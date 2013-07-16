@@ -27,7 +27,7 @@
 
 using namespace TemplateParser;
 
-TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const char *name )
+TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const QString &name )
   : QWidget( parent )
 {
   setupUi( this );
@@ -347,8 +347,8 @@ void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCu
 
   // kDebug() << "Insert command:" << cmd;
   const QString editText( edit->toPlainText() );
-  if ( ( editText.contains( "%FORCEDPLAIN" ) && ( cmd == QLatin1String( "%FORCEDHTML" ) ) ) ||
-       ( editText.contains( "%FORCEDHTML" ) && ( cmd == QLatin1String( "%FORCEDPLAIN" ) ) ) ) {
+  if ( ( editText.contains( QLatin1String("%FORCEDPLAIN") ) && ( cmd == QLatin1String( "%FORCEDHTML" ) ) ) ||
+       ( editText.contains( QLatin1String("%FORCEDHTML") ) && ( cmd == QLatin1String( "%FORCEDPLAIN" ) ) ) ) {
     KMessageBox::error(
       this,
       i18n( "Use of \"Reply using plain text\" and \"Reply using HTML text\" in pairs"

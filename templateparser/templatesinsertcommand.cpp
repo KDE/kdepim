@@ -338,7 +338,7 @@ static void fillMenuFromActionMap( const QMap< QString, TemplatesInsertCommand::
   }
 }
 
-TemplatesInsertCommand::TemplatesInsertCommand( QWidget *parent, const char *name )
+TemplatesInsertCommand::TemplatesInsertCommand( QWidget *parent, const QString &name )
   : QPushButton( parent )
 {
   setObjectName( name );
@@ -418,202 +418,202 @@ void TemplatesInsertCommand::slotMapped( int cmd )
 
   switch( cmd ) {
   case TemplatesInsertCommand::CQuote:
-    emit insertCommand( "%QUOTE" );
+    emit insertCommand( QLatin1String("%QUOTE") );
     break;
   case TemplatesInsertCommand::CText:
-    emit insertCommand( "%TEXT" );
+    emit insertCommand( QLatin1String("%TEXT") );
     break;
   case TemplatesInsertCommand::COMsgId:
-    emit insertCommand( "%OMSGID" );
+    emit insertCommand( QLatin1String("%OMSGID") );
     break;
   case TemplatesInsertCommand::CODate:
-    emit insertCommand( "%ODATE" );
+    emit insertCommand( QLatin1String("%ODATE") );
     break;
   case TemplatesInsertCommand::CODateShort:
-    emit insertCommand( "%ODATESHORT" );
+    emit insertCommand( QLatin1String("%ODATESHORT") );
     break;
   case TemplatesInsertCommand::CODateEn:
-    emit insertCommand( "%ODATEEN" );
+    emit insertCommand( QLatin1String("%ODATEEN") );
     break;
   case TemplatesInsertCommand::CODow:
-    emit insertCommand( "%ODOW" );
+    emit insertCommand( QLatin1String("%ODOW") );
     break;
   case TemplatesInsertCommand::COTime:
-    emit insertCommand( "%OTIME" );
+    emit insertCommand( QLatin1String("%OTIME") );
     break;
   case TemplatesInsertCommand::COTimeLong:
-    emit insertCommand( "%OTIMELONG" );
+    emit insertCommand( QLatin1String("%OTIMELONG") );
     break;
   case TemplatesInsertCommand::COTimeLongEn:
-    emit insertCommand( "%OTIMELONGEN" );
+    emit insertCommand( QLatin1String("%OTIMELONGEN") );
     break;
   case TemplatesInsertCommand::COToAddr:
-    emit insertCommand( "%OTOADDR" );
+    emit insertCommand( QLatin1String("%OTOADDR" ));
     break;
   case TemplatesInsertCommand::COToName:
-    emit insertCommand( "%OTONAME" );
+    emit insertCommand( QLatin1String("%OTONAME") );
     break;
   case TemplatesInsertCommand::COToFName:
-    emit insertCommand( "%OTOFNAME" );
+    emit insertCommand( QLatin1String("%OTOFNAME") );
     break;
   case TemplatesInsertCommand::COToLName:
-    emit insertCommand( "%OTOLNAME" );
+    emit insertCommand( QLatin1String("%OTOLNAME") );
     break;
   case TemplatesInsertCommand::COCCAddr:
-    emit insertCommand( "%OCCADDR" );
+    emit insertCommand( QLatin1String("%OCCADDR") );
     break;
   case TemplatesInsertCommand::COCCName:
-    emit insertCommand( "%OCCNAME" );
+    emit insertCommand( QLatin1String("%OCCNAME") );
     break;
   case TemplatesInsertCommand::COCCFName:
-    emit insertCommand( "%OCCFNAME" );
+    emit insertCommand( QLatin1String("%OCCFNAME") );
     break;
   case TemplatesInsertCommand::COCCLName:
-    emit insertCommand( "%OCCLNAME" );
+    emit insertCommand( QLatin1String("%OCCLNAME") );
     break;
   case TemplatesInsertCommand::COFromAddr:
-    emit insertCommand( "%OFROMADDR" );
+    emit insertCommand( QLatin1String("%OFROMADDR") );
     break;
   case TemplatesInsertCommand::COFromName:
-    emit insertCommand( "%OFROMNAME" );
+    emit insertCommand( QLatin1String("%OFROMNAME") );
     break;
   case TemplatesInsertCommand::COFromFName:
-    emit insertCommand( "%OFROMFNAME" );
+    emit insertCommand( QLatin1String("%OFROMFNAME") );
     break;
   case TemplatesInsertCommand::COFromLName:
-    emit insertCommand( "%OFROMLNAME" );
+    emit insertCommand( QLatin1String("%OFROMLNAME") );
     break;
   case TemplatesInsertCommand::COFullSubject:
-    emit insertCommand( "%OFULLSUBJECT" );
+    emit insertCommand( QLatin1String("%OFULLSUBJECT") );
     break;
   case TemplatesInsertCommand::CQHeaders:
-    emit insertCommand( "%QHEADERS" );
+    emit insertCommand( QLatin1String("%QHEADERS") );
     break;
   case TemplatesInsertCommand::CHeaders:
-    emit insertCommand( "%HEADERS" );
+    emit insertCommand( QLatin1String("%HEADERS") );
     break;
   case TemplatesInsertCommand::COHeader:
-    emit insertCommand( "%OHEADER=\"\"", -1 );
+    emit insertCommand( QLatin1String("%OHEADER=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CMsgId:
-    emit insertCommand( "%MSGID" );
+    emit insertCommand( QLatin1String("%MSGID") );
     break;
   case TemplatesInsertCommand::CDate:
-    emit insertCommand( "%DATE" );
+    emit insertCommand( QLatin1String("%DATE") );
     break;
   case TemplatesInsertCommand::CDateShort:
-    emit insertCommand( "%DATESHORT" );
+    emit insertCommand( QLatin1String("%DATESHORT") );
     break;
   case TemplatesInsertCommand::CDateEn:
-    emit insertCommand( "%DATEEN" );
+    emit insertCommand( QLatin1String("%DATEEN") );
     break;
   case TemplatesInsertCommand::CDow:
-    emit insertCommand( "%DOW" );
+    emit insertCommand( QLatin1String("%DOW") );
     break;
   case TemplatesInsertCommand::CTime:
-    emit insertCommand( "%TIME" );
+    emit insertCommand( QLatin1String("%TIME") );
     break;
   case TemplatesInsertCommand::CTimeLong:
-    emit insertCommand( "%TIMELONG" );
+    emit insertCommand( QLatin1String("%TIMELONG") );
     break;
   case TemplatesInsertCommand::CTimeLongEn:
-    emit insertCommand( "%TIMELONGEN" );
+    emit insertCommand( QLatin1String("%TIMELONGEN") );
     break;
   case TemplatesInsertCommand::COAddresseesAddr:
-    emit insertCommand( "%OADDRESSEESADDR" );
+    emit insertCommand( QLatin1String("%OADDRESSEESADDR") );
     break;
   case TemplatesInsertCommand::CToAddr:
-    emit insertCommand( "%TOADDR" );
+    emit insertCommand( QLatin1String("%TOADDR") );
     break;
   case TemplatesInsertCommand::CToName:
-    emit insertCommand( "%TONAME" );
+    emit insertCommand( QLatin1String("%TONAME") );
     break;
   case TemplatesInsertCommand::CToFName:
-    emit insertCommand( "%TOFNAME" );
+    emit insertCommand( QLatin1String("%TOFNAME") );
     break;
   case TemplatesInsertCommand::CToLName:
-    emit insertCommand( "%TOLNAME" );
+    emit insertCommand( QLatin1String("%TOLNAME") );
     break;
   case TemplatesInsertCommand::CCCAddr:
-    emit insertCommand( "%CCADDR" );
+    emit insertCommand( QLatin1String("%CCADDR") );
     break;
   case TemplatesInsertCommand::CCCName:
-    emit insertCommand( "%CCNAME" );
+    emit insertCommand( QLatin1String("%CCNAME") );
     break;
   case TemplatesInsertCommand::CCCFName:
-    emit insertCommand( "%CCFNAME" );
+    emit insertCommand( QLatin1String("%CCFNAME") );
     break;
   case TemplatesInsertCommand::CCCLName:
-    emit insertCommand( "%CCLNAME" );
+    emit insertCommand( QLatin1String("%CCLNAME") );
     break;
   case TemplatesInsertCommand::CFromAddr:
-    emit insertCommand( "%FROMADDR" );
+    emit insertCommand( QLatin1String("%FROMADDR") );
     break;
   case TemplatesInsertCommand::CFromName:
-    emit insertCommand( "%FROMNAME" );
+    emit insertCommand( QLatin1String("%FROMNAME") );
     break;
   case TemplatesInsertCommand::CFromFName:
-    emit insertCommand( "%FROMFNAME" );
+    emit insertCommand( QLatin1String("%FROMFNAME") );
     break;
   case TemplatesInsertCommand::CFromLName:
-    emit insertCommand( "%FROMLNAME" );
+    emit insertCommand( QLatin1String("%FROMLNAME") );
     break;
   case TemplatesInsertCommand::CFullSubject:
-    emit insertCommand( "%FULLSUBJECT" );
+    emit insertCommand( QLatin1String("%FULLSUBJECT") );
     break;
   case TemplatesInsertCommand::CHeader:
-    emit insertCommand( "%HEADER=\"\"", -1 );
+    emit insertCommand( QLatin1String("%HEADER=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CSystem:
-    emit insertCommand( "%SYSTEM=\"\"", -1 );
+    emit insertCommand( QLatin1String("%SYSTEM=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CQuotePipe:
-    emit insertCommand( "%QUOTEPIPE=\"\"", -1 );
+    emit insertCommand( QLatin1String("%QUOTEPIPE=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CTextPipe:
-    emit insertCommand( "%TEXTPIPE=\"\"", -1 );
+    emit insertCommand( QLatin1String("%TEXTPIPE=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CMsgPipe:
-    emit insertCommand( "%MSGPIPE=\"\"", -1 );
+    emit insertCommand( QLatin1String("%MSGPIPE=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CBodyPipe:
-    emit insertCommand( "%BODYPIPE=\"\"", -1 );
+    emit insertCommand( QLatin1String("%BODYPIPE=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CClearPipe:
-    emit insertCommand( "%CLEARPIPE=\"\"", -1 );
+    emit insertCommand( QLatin1String("%CLEARPIPE=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CCursor:
-    emit insertCommand( "%CURSOR" );
+    emit insertCommand( QLatin1String("%CURSOR") );
     break;
   case TemplatesInsertCommand::CSignature:
-    emit insertCommand( "%SIGNATURE" );
+    emit insertCommand( QLatin1String("%SIGNATURE") );
     break;
   case TemplatesInsertCommand::CInsert:
-    emit insertCommand( "%INSERT=\"\"", -1 );
+    emit insertCommand( QLatin1String("%INSERT=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CDnl:
-    emit insertCommand( "%-" );
+    emit insertCommand( QLatin1String("%-") );
     break;
   case TemplatesInsertCommand::CRem:
-    emit insertCommand( "%REM=\"\"", -1 );
+    emit insertCommand( QLatin1String("%REM=\"\""), -1 );
     break;
   case TemplatesInsertCommand::CNop:
-    emit insertCommand( "%NOP" );
+    emit insertCommand( QLatin1String("%NOP") );
     break;
   case TemplatesInsertCommand::CClear:
-    emit insertCommand( "%CLEAR" );
+    emit insertCommand( QLatin1String("%CLEAR") );
     break;
   case TemplatesInsertCommand::CDebug:
-    emit insertCommand( "%DEBUG" );
+    emit insertCommand( QLatin1String("%DEBUG") );
     break;
   case TemplatesInsertCommand::CDebugOff:
-    emit insertCommand( "%DEBUGOFF" );
+    emit insertCommand( QLatin1String("%DEBUGOFF") );
     break;
   case TemplatesInsertCommand::CQuotePlain:
-    emit insertCommand( "%FORCEDPLAIN" );
+    emit insertCommand( QLatin1String("%FORCEDPLAIN") );
     break;
   case TemplatesInsertCommand::CQuoteHtml:
-    emit insertCommand( "%FORCEDHTML" );
+    emit insertCommand( QLatin1String("%FORCEDHTML") );
     break;
   default:
     kDebug() << "Unknown template command index:" << cmd;

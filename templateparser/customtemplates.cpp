@@ -38,10 +38,10 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
   mUi = new Ui_CustomTemplatesBase;
   mUi->setupUi( this );
 
-  mUi->mAdd->setIcon( KIcon( "list-add" ) );
+  mUi->mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
   mUi->mAdd->setEnabled( false );
-  mUi->mRemove->setIcon( KIcon( "list-remove" ) );
-  mUi->mDuplicate->setIcon( KIcon( "edit-copy" ) );
+  mUi->mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
+  mUi->mDuplicate->setIcon( KIcon( QLatin1String("edit-copy") ) );
 
   mUi->mList->setColumnWidth( 0, 100 );
   mUi->mList->header()->setStretchLastSection( true );
@@ -84,9 +84,9 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
 
   mUi->mKeySequenceWidget->setCheckActionCollections( actionCollection );
 
-  mReplyPix = KIconLoader().loadIcon( "mail-reply-sender", KIconLoader::Small );
-  mReplyAllPix = KIconLoader().loadIcon( "mail-reply-all", KIconLoader::Small );
-  mForwardPix = KIconLoader().loadIcon( "mail-forward", KIconLoader::Small );
+  mReplyPix = KIconLoader().loadIcon( QLatin1String("mail-reply-sender"), KIconLoader::Small );
+  mReplyAllPix = KIconLoader().loadIcon( QLatin1String("mail-reply-all"), KIconLoader::Small );
+  mForwardPix = KIconLoader().loadIcon( QLatin1String("mail-forward"), KIconLoader::Small );
 
   mUi->mType->clear();
   mUi->mType->addItem( QPixmap(), i18nc( "Message->", "Universal" ) );
@@ -219,7 +219,7 @@ void CustomTemplates::save()
 {
   // Before saving the new templates, delete the old ones. That needs to be done before
   // saving, since otherwise a new template with the new name wouldn't get saved.
-  KSharedConfig::Ptr config = KSharedConfig::openConfig( "customtemplatesrc", KConfig::NoGlobals );
+  KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("customtemplatesrc"), KConfig::NoGlobals );
   foreach ( const QString &item, mItemsToDelete ) {
     CTemplates t( item );
     const QString configGroup = t.currentGroup();
@@ -236,7 +236,7 @@ void CustomTemplates::save()
     CTemplates t(name);
     QString content = it->content();
     if ( content.trimmed().isEmpty() ) {
-      content = "%BLANK";
+      content = QLatin1String("%BLANK");
     }
 
     t.setContent( content );
@@ -293,7 +293,7 @@ void CustomTemplates::slotAddClicked()
     // FIXME There must be a better way of doing this...
     QKeySequence nullShortcut;
     CustomTemplateItem *item =
-      new CustomTemplateItem( mUi->mList, str, "", nullShortcut, TUniversal,
+            new CustomTemplateItem( mUi->mList, str, QString(), nullShortcut, TUniversal,
                               QString(), QString() );
     item->setText( 0, indexToType( TUniversal ) );
     item->setText( 1, str );
@@ -325,7 +325,7 @@ QString CustomTemplates::createUniqueName( const QString &name ) const
         found = true;
         ++counter;
         uniqueName = name;
-        uniqueName += QString( " (" ) + QString::number( counter ) + QString( ")" );
+        uniqueName += QLatin1String( " (" ) + QString::number( counter ) + QLatin1String( ")" );
         break;
       }
       lit++;
