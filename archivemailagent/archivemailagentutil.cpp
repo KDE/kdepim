@@ -31,6 +31,9 @@ QDate ArchiveMailAgentUtil::diffDate(ArchiveMailInfo *info)
     case ArchiveMailInfo::ArchiveMonths:
         diffDate = diffDate.addMonths(info->archiveAge());
         break;
+    case ArchiveMailInfo::ArchiveYears:
+        diffDate = diffDate.addYears(info->archiveAge());
+        break;
     default:
         kDebug()<<"archiveUnit not defined :"<<info->archiveUnit();
         break;

@@ -37,7 +37,8 @@ public:
     enum ArchiveUnit {
         ArchiveDays = 0,
         ArchiveWeeks,
-        ArchiveMonths
+        ArchiveMonths,
+        ArchiveYears
     };
 
     KUrl realUrl(const QString &folderName) const;

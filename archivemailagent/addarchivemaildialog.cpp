@@ -104,6 +104,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     unitsList<<i18n("Days");
     unitsList<<i18n("Weeks");
     unitsList<<i18n("Months");
+    unitsList<<i18n("Years");
     mUnits->addItems(unitsList);
     hlayout->addWidget(mUnits);
 
