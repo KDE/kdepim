@@ -70,7 +70,7 @@ QString PimCommon::RenameFileDialog::RenameFileDialogPrivate::suggestName(const 
 {
     QString dotSuffix, suggestedName;
     QString basename = oldName;
-    const QChar spacer(' ');
+    const QChar spacer(QLatin1Char(' '));
 
     //ignore dots at the beginning, that way "..aFile.tar.gz" will become "..aFile 1.tar.gz" instead of " 1..aFile.tar.gz"
     int index = basename.indexOf(QLatin1Char('.'));

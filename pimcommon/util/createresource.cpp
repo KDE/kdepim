@@ -95,7 +95,7 @@ QString CreateResource::createResource( const QString& resources, const QString&
 
         if ( !settings.isEmpty() ) {
             Q_EMIT createResourceInfo( i18n( "Configuring resource instance..." ) );
-            QDBusInterface iface( "org.freedesktop.Akonadi.Resource." + instance.identifier(), "/Settings" );
+            QDBusInterface iface( QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(), QLatin1String("/Settings") );
             if ( !iface.isValid() ) {
                 Q_EMIT createResourceError( i18n( "Unable to configure resource instance." ) );
                 return QString();
@@ -111,7 +111,7 @@ QString CreateResource::createResource( const QString& resources, const QString&
                 QVariant arg = it.value();
                 const QVariant::Type targetType = argumentType( iface.metaObject(), methodName );
                 if ( !arg.canConvert( targetType ) ) {
-                    Q_EMIT createResourceError( i18n( "Could not convert value of setting '%1' to required type %2.", it.key(), QVariant::typeToName( targetType ) ) );
+                    Q_EMIT createResourceError( i18n( "Could not convert value of setting '%1' to required type %2.", it.key(), QString::fromLatin1(QVariant::typeToName( targetType ) )) );
                     return QString();
                 }
                 arg.convert( targetType );
