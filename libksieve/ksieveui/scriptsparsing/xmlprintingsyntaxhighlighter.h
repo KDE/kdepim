@@ -15,27 +15,37 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "parsingresultdialog.h"
-#include "xmlprintingsyntaxhighlighter.h"
-#include <KTextEdit>
-#include <KLocale>
+#ifndef XMLPRINTINGSYNTAXHIGHLIGHTER_H
+#define XMLPRINTINGSYNTAXHIGHLIGHTER_H
 
-ParsingResultDialog::ParsingResultDialog(QWidget *parent)
-    : KDialog(parent)
+#include <QList>
+#include <QRegExp>
+#include <QSyntaxHighlighter>
+
+class QTextDocument;
+
+class XMLPrintingSyntaxHighLighter : public QSyntaxHighlighter
 {
-    setCaption( i18n( "Sieve Parsing" ) );
-    setButtons( Close );
+    Q_OBJECT
+public:
+    explicit XMLPrintingSyntaxHighLighter( QTextDocument *doc );
+    ~XMLPrintingSyntaxHighLighter();
 
-    mTextEdit = new KTextEdit( this );
-    new XMLPrintingSyntaxHighLighter(mTextEdit->document());
-    mTextEdit->setReadOnly( true );
-    setMainWidget( mTextEdit );
-}
+    void highlightBlock(const QString &text);
+private:
+    void init();
+
+    struct Rule {
+        QRegExp pattern;
+        QTextCharFormat format;
+
+        Rule( const QRegExp &r, const QTextCharFormat &f )
+            : pattern(r), format(f) {}
+    };
+
+    QList<Rule> m_rules;
+
+};
 
 
-void ParsingResultDialog::setResultParsing(const QString &result)
-{
-    mTextEdit->setPlainText(result);
-}
-
-#include "parsingresultdialog.moc"
+#endif // XMLPRINTINGSYNTAXHIGHLIGHTER_H

@@ -4,6 +4,7 @@ set(xmlsieveparsing_SRCS
   main.cpp
   xmlprintingscriptbuilder.cpp
   parsingresultdialog.cpp
+  xmlprintingsyntaxhighlighter.cpp
 )
 
 KDE4_ADD_EXECUTABLE(xmlsieveparsing ${xmlsieveparsing_SRCS} )
