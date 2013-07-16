@@ -35,6 +35,9 @@ public:
     void loadSettings();
     void writeSettings();
 
+private Q_SLOTS:
+    void slotEnableChanged(bool enabled);
+
 private:
     QString mInstanceName;
     QCheckBox *mEnabled;

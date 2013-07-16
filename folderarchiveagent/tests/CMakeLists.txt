@@ -5,5 +5,7 @@ target_link_libraries(folderarchive_gui
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   mailcommon
 )

@@ -33,6 +33,7 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mEnabled = new QCheckBox(i18n("Enable"));
+    connect(mEnabled, SIGNAL(toggled(bool)), this, SLOT(slotEnableChanged(bool)));
     lay->addWidget(mEnabled);
 
     QHBoxLayout *hbox = new QHBoxLayout;
@@ -48,6 +49,11 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
 FolderArchiveSettingPage::~FolderArchiveSettingPage()
 {
 
+}
+
+void FolderArchiveSettingPage::slotEnableChanged(bool enabled)
+{
+    mArchiveFolder->setEnabled(enabled);
 }
 
 void FolderArchiveSettingPage::loadSettings()

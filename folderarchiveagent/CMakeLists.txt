@@ -32,6 +32,7 @@ kde4_add_executable(akonadi_folderarchive_agent ${folderarchiveagent_SRCS})
 target_link_libraries(akonadi_folderarchive_agent
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
   mailcommon
 )
 
