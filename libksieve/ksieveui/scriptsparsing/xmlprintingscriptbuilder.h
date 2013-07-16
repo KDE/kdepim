@@ -18,7 +18,6 @@
 #ifndef KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
 #define KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
 
-#include <config-libksieve.h> // SIZEOF_UNSIGNED_LONG
 #include <ksieve/parser.h>
 using KSieve::Parser;
 

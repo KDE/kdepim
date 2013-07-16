@@ -40,7 +40,7 @@ void XMLPrintingScriptBuilder::stringArgument( const QString & string, bool mult
 
 void XMLPrintingScriptBuilder::numberArgument( unsigned long number, char quantifier )
 {
-    const QString txt = "number" + ( quantifier ? QString(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
+    const QString txt = QLatin1String("number") + ( quantifier ? QString::fromLatin1(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
     write( txt.toLatin1(), QString::number( number ) );
 }
 
@@ -129,7 +129,7 @@ void XMLPrintingScriptBuilder::lineFeed()
 void XMLPrintingScriptBuilder::error( const KSieve::Error & error )
 {
     mIndent = 0;
-    write( ("Error: " + error.asString()).toLatin1() );
+    write( (QLatin1String("Error: ") + error.asString()).toLatin1() );
 }
 
 void XMLPrintingScriptBuilder::finished()
@@ -140,7 +140,7 @@ void XMLPrintingScriptBuilder::finished()
 
 void XMLPrintingScriptBuilder::write( const char * msg )
 {
-    for ( int i = 2*indent ; i > 0 ; --i ) {
+    for ( int i = 2*mIndent ; i > 0 ; --i ) {
         qDebug() << " ";
     }
     qDebug() << msg;
