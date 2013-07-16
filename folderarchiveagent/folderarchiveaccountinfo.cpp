@@ -20,18 +20,30 @@
 #include <KConfigGroup>
 
 FolderArchiveAccountInfo::FolderArchiveAccountInfo()
-    : mArchiveTopLevelCollectionId(-1)
+    : mType(UniqFolder),
+      mArchiveTopLevelCollectionId(-1)
 {
 }
 
 FolderArchiveAccountInfo::FolderArchiveAccountInfo(const KConfigGroup &config)
-    : mArchiveTopLevelCollectionId(-1)
+    : mType(UniqFolder),
+      mArchiveTopLevelCollectionId(-1)
 {
     readConfig(config);
 }
 
 FolderArchiveAccountInfo::~FolderArchiveAccountInfo()
 {
+}
+
+void FolderArchiveAccountInfo::setFolderArchiveType(FolderArchiveAccountInfo::FolderArchiveType type)
+{
+    mType = type;
+}
+
+FolderArchiveAccountInfo::FolderArchiveType FolderArchiveAccountInfo::folderArchiveType() const
+{
+    return mType;
 }
 
 void FolderArchiveAccountInfo::setArchiveTopLevel(Akonadi::Collection::Id id)

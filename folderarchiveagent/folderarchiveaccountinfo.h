@@ -28,16 +28,26 @@ public:
     FolderArchiveAccountInfo(const KConfigGroup &config);
     ~FolderArchiveAccountInfo();
 
+    enum FolderArchiveType {
+        UniqFolder,
+        FolderByMonths
+    };
+
+
     QString instanceName() const;
 
     void setArchiveTopLevel(Akonadi::Collection::Id id);
     Akonadi::Collection::Id archiveTopLevel() const;
 
+    void setFolderArchiveType(FolderArchiveType type);
+    FolderArchiveType folderArchiveType() const;
+
+
     void writeConfig(KConfigGroup &config );
     void readConfig(const KConfigGroup &config);
 
 private:
-
+    FolderArchiveAccountInfo::FolderArchiveType mType;
     Akonadi::Collection::Id mArchiveTopLevelCollectionId;
     QString mInstanceName;
 };
