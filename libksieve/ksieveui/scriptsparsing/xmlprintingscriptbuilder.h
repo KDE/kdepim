@@ -51,10 +51,14 @@ public:
     void error( const KSieve::Error &error );
     void finished();
 
+    QString result() const;
+
 private:
-    int mIndent;
     void write( const char * msg );
     void write( const QByteArray &key, const QString &value );
+
+    QString mResult;
+    int mIndent;
 };
 
 #endif

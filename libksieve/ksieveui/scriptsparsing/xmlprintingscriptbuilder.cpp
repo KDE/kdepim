@@ -144,6 +144,7 @@ void XMLPrintingScriptBuilder::write( const char * msg )
         qDebug() << " ";
     }
     qDebug() << msg;
+    mResult += QString::fromUtf8(msg);
 }
 
 void XMLPrintingScriptBuilder::write( const QByteArray & key, const QString & value )
@@ -157,4 +158,9 @@ void XMLPrintingScriptBuilder::write( const QByteArray & key, const QString & va
     write( value.toUtf8().data() );
     --mIndent;
     write( "</" + key + ">" );
+}
+
+QString XMLPrintingScriptBuilder::result() const
+{
+    return mResult;
 }

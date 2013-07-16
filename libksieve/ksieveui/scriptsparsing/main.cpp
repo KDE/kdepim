@@ -17,6 +17,8 @@
 
 #include <QApplication>
 #include "xmlprintingscriptbuilder.h"
+#include "parsingresultdialog.h"
+
 //#include <config-libksieve.h> // SIZEOF_UNSIGNED_LONG
 #include <ksieve/parser.h>
 using KSieve::Parser;
@@ -24,30 +26,36 @@ using KSieve::Parser;
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
 
+#include <KFileDialog>
+
 #include <QDebug>
 
 int main( int argc, char** argv )
 {
   QApplication app( argc, argv );
 
-  QString script = QLatin1String( "require \"reject\";"
-          "require \"fileinto\";"
-          "require \"envelope\";"
-          "if size :under 1 {"
-          "   fileinto \"INBOX\";"
-                                  "}"
-                                  );
-  const QByteArray scriptUTF8 = script.trimmed().toUtf8();
-  qDebug() << "scriptUtf8 = \"" + scriptUTF8 +"\"";
+  QByteArray script;
+  const QString fileName = KFileDialog::getOpenFileName();
+  if (!fileName.isEmpty()) {
+      QFile file(fileName);
+      if (file.open(QIODevice::ReadOnly)) {
+          script = file.readAll();
+      }
+  } else {
+      return 0;
+  }
+  qDebug() << "scriptUtf8 = \"" + script +"\"";
 
-  KSieve::Parser parser( scriptUTF8.begin(),
-                         scriptUTF8.begin() + scriptUTF8.length() );
+  KSieve::Parser parser( script.begin(),
+                         script.begin() + script.length() );
   XMLPrintingScriptBuilder psb;
   parser.setScriptBuilder( &psb );
   if ( parser.parse() )
     qDebug() << "ok";
   else
     qDebug() << "bad";
-
+  ParsingResultDialog dlg;
+  dlg.setResultParsing(psb.result());
+  dlg.exec();
   return 0;
 }
