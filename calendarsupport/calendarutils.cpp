@@ -261,7 +261,7 @@ void CalendarUtils::purgeCompletedTodos()
       i18nc( "@info",
              "Unable to purge to-dos with uncompleted children." ),
       i18nc( "@title:window", "Delete To-do" ),
-      "UncompletedChildrenPurgeTodos" );
+      QLatin1String("UncompletedChildrenPurgeTodos") );
   }
 }
 
