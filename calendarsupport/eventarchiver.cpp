@@ -142,7 +142,7 @@ void EventArchiver::run( const Akonadi::ETMCalendar::Ptr &calendar,
       KMessageBox::information( widget,
                                 i18n( "There are no items before %1",
                                       KGlobal::locale()->formatDate( limitDate ) ),
-                                "ArchiverNoIncidences" );
+                                QLatin1String("ArchiverNoIncidences") );
     }
     return;
   }
