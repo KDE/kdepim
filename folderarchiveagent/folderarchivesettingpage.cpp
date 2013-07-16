@@ -16,6 +16,7 @@
 */
 
 #include "folderarchivesettingpage.h"
+#include "folderarchiveaccountinfo.h"
 #include "mailcommon/folder/folderrequester.h"
 
 #include <KLocale>
@@ -29,7 +30,8 @@
 
 FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, QWidget *parent)
     : QWidget(parent),
-      mInstanceName(instanceName)
+      mInstanceName(instanceName),
+      mInfo(0)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mEnabled = new QCheckBox(i18n("Enable"));
@@ -48,7 +50,7 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
 
 FolderArchiveSettingPage::~FolderArchiveSettingPage()
 {
-
+    delete mInfo;
 }
 
 void FolderArchiveSettingPage::slotEnableChanged(bool enabled)
@@ -58,12 +60,23 @@ void FolderArchiveSettingPage::slotEnableChanged(bool enabled)
 
 void FolderArchiveSettingPage::loadSettings()
 {
-
-    //TODO
+    KSharedConfig::Ptr config = KGlobal::config();
+    if (config->hasGroup(mInstanceName)) {
+        KConfigGroup grp = config->group(mInstanceName);
+        mInfo = new FolderArchiveAccountInfo(grp);
+        mEnabled->setChecked(mInfo->enabled());
+    } else {
+        mInfo = new FolderArchiveAccountInfo();
+        mEnabled->setChecked(false);
+    }
 }
 
 void FolderArchiveSettingPage::writeSettings()
 {
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup grp = config->group(mInstanceName);
+    mInfo->setEnabled(mEnabled->isChecked());
+    mInfo->writeConfig(grp);
     //TODO
 }
 

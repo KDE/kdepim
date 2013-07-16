@@ -91,6 +91,7 @@ void FolderArchiveConfigureDialog::initializeTab()
                 //Store just pop3/imap account. Store other config when we copy data.
                 if (identifier.contains(QLatin1String("pop3")) || identifier.contains(QLatin1String("maildir"))) {
                     FolderArchiveSettingPage *page = new FolderArchiveSettingPage(identifier);
+                    page->loadSettings();
                     mTabWidget->addTab(page, identifier);
                 }
             }
@@ -100,7 +101,8 @@ void FolderArchiveConfigureDialog::initializeTab()
 
 void FolderArchiveConfigureDialog::slotOkClicked()
 {
-    for (int i=0; i <mTabWidget->count(); ++i) {
+    const int numberOfTab(mTabWidget->count());
+    for (int i=0; i <numberOfTab; ++i) {
         FolderArchiveSettingPage *page = static_cast<FolderArchiveSettingPage *>(mTabWidget->widget(i));
         page->writeSettings();
     }

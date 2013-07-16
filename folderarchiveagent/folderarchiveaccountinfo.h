@@ -42,14 +42,17 @@ public:
     void setFolderArchiveType(FolderArchiveType type);
     FolderArchiveType folderArchiveType() const;
 
+    void setEnabled(bool enabled);
+    bool enabled() const;
 
     void writeConfig(KConfigGroup &config );
     void readConfig(const KConfigGroup &config);
 
 private:
-    FolderArchiveAccountInfo::FolderArchiveType mType;
+    FolderArchiveAccountInfo::FolderArchiveType mArchiveType;
     Akonadi::Collection::Id mArchiveTopLevelCollectionId;
     QString mInstanceName;
+    bool mEnabled;
 };
 
 #endif // FOLDERARCHIVEACCOUNTINFO_H
