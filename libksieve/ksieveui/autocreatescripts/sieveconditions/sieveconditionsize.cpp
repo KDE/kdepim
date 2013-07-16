@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionsize.h"
+#include "widgets/selectsizetypecombobox.h"
 
 #include <KLocale>
 
@@ -51,10 +52,14 @@ QWidget *SieveConditionSize::createParamWidget( QWidget *parent ) const
     QSpinBox *spinbox = new QSpinBox;
     spinbox->setMinimum(1);
     spinbox->setMaximum(9999);
-    spinbox->setSuffix(i18n(" KB"));
+    lay->addWidget(spinbox);
     spinbox->setObjectName(QLatin1String("spinboxsize"));
 
-    lay->addWidget(spinbox);
+    SelectSizeTypeComboBox *sizeType = new SelectSizeTypeComboBox;
+    sizeType->setObjectName(QLatin1String("sizetype"));
+    lay->addWidget(sizeType);
+
+
     return w;
 }
 
@@ -63,7 +68,9 @@ QString SieveConditionSize::code(QWidget *w) const
     const QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
     const QString comparaison = combo->itemData(combo->currentIndex()).toString();
     const QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("spinboxsize") );
-    return QString::fromLatin1("size %1 %2K").arg(comparaison).arg(spinbox->value());
+    const SelectSizeTypeComboBox *sizeTypeCombo = w->findChild<SelectSizeTypeComboBox*>( QLatin1String("sizetype") );
+    const QString type = sizeTypeCombo->code();
+    return QString::fromLatin1("size %1 %2%3").arg(comparaison).arg(spinbox->value()).arg(type);
 }
 
 QString SieveConditionSize::help() const
