@@ -48,7 +48,7 @@ static QString check_x_beenthere( const KMime::Message::Ptr &message,
                                   QByteArray &headerName,
                                   QString &headerValue )
 {
-  QString header = message->headerByType( "X-BeenThere" ) ? message->headerByType( "X-BeenThere" )->asUnicodeString() : "";
+  QString header = message->headerByType( "X-BeenThere" ) ? message->headerByType( "X-BeenThere" )->asUnicodeString() : QString();
   if ( header.isNull() || header.indexOf( QLatin1Char( '@' ) ) == -1 )
     return QString();
 
@@ -64,7 +64,7 @@ static QString check_delivered_to( const KMime::Message::Ptr &message,
                                    QByteArray &headerName,
                                    QString &headerValue )
 {
-  QString header = message->headerByType( "Delivered-To" ) ? message->headerByType( "Delivered-To" )->asUnicodeString() : "";
+  QString header = message->headerByType( "Delivered-To" ) ? message->headerByType( "Delivered-To" )->asUnicodeString() : QString();
   if ( header.isNull()
        || header.left( 13 ) != QLatin1String( "mailing list" )
        || header.indexOf( QLatin1Char( '@' ) ) == -1 )
@@ -81,7 +81,7 @@ static QString check_x_mailing_list( const KMime::Message::Ptr &message,
                                      QByteArray &headerName,
                                      QString &headerValue )
 {
-  QString header = message->headerByType( "X-Mailing-List" ) ? message->headerByType( "X-Mailing-List" )->asUnicodeString() : "";
+  QString header = message->headerByType( "X-Mailing-List" ) ? message->headerByType( "X-Mailing-List" )->asUnicodeString() : QString();
   if ( header.isEmpty() )
     return QString();
 
@@ -103,7 +103,7 @@ static QString check_list_id( const KMime::Message::Ptr &message,
                               QByteArray &headerName,
                               QString &headerValue )
 {
-  QString header = message->headerByType( "List-Id" ) ? message->headerByType( "List-Id" )->asUnicodeString() : "";
+  QString header = message->headerByType( "List-Id" ) ? message->headerByType( "List-Id" )->asUnicodeString() : QString();
   if ( header.isEmpty() )
     return QString();
 
@@ -128,7 +128,7 @@ static QString check_list_post( const KMime::Message::Ptr &message,
                                 QByteArray &headerName,
                                 QString &headerValue )
 {
-  QString header = message->headerByType( "List-Post" ) ? message->headerByType( "List-Post" )->asUnicodeString() : "";
+  QString header = message->headerByType( "List-Post" ) ? message->headerByType( "List-Post" )->asUnicodeString() : QString();
   if ( header.isEmpty() )
     return QString();
 
@@ -149,7 +149,7 @@ static QString check_mailing_list( const KMime::Message::Ptr &message,
                                    QByteArray &headerName,
                                    QString &headerValue )
 {
-  QString header = message->headerByType( "Mailing-List" ) ? message->headerByType( "Mailing-List" )->asUnicodeString() : "";
+  QString header = message->headerByType( "Mailing-List" ) ? message->headerByType( "Mailing-List" )->asUnicodeString() : QString();
   if ( header.isEmpty() )
     return QString();
 
@@ -170,7 +170,7 @@ static QString check_x_loop( const KMime::Message::Ptr &message,
                              QByteArray &headerName,
                              QString &headerValue )
 {
-  QString header = message->headerByType( "X-Loop" ) ? message->headerByType( "X-Loop" )->asUnicodeString() : "";
+  QString header = message->headerByType( "X-Loop" ) ? message->headerByType( "X-Loop" )->asUnicodeString() : QString();
   if ( header.isEmpty() )
     return QString();
 
@@ -190,7 +190,7 @@ static QString check_x_ml_name( const KMime::Message::Ptr &message,
                                 QByteArray &headerName,
                                 QString &headerValue )
 {
-  QString header = message->headerByType( "X-ML-Name" ) ? message->headerByType( "X-ML-Name" )->asUnicodeString() : "";
+  QString header = message->headerByType( "X-ML-Name" ) ? message->headerByType( "X-ML-Name" )->asUnicodeString() : QString();
   if ( header.isEmpty() )
     return QString();
 

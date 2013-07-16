@@ -34,8 +34,8 @@ void StringUtilTest::test_SmartQuote()
 
   QEXPECT_FAIL( "hard linebreak", "Currently no way to differentiate between hard and soft line breaks", Continue );
   const QString result = StringUtil::smartQuote( originalString, lineLength );
-  const QStringList resultList = result.split("\n");
-  const QStringList expectedList = quotedString.split("\n");
+  const QStringList resultList = result.split(QLatin1Char('\n'));
+  const QStringList expectedList = quotedString.split(QLatin1Char('\n'));
   qDebug() << "result  :" << resultList;
   qDebug() << "expected:" << expectedList;
   QCOMPARE( resultList, expectedList );
@@ -195,7 +195,7 @@ void StringUtilTest::test_SmartQuote_data()
 void StringUtilTest::test_signatureStripping()
 {
   //QStringList tests;
-  const QString test1 =
+  const QString test1 = QLatin1String(
       "text1\n"
       "-- \n"
       "Signature Block1\n"
@@ -218,9 +218,9 @@ void StringUtilTest::test_signatureStripping()
       ">> Signature Block 5\n"
       "text6\n"
       "-- \n"
-      "Signature Block 6\n";
+      "Signature Block 6\n");
 
-  const QString test1Result =
+  const QString test1Result = QLatin1String(
       "text1\n"
       "> text2\n"
       ">> text3 -- not a signature block\n"
@@ -229,12 +229,12 @@ void StringUtilTest::test_signatureStripping()
       ">>-------------\n"
       ">>-- text5 --\n"
       ">>-------------------\n"
-      "text6\n";
+      "text6\n");
 
   QCOMPARE( StringUtil::stripSignature( test1 ), test1Result );
 
 
-  const QString test2 =
+  const QString test2 = QLatin1String(
       "text1\n"
       "> text2\n"
       ">> text3 -- not a signature block\n"
@@ -243,12 +243,12 @@ void StringUtilTest::test_signatureStripping()
       ">>-------------\n"
       ">>-- text5 --\n"
       ">>-------------------\n"
-      "text6\n";
+      "text6\n");
 
   // No actual signature - should stay the same
   QCOMPARE( StringUtil::stripSignature( test2 ), test2 );
 
-  const QString test3 =
+  const QString test3 = QLatin1String(
       "text1\n"
       "-- \n"
       "Signature Block1\n"
@@ -268,9 +268,9 @@ void StringUtilTest::test_signatureStripping()
       ">Signature Block 4\n"
       "text5\n"
       "-- \n"
-      "Signature Block 5";
+      "Signature Block 5");
 
-  const QString test3Result =
+  const QString test3Result = QLatin1String(
       "text1\n"
       ">text2\n"
       "> >text3\n"
@@ -278,11 +278,11 @@ void StringUtilTest::test_signatureStripping()
       ">>Not Signature Block 3\n"
       "> > Not Signature Block 3\n"
       ">text4\n"
-      "text5\n";
+      "text5\n");
 
   QCOMPARE( StringUtil::stripSignature( test3 ), test3Result );
 
-  const QString test4 =
+  const QString test4 = QLatin1String(
       "Text 1\n"
       "-- \n"
       "First sign\n\n\n"
@@ -294,9 +294,9 @@ void StringUtilTest::test_signatureStripping()
       "> Adios\n\n"
       ">> Texto 3\n\n"
       ">> --\n"
-      ">> Not Signature block 3\n";
+      ">> Not Signature block 3\n");
 
-  const QString test4Result =
+  const QString test4Result = QLatin1String(
       "Text 1\n"
       "> From: bla\n"
       "> Texto 2\n\n"
@@ -306,21 +306,21 @@ void StringUtilTest::test_signatureStripping()
       "> Adios\n\n"
       ">> Texto 3\n\n"
       ">> --\n"
-      ">> Not Signature block 3\n";
+      ">> Not Signature block 3\n");
 
   QCOMPARE( StringUtil::stripSignature( test4 ), test4Result );
 
-  const QString test5 =
+  const QString test5 = QLatin1String(
       "-- \n"
       "-- ACME, Inc\n"
       "-- Joe User\n"
       "-- PHB\n"
       "-- Tel.: 555 1234\n"
-      "--";
+      "--");
 
   QCOMPARE( StringUtil::stripSignature( test5 ), QString() );
 
-  const QString test6 =
+  const QString test6 = QLatin1String(
       "Text 1\n\n\n\n"
       "> From: bla\n"
       "> Texto 2\n\n"
@@ -329,7 +329,7 @@ void StringUtilTest::test_signatureStripping()
       "> Adios\n\n"
       ">> Texto 3\n\n"
       ">> --\n"
-      ">> Not Signature block 3\n";
+      ">> Not Signature block 3\n");
 
   // Again, no actual signature in here
   QCOMPARE( StringUtil::stripSignature( test6 ), test6 );
@@ -337,15 +337,15 @@ void StringUtilTest::test_signatureStripping()
 
 void StringUtilTest::test_isCryptoPart()
 {
-  QVERIFY( StringUtil::isCryptoPart( "application", "pgp-encrypted", QString() ) );
-  QVERIFY( StringUtil::isCryptoPart( "application", "pgp-signature", QString() ) );
-  QVERIFY( StringUtil::isCryptoPart( "application", "pkcs7-mime", QString() ) );
-  QVERIFY( StringUtil::isCryptoPart( "application", "pkcs7-signature", QString() ) );
-  QVERIFY( StringUtil::isCryptoPart( "application", "x-pkcs7-signature", QString() ) );
-  QVERIFY( StringUtil::isCryptoPart( "application", "octet-stream", "msg.asc" ) );
-  QVERIFY( !StringUtil::isCryptoPart( "application", "octet-stream", "bla.foo" ) );
-  QVERIFY( !StringUtil::isCryptoPart( "application", "foo", QString() ) );
-  QVERIFY( !StringUtil::isCryptoPart( "application", "foo", "msg.asc" ) );
+  QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("pgp-encrypted"), QString() ) );
+  QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("pgp-signature"), QString() ) );
+  QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("pkcs7-mime"), QString() ) );
+  QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("pkcs7-signature"), QString() ) );
+  QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("x-pkcs7-signature"), QString() ) );
+  QVERIFY( StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("octet-stream"), QLatin1String("msg.asc") ) );
+  QVERIFY( !StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("octet-stream"), QLatin1String("bla.foo") ) );
+  QVERIFY( !StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("foo"), QString() ) );
+  QVERIFY( !StringUtil::isCryptoPart( QLatin1String("application"), QLatin1String("foo"), QLatin1String("msg.asc") ) );
 }
 
 void StringUtilTest::test_stripOffMessagePrefix()

@@ -117,7 +117,7 @@ void AttachmentPropertiesDialog::Private::mimeTypeChanged( const QString &type )
   if ( !mimeType.isNull() ) {
     pix = KIconLoader::global()->loadMimeTypeIcon( mimeType->iconName(), KIconLoader::Desktop );
   } else {
-    pix = DesktopIcon( "unknown" );
+    pix = DesktopIcon( QLatin1String("unknown") );
   }
   if( mReadOnly ) {
     uiReadOnly->mimeIcon->setPixmap(pix);
@@ -236,14 +236,14 @@ void AttachmentPropertiesDialog::Private::loadFromPart()
   Q_ASSERT( mPart );
 
   if(mReadOnly) {
-    uiReadOnly->mimeType->setText( mPart->mimeType() );
-    mimeTypeChanged( mPart->mimeType() );
+    uiReadOnly->mimeType->setText( QString::fromLatin1(mPart->mimeType()) );
+    mimeTypeChanged( QString::fromLatin1(mPart->mimeType()) );
     uiReadOnly->size->setText( KGlobal::locale()->formatByteSize( mPart->size() ) );
     uiReadOnly->name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
     uiReadOnly->description->setText( mPart->description() );
     uiReadOnly->encoding->setText( KMime::nameForEncoding( mPart->encoding() ) );
   } else {
-    ui->mimeType->setCurrentItem( mPart->mimeType(), true );
+    ui->mimeType->setCurrentItem( QString::fromLatin1(mPart->mimeType()), true );
     ui->size->setText( KGlobal::locale()->formatByteSize( mPart->size() ) );
     ui->name->setText( mPart->name().isEmpty() ? mPart->fileName() : mPart->name()  );
     ui->description->setText( mPart->description() );
@@ -257,7 +257,7 @@ void AttachmentPropertiesDialog::Private::loadFromPart()
 static QString removeNewlines( const QString &input )
 {
   QString ret( input );
-  ret.replace( '\n', ' ' );
+  ret.replace( QLatin1Char('\n'), QLatin1Char(' ') );
   return ret;
 }
 
