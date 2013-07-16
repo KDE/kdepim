@@ -50,7 +50,7 @@ QString SieveActionAbstractFlags::code(QWidget *w) const
 
 QStringList SieveActionAbstractFlags::needRequires(QWidget *) const
 {
-    return QStringList() <<QLatin1String("imapflags");
+    return QStringList() << QLatin1String("imapflags");
 }
 
 bool SieveActionAbstractFlags::needCheckIfServerHasCapability() const
