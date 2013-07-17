@@ -16,7 +16,7 @@
 */
 
 #include "sieveactionredirect.h"
-#include "autocreatescripts/autocreatescriptdialog.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "widgets/addresslineedit.h"
 
 #include <KLocale>
@@ -30,8 +30,8 @@ using namespace KSieveUi;
 SieveActionRedirect::SieveActionRedirect(QObject *parent)
     : SieveAction(QLatin1String("redirect"), i18n("Redirect"), parent)
 {
-    mHasCopySupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("copy"));
-    mHasListSupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("extlists"));
+    mHasCopySupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("copy"));
+    mHasListSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("extlists"));
 }
 
 SieveAction *SieveActionRedirect::newAction()

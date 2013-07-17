@@ -17,6 +17,7 @@
 
 #include "sieveconditionwidgetlister.h"
 #include "autocreatescriptdialog.h"
+#include "sieveeditorgraphicalmodewidget.h"
 #include "sieveconditions/sieveconditionlist.h"
 #include "sieveconditions/sievecondition.h"
 #include "pimcommon/widgets/minimumcombobox.h"
@@ -92,7 +93,7 @@ void SieveConditionWidget::initWidget()
     int index = 0;
     for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {        
         if ((*it)->needCheckIfServerHasCapability()) {
-            if (AutoCreateScriptDialog::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
+            if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mConditionList.append( *it );
 

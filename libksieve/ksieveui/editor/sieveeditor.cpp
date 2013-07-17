@@ -44,13 +44,14 @@ SieveEditor::SieveEditor( QWidget * parent )
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
     w->setLayout(lay);
     mTextModeWidget = new SieveEditorTextModeWidget;
     lay->addWidget(mTextModeWidget);
     lay->addWidget(buttonBox);
     connect(mTextModeWidget, SIGNAL(checkSyntax()), SIGNAL(checkSyntax()));
     connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
-
+    readConfig();
     setMainWidget( w );
 }
 
@@ -119,8 +120,7 @@ void SieveEditor::resultDone()
 
 void SieveEditor::setSieveCapabilities( const QStringList &capabilities )
 {
-    mSieveCapabilities = capabilities;
-    mTextModeWidget->setSieveCapabilities(mSieveCapabilities);
+    mTextModeWidget->setSieveCapabilities(capabilities);
 }
 
 #include "sieveeditor.moc"

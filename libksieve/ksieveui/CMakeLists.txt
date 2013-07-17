@@ -28,7 +28,8 @@ set(ksieveui_LIB_SRCS
   editor/sieveeditortextmodewidget.cpp
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
-  templates/sievetemplateeditdialog.cpp 
+  templates/sievetemplateeditdialog.cpp
+  autocreatescripts/sieveeditorgraphicalmodewidget.cpp 
   autocreatescripts/autocreatescriptdialog.cpp
   autocreatescripts/sieveconditionwidgetlister.cpp
   autocreatescripts/sievescriptlistbox.cpp

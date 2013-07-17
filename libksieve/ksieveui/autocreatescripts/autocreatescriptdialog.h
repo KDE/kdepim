@@ -27,31 +27,23 @@ class QSplitter;
 
 namespace KSieveUi {
 class SieveScriptListBox;
+class SieveEditorGraphicalModeWidget;
 class KSIEVEUI_EXPORT AutoCreateScriptDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit AutoCreateScriptDialog(QWidget *parent = 0);
     ~AutoCreateScriptDialog();
+
     QString script(QString &requires) const;
-
-    static void setSieveCapabilities( const QStringList &capabilities );
-    static QStringList sieveCapabilities();
-
-private Q_SLOTS:
-    void slotAddScriptPage(QWidget *page);
-    void slotRemoveScriptPage(QWidget *page);
-    void slotActivateScriptPage(QWidget *page);
+    void setSieveCapabilities(const QStringList &capabilities);
 
 private:
     void readConfig();
     void writeConfig();
 
 private:
-    static QStringList sCapabilities;
-    SieveScriptListBox *mSieveScript;
-    QStackedWidget *mStackWidget;
-    QSplitter *mSplitter;
+    SieveEditorGraphicalModeWidget *mEditor;
 };
 }
 

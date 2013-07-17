@@ -16,8 +16,7 @@
 */
 
 #include "sieveactionfileinto.h"
-#include "autocreatescripts/autocreatescriptdialog.h"
-
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include <KLocale>
 #include <KLineEdit>
 
@@ -28,8 +27,8 @@ using namespace KSieveUi;
 SieveActionFileInto::SieveActionFileInto(QObject *parent)
     : SieveAction(QLatin1String("fileinto"), i18n("File Into"), parent)
 {
-    mHasCopySupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("copy"));
-    mHasMailBoxSupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("mailbox"));
+    mHasCopySupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("copy"));
+    mHasMailBoxSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("mailbox"));
 }
 
 SieveAction* SieveActionFileInto::newAction()

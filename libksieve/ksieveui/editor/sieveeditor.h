@@ -55,7 +55,6 @@ private:
     void writeConfig();
     void readConfig();
 
-    QStringList mSieveCapabilities;
     QString mOriginalScript;
     QPushButton *mOkButton;
     SieveEditorTextModeWidget *mTextModeWidget;

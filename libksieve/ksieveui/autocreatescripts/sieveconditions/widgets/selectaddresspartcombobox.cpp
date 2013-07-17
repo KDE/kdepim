@@ -16,7 +16,7 @@
 */
 
 #include "selectaddresspartcombobox.h"
-#include "autocreatescripts/autocreatescriptdialog.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 #include <KLocale>
 
@@ -25,7 +25,7 @@ using namespace KSieveUi;
 SelectAddressPartComboBox::SelectAddressPartComboBox(QWidget *parent)
     : KComboBox(parent)
 {
-    mHasSubaddressCapability = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("subaddress"));
+    mHasSubaddressCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("subaddress"));
     initialize();
 }
 
