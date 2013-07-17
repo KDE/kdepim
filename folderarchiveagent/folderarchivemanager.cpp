@@ -78,14 +78,11 @@ void FolderArchiveManager::load()
         KConfigGroup group = KGlobal::config()->group(account);
         FolderArchiveAccountInfo *info = new FolderArchiveAccountInfo(group);
         if (info->enabled()) {
-            //TODO verify isValid();
             mListAccountInfo.append(info);
         } else {
             delete info;
         }
     }
-
-    //TODO
 }
 
 #include "folderarchivemanager.moc"
