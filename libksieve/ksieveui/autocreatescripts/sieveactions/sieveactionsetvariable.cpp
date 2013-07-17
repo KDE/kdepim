@@ -64,6 +64,11 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionSetVariable::setParamWidgetValue(QWidget *parent ) const
+{
+
+}
+
 QString SieveActionSetVariable::code(QWidget *w) const
 {
     QString result = QLatin1String("set ");

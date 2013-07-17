@@ -50,6 +50,11 @@ QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionBreak::setParamWidgetValue(QWidget *parent ) const
+{
+
+}
+
 QString SieveActionBreak::code(QWidget *w) const
 {
     QString result;

@@ -33,6 +33,7 @@ public:
     QString code(QWidget *) const;
     QString serverNeedsCapability() const;
     bool needCheckIfServerHasCapability() const;
+    void setParamWidgetValue(QWidget *parent ) const;
     QString help() const;
 };
 }

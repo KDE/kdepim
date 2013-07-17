@@ -61,6 +61,11 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionRedirect::setParamWidgetValue(QWidget *parent ) const
+{
+
+}
+
 QString SieveActionRedirect::code(QWidget *w) const
 {
     QString result = QLatin1String("redirect ");

@@ -23,6 +23,7 @@ XMLPrintingScriptBuilder::XMLPrintingScriptBuilder()
     : KSieve::ScriptBuilder(),
       mIndent( 0 )
 {
+    write( "<?xml version='1.0'?>" );
     write( "<script>" );
 }
 

@@ -37,7 +37,10 @@ public:
 
     virtual QWidget *createParamWidget( QWidget *parent ) const;
 
+    virtual void setParamWidgetValue(QWidget *parent ) const;
+
     virtual QString code( QWidget *) const;
+
     virtual QStringList needRequires(QWidget *parent) const;
 
     virtual bool needCheckIfServerHasCapability() const;

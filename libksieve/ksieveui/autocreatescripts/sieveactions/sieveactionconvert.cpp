@@ -67,6 +67,11 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionConvert::setParamWidgetValue(QWidget *parent ) const
+{
+
+}
+
 QString SieveActionConvert::code(QWidget *w) const
 {
     QString result = QLatin1String("convert ");
