@@ -56,7 +56,7 @@ AnnotationEditDialog::AnnotationEditDialog( const QUrl &uri, QWidget *parent )
     setCaption( i18n( "Edit Note" ) );
     setButtons( Ok | Cancel | User1 );
     setButtonText( User1, i18n( "Delete Note" ) );
-    setButtonIcon( User1, KIcon( "edit-delete" ) );
+    setButtonIcon( User1, KIcon( QLatin1String("edit-delete") ) );
   } else {
     setCaption( i18n( "Add Note" ) );
     setButtons( Ok | Cancel );
@@ -102,7 +102,7 @@ void AnnotationEditDialog::slotButtonClicked( int button )
   } else if ( button == KDialog::User1 ) {
     const int answer = KMessageBox::warningContinueCancel( this,
                               i18n( "Do you really want to delete this note?" ),
-                              i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), "edit-delete" ) );
+                              i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), QLatin1String("edit-delete") ) );
     if ( answer == KMessageBox::Continue ) {
       Nepomuk2::Resource resource( d->mNepomukResourceUri );
       resource.removeProperty( QUrl( Soprano::Vocabulary::NAO::description().toString() ) );

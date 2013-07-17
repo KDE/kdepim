@@ -18,7 +18,6 @@
 #ifndef KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
 #define KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
 
-#include <config-libksieve.h> // SIZEOF_UNSIGNED_LONG
 #include <ksieve/parser.h>
 using KSieve::Parser;
 
@@ -52,10 +51,19 @@ public:
     void error( const KSieve::Error &error );
     void finished();
 
+    QString result() const;
+    QString error() const;
+    bool hasError() const;
+
+    void clear();
+
 private:
-    int mIndent;
     void write( const char * msg );
     void write( const QByteArray &key, const QString &value );
+
+    QString mResult;
+    QString mError;
+    int mIndent;
 };
 
 #endif

@@ -1281,7 +1281,7 @@ void AgendaView::createTimeBarHeaders()
 
   foreach ( QScrollArea *area, d->mTimeLabelsZone->timeLabels() ) {
     TimeLabels *timeLabel = static_cast<TimeLabels*>( area->widget() );
-    QLabel *label = new QLabel( timeLabel->header().replace( '/', "/ " ),
+    QLabel *label = new QLabel( timeLabel->header().replace( QLatin1Char('/'), QLatin1String("/ ") ),
                                 d->mTimeBarHeaderFrame );
     label->setFont( labelFont );
     label->setAlignment( Qt::AlignBottom | Qt::AlignRight );
@@ -1308,7 +1308,7 @@ void AgendaView::updateTimeBarWidth()
 
   int width = d->mTimeLabelsZone->preferedTimeLabelsWidth();
   foreach ( QLabel *l, d->mTimeBarHeaders ) {
-    foreach ( const QString &word, l->text().split( ' ' ) ) {
+    foreach ( const QString &word, l->text().split( QLatin1Char(' ') ) ) {
       width = qMax( width, fm.width( word ) );
     }
   }
@@ -2122,7 +2122,7 @@ CalendarDecoration::Decoration *AgendaView::Private::loadCalendarDecoration( con
   QString constraint;
   if ( version >= 0 ) {
     constraint =
-      QString( "[X-KDE-PluginInterfaceVersion] == %1" ).arg( QString::number( version ) );
+      QString::fromLatin1( "[X-KDE-PluginInterfaceVersion] == %1" ).arg( QString::number( version ) );
   }
 
   KService::List list = KServiceTypeTrader::self()->query( type, constraint );

@@ -241,9 +241,46 @@ void SearchRule::writeConfig( KConfigGroup &config, int aIdx ) const
 void SearchRule::generateSieveScript(QStringList &requires, QString &code)
 {
     if (mField == "<size>") {
-        //TODO look at comparaison
         QString comparaison;
-        code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(mContents);
+        int offset = 0;
+        switch(mFunction) {
+        case FuncEquals:
+            //TODO implement it
+        case FuncNotEqual:
+            //TODO implement it
+            break;
+        case FuncIsGreater:
+            comparaison = QLatin1String(":over");
+            break;
+        case FuncIsLessOrEqual:
+            comparaison = QLatin1String(":under");
+            offset = 1;
+            break;
+        case FuncIsLess:
+            comparaison = QLatin1String(":under");
+            break;
+        case FuncIsGreaterOrEqual:
+            comparaison = QLatin1String(":over");
+            offset = -1;
+            break;
+        case FuncIsInAddressbook:
+        case FuncIsNotInAddressbook:
+        case FuncIsInCategory:
+        case FuncIsNotInCategory:
+        case FuncHasAttachment:
+        case FuncHasNoAttachment:
+        case FuncStartWith:
+        case FuncNotStartWith:
+        case FuncEndWith:
+        case FuncNotEndWith:
+        case FuncNone:
+        case FuncContains:
+        case FuncContainsNot:
+        case FuncRegExp:
+        case FuncNotRegExp:
+            return;
+        }
+        code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(QString::number(mContents.toInt() + offset));
     } else if (mField == "<status>") {
 
     } else if (mField == "contents") {
@@ -257,6 +294,46 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     } else if (mField == "From") {
     } else if (mField == "<message>") {
     } else if (mField == "<body>") {
+        if (!requires.contains(QLatin1String("body")))
+            requires << QLatin1String("body");
+        QString comparaison;
+        bool negative = false;
+        switch(mFunction) {
+        case FuncNone:
+            break;
+        case FuncContains:
+            comparaison = QLatin1String(":contains");
+            break;
+        case FuncContainsNot:
+            negative = true;
+            comparaison = QLatin1String(":contains");
+            break;
+        case FuncEquals:
+            comparaison = QLatin1String(":is");
+            break;
+        case FuncNotEqual:
+            comparaison = QLatin1String(":is");
+            negative = true;
+            break;
+        case FuncRegExp:
+        case FuncNotRegExp:
+        case FuncIsGreater:
+        case FuncIsLessOrEqual:
+        case FuncIsLess:
+        case FuncIsGreaterOrEqual:
+        case FuncIsInAddressbook:
+        case FuncIsNotInAddressbook:
+        case FuncIsInCategory:
+        case FuncIsNotInCategory:
+        case FuncHasAttachment:
+        case FuncHasNoAttachment:
+        case FuncStartWith:
+        case FuncNotStartWith:
+        case FuncEndWith:
+        case FuncNotEndWith:
+            return;
+        }
+        code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body :text %1 \"%2\"").arg(comparaison).arg(mContents);
     } else {
         //TODO
     }

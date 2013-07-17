@@ -171,13 +171,16 @@ void SelectHeaderTypeComboBox::headerMap(bool onlyEnvelopType)
 {
     mHeaderMap.insert(QLatin1String("from"), i18n("From"));
     mHeaderMap.insert(QLatin1String("to"), i18n("To"));
+    mHeaderMap.insert(QLatin1String("Reply-To"), i18n("Reply To"));
+    mHeaderMap.insert(QLatin1String("cc"), i18n("Cc"));
+    mHeaderMap.insert(QLatin1String("bcc"), i18n("Bcc"));
     if (!onlyEnvelopType) {
-        mHeaderMap.insert(QLatin1String("cc"), i18n("Cc"));
-        mHeaderMap.insert(QLatin1String("bcc"), i18n("Bcc"));
+        mHeaderMap.insert(QLatin1String("Subject"), i18n("Subject"));
         mHeaderMap.insert(QLatin1String("sender"), i18n("Sender"));
+        mHeaderMap.insert(QLatin1String("Date"), i18n("Date"));
+        mHeaderMap.insert(QLatin1String("Message-ID"), i18n("Message Id"));
+        mHeaderMap.insert(QLatin1String("Content-Type"), i18n("Content type"));
     }
-    //mHeaderMap.insert(QLatin1String("sender-from"), i18n("Sender-From"));
-    //mHeaderMap.insert(QLatin1String("sender-to"), i18n("Sender-To"));
 }
 
 void SelectHeaderTypeComboBox::initialize(bool onlyEnvelopType)

@@ -45,6 +45,8 @@ SieveConditionWidget::SieveConditionWidget(QWidget *parent)
 
 SieveConditionWidget::~SieveConditionWidget()
 {
+    qDeleteAll(mConditionList);
+    mConditionList.clear();
 }
 
 void SieveConditionWidget::setFilterCondition( QWidget *widget )
@@ -96,6 +98,8 @@ void SieveConditionWidget::initWidget()
 
                 // add (i18n-ized) name to combo box
                 mComboBox->addItem( (*it)->label(),(*it)->name() );
+            } else {
+                delete (*it);
             }
         } else {
             // append to the list of actions:

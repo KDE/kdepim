@@ -436,8 +436,11 @@ Vacation::Vacation( QObject * parent, bool checkOnly, const char * name )
 }
 
 Vacation::~Vacation() {
-    if ( mSieveJob ) mSieveJob->kill(); mSieveJob = 0;
-    delete mDialog; mDialog = 0;
+    if ( mSieveJob )
+        mSieveJob->kill();
+    mSieveJob = 0;
+    delete mDialog;
+    mDialog = 0;
     kDebug() << "~Vacation()";
 }
 

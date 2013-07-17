@@ -15,34 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVESETTINGPAGE_H
-#define FOLDERARCHIVESETTINGPAGE_H
+#include "parsingresultdialog.h"
+#include "xmlprintingsyntaxhighlighter.h"
+#include <KTextEdit>
+#include <KLocale>
 
-#include <QWidget>
-class QCheckBox;
-
-namespace MailCommon {
-class FolderRequester;
-}
-class FolderArchiveAccountInfo;
-class FolderArchiveSettingPage : public QWidget
+ParsingResultDialog::ParsingResultDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit FolderArchiveSettingPage(const QString &instanceName, QWidget *parent=0);
-    ~FolderArchiveSettingPage();
+    setCaption( i18n( "Sieve Parsing" ) );
+    setButtons( Close );
 
-    void loadSettings();
-    void writeSettings();
+    mTextEdit = new KTextEdit( this );
+    new XMLPrintingSyntaxHighLighter(mTextEdit->document());
+    mTextEdit->setReadOnly( true );
+    setMainWidget( mTextEdit );
+}
 
-private Q_SLOTS:
-    void slotEnableChanged(bool enabled);
 
-private:
-    QString mInstanceName;
-    QCheckBox *mEnabled;
-    MailCommon::FolderRequester *mArchiveFolder;
-    FolderArchiveAccountInfo *mInfo;
-};
+void ParsingResultDialog::setResultParsing(const QString &result)
+{
+    mTextEdit->setPlainText(result);
+}
 
-#endif // FOLDERARCHIVESETTINGPAGE_H
+#include "parsingresultdialog.moc"

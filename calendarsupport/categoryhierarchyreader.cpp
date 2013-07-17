@@ -26,17 +26,17 @@ using namespace CalendarSupport;
 
 inline QString &quote( QString &string )
 {
-  Q_ASSERT( CategoryConfig::categorySeparator != "@" );
-  return string.replace( '@', "@0" ).replace( QString( '\\' ) +
+  Q_ASSERT( CategoryConfig::categorySeparator != QLatin1String("@") );
+  return string.replace( QLatin1Char('@'), QLatin1String("@0") ).replace( QLatin1Char( '\\' ) +
                                               CategoryConfig::categorySeparator,
-                                              "@1" );
+                                              QLatin1String("@1") );
 }
 
 inline QStringList &unquote( QStringList &strings )
 {
   return
-    strings.replaceInStrings( "@1", CategoryConfig::categorySeparator ).
-    replaceInStrings( "@0", "@" );
+    strings.replaceInStrings( QLatin1String("@1"), CategoryConfig::categorySeparator ).
+    replaceInStrings( QLatin1String("@0"), QLatin1String("@") );
 }
 
 QStringList CategoryHierarchyReader::path( QString string )
@@ -114,7 +114,7 @@ void CategoryHierarchyReaderQComboBox::goUp()
 void CategoryHierarchyReaderQComboBox::addChild( const QString &label, const QVariant &userData )
 {
   QString spaces;
-  spaces.fill( ' ', 2 * mCurrentDepth );
+  spaces.fill( QLatin1Char(' '), 2 * mCurrentDepth );
   mBox->addItem( spaces + label, userData );
   mCurrentDepth++;
 }

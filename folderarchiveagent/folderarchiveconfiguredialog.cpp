@@ -20,6 +20,9 @@
 
 #include "kdepim-version.h"
 
+#include <Akonadi/AgentManager>
+#include <KMime/Message>
+
 #include <KLocale>
 #include <KConfigGroup>
 #include <KGlobal>
@@ -29,6 +32,7 @@
 #include <KAboutData>
 
 #include <QTabWidget>
+#include <QDebug>
 
 FolderArchiveConfigureDialog::FolderArchiveConfigureDialog(QWidget *parent)
     : KDialog(parent)
@@ -75,12 +79,30 @@ FolderArchiveConfigureDialog::~FolderArchiveConfigureDialog()
 
 void FolderArchiveConfigureDialog::initializeTab()
 {
-    //TODO
+    Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+    const Akonadi::AgentInstance::List list = manager->instances();
+    foreach( const Akonadi::AgentInstance &agent, list ) {
+        const QStringList capabilities( agent.type().capabilities() );
+        if (agent.type().mimeTypes().contains( KMime::Message::mimeType())) {
+            if ( capabilities.contains( QLatin1String("Resource") ) &&
+                 !capabilities.contains( QLatin1String("Virtual") ) &&
+                 !capabilities.contains( QLatin1String("MailTransport") ) ) {
+                const QString identifier = agent.identifier();
+                //Store just pop3/imap account. Store other config when we copy data.
+                if (identifier.contains(QLatin1String("pop3")) || identifier.contains(QLatin1String("maildir"))) {
+                    FolderArchiveSettingPage *page = new FolderArchiveSettingPage(identifier);
+                    page->loadSettings();
+                    mTabWidget->addTab(page, identifier);
+                }
+            }
+        }
+    }
 }
 
 void FolderArchiveConfigureDialog::slotOkClicked()
 {
-    for (int i=0; i <mTabWidget->count(); ++i) {
+    const int numberOfTab(mTabWidget->count());
+    for (int i=0; i <numberOfTab; ++i) {
         FolderArchiveSettingPage *page = static_cast<FolderArchiveSettingPage *>(mTabWidget->widget(i));
         page->writeSettings();
     }

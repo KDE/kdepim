@@ -20,18 +20,32 @@
 #include <KConfigGroup>
 
 FolderArchiveAccountInfo::FolderArchiveAccountInfo()
-    : mArchiveTopLevelCollectionId(-1)
+    : mArchiveType(UniqFolder),
+      mArchiveTopLevelCollectionId(-1),
+      mEnabled(false)
 {
 }
 
 FolderArchiveAccountInfo::FolderArchiveAccountInfo(const KConfigGroup &config)
-    : mArchiveTopLevelCollectionId(-1)
+    : mArchiveType(UniqFolder),
+      mArchiveTopLevelCollectionId(-1),
+      mEnabled(false)
 {
     readConfig(config);
 }
 
 FolderArchiveAccountInfo::~FolderArchiveAccountInfo()
 {
+}
+
+void FolderArchiveAccountInfo::setFolderArchiveType(FolderArchiveAccountInfo::FolderArchiveType type)
+{
+    mArchiveType = type;
+}
+
+FolderArchiveAccountInfo::FolderArchiveType FolderArchiveAccountInfo::folderArchiveType() const
+{
+    return mArchiveType;
 }
 
 void FolderArchiveAccountInfo::setArchiveTopLevel(Akonadi::Collection::Id id)
@@ -49,10 +63,22 @@ QString FolderArchiveAccountInfo::instanceName() const
     return mInstanceName;
 }
 
+void FolderArchiveAccountInfo::setEnabled(bool enabled)
+{
+    mEnabled = enabled;
+}
+
+bool FolderArchiveAccountInfo::enabled() const
+{
+    return mEnabled;
+}
+
 void FolderArchiveAccountInfo::readConfig(const KConfigGroup &config)
 {
     mInstanceName = config.readEntry(QLatin1String("instanceName"));
     mArchiveTopLevelCollectionId = config.readEntry(QLatin1String("toplevelid"), -1);
+    mArchiveType = static_cast<FolderArchiveType>(config.readEntry("folderArchiveType", (int)UniqFolder));
+    mEnabled = config.readEntry("enabled", false);
     //TODO
 }
 
@@ -60,5 +86,7 @@ void FolderArchiveAccountInfo::writeConfig(KConfigGroup &config )
 {
     config.writeEntry(QLatin1String("instanceName"), mInstanceName);
     config.writeEntry(QLatin1String("toplevelid"), mArchiveTopLevelCollectionId);
+    config.writeEntry(QLatin1String("folderArchiveType"), (int)mArchiveType);
+    config.writeEntry(QLatin1String("enabled"), mEnabled);
     //TODO
 }

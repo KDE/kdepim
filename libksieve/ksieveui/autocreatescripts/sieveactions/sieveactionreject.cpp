@@ -60,7 +60,7 @@ QString SieveActionReject::code(QWidget *w) const
 
 QStringList SieveActionReject::needRequires(QWidget *) const
 {
-    return QStringList() <<QLatin1String("reject");
+    return QStringList() << QLatin1String("reject");
 }
 
 QString SieveActionReject::serverNeedsCapability() const

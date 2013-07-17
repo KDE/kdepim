@@ -143,7 +143,7 @@ static KUrl tempFileForAttachment( const Attachment::Ptr &attachment )
   s_tempFile->setAutoRemove( false );
   QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
   if ( !patterns.empty() ) {
-    s_tempFile->setSuffix( QString( patterns.first() ).remove( '*' ) );
+    s_tempFile->setSuffix( QString( patterns.first() ).remove( QLatin1Char('*') ) );
   }
   s_tempFile->open();
   s_tempFile->setPermissions( QFile::ReadUser );

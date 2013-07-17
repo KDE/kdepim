@@ -72,14 +72,15 @@ void AttachmentFromFolderJob::Private::compressFolder()
     mZip->writeDir( mUrl.fileName(),QString(),QString(), 040755, mArchiveTime, mArchiveTime, mArchiveTime );
     kDebug() << "writing root directory : " << mUrl.fileName();
     addEntity(  QDir( mUrl.path() ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot |
-                QDir::NoSymLinks | QDir::Files, QDir::DirsFirst ), fileName + '/' );
+                QDir::NoSymLinks | QDir::Files, QDir::DirsFirst ), fileName + QLatin1Char('/') );
     mZip->close();
 
     Q_ASSERT ( mCompressedFolder == 0 );
 
     mCompressedFolder = AttachmentPart::Ptr( new AttachmentPart );
-    mCompressedFolder->setName( fileName + ".zip" );
-    mCompressedFolder->setFileName( fileName + ".zip" );
+    const QString newName = fileName + QLatin1String(".zip");
+    mCompressedFolder->setName( newName );
+    mCompressedFolder->setFileName( newName );
     mCompressedFolder->setMimeType( "application/zip" );
 //     mCompressedFolder->setCompressed( true );
     mCompressedFolder->setData( array );
@@ -112,7 +113,7 @@ void AttachmentFromFolderJob::Private::addEntity( const QFileInfoList &f, const 
         q->emitResult();
       }
       addEntity( QDir( info.filePath() ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot |
-                 QDir::NoSymLinks | QDir::Files,QDir::DirsFirst ), path+info.fileName() + '/');
+                 QDir::NoSymLinks | QDir::Files,QDir::DirsFirst ), path+info.fileName() + QLatin1Char('/'));
     }
 
     if ( info.isFile() ){

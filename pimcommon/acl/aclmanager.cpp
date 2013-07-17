@@ -453,7 +453,7 @@ void AclManager::save()
 
         // we can use job->exec() here, it is not a hot path
         Akonadi::ContactGroupSearchJob *searchJob = new Akonadi::ContactGroupSearchJob( this );
-        searchJob->setQuery( Akonadi::ContactGroupSearchJob::Name, it.key() );
+        searchJob->setQuery( Akonadi::ContactGroupSearchJob::Name, QString::fromLatin1(it.key()) );
         searchJob->setLimit( 1 );
         if ( !searchJob->exec() ) {
             continue;

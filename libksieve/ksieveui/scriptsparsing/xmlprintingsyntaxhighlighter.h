@@ -15,34 +15,37 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVESETTINGPAGE_H
-#define FOLDERARCHIVESETTINGPAGE_H
+#ifndef XMLPRINTINGSYNTAXHIGHLIGHTER_H
+#define XMLPRINTINGSYNTAXHIGHLIGHTER_H
 
-#include <QWidget>
-class QCheckBox;
+#include <QList>
+#include <QRegExp>
+#include <QSyntaxHighlighter>
 
-namespace MailCommon {
-class FolderRequester;
-}
-class FolderArchiveAccountInfo;
-class FolderArchiveSettingPage : public QWidget
+class QTextDocument;
+
+class XMLPrintingSyntaxHighLighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
-    explicit FolderArchiveSettingPage(const QString &instanceName, QWidget *parent=0);
-    ~FolderArchiveSettingPage();
+    explicit XMLPrintingSyntaxHighLighter( QTextDocument *doc );
+    ~XMLPrintingSyntaxHighLighter();
 
-    void loadSettings();
-    void writeSettings();
-
-private Q_SLOTS:
-    void slotEnableChanged(bool enabled);
-
+    void highlightBlock(const QString &text);
 private:
-    QString mInstanceName;
-    QCheckBox *mEnabled;
-    MailCommon::FolderRequester *mArchiveFolder;
-    FolderArchiveAccountInfo *mInfo;
+    void init();
+
+    struct Rule {
+        QRegExp pattern;
+        QTextCharFormat format;
+
+        Rule( const QRegExp &r, const QTextCharFormat &f )
+            : pattern(r), format(f) {}
+    };
+
+    QList<Rule> m_rules;
+
 };
 
-#endif // FOLDERARCHIVESETTINGPAGE_H
+
+#endif // XMLPRINTINGSYNTAXHIGHLIGHTER_H

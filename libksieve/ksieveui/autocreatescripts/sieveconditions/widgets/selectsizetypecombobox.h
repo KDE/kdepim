@@ -14,35 +14,25 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef SELECTSIZETYPECOMBOBOX_H
+#define SELECTSIZETYPECOMBOBOX_H
 
-#ifndef FOLDERARCHIVESETTINGPAGE_H
-#define FOLDERARCHIVESETTINGPAGE_H
+#include <KComboBox>
 
-#include <QWidget>
-class QCheckBox;
-
-namespace MailCommon {
-class FolderRequester;
-}
-class FolderArchiveAccountInfo;
-class FolderArchiveSettingPage : public QWidget
+namespace KSieveUi {
+class SelectSizeTypeComboBox : public KComboBox
 {
     Q_OBJECT
 public:
-    explicit FolderArchiveSettingPage(const QString &instanceName, QWidget *parent=0);
-    ~FolderArchiveSettingPage();
+    explicit SelectSizeTypeComboBox(QWidget *parent = 0);
+    ~SelectSizeTypeComboBox();
 
-    void loadSettings();
-    void writeSettings();
-
-private Q_SLOTS:
-    void slotEnableChanged(bool enabled);
+    QString code() const;
+    void setCode(const QString &code);
 
 private:
-    QString mInstanceName;
-    QCheckBox *mEnabled;
-    MailCommon::FolderRequester *mArchiveFolder;
-    FolderArchiveAccountInfo *mInfo;
+    void initialize();
 };
+}
 
-#endif // FOLDERARCHIVESETTINGPAGE_H
+#endif // SELECTSIZETYPECOMBOBOX_H

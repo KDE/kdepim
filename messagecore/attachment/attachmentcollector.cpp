@@ -48,11 +48,11 @@ static bool isInExclusionFileTypeList( KMime::Content * node )
     return true;
 
   if ( node->contentType()->mediaType() == "application" ) {
-    const QString subType = node->contentType()->subType();
-    if ( subType == QLatin1String( "pkcs7-mime" )  ||
-         subType == QLatin1String( "pkcs7-signature" ) ||
-         subType == QLatin1String( "pgp-signature" ) ||
-         subType == QLatin1String( "pgp-encrypted" ) ) {
+    const QByteArray subType = node->contentType()->subType();
+    if ( subType == "pkcs7-mime"   ||
+         subType == "pkcs7-signature" ||
+         subType == "pgp-signature" ||
+         subType == "pgp-encrypted" ) {
       return true;
     }
   }

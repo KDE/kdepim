@@ -22,6 +22,7 @@ XMLPrintingScriptBuilder::XMLPrintingScriptBuilder()
     : KSieve::ScriptBuilder(),
       mIndent( 0 )
 {
+    write( "<script>" );
 }
 
 XMLPrintingScriptBuilder::~XMLPrintingScriptBuilder()
@@ -40,7 +41,7 @@ void XMLPrintingScriptBuilder::stringArgument( const QString & string, bool mult
 
 void XMLPrintingScriptBuilder::numberArgument( unsigned long number, char quantifier )
 {
-    const QString txt = "number" + ( quantifier ? QString(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
+    const QString txt = QLatin1String("number") + ( quantifier ? QString::fromLatin1(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
     write( txt.toLatin1(), QString::number( number ) );
 }
 
@@ -129,7 +130,8 @@ void XMLPrintingScriptBuilder::lineFeed()
 void XMLPrintingScriptBuilder::error( const KSieve::Error & error )
 {
     mIndent = 0;
-    write( ("Error: " + error.asString()).toLatin1() );
+    mError = QLatin1String("Error: ") + error.asString();
+    write( mError.toLatin1() );
 }
 
 void XMLPrintingScriptBuilder::finished()
@@ -140,10 +142,12 @@ void XMLPrintingScriptBuilder::finished()
 
 void XMLPrintingScriptBuilder::write( const char * msg )
 {
-    for ( int i = 2*indent ; i > 0 ; --i ) {
+    for ( int i = 4*mIndent ; i > 0 ; --i ) {
         qDebug() << " ";
+        mResult += QLatin1String(" ");
     }
     qDebug() << msg;
+    mResult += QString::fromUtf8(msg) + QLatin1Char('\n');
 }
 
 void XMLPrintingScriptBuilder::write( const QByteArray & key, const QString & value )
@@ -157,4 +161,26 @@ void XMLPrintingScriptBuilder::write( const QByteArray & key, const QString & va
     write( value.toUtf8().data() );
     --mIndent;
     write( "</" + key + ">" );
+}
+
+QString XMLPrintingScriptBuilder::result() const
+{
+    return mResult;
+}
+
+QString XMLPrintingScriptBuilder::error() const
+{
+    return mError;
+}
+
+bool XMLPrintingScriptBuilder::hasError() const
+{
+    return !mError.isEmpty();
+}
+
+void XMLPrintingScriptBuilder::clear()
+{
+    mResult.clear();
+    mError.clear();
+    mIndent = 0;
 }

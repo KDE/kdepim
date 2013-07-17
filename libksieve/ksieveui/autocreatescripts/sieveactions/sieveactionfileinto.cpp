@@ -74,6 +74,7 @@ QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const
     }
 
     //TODO improve it.
+    //Use widgets/selectfileintowidget
     KLineEdit *edit = new KLineEdit;
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("fileintolineedit"));

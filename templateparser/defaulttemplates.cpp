@@ -26,38 +26,37 @@ using namespace TemplateParser;
 QString DefaultTemplates::defaultNewMessage()
 {
   return
-    "%REM=\"" + i18n( "Default new message template" ) + "\"%-\n"
-    "%BLANK";
+    QLatin1String("%REM=\"") + i18n( "Default new message template" ) + QLatin1String("\"%-\n") + QLatin1String("%BLANK");
 }
 
 QString DefaultTemplates::defaultReply()
 {
   return
-    "%REM=\"" + i18n( "Default reply template" ) + "\"%-\n" +
+    QLatin1String("%REM=\"") + i18n( "Default reply template" ) + QLatin1String("\"%-\n") +
     i18nc( "Default reply template."
            "%1: date of original message, %2: time of original message, "
            "%3: quoted text of original message, %4: cursor Position",
            "On %1 %2 you wrote:\n"
            "%3\n"
-           "%4", "%ODATE", "%OTIMELONG", "%QUOTE", "%CURSOR" );
+           "%4", QLatin1String("%ODATE"), QLatin1String("%OTIMELONG"), QLatin1String("%QUOTE"), QLatin1String("%CURSOR") );
 }
 
 QString DefaultTemplates::defaultReplyAll()
 {
   return
-    "%REM=\"" + i18n( "Default reply all template" ) + "\"%-\n" +
+    QLatin1String("%REM=\"") + i18n( "Default reply all template" ) + QLatin1String("\"%-\n") +
     i18nc( "Default reply all template: %1: date, %2: time, %3: name of original sender, "
            "%4: quoted text of original message, %5: cursor position",
            "On %1 %2 %3 wrote:\n"
            "%4\n"
            "%5",
-           "%ODATE", "%OTIMELONG", "%OFROMNAME", "%QUOTE", "%CURSOR" );
+           QLatin1String("%ODATE"), QLatin1String("%OTIMELONG"), QLatin1String("%OFROMNAME"), QLatin1String("%QUOTE"), QLatin1String("%CURSOR") );
 }
 
 QString DefaultTemplates::defaultForward()
 {
   return
-    "%REM=\"" + i18n( "Default forward template" ) + "\"%-\n" +
+    QLatin1String("%REM=\"") + i18n( "Default forward template" ) + QLatin1String("\"%-\n") +
     i18nc( "Default forward template: %1: subject of original message, "
            "%2: date of original message, "
            "%3: time of original message, "
@@ -73,10 +72,10 @@ QString DefaultTemplates::defaultForward()
            "\n"
            "%5\n"
            "-----------------------------------------",
-           "%OFULLSUBJECT", "%ODATE", "%OTIMELONG", "%OFROMADDR", "%TEXT" );
+           QLatin1String("%OFULLSUBJECT"), QLatin1String("%ODATE"), QLatin1String("%OTIMELONG"), QLatin1String("%OFROMADDR"), QLatin1String("%TEXT") );
 }
 
 QString DefaultTemplates::defaultQuoteString()
 {
-  return "> ";
+  return QLatin1String("> ");
 }

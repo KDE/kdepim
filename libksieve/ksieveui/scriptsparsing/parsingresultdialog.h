@@ -14,35 +14,21 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef PARSINGRESULTDIALOG_H
+#define PARSINGRESULTDIALOG_H
 
-#ifndef FOLDERARCHIVESETTINGPAGE_H
-#define FOLDERARCHIVESETTINGPAGE_H
-
-#include <QWidget>
-class QCheckBox;
-
-namespace MailCommon {
-class FolderRequester;
-}
-class FolderArchiveAccountInfo;
-class FolderArchiveSettingPage : public QWidget
+#include <KDialog>
+class KTextEdit;
+class ParsingResultDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit FolderArchiveSettingPage(const QString &instanceName, QWidget *parent=0);
-    ~FolderArchiveSettingPage();
+    explicit ParsingResultDialog(QWidget *parent=0);
 
-    void loadSettings();
-    void writeSettings();
-
-private Q_SLOTS:
-    void slotEnableChanged(bool enabled);
+    void setResultParsing(const QString &result);
 
 private:
-    QString mInstanceName;
-    QCheckBox *mEnabled;
-    MailCommon::FolderRequester *mArchiveFolder;
-    FolderArchiveAccountInfo *mInfo;
+    KTextEdit *mTextEdit;
 };
 
-#endif // FOLDERARCHIVESETTINGPAGE_H
+#endif // PARSINGRESULTDIALOG_H

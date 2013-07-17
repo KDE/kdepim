@@ -25,7 +25,7 @@ using namespace TemplateParser;
 void TemplateParser::Util::deleteTemplate( const QString &id )
 {
   KSharedConfig::Ptr config =
-    KSharedConfig::openConfig( "templatesconfigurationrc", KConfig::NoGlobals );
+    KSharedConfig::openConfig( QLatin1String("templatesconfigurationrc"), KConfig::NoGlobals );
 
   const QString key = QString::fromLatin1( "Templates #%1" ).arg( id );
   if ( config->hasGroup( key ) ) {

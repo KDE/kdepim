@@ -31,7 +31,7 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
 
   public:
 
-    explicit TemplatesConfiguration( QWidget *parent = 0, const char *name = 0 );
+    explicit TemplatesConfiguration( QWidget *parent = 0, const QString &name = QString() );
 
     void loadFromGlobal();
     void saveToGlobal();

@@ -35,17 +35,17 @@ CustomTemplatesMenu::CustomTemplatesMenu( QWidget *owner, KActionCollection *ac 
 {
   mOwnerActionCollection = ac;
 
-  mCustomForwardActionMenu = new KActionMenu( KIcon( "mail-forward-custom" ),
+  mCustomForwardActionMenu = new KActionMenu( KIcon( QLatin1String("mail-forward-custom") ),
                                               i18n( "With Custom Template" ), owner );
-  mOwnerActionCollection->addAction( "custom_forward", mCustomForwardActionMenu );
+  mOwnerActionCollection->addAction( QLatin1String("custom_forward"), mCustomForwardActionMenu );
 
-  mCustomReplyActionMenu = new KActionMenu( KIcon( "mail-reply-custom" ),
+  mCustomReplyActionMenu = new KActionMenu( KIcon( QLatin1String("mail-reply-custom") ),
                                             i18n( "Reply With Custom Template" ), owner );
-  mOwnerActionCollection->addAction( "custom_reply", mCustomReplyActionMenu );
+  mOwnerActionCollection->addAction( QLatin1String("custom_reply"), mCustomReplyActionMenu );
 
-  mCustomReplyAllActionMenu = new KActionMenu( KIcon( "mail-reply-all-custom" ),
+  mCustomReplyAllActionMenu = new KActionMenu( KIcon( QLatin1String("mail-reply-all-custom") ),
                                                i18n( "Reply to All With Custom Template" ), owner );
-  mOwnerActionCollection->addAction( "custom_reply_all", mCustomReplyAllActionMenu );
+  mOwnerActionCollection->addAction( QLatin1String("custom_reply_all"), mCustomReplyAllActionMenu );
 
   mCustomForwardMapper = new QSignalMapper( this );
   connect( mCustomForwardMapper, SIGNAL(mapped(int)),
@@ -108,9 +108,9 @@ void CustomTemplatesMenu::update()
     CTemplates t( *it );
     mCustomTemplates.append( *it );
     QString nameAction( *it );
-    nameAction.replace( '&', "&&" );
+    nameAction.replace( QLatin1Char('&'), QLatin1String("&&") );
 
-    const QString nameActionName = nameAction.replace(' ', '_');
+    const QString nameActionName = nameAction.replace(QLatin1Char(' '), QLatin1Char('_'));
 
     KAction *action;
     switch ( t.type() ) {
