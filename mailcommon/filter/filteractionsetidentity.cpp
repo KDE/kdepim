@@ -20,7 +20,7 @@
 #include "filteractionsetidentity.h"
 
 #include "kernel/mailkernel.h"
-#include "filteractionmissingargumentdialog.h"
+#include "dialog/filteractionmissingargumentdialog.h"
 
 #include <KDE/KPIMIdentities/Identity>
 #include <KDE/KPIMIdentities/IdentityCombo>
