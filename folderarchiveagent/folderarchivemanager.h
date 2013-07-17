@@ -35,7 +35,7 @@ public:
     ~FolderArchiveManager();
 
     void load();
-    void setArchiveItems(const QList<qint64> &itemIds);
+    void setArchiveItems(const QList<qint64> &itemIds, const QString &instanceName);
 
 private Q_SLOTS:
     void slotInstanceRemoved(const Akonadi::AgentInstance &instance);

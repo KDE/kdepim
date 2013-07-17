@@ -44,9 +44,9 @@ FolderArchiveAgent::~FolderArchiveAgent()
 {
 }
 
-void FolderArchiveAgent::archiveItems( const QList<qint64> &itemIds )
+void FolderArchiveAgent::archiveItems( const QList<qint64> &itemIds, const QString &instanceName )
 {
-    mFolderArchiveManager->setArchiveItems(itemIds);
+    mFolderArchiveManager->setArchiveItems(itemIds, instanceName);
 }
 
 void FolderArchiveAgent::showConfigureDialog(qlonglong windowId)

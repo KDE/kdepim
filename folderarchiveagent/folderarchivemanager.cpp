@@ -41,9 +41,10 @@ FolderArchiveManager::FolderArchiveManager(QObject *parent)
 FolderArchiveManager::~FolderArchiveManager()
 {
     qDeleteAll(mListAccountInfo);
+    mListAccountInfo.clear();
 }
 
-void FolderArchiveManager::setArchiveItems(const QList<qint64> &itemIds)
+void FolderArchiveManager::setArchiveItems(const QList<qint64> &itemIds, const QString &instanceName)
 {
 
 }
@@ -76,8 +77,12 @@ void FolderArchiveManager::load()
     Q_FOREACH (const QString &account, accountList) {
         KConfigGroup group = KGlobal::config()->group(account);
         FolderArchiveAccountInfo *info = new FolderArchiveAccountInfo(group);
-        //TODO verify isValid();
-        mListAccountInfo.append(info);
+        if (info->enabled()) {
+            //TODO verify isValid();
+            mListAccountInfo.append(info);
+        } else {
+            delete info;
+        }
     }
 
     //TODO

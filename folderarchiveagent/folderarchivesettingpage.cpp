@@ -44,6 +44,7 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
     mArchiveFolder = new MailCommon::FolderRequester;
     hbox->addWidget(mArchiveFolder);
     lay->addLayout(hbox);
+    lay->addStretch();
 
     setLayout(lay);
 }

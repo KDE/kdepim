@@ -32,7 +32,7 @@ public:
 
     void showConfigureDialog(qlonglong windowId = 0);
 
-    void archiveItems( const QList<qint64> &itemIds );
+    void archiveItems( const QList<qint64> &itemIds, const QString &instanceName );
 
 public Q_SLOTS:
     void configure( WId windowId );
