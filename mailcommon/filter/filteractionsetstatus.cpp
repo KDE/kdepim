@@ -59,12 +59,30 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
     return GoOn;
 }
 
-
 SearchRule::RequiredPart FilterActionSetStatus::requiredPart() const
 {
     return SearchRule::Envelope;
 }
 
+bool FilterActionSetStatus::canConvertToSieve() const
+{
+    return true;
+}
+
+QString FilterActionSetStatus::sieveCode() const
+{
+    QString flagCode;
+    if (mParameter == "U") {
+        //TODO
+    }
+    const QString result = QString::fromLatin1("setflag %1").arg(flagCode);
+    return result;
+}
+
+QStringList FilterActionSetStatus::sieveRequires() const
+{
+    return QStringList() << QLatin1String("imapflags");
+}
 
 
 #include "filteractionsetstatus.moc"
