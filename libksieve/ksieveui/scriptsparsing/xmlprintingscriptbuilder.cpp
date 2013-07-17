@@ -18,6 +18,7 @@
 #include "xmlprintingscriptbuilder.h"
 #include <QDebug>
 
+using namespace KSieveUi;
 XMLPrintingScriptBuilder::XMLPrintingScriptBuilder()
     : KSieve::ScriptBuilder(),
       mIndent( 0 )
