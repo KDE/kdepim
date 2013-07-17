@@ -55,6 +55,17 @@ void XMLPrintingSyntaxHighLighter::init()
         m_rules.append( Rule( regex, testFormat ) );
     }
 
+    QTextCharFormat quoteFormat;
+    quoteFormat.setForeground( Qt::blue );
+    quoteFormat.setFontWeight( QFont::Bold );
+    QStringList quoteType;
+    quoteType << QLatin1String("quoted") << QLatin1String("hash") << QLatin1String("bracket") << QLatin1String("multiline");
+    Q_FOREACH ( const QString &s, quoteType ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( Rule( regex, quoteFormat ) );
+    }
+
+
     QTextCharFormat misc;
     misc.setForeground( Qt::red );
     misc.setFontWeight( QFont::Bold );
