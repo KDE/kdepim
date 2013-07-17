@@ -61,7 +61,7 @@ static QString cleanSummary( const QString &summary, const KDateTime &next )
   int maxLen = 40;
 
   QString retStr = summary;
-  retStr.replace( '\n', ' ' );
+  retStr.replace( QLatin1Char('\n'), QLatin1Char(' ') );
   if ( retStr.length() > maxLen ) {
     maxLen -= etc.length();
     retStr = retStr.left( maxLen );
@@ -186,10 +186,10 @@ class ListView::Private::ListItemVisitor : public KCalCore::Visitor
 bool ListView::Private::ListItemVisitor::visit( Event::Ptr e )
 {
   QPixmap eventPxmp;
-  if ( e->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    eventPxmp = cachedSmallIcon( "view-calendar-wedding-anniversary" );
-  } else if ( e->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
-    eventPxmp = cachedSmallIcon( "view-calendar-birthday" );
+  if ( e->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String("YES") ) {
+    eventPxmp = cachedSmallIcon( QLatin1String("view-calendar-wedding-anniversary") );
+  } else if ( e->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String("YES") ) {
+    eventPxmp = cachedSmallIcon( QLatin1String("view-calendar-birthday") );
   } else {
     eventPxmp = cachedSmallIcon( e->iconName() );
   }
@@ -234,7 +234,7 @@ bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
                       t->dateTime( Incidence::RoleDisplayStart ), t->allDay(), true,
                       CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
   } else {
-    mItem->setText( StartDateTime_Column, "---" );
+    mItem->setText( StartDateTime_Column, QLatin1String("---") );
   }
 
   if ( t->hasDueDate() ) {
@@ -243,7 +243,7 @@ bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
                       CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   } else {
-    mItem->setText( EndDateTime_Column, "---" );
+    mItem->setText( EndDateTime_Column, QLatin1String("---") );
   }
   mItem->setText( Categories_Column, t->categoriesStr() );
 
@@ -256,7 +256,7 @@ bool ListView::Private::ListItemVisitor::visit( Journal::Ptr j )
   mItem->setIcon( Summary_Column, jrnalPxmp );
   if ( j->summary().isEmpty() ) {
     mItem->setText( Summary_Column,
-                    cleanSummary( j->description().section( '\n', 0, 0 ),
+                    cleanSummary( j->description().section( QLatin1Char('\n'), 0, 0 ),
                                   KDateTime() ) );
   } else {
     mItem->setText( Summary_Column, cleanSummary( j->summary(), KDateTime() ) );
@@ -418,8 +418,8 @@ void ListView::Private::addIncidence( const Akonadi::ETMCalendar::Ptr &calendar,
   mItems.insert( aitem.id(), aitem );
   Incidence::Ptr tinc = incidence;
 
-  if ( tinc->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
-       tinc->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+  if ( tinc->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String("YES") ||
+       tinc->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String("YES") ) {
     const int years = EventViews::yearDiff( tinc->dtStart().date(), mEndDate );
     if ( years > 0 ) {
       tinc = Incidence::Ptr( incidence->clone() );

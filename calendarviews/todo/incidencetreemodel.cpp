@@ -566,14 +566,14 @@ void IncidenceTreeModel::Private::onRowsMoved( const QModelIndex &, int, int, co
 IncidenceTreeModel::IncidenceTreeModel( QObject *parent ) : QAbstractProxyModel( parent )
                                                           , d( new Private( this, QStringList() ) )
 {
-  setObjectName( "IncidenceTreeModel" );
+  setObjectName( QLatin1String("IncidenceTreeModel") );
 }
 
 IncidenceTreeModel::IncidenceTreeModel( const QStringList &mimeTypes,
                                         QObject *parent ) : QAbstractProxyModel( parent )
                                                           , d( new Private( this, mimeTypes ) )
 {
-  setObjectName( "IncidenceTreeModel" );
+  setObjectName( QLatin1String("IncidenceTreeModel") );
 }
 
 IncidenceTreeModel::~IncidenceTreeModel()
@@ -601,7 +601,7 @@ int IncidenceTreeModel::rowCount( const QModelIndex &parent ) const
     Node *parentNode = reinterpret_cast<Node*>( parent.internalPointer() );
     Q_ASSERT( parentNode );
     d->assert_and_dump( !d->m_removedNodes.contains( parentNode ),
-                        QString::number( (quintptr)parentNode, 16 ) + " was already deleted" );
+                        QString::number( (quintptr)parentNode, 16 ) + QLatin1String(" was already deleted") );
 
     const int count = parentNode->directChilds.count();
     return count;
@@ -868,8 +868,8 @@ QDebug operator<<( QDebug s, const Node::Ptr &node )
   Q_ASSERT( node );
   static int level = 0;
   ++level;
-  QString padding = QString(level-1, ' ' );
-  s << padding+"node" << node.data() << ";uid=" << node->uid << ";id=" << node->id << ";parentUid=" << node->parentUid << ";parentNode=" << (void*)(node->parentNode.data()) << '\n';
+  QString padding = QString(level-1, QLatin1Char(' ') );
+  s << padding+QLatin1String("node") << node.data() << QLatin1String(";uid=") << node->uid << QLatin1String(";id=") << node->id << QLatin1String(";parentUid=") << node->parentUid << QLatin1String(";parentNode=") << (void*)(node->parentNode.data()) << '\n';
 
   foreach( const Node::Ptr &child, node->directChilds ) {
     s << child;

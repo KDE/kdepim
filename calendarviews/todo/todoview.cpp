@@ -326,18 +326,18 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
 
   mItemPopupMenu->addSeparator();
   mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
-    cachedSmallIcon( "document-print" ),
+    cachedSmallIcon( QLatin1String("document-print") ),
     i18nc( "@action:inmenu print the to-do", "&Print..." ),
     this, SIGNAL(printTodo()) );
 
   mItemPopupMenuItemOnlyEntries << mItemPopupMenu->addAction(
-    cachedSmallIcon( "document-print-preview" ),
+    cachedSmallIcon( QLatin1String("document-print-preview") ),
     i18nc( "@action:inmenu print preview the to-do", "Print Previe&w..." ),
     this, SIGNAL(printPreviewTodo()) );
 
   mItemPopupMenu->addSeparator();
   a = mItemPopupMenu->addAction(
-    KIconLoader::global()->loadIcon( "edit-delete", KIconLoader::NoGroup, KIconLoader::SizeSmall ),
+    KIconLoader::global()->loadIcon( QLatin1String("edit-delete"), KIconLoader::NoGroup, KIconLoader::SizeSmall ),
     i18nc( "@action:inmenu delete the to-do", "&Delete" ),
     this, SLOT(deleteTodo()) );
   mItemPopupMenuReadWriteEntries << a;
@@ -347,7 +347,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
 
   mItemPopupMenu->addAction(
     KIconLoader::global()->loadIcon(
-      "view-calendar-tasks", KIconLoader::NoGroup, KIconLoader::SizeSmall ),
+      QLatin1String("view-calendar-tasks"), KIconLoader::NoGroup, KIconLoader::SizeSmall ),
     i18nc( "@action:inmenu create a new to-do", "New &To-do..." ),
     this, SLOT(newTodo()) );
 
@@ -434,7 +434,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
 
   mPercentageCompletedPopupMenu = new QMenu(this);
   for ( int i = 0; i <= 100; i+=10 ) {
-    QString label = QString( "%1 %" ).arg( i );
+    const QString label = QString::fromLatin1( "%1 %" ).arg( i );
     mPercentage[mPercentageCompletedPopupMenu->addAction( label )] = i;
   }
   connect( mPercentageCompletedPopupMenu, SIGNAL(triggered(QAction*)),
@@ -1043,9 +1043,9 @@ void TodoView::setFullView( bool fullView )
 
   mFullViewButton->setChecked( fullView );
   if ( fullView ) {
-    mFullViewButton->setIcon( KIcon( "view-restore" ) );
+    mFullViewButton->setIcon( KIcon( QLatin1String("view-restore") ) );
   } else {
-    mFullViewButton->setIcon( KIcon( "view-fullscreen" ) );
+    mFullViewButton->setIcon( KIcon( QLatin1String("view-fullscreen") ) );
   }
 
   mFullViewButton->blockSignals( true );
@@ -1063,9 +1063,9 @@ void TodoView::setFullView( bool fullView )
 void TodoView::setFlatView( bool flatView, bool notifyOtherViews )
 {
   if ( flatView ) {
-    mFlatViewButton->setIcon( KIcon( "view-list-tree" ) );
+    mFlatViewButton->setIcon( KIcon( QLatin1String("view-list-tree") ) );
   } else {
-    mFlatViewButton->setIcon( KIcon( "view-list-details" ) );
+    mFlatViewButton->setIcon( KIcon( QLatin1String("view-list-details") ) );
   }
 
   if ( notifyOtherViews ) {
@@ -1117,7 +1117,7 @@ QString TodoView::stateSaverGroup() const
 {
   QString str = QLatin1String( "TodoTreeViewState" );
   if ( mSidebarView ) {
-    str += QChar( 'S' );
+    str += QLatin1Char( 'S' );
   }
 
   return str;
