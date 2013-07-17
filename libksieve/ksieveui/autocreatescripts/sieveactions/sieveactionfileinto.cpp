@@ -55,7 +55,7 @@ QString SieveActionFileInto::code(QWidget *w) const
     return result + QString::fromLatin1("\"%1\";").arg(text);
 }
 
-void SieveActionFileInto::setParamWidgetValue(QWidget *parent ) const
+void SieveActionFileInto::setParamWidgetValue(QWidget *w ) const
 {
 
 }

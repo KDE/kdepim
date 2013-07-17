@@ -61,7 +61,7 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionRedirect::setParamWidgetValue(QWidget *parent ) const
+void SieveActionRedirect::setParamWidgetValue(QWidget *w ) const
 {
 
 }

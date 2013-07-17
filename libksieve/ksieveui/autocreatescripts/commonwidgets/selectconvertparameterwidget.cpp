@@ -34,6 +34,11 @@ SelectConvertParameterWidget::~SelectConvertParameterWidget()
 {
 }
 
+void SelectConvertParameterWidget::setCode(const QString &code)
+{
+    //TODO
+}
+
 QString SelectConvertParameterWidget::code() const
 {
     return QString::fromLatin1("[\"pix-x=%1\",\"pix-y=%2\"]").arg(mWidth->value()).arg(mHeight->value());

@@ -65,9 +65,16 @@ QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionAddHeader::setParamWidgetValue(QWidget *parent ) const
+void SieveActionAddHeader::setParamWidgetValue(QWidget *w ) const
 {
+    const SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
+    //combo->setCode();
 
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
+    //edit->setText();
+
+    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
+    //value->setText();
 }
 
 QString SieveActionAddHeader::code(QWidget *w) const

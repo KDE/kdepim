@@ -93,7 +93,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionVacation::setParamWidgetValue(QWidget *parent ) const
+void SieveActionVacation::setParamWidgetValue(QWidget *w ) const
 {
 
 }

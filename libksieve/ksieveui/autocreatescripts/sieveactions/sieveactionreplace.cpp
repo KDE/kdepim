@@ -68,7 +68,7 @@ QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionReplace::setParamWidgetValue(QWidget *parent ) const
+void SieveActionReplace::setParamWidgetValue(QWidget *w ) const
 {
 
 }

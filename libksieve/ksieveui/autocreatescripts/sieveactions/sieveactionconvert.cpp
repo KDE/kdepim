@@ -67,9 +67,14 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionConvert::setParamWidgetValue(QWidget *parent ) const
+void SieveActionConvert::setParamWidgetValue(QWidget *w ) const
 {
-
+    const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
+    //fromMimeType->setCode();
+    const SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
+    //toMimeType->setCode();
+    const SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
+    //params->setCode();
 }
 
 QString SieveActionConvert::code(QWidget *w) const
