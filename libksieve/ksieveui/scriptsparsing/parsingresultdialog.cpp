@@ -30,6 +30,7 @@ ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     new XMLPrintingSyntaxHighLighter(mTextEdit->document());
     mTextEdit->setReadOnly( true );
     setMainWidget( mTextEdit );
+    resize(800,600);
 }
 
 
