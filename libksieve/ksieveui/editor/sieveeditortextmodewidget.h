@@ -73,7 +73,6 @@ private:
     SieveFindBar *mFindBar;
     QAction *mCheckSyntax;
 
-    QPushButton *mOkButton;
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;
     QSplitter *mExtraSplitter;

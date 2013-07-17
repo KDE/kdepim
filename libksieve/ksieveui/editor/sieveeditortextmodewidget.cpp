@@ -115,7 +115,6 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mMainSplitter->setChildrenCollapsible(false);
     connect( mTextEdit, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
 
-    //lay->addWidget(buttonBox);
     readConfig();
 
     mTextEdit->setFocus();
@@ -129,7 +128,6 @@ SieveEditorTextModeWidget::~SieveEditorTextModeWidget()
 void SieveEditorTextModeWidget::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
-    group.writeEntry( "Size", size() );
     group.writeEntry( "mainSplitter", mMainSplitter->sizes());
     group.writeEntry( "extraSplitter", mExtraSplitter->sizes());
     group.writeEntry( "templateSplitter", mTemplateSplitter->sizes());
@@ -138,12 +136,6 @@ void SieveEditorTextModeWidget::writeConfig()
 void SieveEditorTextModeWidget::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
-    if ( sizeDialog.isValid() ) {
-        resize( sizeDialog );
-    } else {
-        resize( 800,600);
-    }
     QList<int> size;
     size << 400 << 100;
 
@@ -261,7 +253,6 @@ bool SieveEditorTextModeWidget::loadFromFile( const QString &filename )
 void SieveEditorTextModeWidget::slotTextChanged()
 {
     const bool enabled = !script().isEmpty();
-    mOkButton->setEnabled(enabled);
     mCheckSyntax->setEnabled( enabled );
     Q_EMIT enableButtonOk( enabled );
 }

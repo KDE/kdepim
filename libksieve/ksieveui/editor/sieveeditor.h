@@ -20,19 +20,11 @@
 #define KSIEVE_KSIEVEUI_SIEVEEDITOR_H
 
 #include "ksieveui_export.h"
-#include "sievetextedit.h"
 
 #include <kdialog.h>
 
-class QLineEdit;
-class KTextEdit;
-class QSplitter;
-
 namespace KSieveUi {
-
-class SieveFindBar;
-class SieveInfoWidget;
-
+class SieveEditorTextModeWidget;
 class KSIEVEUI_EXPORT SieveEditor : public KDialog
 {
     Q_OBJECT
@@ -53,35 +45,20 @@ public:
 
     void setSieveCapabilities( const QStringList &capabilities );
 
+private Q_SLOTS:
+    void slotEnableButtonOk(bool b);
+
 Q_SIGNALS:
     void checkSyntax();
 
-private slots:
-    void slotTextChanged();
-    void slotImport();
-    void slotSaveAs();
-    void slotFind();
-    void slotAutoGenerateScripts();
-    void slotCheckSyntax();
-
 private:
-    void readConfig();
     void writeConfig();
-    bool saveToFile( const QString &filename );
-    bool loadFromFile( const QString &filename );
-    QString mOriginalScript;
-    QStringList mSieveCapabilities;
-    SieveTextEdit * mTextEdit;
-    KTextEdit *mDebugTextEdit;
-    QLineEdit *mScriptName;
-    SieveFindBar *mFindBar;
-    QAction *mCheckSyntax;
+    void readConfig();
 
+    QStringList mSieveCapabilities;
+    QString mOriginalScript;
     QPushButton *mOkButton;
-    SieveInfoWidget *mSieveInfo;
-    QSplitter *mMainSplitter;
-    QSplitter *mExtraSplitter;
-    QSplitter *mTemplateSplitter;
+    SieveEditorTextModeWidget *mTextModeWidget;
 };
 
 }
