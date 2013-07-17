@@ -75,7 +75,8 @@ private:
     KTextEdit *mDebugTextEdit;
     QLineEdit *mScriptName;
     SieveFindBar *mFindBar;
-    KPushButton *mCheckSyntax;
+    QAction *mCheckSyntax;
+
     QPushButton *mOkButton;
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;

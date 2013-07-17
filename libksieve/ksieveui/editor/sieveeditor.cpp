@@ -38,6 +38,8 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QShortcut>
+#include <QToolBar>
+#include <QAction>
 
 using namespace KSieveUi;
 
@@ -45,16 +47,8 @@ SieveEditor::SieveEditor( QWidget * parent )
     : KDialog( parent )
 {
     setCaption( i18n( "Edit Sieve Script" ) );
-    setButtons( None );
+    setButtons( None );    
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    mCheckSyntax = new KPushButton(i18n("Check Syntax"), this);
-    connect(mCheckSyntax, SIGNAL(clicked(bool)), SLOT(slotCheckSyntax()));
-    KPushButton *saveAs = new KPushButton(KStandardGuiItem::saveAs(), this);
-    connect(saveAs, SIGNAL(clicked(bool)), SLOT(slotSaveAs()));
-    KPushButton *import = new KPushButton(i18n( "Import..." ), this);
-    connect(import, SIGNAL(clicked(bool)), SLOT(slotImport()));
-    KPushButton *autogenerateScript = new KPushButton(i18n("Autogenerate Script..."), this);
-    connect(autogenerateScript, SIGNAL(clicked(bool)), SLOT(slotAutoGenerateScripts()));
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
 
     connect(buttonBox, SIGNAL(accepted()), this, SIGNAL(okClicked()));
@@ -62,17 +56,24 @@ SieveEditor::SieveEditor( QWidget * parent )
     connect(this, SIGNAL(accepted()), this, SIGNAL(okClicked()));
     connect(this, SIGNAL(rejected()), this, SIGNAL(cancelClicked()));
 
-    buttonBox->addButton(mCheckSyntax, QDialogButtonBox::ActionRole);
-    buttonBox->addButton(saveAs, QDialogButtonBox::ActionRole);
-    buttonBox->addButton(import, QDialogButtonBox::ActionRole);
-    buttonBox->addButton(autogenerateScript, QDialogButtonBox::ActionRole);
-
     setModal( true );
 
     QWidget *mainWidget = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     mainWidget->setLayout( lay );
+
+    QToolBar *bar = new QToolBar;
+    mCheckSyntax = new QAction(i18n("Check Syntax"), this);
+    connect(mCheckSyntax, SIGNAL(triggered(bool)), SLOT(slotCheckSyntax()));
+    bar->addAction(mCheckSyntax);
+    bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
+    bar->addAction(i18n( "Import..." ), this, SLOT(slotImport()));
+    bar->addAction(i18n("Autogenerate Script..."), this, SLOT(slotAutoGenerateScripts()));
+
+    lay->addWidget(bar);
+
     QHBoxLayout *nameLayout = new QHBoxLayout;
+
     QLabel * label = new QLabel( i18n( "Script name:" ) );
     nameLayout->addWidget( label );
     mScriptName = new QLineEdit;
