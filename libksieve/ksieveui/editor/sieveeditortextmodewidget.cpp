@@ -23,6 +23,14 @@
 #include "editor/sievefindbar.h"
 #include "editor/sievetextedit.h"
 
+#include "scriptsparsing/xmlprintingscriptbuilder.h"
+#include "scriptsparsing/parsingresultdialog.h"
+
+#include <ksieve/parser.h>
+#include <ksieve/error.h>
+#include <ksieve/scriptbuilder.h>
+
+
 #include <KLocale>
 #include <KTextEdit>
 #include <KStandardGuiItem>
@@ -39,6 +47,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTextStream>
+#include <QDebug>
 
 #include <errno.h>
 
@@ -57,6 +66,8 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
     bar->addAction(i18n( "Import..." ), this, SLOT(slotImport()));
     bar->addAction(i18n("Autogenerate Script..."), this, SLOT(slotAutoGenerateScripts()));
+    //Remove it for 4.12
+    bar->addAction(QLatin1String("Generate xml"), this, SLOT(slotGenerateXml()));
 
     lay->addWidget(bar);
 
@@ -142,6 +153,24 @@ void SieveEditorTextModeWidget::readConfig()
     mMainSplitter->setSizes(group.readEntry( "mainSplitter", size));
     mExtraSplitter->setSizes(group.readEntry( "extraSplitter", size));
     mTemplateSplitter->setSizes(group.readEntry( "templateSplitter", size));
+}
+
+void SieveEditorTextModeWidget::slotGenerateXml()
+{
+    const QByteArray script = mTextEdit->toPlainText().toUtf8();
+    KSieve::Parser parser( script.begin(),
+                           script.begin() + script.length() );
+    KSieveUi::XMLPrintingScriptBuilder psb;
+    parser.setScriptBuilder( &psb );
+    const bool result = parser.parse();
+    QPointer<ParsingResultDialog> dlg = new  ParsingResultDialog;
+    if (result) {
+        dlg->setResultParsing(psb.toDom().toString());
+    } else {
+        dlg->setResultParsing(QLatin1String("Error during parsing"));
+    }
+    dlg->exec();
+    delete dlg;
 }
 
 void SieveEditorTextModeWidget::slotAutoGenerateScripts()

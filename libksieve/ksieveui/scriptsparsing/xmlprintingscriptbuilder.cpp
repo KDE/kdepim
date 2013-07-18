@@ -208,6 +208,7 @@ QDomDocument XMLPrintingScriptBuilder::toDom() const
     if ( !doc.setContent( mResult, &errorMsg, &errorRow, &errorCol ) ) {
         qDebug() << "Unable to load document.Parse error in line " << errorRow
                  << ", col " << errorCol << ": " << errorMsg;
+        qDebug()<<" mResult"<<mResult;
 
     }
     return doc;
