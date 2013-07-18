@@ -33,40 +33,40 @@ using KSieve::Parser;
 
 int main( int argc, char** argv )
 {
-  QApplication app( argc, argv );
+    QApplication app( argc, argv );
 
-  QByteArray script;
-  const QString fileName = KFileDialog::getOpenFileName();
-  if (!fileName.isEmpty()) {
-      QFile file(fileName);
-      if (file.open(QIODevice::ReadOnly)) {
-          script = file.readAll();
-      }
-  } else {
-      return 0;
-  }
-  //qDebug() << "scriptUtf8 = \"" + script +"\"";
+    QByteArray script;
+    const QString fileName = KFileDialog::getOpenFileName();
+    if (!fileName.isEmpty()) {
+        QFile file(fileName);
+        if (file.open(QIODevice::ReadOnly)) {
+            script = file.readAll();
+        }
+    } else {
+        return 0;
+    }
+    //qDebug() << "scriptUtf8 = \"" + script +"\"";
 
-  KSieve::Parser parser( script.begin(),
-                         script.begin() + script.length() );
-  KSieveUi::XMLPrintingScriptBuilder psb;
-  parser.setScriptBuilder( &psb );
-  if ( parser.parse() )
-    qDebug() << "ok";
-  else
-    qDebug() << "bad";
-  ParsingResultDialog dlg;
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  QDomDocument doc;
-  if ( !doc.setContent( psb.result(), &errorMsg, &errorRow, &errorCol ) ) {
-      qDebug() << "Unable to load document.Parse error in line " << errorRow
-               << ", col " << errorCol << ": " << errorMsg;
+    KSieve::Parser parser( script.begin(),
+                           script.begin() + script.length() );
+    KSieveUi::XMLPrintingScriptBuilder psb;
+    parser.setScriptBuilder( &psb );
+    if ( parser.parse() )
+        qDebug() << "ok";
+    else
+        qDebug() << "bad";
+    ParsingResultDialog dlg;
+    QString errorMsg;
+    int errorRow;
+    int errorCol;
+    QDomDocument doc;
+    if ( !doc.setContent( psb.result(), &errorMsg, &errorRow, &errorCol ) ) {
+        qDebug() << "Unable to load document.Parse error in line " << errorRow
+                 << ", col " << errorCol << ": " << errorMsg;
 
-  }
-  dlg.setResultParsing(doc.toString());
+    }
+    dlg.setResultParsing(doc.toString());
 
-  dlg.exec();
-  return 0;
+    dlg.exec();
+    return 0;
 }
