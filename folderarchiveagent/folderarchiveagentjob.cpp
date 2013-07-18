@@ -70,8 +70,7 @@ void FolderArchiveAgentJob::slotMoveMessages(KJob *job)
         sendError(i18n("Can not move messages. %1", job->errorString() ));
         return;
     }
-    //TODO
-    mManager->moveDone(QString());
+    mManager->moveDone();
 }
 
 void FolderArchiveAgentJob::sendError(const QString &error)
