@@ -79,8 +79,6 @@ QML.Rectangle {
     anchors.right: parent.right
     width: 150
     buttonText: KDE.i18n( "Cancel" )
-    onClicked: {
-      guiStateManager.popState()
-    }
+    onClicked: guiStateManager.popState()
   }
 }

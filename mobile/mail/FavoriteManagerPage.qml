@@ -58,6 +58,6 @@ PlasmaComponents.Page {
       actionName : "favoriteseditor_remove"
     }
 
-    onCurrentIndexChanged : { favoritesEditor.setRowSelected( index ) }
+    onCurrentIndexChanged: favoritesEditor.setRowSelected( index )
   }
 }

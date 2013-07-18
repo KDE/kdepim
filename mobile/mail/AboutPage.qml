@@ -113,9 +113,7 @@ PlasmaComponets.Page {
           id: licenseButton
 
           text: i18n( "Show Licenses" )
-          onClicked: {
-            application.openLicenses()
-          }
+          onClicked: application.openLicenses()
         }
       }
     }

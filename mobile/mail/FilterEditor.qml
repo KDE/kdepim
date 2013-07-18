@@ -72,7 +72,7 @@ PlasmaComponents.Page {
 
       QML.MouseArea {
         anchors.fill: parent
-        onClicked: { filterDelegate.QML.ListView.view.currentIndex = model.index; }
+        onClicked: filterDelegate.QML.ListView.view.currentIndex = model.index
       }
     }
 
@@ -101,6 +101,6 @@ PlasmaComponents.Page {
       actionName : "filtereditor_movedown"
     }
 
-    onCurrentIndexChanged : { filterEditor.setRowSelected( index ) }
+    onCurrentIndexChanged: filterEditor.setRowSelected( index )
   }
 }

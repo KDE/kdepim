@@ -68,9 +68,7 @@ PlasmaComponents.Page {
 
     Connections {
       target : navigationModel
-      onCurrentRowChanged : {
-        currentRow = navigationModel.currentRow
-      }
+      onCurrentRowChanged: currentRow = navigationModel.currentRow
     }
 
     delegate: PlasmaComponents.ListItem {
@@ -89,9 +87,7 @@ PlasmaComponents.Page {
         navigationModel.select(model.index, 3)
       }
 
-      onPressAndHold: {
-        threadView.currentIndex = index
-      }
+      onPressAndHold: threadView.currentIndex = index
 
       Rectangle {
         id: itemBackground
