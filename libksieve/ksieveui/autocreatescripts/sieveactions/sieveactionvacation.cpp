@@ -17,7 +17,7 @@
 
 
 #include "sieveactionvacation.h"
-#include "autocreatescripts/autocreatescriptdialog.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/multilineedit.h"
 #include "widgets/selectvacationcombobox.h"
@@ -37,7 +37,7 @@ using namespace KSieveUi;
 SieveActionVacation::SieveActionVacation(QObject *parent)
     : SieveAction(QLatin1String("vacation"), i18n("Vacation"), parent)
 {
-    mHasVacationSecondsSupport = AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("vacation-seconds"));
+    mHasVacationSecondsSupport = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("vacation-seconds"));
 }
 
 SieveAction* SieveActionVacation::newAction()
@@ -91,6 +91,11 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     lay->addWidget(text);
 
     return w;
+}
+
+void SieveActionVacation::setParamWidgetValue(QWidget *w ) const
+{
+
 }
 
 QString SieveActionVacation::code(QWidget *w) const

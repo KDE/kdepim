@@ -48,7 +48,7 @@ int main( int argc, char** argv )
 
   KSieve::Parser parser( script.begin(),
                          script.begin() + script.length() );
-  XMLPrintingScriptBuilder psb;
+  KSieveUi::XMLPrintingScriptBuilder psb;
   parser.setScriptBuilder( &psb );
   if ( parser.parse() )
     qDebug() << "ok";

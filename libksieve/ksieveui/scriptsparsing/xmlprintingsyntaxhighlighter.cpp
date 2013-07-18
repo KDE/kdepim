@@ -44,17 +44,38 @@ void XMLPrintingSyntaxHighLighter::highlightBlock(const QString &text)
 
 void XMLPrintingSyntaxHighLighter::init()
 {
-    // Comments
     QTextCharFormat testFormat;
     testFormat.setForeground( Qt::gray );
     testFormat.setFontWeight( QFont::Bold );
     QStringList testType;
     testType << QLatin1String("require");
 
-    Q_FOREACH ( const QString & s, testType ) {
+    Q_FOREACH ( const QString &s, testType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, testFormat ) );
     }
+
+    QTextCharFormat quoteFormat;
+    quoteFormat.setForeground( Qt::blue );
+    quoteFormat.setFontWeight( QFont::Bold );
+    QStringList quoteType;
+    quoteType << QLatin1String("quoted") << QLatin1String("hash") << QLatin1String("bracket") << QLatin1String("multiline");
+    Q_FOREACH ( const QString &s, quoteType ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( Rule( regex, quoteFormat ) );
+    }
+
+
+    QTextCharFormat misc;
+    misc.setForeground( Qt::red );
+    misc.setFontWeight( QFont::Bold );
+    QStringList miscType;
+    miscType << QLatin1String("command") << QLatin1String("identifier") << QLatin1String("block") << QLatin1String("script");
+    Q_FOREACH ( const QString &s, miscType ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( Rule( regex, misc ) );
+    }
+
 
 }
 

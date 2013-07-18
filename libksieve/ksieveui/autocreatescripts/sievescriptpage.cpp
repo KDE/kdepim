@@ -20,6 +20,7 @@
 #include "sieveincludewidget.h"
 #include "sieveforeverypartwidget.h"
 #include "sieveglobalvariablewidget.h"
+#include "sieveeditorgraphicalmodewidget.h"
 
 #include "sievewidgetpageabstract.h"
 #include "autocreatescripts/autocreatescriptdialog.h"
@@ -40,7 +41,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
     mTabWidget = new SieveScriptTabWidget;
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(slotCloseTab(int)));
 
-    if (AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("include"))) {
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("include"))) {
         mIncludeWidget = new SieveIncludeWidget;
         mTabWidget->addTab(mIncludeWidget, i18n("Includes"));
 
@@ -48,7 +49,7 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
         mTabWidget->addTab(mGlobalVariableWidget, i18n("Global Variable"));
     }
 
-    if (AutoCreateScriptDialog::sieveCapabilities().contains(QLatin1String("foreverypart"))) {
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("foreverypart"))) {
         mForEveryPartWidget = new SieveForEveryPartWidget;
         mTabWidget->addTab(mForEveryPartWidget, i18n("ForEveryPart"));
     }

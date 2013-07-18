@@ -27,7 +27,7 @@
 #include "filteractiondict.h"
 #include "filtermanager.h"
 #include "filterlog.h"
-#include "filteractionmissingargumentdialog.h"
+#include "dialog/filteractionmissingargumentdialog.h"
 using MailCommon::FilterLog;
 
 #include "pimcommon/util/pimutil.h"

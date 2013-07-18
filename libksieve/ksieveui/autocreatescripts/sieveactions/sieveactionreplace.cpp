@@ -68,6 +68,11 @@ QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionReplace::setParamWidgetValue(QWidget *w ) const
+{
+
+}
+
 QString SieveActionReplace::code(QWidget *w) const
 {
     QString result = QLatin1String("replace ");

@@ -16,7 +16,7 @@
 */
 
 #include "selectcomparatorcombobox.h"
-#include "autocreatescripts/autocreatescriptdialog.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 SelectComparatorComboBox::SelectComparatorComboBox(QWidget *parent)
     : KComboBox(parent)
@@ -30,7 +30,7 @@ SelectComparatorComboBox::~SelectComparatorComboBox()
 
 void SelectComparatorComboBox::initialize()
 {
-    Q_FOREACH (const QString &capability, KSieveUi::AutoCreateScriptDialog::sieveCapabilities()) {
+    Q_FOREACH (const QString &capability, KSieveUi::SieveEditorGraphicalModeWidget::sieveCapabilities()) {
         if (capability.startsWith(QLatin1String("comparator-"))) {
             QString str(capability);
             str.remove(QLatin1String("comparator-"));

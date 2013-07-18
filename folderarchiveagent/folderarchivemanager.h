@@ -35,14 +35,20 @@ public:
     ~FolderArchiveManager();
 
     void load();
-    void setArchiveItems(const QList<qint64> &itemIds);
+    void setArchiveItems(const QList<qint64> &itemIds, const QString &instanceName);
+
+    void moveFailed(const QString &msg);
+    void moveDone(const QString &msg);
 
 private Q_SLOTS:
     void slotInstanceRemoved(const Akonadi::AgentInstance &instance);
 
 private:
+    FolderArchiveAccountInfo *infoFromInstanceName(const QString &instanceName) const;
+    void nextJob();
     void removeInfo(const QString &instanceName);
     QQueue<FolderArchiveAgentJob*> mJobQueue;
+    FolderArchiveAgentJob *mCurrentJob;
     QList<FolderArchiveAccountInfo*> mListAccountInfo;
     FolderArchiveKernel *mFolderArchivelKernel;
 };

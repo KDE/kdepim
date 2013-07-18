@@ -40,6 +40,10 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionAbstractFlags::setParamWidgetValue(QWidget *parent ) const
+{
+
+}
 QString SieveActionAbstractFlags::code(QWidget *w) const
 {
     const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
@@ -62,6 +66,8 @@ QString SieveActionAbstractFlags::serverNeedsCapability() const
 {
     return QLatin1String("imapflags");
 }
+
+
 
 
 #include "sieveactionabstractflags.moc"

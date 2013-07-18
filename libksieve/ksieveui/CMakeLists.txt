@@ -13,6 +13,7 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 add_subdirectory(tests)
 
 set(ksieveui_LIB_SRCS
+  scriptsparsing/xmlprintingscriptbuilder.cpp
   managesievescriptsdialog.cpp
   widgets/sievetreewidgetitem.cpp
   debug/sievedebugdialog.cpp
@@ -24,9 +25,11 @@ set(ksieveui_LIB_SRCS
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp
   editor/sieveinfowidget.cpp
+  editor/sieveeditortextmodewidget.cpp
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
-  templates/sievetemplateeditdialog.cpp 
+  templates/sievetemplateeditdialog.cpp
+  autocreatescripts/sieveeditorgraphicalmodewidget.cpp 
   autocreatescripts/autocreatescriptdialog.cpp
   autocreatescripts/sieveconditionwidgetlister.cpp
   autocreatescripts/sievescriptlistbox.cpp

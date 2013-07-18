@@ -38,7 +38,7 @@
 #include "filterimporter/filterimporterprocmail_p.h"
 #include "filterimporter/filterimporterbalsa_p.h"
 #include "filterimporter/filterimporterclawsmail_p.h"
-#include "selectthunderbirdfilterfilesdialog.h"
+#include "dialog/selectthunderbirdfilterfilesdialog.h"
 
 #include <messageviewer/utils/autoqpointer.h>
 #include <messageviewer/utils/util.h>

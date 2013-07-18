@@ -24,6 +24,7 @@ using KSieve::Parser;
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
 
+namespace KSieveUi {
 class XMLPrintingScriptBuilder : public KSieve::ScriptBuilder
 {
 public:
@@ -65,5 +66,5 @@ private:
     QString mError;
     int mIndent;
 };
-
+}
 #endif

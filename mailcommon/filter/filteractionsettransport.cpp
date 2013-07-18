@@ -19,7 +19,7 @@
 
 #include "filteractionsettransport.h"
 
-#include "filteractionmissingargumentdialog.h"
+#include "dialog/filteractionmissingargumentdialog.h"
 
 #include <KDE/KLocale>
 #include <KDE/Mailtransport/Transport>

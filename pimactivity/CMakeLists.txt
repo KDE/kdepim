@@ -1,8 +1,10 @@
 PROJECT( pimactivity )
 
 find_package(KActivities 6.2.0 QUIET CONFIG)
-set_package_properties(KActivities PROPERTIES DESCRIPTION "KActivities" URL "https://projects.kde.org/projects/kde/kdelibs/kactivities" TYPE REQUIRED PURPOSE "Required for Activities integration in kdepim." )
+set_package_properties(KActivities PROPERTIES DESCRIPTION "KActivities" URL "https://projects.kde.org/projects/kde/kdelibs/kactivities" TYPE RECOMMENDED PURPOSE "Required for Activities integration in kdepim." )
 
+
+if(KActivities_FOUND)
 
 include_directories(${KACTIVITIES_INCLUDE_DIRS} .)
 
@@ -47,4 +49,4 @@ install(TARGETS pimactivity ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(kcm)
 add_subdirectory(tests)
-
+endif()

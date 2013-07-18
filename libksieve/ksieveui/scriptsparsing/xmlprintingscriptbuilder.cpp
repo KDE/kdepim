@@ -18,10 +18,12 @@
 #include "xmlprintingscriptbuilder.h"
 #include <QDebug>
 
+using namespace KSieveUi;
 XMLPrintingScriptBuilder::XMLPrintingScriptBuilder()
     : KSieve::ScriptBuilder(),
       mIndent( 0 )
 {
+    write( "<?xml version='1.0'?>" );
     write( "<script>" );
 }
 
@@ -143,10 +145,8 @@ void XMLPrintingScriptBuilder::finished()
 void XMLPrintingScriptBuilder::write( const char * msg )
 {
     for ( int i = 4*mIndent ; i > 0 ; --i ) {
-        qDebug() << " ";
         mResult += QLatin1String(" ");
     }
-    qDebug() << msg;
     mResult += QString::fromUtf8(msg) + QLatin1Char('\n');
 }
 

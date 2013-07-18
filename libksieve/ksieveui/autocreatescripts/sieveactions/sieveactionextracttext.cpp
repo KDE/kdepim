@@ -62,6 +62,15 @@ QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionExtractText::setParamWidgetValue(QWidget *w ) const
+{
+    const QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
+    //
+
+    const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+    //variableName->setText();
+}
+
 QString SieveActionExtractText::code(QWidget *w) const
 {
     const QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));

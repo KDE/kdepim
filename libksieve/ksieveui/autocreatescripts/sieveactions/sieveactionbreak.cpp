@@ -50,6 +50,12 @@ QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionBreak::setParamWidgetValue(QWidget *w ) const
+{
+    const KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
+    //name->setText();
+}
+
 QString SieveActionBreak::code(QWidget *w) const
 {
     QString result;

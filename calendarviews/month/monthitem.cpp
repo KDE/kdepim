@@ -309,8 +309,8 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
   mIsTodo = CalendarSupport::hasTodo( aitem );
 
   KCalCore::Incidence::Ptr inc = mIncidence;
-  if ( inc->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
-       inc->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+  if ( inc->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String("YES") ||
+       inc->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String("YES") ) {
     const int years = EventViews::yearDiff( inc->dtStart().date(), recurStartDate );
     if ( years > 0 ) {
       inc = KCalCore::Incidence::Ptr( inc->clone() );
@@ -497,9 +497,9 @@ QString IncidenceMonthItem::text( bool end ) const
     }
     if ( !timeStr.isEmpty() ) {
       if ( !end ) {
-        ret = timeStr + ' ' + ret;
+        ret = timeStr + QLatin1Char(' ') + ret;
       } else {
-        ret = ret + ' ' + timeStr;
+        ret = ret + QLatin1Char(' ') + timeStr;
       }
     }
   }
@@ -532,17 +532,17 @@ QList<QPixmap> IncidenceMonthItem::icons() const
   QString customIconName;
   if ( icons.contains( EventViews::EventView::CalendarCustomIcon ) ) {
     const QString iconName = monthScene()->monthView()->iconForItem( item );
-    if ( !iconName.isEmpty() && iconName != "view-calendar" && iconName != "office-calendar" ) {
+    if ( !iconName.isEmpty() && iconName != QLatin1String("view-calendar") && iconName != QLatin1String("office-calendar") ) {
       customIconName = iconName;
       ret << QPixmap( cachedSmallIcon( iconName ) );
     }
   }
 
   if ( mIsEvent ) {
-    if ( mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+    if ( mIncidence->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String("YES") ) {
       specialEvent = true;
       ret << monthScene()->anniversaryPixmap();
-    } else if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+    } else if ( mIncidence->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String("YES") ) {
       specialEvent = true;
        // Disabling birthday icon because it's the birthday agent's icon
        // and we allow to display the agent's icon now.

@@ -19,7 +19,7 @@
 
 #include "filteractionplaysound.h"
 
-#include "filteractionmissingargumentdialog.h"
+#include "dialog/filteractionmissingargumentdialog.h"
 
 #ifndef Q_OS_WINCE
 #include <phonon/mediaobject.h>

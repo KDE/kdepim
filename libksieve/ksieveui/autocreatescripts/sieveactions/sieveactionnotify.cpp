@@ -59,6 +59,11 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionNotify::setParamWidgetValue(QWidget *w ) const
+{
+
+}
+
 QString SieveActionNotify::code(QWidget *w) const
 {
     const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );

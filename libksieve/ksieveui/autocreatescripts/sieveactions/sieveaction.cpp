@@ -75,4 +75,9 @@ QString SieveAction::help() const
     return QString();
 }
 
+void SieveAction::setParamWidgetValue( QWidget *parent ) const
+{
+
+}
+
 #include "sieveaction.moc"

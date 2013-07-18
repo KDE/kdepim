@@ -50,6 +50,12 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionReject::setParamWidgetValue(QWidget *w ) const
+{
+    const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );
+    //edit->setText();
+}
+
 QString SieveActionReject::code(QWidget *w) const
 {
     const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );

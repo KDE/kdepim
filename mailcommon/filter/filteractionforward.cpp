@@ -21,7 +21,7 @@
 
 #include "kernel/mailkernel.h"
 #include "util/mailutil.h"
-#include "filteractionmissingargumentdialog.h"
+#include "dialog/filteractionmissingargumentdialog.h"
 
 #include <pimcommon/widgets/minimumcombobox.h>
 #include <messagecomposer/helper/messagefactory.h>

@@ -45,7 +45,7 @@
 #include "foldercollection.h"
 #include "pop3settings.h"
 #include "kernel/mailkernel.h"
-#include "filter/filteractionmissingargumentdialog.h"
+#include "filter/dialog/filteractionmissingargumentdialog.h"
 
 #include "mailimporter/filterbalsa.h"
 #include "mailimporter/filter_evolution.h"

@@ -686,7 +686,7 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
     KCheckableProxyModel *checkableProxy = new KCheckableProxyModel( this );
     checkableProxy->setSourceModel( columnFilterProxy );
     checkableProxy->setSelectionModel( qsm );
-    const QString groupName = configGroup.name() + "_subView_" + QByteArray::number( i );
+    const QString groupName = configGroup.name() + QLatin1String("_subView_") + QString::number( i );
     const KConfigGroup group = configGroup.config()->group( groupName );
 
     if ( !d->mSelectionSavers.contains( groupName ) ) {
@@ -710,9 +710,10 @@ void MultiAgendaView::doSaveConfig( KConfigGroup &configGroup )
   configGroup.writeEntry( "ColumnTitles", titleList );
   int idx = 0;
   foreach ( KCheckableProxyModel *checkableProxyModel, d->mCollectionSelectionModels ) {
-    const QString groupName = configGroup.name() + "_subView_" + QByteArray::number( idx );
+    const QString groupName = configGroup.name() + QLatin1String("_subView_") + QString::number( idx );
     KConfigGroup group = configGroup.config()->group( groupName );
     ++idx;
+    //TODO never used ?
     KViewStateMaintainer<ETMViewStateSaver> saver( group );
     if ( !d->mSelectionSavers.contains( groupName ) ) {
       d->mSelectionSavers.insert( groupName, new KViewStateMaintainer<ETMViewStateSaver>( group ) );

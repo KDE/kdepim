@@ -49,7 +49,7 @@ set(libmailcommon_SRCS
   filter/filteractiondict.cpp
   filter/filteractionexec.cpp
   filter/filteractionforward.cpp
-  filter/filteractionmissingargumentdialog.cpp
+  filter/dialog/filteractionmissingargumentdialog.cpp
   filter/filteractionmove.cpp
   filter/filteractionpipethrough.cpp
   filter/filteractionplaysound.cpp
@@ -90,8 +90,8 @@ set(libmailcommon_SRCS
   filter/itemcontext.cpp
   filter/kmfilterdialog.cpp
   filter/mailfilter.cpp
-  filter/selectthunderbirdfilterfilesdialog.cpp
-  filter/selectthunderbirdfilterfileswidget.cpp
+  filter/dialog/selectthunderbirdfilterfilesdialog.cpp
+  filter/dialog/selectthunderbirdfilterfileswidget.cpp
   filter/mdnadvicedialog.cpp
   folder/foldercollection.cpp
   folder/foldercollectionmonitor.cpp

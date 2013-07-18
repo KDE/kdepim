@@ -69,6 +69,11 @@ QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+void SieveActionEnclose::setParamWidgetValue(QWidget *w ) const
+{
+
+}
+
 QString SieveActionEnclose::code(QWidget *w) const
 {
     QString result = QLatin1String("enclose ");

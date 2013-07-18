@@ -32,6 +32,7 @@ public:
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
     QWidget *createParamWidget( QWidget *parent ) const;
+    void setParamWidgetValue(QWidget *parent ) const;
 };
 }
 

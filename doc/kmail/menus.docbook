@@ -588,376 +588,364 @@ performs a menu item function, the default shortcut is listed with the menu item
 </sect2>
 
 <sect2 id="reader-message-menu">
-<title><guimenu>Message</guimenu> Menu</title>
+<title>Message Menu</title>
 
 <variablelist>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>New Message...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens the <link linkend="the-composer-window">composer window</link> so you can
-write a new message.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>N</keycap></keycombo></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>New Message to Mailing-List...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens the composer window so you can write a new
-mail. If the current folder holds a mailing list and has a posting
-address defined, this address will be the default <guilabel>To:</guilabel>
-address.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>R</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Reply...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the composer window, inserts the quoted text of the currently
-selected message and presets the <guilabel>To:</guilabel> field either with
-the mailing-list address (if you reply to a mailing-list message) or with the
-preferred reply address of the sender. If you want to control which address
-the <guilabel>To:</guilabel> field is preset with then you should either use
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Reply to
-Author...</guimenuitem></menuchoice> or
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Reply to
-Mailing-List...</guimenuitem></menuchoice>.
-Your identity will automatically be set to the one which this message was
-sent to.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>A</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Reply to All...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the composer window, inserts the quoted text of the currently
-selected message and presets the <guilabel>To:</guilabel> field either with
-the mailing-list address (if you reply to a mailing-list message) or with the
-preferred reply address of the sender. The <guilabel>Copy to (CC):</guilabel>
-field is preset with the addresses of all other recipients of the currently
-selected message excluding your own addresses.
-Your identity will automatically be set to the one which this message was
-sent to.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Shift;<keycap>A</keycap></keycombo></shortcut>
-<guimenu>Message</guimenu>
-<guisubmenu>Reply Special</guisubmenu>
-<guimenuitem>Reply to Author...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the composer window, inserts the quoted text of the currently
-selected message and presets the <guilabel>To:</guilabel> field with the
-preferred reply address of the sender.
-Your identity will automatically be set to the one which this message was
-sent to.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>L</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guisubmenu>Reply Special</guisubmenu>
-<guimenuitem>Reply to Mailing-List...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the composer window, inserts the quoted text of the currently
-selected message and presets the <guilabel>To:</guilabel> field with
-the mailing-list address. If you did not specify a mailing-list address for
-the currently selected folder and &kmail; cannot determine the posting address
-from the currently selected message then the <guilabel>To:</guilabel> field
-will be empty.
-Your identity will automatically be set to the one which this message was
-sent to.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Shift;<keycap>R</keycap></keycombo></shortcut>
-<guimenu>Message</guimenu>
-<guisubmenu>Reply Special</guisubmenu>
-<guimenuitem>Reply Without Quote...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Works just like <guimenuitem>Reply...</guimenuitem> except that the text
-of the currently selected message is not quoted.</para>
-</listitem>
-</varlistentry>
-<!-- missing
-Reply With Custom Template
-Reply to All With Custom Template
-  -->
-<varlistentry>
-<term><menuchoice>
-<guimenu>Message</guimenu>
-<guimenuitem>Forward</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Forwards the message to a new recipient. Using <guimenuitem>Inline</guimenuitem>,
-the message's text and some important header fields will be copied to the body of the new message
-with a text marking the forwarded part. Attachments will be forwarded
-as attachments of the new message. Using <guimenuitem>As Attachment</guimenuitem>
-the message and its attachments will become an attachment of the new message. The original message
-headers will be included in the forwarded message, too.
-<guimenuitem>Redirect</guimenuitem> works like forward, except that the message stays the same (even
-the <guilabel>From:</guilabel> field). The user who redirected the message is added in special
-header fields (<literal>Redirect-From</literal>, <literal>Redirect-Date</literal>, <literal>Redirect-To</literal>,
-&etc;).</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guimenuitem>Send Again...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens a composer window with the currently selected message so it can be
-sent again. This is only available for messages which you have sent or, more
-precisely, for messages which have the <guilabel>sent</guilabel> status.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>T</keycap></shortcut>
-<guimenu>Message</guimenu>
-<guimenuitem>Edit Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Edits the selected message if it is editable. Only messages in the
-<guilabel>outbox</guilabel> and <guilabel>drafts</guilabel> folder can be edited.</para>
-</listitem>
-</varlistentry>
-<!-- Mailing List missing-->
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guisubmenu>Copy Message To</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Copies the selected messages to a certain folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guisubmenu>Move Message To</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Moves the selected messages to a certain folder.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry id="mark-messages">
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guisubmenu>Mark Message</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Allows you to change the status of the selected message to one of the
-following states:</para>
-<!-- TODO: I think it is worth adding inline images here, at some point. LW. 
-has to be adapted for 2.1.96 lueck
-Mark Mail as Read/Unread
-Mark Mail as Important / Remove Important Mark
-Mark Mail as Action Item / Remove Action Item Mark
-
-Mark Thread as Read/Unread
-Mark Thread as Important / Remove Important Thread Mark
-Mark Thread as Action Item / Remove Action Item Thread Mark
-Watch Thread
-Ignore Thread
--->
-<informaltable>
-<tgroup cols="2">
-<thead>
-<row>
-<entry>Status</entry>
-<entry>Symbol</entry>
-<entry>Meaning</entry>
-</row>
-</thead>
-<tbody>
-<row>
-<entry><guimenuitem>Read</guimenuitem></entry>
-<entry>Sheet of paper before an envelope</entry>
-<entry>The message has been read.</entry>
-</row>
-<row>
-<entry><guimenuitem>New</guimenuitem></entry>
-<entry>Closed envelope with a star</entry>
-<entry>The message is new to &kmail; and you.</entry>
-</row>
-<row>
-<entry><guimenuitem>Unread</guimenuitem></entry>
-<entry>Close envelope</entry>
-<entry>The message is not new to &kmail; but has not been read yet.</entry>
-</row>
-<row>
-<entry><guimenuitem>Important</guimenuitem></entry>
-<entry>Flag</entry>
-<entry>This status will not automatically be set by &kmail;. You can use it freely to mark
-messages that are in some way important to you.</entry>
-</row>
-<row>
-<entry><guimenuitem>Replied</guimenuitem></entry>
-<entry>Blue u-turn arrow</entry>
-<entry>A reply to this message has been sent.</entry>
-</row>
-<row>
-<entry><guimenuitem>Forwarded</guimenuitem></entry>
-<entry>Blue arrow</entry>
-<entry>The message has been forwarded to someone else.</entry>
-</row>
-<row>
-<entry><guimenuitem>Queued</guimenuitem></entry>
-<entry>Envelope</entry>
-<entry>The message has been queued in the outbox to be sent later.</entry>
-</row>
-<row>
-<entry><guimenuitem>Sent</guimenuitem></entry>
-<entry>Angled envelope</entry>
-<entry>The message has been sent.</entry>
-</row>
-<row>
-<entry><guimenuitem>Spam</guimenuitem></entry>
-<entry>Round recycle symbol</entry>
-<entry>This status will not be set automatically by &kmail;. You can use it
-to mark spam messages.</entry>
-</row>
-<row>
-<entry><guimenuitem>Ham</guimenuitem></entry>
-<entry>Green check mark</entry>
-<entry>This status will not be set automatically by &kmail;. You can use it
-to mark messages which are not spam.</entry>
-</row>
-</tbody>
-</tgroup>
-</informaltable>
-
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guisubmenu>Mark Thread</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Allows you to change the status of all messages in a thread. The possible
-states are the same as for <menuchoice><guimenu>Message</guimenu>
-<guimenuitem>Mark Message</guimenuitem></menuchoice>.</para>
-</listitem>
-</varlistentry>
-<!-- not in 440
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guisubmenu>Watch Thread</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Use this to mark threads which you want to keep an eye on for further
-contributions to the discussion.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guisubmenu>Ignore Thread</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Use this to mark threads you are not interested in. New contributions
-to this thread will automatically be marked as read.</para>
-</listitem>
-</varlistentry>
--->
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guisubmenu>Create Filter</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the <link linkend="filter-dialog-id">Filter dialog</link> with a new filter added.
-This new filter is based on fields of the current mail, depending on which
-sub menu item you select.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Message</guimenu>
-<guimenuitem>Apply Filter</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Allows you to apply an individual filter or all filters to the selected messages. Only
-filters for which you enabled the <guilabel>Add this filter to the Apply
-Filter menu</guilabel> option will be available.</para>
-</listitem>
-</varlistentry>
-
-<!-- missing
-Create To-do/Reminder
-Add Note
-  -->
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
+        <guimenu>Message</guimenu><guimenuitem>New Message...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens the <link linkend="the-composer-window">composer window</link> so you can
+        write a new message.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>N</keycap></keycombo></shortcut>
+        <guimenu>Message</guimenu><guimenuitem>New Message to Mailing-List...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens the composer window so you can write a new mail.
+        If the current folder holds a mailing list and has a posting
+        address defined, this address will be the default <guilabel>To:</guilabel>
+        address.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>R</keycap></shortcut>
+        <guimenu>Message</guimenu><guimenuitem>Reply...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens up the composer window, inserts the quoted text of the currently
+        selected message and presets the <guilabel>To:</guilabel> field either with
+        the mailing-list address (if you reply to a mailing-list message) or with the
+        preferred reply address of the sender. If you want to control which address
+        the <guilabel>To:</guilabel> field is preset with then you should use
+        <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply Special</guimenuitem></menuchoice>
+        Please see <link linkend="reply-special">Reply Special</link> for more information.
+        Your identity will automatically be set to the identity this message was
+        sent to.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>A</keycap></shortcut>
+        <guimenu>Message</guimenu><guimenuitem>Reply to All...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens up the composer window, inserts the quoted text of the currently
+        selected message and presets the <guilabel>To:</guilabel> field either with
+        the mailing-list address (if you reply to a mailing-list message) or with the
+        preferred reply address of the sender. The <guilabel>Copy to (CC):</guilabel>
+        field is preset with the addresses of all other recipients of the currently
+        selected message excluding your own addresses.
+        Your identity will automatically be set to the identity this message was
+        sent to.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry id="reply-special"><term><menuchoice><shortcut><keycombo action="simul">&Shift;<keycap>A</keycap></keycombo></shortcut>
+        <guimenu>Message</guimenu><guisubmenu>Reply Special</guisubmenu><guimenuitem>Reply to Author...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens up the composer window, inserts the quoted text of the currently
+        selected message and presets the <guilabel>To:</guilabel> field with the
+        preferred reply address of the sender.
+        Your identity will automatically be set to the identity this message was
+        sent to.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycap>L</keycap></shortcut><guimenu>Message</guimenu>
+        <guisubmenu>Reply Special</guisubmenu><guimenuitem>Reply to Mailing-List...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens up the composer window, inserts the quoted text of the currently
+        selected message and presets the <guilabel>To:</guilabel> field with
+        the mailing-list address. If you did not specify a mailing-list address for
+        the currently selected folder and &kmail; cannot determine the posting address
+        from the currently selected message then the <guilabel>To:</guilabel> field
+        will be empty. Your identity will automatically be set to the identity this message was
+        sent to.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Shift;<keycap>R</keycap></keycombo></shortcut>
+        <guimenu>Message</guimenu><guisubmenu>Reply Special</guisubmenu><guimenuitem>Reply Without Quote...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Works just like <guimenuitem>Reply...</guimenuitem> except that the text
+        of the currently selected message is not quoted.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Reply Special</guisubmenu><guimenuitem>Reply With Custom Template</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Works just like <guimenuitem>Reply...</guimenuitem> with the option to select a custom template that has
+        been configured in the composer custom templates tab in <guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>, please
+        see <link linkend="configure-composer-custom-templates">Custom Templates</link> for more information.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Reply Special</guisubmenu><guimenuitem>Reply to All With Custom Template</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Works just like <guimenuitem>Reply to All...</guimenuitem> with the option to select a custom template that has
+        been configured in the composer custom templates tab in <guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>, please
+        see <link linkend="configure-composer-custom-templates">Custom Templates</link> for more information.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Shift;<keycap>F</keycap></keycombo></shortcut>
+        <guimenu>Message</guimenu><guisubmenu>Forward</guisubmenu><guimenuitem>As Attachment</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Forwards the message to a new recipient. The message and its attachments will become an attachment of the new message.
+        The original message headers will be included in the forwarded message as well.</para>
+    </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><shortcut><keycap>F</keycap></shortcut>
+          <guimenu>Message</guimenu><guisubmenu>Forward</guisubmenu><guimenuitem>Inline</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>The message's text and some important header fields will be copied to the body of the new message
+          with text marking the forwarded part. Attachments will be forwarded as attachments of the new message.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><shortcut><keycap>E</keycap></shortcut>
+          <guimenu>Message</guimenu><guisubmenu>Forward</guisubmenu><guimenuitem>Redirect</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>This works like forward, except that the message stays the same (even the <guilabel>From:</guilabel> field).
+          The user who redirected the message is added in special header fields (<literal>Redirect-From</literal>,
+          <literal>Redirect-Date</literal>, <literal>Redirect-To</literal>, &etc;).</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Forward</guisubmenu><guimenuitem>With Custom Template</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Works just like forward with the option to select a custom template that has
+          been configured in the composer custom templates tab in <guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>, please
+          see <link linkend="configure-composer-custom-templates">Custom Templates</link> for more information.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Message</guimenu><guimenuitem>Send Again...</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Opens a composer window with the currently selected message so it can be
+          sent again. This is only available for messages which you have sent or, more
+          precisely, for messages which have the <guilabel>sent</guilabel> status.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><shortcut><keycap>T</keycap></shortcut>
+          <guimenu>Message</guimenu><guimenuitem>Edit Message</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Edits the selected message if it is editable. Only messages in the
+          <guilabel>outbox</guilabel> and <guilabel>drafts</guilabel> folder can be edited.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Message</guimenu><guimenuitem>Mailing List</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Offers several options for mailing list messages. The the current working folder must be configured as a mailing list for this to be available. Please see
+          <link linkend="folders-properties-mailinglist">Folder Properties Mailing List</link> for information on setting up mailing lists. The following options are available
+          to mailing list folders:</para>
+        <itemizedlist>
+          <listitem>
+            <para><guimenuitem>Post New Message(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with
+              the address configured in Post to List.</para>
+          </listitem>
+          <listitem>
+            <para><guimenuitem>Request Help(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with
+              the address configured in Post to List and help in the <guilabel>Subject:</guilabel> field.</para>
+          </listitem>
+          <listitem>
+            <para><guimenuitem>Subscribe to List(web)</guimenuitem> will open your default web browser to the subscribe website of the configured mailing list.</para>
+          </listitem>
+          <listitem>
+            <para><guimenuitem>Subscribe to List(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with
+              the mailing list subscription address and subscribe in the <guilabel>Subject:</guilabel> field.</para>
+          </listitem>
+          <listitem>
+            <para><guimenuitem>Unsubscribe to List(web)</guimenuitem> will open your default web browser to the unsubscribe website of the configured mailing list.</para>
+          </listitem>
+          <listitem>
+            <para><guimenuitem>Unsubscribe to List(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with
+              the mailing list subscription address and unsubscribe in the <guilabel>Subject:</guilabel> field.</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Copy Message To</guisubmenu></menuchoice></term>
+      <listitem>
+        <para>Copies the selected messages to a specified folder, you can choose from recent folders, local folders, or a specific account folder.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Move Message To</guisubmenu></menuchoice></term>
+      <listitem>
+        <para>The same a <guimenuitem>Copy Message</guimenuitem>, except that it permanently moves the message.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry id="mark-messages"><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Mark Message</guisubmenu></menuchoice></term>
+      <listitem>
+        <para>Allows you to change the status of the selected message to one of the following states:</para>
+        <informaltable><tgroup cols="2">
+            <thead>
+              <row><entry>Status</entry><entry>Symbol</entry><entry>Meaning</entry></row>
+            </thead>
+            <tbody>
+              <row>
+                <entry><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo></shortcut><guimenuitem>Mark Message as Read</guimenuitem></menuchoice></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-read.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>The message has been read.</entry>
+              </row>
+              <row>
+                <entry><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>U</keycap></keycombo></shortcut><guimenuitem>Mark Message as Unread</guimenuitem></menuchoice></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-unread.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>The message has not been read yet.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Mark Message as Important</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-important.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>This status will not automatically be set by &kmail;.
+                  You can use it freely to mark messages that are in some way important to you.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Remove Important Mark</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-important.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>Remove a previously set important flag from the message.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Mark Message as Action Item</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-task.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>This status will not automatically be set by &kmail;. Use this to mark
+                  messages that are action items &eg; To-do list.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Remove Action Item Mark</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-task.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>Remove a previously set action item mark from the message.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Mark Thread</guisubmenu></menuchoice></term>
+      <listitem>
+        <para>Allows you to change the status of all messages in a thread as follows:</para>
+          <informaltable><tgroup cols="2">
+            <thead>
+              <row><entry>Status</entry><entry>Symbol</entry><entry>Meaning</entry></row>
+            </thead>
+            <tbody>
+              <row>
+                <entry><guimenuitem>Mark Thread as Read</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-read.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>The entire thread has been read.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Mark Thread as Unread</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-unread.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>The thread has not been read yet.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Mark Thread as Important</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-important.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>This status will not automatically be set by &kmail;.
+                  You can use it freely to mark threads that are in some way important to you.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Remove Important Thread Mark</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-important.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>Remove a previously set important flag from the thread.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Mark Thread as Action Item</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-task.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>This status will not automatically be set by &kmail;. Use this to mark
+                  threads that are action items &eg; To-do list.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Remove Action Item Thread Mark</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-mark-task.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>Remove a previously set action item mark from the thread.</entry>
+              </row>
+               <row>
+                <entry><guimenuitem>Watch Thread</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-thread-watch.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>Set the watched thread status, which allows you to easily view threads your interested in by selecting Watched in the status sort bar.</entry>
+              </row>
+              <row>
+                <entry><guimenuitem>Ignore Thread</guimenuitem></entry>
+                <entry>
+                  <inlinemediaobject>
+                    <imageobject><imagedata fileref="mail-thread-ignored.png" format="PNG"/></imageobject>
+                  </inlinemediaobject>
+                </entry>
+                <entry>Allows you to ignore entire threads.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Create Filter</guisubmenu></menuchoice></term>
+      <listitem>
+        <para>Opens up the <link linkend="filter-dialog-id">Filter dialog</link> with a new filter added.
+          This new filter is based on fields of the current mail, depending on which sub menu item you select from:</para>
+        <simplelist>
+          <member>Filter on Subject...</member>
+          <member>Filter on From...</member>
+          <member>Filter on To...</member>
+          <member>Filter on Mailing-List...(currently selected mail must be a mailing list for this to be available)</member>
+        </simplelist>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Message</guimenu><guimenuitem>Apply Filter</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Allows you to <guimenuitem>Apply all Filters</guimenuitem>. If you have spam filtering set up through <link linkend="the-anti-spam-wizard">Anti-Spam Wizard</link>
+          the options <guimenuitem>Filter Classify as Spam</guimenuitem> and <guimenuitem>Filter Classify as NOT Spam</guimenuitem> will be available
+          for spam filtering.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Message</guimenu><guimenuitem>Create To-do/Reminder</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Brings up the &kontact; To-do/Reminder dialog with options to add the selected email as a link, inline, or inline without attachments.</para>
+      </listitem>
+    </varlistentry>
+     <varlistentry><term><menuchoice><guimenu>Message</guimenu><guimenuitem>Add Note...</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Brings up the &kontact; Note dialog to add a note to the selected email.</para>
+      </listitem>
+    </varlistentry>
 </variablelist>
 
 </sect2>

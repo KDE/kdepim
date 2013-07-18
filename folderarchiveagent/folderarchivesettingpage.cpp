@@ -44,6 +44,7 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
     mArchiveFolder = new MailCommon::FolderRequester;
     hbox->addWidget(mArchiveFolder);
     lay->addLayout(hbox);
+    lay->addStretch();
 
     setLayout(lay);
 }
@@ -65,6 +66,7 @@ void FolderArchiveSettingPage::loadSettings()
         KConfigGroup grp = config->group(mInstanceName);
         mInfo = new FolderArchiveAccountInfo(grp);
         mEnabled->setChecked(mInfo->enabled());
+        mArchiveFolder->setCollection(Akonadi::Collection(mInfo->archiveTopLevel()));
     } else {
         mInfo = new FolderArchiveAccountInfo();
         mEnabled->setChecked(false);
@@ -76,8 +78,8 @@ void FolderArchiveSettingPage::writeSettings()
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup grp = config->group(mInstanceName);
     mInfo->setEnabled(mEnabled->isChecked());
+    mInfo->setArchiveTopLevel(mArchiveFolder->collection().id());
     mInfo->writeConfig(grp);
-    //TODO
 }
 
 #include "folderarchivesettingpage.moc"

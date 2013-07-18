@@ -7,8 +7,8 @@
 
 project(calendarView)
 
-#add_definitions( -DQT_NO_CAST_FROM_ASCII )
-#add_definitions( -DQT_NO_CAST_TO_ASCII )
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
 if(KDEPIM_BUILD_EXAMPLES)
