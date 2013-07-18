@@ -84,7 +84,8 @@ function get_svn_revision
 
   savepath=`pwd`
   cd $1
-  if ( test -d .svn) then
+  svn info >/dev/null 2>&1
+  if ( test $? -eq 0) then
     svn up >/dev/null 2>&1
     if ( test $? -eq 0 ) then
       SVN_REVISION=`svn info | grep "Revision:" | awk '{print $2}'`
