@@ -45,7 +45,7 @@ int main( int argc, char** argv )
   } else {
       return 0;
   }
-  qDebug() << "scriptUtf8 = \"" + script +"\"";
+  //qDebug() << "scriptUtf8 = \"" + script +"\"";
 
   KSieve::Parser parser( script.begin(),
                          script.begin() + script.length() );
@@ -64,6 +64,9 @@ int main( int argc, char** argv )
   if ( !doc.setContent( psb.result(), &errorMsg, &errorRow, &errorCol ) ) {
       qDebug() << "Unable to load document.Parse error in line " << errorRow
                << ", col " << errorCol << ": " << errorMsg;
+
+  } else {
+      qDebug()<<" result dom:"<<doc.toString();
   }
 
 
