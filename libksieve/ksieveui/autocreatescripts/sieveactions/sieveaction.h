@@ -49,9 +49,14 @@ public:
 
     virtual QString help() const;
 
+    QString comment() const;
+
+    void setComment(const QString &comment);
+
 private:
     QString mName;
     QString mLabel;
+    QString mComment;
 };
 }
 

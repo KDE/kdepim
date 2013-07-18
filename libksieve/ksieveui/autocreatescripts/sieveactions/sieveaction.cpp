@@ -80,4 +80,15 @@ void SieveAction::setParamWidgetValue( QWidget *parent ) const
 
 }
 
+QString SieveAction::comment() const
+{
+    return mComment;
+}
+
+void SieveAction::setComment(const QString &comment)
+{
+    mComment = comment;
+}
+
+
 #include "sieveaction.moc"

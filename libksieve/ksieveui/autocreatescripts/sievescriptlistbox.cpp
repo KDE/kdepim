@@ -27,6 +27,7 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QPointer>
+#include <QDomElement>
 
 
 using namespace KSieveUi;
@@ -304,5 +305,11 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
 
     return resultScript;
 }
+
+void SieveScriptListBox::loadScript(const QDomElement &doc)
+{
+    //TODO
+}
+
 
 #include "sievescriptlistbox.moc"

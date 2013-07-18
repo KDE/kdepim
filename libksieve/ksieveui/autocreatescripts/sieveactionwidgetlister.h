@@ -47,6 +47,7 @@ private Q_SLOTS:
     void slotRemoveWidget();
     void slotActionChanged(int index);
     void slotHelp();
+    void slotAddComment();
 
 Q_SIGNALS:
     void addWidget(QWidget *w);
@@ -61,6 +62,7 @@ private:
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
     QToolButton *mHelpButton;
+    QToolButton *mCommentButton;
 };
 
 

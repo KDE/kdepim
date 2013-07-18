@@ -18,6 +18,7 @@
 #include "sieveactionwidgetlister.h"
 #include "autocreatescriptdialog.h"
 #include "sieveeditorgraphicalmodewidget.h"
+#include "sievescriptdescriptiondialog.h"
 #include "sieveactions/sieveaction.h"
 #include "sieveactions/sieveactionlist.h"
 #include "pimcommon/widgets/minimumcombobox.h"
@@ -53,14 +54,14 @@ SieveActionWidget::~SieveActionWidget()
 
 void SieveActionWidget::setFilterAction( QWidget *widget )
 {
-    if ( mLayout->itemAtPosition( 1, 2 ) ) {
-        delete mLayout->itemAtPosition( 1, 2 )->widget();
+    if ( mLayout->itemAtPosition( 1, 3 ) ) {
+        delete mLayout->itemAtPosition( 1, 3 )->widget();
     }
 
     if ( widget ) {
-        mLayout->addWidget( widget, 1, 2 );
+        mLayout->addWidget( widget, 1, 3 );
     } else {
-        mLayout->addWidget( new QLabel( i18n( "Please select an action." ), this ), 1, 2 );
+        mLayout->addWidget( new QLabel( i18n( "Please select an action." ), this ), 1, 3 );
     }
 }
 
@@ -69,12 +70,16 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
     const int index = mComboBox->currentIndex();
     if (index != mComboBox->count()-1) {
         KSieveUi::SieveAction *widgetAction = mActionList.at(mComboBox->currentIndex());
-        QWidget *currentWidget = mLayout->itemAtPosition( 1, 2 )->widget();
+        QWidget *currentWidget = mLayout->itemAtPosition( 1, 3 )->widget();
         const QStringList lstRequires = widgetAction->needRequires(currentWidget);
         Q_FOREACH (const QString &r, lstRequires) {
             if (!requires.contains(r)) {
                 requires.append(r);
             }
+        }
+        QString comment = widgetAction->comment();
+        if (!comment.isEmpty()) {
+            script += QLatin1Char('#') + comment.replace(QLatin1Char('\n'), QLatin1String("\n#")) + QLatin1Char('\n');
         }
         script += INDENTACTION + widgetAction->code(currentWidget) + QLatin1Char('\n');
     }
@@ -118,6 +123,14 @@ void SieveActionWidget::initWidget()
     mHelpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
+    mCommentButton = new QToolButton;
+    mCommentButton->setToolTip(i18n("Add comment"));
+    mCommentButton->setEnabled(false);
+    mLayout->addWidget( mCommentButton, 1, 1 );
+    mCommentButton->setIcon( KIcon( QLatin1String("view-pim-notes") ) );
+    connect(mCommentButton, SIGNAL(clicked()), this, SLOT(slotAddComment()));
+
+
     mComboBox->addItem(QLatin1String(""));
     mComboBox->setCurrentIndex(mComboBox->count()-1);
 
@@ -125,7 +138,7 @@ void SieveActionWidget::initWidget()
     mComboBox->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     mComboBox->adjustSize();
-    mLayout->addWidget(mComboBox, 1, 1);
+    mLayout->addWidget(mComboBox, 1, 2);
 
     updateGeometry();
 
@@ -140,8 +153,8 @@ void SieveActionWidget::initWidget()
     mRemove = new KPushButton( this );
     mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
     mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-    mLayout->addWidget( mAdd, 1, 3 );
-    mLayout->addWidget( mRemove, 1, 4 );
+    mLayout->addWidget( mAdd, 1, 4 );
+    mLayout->addWidget( mRemove, 1, 5 );
 
     // redirect focus to the filter action combo box
     setFocusProxy( mComboBox );
@@ -164,11 +177,27 @@ void SieveActionWidget::slotHelp()
     }
 }
 
+void SieveActionWidget::slotAddComment()
+{
+    const int index = mComboBox->currentIndex();
+    if (index < mActionList.count()) {
+        KSieveUi::SieveAction* action = mActionList.at( index );
+        const QString comment = action->comment();
+        QPointer<SieveScriptDescriptionDialog> dlg = new SieveScriptDescriptionDialog;
+        dlg->setDescription(comment);
+        if (dlg->exec()) {
+            action->setComment(dlg->description());
+        }
+        delete dlg;
+    }
+}
+
 void SieveActionWidget::slotActionChanged(int index)
 {
     if (index < mActionList.count()) {
         KSieveUi::SieveAction* action = mActionList.at( index );
         mHelpButton->setEnabled(!action->help().isEmpty());
+        mCommentButton->setEnabled(true);
         setFilterAction( action->createParamWidget(this) );
         //All actions after stop will not execute => don't allow to add more actions.
         const bool enableAddAction = (action->name() != QLatin1String("stop"));
@@ -176,6 +205,7 @@ void SieveActionWidget::slotActionChanged(int index)
 
     } else {
         mAdd->setEnabled(true);
+        mCommentButton->setEnabled(false);
         setFilterAction( 0 );
         mHelpButton->setEnabled(false);
     }
