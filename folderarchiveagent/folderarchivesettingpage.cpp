@@ -80,7 +80,6 @@ void FolderArchiveSettingPage::writeSettings()
     mInfo->setEnabled(mEnabled->isChecked());
     mInfo->setArchiveTopLevel(mArchiveFolder->collection().id());
     mInfo->writeConfig(grp);
-    //TODO
 }
 
 #include "folderarchivesettingpage.moc"

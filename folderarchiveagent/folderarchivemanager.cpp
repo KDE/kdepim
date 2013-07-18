@@ -16,6 +16,7 @@
 */
 
 #include "folderarchivemanager.h"
+#include "folderarchiveagentjob.h"
 #include "folderarchiveaccountinfo.h"
 #include "folderarchivekernel.h"
 
@@ -27,7 +28,8 @@
 #include <KGlobal>
 
 FolderArchiveManager::FolderArchiveManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mCurrentJob(0)
 {
     mFolderArchivelKernel = new FolderArchiveKernel( this );
     CommonKernel->registerKernelIf( mFolderArchivelKernel ); //register KernelIf early, it is used by the Filter classes
@@ -44,9 +46,28 @@ FolderArchiveManager::~FolderArchiveManager()
     mListAccountInfo.clear();
 }
 
+FolderArchiveAccountInfo *FolderArchiveManager::infoFromInstanceName(const QString &instanceName) const
+{
+    Q_FOREACH (FolderArchiveAccountInfo *info, mListAccountInfo) {
+        if (info->instanceName() == instanceName) {
+            return info;
+        }
+    }
+    return 0;
+}
+
 void FolderArchiveManager::setArchiveItems(const QList<qint64> &itemIds, const QString &instanceName)
 {
-
+    FolderArchiveAccountInfo *info = infoFromInstanceName(instanceName);
+    if (info) {
+        FolderArchiveAgentJob *job = new FolderArchiveAgentJob(this, info, itemIds);
+        if (mCurrentJob) {
+            mJobQueue.enqueue(job);
+        } else {
+            mCurrentJob = job;
+            job->start();
+        }
+    }
 }
 
 void FolderArchiveManager::slotInstanceRemoved(const Akonadi::AgentInstance &instance)
@@ -82,6 +103,29 @@ void FolderArchiveManager::load()
         } else {
             delete info;
         }
+    }
+}
+
+void FolderArchiveManager::moveDone(const QString &msg)
+{
+    //TODO emit message move done
+    nextJob();
+}
+
+void FolderArchiveManager::moveFailed(const QString &msg)
+{
+    //TODO emit message move failed
+    nextJob();
+}
+
+void FolderArchiveManager::nextJob()
+{
+    mCurrentJob->deleteLater();
+    if (mJobQueue.isEmpty()) {
+        mCurrentJob = 0;
+    } else {
+        mCurrentJob = mJobQueue.dequeue();
+        mCurrentJob->start();
     }
 }
 

@@ -18,10 +18,14 @@
 #include "folderarchiveagentjob.h"
 #include "folderarchiveaccountinfo.h"
 #include "folderarchivemanager.h"
+
 #include <Akonadi/ItemMoveJob>
 #include <Akonadi/CollectionFetchJob>
+#include <Akonadi/ItemMoveJob>
 
-FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const Akonadi::Item::List &lstItem, QObject *parent)
+#include <KLocale>
+
+FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const QList<qint64> &lstItem, QObject *parent)
     : QObject(parent),
       mLstItem(lstItem),
       mManager(manager),
@@ -35,13 +39,44 @@ FolderArchiveAgentJob::~FolderArchiveAgentJob()
 
 void FolderArchiveAgentJob::start()
 {
-    Akonadi::CollectionFetchJob *saveMessageJob = new Akonadi::CollectionFetchJob( Akonadi::Collection(mInfo->archiveTopLevel()), Akonadi::CollectionFetchJob::Base );
-    connect( saveMessageJob, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
+    Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( Akonadi::Collection(mInfo->archiveTopLevel()), Akonadi::CollectionFetchJob::Base );
+    connect( fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
 }
 
-void FolderArchiveAgentJob::slotFetchCollection(KJob*)
+void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
 {
+    if ( job->error() ) {
+        sendError(i18n("Can not fetch collection. %1", job->errorString() ));
+        return;
+    }
+    Akonadi::CollectionFetchJob *fetchCollectionJob = static_cast<Akonadi::CollectionFetchJob*>(job);
+    Akonadi::Collection::List collections = fetchCollectionJob->collections();
+    if (collections.isEmpty()) {
+        sendError(i18n("List of collection is empty. %1", job->errorString() ));
+        return;
+    }
+    Akonadi::Item::List lst;
+    Q_FOREACH (qint64 i, mLstItem) {
+        lst.append(Akonadi::Item(i));
+    }
+
+    Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob(lst, collections.first());
+    connect( moveJob, SIGNAL(result(KJob*)), this, SLOT(slotMoveMessages(KJob*)));
+}
+
+void FolderArchiveAgentJob::slotMoveMessages(KJob *job)
+{
+    if ( job->error() ) {
+        sendError(i18n("Can not move messages. %1", job->errorString() ));
+        return;
+    }
     //TODO
+    mManager->moveDone(QString());
+}
+
+void FolderArchiveAgentJob::sendError(const QString &error)
+{
+    mManager->moveFailed(error);
 }
 
 #include "folderarchiveagentjob.moc"
