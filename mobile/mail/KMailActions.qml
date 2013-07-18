@@ -123,24 +123,6 @@ ActionMenuContainer {
     name : "email_menu"
     text : KDE.i18n( "Email" )
 
-    ActionListItem {
-      name : "message_reply"
-      onPressAndHold: {
-          pageRow.push(Qt.createComponent("ReplyOptionsPage.qml") )
-          actionPanel.collapse()
-      }
-      reactsOnLongPressed : true
-    }
-
-    ActionListItem {
-      name : "message_forward"
-      onPressAndHold: {
-          pageRow.push(Qt.createComponent("ForwardOptionsPage.qml") )
-          actionPanel.collapse()
-      }
-      reactsOnLongPressed : true
-    }
-
     ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark Email As" ) }
     ActionListItem { name : "message_send_again"; visible : application.collectionIsSentMail }
     ActionListItem { name : "create_todo_reminder" }

@@ -39,12 +39,14 @@ PlasmaComponents.Page {
 
       spacing: root.width * 0.03
 
+      //TODO add forward-as-attachment and redirect when the "multiple actions" button  is ready
       PlasmaComponents.ToolButton {
         iconSource: "mail-forward"
 
         onClicked: application.getAction("message_forward", "").trigger()
       }
 
+      //TODO add reply-to-list and (maybe) reply-without quoting when the "multiple actions" button  is ready
       PlasmaComponents.ToolButton {
         iconSource: "mail-reply-sender"
 

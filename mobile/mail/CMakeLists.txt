@@ -130,12 +130,10 @@ install(FILES
   ConfigDialog.qml
   FilterEditor.qml
   FolderPage.qml
-  ForwardOptionsPage.qml
   MarkAsPage.qml
   MailListPage.qml
   MailViewPage.qml
   NewMailPage.qml
-  ReplyOptionsPage.qml
   EditorView.qml
   FavoriteManagerPage.qml
   kmail-composer.qml
