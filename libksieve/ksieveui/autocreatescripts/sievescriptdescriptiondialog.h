@@ -27,7 +27,7 @@ class SieveScriptDescriptionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SieveScriptDescriptionDialog(QWidget *parent);
+    explicit SieveScriptDescriptionDialog(QWidget *parent=0);
     ~SieveScriptDescriptionDialog();
 
     void setDescription(const QString &desc);
