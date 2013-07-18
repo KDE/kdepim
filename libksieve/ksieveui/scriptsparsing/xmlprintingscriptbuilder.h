@@ -59,13 +59,13 @@ public:
     QDomDocument toDom() const;
 
 private:
-    void write( const char * msg );
-    void write( const QByteArray &key, const QString &value );
-    void write( const QByteArray & key, const QByteArray &attribute, const QString & value );
+    void write( const QString &msg );
+    void write( const QString &key, const QString &value );
+    void write( const QString &key, const QString &attribute, const QString & value );
 
     QString mResult;
     QString mError;
-    int mIndent;
+    bool mIsAction;
 };
 }
 #endif
