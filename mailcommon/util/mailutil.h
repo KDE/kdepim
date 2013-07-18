@@ -55,8 +55,8 @@ class QAbstractItemModel;
 class QModelIndex;
 class QString;
 
-#define POP3_RESOURCE_IDENTIFIER "akonadi_pop3_resource"
-#define MBOX_RESOURCE_IDENTIFIER "akonadi_mbox_resource"
+#define POP3_RESOURCE_IDENTIFIER QLatin1String("akonadi_pop3_resource")
+#define MBOX_RESOURCE_IDENTIFIER QLatin1String("akonadi_mbox_resource")
 
 namespace MailCommon {
 
