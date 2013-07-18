@@ -144,7 +144,6 @@ install(FILES
   SnippetsEditor.qml
   SnippetsList.qml
   StartPage.qml
-  VacationScriptIndicator.qml
   add-attachment-button.png
   remove-attachment-button.png
   toggle-signature-button.png
