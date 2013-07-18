@@ -175,13 +175,6 @@ ActionMenuContainer {
     searchActionTitle: KDE.i18n( "Search For Emails" )
     configureActionTitle: KDE.i18n( "Configure Mail" )
 
-    onLongPressed : {
-      if ( actionName == "add_new_mail" ) {
-          pageRow.push(Qt.createComponent("NewMailPage.qml") )
-          actionPanel.collapse()
-      }
-    }
-
     ActionListItem { name : "tools_edit_vacation" }
   }
 }

@@ -133,7 +133,6 @@ install(FILES
   MarkAsPage.qml
   MailListPage.qml
   MailViewPage.qml
-  NewMailPage.qml
   EditorView.qml
   FavoriteManagerPage.qml
   kmail-composer.qml

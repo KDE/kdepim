@@ -38,6 +38,7 @@ PlasmaComponents.Page {
       onClicked: pageRow.pop()
     }
 
+    //TODO add new mail from template once the multiple actions button is ready
     PlasmaComponents.ToolButton {
       iconSource: "mail-message-new"
 
