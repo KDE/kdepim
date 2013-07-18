@@ -18,11 +18,9 @@
 #ifndef KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
 #define KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
 
-#include <ksieve/parser.h>
-using KSieve::Parser;
-
-#include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
+
+#include <QDomDocument>
 
 namespace KSieveUi {
 class XMLPrintingScriptBuilder : public KSieve::ScriptBuilder
@@ -57,6 +55,8 @@ public:
     bool hasError() const;
 
     void clear();
+
+    QDomDocument toDom() const;
 
 private:
     void write( const char * msg );

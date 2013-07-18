@@ -16,6 +16,10 @@
 */
 
 #include "xmlprintingscriptbuilder.h"
+#include <ksieve/parser.h>
+using KSieve::Parser;
+
+#include <ksieve/error.h>
 #include <QDebug>
 
 using namespace KSieveUi;
@@ -193,4 +197,18 @@ void XMLPrintingScriptBuilder::clear()
     mResult.clear();
     mError.clear();
     mIndent = 0;
+}
+
+QDomDocument XMLPrintingScriptBuilder::toDom() const
+{
+    QString errorMsg;
+    int errorRow;
+    int errorCol;
+    QDomDocument doc;
+    if ( !doc.setContent( mResult, &errorMsg, &errorRow, &errorCol ) ) {
+        qDebug() << "Unable to load document.Parse error in line " << errorRow
+                 << ", col " << errorCol << ": " << errorMsg;
+
+    }
+    return doc;
 }

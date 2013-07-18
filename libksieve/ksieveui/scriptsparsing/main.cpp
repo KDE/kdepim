@@ -56,16 +56,7 @@ int main( int argc, char** argv )
     else
         qDebug() << "bad";
     ParsingResultDialog dlg;
-    QString errorMsg;
-    int errorRow;
-    int errorCol;
-    QDomDocument doc;
-    if ( !doc.setContent( psb.result(), &errorMsg, &errorRow, &errorCol ) ) {
-        qDebug() << "Unable to load document.Parse error in line " << errorRow
-                 << ", col " << errorCol << ": " << errorMsg;
-
-    }
-    dlg.setResultParsing(doc.toString());
+    dlg.setResultParsing(psb.toDom().toString());
 
     dlg.exec();
     return 0;
