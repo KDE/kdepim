@@ -26,6 +26,9 @@ import org.kde.pim.mobileui 4.5 as KPIM
 
 PlasmaComponents.Page {
 
+  implicitWidth: pageRow.width * 2 /3
+
+
   //BEGIN: Tools
   tools: PlasmaComponents.ToolBarLayout {
     PlasmaComponents.ToolButton {
@@ -34,7 +37,7 @@ PlasmaComponents.Page {
 
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
   }
   //END: Tools
@@ -69,7 +72,7 @@ PlasmaComponents.Page {
 
       QML.MouseArea {
         anchors.fill: parent
-        onClicked: { filterDelegate.QML.ListView.view.currentIndex = model.index; }
+        onClicked: filterDelegate.QML.ListView.view.currentIndex = model.index
       }
     }
 
@@ -98,6 +101,6 @@ PlasmaComponents.Page {
       actionName : "filtereditor_movedown"
     }
 
-    onCurrentIndexChanged : { filterEditor.setRowSelected( index ) }
+    onCurrentIndexChanged: filterEditor.setRowSelected( index )
   }
 }

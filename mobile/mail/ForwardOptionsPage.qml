@@ -38,7 +38,7 @@ PlasmaComponents.Page {
 
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
   }
 
@@ -60,7 +60,7 @@ PlasmaComponents.Page {
         buttonText: KDE.i18n( "Forward as Attachment" )
         onClicked: {
           application.getAction("message_forward_as_attachment", "").trigger();
-          pageStack.pop()
+          pageRow.pop()
         }
       }
       KPIM.Button2 {
@@ -68,7 +68,7 @@ PlasmaComponents.Page {
         buttonText: KDE.i18n( "Redirect" )
         onClicked: {
           application.getAction("message_redirect", "").trigger();
-          pageStack.pop()
+          pageRow.pop()
         }
       }
     }

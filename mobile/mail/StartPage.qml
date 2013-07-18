@@ -38,7 +38,7 @@ PlasmaComponents.Page {
     PlasmaComponents.ToolButton{
       iconSource: "preferences-system"
 
-      onClicked: pageStack.push(Qt.createComponent("SettingsPage.qml") )
+      onClicked: pageRow.push(Qt.createComponent("SettingsPage.qml") )
     }
 
     PlasmaComponents.ToolButton {
@@ -360,7 +360,7 @@ PlasmaComponents.Page {
                 name : "mark_as_dialog"
                 script : {
                   actionPanel.collapse();
-                  pageStack.push(Qt.createComponent("MarkAsPage.qml") )
+                  pageRow.push(Qt.createComponent("MarkAsPage.qml") )
                 }
               },
               KPIM.ScriptAction {

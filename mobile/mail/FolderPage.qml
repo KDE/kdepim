@@ -20,66 +20,46 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.akonadi 4.5 as Akonadi
 
 PlasmaComponents.Page {
   id: root
 
   implicitWidth: pageRow.width * 2 /3
 
-  //BEGIN: Tools
-  tools: PlasmaComponents.ToolBarLayout {
+  //BEGIN Tools
+  tools: PlasmaComponents.ToolBarLayout{
+
+    PlasmaComponents.ToolButton{
+      iconSource: "preferences-system"
+
+      onClicked: pageRow.push(Qt.createComponent("SettingsPage.qml") )
+    }
+
+    //FIXME remove this button and push the page when a folder gets selected (requires actual favorite/folderpage)
     PlasmaComponents.ToolButton {
+      iconSource: "go-next"
 
-      anchors.left: parent.left
-
-      iconSource: "go-previous"
-
-      onClicked: pageRow.pop()
+      onClicked: pageRow.push(Qt.createComponent("MailListPage.qml"))
     }
   }
-  //END: Tools
+  //END Tools
 
-  Column {
-    anchors.centerIn: parent
+  Akonadi.AkonadiBreadcrumbNavigationView {
+    id : collectionView
 
-    spacing: 20
+    anchors.fill: parent
 
-    PlasmaComponents.Button {
-      text: i18n("Accounts")
+    showUnread : true
 
-      onClicked: {
-        pageRow.pop(root)
-        pageRow.push(Qt.createComponent("AccountSettingsPage.qml"))
-      }
-    }
-    PlasmaComponents.Button {
-      text: i18n("Identities")
+    itemHeight: root.height / 7
 
-      onClicked: application.configureIdentity()
-    }
-    PlasmaComponents.Button {
-      text: i18n("Favorites")
+    breadcrumbComponentFactory : _breadcrumbNavigationFactory
 
-      onClicked: {
-        pageRow.pop(root)
-        pageRow.push(Qt.createComponent("FavoriteManagerPage.qml"))
-      }
-    }
-    PlasmaComponents.Button {
-      text: i18n("Filter")
-
-      onClicked: {
-        pageRow.pop(root)
-        pageRow.push(Qt.createComponent("FilterEditor.qml"))
-      }
-    }
-    PlasmaComponents.Button {
-      text: i18n( "About" )
-
-      onClicked: {
-        pageRow.pop(root)
-        pageRow.push(Qt.createComponent("AboutPage.qml"))
-      }
+    KPIM.AgentStatusIndicator {
+      id: agentStatusIndicator
+      anchors { top: parent.top; right: parent.right; rightMargin: 10; topMargin: 10 }
     }
   }
 

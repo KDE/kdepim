@@ -54,7 +54,7 @@ QML.Rectangle {
 
     model: aclModel
 
-    onCurrentIndexChanged : { aclEditor.setRowSelected( index ) }
+    onCurrentIndexChanged: aclEditor.setRowSelected( index )
 
     KPIM.ActionButton {
       icon : KDE.locate( "data", "mobileui/add-button.png" )
@@ -92,8 +92,6 @@ QML.Rectangle {
     anchors.leftMargin: 10
     width: 150
     buttonText: KDE.i18n( "Cancel" )
-    onClicked: {
-      guiStateManager.popState();
-    }
+    onClicked: guiStateManager.popState()
   }
 }

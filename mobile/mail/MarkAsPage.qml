@@ -37,7 +37,7 @@ PlasmaComponents.Page {
 
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
   }
   //END Tools
@@ -60,7 +60,7 @@ PlasmaComponents.Page {
         buttonText : application.getAction("akonadi_mark_as_read", "").text.replace("&", "");
         onClicked : {
           application.getAction("akonadi_mark_as_read", "").trigger();
-          pageStack.pop()
+          pageRow.pop()
         }
       }
       KPIM.Button2 {
@@ -68,7 +68,7 @@ PlasmaComponents.Page {
         buttonText : application.getAction("akonadi_mark_as_important", "").text.replace("&", "");
         onClicked : {
           application.getAction("akonadi_mark_as_important", "").trigger();
-          pageStack.pop()
+          pageRow.pop()
         }
       }
       KPIM.Button2 {
@@ -76,7 +76,7 @@ PlasmaComponents.Page {
         buttonText : application.getAction("akonadi_mark_as_action_item", "").text.replace("&", "");
         onClicked : {
           application.getAction("akonadi_mark_as_action_item", "").trigger();
-          pageStack.pop()
+          pageRow.pop()
         }
       }
     }

@@ -148,12 +148,12 @@ Item {
 
     KPIM.Button2 {
       id: cancelButton
-      anchors.bottom: parent.bottom;
-      anchors.right: sendButton.left;
-      width: height * 1.5;
+      anchors.bottom: parent.bottom
+      anchors.right: sendButton.left
+      width: height * 1.5
       height: identityCombo.height
-      icon: KDE.iconPath( "dialog-cancel", 64 );
-      onClicked: window.close();
+      icon: KDE.iconPath( "dialog-cancel", 64 )
+      onClicked: window.close()
     }
 
     KPIM.Button2 {

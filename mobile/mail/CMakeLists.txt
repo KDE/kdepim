@@ -129,9 +129,10 @@ install(FILES
   AttachmentEditor.qml
   ConfigDialog.qml
   FilterEditor.qml
+  FolderPage.qml
   ForwardOptionsPage.qml
-  HeaderView.qml
   MarkAsPage.qml
+  MailListPage.qml
   MailViewPage.qml
   NewMailPage.qml
   ReplyOptionsPage.qml
