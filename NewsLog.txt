@@ -1,4 +1,15 @@
 
+Thursday 18 July 2013
+
+Problems addressed
+------------------
+
+* kolab/issue4864: Task incidence with recurrence range freezes agendaview (rt #10241)
+* kolab/issue4865: Accepting an invitiation to a task without start date jumps to invalid date. (rt #10241)
+* kolab/issue4866: Switching to day view should switch to a selected day if possible (rt #10240)
+
+
+
 Wednesday 10 April 2013
 
 Problems addressed
