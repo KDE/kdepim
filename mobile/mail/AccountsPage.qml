@@ -96,8 +96,7 @@ PlasmaComponents.Page {
 
       height: root.height * 0.12
 
-      //TODO create a "configure account" dialog or start the widget based wizard?
-      onClicked: { }
+      onClicked: application.launchAccountWizard()
 
       //FIXME show a black plus button instead of the green one?
       QtExtra.QIconItem {
