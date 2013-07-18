@@ -29,6 +29,7 @@ using KSieve::Parser;
 #include <KFileDialog>
 
 #include <QDebug>
+#include <QDomDocument>
 
 int main( int argc, char** argv )
 {
@@ -56,6 +57,16 @@ int main( int argc, char** argv )
     qDebug() << "bad";
   ParsingResultDialog dlg;
   dlg.setResultParsing(psb.result());
+  QString errorMsg;
+  int errorRow;
+  int errorCol;
+  QDomDocument doc;
+  if ( !doc.setContent( psb.result(), &errorMsg, &errorRow, &errorCol ) ) {
+      qDebug() << "Unable to load document.Parse error in line " << errorRow
+               << ", col " << errorCol << ": " << errorMsg;
+  }
+
+
   dlg.exec();
   return 0;
 }

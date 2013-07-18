@@ -38,13 +38,12 @@ void XMLPrintingScriptBuilder::taggedArgument( const QString & tag )
 
 void XMLPrintingScriptBuilder::stringArgument( const QString & string, bool multiLine, const QString & /*fixme*/ )
 {
-    write( multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string );
+    write( "string" ,multiLine ? "type=\"multiline\"" : "type=\"quoted\"", string );
 }
 
 void XMLPrintingScriptBuilder::numberArgument( unsigned long number, char quantifier )
 {
-    const QString txt = QLatin1String("number") + ( quantifier ? QString::fromLatin1(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
-    write( txt.toLatin1(), QString::number( number ) );
+    write( "number", ( quantifier ? QString::fromLatin1("quantifier=\"%1\"").arg( quantifier ) : QString()).toLatin1() , QString::number( number ) );
 }
 
 void XMLPrintingScriptBuilder::commandStart( const QString & identifier )
@@ -116,12 +115,12 @@ void XMLPrintingScriptBuilder::stringListEntry( const QString & string, bool mul
 
 void XMLPrintingScriptBuilder::hashComment( const QString & comment )
 {
-    write( "comment type=\"hash\"", comment );
+    write( "comment", "type=\"hash\"", comment );
 }
 
 void XMLPrintingScriptBuilder::bracketComment( const QString & comment )
 {
-    write( "comment type=\"bracket\"", comment );
+    write( "comment", "type=\"bracket\"", comment );
 }
 
 void XMLPrintingScriptBuilder::lineFeed()
@@ -162,6 +161,20 @@ void XMLPrintingScriptBuilder::write( const QByteArray & key, const QString & va
     --mIndent;
     write( "</" + key + ">" );
 }
+
+void XMLPrintingScriptBuilder::write( const QByteArray & key, const QByteArray &attribute, const QString & value )
+{
+    if ( value.isEmpty() ) {
+        write( "<" + key + "/>" );
+        return;
+    }
+    write( "<" + key + " " +attribute + ">" );
+    ++mIndent;
+    write( value.toUtf8().data() );
+    --mIndent;
+    write( "</" + key + ">" );
+}
+
 
 QString XMLPrintingScriptBuilder::result() const
 {

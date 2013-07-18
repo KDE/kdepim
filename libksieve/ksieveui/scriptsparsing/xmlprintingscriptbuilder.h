@@ -61,6 +61,7 @@ public:
 private:
     void write( const char * msg );
     void write( const QByteArray &key, const QString &value );
+    void write( const QByteArray & key, const QByteArray &attribute, const QString & value );
 
     QString mResult;
     QString mError;
