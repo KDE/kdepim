@@ -75,4 +75,9 @@ QString SieveCondition::help() const
     return QString();
 }
 
+void SieveCondition::setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const
+{
+
+}
+
 #include "sievecondition.moc"

@@ -89,4 +89,9 @@ QString SieveConditionMetaDataExists::help() const
     return i18n("The \"metadataexists\" test is true if all of the annotations listed in the \"annotation-names\" argument exist for the specified mailbox.");
 }
 
+void SieveConditionMetaDataExists::setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const
+{
+
+}
+
 #include "sieveconditionmetadataexists.moc"

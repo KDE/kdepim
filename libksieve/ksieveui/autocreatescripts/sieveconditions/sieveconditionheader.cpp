@@ -83,4 +83,9 @@ QString SieveConditionHeader::help() const
     return i18n("The \"header\" test evaluates to true if the value of any of the named headers, ignoring leading and trailing whitespace, matches any key.");
 }
 
+void SieveConditionHeader::setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const
+{
+
+}
+
 #include "sieveconditionheader.moc"

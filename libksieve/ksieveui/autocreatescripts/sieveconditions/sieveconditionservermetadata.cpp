@@ -118,4 +118,9 @@ QString SieveConditionServerMetaData::help() const
     return i18n("This test retrieves the value of the server annotation \"annotation-name\".  The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
 }
 
+void SieveConditionServerMetaData::setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const
+{
+
+}
+
 #include "sieveconditionservermetadata.moc"
