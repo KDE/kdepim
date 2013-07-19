@@ -172,6 +172,11 @@ void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
     }
 }
 
+void SieveIncludeWidget::loadScript(const QDomElement &element)
+{
+
+}
+
 SieveIncludeWidgetLister::SieveIncludeWidgetLister(QWidget *parent)
     : KPIM::KWidgetLister(false, MINIMUMINCLUDEACTION, MAXIMUMINCLUDEACTION, parent)
 {

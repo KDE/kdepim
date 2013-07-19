@@ -25,6 +25,8 @@ class KPushButton;
 class KLineEdit;
 class QGridLayout;
 class QCheckBox;
+class QDomElement;
+
 namespace KSieveUi {
 class SieveGlobalVariableWidget;
 
@@ -85,6 +87,8 @@ public:
     ~SieveGlobalVariableWidget();
 
     void generatedScript(QString &script, QStringList &requires);
+
+    void loadScript(const QDomElement &element);
 
 private Q_SLOTS:
     void slotHelp();

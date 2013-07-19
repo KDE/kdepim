@@ -25,6 +25,7 @@ class KPushButton;
 
 class QGridLayout;
 class QToolButton;
+class QDomElement;
 
 namespace PimCommon {
 class MinimumComboBox;
@@ -74,6 +75,8 @@ public:
     ~SieveActionWidgetLister();
 
     void generatedScript(QString &script, QStringList &requires);
+    void loadScript(const QDomElement &element);
+
     int actionNumber() const;
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );

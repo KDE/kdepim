@@ -146,6 +146,10 @@ void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &re
     }
 }
 
+void SieveGlobalVariableWidget::loadScript(const QDomElement &element)
+{
+}
+
 SieveGlobalVariableLister::SieveGlobalVariableLister(QWidget *parent)
     : KPIM::KWidgetLister(false, MINIMUMGLOBALVARIABLEACTION, MAXIMUMGLOBALVARIABLEACTION, parent)
 {

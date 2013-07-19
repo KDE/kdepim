@@ -29,13 +29,15 @@
 #include <KMessageBox>
 
 #include <QVBoxLayout>
+#include <QDomElement>
 
 namespace KSieveUi {
 SieveScriptPage::SieveScriptPage(QWidget *parent)
     : QWidget(parent),
       mIncludeWidget(0),
       mForEveryPartWidget(0),
-      mGlobalVariableWidget(0)
+      mGlobalVariableWidget(0),
+      mBlockIfWidget(0)
 {
     QVBoxLayout *topLayout = new QVBoxLayout;
     mTabWidget = new SieveScriptTabWidget;
@@ -54,16 +56,25 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
         mTabWidget->addTab(mForEveryPartWidget, i18n("ForEveryPart"));
     }
 
-    SieveScriptBlockWidget *blockWidget = createScriptBlock(SieveScriptBlockWidget::BlockIf);
-    mTabWidget->addTab(blockWidget, blockName(KSieveUi::SieveScriptBlockWidget::BlockIf));
+    mBlockIfWidget = createScriptBlock(SieveScriptBlockWidget::BlockIf);
+    mTabWidget->addTab(mBlockIfWidget, blockName(KSieveUi::SieveScriptBlockWidget::BlockIf));
     topLayout->addWidget(mTabWidget);
-    mTabWidget->setCurrentWidget(blockWidget);
+    mTabWidget->setCurrentWidget(mBlockIfWidget);
     setLayout(topLayout);
 }
 
 SieveScriptPage::~SieveScriptPage()
 {
 }
+
+SieveScriptBlockWidget *SieveScriptPage::addScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type)
+{
+    SieveScriptBlockWidget *blockWidget = createScriptBlock(type);
+    mTabWidget->insertTab(mTabWidget->count(), blockWidget, blockName(type));
+    mTabWidget->setCurrentWidget(blockWidget);
+    return blockWidget;
+}
+
 
 SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type)
 {
@@ -138,6 +149,26 @@ void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
 void SieveScriptPage::slotCloseTab(int index)
 {
     mTabWidget->removeTab(index);
+}
+
+SieveIncludeWidget *SieveScriptPage::includeWidget() const
+{
+    return mIncludeWidget;
+}
+
+SieveForEveryPartWidget *SieveScriptPage::forEveryPartWidget() const
+{
+    return mForEveryPartWidget;
+}
+
+SieveGlobalVariableWidget *SieveScriptPage::globalVariableWidget() const
+{
+    return mGlobalVariableWidget;
+}
+
+SieveScriptBlockWidget *SieveScriptPage::blockIfWidget() const
+{
+    return mBlockIfWidget;
 }
 
 }

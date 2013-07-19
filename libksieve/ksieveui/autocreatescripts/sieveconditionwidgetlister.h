@@ -24,6 +24,7 @@
 class KPushButton;
 class QGridLayout;
 class QToolButton;
+class QDomElement;
 
 namespace PimCommon {
 class MinimumComboBox;
@@ -72,6 +73,8 @@ public:
 
     void generatedScript(QString &script, int &numberOfCondition, QStringList &requires);
     int conditionNumber() const;
+    void loadScript(const QDomElement &element);
+
 
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );

@@ -21,7 +21,7 @@
 #include <QGroupBox>
 #include <QListWidgetItem>
 class QListWidget;
-class QDomElement;
+class QDomDocument;
 class KPushButton;
 
 namespace KSieveUi {
@@ -53,7 +53,7 @@ public:
     ~SieveScriptListBox();
 
     QString generatedScript(QString &requires) const;
-    void loadScript(const QDomElement &doc);
+    void loadScript(const QDomDocument &doc);
 
 Q_SIGNALS:
     void addNewPage(QWidget *);
@@ -73,7 +73,7 @@ private Q_SLOTS:
     void slotUp();
 
 private:
-    void createNewScript(const QString &newName);
+    SieveScriptPage *createNewScript(const QString &newName);
     QString createUniqName();
     QListWidget *mSieveListScript;
     KPushButton *mBtnNew;

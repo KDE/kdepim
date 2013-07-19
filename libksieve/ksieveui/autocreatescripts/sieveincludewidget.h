@@ -26,6 +26,7 @@ class KPushButton;
 class KLineEdit;
 class QGridLayout;
 class QCheckBox;
+class QDomElement;
 namespace KSieveUi {
 
 class SieveIncludeLocation : public KComboBox
@@ -97,6 +98,8 @@ public:
     ~SieveIncludeWidget();
 
     void generatedScript(QString &script, QStringList &requires);
+
+    void loadScript(const QDomElement &element);
 
 private Q_SLOTS:
     void slotHelp();

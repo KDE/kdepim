@@ -62,16 +62,7 @@ SieveEditorGraphicalModeWidget::~SieveEditorGraphicalModeWidget()
 
 void SieveEditorGraphicalModeWidget::loadScript(const QDomDocument &doc)
 {
-    QDomElement docElem = doc.documentElement();
-    QDomNode n = docElem.firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement();
-        if(!e.isNull()) {
-            qDebug() <<"tag"<< e.tagName();
-        }
-        n = n.nextSibling();
-    }
-    //mSieveScript->loadScript(doc);
+    mSieveScript->loadScript(doc);
 }
 
 void SieveEditorGraphicalModeWidget::readConfig()

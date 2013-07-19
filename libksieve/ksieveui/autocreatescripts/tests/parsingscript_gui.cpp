@@ -70,11 +70,8 @@ int main (int argc, char **argv)
     //Add all capabilities for testing
     dialog->setSieveCapabilities(capabilities);
     dialog->loadScript(psb.toDom());
-    if (dialog->exec() ) {
-        QString requires;
-        const QString script = dialog->script(requires);
-        qDebug()<<" generated script :\n"<<requires<<"\n"<<script;
-    }
+    dialog->show();
+    app.exec();
     delete dialog;
     return 0;
 }

@@ -32,6 +32,7 @@
 #include <QToolButton>
 #include <QWhatsThis>
 #include <QDebug>
+#include <QDomElement>
 
 using namespace KSieveUi;
 
@@ -286,6 +287,36 @@ void SieveConditionWidgetLister::generatedScript(QString &script, int &numberOfC
 int SieveConditionWidgetLister::conditionNumber() const
 {
     return widgets().count();
+}
+
+void SieveConditionWidgetLister::loadScript(const QDomElement &element)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("testlist")) {
+                QDomNode testNode = e.firstChild();
+                while (!testNode.isNull()) {
+                    QDomElement testElement = testNode.toElement();
+                    if (!testElement.isNull()) {
+                        const QString testTagName = testElement.tagName();
+                        if (testTagName == QLatin1String("test")) {
+                            if (testElement.hasAttribute(QLatin1String("name"))) {
+                                const QString condition = testElement.attribute(QLatin1String("name"));
+                                qDebug()<<" CONDITION "<<condition;
+                            }
+                        } else {
+                            qDebug()<<" unknown condition tag: "<<testTagName;
+                        }
+                    }
+                    testNode = testNode.nextSibling();
+                }
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionwidgetlister.moc"

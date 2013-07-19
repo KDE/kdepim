@@ -32,6 +32,7 @@
 #include <QDebug>
 #include <QToolButton>
 #include <QWhatsThis>
+#include <QDomElement>
 
 using namespace KSieveUi;
 
@@ -311,6 +312,27 @@ int SieveActionWidgetLister::actionNumber() const
 {
     return widgets().count();
 }
+
+void SieveActionWidgetLister::loadScript(const QDomElement &element)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("action")) {
+                if (e.hasAttribute(QLatin1String("name"))) {
+                    const QString actionName = e.attribute(QLatin1String("name"));
+                    qDebug()<<" actionName "<<actionName;
+                } else {
+                    qDebug()<<" SieveActionWidgetLister::loadScript unknow tag: "<<tagName;
+                }
+            }
+        }
+        node = node.nextSibling();
+    }
+}
+
 
 
 #include "sieveactionwidgetlister.moc"

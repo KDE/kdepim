@@ -21,6 +21,7 @@
 #include "sievewidgetpageabstract.h"
 class QCheckBox;
 class KLineEdit;
+class QDomElement;
 
 namespace KSieveUi {
 class SieveForEveryPartWidget : public SieveWidgetPageAbstract
@@ -31,6 +32,7 @@ public:
     ~SieveForEveryPartWidget();
 
     void generatedScript(QString &script, QStringList &requires);
+    void loadScript(const QDomElement &element);
 
 private Q_SLOTS:
     void slotHelp();
