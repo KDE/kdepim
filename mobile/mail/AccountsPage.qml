@@ -64,18 +64,13 @@ PlasmaComponents.Page {
         pageRow.push(Qt.createComponent("FolderPage.qml"))
       }
 
-      QtExtra.QIconItem {
+      KPIM.AgentInstanceStatusIndicator {
         id: iconItem
 
-        anchors {
-          verticalCenter: parent.verticalCenter
-        }
+        anchors.verticalCenter: parent.verticalCenter
 
-        height: parent.height
-        width: height
-
-       icon: QIcon("application-x-smb-server")
-
+        online: model.online
+        status: model.status
       }
 
       PlasmaExtras.Heading {
@@ -110,10 +105,10 @@ PlasmaComponents.Page {
           verticalCenter: parent.verticalCenter
         }
 
-        height: parent.height
+        height: parent.height * 0.6
         width: height
 
-       icon: QIcon("list-add")
+        icon: QIcon("list-add")
 
       }
 
@@ -129,6 +124,6 @@ PlasmaComponents.Page {
         level: 4
       }
     }
-   //END: Footer
+    //END: Footer
   }
 }

@@ -49,11 +49,13 @@ QML.Item {
     AgentInstanceStatusIndicator {
       id: statusIcon
 
+      anchors {
+        top: parent.top
+        left: parent.left
+      }
+
       online: model.online
       status: model.status
-
-      anchors { top: parent.top; left: parent.left }
-
     }
 
     QML.Text {

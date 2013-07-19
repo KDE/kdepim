@@ -125,6 +125,7 @@ install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   AboutPage.qml
   AccountSettingsPage.qml
+  AccountsPage.qml
   AclEditor.qml
   AttachmentEditor.qml
   ConfigDialog.qml
