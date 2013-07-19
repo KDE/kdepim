@@ -33,6 +33,7 @@ public:
 
     void setFlags(const QStringList& list);
     QStringList flags() const;
+
 private:
     enum Type {
         FlagsRealName = Qt::UserRole+1
@@ -68,6 +69,7 @@ public:
 
 private Q_SLOTS:
     void slotSelectFlags();
+
 private:
     QString mCode;
     KLineEdit *mEdit;

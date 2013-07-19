@@ -45,6 +45,7 @@ public:
 
 private Q_SLOTS:
     void slotSelectFolder();
+
 private:
     KLineEdit *mLineEdit;
 };
