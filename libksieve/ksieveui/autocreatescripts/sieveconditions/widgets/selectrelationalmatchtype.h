@@ -29,6 +29,8 @@ public:
     ~SelectRelationalMatchType();
 
     QString code() const;
+    void setCode(const QString &code);
+
 private:
     void initialize();
     KComboBox *mType;

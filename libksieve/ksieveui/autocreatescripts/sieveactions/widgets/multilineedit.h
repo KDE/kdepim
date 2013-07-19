@@ -27,6 +27,7 @@ class MultiLineEdit : public KTextEdit
 public:
     explicit MultiLineEdit(QWidget *parent = 0);
     ~MultiLineEdit();
+
 protected:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;

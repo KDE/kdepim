@@ -51,6 +51,7 @@ public:
     ~SelectDateWidget();
 
     QString code() const;
+    void setCode(const QString &);
 
 private Q_SLOTS:
     void slotDateTypeActivated(int);

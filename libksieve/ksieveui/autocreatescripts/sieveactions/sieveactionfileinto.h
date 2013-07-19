@@ -34,6 +34,7 @@ public:
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
     QString help() const;
+
 private:
     bool mHasCopySupport;
     bool mHasMailBoxSupport;

@@ -30,6 +30,7 @@ class SelectFileIntoDialog : public KDialog
 public:
     explicit SelectFileIntoDialog(QWidget *parent = 0);
     ~SelectFileIntoDialog();
+
     QString selectedFolder() const;
 };
 
