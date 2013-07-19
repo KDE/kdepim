@@ -28,12 +28,14 @@ import org.kde.qtextracomponents 0.1 as QtExtra
 PlasmaComponents.Page {
   id: root
 
+  implicitWidth: pageRow.width * 2 /3
+
   //BEGIN: Tools
   tools: PlasmaComponents.ToolBarLayout {
     PlasmaComponents.ToolButton{
       iconSource: "preferences-system"
 
-      onClicked: pageStack.push(Qt.createComponent("SettingsPage.qml") )
+      onClicked: pageRow.push(Qt.createComponent("SettingsPage.qml") )
     }
   }
   //END: Tools
@@ -58,8 +60,8 @@ PlasmaComponents.Page {
 
       //TODO create FoldersListPage.qml
       onClicked: {
-        pageStack.pop(root)
-        pageStack.push(Qt.createComponent("StartPage.qml"))
+        pageRow.pop(root)
+        pageRow.push(Qt.createComponent("FolderPage.qml"))
       }
 
       QtExtra.QIconItem {
@@ -95,6 +97,8 @@ PlasmaComponents.Page {
     footer: PlasmaComponents.ListItem {
 
       height: root.height * 0.12
+
+      enabled: true
 
       onClicked: application.launchAccountWizard()
 
