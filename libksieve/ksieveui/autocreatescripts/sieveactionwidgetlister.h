@@ -42,6 +42,7 @@ public:
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires);
+    void setAction(const QString &actionName);
 
 private Q_SLOTS:
     void slotAddWidget();
