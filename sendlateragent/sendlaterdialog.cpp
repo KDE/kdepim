@@ -40,12 +40,15 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 {
     setCaption( i18n("Send Later") );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
-    setButtons( Ok|Cancel );
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
-
-    if (!info) {
+    if (info) {
+        setButtons( Ok|Cancel );
+    } else {
+        setButtons( User1|Ok|Cancel );
         setButtonText( Ok, i18n("Send Later"));
+        setButtonText( User1, i18n("Put in outbox"));
     }
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotPutOutbox()));
 
     QWidget *sendLaterWidget = new QWidget;
     mSendLaterWidget = new Ui::SendLaterWidget;
@@ -124,6 +127,12 @@ void SendLaterDialog::slotOkClicked()
 {
     mSendDateTime = mSendLaterWidget->mDateTime->dateTime();
     mAction = SendDeliveryAtTime;
+    accept();
+}
+
+void SendLaterDialog::slotPutOutbox()
+{
+    mAction = PutInOutbox;
     accept();
 }
 
