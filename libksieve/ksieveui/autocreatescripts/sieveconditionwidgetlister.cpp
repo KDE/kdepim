@@ -305,6 +305,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &element)
                         if (testTagName == QLatin1String("test")) {
                             if (testElement.hasAttribute(QLatin1String("name"))) {
                                 const QString condition = testElement.attribute(QLatin1String("name"));
+                                addWidgetAfterThisWidget(widgets().last());
                                 qDebug()<<" CONDITION "<<condition;
                             }
                         } else {

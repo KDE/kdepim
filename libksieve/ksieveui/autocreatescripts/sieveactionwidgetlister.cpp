@@ -323,6 +323,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element)
             if (tagName == QLatin1String("action")) {
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString actionName = e.attribute(QLatin1String("name"));
+                    addWidgetAfterThisWidget(widgets().last());
                     qDebug()<<" actionName "<<actionName;
                 } else {
                     qDebug()<<" SieveActionWidgetLister::loadScript unknow tag: "<<tagName;

@@ -148,6 +148,7 @@ void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &re
 
 void SieveGlobalVariableWidget::loadScript(const QDomElement &element)
 {
+    //TODO
 }
 
 SieveGlobalVariableLister::SieveGlobalVariableLister(QWidget *parent)
