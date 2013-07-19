@@ -92,7 +92,7 @@ void FolderArchiveConfigureDialog::initializeTab()
                 if (identifier.contains(QLatin1String("pop3")) || identifier.contains(QLatin1String("maildir"))) {
                     FolderArchiveSettingPage *page = new FolderArchiveSettingPage(identifier);
                     page->loadSettings();
-                    mTabWidget->addTab(page, identifier);
+                    mTabWidget->addTab(page, agent.name());
                 }
             }
         }
