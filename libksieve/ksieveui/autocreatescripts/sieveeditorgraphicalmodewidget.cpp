@@ -27,6 +27,7 @@
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QDomDocument>
+#include <QDebug>
 
 
 using namespace KSieveUi;
@@ -61,7 +62,16 @@ SieveEditorGraphicalModeWidget::~SieveEditorGraphicalModeWidget()
 
 void SieveEditorGraphicalModeWidget::loadScript(const QDomDocument &doc)
 {
-    //TODO
+    QDomElement docElem = doc.documentElement();
+    QDomNode n = docElem.firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement();
+        if(!e.isNull()) {
+            qDebug() <<"tag"<< e.tagName();
+        }
+        n = n.nextSibling();
+    }
+    //mSieveScript->loadScript(doc);
 }
 
 void SieveEditorGraphicalModeWidget::readConfig()
