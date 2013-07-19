@@ -16,10 +16,12 @@
 */
 #ifndef PARSINGRESULTDIALOG_H
 #define PARSINGRESULTDIALOG_H
-
+#include "ksieveui_export.h"
 #include <KDialog>
+
 class KTextEdit;
-class ParsingResultDialog : public KDialog
+namespace KSieveUi {
+class KSIEVEUI_EXPORT ParsingResultDialog : public KDialog
 {
     Q_OBJECT
 public:
@@ -30,5 +32,6 @@ public:
 private:
     KTextEdit *mTextEdit;
 };
+}
 
 #endif // PARSINGRESULTDIALOG_H

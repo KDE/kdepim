@@ -55,7 +55,7 @@ int main( int argc, char** argv )
         qDebug() << "ok";
     else
         qDebug() << "bad";
-    ParsingResultDialog dlg;
+    KSieveUi::ParsingResultDialog dlg;
     dlg.setResultParsing(psb.toDom().toString());
 
     dlg.exec();
