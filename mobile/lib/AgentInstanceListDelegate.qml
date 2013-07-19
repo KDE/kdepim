@@ -28,21 +28,6 @@ QML.Item {
   width: QML.ListView.width
   height: 100
 
-  function iconForStatus( online, status )
-  {
-    if ( !online ) {
-      return "images/status/offline.png";
-    }
-
-    if ( status == 0 ) {
-      return "images/status/online.png"
-    } else if ( status == 1 ) {
-      return "images/status/receiving.png";
-    } else {
-      return KDE.iconPath( "dialog-warning", 26 );
-    }
-  }
-
   function statusMessage( msg, progress )
   {
     if ( progress <= 0 || progress >= 100 )
@@ -61,10 +46,14 @@ QML.Item {
     anchors.margins: 4
     anchors.fill: parent
 
-    QML.Image {
+    AgentInstanceStatusIndicator {
       id: statusIcon
+
+      online: model.online
+      status: model.status
+
       anchors { top: parent.top; left: parent.left }
-      source: iconForStatus( model.online, model.status )
+
     }
 
     QML.Text {
