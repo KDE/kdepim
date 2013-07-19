@@ -28,7 +28,7 @@ public:
     static SieveAction* newAction();
     QString code(QWidget *w) const;
     QWidget *createParamWidget( QWidget *parent ) const;
-    void setParamWidgetValue(QWidget *parent ) const;
+    void setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const;
     QString help() const;
 };
 }

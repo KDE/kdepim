@@ -32,7 +32,7 @@ public:
     QWidget *createParamWidget( QWidget *parent ) const;
     QString code(QWidget *) const;
     QStringList needRequires(QWidget *parent) const;
-    void setParamWidgetValue(QWidget *parent ) const;
+    void setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const;
     QString help() const;
 
 private:

@@ -71,7 +71,10 @@ private Q_SLOTS:
     void slotBottom();
     void slotDown();
     void slotUp();
+
 private:
+    void createNewScript(const QString &newName);
+    QString createUniqName();
     QListWidget *mSieveListScript;
     KPushButton *mBtnNew;
     KPushButton *mBtnDelete;

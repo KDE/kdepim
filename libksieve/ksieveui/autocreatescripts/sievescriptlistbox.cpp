@@ -182,16 +182,21 @@ void SieveScriptListBox::updateButtons()
     mBtnUp->setEnabled(!lst.isEmpty() && !theFirst);
 }
 
+void SieveScriptListBox::createNewScript(const QString &newName)
+{
+    SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
+    SieveScriptPage *page = new SieveScriptPage;
+    item->setScriptPage(page);
+    Q_EMIT addNewPage(page);
+    mSieveListScript->setCurrentItem(item);
+    updateButtons();
+}
+
 void SieveScriptListBox::slotNew()
 {
     const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
-        SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
-        SieveScriptPage *page = new SieveScriptPage;
-        item->setScriptPage(page);
-        Q_EMIT addNewPage(page);
-        mSieveListScript->setCurrentItem(item);
-        updateButtons();
+        createNewScript(newName);
     }
 }
 
@@ -311,5 +316,12 @@ void SieveScriptListBox::loadScript(const QDomElement &doc)
     //TODO
 }
 
+QString SieveScriptListBox::createUniqName()
+{
+    static int val = 1;
+    QString pattern = i18n("Script part %1", val);
+    val++;
+    return pattern;
+}
 
 #include "sievescriptlistbox.moc"

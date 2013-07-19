@@ -46,6 +46,11 @@ AutoCreateScriptDialog::~AutoCreateScriptDialog()
     writeConfig();
 }
 
+void AutoCreateScriptDialog::loadScript(const QDomDocument &doc)
+{
+    mEditor->loadScript(doc);
+}
+
 void AutoCreateScriptDialog::setSieveCapabilities(const QStringList &capabilities)
 {
     mEditor->setSieveCapabilities(capabilities);

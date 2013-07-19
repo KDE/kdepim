@@ -64,7 +64,7 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionSetVariable::setParamWidgetValue(QWidget *w ) const
+void SieveActionSetVariable::setParamWidgetValue(const QDomDocument &doc, QWidget *w ) const
 {
 
 }
