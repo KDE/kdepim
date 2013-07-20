@@ -56,9 +56,9 @@ QString SieveConditionFalse::help() const
     return i18n("The \"false\" test always evaluates to false.");
 }
 
-void SieveConditionFalse::setParamWidgetValue(const QDomElement &element, QWidget *parent )
+void SieveConditionFalse::setParamWidgetValue(const QDomElement &, QWidget *)
 {
-
+    //Nothing
 }
 
 #include "sieveconditionfalse.moc"
