@@ -53,7 +53,7 @@ QWidget *SieveConditionMailboxExists::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionMailboxExists::code(QWidget *w) const
 {
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
     return QString::fromLatin1("mailboxexists \"%1\"").arg(editValue);
 }
@@ -78,9 +78,9 @@ QString SieveConditionMailboxExists::help() const
     return i18n("The \"mailboxexists\" test is true if all mailboxes listed in the \"mailbox-names\" argument exist in the mailstore, and each allows the user in whose context the Sieve script runs to \"deliver\" messages into it.");
 }
 
-void SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element, QWidget *parent )
+void SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element, QWidget *w)
 {
-
+    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
 }
 
 #include "sieveconditionmailboxexists.moc"

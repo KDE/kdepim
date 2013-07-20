@@ -71,6 +71,9 @@ QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
 
 void SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
+    KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
+    KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("headers"));
+    MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
 
 }
 

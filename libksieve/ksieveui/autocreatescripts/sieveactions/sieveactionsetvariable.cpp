@@ -66,7 +66,10 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
 
 void SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
+    KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+    KLineEdit *variable = w->findChild<KLineEdit*>(QLatin1String("variable"));
+    //TODO
 }
 
 QString SieveActionSetVariable::code(QWidget *w) const

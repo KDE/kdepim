@@ -66,13 +66,13 @@ QWidget *SieveActionDeleteHeader::createParamWidget( QWidget *parent ) const
 
 void SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    const SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
+    SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
     //combo->setCode(isNegative);
 
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
+    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
     //edit->setText();
 
-    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
+    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
     //value->setTex();
 }
 

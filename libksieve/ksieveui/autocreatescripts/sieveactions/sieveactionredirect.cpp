@@ -63,6 +63,15 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
 
 void SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
+    KLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
+
+    if (mHasCopySupport) {
+        QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+    }
+
+    if (mHasListSupport) {
+        QCheckBox *list = w->findChild<QCheckBox*>( QLatin1String("list") );
+    }
 
 }
 

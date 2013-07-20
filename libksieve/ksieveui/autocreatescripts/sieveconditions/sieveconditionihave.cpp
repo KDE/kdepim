@@ -55,7 +55,7 @@ QWidget *SieveConditionIhave::createParamWidget( QWidget *parent ) const
 
 QString SieveConditionIhave::code(QWidget *w) const
 {
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
     const QString editValue = edit->text();
     return QString::fromLatin1("ihave %1").arg(AutoCreateScriptUtil::createList(editValue, QLatin1Char(',')));
 }
@@ -80,9 +80,9 @@ QString SieveConditionIhave::help() const
     return i18n("The \"ihave\" test provides a means for Sieve scripts to test for the existence of a given extension prior to actually using it.");
 }
 
-void SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidget *parent )
+void SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
 }
 
 #include "sieveconditionihave.moc"

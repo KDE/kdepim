@@ -103,8 +103,15 @@ QString SieveConditionSpamTestPlus::help() const
     return i18n("Sieve implementations that implement the \"spamtest\" test use an identifier of either \"spamtest\" or \"spamtestplus\" for use with the capability mechanism.");
 }
 
-void SieveConditionSpamTestPlus::setParamWidgetValue(const QDomElement &element, QWidget *parent )
+void SieveConditionSpamTestPlus::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
+    QCheckBox *checkbox = w->findChild<QCheckBox*>( QLatin1String("percent") );
+
+    SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
+
+    SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
+
+    QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
 
 }
 

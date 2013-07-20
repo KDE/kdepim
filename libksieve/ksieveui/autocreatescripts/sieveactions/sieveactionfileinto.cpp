@@ -56,7 +56,13 @@ QString SieveActionFileInto::code(QWidget *w) const
 
 void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("fileintolineedit") );
+    if (mHasCopySupport) {
+        QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+    }
+    if (mHasMailBoxSupport) {
+        QCheckBox *create = w->findChild<QCheckBox*>( QLatin1String("create") );
+    }
 }
 
 QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const

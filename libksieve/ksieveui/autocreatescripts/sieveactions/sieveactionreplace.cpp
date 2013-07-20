@@ -70,7 +70,10 @@ QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const
 
 void SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
+    KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("from"));
+    MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
+    //TODO
 }
 
 QString SieveActionReplace::code(QWidget *w) const

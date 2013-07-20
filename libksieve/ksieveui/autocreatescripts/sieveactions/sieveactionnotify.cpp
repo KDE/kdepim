@@ -61,7 +61,9 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
 
 void SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
+    KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
+    //TODO
 }
 
 QString SieveActionNotify::code(QWidget *w) const
