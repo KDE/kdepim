@@ -324,6 +324,7 @@ int SieveActionWidgetLister::actionNumber() const
 
 void SieveActionWidgetLister::loadScript(const QDomElement &element)
 {
+    bool firstAction = true;
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
@@ -332,7 +333,11 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element)
             if (tagName == QLatin1String("action")) {
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString actionName = e.attribute(QLatin1String("name"));
-                    addWidgetAfterThisWidget(widgets().last());
+                    if (firstAction) {
+                        firstAction = false;
+                    } else {
+                        addWidgetAfterThisWidget(widgets().last());
+                    }
                     SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
                     w->setAction(actionName);
                     qDebug()<<" actionName "<<actionName;

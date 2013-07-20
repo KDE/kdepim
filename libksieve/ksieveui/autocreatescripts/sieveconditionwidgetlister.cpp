@@ -194,6 +194,14 @@ void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool re
     mRemove->setEnabled(removeButtonEnabled);
 }
 
+void SieveConditionWidget::setCondition(const QString &conditionName)
+{
+    const int index = mComboBox->findData(conditionName);
+    if (index != -1) {
+        mComboBox->setCurrentIndex(index);
+    }
+}
+
 SieveConditionWidgetLister::SieveConditionWidgetLister(QWidget *parent)
     : KPIM::KWidgetLister(false, MINIMUMCONDITION, MAXIMUMCONDITION, parent)
 {
@@ -291,6 +299,7 @@ int SieveConditionWidgetLister::conditionNumber() const
 
 void SieveConditionWidgetLister::loadScript(const QDomElement &element)
 {
+    bool firstAction = true;
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
@@ -304,9 +313,16 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &element)
                         const QString testTagName = testElement.tagName();
                         if (testTagName == QLatin1String("test")) {
                             if (testElement.hasAttribute(QLatin1String("name"))) {
-                                const QString condition = testElement.attribute(QLatin1String("name"));
-                                addWidgetAfterThisWidget(widgets().last());
-                                qDebug()<<" CONDITION "<<condition;
+                                const QString conditionName = testElement.attribute(QLatin1String("name"));
+                                if (firstAction) {
+                                    firstAction = false;
+                                } else {
+                                    addWidgetAfterThisWidget(widgets().last());
+                                }
+                                SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
+                                w->setCondition(conditionName);
+
+                                qDebug()<<" CONDITION "<<conditionName;
                             }
                         } else {
                             qDebug()<<" unknown condition tag: "<<testTagName;
