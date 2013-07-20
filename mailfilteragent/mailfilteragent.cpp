@@ -19,7 +19,7 @@
 
 #include "mailfilteragent.h"
 
-#include "dbusoperators.h"
+#include "mailcommon/dbusoperators.h"
 #include "dummykernel.h"
 #include "filterlogdialog.h"
 #include "filtermanager.h"

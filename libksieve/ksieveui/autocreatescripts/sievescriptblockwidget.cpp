@@ -23,11 +23,14 @@
 #include <KComboBox>
 #include <KPushButton>
 
+#include <QDomElement>
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QLabel>
+#include <QDebug>
+
 
 namespace KSieveUi {
 SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
@@ -205,6 +208,45 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
     mScriptActionLister->generatedScript(script, requires);
     script += QLatin1String("} ");
 }
+
+void SieveScriptBlockWidget::loadScript(const QDomElement &element)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("test")) {
+                if (e.hasAttribute(QLatin1String("name"))) {
+                    const QString typeCondition = e.attribute(QLatin1String("name"));
+                    if (typeCondition == QLatin1String("anyof")) {
+                        qDebug()<<" Anyof";
+                        mMatchCondition = OrCondition;
+                        mMatchAny->setChecked(true);
+                    } else if (typeCondition == QLatin1String("allof")) {
+                        qDebug()<<" Allof";
+                        mMatchAll->setChecked(true);
+                        mMatchCondition = AndCondition;
+                    } else { //true;
+                        mMatchCondition = AllCondition;
+                        mAllMessageRBtn->setChecked(true);
+                        qDebug()<<" TRUE";
+                    }
+                    mScriptConditionLister->setEnabled(mMatchCondition != AllCondition);
+                }
+                //Conditions
+                mScriptConditionLister->loadScript(e);
+            } else if (tagName == QLatin1String("block")) {
+                //Actions
+                mScriptActionLister->loadScript(e);
+            }
+            qDebug()<<" e.tag"<<e.tagName();
+        }
+        node = node.nextSibling();
+    }
+}
+
+
 }
 
 #include "sievescriptblockwidget.moc"

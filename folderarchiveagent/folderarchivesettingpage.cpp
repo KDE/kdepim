@@ -71,6 +71,7 @@ void FolderArchiveSettingPage::loadSettings()
         mInfo = new FolderArchiveAccountInfo();
         mEnabled->setChecked(false);
     }
+    slotEnableChanged(mEnabled->isChecked());
 }
 
 void FolderArchiveSettingPage::writeSettings()

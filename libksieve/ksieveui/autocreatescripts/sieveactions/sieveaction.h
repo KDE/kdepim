@@ -19,6 +19,7 @@
 #define SIEVEACTION_H
 
 #include <QObject>
+class QDomElement;
 namespace KSieveUi {
 class SieveAction : public QObject
 {
@@ -37,7 +38,7 @@ public:
 
     virtual QWidget *createParamWidget( QWidget *parent ) const;
 
-    virtual void setParamWidgetValue(QWidget *parent ) const;
+    virtual void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
 
     virtual QString code( QWidget *) const;
 
@@ -49,9 +50,14 @@ public:
 
     virtual QString help() const;
 
+    QString comment() const;
+
+    void setComment(const QString &comment);
+
 private:
     QString mName;
     QString mLabel;
+    QString mComment;
 };
 }
 

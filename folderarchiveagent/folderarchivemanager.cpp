@@ -26,6 +26,10 @@
 
 #include <KSharedConfig>
 #include <KGlobal>
+#include <KNotification>
+#include <KIcon>
+#include <KLocale>
+#include <KIconLoader>
 
 FolderArchiveManager::FolderArchiveManager(QObject *parent)
     : QObject(parent),
@@ -44,6 +48,8 @@ FolderArchiveManager::~FolderArchiveManager()
 {
     qDeleteAll(mListAccountInfo);
     mListAccountInfo.clear();
+    qDeleteAll(mJobQueue);
+    delete mCurrentJob;
 }
 
 FolderArchiveAccountInfo *FolderArchiveManager::infoFromInstanceName(const QString &instanceName) const
@@ -106,15 +112,29 @@ void FolderArchiveManager::load()
     }
 }
 
-void FolderArchiveManager::moveDone(const QString &msg)
+void FolderArchiveManager::moveDone()
 {
-    //TODO emit message move done
+    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+
+    KNotification::event( QLatin1String("folderarchivedone"),
+                          i18n("Messages archived"),
+                          pixmap,
+                          0,
+                          KNotification::CloseOnTimeout,
+                          KGlobal::mainComponent());
     nextJob();
 }
 
 void FolderArchiveManager::moveFailed(const QString &msg)
 {
-    //TODO emit message move failed
+    const QPixmap pixmap = KIcon( QLatin1String("kmail") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+
+    KNotification::event( QLatin1String("folderarchiveerror"),
+                          msg,
+                          pixmap,
+                          0,
+                          KNotification::CloseOnTimeout,
+                          KGlobal::mainComponent());
     nextJob();
 }
 

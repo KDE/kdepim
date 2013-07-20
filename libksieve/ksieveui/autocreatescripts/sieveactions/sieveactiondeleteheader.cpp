@@ -64,7 +64,7 @@ QWidget *SieveActionDeleteHeader::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionDeleteHeader::setParamWidgetValue(QWidget *w ) const
+void SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
 {
     const SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
     //combo->setCode(isNegative);

@@ -41,7 +41,8 @@ public:
     enum SendLaterAction {
         Unknown = 0,
         SendDeliveryAtTime = 1,
-        Canceled = 2
+        Canceled = 2,
+        PutInOutbox = 3
     };
 
     explicit SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent = 0);
@@ -54,6 +55,7 @@ public:
 private Q_SLOTS:
     void slotRecurrenceClicked(bool);
     void slotOkClicked();
+    void slotPutOutbox();
 
 private:
     void load(SendLater::SendLaterInfo *info);

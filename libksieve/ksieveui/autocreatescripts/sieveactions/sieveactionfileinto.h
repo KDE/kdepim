@@ -30,10 +30,11 @@ public:
     QString code(QWidget *) const;
     QWidget *createParamWidget( QWidget *parent ) const;
     QStringList needRequires(QWidget *parent) const;
-    void setParamWidgetValue(QWidget *parent ) const;
+    void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
     QString help() const;
+
 private:
     bool mHasCopySupport;
     bool mHasMailBoxSupport;

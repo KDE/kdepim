@@ -615,7 +615,7 @@ performs a menu item function, the default shortcut is listed with the menu item
         the mailing-list address (if you reply to a mailing-list message) or with the
         preferred reply address of the sender. If you want to control which address
         the <guilabel>To:</guilabel> field is preset with then you should use
-        <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply Special</guimenuitem></menuchoice>
+        <menuchoice><guimenu>Message</guimenu><guimenuitem>Reply Special</guimenuitem></menuchoice>.
         Please see <link linkend="reply-special">Reply Special</link> for more information.
         Your identity will automatically be set to the identity this message was
         sent to.</para>
@@ -666,14 +666,14 @@ performs a menu item function, the default shortcut is listed with the menu item
   <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Reply Special</guisubmenu><guimenuitem>Reply With Custom Template</guimenuitem></menuchoice></term>
     <listitem>
       <para>Works just like <guimenuitem>Reply...</guimenuitem> with the option to select a custom template that has
-        been configured in the composer custom templates tab in <guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>, please
+        been configured in the composer custom templates tab in <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>, please
         see <link linkend="configure-composer-custom-templates">Custom Templates</link> for more information.</para>
     </listitem>
   </varlistentry>
   <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Reply Special</guisubmenu><guimenuitem>Reply to All With Custom Template</guimenuitem></menuchoice></term>
     <listitem>
       <para>Works just like <guimenuitem>Reply to All...</guimenuitem> with the option to select a custom template that has
-        been configured in the composer custom templates tab in <guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>, please
+        been configured in the composer custom templates tab in <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>, please
         see <link linkend="configure-composer-custom-templates">Custom Templates</link> for more information.</para>
     </listitem>
   </varlistentry>
@@ -702,7 +702,7 @@ performs a menu item function, the default shortcut is listed with the menu item
     <varlistentry><term><menuchoice><guimenu>Message</guimenu><guisubmenu>Forward</guisubmenu><guimenuitem>With Custom Template</guimenuitem></menuchoice></term>
       <listitem>
         <para>Works just like forward with the option to select a custom template that has
-          been configured in the composer custom templates tab in <guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>, please
+          been configured in the composer custom templates tab in <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem></menuchoice>, please
           see <link linkend="configure-composer-custom-templates">Custom Templates</link> for more information.</para>
       </listitem>
     </varlistentry>
@@ -722,7 +722,7 @@ performs a menu item function, the default shortcut is listed with the menu item
     </varlistentry>
     <varlistentry><term><menuchoice><guimenu>Message</guimenu><guimenuitem>Mailing List</guimenuitem></menuchoice></term>
       <listitem>
-        <para>Offers several options for mailing list messages. The the current working folder must be configured as a mailing list for this to be available. Please see
+        <para>Offers several options for mailing list messages. The current working folder must be configured as a mailing list for this to be available. Please see
           <link linkend="folders-properties-mailinglist">Folder Properties Mailing List</link> for information on setting up mailing lists. The following options are available
           to mailing list folders:</para>
         <itemizedlist>

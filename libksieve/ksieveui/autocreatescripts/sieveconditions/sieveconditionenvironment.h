@@ -40,6 +40,8 @@ public:
     QString serverNeedsCapability() const;
 
     QString help() const;
+
+    void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
 };
 }
 

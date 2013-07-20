@@ -24,6 +24,7 @@
 
 class QSplitter;
 class QStackedWidget;
+class QDomDocument;
 
 namespace KSieveUi {
 class SieveScriptListBox;
@@ -38,6 +39,8 @@ public:
 
     static void setSieveCapabilities( const QStringList &capabilities );
     static QStringList sieveCapabilities();
+
+    void loadScript(const QDomDocument &doc);
 
 private:
     void readConfig();

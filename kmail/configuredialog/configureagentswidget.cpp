@@ -17,20 +17,33 @@
 
 #include "configureagentswidget.h"
 
+#include <akonadi/private/xdgbasedirs_p.h>
+
 #include <KLocale>
+#include <KDesktopFile>
 #include <KDebug>
+#include <KTextBrowser>
+#include <KGlobal>
+#include <KConfigGroup>
 
 #include <QVBoxLayout>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QSplitter>
+#include <QFile>
+#include <QDir>
 
 
 ConfigureAgentsWidget::ConfigureAgentsWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QVBoxLayout *lay = new QVBoxLayout;
+    QHBoxLayout *lay = new QHBoxLayout;
+    mSplitter = new QSplitter;
+    mSplitter->setChildrenCollapsible(false);
+    lay->addWidget(mSplitter);
+
     mTreeWidget = new QTreeWidget;
     QStringList headers;
     headers<<i18n("Activate")<<i18n("Agent Name");
@@ -38,32 +51,76 @@ ConfigureAgentsWidget::ConfigureAgentsWidget(QWidget *parent)
     mTreeWidget->setSortingEnabled(true);
     mTreeWidget->setRootIsDecorated(false);
 
-    lay->addWidget(mTreeWidget);
+    mSplitter->addWidget(mTreeWidget);
+    mDescription = new KTextBrowser;
+    mDescription->setReadOnly(true);
+    mSplitter->addWidget(mDescription);
+
     setLayout(lay);
-    initialize();
+    connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), SLOT(slotItemClicked(QTreeWidgetItem*)));
+    connect(mTreeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), SLOT(slotItemClicked(QTreeWidgetItem*)));
     connect(mTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SIGNAL(changed()));
+    mAgentPathList = Akonadi::XdgBaseDirs::findAllResourceDirs( "data", QLatin1String( "akonadi/agents" ) );
+    initialize();
+    readConfig();
 }
 
 ConfigureAgentsWidget::~ConfigureAgentsWidget()
 {
+    writeConfig();
+}
 
+void ConfigureAgentsWidget::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "ConfigureAgentsWidget" );
+    QList<int> size;
+    size << 400 << 100;
+    mSplitter->setSizes(group.readEntry( "splitter", size));
+}
+
+void ConfigureAgentsWidget::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "ConfigureAgentsWidget" );
+    group.writeEntry( "splitter", mSplitter->sizes());
+}
+
+void ConfigureAgentsWidget::slotItemClicked(QTreeWidgetItem *item)
+{
+    if (item) {
+        if (item->flags() & Qt::ItemIsEnabled) {
+            mDescription->setText(item->data(AgentName, Description).toString());
+        }
+    }
+}
+
+void ConfigureAgentsWidget::addInfos(QTreeWidgetItem *item, const QString &desktopFile)
+{
+    KDesktopFile config(desktopFile);
+    item->setText(AgentName, config.readName());
+    item->setData(AgentName, Description, config.readComment());
 }
 
 void ConfigureAgentsWidget::initialize()
 {
-    createItem(QLatin1String("akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent"), i18n("Send Later Agent"));
-    createItem(QLatin1String("akonadi_archivemail_agent"), QLatin1String("/ArchiveMailAgent"), i18n("Archive Mail Agent"));
-    createItem(QLatin1String("akonadi_newmailnotifier_agent"), QLatin1String("/NewMailNotifierAgent"), i18n("New Mail Notifier Agent"));
+    createItem(QLatin1String("akonadi_sendlater_agent"), QLatin1String("/SendLaterAgent"), QLatin1String("sendlateragent.desktop"));
+    createItem(QLatin1String("akonadi_archivemail_agent"), QLatin1String("/ArchiveMailAgent"), QLatin1String("archivemailagent.desktop"));
+    createItem(QLatin1String("akonadi_newmailnotifier_agent"), QLatin1String("/NewMailNotifierAgent"), QLatin1String("newmailnotifieragent.desktop"));
+    createItem(QLatin1String("akonadi_folderarchive_agent"), QLatin1String("/FolderArchiveAgent"), QLatin1String("folderarchiveagent.desktop"));
     //Add more
 }
 
-void ConfigureAgentsWidget::createItem(const QString &interfaceName, const QString &path, const QString &name)
+void ConfigureAgentsWidget::createItem(const QString &interfaceName, const QString &path, const QString &desktopFileName)
 {
-    QTreeWidgetItem *item = new QTreeWidgetItem(mTreeWidget);
-    item->setText(AgentName, name);
-    item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-    item->setData(AgentName, InterfaceName, interfaceName);
-    item->setData(AgentName, PathName, path);
+    Q_FOREACH(const QString &agentPath, mAgentPathList) {
+        QFile file (agentPath + QDir::separator() + desktopFileName);
+        if (file.exists()) {
+            QTreeWidgetItem *item = new QTreeWidgetItem(mTreeWidget);
+            item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
+            item->setData(AgentName, InterfaceName, interfaceName);
+            item->setData(AgentName, PathName, path);
+            addInfos(item, file.fileName());
+        }
+    }
 }
 
 bool ConfigureAgentsWidget::agentActivateState(const QString &interfaceName, const QString &pathName, bool &failed)

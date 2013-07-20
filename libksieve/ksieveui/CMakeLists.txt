@@ -14,6 +14,8 @@ add_subdirectory(tests)
 
 set(ksieveui_LIB_SRCS
   scriptsparsing/xmlprintingscriptbuilder.cpp
+  scriptsparsing/parsingresultdialog.cpp
+  scriptsparsing/xmlprintingsyntaxhighlighter.cpp
   managesievescriptsdialog.cpp
   widgets/sievetreewidgetitem.cpp
   debug/sievedebugdialog.cpp
@@ -137,4 +139,5 @@ set_target_properties(
 install(TARGETS ksieveui ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(autocreatescripts/tests)
-add_subdirectory(scriptsparsing)
+add_subdirectory(scriptsparsing/tests)
+

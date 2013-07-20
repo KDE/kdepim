@@ -24,6 +24,7 @@
 class KPushButton;
 class QGridLayout;
 class QToolButton;
+class QDomElement;
 
 namespace PimCommon {
 class MinimumComboBox;
@@ -40,6 +41,7 @@ public:
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires);
+    void setCondition(const QString &conditionName, const QDomElement &element);
 
 private Q_SLOTS:
     void slotAddWidget();
@@ -72,6 +74,8 @@ public:
 
     void generatedScript(QString &script, int &numberOfCondition, QStringList &requires);
     int conditionNumber() const;
+    void loadScript(const QDomElement &element);
+
 
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );

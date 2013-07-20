@@ -2,6 +2,9 @@ project(kmail)
 
 include(CheckIncludeFiles)
 
+#add_definitions( -DQT_NO_CAST_FROM_ASCII )
+#add_definitions( -DQT_NO_CAST_TO_ASCII )
+
 
 if (NOT WINCE)
 
@@ -45,6 +48,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${SOPRANO_INCLUDE_DIR}
+  ${AKONADI_INCLUDE_DIR}
  )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
@@ -156,6 +160,13 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
   )
 
 
+  set_source_files_properties(${CMAKE_SOURCE_DIR}/folderarchiveagent/org.freedesktop.Akonadi.FolderArchiveAgent.xml PROPERTIES INCLUDE "../mailcommon/dbusoperators.h")
+
+  qt4_add_dbus_interfaces(kmailprivate_LIB_SRCS
+    ${CMAKE_SOURCE_DIR}/folderarchiveagent/org.freedesktop.Akonadi.FolderArchiveAgent.xml
+  )
+
+
 
   kde4_add_ui_files(kmailprivate_LIB_SRCS
     ui/composercryptoconfiguration.ui
@@ -229,6 +240,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     ${KDE4_KPRINTUTILS_LIBS}
     ${NEPOMUK_CORE_LIBRARY}
     sendlater
+    ${AKONADI_COMMON_LIBRARIES}
   )
 
   set_target_properties(kmailprivate

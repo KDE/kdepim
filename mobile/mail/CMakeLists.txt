@@ -129,12 +129,10 @@ install(FILES
   AttachmentEditor.qml
   ConfigDialog.qml
   FilterEditor.qml
-  ForwardOptionsPage.qml
-  HeaderView.qml
+  FolderPage.qml
   MarkAsPage.qml
+  MailListPage.qml
   MailViewPage.qml
-  NewMailPage.qml
-  ReplyOptionsPage.qml
   EditorView.qml
   FavoriteManagerPage.qml
   kmail-composer.qml

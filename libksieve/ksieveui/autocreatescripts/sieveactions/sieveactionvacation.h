@@ -32,7 +32,7 @@ public:
     QString code(QWidget *) const;
     QString serverNeedsCapability() const;
     bool needCheckIfServerHasCapability() const;
-    void setParamWidgetValue(QWidget *parent ) const;
+    void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
     QStringList needRequires(QWidget *parent) const;
     QString help() const;
 

@@ -75,9 +75,20 @@ QString SieveAction::help() const
     return QString();
 }
 
-void SieveAction::setParamWidgetValue( QWidget *parent ) const
+void SieveAction::setParamWidgetValue( const QDomElement &doc, QWidget *parent ) const
 {
 
 }
+
+QString SieveAction::comment() const
+{
+    return mComment;
+}
+
+void SieveAction::setComment(const QString &comment)
+{
+    mComment = comment;
+}
+
 
 #include "sieveaction.moc"

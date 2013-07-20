@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "sievescriptblockwidget.h"
 
+class QDomElement;
+
 namespace KSieveUi {
 class SieveScriptBlockWidget;
 class SieveScriptTabWidget;
@@ -37,19 +39,28 @@ public:
 
     void generatedScript(QString &script, QStringList &requires);
 
+    SieveIncludeWidget *includeWidget() const;
+    SieveForEveryPartWidget *forEveryPartWidget() const;
+    SieveGlobalVariableWidget *globalVariableWidget() const;
+    SieveScriptBlockWidget *blockIfWidget() const;
+
+    SieveScriptBlockWidget *addScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
+
 
 private Q_SLOTS:
     void slotAddNewBlock(QWidget* widget,KSieveUi::SieveWidgetPageAbstract::PageType type);
     void slotCloseTab(int);
 
 private:
+    SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
     bool hasAnElseBlock() const;
     QString blockName(SieveWidgetPageAbstract::PageType type) const;
-    SieveScriptBlockWidget *createScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
+
     SieveScriptTabWidget *mTabWidget;
     SieveIncludeWidget *mIncludeWidget;
     SieveForEveryPartWidget *mForEveryPartWidget;
     SieveGlobalVariableWidget *mGlobalVariableWidget;
+    SieveScriptBlockWidget *mBlockIfWidget;
 };
 }
 

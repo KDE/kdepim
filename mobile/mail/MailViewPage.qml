@@ -25,24 +25,28 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 PlasmaComponents.Page {
   id: root
 
+  implicitWidth: pageRow.width * 2 /3
+
   //BEGIN Tools
   tools: PlasmaComponents.ToolBarLayout{
     PlasmaComponents.ToolButton{
       iconSource: "go-previous"
 
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
 
     Row {
 
       spacing: root.width * 0.03
 
+      //TODO add forward-as-attachment and redirect when the "multiple actions" button  is ready
       PlasmaComponents.ToolButton {
         iconSource: "mail-forward"
 
         onClicked: application.getAction("message_forward", "").trigger()
       }
 
+      //TODO add reply-to-list and (maybe) reply-without quoting when the "multiple actions" button  is ready
       PlasmaComponents.ToolButton {
         iconSource: "mail-reply-sender"
 

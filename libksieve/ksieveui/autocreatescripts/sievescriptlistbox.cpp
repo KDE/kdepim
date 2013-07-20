@@ -27,6 +27,8 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QPointer>
+#include <QDomElement>
+#include <QDebug>
 
 
 using namespace KSieveUi;
@@ -181,16 +183,22 @@ void SieveScriptListBox::updateButtons()
     mBtnUp->setEnabled(!lst.isEmpty() && !theFirst);
 }
 
+SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName)
+{
+    SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
+    SieveScriptPage *page = new SieveScriptPage;
+    item->setScriptPage(page);
+    Q_EMIT addNewPage(page);
+    mSieveListScript->setCurrentItem(item);
+    updateButtons();
+    return page;
+}
+
 void SieveScriptListBox::slotNew()
 {
     const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
-        SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
-        SieveScriptPage *page = new SieveScriptPage;
-        item->setScriptPage(page);
-        Q_EMIT addNewPage(page);
-        mSieveListScript->setCurrentItem(item);
-        updateButtons();
+        createNewScript(newName);
     }
 }
 
@@ -303,6 +311,65 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
     }
 
     return resultScript;
+}
+
+void SieveScriptListBox::loadScript(const QDomDocument &doc)
+{
+    SieveScriptPage *currentPage = 0;
+    QDomElement docElem = doc.documentElement();
+    QDomNode n = docElem.firstChild();
+    while (!n.isNull()) {
+        QDomElement e = n.toElement();
+        if (!e.isNull()) {
+            QString comment;
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("control")) {
+                if (e.hasAttribute(QLatin1String("name"))) {
+                    const QString controlType = e.attribute(QLatin1String("name"));
+                    qDebug()<<" controlType"<<controlType;
+                    if (controlType == QLatin1String("if")) {
+                        qDebug()<<" IF";
+                        //TODO verify unique name.
+                        currentPage = createNewScript(createUniqName());
+                        currentPage->blockIfWidget()->loadScript(e);
+                    } else if (controlType == QLatin1String("elsif")) {
+                        if (!currentPage) {
+                            qDebug() <<" script is not correct missing if block";
+                        }
+                        SieveScriptBlockWidget *blockWidget = currentPage->addScriptBlock(KSieveUi::SieveWidgetPageAbstract::BlockElsIf);
+                        if (blockWidget) {
+                            blockWidget->loadScript(e);
+                        }
+                        qDebug()<<" ELSEIF";
+                    } else if (controlType == QLatin1String("else")) {
+                        if (!currentPage) {
+                            qDebug() <<" script is not correct missing if block";
+                        }
+                        SieveScriptBlockWidget *blockWidget = currentPage->addScriptBlock(KSieveUi::SieveWidgetPageAbstract::BlockElse);
+                        if (blockWidget) {
+                            blockWidget->loadScript(e);
+                        }
+                        qDebug()<<" ELSE";
+                        //We are sure that we can't have another elsif
+                        currentPage = 0;
+                    }
+                }
+            } else if (tagName == QLatin1String("comment")) {
+                comment =  e.text();
+            }
+
+            qDebug() <<"tag"<< tagName<<" comment "<<comment;
+        }
+        n = n.nextSibling();
+    }
+}
+
+QString SieveScriptListBox::createUniqName()
+{
+    static int val = 1;
+    QString pattern = i18n("Script part %1", val);
+    val++;
+    return pattern;
 }
 
 #include "sievescriptlistbox.moc"

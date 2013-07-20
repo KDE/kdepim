@@ -36,6 +36,11 @@ SelectRelationalMatchType::~SelectRelationalMatchType()
 
 }
 
+void SelectRelationalMatchType::setCode(const QString &code)
+{
+    //TODO split element
+}
+
 QString SelectRelationalMatchType::code() const
 {
     return QString::fromLatin1("%1 \"%2\"").arg(mType->itemData(mType->currentIndex()).toString()).arg(mMatch->itemData(mMatch->currentIndex()).toString());

@@ -123,24 +123,6 @@ ActionMenuContainer {
     name : "email_menu"
     text : KDE.i18n( "Email" )
 
-    ActionListItem {
-      name : "message_reply"
-      onPressAndHold: {
-          pageStack.push(Qt.createComponent("ReplyOptionsPage.qml") )
-          actionPanel.collapse()
-      }
-      reactsOnLongPressed : true
-    }
-
-    ActionListItem {
-      name : "message_forward"
-      onPressAndHold: {
-          pageStack.push(Qt.createComponent("ForwardOptionsPage.qml") )
-          actionPanel.collapse()
-      }
-      reactsOnLongPressed : true
-    }
-
     ScriptActionItem { name : "mark_as_dialog"; title : KDE.i18n( "Mark Email As" ) }
     ActionListItem { name : "message_send_again"; visible : application.collectionIsSentMail }
     ActionListItem { name : "create_todo_reminder" }
@@ -192,13 +174,6 @@ ActionMenuContainer {
 
     searchActionTitle: KDE.i18n( "Search For Emails" )
     configureActionTitle: KDE.i18n( "Configure Mail" )
-
-    onLongPressed : {
-      if ( actionName == "add_new_mail" ) {
-          pageStack.push(Qt.createComponent("NewMailPage.qml") )
-          actionPanel.collapse()
-      }
-    }
 
     ActionListItem { name : "tools_edit_vacation" }
   }

@@ -26,6 +26,8 @@
 #include <QVBoxLayout>
 #include <QSplitter>
 #include <QStackedWidget>
+#include <QDomDocument>
+#include <QDebug>
 
 
 using namespace KSieveUi;
@@ -56,6 +58,11 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
 SieveEditorGraphicalModeWidget::~SieveEditorGraphicalModeWidget()
 {
     writeConfig();
+}
+
+void SieveEditorGraphicalModeWidget::loadScript(const QDomDocument &doc)
+{
+    mSieveScript->loadScript(doc);
 }
 
 void SieveEditorGraphicalModeWidget::readConfig()

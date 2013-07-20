@@ -26,11 +26,13 @@ import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 PlasmaComponets.Page {
 
+  implicitWidth: pageRow.width * 2 /3
+
   tools: PlasmaComponets.ToolBarLayout {
     PlasmaComponets.ToolButton {
       anchors.left: parent.left
       iconSource: "go-previous"
-      onClicked: pageStack.pop()
+      onClicked: pageRow.pop()
     }
   }
 
@@ -111,9 +113,7 @@ PlasmaComponets.Page {
           id: licenseButton
 
           text: i18n( "Show Licenses" )
-          onClicked: {
-            application.openLicenses()
-          }
+          onClicked: application.openLicenses()
         }
       }
     }

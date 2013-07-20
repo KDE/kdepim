@@ -248,4 +248,9 @@ QString SelectDateWidget::code() const
     return QString::fromLatin1("\"%1\" \"%2\"").arg(dateType(type)).arg(dateValue(type));
 }
 
+void SelectDateWidget::setCode(const QString &)
+{
+
+}
+
 #include "selectdatewidget.moc"

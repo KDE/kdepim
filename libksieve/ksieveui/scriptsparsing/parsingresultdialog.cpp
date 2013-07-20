@@ -20,6 +20,8 @@
 #include <KTextEdit>
 #include <KLocale>
 
+using namespace KSieveUi;
+
 ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     : KDialog(parent)
 {

@@ -25,6 +25,7 @@ class QGroupBox;
 class QAbstractButton;
 class KComboBox;
 class KPushButton;
+class QDomElement;
 
 namespace KSieveUi {
 class SieveConditionWidgetLister;
@@ -48,6 +49,8 @@ public:
     void generatedScript(QString &script, QStringList &requires);
 
     MatchCondition matchCondition() const;
+
+    void loadScript(const QDomElement &element);
 
 Q_SIGNALS:
     void addNewBlock(QWidget *widget, KSieveUi::SieveWidgetPageAbstract::PageType type);

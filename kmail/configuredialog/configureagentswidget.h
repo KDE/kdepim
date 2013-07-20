@@ -21,7 +21,9 @@
 #include <QWidget>
 
 class QTreeWidget;
-
+class QSplitter;
+class KTextBrowser;
+class QTreeWidgetItem;
 class ConfigureAgentsWidget : public QWidget
 {
     Q_OBJECT
@@ -34,10 +36,16 @@ public:
     void doLoadFromGlobalSettings();
     void doResetToDefaultsOther();
 
+private Q_SLOTS:
+    void slotItemClicked(QTreeWidgetItem *item);
+
 Q_SIGNALS:
     void changed();
 
 private:
+    void writeConfig();
+    void readConfig();
+
     enum ConfigureAgentsColumn {
         AgentState = 0,
         AgentName
@@ -45,14 +53,19 @@ private:
 
     enum ItemData {
         InterfaceName = Qt::UserRole + 1,
-        PathName = Qt::UserRole + 2
+        PathName = Qt::UserRole + 2,
+        Description = Qt::UserRole + 3
     };
 
     void changeAgentActiveState(bool enable, const QString &interfaceName, const QString &pathName);
     bool agentActivateState(const QString &interfaceName, const QString &pathName, bool &failed);
     void initialize();
+    void addInfos(QTreeWidgetItem *item, const QString &desktopFile);
     void createItem(const QString &interfaceName, const QString &path, const QString &name);
+    QStringList mAgentPathList;
     QTreeWidget *mTreeWidget;
+    QSplitter *mSplitter;
+    KTextBrowser *mDescription;
 };
 
 #endif // CONFIGUREAGENTSWIDGET_H

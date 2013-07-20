@@ -25,6 +25,7 @@ class KPushButton;
 
 class QGridLayout;
 class QToolButton;
+class QDomElement;
 
 namespace PimCommon {
 class MinimumComboBox;
@@ -41,12 +42,14 @@ public:
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires);
+    void setAction(const QString &actionName, const QDomElement &element);
 
 private Q_SLOTS:
     void slotAddWidget();
     void slotRemoveWidget();
     void slotActionChanged(int index);
     void slotHelp();
+    void slotAddComment();
 
 Q_SIGNALS:
     void addWidget(QWidget *w);
@@ -61,6 +64,7 @@ private:
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
     QToolButton *mHelpButton;
+    QToolButton *mCommentButton;
 };
 
 
@@ -72,6 +76,8 @@ public:
     ~SieveActionWidgetLister();
 
     void generatedScript(QString &script, QStringList &requires);
+    void loadScript(const QDomElement &element);
+
     int actionNumber() const;
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );

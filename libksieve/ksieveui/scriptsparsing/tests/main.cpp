@@ -29,33 +29,35 @@ using KSieve::Parser;
 #include <KFileDialog>
 
 #include <QDebug>
+#include <QDomDocument>
 
 int main( int argc, char** argv )
 {
-  QApplication app( argc, argv );
+    QApplication app( argc, argv );
 
-  QByteArray script;
-  const QString fileName = KFileDialog::getOpenFileName();
-  if (!fileName.isEmpty()) {
-      QFile file(fileName);
-      if (file.open(QIODevice::ReadOnly)) {
-          script = file.readAll();
-      }
-  } else {
-      return 0;
-  }
-  qDebug() << "scriptUtf8 = \"" + script +"\"";
+    QByteArray script;
+    const QString fileName = KFileDialog::getOpenFileName();
+    if (!fileName.isEmpty()) {
+        QFile file(fileName);
+        if (file.open(QIODevice::ReadOnly)) {
+            script = file.readAll();
+        }
+    } else {
+        return 0;
+    }
+    //qDebug() << "scriptUtf8 = \"" + script +"\"";
 
-  KSieve::Parser parser( script.begin(),
-                         script.begin() + script.length() );
-  KSieveUi::XMLPrintingScriptBuilder psb;
-  parser.setScriptBuilder( &psb );
-  if ( parser.parse() )
-    qDebug() << "ok";
-  else
-    qDebug() << "bad";
-  ParsingResultDialog dlg;
-  dlg.setResultParsing(psb.result());
-  dlg.exec();
-  return 0;
+    KSieve::Parser parser( script.begin(),
+                           script.begin() + script.length() );
+    KSieveUi::XMLPrintingScriptBuilder psb;
+    parser.setScriptBuilder( &psb );
+    if ( parser.parse() )
+        qDebug() << "ok";
+    else
+        qDebug() << "bad";
+    KSieveUi::ParsingResultDialog dlg;
+    dlg.setResultParsing(psb.toDom().toString());
+
+    dlg.exec();
+    return 0;
 }

@@ -18,14 +18,13 @@
 #ifndef KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
 #define KSIEVE_KSIEVEUI_XMLPRINTINGSCRIPTBUILDER_H
 
-#include <ksieve/parser.h>
-using KSieve::Parser;
-
-#include <ksieve/error.h>
+#include "ksieveui_export.h"
 #include <ksieve/scriptbuilder.h>
 
+#include <QDomDocument>
+
 namespace KSieveUi {
-class XMLPrintingScriptBuilder : public KSieve::ScriptBuilder
+class KSIEVEUI_EXPORT XMLPrintingScriptBuilder : public KSieve::ScriptBuilder
 {
 public:
     explicit XMLPrintingScriptBuilder();
@@ -58,13 +57,16 @@ public:
 
     void clear();
 
+    QDomDocument toDom() const;
+
 private:
-    void write( const char * msg );
-    void write( const QByteArray &key, const QString &value );
+    void write( const QString &msg );
+    void write( const QString &key, const QString &value );
+    void write( const QString &key, const QString &attribute, const QString & value );
 
     QString mResult;
     QString mError;
-    int mIndent;
+    bool mIsAction;
 };
 }
 #endif

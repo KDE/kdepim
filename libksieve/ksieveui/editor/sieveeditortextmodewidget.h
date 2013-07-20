@@ -59,6 +59,7 @@ private slots:
     void slotFind();
     void slotAutoGenerateScripts();
     void slotCheckSyntax();
+    void slotGenerateXml();
 
 private:
     void readConfig();
