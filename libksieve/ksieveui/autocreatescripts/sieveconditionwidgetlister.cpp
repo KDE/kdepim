@@ -300,39 +300,44 @@ int SieveConditionWidgetLister::conditionNumber() const
     return widgets().count();
 }
 
-void SieveConditionWidgetLister::loadScript(const QDomElement &element)
+void SieveConditionWidgetLister::loadTest(const QDomElement &e)
 {
     bool firstAction = true;
+    QDomNode testNode = e.firstChild();
+    while (!testNode.isNull()) {
+        QDomElement testElement = testNode.toElement();
+        if (!testElement.isNull()) {
+            const QString testTagName = testElement.tagName();
+            if (testTagName == QLatin1String("test")) {
+                if (testElement.hasAttribute(QLatin1String("name"))) {
+                    const QString conditionName = testElement.attribute(QLatin1String("name"));
+                    if (firstAction) {
+                        firstAction = false;
+                    } else {
+                        addWidgetAfterThisWidget(widgets().last());
+                    }
+                    SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
+                    w->setCondition(conditionName, testElement);
+
+                    qDebug()<<" CONDITION "<<conditionName;
+                }
+            } else {
+                qDebug()<<" unknown condition tag: "<<testTagName;
+            }
+        }
+        testNode = testNode.nextSibling();
+    }
+}
+
+void SieveConditionWidgetLister::loadScript(const QDomElement &element)
+{
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("testlist")) {
-                QDomNode testNode = e.firstChild();
-                while (!testNode.isNull()) {
-                    QDomElement testElement = testNode.toElement();
-                    if (!testElement.isNull()) {
-                        const QString testTagName = testElement.tagName();
-                        if (testTagName == QLatin1String("test")) {
-                            if (testElement.hasAttribute(QLatin1String("name"))) {
-                                const QString conditionName = testElement.attribute(QLatin1String("name"));
-                                if (firstAction) {
-                                    firstAction = false;
-                                } else {
-                                    addWidgetAfterThisWidget(widgets().last());
-                                }
-                                SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
-                                w->setCondition(conditionName, testElement);
-
-                                qDebug()<<" CONDITION "<<conditionName;
-                            }
-                        } else {
-                            qDebug()<<" unknown condition tag: "<<testTagName;
-                        }
-                    }
-                    testNode = testNode.nextSibling();
-                }
+                loadTest(e);
             }
         }
         node = node.nextSibling();

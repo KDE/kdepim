@@ -128,7 +128,6 @@ QString SieveActionEnclose::code(QWidget *w) const
         result += QString::fromLatin1(":headers \"%1\" ").arg(headersStr);
     }
 
-
     const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
     const QString text = edit->toPlainText();
     if (!text.isEmpty()) {

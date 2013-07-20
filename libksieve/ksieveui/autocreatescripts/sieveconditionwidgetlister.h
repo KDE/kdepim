@@ -86,6 +86,7 @@ protected:
     QWidget *createWidget( QWidget *parent );
 
 private:
+    void loadTest(const QDomElement &e);
     void reconnectWidget(SieveConditionWidget *w );
     void updateAddRemoveButton();
 };
