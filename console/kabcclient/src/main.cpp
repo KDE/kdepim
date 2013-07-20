@@ -302,7 +302,7 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
 
         QString usage = format->optionUsage();
 
-	const QString tmparg = optionAsString(args, "input-format");
+        const QString tmparg = optionAsString(args, "input-format");
         const QString message =
             (usage.isEmpty()
                 ? i18n("No options available for input format %1", tmparg)
@@ -356,7 +356,7 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
 
         QString usage = format->optionUsage();
 
-	const QString tmparg = optionAsString(args, "output-format");
+        const QString tmparg = optionAsString(args, "output-format");
         const QString message =
             (usage.isEmpty()
                 ? i18n("No options available for output format %1", tmparg)
