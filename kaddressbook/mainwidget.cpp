@@ -311,7 +311,7 @@ void MainWidget::configure()
 
 void MainWidget::delayedInit()
 {
-  setViewMode(0);					// get default from settings
+  setViewMode(0);                                        // get default from settings
 
   const KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
   KPIM::UiStateSaver::restoreState( mItemView, group );
@@ -447,8 +447,8 @@ void MainWidget::setupGui()
   mDetailsPane = new QWidget;
   mMainWidgetSplitter1->addWidget( mDetailsPane );
 
-  mMainWidgetSplitter1->setStretchFactor( 1, 9 );	// maximum width for detail
-  mMainWidgetSplitter2->setStretchFactor( 1, 9 );	// for intuitive resizing
+  mMainWidgetSplitter1->setStretchFactor( 1, 9 );        // maximum width for detail
+  mMainWidgetSplitter2->setStretchFactor( 1, 9 );        // for intuitive resizing
   mMainWidgetSplitter2->setChildrenCollapsible(false);
   mMainWidgetSplitter1->setChildrenCollapsible(false);
 
@@ -754,14 +754,14 @@ void MainWidget::setViewMode( int mode )
 {
   int currentMode = Settings::self()->viewMode();
   //kDebug() << "cur" << currentMode << "new" << mode;
-  if ( mode == currentMode ) return;			// nothing to do
+  if ( mode == currentMode ) return;                        // nothing to do
 
   if ( mode == 0 ) {
       mode = currentMode;// initialisation, no save
   } else {
-      saveSplitterStates();				// for 2- or 3-column mode
+      saveSplitterStates();                                // for 2- or 3-column mode
   }
-  if ( mode == 1 ) {					// simple mode
+  if ( mode == 1 ) {                                        // simple mode
     mMainWidgetSplitter2->setVisible( false );
     mDetailsPane->setVisible( true );
     mContactSwitcher->setVisible( true );
@@ -770,16 +770,16 @@ void MainWidget::setViewMode( int mode )
     mMainWidgetSplitter2->setVisible( true );
     mContactSwitcher->setVisible( false );
 
-    if ( mode == 2 ) {					// 2 columns
+    if ( mode == 2 ) {                                        // 2 columns
         mMainWidgetSplitter2->setOrientation( Qt::Vertical );
     }
-    else if ( mode == 3 ) {				// 3 columns
+    else if ( mode == 3 ) {                                // 3 columns
         mMainWidgetSplitter2->setOrientation( Qt::Horizontal );
     }
   }
 
-  Settings::self()->setViewMode( mode );		// save new mode in settings
-  restoreSplitterStates();				// restore state for new mode
+  Settings::self()->setViewMode( mode );                // save new mode in settings
+  restoreSplitterStates();                                // restore state for new mode
   mViewModeGroup->actions().at( mode-1 )->setChecked( true );
 
   if ( mItemView->model() ) {
