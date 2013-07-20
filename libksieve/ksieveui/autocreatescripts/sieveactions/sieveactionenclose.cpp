@@ -72,20 +72,41 @@ QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
 
 void SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
-    KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("headers"));
-    MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
-    int index = 1;
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("str")) {
+            if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                ++index;
+                if (tagValue == QLatin1String("headers")) {
+                    node = node.nextSibling();
+                    QDomElement textElement = node.toElement();
+                    if (!textElement.isNull()) {
+                        const QString textElementTagName = textElement.tagName();
+                        if (textElementTagName == QLatin1String("str")) {
+                            KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
+                            subject->setText(textElement.text());
+                        }
+                    }
+                } else if (tagValue == QLatin1String("subject")) {
+                    node = node.nextSibling();
+                    QDomElement textElement = node.toElement();
+                    if (!textElement.isNull()) {
+                        const QString textElementTagName = textElement.tagName();
+                        if (textElementTagName == QLatin1String("str")) {
+                            KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("headers"));
+                            headers->setText(textElement.text());
+                        }
+                    }
+                } else {
+                    qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tag value:"<<tagValue;
+                }
+            } else if (tagName == QLatin1String("str")) {
+                MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
+                edit->setText(e.text());
             } else {
-                qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
