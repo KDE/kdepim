@@ -40,7 +40,7 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionAbstractFlags::setParamWidgetValue( const QDomDocument &doc, QWidget *parent ) const
+void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *parent ) const
 {
 
 }

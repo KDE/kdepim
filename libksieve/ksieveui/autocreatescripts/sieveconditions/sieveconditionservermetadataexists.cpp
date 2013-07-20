@@ -79,7 +79,7 @@ QString SieveConditionServerMetaDataExists::help() const
     return i18n("The \"servermetadataexists\" test is true if all of the server annotations listed in the \"annotation-names\" argument exist.");
 }
 
-void SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const
+void SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
 {
 
 }

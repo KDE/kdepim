@@ -118,7 +118,7 @@ QString SieveConditionMetaData::help() const
     return i18n("This test retrieves the value of the mailbox annotation \"annotation-name\" for the mailbox \"mailbox\". The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
 }
 
-void SieveConditionMetaData::setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const
+void SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
 {
 
 }

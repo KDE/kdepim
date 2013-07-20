@@ -19,7 +19,7 @@
 #define SIEVECONDITION_H
 
 #include <QObject>
-class QDomDocument;
+class QDomElement;
 namespace KSieveUi {
 class SieveCondition : public QObject
 {
@@ -47,7 +47,7 @@ public:
     virtual QString serverNeedsCapability() const;
 
     virtual QString help() const;
-    virtual void setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const;
+    virtual void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
 
 private:
     QString mName;

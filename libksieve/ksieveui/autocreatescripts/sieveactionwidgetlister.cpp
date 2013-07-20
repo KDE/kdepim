@@ -228,13 +228,15 @@ void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool remov
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-void SieveActionWidget::setAction(const QString &actionName)
+void SieveActionWidget::setAction(const QString &actionName, const QDomElement &element)
 {
     const int index = mComboBox->findData(actionName);
     if (index != -1) {
         mComboBox->setCurrentIndex(index);
+        slotActionChanged(index);
+        KSieveUi::SieveAction* action = mActionList.at( index );
+        action->setParamWidgetValue(element, this);
     }
-    //TODO
 }
 
 SieveActionWidgetLister::SieveActionWidgetLister(QWidget *parent)
@@ -339,7 +341,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element)
                         addWidgetAfterThisWidget(widgets().last());
                     }
                     SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
-                    w->setAction(actionName);
+                    w->setAction(actionName, e);
                     qDebug()<<" actionName "<<actionName;
                 } else {
                     qDebug()<<" SieveActionWidgetLister::loadScript unknow tag: "<<tagName;

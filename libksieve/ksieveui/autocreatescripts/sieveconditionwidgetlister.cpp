@@ -194,11 +194,14 @@ void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool re
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-void SieveConditionWidget::setCondition(const QString &conditionName)
+void SieveConditionWidget::setCondition(const QString &conditionName, const QDomElement &element)
 {
     const int index = mComboBox->findData(conditionName);
     if (index != -1) {
         mComboBox->setCurrentIndex(index);
+        slotConditionChanged(index);
+        KSieveUi::SieveCondition* condition = mConditionList.at( index );
+        condition->setParamWidgetValue(element, this);
     }
 }
 
@@ -320,7 +323,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &element)
                                     addWidgetAfterThisWidget(widgets().last());
                                 }
                                 SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
-                                w->setCondition(conditionName);
+                                w->setCondition(conditionName, e);
 
                                 qDebug()<<" CONDITION "<<conditionName;
                             }

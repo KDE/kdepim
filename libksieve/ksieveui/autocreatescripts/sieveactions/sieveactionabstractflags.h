@@ -27,7 +27,7 @@ public:
     SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent = 0);
 
     QWidget *createParamWidget( QWidget *parent ) const;
-    void setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const;
+    void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
     QString code(QWidget *) const;
     QStringList needRequires(QWidget *parent) const;
 

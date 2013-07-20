@@ -80,7 +80,7 @@ QString SieveConditionIhave::help() const
     return i18n("The \"ihave\" test provides a means for Sieve scripts to test for the existence of a given extension prior to actually using it.");
 }
 
-void SieveConditionIhave::setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const
+void SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
 {
 
 }

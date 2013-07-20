@@ -29,7 +29,7 @@ public:
     static SieveAction* newAction();
     QString code(QWidget *) const;
     QWidget *createParamWidget( QWidget *parent ) const;
-    void setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const;
+    void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
     QStringList needRequires(QWidget *parent) const;
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;

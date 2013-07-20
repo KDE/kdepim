@@ -33,7 +33,7 @@ public:
 
     QString code(QWidget *w) const;
     QString help() const;
-    void setParamWidgetValue(const QDomDocument &doc, QWidget *parent ) const;
+    void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
 };
 }
 
