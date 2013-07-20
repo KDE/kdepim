@@ -74,7 +74,7 @@ public:
 
     void generatedScript(QString &script, int &numberOfCondition, QStringList &requires);
     int conditionNumber() const;
-    void loadScript(const QDomElement &element);
+    void loadScript(const QDomElement &element, bool uniqTest);
 
 
 public Q_SLOTS:
