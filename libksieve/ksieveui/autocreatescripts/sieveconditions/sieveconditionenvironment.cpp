@@ -25,6 +25,7 @@
 #include <QLabel>
 #include <QCompleter>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionEnvironment::SieveConditionEnvironment(QObject *parent)
@@ -108,6 +109,20 @@ void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
 {
     KLineEdit *item =  w->findChild<KLineEdit*>( QLatin1String("item") );
     KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );
+    QDomNode node = element.firstChild();
+    int index = 1;
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+            } else {
+                qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 
 }
 

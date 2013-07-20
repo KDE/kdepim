@@ -228,6 +228,7 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element)
                         mMatchAll->setChecked(true);
                         mMatchCondition = AndCondition;
                     } else { //true;
+                        //Verify it.
                         mMatchCondition = AllCondition;
                         mAllMessageRBtn->setChecked(true);
                         qDebug()<<" TRUE";

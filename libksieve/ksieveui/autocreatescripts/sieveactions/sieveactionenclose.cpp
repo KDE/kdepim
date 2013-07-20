@@ -25,6 +25,8 @@
 
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionEnclose::SieveActionEnclose(QObject *parent)
@@ -36,7 +38,6 @@ SieveAction* SieveActionEnclose::newAction()
 {
     return new SieveActionEnclose;
 }
-
 
 QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
 {
@@ -74,7 +75,21 @@ void SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
     KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
     KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("headers"));
     MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
-
+    int index = 1;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                ++index;
+            } else {
+                qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionEnclose::code(QWidget *w) const

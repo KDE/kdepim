@@ -68,6 +68,9 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
 
 void SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
+    SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
+    KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+    KLineEdit *variable = w->findChild<KLineEdit*>(QLatin1String("variable"));
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
@@ -76,16 +79,13 @@ void SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
             } else {
-                qDebug()<<" SieveActionReject::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
 
     //TODO
-    SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
-    KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
-    KLineEdit *variable = w->findChild<KLineEdit*>(QLatin1String("variable"));
     //TODO
 }
 
