@@ -23,6 +23,8 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionSetVariable::SieveActionSetVariable(QObject *parent)
@@ -66,6 +68,21 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
 
 void SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+            } else {
+                qDebug()<<" SieveActionReject::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+
+    //TODO
     SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
     KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
     KLineEdit *variable = w->findChild<KLineEdit*>(QLatin1String("variable"));
