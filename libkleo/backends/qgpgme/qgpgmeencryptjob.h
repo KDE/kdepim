@@ -60,7 +60,7 @@ namespace Kleo {
 
     /*! \reimp from EncryptJob */
     GpgME::Error start( const std::vector<GpgME::Key> & recipients,
-			const QByteArray & plainText, bool alwaysTrust );
+                        const QByteArray & plainText, bool alwaysTrust );
 
     /*! \reimp from EncryptJob */
     void start( const std::vector<GpgME::Key> & recipients,
@@ -70,8 +70,8 @@ namespace Kleo {
 
     /*! \reimp from EncryptJob */
     GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
-				  const QByteArray & plainText, bool alwaysTrust,
-				  QByteArray & cipherText );
+                                  const QByteArray & plainText, bool alwaysTrust,
+                                  QByteArray & cipherText );
 
     /*! \reimp from Job */
     void showErrorDialog( QWidget * parent, const QString & caption ) const;

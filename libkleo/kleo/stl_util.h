@@ -77,14 +77,14 @@ namespace kdtools {
 
     template <typename InputIterator, typename OutputIterator, typename UnaryPredicate>
     OutputIterator copy_if( InputIterator first, InputIterator last, OutputIterator dest, UnaryPredicate pred ) {
-	while ( first != last ) {
-	    if ( pred( *first ) ) {
-		*dest = *first;
-		++dest;
-	    }
-	    ++first;
-	}
-	return dest;
+        while ( first != last ) {
+            if ( pred( *first ) ) {
+                *dest = *first;
+                ++dest;
+            }
+            ++first;
+        }
+        return dest;
     }
 
     template <typename OutputIterator, typename InputIterator, typename UnaryFunction, typename UnaryPredicate>
@@ -189,42 +189,42 @@ namespace kdtools {
 
     template <typename InputIterator>
     bool any( InputIterator first, InputIterator last ) {
-	while ( first != last )
-	    if ( *first )
-		return true;
-	    else
-		++first;
-	return false;
+        while ( first != last )
+            if ( *first )
+                return true;
+            else
+                ++first;
+        return false;
     }
 
     template <typename InputIterator, typename UnaryPredicate>
     bool any( InputIterator first, InputIterator last, UnaryPredicate pred ) {
-	while ( first != last )
-	    if ( pred( *first ) )
-		return true;
-	    else
-		++first;
-	return false;
+        while ( first != last )
+            if ( pred( *first ) )
+                return true;
+            else
+                ++first;
+        return false;
     }
 
     template <typename InputIterator>
     bool all( InputIterator first, InputIterator last ) {
-	while ( first != last )
-	    if ( *first )
-		++first;
-	    else
-		return false;
-	return true;
+        while ( first != last )
+            if ( *first )
+                ++first;
+            else
+                return false;
+        return true;
     }
 
     template <typename InputIterator, typename UnaryPredicate>
     bool all( InputIterator first, InputIterator last, UnaryPredicate pred ) {
-	while ( first != last )
-	    if ( pred( *first ) )
-		++first;
-	    else
-		return false;
-	return true;
+        while ( first != last )
+            if ( pred( *first ) )
+                ++first;
+            else
+                return false;
+        return true;
     }
 
     template <typename InputIterator>

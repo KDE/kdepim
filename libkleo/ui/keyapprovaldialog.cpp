@@ -83,11 +83,11 @@ static int pref2cb( Kleo::EncryptionPreference p ) {
 
 static QStringList preferencesStrings() {
   return QStringList() << i18n("<placeholder>none</placeholder>")
-		       << i18n("Never Encrypt with This Key")
-		       << i18n("Always Encrypt with This Key")
-		       << i18n("Encrypt Whenever Encryption is Possible")
-		       << i18n("Always Ask")
-		       << i18n("Ask Whenever Encryption is Possible");
+                       << i18n("Never Encrypt with This Key")
+                       << i18n("Always Encrypt with This Key")
+                       << i18n("Encrypt Whenever Encryption is Possible")
+                       << i18n("Always Ask")
+                       << i18n("Ask Whenever Encryption is Possible");
 }
 
 
@@ -179,7 +179,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
   // don't make the dialog too large
   const QRect desk = KGlobalSettings::desktopGeometry( this );
   setInitialSize( QSize( qMin( size.width(), 3 * desk.width() / 4 ),
-			 qMin( size.height(), 7 * desk.height() / 8 ) ) );
+                         qMin( size.height(), 7 * desk.height() / 8 ) ) );
 }
 
 Kleo::KeyApprovalDialog::~KeyApprovalDialog() {

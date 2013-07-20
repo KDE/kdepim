@@ -98,7 +98,7 @@ void Kleo::ProgressBar::fixup( bool newValue ) {
     if ( !mBusyTimer->isActive() ) {
       mBusyTimer->start( busyTimerTickInterval );
       if ( newValue )
-	QProgressBar::setValue( mRealProgress );
+        QProgressBar::setValue( mRealProgress );
     }
   } else {
     kDebug(5150) <<"(new value) normal progress";

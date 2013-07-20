@@ -240,7 +240,7 @@ namespace Kleo {
     /* reimp */ void doLoad();
 
   private:
-	QLineEdit * mLineEdit;
+        QLineEdit * mLineEdit;
     KUrlRequester * mUrlRequester;
   };
 

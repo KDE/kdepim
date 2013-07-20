@@ -102,15 +102,15 @@ void KDHorizontalLine::calculateFrame() {
       QRect r = rect();
       const int va = style().styleHint( QStyle::SH_GroupBox_TextLabelVerticalAlignment, this );
       if( va & Qt::AlignVCenter )
-        r.setTop( fm.height() / 2 );		// frame rect should be
+        r.setTop( fm.height() / 2 );                // frame rect should be
       else if( va & Qt::AlignTop )
         r.setTop( fm.ascent() );
-      setFrameRect( r );			//   smaller than client rect
+      setFrameRect( r );                        //   smaller than client rect
       return;
     }
   }
   // no visible label
-  setFrameRect( QRect(0,0,0,0) );		//  then use client rect
+  setFrameRect( QRect(0,0,0,0) );                //  then use client rect
 #endif
 }
 
@@ -132,14 +132,14 @@ QSize KDHorizontalLine::minimumSizeHint() const {
 void KDHorizontalLine::paintEvent( QPaintEvent * e ) {
   QPainter paint( this );
 
-  if ( mLenVisible ) {	// draw title
+  if ( mLenVisible ) {        // draw title
     const QFontMetrics & fm = paint.fontMetrics();
     const int h = fm.height();
     const int tw = fm.width( mTitle, mLenVisible ) + fm.width(QChar(' '));
     int x;
-    if ( mAlign & Qt::AlignHCenter )		// center alignment
+    if ( mAlign & Qt::AlignHCenter )                // center alignment
       x = frameRect().width()/2 - tw/2;
-    else if ( mAlign & Qt::AlignRight )	// right alignment
+    else if ( mAlign & Qt::AlignRight )        // right alignment
       x = frameRect().width() - tw;
     else if ( mAlign & Qt::AlignLeft )       // left alignment
       x = 0;

@@ -50,9 +50,9 @@ int main( int argc, char ** argv ) {
   KIconLoader::global()->addAppDir( "kdepim" );
 
   Kleo::KeySelectionDialog dlg( "Kleo::KeySelectionDialog Test",
-				"Please select a key:",
-				std::vector<GpgME::Key>(),
-				Kleo::KeySelectionDialog::AllKeys, true, true );
+                                "Please select a key:",
+                                std::vector<GpgME::Key>(),
+                                Kleo::KeySelectionDialog::AllKeys, true, true );
 
   if ( dlg.exec() == QDialog::Accepted ) {
     kDebug(5150) <<"accepted; selected key:" << (dlg.selectedKey().userID(0).id() ? dlg.selectedKey().userID(0).id() :"<null>") <<"\nselected _keys_:";

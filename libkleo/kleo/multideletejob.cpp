@@ -96,7 +96,7 @@ GpgME::Error Kleo::MultiDeleteJob::startAJob() {
     return GpgME::Error(0);
   mJob = mProtocol->deleteJob();
   assert( mJob ); // FIXME: we need a way to generate errors ourselves,
-		  // but I don't like the dependency on gpg-error :/
+                  // but I don't like the dependency on gpg-error :/
 
   connect( mJob, SIGNAL(result(GpgME::Error)), SLOT(slotResult(GpgME::Error)) );
 

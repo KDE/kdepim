@@ -92,7 +92,7 @@ namespace Kleo {
     static QString escape( const QString & value );
 
     /** @return the DN in a reordered form, according to the settings in
-	the [DN] group of the application's config file */
+        the [DN] group of the application's config file */
     QString prettyDN() const;
     /** @return the DN in the original form */
     QString dn() const;
@@ -127,8 +127,8 @@ namespace Kleo {
 
     const Attribute & operator=( const Attribute & other ) {
       if ( this != &other ) {
-	mName = other.name();
-	mValue = other.value();
+        mName = other.name();
+        mValue = other.value();
       }
       return *this;
     }

@@ -64,12 +64,12 @@ AddDirectoryServiceDialogImpl::~AddDirectoryServiceDialogImpl()
 
 void AddDirectoryServiceDialogImpl::slotAccept()
 {
-	accept();
+        accept();
 }
 
 void AddDirectoryServiceDialogImpl::slotCancel()
 {
-	reject();
+        reject();
 }
 
 

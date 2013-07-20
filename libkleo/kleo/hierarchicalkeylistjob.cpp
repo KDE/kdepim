@@ -51,7 +51,7 @@
 #include <assert.h>
 
 Kleo::HierarchicalKeyListJob::HierarchicalKeyListJob( const CryptoBackend::Protocol * protocol,
-						      bool remote, bool includeSigs, bool validating )
+                                                      bool remote, bool includeSigs, bool validating )
   : KeyListJob( 0 ),
     mProtocol( protocol ),
     mRemote( remote ),
@@ -72,7 +72,7 @@ GpgME::Error Kleo::HierarchicalKeyListJob::start( const QStringList & patterns, 
   if ( secretOnly || patterns.empty() )
     return GpgME::Error::fromCode( GPG_ERR_UNSUPPORTED_OPERATION, GPG_ERR_SOURCE_GPGME );
   qCopy( patterns.begin(), patterns.end(),
-	 std::inserter( mNextSet, mNextSet.begin() ) );
+         std::inserter( mNextSet, mNextSet.begin() ) );
   const GpgME::Error err = startAJob();
   if ( err )
     deleteLater();
@@ -80,7 +80,7 @@ GpgME::Error Kleo::HierarchicalKeyListJob::start( const QStringList & patterns, 
 }
 
 GpgME::KeyListResult Kleo::HierarchicalKeyListJob::exec( const QStringList &, bool,
-							 std::vector<GpgME::Key> & keys ) {
+                                                         std::vector<GpgME::Key> & keys ) {
   keys.clear();
   return GpgME::KeyListResult( GpgME::Error::fromCode( GPG_ERR_UNSUPPORTED_OPERATION, GPG_ERR_SOURCE_GPGME ) );
 }
@@ -105,12 +105,12 @@ void Kleo::HierarchicalKeyListJob::slotResult( const GpgME::KeyListResult & res 
   mIntermediateResult.mergeWith( res );
   std::set<QString> tmp;
   std::set_difference( mNextSet.begin(), mNextSet.end(),
-		       mScheduledSet.begin(), mScheduledSet.end(),
-		       std::inserter( tmp, tmp.begin() ) );
+                       mScheduledSet.begin(), mScheduledSet.end(),
+                       std::inserter( tmp, tmp.begin() ) );
   mNextSet.clear();
   std::set_difference( tmp.begin(), tmp.end(),
-		       mSentSet.begin(), mSentSet.end(),
-		       std::inserter( mNextSet, mNextSet.begin() ) );
+                       mSentSet.begin(), mSentSet.end(),
+                       std::inserter( mNextSet, mNextSet.begin() ) );
   if ( mIntermediateResult.error() || mNextSet.empty() ) {
     emit done();
     emit result( mIntermediateResult );
@@ -136,7 +136,7 @@ GpgME::Error Kleo::HierarchicalKeyListJob::startAJob() {
     return GpgME::Error(0);
   mJob = mProtocol->keyListJob( mRemote, mIncludeSigs, mValidating );
   assert( mJob ); // FIXME: we need a way to generate errors ourselves,
-		  // but I don't like the dependency on gpg-error :/
+                  // but I don't like the dependency on gpg-error :/
 
   connect( mJob, SIGNAL(nextKey(GpgME::Key)), SLOT(slotNextKey(GpgME::Key)) );
   connect( mJob, SIGNAL(result(GpgME::KeyListResult)), SLOT(slotResult(GpgME::KeyListResult)) );

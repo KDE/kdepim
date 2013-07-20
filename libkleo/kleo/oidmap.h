@@ -39,7 +39,7 @@ static struct {
 } oidmap[] = {
   // keep them ordered by oid:
   { "SP", "ST" }, // hack to show the Sphinx-required/desired SP for
-		  // StateOrProvince, otherwise known as ST or even S
+                  // StateOrProvince, otherwise known as ST or even S
   { "NameDistinguisher", "0.2.262.1.10.7.20" },
   { "EMAIL", "1.2.840.113549.1.9.1" },
   { "SN", "2.5.4.4" },
