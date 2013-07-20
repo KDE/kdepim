@@ -23,6 +23,8 @@
 #include <QSpinBox>
 #include <QHBoxLayout>
 #include <QComboBox>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -78,9 +80,31 @@ QString SieveConditionSize::help() const
     return i18n("The \"size\" test deals with the size of a message.  It takes either a tagged argument of \":over\" or \":under\", followed by a number representing the size of the message.");
 }
 
-void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
+void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
+    QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("spinboxsize") );
+    SelectSizeTypeComboBox *sizeTypeCombo = w->findChild<SelectSizeTypeComboBox*>( QLatin1String("sizetype") );
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                qDebug()<<" tagValue"<<tagValue;
+                const int index = combo->findData(QString(QLatin1Char(':') + tagValue));
+                if (index != -1) {
+                    combo->setCurrentIndex(index);
+                }
+            } else if (tagName == QLatin1String("num")) {
+                const QString tagValue = e.text();
+            } else {
+                qDebug()<<" SieveConditionSize::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionsize.moc"

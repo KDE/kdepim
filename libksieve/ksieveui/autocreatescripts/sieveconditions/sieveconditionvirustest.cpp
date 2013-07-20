@@ -97,7 +97,7 @@ QString SieveConditionVirusTest::help() const
     return i18n("Sieve implementations that implement the \"virustest\" test have an identifier of \"virustest\" for use with the capability mechanism.");
 }
 
-void SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
+void SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QWidget *parent )
 {
 
 }

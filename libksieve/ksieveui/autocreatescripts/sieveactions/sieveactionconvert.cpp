@@ -67,7 +67,7 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
+void SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
     const SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
     //fromMimeType->setCode();

@@ -62,7 +62,7 @@ QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
+void SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
     const QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
     //

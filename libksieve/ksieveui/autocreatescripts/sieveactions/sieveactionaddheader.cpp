@@ -65,7 +65,7 @@ QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
+void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
     const SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
     //combo->setCode();

@@ -104,7 +104,7 @@ QString SieveConditionEnvironment::help() const
     return i18n("The environment test retrieves the item of environment information specified by the name string and matches it to the values specified in the key-list argument.");
 }
 
-void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
+void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *parent )
 {
 
 }

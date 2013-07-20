@@ -323,7 +323,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &element)
                                     addWidgetAfterThisWidget(widgets().last());
                                 }
                                 SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
-                                w->setCondition(conditionName, e);
+                                w->setCondition(conditionName, testElement);
 
                                 qDebug()<<" CONDITION "<<conditionName;
                             }
