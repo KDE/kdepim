@@ -303,10 +303,10 @@ BaseG::decrypt( Block& block, const char *passphrase )
       mRecipients.clear();
       while( (index2 = error.indexOf('\n',index+1)) <= end )
       {
-	QByteArray item = error.mid(index+1,index2-index-1);
-	item.trimmed();
-	mRecipients.append(item);
-	index = index2;
+        QByteArray item = error.mid(index+1,index2-index-1);
+        item.trimmed();
+        mRecipients.append(item);
+        index = index2;
       }
     }
 #endif

@@ -79,8 +79,8 @@ Base6::decrypt( Block& block, const char *passphrase )
       ///     by adding an additional '+verbose=2' to the command line
       if (!passphrase || !output.length())
       {
-	errMsg = i18n("Bad passphrase; could not decrypt.");
-	//kDebug( 5326 ) <<"Base: passphrase is bad";
+        errMsg = i18n("Bad passphrase; could not decrypt.");
+        //kDebug( 5326 ) <<"Base: passphrase is bad";
         status |= BADPHRASE;
         status |= ERROR;
       }
@@ -289,13 +289,13 @@ Base6::pubKeys()
 
       if( (index3 >index2) || (index3 == -1) )
       {
-	// second address for the same key
-	line = error.mid(index+1,index2-index-1);
-	line = line.trimmed();
+        // second address for the same key
+        line = error.mid(index+1,index2-index-1);
+        line = line.trimmed();
       } else {
-	// line with new key
-	int index4 = error.indexOf(QRegExp("/\\d{2}/\\d{2} "), index);
-	line = error.mid(index4+7,index2-index4-7);
+        // line with new key
+        int index4 = error.indexOf(QRegExp("/\\d{2}/\\d{2} "), index);
+        line = error.mid(index4+7,index2-index4-7);
       }
       //kDebug( 5326 ) <<"Base: found key for" << (const char *)line;
 
@@ -653,8 +653,8 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         pos += 18;
         QByteArray fingerprint = output.mid( pos, eol-pos );
         // remove white space from the fingerprint
-	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1; )
-	  fingerprint.replace( idx, 1, "" );
+        for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1; )
+          fingerprint.replace( idx, 1, "" );
 
         //kDebug( 5326 )<<"Fingerprint:"<<fingerprint;
         assert( subkey != 0 );

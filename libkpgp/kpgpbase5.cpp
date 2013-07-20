@@ -140,24 +140,24 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
       int index3 = error.indexOf("WARNING: The above key",index+1);
       if(index2 == -1 || (index2 > index3 && index3 != -1))
       {
-	// the key wasn't valid, no encryption to this person
-	// extract the person
-	index2 = error.indexOf('\n',index);
-	index3 = error.indexOf('\n',index2+1);
-	aStr += error.mid(index2+1, index3-index2-1);
-	aStr += ", ";
+        // the key wasn't valid, no encryption to this person
+        // extract the person
+        index2 = error.indexOf('\n',index);
+        index3 = error.indexOf('\n',index2+1);
+        aStr += error.mid(index2+1, index3-index2-1);
+        aStr += ", ";
       }
     }
     if(!aStr.isEmpty())
     {
       aStr.truncate(aStr.length()-2);
       if(error.contains("No valid keys found") )
-	errMsg = i18n("The key(s) you want to encrypt your message "
-		      "to are not trusted. No encryption done.");
+        errMsg = i18n("The key(s) you want to encrypt your message "
+                      "to are not trusted. No encryption done.");
       else
-	errMsg = i18n("The following key(s) are not trusted:\n%1\n"
+        errMsg = i18n("The following key(s) are not trusted:\n%1\n"
                       "Their owner(s) will not be able to decrypt the message.",
-		      QString::fromLocal8Bit( aStr ));
+                      QString::fromLocal8Bit( aStr ));
       status |= ERROR;
       status |= BADKEYS;
     }
@@ -221,10 +221,10 @@ Base5::decrypt( Block& block, const char *passphrase )
     {
       if(passphrase != 0)
       {
-	errMsg = i18n("Bad passphrase; could not decrypt.");
-	kDebug( 5326 ) <<"Base: passphrase is bad";
-	status |= BADPHRASE;
-	status |= ERROR;
+        errMsg = i18n("Bad passphrase; could not decrypt.");
+        kDebug( 5326 ) <<"Base: passphrase is bad";
+        status |= BADPHRASE;
+        status |= ERROR;
       }
     }
     else
@@ -249,10 +249,10 @@ Base5::decrypt( Block& block, const char *passphrase )
       int index2;
       while( (index2 = error.indexOf('\n',index+1)) <= end )
       {
-	QByteArray item = error.mid(index+1,index2-index-1);
-	item.trimmed();
-	mRecipients.append(item);
-	index = index2;
+        QByteArray item = error.mid(index+1,index2-index-1);
+        item.trimmed();
+        mRecipients.append(item);
+        index = index2;
       }
     }
 #endif
@@ -650,7 +650,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       QByteArray fingerprint = output.mid( pos, eol-pos );
       // remove white space from the fingerprint
       for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
-	fingerprint.replace( idx, 1, "" );
+        fingerprint.replace( idx, 1, "" );
       assert( subkey != 0 );
       subkey->setFingerprint( fingerprint );
       //kDebug( 5326 )<<"Fingerprint:"<<fingerprint;
