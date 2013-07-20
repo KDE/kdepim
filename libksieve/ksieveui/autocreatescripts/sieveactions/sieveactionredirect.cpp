@@ -24,6 +24,8 @@
 
 #include <QHBoxLayout>
 #include <QCheckBox>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -63,16 +65,36 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
 
 void SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    KLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
-
-    if (mHasCopySupport) {
-        QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                KLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
+                const QString tagValue = e.text();
+                edit->setText(tagValue);
+            } else if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("copy")) {
+                    if (mHasCopySupport) {
+                        QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+                        copy->setChecked(true);
+                    }
+                } else if (tagValue == QLatin1String("list")) {
+                    if (mHasListSupport) {
+                        QCheckBox *list = w->findChild<QCheckBox*>( QLatin1String("list") );
+                        list->setChecked(true);
+                    }
+                } else {
+                    qDebug()<<" SieveActionRedirect::setParamWidgetValue tag unknown"<<tagValue;
+                }
+            } else {
+                qDebug()<<" SieveActionRedirect::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
     }
-
-    if (mHasListSupport) {
-        QCheckBox *list = w->findChild<QCheckBox*>( QLatin1String("list") );
-    }
-
 }
 
 QString SieveActionRedirect::code(QWidget *w) const
