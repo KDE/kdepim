@@ -406,15 +406,15 @@ int main( int argc, char * argv[]  ) {
       QString result;
       Lexer::Token token = lexer.nextToken( result );
       if ( lexer.error() ) {
-	cout << "Error " << token2string( token ) << ": \""
-	     << lexer.error().asString().toLatin1().constData() << "\" at ("
-	     << lexer.error().line() << "," << lexer.error().column()
-	     << ")" << endl;
-	break;
+        cout << "Error " << token2string( token ) << ": \""
+             << lexer.error().asString().toLatin1().constData() << "\" at ("
+             << lexer.error().line() << "," << lexer.error().column()
+             << ")" << endl;
+        break;
       } else
-	cout << "Got " << token2string( token ) << ": \""
-	     << result.toUtf8().data() << "\" at ("
-	     << lexer.line() << "," << lexer.column() << ")" << endl;
+        cout << "Got " << token2string( token ) << ": \""
+             << result.toUtf8().data() << "\" at ("
+             << lexer.line() << "," << lexer.column() << ")" << endl;
     }
     cout << "End" << endl;
 
@@ -427,51 +427,51 @@ int main( int argc, char * argv[]  ) {
       Lexer lexer( t.string, send, Lexer::IncludeComments );
       cerr << t.name << ":";
       for ( int j = 0 ; !lexer.atEnd() ; ++j ) {
-	QString result;
-	Lexer::Token token = lexer.nextToken( result );
-	Error error = lexer.error();
-	if ( t.expected[j].token != token ) {
-	  ok = false;
-	  cerr << " expected token " << token2string( t.expected[j].token )
-	       << ", got " << token2string( token );
-	}
-	if ( QString::fromUtf8( t.expected[j].result ) != result ) {
-	  ok = false;
-	  if ( t.expected[j].result )
-	    cerr << " expected string \"" << t.expected[j].result << "\"";
-	  else
-	    cerr << " expected null string";
-	  if ( !result.toUtf8().isNull() )
-	    cerr << ", got \"" << result.toUtf8().data() << "\"";
-	  else
-	    cerr << ", got null string";
-	}
-	if ( error && error.type() != t.expectedError ) {
-	  ok = false;
-	  cerr << " expected error #" << (int)t.expectedError
-	       << ", got #" << (int)error.type();
-	}
-	if ( error && ( error.line() != t.errorLine || error.column() != t.errorCol ) ) {
-	  ok = false;
-	  cerr << " expected position (" << t.errorLine << "," << t.errorCol
-	       << "), got (" << error.line() << "," << error.column() << ")";
-	}
-	if ( error )
-	  goto ErrorOut;
-	if ( t.expected[j].token == Lexer::None &&
-	     t.expected[j].result == 0 )
-	  break;
+        QString result;
+        Lexer::Token token = lexer.nextToken( result );
+        Error error = lexer.error();
+        if ( t.expected[j].token != token ) {
+          ok = false;
+          cerr << " expected token " << token2string( t.expected[j].token )
+               << ", got " << token2string( token );
+        }
+        if ( QString::fromUtf8( t.expected[j].result ) != result ) {
+          ok = false;
+          if ( t.expected[j].result )
+            cerr << " expected string \"" << t.expected[j].result << "\"";
+          else
+            cerr << " expected null string";
+          if ( !result.toUtf8().isNull() )
+            cerr << ", got \"" << result.toUtf8().data() << "\"";
+          else
+            cerr << ", got null string";
+        }
+        if ( error && error.type() != t.expectedError ) {
+          ok = false;
+          cerr << " expected error #" << (int)t.expectedError
+               << ", got #" << (int)error.type();
+        }
+        if ( error && ( error.line() != t.errorLine || error.column() != t.errorCol ) ) {
+          ok = false;
+          cerr << " expected position (" << t.errorLine << "," << t.errorCol
+               << "), got (" << error.line() << "," << error.column() << ")";
+        }
+        if ( error )
+          goto ErrorOut;
+        if ( t.expected[j].token == Lexer::None &&
+             t.expected[j].result == 0 )
+          break;
       }
       if ( !lexer.atEnd() ) {
-	ok = false;
-	cerr << " premature end of expected token list";
+        ok = false;
+        cerr << " premature end of expected token list";
       }
     ErrorOut:
       if ( ok )
-	cerr << " ok";
+        cerr << " ok";
       cerr << endl;
       if ( !ok )
-	success = false;
+        success = false;
     }
     if ( !success )
       return 1;

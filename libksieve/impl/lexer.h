@@ -85,8 +85,8 @@ namespace KSieve {
     bool eatCRLF();
 
     /** Cursor must be positioned after the opening hash (#). If
-	parsing is successful, cursor is positioned behind the CRLF
-	that ended the comment's line (or past the end). */
+        parsing is successful, cursor is positioned behind the CRLF
+        that ended the comment's line (or past the end). */
     bool parseHashComment( QString & result, bool reallySave=false );
 
     /** Cursor must be positioned after the opening slash-asterisk */
@@ -118,7 +118,7 @@ namespace KSieve {
 
     struct State {
       State( const char * s=0 )
-	: cursor( s ), line( 0 ), beginOfLine( s ), error() {}
+        : cursor( s ), line( 0 ), beginOfLine( s ), error() {}
       const char * cursor;
       int line;
       const char * beginOfLine;
@@ -152,7 +152,7 @@ namespace KSieve {
       makeIllegalCharError( *mState.cursor );
     }
     /** Defines the current char to end a line.
-	Warning: increases @p mCursor!
+        Warning: increases @p mCursor!
     **/
     void newLine() {
       ++mState.line;
@@ -160,25 +160,25 @@ namespace KSieve {
     }
     bool skipTo( char c, bool acceptEnd=false ) {
       while( !atEnd() ) {
-	if ( *mState.cursor == '\n' || *mState.cursor == '\r' ) {
-	  if ( !eatCRLF() ) return false;
-	} else if ( *mState.cursor == c ) {
-	  return true;
-	} else {
-	  ++mState.cursor;
-	}
+        if ( *mState.cursor == '\n' || *mState.cursor == '\r' ) {
+          if ( !eatCRLF() ) return false;
+        } else if ( *mState.cursor == c ) {
+          return true;
+        } else {
+          ++mState.cursor;
+        }
       }
       return acceptEnd;
     }
     bool skipToCRLF( bool acceptEnd=true ) {
       for ( ; !atEnd() ; ++mState.cursor )
-	if ( *mState.cursor == '\n' || *mState.cursor == '\r' )
-	  return eatCRLF();
+        if ( *mState.cursor == '\n' || *mState.cursor == '\r' )
+          return eatCRLF();
       return acceptEnd;
     }
     void skipTo8BitEnd() {
       while ( !atEnd() && (signed char)*mState.cursor < 0 )
-	++mState.cursor;
+        ++mState.cursor;
     }
     void skipToDelim();
   };
