@@ -17,6 +17,7 @@
 
 #include "sieveconditionsize.h"
 #include "widgets/selectsizetypecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 
@@ -93,12 +94,17 @@ void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 qDebug()<<" tagValue"<<tagValue;
-                const int index = combo->findData(QString(QLatin1Char(':') + tagValue));
+                const int index = combo->findData(AutoCreateScriptUtil::tagValue(tagValue));
                 if (index != -1) {
                     combo->setCurrentIndex(index);
                 }
             } else if (tagName == QLatin1String("num")) {
-                const QString tagValue = e.text();
+                const int tagValue = e.text().toInt();
+                //TODO fix value
+                if (element.hasAttribute(QLatin1String("quantifier"))) {
+                    const QString numIdentifier = element.attribute(QLatin1String("quantifier"));
+                    sizeTypeCombo->setCode(numIdentifier);
+                }
             } else {
                 qDebug()<<" SieveConditionSize::setParamWidgetValue unknown tagName "<<tagName;
             }

@@ -85,3 +85,8 @@ QString AutoCreateScriptUtil::negativeString(bool isNegative)
 {
     return (isNegative ? QLatin1String("not ") : QString());
 }
+
+QString AutoCreateScriptUtil::tagValue(const QString &tag)
+{
+    return QLatin1Char(':') + tag;
+}
