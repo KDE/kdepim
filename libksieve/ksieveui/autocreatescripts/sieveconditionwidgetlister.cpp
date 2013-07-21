@@ -336,8 +336,6 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &element, bool uni
                                     }
                                     SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
                                     w->setCondition(conditionName, testElement);
-
-                                    qDebug()<<" CONDITION "<<conditionName;
                                 }
                             } else {
                                 qDebug()<<" unknown condition tag: "<<testTagName;
