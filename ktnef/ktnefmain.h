@@ -15,7 +15,7 @@
 */
 
 #ifndef KTNEFMAIN_H
-#define	KTNEFMAIN_H
+#define KTNEFMAIN_H
 
 #include <KXmlGuiWindow>
 

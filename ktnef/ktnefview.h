@@ -15,7 +15,7 @@
  */
 
 #ifndef KTNEFVIEW_H
-#define	KTNEFVIEW_H
+#define KTNEFVIEW_H
 
 #include <QTreeWidget>
 
