@@ -48,14 +48,14 @@ using namespace IncidenceEditorNG;
  */
 static bool incidenceHasDefaultTimes( const KCalCore::Incidence::Ptr &incidence )
 {
-  if (incidence->allDay())
+  if (!incidence || incidence->allDay())
     return false;
 
   QTime defaultDuration = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
   if ( !defaultDuration.isValid() )
     return false;
 
-  QTime defaultStart = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
+  QTime defaultStart = CalendarSupport::KCalPrefs::instance()->mStartTime.time();
   if ( !defaultStart.isValid() )
     return false;
 
@@ -158,16 +158,23 @@ bool IncidenceDateTime::eventFilter( QObject *obj, QEvent *event )
 
 void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
 {
+  if (mLoadedIncidence && *mLoadedIncidence == *incidence) {
+    return;
+  }
+
+  const bool isTemplate             = incidence->customProperty( "kdepim", "isTemplate" ) == "true";
+  const bool templateOverridesTimes = incidenceHasDefaultTimes( mLoadedIncidence );
+
   mLoadedIncidence = incidence;
   mLoadingIncidence = true;
 
   // We can only handle events or todos.
   if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<KCalCore::Todo>() ) {
-    load( todo );
+    load( todo, isTemplate, templateOverridesTimes );
   } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<KCalCore::Event>() ) {
-    load( event );
+    load( event, isTemplate, templateOverridesTimes );
   } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<KCalCore::Journal>() ) {
-    load( journal );
+    load( journal, isTemplate, templateOverridesTimes );
   } else {
     kDebug() << "Not an Incidence.";
   }
@@ -541,7 +548,7 @@ KDateTime IncidenceDateTime::currentEndDateTime() const
     mUi->mTimeZoneComboEnd->selectedTimeSpec() );
 }
 
-void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
+void IncidenceDateTime::load( const KCalCore::Event::Ptr &event, bool isTemplate, bool templateOverridesTimes )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( false );
@@ -577,9 +584,8 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   mUi->mWholeDayCheck->setChecked( event->allDay() );
   enableTimeEdits();
 
-  const bool isTemplate = event->customProperty( "kdepim", "isTemplate" ) == "true";
   if ( isTemplate ) {
-    if ( incidenceHasDefaultTimes( event ) ) {
+    if ( templateOverridesTimes ) {
         // We only use the template times if the user didn't override them.
         setTimes( event->dtStart(), event->dtEnd() );
     }
@@ -599,7 +605,7 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   }
 }
 
-void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
+void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal, bool isTemplate, bool templateOverridesTimes )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( false );
@@ -623,9 +629,8 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
   mUi->mWholeDayCheck->setChecked( journal->allDay() );
   enableTimeEdits();
 
-  const bool isTemplate = journal->customProperty( "kdepim", "isTemplate" ) == "true";
   if ( isTemplate ) {
-    if ( incidenceHasDefaultTimes( journal ) ) {
+    if ( templateOverridesTimes ) {
         // We only use the template times if the user didn't override them.
         setTimes( journal->dtStart(), KDateTime() );
     }
@@ -640,7 +645,7 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
   }
 }
 
-void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
+void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo, bool isTemplate, bool templateOverridesTimes )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( true );
@@ -680,10 +685,8 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
 
   const KDateTime rightNow = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
 
-
-  const bool isTemplate = todo->customProperty( "kdepim", "isTemplate" ) == "true";
   if ( isTemplate ) {
-    if ( incidenceHasDefaultTimes( todo ) ) {
+    if ( templateOverridesTimes ) {
         // We only use the template times if the user didn't override them.
         setTimes( todo->dtStart(), todo->dateTime(KCalCore::Incidence::RoleEnd) );
     }
