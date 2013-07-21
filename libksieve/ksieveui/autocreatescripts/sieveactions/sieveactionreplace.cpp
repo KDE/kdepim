@@ -24,6 +24,8 @@
 #include <KLineEdit>
 
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 #include <QHBoxLayout>
 
 using namespace KSieveUi;
@@ -68,9 +70,45 @@ QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
+void SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
+                edit->setText(e.text());
+            } else if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("subject")) {
+                    node = node.nextSibling();
+                    QDomElement textElement = node.toElement();
+                    if (!textElement.isNull()) {
+                        const QString textElementTagName = textElement.tagName();
+                        if (textElementTagName == QLatin1String("str")) {
+                            KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
+                            subject->setText(textElement.text());
+                        }
+                    }
+                } else if (tagValue == QLatin1String("from")) {
+                    node = node.nextSibling();
+                    QDomElement textElement = node.toElement();
+                    if (!textElement.isNull()) {
+                        const QString textElementTagName = textElement.tagName();
+                        if (textElementTagName == QLatin1String("str")) {
+                            KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("from"));
+                            headers->setText(textElement.text());
+                        }
+                    }
+                }
+            } else {
+                qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionReplace::code(QWidget *w) const
@@ -87,7 +125,6 @@ QString SieveActionReplace::code(QWidget *w) const
     if (!headersStr.isEmpty()) {
         result += QString::fromLatin1(":from \"%1\" ").arg(headersStr);
     }
-
 
     const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
     const QString text = edit->toPlainText();

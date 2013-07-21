@@ -103,7 +103,7 @@ void CertListView::slotResult( const GpgME::KeyListResult & result ) {
     QMessageBox::information( this, "Key Listing Result", "KeyListResult is null!" );
   else if ( result.error() )
     QMessageBox::critical( this, "Key Listing Result",
-			   QString("KeyListResult Error: %1").arg( result.error().asString() ) );
+                           QString("KeyListResult Error: %1").arg( result.error().asString() ) );
   else if ( result.isTruncated() )
     QMessageBox::information( this, "Key Listing Result", "KeyListResult is truncated!" );
   else
@@ -115,9 +115,9 @@ void CertListView::slotStart() {
   Kleo::KeyListJob * job = Kleo::CryptoBackendFactory::instance()->smime()->keyListJob( false );
   assert( job );
   QObject::connect( job, SIGNAL(nextKey(GpgME::Key)),
-		    this, SLOT(slotAddKey(GpgME::Key)) );
+                    this, SLOT(slotAddKey(GpgME::Key)) );
   QObject::connect( job, SIGNAL(result(GpgME::KeyListResult)),
-		    this, SLOT(slotResult(GpgME::KeyListResult)) );
+                    this, SLOT(slotResult(GpgME::KeyListResult)) );
 #if 0
   QStringList l;
   l << "Marc";

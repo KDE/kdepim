@@ -300,42 +300,53 @@ int SieveConditionWidgetLister::conditionNumber() const
     return widgets().count();
 }
 
-void SieveConditionWidgetLister::loadScript(const QDomElement &element)
+void SieveConditionWidgetLister::loadTest(const QDomElement &testElement)
 {
-    bool firstAction = true;
-    QDomNode node = element.firstChild();
-    while (!node.isNull()) {
-        QDomElement e = node.toElement();
-        if (!e.isNull()) {
-            const QString tagName = e.tagName();
-            if (tagName == QLatin1String("testlist")) {
-                QDomNode testNode = e.firstChild();
-                while (!testNode.isNull()) {
-                    QDomElement testElement = testNode.toElement();
-                    if (!testElement.isNull()) {
-                        const QString testTagName = testElement.tagName();
-                        if (testTagName == QLatin1String("test")) {
-                            if (testElement.hasAttribute(QLatin1String("name"))) {
-                                const QString conditionName = testElement.attribute(QLatin1String("name"));
-                                if (firstAction) {
-                                    firstAction = false;
-                                } else {
-                                    addWidgetAfterThisWidget(widgets().last());
-                                }
-                                SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
-                                w->setCondition(conditionName, e);
+    if (testElement.hasAttribute(QLatin1String("name"))) {
+        const QString conditionName = testElement.attribute(QLatin1String("name"));
+        SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
+        w->setCondition(conditionName, testElement);
+    }
+}
 
-                                qDebug()<<" CONDITION "<<conditionName;
+void SieveConditionWidgetLister::loadScript(const QDomElement &element, bool uniqTest)
+{
+    if (uniqTest) {
+        loadTest(element);
+    } else {
+        bool firstCondition = true;
+        QDomNode node = element.firstChild();
+        while (!node.isNull()) {
+            QDomElement e = node.toElement();
+            if (!e.isNull()) {
+                const QString tagName = e.tagName();
+                if (tagName == QLatin1String("testlist")) {
+                    QDomNode testNode = e.firstChild();
+                    while (!testNode.isNull()) {
+                        QDomElement testElement = testNode.toElement();
+                        if (!testElement.isNull()) {
+                            const QString testTagName = testElement.tagName();
+                            if (testTagName == QLatin1String("test")) {
+                                if (testElement.hasAttribute(QLatin1String("name"))) {
+                                    const QString conditionName = testElement.attribute(QLatin1String("name"));
+                                    if (firstCondition) {
+                                        firstCondition = false;
+                                    } else {
+                                        addWidgetAfterThisWidget(widgets().last());
+                                    }
+                                    SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
+                                    w->setCondition(conditionName, testElement);
+                                }
+                            } else {
+                                qDebug()<<" unknown condition tag: "<<testTagName;
                             }
-                        } else {
-                            qDebug()<<" unknown condition tag: "<<testTagName;
                         }
+                        testNode = testNode.nextSibling();
                     }
-                    testNode = testNode.nextSibling();
                 }
             }
+            node = node.nextSibling();
         }
-        node = node.nextSibling();
     }
 }
 

@@ -22,6 +22,7 @@ QStringList SieveSyntaxHighlighterUtil::fullCapabilities()
 {
     return  QStringList()
             <<QLatin1String("body")
+            <<QLatin1String("extlists")
             <<QLatin1String("envelope")
             <<QLatin1String("redirect")
             <<QLatin1String("fileinto")

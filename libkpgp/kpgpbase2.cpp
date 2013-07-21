@@ -121,7 +121,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       index = 0;
       num = 0;
       while((index = error.indexOf("Cannot find the public key",index))
-	    != -1)
+            != -1)
       {
         bad = true;
         index = error.indexOf('\'',index);
@@ -134,7 +134,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       {
         badkeys.trimmed();
         if(num == recipients.count())
-	  errMsg = i18n("Could not find public keys matching the userid(s)\n"
+          errMsg = i18n("Could not find public keys matching the userid(s)\n"
                         "%1;\n"
                         "the message is not encrypted.",
                          badkeys.data() );
@@ -152,7 +152,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       index = 0;
       num = 0;
       while((index = error.indexOf("skipping userid",index))
-	    != -1)
+            != -1)
       {
         bad = true;
         int index2 = error.indexOf('\n',index+16);
@@ -165,13 +165,13 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       {
         badkeys.trimmed();
         if(num == recipients.count())
-	  errMsg = i18n("Public keys not certified with trusted signature "
+          errMsg = i18n("Public keys not certified with trusted signature "
                         "for userid(s)\n"
                         "%1.\n"
                         "The message is not encrypted.",
                          badkeys.data() );
         else
-	  errMsg = i18n("Public keys not certified with trusted signature "
+          errMsg = i18n("Public keys not certified with trusted signature "
                         "for userid(s)\n"
                         "%1;\n"
                         "these persons will not be able to read the message.",
@@ -321,10 +321,10 @@ Base2::decrypt( Block& block, const char *passphrase )
       mRecipients.clear();
       while( (index2 = error.indexOf('\n',index+1)) <= end )
       {
-	QByteArray item = error.mid(index+1,index2-index-1);
-	item.trimmed();
-	mRecipients.append(item);
-	index = index2;
+        QByteArray item = error.mid(index+1,index2-index-1);
+        item.trimmed();
+        mRecipients.append(item);
+        index = index2;
       }
     }
 #endif
@@ -751,8 +751,8 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
 
         QByteArray fingerprint = output.mid( pos, index2-pos );
         // remove white space from the fingerprint
-	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
-	  fingerprint.replace( idx, 1, "" );
+        for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
+          fingerprint.replace( idx, 1, "" );
 
         subkey->setFingerprint( fingerprint );
       }
@@ -937,7 +937,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
       int pos, pos2;
 
       if( key != 0 ) // store the previous key in the key list
-	keys.append( key );
+        keys.append( key );
 
       key = new Key();
       key->setSecret( secretKeys );
@@ -1030,8 +1030,8 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
 
         QByteArray fingerprint = output.mid( pos, index2-pos );
         // remove white space from the fingerprint
-	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
-	  fingerprint.replace( idx, 1, "" );
+        for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
+          fingerprint.replace( idx, 1, "" );
 
         subkey->setFingerprint( fingerprint );
       }

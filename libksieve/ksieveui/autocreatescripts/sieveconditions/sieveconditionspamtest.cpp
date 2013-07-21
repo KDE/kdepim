@@ -96,9 +96,13 @@ QString SieveConditionSpamTest::help() const
     return i18n("Sieve implementations that implement the \"spamtest\" test use an identifier of either \"spamtest\" or \"spamtestplus\" for use with the capability mechanism.");
 }
 
-void SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
+void SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
 
+    SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
+    SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
+    QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
 }
+
 #include "sieveconditionspamtest.moc"
 

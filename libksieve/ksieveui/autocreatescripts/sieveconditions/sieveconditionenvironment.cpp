@@ -25,6 +25,7 @@
 #include <QLabel>
 #include <QCompleter>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionEnvironment::SieveConditionEnvironment(QObject *parent)
@@ -104,8 +105,24 @@ QString SieveConditionEnvironment::help() const
     return i18n("The environment test retrieves the item of environment information specified by the name string and matches it to the values specified in the key-list argument.");
 }
 
-void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
+void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
+    KLineEdit *item =  w->findChild<KLineEdit*>( QLatin1String("item") );
+    KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );
+    QDomNode node = element.firstChild();
+    int index = 1;
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+            } else {
+                qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 
 }
 

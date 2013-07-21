@@ -1,0 +1,9 @@
+require "ihave";
+require "copy";
+ 
+#Script name: redirect
+
+if ihave "redirect"
+{
+    redirect :copy "montel@kde.org";
+}

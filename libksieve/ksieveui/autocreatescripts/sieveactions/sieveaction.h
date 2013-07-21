@@ -38,7 +38,7 @@ public:
 
     virtual QWidget *createParamWidget( QWidget *parent ) const;
 
-    virtual void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
+    virtual void setParamWidgetValue(const QDomElement &element, QWidget *parent );
 
     virtual QString code( QWidget *) const;
 

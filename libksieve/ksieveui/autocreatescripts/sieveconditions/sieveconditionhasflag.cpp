@@ -104,7 +104,7 @@ QString SieveConditionHasFlag::help() const
     return i18n("The hasflag test evaluates to true if any of the variables matches any flag name.");
 }
 
-void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
+void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWidget *parent )
 {
 
 }

@@ -111,7 +111,7 @@ namespace KSieve {
       break;
     case SlashWithoutAsterisk:
       err = i18n("Parse error: Unquoted Slash ('/') without Asterisk ('*'). "
-		 "Broken Comment?");
+                 "Broken Comment?");
       break;
     case IllegalCharacter:
       err = i18n("Parse error: Illegal Character");
@@ -124,7 +124,7 @@ namespace KSieve {
       break;
     case NonCWSAfterTextColon:
       err = i18n("Parse error: Only whitespace and #comments may "
-		 "follow \"text:\" on the same line");
+                 "follow \"text:\" on the same line");
       break;
     case NumberOutOfRange:
       err = i18n("Parse error: Number out of Range (must be smaller than %1)", UINT_MAX);

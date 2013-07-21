@@ -211,6 +211,7 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
 
 void SieveScriptBlockWidget::loadScript(const QDomElement &element)
 {
+    bool uniqueTest = false;
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
@@ -228,14 +229,15 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element)
                         mMatchAll->setChecked(true);
                         mMatchCondition = AndCondition;
                     } else { //true;
-                        mMatchCondition = AllCondition;
-                        mAllMessageRBtn->setChecked(true);
+                        uniqueTest = true;
+                        mMatchCondition = OrCondition;
+                        mMatchAny->setChecked(true);
                         qDebug()<<" TRUE";
                     }
                     mScriptConditionLister->setEnabled(mMatchCondition != AllCondition);
                 }
                 //Conditions
-                mScriptConditionLister->loadScript(e);
+                mScriptConditionLister->loadScript(e, uniqueTest);
             } else if (tagName == QLatin1String("block")) {
                 //Actions
                 mScriptActionLister->loadScript(e);

@@ -1,0 +1,14 @@
+require "ihave";
+require "reject";
+
+#Script name: reject
+
+if ihave "reject"
+{
+    reject text:
+ sorry rejected
+thanks
+.
+;
+
+}

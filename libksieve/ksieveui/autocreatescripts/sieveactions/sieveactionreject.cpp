@@ -23,6 +23,8 @@
 
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionReject::SieveActionReject(QObject *parent)
@@ -50,10 +52,23 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
+void SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );
-    //edit->setText();
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );
+                edit->setText(tagValue);
+            } else {
+                qDebug()<<" SieveActionReject::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionReject::code(QWidget *w) const

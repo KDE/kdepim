@@ -95,7 +95,7 @@ namespace KSieve {
     void makeError( Error::Type e, int line, int col ) {
       mError = Error( e, line, col );
       if ( scriptBuilder() )
-	scriptBuilder()->error( mError );
+        scriptBuilder()->error( mError );
     }
     void makeError( Error::Type e ) {
       makeError( e, lexer.line(), lexer.column() );

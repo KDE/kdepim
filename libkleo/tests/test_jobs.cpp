@@ -86,7 +86,7 @@ static void testSign()
     return;
   }
   kDebug(5150) <<"signing resulted in signature="
-	    << signature;
+            << signature;
 }
 
 int main( int argc, char** argv ) {

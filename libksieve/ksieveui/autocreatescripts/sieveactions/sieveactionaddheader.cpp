@@ -65,15 +65,15 @@ QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
+void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    const SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
+    SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
     //combo->setCode();
 
-    const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
+    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
     //edit->setText();
 
-    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
+    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
     //value->setText();
 }
 

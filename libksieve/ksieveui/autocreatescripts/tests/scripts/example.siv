@@ -1,0 +1,35 @@
+require "subaddress";
+require "body";
+require "fileinto";
+require "copy";
+require "imapflags";
+require "include";
+require "reject";
+#Script name: example
+
+if anyof (address :all :is "Content-Type" "type"
+, size :over 6K
+, body :raw :is "test"
+)
+{
+    fileinto :copy "INBOX";
+    removeflag [ "\\Answered", "\\Draft" ];
+} elsif allof (size :under 5K
+, body :raw :is "voiture"
+)
+{
+    fileinto "INBOX2";
+} else {
+    keep;
+} 
+
+#Script name: example-part2
+
+global "variable-global";
+set "test-variable" "25";
+if true {
+    reject text:
+ 
+.
+;
+} 

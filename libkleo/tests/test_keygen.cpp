@@ -86,7 +86,7 @@ KeyGenerator::KeyGenerator( QWidget * parent )
 
   ++row;
   glay->addWidget( new QLabel( "<GnupgKeyParms format=\"internal\">", w ),
-			    row, 0, 1, 2 );
+                            row, 0, 1, 2 );
   for ( int i = 0 ; i < numKeyParams ; ++i ) {
     ++row;
     glay->addWidget( new QLabel( keyParams[i], w ), row, 0 );
@@ -126,7 +126,7 @@ void KeyGenerator::slotStartKeyGeneration() {
   assert( job );
 
   connect( job, SIGNAL(result(GpgME::KeyGenerationResult,QByteArray)),
-	   SLOT(slotResult(GpgME::KeyGenerationResult,QByteArray)) );
+           SLOT(slotResult(GpgME::KeyGenerationResult,QByteArray)) );
 
   const GpgME::Error err = job->start( params );
   if ( err )
@@ -139,7 +139,7 @@ void KeyGenerator::slotStartKeyGeneration() {
 
 void KeyGenerator::showError( const GpgME::Error & err ) {
   KMessageBox::error( this, "Could not start key generation: " + QString::fromLocal8Bit( err.asString() ),
-		      "Key Generation Error" );
+                      "Key Generation Error" );
 }
 
 void KeyGenerator::slotResult( const GpgME::KeyGenerationResult & res, const QByteArray & keyData ) {
@@ -147,7 +147,7 @@ void KeyGenerator::slotResult( const GpgME::KeyGenerationResult & res, const QBy
     showError( res.error() );
   else
     KMessageBox::information( this, QString("Key generated successfully, %1 bytes long").arg( keyData.size() ),
-			      "Key Generation Finished" );
+                              "Key Generation Finished" );
 }
 
 int main( int argc, char** argv ) {

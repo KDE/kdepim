@@ -42,7 +42,7 @@ public:
 
     QString help() const;
 
-    void setParamWidgetValue(const QDomElement &element, QWidget *parent ) const;
+    void setParamWidgetValue(const QDomElement &element, QWidget *parent );
 };
 }
 #endif // SIEVECONDITIONMAILBOXEXISTS_H

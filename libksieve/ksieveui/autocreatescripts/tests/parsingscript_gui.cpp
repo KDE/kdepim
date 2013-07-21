@@ -39,17 +39,30 @@ int main (int argc, char **argv)
 {
     KCmdLineArgs::init(argc, argv, "parsingscript_gui", 0, ki18n("ParsingScriptTest_Gui"),
                        "1.0", ki18n("Test for parsing script dialog"));
+
+    KCmdLineOptions option;
+    option.add("+[url]", ki18n("URL of an archive to be opened"));
+    KCmdLineArgs::addCmdLineOptions(option);
+
+
     KApplication app;
 
     QByteArray script;
-    const QString fileName = KFileDialog::getOpenFileName();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+    QString fileName;
+    if (args->count()) {
+        fileName = args->url(0).path();
+    } else {
+        fileName = KFileDialog::getOpenFileName();
+    }
     if (!fileName.isEmpty()) {
         QFile file(fileName);
         if (file.open(QIODevice::ReadOnly)) {
-            script = file.readAll();
+           script = file.readAll();
         }
     } else {
-        return 0;
+       return 0;
     }
     //qDebug() << "scriptUtf8 = \"" + script +"\"";
 

@@ -97,8 +97,11 @@ QString SieveConditionVirusTest::help() const
     return i18n("Sieve implementations that implement the \"virustest\" test have an identifier of \"virustest\" for use with the capability mechanism.");
 }
 
-void SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
+void SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
+    SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
+    SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
+    QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
 
 }
 

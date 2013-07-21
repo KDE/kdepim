@@ -88,19 +88,19 @@ namespace Kleo {
 
     KeySelectionDialog( const QString & title,
                         const QString & text,
-			const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>(),
+                        const std::vector<GpgME::Key> & selectedKeys=std::vector<GpgME::Key>(),
                         unsigned int keyUsage=AllKeys,
                         bool extendedSelection=false,
-			bool rememberChoice=false,
+                        bool rememberChoice=false,
                         QWidget * parent=0,
                         bool modal=true );
     KeySelectionDialog( const QString & title,
                         const QString & text,
-			const QString & initialPattern,
+                        const QString & initialPattern,
                         const std::vector<GpgME::Key> & selectedKeys,
                         unsigned int keyUsage=AllKeys,
                         bool extendedSelection=false,
-			bool rememberChoice=false,
+                        bool rememberChoice=false,
                         QWidget * parent=0,
                         bool modal=true );
     KeySelectionDialog( const QString & title,

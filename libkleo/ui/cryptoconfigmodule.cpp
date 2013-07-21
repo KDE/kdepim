@@ -601,7 +601,7 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
         mFileNameRequester->setEnabled( false );
   } else {
 #ifndef KDEPIM_ONLY_KLEO
-	  if ( mUrlRequester )
+          if ( mUrlRequester )
           connect( mUrlRequester, SIGNAL(textChanged(QString)),
                    this, SLOT(slotChanged()) );
 #endif

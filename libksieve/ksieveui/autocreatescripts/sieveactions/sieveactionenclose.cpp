@@ -25,6 +25,8 @@
 
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionEnclose::SieveActionEnclose(QObject *parent)
@@ -36,7 +38,6 @@ SieveAction* SieveActionEnclose::newAction()
 {
     return new SieveActionEnclose;
 }
-
 
 QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
 {
@@ -69,9 +70,47 @@ QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
+void SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("headers")) {
+                    node = node.nextSibling();
+                    QDomElement textElement = node.toElement();
+                    if (!textElement.isNull()) {
+                        const QString textElementTagName = textElement.tagName();
+                        if (textElementTagName == QLatin1String("str")) {
+                            KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
+                            subject->setText(textElement.text());
+                        }
+                    }
+                } else if (tagValue == QLatin1String("subject")) {
+                    node = node.nextSibling();
+                    QDomElement textElement = node.toElement();
+                    if (!textElement.isNull()) {
+                        const QString textElementTagName = textElement.tagName();
+                        if (textElementTagName == QLatin1String("str")) {
+                            KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("headers"));
+                            headers->setText(textElement.text());
+                        }
+                    }
+                } else {
+                    qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tag value:"<<tagValue;
+                }
+            } else if (tagName == QLatin1String("str")) {
+                MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
+                edit->setText(e.text());
+            } else {
+                qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionEnclose::code(QWidget *w) const
@@ -88,7 +127,6 @@ QString SieveActionEnclose::code(QWidget *w) const
     if (!headersStr.isEmpty()) {
         result += QString::fromLatin1(":headers \"%1\" ").arg(headersStr);
     }
-
 
     const MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
     const QString text = edit->toPlainText();

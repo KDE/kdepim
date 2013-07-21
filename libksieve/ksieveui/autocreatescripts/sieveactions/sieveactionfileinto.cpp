@@ -22,6 +22,8 @@
 
 #include <QCheckBox>
 #include <QHBoxLayout>
+#include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveActionFileInto::SieveActionFileInto(QObject *parent)
@@ -54,9 +56,36 @@ QString SieveActionFileInto::code(QWidget *w) const
     return result + QString::fromLatin1("\"%1\";").arg(text);
 }
 
-void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
+void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("copy")) {
+                    if (mHasCopySupport) {
+                        QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
+                        copy->setChecked(true);
+                    }
+                } else if (tagValue == QLatin1String("create")) {
+                    if (mHasMailBoxSupport) {
+                        QCheckBox *create = w->findChild<QCheckBox*>( QLatin1String("create") );
+                        create->setChecked(true);
+                    }
+                }
+            } else if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("fileintolineedit") );
+                edit->setText(tagValue);
+            } else {
+                qDebug()<<" SieveActionFileInto::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const

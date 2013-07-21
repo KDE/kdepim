@@ -84,14 +84,14 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
   mProcess->setUseStatusFD( true );
 
   connect( mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-	   SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
+           SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
   connect( mProcess, SIGNAL(readyReadStandardOutput()),
-	   SLOT(slotStdout()) );
+           SLOT(slotStdout()) );
   connect( mProcess, SIGNAL(readyReadStandardError()),
-	   SLOT(slotStderr()) );
+           SLOT(slotStderr()) );
 
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
-	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
+           SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
 
   mProcess->setOutputChannelMode( KProcess::SeparateChannels );
   mProcess->start();

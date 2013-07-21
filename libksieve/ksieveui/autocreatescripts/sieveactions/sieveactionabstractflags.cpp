@@ -40,9 +40,10 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *parent ) const
+void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *w )
 {
-
+    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
+    //TODO
 }
 
 QString SieveActionAbstractFlags::code(QWidget *w) const

@@ -196,7 +196,7 @@ Module::prepare( bool needPassPhrase, Block* block )
   if(!havePgp)
   {
     errMsg = i18n("Could not find PGP executable.\n"
-		       "Please check your PATH is set correctly.");
+                       "Please check your PATH is set correctly.");
     return 0;
   }
 
@@ -228,7 +228,7 @@ Module::prepare( bool needPassPhrase, Block* block )
              errMsg = i18n("Passphrase is too long, it must contain fewer than 1024 characters.");
           else
              errMsg = i18n("Out of memory.");
-  	return 0;
+          return 0;
         }
       } else {
         wipePassPhrase();
@@ -300,10 +300,10 @@ Module::decrypt( Block& block )
       QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
 #endif
       int ret = KMessageBox::warningContinueCancel(0,
-	     i18n("You just entered an invalid passphrase.\n"
-		  "Do you want to try again, or "
-		  "cancel and view the message undecrypted?"),
-	     i18n("PGP Warning"), KGuiItem(i18n("&Retry")));
+             i18n("You just entered an invalid passphrase.\n"
+                  "Do you want to try again, or "
+                  "cancel and view the message undecrypted?"),
+             i18n("PGP Warning"), KGuiItem(i18n("&Retry")));
 #ifndef QT_NO_CURSOR
       QApplication::restoreOverrideCursor();
 #endif
@@ -917,12 +917,12 @@ bool Module::setPassPhrase(const QString& aPass)
       // too little space in current buffer:
       // allocate a larger one.
       if ( passphrase )
-	free( passphrase );
+        free( passphrase );
       passphrase_buffer_len = (newlen + 1 + 15) & ~0xF; // make it a multiple of 16.
       passphrase = (char*)malloc( passphrase_buffer_len );
       if (!passphrase) {
-	passphrase_buffer_len = 0;
-	return false;
+        passphrase_buffer_len = 0;
+        return false;
       }
     }
     memcpy( passphrase, aPass.toLocal8Bit().data(), newlen + 1 );
@@ -1539,7 +1539,7 @@ Module::canonicalAddress( const QString& _adress )
   if((index = address.indexOf("<")) != -1)
     if((index2 = address.indexOf("@",index+1)) != -1)
       if((index2 = address.indexOf(">",index2+1)) != -1)
-	return address.mid(index,index2-index+1);
+        return address.mid(index,index2-index+1);
 
   if((index = address.indexOf("@")) == -1)
   {

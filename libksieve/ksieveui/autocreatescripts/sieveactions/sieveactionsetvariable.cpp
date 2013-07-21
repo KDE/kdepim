@@ -17,16 +17,19 @@
 
 #include "sieveactionsetvariable.h"
 #include "widgets/selectvariablemodifiercombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionSetVariable::SieveActionSetVariable(QObject *parent)
-    : SieveAction(QLatin1String("variable"), i18n("Variable"), parent)
+    : SieveAction(QLatin1String("set"), i18n("Variable"), parent)
 {
 }
 
@@ -64,9 +67,37 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w ) const
+void SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+                value->setText(tagValue);
+                node = node.nextSibling();
+                QDomElement variableElement = node.toElement();
+                if (!variableElement.isNull()) {
+                    const QString variableTagName = variableElement.tagName();
+                    if (variableTagName == QLatin1String("str")) {
+                        KLineEdit *variable = w->findChild<KLineEdit*>(QLatin1String("variable"));
+                        variable->setText(variableElement.text());
+                    }
+                } else {
+                    return;
+                }
+            } else if (tagName == QLatin1String("tag")) {
+                SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
+                modifier->setCode(AutoCreateScriptUtil::tagValue(e.text()));
+            } else {
+                qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionSetVariable::code(QWidget *w) const

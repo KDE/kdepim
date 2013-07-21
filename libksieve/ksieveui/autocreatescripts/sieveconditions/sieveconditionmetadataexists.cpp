@@ -89,8 +89,11 @@ QString SieveConditionMetaDataExists::help() const
     return i18n("The \"metadataexists\" test is true if all of the annotations listed in the \"annotation-names\" argument exist for the specified mailbox.");
 }
 
-void SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
+void SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
+    KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox") );
+
+    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
 
 }
 

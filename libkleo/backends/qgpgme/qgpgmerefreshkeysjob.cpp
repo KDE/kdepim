@@ -66,8 +66,8 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::start( const QStringList & patterns ) {
   mPatternsToDo = patterns;
   if ( mPatternsToDo.empty() )
     mPatternsToDo.push_back( " " ); // empty list means all -> mae
-				    // sure to fail the first
-				    // startAProcess() guard clause
+                                    // sure to fail the first
+                                    // startAProcess() guard clause
 
   return startAProcess();
 }
@@ -85,7 +85,7 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
 
   // FIXME: obbtain the path to gpgsm from gpgme, so we use the same instance.
   *mProcess << "gpgsm" << "-k" << "--with-validation" << "--force-crl-refresh"
-	    << "--enable-crl-checks";
+            << "--enable-crl-checks";
   unsigned int commandLineLength = MAX_CMD_LENGTH;
   commandLineLength -=
     strlen("gpgsm") + 1 + strlen("-k") + 1 +
@@ -106,14 +106,14 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
   mProcess->setUseStatusFD( true );
 
   connect( mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-	   SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
+           SLOT(slotProcessExited(int,QProcess::ExitStatus)) );
   connect( mProcess, SIGNAL(readyReadStandardOutput()),
-	   SLOT(slotStdout()) );
+           SLOT(slotStdout()) );
   connect( mProcess, SIGNAL(readyReadStandardError()),
-	   SLOT(slotStderr()) );
+           SLOT(slotStderr()) );
 
   connect( mProcess, SIGNAL(status(Kleo::GnuPGProcessBase*,QString,QStringList)),
-	   SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
+           SLOT(slotStatus(Kleo::GnuPGProcessBase*,QString,QStringList)) );
 
   mProcess->setOutputChannelMode( KProcess::SeparateChannels );
   mProcess->start();

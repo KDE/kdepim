@@ -86,7 +86,7 @@ QString SieveConditionCurrentDate::help() const
     return i18n("The currentdate test is similar to the date test, except that it operates on the current date/time rather than a value extracted from the message header.");
 }
 
-void SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, QWidget *parent ) const
+void SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, QWidget *parent )
 {
 
 }

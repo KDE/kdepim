@@ -80,7 +80,7 @@
 #include <assert.h>
 
 Kleo::KeyRequester::KeyRequester( unsigned int allowedKeys, bool multipleKeys,
-				  QWidget * parent )
+                                  QWidget * parent )
   : QWidget( parent ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),

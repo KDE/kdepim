@@ -82,7 +82,7 @@ namespace Kleo {
        without further checks.
     */
     virtual KDE_DEPRECATED GpgME::Error start( const std::vector<GpgME::Key> & recipients,
-				const QByteArray & plainText, bool alwaysTrust=false ) = 0;
+                                const QByteArray & plainText, bool alwaysTrust=false ) = 0;
 
     /*!
       \overload
@@ -99,8 +99,8 @@ namespace Kleo {
                         bool alwaysTrust=false ) = 0;
 
     virtual GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
-					  const QByteArray & plainText,
-					  bool alwaysTrust, QByteArray & cipherText ) = 0;
+                                          const QByteArray & plainText,
+                                          bool alwaysTrust, QByteArray & cipherText ) = 0;
 
     /*!
       This is a hack to request BASE64 output (instead of whatever

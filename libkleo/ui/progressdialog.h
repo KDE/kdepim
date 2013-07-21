@@ -50,7 +50,7 @@ namespace Kleo {
     Q_OBJECT
   public:
     ProgressDialog( Job * job, const QString & baseText,
-		    QWidget * creator=0, Qt::WindowFlags f=0  );
+                    QWidget * creator=0, Qt::WindowFlags f=0  );
     ~ProgressDialog();
 
   public Q_SLOTS:

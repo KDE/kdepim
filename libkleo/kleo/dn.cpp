@@ -110,15 +110,15 @@ trim_trailing_spaces( char *string )
     char *p, *mark;
 
     for( mark = NULL, p = string; *p; p++ ) {
-	if( isspace( *p ) ) {
-	    if( !mark )
-		mark = p;
-	}
-	else
-	    mark = NULL;
+        if( isspace( *p ) ) {
+            if( !mark )
+                mark = p;
+        }
+        else
+            mark = NULL;
     }
     if( mark )
-	*mark = '\0' ;
+        *mark = '\0' ;
 
     return string ;
 }
@@ -245,10 +245,10 @@ parse_dn( const unsigned char * string ) {
       DnPair pair = { 0, 0 };
       string = parse_dn_part (&pair, string);
       if (!string)
-	goto failure;
+        goto failure;
       if ( pair.key && pair.value )
-	result.push_back( Kleo::DN::Attribute( QString::fromUtf8( pair.key ),
-					       QString::fromUtf8( pair.value ) ) );
+        result.push_back( Kleo::DN::Attribute( QString::fromUtf8( pair.key ),
+                                               QString::fromUtf8( pair.value ) ) );
       free( pair.key );
       free( pair.value );
 
@@ -319,12 +319,12 @@ reorder_dn( const Kleo::DN::Attribute::List & dn ) {
     if ( *oit == "_X_" ) {
       // insert the unknown attrs
       std::copy( unknownEntries.begin(), unknownEntries.end(),
-		 std::back_inserter( result ) );
+                 std::back_inserter( result ) );
       unknownEntries.clear(); // don't produce dup's
     } else {
       for ( Kleo::DN::const_iterator dnit = dn.begin() ; dnit != dn.end() ; ++dnit )
-	if ( (*dnit).name() == *oit )
-	  result.push_back( *dnit );
+        if ( (*dnit).name() == *oit )
+          result.push_back( *dnit );
     }
 
   return result;
@@ -422,7 +422,7 @@ QString Kleo::DN::operator[]( const QString & attr ) const {
     return QString();
   const QString attrUpper = attr.toUpper();
   for ( QVector<Attribute>::const_iterator it = d->attributes.constBegin() ;
-	it != d->attributes.constEnd() ; ++it )
+        it != d->attributes.constEnd() ; ++it )
     if ( (*it).name() == attrUpper )
       return (*it).value();
   return QString();
@@ -494,7 +494,7 @@ Kleo::DNAttributeMapper::DNAttributeMapper() {
   d->attributeOrder = config.readEntry( "AttributeOrder" , QStringList() );
   if ( d->attributeOrder.empty() )
     std::copy( defaultOrder, defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
-	       std::back_inserter( d->attributeOrder ) );
+               std::back_inserter( d->attributeOrder ) );
   mSelf = this;
 }
 
@@ -534,7 +534,7 @@ void Kleo::DNAttributeMapper::setAttributeOrder( const QStringList & order ) {
   d->attributeOrder = order;
   if ( order.empty() )
     std::copy( defaultOrder, defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
-	       std::back_inserter( d->attributeOrder ) );
+               std::back_inserter( d->attributeOrder ) );
   KConfigGroup config( KGlobal::config(), "DN" );
   config.writeEntry( "AttributeOrder", order );
 }

@@ -329,7 +329,7 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
     addr.setFormattedName( (*it).formattedName() );
 
     bool addrDone = false;
-    if ( dlg->exportDisplayName() ) {		// output display name as N field
+    if ( dlg->exportDisplayName() ) {                // output display name as N field
       QString fmtName = (*it).formattedName();
       QStringList splitNames = fmtName.split( ' ', QString::SkipEmptyParts );
       if ( splitNames.count() >= 2 ) {
@@ -342,7 +342,7 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
       }
     }
 
-    if ( !addrDone ) {				// not wanted, or could not be split
+    if ( !addrDone ) {                                // not wanted, or could not be split
       addr.setPrefix( (*it).prefix() );
       addr.setGivenName( (*it).givenName() );
       addr.setAdditionalName( (*it).additionalName() );
