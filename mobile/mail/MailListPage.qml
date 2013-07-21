@@ -75,7 +75,7 @@ PlasmaComponents.Page {
     delegate: PlasmaComponents.ListItem {
       id: headerListDelegate
 
-      height: root.height / 8
+      height: label.height * 2.5
 
       clip: true
       enabled: true
@@ -98,12 +98,23 @@ PlasmaComponents.Page {
         opacity: 0.5
       }
 
+      PlasmaComponents.CheckBox {
+        id: checkBox
+
+        anchors {
+          left: parent.left
+          leftMargin: label.width
+          verticalCenter: parent.verticalCenter
+        }
+      }
+
       PlasmaComponents.Label {
         id: fromLabel
 
         anchors {
           top : parent.top
-          left : parent.left
+          left : checkBox.right
+          leftMargin: label.width
           right: dateLabel.left
         }
 
@@ -131,8 +142,9 @@ PlasmaComponents.Page {
         id: subjectLabel
 
         anchors {
-          top: fromLabel.bottom
-          left: parent.left
+          bottom: parent.bottom
+          left: checkBox.right
+          leftMargin: label.width
           right: parent.right
         }
 
@@ -142,6 +154,12 @@ PlasmaComponents.Page {
         color: model.is_unread ? "#E10909" : "#3B3B3B"
       }
     }
+  }
+
+  PlasmaComponents.Label {
+    id: label
+
+    text: "   "
   }
 }
 
