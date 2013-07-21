@@ -80,24 +80,16 @@ void SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("headers")) {
-                    node = node.nextSibling();
-                    QDomElement textElement = node.toElement();
-                    if (!textElement.isNull()) {
-                        const QString textElementTagName = textElement.tagName();
-                        if (textElementTagName == QLatin1String("str")) {
-                            KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
-                            subject->setText(textElement.text());
-                        }
+                    const QString strValue = AutoCreateScriptUtil::strValue(node);
+                    if (!strValue.isEmpty()) {
+                        KLineEdit *subject = w->findChild<KLineEdit*>(QLatin1String("subject"));
+                        subject->setText(strValue);
                     }
                 } else if (tagValue == QLatin1String("subject")) {
-                    node = node.nextSibling();
-                    QDomElement textElement = node.toElement();
-                    if (!textElement.isNull()) {
-                        const QString textElementTagName = textElement.tagName();
-                        if (textElementTagName == QLatin1String("str")) {
-                            KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("headers"));
-                            headers->setText(textElement.text());
-                        }
+                    const QString strValue = AutoCreateScriptUtil::strValue(node);
+                    if (!strValue.isEmpty()) {
+                        KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("headers"));
+                        headers->setText(strValue);
                     }
                 } else {
                     qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tag value:"<<tagValue;

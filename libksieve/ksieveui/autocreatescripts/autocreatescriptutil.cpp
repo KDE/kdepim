@@ -90,3 +90,16 @@ QString AutoCreateScriptUtil::tagValue(const QString &tag)
 {
     return QLatin1Char(':') + tag;
 }
+
+QString AutoCreateScriptUtil::strValue(QDomNode &node)
+{
+    node = node.nextSibling();
+    QDomElement textElement = node.toElement();
+    if (!textElement.isNull()) {
+        const QString textElementTagName = textElement.tagName();
+        if (textElementTagName == QLatin1String("str")) {
+            return textElement.text();
+        }
+    }
+    return QString();
+}
