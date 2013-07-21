@@ -1,0 +1,8 @@
+require "variables";
+ 
+#Script name: variables
+
+if size :under 5
+{
+    set "testvariable" "25";
+} 
