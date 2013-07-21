@@ -93,7 +93,6 @@ void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                qDebug()<<" tagValue"<<tagValue;
                 const int index = combo->findData(AutoCreateScriptUtil::tagValue(tagValue));
                 if (index != -1) {
                     combo->setCurrentIndex(index);

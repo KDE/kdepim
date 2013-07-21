@@ -25,6 +25,7 @@
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionIhave::SieveConditionIhave(QObject *parent)
@@ -82,7 +83,21 @@ QString SieveConditionIhave::help() const
 
 void SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+                edit->setText(tagValue);
+            } else {
+                qDebug()<<" SieveConditionIhave::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionihave.moc"

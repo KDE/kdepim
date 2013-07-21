@@ -96,7 +96,18 @@ QString SieveConditionBody::help() const
 
 void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget *parent )
 {
-
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+            } else {
+                qDebug()<<" SieveConditionBody::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 
