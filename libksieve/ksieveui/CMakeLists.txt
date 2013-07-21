@@ -112,6 +112,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectcomparatorcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectmimecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectsizetypecombobox.cpp
+  autocreatescripts/sieveconditions/widgets/selectsizewidget.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)
