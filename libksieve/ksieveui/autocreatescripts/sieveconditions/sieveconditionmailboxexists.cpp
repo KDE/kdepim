@@ -24,10 +24,11 @@
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionMailboxExists::SieveConditionMailboxExists(QObject *parent)
-    : SieveCondition(QLatin1String("mailboxexist"), i18n("Mailbox exist"), parent)
+    : SieveCondition(QLatin1String("mailboxexists"), i18n("Mailbox exists"), parent)
 {
 }
 
@@ -80,7 +81,21 @@ QString SieveConditionMailboxExists::help() const
 
 void SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element, QWidget *w)
 {
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+                edit->setText(tagValue);
+            } else {
+                qDebug()<<" SieveConditionMailboxExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionmailboxexists.moc"
