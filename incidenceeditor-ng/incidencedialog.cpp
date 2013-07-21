@@ -306,7 +306,11 @@ void IncidenceDialogPrivate::loadTemplate( const QString &templateName )
   mIeDateTime->setActiveDate( QDate() );
   KCalCore::Incidence::Ptr newInc = KCalCore::Incidence::Ptr( incidences.first()->clone() );
   newInc->setUid( KCalCore::CalFormat::createUniqueId() );
+
+  // We add a custom property so that some fields aren't loaded, dates for example
+  newInc->setCustomProperty( QByteArray("kdepim"), "isTemplate", "true");
   mEditor->load( newInc );
+  newInc->removeCustomProperty( QByteArray(), "isTemplate");
 }
 
 void IncidenceDialogPrivate::manageTemplates()

@@ -32,6 +32,8 @@
 //#include "ui_incidencedatetime.h"
 //#endif
 
+#include <calendarsupport/kcalprefs.h>
+
 #include <KCalCore/ICalTimeZones>
 #include <KCalUtils/IncidenceFormatter>
 
@@ -39,6 +41,40 @@
 #include <KSystemTimeZone>
 
 using namespace IncidenceEditorNG;
+
+
+/**
+ * Returns true if the incidence's dates are equal to the default ones specified in config.
+ */
+static bool incidenceHasDefaultTimes( const KCalCore::Incidence::Ptr &incidence )
+{
+  if (incidence->allDay())
+    return false;
+
+  QTime defaultDuration = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
+  if ( !defaultDuration.isValid() )
+    return false;
+
+  QTime defaultStart = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
+  if ( !defaultStart.isValid() )
+    return false;
+
+  if ( incidence->dtStart().time() == defaultStart ) {
+    if ( incidence->type() == KCalCore::Incidence::TypeJournal )
+      return true; // no duration to compare with
+
+    const KDateTime start = incidence->dtStart();
+    const KDateTime end   = incidence->dateTime( KCalCore::Incidence::RoleEnd );
+    if (!end.isValid() || !start.isValid())
+      return false;
+
+    const int durationInSeconds = defaultDuration.hour()*3600 + defaultDuration.minute()*60;
+    return start.secsTo(end) == durationInSeconds;
+  }
+
+  return false;
+}
+
 
 IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 ), mTimeZones( new KCalCore::ICalTimeZones ), mUi( ui ),
@@ -541,17 +577,16 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   mUi->mWholeDayCheck->setChecked( event->allDay() );
   enableTimeEdits();
 
-  bool isTemplate = false; // TODO
-  if ( !isTemplate ) {
+  const bool isTemplate = event->customProperty( "kdepim", "isTemplate" ) == "true";
+  if ( isTemplate ) {
+    if ( incidenceHasDefaultTimes( event ) ) {
+        // We only use the template times if the user didn't override them.
+        setTimes( event->dtStart(), event->dtEnd() );
+    }
+  } else {
     KDateTime startDT = event->dtStart();
     KDateTime endDT = event->dtEnd();
-
     setDateTimes( startDT, endDT );
-  } else {
-    // set the start/end time from the template, only as a last resort #190545
-    if ( !event->dtStart().isValid() || !event->dtEnd().isValid() ) {
-      setTimes( event->dtStart(), event->dtEnd() );
-    }
   }
 
   switch( event->transparency() ) {
@@ -588,8 +623,13 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
   mUi->mWholeDayCheck->setChecked( journal->allDay() );
   enableTimeEdits();
 
-  bool isTemplate = false; // TODO
-  if ( !isTemplate ) {
+  const bool isTemplate = journal->customProperty( "kdepim", "isTemplate" ) == "true";
+  if ( isTemplate ) {
+    if ( incidenceHasDefaultTimes( journal ) ) {
+        // We only use the template times if the user didn't override them.
+        setTimes( journal->dtStart(), KDateTime() );
+    }
+  } else {
     KDateTime startDT = journal->dtStart();
 
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
@@ -597,11 +637,6 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
       startDT = startDT.toLocalZone();
     }
     setDateTimes( startDT, KDateTime() );
-  } else {
-    // set the start/end time from the template, only as a last resort #190545
-    if ( !journal->dtStart().isValid() ) {
-      setTimes( journal->dtStart(), KDateTime() );
-    }
   }
 }
 
@@ -645,9 +680,18 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
 
   const KDateTime rightNow = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
 
-  const KDateTime endDT   = todo->hasDueDate() ? todo->dtDue( true/** first */ ) : rightNow;
-  const KDateTime startDT = todo->hasStartDate() ? todo->dtStart( true/** first */ ) : rightNow;
-  setDateTimes( startDT, endDT );
+
+  const bool isTemplate = todo->customProperty( "kdepim", "isTemplate" ) == "true";
+  if ( isTemplate ) {
+    if ( incidenceHasDefaultTimes( todo ) ) {
+        // We only use the template times if the user didn't override them.
+        setTimes( todo->dtStart(), todo->dateTime(KCalCore::Incidence::RoleEnd) );
+    }
+  } else {
+    const KDateTime endDT   = todo->hasDueDate() ? todo->dtDue( true/** first */ ) : rightNow;
+    const KDateTime startDT = todo->hasStartDate() ? todo->dtStart( true/** first */ ) : rightNow;
+    setDateTimes( startDT, endDT );
+  }
 }
 
 void IncidenceDateTime::save( const KCalCore::Event::Ptr &event )
