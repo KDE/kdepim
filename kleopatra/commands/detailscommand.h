@@ -45,17 +45,17 @@ namespace Commands {
     class DetailsCommand : public Command {
         Q_OBJECT
     public:
-	explicit DetailsCommand( KeyListController * parent );
-	explicit DetailsCommand( QAbstractItemView * view, KeyListController * parent );
-	explicit DetailsCommand( const GpgME::Key & key, KeyListController * parent );
-	explicit DetailsCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent );
-	~DetailsCommand();
+        explicit DetailsCommand( KeyListController * parent );
+        explicit DetailsCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit DetailsCommand( const GpgME::Key & key, KeyListController * parent );
+        explicit DetailsCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent );
+        ~DetailsCommand();
 
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey; }
 
     private:
-	/* reimp */ void doStart();
-	/* reimp */ void doCancel();
+        /* reimp */ void doStart();
+        /* reimp */ void doCancel();
 
     private:
         class Private;

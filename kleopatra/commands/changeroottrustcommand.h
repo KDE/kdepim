@@ -43,11 +43,11 @@ namespace Commands {
     class ChangeRootTrustCommand : public Command {
         Q_OBJECT
     public:
-	explicit ChangeRootTrustCommand( KeyListController * parent );
-	explicit ChangeRootTrustCommand( QAbstractItemView * view, KeyListController * parent );
-	explicit ChangeRootTrustCommand( const GpgME::Key & key, KeyListController * parent );
-	explicit ChangeRootTrustCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent );
-	~ChangeRootTrustCommand();
+        explicit ChangeRootTrustCommand( KeyListController * parent );
+        explicit ChangeRootTrustCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit ChangeRootTrustCommand( const GpgME::Key & key, KeyListController * parent );
+        explicit ChangeRootTrustCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent );
+        ~ChangeRootTrustCommand();
 
         void setTrust( GpgME::Key::OwnerTrust trust );
         GpgME::Key::OwnerTrust trust() const;
@@ -58,8 +58,8 @@ namespace Commands {
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeCMS|MustBeRoot; }
 
     private:
-	/* reimp */ void doStart();
-	/* reimp */ void doCancel();
+        /* reimp */ void doStart();
+        /* reimp */ void doCancel();
 
     private:
         class Private;

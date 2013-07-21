@@ -127,7 +127,7 @@ public:
     void slotDestroyed( QObject * o ) {
         kDebug() << ( void* )o;
         views.erase( std::remove( views.begin(), views.end(), o ), views.end() );
-	commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
+        commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
     }
     void slotDoubleClicked( const QModelIndex & idx );
     void slotActivated( const QModelIndex & idx );
@@ -512,7 +512,7 @@ void KeyListController::Private::connectCommand( Command * cmd ) {
 void KeyListController::Private::slotDoubleClicked( const QModelIndex & idx ) {
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
     if ( !view || !kdtools::binary_search( views, view ) )
-	return;
+        return;
 
     DetailsCommand * const c = new DetailsCommand( view, q );
     if ( parentWidget )
@@ -527,7 +527,7 @@ void KeyListController::Private::slotActivated( const QModelIndex & idx )
     Q_UNUSED( idx );
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
     if ( !view || !kdtools::binary_search( views, view ) )
-	return;
+        return;
 
 }
 
@@ -538,7 +538,7 @@ void KeyListController::Private::slotSelectionChanged( const QItemSelection & ol
 
     const QItemSelectionModel * const sm = qobject_cast<QItemSelectionModel*>( q->sender() );
     if ( !sm )
-	return;
+        return;
     q->enableDisableActions( sm );
 }
 

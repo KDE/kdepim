@@ -224,21 +224,21 @@ private:
 
         TabWidget tabWidget;
 
-	explicit UI( MainWindow * q )
-	    : tabWidget( q )
-	{
-	    KDAB_SET_OBJECT_NAME( tabWidget );
+        explicit UI( MainWindow * q )
+            : tabWidget( q )
+        {
+            KDAB_SET_OBJECT_NAME( tabWidget );
 
-	    q->setCentralWidget(&tabWidget);
-	    KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
-	    KDAB_SET_OBJECT_NAME( progressDialog );
-	    progressDialog->hide();
-	    KPIM::StatusbarProgressWidget * statusBarProgressWidget 
-		    = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
-	    KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
-	    q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
-	    statusBarProgressWidget->show();
-	}
+            q->setCentralWidget(&tabWidget);
+            KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
+            KDAB_SET_OBJECT_NAME( progressDialog );
+            progressDialog->hide();
+            KPIM::StatusbarProgressWidget * statusBarProgressWidget
+                    = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
+            KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
+            q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
+            statusBarProgressWidget->show();
+        }
     } ui;
 };
 
@@ -348,8 +348,8 @@ void MainWindow::Private::setupActions() {
 void MainWindow::Private::configureBackend() {
     Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
     if ( !config ) {
-    	KMessageBox::error( q, i18n( "Could not configure the cryptography backend (gpgconf tool not found)" ), i18n( "Configuration Error" ) );
-    	return;
+        KMessageBox::error( q, i18n( "Could not configure the cryptography backend (gpgconf tool not found)" ), i18n( "Configuration Error" ) );
+        return;
     }
 
     Kleo::CryptoConfigDialog dlg( config );

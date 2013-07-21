@@ -1318,7 +1318,7 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
             else
                 s << Row<        >( i18n("Subkey Strength:"),   i18n("default") );
             s     << Row<        >( i18n("Subkey Usage:"),      i18nSubkeyUsages().join(i18nc("separator for key usages",",&nbsp;")) );
-	}
+        }
     }
     if ( pgp() && details && expiryDate().isValid() )
         s         << Row<        >( i18n("Valid Until:"),       KGlobal::locale()->formatDate( expiryDate() ) );

@@ -87,18 +87,18 @@ static const about_data credits[] = {
 
 AboutData::AboutData()
   : KAboutData( "kleopatra", 0, ki18n("Kleopatra"),
-		kleopatra_version, ki18n(description), License_GPL,
-		ki18n("(c) 2002 Steffen\xC2\xA0Hansen, Matthias\xC2\xA0Kalle\xC2\xA0" "Dalheimer, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB\n"
-		      "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB") )
+                kleopatra_version, ki18n(description), License_GPL,
+                ki18n("(c) 2002 Steffen\xC2\xA0Hansen, Matthias\xC2\xA0Kalle\xC2\xA0" "Dalheimer, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB\n"
+                      "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB") )
 {
   using ::authors;
   using ::credits;
   for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
     addAuthor( ki18n(authors[i].name), ki18n(authors[i].desc),
-	       authors[i].email, authors[i].web );
+               authors[i].email, authors[i].web );
   for ( unsigned int i = 0 ; i < sizeof credits / sizeof *credits ; ++i )
     addCredit( ki18n(credits[i].name), ki18n(credits[i].desc),
-	       credits[i].email, credits[i].web );
+               credits[i].email, credits[i].web );
 }
 
 
@@ -109,7 +109,7 @@ static const char gpg4win_description[] = I18N_NOOP( "Gpg4win is an installer pa
                                                      "are Free Software.");
 
 
-static const char gpg4win_credits_description[]	= I18N_NOOP( "This Free Software product was developed mostly as part of "
+static const char gpg4win_credits_description[] = I18N_NOOP( "This Free Software product was developed mostly as part of "
                                                      "commercial contracts by the following companies:"
                                                      "<ul><li><a href='http://intevation.net'>Intevation GmbH</a> "
                                                      "(Projekt coordination, QA, Compendium)</li>"
@@ -118,7 +118,7 @@ static const char gpg4win_credits_description[]	= I18N_NOOP( "This Free Software
                                                      "<li><a href='http://www.kdab.com'>KDAB</a> (Kleopatra)</li></ul>"
                                                      "The following persons have contributed (as of 20100706):");
 
-static const char gpg4win_credits_persons[] 	= I18N_NOOP( "Till Adam<br>"
+static const char gpg4win_credits_persons[] = I18N_NOOP( "Till Adam<br>"
                                                      "Marcus Brinkmann<br>"
                                                      "Brigitte Hamilton<br>"
                                                      "Bernhard Herzog<br>"

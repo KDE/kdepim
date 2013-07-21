@@ -272,7 +272,7 @@ QSize KDLogTextWidget::minimumSizeHint() const {
     const QSize view( d->minimumVisibleColumns * d->cache.fontMetrics.averageCharWidth,
                       d->minimumVisibleLines   * d->cache.fontMetrics.lineSpacing );
     const QSize scrollbars( verticalScrollBar() ? verticalScrollBar()->minimumSizeHint().width() : 0,
-			    horizontalScrollBar() ? horizontalScrollBar()->minimumSizeHint().height() : 0 );
+                            horizontalScrollBar() ? horizontalScrollBar()->minimumSizeHint().height() : 0 );
     return base + view + scrollbars;
 }
 
@@ -582,7 +582,7 @@ static int get_scrollbar_offset( const QScrollBar * sb ) {
 
 QPoint KDLogTextWidget::Private::scrollOffset() const {
     return QPoint( get_scrollbar_offset( q->horizontalScrollBar() ),
-		   get_scrollbar_offset( q->verticalScrollBar() ) );
+                   get_scrollbar_offset( q->verticalScrollBar() ) );
 }
 
 #include "moc_kdlogtextwidget.cpp"
