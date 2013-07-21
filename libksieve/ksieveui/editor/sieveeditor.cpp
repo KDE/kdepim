@@ -30,7 +30,8 @@
 using namespace KSieveUi;
 
 SieveEditor::SieveEditor( QWidget * parent )
-    : KDialog( parent )
+    : KDialog( parent ),
+      mMode(TextMode)
 {
     setCaption( i18n( "Edit Sieve Script" ) );
     setButtons( None );    
@@ -66,6 +67,14 @@ SieveEditor::SieveEditor( QWidget * parent )
 SieveEditor::~SieveEditor()
 {
     writeConfig();
+}
+
+void SieveEditor::changeMode(EditorMode mode)
+{
+    if (mode != mMode) {
+        mMode = mode;
+        mStackedWidget->setCurrentIndex(static_cast<int>(mode));
+    }
 }
 
 void SieveEditor::slotEnableButtonOk(bool b)

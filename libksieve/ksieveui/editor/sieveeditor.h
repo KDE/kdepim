@@ -51,6 +51,7 @@ public:
     void resultDone();
 
     void setSieveCapabilities( const QStringList &capabilities );
+    void changeMode(EditorMode mode);
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
@@ -67,6 +68,7 @@ private:
     SieveEditorTextModeWidget *mTextModeWidget;
     SieveEditorGraphicalModeWidget *mGraphicalModeWidget;
     QStackedWidget *mStackedWidget;
+    EditorMode mMode;
 };
 
 }
