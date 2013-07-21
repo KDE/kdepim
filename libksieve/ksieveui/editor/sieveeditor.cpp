@@ -18,12 +18,14 @@
 
 #include "sieveeditor.h"
 #include "sieveeditortextmodewidget.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 #include <klocale.h>
 
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
+#include <QStackedWidget>
 
 using namespace KSieveUi;
 
@@ -46,8 +48,14 @@ SieveEditor::SieveEditor( QWidget * parent )
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
+    mStackedWidget = new QStackedWidget;
+
     mTextModeWidget = new SieveEditorTextModeWidget;
-    lay->addWidget(mTextModeWidget);
+    mStackedWidget->addWidget(mTextModeWidget);
+    mGraphicalModeWidget = new SieveEditorGraphicalModeWidget;
+    mStackedWidget->addWidget(mGraphicalModeWidget);
+
+    lay->addWidget(mStackedWidget);
     lay->addWidget(buttonBox);
     connect(mTextModeWidget, SIGNAL(checkSyntax()), SIGNAL(checkSyntax()));
     connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
