@@ -65,7 +65,7 @@ bool EditorWatcher::start()
   // find an editor
   KUrl::List list;
   list.append( mUrl );
-  KService::Ptr offer = KMimeTypeTrader::self()->preferredService( mMimeType, "Application" );
+  KService::Ptr offer = KMimeTypeTrader::self()->preferredService( mMimeType, QLatin1String("Application") );
   if ( mOpenWith || !offer ) {
 #ifndef Q_OS_WINCE
     AutoQPointer<KOpenWithDialog> dlg( new KOpenWithDialog( list, i18n("Edit with:"),
@@ -153,8 +153,8 @@ void EditorWatcher::checkEditDone()
 
   static QStringList readOnlyMimeTypes;
   if ( readOnlyMimeTypes.isEmpty() ) {
-    readOnlyMimeTypes << "message/rfc822"
-                      << "application/pdf";
+    readOnlyMimeTypes << QLatin1String("message/rfc822")
+                      << QLatin1String("application/pdf");
   }
 
   // protect us against double-deletion by calling this method again while
@@ -163,7 +163,7 @@ void EditorWatcher::checkEditDone()
 
   // check if it's a mime type that's mostly handled read-only
   const bool isReadOnlyMimeType = ( readOnlyMimeTypes.contains( mMimeType ) ||
-                                    mMimeType.startsWith( "image/" ) );
+                                    mMimeType.startsWith( QLatin1String("image/") ) );
 
   // nobody can edit that fast, we seem to be unable to detect
   // when the editor will be closed
@@ -172,7 +172,7 @@ void EditorWatcher::checkEditDone()
                         i18n( "KMail is unable to detect when the chosen editor is closed. "
                               "To avoid data loss, editing the attachment will be aborted." ),
                         i18n( "Unable to edit attachment" ),
-                        "UnableToEditAttachment" );
+                        QLatin1String("UnableToEditAttachment") );
   }
 
   emit editDone( this );
