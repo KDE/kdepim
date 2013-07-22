@@ -54,7 +54,7 @@
 using namespace KSieveUi;
 
 SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
-    : QWidget(parent)
+    : SieveEditorAbstractWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     setLayout( lay );

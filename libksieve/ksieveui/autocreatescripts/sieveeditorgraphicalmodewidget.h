@@ -20,7 +20,7 @@
 #ifndef SIEVEEDITORGRAPHICALMODEWIDGET_H
 #define SIEVEEDITORGRAPHICALMODEWIDGET_H
 
-#include <QWidget>
+#include "editor/sieveeditorabstractwidget.h"
 
 class QSplitter;
 class QStackedWidget;
@@ -28,7 +28,7 @@ class QDomDocument;
 
 namespace KSieveUi {
 class SieveScriptListBox;
-class SieveEditorGraphicalModeWidget : public QWidget
+class SieveEditorGraphicalModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
 public:

@@ -19,7 +19,8 @@
 #ifndef SIEVEEDITORTEXTMODEWIDGET_H
 #define SIEVEEDITORTEXTMODEWIDGET_H
 
-#include <QWidget>
+#include "sieveeditorabstractwidget.h"
+
 class KTextEdit;
 class QLineEdit;
 class QPushButton;
@@ -29,7 +30,7 @@ namespace KSieveUi {
 class SieveFindBar;
 class SieveInfoWidget;
 class SieveTextEdit;
-class SieveEditorTextModeWidget : public QWidget
+class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
 public:
