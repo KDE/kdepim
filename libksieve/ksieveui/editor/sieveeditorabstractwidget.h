@@ -28,6 +28,14 @@ class SieveEditorAbstractWidget : public QWidget
 public:
     explicit SieveEditorAbstractWidget(QWidget *parent=0);
     ~SieveEditorAbstractWidget();
+
+    virtual QString scriptToSave();
+
+public Q_SLOTS:
+    void slotSaveAs();
+
+private:
+    bool saveToFile( const QString &filename );
 };
 }
 

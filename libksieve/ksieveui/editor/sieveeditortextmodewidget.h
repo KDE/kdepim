@@ -47,6 +47,8 @@ public:
     void setDebugColor( const QColor &col );
     void setDebugScript( const QString &debug );
 
+    QString scriptToSave();
+
 Q_SIGNALS:
     void checkSyntax();
     void enableButtonOk( bool );
@@ -54,7 +56,6 @@ Q_SIGNALS:
 private slots:
     void slotTextChanged();
     void slotImport();
-    void slotSaveAs();
     void slotFind();
     void slotAutoGenerateScripts();
     void slotCheckSyntax();
@@ -63,7 +64,6 @@ private slots:
 private:
     void readConfig();
     void writeConfig();
-    bool saveToFile( const QString &filename );
     bool loadFromFile( const QString &filename );
     QString mOriginalScript;
     QStringList mSieveCapabilities;

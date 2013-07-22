@@ -42,6 +42,8 @@ public:
 
     void loadScript(const QDomDocument &doc);
 
+    QString scriptToSave();
+
 private:
     void readConfig();
     void writeConfig();

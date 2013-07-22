@@ -110,5 +110,14 @@ void SieveEditorGraphicalModeWidget::slotActivateScriptPage(QWidget *page)
     mStackWidget->setCurrentWidget(page);
 }
 
+QString SieveEditorGraphicalModeWidget::scriptToSave()
+{
+    QString requires;
+    QString script = mSieveScript->generatedScript(requires);
+    if (!requires.isEmpty()) {
+        script.prepend(requires);
+    }
+    return script;
+}
 
 #include "sieveeditorgraphicalmodewidget.moc"
