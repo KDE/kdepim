@@ -26,6 +26,7 @@ PlasmaComponents.Page {
   id: root
 
   property variant navigationModel: _threadSelector
+  property variant checkModel: _itemActionModel
 
   implicitWidth: pageRow.width * 2 /3
 
@@ -38,8 +39,40 @@ PlasmaComponents.Page {
       onClicked: pageRow.pop()
     }
 
+    //TODO (de)select-all checkbox
+    //TODO hide/grey out when no mail is selected?
+    Row {
+
+      anchors.horizontalCenter: parent.horizontalCenter
+
+      spacing: root.width * 0.03
+
+      PlasmaComponents.ToolButton {
+        iconSource: "mail-mark-unread"
+
+        onClicked: application.getAction("akonadi_mark_as_read", "").trigger()
+      }
+
+      PlasmaComponents.ToolButton {
+        iconSource: "mail-mark-important"
+
+        onClicked: application.getAction("akonadi_mark_as_important", "").trigger()
+      }
+
+      //TODO usability feature: offer to undo deletion
+      PlasmaComponents.ToolButton {
+        iconSource: "edit-delete"
+
+        onClicked: application.getAction("akonadi_move_to_trash", "").trigger()
+      }
+    }
+
+
     //TODO add new mail from template once the multiple actions button is ready
     PlasmaComponents.ToolButton {
+
+      anchors.right: parent.right
+
       iconSource: "mail-message-new"
 
       onClicked: application.startComposer()
@@ -106,6 +139,10 @@ PlasmaComponents.Page {
           leftMargin: label.width
           verticalCenter: parent.verticalCenter
         }
+
+        checked: model.checkOn
+
+        onClicked: checkModel.select(model.index, 8)
       }
 
       PlasmaComponents.Label {
