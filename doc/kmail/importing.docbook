@@ -6,24 +6,68 @@
 <firstname>Daniel</firstname>
 <surname>Naber</surname>
 <affiliation><address>
-<email>daniel.naber@t-online.de</email>
+&Daniel.Naber.mail;
 </address></affiliation>
 </author>
 <author>
 <firstname>David</firstname>
 <surname>Rugge</surname>
 <affiliation><address>
-<email>davidrugge@mediaone.net</email>
+&David.Rugge.mail;
+</address></affiliation>
+</author>
+<author>
+<firstname>Scarlett</firstname>
+<surname>Clark</surname>
+<affiliation><address>
+&Scarlett.Clark.mail;
 </address></affiliation>
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2010-02-05</date>
-<releaseinfo>&kde; 4.5</releaseinfo>
+<date>2013-07-18</date>
+<releaseinfo>&kde; 4.11</releaseinfo>
 </chapterinfo>
+<title>Importing in &kmail;</title>
+<sect1 id="import-options">
+<title>Import Options in &kmail;</title>
 
-<title>Using other Mailbox Files with &kmail;</title>
+<sect2 id="import-wizard">
+  <title>Import Wizard</title>
+  <para>&kmail; has an import wizard to make the transition from another email application extremely easy.
+    To use this tool, follow the steps below.</para>
+  <variablelist>
+    <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Import Wizard...</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>This brings up the import wizard dialog. The import wizard will detect all known email applications and list them for you in the window.
+          Select the the email application you want to import from and click the <guibutton>Next</guibutton> button. The wizard will then ask if you want to import everything,
+          or give you options to select which types of materials you want to import. Depending on your selections in the materials to import screen you will see one or more of the following screens.</para>
+          <itemizedlist>
+            <listitem>
+              <para>To <guilabel>Import mail messages</guilabel>, you need to select the folder you want your email messages to import into. Once selected, click the <guibutton>Import Mail</guibutton> button.
+              Once the progress bar reaches 100%, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para>
+            </listitem>
+            <listitem>
+              <para>To <guilabel>Import mail filters</guilabel>, click the <guibutton>Import Filters</guibutton> and it will import any filters it found, once finished
+                click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para>
+            </listitem>
+            <listitem>
+              <para>To <guilabel>Import settings</guilabel>, click the <guibutton>Import Settings</guibutton> button. The wizard will ask you some questions &eg; which folder to use for account folders that do not exist.
+                The wizard will also create your identity. Once complete, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para>
+            </listitem>
+            <listitem>
+              <para>To <guilabel>Import address books</guilabel>, click the <guibutton>Import address book</guibutton> button, and it will import all address books it finds.
+                Once complete, click the <guibutton>Next</guibutton> button.</para>
+            </listitem>
+          </itemizedlist>
+          <para>Click the <guibutton>Finish</guibutton> button to complete and exit the wizard. If at any time you wish to end the wizard, you can click the <guibutton>Cancel</guibutton> button.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </sect2>
 
+<sect2 id="import-messages">
+  <title>Import Messages</title>
 <para>&kmail; offers an import tool for the messages and address books of some
 other email clients. You can access it using <menuchoice><guimenu>File</guimenu>
 <guimenuitem>Import Messages</guimenuitem></menuchoice>. Please make sure that you 
@@ -44,11 +88,6 @@ class="directory">~/Mail</filename> (or make <filename
 class="symlink">Mail</filename> a symbolic link to the folder containing
 your mailboxes), make sure they are writable by your user, and launch
 &kmail;. The mailboxes should now show up correctly in &kmail;.</para>
-
-<para>Please have a look at the
-<ulink url="http://userbase.kde.org/KMail/Tools">Tools section of &kmail;'s
-homepage</ulink> first, to see if there is a tool that imports your mailbox
-and maybe even address book.</para>
 
 <warning><para>Do not use a second email client that accesses the files in
 <filename class="directory">~/Mail</filename> while &kmail; is running or
@@ -116,7 +155,7 @@ specific directions in the next documentation release.</para>
 <varlistentry>
 <term>MH mailboxes</term>
 <listitem>
-<para>MH mailboxes are directories containing files that correspond to each
+<para>MH mailboxes are folders containing files that correspond to each
 message in that mailbox.  A shell script to convert MH mailboxes to mbox
 mailboxes, <command>mh2kmail</command>, is included at least in the source
 releases of &kmail;, but maybe not in the packaged releases. Running this script
@@ -170,7 +209,7 @@ there.</para>
 
 <para>If you are using &Netscape; 4.x, the mail files should be found
 in <filename class="directory">~/nsmail</filename>; if you are using
-&Netscape; 6.x, they're buried in a folder deep in the <filename
+&Netscape; 6.x, they are buried in a folder deep in the <filename
 class="directory">~/.mozilla</filename> subfolder, something like:
 <filename
 class="directory">/home/user_name/.mozilla/user_name/2ts1ixha.slt/Mail/Mail/server_name</filename>
@@ -265,5 +304,6 @@ revision of this documentation. </para>
 </varlistentry>
 
 </variablelist>
-
+</sect2>
+</sect1>
 </chapter>
