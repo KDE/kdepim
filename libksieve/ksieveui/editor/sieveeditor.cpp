@@ -32,6 +32,8 @@
 #include <QToolBar>
 #include <QAction>
 
+//#define GENERATE_XML_ACTION 1
+
 using namespace KSieveUi;
 
 SieveEditor::SieveEditor( QWidget * parent )
@@ -58,10 +60,14 @@ SieveEditor::SieveEditor( QWidget * parent )
     connect(mCheckSyntax, SIGNAL(triggered(bool)), SLOT(slotCheckSyntax()));
     bar->addAction(mCheckSyntax);
     bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
-    bar->addAction(i18n( "Import..." ), this, SLOT(slotImport()));
+    bar->addAction(i18n("Import..."), this, SLOT(slotImport()));
     bar->addAction(i18n("Autogenerate Script..."), this, SLOT(slotAutoGenerateScripts()));
-    //Remove it for 4.12
+    mSwitchMode = new QAction(i18n("Switch Mode"), this);
+    bar->addAction(mSwitchMode);
+    connect(mSwitchMode, SIGNAL(triggered(bool)), SLOT(slotSwitchMode()));
+#ifdef GENERATE_XML_ACTION
     bar->addAction(QLatin1String("Generate xml"), this, SLOT(slotGenerateXml()));
+#endif
 
     lay->addWidget(bar);
 
@@ -224,6 +230,26 @@ void SieveEditor::slotImport()
         mTextModeWidget->slotImport();
         break;
     }
+}
+
+void SieveEditor::slotSwitchMode()
+{
+    switch (mMode) {
+    case TextMode: {
+        const QString script = mTextModeWidget->currentscript();
+        changeMode(GraphicMode);
+        //load script
+        //mGraphicalModeWidget->set
+        break;
+    }
+    case GraphicMode: {
+        const QString script = mGraphicalModeWidget->currentscript();
+        changeMode(TextMode);
+        mTextModeWidget->setScript(script);
+        break;
+    }
+    }
+    //TODO
 }
 
 #include "sieveeditor.moc"

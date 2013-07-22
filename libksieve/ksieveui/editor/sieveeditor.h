@@ -62,6 +62,7 @@ private Q_SLOTS:
     void slotGenerateXml();
     void slotSaveAs();
     void slotImport();
+    void slotSwitchMode();
 
 Q_SIGNALS:
     void checkSyntax();
@@ -77,6 +78,7 @@ private:
     QStackedWidget *mStackedWidget;
     QLineEdit *mScriptName;
     QAction *mCheckSyntax;
+    QAction *mSwitchMode;
     EditorMode mMode;
 };
 
