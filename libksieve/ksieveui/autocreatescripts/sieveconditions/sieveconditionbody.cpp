@@ -96,6 +96,7 @@ QString SieveConditionBody::help() const
 
 void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
+    //TODO FIXME
     int index = 0;
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -104,19 +105,19 @@ void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                if (index == 0) {
+                if (index == 1) {
                     SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
-                    qDebug()<<" strValue "<<strValue<<" tagValue"<<tagValue;
-                    bodyType->setCode(tagValue,strValue);
-                    ++index;
-                } else if (index == 1) {
+                    qDebug()<<" strValue index =1:"<<strValue<<" tagValue"<<tagValue;
+                    bodyType->setCode(AutoCreateScriptUtil::tagValue(tagValue, notCondition),strValue);
+                } else if (index == 0) {
                     SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
                     matchType->setCode(e.text(), notCondition);
-                    qDebug()<<" strValue "<<strValue<<" tagValue"<<tagValue;
+                    qDebug()<<" strValue index = 0: "<<e.text()<<" tagValue"<<tagValue;
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
                     edit->setText(strValue);
+                    ++index;
                 }
             } else {
                 qDebug()<<" SieveConditionBody::setParamWidgetValue unknown tagName "<<tagName;
