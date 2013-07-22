@@ -18,6 +18,7 @@
 
 #include "sieveeditorgraphicalmodewidget.h"
 #include "sievescriptlistbox.h"
+#include "scriptsparsing/parsingutil.h"
 
 #include <KLocale>
 #include <KGlobal>
@@ -62,6 +63,9 @@ SieveEditorGraphicalModeWidget::~SieveEditorGraphicalModeWidget()
 
 void SieveEditorGraphicalModeWidget::loadScript(const QDomDocument &doc)
 {
+    for (int i = mStackWidget->count(); i>=0; --i) {
+        mStackWidget->removeWidget(mStackWidget->widget(i));
+    }
     mSieveScript->loadScript(doc);
 }
 
@@ -120,9 +124,16 @@ QString SieveEditorGraphicalModeWidget::currentscript()
     return script;
 }
 
-void SieveEditorGraphicalModeWidget::setImportScript( const QString & )
+void SieveEditorGraphicalModeWidget::setImportScript( const QString &script )
 {
-    //TODO
+    bool result = false;
+    const QDomDocument doc = ParsingUtil::parseScript(script, result);
+    if (result) {
+        loadScript(doc);
+    } else {
+        //TODO
+        qDebug()<<" can not import script";
+    }
 }
 
 #include "sieveeditorgraphicalmodewidget.moc"

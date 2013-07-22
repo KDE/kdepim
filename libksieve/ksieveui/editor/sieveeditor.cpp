@@ -18,6 +18,7 @@
 
 #include "sieveeditor.h"
 #include "sieveeditortextmodewidget.h"
+#include "scriptsparsing/parsingutil.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 #include <klocale.h>
@@ -30,6 +31,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QToolBar>
+#include <QDebug>
 #include <QAction>
 
 //#define GENERATE_XML_ACTION 1
@@ -172,6 +174,7 @@ void SieveEditor::resultDone()
 void SieveEditor::setSieveCapabilities( const QStringList &capabilities )
 {
     mTextModeWidget->setSieveCapabilities(capabilities);
+    mGraphicalModeWidget->setSieveCapabilities(capabilities);
 }
 
 void SieveEditor::slotAutoGenerateScripts()
@@ -236,10 +239,16 @@ void SieveEditor::slotSwitchMode()
 {
     switch (mMode) {
     case TextMode: {
-        const QString script = mTextModeWidget->currentscript();
-        changeMode(GraphicMode);
-        //load script
-        //mGraphicalModeWidget->set
+        bool result = false;
+        const QDomDocument doc = ParsingUtil::parseScript(mTextModeWidget->currentscript(), result);
+        if (result) {
+            mGraphicalModeWidget->loadScript(doc);
+            mTextModeWidget->hideEditorWarning();
+            changeMode(GraphicMode);
+        } else {
+            mTextModeWidget->showEditorWarning();
+            qDebug() << "can not parse file";
+        }
         break;
     }
     case GraphicMode: {
@@ -249,7 +258,6 @@ void SieveEditor::slotSwitchMode()
         break;
     }
     }
-    //TODO
 }
 
 #include "sieveeditor.moc"

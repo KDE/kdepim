@@ -313,8 +313,16 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
     return resultScript;
 }
 
+void SieveScriptListBox::clear()
+{
+    //Clear tabpage
+    mSieveListScript->clear();
+    updateButtons();
+}
+
 void SieveScriptListBox::loadScript(const QDomDocument &doc)
 {
+    clear();
     SieveScriptPage *currentPage = 0;
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();

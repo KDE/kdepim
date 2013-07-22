@@ -22,6 +22,7 @@
 #include "editor/sieveinfowidget.h"
 #include "editor/sievefindbar.h"
 #include "editor/sievetextedit.h"
+#include "editor/sieveeditorwarning.h"
 
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
@@ -82,7 +83,11 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTextEdit = new SieveTextEdit;
     textEditLayout->addWidget(mTextEdit);
     mFindBar = new SieveFindBar( mTextEdit, textEditWidget );
+
     textEditLayout->addWidget(mFindBar);
+    mSieveEditorWarning = new SieveEditorWarning;
+    textEditLayout->addWidget(mSieveEditorWarning);
+
     textEditWidget->setLayout(textEditLayout);
 
     mTemplateSplitter->addWidget(textEditWidget);
@@ -217,6 +222,16 @@ void SieveEditorTextModeWidget::setSieveCapabilities( const QStringList &capabil
     mSieveCapabilities = capabilities;
     mTextEdit->setSieveCapabilities(mSieveCapabilities);
     mSieveInfo->setServerInfo(capabilities);
+}
+
+void SieveEditorTextModeWidget::showEditorWarning()
+{
+    mSieveEditorWarning->animatedShow();
+}
+
+void SieveEditorTextModeWidget::hideEditorWarning()
+{
+    mSieveEditorWarning->animatedHide();
 }
 
 

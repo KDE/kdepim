@@ -29,6 +29,7 @@ namespace KSieveUi {
 class SieveFindBar;
 class SieveInfoWidget;
 class SieveTextEdit;
+class SieveEditorWarning;
 class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
@@ -51,6 +52,9 @@ public:
     void autoGenerateScripts();
     void generateXml();
 
+    void showEditorWarning();
+    void hideEditorWarning();
+
 Q_SIGNALS:
     void enableButtonOk( bool );
 
@@ -71,6 +75,7 @@ private:
     QSplitter *mMainSplitter;
     QSplitter *mExtraSplitter;
     QSplitter *mTemplateSplitter;
+    SieveEditorWarning *mSieveEditorWarning;
 };
 
 }
