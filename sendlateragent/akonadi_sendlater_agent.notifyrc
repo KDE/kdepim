@@ -1,7 +1,6 @@
 [Global]
 IconName=kmail
 Comment=Send Later Agent
-Comment[bs]=Agent za slanje kasnije
 Comment[ca]=Agent per enviar més tard
 Comment[da]=Agent til send senere
 Comment[de]=Agent zum späteren Senden
@@ -31,7 +30,6 @@ Comment[zh_TW]=稍後傳送代理程式
 
 [Event/mailsend]
 Name=Mail is sent
-Name[bs]=Pošta je poslana
 Name[ca]=S'ha enviat el correu
 Name[cs]=Pošta byla odeslána
 Name[da]=E-mail sendt
@@ -63,7 +61,6 @@ Action=Popup
 
 [Event/mailsendfailed]
 Name=Send mail failed
-Name[bs]=Slaneje pošte neuspjelo
 Name[ca]=Ha fallat en enviar el correu
 Name[cs]=Odesílání e-mailu selhalo
 Name[da]=Afsendelse af e-mail mislykkedes

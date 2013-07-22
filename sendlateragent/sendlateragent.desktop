@@ -1,6 +1,5 @@
 [Desktop Entry]
 Name=Send Later Agent
-Name[bs]=Agent za kasnije slanje
 Name[ca]=Agent envia més tard
 Name[da]=Agent til send senere
 Name[de]=Agent zum späteren Senden
@@ -28,7 +27,6 @@ Name[wa]=Adjint evoyî pus tård
 Name[x-test]=xxSend Later Agentxx
 Name[zh_TW]=稍後傳送代理程式
 Comment=Send Later Agent
-Comment[bs]=Agent za slanje kasnije
 Comment[ca]=Agent per enviar més tard
 Comment[da]=Agent til send senere
 Comment[de]=Agent zum späteren Senden
