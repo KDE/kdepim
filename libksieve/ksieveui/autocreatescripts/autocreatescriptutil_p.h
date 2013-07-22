@@ -32,7 +32,7 @@ QString createList(const QStringList &lst);
 QStringList createListFromString(QString str);
 QString createAddressList(const QString &str);
 QString negativeString(bool isNegative);
-QString tagValue(const QString &tag);
+QString tagValue(const QString &tag, bool notCondition = false);
 QString strValue(QDomNode &node);
 }
 

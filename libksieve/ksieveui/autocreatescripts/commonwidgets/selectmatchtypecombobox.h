@@ -30,7 +30,7 @@ public:
 
     QString code(bool &negative) const;
     bool isNegative() const;
-    void setCode(const QString &code);
+    void setCode(const QString &code, bool notCondition);
 
 private:
     void initialize();

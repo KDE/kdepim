@@ -50,7 +50,7 @@ QString SelectMatchTypeComboBox::code(bool &negative) const
     return value;
 }
 
-void SelectMatchTypeComboBox::setCode(const QString &code)
+void SelectMatchTypeComboBox::setCode(const QString &code, bool notCondition)
 {
     //TODO look at "not"
     const int index = findData(code);
