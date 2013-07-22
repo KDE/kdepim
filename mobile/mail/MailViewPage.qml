@@ -43,20 +43,20 @@ PlasmaComponents.Page {
       PlasmaComponents.ToolButton {
         iconSource: "mail-forward"
 
-        onClicked: application.getAction("message_forward", "").trigger()
+        onClicked: application.forwardMessage()
       }
 
       //TODO add reply-to-list and (maybe) reply-without quoting when the "multiple actions" button  is ready
       PlasmaComponents.ToolButton {
         iconSource: "mail-reply-sender"
 
-        onClicked: application.getAction("message_reply_to_author", "").trigger()
+        onClicked: application.replyToAuthor()
       }
 
       PlasmaComponents.ToolButton {
         iconSource: "mail-reply-all"
 
-        onClicked: application.getAction("message_reply_to_all", "").trigger()
+        onClicked: application.replyToAll()
       }
     }
   }
