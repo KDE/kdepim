@@ -75,6 +75,7 @@ void SelectBodyTypeWidget::slotBodyTypeChanged(int index)
 
 void SelectBodyTypeWidget::setCode(const QString &type, const QString &content)
 {
+    qDebug()<<" type"<<type<<" content "<<content;
     const int index = mBodyCombobox->findData(type);
     if (index != -1) {
         mBodyCombobox->setCurrentIndex(index);

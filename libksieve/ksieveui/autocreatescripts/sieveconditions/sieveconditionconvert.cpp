@@ -24,6 +24,8 @@
 
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveConditionConvert::SieveConditionConvert(QObject *parent)
@@ -106,12 +108,31 @@ QString SieveConditionConvert::help() const
     return i18n("The \"convert\" action specifies that all body parts with a media type equal to \"media-type\" be converted to the media type in \"media-type\" using conversion parameters.");
 }
 
-void SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+void SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
 {
     SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
     SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
     SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
 
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                if (index == 1) {
+                    ++index;
+                } else if (index == 0) {
+                    ++index;
+                }
+            } else {
+                qDebug()<<" SieveConditionConvert::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionconvert.moc"

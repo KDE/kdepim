@@ -22,6 +22,7 @@
 #define AUTOCREATESCRIPTUTIL_H
 
 #include <QString>
+#include <QStringList>
 #include <QDomNode>
 
 namespace AutoCreateScriptUtil
@@ -32,8 +33,10 @@ QString createList(const QStringList &lst);
 QStringList createListFromString(QString str);
 QString createAddressList(const QString &str);
 QString negativeString(bool isNegative);
-QString tagValue(const QString &tag, bool notCondition = false);
+QString tagValueWithCondition(const QString &tag, bool notCondition);
+QString tagValue(const QString &tag);
 QString strValue(QDomNode &node);
+QStringList listValue(const QDomElement &element);
 }
 
 #endif // AUTOCREATESCRIPTUTIL_H
