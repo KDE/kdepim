@@ -63,7 +63,6 @@ private Q_SLOTS:
     void slotSaveAs();
     void slotImport();
 
-
 Q_SIGNALS:
     void checkSyntax();
 

@@ -141,7 +141,7 @@ void SieveEditorTextModeWidget::generateXml()
     KSieveUi::XMLPrintingScriptBuilder psb;
     parser.setScriptBuilder( &psb );
     const bool result = parser.parse();
-    QPointer<ParsingResultDialog> dlg = new  ParsingResultDialog;
+    QPointer<ParsingResultDialog> dlg = new ParsingResultDialog;
     if (result) {
         dlg->setResultParsing(psb.toDom().toString());
     } else {

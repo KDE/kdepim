@@ -1,0 +1,10 @@
+require "envelope";
+require "subaddress";
+require "foreverypart";
+ 
+#Script name: not condition
+
+if not envelope :localpart :is "Reply-To" "montel@kde.org"
+{
+    break ;
+}

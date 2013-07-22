@@ -300,8 +300,15 @@ int SieveConditionWidgetLister::conditionNumber() const
     return widgets().count();
 }
 
-void SieveConditionWidgetLister::loadTest(const QDomElement &testElement)
+void SieveConditionWidgetLister::loadTest(const QDomElement &element, bool notCondition)
 {
+    QDomElement testElement = element;
+    if (notCondition) {
+        QDomNode node = element.firstChild();
+        if (!node.isNull()) {
+            testElement = node.toElement();
+        }
+    }
     if (testElement.hasAttribute(QLatin1String("name"))) {
         const QString conditionName = testElement.attribute(QLatin1String("name"));
         SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
@@ -309,12 +316,19 @@ void SieveConditionWidgetLister::loadTest(const QDomElement &testElement)
     }
 }
 
-void SieveConditionWidgetLister::loadScript(const QDomElement &element, bool uniqTest)
+void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest, bool notCondition)
 {
     if (uniqTest) {
-        loadTest(element);
+        loadTest(e, notCondition);
     } else {
         bool firstCondition = true;
+        QDomElement element = e;
+        if (notCondition) {
+            QDomNode node = e.firstChild();
+            if (!node.isNull()) {
+                element = node.toElement();
+            }
+        }
         QDomNode node = element.firstChild();
         while (!node.isNull()) {
             QDomElement e = node.toElement();
