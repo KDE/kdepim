@@ -76,17 +76,15 @@ bool FolderArchiveAccountInfo::enabled() const
 void FolderArchiveAccountInfo::readConfig(const KConfigGroup &config)
 {
     mInstanceName = config.readEntry(QLatin1String("instanceName"));
-    mArchiveTopLevelCollectionId = config.readEntry(QLatin1String("toplevelid"), -1);
+    mArchiveTopLevelCollectionId = config.readEntry(QLatin1String("topLevelCollectionId"), -1);
     mArchiveType = static_cast<FolderArchiveType>(config.readEntry("folderArchiveType", (int)UniqFolder));
     mEnabled = config.readEntry("enabled", false);
-    //TODO
 }
 
 void FolderArchiveAccountInfo::writeConfig(KConfigGroup &config )
 {
     config.writeEntry(QLatin1String("instanceName"), mInstanceName);
-    config.writeEntry(QLatin1String("toplevelid"), mArchiveTopLevelCollectionId);
+    config.writeEntry(QLatin1String("topLevelCollectionId"), mArchiveTopLevelCollectionId);
     config.writeEntry(QLatin1String("folderArchiveType"), (int)mArchiveType);
     config.writeEntry(QLatin1String("enabled"), mEnabled);
-    //TODO
 }
