@@ -199,4 +199,3 @@ PlasmaComponents.Page {
     text: "   "
   }
 }
-
