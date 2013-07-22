@@ -69,13 +69,65 @@ bool SieveEditorAbstractWidget::saveToFile( const QString &filename )
         return false;
     QTextStream out(&file);
     out.setCodec("UTF-8");
-    out << scriptToSave();
+    out << currentscript();
     return true;
 }
 
-QString SieveEditorAbstractWidget::scriptToSave()
+QString SieveEditorAbstractWidget::currentscript()
 {
     return QString();
 }
+
+void SieveEditorAbstractWidget::setImportScript( const QString & )
+{
+
+}
+
+void SieveEditorAbstractWidget::slotImport()
+{
+    if ( !currentscript().isEmpty() ) {
+        if ( KMessageBox::warningYesNo(this, i18n( "You will overwrite script. Do you want to continue?" ), i18n( "Import Script" ) ) == KMessageBox::No )
+            return;
+    }
+    KUrl url;
+    const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
+    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
+
+    fdlg->setMode( KFile::File );
+    fdlg->setOperationMode( KFileDialog::Opening );
+    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
+        const QString fileName = fdlg->selectedFile();
+        if ( !loadFromFile( fileName ) ) {
+            KMessageBox::error( this,
+                                i18n( "Could not load the file %1:\n"
+                                      "\"%2\" is the detailed error description.",
+                                      fileName,
+                                      QString::fromLocal8Bit( strerror( errno ) ) ),
+                                i18n( "Sieve Editor Error" ) );
+        }
+    }
+    delete fdlg;
+}
+
+bool SieveEditorAbstractWidget::loadFromFile( const QString &filename )
+{
+    QFile file( filename );
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return false;
+
+    QTextStream in(&file);
+    QString line = in.readLine();
+    QString scriptText;
+    while (!line.isNull()) {
+        if ( scriptText.isEmpty() )
+            scriptText = line;
+        else
+            scriptText += QLatin1Char( '\n' ) + line;
+        line = in.readLine();
+    }
+    setImportScript( scriptText );
+    return true;
+}
+
 
 #include "sieveeditorabstractwidget.moc"

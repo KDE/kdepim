@@ -47,7 +47,8 @@ public:
     void setDebugColor( const QColor &col );
     void setDebugScript( const QString &debug );
 
-    QString scriptToSave();
+    QString currentscript();
+    void setImportScript( const QString &script );
 
 Q_SIGNALS:
     void checkSyntax();
@@ -55,7 +56,6 @@ Q_SIGNALS:
 
 private slots:
     void slotTextChanged();
-    void slotImport();
     void slotFind();
     void slotAutoGenerateScripts();
     void slotCheckSyntax();

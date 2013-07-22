@@ -42,7 +42,8 @@ public:
 
     void loadScript(const QDomDocument &doc);
 
-    QString scriptToSave();
+    QString currentscript();
+    void setImportScript( const QString & );
 
 private:
     void readConfig();

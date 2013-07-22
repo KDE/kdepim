@@ -29,12 +29,15 @@ public:
     explicit SieveEditorAbstractWidget(QWidget *parent=0);
     ~SieveEditorAbstractWidget();
 
-    virtual QString scriptToSave();
+    virtual QString currentscript();
+    virtual void setImportScript( const QString & );
 
 public Q_SLOTS:
     void slotSaveAs();
+    void slotImport();
 
 private:
+    bool loadFromFile( const QString &filename );
     bool saveToFile( const QString &filename );
 };
 }

@@ -110,7 +110,7 @@ void SieveEditorGraphicalModeWidget::slotActivateScriptPage(QWidget *page)
     mStackWidget->setCurrentWidget(page);
 }
 
-QString SieveEditorGraphicalModeWidget::scriptToSave()
+QString SieveEditorGraphicalModeWidget::currentscript()
 {
     QString requires;
     QString script = mSieveScript->generatedScript(requires);
@@ -118,6 +118,11 @@ QString SieveEditorGraphicalModeWidget::scriptToSave()
         script.prepend(requires);
     }
     return script;
+}
+
+void SieveEditorGraphicalModeWidget::setImportScript( const QString & )
+{
+    //TODO
 }
 
 #include "sieveeditorgraphicalmodewidget.moc"
