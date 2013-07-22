@@ -59,12 +59,6 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
 
   action = actionCollection->addAction( "message_reply" );
   action->setText( i18n( "Reply" ) );
-  
-  action = actionCollection->addAction( "message_reply_to_all" );
-  action->setText( i18n( "Reply to All" ) );
-
-  action = actionCollection->addAction( "message_reply_to_author" );
-  action->setText( i18n( "Reply to Author" ) );
 
   action = actionCollection->addAction( "message_reply_to_list" );
   action->setText( i18n( "Reply to Mailing List" ) );
@@ -73,9 +67,6 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
   action->setText( i18n( "Reply Without Quoting" ) );
 
   action = actionCollection->addAction( "message_reply_variants" );
-
-  action = actionCollection->addAction( "message_forward" );
-  action->setText( i18n( "Forward" ) );
 
   action = actionCollection->addAction( "message_forward_as_attachment" );
   action->setText( i18n( "Forward as Attachment" ) );
