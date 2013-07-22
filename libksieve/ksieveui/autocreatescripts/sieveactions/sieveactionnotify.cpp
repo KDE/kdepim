@@ -18,6 +18,7 @@
 
 #include "sieveactionnotify.h"
 #include "widgets/selectimportancecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -25,6 +26,8 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -61,10 +64,32 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
 
 void SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
-    KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
-
-    //TODO
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("message")) {
+                    const QString strValue = AutoCreateScriptUtil::strValue(node);
+                    if (!strValue.isEmpty()) {
+                        KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
+                        message->setText(strValue);
+                    }
+                } else if (tagValue == QLatin1String("importance")) {
+                    const QString strValue = AutoCreateScriptUtil::strValue(node);
+                    if (!strValue.isEmpty()) {
+                        SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
+                        importance->setCode(strValue);
+                    }
+                }
+            } else {
+                qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionNotify::code(QWidget *w) const
