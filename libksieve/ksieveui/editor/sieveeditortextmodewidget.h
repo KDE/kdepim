@@ -39,8 +39,6 @@ public:
 
     void setSieveCapabilities( const QStringList &capabilities );
 
-    void resultDone();
-
     QString script() const;
     void setScript( const QString &script );
 
@@ -50,16 +48,15 @@ public:
     QString currentscript();
     void setImportScript( const QString &script );
 
+    void autoGenerateScripts();
+    void generateXml();
+
 Q_SIGNALS:
-    void checkSyntax();
     void enableButtonOk( bool );
 
 private slots:
     void slotTextChanged();
     void slotFind();
-    void slotAutoGenerateScripts();
-    void slotCheckSyntax();
-    void slotGenerateXml();
 
 private:
     void readConfig();
@@ -70,8 +67,6 @@ private:
     SieveTextEdit * mTextEdit;
     KTextEdit *mDebugTextEdit;
     SieveFindBar *mFindBar;
-    QAction *mCheckSyntax;
-
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;
     QSplitter *mExtraSplitter;

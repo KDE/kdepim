@@ -58,18 +58,6 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     setLayout( lay );
 
-    QToolBar *bar = new QToolBar;
-    mCheckSyntax = new QAction(i18n("Check Syntax"), this);
-    connect(mCheckSyntax, SIGNAL(triggered(bool)), SLOT(slotCheckSyntax()));
-    bar->addAction(mCheckSyntax);
-    bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
-    bar->addAction(i18n( "Import..." ), this, SLOT(slotImport()));
-    bar->addAction(i18n("Autogenerate Script..."), this, SLOT(slotAutoGenerateScripts()));
-    //Remove it for 4.12
-    bar->addAction(QLatin1String("Generate xml"), this, SLOT(slotGenerateXml()));
-
-    lay->addWidget(bar);
-
     mMainSplitter = new QSplitter;
     mMainSplitter->setOrientation( Qt::Vertical );
     lay->addWidget( mMainSplitter );
@@ -145,7 +133,7 @@ void SieveEditorTextModeWidget::readConfig()
     mTemplateSplitter->setSizes(group.readEntry( "templateSplitter", size));
 }
 
-void SieveEditorTextModeWidget::slotGenerateXml()
+void SieveEditorTextModeWidget::generateXml()
 {
     const QByteArray script = mTextEdit->toPlainText().toUtf8();
     KSieve::Parser parser( script.begin(),
@@ -163,7 +151,7 @@ void SieveEditorTextModeWidget::slotGenerateXml()
     delete dlg;
 }
 
-void SieveEditorTextModeWidget::slotAutoGenerateScripts()
+void SieveEditorTextModeWidget::autoGenerateScripts()
 {
     QPointer<AutoCreateScriptDialog> dlg = new AutoCreateScriptDialog(this);
     dlg->setSieveCapabilities(mSieveCapabilities);
@@ -201,7 +189,6 @@ void SieveEditorTextModeWidget::setImportScript( const QString &script )
 void SieveEditorTextModeWidget::slotTextChanged()
 {
     const bool enabled = !script().isEmpty();
-    mCheckSyntax->setEnabled( enabled );
     Q_EMIT enableButtonOk( enabled );
 }
 
@@ -223,17 +210,6 @@ void SieveEditorTextModeWidget::setDebugColor( const QColor &col )
 void SieveEditorTextModeWidget::setDebugScript( const QString &debug )
 {
     mDebugTextEdit->setText( debug );
-}
-
-void SieveEditorTextModeWidget::resultDone()
-{
-    mCheckSyntax->setEnabled(true);
-}
-
-void SieveEditorTextModeWidget::slotCheckSyntax()
-{
-    mCheckSyntax->setEnabled(false);
-    Q_EMIT checkSyntax();
 }
 
 void SieveEditorTextModeWidget::setSieveCapabilities( const QStringList &capabilities )

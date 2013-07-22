@@ -25,6 +25,7 @@
 
 class QStackedWidget;
 class QLineEdit;
+class QAction;
 namespace KSieveUi {
 class SieveEditorTextModeWidget;
 class SieveEditorGraphicalModeWidget;
@@ -56,6 +57,12 @@ public:
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
+    void slotAutoGenerateScripts();
+    void slotCheckSyntax();
+    void slotGenerateXml();
+    void slotSaveAs();
+    void slotImport();
+
 
 Q_SIGNALS:
     void checkSyntax();
@@ -70,6 +77,7 @@ private:
     SieveEditorGraphicalModeWidget *mGraphicalModeWidget;
     QStackedWidget *mStackedWidget;
     QLineEdit *mScriptName;
+    QAction *mCheckSyntax;
     EditorMode mMode;
 };
 
