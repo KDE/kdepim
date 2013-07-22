@@ -24,6 +24,7 @@
 #include <kdialog.h>
 
 class QStackedWidget;
+class QLineEdit;
 namespace KSieveUi {
 class SieveEditorTextModeWidget;
 class SieveEditorGraphicalModeWidget;
@@ -68,6 +69,7 @@ private:
     SieveEditorTextModeWidget *mTextModeWidget;
     SieveEditorGraphicalModeWidget *mGraphicalModeWidget;
     QStackedWidget *mStackedWidget;
+    QLineEdit *mScriptName;
     EditorMode mMode;
 };
 

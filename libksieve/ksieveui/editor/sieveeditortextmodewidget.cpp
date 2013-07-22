@@ -44,7 +44,6 @@
 #include <QShortcut>
 #include <QHBoxLayout>
 #include <QPointer>
-#include <QLineEdit>
 #include <QPushButton>
 #include <QTextStream>
 #include <QDebug>
@@ -70,15 +69,6 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     bar->addAction(QLatin1String("Generate xml"), this, SLOT(slotGenerateXml()));
 
     lay->addWidget(bar);
-
-    QHBoxLayout *nameLayout = new QHBoxLayout;
-
-    QLabel * label = new QLabel( i18n( "Script name:" ) );
-    nameLayout->addWidget( label );
-    mScriptName = new QLineEdit;
-    mScriptName->setReadOnly( true );
-    nameLayout->addWidget( mScriptName );
-    lay->addLayout( nameLayout );
 
     mMainSplitter = new QSplitter;
     mMainSplitter->setOrientation( Qt::Vertical );
@@ -304,11 +294,6 @@ void SieveEditorTextModeWidget::setDebugColor( const QColor &col )
 void SieveEditorTextModeWidget::setDebugScript( const QString &debug )
 {
     mDebugTextEdit->setText( debug );
-}
-
-void SieveEditorTextModeWidget::setScriptName( const QString &name )
-{
-    mScriptName->setText( name );
 }
 
 void SieveEditorTextModeWidget::resultDone()

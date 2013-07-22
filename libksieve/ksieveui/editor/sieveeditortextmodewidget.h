@@ -22,7 +22,6 @@
 #include "sieveeditorabstractwidget.h"
 
 class KTextEdit;
-class QLineEdit;
 class QPushButton;
 class QSplitter;
 
@@ -47,7 +46,6 @@ public:
 
     void setDebugColor( const QColor &col );
     void setDebugScript( const QString &debug );
-    void setScriptName( const QString &name );
 
 Q_SIGNALS:
     void checkSyntax();
@@ -71,7 +69,6 @@ private:
     QStringList mSieveCapabilities;
     SieveTextEdit * mTextEdit;
     KTextEdit *mDebugTextEdit;
-    QLineEdit *mScriptName;
     SieveFindBar *mFindBar;
     QAction *mCheckSyntax;
 

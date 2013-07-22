@@ -26,6 +26,8 @@
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QStackedWidget>
+#include <QLabel>
+#include <QLineEdit>
 
 using namespace KSieveUi;
 
@@ -47,6 +49,16 @@ SieveEditor::SieveEditor( QWidget * parent )
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
+
+    QHBoxLayout *nameLayout = new QHBoxLayout;
+    QLabel *label = new QLabel( i18n( "Script name:" ) );
+    nameLayout->addWidget( label );
+    mScriptName = new QLineEdit;
+    mScriptName->setReadOnly( true );
+    nameLayout->addWidget( mScriptName );
+    lay->addLayout( nameLayout );
+
+
     lay->setMargin(0);
     w->setLayout(lay);
     mStackedWidget = new QStackedWidget;
@@ -127,7 +139,7 @@ void SieveEditor::setDebugScript( const QString &debug )
 
 void SieveEditor::setScriptName( const QString &name )
 {
-    mTextModeWidget->setScriptName( name );
+    mScriptName->setText( name );
 }  
 
 void SieveEditor::resultDone()
