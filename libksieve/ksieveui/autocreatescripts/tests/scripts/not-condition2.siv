@@ -1,0 +1,12 @@
+require "ihave";
+require "foreverypart";
+ 
+#Script name: not condition
+
+if allof (not header :is "Content-Type" "sdfsdf"
+, ihave "xvwx"
+)
+{
+    break ;
+}
+

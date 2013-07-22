@@ -72,7 +72,7 @@ QString SieveConditionSize::help() const
     return i18n("The \"size\" test deals with the size of a message.  It takes either a tagged argument of \":over\" or \":under\", followed by a number representing the size of the message.");
 }
 
-void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget *w )
+void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
     QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
     SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget*>(QLatin1String("sizewidget"));

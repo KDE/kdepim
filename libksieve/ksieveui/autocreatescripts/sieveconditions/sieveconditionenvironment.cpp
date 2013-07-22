@@ -105,7 +105,7 @@ QString SieveConditionEnvironment::help() const
     return i18n("The environment test retrieves the item of environment information specified by the name string and matches it to the values specified in the key-list argument.");
 }
 
-void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w )
+void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
     KLineEdit *item =  w->findChild<KLineEdit*>( QLatin1String("item") );
     KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );

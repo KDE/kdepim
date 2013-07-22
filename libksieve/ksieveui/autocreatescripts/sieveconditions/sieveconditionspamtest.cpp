@@ -96,7 +96,7 @@ QString SieveConditionSpamTest::help() const
     return i18n("Sieve implementations that implement the \"spamtest\" test use an identifier of either \"spamtest\" or \"spamtestplus\" for use with the capability mechanism.");
 }
 
-void SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWidget *w )
+void SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
 
     SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );

@@ -194,14 +194,14 @@ void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool re
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-void SieveConditionWidget::setCondition(const QString &conditionName, const QDomElement &element)
+void SieveConditionWidget::setCondition(const QString &conditionName, const QDomElement &element, bool notCondition)
 {
     const int index = mComboBox->findData(conditionName);
     if (index != -1) {
         mComboBox->setCurrentIndex(index);
         slotConditionChanged(index);
         KSieveUi::SieveCondition* condition = mConditionList.at( index );
-        condition->setParamWidgetValue(element, this);
+        condition->setParamWidgetValue(element, this, notCondition);
     }
 }
 
@@ -312,7 +312,7 @@ void SieveConditionWidgetLister::loadTest(const QDomElement &element, bool notCo
     if (testElement.hasAttribute(QLatin1String("name"))) {
         const QString conditionName = testElement.attribute(QLatin1String("name"));
         SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
-        w->setCondition(conditionName, testElement);
+        w->setCondition(conditionName, testElement, notCondition);
     }
 }
 
@@ -349,7 +349,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
                                         addWidgetAfterThisWidget(widgets().last());
                                     }
                                     SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
-                                    w->setCondition(conditionName, testElement);
+                                    w->setCondition(conditionName, testElement, notCondition);
                                 }
                             } else {
                                 qDebug()<<" unknown condition tag: "<<testTagName;

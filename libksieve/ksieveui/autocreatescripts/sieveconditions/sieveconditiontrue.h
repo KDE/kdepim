@@ -35,7 +35,7 @@ public:
 
     QString help() const;
 
-    void setParamWidgetValue(const QDomElement &element, QWidget *parent );
+    void setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition );
 };
 }
 
