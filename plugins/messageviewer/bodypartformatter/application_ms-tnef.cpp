@@ -67,10 +67,10 @@ namespace {
 
       if ( !writer ) return Ok;
 
-      const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
-      QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">";
-      QString startRow = "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
-      QString endRow = "</td></tr>";
+      const QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
+      QString htmlStr = QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">");
+      QString startRow = QLatin1String("<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">");
+      QString endRow = QLatin1String("</td></tr>");
 
       const QString fileName = bodyPart->nodeHelper()->writeNodeToTempFile( bodyPart->content() );
       KTnef::KTNEFParser parser;
@@ -109,11 +109,11 @@ namespace {
         htmlStr += startRow;
         htmlStr += label;
         if ( !comment.isEmpty() ) {
-          htmlStr += "<br/>" + comment;
+          htmlStr += QLatin1String("<br/>") + comment;
         }
-        htmlStr += "&nbsp;&lt;" + i18nc( "TNEF attachment has no content", "empty" ) + "&gt;";
+        htmlStr += QLatin1String("&nbsp;&lt;") + i18nc( "TNEF attachment has no content", "empty" ) + QLatin1String("&gt;");
         htmlStr += endRow;
-        htmlStr += "</table>";
+        htmlStr += QLatin1String("</table>");
         writer->queue( htmlStr );
 
         return NeedContent;
@@ -128,7 +128,7 @@ namespace {
       htmlStr += startRow;
       htmlStr += label;
       if ( !comment.isEmpty() ) {
-        htmlStr += "<br/>" + comment;
+        htmlStr += QLatin1String("<br/>") + comment;
       }
       htmlStr += endRow;
       if ( !inviteStr.isEmpty() ) {
@@ -149,23 +149,23 @@ namespace {
           label = att->name();
         label = MessageCore::StringUtil::quoteHtmlChars( label, true );
 
-        const QString dir = bodyPart->nodeHelper()->createTempDir( "ktnef-" + QString::number( i ) );
+        const QString dir = bodyPart->nodeHelper()->createTempDir( QLatin1String("ktnef-") + QString::number( i ) );
         parser.extractFileTo( att->name(), dir );
         bodyPart->nodeHelper()->addTempFile( dir + QDir::separator() + att->name() );
-        const QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
+        const QString href = QLatin1String("file:") + QString::fromLatin1(KUrl::toPercentEncoding( dir + QDir::separator() + att->name() ));
 
         const QString iconName = MessageViewer::Util::fileNameForMimetype( att->mimeTag(),
                                                             KIconLoader::Desktop, att->name() );
 
-        writer->queue( "<div><a href=\"" + href + "\"><img src=\"file:///" +
-                              iconName + "\" border=\"0\" style=\"max-width: 100%\"/>" + label +
-                              "</a></div><br/>" );
+        writer->queue( QLatin1String("<div><a href=\"") + href + QLatin1String("\"><img src=\"file:///") +
+                              iconName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\"/>") + label +
+                              QLatin1String("</a></div><br/>") );
       }
 
       if ( tnefatts.count() > 0 ) {
         writer->queue( endRow );
       }
-      writer->queue( "</table>" );
+      writer->queue( QLatin1String("</table>") );
 
       return Ok;
     }
@@ -200,6 +200,6 @@ namespace {
 extern "C"
 KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_application_mstnef_create_bodypart_formatter_plugin() {
-  KGlobal::locale()->insertCatalog( "messageviewer_application_mstnef_plugin" );
+  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_application_mstnef_plugin") );
   return new Plugin();
 }

@@ -33,7 +33,7 @@ using namespace KPIMIdentities;
 // This function is used by kate/kwrite
 extern "C" KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
 {
-  KGlobal::locale()->insertCatalog( "ktexteditorkabcbridge_plugin" );
+  KGlobal::locale()->insertCatalog( QLatin1String("ktexteditorkabcbridge_plugin") );
 
   IdentityManager manager( true, widget );
   Identity defaultIdentity = manager.defaultIdentity();
@@ -49,7 +49,7 @@ extern "C" KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder,
     }
 
     KCMultiDialog dlg( widget );
-    dlg.addModule( "kcm_useraccount.desktop" );
+    dlg.addModule( QLatin1String("kcm_useraccount.desktop") );
     if ( !dlg.exec() ) {
       *ok = false;
       return QString();
