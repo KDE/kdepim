@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionconvert.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/commonwidgets/selectconvertparameterwidget.h"
 #include "autocreatescripts/commonwidgets/selectmimetypecombobox.h"
 
@@ -24,6 +25,8 @@
 
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveActionConvert::SieveActionConvert(QObject *parent)
@@ -69,12 +72,33 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
 
 void SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
-    //fromMimeType->setCode();
-    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
-    //toMimeType->setCode();
-    SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
-    //params->setCode();
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                if (index == 0) {
+                    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
+                    fromMimeType->setCode(e.text());
+                } else if (index == 1) {
+                    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
+                    toMimeType->setCode(e.text());
+                } else {
+                    qDebug()<<" SieveActionConvert::setParamWidgetValue too many argument :"<<index;
+                }
+                ++index;
+            } else if (tagName == QLatin1String("list")) {
+               SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
+               params->setCode(AutoCreateScriptUtil::listValue(e));
+            } else {
+                qDebug()<<"SieveActionConvert::setParamWidgetValue unknown tag "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+
 }
 
 QString SieveActionConvert::code(QWidget *w) const
