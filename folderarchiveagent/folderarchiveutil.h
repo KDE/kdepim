@@ -18,9 +18,11 @@
 #ifndef FOLDERARCHIVEUTIL_H
 #define FOLDERARCHIVEUTIL_H
 
+#include "folderarchive_export.h"
+
 namespace FolderArchiveUtil
 {
-bool folderArchiveAgentEnabled();
+FOLDERARCHIVE_EXPORT bool folderArchiveAgentEnabled();
 }
 
 

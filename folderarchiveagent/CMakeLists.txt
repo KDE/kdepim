@@ -6,6 +6,24 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/mailcommon
 )
 
+set(folderarchivelib_SRCS 
+  folderarchiveutil.cpp
+)
+
+kde4_add_kcfg_files(folderarchivelib_SRCS
+    folderarchiveagentsettings.kcfgc 
+  )
+
+
+kde4_add_library( folderarchive ${LIBRARY_TYPE} ${folderarchivelib_SRCS} )
+target_link_libraries( folderarchive ${KDE4_KDEUI_LIBS} )
+
+set_target_properties( folderarchive PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+
+install( TARGETS folderarchive ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
+
+
 set(folderarchiveagent_SRCS
   folderarchiveagent.cpp
   folderarchiveconfiguredialog.cpp
@@ -14,19 +32,11 @@ set(folderarchiveagent_SRCS
   folderarchivemanager.cpp
   folderarchiveaccountinfo.cpp
   folderarchiveagentjob.cpp
-  folderarchiveutil.cpp
 )
-
-kde4_add_kcfg_files(folderarchiveagent_SRCS
-  folderarchiveagentsettings.kcfgc
-)
-
 
 qt4_add_dbus_adaptor(folderarchiveagent_SRCS org.freedesktop.Akonadi.FolderArchiveAgent.xml folderarchiveagent.h FolderArchiveAgent)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-
-#kde4_add_ui_files(archivemailagent_SRCS ui/archivemailwidget.ui )
 
 kde4_add_executable(akonadi_folderarchive_agent ${folderarchiveagent_SRCS})
 
@@ -35,6 +45,7 @@ target_link_libraries(akonadi_folderarchive_agent
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   mailcommon
+  folderarchive
 )
 
 if (Q_WS_MAC)
