@@ -353,13 +353,6 @@ PlasmaComponents.Page {
                 }
               },
               KPIM.ScriptAction {
-                name : "mark_as_dialog"
-                script : {
-                  actionPanel.collapse();
-                  pageRow.push(Qt.createComponent("MarkAsPage.qml") )
-                }
-              },
-              KPIM.ScriptAction {
                 name : "add_as_favorite"
                 script : {
                   actionPanel.collapse();

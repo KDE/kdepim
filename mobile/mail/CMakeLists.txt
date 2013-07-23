@@ -131,7 +131,6 @@ install(FILES
   ConfigDialog.qml
   FilterEditor.qml
   FolderPage.qml
-  MarkAsPage.qml
   MailListPage.qml
   MailViewPage.qml
   EditorView.qml
