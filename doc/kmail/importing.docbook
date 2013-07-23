@@ -40,7 +40,7 @@
     <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Import Wizard...</guimenuitem></menuchoice></term>
       <listitem>
         <para>This brings up the import wizard dialog. The import wizard will detect all known email applications and list them for you in the window.
-          Select the the email application you want to import from and click the <guibutton>Next</guibutton> button. The wizard will then ask if you want to import everything,
+          Select the email application you want to import from and click the <guibutton>Next</guibutton> button. The wizard will then ask if you want to import everything,
           or give you options to select which types of materials you want to import. Depending on your selections in the materials to import screen you will see one or more of the following screens.</para>
           <itemizedlist>
             <listitem>
