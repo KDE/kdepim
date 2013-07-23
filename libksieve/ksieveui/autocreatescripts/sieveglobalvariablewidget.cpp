@@ -93,6 +93,16 @@ void SieveGlobalVariableActionWidget::initWidget()
              this, SLOT(slotRemoveWidget()) );
 }
 
+bool SieveGlobalVariableActionWidget::isInitialized() const
+{
+    return !mVariableName->text().isEmpty();
+}
+
+void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element)
+{
+    //TODO
+}
+
 void SieveGlobalVariableActionWidget::slotAddWidget()
 {
     emit addWidget( this );
@@ -230,6 +240,11 @@ QWidget *SieveGlobalVariableLister::createWidget( QWidget *parent )
     SieveGlobalVariableActionWidget *w = new SieveGlobalVariableActionWidget( parent);
     reconnectWidget( w );
     return w;
+}
+
+void SieveGlobalVariableLister::loadScript(const QDomElement &element)
+{
+    //TODO
 }
 
 }

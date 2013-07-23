@@ -35,7 +35,10 @@ class SieveIncludeLocation : public KComboBox
 public:
     explicit SieveIncludeLocation(QWidget *parent = 0);
     ~SieveIncludeLocation();
+
     QString code() const;
+    void setCode(const QString &code);
+
 private:
     void initialize();
 };
@@ -49,6 +52,8 @@ public:
 
     void generatedScript(QString &script);
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    void loadScript(const QDomElement &element);
+    bool isInitialized() const;
 
 private Q_SLOTS:
     void slotAddWidget();
@@ -77,6 +82,8 @@ public:
     ~SieveIncludeWidgetLister();
 
     void generatedScript(QString &script, QStringList &requires);
+    void loadScript(const QDomElement &element);
+
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );

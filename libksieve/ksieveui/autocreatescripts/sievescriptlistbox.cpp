@@ -16,7 +16,9 @@
 */
 #include "sievescriptlistbox.h"
 #include "sievescriptdescriptiondialog.h"
+#include "sieveglobalvariablewidget.h"
 #include "sievescriptpage.h"
+#include "sieveincludewidget.h"
 
 #include <KHBox>
 #include <KMessageBox>
@@ -362,10 +364,32 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         qDebug()<<" ELSE";
                         //We are sure that we can't have another elsif
                         currentPage = 0;
+                    } else {
+                        qDebug()<<" unknown controlType :"<<controlType;
                     }
                 }
             } else if (tagName == QLatin1String("comment")) {
                 comment =  e.text();
+            } else if (tagName == QLatin1String("action")) {
+                if (e.hasAttribute(QLatin1String("name"))) {
+                    const QString actionName = e.attribute(QLatin1String("name"));
+                    if (actionName == QLatin1String("include")) {
+                        if (!currentPage) {
+                            currentPage = createNewScript(createUniqName());
+                        }
+                        currentPage->includeWidget()->loadScript(e);
+                    } else if (actionName == QLatin1String("global")) {
+                        if (!currentPage) {
+                            currentPage = createNewScript(createUniqName());
+                        }
+                        currentPage->globalVariableWidget()->loadScript(e);
+                    } else {
+                        qDebug()<<" unknown action name: "<<actionName;
+                    }
+                }
+                qDebug()<<" NEW ACTIONS";
+            } else {
+                qDebug()<<" unknown tagname"<<tagName;
             }
 
             qDebug() <<"tag"<< tagName<<" comment "<<comment;
