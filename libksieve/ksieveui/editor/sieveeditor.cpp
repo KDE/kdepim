@@ -142,7 +142,16 @@ void SieveEditor::readConfig()
 
 QString SieveEditor::script() const
 {
-    return mTextModeWidget->script();
+    QString currentScript;
+    switch (mMode) {
+    case TextMode:
+        currentScript = mTextModeWidget->script();
+        break;
+    case GraphicMode:
+        currentScript = mGraphicalModeWidget->currentscript();
+        break;
+    }
+    return currentScript;
 }
 
 QString SieveEditor::originalScript() const
@@ -223,7 +232,7 @@ void SieveEditor::slotSaveAs()
         mTextModeWidget->slotSaveAs();
         break;
     case GraphicMode:
-        mTextModeWidget->slotSaveAs();
+        mGraphicalModeWidget->slotSaveAs();
         break;
     }
 }
@@ -235,7 +244,7 @@ void SieveEditor::slotImport()
         mTextModeWidget->slotImport();
         break;
     case GraphicMode:
-        mTextModeWidget->slotImport();
+        mGraphicalModeWidget->slotImport();
         break;
     }
 }
