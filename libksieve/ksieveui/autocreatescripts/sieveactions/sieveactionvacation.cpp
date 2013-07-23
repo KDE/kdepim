@@ -31,6 +31,8 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QSpinBox>
+#include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 
@@ -95,6 +97,30 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
 
 void SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("seconds")) {
+                    //TODO
+                } else if (tagValue == QLatin1String("days")) {
+                    //TODO
+                }
+            } else if (tagName == QLatin1String("num"))  {
+                QSpinBox *day = w->findChild<QSpinBox*>( QLatin1String("day") );
+                day->setValue(e.text().toInt());
+            } else if (tagName == QLatin1String("str")) {
+                //TODO
+            } else {
+                qDebug()<<" SieveActionVacation::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 
 }
 
