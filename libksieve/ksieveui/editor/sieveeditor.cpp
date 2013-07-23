@@ -63,7 +63,10 @@ SieveEditor::SieveEditor( QWidget * parent )
     bar->addAction(mCheckSyntax);
     bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
     bar->addAction(i18n("Import..."), this, SLOT(slotImport()));
-    bar->addAction(i18n("Autogenerate Script..."), this, SLOT(slotAutoGenerateScripts()));
+
+    mAutoGenerateScript = new QAction(i18n("Autogenerate Script..."), this);
+    connect(mAutoGenerateScript, SIGNAL(triggered(bool)), SLOT(slotAutoGenerateScripts()));
+    bar->addAction(mAutoGenerateScript);
     mSwitchMode = new QAction(i18n("Switch Mode"), this);
     bar->addAction(mSwitchMode);
     connect(mSwitchMode, SIGNAL(triggered(bool)), SLOT(slotSwitchMode()));
@@ -110,6 +113,7 @@ void SieveEditor::changeMode(EditorMode mode)
     if (mode != mMode) {
         mMode = mode;
         mStackedWidget->setCurrentIndex(static_cast<int>(mode));
+        mAutoGenerateScript->setEnabled((mMode == TextMode));
     }
 }
 

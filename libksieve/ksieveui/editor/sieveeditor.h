@@ -79,6 +79,7 @@ private:
     QLineEdit *mScriptName;
     QAction *mCheckSyntax;
     QAction *mSwitchMode;
+    QAction *mAutoGenerateScript;
     EditorMode mMode;
 };
 
