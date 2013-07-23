@@ -40,7 +40,6 @@ PlasmaComponents.Page {
     }
 
     //TODO (de)select-all checkbox
-    //TODO hide/grey out when no mail is selected?
     Row {
 
       anchors.horizontalCenter: parent.horizontalCenter
@@ -221,7 +220,9 @@ PlasmaComponents.Page {
               iconSource: "mail-mark-unread"
 
               onClicked: {
-
+                checkModel.select(model.index, 3)
+                application.getAction("akonadi_mark_as_read", "").trigger()
+                checkModel.select(-1, 1)
               }
 
             }
@@ -231,7 +232,9 @@ PlasmaComponents.Page {
               iconSource: "mail-mark-important"
 
               onClicked: {
-
+                checkModel.select(model.index, 3)
+                application.getAction("akonadi_mark_as_important", "").trigger()
+                checkModel.select(-1, 1)
               }
 
             }
@@ -241,7 +244,9 @@ PlasmaComponents.Page {
               iconSource: "edit-delete"
 
               onClicked: {
-
+                checkModel.select(model.index, 3)
+                application.getAction("akonadi_move_to_trash", "").trigger()
+                checkModel.select(-1, 1)
               }
 
             }
