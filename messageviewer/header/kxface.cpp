@@ -94,15 +94,15 @@ QString KXFace::fromImage( const QImage &image )
     QBuffer buffer( &ba, this );
     buffer.open( QIODevice::WriteOnly );
     scaledImg.save( &buffer, "XBM" );
-    QString xbm( ba );
-    xbm.remove( 0, xbm.indexOf( "{" ) + 1 );
-    xbm.truncate( xbm.indexOf( "}" ) );
-    xbm.remove( ' ' );
-    xbm.remove( ',' );
-    xbm.remove( "0x" );
-    xbm.remove( '\n' );
+    QString xbm( QString::fromLatin1(ba) );
+    xbm.remove( 0, xbm.indexOf( QLatin1String("{") ) + 1 );
+    xbm.truncate( xbm.indexOf( QLatin1String("}") ) );
+    xbm.remove( QLatin1Char(' ') );
+    xbm.remove( QLatin1Char(',') );
+    xbm.remove( QLatin1String("0x") );
+    xbm.remove( QLatin1Char('\n') );
     xbm.truncate( 576 );
-    QString tmp = xbm.toLatin1();
+    QString tmp = QLatin1String(xbm.toLatin1());
     int len = tmp.length();
     for( int i=0; i<len; ++i )
     {
@@ -133,8 +133,8 @@ QString KXFace::fromImage( const QImage &image )
             tmp[i-1] = t;
         }
     }
-    tmp.replace( QRegExp( "(\\w{12})" ), "\\1\n" );
-    tmp.replace( QRegExp( "(\\w{4})" ), "0x\\1," );
+    tmp.replace( QRegExp( QLatin1String("(\\w{12})") ), QLatin1String("\\1\n") );
+    tmp.replace( QRegExp( QLatin1String("(\\w{4})") ), QLatin1String("0x\\1,") );
     len = tmp.length();
     char *fbuf = (char *)malloc( len + 1 );
     strncpy( fbuf, (const char *)tmp.toLatin1(), len );
@@ -145,7 +145,7 @@ QString KXFace::fromImage( const QImage &image )
         GenFace();
         CompAll( fbuf );
     }
-    QString ret( fbuf );
+    QString ret( QString::fromLatin1(fbuf) );
     free( fbuf );
 
     return ret;
