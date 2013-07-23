@@ -32,10 +32,10 @@ PlasmaComponents.Page {
 
   //BEGIN: Tools
   tools: PlasmaComponents.ToolBarLayout {
-    PlasmaComponents.ToolButton{
+    PlasmaComponents.ToolButton {
       iconSource: "preferences-system"
 
-      onClicked: pageRow.push(Qt.createComponent("SettingsPage.qml") )
+      onClicked: pageRow.push(Qt.createComponent("SettingsPage.qml"))
     }
   }
   //END: Tools
