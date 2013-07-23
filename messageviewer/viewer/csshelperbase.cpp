@@ -166,23 +166,23 @@ namespace MessageViewer {
     return
       commonCssDefinitions()
       +
-      "@media screen {\n\n"
+      QLatin1String("@media screen {\n\n")
       +
       screenCssDefinitions( this, fixed )
       +
-      "}\n"
-      "@media print {\n\n"
+      QLatin1String("}\n"
+      "@media print {\n\n")
       +
       printCssDefinitions( fixed )
       +
-      "\n";
+      QLatin1String("\n");
   }
 
   QString CSSHelperBase::htmlHead( bool /*fixed*/ ) const {
     return
-      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
+      QLatin1String("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
       "<html><head><title></title></head>\n"
-      "<body>\n";
+      "<body>\n");
   }
 
   QString CSSHelperBase::quoteFontTag( int level ) const {
@@ -193,13 +193,13 @@ namespace MessageViewer {
       ? level % numQuoteLevels + 1
       : qMin( level + 1, numQuoteLevels ) ;
     if ( level >= numQuoteLevels )
-      return QString( "<div class=\"deepquotelevel%1\">" ).arg( effectiveLevel );
+      return QString::fromLatin1( "<div class=\"deepquotelevel%1\">" ).arg( effectiveLevel );
     else
-      return QString( "<div class=\"quotelevel%1\">" ).arg( effectiveLevel );
+      return QString::fromLatin1( "<div class=\"quotelevel%1\">" ).arg( effectiveLevel );
   }
 
   QString CSSHelperBase::nonQuotedFontTag() const {
-    return "<div class=\"noquote\">";
+    return QLatin1String("<div class=\"noquote\">");
   }
 
   QFont CSSHelperBase::bodyFont( bool fixed, bool print ) const {
@@ -221,7 +221,7 @@ namespace MessageViewer {
   static const char * const quoteFontSizes[] = { "85", "80", "75" };
 
   QString CSSHelperBase::printCssDefinitions( bool fixed ) const {
-    const QString headerFont = QString( "  font-family: \"%1\" ! important;\n"
+    const QString headerFont = QString::fromLatin1( "  font-family: \"%1\" ! important;\n"
                                         "  font-size: %2pt ! important;\n" )
                            .arg( mPrintFont.family() )
                            .arg( mPrintFont.pointSize() );
@@ -230,14 +230,14 @@ namespace MessageViewer {
     const QFont printFont = bodyFont( fixed, true /* print */ );
     QString quoteCSS;
     if ( printFont.italic() )
-      quoteCSS += "  font-style: italic ! important;\n";
+      quoteCSS += QLatin1String("  font-style: italic ! important;\n");
     if ( printFont.bold() )
-      quoteCSS += "  font-weight: bold ! important;\n";
+      quoteCSS += QLatin1String("  font-weight: bold ! important;\n");
     if ( !quoteCSS.isEmpty() )
-      quoteCSS = "div.noquote {\n" + quoteCSS + "}\n\n";
+      quoteCSS = QLatin1String("div.noquote {\n") + quoteCSS + QLatin1String("}\n\n");
 
     return
-      QString( "body {\n"
+      QString::fromLatin1( "body {\n"
                "  font-family: \"%1\" ! important;\n"
                "  font-size: %2pt ! important;\n"
                "  color: #000000 ! important;\n"
@@ -246,7 +246,7 @@ namespace MessageViewer {
       .arg( printFont.family(),
             QString::number( printFont.pointSize() ) )
       +
-      QString( "tr.textAtmH,\n"
+      QString::fromLatin1( "tr.textAtmH,\n"
                "tr.signInProgressH,\n"
                "tr.rfc822H,\n"
                "tr.encrH,\n"
@@ -309,57 +309,57 @@ namespace MessageViewer {
     const QString fgColor = mForegroundColor.name();
     const QString bgColor = mBackgroundColor.name();
     const QString linkColor = mLinkColor.name();
-    const QString headerFont = QString("  font-family: \"%1\" ! important;\n"
+    const QString headerFont = QString::fromLatin1("  font-family: \"%1\" ! important;\n"
                                        "  font-size: %2px ! important;\n")
       .arg( mBodyFont.family() )
       .arg( pointsToPixel( helper->mPaintDevice, mBodyFont.pointSize() ) );
     const QString background = ( mBackingPixmapOn
-                         ? QString( "  background-image:url(file:///%1) ! important;\n" )
+                         ? QString::fromLatin1( "  background-image:url(file:///%1) ! important;\n" )
                            .arg( mBackingPixmapStr )
-                         : QString( "  background-color: %1 ! important;\n" )
+                         : QString::fromLatin1( "  background-color: %1 ! important;\n" )
                            .arg( bgColor ) );
-    const QString bodyFontSize = QString::number( pointsToPixel( helper->mPaintDevice, fontSize( fixed ) ) ) + "px" ;
+    const QString bodyFontSize = QString::number( pointsToPixel( helper->mPaintDevice, fontSize( fixed ) ) ) + QLatin1String("px");
     const QPalette & pal = QApplication::palette();
 
     QString quoteCSS;
     if ( bodyFont( fixed ).italic() )
-      quoteCSS += "  font-style: italic ! important;\n";
+      quoteCSS += QLatin1String("  font-style: italic ! important;\n");
     if ( bodyFont( fixed ).bold() )
-      quoteCSS += "  font-weight: bold ! important;\n";
+      quoteCSS += QLatin1String("  font-weight: bold ! important;\n");
     if ( !quoteCSS.isEmpty() )
-      quoteCSS = "div.noquote {\n" + quoteCSS + "}\n\n";
+      quoteCSS = QLatin1String("div.noquote {\n") + quoteCSS + QLatin1String("}\n\n");
 
     // CSS definitions for quote levels 1-3
     for ( int i = 0 ; i < 3 ; ++i ) {
-      quoteCSS += QString( "div.quotelevel%1 {\n"
+      quoteCSS += QString::fromLatin1( "div.quotelevel%1 {\n"
                            "  color: %2 ! important;\n" )
         .arg( QString::number(i+1), mQuoteColor[i].name() );
       if ( mQuoteFont[i].italic() )
-        quoteCSS += "  font-style: italic ! important;\n";
+        quoteCSS += QLatin1String("  font-style: italic ! important;\n");
       if ( mQuoteFont[i].bold() )
-        quoteCSS += "  font-weight: bold ! important;\n";
+        quoteCSS += QLatin1String("  font-weight: bold ! important;\n");
       if ( mShrinkQuotes )
-        quoteCSS += "  font-size: " + QString::fromLatin1( quoteFontSizes[i] )
-          + "% ! important;\n";
-      quoteCSS += "}\n\n";
+        quoteCSS += QLatin1String("  font-size: ") + QString::fromLatin1( quoteFontSizes[i] )
+          + QLatin1String("% ! important;\n");
+      quoteCSS += QLatin1String("}\n\n");
     }
 
     // CSS definitions for quote levels 4+
     for ( int i = 0 ; i < 3 ; ++i ) {
-      quoteCSS += QString( "div.deepquotelevel%1 {\n"
+      quoteCSS += QString::fromLatin1( "div.deepquotelevel%1 {\n"
                            "  color: %2 ! important;\n" )
         .arg( QString::number(i+1), mQuoteColor[i].name() );
       if ( mQuoteFont[i].italic() )
-        quoteCSS += "  font-style: italic ! important;\n";
+        quoteCSS += QLatin1String("  font-style: italic ! important;\n");
       if ( mQuoteFont[i].bold() )
-        quoteCSS += "  font-weight: bold ! important;\n";
+        quoteCSS += QLatin1String("  font-weight: bold ! important;\n");
       if ( mShrinkQuotes )
-        quoteCSS += "  font-size: 70% ! important;\n";
-      quoteCSS += "}\n\n";
+        quoteCSS += QLatin1String("  font-size: 70% ! important;\n");
+      quoteCSS += QLatin1String("}\n\n");
     }
 
     return
-      QString( "body {\n"
+      QString::fromLatin1( "body {\n"
                "  font-family: \"%1\" ! important;\n"
                "  font-size: %2 ! important;\n"
                "  color: %3 ! important;\n"
@@ -380,7 +380,7 @@ namespace MessageViewer {
                            "}\n\n" )
       +
       */
-      QString( "a {\n"
+      QString::fromLatin1( "a {\n"
                "  color: %1 ! important;\n"
                "  text-decoration: none ! important;\n"
                "}\n\n"
@@ -415,7 +415,7 @@ namespace MessageViewer {
                "}\n\n" )
       .arg( linkColor, fgColor, bgColor, headerFont )
       +
-      QString( "table.encr {\n"
+      QString::fromLatin1( "table.encr {\n"
                "  background-color: %1 ! important;\n"
                "}\n\n"
 
@@ -430,7 +430,7 @@ namespace MessageViewer {
             headerFont,
             cPgpEncrB.name() )
       +
-      QString( "table.signOkKeyOk {\n"
+      QString::fromLatin1( "table.signOkKeyOk {\n"
                "  background-color: %1 ! important;\n"
                "}\n\n"
 
@@ -445,7 +445,7 @@ namespace MessageViewer {
             headerFont,
             cPgpOk1B.name() )
       +
-      QString( "table.signOkKeyBad {\n"
+      QString::fromLatin1( "table.signOkKeyBad {\n"
                "  background-color: %1 ! important;\n"
                "}\n\n"
 
@@ -460,7 +460,7 @@ namespace MessageViewer {
             headerFont,
             cPgpOk0B.name() )
       +
-      QString( "table.signWarn {\n"
+      QString::fromLatin1( "table.signWarn {\n"
                "  background-color: %1 ! important;\n"
                "}\n\n"
 
@@ -475,7 +475,7 @@ namespace MessageViewer {
             headerFont,
             cPgpWarnB.name() )
       +
-      QString( "table.signErr {\n"
+      QString::fromLatin1( "table.signErr {\n"
                "  background-color: %1 ! important;\n"
                "}\n\n"
 
@@ -490,13 +490,13 @@ namespace MessageViewer {
             headerFont,
             cPgpErrB.name() )
       +
-      QString( "div.htmlWarn {\n"
+      QString::fromLatin1( "div.htmlWarn {\n"
                "  border: 2px solid %1 ! important;\n"
                "  line-height: normal;\n"
                "}\n\n" )
       .arg( cHtmlWarning.name() )
       +
-      QString( "div.header {\n"
+      QString::fromLatin1( "div.header {\n"
                "%1"
                "}\n\n"
 
@@ -553,7 +553,7 @@ namespace MessageViewer {
 
   QString CSSHelperBase::commonCssDefinitions() const {
     const QPalette & pal = QApplication::palette();
-    const QString headerFont = QString("font-family: \"%1\" ! important;\n"
+    const QString headerFont = QString::fromLatin1("font-family: \"%1\" ! important;\n"
                                        "  font-size: %2px ! important;\n")
       .arg( mBodyFont.family() )
       .arg( pointsToPixel( this->mPaintDevice, mBodyFont.pointSize() ) );
