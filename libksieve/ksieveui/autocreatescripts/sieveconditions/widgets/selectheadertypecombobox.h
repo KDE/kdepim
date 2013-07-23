@@ -74,6 +74,7 @@ public:
     ~SelectHeaderTypeComboBox();
 
     QString code() const;
+    void setCode(const QString &code);
 
 private Q_SLOTS:
     void slotSelectItem(const QString &str);

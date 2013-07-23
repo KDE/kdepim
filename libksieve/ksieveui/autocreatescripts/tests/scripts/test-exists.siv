@@ -1,0 +1,8 @@
+#Script name: test-exists
+
+if allof (exists "Date"
+, not exists "Reply-To"
+)
+{
+    stop;
+}
