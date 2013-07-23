@@ -147,10 +147,6 @@ PlasmaComponents.Page {
                                         KDE.i18np("from 1 account","from %1 accounts",application.numSelectedAccounts),
                                         KDE.i18np("1 thread","%1 threads",threadView.count))
 
-      VacationScriptIndicator {
-        anchors { top: parent.top; right: agentStatusIndicator.left; rightMargin: 5; topMargin: 10 }
-      }
-
       KPIM.AgentStatusIndicator {
         id: agentStatusIndicator
         anchors { top: parent.top; right: parent.right; rightMargin: 10; topMargin: 10 }
