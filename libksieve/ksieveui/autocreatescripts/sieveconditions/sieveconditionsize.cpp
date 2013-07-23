@@ -16,7 +16,7 @@
 */
 
 #include "sieveconditionsize.h"
-#include "widgets/selectsizetypecombobox.h"
+#include "widgets/selectsizewidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
@@ -52,16 +52,9 @@ QWidget *SieveConditionSize::createParamWidget( QWidget *parent ) const
     combo->addItem(i18n("over"), QLatin1String(":over"));
     lay->addWidget(combo);
 
-    QSpinBox *spinbox = new QSpinBox;
-    spinbox->setMinimum(1);
-    spinbox->setMaximum(9999);
-    lay->addWidget(spinbox);
-    spinbox->setObjectName(QLatin1String("spinboxsize"));
-
-    SelectSizeTypeComboBox *sizeType = new SelectSizeTypeComboBox;
-    sizeType->setObjectName(QLatin1String("sizetype"));
-    lay->addWidget(sizeType);
-
+    SelectSizeWidget *sizeWidget = new SelectSizeWidget;
+    sizeWidget->setObjectName(QLatin1String("sizewidget"));
+    lay->addWidget(sizeWidget);
 
     return w;
 }
@@ -70,10 +63,8 @@ QString SieveConditionSize::code(QWidget *w) const
 {
     const QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
     const QString comparaison = combo->itemData(combo->currentIndex()).toString();
-    const QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("spinboxsize") );
-    const SelectSizeTypeComboBox *sizeTypeCombo = w->findChild<SelectSizeTypeComboBox*>( QLatin1String("sizetype") );
-    const QString type = sizeTypeCombo->code();
-    return QString::fromLatin1("size %1 %2%3").arg(comparaison).arg(spinbox->value()).arg(type);
+    const SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget*>(QLatin1String("sizewidget"));
+    return QString::fromLatin1("size %1 %2").arg(comparaison).arg(sizeWidget->code());
 }
 
 QString SieveConditionSize::help() const
@@ -81,11 +72,10 @@ QString SieveConditionSize::help() const
     return i18n("The \"size\" test deals with the size of a message.  It takes either a tagged argument of \":over\" or \":under\", followed by a number representing the size of the message.");
 }
 
-void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget *w )
+void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
     QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
-    QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("spinboxsize") );
-    SelectSizeTypeComboBox *sizeTypeCombo = w->findChild<SelectSizeTypeComboBox*>( QLatin1String("sizetype") );
+    SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget*>(QLatin1String("sizewidget"));
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
@@ -93,18 +83,17 @@ void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                qDebug()<<" tagValue"<<tagValue;
                 const int index = combo->findData(AutoCreateScriptUtil::tagValue(tagValue));
                 if (index != -1) {
                     combo->setCurrentIndex(index);
                 }
             } else if (tagName == QLatin1String("num")) {
                 const int tagValue = e.text().toInt();
-                //TODO fix value
-                if (element.hasAttribute(QLatin1String("quantifier"))) {
-                    const QString numIdentifier = element.attribute(QLatin1String("quantifier"));
-                    sizeTypeCombo->setCode(numIdentifier);
+                QString numIdentifier;
+                if (e.hasAttribute(QLatin1String("quantifier"))) {
+                    numIdentifier = e.attribute(QLatin1String("quantifier"));
                 }
+                sizeWidget->setCode(tagValue, numIdentifier);
             } else {
                 qDebug()<<" SieveConditionSize::setParamWidgetValue unknown tagName "<<tagName;
             }

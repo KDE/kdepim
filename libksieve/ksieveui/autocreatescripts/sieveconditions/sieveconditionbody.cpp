@@ -94,9 +94,35 @@ QString SieveConditionBody::help() const
     return i18n("The body test matches content in the body of an email message, that is, anything following the first empty line after the header.  (The empty line itself, if present, is not considered to be part of the body.)");
 }
 
-void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget *parent )
+void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (index == 1) {
+                    SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
+                    matchType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition) );
+                    const QString strValue = AutoCreateScriptUtil::strValue(node);
+                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+                    edit->setText(strValue);
+                    ++index;
+                } else if (index == 0) {
+                    SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
+                    const QString strValue = AutoCreateScriptUtil::strValue(node);
+                    bodyType->setCode(AutoCreateScriptUtil::tagValue(tagValue), strValue);
+                    ++index;
+                }
+            } else {
+                qDebug()<<" SieveConditionBody::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 

@@ -19,9 +19,9 @@
 #ifndef SIEVEEDITORTEXTMODEWIDGET_H
 #define SIEVEEDITORTEXTMODEWIDGET_H
 
-#include <QWidget>
+#include "sieveeditorabstractwidget.h"
+
 class KTextEdit;
-class QLineEdit;
 class QPushButton;
 class QSplitter;
 
@@ -29,7 +29,8 @@ namespace KSieveUi {
 class SieveFindBar;
 class SieveInfoWidget;
 class SieveTextEdit;
-class SieveEditorTextModeWidget : public QWidget
+class SieveEditorWarning;
+class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
 public:
@@ -39,45 +40,42 @@ public:
 
     void setSieveCapabilities( const QStringList &capabilities );
 
-    void resultDone();
-
     QString script() const;
     void setScript( const QString &script );
 
     void setDebugColor( const QColor &col );
     void setDebugScript( const QString &debug );
-    void setScriptName( const QString &name );
+
+    QString currentscript();
+    void setImportScript( const QString &script );
+
+    void autoGenerateScripts();
+    void generateXml();
+
+    void showEditorWarning();
+    void hideEditorWarning();
 
 Q_SIGNALS:
-    void checkSyntax();
     void enableButtonOk( bool );
 
 private slots:
     void slotTextChanged();
-    void slotImport();
-    void slotSaveAs();
     void slotFind();
-    void slotAutoGenerateScripts();
-    void slotCheckSyntax();
-    void slotGenerateXml();
 
 private:
     void readConfig();
     void writeConfig();
-    bool saveToFile( const QString &filename );
     bool loadFromFile( const QString &filename );
     QString mOriginalScript;
     QStringList mSieveCapabilities;
     SieveTextEdit * mTextEdit;
     KTextEdit *mDebugTextEdit;
-    QLineEdit *mScriptName;
     SieveFindBar *mFindBar;
-    QAction *mCheckSyntax;
-
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;
     QSplitter *mExtraSplitter;
     QSplitter *mTemplateSplitter;
+    SieveEditorWarning *mSieveEditorWarning;
 };
 
 }

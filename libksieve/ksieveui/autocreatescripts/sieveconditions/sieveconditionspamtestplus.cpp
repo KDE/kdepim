@@ -103,7 +103,7 @@ QString SieveConditionSpamTestPlus::help() const
     return i18n("Sieve implementations that implement the \"spamtest\" test use an identifier of either \"spamtest\" or \"spamtestplus\" for use with the capability mechanism.");
 }
 
-void SieveConditionSpamTestPlus::setParamWidgetValue(const QDomElement &element, QWidget *w )
+void SieveConditionSpamTestPlus::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
     QCheckBox *checkbox = w->findChild<QCheckBox*>( QLatin1String("percent") );
 

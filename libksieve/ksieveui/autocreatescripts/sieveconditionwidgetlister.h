@@ -41,7 +41,7 @@ public:
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires);
-    void setCondition(const QString &conditionName, const QDomElement &element);
+    void setCondition(const QString &conditionName, const QDomElement &element, bool notCondition);
 
 private Q_SLOTS:
     void slotAddWidget();
@@ -74,7 +74,7 @@ public:
 
     void generatedScript(QString &script, int &numberOfCondition, QStringList &requires);
     int conditionNumber() const;
-    void loadScript(const QDomElement &element, bool uniqTest);
+    void loadScript(const QDomElement &element, bool uniqTest, bool notCondition);
 
 
 public Q_SLOTS:
@@ -86,7 +86,7 @@ protected:
     QWidget *createWidget( QWidget *parent );
 
 private:
-    void loadTest(const QDomElement &e);
+    void loadTest(const QDomElement &e, bool notCondition);
     void reconnectWidget(SieveConditionWidget *w );
     void updateAddRemoveButton();
 };

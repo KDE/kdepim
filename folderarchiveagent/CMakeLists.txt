@@ -14,6 +14,7 @@ set(folderarchiveagent_SRCS
   folderarchivemanager.cpp
   folderarchiveaccountinfo.cpp
   folderarchiveagentjob.cpp
+  folderarchiveutil.cpp
 )
 
 kde4_add_kcfg_files(folderarchiveagent_SRCS

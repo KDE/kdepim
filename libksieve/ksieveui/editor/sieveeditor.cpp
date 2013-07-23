@@ -18,17 +18,29 @@
 
 #include "sieveeditor.h"
 #include "sieveeditortextmodewidget.h"
+#include "scriptsparsing/parsingutil.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 #include <klocale.h>
+#include <KStandardGuiItem>
 
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
+#include <QStackedWidget>
+#include <QLabel>
+#include <QLineEdit>
+#include <QToolBar>
+#include <QDebug>
+#include <QAction>
+
+//#define GENERATE_XML_ACTION 1
 
 using namespace KSieveUi;
 
 SieveEditor::SieveEditor( QWidget * parent )
-    : KDialog( parent )
+    : KDialog( parent ),
+      mMode(TextMode)
 {
     setCaption( i18n( "Edit Sieve Script" ) );
     setButtons( None );    
@@ -44,12 +56,44 @@ SieveEditor::SieveEditor( QWidget * parent )
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
+
+    QToolBar *bar = new QToolBar;
+    mCheckSyntax = new QAction(i18n("Check Syntax"), this);
+    connect(mCheckSyntax, SIGNAL(triggered(bool)), SLOT(slotCheckSyntax()));
+    bar->addAction(mCheckSyntax);
+    bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
+    bar->addAction(i18n("Import..."), this, SLOT(slotImport()));
+    bar->addAction(i18n("Autogenerate Script..."), this, SLOT(slotAutoGenerateScripts()));
+    mSwitchMode = new QAction(i18n("Switch Mode"), this);
+    bar->addAction(mSwitchMode);
+    connect(mSwitchMode, SIGNAL(triggered(bool)), SLOT(slotSwitchMode()));
+#ifdef GENERATE_XML_ACTION
+    bar->addAction(QLatin1String("Generate xml"), this, SLOT(slotGenerateXml()));
+#endif
+
+    lay->addWidget(bar);
+
+
+    QHBoxLayout *nameLayout = new QHBoxLayout;
+    QLabel *label = new QLabel( i18n( "Script name:" ) );
+    nameLayout->addWidget( label );
+    mScriptName = new QLineEdit;
+    mScriptName->setReadOnly( true );
+    nameLayout->addWidget( mScriptName );
+    lay->addLayout( nameLayout );
+
+
     lay->setMargin(0);
     w->setLayout(lay);
+    mStackedWidget = new QStackedWidget;
+
     mTextModeWidget = new SieveEditorTextModeWidget;
-    lay->addWidget(mTextModeWidget);
+    mStackedWidget->addWidget(mTextModeWidget);
+    mGraphicalModeWidget = new SieveEditorGraphicalModeWidget;
+    mStackedWidget->addWidget(mGraphicalModeWidget);
+
+    lay->addWidget(mStackedWidget);
     lay->addWidget(buttonBox);
-    connect(mTextModeWidget, SIGNAL(checkSyntax()), SIGNAL(checkSyntax()));
     connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
     readConfig();
     setMainWidget( w );
@@ -60,9 +104,18 @@ SieveEditor::~SieveEditor()
     writeConfig();
 }
 
+void SieveEditor::changeMode(EditorMode mode)
+{
+    if (mode != mMode) {
+        mMode = mode;
+        mStackedWidget->setCurrentIndex(static_cast<int>(mode));
+    }
+}
+
 void SieveEditor::slotEnableButtonOk(bool b)
 {
     mOkButton->setEnabled(b);
+    mCheckSyntax->setEnabled( b );
 }
 
 void SieveEditor::writeConfig()
@@ -110,17 +163,101 @@ void SieveEditor::setDebugScript( const QString &debug )
 
 void SieveEditor::setScriptName( const QString &name )
 {
-    mTextModeWidget->setScriptName( name );
+    mScriptName->setText( name );
 }  
 
 void SieveEditor::resultDone()
 {
-    mTextModeWidget->resultDone();
+    mCheckSyntax->setEnabled(true);
 }
 
 void SieveEditor::setSieveCapabilities( const QStringList &capabilities )
 {
     mTextModeWidget->setSieveCapabilities(capabilities);
+    mGraphicalModeWidget->setSieveCapabilities(capabilities);
+}
+
+void SieveEditor::slotAutoGenerateScripts()
+{
+    switch (mMode) {
+    case TextMode:
+        mTextModeWidget->autoGenerateScripts();
+        break;
+    case GraphicMode:
+        break;
+    }
+}
+
+void SieveEditor::slotCheckSyntax()
+{
+    switch (mMode) {
+    case TextMode:
+        mCheckSyntax->setEnabled(false);
+        Q_EMIT checkSyntax();
+        break;
+    case GraphicMode:
+        break;
+    }
+}
+
+void SieveEditor::slotGenerateXml()
+{
+    switch (mMode) {
+    case TextMode:
+        mTextModeWidget->generateXml();
+        break;
+    case GraphicMode:
+        break;
+    }
+}
+
+void SieveEditor::slotSaveAs()
+{
+    switch (mMode) {
+    case TextMode:
+        mTextModeWidget->slotSaveAs();
+        break;
+    case GraphicMode:
+        mTextModeWidget->slotSaveAs();
+        break;
+    }
+}
+
+void SieveEditor::slotImport()
+{
+    switch (mMode) {
+    case TextMode:
+        mTextModeWidget->slotImport();
+        break;
+    case GraphicMode:
+        mTextModeWidget->slotImport();
+        break;
+    }
+}
+
+void SieveEditor::slotSwitchMode()
+{
+    switch (mMode) {
+    case TextMode: {
+        bool result = false;
+        const QDomDocument doc = ParsingUtil::parseScript(mTextModeWidget->currentscript(), result);
+        if (result) {
+            mGraphicalModeWidget->loadScript(doc);
+            mTextModeWidget->hideEditorWarning();
+            changeMode(GraphicMode);
+        } else {
+            mTextModeWidget->showEditorWarning();
+            qDebug() << "can not parse file";
+        }
+        break;
+    }
+    case GraphicMode: {
+        const QString script = mGraphicalModeWidget->currentscript();
+        changeMode(TextMode);
+        mTextModeWidget->setScript(script);
+        break;
+    }
+    }
 }
 
 #include "sieveeditor.moc"

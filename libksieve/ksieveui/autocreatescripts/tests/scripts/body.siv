@@ -1,0 +1,8 @@
+require "body";
+ 
+#Script name: body
+
+if not body :content "content-str" :contains "not contains value"
+{
+    discard;
+}

@@ -50,10 +50,10 @@ using namespace Akonadi;
 CryptoPagePlugin::CryptoPagePlugin()
   : mReadOnly( false )
 {
-  KGlobal::locale()->insertCatalog( "libkleopatra" );
-  KGlobal::locale()->insertCatalog( "cryptopageplugin" );
-  KIconLoader::global()->addAppDir( "libkleopatra" );
-  KIconLoader::global()->addAppDir( "kdepim" );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkleopatra") );
+  KGlobal::locale()->insertCatalog( QLatin1String("cryptopageplugin") );
+  KIconLoader::global()->addAppDir( QLatin1String("libkleopatra") );
+  KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
 
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
@@ -129,21 +129,21 @@ QString CryptoPagePlugin::title() const
 
 void CryptoPagePlugin::loadContact( const KABC::Addressee &contact )
 {
-  const QStringList protocolPrefs = contact.custom( "KADDRESSBOOK", "CRYPTOPROTOPREF" ).split( ',', QString::SkipEmptyParts );
+  const QStringList protocolPrefs = contact.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF") ).split( QLatin1Char(','), QString::SkipEmptyParts );
   const uint cryptoFormats = Kleo::stringListToCryptoMessageFormats( protocolPrefs );
 
   uint msgFormat = 1;
   for ( uint i = 0 ; i < NumberOfProtocols ; ++i, msgFormat *= 2 )
     mProtocolCB[i]->setChecked( cryptoFormats & msgFormat );
 
-  mSignPref->setCurrentIndex( Kleo::stringToSigningPreference( contact.custom( "KADDRESSBOOK", "CRYPTOSIGNPREF" ) ) );
-  mCryptPref->setCurrentIndex( Kleo::stringToEncryptionPreference( contact.custom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF" ) ) );
+  mSignPref->setCurrentIndex( Kleo::stringToSigningPreference( contact.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF") ) ) );
+  mCryptPref->setCurrentIndex( Kleo::stringToEncryptionPreference( contact.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF") ) ) );
 
   // We don't use the contents of addr->key(...) because we want just a ref.
   // to the key/cert. stored elsewhere.
 
-  mPgpKey->setFingerprints( contact.custom( "KADDRESSBOOK", "OPENPGPFP" ).split( ',', QString::SkipEmptyParts ) );
-  mSmimeCert->setFingerprints( contact.custom( "KADDRESSBOOK", "SMIMEFP" ).split( ',', QString::SkipEmptyParts ) );
+  mPgpKey->setFingerprints( contact.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP") ).split( QLatin1Char(','), QString::SkipEmptyParts ) );
+  mSmimeCert->setFingerprints( contact.custom( QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP") ).split( QLatin1Char(','), QString::SkipEmptyParts ) );
 }
 
 void CryptoPagePlugin::storeContact( KABC::Addressee &contact ) const
@@ -157,34 +157,34 @@ void CryptoPagePlugin::storeContact( KABC::Addressee &contact ) const
 
   const QStringList protocolPref = Kleo::cryptoMessageFormatsToStringList( cryptoFormats );
   if ( !protocolPref.isEmpty() )
-    contact.insertCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF", protocolPref.join( "," ) );
+    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF"), protocolPref.join( QLatin1String(",") ) );
   else
-    contact.removeCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF" );
+    contact.removeCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOPROTOPREF") );
 
   const Kleo::SigningPreference signPref = static_cast<Kleo::SigningPreference>( mSignPref->currentIndex() );
   if ( signPref != Kleo::UnknownSigningPreference )
-    contact.insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF", Kleo::signingPreferenceToString( signPref ) );
+    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF"), QLatin1String(Kleo::signingPreferenceToString( signPref )) );
   else
-    contact.removeCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF" );
+    contact.removeCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOSIGNPREF") );
 
   const Kleo::EncryptionPreference encryptPref = static_cast<Kleo::EncryptionPreference>( mCryptPref->currentIndex() );
   if ( encryptPref != Kleo::UnknownPreference )
-    contact.insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF", Kleo::encryptionPreferenceToString( encryptPref ) );
+    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF"), QLatin1String(Kleo::encryptionPreferenceToString( encryptPref )) );
   else
-    contact.removeCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF" );
+    contact.removeCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("CRYPTOENCRYPTPREF") );
 
   const QStringList pfp = mPgpKey->fingerprints();
   const QStringList sfp = mSmimeCert->fingerprints();
 
   if ( !pfp.isEmpty() )
-    contact.insertCustom( "KADDRESSBOOK", "OPENPGPFP", pfp.join( "," ) );
+    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP"), pfp.join( QLatin1String(",") ) );
   else
-    contact.removeCustom( "KADDRESSBOOK", "OPENPGPFP" );
+    contact.removeCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("OPENPGPFP") );
 
   if ( !sfp.isEmpty() )
-    contact.insertCustom( "KADDRESSBOOK", "SMIMEFP", sfp.join( "," ) );
+    contact.insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP"), sfp.join( QLatin1String(",") ) );
   else
-    contact.removeCustom( "KADDRESSBOOK", "SMIMEFP" );
+    contact.removeCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("SMIMEFP") );
 }
 
 void CryptoPagePlugin::setReadOnly( bool readOnly )

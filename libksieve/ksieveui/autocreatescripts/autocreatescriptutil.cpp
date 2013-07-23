@@ -86,7 +86,44 @@ QString AutoCreateScriptUtil::negativeString(bool isNegative)
     return (isNegative ? QLatin1String("not ") : QString());
 }
 
+QString AutoCreateScriptUtil::tagValueWithCondition(const QString &tag, bool notCondition)
+{
+    return (notCondition ? QLatin1String("[NOT]") : QString()) + QLatin1Char(':') + tag;
+}
+
 QString AutoCreateScriptUtil::tagValue(const QString &tag)
 {
     return QLatin1Char(':') + tag;
 }
+
+QString AutoCreateScriptUtil::strValue(QDomNode &node)
+{
+    node = node.nextSibling();
+    QDomElement textElement = node.toElement();
+    if (!textElement.isNull()) {
+        const QString textElementTagName = textElement.tagName();
+        if (textElementTagName == QLatin1String("str")) {
+            return textElement.text();
+        }
+    }
+    return QString();
+}
+
+QStringList AutoCreateScriptUtil::listValue(const QDomElement &element)
+{
+    QStringList lst;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                lst << e.text();
+            }
+        }
+        node = node.nextSibling();
+    }
+    qDebug()<<" AutoCreateScriptUtil::listValue"<<lst;
+    return lst;
+}
+

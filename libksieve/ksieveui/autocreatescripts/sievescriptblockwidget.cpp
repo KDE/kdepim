@@ -217,6 +217,7 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element)
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
+            bool notCondition = false;
             if (tagName == QLatin1String("test")) {
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString typeCondition = e.attribute(QLatin1String("name"));
@@ -229,6 +230,10 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element)
                         mMatchAll->setChecked(true);
                         mMatchCondition = AndCondition;
                     } else { //true;
+                        if (typeCondition == QLatin1String("not")) {
+                            qDebug()<<" NOT condition";
+                            notCondition = true;
+                        }
                         uniqueTest = true;
                         mMatchCondition = OrCondition;
                         mMatchAny->setChecked(true);
@@ -237,7 +242,7 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element)
                     mScriptConditionLister->setEnabled(mMatchCondition != AllCondition);
                 }
                 //Conditions
-                mScriptConditionLister->loadScript(e, uniqueTest);
+                mScriptConditionLister->loadScript(e, uniqueTest, notCondition);
             } else if (tagName == QLatin1String("block")) {
                 //Actions
                 mScriptActionLister->loadScript(e);

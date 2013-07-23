@@ -73,6 +73,7 @@ private Q_SLOTS:
     void slotUp();
 
 private:
+    void clear();
     SieveScriptPage *createNewScript(const QString &newName);
     QString createUniqName();
     QListWidget *mSieveListScript;

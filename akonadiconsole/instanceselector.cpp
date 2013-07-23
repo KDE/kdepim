@@ -58,6 +58,7 @@ InstanceSelector::InstanceSelector( const QString& remoteHost, QWidget* parent, 
       item->setData( inst, Qt::UserRole );
       model->appendRow( item );
     }
+    connect( ui->listView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(accept()) );
     ui->listView->setModel( model );
     show();
   }

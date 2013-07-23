@@ -85,8 +85,8 @@ namespace {
       static const QLatin1String sepStyle( "style=\"color: black; font-weight: bold;\"" );
       static const QLatin1String chunkStyle( "style=\"color: blue;\"" );
 
-      QString html = "<br><div align=\"center\">";
-      html += "<pre " + tableStyle + '>';
+      QString html = QLatin1String("<br><div align=\"center\">");
+      html += QLatin1String("<pre ") + tableStyle + QLatin1Char('>');
 
       const QStringList lines = diff.split( QLatin1Char('\n') );
       QStringList::ConstIterator end( lines.end() );
@@ -108,10 +108,10 @@ namespace {
             style = chunkStyle;
           }
         }
-        html += "<span " + style + '>' + line + "</span><br/>";
+        html += QLatin1String("<span ") + style + QLatin1Char('>') + line + QLatin1String("</span><br/>");
       }
 
-      html += "</pre></div>";
+      html += QLatin1String("</pre></div>");
       //kDebug( "%s", html.toLatin1() );
       writer->queue( html );
 
@@ -142,6 +142,6 @@ namespace {
 extern "C"
 KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
-  KGlobal::locale()->insertCatalog( "messageviewer_text_xdiff_plugin" );
+  KGlobal::locale()->insertCatalog( QLatin1String("messageviewer_text_xdiff_plugin") );
   return new Plugin();
 }

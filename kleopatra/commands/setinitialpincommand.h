@@ -41,16 +41,16 @@ namespace Commands {
     class SetInitialPinCommand : public Command {
         Q_OBJECT
     public:
-	SetInitialPinCommand();
-	~SetInitialPinCommand();
+        SetInitialPinCommand();
+        ~SetInitialPinCommand();
 
         /* reimp */ static Restrictions restrictions() { return AnyCardHasNullPin; }
 
         QDialog * dialog() const;
 
     private:
-	/* reimp */ void doStart();
-	/* reimp */ void doCancel();
+        /* reimp */ void doStart();
+        /* reimp */ void doCancel();
 
     private:
         class Private;

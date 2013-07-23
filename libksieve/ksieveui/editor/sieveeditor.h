@@ -23,14 +23,23 @@
 
 #include <kdialog.h>
 
+class QStackedWidget;
+class QLineEdit;
+class QAction;
 namespace KSieveUi {
 class SieveEditorTextModeWidget;
+class SieveEditorGraphicalModeWidget;
 class KSIEVEUI_EXPORT SieveEditor : public KDialog
 {
     Q_OBJECT
     Q_PROPERTY( QString script READ script WRITE setScript )
 
 public:
+    enum EditorMode {
+        TextMode = 0,
+        GraphicMode = 1
+    };
+
     explicit SieveEditor( QWidget * parent=0 );
     ~SieveEditor();
 
@@ -44,9 +53,16 @@ public:
     void resultDone();
 
     void setSieveCapabilities( const QStringList &capabilities );
+    void changeMode(EditorMode mode);
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
+    void slotAutoGenerateScripts();
+    void slotCheckSyntax();
+    void slotGenerateXml();
+    void slotSaveAs();
+    void slotImport();
+    void slotSwitchMode();
 
 Q_SIGNALS:
     void checkSyntax();
@@ -58,6 +74,12 @@ private:
     QString mOriginalScript;
     QPushButton *mOkButton;
     SieveEditorTextModeWidget *mTextModeWidget;
+    SieveEditorGraphicalModeWidget *mGraphicalModeWidget;
+    QStackedWidget *mStackedWidget;
+    QLineEdit *mScriptName;
+    QAction *mCheckSyntax;
+    QAction *mSwitchMode;
+    EditorMode mMode;
 };
 
 }

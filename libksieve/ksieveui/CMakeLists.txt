@@ -16,6 +16,7 @@ set(ksieveui_LIB_SRCS
   scriptsparsing/xmlprintingscriptbuilder.cpp
   scriptsparsing/parsingresultdialog.cpp
   scriptsparsing/xmlprintingsyntaxhighlighter.cpp
+  scriptsparsing/parsingutil.cpp
   managesievescriptsdialog.cpp
   widgets/sievetreewidgetitem.cpp
   debug/sievedebugdialog.cpp
@@ -28,6 +29,8 @@ set(ksieveui_LIB_SRCS
   editor/sievelinenumberarea.cpp
   editor/sieveinfowidget.cpp
   editor/sieveeditortextmodewidget.cpp
+  editor/sieveeditorabstractwidget.cpp
+  editor/sieveeditorwarning.cpp
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp
@@ -112,6 +115,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectcomparatorcombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectmimecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectsizetypecombobox.cpp
+  autocreatescripts/sieveconditions/widgets/selectsizewidget.cpp
 )
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)

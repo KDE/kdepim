@@ -194,14 +194,14 @@ void SieveConditionWidget::updateAddRemoveButton( bool addButtonEnabled, bool re
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-void SieveConditionWidget::setCondition(const QString &conditionName, const QDomElement &element)
+void SieveConditionWidget::setCondition(const QString &conditionName, const QDomElement &element, bool notCondition)
 {
     const int index = mComboBox->findData(conditionName);
     if (index != -1) {
         mComboBox->setCurrentIndex(index);
         slotConditionChanged(index);
         KSieveUi::SieveCondition* condition = mConditionList.at( index );
-        condition->setParamWidgetValue(element, this);
+        condition->setParamWidgetValue(element, this, notCondition);
     }
 }
 
@@ -300,21 +300,35 @@ int SieveConditionWidgetLister::conditionNumber() const
     return widgets().count();
 }
 
-void SieveConditionWidgetLister::loadTest(const QDomElement &testElement)
+void SieveConditionWidgetLister::loadTest(const QDomElement &element, bool notCondition)
 {
+    QDomElement testElement = element;
+    if (notCondition) {
+        QDomNode node = element.firstChild();
+        if (!node.isNull()) {
+            testElement = node.toElement();
+        }
+    }
     if (testElement.hasAttribute(QLatin1String("name"))) {
         const QString conditionName = testElement.attribute(QLatin1String("name"));
         SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
-        w->setCondition(conditionName, testElement);
+        w->setCondition(conditionName, testElement, notCondition);
     }
 }
 
-void SieveConditionWidgetLister::loadScript(const QDomElement &element, bool uniqTest)
+void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest, bool notCondition)
 {
     if (uniqTest) {
-        loadTest(element);
+        loadTest(e, notCondition);
     } else {
         bool firstCondition = true;
+        QDomElement element = e;
+        if (notCondition) {
+            QDomNode node = e.firstChild();
+            if (!node.isNull()) {
+                element = node.toElement();
+            }
+        }
         QDomNode node = element.firstChild();
         while (!node.isNull()) {
             QDomElement e = node.toElement();
@@ -335,7 +349,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &element, bool uni
                                         addWidgetAfterThisWidget(widgets().last());
                                     }
                                     SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
-                                    w->setCondition(conditionName, testElement);
+                                    w->setCondition(conditionName, testElement, notCondition);
                                 }
                             } else {
                                 qDebug()<<" unknown condition tag: "<<testTagName;

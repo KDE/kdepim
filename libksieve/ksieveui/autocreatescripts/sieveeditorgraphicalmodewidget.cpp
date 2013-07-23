@@ -18,6 +18,7 @@
 
 #include "sieveeditorgraphicalmodewidget.h"
 #include "sievescriptlistbox.h"
+#include "scriptsparsing/parsingutil.h"
 
 #include <KLocale>
 #include <KGlobal>
@@ -35,7 +36,7 @@ using namespace KSieveUi;
 QStringList SieveEditorGraphicalModeWidget::sCapabilities = QStringList();
 
 SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
-    : QWidget(parent)
+    : SieveEditorAbstractWidget(parent)
 {
     QVBoxLayout *vlay = new QVBoxLayout;
     vlay->setMargin(0);
@@ -62,6 +63,9 @@ SieveEditorGraphicalModeWidget::~SieveEditorGraphicalModeWidget()
 
 void SieveEditorGraphicalModeWidget::loadScript(const QDomDocument &doc)
 {
+    for (int i = mStackWidget->count(); i>=0; --i) {
+        mStackWidget->removeWidget(mStackWidget->widget(i));
+    }
     mSieveScript->loadScript(doc);
 }
 
@@ -110,5 +114,26 @@ void SieveEditorGraphicalModeWidget::slotActivateScriptPage(QWidget *page)
     mStackWidget->setCurrentWidget(page);
 }
 
+QString SieveEditorGraphicalModeWidget::currentscript()
+{
+    QString requires;
+    QString script = mSieveScript->generatedScript(requires);
+    if (!requires.isEmpty()) {
+        script.prepend(requires);
+    }
+    return script;
+}
+
+void SieveEditorGraphicalModeWidget::setImportScript( const QString &script )
+{
+    bool result = false;
+    const QDomDocument doc = ParsingUtil::parseScript(script, result);
+    if (result) {
+        loadScript(doc);
+    } else {
+        //TODO
+        qDebug()<<" can not import script";
+    }
+}
 
 #include "sieveeditorgraphicalmodewidget.moc"

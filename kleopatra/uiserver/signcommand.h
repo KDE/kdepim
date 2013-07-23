@@ -41,8 +41,8 @@ namespace Kleo {
 
     class SignCommand : public Kleo::AssuanCommandMixin<SignCommand> {
     public:
-	SignCommand();
-	~SignCommand();
+        SignCommand();
+        ~SignCommand();
 
     private:
         /* reimp */ int doStart();

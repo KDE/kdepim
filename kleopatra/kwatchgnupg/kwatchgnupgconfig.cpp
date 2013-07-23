@@ -54,18 +54,18 @@ static const char* log_levels[] = { "none", "basic", "advanced", "expert", "guru
 static int log_level_to_int( const QString& loglevel )
 {
   if( loglevel == "none" ) {
-	return 0;
+      return 0;
   } else if( loglevel == "basic" ) {
-	return 1;
+      return 1;
   } else if( loglevel == "advanced" ) {
-	return 2;
+      return 2;
   } else if( loglevel == "expert" ) {
-	return 3;
+      return 3;
   } else if( loglevel == "guru" ) {
-	return 4;
+      return 4;
   } else {
-	// default
-	return 1;
+      // default
+      return 1;
   }
 }
 

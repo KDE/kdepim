@@ -22,6 +22,7 @@
 #include "editor/sieveinfowidget.h"
 #include "editor/sievefindbar.h"
 #include "editor/sievetextedit.h"
+#include "editor/sieveeditorwarning.h"
 
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
@@ -44,7 +45,6 @@
 #include <QShortcut>
 #include <QHBoxLayout>
 #include <QPointer>
-#include <QLineEdit>
 #include <QPushButton>
 #include <QTextStream>
 #include <QDebug>
@@ -54,31 +54,10 @@
 using namespace KSieveUi;
 
 SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
-    : QWidget(parent)
+    : SieveEditorAbstractWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     setLayout( lay );
-
-    QToolBar *bar = new QToolBar;
-    mCheckSyntax = new QAction(i18n("Check Syntax"), this);
-    connect(mCheckSyntax, SIGNAL(triggered(bool)), SLOT(slotCheckSyntax()));
-    bar->addAction(mCheckSyntax);
-    bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
-    bar->addAction(i18n( "Import..." ), this, SLOT(slotImport()));
-    bar->addAction(i18n("Autogenerate Script..."), this, SLOT(slotAutoGenerateScripts()));
-    //Remove it for 4.12
-    bar->addAction(QLatin1String("Generate xml"), this, SLOT(slotGenerateXml()));
-
-    lay->addWidget(bar);
-
-    QHBoxLayout *nameLayout = new QHBoxLayout;
-
-    QLabel * label = new QLabel( i18n( "Script name:" ) );
-    nameLayout->addWidget( label );
-    mScriptName = new QLineEdit;
-    mScriptName->setReadOnly( true );
-    nameLayout->addWidget( mScriptName );
-    lay->addLayout( nameLayout );
 
     mMainSplitter = new QSplitter;
     mMainSplitter->setOrientation( Qt::Vertical );
@@ -104,7 +83,11 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTextEdit = new SieveTextEdit;
     textEditLayout->addWidget(mTextEdit);
     mFindBar = new SieveFindBar( mTextEdit, textEditWidget );
+
     textEditLayout->addWidget(mFindBar);
+    mSieveEditorWarning = new SieveEditorWarning;
+    textEditLayout->addWidget(mSieveEditorWarning);
+
     textEditWidget->setLayout(textEditLayout);
 
     mTemplateSplitter->addWidget(textEditWidget);
@@ -155,7 +138,7 @@ void SieveEditorTextModeWidget::readConfig()
     mTemplateSplitter->setSizes(group.readEntry( "templateSplitter", size));
 }
 
-void SieveEditorTextModeWidget::slotGenerateXml()
+void SieveEditorTextModeWidget::generateXml()
 {
     const QByteArray script = mTextEdit->toPlainText().toUtf8();
     KSieve::Parser parser( script.begin(),
@@ -163,7 +146,7 @@ void SieveEditorTextModeWidget::slotGenerateXml()
     KSieveUi::XMLPrintingScriptBuilder psb;
     parser.setScriptBuilder( &psb );
     const bool result = parser.parse();
-    QPointer<ParsingResultDialog> dlg = new  ParsingResultDialog;
+    QPointer<ParsingResultDialog> dlg = new ParsingResultDialog;
     if (result) {
         dlg->setResultParsing(psb.toDom().toString());
     } else {
@@ -173,7 +156,7 @@ void SieveEditorTextModeWidget::slotGenerateXml()
     delete dlg;
 }
 
-void SieveEditorTextModeWidget::slotAutoGenerateScripts()
+void SieveEditorTextModeWidget::autoGenerateScripts()
 {
     QPointer<AutoCreateScriptDialog> dlg = new AutoCreateScriptDialog(this);
     dlg->setSieveCapabilities(mSieveCapabilities);
@@ -198,91 +181,19 @@ void SieveEditorTextModeWidget::slotFind()
     mFindBar->focusAndSetCursor();
 }
 
-void SieveEditorTextModeWidget::slotSaveAs()
+QString SieveEditorTextModeWidget::currentscript()
 {
-    KUrl url;
-    const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
-    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
-
-    fdlg->setMode( KFile::File );
-    fdlg->setOperationMode( KFileDialog::Saving );
-    fdlg->setConfirmOverwrite(true);
-    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
-        const QString fileName = fdlg->selectedFile();
-        if ( !saveToFile( fileName ) ) {
-            KMessageBox::error( this,
-                                i18n( "Could not write the file %1:\n"
-                                      "\"%2\" is the detailed error description.",
-                                      fileName,
-                                      QString::fromLocal8Bit( strerror( errno ) ) ),
-                                i18n( "Sieve Editor Error" ) );
-        }
-    }
-    delete fdlg;
-
+    return mTextEdit->toPlainText();
 }
 
-bool SieveEditorTextModeWidget::saveToFile( const QString &filename )
+void SieveEditorTextModeWidget::setImportScript( const QString &script )
 {
-    QFile file( filename );
-    if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
-        return false;
-    QTextStream out(&file);
-    out.setCodec("UTF-8");
-    out << mTextEdit->toPlainText();
-    return true;
-}
-
-void SieveEditorTextModeWidget::slotImport()
-{
-    if ( !mTextEdit->toPlainText().isEmpty() ) {
-        if ( KMessageBox::warningYesNo(this, i18n( "You will overwrite script. Do you want to continue?" ), i18n( "Import Script" ) ) == KMessageBox::No )
-            return;
-    }
-    KUrl url;
-    const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
-    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
-
-    fdlg->setMode( KFile::File );
-    fdlg->setOperationMode( KFileDialog::Opening );
-    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
-        const QString fileName = fdlg->selectedFile();
-        if ( !loadFromFile( fileName ) ) {
-            KMessageBox::error( this,
-                                i18n( "Could not load the file %1:\n"
-                                      "\"%2\" is the detailed error description.",
-                                      fileName,
-                                      QString::fromLocal8Bit( strerror( errno ) ) ),
-                                i18n( "Sieve Editor Error" ) );
-        }
-    }
-    delete fdlg;
-}
-
-bool SieveEditorTextModeWidget::loadFromFile( const QString &filename )
-{
-    QFile file( filename );
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return false;
-
-    QTextStream in(&file);
-    QString line = in.readLine();
-    QString scriptText;
-    while (!line.isNull()) {
-        if ( scriptText.isEmpty() )
-            scriptText = line;
-        else
-            scriptText += QLatin1Char( '\n' ) + line;
-        line = in.readLine();
-    }
-    mTextEdit->setPlainText( scriptText );
-    return true;
+    mTextEdit->setPlainText( script );
 }
 
 void SieveEditorTextModeWidget::slotTextChanged()
 {
     const bool enabled = !script().isEmpty();
-    mCheckSyntax->setEnabled( enabled );
     Q_EMIT enableButtonOk( enabled );
 }
 
@@ -306,27 +217,21 @@ void SieveEditorTextModeWidget::setDebugScript( const QString &debug )
     mDebugTextEdit->setText( debug );
 }
 
-void SieveEditorTextModeWidget::setScriptName( const QString &name )
-{
-    mScriptName->setText( name );
-}
-
-void SieveEditorTextModeWidget::resultDone()
-{
-    mCheckSyntax->setEnabled(true);
-}
-
-void SieveEditorTextModeWidget::slotCheckSyntax()
-{
-    mCheckSyntax->setEnabled(false);
-    Q_EMIT checkSyntax();
-}
-
 void SieveEditorTextModeWidget::setSieveCapabilities( const QStringList &capabilities )
 {
     mSieveCapabilities = capabilities;
     mTextEdit->setSieveCapabilities(mSieveCapabilities);
     mSieveInfo->setServerInfo(capabilities);
+}
+
+void SieveEditorTextModeWidget::showEditorWarning()
+{
+    mSieveEditorWarning->animatedShow();
+}
+
+void SieveEditorTextModeWidget::hideEditorWarning()
+{
+    mSieveEditorWarning->animatedHide();
 }
 
 

@@ -51,15 +51,15 @@ namespace Kleo {
         explicit SubkeyListModel( QObject * parent=0 );
         ~SubkeyListModel();
 
-	GpgME::Key key() const;
+        GpgME::Key key() const;
 
         enum Columns {
             ID,
-	    Type,
+            Type,
             ValidFrom,
             ValidUntil,
-	    Status,
-	    Bits,
+            Status,
+            Bits,
 
             NumColumns,
             Icon = ID // which column shall the icon be displayed in?
@@ -73,18 +73,18 @@ namespace Kleo {
         QList<QModelIndex> indexes( const std::vector<GpgME::Subkey> & subkeys ) const;
 
     public Q_SLOTS:
-	void setKey( const GpgME::Key & key );
+        void setKey( const GpgME::Key & key );
         void clear();
 
     public:
         /* reimp */ int columnCount( const QModelIndex & pidx=QModelIndex() ) const;
-	/* reimp */ int rowCount( const QModelIndex & pidx=QModelIndex() ) const;
+        /* reimp */ int rowCount( const QModelIndex & pidx=QModelIndex() ) const;
         /* reimp */ QVariant headerData( int section, Qt::Orientation o, int role=Qt::DisplayRole ) const;
         /* reimp */ QVariant data( const QModelIndex & index, int role=Qt::DisplayRole ) const;
 
     private:
-	class Private;
-	kdtools::pimpl_ptr<Private> d;
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
     };
 
 }
