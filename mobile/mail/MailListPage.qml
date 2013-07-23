@@ -45,6 +45,7 @@ PlasmaComponents.Page {
 
       anchors.horizontalCenter: parent.horizontalCenter
 
+      opacity: checkModel.hasSelection ? 1 : 0.5
       spacing: root.width * 0.03
 
       PlasmaComponents.ToolButton {
@@ -166,7 +167,7 @@ PlasmaComponents.Page {
 
         anchors {
           top: parent.top
-          right: parent.right
+          right: statusIcon.left
         }
 
         text: model.date
@@ -182,13 +183,71 @@ PlasmaComponents.Page {
           bottom: parent.bottom
           left: checkBox.right
           leftMargin: label.width
-          right: parent.right
+          right: statusIcon.left
         }
 
         level: 4
         text: model.subject
         elide: "ElideRight"
         color: model.is_unread ? "#E10909" : "#3B3B3B"
+      }
+
+      PlasmaComponents.ToolButton {
+        id: statusIcon
+
+        anchors{
+          right: parent.right
+          verticalCenter: parent.verticalCenter
+        }
+
+        height: parent.height * 0.8
+
+        iconSource: model.is_important ? "mail-mark-important" : "mail-mark-unread"
+
+        onClicked: dialog.open()
+
+        //BEGIN Dialog
+        PlasmaComponents.Dialog {
+          id: dialog
+
+          visualParent: parent
+
+          buttons: Column {
+
+            spacing: root.width * 0.03
+
+            PlasmaComponents.ToolButton {
+
+              iconSource: "mail-mark-unread"
+
+              onClicked: {
+
+              }
+
+            }
+
+            PlasmaComponents.ToolButton {
+
+              iconSource: "mail-mark-important"
+
+              onClicked: {
+
+              }
+
+            }
+
+            PlasmaComponents.ToolButton {
+
+              iconSource: "edit-delete"
+
+              onClicked: {
+
+              }
+
+            }
+          }
+        }
+        //END Dialog
       }
     }
   }
