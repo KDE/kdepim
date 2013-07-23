@@ -503,11 +503,8 @@ void MainView::doDelayedInit()
   connect( actionCollection()->action( "send_queued_emails" ), SIGNAL(triggered(bool)), SLOT(sendQueued()) );
   connect( actionCollection()->action( "send_queued_emails_via" ), SIGNAL(triggered(bool)), SLOT(sendQueuedVia()) );
   connect( actionCollection()->action( "message_reply" ), SIGNAL(triggered(bool)), SLOT(replyToMessage()) );
-  connect( actionCollection()->action( "message_reply_to_all" ), SIGNAL(triggered(bool)), SLOT(replyToAll()) );
-  connect( actionCollection()->action( "message_reply_to_author" ), SIGNAL(triggered(bool)), SLOT(replyToAuthor()) );
   connect( actionCollection()->action( "message_reply_to_list" ), SIGNAL(triggered(bool)), SLOT(replyToMailingList()) );
   connect( actionCollection()->action( "message_reply_without_quoting" ), SIGNAL(triggered(bool)), SLOT(replyWithoutQuoting()) );
-  connect( actionCollection()->action( "message_forward" ), SIGNAL(triggered(bool)), SLOT(forwardMessage()) );
   connect( actionCollection()->action( "message_forward_as_attachment" ), SIGNAL(triggered(bool)), SLOT(forwardAsAttachment()) );
   connect( actionCollection()->action( "message_redirect" ), SIGNAL(triggered(bool)), SLOT(redirect()) );
   connect( actionCollection()->action( "message_send_again" ), SIGNAL(triggered(bool)), SLOT(sendAgain()) );
