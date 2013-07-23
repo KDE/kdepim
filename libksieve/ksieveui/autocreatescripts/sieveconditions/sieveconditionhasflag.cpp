@@ -75,12 +75,12 @@ QString SieveConditionHasFlag::code(QWidget *w) const
     const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
     const QString variableNameStr = variableName->text();
     if (!variableNameStr.isEmpty()) {
-        result += variableNameStr + QLatin1Char(' ');
+        result += QLatin1String(" \"") + variableNameStr + QLatin1Char('"');
     }
 
     const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
     const QString valueStr = value->text();
-    result += valueStr;
+    result += QLatin1String(" \"") + valueStr + QLatin1Char('"');
     return result;
 }
 
