@@ -45,18 +45,17 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
 
 void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *w )
 {
-
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("list")) {
-                qDebug()<<" dsd"<<AutoCreateScriptUtil::listValue(e);
                 SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
                 flagsWidget->setFlags(AutoCreateScriptUtil::listValue(e));
+            } else {
+                qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
             }
-            qDebug()<<" tagName"<<tagName;
         }
         node = node.nextSibling();
     }
