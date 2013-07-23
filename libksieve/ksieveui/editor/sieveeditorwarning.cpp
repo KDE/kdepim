@@ -26,7 +26,7 @@ SieveEditorWarning::SieveEditorWarning(QWidget *parent)
     setVisible(false);
     setCloseButtonVisible(true);
     setMessageType(Information);
-    setText( i18n( "We can not parse script. We can not swith to graphical mode" ) );
+    setText( i18n( "We cannot parse script. We cannot switch to graphical mode" ) );
     setWordWrap(true);
 }
 
