@@ -189,6 +189,7 @@ SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName)
     SieveScriptPage *page = new SieveScriptPage;
     item->setScriptPage(page);
     Q_EMIT addNewPage(page);
+    Q_EMIT enableButtonOk(true);
     mSieveListScript->setCurrentItem(item);
     updateButtons();
     return page;
@@ -315,6 +316,7 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
 
 void SieveScriptListBox::clear()
 {
+    Q_EMIT enableButtonOk(false);
     //Clear tabpage
     mSieveListScript->clear();
     updateButtons();

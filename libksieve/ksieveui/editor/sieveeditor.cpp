@@ -95,6 +95,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     lay->addWidget(mStackedWidget);
     lay->addWidget(buttonBox);
     connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
+    connect(mGraphicalModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
     readConfig();
     setMainWidget( w );
 }

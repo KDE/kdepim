@@ -45,6 +45,9 @@ public:
     QString currentscript();
     void setImportScript( const QString & );
 
+Q_SIGNALS:
+    void enableButtonOk(bool);
+
 private:
     void readConfig();
     void writeConfig();

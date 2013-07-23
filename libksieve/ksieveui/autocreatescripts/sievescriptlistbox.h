@@ -59,6 +59,7 @@ Q_SIGNALS:
     void addNewPage(QWidget *);
     void removePage(QWidget *);
     void activatePage(QWidget *);
+    void enableButtonOk(bool);
 
 private Q_SLOTS:
     void slotNew();
