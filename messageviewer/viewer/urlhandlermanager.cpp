@@ -265,7 +265,7 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
   if ( !urlPath.startsWith( QLatin1String("/bodypart/") ) )
     return 0;
 
-  const QStringList urlParts = urlPath.mid( 10 ).split( '/' );
+  const QStringList urlParts = urlPath.mid( 10 ).split( QLatin1Char('/') );
   if ( urlParts.size() != 3 )
     return 0;
   //KMime::ContentIndex index( urlParts[1] );
@@ -593,19 +593,19 @@ bool foundSMIMEData( const QString &aUrl,
                      QString& libName,
                      QString& keyId )
 {
-  static QString showCertMan("showCertificate#");
+  static QString showCertMan(QLatin1String("showCertificate#"));
   displayName.clear();
   libName.clear();
   keyId.clear();
   int i1 = aUrl.indexOf( showCertMan );
   if( -1 < i1 ) {
     i1 += showCertMan.length();
-    int i2 = aUrl.indexOf(" ### ", i1);
+    int i2 = aUrl.indexOf(QLatin1String(" ### "), i1);
     if( i1 < i2 )
     {
       displayName = aUrl.mid( i1, i2-i1 );
       i1 = i2+5;
-      i2 = aUrl.indexOf(" ### ", i1);
+      i2 = aUrl.indexOf(QLatin1String(" ### "), i1);
       if( i1 < i2 )
       {
         libName = aUrl.mid( i1, i2-i1 );
@@ -636,13 +636,13 @@ namespace {
     if ( !url.hasRef() )
       return false;
     QString displayName, libName, keyId;
-    if ( !foundSMIMEData( url.path() + '#' +
+    if ( !foundSMIMEData( url.path() + QLatin1Char('#') +
                           QUrl::fromPercentEncoding( url.ref().toLatin1() ),
                           displayName, libName, keyId ) )
       return false;
     QStringList lst;
-    lst << "-query" << keyId;
-    if ( !QProcess::startDetached( "kleopatra",lst) )
+    lst << QLatin1String("-query") << keyId;
+    if ( !QProcess::startDetached( QLatin1String("kleopatra"),lst) )
       KMessageBox::error( w->mMainWindow, i18n("Could not start certificate manager. "
                                   "Please check your installation."),
                              i18n("KMail Error") );
@@ -651,7 +651,7 @@ namespace {
 
   QString SMimeURLHandler::statusBarMessage( const KUrl & url, ViewerPrivate * ) const {
     QString displayName, libName, keyId;
-    if ( !foundSMIMEData( url.path() + '#' +
+    if ( !foundSMIMEData( url.path() + QLatin1Char('#') +
                           QUrl::fromPercentEncoding( url.ref().toLatin1() ),
                           displayName, libName, keyId ) )
       return QString();
@@ -718,10 +718,10 @@ namespace {
 
     KMenu *menu = new KMenu();
     QAction *open =
-      menu->addAction( KIcon( "view-pim-contacts" ), i18n( "&Open in Address Book" ) );
+      menu->addAction( KIcon( QLatin1String("view-pim-contacts") ), i18n( "&Open in Address Book" ) );
 #ifndef QT_NO_CLIPBOARD
     QAction *copy =
-      menu->addAction( KIcon( "edit-copy" ), i18n( "&Copy Email Address" ) );
+      menu->addAction( KIcon( QLatin1String("edit-copy") ), i18n( "&Copy Email Address" ) );
 #endif
 
     QAction *a = menu->exec( p );
@@ -769,7 +769,7 @@ namespace {
  bool AttachmentURLHandler::attachmentIsInHeader( const KUrl &url ) const
  {
    bool inHeader = false;
-   const QString place = url.queryItem( "place" ).toLower();
+   const QString place = url.queryItem( QLatin1String("place") ).toLower();
    if ( !place.isNull() ) {
      inHeader = ( place == QLatin1String( "header" ) );
    }
@@ -872,8 +872,8 @@ namespace {
     if ( url.protocol() != QLatin1String( "kmail" )
          || url.path() != QLatin1String( "showAuditLog" ) )
       return QString();
-    assert( !url.queryItem( "log" ).isEmpty() );
-    return url.queryItem( "log" );
+    assert( !url.queryItem( QLatin1String("log") ).isEmpty() );
+    return url.queryItem( QLatin1String("log") );
   }
 
   bool ShowAuditLogURLHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
@@ -912,10 +912,10 @@ namespace {
   bool InternalImageURLHandler::willHandleDrag( const KUrl &url, ViewerPrivate *window ) const
   {
     Q_UNUSED( window );
-    if ( url.protocol() == QLatin1String( "data" ) && url.path().startsWith( "image" ) )
+    if ( url.protocol() == QLatin1String( "data" ) && url.path().startsWith( QLatin1String("image") ) )
       return true;
 
-    const QString imagePath = KStandardDirs::locate( "data", "libmessageviewer/pics/" );
+    const QString imagePath = KStandardDirs::locate( "data", QLatin1String("libmessageviewer/pics/") );
     return url.path().contains( imagePath );
   }
 }
@@ -935,10 +935,10 @@ namespace {
       QTimer::singleShot( 2000, KPIM::BroadcastStatus::instance(), SLOT(reset()) );
 
       KMimeType::Ptr mime = KMimeType::findByUrl( url );
-      if (mime->name() == "application/x-desktop" ||
-          mime->name() == "application/x-executable" ||
-          mime->name() == "application/x-ms-dos-executable" ||
-          mime->name() == "application/x-shellscript" )
+      if (mime->name() == QLatin1String("application/x-desktop") ||
+          mime->name() == QLatin1String("application/x-executable") ||
+          mime->name() == QLatin1String("application/x-ms-dos-executable") ||
+          mime->name() == QLatin1String("application/x-shellscript") )
       {
         if ( KMessageBox::warningYesNo( 0, i18nc( "@info", "Do you really want to execute <filename>%1</filename>?",
             url.pathOrUrl() ), QString(), KGuiItem(i18n("Execute")), KStandardGuiItem::cancel() ) != KMessageBox::Yes)
