@@ -33,6 +33,7 @@
 #include <QDomElement>
 #include <QDebug>
 
+static QString defaultScriptName = QLatin1String("SCRIPTNAME: ");
 
 using namespace KSieveUi;
 
@@ -296,7 +297,6 @@ void SieveScriptListBox::slotUp()
     }
 }
 
-
 QString SieveScriptListBox::generatedScript(QString &requires) const
 {
     QString resultScript;
@@ -306,6 +306,7 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
         SieveScriptListItem* item = static_cast<SieveScriptListItem*>(mSieveListScript->item(i));
         if (i != 0)
             resultScript += QLatin1String("\n\n");
+        resultScript += QLatin1Char('#') + defaultScriptName + item->text() + QLatin1Char('\n');
         resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1String("\n\n");
         resultScript += item->generatedScript(lstRequires);
     }
@@ -331,6 +332,7 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
     SieveScriptPage *currentPage = 0;
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
+    QString scriptName;
     while (!n.isNull()) {
         QDomElement e = n.toElement();
         if (!e.isNull()) {
@@ -341,8 +343,7 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                     const QString controlType = e.attribute(QLatin1String("name"));
                     qDebug()<<" controlType"<<controlType;
                     if (controlType == QLatin1String("if")) {
-                        //TODO verify unique name.
-                        currentPage = createNewScript(createUniqName());
+                        currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName);
                         currentPage->blockIfWidget()->loadScript(e);
                     } else if (controlType == QLatin1String("elsif")) {
                         if (!currentPage) {
@@ -364,7 +365,7 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         currentPage = 0;
                     } else if (controlType == QLatin1String("foreverypart")) {
                         if (!currentPage) {
-                            currentPage = createNewScript(createUniqName());
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName);
                         }
                         currentPage->forEveryPartWidget()->loadScript(e);
                     } else {
@@ -372,18 +373,23 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                     }
                 }
             } else if (tagName == QLatin1String("comment")) {
-                comment =  e.text();
+                QString str(e.text());
+                if (str.contains(defaultScriptName)) {
+                    scriptName = str.remove(defaultScriptName);
+                } else {
+                    comment += e.text();
+                }
             } else if (tagName == QLatin1String("action")) {
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString actionName = e.attribute(QLatin1String("name"));
                     if (actionName == QLatin1String("include")) {
                         if (!currentPage) {
-                            currentPage = createNewScript(createUniqName());
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName);
                         }
                         currentPage->includeWidget()->loadScript(e);
                     } else if (actionName == QLatin1String("global")) {
                         if (!currentPage) {
-                            currentPage = createNewScript(createUniqName());
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName);
                         }
                         currentPage->globalVariableWidget()->loadScript(e);
                     } else {
