@@ -53,7 +53,7 @@ void PluginLoaderBase::doScan( const char * path ) {
   mPluginMap.clear();
 
   const QStringList list =
-    KGlobal::dirs()->findAllResources( "data", path,
+    KGlobal::dirs()->findAllResources( "data", QString::fromLatin1(path),
                                        KStandardDirs::Recursive |
                                        KStandardDirs::NoDuplicates );
   for ( QStringList::const_iterator it = list.constBegin(); it != list.constEnd(); ++it ) {
@@ -110,7 +110,7 @@ KLibrary::void_function_ptr PluginLoaderBase::mainFunc( const QString & type, co
   pmd.loaded = true;
   mPluginMap[ type ] = pmd;
 
-  const QString factory_name = libName + '_' + mf_name;
+  const QString factory_name = libName + QLatin1Char('_') + QString::fromLatin1(mf_name);
   KLibrary::void_function_ptr sym = const_cast<KLibrary*>( lib )->resolveFunction( factory_name.toLatin1() );
   if ( !sym ) {
     kWarning() << "No symbol named \"" << factory_name.toLatin1() << "\" (" << factory_name << ") was found in library \"" << libName << "\"";

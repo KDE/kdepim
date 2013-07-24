@@ -73,7 +73,7 @@ QByteArray PartNodeBodyPart::asBinary() const {
 }
 
 QString PartNodeBodyPart::contentTypeParameter( const char * param ) const {
-  return mContent->contentType()->parameter( param );
+  return mContent->contentType()->parameter( QString::fromLatin1(param) );
 }
 
 QString PartNodeBodyPart::contentDescription() const {
@@ -81,7 +81,7 @@ QString PartNodeBodyPart::contentDescription() const {
 }
 
 QString PartNodeBodyPart::contentDispositionParameter( const char * param ) const {
-  return mContent->contentDisposition()->parameter( param );
+  return mContent->contentDisposition()->parameter( QString::fromLatin1(param) );
 }
 
 bool PartNodeBodyPart::hasCompleteBody() const {
