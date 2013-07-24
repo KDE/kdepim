@@ -385,9 +385,8 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                 if (str.contains(defaultScriptName)) {
                     scriptName = str.remove(defaultScriptName);
                 } else {
-                    comment += e.text();
+                    comment += e.text() + QLatin1Char('\n');
                 }
-                qDebug()<<" comment !!!!!!!!!!!!!!!"<<comment;
             } else if (tagName == QLatin1String("action")) {
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString actionName = e.attribute(QLatin1String("name"));
