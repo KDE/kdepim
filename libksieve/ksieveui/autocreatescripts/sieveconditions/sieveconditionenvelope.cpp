@@ -149,6 +149,9 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                 if (indexStr == 0) {
                     SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
                     selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
+                } else if (indexStr == 1) {
+                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+                    edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 }
                 ++indexStr;
             } else {
