@@ -229,6 +229,7 @@ void SelectHeaderTypeComboBox::setCode(const QString &code)
 {
     //TODO verify it.
     lineEdit()->setText(code);
+    mCode = code;
 }
 
 #include "selectheadertypecombobox.moc"
