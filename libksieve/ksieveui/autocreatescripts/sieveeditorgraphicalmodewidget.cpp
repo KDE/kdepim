@@ -18,10 +18,12 @@
 
 #include "sieveeditorgraphicalmodewidget.h"
 #include "sievescriptlistbox.h"
+#include "scriptsparsing/parsingutil.h"
 
 #include <KLocale>
 #include <KGlobal>
 #include <KConfigGroup>
+#include <KMessageBox>
 
 #include <QVBoxLayout>
 #include <QSplitter>
@@ -46,6 +48,7 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
     connect(mSieveScript, SIGNAL(addNewPage(QWidget*)), SLOT(slotAddScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(removePage(QWidget*)), SLOT(slotRemoveScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(activatePage(QWidget*)), SLOT(slotActivateScriptPage(QWidget*)));
+    connect(mSieveScript, SIGNAL(enableButtonOk(bool)), SIGNAL(enableButtonOk(bool)));
     mSplitter->addWidget(mSieveScript);
     vlay->addWidget(mSplitter);
 
@@ -62,6 +65,9 @@ SieveEditorGraphicalModeWidget::~SieveEditorGraphicalModeWidget()
 
 void SieveEditorGraphicalModeWidget::loadScript(const QDomDocument &doc)
 {
+    for (int i = mStackWidget->count(); i>=0; --i) {
+        mStackWidget->removeWidget(mStackWidget->widget(i));
+    }
     mSieveScript->loadScript(doc);
 }
 
@@ -120,9 +126,18 @@ QString SieveEditorGraphicalModeWidget::currentscript()
     return script;
 }
 
-void SieveEditorGraphicalModeWidget::setImportScript( const QString & )
+void SieveEditorGraphicalModeWidget::setImportScript( const QString &script )
 {
-    //TODO
+    bool result = false;
+    const QDomDocument doc = ParsingUtil::parseScript(script, result);
+    if (result) {
+        loadScript(doc);
+    } else {
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Error during importing script. Do you want to switch in text mode ?"))) {
+            Q_EMIT switchTextMode(script);
+        }
+        qDebug()<<" can not import script";
+    }
 }
 
 #include "sieveeditorgraphicalmodewidget.moc"

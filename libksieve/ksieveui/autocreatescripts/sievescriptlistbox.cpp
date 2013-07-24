@@ -16,7 +16,10 @@
 */
 #include "sievescriptlistbox.h"
 #include "sievescriptdescriptiondialog.h"
+#include "sieveglobalvariablewidget.h"
+#include "sieveforeverypartwidget.h"
 #include "sievescriptpage.h"
+#include "sieveincludewidget.h"
 
 #include <KHBox>
 #include <KMessageBox>
@@ -189,6 +192,7 @@ SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName)
     SieveScriptPage *page = new SieveScriptPage;
     item->setScriptPage(page);
     Q_EMIT addNewPage(page);
+    Q_EMIT enableButtonOk(true);
     mSieveListScript->setCurrentItem(item);
     updateButtons();
     return page;
@@ -313,8 +317,17 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
     return resultScript;
 }
 
+void SieveScriptListBox::clear()
+{
+    Q_EMIT enableButtonOk(false);
+    //Clear tabpage
+    mSieveListScript->clear();
+    updateButtons();
+}
+
 void SieveScriptListBox::loadScript(const QDomDocument &doc)
 {
+    clear();
     SieveScriptPage *currentPage = 0;
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
@@ -328,7 +341,6 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                     const QString controlType = e.attribute(QLatin1String("name"));
                     qDebug()<<" controlType"<<controlType;
                     if (controlType == QLatin1String("if")) {
-                        qDebug()<<" IF";
                         //TODO verify unique name.
                         currentPage = createNewScript(createUniqName());
                         currentPage->blockIfWidget()->loadScript(e);
@@ -340,7 +352,6 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         if (blockWidget) {
                             blockWidget->loadScript(e);
                         }
-                        qDebug()<<" ELSEIF";
                     } else if (controlType == QLatin1String("else")) {
                         if (!currentPage) {
                             qDebug() <<" script is not correct missing if block";
@@ -349,13 +360,39 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         if (blockWidget) {
                             blockWidget->loadScript(e);
                         }
-                        qDebug()<<" ELSE";
                         //We are sure that we can't have another elsif
                         currentPage = 0;
+                    } else if (controlType == QLatin1String("foreverypart")) {
+                        if (!currentPage) {
+                            currentPage = createNewScript(createUniqName());
+                        }
+                        currentPage->forEveryPartWidget()->loadScript(e);
+                    } else {
+                        qDebug()<<" unknown controlType :"<<controlType;
                     }
                 }
             } else if (tagName == QLatin1String("comment")) {
                 comment =  e.text();
+            } else if (tagName == QLatin1String("action")) {
+                if (e.hasAttribute(QLatin1String("name"))) {
+                    const QString actionName = e.attribute(QLatin1String("name"));
+                    if (actionName == QLatin1String("include")) {
+                        if (!currentPage) {
+                            currentPage = createNewScript(createUniqName());
+                        }
+                        currentPage->includeWidget()->loadScript(e);
+                    } else if (actionName == QLatin1String("global")) {
+                        if (!currentPage) {
+                            currentPage = createNewScript(createUniqName());
+                        }
+                        currentPage->globalVariableWidget()->loadScript(e);
+                    } else {
+                        qDebug()<<" unknown action name: "<<actionName;
+                    }
+                }
+                qDebug()<<" NEW ACTIONS";
+            } else {
+                qDebug()<<" unknown tagname"<<tagName;
             }
 
             qDebug() <<"tag"<< tagName<<" comment "<<comment;

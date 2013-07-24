@@ -17,6 +17,7 @@
 
 #include "sieveincludewidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KPushButton>
 #include <KLocale>
@@ -27,7 +28,8 @@
 #include <QLabel>
 #include <QToolButton>
 #include <QWhatsThis>
-
+#include <QDomNode>
+#include <QDebug>
 
 namespace KSieveUi {
 static int MINIMUMINCLUDEACTION = 1;
@@ -54,6 +56,16 @@ QString SieveIncludeLocation::code() const
     return itemData(currentIndex()).toString();
 }
 
+void SieveIncludeLocation::setCode(const QString &code)
+{
+    const int index = findData(code);
+    if (index != -1) {
+        setCurrentIndex(index);
+    } else {
+        setCurrentIndex(0);
+    }
+}
+
 SieveIncludeActionWidget::SieveIncludeActionWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -62,7 +74,35 @@ SieveIncludeActionWidget::SieveIncludeActionWidget(QWidget *parent)
 
 SieveIncludeActionWidget::~SieveIncludeActionWidget()
 {
+}
 
+void SieveIncludeActionWidget::loadScript(const QDomElement &element)
+{
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("personal") ||
+                        tagValue == QLatin1String("global")) {
+                    mLocation->setCode(AutoCreateScriptUtil::tagValue(tagValue));
+                } else if (tagValue == QLatin1String("optional")) {
+                    mOptional->setChecked(true);
+                } else if (tagValue == QLatin1String("once")) {
+                    mOnce->setChecked(true);
+                } else {
+                    qDebug()<<" SieveIncludeActionWidget::loadScript unknown tagValue "<<tagValue;
+                }
+            } else if (tagName == QLatin1String("str")) {
+                mIncludeName->setText(e.text());
+            } else {
+                qDebug()<<" SieveIncludeActionWidget::loadScript unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 void SieveIncludeActionWidget::generatedScript(QString &script)
@@ -129,6 +169,11 @@ void SieveIncludeActionWidget::slotRemoveWidget()
     emit removeWidget( this );
 }
 
+bool SieveIncludeActionWidget::isInitialized() const
+{
+    return !mIncludeName->text().isEmpty();
+}
+
 void SieveIncludeActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
 {
     mAdd->setEnabled(addButtonEnabled);
@@ -174,7 +219,7 @@ void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
 
 void SieveIncludeWidget::loadScript(const QDomElement &element)
 {
-
+    mIncludeLister->loadScript(element);
 }
 
 SieveIncludeWidgetLister::SieveIncludeWidgetLister(QWidget *parent)
@@ -200,7 +245,6 @@ void SieveIncludeWidgetLister::slotRemoveWidget( QWidget *w )
     removeWidget( w );
     updateAddRemoveButton();
 }
-
 
 void SieveIncludeWidgetLister::updateAddRemoveButton()
 {
@@ -256,6 +300,16 @@ QWidget *SieveIncludeWidgetLister::createWidget( QWidget *parent )
     SieveIncludeActionWidget *w = new SieveIncludeActionWidget( parent);
     reconnectWidget( w );
     return w;
+}
+
+void SieveIncludeWidgetLister::loadScript(const QDomElement &element)
+{
+    SieveIncludeActionWidget *w = static_cast<SieveIncludeActionWidget *>(widgets().last());
+    if (w->isInitialized()) {
+        addWidgetAfterThisWidget(widgets().last());
+        w = static_cast<SieveIncludeActionWidget *>(widgets().last());
+    }
+    w->loadScript(element);
 }
 
 }

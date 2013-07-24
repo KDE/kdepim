@@ -27,6 +27,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 
@@ -99,9 +100,35 @@ QString SieveConditionAddress::help() const
     return i18n("The \"address\" test matches Internet addresses in structured headers that contain addresses.  It returns true if any header contains any key in the specified part of the address, as modified by the comparator and the match keyword.");
 }
 
-void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition )
+void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (index == 0) {
+                    SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+                    selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(tagValue));
+                } else if (index == 1) {
+                    SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+                    selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition));
+                } else {
+                    qDebug()<<" too many argument :"<<index;
+                }
+                ++index;
+            } else if (tagName == QLatin1String("str")) {
+                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+                edit->setText(e.text());
+            } else {
+                qDebug()<<" SieveConditionAddress::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionaddress.moc"

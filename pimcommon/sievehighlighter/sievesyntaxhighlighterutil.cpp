@@ -21,6 +21,7 @@ namespace PimCommon {
 QStringList SieveSyntaxHighlighterUtil::fullCapabilities()
 {
     return  QStringList()
+            <<QLatin1String("mboxmetadata")
             <<QLatin1String("body")
             <<QLatin1String("extlists")
             <<QLatin1String("envelope")

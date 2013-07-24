@@ -52,12 +52,10 @@ QString SelectMatchTypeComboBox::code(bool &negative) const
 
 void SelectMatchTypeComboBox::setCode(const QString &code)
 {
-    //TODO look at "not"
     const int index = findData(code);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
-        //TODO other value ?
         setCurrentIndex(0);
     }
 }

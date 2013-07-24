@@ -23,6 +23,7 @@
 #include <QHBoxLayout>
 #include <QDebug>
 #include <QLabel>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionServerMetaDataExists::SieveConditionServerMetaDataExists(QObject *parent)
@@ -81,6 +82,20 @@ QString SieveConditionServerMetaDataExists::help() const
 
 void SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-    const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                value->setText(tagValue);
+            } else {
+                qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 #include "sieveconditionservermetadataexists.moc"

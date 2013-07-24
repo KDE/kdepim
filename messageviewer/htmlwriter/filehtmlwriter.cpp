@@ -42,7 +42,7 @@ namespace MessageViewer {
 
   FileHtmlWriter::FileHtmlWriter( const QString & filename )
     : HtmlWriter(),
-      mFile( filename.isEmpty() ? QString( "filehtmlwriter.out" ) : filename )
+      mFile( filename.isEmpty() ? QLatin1String( "filehtmlwriter.out" ) : filename )
   {
     mStream.setCodec( "UTF-8" );
   }
@@ -58,7 +58,7 @@ namespace MessageViewer {
   void FileHtmlWriter::begin( const QString & css ) {
     openOrWarn();
     if ( !css.isEmpty() )
-      write( "<!-- CSS Definitions \n" + css + "-->\n" );
+      write( QLatin1String("<!-- CSS Definitions \n") + css + QLatin1String("-->\n") );
   }
 
   void FileHtmlWriter::end() {

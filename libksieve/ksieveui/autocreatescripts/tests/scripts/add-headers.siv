@@ -1,0 +1,8 @@
+require "editheader";
+ 
+#Script name: add headers
+
+if true {
+    addheader :last "header-str" "header-value";
+    addheader  "header-str" "header-value";
+}

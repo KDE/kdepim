@@ -1,0 +1,8 @@
+require "mboxmetadata";
+ 
+#Script name: test-metadata-exist
+
+if metadataexists "INBOX" "ANNOTATION"
+{
+    stop;
+}

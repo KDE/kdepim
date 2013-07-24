@@ -59,6 +59,7 @@ Q_SIGNALS:
     void addNewPage(QWidget *);
     void removePage(QWidget *);
     void activatePage(QWidget *);
+    void enableButtonOk(bool);
 
 private Q_SLOTS:
     void slotNew();
@@ -73,6 +74,7 @@ private Q_SLOTS:
     void slotUp();
 
 private:
+    void clear();
     SieveScriptPage *createNewScript(const QString &newName);
     QString createUniqName();
     QListWidget *mSieveListScript;

@@ -952,135 +952,83 @@ performs a menu item function, the default shortcut is listed with the menu item
 
 
 <sect2 id="reader-tools-menu">
-<title><guimenu>Tools</guimenu> Menu</title>
-
+<title>Tools Menu</title>
 <variablelist>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>S</keycap></shortcut>
-<guimenu>Tools</guimenu>
-<guimenuitem>Find Messages...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up a search window that lets you search for messages with
-certain characteristics, &eg; a certain subject. Start the search by entering
-some values and press <guibutton>Search</guibutton>. Click on one of the
-resulting messages and it will appear in the <guilabel>Message
-pane</guilabel>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Tools</guimenu>
-<guimenuitem>Address Book</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Starts up &kaddressbook;, the &kde; address book. If this menu item is disabled
-and greyed out either &kaddressbook; is not installed or the program was not 
-found.</para>
-</listitem>
-</varlistentry>
-
-    <varlistentry id="reader-tools-certificate-manager">
-      <term>
-        <menuchoice>
-          <guimenu>Tools</guimenu>
-          <guimenuitem>Certificate Manager...</guimenuitem>
-        </menuchoice>
-      </term>
+  <varlistentry><term><menuchoice><shortcut><keycap>S</keycap></shortcut>
+        <guimenu>Tools</guimenu><guimenuitem>Find Messages...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Opens up a search window that lets you search for messages with
+        certain characteristics, &eg; a certain subject. Start the search by entering
+        some values and press <guibutton>Search</guibutton>. Click on one of the
+        resulting messages and it will appear in the <guilabel>Message pane</guilabel>.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry id="reader-tools-certificate-manager"><term><menuchoice><guimenu>Tools</guimenu>
+        <guimenuitem>Certificate Manager...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Starts <ulink url="help:kleopatra">&kleopatra;</ulink>, the &kde; certificate manager.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry id="reader-tools-gnupg-log-viewer"><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Starts <ulink url="help:kwatchgnupg"><application>KWatchGnuPG</application></ulink>,
+        a tool to present the debug output of the <application>GnuPG</application> application. If
+        signing, encryption, or verification mysteriously stop working, you might find out why by looking at this log.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guisubmenu>Edit "Out of Office" Replies...</guisubmenu></menuchoice></term>
+    <listitem>
+      <para>Launch the <guilabel>Configure "Out of Office" Replies</guilabel> dialog, which allows you to set-up vacation notifications.</para>
+      <note><para><guilabel>Out of Office reply</guilabel> functionality relies on server-side filtering.
+          To be able to use it you need to configure the <link linkend="receiving-mail">Filtering tab</link> (see option relevant to kolab server) of your &imap; account set-up.</para>
+      </note>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guisubmenu>Debug Sieve...</guisubmenu></menuchoice></term>
+    <listitem>
+      <para>Launch the <guilabel>Sieve Diagnostics</guilabel> dialog. This is useful to debug sieve if you are having problems with it.</para>
+      <note><para>You must have sieve support on your email server.</para></note>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guisubmenu>Filter Log Viewer...</guisubmenu></menuchoice></term>
+    <listitem>
+      <para>Opens up the viewer window for the filter log; there you find some options to
+        control the logging of the filtering process.  In the log you will find valuable
+        information about what filter rules were used, what was the result of the evaluation
+        of those rules, and which filter actions were applied to a message.</para>
+    </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guisubmenu>Import Wizard...</guisubmenu></menuchoice></term>
       <listitem>
-        <para>
-          Starts <ulink
-          url="help:kleopatra">&kleopatra;</ulink>,
-          the &kde; certificate manager.
-        </para>
+        <para>Brings up the Import Wizard dialog which assists in easily importing settings and email.
+          Please see <link linkend="import-wizard">Import Wizard</link> for details.</para>
       </listitem>
     </varlistentry>
-
-    <varlistentry id="reader-tools-gnupg-log-viewer">
-      <term>
-        <menuchoice>
-          <guimenu>Tools</guimenu>
-          <guimenuitem>GnuPG Log Viewer</guimenuitem>
-        </menuchoice>
-      </term>
+    <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guisubmenu>Export &kmail; Data...</guisubmenu></menuchoice></term>
       <listitem>
-        <para>
-          Starts <ulink
-          url="help:kwatchgnupg"><application>KWatchGnuPG</application></ulink>,
-          a tool to present the debug output of
-          <application>GnuPG</application> application. If
-          signing, encryption, or verification mysteriously stop
-          working, you might find out why by looking at the log.
-        </para>
+        <para>Brings up the Export Data Wizard dialog which assists in easily exporting your settings and email.
+          Please see <link linkend="export-data-wizard">Export &kmail; Data</link> for details.</para>
       </listitem>
     </varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Tools</guimenu>
-<guisubmenu>Edit "Out of Office" Replies...</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Launch the <guilabel>Configure "Out of Office" Replies</guilabel> dialog, which allow you to set-up vacation notifications.</para>
-<note>
-<para><guilabel>Out of Office reply</guilabel> functionality relies on server-side filtering. To be able to use it you need to configure the <link linkend="receiving-mail">Filtering tab</link> (see option relevant to kolab server) of your <guilabel>IMAP</guilabel> account set-up.
-</para>
-</note>
-</listitem>
-</varlistentry>
-<!-- Debug Sieve missing  lueck 31.05.2011-->
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Tools</guimenu>
-<guisubmenu>Filter Log Viewer...</guisubmenu>
-</menuchoice>
-</term>
-<listitem>
-<para>Opens up the viewer window for the filter log; there you find some options to
-control the logging of the filtering process.  In the log you will find valuable
-information about what filter rules were used, what was the result of the evaluation
-of those rules, and which filter actions were applied to a message.</para>
-</listitem>
-</varlistentry>
-<!-- Account Wizard missing  lueck 31.05.2011-->
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Tools</guimenu>
-<guimenuitem>Anti-Spam Wizard...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>It starts a <link linkend="the-anti-spam-wizard">wizard</link> which can help
-you to set up spam filtering.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Tools</guimenu>
-<guimenuitem>Anti-Virus Wizard...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>It starts a <link linkend="the-anti-virus-wizard">wizard</link> which can help
-you to set up scanning messages for viruses.</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
+    <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guisubmenu>Account Wizard...</guisubmenu></menuchoice></term>
+      <listitem>
+        <para>Brings up the Account Wizard dialog which assists in easily setting up accounts.
+          Please see <link linkend="account-wizard">Import Wizard</link> for details.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Anti-Spam Wizard...</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Brings up the Anti-Spam Wizard which can help you to set up spam filtering.
+          Please see <link linkend="the-anti-spam-wizard">Anti-Spam Wizard</link> for details.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Anti-Virus Wizard...</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>Brings up the Anti-Virus Wizard which can help you to set up scanning messages for viruses.
+          Please see <link linkend="the-anti-virus-wizard">Anti-Virus Wizard</link> for details.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
 </sect2>
 
 

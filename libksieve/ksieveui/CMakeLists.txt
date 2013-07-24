@@ -16,6 +16,7 @@ set(ksieveui_LIB_SRCS
   scriptsparsing/xmlprintingscriptbuilder.cpp
   scriptsparsing/parsingresultdialog.cpp
   scriptsparsing/xmlprintingsyntaxhighlighter.cpp
+  scriptsparsing/parsingutil.cpp
   managesievescriptsdialog.cpp
   widgets/sievetreewidgetitem.cpp
   debug/sievedebugdialog.cpp
@@ -29,6 +30,7 @@ set(ksieveui_LIB_SRCS
   editor/sieveinfowidget.cpp
   editor/sieveeditortextmodewidget.cpp
   editor/sieveeditorabstractwidget.cpp
+  editor/sieveeditorwarning.cpp
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp

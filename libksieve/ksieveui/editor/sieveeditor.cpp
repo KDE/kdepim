@@ -18,6 +18,7 @@
 
 #include "sieveeditor.h"
 #include "sieveeditortextmodewidget.h"
+#include "scriptsparsing/parsingutil.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 #include <klocale.h>
@@ -30,6 +31,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QToolBar>
+#include <QDebug>
 #include <QAction>
 
 //#define GENERATE_XML_ACTION 1
@@ -61,7 +63,10 @@ SieveEditor::SieveEditor( QWidget * parent )
     bar->addAction(mCheckSyntax);
     bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
     bar->addAction(i18n("Import..."), this, SLOT(slotImport()));
-    bar->addAction(i18n("Autogenerate Script..."), this, SLOT(slotAutoGenerateScripts()));
+
+    mAutoGenerateScript = new QAction(i18n("Autogenerate Script..."), this);
+    connect(mAutoGenerateScript, SIGNAL(triggered(bool)), SLOT(slotAutoGenerateScripts()));
+    bar->addAction(mAutoGenerateScript);
     mSwitchMode = new QAction(i18n("Switch Mode"), this);
     bar->addAction(mSwitchMode);
     connect(mSwitchMode, SIGNAL(triggered(bool)), SLOT(slotSwitchMode()));
@@ -93,6 +98,8 @@ SieveEditor::SieveEditor( QWidget * parent )
     lay->addWidget(mStackedWidget);
     lay->addWidget(buttonBox);
     connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
+    connect(mGraphicalModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
+    connect(mGraphicalModeWidget, SIGNAL(switchTextMode(QString)), this, SLOT(slotSwitchTextMode(QString)));
     readConfig();
     setMainWidget( w );
 }
@@ -107,6 +114,7 @@ void SieveEditor::changeMode(EditorMode mode)
     if (mode != mMode) {
         mMode = mode;
         mStackedWidget->setCurrentIndex(static_cast<int>(mode));
+        mAutoGenerateScript->setEnabled((mMode == TextMode));
     }
 }
 
@@ -135,7 +143,16 @@ void SieveEditor::readConfig()
 
 QString SieveEditor::script() const
 {
-    return mTextModeWidget->script();
+    QString currentScript;
+    switch (mMode) {
+    case TextMode:
+        currentScript = mTextModeWidget->script();
+        break;
+    case GraphicMode:
+        currentScript = mGraphicalModeWidget->currentscript();
+        break;
+    }
+    return currentScript;
 }
 
 QString SieveEditor::originalScript() const
@@ -172,6 +189,7 @@ void SieveEditor::resultDone()
 void SieveEditor::setSieveCapabilities( const QStringList &capabilities )
 {
     mTextModeWidget->setSieveCapabilities(capabilities);
+    mGraphicalModeWidget->setSieveCapabilities(capabilities);
 }
 
 void SieveEditor::slotAutoGenerateScripts()
@@ -215,7 +233,7 @@ void SieveEditor::slotSaveAs()
         mTextModeWidget->slotSaveAs();
         break;
     case GraphicMode:
-        mTextModeWidget->slotSaveAs();
+        mGraphicalModeWidget->slotSaveAs();
         break;
     }
 }
@@ -227,7 +245,7 @@ void SieveEditor::slotImport()
         mTextModeWidget->slotImport();
         break;
     case GraphicMode:
-        mTextModeWidget->slotImport();
+        mGraphicalModeWidget->slotImport();
         break;
     }
 }
@@ -236,10 +254,16 @@ void SieveEditor::slotSwitchMode()
 {
     switch (mMode) {
     case TextMode: {
-        const QString script = mTextModeWidget->currentscript();
-        changeMode(GraphicMode);
-        //load script
-        //mGraphicalModeWidget->set
+        bool result = false;
+        const QDomDocument doc = ParsingUtil::parseScript(mTextModeWidget->currentscript(), result);
+        if (result) {
+            mGraphicalModeWidget->loadScript(doc);
+            mTextModeWidget->hideEditorWarning();
+            changeMode(GraphicMode);
+        } else {
+            mTextModeWidget->showEditorWarning();
+            qDebug() << "can not parse file";
+        }
         break;
     }
     case GraphicMode: {
@@ -249,7 +273,12 @@ void SieveEditor::slotSwitchMode()
         break;
     }
     }
-    //TODO
+}
+
+void SieveEditor::slotSwitchTextMode(const QString &script)
+{
+    changeMode(TextMode);
+    mTextModeWidget->setScript(script);
 }
 
 #include "sieveeditor.moc"

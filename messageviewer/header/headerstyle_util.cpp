@@ -98,7 +98,7 @@ QString spamStatus(KMime::Message *message)
         const SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
 
         for ( SpamScores::const_iterator it = scores.constBegin(), end = scores.constEnd() ; it != end ; ++it )
-            spamHTML += (*it).agent() + ' ' +
+            spamHTML += (*it).agent() + QLatin1Char(' ') +
                     MessageViewer::HeaderStyleUtil::drawSpamMeter( (*it).error(), (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );
     }
     return spamHTML;
@@ -154,12 +154,12 @@ QString drawSpamMeter( SpamError spamError, double percent, double confidence,
     QString confidenceString;
     if ( spamError == noError ) {
         if ( confidence >= 0 ) {
-            confidenceString = QString::number( confidence ) + "% &nbsp;";
+            confidenceString = QString::number( confidence ) + QLatin1String("% &nbsp;");
             titleText = i18n("%1% probability of being spam with confidence %3%.\n\n"
                              "Full report:\nProbability=%2\nConfidence=%4",
                              QString::number(percent,'f',2), filterHeader, confidence, confidenceHeader );
         } else { // do not show negative confidence
-            confidenceString = QString() + "&nbsp;";
+            confidenceString = QString() + QLatin1String("&nbsp;");
             titleText = i18n("%1% probability of being spam.\n\n"
                              "Full report:\nProbability=%2",
                              QString::number(percent,'f',2), filterHeader);
@@ -254,7 +254,7 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
         ContactDisplayMessageMemento *photoMemento =
                 dynamic_cast<ContactDisplayMessageMemento*>( style->nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
         if ( !photoMemento ) {
-            const QString email = KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) );
+            const QString email = QString::fromLatin1(KPIMUtils::firstEmailAddress( message->from()->as7BitString(false) ));
             photoMemento = new ContactDisplayMessageMemento( email );
             style->nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
             QObject::connect( photoMemento, SIGNAL(update(MessageViewer::Viewer::UpdateMode)),
@@ -284,8 +284,8 @@ xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *mes
                 }
             } else {
                 settings.photoURL = photoMemento->photo().url();
-                if ( settings.photoURL.startsWith('/') )
-                    settings.photoURL.prepend( "file:" );
+                if ( settings.photoURL.startsWith(QLatin1Char('/')) )
+                    settings.photoURL.prepend( QLatin1String("file:") );
             }
         } else {
             // if the memento is not finished yet, use other photo sources instead

@@ -127,7 +127,7 @@ QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
       fileName = fallbackFileName2;
     }
     if ( !fileName.isEmpty() ) {
-      fileName = KMimeType::findByPath( "/tmp/" + fileName, 0, true )->iconName();
+      fileName = KMimeType::findByPath( QLatin1String("/tmp/") + fileName, 0, true )->iconName();
     }
   }
 
@@ -191,7 +191,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
   KUrl url, dirUrl;
   if ( contents.count() > 1 ) {
     // get the dir
-    dirUrl = KFileDialog::getExistingDirectoryUrl( KUrl( "kfiledialog:///saveAttachment" ),
+    dirUrl = KFileDialog::getExistingDirectoryUrl( KUrl( QLatin1String("kfiledialog:///saveAttachment") ),
                                                    parent,
                                                    i18n( "Save Attachments To" ) );
     if ( !dirUrl.isValid() ) {
@@ -208,7 +208,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
     if ( fileName.isEmpty() ) {
       fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
     }
-    url = KFileDialog::getSaveUrl( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
+    url = KFileDialog::getSaveUrl( KUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
                                    QString(),
                                    parent,
                                    i18n( "Save Attachment" ) );
@@ -250,8 +250,8 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
       while ( renameNumbering.contains(file) ) {
         file = origFile;
         int num = renameNumbering[file] + 1;
-        int dotIdx = file.lastIndexOf('.');
-        file = file.insert( (dotIdx>=0) ? dotIdx : file.length(), QString("_") + QString::number(num) );
+        int dotIdx = file.lastIndexOf(QLatin1Char('.'));
+        file = file.insert( (dotIdx>=0) ? dotIdx : file.length(), QLatin1String("_") + QString::number(num) );
       }
       curUrl.setFileName(file);
 
@@ -488,7 +488,7 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
     fileName = i18n("message");
 
   if ( !fileName.endsWith( QLatin1String( ".mbox" ) ) )
-    fileName += ".mbox";
+    fileName += QLatin1String(".mbox");
 
   const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
   KFileDialog::Option options = static_cast<KFileDialog::Option>(0);
@@ -536,23 +536,23 @@ bool Util::speakSelectedText( const QString& text, QWidget *parent)
     return false;
 
   // If KTTSD not running, start it.
-  if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kttsd"))
+  if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.kttsd")))
   {
     QString error;
-    if (KToolInvocation::startServiceByDesktopName("kttsd", QStringList(), &error))
+    if (KToolInvocation::startServiceByDesktopName(QLatin1String("kttsd"), QStringList(), &error))
     {
       KMessageBox::error(parent, i18n( "Starting Jovie Text-to-Speech Service Failed"), error );
       return false;
     }
   }
-  QDBusInterface ktts("org.kde.kttsd", "/KSpeech", "org.kde.KSpeech");
-  ktts.asyncCall("say", text, 0);
+  QDBusInterface ktts(QLatin1String("org.kde.kttsd"), QLatin1String("/KSpeech"), QLatin1String("org.kde.KSpeech"));
+  ktts.asyncCall(QLatin1String("say"), text, 0);
   return true;
 }
 
 KAction* Util::createAppAction(const KService::Ptr& service, bool singleOffer, QActionGroup *actionGroup, QObject *parent )
 {
-  QString actionName(service->name().replace('&', "&&"));
+  QString actionName(service->name().replace(QLatin1Char('&'), QLatin1String("&&")));
   if (singleOffer) {
     actionName = i18n("Open &with %1", actionName);
   } else {
@@ -572,7 +572,7 @@ KMimeType::Ptr Util::mimetype(const QString& name)
 {
   // consider the filename if mimetype cannot be found by content-type
   KMimeType::Ptr mimeType = KMimeType::findByPath( name, 0, true /* no disk access */  );
-  if ( mimeType->name() == "application/octet-stream" ) {
+  if ( mimeType->name() == QLatin1String("application/octet-stream") ) {
      // consider the attachment's contents if neither the Content-Type header
      // nor the filename give us a clue
      mimeType = KMimeType::findByFileContent( name );

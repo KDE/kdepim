@@ -39,6 +39,8 @@ public:
 
     void generatedScript(QString &script);
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+    bool isInitialized() const;
+    void loadScript(const QDomElement &element);
 
 private Q_SLOTS:
     void slotAddWidget();
@@ -66,6 +68,7 @@ public:
     ~SieveGlobalVariableLister();
 
     void generatedScript(QString &script, QStringList &requires);
+    void loadScript(const QDomElement &element);
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
@@ -97,12 +100,5 @@ private:
     SieveGlobalVariableLister *mIncludeLister;
 };
 }
-
-
-class SieveGlobalVariableWidget
-{
-public:
-    SieveGlobalVariableWidget();
-};
 
 #endif // SIEVEGLOBALVARIABLEWIDGET_H

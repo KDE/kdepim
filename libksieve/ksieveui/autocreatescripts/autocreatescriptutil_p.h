@@ -29,7 +29,7 @@ namespace AutoCreateScriptUtil
 {
 QString createMultiLine(const QString &str);
 QString createList(const QString &str, const QChar &separator);
-QString createList(const QStringList &lst);
+QString createList(const QStringList &lst, bool addSemiColon = true);
 QStringList createListFromString(QString str);
 QString createAddressList(const QString &str);
 QString negativeString(bool isNegative);
@@ -37,6 +37,7 @@ QString tagValueWithCondition(const QString &tag, bool notCondition);
 QString tagValue(const QString &tag);
 QString strValue(QDomNode &node);
 QStringList listValue(const QDomElement &element);
+QString listValueToStr(const QDomElement &element);
 }
 
 #endif // AUTOCREATESCRIPTUTIL_H

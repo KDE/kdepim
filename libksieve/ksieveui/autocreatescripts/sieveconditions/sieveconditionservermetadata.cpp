@@ -25,6 +25,7 @@
 #include <QHBoxLayout>
 #include <QDebug>
 #include <QLabel>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionServerMetaData::SieveConditionServerMetaData(QObject *parent)
@@ -118,9 +119,26 @@ QString SieveConditionServerMetaData::help() const
     return i18n("This test retrieves the value of the server annotation \"annotation-name\".  The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
 }
 
-void SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition )
+void SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-
+    //TODO
+#if 0
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+                edit->setText(tagValue);
+            } else {
+                qDebug()<<" SieveConditionServerMetaData::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+#endif
 }
 
 #include "sieveconditionservermetadata.moc"

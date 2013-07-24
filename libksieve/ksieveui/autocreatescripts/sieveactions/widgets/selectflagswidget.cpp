@@ -130,18 +130,23 @@ void SelectFlagsWidget::slotSelectFlags()
     dialog->setFlags(AutoCreateScriptUtil::createListFromString(mEdit->text()));
     if (dialog->exec()) {
         const QStringList lstFlags = dialog->flags();
-        mCode.clear();
+        QString flags;
         if (!lstFlags.isEmpty()) {
-            mCode = AutoCreateScriptUtil::createList(lstFlags);
+            flags = AutoCreateScriptUtil::createList(lstFlags);
         }
+        mEdit->setText(flags);
     }
-    mEdit->setText(mCode);
     delete dialog;
+}
+
+void SelectFlagsWidget::setFlags(const QStringList &flags)
+{
+    mEdit->setText(AutoCreateScriptUtil::createList(flags));
 }
 
 QString SelectFlagsWidget::code() const
 {
-    return mCode;
+    return mEdit->text();
 }
 
 #include "selectflagswidget.moc"

@@ -24,6 +24,7 @@
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QDomNode>
 #include <QLabel>
 
 using namespace KSieveUi;
@@ -75,12 +76,12 @@ QString SieveConditionHasFlag::code(QWidget *w) const
     const KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
     const QString variableNameStr = variableName->text();
     if (!variableNameStr.isEmpty()) {
-        result += variableNameStr + QLatin1Char(' ');
+        result += QLatin1String(" \"") + variableNameStr + QLatin1Char('"');
     }
 
     const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
     const QString valueStr = value->text();
-    result += valueStr;
+    result += QLatin1String(" \"") + valueStr + QLatin1Char('"');
     return result;
 }
 
@@ -104,9 +105,42 @@ QString SieveConditionHasFlag::help() const
     return i18n("The hasflag test evaluates to true if any of the variables matches any flag name.");
 }
 
-void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition )
+void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-
+    QStringList strList;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
+                matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+            } else if (tagName == QLatin1String("str")) {
+                strList << e.text();
+            } else {
+                qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    switch (strList.count()) {
+    case 1: {
+        KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+        value->setText(strList.at(0));
+        break;
+    }
+    case 2: {
+        KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+        variableName->setText(strList.at(0));
+        KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
+        value->setText(strList.at(1));
+        break;
+    }
+    default:
+        qDebug()<<" SieveConditionHasFlag::setParamWidgetValue str list count not correct :"<<strList.count();
+        break;
+    }
 }
 
 #include "sieveconditionhasflag.moc"

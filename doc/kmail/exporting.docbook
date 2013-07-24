@@ -1,0 +1,39 @@
+<chapter id="exporting">
+
+<chapterinfo>
+<authorgroup>
+<author>
+<firstname>Scarlett</firstname>
+<surname>Clark</surname>
+<affiliation><address>
+&Scarlett.Clark.mail;
+</address></affiliation>
+</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+<date>2013-07-22</date>
+<releaseinfo>&kde; 4.11</releaseinfo>
+</chapterinfo>
+<title>Exporting in &kmail;</title>
+<sect1 id="export-options">
+<title>Export Options in &kmail;</title>
+
+<sect2 id="export-data-wizard">
+  <title>Export &kmail; Data</title>
+  <para>&kmail; has an export wizard to export your settings and email easily. This is useful for backups and moving all of your settings and email
+    to a new installation.</para>
+  <variablelist>
+    <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Export &kmail; Data...</guimenuitem></menuchoice></term>
+      <listitem>
+        <para>This brings up the <guilabel>PIM Setting Exporter</guilabel> dialog. Select <menuchoice><guimenu>File</guimenu><guimenuitem>Back Up Data...</guimenuitem></menuchoice>,
+          it will prompt you to close all kdepim applications. Once you have closed them, click <guibutton>Yes</guibutton> to continue, or <guibutton>No</guibutton> to cancel. You will be prompted to create a
+          backup name, enter the name into the <guilabel>File</guilabel> textbox, &eg; <replaceable>mymailsettings</replaceable>. The default filetype it saves as is <literal role="extension">.zip</literal>, if you want a
+          different type, uncheck <guilabel>Automatically select filename extension</guilabel> and append the extension to the end of your filename. The final screen shows the
+          log of the backup up process. You can close the window once you have reviewed the log and verified your backup was successful.</para>
+        <para>To restore your backup, select <menuchoice><guimenu>File</guimenu><guimenuitem>Restore Data...</guimenuitem></menuchoice></para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </sect2>
+</sect1>
+</chapter>

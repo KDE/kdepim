@@ -1,0 +1,17 @@
+require "vacation-seconds";
+require "vacation";
+ 
+#Script name: vacation
+
+if true {
+    vacation :seconds 4 :subject "message" :addresses "foo@example.com" text:
+ vacation!!!!!!!!!!!!!!
+.
+;
+
+    vacation :days 5 :subject "message" text:
+ vacation bis!!!!
+.
+;
+
+} 

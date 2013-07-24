@@ -101,6 +101,7 @@ install(FILES
   AgentInstanceList.qml
   AgentInstanceListContainer.qml
   AgentInstanceListDelegate.qml
+  AgentInstanceStatusIndicator.qml
   AttachmentList.qml
   ApplicationGeneralActions.qml
   Button.qml

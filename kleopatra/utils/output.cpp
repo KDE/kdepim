@@ -55,7 +55,6 @@
 #include <QPointer>
 #include <QWidget>
 #include <QDir>
-#include <QFileInfo>
 #include <QProcess>
 #include <QTimer>
 

@@ -49,7 +49,7 @@ public:
         downloadThemesAction = new KAction(i18n("Download New Themes..."), q);
         downloadThemesAction->setIcon(KIcon(QLatin1String("get-hot-new-stuff")));
         if (actionCollection)
-            actionCollection->addAction( "download_header_themes", downloadThemesAction );
+            actionCollection->addAction( QLatin1String("download_header_themes"), downloadThemesAction );
         separatorAction = new QAction(q);
         separatorAction->setSeparator(true);
 

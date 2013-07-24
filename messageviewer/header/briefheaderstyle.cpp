@@ -71,7 +71,7 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
     // The direction of the header is determined according to the direction
     // of the application layout.
 
-    QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
+    const QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
 
     // However, the direction of the message subject within the header is
     // determined according to the contents of the subject itself. Since
@@ -81,40 +81,40 @@ QString BriefHeaderStyle::format( KMime::Message *message ) const {
 
     const QString subjectDir = MessageViewer::HeaderStyleUtil::subjectDirectionString( message );
 
-    QString headerStr = "<div class=\"header\" dir=\"" + dir + "\">\n";
+    QString headerStr = QLatin1String("<div class=\"header\" dir=\"") + dir + QLatin1String("\">\n");
 
-    if ( strategy->showHeader( "subject" ) ) {
-        headerStr += "<div dir=\"" + subjectDir + "\">\n"
-                "<b style=\"font-size:130%\">";
+    if ( strategy->showHeader( QLatin1String("subject") ) ) {
+        headerStr += QLatin1String("<div dir=\"") + subjectDir + QLatin1String("\">\n") +
+                QLatin1String("<b style=\"font-size:130%\">");
 
-        headerStr += MessageViewer::HeaderStyleUtil::subjectString( message ) + "</b></div>\n";
+        headerStr += MessageViewer::HeaderStyleUtil::subjectString( message ) + QLatin1String("</b></div>\n");
     }
     QStringList headerParts;
 
-    if ( strategy->showHeader( "from" ) ) {
+    if ( strategy->showHeader( QLatin1String("from") ) ) {
         /*TODO(Andras) review if it can happen or not
     if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
       fromStr = message->fromStrip(); // let's use that
 */
         QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly );
         if ( !vCardName().isEmpty() )
-            fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName() + "\">" + i18n("[vCard]") + "</a>";
+            fromPart += QLatin1String("&nbsp;&nbsp;<a href=\"") + vCardName() + QLatin1String("\">") + i18n("[vCard]") + QLatin1String("</a>");
         headerParts << fromPart;
     }
 
-    if ( strategy->showHeader( "cc" ) && message->cc(false) )
+    if ( strategy->showHeader( QLatin1String("cc") ) && message->cc(false) )
         headerParts << i18n("CC: ") + StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly );
 
-    if ( strategy->showHeader( "bcc" ) && message->bcc(false) )
+    if ( strategy->showHeader( QLatin1String("bcc") ) && message->bcc(false) )
         headerParts << i18n("BCC: ") + StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly );
 
-    if ( strategy->showHeader( "date" ) )
+    if ( strategy->showHeader( QLatin1String("date") ) )
         headerParts << MessageViewer::HeaderStyleUtil::strToHtml( MessageViewer::HeaderStyleUtil::dateString( message, isPrinting(), /* shortDate = */ true ) );
 
     // remove all empty (modulo whitespace) entries and joins them via ", \n"
-    headerStr += " (" + headerParts.filter( QRegExp( "\\S" ) ).join( ",\n" ) + ')';
+    headerStr += QLatin1String(" (") + headerParts.filter( QRegExp( QLatin1String("\\S") ) ).join( QLatin1String(",\n") ) + QLatin1Char(')');
 
-    headerStr += "</div>\n";
+    headerStr += QLatin1String("</div>\n");
 
     // ### iterate over the rest of strategy->headerToDisplay() (or
     // ### all headers if DefaultPolicy == Display) (elsewhere, too)

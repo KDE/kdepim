@@ -1,0 +1,8 @@
+require "environment";
+ 
+#Script name: test environnement
+
+if environment "PATH" "local folder"
+{
+    keep;
+}

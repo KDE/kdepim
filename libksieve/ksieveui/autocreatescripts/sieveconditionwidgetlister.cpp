@@ -323,6 +323,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
     } else {
         bool firstCondition = true;
         QDomElement element = e;
+        qDebug()<<" void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest, bool notCondition)"<<notCondition;
         if (notCondition) {
             QDomNode node = e.firstChild();
             if (!node.isNull()) {
@@ -342,14 +343,24 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
                             const QString testTagName = testElement.tagName();
                             if (testTagName == QLatin1String("test")) {
                                 if (testElement.hasAttribute(QLatin1String("name"))) {
-                                    const QString conditionName = testElement.attribute(QLatin1String("name"));
+                                    QString conditionName = testElement.attribute(QLatin1String("name"));
                                     if (firstCondition) {
                                         firstCondition = false;
                                     } else {
                                         addWidgetAfterThisWidget(widgets().last());
                                     }
                                     SieveConditionWidget *w = qobject_cast<SieveConditionWidget*>( widgets().last() );
-                                    w->setCondition(conditionName, testElement, notCondition);
+                                    if (conditionName == QLatin1String("not")) {
+                                        notCondition = true;
+                                        QDomNode notNode = testElement.firstChild();
+                                        QDomElement notElement = notNode.toElement();
+                                        if (notElement.hasAttribute(QLatin1String("name"))) {
+                                            conditionName = notElement.attribute(QLatin1String("name"));
+                                        }
+                                        w->setCondition(conditionName, notElement, notCondition);
+                                    } else {
+                                        w->setCondition(conditionName, testElement, notCondition);
+                                    }
                                 }
                             } else {
                                 qDebug()<<" unknown condition tag: "<<testTagName;

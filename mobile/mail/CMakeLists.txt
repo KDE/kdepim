@@ -125,12 +125,12 @@ install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   AboutPage.qml
   AccountSettingsPage.qml
+  AccountsPage.qml
   AclEditor.qml
   AttachmentEditor.qml
   ConfigDialog.qml
   FilterEditor.qml
   FolderPage.qml
-  MarkAsPage.qml
   MailListPage.qml
   MailViewPage.qml
   EditorView.qml
@@ -144,7 +144,6 @@ install(FILES
   SnippetsEditor.qml
   SnippetsList.qml
   StartPage.qml
-  VacationScriptIndicator.qml
   add-attachment-button.png
   remove-attachment-button.png
   toggle-signature-button.png

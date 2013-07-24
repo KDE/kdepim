@@ -1,0 +1,12 @@
+require "envelope";
+require "subaddress";
+ 
+#Script name: test-envelop
+
+if allof (envelope :user :is "to" "foo@example.com"
+, not envelope :localpart :is "cc" "foo@example.com"
+, not envelope :detail :matches "from" "foo@example.com"
+)
+{
+    stop;
+} 

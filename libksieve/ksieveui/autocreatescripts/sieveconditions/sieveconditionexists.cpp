@@ -26,6 +26,8 @@
 #include <QHBoxLayout>
 #include <QComboBox>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -78,8 +80,27 @@ QString SieveConditionExists::help() const
 
 void SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-    QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("existscheck") );
-    SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headervalue") );
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (notCondition) {
+                QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("existscheck") );
+                combo->setCurrentIndex(1);
+            }
+            if (tagName == QLatin1String("str")) {
+                SelectHeaderTypeComboBox *value = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headervalue") );
+                value->setCode(e.text());
+            } else if (tagName == QLatin1String("list")) {
+                SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headervalue"));
+                selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
+            } else {
+                qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionexists.moc"

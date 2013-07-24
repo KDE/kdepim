@@ -16,6 +16,7 @@
 */
 
 #include "selectheadertypecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -24,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -82,9 +84,9 @@ void SelectHeadersDialog::slotAddNewHeader()
         mListWidget->addNewHeader(headerText);
 }
 
-void SelectHeadersDialog::setListHeaders(const QMap<QString, QString> &lst)
+void SelectHeadersDialog::setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders)
 {
-    mListWidget->setListHeaders(lst);
+    mListWidget->setListHeaders(lst, selectedHeaders);
 }
 
 QString SelectHeadersDialog::headers() const
@@ -108,14 +110,25 @@ void SelectHeadersWidget::addNewHeader(const QString &header)
     item->setCheckState(Qt::Unchecked);
 }
 
-void SelectHeadersWidget::setListHeaders(const QMap<QString, QString> &lst)
+void SelectHeadersWidget::setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders)
 {
     QMapIterator<QString, QString> i(lst);
     while (i.hasNext()) {
         i.next();
         QListWidgetItem *item = new QListWidgetItem(i.value(), this);
         item->setData(HeaderId, i.key());
-        item->setCheckState(Qt::Unchecked);
+        if (selectedHeaders.contains(i.key())) {
+            item->setCheckState(Qt::Checked);
+        } else {
+            item->setCheckState(Qt::Unchecked);
+        }
+    }
+    Q_FOREACH (const QString &header, selectedHeaders) {
+        if (!lst.contains(header)) {
+            QListWidgetItem *item = new QListWidgetItem(header, this);
+            item->setData(HeaderId, header);
+            item->setCheckState(Qt::Checked);
+        }
     }
 }
 
@@ -157,13 +170,16 @@ void SelectHeaderTypeComboBox::slotSelectItem(const QString &str)
 {
     if (str == i18n(selectMultipleHeaders)) {
         QPointer<SelectHeadersDialog> dlg = new SelectHeadersDialog(this);
-        dlg->setListHeaders(mHeaderMap);
+        dlg->setListHeaders(mHeaderMap, AutoCreateScriptUtil::createListFromString(mCode));
         if (dlg->exec()) {
+            mCode = dlg->headers();
             lineEdit()->setText(dlg->headers());
         } else {
-            lineEdit()->clear();
+            lineEdit()->setText(mCode);
         }
         delete dlg;
+    } else {
+        mCode = str;
     }
 }
 
@@ -207,6 +223,13 @@ QString SelectHeaderTypeComboBox::code() const
         str = QLatin1String("\"") + str + QLatin1String("\"");
     }
     return str;
+}
+
+void SelectHeaderTypeComboBox::setCode(const QString &code)
+{
+    //TODO verify it.
+    lineEdit()->setText(code);
+    mCode = code;
 }
 
 #include "selectheadertypecombobox.moc"

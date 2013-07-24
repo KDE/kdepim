@@ -45,6 +45,10 @@ public:
     QString currentscript();
     void setImportScript( const QString & );
 
+Q_SIGNALS:
+    void enableButtonOk(bool);
+    void switchTextMode(const QString &script);
+
 private:
     void readConfig();
     void writeConfig();
