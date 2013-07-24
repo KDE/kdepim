@@ -58,54 +58,54 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts )
   }
 
   int counter = 0;
-  content += "<html>\n";
-  content += " <body>\n";
+  content += QLatin1String("<html>\n");
+  content += QLatin1String(" <body>\n");
   foreach ( const KABC::Addressee &contact, contacts ) {
     const int max = qMax( leftFields.count(), rightFields.count() );
 
     const QString name = contact.realName();
 
     if ( counter % 2 ) {
-      content += "  <br/><br/>\n";
+      content += QLatin1String("  <br/><br/>\n");
     }
 
     // start a new page after every second table
-    const QString pageBreak = ( ( counter % 2 ) ? "page-break-after: always;" : QString() );
+    const QString pageBreak = ( ( counter % 2 ) ? QLatin1String("page-break-after: always;" ): QString() );
 
-    content += "  <table style=\"border-width: 0px; " + pageBreak + "\" width=\"100%\">\n";
-    content += "   <tr>\n";
-    content += "    <th align=\"left\" style=\"color: black;\" bgcolor=\"gray\" "
-               "style=\"padding-left: 20px\" colspan=\"4\">" + name + "</th>\n";
-    content += "   </tr>\n";
+    content += QLatin1String("  <table style=\"border-width: 0px; ") + pageBreak + QLatin1String("\" width=\"100%\">\n");
+    content += QLatin1String("   <tr>\n");
+    content += QLatin1String("    <th align=\"left\" style=\"color: black;\" bgcolor=\"gray\" "
+               "style=\"padding-left: 20px\" colspan=\"4\">") + name + QLatin1String("</th>\n");
+    content += QLatin1String("   </tr>\n");
 
     for ( int i = 0; i < max; i ++ ) {
       QString leftTitle, leftValue, rightTitle, rightValue;
 
       if ( i < leftFields.count() ) {
-        leftTitle = ContactFields::label( leftFields.at( i ) ) + ':';
-        leftTitle = leftTitle.replace( ' ', "&nbsp;" );
+        leftTitle = ContactFields::label( leftFields.at( i ) ) + QLatin1Char(':');
+        leftTitle = leftTitle.replace( QLatin1Char(' '), QLatin1String("&nbsp;") );
         leftValue = ContactFields::value( leftFields.at( i ), contact );
       }
 
       if ( i < rightFields.count() ) {
-        rightTitle = ContactFields::label( rightFields.at( i ) ) + ':';
-        rightTitle = rightTitle.replace( ' ', "&nbsp;" );
+        rightTitle = ContactFields::label( rightFields.at( i ) ) + QLatin1Char(':');
+        rightTitle = rightTitle.replace( QLatin1Char(' '), QLatin1String("&nbsp;") );
         rightValue = ContactFields::value( rightFields.at( i ), contact );
       }
 
-      content += "   <tr>\n";
-      content += "    <td>" + leftTitle + "</td>\n";
-      content += "    <td>" + leftValue + "</td>\n";
-      content += "    <td>" + rightTitle + "</td>\n";
-      content += "    <td>" + rightValue + "</td>\n";
-      content += "   </tr>\n";
+      content += QLatin1String("   <tr>\n");
+      content += QLatin1String("    <td>") + leftTitle + QLatin1String("</td>\n");
+      content += QLatin1String("    <td>") + leftValue + QLatin1String("</td>\n");
+      content += QLatin1String("    <td>") + rightTitle + QLatin1String("</td>\n");
+      content += QLatin1String("    <td>") + rightValue + QLatin1String("</td>\n");
+      content += QLatin1String("   </tr>\n");
     }
-    content += "  </table>\n";
+    content += QLatin1String("  </table>\n");
 
     counter++;
   }
-  content += " </body>\n";
-  content += "</html>\n";
+  content += QLatin1String(" </body>\n");
+  content += QLatin1String("</html>\n");
 
   return content;
 }
@@ -113,7 +113,7 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts )
 MikesStyle::MikesStyle( PrintingWizard *parent )
   : PrintStyle( parent )
 {
-  setPreview( "mike-style.png" );
+  setPreview( QLatin1String("mike-style.png") );
   setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 }
 

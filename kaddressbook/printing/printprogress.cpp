@@ -37,7 +37,7 @@ using namespace KABPrinting;
 PrintProgress::PrintProgress( QWidget *parent, const char *name )
   : QWidget( parent )
 {
-  setObjectName( name );
+  setObjectName( QLatin1String(name) );
   setWindowTitle( i18n( "Printing: Progress" ) );
 
   QGridLayout *topLayout = new QGridLayout( this );
@@ -62,15 +62,16 @@ void PrintProgress::addMessage( const QString &msg )
 {
   mMessages.append( msg );
 
-  QString head = QString( "<qt><b>" ) + i18n( "Progress" ) +
-                 QString( ":</b><ul>" );
+  QString head = QLatin1String( "<qt><b>" ) + i18n( "Progress" ) +
+                 QLatin1String( ":</b><ul>" );
 
-  QString foot = QString( "</ul></qt>" );
+  QString foot = QLatin1String( "</ul></qt>" );
 
   QString body;
   QStringList::ConstIterator it;
-  for ( it = mMessages.constBegin(); it != mMessages.constEnd(); ++it ) {
-    body.append( QString( "<li>" ) + (*it) + QString( "</li>" ) );
+  QStringList::ConstIterator end(mMessages.constEnd());
+  for ( it = mMessages.constBegin(); it != end; ++it ) {
+    body.append( QLatin1String( "<li>" ) + (*it) + QLatin1String( "</li>" ) );
   }
 
   mLogBrowser->setText( head + body + foot );
