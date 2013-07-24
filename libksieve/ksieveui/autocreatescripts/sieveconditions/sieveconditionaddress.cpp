@@ -129,7 +129,6 @@ void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
         }
         node = node.nextSibling();
     }
-
 }
 
 #include "sieveconditionaddress.moc"
