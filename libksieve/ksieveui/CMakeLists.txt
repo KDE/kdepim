@@ -117,7 +117,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectsizewidget.cpp
 )
 
-kde4_add_kcfg_files(ksieveui_LIB_SRCS sieve-vacation.kcfgc)
+kde4_add_kcfg_files(ksieveui_LIB_SRCS sieve-vacation.kcfgc sieve-editor.kcfgc)
 
 kde4_add_library(ksieveui ${LIBRARY_TYPE} ${ksieveui_LIB_SRCS})
 
