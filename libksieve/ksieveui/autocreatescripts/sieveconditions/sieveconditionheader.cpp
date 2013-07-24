@@ -108,6 +108,13 @@ void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
                 }
                 ++index;
+            } else if (tagName == QLatin1String("list")) {
+                //Header list
+                if (index == 0) {
+                    SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
+                    headerType->setCode(AutoCreateScriptUtil::listValueToStr(e));
+                    ++index;
+                }
             } else {
                 qDebug()<<" SieveConditionHeader::setParamWidgetValue unknown tagName "<<tagName;
             }

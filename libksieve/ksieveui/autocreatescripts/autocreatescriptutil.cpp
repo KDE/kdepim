@@ -44,7 +44,7 @@ QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separa
     }
 }
 
-QString AutoCreateScriptUtil::createList(const QStringList &lst)
+QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiColon)
 {
     QString result;
     result = QLatin1String("[");
@@ -53,7 +53,10 @@ QString AutoCreateScriptUtil::createList(const QStringList &lst)
         result += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(str);
         wasFirst = false;
     }
-    result += QLatin1String(" ];");
+    result += QLatin1String(" ]");
+    if (addSemiColon) {
+        result += QLatin1Char(';');
+    }
 
     return result;
 }
@@ -107,6 +110,13 @@ QString AutoCreateScriptUtil::strValue(QDomNode &node)
         }
     }
     return QString();
+}
+
+QString AutoCreateScriptUtil::listValueToStr(const QDomElement &element)
+{
+    const QStringList lst = AutoCreateScriptUtil::listValue(element);
+    //Don't add semicolon
+    return createList(lst, false);
 }
 
 QStringList AutoCreateScriptUtil::listValue(const QDomElement &element)
