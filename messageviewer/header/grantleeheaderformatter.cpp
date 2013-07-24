@@ -77,7 +77,7 @@ QString GrantleeHeaderFormatter::toHtml(const QStringList &displayExtraHeaders, 
     return format(headerTemplate, displayExtraHeaders, isPrinting, style, message);
 }
 
-QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme::Theme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
 {
     QString errorMessage;
     if (!theme.isValid()) {

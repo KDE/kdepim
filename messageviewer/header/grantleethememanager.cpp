@@ -106,7 +106,7 @@ public:
             while ( dirIt.hasNext() ) {
                 dirIt.next();
                 const QString dirName = dirIt.fileName();
-                GrantleeTheme theme = loadTheme( dirIt.filePath(), dirName );
+                GrantleeTheme::Theme theme = loadTheme( dirIt.filePath(), dirName );
                 if (theme.isValid()) {
                     QString themeName = theme.name();
                     if (alreadyLoadedThemeName.contains(themeName)) {
@@ -130,13 +130,13 @@ public:
         watch->startScan();
     }
 
-    GrantleeTheme loadTheme(const QString &themePath, const QString &dirName )
+    GrantleeTheme::Theme loadTheme(const QString &themePath, const QString &dirName )
     {
         const QString themeInfoFile = themePath + QDir::separator() + QString::fromLatin1( "header.desktop" );
         KConfig config( themeInfoFile );
         KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
 
-        GrantleeTheme theme;
+        GrantleeTheme::Theme theme;
         theme.setDirName(dirName);
         theme.setName( group.readEntry( "Name", QString() ) );
         theme.setDescription( group.readEntry( "Description", QString() ) );
@@ -166,10 +166,10 @@ public:
         themesActionList.clear();
 
 
-        QMapIterator<QString, GrantleeTheme> i(themes);
+        QMapIterator<QString, GrantleeTheme::Theme> i(themes);
         while (i.hasNext()) {
             i.next();
-            GrantleeTheme theme = i.value();
+            GrantleeTheme::Theme theme = i.value();
             KToggleAction *act = new KToggleAction(theme.name(),q);
             act->setToolTip(theme.description());
             act->setData(theme.dirName());
@@ -224,7 +224,7 @@ public:
     }
 
     QStringList themesDirectories;
-    QMap<QString, GrantleeTheme> themes;
+    QMap<QString, GrantleeTheme::Theme> themes;
     QList<KToggleAction*> themesActionList;
     KDirWatch *watch;
     QActionGroup *actionGroup;
@@ -247,7 +247,7 @@ GrantleeThemeManager::~GrantleeThemeManager()
     delete d;
 }
 
-QMap<QString, GrantleeTheme> GrantleeThemeManager::themes() const
+QMap<QString, GrantleeTheme::Theme> GrantleeThemeManager::themes() const
 {
     return d->themes;
 }
@@ -275,7 +275,7 @@ void GrantleeThemeManager::setHeaderMenu(KActionMenu *menu)
 
 QStringList GrantleeThemeManager::displayExtraHeader(const QString &themename) const
 {
-    QMapIterator<QString, GrantleeTheme> i(d->themes);
+    QMapIterator<QString, GrantleeTheme::Theme> i(d->themes);
     while (i.hasNext()) {
         i.next();
         if (i.value().dirName() == themename) {
@@ -285,12 +285,12 @@ QStringList GrantleeThemeManager::displayExtraHeader(const QString &themename) c
     return QStringList();
 }
 
-GrantleeTheme GrantleeThemeManager::theme(const QString &themeName)
+GrantleeTheme::Theme GrantleeThemeManager::theme(const QString &themeName)
 {
     if (d->themes.contains(themeName)) {
         return d->themes.value(themeName);
     }
-    return GrantleeTheme();
+    return GrantleeTheme::Theme();
 }
 
 

@@ -18,7 +18,7 @@
 #ifndef GRANTLEETHEMEMANAGER_H
 #define GRANTLEETHEMEMANAGER_H
 
-#include "header/grantleetheme.h"
+#include "grantleetheme/grantleetheme.h"
 
 #include <QObject>
 #include <QMap>
@@ -35,7 +35,7 @@ public:
     explicit GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent = 0);
     ~GrantleeThemeManager();
 
-    QMap<QString, GrantleeTheme> themes() const;
+    QMap<QString, GrantleeTheme::Theme> themes() const;
 
     void setActionGroup( QActionGroup *actionGroup );
 
@@ -45,7 +45,7 @@ public:
 
     QStringList displayExtraHeader(const QString &themename) const;
 
-    GrantleeTheme theme(const QString &themeName);
+    GrantleeTheme::Theme theme(const QString &themeName);
 
 Q_SIGNALS:
     void themesChanged();

@@ -17,14 +17,15 @@
 #ifndef GRANTLEETHEME_H
 #define GRANTLEETHEME_H
 
+#include "grantleetheme_export.h"
 #include <QString>
 #include <QStringList>
-namespace MessageViewer {
-class GrantleeTheme
+namespace GrantleeTheme {
+class GRANTLEETHEME_EXPORT Theme
 {
 public:
-    GrantleeTheme();
-    ~GrantleeTheme();
+    Theme();
+    ~Theme();
 
     bool isValid() const;
 

@@ -16,97 +16,97 @@
 */
 
 #include "grantleetheme.h"
-using namespace MessageViewer;
+using namespace GrantleeTheme;
 
-GrantleeTheme::GrantleeTheme()
+Theme::Theme()
 {
 }
 
-GrantleeTheme::~GrantleeTheme()
+Theme::~Theme()
 {
 }
 
-bool GrantleeTheme::isValid() const
+bool Theme::isValid() const
 {
     return !mFileName.isEmpty() && !mName.isEmpty();
 }
 
-QString GrantleeTheme::description() const
+QString Theme::description() const
 {
     return mDescription;
 }
 
-void GrantleeTheme::setDescription(const QString &description)
+void Theme::setDescription(const QString &description)
 {
     mDescription = description;
 }
 
-QString GrantleeTheme::filename() const
+QString Theme::filename() const
 {
     return mFileName;
 }
 
-void GrantleeTheme::setFilename(const QString &file)
+void Theme::setFilename(const QString &file)
 {
     mFileName = file;
 }
 
-QString GrantleeTheme::name() const
+QString Theme::name() const
 {
     return mName;
 }
 
-void GrantleeTheme::setName(const QString &n)
+void Theme::setName(const QString &n)
 {
     mName = n;
 }
 
-QStringList GrantleeTheme::displayExtraHeaders() const
+QStringList Theme::displayExtraHeaders() const
 {
     return mDisplayExtraHeaders;
 }
 
-void GrantleeTheme::setDisplayExtraHeaders(const QStringList &variables)
+void Theme::setDisplayExtraHeaders(const QStringList &variables)
 {
     mDisplayExtraHeaders = variables;
 }
 
-void GrantleeTheme::setDirName(const QString &name)
+void Theme::setDirName(const QString &name)
 {
     mDirName = name;
 }
 
-QString GrantleeTheme::dirName() const
+QString Theme::dirName() const
 {
     return mDirName;
 }
 
-void GrantleeTheme::setAbsolutePath(const QString &absPath)
+void Theme::setAbsolutePath(const QString &absPath)
 {
     mAbsolutePath = absPath;
 }
 
-QString GrantleeTheme::absolutePath() const
+QString Theme::absolutePath() const
 {
     return mAbsolutePath;
 }
 
-void GrantleeTheme::setAuthor(const QString &author)
+void Theme::setAuthor(const QString &author)
 {
     mAuthor = author;
 }
 
-QString GrantleeTheme::author() const
+QString Theme::author() const
 {
     return mAuthor;
 }
 
-void GrantleeTheme::setAuthorEmail(const QString &email)
+void Theme::setAuthorEmail(const QString &email)
 {
     mEmail = email;
 }
 
-QString GrantleeTheme::authorEmail() const
+QString Theme::authorEmail() const
 {
     return mEmail;
 }
