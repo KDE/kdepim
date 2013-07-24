@@ -1,6 +1,6 @@
-File=ksieveui.kcfg
+File=sieve-vacation.kcfg
 NameSpace=KSieveUi
-ClassName=Settings
+ClassName=VacationSettings
 Mutators=true
 Singleton=true
 ItemAccessors=true

@@ -359,6 +359,7 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
                                         }
                                         w->setCondition(conditionName, notElement, notCondition);
                                     } else {
+                                        notCondition = false;
                                         w->setCondition(conditionName, testElement, notCondition);
                                     }
                                 }

@@ -1,0 +1,11 @@
+require "mboxmetadata";
+ 
+#Script name: test-metadata
+
+if allof (metadata :is "INBOX" "ANNOT1" "25"
+, not metadata :contains "INBOX3" "ANNOT2" "45"
+, not metadata :is "INBOX5" "ANNOT4" "7"
+)
+{
+    stop;
+} 

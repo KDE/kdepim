@@ -40,7 +40,7 @@
 #include "util.h"
 #include "pimcommon/util/pimutil.h"
 #include "imapresourcesettings.h"
-#include "settings.h"
+#include "sieve-vacation.h"
 
 #include <akonadi/agentmanager.h>
 #include <kimap/loginjob.h>
@@ -160,10 +160,10 @@ Akonadi::AgentInstance::List KSieveUi::Util::imapAgentInstances()
 
 bool KSieveUi::Util::checkOutOfOfficeOnStartup()
 {
-    return Settings::self()->checkOutOfOfficeOnStartup();
+    return VacationSettings::self()->checkOutOfOfficeOnStartup();
 }
 
 bool KSieveUi::Util::allowOutOfOfficeSettings()
 {
-    return Settings::self()->allowOutOfOfficeSettings();
+    return VacationSettings::self()->allowOutOfOfficeSettings();
 }

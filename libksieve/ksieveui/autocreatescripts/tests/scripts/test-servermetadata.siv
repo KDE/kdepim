@@ -1,0 +1,11 @@
+require "servermetadata";
+ 
+#Script name: test-servermetadata
+
+if allof (not servermetadata :contains "INBOX" "ANNOT" "25"
+, servermetadata :is "INBOX" "ANNOT2" "35"
+, servermetadata :contains "INBOX3" "ANNOT3" "47"
+)
+{
+    keep;
+}

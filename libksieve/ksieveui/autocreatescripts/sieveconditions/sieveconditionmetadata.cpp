@@ -26,6 +26,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionMetaData::SieveConditionMetaData(QObject *parent)
@@ -118,9 +119,47 @@ QString SieveConditionMetaData::help() const
     return i18n("This test retrieves the value of the mailbox annotation \"annotation-name\" for the mailbox \"mailbox\". The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
 }
 
-void SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition )
+void SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                switch(index) {
+                case 0: {
+                    KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox"));
+                    mailbox->setText(tagValue);
+                    break;
+                }
+                case 1: {
+                    KLineEdit *annotation = w->findChild<KLineEdit*>( QLatin1String("annotation"));
+                    annotation->setText(tagValue);
+                    break;
+                }
+                case 2: {
+                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value"));
+                    value->setText(tagValue);
+                    break;
+                }
+                default: {
+                    qDebug()<<" SieveConditionMetaData::setParamWidgetValue too many argument "<<index;
+                    break;
+                }
+                }
+                ++index;
+            } else if (tagName == QLatin1String("tag")) {
+                SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("selecttype"));
+                selectType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+            } else {
+                qDebug()<<" SieveConditionMetaData::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionmetadata.moc"

@@ -50,7 +50,6 @@ void SelectSizeTypeComboBox::setCode(const QString &code)
     if (index != -1) {
         setCurrentIndex(index);
     } else {
-        //TODO other value ?
         setCurrentIndex(0);
     }
 }
