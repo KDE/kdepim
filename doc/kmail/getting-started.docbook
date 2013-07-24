@@ -48,10 +48,10 @@ appendix</link>.</para>
 
 <sect1 id="account-wizard">
   <title>Account Wizard</title>
-  <para>The first time you run &kmail; you will be greeted with the Account Wizard.
+  <para>The first time you run &kmail; you will be greeted with the Account Wizard.</para>
     <note><para>If at anytime you need to run the account wizard again, you can find it under
         <menuchoice><guimenu>Tools</guimenu><guimenuitem>Account Wizard</guimenuitem></menuchoice>.</para></note>
-    The wizard will take you through the process of creating your email accounts. Your screens will vary depending
+    <para>The wizard will take you through the process of creating your email accounts. Your screens will vary depending
     on how much the wizard can determine on its own. Below is an outline of the screens you may encounter while using this wizard.</para>
 <itemizedlist>
   <listitem>
