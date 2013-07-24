@@ -1,0 +1,11 @@
+require "subaddress";
+ 
+#Script name: test-address
+
+if allof (address :user :contains "Subject" "foo@example.com"
+, not address :all :is "Content-Type" "foo@example.com"
+, not address :detail :matches "Subject" "foo@example.com"
+)
+{
+    stop;
+} 
