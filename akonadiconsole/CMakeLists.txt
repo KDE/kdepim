@@ -58,9 +58,17 @@ qt4_add_dbus_interface(akonadiconsole_bin_SRCS
 set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml
   PROPERTIES INCLUDE "akonadi/private/notificationmessage_p.h")
 
+set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
+  PROPERTIES INCLUDE "akonadi/private/notificationmessagev2_p.h")
+
 qt4_add_dbus_interface(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml
   notificationmanagerinterface
+)
+
+qt4_add_dbus_interface(akonadiconsole_bin_SRCS
+  ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
+  notificationsourceinterface
 )
 
 kde4_add_ui_files(akonadiconsole_bin_SRCS
