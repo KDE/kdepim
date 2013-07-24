@@ -75,7 +75,7 @@ private Q_SLOTS:
 
 private:
     void clear();
-    SieveScriptPage *createNewScript(const QString &newName);
+    SieveScriptPage *createNewScript(const QString &newName, const QString &description = QString());
     QString createUniqName();
     QListWidget *mSieveListScript;
     KPushButton *mBtnNew;
@@ -86,6 +86,7 @@ private:
     KPushButton *mBtnUp;
     KPushButton *mBtnDown;
     KPushButton *mBtnBottom;
+    int mScriptNumber;
 };
 }
 

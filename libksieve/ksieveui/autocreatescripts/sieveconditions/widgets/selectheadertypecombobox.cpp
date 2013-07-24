@@ -212,7 +212,7 @@ void SelectHeaderTypeComboBox::initialize(bool onlyEnvelopType)
 
 QString SelectHeaderTypeComboBox::code() const
 {
-    QString str = itemData(currentIndex()).toString();
+    QString str = mCode.isEmpty() ? itemData(currentIndex()).toString() : mCode;
     if (str.isEmpty()) {
         str = currentText();
         if (str == i18n(selectMultipleHeaders)) {
@@ -227,7 +227,6 @@ QString SelectHeaderTypeComboBox::code() const
 
 void SelectHeaderTypeComboBox::setCode(const QString &code)
 {
-    //TODO verify it.
     lineEdit()->setText(code);
     mCode = code;
 }

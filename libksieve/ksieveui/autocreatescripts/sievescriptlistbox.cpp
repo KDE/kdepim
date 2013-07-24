@@ -82,7 +82,8 @@ QString SieveScriptListItem::generatedScript(QStringList &requires) const
 }
 
 SieveScriptListBox::SieveScriptListBox(const QString &title, QWidget *parent)
-    : QGroupBox(title, parent)
+    : QGroupBox(title, parent),
+      mScriptNumber(0)
 {
     QVBoxLayout *layout = new QVBoxLayout();
     mSieveListScript = new QListWidget;
@@ -187,9 +188,10 @@ void SieveScriptListBox::updateButtons()
     mBtnUp->setEnabled(!lst.isEmpty() && !theFirst);
 }
 
-SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName)
+SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName, const QString &description)
 {
     SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
+    item->setDescription(description);
     SieveScriptPage *page = new SieveScriptPage;
     item->setScriptPage(page);
     Q_EMIT addNewPage(page);
@@ -320,6 +322,7 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
 
 void SieveScriptListBox::clear()
 {
+    mScriptNumber = 0;
     Q_EMIT enableButtonOk(false);
     //Clear tabpage
     mSieveListScript->clear();
@@ -341,9 +344,10 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
             if (tagName == QLatin1String("control")) {
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString controlType = e.attribute(QLatin1String("name"));
-                    qDebug()<<" controlType"<<controlType;
                     if (controlType == QLatin1String("if")) {
-                        currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName);
+                        qDebug()<<" ciomment "<<comment;
+                        currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                        comment.clear();
                         currentPage->blockIfWidget()->loadScript(e);
                     } else if (controlType == QLatin1String("elsif")) {
                         if (!currentPage) {
@@ -365,7 +369,8 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         currentPage = 0;
                     } else if (controlType == QLatin1String("foreverypart")) {
                         if (!currentPage) {
-                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName);
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                            comment.clear();
                         }
                         currentPage->forEveryPartWidget()->loadScript(e);
                     } else {
@@ -384,24 +389,23 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                     const QString actionName = e.attribute(QLatin1String("name"));
                     if (actionName == QLatin1String("include")) {
                         if (!currentPage) {
-                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName);
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                            comment.clear();
                         }
                         currentPage->includeWidget()->loadScript(e);
                     } else if (actionName == QLatin1String("global")) {
                         if (!currentPage) {
-                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName);
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                            comment.clear();
                         }
                         currentPage->globalVariableWidget()->loadScript(e);
                     } else {
                         qDebug()<<" unknown action name: "<<actionName;
                     }
                 }
-                qDebug()<<" NEW ACTIONS";
             } else {
                 qDebug()<<" unknown tagname"<<tagName;
             }
-
-            qDebug() <<"tag"<< tagName<<" comment "<<comment;
         }
         n = n.nextSibling();
     }
@@ -409,9 +413,8 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
 
 QString SieveScriptListBox::createUniqName()
 {
-    static int val = 1;
-    QString pattern = i18n("Script part %1", val);
-    val++;
+    const QString pattern = i18n("Script part %1", mScriptNumber);
+    ++mScriptNumber;
     return pattern;
 }
 
