@@ -81,7 +81,7 @@ AntiSpamConfig::~AntiSpamConfig()
 void AntiSpamConfig::readConfig()
 {
     mAgents.clear();
-    KConfig config( "kmail.antispamrc" );
+    KConfig config( QLatin1String("kmail.antispamrc") );
     config.setReadDefaults( true );
     KConfigGroup general( &config, "General" );
     unsigned int totalTools = general.readEntry( "tools", 0 );

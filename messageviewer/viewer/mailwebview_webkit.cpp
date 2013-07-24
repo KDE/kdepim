@@ -98,7 +98,7 @@ static bool isEditableElement(QWebPage* page)
         && (type.isEmpty() || type == QLatin1String("text") || type == QLatin1String("password"))) {
        return true;
      }
-     if (element.evaluateJavaScript("this.isContentEditable").toBool()) {
+     if (element.evaluateJavaScript(QLatin1String("this.isContentEditable")).toBool()) {
        return true;
      }
   }
@@ -257,7 +257,7 @@ static bool has_parent_div_with_id( const QWebElement & start, const QString & i
     return false;
 
   if ( start.tagName().toLower() == QLatin1String("div") ) {
-    if ( start.attribute( "id", "" ) == id )
+      if ( start.attribute( QLatin1String("id"), QString() ) == id )
       return true;
   }
 
@@ -269,14 +269,14 @@ bool MailWebView::isAttachmentInjectionPoint( const QPoint & global ) const
   // for QTextBrowser, can be implemented as 'return false'
   const QPoint local = page()->view()->mapFromGlobal( global );
   const QWebHitTestResult hit = page()->currentFrame()->hitTestContent( local );
-  return has_parent_div_with_id( hit.enclosingBlockElement(), "attachmentInjectionPoint" );
+  return has_parent_div_with_id( hit.enclosingBlockElement(), QLatin1String("attachmentInjectionPoint") );
 }
 
 void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
 {
   // for QTextBrowser, can be implemented empty
   QWebElement doc = page()->currentFrame()->documentElement();
-  QWebElement injectionPoint = doc.findFirst( "*#attachmentInjectionPoint" );
+  QWebElement injectionPoint = doc.findFirst( QLatin1String("*#attachmentInjectionPoint") );
   if( injectionPoint.isNull() )
     return;
 
@@ -284,14 +284,14 @@ void MailWebView::injectAttachments( const function<QString()> & delayedHtml )
   if ( html.isEmpty() )
     return;
 
-  assert( injectionPoint.tagName().toLower() == "div" );
+  assert( injectionPoint.tagName().toLower() == QLatin1String("div") );
   injectionPoint.setInnerXml( html );
 }
 
 void MailWebView::scrollToAnchor( const QString & anchor )
 {
   QWebElement doc = page()->mainFrame()->documentElement();
-  QWebElement link = doc.findFirst( "a[name=" + anchor +']' );
+  QWebElement link = doc.findFirst( QLatin1String("a[name=") + anchor +QLatin1Char(']') );
   if ( link.isNull() ) {
     return;
   }
@@ -306,19 +306,19 @@ void MailWebView::scrollToAnchor( const QString & anchor )
 bool MailWebView::removeAttachmentMarking( const QString & id )
 {
   QWebElement doc = page()->mainFrame()->documentElement();
-  QWebElement attachmentDiv = doc.findFirst( "*#" + id );
+  QWebElement attachmentDiv = doc.findFirst( QLatin1String("*#") + id );
   if ( attachmentDiv.isNull() )
     return false;
-  attachmentDiv.removeAttribute( "style" );
+  attachmentDiv.removeAttribute( QLatin1String("style") );
   return true;
 }
 
 void MailWebView::markAttachment( const QString & id, const QString & style )
 {
   QWebElement doc = page()->mainFrame()->documentElement();
-  QWebElement attachmentDiv = doc.findFirst( "*#" + id );
+  QWebElement attachmentDiv = doc.findFirst( QLatin1String("*#") + id );
   if ( !attachmentDiv.isNull() ) {
-    attachmentDiv.setAttribute( "style", style );
+    attachmentDiv.setAttribute(QLatin1String( "style"), style );
   }
 }
 
@@ -367,7 +367,7 @@ Qt::ScrollBarPolicy MailWebView::scrollBarPolicy( Qt::Orientation orientation ) 
 bool MailWebView::replaceInnerHtml( const QString & id, const function<QString()> & delayedHtml )
 {
   QWebElement doc = page()->currentFrame()->documentElement();
-  QWebElement tag = doc.findFirst( "*#" + id );
+  QWebElement tag = doc.findFirst( QLatin1String("*#") + id );
   if ( tag.isNull() ) {
     return false;
   }
@@ -378,13 +378,13 @@ bool MailWebView::replaceInnerHtml( const QString & id, const function<QString()
 void MailWebView::setElementByIdVisible( const QString & id, bool visible )
 {
   QWebElement doc = page()->currentFrame()->documentElement();
-  QWebElement e = doc.findFirst( "*#" + id );
+  QWebElement e = doc.findFirst( QLatin1String("*#") + id );
   Q_ASSERT( !e.isNull() );
 
   if ( visible ) {
-    e.removeAttribute( "display" );
+    e.removeAttribute( QLatin1String("display") );
   } else {
-    e.setStyleProperty( "display", "none" );
+    e.setStyleProperty( QLatin1String("display"), QLatin1String("none") );
   }
 }
 
