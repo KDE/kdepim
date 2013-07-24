@@ -99,6 +99,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     lay->addWidget(buttonBox);
     connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
     connect(mGraphicalModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
+    connect(mGraphicalModeWidget, SIGNAL(switchTextMode(QString)), this, SLOT(slotSwitchTextMode(QString)));
     readConfig();
     setMainWidget( w );
 }
@@ -272,6 +273,12 @@ void SieveEditor::slotSwitchMode()
         break;
     }
     }
+}
+
+void SieveEditor::slotSwitchTextMode(const QString &script)
+{
+    changeMode(TextMode);
+    mTextModeWidget->setScript(script);
 }
 
 #include "sieveeditor.moc"
