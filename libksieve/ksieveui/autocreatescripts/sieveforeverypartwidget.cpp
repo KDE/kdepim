@@ -17,6 +17,7 @@
 
 #include "sieveforeverypartwidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -27,6 +28,8 @@
 #include <QCheckBox>
 #include <QToolButton>
 #include <QWhatsThis>
+#include <QDomNode>
+#include <QDebug>
 
 namespace KSieveUi {
 SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
@@ -85,9 +88,23 @@ void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requ
 
 void SieveForEveryPartWidget::loadScript(const QDomElement &element)
 {
-    //TODO
+    QDomNode node = element.firstChild();
+    QDomElement e = node.toElement();
+    if (!e.isNull()) {
+        const QString tagName = e.tagName();
+        if (tagName == QLatin1String("tag")) {
+            const QString tagValue = e.text();
+            if (tagValue == QLatin1String("name")) {
+                mName->setText(AutoCreateScriptUtil::strValue(e));
+            } else {
+                qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagValue "<<tagValue;
+            }
+            mForLoop->setChecked(true);
+        } else {
+            qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagName "<<tagName;
+        }
+    }
 }
-
 }
 
 #include "sieveforeverypartwidget.moc"

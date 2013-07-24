@@ -17,6 +17,7 @@
 #include "sievescriptlistbox.h"
 #include "sievescriptdescriptiondialog.h"
 #include "sieveglobalvariablewidget.h"
+#include "sieveforeverypartwidget.h"
 #include "sievescriptpage.h"
 #include "sieveincludewidget.h"
 
@@ -340,7 +341,6 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                     const QString controlType = e.attribute(QLatin1String("name"));
                     qDebug()<<" controlType"<<controlType;
                     if (controlType == QLatin1String("if")) {
-                        qDebug()<<" IF";
                         //TODO verify unique name.
                         currentPage = createNewScript(createUniqName());
                         currentPage->blockIfWidget()->loadScript(e);
@@ -352,7 +352,6 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         if (blockWidget) {
                             blockWidget->loadScript(e);
                         }
-                        qDebug()<<" ELSEIF";
                     } else if (controlType == QLatin1String("else")) {
                         if (!currentPage) {
                             qDebug() <<" script is not correct missing if block";
@@ -361,9 +360,13 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         if (blockWidget) {
                             blockWidget->loadScript(e);
                         }
-                        qDebug()<<" ELSE";
                         //We are sure that we can't have another elsif
                         currentPage = 0;
+                    } else if (controlType == QLatin1String("foreverypart")) {
+                        if (!currentPage) {
+                            currentPage = createNewScript(createUniqName());
+                        }
+                        currentPage->forEveryPartWidget()->loadScript(e);
                     } else {
                         qDebug()<<" unknown controlType :"<<controlType;
                     }
