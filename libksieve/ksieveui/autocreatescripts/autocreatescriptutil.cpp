@@ -28,7 +28,7 @@ QString AutoCreateScriptUtil::createMultiLine(const QString &str)
     return result;
 }
 
-QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separator)
+QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separator, bool addEndSemiColon)
 {
     const QStringList list = str.trimmed().split(separator);
     const int count = list.count();
@@ -38,7 +38,7 @@ QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separa
     case 1:
         return QLatin1String("\"") + list.first() + QLatin1String("\"");
     default: {
-        const QString result = createList(list);
+        const QString result = createList(list, addEndSemiColon);
         return result;
     }
     }
@@ -83,9 +83,9 @@ QStringList AutoCreateScriptUtil::createListFromString(QString str)
     return lst;
 }
 
-QString AutoCreateScriptUtil::createAddressList(const QString &str)
+QString AutoCreateScriptUtil::createAddressList(const QString &str, bool addSemiColon)
 {
-    return createList(str, QLatin1Char(';'));
+    return createList(str, QLatin1Char(';'), addSemiColon);
 }
 
 

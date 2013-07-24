@@ -28,10 +28,10 @@
 namespace AutoCreateScriptUtil
 {
 QString createMultiLine(const QString &str);
-QString createList(const QString &str, const QChar &separator);
+QString createList(const QString &str, const QChar &separator, bool addEndSemiColon = true);
 QString createList(const QStringList &lst, bool addSemiColon = true);
 QStringList createListFromString(QString str);
-QString createAddressList(const QString &str);
+QString createAddressList(const QString &str, bool addSemiColon = true);
 QString negativeString(bool isNegative);
 QString tagValueWithCondition(const QString &tag, bool notCondition);
 QString tagValue(const QString &tag);

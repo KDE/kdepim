@@ -85,7 +85,7 @@ QString SieveConditionAddress::code(QWidget *w) const
     const QString selectHeaderTypeStr = selectHeaderType->code();
 
     const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
-    const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed());
+    const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed(), false);
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("address %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
