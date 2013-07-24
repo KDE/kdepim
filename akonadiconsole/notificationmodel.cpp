@@ -20,149 +20,295 @@
 #include "notificationmodel.h"
 #include "notificationmanagerinterface.h"
 
-#include <akonadi/private/imapparser_p.h>
+#include <QtCore/QCoreApplication>
+#include <QtDBus/QDBusConnection>
 
+#include <KRandom>
 #include <KDebug>
-#include <KGlobal>
 #include <KLocale>
+#include <KGlobal>
+
 #include <Akonadi/ServerManager>
-#include <QDBusConnection>
 
-using Akonadi::NotificationMessage;
+#include <akonadi/private/imapparser_p.h>
+#include <boost/concept_check.hpp>
+#include <akonadi/private/notificationmessagev2_p.h>
 
-NotificationModel::NotificationBlock::NotificationBlock( const NotificationMessage::List &_msgs ) :
-  msgs( _msgs )
+using Akonadi::NotificationMessageV2;
+
+class NotificationModel::Item {
+  public:
+    Item(int type_): type(type_) {}
+    virtual ~Item() {}
+
+    int type;
+};
+
+class NotificationModel::NotificationBlock: public NotificationModel::Item {
+  public:
+    NotificationBlock( const Akonadi::NotificationMessageV2::List &msgs );
+    ~NotificationBlock();
+
+    QList<NotificationNode*> nodes;
+    QDateTime timestamp;
+};
+
+class NotificationModel::NotificationNode: public NotificationModel::Item {
+  public:
+    NotificationNode( const NotificationMessageV2 &msg_, NotificationBlock *parent_ );
+    ~NotificationNode();
+
+    QByteArray sessionId;
+    NotificationMessageV2::Type type;
+    NotificationMessageV2::Operation operation;
+    QByteArray resource;
+    QByteArray destResource;
+    NotificationMessageV2::Id parentCollection;
+    NotificationMessageV2::Id destCollection;
+    QSet<QByteArray> parts;
+    QSet<QByteArray> addedFlags;
+    QSet<QByteArray> removedFlags;
+    QList<NotificationEntity*> entities;
+    NotificationBlock *parent;
+};
+
+class NotificationModel::NotificationEntity: public NotificationModel::Item {
+  public:
+    NotificationEntity( const NotificationMessageV2::Entity &entity, NotificationNode *parent_ );
+
+    NotificationMessageV2::Id id;
+    QString remoteId;
+    QString remoteRevision;
+    QString mimeType;
+    NotificationNode *parent;
+};
+
+
+NotificationModel::NotificationBlock::NotificationBlock( const NotificationMessageV2::List &msgs ) :
+  Item( 0 )
 {
   timestamp = QDateTime::currentDateTime();
+  Q_FOREACH ( const NotificationMessageV2 &msg, msgs ) {
+    nodes << new NotificationNode( msg, this );
+  }
 }
 
-NotificationModel::NotificationModel(QObject* parent) :
-  QAbstractItemModel( parent ),
-  m_enabled( true )
+NotificationModel::NotificationBlock::~NotificationBlock()
 {
-  NotificationMessage::registerDBusTypes();
+  qDeleteAll( nodes );
+}
+
+
+NotificationModel::NotificationNode::NotificationNode( const NotificationMessageV2& msg, NotificationModel::NotificationBlock* parent_ ):
+  Item( 1 ),
+  sessionId( msg.sessionId() ),
+  type( msg.type() ),
+  operation( msg.operation() ),
+  resource( msg.resource() ),
+  destResource( msg.destinationResource() ),
+  parentCollection( msg.parentCollection() ),
+  destCollection( msg.parentDestCollection() ),
+  parts( msg.itemParts() ),
+  addedFlags( msg.addedFlags() ),
+  removedFlags( msg.removedFlags() ),
+  parent( parent_ )
+{
+  Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities()) {
+    entities << new NotificationEntity( entity, this );
+  }
+}
+
+NotificationModel::NotificationNode::~NotificationNode()
+{
+  qDeleteAll( entities );
+}
+
+
+NotificationModel::NotificationEntity::NotificationEntity( const NotificationMessageV2::Entity &entity, NotificationModel::NotificationNode* parent_ ):
+  Item( 2 ),
+  id( entity.id ),
+  remoteId( entity.remoteId ),
+  remoteRevision( entity.remoteRevision ),
+  mimeType( entity.mimeType ),
+  parent( parent_ )
+{
+}
+
+NotificationModel::NotificationModel( QObject* parent ) :
+  QAbstractItemModel( parent ),
+  m_source( 0 )
+{
+  NotificationMessageV2::registerDBusTypes();
 
   QString service = QLatin1String( "org.freedesktop.Akonadi" );
   if ( Akonadi::ServerManager::hasInstanceIdentifier() ) {
     service += "." + Akonadi::ServerManager::instanceIdentifier();
   }
-  org::freedesktop::Akonadi::NotificationManager* nm
-    = new org::freedesktop::Akonadi::NotificationManager( service,
+  m_manager = new org::freedesktop::Akonadi::NotificationManager( service,
                                                           QLatin1String( "/notifications" ),
                                                           QDBusConnection::sessionBus(), this );
-  if ( !nm ) {
+  if ( !m_manager ) {
     kWarning( 5250 ) << "Unable to connect to notification manager";
-  } else {
-    connect( nm, SIGNAL(notify(Akonadi::NotificationMessage::List)), this, SLOT(slotNotify(Akonadi::NotificationMessage::List)) );
+    return;
   }
 }
 
-int NotificationModel::columnCount(const QModelIndex& parent) const
+NotificationModel::~NotificationModel()
+{
+  if ( m_source ) {
+    m_source->unsubscribe();
+  }
+}
+
+int NotificationModel::columnCount( const QModelIndex &parent ) const
 {
   Q_UNUSED( parent );
   return 10;
 }
 
-int NotificationModel::rowCount(const QModelIndex& parent) const
+int NotificationModel::rowCount( const QModelIndex& parent ) const
 {
   if ( !parent.isValid() )
     return m_data.size();
-  if ( parent.internalId() >= 0 )
-    return 0;
-  if ( parent.row() < m_data.size() ) {
-    const NotificationBlock block = m_data.at( parent.row() );
-    return block.msgs.count();
+
+  Item *parentItem = static_cast<Item*>( parent.internalPointer() );
+  if ( parentItem ) {
+    if ( parentItem->type == 0 ) {
+      return static_cast<NotificationBlock*>( parentItem )->nodes.count();
+    } else if ( parentItem->type == 1 ) {
+      return static_cast<NotificationNode*>( parentItem )->entities.count();
+    }
   }
+
   return 0;
 }
 
-QModelIndex NotificationModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex NotificationModel::index( int row, int column, const QModelIndex &parent ) const
 {
   if ( !parent.isValid() ) {
-    if ( row < 0 || row >= m_data.size() )
-      return QModelIndex();
-    return createIndex( row, column, -1 );
+    return createIndex( row, column, m_data.at( row ) );
   }
 
-  if ( parent.row() < 0 || parent.row() >= m_data.size() )
-    return QModelIndex();
-  const NotificationBlock block = m_data.at( parent.row() );
-  if ( row >= block.msgs.size() )
-    return QModelIndex();
-  return createIndex( row, column, parent.row() );
+  Item *parentItem = static_cast<Item*>( parent.internalPointer() );
+  if ( parentItem  ) {
+    if ( parentItem ->type == 0 ) {
+      NotificationBlock *parentBlock = static_cast<NotificationBlock*>( parentItem  );
+      return createIndex( row, column, parentBlock->nodes.at( row ) );
+    } else if ( parentItem->type == 1 ) {
+      NotificationNode *parentNode = static_cast<NotificationNode*>( parentItem );
+      return createIndex( row, column, parentNode->entities.at( row ) );
+    }
+  }
+
+  return QModelIndex();
 }
 
-QModelIndex NotificationModel::parent(const QModelIndex& child) const
+QModelIndex NotificationModel::parent( const QModelIndex &child ) const
 {
-  if ( !child.isValid() || child.internalId() < 0 || child.internalId() > m_data.count() )
+  if ( !child.isValid() ) {
     return QModelIndex();
-  return createIndex( child.internalId(), 0, -1 );
+  }
+
+  Item *childItem = static_cast<Item*>( child.internalPointer() );
+  if ( childItem ) {
+    if ( childItem->type == 0 ) {
+      return QModelIndex();
+    } else if ( childItem->type == 1 ) {
+      NotificationNode *childNode = static_cast<NotificationNode*>( childItem );
+      return createIndex( m_data.indexOf( childNode->parent ), 0, childNode->parent );
+    } else if ( childItem->type == 2 ) {
+      NotificationEntity *childEntity = static_cast<NotificationEntity*>( childItem );
+      NotificationNode *parentNode = childEntity->parent;
+      return createIndex( parentNode->parent->nodes.indexOf( parentNode ), 0, childEntity->parent );
+    }
+  }
+
+  return QModelIndex();
 }
 
-QVariant NotificationModel::data(const QModelIndex& index, int role) const
+QVariant NotificationModel::data( const QModelIndex &index, int role ) const
 {
-  if ( index.parent().isValid() ) {
-    if ( index.parent().row() < 0 || index.parent().row() >= m_data.size() )
-      return QVariant();
-    const NotificationBlock block = m_data.at( index.parent().row() );
-    if ( index.row() < 0 || index.row() >= block.msgs.size() )
-      return QVariant();
-    const NotificationMessage msg = block.msgs.at( index.row() );
+  if ( !index.isValid() ) {
+    return QVariant();
+  }
+
+  Item *item = static_cast<Item*>( index.internalPointer() );
+  if ( !item ) {
+    return QVariant();
+  }
+
+  if ( item->type == 0 ) {
+    NotificationBlock *block = static_cast<NotificationBlock*>( item );
+    if ( role == Qt::DisplayRole ) {
+      switch ( index.column() ) {
+        case 0:
+          return QString( KGlobal::locale()->formatTime( block->timestamp.time(), true ) +
+                QString::fromLatin1( ".%1" ).arg( block->timestamp.time().msec(), 3, 10, QLatin1Char('0') ) );
+        case 1:
+          return block->nodes.count();
+      }
+    }
+  } else if ( item->type == 1 ) {
+    NotificationNode *node = static_cast<NotificationNode*>( item );
     if ( role == Qt::DisplayRole ) {
       switch ( index.column() ) {
         case 0:
         {
-          switch ( msg.operation() ) {
-            case NotificationMessage::Add: return QString( "Add" );
-            case NotificationMessage::Modify: return QString( "Modify" );
-            case NotificationMessage::Move: return QString( "Move" );
-            case NotificationMessage::Remove: return QString( "Delete" );
-            case NotificationMessage::Link: return QString( "Link" );
-            case NotificationMessage::Unlink: return QString( "Unlink" );
-            case NotificationMessage::Subscribe: return QString( "Subscribe" );
-            case NotificationMessage::Unsubscribe: return QString( "Unsubscribe" );
+          switch ( node->operation ) {
+            case NotificationMessageV2::Add: return QString( "Add" );
+            case NotificationMessageV2::Modify: return QString( "Modify" );
+            case NotificationMessageV2::ModifyFlags: return QString( "ModifyFlags" );
+            case NotificationMessageV2::Move: return QString( "Move" );
+            case NotificationMessageV2::Remove: return QString( "Delete" );
+            case NotificationMessageV2::Link: return QString( "Link" );
+            case NotificationMessageV2::Unlink: return QString( "Unlink" );
+            case NotificationMessageV2::Subscribe: return QString( "Subscribe" );
+            case NotificationMessageV2::Unsubscribe: return QString( "Unsubscribe" );
             default: return QString( "Invalid" );
           }
         }
         case 1:
         {
-          switch ( msg.type() ) {
-            case NotificationMessage::Collection: return QString( "Collection" );
-            case NotificationMessage::Item: return QString( "Item" );
+          switch ( node->type ) {
+            case NotificationMessageV2::Collections: return QString( "Collections" );
+            case NotificationMessageV2::Items: return QString( "Items" );
             default: return QString( "Invalid" );
           }
         }
         case 2:
-          return QString::number( msg.uid() );
+          return QString::fromUtf8( node->sessionId );
         case 3:
-          return msg.remoteId();
+          return QString::fromUtf8( node->resource );
         case 4:
-          return QString::fromUtf8( msg.sessionId() );
+          return QString::fromUtf8( node->destResource );
         case 5:
-          return QString::fromUtf8( msg.resource() );
+          return QString::number( node->parentCollection );
         case 6:
-          return msg.mimeType();
+          return QString::number( node->destCollection );
         case 7:
-          return QString::number( msg.parentCollection() );
+          return QString::fromUtf8( Akonadi::ImapParser::join( node->parts, ", " ) );
         case 8:
-          return QString::number( msg.parentDestCollection() );
+          return QString::fromUtf8( Akonadi::ImapParser::join( node->addedFlags, ", " ) );
         case 9:
-          return QString::fromUtf8( Akonadi::ImapParser::join( msg.itemParts(), ", " ) );
+          return QString::fromUtf8( Akonadi::ImapParser::join( node->removedFlags, ", " ) );
       }
     }
-  } else {
-    if ( index.row() < 0 || index.row() >= m_data.size() )
-      return QVariant();
-    const NotificationBlock block = m_data.at( index.row() );
+  } else if ( item->type == 2 ) {
+    NotificationEntity *entity = static_cast<NotificationEntity*>( item );
     if ( role == Qt::DisplayRole ) {
-      if ( index.column() == 0 ) {
-        return QString(KGlobal::locale()->formatTime( block.timestamp.time(), true )
-          + QString::fromLatin1( ".%1" ).arg( block.timestamp.time().msec(), 3, 10, QLatin1Char('0') ) );
-      } else if ( index.column() == 1 ) {
-        return block.msgs.size();
+      switch ( index.column() ) {
+        case 0:
+          return entity->id;
+        case 1:
+          return entity->remoteId;
+        case 2:
+          return entity->remoteRevision;
+        case 3:
+          return entity->mimeType;
       }
     }
   }
+
   return QVariant();
 }
 
@@ -170,35 +316,64 @@ QVariant NotificationModel::headerData(int section, Qt::Orientation orientation,
 {
   if ( role == Qt::DisplayRole && orientation == Qt::Horizontal ) {
     switch ( section ) {
-      case 0: return QString( "Operation" );
-      case 1: return QString( "Type" );
-      case 2: return QString( "UID" );
-      case 3: return QString( "RID" );
-      case 4: return QString( "Session" );
-      case 5: return QString( "Resource" );
-      case 6: return QString( "Mimetype" );
-      case 7: return QString( "Parent" );
-      case 8: return QString( "Destination" );
-      case 9: return QString( "Parts" );
+      case 0: return QString( "Operation / ID" );
+      case 1: return QString( "Type / RID" );
+      case 2: return QString( "Session / REV" );
+      case 3: return QString( "Resource / MimeType" );
+      case 4: return QString( "Destination Resource" );
+      case 5: return QString( "Parent" );
+      case 6: return QString( "Destination" );
+      case 7: return QString( "Parts" );
+      case 8: return QString( "Added Flags" );
+      case 9: return QString( "Removed Flags" );
     }
   }
   return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 
-void NotificationModel::slotNotify(const Akonadi::NotificationMessage::List& msgs)
+void NotificationModel::slotNotify(const Akonadi::NotificationMessageV2::List& msgs)
 {
-  if ( !m_enabled )
-    return;
   beginInsertRows( QModelIndex(), m_data.size(), m_data.size() );
-  m_data.append( NotificationBlock( msgs ) );
+  m_data.append( new NotificationBlock( msgs ) );
   endInsertRows();
 }
 
 void NotificationModel::clear()
 {
+  qDeleteAll( m_data );
   m_data.clear();
   reset();
+}
+
+void NotificationModel::setEnabled( bool enable )
+{
+  if ( enable && !m_source ) {
+    const QString identifier = QString::fromLatin1("akonadiconsole_%1_notificationmodel").arg( QString::number( QCoreApplication::applicationPid() ) );
+    m_manager->subscribe( identifier );
+
+    QString service = QLatin1String( "org.freedesktop.Akonadi" );
+    if ( Akonadi::ServerManager::hasInstanceIdentifier() ) {
+      service += "." + Akonadi::ServerManager::instanceIdentifier();
+    }
+    m_source = new org::freedesktop::Akonadi::NotificationSource( service,
+                                                      QLatin1String( "/subscriber/" ) + identifier,
+                                                      QDBusConnection::sessionBus(), this );
+    if ( !m_source ) {
+      kWarning( 5250 ) << "Unable to connect to notification source";
+      return;
+    }
+
+    connect( m_source, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)),
+             this, SLOT(slotNotify(Akonadi::NotificationMessageV2::List)) );
+
+  } else if ( !enable && m_source ) {
+
+    disconnect( m_source, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)) );
+    m_source->unsubscribe();
+    m_source->deleteLater();
+    m_source = 0;
+  }
 }
 
 
