@@ -145,6 +145,12 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     qDebug()<<"SieveConditionEnvelope::setParamWidgetValue too many argument indexStr "<<indexStr;
                 }
                 ++indexStr;
+            } else if (tagName == QLatin1String("list")) {
+                if (indexStr == 0) {
+                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+                    selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
+                }
+                ++indexStr;
             } else {
                 qDebug()<<" SieveConditionEnvelope::setParamWidgetValue unknown tagName "<<tagName;
             }
