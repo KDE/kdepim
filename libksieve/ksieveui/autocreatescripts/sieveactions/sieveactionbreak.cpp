@@ -16,12 +16,15 @@
 */
 
 #include "sieveactionbreak.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionBreak::SieveActionBreak(QObject *parent)
@@ -52,8 +55,25 @@ QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
 
 void SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
-    //name->setText();
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("name")) {
+                    KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
+                    name->setText(AutoCreateScriptUtil::strValue(e));
+                } else {
+                    qDebug()<<" SieveActionBreak::setParamWidgetValue unknown tagValue "<<tagValue;
+                }
+            } else {
+                qDebug()<<"SieveActionBreak::setParamWidgetValue unknown tag "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionBreak::code(QWidget *w) const

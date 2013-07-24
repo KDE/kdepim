@@ -98,7 +98,6 @@ void SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
         }
         node = node.nextSibling();
     }
-
 }
 
 QString SieveActionConvert::code(QWidget *w) const
