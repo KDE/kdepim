@@ -17,6 +17,7 @@
  */
 
 #include "sieveeditor.h"
+#include "sieve-editor.h"
 #include "sieveeditortextmodewidget.h"
 #include "scriptsparsing/parsingutil.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
@@ -102,6 +103,9 @@ SieveEditor::SieveEditor( QWidget * parent )
     connect(mGraphicalModeWidget, SIGNAL(switchTextMode(QString)), this, SLOT(slotSwitchTextMode(QString)));
     readConfig();
     setMainWidget( w );
+    if (KSieveUi::EditorSettings::useGraphicEditorByDefault()) {
+        changeMode(GraphicMode);
+    }
 }
 
 SieveEditor::~SieveEditor()
