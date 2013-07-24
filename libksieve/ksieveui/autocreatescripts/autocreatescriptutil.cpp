@@ -64,14 +64,19 @@ QStringList AutoCreateScriptUtil::createListFromString(QString str)
     if (str.startsWith(QLatin1Char('[')) && str.endsWith(QLatin1String("];"))) {
         str.remove(0,1);
         str.remove(str.length()-2, 2);
-        lst = str.split(QLatin1String(", "));
-        QStringList resultLst;
-        Q_FOREACH (QString s, lst) {
-            s.remove(QLatin1String("\""));
-            resultLst<<s.trimmed();
-        }
-        lst = resultLst;
+    } else if (str.startsWith(QLatin1Char('[')) && str.endsWith(QLatin1String("]"))) {
+        str.remove(0,1);
+        str.remove(str.length()-1, 1);
+    } else {
+        return lst;
     }
+    lst = str.split(QLatin1String(", "));
+    QStringList resultLst;
+    Q_FOREACH (QString s, lst) {
+        s.remove(QLatin1String("\""));
+        resultLst<<s.trimmed();
+    }
+    lst = resultLst;
     return lst;
 }
 
