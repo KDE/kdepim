@@ -195,6 +195,40 @@ QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
     return str;
 }
 
+SelectDateWidget::DateType SelectDateWidget::dateTypeFromString(const QString &str)
+{
+    if (str == QLatin1String("year")) {
+        return Year;
+    } else if (str == QLatin1String("month")) {
+        return Month;
+    } else if (str == QLatin1String("day")) {
+        return Day;
+    } else if (str == QLatin1String("date")) {
+        return Date;
+    } else if (str == QLatin1String("julian")) {
+        return Julian;
+    } else if (str == QLatin1String("hour")) {
+        return Hour;
+    } else if (str == QLatin1String("minute")) {
+        return Minute;
+    } else if (str == QLatin1String("second")) {
+        return Second;
+    } else if (str == QLatin1String("time")) {
+        return Time;
+    } else if (str == QLatin1String("iso8601")) {
+        return Iso8601;
+    } else if (str == QLatin1String("std11")) {
+        return Std11;
+    } else if (str == QLatin1String("zone")) {
+        return Zone;
+    } else if (str == QLatin1String("weekday")) {
+        return Weekday;
+    } else {
+        qDebug()<<" date type unknown :"<<str;
+    }
+    return Year;
+}
+
 QString SelectDateWidget::dateType(SelectDateWidget::DateType type) const
 {
     QString str;
@@ -248,8 +282,46 @@ QString SelectDateWidget::code() const
     return QString::fromLatin1("\"%1\" \"%2\"").arg(dateType(type)).arg(dateValue(type));
 }
 
-void SelectDateWidget::setCode(const QString &)
+void SelectDateWidget::setCode(const QString &type, const QString &value)
 {
+    const int index = dateTypeFromString(type);
+    if (index != -1) {
+        mDateType->setCurrentIndex(index);
+    } else {
+        mDateType->setCurrentIndex(0);
+    }
+    const DateType dateType = mDateType->itemData(index).value<KSieveUi::SelectDateWidget::DateType>();
+    switch(dateType) {
+    case Month:
+    case Day:
+    case Hour:
+    case Minute:
+    case Second:
+    case Weekday:
+    case Year:
+        mStackWidget->setCurrentWidget(mDateValue);
+        mDateValue->setValue(value.toInt());
+        break;
+    case Date:
+        //TODO
+        mStackWidget->setCurrentWidget(mDateEdit);
+        //mDateEdit
+        break;
+    case Julian:
+        mStackWidget->setCurrentWidget(mDateLineEdit);
+        mDateLineEdit->setText(value);
+        break;
+    case Time:
+        mStackWidget->setCurrentWidget(mTimeEdit);
+        //TODO mTimeEdit
+        break;
+    case Iso8601:
+    case Std11:
+    case Zone:
+        mStackWidget->setCurrentWidget(mDateLineEdit);
+        mDateLineEdit->setText(value);
+        break;
+    }
 
 }
 

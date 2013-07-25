@@ -23,6 +23,8 @@
 #include <KLocale>
 
 #include <QHBoxLayout>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -86,8 +88,36 @@ QString SieveConditionCurrentDate::help() const
     return i18n("The currentdate test is similar to the date test, except that it operates on the current date/time rather than a value extracted from the message header.");
 }
 
-void SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition )
+void SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
+    int index = 0;
+    QString type;
+    QString value;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                if (index == 0) {
+                    type = e.text();
+                } else if (index == 1) {
+                    value = e.text();
+                } else {
+                    qDebug()<<" SieveConditionCurrentDate::setParamWidgetValue too many argument :"<<index;
+                }
+                ++index;
+            } else if (tagName == QLatin1String("tag")) {
+                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtype"));
+                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+            } else {
+                qDebug()<<"SieveConditionCurrentDate::setParamWidgetValue unknown tag "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
+    dateWidget->setCode(type, value);
 
 }
 

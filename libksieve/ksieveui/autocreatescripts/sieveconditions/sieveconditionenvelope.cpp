@@ -160,6 +160,5 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
         }
         node = node.nextSibling();
     }
-
 }
 #include "sieveconditionenvelope.moc"
