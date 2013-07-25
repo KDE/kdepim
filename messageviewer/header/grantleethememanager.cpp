@@ -75,7 +75,7 @@ public:
     void slotDownloadHeaderThemes()
     {
         if (!downloadThemesDialog) {
-            downloadThemesDialog = new KNS3::DownloadDialog(QLatin1String("messageviewer_header_themes.knsrc"));
+            downloadThemesDialog = new KNS3::DownloadDialog(downloadConfigFileName);
         }
         downloadThemesDialog.data()->show();
     }
@@ -223,6 +223,7 @@ public:
         }
     }
 
+    QString downloadConfigFileName;
     QStringList themesDirectories;
     QMap<QString, GrantleeTheme::Theme> themes;
     QList<KToggleAction*> themesActionList;
@@ -293,5 +294,9 @@ GrantleeTheme::Theme GrantleeThemeManager::theme(const QString &themeName)
     return GrantleeTheme::Theme();
 }
 
+void GrantleeThemeManager::setDownloadNewStuffConfigFile(const QString &configFileName)
+{
+    d->downloadConfigFileName = configFileName;
+}
 
 #include "grantleethememanager.moc"

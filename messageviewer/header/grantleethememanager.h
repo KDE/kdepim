@@ -47,6 +47,8 @@ public:
 
     GrantleeTheme::Theme theme(const QString &themeName);
 
+    void setDownloadNewStuffConfigFile(const QString &configFileName);
+
 Q_SIGNALS:
     void themesChanged();
     void grantleeThemeSelected();
