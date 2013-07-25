@@ -212,10 +212,10 @@ public:
     void initThemesDirectories(const QString &themesRelativePath)
     {
         if (!themesRelativePath.isEmpty()) {
-            themesDirectories = KGlobal::dirs()->findDirs("data", QLatin1String("messageviewer/themes/"));
+            themesDirectories = KGlobal::dirs()->findDirs("data", themesRelativePath);
             if (themesDirectories.count() < 2) {
                 //Make sure to add local directory
-                const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+                const QString localDirectory = KStandardDirs::locateLocal("data", themesRelativePath);
                 if (!themesDirectories.contains(localDirectory)) {
                     themesDirectories.append(localDirectory);
                 }
