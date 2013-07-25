@@ -18,8 +18,8 @@
 #ifndef GRANTLEETHEMEMANAGER_H
 #define GRANTLEETHEMEMANAGER_H
 
-#include "grantleetheme/grantleetheme.h"
-
+#include "grantleetheme.h"
+#include "grantleetheme_export.h"
 #include <QObject>
 #include <QMap>
 class QActionGroup;
@@ -27,8 +27,8 @@ class KActionCollection;
 class KToggleAction;
 class KActionMenu;
 
-namespace MessageViewer {
-class GrantleeThemeManager : public QObject
+namespace GrantleeTheme {
+class GRANTLEETHEME_EXPORT GrantleeThemeManager : public QObject
 {
     Q_OBJECT
 public:

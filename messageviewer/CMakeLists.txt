@@ -77,7 +77,6 @@ set(libmessageviewer_SRCS
   header/fancyheaderstyle.cpp
   header/customheadersettingwidget.cpp
   header/grantleeheaderformatter.cpp
-  header/grantleethememanager.cpp
   header/grantleeheaderteststyle.cpp
   header/kxface.cpp
   viewer/htmlquotecolorer.cpp
@@ -144,6 +143,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/grantleetheme
     ${CMAKE_SOURCE_DIR}/messagecore
     ${CMAKE_SOURCE_DIR}/pimcommon
     ${CMAKE_SOURCE_DIR}/libkdepim

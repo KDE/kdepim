@@ -16,7 +16,7 @@
 */
 
 #include "grantleethememanager.h"
-#include "settings/globalsettings.h"
+#include "globalsettings_base.h"
 
 #include <KDirWatch>
 #include <KConfigGroup>
@@ -33,7 +33,7 @@
 #include <QDirIterator>
 #include <QActionGroup>
 
-using namespace MessageViewer;
+using namespace GrantleeTheme;
 
 class GrantleeThemeManager::Private
 {
@@ -189,8 +189,8 @@ public:
         if (q->sender() ) {
             KToggleAction *act = dynamic_cast<KToggleAction *>(q->sender());
             if (act) {
-                GlobalSettings::self()->setGrantleeThemeName( act->data().toString() );
-                GlobalSettings::self()->writeConfig();
+                GrantleeSettings::self()->setGrantleeThemeName( act->data().toString() );
+                GrantleeSettings::self()->writeConfig();
             }
             Q_EMIT q->grantleeThemeSelected();
         }
@@ -198,7 +198,7 @@ public:
 
     KToggleAction *actionForHeaderStyle()
     {
-        const QString themeName = GlobalSettings::self()->grantleeThemeName();
+        const QString themeName = GrantleeSettings::self()->grantleeThemeName();
         if (themeName.isEmpty())
             return 0;
         Q_FOREACH(KToggleAction *act, themesActionList) {
