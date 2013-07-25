@@ -103,6 +103,7 @@ QString SieveConditionAddress::help() const
 void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
     int index = 0;
+    int indexStr = 0;
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
@@ -117,12 +118,31 @@ void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
                     selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition));
                 } else {
-                    qDebug()<<" too many argument :"<<index;
+                    qDebug()<<"SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("str")) {
-                KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
-                edit->setText(e.text());
+                if (indexStr == 0) {
+                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+                    selectHeaderType->setCode(e.text());
+                } else if (indexStr == 1) {
+                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+                    edit->setText(e.text());
+                } else {
+                    qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
+                }
+                ++indexStr;
+            } else if (tagName == QLatin1String("list")) {
+                if (indexStr == 0) {
+                    SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
+                    selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
+                } else if (indexStr == 1) {
+                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+                    edit->setText(AutoCreateScriptUtil::listValueToStr(e));
+                } else {
+                    qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
+                }
+                ++indexStr;
             } else {
                 qDebug()<<" SieveConditionAddress::setParamWidgetValue unknown tagName "<<tagName;
             }

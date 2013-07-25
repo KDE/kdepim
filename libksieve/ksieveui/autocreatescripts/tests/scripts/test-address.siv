@@ -8,4 +8,12 @@ if allof (address :user :contains "Subject" "foo@example.com"
 )
 {
     stop;
+}
+
+if allof (header :contains "Bcc" "montel@kde.org"
+, header :is [ "Subject", "bcc", "cc" ] "mo@kde.org"
+, not header :is [ "cc", "from", "to" ] "m@kde.org;dd@kde.org"
+)
+{
+    discard;
 } 
