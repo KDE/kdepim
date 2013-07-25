@@ -38,8 +38,9 @@ using namespace GrantleeTheme;
 class GrantleeThemeManager::Private
 {
 public:
-    Private(KActionCollection *ac, const QString &relativePath, GrantleeThemeManager *qq)
-        : actionGroup(0),
+    Private(const QString &desktopFileName, KActionCollection *ac, const QString &relativePath, GrantleeThemeManager *qq)
+        : defaultDesktopFileName(desktopFileName),
+          actionGroup(0),
           menu(0),
           actionCollection(ac),
           q(qq)
@@ -133,7 +134,7 @@ public:
 
     GrantleeTheme::Theme loadTheme(const QString &themePath, const QString &dirName )
     {
-        const QString themeInfoFile = themePath + QDir::separator() + QString::fromLatin1( "header.desktop" );
+        const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
         KConfig config( themeInfoFile );
         KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
 
@@ -223,6 +224,7 @@ public:
         }
     }
 
+    QString defaultDesktopFileName;
     QString downloadConfigFileName;
     QStringList themesDirectories;
     QMap<QString, GrantleeTheme::Theme> themes;
@@ -238,8 +240,8 @@ public:
     GrantleeThemeManager *q;
 };
 
-GrantleeThemeManager::GrantleeThemeManager(KActionCollection *actionCollection, const QString &path, QObject *parent)
-    : QObject(parent), d(new Private(actionCollection, path,this))
+GrantleeThemeManager::GrantleeThemeManager(const QString &defaultDesktopFileName, KActionCollection *actionCollection, const QString &path, QObject *parent)
+    : QObject(parent), d(new Private(defaultDesktopFileName, actionCollection, path,this))
 {
 }
 
