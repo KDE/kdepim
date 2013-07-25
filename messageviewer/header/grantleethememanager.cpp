@@ -55,6 +55,7 @@ public:
 
         q->connect(downloadThemesAction, SIGNAL(triggered(bool)), q, SLOT(slotDownloadHeaderThemes()) );
         q->connect( watch, SIGNAL(dirty(QString)), SLOT(directoryChanged()) );
+        setThemesPath();
     }
 
     ~Private()
@@ -150,7 +151,6 @@ public:
     {
         if (!actionGroup || !menu)
             return;
-        setThemesPath();
         QString themeActivated;
         Q_FOREACH ( KToggleAction *action, themesActionList ) {
             if (action->isChecked())
