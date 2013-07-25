@@ -54,12 +54,12 @@ class GrantleeContactFormatter::Private
       mTemplateLoader->setTheme( QLatin1String( "default" ) );
 
       mEngine->addTemplateLoader( mTemplateLoader );
-      mSelfcontainedTemplate = mEngine->loadByName( "contact.html" );
+      mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("contact.html") );
       if ( mSelfcontainedTemplate->error() ) {
         mErrorMessage += mSelfcontainedTemplate->errorString();
       }
 
-      mEmbeddableTemplate = mEngine->loadByName( "contact_embedded.html" );
+      mEmbeddableTemplate = mEngine->loadByName( QLatin1String("contact_embedded.html") );
       if ( mEmbeddableTemplate->error() ) {
         mErrorMessage += mEmbeddableTemplate->errorString();
       }
@@ -151,13 +151,13 @@ static QVariantHash addressHash( const KABC::Address &address, int counter )
   }
 
   if ( !formattedAddress.isEmpty() ) {
-    formattedAddress = formattedAddress.replace( QRegExp( "\n+" ), QLatin1String( "<br/>" ) );
+    formattedAddress = formattedAddress.replace( QRegExp( QLatin1String("\n+") ), QLatin1String( "<br/>" ) );
 
     const QString url =
       QString::fromLatin1( "<a href=\"address:?index=%1\">%2</a>" ).
         arg( counter ).
         arg( formattedAddress );
-    addressObject.insert( "formattedAddressLink", url );
+    addressObject.insert( QLatin1String("formattedAddressLink"), url );
   }
 
   return addressObject;
@@ -426,20 +426,20 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   QVariantHash colorsObject;
 
   colorsObject.insert(
-    "linkColor",
+    QLatin1String("linkColor"),
     KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
 
   colorsObject.insert(
-    "textColor",
+    QLatin1String("textColor"),
     KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
 
   colorsObject.insert(
-    "backgroundColor",
+    QLatin1String("backgroundColor"),
     KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() );
 
   QVariantHash mapping;
-  mapping.insert( "contact", contactObject );
-  mapping.insert( "colors", colorsObject );
+  mapping.insert( QLatin1String("contact"), contactObject );
+  mapping.insert( QLatin1String("colors"), colorsObject );
 
   Grantlee::Context context( mapping );
 

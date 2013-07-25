@@ -210,7 +210,7 @@ CSVImportDialog::CSVImportDialog( QWidget *parent )
   connect( mModel, SIGNAL(finishedLoading()), this, SLOT(modelFinishedLoading()) );
 
   delimiterClicked( 0 );
-  textQuoteChanged( "\"" );
+  textQuoteChanged( QLatin1String("\"") );
   skipFirstRowChanged( false );
 }
 
@@ -250,7 +250,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
           value = dateParser.parse( value ).toString( Qt::ISODate );
         }
 
-        value.replace( "\\n", "\n" );
+        value.replace( QLatin1String("\\n"), QLatin1String("\n") );
 
         ContactFields::setValue( field, value, contact );
       }
@@ -288,7 +288,7 @@ void CSVImportDialog::initGUI()
   hbox->addWidget( label );
 
   mUrlRequester = new KUrlRequester( page );
-  mUrlRequester->setFilter( "*.csv" );
+  mUrlRequester->setFilter( QLatin1String("*.csv") );
   mUrlRequester->lineEdit()->setTrapReturnKey( true );
   mUrlRequester->setToolTip(
     i18nc( "@info:tooltip", "Select a csv file to import" ) );
@@ -394,7 +394,7 @@ void CSVImportDialog::initGUI()
   layout->addWidget( label, 2, 2 );
 
   mDatePatternEdit = new KLineEdit( page );
-  mDatePatternEdit->setText( "Y-M-D" ); // ISO 8601 date format as default
+  mDatePatternEdit->setText( QLatin1String("Y-M-D") ); // ISO 8601 date format as default
   mDatePatternEdit->setToolTip(
     i18nc( "@info:tooltip",
            "<para><list><item>y: year with 2 digits</item>"
@@ -484,7 +484,7 @@ void CSVImportDialog::reloadCodecs()
   mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Microsoft Unicode" ), MSBug );
 
   for ( int i = 0; i < mCodecs.count(); ++i ) {
-    mCodecCombo->addItem( mCodecs.at( i )->name(), Codec + i );
+    mCodecCombo->addItem( QLatin1String(mCodecs.at( i )->name()), Codec + i );
   }
 }
 
@@ -505,7 +505,7 @@ void CSVImportDialog::delimiterClicked( int id, bool reload )
 {
   switch ( id ) {
   case 0: // comma
-    mModel->setDelimiter( ',' );
+    mModel->setDelimiter( QLatin1Char(',') );
     break;
   case 4: // other
     mDelimiterEdit->setFocus( Qt::OtherFocusReason );
@@ -514,13 +514,13 @@ void CSVImportDialog::delimiterClicked( int id, bool reload )
     }
     break;
   case 2: // tab
-    mModel->setDelimiter( '\t' );
+    mModel->setDelimiter( QLatin1Char('\t') );
     break;
   case 3: // space
-    mModel->setDelimiter( ' ' );
+    mModel->setDelimiter( QLatin1Char(' ') );
     break;
   case 1: // semicolon
-    mModel->setDelimiter( ';' );
+    mModel->setDelimiter( QLatin1Char(';') );
     break;
   }
 
@@ -671,9 +671,9 @@ void CSVImportDialog::saveTemplate()
   }
 
   const QString fileName =
-    KStandardDirs::locateLocal( "data", QString( "kaddressbook/csv-templates/" +
-                                                 QString( QUuid::createUuid() ) +
-                                                 ".desktop" ) );
+    KStandardDirs::locateLocal( "data", QLatin1String( "kaddressbook/csv-templates/") +
+                                                 QUuid::createUuid().toString() +
+                                                 QLatin1String(".desktop" ));
 
   KConfig config( fileName );
   KConfigGroup generalGroup( &config, "General" );

@@ -117,14 +117,14 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
   if ( list.count() == 1 ) {
     url = KFileDialog::getSaveUrl(
       QString( list[ 0 ].givenName() +
-               QLatin1Char( '_' ) +
+               QLatin1Char( QLatin1Char('_') ) +
                list[ 0 ].familyName() +
                QLatin1String( ".vcf" ) ) );
     if ( url.isEmpty() ) { // user canceled export
       return true;
     }
 
-    if ( option( "version" ) == "v21" ) {
+    if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
       ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
     } else {
       ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
@@ -151,11 +151,11 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
       for ( int i = 0; i < list.count(); ++i ) {
         const KABC::Addressee contact = list.at( i );
 
-        url = baseUrl.url() + '/' + contactFileName( contact ) + ".vcf";
+        url = baseUrl.url() + QLatin1Char('/') + contactFileName( contact ) + QLatin1String(".vcf");
 
         bool tmpOk = false;
 
-        if ( option( "version" ) == "v21" ) {
+        if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
           tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v2_1 ) );
         } else {
           tmpOk = doExport( url, converter.exportVCard( contact, KABC::VCardConverter::v3_0 ) );
@@ -168,12 +168,12 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
     case KMessageBox::No:
     default:
     {
-      url = KFileDialog::getSaveUrl( KUrl( "addressbook.vcf" ) );
+      url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.vcf") ) );
       if ( url.isEmpty() ) {
         return true; // user canceled export
       }
 
-      if ( option( "version" ) == "v21" ) {
+      if ( option( QLatin1String("version") ) == QLatin1String("v21") ) {
         ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v2_1 ) );
       } else {
         ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
@@ -191,16 +191,16 @@ KABC::Addressee::List VCardXXPort::importContacts() const
   KABC::Addressee::List addrList;
   KUrl::List urls;
 
-  if ( !option( "importData" ).isEmpty() ) {
-    addrList = parseVCard( option( "importData" ).toUtf8() );
+  if ( !option( QLatin1String("importData") ).isEmpty() ) {
+    addrList = parseVCard( option( QLatin1String("importData") ).toUtf8() );
   } else {
-    if ( !option( "importUrl" ).isEmpty() ) {
-      urls.append( KUrl( option( "importUrl" ) ) );
+    if ( !option( QLatin1String("importUrl") ).isEmpty() ) {
+      urls.append( KUrl( option( QLatin1String("importUrl") ) ) );
     } else {
       urls =
         KFileDialog::getOpenUrls(
           KUrl(),
-          "*.vcf|vCards",
+          QLatin1String("*.vcf|vCards"),
           parentWidget(),
           i18nc( "@title:window", "Select vCard to Import" ) );
     }
@@ -249,7 +249,7 @@ KABC::Addressee::List VCardXXPort::importContacts() const
       }
     }
 
-    if ( !option( "importUrl" ).isEmpty() ) { // a vcard was passed via cmd
+    if ( !option( QLatin1String("importUrl") ).isEmpty() ) { // a vcard was passed via cmd
       if ( addrList.isEmpty() ) {
         if ( anyFailures && urls.count() > 1 ) {
           KMessageBox::information(
@@ -331,12 +331,12 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
     bool addrDone = false;
     if ( dlg->exportDisplayName() ) {                // output display name as N field
       QString fmtName = (*it).formattedName();
-      QStringList splitNames = fmtName.split( ' ', QString::SkipEmptyParts );
+      QStringList splitNames = fmtName.split( QLatin1Char(' '), QString::SkipEmptyParts );
       if ( splitNames.count() >= 2 ) {
         addr.setPrefix( QString() );
         addr.setGivenName( splitNames.takeFirst() );
         addr.setFamilyName( splitNames.takeLast() );
-        addr.setAdditionalName( splitNames.join( " " ) );
+        addr.setAdditionalName( splitNames.join( QLatin1String(" ") ) );
         addr.setSuffix( QString() );
         addrDone = true;
       }
@@ -444,8 +444,8 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
 void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Type type ) const
 {
 #ifdef QGPGME_FOUND
-  const QString fingerprint = addr.custom( "KADDRESSBOOK",
-                                           ( type == KABC::Key::PGP ? "OPENPGPFP" : "SMIMEFP" ) );
+  const QString fingerprint = addr.custom( QLatin1String("KADDRESSBOOK"),
+                                           ( type == KABC::Key::PGP ? QLatin1String("OPENPGPFP") : QLatin1String("SMIMEFP") ) );
   if ( fingerprint.isEmpty() ) {
     return;
   }
@@ -651,7 +651,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
            "name shown correctly in GMail or Android." ) );
   layout->addWidget( mDisplayNameBox, 5, 0, 1, 2 );
 
-  KConfig config( "kaddressbookrc" );
+  KConfig config( QLatin1String("kaddressbookrc") );
   const KConfigGroup group( &config, "XXPortVCard" );
 
   mPrivateBox->setChecked( group.readEntry( "ExportPrivateFields", true ) );
@@ -664,7 +664,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
 
 VCardExportSelectionDialog::~VCardExportSelectionDialog()
 {
-  KConfig config( "kaddressbookrc" );
+  KConfig config( QLatin1String("kaddressbookrc") );
   KConfigGroup group( &config, "XXPortVCard" );
 
   group.writeEntry( "ExportPrivateFields", mPrivateBox->isChecked() );

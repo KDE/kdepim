@@ -51,12 +51,12 @@ class GrantleeContactGroupFormatter::Private
       mTemplateLoader->setTheme( QLatin1String( "default" ) );
 
       mEngine->addTemplateLoader( mTemplateLoader );
-      mSelfcontainedTemplate = mEngine->loadByName( "contactgroup.html" );
+      mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("contactgroup.html") );
       if ( mSelfcontainedTemplate->error() ) {
         mErrorMessage += mSelfcontainedTemplate->errorString();
       }
 
-      mEmbeddableTemplate = mEngine->loadByName( "contactgroup_embedded.html" );
+      mEmbeddableTemplate = mEngine->loadByName( QLatin1String("contactgroup_embedded.html") );
       if ( mEmbeddableTemplate->error() ) {
         mErrorMessage += mEmbeddableTemplate->errorString();
       }
@@ -177,20 +177,20 @@ QString GrantleeContactGroupFormatter::toHtml( HtmlForm form ) const
 
   QVariantHash colorsObject;
   colorsObject.insert(
-    "linkColor",
+    QLatin1String("linkColor"),
     KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
 
   colorsObject.insert(
-    "textColor",
+    QLatin1String("textColor"),
     KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
 
   colorsObject.insert(
-    "backgroundColor",
+    QLatin1String("backgroundColor"),
     KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() );
 
   QVariantHash mapping;
-  mapping.insert( "contactGroup", contactGroupObject );
-  mapping.insert( "colors", colorsObject );
+  mapping.insert( QLatin1String("contactGroup"), contactGroupObject );
+  mapping.insert( QLatin1String("colors"), colorsObject );
 
   Grantlee::Context context( mapping );
 

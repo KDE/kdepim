@@ -35,8 +35,8 @@ class QCsvReader::Private
     Private( QCsvBuilderInterface *builder )
       : mBuilder( builder ), mNotTerminated( true )
     {
-      mTextQuote = QChar( '"' );
-      mDelimiter = QChar( ' ' );
+      mTextQuote = QLatin1Char( '"' );
+      mDelimiter = QLatin1Char( ' ' );
       mStartRow = 0;
       mCodec = QTextCodec::codecForLocale();
     }

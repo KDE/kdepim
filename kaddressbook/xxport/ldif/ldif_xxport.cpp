@@ -69,7 +69,7 @@ KABC::Addressee::List LDIFXXPort::importContacts() const
 {
   KABC::Addressee::List contacts;
 
-  const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), "text/x-ldif", 0 );
+  const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), QLatin1String("text/x-ldif"), 0 );
   if ( fileName.isEmpty() ) {
     return contacts;
   }
@@ -96,7 +96,7 @@ KABC::Addressee::List LDIFXXPort::importContacts() const
 bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const
 {
   const KUrl url =
-    KFileDialog::getSaveUrl( KUrl( QDir::homePath() + "/addressbook.ldif" ), "text/x-ldif" );
+    KFileDialog::getSaveUrl( KUrl( QDir::homePath() + QLatin1String("/addressbook.ldif") ), QLatin1String("text/x-ldif") );
   if ( url.isEmpty() ) {
     return true;
   }

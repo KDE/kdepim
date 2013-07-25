@@ -45,7 +45,7 @@ KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
 
   KAddressBook::insertLibraryCatalogues();
 
-  KIconLoader::global()->addAppDir( "kaddressbook" );
+  KIconLoader::global()->addAppDir( QLatin1String("kaddressbook") );
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget( parentWidget );
   canvas->setFocusPolicy( Qt::ClickFocus );
@@ -57,13 +57,13 @@ KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
 
   topLayout->addWidget( mMainWidget );
   topLayout->setMargin(0);
-  setXMLFile( "kaddressbookui.rc" );
+  setXMLFile( QLatin1String("kaddressbookui.rc") );
 }
 
 void KAddressBookPart::initAction()
 {
-  KAction *action = new KAction( KIcon( "configure" ), i18n( "&Configure KAddressBook..." ), this );
-  actionCollection()->addAction( "kaddressbook_configure", action );
+  KAction *action = new KAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KAddressBook..." ), this );
+  actionCollection()->addAction( QLatin1String("kaddressbook_configure"), action );
   connect( action, SIGNAL(triggered(bool)), mMainWidget,
            SLOT(configure()) );
 }
