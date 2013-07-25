@@ -190,7 +190,6 @@ void SieveScriptListBox::updateButtons()
 
 SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName, const QString &description)
 {
-    qDebug()<<" SieveScriptPage *SieveScriptListBox::createNewScript(const QString &newName, const QString &description)"<<description;
     SieveScriptListItem *item = new SieveScriptListItem(newName, mSieveListScript);
     item->setDescription(description);
     SieveScriptPage *page = new SieveScriptPage;
@@ -338,6 +337,7 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
     QDomNode n = docElem.firstChild();
     QString scriptName;
     QString comment;
+    bool hasCreatedAIfBlock = false;
     while (!n.isNull()) {
         QDomElement e = n.toElement();
         if (!e.isNull()) {
@@ -346,8 +346,9 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString controlType = e.attribute(QLatin1String("name"));
                     if (controlType == QLatin1String("if")) {
-                        if (!currentPage)
+                        if (!currentPage || hasCreatedAIfBlock)
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                        hasCreatedAIfBlock = true;
                         comment.clear();
                         currentPage->blockIfWidget()->loadScript(e);
                     } else if (controlType == QLatin1String("elsif")) {
