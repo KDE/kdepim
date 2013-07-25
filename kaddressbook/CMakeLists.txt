@@ -83,12 +83,7 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_LIB_SRCS}
   grantleecontactformatter.cpp
   grantleecontactgroupformatter.cpp
-  grantlee/theme.cpp
-  grantlee/themecombobox.cpp
-  grantlee/thememanager.cpp
-  grantlee/thememodel.cpp
 )
-add_subdirectory(grantlee)
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
