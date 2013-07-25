@@ -23,7 +23,7 @@
 
 KMime::Message::Ptr readAndParseMail( const QString &mailFile )
 {
-  QFile file( QString( MAIL_DATA_DIR ) + '/' + mailFile );
+  QFile file( QLatin1String( MAIL_DATA_DIR ) + QLatin1Char('/') + mailFile );
   bool ok = file.open( QIODevice::ReadOnly );
   Q_ASSERT( ok );
   Q_UNUSED( ok );

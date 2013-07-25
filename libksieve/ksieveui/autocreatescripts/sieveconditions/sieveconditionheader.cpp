@@ -26,6 +26,8 @@
 #include <QComboBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -83,9 +85,42 @@ QString SieveConditionHeader::help() const
     return i18n("The \"header\" test evaluates to true if the value of any of the named headers, ignoring leading and trailing whitespace, matches any key.");
 }
 
-void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition )
+void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition));
+            } else if (tagName == QLatin1String("str")) {
+                if (index == 0) {
+                    SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
+                    headerType->setCode(e.text());
+                } else if (index == 1) {
+                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                    value->setText(e.text());
+                } else {
+                    qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
+                }
+                ++index;
+            } else if (tagName == QLatin1String("list")) {
+                //Header list
+                if (index == 0) {
+                    SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
+                    headerType->setCode(AutoCreateScriptUtil::listValueToStr(e));
+                    ++index;
+                }
+            } else {
+                qDebug()<<" SieveConditionHeader::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionheader.moc"

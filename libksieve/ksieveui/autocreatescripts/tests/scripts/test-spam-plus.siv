@@ -1,0 +1,13 @@
+require "spamtestplus";
+require "relational";
+require "comparator-i;ascii-numeric";
+ 
+#Script name: test spam-plus
+
+if allof (spamtest :percent :value "ne" :comparator "i;ascii-numeric" "4"
+, spamtest  :count "ge" :comparator "i;ascii-numeric" "3"
+, spamtest :percent :value "ne" :comparator "i;ascii-numeric" "3"
+)
+{
+    stop;
+}

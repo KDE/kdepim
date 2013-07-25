@@ -108,7 +108,7 @@ void InvitationSettings::slotLegacyBodyInvitesToggled( bool on )
                                   "resulting messages look very odd.<br />People that have email "
                                   "programs that do understand invitations will still "
                                   "be able to work with this.</qt>" );
-        KMessageBox::information( this, txt, QString(), "LegacyBodyInvitesWarning" );
+        KMessageBox::information( this, txt, QString(), QLatin1String("LegacyBodyInvitesWarning") );
     }
     // Invitations in the body are autosent in any case (no point in editing raw ICAL)
     // So the autosend option is only available if invitations are sent as attachment.

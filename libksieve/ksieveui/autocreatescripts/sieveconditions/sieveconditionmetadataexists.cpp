@@ -23,6 +23,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 SieveConditionMetaDataExists::SieveConditionMetaDataExists(QObject *parent)
@@ -89,11 +90,32 @@ QString SieveConditionMetaDataExists::help() const
     return i18n("The \"metadataexists\" test is true if all of the annotations listed in the \"annotation-names\" argument exist for the specified mailbox.");
 }
 
-void SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+void SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
 {
-    KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox") );
-
-    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                const QString tagValue = e.text();
+                if (index == 0) {
+                    KLineEdit *mailbox = w->findChild<KLineEdit*>( QLatin1String("mailbox") );
+                    mailbox->setText(tagValue);
+                } else if (index == 1) {
+                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                    value->setText(tagValue);
+                } else {
+                    qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue to many attribute "<<index;
+                }
+                ++index;
+            } else {
+                qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 
 }
 

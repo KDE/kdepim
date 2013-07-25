@@ -30,7 +30,7 @@ void AccessibleMailWebViewTest::testWebViewText()
 {
   MessageViewer::MailWebView *widget = new MessageViewer::MailWebView();
   QAccessibleInterface *interface = QAccessible::queryAccessibleInterface(widget);
-  widget->setHtml("<html><body><h1>Hi!</h1>This is a KDE test</body></html>", QUrl());
+  widget->setHtml(QLatin1String("<html><body><h1>Hi!</h1>This is a KDE test</body></html>"), QUrl());
 
   QVERIFY( interface );
   QVERIFY( interface->textInterface() );

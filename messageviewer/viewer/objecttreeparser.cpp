@@ -291,7 +291,7 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
   // Also force word wrapping, which is useful for printing, see https://issues.kolab.org/issue3992.
   bool isRoot = node->isTopLevel();
   if ( isRoot && htmlWriter() )
-    htmlWriter()->queue( "<div style=\"position: relative; word-wrap: break-word\">\n" );
+    htmlWriter()->queue( QLatin1String("<div style=\"position: relative; word-wrap: break-word\">\n") );
 
   for( ; node ; node = MessageCore::NodeHelper::nextSibling( node ) )
   {
@@ -365,7 +365,7 @@ void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
   }
 
   if ( isRoot && htmlWriter() )
-    htmlWriter()->queue( "</div>\n" );
+    htmlWriter()->queue( QLatin1String("</div>\n") );
 }
 
 void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & result ) {
@@ -380,7 +380,7 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
   if ( result.isImage() && node->parent() &&
         node->parent()->contentType()->subType() == "related" && mSource->htmlMail() && !showOnlyOneMimePart() ) {
     QString fileName = mNodeHelper->writeNodeToTempFile( node );
-    QString href = "file:///" + fileName;
+    QString href = QLatin1String("file:///") + fileName;
     QByteArray cid = node->contentID()->identifier();
     htmlWriter()->embedPart( cid, href );
     nodeHelper()->setNodeDisplayedEmbedded( node, true );
@@ -728,7 +728,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
         } else {
           std::vector<GpgME::Key> found_keys;
           // As we are local it is ok to make this synchronous
-          GpgME::KeyListResult res = job->exec( QStringList( signature.fingerprint() ), false, found_keys );
+          GpgME::KeyListResult res = job->exec( QStringList( QLatin1String(signature.fingerprint()) ), false, found_keys );
           if ( res.error() ) {
             kDebug() << "Error while searching key for Fingerprint: " << signature.fingerprint();
           }
@@ -764,7 +764,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
         QString email = QString::fromUtf8( key.userID( iMail ).email() );
         // ### work around gpgme 0.3.x / cryptplug bug where the
         // ### email addresses are specified as angle-addr, not addr-spec:
-        if ( email.startsWith( '<' ) && email.endsWith( '>' ) )
+        if ( email.startsWith( QLatin1Char('<') ) && email.endsWith( QLatin1Char('>') ) )
           email = email.mid( 1, email.length() - 2 );
         if ( !email.isEmpty() )
           messagePart.signerMailAddresses.append( email );
@@ -782,7 +782,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
         if ( messagePart.signer.isEmpty() )
           messagePart.signer = messagePart.signerMailAddresses.front();
         else
-          messagePart.signer += " <" + messagePart.signerMailAddresses.front() + '>';
+          messagePart.signer += QLatin1String(" <") + messagePart.signerMailAddresses.front() + QLatin1Char('>');
       }
     }
 #ifdef DEBUG_SIGNATURE
@@ -812,15 +812,15 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
     }
     else if ( !hideErrors ) {
       QString txt;
-      txt = "<hr><b><h2>";
+      txt = QLatin1String("<hr><b><h2>");
       txt.append( i18n( "The crypto engine returned no cleartext data." ) );
-      txt.append( "</h2></b>" );
-      txt.append( "<br/>&nbsp;<br/>" );
+      txt.append( QLatin1String("</h2></b>" ));
+      txt.append( QLatin1String("<br/>&nbsp;<br/>") );
       txt.append( i18n( "Status: " ) );
       if ( !messagePart.status.isEmpty() ) {
-        txt.append( "<i>" );
+        txt.append( QLatin1String("<i>") );
         txt.append( messagePart.status );
-        txt.append( "</i>" );
+        txt.append( QLatin1String("</i>") );
       }
       else
         txt.append( i18nc("Status of message unknown.","(unknown)") );
@@ -879,17 +879,17 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
 
 void ObjectTreeParser::writeDeferredDecryptionBlock()
 {
-  const QString iconName = "file:///" + KIconLoader::global()->iconPath( "document-decrypt",
+  const QString iconName = QLatin1String("file:///") + KIconLoader::global()->iconPath( QLatin1String("document-decrypt"),
                                                                         KIconLoader::Small );
-  const QString decryptedData = "<div style=\"font-size:large; text-align:center;"
-        "padding-top:20pt;\">"
+  const QString decryptedData = QLatin1String("<div style=\"font-size:large; text-align:center;"
+        "padding-top:20pt;\">")
         + i18n("This message is encrypted.")
-        + "</div>"
+        + QLatin1String("</div>"
         "<div style=\"text-align:center; padding-bottom:20pt;\">"
         "<a href=\"kmail:decryptMessage\">"
-        "<img src=\"" + iconName.toUtf8() + "\"/>"
+        "<img src=\"") + iconName + QLatin1String("\"/>")
         + i18n("Decrypt Message")
-        + "</a></div>";
+        + QLatin1String("</a></div>");
   PartMetaData messagePart;
   messagePart.isDecryptable = true;
   messagePart.isEncrypted = true;
@@ -941,47 +941,47 @@ void ObjectTreeParser::writeCertificateImportResult( const GpgME::ImportResult &
       htmlWriter()->queue( i18n( "Sorry, no certificates were found in this message." ) );
       return;
     }
-    QString comment = "<b>" + i18n( "Certificate import status:" ) + "</b><br/>&nbsp;<br/>";
+    QString comment = QLatin1String("<b>") + i18n( "Certificate import status:" ) + QLatin1String("</b><br/>&nbsp;<br/>");
     if ( nImp )
       comment += i18np( "1 new certificate was imported.",
-                        "%1 new certificates were imported.", nImp ) + "<br/>";
+                        "%1 new certificates were imported.", nImp ) + QLatin1String("<br/>");
     if ( nUnc )
       comment += i18np( "1 certificate was unchanged.",
-                        "%1 certificates were unchanged.", nUnc ) + "<br/>";
+                        "%1 certificates were unchanged.", nUnc ) + QLatin1String("<br/>");
     if ( nSKImp )
       comment += i18np( "1 new secret key was imported.",
-                        "%1 new secret keys were imported.", nSKImp ) + "<br/>";
+                        "%1 new secret keys were imported.", nSKImp ) + QLatin1String("<br/>");
     if ( nSKUnc )
       comment += i18np( "1 secret key was unchanged.",
-                        "%1 secret keys were unchanged.", nSKUnc ) + "<br/>";
+                        "%1 secret keys were unchanged.", nSKUnc ) + QLatin1String("<br/>");
     comment += QLatin1String("&nbsp;<br/>");
     htmlWriter()->queue( comment );
     if ( !nImp && !nSKImp ) {
-      htmlWriter()->queue( "<hr>" );
+      htmlWriter()->queue( QLatin1String("<hr>") );
       return;
     }
     const std::vector<GpgME::Import> imports = res.imports();
     if ( imports.empty() ) {
-      htmlWriter()->queue( i18n( "Sorry, no details on certificate import available." ) + "<hr>" );
+      htmlWriter()->queue( i18n( "Sorry, no details on certificate import available." ) + QLatin1String("<hr>") );
       return;
     }
-    htmlWriter()->queue( "<b>" + i18n( "Certificate import details:" ) + "</b><br/>" );
+    htmlWriter()->queue( QLatin1String("<b>") + i18n( "Certificate import details:" ) + QLatin1String("</b><br/>") );
     std::vector<GpgME::Import>::const_iterator end( imports.end() );
     for ( std::vector<GpgME::Import>::const_iterator it = imports.begin() ; it != end ; ++it ) {
       if ( (*it).error() ) {
-        htmlWriter()->queue( i18nc( "Certificate import failed.", "Failed: %1 (%2)", (*it).fingerprint(),
+        htmlWriter()->queue( i18nc( "Certificate import failed.", "Failed: %1 (%2)", QLatin1String((*it).fingerprint()),
                                 QString::fromLocal8Bit( (*it).error().asString() ) ) );
       } else if ( (*it).status() & ~GpgME::Import::ContainedSecretKey ) {
         if ( (*it).status() & GpgME::Import::ContainedSecretKey ) {
-          htmlWriter()->queue( i18n( "New or changed: %1 (secret key available)", (*it).fingerprint() ) );
+          htmlWriter()->queue( i18n( "New or changed: %1 (secret key available)", QLatin1String((*it).fingerprint() )) );
         } else {
-          htmlWriter()->queue( i18n( "New or changed: %1", (*it).fingerprint() ) );
+          htmlWriter()->queue( i18n( "New or changed: %1", QLatin1String((*it).fingerprint() )) );
         }
       }
-      htmlWriter()->queue( "<br/>" );
+      htmlWriter()->queue( QLatin1String("<br/>") );
     }
 
-    htmlWriter()->queue( "<hr>" );
+    htmlWriter()->queue( QLatin1String("<hr>") );
 }
 
 
@@ -1102,7 +1102,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
                       + "</div>";
         if ( !passphraseError )
           partMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", cryptPlugLibName )
-                    + "<br />"
+                    + QLatin1String("<br />")
                     + i18n("Error: %1", partMetaData.errorText );
       }
     }
@@ -1131,9 +1131,9 @@ if ( !cryptProto ) {
   // ### while pinentry-qt appears)
   QByteArray ciphertext( data.decodedContent() );
   QString cipherStr = QString::fromLatin1( ciphertext );
-  bool cipherIsBinary = ( !cipherStr.contains("BEGIN ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
-                        ( !cipherStr.contains("BEGIN PGP ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
-                        ( !cipherStr.contains("BEGIN PGP MESSAGE", Qt::CaseInsensitive ) );
+  bool cipherIsBinary = ( !cipherStr.contains(QLatin1String("BEGIN ENCRYPTED MESSAGE"), Qt::CaseInsensitive ) ) &&
+                        ( !cipherStr.contains(QLatin1String("BEGIN PGP ENCRYPTED MESSAGE"), Qt::CaseInsensitive ) ) &&
+                        ( !cipherStr.contains(QLatin1String("BEGIN PGP MESSAGE"), Qt::CaseInsensitive ) );
   if ( !cipherIsBinary ) {
     decryptedData = ciphertext;
   }
@@ -1164,8 +1164,8 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str, const QS
     return true;
   }
   */
-  int httpPos = str.indexOf( "\"http:", Qt::CaseInsensitive );
-  int httpsPos = str.indexOf( "\"https:", Qt::CaseInsensitive );
+  int httpPos = str.indexOf( QLatin1String("\"http:"), Qt::CaseInsensitive );
+  int httpsPos = str.indexOf( QLatin1String("\"https:"), Qt::CaseInsensitive );
 
   while ( httpPos >= 0 || httpsPos >= 0 ) {
     // pos = index of next occurrence of "http: or "https: whichever comes first
@@ -1174,7 +1174,7 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str, const QS
               : ( ( httpsPos >= 0 ) ? httpsPos : httpPos );
     // look backwards for "href"
     if ( pos > 5 ) {
-      int hrefPos = str.lastIndexOf( "href", pos - 5, Qt::CaseInsensitive );
+      int hrefPos = str.lastIndexOf( QLatin1String("href"), pos - 5, Qt::CaseInsensitive );
       // if no 'href' is found or the distance between 'href' and '"http[s]:'
       // is larger than 7 (7 is the distance in 'href = "http[s]:') then
       // we assume that we have found an external reference
@@ -1183,17 +1183,17 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str, const QS
         // HTML messages created by KMail itself for now contain the following:
         // <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
         // Make sure not to show an external references warning for this string
-        int dtdPos = str.indexOf( "http://www.w3.org/TR/html4/loose.dtd", pos + 1 );
+        int dtdPos = str.indexOf( QLatin1String("http://www.w3.org/TR/html4/loose.dtd"), pos + 1 );
         if ( dtdPos != ( pos + 1 ) )
           return true;
       }
     }
     // find next occurrence of "http: or "https:
     if ( pos == httpPos ) {
-      httpPos = str.indexOf( "\"http:", httpPos + 6, Qt::CaseInsensitive );
+      httpPos = str.indexOf( QLatin1String("\"http:"), httpPos + 6, Qt::CaseInsensitive );
     }
     else {
-      httpsPos = str.indexOf( "\"https:", httpsPos + 7, Qt::CaseInsensitive );
+      httpsPos = str.indexOf( QLatin1String("\"https:"), httpsPos + 7, Qt::CaseInsensitive );
     }
   }
   return false;
@@ -1214,7 +1214,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
   if ( mSource->htmlMail() ) {
     bodyText = bodyHTML;
   } else {
-    bodyText = StringUtil::convertAngleBracketsToHtml( partBody );
+    bodyText = QLatin1String(StringUtil::convertAngleBracketsToHtml( partBody ));
   }
 
   if ( curNode->topLevel()->textContent() == curNode  || attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
@@ -1238,30 +1238,30 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
       // because only spam contains obfuscated external references.
       if ( !mSource->htmlLoadExternal() &&
             containsExternalReferences( bodyText,extraHead ) ) {
-        htmlWriter()->queue( "<div class=\"htmlWarn\">\n" );
+        htmlWriter()->queue( QLatin1String("<div class=\"htmlWarn\">\n") );
         htmlWriter()->queue( i18n("<b>Note:</b> This HTML message may contain external "
                                   "references to images etc. For security/privacy reasons "
                                   "external references are not loaded. If you trust the "
                                   "sender of this message then you can load the external "
                                   "references for this message "
                                   "<a href=\"kmail:loadExternal\">by clicking here</a>.") );
-        htmlWriter()->queue( "</div><br/><br/>" );
+        htmlWriter()->queue( QLatin1String("</div><br/><br/>") );
       }
     } else {
-      htmlWriter()->queue( "<div class=\"htmlWarn\">\n" );
+      htmlWriter()->queue( QLatin1String("<div class=\"htmlWarn\">\n") );
       htmlWriter()->queue( i18n("<b>Note:</b> This is an HTML message. For "
                                 "security reasons, only the raw HTML code "
                                 "is shown. If you trust the sender of this "
                                 "message then you can activate formatted "
                                 "HTML display for this message "
                                 "<a href=\"kmail:showHTML\">by clicking here</a>.") );
-      htmlWriter()->queue( "</div><br/><br/>" );
+      htmlWriter()->queue( QLatin1String("</div><br/><br/>") );
     }
     // Make sure the body is relative, so that nothing is painted over above "Note: ..."
     // if a malicious message uses absolute positioning. #137643
-    htmlWriter()->queue( "<div style=\"position: relative\">\n" );
+    htmlWriter()->queue( QLatin1String("<div style=\"position: relative\">\n") );
     htmlWriter()->queue( bodyText );
-    htmlWriter()->queue( "</div>\n" );
+    htmlWriter()->queue( QLatin1String("</div>\n" ));
     mSource->setHtmlMode( Util::Html );
     return true;
   }
@@ -1276,7 +1276,7 @@ bool ObjectTreeParser::isMailmanMessage( KMime::Content * curNode )
     return true;
   if ( curNode->hasHeader("X-Mailer") ) {
       KMime::Headers::Base *header = curNode->headerByType("X-Mailer");
-      if ( header->asUnicodeString().contains("MAILMAN", Qt::CaseInsensitive ) )
+      if ( header->asUnicodeString().contains(QLatin1String("MAILMAN"), Qt::CaseInsensitive ) )
         return true;
   }
   return false;
@@ -1317,7 +1317,7 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
   //  curNode = curNode->mRoot;
 
   // at least one message found: build a mime tree
-  digestHeaderStr = "Content-Type: text/plain\nContent-Description: digest header\n\n";
+  digestHeaderStr = QLatin1String("Content-Type: text/plain\nContent-Description: digest header\n\n");
   digestHeaderStr += str.mid( 0, thisDelim );
   createAndParseTempNode( mTopLevelContent, digestHeaderStr.toLatin1(), "Digest Header" );
   //mReader->queueHtml("<br><hr><br>");
@@ -1325,15 +1325,15 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
   // to get our embedded RfC822 messages properly inserted
   curNode->contentType()->setMimeType( "multipart/digest" );
   while( -1 < nextDelim ){
-    int thisEoL = str.indexOf("\nMessage:", thisDelim, Qt::CaseInsensitive );
+    int thisEoL = str.indexOf(QLatin1String("\nMessage:"), thisDelim, Qt::CaseInsensitive );
     if ( -1 < thisEoL )
       thisDelim = thisEoL+1;
     else{
-      thisEoL = str.indexOf("\n_____________", thisDelim, Qt::CaseInsensitive );
+      thisEoL = str.indexOf(QLatin1String("\n_____________"), thisDelim, Qt::CaseInsensitive );
       if ( -1 < thisEoL )
         thisDelim = thisEoL+1;
     }
-    thisEoL = str.indexOf( '\n', thisDelim );
+    thisEoL = str.indexOf( QLatin1Char('\n'), thisDelim );
     if ( -1 < thisEoL )
       thisDelim = thisEoL+1;
     else
@@ -1341,15 +1341,15 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
     //while( thisDelim < cstr.size() && '\n' == cstr[thisDelim] )
     //  ++thisDelim;
 
-    partStr = "Content-Type: message/rfc822\nContent-Description: embedded message\n\n";
-    partStr += "Content-Type: text/plain\n";
+    partStr = QLatin1String("Content-Type: message/rfc822\nContent-Description: embedded message\n\n");
+    partStr += QLatin1String("Content-Type: text/plain\n");
     partStr += str.mid( thisDelim, nextDelim-thisDelim );
     QString subject = QString::fromLatin1("embedded message");
     QString subSearch = QString::fromLatin1("\nSubject:");
     int subPos = partStr.indexOf(subSearch, 0, Qt::CaseInsensitive );
     if ( -1 < subPos ){
       subject = partStr.mid(subPos+subSearch.length());
-      thisEoL = subject.indexOf('\n');
+      thisEoL = subject.indexOf(QLatin1Char('\n'));
       if ( -1 < thisEoL )
         subject.truncate( thisEoL );
     }
@@ -1367,16 +1367,16 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
   }
   // reset curent node's Content-Type
   curNode->contentType()->setMimeType( "text/plain" );
-  int thisEoL = str.indexOf( "_____________", thisDelim );
+  int thisEoL = str.indexOf( QLatin1String("_____________"), thisDelim );
   if ( -1 < thisEoL ){
     thisDelim = thisEoL;
-    thisEoL = str.indexOf( '\n', thisDelim );
+    thisEoL = str.indexOf( QLatin1Char('\n'), thisDelim );
     if ( -1 < thisEoL )
       thisDelim = thisEoL+1;
   }
   else
     thisDelim = thisDelim+1;
-  partStr = "Content-Type: text/plain\nContent-Description: digest footer\n\n";
+  partStr = QLatin1String("Content-Type: text/plain\nContent-Description: digest footer\n\n");
   partStr += str.mid( thisDelim );
   createAndParseTempNode( mTopLevelContent, partStr.toLatin1(), "Digest Footer" );
   return true;
@@ -1415,18 +1415,18 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
 
     const QString fileName;
     mNodeHelper->writeNodeToTempFile( curNode );
-    const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
+    const QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr") ;
 
-    QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
-                "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
+    QString htmlStr = QLatin1String("<table cellspacing=\"1\" class=\"textAtm\">"
+                "<tr class=\"textAtmH\"><td dir=\"") + dir + QLatin1String("\">");
     if ( !fileName.isEmpty() )
-      htmlStr += "<a href=\"" + mNodeHelper->asHREF( curNode, "body" ) + "\">"
-                  + label + "</a>";
+      htmlStr += QLatin1String("<a href=\"") + mNodeHelper->asHREF( curNode, QLatin1String("body") ) + QLatin1String("\">")
+                  + label + QLatin1String("</a>");
     else
       htmlStr += label;
     if ( !comment.isEmpty() )
-      htmlStr += "<br/>" + comment;
-    htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
+      htmlStr += QLatin1String("<br/>") + comment;
+    htmlStr += QLatin1String("</td></tr><tr class=\"textAtmB\"><td>");
 
     htmlWriter()->queue( htmlStr );
   }
@@ -1447,7 +1447,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
   }
   if( bDrawFrame && htmlWriter() ) {
-    htmlWriter()->queue( "</td></tr></table>" );
+    htmlWriter()->queue( QLatin1String("</td></tr></table>") );
   }
 
   return true;
@@ -1476,8 +1476,8 @@ bool ObjectTreeParser::processToltecMail( KMime::Content *node )
     return false;
 
   htmlWriter()->queue( GlobalSettings::self()->toltecReplacementText() );
-  htmlWriter()->queue( "<br/><br/><a href=\"kmail:showRawToltecMail\">" +
-                       i18n( "Show Raw Message" ) + "</a>" );
+  htmlWriter()->queue( QLatin1String("<br/><br/><a href=\"kmail:showRawToltecMail\">") +
+                       i18n( "Show Raw Message" ) + QLatin1String("</a>") );
   return true;
 }
 
@@ -1586,8 +1586,8 @@ bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, Pro
     return true;
   }
 
-  QString protocolContentType = node->contentType()->parameter( "protocol" ).toLower();
-  const QString signatureContentType = signature->contentType()->mimeType().toLower();
+  QString protocolContentType = node->contentType()->parameter( QLatin1String("protocol") ).toLower();
+  const QString signatureContentType = QLatin1String(signature->contentType()->mimeType().toLower());
   if ( protocolContentType.isEmpty() ) {
     kWarning() << "Message doesn't set the protocol for the multipart/signed content-type, "
                   "using content-type of the signature:" << signatureContentType;
@@ -1912,7 +1912,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
   if ( !smimeCrypto )
     return false;
 
-  const QString smimeType = node->contentType()->parameter("smime-type").toLower();
+  const QString smimeType = node->contentType()->parameter(QLatin1String("smime-type")).toLower();
 
   if ( smimeType == QLatin1String( "certs-only" ) ) {
     result.setNeverDisplayInline( true );
@@ -2159,7 +2159,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
                                               0, //cryptPlugWrapper(),
                                               NodeHelper::fromAsString( curNode ) ) );
   const QByteArray body = bOkDecrypt ? decryptedBody : data;
-  const QString chiasmusCharset = curNode->contentType()->parameter("chiasmus-charset");
+  const QString chiasmusCharset = curNode->contentType()->parameter(QLatin1String("chiasmus-charset"));
   const QTextCodec* aCodec = chiasmusCharset.isEmpty() ? codecFor( curNode )
                               : NodeHelper::codecForName( chiasmusCharset.toLatin1() );
   htmlWriter()->queue( quotedHTML( aCodec->toUnicode( body ), false /*decorate*/ ) );
@@ -2201,17 +2201,17 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   if ( label == comment )
     comment.clear();
 
-  QString href = mNodeHelper->asHREF( msgPart, "body" );
+  QString href = mNodeHelper->asHREF( msgPart, QLatin1String("body") );
 
   if ( inlineImage ) {
     const QString fileName = mNodeHelper->writeNodeToTempFile( msgPart );
     // show the filename of the image below the embedded image
-    htmlWriter()->queue( "<div><a href=\"" + href + "\">"
-                         "<img src=\"file:///" + fileName + "\" border=\"0\" style=\"max-width: 100%\"/></a>"
+    htmlWriter()->queue( QLatin1String("<div><a href=\"") + href + QLatin1String("\">"
+                         "<img src=\"file:///") + fileName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\"/></a>"
                           "</div>"
-                          "<div><a href=\"" + href + "\">" + label + "</a>"
+                          "<div><a href=\"") + href + QLatin1String("\">") + label + QLatin1String("</a>"
                           "</div>"
-                          "<div>" + comment + "</div><br/>" );
+                          "<div>") + comment + QLatin1String("</div><br/>") );
   } else {
     // show the filename next to the image
     const QString iconName = mNodeHelper->iconName( msgPart );
@@ -2219,10 +2219,10 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
       mNodeHelper->magicSetType( msgPart );
       //iconName = mNodeHelper->iconName( msgPart );
     }
-    htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"file:///" +
-                          iconName + "\" border=\"0\" style=\"max-width: 100%\" alt=\"\"/>" + label +
-                          "</a></div>"
-                          "<div>" + comment + "</div><br/>" );
+    htmlWriter()->queue( QLatin1String("<div><a href=\"") + href + QLatin1String("\"><img src=\"file:///") +
+                          iconName + QLatin1String("\" border=\"0\" style=\"max-width: 100%\" alt=\"\"/>") + label +
+                          QLatin1String("</a></div>"
+                          "<div>") + comment +QLatin1String( "</div><br/>") );
   }
 }
 
@@ -2384,7 +2384,7 @@ QString ObjectTreeParser::sigStatusToString( const Kleo::CryptoBackend::Protocol
 
           if( !result2.isEmpty() ) {
               if( !result.isEmpty() )
-                  result.append("<br />");
+                  result.append(QLatin1String("<br />"));
               result.append( result2 );
           }
       }
@@ -2402,7 +2402,7 @@ QString ObjectTreeParser::sigStatusToString( const Kleo::CryptoBackend::Protocol
 static QString writeSimpleSigstatHeader( const PartMetaData &block )
 {
   QString html;
-  html += "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td>";
+  html += QLatin1String("<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td>");
 
   if ( block.signClass == QLatin1String( "signErr" ) ) {
     html += i18n( "Invalid signature." );
@@ -2429,16 +2429,16 @@ static QString writeSimpleSigstatHeader( const PartMetaData &block )
     // should not happen
     html += i18n( "Unknown signature state" );
   }
-  html += "</td><td align=\"right\">";
-  html += "<a href=\"kmail:showSignatureDetails\">";
+  html += QLatin1String("</td><td align=\"right\">");
+  html += QLatin1String("<a href=\"kmail:showSignatureDetails\">");
   html += i18n( "Show Details" );
-  html += "</a></td></tr></table>";
+  html += QLatin1String("</a></td></tr></table>");
   return html;
 }
 
 static QString beginVerboseSigstatHeader()
 {
-  return "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td rowspan=\"2\">";
+  return QLatin1String("<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td rowspan=\"2\">");
 }
 
 static QString makeShowAuditLogLink( const GpgME::Error & err, const QString & auditLog ) {
@@ -2459,11 +2459,11 @@ static QString makeShowAuditLogLink( const GpgME::Error & err, const QString & a
 
   if ( !auditLog.isEmpty() ) {
     KUrl url;
-    url.setProtocol( "kmail" );
-    url.setPath( "showAuditLog" );
-    url.addQueryItem( "log", auditLog );
+    url.setProtocol( QLatin1String("kmail") );
+    url.setPath( QLatin1String("showAuditLog") );
+    url.addQueryItem( QLatin1String("log"), auditLog );
 
-    return "<a href=\"" + url.url() + "\">" + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + "</a>";
+    return QLatin1String("<a href=\"") + url.url() + QLatin1String("\">") + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + QLatin1String("</a>");
   }
 
   return QString();
@@ -2472,13 +2472,13 @@ static QString makeShowAuditLogLink( const GpgME::Error & err, const QString & a
 static QString endVerboseSigstatHeader( const PartMetaData & pmd )
 {
   QString html;
-  html += "</td><td align=\"right\" valign=\"top\" nowrap=\"nowrap\">";
-  html += "<a href=\"kmail:hideSignatureDetails\">";
+  html += QLatin1String("</td><td align=\"right\" valign=\"top\" nowrap=\"nowrap\">");
+  html += QLatin1String("<a href=\"kmail:hideSignatureDetails\">");
   html += i18n( "Hide Details" );
-  html += "</a></td></tr>";
-  html += "<tr><td align=\"right\" valign=\"bottom\" nowrap=\"nowrap\">";
+  html += QLatin1String("</a></td></tr>");
+  html += QLatin1String("<tr><td align=\"right\" valign=\"bottom\" nowrap=\"nowrap\">");
   html += makeShowAuditLogLink( pmd.auditLogError, pmd.auditLog );
-  html += "</td></tr></table>";
+  html += QLatin1String("</td></tr></table>");
   return html;
 }
 
@@ -2491,25 +2491,25 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
   QString signer = block.signer;
 
   QString htmlStr, simpleHtmlStr;
-  const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-  QString cellPadding("cellpadding=\"1\"");
+  const QString dir = QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr");
+  QString cellPadding(QLatin1String("cellpadding=\"1\""));
 
   if( block.isEncapsulatedRfc822Message )
   {
-      htmlStr += "<table cellspacing=\"1\" "+cellPadding+" class=\"rfc822\">"
-          "<tr class=\"rfc822H\"><td dir=\"" + dir + "\">";
+      htmlStr += QLatin1String("<table cellspacing=\"1\" ")+cellPadding+QLatin1String(" class=\"rfc822\">"
+          "<tr class=\"rfc822H\"><td dir=\"") + dir + QLatin1String("\">");
       if( node ) {
-          htmlStr += "<a href=\"" + mNodeHelper->asHREF( node, "body" ) + "\">"
-                    + i18n("Encapsulated message") + "</a>";
+          htmlStr += QLatin1String("<a href=\"") + mNodeHelper->asHREF( node, QLatin1String("body") ) + QLatin1String("\">")
+                    + i18n("Encapsulated message") + QLatin1String("</a>");
       } else {
           htmlStr += i18n("Encapsulated message");
       }
-      htmlStr += "</td></tr><tr class=\"rfc822B\"><td>";
+      htmlStr += QLatin1String("</td></tr><tr class=\"rfc822B\"><td>");
   }
 
   if( block.isEncrypted ) {
-      htmlStr += "<table cellspacing=\"1\" "+cellPadding+" class=\"encr\">"
-          "<tr class=\"encrH\"><td dir=\"" + dir + "\">";
+      htmlStr += QLatin1String("<table cellspacing=\"1\" ")+cellPadding+QLatin1String(" class=\"encr\">"
+          "<tr class=\"encrH\"><td dir=\"") + dir + QLatin1String("\">");
       if ( block.inProgress ) {
           htmlStr += i18n("Please wait while the message is being decrypted...");
       } else if( block.isDecryptable ) {
@@ -2517,18 +2517,18 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
       } else {
           htmlStr += i18n("Encrypted message (decryption not possible)");
           if( !block.errorText.isEmpty() ) {
-              htmlStr += "<br />" + i18n("Reason: %1", block.errorText );
+              htmlStr += QLatin1String("<br />") + i18n("Reason: %1", block.errorText );
           }
       }
-      htmlStr += "</td></tr><tr class=\"encrB\"><td>";
+      htmlStr += QLatin1String("</td></tr><tr class=\"encrB\"><td>");
   }
 
   if ( block.isSigned && block.inProgress ) {
-      block.signClass = "signInProgress";
-      htmlStr += "<table cellspacing=\"1\" "+cellPadding+" class=\"signInProgress\">"
-      "<tr class=\"signInProgressH\"><td dir=\"" + dir + "\">";
+      block.signClass =QLatin1String( "signInProgress");
+      htmlStr += QLatin1String("<table cellspacing=\"1\" ")+cellPadding+QLatin1String(" class=\"signInProgress\">"
+      "<tr class=\"signInProgressH\"><td dir=\"") + dir + QLatin1String("\">");
       htmlStr += i18n("Please wait while the signature is being verified...");
-      htmlStr += "</td></tr><tr class=\"signInProgressB\"><td>";
+      htmlStr += QLatin1String("</td></tr><tr class=\"signInProgressB\"><td>");
   }
 
   simpleHtmlStr = htmlStr;
@@ -2574,17 +2574,17 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
       QString startKeyHREF;
       if( isSMIME )
           startKeyHREF =
-              QString("<a href=\"kmail:showCertificate#%1 ### %2 ### %3\">")
+              QString::fromLatin1("<a href=\"kmail:showCertificate#%1 ### %2 ### %3\">")
               .arg( cryptProto->displayName(),
                     cryptProto->name(),
                     QString::fromLatin1( block.keyId ) );
-      QString keyWithWithoutURL
+      QString keyWithWithoutURL =
           // FIXME: Kleopatra misses a -query option, so disable this for now.
-          = /*isSMIME
+           /*isSMIME
           ? QString("%1%2</a>")
               .arg( startKeyHREF,
                     cannotCheckSignature ? i18n("[Details]") : ("0x" + block.keyId) )
-          : */"0x" + QString::fromUtf8( block.keyId );
+          : */ QLatin1String("0x") + QString::fromUtf8( block.keyId );
 
 
       // temporary hack: always show key information!
@@ -2598,24 +2598,24 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
           // new frame settings for CMS:
           // beautify the status string
           if( !statusStr.isEmpty() ) {
-              statusStr.prepend("<i>");
-              statusStr.append( "</i>");
+              statusStr.prepend(QLatin1String("<i>"));
+              statusStr.append( QLatin1String("</i>"));
           }
 
           // special color handling: S/MIME uses only green/yellow/red.
           switch( frameColor ) {
               case SIG_FRAME_COL_RED:
-                  block.signClass = "signErr";//"signCMSRed";
+                  block.signClass = QLatin1String("signErr");//"signCMSRed";
                   onlyShowKeyURL = true;
                   break;
               case SIG_FRAME_COL_YELLOW:
                   if( block.technicalProblem )
-                      block.signClass = "signWarn";
+                      block.signClass = QLatin1String("signWarn");
                   else
-                      block.signClass = "signOkKeyBad";//"signCMSYellow";
+                      block.signClass = QLatin1String("signOkKeyBad");//"signCMSYellow";
                   break;
               case SIG_FRAME_COL_GREEN:
-                  block.signClass = "signOkKeyOk";//"signCMSGreen";
+                  block.signClass = QLatin1String("signOkKeyOk");//"signCMSGreen";
                   // extra hint for green case
                   // that email addresses in DN do not match fromAddress
                   QString greenCaseWarning;
@@ -2624,20 +2624,20 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                   if( block.keyId.isEmpty() )
                       certificate = i18n("certificate");
                   else
-                      certificate = startKeyHREF + i18n("certificate") + "</a>";
+                      certificate = startKeyHREF + i18n("certificate") + QLatin1String("</a>");
                   if( !blockAddrs.empty() ){
                       if( !blockAddrs.contains( msgFrom, Qt::CaseInsensitive ) ) {
                           greenCaseWarning =
-                              "<u>" +
+                              QLatin1String("<u>") +
                               i18nc("Start of warning message."
                                 ,"Warning:") +
-                              "</u> " +
+                              QLatin1String("</u> ") +
                               i18n("Sender's mail address is not stored "
                                     "in the %1 used for signing.", certificate) +
-                              "<br />" +
+                              QLatin1String("<br />") +
                               i18n("sender: ") +
                               msgFrom +
-                              "<br />" +
+                              QLatin1String("<br />") +
                               i18n("stored: ");
                           // We cannot use Qt's join() function here but
                           // have to join the addresses manually to
@@ -2647,16 +2647,16 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                           for(QStringList::ConstIterator it = blockAddrs.constBegin();
                               it != blockAddrs.constEnd(); ++it ){
                               if( !bStart )
-                                  greenCaseWarning.append(", <br />&nbsp; &nbsp;");
+                                  greenCaseWarning.append(QLatin1String(", <br />&nbsp; &nbsp;"));
                               bStart = false;
                               greenCaseWarning.append( KPIMUtils::extractEmailAddress(*it) );
                           }
                       }
                   } else {
                       greenCaseWarning =
-                          "<u>" +
+                          QLatin1String("<u>") +
                           i18nc("Start of warning message.","Warning:") +
-                          "</u> " +
+                          QLatin1String("</u> ") +
                           i18n("No mail address is stored in the %1 used for signing, "
                                 "so we cannot compare it to the sender's address %2.",
                             certificate,
@@ -2664,15 +2664,15 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                   }
                   if( !greenCaseWarning.isEmpty() ) {
                       if( !statusStr.isEmpty() )
-                          statusStr.append("<br />&nbsp;<br />");
+                          statusStr.append(QLatin1String("<br />&nbsp;<br />"));
                       statusStr.append( greenCaseWarning );
                   }
                   break;
           }
 
-          QString frame = "<table cellspacing=\"1\" "+cellPadding+" "
-              "class=\"" + block.signClass + "\">"
-              "<tr class=\"" + block.signClass + "H\"><td dir=\"" + dir + "\">";
+          QString frame = QLatin1String("<table cellspacing=\"1\" ")+cellPadding+QLatin1String(" "
+              "class=\"") + block.signClass + QLatin1String("\">"
+              "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"") + dir + QLatin1String("\">");
           htmlStr += frame + beginVerboseSigstatHeader();
           simpleHtmlStr += frame;
           simpleHtmlStr += writeSimpleSigstatHeader( block );
@@ -2692,8 +2692,8 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                   else {
                       if( !blockAddrs.empty() ){
                           const KUrl address = KPIMUtils::encodeMailtoUrl( blockAddrs.first() );
-                          signer = "<a href=\"mailto:" + KUrl::toPercentEncoding( address.path() ) +
-                                   "\">" + signer + "</a>";
+                          signer = QLatin1String("<a href=\"mailto:") + QLatin1String(KUrl::toPercentEncoding( address.path() )) +
+                                   QLatin1String("\">") + signer + QLatin1String("</a>");
                       }
                   }
 
@@ -2737,16 +2737,16 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                       }
                   }
               }
-              htmlStr += "<br />";
+              htmlStr += QLatin1String("<br />");
               if( !statusStr.isEmpty() ) {
-                  htmlStr += "&nbsp;<br />";
+                  htmlStr += QLatin1String("&nbsp;<br />");
                   htmlStr += i18n( "Status: " );
                   htmlStr += statusStr;
               }
           } else {
               htmlStr += statusStr;
           }
-          frame = "</td></tr><tr class=\"" + block.signClass + "B\"><td>";
+          frame = QLatin1String("</td></tr><tr class=\"") + block.signClass + QLatin1String("B\"><td>");
           htmlStr += endVerboseSigstatHeader( block ) + frame;
           simpleHtmlStr += frame;
 
@@ -2755,10 +2755,10 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
           // old frame settings for PGP:
 
           if( block.signer.isEmpty() || block.technicalProblem ) {
-              block.signClass = "signWarn";
-              QString frame = "<table cellspacing=\"1\" "+cellPadding+" "
-                  "class=\"" + block.signClass + "\">"
-                  "<tr class=\"" + block.signClass + "H\"><td dir=\"" + dir + "\">";
+              block.signClass = QLatin1String("signWarn");
+              QString frame = QLatin1String("<table cellspacing=\"1\" ")+cellPadding+QLatin1String(" "
+                  "class=\"") + block.signClass + QLatin1String("\">"
+                  "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"" )+ dir + QLatin1String("\">");
               htmlStr += frame + beginVerboseSigstatHeader();
               simpleHtmlStr += frame;
               simpleHtmlStr += writeSimpleSigstatHeader( block );
@@ -2778,18 +2778,18 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                 }
                 else
                   htmlStr += i18n( "Message was signed with unknown key." );
-                htmlStr += "<br />";
+                htmlStr += QLatin1String("<br />");
                 htmlStr += i18n( "The validity of the signature cannot be "
                                   "verified." );
                 if( !statusStr.isEmpty() ) {
-                  htmlStr += "<br />";
+                  htmlStr += QLatin1String("<br />");
                   htmlStr += i18n( "Status: " );
-                  htmlStr += "<i>";
+                  htmlStr += QLatin1String("<i>");
                   htmlStr += statusStr;
-                  htmlStr += "</i>";
+                  htmlStr += QLatin1String("</i>");
                 }
               }
-              frame = "</td></tr><tr class=\"" + block.signClass + "B\"><td>";
+              frame = QLatin1String("</td></tr><tr class=\"") + block.signClass + QLatin1String("B\"><td>");
               htmlStr += endVerboseSigstatHeader( block ) + frame;
               simpleHtmlStr += frame;
           }
@@ -2797,16 +2797,16 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
           {
               // HTMLize the signer's user id and create mailto: link
               signer = StringUtil::quoteHtmlChars( signer, true );
-              signer = "<a href=\"mailto:" + signer + "\">" + signer + "</a>";
+              signer = QLatin1String("<a href=\"mailto:") + signer + QLatin1String("\">") + signer + QLatin1String("</a>");
 
               if (block.isGoodSignature) {
                   if( block.keyTrust < Kpgp::KPGP_VALIDITY_MARGINAL )
-                      block.signClass = "signOkKeyBad";
+                      block.signClass = QLatin1String("signOkKeyBad");
                   else
-                      block.signClass = "signOkKeyOk";
-                  QString frame = "<table cellspacing=\"1\" "+cellPadding+" "
-                      "class=\"" + block.signClass + "\">"
-                      "<tr class=\"" + block.signClass + "H\"><td dir=\"" + dir + "\">";
+                      block.signClass = QLatin1String("signOkKeyOk");
+                  QString frame = QLatin1String("<table cellspacing=\"1\" ")+cellPadding+QLatin1String(" "
+                      "class=\"") + block.signClass + QLatin1String("\">"
+                      "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"") + dir + QLatin1String("\">");
                   htmlStr += frame + beginVerboseSigstatHeader();
                   simpleHtmlStr += frame;
                   simpleHtmlStr += writeSimpleSigstatHeader( block );
@@ -2816,7 +2816,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                     signer );
                   else
                       htmlStr += i18n( "Message was signed by %1.", signer );
-                  htmlStr += "<br />";
+                  htmlStr += QLatin1String("<br />");
 
                   switch( block.keyTrust )
                   {
@@ -2840,17 +2840,17 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                       htmlStr += i18n( "The signature is valid, but the key is "
                               "untrusted." );
                   }
-                  frame = "</td></tr>"
-                      "<tr class=\"" + block.signClass + "B\"><td>";
+                  frame = QLatin1String("</td></tr>"
+                      "<tr class=\"") + block.signClass + QLatin1String("B\"><td>");
                   htmlStr += endVerboseSigstatHeader( block ) + frame;
                   simpleHtmlStr += frame;
               }
               else
               {
-                  block.signClass = "signErr";
-                  QString frame = "<table cellspacing=\"1\" "+cellPadding+" "
-                      "class=\"" + block.signClass + "\">"
-                      "<tr class=\"" + block.signClass + "H\"><td dir=\"" + dir + "\">";
+                  block.signClass = QLatin1String("signErr");
+                  QString frame = QLatin1String("<table cellspacing=\"1\" ")+cellPadding+QLatin1String(" "
+                      "class=\"") + block.signClass + QLatin1String("\">"
+                      "<tr class=\"") + block.signClass + QLatin1String("H\"><td dir=\"") + dir + QLatin1String("\">");
                   htmlStr += frame + beginVerboseSigstatHeader();
                   simpleHtmlStr += frame;
                   simpleHtmlStr += writeSimpleSigstatHeader( block );
@@ -2860,10 +2860,10 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                         signer );
                   else
                       htmlStr += i18n( "Message was signed by %1.", signer );
-                  htmlStr += "<br />";
+                  htmlStr += QLatin1String("<br />");
                   htmlStr += i18n("Warning: The signature is bad.");
-                  frame = "</td></tr>"
-                      "<tr class=\"" + block.signClass + "B\"><td>";
+                  frame = QLatin1String("</td></tr>"
+                      "<tr class=\"") + block.signClass + QLatin1String("B\"><td>");
                   htmlStr += endVerboseSigstatHeader( block ) + frame;
                   simpleHtmlStr += frame;
               }
@@ -2878,28 +2878,28 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
 
 QString ObjectTreeParser::writeSigstatFooter( PartMetaData& block )
 {
-  const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+  const QString dir = ( QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr") );
 
   QString htmlStr;
 
   if (block.isSigned) {
-      htmlStr += "</td></tr><tr class=\"" + block.signClass + "H\">";
-      htmlStr += "<td dir=\"" + dir + "\">" +
+      htmlStr += QLatin1String("</td></tr><tr class=\"") + block.signClass + QLatin1String("H\">");
+      htmlStr += QLatin1String("<td dir=\"") + dir + QLatin1String("\">") +
           i18n( "End of signed message" ) +
-          "</td></tr></table>";
+          QLatin1String("</td></tr></table>");
   }
 
   if (block.isEncrypted) {
-      htmlStr += "</td></tr><tr class=\"encrH\"><td dir=\"" + dir + "\">" +
+      htmlStr += QLatin1String("</td></tr><tr class=\"encrH\"><td dir=\"") + dir + QLatin1String("\">") +
               i18n( "End of encrypted message" ) +
-          "</td></tr></table>";
+          QLatin1String("</td></tr></table>");
   }
 
   if( block.isEncapsulatedRfc822Message )
   {
-      htmlStr += "</td></tr><tr class=\"rfc822H\"><td dir=\"" + dir + "\">" +
+      htmlStr += QLatin1String("</td></tr><tr class=\"rfc822H\"><td dir=\"") + dir + QLatin1String("\">") +
           i18n( "End of encapsulated message" ) +
-          "</td></tr></table>";
+          QLatin1String("</td></tr></table>");
   }
 
   return htmlStr;
@@ -2923,7 +2923,7 @@ void ObjectTreeParser::writeAttachmentMarkFooter()
   if ( !htmlWriter() )
     return;
 
-  htmlWriter()->queue( QString( "</div>" ) );
+  htmlWriter()->queue( QLatin1String( "</div>" ) );
 }
 
 
@@ -2947,7 +2947,7 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
   bool goodSignature = false;
   Kpgp::Module* pgp = Kpgp::Module::getKpgp();
   assert(pgp != 0);
-  const QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+  const QString dir = ( QApplication::isRightToLeft() ? QLatin1String("rtl") : QLatin1String("ltr") );
   //QString headerStr = QString::fromLatin1("<div dir=\"%1\">").arg(dir);
 
   inlineSignatureState  = KMMsgNotSigned;
@@ -3145,8 +3145,8 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     quoteFontTag[i] = cssHelper()->quoteFontTag( i );
     deepQuoteFontTag[i] = cssHelper()->quoteFontTag( i+3 );
   }
-  const QString normalEndTag = "</div>";
-  const QString quoteEnd = "</div>";
+  const QString normalEndTag = QLatin1String("</div>");
+  const QString quoteEnd = QLatin1String("</div>");
 
   const unsigned int length = s.length();
   bool paraIsRTL = false;
@@ -3154,9 +3154,9 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
   unsigned int pos, beg;
 
   // skip leading empty lines
-  for ( pos = 0; pos < length && s[pos] <= ' '; pos++ )
+  for ( pos = 0; pos < length && s[pos] <= QLatin1Char(' '); pos++ )
     ;
-  while (pos > 0 && (s[pos-1] == ' ' || s[pos-1] == '\t')) pos--;
+  while (pos > 0 && (s[pos-1] == QLatin1Char(' ') || s[pos-1] == QLatin1Char('\t'))) pos--;
   beg = pos;
 
   int currQuoteLevel = -2; // -2 == no previous lines
@@ -3167,17 +3167,17 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     // Cache Icons
     if ( mCollapseIcon.isEmpty() ) {
       mCollapseIcon= LinkLocator::pngToDataUrl(
-          IconNameCache::instance()->iconPath( "quotecollapse", 0 ));
+          IconNameCache::instance()->iconPath( QLatin1String("quotecollapse"), 0 ));
     }
     if ( mExpandIcon.isEmpty() )
       mExpandIcon= LinkLocator::pngToDataUrl(
-          IconNameCache::instance()->iconPath( "quoteexpand", 0 ));
+          IconNameCache::instance()->iconPath( QLatin1String("quoteexpand"), 0 ));
   }
 
   while (beg<length)
   {
     /* search next occurrence of '\n' */
-    pos = s.indexOf('\n', beg, Qt::CaseInsensitive);
+    pos = s.indexOf(QLatin1Char('\n'), beg, Qt::CaseInsensitive);
     if (pos == (unsigned int)(-1))
         pos = length;
 
@@ -3227,21 +3227,21 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
             //only show the QuoteMark when is the first line of the level hidden
             if ( !curHidden ) {
               //Expand all quotes
-              htmlStr += "<div class=\"quotelevelmark\" >" ;
+              htmlStr += QLatin1String("<div class=\"quotelevelmark\" >") ;
               htmlStr += QString::fromLatin1( "<a href=\"kmail:levelquote?%1 \">"
                                   "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
                   .arg(-1)
                   .arg( mExpandIcon );
-              htmlStr += "</div><br/>";
+              htmlStr += QLatin1String("</div><br/>");
               htmlStr += quoteEnd;
             }
           } else {
-            htmlStr += "<div class=\"quotelevelmark\" >" ;
+            htmlStr += QLatin1String("<div class=\"quotelevelmark\" >" );
             htmlStr += QString::fromLatin1( "<a href=\"kmail:levelquote?%1 \">"
                                 "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
                 .arg(actQuoteLevel)
                 .arg( mCollapseIcon);
-            htmlStr += "</div>";
+            htmlStr += QLatin1String("</div>");
             if ( actQuoteLevel < 3 ) {
               htmlStr += quoteFontTag[actQuoteLevel];
             } else {
@@ -3265,18 +3265,18 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     {
       // don't write empty <div ...></div> blocks (they have zero height)
       // ignore ^M DOS linebreaks
-      if( !line.remove( '\015' ).isEmpty() )
+      if( !line.remove( QLatin1Char('\015') ).isEmpty() )
       {
           if ( startNewPara )
             paraIsRTL = line.isRightToLeft();
-          htmlStr += QString::fromLatin1( "<div dir=\"%1\">" ).arg( paraIsRTL ? "rtl" : "ltr" );
+          htmlStr += QString::fromLatin1( "<div dir=\"%1\">" ).arg( paraIsRTL ? QLatin1String("rtl") : QLatin1String("ltr") );
           htmlStr += LinkLocator::convertToHtml( line, convertFlags );
           htmlStr += QLatin1String( "</div>" );
           startNewPara = looksLikeParaBreak( s, pos );
       }
       else
       {
-        htmlStr += "<br/>";
+        htmlStr += QLatin1String("<br/>");
         // after an empty line, always start a new paragraph
         startNewPara = true;
       }
@@ -3328,7 +3328,7 @@ bool ObjectTreeParser::looksLikeParaBreak( const QString& s, unsigned int newLin
   // 2. Is the previous line really a paragraph -- longer than the wrap size?
 
   // First char of prev line -- works also for first line
-  unsigned prevStart = s.lastIndexOf( '\n', newLinePos - 1 ) + 1;
+  unsigned prevStart = s.lastIndexOf( QLatin1Char('\n'), newLinePos - 1 ) + 1;
   unsigned prevLineLength = newLinePos - prevStart;
   if ( prevLineLength > WRAP_COL ) {
     return true;
@@ -3336,7 +3336,7 @@ bool ObjectTreeParser::looksLikeParaBreak( const QString& s, unsigned int newLin
 
   // find next line to delimit search for first word
   unsigned int nextStart = newLinePos + 1;
-  int nextEnd = s.indexOf( '\n', nextStart );
+  int nextEnd = s.indexOf( QLatin1Char('\n'), nextStart );
   if ( nextEnd == -1 ) {
     nextEnd = length;
   }
@@ -3368,7 +3368,7 @@ bool ObjectTreeParser::looksLikeParaBreak( const QString& s, unsigned int newLin
   //Note: flowText (in kmmessage.cpp) separates words for wrap by
   //spaces only. This should be consistent, which calls for some
   //refactoring.
-  int wordEnd = nextLine.indexOf( ' ', wordStart );
+  int wordEnd = nextLine.indexOf( QLatin1Char(' '), wordStart );
   if ( wordEnd == (-1) ) {
     wordEnd = length;
   }
@@ -3462,7 +3462,7 @@ QString ObjectTreeParser::convertedTextContent() const
       plainTextContent = doc.mainFrame()->toPlainText();
 #endif
   }
-  return plainTextContent.append('\n');
+  return plainTextContent.append(QLatin1Char('\n'));
 }
 
 QString ObjectTreeParser::convertedHtmlContent() const
@@ -3470,9 +3470,9 @@ QString ObjectTreeParser::convertedHtmlContent() const
   QString htmlContent = mHtmlContent;
   if( htmlContent.isEmpty() ) {
     QString convertedHtml = Qt::escape( mPlainTextContent );
-    convertedHtml.append("</body></html>");
-    convertedHtml.prepend("<html><head></head><body>");
-    htmlContent = convertedHtml.replace( QRegExp( "\n" ), "<br />" );
+    convertedHtml.append(QLatin1String("</body></html>"));
+    convertedHtml.prepend(QLatin1String("<html><head></head><body>"));
+    htmlContent = convertedHtml.replace( QRegExp( QLatin1String("\n" )), QLatin1String("<br />") );
   }
-  return htmlContent.append('\n');
+  return htmlContent.append(QLatin1Char('\n'));
 }

@@ -119,10 +119,10 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
                                                            : KIconTheme::TextEditor,
                                               popup->actions() );
         popup->addSeparator();
-        popup->addAction( KIcon("preferences-desktop-text-to-speech"),i18n("Speak Text"),this,SLOT(slotSpeakText()));
+        popup->addAction( KIcon(QLatin1String("preferences-desktop-text-to-speech")),i18n("Speak Text"),this,SLOT(slotSpeakText()));
 
         popup->addSeparator();
-        popup->addAction( KIcon("document-save"),i18n("Save As..."),this,SLOT(slotSaveAs()));
+        popup->addAction( KIcon(QLatin1String("document-save")),i18n("Save As..."),this,SLOT(slotSaveAs()));
 
         popup->exec( event->globalPos() );
         delete popup;
@@ -177,7 +177,7 @@ void MailSourceViewTextBrowser::slotSpeakText()
 
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
     // all visible ascii except space and :
-    const QRegExp regexp( "^([\\x21-9;-\\x7E]+:\\s)" );
+    const QRegExp regexp( QLatin1String("^([\\x21-9;-\\x7E]+:\\s)") );
 
     // keep the previous state
     setCurrentBlockState( previousBlockState() );
@@ -209,7 +209,7 @@ void MailSourceHighlighter::highlightBlock ( const QString & text ) {
 
 const QString HTMLPrettyFormatter::reformat( const QString &src )
 {
-    const QRegExp cleanLeadingWhitespace( "(?:\\n)+\\w*" );
+    const QRegExp cleanLeadingWhitespace( QLatin1String("(?:\\n)+\\w*") );
     QStringList tmpSource;
     QString source( src );
     int pos = 0;
@@ -218,15 +218,15 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
     //First make sure that each tag is surrounded by newlines
     while( (pos = htmlTagRegExp.indexIn( source, pos ) ) != -1 )
     {
-        source.insert(pos, '\n');
+        source.insert(pos, QLatin1Char('\n'));
         pos += htmlTagRegExp.matchedLength() + 1;
-        source.insert(pos, '\n');
+        source.insert(pos, QLatin1Char('\n'));
         pos++;
     }
 
     // Then split the source on newlines skiping empty parts.
     // Now a line is either a tag or pure data.
-    tmpSource = source.split('\n', QString::SkipEmptyParts );
+    tmpSource = source.split(QLatin1Char('\n'), QString::SkipEmptyParts );
 
     // Then clean any leading whitespace
     for( int i = 0; i != tmpSource.length(); ++i )
@@ -252,7 +252,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
             }
             // start tag
             tmpSource[i].prepend( indent );
-            indent.append( "  " );
+            indent.append( QLatin1String("  ") );
             continue;
         }
         // Data
@@ -260,7 +260,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
     }
 
     // Finally reassemble and return :)
-    return tmpSource.join( "\n" );
+    return tmpSource.join( QLatin1String("\n") );
 }
 
 MailSourceViewer::MailSourceViewer( QWidget *parent )

@@ -16,9 +16,12 @@
 */
 
 #include "sieveactionabstractflags.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/selectflagswidget.h"
 
 #include <QHBoxLayout>
+#include <QDomNode>
+#include <QDebug>
 
 #include <KLocale>
 
@@ -42,8 +45,20 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
 
 void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *w )
 {
-    SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
-    //TODO
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("list")) {
+                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
+                flagsWidget->setFlags(AutoCreateScriptUtil::listValue(e));
+            } else {
+                qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionAbstractFlags::code(QWidget *w) const

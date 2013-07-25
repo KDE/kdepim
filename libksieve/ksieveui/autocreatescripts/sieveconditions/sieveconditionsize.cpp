@@ -74,8 +74,6 @@ QString SieveConditionSize::help() const
 
 void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-    QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
-    SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget*>(QLatin1String("sizewidget"));
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
@@ -83,6 +81,7 @@ void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
+                QComboBox *combo = w->findChild<QComboBox*>( QLatin1String("combosize") );
                 const int index = combo->findData(AutoCreateScriptUtil::tagValue(tagValue));
                 if (index != -1) {
                     combo->setCurrentIndex(index);
@@ -93,6 +92,7 @@ void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
                 if (e.hasAttribute(QLatin1String("quantifier"))) {
                     numIdentifier = e.attribute(QLatin1String("quantifier"));
                 }
+                SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget*>(QLatin1String("sizewidget"));
                 sizeWidget->setCode(tagValue, numIdentifier);
             } else {
                 qDebug()<<" SieveConditionSize::setParamWidgetValue unknown tagName "<<tagName;

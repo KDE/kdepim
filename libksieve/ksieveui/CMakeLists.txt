@@ -96,7 +96,6 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/sieveconditioncurrentdate.cpp
   autocreatescripts/sieveconditions/sieveconditionmailboxexists.cpp
   autocreatescripts/sieveconditions/sieveconditionspamtest.cpp
-  autocreatescripts/sieveconditions/sieveconditionspamtestplus.cpp
   autocreatescripts/sieveconditions/sieveconditionvirustest.cpp
   autocreatescripts/sieveconditions/sieveconditionihave.cpp
   autocreatescripts/sieveconditions/sieveconditionfalse.cpp
@@ -118,7 +117,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectsizewidget.cpp
 )
 
-kde4_add_kcfg_files(ksieveui_LIB_SRCS settings.kcfgc)
+kde4_add_kcfg_files(ksieveui_LIB_SRCS sieve-vacation.kcfgc sieve-editor.kcfgc)
 
 kde4_add_library(ksieveui ${LIBRARY_TYPE} ${ksieveui_LIB_SRCS})
 

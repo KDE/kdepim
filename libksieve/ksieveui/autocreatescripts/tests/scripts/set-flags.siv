@@ -1,0 +1,10 @@
+require "ihave";
+require "imapflags";
+ 
+#Script name: set flags
+
+if ihave "reject"
+{
+    setflag [ "\\Flagged", "\\Seen" ];
+    setflag [ "\\Answered" ];
+}

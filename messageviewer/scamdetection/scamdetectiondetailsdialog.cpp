@@ -56,7 +56,7 @@ void ScamDetectionDetailsDialog::slotSaveAs()
     MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
 
     fdlg->setMode( KFile::File );
-    fdlg->setSelection( "scam-detection.html" );
+    fdlg->setSelection( QLatin1String("scam-detection.html") );
     fdlg->setOperationMode( KFileDialog::Saving );
     fdlg->setConfirmOverwrite(true);
     if ( fdlg->exec() == QDialog::Accepted ) {

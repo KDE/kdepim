@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionaddheader.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/selectaddheaderpositioncombobox.h"
 
 #include <KLocale>
@@ -24,6 +25,8 @@
 #include <QHBoxLayout>
 #include <QWidget>
 #include <QLabel>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -67,14 +70,32 @@ QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
 
 void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
-    //combo->setCode();
-
-    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
-    //edit->setText();
-
-    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
-    //value->setText();
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
+                combo->setCode(AutoCreateScriptUtil::tagValue(e.text()));
+            } else if (tagName == QLatin1String("str")) {
+                if (index == 0) {
+                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
+                    edit->setText(e.text());
+                } else if (index == 1) {
+                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
+                    value->setText(e.text());
+                } else {
+                    qDebug()<<" SieveActionAddHeader::setParamWidgetValue too many argument :"<<index;
+                }
+                ++index;
+            } else {
+                qDebug()<<"SieveActionAddHeader::setParamWidgetValue unknown tag "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionAddHeader::code(QWidget *w) const

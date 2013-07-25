@@ -23,6 +23,7 @@
 #include <KLocale>
 #include <KGlobal>
 #include <KConfigGroup>
+#include <KMessageBox>
 
 #include <QVBoxLayout>
 #include <QSplitter>
@@ -47,6 +48,7 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
     connect(mSieveScript, SIGNAL(addNewPage(QWidget*)), SLOT(slotAddScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(removePage(QWidget*)), SLOT(slotRemoveScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(activatePage(QWidget*)), SLOT(slotActivateScriptPage(QWidget*)));
+    connect(mSieveScript, SIGNAL(enableButtonOk(bool)), SIGNAL(enableButtonOk(bool)));
     mSplitter->addWidget(mSieveScript);
     vlay->addWidget(mSplitter);
 
@@ -131,7 +133,9 @@ void SieveEditorGraphicalModeWidget::setImportScript( const QString &script )
     if (result) {
         loadScript(doc);
     } else {
-        //TODO
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Error during importing script. Do you want to switch in text mode ?"))) {
+            Q_EMIT switchTextMode(script);
+        }
         qDebug()<<" can not import script";
     }
 }

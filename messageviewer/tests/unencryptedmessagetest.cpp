@@ -49,7 +49,7 @@ void UnencryptedMessageTest::initTestCase()
 
 void UnencryptedMessageTest::testMailWithoutEncryption()
 {
-  KMime::Message::Ptr originalMessage = readAndParseMail( "encapsulated-with-attachment.mbox" );
+  KMime::Message::Ptr originalMessage = readAndParseMail( QLatin1String("encapsulated-with-attachment.mbox") );
   NodeHelper nodeHelper;
   EmptySource emptySource;
   ObjectTreeParser otp( &emptySource, &nodeHelper );
@@ -59,7 +59,7 @@ void UnencryptedMessageTest::testMailWithoutEncryption()
 
 void UnencryptedMessageTest::testSignedForwardedOpenPGPSignedEncrypted()
 {
-  KMime::Message::Ptr originalMessage = readAndParseMail( "signed-forward-openpgp-signed-encrypted.mbox" );
+  KMime::Message::Ptr originalMessage = readAndParseMail( QLatin1String("signed-forward-openpgp-signed-encrypted.mbox") );
 
   NodeHelper nodeHelper;
     TestHtmlWriter testWriter;
@@ -78,7 +78,7 @@ void UnencryptedMessageTest::testSignedForwardedOpenPGPSignedEncrypted()
 
 void UnencryptedMessageTest::testForwardedOpenPGPSignedEncrypted()
 {
-  KMime::Message::Ptr originalMessage = readAndParseMail( "forward-openpgp-signed-encrypted.mbox" );
+  KMime::Message::Ptr originalMessage = readAndParseMail( QLatin1String("forward-openpgp-signed-encrypted.mbox") );
 
   NodeHelper nodeHelper;
     TestHtmlWriter testWriter;
@@ -116,7 +116,7 @@ void UnencryptedMessageTest::testForwardedOpenPGPSignedEncrypted()
 
 void UnencryptedMessageTest::testSMIMESignedEncrypted()
 {
-  KMime::Message::Ptr originalMessage = readAndParseMail( "smime-signed-encrypted.mbox" );
+  KMime::Message::Ptr originalMessage = readAndParseMail( QLatin1String("smime-signed-encrypted.mbox") );
 
   NodeHelper nodeHelper;
   EmptySource emptySource;
@@ -145,7 +145,7 @@ void UnencryptedMessageTest::testSMIMESignedEncrypted()
 
 void UnencryptedMessageTest::testOpenPGPSignedEncrypted()
 {
-  KMime::Message::Ptr originalMessage = readAndParseMail( "openpgp-signed-encrypted.mbox" );
+  KMime::Message::Ptr originalMessage = readAndParseMail( QLatin1String("openpgp-signed-encrypted.mbox") );
 
   NodeHelper nodeHelper;
   EmptySource emptySource;
@@ -174,7 +174,7 @@ void UnencryptedMessageTest::testOpenPGPSignedEncrypted()
 
 void UnencryptedMessageTest::testOpenPGPEncrypted()
 {
-  KMime::Message::Ptr originalMessage = readAndParseMail( "openpgp-encrypted.mbox" );
+  KMime::Message::Ptr originalMessage = readAndParseMail( QLatin1String("openpgp-encrypted.mbox") );
 
   NodeHelper nodeHelper;
   EmptySource emptySource;

@@ -105,25 +105,31 @@ QString SieveConditionEnvironment::help() const
     return i18n("The environment test retrieves the item of environment information specified by the name string and matches it to the values specified in the key-list argument.");
 }
 
-void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
 {
-    KLineEdit *item =  w->findChild<KLineEdit*>( QLatin1String("item") );
-    KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );
     QDomNode node = element.firstChild();
-    int index = 1;
+    int index = 0;
     while (!node.isNull()) {
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
-                const QString tagValue = e.text();
+                if (index == 0) {
+                    KLineEdit *item =  w->findChild<KLineEdit*>( QLatin1String("item") );
+                    item->setText(e.text());
+                } else if (index == 1) {
+                    KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );
+                    value->setText(e.text());
+                } else {
+                    qDebug()<<" SieveConditionEnvironment::setParamWidgetValue to many argument "<<index;
+                }
+                ++index;
             } else {
                 qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
-
 }
 
 #include "sieveconditionenvironment.moc"

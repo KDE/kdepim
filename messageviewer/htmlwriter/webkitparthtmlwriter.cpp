@@ -88,7 +88,7 @@ void WebKitPartHtmlWriter::end() {
     insertExtraHead();
     mExtraHead.clear();
   }
-  mHtmlView->setHtml( mHtml, QUrl( "file:///" ) );
+  mHtmlView->setHtml( mHtml, QUrl( QLatin1String("file:///") ) );
   mHtmlView->show();
   mHtml.clear();
 
@@ -129,7 +129,7 @@ void WebKitPartHtmlWriter::flush() {
 
 void WebKitPartHtmlWriter::embedPart( const QByteArray & contentId,
                                       const QString & contentURL ) {
-  mEmbeddedPartMap[QString(contentId)] = contentURL;
+  mEmbeddedPartMap[QLatin1String(contentId)] = contentURL;
 }
 
 void WebKitPartHtmlWriter::resolveCidUrls()
@@ -139,16 +139,15 @@ void WebKitPartHtmlWriter::resolveCidUrls()
   // virtual loadResource() (for QTextBrowser)
 #ifndef KDEPIM_NO_WEBKIT
   QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
-  QWebElementCollection images = root.findAll( "img" );
+  QWebElementCollection images = root.findAll( QLatin1String("img") );
   QWebElementCollection::iterator end(images.end());
-  for( QWebElementCollection::iterator it = images.begin(); it != end; ++it )
-  {
-    KUrl url( (*it).attribute( "src" ) );
+  for( QWebElementCollection::iterator it = images.begin(); it != end; ++it ) {
+    KUrl url( (*it).attribute( QLatin1String("src") ) );
     if ( url.protocol() == QLatin1String( "cid" ) ) {
       EmbeddedPartMap::const_iterator cit = mEmbeddedPartMap.constFind( url.path() );
       if ( cit != mEmbeddedPartMap.constEnd() ) {
         kDebug() << "Replacing" << url.prettyUrl() << "by" << cit.value();
-        (*it).setAttribute( "src", cit.value() );
+        (*it).setAttribute( QLatin1String("src"), cit.value() );
       }
     }
   }
@@ -157,7 +156,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
 
 void WebKitPartHtmlWriter::insertExtraHead()
 {
-  const QString headTag("<head>");
+  const QString headTag(QLatin1String("<head>"));
   const int index = mHtml.indexOf(headTag);
   if(index!=-1) {
     mHtml.insert(index+headTag.length(),mExtraHead);

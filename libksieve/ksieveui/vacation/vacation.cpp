@@ -14,7 +14,7 @@
 
 #include "vacation.h"
 
-#include "settings.h"
+#include "sieve-vacation.h"
 #include "util.h"
 #include "vacationdialog.h"
 #include <kmanagesieve/sievejob.h>
@@ -531,7 +531,7 @@ bool Vacation::parseScript( const QString & script, QString & messageText,
     messageText = vdx.messageText().trimmed();
     notificationInterval = vdx.notificationInterval();
     aliases = vdx.aliases();
-    if ( !Settings::allowOutOfOfficeUploadButNoSettings() ) {
+    if ( !VacationSettings::allowOutOfOfficeUploadButNoSettings() ) {
         sendForSpam = !sdx.found();
         domainName = drdx.domainName();
     }
@@ -571,11 +571,11 @@ QStringList Vacation::defaultMailAliases()
 }
 
 bool Vacation::defaultSendForSpam() {
-    return Settings::outOfOfficeReactToSpam();
+    return VacationSettings::outOfOfficeReactToSpam();
 }
 
 QString Vacation::defaultDomainName() {
-    return Settings::outOfOfficeDomain();
+    return VacationSettings::outOfOfficeDomain();
 }
 
 void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
@@ -622,7 +622,7 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
         mDialog->setMailAliases( aliases.join(QLatin1String(", ")) );
         mDialog->setSendForSpam( sendForSpam );
         mDialog->setDomainName( domainName );
-        mDialog->enableDomainAndSendForSpam( !Settings::allowOutOfOfficeUploadButNoSettings() );
+        mDialog->enableDomainAndSendForSpam( !VacationSettings::allowOutOfOfficeUploadButNoSettings() );
 
         connect( mDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
         connect( mDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCancel()) );

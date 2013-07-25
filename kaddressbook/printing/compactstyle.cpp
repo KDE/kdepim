@@ -55,7 +55,7 @@ class CompactStyleForm : public QWidget, public Ui::CompactStyleForm_Base
     explicit CompactStyleForm( QWidget *parent )
       : QWidget( parent )
     {
-      setObjectName( "AppearancePage" );
+      setObjectName( QLatin1String("AppearancePage") );
       setupUi( this );
     }
 };
@@ -90,9 +90,9 @@ QString CompactStyle::contactsToHtml( const KABC::Addressee::List &contacts ) co
 
   QString content;
 
-  content += "<html>\n";
-  content += " <body>\n";
-  content += "  <table style=\"font-size:50%; border-width: 0px; \"width=\"100%\">\n";
+  content += QLatin1String("<html>\n");
+  content += QLatin1String(" <body>\n");
+  content += QLatin1String("  <table style=\"font-size:50%; border-width: 0px; \"width=\"100%\">\n");
 
   bool odd = false;
   foreach ( const KABC::Addressee &contact, contacts ) {
@@ -106,21 +106,21 @@ QString CompactStyle::contactsToHtml( const KABC::Addressee::List &contacts ) co
       }
     }
 
-    content += "   <tr>\n";
-    QString style = "background-color:";
+    content += QLatin1String("   <tr>\n");
+    QString style = QLatin1String("background-color:");
     if ( this->withAlternating ) {
       style += ( odd ) ? this->firstColor.name() : this->secondColor.name();
     } else {
-      style += "#ffffff";
+      style += QLatin1String("#ffffff");
     }
-    content += "    <td style=\""+ style + ";\">" + values.join("; ") + "</td>\n";
-    content += "   </tr>\n";
+    content += QLatin1String("    <td style=\"")+ style + QLatin1String(";\">") + values.join(QLatin1String("; ")) + QLatin1String("</td>\n");
+    content += QLatin1String("   </tr>\n");
     odd = !odd;
   }
 
-  content += "  </table>\n";
-  content += " </body>\n";
-  content += "</html>\n";
+  content += QLatin1String("  </table>\n");
+  content += QLatin1String(" </body>\n");
+  content += QLatin1String("</html>\n");
 
   return content;
 }
@@ -129,7 +129,7 @@ CompactStyle::CompactStyle( PrintingWizard *parent )
   : PrintStyle( parent ),
     mPageSettings( new CompactStyleForm( parent ) )
 {
-  setPreview( "compact-style.png" );
+  setPreview( QLatin1String("compact-style.png") );
   setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 
   addPage( mPageSettings, i18n( "Compact Style" ) );

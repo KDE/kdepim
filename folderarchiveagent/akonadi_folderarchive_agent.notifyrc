@@ -1,6 +1,7 @@
 [Global]
 IconName=kmail
 Comment=Folder Archive Agent
+Comment[de]=Agent zur Ordner-Archivierung
 Comment[es]=Agente de archivado de carpeta
 Comment[fi]=Kansioiden arkistointiohjelma
 Comment[fr]=Agent d'archivage de dossiers

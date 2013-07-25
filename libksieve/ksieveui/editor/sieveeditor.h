@@ -63,6 +63,7 @@ private Q_SLOTS:
     void slotSaveAs();
     void slotImport();
     void slotSwitchMode();
+    void slotSwitchTextMode(const QString &script);
 
 Q_SIGNALS:
     void checkSyntax();
@@ -79,6 +80,7 @@ private:
     QLineEdit *mScriptName;
     QAction *mCheckSyntax;
     QAction *mSwitchMode;
+    QAction *mAutoGenerateScript;
     EditorMode mMode;
 };
 

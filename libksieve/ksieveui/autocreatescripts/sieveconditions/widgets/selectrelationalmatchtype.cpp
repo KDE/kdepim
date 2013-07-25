@@ -36,9 +36,21 @@ SelectRelationalMatchType::~SelectRelationalMatchType()
 
 }
 
-void SelectRelationalMatchType::setCode(const QString &code)
+void SelectRelationalMatchType::setCode(const QString &type, const QString &comparatorStr)
 {
-    //TODO split element
+    int index = mType->findData(type);
+    if (index != -1) {
+        mType->setCurrentIndex(index);
+    } else {
+        mType->setCurrentIndex(0);
+    }
+
+    index = mMatch->findData(comparatorStr);
+    if (index != -1) {
+        mMatch->setCurrentIndex(index);
+    } else {
+        mMatch->setCurrentIndex(0);
+    }
 }
 
 QString SelectRelationalMatchType::code() const

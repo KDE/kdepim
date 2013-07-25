@@ -1,7 +1,0 @@
-File=ksieveui.kcfg
-NameSpace=KSieveUi
-ClassName=Settings
-Mutators=true
-Singleton=true
-ItemAccessors=true
-SetUserTexts=true

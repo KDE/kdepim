@@ -1,0 +1,8 @@
+require "include";
+ 
+#Script name: add-variable
+
+global "Variable";
+set "Variable" "Value-variable";
+global "Variable2";
+

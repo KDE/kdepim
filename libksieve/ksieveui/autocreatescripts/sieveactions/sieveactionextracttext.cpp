@@ -24,6 +24,8 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QSpinBox>
+#include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionExtractText::SieveActionExtractText(QObject *parent)
@@ -64,11 +66,25 @@ QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
 
 void SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWidget *w )
 {
-    QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
-
-    KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
-    //variableName->setText();
-    //TODO
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                //TODO ?
+            } else if (tagName == QLatin1String("num")) {
+                QSpinBox *numberOfCharacters = w->findChild<QSpinBox*>(QLatin1String("numberOfCharacters"));
+                numberOfCharacters->setValue(e.text().toInt());
+            } else if (tagName == QLatin1String("str")) {
+                KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
+                variableName->setText(e.text());
+            } else {
+                qDebug()<<" SieveActionExtractText::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 QString SieveActionExtractText::code(QWidget *w) const

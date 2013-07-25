@@ -135,10 +135,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>What style of headers should be displayed</label>
       <default>fancy</default>
     </entry>
-    <entry name="grantleeThemeName" type="String" key="grantlee-theme-name">
-      <label></label>
-      <default></default>
-    </entry>
     <entry name="headerSetDisplayed" type="String" key="header-set-displayed">
       <label>How much of headers should be displayed</label>
       <default>rich</default>

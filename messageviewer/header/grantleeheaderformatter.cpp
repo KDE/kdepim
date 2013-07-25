@@ -44,7 +44,7 @@ public:
     Private()
     {
         engine = new Grantlee::Engine;
-        engine->setPluginPaths( QStringList() << GRANTLEE_PLUGIN_PATH << MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH);
+        engine->setPluginPaths( QStringList() << QLatin1String(GRANTLEE_PLUGIN_PATH) << QLatin1String(MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH));
         templateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
         engine->addTemplateLoader( templateLoader );
     }
@@ -77,7 +77,7 @@ QString GrantleeHeaderFormatter::toHtml(const QStringList &displayExtraHeaders, 
     return format(headerTemplate, displayExtraHeaders, isPrinting, style, message);
 }
 
-QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme::Theme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
 {
     QString errorMessage;
     if (!theme.isValid()) {
@@ -148,11 +148,11 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
 
     if ( GlobalSettings::self()->showUserAgent() ) {
         if ( message->headerByType("User-Agent") ) {
-            headerObject.insert( QLatin1String( "useragent" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("User-Agent")->as7BitString() ) );
+            headerObject.insert( QLatin1String( "useragent" ), MessageViewer::HeaderStyleUtil::strToHtml( QLatin1String(message->headerByType("User-Agent")->as7BitString() )) );
         }
 
         if ( message->headerByType("X-Mailer") ) {
-            headerObject.insert( QLatin1String( "xmailer" ), MessageViewer::HeaderStyleUtil::strToHtml( message->headerByType("X-Mailer")->as7BitString() ) );
+            headerObject.insert( QLatin1String( "xmailer" ), MessageViewer::HeaderStyleUtil::strToHtml( QLatin1String(message->headerByType("X-Mailer")->as7BitString() )) );
         }
     }
 
@@ -213,7 +213,7 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
 
 
     QVariantHash mapping;
-    mapping.insert( "header", headerObject );
+    mapping.insert( QLatin1String("header"), headerObject );
     Grantlee::Context context( mapping );
 
     return headerTemplate->render(&context);

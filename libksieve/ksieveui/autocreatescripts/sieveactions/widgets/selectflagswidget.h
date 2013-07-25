@@ -66,12 +66,12 @@ public:
     ~SelectFlagsWidget();
 
     QString code() const;
+    void setFlags(const QStringList &flags);
 
 private Q_SLOTS:
     void slotSelectFlags();
 
 private:
-    QString mCode;
     KLineEdit *mEdit;
 };
 }

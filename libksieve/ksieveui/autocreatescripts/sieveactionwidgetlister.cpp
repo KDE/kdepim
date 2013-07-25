@@ -332,7 +332,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element)
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("action")) {
+            if (tagName == QLatin1String("action") || tagName == QLatin1String("control")/*for break action*/) {
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString actionName = e.attribute(QLatin1String("name"));
                     if (firstAction) {

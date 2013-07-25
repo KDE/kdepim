@@ -1,0 +1,7 @@
+File=sieve-editor.kcfg
+NameSpace=KSieveUi
+ClassName=EditorSettings
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true

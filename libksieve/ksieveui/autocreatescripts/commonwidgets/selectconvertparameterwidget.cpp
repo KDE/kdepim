@@ -22,6 +22,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QSpinBox>
+#include <QDebug>
 
 namespace KSieveUi {
 SelectConvertParameterWidget::SelectConvertParameterWidget(QWidget *parent)
@@ -34,9 +35,21 @@ SelectConvertParameterWidget::~SelectConvertParameterWidget()
 {
 }
 
-void SelectConvertParameterWidget::setCode(const QString &code)
+void SelectConvertParameterWidget::setCode(const QStringList &code)
 {
-    //TODO
+    if (code.isEmpty())
+        return;
+    if (code.count() > 2) {
+        qDebug()<<" too many argument "<<code.count();
+    }
+
+    QString widthStr = code.at(0);
+    widthStr = widthStr.remove(QString::fromLatin1("pix-x="));
+
+    QString heightStr = code.at(1);
+    heightStr = heightStr.remove(QString::fromLatin1("pix-y="));
+    mWidth->setValue(widthStr.toInt());
+    mHeight->setValue(heightStr.toInt());
 }
 
 QString SelectConvertParameterWidget::code() const

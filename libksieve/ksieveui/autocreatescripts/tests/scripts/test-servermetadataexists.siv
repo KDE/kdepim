@@ -1,0 +1,8 @@
+require "servermetadata";
+ 
+#Script name: test-metadataexists
+
+if servermetadataexists "ANNOTATION"
+{
+    keep;
+} 

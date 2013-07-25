@@ -68,8 +68,11 @@ namespace MessageViewer {
   class WebKitPartHtmlWriter;
   class HtmlStatusBar;
   class MailWebView;
-  class GrantleeThemeManager;
   class ScamDetectionWarningWidget;
+}
+
+namespace GrantleeTheme {
+class GrantleeThemeManager;
 }
 
 namespace PimCommon {
@@ -701,7 +704,7 @@ public:
   QSet<AbstractMessageLoadedHandler*> mMessageLoadedHandlers;
   Akonadi::Item::Id mPreviouslyViewedItem;
 
-  GrantleeThemeManager *mThemeManager;
+  GrantleeTheme::GrantleeThemeManager *mThemeManager;
   ScamDetectionWarningWidget *mScamDetectionWarning;
   // zoom Factor
   static const qreal zoomBy;

@@ -1,0 +1,4 @@
+Id=initial-grantlee-theme-migration
+File=kmail2rc,kmail2rc
+Group=Reader,GrantleeTheme
+Key=grantlee-theme-name,grantlee-theme-name

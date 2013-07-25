@@ -3,3 +3,5 @@ File=folderarchiveagentsettings.kcfg
 ClassName=FolderArchiveAgentSettings
 Singleton=true
 Mutators=true
+Visibility=FOLDERARCHIVE_EXPORT
+IncludeFiles=folderarchive_export.h

@@ -35,7 +35,7 @@ public:
     ~SelectHeadersWidget();
 
     QString headers() const;
-    void setListHeaders(const QMap<QString, QString> &lst);
+    void setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders);
     void addNewHeader(const QString &header);
 private:
     enum HeaderEnum {
@@ -53,7 +53,7 @@ public:
     ~SelectHeadersDialog();
 
     QString headers() const;
-    void setListHeaders(const QMap<QString, QString> &lst);
+    void setListHeaders(const QMap<QString, QString> &lst, const QStringList &selectedHeaders);
 
 private Q_SLOTS:
     void slotNewHeaderTextChanged(const QString &text);
@@ -74,6 +74,7 @@ public:
     ~SelectHeaderTypeComboBox();
 
     QString code() const;
+    void setCode(const QString &code);
 
 private Q_SLOTS:
     void slotSelectItem(const QString &str);
@@ -82,6 +83,7 @@ private:
     void initialize(bool onlyEnvelopType);
     void headerMap(bool onlyEnvelopType);
     QMap<QString, QString> mHeaderMap;
+    QString mCode;
 };
 
 }
