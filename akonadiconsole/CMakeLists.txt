@@ -37,6 +37,7 @@ set(akonadiconsole_bin_SRCS
   rawsocketconsole.cpp
   searchdialog.cpp
   searchwidget.cpp
+  querydebugger.cpp
   jobtracker.cpp
   jobtrackerwidget.cpp
   jobtrackermodel.cpp
@@ -69,6 +70,11 @@ qt4_add_dbus_interface(akonadiconsole_bin_SRCS
 qt4_add_dbus_interface(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
   notificationsourceinterface
+)
+
+qt4_add_dbus_interface(akonadiconsole_bin_SRCS
+  ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.StorageDebugger.xml
+  storagedebuggerinterface
 )
 
 kde4_add_ui_files(akonadiconsole_bin_SRCS

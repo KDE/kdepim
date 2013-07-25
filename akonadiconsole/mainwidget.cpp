@@ -30,6 +30,7 @@
 #include "searchwidget.h"
 #include "jobtrackerwidget.h"
 #include "notificationmonitor.h"
+#include "querydebugger.h"
 
 #include <akonadi/agentinstancewidget.h>
 #include <akonadi/agentfilterproxymodel.h>
@@ -61,6 +62,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   tabWidget->addTab( new RawSocketConsole( tabWidget ), "Raw Socket" );
   tabWidget->addTab( new DbBrowser( tabWidget ), "DB Browser" );
   tabWidget->addTab( new DbConsole( tabWidget ), "DB Console" );
+  tabWidget->addTab( new QueryDebugger( tabWidget ), "Query Debugger" );
   tabWidget->addTab( new JobTrackerWidget( "jobtracker", tabWidget, "Enable job tracker" ), "Job Tracker" );
   tabWidget->addTab( new JobTrackerWidget( "resourcesJobtracker", tabWidget, "Enable tracking of Resource Schedulers" ), "Resources Schedulers" );
   tabWidget->addTab( new NotificationMonitor( tabWidget ), "Notification Monitor" );
