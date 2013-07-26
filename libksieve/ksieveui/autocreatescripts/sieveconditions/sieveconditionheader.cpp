@@ -114,7 +114,13 @@ void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
                     headerType->setCode(AutoCreateScriptUtil::listValueToStr(e));
                     ++index;
+                } else if (index == 1) {
+                    KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
+                    value->setText(AutoCreateScriptUtil::listValueToStr(e));
+                } else {
+                    qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
                 }
+                ++index;
             } else {
                 qDebug()<<" SieveConditionHeader::setParamWidgetValue unknown tagName "<<tagName;
             }
