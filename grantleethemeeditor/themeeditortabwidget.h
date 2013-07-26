@@ -18,9 +18,10 @@
 #ifndef THEMEEDITORTABWIDGET_H
 #define THEMEEDITORTABWIDGET_H
 
+#include "grantleethemeeditor_export.h"
 #include <KTabWidget>
 
-class ThemeEditorTabWidget : public KTabWidget
+class GRANTLEETHEMEEDITOR_EXPORT ThemeEditorTabWidget : public KTabWidget
 {
     Q_OBJECT
 public:
