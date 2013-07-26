@@ -42,7 +42,7 @@ public:
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires);
-    void setAction(const QString &actionName, const QDomElement &element);
+    void setAction(const QString &actionName, const QDomElement &element, const QString &comment);
 
 private Q_SLOTS:
     void slotAddWidget();

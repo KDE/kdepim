@@ -42,7 +42,7 @@ MainWindow::MainWindow()
 
   toolBar()->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
-  setupGUI( Keys | Save | Create, "kaddressbookui.rc" );
+  setupGUI( Keys | Save | Create, QLatin1String("kaddressbookui.rc") );
 
   setAutoSaveSettings();
 }
@@ -87,7 +87,7 @@ void MainWindow::configureToolbars()
 
 void MainWindow::newToolbarConfig()
 {
-  createGUI( "kaddressbookui.rc" );
+  createGUI( QLatin1String("kaddressbookui.rc") );
 
   applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
 }

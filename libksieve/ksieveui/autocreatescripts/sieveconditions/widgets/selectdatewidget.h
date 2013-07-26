@@ -51,12 +51,13 @@ public:
     ~SelectDateWidget();
 
     QString code() const;
-    void setCode(const QString &);
+    void setCode(const QString &type, const QString &value);
 
 private Q_SLOTS:
     void slotDateTypeActivated(int);
 
 private:
+    SelectDateWidget::DateType dateTypeFromString(const QString &str);
     void initialize();
     QString dateType(DateType type) const;
     QString dateValue(DateType type) const;

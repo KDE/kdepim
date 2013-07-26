@@ -27,19 +27,19 @@
 
 XXPort *XXPortFactory::createXXPort( const QString &identifier, QWidget *parentWidget ) const
 {
-  if ( identifier == "vcard21" || identifier == "vcard30" ) {
+  if ( identifier == QLatin1String("vcard21") || identifier == QLatin1String("vcard30") ) {
     XXPort *xxport = new VCardXXPort( parentWidget );
-    if ( identifier == "vcard21" ) {
-      xxport->setOption( "version", "v21" );
+    if ( identifier == QLatin1String("vcard21") ) {
+      xxport->setOption( QLatin1String("version"), QLatin1String("v21") );
     }
     return xxport;
-  } else if ( identifier == "csv" ) {
+  } else if ( identifier == QLatin1String("csv") ) {
     return new CsvXXPort( parentWidget );
-  } else if ( identifier == "ldif" ) {
+  } else if ( identifier == QLatin1String("ldif") ) {
     return new LDIFXXPort( parentWidget );
-  } else if ( identifier == "ldap" ) {
+  } else if ( identifier == QLatin1String("ldap") ) {
     return new LDAPXXPort( parentWidget );
-  } else if ( identifier == "gmx" ) {
+  } else if ( identifier == QLatin1String("gmx") ) {
     return new GMXXXPort( parentWidget );
   } else {
     return 0;

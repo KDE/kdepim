@@ -99,9 +99,41 @@ QString SieveConditionDate::help() const
     return i18n("The date test matches date/time information derived from headers containing date-time values.");
 }
 
-void SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition )
+void SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
-
+    int index = 0;
+    QString type;
+    QString value;
+    QString headerStr;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                if (index == 0) {
+                    headerStr   = e.text();
+                } else if (index == 1) {
+                    type = e.text();
+                } else if (index == 2) {
+                    value = e.text();
+                } else {
+                    qDebug()<<" SieveConditionDate::setParamWidgetValue too many argument :"<<index;
+                }
+                ++index;
+            } else if (tagName == QLatin1String("tag")) {
+                SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtype"));
+                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+            } else {
+                qDebug()<<"SieveConditionDate::setParamWidgetValue unknown tag "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+    SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
+    dateWidget->setCode(type, value);
+    KLineEdit *header = w->findChild<KLineEdit*>(QLatin1String("header"));
+    header->setText(headerStr);
 }
 
 #include "sieveconditiondate.moc"

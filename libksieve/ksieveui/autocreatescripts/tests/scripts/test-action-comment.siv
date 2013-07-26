@@ -1,0 +1,14 @@
+require "ihave";
+require "fileinto";
+require "copy";
+require "mailbox";
+ 
+#SCRIPTNAME: test-action-comment
+#Script name: test-action-comment
+
+if ihave "toto"
+{
+#move file in INBOX
+#Test comment
+    fileinto :copy :create "INBOX";
+}

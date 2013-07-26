@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionconvert.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/commonwidgets/selectconvertparameterwidget.h"
 #include "autocreatescripts/commonwidgets/selectmimetypecombobox.h"
 
@@ -110,10 +111,6 @@ QString SieveConditionConvert::help() const
 
 void SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
 {
-    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
-    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
-    SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
-
     int index = 0;
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -121,14 +118,21 @@ void SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWid
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("str")) {
-                const QString tagValue = e.text();
-                if (index == 1) {
-                    ++index;
-                } else if (index == 0) {
-                    ++index;
+                if (index == 0) {
+                    SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
+                    fromMimeType->setCode(e.text());
+                } else if (index == 1) {
+                    SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
+                    toMimeType->setCode(e.text());
+                } else {
+                    qDebug()<<" SieveActionConvert::setParamWidgetValue too many argument :"<<index;
                 }
+                ++index;
+            } else if (tagName == QLatin1String("list")) {
+               SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
+               params->setCode(AutoCreateScriptUtil::listValue(e));
             } else {
-                qDebug()<<" SieveConditionConvert::setParamWidgetValue unknown tagName "<<tagName;
+                qDebug()<<"SieveActionConvert::setParamWidgetValue unknown tag "<<tagName;
             }
         }
         node = node.nextSibling();

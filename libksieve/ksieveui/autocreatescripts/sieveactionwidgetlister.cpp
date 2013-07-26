@@ -228,7 +228,7 @@ void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool remov
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-void SieveActionWidget::setAction(const QString &actionName, const QDomElement &element)
+void SieveActionWidget::setAction(const QString &actionName, const QDomElement &element, const QString &comment)
 {
     const int index = mComboBox->findData(actionName);
     if (index != -1) {
@@ -236,6 +236,7 @@ void SieveActionWidget::setAction(const QString &actionName, const QDomElement &
         slotActionChanged(index);
         KSieveUi::SieveAction* action = mActionList.at( index );
         action->setParamWidgetValue(element, this);
+        action->setComment(comment);
     }
 }
 
@@ -327,6 +328,7 @@ int SieveActionWidgetLister::actionNumber() const
 void SieveActionWidgetLister::loadScript(const QDomElement &element)
 {
     bool firstAction = true;
+    QString comment;
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
@@ -341,11 +343,19 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element)
                         addWidgetAfterThisWidget(widgets().last());
                     }
                     SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
-                    w->setAction(actionName, e);
+                    w->setAction(actionName, e, comment);
+                    comment.clear();
                     qDebug()<<" actionName "<<actionName;
                 } else {
-                    qDebug()<<" SieveActionWidgetLister::loadScript unknow tag: "<<tagName;
+                    qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
                 }
+            } else if (tagName == QLatin1String("comment")) {
+                if (!comment.isEmpty()) {
+                    comment += QLatin1Char('\n');
+                }
+                comment += e.text();
+            } else {
+                qDebug()<<" SieveActionWidgetLister::loadScript unknow tagName "<<tagName;
             }
         }
         node = node.nextSibling();

@@ -111,7 +111,7 @@ class TemplatesModel : public QAbstractTableModel
       beginResetModel();
       mTemplates.clear();
       const QStringList files =
-        KGlobal::dirs()->findAllResources( "data", "kaddressbook/csv-templates/*.desktop",
+        KGlobal::dirs()->findAllResources( "data", QLatin1String("kaddressbook/csv-templates/*.desktop"),
                                            KStandardDirs::Recursive | KStandardDirs::NoDuplicates );
       for ( int i = 0; i < files.count(); ++i ) {
         KConfig config( files.at( i ), KConfig::SimpleConfig );
@@ -146,7 +146,7 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
 {
   public:
     explicit TemplateSelectionDelegate( QObject *parent = 0 )
-      : QStyledItemDelegate( parent ), mIcon( "list-remove" )
+      : QStyledItemDelegate( parent ), mIcon( QLatin1String("list-remove") )
     {
     }
 

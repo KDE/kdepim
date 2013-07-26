@@ -1,0 +1,12 @@
+require "date";
+ 
+#SCRIPTNAME: test-date
+#Script name: test-date
+
+if allof (date :is "header" "iso8601" "sam. janv. 1 2000"
+, not date :matches "header" "hour" "08"
+, not date :contains "header" "julian" "sam. janv. 1 2000"
+)
+{
+    keep;
+} 
