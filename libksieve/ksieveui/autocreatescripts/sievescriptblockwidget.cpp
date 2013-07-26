@@ -157,8 +157,14 @@ void SieveScriptBlockWidget::slotRadioClicked(QAbstractButton* button)
     } else {
         mMatchCondition = AllCondition;
     }
+    updateWidget();
+}
+
+void SieveScriptBlockWidget::updateWidget()
+{
     mScriptConditionLister->setEnabled(mMatchCondition != AllCondition);
     mNewBlockType->setEnabled(mMatchCondition != AllCondition);
+    mAddBlockType->setEnabled(mMatchCondition != AllCondition);
 }
 
 void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requires)
@@ -221,8 +227,7 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
         mScriptActionLister->loadScript(element, onlyActions);
         mAllMessageRBtn->setChecked(true);
         mMatchCondition = AllCondition;
-        mScriptConditionLister->setEnabled(mMatchCondition != AllCondition);
-        mNewBlockType->setEnabled(mMatchCondition != AllCondition);
+        updateWidget();
     } else {
         bool uniqueTest = false;
         QDomNode node = element.firstChild();
@@ -252,8 +257,7 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
                             mMatchAny->setChecked(true);
                             qDebug()<<" TRUE";
                         }
-                        mScriptConditionLister->setEnabled(mMatchCondition != AllCondition);
-                        mNewBlockType->setEnabled(mMatchCondition != AllCondition);
+                        updateWidget();
                     }
                     //Conditions
                     mScriptConditionLister->loadScript(e, uniqueTest, notCondition);
