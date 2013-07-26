@@ -137,7 +137,7 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotManageTheme()
 {
-    QPointer<ManageThemes> dialog = new ManageThemes(this);
+    QPointer<ManageThemes> dialog = new ManageThemes(QLatin1String("messageviewer/themes/"), this);
     dialog->exec();
     delete dialog;
 }

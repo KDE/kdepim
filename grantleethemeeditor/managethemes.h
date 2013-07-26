@@ -18,16 +18,17 @@
 #ifndef MANAGETHEMES_H
 #define MANAGETHEMES_H
 
+#include "grantleethemeeditor_export.h"
 #include <KDialog>
 
 class QListWidget;
 class QListWidgetItem;
 class KPushButton;
-class ManageThemes : public KDialog
+class GRANTLEETHEMEEDITOR_EXPORT ManageThemes : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ManageThemes(QWidget *parent = 0);
+    explicit ManageThemes(const QString &relativeThemePath, QWidget *parent = 0);
     ~ManageThemes();
 
 private Q_SLOTS:

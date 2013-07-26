@@ -30,9 +30,10 @@
 #include <QDirIterator>
 #include <QDebug>
 
-ManageThemes::ManageThemes(QWidget *parent)
+ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     : KDialog(parent)
 {
+    mLocalDirectory = KStandardDirs::locateLocal("data", relativeThemePath);
     setCaption( i18n( "Manage Theme" ) );
     setButtons( Close );
     QWidget *w = new QWidget;
@@ -96,7 +97,6 @@ void ManageThemes::slotDeleteTheme()
 
 void ManageThemes::initialize()
 {
-    mLocalDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
     QDir dir(mLocalDirectory);
     if (dir.exists()) {
         bool hasSubDir = false;
