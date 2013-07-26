@@ -336,12 +336,17 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
     QDomNode n = docElem.firstChild();
     QString scriptName;
     QString comment;
+    bool onlyActions = false;
     bool hasCreatedAIfBlock = false;
     while (!n.isNull()) {
         QDomElement e = n.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("control")) {
+                //Create a new page when before it was "onlyactions"
+                if (onlyActions)
+                    currentPage = 0;
+                onlyActions = false;
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString controlType = e.attribute(QLatin1String("name"));
                     if (controlType == QLatin1String("if")) {
@@ -403,9 +408,12 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         }
                         currentPage->globalVariableWidget()->loadScript(e);
                     } else {
-                        currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                        if (!onlyActions) {
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                        }
+                        onlyActions = true;
                         comment.clear();
-                        currentPage->blockIfWidget()->loadScript(e);
+                        currentPage->blockIfWidget()->loadScript(e, onlyActions);
                         //qDebug()<<" unknown action name: "<<actionName;
                     }
                 }

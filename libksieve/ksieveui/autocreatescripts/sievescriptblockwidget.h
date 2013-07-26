@@ -50,7 +50,7 @@ public:
 
     MatchCondition matchCondition() const;
 
-    void loadScript(const QDomElement &element);
+    void loadScript(const QDomElement &element, bool onlyActions = false);
 
 Q_SIGNALS:
     void addNewBlock(QWidget *widget, KSieveUi::SieveWidgetPageAbstract::PageType type);

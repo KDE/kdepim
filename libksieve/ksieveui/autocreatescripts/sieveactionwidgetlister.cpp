@@ -325,40 +325,58 @@ int SieveActionWidgetLister::actionNumber() const
     return widgets().count();
 }
 
-void SieveActionWidgetLister::loadScript(const QDomElement &element)
+void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyActions)
 {
     bool firstAction = true;
     QString comment;
-    QDomNode node = element.firstChild();
-    while (!node.isNull()) {
-        QDomElement e = node.toElement();
-        if (!e.isNull()) {
-            const QString tagName = e.tagName();
-            if (tagName == QLatin1String("action") || tagName == QLatin1String("control")/*for break action*/) {
-                if (e.hasAttribute(QLatin1String("name"))) {
-                    const QString actionName = e.attribute(QLatin1String("name"));
-                    if (firstAction) {
-                        firstAction = false;
-                    } else {
-                        addWidgetAfterThisWidget(widgets().last());
-                    }
+    if (onlyActions) {
+        if (!element.isNull()) {
+            const QString tagName = element.tagName();
+            if (tagName == QLatin1String("action")) {
+                if (element.hasAttribute(QLatin1String("name"))) {
+                    const QString actionName = element.attribute(QLatin1String("name"));
+                    addWidgetAfterThisWidget(widgets().last());
                     SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
-                    w->setAction(actionName, e, comment);
-                    comment.clear();
+                    w->setAction(actionName, element, comment);
+                    //comment.clear();
                     qDebug()<<" actionName "<<actionName;
                 } else {
                     qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
                 }
-            } else if (tagName == QLatin1String("comment")) {
-                if (!comment.isEmpty()) {
-                    comment += QLatin1Char('\n');
-                }
-                comment += e.text();
-            } else {
-                qDebug()<<" SieveActionWidgetLister::loadScript unknow tagName "<<tagName;
             }
         }
-        node = node.nextSibling();
+    } else {
+        QDomNode node = element.firstChild();
+        while (!node.isNull()) {
+            QDomElement e = node.toElement();
+            if (!e.isNull()) {
+                const QString tagName = e.tagName();
+                if (tagName == QLatin1String("action") || tagName == QLatin1String("control")/*for break action*/) {
+                    if (e.hasAttribute(QLatin1String("name"))) {
+                        const QString actionName = e.attribute(QLatin1String("name"));
+                        if (firstAction) {
+                            firstAction = false;
+                        } else {
+                            addWidgetAfterThisWidget(widgets().last());
+                        }
+                        SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
+                        w->setAction(actionName, e, comment);
+                        comment.clear();
+                        qDebug()<<" actionName "<<actionName;
+                    } else {
+                        qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
+                    }
+                } else if (tagName == QLatin1String("comment")) {
+                    if (!comment.isEmpty()) {
+                        comment += QLatin1Char('\n');
+                    }
+                    comment += e.text();
+                } else {
+                    qDebug()<<" SieveActionWidgetLister::loadScript unknow tagName "<<tagName;
+                }
+            }
+            node = node.nextSibling();
+        }
     }
 }
 
