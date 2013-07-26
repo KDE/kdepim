@@ -38,6 +38,7 @@ private:
     void readConfig();
     void writeConfig();
     void initialize();
+    QString mLocalDirectory;
     QListWidget *mListThemes;
     KPushButton *mDeleteTheme;
 };
