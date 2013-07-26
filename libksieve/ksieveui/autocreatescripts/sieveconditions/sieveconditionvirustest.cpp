@@ -130,6 +130,8 @@ void SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
                             }
                         }
                     }
+                } else {
+                    qDebug()<<" SieveConditionVirusTest::setParamWidgetValue unknow tagValue "<<tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );

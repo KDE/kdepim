@@ -83,6 +83,8 @@ void SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                         SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
                         importance->setCode(strValue);
                     }
+                } else {
+                    qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagValue"<<tagValue;
                 }
             } else {
                 qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagName "<<tagName;

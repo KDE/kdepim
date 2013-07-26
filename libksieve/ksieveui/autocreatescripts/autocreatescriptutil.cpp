@@ -138,7 +138,6 @@ QStringList AutoCreateScriptUtil::listValue(const QDomElement &element)
         }
         node = node.nextSibling();
     }
-    qDebug()<<" AutoCreateScriptUtil::listValue"<<lst;
     return lst;
 }
 

@@ -69,11 +69,15 @@ void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                     if (mHasCopySupport) {
                         QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
                         copy->setChecked(true);
+                    } else {
+                        qDebug()<<"SieveActionFileInto::setParamWidgetValue has not copy support ";
                     }
                 } else if (tagValue == QLatin1String("create")) {
                     if (mHasMailBoxSupport) {
                         QCheckBox *create = w->findChild<QCheckBox*>( QLatin1String("create") );
                         create->setChecked(true);
+                    } else {
+                        qDebug()<<"SieveActionFileInto::setParamWidgetValue server has not create support ";
                     }
                 }
             } else if (tagName == QLatin1String("str")) {

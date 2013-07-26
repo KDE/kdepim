@@ -94,6 +94,8 @@ void SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
                         KLineEdit *headers = w->findChild<KLineEdit*>(QLatin1String("from"));
                         headers->setText(strValue);
                     }
+                } else {
+                    qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagValue "<<tagValue;
                 }
             } else {
                 qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagName "<<tagName;
