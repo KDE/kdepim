@@ -89,8 +89,7 @@ void ManageThemes::slotDeleteTheme()
             if (KTempDir::removeDir(localDirectory + QDir::separator() + mListThemes->currentItem()->text())) {
                 delete mListThemes->currentItem();
             } else {
-                //TODO give info about with theme we can't delete.
-                KMessageBox::error(this, i18n("Can not delete theme. Please contact your administrator."), i18n("Delete theme failed"));
+                KMessageBox::error(this, i18n("Theme \"%1\" can not delete. Please contact your administrator.", mListThemes->currentItem()->text()), i18n("Delete theme failed"));
             }
         }
     }
