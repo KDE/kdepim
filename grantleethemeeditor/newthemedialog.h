@@ -23,6 +23,7 @@
 
 class KLineEdit;
 class KUrlRequester;
+namespace GrantleeThemeEditor {
 class GRANTLEETHEMEEDITOR_EXPORT NewThemeDialog : public KDialog
 {
     Q_OBJECT
@@ -41,5 +42,5 @@ private:
     KLineEdit *mThemeName;
     KUrlRequester *mUrlRequester;
 };
-
+}
 #endif // NEWTHEMEDIALOG_H

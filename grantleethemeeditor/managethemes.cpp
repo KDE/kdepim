@@ -30,6 +30,8 @@
 #include <QDirIterator>
 #include <QDebug>
 
+using namespace GrantleeThemeEditor;
+
 ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     : KDialog(parent)
 {

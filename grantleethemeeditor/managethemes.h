@@ -24,6 +24,8 @@
 class QListWidget;
 class QListWidgetItem;
 class KPushButton;
+namespace GrantleeThemeEditor {
+
 class GRANTLEETHEMEEDITOR_EXPORT ManageThemes : public KDialog
 {
     Q_OBJECT
@@ -43,5 +45,5 @@ private:
     QListWidget *mListThemes;
     KPushButton *mDeleteTheme;
 };
-
+}
 #endif // MANAGETHEMES_H

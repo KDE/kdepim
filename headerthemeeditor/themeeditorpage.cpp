@@ -45,7 +45,7 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
       mChanged(false)
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    mTabWidget = new ThemeEditorTabWidget;
+    mTabWidget = new GrantleeThemeEditor::ThemeEditorTabWidget;
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));

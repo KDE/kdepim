@@ -26,7 +26,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-
+using namespace GrantleeThemeEditor;
 NewThemeDialog::NewThemeDialog(QWidget *parent)
     : KDialog(parent)
 {
