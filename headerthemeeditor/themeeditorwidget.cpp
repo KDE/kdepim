@@ -15,33 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EDITORWIDGET_H
-#define EDITORWIDGET_H
+#include "themeeditorwidget.h"
+#include "defaultcompletion.h"
+#include <QStringListModel>
+#include <QCompleter>
+#include <QDebug>
 
-#include <KTextEdit>
-
-class QCompleter;
-
-class EditorWidget : public KTextEdit
+ThemeEditorWidget::ThemeEditorWidget(QWidget *parent)
+    : GrantleeThemeEditor::EditorWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit EditorWidget(QWidget *parent = 0);
-    ~EditorWidget();
+    createCompleterList();
+}
 
-    void insertFile(const QString &filename);
-    void createCompleterList(const QStringList &extraHeaders = QStringList());
+ThemeEditorWidget::~ThemeEditorWidget()
+{
+}
 
-private Q_SLOTS:
-    void slotInsertCompletion( const QString &completion );
+void ThemeEditorWidget::createCompleterList(const QStringList &extraCompletion)
+{
+    QStringList listWord;
+    listWord << DefaultCompletion::defaultCompetion();
+    listWord << DefaultCompletion::defaultOptions();
+    listWord << extraCompletion;
+    m_completer->setModel( new QStringListModel( listWord, m_completer ) );
+}
 
-protected:
-    void keyPressEvent(QKeyEvent* e);
-
-private:
-    void initCompleter();
-    QString wordUnderCursor() const;
-    QCompleter *m_completer;
-};
-
-#endif // EDITORWIDGET_H
+#include "themeeditorwidget.moc"

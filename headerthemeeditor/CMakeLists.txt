@@ -14,7 +14,6 @@ include_directories(
 
 set(headerthemeeditor_SRCS
   main.cpp
-  editorwidget.cpp  
   themeeditormainwindow.cpp 
   themeeditorpage.cpp
   previewwidget.cpp
@@ -25,6 +24,7 @@ set(headerthemeeditor_SRCS
   defaultcompletion.cpp
   themeconfiguredialog.cpp
   themeeditorutil.cpp
+  themeeditorwidget.cpp
 )
 
 

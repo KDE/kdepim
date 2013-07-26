@@ -21,11 +21,13 @@
 
 #include <QWidget>
 
+
 class ThemeTemplateWidget;
 class EditorWidget;
 class KZip;
 class QSplitter;
 class PreviewWidget;
+class ThemeEditorWidget;
 
 class EditorPage : public QWidget
 {
@@ -53,7 +55,7 @@ public:
     void insertFile(const QString &filename);
 
     PreviewWidget *preview() const;
-    EditorWidget *editor() const;
+    ThemeEditorWidget *editor() const;
 
 Q_SIGNALS:
     void needUpdateViewer();
@@ -62,7 +64,7 @@ Q_SIGNALS:
 private:
     PageType mType;
     QString mPageFileName;
-    EditorWidget *mEditor;
+    ThemeEditorWidget *mEditor;
     PreviewWidget *mPreview;
     ThemeTemplateWidget *mThemeTemplate;
     QSplitter *mMainSplitter;

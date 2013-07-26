@@ -18,6 +18,7 @@
 #include "editorpage.h"
 #include "editorwidget.h"
 #include "previewwidget.h"
+#include "themeeditorwidget.h"
 #include "themetemplatewidget.h"
 
 #include <KTextEdit>
@@ -56,7 +57,7 @@ EditorPage::EditorPage(PageType type, const QString &projectDirectory, QWidget *
         lay->addWidget(mMainSplitter);
     }
 
-    mEditor = new EditorWidget;
+    mEditor = new ThemeEditorWidget;
 
     if (mType == MainPage) {
         KConfigGroup group( KGlobal::config(), QLatin1String("Global"));
@@ -161,7 +162,7 @@ EditorPage::PageType EditorPage::pageType() const
     return mType;
 }
 
-EditorWidget *EditorPage::editor() const
+ThemeEditorWidget *EditorPage::editor() const
 {
     return mEditor;
 }
