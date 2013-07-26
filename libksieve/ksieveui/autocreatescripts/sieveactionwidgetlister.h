@@ -76,7 +76,7 @@ public:
     ~SieveActionWidgetLister();
 
     void generatedScript(QString &script, QStringList &requires, bool onlyActions);
-    void loadScript(const QDomElement &element, bool onlyActions = false);
+    void loadScript(const QDomElement &element, bool onlyActions);
 
     int actionNumber() const;
 public Q_SLOTS:

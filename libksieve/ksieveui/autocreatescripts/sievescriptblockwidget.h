@@ -61,6 +61,7 @@ private Q_SLOTS:
 
 private:
     void updateWidget();
+    void updateCondition();
     MatchCondition mMatchCondition;
     QGroupBox *mConditions;
     SieveConditionWidgetLister *mScriptConditionLister;

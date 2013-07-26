@@ -173,7 +173,6 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
     if (mMatchCondition == AllCondition) {
         onlyActions = true;
         //Just actions type
-        //script += QLatin1String("if true {\n");
     } else if (pageType() == BlockElse) {
         script += QLatin1String("else {\n");
     } else {
@@ -221,13 +220,28 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
     }
 }
 
+void SieveScriptBlockWidget::updateCondition()
+{
+    switch(mMatchCondition) {
+    case AndCondition:
+        mMatchAll->setChecked(true);
+        break;
+    case OrCondition:
+        mMatchAny->setChecked(true);
+        break;
+    case AllCondition:
+        mAllMessageRBtn->setChecked(true);
+        break;
+    }
+    updateWidget();
+}
+
 void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyActions)
 {
     if (onlyActions) {
-        mScriptActionLister->loadScript(element, onlyActions);
-        mAllMessageRBtn->setChecked(true);
+        mScriptActionLister->loadScript(element, true);
         mMatchCondition = AllCondition;
-        updateWidget();
+        updateCondition();
     } else {
         bool uniqueTest = false;
         QDomNode node = element.firstChild();
@@ -240,32 +254,24 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
                     if (e.hasAttribute(QLatin1String("name"))) {
                         const QString typeCondition = e.attribute(QLatin1String("name"));
                         if (typeCondition == QLatin1String("anyof")) {
-                            qDebug()<<" Anyof";
                             mMatchCondition = OrCondition;
-                            mMatchAny->setChecked(true);
                         } else if (typeCondition == QLatin1String("allof")) {
-                            qDebug()<<" Allof";
                             mMatchAll->setChecked(true);
-                            mMatchCondition = AndCondition;
-                        } else { //true;
+                        } else {
                             if (typeCondition == QLatin1String("not")) {
-                                qDebug()<<" NOT condition";
                                 notCondition = true;
                             }
                             uniqueTest = true;
                             mMatchCondition = OrCondition;
-                            mMatchAny->setChecked(true);
-                            qDebug()<<" TRUE";
                         }
-                        updateWidget();
+                        updateCondition();
                     }
-                    //Conditions
                     mScriptConditionLister->loadScript(e, uniqueTest, notCondition);
                 } else if (tagName == QLatin1String("block")) {
-                    //Actions
-                    mScriptActionLister->loadScript(e);
+                    mScriptActionLister->loadScript(e, false);
+                } else {
+                    qDebug()<<" e.tag"<<e.tagName();
                 }
-                qDebug()<<" e.tag"<<e.tagName();
             }
             node = node.nextSibling();
         }
