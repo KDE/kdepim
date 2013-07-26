@@ -90,7 +90,7 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme::Theme &theme, bool 
         errorMessage = headerTemplate->errorString();
         return errorMessage;
     }
-    return format(headerTemplate, theme.displayExtraHeaders(), isPrinting, style, message);
+    return format(headerTemplate, theme.displayExtraVariables(), isPrinting, style, message);
 }
 
 QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
