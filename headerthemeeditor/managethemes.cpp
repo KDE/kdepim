@@ -85,8 +85,7 @@ void ManageThemes::slotDeleteTheme()
 {
     if (mListThemes->currentItem()) {
         if (KMessageBox::questionYesNo(this, i18n("Do you want to remove selected theme?"), i18n("Remove theme")) == KMessageBox::Yes) {
-            const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
-            if (KTempDir::removeDir(localDirectory + QDir::separator() + mListThemes->currentItem()->text())) {
+            if (KTempDir::removeDir(mLocalDirectory + QDir::separator() + mListThemes->currentItem()->text())) {
                 delete mListThemes->currentItem();
             } else {
                 //TODO give info about with theme we can't delete.
@@ -98,11 +97,11 @@ void ManageThemes::slotDeleteTheme()
 
 void ManageThemes::initialize()
 {
-    const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
-    QDir dir(localDirectory);
+    mLocalDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+    QDir dir(mLocalDirectory);
     if (dir.exists()) {
         bool hasSubDir = false;
-        QDirIterator dirIt( localDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
+        QDirIterator dirIt( mLocalDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
         while ( dirIt.hasNext() ) {
             dirIt.next();
             const QString dirName = dirIt.fileName();
