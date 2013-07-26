@@ -302,6 +302,7 @@ else()
   add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)
   macro_optional_add_subdirectory(headerthemeeditor)
+  add_subdirectory(grantleethemeeditor)
 
   if(KDEPIM_BUILD_MOBILE)
     add_subdirectory(mobile)

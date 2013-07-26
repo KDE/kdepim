@@ -18,11 +18,12 @@
 #ifndef NEWTHEMEDIALOG_H
 #define NEWTHEMEDIALOG_H
 
+#include "grantleethemeeditor_export.h"
 #include <KDialog>
 
 class KLineEdit;
 class KUrlRequester;
-class NewThemeDialog : public KDialog
+class GRANTLEETHEMEEDITOR_EXPORT NewThemeDialog : public KDialog
 {
     Q_OBJECT
 public:
