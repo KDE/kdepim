@@ -71,7 +71,7 @@ QString SieveScriptListItem::generatedScript(QStringList &requires) const
 {
     QString script;
     if (!mDescription.isEmpty()) {
-        script = QLatin1Char('#') + i18n("Description:") + QLatin1Char('\n') + mDescription;
+        script = QLatin1Char('#') + mDescription;
         script.replace(QLatin1Char('\n'), QLatin1String("\n#"));
         script += QLatin1Char('\n');
     }
@@ -309,7 +309,6 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
         if (i != 0)
             resultScript += QLatin1String("\n\n");
         resultScript += QLatin1Char('#') + defaultScriptName + item->text() + QLatin1Char('\n');
-        resultScript += QLatin1Char('#') + i18n("Script name: %1",item->text()) + QLatin1String("\n\n");
         resultScript += item->generatedScript(lstRequires);
     }
 
@@ -404,7 +403,10 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         }
                         currentPage->globalVariableWidget()->loadScript(e);
                     } else {
-                        qDebug()<<" unknown action name: "<<actionName;
+                        currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
+                        comment.clear();
+                        currentPage->blockIfWidget()->loadScript(e);
+                        //qDebug()<<" unknown action name: "<<actionName;
                     }
                 }
             } else {
