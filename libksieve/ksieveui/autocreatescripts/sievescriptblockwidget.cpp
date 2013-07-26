@@ -158,12 +158,16 @@ void SieveScriptBlockWidget::slotRadioClicked(QAbstractButton* button)
         mMatchCondition = AllCondition;
     }
     mScriptConditionLister->setEnabled(mMatchCondition != AllCondition);
+    mNewBlockType->setEnabled(mMatchCondition != AllCondition);
 }
 
 void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requires)
 {
+    bool onlyActions = false;
     if (mMatchCondition == AllCondition) {
-        script += QLatin1String("if true {\n");
+        onlyActions = true;
+        //Just actions type
+        //script += QLatin1String("if true {\n");
     } else if (pageType() == BlockElse) {
         script += QLatin1String("else {\n");
     } else {
@@ -205,8 +209,10 @@ void SieveScriptBlockWidget::generatedScript(QString &script, QStringList &requi
         else
             script += QLatin1String(")\n{\n");
     }
-    mScriptActionLister->generatedScript(script, requires);
-    script += QLatin1String("} ");
+    mScriptActionLister->generatedScript(script, requires, onlyActions);
+    if (!onlyActions) {
+        script += QLatin1String("} ");
+    }
 }
 
 void SieveScriptBlockWidget::loadScript(const QDomElement &element)

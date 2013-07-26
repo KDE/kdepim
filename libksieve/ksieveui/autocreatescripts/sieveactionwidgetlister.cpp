@@ -66,7 +66,7 @@ void SieveActionWidget::setFilterAction( QWidget *widget )
     }
 }
 
-void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
+void SieveActionWidget::generatedScript(QString &script, QStringList &requires, bool onlyActions)
 {
     const int index = mComboBox->currentIndex();
     if (index != mComboBox->count()-1) {
@@ -82,7 +82,7 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
         if (!comment.isEmpty()) {
             script += QLatin1Char('#') + comment.replace(QLatin1Char('\n'), QLatin1String("\n#")) + QLatin1Char('\n');
         }
-        script += INDENTACTION + widgetAction->code(currentWidget) + QLatin1Char('\n');
+        script += (onlyActions ? QString() : INDENTACTION) + widgetAction->code(currentWidget) + QLatin1Char('\n');
     }
 }
 
@@ -289,14 +289,14 @@ void SieveActionWidgetLister::updateAddRemoveButton()
     }
 }
 
-void SieveActionWidgetLister::generatedScript(QString &script, QStringList &requires)
+void SieveActionWidgetLister::generatedScript(QString &script, QStringList &requires, bool onlyActions)
 {
     const QList<QWidget*> widgetList = widgets();
     QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
         SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
-        w->generatedScript(script, requires);
+        w->generatedScript(script, requires, onlyActions);
     }
 }
 
