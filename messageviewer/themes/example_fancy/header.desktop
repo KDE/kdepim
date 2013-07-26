@@ -50,4 +50,4 @@ Description[wa]=Ahiver des tinmes decoratifs avou grantlee
 Description[x-test]=xxCreate fancy theme with grantlee.xx
 Description[zh_TW]=用 grantlee 建立花俏主題。
 FileName=header.html
-DisplayExtraHeaders=Sender,List-Id
+DisplayExtraVariables=Sender,List-Id

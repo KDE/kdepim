@@ -142,7 +142,7 @@ public:
         theme.setName( group.readEntry( "Name", QString() ) );
         theme.setDescription( group.readEntry( "Description", QString() ) );
         theme.setFilename( group.readEntry( "FileName" , QString() ) );
-        theme.setDisplayExtraHeaders( group.readEntry( "DisplayExtraHeaders", QStringList() ) );
+        theme.setDisplayExtraHeaders( group.readEntry( "DisplayExtraVariables", QStringList() ) );
         theme.setAbsolutePath(themePath);
         return theme;
     }
