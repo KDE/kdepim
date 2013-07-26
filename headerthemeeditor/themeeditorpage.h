@@ -22,10 +22,10 @@
 
 namespace GrantleeThemeEditor {
 class ThemeEditorTabWidget;
+class ThemeSession;
 }
 class EditorPage;
 class DesktopFilePage;
-class ThemeSession;
 class KZip;
 
 class ThemeEditorPage : public QWidget
@@ -72,7 +72,7 @@ private:
     GrantleeThemeEditor::ThemeEditorTabWidget *mTabWidget;
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
-    ThemeSession *mThemeSession;
+    GrantleeThemeEditor::ThemeSession *mThemeSession;
     bool mChanged;
 };
 

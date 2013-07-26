@@ -23,7 +23,6 @@ set(headerthemeeditor_SRCS
   themetemplatewidget.cpp
   themedefaulttemplate.cpp
   defaultcompletion.cpp
-  themesession.cpp
   themeconfiguredialog.cpp
   themeeditorutil.cpp
 )

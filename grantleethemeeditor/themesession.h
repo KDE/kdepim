@@ -17,11 +17,12 @@
 
 #ifndef THEMESESSION_H
 #define THEMESESSION_H
-
+#include "grantleethemeeditor_export.h"
 #include <QString>
 #include <QStringList>
 
-class ThemeSession
+namespace GrantleeThemeEditor {
+class GRANTLEETHEMEEDITOR_EXPORT ThemeSession
 {
 public:
     ThemeSession(const QString &projectDirectory);
@@ -42,5 +43,6 @@ private:
     QString mMainPageFileName;
     QStringList mExtraPage;
 };
+}
 
 #endif // THEMESESSION_H
