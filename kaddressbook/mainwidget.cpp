@@ -27,8 +27,8 @@
 #include "settings.h"
 #include "xxportmanager.h"
 
-#include "grantleecontactformatter.h"
-#include "grantleecontactgroupformatter.h"
+#include "grantlee/grantleecontactformatter.h"
+#include "grantlee/grantleecontactgroupformatter.h"
 
 #include "libkdepim/misc/uistatesaver.h"
 

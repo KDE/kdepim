@@ -81,8 +81,8 @@ set(kaddressbook_LIB_SRCS
 
 set(kaddressbook_LIB_SRCS
   ${kaddressbook_LIB_SRCS}
-  grantleecontactformatter.cpp
-  grantleecontactgroupformatter.cpp
+  grantlee/grantleecontactformatter.cpp
+  grantlee/grantleecontactgroupformatter.cpp
 )
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
