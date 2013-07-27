@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Example fancy
+Name[bs]=Kitnjasti primjer
 Name[ca]=Exemple sofisticat
 Name[da]=Eksempel på flot
 Name[es]=Ejemplo elegante
@@ -23,6 +24,7 @@ Name[wa]=Egzimpe decoratif
 Name[x-test]=xxExample fancyxx
 Name[zh_TW]=花俏範例
 Description=Create fancy theme with grantlee.
+Description[bs]=Kreiraj kitnjastu temu sa poklonom.
 Description[ca]=Crea un tema sofisticat amb grantlee.
 Description[da]=Opret flot tema med grantlee.
 Description[es]=Crear tema elegante con grantlee.
