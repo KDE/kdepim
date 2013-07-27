@@ -61,14 +61,14 @@ void Theme::setName(const QString &n)
     mName = n;
 }
 
-QStringList Theme::displayExtraHeaders() const
+QStringList Theme::displayExtraVariables() const
 {
-    return mDisplayExtraHeaders;
+    return mDisplayExtraVariables;
 }
 
-void Theme::setDisplayExtraHeaders(const QStringList &variables)
+void Theme::setDisplayExtraVariables(const QStringList &variables)
 {
-    mDisplayExtraHeaders = variables;
+    mDisplayExtraVariables = variables;
 }
 
 void Theme::setDirName(const QString &name)

@@ -15,20 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef THEMEEDITORTABWIDGET_H
-#define THEMEEDITORTABWIDGET_H
+#include "themeeditorwidget.h"
+#include "defaultcompletion.h"
+#include <QStringListModel>
+#include <QCompleter>
+#include <QDebug>
 
-#include <KTabWidget>
-
-class ThemeEditorTabWidget : public KTabWidget
+ThemeEditorWidget::ThemeEditorWidget(QWidget *parent)
+    : GrantleeThemeEditor::EditorWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit ThemeEditorTabWidget(QWidget *parent = 0);
-    ~ThemeEditorTabWidget();
+    createCompleterList();
+}
 
-private Q_SLOTS:
-    void slotTabContextMenuRequest( const QPoint &pos );
-};
+ThemeEditorWidget::~ThemeEditorWidget()
+{
+}
 
-#endif // THEMEEDITORTABWIDGET_H
+void ThemeEditorWidget::createCompleterList(const QStringList &extraCompletion)
+{
+    QStringList listWord;
+    listWord << DefaultCompletion::defaultCompetion();
+    listWord << DefaultCompletion::defaultOptions();
+    listWord << extraCompletion;
+    m_completer->setModel( new QStringListModel( listWord, m_completer ) );
+}
+
+#include "themeeditorwidget.moc"

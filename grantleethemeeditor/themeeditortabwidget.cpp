@@ -22,6 +22,7 @@
 #include <KIcon>
 
 #include <QTabBar>
+using namespace GrantleeThemeEditor;
 
 ThemeEditorTabWidget::ThemeEditorTabWidget(QWidget *parent)
     : KTabWidget(parent)

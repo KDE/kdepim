@@ -139,7 +139,7 @@ void DesktopFilePage::loadTheme(const QString &path)
     mAuthor->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Author")));
     mEmail->setText(desktopFile.desktopGroup().readEntry(QLatin1String("AuthorEmail")));
     mVersion->setText(desktopFile.desktopGroup().readEntry(QLatin1String("ThemeVersion")));
-    const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QLatin1String("DisplayExtraHeaders"),QStringList());
+    const QStringList displayExtraHeaders = desktopFile.desktopGroup().readEntry(QLatin1String("DisplayExtraVariables"),QStringList());
     mExtraDisplayHeaders->setStringList(displayExtraHeaders);
 }
 
@@ -157,7 +157,7 @@ void DesktopFilePage::saveAsFilename(const QString &filename)
     desktopFile.desktopGroup().writeEntry(QLatin1String("FileName"), mFilename->text());
     const QStringList displayExtraHeaders = mExtraDisplayHeaders->stringList();
     if (!displayExtraHeaders.isEmpty())
-        desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraHeaders"), mExtraDisplayHeaders->stringList());
+        desktopFile.desktopGroup().writeEntry(QLatin1String("DisplayExtraVariables"), mExtraDisplayHeaders->stringList());
 
     desktopFile.desktopGroup().writeEntry(QLatin1String("Author"), mAuthor->text());
     desktopFile.desktopGroup().writeEntry(QLatin1String("AuthorEmail"), mEmail->text());

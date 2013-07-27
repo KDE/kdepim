@@ -38,8 +38,8 @@ public:
     QString name() const;
     void setName(const QString &);
 
-    QStringList displayExtraHeaders() const;
-    void setDisplayExtraHeaders(const QStringList &);
+    QStringList displayExtraVariables() const;
+    void setDisplayExtraVariables(const QStringList &);
 
     void setDirName(const QString &name);
     QString dirName() const;
@@ -54,7 +54,7 @@ public:
     QString authorEmail() const;
 
 private:
-    QStringList mDisplayExtraHeaders;
+    QStringList mDisplayExtraVariables;
     QString mFileName;
     QString mDescription;
     QString mName;

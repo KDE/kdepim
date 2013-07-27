@@ -1,0 +1,10 @@
+require "include";
+ 
+#SCRIPTNAME: test-global
+global "VARIABLE1";
+global "VARIABLE2";
+set "VARIABLE2" "value1";
+global "VARIABLE3";
+set "VARIABLE3" "";
+
+

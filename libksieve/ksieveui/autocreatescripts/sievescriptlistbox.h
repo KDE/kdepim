@@ -74,6 +74,17 @@ private Q_SLOTS:
     void slotUp();
 
 private:
+    enum ParseSieveScriptTypeBlock {
+        TypeUnknown = 0,
+        TypeBlockIf,
+        TypeBlockElsif,
+        TypeBlockElse,
+        TypeBlockInclude,
+        TypeBlockGlobal,
+        TypeBlockAction,
+        TypeBlockForeachBlock
+    };
+
     void clear();
     SieveScriptPage *createNewScript(const QString &newName, const QString &description = QString());
     QString createUniqName();

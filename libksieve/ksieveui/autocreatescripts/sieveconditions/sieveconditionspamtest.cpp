@@ -153,6 +153,8 @@ void SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                     if (mHasSpamTestPlusSupport) {
                         QCheckBox *checkbox = w->findChild<QCheckBox*>( QLatin1String("percent") );
                         checkbox->setChecked(true);
+                    } else {
+                        qDebug()<<" SieveConditionSpamTest::setParamWidgetValue server has not percent support";
                     }
                 } else {
                     qDebug()<<" SieveConditionSpamTest::setParamWidgetValue unknown tagvalue "<<tagValue;

@@ -143,7 +143,7 @@ public:
         theme.setName( group.readEntry( "Name", QString() ) );
         theme.setDescription( group.readEntry( "Description", QString() ) );
         theme.setFilename( group.readEntry( "FileName" , QString() ) );
-        theme.setDisplayExtraHeaders( group.readEntry( "DisplayExtraHeaders", QStringList() ) );
+        theme.setDisplayExtraVariables( group.readEntry( "DisplayExtraVariables", QStringList() ) );
         theme.setAbsolutePath(themePath);
         return theme;
     }
@@ -276,13 +276,13 @@ void GrantleeThemeManager::setHeaderMenu(KActionMenu *menu)
     }
 }
 
-QStringList GrantleeThemeManager::displayExtraHeader(const QString &themename) const
+QStringList GrantleeThemeManager::displayExtraVariables(const QString &themename) const
 {
     QMapIterator<QString, GrantleeTheme::Theme> i(d->themes);
     while (i.hasNext()) {
         i.next();
         if (i.value().dirName() == themename) {
-            return i.value().displayExtraHeaders();
+            return i.value().displayExtraVariables();
         }
     }
     return QStringList();

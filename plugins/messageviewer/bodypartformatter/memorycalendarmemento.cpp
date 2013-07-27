@@ -46,9 +46,8 @@ void MemoryCalendarMemento::slotSearchJobFinished( KJob *job )
         mCalendar->addIncidence( incidence );
       }
     }
-
-    emit update( Viewer::Delayed );
   }
+  emit update( Viewer::Delayed );
 }
 
 bool MemoryCalendarMemento::finished() const

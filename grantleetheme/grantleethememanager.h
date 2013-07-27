@@ -43,7 +43,7 @@ public:
 
     void setHeaderMenu(KActionMenu *menu);
 
-    QStringList displayExtraHeader(const QString &themename) const;
+    QStringList displayExtraVariables(const QString &themename) const;
 
     GrantleeTheme::Theme theme(const QString &themeName);
 

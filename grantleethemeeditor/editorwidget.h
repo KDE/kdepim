@@ -18,11 +18,12 @@
 #ifndef EDITORWIDGET_H
 #define EDITORWIDGET_H
 
+#include "grantleethemeeditor_export.h"
 #include <KTextEdit>
 
 class QCompleter;
-
-class EditorWidget : public KTextEdit
+namespace GrantleeThemeEditor {
+class GRANTLEETHEMEEDITOR_EXPORT EditorWidget : public KTextEdit
 {
     Q_OBJECT
 public:
@@ -30,7 +31,8 @@ public:
     ~EditorWidget();
 
     void insertFile(const QString &filename);
-    void createCompleterList(const QStringList &extraHeaders = QStringList());
+
+    virtual void createCompleterList(const QStringList &extraCompletion = QStringList());
 
 private Q_SLOTS:
     void slotInsertCompletion( const QString &completion );
@@ -38,10 +40,13 @@ private Q_SLOTS:
 protected:
     void keyPressEvent(QKeyEvent* e);
 
+protected:
+    QCompleter *m_completer;
+
 private:
     void initCompleter();
     QString wordUnderCursor() const;
-    QCompleter *m_completer;
 };
+}
 
 #endif // EDITORWIDGET_H

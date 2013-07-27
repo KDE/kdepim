@@ -8,12 +8,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 include_directories(
   ${CMAKE_SOURCE_DIR}/messageviewer
   ${CMAKE_SOURCE_DIR}/pimcommon/
+  ${CMAKE_SOURCE_DIR}/grantleethemeeditor
 )
 
 
 set(headerthemeeditor_SRCS
   main.cpp
-  editorwidget.cpp  
   themeeditormainwindow.cpp 
   themeeditorpage.cpp
   previewwidget.cpp
@@ -22,17 +22,14 @@ set(headerthemeeditor_SRCS
   themetemplatewidget.cpp
   themedefaulttemplate.cpp
   defaultcompletion.cpp
-  newthemedialog.cpp
-  themesession.cpp
   themeconfiguredialog.cpp
   themeeditorutil.cpp
-  themeeditortabwidget.cpp
-  managethemes.cpp
+  themeeditorwidget.cpp
 )
 
 
 kde4_add_executable(headerthemeeditor ${headerthemeeditor_SRCS} )
-TARGET_LINK_LIBRARIES(headerthemeeditor ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KNEWSTUFF3_LIBS} pimcommon messageviewer)
+TARGET_LINK_LIBRARIES(headerthemeeditor ${KDEPIMLIBS_KMIME_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KNEWSTUFF3_LIBS} pimcommon messageviewer grantleethemeeditor)
 
 install(TARGETS headerthemeeditor ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES

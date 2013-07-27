@@ -18,7 +18,7 @@
 #include "themeeditorpage.h"
 #include "desktopfilepage.h"
 #include "editorpage.h"
-#include "editorwidget.h"
+#include "themeeditorwidget.h"
 #include "previewwidget.h"
 #include "themesession.h"
 #include "themeeditortabwidget.h"
@@ -41,11 +41,11 @@
 
 ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
-      mThemeSession(new ThemeSession(projectDir)),
+      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir)),
       mChanged(false)
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    mTabWidget = new ThemeEditorTabWidget;
+    mTabWidget = new GrantleeThemeEditor::ThemeEditorTabWidget;
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));

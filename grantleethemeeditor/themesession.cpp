@@ -23,6 +23,8 @@
 
 #include <QDir>
 
+using namespace GrantleeThemeEditor;
+
 ThemeSession::ThemeSession(const QString &projectDirectory)
     : mProjectDirectory(projectDirectory)
 {

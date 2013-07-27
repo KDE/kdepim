@@ -15,30 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef NEWTHEMEDIALOG_H
-#define NEWTHEMEDIALOG_H
+#ifndef THEMESESSION_H
+#define THEMESESSION_H
+#include "grantleethemeeditor_export.h"
+#include <QString>
+#include <QStringList>
 
-#include <KDialog>
-
-class KLineEdit;
-class KUrlRequester;
-class NewThemeDialog : public KDialog
+namespace GrantleeThemeEditor {
+class GRANTLEETHEMEEDITOR_EXPORT ThemeSession
 {
-    Q_OBJECT
 public:
-    explicit NewThemeDialog(QWidget *parent = 0);
-    ~NewThemeDialog();
+    ThemeSession(const QString &projectDirectory);
+    ~ThemeSession();
+    void loadSession(const QString &session);
+    void writeSession();
 
-    QString themeName() const;
-    QString directory() const;
+    QString projectDirectory() const;
 
-private Q_SLOTS:
-    void slotUpdateOkButton();
+    void addExtraPage(const QString &filename);
+    QStringList extraPages() const;
+
+    void setMainPageFileName(const QString &filename);
+    QString mainPageFileName() const;
 
 private:
-    void readConfig();
-    KLineEdit *mThemeName;
-    KUrlRequester *mUrlRequester;
+    QString mProjectDirectory;
+    QString mMainPageFileName;
+    QStringList mExtraPage;
 };
+}
 
-#endif // NEWTHEMEDIALOG_H
+#endif // THEMESESSION_H

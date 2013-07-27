@@ -20,10 +20,12 @@
 
 #include <QWidget>
 
+namespace GrantleeThemeEditor {
 class ThemeEditorTabWidget;
+class ThemeSession;
+}
 class EditorPage;
 class DesktopFilePage;
-class ThemeSession;
 class KZip;
 
 class ThemeEditorPage : public QWidget
@@ -67,10 +69,10 @@ private:
     void createZip(const QString &themeName, KZip *zip);
     EditorPage *createExtraPage(const QString &filename);
     QList<EditorPage*> mExtraPage;
-    ThemeEditorTabWidget *mTabWidget;
+    GrantleeThemeEditor::ThemeEditorTabWidget *mTabWidget;
     EditorPage *mEditorPage;
     DesktopFilePage *mDesktopPage;
-    ThemeSession *mThemeSession;
+    GrantleeThemeEditor::ThemeSession *mThemeSession;
     bool mChanged;
 };
 

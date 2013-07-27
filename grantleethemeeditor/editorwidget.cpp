@@ -16,7 +16,6 @@
 */
 
 #include "editorwidget.h"
-#include "defaultcompletion.h"
 
 #include <kpimtextedit/htmlhighlighter.h>
 
@@ -24,6 +23,9 @@
 #include <QCompleter>
 #include <QKeyEvent>
 #include <QScrollBar>
+#include <QDebug>
+
+using namespace GrantleeThemeEditor;
 
 EditorWidget::EditorWidget(QWidget *parent)
     : KTextEdit(parent)
@@ -53,7 +55,6 @@ void EditorWidget::insertFile(const QString &filename)
 void EditorWidget::initCompleter()
 {
     m_completer = new QCompleter( this );
-    createCompleterList();
     m_completer->setModelSorting( QCompleter::CaseSensitivelySortedModel );
     m_completer->setCaseSensitivity( Qt::CaseInsensitive );
 
@@ -63,13 +64,10 @@ void EditorWidget::initCompleter()
     connect( m_completer, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
 }
 
-void EditorWidget::createCompleterList(const QStringList &extraHeaders)
+void EditorWidget::createCompleterList(const QStringList &extraCompletion)
 {
     QStringList listWord;
-
-    listWord << DefaultCompletion::defaultCompetion();
-    listWord << DefaultCompletion::defaultOptions();
-    listWord << extraHeaders;
+    listWord << extraCompletion;
     m_completer->setModel( new QStringListModel( listWord, m_completer ) );
 }
 

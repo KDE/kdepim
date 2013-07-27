@@ -15,32 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef THEMESESSION_H
-#define THEMESESSION_H
+#ifndef THEMEEDITORWIDGET_H
+#define THEMEEDITORWIDGET_H
+#include "grantleethemeeditor/editorwidget.h"
 
-#include <QString>
-#include <QStringList>
-
-class ThemeSession
+class ThemeEditorWidget : public GrantleeThemeEditor::EditorWidget
 {
+    Q_OBJECT
 public:
-    ThemeSession(const QString &projectDirectory);
-    ~ThemeSession();
-    void loadSession(const QString &session);
-    void writeSession();
+    explicit ThemeEditorWidget(QWidget *parent = 0);
+    ~ThemeEditorWidget();
 
-    QString projectDirectory() const;
-
-    void addExtraPage(const QString &filename);
-    QStringList extraPages() const;
-
-    void setMainPageFileName(const QString &filename);
-    QString mainPageFileName() const;
-
-private:
-    QString mProjectDirectory;
-    QString mMainPageFileName;
-    QStringList mExtraPage;
+public Q_SLOTS:
+    void createCompleterList(const QStringList &extraCompletion = QStringList());
 };
 
-#endif // THEMESESSION_H
+#endif // THEMEEDITORWIDGET_H

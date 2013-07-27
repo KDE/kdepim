@@ -15,31 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MANAGETHEMES_H
-#define MANAGETHEMES_H
+#ifndef NEWTHEMEDIALOG_H
+#define NEWTHEMEDIALOG_H
 
+#include "grantleethemeeditor_export.h"
 #include <KDialog>
 
-class QListWidget;
-class QListWidgetItem;
-class KPushButton;
-class ManageThemes : public KDialog
+class KLineEdit;
+class KUrlRequester;
+namespace GrantleeThemeEditor {
+class GRANTLEETHEMEEDITOR_EXPORT NewThemeDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ManageThemes(QWidget *parent = 0);
-    ~ManageThemes();
+    explicit NewThemeDialog(QWidget *parent = 0);
+    ~NewThemeDialog();
+
+    QString themeName() const;
+    QString directory() const;
 
 private Q_SLOTS:
-    void slotItemSelectionChanged();
-    void slotDeleteTheme();
+    void slotUpdateOkButton();
 
 private:
     void readConfig();
-    void writeConfig();
-    void initialize();
-    QListWidget *mListThemes;
-    KPushButton *mDeleteTheme;
+    KLineEdit *mThemeName;
+    KUrlRequester *mUrlRequester;
 };
-
-#endif // MANAGETHEMES_H
+}
+#endif // NEWTHEMEDIALOG_H

@@ -186,6 +186,9 @@ int NotificationModel::rowCount( const QModelIndex& parent ) const
 QModelIndex NotificationModel::index( int row, int column, const QModelIndex &parent ) const
 {
   if ( !parent.isValid() ) {
+    if ( row >= m_data.count() ) {
+      return QModelIndex();
+    }
     return createIndex( row, column, m_data.at( row ) );
   }
 

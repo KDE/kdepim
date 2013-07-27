@@ -30,9 +30,12 @@
 #include <QDirIterator>
 #include <QDebug>
 
-ManageThemes::ManageThemes(QWidget *parent)
+using namespace GrantleeThemeEditor;
+
+ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     : KDialog(parent)
 {
+    mLocalDirectory = KStandardDirs::locateLocal("data", relativeThemePath);
     setCaption( i18n( "Manage Theme" ) );
     setButtons( Close );
     QWidget *w = new QWidget;
@@ -85,12 +88,10 @@ void ManageThemes::slotDeleteTheme()
 {
     if (mListThemes->currentItem()) {
         if (KMessageBox::questionYesNo(this, i18n("Do you want to remove selected theme?"), i18n("Remove theme")) == KMessageBox::Yes) {
-            const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
-            if (KTempDir::removeDir(localDirectory + QDir::separator() + mListThemes->currentItem()->text())) {
+            if (KTempDir::removeDir(mLocalDirectory + QDir::separator() + mListThemes->currentItem()->text())) {
                 delete mListThemes->currentItem();
             } else {
-                //TODO give info about with theme we can't delete.
-                KMessageBox::error(this, i18n("Can not delete theme. Please contact your administrator."), i18n("Delete theme failed"));
+                KMessageBox::error(this, i18n("Theme \"%1\" can not delete. Please contact your administrator.", mListThemes->currentItem()->text()), i18n("Delete theme failed"));
             }
         }
     }
@@ -98,11 +99,10 @@ void ManageThemes::slotDeleteTheme()
 
 void ManageThemes::initialize()
 {
-    const QString localDirectory = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
-    QDir dir(localDirectory);
+    QDir dir(mLocalDirectory);
     if (dir.exists()) {
         bool hasSubDir = false;
-        QDirIterator dirIt( localDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
+        QDirIterator dirIt( mLocalDirectory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
         while ( dirIt.hasNext() ) {
             dirIt.next();
             const QString dirName = dirIt.fileName();
