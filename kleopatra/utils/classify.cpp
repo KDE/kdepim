@@ -213,28 +213,28 @@ unsigned int Kleo::classifyContent( const QByteArray & data ) {
 QString Kleo::printableClassification( unsigned int classification ) {
     QStringList parts;
     if ( classification & CMS )
-        parts.push_back( "CMS" );
+        parts.push_back( QLatin1String("CMS") );
     if ( classification & OpenPGP )
-        parts.push_back( "OpenPGP" );
+        parts.push_back( QLatin1String("OpenPGP") );
     if ( classification & Binary )
-        parts.push_back( "Binary" );
+        parts.push_back( QLatin1String("Binary") );
     if ( classification & Ascii )
-        parts.push_back( "Ascii" );
+        parts.push_back( QLatin1String("Ascii") );
     if ( classification & DetachedSignature )
-        parts.push_back( "DetachedSignature" );
+        parts.push_back( QLatin1String("DetachedSignature") );
     if ( classification & OpaqueSignature )
-        parts.push_back( "OpaqueSignature" );
+        parts.push_back( QLatin1String("OpaqueSignature") );
     if ( classification & ClearsignedMessage )
-        parts.push_back( "ClearsignedMessage" );
+        parts.push_back( QLatin1String("ClearsignedMessage") );
     if ( classification & CipherText )
-        parts.push_back( "CipherText" );
+        parts.push_back( QLatin1String("CipherText") );
     if ( classification & Certificate )
-        parts.push_back( "Certificate" );
+        parts.push_back( QLatin1String("Certificate" ));
     if ( classification & ExportedPSM )
-        parts.push_back( "ExportedPSM" );
+        parts.push_back( QLatin1String("ExportedPSM") );
     if ( classification & CertificateRequest )
-        parts.push_back( "CertificateRequest" );
-    return parts.join( ", " );
+        parts.push_back( QLatin1String("CertificateRequest") );
+    return parts.join( QLatin1String(", ") );
 }
 
 static QString chopped( QString s, unsigned int n ) {
@@ -263,7 +263,7 @@ QStringList Kleo::findSignatures( const QString & signedDataFileName ) {
     QStringList result;
     for ( unsigned int i = 0, end = size( classifications ) ; i < end ; ++i )
         if ( classifications[i].classification & DetachedSignature ) {
-            const QString candiate = signedDataFileName + '.' + classifications[i].extension;
+            const QString candiate = signedDataFileName + QLatin1Char('.') + QLatin1String(classifications[i].extension);
             if ( QFile::exists( candiate ) )
                 result.push_back( candiate );
         }
@@ -280,7 +280,7 @@ QString Kleo::outputFileName( const QString & inputFileName ) {
     if ( qBinaryFind( begin( classifications ), end( classifications ),
                       fi.suffix().toLatin1().constData(),
                       ByExtension<std::less>() ) == end( classifications ) )
-        return inputFileName + ".out";
+        return inputFileName + QLatin1String(".out");
     else
         return chopped( inputFileName, 4 );
 }

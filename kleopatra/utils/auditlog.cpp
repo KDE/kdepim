@@ -67,8 +67,8 @@ QString AuditLog::formatLink( const KUrl & urlTemplate ) const {
 
     if ( !m_text.isEmpty() ) {
         KUrl url = urlTemplate;
-        url.addQueryItem( "log", m_text );
-        return "<a href=\"" + url.url() + "\">" + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + "</a>";
+        url.addQueryItem( QLatin1String("log"), m_text );
+        return QLatin1String("<a href=\"") + url.url() + QLatin1String("\">") + i18nc("The Audit Log is a detailed error log from the gnupg backend", "Show Audit Log") + QLatin1String("</a>");
     }
 
     return QString();
