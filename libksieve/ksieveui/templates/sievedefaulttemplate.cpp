@@ -65,7 +65,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     tmp.name = i18n("Forward Message and add copy");
     tmp.text = QString::fromLatin1("require [\"copy\", \"fileinto\"];\n"
                                    "if header :contains \"Subject\" \"foo\" { \n"
-                                   "  redirect :copy \"other@example.net\" \n"
+                                   "  redirect :copy \"other@example.net\";\n"
                                    "  fileinto \"Forwarded Messages\" \n"
                                    "}\n");
     lst <<tmp;
