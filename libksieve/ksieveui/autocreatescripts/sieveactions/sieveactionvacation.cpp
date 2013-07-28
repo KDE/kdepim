@@ -117,7 +117,7 @@ QString SieveActionVacation::code(QWidget *w) const
     if (!subjectStr.isEmpty())
         result += QString::fromLatin1(" :subject \"%1\"").arg(subjectStr);
     if (!addressesStr.isEmpty())
-        result += QString::fromLatin1(" :addresses %1").arg(AutoCreateScriptUtil::createAddressList(addressesStr));
+        result += QString::fromLatin1(" :addresses %1").arg(AutoCreateScriptUtil::createAddressList(addressesStr, false));
     if (!textStr.isEmpty())
         result += QString::fromLatin1(" text:%1").arg(AutoCreateScriptUtil::createMultiLine(textStr));
     else
