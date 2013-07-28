@@ -127,7 +127,7 @@ static std::string email( const UserID & uid ) {
         if ( *id == '<' )
             return stripAngleBrackets( id );
         else
-            return DN( id )["EMAIL"].trimmed().toUtf8().constData();
+            return DN( id )[QLatin1String("EMAIL")].trimmed().toUtf8().constData();
     else
         return std::string();
 }
@@ -412,7 +412,7 @@ static QString formatSignature( const Signature & sig, const Key & key, const De
     if ( sig.isNull() )
         return QString();
 
-    const QString text = formatSigningInformation( sig, key ) + "<br/>";
+    const QString text = formatSigningInformation( sig, key ) + QLatin1String("<br/>");
 
     const bool red = sig.summary() & Signature::Red;
     if ( sig.summary() & Signature::Valid ) {
@@ -458,7 +458,7 @@ static QString formatDecryptionResultDetails( const DecryptionResult & res, cons
         return QString();
 
     if ( recipients.empty() && res.numRecipients() > 0 )
-        return QString( "<i>" + i18np( "One unknown recipient.", "%1 unknown recipients.", res.numRecipients() ) + "</i>" );
+        return QLatin1String( "<i>") + i18np( "One unknown recipient.", "%1 unknown recipients.", res.numRecipients() ) + QLatin1String("</i>");
 
     QString details;
     if ( !recipients.empty() ) {
@@ -466,14 +466,14 @@ static QString formatDecryptionResultDetails( const DecryptionResult & res, cons
         if ( res.numRecipients() == 1 )
             return details + renderKey( recipients.front() );
 
-        details += "<ul>";
+        details += QLatin1String("<ul>");
         Q_FOREACH( const Key & key, recipients )
-            details += "<li>" + renderKey( key ) + "</li>";
+            details += QLatin1String("<li>") + renderKey( key ) + QLatin1String("</li>");
         if ( recipients.size() < res.numRecipients() )
-            details += "<li><i>" + i18np( "One unknown recipient", "%1 unknown recipients",
-                                       res.numRecipients() - recipients.size() ) + "</i></li>";
+            details += QLatin1String("<li><i>") + i18np( "One unknown recipient", "%1 unknown recipients",
+                                       res.numRecipients() - recipients.size() ) + QLatin1String("</i></li>");
 
-        details += "</ul>";
+        details += QLatin1String("</ul>");
     }
 
     return details;
@@ -495,7 +495,7 @@ static QString formatDecryptVerifyResultDetails( const DecryptionResult & dr,
     const QString drDetails = formatDecryptionResultDetails( dr, recipients, errorString );
     if ( IsErrorOrCanceled( dr ) || !relevantInDecryptVerifyContext( vr ) )
         return drDetails;
-    return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr, info, errorString );
+    return drDetails + ( drDetails.isEmpty() ? QString() : QLatin1String("<br/>") ) + formatVerificationResultDetails( vr, info, errorString );
 }
 
 } // anon namespace
