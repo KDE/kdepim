@@ -85,6 +85,8 @@ QStringList AutoCreateScriptUtil::createListFromString(QString str)
 
 QString AutoCreateScriptUtil::createAddressList(const QString &str, bool addSemiColon)
 {
+    if (str.trimmed().startsWith(QLatin1Char('[')) && str.trimmed().endsWith(QLatin1Char(']')))
+        return str;
     return createList(str, QLatin1Char(';'), addSemiColon);
 }
 
