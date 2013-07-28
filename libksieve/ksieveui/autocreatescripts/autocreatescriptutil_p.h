@@ -38,6 +38,7 @@ QString tagValue(const QString &tag);
 QString strValue(QDomNode &node);
 QStringList listValue(const QDomElement &element);
 QString listValueToStr(const QDomElement &element);
+QString fixListValue(QString valueStr);
 }
 
 #endif // AUTOCREATESCRIPTUTIL_H

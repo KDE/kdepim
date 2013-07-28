@@ -143,3 +143,12 @@ QStringList AutoCreateScriptUtil::listValue(const QDomElement &element)
     return lst;
 }
 
+QString AutoCreateScriptUtil::fixListValue(QString valueStr)
+{
+    if (! (valueStr.startsWith(QLatin1Char('[')) && valueStr.endsWith(QLatin1Char(']')))) {
+        valueStr = QString::fromLatin1("\"%1\"").arg(valueStr);
+    }
+
+    return valueStr;
+}
+
