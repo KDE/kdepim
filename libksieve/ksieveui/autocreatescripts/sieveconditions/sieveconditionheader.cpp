@@ -75,9 +75,12 @@ QString SieveConditionHeader::code(QWidget *w) const
     const QString headerStr = headerType->code();
 
     const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
-    const QString valueStr = value->text();
+    QString valueStr = value->text();
 
-    return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("header %1 %2 \"%3\"").arg(matchString).arg(headerStr).arg(valueStr);
+    if (! (valueStr.startsWith(QLatin1Char('[')) && valueStr.endsWith(QLatin1Char(']')))) {
+        valueStr = QString::fromLatin1("\"%1\"").arg(valueStr);
+    }
+    return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("header %1 %2 %3").arg(matchString).arg(headerStr).arg(valueStr);
 }
 
 QString SieveConditionHeader::help() const
