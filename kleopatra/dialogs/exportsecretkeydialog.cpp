@@ -101,7 +101,7 @@ private:
         const char * const extension = extensions[idx];
 
         const QString nf = i18n("Secret Key Files") + QString::fromLatin1("(*%1 *%2 *%3 *%4 *.pgp)")
-            .arg( extensions[idx], extensions[(idx+1)%4], extensions[(idx+2)%4], extensions[(idx+3)%4] );
+            .arg( QLatin1String(extensions[idx]), QLatin1String(extensions[(idx+1)%4]), QLatin1String(extensions[(idx+2)%4]), QLatin1String(extensions[(idx+3)%4]) );
         ui.outputFileFR->setNameFilter( nf );
 
         QString fn = q->fileName();
@@ -110,13 +110,13 @@ private:
 
         bool found = false;
         for ( unsigned int i = 0 ; i < sizeof extensions / sizeof *extensions ; ++i )
-            if ( fn.endsWith( extensions[i], Qt::CaseInsensitive ) ) {
+            if ( fn.endsWith( QLatin1String(extensions[i]), Qt::CaseInsensitive ) ) {
                 fn.chop( 4 );
                 found = true;
                 break;
             }
         if ( found )
-            q->setFileName( fn + extension );
+            q->setFileName( fn + QLatin1String(extension) );
     }
 
     void updateLabel() {
