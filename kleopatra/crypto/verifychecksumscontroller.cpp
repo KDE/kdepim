@@ -153,7 +153,7 @@ private:
 
         if ( !errors.empty() )
             q->setLastError( gpg_error( GPG_ERR_GENERAL ),
-                             errors.join( "\n" ) );
+                             errors.join( QLatin1String("\n") ) );
         q->emitDoneOrError();
     }
 
@@ -300,7 +300,7 @@ static std::vector<File> parse_sum_file( const QString & fileName ) {
     QFile f( fileName );
     if ( f.open( QIODevice::ReadOnly ) ) {
         QTextStream s( &f );
-        QRegExp rx( "(\\?)([a-f0-9A-F]+) ([ *])([^\n]+)\n*" );
+        QRegExp rx( QLatin1String("(\\?)([a-f0-9A-F]+) ([ *])([^\n]+)\n*") );
         while ( !s.atEnd() ) {
             const QString line = s.readLine();
             if ( rx.exactMatch( line ) ) {
@@ -437,7 +437,7 @@ static std::vector<SumFile> find_sums_by_input_files( const QStringList & files,
             QDir dir( file );
             const QStringList sumfiles = filter_checksum_files( dir.entryList( QDir::Files ), patterns );
             kDebug() << "find_sums_by_input_files:   found " << sumfiles.size()
-                     << " sum files: " << qPrintable( sumfiles.join(", ") );
+                     << " sum files: " << qPrintable( sumfiles.join(QLatin1String(", ")) );
             dirs2sums[ dir ].insert( sumfiles.begin(), sumfiles.end() );
             const QStringList dirs = dir.entryList( QDir::Dirs|QDir::NoDotAndDotDot );
             kDebug() << "find_sums_by_input_files:   found " << dirs.size()
@@ -453,7 +453,7 @@ static std::vector<SumFile> find_sums_by_input_files( const QStringList & files,
             const QDir dir = fi.dir();
             const QStringList sumfiles = filter_checksum_files( dir.entryList( QDir::Files ), patterns );
             kDebug() << "find_sums_by_input_files:   found " << sumfiles.size()
-                     << " potential sumfiles: " << qPrintable( sumfiles.join(", ") );
+                     << " potential sumfiles: " << qPrintable( sumfiles.join(QLatin1String(", ")) );
             const QStringList::const_iterator it = kdtools::find_if( sumfiles, sumfile_contains_file( dir, fileName ) );
             if ( it == sumfiles.end() )
                 errors.push_back( i18n( "Cannot find checksums file for file %1", file ) );
@@ -501,9 +501,9 @@ static QStringList c_lang_environment() {
     QStringList env = QProcess::systemEnvironment();
     env.erase( std::remove_if( env.begin(), env.end(),
                                boost::bind( &QRegExp::exactMatch,
-                                     QRegExp( "^LANG=.*", fs_cs ), _1 ) ),
+                                     QRegExp( QLatin1String("^LANG=.*"), fs_cs ), _1 ) ),
                env.end() );
-    env.push_back( "LANG=C" );
+    env.push_back( QLatin1String("LANG=C") );
     return env;
 }
 

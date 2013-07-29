@@ -193,7 +193,7 @@ ImportCertificatesCommand::ImportCertificatesCommand( QAbstractItemView * v, Key
 ImportCertificatesCommand::~ImportCertificatesCommand() {}
 
 static QString format_ids( const QStringList & ids ) {
-    return kdtools::transform_if<QStringList>( ids, Qt::escape, !boost::bind( &QString::isEmpty, _1 ) ).join( "<br>" );
+    return kdtools::transform_if<QStringList>( ids, Qt::escape, !boost::bind( &QString::isEmpty, _1 ) ).join( QLatin1String("<br>") );
 }
 
 static QString make_tooltip( const QStringList & ids ) {

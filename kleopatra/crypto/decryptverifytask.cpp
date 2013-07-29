@@ -226,7 +226,7 @@ static QString formatValidSignatureWithTrustLevel( const UserID & id ) {
 static QString renderFingerprint( const char * fpr ) {
     if ( !fpr )
         return QString();
-    return QString( "0x%1" ).arg( QString::fromLatin1( fpr ).toUpper() );
+    return QString::fromLatin1( "0x%1" ).arg( QString::fromLatin1( fpr ).toUpper() );
 }
 
 static QString renderKeyLink( const QString & fpr, const QString & text ) {
@@ -236,7 +236,7 @@ static QString renderKeyLink( const QString & fpr, const QString & text ) {
 static QString renderKey( const Key & key ) {
     if ( key.isNull() )
         return i18n( "Unknown certificate" );
-    return renderKeyLink( key.primaryFingerprint(), Formatting::prettyName( key ) );
+    return renderKeyLink( QLatin1String(key.primaryFingerprint()), Formatting::prettyName( key ) );
 }
 
 static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
@@ -244,7 +244,7 @@ static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
         return i18n( "Unknown certificate" );
     const QString email = Formatting::prettyEMail( key );
     const QString user = !email.isEmpty() ? email : Formatting::prettyName( key );
-    return renderKeyLink( key.primaryFingerprint(), user );
+    return renderKeyLink( QLatin1String(key.primaryFingerprint()), user );
 }
 
 static QString formatDate( const QDateTime & dt ) {
@@ -281,7 +281,7 @@ static QString formatSigningInformation( const Signature & sig, const Key & key 
 }
 
 static QString strikeOut( const QString & str, bool strike ) {
-    return QString( strike ? "<s>%1</s>" : "%1" ).arg( Qt::escape( str ) );
+    return QString( strike ? QLatin1String("<s>%1</s>") : QLatin1String("%1") ).arg( Qt::escape( str ) );
 }
 
 static QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
@@ -384,7 +384,7 @@ static QString formatVerificationResultOverview( const VerificationResult & res,
         text = i18n( "<b>Signed by %1</b>", renderKeyEMailOnlyNameAsFallback( key ) );
         if ( info.conflicts() )
             text += i18n( "<br/><b>Warning:</b> The sender's mail address is not stored in the %1 used for signing.",
-                          renderKeyLink( key.primaryFingerprint(), i18n( "certificate" ) ) );
+                          renderKeyLink( QLatin1String(key.primaryFingerprint()), i18n( "certificate" ) ) );
     }
     else {
         text = i18np("<b>Valid signature.</b>", "<b>%1 valid signatures.</b>", sigs.size() );
@@ -441,9 +441,9 @@ static QString formatVerificationResultDetails( const VerificationResult & res, 
     const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
     QString details;
     Q_FOREACH ( const Signature & sig, sigs )
-        details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ), info ) + '\n';
+        details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ), info ) + QLatin1Char('\n');
     details = details.trimmed();
-    details.replace( '\n', "<br/>" );
+    details.replace( QLatin1Char('\n'), QLatin1String("<br/>") );
     if ( info.conflicts() )
         details += i18n( "<p>The sender's address %1 is not stored in the certificate. Stored: %2</p>", info.informativeSender.prettyAddress(), format( info.signerMailboxes() ).join( i18nc("separator for a list of e-mail addresses", ", " ) ) );
     return details;
