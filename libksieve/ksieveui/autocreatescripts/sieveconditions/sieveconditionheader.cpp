@@ -114,7 +114,6 @@ void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                 if (index == 0) {
                     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
                     headerType->setCode(AutoCreateScriptUtil::listValueToStr(e));
-                    ++index;
                 } else if (index == 1) {
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
                     value->setText(AutoCreateScriptUtil::listValueToStr(e));
