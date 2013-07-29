@@ -127,7 +127,7 @@ void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     selectHeaderType->setCode(e.text());
                 } else if (indexStr == 1) {
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
-                    edit->setText(e.text());
+                    edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
                 }

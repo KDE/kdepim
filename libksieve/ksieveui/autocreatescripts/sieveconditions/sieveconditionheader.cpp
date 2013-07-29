@@ -104,7 +104,7 @@ void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     headerType->setCode(e.text());
                 } else if (index == 1) {
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
-                    value->setText(e.text());
+                    value->setText(e.text().replace(QLatin1String("\""), QLatin1String("\\\"")));
                 } else {
                     qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
                 }

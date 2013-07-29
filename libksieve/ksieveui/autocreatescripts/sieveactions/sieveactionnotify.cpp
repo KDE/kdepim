@@ -75,7 +75,7 @@ void SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
                         KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
-                        message->setText(strValue);
+                        message->setText(AutoCreateScriptUtil::quoteStr(strValue));
                     }
                 } else if (tagValue == QLatin1String("importance")) {
                     const QString strValue = AutoCreateScriptUtil::strValue(node);

@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionredirect.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "widgets/addresslineedit.h"
 
@@ -73,7 +74,7 @@ void SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
             if (tagName == QLatin1String("str")) {
                 KLineEdit *edit = w->findChild<AddressLineEdit*>( QLatin1String("RedirectEdit") );
                 const QString tagValue = e.text();
-                edit->setText(tagValue);
+                edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
             } else if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("copy")) {

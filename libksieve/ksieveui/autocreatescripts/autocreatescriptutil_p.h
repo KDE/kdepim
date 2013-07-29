@@ -39,6 +39,7 @@ QString strValue(QDomNode &node);
 QStringList listValue(const QDomElement &element);
 QString listValueToStr(const QDomElement &element);
 QString fixListValue(QString valueStr);
+QString quoteStr(QString str);
 }
 
 #endif // AUTOCREATESCRIPTUTIL_H

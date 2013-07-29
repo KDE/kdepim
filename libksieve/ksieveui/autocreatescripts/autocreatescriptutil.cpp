@@ -44,13 +44,18 @@ QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separa
     }
 }
 
+QString AutoCreateScriptUtil::quoteStr(QString str)
+{
+    return str.replace(QLatin1String("\""), QLatin1String("\\\""));
+}
+
 QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiColon)
 {
     QString result;
     result = QLatin1String("[");
     bool wasFirst = true;
     Q_FOREACH (const QString &str, lst) {
-        result += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(str);
+        result += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(quoteStr(str));
         wasFirst = false;
     }
     result += QLatin1String(" ]");

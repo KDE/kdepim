@@ -137,12 +137,12 @@ void SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
                 }
                 case 1: {
                     KLineEdit *annotation = w->findChild<KLineEdit*>( QLatin1String("annotation"));
-                    annotation->setText(tagValue);
+                    annotation->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                     break;
                 }
                 case 2: {
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value"));
-                    value->setText(tagValue);
+                    value->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                     break;
                 }
                 default: {

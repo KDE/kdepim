@@ -108,7 +108,6 @@ void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                qDebug()<<" tagValue"<<tagValue<< " index "<<index;
                 if (index == 0) {
                     tagValueList<<AutoCreateScriptUtil::tagValue(tagValue);
                 } else if (index == 1) {
@@ -119,7 +118,6 @@ void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
                 ++index;
             } else if (tagName == QLatin1String("str")) {
                 strValue<<e.text();
-                qDebug()<<" strValue"<<strValue;
                 ++indexStr;
             } else {
                 qDebug()<<" SieveConditionBody::setParamWidgetValue unknown tagName "<<tagName;
@@ -134,14 +132,14 @@ void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
         SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
         matchType->setCode(strValue.at(0));
         KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
-        edit->setText(strValue.at(0));
+        edit->setText(AutoCreateScriptUtil::quoteStr(strValue.at(0)));
     } else if (strValue.count() == 2) {
         SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
         bodyType->setCode(tagValueList.at(0), indexStr == 2 ? strValue.at(0) : QString());
         SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
         matchType->setCode(tagValueList.at(1));
         KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
-        edit->setText(indexStr == 1 ? strValue.at(0) : strValue.at(1));
+        edit->setText(indexStr == 1 ? AutoCreateScriptUtil::quoteStr(strValue.at(0)) : AutoCreateScriptUtil::quoteStr(strValue.at(1)));
     }
 }
 
