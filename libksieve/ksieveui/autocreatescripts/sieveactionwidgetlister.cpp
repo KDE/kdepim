@@ -53,6 +53,11 @@ SieveActionWidget::~SieveActionWidget()
     mActionList.clear();
 }
 
+bool SieveActionWidget::isConfigurated() const
+{
+    return (mComboBox->currentIndex() != (mComboBox->count()-1));
+}
+
 void SieveActionWidget::setFilterAction( QWidget *widget )
 {
     if ( mLayout->itemAtPosition( 1, 3 ) ) {
@@ -335,8 +340,11 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
             if (tagName == QLatin1String("action")) {
                 if (element.hasAttribute(QLatin1String("name"))) {
                     const QString actionName = element.attribute(QLatin1String("name"));
-                    addWidgetAfterThisWidget(widgets().last());
                     SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
+                    if (w->isConfigurated()) {
+                        addWidgetAfterThisWidget(widgets().last());
+                        w = qobject_cast<SieveActionWidget*>( widgets().last() );
+                    }
                     w->setAction(actionName, element, comment);
                     //comment.clear();
                     qDebug()<<" actionName "<<actionName;
