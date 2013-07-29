@@ -30,7 +30,8 @@ public:
 
     enum FolderArchiveType {
         UniqFolder,
-        FolderByMonths
+        FolderByMonths,
+        FolderByYears
     };
 
 
