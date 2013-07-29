@@ -20,15 +20,15 @@
 #define DESKTOPFILEPAGE_H
 
 #include <QWidget>
-
+#include "grantleethemeeditor_export.h"
 class KLineEdit;
 class KZip;
 
 namespace PimCommon {
 class SimpleStringListEditor;
 }
-
-class DesktopFilePage : public QWidget
+namespace GrantleeThemeEditor {
+class GRANTLEETHEMEEDITOR_EXPORT DesktopFilePage : public QWidget
 {
     Q_OBJECT
 public:
@@ -70,5 +70,6 @@ private:
     KLineEdit *mVersion;
     PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
 };
+}
 
 #endif // DESKTOPFILEPAGE_H

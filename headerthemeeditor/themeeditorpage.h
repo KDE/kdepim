@@ -23,9 +23,9 @@
 namespace GrantleeThemeEditor {
 class ThemeEditorTabWidget;
 class ThemeSession;
+class DesktopFilePage;
 }
 class EditorPage;
-class DesktopFilePage;
 class KZip;
 
 class ThemeEditorPage : public QWidget
@@ -71,7 +71,7 @@ private:
     QList<EditorPage*> mExtraPage;
     GrantleeThemeEditor::ThemeEditorTabWidget *mTabWidget;
     EditorPage *mEditorPage;
-    DesktopFilePage *mDesktopPage;
+    GrantleeThemeEditor::DesktopFilePage *mDesktopPage;
     GrantleeThemeEditor::ThemeSession *mThemeSession;
     bool mChanged;
 };

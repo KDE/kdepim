@@ -31,6 +31,8 @@
 #include <QLabel>
 #include <QDir>
 
+using namespace GrantleeThemeEditor;
+
 DesktopFilePage::DesktopFilePage(bool allowToAddExtraDisplayVariables, QWidget *parent)
     : QWidget(parent),
       mExtraDisplayHeaders(0)
