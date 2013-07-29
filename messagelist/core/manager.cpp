@@ -769,8 +769,8 @@ void Manager::createDefaultThemes()
   // The Fancy theme
 
   s = new Theme(
-      i18n( "Fancy" ),
-      i18n( "A fancy multiline and multi item theme" ), true /*readOnly*/
+      i18n( "Smart" ),
+      i18n( "A smart multiline and multi item theme" ), true /*readOnly*/
     );
 
     c = new Theme::Column();
@@ -866,8 +866,8 @@ void Manager::createDefaultThemes()
 
   s = fancyWithClickableStatus;
 
-  s->setName( i18n( "Fancy with Clickable Status" ) );
-  s->setDescription( i18n( "A fancy multiline and multi item theme with a clickable status column" ) );
+  s->setName( i18n( "Smart with Clickable Status" ) );
+  s->setDescription( i18n( "A smart multiline and multi item theme with a clickable status column" ) );
   s->setReadOnly( true );
 
     c = new Theme::Column();
