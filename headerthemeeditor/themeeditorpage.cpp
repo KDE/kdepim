@@ -52,7 +52,8 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
-    mDesktopPage = new DesktopFilePage;
+    mDesktopPage = new DesktopFilePage(true /*allow to add extra variables*/);
+    mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
