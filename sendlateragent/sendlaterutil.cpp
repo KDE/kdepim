@@ -91,6 +91,12 @@ bool SendLater::SendLaterUtil::sentLaterAgentWasRegistered()
     return interface.isValid();
 }
 
+void SendLater::SendLaterUtil::forceReparseConfiguration()
+{
+    SendLaterAgentSettings::self()->writeConfig();
+    SendLaterAgentSettings::self()->config()->reparseConfiguration();
+}
+
 bool SendLater::SendLaterUtil::sentLaterAgentEnabled()
 {
     return SendLaterAgentSettings::self()->enabled();
