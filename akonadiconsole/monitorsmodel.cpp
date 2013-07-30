@@ -163,6 +163,10 @@ QModelIndex MonitorsModel::parent( const QModelIndex &child ) const
 
 QModelIndex MonitorsModel::index( int row, int column, const QModelIndex &parent ) const
 {
+  if ( row >= mData.uniqueKeys().count() ) {
+    return QModelIndex();
+  }
+
   const QString key = mData.uniqueKeys().at( row );
   return createIndex( row, column, mData.value( key ) );
 }
