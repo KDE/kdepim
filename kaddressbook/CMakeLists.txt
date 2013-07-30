@@ -9,8 +9,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim/ 
 )
 
-#add_definitions( -DQT_NO_CAST_FROM_ASCII )
-#add_definitions( -DQT_NO_CAST_TO_ASCII )
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
@@ -81,14 +81,9 @@ set(kaddressbook_LIB_SRCS
 
 set(kaddressbook_LIB_SRCS
   ${kaddressbook_LIB_SRCS}
-  grantleecontactformatter.cpp
-  grantleecontactgroupformatter.cpp
-  grantlee/theme.cpp
-  grantlee/themecombobox.cpp
-  grantlee/thememanager.cpp
-  grantlee/thememodel.cpp
+  grantlee/grantleecontactformatter.cpp
+  grantlee/grantleecontactgroupformatter.cpp
 )
-add_subdirectory(grantlee)
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})

@@ -242,7 +242,7 @@ void SignEncryptFilesCommand::doCancel() {
 }
 
 QStringList SignEncryptFilesCommand::Private::selectFiles() const {
-    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Sign and/or Encrypt" ), "enc" );
+    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Sign and/or Encrypt" ), QLatin1String("enc") );
 }
 
 #undef d

@@ -66,16 +66,16 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
 {
   QString content;
 
-  content += "<html>\n";
-  content += " <head>\n";
-  content += "  <style type=\"text/css\">\n";
-  content += "    td.indented {\n";
-  content += "      padding-left: 20px;\n";
-  content += "      font-family: Fixed, monospace;\n";
-  content += "    }\n";
-  content += "  </style>\n";
-  content += " </head>\n";
-  content += " <body>\n";
+  content += QLatin1String("<html>\n");
+  content += QLatin1String(" <head>\n");
+  content += QLatin1String("  <style type=\"text/css\">\n");
+  content += QLatin1String("    td.indented {\n");
+  content += QLatin1String("      padding-left: 20px;\n");
+  content += QLatin1String("      font-family: Fixed, monospace;\n");
+  content += QLatin1String("    }\n");
+  content += QLatin1String("  </style>\n");
+  content += QLatin1String(" </head>\n");
+  content += QLatin1String(" <body>\n");
   foreach ( const KABC::Addressee &contact, contacts ) {
     QString name = contact.realName();
     if ( !contact.title().isEmpty() || !contact.role().isEmpty() ) {
@@ -121,7 +121,7 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
                          i18n( "Telephones:" ) );
 
       foreach ( const KABC::PhoneNumber &number, numbers ) {
-        const QString line = number.typeLabel() + ": " + number.number();
+        const QString line = number.typeLabel() + QLatin1String(": ") + number.number();
         block.entries.append( line );
       }
 
@@ -165,9 +165,9 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
         default:
           block.header = i18n( "Preferred Address" );
         }
-        block.header += ':';
+        block.header += QLatin1Char(':');
 
-        block.entries = address.formattedAddress().split( '\n', QString::KeepEmptyParts );
+        block.entries = address.formattedAddress().split( QLatin1Char('\n'), QString::KeepEmptyParts );
         blocks.append( block );
       }
     }
@@ -175,31 +175,31 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
     if ( !contact.note().isEmpty() ) {
       ContactBlock block;
       block.header = i18n( "Notes:" );
-      block.entries = contact.note().split( '\n', QString::KeepEmptyParts );
+      block.entries = contact.note().split( QLatin1Char('\n'), QString::KeepEmptyParts );
 
       blocks.append( block );
     }
 
     // add header
-    content += "  <table style=\"border-width: 0px; border-spacing: 0px; "
-               "page-break-inside: avoid\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
-    content += "   <tr>\n";
-    content += "    <td style=\"color: " + settings.headerTextColor +
-               ";\" bgcolor=\"" + settings.headerBackgroundColor +
-               "\" style=\"padding-left: 20px\">" +
-               name +  "</td>\n";
-    content += "    <td style=\"color: " + settings.headerTextColor +
-               ";\" align=\"right\" bgcolor=\"" + settings.headerBackgroundColor +
-               "\" style=\"padding-right: 20px\">" +
-               birthday + "</td>\n";
-    content += "   </tr>\n";
+    content += QLatin1String("  <table style=\"border-width: 0px; border-spacing: 0px; "
+               "page-break-inside: avoid\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n");
+    content += QLatin1String("   <tr>\n");
+    content += QLatin1String("    <td style=\"color: ") + settings.headerTextColor +
+               QLatin1String(";\" bgcolor=\"") + settings.headerBackgroundColor +
+               QLatin1String("\" style=\"padding-left: 20px\">") +
+               name +  QLatin1String("</td>\n");
+    content += QLatin1String("    <td style=\"color: ") + settings.headerTextColor +
+               QLatin1String(";\" align=\"right\" bgcolor=\"") + settings.headerBackgroundColor +
+               QLatin1String("\" style=\"padding-right: 20px\">") +
+               birthday + QLatin1String("</td>\n");
+    content += QLatin1String("   </tr>\n");
 
     for ( int i = 0; i < blocks.count(); i += 2 ) {
       // add empty line for spacing
-      content += "   <tr>\n";
-      content += "    <td>&nbsp;</td>\n";
-      content += "    <td>&nbsp;</td>\n";
-      content += "   </tr>\n";
+      content += QLatin1String("   <tr>\n");
+      content += QLatin1String("    <td>&nbsp;</td>\n");
+      content += QLatin1String("    <td>&nbsp;</td>\n");
+      content += QLatin1String("   </tr>\n");
 
       // add real block data
       const ContactBlock leftBlock = blocks.at( i );
@@ -207,10 +207,10 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
                                           blocks.at( i + 1 ) :
                                           ContactBlock() );
 
-      content += "   <tr>\n";
-      content += "    <td>" + leftBlock.header + "</td>\n";
-      content += "    <td>" + rightBlock.header + "</td>\n";
-      content += "   </tr>\n";
+      content += QLatin1String("   <tr>\n");
+      content += QLatin1String("    <td>") + leftBlock.header + QLatin1String("</td>\n");
+      content += QLatin1String("    <td>") + rightBlock.header + QLatin1String("</td>\n");
+      content += QLatin1String("   </tr>\n");
 
       const int maxLines = qMax( leftBlock.entries.count(), rightBlock.entries.count() );
       for ( int j = 0; j < maxLines; ++j ) {
@@ -224,22 +224,22 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
           rightLine = rightBlock.entries.at( j );
         }
 
-        content += "   <tr>\n";
-        content += "    <td class=\"indented\">" + leftLine + "</td>\n";
-        content += "    <td class=\"indented\">" + rightLine + "</td>\n";
-        content += "   </tr>\n";
+        content += QLatin1String("   <tr>\n");
+        content += QLatin1String("    <td class=\"indented\">") + leftLine + QLatin1String("</td>\n");
+        content += QLatin1String("    <td class=\"indented\">") + rightLine + QLatin1String("</td>\n");
+        content += QLatin1String("   </tr>\n");
       }
     }
 
     // add empty line for spacing
-    content += "   <tr>\n";
-    content += "    <td>&nbsp;</td>\n";
-    content += "    <td>&nbsp;</td>\n";
-    content += "   </tr>\n";
-    content += "  </table>\n";
+    content += QLatin1String("   <tr>\n");
+    content += QLatin1String("    <td>&nbsp;</td>\n");
+    content += QLatin1String("    <td>&nbsp;</td>\n");
+    content += QLatin1String("   </tr>\n");
+    content += QLatin1String("  </table>\n");
   }
-  content += " </body>\n";
-  content += "</html>\n";
+  content += QLatin1String(" </body>\n");
+  content += QLatin1String("</html>\n");
 
   return content;
 }
@@ -258,7 +258,7 @@ class KABPrinting::AppearancePage : public QWidget, public Ui::AppearancePage_Ba
 DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
   : PrintStyle( parent ), mPageAppearance( new AppearancePage( parent ) )
 {
-  setPreview( "detailed-style.png" );
+  setPreview( QLatin1String("detailed-style.png") );
   setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 
   addPage( mPageAppearance, i18n( "Detailed Print Style - Appearance" ) );

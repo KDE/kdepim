@@ -140,7 +140,7 @@ void Log::setOutputDirectory( const QString& path )
         return;
     d->m_outputDirectory = path;
     assert( !d->m_logFile );
-    const QString lfn = path + "/kleo-log";
+    const QString lfn = path + QLatin1String("/kleo-log");
     d->m_logFile = fopen( QDir::toNativeSeparators( lfn ).toLocal8Bit().constData(), "a" );
     assert( d->m_logFile );
 }
@@ -152,9 +152,9 @@ shared_ptr<QIODevice> Log::createIOLogger( const shared_ptr<QIODevice>& io, cons
     
     shared_ptr<IODeviceLogger> logger( new IODeviceLogger( io ) );
 
-    const QString timestamp = QDateTime::currentDateTime().toString( "yyMMdd-hhmmss" );
+    const QString timestamp = QDateTime::currentDateTime().toString( QLatin1String("yyMMdd-hhmmss") );
     
-    const QString fn = d->m_outputDirectory + '/' + prefix + '-' + timestamp + '-' + KRandom::randomString( 4 );
+    const QString fn = d->m_outputDirectory + QLatin1Char('/') + prefix + QLatin1Char('-') + timestamp + QLatin1Char('-') + KRandom::randomString( 4 );
     shared_ptr<QFile> file( new QFile( fn ) );
 
     if ( !file->open( QIODevice::WriteOnly ) )

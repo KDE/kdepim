@@ -27,6 +27,8 @@
 #include <QLabel>
 #include <QToolButton>
 #include <QWhatsThis>
+#include <QDebug>
+#include <QDomNode>
 
 
 namespace KSieveUi {
@@ -100,7 +102,19 @@ bool SieveGlobalVariableActionWidget::isInitialized() const
 
 void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element)
 {
-    //TODO
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                mVariableName->setText(e.text());
+            } else {
+                qDebug()<<" SieveGlobalVariableActionWidget::loadScript unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 void SieveGlobalVariableActionWidget::slotAddWidget()
@@ -158,7 +172,7 @@ void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &re
 
 void SieveGlobalVariableWidget::loadScript(const QDomElement &element)
 {
-    //TODO
+    mIncludeLister->loadScript(element);
 }
 
 SieveGlobalVariableLister::SieveGlobalVariableLister(QWidget *parent)
@@ -244,7 +258,12 @@ QWidget *SieveGlobalVariableLister::createWidget( QWidget *parent )
 
 void SieveGlobalVariableLister::loadScript(const QDomElement &element)
 {
-    //TODO
+    SieveGlobalVariableActionWidget *w = static_cast<SieveGlobalVariableActionWidget *>(widgets().last());
+    if (w->isInitialized()) {
+        addWidgetAfterThisWidget(widgets().last());
+        w = static_cast<SieveGlobalVariableActionWidget *>(widgets().last());
+    }
+    w->loadScript(element);
 }
 
 }

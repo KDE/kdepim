@@ -57,7 +57,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
 {
     mWidget = new Ui::KSelFilterPageDlg;
     mWidget->setupUi( this );
-    mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
+    mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", QLatin1String("kmailcvt/pics/step1.png")));
     connect(mWidget->mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
     // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.

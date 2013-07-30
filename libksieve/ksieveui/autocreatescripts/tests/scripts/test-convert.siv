@@ -1,0 +1,12 @@
+require "convert";
+ 
+#SCRIPTNAME: test-convert
+#Script name: test-convert
+
+if allof (convert "image/png" "image/bmp" ["pix-x=305","pix-y=194"]
+, convert "image/tiff" "image/png" ["pix-x=310","pix-y=210"]
+, convert "image/jpeg" "image/png" ["pix-x=2","pix-y=200"]
+)
+{
+    stop;
+} 

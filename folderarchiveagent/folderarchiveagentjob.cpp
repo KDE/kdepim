@@ -39,6 +39,10 @@ FolderArchiveAgentJob::~FolderArchiveAgentJob()
 
 void FolderArchiveAgentJob::start()
 {
+    if (mInfo->isValid()) {
+        sendError(i18n("Archive folder not defined. Please verify settings for account", mInfo->instanceName() ));
+        return;
+    }
     Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( Akonadi::Collection(mInfo->archiveTopLevel()), Akonadi::CollectionFetchJob::Base );
     connect( fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
 }

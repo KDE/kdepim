@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionmetadataexists.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -105,7 +106,7 @@ void SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
                     mailbox->setText(tagValue);
                 } else if (index == 1) {
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
-                    value->setText(tagValue);
+                    value->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                 } else {
                     qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue to many attribute "<<index;
                 }

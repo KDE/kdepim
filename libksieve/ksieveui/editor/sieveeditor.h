@@ -81,6 +81,9 @@ private:
     QAction *mCheckSyntax;
     QAction *mSwitchMode;
     QAction *mAutoGenerateScript;
+#if !defined(NDEBUG)
+    QAction *mGenerateXml;
+#endif
     EditorMode mMode;
 };
 

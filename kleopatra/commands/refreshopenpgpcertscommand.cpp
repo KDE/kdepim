@@ -49,7 +49,7 @@ static bool haveKeyserverConfigured() {
     const Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
     if ( !config )
         return false;
-    const Kleo::CryptoConfigEntry * const entry = config->entry( "gpg", "Keyserver", "keyserver" );
+    const Kleo::CryptoConfigEntry * const entry = config->entry( QLatin1String("gpg"), QLatin1String("Keyserver"), QLatin1String("keyserver") );
     return entry && !entry->stringValue().isEmpty();
 }
 
@@ -103,8 +103,8 @@ QStringList RefreshOpenPGPCertsCommand::arguments() const {
     QStringList result;
     result << gpgPath();
     if ( !haveKeyserverConfigured() )
-        result << "--keyserver" << "keys.gnupg.net";
-    result << "--refresh-keys";
+        result << QLatin1String("--keyserver") << QLatin1String("keys.gnupg.net");
+    result << QLatin1String("--refresh-keys");
     return result;
 }
 
@@ -120,7 +120,7 @@ QString RefreshOpenPGPCertsCommand::crashExitMessage( const QStringList & args )
     return i18nc("@info",
                  "<para>The GPG process that tried to refresh OpenPGP certificates "
                  "ended prematurely because of an unexpected error.</para>"
-                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( " " ) ) ;
+                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;
 }
 
 QString RefreshOpenPGPCertsCommand::errorExitMessage( const QStringList & args ) const {

@@ -22,6 +22,7 @@ Comment[zh_TW]=資料夾歸檔代理程式
 
 [Event/folderarchivedone]
 Name=Archive Mails in Folder done
+Name[cs]=Archivace pošty ve složce byla dokončena
 Name[es]=Archivado de correos en carpeta terminado
 Name[fi]=Viestien arkistointi kansioihin valmis
 Name[fr]=Archivage des dossiers terminé

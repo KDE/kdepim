@@ -28,7 +28,7 @@ QString AutoCreateScriptUtil::createMultiLine(const QString &str)
     return result;
 }
 
-QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separator)
+QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separator, bool addEndSemiColon)
 {
     const QStringList list = str.trimmed().split(separator);
     const int count = list.count();
@@ -38,10 +38,15 @@ QString AutoCreateScriptUtil::createList(const QString &str, const QChar &separa
     case 1:
         return QLatin1String("\"") + list.first() + QLatin1String("\"");
     default: {
-        const QString result = createList(list);
+        const QString result = createList(list, addEndSemiColon);
         return result;
     }
     }
+}
+
+QString AutoCreateScriptUtil::quoteStr(QString str)
+{
+    return str.replace(QLatin1String("\""), QLatin1String("\\\""));
 }
 
 QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiColon)
@@ -50,7 +55,7 @@ QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiCol
     result = QLatin1String("[");
     bool wasFirst = true;
     Q_FOREACH (const QString &str, lst) {
-        result += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(str);
+        result += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(quoteStr(str));
         wasFirst = false;
     }
     result += QLatin1String(" ]");
@@ -83,9 +88,11 @@ QStringList AutoCreateScriptUtil::createListFromString(QString str)
     return lst;
 }
 
-QString AutoCreateScriptUtil::createAddressList(const QString &str)
+QString AutoCreateScriptUtil::createAddressList(const QString &str, bool addSemiColon)
 {
-    return createList(str, QLatin1Char(';'));
+    if (str.trimmed().startsWith(QLatin1Char('[')) && str.trimmed().endsWith(QLatin1Char(']')))
+        return str;
+    return createList(str, QLatin1Char(';'), addSemiColon);
 }
 
 
@@ -138,7 +145,15 @@ QStringList AutoCreateScriptUtil::listValue(const QDomElement &element)
         }
         node = node.nextSibling();
     }
-    qDebug()<<" AutoCreateScriptUtil::listValue"<<lst;
     return lst;
+}
+
+QString AutoCreateScriptUtil::fixListValue(QString valueStr)
+{
+    if (! (valueStr.startsWith(QLatin1Char('[')) && valueStr.endsWith(QLatin1Char(']')))) {
+        valueStr = QString::fromLatin1("\"%1\"").arg(valueStr);
+    }
+
+    return valueStr;
 }
 

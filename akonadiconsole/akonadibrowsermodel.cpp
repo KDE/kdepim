@@ -291,7 +291,7 @@ AkonadiBrowserModel::ItemDisplayMode AkonadiBrowserModel::itemDisplayMode() cons
 
 void AkonadiBrowserModel::setItemDisplayMode( AkonadiBrowserModel::ItemDisplayMode itemDisplayMode )
 {
-  beginResetModel();
+  emit layoutAboutToBeChanged();
   m_itemDisplayMode = itemDisplayMode;
   switch (itemDisplayMode)
   {
@@ -309,5 +309,5 @@ void AkonadiBrowserModel::setItemDisplayMode( AkonadiBrowserModel::ItemDisplayMo
     m_currentState = m_genericState;
     break;
   }
-  endResetModel();
+  emit layoutChanged();
 }

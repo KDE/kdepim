@@ -339,14 +339,14 @@ void LookupCertificatesCommand::Private::showResult( QWidget * parent, const Key
                                         "of the configured servers is the limiting "
                                         "factor, you have to refine your search.</para>"),
                                   i18nc("@title", "Result Truncated"),
-                                  "lookup-certificates-truncated-result" );
+                                  QLatin1String("lookup-certificates-truncated-result") );
 }
 
 static bool haveOpenPGPKeyserverConfigured() {
     const Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
     if ( !config )
         return false;
-    const Kleo::CryptoConfigEntry * const entry = config->entry( "gpg", "Keyserver", "keyserver" );
+    const Kleo::CryptoConfigEntry * const entry = config->entry( QLatin1String("gpg"), QLatin1String("Keyserver"), QLatin1String("keyserver") );
     return entry && !entry->stringValue().isEmpty();
 }
 
@@ -355,9 +355,9 @@ static bool haveX509DirectoryServerConfigured() {
     const Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
     if ( !config )
         return false;
-    const Kleo::CryptoConfigEntry * entry = config->entry( "dirmngr", "LDAP", "LDAP Server" );
+    const Kleo::CryptoConfigEntry * entry = config->entry( QLatin1String("dirmngr"), QLatin1String("LDAP"), QLatin1String("LDAP Server") );
     bool entriesExist = entry && !entry->urlValueList().empty();
-    entry = config->entry( "gpgsm", "Configuration", "keyserver" );
+    entry = config->entry( QLatin1String("gpgsm"), QLatin1String("Configuration"), QLatin1String("keyserver") );
     entriesExist |= entry && !entry->stringValueList().empty();
     return entriesExist;
 }

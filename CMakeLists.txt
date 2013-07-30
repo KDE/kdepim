@@ -179,7 +179,7 @@ else()
 # Otherwise...
 ############### Find the stuff we need ###############
   # Akonadi
-  find_package(Akonadi 1.9.51 QUIET CONFIG)
+  find_package(Akonadi 1.10.43 QUIET CONFIG)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
@@ -275,6 +275,7 @@ else()
   add_subdirectory(composereditor-ng)
   add_subdirectory(grammar)
   add_subdirectory(messagecore)
+  add_subdirectory(grantleetheme)
   if(NOT WINCE)
     add_subdirectory(messagelist)
   else()
@@ -301,6 +302,7 @@ else()
   add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)
   macro_optional_add_subdirectory(headerthemeeditor)
+  add_subdirectory(grantleethemeeditor)
 
   if(KDEPIM_BUILD_MOBILE)
     add_subdirectory(mobile)

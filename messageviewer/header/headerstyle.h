@@ -36,7 +36,7 @@
 
 #include "messageviewer_export.h"
 
-#include "messageviewer/header/grantleetheme.h"
+#include "grantleetheme/grantleetheme.h"
 
 #include <akonadi/kmime/messagestatus.h>
 #include <KMime/Message>
@@ -130,11 +130,11 @@ public:
     void setMessageStatus( const Akonadi::MessageStatus &status ) { mMessageStatus = status; }
     Akonadi::MessageStatus messageStatus() const { return mMessageStatus; }
 
-    void setTheme(const GrantleeTheme &theme) { mTheme = theme; }
-    GrantleeTheme theme() const { return mTheme; }
+    void setTheme(const GrantleeTheme::Theme &theme) { mTheme = theme; }
+    GrantleeTheme::Theme theme() const { return mTheme; }
 
 private:
-    GrantleeTheme mTheme;
+    GrantleeTheme::Theme mTheme;
     QString mMessagePath;
     const HeaderStrategy *mStrategy;
     QString mVCardName;

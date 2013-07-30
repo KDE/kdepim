@@ -57,7 +57,7 @@ bool PrintStyle::setPreview( const QString &fileName )
 {
   QPixmap preview;
 
-  const QString path = KStandardDirs::locate( "data", "kaddressbook/printing/" + fileName );
+  const QString path = KStandardDirs::locate( "data", QLatin1String("kaddressbook/printing/") + fileName );
   if ( path.isEmpty() ) {
     kDebug() << "cannot locate preview image " << fileName << " in appdata";
     return false;

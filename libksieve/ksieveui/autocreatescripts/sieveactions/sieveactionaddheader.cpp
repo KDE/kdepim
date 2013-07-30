@@ -85,7 +85,7 @@ void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     edit->setText(e.text());
                 } else if (index == 1) {
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
-                    value->setText(e.text());
+                    value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     qDebug()<<" SieveActionAddHeader::setParamWidgetValue too many argument :"<<index;
                 }

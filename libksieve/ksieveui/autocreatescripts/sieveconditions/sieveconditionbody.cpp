@@ -97,6 +97,10 @@ QString SieveConditionBody::help() const
 void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
 {
     int index = 0;
+    int indexStr = 0;
+    QStringList tagValueList;
+    QStringList strValue;
+
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
         QDomElement e = node.toElement();
@@ -105,25 +109,37 @@ void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 if (index == 0) {
-                    SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
-                    const QString strValue = AutoCreateScriptUtil::strValue(node);
-                    bodyType->setCode(AutoCreateScriptUtil::tagValue(tagValue), strValue);
-                    ++index;
+                    tagValueList<<AutoCreateScriptUtil::tagValue(tagValue);
                 } else if (index == 1) {
-                    SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
-                    matchType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition) );
-                    const QString strValue = AutoCreateScriptUtil::strValue(node);
-                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
-                    edit->setText(strValue);
-                    ++index;
+                    tagValueList<<AutoCreateScriptUtil::tagValue(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
                 } else {
                     qDebug()<<" SieveConditionBody::setParamWidgetValue too many argument "<<index;
                 }
+                ++index;
+            } else if (tagName == QLatin1String("str")) {
+                strValue<<e.text();
+                ++indexStr;
             } else {
                 qDebug()<<" SieveConditionBody::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
+    }
+
+    if (strValue.count() == 1) {
+        SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
+        bodyType->setCode(tagValueList.at(0), QString());
+        SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
+        matchType->setCode(strValue.at(0));
+        KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+        edit->setText(AutoCreateScriptUtil::quoteStr(strValue.at(0)));
+    } else if (strValue.count() == 2) {
+        SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
+        bodyType->setCode(tagValueList.at(0), indexStr == 2 ? strValue.at(0) : QString());
+        SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
+        matchType->setCode(tagValueList.at(1));
+        KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
+        edit->setText(indexStr == 1 ? AutoCreateScriptUtil::quoteStr(strValue.at(0)) : AutoCreateScriptUtil::quoteStr(strValue.at(1)));
     }
 }
 

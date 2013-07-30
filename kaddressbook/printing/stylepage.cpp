@@ -45,7 +45,7 @@ static bool contactFieldsNameLesser( const ContactFields::Field &field,
 StylePage::StylePage( QWidget *parent, const char *name )
   : QWidget( parent )
 {
-  setObjectName( name );
+  setObjectName( QLatin1String(name) );
   initGUI();
 
   initFieldCombo();

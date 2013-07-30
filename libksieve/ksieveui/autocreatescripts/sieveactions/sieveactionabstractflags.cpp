@@ -53,6 +53,9 @@ void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, 
             if (tagName == QLatin1String("list")) {
                 SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
                 flagsWidget->setFlags(AutoCreateScriptUtil::listValue(e));
+            } else if (tagName == QLatin1String("str")) {
+                SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
+                flagsWidget->setCode(e.text());
             } else {
                 qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
             }

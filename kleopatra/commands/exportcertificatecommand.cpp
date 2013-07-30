@@ -210,11 +210,11 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
 
     const QString fname = FileDialog::getSaveFileNameEx( parentWidgetOrView(),
                                                          i18n( "Export Certificates" ), 
-                                                         "imp",
+                                                         QLatin1String("imp"),
                                                          proposedFileName,
                                                          protocol == GpgME::OpenPGP
-                                                         ? QString(i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg *.pgp)")
-                                                         : QString(i18n( "S/MIME Certificates" )  + " (*.pem *.der)" ));
+                                                         ? i18n( "OpenPGP Certificates" ) + QLatin1String(" (*.asc *.gpg *.pgp)")
+                                                         : i18n( "S/MIME Certificates" )  + QLatin1String(" (*.pem *.der)" ));
     fileNames[protocol] = fname;
     return !fname.isEmpty();
 }
@@ -240,7 +240,7 @@ void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol
 
     QStringList fingerprints;
     Q_FOREACH ( const Key& i, keys )
-        fingerprints << i.primaryFingerprint();
+        fingerprints << QLatin1String(i.primaryFingerprint());
 
     const GpgME::Error err = job->start( fingerprints );
     if ( err ) {

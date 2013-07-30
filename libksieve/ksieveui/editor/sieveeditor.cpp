@@ -17,6 +17,7 @@
  */
 
 #include "sieveeditor.h"
+#include "sieve-editor.h"
 #include "sieveeditortextmodewidget.h"
 #include "scriptsparsing/parsingutil.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
@@ -33,8 +34,6 @@
 #include <QToolBar>
 #include <QDebug>
 #include <QAction>
-
-//#define GENERATE_XML_ACTION 1
 
 using namespace KSieveUi;
 
@@ -70,8 +69,11 @@ SieveEditor::SieveEditor( QWidget * parent )
     mSwitchMode = new QAction(i18n("Switch Mode"), this);
     bar->addAction(mSwitchMode);
     connect(mSwitchMode, SIGNAL(triggered(bool)), SLOT(slotSwitchMode()));
-#ifdef GENERATE_XML_ACTION
-    bar->addAction(QLatin1String("Generate xml"), this, SLOT(slotGenerateXml()));
+#if !defined(NDEBUG)
+    //Not necessary to translate it.
+    mGenerateXml = new QAction(QLatin1String("Generate xml"), this);
+    connect(mGenerateXml, SIGNAL(triggered(bool)), SLOT(slotGenerateXml()));
+    bar->addAction(mGenerateXml);
 #endif
 
     lay->addWidget(bar);
@@ -102,6 +104,9 @@ SieveEditor::SieveEditor( QWidget * parent )
     connect(mGraphicalModeWidget, SIGNAL(switchTextMode(QString)), this, SLOT(slotSwitchTextMode(QString)));
     readConfig();
     setMainWidget( w );
+    if (KSieveUi::EditorSettings::useGraphicEditorByDefault()) {
+        changeMode(GraphicMode);
+    }
 }
 
 SieveEditor::~SieveEditor()
@@ -115,13 +120,24 @@ void SieveEditor::changeMode(EditorMode mode)
         mMode = mode;
         mStackedWidget->setCurrentIndex(static_cast<int>(mode));
         mAutoGenerateScript->setEnabled((mMode == TextMode));
+#if !defined(NDEBUG)
+        mGenerateXml->setEnabled((mMode == TextMode));
+#endif
+        if (mMode == GraphicMode)
+            mCheckSyntax->setEnabled(false);
+        else
+            mCheckSyntax->setEnabled(!mTextModeWidget->currentscript().isEmpty());
     }
 }
 
 void SieveEditor::slotEnableButtonOk(bool b)
 {
     mOkButton->setEnabled(b);
-    mCheckSyntax->setEnabled( b );
+    if (mMode == TextMode) {
+        mCheckSyntax->setEnabled(b);
+    } else {
+        mCheckSyntax->setEnabled(false);
+    }
 }
 
 void SieveEditor::writeConfig()

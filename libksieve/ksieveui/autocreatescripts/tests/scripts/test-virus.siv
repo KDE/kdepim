@@ -1,0 +1,13 @@
+require "spamtest";
+require "relational";
+require "comparator-i;ascii-numeric";
+ 
+#Script name: test virus
+
+if allof (virustest :count "ge" :comparator "i;ascii-numeric" "5"
+, virustest :value "ne" :comparator "i;ascii-numeric" "5"
+, virustest :count "lt" :comparator "i;ascii-numeric" "4"
+)
+{
+    stop;
+}

@@ -88,7 +88,7 @@ QString SieveConditionEnvelope::code(QWidget *w) const
 
 
     const KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
-    const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed());
+    const QString addressStr = AutoCreateScriptUtil::createAddressList(edit->text().trimmed(), false);
     return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("envelope %1 %2 %3 %4").arg(selectAddressPartStr).arg(matchTypeStr).arg(selectHeaderTypeStr).arg(addressStr);
 }
 
@@ -140,7 +140,7 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     selectHeaderType->setCode(e.text());
                 } else if (indexStr == 1) {
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
-                    edit->setText(e.text());
+                    edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     qDebug()<<"SieveConditionEnvelope::setParamWidgetValue too many argument indexStr "<<indexStr;
                 }
@@ -149,6 +149,9 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                 if (indexStr == 0) {
                     SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headertypecombobox"));
                     selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
+                } else if (indexStr == 1) {
+                    KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
+                    edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 }
                 ++indexStr;
             } else {
@@ -157,6 +160,5 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
         }
         node = node.nextSibling();
     }
-
 }
 #include "sieveconditionenvelope.moc"

@@ -27,7 +27,8 @@
 #include "viewer/objecttreeemptysource.h"
 #include "viewer/objecttreeviewersource.h"
 #include "messagedisplayformatattribute.h"
-#include "header/grantleethememanager.h"
+#include "grantleetheme/grantleethememanager.h"
+#include "grantleetheme/globalsettings_base.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamattribute.h"
 
@@ -219,7 +220,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent, QWidget *mainWindow,
     }
 
 
-     mThemeManager = new MessageViewer::GrantleeThemeManager(mActionCollection, KStandardDirs::locate("data",QLatin1String("messageviewer/themes/")));
+     mThemeManager = new GrantleeTheme::GrantleeThemeManager(QString::fromLatin1( "header.desktop" ), mActionCollection, QLatin1String("messageviewer/themes/"));
+     mThemeManager->setDownloadNewStuffConfigFile(QLatin1String("messageviewer_header_themes.knsrc"));
      connect(mThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeHeaders()));
      connect(mThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
      mHtmlOverride = false;
@@ -1211,7 +1213,7 @@ void ViewerPrivate::writeConfig( bool sync )
   GlobalSettings::self()->setUseFixedFont( mUseFixedFont );
   if ( headerStyle() ) {
     GlobalSettings::self()->setHeaderStyle( QLatin1String(headerStyle()->name()) );
-    GlobalSettings::self()->setGrantleeThemeName( headerStyle()->theme().dirName() );
+    GrantleeTheme::GrantleeSettings::self()->setGrantleeThemeName( headerStyle()->theme().dirName() );
   }
   if ( headerStrategy() )
     GlobalSettings::self()->setHeaderSetDisplayed( QLatin1String(headerStrategy()->name()) );
@@ -2365,7 +2367,7 @@ void ViewerPrivate::slotGrantleeHeaders()
 
 void ViewerPrivate::initGrantleeThemeName()
 {
-    const QString themeName = GlobalSettings::self()->grantleeThemeName();
+    const QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeThemeName();
     headerStyle()->setTheme(mThemeManager->theme(themeName));
 }
 

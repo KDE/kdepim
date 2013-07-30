@@ -72,7 +72,7 @@ bool RefreshX509CertsCommand::preStartHook( QWidget * parent ) const {
 }
 
 QStringList RefreshX509CertsCommand::arguments() const {
-    return QStringList() << gpgSmPath() << "-k" << "--with-validation" << "--force-crl-refresh" << "--enable-crl-checks";
+    return QStringList() << gpgSmPath() << QLatin1String("-k") << QLatin1String("--with-validation") << QLatin1String("--force-crl-refresh") << QLatin1String("--enable-crl-checks");
 }
 
 QString RefreshX509CertsCommand::errorCaption() const {
@@ -87,7 +87,7 @@ QString RefreshX509CertsCommand::crashExitMessage( const QStringList & args ) co
     return i18nc( "@info",
                   "<para>The GpgSM process that tried to refresh X.509 certificates "
                   "ended prematurely because of an unexpected error.</para>"
-                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( " " ) ) ;
+                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( QLatin1String(" ") ) ) ;
 }
 
 QString RefreshX509CertsCommand::errorExitMessage( const QStringList & args ) const {

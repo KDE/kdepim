@@ -95,8 +95,9 @@ void insertLibraryCataloguesAndIcons() {
     "libkpimutils",
     "akonadicontact",
     "kabc",
-    "akonadi_sendlater_agent"
-
+    "akonadi_sendlater_agent",
+    "libgrantleetheme",
+    "akonadi_folderagent_agent"
   };
 
   KLocale * l = KGlobal::locale();

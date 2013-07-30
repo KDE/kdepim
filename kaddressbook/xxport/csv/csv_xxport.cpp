@@ -41,7 +41,7 @@ CsvXXPort::CsvXXPort( QWidget *parent )
 
 bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
 {
-  KUrl url = KFileDialog::getSaveUrl( KUrl( "addressbook.csv" ) );
+  KUrl url = KFileDialog::getSaveUrl( KUrl( QLatin1String("addressbook.csv") ) );
   if ( url.isEmpty() ) {
       return true;
   }
@@ -134,7 +134,7 @@ void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts
           content = dateTime.date().toString( Qt::ISODate );
         }
       } else {
-        content = ContactFields::value( fields.at( j ), contact ).replace( '\n', "\\n" );
+        content = ContactFields::value( fields.at( j ), contact ).replace( QLatin1Char('\n'), QLatin1String("\\n") );
       }
 
       // add quoting as defined in RFC 4180

@@ -17,6 +17,7 @@
 
 #include "selectcomparatorcombobox.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
+#include <QDebug>
 
 SelectComparatorComboBox::SelectComparatorComboBox(QWidget *parent)
     : KComboBox(parent)
@@ -51,11 +52,11 @@ QString SelectComparatorComboBox::code() const
 
 void SelectComparatorComboBox::setCode(const QString &code)
 {
-    const int index = findData(code);
+    const QString completCode = QLatin1String("comparator-") + code;
+    const int index = findData(completCode);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
-        //TODO other value ?
         setCurrentIndex(0);
     }
 }

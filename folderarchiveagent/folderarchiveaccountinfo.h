@@ -30,9 +30,12 @@ public:
 
     enum FolderArchiveType {
         UniqFolder,
-        FolderByMonths
+        FolderByMonths,
+        FolderByYears
     };
 
+
+    bool isValid() const;
 
     QString instanceName() const;
 

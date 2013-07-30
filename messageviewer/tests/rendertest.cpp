@@ -54,11 +54,11 @@ class RenderTest : public QObject
       QTest::addColumn<QString>( "referenceFileName" );
       QTest::addColumn<QString>( "outFileName" );
 
-      QDir dir( MAIL_DATA_DIR );
-      foreach ( const QString &file, dir.entryList( QStringList("*.mbox"), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
-        if ( !QFile::exists(dir.path() + '/' + file + ".html") )
+      QDir dir( QLatin1String(MAIL_DATA_DIR) );
+      foreach ( const QString &file, dir.entryList( QStringList(QLatin1String("*.mbox")), QDir::Files | QDir::Readable | QDir::NoSymLinks  ) ) {
+        if ( !QFile::exists(dir.path() + QLatin1Char('/') + file + QLatin1String(".html")) )
           continue;
-        QTest::newRow( file.toLatin1() ) << QString(dir.path() + '/' +  file) << QString(dir.path() + '/' + file + ".html") << QString(file + ".out");
+        QTest::newRow( file.toLatin1() ) << QString(dir.path() + QLatin1Char('/') +  file) << QString(dir.path() + QLatin1Char('/') + file + QLatin1String(".html")) << QString(file + QLatin1String(".out"));
       }
     }
 
@@ -68,7 +68,7 @@ class RenderTest : public QObject
       QFETCH( QString, referenceFileName );
       QFETCH( QString, outFileName );
 
-      const QString htmlFileName = outFileName + ".html";
+      const QString htmlFileName = outFileName + QLatin1String(".html");
 
       // load input mail
       QFile mailFile( mailFileName );
@@ -95,7 +95,7 @@ class RenderTest : public QObject
       otp.parseObjectTree( msg.get() );
       qInstallMsgHandler( 0 );
 
-      fileWriter.queue("</body></html>");
+      fileWriter.queue(QLatin1String("</body></html>"));
       fileWriter.flush();
       fileWriter.end();
 
@@ -104,11 +104,11 @@ class RenderTest : public QObject
       // validate xml and pretty-print for comparisson
       // TODO add proper cmake check for xmllint and diff
       QStringList args = QStringList()
-        << "--format"
-        << "--output"
+        << QLatin1String("--format")
+        << QLatin1String("--output")
         << htmlFileName
         << outFileName;
-      QCOMPARE( QProcess::execute( "xmllint", args ),  0 );
+      QCOMPARE( QProcess::execute( QLatin1String("xmllint"), args ),  0 );
 
       // get rid of system dependent or random paths
       {
@@ -116,7 +116,7 @@ class RenderTest : public QObject
         QVERIFY( f.open( QIODevice::ReadOnly ) );
         QString content = QString::fromUtf8( f.readAll() );
         f.close();
-        content.replace( QRegExp( "\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"" ), "\"file:\\1\"" );
+        content.replace( QRegExp( QLatin1String("\"file:[^\"]*[/(?:%2F)]([^\"/(?:%2F)]*)\"") ), QLatin1String("\"file:\\1\"") );
         QVERIFY( f.open( QIODevice::WriteOnly | QIODevice::Truncate ) );
         f.write( content.toUtf8() );
         f.close();
@@ -124,12 +124,12 @@ class RenderTest : public QObject
 
       // compare to reference file
       args = QStringList()
-        << "-u"
+        << QLatin1String("-u")
         << referenceFileName
         << htmlFileName;
       QProcess proc;
       proc.setProcessChannelMode( QProcess::ForwardedChannels );
-      proc.start( "diff", args );
+      proc.start( QLatin1String("diff"), args );
       QVERIFY( proc.waitForFinished() );
 
       QEXPECT_FAIL( "forward-openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );

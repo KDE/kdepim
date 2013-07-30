@@ -124,6 +124,9 @@ void SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
             } else if (tagName == QLatin1String("str")) {
                 MultiLineEdit *text = w->findChild<MultiLineEdit*>( QLatin1String("text") );
                 text->setText(e.text());
+            } else if (tagName == QLatin1String("list")) {
+                KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
+                addresses->setText(AutoCreateScriptUtil::listValueToStr(e));
             } else {
                 qDebug()<<" SieveActionVacation::setParamWidgetValue unknown tagName "<<tagName;
             }
@@ -157,7 +160,7 @@ QString SieveActionVacation::code(QWidget *w) const
     if (!subjectStr.isEmpty())
         result += QString::fromLatin1(" :subject \"%1\"").arg(subjectStr);
     if (!addressesStr.isEmpty())
-        result += QString::fromLatin1(" :addresses %1").arg(AutoCreateScriptUtil::createAddressList(addressesStr));
+        result += QString::fromLatin1(" :addresses %1").arg(AutoCreateScriptUtil::createAddressList(addressesStr, false));
     if (!textStr.isEmpty())
         result += QString::fromLatin1(" text:%1").arg(AutoCreateScriptUtil::createMultiLine(textStr));
     else

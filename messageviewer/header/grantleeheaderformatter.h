@@ -24,16 +24,19 @@ namespace KMime {
 class Message;
 }
 
+namespace GrantleeTheme {
+class Theme;
+}
+
 namespace MessageViewer {
 class HeaderStyle;
-class GrantleeTheme;
 class GrantleeHeaderFormatter
 {
 public:
     explicit GrantleeHeaderFormatter();
     ~GrantleeHeaderFormatter();
 
-    QString toHtml(const MessageViewer::GrantleeTheme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const;
+    QString toHtml(const GrantleeTheme::Theme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const;
 
     QString toHtml(const QStringList &displayExtraHeaders, const QString &absolutPath, const QString &filename, const MessageViewer::HeaderStyle *style, KMime::Message *message, bool isPrinting) const;
 private:

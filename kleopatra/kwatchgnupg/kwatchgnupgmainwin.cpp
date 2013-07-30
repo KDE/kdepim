@@ -105,8 +105,8 @@ void KWatchGnuPGMainWindow::slotClear()
 
 void KWatchGnuPGMainWindow::createActions()
 {
-  KAction *action = actionCollection()->addAction( "clear_log" );
-  action->setIcon( KIcon("edit-clear-history") );
+  KAction *action = actionCollection()->addAction( QLatin1String("clear_log") );
+  action->setIcon( KIcon(QLatin1String("edit-clear-history")) );
   action->setText( i18n("C&lear History") );
   connect(action, SIGNAL(triggered()), SLOT(slotClear()));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
@@ -145,7 +145,7 @@ void KWatchGnuPGMainWindow::startWatcher()
   {
     const KConfigGroup config(KGlobal::config(), "WatchGnuPG");
     *mWatcher << config.readEntry("Executable", WATCHGNUPGBINARY);
-    *mWatcher << "--force";
+    *mWatcher << QLatin1String("--force");
     *mWatcher << config.readEntry("Socket", WATCHGNUPGSOCKET);
   }
 
@@ -175,14 +175,14 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
         Kleo::CryptoConfigComponent* comp = cconfig->component( *it );
         Q_ASSERT(comp);
         // Look for log-file entry in Debug group
-        Kleo::CryptoConfigGroup* group = comp->group("Debug");
+        Kleo::CryptoConfigGroup* group = comp->group(QLatin1String("Debug"));
         if( group ) {
-          Kleo::CryptoConfigEntry* entry = group->entry("log-file");
+          Kleo::CryptoConfigEntry* entry = group->entry(QLatin1String("log-file"));
           if( entry ) {
-            entry->setStringValue( QString("socket://")+ config.readEntry("Socket", WATCHGNUPGSOCKET ));
-            logclients << QString("%1 (%2)").arg(*it).arg(comp->description());
+            entry->setStringValue( QString::fromLatin1("socket://")+ config.readEntry("Socket", WATCHGNUPGSOCKET ));
+            logclients << QString::fromLatin1("%1 (%2)").arg(*it).arg(comp->description());
           }
-          entry = group->entry("debug-level");
+          entry = group->entry(QLatin1String("debug-level"));
           if( entry ) {
             entry->setStringValue( config.readEntry("LogLevel", "basic") );
           }
@@ -210,9 +210,9 @@ void KWatchGnuPGMainWindow::slotReadStdout()
     return;
   while(mWatcher->canReadLine()){
         QString str = QString::fromUtf8( mWatcher->readLine() );
-        if ( str.endsWith( '\n' ) )
+        if ( str.endsWith( QLatin1Char('\n') ) )
            str.chop( 1 );
-        if ( str.endsWith( '\r' ) )
+        if ( str.endsWith( QLatin1Char('\r') ) )
            str.chop( 1 );
         mCentralWidget->message(str);
         if( !isVisible() ) {
@@ -262,7 +262,7 @@ void KWatchGnuPGMainWindow::slotConfigure()
 {
   if( !mConfig ) {
       mConfig = new KWatchGnuPGConfig( this );
-      mConfig->setObjectName( "config dialog" );
+      mConfig->setObjectName( QLatin1String("config dialog") );
       connect( mConfig, SIGNAL(reconfigure()),
                this, SLOT(slotReadConfig()) );
   }

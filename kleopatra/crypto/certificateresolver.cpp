@@ -137,7 +137,7 @@ void KConfigBasedRecipientPreferences::Private::writePrefs()
     int n = 0;
     Q_FOREACH ( const QByteArray& i, keys )
     {
-        KConfigGroup group( m_config, QString( "EncryptionPreference_%1" ).arg( n++ ) );
+        KConfigGroup group( m_config, QString::fromLatin1( "EncryptionPreference_%1" ).arg( n++ ) );
         group.writeEntry( "email", i );
         const QByteArray pgp = pgpPrefs.value( i );
         if ( !pgp.isEmpty() )
@@ -153,7 +153,7 @@ void KConfigBasedRecipientPreferences::Private::ensurePrefsParsed() const
 {
     if ( m_parsed )
         return;
-    const QStringList groups = m_config->groupList().filter( QRegExp( "^EncryptionPreference_\\d+$" ) );
+    const QStringList groups = m_config->groupList().filter( QRegExp( QLatin1String("^EncryptionPreference_\\d+$") ) );
 
     Q_FOREACH ( const QString& i, groups )
     {

@@ -77,7 +77,7 @@ QString GrantleeHeaderFormatter::toHtml(const QStringList &displayExtraHeaders, 
     return format(headerTemplate, displayExtraHeaders, isPrinting, style, message);
 }
 
-QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
+QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme::Theme &theme, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const
 {
     QString errorMessage;
     if (!theme.isValid()) {
@@ -90,7 +90,7 @@ QString GrantleeHeaderFormatter::toHtml(const GrantleeTheme &theme, bool isPrint
         errorMessage = headerTemplate->errorString();
         return errorMessage;
     }
-    return format(headerTemplate, theme.displayExtraHeaders(), isPrinting, style, message);
+    return format(headerTemplate, theme.displayExtraVariables(), isPrinting, style, message);
 }
 
 QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const QStringList &displayExtraHeaders, bool isPrinting, const MessageViewer::HeaderStyle *style, KMime::Message *message) const

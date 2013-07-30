@@ -53,6 +53,11 @@ SieveActionWidget::~SieveActionWidget()
     mActionList.clear();
 }
 
+bool SieveActionWidget::isConfigurated() const
+{
+    return (mComboBox->currentIndex() != (mComboBox->count()-1));
+}
+
 void SieveActionWidget::setFilterAction( QWidget *widget )
 {
     if ( mLayout->itemAtPosition( 1, 3 ) ) {
@@ -66,7 +71,7 @@ void SieveActionWidget::setFilterAction( QWidget *widget )
     }
 }
 
-void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
+void SieveActionWidget::generatedScript(QString &script, QStringList &requires, bool onlyActions)
 {
     const int index = mComboBox->currentIndex();
     if (index != mComboBox->count()-1) {
@@ -82,7 +87,7 @@ void SieveActionWidget::generatedScript(QString &script, QStringList &requires)
         if (!comment.isEmpty()) {
             script += QLatin1Char('#') + comment.replace(QLatin1Char('\n'), QLatin1String("\n#")) + QLatin1Char('\n');
         }
-        script += INDENTACTION + widgetAction->code(currentWidget) + QLatin1Char('\n');
+        script += (onlyActions ? QString() : INDENTACTION) + widgetAction->code(currentWidget) + QLatin1Char('\n');
     }
 }
 
@@ -228,7 +233,7 @@ void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool remov
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-void SieveActionWidget::setAction(const QString &actionName, const QDomElement &element)
+void SieveActionWidget::setAction(const QString &actionName, const QDomElement &element, const QString &comment)
 {
     const int index = mComboBox->findData(actionName);
     if (index != -1) {
@@ -236,6 +241,7 @@ void SieveActionWidget::setAction(const QString &actionName, const QDomElement &
         slotActionChanged(index);
         KSieveUi::SieveAction* action = mActionList.at( index );
         action->setParamWidgetValue(element, this);
+        action->setComment(comment);
     }
 }
 
@@ -288,14 +294,14 @@ void SieveActionWidgetLister::updateAddRemoveButton()
     }
 }
 
-void SieveActionWidgetLister::generatedScript(QString &script, QStringList &requires)
+void SieveActionWidgetLister::generatedScript(QString &script, QStringList &requires, bool onlyActions)
 {
     const QList<QWidget*> widgetList = widgets();
     QList<QWidget*>::ConstIterator wIt = widgetList.constBegin();
     QList<QWidget*>::ConstIterator wEnd = widgetList.constEnd();
     for ( ; wIt != wEnd ;++wIt ) {
         SieveActionWidget *w = qobject_cast<SieveActionWidget*>( *wIt );
-        w->generatedScript(script, requires);
+        w->generatedScript(script, requires, onlyActions);
     }
 }
 
@@ -324,31 +330,61 @@ int SieveActionWidgetLister::actionNumber() const
     return widgets().count();
 }
 
-void SieveActionWidgetLister::loadScript(const QDomElement &element)
+void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyActions)
 {
     bool firstAction = true;
-    QDomNode node = element.firstChild();
-    while (!node.isNull()) {
-        QDomElement e = node.toElement();
-        if (!e.isNull()) {
-            const QString tagName = e.tagName();
-            if (tagName == QLatin1String("action") || tagName == QLatin1String("control")/*for break action*/) {
-                if (e.hasAttribute(QLatin1String("name"))) {
-                    const QString actionName = e.attribute(QLatin1String("name"));
-                    if (firstAction) {
-                        firstAction = false;
-                    } else {
-                        addWidgetAfterThisWidget(widgets().last());
-                    }
+    QString comment;
+    if (onlyActions) {
+        if (!element.isNull()) {
+            const QString tagName = element.tagName();
+            if (tagName == QLatin1String("action")) {
+                if (element.hasAttribute(QLatin1String("name"))) {
+                    const QString actionName = element.attribute(QLatin1String("name"));
                     SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
-                    w->setAction(actionName, e);
+                    if (w->isConfigurated()) {
+                        addWidgetAfterThisWidget(widgets().last());
+                        w = qobject_cast<SieveActionWidget*>( widgets().last() );
+                    }
+                    w->setAction(actionName, element, comment);
+                    //comment.clear();
                     qDebug()<<" actionName "<<actionName;
                 } else {
-                    qDebug()<<" SieveActionWidgetLister::loadScript unknow tag: "<<tagName;
+                    qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
                 }
             }
         }
-        node = node.nextSibling();
+    } else {
+        QDomNode node = element.firstChild();
+        while (!node.isNull()) {
+            QDomElement e = node.toElement();
+            if (!e.isNull()) {
+                const QString tagName = e.tagName();
+                if (tagName == QLatin1String("action") || tagName == QLatin1String("control")/*for break action*/) {
+                    if (e.hasAttribute(QLatin1String("name"))) {
+                        const QString actionName = e.attribute(QLatin1String("name"));
+                        if (firstAction) {
+                            firstAction = false;
+                        } else {
+                            addWidgetAfterThisWidget(widgets().last());
+                        }
+                        SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
+                        w->setAction(actionName, e, comment);
+                        comment.clear();
+                        qDebug()<<" actionName "<<actionName;
+                    } else {
+                        qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
+                    }
+                } else if (tagName == QLatin1String("comment")) {
+                    if (!comment.isEmpty()) {
+                        comment += QLatin1Char('\n');
+                    }
+                    comment += e.text();
+                } else {
+                    qDebug()<<" SieveActionWidgetLister::loadScript unknow tagName "<<tagName;
+                }
+            }
+            node = node.nextSibling();
+        }
     }
 }
 

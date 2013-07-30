@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionenvironment.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -116,10 +117,10 @@ void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
             if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     KLineEdit *item =  w->findChild<KLineEdit*>( QLatin1String("item") );
-                    item->setText(e.text());
+                    item->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else if (index == 1) {
                     KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );
-                    value->setText(e.text());
+                    value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
                     qDebug()<<" SieveConditionEnvironment::setParamWidgetValue to many argument "<<index;
                 }

@@ -444,7 +444,7 @@ QString ProcessStdInOutput::label() const {
     if ( !m_proc )
         return OutputImplBase::label();
     // output max. 3 arguments
-    const QString cmdline = ( QStringList( m_command ) + m_arguments.mid(0,3) ).join( " " );
+    const QString cmdline = ( QStringList( m_command ) + m_arguments.mid(0,3) ).join( QLatin1String(" ") );
     if ( m_arguments.size() > 3 )
         return i18nc( "e.g. \"Input to tar xf - file1 ...\"", "Input to %1 ...", cmdline );
     else

@@ -155,7 +155,7 @@ shared_ptr<SelfTest> Kleo::makeGpgConfEngineCheckSelfTest() {
 //
 
 static bool is_version( const char * actual, int major, int minor, int patch ) {
-    QRegExp rx( "(\\d+)\\.(\\d+)\\.(\\d+)(?:-svn\\d+)?.*" );
+    QRegExp rx( QLatin1String("(\\d+)\\.(\\d+)\\.(\\d+)(?:-svn\\d+)?.*") );
     if ( !rx.exactMatch( QString::fromUtf8( actual ) ) ) {
         kDebug() << "Can't parse version " << actual;
         return false;
@@ -178,8 +178,8 @@ static bool is_version( const char * actual, int major, int minor, int patch ) {
     // return ! ( actual_version < required_version )
     ok = !std::lexicographical_compare( begin(  actual_version  ), end(  actual_version  ),
                                         begin( required_version ), end( required_version ) );
-    kDebug( ok )  << QString( "%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << "<=" << actual ;
-    kDebug( !ok ) << QString( "%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << ">" << actual ;
+    kDebug( ok )  << QString::fromLatin1("%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << "<=" << actual ;
+    kDebug( !ok ) << QString::fromLatin1( "%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << ">" << actual ;
     return ok;
 }
 

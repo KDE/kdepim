@@ -98,7 +98,7 @@ ImportCrlCommand::Private::Private( ImportCrlCommand * qq, KeyListController * c
       canceled( false )
 {
     process.setOutputChannelMode( KProcess::OnlyStderrChannel );
-    process << "gpgsm" << "--call-dirmngr" << "loadcrl";
+    process << QLatin1String("gpgsm") << QLatin1String("--call-dirmngr") << QLatin1String("loadcrl");
 }
 
 ImportCrlCommand::Private::~Private() {}

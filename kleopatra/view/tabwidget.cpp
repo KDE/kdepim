@@ -523,7 +523,7 @@ void TabWidget::Private::slotPageHierarchyChanged( bool ) {
 }
 
 void TabWidget::Private::slotNewTab() {
-    Page * page = new Page( QString(), "all-certificates", QString() );
+    Page * page = new Page( QString(), QLatin1String("all-certificates"), QString() );
     addView( page, currentPage() );
     tabWidget.setCurrentIndex( tabWidget.count()-1 );
 }
@@ -736,7 +736,7 @@ QTreeView * TabWidget::Private::addView( Page * page, Page * columnReference ) {
 }
 
 static QStringList extractViewGroups( const KConfig * config ) {
-    return config ? config->groupList().filter( QRegExp( "^View #\\d+$" ) ) : QStringList() ;
+    return config ? config->groupList().filter( QRegExp( QLatin1String("^View #\\d+$") ) ) : QStringList() ;
 }
 
 // work around deleteGroup() not deleting groups out of groupList():
@@ -751,9 +751,9 @@ void TabWidget::loadViews( const KConfig * config ) {
         }
     if ( !count() ) {
         // add default views:
-        addView( QString(), "my-certificates" );
-        addView( QString(), "trusted-certificates" );
-        addView( QString(), "other-certificates" );
+        addView( QString(), QLatin1String("my-certificates") );
+        addView( QString(), QLatin1String("trusted-certificates") );
+        addView( QString(), QLatin1String("other-certificates") );
     }
 }
 

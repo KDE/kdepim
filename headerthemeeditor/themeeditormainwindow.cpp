@@ -137,7 +137,7 @@ void ThemeEditorMainWindow::setupActions()
 
 void ThemeEditorMainWindow::slotManageTheme()
 {
-    QPointer<ManageThemes> dialog = new ManageThemes(this);
+    QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QLatin1String("messageviewer/themes/"), this);
     dialog->exec();
     delete dialog;
 }
@@ -234,7 +234,7 @@ bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
     if (createNewTheme) {
         delete mThemeEditor;
         mThemeEditor = 0;
-        QPointer<NewThemeDialog> dialog = new NewThemeDialog(this);
+        QPointer<GrantleeThemeEditor::NewThemeDialog> dialog = new GrantleeThemeEditor::NewThemeDialog(this);
         QString newTheme;
         QString projectDirectory;
         if (dialog->exec()) {

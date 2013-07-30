@@ -94,7 +94,7 @@
 #include <QtCore/QList>
 #include <QtCore/QTextStream>
 
-#define GMX_FILESELECTION_STRING "*.gmxa|" + i18n( "GMX address book file (*.gmxa)" )
+#define GMX_FILESELECTION_STRING QLatin1String("*.gmxa|") + i18n( "GMX address book file (*.gmxa)" )
 
 const int typeHome  = 0;
 const int typeWork  = 1;
@@ -165,26 +165,26 @@ KABC::Addressee::List GMXXXPort::importContacts() const
   while ( ( line != QLatin1String( "####" ) ) && !gmxStream.atEnd() ) {
     // an addressee entry may spread over several lines in the file
     while ( 1 ) {
-      itemList = line.split( '#', QString::KeepEmptyParts );
+      itemList = line.split( QLatin1Char('#'), QString::KeepEmptyParts );
       if ( itemList.count() >= 11 ) {
         break;
       }
-      line.append( '\n' );
+      line.append( QLatin1Char('\n') );
       line.append( gmxStream.readLine() );
     };
 
     // populate the addressee
     KABC::Addressee *addressee = new KABC::Addressee;
-    addressee->setNickName( itemList[1] );
-    addressee->setGivenName( itemList[2] );
-    addressee->setFamilyName( itemList[3] );
-    addressee->setFormattedName( itemList[3] + ", " + itemList[2] );
-    addressee->setPrefix( itemList[4] );
-    if ( checkDateTime( itemList[5], dt ) ) {
+    addressee->setNickName( itemList.at(1) );
+    addressee->setGivenName( itemList.at(2) );
+    addressee->setFamilyName( itemList.at(3) );
+    addressee->setFormattedName( itemList.at(3) + QLatin1String(", ") + itemList.at(2) );
+    addressee->setPrefix( itemList.at(4) );
+    if ( checkDateTime( itemList.at(5), dt ) ) {
       addressee->setBirthday( dt );
     }
-    addressee->setNote( itemList[6] );
-    if ( checkDateTime( itemList[7], dt ) ) {
+    addressee->setNote( itemList.at(6) );
+    if ( checkDateTime( itemList.at(7), dt ) ) {
       addressee->setRevision( dt );
     }
     // addressee->setStatus( itemList[8] ); Status
@@ -210,11 +210,11 @@ KABC::Addressee::List GMXXXPort::importContacts() const
   while ( !line.startsWith( QLatin1String( "####" ) ) && !gmxStream.atEnd() ) {
     // an address entry may spread over several lines in the file
     while ( 1 ) {
-       itemList = line.split( '#', QString::KeepEmptyParts );
+       itemList = line.split( QLatin1Char('#'), QString::KeepEmptyParts );
        if ( itemList.count() >= 21 ) {
          break;
        }
-       line.append( '\n' );
+       line.append( QLatin1Char('\n') );
        line.append( gmxStream.readLine() );
     };
 
@@ -277,7 +277,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
         addressee->setOrganization( itemList[16] ); // Company
       }
       if ( !itemList[17].isEmpty() ) {
-        addressee->insertCustom( "KADDRESSBOOK", "X-Department", itemList[17] ); // Department
+        addressee->insertCustom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-Department"), itemList[17] ); // Department
       }
       if ( checkDateTime( itemList[18], dt ) ) {
         addressee->setRevision( dt ); // Change_date
@@ -303,11 +303,11 @@ KABC::Addressee::List GMXXXPort::importContacts() const
             !gmxStream.atEnd() ) {
       // a category should not spread over multiple lines, but just in case
       while ( 1 ) {
-        itemList = line.split( '#', QString::KeepEmptyParts );
+        itemList = line.split( QLatin1Char('#'), QString::KeepEmptyParts );
         if ( itemList.count() >= 3 ) {
           break;
         }
-        line.append( '\n' );
+        line.append( QLatin1Char('\n') );
         line.append( gmxStream.readLine() );
       };
       usedCategoryList.append( itemList[1] );
@@ -345,7 +345,7 @@ KABC::Addressee::List GMXXXPort::importContacts() const
 bool GMXXXPort::exportContacts( const KABC::AddresseeList &list ) const
 {
   KUrl url = KFileDialog::getSaveUrl(
-    KUrl( QDir::homePath() + "/addressbook.gmx" ), GMX_FILESELECTION_STRING );
+    KUrl( QDir::homePath() + QLatin1String("/addressbook.gmx") ), GMX_FILESELECTION_STRING );
   if ( url.isEmpty() ) {
     return true;
   }
@@ -447,7 +447,7 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list ) const
   categoryMap.append( assignedCategoriesSorted( list ) );
 
   int addresseeId = 0;
-  const QChar DELIM( '#' );
+  const QChar DELIM( QLatin1Char('#') );
   for ( KABC::AddresseeList::ConstIterator it = list.begin();
     it != list.end(); ++it ) {
     addressee = &(*it);
@@ -590,7 +590,7 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list ) const
           break;
       }
 
-      QString email="";
+      QString email;
       if ( emails.count()>recId ) {
         email = emails[ recId ];
         if ( email == addressee->preferredEmail() ) {
@@ -623,7 +623,7 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list ) const
                  QString() ) << DELIM // Position
 
           << ( ( recId == typeHome ) ?
-                 addressee->custom( "KADDRESSBOOK", "X-SpousesName" ) :
+                 addressee->custom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-SpousesName") ) :
                  QString() ) << DELIM // Comments
 
           << recId << DELIM                   // Record_type_id (0,1,2)
@@ -635,7 +635,7 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list ) const
                  QString() ) << DELIM // Company
 
           << ( ( recId == typeWork ) ?
-                 addressee->custom( "KADDRESSBOOK", "X-Department" ) :
+                 addressee->custom( QLatin1String("KADDRESSBOOK"), QLatin1String("X-Department") ) :
                  QString() ) << DELIM // Department
 
           << dateString( addressee->revision() ) << DELIM // Change_date

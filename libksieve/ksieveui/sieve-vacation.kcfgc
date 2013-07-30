@@ -1,0 +1,7 @@
+File=sieve-vacation.kcfg
+NameSpace=KSieveUi
+ClassName=VacationSettings
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true

@@ -16,6 +16,7 @@
 */
 
 #include "sieveconditionvirustest.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include "widgets/selectrelationalmatchtype.h"
 #include "widgets/selectcomparatorcombobox.h"
@@ -26,6 +27,7 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QDebug>
+#include <QDomNode>
 
 using namespace KSieveUi;
 
@@ -97,12 +99,49 @@ QString SieveConditionVirusTest::help() const
     return i18n("Sieve implementations that implement the \"virustest\" test have an identifier of \"virustest\" for use with the capability mechanism.");
 }
 
-void SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+void SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
 {
-    SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
-    SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
-    QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
-
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("count") || tagValue == QLatin1String("value")) {
+                    node = node.nextSibling();
+                    if (!node.isNull()) {
+                        QDomElement relationalElement = node.toElement();
+                        if (!relationalElement.isNull()) {
+                            if (relationalElement.tagName() == QLatin1String("str")) {
+                                SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
+                                relation->setCode(AutoCreateScriptUtil::tagValue(tagValue), relationalElement.text());
+                            }
+                        }
+                    }
+                } else if (tagValue == QLatin1String("comparator")) {
+                    node = node.nextSibling();
+                    if (!node.isNull()) {
+                        QDomElement comparatorElement = node.toElement();
+                        if (!comparatorElement.isNull()) {
+                            if (comparatorElement.tagName() == QLatin1String("str")) {
+                                SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
+                                comparator->setCode(comparatorElement.text());
+                            }
+                        }
+                    }
+                } else {
+                    qDebug()<<" SieveConditionVirusTest::setParamWidgetValue unknow tagValue "<<tagValue;
+                }
+            } else if (tagName == QLatin1String("str")) {
+                QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
+                spinbox->setValue(e.text().toInt());
+            } else {
+                qDebug()<<" SieveConditionVirusTest::setParamWidgetValue unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
 }
 
 #include "sieveconditionvirustest.moc"

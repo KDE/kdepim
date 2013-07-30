@@ -72,7 +72,7 @@ public:
         : QThread(), Command::Private( qq, c ),
           mutex(),
           trust( Key::Ultimate ),
-          trustListFile( QDir( gnupgHomeDirectory() ).absoluteFilePath( "trustlist.txt" ) ),
+          trustListFile( QDir( gnupgHomeDirectory() ).absoluteFilePath( QLatin1String("trustlist.txt") ) ),
           canceled( false )
     {
 
@@ -274,7 +274,7 @@ QString change_trust_file( const QString & trustListFile, const QString & key, K
     kDebug() << qPrintable( key ) << " -> " << qPrintable( keyColon );
 
     //               ( 1)    (                         2                           )    (  3  )( 4)
-    QRegExp rx( "\\s*(!?)\\s*([a-fA-F0-9]{40}|(?:[a-fA-F0-9]{2}:){19}[a-fA-F0-9]{2})\\s*([SsPp*])(.*)" );
+    QRegExp rx( QLatin1String("\\s*(!?)\\s*([a-fA-F0-9]{40}|(?:[a-fA-F0-9]{2}:){19}[a-fA-F0-9]{2})\\s*([SsPp*])(.*)") );
     bool found = false;
 
     Q_FOREACH( const QByteArray & rawLine, trustListFileContents ) {
@@ -332,7 +332,7 @@ QString run_gpgconf_reload_gpg_agent( const QString & gpgConfPath )
         return i18n("Could not find gpgconf executable");
 
     QProcess p;
-    p.start( gpgConfPath, QStringList() << "--reload" << "gpg-agent" );
+    p.start( gpgConfPath, QStringList() << QLatin1String("--reload") << QLatin1String("gpg-agent") );
     kDebug() <<  "starting " << qPrintable( gpgConfPath )
              << " --reload gpg-agent";
     p.waitForFinished( -1 );

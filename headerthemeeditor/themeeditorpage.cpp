@@ -18,7 +18,7 @@
 #include "themeeditorpage.h"
 #include "desktopfilepage.h"
 #include "editorpage.h"
-#include "editorwidget.h"
+#include "themeeditorwidget.h"
 #include "previewwidget.h"
 #include "themesession.h"
 #include "themeeditortabwidget.h"
@@ -41,18 +41,19 @@
 
 ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
-      mThemeSession(new ThemeSession(projectDir)),
+      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir)),
       mChanged(false)
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    mTabWidget = new ThemeEditorTabWidget;
+    mTabWidget = new GrantleeThemeEditor::ThemeEditorTabWidget;
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
-    mDesktopPage = new DesktopFilePage;
+    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(true /*allow to add extra variables*/);
+    mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 

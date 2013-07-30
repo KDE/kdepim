@@ -75,7 +75,7 @@ QString Formatting::prettyName( int proto, const char * id, const char * name_, 
 
     if ( proto == CMS ) {
         const DN subject( id );
-        const QString cn = subject["CN"].trimmed();
+        const QString cn = subject[QLatin1String("CN")].trimmed();
         if ( cn.isEmpty() )
             return subject.prettyDN();
         return cn;
@@ -113,7 +113,7 @@ QString Formatting::prettyNameAndEMail( int proto, const QString & id, const QSt
 
     if ( proto == CMS ) {
         const DN subject( id );
-        const QString cn = subject["CN"].trimmed();
+        const QString cn = subject[QLatin1String("CN")].trimmed();
         if ( cn.isEmpty() )
             return subject.prettyDN();
         return cn;
@@ -137,7 +137,7 @@ QString Formatting::prettyUserID( const UserID & uid ) {
 QString Formatting::prettyKeyID( const char * id ) {
     if ( !id )
         return QString();
-    return "0x" + QString::fromLatin1( id ).toUpper();
+    return QLatin1String("0x") + QString::fromLatin1( id ).toUpper();
 }
 
 QString Formatting::prettyNameAndEMail( const UserID & uid ) {
@@ -186,7 +186,7 @@ QString Formatting::prettyEMail( const char * email_, const char * id ) {
     if ( email_ && parseMailbox( email_, email_ + strlen( email_ ), mailBox ) )
         return mailBox.addrSpec().asPrettyString();
     else
-        return DN( id )["EMAIL"].trimmed();
+        return DN( id )[QLatin1String("EMAIL")].trimmed();
 }
 
 //
@@ -214,9 +214,9 @@ namespace {
     QString format_keytype( const Key & key ) {
         const Subkey subkey = key.subkey( 0 );
         if ( key.hasSecret() )
-            return i18n( "%1-bit %2 (secret key available)", subkey.length(), subkey.publicKeyAlgorithmAsString() );
+            return i18n( "%1-bit %2 (secret key available)", subkey.length(), QLatin1String(subkey.publicKeyAlgorithmAsString()) );
         else
-            return i18n( "%1-bit %2", subkey.length(), subkey.publicKeyAlgorithmAsString() );
+            return i18n( "%1-bit %2", subkey.length(), QLatin1String(subkey.publicKeyAlgorithmAsString()) );
     }
 
     QString format_keyusage( const Key & key ) {
@@ -233,7 +233,7 @@ namespace {
             capabilities.push_back( i18n( "Certifying other Certificates" ) );
         if ( key.canAuthenticate() )
             capabilities.push_back( i18n( "Authenticate against Servers" ) );
-        return capabilities.join( i18n(", ") );
+        return capabilities.join( QLatin1String(", ") );
     }
 
     static QString time_t2string( time_t t ) {
@@ -491,15 +491,15 @@ QString Formatting::validityShort( const UserID::Signature & sig ) {
 QString Formatting::formatKeyLink( const Key & key ) {
     if ( key.isNull() )
         return QString();
-    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
+    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( QLatin1String(key.primaryFingerprint()), Formatting::prettyName( key ) );
 }
 
 QString Formatting::formatForComboBox( const GpgME::Key & key ) {
     const QString name = prettyName( key );
     QString mail = prettyEMail( key );
     if ( !mail.isEmpty() )
-        mail = '<' + mail + '>';
-    return i18nc( "name, email, key id", "%1 %2 (%3)", name, mail, key.shortKeyID() ).simplified();
+        mail = QLatin1Char('<') + mail + QLatin1Char('>');
+    return i18nc( "name, email, key id", "%1 %2 (%3)", name, mail, QLatin1String(key.shortKeyID()) ).simplified();
 }
 
 namespace {
@@ -575,9 +575,9 @@ QString Formatting::importMetaData( const Import & import, const QStringList & i
     if ( result.isEmpty() )
         return QString();
     else
-        return result + '\n' +
-            i18n("This certificate was imported from the following sources:") + '\n' +
-            ids.join("\n");
+        return result + QLatin1Char('\n') +
+            i18n("This certificate was imported from the following sources:") + QLatin1Char('\n') +
+            ids.join(QLatin1String("\n"));
 }
 
 QString Formatting::importMetaData( const Import & import ) {
@@ -607,7 +607,7 @@ QString Formatting::importMetaData( const Import & import ) {
 
     return results.empty()
         ? i18n( "The import contained no new data for this certificate. It is unchanged.")
-        : results.join( "\n" );
+        : results.join( QLatin1String("\n") );
 }
 
 

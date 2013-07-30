@@ -62,7 +62,7 @@ QString Kleo::gnupgHomeDirectory()
     if ( !gnupgHome.isEmpty() )
         return QFile::decodeName( gnupgHome );
     else
-        return QDir::homePath() + "/.gnupg";
+        return QDir::homePath() + QLatin1String("/.gnupg");
 #endif
 }
 
@@ -70,34 +70,34 @@ int Kleo::makeGnuPGError( int code ) {
     return gpg_error( static_cast<gpg_err_code_t>( code ) );
 }
 
-static QString findGpgExe( GpgME::Engine engine, const char * exe ) {
+static QString findGpgExe( GpgME::Engine engine, const QString & exe ) {
     const GpgME::EngineInfo info = GpgME::engineInfo( engine );
     return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( exe ) ;
 }
 
 QString Kleo::gpgConfPath() {
-    return findGpgExe( GpgME::GpgConfEngine, "gpgconf" );
+    return findGpgExe( GpgME::GpgConfEngine, QLatin1String("gpgconf") );
 }
 
 QString Kleo::gpgSmPath() {
-    return findGpgExe( GpgME::GpgSMEngine, "gpgsm" );
+    return findGpgExe( GpgME::GpgSMEngine, QLatin1String("gpgsm") );
 }
 
 QString Kleo::gpgPath() {
-    return findGpgExe( GpgME::GpgEngine, "gpg" );
+    return findGpgExe( GpgME::GpgEngine, QLatin1String("gpg") );
 }
 
 QStringList Kleo::gnupgFileBlacklist() {
     return QStringList()
-        << "dirmngr-cache.d"
-        << "S.uiserver"
-        << "S.gpg-agent"
-        << "random_seed"
-        << "*~"
-        << "*.bak"
-        << "*.lock"
-        << "*.tmp"
-        << "reader_*.status"
+        << QLatin1String("dirmngr-cache.d")
+        << QLatin1String("S.uiserver")
+        << QLatin1String("S.gpg-agent")
+        << QLatin1String("random_seed")
+        << QLatin1String("*~")
+        << QLatin1String("*.bak")
+        << QLatin1String("*.lock")
+        << QLatin1String("*.tmp")
+        << QLatin1String("reader_*.status")
         ;
 }
 
