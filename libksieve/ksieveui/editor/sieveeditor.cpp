@@ -35,7 +35,9 @@
 #include <QDebug>
 #include <QAction>
 
-//#define GENERATE_XML_ACTION 1
+#if !defined(NDEBUG)
+#define GENERATE_XML_ACTION 1
+#endif
 
 using namespace KSieveUi;
 
