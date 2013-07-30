@@ -72,10 +72,18 @@ bool FilterActionSetStatus::canConvertToSieve() const
 QString FilterActionSetStatus::sieveCode() const
 {
     QString flagCode;
-    if (mParameter == "U") {
-        //TODO
+    if (mParameter == QLatin1String("R")) {
+        flagCode = QLatin1String("\\\\Seen");
+    } else if (mParameter == QLatin1String("D")) {
+        flagCode = QLatin1String("\\\\Deleted");
+    } else if (mParameter == QLatin1String("A")) {
+        flagCode = QLatin1String("\\\\Answered");
+    } else {
+        qDebug()<<" FilterActionSetStatus::sieveCode() unknown flags"<<mParameter;
+        flagCode = mParameter;
     }
-    const QString result = QString::fromLatin1("setflag %1").arg(flagCode);
+
+    const QString result = QString::fromLatin1("setflag \"%1\";").arg(flagCode);
     return result;
 }
 

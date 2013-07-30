@@ -67,4 +67,33 @@ SearchRule::RequiredPart FilterActionUnsetStatus::requiredPart() const
     return SearchRule::Envelope;
 }
 
+QString FilterActionUnsetStatus::sieveCode() const
+{
+    QString flagCode;
+    if (mParameter == QLatin1String("R")) {
+        flagCode = QLatin1String("\\\\Seen");
+    } else if (mParameter == QLatin1String("D")) {
+        flagCode = QLatin1String("\\\\Deleted");
+    } else if (mParameter == QLatin1String("A")) {
+        flagCode =QLatin1String("\\\\Answered");
+    } else {
+        qDebug()<<" FilterActionSetStatus::sieveCode() unknown flags"<<mParameter;
+        flagCode = mParameter;
+    }
+
+    const QString result = QString::fromLatin1("removeflag \"%1\";").arg(flagCode);
+    return result;
+}
+
+QStringList FilterActionUnsetStatus::sieveRequires() const
+{
+    return QStringList() << QLatin1String("imapflags");
+}
+
+bool FilterActionUnsetStatus::canConvertToSieve() const
+{
+    return true;
+}
+
+
 #include "filteractionunsetstatus.moc"
