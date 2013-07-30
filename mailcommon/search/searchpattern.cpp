@@ -1813,12 +1813,9 @@ void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
 
     QList<SearchRule::Ptr>::const_iterator it;
     QList<SearchRule::Ptr>::const_iterator endIt( constEnd() );
-    bool firstRule = true;
     int i = 0;
     for ( it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it ) {
-        if (firstRule) {
-            firstRule = false;
-        } else {
+        if (i != 0) {
             code += QLatin1String("\n, ");
         }
         (*it)->generateSieveScript(requires, code);
