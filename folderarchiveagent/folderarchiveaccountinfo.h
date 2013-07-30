@@ -35,6 +35,8 @@ public:
     };
 
 
+    bool isValid() const;
+
     QString instanceName() const;
 
     void setArchiveTopLevel(Akonadi::Collection::Id id);

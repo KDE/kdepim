@@ -38,6 +38,11 @@ FolderArchiveAccountInfo::~FolderArchiveAccountInfo()
 {
 }
 
+bool FolderArchiveAccountInfo::isValid() const
+{
+    return (mArchiveTopLevelCollectionId > -1);
+}
+
 void FolderArchiveAccountInfo::setFolderArchiveType(FolderArchiveAccountInfo::FolderArchiveType type)
 {
     mArchiveType = type;
