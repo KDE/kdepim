@@ -286,6 +286,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     } else if (mField == "contents") {
 
     } else if (mField == "<age in days>") {
+        //date ?
 
     } else if (mField == "<recipients>") {
     } else if (mField == "<tag>") {
