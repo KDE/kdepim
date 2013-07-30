@@ -54,7 +54,7 @@ ClearCrlCacheCommand::ClearCrlCacheCommand( QAbstractItemView * v, KeyListContro
 ClearCrlCacheCommand::~ClearCrlCacheCommand() {}
 
 QStringList ClearCrlCacheCommand::arguments() const {
-    return QStringList() << "dirmngr" << "--flush";
+    return QStringList() << QLatin1String("dirmngr") << QLatin1String("--flush");
     //return QStringList() << "gpgsm" << "--call-dirmngr" << "flush";
 }
 
@@ -69,7 +69,7 @@ QString ClearCrlCacheCommand::successCaption() const {
 QString ClearCrlCacheCommand::crashExitMessage( const QStringList & args ) const {
     return i18n( "The DirMngr process that tried to clear the CRL cache "
                  "ended prematurely because of an unexpected error. "
-                 "Please check the output of %1 for details.", args.join( " " ) ) ;
+                 "Please check the output of %1 for details.", args.join( QLatin1String(" ") ) ) ;
 }
 
 QString ClearCrlCacheCommand::errorExitMessage( const QStringList & args ) const {

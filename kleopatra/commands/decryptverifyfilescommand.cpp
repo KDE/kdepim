@@ -172,7 +172,7 @@ void DecryptVerifyFilesCommand::doCancel() {
 }
 
 QStringList DecryptVerifyFilesCommand::Private::selectFiles() const {
-    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Decrypt and/or Verify" ), "enc" );
+    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Decrypt and/or Verify" ), QLatin1String("enc") );
 }
 
 #undef d

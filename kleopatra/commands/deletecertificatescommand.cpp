@@ -345,7 +345,7 @@ void DeleteCertificatesCommand::Private::showErrorsAndFinish() {
         const QString msg = i18n("<qt><p>An error occurred while trying to delete "
                                  "the certificate:</p>"
                                  "<p><b>%1</b></p></qt>",
-                                 pgpError ? cmsError ? pgpErrorString + "</br>" + cmsErrorString : pgpErrorString : cmsErrorString );
+                                 pgpError ? cmsError ? pgpErrorString + QLatin1String("</br>") + cmsErrorString : pgpErrorString : cmsErrorString );
         error( msg, i18n("Certificate Deletion Failed") );
     } else {
         std::vector<Key> keys = pgpKeys;
