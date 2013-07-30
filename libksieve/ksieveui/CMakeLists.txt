@@ -1,5 +1,13 @@
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
+if(KDEPIM_ENTERPRISE_BUILD)
+  set(USE_GRAPHICAL_SIEVE_EDITOR true)
+else()
+  set(USE_GRAPHICAL_SIEVE_EDITOR false)
+endif()
+
+
+configure_file(sieve-editor.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/sieve-editor.kcfg)
 
 include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	${CMAKE_SOURCE_DIR}/pimcommon
