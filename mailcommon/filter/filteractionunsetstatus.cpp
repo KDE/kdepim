@@ -70,15 +70,16 @@ SearchRule::RequiredPart FilterActionUnsetStatus::requiredPart() const
 QString FilterActionUnsetStatus::sieveCode() const
 {
     QString flagCode;
-    if (mParameter == QLatin1String("R")) {
+    const QString parameter = argsAsString();
+    if (parameter == QLatin1String("R")) {
         flagCode = QLatin1String("\\\\Seen");
-    } else if (mParameter == QLatin1String("D")) {
+    } else if (parameter == QLatin1String("D")) {
         flagCode = QLatin1String("\\\\Deleted");
-    } else if (mParameter == QLatin1String("A")) {
+    } else if (parameter == QLatin1String("A")) {
         flagCode =QLatin1String("\\\\Answered");
     } else {
-        qDebug()<<" FilterActionSetStatus::sieveCode() unknown flags"<<mParameter;
-        flagCode = mParameter;
+        qDebug()<<" FilterActionSetStatus::sieveCode() unknown flags"<<parameter;
+        flagCode = parameter;
     }
 
     const QString result = QString::fromLatin1("removeflag \"%1\";").arg(flagCode);
