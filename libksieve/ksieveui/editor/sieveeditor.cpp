@@ -35,10 +35,6 @@
 #include <QDebug>
 #include <QAction>
 
-#if !defined(NDEBUG)
-#define GENERATE_XML_ACTION 1
-#endif
-
 using namespace KSieveUi;
 
 SieveEditor::SieveEditor( QWidget * parent )
@@ -73,8 +69,11 @@ SieveEditor::SieveEditor( QWidget * parent )
     mSwitchMode = new QAction(i18n("Switch Mode"), this);
     bar->addAction(mSwitchMode);
     connect(mSwitchMode, SIGNAL(triggered(bool)), SLOT(slotSwitchMode()));
-#ifdef GENERATE_XML_ACTION
-    bar->addAction(QLatin1String("Generate xml"), this, SLOT(slotGenerateXml()));
+#if !defined(NDEBUG)
+    //Not necessary to translate it.
+    mGenerateXml = new QAction(QLatin1String("Generate xml"), this);
+    connect(mGenerateXml, SIGNAL(triggered(bool)), SLOT(slotGenerateXml()));
+    bar->addAction(mGenerateXml);
 #endif
 
     lay->addWidget(bar);
@@ -121,13 +120,16 @@ void SieveEditor::changeMode(EditorMode mode)
         mMode = mode;
         mStackedWidget->setCurrentIndex(static_cast<int>(mode));
         mAutoGenerateScript->setEnabled((mMode == TextMode));
+#if !defined(NDEBUG)
+        mGenerateXml->setEnabled((mMode == TextMode));
+#endif
     }
 }
 
 void SieveEditor::slotEnableButtonOk(bool b)
 {
     mOkButton->setEnabled(b);
-    mCheckSyntax->setEnabled( b );
+    mCheckSyntax->setEnabled(b);
 }
 
 void SieveEditor::writeConfig()
