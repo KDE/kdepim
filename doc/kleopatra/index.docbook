@@ -491,8 +491,7 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
                 This function exports only the public keys, even if
                 the secret key is available. Use
                 <xref linkend="file-export-secret-key"/> to export
-                both public and secret keys into a file, but note that
-                this is almost always a bad idea.
+                the secret keys into a file.
               </para>
             </note>
           </listitem>
@@ -506,14 +505,15 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
           </term>
           <listitem>
             <para>
-              <action>Exports both the public and the secret key to a
-              file.</action>
+              <action>Exports the secret key to a file.</action>
             </para>
             <para>
-              In the dialog that opens, you can choose an
-              <guilabel>Output file</guilabel> name, and whether to
+              In the dialog that opens, you can choose whether to
               create a binary or an &ascii;-armored export file
-              (<guilabel>ASCII armor</guilabel>). When exporting
+              (<guilabel>ASCII armor</guilabel>). 
+	      Next click on the folder icon at the right hand side of the 
+	      <guilabel>Output file</guilabel> text box and select folder 
+	      and name of the export file. When exporting
               &smime; secret keys, you can also choose the
               <guilabel>Passphrase charset</guilabel>. See the
               discussion of the

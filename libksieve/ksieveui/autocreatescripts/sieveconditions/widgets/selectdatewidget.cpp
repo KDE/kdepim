@@ -20,6 +20,8 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KLineEdit>
+#include <KDateComboBox>
+#include <KTimeComboBox>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -76,10 +78,10 @@ void SelectDateWidget::initialize()
     mDateValue = new QSpinBox;
     mStackWidget->addWidget(mDateValue);
 
-    mDateEdit = new QDateEdit;
+    mDateEdit = new KDateComboBox;
     mStackWidget->addWidget(mDateEdit);
 
-    mTimeEdit = new QTimeEdit;
+    mTimeEdit = new KTimeComboBox;
     mStackWidget->addWidget(mTimeEdit);
 
     mStackWidget->setCurrentWidget(mDateValue);
@@ -155,7 +157,7 @@ QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const
         str = QString::fromLatin1("%1").arg(mDateValue->value(),4, 10, QLatin1Char('0'));
         break;
     case Month:
-        str = QString::fromLatin1("%1").arg(mDateValue->value(),2,  10,QLatin1Char('0'));
+        str = QString::fromLatin1("%1").arg(mDateValue->value(),2, 10,QLatin1Char('0'));
         break;
     case Day:
         str = QString::fromLatin1("%1").arg(mDateValue->value(),2, 10, QLatin1Char('0'));
@@ -303,9 +305,8 @@ void SelectDateWidget::setCode(const QString &type, const QString &value)
         mDateValue->setValue(value.toInt());
         break;
     case Date:
-        //TODO
         mStackWidget->setCurrentWidget(mDateEdit);
-        //mDateEdit
+        mDateEdit->setDate(QDate::fromString(value));
         break;
     case Julian:
         mStackWidget->setCurrentWidget(mDateLineEdit);
@@ -313,7 +314,7 @@ void SelectDateWidget::setCode(const QString &type, const QString &value)
         break;
     case Time:
         mStackWidget->setCurrentWidget(mTimeEdit);
-        //TODO mTimeEdit
+        mTimeEdit->setTime(QTime::fromString(value));
         break;
     case Iso8601:
     case Std11:

@@ -24,9 +24,8 @@ class KComboBox;
 class KLineEdit;
 class QStackedWidget;
 class QSpinBox;
-class QDateEdit;
-class QTimeEdit;
-
+class KDateComboBox;
+class KTimeComboBox;
 namespace KSieveUi {
 class SelectDateWidget : public QWidget
 {
@@ -64,8 +63,8 @@ private:
     KComboBox *mDateType;
     KLineEdit *mDateLineEdit;
     QSpinBox *mDateValue;
-    QDateEdit *mDateEdit;
-    QTimeEdit *mTimeEdit;
+    KDateComboBox *mDateEdit;
+    KTimeComboBox *mTimeEdit;
     QStackedWidget *mStackWidget;
 };
 }

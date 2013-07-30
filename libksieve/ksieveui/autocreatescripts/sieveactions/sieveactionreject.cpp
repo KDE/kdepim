@@ -62,7 +62,7 @@ void SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
             if (tagName == QLatin1String("str")) {
                 const QString tagValue = e.text();
                 MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );
-                edit->setText(tagValue);
+                edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
             } else {
                 qDebug()<<" SieveActionReject::setParamWidgetValue unknown tagName "<<tagName;
             }

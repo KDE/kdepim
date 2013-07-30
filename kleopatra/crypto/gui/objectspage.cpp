@@ -96,7 +96,7 @@ ObjectsPage::Private::~Private() {}
 
 void ObjectsPage::Private::add()
 {
-    const QString fname = FileDialog::getOpenFileName( q, i18n( "Select File" ), "enc" );
+    const QString fname = FileDialog::getOpenFileName( q, i18n( "Select File" ), QLatin1String("enc") );
     if ( fname.isEmpty() )
         return;
     addFile( QFileInfo( fname ) );
@@ -139,7 +139,7 @@ void ObjectsPage::Private::addFile( const QFileInfo& info )
 {
     QListWidgetItem* const item = new QListWidgetItem;
     if ( info.isDir() )
-        item->setIcon( KIcon( "folder" ) );
+        item->setIcon( KIcon( QLatin1String("folder") ) );
     item->setText( info.fileName() );
     item->setData( AbsoluteFilePathRole, info.absoluteFilePath() ); 
     fileListWidget->addItem( item );

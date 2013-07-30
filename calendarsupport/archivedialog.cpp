@@ -36,7 +36,6 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KNumInput>
-#include <KTextBrowser>
 #include <KUrl>
 #include <KUrlRequester>
 #include <KVBox>
@@ -51,6 +50,7 @@
 #include <QLayout>
 #include <QRadioButton>
 #include <QVBoxLayout>
+#include <QWhatsThis>
 
 using namespace CalendarSupport;
 
@@ -73,21 +73,25 @@ ArchiveDialog::ArchiveDialog( const Akonadi::ETMCalendar::Ptr &cal,
   QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
   topLayout->setSpacing( spacingHint() );
 #ifndef KDEPIM_MOBILE_UI
-  KTextBrowser *descLabel = new KTextBrowser( topFrame );
+  QLabel *descLabel = new QLabel( topFrame );
   descLabel->setText(
     i18nc( "@info:whatsthis",
            "Archiving saves old items into the given file and "
            "then deletes them in the current calendar. If the archive file "
            "already exists they will be added. "
-           "(<link url=\"whatsthis:In order to add an archive "
-           "to your calendar, use the Merge Calendar function. "
-           "You can view an archive by opening it like you would any "
+           "(<link url=\"#\">How to restore</link>)" ) );
+  descLabel->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "In order to add an archive to your calendar, use the Merge Calendar "
+           "function. You can view an archive by opening it like you would any "
            "other calendar. It is not saved in a special format, but as "
-           "vCalendar.\">How to restore</link>)" ) );
+           "vCalendar." ) );
   descLabel->setTextInteractionFlags(
     Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard |
     Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard );
+  descLabel->setWordWrap( true );
   topLayout->addWidget( descLabel );
+  connect( descLabel, SIGNAL(linkActivated(QString)), SLOT(showWhatsThis()) );
 #endif
 
   QButtonGroup *radioBG = new QButtonGroup( this );
@@ -327,6 +331,14 @@ void ArchiveDialog::slotEventsDeleted()
   emit eventsDeleted();
   if ( !KCalPrefs::instance()->mAutoArchive ) {
     accept();
+  }
+}
+
+void ArchiveDialog::showWhatsThis()
+{
+  QWidget *widget = qobject_cast< QWidget * >( sender() );
+  if ( widget && !widget->whatsThis().isEmpty() ) {
+    QWhatsThis::showText( QCursor::pos(), widget->whatsThis() );
   }
 }
 

@@ -25,7 +25,7 @@ KImportPage::KImportPage(QWidget *parent )
 {
     mWidget = new Ui::KImportPageDlg;
     mWidget->setupUi( this );
-    mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
+    mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", QLatin1String("kmailcvt/pics/step1.png")));
 }
 
 KImportPage::~KImportPage()

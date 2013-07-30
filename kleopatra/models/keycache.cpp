@@ -593,7 +593,7 @@ std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, 
 static std::string email( const UserID & uid ) {
     const std::string email = uid.email();
     if ( email.empty() )
-        return DN( uid.id() )["EMAIL"].trimmed().toUtf8().constData();
+        return DN( uid.id() )[QLatin1String("EMAIL")].trimmed().toUtf8().constData();
     if ( email[0] == '<' && email[email.size()-1] == '>' )
         return email.substr( 1, email.size() - 2 );
     else

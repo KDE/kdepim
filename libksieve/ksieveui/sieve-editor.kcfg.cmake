@@ -6,7 +6,7 @@
 
   <group name="General">
       <entry name="UseGraphicEditorByDefault" type="Bool">
-          <default>false</default>
+          <default>${USE_GRAPHICAL_SIEVE_EDITOR}</default>
           <label>Use graphical editor by default to edit sieve script.</label>
       </entry>
   </group>

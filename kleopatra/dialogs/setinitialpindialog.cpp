@@ -78,9 +78,9 @@ static void update_widget( State state, bool delay, QLabel * resultLB, QLabel * 
     assert( state >= 0 ); assert( state < NumStates );
     const char * icon = icons[state];
     if ( qstrncmp( icon, "movie-", sizeof("movie-")-1 ) == 0 )
-        resultLB->setMovie( KIconLoader::global()->loadMovie( icon+sizeof("movie-"), KIconLoader::NoGroup ) );
+        resultLB->setMovie( KIconLoader::global()->loadMovie( QLatin1String(icon+sizeof("movie-")), KIconLoader::NoGroup ) );
     else if ( icon && *icon )
-        resultLB->setPixmap( KIcon( icon ).pixmap( 32 ) );
+        resultLB->setPixmap( KIcon( QLatin1String(icon) ).pixmap( 32 ) );
     else
         resultLB->setPixmap( QPixmap() );
     lb->setEnabled( ( state == NotSet || state == Failed ) && !delay );

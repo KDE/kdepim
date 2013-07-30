@@ -40,12 +40,12 @@
 KAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
 
     KAction * const a = ad.toggle ? new KToggleAction( parent ) : new KAction( parent ) ;
-    a->setObjectName( ad.name );
+    a->setObjectName( QLatin1String(ad.name) );
     a->setText( ad.text );
     if ( !ad.tooltip.isEmpty() )
         a->setToolTip( ad.tooltip );
     if ( ad.icon )
-        a->setIcon( KIcon( ad.icon ) );
+        a->setIcon( KIcon( QLatin1String(ad.icon) ) );
     if ( ad.receiver && ad.slot ) {
         if ( ad.toggle )
             QObject::connect( a, SIGNAL(toggled(bool)), ad.receiver, ad.slot );
@@ -65,5 +65,5 @@ void Kleo::make_actions_from_data( const action_data * ads, unsigned int size, Q
 
 void Kleo::make_actions_from_data( const action_data * ads, unsigned int size, KActionCollection * coll ) {
     for ( unsigned int i = 0 ; i < size ; ++i )
-        coll->addAction( ads[i].name, make_action_from_data( ads[i], coll ) );
+        coll->addAction( QLatin1String(ads[i].name), make_action_from_data( ads[i], coll ) );
 }

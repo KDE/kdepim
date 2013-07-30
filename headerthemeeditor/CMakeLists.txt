@@ -17,7 +17,6 @@ set(headerthemeeditor_SRCS
   themeeditormainwindow.cpp 
   themeeditorpage.cpp
   previewwidget.cpp
-  desktopfilepage.cpp
   editorpage.cpp
   themetemplatewidget.cpp
   themedefaulttemplate.cpp

@@ -1,6 +1,10 @@
 kde4_no_enable_final(kleopatra)
 project(kleopatra)
 
+#add_definitions( -DQT_NO_CAST_FROM_ASCII )
+#add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+
 option(KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't install plugins" WINCE)
 
 include(MacroOptionalAddSubdirectory)

@@ -20,19 +20,19 @@
 #define DESKTOPFILEPAGE_H
 
 #include <QWidget>
-
+#include "grantleethemeeditor_export.h"
 class KLineEdit;
 class KZip;
 
 namespace PimCommon {
 class SimpleStringListEditor;
 }
-
-class DesktopFilePage : public QWidget
+namespace GrantleeThemeEditor {
+class GRANTLEETHEMEEDITOR_EXPORT DesktopFilePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DesktopFilePage(QWidget *parent = 0);
+    explicit DesktopFilePage(bool allowToAddExtraDisplayVariables, QWidget *parent = 0);
     ~DesktopFilePage();
 
     void saveTheme(const QString &path);
@@ -46,6 +46,9 @@ public:
     QString themeName() const;
     void createZip(const QString &themeName, KZip *zip);
     void installTheme(const QString &themePath);
+    void setDefaultDesktopName(const QString &name);
+    void setAllowToAddExtraDisplayVariables(bool b);
+
 
 Q_SIGNALS:
     void mainFileNameChanged(const QString &filename);
@@ -58,6 +61,7 @@ private Q_SLOTS:
 
 private:
     void saveAsFilename(const QString &filename);
+    QString mDefaultDesktopName;
     KLineEdit *mName;
     KLineEdit *mDescription;
     KLineEdit *mFilename;
@@ -66,5 +70,6 @@ private:
     KLineEdit *mVersion;
     PimCommon::SimpleStringListEditor *mExtraDisplayHeaders;
 };
+}
 
 #endif // DESKTOPFILEPAGE_H

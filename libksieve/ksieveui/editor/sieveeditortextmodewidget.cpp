@@ -57,6 +57,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     : SieveEditorAbstractWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
     setLayout( lay );
 
     mMainSplitter = new QSplitter;
@@ -80,6 +81,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
 
     QWidget *textEditWidget = new QWidget;
     QVBoxLayout * textEditLayout = new QVBoxLayout;
+    textEditLayout->setMargin(0);
     mTextEdit = new SieveTextEdit;
     textEditLayout->addWidget(mTextEdit);
     mFindBar = new SieveFindBar( mTextEdit, textEditWidget );

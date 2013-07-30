@@ -75,9 +75,10 @@ QString SieveConditionHeader::code(QWidget *w) const
     const QString headerStr = headerType->code();
 
     const KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
-    const QString valueStr = value->text();
+    QString valueStr = value->text();
 
-    return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("header %1 %2 \"%3\"").arg(matchString).arg(headerStr).arg(valueStr);
+    valueStr = AutoCreateScriptUtil::fixListValue(valueStr);
+    return AutoCreateScriptUtil::negativeString(isNegative) + QString::fromLatin1("header %1 %2 %3").arg(matchString).arg(headerStr).arg(valueStr);
 }
 
 QString SieveConditionHeader::help() const
@@ -103,7 +104,7 @@ void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     headerType->setCode(e.text());
                 } else if (index == 1) {
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
-                    value->setText(e.text());
+                    value->setText(e.text().replace(QLatin1String("\""), QLatin1String("\\\"")));
                 } else {
                     qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
                 }
@@ -113,7 +114,6 @@ void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                 if (index == 0) {
                     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
                     headerType->setCode(AutoCreateScriptUtil::listValueToStr(e));
-                    ++index;
                 } else if (index == 1) {
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
                     value->setText(AutoCreateScriptUtil::listValueToStr(e));

@@ -66,6 +66,7 @@ public:
     ~SelectFlagsWidget();
 
     QString code() const;
+    void setCode(const QString &flags);
     void setFlags(const QStringList &flags);
 
 private Q_SLOTS:
