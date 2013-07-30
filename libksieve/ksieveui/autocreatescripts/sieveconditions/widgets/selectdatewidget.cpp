@@ -20,6 +20,8 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KLineEdit>
+#include <KDateComboBox>
+#include <KTimeComboBox>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -76,10 +78,10 @@ void SelectDateWidget::initialize()
     mDateValue = new QSpinBox;
     mStackWidget->addWidget(mDateValue);
 
-    mDateEdit = new QDateEdit;
+    mDateEdit = new KDateComboBox;
     mStackWidget->addWidget(mDateEdit);
 
-    mTimeEdit = new QTimeEdit;
+    mTimeEdit = new KTimeComboBox;
     mStackWidget->addWidget(mTimeEdit);
 
     mStackWidget->setCurrentWidget(mDateValue);
