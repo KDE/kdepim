@@ -123,13 +123,21 @@ void SieveEditor::changeMode(EditorMode mode)
 #if !defined(NDEBUG)
         mGenerateXml->setEnabled((mMode == TextMode));
 #endif
+        if (mMode == GraphicMode)
+            mCheckSyntax->setEnabled(false);
+        else
+            mCheckSyntax->setEnabled(!mTextModeWidget->currentscript().isEmpty());
     }
 }
 
 void SieveEditor::slotEnableButtonOk(bool b)
 {
     mOkButton->setEnabled(b);
-    mCheckSyntax->setEnabled(b);
+    if (mMode == TextMode) {
+        mCheckSyntax->setEnabled(b);
+    } else {
+        mCheckSyntax->setEnabled(false);
+    }
 }
 
 void SieveEditor::writeConfig()
