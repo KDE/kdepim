@@ -195,8 +195,8 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       aboutDialog(),
       mainWindowPreviousGeometry()
 {
-    q->setNormalIcon( KIcon( "kleopatra" ) );
-    q->setAttentionIcon( KIcon( "secure-card" ) );
+    q->setNormalIcon( KIcon( QLatin1String("kleopatra") ) );
+    q->setAttentionIcon( KIcon( QLatin1String("secure-card") ) );
 
     KDAB_SET_OBJECT_NAME( menu );
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );

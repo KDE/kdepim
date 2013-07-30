@@ -43,12 +43,12 @@ int main(int argc, char *argv[]) \
 { \
     setenv("GNUPGHOME", KLEO_TEST_GNUPGHOME, 1 ); \
     setenv("LC_ALL", "C", 1); \
-    setenv("KDEHOME", QFile::encodeName( QDir::homePath() + "/.kde-unit-test" ), 1); \
+    setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QLatin1String("/.kde-unit-test") ), 1); \
     KAboutData aboutData( "qttest", 0, ki18n("qttest"), "version" );  \
     KDEMainFlags mainFlags = flags;                         \
     KComponentData cData(&aboutData); \
     QApplication app( argc, argv, (mainFlags & GUI) != 0 ); \
-    app.setApplicationName( "qttest" ); \
+    app.setApplicationName( QLatin1String("qttest") ); \
     TestObject tc; \
     return QTest::qExec( &tc, argc, argv ); \
 }

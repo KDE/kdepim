@@ -83,7 +83,7 @@ extern "C"
   {
     AppearanceConfigurationPage *page =
       new AppearanceConfigurationPage( KComponentData( "kleopatra" ), parent, args );
-    page->setObjectName( "kleopatra_config_appear" );
+    page->setObjectName( QLatin1String("kleopatra_config_appear") );
     return page;
   }
 }

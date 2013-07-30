@@ -159,7 +159,7 @@ public:
                                                          i18n("%1 may be used by other applications as a service.\n"
                                                               "You may instead want to close this window without exiting %1.", app ),
                                                          i18n("Really Quit?"), KStandardGuiItem_close(), KStandardGuiItem_quit(), KStandardGuiItem::cancel(),
-                                                         "really-quit-" + app.toLower() );
+                                                         QLatin1String("really-quit-") + app.toLower() );
         if ( rc == KMessageBox::Cancel )
             return;
         if ( !q->close() )
@@ -184,14 +184,14 @@ public:
     void showHandbook();
 
     void gnupgLogViewer() {
-        if( !QProcess::startDetached("kwatchgnupg" ) )
+        if( !QProcess::startDetached(QLatin1String("kwatchgnupg") ) )
             KMessageBox::error( q, i18n( "Could not start the GnuPG Log Viewer (kwatchgnupg). "
                                          "Please check your installation." ),
                                 i18n( "Error Starting KWatchGnuPG" ) );
     }
 
     void gnupgAdministrativeConsole() {
-        if( !QProcess::startDetached("kgpgconf" ) )
+        if( !QProcess::startDetached(QLatin1String("kgpgconf") ) )
             KMessageBox::error( q, i18n( "Could not start the GnuPG Administrative Console (kgpgconf). "
                                          "Please check your installation." ),
                                 i18n( "Error Starting KGpgConf" ) );
@@ -199,7 +199,7 @@ public:
 
     void slotConfigCommitted();
     void slotContextMenuRequested( QAbstractItemView *, const QPoint & p ) {
-        if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( "listview_popup", q ) ) )
+        if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( QLatin1String("listview_popup"), q ) ) )
             menu->exec( p );
         else
             kDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
@@ -270,7 +270,7 @@ MainWindow::Private::Private( MainWindow * qq )
     connect( &controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)),
              q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)) );
 
-    q->createGUI( "kleopatra.rc" );
+    q->createGUI( QLatin1String("kleopatra.rc") );
 
     q->setAcceptDrops( true );
 
@@ -297,7 +297,7 @@ void MainWindow::Private::setupActions() {
     ui.tabWidget.connectSearchBar( searchBar );
 
     searchBarAction->setDefaultWidget( searchBar );
-    coll->addAction( "key_search_bar", searchBarAction );
+    coll->addAction( QLatin1String("key_search_bar"), searchBarAction );
 
     const action_data action_data[] = {
         // most have been MOVED TO keylistcontroller.cpp
@@ -328,7 +328,7 @@ void MainWindow::Private::setupActions() {
 
     make_actions_from_data( action_data, /*sizeof action_data / sizeof *action_data,*/ coll );
 
-    if ( QAction * action = coll->action( "configure_backend" ) )
+    if ( QAction * action = coll->action( QLatin1String("configure_backend") ) )
         action->setMenuRole( QAction::NoRole ); //prevent Qt OS X heuristics for config* actions
 
     KStandardAction::close( q, SLOT(close()), coll );
