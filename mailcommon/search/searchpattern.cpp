@@ -291,8 +291,45 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     } else if (mField == "<recipients>") {
     } else if (mField == "<tag>") {
         //Not supported
-    } else if (mField == "Subject") {
-    } else if (mField == "From") {
+    } else if (mField == "To" || mField == "From" || mField == "Subject") {
+        QString comparaison;
+        bool negative = false;
+        switch(mFunction) {
+        case FuncNone:
+            break;
+        case FuncContains:
+            comparaison = QLatin1String(":contains");
+            break;
+        case FuncContainsNot:
+            negative = true;
+            comparaison = QLatin1String(":contains");
+            break;
+        case FuncEquals:
+            comparaison = QLatin1String(":is");
+            break;
+        case FuncNotEqual:
+            comparaison = QLatin1String(":is");
+            negative = true;
+            break;
+        case FuncRegExp:
+        case FuncNotRegExp:
+        case FuncIsGreater:
+        case FuncIsLessOrEqual:
+        case FuncIsLess:
+        case FuncIsGreaterOrEqual:
+        case FuncIsInAddressbook:
+        case FuncIsNotInAddressbook:
+        case FuncIsInCategory:
+        case FuncIsNotInCategory:
+        case FuncHasAttachment:
+        case FuncHasNoAttachment:
+        case FuncStartWith:
+        case FuncNotStartWith:
+        case FuncEndWith:
+        case FuncNotEndWith:
+            return;
+        }
+        code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 \"%2\" \"%3\"").arg(comparaison).arg(QLatin1String(mField)).arg(mContents);
     } else if (mField == "<message>") {
     } else if (mField == "<body>") {
         if (!requires.contains(QLatin1String("body")))
