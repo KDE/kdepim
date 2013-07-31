@@ -29,7 +29,7 @@ MBoxImporterKernel::MBoxImporterKernel( QObject *parent )
     : QObject( parent )
 {
     mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
-    Akonadi::Session *session = new Akonadi::Session( "ImportWizard Kernel ETM", this );
+    Akonadi::Session *session = new Akonadi::Session( "MBox importer Kernel ETM", this );
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
 
     mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
