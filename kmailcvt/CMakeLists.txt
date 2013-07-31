@@ -21,7 +21,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(kmailcvt_SRCS ui/kselfilterpagedlg.ui ui/kimportpagedlg.ui)
 
-kde4_add_app_icon(kmailcvt_SRCS "icons/ox*-app-kmailcvt.png")
+kde4_add_app_icon(kmailcvt_SRCS "icons/hi*-app-kmailcvt.png")
 kde4_add_executable(kmailcvt ${kmailcvt_SRCS})
 
 target_link_libraries(kmailcvt
