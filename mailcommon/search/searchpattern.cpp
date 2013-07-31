@@ -290,7 +290,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
 
     } else if (mField == "<recipients>") {
     } else if (mField == "<tag>") {
-        //Not supported
+        code += i18n("<Tag> is not supported");
     } else if (mField == "<message>") {
     } else if (mField == "<body>") {
         if (!requires.contains(QLatin1String("body")))
@@ -315,7 +315,14 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             negative = true;
             break;
         case FuncRegExp:
+            comparaison = QLatin1String(":regex");
+            requires << QLatin1String("regex");
+            break;
         case FuncNotRegExp:
+            requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            negative = true;
+            break;
         case FuncIsGreater:
         case FuncIsLessOrEqual:
         case FuncIsLess:
@@ -354,7 +361,14 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             negative = true;
             break;
         case FuncRegExp:
+            comparaison = QLatin1String(":regex");
+            requires << QLatin1String("regex");
+            break;
         case FuncNotRegExp:
+            requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            negative = true;
+            break;
         case FuncIsGreater:
         case FuncIsLessOrEqual:
         case FuncIsLess:
