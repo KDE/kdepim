@@ -24,7 +24,7 @@
 #include <QHBoxLayout>
 #include <QDebug>
 #include <QDomNode>
-
+//Add support for adding flags
 using namespace KSieveUi;
 SieveActionFileInto::SieveActionFileInto(QObject *parent)
     : SieveAction(QLatin1String("fileinto"), i18n("File Into"), parent)

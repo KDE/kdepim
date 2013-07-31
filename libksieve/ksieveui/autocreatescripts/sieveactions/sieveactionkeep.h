@@ -28,6 +28,12 @@ public:
 
     QString code(QWidget *) const;
     QString help() const;
+    QWidget *createParamWidget( QWidget *parent ) const;
+    void setParamWidgetValue( const QDomElement &element, QWidget *w );
+    QStringList needRequires(QWidget *) const;
+
+private:
+    bool mHasFlagSupport;
 };
 }
 #endif // SIEVEACTIONKEEP_H
