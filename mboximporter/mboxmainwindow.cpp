@@ -16,10 +16,12 @@
 */
 
 #include "mboxmainwindow.h"
+#include "importmailswidget.h"
 
-MBoxMainWindow::MBoxMainWindow(QWidget *parent)
+MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
     : KDialog(parent)
 {
+    mImportMailsWidget = new MailImporter::ImportMailsWidget;
 }
 
 MBoxMainWindow::~MBoxMainWindow()

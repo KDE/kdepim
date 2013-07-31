@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     if (fileName.isEmpty()) {
         return 0;
     }
-    MBoxMainWindow *w = new MBoxMainWindow();
+    MBoxMainWindow *w = new MBoxMainWindow(fileName);
     w->show();
     int ret = a.exec();
     delete w;

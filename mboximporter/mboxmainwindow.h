@@ -20,11 +20,19 @@
 
 #include <KDialog>
 
+namespace MailImporter {
+class ImportMailsWidget;
+}
+
 class MBoxMainWindow : public KDialog
 {
+    Q_OBJECT
 public:
-    explicit MBoxMainWindow(QWidget *parent=0);
+    explicit MBoxMainWindow(const QString &filename, QWidget *parent=0);
     ~MBoxMainWindow();
+
+private:
+    MailImporter::ImportMailsWidget *mImportMailsWidget;
 };
 
 #endif // MBOXMAINWINDOW_H
