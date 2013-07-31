@@ -433,7 +433,7 @@ void AppearanceConfigWidget::load() {
     KConfig * const config = CryptoBackendFactory::instance()->configObject();
     if ( !config )
         return;
-    const QStringList groups = config->groupList().filter( QRegExp( "^Key Filter #\\d+$" ) );
+    const QStringList groups = config->groupList().filter( QRegExp( QLatin1String("^Key Filter #\\d+$") ) );
     Q_FOREACH( const QString & group, groups ) {
         //QListWidgetItem * item = new QListWidgetItem( d->categoriesLV );
         apply_config( KConfigGroup( config, group ), new QListWidgetItem( d->categoriesLV ) );
@@ -460,7 +460,7 @@ void AppearanceConfigWidget::save() {
         return;
     // We know (assume) that the groups in the config object haven't changed,
     // so we just iterate over them and over the listviewitems, and map one-to-one.
-    const QStringList groups = config->groupList().filter( QRegExp( "^Key Filter #\\d+$" ) );
+    const QStringList groups = config->groupList().filter( QRegExp( QLatin1String("^Key Filter #\\d+$") ) );
 #if 0
     if ( groups.isEmpty() ) {
         // If we created the default categories ourselves just now, then we need to make up their list

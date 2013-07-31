@@ -26,7 +26,7 @@ class QTimer;
 class ArchiveMailManager;
 class ArchiveMailInfo;
 
-class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
+class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
     Q_OBJECT
 

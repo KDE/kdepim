@@ -18,7 +18,16 @@
 #include "folderarchiveutil.h"
 #include "folderarchiveagentsettings.h"
 
+using namespace FolderArchive;
+
 bool FolderArchiveUtil::folderArchiveAgentEnabled()
 {
     return FolderArchiveAgentSettings::enabled();
+}
+
+
+void FolderArchiveUtil::forceReparseConfiguration()
+{
+    FolderArchiveAgentSettings::self()->writeConfig();
+    FolderArchiveAgentSettings::self()->config()->reparseConfiguration();
 }

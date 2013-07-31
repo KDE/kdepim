@@ -107,7 +107,7 @@ int EchoCommand::doStart() {
     // aaand ACTION:
 
     // 1. echo the command line though the status channel
-    sendStatus( "ECHO", output.empty() ? "" : output.c_str() );
+        sendStatus( "ECHO", output.empty() ? QString() : QLatin1String(output.c_str()) );
 
     // 2. if --inquire was given, inquire more data from the client:
     if ( !keyword.empty() ) {
@@ -150,7 +150,7 @@ void EchoCommand::slotInquireData( int rc, const QByteArray & data ) {
     }
 
     try {
-        sendStatus( "ECHOINQ", data );
+        sendStatus( "ECHOINQ", QLatin1String(data) );
         if ( !d->operationsInFlight )
             done();
     } catch ( const Exception & e ) {

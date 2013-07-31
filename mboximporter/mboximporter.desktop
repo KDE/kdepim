@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=MBoxImporter
+Type=Application
+Exec=mboximporter %u
+Icon=kmail
+MimeType=application/mbox;
+
+X-KDE-StartupNotify=true

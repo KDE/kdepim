@@ -164,7 +164,7 @@ void ChecksumVerifyFilesCommand::doCancel() {
 }
 
 QStringList ChecksumVerifyFilesCommand::Private::selectFiles() const {
-    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Checksum Files" ), "chk" );
+    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Checksum Files" ), QLatin1String("chk") );
 }
 
 #undef d

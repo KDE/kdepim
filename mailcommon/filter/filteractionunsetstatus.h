@@ -31,6 +31,10 @@ public:
     virtual SearchRule::RequiredPart requiredPart() const;
     
     static FilterAction* newAction();
+    QString sieveCode() const;
+    QStringList sieveRequires() const;
+    bool canConvertToSieve() const;
+
 };
 }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui version="3" name="akonadiconsole" >
+<kpartgui version="4" name="akonadiconsole" >
 
  <MenuBar>
   <Menu name="edit">
@@ -33,6 +33,9 @@
     <Action name="akonadi_item_move_to_menu"/>
     <Separator/>
     <Action name="akonadi_item_delete"/>
+  </Menu>
+  <Menu name="cache"><text>&ammp;Cache</text>
+    <Action name="akonadiconsole_cacheonly"/>
   </Menu>
   <Menu name="server"><text>&amp;Server</text>
     <Action name="akonadiserver_start"/>

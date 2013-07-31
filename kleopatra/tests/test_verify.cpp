@@ -134,8 +134,8 @@ class VerifyTest : public QObject
     {
       qRegisterMetaType<GpgME::VerificationResult>();
 
-      const QString sigFileName = KLEO_TEST_DATADIR "/test.data.sig";
-      const QString dataFileName = KLEO_TEST_DATADIR "/test.data";
+      const QString sigFileName = QLatin1String(KLEO_TEST_DATADIR) + QLatin1String("/test.data.sig");
+      const QString dataFileName = QLatin1String(KLEO_TEST_DATADIR) + QLatin1String("/test.data");
 
       QFile sigFile( sigFileName );
       QVERIFY( sigFile.open(QFile::ReadOnly ) );

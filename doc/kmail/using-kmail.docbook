@@ -234,7 +234,11 @@ users, depending on your system configuration.</para>
 <para>When you are finished with your message, you click the <guiicon>Send</guiicon> icon (the envelope) to send the message now, or click the <guiicon>Queue</guiicon> icon to put the message in the outbox.
 If your message is not finished yet, select <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Draft</guimenuitem></menuchoice> to save for later editing.
   If you would like to print your message, select <menuchoice><guimenu>Message</guimenu><guimenuitem>Print Preview</guimenuitem></menuchoice> to preview the message, and
-    <menuchoice><guimenu>Message</guimenu><guimenuitem>Print</guimenuitem></menuchoice> to print it.</para></sect2>
+    <menuchoice><guimenu>Message</guimenu><guimenuitem>Print</guimenuitem></menuchoice> to print it.</para>
+  <para id="send-later"><guimenu>Message</guimenu><guimenuitem>Send Later</guimenuitem> allows you to
+    schedule your emails to send at a specific time. This dialog also allows you to repeat sending the message.</para>
+
+</sect2>
 
 <sect2 id="encrypt-sign">
 <title>Signing and Encrypting Messages</title>
@@ -1732,7 +1736,7 @@ you need to debug your filtering process.
   <sect2 id="archiving">
     <title>Automatic Archiving</title>
     <variablelist>
-    <varlistentry><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Create Automatic Archiving...</guimenuitem></menuchoice></term>
+    <varlistentry id="auto-archive"><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Create Automatic Archiving...</guimenuitem></menuchoice></term>
       <listitem>
         <para>This is a powerful tool that can be used to assist in backing up your email. To use this, click
           the <guibutton>Add...</guibutton> button, and the <guilabel>Add Archive Mail</guilabel> dialog will pop up.</para>
@@ -1744,6 +1748,13 @@ you need to debug your filtering process.
             <listitem><para>Select how often you wish to backup through the dropdown menues next to <guilabel>Backup each:</guilabel>.</para></listitem>
             <listitem><para>If you are limited on drive space you will want to set a limit on <guilabel>Maximum number of archive:</guilabel></para></listitem>
           </itemizedlist>
+        </listitem>
+      </varlistentry>
+      <varlistentry id="archive-folder"><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice></term>
+        <listitem>
+          <para>This dialog allows you to enable/disable the folder archive agent. It is enabled by default, to disable uncheck the <guilabel>Enable</guilabel>
+            checkbox. You can change the location of you Archive folder by clicking the folder icon next to
+            <guilabel>Archive folder:</guilabel> and selecting the folder you wish to use.</para>
         </listitem>
       </varlistentry>
     </variablelist>

@@ -174,10 +174,10 @@ private:
         {
             setupUi( q );
 
-            addTB->setIcon( KIcon( "list-add" ) );
-            removeTB->setIcon( KIcon( "list-remove" ) );
-            upTB->setIcon( KIcon( "go-up" ) );
-            downTB->setIcon( KIcon( "go-down" ) );
+            addTB->setIcon( KIcon( QLatin1String("list-add") ) );
+            removeTB->setIcon( KIcon( QLatin1String("list-remove") ) );
+            upTB->setIcon( KIcon( QLatin1String("go-up") ) );
+            downTB->setIcon( KIcon( QLatin1String("go-down") ) );
         }
     } ui;
 
