@@ -32,6 +32,7 @@ private Q_SLOTS:
     void slotImportMBox();
 
 private:
+    QString mFileName;
     MBoxImportWidget *mImportWidget;
 };
 

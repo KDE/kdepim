@@ -18,13 +18,18 @@
 #include "mboxmainwindow.h"
 #include "mboximportwidget.h"
 #include "mboximportkernel.h"
+#include "mboximporterinfogui.h"
+
+#include <mailimporter/filter_mbox.h>
+#include <mailimporter/importmailswidget.h>
 
 #include <mailcommon/kernel/mailkernel.h>
 
 #include <KLocale>
 
 MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
-    : KDialog(parent)
+    : KDialog(parent),
+      mFileName(filename)
 {
     setCaption( i18n( "Import mbox file" ) );
     setButtons( Cancel );
@@ -48,7 +53,19 @@ MBoxMainWindow::~MBoxMainWindow()
 
 void MBoxMainWindow::slotImportMBox()
 {
-    //TODO
+    MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
+    MBoxImporterInfoGui *infoGui = new MBoxImporterInfoGui(mImportWidget);
+    info->setFilterInfoGui(infoGui);
+    info->setRootCollection( mImportWidget->selectedCollection() );
+    info->clear(); // Clear info from last time
+
+    info->setStatusMessage(i18n("Import in progress"));
+    MailImporter::FilterMBox mbox;
+    mbox.setFilterInfo( info );
+    info->clear();
+    mbox.importMails(QStringList()<<mFileName);
+    info->setStatusMessage(i18n("Import finished"));
+    delete info;
 }
 
 #include "mboxmainwindow.moc"
