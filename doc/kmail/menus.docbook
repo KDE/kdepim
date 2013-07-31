@@ -1033,7 +1033,7 @@ performs a menu item function, the default shortcut is listed with the menu item
 
 
 <sect2 id="reader-settings-menu">
-<title><guimenu>Settings</guimenu> Menu</title>
+<title>Settings Menu</title>
 
 <variablelist>
   <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>H</keycap></keycombo></shortcut>
@@ -1051,6 +1051,21 @@ performs a menu item function, the default shortcut is listed with the menu item
   <varlistentry><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Manage Sieve Scripts...</guimenuitem></menuchoice></term>
     <listitem>
       <para>If your mail server supports sieve (server side filtering), you would configure your scripts here.</para>
+    </listitem>
+  </varlistentry>
+   <varlistentry><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Automatic Archiving...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Allows you to set up automatic archiving. Please see <link linkend="auto-archive">Automatic Archiving</link> for details.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Send Later Agent...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>A dialog that allows you to modify and remove emails that have been sent using the send later feature. Please see <link linkend="send-later">Send Later</link> for details.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice></term>
+    <listitem>
+      <para>Allows you to configure archive folders. Please see <link linkend="archive-folder">Folder Archive Agent</link> for details.</para>
     </listitem>
   </varlistentry>
   <varlistentry><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Notifications...</guimenuitem></menuchoice></term>
