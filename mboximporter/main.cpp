@@ -19,6 +19,8 @@
 #include <kaboutdata.h>
 #include <klocale.h>
 #include <KApplication>
+#include <KFileDialog>
+#include "mboxmainwindow.h"
 
 #include "kdepim-version.h"
 
@@ -33,14 +35,24 @@ int main(int argc, char *argv[])
 
     KCmdLineArgs::init( argc, argv, &aboutData );
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    QString fileName;
+    KCmdLineOptions option;
+    option.add("+[url]", ki18n("URL of mbox to be imported"));
+    KCmdLineArgs::addCmdLineOptions(option);
 
     KApplication a;
-    //KMailCVT *kmailcvt = new KMailCVT();
-    //a.setTopWidget(kmailcvt);
-    //kmailcvt->show();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    if (args->count()) {
+        fileName = args->url(0).path();
+    } else {
+        fileName = KFileDialog::getOpenFileName();
+    }
+    if (fileName.isEmpty()) {
+        return 0;
+    }
+    MBoxMainWindow *w = new MBoxMainWindow();
+    w->show();
     int ret = a.exec();
-    //delete kmailcvt;
+    delete w;
     return ret;
 }
