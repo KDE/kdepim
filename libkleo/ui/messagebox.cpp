@@ -64,13 +64,13 @@ namespace {
 
 #ifndef QT_NO_FILEDIALOG
 static KGuiItem KGuiItem_save() {
-    return KGuiItem( i18n("&Save to Disk..."), "document-save-as" );
+    return KGuiItem( i18n("&Save to Disk..."), QLatin1String("document-save-as") );
 }
 #endif
 
 #ifndef QT_NO_CLIPBOARD
 static KGuiItem KGuiItem_copy() {
-    return KGuiItem( i18n("&Copy to Clipboard"), "edit-copy", i18n("Copy Audit Log to Clipboard") );
+    return KGuiItem( i18n("&Copy to Clipboard"), QLatin1String("edit-copy"), i18n("Copy Audit Log to Clipboard") );
 }
 #endif
 
@@ -104,7 +104,7 @@ AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::Windo
     showButtonSeparator( false );
     setModal( false );
     setMainWidget( m_textEdit );
-    m_textEdit->setObjectName( "m_textEdit" );
+    m_textEdit->setObjectName( QLatin1String("m_textEdit") );
     m_textEdit->setReadOnly( true );
     setAuditLog( log );
 
@@ -126,7 +126,7 @@ void AuditLogViewer::setAuditLog( const QString & log ) {
   if ( log == m_log )
     return;
   m_log = log;
-  m_textEdit->setHtml( "<qt>" + log + "</qt>" );
+  m_textEdit->setHtml( QLatin1String("<qt>") + log + QLatin1String("</qt>") );
 }
 
 #ifndef QT_NO_FILEDIALOG
@@ -227,7 +227,7 @@ void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & ca
 void MessageBox::auditLog( QWidget * parent, const QString & log, const QString & caption ) {
     AuditLogViewer * const alv = new AuditLogViewer( log, parent );
     alv->setAttribute( Qt::WA_DeleteOnClose );
-    alv->setObjectName( "alv" );
+    alv->setObjectName( QLatin1String("alv") );
     alv->setCaption( caption );
     alv->show();
 }
@@ -263,7 +263,7 @@ static QString to_error_string( const EncryptionResult & result ) {
 }
 
 static QString to_information_string( const SigningResult & sresult, const EncryptionResult & eresult ) {
-    return to_information_string( sresult ) + '\n' + to_information_string( eresult );
+    return to_information_string( sresult ) + QLatin1Char('\n') + to_information_string( eresult );
 }
 
 static QString to_error_string( const SigningResult & sresult, const EncryptionResult & eresult ) {
@@ -363,7 +363,7 @@ void MessageBox::make( QWidget * parent, QMessageBox::Icon icon, const QString &
     dialog->setButtons( showAuditLogButton( job ) ? ( KDialog::Yes | KDialog::No ) : KDialog::Yes );
     dialog->setDefaultButton( KDialog::Yes );
     dialog->setEscapeButton( KDialog::Yes );
-    dialog->setObjectName( "error" );
+    dialog->setObjectName( QLatin1String("error") );
     dialog->setModal( true );
     dialog->showButtonSeparator( true );
     dialog->setButtonGuiItem( KDialog::Yes, KStandardGuiItem::ok() );

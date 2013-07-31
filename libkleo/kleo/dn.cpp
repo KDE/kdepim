@@ -282,7 +282,7 @@ static QString dn_escape( const QString & s ) {
         case '<':
         case '>':
         case ';':
-            result += '\\';
+            result += QLatin1Char('\\');
             // fall through
         default:
             result += ch;
@@ -296,7 +296,7 @@ serialise( const QVector<Kleo::DN::Attribute> & dn, const QString & sep ) {
   QStringList result;
   for ( QVector<Kleo::DN::Attribute>::const_iterator it = dn.begin() ; it != dn.end() ; ++it )
     if ( !(*it).name().isEmpty() && !(*it).value().isEmpty() )
-      result.push_back( (*it).name().trimmed() + '=' + dn_escape( (*it).value().trimmed() ) );
+      result.push_back( (*it).name().trimmed() + QLatin1Char('=') + dn_escape( (*it).value().trimmed() ) );
   return result.join( sep );
 }
 
@@ -316,7 +316,7 @@ reorder_dn( const Kleo::DN::Attribute::List & dn ) {
 
   // process the known attrs in the desired order
   for ( QStringList::const_iterator oit = attrOrder.begin() ; oit != attrOrder.end() ; ++oit )
-    if ( *oit == "_X_" ) {
+    if ( *oit == QLatin1String("_X_") ) {
       // insert the unknown attrs
       std::copy( unknownEntries.begin(), unknownEntries.end(),
                  std::back_inserter( result ) );
@@ -383,11 +383,11 @@ QString Kleo::DN::prettyDN() const {
     return QString();
   if ( d->reorderedAttributes.empty() )
     d->reorderedAttributes = reorder_dn( d->attributes );
-  return serialise( d->reorderedAttributes, "," );
+  return serialise( d->reorderedAttributes, QLatin1String(",") );
 }
 
 QString Kleo::DN::dn() const {
-  return d ? serialise( d->attributes, "," ) : QString() ;
+  return d ? serialise( d->attributes, QLatin1String(",") ) : QString() ;
 }
 
 QString Kleo::DN::dn( const QString & sep ) const {
@@ -522,7 +522,7 @@ QString Kleo::DNAttributeMapper::name2label( const QString & s ) const {
 QStringList Kleo::DNAttributeMapper::names() const {
   QStringList result;
   for ( std::map<const char*,const char*,ltstr>::const_iterator it = d->map.begin() ; it != d->map.end() ; ++it )
-    result.push_back( it->first );
+    result.push_back( QLatin1String(it->first) );
   return result;
 }
 
