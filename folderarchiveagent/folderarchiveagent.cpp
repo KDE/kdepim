@@ -44,6 +44,11 @@ FolderArchiveAgent::~FolderArchiveAgent()
 {
 }
 
+void FolderArchiveAgent::collectionRemoved( const Akonadi::Collection &collection )
+{
+    mFolderArchiveManager->collectionRemoved(collection);
+}
+
 void FolderArchiveAgent::archiveItems( const QList<qint64> &itemIds, const QString &instanceName )
 {
     mFolderArchiveManager->setArchiveItems(itemIds, instanceName);

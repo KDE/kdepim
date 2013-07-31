@@ -34,6 +34,8 @@ public:
 
     void archiveItems( const QList<qint64> &itemIds, const QString &instanceName );
 
+    void collectionRemoved( const Akonadi::Collection &collection );
+
 public Q_SLOTS:
     void configure( WId windowId );
 

@@ -52,6 +52,18 @@ FolderArchiveManager::~FolderArchiveManager()
     delete mCurrentJob;
 }
 
+void FolderArchiveManager::collectionRemoved(const Akonadi::Collection &collection)
+{
+    Q_FOREACH (FolderArchiveAccountInfo *info, mListAccountInfo) {
+        if (info->archiveTopLevel() == collection.id()) {
+            info->setArchiveTopLevel(-1);
+            KConfigGroup group = KGlobal::config()->group(QLatin1String("FolderArchiveAccount ") + info->instanceName());
+            info->writeConfig(group);
+        }
+    }
+    load();
+}
+
 FolderArchiveAccountInfo *FolderArchiveManager::infoFromInstanceName(const QString &instanceName) const
 {
     Q_FOREACH (FolderArchiveAccountInfo *info, mListAccountInfo) {
