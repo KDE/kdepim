@@ -25,6 +25,7 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>
+#include <QtCore/QVector>
 
 #include <KDebug>
 
@@ -89,9 +90,9 @@ void MonitorItem::isAllMonitoredChanged()
 
 void MonitorItem::collectionsMonitoredChanged()
 {
-  QList<long long> list = mInterface->collectionsMonitored();
+  const QVector<long long> list = mInterface->collectionsMonitored();
   monitoredCollections.clear();
-  for ( int i = 0; i < list.length(); i++ ) {
+  for ( int i = 0; i < list.size(); i++ ) {
     if ( i > 0 ) monitoredCollections += QLatin1String( ", " );
     monitoredCollections += QString::number( list[i] );
   }
@@ -101,9 +102,9 @@ void MonitorItem::collectionsMonitoredChanged()
 
 void MonitorItem::itemsMonitoredChanged()
 {
-  QList<long long> list = mInterface->itemsMonitored();
+  const QVector<long long> list = mInterface->itemsMonitored();
   monitoredItems.clear();
-  for ( int i = 0; i < list.length(); i++ ) {
+  for ( int i = 0; i < list.size(); i++ ) {
     if ( i > 0 ) monitoredItems += QLatin1String( ", " );
     monitoredItems += QString::number( list[i] );
   }
@@ -120,9 +121,9 @@ void MonitorItem::mimeTypesMonitoredChanged()
 
 void MonitorItem::resourcesMonitoredChanged()
 {
-  QList<QByteArray> list = mInterface->resourcesMonitored();
+  const QVector<QByteArray> list = mInterface->resourcesMonitored();
   monitoredResources.clear();
-  for ( int i = 0; i < list.length(); i++ ) {
+  for ( int i = 0; i < list.size(); i++ ) {
     if ( i > 0 ) monitoredResources += QLatin1String( ", " );
     monitoredResources += list[i];
   }
@@ -132,9 +133,9 @@ void MonitorItem::resourcesMonitoredChanged()
 
 void MonitorItem::ignoredSessionsChanged()
 {
-  QList<QByteArray> list = mInterface->sessionsIgnored();
+  const QVector<QByteArray> list = mInterface->sessionsIgnored();
   ignoredSessions.clear();
-  for ( int i = 0; i < list.length(); i++ ) {
+  for ( int i = 0; i < list.size(); i++ ) {
     if ( i > 0 ) ignoredSessions += QLatin1String( ", " );
     ignoredSessions += list[i];
   }

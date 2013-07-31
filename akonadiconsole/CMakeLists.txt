@@ -63,7 +63,7 @@ set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akona
   PROPERTIES INCLUDE "akonadi/private/notificationmessage_p.h")
 
 set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml
-  PROPERTIES INCLUDE "metatypes.h")
+  PROPERTIES INCLUDE "akonadi/private/notificationmessagev2_p.h")
 
 qt4_add_dbus_interface(akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml
