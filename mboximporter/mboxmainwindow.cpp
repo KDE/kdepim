@@ -16,17 +16,39 @@
 */
 
 #include "mboxmainwindow.h"
-#include "importmailswidget.h"
+#include "mboximportwidget.h"
+#include "mboximportkernel.h"
+
+#include <mailcommon/kernel/mailkernel.h>
+
+#include <KLocale>
 
 MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
     : KDialog(parent)
 {
-    mImportMailsWidget = new MailImporter::ImportMailsWidget;
+    setCaption( i18n( "Import mbox file" ) );
+    setButtons( Cancel );
+
+    setDefaultButton( Cancel );
+
+    MBoxImporterKernel *kernel = new MBoxImporterKernel( this );
+    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+
+    mImportWidget = new MBoxImportWidget;
+    connect(mImportWidget, SIGNAL(importMailsClicked()), this, SLOT(slotImportMBox()));
+    setMainWidget( mImportWidget );
+    resize( 800, 600 );
 }
 
 MBoxMainWindow::~MBoxMainWindow()
 {
 
+}
+
+void MBoxMainWindow::slotImportMBox()
+{
+    //TODO
 }
 
 #include "mboxmainwindow.moc"
