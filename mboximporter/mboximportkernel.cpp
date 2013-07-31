@@ -19,7 +19,6 @@
 
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
-#include <messagecomposer/sender/akonadisender.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>
 #include <akonadi/session.h>
 #include <akonadi/entitytreemodel.h>
@@ -29,7 +28,6 @@
 MBoxImporterKernel::MBoxImporterKernel( QObject *parent )
     : QObject( parent )
 {
-    mMessageSender = new MessageComposer::AkonadiSender( this );
     mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
     Akonadi::Session *session = new Akonadi::Session( "ImportWizard Kernel ETM", this );
     mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
@@ -53,7 +51,7 @@ KPIMIdentities::IdentityManager *MBoxImporterKernel::identityManager()
 
 MessageComposer::MessageSender *MBoxImporterKernel::msgSender()
 {
-    return mMessageSender;
+    return 0;
 }
 
 Akonadi::EntityMimeTypeFilterModel *MBoxImporterKernel::collectionModel() const

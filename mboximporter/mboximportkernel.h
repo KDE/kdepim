@@ -53,7 +53,6 @@ public:
     
 private:
     KPIMIdentities::IdentityManager *mIdentityManager;
-    MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
