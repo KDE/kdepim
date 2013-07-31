@@ -34,6 +34,7 @@ class QItemSelectionModel;
 class QStandardItemModel;
 
 class KJob;
+class KToggleAction;
 class KXmlGuiWindow;
 
 class AkonadiBrowserModel;
@@ -41,6 +42,7 @@ class AkonadiBrowserModel;
 template <typename T> class KViewStateMaintainer;
 
 namespace Akonadi {
+class ChangeRecorder;
 class EntityTreeView;
 class Job;
 class StandardActionManager;
@@ -73,10 +75,12 @@ class BrowserWidget: public QWidget
     void setItem( const Akonadi::Item &item );
     void dumpToXmlResult( KJob *job );
     void clear();
+    void updateItemFetchScope();
 
   private:
     Akonadi::Collection currentCollection() const;
 
+    Akonadi::ChangeRecorder *mBrowserMonitor;
     AkonadiBrowserModel *mBrowserModel;
     Akonadi::EntityTreeView *mCollectionView;
     KPIM::StatisticsProxyModel *statisticsProxyModel;
@@ -88,6 +92,7 @@ class BrowserWidget: public QWidget
     Akonadi::StandardActionManager *mStdActionManager;
     Akonadi::Monitor *mMonitor;
     KViewStateMaintainer<Akonadi::ETMViewStateSaver> *m_stateMaintainer;
+    KToggleAction *mCacheOnlyAction;
 };
 
 #endif
