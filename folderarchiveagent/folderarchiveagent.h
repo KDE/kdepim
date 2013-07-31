@@ -20,7 +20,7 @@
 
 #include <akonadi/agentbase.h>
 class FolderArchiveManager;
-class FolderArchiveAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
+class FolderArchiveAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
     Q_OBJECT
 public:
