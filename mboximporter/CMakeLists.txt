@@ -5,6 +5,12 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 set(mboximporter_SRCS
   main.cpp
   mboxmainwindow.cpp
+  mboximporterinfogui.cpp
+  mboximportwidget.cpp
+)
+
+kde4_add_ui_files(mboximporter_SRCS 
+                  ui/mboximportwidget.ui
 )
 
 include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter ${CMAKE_SOURCE_DIR}/mailcommon ${CMAKE_SOURCE_DIR}/messagecomposer)
