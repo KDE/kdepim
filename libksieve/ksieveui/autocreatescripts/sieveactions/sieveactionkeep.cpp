@@ -25,6 +25,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDomNode>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveActionKeep::SieveActionKeep(QObject *parent)
