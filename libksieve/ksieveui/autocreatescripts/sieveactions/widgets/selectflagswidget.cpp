@@ -141,7 +141,7 @@ void SelectFlagsWidget::slotSelectFlags()
 
 void SelectFlagsWidget::setFlags(const QStringList &flags)
 {
-    mEdit->setText(AutoCreateScriptUtil::createList(flags));
+    mEdit->setText(AutoCreateScriptUtil::createList(flags, true, true));
 }
 
 QString SelectFlagsWidget::code() const

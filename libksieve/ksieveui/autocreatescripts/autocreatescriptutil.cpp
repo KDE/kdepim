@@ -49,12 +49,15 @@ QString AutoCreateScriptUtil::quoteStr(QString str)
     return str.replace(QLatin1String("\""), QLatin1String("\\\""));
 }
 
-QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiColon)
+QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiColon, bool protectSlash)
 {
     QString result;
     result = QLatin1String("[");
     bool wasFirst = true;
-    Q_FOREACH (const QString &str, lst) {
+    Q_FOREACH (QString str, lst) {
+        if (protectSlash) {
+            str = str.replace(QLatin1Char('\\'), QLatin1String("\\\\"));
+        }
         result += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(quoteStr(str));
         wasFirst = false;
     }
