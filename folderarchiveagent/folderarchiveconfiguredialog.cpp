@@ -88,8 +88,8 @@ void FolderArchiveConfigureDialog::initializeTab()
                  !capabilities.contains( QLatin1String("Virtual") ) &&
                  !capabilities.contains( QLatin1String("MailTransport") ) ) {
                 const QString identifier = agent.identifier();
-                //Store just pop3/imap account. Store other config when we copy data.
-                if (identifier.contains(QLatin1String("pop3")) || identifier.contains(QLatin1String("maildir"))) {
+                //Store just imap/maildir account. Store other config when we copy data.
+                if (identifier.contains(QLatin1String("imap")) || identifier.contains(QLatin1String("maildir"))) {
                     FolderArchiveSettingPage *page = new FolderArchiveSettingPage(identifier);
                     page->loadSettings();
                     mTabWidget->addTab(page, agent.name());
