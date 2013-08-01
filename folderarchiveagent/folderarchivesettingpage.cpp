@@ -62,8 +62,9 @@ void FolderArchiveSettingPage::slotEnableChanged(bool enabled)
 void FolderArchiveSettingPage::loadSettings()
 {
     KSharedConfig::Ptr config = KGlobal::config();
-    if (config->hasGroup(QLatin1String("FolderArchiveAccount ") + mInstanceName)) {
-        KConfigGroup grp = config->group(QLatin1String("FolderArchiveAccount ") + mInstanceName);
+    const QString groupName = QLatin1String("FolderArchiveAccount ") + mInstanceName;
+    if (config->hasGroup(groupName)) {
+        KConfigGroup grp = config->group(groupName);
         mInfo = new FolderArchiveAccountInfo(grp);
         mEnabled->setChecked(mInfo->enabled());
         mArchiveFolder->setCollection(Akonadi::Collection(mInfo->archiveTopLevel()));
