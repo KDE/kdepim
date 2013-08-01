@@ -4,5 +4,6 @@
 #include <QList>
 
 Q_DECLARE_METATYPE(QList<qint64>)
+Q_DECLARE_METATYPE(QVector<qlonglong>)
 
 #endif
