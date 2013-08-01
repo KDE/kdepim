@@ -74,9 +74,10 @@ FolderArchiveAccountInfo *FolderArchiveManager::infoFromInstanceName(const QStri
     return 0;
 }
 
-void FolderArchiveManager::setArchiveItems(const QVector<qint64> &itemIds, const QString &instanceName)
+void FolderArchiveManager::setArchiveItems(const QVector<qlonglong> &itemIds, const QString &instanceName)
 {
     FolderArchiveAccountInfo *info = infoFromInstanceName(instanceName);
+    qDebug()<<" FolderArchiveManager::setArchiveItems : info:"<<info;
     if (info) {
         FolderArchiveAgentJob *job = new FolderArchiveAgentJob(this, info, itemIds);
         if (mCurrentJob) {

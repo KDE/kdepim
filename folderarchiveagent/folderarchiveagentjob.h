@@ -27,7 +27,7 @@ class FolderArchiveAgentJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const QVector<qint64> &lstItem, QObject *parent=0);
+    explicit FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const QVector<qlonglong> &lstItem, QObject *parent=0);
     ~FolderArchiveAgentJob();
 
     void start();
@@ -38,7 +38,7 @@ private Q_SLOTS:
 
 private:
     void sendError(const QString &error);
-    QVector<qint64> mLstItem;
+    QVector<qlonglong> mLstItem;
     FolderArchiveManager *mManager;
     FolderArchiveAccountInfo *mInfo;
 };

@@ -25,7 +25,7 @@
 
 #include <KLocale>
 
-FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const QVector<qint64> &lstItem, QObject *parent)
+FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const QVector<qlonglong> &lstItem, QObject *parent)
     : QObject(parent),
       mLstItem(lstItem),
       mManager(manager),
@@ -60,7 +60,7 @@ void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
         return;
     }
     Akonadi::Item::List lst;
-    Q_FOREACH (qint64 i, mLstItem) {
+    Q_FOREACH (qlonglong i, mLstItem) {
         lst.append(Akonadi::Item(i));
     }
 
