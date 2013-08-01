@@ -16,4 +16,3 @@ TODO 4.12:
 - Allow to write a report.
 - Allow to save other kontact settings ?
 - Add global default settings (as overwrite all settings etc.)
-- Fix import akonadi_folderarchive_ config

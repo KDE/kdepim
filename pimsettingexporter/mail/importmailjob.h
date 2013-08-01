@@ -57,7 +57,6 @@ private:
     void mergeLdapConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     void mergeKmailSnippetConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     void mergeArchiveMailAgentConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
-    void mergeFolderArchiveConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     void copyArchiveMailAgentConfigGroup(KSharedConfig::Ptr archiveConfigOrigin, KSharedConfig::Ptr archiveConfigDestination);
     void mergeSieveTemplate(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     QString uniqueIdentityName(const QString &name);

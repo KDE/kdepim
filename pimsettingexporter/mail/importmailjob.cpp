@@ -630,11 +630,8 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* folderarchiveconfiguration = static_cast<const KArchiveFile*>(folderarchiveconfigurationentry);
         const QString folderarchiveconfigurationrc = KStandardDirs::locateLocal( "config",  folderarchiveconfigurationrcStr);
         if (QFile(folderarchiveconfigurationrc).exists()) {
-            const int result = mergeConfigMessageBox(folderarchiveconfigurationrcStr);
-            if ( result == KMessageBox::Yes) {
+            if (overwriteConfigMessageBox(folderarchiveconfigurationrcStr)) {
                 importFolderArchiveConfig(folderarchiveconfiguration, folderarchiveconfigurationrc, folderarchiveconfigurationrcStr, Utils::configsPath());
-            } else if (result == KMessageBox::No) {
-                mergeFolderArchiveConfig(folderarchiveconfiguration, folderarchiveconfigurationrcStr, Utils::configsPath());
             }
         } else {
             importFolderArchiveConfig(folderarchiveconfiguration, folderarchiveconfigurationrc, folderarchiveconfigurationrcStr, Utils::configsPath());
@@ -947,11 +944,17 @@ void ImportMailJob::importFolderArchiveConfig(const KArchiveFile* archiveconfigu
     copyToFile(archiveconfiguration,archiveconfigurationrc,filename,prefix);
     KSharedConfig::Ptr archiveConfig = KSharedConfig::openConfig(archiveconfigurationrc);
 
-    //TODO
-    /*
-    copyArchiveMailAgentConfigGroup(archiveConfig, archiveConfig);
+    const QStringList archiveList = archiveConfig->groupList().filter( QRegExp( QLatin1String("FolderArchiveAccount ") ) );
+
+    Q_FOREACH(const QString& str, archiveList) {
+        KConfigGroup oldGroup = archiveConfig->group(str);
+        const Akonadi::Collection::Id id = convertPathToId(oldGroup.readEntry(QLatin1String("topLevelCollectionId")));
+        if (id!=-1) {
+            oldGroup.writeEntry(QLatin1String("topLevelCollectionId"), id);
+        }
+    }
+
     archiveConfig->sync();
-    */
 }
 
 
@@ -1208,26 +1211,6 @@ void ImportMailJob::mergeArchiveMailAgentConfig(const KArchiveFile *archivefile,
 
     copyArchiveMailAgentConfigGroup(importingArchiveMailAgentConfig, existingConfig);
     existingConfig->sync();
-}
-
-void ImportMailJob::mergeFolderArchiveConfig(const KArchiveFile *archivefile, const QString &filename, const QString &prefix)
-{
-    QDir dir(mTempDirName);
-    dir.mkdir(prefix);
-
-    const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
-    archivefile->copyTo(copyToDirName);
-
-
-    KSharedConfig::Ptr existingConfig = KSharedConfig::openConfig(filename);
-
-    KSharedConfig::Ptr importingArchiveMailAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + filename);
-
-    //TODO
-    /*
-    copyArchiveMailAgentConfigGroup(importingArchiveMailAgentConfig, existingConfig);
-    existingConfig->sync();
-    */
 }
 
 
