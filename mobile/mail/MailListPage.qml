@@ -175,7 +175,7 @@ PlasmaComponents.Page {
         width: height
 
         source: "dummy-avatar.png"
-        fillMode: Image.PerserveAspectFit
+        fillMode: Image.PreserveAspectFit
         smooth: true
       }
 
