@@ -235,7 +235,7 @@ users, depending on your system configuration.</para>
 If your message is not finished yet, select <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Draft</guimenuitem></menuchoice> to save for later editing.
   If you would like to print your message, select <menuchoice><guimenu>Message</guimenu><guimenuitem>Print Preview</guimenuitem></menuchoice> to preview the message, and
     <menuchoice><guimenu>Message</guimenu><guimenuitem>Print</guimenuitem></menuchoice> to print it.</para>
-  <para id="send-later"><guimenu>Message</guimenu><guimenuitem>Send Later</guimenuitem> allows you to
+  <para id="send-later"><menuchoice><guimenu>Message</guimenu><guimenuitem>Send Later</guimenuitem></menuchoice> allows you to
     schedule your emails to send at a specific time. This dialog also allows you to repeat sending the message.</para>
 
 </sect2>
@@ -1753,7 +1753,7 @@ you need to debug your filtering process.
       <varlistentry id="archive-folder"><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice></term>
         <listitem>
           <para>This dialog allows you to enable/disable the folder archive agent. It is enabled by default, to disable uncheck the <guilabel>Enable</guilabel>
-            checkbox. You can change the location of you Archive folder by clicking the folder icon next to
+            checkbox. You can change the location of your Archive folder by clicking the folder icon next to
             <guilabel>Archive folder:</guilabel> and selecting the folder you wish to use.</para>
         </listitem>
       </varlistentry>
