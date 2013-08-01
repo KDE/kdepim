@@ -79,6 +79,8 @@ namespace Kleo {
         virtual bool isFinalized() const = 0;
         virtual void finalize() = 0;
         virtual void cancel() = 0;
+        virtual bool binaryOpt() const = 0;
+        virtual void setBinaryOpt( bool value ) = 0;
 
         static boost::shared_ptr<Output> createFromFile( const QString & fileName, const boost::shared_ptr<OverwritePolicy> & );
         static boost::shared_ptr<Output> createFromFile( const QString & fileName, bool forceOverwrite );

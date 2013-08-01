@@ -486,6 +486,15 @@ private:
         assert( assuan_get_pointer( ctx_ ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
+        char *binOpt = strstr ( line_, "--binary" );
+
+        if ( binOpt && !in ) {
+            /* Note there is also --armor and --base64 allowed but we don't need
+             * to parse those because they are default. 
+             * We remove it here so that it is not parsed as an Option.*/
+            memset (binOpt, ' ', 8 );
+        }
+
         try {
 
             /*const*/ std::map<std::string,std::string> options = upcase_option( "FD", upcase_option( "FILE", parse_commandline( line_ ) ) );
@@ -548,6 +557,12 @@ private:
                 throw gpg_error( GPG_ERR_UNKNOWN_OPTION );
 
             (conn.*which).push_back( io );
+
+            if ( binOpt && !in ) {
+                Output* out = reinterpret_cast <Output*>( io.get() );
+                out->setBinaryOpt( true );
+                kDebug() << "Configured output for binary data";
+            }
 
             kDebug() << "AssuanServerConnection: added" << io->label();
 
