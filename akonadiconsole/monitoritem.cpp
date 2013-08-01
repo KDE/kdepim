@@ -52,17 +52,17 @@ MonitorItem::MonitorItem( const QString &identifier_, MonitorsModel* model):
     return;
   }
 
-  connect( mInterface, SIGNAL(collectionsMonitoredChanged()),
-           this, SLOT(collectionsMonitoredChanged()) );
-  connect( mInterface, SIGNAL(itemsMonitoredChanged()),
-           this, SLOT(itemsMonitoredChanged()) );
-  connect( mInterface, SIGNAL(resourcesMonitoredChanged()),
-           this, SLOT(resourcesMonitoredChanged()) );
-  connect( mInterface, SIGNAL(mimeTypesMonitoredChanged()),
-           this, SLOT(mimeTypesMonitoredChanged()) );
+  connect( mInterface, SIGNAL(monitoredCollectionsChanged()),
+           this, SLOT(monitoredCollectionsChanged()) );
+  connect( mInterface, SIGNAL(monitoredItemsChanged()),
+           this, SLOT(monitoredItemsChanged()) );
+  connect( mInterface, SIGNAL(monitoredResourcesChanged()),
+           this, SLOT(monitoredResourcesChanged()) );
+  connect( mInterface, SIGNAL(monitoredMimeTypesChanged()),
+           this, SLOT(monitoredMimeTypesChanged()) );
   connect( mInterface, SIGNAL(isAllMonitoredChanged()),
            this, SLOT(isAllMonitoredChanged()) );
-  connect( mInterface, SIGNAL(sessionsIgnoredChanged()),
+  connect( mInterface, SIGNAL(ignoredSessionsChanged()),
            this, SLOT(ignoredSessionsChanged()) );
 
   QTimer::singleShot( 0, this, SLOT(init()));
@@ -75,10 +75,10 @@ MonitorItem::~MonitorItem()
 void MonitorItem::init()
 {
   isAllMonitoredChanged();
-  collectionsMonitoredChanged();
-  itemsMonitoredChanged();
-  mimeTypesMonitoredChanged();
-  resourcesMonitoredChanged();
+  monitoredCollectionsChanged();
+  monitoredItemsChanged();
+  monitoredMimeTypesChanged();
+  monitoredResourcesChanged();
   ignoredSessionsChanged();
 }
 
@@ -88,9 +88,9 @@ void MonitorItem::isAllMonitoredChanged()
   Q_EMIT changed( MonitorsModel::IsAllMonitoredColumn );
 }
 
-void MonitorItem::collectionsMonitoredChanged()
+void MonitorItem::monitoredCollectionsChanged()
 {
-  const QVector<long long> list = mInterface->collectionsMonitored();
+  const QVector<long long> list = mInterface->monitoredCollections();
   monitoredCollections.clear();
   for ( int i = 0; i < list.size(); i++ ) {
     if ( i > 0 ) monitoredCollections += QLatin1String( ", " );
@@ -100,9 +100,9 @@ void MonitorItem::collectionsMonitoredChanged()
   Q_EMIT changed( MonitorsModel::MonitoredCollectionsColumn );
 }
 
-void MonitorItem::itemsMonitoredChanged()
+void MonitorItem::monitoredItemsChanged()
 {
-  const QVector<long long> list = mInterface->itemsMonitored();
+  const QVector<long long> list = mInterface->monitoredItems();
   monitoredItems.clear();
   for ( int i = 0; i < list.size(); i++ ) {
     if ( i > 0 ) monitoredItems += QLatin1String( ", " );
@@ -112,16 +112,16 @@ void MonitorItem::itemsMonitoredChanged()
   Q_EMIT changed( MonitorsModel::MonitoredItemsColumn );
 }
 
-void MonitorItem::mimeTypesMonitoredChanged()
+void MonitorItem::monitoredMimeTypesChanged()
 {
-  const QStringList mimeTypes = mInterface->mimeTypesMonitored();
+  const QStringList mimeTypes = mInterface->monitoredMimeTypes();
   monitoredMimeTypes = mimeTypes.join( QLatin1String( ", " ) );
   Q_EMIT changed( MonitorsModel::MonitorsModel::MonitoredMimeTypesColumn );
 }
 
-void MonitorItem::resourcesMonitoredChanged()
+void MonitorItem::monitoredResourcesChanged()
 {
-  const QVector<QByteArray> list = mInterface->resourcesMonitored();
+  const QVector<QByteArray> list = mInterface->monitoredResources();
   monitoredResources.clear();
   for ( int i = 0; i < list.size(); i++ ) {
     if ( i > 0 ) monitoredResources += QLatin1String( ", " );
@@ -133,7 +133,7 @@ void MonitorItem::resourcesMonitoredChanged()
 
 void MonitorItem::ignoredSessionsChanged()
 {
-  const QVector<QByteArray> list = mInterface->sessionsIgnored();
+  const QVector<QByteArray> list = mInterface->ignoredSessions();
   ignoredSessions.clear();
   for ( int i = 0; i < list.size(); i++ ) {
     if ( i > 0 ) ignoredSessions += QLatin1String( ", " );

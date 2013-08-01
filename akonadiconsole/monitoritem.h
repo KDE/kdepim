@@ -48,10 +48,10 @@ class MonitorItem : public QObject
   private Q_SLOTS:
     void init();
 
-    void collectionsMonitoredChanged();
-    void itemsMonitoredChanged();
-    void resourcesMonitoredChanged();
-    void mimeTypesMonitoredChanged();
+    void monitoredCollectionsChanged();
+    void monitoredItemsChanged();
+    void monitoredResourcesChanged();
+    void monitoredMimeTypesChanged();
     void isAllMonitoredChanged();
     void ignoredSessionsChanged();
 
