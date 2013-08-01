@@ -22,12 +22,9 @@ kde4_add_executable(mboximporter ${mboximporter_SRCS})
 target_link_libraries(mboximporter
   ${KDE4_KIO_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
-  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   mailimporter
   mailcommon
-  kdepim
-  messagecomposer
 )
 
 install(TARGETS mboximporter  ${INSTALL_TARGETS_DEFAULT_ARGS} )
