@@ -208,9 +208,10 @@ void SignEMailTask::cancel() {
 std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob( GpgME::Protocol proto ) {
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
     kleo_assert( backend );
-    std::auto_ptr<Kleo::SignJob> signJob( backend->signJob( /*armor=*/proto == OpenPGP || q->asciiArmor(), /*textmode=*/false ) );
+    bool shouldArmor = ( proto == OpenPGP || q->asciiArmor() ) && !output->binaryOpt();
+    std::auto_ptr<Kleo::SignJob> signJob( backend->signJob( /*armor=*/ shouldArmor, /*textmode=*/false ) );
     kleo_assert( signJob.get() );
-    if ( proto == CMS && !q->asciiArmor() )
+    if ( proto == CMS && !q->asciiArmor() && !output->binaryOpt() )
         signJob->setOutputIsBase64Encoded( true );
     connect( signJob.get(), SIGNAL(progress(QString,int,int)),
              q, SLOT(setProgress(QString,int,int)) );

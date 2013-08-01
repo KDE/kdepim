@@ -165,7 +165,8 @@ namespace {
               m_isFinalized( false ),
               m_isFinalizing( false ),
               m_cancelPending( false ),
-              m_canceled( false )
+              m_canceled( false ),
+              m_binaryOpt( false )
         {
 
         }
@@ -173,6 +174,8 @@ namespace {
         /* reimp */ QString label() const { return m_customLabel.isEmpty() ? m_defaultLabel : m_customLabel; }
         /* reimp */ void setLabel( const QString & label ) { m_customLabel = label; }
         void setDefaultLabel( const QString & l ) { m_defaultLabel = l; }
+        /* reimp */ void setBinaryOpt( bool value ) { m_binaryOpt = value; }
+        /* reimp */ bool binaryOpt() const { return m_binaryOpt; }
 
         /* reimp */ QString errorString() const {
             if ( m_errorString.dirty() )
@@ -222,6 +225,7 @@ namespace {
         bool m_isFinalizing  : 1;
         bool m_cancelPending : 1;
         bool m_canceled      : 1;
+        bool m_binaryOpt     : 1;
     };
 
 
