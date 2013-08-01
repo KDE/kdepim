@@ -235,8 +235,10 @@ users, depending on your system configuration.</para>
 If your message is not finished yet, select <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Draft</guimenuitem></menuchoice> to save for later editing.
   If you would like to print your message, select <menuchoice><guimenu>Message</guimenu><guimenuitem>Print Preview</guimenuitem></menuchoice> to preview the message, and
     <menuchoice><guimenu>Message</guimenu><guimenuitem>Print</guimenuitem></menuchoice> to print it.</para>
-  <para id="send-later"><menuchoice><guimenu>Message</guimenu><guimenuitem>Send Later</guimenuitem></menuchoice> allows you to
-    schedule your emails to send at a specific time. This dialog also allows you to repeat sending the message.</para>
+  <para id="send-later"><menuchoice><guimenu>Message</guimenu><guimenuitem>Send Later</guimenuitem></menuchoice>
+    allows you to schedule your emails to send at a specific date and time. You can configure it to repeat sending the message by checking <guilabel>Repeat every:</guilabel>
+    checkbox and selecting the desired intervals. This is useful if you need to send out reminders to someone on a consistant basis, &eg; employees. You can put the
+    message in your queued messages by selecting the <guibutton>Put in outbox</guibutton> button or select the <guibutton>Send Later</guibutton> button to schedule the message immediately.</para>
 
 </sect2>
 
