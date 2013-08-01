@@ -94,7 +94,8 @@ void FolderArchiveAccountInfo::readConfig(const KConfigGroup &config)
 void FolderArchiveAccountInfo::writeConfig(KConfigGroup &config )
 {
     config.writeEntry(QLatin1String("instanceName"), mInstanceName);
-    config.writeEntry(QLatin1String("topLevelCollectionId"), mArchiveTopLevelCollectionId);
+    if (mArchiveTopLevelCollectionId>-1)
+        config.writeEntry(QLatin1String("topLevelCollectionId"), mArchiveTopLevelCollectionId);
     config.writeEntry(QLatin1String("folderArchiveType"), (int)mArchiveType);
     config.writeEntry(QLatin1String("enabled"), mEnabled);
 }
