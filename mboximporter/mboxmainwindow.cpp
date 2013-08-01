@@ -32,9 +32,9 @@ MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
       mFileName(filename)
 {
     setCaption( i18n( "Import mbox file" ) );
-    setButtons( Cancel );
+    setButtons( Close );
 
-    setDefaultButton( Cancel );
+    setDefaultButton( Close );
 
     MBoxImporterKernel *kernel = new MBoxImporterKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
@@ -48,7 +48,6 @@ MBoxMainWindow::MBoxMainWindow(const QString &filename, QWidget *parent)
 
 MBoxMainWindow::~MBoxMainWindow()
 {
-
 }
 
 void MBoxMainWindow::slotImportMBox()
