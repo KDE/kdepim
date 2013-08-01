@@ -34,6 +34,7 @@ public:
 
 private:
     bool mHasFlagSupport;
+    bool mHasImapFlag4Support;
 };
 }
 #endif // SIEVEACTIONKEEP_H

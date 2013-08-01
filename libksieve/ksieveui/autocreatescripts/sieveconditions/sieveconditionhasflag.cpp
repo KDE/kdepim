@@ -18,6 +18,7 @@
 #include "sieveconditionhasflag.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include <KLocale>
 #include <KLineEdit>
 
@@ -87,7 +88,7 @@ QString SieveConditionHasFlag::code(QWidget *w) const
 
 QStringList SieveConditionHasFlag::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("imap4flags");
+    return QStringList() << QLatin1String("imapflags");
 }
 
 bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
@@ -97,7 +98,10 @@ bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
 
 QString SieveConditionHasFlag::serverNeedsCapability() const
 {
-    return QLatin1String("imap4flags");
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+        return QLatin1String("imap4flags");
+    else
+        return QLatin1String("imapflags");
 }
 
 QString SieveConditionHasFlag::help() const

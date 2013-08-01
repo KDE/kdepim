@@ -88,7 +88,7 @@ QString FilterActionUnsetStatus::sieveCode() const
 
 QStringList FilterActionUnsetStatus::sieveRequires() const
 {
-    return QStringList() << QLatin1String("imapflags");
+    return QStringList() << QLatin1String("imap4flags");
 }
 
 bool FilterActionUnsetStatus::canConvertToSieve() const
