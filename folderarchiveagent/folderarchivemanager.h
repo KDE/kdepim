@@ -36,7 +36,7 @@ public:
     ~FolderArchiveManager();
 
     void load();
-    void setArchiveItems(const QVector<qlonglong> &itemIds, const QString &instanceName);
+    void setArchiveItems(const QList<qlonglong> &itemIds, const QString &instanceName);
 
     void moveFailed(const QString &msg);
     void moveDone();

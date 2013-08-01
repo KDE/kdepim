@@ -74,7 +74,7 @@ FolderArchiveAccountInfo *FolderArchiveManager::infoFromInstanceName(const QStri
     return 0;
 }
 
-void FolderArchiveManager::setArchiveItems(const QVector<qlonglong> &itemIds, const QString &instanceName)
+void FolderArchiveManager::setArchiveItems(const QList<qlonglong> &itemIds, const QString &instanceName)
 {
     FolderArchiveAccountInfo *info = infoFromInstanceName(instanceName);
     qDebug()<<" FolderArchiveManager::setArchiveItems : info:"<<info;

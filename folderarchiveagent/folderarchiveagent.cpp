@@ -18,6 +18,7 @@
 
 #include "folderarchiveagent.h"
 #include "folderarchiveconfiguredialog.h"
+#include "mailcommon/dbusoperators.h"
 
 #include "folderarchiveagentadaptor.h"
 #include "folderarchiveagentsettings.h"
@@ -51,7 +52,7 @@ void FolderArchiveAgent::collectionRemoved( const Akonadi::Collection &collectio
     mFolderArchiveManager->collectionRemoved(collection);
 }
 
-void FolderArchiveAgent::archiveItems(const QVector<qlonglong> &itemIds, const QString &instanceName )
+void FolderArchiveAgent::archiveItems(const QList<qlonglong> &itemIds, const QString &instanceName )
 {
     qDebug()<<" void FolderArchiveAgent::archiveItems(const QVector<qint64> &itemIds, const QString &instanceName )"<<instanceName<<" itemIds"<<itemIds;
     mFolderArchiveManager->setArchiveItems(itemIds, instanceName);

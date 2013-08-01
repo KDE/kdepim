@@ -25,7 +25,7 @@
 
 #include <KLocale>
 
-FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const QVector<qlonglong> &lstItem, QObject *parent)
+FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const QList<qlonglong> &lstItem, QObject *parent)
     : QObject(parent),
       mLstItem(lstItem),
       mManager(manager),
