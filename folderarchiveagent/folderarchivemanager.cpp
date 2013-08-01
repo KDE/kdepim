@@ -67,7 +67,6 @@ void FolderArchiveManager::collectionRemoved(const Akonadi::Collection &collecti
 FolderArchiveAccountInfo *FolderArchiveManager::infoFromInstanceName(const QString &instanceName) const
 {
     Q_FOREACH (FolderArchiveAccountInfo *info, mListAccountInfo) {
-        qDebug()<<" info->instanceName()"<<info->instanceName();
         if (info->instanceName() == instanceName) {
             return info;
         }
@@ -78,7 +77,6 @@ FolderArchiveAccountInfo *FolderArchiveManager::infoFromInstanceName(const QStri
 void FolderArchiveManager::setArchiveItems(const QList<qlonglong> &itemIds, const QString &instanceName)
 {
     FolderArchiveAccountInfo *info = infoFromInstanceName(instanceName);
-    qDebug()<<" FolderArchiveManager::setArchiveItems : info:"<<info;
     if (info) {
         FolderArchiveAgentJob *job = new FolderArchiveAgentJob(this, info, itemIds);
         if (mCurrentJob) {
@@ -115,7 +113,6 @@ void FolderArchiveManager::load()
     mListAccountInfo.clear();
 
     const QStringList accountList = KGlobal::config()->groupList().filter( QRegExp( QLatin1String("FolderArchiveAccount ") ) );
-    qDebug()<<" accountList "<<accountList;
     Q_FOREACH (const QString &account, accountList) {
         KConfigGroup group = KGlobal::config()->group(account);
         FolderArchiveAccountInfo *info = new FolderArchiveAccountInfo(group);

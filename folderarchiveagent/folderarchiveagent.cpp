@@ -40,7 +40,6 @@ FolderArchiveAgent::FolderArchiveAgent(const QString &id)
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FolderArchiveAgent" ) );
 
     mFolderArchiveManager->load();
-    qDebug()<<" FolderArchiveAgent::FolderArchiveAgent(const QString &id)"<<id;
 }
 
 FolderArchiveAgent::~FolderArchiveAgent()
@@ -54,7 +53,6 @@ void FolderArchiveAgent::collectionRemoved( const Akonadi::Collection &collectio
 
 void FolderArchiveAgent::archiveItems(const QList<qlonglong> &itemIds, const QString &instanceName )
 {
-    qDebug()<<" void FolderArchiveAgent::archiveItems(const QVector<qint64> &itemIds, const QString &instanceName )"<<instanceName<<" itemIds"<<itemIds;
     mFolderArchiveManager->setArchiveItems(itemIds, instanceName);
 }
 
