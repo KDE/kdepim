@@ -68,6 +68,11 @@ QString FolderArchiveAccountInfo::instanceName() const
     return mInstanceName;
 }
 
+void FolderArchiveAccountInfo::setInstanceName(const QString &instance)
+{
+    mInstanceName = instance;
+}
+
 void FolderArchiveAccountInfo::setEnabled(bool enabled)
 {
     mEnabled = enabled;
