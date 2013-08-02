@@ -100,6 +100,18 @@ bool SieveGlobalVariableActionWidget::isInitialized() const
     return !mVariableName->text().isEmpty();
 }
 
+QString SieveGlobalVariableActionWidget::variableName() const
+{
+    return mVariableName->text();
+}
+
+void SieveGlobalVariableActionWidget::setVariableValue(const QString &name)
+{
+    mSetValueTo->setChecked(true);
+    mVariableValue->setText(name);
+    mVariableValue->setEnabled(true);
+}
+
 void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element)
 {
     QDomNode node = element.firstChild();
@@ -173,6 +185,11 @@ void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &re
 void SieveGlobalVariableWidget::loadScript(const QDomElement &element)
 {
     mIncludeLister->loadScript(element);
+}
+
+void SieveGlobalVariableWidget::loadSetVariable(const QDomElement &element)
+{
+    mIncludeLister->loadSetVariable(element);
 }
 
 SieveGlobalVariableLister::SieveGlobalVariableLister(QWidget *parent)
@@ -264,6 +281,40 @@ void SieveGlobalVariableLister::loadScript(const QDomElement &element)
         w = static_cast<SieveGlobalVariableActionWidget *>(widgets().last());
     }
     w->loadScript(element);
+}
+
+void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element)
+{
+    QString variableName;
+    QString variableValue;
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                if (index == 0) {
+                    variableName = e.text();
+                } else if (index == 1) {
+                    variableValue = e.text();
+                } else {
+                    qDebug()<<" SieveGlobalVariableLister::loadSetVariable too many argument:"<<index;
+                }
+                ++index;
+            } else {
+                qDebug()<<" SieveGlobalVariableLister::loadSetVariable unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+
+    Q_FOREACH (QWidget *widget, widgets()) {
+        SieveGlobalVariableActionWidget *w = static_cast<SieveGlobalVariableActionWidget *>(widget);
+        if (w->variableName() == variableName) {
+            w->setVariableValue(variableValue);
+        }
+    }
 }
 
 }
