@@ -28,6 +28,7 @@ class Collection;
 class FolderArchiveAccountInfo;
 class FolderArchiveKernel;
 class FolderArchiveAgentJob;
+class KJob;
 class FolderArchiveManager : public QObject
 {
     Q_OBJECT
@@ -37,6 +38,7 @@ public:
 
     void load();
     void setArchiveItems(const QList<qlonglong> &itemIds, const QString &instanceName);
+    void setArchiveItem(qlonglong itemId);
 
     void moveFailed(const QString &msg);
     void moveDone();
@@ -45,6 +47,8 @@ public:
 
 private Q_SLOTS:
     void slotInstanceRemoved(const Akonadi::AgentInstance &instance);
+    void slotFetchParentCollection(KJob* job);
+    void slotFetchCollection(KJob *job);
 
 private:
     FolderArchiveAccountInfo *infoFromInstanceName(const QString &instanceName) const;

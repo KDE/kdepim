@@ -23,6 +23,9 @@
 #include <mailcommon/kernel/mailkernel.h>
 
 #include <Akonadi/AgentManager>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/CollectionFetchJob>
 
 #include <KSharedConfig>
 #include <KGlobal>
@@ -72,6 +75,49 @@ FolderArchiveAccountInfo *FolderArchiveManager::infoFromInstanceName(const QStri
         }
     }
     return 0;
+}
+
+void FolderArchiveManager::setArchiveItem(qlonglong itemId)
+{
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item(itemId), this );
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    job->fetchScope().setFetchRemoteIdentification(true);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchParentCollection(KJob*)) );
+}
+
+void FolderArchiveManager::slotFetchParentCollection(KJob *job)
+{
+    if ( job->error() ) {
+        qDebug()<<"FolderArchiveManager::slotFetchParentCollection can not fetch item ";
+        return;
+    }
+    const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+    const Akonadi::Item::List items = fetchJob->items();
+    if (items.isEmpty()) {
+        qDebug()<<" FolderArchiveManager::slotFetchParentCollection fetch list is empty";
+    } else {
+        Akonadi::CollectionFetchJob* jobCol = new Akonadi::CollectionFetchJob( Akonadi::Collection(items.first().parentCollection().id()), Akonadi::CollectionFetchJob::Base, this );
+        jobCol->setProperty("itemId", items.first().id());
+        connect( jobCol, SIGNAL(result(KJob*)), SLOT(slotFetchCollection(KJob*)) );
+
+    }
+}
+
+void FolderArchiveManager::slotFetchCollection(KJob *job)
+{
+    if ( job->error() ) {
+        qDebug()<<"FolderArchiveManager::slotFetchCollection can not fetch collection ";
+        return;
+    }
+    Akonadi::CollectionFetchJob* jobCol = qobject_cast<Akonadi::CollectionFetchJob*>(job);
+    if (jobCol->collections().isEmpty()) {
+        qDebug()<<" void FolderArchiveManager::slotFetchCollection(KJob *job) list is empty";
+        return;
+    }
+
+    QList<qlonglong> itemIds;
+    itemIds << jobCol->property("itemId").toLongLong();
+    setArchiveItems(itemIds, jobCol->collections().first().resource());
 }
 
 void FolderArchiveManager::setArchiveItems(const QList<qlonglong> &itemIds, const QString &instanceName)

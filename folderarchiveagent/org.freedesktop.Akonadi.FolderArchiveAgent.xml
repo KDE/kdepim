@@ -10,6 +10,9 @@
     <method name="enabledAgent" >
       <arg direction="out" type="b" />
     </method>
+    <method name="archiveItem">
+      <arg name="item" type="x" direction="in"/>
+    </method>
     <method name="archiveItems">
       <arg name="items" type="ax" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QList&lt;qlonglong&gt; &amp;"/>
