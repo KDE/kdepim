@@ -139,6 +139,8 @@ public:
    */
   QVector<qlonglong> selectionAsMessageItemListId( bool includeCollapsedChildren = true ) const;
 
+  QList<Akonadi::Item::Id> selectionAsListMessageId( bool includeCollapsedChildren = true) const;
+
   /**
    * Returns the Akonadi::Item bound to the current StorageModel that
    * are part of the current thread. The current thread is the thread
