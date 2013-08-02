@@ -88,30 +88,33 @@ void FolderArchiveManager::setArchiveItem(qlonglong itemId)
 void FolderArchiveManager::slotFetchParentCollection(KJob *job)
 {
     if ( job->error() ) {
-        qDebug()<<"FolderArchiveManager::slotFetchParentCollection can not fetch item ";
+        moveFailed(i18n("Unable to fetch folder. Error reported:%1",job->errorString()));
+        kDebug()<<"Unable to fetch folder:"<<job->errorString();
         return;
     }
     const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
     const Akonadi::Item::List items = fetchJob->items();
     if (items.isEmpty()) {
-        qDebug()<<" FolderArchiveManager::slotFetchParentCollection fetch list is empty";
+        moveFailed(i18n("No folder returned."));
+        kDebug()<<"Fetch list is empty";
     } else {
         Akonadi::CollectionFetchJob* jobCol = new Akonadi::CollectionFetchJob( Akonadi::Collection(items.first().parentCollection().id()), Akonadi::CollectionFetchJob::Base, this );
         jobCol->setProperty("itemId", items.first().id());
         connect( jobCol, SIGNAL(result(KJob*)), SLOT(slotFetchCollection(KJob*)) );
-
     }
 }
 
 void FolderArchiveManager::slotFetchCollection(KJob *job)
 {
     if ( job->error() ) {
-        qDebug()<<"FolderArchiveManager::slotFetchCollection can not fetch collection ";
+        moveFailed(i18n("Unable to fetch parent folder. Error reported: %1", job->errorString()));
+        kDebug()<<"can not fetch collection "<<job->errorString();
         return;
     }
     Akonadi::CollectionFetchJob* jobCol = qobject_cast<Akonadi::CollectionFetchJob*>(job);
     if (jobCol->collections().isEmpty()) {
-        qDebug()<<" void FolderArchiveManager::slotFetchCollection(KJob *job) list is empty";
+        moveFailed(i18n("Unable to return list of folders."));
+        kDebug()<<"List of folder is empty";
         return;
     }
 
