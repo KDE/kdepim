@@ -445,6 +445,7 @@ void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, c
 
     if ( saveUrl.isEmpty() ||
          !MessageViewer::Util::checkOverwrite( saveUrl, d->mParent ) ) {
+      qDeleteAll(filters);
       return;
     }
   } else {
