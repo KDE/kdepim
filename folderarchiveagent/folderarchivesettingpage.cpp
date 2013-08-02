@@ -17,6 +17,7 @@
 
 #include "folderarchivesettingpage.h"
 #include "folderarchiveaccountinfo.h"
+#include "folderarchiveutil.h"
 #include "mailcommon/folder/folderrequester.h"
 
 #include <KLocale>
@@ -62,7 +63,7 @@ void FolderArchiveSettingPage::slotEnableChanged(bool enabled)
 void FolderArchiveSettingPage::loadSettings()
 {
     KSharedConfig::Ptr config = KGlobal::config();
-    const QString groupName = QLatin1String("FolderArchiveAccount ") + mInstanceName;
+    const QString groupName = FolderArchive::FolderArchiveUtil::groupConfigPattern() + mInstanceName;
     if (config->hasGroup(groupName)) {
         KConfigGroup grp = config->group(groupName);
         mInfo = new FolderArchiveAccountInfo(grp);
@@ -78,7 +79,7 @@ void FolderArchiveSettingPage::loadSettings()
 void FolderArchiveSettingPage::writeSettings()
 {
     KSharedConfig::Ptr config = KGlobal::config();
-    KConfigGroup grp = config->group(QLatin1String("FolderArchiveAccount ") + mInstanceName);
+    KConfigGroup grp = config->group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + mInstanceName);
     mInfo->setInstanceName(mInstanceName);
     mInfo->setEnabled(mEnabled->isChecked());
     mInfo->setArchiveTopLevel(mArchiveFolder->collection().id());

@@ -19,6 +19,7 @@
 #include "folderarchiveagentjob.h"
 #include "folderarchiveaccountinfo.h"
 #include "folderarchivekernel.h"
+#include "folderarchiveutil.h"
 
 #include <mailcommon/kernel/mailkernel.h>
 
@@ -60,7 +61,7 @@ void FolderArchiveManager::collectionRemoved(const Akonadi::Collection &collecti
     Q_FOREACH (FolderArchiveAccountInfo *info, mListAccountInfo) {
         if (info->archiveTopLevel() == collection.id()) {
             info->setArchiveTopLevel(-1);
-            KConfigGroup group = KGlobal::config()->group(QLatin1String("FolderArchiveAccount ") + info->instanceName());
+            KConfigGroup group = KGlobal::config()->group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + info->instanceName());
             info->writeConfig(group);
         }
     }
@@ -151,7 +152,7 @@ void FolderArchiveManager::slotInstanceRemoved(const Akonadi::AgentInstance &ins
 
 void FolderArchiveManager::removeInfo(const QString &instanceName)
 {
-    KConfigGroup group = KGlobal::config()->group(QLatin1String("FolderArchiveAccount ") + instanceName);
+    KConfigGroup group = KGlobal::config()->group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + instanceName);
     group.deleteGroup();
     KGlobal::config()->sync();
 }
@@ -161,7 +162,7 @@ void FolderArchiveManager::load()
     qDeleteAll(mListAccountInfo);
     mListAccountInfo.clear();
 
-    const QStringList accountList = KGlobal::config()->groupList().filter( QRegExp( QLatin1String("FolderArchiveAccount ") ) );
+    const QStringList accountList = KGlobal::config()->groupList().filter( QRegExp( FolderArchive::FolderArchiveUtil::groupConfigPattern() ) );
     Q_FOREACH (const QString &account, accountList) {
         KConfigGroup group = KGlobal::config()->group(account);
         FolderArchiveAccountInfo *info = new FolderArchiveAccountInfo(group);

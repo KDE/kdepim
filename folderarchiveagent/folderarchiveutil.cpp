@@ -31,3 +31,8 @@ void FolderArchiveUtil::forceReparseConfiguration()
     FolderArchiveAgentSettings::self()->writeConfig();
     FolderArchiveAgentSettings::self()->config()->reparseConfiguration();
 }
+
+QString FolderArchiveUtil::groupConfigPattern()
+{
+    return QLatin1String("FolderArchiveAccount ");
+}

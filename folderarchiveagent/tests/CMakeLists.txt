@@ -8,4 +8,5 @@ target_link_libraries(folderarchive_gui
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   mailcommon
+  folderarchive
 )
