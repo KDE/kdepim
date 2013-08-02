@@ -426,6 +426,8 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         //qDebug()<<" unknown action name: "<<actionName;
                     }
                 }
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" unknown tagname"<<tagName;
             }
