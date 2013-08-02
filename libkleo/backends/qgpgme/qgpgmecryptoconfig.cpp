@@ -69,7 +69,7 @@ static const int GPGCONF_FLAG_NO_CHANGE = 128; // readonly
 QString QGpgMECryptoConfig::gpgConfPath()
 {
     const GpgME::EngineInfo info = GpgME::engineInfo( GpgME::GpgConfEngine );
-    return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( "gpgconf" );
+    return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( QLatin1String("gpgconf") );
 }
 
 QGpgMECryptoConfig::QGpgMECryptoConfig()
@@ -88,7 +88,7 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
   KProcess process;
 
   process << gpgConfPath();
-  process << "--list-components";
+  process << QLatin1String("--list-components");
 
 
   connect( &process, SIGNAL(readyReadStandardOutput()),
@@ -127,13 +127,13 @@ void QGpgMECryptoConfig::slotCollectStdOut()
   KProcess * const proc = static_cast<KProcess*>( QObject::sender() );
   while( proc->canReadLine() ) {
     QString line = QString::fromUtf8( proc->readLine() );
-    if ( line.endsWith( '\n' ) )
+    if ( line.endsWith( QLatin1Char('\n') ) )
       line.chop( 1 );
-    if ( line.endsWith( '\r' ) )
+    if ( line.endsWith( QLatin1Char('\r') ) )
       line.chop( 1 );
     //kDebug(5150) <<"GOT LINE:" << line;
     // Format: NAME:DESCRIPTION
-    const QStringList lst = line.split( ':' );
+    const QStringList lst = line.split( QLatin1Char(':') );
     if ( lst.count() >= 2 ) {
         const std::pair<QString,QGpgMECryptoConfigComponent*> pair( lst[0], new QGpgMECryptoConfigComponent( this, lst[0], lst[1] ) );
         mComponentsNaturalOrder.push_back( pair );
@@ -212,7 +212,7 @@ void QGpgMECryptoConfigComponent::runGpgConf()
   // Run gpgconf --list-options <component>, and create all groups and entries for that component
   KProcess proc;
   proc << gpgconf;
-  proc << "--list-options";
+  proc << QLatin1String("--list-options");
   proc << mName;
 
   //kDebug(5150) <<"Running gpgconf --list-options" << mName;
@@ -248,13 +248,13 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
   KProcess * const proc = static_cast<KProcess*>( QObject::sender() );
   while( proc->canReadLine() ) {
     QString line = QString::fromUtf8( proc->readLine() );
-    if ( line.endsWith( '\n' ) )
+    if ( line.endsWith( QLatin1Char('\n') ) )
       line.chop( 1 );
-    if ( line.endsWith( '\r' ) )
+    if ( line.endsWith( QLatin1Char('\r') ) )
       line.chop( 1 );
     //kDebug(5150) <<"GOT LINE:" << line;
     // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
-    const QStringList lst = line.split( ':' );
+    const QStringList lst = line.split( QLatin1Char(':') );
     if ( lst.count() >= 10 ) {
       const int flags = lst[1].toInt();
       const int level = lst[2].toInt();
@@ -272,8 +272,8 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
       } else {
         // normal entry
         if ( !mCurrentGroup ) {  // first toplevel entry -> create toplevel group
-          mCurrentGroup = new QGpgMECryptoConfigGroup( this, "<nogroup>", QString(), 0 );
-          mCurrentGroupName = "<nogroup>";
+          mCurrentGroup = new QGpgMECryptoConfigGroup( this, QLatin1String("<nogroup>"), QString(), 0 );
+          mCurrentGroupName = QLatin1String("<nogroup>");
         }
         const QString & name = lst[0];
         QGpgMECryptoConfigEntry * value = new QGpgMECryptoConfigEntry( mCurrentGroup, lst );
@@ -320,15 +320,15 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
        // OK, we can set it.currentKey() to it.current()->outputString()
         QString line = keyentry;
         if ( entry[keyentry]->isSet() ) { // set option
-          line += ":0:";
+          line += QLatin1String(":0:");
           line += entry[keyentry]->outputString();
         } else {                       // unset option
-          line += ":16:";
+          line += QLatin1String(":16:");
         }
 #ifdef Q_OS_WIN
-        line += '\r';
+        line += QLatin1Char('\r');
 #endif
-        line += '\n';
+        line += QLatin1Char('\n');
         const QByteArray line8bit = line.toUtf8(); // encode with utf8, and K3ProcIO uses utf8 when reading.
         tmpFile.write( line8bit );
         dirtyEntries.append( entry[keyentry] );
@@ -347,10 +347,10 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
       ? QString::fromLatin1( "gpgconf" )
       : KShell::quoteArg( gpgconf ) ;
   if ( runtime )
-    commandLine += " --runtime";
-  commandLine += " --change-options ";
+    commandLine += QLatin1String(" --runtime");
+  commandLine += QLatin1String(" --change-options ");
   commandLine += KShell::quoteArg( mName );
-  commandLine += " < ";
+  commandLine += QLatin1String(" < ");
   commandLine += KShell::quoteArg( tmpFile.fileName() );
 
   //kDebug(5150) << commandLine;
@@ -425,17 +425,17 @@ static QString gpgconf_unescape( const QString& str )
 static QString gpgconf_escape( const QString& str )
 {
   // Escape special chars (including ':' and '%')
-  QString enc = KUrl::toPercentEncoding( str ); // and convert to utf8 first (to get %12%34 for one special char)
+  QString enc = QLatin1String(KUrl::toPercentEncoding( str )); // and convert to utf8 first (to get %12%34 for one special char)
   // Also encode commas, for lists.
-  enc.replace( ',', "%2c" );
+  enc.replace( QLatin1Char(','), QLatin1String("%2c") );
   return enc;
 }
 
 static QString urlpart_encode( const QString& str )
 {
   QString enc( str );
-  enc.replace( '%', "%25" ); // first!
-  enc.replace( ':', "%3a" );
+  enc.replace( QLatin1Char('%'), QLatin1String("%25") ); // first!
+  enc.replace( QLatin1Char(':'), QLatin1String("%3a") );
   //kDebug(5150) <<"  urlpart_encode:" << str <<" ->" << enc;
   return enc;
 }
@@ -526,7 +526,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
         return v;
     }
     QList<QVariant> lst;
-    QStringList items = str.split( ',', QString::SkipEmptyParts );
+    QStringList items = str.split( QLatin1Char(','), QString::SkipEmptyParts );
     for( QStringList::const_iterator valit = items.constBegin(); valit != items.constEnd(); ++valit ) {
       QString val = *valit;
       if ( isString ) {
@@ -535,7 +535,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
           continue;
         }
         else if ( unescape ) {
-          if( val[0] != '"' ) // see README.gpgconf
+          if( val[0] != QLatin1Char('"') ) // see README.gpgconf
             kWarning(5150) <<"String value should start with '\"' :" << val;
           val = val.mid( 1 );
         }
@@ -549,7 +549,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
       if ( val.isEmpty() )
         return QVariant( QString() ); // not set  [ok with lists too?]
       else if ( unescape ) {
-        if( val[0] != '"' ) // see README.gpgconf
+        if( val[0] != QLatin1Char('"') ) // see README.gpgconf
           kWarning(5150) <<"String value should start with '\"' :" << val;
         val = val.mid( 1 );
       }
@@ -622,11 +622,11 @@ static KUrl parseURL( int mRealArgType, const QString& str )
 {
   if ( mRealArgType == 33 ) { // LDAP server
     // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-    QStringList items = str.split( ':' );
+    QStringList items = str.split( QLatin1Char(':') );
     if ( items.count() == 5 ) {
       QStringList::const_iterator it = items.constBegin();
       KUrl url;
-      url.setProtocol( "ldap" );
+      url.setProtocol( QLatin1String("ldap") );
       url.setHost( urlpart_decode( *it++ ) );
 
       bool ok;
@@ -636,7 +636,7 @@ static KUrl parseURL( int mRealArgType, const QString& str )
       else if ( !it->isEmpty() )
           kWarning(5150) <<"parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
 
-      url.setPath( "/" ); // workaround KUrl parsing bug
+      url.setPath( QLatin1String("/") ); // workaround KUrl parsing bug
       url.setUser( urlpart_decode( *it++ ) );
       url.setPass( urlpart_decode( *it++ ) );
       url.setQuery( urlpart_decode( *it ) );
@@ -653,11 +653,11 @@ static QString splitURL( int mRealArgType, const KUrl& url )
 {
   if ( mRealArgType == 33 ) { // LDAP server
     // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-    Q_ASSERT( url.protocol() == "ldap" );
-    return urlpart_encode( url.host() ) + ':' +
-      ( url.port() != -1 ? QString::number( url.port() ) : QString() ) + ':' + // -1 is used for default ports, omit
-      urlpart_encode( url.user() ) + ':' +
-      urlpart_encode( url.pass() ) + ':' +
+    Q_ASSERT( url.protocol() == QLatin1String("ldap") );
+    return urlpart_encode( url.host() ) + QLatin1Char(':') +
+      ( url.port() != -1 ? QString::number( url.port() ) : QString() ) + QLatin1Char(':') + // -1 is used for default ports, omit
+      urlpart_encode( url.user() ) + QLatin1Char(':') +
+      urlpart_encode( url.pass() ) + QLatin1Char(':') +
       // KUrl automatically encoded the query (e.g. for spaces inside it),
       // so decode it before writing it out to gpgconf (issue119)
       urlpart_encode( KUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
@@ -875,16 +875,16 @@ QString QGpgMECryptoConfigEntry::toString( bool escape ) const
       if ( escape ) {
         for( QStringList::iterator it = lst.begin(); it != lst.end(); ++it ) {
           if ( !(*it).isNull() )
-            *it = gpgconf_escape( *it ).prepend( "\"" );
+            *it = gpgconf_escape( *it ).prepend( QLatin1String("\"") );
         }
       }
-      QString res = lst.join( "," );
+      const QString res = lst.join( QLatin1String(",") );
       //kDebug(5150) <<"toString:" << res;
       return res;
     } else { // normal string
       QString res = mValue.toString();
       if ( escape )
-        res = gpgconf_escape( res ).prepend( "\"" );
+        res = gpgconf_escape( res ).prepend( QLatin1String("\"") );
       return res;
     }
   }
@@ -906,7 +906,7 @@ QString QGpgMECryptoConfigEntry::toString( bool escape ) const
   for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
       ret << (*it).toString(); // QVariant does the conversion
   }
-  return ret.join( "," );
+  return ret.join( QLatin1String(",") );
 }
 
 QString QGpgMECryptoConfigEntry::outputString() const

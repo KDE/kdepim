@@ -76,16 +76,16 @@ namespace {
 
     QString name() const {
       switch ( mProtocol ) {
-      case GpgME::OpenPGP: return "OpenPGP";
-      case GpgME::CMS:     return "SMIME";
+      case GpgME::OpenPGP: return QLatin1String("OpenPGP");
+      case GpgME::CMS:     return QLatin1String("SMIME");
       default:             return QString();
       }
     }
 
     QString displayName() const {
       switch ( mProtocol ) {
-      case GpgME::OpenPGP: return "gpg";
-      case GpgME::CMS:     return "gpgsm";
+      case GpgME::OpenPGP: return QLatin1String("gpg");
+      case GpgME::CMS:     return QLatin1String("gpgsm");
       default:             return i18n("unknown");
       }
     }
@@ -323,7 +323,7 @@ Kleo::QGpgMEBackend::~QGpgMEBackend() {
 }
 
 QString Kleo::QGpgMEBackend::name() const {
-  return "gpgme";
+  return QLatin1String("gpgme");
 }
 
 QString Kleo::QGpgMEBackend::displayName() const {
@@ -351,15 +351,15 @@ static bool check( GpgME::Protocol proto, QString * reason ) {
   // error, check why:
   const GpgME::EngineInfo ei = GpgME::engineInfo( proto );
   if ( ei.isNull() )
-    *reason = i18n("GPGME was compiled without support for %1.", proto == GpgME::CMS ? "S/MIME" : "OpenPGP" );
+    *reason = i18n("GPGME was compiled without support for %1.", proto == GpgME::CMS ? QLatin1String("S/MIME") : QLatin1String("OpenPGP") );
   else if ( ei.fileName() && !ei.version() )
     *reason = i18n("Engine %1 is not installed properly.", QFile::decodeName( ei.fileName() ) );
   else if ( ei.fileName() && ei.version() && ei.requiredVersion() )
     *reason = i18n("Engine %1 version %2 installed, "
                    "but at least version %3 is required.",
-      QFile::decodeName( ei.fileName() ), ei.version(), ei.requiredVersion() );
+      QFile::decodeName( ei.fileName() ), QLatin1String(ei.version()), QLatin1String(ei.requiredVersion()) );
   else
-    *reason = i18n("Unknown problem with engine for protocol %1.", proto == GpgME::CMS ? "S/MIME" : "OpenPGP" );
+    *reason = i18n("Unknown problem with engine for protocol %1.", proto == GpgME::CMS ? QLatin1String("S/MIME") : QLatin1String("OpenPGP") );
   return false;
 }
 
@@ -377,7 +377,7 @@ bool Kleo::QGpgMEBackend::checkForProtocol( const char * name, QString * reason 
   if ( qstricmp( name, SMIME ) == 0 )
     return check( GpgME::CMS, reason );
   if ( reason )
-    *reason = i18n( "Unsupported protocol \"%1\"", name );
+    *reason = i18n( "Unsupported protocol \"%1\"", QLatin1String(name) );
   return false;
 }
 

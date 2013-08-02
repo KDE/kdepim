@@ -61,14 +61,14 @@ namespace {
 
     static KUrl defaultX509Service() {
         KUrl url;
-        url.setProtocol( "ldap" );
+        url.setProtocol( QLatin1String("ldap") );
         url.setHost( i18nc("default server name, keep it a valid domain name, ie. no spaces", "server") );
         return url;
     }
     static KUrl defaultOpenPGPService() {
         KUrl url;
-        url.setProtocol( "hkp" );
-        url.setHost( "keys.gnupg.net" );
+        url.setProtocol( QLatin1String("hkp") );
+        url.setHost( QLatin1String("keys.gnupg.net") );
         return url;
     }
 
@@ -362,7 +362,7 @@ namespace {
             QComboBox * cb = new QComboBox( parent );
             for ( unsigned int i = 0 ; i < numProtocols ; ++i )
                 if ( m_schemes & protocols[i].base )
-                    cb->addItem( i18n( protocols[i].label ), protocols[i].label );
+                    cb->addItem( i18n( protocols[i].label ), QLatin1String(protocols[i].label) );
             assert( cb->count() > 0 );
             return cb;
         }
@@ -509,9 +509,9 @@ private:
               newOpenPGPAction( i18nc("New OpenPGP Directory Server", "OpenPGP"), q ),
               newMenu( q )
         {
-            newX509Action.setObjectName( "newX509Action" );
-            newOpenPGPAction.setObjectName( "newOpenPGPAction" );
-            newMenu.setObjectName( "newMenu" );
+            newX509Action.setObjectName( QLatin1String("newX509Action") );
+            newOpenPGPAction.setObjectName( QLatin1String("newOpenPGPAction") );
+            newMenu.setObjectName( QLatin1String("newMenu") );
 
             setupUi( q );
 
@@ -774,7 +774,7 @@ bool Model::doSetData( unsigned int row, unsigned int column, const QVariant & v
         case Host:
             if ( display_host( m_items[row].url ) != m_items[row].url.host() ) {
                 m_items[row].url.setProtocol( display_scheme( m_items[row].url ) );
-                m_items[row].url.setPath( "/" );
+                m_items[row].url.setPath( QLatin1String("/") );
             }
             m_items[row].url.setHost( value.toString() );
             return true;
@@ -789,7 +789,7 @@ bool Model::doSetData( unsigned int row, unsigned int column, const QVariant & v
                 m_items[row].url.setPath( QString() );
                 m_items[row].url.setQuery( QString() );
             } else {
-                m_items[row].url.setPath( "/" ); // workaround KUrl parsing bug
+                m_items[row].url.setPath( QLatin1String("/") ); // workaround KUrl parsing bug
                 m_items[row].url.setQuery( value.toString() );
             }
             return true;
