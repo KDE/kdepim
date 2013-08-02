@@ -76,6 +76,7 @@ void SieveSyntaxHighlighter::init()
     QStringList keywords;
     keywords << QLatin1String( "\\brequire\\b" );
     keywords << QLatin1String( "\\binclude\\b" );
+    keywords << QLatin1String( "\\bglobal\\b" );
     Q_FOREACH ( const QString & s, keywords ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, keywordFormat ) );
@@ -140,6 +141,7 @@ void SieveSyntaxHighlighter::init()
                <<QLatin1String( "\\bdeleteheader\\b" )
                <<QLatin1String( "\\baddheader\\b" )
                <<QLatin1String( "\\notify\\b" )
+               <<QLatin1String( "\\set\\b" )
                <<QLatin1String( "\\bvacation\\b" );
     Q_FOREACH ( const QString & s, actionType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
