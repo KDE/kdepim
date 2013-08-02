@@ -38,7 +38,7 @@ SoundTestWidget::SoundTestWidget( QWidget *parent )
     layout->setMargin( 0 );
 
     m_playButton = new QPushButton( this );
-    m_playButton->setIcon( KIcon( "arrow-right" ) );
+    m_playButton->setIcon( KIcon( QLatin1String("arrow-right") ) );
     m_playButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     layout->addWidget( m_playButton );
 
@@ -115,7 +115,7 @@ void SoundTestWidget::playSound()
                                parameter.mid( file.length() ) :
                                parameter );
 
-    Phonon::MediaObject *player = Phonon::createPlayer( Phonon::NotificationCategory, play );
+    Phonon::MediaObject *player = Phonon::createPlayer( Phonon::NotificationCategory, QUrl::fromLocalFile(play) );
     player->play();
     connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
 }
