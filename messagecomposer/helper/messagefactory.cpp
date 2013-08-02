@@ -494,8 +494,8 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr, int tr
   msg->parse();
 
   uint id = identity;
-  if(id == -1) {
-    QString strId = msg->headerByType( "X-KMail-Identity" ) ? msg->headerByType( "X-KMail-Identity" )->asUnicodeString().trimmed() : QString::fromLocal8Bit("");
+  if(identity == -1) {
+    const QString strId = msg->headerByType( "X-KMail-Identity" ) ? msg->headerByType( "X-KMail-Identity" )->asUnicodeString().trimmed() : QString::fromLocal8Bit("");
     if ( !strId.isEmpty())
       id = strId.toUInt();
   }
