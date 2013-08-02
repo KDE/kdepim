@@ -20,7 +20,7 @@
 
 #include <akonadi/agentbase.h>
 class FolderArchiveManager;
-class FolderArchiveAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
+class FolderArchiveAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
     Q_OBJECT
 public:
@@ -32,7 +32,9 @@ public:
 
     void showConfigureDialog(qlonglong windowId = 0);
 
-    void archiveItems( const QList<qint64> &itemIds, const QString &instanceName );
+    void archiveItems(const QList<qlonglong> &itemIds, const QString &instanceName );
+
+    void collectionRemoved( const Akonadi::Collection &collection );
 
 public Q_SLOTS:
     void configure( WId windowId );

@@ -24,7 +24,7 @@
 #include "editor/composer.h"
 #include "searchdialog/searchwindow.h"
 #include "antispam-virus/antispamwizard.h"
-#include "statusbarlabel.h"
+#include "widgets/statusbarlabel.h"
 #include "undostack.h"
 #include "kmcommands.h"
 #include "kmmainwin.h"
@@ -40,7 +40,7 @@
 #include "foldertreeview.h"
 #include "tag/tagactionmanager.h"
 #include "foldershortcutactionmanager.h"
-#include "collectionpane.h"
+#include "widgets/collectionpane.h"
 #if !defined(NDEBUG)
     #include <ksieveui/debug/sievedebugdialog.h>
     using KSieveUi::SieveDebugDialog;
@@ -57,6 +57,7 @@
 #include "job/createnewcontactjob.h"
 #include "sendlateragentinterface.h"
 #include "folderarchiveagentinterface.h"
+#include "folderarchiveagent/folderarchiveutil.h"
 
 #include "pimcommon/acl/collectionaclpage.h"
 #include "mailcommon/collectionpage/collectiongeneralpage.h"
@@ -209,7 +210,6 @@ using MessageViewer::AttachmentStrategy;
 Q_DECLARE_METATYPE(KPIM::ProgressItem*)
 Q_DECLARE_METATYPE(Akonadi::Job*)
 Q_DECLARE_METATYPE(QPointer<KPIM::ProgressItem>)
-
 K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
 
 //-----------------------------------------------------------------------------
@@ -3717,6 +3717,12 @@ void KMMainWidget::setupActions()
              SLOT(slotMoveSelectedMessageToFolder()) );
   }
 
+  mArchiveAction = new KAction( i18n("Archive"), this);
+  actionCollection()->addAction( QLatin1String("archive_mails"), mArchiveAction );
+  connect( mArchiveAction, SIGNAL(triggered(bool)),
+           SLOT(slotArchiveMails()) );
+
+
 }
 
 void KMMainWidget::slotAddFavoriteFolder()
@@ -3979,6 +3985,8 @@ void KMMainWidget::updateMessageActionsDelayed()
     actionList << messageActions()->editAction();
   }
   actionList << mSaveAttachmentsAction;
+  if (FolderArchive::FolderArchiveUtil::folderArchiveAgentEnabled())
+      actionList << mArchiveAction;
   mGUIClient->unplugActionList( QLatin1String( "messagelist_actionlist" ) );
   mGUIClient->plugActionList( QLatin1String( "messagelist_actionlist" ), actionList );
   mSendAgainAction->setEnabled( statusSendAgain );
@@ -4850,4 +4858,20 @@ void KMMainWidget::slotMoveMessageToTrash()
     }
 }
 
+void KMMainWidget::slotArchiveMails()
+{
+    OrgFreedesktopAkonadiFolderArchiveAgentInterface folderArchiveInterface(QLatin1String("org.freedesktop.Akonadi.FolderArchiveAgent"), QLatin1String("/FolderArchiveAgent"),QDBusConnection::sessionBus(), this);
+    if (folderArchiveInterface.isValid()) {
+        const QList<Akonadi::Item> selectedMessages = mMessagePane->selectionAsMessageItemList();
+        if (mCurrentFolder) {
+            QList<qlonglong> ids;
+            Q_FOREACH(const Akonadi::Item &item, selectedMessages) {
+                ids << item.id();
+            }
 
+            folderArchiveInterface.archiveItems(ids, mCurrentFolder->collection().resource());
+        }
+    } else {
+        KMessageBox::error(this,i18n("Archive Folder Agent was not registered."));
+    }
+}

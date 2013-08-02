@@ -20,9 +20,12 @@
 
 #include "folderarchive_export.h"
 
+namespace FolderArchive {
 namespace FolderArchiveUtil
 {
 FOLDERARCHIVE_EXPORT bool folderArchiveAgentEnabled();
+FOLDERARCHIVE_EXPORT void forceReparseConfiguration();
+}
 }
 
 

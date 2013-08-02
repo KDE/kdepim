@@ -170,7 +170,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
   ++row;
   QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds):" ), this );
   mTimeout = new QTimeEdit( this );
-  mTimeout->setDisplayFormat( "mm:ss" );
+  mTimeout->setDisplayFormat( QLatin1String("mm:ss") );
   connect( mTimeout, SIGNAL(timeChanged(QTime)), this, SLOT(changed()) );
   label->setBuddy( mTimeout );
   glay->addWidget( label, row, 0 );
@@ -365,7 +365,7 @@ extern "C"
   {
     DirectoryServicesConfigurationPage *page =
       new DirectoryServicesConfigurationPage( KComponentData( "kleopatra" ), parent, args );
-    page->setObjectName( "kleopatra_config_dirserv" );
+    page->setObjectName( QLatin1String("kleopatra_config_dirserv") );
     return page;
   }
 }
@@ -378,16 +378,16 @@ Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry( const 
                                                                           bool isList,
                                                                           bool showError )
 {
-    Kleo::CryptoConfigEntry* entry = mConfig->entry( componentName, groupName, entryName );
+    Kleo::CryptoConfigEntry* entry = mConfig->entry( QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName) );
 
     if ( !entry ) {
         if ( showError )
-            KMessageBox::error( this, i18n( "Backend error: gpgconf does not seem to know the entry for %1/%2/%3", componentName, groupName, entryName ) );
+            KMessageBox::error( this, i18n( "Backend error: gpgconf does not seem to know the entry for %1/%2/%3", QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName) ) );
         return 0;
     }
     if( entry->argType() != argType || entry->isList() != isList ) {
         if ( showError )
-            KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5", componentName, groupName, entryName, entry->argType(), entry->isList() ) );
+            KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5", QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName), entry->argType(), entry->isList() ) );
         return 0;
     }
     return entry;

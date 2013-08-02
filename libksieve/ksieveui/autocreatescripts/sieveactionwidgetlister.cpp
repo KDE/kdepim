@@ -102,9 +102,14 @@ void SieveActionWidget::initWidget()
     QList<KSieveUi::SieveAction*>::const_iterator it;
     QList<KSieveUi::SieveAction*>::const_iterator end( list.constEnd() );
     int index = 0;
+    QStringList listCapabilities = SieveEditorGraphicalModeWidget::sieveCapabilities();
+    //imapflags was old name of imap4flags but still used.
+    if (listCapabilities.contains(QLatin1String("imap4flags"))) {
+        listCapabilities.append(QLatin1String("imapflags"));
+    }
     for ( index = 0, it = list.constBegin(); it != end; ++it, ++index ) {
         if ((*it)->needCheckIfServerHasCapability()) {
-            if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
+            if (listCapabilities.contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mActionList.append( *it );
 

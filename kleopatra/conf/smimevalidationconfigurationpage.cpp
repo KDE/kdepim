@@ -80,7 +80,7 @@ void SMimeValidationConfigurationPage::defaults()
 extern "C" KDE_EXPORT KCModule *create_kleopatra_config_smimevalidation( QWidget * parent, const QVariantList & args ) {
     SMimeValidationConfigurationPage * page =
         new SMimeValidationConfigurationPage( KComponentData( "kleopatra" ), parent, args );
-    page->setObjectName( "kleopatra_config_smimevalidation" );
+    page->setObjectName( QLatin1String("kleopatra_config_smimevalidation") );
     return page;
 }
 

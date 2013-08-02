@@ -286,12 +286,11 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     } else if (mField == "contents") {
 
     } else if (mField == "<age in days>") {
+        //date ?
 
     } else if (mField == "<recipients>") {
     } else if (mField == "<tag>") {
-        //Not supported
-    } else if (mField == "Subject") {
-    } else if (mField == "From") {
+        code += i18n("<Tag> is not supported");
     } else if (mField == "<message>") {
     } else if (mField == "<body>") {
         if (!requires.contains(QLatin1String("body")))
@@ -316,7 +315,14 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             negative = true;
             break;
         case FuncRegExp:
+            comparaison = QLatin1String(":regex");
+            requires << QLatin1String("regex");
+            break;
         case FuncNotRegExp:
+            requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            negative = true;
+            break;
         case FuncIsGreater:
         case FuncIsLessOrEqual:
         case FuncIsLess:
@@ -335,7 +341,51 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         }
         code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body :text %1 \"%2\"").arg(comparaison).arg(mContents);
     } else {
-        //TODO
+        QString comparaison;
+        bool negative = false;
+        switch(mFunction) {
+        case FuncNone:
+            break;
+        case FuncContains:
+            comparaison = QLatin1String(":contains");
+            break;
+        case FuncContainsNot:
+            negative = true;
+            comparaison = QLatin1String(":contains");
+            break;
+        case FuncEquals:
+            comparaison = QLatin1String(":is");
+            break;
+        case FuncNotEqual:
+            comparaison = QLatin1String(":is");
+            negative = true;
+            break;
+        case FuncRegExp:
+            comparaison = QLatin1String(":regex");
+            requires << QLatin1String("regex");
+            break;
+        case FuncNotRegExp:
+            requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            negative = true;
+            break;
+        case FuncIsGreater:
+        case FuncIsLessOrEqual:
+        case FuncIsLess:
+        case FuncIsGreaterOrEqual:
+        case FuncIsInAddressbook:
+        case FuncIsNotInAddressbook:
+        case FuncIsInCategory:
+        case FuncIsNotInCategory:
+        case FuncHasAttachment:
+        case FuncHasNoAttachment:
+        case FuncStartWith:
+        case FuncNotStartWith:
+        case FuncEndWith:
+        case FuncNotEndWith:
+            return;
+        }
+        code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 \"%2\" \"%3\"").arg(comparaison).arg(QLatin1String(mField)).arg(mContents);
     }
 }
 
@@ -1812,12 +1862,9 @@ void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
 
     QList<SearchRule::Ptr>::const_iterator it;
     QList<SearchRule::Ptr>::const_iterator endIt( constEnd() );
-    bool firstRule = true;
     int i = 0;
     for ( it = constBegin(); it != endIt && i < FILTER_MAX_RULES; ++i, ++it ) {
-        if (firstRule) {
-            firstRule = false;
-        } else {
+        if (i != 0) {
             code += QLatin1String("\n, ");
         }
         (*it)->generateSieveScript(requires, code);

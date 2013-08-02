@@ -49,6 +49,7 @@ private:
     void importTemplatesConfig(const KArchiveFile* templatesconfiguration, const QString& templatesconfigurationrc, const QString &filename, const QString &prefix);
     void importKmailConfig(const KArchiveFile* kmailsnippet, const QString& kmail2rc, const QString &filename, const QString &prefix);
     void importArchiveConfig(const KArchiveFile* archiveconfiguration, const QString& archiveconfigurationrc, const QString&filename,const QString& prefix);
+    void importFolderArchiveConfig(const KArchiveFile* archiveconfiguration, const QString& archiveconfigurationrc, const QString&filename,const QString& prefix);
     QString createResource( const QString &resources, const QString &name, const QMap<QString, QVariant> &settings );
     void searchAllFiles(const KArchiveDirectory *dir,const QString &prefix);
     void storeMailArchiveResource(const KArchiveDirectory*dir, const QString &prefix);

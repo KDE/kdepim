@@ -22,6 +22,7 @@
 #include <QQueue>
 namespace Akonadi {
 class AgentInstance;
+class Collection;
 }
 
 class FolderArchiveAccountInfo;
@@ -35,10 +36,12 @@ public:
     ~FolderArchiveManager();
 
     void load();
-    void setArchiveItems(const QList<qint64> &itemIds, const QString &instanceName);
+    void setArchiveItems(const QList<qlonglong> &itemIds, const QString &instanceName);
 
     void moveFailed(const QString &msg);
     void moveDone();
+
+    void collectionRemoved(const Akonadi::Collection &collection);
 
 private Q_SLOTS:
     void slotInstanceRemoved(const Akonadi::AgentInstance &instance);

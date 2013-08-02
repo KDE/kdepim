@@ -17,6 +17,7 @@
 
 #include "sieveactionabstractflags.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "widgets/selectflagswidget.h"
 
 #include <QHBoxLayout>
@@ -55,7 +56,7 @@ void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, 
                 flagsWidget->setFlags(AutoCreateScriptUtil::listValue(e));
             } else if (tagName == QLatin1String("str")) {
                 SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
-                flagsWidget->setCode(e.text());
+                flagsWidget->setFlags(QStringList()<<e.text());
             } else {
                 qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
             }
@@ -84,10 +85,10 @@ bool SieveActionAbstractFlags::needCheckIfServerHasCapability() const
 
 QString SieveActionAbstractFlags::serverNeedsCapability() const
 {
-    return QLatin1String("imapflags");
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+        return QLatin1String("imap4flags");
+    else
+        return QLatin1String("imapflags");
 }
-
-
-
 
 #include "sieveactionabstractflags.moc"

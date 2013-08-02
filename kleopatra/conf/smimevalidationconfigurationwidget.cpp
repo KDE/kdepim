@@ -57,7 +57,7 @@ public:
           customHTTPProxyWritable( false ),
           ui( q )
     {
-        QDBusConnection::sessionBus().connect(QString(), QString(), "org.kde.kleo.CryptoConfig", "changed", q, SLOT(load()) );
+        QDBusConnection::sessionBus().connect(QString(), QString(), QLatin1String("org.kde.kleo.CryptoConfig"), QLatin1String("changed"), q, SLOT(load()) );
     }
 
    bool customHTTPProxyWritable;
@@ -359,13 +359,13 @@ CryptoConfigEntry * SMIMECryptoConfigEntries::configEntry( const char * componen
                                                            int /*CryptoConfigEntry::ArgType*/ argType,
                                                            bool isList )
 {
-    CryptoConfigEntry * const entry = mConfig->entry( componentName, groupName, entryName );
+    CryptoConfigEntry * const entry = mConfig->entry( QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName) );
     if ( !entry ) {
-        kWarning(5151) << QString("Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName );
+        kWarning(5151) << QString::fromLatin1("Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName) );
         return 0;
     }
     if( entry->argType() != argType || entry->isList() != isList ) {
-        kWarning(5151) << QString("Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( componentName, groupName, entryName ).arg( entry->argType() ).arg( entry->isList() );
+        kWarning(5151) << QString::fromLatin1("Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( QLatin1String(componentName), QLatin1String(groupName), QLatin1String(entryName) ).arg( entry->argType() ).arg( entry->isList() );
         return 0;
     }
     return entry;

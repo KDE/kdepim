@@ -25,7 +25,7 @@
 
 #include <KLocale>
 
-FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const QList<qint64> &lstItem, QObject *parent)
+FolderArchiveAgentJob::FolderArchiveAgentJob(FolderArchiveManager *manager, FolderArchiveAccountInfo *info, const QList<qlonglong> &lstItem, QObject *parent)
     : QObject(parent),
       mLstItem(lstItem),
       mManager(manager),
@@ -39,7 +39,7 @@ FolderArchiveAgentJob::~FolderArchiveAgentJob()
 
 void FolderArchiveAgentJob::start()
 {
-    if (mInfo->isValid()) {
+    if (!mInfo->isValid()) {
         sendError(i18n("Archive folder not defined. Please verify settings for account", mInfo->instanceName() ));
         return;
     }
@@ -60,7 +60,7 @@ void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
         return;
     }
     Akonadi::Item::List lst;
-    Q_FOREACH (qint64 i, mLstItem) {
+    Q_FOREACH (qlonglong i, mLstItem) {
         lst.append(Akonadi::Item(i));
     }
 

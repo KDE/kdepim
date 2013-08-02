@@ -34,6 +34,7 @@ public:
 
 private:
     void initialize();
+    bool mHasRegexCapability;
 };
 }
 

@@ -38,6 +38,7 @@ public:
     bool isValid() const;
 
     QString instanceName() const;
+    void setInstanceName(const QString &instance);
 
     void setArchiveTopLevel(Akonadi::Collection::Id id);
     Akonadi::Collection::Id archiveTopLevel() const;

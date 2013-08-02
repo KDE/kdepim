@@ -415,7 +415,7 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
                         }
                         currentPage->globalVariableWidget()->loadScript(e);
                     } else if (actionName == QLatin1String("set") && (typeBlock == TypeBlockGlobal)) {
-                        //TODO implement load set global variable.
+                        currentPage->globalVariableWidget()->loadSetVariable(e);
                     } else {
                         if (typeBlock != TypeBlockAction) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);

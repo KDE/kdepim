@@ -42,17 +42,21 @@ FilterMBox::~FilterMBox()
 
 void FilterMBox::import()
 {
-    int currentFile = 1;
-    int overall_status = 0;
-    bool first_msg = true;
-
     const QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("mbox Files (*)"), filterInfo()->parent() );
     if ( filenames.isEmpty() )
     {
         filterInfo()->alert(i18n("No files selected."));
         return;
     }
-    
+    importMails(filenames);
+}
+
+void FilterMBox::importMails(const QStringList &filenames)
+{
+    int currentFile = 1;
+    int overall_status = 0;
+    bool first_msg = true;
+
 
     filterInfo()->setOverall(0);
 

@@ -4,6 +4,10 @@ if (KDEPIM_ONLY_KLEO)
   add_definitions( -DKDEPIM_ONLY_KLEO )
 endif ()
 
+#add_definitions( -DQT_NO_CAST_FROM_ASCII )
+#add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 add_definitions( -DGPGMEPP_ERR_SOURCE_DEFAULT=13 ) # 13 is GPG_ERR_SOURCE_KLEO, even if gpg-error's too old to know about
 #parts of Boost don't build with the gcc pedantic option, so remove that option

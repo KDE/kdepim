@@ -58,6 +58,8 @@
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <kxmlguiwindow.h>
+#include <KToggleAction>
+#include <KActionCollection>
 
 #include <nepomuk2/resource.h>
 #include <nepomuk2/resourcemanager.h>
@@ -86,7 +88,8 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
     mAttrModel( 0 ),
     mNepomukModel( 0 ),
     mStdActionManager( 0 ),
-    mMonitor( 0 )
+    mMonitor( 0 ),
+    mCacheOnlyAction( 0 )
 {
   Q_ASSERT( xmlGuiWindow );
   QVBoxLayout *layout = new QVBoxLayout( this );
@@ -112,16 +115,16 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   Session *session = new Session( "AkonadiConsole Browser Widget", this );
 
   // monitor collection changes
-  ChangeRecorder *monitor = new ChangeRecorder( this );
-  monitor->setSession(session);
-  monitor->setCollectionMonitored( Collection::root() );
-  monitor->fetchCollection( true );
-  monitor->setAllMonitored( true );
+  mBrowserMonitor = new ChangeRecorder( this );
+  mBrowserMonitor->setSession(session);
+  mBrowserMonitor->setCollectionMonitored( Collection::root() );
+  mBrowserMonitor->fetchCollection( true );
+  mBrowserMonitor->setAllMonitored( true );
   // TODO: Only fetch the envelope etc if possible.
-  monitor->itemFetchScope().fetchFullPayload( true );
-  monitor->itemFetchScope().setCacheOnly( true );
+  mBrowserMonitor->itemFetchScope().fetchFullPayload( true );
+  mBrowserMonitor->itemFetchScope().setCacheOnly( true );
 
-  mBrowserModel = new AkonadiBrowserModel( monitor, this );
+  mBrowserModel = new AkonadiBrowserModel( mBrowserMonitor, this );
   mBrowserModel->setItemPopulationStrategy( EntityTreeModel::LazyPopulation );
   mBrowserModel->setShowSystemEntities( true );
 
@@ -200,6 +203,11 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   mStdActionManager->setFavoriteCollectionsModel( favoritesModel );
   mStdActionManager->setFavoriteSelectionModel( favoritesView->selectionModel() );
   mStdActionManager->createAllActions();
+
+  mCacheOnlyAction = new KToggleAction( i18n("Cache only retrieval"), xmlGuiWindow );
+  mCacheOnlyAction->setChecked( true );
+  xmlGuiWindow->actionCollection()->addAction( "akonadiconsole_cacheonly", mCacheOnlyAction );
+  connect( mCacheOnlyAction, SIGNAL(toggled(bool)), SLOT(updateItemFetchScope()) );
 
   Nepomuk2::ResourceManager::instance()->init();
 
@@ -476,6 +484,11 @@ void BrowserWidget::clearCache()
 Akonadi::Collection BrowserWidget::currentCollection() const
 {
   return mCollectionView->currentIndex().data( EntityTreeModel::CollectionRole ).value<Collection>();
+}
+
+void BrowserWidget::updateItemFetchScope()
+{
+  mBrowserMonitor->itemFetchScope().setCacheOnly( mCacheOnlyAction->isChecked() );
 }
 
 #include "browserwidget.moc"

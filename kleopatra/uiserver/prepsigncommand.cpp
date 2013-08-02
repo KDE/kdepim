@@ -156,7 +156,7 @@ void PrepSignCommand::Private::slotSignersResolved() {
 
     try {
 
-        q->sendStatus( "PROTOCOL", controller->protocolAsString() );
+        q->sendStatus( "PROTOCOL", QLatin1String(controller->protocolAsString()) );
         q->registerMemento( NewSignEncryptEMailController::mementoName(),
                             make_typed_memento( controller ) );
         q->done();
