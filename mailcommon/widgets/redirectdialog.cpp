@@ -195,7 +195,7 @@ int RedirectDialog::transportId() const
 
 int RedirectDialog::identity() const
 {
-  return d->mComboboxIdentity->currentIdentity();
+  return static_cast<int>(d->mComboboxIdentity->currentIdentity());
 }
 
 void RedirectDialog::accept()
