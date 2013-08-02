@@ -28,6 +28,20 @@ PlasmaComponents.Page {
   property variant navigationModel: _threadSelector
   property variant checkModel: _itemActionModel
 
+  function mailStatusIconSource(mail) {
+    if (mail.is_important) {
+      return "mail-mark-important"
+    } else if (mail.is_replied) {
+      return "mail-replied"
+    } else if (mail.is_forwarded) {
+      return "mail-forwarded"
+    } else if (mail.is_unread) {
+      return "mail-unread-new"
+    } else {
+      return "mail-read"
+    }
+  }
+
   implicitWidth: pageRow.width * 2 /3
 
   //BEGIN Tools
@@ -105,11 +119,13 @@ PlasmaComponents.Page {
       onCurrentRowChanged: currentRow = navigationModel.currentRow
     }
 
+    //BEGIN Delegate
     delegate: PlasmaComponents.ListItem {
       id: headerListDelegate
 
       height: label.height * 2.5
 
+      opacity: model.is_important || model.is_unread ? 1 : 0.65
       clip: true
       enabled: true
       checked: threadView.currentIndex == index
@@ -127,7 +143,7 @@ PlasmaComponents.Page {
         id: itemBackground
 
         anchors.fill: parent
-        color: checked == true ? "lightgrey" : "white"
+        color: checked ? "lightgrey" : "white"
         opacity: 0.5
       }
 
@@ -140,9 +156,27 @@ PlasmaComponents.Page {
           verticalCenter: parent.verticalCenter
         }
 
+        visible: root == pageRow.currentPage
         checked: model.checkOn
 
         onClicked: checkModel.select(model.index, 8)
+      }
+
+      Image {
+        id: avatar
+
+        anchors {
+          left: root == pageRow.currentPage ? checkBox.right : parent.left
+          leftMargin: label.width
+          verticalCenter: parent.verticalCenter
+        }
+
+        height: parent.height * 0.7
+        width: height
+
+        source: "dummy-avatar.png"
+        fillMode: Image.PreserveAspectFit
+        smooth: true
       }
 
       PlasmaComponents.Label {
@@ -150,7 +184,7 @@ PlasmaComponents.Page {
 
         anchors {
           top : parent.top
-          left : checkBox.right
+          left : avatar.right
           leftMargin: label.width
           right: dateLabel.left
         }
@@ -180,7 +214,7 @@ PlasmaComponents.Page {
 
         anchors {
           bottom: parent.bottom
-          left: checkBox.right
+          left: avatar.right
           leftMargin: label.width
           right: statusIcon.left
         }
@@ -188,7 +222,7 @@ PlasmaComponents.Page {
         level: 4
         text: model.subject
         elide: "ElideRight"
-        color: model.is_unread ? "#E10909" : "#3B3B3B"
+        color: "#3B3B3B"
       }
 
       PlasmaComponents.ToolButton {
@@ -199,9 +233,9 @@ PlasmaComponents.Page {
           verticalCenter: parent.verticalCenter
         }
 
-        height: parent.height * 0.8
+        height: parent.height * 0.7
 
-        iconSource: model.is_important ? "mail-mark-important" : "mail-mark-unread"
+        iconSource: mailStatusIconSource(model)
 
         onClicked: dialog.open()
 
@@ -255,6 +289,7 @@ PlasmaComponents.Page {
         //END Dialog
       }
     }
+    //END Delegate
   }
 
   PlasmaComponents.Label {
