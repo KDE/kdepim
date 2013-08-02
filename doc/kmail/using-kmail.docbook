@@ -258,7 +258,7 @@ If your message is not finished yet, select <menuchoice><guimenu>Message</guimen
     <menuchoice><guimenu>Message</guimenu><guimenuitem>Print</guimenuitem></menuchoice> to print it.</para>
   <para id="send-later"><menuchoice><guimenu>Message</guimenu><guimenuitem>Send Later</guimenuitem></menuchoice>
     allows you to schedule your emails to send at a specific date and time. You can configure it to repeat sending the message by checking <guilabel>Repeat every:</guilabel>
-    checkbox and selecting the desired intervals. This is useful if you need to send out reminders to someone on a consistant basis, &eg; employees. You can put the
+    checkbox and selecting the desired intervals. This is useful if you need to send out reminders to someone on a consistent basis, &eg; employees. You can put the
     message in your queued messages by selecting the <guibutton>Put in outbox</guibutton> button or select the <guibutton>Send Later</guibutton> button to schedule the message immediately.</para>
 </listitem>
 </varlistentry>
@@ -267,7 +267,7 @@ If your message is not finished yet, select <menuchoice><guimenu>Message</guimen
   <listitem>
     <para>Compose a new Message from Template is useful if you have created a masterpiece message that you would like to save as a template for use in future new messages.
     Select <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Template</guimenuitem></menuchoice> and this will place your new template in
-      the <guilabel>templates:</guilabel> folder. You can revise the template at anytime by selecting it in this folder. To create your new message
+      the <guilabel>templates:</guilabel> folder. You can revise the template at anytime by selecting it in this folder.
       The saved template will now be listed under this menu to use for new messages. Please see <link linkend="compose-new-message">Compose New Message</link> for further details on composing a message.</para>
   </listitem>
 </varlistentry>
