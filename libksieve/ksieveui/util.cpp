@@ -154,7 +154,6 @@ Akonadi::AgentInstance::List KSieveUi::Util::imapAgentInstances()
                 relevantInstances << instance;
         }
     }
-
     return relevantInstances;
 }
 
