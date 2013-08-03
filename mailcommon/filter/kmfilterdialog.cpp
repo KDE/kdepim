@@ -1704,7 +1704,7 @@ void KMFilterDialog::slotExportAsSieveScript()
     if ( dlg->exec() == QDialog::Accepted ) {
         QList<MailFilter*> lst = dlg->selectedFilters();
         if (!lst.isEmpty()) {
-            FilterConvertToSieve convert(dlg->selectedFilters());
+            FilterConvertToSieve convert(lst);
             convert.convert();
             qDeleteAll(lst);
         }
