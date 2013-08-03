@@ -39,6 +39,7 @@
 #include "archivestorage.h"
 
 #include <mailcommon/kernel/mailkernel.h>
+#include <mailcommon/filter/filtermanager.h>
 
 #include <Akonadi/Control>
 
@@ -60,7 +61,8 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
 {
     KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
     KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
-
+    //Initialize filtermanager
+    (void)MailCommon::FilterManager::instance();
     PimSettingExporterKernel *kernel = new PimSettingExporterKernel( this );
     CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
