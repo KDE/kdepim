@@ -36,9 +36,9 @@ class CryptoComposerTest : public QObject
 
   private Q_SLOTS:
     // openpgp
-    void testSignOpenPGPMime();
-    void testEncryptOpenPGPMime();
-    void testSignEncryptOpenPGPMime();
+    void testOpenPGPMime();
+    void testOpenPGPMime_data();
+
     // the following will do for s-mime as well, as the same sign/enc jobs are used
     void testSignEncryptSameAttachmentsOpenPGPMime();
     void testSignEncryptLateAttachmentsOpenPGPMime();
@@ -47,21 +47,24 @@ class CryptoComposerTest : public QObject
     void testBCCEncrypt();
 
     // inline pgp
-    void testSignInlinePGP();
-    void testEncryptInlinePGP();
-    void testSignEncryptInlinePGP();
+    void testOpenPGPInline_data();
+    void testOpenPGPInline();
 
-    //s-mime
-    void testSignSMIME();
-    void testEncryptSMIME();
-    void testSignEncryptSMIME();
-    void testSignSMIMEOpaque();
-    void testEncryptSMIMEOpaque();
-    void testSignEncryptSMIMEOpaque();
+    // s-mime
+    void testSMIME_data();
+    void testSMIME();
+    void testSMIMEOpaque_data();
+    void testSMIMEOpaque();
+
+    // contentTransferEncoding
+    void testCTEquPr_data();
+    void testCTEquPr();
+    void testCTEbase64_data();
+    void testCTEbase64();
+
     // TODO test the code for autodetecting the charset of a text attachment.
-    // TODO figure out what CTE testing has to be done.
   private:
-    void fillComposerData( MessageComposer::Composer* composer );
+    void fillComposerData( MessageComposer::Composer* composer, QString data );
     void fillComposerCryptoData( MessageComposer::Composer* composer );
 
     // convenience, shared code
