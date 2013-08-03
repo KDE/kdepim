@@ -89,7 +89,7 @@ void FolderArchiveManager::setArchiveItem(qlonglong itemId)
 void FolderArchiveManager::slotFetchParentCollection(KJob *job)
 {
     if ( job->error() ) {
-        moveFailed(i18n("Unable to fetch folder. Error reported:%1",job->errorString()));
+        moveFailed(i18n("Unable to fetch folder. Error reported: %1",job->errorString()));
         kDebug()<<"Unable to fetch folder:"<<job->errorString();
         return;
     }
