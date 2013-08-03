@@ -184,6 +184,16 @@ bool LookupCertificatesDialog::isPassive() const {
     return d->passive;
 }
 
+void LookupCertificatesDialog::setSearchText( const QString &text )
+{
+    d->ui.findED->setText( text );
+}
+
+QString LookupCertificatesDialog::searchText() const
+{
+    return d->ui.findED->text();
+}
+
 void LookupCertificatesDialog::accept() {
     assert( !d->selectedIndexes().empty() );
     emit importRequested( selectedCertificates() );

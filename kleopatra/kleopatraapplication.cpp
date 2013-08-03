@@ -36,7 +36,6 @@
 
 #include "mainwindow.h"
 #include "systrayicon.h"
-
 #include <smartcard/readerstatus.h>
 #include <conf/configuredialog.h>
 
@@ -46,6 +45,7 @@
 #include <utils/log.h>
 #include <utils/getpid.h>
 
+#include <gpgme++/key.h>
 #include <models/keycache.h>
 
 #ifdef HAVE_USABLE_ASSUAN
@@ -54,6 +54,8 @@
 
 #include <commands/signencryptfilescommand.h>
 #include <commands/decryptverifyfilescommand.h>
+#include <commands/lookupcertificatescommand.h>
+#include <commands/detailscommand.h>
 
 #include <KGlobal>
 #include <KIconLoader>
@@ -101,6 +103,8 @@ static const struct {
     { "decrypt",            I18N_NOOP("Decrypt file(s)"),                         "d" },
     { "verify",             I18N_NOOP("Verify file/signature"),                   "V" },
     { "decrypt-verify",     I18N_NOOP("Decrypt and/or verify file(s)"),          "D" },
+    { "query <fingerprint>",I18N_NOOP("Search for Certificate by fingerprint"),   "q" },
+    { "parent-windowid <windowId>",   I18N_NOOP("Parent Window Id for dialogs"),   "" },
     //{ "show-certificate",   I18N_NOOP("Show Certificate(s) by fingerprint(s)"),   ""  },
 };
 
@@ -277,6 +281,42 @@ int KleopatraApplication::newInstance() {
     if ( openpgp && cms ) {
         kDebug() << "ambigious protocol: --openpgp and --cms";
         return 1;
+    }
+
+    // Check for --query command
+    if ( args->isSet( "query" ) ) {
+        const QString fingerPrint = args->getOption( "query" );
+        if ( fingerPrint.isEmpty() ) {
+          kDebug() << "no fingerprint specified: --query";
+          return 1;
+        }
+
+        // Check for Parent Window id
+        WId parentId = 0;
+        if ( args->isSet( "parent-windowid" ) ) {
+            parentId = args->getOption( "parent-windowid" ).toUInt();
+        }
+
+        // Search for local keys
+        const GpgME::Key &key = Kleo::KeyCache::instance()->findByKeyIDOrFingerprint( fingerPrint.toLocal8Bit().data() );
+        if ( key.isNull() ) {
+            // Show external search dialog
+            LookupCertificatesCommand * const cmd = new LookupCertificatesCommand( fingerPrint, 0 );
+            if ( parentId != 0 ) {
+                cmd->setParentWId( parentId );
+            };
+            cmd->start();
+            return 0;
+        } else {
+            // show local detail
+            DetailsCommand * const cmd = new DetailsCommand( key, 0 );
+            if ( parentId != 0 ) {
+                cmd->setParentWId( parentId );
+            };
+            cmd->start();
+            return 0;
+        }
+
     }
 
     static const _Funcs funcs[] = {
