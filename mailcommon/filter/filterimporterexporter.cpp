@@ -337,7 +337,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
     return QList<MailFilter*>();
 }
 
-void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, const KUrl&fileName, bool saveAll )
+void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, const KUrl &fileName, bool saveAll )
 {
     KUrl saveUrl;
     if (fileName.isEmpty()) {
