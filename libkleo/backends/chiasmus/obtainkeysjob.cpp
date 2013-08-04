@@ -58,7 +58,7 @@ Kleo::ObtainKeysJob::ObtainKeysJob( QObject * p )
   assert( ChiasmusBackend::instance() );
   assert( ChiasmusBackend::instance()->config() );
   const CryptoConfigEntry * keypaths =
-    ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "keydir" );
+    ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("keydir") );
   assert( keypaths );
   mKeyPaths = QStringList( keypaths->urlValue().path() );
 }
@@ -97,7 +97,7 @@ void Kleo::ObtainKeysJob::slotPerform( bool async ) {
 
   const QDir dir( KShell::tildeExpand( mKeyPaths[mIndex] ) );
 
-  const QFileInfoList xisFiles = dir.entryInfoList( QStringList( "*.xis;*.XIS" ), QDir::Files );
+  const QFileInfoList xisFiles = dir.entryInfoList( QStringList()<< QLatin1String("*.xis;*.XIS" ), QDir::Files );
   for ( QFileInfoList::const_iterator it = xisFiles.begin(), end = xisFiles.end() ; it != end ; ++it )
     if ( (*it).isReadable() )
       mResult.push_back( (*it).absoluteFilePath() );
