@@ -86,7 +86,7 @@ private:
         TypeBlockForeachBlock
     };
 
-    void loadBlock(QDomNode &n);
+    void loadBlock(QDomNode &n, SieveScriptPage *currentPage, ParseSieveScriptTypeBlock typeBlock);
     void clear();
     SieveScriptPage *createNewScript(const QString &newName, const QString &description = QString());
     QString createUniqName();
