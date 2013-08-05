@@ -80,7 +80,7 @@ QString SieveConditionMailboxExists::help() const
     return i18n("The \"mailboxexists\" test is true if all mailboxes listed in the \"mailbox-names\" argument exist in the mailstore, and each allows the user in whose context the Sieve script runs to \"deliver\" messages into it.");
 }
 
-void SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/)
+bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -99,6 +99,7 @@ void SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionmailboxexists.moc"

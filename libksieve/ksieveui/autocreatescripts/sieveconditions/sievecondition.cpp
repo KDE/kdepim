@@ -75,9 +75,9 @@ QString SieveCondition::help() const
     return QString();
 }
 
-void SieveCondition::setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition )
+bool SieveCondition::setParamWidgetValue(const QDomElement &/*element*/, QWidget */*parent*/, bool /*notCondition*/, QString &/*error*/)
 {
-
+    return true;
 }
 
 #include "sievecondition.moc"

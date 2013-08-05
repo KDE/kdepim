@@ -99,7 +99,7 @@ QString SieveConditionVirusTest::help() const
     return i18n("Sieve implementations that implement the \"virustest\" test have an identifier of \"virustest\" for use with the capability mechanism.");
 }
 
-void SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
+bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -144,6 +144,7 @@ void SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionvirustest.moc"

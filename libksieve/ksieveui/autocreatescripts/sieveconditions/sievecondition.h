@@ -47,7 +47,7 @@ public:
     virtual QString serverNeedsCapability() const;
 
     virtual QString help() const;
-    virtual void setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition );
+    virtual bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error );
 
 private:
     QString mName;

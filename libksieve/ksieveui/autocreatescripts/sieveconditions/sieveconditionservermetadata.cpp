@@ -120,7 +120,7 @@ QString SieveConditionServerMetaData::help() const
     return i18n("This test retrieves the value of the server annotation \"annotation-name\".  The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
 }
 
-void SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error )
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -163,6 +163,7 @@ void SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &elemen
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionservermetadata.moc"

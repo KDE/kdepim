@@ -78,7 +78,7 @@ QString SieveConditionExists::help() const
     return i18n("The \"exists\" test is true if the headers listed in the header-names argument exist within the message.  All of the headers must exist or the test is false.");
 }
 
-void SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -103,6 +103,7 @@ void SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidg
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionexists.moc"

@@ -106,7 +106,7 @@ QString SieveConditionEnvironment::help() const
     return i18n("The environment test retrieves the item of environment information specified by the name string and matches it to the values specified in the key-list argument.");
 }
 
-void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
+bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ , QString &error)
 {
     QDomNode node = element.firstChild();
     int index = 0;
@@ -133,6 +133,7 @@ void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionenvironment.moc"

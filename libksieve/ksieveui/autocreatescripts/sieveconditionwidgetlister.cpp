@@ -201,7 +201,8 @@ void SieveConditionWidget::setCondition(const QString &conditionName, const QDom
         mComboBox->setCurrentIndex(index);
         slotConditionChanged(index);
         KSieveUi::SieveCondition* condition = mConditionList.at( index );
-        condition->setParamWidgetValue(element, this, notCondition);
+        QString error;
+        condition->setParamWidgetValue(element, this, notCondition, error);
     }
 }
 
