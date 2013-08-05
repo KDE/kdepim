@@ -347,7 +347,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
         QDomElement e = n.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            qDebug()<<" tagName "<<tagName;
+            //qDebug()<<" tagName "<<tagName;
             if (tagName == QLatin1String("control")) {
                 //Create a new page when before it was "onlyactions"
                 if (typeBlock == TypeBlockAction)
