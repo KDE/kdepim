@@ -95,7 +95,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -133,6 +133,7 @@ void SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
         }
         node = node.nextSibling();
     }
+    return true;
 
 }
 

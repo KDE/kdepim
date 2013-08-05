@@ -68,7 +68,7 @@ QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -96,6 +96,7 @@ void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionAddHeader::code(QWidget *w) const

@@ -53,7 +53,7 @@ QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -74,6 +74,7 @@ void SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionBreak::code(QWidget *w) const

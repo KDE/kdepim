@@ -75,9 +75,9 @@ QString SieveAction::help() const
     return QString();
 }
 
-void SieveAction::setParamWidgetValue( const QDomElement &doc, QWidget *parent )
+bool SieveAction::setParamWidgetValue( const QDomElement &doc, QWidget *parent, QString &error )
 {
-
+    return true;
 }
 
 QString SieveAction::comment() const

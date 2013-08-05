@@ -67,7 +67,7 @@ QWidget *SieveActionDeleteHeader::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -77,8 +77,9 @@ void SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("test")) {
                 QDomNode testNode = e.toElement();
-                setParamWidgetValue(testNode.toElement(), w );
-                return;
+                //TODO return error here
+                setParamWidgetValue(testNode.toElement(), w, error );
+                return true;
             } else if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
                 combo->setCode(AutoCreateScriptUtil::tagValue(e.text()));
@@ -99,7 +100,7 @@ void SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
         }
         node = node.nextSibling();
     }
-
+    return true;
 }
 
 QString SieveActionDeleteHeader::code(QWidget *w) const

@@ -79,7 +79,7 @@ QWidget *SieveActionKeep::createParamWidget( QWidget *parent ) const
     }
 }
 
-void SieveActionKeep::setParamWidgetValue( const QDomElement &element, QWidget *w )
+bool SieveActionKeep::setParamWidgetValue( const QDomElement &element, QWidget *w, QString &error )
 {
     if (mHasFlagSupport) {
         QDomNode node = element.firstChild();
@@ -104,6 +104,7 @@ void SieveActionKeep::setParamWidgetValue( const QDomElement &element, QWidget *
     } else {
         qDebug()<<" Server doesn't support imapflags";
     }
+    return true;
 }
 
 QStringList SieveActionKeep::needRequires(QWidget *) const

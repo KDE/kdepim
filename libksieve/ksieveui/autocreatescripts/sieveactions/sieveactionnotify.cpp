@@ -62,7 +62,7 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -92,6 +92,7 @@ void SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionNotify::code(QWidget *w) const

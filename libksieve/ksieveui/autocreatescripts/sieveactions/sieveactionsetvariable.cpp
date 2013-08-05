@@ -67,7 +67,7 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -87,7 +87,7 @@ void SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
                         variable->setText(variableElement.text());
                     }
                 } else {
-                    return;
+                    return false;
                 }
             } else if (tagName == QLatin1String("tag")) {
                 SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
@@ -98,6 +98,7 @@ void SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionSetVariable::code(QWidget *w) const

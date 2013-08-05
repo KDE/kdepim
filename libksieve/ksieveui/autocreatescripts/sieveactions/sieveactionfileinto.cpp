@@ -56,7 +56,7 @@ QString SieveActionFileInto::code(QWidget *w) const
     return result + QString::fromLatin1("\"%1\";").arg(text);
 }
 
-void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -90,6 +90,7 @@ void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const

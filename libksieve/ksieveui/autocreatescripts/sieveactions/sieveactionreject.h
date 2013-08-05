@@ -31,7 +31,7 @@ public:
     QWidget *createParamWidget( QWidget *parent ) const;
     QString code(QWidget *) const;
     QStringList needRequires(QWidget *parent) const;
-    void setParamWidgetValue(const QDomElement &element, QWidget *parent );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
 
     bool needCheckIfServerHasCapability() const;
 

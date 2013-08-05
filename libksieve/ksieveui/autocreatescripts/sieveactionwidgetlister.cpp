@@ -245,7 +245,8 @@ void SieveActionWidget::setAction(const QString &actionName, const QDomElement &
         mComboBox->setCurrentIndex(index);
         slotActionChanged(index);
         KSieveUi::SieveAction* action = mActionList.at( index );
-        action->setParamWidgetValue(element, this);
+        QString error;
+        action->setParamWidgetValue(element, this, error);
         action->setComment(comment);
     }
 }

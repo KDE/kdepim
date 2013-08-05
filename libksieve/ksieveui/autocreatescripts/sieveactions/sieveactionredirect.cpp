@@ -64,7 +64,7 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -96,6 +96,7 @@ void SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionRedirect::code(QWidget *w) const

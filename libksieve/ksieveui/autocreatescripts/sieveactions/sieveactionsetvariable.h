@@ -29,7 +29,7 @@ public:
     QString code(QWidget *) const;
     QString help() const;
     QStringList needRequires(QWidget *parent) const;
-    void setParamWidgetValue(const QDomElement &element, QWidget *parent );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
     QWidget *createParamWidget( QWidget *parent ) const;
