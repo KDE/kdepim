@@ -29,9 +29,9 @@ class FilterActionBeep : public FilterActionWithNone
     Q_OBJECT
 public:
     explicit FilterActionBeep( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context ) const;
     static FilterAction* newAction();
-    virtual SearchRule::RequiredPart requiredPart() const;
+    SearchRule::RequiredPart requiredPart() const;
 };
 
 }

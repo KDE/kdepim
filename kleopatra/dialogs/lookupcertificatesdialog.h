@@ -57,6 +57,8 @@ namespace Dialogs {
 
         void setPassive( bool passive );
         bool isPassive() const;
+        void setSearchText( const QString &text );
+        QString searchText() const;
 
     Q_SIGNALS:
         void searchTextChanged( const QString & text );

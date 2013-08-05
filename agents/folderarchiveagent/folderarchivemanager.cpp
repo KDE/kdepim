@@ -19,10 +19,14 @@
 #include "folderarchiveagentjob.h"
 #include "folderarchiveaccountinfo.h"
 #include "folderarchivekernel.h"
+#include "folderarchiveutil.h"
 
 #include <mailcommon/kernel/mailkernel.h>
 
 #include <Akonadi/AgentManager>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/CollectionFetchJob>
 
 #include <KSharedConfig>
 #include <KGlobal>
@@ -57,7 +61,7 @@ void FolderArchiveManager::collectionRemoved(const Akonadi::Collection &collecti
     Q_FOREACH (FolderArchiveAccountInfo *info, mListAccountInfo) {
         if (info->archiveTopLevel() == collection.id()) {
             info->setArchiveTopLevel(-1);
-            KConfigGroup group = KGlobal::config()->group(QLatin1String("FolderArchiveAccount ") + info->instanceName());
+            KConfigGroup group = KGlobal::config()->group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + info->instanceName());
             info->writeConfig(group);
         }
     }
@@ -72,6 +76,52 @@ FolderArchiveAccountInfo *FolderArchiveManager::infoFromInstanceName(const QStri
         }
     }
     return 0;
+}
+
+void FolderArchiveManager::setArchiveItem(qlonglong itemId)
+{
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item(itemId), this );
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    job->fetchScope().setFetchRemoteIdentification(true);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchParentCollection(KJob*)) );
+}
+
+void FolderArchiveManager::slotFetchParentCollection(KJob *job)
+{
+    if ( job->error() ) {
+        moveFailed(i18n("Unable to fetch folder. Error reported: %1",job->errorString()));
+        kDebug()<<"Unable to fetch folder:"<<job->errorString();
+        return;
+    }
+    const Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+    const Akonadi::Item::List items = fetchJob->items();
+    if (items.isEmpty()) {
+        moveFailed(i18n("No folder returned."));
+        kDebug()<<"Fetch list is empty";
+    } else {
+        Akonadi::CollectionFetchJob* jobCol = new Akonadi::CollectionFetchJob( Akonadi::Collection(items.first().parentCollection().id()), Akonadi::CollectionFetchJob::Base, this );
+        jobCol->setProperty("itemId", items.first().id());
+        connect( jobCol, SIGNAL(result(KJob*)), SLOT(slotFetchCollection(KJob*)) );
+    }
+}
+
+void FolderArchiveManager::slotFetchCollection(KJob *job)
+{
+    if ( job->error() ) {
+        moveFailed(i18n("Unable to fetch parent folder. Error reported: %1", job->errorString()));
+        kDebug()<<"can not fetch collection "<<job->errorString();
+        return;
+    }
+    Akonadi::CollectionFetchJob* jobCol = qobject_cast<Akonadi::CollectionFetchJob*>(job);
+    if (jobCol->collections().isEmpty()) {
+        moveFailed(i18n("Unable to return list of folders."));
+        kDebug()<<"List of folder is empty";
+        return;
+    }
+
+    QList<qlonglong> itemIds;
+    itemIds << jobCol->property("itemId").toLongLong();
+    setArchiveItems(itemIds, jobCol->collections().first().resource());
 }
 
 void FolderArchiveManager::setArchiveItems(const QList<qlonglong> &itemIds, const QString &instanceName)
@@ -102,7 +152,7 @@ void FolderArchiveManager::slotInstanceRemoved(const Akonadi::AgentInstance &ins
 
 void FolderArchiveManager::removeInfo(const QString &instanceName)
 {
-    KConfigGroup group = KGlobal::config()->group(QLatin1String("FolderArchiveAccount ") + instanceName);
+    KConfigGroup group = KGlobal::config()->group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + instanceName);
     group.deleteGroup();
     KGlobal::config()->sync();
 }
@@ -112,7 +162,7 @@ void FolderArchiveManager::load()
     qDeleteAll(mListAccountInfo);
     mListAccountInfo.clear();
 
-    const QStringList accountList = KGlobal::config()->groupList().filter( QRegExp( QLatin1String("FolderArchiveAccount ") ) );
+    const QStringList accountList = KGlobal::config()->groupList().filter( QRegExp( FolderArchive::FolderArchiveUtil::groupConfigPattern() ) );
     Q_FOREACH (const QString &account, accountList) {
         KConfigGroup group = KGlobal::config()->group(account);
         FolderArchiveAccountInfo *info = new FolderArchiveAccountInfo(group);

@@ -33,6 +33,7 @@ public:
     void showConfigureDialog(qlonglong windowId = 0);
 
     void archiveItems(const QList<qlonglong> &itemIds, const QString &instanceName );
+    void archiveItem(qlonglong itemId);
 
     void collectionRemoved( const Akonadi::Collection &collection );
 

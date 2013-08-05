@@ -109,7 +109,7 @@ QString SieveConditionConvert::help() const
     return i18n("The \"convert\" action specifies that all body parts with a media type equal to \"media-type\" be converted to the media type in \"media-type\" using conversion parameters.");
 }
 
-void SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
+bool SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ , QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -131,12 +131,15 @@ void SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWid
             } else if (tagName == QLatin1String("list")) {
                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
                params->setCode(AutoCreateScriptUtil::listValue(e));
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<"SieveActionConvert::setParamWidgetValue unknown tag "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionconvert.moc"

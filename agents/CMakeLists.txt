@@ -1,0 +1,4 @@
+add_subdirectory(folderarchiveagent)
+add_subdirectory(sendlateragent)
+add_subdirectory(archivemailagent)
+add_subdirectory(mailfilteragent)

@@ -34,16 +34,16 @@ class FilterActionForward: public FilterActionWithAddress
 public:
     explicit FilterActionForward( QObject *parent = 0 );
     static FilterAction* newAction();
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual SearchRule::RequiredPart requiredPart() const;
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
-    virtual void argsFromString( const QString &argsStr );
-    virtual QString argsAsString() const;
-    virtual QString displayString() const;
-    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+    ReturnCode process( ItemContext &context ) const;
+    SearchRule::RequiredPart requiredPart() const;
+    QWidget* createParamWidget( QWidget *parent ) const;
+    void applyParamWidgetValue( QWidget *paramWidget );
+    void setParamWidgetValue( QWidget *paramWidget ) const;
+    void clearParamWidget( QWidget *paramWidget ) const;
+    void argsFromString( const QString &argsStr );
+    QString argsAsString() const;
+    QString displayString() const;
+    bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
 private:
     mutable QString mTemplate;

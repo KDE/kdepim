@@ -42,22 +42,22 @@ class FilterActionAddTag: public FilterAction
     Q_OBJECT
 public:
     explicit FilterActionAddTag( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context ) const;
     SearchRule::RequiredPart requiredPart() const;
 
     static FilterAction* newAction();
 
-    virtual bool isEmpty() const;
+    bool isEmpty() const;
 
-    virtual void argsFromString( const QString &argsStr );
-    virtual QString argsAsString() const;
-    virtual QString displayString() const;
-    virtual bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
+    void argsFromString( const QString &argsStr );
+    QString argsAsString() const;
+    QString displayString() const;
+    bool argsFromStringInteractive( const QString &argsStr, const QString& filterName );
 
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    QWidget *createParamWidget( QWidget *parent ) const;
+    void applyParamWidgetValue( QWidget *paramWidget );
+    void setParamWidgetValue( QWidget *paramWidget ) const;
+    void clearParamWidget( QWidget *paramWidget ) const;
 
 
 private Q_SLOTS:

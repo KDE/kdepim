@@ -41,7 +41,7 @@ public:
 
     QString help() const;
 
-    void setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition );
+    bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error );
 };
 }
 #endif // SIEVECONDITIONVIRUSTEST_H

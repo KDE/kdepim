@@ -109,8 +109,8 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
   for ( int i = 0 ; i < numSignalReplacements ; ++i )
     connect( this, signalReplacements[i].source, signalReplacements[i].target );
 
-  this->setToolTip("");
-  viewport()->setToolTip(""); // make double sure :)
+  this->setToolTip(QString());
+  viewport()->setToolTip(QString()); // make double sure :)
 }
 
 Kleo::KeyListView::~KeyListView() {

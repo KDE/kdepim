@@ -245,9 +245,10 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         int offset = 0;
         switch(mFunction) {
         case FuncEquals:
-            //TODO implement it
+            code += i18n("size equals not supported");
+            break;
         case FuncNotEqual:
-            //TODO implement it
+            code += i18n("size not equals not supported");
             break;
         case FuncIsGreater:
             comparaison = QLatin1String(":over");
@@ -282,16 +283,22 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         }
         code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(QString::number(mContents.toInt() + offset));
     } else if (mField == "<status>") {
-
+        //TODO ?
+        code += i18n("<status> not implemented/supported");
     } else if (mField == "contents") {
-
+        //TODO ?
+        code += i18n("<contents> not implemented/supported");
     } else if (mField == "<age in days>") {
-        //date ?
-
+        //TODO ?
+        code += i18n("<age in days> not implemented/supported");
     } else if (mField == "<recipients>") {
+        //TODO ?
+        code += i18n("<recipients> not implemented/supported");
     } else if (mField == "<tag>") {
         code += i18n("<Tag> is not supported");
     } else if (mField == "<message>") {
+        //TODO ?
+        code += i18n("<message> not implemented/supported");
     } else if (mField == "<body>") {
         if (!requires.contains(QLatin1String("body")))
             requires << QLatin1String("body");

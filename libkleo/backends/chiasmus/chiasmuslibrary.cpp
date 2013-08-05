@@ -65,7 +65,7 @@ Kleo::ChiasmusLibrary::~ChiasmusLibrary() {
 Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reason ) const {
   assert( ChiasmusBackend::instance() );
   assert( ChiasmusBackend::instance()->config() );
-  const CryptoConfigEntry * lib = ChiasmusBackend::instance()->config()->entry( "Chiasmus", "General", "lib" );
+  const CryptoConfigEntry * lib = ChiasmusBackend::instance()->config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("lib") );
   assert( lib );
   const QString libfile = lib->urlValue().path();
   if ( !mXiaLibrary )

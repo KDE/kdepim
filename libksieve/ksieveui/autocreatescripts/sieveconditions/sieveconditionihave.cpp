@@ -81,7 +81,7 @@ QString SieveConditionIhave::help() const
     return i18n("The \"ihave\" test provides a means for Sieve scripts to test for the existence of a given extension prior to actually using it.");
 }
 
-void SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidget *w, bool, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -92,12 +92,15 @@ void SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidge
                 const QString tagValue = e.text();
                 KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
                 edit->setText(tagValue);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionIhave::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionihave.moc"

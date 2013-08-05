@@ -100,7 +100,7 @@ QString SieveConditionAddress::help() const
     return i18n("The \"address\" test matches Internet addresses in structured headers that contain addresses.  It returns true if any header contains any key in the specified part of the address, as modified by the comparator and the match keyword.");
 }
 
-void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error )
 {
     int index = 0;
     int indexStr = 0;
@@ -143,12 +143,15 @@ void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
                 }
                 ++indexStr;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionAddress::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionaddress.moc"

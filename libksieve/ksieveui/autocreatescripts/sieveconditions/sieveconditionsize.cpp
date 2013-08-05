@@ -72,7 +72,7 @@ QString SieveConditionSize::help() const
     return i18n("The \"size\" test deals with the size of a message.  It takes either a tagged argument of \":over\" or \":under\", followed by a number representing the size of the message.");
 }
 
-void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -94,12 +94,15 @@ void SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
                 }
                 SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget*>(QLatin1String("sizewidget"));
                 sizeWidget->setCode(tagValue, numIdentifier);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionSize::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionsize.moc"

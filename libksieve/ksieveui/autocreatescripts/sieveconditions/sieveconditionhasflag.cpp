@@ -109,7 +109,7 @@ QString SieveConditionHasFlag::help() const
     return i18n("The hasflag test evaluates to true if any of the variables matches any flag name.");
 }
 
-void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
 {
     QStringList strList;
     QDomNode node = element.firstChild();
@@ -122,6 +122,8 @@ void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
                 matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
             } else if (tagName == QLatin1String("str")) {
                 strList << e.text();
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;
             }
@@ -145,6 +147,7 @@ void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
         qDebug()<<" SieveConditionHasFlag::setParamWidgetValue str list count not correct :"<<strList.count();
         break;
     }
+    return true;
 }
 
 #include "sieveconditionhasflag.moc"

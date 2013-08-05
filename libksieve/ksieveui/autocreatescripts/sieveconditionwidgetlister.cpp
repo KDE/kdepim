@@ -201,7 +201,8 @@ void SieveConditionWidget::setCondition(const QString &conditionName, const QDom
         mComboBox->setCurrentIndex(index);
         slotConditionChanged(index);
         KSieveUi::SieveCondition* condition = mConditionList.at( index );
-        condition->setParamWidgetValue(element, this, notCondition);
+        QString error;
+        condition->setParamWidgetValue(element, this, notCondition, error);
     }
 }
 
@@ -323,7 +324,6 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
     } else {
         bool firstCondition = true;
         QDomElement element = e;
-        qDebug()<<" void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest, bool notCondition)"<<notCondition;
         if (notCondition) {
             QDomNode node = e.firstChild();
             if (!node.isNull()) {

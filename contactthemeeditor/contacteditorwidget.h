@@ -15,18 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVEUTIL_H
-#define FOLDERARCHIVEUTIL_H
+#ifndef CONTACTEDITORWIDGET_H
+#define CONTACTEDITORWIDGET_H
+#include "grantleethemeeditor/editorwidget.h"
 
-#include "folderarchive_export.h"
-
-namespace FolderArchive {
-namespace FolderArchiveUtil
+class ContactEditorWidget : public GrantleeThemeEditor::EditorWidget
 {
-FOLDERARCHIVE_EXPORT bool folderArchiveAgentEnabled();
-FOLDERARCHIVE_EXPORT void forceReparseConfiguration();
-}
-}
+    Q_OBJECT
+public:
+    explicit ContactEditorWidget(QWidget *parent = 0);
+    ~ContactEditorWidget();
 
+public Q_SLOTS:
+    void createCompleterList(const QStringList &extraCompletion = QStringList());
+};
 
-#endif // FOLDERARCHIVEUTIL_H
+#endif // CONTACTEDITORWIDGET_H

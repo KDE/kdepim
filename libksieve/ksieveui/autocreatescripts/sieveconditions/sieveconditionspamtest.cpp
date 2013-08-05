@@ -118,7 +118,7 @@ QString SieveConditionSpamTest::help() const
     return i18n("Sieve implementations that implement the \"spamtest\" test use an identifier of either \"spamtest\" or \"spamtestplus\" for use with the capability mechanism.");
 }
 
-void SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
+bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -162,12 +162,15 @@ void SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
             } else if (tagName == QLatin1String("str")) {
                 QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
                 spinbox->setValue(e.text().toInt());
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveSpamTest::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionspamtest.moc"

@@ -128,10 +128,10 @@ soprano_add_ontology(libmailcommon_SRCS
 )
 
 
-set_source_files_properties(${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
+set_source_files_properties(${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
 
 qt4_add_dbus_interfaces(libmailcommon_SRCS
-  ${CMAKE_SOURCE_DIR}/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
+  ${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml
 )
 
 kde4_add_ui_files(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)

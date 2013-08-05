@@ -53,7 +53,7 @@ void SieveGlobalVariableActionWidget::generatedScript(QString &script)
         return;
     script += QLatin1String("global ");
     script += QString::fromLatin1("\"%1\";\n").arg(variableName);
-    if (mSetValueTo->isChecked()) {
+    if (mSetValueTo->isChecked() && !mVariableValue->text().isEmpty()) {
         script += QString::fromLatin1("set \"%1\" \"%2\";\n").arg(variableName).arg(mVariableValue->text());
     }
 }

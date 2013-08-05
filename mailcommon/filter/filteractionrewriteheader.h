@@ -35,17 +35,17 @@ class FilterActionRewriteHeader: public FilterActionWithStringList
     Q_OBJECT
 public:
     explicit FilterActionRewriteHeader( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual SearchRule::RequiredPart requiredPart() const;
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    ReturnCode process( ItemContext &context ) const;
+    SearchRule::RequiredPart requiredPart() const;
+    QWidget* createParamWidget( QWidget *parent ) const;
+    void setParamWidgetValue( QWidget *paramWidget ) const;
+    void applyParamWidgetValue( QWidget *paramWidget );
+    void clearParamWidget( QWidget *paramWidget ) const;
 
-    virtual QString argsAsString() const;
-    virtual void argsFromString( const QString &argsStr );
+    QString argsAsString() const;
+    void argsFromString( const QString &argsStr );
 
-    virtual QString displayString() const;
+    QString displayString() const;
 
     static FilterAction* newAction();
 

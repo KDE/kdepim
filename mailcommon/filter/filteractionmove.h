@@ -33,9 +33,9 @@ class FilterActionMove: public FilterActionWithFolder
     Q_OBJECT
 public:
     explicit FilterActionMove( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual bool requiresBody() const;
-    virtual SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process( ItemContext &context ) const;
+    bool requiresBody() const;
+    SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
 
     bool canConvertToSieve() const;

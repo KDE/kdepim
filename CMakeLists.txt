@@ -113,7 +113,7 @@ endif()
 find_package(KDE4 4.10 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.11.40)
+find_package(KdepimLibs 4.11.43)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -179,7 +179,7 @@ else()
 # Otherwise...
 ############### Find the stuff we need ###############
   # Akonadi
-  find_package(Akonadi 1.10.43 QUIET CONFIG)
+  find_package(Akonadi 1.10.44 QUIET CONFIG)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
@@ -299,7 +299,6 @@ else()
   macro_optional_add_subdirectory(messagecomposer)
   add_subdirectory(pimcommon)
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
-  add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)
   macro_optional_add_subdirectory(headerthemeeditor)
   add_subdirectory(grantleethemeeditor)
@@ -321,11 +320,9 @@ else()
   macro_optional_add_subdirectory(pimactivity)
   macro_optional_add_subdirectory(korganizer)
   if(KDEPIM_BUILD_DESKTOP)
+    macro_optional_add_subdirectory(agents)
     macro_optional_add_subdirectory(akregator)
     macro_optional_add_subdirectory(akregator2)
-    macro_optional_add_subdirectory(archivemailagent)
-    macro_optional_add_subdirectory(sendlateragent)
-    macro_optional_add_subdirectory(folderarchiveagent)
     macro_optional_add_subdirectory(importwizard)
     macro_optional_add_subdirectory(kaddressbook)
     macro_optional_add_subdirectory(kmailcvt)

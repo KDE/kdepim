@@ -33,8 +33,8 @@ class FilterActionExec : public FilterActionWithCommand
     Q_OBJECT
 public:
     explicit FilterActionExec( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process( ItemContext &context ) const;
+    SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
 };
 

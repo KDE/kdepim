@@ -15,19 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "folderarchiveutil.h"
-#include "folderarchiveagentsettings.h"
+#include "contacteditorwidget.h"
+#include "defaultcompletion.h"
+#include <QStringListModel>
+#include <QCompleter>
+#include <QDebug>
 
-using namespace FolderArchive;
-
-bool FolderArchiveUtil::folderArchiveAgentEnabled()
+ContactEditorWidget::ContactEditorWidget(QWidget *parent)
+    : GrantleeThemeEditor::EditorWidget(parent)
 {
-    return FolderArchiveAgentSettings::enabled();
+    createCompleterList();
 }
 
-
-void FolderArchiveUtil::forceReparseConfiguration()
+ContactEditorWidget::~ContactEditorWidget()
 {
-    FolderArchiveAgentSettings::self()->writeConfig();
-    FolderArchiveAgentSettings::self()->config()->reparseConfiguration();
 }
+
+void ContactEditorWidget::createCompleterList(const QStringList &extraCompletion)
+{
+    QStringList listWord;
+    listWord << DefaultCompletion::defaultCompetion();
+    listWord << DefaultCompletion::defaultOptions();
+    listWord << extraCompletion;
+    m_completer->setModel( new QStringListModel( listWord, m_completer ) );
+}
+
+#include "contacteditorwidget.moc"

@@ -80,7 +80,7 @@ QString SieveConditionServerMetaDataExists::help() const
     return i18n("The \"servermetadataexists\" test is true if all of the server annotations listed in the \"annotation-names\" argument exist.");
 }
 
-void SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -91,11 +91,14 @@ void SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &
                 const QString tagValue = e.text();
                 KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
                 value->setText(tagValue);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 #include "sieveconditionservermetadataexists.moc"

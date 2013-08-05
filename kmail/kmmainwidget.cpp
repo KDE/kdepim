@@ -57,7 +57,7 @@
 #include "job/createnewcontactjob.h"
 #include "sendlateragentinterface.h"
 #include "folderarchiveagentinterface.h"
-#include "folderarchiveagent/folderarchiveutil.h"
+#include "agents/folderarchiveagent/folderarchiveutil.h"
 
 #include "pimcommon/acl/collectionaclpage.h"
 #include "mailcommon/collectionpage/collectiongeneralpage.h"
@@ -2946,6 +2946,8 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,cons
     menu->addAction( mMsgActions->printAction() );
     menu->addAction( mSaveAsAction );
     menu->addAction( mSaveAttachmentsAction );
+    if (FolderArchive::FolderArchiveUtil::folderArchiveAgentEnabled())
+        menu->addAction( mMsgActions->archiveMailAction());
 
     menu->addSeparator();
     if ( parentCol.isValid() && CommonKernel->folderIsTrash(parentCol) ) {
@@ -4862,14 +4864,9 @@ void KMMainWidget::slotArchiveMails()
 {
     OrgFreedesktopAkonadiFolderArchiveAgentInterface folderArchiveInterface(QLatin1String("org.freedesktop.Akonadi.FolderArchiveAgent"), QLatin1String("/FolderArchiveAgent"),QDBusConnection::sessionBus(), this);
     if (folderArchiveInterface.isValid()) {
-        const QList<Akonadi::Item> selectedMessages = mMessagePane->selectionAsMessageItemList();
+        const QList<Akonadi::Item::Id> selectedMessages = mMessagePane->selectionAsListMessageId();
         if (mCurrentFolder) {
-            QList<qlonglong> ids;
-            Q_FOREACH(const Akonadi::Item &item, selectedMessages) {
-                ids << item.id();
-            }
-
-            folderArchiveInterface.archiveItems(ids, mCurrentFolder->collection().resource());
+            folderArchiveInterface.archiveItems(selectedMessages, mCurrentFolder->collection().resource());
         }
     } else {
         KMessageBox::error(this,i18n("Archive Folder Agent was not registered."));

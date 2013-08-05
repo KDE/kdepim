@@ -56,6 +56,11 @@ void FolderArchiveAgent::archiveItems(const QList<qlonglong> &itemIds, const QSt
     mFolderArchiveManager->setArchiveItems(itemIds, instanceName);
 }
 
+void FolderArchiveAgent::archiveItem(qlonglong itemId)
+{
+    mFolderArchiveManager->setArchiveItem(itemId);
+}
+
 void FolderArchiveAgent::showConfigureDialog(qlonglong windowId)
 {
     QPointer<FolderArchiveConfigureDialog> dialog = new FolderArchiveConfigureDialog();

@@ -59,6 +59,7 @@
 
 #include <QBuffer>
 #include <QRegExp>
+#include <QLineEdit>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -81,6 +82,7 @@ public:
     explicit Private( LookupCertificatesCommand * qq, KeyListController * c );
     ~Private();
 
+    QString fingerPrint;
     void init();
 
 private:
@@ -150,6 +152,13 @@ LookupCertificatesCommand::LookupCertificatesCommand( KeyListController * c )
     d->init();
 }
 
+LookupCertificatesCommand::LookupCertificatesCommand( const QString & fingerPrint, KeyListController * c )
+    : ImportCertificatesCommand( new Private( this, c ) )
+{
+    d->init();
+    d->fingerPrint = fingerPrint;
+}
+
 LookupCertificatesCommand::LookupCertificatesCommand( QAbstractItemView * v, KeyListController * c )
     : ImportCertificatesCommand( v, new Private( this, c ) )
 {
@@ -172,6 +181,16 @@ void LookupCertificatesCommand::doStart() {
 
     d->createDialog();
     assert( d->dialog );
+
+    // if have prespecified fingerPrint, load into find field
+    // and start search
+    if ( ! d->fingerPrint.isEmpty() ) {
+        if ( !d->fingerPrint.startsWith( QLatin1String("0x") ) )
+            d->fingerPrint = QLatin1String("0x") + d->fingerPrint;
+        d->dialog->setSearchText( d->fingerPrint );
+        // Start Search
+        d->slotSearchTextChanged( d->fingerPrint );
+    }
 
     d->dialog->setPassive( false );
     d->dialog->show();
@@ -207,11 +226,11 @@ void LookupCertificatesCommand::Private::slotSearchTextChanged( const QString & 
     const QRegExp rx( QLatin1String( "(?:0x|0X)?[0-9a-fA-F]{6,}" ) );
     if ( rx.exactMatch( str ) )
         information( str.startsWith( QLatin1String( "0x" ), Qt::CaseInsensitive )
-                     ? i18n("<p>You seem to be searching for a fingerprint or a key-id.</p>"
+                     ? i18n("<p>You seem to be searching for a fingerPrint or a key-id.</p>"
                             "<p>Different keyservers expect different ways to search for these. "
                             "Some require a \"0x\" prefix, while others require there be no such prefix.</p>"
                             "<p>If your search does not yield any results, try removing the 0x prefix from your search.</p>")
-                     : i18n("<p>You seem to be searching for a fingerprint or a key-id.</p>"
+                     : i18n("<p>You seem to be searching for a fingerPrint or a key-id.</p>"
                             "<p>Different keyservers expect different ways to search for these. "
                             "Some require a \"0x\" prefix, while others require there be no such prefix.</p>"
                             "<p>If your search does not yield any results, try adding the 0x prefix to your search.</p>"),

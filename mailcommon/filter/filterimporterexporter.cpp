@@ -337,7 +337,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
     return QList<MailFilter*>();
 }
 
-void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, const KUrl&fileName, bool saveAll )
+void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, const KUrl &fileName, bool saveAll )
 {
     KUrl saveUrl;
     if (fileName.isEmpty()) {
@@ -346,15 +346,16 @@ void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, c
 
         if ( saveUrl.isEmpty() ||
              !MessageViewer::Util::checkOverwrite( saveUrl, d->mParent ) ) {
+            qDeleteAll(filters);
             return;
         }
     } else {
         saveUrl= fileName;
     }
-
     KSharedConfig::Ptr config = KSharedConfig::openConfig( saveUrl.toLocalFile() );
     if (saveAll) {
         writeFiltersToConfig( filters, config, true );
+        qDeleteAll(filters);
     } else {
         MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );
         dlg->setFilters( filters );

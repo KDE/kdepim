@@ -145,6 +145,7 @@ install(FILES
   SnippetsList.qml
   StartPage.qml
   add-attachment-button.png
+  dummy-avatar.png
   remove-attachment-button.png
   toggle-signature-button.png
   toggle-encryption-button.png
