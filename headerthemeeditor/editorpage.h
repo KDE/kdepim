@@ -28,6 +28,9 @@ class KZip;
 class QSplitter;
 class PreviewWidget;
 class ThemeEditorWidget;
+namespace GrantleeThemeEditor {
+class EditorWidget;
+}
 
 class EditorPage : public QWidget
 {
@@ -55,7 +58,7 @@ public:
     void insertFile(const QString &filename);
 
     PreviewWidget *preview() const;
-    ThemeEditorWidget *editor() const;
+    GrantleeThemeEditor::EditorWidget *editor() const;
 
 Q_SIGNALS:
     void needUpdateViewer();
@@ -64,7 +67,7 @@ Q_SIGNALS:
 private:
     PageType mType;
     QString mPageFileName;
-    ThemeEditorWidget *mEditor;
+    GrantleeThemeEditor::EditorWidget *mEditor;
     PreviewWidget *mPreview;
     ThemeTemplateWidget *mThemeTemplate;
     QSplitter *mMainSplitter;
