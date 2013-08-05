@@ -20,7 +20,7 @@
 
 #include <KXmlGuiWindow>
 
-class ThemeEditorPage;
+class ContactEditorPage;
 class KAction;
 class KToggleAction;
 
@@ -42,7 +42,6 @@ private Q_SLOTS:
     void slotUploadTheme();
     void slotQuitApp();
     bool slotSaveTheme();
-    void slotConfigure();
     void slotInstallTheme();
     void slotInsertFile();
     void slotPrintingMode();
@@ -55,7 +54,7 @@ private:
     void updateActions();
     bool saveCurrentProject(bool createNewTheme);
     void setupActions();
-    ThemeEditorPage *mThemeEditor;
+    ContactEditorPage *mContactEditor;
     KAction *mNewThemeAction;
     KAction *mCloseThemeAction;
     KAction *mAddExtraPage;

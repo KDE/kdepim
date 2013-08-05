@@ -20,9 +20,23 @@
 QStringList DefaultCompletion::defaultCompetion()
 {
     //TODO add to highlighter
-    //TODO
     QStringList lst;
-    lst <<QLatin1String( "<div>" );
+
+    lst << QLatin1String( "<div>" )
+        << QLatin1String( "contact.birthday")
+        << QLatin1String("contact.birthdayi18n")
+        << QLatin1String("contact.phoneNumbers")
+        << QLatin1String("phoneNumber.smsLink")
+        << QLatin1String("phoneNumber.type")
+        << QLatin1String("contact.emailsi18n")
+        << QLatin1String("contact.websitei18n")
+        << QLatin1String("contact.website")
+        << QLatin1String("contact.blogUrl")
+        << QLatin1String("contact.addresses")
+        << QLatin1String("contact.imAddressi18n")
+        << QLatin1String("contact.imAddress")
+        << QLatin1String("contact.Professioni18n")
+        << QLatin1String("contact.profession");
     return lst;
 }
 

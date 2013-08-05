@@ -35,7 +35,7 @@ ContactTemplateListWidget::~ContactTemplateListWidget()
 
 QList<PimCommon::defaultTemplate> ContactTemplateListWidget::defaultTemplates()
 {
-    return ThemeDefaultTemplate::defaultTemplates();
+    return ContactDefaultTemplate::contactTemplates();
 }
 
 ContactTemplateWidget::ContactTemplateWidget(const QString &title, QWidget *parent)
