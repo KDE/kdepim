@@ -238,17 +238,18 @@ void SieveActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool remov
     mRemove->setEnabled(removeButtonEnabled);
 }
 
-void SieveActionWidget::setAction(const QString &actionName, const QDomElement &element, const QString &comment)
+bool SieveActionWidget::setAction(const QString &actionName, const QDomElement &element, const QString &comment, QString &error)
 {
     const int index = mComboBox->findData(actionName);
+    bool result = false;
     if (index != -1) {
         mComboBox->setCurrentIndex(index);
         slotActionChanged(index);
         KSieveUi::SieveAction* action = mActionList.at( index );
-        QString error;
-        action->setParamWidgetValue(element, this, error);
+        result = action->setParamWidgetValue(element, this, error);
         action->setComment(comment);
     }
+    return result;
 }
 
 SieveActionWidgetLister::SieveActionWidgetLister(QWidget *parent)
@@ -336,7 +337,7 @@ int SieveActionWidgetLister::actionNumber() const
     return widgets().count();
 }
 
-void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyActions)
+void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyActions, QString &error)
 {
     bool firstAction = true;
     QString comment;
@@ -351,7 +352,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                         addWidgetAfterThisWidget(widgets().last());
                         w = qobject_cast<SieveActionWidget*>( widgets().last() );
                     }
-                    w->setAction(actionName, element, comment);
+                    w->setAction(actionName, element, comment, error);
                     //comment.clear();
                 } else if (tagName == QLatin1String("crlf")) {
                     //nothing
@@ -375,7 +376,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                             addWidgetAfterThisWidget(widgets().last());
                         }
                         SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
-                        w->setAction(actionName, e, comment);
+                        w->setAction(actionName, e, comment, error);
                         comment.clear();
                     } else {
                         qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
