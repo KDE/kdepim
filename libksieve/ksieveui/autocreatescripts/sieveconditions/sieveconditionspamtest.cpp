@@ -162,6 +162,8 @@ void SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
             } else if (tagName == QLatin1String("str")) {
                 QSpinBox *spinbox = w->findChild<QSpinBox*>( QLatin1String("value") );
                 spinbox->setValue(e.text().toInt());
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveSpamTest::setParamWidgetValue unknown tagName "<<tagName;
             }

@@ -352,7 +352,8 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                     }
                     w->setAction(actionName, element, comment);
                     //comment.clear();
-                    qDebug()<<" actionName "<<actionName;
+                } else if (tagName == QLatin1String("crlf")) {
+                    //nothing
                 } else {
                     qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
                 }
@@ -375,7 +376,6 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                         SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
                         w->setAction(actionName, e, comment);
                         comment.clear();
-                        qDebug()<<" actionName "<<actionName;
                     } else {
                         qDebug()<<" SieveActionWidgetLister::loadScript don't have name attribute "<<tagName;
                     }
@@ -384,8 +384,10 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                         comment += QLatin1Char('\n');
                     }
                     comment += e.text();
+                } else if (tagName == QLatin1String("crlf")) {
+                    //nothing
                 } else {
-                    qDebug()<<" SieveActionWidgetLister::loadScript unknow tagName "<<tagName;
+                    qDebug()<<" SieveActionWidgetLister::loadScript unknown tagName "<<tagName;
                 }
             }
             node = node.nextSibling();

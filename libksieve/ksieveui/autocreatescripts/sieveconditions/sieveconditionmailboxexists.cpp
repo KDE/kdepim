@@ -91,6 +91,8 @@ void SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
                 const QString tagValue = e.text();
                 KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionMailboxExists::setParamWidgetValue unknown tagName "<<tagName;
             }

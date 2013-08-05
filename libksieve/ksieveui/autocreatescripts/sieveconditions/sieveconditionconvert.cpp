@@ -131,6 +131,8 @@ void SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWid
             } else if (tagName == QLatin1String("list")) {
                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
                params->setCode(AutoCreateScriptUtil::listValue(e));
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<"SieveActionConvert::setParamWidgetValue unknown tag "<<tagName;
             }

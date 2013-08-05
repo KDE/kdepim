@@ -95,6 +95,8 @@ void SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidg
             } else if (tagName == QLatin1String("list")) {
                 SelectHeaderTypeComboBox *selectHeaderType = w->findChild<SelectHeaderTypeComboBox*>(QLatin1String("headervalue"));
                 selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;
             }

@@ -154,6 +154,8 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 }
                 ++indexStr;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionEnvelope::setParamWidgetValue unknown tagName "<<tagName;
             }

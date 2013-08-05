@@ -155,6 +155,8 @@ void SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &elemen
             } else if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("selecttype"));
                 selectType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionServerMetaData::setParamWidgetValue unknown tagName "<<tagName;
             }

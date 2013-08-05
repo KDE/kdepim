@@ -323,7 +323,6 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
     } else {
         bool firstCondition = true;
         QDomElement element = e;
-        qDebug()<<" void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest, bool notCondition)"<<notCondition;
         if (notCondition) {
             QDomNode node = e.firstChild();
             if (!node.isNull()) {

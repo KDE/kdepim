@@ -92,6 +92,8 @@ void SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidge
                 const QString tagValue = e.text();
                 KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
                 edit->setText(tagValue);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionIhave::setParamWidgetValue unknown tagName "<<tagName;
             }

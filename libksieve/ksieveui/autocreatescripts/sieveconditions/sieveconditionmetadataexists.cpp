@@ -111,6 +111,8 @@ void SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
                     qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue to many attribute "<<index;
                 }
                 ++index;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName "<<tagName;
             }

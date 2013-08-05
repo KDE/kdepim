@@ -91,6 +91,8 @@ void SieveConditionServerMetaDataExists::setParamWidgetValue(const QDomElement &
                 const QString tagValue = e.text();
                 KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
                 value->setText(tagValue);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName "<<tagName;
             }

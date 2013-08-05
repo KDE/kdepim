@@ -125,6 +125,8 @@ void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
                     qDebug()<<" SieveConditionEnvironment::setParamWidgetValue to many argument "<<index;
                 }
                 ++index;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
             }

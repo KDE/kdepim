@@ -122,6 +122,8 @@ void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
                 matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
             } else if (tagName == QLatin1String("str")) {
                 strList << e.text();
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;
             }

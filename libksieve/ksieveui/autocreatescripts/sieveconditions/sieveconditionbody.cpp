@@ -119,6 +119,8 @@ void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
             } else if (tagName == QLatin1String("str")) {
                 strValue<<e.text();
                 ++indexStr;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 qDebug()<<" SieveConditionBody::setParamWidgetValue unknown tagName "<<tagName;
             }
