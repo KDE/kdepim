@@ -62,14 +62,12 @@ MailFilter::MailFilter()
     bAutoNaming = true;
     mApplicability = All;
     bEnabled = true;
-    qDebug() << "MailFilter::MailFilter" << this;
 }
 
 
 MailFilter::MailFilter( const KConfigGroup & aConfig, bool interactive, bool & needUpdate )
 {
     needUpdate =  readConfig( aConfig, interactive );
-    qDebug() << "MailFilter::MailFilter group" << this;
 }
 
 
@@ -110,13 +108,11 @@ MailFilter::MailFilter( const MailFilter & aFilter )
     QStringList::ConstIterator end2 = aFilter.mAccounts.constEnd();
     for ( it2 = aFilter.mAccounts.constBegin() ; it2 != end2 ; ++it2 )
         mAccounts.append( *it2 );
-     qDebug() << "MailFilter::MailFilter copy" << this;
 }
 
 MailFilter::~MailFilter()
 {
     qDeleteAll( mActions );
-    qDebug() << "MailFilter::~MailFilter" << this;
 }
 
 QString MailFilter::identifier() const
