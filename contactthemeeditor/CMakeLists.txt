@@ -16,6 +16,7 @@ set(contactthemeeditor_SRCS
   defaultcompletion.cpp
   contactdefaulttemplate.cpp
   contacteditorwidget.cpp
+  contacttemplatewidget.cpp
 )
 
 
