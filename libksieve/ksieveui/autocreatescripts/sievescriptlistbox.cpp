@@ -331,10 +331,15 @@ void SieveScriptListBox::clear()
 void SieveScriptListBox::loadScript(const QDomDocument &doc)
 {
     clear();
-    ParseSieveScriptTypeBlock typeBlock = TypeUnknown;
-    SieveScriptPage *currentPage = 0;
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
+    loadBlock(n);
+}
+
+void SieveScriptListBox::loadBlock(QDomNode &n)
+{
+    ParseSieveScriptTypeBlock typeBlock = TypeUnknown;
+    SieveScriptPage *currentPage = 0;
     QString scriptName;
     QString comment;
     bool hasCreatedAIfBlock = false;
@@ -342,12 +347,14 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
         QDomElement e = n.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
+            qDebug()<<" tagName "<<tagName;
             if (tagName == QLatin1String("control")) {
                 //Create a new page when before it was "onlyactions"
                 if (typeBlock == TypeBlockAction)
                     currentPage = 0;
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString controlType = e.attribute(QLatin1String("name"));
+                    qDebug()<<" controlType"<<controlType;
                     if (controlType == QLatin1String("if")) {
                         typeBlock = TypeBlockIf;
                         if (!currentPage || hasCreatedAIfBlock)

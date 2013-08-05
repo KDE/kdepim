@@ -22,6 +22,7 @@
 #include <QListWidgetItem>
 class QListWidget;
 class QDomDocument;
+class QDomNode;
 class KPushButton;
 
 namespace KSieveUi {
@@ -85,6 +86,7 @@ private:
         TypeBlockForeachBlock
     };
 
+    void loadBlock(QDomNode &n);
     void clear();
     SieveScriptPage *createNewScript(const QString &newName, const QString &description = QString());
     QString createUniqName();
