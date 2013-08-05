@@ -20,6 +20,7 @@
 #include "sieveforeverypartwidget.h"
 #include "sievescriptpage.h"
 #include "sieveincludewidget.h"
+#include "sievescriptparsingerrordialog.h"
 
 #include <KHBox>
 #include <KMessageBox>
@@ -337,6 +338,12 @@ void SieveScriptListBox::loadScript(const QDomDocument &doc)
     ParseSieveScriptTypeBlock typeBlock = TypeUnknown;
     QString error;
     loadBlock(n, currentPage, typeBlock, error);
+    if (!error.isEmpty()) {
+        QPointer<SieveScriptParsingErrorDialog> dlg = new SieveScriptParsingErrorDialog(this);
+        dlg->setError(error);
+        dlg->exec();
+        delete dlg;
+    }
 }
 
 void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, ParseSieveScriptTypeBlock typeBlock, QString &error)
@@ -389,7 +396,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                             comment.clear();
                         }
-                        currentPage->forEveryPartWidget()->loadScript(e);
+                        currentPage->forEveryPartWidget()->loadScript(e, error);
                         //TODO verify it.
                         QDomNode block = e.firstChildElement(QLatin1String("block")).firstChild();
                         loadBlock(block, currentPage, typeBlock, error);
@@ -417,16 +424,16 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                             comment.clear();
                         }
-                        currentPage->includeWidget()->loadScript(e);
+                        currentPage->includeWidget()->loadScript(e, error);
                     } else if (actionName == QLatin1String("global")) {
                         typeBlock = TypeBlockGlobal;
                         if (!currentPage) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                             comment.clear();
                         }
-                        currentPage->globalVariableWidget()->loadScript(e);
+                        currentPage->globalVariableWidget()->loadScript(e, error);
                     } else if (actionName == QLatin1String("set") && (typeBlock == TypeBlockGlobal)) {
-                        currentPage->globalVariableWidget()->loadSetVariable(e);
+                        currentPage->globalVariableWidget()->loadSetVariable(e, error);
                     } else {
                         if (typeBlock != TypeBlockAction) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);

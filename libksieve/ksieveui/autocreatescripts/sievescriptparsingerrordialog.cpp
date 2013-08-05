@@ -15,33 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVEFOREVERYPARTWIDGET_H
-#define SIEVEFOREVERYPARTWIDGET_H
+#include "sievescriptparsingerrordialog.h"
 
-#include "sievewidgetpageabstract.h"
-class QCheckBox;
-class KLineEdit;
-class QDomElement;
+#include <KTextEdit>
+#include <KLocale>
 
-namespace KSieveUi {
-class SieveForEveryPartWidget : public SieveWidgetPageAbstract
+SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit SieveForEveryPartWidget(QWidget *parent = 0);
-    ~SieveForEveryPartWidget();
+    setCaption( i18n( "Sieve Parsing Error" ) );
+    setButtons( Close );
 
-    void generatedScript(QString &script, QStringList &requires);
-    void loadScript(const QDomElement &element, QString &error);
-
-private Q_SLOTS:
-    void slotHelp();
-
-private:
-    QCheckBox *mForLoop;
-    KLineEdit *mName;
-};
+    mTextEdit = new KTextEdit( this );
+    mTextEdit->setReadOnly( true );
+    setMainWidget( mTextEdit );
+    resize(800,600);
 }
 
+SieveScriptParsingErrorDialog::~SieveScriptParsingErrorDialog()
+{
+}
 
-#endif // SIEVEFOREVERYPARTWIDGET_H
+void SieveScriptParsingErrorDialog::setError(const QString &error)
+{
+    mTextEdit->setPlainText(error);
+}
+
+#include "sievescriptparsingerrordialog.moc"
+

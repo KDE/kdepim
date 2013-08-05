@@ -15,33 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVEFOREVERYPARTWIDGET_H
-#define SIEVEFOREVERYPARTWIDGET_H
-
-#include "sievewidgetpageabstract.h"
-class QCheckBox;
-class KLineEdit;
-class QDomElement;
-
-namespace KSieveUi {
-class SieveForEveryPartWidget : public SieveWidgetPageAbstract
+#ifndef SIEVESCRIPTPARSINGERRORDIALOG_H
+#define SIEVESCRIPTPARSINGERRORDIALOG_H
+#include <KDialog>
+class KTextEdit;
+class SieveScriptParsingErrorDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SieveForEveryPartWidget(QWidget *parent = 0);
-    ~SieveForEveryPartWidget();
+    explicit SieveScriptParsingErrorDialog(QWidget *parent=0);
+    ~SieveScriptParsingErrorDialog();
 
-    void generatedScript(QString &script, QStringList &requires);
-    void loadScript(const QDomElement &element, QString &error);
-
-private Q_SLOTS:
-    void slotHelp();
+    void setError(const QString &);
 
 private:
-    QCheckBox *mForLoop;
-    KLineEdit *mName;
+    KTextEdit *mTextEdit;
 };
-}
 
-
-#endif // SIEVEFOREVERYPARTWIDGET_H
+#endif // SIEVESCRIPTPARSINGERRORDIALOG_H

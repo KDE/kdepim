@@ -76,7 +76,7 @@ SieveIncludeActionWidget::~SieveIncludeActionWidget()
 {
 }
 
-void SieveIncludeActionWidget::loadScript(const QDomElement &element)
+void SieveIncludeActionWidget::loadScript(const QDomElement &element, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -217,9 +217,9 @@ void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
     }
 }
 
-void SieveIncludeWidget::loadScript(const QDomElement &element)
+void SieveIncludeWidget::loadScript(const QDomElement &element, QString &error)
 {
-    mIncludeLister->loadScript(element);
+    mIncludeLister->loadScript(element, error);
 }
 
 SieveIncludeWidgetLister::SieveIncludeWidgetLister(QWidget *parent)
@@ -302,14 +302,14 @@ QWidget *SieveIncludeWidgetLister::createWidget( QWidget *parent )
     return w;
 }
 
-void SieveIncludeWidgetLister::loadScript(const QDomElement &element)
+void SieveIncludeWidgetLister::loadScript(const QDomElement &element, QString &error)
 {
     SieveIncludeActionWidget *w = static_cast<SieveIncludeActionWidget *>(widgets().last());
     if (w->isInitialized()) {
         addWidgetAfterThisWidget(widgets().last());
         w = static_cast<SieveIncludeActionWidget *>(widgets().last());
     }
-    w->loadScript(element);
+    w->loadScript(element, error);
 }
 
 }
