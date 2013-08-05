@@ -299,7 +299,6 @@ else()
   macro_optional_add_subdirectory(messagecomposer)
   add_subdirectory(pimcommon)
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
-  add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)
   macro_optional_add_subdirectory(headerthemeeditor)
   add_subdirectory(grantleethemeeditor)
