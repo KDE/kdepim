@@ -236,9 +236,8 @@ void SieveScriptBlockWidget::updateCondition()
     updateWidget();
 }
 
-void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyActions)
+void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyActions, QString &error)
 {
-    QString error;
     if (onlyActions) {
         mScriptActionLister->loadScript(element, true, error);
         mMatchCondition = AllCondition;
@@ -267,7 +266,7 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
                         }
                         updateCondition();
                     }
-                    mScriptConditionLister->loadScript(e, uniqueTest, notCondition);
+                    mScriptConditionLister->loadScript(e, uniqueTest, notCondition, error);
                 } else if (tagName == QLatin1String("block")) {
                     mScriptActionLister->loadScript(e, false, error);
                 } else {
