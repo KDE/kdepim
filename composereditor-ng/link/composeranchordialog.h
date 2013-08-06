@@ -22,6 +22,7 @@
 #define COMPOSERANCHORDIALOG_H
 
 #include <KDialog>
+#include <QWebElement>
 
 namespace ComposerEditorNG
 {
@@ -30,7 +31,7 @@ class ComposerAnchorDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ComposerAnchorDialog(QWidget *parent=0);
+    explicit ComposerAnchorDialog(const QWebElement &element, QWidget *parent=0);
     ~ComposerAnchorDialog();
 
     QString html() const;
@@ -38,6 +39,8 @@ public:
 private:
     friend class ComposerAnchorDialogPrivate;
     ComposerAnchorDialogPrivate * const d;
+    Q_PRIVATE_SLOT(d, void _k_slotOkClicked() )
+    Q_PRIVATE_SLOT(d, void _k_slotWebElementChanged() )
 };
 }
 
