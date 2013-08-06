@@ -128,6 +128,7 @@ bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
                 KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
                 addresses->setText(AutoCreateScriptUtil::listValueToStr(e));
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionVacation::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

@@ -85,6 +85,7 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                 KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("fileintolineedit") );
                 edit->setText(tagValue);
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionFileInto::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

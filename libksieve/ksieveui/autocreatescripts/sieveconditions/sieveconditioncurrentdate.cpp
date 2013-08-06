@@ -113,6 +113,7 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveConditionCurrentDate::setParamWidgetValue unknown tag "<<tagName;
             }
         }

@@ -114,6 +114,7 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

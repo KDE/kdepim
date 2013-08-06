@@ -96,6 +96,7 @@ bool SieveActionKeep::setParamWidgetValue( const QDomElement &element, QWidget *
                 } else if (tagName == QLatin1String("tag") && e.text() == QLatin1String("flags")) {
                     //nothing :)
                 } else {
+                    unknownTag(tagName, error);
                     qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
                 }
             }

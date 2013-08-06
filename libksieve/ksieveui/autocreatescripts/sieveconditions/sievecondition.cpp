@@ -17,6 +17,8 @@
 
 #include "sievecondition.h"
 
+#include <KLocale>
+
 #include <QWidget>
 
 using namespace KSieveUi;
@@ -78,6 +80,11 @@ QString SieveCondition::help() const
 bool SieveCondition::setParamWidgetValue(const QDomElement &/*element*/, QWidget */*parent*/, bool /*notCondition*/, QString &/*error*/)
 {
     return true;
+}
+
+void SieveCondition::unknownTag(const QString &tag, QString &error)
+{
+    error += i18n("Unknown tag \"%1\" during parsing condition \"%2\"", tag, name()) + QLatin1Char('\n');
 }
 
 #include "sievecondition.moc"

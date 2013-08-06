@@ -91,6 +91,7 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
                     qDebug()<<" SieveActionRedirect::setParamWidgetValue tag unknown"<<tagValue;
                 }
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionRedirect::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

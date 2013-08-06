@@ -165,6 +165,7 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveSpamTest::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

@@ -94,6 +94,7 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionMailboxExists::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

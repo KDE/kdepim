@@ -98,6 +98,7 @@ bool SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
                 MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
                 edit->setText(e.text());
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

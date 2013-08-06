@@ -128,6 +128,7 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

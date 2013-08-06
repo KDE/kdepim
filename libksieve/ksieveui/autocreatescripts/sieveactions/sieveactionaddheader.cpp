@@ -91,6 +91,7 @@ bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
                 }
                 ++index;
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveActionAddHeader::setParamWidgetValue unknown tag "<<tagName;
             }
         }

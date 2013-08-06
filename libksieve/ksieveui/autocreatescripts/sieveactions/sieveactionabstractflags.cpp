@@ -58,6 +58,7 @@ bool SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, 
                 SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
                 flagsWidget->setFlags(QStringList()<<e.text());
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
             }
         }

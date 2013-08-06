@@ -98,6 +98,7 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
                     qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagValue "<<tagValue;
                 }
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

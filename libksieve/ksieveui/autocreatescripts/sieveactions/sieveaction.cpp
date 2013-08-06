@@ -17,6 +17,8 @@
 
 #include "sieveaction.h"
 
+#include <KLocale>
+
 #include <QWidget>
 
 using namespace KSieveUi;
@@ -90,5 +92,9 @@ void SieveAction::setComment(const QString &comment)
     mComment = comment;
 }
 
+void SieveAction::unknownTag(const QString &tag, QString &error)
+{
+    error += i18n("An unknown tag \"%1\" was found during parsing action \"%2\".", tag, name()) + QLatin1Char('\n');
+}
 
 #include "sieveaction.moc"

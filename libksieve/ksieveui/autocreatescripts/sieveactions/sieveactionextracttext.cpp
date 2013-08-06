@@ -80,6 +80,7 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
                 KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
                 variableName->setText(e.text());
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionExtractText::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

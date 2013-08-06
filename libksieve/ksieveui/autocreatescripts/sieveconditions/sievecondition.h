@@ -49,6 +49,8 @@ public:
     virtual QString help() const;
     virtual bool setParamWidgetValue(const QDomElement &element, QWidget *parent, bool notCondition, QString &error );
 
+    void unknownTag(const QString &tag, QString &error);
+
 private:
     QString mName;
     QString mLabel;

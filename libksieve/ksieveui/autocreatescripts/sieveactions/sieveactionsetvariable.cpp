@@ -93,6 +93,7 @@ bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
                 SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
                 modifier->setCode(AutoCreateScriptUtil::tagValue(e.text()));
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
