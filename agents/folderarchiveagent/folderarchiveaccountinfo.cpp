@@ -109,6 +109,9 @@ void FolderArchiveAccountInfo::writeConfig(KConfigGroup &config )
     config.writeEntry(QLatin1String("instanceName"), mInstanceName);
     if (mArchiveTopLevelCollectionId>-1)
         config.writeEntry(QLatin1String("topLevelCollectionId"), mArchiveTopLevelCollectionId);
+    else
+        config.deleteEntry(QLatin1String("topLevelCollectionId"));
+
     config.writeEntry(QLatin1String("folderArchiveType"), (int)mArchiveType);
     config.writeEntry(QLatin1String("enabled"), mEnabled);
     config.writeEntry("keepExistingStructure", mKeepExistingStructure);
