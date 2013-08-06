@@ -52,6 +52,11 @@ public:
     explicit ManageSieveScriptsDialog( QWidget *parent=0 );
     ~ManageSieveScriptsDialog();
 
+    enum SieveEditorMode {
+        NormalEditorMode = 0,
+        Kep14EditorMode
+    };
+
 private slots:
     void slotRefresh();
     void slotItem( KManageSieve::SieveJob *, const QString &, bool );
