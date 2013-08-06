@@ -122,6 +122,7 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
                     KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );
                     value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionEnvironment::setParamWidgetValue to many argument "<<index;
                 }
                 ++index;

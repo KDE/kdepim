@@ -147,6 +147,7 @@ bool SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &elemen
                     break;
                 }
                 default: {
+                    tooManyArgument(tagName, index, 3, error);
                     qDebug()<<" SieveConditionServerMetaData::setParamWidgetValue too many argument "<<index;
                     break;
                 }

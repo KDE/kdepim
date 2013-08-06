@@ -108,6 +108,7 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
                     value->setText(AutoCreateScriptUtil::quoteStr(tagValue));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionServerMetaDataExists::setParamWidgetValue to many attribute "<<index;
                 }
                 ++index;

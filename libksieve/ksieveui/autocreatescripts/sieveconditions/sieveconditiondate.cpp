@@ -118,6 +118,7 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
                 } else if (index == 2) {
                     value = e.text();
                 } else {
+                    tooManyArgument(tagName, index, 3, error);
                     qDebug()<<" SieveConditionDate::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;

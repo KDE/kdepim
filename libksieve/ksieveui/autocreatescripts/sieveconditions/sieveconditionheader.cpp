@@ -106,6 +106,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
                     value->setText(e.text().replace(QLatin1String("\""), QLatin1String("\\\"")));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
                 }
                 ++index;
@@ -118,6 +119,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
                     value->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
                 }
                 ++index;
