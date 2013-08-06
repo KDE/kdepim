@@ -95,6 +95,7 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
                         headers->setText(strValue);
                     }
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagValue "<<tagValue;
                 }
             } else {

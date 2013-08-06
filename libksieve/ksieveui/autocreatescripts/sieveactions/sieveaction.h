@@ -55,6 +55,7 @@ public:
     void setComment(const QString &comment);
 
     void unknownTag(const QString &tag, QString &error);
+    void unknowTagValue(const QString &tagValue, QString &error);
 private:
     QString mName;
     QString mLabel;

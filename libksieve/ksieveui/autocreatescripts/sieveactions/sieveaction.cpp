@@ -97,4 +97,9 @@ void SieveAction::unknownTag(const QString &tag, QString &error)
     error += i18n("An unknown tag \"%1\" was found during parsing action \"%2\".", tag, name()) + QLatin1Char('\n');
 }
 
+void SieveAction::unknowTagValue(const QString &tagValue, QString &error)
+{
+    error += i18n("An unknown tag value \"%1\" was found during parsing action \"%2\".", tagValue, name()) + QLatin1Char('\n');
+}
+
 #include "sieveaction.moc"

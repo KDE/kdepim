@@ -84,6 +84,7 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                         importance->setCode(strValue);
                     }
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagValue"<<tagValue;
                 }
             } else {

@@ -157,6 +157,7 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                         qDebug()<<" SieveConditionSpamTest::setParamWidgetValue server has not percent support";
                     }
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveConditionSpamTest::setParamWidgetValue unknown tagvalue "<<tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {

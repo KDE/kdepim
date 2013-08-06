@@ -66,6 +66,7 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
                     KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
                     name->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionBreak::setParamWidgetValue unknown tagValue "<<tagValue;
                 }
             } else {

@@ -92,6 +92,7 @@ bool SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
                         headers->setText(strValue);
                     }
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tag value:"<<tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
