@@ -21,6 +21,7 @@ set(contactthemeeditor_SRCS
   previewwidget.cpp
   editorpage.cpp
   contacteditorpage.cpp
+  contactconfigurationdialog.cpp
 )
 
 

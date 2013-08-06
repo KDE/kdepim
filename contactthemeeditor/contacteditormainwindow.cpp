@@ -19,6 +19,8 @@
 #include "contacteditorpage.h"
 #include "newthemedialog.h"
 #include "managethemes.h"
+#include "contactconfigurationdialog.h"
+
 
 #include <KTemporaryFile>
 #include <KTempDir>
@@ -101,6 +103,7 @@ void ContactEditorMainWindow::setupActions()
 
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
+    KStandardAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
 
     mInstallTheme = new KAction(i18n("Install theme"), this);
     actionCollection()->addAction( QLatin1String( "install_theme" ), mInstallTheme );
@@ -131,6 +134,17 @@ void ContactEditorMainWindow::setupActions()
     mUpdateView->setShortcut(QKeySequence( Qt::Key_F5 ));
     connect(mUpdateView, SIGNAL(triggered(bool)),SLOT(slotUpdateView()));
     actionCollection()->addAction( QLatin1String( "update_view" ), mUpdateView );
+}
+
+void ContactEditorMainWindow::slotConfigure()
+{
+    QPointer<ContactConfigureDialog> dialog = new ContactConfigureDialog(this);
+    if (dialog->exec()) {
+        if (mContactEditor) {
+            mContactEditor->reloadConfig();
+        }
+    }
+    delete dialog;
 }
 
 void ContactEditorMainWindow::slotManageTheme()
