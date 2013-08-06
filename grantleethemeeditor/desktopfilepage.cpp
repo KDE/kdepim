@@ -86,6 +86,8 @@ DesktopFilePage::DesktopFilePage(bool allowToAddExtraDisplayVariables, QWidget *
         mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
         lay->addWidget(mExtraDisplayHeaders, 8, 0, 1, 2);
         connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotExtraDisplayHeadersChanged()));
+    } else {
+        lay->setRowStretch(6,0);
     }
     setLayout(lay);
     connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
