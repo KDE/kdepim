@@ -44,11 +44,6 @@ bool PreviewWidget::printing() const
     return mPrinting;
 }
 
-void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
-{
-    updateViewer();
-}
-
 void PreviewWidget::slotMainFileNameChanged(const QString &filename)
 {
     updateViewer();

@@ -44,11 +44,9 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void slotMainFileNameChanged(const QString &);
-    void slotExtraHeaderDisplayChanged(const QStringList &headers);
 
 private:
     bool mPrinting;
-    MessageViewer::Viewer *mViewer;
 };
 
 #endif // PREVIEWWIDGET_H
