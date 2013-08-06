@@ -135,7 +135,7 @@ void ContactEditorMainWindow::setupActions()
 
 void ContactEditorMainWindow::slotManageTheme()
 {
-    QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QLatin1String("messageviewer/themes/"), this);
+    QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QLatin1String("kaddressbook/viewertemplates/"), this);
     dialog->exec();
     delete dialog;
 }
@@ -159,7 +159,7 @@ void ContactEditorMainWindow::slotInstallTheme()
 {
     //Save before installing :)
     if (slotSaveTheme()) {
-        const QString localThemePath = KStandardDirs::locateLocal("data",QLatin1String("messageviewer/themes/"));
+        const QString localThemePath = KStandardDirs::locateLocal("data",QLatin1String("kaddressbook/viewertemplates/"));
         mContactEditor->installTheme(localThemePath);
     }
 }
