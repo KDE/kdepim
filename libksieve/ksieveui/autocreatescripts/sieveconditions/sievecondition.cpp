@@ -97,4 +97,9 @@ void SieveCondition::tooManyArgument(const QString &tagName, int index, int maxV
     error += i18n("Too many argument found for \"%1\", max value is %2, number of value found %3 for %4", name(), maxValue, index, tagName) + QLatin1Char('\n');
 }
 
+void SieveCondition::serverDoesNotSupportFeatures(const QString &feature, QString &error)
+{
+    error += i18n("A feature \"%1\" in condition \"%2\" is not supported by server", feature, name()) + QLatin1Char('\n');
+}
+
 #include "sievecondition.moc"

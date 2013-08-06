@@ -87,6 +87,7 @@ bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
                     value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveActionAddHeader::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;

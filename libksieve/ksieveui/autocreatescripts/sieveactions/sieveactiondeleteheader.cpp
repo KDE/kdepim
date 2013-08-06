@@ -91,6 +91,7 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
                     value->setText(e.text());
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveActionAddHeader::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
