@@ -21,6 +21,8 @@
 
 #include "grantleecontactgroupformatter.h"
 
+#include "grantleetheme/grantleetheme.h"
+
 #include <grantlee/context.h>
 #include <grantlee/engine.h>
 #include <grantlee/templateloader.h>
@@ -41,25 +43,12 @@ using namespace Akonadi;
 class GrantleeContactGroupFormatter::Private
 {
   public:
-    Private( const QString &templatePath )
+    Private()
     {
       mEngine = new Grantlee::Engine;
 
       mTemplateLoader =
         Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
-      mTemplateLoader->setTemplateDirs( QStringList() << templatePath );
-      mTemplateLoader->setTheme( QLatin1String( "default" ) );
-
-      mEngine->addTemplateLoader( mTemplateLoader );
-      mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("contactgroup.html") );
-      if ( mSelfcontainedTemplate->error() ) {
-        mErrorMessage += mSelfcontainedTemplate->errorString();
-      }
-
-      mEmbeddableTemplate = mEngine->loadByName( QLatin1String("contactgroup_embedded.html") );
-      if ( mEmbeddableTemplate->error() ) {
-        mErrorMessage += mEmbeddableTemplate->errorString();
-      }
     }
 
     ~Private()
@@ -75,14 +64,30 @@ class GrantleeContactGroupFormatter::Private
     QString mErrorMessage;
 };
 
-GrantleeContactGroupFormatter::GrantleeContactGroupFormatter( const QString &templatePath )
-  : d( new Private( templatePath ) )
+GrantleeContactGroupFormatter::GrantleeContactGroupFormatter()
+  : d( new Private )
 {
 }
 
 GrantleeContactGroupFormatter::~GrantleeContactGroupFormatter()
 {
   delete d;
+}
+
+void GrantleeContactGroupFormatter::setGrantleeTheme(const GrantleeTheme::Theme &theme)
+{
+    d->mTemplateLoader->setTemplateDirs( QStringList() << theme.absolutePath() );
+    d->mEngine->addTemplateLoader( d->mTemplateLoader );
+
+    d->mSelfcontainedTemplate = d->mEngine->loadByName( QLatin1String("contactgroup.html") );
+    if ( d->mSelfcontainedTemplate->error() ) {
+        d->mErrorMessage += d->mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
+    }
+
+    d->mEmbeddableTemplate = d->mEngine->loadByName( QLatin1String("contactgroup_embedded.html") );
+    if ( d->mEmbeddableTemplate->error() ) {
+      d->mErrorMessage += d->mEmbeddableTemplate->errorString() + QLatin1String("<br>");
+    }
 }
 
 #ifndef KDE_USE_FINAL

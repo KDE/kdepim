@@ -6,7 +6,8 @@ include_directories(
   ${Boost_INCLUDE_DIR}
   ${Grantlee_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/pimcommon/
-  ${CMAKE_SOURCE_DIR}/libkdepim/ 
+  ${CMAKE_SOURCE_DIR}/libkdepim/
+  ${CMAKE_SOURCE_DIR}/grantleetheme 
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -97,6 +98,7 @@ target_link_libraries(kaddressbookprivate
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KPRINTUTILS_LIBS}
+  grantleetheme
 )
 
 if(QGPGME_FOUND)
@@ -131,6 +133,7 @@ target_link_libraries(kaddressbook
   ${KDE4_KIO_LIBS}
   ${KDE4_PHONON_LIBS}
   kaddressbookprivate
+  grantleetheme
 )
 
 if(QGPGME_FOUND)
@@ -155,6 +158,7 @@ install(FILES
   viewertemplates/contactgroup_embedded.html
   viewertemplates/contactgroup_additionalfieldrow.html
   viewertemplates/contactgroup_memberrow.html
+  viewertemplates/theme.desktop
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/viewertemplates/default/
 )
 

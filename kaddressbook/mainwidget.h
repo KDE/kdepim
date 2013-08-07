@@ -25,6 +25,10 @@
 
 #include <QWidget>
 
+namespace GrantleeTheme {
+class GrantleeThemeManager;
+}
+
 namespace Akonadi {
   class Collection;
   class ContactGroupViewer;
@@ -35,6 +39,8 @@ namespace Akonadi {
   class Item;
   class ItemView;
   class StandardContactActionManager;
+  class GrantleeContactFormatter;
+  class GrantleeContactGroupFormatter;
 }
 
 class ContactSwitcher;
@@ -78,7 +84,11 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void restoreState();
     void saveState();
 
+    void slotGrantleeThemeSelected();
+    void slotGrantleeThemesUpdated();
+
   private:
+    void initGrantleeThemeName();
     void setupGui();
     void setupActions( KActionCollection * );
     bool showQRCodes();
@@ -120,6 +130,9 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     XXPortManager *mXXPortManager;
     ModelColumnManager *mModelColumnManager;
     KXMLGUIClient *mXmlGuiClient;
+    Akonadi::GrantleeContactFormatter *mFormatter;
+    Akonadi::GrantleeContactGroupFormatter *mGroupFormatter;
+    GrantleeTheme::GrantleeThemeManager *mGrantleeThemeManager;
 };
 
 #endif

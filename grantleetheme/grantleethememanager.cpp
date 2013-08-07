@@ -198,7 +198,7 @@ public:
         }
     }
 
-    KToggleAction *actionForHeaderStyle()
+    KToggleAction *actionForTheme()
     {
         const QString themeName = GrantleeSettings::self()->grantleeThemeName();
         if (themeName.isEmpty())
@@ -264,12 +264,12 @@ void GrantleeThemeManager::setActionGroup( QActionGroup *actionGroup )
     }
 }
 
-KToggleAction *GrantleeThemeManager::actionForHeaderStyle()
+KToggleAction *GrantleeThemeManager::actionForTheme()
 {
-    return d->actionForHeaderStyle();
+    return d->actionForTheme();
 }
 
-void GrantleeThemeManager::setHeaderMenu(KActionMenu *menu)
+void GrantleeThemeManager::setThemeMenu(KActionMenu *menu)
 {
     if (d->menu != menu) {
         d->menu = menu;

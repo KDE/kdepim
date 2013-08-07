@@ -24,6 +24,10 @@
 
 #include <Akonadi/Contact/AbstractContactGroupFormatter>
 
+namespace GrantleeTheme {
+class Theme;
+}
+
 namespace Akonadi {
 
 /**
@@ -37,7 +41,9 @@ class GrantleeContactGroupFormatter : public AbstractContactGroupFormatter
     /**
      * Creates a new grantlee contact group formatter.
      */
-    explicit GrantleeContactGroupFormatter( const QString &templatePath );
+    explicit GrantleeContactGroupFormatter();
+
+    void setGrantleeTheme(const GrantleeTheme::Theme &theme);
 
     /**
      * Destroys the grantlee contact group formatter.

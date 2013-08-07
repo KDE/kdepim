@@ -29,6 +29,8 @@
 
 #include "grantlee/grantleecontactformatter.h"
 #include "grantlee/grantleecontactgroupformatter.h"
+#include "grantleetheme/grantleethememanager.h"
+#include "grantleetheme/globalsettings_base.h"
 
 #include "libkdepim/misc/uistatesaver.h"
 
@@ -58,6 +60,7 @@
 
 #include <KAction>
 #include <KActionCollection>
+#include <KActionMenu>
 #include <KApplication>
 #include <KCheckableProxyModel>
 #include <kdescendantsproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.9
@@ -128,7 +131,7 @@ class StructuralCollectionsNotCheckableProxy : public KCheckableProxyModel
 }
 
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
-  : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient )
+    : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient ), mGrantleeThemeManager(0)
 {
   mXXPortManager = new XXPortManager( this );
   Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
@@ -340,6 +343,7 @@ MainWidget::~MainWidget()
   KPIM::UiStateSaver::saveState( mItemView, group );
 
   saveState();
+  delete mGrantleeThemeManager;
 
   Settings::self()->writeConfig();
 }
@@ -483,21 +487,34 @@ void MainWidget::setupGui()
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
- Akonadi::GrantleeContactFormatter *formatter =
-   new Akonadi::GrantleeContactFormatter(
-     KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
+  mFormatter = new Akonadi::GrantleeContactFormatter;
 
- mContactDetails->setContactFormatter( formatter );
+  mContactDetails->setContactFormatter( mFormatter );
 
- Akonadi::GrantleeContactGroupFormatter *groupFormatter =
-   new Akonadi::GrantleeContactGroupFormatter(
-     KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
+  mGroupFormatter = new Akonadi::GrantleeContactGroupFormatter;
 
- mContactGroupDetails->setContactGroupFormatter( groupFormatter );
+  mContactGroupDetails->setContactGroupFormatter( mGroupFormatter );
 }
 
 void MainWidget::setupActions( KActionCollection *collection )
 {
+
+
+
+  mGrantleeThemeManager = new GrantleeTheme::GrantleeThemeManager(QString::fromLatin1( "theme.desktop" ), collection, QLatin1String("kaddressbook/viewertemplates/"));
+  mGrantleeThemeManager->setDownloadNewStuffConfigFile(QLatin1String("kaddressbook_themes.knsrc"));
+  connect(mGrantleeThemeManager, SIGNAL(grantleeThemeSelected()), this, SLOT(slotGrantleeThemeSelected()));
+  connect(mGrantleeThemeManager, SIGNAL(updateThemes()), this, SLOT(slotGrantleeThemesUpdated()));
+
+
+  KActionMenu *themeMenu  = new KActionMenu(i18n("&Themes"), this);
+  collection->addAction(QLatin1String("theme_menu"), themeMenu );
+
+  initGrantleeThemeName();
+  QActionGroup *group = new QActionGroup( this );
+  mGrantleeThemeManager->setThemeMenu(themeMenu);
+  mGrantleeThemeManager->setActionGroup(group);
+
   KAction *action = 0;
 
   action = KStandardAction::print( this, SLOT(print()), collection );
@@ -816,5 +833,28 @@ void MainWidget::restoreSplitterStates()
   KPIM::UiStateSaver::restoreState( mMainWidgetSplitter1, group );
   KPIM::UiStateSaver::restoreState( mMainWidgetSplitter2, group );
 }
+
+void MainWidget::initGrantleeThemeName()
+{
+    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeThemeName();
+    if (themeName.isEmpty()) {
+        themeName = QLatin1String("default");
+    }
+    mFormatter->setGrantleeTheme(mGrantleeThemeManager->theme(themeName));
+    mGroupFormatter->setGrantleeTheme(mGrantleeThemeManager->theme(themeName));
+}
+
+void MainWidget::slotGrantleeThemeSelected()
+{
+    initGrantleeThemeName();
+    //Update View ?
+}
+
+void MainWidget::slotGrantleeThemesUpdated()
+{
+    //Update view ?
+    //TODO
+}
+
 
 #include "mainwidget.moc"
