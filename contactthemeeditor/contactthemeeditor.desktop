@@ -1,10 +1,18 @@
 [Desktop Entry]
 Name=Contact Theme Editor
+Name[pt]=Editor de Temas de Contactos
+Name[pt_BR]=Editor de temas de contatos
+Name[uk]=Редактор тем контактів
+Name[x-test]=xxContact Theme Editorxx
 Type=Application
 Exec=contactthemeeditor
 Icon=kaddressbook
 X-DocPath=contactthemeeditor/index.html
 GenericName=Contact Theme Editor
+GenericName[pt]=Editor de Temas de Contactos
+GenericName[pt_BR]=Editor de temas de contatos
+GenericName[uk]=Редактор тем контактів
+GenericName[x-test]=xxContact Theme Editorxx
 Terminal=false
 Categories=Qt;KDE;Office;Network;ContactManagement;
 InitialPreference=10
