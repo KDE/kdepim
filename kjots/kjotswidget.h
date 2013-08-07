@@ -79,8 +79,6 @@ public:
 
   QTextEdit* activeEditor();
 
-  Q_SCRIPTABLE bool queryClose();
-
 public slots:
   void prevPage();
   void nextPage();
@@ -97,6 +95,8 @@ public slots:
 
   Q_SCRIPTABLE void newPage();
   Q_SCRIPTABLE void newBook();
+
+  Q_SCRIPTABLE bool queryClose();
 
 signals:
   void canGoNextPageChanged( bool );
