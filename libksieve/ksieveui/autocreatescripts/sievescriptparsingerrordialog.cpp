@@ -28,6 +28,7 @@ SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
 
     mTextEdit = new KTextEdit( this );
     mTextEdit->setReadOnly( true );
+    mTextEdit->setAcceptRichText(true);
     setMainWidget( mTextEdit );
     readConfig();
 }
@@ -39,7 +40,12 @@ SieveScriptParsingErrorDialog::~SieveScriptParsingErrorDialog()
 
 void SieveScriptParsingErrorDialog::setError(const QString &script, const QString &error)
 {
-    mTextEdit->setPlainText(error);
+    QString str;
+    str = QLatin1String("<b>") + i18n("Sieve script:") + QLatin1String("</b>") + QLatin1Char('\n');
+    str += script + QLatin1Char('\n');
+    str += QLatin1String("<b>") + i18n("Errors reported:") + QLatin1String("</b>") + QLatin1Char('\n');
+    str += error + QLatin1Char('\n');
+    mTextEdit->setHtml(str);
 }
 
 void SieveScriptParsingErrorDialog::readConfig()
