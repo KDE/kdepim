@@ -25,9 +25,9 @@ namespace GrantleeThemeEditor {
 class GRANTLEETHEMEEDITOR_EXPORT ThemeSession
 {
 public:
-    ThemeSession(const QString &projectDirectory);
+    ThemeSession(const QString &projectDirectory, const QString &themeTypeName);
     ~ThemeSession();
-    void loadSession(const QString &session);
+    bool loadSession(const QString &session);
     void writeSession();
 
     QString projectDirectory() const;
@@ -42,6 +42,8 @@ private:
     QString mProjectDirectory;
     QString mMainPageFileName;
     QStringList mExtraPage;
+    QString mThemeTypeName;
+    int mVersion;
 };
 }
 

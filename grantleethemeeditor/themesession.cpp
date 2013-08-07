@@ -20,13 +20,17 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
+#include <KMessageBox>
+#include <KLocale>
 
 #include <QDir>
 
 using namespace GrantleeThemeEditor;
 
-ThemeSession::ThemeSession(const QString &projectDirectory)
-    : mProjectDirectory(projectDirectory)
+ThemeSession::ThemeSession(const QString &projectDirectory, const QString &themeTypeName)
+    : mProjectDirectory(projectDirectory),
+      mThemeTypeName(themeTypeName),
+      mVersion(1.0)
 {
 }
 
@@ -59,16 +63,25 @@ QString ThemeSession::mainPageFileName() const
     return mMainPageFileName;
 }
 
-void ThemeSession::loadSession(const QString &session)
+bool ThemeSession::loadSession(const QString &session)
 {
     KConfig config(session);
     if (config.hasGroup(QLatin1String("Global"))) {
         KConfigGroup global = config.group(QLatin1String("Global"));
+        const int version = global.readEntry(QLatin1String("version"), 0.0);
+        if (version >= mVersion) {
+            if (global.readEntry(QLatin1String("themeTypeName")) != mThemeTypeName) {
+                KMessageBox::error(0, i18n("Error during load theme"), i18n("You try to load a theme which can not be reading by this application"));
+                return false;
+            }
+        }
         mProjectDirectory = global.readEntry("path", QString());
         mMainPageFileName = global.readEntry(QLatin1String("mainPageName"), QString());
         mExtraPage = global.readEntry(QLatin1String("extraPagesName"), QStringList());
+        return true;
     } else {
         kDebug()<<QString::fromLatin1("\"%1\" is not a session file").arg(session);
+        return false;
     }
 }
 
@@ -79,5 +92,7 @@ void ThemeSession::writeSession()
     global.writeEntry(QLatin1String("path"), mProjectDirectory);
     global.writeEntry(QLatin1String("mainPageName"), mMainPageFileName);
     global.writeEntry(QLatin1String("extraPagesName"), mExtraPage);
+    global.writeEntry(QLatin1String("themeTypeName"), mThemeTypeName);
+    global.writeEntry(QLatin1String("version"), mVersion);
     config.sync();
 }

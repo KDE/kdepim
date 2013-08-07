@@ -41,7 +41,7 @@
 
 ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
-      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir)),
+      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir, QLatin1String("headerthemeeditor"))),
       mChanged(false)
 {
     QHBoxLayout *lay = new QHBoxLayout;
@@ -265,17 +265,18 @@ bool ThemeEditorPage::saveTheme(bool withConfirmation)
 
 void ThemeEditorPage::loadTheme(const QString &filename)
 {
-    mThemeSession->loadSession(filename);
-    mDesktopPage->loadTheme(mThemeSession->projectDirectory());
-    mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
-    mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+    if (mThemeSession->loadSession(filename)) {
+        mDesktopPage->loadTheme(mThemeSession->projectDirectory());
+        mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
+        mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
 
-    const QStringList lstExtraPages = mThemeSession->extraPages();
-    Q_FOREACH(const QString &page, lstExtraPages) {
-        EditorPage *extraPage = createExtraPage(page);
-        extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
+        const QStringList lstExtraPages = mThemeSession->extraPages();
+        Q_FOREACH(const QString &page, lstExtraPages) {
+            EditorPage *extraPage = createExtraPage(page);
+            extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
+        }
+        setChanged(false);
     }
-    setChanged(false);
 }
 
 void ThemeEditorPage::reloadConfig()
