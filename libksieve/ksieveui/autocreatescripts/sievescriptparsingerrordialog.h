@@ -29,11 +29,15 @@ public:
 
     void setError(const QString &script, const QString &);
 
+private Q_SLOTS:
+    void slotSaveAs();
+
 private:
     void readConfig();
     void writeConfig();
 
 private:
+    bool saveToFile( const QString &filename );
     KTextEdit *mTextEdit;
 };
 
