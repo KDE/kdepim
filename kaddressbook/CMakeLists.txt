@@ -157,3 +157,6 @@ install(FILES
   viewertemplates/contactgroup_memberrow.html
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/viewertemplates/default/
 )
+
+install(FILES data/kaddressbook_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
+

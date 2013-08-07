@@ -151,8 +151,12 @@ void ContactEditorPage::uploadTheme()
     const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
     KZip *zip = new KZip(zipFileName);
     if (zip->open(QIODevice::WriteOnly)) {
+
+        //TODO reactivate it when we will be able to create a preview
+#if 0
         const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
         //qDebug()<<" previewFileName"<<previewFileName;
+
         mEditorPage->preview()->createScreenShot(previewFileName);
 
         const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
@@ -161,17 +165,19 @@ void ContactEditorPage::uploadTheme()
             delete zip;
             return;
         }
-
+#endif
         createZip(themename, zip);
         zip->close();
         //qDebug()<< "zipFilename"<<zipFileName;
 
-        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
+        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("kaddressbook_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
         dialog->setUploadName(themename);
+#if 0
         dialog->setPreviewImageFile(0, KUrl(previewFileName));
+#endif
         const QString description = mDesktopPage->description();
-        dialog->setDescription(description.isEmpty() ? i18n("My favorite KMail header") : description);
+        dialog->setDescription(description.isEmpty() ? i18n("My favorite Kaddressbook theme") : description);
         dialog->exec();
         delete dialog;
     } else {
