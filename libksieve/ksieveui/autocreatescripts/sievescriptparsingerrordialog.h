@@ -27,7 +27,7 @@ public:
     explicit SieveScriptParsingErrorDialog(QWidget *parent=0);
     ~SieveScriptParsingErrorDialog();
 
-    void setError(const QString &script, const QString &);
+    void setError(QString script, QString);
 
 private Q_SLOTS:
     void slotSaveAs();
