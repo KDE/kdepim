@@ -78,7 +78,7 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                         QCheckBox *create = w->findChild<QCheckBox*>( QLatin1String("create") );
                         create->setChecked(true);
                     } else {
-                        error += i18n("Action \"fileinto\" has \"create\" argument but current server does not support it") + QLatin1Char('\n');
+                        serverDoesNotSupportFeatures(QLatin1String("fileinto"), error);
                         qDebug()<<"SieveActionFileInto::setParamWidgetValue server has not create support ";
                     }
                 }
