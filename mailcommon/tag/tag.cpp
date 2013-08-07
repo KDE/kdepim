@@ -35,7 +35,7 @@ Tag::Ptr Tag::fromNepomuk( const Nepomuk2::Tag& nepomukTag )
 
   tag->iconName = nepomukTag.genericIcon();
   if ( tag->iconName.isEmpty() )
-    tag->iconName = "mail-tagged";
+    tag->iconName = QLatin1String("mail-tagged");
 
   tag->nepomukResourceUri = nepomukTag.uri();
 

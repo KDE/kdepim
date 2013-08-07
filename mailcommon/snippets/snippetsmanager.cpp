@@ -361,7 +361,7 @@ void SnippetsManager::Private::updateActionCollection( const QString &oldName,
   // remove previous action in case that the name changed
   if ( !oldName.isEmpty() ) {
     const QString actionName = i18nc( "@action", "Snippet %1", oldName );
-    const QString normalizedName = QString( actionName ).replace( ' ', '_' );
+    const QString normalizedName = QString( actionName ).replace( QLatin1Char(' '), QLatin1Char('_') );
 
     QAction *action = mActionCollection->action( normalizedName );
     if ( action ) {
@@ -371,7 +371,7 @@ void SnippetsManager::Private::updateActionCollection( const QString &oldName,
 
   if ( !newName.isEmpty() ) {
     const QString actionName = i18nc( "@action", "Snippet %1", newName );
-    const QString normalizedName = QString( actionName ).replace( ' ', '_' );
+    const QString normalizedName = QString( actionName ).replace( QLatin1Char(' '), QLatin1Char('_') );
 
     KAction *action =
       mActionCollection->addAction( normalizedName, q, SLOT(insertActionSnippet()) );
@@ -392,9 +392,9 @@ QString SnippetsManager::Private::replaceVariables( const QString &text )
 
   do {
     //find the next variable by this QRegExp
-    iFound = text.indexOf( QRegExp( "\\$[A-Za-z-_0-9\\s]*\\$" ), iEnd + 1 );
+    iFound = text.indexOf( QRegExp( QLatin1String("\\$[A-Za-z-_0-9\\s]*\\$") ), iEnd + 1 );
     if ( iFound >= 0 ) {
-      iEnd = text.indexOf( '$', iFound + 1 ) + 1;
+      iEnd = text.indexOf( QLatin1Char('$'), iFound + 1 ) + 1;
 
       variableName = text.mid( iFound, iEnd - iFound );
 
@@ -414,7 +414,7 @@ QString SnippetsManager::Private::replaceVariables( const QString &text )
           variableValue = localVariables.value( variableName );
         }
       } else {
-        variableValue = '$'; //if double-delimiter -> replace by single character
+        variableValue = QLatin1Char('$'); //if double-delimiter -> replace by single character
       }
 
       result.replace( variableName, variableValue );
@@ -521,7 +521,7 @@ void SnippetsManager::Private::loadFromOldFormat( const KConfigGroup &group )
 void SnippetsManager::Private::load()
 {
   const KSharedConfig::Ptr config =
-    KSharedConfig::openConfig( "kmailsnippetrc", KConfig::NoGlobals );
+    KSharedConfig::openConfig( QLatin1String("kmailsnippetrc"), KConfig::NoGlobals );
 
   const KConfigGroup snippetPartGroup = config->group( "SnippetPart" );
 
@@ -577,7 +577,7 @@ void SnippetsManager::Private::save()
     return;
   }
 
-  KSharedConfig::Ptr config = KSharedConfig::openConfig( "kmailsnippetrc", KConfig::NoGlobals );
+  KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kmailsnippetrc"), KConfig::NoGlobals );
 
   // clear everything
   foreach ( const QString &group, config->groupList() ) {
@@ -644,15 +644,15 @@ SnippetsManager::SnippetsManager( KActionCollection *actionCollection,
 
   d->mAddSnippetAction = new QAction( i18n( "Add Snippet..." ), this );
   d->mEditSnippetAction = new QAction( i18n( "Edit Snippet..." ), this );
-  d->mEditSnippetAction->setIcon( KIcon( "document-properties" ) );
+  d->mEditSnippetAction->setIcon( KIcon( QLatin1String("document-properties") ) );
   d->mDeleteSnippetAction = new QAction( i18n( "Remove Snippet" ), this );
-  d->mDeleteSnippetAction->setIcon( KIcon( "edit-delete" ) );
+  d->mDeleteSnippetAction->setIcon( KIcon( QLatin1String("edit-delete") ) );
 
   d->mAddSnippetGroupAction = new QAction( i18n( "Add Group..." ), this );
   d->mEditSnippetGroupAction = new QAction( i18n( "Rename Group..." ), this );
-  d->mEditSnippetGroupAction->setIcon( KIcon( "edit-rename" ) );
+  d->mEditSnippetGroupAction->setIcon( KIcon( QLatin1String("edit-rename") ) );
   d->mDeleteSnippetGroupAction = new QAction( i18n( "Remove Group" ), this );
-  d->mDeleteSnippetGroupAction->setIcon( KIcon( "edit-delete" ) );
+  d->mDeleteSnippetGroupAction->setIcon( KIcon( QLatin1String("edit-delete") ) );
 
   d->mInsertSnippetAction = new QAction( i18n( "Insert Snippet" ), this );
 

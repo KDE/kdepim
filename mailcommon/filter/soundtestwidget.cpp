@@ -78,10 +78,10 @@ void SoundTestWidget::openSoundDialog( KUrlRequester * )
     fileDialog->setCaption( i18n( "Select Sound File" ) );
 
     QStringList filters;
-    filters << "audio/x-wav"
-            << "audio/mpeg"
-            << "application/ogg"
-            << "audio/x-adpcm";
+    filters << QLatin1String("audio/x-wav")
+            << QLatin1String("audio/mpeg")
+            << QLatin1String("application/ogg")
+            << QLatin1String("audio/x-adpcm");
 
     fileDialog->setMimeFilter( filters );
 
