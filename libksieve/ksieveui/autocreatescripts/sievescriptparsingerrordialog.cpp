@@ -29,17 +29,36 @@ SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
     mTextEdit = new KTextEdit( this );
     mTextEdit->setReadOnly( true );
     setMainWidget( mTextEdit );
-    resize(800,600);
+    readConfig();
 }
 
 SieveScriptParsingErrorDialog::~SieveScriptParsingErrorDialog()
 {
+    writeConfig();
 }
 
 void SieveScriptParsingErrorDialog::setError(const QString &error)
 {
     mTextEdit->setPlainText(error);
 }
+
+void SieveScriptParsingErrorDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveScriptParsingErrorDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 800,600);
+    }
+}
+
+void SieveScriptParsingErrorDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveScriptParsingErrorDialog" );
+    group.writeEntry( "Size", size() );
+}
+
 
 #include "sievescriptparsingerrordialog.moc"
 

@@ -29,6 +29,10 @@ public:
     void setError(const QString &);
 
 private:
+    void readConfig();
+    void writeConfig();
+
+private:
     KTextEdit *mTextEdit;
 };
 
