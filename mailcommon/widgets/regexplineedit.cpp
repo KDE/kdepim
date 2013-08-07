@@ -77,9 +77,9 @@ void RegExpLineEdit::initWidget( const QString &str )
   connect( mLineEdit, SIGNAL(returnPressed()),
            this, SIGNAL(returnPressed()) );
 
-  if ( !KServiceTypeTrader::self()->query( "KRegExpEditor/KRegExpEditor" ).isEmpty() ) {
+  if ( !KServiceTypeTrader::self()->query( QLatin1String("KRegExpEditor/KRegExpEditor") ).isEmpty() ) {
     mRegExpEditButton = new QPushButton( i18n( "Edit..." ), this );
-    mRegExpEditButton->setObjectName( "mRegExpEditButton" );
+    mRegExpEditButton->setObjectName( QLatin1String("mRegExpEditButton") );
     mRegExpEditButton->setSizePolicy( QSizePolicy::Minimum,
                                       QSizePolicy::Fixed );
     hlay->addWidget( mRegExpEditButton );
@@ -122,7 +122,7 @@ void RegExpLineEdit::slotEditRegExp()
   if ( !mRegExpEditDialog ) {
     mRegExpEditDialog =
       KServiceTypeTrader::createInstanceFromQuery<KDialog>(
-        "KRegExpEditor/KRegExpEditor", QString(), this );
+        QLatin1String("KRegExpEditor/KRegExpEditor"), QString(), this );
   }
 
   KRegExpEditorInterface *iface = qobject_cast<KRegExpEditorInterface *>( mRegExpEditDialog );

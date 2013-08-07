@@ -110,7 +110,7 @@ void RedirectDialog::Private::slotAddressSelection()
       addresses.prepend( mResentTo );
     }
 
-    mEditTo->setText( addresses.join( ", " ) );
+    mEditTo->setText( addresses.join( QLatin1String(", ") ) );
     mEditTo->setModified( true );
   }
 }
@@ -141,7 +141,7 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   d->mEditTo->setClearButtonShown( true );
 
   QPushButton *BtnTo = new QPushButton( QString(), hbox );
-  BtnTo->setIcon( KIcon( "help-contents" ) );
+  BtnTo->setIcon( KIcon( QLatin1String("help-contents") ) );
   BtnTo->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   BtnTo->setMinimumSize( BtnTo->sizeHint() * 1.2 );
   BtnTo->setToolTip( i18n( "Use the Address-Selection Dialog" ) );
@@ -165,8 +165,8 @@ RedirectDialog::RedirectDialog( SendMode mode, QWidget *parent )
   d->mTransportCombobox = new MailTransport::TransportComboBox( hbox );
   lab->setBuddy(d->mTransportCombobox);
 
-  setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), "mail-send" ) );
-  setButtonGuiItem( User2, KGuiItem( i18n( "Send &Later" ), "mail-queue" ) );
+  setButtonGuiItem( User1, KGuiItem( i18n( "&Send Now" ), QLatin1String("mail-send") ) );
+  setButtonGuiItem( User2, KGuiItem( i18n( "Send &Later" ), QLatin1String("mail-queue") ) );
   connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
   connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
   enableButton( User1, false );
