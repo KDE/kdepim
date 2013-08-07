@@ -56,7 +56,7 @@ class FolderSelectionDialog::FolderSelectionDialogPrivate
 FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOptions options )
   :KDialog( parent ), d( new FolderSelectionDialogPrivate() )
 {
-  setObjectName( "folder dialog" );
+  setObjectName( QLatin1String("folder dialog") );
 
   d->mNotAllowToCreateNewFolder = ( options & FolderSelectionDialog::NotAllowToCreateNewFolder );
 
@@ -66,7 +66,7 @@ FolderSelectionDialog::FolderSelectionDialog( QWidget *parent, SelectionFolderOp
     setButtons( Ok | Cancel | User1 );
     setButtonGuiItem(
       User1,
-      KGuiItem( i18n( "&New Subfolder..." ), "folder-new",
+      KGuiItem( i18n( "&New Subfolder..." ), QLatin1String("folder-new"),
                 i18n( "Create a new subfolder under the currently selected folder" ) ) );
   }
 

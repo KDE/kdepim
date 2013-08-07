@@ -62,7 +62,7 @@ FolderRequester::FolderRequester( QWidget *parent )
   hlay->addWidget( mEdit );
 
   QToolButton *button = new QToolButton( this );
-  button->setIcon( KIcon( "folder" ) );
+  button->setIcon( KIcon( QLatin1String("folder") ) );
   button->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   hlay->addWidget( button );
   connect( button, SIGNAL(clicked()), this, SLOT(slotOpenDialog()) );

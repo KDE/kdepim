@@ -60,8 +60,8 @@ QString FilterImporterSylpheed::defaultFiltersSettingsPath()
 
 void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::MailFilter *filter )
 {
-    if ( e.hasAttribute( "bool" ) ) {
-        const QString attr = e.attribute( "bool" );
+    if ( e.hasAttribute( QLatin1String("bool") ) ) {
+        const QString attr = e.attribute( QLatin1String("bool") );
         if ( attr == QLatin1String( "and" ) ) {
             filter->pattern()->setOp( SearchPattern::OpAnd );
         } else if ( attr == QLatin1String( "or" ) ) {
@@ -79,8 +79,8 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
 
         const QString nexttag = ruleFilter.tagName();
         if ( nexttag == QLatin1String( "match-header" ) ){
-            if ( ruleFilter.hasAttribute( "name" ) ) {
-                const QString attr = ruleFilter.attribute( "name" );
+            if ( ruleFilter.hasAttribute( QLatin1String("name") ) ) {
+                const QString attr = ruleFilter.attribute( QLatin1String("name") );
                 if ( attr == QLatin1String( "From" ) ) {
                     fieldName = "from";
                 } else if ( attr == QLatin1String( "Cc" ) ) {
@@ -139,8 +139,8 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
             kDebug()<<" field not implemented "<<nexttag;
         }
 
-        if ( ruleFilter.hasAttribute( "type" ) ) {
-            const QString attr = ruleFilter.attribute( "type" );
+        if ( ruleFilter.hasAttribute( QLatin1String("type") ) ) {
+            const QString attr = ruleFilter.attribute( QLatin1String("type") );
             if ( attr == QLatin1String( "not-contain" ) ) {
                 functionName = SearchRule::FuncContainsNot;
             } else if ( attr == QLatin1String( "contains" ) ) {
@@ -225,21 +225,21 @@ void FilterImporterSylpheed::parseActions( const QDomElement &e,
 void FilterImporterSylpheed::parseFilters( const QDomElement &e )
 {
     MailCommon::MailFilter *filter = new MailCommon::MailFilter();
-    if ( e.hasAttribute( "enabled" ) ) {
-        const QString attr = e.attribute( "enabled" );
+    if ( e.hasAttribute( QLatin1String("enabled") ) ) {
+        const QString attr = e.attribute( QLatin1String("enabled") );
         if ( attr == QLatin1String( "false" ) ) {
             filter->setEnabled( false );
         }
     }
 
-    if ( e.hasAttribute( "name" ) ) {
-        const QString attr = e.attribute( "name" );
+    if ( e.hasAttribute( QLatin1String("name") ) ) {
+        const QString attr = e.attribute( QLatin1String("name") );
         filter->pattern()->setName( attr );
         filter->setToolbarName( attr );
     }
 
-    if ( e.hasAttribute( "timing" ) ) {
-        const QString attr = e.attribute( "timing" );
+    if ( e.hasAttribute( QLatin1String("timing") ) ) {
+        const QString attr = e.attribute( QLatin1String("timing") );
         if ( attr == QLatin1String( "any" ) ) {
             filter->setApplyOnInbound( true );
             filter->setApplyOnExplicit( true );
