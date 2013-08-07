@@ -32,6 +32,7 @@ class ComposerAnchorDialog : public KDialog
     Q_OBJECT
 public:
     explicit ComposerAnchorDialog(const QWebElement &element, QWidget *parent=0);
+    ComposerAnchorDialog(QWidget *parent);
     ~ComposerAnchorDialog();
 
     QString html() const;
