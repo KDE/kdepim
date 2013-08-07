@@ -22,14 +22,16 @@
 FolderArchiveAccountInfo::FolderArchiveAccountInfo()
     : mArchiveType(UniqFolder),
       mArchiveTopLevelCollectionId(-1),
-      mEnabled(false)
+      mEnabled(false),
+      mKeepExistingStructure(false)
 {
 }
 
 FolderArchiveAccountInfo::FolderArchiveAccountInfo(const KConfigGroup &config)
     : mArchiveType(UniqFolder),
       mArchiveTopLevelCollectionId(-1),
-      mEnabled(false)
+      mEnabled(false),
+      mKeepExistingStructure(false)
 {
     readConfig(config);
 }
@@ -83,12 +85,23 @@ bool FolderArchiveAccountInfo::enabled() const
     return mEnabled;
 }
 
+void FolderArchiveAccountInfo::setKeepExistingStructure(bool b)
+{
+    mKeepExistingStructure = b;
+}
+
+bool FolderArchiveAccountInfo::keepExistingStructure() const
+{
+    return mKeepExistingStructure;
+}
+
 void FolderArchiveAccountInfo::readConfig(const KConfigGroup &config)
 {
     mInstanceName = config.readEntry(QLatin1String("instanceName"));
     mArchiveTopLevelCollectionId = config.readEntry(QLatin1String("topLevelCollectionId"), -1);
     mArchiveType = static_cast<FolderArchiveType>(config.readEntry("folderArchiveType", (int)UniqFolder));
     mEnabled = config.readEntry("enabled", false);
+    mKeepExistingStructure = config.readEntry("keepExistingStructure", false);
 }
 
 void FolderArchiveAccountInfo::writeConfig(KConfigGroup &config )
@@ -96,6 +109,10 @@ void FolderArchiveAccountInfo::writeConfig(KConfigGroup &config )
     config.writeEntry(QLatin1String("instanceName"), mInstanceName);
     if (mArchiveTopLevelCollectionId>-1)
         config.writeEntry(QLatin1String("topLevelCollectionId"), mArchiveTopLevelCollectionId);
+    else
+        config.deleteEntry(QLatin1String("topLevelCollectionId"));
+
     config.writeEntry(QLatin1String("folderArchiveType"), (int)mArchiveType);
     config.writeEntry(QLatin1String("enabled"), mEnabled);
+    config.writeEntry("keepExistingStructure", mKeepExistingStructure);
 }

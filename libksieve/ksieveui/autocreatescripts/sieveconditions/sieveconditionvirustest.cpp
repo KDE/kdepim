@@ -131,6 +131,7 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
                         }
                     }
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveConditionVirusTest::setParamWidgetValue unknow tagValue "<<tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
@@ -139,6 +140,7 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionVirusTest::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

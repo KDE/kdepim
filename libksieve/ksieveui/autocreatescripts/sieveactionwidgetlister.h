@@ -42,7 +42,7 @@ public:
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     void generatedScript(QString &script, QStringList &requires, bool onlyActions);
-    void setAction(const QString &actionName, const QDomElement &element, const QString &comment);
+    bool setAction(const QString &actionName, const QDomElement &element, const QString &comment, QString &error);
     bool isConfigurated() const;
 
 private Q_SLOTS:
@@ -77,7 +77,7 @@ public:
     ~SieveActionWidgetLister();
 
     void generatedScript(QString &script, QStringList &requires, bool onlyActions);
-    void loadScript(const QDomElement &element, bool onlyActions);
+    void loadScript(const QDomElement &element, bool onlyActions, QString &error);
 
     int actionNumber() const;
 public Q_SLOTS:

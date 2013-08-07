@@ -301,6 +301,7 @@ else()
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
   macro_optional_add_subdirectory(kmail)
   macro_optional_add_subdirectory(headerthemeeditor)
+  macro_optional_add_subdirectory(contactthemeeditor)
   add_subdirectory(grantleethemeeditor)
 
   if(KDEPIM_BUILD_MOBILE)

@@ -53,7 +53,7 @@ QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -65,15 +65,20 @@ void SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
                 if (tagValue == QLatin1String("name")) {
                     KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
                     name->setText(AutoCreateScriptUtil::strValue(e));
+                } else if (tagValue == QLatin1String("str")) {
+                    //Nothing
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionBreak::setParamWidgetValue unknown tagValue "<<tagValue;
                 }
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveActionBreak::setParamWidgetValue unknown tag "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionBreak::code(QWidget *w) const

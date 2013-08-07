@@ -53,6 +53,7 @@ int main( int argc, char *argv[] )
     global_init();
     KGlobal::locale()->insertCatalog("libkblog");
     KGlobal::locale()->insertCatalog("libkxmlrpcclient");
+    KGlobal::locale()->insertCatalog("libcomposereditorng");
 
     MainWindow *bilbo = new MainWindow;
 

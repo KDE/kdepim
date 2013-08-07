@@ -113,6 +113,7 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
                 } else if (index == 1) {
                     tagValueList<<AutoCreateScriptUtil::tagValue(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionBody::setParamWidgetValue too many argument "<<index;
                 }
                 ++index;
@@ -122,6 +123,7 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionBody::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

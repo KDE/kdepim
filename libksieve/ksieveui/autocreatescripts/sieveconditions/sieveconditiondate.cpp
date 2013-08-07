@@ -118,6 +118,7 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
                 } else if (index == 2) {
                     value = e.text();
                 } else {
+                    tooManyArgument(tagName, index, 3, error);
                     qDebug()<<" SieveConditionDate::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
@@ -127,6 +128,7 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveConditionDate::setParamWidgetValue unknown tag "<<tagName;
             }
         }

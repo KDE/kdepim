@@ -112,7 +112,7 @@ void SieveGlobalVariableActionWidget::setVariableValue(const QString &name)
     mVariableValue->setEnabled(true);
 }
 
-void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element)
+void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -182,14 +182,14 @@ void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &re
     }
 }
 
-void SieveGlobalVariableWidget::loadScript(const QDomElement &element)
+void SieveGlobalVariableWidget::loadScript(const QDomElement &element, QString &error)
 {
-    mIncludeLister->loadScript(element);
+    mIncludeLister->loadScript(element, error);
 }
 
-void SieveGlobalVariableWidget::loadSetVariable(const QDomElement &element)
+void SieveGlobalVariableWidget::loadSetVariable(const QDomElement &element, QString &error)
 {
-    mIncludeLister->loadSetVariable(element);
+    mIncludeLister->loadSetVariable(element, error);
 }
 
 SieveGlobalVariableLister::SieveGlobalVariableLister(QWidget *parent)
@@ -273,17 +273,17 @@ QWidget *SieveGlobalVariableLister::createWidget( QWidget *parent )
     return w;
 }
 
-void SieveGlobalVariableLister::loadScript(const QDomElement &element)
+void SieveGlobalVariableLister::loadScript(const QDomElement &element, QString &error)
 {
     SieveGlobalVariableActionWidget *w = static_cast<SieveGlobalVariableActionWidget *>(widgets().last());
     if (w->isInitialized()) {
         addWidgetAfterThisWidget(widgets().last());
         w = static_cast<SieveGlobalVariableActionWidget *>(widgets().last());
     }
-    w->loadScript(element);
+    w->loadScript(element, error);
 }
 
-void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element)
+void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element, QString &error)
 {
     QString variableName;
     QString variableValue;

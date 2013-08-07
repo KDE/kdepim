@@ -18,6 +18,9 @@
 #include "folderarchiveutil.h"
 #include "folderarchiveagentsettings.h"
 
+#include <KConfig>
+#include <KConfigGroup>
+
 using namespace FolderArchive;
 
 bool FolderArchiveUtil::folderArchiveAgentEnabled()
@@ -36,3 +39,16 @@ QString FolderArchiveUtil::groupConfigPattern()
 {
     return QLatin1String("FolderArchiveAccount ");
 }
+
+bool FolderArchiveUtil::resourceSupportArchiving(const QString &resource)
+{
+    KConfig config(QLatin1String("akonadi_folderarchive_agentrc"));
+    if (config.hasGroup(groupConfigPattern() + resource)) {
+        KConfigGroup grp = config.group(groupConfigPattern() + resource);
+        if (grp.readEntry("enabled", false) && (grp.readEntry("topLevelCollectionId", -1) > 0) ) {
+            return true;
+        }
+    }
+    return false;
+}
+

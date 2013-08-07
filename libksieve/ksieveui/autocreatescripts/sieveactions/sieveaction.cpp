@@ -17,6 +17,8 @@
 
 #include "sieveaction.h"
 
+#include <KLocale>
+
 #include <QWidget>
 
 using namespace KSieveUi;
@@ -75,9 +77,9 @@ QString SieveAction::help() const
     return QString();
 }
 
-void SieveAction::setParamWidgetValue( const QDomElement &doc, QWidget *parent )
+bool SieveAction::setParamWidgetValue( const QDomElement &doc, QWidget *parent, QString &error )
 {
-
+    return true;
 }
 
 QString SieveAction::comment() const
@@ -90,5 +92,19 @@ void SieveAction::setComment(const QString &comment)
     mComment = comment;
 }
 
+void SieveAction::unknownTag(const QString &tag, QString &error)
+{
+    error += i18n("An unknown tag \"%1\" was found during parsing action \"%2\".", tag, name()) + QLatin1Char('\n');
+}
+
+void SieveAction::unknowTagValue(const QString &tagValue, QString &error)
+{
+    error += i18n("An unknown tag value \"%1\" was found during parsing action \"%2\".", tagValue, name()) + QLatin1Char('\n');
+}
+
+void SieveAction::tooManyArgument(const QString &tagName, int index, int maxValue, QString &error)
+{
+    error += i18n("Too many argument found for \"%1\", max value is %2, number of value found %3 for %4", name(), maxValue, index, tagName) + QLatin1Char('\n');
+}
 
 #include "sieveaction.moc"

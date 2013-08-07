@@ -125,6 +125,7 @@ bool SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWid
                     SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
                     toMimeType->setCode(e.text());
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveActionConvert::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
@@ -134,6 +135,7 @@ bool SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWid
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveActionConvert::setParamWidgetValue unknown tag "<<tagName;
             }
         }

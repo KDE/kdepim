@@ -64,7 +64,7 @@ QWidget *SieveActionRedirect::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -88,14 +88,17 @@ void SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
                         list->setChecked(true);
                     }
                 } else {
-                    qDebug()<<" SieveActionRedirect::setParamWidgetValue tag unknown"<<tagValue;
+                    unknowTagValue(tagValue, error);
+                    qDebug()<<" SieveActionRedirect::setParamWidgetValue tagValue unknown"<<tagValue;
                 }
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionRedirect::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionRedirect::code(QWidget *w) const

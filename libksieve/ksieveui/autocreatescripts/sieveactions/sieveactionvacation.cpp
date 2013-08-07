@@ -95,7 +95,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -116,6 +116,7 @@ void SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
                     KLineEdit *subject = w->findChild<KLineEdit*>( QLatin1String("subject") );
                     subject->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<"SieveActionVacation::setParamWidgetValue unknow tagValue :"<<tagValue;
                 }
             } else if (tagName == QLatin1String("num"))  {
@@ -128,11 +129,13 @@ void SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
                 KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
                 addresses->setText(AutoCreateScriptUtil::listValueToStr(e));
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionVacation::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 
 }
 

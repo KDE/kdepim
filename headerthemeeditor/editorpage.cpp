@@ -162,7 +162,7 @@ EditorPage::PageType EditorPage::pageType() const
     return mType;
 }
 
-ThemeEditorWidget *EditorPage::editor() const
+GrantleeThemeEditor::EditorWidget *EditorPage::editor() const
 {
     return mEditor;
 }

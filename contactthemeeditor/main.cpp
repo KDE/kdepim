@@ -20,7 +20,7 @@
 
 
 #include "kdepim-version.h"
-
+#include "contacteditormainwindow.h"
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -38,7 +38,7 @@ int main( int argc, char **argv )
     KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
     KApplication app;
-    //ThemeEditorMainWindow *mw = new ThemeEditorMainWindow();
-    //mw->show();
+    ContactEditorMainWindow *mw = new ContactEditorMainWindow();
+    mw->show();
     app.exec();
 }

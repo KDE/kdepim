@@ -192,6 +192,8 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
                                elm.tagName().toLower() == QLatin1String("ul") ||
                                elm.tagName().toLower() == QLatin1String("li") );
 
+    const bool anchorSelected = (elm.tagName().toLower() == QLatin1String("a"));
+
     kDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
     KMenu *menu = new KMenu;

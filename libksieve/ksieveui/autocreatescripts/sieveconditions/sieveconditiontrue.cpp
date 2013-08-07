@@ -56,7 +56,7 @@ QString SieveConditionTrue::help() const
     return i18n("The \"true\" test always evaluates to true.");
 }
 
-bool SieveConditionTrue::setParamWidgetValue(const QDomElement &, QWidget *, bool, QString &error)
+bool SieveConditionTrue::setParamWidgetValue(const QDomElement &, QWidget *, bool, QString &)
 {
     //Nothing
     return true;

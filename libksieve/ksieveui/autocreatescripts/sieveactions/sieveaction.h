@@ -38,7 +38,7 @@ public:
 
     virtual QWidget *createParamWidget( QWidget *parent ) const;
 
-    virtual void setParamWidgetValue(const QDomElement &element, QWidget *parent );
+    virtual bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
 
     virtual QString code( QWidget *) const;
 
@@ -54,6 +54,9 @@ public:
 
     void setComment(const QString &comment);
 
+    void unknownTag(const QString &tag, QString &error);
+    void unknowTagValue(const QString &tagValue, QString &error);
+    void tooManyArgument(const QString &tagName, int index, int maxValue, QString &error);
 private:
     QString mName;
     QString mLabel;

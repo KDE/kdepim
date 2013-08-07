@@ -147,6 +147,7 @@ bool SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &elemen
                     break;
                 }
                 default: {
+                    tooManyArgument(tagName, index, 3, error);
                     qDebug()<<" SieveConditionServerMetaData::setParamWidgetValue too many argument "<<index;
                     break;
                 }
@@ -158,6 +159,7 @@ bool SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &elemen
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionServerMetaData::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

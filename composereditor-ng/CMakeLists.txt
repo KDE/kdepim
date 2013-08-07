@@ -14,6 +14,7 @@ set(libcomposereditor_ng_SRCS
     composereditor.cpp
     composerview.cpp
     link/composerlinkdialog.cpp
+    link/composeranchordialog.cpp
     private/composerview_p.cpp
     pagecolor/pagecolorbackgrounddialog.cpp
     pagecolor/pagecolorbackgroundwidget.cpp

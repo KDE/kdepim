@@ -34,7 +34,6 @@ public:
         FolderByYears
     };
 
-
     bool isValid() const;
 
     QString instanceName() const;
@@ -49,6 +48,9 @@ public:
     void setEnabled(bool enabled);
     bool enabled() const;
 
+    void setKeepExistingStructure(bool b);
+    bool keepExistingStructure() const;
+
     void writeConfig(KConfigGroup &config );
     void readConfig(const KConfigGroup &config);
 
@@ -57,6 +59,7 @@ private:
     Akonadi::Collection::Id mArchiveTopLevelCollectionId;
     QString mInstanceName;
     bool mEnabled;
+    bool mKeepExistingStructure;
 };
 
 #endif // FOLDERARCHIVEACCOUNTINFO_H

@@ -118,6 +118,7 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
                     selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<"SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
@@ -129,6 +130,7 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
                     edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
+                    tooManyArgument(tagName, indexStr, 2, error);
                     qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
                 }
                 ++indexStr;
@@ -140,12 +142,14 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
                     edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
+                    tooManyArgument(tagName, indexStr, 2, error);
                     qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
                 }
                 ++indexStr;
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionAddress::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

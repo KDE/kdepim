@@ -26,6 +26,7 @@ namespace FolderArchiveUtil
 FOLDERARCHIVE_EXPORT bool folderArchiveAgentEnabled();
 FOLDERARCHIVE_EXPORT void forceReparseConfiguration();
 FOLDERARCHIVE_EXPORT QString groupConfigPattern();
+FOLDERARCHIVE_EXPORT bool resourceSupportArchiving(const QString &resource);
 }
 }
 

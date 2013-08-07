@@ -44,7 +44,7 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *w )
+bool SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *w, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -58,11 +58,13 @@ void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, 
                 SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
                 flagsWidget->setFlags(QStringList()<<e.text());
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionAbstractFlags::code(QWidget *w) const

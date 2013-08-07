@@ -154,9 +154,11 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
                         QCheckBox *checkbox = w->findChild<QCheckBox*>( QLatin1String("percent") );
                         checkbox->setChecked(true);
                     } else {
+                        serverDoesNotSupportFeatures(QLatin1String("percent"), error);
                         qDebug()<<" SieveConditionSpamTest::setParamWidgetValue server has not percent support";
                     }
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveConditionSpamTest::setParamWidgetValue unknown tagvalue "<<tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
@@ -165,6 +167,7 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveSpamTest::setParamWidgetValue unknown tagName "<<tagName;
             }
         }

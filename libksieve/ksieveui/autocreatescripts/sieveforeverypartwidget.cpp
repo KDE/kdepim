@@ -86,7 +86,7 @@ void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requ
     }
 }
 
-void SieveForEveryPartWidget::loadScript(const QDomElement &element)
+void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &error)
 {
     QDomNode node = element.firstChild();
     QDomElement e = node.toElement();

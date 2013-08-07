@@ -70,7 +70,7 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w ,QString &error )
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -86,6 +86,7 @@ void SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
                     SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
                     toMimeType->setCode(e.text());
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveActionConvert::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
@@ -93,11 +94,13 @@ void SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
                params->setCode(AutoCreateScriptUtil::listValue(e));
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveActionConvert::setParamWidgetValue unknown tag "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionConvert::code(QWidget *w) const
