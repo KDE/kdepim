@@ -1540,7 +1540,7 @@ QString TagRuleWidgetHandler::value( const QByteArray &field,
   if ( func == SearchRule::FuncRegExp || func == SearchRule::FuncNotRegExp ) {
     // Use regexp line edit
     const RegExpLineEdit *lineEdit =
-      valueStack->findChild<RegExpLineEdit*>( QLatin1String("tagRuleRegExpLineEdit ") );
+      valueStack->findChild<RegExpLineEdit*>( QLatin1String("tagRuleRegExpLineEdit") );
 
     if ( lineEdit ) {
       return lineEdit->text();
