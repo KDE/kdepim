@@ -54,7 +54,7 @@ public:
     ~SieveScriptListBox();
 
     QString generatedScript(QString &requires) const;
-    void loadScript(const QDomDocument &doc);
+    void loadScript(const QDomDocument &doc, QString &error);
 
 Q_SIGNALS:
     void addNewPage(QWidget *);

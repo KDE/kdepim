@@ -20,6 +20,7 @@
 #include <kapplication.h>
 #include <KFileDialog>
 #include <QDebug>
+#include <QPointer>
 
 #include "xmlprintingscriptbuilder.h"
 #include "parsingresultdialog.h"
@@ -33,6 +34,7 @@ using KSieve::Parser;
 
 
 #include "libksieve/ksieveui/autocreatescripts/autocreatescriptdialog.h"
+#include "libksieve/ksieveui/autocreatescripts/sievescriptparsingerrordialog.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
 
 int main (int argc, char **argv)
@@ -82,7 +84,15 @@ int main (int argc, char **argv)
     QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
     //Add all capabilities for testing
     dialog->setSieveCapabilities(capabilities);
-    dialog->loadScript(psb.toDom());
+    QString error;
+    dialog->loadScript(psb.toDom(), error);
+    if (!error.isEmpty()) {
+        QPointer<SieveScriptParsingErrorDialog> dlg = new SieveScriptParsingErrorDialog;
+        dlg->setError(QString::fromLatin1(script), error);
+        dlg->exec();
+        delete dlg;
+    }
+
     dialog->show();
     app.exec();
     delete dialog;

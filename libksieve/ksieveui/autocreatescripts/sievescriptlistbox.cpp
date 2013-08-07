@@ -20,7 +20,6 @@
 #include "sieveforeverypartwidget.h"
 #include "sievescriptpage.h"
 #include "sieveincludewidget.h"
-#include "sievescriptparsingerrordialog.h"
 
 #include <KHBox>
 #include <KMessageBox>
@@ -329,21 +328,14 @@ void SieveScriptListBox::clear()
     updateButtons();
 }
 
-void SieveScriptListBox::loadScript(const QDomDocument &doc)
+void SieveScriptListBox::loadScript(const QDomDocument &doc, QString &error)
 {
     clear();
     QDomElement docElem = doc.documentElement();
     QDomNode n = docElem.firstChild();
     SieveScriptPage *currentPage = 0;
     ParseSieveScriptTypeBlock typeBlock = TypeUnknown;
-    QString error;
     loadBlock(n, currentPage, typeBlock, error);
-    if (!error.isEmpty()) {
-        QPointer<SieveScriptParsingErrorDialog> dlg = new SieveScriptParsingErrorDialog(this);
-        dlg->setError(error);
-        dlg->exec();
-        delete dlg;
-    }
 }
 
 void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, ParseSieveScriptTypeBlock typeBlock, QString &error)

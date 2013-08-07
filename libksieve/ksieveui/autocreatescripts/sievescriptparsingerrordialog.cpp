@@ -37,7 +37,7 @@ SieveScriptParsingErrorDialog::~SieveScriptParsingErrorDialog()
     writeConfig();
 }
 
-void SieveScriptParsingErrorDialog::setError(const QString &error)
+void SieveScriptParsingErrorDialog::setError(const QString &script, const QString &error)
 {
     mTextEdit->setPlainText(error);
 }
