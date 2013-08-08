@@ -212,8 +212,14 @@ void LdapClientSearch::startSearch( const QString &txt )
    * This allows both resource accounts with an email address which are not a person and
    * person entries without an email address to show up, while still not showing things
    * like structural entries in the ldap tree. */
+
+#if 0
   const QString filter = QString::fromLatin1( "&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
                                   "(|(cn=%1*)(mail=%1*)(mail=*@%1*)(givenName=%1*)(sn=%1*))" ).arg( d->mSearchText );
+#endif
+  //Fix bug 323272 "Exchange doesn't like any queries beginning with *."
+  const QString filter = QString::fromLatin1( "&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
+                                  "(|(cn=%1*)(mail=%1*)(givenName=%1*)(sn=%1*))" ).arg( d->mSearchText );
 
   QList<LdapClient*>::Iterator it;
   QList<LdapClient*>::Iterator end(d->mClients.end());
