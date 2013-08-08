@@ -105,7 +105,7 @@ performs a menu item function, the default shortcut is listed with the menu item
   <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo></shortcut>
         <guimenu>File</guimenu><guimenuitem>Save As...</guimenuitem></menuchoice></term>
     <listitem>
-      <para><action>Saves the currently displayed message to a .mbox file.</action> This includes all the headers and attachments.</para>
+      <para><action>Saves the currently displayed message to a <filename class="extension">.mbox</filename> file.</action> This includes all the headers and attachments.</para>
       <para>If you would like to save it to a different format &eg; text, deselect <guilabel>Automatically select filename extension (.mbox)</guilabel>
         and be sure to change the file extension.</para>
     </listitem>
