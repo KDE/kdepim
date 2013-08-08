@@ -38,7 +38,7 @@ int PIMMessageBox::fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
   KDialog *dialog= new KDialog( parent );
   dialog->setCaption( caption );
   dialog->setButtons( KDialog::Yes | KDialog::No | KDialog::Ok | KDialog::Cancel );
-  dialog->setObjectName( "PIMMessageBox" );
+  dialog->setObjectName( QLatin1String("PIMMessageBox") );
   dialog->setDefaultButton( KDialog::Yes );
   dialog->setButtonGuiItem( KDialog::Ok, button3 );
   dialog->setButtonGuiItem( KDialog::Yes, button1 );

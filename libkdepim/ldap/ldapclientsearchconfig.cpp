@@ -51,7 +51,7 @@ public:
     KWallet::Wallet* wallet;
 };
 
-K_GLOBAL_STATIC_WITH_ARGS( KConfig, s_config, ( "kabldaprc", KConfig::NoGlobals ) )
+K_GLOBAL_STATIC_WITH_ARGS( KConfig, s_config, ( QLatin1String("kabldaprc"), KConfig::NoGlobals ) )
 
 KConfig* LdapClientSearchConfig::config()
 {
