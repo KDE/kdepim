@@ -23,6 +23,7 @@
 #define GRANTLEECONTACTGROUPFORMATTER_H
 
 #include <Akonadi/Contact/AbstractContactGroupFormatter>
+#include "kaddressbook_grantlee_export.h"
 
 namespace GrantleeTheme {
 class Theme;
@@ -35,7 +36,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class GrantleeContactGroupFormatter : public AbstractContactGroupFormatter
+class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactGroupFormatter : public AbstractContactGroupFormatter
 {
   public:
     /**

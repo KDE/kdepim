@@ -19,6 +19,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 find_package(Prison QUIET CONFIG)
 set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
 
+add_subdirectory(grantlee)
+
 if(Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
   include_directories(${PRISON_INCLUDE_DIR})
@@ -80,17 +82,12 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_xxport_SRCS}
 )
 
-set(kaddressbook_LIB_SRCS
-  ${kaddressbook_LIB_SRCS}
-  grantlee/grantleecontactformatter.cpp
-  grantlee/grantleecontactgroupformatter.cpp
-)
-
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
 target_link_libraries(kaddressbookprivate
   kdepim
   pimcommon
+  kaddressbookgrantlee
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
@@ -98,14 +95,13 @@ target_link_libraries(kaddressbookprivate
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KPRINTUTILS_LIBS}
+  ${Grantlee_CORE_LIBRARIES}
   grantleetheme
 )
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
 endif()
-
-target_link_libraries(kaddressbookprivate ${Grantlee_CORE_LIBRARIES})
 
 if(PRISON_FOUND)
   target_link_libraries(kaddressbookprivate ${PRISON_LIBRARIES})
