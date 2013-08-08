@@ -11,6 +11,7 @@ include_directories(
 
 
 set(followupreminderagent_SRCS
+    followupreminderagent.cpp
 )
 
 

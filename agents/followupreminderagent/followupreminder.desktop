@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Followup Reminder Agent
+Comment=Followup Reminder Agent allows to remind when an email was not answer.
+Type=AkonadiAgent
+Exec=akonadi_followupreminder_agent
+Icon=kmail
+X-Akonadi-MimeTypes=message/rfc822
+X-Akonadi-Capabilities=Unique,Autostart
+X-Akonadi-Identifier=akonadi_followupreminder_agent
