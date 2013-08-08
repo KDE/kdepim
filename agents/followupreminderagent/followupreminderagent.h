@@ -26,7 +26,6 @@ public:
     explicit FollowUpReminderAgent(const QString &id);
     ~FollowUpReminderAgent();
 
-#if 0
     void setEnableAgent(bool b);
     bool enabledAgent() const;
 
@@ -34,7 +33,6 @@ public:
 
 public Q_SLOTS:
     void configure( WId windowId );
-#endif
 };
 
 #endif // FOLLOWUPREMINDERAGENT_H

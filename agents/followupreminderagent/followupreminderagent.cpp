@@ -17,6 +17,8 @@
 
 
 #include "followupreminderagent.h"
+#include "followupreminderadaptor.h"
+#include "followupreminderagentsettings.h"
 #include <KWindowSystem>
 
 #include <akonadi/dbusconnectionpool.h>
@@ -27,11 +29,35 @@
 FollowUpReminderAgent::FollowUpReminderAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
+    new FollowUpReminderAgentAdaptor(this);
+    Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FollowUpReminder" ), this, QDBusConnection::ExportAdaptors );
+    Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FollowUpReminder" ) );
 }
 
 FollowUpReminderAgent::~FollowUpReminderAgent()
 {
 }
+
+void FollowUpReminderAgent::setEnableAgent(bool b)
+{
+    FollowUpReminderAgentSettings::self()->setEnabled(b);
+}
+
+bool FollowUpReminderAgent::enabledAgent() const
+{
+    return FollowUpReminderAgentSettings::self()->enabled();
+}
+
+void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
+{
+    //TODO
+}
+
+void FollowUpReminderAgent::configure( WId windowId )
+{
+    //TODO
+}
+
 
 AKONADI_AGENT_MAIN( FollowUpReminderAgent )
 
