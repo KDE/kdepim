@@ -32,7 +32,8 @@ class ActivityManagerPrivate
 public:
     ActivityManagerPrivate(ActivityManager *qq)
         : isEnabled(false),
-          q(qq)
+          q(qq),
+          selectComponents(ActivityManager::None)
     {
         consumer = new KActivities::Consumer;
         const QStringList activities = consumer->listActivities();
@@ -84,7 +85,7 @@ public:
     QHash<QString, KActivities::Info*> activities;
     ActivityManager *q;
     KActivities::Consumer *consumer;
-
+    ActivityManager::SelectComponents selectComponents;
 };
 
 ActivityManager::ActivityManager(QObject *parent)
@@ -92,12 +93,13 @@ ActivityManager::ActivityManager(QObject *parent)
 {
     if (KActivities::Consumer::serviceStatus() == KActivities::Consumer::NotRunning)  {
         qDebug()<<" kactivities is not running";
-    }
-    const QString currentActivity = this->currentActivity();
-    if (!currentActivity.isEmpty()) {
-        KSharedConfigPtr conf = ActivityManager::configFromActivity(currentActivity);
-        KConfigGroup grp = conf->group(QLatin1String("Global"));
-        d->isEnabled =grp.readEntry(QLatin1String("Enabled"), false);
+    } else {
+        const QString currentActivity = this->currentActivity();
+        if (!currentActivity.isEmpty()) {
+            KSharedConfigPtr conf = ActivityManager::configFromActivity(currentActivity);
+            KConfigGroup grp = conf->group(QLatin1String("Global"));
+            d->isEnabled =grp.readEntry(QLatin1String("Enabled"), false);
+        }
     }
 }
 
@@ -148,6 +150,17 @@ KSharedConfigPtr ActivityManager::configFromActivity(const QString &id)
     const QString configLocal = KStandardDirs::locateLocal( "data", QString::fromLatin1("activitymanager/activities/%1/config/pimactivityrc").arg(id) );
     return KSharedConfig::openConfig( configLocal );
 }
+
+void ActivityManager::setSelectComponents(ActivityManager::SelectComponents selection)
+{
+    d->selectComponents = selection;
+}
+
+ActivityManager::SelectComponents ActivityManager::selectComponents() const
+{
+    return d->selectComponents;
+}
+
 
 
 }
