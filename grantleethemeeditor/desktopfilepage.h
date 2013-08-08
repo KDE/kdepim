@@ -32,7 +32,7 @@ class GRANTLEETHEMEEDITOR_EXPORT DesktopFilePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DesktopFilePage(bool allowToAddExtraDisplayVariables, QWidget *parent = 0);
+    explicit DesktopFilePage(const QString &defaultFileName, bool allowToAddExtraDisplayVariables, QWidget *parent = 0);
     ~DesktopFilePage();
 
     void saveTheme(const QString &path);
