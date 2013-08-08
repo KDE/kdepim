@@ -7,7 +7,7 @@ else()
 endif()
 
 
-configure_file(sieve-editor.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/sieve-editor.kcfg)
+configure_file(settings/sieve-editor.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/sieve-editor.kcfg)
 
 include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	${CMAKE_SOURCE_DIR}/pimcommon
@@ -126,7 +126,7 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectsizewidget.cpp
 )
 
-kde4_add_kcfg_files(ksieveui_LIB_SRCS sieve-vacation.kcfgc sieve-editor.kcfgc)
+kde4_add_kcfg_files(ksieveui_LIB_SRCS settings/sieve-vacation.kcfgc settings/sieve-editor.kcfgc)
 
 kde4_add_library(ksieveui ${LIBRARY_TYPE} ${ksieveui_LIB_SRCS})
 
