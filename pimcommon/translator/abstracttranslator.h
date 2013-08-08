@@ -36,8 +36,6 @@ public:
 
     virtual QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from) = 0;
 
-    virtual void debug();
-
     QString resultTranslate() const;
     void setInputText(const QString& text);
     void setFrom(const QString& language);

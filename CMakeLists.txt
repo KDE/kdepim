@@ -214,6 +214,9 @@ else()
   find_package(Xsltproc)
   set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces.")
 
+  find_package(QJSON)
+  set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
+
 ############### Desktop vs. Mobile options ##############
 
   if(KDEPIM_MOBILE_UI)

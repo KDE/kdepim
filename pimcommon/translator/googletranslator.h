@@ -20,8 +20,10 @@
 
 #include "abstracttranslator.h"
 #include <QUrl>
-class QWebPage;
+#include <QNetworkReply>
+class QNetworkAccessManager;
 class KComboBox;
+class QNetworkReply;
 
 namespace PimCommon {
 class GoogleTranslator : public AbstractTranslator
@@ -33,14 +35,13 @@ public:
 
     QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from);
     void translate();
-    void debug();
 
 protected Q_SLOTS:
-    void slotLoadFinished(bool result);
+    void slotTranslateFinished(QNetworkReply*);
+    void slotError(QNetworkReply::NetworkError /*error*/);
 
 private:
-    QUrl mUrl;
-    QWebPage *mWebPage;
+    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 

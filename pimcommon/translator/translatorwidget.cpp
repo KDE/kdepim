@@ -254,11 +254,6 @@ void TranslatorWidget::init()
     hboxLayout->addWidget( d->translate );
     connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
 
-#if !defined(NDEBUG)
-    KPushButton *debug = new KPushButton(i18n("Debug"));
-    connect(debug,SIGNAL(clicked()),this,SLOT(slotDebug()));
-    hboxLayout->addWidget( debug );
-#endif
 
     d->progressIndictor = new KPIMUtils::ProgressIndicatorWidget(this);
     hboxLayout->addWidget( d->progressIndictor );
@@ -404,11 +399,6 @@ void TranslatorWidget::slotClear()
     d->inputText->clear();
     d->translatedText->clear();
     d->translate->setEnabled( false );
-}
-
-void TranslatorWidget::slotDebug()
-{
-    d->abstractTranslator->debug();
 }
 
 #include "translatorwidget.moc"
