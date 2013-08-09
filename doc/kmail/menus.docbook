@@ -125,7 +125,7 @@ performs a menu item function, the default shortcut is listed with the menu item
 <guimenu>File</guimenu>
 <guimenuitem>Save As...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Saves the currently displayed message to a .mbox file.</action> This includes all the headers and attachments.</para>
+<listitem><para><action>Saves the currently displayed message to a <filename role="extension">.mbox</filename>.</action> This includes all the headers and attachments.</para>
 <para>If you would like to save it to a different format &eg; <filename role="extension">.txt</filename>, deselect <guilabel>Automatically select filename extension (.mbox)</guilabel>, and be sure to change the file extension while naming the file.</para></listitem>
 </varlistentry>
 <varlistentry id="file-import-messages">
