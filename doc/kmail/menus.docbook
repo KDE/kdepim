@@ -643,7 +643,7 @@ servers have been used to send the message by looking at the <literal>Received:<
 <guimenu>Folder</guimenu>
 <guimenuitem>Update Folder and All Its Subfolders</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Checks whether new mail arrived in the currently selected folder and all of its folders.</action></para>
+<listitem><para><action>Checks whether new mail arrived in the currently selected folder and all of its subfolders.</action></para>
 <note><para>This is only available for &imap; folders.</para></note></listitem>
 </varlistentry>
 <varlistentry id="folder-move-all-messages-to-trash">
