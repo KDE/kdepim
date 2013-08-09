@@ -16,11 +16,20 @@
 */
 
 #include "folderarchiveagentcheckcollection.h"
+#include "folderarchiveaccountinfo.h"
 
 FolderArchiveAgentCheckCollection::FolderArchiveAgentCheckCollection(FolderArchiveAccountInfo *info, QObject *parent)
     : QObject(parent),
       mInfo(info)
 {
+    switch(info->folderArchiveType()) {
+    case FolderArchiveAccountInfo::UniqFolder:
+        break;
+    case FolderArchiveAccountInfo::FolderByMonths:
+        break;
+    case FolderArchiveAccountInfo::FolderByYears:
+        break;
+    }
 }
 
 FolderArchiveAgentCheckCollection::~FolderArchiveAgentCheckCollection()

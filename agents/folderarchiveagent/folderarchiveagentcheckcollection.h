@@ -18,6 +18,7 @@
 #ifndef FOLDERARCHIVEAGENTCHECKCOLLECTION_H
 #define FOLDERARCHIVEAGENTCHECKCOLLECTION_H
 #include <QObject>
+#include <Akonadi/Collection>
 
 class FolderArchiveAccountInfo;
 class FolderArchiveAgentCheckCollection : public QObject
@@ -26,6 +27,9 @@ class FolderArchiveAgentCheckCollection : public QObject
 public:
     explicit FolderArchiveAgentCheckCollection(FolderArchiveAccountInfo *info, QObject *parent = 0);
     ~FolderArchiveAgentCheckCollection();
+
+Q_SIGNALS:
+    void collectionIdFound(Akonadi::Collection::Id id);
 
 private:
     FolderArchiveAccountInfo *mInfo;
