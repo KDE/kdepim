@@ -29,7 +29,7 @@ public:
     ~SelectRelationalMatchType();
 
     QString code() const;
-    void setCode(const QString &type, const QString &comparatorStr);
+    void setCode(const QString &type, const QString &comparatorStr, const QString &name, QString &error);
 
 private:
     void initialize();

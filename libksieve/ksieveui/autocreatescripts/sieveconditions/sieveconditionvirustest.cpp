@@ -115,7 +115,7 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
                         if (!relationalElement.isNull()) {
                             if (relationalElement.tagName() == QLatin1String("str")) {
                                 SelectRelationalMatchType *relation = w->findChild<SelectRelationalMatchType*>( QLatin1String("relation") );
-                                relation->setCode(AutoCreateScriptUtil::tagValue(tagValue), relationalElement.text());
+                                relation->setCode(AutoCreateScriptUtil::tagValue(tagValue), relationalElement.text(), name(), error);
                             }
                         }
                     }
@@ -126,7 +126,7 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
                         if (!comparatorElement.isNull()) {
                             if (comparatorElement.tagName() == QLatin1String("str")) {
                                 SelectComparatorComboBox *comparator = w->findChild<SelectComparatorComboBox*>( QLatin1String("comparator") );
-                                comparator->setCode(comparatorElement.text());
+                                comparator->setCode(comparatorElement.text(), name(), error);
                             }
                         }
                     }
