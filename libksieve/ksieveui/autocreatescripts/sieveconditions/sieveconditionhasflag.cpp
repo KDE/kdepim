@@ -119,7 +119,7 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
-                matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+                matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 strList << e.text();
             } else if (tagName == QLatin1String("crlf")) {

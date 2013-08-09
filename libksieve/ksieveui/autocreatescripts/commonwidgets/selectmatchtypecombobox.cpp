@@ -17,6 +17,7 @@
 
 #include "selectmatchtypecombobox.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 
@@ -56,12 +57,13 @@ QString SelectMatchTypeComboBox::code(bool &negative) const
     return value;
 }
 
-void SelectMatchTypeComboBox::setCode(const QString &code)
+void SelectMatchTypeComboBox::setCode(const QString &code, const QString &name, QString &error)
 {
     const int index = findData(code);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
+        AutoCreateScriptUtil::comboboxItemNotFound(code, name, error);
         setCurrentIndex(0);
     }
 }

@@ -97,7 +97,7 @@ bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
-                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition));
+                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );

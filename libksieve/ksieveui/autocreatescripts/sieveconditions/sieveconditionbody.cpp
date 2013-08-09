@@ -134,14 +134,14 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
         SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
         bodyType->setCode(tagValueList.at(0), QString());
         SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
-        matchType->setCode(strValue.at(0));
+        matchType->setCode(strValue.at(0), name(), error);
         KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
         edit->setText(AutoCreateScriptUtil::quoteStr(strValue.at(0)));
     } else if (strValue.count() == 2) {
         SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
         bodyType->setCode(tagValueList.at(0), indexStr == 2 ? strValue.at(0) : QString());
         SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
-        matchType->setCode(tagValueList.at(1));
+        matchType->setCode(tagValueList.at(1), name(), error);
         KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
         edit->setText(indexStr == 1 ? AutoCreateScriptUtil::quoteStr(strValue.at(0)) : AutoCreateScriptUtil::quoteStr(strValue.at(1)));
     }
