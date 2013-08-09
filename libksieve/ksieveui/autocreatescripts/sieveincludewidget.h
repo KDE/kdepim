@@ -37,7 +37,7 @@ public:
     ~SieveIncludeLocation();
 
     QString code() const;
-    void setCode(const QString &code);
+    void setCode(const QString &code, QString &error);
 
 private:
     void initialize();

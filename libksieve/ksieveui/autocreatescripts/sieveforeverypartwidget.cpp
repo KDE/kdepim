@@ -97,10 +97,12 @@ void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &er
             if (tagValue == QLatin1String("name")) {
                 mName->setText(AutoCreateScriptUtil::strValue(e));
             } else {
+                error += i18n("Unknown tagValue \"%1\" during loading loop \"for\"", tagValue);
                 qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagValue "<<tagValue;
             }
             mForLoop->setChecked(true);
         } else {
+            error += i18n("Unknown tag \"%1\" during loading loop \"for\"", tagName);
             qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagName "<<tagName;
         }
     }
