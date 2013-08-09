@@ -52,7 +52,7 @@ QString SelectSizeWidget::code() const
     return QString::fromLatin1("%1%2").arg(mSpinBoxSize->value()).arg(type);
 }
 
-void SelectSizeWidget::setCode(int value, const QString &identifier)
+void SelectSizeWidget::setCode(int value, const QString &identifier, const QString &name, QString &error)
 {
     if (identifier == QLatin1String("K")) {
         value /= 1024;
@@ -61,7 +61,7 @@ void SelectSizeWidget::setCode(int value, const QString &identifier)
     } else if (identifier == QLatin1String("G")) {
         value /= (1024*1024*1024);
     }
-    mSelectSizeType->setCode(identifier);
+    mSelectSizeType->setCode(identifier, name, error);
     mSpinBoxSize->setValue(value);
 }
 

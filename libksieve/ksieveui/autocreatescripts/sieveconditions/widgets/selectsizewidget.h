@@ -31,7 +31,7 @@ public:
     ~SelectSizeWidget();
 
     QString code() const;
-    void setCode(int value, const QString &identifier);
+    void setCode(int value, const QString &identifier, const QString &name, QString &error);
 
 private:
     SelectSizeTypeComboBox *mSelectSizeType;
