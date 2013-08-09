@@ -91,7 +91,7 @@ bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
                 }
             } else if (tagName == QLatin1String("tag")) {
                 SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
-                modifier->setCode(AutoCreateScriptUtil::tagValue(e.text()));
+                modifier->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;

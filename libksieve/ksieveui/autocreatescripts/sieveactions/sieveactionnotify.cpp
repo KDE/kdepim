@@ -81,7 +81,7 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
                         SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
-                        importance->setCode(strValue);
+                        importance->setCode(strValue, name(), error);
                     }
                 } else {
                     unknowTagValue(tagValue, error);

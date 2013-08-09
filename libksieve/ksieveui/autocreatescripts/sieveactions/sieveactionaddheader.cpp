@@ -78,7 +78,7 @@ bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
-                combo->setCode(AutoCreateScriptUtil::tagValue(e.text()));
+                combo->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
