@@ -32,7 +32,7 @@ public:
     ~SelectBodyTypeWidget();
 
     QString code() const;
-    void setCode(const QString &type, const QString &content);
+    void setCode(const QString &type, const QString &content, const QString &name, QString &error);
 
 private Q_SLOTS:
     void slotBodyTypeChanged(int);
