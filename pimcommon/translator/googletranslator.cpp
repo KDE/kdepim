@@ -151,7 +151,7 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
     //  but this is not valid JSON for QJSON, it expects empty strings: ["foo","","bar"]
     jsonData = jsonData.replace(QRegExp(QLatin1String(",{3,3}")), QLatin1String(",\"\",\"\","));
     jsonData = jsonData.replace(QRegExp(QLatin1String(",{2,2}")), QLatin1String(",\"\","));
-    qDebug() << jsonData;
+    //kDebug() << jsonData;
 
     QJson::Parser parser;
     bool ok;
@@ -167,17 +167,17 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
 
     // we are going recursively through the nested json-arry
     // level0 contains the data of the outer array, level1 of the next one and so on
-    foreach (const QVariant& level0, json) {
-        QVariantList listLevel0 = level0.toList();
+    Q_FOREACH (const QVariant& level0, json) {
+        const QVariantList listLevel0 = level0.toList();
         if (listLevel0.isEmpty()) {
             continue;
         }
-        foreach (const QVariant& level1, listLevel0) {
+        Q_FOREACH (const QVariant& level1, listLevel0) {
             if (level1.toList().size() <= 2 || level1.toList().at(2).toList().isEmpty()) {
                 continue;
             }
-            int indexLevel1 = listLevel0.indexOf(level1);
-            QVariantList listLevel1 = level1.toList().at(2).toList();
+            const int indexLevel1 = listLevel0.indexOf(level1);
+            const QVariantList listLevel1 = level1.toList().at(2).toList();
             foreach (const QVariant& level2, listLevel1) {
                 QVariantList listLevel2 = level2.toList();
 
