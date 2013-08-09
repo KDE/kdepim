@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Contact Theme Editor
+Name[es]=Editor de temas de Contact
 Name[hu]=Névjegy téma szerkesztő
 Name[nl]=Contactpersoon van themabewerker
 Name[pt]=Editor de Temas de Contactos
@@ -11,6 +12,7 @@ Exec=contactthemeeditor
 Icon=kaddressbook
 X-DocPath=contactthemeeditor/index.html
 GenericName=Contact Theme Editor
+GenericName[es]=Editor de temas de Contact
 GenericName[hu]=Névjegy téma szerkesztő
 GenericName[nl]=Contactpersoon van themabewerker
 GenericName[pt]=Editor de Temas de Contactos
