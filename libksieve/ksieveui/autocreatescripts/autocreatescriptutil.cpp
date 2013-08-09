@@ -19,6 +19,9 @@
 */
 
 #include "autocreatescriptutil_p.h"
+
+#include <KLocale>
+
 #include <QStringList>
 #include <QDebug>
 
@@ -160,3 +163,7 @@ QString AutoCreateScriptUtil::fixListValue(QString valueStr)
     return valueStr;
 }
 
+void AutoCreateScriptUtil::comboboxItemNotFound(const QString &searchItem, const QString &name, QString &error)
+{
+    error += i18n("In widget \"%1\" we can not found item \"%2\"", name, searchItem);
+}

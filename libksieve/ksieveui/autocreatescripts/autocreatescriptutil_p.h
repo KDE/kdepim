@@ -40,6 +40,7 @@ QStringList listValue(const QDomElement &element);
 QString listValueToStr(const QDomElement &element);
 QString fixListValue(QString valueStr);
 QString quoteStr(QString str);
+void comboboxItemNotFound(const QString &searchItem, const QString &name, QString &error);
 }
 
 #endif // AUTOCREATESCRIPTUTIL_H

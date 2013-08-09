@@ -120,10 +120,10 @@ bool SieveConditionConvert::setParamWidgetValue(const QDomElement &element, QWid
             if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
-                    fromMimeType->setCode(e.text());
+                    fromMimeType->setCode(e.text(), name(), error);
                 } else if (index == 1) {
                     SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
-                    toMimeType->setCode(e.text());
+                    toMimeType->setCode(e.text(), name(), error);
                 } else {
                     tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveActionConvert::setParamWidgetValue too many argument :"<<index;

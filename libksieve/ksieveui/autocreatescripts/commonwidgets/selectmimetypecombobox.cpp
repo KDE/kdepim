@@ -16,6 +16,7 @@
 */
 
 #include "selectmimetypecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 
@@ -45,13 +46,13 @@ QString SelectMimeTypeComboBox::code() const
     return QString::fromLatin1("\"%1\"").arg(itemData(currentIndex()).toString());
 }
 
-void SelectMimeTypeComboBox::setCode(const QString &code)
+void SelectMimeTypeComboBox::setCode(const QString &code, const QString &name, QString &error)
 {
     const int index = findData(code);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
-        //TODO other value ?
+        AutoCreateScriptUtil::comboboxItemNotFound(code, name, error);
         setCurrentIndex(0);
     }
 }
