@@ -143,7 +143,6 @@ install(FILES
   SettingsPage.qml
   SnippetsEditor.qml
   SnippetsList.qml
-  StartPage.qml
   add-attachment-button.png
   dummy-avatar.png
   remove-attachment-button.png
