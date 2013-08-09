@@ -18,12 +18,12 @@
 #include "translatorutil.h"
 #include <KComboBox>
 
-void PimCommon::TranslatorUtil::addPairToMap( QMap<QString, QString>& map, const QPair<QString, QString>& pair )
+void PimCommon::TranslatorUtil::addPairToMap( QMap<QString, QString> &map, const QPair<QString, QString> &pair )
 {
     map.insert( i18n(pair.first.toUtf8()), pair.second );
 }
 
-void PimCommon::TranslatorUtil::addItemToFromComboBox( KComboBox *combo, const QPair<QString, QString>& pair )
+void PimCommon::TranslatorUtil::addItemToFromComboBox( KComboBox *combo, const QPair<QString, QString> &pair )
 {
     combo->addItem( i18n(pair.first.toUtf8()), pair.second );
 }

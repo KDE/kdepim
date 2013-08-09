@@ -38,7 +38,7 @@ GoogleTranslator::~GoogleTranslator()
 {
 }
 
-QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KComboBox* from)
+QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KComboBox *from)
 {
     QMap<QString, QMap<QString, QString> > listLanguage;
 

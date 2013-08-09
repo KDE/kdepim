@@ -30,9 +30,10 @@ namespace PimCommon {
 class PIMCOMMON_EXPORT MinimumComboBox: public KComboBox {
     Q_OBJECT
 public:
-    explicit MinimumComboBox(QWidget* parent = 0) : KComboBox( parent ) {}
+    explicit MinimumComboBox(QWidget* parent = 0);
+
 protected:
-    QSize minimumSizeHint() const { return QSize( 50, KComboBox::minimumSizeHint().height() ); }
+    QSize minimumSizeHint() const;
 };
 
 }

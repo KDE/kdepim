@@ -72,7 +72,7 @@ public:
     QSplitter *splitter;
 };
 
-void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString& lang )
+void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString &lang )
 {
     to->clear();
     const QMap<QString, QString> list = listLanguage.value( lang );
@@ -207,7 +207,7 @@ void TranslatorWidget::init()
     layout->setMargin( 0 );
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( "dialog-close" ) );
+    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 

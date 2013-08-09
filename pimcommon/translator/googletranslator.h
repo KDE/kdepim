@@ -33,7 +33,7 @@ public:
     explicit GoogleTranslator();
     ~GoogleTranslator();
 
-    QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from);
+    QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox *from);
     void translate();
 
 protected Q_SLOTS:

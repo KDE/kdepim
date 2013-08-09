@@ -100,8 +100,8 @@ namespace TranslatorUtil {
   static const QPair<QString, QString> yi(I18N_NOOP("Yiddish"),QLatin1String("yi"));
 
 
-  void addPairToMap( QMap<QString, QString>& map, const QPair<QString, QString>& pair );
-  void addItemToFromComboBox( KComboBox *combo, const QPair<QString, QString>& pair );
+  void addPairToMap( QMap<QString, QString> &map, const QPair<QString, QString> &pair );
+  void addItemToFromComboBox( KComboBox *combo, const QPair<QString, QString> &pair );
 }
 }
 #endif // TRANSLATORUTIL_H
