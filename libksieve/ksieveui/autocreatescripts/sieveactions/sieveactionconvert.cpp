@@ -92,7 +92,7 @@ bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
                 ++index;
             } else if (tagName == QLatin1String("list")) {
                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
-               params->setCode(AutoCreateScriptUtil::listValue(e));
+               params->setCode(AutoCreateScriptUtil::listValue(e), error);
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<"SieveActionConvert::setParamWidgetValue unknown tag "<<tagName;
