@@ -19,7 +19,7 @@
 #define FOLDERARCHIVEAGENTCHECKCOLLECTION_H
 #include <QObject>
 #include <Akonadi/Collection>
-
+class KJob;
 class FolderArchiveAccountInfo;
 class FolderArchiveAgentCheckCollection : public QObject
 {
@@ -30,6 +30,10 @@ public:
 
 Q_SIGNALS:
     void collectionIdFound(Akonadi::Collection::Id id);
+    void checkFailed();
+
+private Q_SLOTS:
+    void slotInitialCollectionFetchingDone(KJob*);
 
 private:
     FolderArchiveAccountInfo *mInfo;

@@ -4,11 +4,6 @@
     <method name="showConfigureDialog" >
       <arg direction="in" type="x" name="windowId" />
     </method>
-    <method name="addSendLaterItem" >
-      <arg name="item" type="x" direction="in"/>
-      <arg direction="in" type="x" name="windowId" />
-      <arg direction="out" type="x" />
-    </method>
     <method name="setEnableAgent" >
       <arg type="b" direction="in"/>
     </method>

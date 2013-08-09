@@ -18,23 +18,34 @@
 #include "folderarchiveagentcheckcollection.h"
 #include "folderarchiveaccountinfo.h"
 
+#include <Akonadi/CollectionFetchJob>
+
 FolderArchiveAgentCheckCollection::FolderArchiveAgentCheckCollection(FolderArchiveAccountInfo *info, QObject *parent)
     : QObject(parent),
       mInfo(info)
 {
-    switch(info->folderArchiveType()) {
-    case FolderArchiveAccountInfo::UniqFolder:
-        break;
-    case FolderArchiveAccountInfo::FolderByMonths:
-        break;
-    case FolderArchiveAccountInfo::FolderByYears:
-        break;
+    Akonadi::Collection col(info->archiveTopLevel());
+    if (info->keepExistingStructure()) {
+        Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(col, Akonadi::CollectionFetchJob::Recursive);
+        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotInitialCollectionFetchingDone(KJob*)) );
+    } else {
+        Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(col, Akonadi::CollectionFetchJob::FirstLevel);
+        connect(job, SIGNAL(result(KJob*)), this, SLOT(slotInitialCollectionFetchingDone(KJob*)) );
     }
 }
 
 FolderArchiveAgentCheckCollection::~FolderArchiveAgentCheckCollection()
 {
 
+}
+
+void FolderArchiveAgentCheckCollection::slotInitialCollectionFetchingDone(KJob *job)
+{
+    if ( job->error() ) {
+        qWarning() << job->errorString();
+        Q_EMIT checkFailed();
+        return;
+    }
 }
 
 #include "folderarchiveagentcheckcollection.moc"
