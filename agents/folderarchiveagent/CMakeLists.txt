@@ -32,6 +32,7 @@ set(folderarchiveagent_SRCS
   folderarchivemanager.cpp
   folderarchiveaccountinfo.cpp
   folderarchiveagentjob.cpp
+  folderarchiveagentcheckcollection.cpp
 )
 
 qt4_add_dbus_adaptor(folderarchiveagent_SRCS org.freedesktop.Akonadi.FolderArchiveAgent.xml folderarchiveagent.h FolderArchiveAgent)
