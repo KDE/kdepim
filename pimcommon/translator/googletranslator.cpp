@@ -124,6 +124,10 @@ void GoogleTranslator::translate()
 {
     mResult.clear();
 
+    if (mFrom == mTo) {
+        qDebug()<<"<From> language == <to> language";
+        return;
+    }
     QNetworkRequest request(QUrl(QLatin1String("http://www.google.com/translate_a/t")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
 
