@@ -71,7 +71,7 @@ private Q_SLOTS:
     void slotInvertLanguage();
     void slotClear();
     void slotTranslateDone();
-    void slotTranslateFailed(bool result);
+    void slotTranslateFailed(bool result, const QString &message);
 
 protected:
     bool event(QEvent* e);

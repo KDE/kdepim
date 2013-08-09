@@ -20,6 +20,7 @@
 #include "widgets/minimumcombobox.h"
 #include "translatorutil.h"
 #include "googletranslator.h"
+
 #include <KTextEdit>
 #include <KComboBox>
 #include <KPushButton>
@@ -28,6 +29,7 @@
 #include <KDebug>
 #include <KConfigGroup>
 #include <KSeparator>
+#include <KMessageBox>
 
 #include <kpimutils/progressindicatorwidget.h>
 
@@ -201,7 +203,7 @@ void TranslatorWidget::init()
 {
     d->abstractTranslator = new /*BabelFishTranslator*/GoogleTranslator();
     connect(d->abstractTranslator, SIGNAL(translateDone()), SLOT(slotTranslateDone()));
-    connect(d->abstractTranslator, SIGNAL(translateFailed(bool)), SLOT(slotTranslateFailed(bool)));
+    connect(d->abstractTranslator, SIGNAL(translateFailed(bool,QString)), SLOT(slotTranslateFailed(bool,QString)));
 
     QVBoxLayout *layout = new QVBoxLayout( this );
     layout->setMargin( 0 );
@@ -340,12 +342,15 @@ void TranslatorWidget::slotTranslateDone()
     d->translatedText->setPlainText(d->abstractTranslator->resultTranslate());
 }
 
-void TranslatorWidget::slotTranslateFailed(bool signalFailed)
+void TranslatorWidget::slotTranslateFailed(bool signalFailed, const QString &message)
 {
     d->translate->setEnabled( true );
     d->progressIndictor->stop();
     d->translatedText->setResultFailed(signalFailed);
     d->translatedText->clear();
+    if (!message.isEmpty()) {
+        KMessageBox::error(this, message, i18n("Translate error"));
+    }
 }
 
 void TranslatorWidget::slotInvertLanguage()

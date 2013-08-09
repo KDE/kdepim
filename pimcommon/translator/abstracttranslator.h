@@ -43,7 +43,7 @@ public:
 
 Q_SIGNALS:
     void translateDone();
-    void translateFailed(bool result);
+    void translateFailed(bool result, const QString &errorMessage=QString());
 
 protected:
     QString mInputText;

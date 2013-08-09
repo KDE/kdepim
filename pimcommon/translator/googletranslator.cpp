@@ -126,6 +126,7 @@ void GoogleTranslator::translate()
 
     if (mFrom == mTo) {
         qDebug()<<"<From> language == <to> language";
+        Q_EMIT translateFailed(false, i18n("You used same language for from and to language."));
         return;
     }
     QNetworkRequest request(QUrl(QLatin1String("http://www.google.com/translate_a/t")));
