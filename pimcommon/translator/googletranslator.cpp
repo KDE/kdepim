@@ -42,7 +42,7 @@ QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KCombo
 {
     QMap<QString, QMap<QString, QString> > listLanguage;
 
-    QList<QPair<QString, QString> > fullListLanguage;
+    QList<QPair<const char *, QString> > fullListLanguage;
     fullListLanguage.append(TranslatorUtil::automatic);
     fullListLanguage.append(TranslatorUtil::en);
     fullListLanguage.append(TranslatorUtil::nl);
@@ -105,7 +105,7 @@ QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KCombo
     fullListLanguage.append(TranslatorUtil::yi);
     const int fullListLanguageSize(fullListLanguage.count());
     for (int i=0;i<fullListLanguageSize;++i) {
-        const QPair<QString, QString> currentLanguage = fullListLanguage.at(i);
+        const QPair<const char *, QString> currentLanguage = fullListLanguage.at(i);
         PimCommon::TranslatorUtil::addItemToFromComboBox( from, currentLanguage );
 
         QMap<QString, QString> toList;
@@ -215,7 +215,7 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
             if (currentKey != it.key()) {
                 currentKey = it.key();
                 currentRel = 1;
-                currentString.append(' ').append(pair.first);
+                currentString.append(QLatin1Char(' ')).append(pair.first);
                 currentRel *= pair.second;
             }
         }
