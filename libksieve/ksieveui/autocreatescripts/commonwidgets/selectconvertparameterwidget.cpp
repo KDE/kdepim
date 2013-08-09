@@ -39,6 +39,10 @@ void SelectConvertParameterWidget::setCode(const QStringList &code)
 {
     if (code.isEmpty())
         return;
+    if (code.count() < 2) {
+        qDebug()<<" SelectConvertParameterWidget::setCode parsing error ?";
+        return;
+    }
     if (code.count() > 2) {
         qDebug()<<" too many argument "<<code.count();
     }
