@@ -247,8 +247,21 @@ namespace {
 
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_proc; }
         /* reimp */ void doFinalize() {
-            if ( !m_proc->isClosed() )
+            /*
+              Make sure the data is written in the output here. If this
+              is not done the output will be written in small chunks
+              trough the eventloop causing an uncessary delay before
+              the process has even a chance to work and finish.
+              This delay is mainly noticabe on Windows where it can
+              take ~30 seconds to write out a 10MB file in the 512 byte
+              chunks gpgme serves. */
+            kDebug(5151) << "Waiting for " << m_proc->bytesToWrite()
+                         << " Bytes to be written";
+            while ( m_proc->waitForBytesWritten( PROCESS_MAX_RUNTIME_TIMEOUT ) );
+
+            if ( !m_proc->isClosed() ) {
                 m_proc->close();
+            }
             m_proc->waitForFinished( PROCESS_MAX_RUNTIME_TIMEOUT );
         }
         /* reimp */ void doCancel() {
