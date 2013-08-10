@@ -38,7 +38,6 @@ set(kmail_mobile_srcs
   cryptoformatselectiondialog.cpp
   declarativeidentitycombobox.cpp
   emailsexporthandler.cpp
-  emailsguistatemanager.cpp
   emailsfilterproxymodel.cpp
   emailsimporthandler.cpp
   filtereditor.cpp

@@ -339,13 +339,6 @@ PlasmaComponents.Page {
                 }
               },
               KPIM.ScriptAction {
-                name : "edit_acls"
-                script : {
-                  actionPanel.collapse();
-                  guiStateManager.pushState( Mail.EmailsGuiStateManager.ManageAclsState );
-                }
-              },
-              KPIM.ScriptAction {
                 name : "to_selection_screen"
                 script : {
                   actionPanel.collapse();

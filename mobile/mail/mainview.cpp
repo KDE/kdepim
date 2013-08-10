@@ -34,7 +34,6 @@
 #include "filtereditor.h"
 #include "emailsexporthandler.h"
 #include "emailsfilterproxymodel.h"
-#include "emailsguistatemanager.h"
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
 #include "mailcommon/collectionpage/collectiongeneralpage.h"
@@ -127,7 +126,6 @@
 #endif
 
 Q_DECLARE_METATYPE( KMime::Content* )
-QML_DECLARE_TYPE( EmailsGuiStateManager )
 QML_DECLARE_TYPE( MessageViewer::MessageViewItem )
 QML_DECLARE_TYPE( DeclarativeConfigWidget )
 QML_DECLARE_TYPE( DeclarativeSearchWidget )
@@ -485,7 +483,6 @@ void MainView::doDelayedInit()
   qmlRegisterType<MessageViewer::MessageViewItem>( "org.kde.messageviewer", 4, 5, "MessageView" );
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.mail", 4, 5, "ConfigWidget" );
   qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.mail", 4, 5, "SearchWidget" );
-  qmlRegisterUncreatableType<EmailsGuiStateManager>( "org.kde.akonadi.mail", 4, 5, "EmailsGuiStateManager", QLatin1String( "This type is only exported for its enums" ) );
 #ifdef KDEQMLPLUGIN_STATIC
   rootContext()->setContextProperty( QLatin1String( "KDE" ), new KDEIntegration( this ) );
 #endif
@@ -1480,11 +1477,6 @@ ImportHandlerBase* MainView::importHandler() const
 ExportHandlerBase* MainView::exportHandler() const
 {
   return new EmailsExportHandler();
-}
-
-GuiStateManager* MainView::createGuiStateManager() const
-{
-  return new EmailsGuiStateManager();
 }
 
 void MainView::saveMessage()
