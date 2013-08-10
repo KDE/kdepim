@@ -116,7 +116,7 @@ LdapClientSearch::~LdapClientSearch()
 void LdapClientSearch::Private::readWeighForClient( LdapClient *client, const KConfigGroup &config,
                                                     int clientNumber )
 {
-  const int completionWeight = config.readEntry( QString( "SelectedCompletionWeight%1" ).arg( clientNumber ), -1 );
+  const int completionWeight = config.readEntry( QString::fromLatin1( "SelectedCompletionWeight%1" ).arg( clientNumber ), -1 );
   if ( completionWeight != -1 ) {
     client->setCompletionWeight( completionWeight );
   }
@@ -159,7 +159,7 @@ void LdapClientSearch::Private::readConfig()
       readWeighForClient( ldapClient, config, j );
 
       QStringList attrs;
-      attrs << "cn" << "mail" << "givenname" << "sn";
+      attrs << QLatin1String("cn") << QLatin1String("mail") << QLatin1String("givenname") << QLatin1String("sn");
       ldapClient->setAttributes( attrs );
 
       q->connect( ldapClient, SIGNAL(result(KLDAP::LdapClient,KLDAP::LdapObject)),
@@ -174,7 +174,7 @@ void LdapClientSearch::Private::readConfig()
 
     q->connect( &mDataTimer, SIGNAL(timeout()), SLOT(slotDataTimer()) );
   }
-  mConfigFile = KStandardDirs::locateLocal( "config", "kabldaprc" );
+  mConfigFile = KStandardDirs::locateLocal( "config", QLatin1String("kabldaprc") );
   KDirWatch::self()->addFile( mConfigFile );
 }
 
@@ -193,10 +193,10 @@ void LdapClientSearch::startSearch( const QString &txt )
 
   cancelSearch();
 
-  int pos = txt.indexOf( '\"' );
+  int pos = txt.indexOf( QLatin1Char('\"') );
   if ( pos >= 0 ) {
     ++pos;
-    const int pos2 = txt.indexOf( '\"', pos );
+    const int pos2 = txt.indexOf( QLatin1Char('\"'), pos );
     if ( pos2 >= 0 ) {
         d->mSearchText = txt.mid( pos, pos2 - pos );
     } else {
@@ -212,10 +212,14 @@ void LdapClientSearch::startSearch( const QString &txt )
    * This allows both resource accounts with an email address which are not a person and
    * person entries without an email address to show up, while still not showing things
    * like structural entries in the ldap tree. */
-  const QString filter = QString( "&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
-                                  "(|(cn=%1*)(mail=%2*)(mail=*@%3*)(givenName=%4*)(sn=%5*))" )
-                                .arg( d->mSearchText ).arg( d->mSearchText )
-                                .arg( d->mSearchText ).arg( d->mSearchText ).arg( d->mSearchText );
+
+#if 0
+  const QString filter = QString::fromLatin1( "&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
+                                  "(|(cn=%1*)(mail=%1*)(mail=*@%1*)(givenName=%1*)(sn=%1*))" ).arg( d->mSearchText );
+#endif
+  //Fix bug 323272 "Exchange doesn't like any queries beginning with *."
+  const QString filter = QString::fromLatin1( "&(|(objectclass=person)(objectclass=groupOfNames)(mail=*))"
+                                  "(|(cn=%1*)(mail=%1*)(givenName=%1*)(sn=%1*))" ).arg( d->mSearchText );
 
   QList<LdapClient*>::Iterator it;
   QList<LdapClient*>::Iterator end(d->mClients.end());
@@ -311,43 +315,43 @@ void LdapClientSearch::Private::makeSearchData( QStringList &ret, LdapResult::Li
       }
       const QString tmp = QString::fromUtf8( val, len );
       //kDebug(5300) <<"      key: \"" << it2.key() <<"\" value: \"" << tmp <<"\"";
-      if ( it2.key() == "cn" ) {
+      if ( it2.key() == QLatin1String("cn") ) {
         name = tmp;
         if ( mail.isEmpty() ) {
           mail = tmp;
         } else {
           if ( wasCN ) {
-            mail.prepend( "." );
+            mail.prepend( QLatin1String(".") );
           } else {
-            mail.prepend( "@" );
+            mail.prepend( QLatin1String("@") );
           }
           mail.prepend( tmp );
         }
         wasCN = true;
-      } else if ( it2.key() == "dc" ) {
+      } else if ( it2.key() == QLatin1String("dc") ) {
         if ( mail.isEmpty() ) {
           mail = tmp;
         } else {
           if ( wasDC ) {
-            mail.append( "." );
+            mail.append( QLatin1String(".") );
           } else {
-            mail.append( "@" );
+            mail.append( QLatin1String("@") );
           }
           mail.append( tmp );
         }
         wasDC = true;
-      } else if ( it2.key() == "mail" ) {
+      } else if ( it2.key() == QLatin1String("mail") ) {
         mail = tmp;
         KLDAP::LdapAttrValue::ConstIterator it3 = it2.value().constBegin();
         for ( ; it3 != it2.value().constEnd(); ++it3 ) {
           mails.append( QString::fromUtf8( (*it3).data(), (*it3).size() ) );
         }
-      } else if ( it2.key() == "givenName" ) {
+      } else if ( it2.key() == QLatin1String("givenName") ) {
         givenname = tmp;
-      } else if ( it2.key() == "sn" ) {
+      } else if ( it2.key() == QLatin1String("sn") ) {
         sn = tmp;
-      } else if ( it2.key() == "objectClass" &&
-               (tmp == "groupOfNames" || tmp == "kolabGroupOfNames") ) {
+      } else if ( it2.key() == QLatin1String("objectClass") &&
+               (tmp == QLatin1String("groupOfNames") || tmp == QLatin1String("kolabGroupOfNames")) ) {
         isDistributionList = true;
       }
     }
@@ -379,7 +383,7 @@ void LdapClientSearch::Private::makeSearchData( QStringList &ret, LdapResult::Li
     } else if ( name.isEmpty() ) {
       ret.append( mail );
     } else {
-      ret.append( QString( "%1 <%2>" ).arg( name ).arg( mail ) );
+      ret.append( QString::fromLatin1( "%1 <%2>" ).arg( name ).arg( mail ) );
     }
 
     LdapResult sr;

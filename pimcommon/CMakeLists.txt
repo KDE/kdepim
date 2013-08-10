@@ -1,9 +1,13 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_CURRENT_SOURCE_DIR}/util/
+  ${QJSON_INCLUDE_DIR}
 )
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 
 set(libpimcommon_SRCS
   acl/aclentrydialog.cpp
@@ -48,6 +52,7 @@ target_link_libraries(pimcommon
     ${KDEPIMLIBS_KPIMUTILS_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
+    ${QJSON_LIBRARIES}
     kdepim
 )
 

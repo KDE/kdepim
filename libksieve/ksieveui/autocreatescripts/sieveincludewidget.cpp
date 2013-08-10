@@ -56,12 +56,13 @@ QString SieveIncludeLocation::code() const
     return itemData(currentIndex()).toString();
 }
 
-void SieveIncludeLocation::setCode(const QString &code)
+void SieveIncludeLocation::setCode(const QString &code, QString &error)
 {
     const int index = findData(code);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
+        error += i18n("Unknown location type \"%1\" during parsing includes", code);
         setCurrentIndex(0);
     }
 }
@@ -87,7 +88,7 @@ void SieveIncludeActionWidget::loadScript(const QDomElement &element, QString &e
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("personal") ||
                         tagValue == QLatin1String("global")) {
-                    mLocation->setCode(AutoCreateScriptUtil::tagValue(tagValue));
+                    mLocation->setCode(AutoCreateScriptUtil::tagValue(tagValue), error);
                 } else if (tagValue == QLatin1String("optional")) {
                     mOptional->setChecked(true);
                 } else if (tagValue == QLatin1String("once")) {

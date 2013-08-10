@@ -93,7 +93,7 @@ bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
                     numIdentifier = e.attribute(QLatin1String("quantifier"));
                 }
                 SelectSizeWidget *sizeWidget = w->findChild<SelectSizeWidget*>(QLatin1String("sizewidget"));
-                sizeWidget->setCode(tagValue, numIdentifier);
+                sizeWidget->setCode(tagValue, numIdentifier, name(), error);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else {

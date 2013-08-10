@@ -29,7 +29,7 @@ public:
     ~SelectConvertParameterWidget();
 
     QString code() const;
-    void setCode(const QStringList &code);
+    void setCode(const QStringList &code, QString &error);
 
 private:
     void initialize();

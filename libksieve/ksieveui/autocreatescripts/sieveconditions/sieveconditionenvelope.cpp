@@ -126,10 +126,10 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                 const QString tagValue = e.text();
                 if (indexTag == 0) {
                     SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
-                    selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(tagValue));
+                    selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(tagValue), name(), error);
                 } else if (indexTag == 1) {
                     SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
-                    selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition));
+                    selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
                 } else {
                     tooManyArgument(tagName, indexTag, 2, error);
                     qDebug()<<"SieveConditionEnvelope::setParamWidgetValue too many argument :"<<indexTag;

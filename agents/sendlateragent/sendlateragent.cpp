@@ -93,36 +93,6 @@ bool SendLaterAgent::enabledAgent() const
     return SendLaterAgentSettings::enabled();
 }
 
-SendLater::SendLaterDialog::SendLaterAction SendLaterAgent::addSendLaterItem(qlonglong itemId, qlonglong windowId)
-{
-    //TODO 4.12: use it and fix it :)
-    SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo;
-    info->setItemId(itemId);
-    QPointer<SendLater::SendLaterDialog> dialog = new SendLater::SendLaterDialog(info);
-    SendLater::SendLaterDialog::SendLaterAction action = SendLater::SendLaterDialog::Canceled;
-    if (windowId) {
-#ifndef Q_WS_WIN
-        KWindowSystem::setMainWindow( dialog, windowId );
-#else
-        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
-#endif
-    }
-    if (dialog->exec()) {
-        info = dialog->info();
-        KSharedConfig::Ptr config = KGlobal::config();
-        KConfigGroup group = config->group(SendLater::SendLaterUtil::sendLaterPattern.arg(info->itemId()));
-        info->writeConfig(group);
-        action = dialog->action();
-        //TODO
-        config->sync();
-        config->reparseConfiguration();
-        mManager->load();
-    }
-    delete info;
-    delete dialog;
-    return action;
-}
-
 void SendLaterAgent::configure( WId windowId )
 {
     showConfigureDialog(windowId);

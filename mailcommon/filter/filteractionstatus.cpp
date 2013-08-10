@@ -43,7 +43,7 @@ FilterActionStatus::FilterActionStatus(const QString &name, const QString &label
 {
     // if you change this list, also update
     // FilterActionSetStatus::stati above
-    mParameterList.append( "" );
+    mParameterList.append(QString() );
     mParameterList.append( i18nc( "msg status", "Important" ) );
     mParameterList.append( i18nc( "msg status", "Read" ) );
     mParameterList.append( i18nc( "msg status", "Unread" ) );
@@ -86,7 +86,7 @@ void FilterActionStatus::argsFromString( const QString &argsStr )
 
         for ( int i = 0 ; i < FilterActionStatus::StatiCount; ++i ) {
             status = stati[i];
-            if ( realStatusString( status.statusStr() ) == argsStr.toLatin1() ) {
+            if ( realStatusString( status.statusStr() ) == QLatin1String(argsStr.toLatin1()) ) {
                 mParameter = mParameterList.at( i + 1 );
                 return;
             }

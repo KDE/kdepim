@@ -23,6 +23,11 @@
 #define GRANTLEECONTACTFORMATTER_H
 
 #include <Akonadi/Contact/AbstractContactFormatter>
+#include "kaddressbook_grantlee_export.h"
+
+namespace GrantleeTheme {
+class Theme;
+}
 
 namespace Akonadi {
 
@@ -31,18 +36,21 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class GrantleeContactFormatter : public AbstractContactFormatter
+class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactFormatter : public AbstractContactFormatter
 {
   public:
     /**
      * Creates a new grantlee contact formatter.
      */
-    explicit GrantleeContactFormatter( const QString &templatePath );
+    explicit GrantleeContactFormatter();
 
     /**
      * Destroys the grantlee contact formatter.
      */
     virtual ~GrantleeContactFormatter();
+
+
+    void setGrantleeTheme(const GrantleeTheme::Theme &theme);
 
     /**
      * Returns the contact formatted as HTML

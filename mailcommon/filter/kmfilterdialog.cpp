@@ -312,7 +312,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
                                                         IconSize( KIconLoader::Desktop ) ),
                              qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                                                         IconSize( KIconLoader::Small ) ) );
-    setHelp( "filters", "kmail" );
+    setHelp( QLatin1String("filters"), QLatin1String("kmail") );
     setButtonText( User1, i18n( "Import..." ) );
     setButtonText( User2, i18n( "Export..." ) );
     setButtonText( User3, i18n( "Convert to..." ) );
@@ -479,7 +479,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
         gl->addWidget( keyButtonLabel, 8, 2, 1, 1 );
 
         mKeySeqWidget = new KKeySequenceWidget( mAdvOptsGroup );
-        mKeySeqWidget->setObjectName( "FilterShortcutSelector" );
+        mKeySeqWidget->setObjectName( QLatin1String("FilterShortcutSelector") );
         gl->addWidget( mKeySeqWidget, 8, 3, 1, 1 );
         mKeySeqWidget->setEnabled( false );
         mKeySeqWidget->setModifierlessAllowed( true );
@@ -498,7 +498,7 @@ KMFilterDialog::KMFilterDialog( const QList<KActionCollection*> &actionCollectio
         mFilterActionLabel->setBuddy( mFilterActionIconButton );
         mFilterActionIconButton->setIconType( KIconLoader::NoGroup, KIconLoader::Action, false );
         mFilterActionIconButton->setIconSize( 16 );
-        mFilterActionIconButton->setIcon( "system-run" );
+        mFilterActionIconButton->setIcon( QLatin1String("system-run") );
         mFilterActionIconButton->setEnabled( false );
 
         gl->addWidget( hbox, 10, 0, 1, 4 );
@@ -920,23 +920,23 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
     hb->setSpacing( 4 );
 
     mBtnTop = new KPushButton( QString(), hb );
-    mBtnTop->setIcon( KIcon( "go-top" ) );
+    mBtnTop->setIcon( KIcon( QLatin1String("go-top") ) );
     mBtnTop->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnTop->setMinimumSize( mBtnTop->sizeHint() * 1.2 );
 
     mBtnUp = new KPushButton( QString(), hb );
     mBtnUp->setAutoRepeat( true );
-    mBtnUp->setIcon( KIcon( "go-up" ) );
+    mBtnUp->setIcon( KIcon( QLatin1String("go-up") ) );
     mBtnUp->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnUp->setMinimumSize( mBtnUp->sizeHint() * 1.2 );
     mBtnDown = new KPushButton( QString(), hb );
     mBtnDown->setAutoRepeat( true );
-    mBtnDown->setIcon( KIcon( "go-down" ) );
+    mBtnDown->setIcon( KIcon( QLatin1String("go-down") ) );
     mBtnDown->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDown->setMinimumSize( mBtnDown->sizeHint() * 1.2 );
 
     mBtnBottom = new KPushButton( QString(), hb );
-    mBtnBottom->setIcon( KIcon( "go-bottom" ) );
+    mBtnBottom->setIcon( KIcon( QLatin1String("go-bottom") ) );
     mBtnBottom->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnBottom->setMinimumSize( mBtnBottom->sizeHint() * 1.2 );
 
@@ -955,15 +955,15 @@ KMFilterListBox::KMFilterListBox( const QString & title, QWidget *parent )
     hb = new KHBox( this );
     hb->setSpacing( 4 );
     mBtnNew = new QPushButton( QString(), hb );
-    mBtnNew->setIcon( KIcon( "document-new" ) );
+    mBtnNew->setIcon( KIcon( QLatin1String("document-new") ) );
     mBtnNew->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnNew->setMinimumSize( mBtnNew->sizeHint() * 1.2 );
     mBtnCopy = new QPushButton( QString(), hb );
-    mBtnCopy->setIcon( KIcon( "edit-copy" ) );
+    mBtnCopy->setIcon( KIcon( QLatin1String("edit-copy") ) );
     mBtnCopy->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnCopy->setMinimumSize( mBtnCopy->sizeHint() * 1.2 );
     mBtnDelete = new QPushButton( QString(), hb );
-    mBtnDelete->setIcon( KIcon( "edit-delete" ) );
+    mBtnDelete->setIcon( KIcon( QLatin1String("edit-delete") ) );
     mBtnDelete->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
     mBtnDelete->setMinimumSize( mBtnDelete->sizeHint() * 1.2 );
     mBtnRename = new QPushButton( i18n( "Rename..." ), hb );
@@ -1066,7 +1066,7 @@ void KMFilterListBox::createFilter( const QByteArray &field, const QString &valu
                                    arg( QString::fromLatin1( field ) ).
                                    arg( value ) );
 
-    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( "transfer" );
+    FilterActionDesc *desc = MailCommon::FilterManager::filterActionDict()->value( QLatin1String("transfer") );
     if ( desc ) {
         newFilter->actions()->append( desc->create() );
     }
@@ -1104,7 +1104,7 @@ void KMFilterListBox::slotUpdateFilterName()
                     arg( QString::fromLatin1( p->first()->field() ) ).
                     arg( p->first()->contents() );
         } else {
-            shouldBeName = '<' + i18n( "unnamed" ) + '>';
+            shouldBeName = QLatin1Char('<') + i18n( "unnamed" ) + QLatin1Char('>');
         }
         p->setName( shouldBeName );
     }
@@ -1179,7 +1179,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
                         QString(),
                         KGuiItem( i18n( "Discard" ) ),
                         KStandardGuiItem::cancel(),
-                        "ShowInvalidFilterWarning" );
+                        QLatin1String("ShowInvalidFilterWarning") );
             if ( response == KMessageBox::Cancel ) {
                 emit abortClosing();
             }
@@ -1191,7 +1191,7 @@ QList<MailFilter *> KMFilterListBox::filtersForSaving( bool closeAfterSaving ) c
                               "(e.g. containing no actions or no search rules)." ),
                         emptyFilters,
                         QString(),
-                        "ShowInvalidFilterWarning" );
+                        QLatin1String("ShowInvalidFilterWarning") );
         }
     }
     return filters;
@@ -1493,7 +1493,7 @@ void KMFilterListBox::slotRename()
     Q_ASSERT( filter );
 
     // allow empty names - those will turn auto-naming on again
-    QValidator *validator = new QRegExpValidator( QRegExp( ".*" ), 0 );
+    QValidator *validator = new QRegExpValidator( QRegExp( QLatin1String(".*") ), 0 );
     QString newName =
             KInputDialog::getText (
                 i18n( "Rename Filter" ),
@@ -1512,7 +1512,7 @@ void KMFilterListBox::slotRename()
     if ( newName.isEmpty() ) {
         // bait for slotUpdateFilterName to
         // use automatic naming again.
-        filter->pattern()->setName( "<>" );
+        filter->pattern()->setName( QLatin1String("<>") );
         filter->setAutoNaming( true );
     } else {
         filter->pattern()->setName( newName );

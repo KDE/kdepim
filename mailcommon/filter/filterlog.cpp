@@ -179,7 +179,7 @@ void FilterLog::add( const QString &logEntry, ContentType contentType )
 
 void FilterLog::addSeparator()
 {
-    add( "------------------------------", Meta );
+    add( QLatin1String("------------------------------"), Meta );
 }
 
 void FilterLog::clear()

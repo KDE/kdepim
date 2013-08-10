@@ -77,12 +77,10 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("test")) {
                 QDomNode testNode = e.toElement();
-                //TODO return error here
-                setParamWidgetValue(testNode.toElement(), w, error );
-                return true;
+                return setParamWidgetValue(testNode.toElement(), w, error );
             } else if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
-                combo->setCode(AutoCreateScriptUtil::tagValue(e.text()));
+                combo->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );

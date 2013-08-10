@@ -16,6 +16,7 @@
 */
 
 #include "selectbodytypewidget.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 #include <KComboBox>
@@ -73,13 +74,13 @@ void SelectBodyTypeWidget::slotBodyTypeChanged(int index)
     }
 }
 
-void SelectBodyTypeWidget::setCode(const QString &type, const QString &content)
+void SelectBodyTypeWidget::setCode(const QString &type, const QString &content, const QString &name, QString &error)
 {
-    qDebug()<<" type"<<type<<" content "<<content;
     const int index = mBodyCombobox->findData(type);
     if (index != -1) {
         mBodyCombobox->setCurrentIndex(index);
     } else {
+        AutoCreateScriptUtil::comboboxItemNotFound(type, name, error);
         mBodyCombobox->setCurrentIndex(0);
     }
     slotBodyTypeChanged(index);

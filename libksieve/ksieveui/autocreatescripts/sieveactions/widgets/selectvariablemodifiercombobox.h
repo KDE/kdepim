@@ -29,7 +29,7 @@ public:
     ~SelectVariableModifierComboBox();
 
     QString code() const;
-    void setCode(const QString &code);
+    void setCode(const QString &code, const QString &name, QString &error);
 
 private:
     void initialize();

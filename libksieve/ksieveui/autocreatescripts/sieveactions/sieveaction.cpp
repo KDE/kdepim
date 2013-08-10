@@ -77,7 +77,7 @@ QString SieveAction::help() const
     return QString();
 }
 
-bool SieveAction::setParamWidgetValue( const QDomElement &doc, QWidget *parent, QString &error )
+bool SieveAction::setParamWidgetValue( const QDomElement &, QWidget *, QString & )
 {
     return true;
 }
@@ -106,5 +106,11 @@ void SieveAction::tooManyArgument(const QString &tagName, int index, int maxValu
 {
     error += i18n("Too many argument found for \"%1\", max value is %2, number of value found %3 for %4", name(), maxValue, index, tagName) + QLatin1Char('\n');
 }
+
+void SieveAction::serverDoesNotSupportFeatures(const QString &feature, QString &error)
+{
+    error += i18n("A feature \"%1\" in condition \"%2\" is not supported by server", feature, name()) + QLatin1Char('\n');
+}
+
 
 #include "sieveaction.moc"

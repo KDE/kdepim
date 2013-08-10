@@ -1619,7 +1619,7 @@ void ViewerPrivate::createActions()
   headerMenu->addAction( raction );
   //Same action group
   mThemeManager->setActionGroup(group);
-  mThemeManager->setHeaderMenu(headerMenu);
+  mThemeManager->setThemeMenu(headerMenu);
 
   // attachment style
   KActionMenu *attachmentMenu  = new KActionMenu(i18nc("View->", "&Attachments"), this);
@@ -1923,7 +1923,7 @@ KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, c
   } else if (style == HeaderStyle::custom() ) {
       actionName = QLatin1String("view_custom_headers");
   } else if (style == HeaderStyle::grantlee()) {
-      return mThemeManager->actionForHeaderStyle();
+      return mThemeManager->actionForTheme();
   }
 
   if ( actionName.isEmpty() )

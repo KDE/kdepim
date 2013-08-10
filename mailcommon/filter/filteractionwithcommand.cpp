@@ -70,7 +70,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
 {
     QString result = mParameter;
     QList<int> argList;
-    QRegExp r( "%[0-9-]+" );
+    QRegExp r( QLatin1String("%[0-9-]+") );
 
     // search for '%n'
     int start = -1;
@@ -125,7 +125,7 @@ QString FilterActionWithCommand::substituteCommandLineArgsFor( const KMime::Mess
         // returns "0 and 1 and %1", so we must call .arg as
         // many times as there are %n's, regardless of their multiplicity.
         if ( (*it) == -1 )
-            result.replace( "%-1", tempFileName );
+            result.replace( QLatin1String("%-1"), tempFileName );
         else
             result = result.arg( tempFileName );
     }
@@ -145,13 +145,13 @@ void substituteMessageHeaders( const KMime::Message::Ptr &aMsg, QString &result 
 {
     // Replace the %{foo} with the content of the foo header field.
     // If the header doesn't exist, remove the placeholder.
-    QRegExp header_rx( "%\\{([a-z0-9-]+)\\}", Qt::CaseInsensitive );
+    QRegExp header_rx( QLatin1String("%\\{([a-z0-9-]+)\\}"), Qt::CaseInsensitive );
     int idx = 0;
     while ( ( idx = header_rx.indexIn( result, idx ) ) != -1 ) {
         const KMime::Headers::Base* header = aMsg->headerByType( header_rx.cap(1).toLatin1() );
         QString replacement;
         if ( header )
-            replacement = KShell::quoteArg( header->as7BitString() );
+            replacement = KShell::quoteArg( QString::fromLatin1(header->as7BitString()) );
         result.replace( idx, header_rx.matchedLength(), replacement );
         idx += replacement.length();
     }
@@ -239,7 +239,7 @@ FilterAction::ReturnCode FilterActionWithCommand::genericProcess( ItemContext &c
        unfortunate, as we need to removed the original from the folder
        using that, and look it up in the message. When the (new) message
        is uploaded, the header is stripped anyhow. */
-            const QString uid = aMsg->headerByType( "X-UID" ) ? aMsg->headerByType( "X-UID" )->asUnicodeString() : "";
+            const QString uid = aMsg->headerByType( "X-UID" ) ? aMsg->headerByType( "X-UID" )->asUnicodeString() : QString();
             aMsg->setContent( KMime::CRLFtoLF( msgText ) );
             aMsg->parse();
 

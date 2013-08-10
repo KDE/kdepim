@@ -33,7 +33,7 @@
 
 using namespace GrantleeThemeEditor;
 
-DesktopFilePage::DesktopFilePage(bool allowToAddExtraDisplayVariables, QWidget *parent)
+DesktopFilePage::DesktopFilePage(const QString &defaultFileName, bool allowToAddExtraDisplayVariables, QWidget *parent)
     : QWidget(parent),
       mExtraDisplayHeaders(0)
 {
@@ -65,7 +65,7 @@ DesktopFilePage::DesktopFilePage(bool allowToAddExtraDisplayVariables, QWidget *
 
     lab = new QLabel(i18n("Filename:"));
     mFilename = new KLineEdit;
-    mFilename->setText(QLatin1String("header.html"));
+    mFilename->setText(defaultFileName);
     lay->addWidget(lab,4,0);
     lay->addWidget(mFilename,4,1);
 

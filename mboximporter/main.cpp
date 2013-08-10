@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     if (args->count()) {
         fileName = args->url(0).path();
+        args->clear();
     } else {
         fileName = KFileDialog::getOpenFileName();
     }

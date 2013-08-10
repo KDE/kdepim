@@ -20,8 +20,6 @@
 #include "ktimezonecomboboxtest.h"
 #include "../ktimezonecombobox.h"
 
-#include <KCalCore/MemoryCalendar>
-
 #include <KSystemTimeZones>
 
 #include "qtest_kde.h"
@@ -30,13 +28,13 @@ QTEST_KDEMAIN( KTimeZoneComboBoxTest, GUI )
 
 void KTimeZoneComboBoxTest::test_timeSpec()
 {
-  KCalCore::MemoryCalendar cal( KDateTime().timeSpec() );
-  IncidenceEditorNG::KTimeZoneComboBox combo( cal.timeZones() );
+  IncidenceEditorNG::KTimeZoneComboBox combo;
   KDateTime::Spec spec;
 
-  spec.setType( KDateTime::UTC );
+  spec.setType( KDateTime::LocalZone );
   combo.selectTimeSpec( spec );
-  QCOMPARE( combo.selectedTimeSpec().type(), KDateTime::UTC );
+  QCOMPARE( combo.selectedTimeSpec().type(), KDateTime::TimeZone ); // KDateTime::Spec stores it as TimeZone, not LocalTime
+
 
   spec = KDateTime::Spec( KDateTime::ClockTime );
   combo.selectTimeSpec( spec );

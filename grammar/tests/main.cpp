@@ -34,5 +34,5 @@ int main( int argc, char **argv )
     KApplication app;
     MainWindow* mw = new MainWindow();
     mw->show();
-    app.exec();
+    return app.exec();
 }

@@ -17,18 +17,27 @@
 
 #ifndef SIEVESCRIPTPARSINGERRORDIALOG_H
 #define SIEVESCRIPTPARSINGERRORDIALOG_H
+#include "ksieveui_export.h"
 #include <KDialog>
 class KTextEdit;
-class SieveScriptParsingErrorDialog : public KDialog
+class KSIEVEUI_EXPORT SieveScriptParsingErrorDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit SieveScriptParsingErrorDialog(QWidget *parent=0);
     ~SieveScriptParsingErrorDialog();
 
-    void setError(const QString &);
+    void setError(QString script, QString);
+
+private Q_SLOTS:
+    void slotSaveAs();
 
 private:
+    void readConfig();
+    void writeConfig();
+
+private:
+    bool saveToFile( const QString &filename );
     KTextEdit *mTextEdit;
 };
 

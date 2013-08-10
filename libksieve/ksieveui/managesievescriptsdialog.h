@@ -105,6 +105,7 @@ private:
     void disableManagerScriptsDialog(bool disable);
 
 private:
+    void checkEditorMode();
     enum sieveServerStatus
     {
         SIEVE_SERVER_ERROR = Qt::UserRole +1,

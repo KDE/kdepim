@@ -39,7 +39,7 @@ public:
     {
     }
 
-    void initialize(const QWebElement &element);
+    void initialize(const QWebElement &element = QWebElement());
 
     void updateSettings();
     void updateLinkHtml();
@@ -106,14 +106,20 @@ void ComposerAnchorDialogPrivate::updateSettings()
 
 QString ComposerAnchorDialogPrivate::html() const
 {
-    //TODO implement it.
-    return QString();
+    return QString::fromLatin1("<a name=\"%1\"></a>").arg(anchorName->text());
 }
 
 void ComposerAnchorDialogPrivate::updateLinkHtml()
 {
     //TODO
 }
+
+ComposerAnchorDialog::ComposerAnchorDialog(QWidget *parent)
+    : KDialog(parent), d(new ComposerAnchorDialogPrivate(this))
+{
+    d->initialize();
+}
+
 
 ComposerAnchorDialog::ComposerAnchorDialog(const QWebElement &element, QWidget *parent)
     : KDialog(parent), d(new ComposerAnchorDialogPrivate(this))

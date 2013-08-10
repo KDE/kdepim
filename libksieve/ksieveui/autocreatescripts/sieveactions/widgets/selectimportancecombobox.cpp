@@ -16,6 +16,7 @@
 */
 
 #include "selectimportancecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KComboBox>
 #include <KLocale>
@@ -44,13 +45,13 @@ QString SelectImportanceCombobox::code() const
     return itemData(currentIndex()).toString();
 }
 
-void SelectImportanceCombobox::setCode(const QString &code)
+void SelectImportanceCombobox::setCode(const QString &code, const QString &name, QString &error)
 {
     const int index = findData(code);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
-        //TODO other value ?
+        AutoCreateScriptUtil::comboboxItemNotFound(code, name, error);
         setCurrentIndex(0);
     }
 }

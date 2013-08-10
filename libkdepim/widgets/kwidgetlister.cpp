@@ -127,11 +127,11 @@ void KWidgetLister::init( bool fewerMoreButton )
   if ( fewerMoreButton )
   {
     d->mBtnMore = new KPushButton( KGuiItem( i18nc( "more widgets", "More" ),
-                                           "list-add" ), d->mButtonBox );
+                                           QLatin1String("list-add") ), d->mButtonBox );
     d->mButtonBox->setStretchFactor( d->mBtnMore, 0 );
 
     d->mBtnFewer = new KPushButton( KGuiItem( i18nc( "fewer widgets", "Fewer" ),
-                                            "list-remove" ), d->mButtonBox );
+                                            QLatin1String("list-remove") ), d->mButtonBox );
     d->mButtonBox->setStretchFactor( d->mBtnFewer, 0 );
   }
   QWidget *spacer = new QWidget( d->mButtonBox );
@@ -139,7 +139,7 @@ void KWidgetLister::init( bool fewerMoreButton )
 
   d->mBtnClear = new KPushButton( KStandardGuiItem::clear(), d->mButtonBox );
   // FIXME a useful whats this. KStandardGuiItem::clear() returns a text with an edit box
-  d->mBtnClear->setWhatsThis( "" );
+  d->mBtnClear->setWhatsThis( QString() );
   d->mButtonBox->setStretchFactor( d->mBtnClear, 0 );
 
   //---------- connect everything

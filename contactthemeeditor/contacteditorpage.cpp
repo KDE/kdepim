@@ -41,7 +41,7 @@
 
 ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent)
     : QWidget(parent),
-      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir)),
+      mThemeSession(new GrantleeThemeEditor::ThemeSession(projectDir, QLatin1String("contactthemeeditor"))),
       mChanged(false)
 {
     QHBoxLayout *lay = new QHBoxLayout;
@@ -52,7 +52,7 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor"));
 
-    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(false /*no extract display variable*/);
+    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("contact.html"), false /*no extract display variable*/);
     mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
@@ -151,8 +151,12 @@ void ContactEditorPage::uploadTheme()
     const QString zipFileName = tmp.name() + QDir::separator() + themename + QLatin1String(".zip");
     KZip *zip = new KZip(zipFileName);
     if (zip->open(QIODevice::WriteOnly)) {
+
+        //TODO reactivate it when we will be able to create a preview
+#if 0
         const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
         //qDebug()<<" previewFileName"<<previewFileName;
+
         mEditorPage->preview()->createScreenShot(previewFileName);
 
         const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
@@ -161,17 +165,19 @@ void ContactEditorPage::uploadTheme()
             delete zip;
             return;
         }
-
+#endif
         createZip(themename, zip);
         zip->close();
         //qDebug()<< "zipFilename"<<zipFileName;
 
-        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("messageviewer_header_themes.knsrc"), this);
+        QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("kaddressbook_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
         dialog->setUploadName(themename);
+#if 0
         dialog->setPreviewImageFile(0, KUrl(previewFileName));
+#endif
         const QString description = mDesktopPage->description();
-        dialog->setDescription(description.isEmpty() ? i18n("My favorite KMail header") : description);
+        dialog->setDescription(description.isEmpty() ? i18n("My favorite Kaddressbook theme") : description);
         dialog->exec();
         delete dialog;
     } else {
@@ -248,17 +254,18 @@ bool ContactEditorPage::saveTheme(bool withConfirmation)
 
 void ContactEditorPage::loadTheme(const QString &filename)
 {
-    mThemeSession->loadSession(filename);
-    mDesktopPage->loadTheme(mThemeSession->projectDirectory());
-    mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
-    mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+    if (mThemeSession->loadSession(filename)) {
+        mDesktopPage->loadTheme(mThemeSession->projectDirectory());
+        mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
+        mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
 
-    const QStringList lstExtraPages = mThemeSession->extraPages();
-    Q_FOREACH(const QString &page, lstExtraPages) {
-        EditorPage *extraPage = createExtraPage(page);
-        extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
+        const QStringList lstExtraPages = mThemeSession->extraPages();
+        Q_FOREACH(const QString &page, lstExtraPages) {
+            EditorPage *extraPage = createExtraPage(page);
+            extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
+        }
+        setChanged(false);
     }
-    setChanged(false);
 }
 
 void ContactEditorPage::reloadConfig()

@@ -44,16 +44,16 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
 
   if ( uri.startsWith( QLatin1String( "kmail:" ) ) ) {
     // make sure kmail is running or the part is shown
-    KToolInvocation::startServiceByDesktopPath( "kmail" );
+    KToolInvocation::startServiceByDesktopPath( QLatin1String("kmail") );
 
     // parse string, show
-    int colon = uri.indexOf( ':' );
+    int colon = uri.indexOf( QLatin1Char(':') );
     // extract 'number' from 'kmail:<number>/<id>'
     QString serialNumberStr = uri.mid( colon + 1 );
-    serialNumberStr = serialNumberStr.left( serialNumberStr.indexOf( '/' ) );
+    serialNumberStr = serialNumberStr.left( serialNumberStr.indexOf( QLatin1Char('/') ) );
 
     org::kde::kmail::kmail kmail(
-      "org.kde.kmail", "/KMail", QDBusConnection::sessionBus() );
+      QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus() );
     kmail.showMail( serialNumberStr.toUInt(), QString() );
     return true;
   } else if ( uri.startsWith( QLatin1String( "mailto:" ) ) ) {
@@ -72,28 +72,28 @@ bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
     }
   } else if ( uri.startsWith( QLatin1String( "urn:x-ical" ) ) ) {
     // make sure korganizer is running or the part is shown
-    KToolInvocation::startServiceByDesktopPath( "korganizer" );
+    KToolInvocation::startServiceByDesktopPath( QLatin1String("korganizer") );
 
     // we must work around KUrl breakage (it doesn't know about URNs)
     const QString uid = KUrl::fromPercentEncoding( uri.toLatin1() ).mid( 11 );
     OrgKdeKorganizerKorganizerInterface korganizerIface(
-      "org.kde.korganizer", "/Korganizer", QDBusConnection::sessionBus() );
+      QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus() );
 
     return korganizerIface.showIncidence( uid );
   } else if ( uri.startsWith( QLatin1String( "news:" ) ) ) {
-    KToolInvocation::startServiceByDesktopPath( "knode" );
+    KToolInvocation::startServiceByDesktopPath( QLatin1String("knode") );
     org::kde::knode knode(
-      "org.kde.knode", "/KNode", QDBusConnection::sessionBus() );
+      QLatin1String("org.kde.knode"), QLatin1String("/KNode"), QDBusConnection::sessionBus() );
     knode.openURL( uri );
   } else if ( uri.startsWith( QLatin1String( "akonadi:" ) ) ) {
     const KUrl url( uri );
     const QString mimeType = url.queryItem( QLatin1String( "type" ) );
     if ( mimeType.toLower() == QLatin1String( "message/rfc822" ) ) {
       // make sure kmail is running or the part is shown
-      KToolInvocation::startServiceByDesktopPath( "kmail" );
+      KToolInvocation::startServiceByDesktopPath( QLatin1String("kmail") );
 
       org::kde::kmail::kmail kmail(
-        "org.kde.kmail", "/KMail", QDBusConnection::sessionBus() );
+        QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QDBusConnection::sessionBus() );
       kmail.viewMessage( uri );
       return true;
     }

@@ -81,11 +81,15 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
                     if (mHasCopySupport) {
                         QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
                         copy->setChecked(true);
+                    } else {
+                        serverDoesNotSupportFeatures(QLatin1String("copy"), error);
                     }
                 } else if (tagValue == QLatin1String("list")) {
                     if (mHasListSupport) {
                         QCheckBox *list = w->findChild<QCheckBox*>( QLatin1String("list") );
                         list->setChecked(true);
+                    } else {
+                        serverDoesNotSupportFeatures(QLatin1String("list"), error);
                     }
                 } else {
                     unknowTagValue(tagValue, error);

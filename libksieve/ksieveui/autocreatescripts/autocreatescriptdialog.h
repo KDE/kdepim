@@ -39,7 +39,7 @@ public:
     QString script(QString &requires) const;
     void setSieveCapabilities(const QStringList &capabilities);
 
-    void loadScript(const QDomDocument &doc);
+    void loadScript(const QDomDocument &doc, QString &error);
 
 private:
     void readConfig();

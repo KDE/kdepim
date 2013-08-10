@@ -16,6 +16,7 @@
 */
 
 #include "selectmimecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 
@@ -49,13 +50,13 @@ QString SelectMimeComboBox::require() const
     return QLatin1String("mime");
 }
 
-void SelectMimeComboBox::setCode(const QString &code)
+void SelectMimeComboBox::setCode(const QString &code, const QString &name, QString &error)
 {
     const int index = findData(code);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
-        //TODO other value ?
+        AutoCreateScriptUtil::comboboxItemNotFound(code, name, error);
         setCurrentIndex(0);
     }
 }

@@ -17,6 +17,21 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+#include "minimumcombobox.h"
+
+using namespace PimCommon;
+
+MinimumComboBox::MinimumComboBox(QWidget* parent)
+    : KComboBox( parent )
+{
+
+}
+
+QSize MinimumComboBox::minimumSizeHint() const
+{
+    return QSize( 50, KComboBox::minimumSizeHint().height() );
+}
+
 
 #include "minimumcombobox.moc"
 

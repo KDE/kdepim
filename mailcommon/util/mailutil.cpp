@@ -96,7 +96,7 @@ OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterfac
 {
   return
     new OrgKdeAkonadiPOP3SettingsInterface(
-      "org.freedesktop.Akonadi.Resource." + ident, "/Settings", QDBusConnection::sessionBus() );
+      QLatin1String("org.freedesktop.Akonadi.Resource.") + ident, QLatin1String("/Settings"), QDBusConnection::sessionBus() );
 }
 
 bool MailCommon::Util::isVirtualCollection( const Akonadi::Collection &collection )
@@ -133,7 +133,7 @@ QString MailCommon::Util::fullCollectionPath( const Akonadi::Collection &collect
   fullPath = idx.data().toString();
   idx = idx.parent();
   while ( idx != QModelIndex() ) {
-    fullPath = idx.data().toString() + '/' + fullPath;
+    fullPath = idx.data().toString() + QLatin1Char('/') + fullPath;
     idx = idx.parent();
   }
   return fullPath;
@@ -158,9 +158,9 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances( bool excludeMailD
   foreach ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
     const QStringList capabilities( instance.type().capabilities() );
     if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) ) {
-      if ( capabilities.contains( "Resource" ) &&
-           !capabilities.contains( "Virtual" ) &&
-           !capabilities.contains( "MailTransport" ) )
+      if ( capabilities.contains( QLatin1String("Resource") ) &&
+           !capabilities.contains( QLatin1String("Virtual") ) &&
+           !capabilities.contains( QLatin1String("MailTransport") ) )
       {
         relevantInstances << instance;
       } else if ( !excludeMailDispacher &&
@@ -185,16 +185,16 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
 
 #if defined (Q_OS_WINCE) || defined(Q_OS_WIN32)
   //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
-  QDBusInterface *interface = new QDBusInterface( "org.kde.korganizer", "/MainApplication" );
+  QDBusInterface *interface = new QDBusInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication") );
   if ( !interface->isValid() ) {
     kDebug() << "Starting korganizer...";
 
     QDBusServiceWatcher *watcher =
-      new QDBusServiceWatcher( "org.kde.korganizer", QDBusConnection::sessionBus(),
+      new QDBusServiceWatcher( QLatin1String("org.kde.korganizer"), QDBusConnection::sessionBus(),
                                QDBusServiceWatcher::WatchForRegistration );
     QEventLoop loop;
     watcher->connect( watcher, SIGNAL(serviceRegistered(QString)), &loop, SLOT(quit()) );
-    result = QProcess::startDetached( "korganizer-mobile" );
+    result = QProcess::startDetached( QLatin1String("korganizer-mobile") );
     if ( result ) {
       kDebug() << "Starting loop";
       loop.exec();
@@ -211,20 +211,20 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
 
 #ifdef KDEPIM_MOBILE_UI
   // start the mobile korg instead of the desktop one
-  constraint = "'mobile' in Keywords";
+  constraint = QLatin1String("'mobile' in Keywords");
 #endif
 
-  result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer",
+  result = KDBusServiceStarter::self()->findServiceFor( QLatin1String("DBUS/Organizer"),
                                                         constraint,
                                                         &error, &dbusService ) == 0;
 #endif
   if ( result ) {
     // OK, so korganizer (or kontact) is running. Now ensure the object we want is loaded.
-    QDBusInterface iface( "org.kde.korganizer", "/MainApplication",
-                          "org.kde.KUniqueApplication" );
+    QDBusInterface iface( QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication"),
+                          QLatin1String("org.kde.KUniqueApplication") );
     if ( iface.isValid() ) {
       if ( switchTo ) {
-        iface.call( "newInstance" ); // activate korganizer window
+        iface.call( QLatin1String("newInstance") ); // activate korganizer window
       }
 #if 0 //Not exist
       QDBusInterface pimIface( "org.kde.korganizer", "/korganizer_PimApplication",
@@ -339,7 +339,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
              i18n( "Remove Attachments" ),
              KStandardGuiItem::cont(),
              KStandardGuiItem::cancel(),
-             "BodyOnlyInlineAttachment" ) != KMessageBox::Continue ) {
+             QLatin1String("BodyOnlyInlineAttachment") ) != KMessageBox::Continue ) {
         return true; // canceled by user
       }
 
@@ -404,7 +404,7 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
   MailCommon::Util::ensureKorganizerRunning( false );
   kDebug() << "opening editor";
   OrgKdeKorganizerCalendarInterface *iface =
-    new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar",
+    new OrgKdeKorganizerCalendarInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/Calendar"),
                                            QDBusConnection::sessionBus() );
   switch( type ) {
   case KCalCore::IncidenceBase::TypeEvent:
@@ -591,9 +591,9 @@ Akonadi::Collection MailCommon::Util::parentCollectionFromItem( const Akonadi::I
 QString MailCommon::Util::realFolderPath( const QString &path )
 {
   QString realPath( path );
-  realPath.remove( ".directory" );
-  realPath.replace( "/.", "/" );
-  if ( !realPath.isEmpty() && ( realPath.at( 0 ) == '.' ) ) {
+  realPath.remove( QLatin1String(".directory") );
+  realPath.replace( QLatin1String("/."), QLatin1String("/") );
+  if ( !realPath.isEmpty() && ( realPath.at( 0 ) == QLatin1Char('.') ) ) {
     realPath.remove( 0, 1 ); //remove first "."
   }
   return realPath;

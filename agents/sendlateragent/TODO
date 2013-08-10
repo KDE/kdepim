@@ -1,5 +1,4 @@
 4.12:
 -----
 - Add specific folder or not ? (for the moment we use templates)
-- Allow to specify a message as send later (even if we already stored)
 

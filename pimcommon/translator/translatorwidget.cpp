@@ -20,6 +20,7 @@
 #include "widgets/minimumcombobox.h"
 #include "translatorutil.h"
 #include "googletranslator.h"
+
 #include <KTextEdit>
 #include <KComboBox>
 #include <KPushButton>
@@ -28,6 +29,7 @@
 #include <KDebug>
 #include <KConfigGroup>
 #include <KSeparator>
+#include <KMessageBox>
 
 #include <kpimutils/progressindicatorwidget.h>
 
@@ -72,7 +74,7 @@ public:
     QSplitter *splitter;
 };
 
-void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString& lang )
+void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString &lang )
 {
     to->clear();
     const QMap<QString, QString> list = listLanguage.value( lang );
@@ -201,13 +203,13 @@ void TranslatorWidget::init()
 {
     d->abstractTranslator = new /*BabelFishTranslator*/GoogleTranslator();
     connect(d->abstractTranslator, SIGNAL(translateDone()), SLOT(slotTranslateDone()));
-    connect(d->abstractTranslator, SIGNAL(translateFailed(bool)), SLOT(slotTranslateFailed(bool)));
+    connect(d->abstractTranslator, SIGNAL(translateFailed(bool,QString)), SLOT(slotTranslateFailed(bool,QString)));
 
     QVBoxLayout *layout = new QVBoxLayout( this );
     layout->setMargin( 0 );
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( "dialog-close" ) );
+    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
     closeBtn->setToolTip( i18n( "Close" ) );
 
@@ -254,11 +256,6 @@ void TranslatorWidget::init()
     hboxLayout->addWidget( d->translate );
     connect( d->translate, SIGNAL(clicked()), SLOT(slotTranslate()) );
 
-#if !defined(NDEBUG)
-    KPushButton *debug = new KPushButton(i18n("Debug"));
-    connect(debug,SIGNAL(clicked()),this,SLOT(slotDebug()));
-    hboxLayout->addWidget( debug );
-#endif
 
     d->progressIndictor = new KPIMUtils::ProgressIndicatorWidget(this);
     hboxLayout->addWidget( d->progressIndictor );
@@ -345,12 +342,15 @@ void TranslatorWidget::slotTranslateDone()
     d->translatedText->setPlainText(d->abstractTranslator->resultTranslate());
 }
 
-void TranslatorWidget::slotTranslateFailed(bool signalFailed)
+void TranslatorWidget::slotTranslateFailed(bool signalFailed, const QString &message)
 {
     d->translate->setEnabled( true );
     d->progressIndictor->stop();
     d->translatedText->setResultFailed(signalFailed);
     d->translatedText->clear();
+    if (!message.isEmpty()) {
+        KMessageBox::error(this, message, i18n("Translate error"));
+    }
 }
 
 void TranslatorWidget::slotInvertLanguage()
@@ -404,11 +404,6 @@ void TranslatorWidget::slotClear()
     d->inputText->clear();
     d->translatedText->clear();
     d->translate->setEnabled( false );
-}
-
-void TranslatorWidget::slotDebug()
-{
-    d->abstractTranslator->debug();
 }
 
 #include "translatorwidget.moc"

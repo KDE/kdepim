@@ -40,7 +40,7 @@ public:
     static void setSieveCapabilities( const QStringList &capabilities );
     static QStringList sieveCapabilities();
 
-    void loadScript(const QDomDocument &doc);
+    void loadScript(const QDomDocument &doc, QString &error);
 
     QString currentscript();
     void setImportScript( const QString & );

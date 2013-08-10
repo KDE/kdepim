@@ -17,6 +17,7 @@
 
 
 #include "grammarcomboboxlanguage.h"
+#include <KDebug>
 
 namespace Grammar {
 class GrammarComboBoxLanguagePrivate {
@@ -56,7 +57,17 @@ void GrammarComboBoxLanguage::reloadList()
 
 void GrammarComboBoxLanguage::setCurrentLanguage(const QString &lang)
 {
-    //TODO
+    if ( lang.isEmpty() || lang == itemData( currentIndex() ).toString() )
+        return;
+
+    const int idx = findData( lang );
+    if ( idx == -1 ) {
+        kDebug() << "lang not found" << lang;
+        return;
+    }
+
+    setCurrentIndex( idx );
+    d->slotLanguageChanged( idx );
 }
 
 }
