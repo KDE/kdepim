@@ -1,5 +1,10 @@
 [Desktop Entry]
 Name=Followup Reminder Agent
+Name[pt]=Agente de Chamadas de Seguimento
+Name[pt_BR]=Agente de Acompanhamento
+Name[sk]=Agent pripomienky spracovania
+Name[uk]=Агент нагадування про відповіді
+Name[x-test]=xxFollowup Reminder Agentxx
 Comment=Followup Reminder Agent allows to remind you when an email was not answered.
 Type=AkonadiAgent
 Exec=akonadi_followupreminder_agent
