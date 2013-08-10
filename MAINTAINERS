@@ -6,7 +6,9 @@ archivemailagent      Laurent Montel <montel@kde.org>
 blogilo               Mehrdad Momeny <mehrdad.momeny@gmail.com>
 calendarsupport       Sérgio Martins <iamsergio@gmail.com>
 calendarviews         Sérgio Martins <iamsergio@gmail.com>
+contactthemeeditor    Laurent Montel <montel@kde.org>
 composereditor-ng     Laurent Montel <montel@kde.org>
+grammar               Laurent Montel <montel@kde.org>
 headerthemeeditor     Laurent Montel <montel@kde.org>
 importwizard          Laurent Montel <montel@kde.org>
 incidenceeditors-ng   Sérgio Martins <iamsergio@gmail.com>
@@ -34,6 +36,7 @@ libkpgp               DEPRECATED
 libksieve             Laurent Montel <montel@kde.org>
 mailcommon            <kmail maintainer>
 mailfilteragent       ?
+mailcommon            Laurent Montel <montel@kde.org>
 pimsettingexporter    Laurent Montel <montel@kde.org>
 pimactivity           Laurent Montel <montel@kde.org>  
 messagecomposer       <kmail maintainer>
