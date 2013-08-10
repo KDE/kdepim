@@ -136,7 +136,6 @@ install(FILES
   FavoriteManagerPage.qml
   kmail-composer.qml
   kmail-mobile.qml
-  KMailActions.qml
   KMailComposerActions.qml
   kmail-mobile.notifyrc
   SettingsPage.qml
