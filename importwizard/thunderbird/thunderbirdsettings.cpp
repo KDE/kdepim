@@ -384,6 +384,37 @@ void ThunderbirdSettings::readGlobalSettings()
         //Default value in thunderbird
         addKmailConfig(QLatin1String("General"),QLatin1String("beep-on-mail"), true);
     }
+
+    const QString mailAlertShowSubjectStr = QLatin1String("mail.biff.alert.show_subject");
+    if (mHashConfig.contains(mailAlertShowSubjectStr)) {
+        const bool mailAlertShowSubject = mHashConfig.value(mailAlertShowSubjectStr).toBool();
+        addNewMailNotifier(QLatin1String("General"),QLatin1String("showSubject"), mailAlertShowSubject);
+    } else {
+        //Default value in thunderbird
+        addNewMailNotifier(QLatin1String("General"),QLatin1String("showSubject"), true);
+    }
+
+    const QString mailAlertShowPreviewStr = QLatin1String("mail.biff.alert.show_preview");
+    //TODO add show preview
+    if (mHashConfig.contains(mailAlertShowPreviewStr)) {
+        const bool mailAlertShowPreview = mHashConfig.value(mailAlertShowPreviewStr).toBool();
+        //addNewMailNotifier(QLatin1String("General"),QLatin1String("showSubject"), mailAlertShowPreview);
+    } else {
+        //Default value in thunderbird
+        //addNewMailNotifier(QLatin1String("General"),QLatin1String("showSubject"), true);
+    }
+
+    const QString mailAlertShowSenderStr = QLatin1String("mail.biff.alert.show_sender");
+    if (mHashConfig.contains(mailAlertShowSenderStr)) {
+        const bool mailAlertShowSender = mHashConfig.value(mailAlertShowSenderStr).toBool();
+        addNewMailNotifier(QLatin1String("General"), QLatin1String("showFrom"), mailAlertShowSender);
+    } else {
+        //Default value in thunderbird
+        addNewMailNotifier(QLatin1String("General"), QLatin1String("showFrom"), true);
+    }
+
+
+
     const QString mailSpellCheckBeforeSendStr = QLatin1String("mail.SpellCheckBeforeSend");
     if (mHashConfig.contains(mailSpellCheckBeforeSendStr)) {
         const bool mailSpellCheckBeforeSend = mHashConfig.value(mailSpellCheckBeforeSendStr).toBool();
@@ -877,4 +908,11 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
         mHashTag.insert(name,tag);
         kDebug()<<" tag :"<<name<<" tag.name"<<tag.name<<" color :"<<tag.color;
     }
+}
+
+void ThunderbirdSettings::addNewMailNotifier(const QString &group, const QString &key, bool value)
+{
+    KConfig config(QLatin1String("akonadi_newmailnotifier_agentrc"));
+    KConfigGroup grp = config.group(group);
+    grp.writeEntry(key, value);
 }

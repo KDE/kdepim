@@ -46,6 +46,8 @@ private:
 
     void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
 
+    void addNewMailNotifier(const QString &group, const QString &key, bool value);
+
     QHash<QString, QVariant> mHashConfig;
     QHash<QString, QString> mHashSmtp;
     QStringList mAccountList;
