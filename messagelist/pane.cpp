@@ -1046,7 +1046,7 @@ void Pane::readConfig()
       for(int i = 0; i<numberOfTab; ++i) {
         KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
         QItemSelectionModel *selectionModel = createNewTab();
-        Q_UNUSED( selectionModel );
+
 #if 0
         Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
         ETMViewStateSaver *saver = new ETMViewStateSaver;
@@ -1058,6 +1058,8 @@ void Pane::readConfig()
             saver->restoreState( grp );
             saver->selectCollections(Akonadi::Collection::List()<<Akonadi::Collection(id));
         }
+#else
+        Q_UNUSED( selectionModel );
 #endif
         Widget *w = qobject_cast<Widget *>( widget( i ) );
         w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));
