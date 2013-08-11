@@ -70,7 +70,7 @@ public:
   /**
    * Create a Pane wrapping the specified model and selection.
    */
-  explicit Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent = 0 );
+  explicit Pane(bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent = 0 );
   ~Pane();
 
 
@@ -387,9 +387,6 @@ public:
 
   void updateTagComboBox();
 
-  void writeConfig();
-
-  void readConfig();
 
   bool searchEditHasFocus() const;
 
@@ -459,6 +456,10 @@ signals:
 
 
 private:
+  void writeConfig();
+
+  void readConfig(bool restoreSession);
+
   Q_PRIVATE_SLOT(d, void onSelectionChanged( const QItemSelection&, const QItemSelection& ))
   Q_PRIVATE_SLOT(d, void onNewTabClicked())
   Q_PRIVATE_SLOT(d, void onCloseTabClicked())
