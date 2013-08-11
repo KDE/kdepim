@@ -41,12 +41,6 @@ PlasmaComponents.Page {
   }
   //END: Tools
 
-  PlasmaComponents.Label {
-    id: label
-
-    text: "  "
-  }
-
   ListView {
     id: listView
 
@@ -77,7 +71,7 @@ PlasmaComponents.Page {
         anchors {
           verticalCenter: parent.verticalCenter
           left: parent.left
-          leftMargin: label.width
+          leftMargin: theme.defaultFont.mSize.width
         }
 
         online: model.online
@@ -89,7 +83,7 @@ PlasmaComponents.Page {
 
         anchors {
           left: iconItem.right
-          leftMargin: label.width
+          leftMargin: theme.defaultFont.mSize.width
           verticalCenter: parent.verticalCenter
         }
 
@@ -116,7 +110,7 @@ PlasmaComponents.Page {
         anchors {
           verticalCenter: parent.verticalCenter
           left: parent.left
-          leftMargin: label.width
+          leftMargin: theme.defaultFont.mSize.width
         }
 
         height: parent.height * 0.6
@@ -131,7 +125,7 @@ PlasmaComponents.Page {
 
         anchors {
           left: iconItem.right
-          leftMargin: label.width
+          leftMargin: theme.defaultFont.mSize.width
           verticalCenter: parent.verticalCenter
         }
 
