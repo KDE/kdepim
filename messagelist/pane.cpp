@@ -190,7 +190,7 @@ Pane::Pane( bool restoreSession, QAbstractItemModel *model, QItemSelectionModel 
 
 Pane::~Pane()
 {
-  writeConfig();
+  writeConfig(true);
   delete d;
 }
 
@@ -1012,7 +1012,7 @@ void Pane::updateTagComboBox()
   }
 }
 
-void Pane::writeConfig()
+void Pane::writeConfig(bool restoreSession)
 {
   KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
 
@@ -1022,14 +1022,16 @@ void Pane::writeConfig()
     conf.deleteGroup( group );
   }
 
-  conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
-  conf.writeEntry(QLatin1String("tabNumber"),count());
+  if (restoreSession) {
+    conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
+    conf.writeEntry(QLatin1String("tabNumber"),count());
 
-  for ( int i=0; i<count(); ++i ) {
-    Widget *w = qobject_cast<Widget *>( widget( i ) );
-    KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
-    grp.writeEntry(QLatin1String("collectionId"),w->currentCollection().id());
-    grp.writeEntry(QLatin1String("HeaderState"), w->view()->header()->saveState());
+    for ( int i=0; i<count(); ++i ) {
+      Widget *w = qobject_cast<Widget *>( widget( i ) );
+      KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
+      grp.writeEntry(QLatin1String("collectionId"),w->currentCollection().id());
+      grp.writeEntry(QLatin1String("HeaderState"), w->view()->header()->saveState());
+    }
   }
   conf.sync();
 }
@@ -1056,6 +1058,7 @@ void Pane::readConfig(bool restoreSession)
             saver->setSelectionModel(selectionModel);
             saver->restoreState( grp );
             saver->selectCollections(Akonadi::Collection::List()<<Akonadi::Collection(id));
+            saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(id) );
         }
 #else
         Q_UNUSED( selectionModel );

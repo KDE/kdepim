@@ -76,6 +76,7 @@ public:
 
   virtual MessageList::StorageModel *createStorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent );
 
+  virtual void writeConfig(bool restoreSession);
 
   /**
    * Sets the XML GUI client which the pane is used in.
@@ -455,8 +456,9 @@ signals:
   void currentTabChanged();
 
 
+
 private:
-  void writeConfig();
+
 
   void readConfig(bool restoreSession);
 
