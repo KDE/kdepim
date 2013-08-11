@@ -80,8 +80,6 @@ void ContactEditorMainWindow::updateActions()
     mSaveAction->setEnabled(projectDirectoryIsEmpty);
     mInstallTheme->setEnabled(projectDirectoryIsEmpty);
     mInsertFile->setEnabled(projectDirectoryIsEmpty);
-    mPrintingMode->setEnabled(projectDirectoryIsEmpty);
-    mNormalMode->setEnabled(projectDirectoryIsEmpty);
     mUpdateView->setEnabled(projectDirectoryIsEmpty);
 }
 
@@ -113,19 +111,6 @@ void ContactEditorMainWindow::setupActions()
     actionCollection()->addAction( QLatin1String( "insert_file" ), mInsertFile );
     connect(mInsertFile, SIGNAL(triggered(bool)), SLOT(slotInsertFile()));
 
-    QActionGroup *group = new QActionGroup( this );
-
-    mPrintingMode  = new KToggleAction(i18n("Printing mode"), this);
-    actionCollection()->addAction(QLatin1String("printing_mode"), mPrintingMode );
-    connect(mPrintingMode, SIGNAL(triggered(bool)), SLOT(slotPrintingMode()));
-    group->addAction( mPrintingMode );
-
-    mNormalMode  = new KToggleAction(i18n("Normal mode"), this);
-    mNormalMode->setChecked(true);
-    actionCollection()->addAction(QLatin1String("normal_mode"), mNormalMode );
-    connect(mNormalMode, SIGNAL(triggered(bool)), SLOT(slotNormalMode()));
-    group->addAction( mNormalMode );
-
     mManageTheme = new KAction(i18n("Manage themes..."), this);
     connect(mManageTheme, SIGNAL(triggered(bool)),SLOT(slotManageTheme()));
     actionCollection()->addAction( QLatin1String( "manage_themes" ), mManageTheme );
@@ -152,16 +137,6 @@ void ContactEditorMainWindow::slotManageTheme()
     QPointer<GrantleeThemeEditor::ManageThemes> dialog = new GrantleeThemeEditor::ManageThemes(QLatin1String("kaddressbook/viewertemplates/"), this);
     dialog->exec();
     delete dialog;
-}
-
-void ContactEditorMainWindow::slotNormalMode()
-{
-    mContactEditor->setPrinting(false);
-}
-
-void ContactEditorMainWindow::slotPrintingMode()
-{
-    mContactEditor->setPrinting(true);
 }
 
 void ContactEditorMainWindow::slotInsertFile()

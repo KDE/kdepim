@@ -20,11 +20,6 @@
 #define PREVIEWWIDGET_H
 
 #include <QWidget>
-namespace MessageViewer {
-class Viewer;
-class GrantleeHeaderTestStyle;
-}
-
 class PreviewWidget : public QWidget
 {
     Q_OBJECT
@@ -36,17 +31,12 @@ public:
     void loadConfig();
     void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
     void updateViewer();
-    void setPrinting(bool printMode);
-    bool printing() const;
 
 Q_SIGNALS:
     void needUpdateViewer();
 
 public Q_SLOTS:
     void slotMainFileNameChanged(const QString &);
-
-private:
-    bool mPrinting;
 };
 
 #endif // PREVIEWWIDGET_H

@@ -26,22 +26,12 @@
 #include <QDebug>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
-    : QWidget(parent),
-      mPrinting(false)
+    : QWidget(parent)
 {
- }
+}
 
 PreviewWidget::~PreviewWidget()
 {
-}
-
-void PreviewWidget::setPrinting(bool printMode)
-{
-}
-
-bool PreviewWidget::printing() const
-{
-    return mPrinting;
 }
 
 void PreviewWidget::slotMainFileNameChanged(const QString &filename)

@@ -75,11 +75,6 @@ void ContactEditorPage::updatePreview()
     mEditorPage->preview()->updateViewer();
 }
 
-void ContactEditorPage::setPrinting(bool print)
-{
-    mEditorPage->preview()->setPrinting(print);
-}
-
 void ContactEditorPage::slotChanged()
 {
     setChanged(true);
