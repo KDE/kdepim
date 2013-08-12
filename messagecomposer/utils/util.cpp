@@ -71,7 +71,7 @@ KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* or
       // set body to be body + encoded if there is a orig body
       // if not, ignore it because the newline messes up decrypting
       if(  sign && makeMultiPartSigned( format ) ) {
-        result->setBody( orig->body() + "\n" + encodedBody );
+        result->setBody( orig->body() + '\n' + encodedBody );
       } else {
         result->setBody( encodedBody );
       }
