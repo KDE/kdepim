@@ -17,6 +17,7 @@
 
 
 #include "grammarcomboboxlanguage.h"
+#include "grammarchecker.h"
 #include <KDebug>
 
 namespace Grammar {
@@ -53,7 +54,16 @@ GrammarComboBoxLanguage::~GrammarComboBoxLanguage()
 void GrammarComboBoxLanguage::reloadList()
 {
     clear();
-    //TODO load list of language from plugins
+
+    Grammar::GrammarChecker* checker = new Grammar::GrammarChecker();
+    QMap<QString, QString> lang = checker->availableLanguage();
+    QMapIterator<QString, QString> i( lang );
+    while ( i.hasNext() ) {
+        i.next();
+        kDebug() << "Populate combo:" << i.key() << ":" << i.value();
+        addItem( i.key(), i.value() );
+    }
+    delete checker;
 }
 
 void GrammarComboBoxLanguage::setCurrentLanguage(const QString &lang)

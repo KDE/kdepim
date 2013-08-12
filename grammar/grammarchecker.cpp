@@ -16,6 +16,10 @@
 */
 
 #include "grammarchecker.h"
+#include "grammarloader.h"
+
+#include <QStringList>
+
 namespace Grammar {
 
 class GrammarCheckerPrivate
@@ -42,8 +46,16 @@ GrammarChecker::~GrammarChecker()
 
 QMap<QString, QString> GrammarChecker::availableLanguage() const
 {
-    //TODO
-    return QMap<QString, QString>();
+    GrammarLoader *l = GrammarLoader::openGrammarLoader();
+    const QStringList lst = l->languages();
+    QMap<QString, QString> langs;
+    foreach(QString tag, lst) {
+        QString description;
+        //TODO
+        langs.insert(description, tag);
+    }
+
+    return langs;
 }
 
 }
