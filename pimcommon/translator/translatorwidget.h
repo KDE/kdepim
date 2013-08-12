@@ -78,12 +78,12 @@ protected:
 
 Q_SIGNALS:
     void translatorWasClosed();
+
 private:
     void init();
     void initLanguage();
     class TranslatorWidgetPrivate;
     TranslatorWidgetPrivate *const d;
-
 };
 }
 

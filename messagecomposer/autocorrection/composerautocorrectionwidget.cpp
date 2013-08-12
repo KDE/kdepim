@@ -407,17 +407,16 @@ void ComposerAutoCorrectionWidget::enableAddRemoveButton()
     QTreeWidgetItem *item = 0;
     if (m_autocorrectEntries.contains(find)) {
         item = ui->treeWidget->findItems(find, Qt::MatchCaseSensitive).first();
-
     }
+
     bool enable = false;
-    if ( find.isEmpty() || replace.isEmpty()) // disable if no text in find/replace
+    if ( find.isEmpty() || replace.isEmpty()) {// disable if no text in find/replace
         enable = !(find.isEmpty() || replace.isEmpty());
-    else if (item && find == item->text(0)) {
+    } else if (item && find == item->text(0)) {
         // We disable add / remove button if no text for the replacement
         enable = !item->text(1).isEmpty();
         ui->addButton->setText(i18n("&Modify"));
-    }
-    else if (!item || !item->text(1).isEmpty()) {
+    } else if (!item || !item->text(1).isEmpty()) {
         enable = true;
         ui->addButton->setText(i18n("&Add"));
     }
@@ -547,8 +546,7 @@ void ComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
             default:
                 return;
             }
-            if (importAutoCorrection->import(fileName,ImportAbstractAutocorrection::All))
-            {
+            if (importAutoCorrection->import(fileName,ImportAbstractAutocorrection::All)) {
                 m_autocorrectEntries = importAutoCorrection->autocorrectEntries();
                 addAutoCorrectEntries();
 
