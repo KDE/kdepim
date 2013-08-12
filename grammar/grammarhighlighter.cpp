@@ -22,11 +22,14 @@ namespace Grammar {
 class GrammarPrivate {
 public:
     GrammarPrivate(GrammarHighlighter *qq)
-        : q(qq)
+        : active(true),
+          q(qq)
     {
 
     }
     QString currentLanguage;
+    QColor grammarErrorColor;
+    bool active;
     GrammarHighlighter *q;
 };
 
@@ -52,8 +55,33 @@ void GrammarHighlighter::setCurrentLanguage(const QString &lang)
 
 void GrammarHighlighter::highlightBlock(const QString &text)
 {
+    if (text.isEmpty() || !d->active)
+        return;
+
     //TODO
+    setCurrentBlockState(0);
 }
+
+void GrammarHighlighter::setActive(bool active)
+{
+    d->active = active;
+}
+
+bool GrammarHighlighter::isActive() const
+{
+    return d->active;
+}
+
+void GrammarHighlighter::setGrammarColor(const QColor &color)
+{
+    d->grammarErrorColor = color;
+}
+
+QColor GrammarHighlighter::grammarColor() const
+{
+    return d->grammarErrorColor;
+}
+
 
 }
 #include "grammarhighlighter.moc"
