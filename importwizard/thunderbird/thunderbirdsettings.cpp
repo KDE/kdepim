@@ -56,7 +56,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
                     line.contains(QLatin1String("mail.biff.")) ||
                     line.contains(QLatin1String("mailnews.tags.")) ||
                     line.contains(QLatin1String("extensions.AutoResizeImage.")) ||
-                    line.contains(QLatin1String("mail.phishing."))) {
+                    line.contains(QLatin1String("mail.phishing.")) ||
+                    line.contains(QLatin1String("mail.display_glyph"))) {
                 insertIntoMap( line );
             }
         } else {
@@ -436,6 +437,14 @@ void ThunderbirdSettings::readGlobalSettings()
         addKmailConfig(QLatin1String("Reader"), QLatin1String("ScamDetectionEnabled"), mailPhishingDetectionEnabled);
     } else { //Default
         addKmailConfig(QLatin1String("Reader"), QLatin1String("ScamDetectionEnabled"), true);
+    }
+
+    const QString mailDisplayGlyphStr = QLatin1String("mail.display_glyph");
+    if (mHashConfig.contains(mailDisplayGlyphStr)) {
+        const bool mailDisplayGlyphEnabled = mHashConfig.value(mailDisplayGlyphStr).toBool();
+        addKmailConfig(QLatin1String("Reader"), QLatin1String("ShowEmoticons"), mailDisplayGlyphEnabled);
+    } else { //Default
+        addKmailConfig(QLatin1String("Reader"), QLatin1String("ShowEmoticons"), true);
     }
 
 }
