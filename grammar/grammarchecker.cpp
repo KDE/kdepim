@@ -18,6 +18,9 @@
 #include "grammarchecker.h"
 #include "grammarloader.h"
 
+#include <KGlobal>
+#include <KLocale>
+
 #include <QStringList>
 
 namespace Grammar {
@@ -49,9 +52,10 @@ QMap<QString, QString> GrammarChecker::availableLanguage() const
     GrammarLoader *l = GrammarLoader::openGrammarLoader();
     const QStringList lst = l->languages();
     QMap<QString, QString> langs;
-    foreach(QString tag, lst) {
-        QString description;
-        //TODO
+    foreach(const QString &tag, lst) {
+        const QString description= QString::fromLatin1("%1 (%2)")
+                     .arg(KGlobal::locale()->languageCodeToName(tag))
+                     .arg(KGlobal::locale()->countryCodeToName(tag));
         langs.insert(description, tag);
     }
 
