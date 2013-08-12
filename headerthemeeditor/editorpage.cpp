@@ -90,11 +90,6 @@ EditorPage::~EditorPage()
     }
 }
 
-void EditorPage::insertFile(const QString &filename)
-{
-    mEditor->insertFile(filename);
-}
-
 void EditorPage::createZip(const QString &themeName, KZip *zip)
 {
     KTemporaryFile tmp;
@@ -135,16 +130,6 @@ void EditorPage::saveAsFilename(const QString &filename)
     }
 }
 
-void EditorPage::setPageFileName(const QString &filename)
-{
-    mPageFileName = filename;
-}
-
-QString EditorPage::pageFileName() const
-{
-    return mPageFileName;
-}
-
 void EditorPage::installTheme(const QString &themePath)
 {
     const QString filename = themePath + QDir::separator() + mPageFileName;
@@ -154,16 +139,6 @@ void EditorPage::installTheme(const QString &themePath)
 PreviewWidget *EditorPage::preview() const
 {
     return mPreview;
-}
-
-EditorPage::PageType EditorPage::pageType() const
-{
-    return mType;
-}
-
-GrantleeThemeEditor::EditorWidget *EditorPage::editor() const
-{
-    return mEditor;
 }
 
 #include "editorpage.moc"

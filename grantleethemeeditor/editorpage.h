@@ -22,6 +22,7 @@
 #include "grantleethemeeditor_export.h"
 
 namespace GrantleeThemeEditor {
+class EditorWidget;
 class GRANTLEETHEMEEDITOR_EXPORT EditorPage : public QWidget
 {
     Q_OBJECT
@@ -33,12 +34,23 @@ public:
     explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, QWidget *parent=0);
     ~EditorPage();
 
+    EditorPage::PageType pageType() const;
+
+    void setPageFileName(const QString &filename);
+    QString pageFileName() const;
+
+    GrantleeThemeEditor::EditorWidget *editor() const;
+
+    void insertFile(const QString &filename);
+
 Q_SIGNALS:
     void needUpdateViewer();
     void changed();
 
 protected:
     PageType mType;
+    QString mPageFileName;
+    GrantleeThemeEditor::EditorWidget *mEditor;
 };
 }
 

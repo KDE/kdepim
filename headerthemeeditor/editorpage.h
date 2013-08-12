@@ -43,22 +43,13 @@ public:
     void saveTheme(const QString &path);
     void loadTheme(const QString &path);
 
-    void setPageFileName(const QString &filename);
-    QString pageFileName() const;
-
-    PageType pageType() const;
-
     void createZip(const QString &themeName, KZip *zip);
     void saveAsFilename(const QString &filename);
     void installTheme(const QString &themePath);
-    void insertFile(const QString &filename);
 
     PreviewWidget *preview() const;
-    GrantleeThemeEditor::EditorWidget *editor() const;
 
 private:
-    QString mPageFileName;
-    GrantleeThemeEditor::EditorWidget *mEditor;
     PreviewWidget *mPreview;
     ThemeTemplateWidget *mThemeTemplate;
     QSplitter *mMainSplitter;

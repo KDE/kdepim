@@ -16,12 +16,14 @@
 */
 
 #include "editorpage.h"
+#include "editorwidget.h"
 
 using namespace GrantleeThemeEditor;
 
 EditorPage::EditorPage(PageType type, QWidget *parent)
     : QWidget(parent),
-      mType(type)
+      mType(type),
+      mEditor(0)
 {
 }
 
@@ -29,5 +31,32 @@ EditorPage::~EditorPage()
 {
 
 }
+
+EditorPage::PageType EditorPage::pageType() const
+{
+    return mType;
+}
+
+void EditorPage::setPageFileName(const QString &filename)
+{
+    mPageFileName = filename;
+}
+
+QString EditorPage::pageFileName() const
+{
+    return mPageFileName;
+}
+
+GrantleeThemeEditor::EditorWidget *EditorPage::editor() const
+{
+    return mEditor;
+}
+
+void EditorPage::insertFile(const QString &filename)
+{
+    if (mEditor)
+        mEditor->insertFile(filename);
+}
+
 
 #include "editorpage.moc"
