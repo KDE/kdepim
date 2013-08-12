@@ -31,6 +31,13 @@ class GRAMMAR_EXPORT GrammarHighlighter : public QSyntaxHighlighter
 public:
     explicit GrammarHighlighter(QTextEdit *textEdit);
     ~GrammarHighlighter();
+
+    QString currentLanguage() const;
+    void setCurrentLanguage(const QString &lang);
+
+protected:
+    void highlightBlock(const QString &text);
+
 private:
     friend class GrammarPrivate;
     GrammarPrivate * const d;

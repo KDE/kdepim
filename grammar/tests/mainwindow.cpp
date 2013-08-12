@@ -18,6 +18,7 @@
 #include "mainwindow.h"
 
 #include "grammar/widgets/grammarcomboboxlanguage.h"
+#include "grammar/grammarhighlighter.h"
 
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -31,6 +32,7 @@ MainWindow::MainWindow()
     Grammar::GrammarComboBoxLanguage *comboxbox = new Grammar::GrammarComboBoxLanguage;
     layout->addWidget(comboxbox);
     mEdit = new QTextEdit;
+    new Grammar::GrammarHighlighter(mEdit);
     layout->addWidget(mEdit);
     setCentralWidget(w);
 }

@@ -26,6 +26,7 @@ public:
     {
 
     }
+    QString currentLanguage;
     GrammarHighlighter *q;
 };
 
@@ -38,5 +39,21 @@ GrammarHighlighter::~GrammarHighlighter()
 {
     delete d;
 }
+
+QString GrammarHighlighter::currentLanguage() const
+{
+    return d->currentLanguage;
+}
+
+void GrammarHighlighter::setCurrentLanguage(const QString &lang)
+{
+    d->currentLanguage = lang;
+}
+
+void GrammarHighlighter::highlightBlock(const QString &text)
+{
+    //TODO
+}
+
 }
 #include "grammarhighlighter.moc"
