@@ -10,6 +10,7 @@ Name[sr@latin]=Agent podsećanja na odgovor
 Name[uk]=Агент нагадування про відповіді
 Name[x-test]=xxFollowup Reminder Agentxx
 Comment=Followup Reminder Agent allows to remind you when an email was not answered.
+Comment[pt]=O Agente de Chamadas de Seguimento permite recordar quando uma mensagem não foi respondida.
 Comment[pt_BR]=O Agente de Acompanhamento permite-lhe lembrar de um e-mail não respondido.
 Comment[sk]=Agent pripomienky spracovania vám umožní upozorniť vás, keď e-mail nemá odpoveď.
 Comment[uk]=Агент нагадування про відповіді нагадуватиме вам про електронні листи, на які ви не дали відповіді.
