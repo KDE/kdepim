@@ -38,13 +38,6 @@ public:
     explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = 0);
     ~EditorPage();
 
-    void saveTheme(const QString &path);
-    void loadTheme(const QString &path);
-
-    void createZip(const QString &themeName, KZip *zip);
-    void saveAsFilename(const QString &filename);
-    void installTheme(const QString &themePath);
-
     PreviewWidget *preview() const;
 
 private:

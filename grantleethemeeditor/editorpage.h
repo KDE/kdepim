@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "grantleethemeeditor_export.h"
 
+class KZip;
+
 namespace GrantleeThemeEditor {
 class EditorWidget;
 class GRANTLEETHEMEEDITOR_EXPORT EditorPage : public QWidget
@@ -42,6 +44,12 @@ public:
     GrantleeThemeEditor::EditorWidget *editor() const;
 
     void insertFile(const QString &filename);
+    void loadTheme(const QString &path);
+    void saveTheme(const QString &path);
+    void saveAsFilename(const QString &filename);
+
+    void createZip(const QString &themeName, KZip *zip);
+    void installTheme(const QString &themePath);
 
 Q_SIGNALS:
     void needUpdateViewer();
