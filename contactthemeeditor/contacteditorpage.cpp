@@ -50,7 +50,7 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
-    mTabWidget->addTab(mEditorPage, i18n("Editor"));
+    mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (contact.html)"));
 
     mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("contact.html"), false /*no extract display variable*/);
     mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
@@ -58,6 +58,7 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
     connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
+    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mTabWidget, SLOT(slotMainFileNameChanged(QString)));
     connect(mDesktopPage, SIGNAL(changed()), SLOT(slotChanged()));
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
     setLayout(lay);
