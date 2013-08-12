@@ -27,6 +27,8 @@ class GRAMMAR_EXPORT GrammarLoader : public QObject
 {
     Q_OBJECT
 public:
+    static GrammarLoader *openGrammarLoader();
+
     GrammarLoader();
     ~GrammarLoader();
 

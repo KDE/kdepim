@@ -75,6 +75,17 @@ public:
     GrammarLoader *q;
 };
 
+K_GLOBAL_STATIC(GrammarLoader, s_loader)
+
+GrammarLoader *GrammarLoader::openGrammarLoader()
+{
+    if (s_loader.isDestroyed()) {
+        return 0;
+    }
+
+    return s_loader;
+}
+
 GrammarLoader::GrammarLoader()
     : d(new GrammarLoaderPrivate(this))
 {
