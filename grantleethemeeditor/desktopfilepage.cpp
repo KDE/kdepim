@@ -66,6 +66,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, bool allowToAdd
     lab = new QLabel(i18n("Filename:"));
     mFilename = new KLineEdit;
     mFilename->setText(defaultFileName);
+    connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
     lay->addWidget(lab,4,0);
     lay->addWidget(mFilename,4,1);
 
@@ -90,7 +91,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, bool allowToAdd
         lay->setRowStretch(6,0);
     }
     setLayout(lay);
-    connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
+
     connect(mDescription, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 }
 
