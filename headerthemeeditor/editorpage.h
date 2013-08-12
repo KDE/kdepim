@@ -36,7 +36,6 @@ class EditorPage : public GrantleeThemeEditor::EditorPage
 {
     Q_OBJECT
 public:
-
     explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = 0);
     ~EditorPage();
 
