@@ -20,7 +20,8 @@
 #include <KDebug>
 
 namespace Grammar {
-class GrammarComboBoxLanguagePrivate {
+class GrammarComboBoxLanguagePrivate
+{
 public:
     GrammarComboBoxLanguagePrivate(GrammarComboBoxLanguage *qq)
         : q(qq)
@@ -52,7 +53,7 @@ GrammarComboBoxLanguage::~GrammarComboBoxLanguage()
 void GrammarComboBoxLanguage::reloadList()
 {
     clear();
-    //TODO
+    //TODO load list of language from plugins
 }
 
 void GrammarComboBoxLanguage::setCurrentLanguage(const QString &lang)
