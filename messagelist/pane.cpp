@@ -114,7 +114,7 @@ using namespace Akonadi;
 using namespace MessageList;
 
 
-Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
+Pane::Pane( bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
   : KTabWidget( parent ), d( new Private( this ) )
 {
   setDocumentMode( true );
@@ -165,7 +165,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   setTabsClosable( Core::Settings::self()->tabsHaveCloseButton() );
   connect( this, SIGNAL(closeRequest(QWidget*)), SLOT(closeTab(QWidget*)) );
 
-  readConfig();
+  readConfig(restoreSession);
   setMovable( true );
 
   connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -190,7 +190,7 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
 
 Pane::~Pane()
 {
-  writeConfig();
+  writeConfig(true);
   delete d;
 }
 
@@ -1012,32 +1012,34 @@ void Pane::updateTagComboBox()
   }
 }
 
-void Pane::writeConfig()
+void Pane::writeConfig(bool restoreSession)
 {
   KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
 
   // Delete list before
-  const QStringList list = conf.groupList().filter( QRegExp( QLatin1String("MessageListTab\\d+") ) );
+  const QStringList list = MessageList::Core::Settings::self()->config()->groupList().filter( QRegExp( QLatin1String("MessageListTab\\d+") ) );
   foreach ( const QString &group, list ) {
     conf.deleteGroup( group );
   }
 
-  conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
-  conf.writeEntry(QLatin1String("tabNumber"),count());
+  if (restoreSession) {
+    conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
+    conf.writeEntry(QLatin1String("tabNumber"),count());
 
-  for ( int i=0; i<count(); ++i ) {
-    Widget *w = qobject_cast<Widget *>( widget( i ) );
-    KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
-    grp.writeEntry(QLatin1String("collectionId"),w->currentCollection().id());
-    grp.writeEntry(QLatin1String("HeaderState"), w->view()->header()->saveState());
+    for ( int i=0; i<count(); ++i ) {
+      Widget *w = qobject_cast<Widget *>( widget( i ) );
+      KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
+      grp.writeEntry(QLatin1String("collectionId"),w->currentCollection().id());
+      grp.writeEntry(QLatin1String("HeaderState"), w->view()->header()->saveState());
+    }
   }
   conf.sync();
 }
 
 
-void Pane::readConfig()
+void Pane::readConfig(bool restoreSession)
 {
-  if(MessageList::Core::Settings::self()->config()->hasGroup(QLatin1String("MessageListPane"))) {
+  if(restoreSession && MessageList::Core::Settings::self()->config()->hasGroup(QLatin1String("MessageListPane"))) {
     KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
     const int numberOfTab = conf.readEntry(QLatin1String("tabNumber"),0);
     if(numberOfTab == 0) {
@@ -1046,7 +1048,6 @@ void Pane::readConfig()
       for(int i = 0; i<numberOfTab; ++i) {
         KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
         QItemSelectionModel *selectionModel = createNewTab();
-        Q_UNUSED( selectionModel );
 #if 0
         Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
         ETMViewStateSaver *saver = new ETMViewStateSaver;
@@ -1057,7 +1058,10 @@ void Pane::readConfig()
             saver->setSelectionModel(selectionModel);
             saver->restoreState( grp );
             saver->selectCollections(Akonadi::Collection::List()<<Akonadi::Collection(id));
+            saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(id) );
         }
+#else
+        Q_UNUSED( selectionModel );
 #endif
         Widget *w = qobject_cast<Widget *>( widget( i ) );
         w->view()->header()->restoreState(grp.readEntry(QLatin1String("HeaderState"),QByteArray()));

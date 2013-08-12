@@ -184,7 +184,6 @@ class MainView : public KDeclarativeMainView
 
     virtual ImportHandlerBase* importHandler() const;
     virtual ExportHandlerBase* exportHandler() const;
-    virtual GuiStateManager* createGuiStateManager() const;
 
     virtual QAbstractItemModel* createItemModelContext(QDeclarativeContext* context, QAbstractItemModel* model);
 

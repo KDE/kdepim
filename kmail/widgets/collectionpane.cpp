@@ -28,13 +28,18 @@
 
 using namespace MailCommon;
 
-CollectionPane::CollectionPane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
-    :MessageList::Pane( model, selectionModel, parent )
+CollectionPane::CollectionPane( bool restoreSession, QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
+    :MessageList::Pane( restoreSession, model, selectionModel, parent )
 {
 }
 
 CollectionPane::~CollectionPane()
 {
+}
+
+void CollectionPane::writeConfig(bool /*restoreSession*/)
+{
+    MessageList::Pane::writeConfig(!GlobalSettings::self()->startSpecificFolderAtStartup());
 }
 
 MessageList::StorageModel *CollectionPane::createStorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent )

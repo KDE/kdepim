@@ -21,21 +21,15 @@
 #include "contacteditorwidget.h"
 #include "contacttemplatewidget.h"
 
-#include <KTextEdit>
-#include <KTemporaryFile>
 #include <KLocale>
-#include <KZip>
+#include <KGlobal>
 #include <KConfigGroup>
-#include <KMessageBox>
 
 #include <QSplitter>
 #include <QVBoxLayout>
-#include <QTextStream>
-#include <QDir>
 
-EditorPage::EditorPage(PageType type, const QString &projectDirectory, QWidget *parent)
-    : QWidget(parent),
-      mType(type),
+EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent)
+    : GrantleeThemeEditor::EditorPage(type, parent),
       mPreview(0),
       mWidgetSplitter(0)
 {
@@ -91,80 +85,9 @@ EditorPage::~EditorPage()
     }
 }
 
-void EditorPage::insertFile(const QString &filename)
-{
-    mEditor->insertFile(filename);
-}
-
-void EditorPage::createZip(const QString &themeName, KZip *zip)
-{
-    KTemporaryFile tmp;
-    tmp.open();
-    saveAsFilename(tmp.fileName());
-    const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + mPageFileName);
-    if (!fileAdded) {
-        KMessageBox::error(this, i18n("We can not add file in zip file"), i18n("Failed to add file."));
-    }
-}
-
-void EditorPage::loadTheme(const QString &path)
-{
-    mEditor->clear();
-    QFile file(path);
-    if (file.open(QIODevice::Text|QIODevice::ReadOnly)) {
-        const QByteArray data = file.readAll();
-        const QString str = QString::fromUtf8(data);
-        file.close();
-        mEditor->setPlainText(str);
-    }
-}
-
-void EditorPage::saveTheme(const QString &path)
-{
-    const QString filename = path + QDir::separator() + mPageFileName;
-    saveAsFilename(filename);
-}
-
-void EditorPage::saveAsFilename(const QString &filename)
-{
-    QFile file(filename);
-    if (file.open(QIODevice::WriteOnly|QIODevice::Text)) {
-        QTextStream out(&file);
-        out.setCodec("UTF-8");
-        out << mEditor->toPlainText();
-        file.close();
-    }
-}
-
-void EditorPage::setPageFileName(const QString &filename)
-{
-    mPageFileName = filename;
-}
-
-QString EditorPage::pageFileName() const
-{
-    return mPageFileName;
-}
-
-void EditorPage::installTheme(const QString &themePath)
-{
-    const QString filename = themePath + QDir::separator() + mPageFileName;
-    saveAsFilename(filename);
-}
-
 PreviewWidget *EditorPage::preview() const
 {
     return mPreview;
-}
-
-EditorPage::PageType EditorPage::pageType() const
-{
-    return mType;
-}
-
-GrantleeThemeEditor::EditorWidget *EditorPage::editor() const
-{
-    return mEditor;
 }
 
 #include "editorpage.moc"

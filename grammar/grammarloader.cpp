@@ -17,6 +17,7 @@
 
 #include "grammarloader.h"
 #include "grammarclient_p.h"
+#include "grammarsettings.h"
 
 #include <kservicetypetrader.h>
 #include <KDebug>
@@ -26,7 +27,8 @@ class GrammarLoaderPrivate
 {
 public:
     GrammarLoaderPrivate(GrammarLoader *qq)
-        : q(qq)
+        : settings(0),
+          q(qq)
     {
         loadPlugins();
     }
@@ -72,12 +74,27 @@ public:
     QStringList clients;
     // <language, Clients with that language >
     QMap<QString, QList<Grammar::GrammarClient*> > languageClients;
+    GrammarSettings *settings;
     GrammarLoader *q;
 };
+
+K_GLOBAL_STATIC(GrammarLoader, s_loader)
+
+GrammarLoader *GrammarLoader::openGrammarLoader()
+{
+    if (s_loader.isDestroyed()) {
+        return 0;
+    }
+
+    return s_loader;
+}
 
 GrammarLoader::GrammarLoader()
     : d(new GrammarLoaderPrivate(this))
 {
+    d->settings = new GrammarSettings;//
+    //KConfig config(QString::fromLatin1(DEFAULT_CONFIG_FILE));
+    //d->settings->readSettings(&config);
 }
 
 GrammarLoader::~GrammarLoader()
@@ -95,6 +112,10 @@ QStringList GrammarLoader::languages() const
     return d->languageClients.keys();
 }
 
+GrammarSettings *GrammarLoader::settings() const
+{
+    return d->settings;
+}
 
 }
 

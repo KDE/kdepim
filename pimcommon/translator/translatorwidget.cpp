@@ -315,7 +315,6 @@ void TranslatorWidget::setTextToTranslate( const QString& text)
     slotTranslate();
 }
 
-
 void TranslatorWidget::slotTranslate()
 {
     const QString textToTranslate = d->inputText->toPlainText();

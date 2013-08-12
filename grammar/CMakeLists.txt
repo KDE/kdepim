@@ -11,6 +11,7 @@ set(libgrammar_SRCS
     grammarsettings.cpp
     grammarplugin.cpp
     grammarloader.cpp
+    grammarchecker.cpp
     widgets/grammarcomboboxlanguage.cpp
     widgets/grammarconfigurewidget.cpp
 )

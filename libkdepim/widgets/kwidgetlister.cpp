@@ -280,8 +280,15 @@ void KWidgetLister::addWidgetAfterThisWidget(QWidget*currentWidget, QWidget* wid
   if ( !widget )
     widget = this->createWidget( this );
 
-  d->mLayout->insertWidget( d->mLayout->indexOf( currentWidget ? currentWidget :  d->mButtonBox )+1, widget );
-  d->mWidgetList.append( widget );
+  int index = d->mLayout->indexOf( currentWidget ? currentWidget :  d->mButtonBox )+1;
+  d->mLayout->insertWidget( index, widget );
+  index = 0;
+  if (currentWidget) {
+      index = d->mWidgetList.indexOf(currentWidget);
+      d->mWidgetList.insert(index+1, widget);
+  } else {
+      d->mWidgetList.append(widget);
+  }
   widget->show();
 
   d->enableControls();

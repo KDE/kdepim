@@ -18,6 +18,8 @@
 #ifndef GRAMMARSETTINGS_H
 #define GRAMMARSETTINGS_H
 
+#include <QString>
+class KConfigGroup;
 
 namespace Grammar {
 class GrammarSettingsPrivate;
@@ -26,6 +28,13 @@ class GrammarSettings
 public:
     GrammarSettings();
     ~GrammarSettings();
+
+    void setDefaultLanguage(const QString &lang);
+    QString defaultLanguage() const;
+
+    void saveSettings(KConfigGroup &group);
+    void readSettings(const KConfigGroup &group);
+
 private:
     friend class GrammarSettingsPrivate;
     GrammarSettingsPrivate * const d;

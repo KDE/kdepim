@@ -39,10 +39,13 @@ class MAILCOMMON_EXPORT FavoriteCollectionWidget : public Akonadi::EntityListVie
   protected slots:
     void slotGeneralFontChanged();
     void slotGeneralPaletteChanged();
+    void slotHeaderContextMenuChangeIconSize(bool );
 
   protected:
-    virtual void paintEvent(QPaintEvent*);
+    void paintEvent(QPaintEvent*);
+
   private:
+    void writeConfig();
     class Private;
     Private *const d;
 };

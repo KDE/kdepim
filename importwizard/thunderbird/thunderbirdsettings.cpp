@@ -43,7 +43,7 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
         const QString line = stream.readLine();
         if (line.startsWith(QLatin1String("user_pref"))) {
             if (line.contains(QLatin1String("mail.smtpserver")) ||
-                    line.contains(QLatin1String("mail.server.") ) ||
+                    line.contains(QLatin1String("mail.server.")) ||
                     line.contains(QLatin1String("mail.identity.")) ||
                     line.contains(QLatin1String("mail.account.")) ||
                     line.contains(QLatin1String("mail.accountmanager.")) ||
@@ -56,7 +56,8 @@ ThunderbirdSettings::ThunderbirdSettings( const QString& filename, ImportWizard 
                     line.contains(QLatin1String("mail.biff.")) ||
                     line.contains(QLatin1String("mailnews.tags.")) ||
                     line.contains(QLatin1String("extensions.AutoResizeImage.")) ||
-                    line.contains(QLatin1String("mail.phishing."))) {
+                    line.contains(QLatin1String("mail.phishing.")) ||
+                    line.contains(QLatin1String("mail.display_glyph"))) {
                 insertIntoMap( line );
             }
         } else {
@@ -384,6 +385,37 @@ void ThunderbirdSettings::readGlobalSettings()
         //Default value in thunderbird
         addKmailConfig(QLatin1String("General"),QLatin1String("beep-on-mail"), true);
     }
+
+    const QString mailAlertShowSubjectStr = QLatin1String("mail.biff.alert.show_subject");
+    if (mHashConfig.contains(mailAlertShowSubjectStr)) {
+        const bool mailAlertShowSubject = mHashConfig.value(mailAlertShowSubjectStr).toBool();
+        addNewMailNotifier(QLatin1String("General"),QLatin1String("showSubject"), mailAlertShowSubject);
+    } else {
+        //Default value in thunderbird
+        addNewMailNotifier(QLatin1String("General"),QLatin1String("showSubject"), true);
+    }
+
+    const QString mailAlertShowPreviewStr = QLatin1String("mail.biff.alert.show_preview");
+    //TODO add show preview
+    if (mHashConfig.contains(mailAlertShowPreviewStr)) {
+        const bool mailAlertShowPreview = mHashConfig.value(mailAlertShowPreviewStr).toBool();
+        //addNewMailNotifier(QLatin1String("General"),QLatin1String("showSubject"), mailAlertShowPreview);
+    } else {
+        //Default value in thunderbird
+        //addNewMailNotifier(QLatin1String("General"),QLatin1String("showSubject"), true);
+    }
+
+    const QString mailAlertShowSenderStr = QLatin1String("mail.biff.alert.show_sender");
+    if (mHashConfig.contains(mailAlertShowSenderStr)) {
+        const bool mailAlertShowSender = mHashConfig.value(mailAlertShowSenderStr).toBool();
+        addNewMailNotifier(QLatin1String("General"), QLatin1String("showFrom"), mailAlertShowSender);
+    } else {
+        //Default value in thunderbird
+        addNewMailNotifier(QLatin1String("General"), QLatin1String("showFrom"), true);
+    }
+
+
+
     const QString mailSpellCheckBeforeSendStr = QLatin1String("mail.SpellCheckBeforeSend");
     if (mHashConfig.contains(mailSpellCheckBeforeSendStr)) {
         const bool mailSpellCheckBeforeSend = mHashConfig.value(mailSpellCheckBeforeSendStr).toBool();
@@ -405,6 +437,14 @@ void ThunderbirdSettings::readGlobalSettings()
         addKmailConfig(QLatin1String("Reader"), QLatin1String("ScamDetectionEnabled"), mailPhishingDetectionEnabled);
     } else { //Default
         addKmailConfig(QLatin1String("Reader"), QLatin1String("ScamDetectionEnabled"), true);
+    }
+
+    const QString mailDisplayGlyphStr = QLatin1String("mail.display_glyph");
+    if (mHashConfig.contains(mailDisplayGlyphStr)) {
+        const bool mailDisplayGlyphEnabled = mHashConfig.value(mailDisplayGlyphStr).toBool();
+        addKmailConfig(QLatin1String("Reader"), QLatin1String("ShowEmoticons"), mailDisplayGlyphEnabled);
+    } else { //Default
+        addKmailConfig(QLatin1String("Reader"), QLatin1String("ShowEmoticons"), true);
     }
 
 }
@@ -877,4 +917,11 @@ void ThunderbirdSettings::insertIntoMap( const QString& line )
         mHashTag.insert(name,tag);
         kDebug()<<" tag :"<<name<<" tag.name"<<tag.name<<" color :"<<tag.color;
     }
+}
+
+void ThunderbirdSettings::addNewMailNotifier(const QString &group, const QString &key, bool value)
+{
+    KConfig config(QLatin1String("akonadi_newmailnotifier_agentrc"));
+    KConfigGroup grp = config.group(group);
+    grp.writeEntry(key, value);
 }

@@ -23,16 +23,25 @@
 
 namespace Grammar {
 class GrammarLoaderPrivate;
+class GrammarSettings;
 class GRAMMAR_EXPORT GrammarLoader : public QObject
 {
     Q_OBJECT
 public:
+    static GrammarLoader *openGrammarLoader();
+
     GrammarLoader();
     ~GrammarLoader();
 
     QStringList clients() const;
 
     QStringList languages() const;
+
+    GrammarSettings *settings() const;
+
+Q_SIGNALS:
+    void configurationChanged();
+
 
 private:
     friend class GrammarLoaderPrivate;

@@ -87,7 +87,7 @@ bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
                     combo->setCurrentIndex(index);
                 }
             } else if (tagName == QLatin1String("num")) {
-                const int tagValue = e.text().toInt();
+                const qlonglong tagValue = e.text().toLongLong();
                 QString numIdentifier;
                 if (e.hasAttribute(QLatin1String("quantifier"))) {
                     numIdentifier = e.attribute(QLatin1String("quantifier"));

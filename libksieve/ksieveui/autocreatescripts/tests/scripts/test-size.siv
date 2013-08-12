@@ -1,0 +1,11 @@
+require "foreverypart";
+ 
+#SCRIPTNAME: test-size
+if allof (size :under 4
+, size :over 10K
+, size :under 7M
+, size :over 28G
+)
+{
+    break;
+} 

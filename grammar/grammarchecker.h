@@ -15,28 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTSIZEWIDGET_H
-#define SELECTSIZEWIDGET_H
+#ifndef GRAMMARCHECKER_H
+#define GRAMMARCHECKER_H
 
-#include <QWidget>
+#include <QString>
+#include <QMap>
 
-class QSpinBox;
-namespace KSieveUi {
-class SelectSizeTypeComboBox;
-class SelectSizeWidget : public QWidget
+namespace Grammar {
+class GrammarCheckerPrivate;
+class GrammarChecker
 {
-    Q_OBJECT
 public:
-    explicit SelectSizeWidget(QWidget *parent=0);
-    ~SelectSizeWidget();
+    GrammarChecker(const QString &lang = QString());
+    ~GrammarChecker();
 
-    QString code() const;
-    void setCode(qlonglong value, const QString &identifier, const QString &name, QString &error);
+    QMap<QString, QString> availableLanguage() const;
 
 private:
-    SelectSizeTypeComboBox *mSelectSizeType;
-    QSpinBox *mSpinBoxSize;
+    friend class GrammarCheckerPrivate;
+    GrammarCheckerPrivate * const d;
 };
 }
 
-#endif // SELECTSIZEWIDGET_H
+#endif // GRAMMARCHECKER_H

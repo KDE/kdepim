@@ -24,6 +24,8 @@
 #include <KDE/KGlobalSettings>
 #include <KDE/KLocale>
 #include <KDE/KXMLGUIClient>
+#include <KActionMenu>
+#include <KActionCollection>
 
 #include <QPainter>
 
@@ -46,12 +48,67 @@ FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient,
            this, SLOT(slotGeneralFontChanged()));
   connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
            this, SLOT(slotGeneralPaletteChanged()));
+
+  readConfig();
+
+  KActionMenu *iconSizeMenu  = new KActionMenu(i18n("Icon size"), this);
+  xmlGuiClient->actionCollection()->addAction(QLatin1String("favorite_icon_size"), iconSizeMenu);
+
+
+  static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
+
+  QActionGroup *grp = new QActionGroup( iconSizeMenu );
+  const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
+  QAction *act = 0;
+  for ( int i = 0; i < nbElement; ++i ) {
+    act = new QAction(QString::fromLatin1( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ), iconSizeMenu);
+    iconSizeMenu->addAction( act );
+    act->setCheckable( true );
+    grp->addAction( act );
+    if ( iconSize().width() == icon_sizes[ i ] ) {
+      act->setChecked( true );
+    }
+    act->setData( QVariant( icon_sizes[ i ] ) );
+    connect( act, SIGNAL(triggered(bool)),
+             SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
+  }
+
   readConfig();
 }
 
 FavoriteCollectionWidget::~FavoriteCollectionWidget()
 {
   delete d;
+}
+
+void FavoriteCollectionWidget::writeConfig()
+{
+    KConfigGroup myGroup( KernelIf->config(), "FavoriteCollectionWidget" );
+    myGroup.writeEntry( "IconSize", iconSize().width() );
+}
+
+void FavoriteCollectionWidget::slotHeaderContextMenuChangeIconSize(bool )
+{
+    QAction *act = dynamic_cast< QAction * >( sender() );
+    if ( !act ) {
+      return;
+    }
+
+    QVariant data = act->data();
+
+    bool ok;
+    const int size = data.toInt( &ok );
+    if ( !ok ) {
+      return;
+    }
+
+    const QSize newIconSize( QSize( size, size ) );
+    if ( newIconSize == iconSize() ) {
+      return;
+    }
+    setIconSize( newIconSize );
+
+    writeConfig();
 }
 
 void FavoriteCollectionWidget::slotGeneralPaletteChanged()
@@ -79,6 +136,13 @@ void FavoriteCollectionWidget::readConfig()
   } else {
     setFont( KGlobalSettings::generalFont() );
   }
+
+  KConfigGroup myGroup( KernelIf->config(), "FavoriteCollectionWidget" );
+  int iIconSize = myGroup.readEntry( "IconSize", iconSize().width() );
+  if ( iIconSize < 16 || iIconSize > 32 ) {
+    iIconSize = 22;
+  }
+  setIconSize( QSize( iIconSize, iIconSize ) );
 }
 
 void FavoriteCollectionWidget::paintEvent( QPaintEvent *event )

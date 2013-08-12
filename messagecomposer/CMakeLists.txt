@@ -84,7 +84,7 @@ set( messagecomposer_src
 )
 
 kde4_add_ui_files(messagecomposer_src
-     autocorrection/composerautocorrectionwidget.ui
+     autocorrection/ui/composerautocorrectionwidget.ui
      imagescaling/ui/imagescalingwidget.ui
 )
 

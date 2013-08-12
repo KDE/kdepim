@@ -38,7 +38,6 @@ set(kmail_mobile_srcs
   cryptoformatselectiondialog.cpp
   declarativeidentitycombobox.cpp
   emailsexporthandler.cpp
-  emailsguistatemanager.cpp
   emailsfilterproxymodel.cpp
   emailsimporthandler.cpp
   filtereditor.cpp
@@ -137,13 +136,11 @@ install(FILES
   FavoriteManagerPage.qml
   kmail-composer.qml
   kmail-mobile.qml
-  KMailActions.qml
   KMailComposerActions.qml
   kmail-mobile.notifyrc
   SettingsPage.qml
   SnippetsEditor.qml
   SnippetsList.qml
-  StartPage.qml
   add-attachment-button.png
   dummy-avatar.png
   remove-attachment-button.png

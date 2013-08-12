@@ -354,7 +354,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                     currentPage = 0;
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString controlType = e.attribute(QLatin1String("name"));
-                    qDebug()<<" controlType"<<controlType;
+                    //qDebug()<<" controlType"<<controlType;
                     if (controlType == QLatin1String("if")) {
                         typeBlock = TypeBlockIf;
                         if (!currentPage || hasCreatedAIfBlock)

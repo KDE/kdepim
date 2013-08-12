@@ -44,8 +44,6 @@ private Q_SLOTS:
     bool slotSaveTheme();
     void slotInstallTheme();
     void slotInsertFile();
-    void slotPrintingMode();
-    void slotNormalMode();
     void slotManageTheme();
     void slotUpdateView();
     void slotConfigure();
@@ -67,8 +65,6 @@ private:
     KAction *mInsertFile;
     KAction *mManageTheme;
     KAction *mUpdateView;
-    KToggleAction *mPrintingMode;
-    KToggleAction *mNormalMode;
 };
 
 #endif // CONTACTEDITORMAINWINDOW_H

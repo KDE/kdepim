@@ -122,13 +122,14 @@ QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KCombo
 
 void GoogleTranslator::translate()
 {
-    mResult.clear();
 
     if (mFrom == mTo) {
-        qDebug()<<"<From> language == <to> language";
         Q_EMIT translateFailed(false, i18n("You used same language for from and to language."));
         return;
     }
+
+    mResult.clear();
+
     QNetworkRequest request(QUrl(QLatin1String("http://www.google.com/translate_a/t")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
 
@@ -184,7 +185,7 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
             const int indexLevel1 = listLevel0.indexOf(level1);
             const QVariantList listLevel1 = level1.toList().at(2).toList();
             foreach (const QVariant& level2, listLevel1) {
-                QVariantList listLevel2 = level2.toList();
+                const QVariantList listLevel2 = level2.toList();
 
                 // The JSON we get from Google has not always the same structure.
                 // There is a version with addiotanal information like synonyms and frequency,

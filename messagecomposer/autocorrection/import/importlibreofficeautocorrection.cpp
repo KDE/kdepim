@@ -40,11 +40,14 @@ ImportLibreOfficeAutocorrection::~ImportLibreOfficeAutocorrection()
 
 void ImportLibreOfficeAutocorrection::closeArchive()
 {
-    if (mArchive && mArchive->isOpen()) {
-        mArchive->close();
+    if (mArchive) {
+        if (mArchive->isOpen()) {
+            mArchive->close();
+        }
+        delete mArchive;
+        mArchive = 0;
     }
-    delete mArchive;
-    mArchive = 0;
+
     delete mTempDir;
     mTempDir = 0;
 }

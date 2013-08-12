@@ -355,9 +355,11 @@ void KMMainWidget::restoreCollectionFolderViewConfig(Akonadi::Collection::Id id)
   //Restore startup folder
 
   if (id == -1) {
-    Akonadi::Collection::Id startupFolder = GlobalSettings::self()->startupFolder();
-    if ( startupFolder > 0 )
-      saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(startupFolder) );
+    if (GlobalSettings::self()->startSpecificFolderAtStartup()) {
+      Akonadi::Collection::Id startupFolder = GlobalSettings::self()->startupFolder();
+      if ( startupFolder > 0 )
+        saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(startupFolder) );
+    }
   } else {
     saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(id) );
   }
@@ -929,6 +931,11 @@ void KMMainWidget::writeConfig(bool force)
       group.writeEntry( "HeaderState", mFolderTreeWidget->folderTreeView()->header()->saveState() );
       //Work around from startup folder
       group.deleteEntry( "Selection" );
+#if 0
+      if (!GlobalSettings::self()->startSpecificFolderAtStartup()) {
+          group.deleteEntry( "Current" );
+      }
+#endif
       group.sync();
     }
 
@@ -991,7 +998,7 @@ void KMMainWidget::createWidgets()
   connect( mFolderTreeWidget->folderTreeView(), SIGNAL(prefereCreateNewTab(bool)), this, SLOT(slotCreateNewTab(bool)) );
 
   mFolderTreeWidget->setSelectionMode( QAbstractItemView::ExtendedSelection );
-  mMessagePane = new CollectionPane( KMKernel::self()->entityTreeModel(),
+  mMessagePane = new CollectionPane( !GlobalSettings::self()->startSpecificFolderAtStartup(), KMKernel::self()->entityTreeModel(),
                                         mFolderTreeWidget->folderTreeView()->selectionModel(),
                                         this );
   connect( KMKernel::self()->entityTreeModel(), SIGNAL(collectionFetched(int)), this, SLOT(slotCollectionFetched(int)));
