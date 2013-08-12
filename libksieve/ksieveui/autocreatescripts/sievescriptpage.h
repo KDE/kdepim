@@ -43,7 +43,6 @@ public:
     SieveForEveryPartWidget *forEveryPartWidget() const;
     SieveGlobalVariableWidget *globalVariableWidget() const;
     SieveScriptBlockWidget *blockIfWidget() const;
-
     SieveScriptBlockWidget *addScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
 
 
