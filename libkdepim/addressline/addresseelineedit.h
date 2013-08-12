@@ -193,6 +193,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     Q_PRIVATE_SLOT( d, void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & ) )
     Q_PRIVATE_SLOT( d, void slotNepomukHits( const QList<Nepomuk2::Query::Result>& ) )
     Q_PRIVATE_SLOT( d, void slotNepomukSearchFinished() )
+    Q_PRIVATE_SLOT( d, void slotKpeopleModelReady() )
     Q_PRIVATE_SLOT( d, void slotTriggerDelayedQueries() )
     //@endcond
 };

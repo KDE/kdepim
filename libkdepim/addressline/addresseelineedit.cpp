@@ -77,6 +77,12 @@
 #include <QTimer>
 #include <QtDBus/QDBusConnection>
 
+#include <KPeople/PersonsModel>
+#include <KPeople/PersonsModelFeature>
+#include "kpeople/completionfinder.h"
+
+
+using namespace KPeople;
 using namespace KPIM;
 
 namespace KPIM {
@@ -95,6 +101,7 @@ class AddresseeLineEditStatic
         nepomukSearchClient( 0 ),
         akonadiSession( new Akonadi::Session("contactsCompletionSession") ),
         nepomukCompletionSource( 0 ),
+        kpeopleCompletionSource( 0 ),
         contactsListed( false )
     {
       KConfig config( QLatin1String( "kpimcompletionorder" ) );
@@ -176,6 +183,7 @@ class AddresseeLineEditStatic
     QVector<QWeakPointer<Akonadi::Job> > akonadiJobsInFlight;
     bool useNepomukCompletion;
     int nepomukCompletionSource;
+    int kpeopleCompletionSource;
     bool contactsListed;
 };
 
@@ -232,7 +240,8 @@ class AddresseeLineEdit::Private
         m_addressBookConnected( false ),
         m_lastSearchMode( false ),
         m_searchExtended( false ),
-        m_useSemicolonAsSeparator( false )
+        m_useSemicolonAsSeparator( false ),
+        m_model(0)
     {
         m_delayedQueryTimer.setSingleShot(true);
         connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
@@ -264,13 +273,21 @@ class AddresseeLineEdit::Private
     void slotAkonadiSearchDbResult( KJob* );
     void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
     void startNepomukSearch();
+    void startKpeopleSearch();
+    void slotKpeopleModelReady();
     void stopNepomukSearch();
     void slotNepomukHits( const QList<Nepomuk2::Query::Result>& result );
     void slotNepomukSearchFinished();
+    void slotKpeopleSearchFinished();
     void slotTriggerDelayedQueries();
+    QVariantList valuesForIndex(const QModelIndex &idx);
+    QPair<QString,QStringList> matchingSearchString(QVariantList value ) ;
+    QPair<QString,QStringList> kpeoplePrepareCompletionRow(QVariantList values, int role, QString triggerVariant);
     static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
+    PersonsModel *m_model;
+    QVector<int> m_compareRoles;
     QString m_previousAddresses;
     QString m_searchString;
     bool m_useCompletion;
@@ -300,8 +317,10 @@ void AddresseeLineEdit::Private::init()
     if ( !s_static->nepomukSearchClient ) {
       s_static->nepomukSearchClient = new Nepomuk2::Query::QueryServiceClient;
       s_static->nepomukCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
+      s_static->kpeopleCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Person found in your data"), -1 );
     }
 
+    //m_model = new PersonsModel(); TODO
     s_static->updateLDAPWeights();
 
     if ( !m_completionInitialized ) {
@@ -324,6 +343,14 @@ void AddresseeLineEdit::Private::init()
       q->connect( s_static->nepomukSearchClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
                   q, SLOT(slotNepomukHits(QList<Nepomuk2::Query::Result>)) );
       q->connect( s_static->nepomukSearchClient, SIGNAL(finishedListing()), q, SLOT(slotNepomukSearchFinished()));
+
+      //q->connect(m_model, SIGNAL(modelInitialized()),  q, SLOT(slotKpeopleModelReady() ) );
+
+      m_compareRoles = QVector<int>() << PersonsModel::FullNamesRole
+                                      << PersonsModel::NicknamesRole
+                                      << PersonsModel::EmailsRole ; // NOTE : KEEP EMAILS AT LAST POSITION !
+      // KPEOPLE : connect results of Kpeople to a slot
+
       m_completionInitialized = true;
     }
   }
@@ -389,6 +416,106 @@ void AddresseeLineEdit::Private::startNepomukSearch()
   }
 }
 
+void AddresseeLineEdit::Private::startKpeopleSearch() {
+  kDebug() << "Start of Kpeople search" ;
+  // consume services from KPEOPLE Lib
+    // Create a model with only mail !
+    if (!m_model) {
+      m_model = new PersonsModel();
+      m_model->startQuery(QList<PersonsModelFeature>() << PersonsModelFeature::emailModelFeature(PersonsModelFeature::Mandatory));
+      q->connect(m_model, SIGNAL(modelInitialized()),  q, SLOT(slotKpeopleModelReady() ) );
+      return ;
+    }
+    if (m_searchString.length() < 4) {
+      return ;
+    }
+    slotKpeopleModelReady();
+}
+
+void AddresseeLineEdit::Private::slotKpeopleModelReady() {
+
+  // parsing model in order to find matching
+  // email / name with the typed string
+  kDebug() << "Kpeople : Model Ready " ;
+
+  for (int i = 0, rows = m_model->rowCount(); i<rows; i++) {
+
+    QModelIndex idx = m_model->index(i,0);
+    QVariantList values = valuesForIndex(idx);
+
+    QPair<QString,QStringList> matchingEmails = matchingSearchString(values);
+
+    if (!matchingEmails.first.isNull()) {
+
+//       kDebug() << "Kpeople : Content of result" << matchingEmails.first;
+      foreach (QString email, matchingEmails.second) {
+//         kDebug() << "-" << email;
+        addCompletionItem( matchingEmails.second.first(), 1, s_static->kpeopleCompletionSource );
+      }
+    }
+  }
+  doCompletion(m_lastSearchMode);
+}
+
+QPair<QString,QStringList> AddresseeLineEdit::Private::matchingSearchString(QVariantList value) {
+
+  Q_ASSERT(value.size() == m_compareRoles.size());
+  QPair<QString, QStringList> results = qMakePair<QString,QStringList>(QString(), QStringList());
+
+  for (int i = 0; i < m_compareRoles.size(); i++) {
+      QVariant &v = value[i];
+
+      if (v.type() == QVariant::List) {
+          QVariantList listValue = v.toList();
+
+          if (!listValue.isEmpty()) {
+              Q_FOREACH (const QVariant &v, listValue) {
+                  if (!v.isNull() && v.toString().contains(m_searchString)) {
+                    return kpeoplePrepareCompletionRow(value,i,v.toString());
+                  }
+              }
+          }
+      } else if (!v.isNull() && v.toString().contains(m_searchString)
+          && (v.type() != QVariant::String || !v.toString().isEmpty()))
+
+        return kpeoplePrepareCompletionRow(value,i,v.toString());
+  }
+  return results;
+}
+
+QPair<QString,QStringList> AddresseeLineEdit::Private::kpeoplePrepareCompletionRow(QVariantList values, int role , QString triggerVariant) {
+
+  QPair<QString, QStringList> results = qMakePair<QString,QStringList>(QString(), QStringList());
+  if (m_compareRoles[role]== PersonsModel::EmailsRole) {
+    results.first = "John Doe";
+    results.second += triggerVariant ;
+  }
+  else {
+
+    results.first = triggerVariant;
+
+    if (values[m_compareRoles.size()].type() == QVariant::List ) {
+      QVariant varTemp;
+      foreach ( varTemp , values[m_compareRoles.size()].toList()) {
+        results.second.append(varTemp.toString());
+      }
+    } else {
+      results.second += values[m_compareRoles.size()].toString();
+    }
+  }
+  return results;
+}
+
+QVariantList AddresseeLineEdit::Private::valuesForIndex(const QModelIndex &idx)
+{
+    QVariantList values;
+    Q_FOREACH (int role, m_compareRoles) {
+        values += idx.data(role);
+    }
+    Q_ASSERT(values.size() == m_compareRoles.size());
+    return values;
+}
+
 void AddresseeLineEdit::Private::stopNepomukSearch()
 {
   s_static->nepomukSearchClient->close();
@@ -433,6 +560,12 @@ void AddresseeLineEdit::Private::slotNepomukSearchFinished()
       doCompletion( m_lastSearchMode );
     }
   }
+}
+
+void AddresseeLineEdit::Private::slotKpeopleSearchFinished()
+{
+  // CREER UN CODE POUR reconnaitre Kpeople comme source de l'item autocompletant
+  // START doCompletion
 }
 
 void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bool autoSuggest )
@@ -493,7 +626,7 @@ void AddresseeLineEdit::Private::addCompletionItem( const QString &string, int w
   // Check if there is an exact match for item already, and use the
   // maximum weight if so. Since there's no way to get the information
   // from KCompletion, we have to keep our own QMap.
-
+  kDebug() << "Add Completion Item !";
   CompletionItemsMap::iterator it = s_static->completionItemMap.find( string );
   if ( it != s_static->completionItemMap.end() ) {
     weight = qMax( ( *it ).first, weight );
@@ -651,6 +784,8 @@ void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
     // additionally, we ask Nepomuk directly, to get hits that
     // did not come in through Akonadi
     startNepomukSearch();
+
+    startKpeopleSearch();
 }
 
 void AddresseeLineEdit::Private::startSearches()

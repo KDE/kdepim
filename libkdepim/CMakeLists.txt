@@ -6,12 +6,14 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 #add_definitions( -DQT_NO_CAST_FROM_ASCII )
 #add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+find_package(KPeople REQUIRED)
 
 add_subdirectory(tests)
 add_subdirectory(pics)
 
 add_definitions(${QT_QTDBUS_DEFINITIONS})
 
+include_directories( ${KPEOPLE_INCLUDES})
 include_directories( ${Boost_INCLUDE_DIR} )
 include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_CORE_INCLUDE_DIR} )
 
@@ -83,6 +85,7 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${NEPOMUK_CORE_LIBRARY}
+  kpeople
 )
 
 
