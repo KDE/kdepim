@@ -19,7 +19,7 @@
 #ifndef EDITORPAGE_H
 #define EDITORPAGE_H
 
-#include <QWidget>
+#include "grantleethemeeditor/editorpage.h"
 
 
 class ThemeTemplateWidget;
@@ -32,16 +32,12 @@ namespace GrantleeThemeEditor {
 class EditorWidget;
 }
 
-class EditorPage : public QWidget
+class EditorPage : public GrantleeThemeEditor::EditorPage
 {
     Q_OBJECT
 public:
-    enum PageType {
-        MainPage = 0,
-        ExtraPage = 1
-    };
 
-    explicit EditorPage(PageType type, const QString &projectDirectory, QWidget *parent = 0);
+    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = 0);
     ~EditorPage();
 
     void saveTheme(const QString &path);
@@ -60,12 +56,7 @@ public:
     PreviewWidget *preview() const;
     GrantleeThemeEditor::EditorWidget *editor() const;
 
-Q_SIGNALS:
-    void needUpdateViewer();
-    void changed();
-
 private:
-    PageType mType;
     QString mPageFileName;
     GrantleeThemeEditor::EditorWidget *mEditor;
     PreviewWidget *mPreview;

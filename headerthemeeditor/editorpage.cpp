@@ -33,9 +33,8 @@
 #include <QTextStream>
 #include <QDir>
 
-EditorPage::EditorPage(PageType type, const QString &projectDirectory, QWidget *parent)
-    : QWidget(parent),
-      mType(type),
+EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent)
+    : GrantleeThemeEditor::EditorPage(type, parent),
       mPreview(0),
       mWidgetSplitter(0)
 {

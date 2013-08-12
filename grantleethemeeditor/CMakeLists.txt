@@ -8,7 +8,14 @@ include_directories(
 )
 
 
-set(libgrantleethemeeditor_SRCS newthemedialog.cpp themeeditortabwidget.cpp managethemes.cpp themesession.cpp editorwidget.cpp desktopfilepage.cpp 
+set(libgrantleethemeeditor_SRCS 
+    newthemedialog.cpp 
+    themeeditortabwidget.cpp 
+    managethemes.cpp 
+    themesession.cpp 
+    editorwidget.cpp 
+    desktopfilepage.cpp 
+    editorpage.cpp
 )
 
 
