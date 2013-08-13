@@ -71,7 +71,7 @@ PlasmaComponents.Page {
         anchors {
           verticalCenter: parent.verticalCenter
           left: parent.left
-          leftMargin: theme.defaultFont.mSize.width
+          leftMargin: units.gridUnit
         }
 
         online: model.online
@@ -83,7 +83,7 @@ PlasmaComponents.Page {
 
         anchors {
           left: iconItem.right
-          leftMargin: theme.defaultFont.mSize.width
+          leftMargin: units.gridUnit
           verticalCenter: parent.verticalCenter
         }
 
@@ -110,7 +110,7 @@ PlasmaComponents.Page {
         anchors {
           verticalCenter: parent.verticalCenter
           left: parent.left
-          leftMargin: theme.defaultFont.mSize.width
+          leftMargin: units.gridUnit
         }
 
         height: parent.height * 0.6
@@ -125,7 +125,7 @@ PlasmaComponents.Page {
 
         anchors {
           left: iconItem.right
-          leftMargin: theme.defaultFont.mSize.width
+          leftMargin: units.gridUnit
           verticalCenter: parent.verticalCenter
         }
 
