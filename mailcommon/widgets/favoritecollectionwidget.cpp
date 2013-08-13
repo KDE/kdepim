@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
 
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -34,29 +34,29 @@ using namespace MailCommon;
 class FavoriteCollectionWidget::Private
 {
 public:
-  Private() {
-  }
-  QColor textColor;
+    Private() {
+    }
+    QColor textColor;
 };
 
 FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent )
-  : Akonadi::EntityListView( xmlGuiClient, parent ), d( new Private )
+    : Akonadi::EntityListView( xmlGuiClient, parent ), d( new Private )
 {
-  setFocusPolicy( Qt::NoFocus );
+    setFocusPolicy( Qt::NoFocus );
 
-  connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
-           this, SLOT(slotGeneralFontChanged()));
-  connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-           this, SLOT(slotGeneralPaletteChanged()));
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
+             this, SLOT(slotGeneralFontChanged()));
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+             this, SLOT(slotGeneralPaletteChanged()));
 
-  readConfig();
+    readConfig();
 
-  createMenu(xmlGuiClient->actionCollection());
+    createMenu(xmlGuiClient->actionCollection());
 }
 
 FavoriteCollectionWidget::~FavoriteCollectionWidget()
 {
-  delete d;
+    delete d;
 }
 
 void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
@@ -70,16 +70,16 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
     const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
     QAction *act = 0;
     for ( int i = 0; i < nbElement; ++i ) {
-      act = new QAction(QString::fromLatin1( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ), iconSizeMenu);
-      iconSizeMenu->addAction( act );
-      act->setCheckable( true );
-      grp->addAction( act );
-      if ( iconSize().width() == icon_sizes[ i ] ) {
-        act->setChecked( true );
-      }
-      act->setData( QVariant( icon_sizes[ i ] ) );
-      connect( act, SIGNAL(triggered(bool)),
-               SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
+        act = new QAction(QString::fromLatin1( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ), iconSizeMenu);
+        iconSizeMenu->addAction( act );
+        act->setCheckable( true );
+        grp->addAction( act );
+        if ( iconSize().width() == icon_sizes[ i ] ) {
+            act->setChecked( true );
+        }
+        act->setData( QVariant( icon_sizes[ i ] ) );
+        connect( act, SIGNAL(triggered(bool)),
+                 SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
     }
 }
 
@@ -93,7 +93,7 @@ void FavoriteCollectionWidget::slotHeaderContextMenuChangeIconSize(bool )
 {
     QAction *act = dynamic_cast< QAction * >( sender() );
     if ( !act ) {
-      return;
+        return;
     }
 
     QVariant data = act->data();
@@ -101,12 +101,12 @@ void FavoriteCollectionWidget::slotHeaderContextMenuChangeIconSize(bool )
     bool ok;
     const int size = data.toInt( &ok );
     if ( !ok ) {
-      return;
+        return;
     }
 
     const QSize newIconSize( QSize( size, size ) );
     if ( newIconSize == iconSize() ) {
-      return;
+        return;
     }
     setIconSize( newIconSize );
 
@@ -115,56 +115,56 @@ void FavoriteCollectionWidget::slotHeaderContextMenuChangeIconSize(bool )
 
 void FavoriteCollectionWidget::slotGeneralPaletteChanged()
 {
-  const QPalette palette = viewport()->palette();
-  QColor color = palette.text().color();
-  color.setAlpha( 128 );
-  d->textColor = color;
+    const QPalette palette = viewport()->palette();
+    QColor color = palette.text().color();
+    color.setAlpha( 128 );
+    d->textColor = color;
 }
 
 void FavoriteCollectionWidget::slotGeneralFontChanged()
 {
-  // Custom/System font support
-  if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-    setFont( KGlobalSettings::generalFont() );
-  }
+    // Custom/System font support
+    if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
+        setFont( KGlobalSettings::generalFont() );
+    }
 }
 
 void FavoriteCollectionWidget::readConfig()
 {
-  // Custom/System font support
-  if (!MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
-    KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
-    setFont( fontConfig.readEntry( "folder-font", KGlobalSettings::generalFont() ) );
-  } else {
-    setFont( KGlobalSettings::generalFont() );
-  }
+    // Custom/System font support
+    if (!MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
+        KConfigGroup fontConfig( KernelIf->config(), "Fonts" );
+        setFont( fontConfig.readEntry( "folder-font", KGlobalSettings::generalFont() ) );
+    } else {
+        setFont( KGlobalSettings::generalFont() );
+    }
 
-  KConfigGroup myGroup( KernelIf->config(), "FavoriteCollectionWidget" );
-  int iIconSize = myGroup.readEntry( "IconSize", iconSize().width() );
-  if ( iIconSize < 16 || iIconSize > 32 ) {
-    iIconSize = 22;
-  }
-  setIconSize( QSize( iIconSize, iIconSize ) );
+    KConfigGroup myGroup( KernelIf->config(), "FavoriteCollectionWidget" );
+    int iIconSize = myGroup.readEntry( "IconSize", iconSize().width() );
+    if ( iIconSize < 16 || iIconSize > 32 ) {
+        iIconSize = 22;
+    }
+    setIconSize( QSize( iIconSize, iIconSize ) );
 }
 
 void FavoriteCollectionWidget::paintEvent( QPaintEvent *event )
 {
-  if ( !model() || model()->rowCount() == 0 ) {
-    QPainter p( viewport() );
+    if ( !model() || model()->rowCount() == 0 ) {
+        QPainter p( viewport() );
 
-    QFont font = p.font();
-    font.setItalic( true );
-    p.setFont( font );
+        QFont font = p.font();
+        font.setItalic( true );
+        p.setFont( font );
 
-    if (!d->textColor.isValid()) {
-        slotGeneralPaletteChanged();
+        if (!d->textColor.isValid()) {
+            slotGeneralPaletteChanged();
+        }
+        p.setPen( d->textColor );
+
+        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n( "Drop your favorite folders here..." ) );
+    } else {
+        Akonadi::EntityListView::paintEvent( event );
     }
-    p.setPen( d->textColor );
-
-    p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n( "Drop your favorite folders here..." ) );
-  } else {
-    Akonadi::EntityListView::paintEvent( event );
-  }
 }
 
 #include "favoritecollectionwidget.moc"

@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
 
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -30,22 +30,22 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT FavoriteCollectionWidget : public Akonadi::EntityListView
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
     ~FavoriteCollectionWidget();
 
     void readConfig();
 
-  protected slots:
+protected slots:
     void slotGeneralFontChanged();
     void slotGeneralPaletteChanged();
-    void slotHeaderContextMenuChangeIconSize(bool );
+    void slotHeaderContextMenuChangeIconSize(bool);
 
-  protected:
+protected:
     void paintEvent(QPaintEvent*);
 
-  private:
+private:
     void createMenu(KActionCollection *ac);
     void writeConfig();
     class Private;
