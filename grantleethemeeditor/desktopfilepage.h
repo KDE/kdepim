@@ -47,8 +47,6 @@ public:
     void createZip(const QString &themeName, KZip *zip);
     void installTheme(const QString &themePath);
     void setDefaultDesktopName(const QString &name);
-    void setAllowToAddExtraDisplayVariables(bool b);
-
 
 Q_SIGNALS:
     void mainFileNameChanged(const QString &filename);
