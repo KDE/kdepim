@@ -20,6 +20,7 @@
 
 #include <QWidget>
 class QCheckBox;
+class QComboBox;
 
 namespace MailCommon {
 class FolderRequester;
@@ -41,6 +42,7 @@ private Q_SLOTS:
 private:
     QString mInstanceName;
     QCheckBox *mEnabled;
+    QComboBox *mArchiveNamed;
     MailCommon::FolderRequester *mArchiveFolder;
     FolderArchiveAccountInfo *mInfo;
 };

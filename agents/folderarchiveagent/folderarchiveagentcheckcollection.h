@@ -19,6 +19,7 @@
 #define FOLDERARCHIVEAGENTCHECKCOLLECTION_H
 #include <QObject>
 #include <Akonadi/Collection>
+#include <QDate>
 class KJob;
 class FolderArchiveAccountInfo;
 class FolderArchiveAgentCheckCollection : public QObject
@@ -34,8 +35,12 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void slotInitialCollectionFetchingDone(KJob*);
+    void slotInitialCollectionFetchingFirstLevelDone(KJob *job);
+    void slotCreateNewFolder(KJob*);
 
 private:
+    void createNewFolder(const QString &name);
+    QDate mCurrentDate;
     FolderArchiveAccountInfo *mInfo;
 };
 
