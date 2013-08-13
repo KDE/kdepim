@@ -278,11 +278,10 @@ class AddresseeLineEdit::Private
     void stopNepomukSearch();
     void slotNepomukHits( const QList<Nepomuk2::Query::Result>& result );
     void slotNepomukSearchFinished();
-    void slotKpeopleSearchFinished();
     void slotTriggerDelayedQueries();
     QVariantList valuesForIndex(const QModelIndex &idx);
-    QPair<QString,QStringList> matchingSearchString(QVariantList value ) ;
-    QPair<QString,QStringList> kpeoplePrepareCompletionRow(QVariantList values, int role, QString triggerVariant);
+    QPair<QString,QStringList> matchingSearchString(QVariantList value, const QString name ) ;
+    QPair<QString,QStringList> kpeoplePrepareCompletionRow(QVariantList values, QString matching = QString());
     static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
@@ -319,8 +318,6 @@ void AddresseeLineEdit::Private::init()
       s_static->nepomukCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
       s_static->kpeopleCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Person found in your data"), -1 );
     }
-
-    //m_model = new PersonsModel(); TODO
     s_static->updateLDAPWeights();
 
     if ( !m_completionInitialized ) {
@@ -344,12 +341,9 @@ void AddresseeLineEdit::Private::init()
                   q, SLOT(slotNepomukHits(QList<Nepomuk2::Query::Result>)) );
       q->connect( s_static->nepomukSearchClient, SIGNAL(finishedListing()), q, SLOT(slotNepomukSearchFinished()));
 
-      //q->connect(m_model, SIGNAL(modelInitialized()),  q, SLOT(slotKpeopleModelReady() ) );
-
       m_compareRoles = QVector<int>() << PersonsModel::FullNamesRole
                                       << PersonsModel::NicknamesRole
-                                      << PersonsModel::EmailsRole ; // NOTE : KEEP EMAILS AT LAST POSITION !
-      // KPEOPLE : connect results of Kpeople to a slot
+                                      << PersonsModel::EmailsRole ; // NOTE: Keep emails at LAST Position !
 
       m_completionInitialized = true;
     }
@@ -417,91 +411,97 @@ void AddresseeLineEdit::Private::startNepomukSearch()
 }
 
 void AddresseeLineEdit::Private::startKpeopleSearch() {
-  kDebug() << "Start of Kpeople search" ;
-  // consume services from KPEOPLE Lib
-    // Create a model with only mail !
+
     if (!m_model) {
+      kDebug() << "KPeople Model Initialization" ;
       m_model = new PersonsModel();
-      m_model->startQuery(QList<PersonsModelFeature>() << PersonsModelFeature::emailModelFeature(PersonsModelFeature::Mandatory));
+      m_model->startQuery(QList<PersonsModelFeature>()
+      << PersonsModelFeature::emailModelFeature(PersonsModelFeature::Mandatory)
+      << KPeople::PersonsModelFeature::fullNameModelFeature(PersonsModelFeature::Optional)
+      << KPeople::PersonsModelFeature::avatarModelFeature(PersonsModelFeature::Optional)
+      );
       q->connect(m_model, SIGNAL(modelInitialized()),  q, SLOT(slotKpeopleModelReady() ) );
-      return ;
     }
-    if (m_searchString.length() < 4) {
-      return ;
+    else {
+      slotKpeopleModelReady();
     }
-    slotKpeopleModelReady();
 }
 
 void AddresseeLineEdit::Private::slotKpeopleModelReady() {
 
-  // parsing model in order to find matching
-  // email / name with the typed string
-  kDebug() << "Kpeople : Model Ready " ;
-
+  // minimum of character type to start parsing
+  if (m_searchString.length() < 4) {
+      return ;
+  }
+  // parsing model to find matching email / name
   for (int i = 0, rows = m_model->rowCount(); i<rows; i++) {
 
     QModelIndex idx = m_model->index(i,0);
     QVariantList values = valuesForIndex(idx);
 
-    QPair<QString,QStringList> matchingEmails = matchingSearchString(values);
+    QPair<QString,QStringList> matchingEmails = matchingSearchString(values, idx.data(Qt::DisplayRole).toString());
 
     if (!matchingEmails.first.isNull()) {
-
-//       kDebug() << "Kpeople : Content of result" << matchingEmails.first;
-      foreach (QString email, matchingEmails.second) {
-//         kDebug() << "-" << email;
-        addCompletionItem( matchingEmails.second.first(), 1, s_static->kpeopleCompletionSource );
+      kDebug() << "Kpeople Results: "  << matchingEmails.first;
+      foreach (const QString& email, matchingEmails.second) {
+        // TODO : give a bigger weight to the head list !
+        addCompletionItem( i18n("%1 <%2>", matchingEmails.first, email), 1, s_static->kpeopleCompletionSource );
+        kDebug() << "--" << email;
       }
     }
   }
   doCompletion(m_lastSearchMode);
 }
 
-QPair<QString,QStringList> AddresseeLineEdit::Private::matchingSearchString(QVariantList value) {
+QPair<QString,QStringList> AddresseeLineEdit::Private::matchingSearchString(QVariantList values, const QString name) {
 
-  Q_ASSERT(value.size() == m_compareRoles.size());
-  QPair<QString, QStringList> results = qMakePair<QString,QStringList>(QString(), QStringList());
+  Q_ASSERT(values.size() == m_compareRoles.size());
 
+  QPair<QString, QStringList> results ;
+  // Does the
+  if (name.contains(m_searchString, Qt::CaseInsensitive)) {
+    kDebug() << "Kpeople Found a Match by Name : " << name << "for input : " << m_searchString ;
+    return kpeoplePrepareCompletionRow(values,name);
+  }
+  // Does the Email or Nickname are matching ?
   for (int i = 0; i < m_compareRoles.size(); i++) {
-      QVariant &v = value[i];
+      QVariant &v = values[i];
 
       if (v.type() == QVariant::List) {
           QVariantList listValue = v.toList();
 
           if (!listValue.isEmpty()) {
               Q_FOREACH (const QVariant &v, listValue) {
-                  if (!v.isNull() && v.toString().contains(m_searchString)) {
-                    return kpeoplePrepareCompletionRow(value,i,v.toString());
+                  if (!v.isNull() && v.toString().contains(m_searchString , Qt::CaseInsensitive)) {
+                    return kpeoplePrepareCompletionRow(values,name);
                   }
               }
           }
-      } else if (!v.isNull() && v.toString().contains(m_searchString)
+      } else if (!v.isNull() && v.toString().contains(m_searchString, Qt::CaseInsensitive)
           && (v.type() != QVariant::String || !v.toString().isEmpty()))
 
-        return kpeoplePrepareCompletionRow(value,i,v.toString());
+        return kpeoplePrepareCompletionRow(values,name);
   }
   return results;
 }
 
-QPair<QString,QStringList> AddresseeLineEdit::Private::kpeoplePrepareCompletionRow(QVariantList values, int role , QString triggerVariant) {
+QPair<QString,QStringList> AddresseeLineEdit::Private::kpeoplePrepareCompletionRow(QVariantList values, QString nameMatchingContact)
+{
+  QString email;
+  QPair<QString, QStringList> results ;
+  results.first = nameMatchingContact ;
 
-  QPair<QString, QStringList> results = qMakePair<QString,QStringList>(QString(), QStringList());
-  if (m_compareRoles[role]== PersonsModel::EmailsRole) {
-    results.first = "John Doe";
-    results.second += triggerVariant ;
+  if (values.last().type() == QVariant::List ) { // trick : email last of m_compareRoles
+    Q_FOREACH(const QVariant var, values.last().toList()) {
+      email = var.toString(); // keep the current matching on on head of list !
+      if (email.contains(m_searchString)) {
+        results.second.prepend(email);
+      }
+      else results.second.append(email) ;
+    }
   }
   else {
-
-    results.first = triggerVariant;
-
-    if (values[m_compareRoles.size()].type() == QVariant::List ) {
-      QVariant varTemp;
-      foreach ( varTemp , values[m_compareRoles.size()].toList()) {
-        results.second.append(varTemp.toString());
-      }
-    } else {
-      results.second += values[m_compareRoles.size()].toString();
-    }
+      results.second.append(values.last().toString());
   }
   return results;
 }
@@ -562,12 +562,6 @@ void AddresseeLineEdit::Private::slotNepomukSearchFinished()
   }
 }
 
-void AddresseeLineEdit::Private::slotKpeopleSearchFinished()
-{
-  // CREER UN CODE POUR reconnaitre Kpeople comme source de l'item autocompletant
-  // START doCompletion
-}
-
 void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bool autoSuggest )
 {
   KCompletionBox *completionBox = q->completionBox();
@@ -626,7 +620,6 @@ void AddresseeLineEdit::Private::addCompletionItem( const QString &string, int w
   // Check if there is an exact match for item already, and use the
   // maximum weight if so. Since there's no way to get the information
   // from KCompletion, we have to keep our own QMap.
-  kDebug() << "Add Completion Item !";
   CompletionItemsMap::iterator it = s_static->completionItemMap.find( string );
   if ( it != s_static->completionItemMap.end() ) {
     weight = qMax( ( *it ).first, weight );
@@ -790,26 +783,27 @@ void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
 
 void AddresseeLineEdit::Private::startSearches()
 {
-    if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-        if (!m_delayedQueryTimer.isActive())
-            m_delayedQueryTimer.start(500);
-    } else {
-      // If Nepomuk is not available, we instead simply fetch
-      // all contacts from Akonadi and filter them ourselves.
-      // This is slower, but a reasonable fallback. We only do this
-      // once, since it returns the same contacts (all of them)
-      // every time. If one is added or removed during the lifetime
-      // of the widget, we miss that update, but that's better than
-      // doing useless repeat queries for every typed letter. We could
-      // monitor, but that doesn't seem worth the bother, for fallback
-      // code.
-      if ( !s_static->contactsListed ) {
-        akonadiListAllContacts();
-        s_static->contactsListed = true;
-      } else {
-        doCompletion( true );
-      }
-    }
+    startKpeopleSearch();
+//     if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
+//         if (!m_delayedQueryTimer.isActive())
+//             m_delayedQueryTimer.start(500);
+//     } else {
+//       // If Nepomuk is not available, we instead simply fetch
+//       // all contacts from Akonadi and filter them ourselves.
+//       // This is slower, but a reasonable fallback. We only do this
+//       // once, since it returns the same contacts (all of them)
+//       // every time. If one is added or removed during the lifetime
+//       // of the widget, we miss that update, but that's better than
+//       // doing useless repeat queries for every typed letter. We could
+//       // monitor, but that doesn't seem worth the bother, for fallback
+//       // code.
+//       if ( !s_static->contactsListed ) {
+//         akonadiListAllContacts();
+//         s_static->contactsListed = true;
+//       } else {
+//         doCompletion( true );
+//       }
+//     }
 }
 
 void AddresseeLineEdit::Private::akonadiPerformSearch()
