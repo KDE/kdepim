@@ -30,6 +30,7 @@
 
 #include <KCalCore/Event>
 #include <Akonadi/Calendar/FetchJobCalendar>
+#include <Akonadi/Collection>
 
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
@@ -368,6 +369,9 @@ class KonsoleKalendarVariables
      */
     void setAllowGui( bool allow );
 
+    void setCollectionId(Akonadi::Collection::Id);
+    Akonadi::Collection::Id collectionId() const;
+
     /**
      * Returns whether to allow using resources with potential GUI dependencies.
      */
@@ -403,6 +407,7 @@ class KonsoleKalendarVariables
     bool m_bDaysCount;
     int m_daysCount;
     bool m_bAllowGui;
+    Akonadi::Collection::Id m_collectionId;
     Akonadi::FetchJobCalendar::Ptr m_calendar;
     //@endcond
 };

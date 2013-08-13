@@ -72,11 +72,11 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_summary = "Default summary";
   m_bFloating = true;
   m_bAllowGui = false;
+  m_collectionId = -1;
 }
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
 {
-  // delete m_resource;
 }
 
 void KonsoleKalendarVariables::setUID( const QString &uid )
@@ -334,7 +334,17 @@ bool KonsoleKalendarVariables::isDaysCount() const
 
 void KonsoleKalendarVariables::setAllowGui( bool allow )
 {
-  m_bAllowGui = allow;
+    m_bAllowGui = allow;
+}
+
+void KonsoleKalendarVariables::setCollectionId(Akonadi::Collection::Id id)
+{
+  m_collectionId = id;
+}
+
+Akonadi::Collection::Id KonsoleKalendarVariables::collectionId() const
+{
+  return m_collectionId;
 }
 
 bool KonsoleKalendarVariables::allowGui() const

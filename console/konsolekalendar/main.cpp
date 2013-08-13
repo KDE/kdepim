@@ -106,8 +106,6 @@ int main( int argc, char *argv[] )
                ki18n( "Print what would have been done, but do not execute" ) );
   options.add( "allow-gui",
                ki18n( "Allow calendars which might need an interactive user interface" ) );
-  options.add( "collection <collection id>", // TODO
-               ki18n( "Specify which collection you want to use" ) );
   options.add( ":",
                ki18n( "Incidence types (these options can be combined):" ) );
   options.add( "event",
@@ -160,6 +158,8 @@ int main( int argc, char *argv[] )
                ki18n( "Add description to incidence (for add/change modes)" ) );
   options.add( "location <location>",
                ki18n( "  Add location to incidence (for add/change modes)" ) );
+  options.add( "calendar <calendar id>",
+               ki18n( "  Calendar to use when creating a new incidence" ) );
   options.add( ":",
                ki18n( "Export options:" ) );
   options.add( "export-type <export-type>",
@@ -171,7 +171,8 @@ int main( int argc, char *argv[] )
   options.add( "",
                ki18n( "Examples:\n"
                       "  konsolekalendar --view\n"
-                      "  konsolekalendar --add --date 2003-06-04 "
+                      "  konsolekalendar --list-collections\n"
+                      "  konsolekalendar --add --collection 42 --date 2003-06-04 "
                       "--time 10:00 --end-time 12:00 \\\n"
                       "                  --summary \"Doctor Visit\" "
                       "--description \"Get My Head Examined\"\n"
@@ -400,6 +401,14 @@ int main( int argc, char *argv[] )
              << "(" << option << ")";
 
     variables.setDescription( option );
+  }
+
+  if ( args->isSet( "calendar" ) ) {
+    option = args->getOption( "calendar" );
+    bool ok = false;
+    int colId = option.toInt(&ok);
+    if (ok)
+        variables.setCollectionId(colId);
   }
 
   /*
