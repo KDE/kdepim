@@ -3,7 +3,7 @@
 "dtd/kdex.dtd" [
   <!-- Define an entity for your application if it is not part of KDE
        CVS -->
-  <!ENTITY kapplication "<application>kmailcvt</application>">
+  <!ENTITY kapplication "<application>KMailCVT</application>">
   <!ENTITY kappname "&kapplication;">
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
@@ -24,6 +24,13 @@
 </personname>
 <email>montel@kde.org</email>
 </author>
+<author>
+<firstname>Scarlett</firstname>
+<surname>Clark</surname>
+<affiliation><address>
+&Scarlett.Clark.mail;
+</address></affiliation>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -39,7 +46,7 @@
 
 <abstract>
 <para>
-&kapplication; allows to import emails.
+&kapplication; assists in importing email messages.
 </para>
 </abstract>
 
@@ -52,13 +59,61 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; allows to import emails from other mailers.</para>
+<para>&kapplication; is to be used to import your email messages if your previous email application/format is listed below.</para>
+  <simplelist>
+    <member>KMail Archive</member>
+    <member>mbox(Unix, Evolution)</member>
+    <member>Evolution 1.x</member>
+    <member>Evolution 2.x</member>
+    <member>Evolution 3.x</member>
+    <member>&kmail;</member>
+    <member>OS X Mail</member>
+    <member>Opera</member>
+    <member>Sylpheed</member>
+    <member>Thunderbird/Mozilla</member>
+    <member>The Bat!</member>
+    <member>Outlook Express</member>
+    <member>Pegasus-Mail</member>
+    <member>Lotus Notes</member>
+    <member>Plain Text</member>
+  </simplelist>
+<para>If your previous email application/format is not listed here, please see <ulink url="help:/kmail/importing.html">Importing</ulink>
+ for other importing options.</para>
 
 </chapter>
 
 <chapter id="using-kapp">
 <title>Using &kapplication;</title>
-<para>using</para>
+
+<para>
+<screenshot>
+<screeninfo>Screenshot of &kapplication;</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kmailcvt.png" format="PNG" />
+    </imageobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+
+
+<sect1 id="kmailcvt-basic-usage">
+<title>&kapplication; Basic Usage</title>
+<para>&kapplication; is a tool that allows easy importing from supported application.
+ Access it using <menuchoice><guimenu>File</guimenu><guimenuitem>Import Messages</guimenuitem></menuchoice>
+within &kmail; or run &kapplication; as a stand alone application.</para>
+<note><para> Please make sure that you compact your folders in the other email client.</para></note>
+<para>Select your previous email program from the drop down box. The center text area of &kapplication; will update
+ with special instructions (if applicable), and the known location of email message storage for that application.
+ Follow these instructions, then select the folder you wish to import your messages to.</para>
+<para>If you want the &kapplication; tool to remove duplicate messages, check <guilabel>Remove duplicate messages during import</guilabel>.
+ A file select dialog will pop up and you need to select the file/folder noted in the instructions.
+ Click the <guibutton>Next</guibutton> button to complete the import. When the import is finished you
+ can click the <guibutton>Back</guibutton> button to import from another application or the <guibutton>Finish</guibutton> button to exit.
+</para>
+
+</sect1>
 
 </chapter>
 
@@ -72,6 +127,7 @@ Program copyright 2013 Laurent Montel montel@kde.org
 </para>
 <para>
 Documentation Copyright &copy; 2013 Laurent Montel montel@kde.org
+and Scarlett Clark scarlett@scarlettgatelyclark.com
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
