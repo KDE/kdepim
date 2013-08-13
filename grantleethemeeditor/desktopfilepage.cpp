@@ -99,6 +99,8 @@ DesktopFilePage::~DesktopFilePage()
 {
 }
 
+void setNeedToSpecifyMainFile(bool b);
+
 void DesktopFilePage::slotExtraDisplayHeadersChanged()
 {
     Q_EMIT extraDisplayHeaderChanged(mExtraDisplayHeaders->stringList());
