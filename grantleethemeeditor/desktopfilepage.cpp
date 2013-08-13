@@ -66,13 +66,15 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     lay->addWidget(lab, row ,0);
     lay->addWidget(mDescription, row,1);
 
-    ++row;
-    lab = new QLabel(i18n("Filename:"));
-    mFilename = new KLineEdit;
-    mFilename->setText(defaultFileName);
-    connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
-    lay->addWidget(lab, row,0);
-    lay->addWidget(mFilename, row,1);
+    if (options & SpecifyFileName) {
+        ++row;
+        lab = new QLabel(i18n("Filename:"));
+        mFilename = new KLineEdit;
+        mFilename->setText(defaultFileName);
+        connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
+        lay->addWidget(lab, row,0);
+        lay->addWidget(mFilename, row,1);
+    }
 
     ++row;
     lab = new QLabel(i18n("Version:"));
