@@ -72,8 +72,6 @@ FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient,
     connect( act, SIGNAL(triggered(bool)),
              SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
   }
-
-  readConfig();
 }
 
 FavoriteCollectionWidget::~FavoriteCollectionWidget()
