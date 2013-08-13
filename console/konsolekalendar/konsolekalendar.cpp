@@ -46,6 +46,7 @@
 #include <Akonadi/AgentManager>
 #include <Akonadi/AgentInstanceCreateJob>
 #include <Akonadi/CollectionFetchJob>
+#include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchScope>
 
 #include <QtCore/QDateTime>
@@ -81,7 +82,11 @@ bool KonsoleKalendar::printCalendarList()
 {
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(Akonadi::Collection::root(),
                                                                        Akonadi::CollectionFetchJob::Recursive);
-    job->fetchScope().setContentMimeTypes( QStringList() << "text/calendar" );
+    QStringList mimeTypes = QStringList() << "text/calendar"
+                                          << KCalCore::Event::eventMimeType()
+                                          << KCalCore::Todo::todoMimeType()
+                                          << KCalCore::Journal::journalMimeType();
+    job->fetchScope().setContentMimeTypes( mimeTypes );
     QEventLoop loop;
     QObject::connect(job, SIGNAL(result(KJob*)), &loop, SLOT(quit()));
     job->start();
@@ -96,10 +101,13 @@ bool KonsoleKalendar::printCalendarList()
         cout << i18n("There are no calendars available.").toLocal8Bit().data() << endl;
     } else {
         cout << "--------------------------" << endl;
+        QSet<QString> mimeTypeSet = mimeTypes.toSet();
         foreach(const Akonadi::Collection &collection, collections) {
-          QString colId = QString::number(collection.id()).leftJustified(6, ' ');
-          colId += "- ";
-          cout << colId.toLocal8Bit().data() << collection.displayName().toLocal8Bit().data() << endl;
+            if (!mimeTypeSet.intersect(collection.contentMimeTypes().toSet()).isEmpty()) {
+                QString colId = QString::number(collection.id()).leftJustified(6, ' ');
+                colId += "- ";
+                cout << colId.toLocal8Bit().data() << collection.displayName().toLocal8Bit().data() << endl;
+            }
         }
     }
 
