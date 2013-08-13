@@ -52,7 +52,10 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (header.html)"));
 
-    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("header.html"), true /*allow to add extra variables*/);
+    GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
+    opt |=GrantleeThemeEditor::DesktopFilePage::ExtraDisplayVariables;
+
+    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("header.html"), opt);
     mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));

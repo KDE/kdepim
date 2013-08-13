@@ -52,7 +52,8 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (contact.html)"));
 
-    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("contact.html"), false /*no extract display variable*/);
+    GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
+    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("contact.html"), opt);
     mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));

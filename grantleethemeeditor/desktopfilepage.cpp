@@ -33,7 +33,7 @@
 
 using namespace GrantleeThemeEditor;
 
-DesktopFilePage::DesktopFilePage(const QString &defaultFileName, bool allowToAddExtraDisplayVariables, QWidget *parent)
+DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage::DesktopFileOptions options, QWidget *parent)
     : QWidget(parent),
       mExtraDisplayHeaders(0)
 {
@@ -41,54 +41,62 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, bool allowToAdd
     QLabel *lab = new QLabel(i18n("Name:"));
     mName = new KLineEdit;
     mName->setReadOnly(true);
-    lay->addWidget(lab,0,0);
-    lay->addWidget(mName,0,1);
+    int row = 0;
+    lay->addWidget(lab, row,0);
+    lay->addWidget(mName, row,1);
 
-
+    ++row;
     lab = new QLabel(i18n("Author:"));
     mAuthor = new KLineEdit;
     mAuthor->setClearButtonShown(true);
-    lay->addWidget(lab,1,0);
-    lay->addWidget(mAuthor,1,1);
+    lay->addWidget(lab,row,0);
+    lay->addWidget(mAuthor,row,1);
 
+    ++row;
     lab = new QLabel(i18n("Email:"));
     mEmail = new KLineEdit;
     mEmail->setClearButtonShown(true);
-    lay->addWidget(lab,2,0);
-    lay->addWidget(mEmail,2,1);
+    lay->addWidget(lab, row,0);
+    lay->addWidget(mEmail,row,1);
 
+    ++row;
     lab = new QLabel(i18n("Description:"));
     mDescription = new KLineEdit;
     mDescription->setClearButtonShown(true);
-    lay->addWidget(lab,3,0);
-    lay->addWidget(mDescription,3,1);
+    lay->addWidget(lab, row ,0);
+    lay->addWidget(mDescription, row,1);
 
+    ++row;
     lab = new QLabel(i18n("Filename:"));
     mFilename = new KLineEdit;
     mFilename->setText(defaultFileName);
     connect(mFilename, SIGNAL(textChanged(QString)), this, SLOT(slotFileNameChanged(QString)));
-    lay->addWidget(lab,4,0);
-    lay->addWidget(mFilename,4,1);
+    lay->addWidget(lab, row,0);
+    lay->addWidget(mFilename, row,1);
 
+    ++row;
     lab = new QLabel(i18n("Version:"));
     mVersion = new KLineEdit;
     mVersion->setText(QLatin1String("0.1"));
-    lay->addWidget(lab,5,0);
-    lay->addWidget(mVersion,5,1);
+    lay->addWidget(lab, row,0);
+    lay->addWidget(mVersion, row,1);
 
-    if (allowToAddExtraDisplayVariables) {
+    ++row;
+    if (options & ExtraDisplayVariables) {
         lab = new QLabel(i18n("Extract Headers:"));
-        lay->addWidget(lab,6,0);
+        lay->addWidget(lab, row,0);
 
+        ++row;
         lab = new QLabel(QLatin1String("<qt><b>") +i18n("Be careful, Grantlee does not support '-' in variable name. So when you want to add extra header as \"X-Original-To\" add \"X-Original-To\" in list, but use \"XOriginalTo\" as variable in Grantlee (remove '-' in name).")+QLatin1String("</b></qt>"));
         lab->setWordWrap(true);
-        lay->addWidget(lab,7,0,1,2);
+        lay->addWidget(lab, row ,0,1,2);
 
+        ++row;
         mExtraDisplayHeaders = new PimCommon::SimpleStringListEditor;
-        lay->addWidget(mExtraDisplayHeaders, 8, 0, 1, 2);
+        lay->addWidget(mExtraDisplayHeaders, row, 0, 1, 2);
         connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotExtraDisplayHeadersChanged()));
     } else {
-        lay->setRowStretch(6,0);
+        lay->setRowStretch(row,0);
     }
     setLayout(lay);
 
