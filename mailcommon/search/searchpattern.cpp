@@ -285,6 +285,9 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     } else if (mField == "<status>") {
         //TODO ?
         code += QLatin1Char('"') + i18n("<status> not implemented/supported") + QLatin1Char('"');
+    } else if (mField == "<any header>") {
+        //TODO ?
+        code += QLatin1Char('"') + i18n("<any header> not implemented/supported") + QLatin1Char('"');
     } else if (mField == "contents") {
         //TODO ?
         code += QLatin1Char('"') + i18n("<contents> not implemented/supported") + QLatin1Char('"');
