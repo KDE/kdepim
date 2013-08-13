@@ -466,7 +466,7 @@ void KNCollectionView::startDrag( Qt::DropActions supportedActions )
 
   KNFolder::Ptr folder = boost::static_pointer_cast<KNFolder>( item->collection() );
 
-  // Can not drag special folders
+  // Cannot drag special folders
   if ( folder->isRootFolder() || folder->isStandardFolder() ) {
     return;
   }

@@ -124,7 +124,7 @@ void ContactEditorPage::installTheme(const QString &themePath)
         }
     } else {
         if (!dir.mkdir(mDesktopPage->themeName())) {
-            KMessageBox::error(this, i18n("Can not create theme folder."));
+            KMessageBox::error(this, i18n("Cannot create theme folder."));
             return;
         }
     }
@@ -157,7 +157,7 @@ void ContactEditorPage::uploadTheme()
 
         const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
         if (!fileAdded) {
-            KMessageBox::error(this, i18n("We can not add preview file in zip file"), i18n("Failed to add file."));
+            KMessageBox::error(this, i18n("We cannot add preview file in zip file"), i18n("Failed to add file."));
             delete zip;
             return;
         }
