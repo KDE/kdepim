@@ -24,6 +24,7 @@
 #include <Akonadi/EntityListView>
 
 class KXMLGUIClient;
+class KActionCollection;
 
 namespace MailCommon {
 
@@ -45,6 +46,7 @@ class MAILCOMMON_EXPORT FavoriteCollectionWidget : public Akonadi::EntityListVie
     void paintEvent(QPaintEvent*);
 
   private:
+    void createMenu(KActionCollection *ac);
     void writeConfig();
     class Private;
     Private *const d;

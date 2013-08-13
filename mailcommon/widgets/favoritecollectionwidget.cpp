@@ -51,32 +51,36 @@ FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient,
 
   readConfig();
 
-  KActionMenu *iconSizeMenu  = new KActionMenu(i18n("Icon size"), this);
-  xmlGuiClient->actionCollection()->addAction(QLatin1String("favorite_icon_size"), iconSizeMenu);
-
-
-  static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
-
-  QActionGroup *grp = new QActionGroup( iconSizeMenu );
-  const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
-  QAction *act = 0;
-  for ( int i = 0; i < nbElement; ++i ) {
-    act = new QAction(QString::fromLatin1( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ), iconSizeMenu);
-    iconSizeMenu->addAction( act );
-    act->setCheckable( true );
-    grp->addAction( act );
-    if ( iconSize().width() == icon_sizes[ i ] ) {
-      act->setChecked( true );
-    }
-    act->setData( QVariant( icon_sizes[ i ] ) );
-    connect( act, SIGNAL(triggered(bool)),
-             SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
-  }
+  createMenu(xmlGuiClient->actionCollection());
 }
 
 FavoriteCollectionWidget::~FavoriteCollectionWidget()
 {
   delete d;
+}
+
+void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
+{
+    KActionMenu *iconSizeMenu  = new KActionMenu(i18n("Icon size"), this);
+    ac->addAction(QLatin1String("favorite_icon_size"), iconSizeMenu);
+
+    static int icon_sizes[] = { 16, 22, 32 /*, 48, 64, 128 */ };
+
+    QActionGroup *grp = new QActionGroup( iconSizeMenu );
+    const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
+    QAction *act = 0;
+    for ( int i = 0; i < nbElement; ++i ) {
+      act = new QAction(QString::fromLatin1( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ), iconSizeMenu);
+      iconSizeMenu->addAction( act );
+      act->setCheckable( true );
+      grp->addAction( act );
+      if ( iconSize().width() == icon_sizes[ i ] ) {
+        act->setChecked( true );
+      }
+      act->setData( QVariant( icon_sizes[ i ] ) );
+      connect( act, SIGNAL(triggered(bool)),
+               SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
+    }
 }
 
 void FavoriteCollectionWidget::writeConfig()
