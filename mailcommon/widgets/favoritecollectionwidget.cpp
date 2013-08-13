@@ -18,6 +18,7 @@
 
 #include "favoritecollectionwidget.h"
 #include "kernel/mailkernel.h"
+#include "mailcommonsettings_base.h"
 
 #include <messagecore/settings/globalsettings.h>
 
@@ -85,8 +86,8 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
 
 void FavoriteCollectionWidget::writeConfig()
 {
-    KConfigGroup myGroup( KernelIf->config(), "FavoriteCollectionWidget" );
-    myGroup.writeEntry( "IconSize", iconSize().width() );
+    MailCommon::MailCommonSettings::self()->setIconSize(iconSize().width());
+    MailCommon::MailCommonSettings::self()->writeConfig();
 }
 
 void FavoriteCollectionWidget::slotHeaderContextMenuChangeIconSize(bool )
@@ -139,8 +140,7 @@ void FavoriteCollectionWidget::readConfig()
         setFont( KGlobalSettings::generalFont() );
     }
 
-    KConfigGroup myGroup( KernelIf->config(), "FavoriteCollectionWidget" );
-    int iIconSize = myGroup.readEntry( "IconSize", iconSize().width() );
+    int iIconSize = MailCommon::MailCommonSettings::self()->iconSize();
     if ( iIconSize < 16 || iIconSize > 32 ) {
         iIconSize = 22;
     }

@@ -1,0 +1,9 @@
+File=mailcommon.kcfg
+ClassName=MailCommonSettings
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+NameSpace=MailCommon
+Visibility=MAILCOMMON_EXPORT
+IncludeFiles=mailcommon_export.h
