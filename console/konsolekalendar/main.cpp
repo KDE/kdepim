@@ -628,7 +628,7 @@ int main( int argc, char *argv[] )
   QElapsedTimer t;
   t.start();
   loop.exec();
-  kDebug() << "Calendar loaded in" << t.elapsed() << "ms; success=" << calendar->isLoaded();
+  kDebug() << "Calendar loaded in" << t.elapsed() << "ms; success=" << calendar->isLoaded() << "; num incidences=" << calendar->incidences().count();
 
   if ( !args->isSet( "import" ) ) {
     variables.setCalendar( calendar );
