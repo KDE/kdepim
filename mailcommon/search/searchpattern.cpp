@@ -245,10 +245,10 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         int offset = 0;
         switch(mFunction) {
         case FuncEquals:
-            code += i18n("size equals not supported");
+            comparaison = QLatin1Char('"') + i18n("size equals not supported") + QLatin1Char('"');
             break;
         case FuncNotEqual:
-            code += i18n("size not equals not supported");
+            comparaison = QLatin1Char('"') + i18n("size not equals not supported") + QLatin1Char('"');
             break;
         case FuncIsGreater:
             comparaison = QLatin1String(":over");
@@ -284,18 +284,18 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(QString::number(mContents.toInt() + offset));
     } else if (mField == "<status>") {
         //TODO ?
-        code += i18n("<status> not implemented/supported");
+        code += QLatin1Char('"') + i18n("<status> not implemented/supported") + QLatin1Char('"');
     } else if (mField == "contents") {
         //TODO ?
-        code += i18n("<contents> not implemented/supported");
+        code += QLatin1Char('"') + i18n("<contents> not implemented/supported") + QLatin1Char('"');
     } else if (mField == "<age in days>") {
         //TODO ?
-        code += i18n("<age in days> not implemented/supported");
+        code += QLatin1Char('"') + i18n("<age in days> not implemented/supported") + QLatin1Char('"');
     } else if (mField == "<recipients>") {
         //TODO ?
-        code += i18n("<recipients> not implemented/supported");
+        code += QLatin1Char('"') + i18n("<recipients> not implemented/supported") + QLatin1Char('"');
     } else if (mField == "<tag>") {
-        code += i18n("<Tag> is not supported");
+        code += QLatin1Char('"') + i18n("<Tag> is not supported") + QLatin1Char('"');
     } else if (mField == "<message>") {
         //TODO ?
         code += i18n("<message> not implemented/supported");
