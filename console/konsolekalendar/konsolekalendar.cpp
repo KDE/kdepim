@@ -106,7 +106,14 @@ bool KonsoleKalendar::printCalendarList()
             if (!mimeTypeSet.intersect(collection.contentMimeTypes().toSet()).isEmpty()) {
                 QString colId = QString::number(collection.id()).leftJustified(6, ' ');
                 colId += "- ";
-                cout << colId.toLocal8Bit().data() << collection.displayName().toLocal8Bit().data() << endl;
+
+                bool readOnly = !( collection.rights() & Akonadi::Collection::CanCreateItem ||
+                                   collection.rights() & Akonadi::Collection::CanChangeItem ||
+                                   collection.rights() & Akonadi::Collection::CanDeleteItem );
+
+                QString readOnlyString = readOnly ? i18n("(Read only)") + QLatin1Char(' ') : QString();
+
+                cout << colId.toLocal8Bit().data() << readOnlyString.toLocal8Bit().constData() << collection.displayName().toLocal8Bit().data() << endl;
             }
         }
     }
