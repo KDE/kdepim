@@ -37,8 +37,6 @@ public:
     bool requiresBody() const;
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
-
-    bool canConvertToSieve() const;
     QString sieveCode() const;
     QStringList sieveRequires() const;
 

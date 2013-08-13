@@ -37,8 +37,6 @@ public:
     SearchRule::RequiredPart requiredPart() const;
     QWidget* createParamWidget( QWidget *parent ) const;
     void setParamWidgetValue( QWidget *paramWidget ) const;
-
-    bool canConvertToSieve() const;
     QStringList sieveRequires() const;
     QString sieveCode() const;
 

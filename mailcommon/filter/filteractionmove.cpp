@@ -60,11 +60,6 @@ SearchRule::RequiredPart FilterActionMove::requiredPart() const
     return SearchRule::Envelope;
 }
 
-bool FilterActionMove::canConvertToSieve() const
-{
-    return true;
-}
-
 QString FilterActionMove::sieveCode() const
 {
     QString path;

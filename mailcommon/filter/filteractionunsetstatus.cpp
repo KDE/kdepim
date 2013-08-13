@@ -91,10 +91,4 @@ QStringList FilterActionUnsetStatus::sieveRequires() const
     return QStringList() << QLatin1String("imap4flags");
 }
 
-bool FilterActionUnsetStatus::canConvertToSieve() const
-{
-    return true;
-}
-
-
 #include "filteractionunsetstatus.moc"

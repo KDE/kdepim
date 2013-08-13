@@ -64,11 +64,6 @@ SearchRule::RequiredPart FilterActionSetStatus::requiredPart() const
     return SearchRule::Envelope;
 }
 
-bool FilterActionSetStatus::canConvertToSieve() const
-{
-    return true;
-}
-
 QString FilterActionSetStatus::sieveCode() const
 {
     QString flagCode;
