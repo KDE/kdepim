@@ -84,8 +84,10 @@ void ContactEditorPage::slotChanged()
 
 void ContactEditorPage::setChanged(bool b)
 {
-    mChanged = b;
-    Q_EMIT changed(b);
+    if (mChanged != b) {
+        mChanged = b;
+        Q_EMIT changed(b);
+    }
 }
 
 void ContactEditorPage::slotUpdateViewer()

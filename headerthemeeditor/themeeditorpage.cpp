@@ -109,8 +109,10 @@ void ThemeEditorPage::slotChanged()
 
 void ThemeEditorPage::setChanged(bool b)
 {
-    mChanged = b;
-    Q_EMIT changed(b);
+    if (mChanged != b) {
+        mChanged = b;
+        Q_EMIT changed(b);
+    }
 }
 
 void ThemeEditorPage::slotUpdateViewer()
