@@ -52,11 +52,18 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (contact.html)"));
 
+    mEditorEmbeddedPage = createCustomPage(QLatin1String("contact_embedded.html"));
+
+    mEditorGroupPage = createCustomPage(QLatin1String("contactgroup.html"));
+
+    mEditorGroupEmbeddedPage = createCustomPage(QLatin1String("contactgroup_embedded.html"));
+
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
     mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("contact.html"), opt);
     mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
+
 
     connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
     connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mTabWidget, SLOT(slotMainFileNameChanged(QString)));
@@ -133,6 +140,10 @@ void ContactEditorPage::installTheme(const QString &themePath)
     }
     const QString newPath = themePath + QDir::separator() + mDesktopPage->themeName();
     mEditorPage->installTheme(newPath);
+    mEditorGroupPage->installTheme(newPath);
+    mEditorGroupEmbeddedPage->installTheme(newPath);
+    mEditorEmbeddedPage->installTheme(newPath);
+
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->installTheme(newPath);
@@ -188,6 +199,10 @@ void ContactEditorPage::uploadTheme()
 void ContactEditorPage::createZip(const QString &themeName, KZip *zip)
 {
     mEditorPage->createZip(themeName, zip);
+    mEditorGroupPage->createZip(themeName, zip);
+    mEditorGroupEmbeddedPage->createZip(themeName, zip);
+    mEditorEmbeddedPage->createZip(themeName, zip);
+
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->createZip(themeName, zip);
@@ -208,6 +223,16 @@ void ContactEditorPage::addExtraPage()
     }
 }
 
+EditorPage *ContactEditorPage::createCustomPage(const QString &filename)
+{
+    EditorPage *customPage = new EditorPage(EditorPage::SecondPage, QString());
+    connect(customPage, SIGNAL(changed()), SLOT(slotChanged()));
+    customPage->setPageFileName(filename);
+    mTabWidget->addTab(customPage, filename);
+    return customPage;
+}
+
+
 EditorPage *ContactEditorPage::createExtraPage(const QString &filename)
 {
     EditorPage *extraPage = new EditorPage(EditorPage::ExtraPage, QString());
@@ -223,6 +248,11 @@ void ContactEditorPage::storeTheme()
     //set default page filename before saving
     mEditorPage->setPageFileName(mDesktopPage->filename());
     mEditorPage->saveTheme(projectDirectory());
+
+    mEditorGroupPage->saveTheme(projectDirectory());
+    mEditorGroupEmbeddedPage->saveTheme(projectDirectory());
+    mEditorEmbeddedPage->saveTheme(projectDirectory());
+
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
         page->saveTheme(projectDirectory());

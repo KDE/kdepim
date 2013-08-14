@@ -65,10 +65,14 @@ private:
     QString projectDirectory() const;
     void createZip(const QString &themeName, KZip *zip);
     EditorPage *createExtraPage(const QString &filename);
+    EditorPage *createCustomPage(const QString &filename);
     QList<EditorPage*> mExtraPage;
 
     GrantleeThemeEditor::ThemeEditorTabWidget *mTabWidget;
     EditorPage *mEditorPage;
+    EditorPage *mEditorGroupPage;
+    EditorPage *mEditorGroupEmbeddedPage;
+    EditorPage *mEditorEmbeddedPage;
     GrantleeThemeEditor::DesktopFilePage *mDesktopPage;
     GrantleeThemeEditor::ThemeSession *mThemeSession;
     bool mChanged;
