@@ -104,6 +104,7 @@ void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &er
                 qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagValue "<<tagValue;
             }
             mForLoop->setChecked(true);
+            mName->setEnabled(true);
         } else {
             error += i18n("Unknown tag \"%1\" during loading loop \"for\"", tagName);
             qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagName "<<tagName;
