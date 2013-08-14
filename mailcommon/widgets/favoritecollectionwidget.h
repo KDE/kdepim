@@ -36,11 +36,12 @@ public:
     ~FavoriteCollectionWidget();
 
     void readConfig();
+    void updateMode();
 
 protected slots:
     void slotGeneralFontChanged();
     void slotGeneralPaletteChanged();
-    void slotHeaderContextMenuChangeIconSize(bool);
+    void slotChangeIconSize(bool);
     void slotChangeMode(bool);
 
 protected:

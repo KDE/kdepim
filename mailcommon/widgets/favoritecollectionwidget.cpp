@@ -35,9 +35,14 @@ using namespace MailCommon;
 class FavoriteCollectionWidget::Private
 {
 public:
-    Private() {
+    Private()
+        : listMode(0),
+          iconMode(0)
+    {
     }
     QColor textColor;
+    QAction *listMode;
+    QAction *iconMode;
 };
 
 FavoriteCollectionWidget::FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent )
@@ -60,6 +65,20 @@ FavoriteCollectionWidget::~FavoriteCollectionWidget()
     delete d;
 }
 
+void FavoriteCollectionWidget::updateMode()
+{
+    switch(viewMode()) {
+    case ListMode:
+        d->listMode->setChecked( true );
+        d->iconMode->setChecked( false );
+        break;
+    case IconMode:
+        d->listMode->setChecked( false );
+        d->iconMode->setChecked( true );
+        break;
+    }
+}
+
 void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
 {
     KActionMenu *iconSizeMenu  = new KActionMenu(i18n("Icon size"), this);
@@ -80,33 +99,33 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
         }
         act->setData( QVariant( icon_sizes[ i ] ) );
         connect( act, SIGNAL(triggered(bool)),
-                 SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
+                 SLOT(slotChangeIconSize(bool)) );
     }
 
     KActionMenu *modeFavoriteMenu = new KActionMenu(i18n("Mode"), this);
     ac->addAction(QLatin1String("favorite_mode"), modeFavoriteMenu);
 
     grp = new QActionGroup( modeFavoriteMenu );
-    act = new QAction(i18n("List Mode"), modeFavoriteMenu);
-    modeFavoriteMenu->addAction( act );
-    act->setCheckable( true );
-    grp->addAction( act );
+    d->listMode = new QAction(i18n("List Mode"), modeFavoriteMenu);
+    modeFavoriteMenu->addAction( d->listMode );
+    d->listMode->setCheckable( true );
+    grp->addAction( d->listMode );
     if ( viewMode() ==  ListMode) {
-        act->setChecked( true );
+        d->listMode->setChecked( true );
     }
-    act->setData( QVariant( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode ) );
-    connect( act, SIGNAL(triggered(bool)),
+    d->listMode->setData( QVariant( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode ) );
+    connect( d->listMode, SIGNAL(triggered(bool)),
              SLOT(slotChangeMode(bool)) );
 
-    act = new QAction(i18n("Icon Mode"), modeFavoriteMenu);
-    modeFavoriteMenu->addAction( act );
-    grp->addAction( act );
-    act->setCheckable( true );
+    d->iconMode = new QAction(i18n("Icon Mode"), modeFavoriteMenu);
+    modeFavoriteMenu->addAction( d->iconMode );
+    grp->addAction( d->iconMode );
+    d->iconMode->setCheckable( true );
     if ( viewMode() == IconMode ) {
-        act->setChecked( true );
+        d->iconMode->setChecked( true );
     }
-    act->setData( QVariant( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode ) );
-    connect( act, SIGNAL(triggered(bool)),
+    d->iconMode->setData( QVariant( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode ) );
+    connect( d->iconMode, SIGNAL(triggered(bool)),
              SLOT(slotChangeMode(bool)) );
 }
 
@@ -138,7 +157,7 @@ void FavoriteCollectionWidget::slotChangeMode(bool)
     MailCommon::MailCommonSettings::self()->writeConfig();
 }
 
-void FavoriteCollectionWidget::slotHeaderContextMenuChangeIconSize(bool )
+void FavoriteCollectionWidget::slotChangeIconSize(bool )
 {
     QAction *act = dynamic_cast< QAction * >( sender() );
     if ( !act ) {
