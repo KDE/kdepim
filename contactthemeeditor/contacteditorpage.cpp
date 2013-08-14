@@ -113,9 +113,15 @@ void ContactEditorPage::slotCloseTab(int index)
 
 void ContactEditorPage::insertFile()
 {
-    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
-    if (!fileName.isEmpty()) {
-        mEditorPage->insertFile(fileName);
+    QWidget *w = mTabWidget->currentWidget();
+    if (!w)
+        return;
+    GrantleeThemeEditor::EditorPage * page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    if (page) {
+        const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
+        if (!fileName.isEmpty()) {
+            page->insertFile(fileName);
+        }
     }
 }
 
