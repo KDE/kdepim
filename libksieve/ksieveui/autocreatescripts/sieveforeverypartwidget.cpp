@@ -51,14 +51,17 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
     topLayout->addWidget(mForLoop);
 
+
     QLabel *lab = new QLabel(i18n("Name (optional):"));
     lay->addWidget(lab);
 
     mName = new KLineEdit;
+    mName->setEnabled(false);
     lay->addWidget(mName);
 
     topLayout->addWidget(w,0, Qt::AlignTop);
 
+    connect(mForLoop, SIGNAL(clicked(bool)), mName, SLOT(setEnabled(bool)));
     setPageType(KSieveUi::SieveScriptBlockWidget::ForEveryPart);
     setLayout(topLayout);
 }
