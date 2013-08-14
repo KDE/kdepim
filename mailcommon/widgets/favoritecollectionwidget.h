@@ -41,13 +41,13 @@ protected slots:
     void slotGeneralFontChanged();
     void slotGeneralPaletteChanged();
     void slotHeaderContextMenuChangeIconSize(bool);
+    void slotChangeMode(bool);
 
 protected:
     void paintEvent(QPaintEvent*);
 
 private:
     void createMenu(KActionCollection *ac);
-    void writeConfig();
     class Private;
     Private *const d;
 };

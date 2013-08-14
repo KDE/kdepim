@@ -82,11 +82,59 @@ void FavoriteCollectionWidget::createMenu(KActionCollection *ac)
         connect( act, SIGNAL(triggered(bool)),
                  SLOT(slotHeaderContextMenuChangeIconSize(bool)) );
     }
+
+    KActionMenu *modeFavoriteMenu = new KActionMenu(i18n("Mode"), this);
+    ac->addAction(QLatin1String("favorite_mode"), modeFavoriteMenu);
+
+    grp = new QActionGroup( modeFavoriteMenu );
+    act = new QAction(i18n("List Mode"), modeFavoriteMenu);
+    modeFavoriteMenu->addAction( act );
+    act->setCheckable( true );
+    grp->addAction( act );
+    if ( viewMode() ==  ListMode) {
+        act->setChecked( true );
+    }
+    act->setData( QVariant( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode ) );
+    connect( act, SIGNAL(triggered(bool)),
+             SLOT(slotChangeMode(bool)) );
+
+    act = new QAction(i18n("Icon Mode"), modeFavoriteMenu);
+    modeFavoriteMenu->addAction( act );
+    grp->addAction( act );
+    act->setCheckable( true );
+    if ( viewMode() == IconMode ) {
+        act->setChecked( true );
+    }
+    act->setData( QVariant( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode ) );
+    connect( act, SIGNAL(triggered(bool)),
+             SLOT(slotChangeMode(bool)) );
 }
 
-void FavoriteCollectionWidget::writeConfig()
+void FavoriteCollectionWidget::slotChangeMode(bool)
 {
-    MailCommon::MailCommonSettings::self()->setIconSize(iconSize().width());
+    QAction *act = dynamic_cast< QAction * >( sender() );
+    if ( !act ) {
+        return;
+    }
+
+    QVariant data = act->data();
+
+    bool ok;
+    const int mode = data.toInt( &ok );
+    if ( !ok ) {
+        return;
+    }
+
+    switch(mode) {
+    case MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode:
+        setViewMode(IconMode);
+        break;
+    case MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode:
+        setViewMode(ListMode);
+        break;
+    }
+
+    MailCommon::MailCommonSettings::self()->setFavoriteCollectionViewMode(mode);
     MailCommon::MailCommonSettings::self()->writeConfig();
 }
 
@@ -110,8 +158,8 @@ void FavoriteCollectionWidget::slotHeaderContextMenuChangeIconSize(bool )
         return;
     }
     setIconSize( newIconSize );
-
-    writeConfig();
+    MailCommon::MailCommonSettings::self()->setIconSize(iconSize().width());
+    MailCommon::MailCommonSettings::self()->writeConfig();
 }
 
 void FavoriteCollectionWidget::slotGeneralPaletteChanged()
