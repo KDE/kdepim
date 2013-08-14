@@ -238,6 +238,77 @@ void SearchRule::writeConfig( KConfigGroup &config, int aIdx ) const
   config.writeEntry( contents + cIdx, mContents );
 }
 
+QString SearchRule::conditionToString(Function function)
+{
+    QString str;
+    switch(function) {
+    case FuncEquals:
+        str = i18n("equal");
+        break;
+    case FuncNotEqual:
+        str = i18n("not equal");
+        break;
+    case FuncIsGreater:
+        str = i18n("is greater");
+        break;
+    case FuncIsLessOrEqual:
+        str = i18n("is less or equal");
+        break;
+    case FuncIsLess:
+        str = i18n("is less");
+        break;
+    case FuncIsGreaterOrEqual:
+        str = i18n("is greater or equal");
+        break;
+    case FuncIsInAddressbook:
+        str = i18n("is in addressbook");
+        break;
+    case FuncIsNotInAddressbook:
+        str = i18n("is not in addressbook");
+        break;
+    case FuncIsInCategory:
+        str = i18n("is in category");
+        break;
+    case FuncIsNotInCategory:
+        str = i18n("is in category");
+        break;
+    case FuncHasAttachment:
+        str = i18n("has an attachment");
+        break;
+    case FuncHasNoAttachment:
+        str = i18n("has not an attachment");
+        break;
+    case FuncStartWith:
+        str = i18n("start with");
+        break;
+    case FuncNotStartWith:
+        str = i18n("not start with");
+        break;
+    case FuncEndWith:
+        str = i18n("end with");
+        break;
+    case FuncNotEndWith:
+        str = i18n("not end with");
+        break;
+    case FuncNone:
+        str = i18n("none");
+        break;
+    case FuncContains:
+        str = i18n("contains");
+        break;
+    case FuncContainsNot:
+        str = i18n("not contains");
+        break;
+    case FuncRegExp:
+        str = i18n("has regexp");
+        break;
+    case FuncNotRegExp:
+        str = i18n("not regexp");
+        break;
+    }
+    return str;
+}
+
 void SearchRule::generateSieveScript(QStringList &requires, QString &code)
 {
     if (mField == "<size>") {
@@ -279,7 +350,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncContainsNot:
         case FuncRegExp:
         case FuncNotRegExp:
-            code += QLatin1Char('"') + i18n("\"%1\" is not supported", QLatin1String(mField)) + QLatin1Char('"');
+            code += QLatin1Char('"') + i18n("\"%1\" is not supported with condition \"%2\"", QLatin1String(mField), conditionToString(mFunction)) + QLatin1Char('"');
             return;
         }
         code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(QString::number(mContents.toInt() + offset));
@@ -348,7 +419,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncNotStartWith:
         case FuncEndWith:
         case FuncNotEndWith:
-            code += QLatin1Char('"') + i18n("\"%1\" is not supported", QLatin1String(mField)) + QLatin1Char('"');
+            code += QLatin1Char('"') + i18n("\"%1\" is not supported with condition \"%2\"", QLatin1String(mField), conditionToString(mFunction)) + QLatin1Char('"');
             return;
         }
         code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body :text %1 \"%2\"").arg(comparaison).arg(mContents);
@@ -395,7 +466,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncNotStartWith:
         case FuncEndWith:
         case FuncNotEndWith:
-            code += QLatin1Char('"') + i18n("\"%1\" is not supported", QLatin1String(mField)) + QLatin1Char('"');
+            code += QLatin1Char('"') + i18n("\"%1\" is not supported with condition \"%2\"", QLatin1String(mField), conditionToString(mFunction)) + QLatin1Char('"');
             return;
         }
         code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 \"%2\" \"%3\"").arg(comparaison).arg(QLatin1String(mField)).arg(mContents);
