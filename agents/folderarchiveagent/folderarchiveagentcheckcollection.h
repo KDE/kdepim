@@ -29,8 +29,10 @@ public:
     explicit FolderArchiveAgentCheckCollection(FolderArchiveAccountInfo *info, QObject *parent = 0);
     ~FolderArchiveAgentCheckCollection();
 
+    void start();
+
 Q_SIGNALS:
-    void collectionIdFound(Akonadi::Collection::Id id);
+    void collectionIdFound(const Akonadi::Collection &col);
     void checkFailed();
 
 private Q_SLOTS:

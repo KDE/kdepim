@@ -28,19 +28,27 @@ FolderArchiveAgentCheckCollection::FolderArchiveAgentCheckCollection(FolderArchi
       mCurrentDate(QDate::currentDate()),
       mInfo(info)
 {
-    Akonadi::Collection col(info->archiveTopLevel());
-    if (info->keepExistingStructure()) {
+}
+
+FolderArchiveAgentCheckCollection::~FolderArchiveAgentCheckCollection()
+{
+
+}
+
+void FolderArchiveAgentCheckCollection::start()
+{
+    Akonadi::Collection col(mInfo->archiveTopLevel());
+#if 0
+    if (mInfo->keepExistingStructure()) {
+#else
+    if (0) {
+#endif
         Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(col, Akonadi::CollectionFetchJob::Recursive);
         connect(job, SIGNAL(result(KJob*)), this, SLOT(slotInitialCollectionFetchingDone(KJob*)) );
     } else {
         Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(col, Akonadi::CollectionFetchJob::FirstLevel);
         connect(job, SIGNAL(result(KJob*)), this, SLOT(slotInitialCollectionFetchingFirstLevelDone(KJob*)) );
     }
-}
-
-FolderArchiveAgentCheckCollection::~FolderArchiveAgentCheckCollection()
-{
-
 }
 
 void FolderArchiveAgentCheckCollection::slotInitialCollectionFetchingDone(KJob *job)
@@ -90,7 +98,7 @@ void FolderArchiveAgentCheckCollection::slotInitialCollectionFetchingFirstLevelD
 
     foreach ( const Akonadi::Collection &collection, fetchJob->collections() ) {
         if (collection.name() == folderName) {
-            Q_EMIT collectionIdFound(collection.id());
+            Q_EMIT collectionIdFound(collection);
             return;
         }
     }
@@ -117,7 +125,7 @@ void FolderArchiveAgentCheckCollection::slotCreateNewFolder(KJob *job)
         return;
     }
     Akonadi::CollectionCreateJob *createJob = qobject_cast<Akonadi::CollectionCreateJob*>( job );
-    Q_EMIT collectionIdFound(createJob->collection().id());
+    Q_EMIT collectionIdFound(createJob->collection());
 }
 
 #include "folderarchiveagentcheckcollection.moc"
