@@ -35,6 +35,7 @@ using namespace GrantleeThemeEditor;
 
 DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage::DesktopFileOptions options, QWidget *parent)
     : QWidget(parent),
+      mFilename(0),
       mExtraDisplayHeaders(0)
 {
     QGridLayout *lay = new QGridLayout;
@@ -141,7 +142,9 @@ void DesktopFilePage::setThemeName(const QString &themeName)
 
 QString DesktopFilePage::filename() const
 {
-    return mFilename->text();
+    if (mFilename)
+       return mFilename->text();
+    return QString();
 }
 
 QString DesktopFilePage::themeName() const
