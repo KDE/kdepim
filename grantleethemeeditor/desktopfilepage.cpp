@@ -158,7 +158,8 @@ void DesktopFilePage::loadTheme(const QString &path)
     KDesktopFile desktopFile(filename);
     mName->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Name")));
     mDescription->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Description")));
-    mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
+    if (mFilename)
+        mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
     mAuthor->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Author")));
     mEmail->setText(desktopFile.desktopGroup().readEntry(QLatin1String("AuthorEmail")));
     mVersion->setText(desktopFile.desktopGroup().readEntry(QLatin1String("ThemeVersion")));
@@ -179,7 +180,8 @@ void DesktopFilePage::saveAsFilename(const QString &filename)
     KDesktopFile desktopFile(filename);
     desktopFile.desktopGroup().writeEntry(QLatin1String("Name"), mName->text());
     desktopFile.desktopGroup().writeEntry(QLatin1String("Description"), mDescription->text());
-    desktopFile.desktopGroup().writeEntry(QLatin1String("FileName"), mFilename->text());
+    if (mFilename)
+        desktopFile.desktopGroup().writeEntry(QLatin1String("FileName"), mFilename->text());
     if (mExtraDisplayHeaders) {
         const QStringList displayExtraHeaders = mExtraDisplayHeaders->stringList();
         if (!displayExtraHeaders.isEmpty())
