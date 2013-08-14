@@ -15,25 +15,38 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "previewwidget.h"
 
-#ifndef PREVIEWWIDGET_H
-#define PREVIEWWIDGET_H
+using namespace GrantleeThemeEditor;
 
-#include <QWidget>
-class PreviewWidget : public QWidget
+
+PreviewWidget::PreviewWidget(QWidget *parent)
+    : QWidget(parent),
+      mPrinting(false)
 {
-    Q_OBJECT
-public:
-    explicit PreviewWidget(const QString &projectDirectory, QWidget *parent = 0);
-    ~PreviewWidget();
+}
 
-    void createScreenShot(const QString &fileName);
-    void loadConfig();
-    void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
-    void updateViewer();
+PreviewWidget::~PreviewWidget()
+{
 
-public Q_SLOTS:
-    void slotMainFileNameChanged(const QString &);
-};
+}
 
-#endif // PREVIEWWIDGET_H
+void PreviewWidget::updateViewer()
+{
+}
+
+void PreviewWidget::setPrinting(bool printMode)
+{
+    if (mPrinting != printMode) {
+        mPrinting = printMode;
+        updateViewer();
+    }
+}
+
+bool PreviewWidget::printing() const
+{
+    return mPrinting;
+}
+
+
+#include "previewwidget.moc"

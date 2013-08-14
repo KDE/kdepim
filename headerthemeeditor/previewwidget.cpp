@@ -31,8 +31,7 @@
 #include <QDebug>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
-    : QWidget(parent),
-      mPrinting(false)
+    : GrantleeThemeEditor::PreviewWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mViewer = new MessageViewer::Viewer(this);
@@ -53,19 +52,6 @@ PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
 PreviewWidget::~PreviewWidget()
 {
     delete mGrantleeHeaderStyle;
-}
-
-void PreviewWidget::setPrinting(bool printMode)
-{
-    if (mPrinting != printMode) {
-        mPrinting = printMode;
-        updateViewer();
-    }
-}
-
-bool PreviewWidget::printing() const
-{
-    return mPrinting;
 }
 
 void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
