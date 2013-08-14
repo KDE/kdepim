@@ -279,6 +279,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncContainsNot:
         case FuncRegExp:
         case FuncNotRegExp:
+            code += QLatin1Char('"') + i18n("\"%1\" is not supported", QLatin1String(mField)) + QLatin1Char('"');
             return;
         }
         code += QString::fromLatin1("size %1 %2K").arg(comparaison).arg(QString::number(mContents.toInt() + offset));
@@ -347,6 +348,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncNotStartWith:
         case FuncEndWith:
         case FuncNotEndWith:
+            code += QLatin1Char('"') + i18n("\"%1\" is not supported", QLatin1String(mField)) + QLatin1Char('"');
             return;
         }
         code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body :text %1 \"%2\"").arg(comparaison).arg(mContents);
@@ -393,6 +395,7 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncNotStartWith:
         case FuncEndWith:
         case FuncNotEndWith:
+            code += QLatin1Char('"') + i18n("\"%1\" is not supported", QLatin1String(mField)) + QLatin1Char('"');
             return;
         }
         code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 \"%2\" \"%3\"").arg(comparaison).arg(QLatin1String(mField)).arg(mContents);
