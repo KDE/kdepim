@@ -179,7 +179,7 @@ else()
 # Otherwise...
 ############### Find the stuff we need ###############
   # Akonadi
-  find_package(Akonadi 1.10.44 QUIET CONFIG)
+  find_package(Akonadi 1.10.45 QUIET CONFIG)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
