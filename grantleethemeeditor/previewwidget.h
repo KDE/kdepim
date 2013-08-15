@@ -30,6 +30,8 @@ public:
 
     virtual void updateViewer();
 
+    virtual void loadConfig();
+
     void setPrinting(bool printMode);
     bool printing() const;
 

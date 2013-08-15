@@ -48,5 +48,9 @@ bool PreviewWidget::printing() const
     return mPrinting;
 }
 
+void PreviewWidget::loadConfig()
+{
+
+}
 
 #include "previewwidget.moc"
