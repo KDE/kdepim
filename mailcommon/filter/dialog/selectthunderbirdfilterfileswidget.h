@@ -40,6 +40,7 @@ public:
 private Q_SLOTS:
     void slotButtonClicked(QAbstractButton*button);
     void slotProfileChanged(int);
+
 private:
     Ui::SelectThunderbirdFilterFilesWidget *ui;
 };

@@ -63,7 +63,7 @@ QString FilterImporterClawsMails::defaultFiltersSettingsPath()
     return QString::fromLatin1( "%1/.claws-mail/matcherrc" ).arg( QDir::homePath() );
 }
 
-MailFilter * FilterImporterClawsMails::parseLine(const QString& line)
+MailFilter * FilterImporterClawsMails::parseLine(const QString &line)
 {
     MailFilter *filter = new MailFilter();
     QString tmp = line;

@@ -177,6 +177,22 @@ void FolderRequester::keyPressEvent( QKeyEvent *e )
   }
 }
 
+void FolderRequester::setMustBeReadWrite( bool readwrite )
+{
+  mMustBeReadWrite = readwrite;
+}
+
+void FolderRequester::setShowOutbox( bool show )
+{
+  mShowOutbox = show;
+}
+
+void FolderRequester::setNotAllowToCreateNewFolder( bool notCreateNewFolder )
+{
+  mNotCreateNewFolder = notCreateNewFolder;
+}
+
+
 } // namespace MailCommon
 
 #include "folderrequester.moc"
