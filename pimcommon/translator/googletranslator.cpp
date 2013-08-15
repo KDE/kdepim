@@ -199,7 +199,10 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
                         // first we have to add all phrases to sentences and then rebuild them
                         sentences.insert(indexLevel1, qMakePair(listLevel2.at(0).toString(), listLevel2.at(1).toDouble() / 1000));
                     } else {
-                        mResult = listLevel2.at(0).toString();
+                        if (foundWordNew) {
+                            oldVersion = false;
+                            mResult = listLevel2.at(0).toString();
+                        }
                     }
                 }
             }
