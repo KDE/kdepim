@@ -251,8 +251,6 @@ EditorPage *ContactEditorPage::createExtraPage(const QString &filename)
 
 void ContactEditorPage::storeTheme()
 {
-    //set default page filename before saving
-    mEditorPage->setPageFileName(mDesktopPage->filename());
     mEditorPage->saveTheme(projectDirectory());
 
     mEditorGroupPage->saveTheme(projectDirectory());
@@ -264,7 +262,7 @@ void ContactEditorPage::storeTheme()
         page->saveTheme(projectDirectory());
     }
     mDesktopPage->saveTheme(projectDirectory());
-    mThemeSession->setMainPageFileName(mDesktopPage->filename());
+    mThemeSession->setMainPageFileName(mEditorPage->pageFileName());
     mThemeSession->writeSession();
     setChanged(false);
 }
