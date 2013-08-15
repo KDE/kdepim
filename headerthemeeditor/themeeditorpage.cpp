@@ -52,7 +52,11 @@ ThemeEditorPage::ThemeEditorPage(const QString &projectDir, const QString &theme
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (header.html)"));
 
-    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("header.html"), true /*allow to add extra variables*/);
+    GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
+    opt |=GrantleeThemeEditor::DesktopFilePage::ExtraDisplayVariables;
+    opt |= GrantleeThemeEditor::DesktopFilePage::SpecifyFileName;
+
+    mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("header.html"), opt);
     mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
@@ -105,8 +109,10 @@ void ThemeEditorPage::slotChanged()
 
 void ThemeEditorPage::setChanged(bool b)
 {
-    mChanged = b;
-    Q_EMIT changed(b);
+    if (mChanged != b) {
+        mChanged = b;
+        Q_EMIT changed(b);
+    }
 }
 
 void ThemeEditorPage::slotUpdateViewer()
@@ -125,9 +131,15 @@ void ThemeEditorPage::slotCloseTab(int index)
 
 void ThemeEditorPage::insertFile()
 {
-    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
-    if (!fileName.isEmpty()) {
-        mEditorPage->insertFile(fileName);
+    QWidget *w = mTabWidget->currentWidget();
+    if (!w)
+        return;
+    GrantleeThemeEditor::EditorPage * page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    if (page) {
+        const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
+        if (!fileName.isEmpty()) {
+            page->insertFile(fileName);
+        }
     }
 }
 
@@ -146,7 +158,7 @@ void ThemeEditorPage::installTheme(const QString &themePath)
         }
     } else {
         if (!dir.mkdir(mDesktopPage->themeName())) {
-            KMessageBox::error(this, i18n("Can not create theme folder."));
+            KMessageBox::error(this, i18n("Cannot create theme folder."));
             return;
         }
     }
@@ -175,7 +187,7 @@ void ThemeEditorPage::uploadTheme()
 
         const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
         if (!fileAdded) {
-            KMessageBox::error(this, i18n("We can not add preview file in zip file"), i18n("Failed to add file."));
+            KMessageBox::error(this, i18n("We cannot add preview file in zip file"), i18n("Failed to add file."));
             delete zip;
             return;
         }

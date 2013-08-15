@@ -32,19 +32,19 @@
  */
 #include "konsolekalendarexports.h"
 
-#include <stdlib.h>
-#include <iostream>
-
-#include <QtCore/QDateTime>
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <KGlobal>
 
-#include <kcal/calendarlocal.h>
-#include <kcal/calendar.h>
-#include <kcal/event.h>
+#include <KCalCore/Event>
 
-using namespace KCal;
+#include <QtCore/QDateTime>
+
+#include <stdlib.h>
+#include <iostream>
+
+using namespace KCalCore;
 using namespace std;
 
 KonsoleKalendarExports::KonsoleKalendarExports( KonsoleKalendarVariables *vars )
@@ -58,7 +58,7 @@ KonsoleKalendarExports::~KonsoleKalendarExports()
 }
 
 bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
-                                          Event *event, const QDate &date )
+                                          const Event::Ptr &event, const QDate &date )
 {
 
   // Export "Text" Format:
@@ -144,7 +144,7 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
 }
 
 bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
-                                               Event *event, const QDate &date,
+                                               const Event::Ptr &event, const QDate &date,
                                                bool sameday )
 {
 
@@ -217,7 +217,7 @@ QString KonsoleKalendarExports::processField( const QString &field,
 //@endcond
 
 bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
-                                          Event *event, const QDate &date )
+                                          const Event::Ptr &event, const QDate &date )
 {
 
   // Export "CSV" Format:

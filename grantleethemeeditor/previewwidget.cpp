@@ -15,36 +15,42 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERCONVERTTOSIEVERESULTDIALOG_H
-#define FILTERCONVERTTOSIEVERESULTDIALOG_H
+#include "previewwidget.h"
 
-#include <KDialog>
-class KTextEdit;
+using namespace GrantleeThemeEditor;
 
-namespace PimCommon {
-class SieveSyntaxHighlighter;
-}
 
-namespace MailCommon {
-class FilterConvertToSieveResultDialog : public KDialog
+PreviewWidget::PreviewWidget(QWidget *parent)
+    : QWidget(parent),
+      mPrinting(false)
 {
-    Q_OBJECT
-public:
-    explicit FilterConvertToSieveResultDialog(QWidget *parent=0);
-    ~FilterConvertToSieveResultDialog();
-
-    void setCode(const QString &code);
-
-private Q_SLOTS:
-    void slotSave();
-
-private:
-    bool saveToFile( const QString &filename );
-    void readConfig();
-    void writeConfig();
-    KTextEdit *mEditor;
-    PimCommon::SieveSyntaxHighlighter *mSyntaxHighlighter;
-};
 }
 
-#endif // FILTERCONVERTTOSIEVERESULTDIALOG_H
+PreviewWidget::~PreviewWidget()
+{
+
+}
+
+void PreviewWidget::updateViewer()
+{
+}
+
+void PreviewWidget::setPrinting(bool printMode)
+{
+    if (mPrinting != printMode) {
+        mPrinting = printMode;
+        updateViewer();
+    }
+}
+
+bool PreviewWidget::printing() const
+{
+    return mPrinting;
+}
+
+void PreviewWidget::loadConfig()
+{
+
+}
+
+#include "previewwidget.moc"

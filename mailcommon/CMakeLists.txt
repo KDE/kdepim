@@ -127,6 +127,11 @@ soprano_add_ontology(libmailcommon_SRCS
   "trig"
 )
 
+kde4_add_kcfg_files(libmailcommon_SRCS
+    settings/mailcommonsettings_base.kcfgc
+)
+
+
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/agents/mailfilteragent/org.freedesktop.Akonadi.MailFilterAgent.xml PROPERTIES INCLUDE "dbusoperators.h")
 

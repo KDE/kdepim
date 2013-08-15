@@ -312,8 +312,12 @@ QString SieveScriptListBox::generatedScript(QString &requires) const
         resultScript += item->generatedScript(lstRequires);
     }
 
+    QStringList endRequires;
     Q_FOREACH (const QString &r, lstRequires) {
-        requires += QString::fromLatin1("require \"%1\";\n").arg(r);
+        if (!endRequires.contains(r)) {
+            endRequires.append(r);
+            requires += QString::fromLatin1("require \"%1\";\n").arg(r);
+        }
     }
 
     return resultScript;
@@ -366,6 +370,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                         typeBlock = TypeBlockElsif;
                         if (!currentPage) {
                             qDebug() <<" script is not correct missing if block";
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                         }
                         SieveScriptBlockWidget *blockWidget = currentPage->addScriptBlock(KSieveUi::SieveWidgetPageAbstract::BlockElsIf);
                         if (blockWidget) {
@@ -374,6 +379,7 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                     } else if (controlType == QLatin1String("else")) {
                         typeBlock = TypeBlockElse;
                         if (!currentPage) {
+                            currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                             qDebug() <<" script is not correct missing if block";
                         }
                         SieveScriptBlockWidget *blockWidget = currentPage->addScriptBlock(KSieveUi::SieveWidgetPageAbstract::BlockElse);
@@ -411,23 +417,23 @@ void SieveScriptListBox::loadBlock(QDomNode &n, SieveScriptPage *currentPage, Pa
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString actionName = e.attribute(QLatin1String("name"));
                     if (actionName == QLatin1String("include")) {
-                        typeBlock = TypeBlockInclude;
-                        if (!currentPage) {
+                        if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                             comment.clear();
                         }
+                        typeBlock = TypeBlockInclude;
                         currentPage->includeWidget()->loadScript(e, error);
                     } else if (actionName == QLatin1String("global")) {
-                        typeBlock = TypeBlockGlobal;
-                        if (!currentPage) {
+                        if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                             comment.clear();
                         }
+                        typeBlock = TypeBlockGlobal;
                         currentPage->globalVariableWidget()->loadScript(e, error);
                     } else if (actionName == QLatin1String("set") && (typeBlock == TypeBlockGlobal)) {
                         currentPage->globalVariableWidget()->loadSetVariable(e, error);
                     } else {
-                        if (typeBlock != TypeBlockAction) {
+                        if (!currentPage || (typeBlock == TypeBlockIf) || (typeBlock == TypeBlockElse) || (typeBlock == TypeBlockElsif)) {
                             currentPage = createNewScript(scriptName.isEmpty() ? createUniqName() : scriptName, comment);
                         }
                         typeBlock = TypeBlockAction;

@@ -23,10 +23,14 @@
 #include <KTextEdit>
 #include <KLocale>
 #include <KFileDialog>
+#include <KMessageBox>
 
 #include <QFile>
 #include <QHBoxLayout>
 #include <QTextStream>
+#include <QPointer>
+
+#include <errno.h>
 
 using namespace MailCommon;
 
@@ -61,19 +65,38 @@ FilterConvertToSieveResultDialog::~FilterConvertToSieveResultDialog()
 
 void FilterConvertToSieveResultDialog::slotSave()
 {
-    const QString fileName = KFileDialog::getSaveFileName();
-    if ( fileName.isEmpty() )
-      return;
+    KUrl url;
+    const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
+    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
 
-    QFile file( fileName );
-    if ( !file.open( QIODevice::WriteOnly ) )
-      return;
-
-    QTextStream ts( &file );
-    ts.setCodec("UTF-8");
-    ts << mEditor->toPlainText();
-    file.close();
+    fdlg->setMode( KFile::File );
+    fdlg->setOperationMode( KFileDialog::Saving );
+    fdlg->setConfirmOverwrite(true);
+    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
+        const QString fileName = fdlg->selectedFile();
+        if ( !saveToFile( fileName ) ) {
+            KMessageBox::error( this,
+                                i18n( "Could not write the file %1:\n"
+                                      "\"%2\" is the detailed error description.",
+                                      fileName,
+                                      QString::fromLocal8Bit( strerror( errno ) ) ),
+                                i18n( "Sieve Editor Error" ) );
+        }
+    }
+    delete fdlg;
 }
+
+bool FilterConvertToSieveResultDialog::saveToFile( const QString &filename )
+{
+    QFile file( filename );
+    if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
+        return false;
+    QTextStream out(&file);
+    out.setCodec("UTF-8");
+    out << mEditor->toPlainText();
+    return true;
+}
+
 
 void FilterConvertToSieveResultDialog::setCode(const QString &code)
 {

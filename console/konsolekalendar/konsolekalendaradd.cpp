@@ -32,22 +32,25 @@
  */
 #include "konsolekalendaradd.h"
 
-#include <stdlib.h>
-#include <iostream>
-
-#include <QtCore/QDateTime>
-#include <QtCore/QObject>
+#include <calendarsupport/kcalprefs.h>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <ksystemtimezone.h>
 #include <klocale.h>
 
-#include <kcal/calendarlocal.h>
-#include <kcal/calendar.h>
-#include <kcal/event.h>
+#include <KCalCore/Event>
+#include <Akonadi/Calendar/IncidenceChanger>
+#include <Akonadi/Collection>
 
-using namespace KCal;
+#include <QtCore/QDateTime>
+#include <QtCore/QObject>
+#include <QEventLoop>
+
+#include <stdlib.h>
+#include <iostream>
+
+using namespace KCalCore;
 using namespace std;
 
 KonsoleKalendarAdd::KonsoleKalendarAdd( KonsoleKalendarVariables *vars )
@@ -80,7 +83,7 @@ bool KonsoleKalendarAdd::addEvent()
       printSpecs();
     }
 
-    Event *event = new Event();
+    Event::Ptr event = Event::Ptr( new Event() );
 
     KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
     event->setDtStart( KDateTime( m_variables->getStartDateTime(), timeSpec ) );
@@ -90,12 +93,34 @@ bool KonsoleKalendarAdd::addEvent()
     event->setDescription( m_variables->getDescription() );
     event->setLocation( m_variables->getLocation() );
 
-    if ( m_variables->getCalendar()->addEvent( event ) ) {
+    Akonadi::CalendarBase::Ptr calendar = m_variables->getCalendar();
+    QEventLoop loop;
+    QObject::connect(calendar.data(), SIGNAL(createFinished(bool,QString)),
+                     &loop, SLOT(quit()));
+    QElapsedTimer t;
+    t.start();
+    Q_ASSERT(calendar->incidence(event->uid()) == 0 ); // can't exist yet
+    if (!m_variables->allowGui()) {
+       Akonadi::IncidenceChanger *changer = calendar->incidenceChanger();
+       changer->setShowDialogsOnError(false);
+       Akonadi::Collection collection = m_variables->collectionId() != -1 ? Akonadi::Collection(m_variables->collectionId())
+                                                                          : Akonadi::Collection(CalendarSupport::KCalPrefs::instance()->defaultCalendarId());
+
+       if (!collection.isValid()) {
+           cout << i18n("Calendar is invalid. Please specify one with --calendar").toLocal8Bit().data() << "\n";
+       }
+
+       changer->setDefaultCollection(collection);
+       changer->setDestinationPolicy(Akonadi::IncidenceChanger::DestinationPolicyNeverAsk);
+    }
+    calendar->addEvent(event);
+    loop.exec();
+    kDebug() << "Creation took " << t.elapsed() << "ms.";
+    status = calendar->incidence(event->uid()) != 0;
+    if ( status ) {
       cout << i18n( "Success: \"%1\" inserted",
                     m_variables->getSummary() ).toLocal8Bit().data()
            << endl;
-
-        m_variables->getCalendar()->save();
 
     } else {
       cout << i18n( "Failure: \"%1\" not inserted",
@@ -114,7 +139,8 @@ bool KonsoleKalendarAdd::addImportedCalendar()
 
 // If --file specified, then import into that file
 // else, import into the standard calendar
-
+/*
+ * TODO_SERGIO
   QString fileName;
   if ( m_variables->getCalendarFile().isEmpty() ) {
     fileName = KStandardDirs::locateLocal( "data", "korganizer/std.ics" );
@@ -134,6 +160,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
   kDebug() << "konsolekalendaradd.cpp::importCalendar() |"
            << "Successfully imported file:"
            << m_variables->getImportFile();
+           */
   return true;
 }
 

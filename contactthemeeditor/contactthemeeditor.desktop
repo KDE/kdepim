@@ -2,6 +2,7 @@
 Name=Contact Theme Editor
 Name[es]=Editor de temas de Contact
 Name[fi]=Yhteystietoteemamuokkain
+Name[fr]=Éditeur de thème pour les contacts
 Name[hu]=Névjegy téma szerkesztő
 Name[nl]=Contactpersoon van themabewerker
 Name[pt]=Editor de Temas de Contactos
@@ -20,6 +21,7 @@ X-DocPath=contactthemeeditor/index.html
 GenericName=Contact Theme Editor
 GenericName[es]=Editor de temas de Contact
 GenericName[fi]=Yhteystietoteemamuokkain
+GenericName[fr]=Éditeur de thème pour les contacts
 GenericName[hu]=Névjegy téma szerkesztő
 GenericName[nl]=Contactpersoon van themabewerker
 GenericName[pt]=Editor de Temas de Contactos

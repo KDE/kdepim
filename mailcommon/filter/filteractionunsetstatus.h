@@ -33,8 +33,6 @@ public:
     static FilterAction* newAction();
     QString sieveCode() const;
     QStringList sieveRequires() const;
-    bool canConvertToSieve() const;
-
 };
 }
 

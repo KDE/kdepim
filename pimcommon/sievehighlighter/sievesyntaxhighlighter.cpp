@@ -98,6 +98,8 @@ void SieveSyntaxHighlighter::init()
               <<QLatin1String( "\\s:under\\b" )
               <<QLatin1String( "\\s:localpart\\b" )
               <<QLatin1String( "\\s:domain\\b" )
+              <<QLatin1String( "\\s:user\\b" )
+              <<QLatin1String( "\\s:detail\\b" )
               <<QLatin1String( "\\s:all\\b" )
               <<QLatin1String( "\\s:copy\\b" )
               <<QLatin1String( "\\s:message\\b" )
@@ -144,6 +146,7 @@ void SieveSyntaxHighlighter::init()
                <<QLatin1String( "\\baddheader\\b" )
                <<QLatin1String( "\\notify\\b" )
                <<QLatin1String( "\\set\\b" )
+               <<QLatin1String( "\\return\\b" )
                <<QLatin1String( "\\bvacation\\b" );
     Q_FOREACH ( const QString & s, actionType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );

@@ -16,6 +16,7 @@ set(libgrantleethemeeditor_SRCS
     editorwidget.cpp 
     desktopfilepage.cpp 
     editorpage.cpp
+    previewwidget.cpp
 )
 
 

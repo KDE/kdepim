@@ -16,6 +16,7 @@
 */
 
 #include "sievescripttabwidget.h"
+#include "sievewidgetpageabstract.h"
 
 #include <KMenu>
 #include <KLocale>
@@ -43,21 +44,24 @@ SieveScriptTabWidget::~SieveScriptTabWidget()
 void SieveScriptTabWidget::slotTabContextMenuRequest( const QPoint &pos )
 {
     QTabBar *bar = tabBar();
-    if ( count() <= 2 )
-        return;
-
     const int indexBar = bar->tabAt( bar->mapFrom( this, pos ) );
-    if ( indexBar < 2 )
+    QWidget *w = widget(indexBar);
+    if (!w)
         return;
 
-    KMenu menu( this );
-    QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-    closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+    SieveWidgetPageAbstract *page = dynamic_cast<SieveWidgetPageAbstract*>(w);
+    if (!page)
+        return;
+    if ((page->pageType() == SieveWidgetPageAbstract::BlockElsIf) || page->pageType() == SieveWidgetPageAbstract::BlockElse) {
+        KMenu menu( this );
+        QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
+        closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
 
-    QAction *action = menu.exec( mapToGlobal( pos ) );
+        QAction *action = menu.exec( mapToGlobal( pos ) );
 
-    if (action == closeTab) {
-        Q_EMIT tabCloseRequested(indexBar);
+        if (action == closeTab) {
+            Q_EMIT tabCloseRequested(indexBar);
+        }
     }
 }
 

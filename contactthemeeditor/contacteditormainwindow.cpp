@@ -183,7 +183,7 @@ void ContactEditorMainWindow::slotOpenTheme()
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
         if (!file.exists()) {
-            KMessageBox::error(this, i18n("Directory does not contain a theme file. We can not load theme."));
+            KMessageBox::error(this, i18n("Directory does not contain a theme file. We cannot load theme."));
             return;
         }
 

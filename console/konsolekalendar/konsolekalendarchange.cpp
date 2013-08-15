@@ -32,13 +32,15 @@
  */
 #include "konsolekalendarchange.h"
 
-#include <stdlib.h>
-#include <iostream>
-
 #include <kdebug.h>
 #include <klocale.h>
 
-using namespace KCal;
+#include <QEventLoop>
+
+#include <stdlib.h>
+#include <iostream>
+
+using namespace KCalCore;
 using namespace std;
 
 KonsoleKalendarChange::KonsoleKalendarChange( KonsoleKalendarVariables *vars )
@@ -59,7 +61,7 @@ bool KonsoleKalendarChange::changeEvent()
   /*
    * Retrieve event on the basis of the unique string ID
    */
-  Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
+  Event::Ptr event = m_variables->getCalendar()->event( m_variables->getUID() );
   if ( event ) {
     if ( m_variables->isDryRun() ) {
       cout << i18n( "Change Event &lt;Dry Run&gt;:" ).toLocal8Bit().data()
@@ -84,7 +86,8 @@ bool KonsoleKalendarChange::changeEvent()
       }
 
       event->startUpdates();
-      KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
+      Akonadi::CalendarBase::Ptr calendar = m_variables->getCalendar();
+      KDateTime::Spec timeSpec = calendar->timeSpec();
       if ( m_variables->isStartDateTime() ) {
         event->setDtStart( KDateTime( m_variables->getStartDateTime(), timeSpec ) );
       }
@@ -106,12 +109,20 @@ bool KonsoleKalendarChange::changeEvent()
       if ( m_variables->isLocation() ) {
         event->setLocation( m_variables->getLocation() );
       }
-
       event->endUpdates();
-      if ( m_variables->getCalendar()->save() ) {
+      QEventLoop loop;
+      QObject::connect(calendar.data(), SIGNAL(modifyFinished(bool,QString)),
+                       &loop, SLOT(quit()));
+      QElapsedTimer t;
+      t.start();
+      calendar->modifyIncidence(event);
+      loop.exec();
+
+      status = *event == *calendar->incidence(event->uid());
+
+      if ( status ) {
         cout << i18n( "Success: \"%1\" changed", event->summary() ).toLocal8Bit().data()
              << endl;
-        status = true;
       } else {
         cout << i18n( "Failure: \"%1\" not changed", event->summary() ).toLocal8Bit().data()
              << endl;
@@ -123,7 +134,7 @@ bool KonsoleKalendarChange::changeEvent()
   return status;
 }
 
-void KonsoleKalendarChange::printSpecs( Event *event )
+void KonsoleKalendarChange::printSpecs( const Event::Ptr &event )
 {
   cout << i18n( "  UID:   %1",
      event->uid() ).toLocal8Bit().data()

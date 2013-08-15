@@ -36,7 +36,6 @@ public:
     ReturnCode process( ItemContext &context ) const;
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
-    bool canConvertToSieve() const;
     QString sieveCode() const;
 };
 

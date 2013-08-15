@@ -32,6 +32,7 @@ PlasmaComponents.Page {
 
   //BEGIN: Tools
   tools: PlasmaComponents.ToolBarLayout {
+
     PlasmaComponents.ToolButton {
       iconSource: "preferences-system"
 
@@ -67,7 +68,11 @@ PlasmaComponents.Page {
       KPIM.AgentInstanceStatusIndicator {
         id: iconItem
 
-        anchors.verticalCenter: parent.verticalCenter
+        anchors {
+          verticalCenter: parent.verticalCenter
+          left: parent.left
+          leftMargin: units.gridUnit
+        }
 
         online: model.online
         status: model.status
@@ -78,6 +83,7 @@ PlasmaComponents.Page {
 
         anchors {
           left: iconItem.right
+          leftMargin: units.gridUnit
           verticalCenter: parent.verticalCenter
         }
 
@@ -103,6 +109,8 @@ PlasmaComponents.Page {
 
         anchors {
           verticalCenter: parent.verticalCenter
+          left: parent.left
+          leftMargin: units.gridUnit
         }
 
         height: parent.height * 0.6
@@ -117,6 +125,7 @@ PlasmaComponents.Page {
 
         anchors {
           left: iconItem.right
+          leftMargin: units.gridUnit
           verticalCenter: parent.verticalCenter
         }
 

@@ -15,36 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERCONVERTTOSIEVERESULTDIALOG_H
-#define FILTERCONVERTTOSIEVERESULTDIALOG_H
+#ifndef GRANTLEEPREVIEWWIDGET_H
+#define GRANTLEEPREVIEWWIDGET_H
+#include <QWidget>
+#include "grantleethemeeditor_export.h"
 
-#include <KDialog>
-class KTextEdit;
-
-namespace PimCommon {
-class SieveSyntaxHighlighter;
-}
-
-namespace MailCommon {
-class FilterConvertToSieveResultDialog : public KDialog
+namespace GrantleeThemeEditor {
+class GRANTLEETHEMEEDITOR_EXPORT PreviewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FilterConvertToSieveResultDialog(QWidget *parent=0);
-    ~FilterConvertToSieveResultDialog();
+    explicit PreviewWidget(QWidget *parent = 0);
+    ~PreviewWidget();
 
-    void setCode(const QString &code);
+    virtual void updateViewer();
 
-private Q_SLOTS:
-    void slotSave();
+    virtual void loadConfig();
 
-private:
-    bool saveToFile( const QString &filename );
-    void readConfig();
-    void writeConfig();
-    KTextEdit *mEditor;
-    PimCommon::SieveSyntaxHighlighter *mSyntaxHighlighter;
+    void setPrinting(bool printMode);
+    bool printing() const;
+
+Q_SIGNALS:
+    void needUpdateViewer();
+
+protected:
+    bool mPrinting;
 };
 }
 
-#endif // FILTERCONVERTTOSIEVERESULTDIALOG_H
+#endif // GRANTLEEPREVIEWWIDGET_H

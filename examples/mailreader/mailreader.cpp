@@ -104,7 +104,7 @@ void mailreader::setupDocks()
   collectionView->setModel( sortModel );
 
   // Now make the message list multi-tab pane
-  m_messagePane = new MessageList::Pane( entityModel, collectionView->selectionModel(), this );
+  m_messagePane = new MessageList::Pane( true, entityModel, collectionView->selectionModel(), this );
   connect( m_messagePane, SIGNAL(messageSelected(Akonadi::Item)),
            this, SLOT(slotMessageSelected(Akonadi::Item)) );
 

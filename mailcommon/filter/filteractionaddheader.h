@@ -48,7 +48,6 @@ public:
 
     static FilterAction* newAction();
 
-    bool canConvertToSieve() const;
     QStringList sieveRequires() const;
     QString sieveCode() const;
 

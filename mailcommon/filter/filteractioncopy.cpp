@@ -60,11 +60,6 @@ FilterAction* FilterActionCopy::newAction()
     return new FilterActionCopy;
 }
 
-bool FilterActionCopy::canConvertToSieve() const
-{
-    return true;
-}
-
 QString FilterActionCopy::sieveCode() const
 {
     QString path;

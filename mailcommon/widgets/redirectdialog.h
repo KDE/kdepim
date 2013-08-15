@@ -46,15 +46,15 @@ namespace MailCommon {
  */
 class MAILCOMMON_EXPORT RedirectDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Describes the send mode.
      */
     enum SendMode {
-      SendNow,
-      SendLater
+        SendNow,
+        SendLater
     };
 
     /**
@@ -84,10 +84,10 @@ class MAILCOMMON_EXPORT RedirectDialog : public KDialog
 
     int identity() const;
 
-  protected:
+protected:
     virtual void accept();
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

@@ -110,7 +110,7 @@ void EditorPage::createZip(const QString &themeName, KZip *zip)
     saveAsFilename(tmp.fileName());
     const bool fileAdded  = zip->addLocalFile(tmp.fileName(), themeName + QLatin1Char('/') + mPageFileName);
     if (!fileAdded) {
-        KMessageBox::error(this, i18n("We can not add file in zip file"), i18n("Failed to add file."));
+        KMessageBox::error(this, i18n("We cannot add file in zip file"), i18n("Failed to add file."));
     }
 }
 

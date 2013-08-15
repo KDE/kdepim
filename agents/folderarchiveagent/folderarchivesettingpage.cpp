@@ -28,6 +28,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QComboBox>
 
 FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, QWidget *parent)
     : QWidget(parent),
@@ -45,6 +46,16 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
     mArchiveFolder = new MailCommon::FolderRequester;
     hbox->addWidget(mArchiveFolder);
     lay->addLayout(hbox);
+
+    hbox = new QHBoxLayout;
+    lab = new QLabel(i18n("Archive folder named:"));
+    hbox->addWidget(lab);
+    mArchiveNamed = new QComboBox;
+    hbox->addWidget(mArchiveNamed);
+
+    lay->addLayout(hbox);
+
+
     lay->addStretch();
 
     setLayout(lay);
@@ -58,6 +69,7 @@ FolderArchiveSettingPage::~FolderArchiveSettingPage()
 void FolderArchiveSettingPage::slotEnableChanged(bool enabled)
 {
     mArchiveFolder->setEnabled(enabled);
+    mArchiveNamed->setEnabled(enabled);
 }
 
 void FolderArchiveSettingPage::loadSettings()

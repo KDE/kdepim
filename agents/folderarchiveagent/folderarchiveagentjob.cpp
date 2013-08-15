@@ -17,6 +17,7 @@
 
 #include "folderarchiveagentjob.h"
 #include "folderarchiveaccountinfo.h"
+#include "folderarchiveagentcheckcollection.h"
 #include "folderarchivemanager.h"
 
 #include <Akonadi/ItemMoveJob>
@@ -43,8 +44,20 @@ void FolderArchiveAgentJob::start()
         sendError(i18n("Archive folder not defined. Please verify settings for account", mInfo->instanceName() ));
         return;
     }
-    Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( Akonadi::Collection(mInfo->archiveTopLevel()), Akonadi::CollectionFetchJob::Base );
-    connect( fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
+    if (mInfo->folderArchiveType() == FolderArchiveAccountInfo::UniqFolder) {
+        Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( Akonadi::Collection(mInfo->archiveTopLevel()), Akonadi::CollectionFetchJob::Base );
+        connect( fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
+    } else {
+        FolderArchiveAgentCheckCollection *checkCol = new FolderArchiveAgentCheckCollection(mInfo, this);
+        connect(checkCol, SIGNAL(collectionIdFound(Akonadi::Collection::Id)), SLOT(sloMoveMailsToCollection(Akonadi::Collection)));
+        connect(checkCol, SIGNAL(checkFailed()), this, SLOT(slotCheckFailder()));
+    }
+}
+
+void FolderArchiveAgentJob::slotCheckFailder()
+{
+    //TODO customize it.
+    sendError(i18n("Can not fetch collection."));
 }
 
 void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
@@ -59,12 +72,17 @@ void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
         sendError(i18n("List of collection is empty. %1", job->errorString() ));
         return;
     }
+    sloMoveMailsToCollection(collections.first());
+}
+
+void FolderArchiveAgentJob::sloMoveMailsToCollection(const Akonadi::Collection &col)
+{
     Akonadi::Item::List lst;
     Q_FOREACH (qlonglong i, mLstItem) {
         lst.append(Akonadi::Item(i));
     }
 
-    Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob(lst, collections.first());
+    Akonadi::ItemMoveJob *moveJob = new Akonadi::ItemMoveJob(lst, col);
     connect( moveJob, SIGNAL(result(KJob*)), this, SLOT(slotMoveMessages(KJob*)));
 }
 

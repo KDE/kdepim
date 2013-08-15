@@ -198,11 +198,6 @@ FilterAction* FilterActionAddHeader::newAction()
     return new FilterActionAddHeader;
 }
 
-bool FilterActionAddHeader::canConvertToSieve() const
-{
-    return true;
-}
-
 QStringList FilterActionAddHeader::sieveRequires() const
 {
     return QStringList() <<QLatin1String("editheader");

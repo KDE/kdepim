@@ -1697,6 +1697,15 @@ void KMFilterDialog::slotDialogUpdated()
 
 void KMFilterDialog::slotExportAsSieveScript()
 {
+    if ( isButtonEnabled( KDialog::Apply ) ) {
+        KMessageBox::information(
+                    this,
+                    i18nc( "@info",
+                           "Some filters were changed and not saved yet. "
+                           "You must save your filters before they can be exported." ),
+                    i18n( "Filters changed." ) );
+        return;
+    }
     KMessageBox::information(this, i18n("We cannot convert all KMail filters to sieve scripts but we can try :)"), i18n("Convert KMail filters to sieve scripts"));
     QList<MailFilter *> filters = mFilterList->filtersForSaving( false );
     QPointer<FilterSelectionDialog> dlg = new FilterSelectionDialog( this );

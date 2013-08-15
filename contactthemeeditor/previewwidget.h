@@ -19,8 +19,9 @@
 #ifndef PREVIEWWIDGET_H
 #define PREVIEWWIDGET_H
 
-#include <QWidget>
-class PreviewWidget : public QWidget
+#include "grantleethemeeditor/previewwidget.h"
+
+class PreviewWidget : public GrantleeThemeEditor::PreviewWidget
 {
     Q_OBJECT
 public:
@@ -31,12 +32,6 @@ public:
     void loadConfig();
     void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
     void updateViewer();
-
-Q_SIGNALS:
-    void needUpdateViewer();
-
-public Q_SLOTS:
-    void slotMainFileNameChanged(const QString &);
 };
 
 #endif // PREVIEWWIDGET_H

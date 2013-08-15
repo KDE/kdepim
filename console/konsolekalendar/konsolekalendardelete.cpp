@@ -37,7 +37,9 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <QEventLoop>
 
+using namespace KCalCore;
 using namespace std;
 
 KonsoleKalendarDelete::KonsoleKalendarDelete( KonsoleKalendarVariables *vars )
@@ -58,7 +60,7 @@ bool KonsoleKalendarDelete::deleteEvent()
   /*
    * Retrieve event on the basis of the unique string ID
    */
-  Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
+  Event::Ptr event = m_variables->getCalendar()->event( m_variables->getUID() );
   if ( event ) {
     if ( m_variables->isDryRun() ) {
       cout << i18n( "Delete Event &lt;Dry Run&gt;:" ).data()
@@ -74,12 +76,20 @@ bool KonsoleKalendarDelete::deleteEvent()
         printSpecs( event );
       }
 
-      m_variables->getCalendar()->deleteEvent( event );
-      cout << i18n( "Success: \"%1\" deleted", event->summary() ).data()
-           << endl;
+      QEventLoop loop;
+      Akonadi::CalendarBase::Ptr calendar = m_variables->getCalendar();
+      QObject::connect(calendar.data(), SIGNAL(deleteFinished(bool,QString)),
+                       &loop, SLOT(quit()));
+      calendar->deleteEvent( event );
+      loop.exec();
+      kDebug() << "Finished deleting";
+      status = calendar->incidence(event->uid()) == 0;
 
-      m_variables->getCalendar()->save();
-      status = true;
+      if (status) {
+          cout << i18n( "Success: \"%1\" deleted", event->summary() ).data() << endl;
+      } else {
+          cout << i18n( "Error deleting: \"%1\"", event->summary() ).data() << endl;
+      }
     }
   }
 
@@ -87,7 +97,7 @@ bool KonsoleKalendarDelete::deleteEvent()
   return status;
 }
 
-void KonsoleKalendarDelete::printSpecs( Event *event )
+void KonsoleKalendarDelete::printSpecs( const Event::Ptr &event )
 {
   cout << i18n( "  UID:   %1",  m_variables->getUID() ).data()
        << endl;

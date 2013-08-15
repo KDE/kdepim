@@ -124,11 +124,6 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
     }
 }
 
-bool FilterAction::canConvertToSieve() const
-{
-    return false;
-}
-
 QStringList FilterAction::sieveRequires() const
 {
     return QStringList();
@@ -136,7 +131,7 @@ QStringList FilterAction::sieveRequires() const
 
 QString FilterAction::sieveCode() const
 {
-    return QString();
+    return i18n("### \"%1 not supported\"", name());
 }
 
 #include "filteraction.moc"
