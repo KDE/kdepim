@@ -26,17 +26,12 @@
 #include <QDebug>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
-    : QWidget(parent)
+    : GrantleeThemeEditor::PreviewWidget(parent)
 {
 }
 
 PreviewWidget::~PreviewWidget()
 {
-}
-
-void PreviewWidget::slotMainFileNameChanged(const QString &filename)
-{
-    updateViewer();
 }
 
 void PreviewWidget::loadConfig()

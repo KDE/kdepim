@@ -65,8 +65,6 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
 
-    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mEditorPage->preview(), SLOT(slotMainFileNameChanged(QString)));
-    connect(mDesktopPage, SIGNAL(mainFileNameChanged(QString)), mTabWidget, SLOT(slotMainFileNameChanged(QString)));
     connect(mDesktopPage, SIGNAL(changed()), SLOT(slotChanged()));
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), SLOT(slotCloseTab(int)));
     setLayout(lay);
