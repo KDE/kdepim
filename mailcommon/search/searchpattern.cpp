@@ -1768,9 +1768,8 @@ Nepomuk2::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url,
   return isChildTerm;
 }
 
-QString SearchPattern::asSparqlQuery(bool &allIsEmpty, const KUrl::List& urlList) const
+MailCommon::SearchPattern::SparqlQueryError SearchPattern::asSparqlQuery(QString &queryStr, const KUrl::List& urlList) const
 {
-
   Nepomuk2::Query::Query query;
 
   Nepomuk2::Query::AndTerm outerGroup;
@@ -1785,10 +1784,9 @@ QString SearchPattern::asSparqlQuery(bool &allIsEmpty, const KUrl::List& urlList
     (*it)->addQueryTerms( innerGroup );
   }
 
-
   if ( innerGroup.subTerms().isEmpty() ) {
     qDebug()<<" innergroup is Empty. Need to report bug";
-    return QString();
+    return MissingCheck;
   }
   if ( !urlList.isEmpty() ) {
     const int numberOfUrl = urlList.count();
@@ -1796,8 +1794,7 @@ QString SearchPattern::asSparqlQuery(bool &allIsEmpty, const KUrl::List& urlList
       bool empty = false;
       const Nepomuk2::Query::ComparisonTerm isChildTerm = createChildTerm( urlList.at( 0 ), empty );
       if ( empty ) {
-        allIsEmpty = true;
-        return QString();
+        return FolderEmptyOrNotIndexed;
       }
       const Nepomuk2::Query::AndTerm andTerm( isChildTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );
@@ -1813,8 +1810,7 @@ QString SearchPattern::asSparqlQuery(bool &allIsEmpty, const KUrl::List& urlList
         }
       }
       if (allFolderIsEmpty) {
-        allIsEmpty = true;
-        return QString();
+        return FolderEmptyOrNotIndexed;
       }
       const Nepomuk2::Query::OrTerm orTerm( term );
       const Nepomuk2::Query::AndTerm andTerm( orTerm, innerGroup );
@@ -1827,8 +1823,8 @@ QString SearchPattern::asSparqlQuery(bool &allIsEmpty, const KUrl::List& urlList
   outerGroup.addSubTerm( typeTerm );
   query.setTerm( outerGroup );
   query.addRequestProperty( itemIdProperty );
-  allIsEmpty = false;
-  return query.toSparqlQuery();
+  queryStr = query.toSparqlQuery();
+  return NoError;
 }
 
 QString MailCommon::SearchPattern::asXesamQuery() const

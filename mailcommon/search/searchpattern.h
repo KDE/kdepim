@@ -634,6 +634,13 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
       OpAll
     };
 
+
+    enum SparqlQueryError {
+        NoError = 0,
+        MissingCheck,
+        FolderEmptyOrNotIndexed
+    };
+
     /**
      * Constructor which provides a pattern with minimal, but
      * sufficient initialization. Unmodified, such a pattern will fail
@@ -740,7 +747,8 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
     /**
      * Returns the pattern as a SPARQL query.
      */
-    QString asSparqlQuery(bool &allIsEmpty, const KUrl::List& url = KUrl::List()) const;
+
+    SparqlQueryError asSparqlQuery(QString &queryStr, const KUrl::List& url = KUrl::List()) const;
 
     /**
      * Returns the pattern as a XESAM query.
