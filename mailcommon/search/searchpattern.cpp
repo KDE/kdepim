@@ -1941,7 +1941,7 @@ void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
         code += QLatin1String("if anyof (");
       break;
     case OpAnd:
-        code += QLatin1String("if allof(");
+        code += QLatin1String("if allof (");
       break;
     case OpAll:
         code += QLatin1String("if (true) {");
