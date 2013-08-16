@@ -25,6 +25,7 @@ class KZip;
 
 namespace GrantleeThemeEditor {
 class EditorWidget;
+class PreviewWidget;
 class GRANTLEETHEMEEDITOR_EXPORT EditorPage : public QWidget
 {
     Q_OBJECT
@@ -59,6 +60,7 @@ Q_SIGNALS:
 protected:
     PageType mType;
     QString mPageFileName;
+    GrantleeThemeEditor::PreviewWidget *mPreview;
     GrantleeThemeEditor::EditorWidget *mEditor;
 };
 }

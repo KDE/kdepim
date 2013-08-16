@@ -37,6 +37,10 @@ public:
     void setPrinting(bool printMode);
     bool printing() const;
 
+public Q_SLOTS:
+    virtual void slotMainFileNameChanged(const QString &);
+    virtual void slotExtraHeaderDisplayChanged(const QStringList &headers);
+
 Q_SIGNALS:
     void needUpdateViewer();
 

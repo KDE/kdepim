@@ -61,5 +61,15 @@ void PreviewWidget::setThemePath(const QString &projectDirectory, const QString 
 {
 }
 
+void PreviewWidget::slotMainFileNameChanged(const QString &)
+{
+
+}
+
+void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
+{
+
+}
+
 
 #include "previewwidget.moc"

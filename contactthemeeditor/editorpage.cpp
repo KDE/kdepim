@@ -30,7 +30,6 @@
 
 EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent)
     : GrantleeThemeEditor::EditorPage(type, parent),
-      mPreview(0),
       mWidgetSplitter(0)
 {
     QVBoxLayout *lay = new QVBoxLayout;
@@ -85,7 +84,7 @@ EditorPage::~EditorPage()
     }
 }
 
-PreviewWidget *EditorPage::preview() const
+GrantleeThemeEditor::PreviewWidget *EditorPage::preview() const
 {
     return mPreview;
 }

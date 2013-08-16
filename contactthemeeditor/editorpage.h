@@ -25,10 +25,10 @@ class ContactTemplateWidget;
 class EditorWidget;
 class KZip;
 class QSplitter;
-class PreviewWidget;
 class ThemeEditorWidget;
 namespace GrantleeThemeEditor {
 class EditorWidget;
+class PreviewWidget;
 }
 
 class EditorPage : public GrantleeThemeEditor::EditorPage
@@ -38,10 +38,9 @@ public:
     explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = 0);
     ~EditorPage();
 
-    PreviewWidget *preview() const;
+    GrantleeThemeEditor::PreviewWidget *preview() const;
 
 private:
-    PreviewWidget *mPreview;
     ContactTemplateWidget *mContactTemplate;
     QSplitter *mMainSplitter;
     QSplitter *mWidgetSplitter;
