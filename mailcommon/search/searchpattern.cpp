@@ -1768,7 +1768,7 @@ Nepomuk2::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url,
   return isChildTerm;
 }
 
-QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
+QString SearchPattern::asSparqlQuery(bool &allIsEmpty, const KUrl::List& urlList) const
 {
 
   Nepomuk2::Query::Query query;
@@ -1785,7 +1785,9 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
     (*it)->addQueryTerms( innerGroup );
   }
 
+
   if ( innerGroup.subTerms().isEmpty() ) {
+    qDebug()<<" innergroup is Empty. Need to report bug";
     return QString();
   }
   if ( !urlList.isEmpty() ) {
@@ -1793,23 +1795,27 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
     if ( numberOfUrl == 1 ) {
       bool empty = false;
       const Nepomuk2::Query::ComparisonTerm isChildTerm = createChildTerm( urlList.at( 0 ), empty );
-      if ( empty )
+      if ( empty ) {
+        allIsEmpty = true;
         return QString();
+      }
       const Nepomuk2::Query::AndTerm andTerm( isChildTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );
     } else {
       QList<Nepomuk2::Query::Term> term;
-      bool allIsEmpty = true;
+      bool allFolderIsEmpty = true;
       for ( int i = 0; i < numberOfUrl; ++i ) {
         bool empty = false;
         const Nepomuk2::Query::ComparisonTerm childTerm = createChildTerm( urlList.at( i ), empty );
         if ( !empty ) {
           term<<childTerm;
-          allIsEmpty = false;
+          allFolderIsEmpty = false;
         }
       }
-      if (allIsEmpty)
+      if (allFolderIsEmpty) {
+        allIsEmpty = true;
         return QString();
+      }
       const Nepomuk2::Query::OrTerm orTerm( term );
       const Nepomuk2::Query::AndTerm andTerm( orTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );
@@ -1821,6 +1827,7 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
   outerGroup.addSubTerm( typeTerm );
   query.setTerm( outerGroup );
   query.addRequestProperty( itemIdProperty );
+  allIsEmpty = false;
   return query.toSparqlQuery();
 }
 

@@ -740,7 +740,7 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
     /**
      * Returns the pattern as a SPARQL query.
      */
-    QString asSparqlQuery(const KUrl::List& url = KUrl::List()) const;
+    QString asSparqlQuery(bool &allIsEmpty, const KUrl::List& url = KUrl::List()) const;
 
     /**
      * Returns the pattern as a XESAM query.
