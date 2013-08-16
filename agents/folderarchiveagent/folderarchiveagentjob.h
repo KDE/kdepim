@@ -37,7 +37,7 @@ private Q_SLOTS:
     void slotFetchCollection(KJob *job);
     void slotMoveMessages(KJob *job);
     void sloMoveMailsToCollection(const Akonadi::Collection &col);
-    void slotCheckFailder();
+    void slotCheckFailder(const QString &message);
 
 private:
     void sendError(const QString &error);

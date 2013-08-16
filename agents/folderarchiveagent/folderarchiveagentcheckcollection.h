@@ -33,7 +33,7 @@ public:
 
 Q_SIGNALS:
     void collectionIdFound(const Akonadi::Collection &col);
-    void checkFailed();
+    void checkFailed(const QString &message);
 
 private Q_SLOTS:
     void slotInitialCollectionFetchingDone(KJob*);
