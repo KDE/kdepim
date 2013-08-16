@@ -109,79 +109,79 @@ private:
 public:
   // instance management
   static Manager * instance()
-    { return mInstance; };
+    { return mInstance; }
 
   // widget registration
   static void registerWidget( Widget *pWidget );
   static void unregisterWidget( Widget *pWidget );
 
   const KMime::DateFormatter * dateFormatter() const
-    { return mDateFormatter; };
+    { return mDateFormatter; }
 
   // global pixmaps
   const QPixmap * pixmapMessageNew() const
-    { return mPixmapMessageNew; };
+    { return mPixmapMessageNew; }
   const QPixmap * pixmapMessageUnread() const
-    { return mPixmapMessageUnread; };
+    { return mPixmapMessageUnread; }
   const QPixmap * pixmapMessageRead() const
-    { return mPixmapMessageRead; };
+    { return mPixmapMessageRead; }
   const QPixmap * pixmapMessageDeleted() const
-    { return mPixmapMessageDeleted; };
+    { return mPixmapMessageDeleted; }
   const QPixmap * pixmapMessageReplied() const
-    { return mPixmapMessageReplied; };
+    { return mPixmapMessageReplied; }
   const QPixmap * pixmapMessageRepliedAndForwarded() const
-    { return mPixmapMessageRepliedAndForwarded; };
+    { return mPixmapMessageRepliedAndForwarded; }
   const QPixmap * pixmapMessageQueued() const
-    { return mPixmapMessageQueued; };
+    { return mPixmapMessageQueued; }
   const QPixmap * pixmapMessageActionItem() const
-    { return mPixmapMessageActionItem; };
+    { return mPixmapMessageActionItem; }
   const QPixmap * pixmapMessageSent() const
-    { return mPixmapMessageSent; };
+    { return mPixmapMessageSent; }
   const QPixmap * pixmapMessageForwarded() const
-    { return mPixmapMessageForwarded; };
+    { return mPixmapMessageForwarded; }
   const QPixmap * pixmapMessageImportant() const
-    { return mPixmapMessageImportant; };
+    { return mPixmapMessageImportant; }
   const QPixmap * pixmapMessageWatched() const
-    { return mPixmapMessageWatched; };
+    { return mPixmapMessageWatched; }
   const QPixmap * pixmapMessageIgnored() const
-    { return mPixmapMessageIgnored; };
+    { return mPixmapMessageIgnored; }
   const QPixmap * pixmapMessageSpam() const
-    { return mPixmapMessageSpam; };
+    { return mPixmapMessageSpam; }
   const QPixmap * pixmapMessageHam() const
-    { return mPixmapMessageHam; };
+    { return mPixmapMessageHam; }
   const QPixmap * pixmapMessageFullySigned() const
-    { return mPixmapMessageFullySigned; };
+    { return mPixmapMessageFullySigned; }
   const QPixmap * pixmapMessagePartiallySigned() const
-    { return mPixmapMessagePartiallySigned; };
+    { return mPixmapMessagePartiallySigned; }
   const QPixmap * pixmapMessageUndefinedSigned() const
-    { return mPixmapMessageUndefinedSigned; };
+    { return mPixmapMessageUndefinedSigned; }
   const QPixmap * pixmapMessageNotSigned() const
-    { return mPixmapMessageNotSigned; };
+    { return mPixmapMessageNotSigned; }
   const QPixmap * pixmapMessageFullyEncrypted() const
-    { return mPixmapMessageFullyEncrypted; };
+    { return mPixmapMessageFullyEncrypted; }
   const QPixmap * pixmapMessagePartiallyEncrypted() const
-    { return mPixmapMessagePartiallyEncrypted; };
+    { return mPixmapMessagePartiallyEncrypted; }
   const QPixmap * pixmapMessageUndefinedEncrypted() const
-    { return mPixmapMessageUndefinedEncrypted; };
+    { return mPixmapMessageUndefinedEncrypted; }
   const QPixmap * pixmapMessageNotEncrypted() const
-    { return mPixmapMessageNotEncrypted; };
+    { return mPixmapMessageNotEncrypted; }
   const QPixmap * pixmapMessageAttachment() const
-    { return mPixmapMessageAttachment; };
+    { return mPixmapMessageAttachment; }
   const QPixmap * pixmapMessageAnnotation() const
-    { return mPixmapMessageAnnotation; };
+    { return mPixmapMessageAnnotation; }
   const QPixmap * pixmapMessageInvitation() const
-    { return mPixmapMessageInvitation; };
+    { return mPixmapMessageInvitation; }
   const QPixmap * pixmapShowMore() const
-    { return mPixmapShowMore; };
+    { return mPixmapShowMore; }
   const QPixmap * pixmapShowLess() const
-    { return mPixmapShowLess; };
+    { return mPixmapShowLess; }
   const QPixmap * pixmapVerticalLine() const
-    { return mPixmapVerticalLine; };
+    { return mPixmapVerticalLine; }
   const QPixmap * pixmapHorizontalSpacer() const
-    { return mPixmapHorizontalSpacer; };
+    { return mPixmapHorizontalSpacer; }
 
   const QString & cachedLocalizedUnknownText() const
-    { return mCachedLocalizedUnknownText; };
+    { return mCachedLocalizedUnknownText; }
 
   /**
    * Returns the unique id of the last selected message for the specified StorageModel.
@@ -214,7 +214,7 @@ public:
   void removeAllAggregations();
 
   const QHash< QString, Aggregation * > & aggregations() const
-    { return mAggregations; };
+    { return mAggregations; }
 
   /**
    * This is called by the aggregation configuration dialog
@@ -244,7 +244,7 @@ public:
   void removeAllThemes();
 
   const QHash< QString, Theme * > & themes() const
-    { return mThemes; };
+    { return mThemes; }
 
   /**
    * This is called by the theme configuration dialog

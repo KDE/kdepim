@@ -97,7 +97,7 @@ bool Aggregation::load( QDataStream &stream )
       // b0rken
       return false;
     break;
-  };
+  }
 
   stream >> val; // Formerly contained group sorting
   stream >> val; // Formerly contained group sorting direction
@@ -115,7 +115,7 @@ bool Aggregation::load( QDataStream &stream )
       // b0rken
       return false;
     break;
-  };
+  }
 
   stream >> val;
   mThreading = (Threading)val;

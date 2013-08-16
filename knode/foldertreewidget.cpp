@@ -51,7 +51,7 @@ protected:
 
 public:
   FolderTreeWidgetItemLabelColumnDelegate( FolderTreeWidget *parent )
-    : QStyledItemDelegate( parent ), mFolderTreeWidget( parent ) {};
+    : QStyledItemDelegate( parent ), mFolderTreeWidget( parent ) {}
 
   ~FolderTreeWidgetItemLabelColumnDelegate()
   {};

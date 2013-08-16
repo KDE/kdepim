@@ -56,7 +56,7 @@ public:
   QColor mBackgroundColor;
   QFont  mFont;
   QString  mFontKey;
-  int    mPriority;
+  int mPriority;
 };
 
 MessageItem::Tag::Tag( const QPixmap &pix, const QString &tagName, const QString &tagId )
