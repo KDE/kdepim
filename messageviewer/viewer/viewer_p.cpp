@@ -805,9 +805,9 @@ void ViewerPrivate::displaySplashPage( const QString &info )
 
 #ifdef KDEPIM_MOBILE_UI
   const QString location = KStandardDirs::locate( "data", QLatin1String("messageviewer/about/main_mobile.html") );
-  QString content = KPIMUtils::kFileToByteArray( location );
-  content = content.arg( "" ); // infopage stylesheet
-  content = content.arg( "" ); // rtl infopage stylesheet
+  QString content = QLatin1String( KPIMUtils::kFileToByteArray( location ) );
+  content = content.arg( QLatin1String( "" ) ); // infopage stylesheet
+  content = content.arg( QLatin1String( "" ) ); // rtl infopage stylesheet
 #else
   const QString location = KStandardDirs::locate( "data", QLatin1String("kmail2/about/main.html") ); //FIXME(Andras) copy to $KDEDIR/share/apps/messageviewer
   QString content = QLatin1String(KPIMUtils::kFileToByteArray( location ));
