@@ -678,8 +678,7 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
 
   d->clear();
 
-  if ( d->mStorageModel )
-  {
+  if ( d->mStorageModel ) {
     disconnect( d->mStorageModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
                 this, SLOT(slotStorageModelRowsInserted(QModelIndex,int,int)) );
     disconnect( d->mStorageModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),

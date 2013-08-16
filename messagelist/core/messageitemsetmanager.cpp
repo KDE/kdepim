@@ -43,6 +43,12 @@ void MessageItemSetManager::clearAllSets()
   mSets->clear();
 }
 
+int MessageItemSetManager::setCount() const
+{
+    return mSets->count();
+}
+
+
 void MessageItemSetManager::removeSet( MessageItemSetReference ref )
 {
   QHash< MessageItem *, MessageItem * > * set = mSets->value( static_cast< unsigned long int >( ref ), 0 );

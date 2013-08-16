@@ -56,10 +56,6 @@ public:
   Filter();
 
 public:
-  Akonadi::MessageStatus mStatus;    ///< Messages must match this status, if non 0
-  QString mSearchString;             ///< Messages must match this search string, if not empty
-  QString mTagId;                    ///< Messages must have this tag, if not empty
-public:
   /**
    * Returns true if the specified parameters match this filter and false otherwise.
    * The msg pointer must not be null.
@@ -126,6 +122,9 @@ private Q_SLOTS:
 
 private:
   bool containString(const QString& searchInString) const;
+  Akonadi::MessageStatus mStatus;    ///< Messages must match this status, if non 0
+  QString mSearchString;             ///< Messages must match this search string, if not empty
+  QString mTagId;                    ///< Messages must have this tag, if not empty
   QStringList mSearchList;
   KUrl mCurrentFolder;
   QSet<qint64> mMatchingItemIds;

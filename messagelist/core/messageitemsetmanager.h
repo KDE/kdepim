@@ -56,8 +56,7 @@ private:
 
 public:
   void clearAllSets();
-  int setCount() const
-    { return mSets->count(); };
+  int setCount() const;
   void removeSet( MessageItemSetReference ref );
   void removeMessageItemFromAllSets( MessageItem * mi );
   QList< MessageItem * > messageItems( MessageItemSetReference ref );

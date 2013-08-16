@@ -37,16 +37,11 @@ public:
   explicit GroupHeaderItem( const QString &label );
   virtual ~GroupHeaderItem();
 
-  const QString & label() const
-    { return mLabel; };
-
-  void setLabel( const QString &label )
-    { mLabel = label; };
+  const QString & label() const;
+  void setLabel( const QString &label );
   
 private:
   QString mLabel;
-
-
 };
 
 } // namespace Core

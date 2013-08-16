@@ -196,7 +196,7 @@ public:
   public:
     ChildItemStats()
       : mTotalChildCount( 0 ), mUnreadChildCount( 0 )
-      {};
+      {}
   };
 
   /**
