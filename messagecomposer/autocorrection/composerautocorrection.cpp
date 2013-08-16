@@ -189,7 +189,6 @@ void ComposerAutoCorrection::setAutocorrectEntries(const QHash<QString, QString>
     mAutocorrectEntries = entries;
 }
 
-
 ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultSingleQuotes() const
 {
     ComposerAutoCorrection::TypographicQuotes quote;
@@ -425,13 +424,17 @@ QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
         word.remove(0, pos);
         QString newWord = word;
 
-        if (link_type == 1)
+        switch(link_type) {
+        case 1:
             newWord = QLatin1String("mailto:") + word;
-        else if (link_type == 2)
+            break;
+        case 2:
             newWord = QLatin1String("http://") + word;
-        else if (link_type == 3)
+            break;
+        case 3:
             newWord = QLatin1String("ftp://") + word;
-
+            break;
+        }
         //kDebug() <<"newWord:" << newWord;
         return newWord;
     }
@@ -495,11 +498,11 @@ void ComposerAutoCorrection::capitalizeWeekDays()
 bool ComposerAutoCorrection::excludeToUppercase(const QString &word) const
 {
     if (word.startsWith(QLatin1String("http://")) ||
+            word.startsWith(QLatin1String("www.")) ||
+            word.startsWith(QLatin1String("mailto:")) ||
             word.startsWith(QLatin1String("ftp://")) ||
             word.startsWith(QLatin1String("https://")) ||
-            word.startsWith(QLatin1String("ftps://")) ||
-            word.startsWith(QLatin1String("www.")) ||
-            word.startsWith(QLatin1String("mailto:")) )
+            word.startsWith(QLatin1String("ftps://")))
         return true;
     return false;
 }
