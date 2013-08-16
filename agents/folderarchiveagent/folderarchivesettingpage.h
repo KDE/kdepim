@@ -18,13 +18,32 @@
 #ifndef FOLDERARCHIVESETTINGPAGE_H
 #define FOLDERARCHIVESETTINGPAGE_H
 
+#include "folderarchiveaccountinfo.h"
+
 #include <QWidget>
+#include <QComboBox>
+
 class QCheckBox;
-class QComboBox;
 
 namespace MailCommon {
 class FolderRequester;
 }
+
+
+class FolderArchiveComboBox : public QComboBox
+{
+    Q_OBJECT
+public:
+    explicit FolderArchiveComboBox(QWidget *parent = 0);
+    ~FolderArchiveComboBox();
+
+    void setType(FolderArchiveAccountInfo::FolderArchiveType type);
+    FolderArchiveAccountInfo::FolderArchiveType type() const;
+
+private:
+    void initialize();
+};
+
 class FolderArchiveAccountInfo;
 class FolderArchiveSettingPage : public QWidget
 {
@@ -42,7 +61,7 @@ private Q_SLOTS:
 private:
     QString mInstanceName;
     QCheckBox *mEnabled;
-    QComboBox *mArchiveNamed;
+    FolderArchiveComboBox *mArchiveNamed;
     MailCommon::FolderRequester *mArchiveFolder;
     FolderArchiveAccountInfo *mInfo;
 };

@@ -30,6 +30,38 @@
 #include <QLabel>
 #include <QComboBox>
 
+FolderArchiveComboBox::FolderArchiveComboBox(QWidget *parent)
+    : QComboBox(parent)
+{
+    initialize();
+}
+
+FolderArchiveComboBox::~FolderArchiveComboBox()
+{
+}
+
+void FolderArchiveComboBox::initialize()
+{
+    addItem(i18n("Uniq folder"), FolderArchiveAccountInfo::UniqFolder);
+    addItem(i18n("Folder by months"), FolderArchiveAccountInfo::FolderByMonths);
+    addItem(i18n("Folder by years"), FolderArchiveAccountInfo::FolderByYears);
+}
+
+void FolderArchiveComboBox::setType(FolderArchiveAccountInfo::FolderArchiveType type)
+{
+    const int index = findData(static_cast<int>(type));
+    if (index != -1) {
+        setCurrentIndex(index);
+    } else {
+        setCurrentIndex(0);
+    }
+}
+
+FolderArchiveAccountInfo::FolderArchiveType FolderArchiveComboBox::type() const
+{
+    return static_cast<FolderArchiveAccountInfo::FolderArchiveType>(itemData(currentIndex()).toInt());
+}
+
 FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, QWidget *parent)
     : QWidget(parent),
       mInstanceName(instanceName),
@@ -50,7 +82,7 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
     hbox = new QHBoxLayout;
     lab = new QLabel(i18n("Archive folder named:"));
     hbox->addWidget(lab);
-    mArchiveNamed = new QComboBox;
+    mArchiveNamed = new FolderArchiveComboBox;
     hbox->addWidget(mArchiveNamed);
 
     lay->addLayout(hbox);
@@ -81,6 +113,7 @@ void FolderArchiveSettingPage::loadSettings()
         mInfo = new FolderArchiveAccountInfo(grp);
         mEnabled->setChecked(mInfo->enabled());
         mArchiveFolder->setCollection(Akonadi::Collection(mInfo->archiveTopLevel()));
+        mArchiveNamed->setType(mInfo->folderArchiveType());
     } else {
         mInfo = new FolderArchiveAccountInfo();
         mEnabled->setChecked(false);
@@ -95,6 +128,7 @@ void FolderArchiveSettingPage::writeSettings()
     mInfo->setInstanceName(mInstanceName);
     mInfo->setEnabled(mEnabled->isChecked());
     mInfo->setArchiveTopLevel(mArchiveFolder->collection().id());
+    mInfo->setFolderArchiveType(mArchiveNamed->type());
     mInfo->writeConfig(grp);
 }
 
