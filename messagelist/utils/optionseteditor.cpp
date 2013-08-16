@@ -73,4 +73,15 @@ void OptionSetEditor::setReadOnly( bool readOnly )
   mNameEdit->setReadOnly( readOnly );
 }
 
+KTextEdit *OptionSetEditor::descriptionEdit() const
+{
+  return mDescriptionEdit;
+}
+
+KLineEdit * OptionSetEditor::nameEdit() const
+{
+  return mNameEdit;
+}
+
+
 #include "optionseteditor.moc"
