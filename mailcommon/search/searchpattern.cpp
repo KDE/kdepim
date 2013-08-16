@@ -1768,9 +1768,8 @@ Nepomuk2::Query::ComparisonTerm SearchPattern::createChildTerm( const KUrl& url,
   return isChildTerm;
 }
 
-QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
+MailCommon::SearchPattern::SparqlQueryError SearchPattern::asSparqlQuery(QString &queryStr, const KUrl::List& urlList) const
 {
-
   Nepomuk2::Query::Query query;
 
   Nepomuk2::Query::AndTerm outerGroup;
@@ -1786,30 +1785,33 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
   }
 
   if ( innerGroup.subTerms().isEmpty() ) {
-    return QString();
+    qDebug()<<" innergroup is Empty. Need to report bug";
+    return MissingCheck;
   }
   if ( !urlList.isEmpty() ) {
     const int numberOfUrl = urlList.count();
     if ( numberOfUrl == 1 ) {
       bool empty = false;
       const Nepomuk2::Query::ComparisonTerm isChildTerm = createChildTerm( urlList.at( 0 ), empty );
-      if ( empty )
-        return QString();
+      if ( empty ) {
+        return FolderEmptyOrNotIndexed;
+      }
       const Nepomuk2::Query::AndTerm andTerm( isChildTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );
     } else {
       QList<Nepomuk2::Query::Term> term;
-      bool allIsEmpty = true;
+      bool allFolderIsEmpty = true;
       for ( int i = 0; i < numberOfUrl; ++i ) {
         bool empty = false;
         const Nepomuk2::Query::ComparisonTerm childTerm = createChildTerm( urlList.at( i ), empty );
         if ( !empty ) {
           term<<childTerm;
-          allIsEmpty = false;
+          allFolderIsEmpty = false;
         }
       }
-      if (allIsEmpty)
-        return QString();
+      if (allFolderIsEmpty) {
+        return FolderEmptyOrNotIndexed;
+      }
       const Nepomuk2::Query::OrTerm orTerm( term );
       const Nepomuk2::Query::AndTerm andTerm( orTerm, innerGroup );
       outerGroup.addSubTerm( andTerm );
@@ -1821,7 +1823,8 @@ QString SearchPattern::asSparqlQuery(const KUrl::List& urlList) const
   outerGroup.addSubTerm( typeTerm );
   query.setTerm( outerGroup );
   query.addRequestProperty( itemIdProperty );
-  return query.toSparqlQuery();
+  queryStr = query.toSparqlQuery();
+  return NoError;
 }
 
 QString MailCommon::SearchPattern::asXesamQuery() const
@@ -1941,7 +1944,7 @@ void SearchPattern::generateSieveScript(QStringList &requires, QString &code)
         code += QLatin1String("if anyof (");
       break;
     case OpAnd:
-        code += QLatin1String("if allof(");
+        code += QLatin1String("if allof (");
       break;
     case OpAll:
         code += QLatin1String("if (true) {");

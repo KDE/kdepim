@@ -50,11 +50,11 @@ void FolderArchiveAgentJob::start()
     } else {
         FolderArchiveAgentCheckCollection *checkCol = new FolderArchiveAgentCheckCollection(mInfo, this);
         connect(checkCol, SIGNAL(collectionIdFound(Akonadi::Collection::Id)), SLOT(sloMoveMailsToCollection(Akonadi::Collection)));
-        connect(checkCol, SIGNAL(checkFailed()), this, SLOT(slotCheckFailder()));
+        connect(checkCol, SIGNAL(checkFailed(QString)), this, SLOT(slotCheckFailder(QString)));
     }
 }
 
-void FolderArchiveAgentJob::slotCheckFailder()
+void FolderArchiveAgentJob::slotCheckFailder(const QString &message)
 {
     //TODO customize it.
     sendError(i18n("Can not fetch collection."));

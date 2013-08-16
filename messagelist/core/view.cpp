@@ -161,8 +161,7 @@ Delegate *View::delegate() const
 
 void View::ignoreCurrentChanges( bool ignore )
 {
-  if ( ignore )
-  {
+  if ( ignore ) {
     disconnect( selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
     viewport()->setUpdatesEnabled( false );
@@ -815,18 +814,15 @@ void View::slotHeaderContextMenuTriggered( QAction * act )
 
   if ( columnIdx < 0 )
   {
-    if ( columnIdx == gHeaderContextMenuAdjustColumnSizesId )
-    {
+    if ( columnIdx == gHeaderContextMenuAdjustColumnSizesId ) {
       // "Adjust Column Sizes"
       d->mTheme->resetColumnSizes();
       applyThemeColumns();
-    } else if ( columnIdx == gHeaderContextMenuShowDefaultColumnsId )
-    {
+    } else if ( columnIdx == gHeaderContextMenuShowDefaultColumnsId ) {
       // "Show Default Columns"
       d->mTheme->resetColumnState();
       applyThemeColumns();
-    } else if ( columnIdx == gHeaderContextMenuDisplayToolTipsId )
-    {
+    } else if ( columnIdx == gHeaderContextMenuDisplayToolTipsId ) {
       Settings::self()->setMessageToolTipEnabled( act->isChecked() );
     }
     return;
@@ -1076,8 +1072,7 @@ void View::setAllGroupsExpanded( bool expand )
     QModelIndex idx = d->mModel->index( item, 0 );
     Q_ASSERT( idx.isValid() );
     Q_ASSERT( static_cast< Item * >( idx.internalPointer() ) == item );
-    if ( expand )
-    {
+    if ( expand ) {
       if ( !isExpanded( idx ) )
         setExpanded( idx, true );
     } else {
@@ -1116,7 +1111,7 @@ static inline bool message_type_matches( Item * item, MessageTypeFilter messageT
       return !item->status().isRead();
     break;
     default:
-      // nuthin here
+      // nothing here
     break;
   }
 
@@ -2073,7 +2068,6 @@ void View::changeMessageStatusRead( MessageItem *it, bool read )
   // The request will be then processed by the Model and the message will be updated again.
 
   d->mWidget->viewMessageStatusChangeRequest( it, set, unset );
-
 }
 
 void View::changeMessageStatus( MessageItem * it, const Akonadi::MessageStatus &set, const Akonadi::MessageStatus &unset )

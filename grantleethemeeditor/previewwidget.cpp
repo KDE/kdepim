@@ -53,4 +53,23 @@ void PreviewWidget::loadConfig()
 
 }
 
+void PreviewWidget::createScreenShot(const QString &fileName)
+{
+}
+
+void PreviewWidget::setThemePath(const QString &projectDirectory, const QString &mainPageFileName)
+{
+}
+
+void PreviewWidget::slotMainFileNameChanged(const QString &)
+{
+
+}
+
+void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
+{
+
+}
+
+
 #include "previewwidget.moc"

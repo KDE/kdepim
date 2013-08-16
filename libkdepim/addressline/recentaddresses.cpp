@@ -148,8 +148,10 @@ void RecentAddresses::add( const QString &entry )
 
 void RecentAddresses::setMaxCount( int count )
 {
-    m_maxCount = count;
-    adjustSize();
+    if (count != m_maxCount) {
+        m_maxCount = count;
+        adjustSize();
+    }
 }
 
 void RecentAddresses::adjustSize()

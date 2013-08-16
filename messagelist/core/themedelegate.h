@@ -71,7 +71,7 @@ private:
 
 public:
   const Theme * theme() const
-    { return mTheme; };
+    { return mTheme; }
   void setTheme( const Theme * theme );
 
   /**
@@ -98,7 +98,7 @@ public:
    * within the same calling function.
    */
   const QModelIndex & hitIndex() const
-    { return mHitIndex; };
+    { return mHitIndex; }
 
   /**
    * Returns the Item that was reported as hit by the previous call to hitTest().
@@ -106,7 +106,7 @@ public:
    * within the same calling function.
    */
   Item * hitItem() const
-    { return mHitItem; };
+    { return mHitItem; }
 
   /**
    * Returns the visual rectangle of the item that was reported as hit by the previous call to hitTest().
@@ -115,7 +115,7 @@ public:
    * to a specific item column (and not all of the columns).
    */
   QRect hitItemRect() const
-    { return mHitItemRect; };
+    { return mHitItemRect; }
 
   /**
    * Returns the theme column that was reported as hit by the previous call to hitTest().
@@ -123,7 +123,7 @@ public:
    * within the same calling function.
    */
   const Theme::Column * hitColumn() const
-    { return mHitColumn; };
+    { return mHitColumn; }
 
   /**
    * Returns the index of the theme column that was reported as hit by the previous call to hitTest().
@@ -132,7 +132,7 @@ public:
    * This is the same as hitIndex().column().
    */
   int hitColumnIndex() const
-    { return mHitIndex.column(); };
+    { return mHitIndex.column(); }
 
   /**
    * Returns the theme row that was reported as hit by the previous call to hitTest().
@@ -142,14 +142,14 @@ public:
    * but no row was exactly hit (the user probably hit the margin instead).
    */
   const Theme::Row * hitRow() const
-    { return mHitRow; };
+    { return mHitRow; }
 
   /**
    * Returns the index of the theme row that was reported as hit by the previous call to hitTest().
    * The result of this function is valid only if hitRow() returns a non null value.
    */
   int hitRowIndex() const
-    { return mHitRowIndex; };
+    { return mHitRowIndex; }
 
   /**
    * Returns the rectangle of the row that was reported as hit by the previous call to hitTest().
@@ -158,14 +158,14 @@ public:
    * if hitRow() returns 0.
    */
   QRect hitRowRect() const
-    { return mHitRowRect; };
+    { return mHitRowRect; }
 
   /**
    * Returns true if the hitRow() is a message row, false otherwise.
    * The result of this function has a meaning only if hitRow() returns a non zero result.
    */
   bool hitRowIsMessageRow() const
-    { return mHitRowIsMessageRow; };
+    { return mHitRowIsMessageRow; }
 
   /**
    * Returns the theme content item that was reported as hit by the previous call to hitTest().
@@ -175,14 +175,14 @@ public:
    * but no content item was exactly hit (the user might have clicked inside a blank unused space instead).
    */
   const Theme::ContentItem * hitContentItem() const
-    { return mHitContentItem; };
+    { return mHitContentItem; }
 
   /**
    * Returns true if the hit theme content item was a right item and false otherwise.
    * The result of this function is valid only if hitContentItem() returns true.
    */
   bool hitContentItemRight() const
-    { return mHitContentItemRight; };
+    { return mHitContentItemRight; }
 
   /**
    * Returns the bounding rect of the content item that was reported as hit by the previous call to hitTest().
@@ -191,7 +191,7 @@ public:
    * invalid also when hitContentItem() returns 0.
    */
   QRect hitContentItemRect() const
-    { return mHitContentItemRect; };
+    { return mHitContentItemRect; }
 
   /// return the font to paint given item with, checking global kmail settings and theme settings
   static QFont itemFont( const Theme::ContentItem *ci, const Item *item );

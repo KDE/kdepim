@@ -15,35 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SEARCHDEBUGDIALOG_H
+#define SEARCHDEBUGDIALOG_H
 
-#ifndef EDITORPAGE_H
-#define EDITORPAGE_H
+#include <KDialog>
+class SearchDebugWidget;
 
-#include "grantleethemeeditor/editorpage.h"
-
-class ContactTemplateWidget;
-class EditorWidget;
-class KZip;
-class QSplitter;
-class ThemeEditorWidget;
-namespace GrantleeThemeEditor {
-class EditorWidget;
-class PreviewWidget;
-}
-
-class EditorPage : public GrantleeThemeEditor::EditorPage
+class SearchDebugDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = 0);
-    ~EditorPage();
+    explicit SearchDebugDialog(const QString &query, QWidget *parent=0);
+    ~SearchDebugDialog();
 
-    GrantleeThemeEditor::PreviewWidget *preview() const;
+private Q_SLOTS:
+    void slotSaveAs();
 
 private:
-    ContactTemplateWidget *mContactTemplate;
-    QSplitter *mMainSplitter;
-    QSplitter *mWidgetSplitter;
+    void readConfig();
+    void writeConfig();
+
+private:
+    bool saveToFile( const QString &filename );
+    SearchDebugWidget *mSearchDebugWidget;
 };
 
-#endif // EDITORPAGE_H
+#endif // SEARCHDEBUGDIALOG_H

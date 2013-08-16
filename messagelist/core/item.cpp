@@ -153,8 +153,7 @@ Item * Item::itemAbove()
 
   Item *siblingAbove = d_ptr->mParent->itemAboveChild( this );
   if ( siblingAbove && siblingAbove != this && siblingAbove != d_ptr->mParent &&
-       siblingAbove->childItemCount() > 0 )
-  {
+       siblingAbove->childItemCount() > 0 ) {
     return siblingAbove->deepestItem();
   }
 
@@ -281,8 +280,7 @@ bool Item::recomputeMaxDate()
   if ( d_ptr->mChildItems )
   {
     QList< Item * >::ConstIterator end = d_ptr->mChildItems->constEnd();
-    for ( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end; ++it )
-    {
+    for ( QList< Item * >::ConstIterator it = d_ptr->mChildItems->constBegin(); it != end; ++it ) {
       if ( ( *it )->d_ptr->mMaxDate > newMaxDate )
         newMaxDate = ( *it )->d_ptr->mMaxDate;
     }
@@ -327,14 +325,12 @@ void Item::setViewable( Model *model,bool bViewable )
   if ( d_ptr->mIsViewable == bViewable )
     return;
 
-  if ( !d_ptr->mChildItems )
-  {
+  if ( !d_ptr->mChildItems ) {
     d_ptr->mIsViewable = bViewable;
     return;
   }
 
-  if ( d_ptr->mChildItems->isEmpty() )
-  {
+  if ( d_ptr->mChildItems->isEmpty() ) {
     d_ptr->mIsViewable = bViewable;
     return;
   }

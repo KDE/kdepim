@@ -3,12 +3,13 @@ Applications:
 akonadiconsole        ?
 akregator             Frank Osterfeld <osterfeld@kde.org>
 archivemailagent      Laurent Montel <montel@kde.org>
-blogilo               Mehrdad Momeny <mehrdad.momeny@gmail.com>
+blogilo               Laurent Montel <montel@kde.org>
 calendarsupport       Sérgio Martins <iamsergio@gmail.com>
 calendarviews         Sérgio Martins <iamsergio@gmail.com>
 contactthemeeditor    Laurent Montel <montel@kde.org>
 composereditor-ng     Laurent Montel <montel@kde.org>
 grammar               Laurent Montel <montel@kde.org>
+grantleethemeeditor   Laurent Montel <montel@kde.org>
 headerthemeeditor     Laurent Montel <montel@kde.org>
 importwizard          Laurent Montel <montel@kde.org>
 incidenceeditors-ng   Sérgio Martins <iamsergio@gmail.com>
@@ -19,7 +20,7 @@ kdgantt2              KDAB
 kjots                 Stephen Kelly <steveire@gmail.com>
 kleopatra             Marc Mutz <mutz@kde.org>
 kmail                 Laurent Montel <montel@kde.org>
-kmailcvt              Danny Kukawka <danny.kukawka@web.de>
+kmailcvt              Laurent Montel <montel@kde.org>
 knode                 Olivier Trichet <nive@nivalis.org>
 knotes                DEPRECATED
 konsolekalendar       Allen Winter <winter@kde.org>
@@ -29,7 +30,7 @@ kresources            DEPRECATED
 ksendemail            ?
 ktimetracker          Thorsten Staerk <dev@staerk.de>
 ktnef                 Allen Winter <winter@kde.org>
-libkdepim             ?
+libkdepim             Laurent Montel <montel@kde.org>
 libkdepimdbusinterfaces ?
 libkleo               Marc Mutz <mutz@kde.org>
 libkpgp               DEPRECATED

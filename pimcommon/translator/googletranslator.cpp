@@ -151,7 +151,6 @@ void GoogleTranslator::slotError(QNetworkReply::NetworkError /*error*/)
 void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
 {
     reply->deleteLater();
-    QString text;
     QString jsonData = QString::fromUtf8(reply->readAll());
     //  jsonData contains arrays like this: ["foo",,"bar"]
     //  but this is not valid JSON for QJSON, it expects empty strings: ["foo","","bar"]
@@ -195,12 +194,15 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
                 const bool foundWordOld = (listLevel2.size() == 4) && (oldVersion == true) && (listLevel2.at(1).toDouble() > 0);
 
                 if (foundWordNew || foundWordOld) {
-                    if (level1.toList().at(0).toString() != text && foundWordOld) {
+                    if (!level1.toList().at(0).toString().isEmpty() && foundWordOld) {
                         // sentences are translated phrase by phrase
                         // first we have to add all phrases to sentences and then rebuild them
                         sentences.insert(indexLevel1, qMakePair(listLevel2.at(0).toString(), listLevel2.at(1).toDouble() / 1000));
                     } else {
-                        mResult = listLevel2.at(0).toString();
+                        if (foundWordNew) {
+                            oldVersion = false;
+                            mResult = listLevel2.at(0).toString();
+                        }
                     }
                 }
             }

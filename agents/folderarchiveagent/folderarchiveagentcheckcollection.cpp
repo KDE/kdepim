@@ -18,6 +18,8 @@
 #include "folderarchiveagentcheckcollection.h"
 #include "folderarchiveaccountinfo.h"
 
+#include <KLocale>
+
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionCreateJob>
 #include <QDate>
@@ -55,7 +57,7 @@ void FolderArchiveAgentCheckCollection::slotInitialCollectionFetchingDone(KJob *
 {
     if ( job->error() ) {
         qWarning() << job->errorString();
-        Q_EMIT checkFailed();
+        Q_EMIT checkFailed(QString());
         return;
     }
 
@@ -71,7 +73,7 @@ void FolderArchiveAgentCheckCollection::slotInitialCollectionFetchingFirstLevelD
 {
     if ( job->error() ) {
         qWarning() << job->errorString();
-        Q_EMIT checkFailed();
+        Q_EMIT checkFailed(i18n("Can not fetch collection. \"%1\"", job->errorString()));
         return;
     }
 
@@ -90,7 +92,7 @@ void FolderArchiveAgentCheckCollection::slotInitialCollectionFetchingFirstLevelD
     }
 
     if (folderName.isEmpty()) {
-        Q_EMIT checkFailed();
+        Q_EMIT checkFailed(i18n("Folder name not defined."));
         return;
     }
 
@@ -121,7 +123,7 @@ void FolderArchiveAgentCheckCollection::slotCreateNewFolder(KJob *job)
 {
     if ( job->error() ) {
         qWarning() << job->errorString();
-        Q_EMIT checkFailed();
+        Q_EMIT checkFailed(i18n("Unable to create folder.\"%1\"", job->errorString()));
         return;
     }
     Akonadi::CollectionCreateJob *createJob = qobject_cast<Akonadi::CollectionCreateJob*>( job );

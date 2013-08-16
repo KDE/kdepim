@@ -22,7 +22,6 @@ endif()
 
 add_definitions( -DDISABLE_NEPOMUK_LEGACY )
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
-
 if(KDEPIM_NO_WEBKIT)
   add_definitions(-DKDEPIM_NO_WEBKIT)
 endif()
@@ -113,7 +112,7 @@ endif()
 find_package(KDE4 4.10 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.11.45)
+find_package(KdepimLibs 4.11.47)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -179,7 +178,7 @@ else()
 # Otherwise...
 ############### Find the stuff we need ###############
   # Akonadi
-  find_package(Akonadi 1.10.44 QUIET CONFIG)
+  find_package(Akonadi 1.10.45 QUIET CONFIG)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)

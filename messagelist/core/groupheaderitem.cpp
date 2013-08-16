@@ -31,3 +31,13 @@ GroupHeaderItem::~GroupHeaderItem()
 {
 }
 
+
+const QString & GroupHeaderItem::label() const
+{
+    return mLabel;
+}
+
+void GroupHeaderItem::setLabel( const QString &label )
+{
+    mLabel = label;
+}
