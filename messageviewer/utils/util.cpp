@@ -270,39 +270,22 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
 
 
       if( !(result == PimCommon::RenameFileDialog::RENAMEFILE_OVERWRITEALL ||
-              result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL ))
-      {
+              result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL )) {
           if ( KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
-              if ( contents.count() == 1 ) {
-                  PimCommon::RenameFileDialog *dlg = new PimCommon::RenameFileDialog(curUrl,false, parent);
-                  result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
-                  if ( result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE )
-                  {
-                      delete dlg;
-                      continue;
-                  }
-                  else if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME )
-                  {
-                      curUrl = dlg->newName();
-                  }
+              const bool multiple = (contents.count() > 1);
+              PimCommon::RenameFileDialog *dlg = new PimCommon::RenameFileDialog(curUrl, multiple, parent);
+              result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
+              if ( result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE ||
+                   result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL)
+              {
                   delete dlg;
+                  continue;
               }
-              else {
-                  PimCommon::RenameFileDialog *dlg = new PimCommon::RenameFileDialog(curUrl,true, parent);
-                  result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
-
-                  if ( result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE ||
-                       result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL )
-                  {
-                      delete dlg;
-                      continue;
-                  }
-                  else if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME )
-                  {
-                      curUrl = dlg->newName();
-                  }
-                  delete dlg;
+              else if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME )
+              {
+                  curUrl = dlg->newName();
               }
+              delete dlg;
           }
       }
       // save

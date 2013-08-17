@@ -1180,6 +1180,21 @@ Please see next section for details.</para></note></listitem>
 <listitem><para><action>Brings up the Export Data Wizard dialog</action> which assists in easily exporting your settings and email.
  Please see <link linkend="export-data-wizard">Export &kmail; Data</link> for details.</para></listitem>
 </varlistentry>
+<varlistentry id="settings-configure-automatic-archiving">
+<term><menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Configure Automatic Archiving...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Brings up the dialog to set up automatic archiving.</action> Please see <link linkend="auto-archive">Automatic Archiving</link> for details.</para></listitem>
+</varlistentry>
+<varlistentry id="settings-configure-send-later-agent">
+<term><menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Configure Send Later Agent...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Brings up a dialog that allows you to modify and remove emails that have been sent using the send later feature.</action>
+ Please see <link linkend="send-later">Send Later</link> for details.</para></listitem>
+</varlistentry>
 <varlistentry id="tools-account-wizard">
 <term><menuchoice>
 <guimenu>Tools</guimenu>
@@ -1235,29 +1250,6 @@ Please see next section for details.</para></note></listitem>
 <guimenuitem>Manage Sieve Scripts...</guimenuitem>
 </menuchoice></term>
 <listitem><para>If your mail server supports sieve (server side filtering), you would <action>configure your scripts here</action>.</para></listitem>
-</varlistentry>
-<varlistentry id="settings-configure-automatic-archiving">
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Automatic Archiving...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Brings up the dialog to set up automatic archiving.</action> Please see <link linkend="auto-archive">Automatic Archiving</link> for details.</para></listitem>
-</varlistentry>
-<varlistentry id="settings-configure-send-later-agent">
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Send Later Agent...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Brings up a dialog that allows you to modify and remove emails that have been sent using the send later feature.</action>
- Please see <link linkend="send-later">Send Later</link> for details.</para></listitem>
-</varlistentry>
-<varlistentry id="settings-configure-folder-archive-agent">
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Folder Archive Agent...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Brings up a dialog that allows you to configure archive folders.</action>
- Please see <link linkend="archive-folder">Folder Archive Agent</link> for details.</para></listitem>
 </varlistentry>
 <varlistentry id="settings-configure-notifications">
 <term><menuchoice>
