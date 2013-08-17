@@ -649,7 +649,7 @@ servers have been used to send the message by looking at the <literal>Received:<
 <varlistentry id="folder-move-all-messages-to-trash">
 <term><menuchoice>
 <guimenu>Folder</guimenu>
-<guimenuitem>Move All Messages to Trash</guimenuitem>
+<guimenuitem>Move All to Trash</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Moves all of the messages in the selected folder into the trash folder.</action></para>
 <note><para>This is only available if the currently selected folder is not a trash folder. If the currently selected folder is a trash folder, you will see <guilabel>Empty Trash</guilabel>.
