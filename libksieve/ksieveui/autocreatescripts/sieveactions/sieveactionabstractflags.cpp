@@ -72,7 +72,7 @@ QString SieveActionAbstractFlags::code(QWidget *w) const
     const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
     const QString flagCode = flagsWidget->code();
     const QString str = flagsCode();
-    return str + QLatin1Char(' ') + flagCode;
+    return str + QLatin1Char(' ') + (flagCode.isEmpty() ? QLatin1String(";") : flagCode);
 }
 
 QStringList SieveActionAbstractFlags::needRequires(QWidget *) const
