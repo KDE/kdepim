@@ -231,22 +231,22 @@ int main( int argc, char *argv[] )
   if ( args->isSet( "export-list" ) ) {
     cout << endl;
     cout << i18n( "%1 supports these export formats:",
-                  QString(progDisplay) ).toLocal8Bit().data()
+                  QString::fromLatin1(progDisplay) ).toLocal8Bit().data()
          << endl;
     cout << i18nc( "the default export format", "  %1 [Default]",
-                   QString( "Text" ) ).toLocal8Bit().data()
+                   QString::fromLatin1( "Text" ) ).toLocal8Bit().data()
          << endl;
     cout << i18nc( "short text export", "  %1 (like %2, but more compact)",
-                   QString( "Short" ), QString( "Text" ) ).toLocal8Bit().data()
+                   QString::fromLatin1( "Short" ), QString::fromLatin1( "Text" ) ).toLocal8Bit().data()
          << endl;
     cout << i18nc( "HTML export", "  %1",
-                   QString( "HTML" ) ).toLocal8Bit().data()
+                   QString::fromLatin1( "HTML" ) ).toLocal8Bit().data()
          << endl;
     cout << i18nc( "HTMLmonth export", "  %1 (like %2, but in a month view)",
-                   QString( "HTMLmonth" ), QString( "HTML" ) ).toLocal8Bit().data()
+                   QString::fromLatin1( "HTMLmonth" ), QString::fromLatin1( "HTML" ) ).toLocal8Bit().data()
          << endl;
     cout << i18nc( "comma-separated values export", "  %1 (Comma-Separated Values)",
-                   QString( "CSV" ) ).toLocal8Bit().data()
+                   QString::fromLatin1( "CSV" ) ).toLocal8Bit().data()
          << endl;
     cout << endl;
     return 0;
@@ -288,19 +288,19 @@ int main( int argc, char *argv[] )
   if ( args->isSet( "export-type" ) ) {
     option = args->getOption( "export-type" );
 
-    if ( option.toUpper() == "HTML" ) {
+    if ( option.toUpper() == QLatin1String("HTML") ) {
       kDebug() << "main | export-type | Export to HTML";
       variables.setExportType( ExportTypeHTML );
-    } else if ( option.toUpper() == "HTMLMONTH" ) {
+    } else if ( option.toUpper() == QLatin1String("HTMLMONTH") ) {
       kDebug() << "main | export-type | Export to HTML by Month";
       variables.setExportType( ExportTypeMonthHTML );
-    } else if ( option.toUpper() == "CSV" ) {
+    } else if ( option.toUpper() == QLatin1String("CSV") ) {
       kDebug() << "main | export-type | Export to CSV";
       variables.setExportType( ExportTypeCSV );
-    } else if ( option.toUpper() == "TEXT" ) {
+    } else if ( option.toUpper() == QLatin1String("TEXT") ) {
       kDebug() << "main | export-type | Export to TEXT (default)";
       variables.setExportType( ExportTypeText );
-    } else if ( option.toUpper() == "SHORT" ) {
+    } else if ( option.toUpper() == QLatin1String("SHORT") ) {
       kDebug() << "main | export-type | Export to TEXT-SHORT";
       variables.setExportType( ExportTypeTextShort );
     } else {
@@ -479,10 +479,10 @@ int main( int argc, char *argv[] )
              << "Start time before conversion :"
              << "(" << option << ")";
 
-    if ( option.toUpper() != "FLOAT" ) {
-      if ( option.count( ':' ) < 2 ) {
+    if ( option.toUpper() != QLatin1String("FLOAT") ) {
+      if ( option.count( QLatin1Char(':') ) < 2 ) {
         // need to append seconds
-        option.append( ":00" );
+        option.append( QLatin1String(":00") );
       }
       starttime = QTime::fromString( option, Qt::ISODate );
       if ( !starttime.isValid() ) {
@@ -556,10 +556,10 @@ int main( int argc, char *argv[] )
              << "End time before conversion:"
              << "(" << option << ")";
 
-    if ( option.toUpper() != "FLOAT" ) {
-      if ( option.count( ':' ) < 2 ) {
+    if ( option.toUpper() != QLatin1String("FLOAT") ) {
+      if ( option.count( QLatin1Char(':') ) < 2 ) {
         // need to append seconds
-        option.append( ":00" );
+        option.append( QLatin1String(":00") );
       }
       endtime = QTime::fromString( option, Qt::ISODate );
       if ( !endtime.isValid() ) {
@@ -782,9 +782,9 @@ int main( int argc, char *argv[] )
    * Set our application name for use in unique IDs and error messages,
    * and product ID for incidence PRODID property
    */
-  QString prodId = "-//K Desktop Environment//NONSGML %1 %2//EN";
-  CalFormat::setApplication( progDisplay,
-                             prodId.arg( progDisplay ).arg( progVersion ) );
+  QString prodId = QLatin1String("-//K Desktop Environment//NONSGML %1 %2//EN");
+  CalFormat::setApplication( QLatin1String(progDisplay),
+                             prodId.arg( QLatin1String(progDisplay) ).arg( QLatin1String(progVersion) ) );
 
   if ( importFile ) {
     if ( konsolekalendar->importCalendar() ) {

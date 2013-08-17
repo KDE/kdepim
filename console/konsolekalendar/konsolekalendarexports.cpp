@@ -173,21 +173,21 @@ bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
   *ts << "\t";
 
   // Print Event Summary
-  *ts << event->summary().replace( QChar( '\n' ), QChar( ' ' ) );
+  *ts << event->summary().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) );
 
   // Print Event Location
   if ( !event->location().isEmpty() ) {
     if ( !event->summary().isEmpty() ) {
       *ts << ", ";
     }
-    *ts << event->location().replace( QChar( '\n' ), QChar( ' ' ) );
+    *ts << event->location().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) );
   }
   *ts << endl;
 
   // Print Event Description
   if ( !event->description().isEmpty() ) {
     *ts << "\t\t\t"
-        << event->description().replace( QChar( '\n' ), QChar( ' ' ) )
+        << event->description().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) )
         << endl;
   }
 
@@ -234,14 +234,14 @@ bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
         << delim << pF( KGlobal::locale()->formatTime( event->dtEnd().time() ) );
   } else {
     *ts <<          pF( KGlobal::locale()->formatDate( date ) )
-        << delim << pF( "" )
+        << delim << pF( QLatin1String("") )
         << delim << pF( KGlobal::locale()->formatDate( date ) )
-        << delim << pF( "" );
+        << delim << pF( QLatin1String("") );
   }
 
-  *ts << delim << pF( event->summary().replace( QChar( '\n' ), QChar( ' ' ) ) )
-      << delim << pF( event->location().replace( QChar( '\n' ), QChar( ' ' ) ) )
-      << delim << pF( event->description().replace( QChar( '\n' ), QChar( ' ' ) ) )
+  *ts << delim << pF( event->summary().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) ) )
+      << delim << pF( event->location().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) ) )
+      << delim << pF( event->description().replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) ) )
       << delim << pF( event->uid() )
       << endl;
 

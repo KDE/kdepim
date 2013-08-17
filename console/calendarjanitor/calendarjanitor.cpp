@@ -425,7 +425,7 @@ static void printStat(const QString &message, int arg)
 void CalendarJanitor::sanityCheck8()
 {
     beginTest(i18n("Gathering statistics..."));
-    print("\n");
+    print(QLatin1String("\n"));
 
     int numOldAlarms = 0;
     int numAttachments = 0;
@@ -507,9 +507,9 @@ void CalendarJanitor::printFound(const Akonadi::Item &item)
     m_numDamaged++;
     if (m_numDamaged == 1)
         print(QLatin1String(" [!!]"));
-    print(QString("    * ") + i18n("Found buggy item:"));
-    print(QString("        ") + i18n("id=%1; summary=\"%2\"", item.id(), incidence->summary()));
-    print(QString("        ") + dateString(incidence));
+    print(QLatin1String("    * ") + i18n("Found buggy item:"));
+    print(QLatin1String("        ") + i18n("id=%1; summary=\"%2\"", item.id(), incidence->summary()));
+    print(QLatin1String("        ") + dateString(incidence));
 }
 
 void CalendarJanitor::beginTest(const QString &message)

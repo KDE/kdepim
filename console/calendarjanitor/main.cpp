@@ -110,7 +110,7 @@ int main(int argv, char *argc[])
 
     if (args->isSet("collections")) {
         QString option = args->getOption("collections");
-        QStringList collections = option.split(",");
+        QStringList collections = option.split(QLatin1String(","));
         QList<Akonadi::Collection::Id> ids;
         foreach (const QString &collection, collections) {
             bool ok = false;
@@ -132,7 +132,7 @@ int main(int argv, char *argc[])
     }
 
     if (args->isSet("fix") && args->isSet("backup")) {
-        print("--fix is incompatible with --backup");
+        print(i18n("--fix is incompatible with --backup"));
         return -1;
     }
 
@@ -147,7 +147,7 @@ int main(int argv, char *argc[])
     } else if (args->isSet("backup")) {
         backupFile = args->getOption("backup");
         if (backupFile.isEmpty()) {
-            print("Please specify a output file.");
+            print(i18n("Please specify a output file."));
             return -1;
         }
         janitorOptions.setAction(Options::ActionBackup);

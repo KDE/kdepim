@@ -65,11 +65,11 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_exportType = ExportTypeText;
   m_bIsExportFile = false;
   m_bDescription = false;
-  m_description = "";
+  m_description.clear();
   m_bLocation = false;
-  m_location = "Default location";
+  m_location = QLatin1String("Default location"); //i18n ?
   m_bSummary = false;
-  m_summary = "Default summary";
+  m_summary = QLatin1String("Default summary"); //i18n?
   m_bFloating = true;
   m_bAllowGui = false;
   m_collectionId = -1;

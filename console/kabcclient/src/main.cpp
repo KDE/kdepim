@@ -55,7 +55,7 @@ using std::endl;
 int main(int argc, char** argv)
 {
     QString commandName = QFileInfo(QFile::decodeName(argv[0])).fileName();
-    if (commandName == "kabc2mutt")
+    if (commandName == QLatin1String("kabc2mutt"))
     {
         return handleKABC2Mutt(argc, argv);
     }
@@ -200,8 +200,8 @@ int main(int argc, char** argv)
     }
 
     QString codecName = args->getOption("input-codec");
-    if (!args->isSet("input-codec") && args->getOption("input-format") == QString("vcard"))
-        codecName = "UTF8";
+    if (!args->isSet("input-codec") && args->getOption("input-format") == QLatin1String("vcard"))
+        codecName = QLatin1String("UTF8");
 
     if (!client.setInputCodec(codecName.toLocal8Bit()))
     {
@@ -211,8 +211,8 @@ int main(int argc, char** argv)
     }
 
     codecName = args->getOption("output-codec");
-    if (!args->isSet("output-codec") && args->getOption("output-format") == QString("vcard"))
-        codecName = "UTF8";
+    if (!args->isSet("output-codec") && args->getOption("output-format") == QLatin1String("vcard"))
+        codecName = QLatin1String("UTF8");
 
     if (!client.setOutputCodec(codecName.toLocal8Bit()))
     {
@@ -261,7 +261,7 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
 {
     bool formatHelpRequested = false;
 
-    if (args->isSet("input-format") && args->getOption("input-format") == "help")
+    if (args->isSet("input-format") && args->getOption("input-format") == QLatin1String("help"))
     {
         formatHelpRequested = true;
 
@@ -287,7 +287,7 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
         }
     }
     else if (args->isSet("input-format-options") &&
-             args->getOption("input-format-options") == "help")
+             args->getOption("input-format-options") == QLatin1String("help"))
     {
         formatHelpRequested = true;
 
@@ -315,7 +315,7 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
         delete format;
     }
 
-    if (args->isSet("output-format") && args->getOption("output-format") == "help")
+    if (args->isSet("output-format") && args->getOption("output-format") == QLatin1String("help"))
     {
         formatHelpRequested = true;
 
@@ -341,7 +341,7 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
         }
     }
     else if (args->isSet("output-format-options") &&
-             args->getOption("output-format-options") == "help")
+             args->getOption("output-format-options") == QLatin1String("help"))
     {
         formatHelpRequested = true;
 
@@ -378,7 +378,7 @@ bool checkForCodecHelp(KCmdLineArgs* args)
 {
     bool codecHelpRequested = false;
 
-    if (args->isSet("input-codec") && args->getOption("input-codec") == "help")
+    if (args->isSet("input-codec") && args->getOption("input-codec") == QLatin1String("help"))
     {
         codecHelpRequested = true;
 
@@ -388,7 +388,7 @@ bool checkForCodecHelp(KCmdLineArgs* args)
                      "in which case the default encoding will be 'utf8'.").toLocal8Bit().data() << endl;
     }
 
-    if (args->isSet("output-codec") && args->getOption("output-codec") == "help")
+    if (args->isSet("output-codec") && args->getOption("output-codec") == QLatin1String("help"))
     {
         codecHelpRequested = true;
 
@@ -460,11 +460,11 @@ int handleKABC2Mutt(int argc, char** argv)
 
     if (args->isSet("alternate-key-format"))
     {
-        options.append(",altkeys");
+        options.append(QLatin1String(",altkeys"));
     }
     if (args->isSet("all-addresses"))
     {
-        options.append(",allemails");
+        options.append(QLatin1String(",allemails"));
     }
 
     if (!args->isSet("ignore-case"))

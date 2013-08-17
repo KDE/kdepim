@@ -82,7 +82,7 @@ bool KonsoleKalendar::printCalendarList()
 {
     Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(Akonadi::Collection::root(),
                                                                        Akonadi::CollectionFetchJob::Recursive);
-    QStringList mimeTypes = QStringList() << "text/calendar"
+    QStringList mimeTypes = QStringList() << QLatin1String("text/calendar")
                                           << KCalCore::Event::eventMimeType()
                                           << KCalCore::Todo::todoMimeType()
                                           << KCalCore::Journal::journalMimeType();
@@ -104,8 +104,8 @@ bool KonsoleKalendar::printCalendarList()
         QSet<QString> mimeTypeSet = mimeTypes.toSet();
         foreach(const Akonadi::Collection &collection, collections) {
             if (!mimeTypeSet.intersect(collection.contentMimeTypes().toSet()).isEmpty()) {
-                QString colId = QString::number(collection.id()).leftJustified(6, ' ');
-                colId += "- ";
+                QString colId = QString::number(collection.id()).leftJustified(6, QLatin1Char(' '));
+                colId += QLatin1String("- ");
 
                 bool readOnly = !( collection.rights() & Akonadi::Collection::CanCreateItem ||
                                    collection.rights() & Akonadi::Collection::CanChangeItem ||
@@ -288,12 +288,12 @@ bool KonsoleKalendar::showInstance()
           lastdate = m_variables->getEndDateTime().date();
         }
 
-        KCalUtils::HTMLExportSettings htmlSettings( "Konsolekalendar" );
+        KCalUtils::HTMLExportSettings htmlSettings( QLatin1String("Konsolekalendar") );
 
         //TODO: get progname and url from the values set in main
-        htmlSettings.setCreditName( "KonsoleKalendar" );
+        htmlSettings.setCreditName( QLatin1String("KonsoleKalendar") );
         htmlSettings.setCreditURL(
-          "http://pim.kde.org/components/konsolekalendar.php" );
+          QLatin1String("http://pim.kde.org/components/konsolekalendar.php") );
 
         htmlSettings.setExcludePrivate( true );
         htmlSettings.setExcludeConfidential( true );
