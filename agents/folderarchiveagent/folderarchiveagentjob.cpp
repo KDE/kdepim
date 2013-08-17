@@ -54,7 +54,7 @@ void FolderArchiveAgentJob::start()
         connect( fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
     } else {
         FolderArchiveAgentCheckCollection *checkCol = new FolderArchiveAgentCheckCollection(mInfo, this);
-        connect(checkCol, SIGNAL(collectionIdFound(Akonadi::Collection)), SLOT(sloMoveMailsToCollection(Akonadi::Collection)));
+        connect(checkCol, SIGNAL(collectionIdFound(Akonadi::Collection)), SLOT(slotCollectionIdFound(Akonadi::Collection)));
         connect(checkCol, SIGNAL(checkFailed(QString)), this, SLOT(slotCheckFailder(QString)));
         checkCol->start();
     }
@@ -78,6 +78,12 @@ void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
         return;
     }
     sloMoveMailsToCollection(collections.first());
+}
+
+void FolderArchiveAgentJob::slotCollectionIdFound(const Akonadi::Collection &col)
+{
+    //TODO cache info.
+    sloMoveMailsToCollection(col);
 }
 
 void FolderArchiveAgentJob::sloMoveMailsToCollection(const Akonadi::Collection &col)
