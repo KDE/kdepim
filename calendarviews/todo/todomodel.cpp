@@ -345,6 +345,11 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
 
   // indicate if a row is checked (=completed) only in the first column
   if ( role == Qt::CheckStateRole && index.column() == 0 ) {
+
+    if (hasChildren(index) && !index.parent().isValid()) {
+        return QVariant();
+    }
+
     if ( todo->isCompleted() ) {
       return QVariant( Qt::Checked );
     } else {
