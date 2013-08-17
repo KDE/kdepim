@@ -170,7 +170,7 @@ void Session::processResponse(const KManageSieve::Response& response, const QByt
           kDebug() << "Sieve server ready & awaiting authentication.";
           if ( m_state == PreTlsCapabilities ) {
             if ( !allowUnencrypted() && !QSslSocket::supportsSsl() ) {
-              m_errorMsg = KIO::buildErrorString( KIO::ERR_SLAVE_DEFINED, i18n("Can not use TLS since the underlying Qt library does not support it.") );
+              m_errorMsg = KIO::buildErrorString( KIO::ERR_SLAVE_DEFINED, i18n("Cannot use TLS since the underlying Qt library does not support it.") );
               disconnectFromHost();
               return;
             }

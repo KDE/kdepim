@@ -287,7 +287,7 @@ void SieveEditor::slotSwitchMode()
             }
         } else {
             mTextModeWidget->showEditorWarning();
-            qDebug() << "can not parse file";
+            qDebug() << "cannot parse file";
         }
         break;
     }

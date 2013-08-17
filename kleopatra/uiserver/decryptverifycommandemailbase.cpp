@@ -142,11 +142,11 @@ void DecryptVerifyCommandEMailBase::Private::checkForErrors() const
 {
     if ( !q->senders().empty() && !q->informativeSenders() )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Can not use non-info SENDER") );
+                               i18n("Cannot use non-info SENDER") );
 
     if ( !q->recipients().empty() && !q->informativeRecipients() )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Can not use non-info RECIPIENT") );
+                               i18n("Cannot use non-info RECIPIENT") );
 
     // ### use informative recipients and senders
 
@@ -187,7 +187,7 @@ void DecryptVerifyCommandEMailBase::Private::checkForErrors() const
                                    i18n("INPUT/OUTPUT count mismatch") );
         else if ( numMessages )
             throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                                   i18n("Can not use OUTPUT and MESSAGE simultaneously") );
+                                   i18n("Cannot use OUTPUT and MESSAGE simultaneously") );
     }
 
     kleo_assert( proto != UnknownProtocol );

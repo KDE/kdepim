@@ -143,11 +143,11 @@ void DecryptVerifyCommandFilesBase::Private::checkForErrors() const
 {
     if ( !q->senders().empty() )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Can not use SENDER") );
+                               i18n("Cannot use SENDER") );
 
     if ( !q->recipients().empty() )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Can not use RECIPIENT") );
+                               i18n("Cannot use RECIPIENT") );
 
     const unsigned int numInputs = q->inputs().size();
     const unsigned int numMessages = q->messages().size();

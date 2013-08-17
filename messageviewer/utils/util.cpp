@@ -523,7 +523,7 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
   }
 
   if ( !mbox.save() ) {
-      KMessageBox::error( parent, i18n("We can not save message.") , i18n( "Error saving message" ) );
+      KMessageBox::error( parent, i18n("We cannot save message.") , i18n( "Error saving message" ) );
       return false;
   }
   return true;

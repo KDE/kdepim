@@ -1242,17 +1242,17 @@ void AssuanCommand::sendStatusEncoded( const char * keyword, const std::string &
     if ( d->nohup )
         return;
     if ( const int err = assuan_write_status( d->ctx.get(), keyword, text.c_str() ) )
-        throw Exception( err, i18n( "Can not send \"%1\" status", QString::fromLatin1( keyword ) ) );
+        throw Exception( err, i18n( "Cannot send \"%1\" status", QString::fromLatin1( keyword ) ) );
 }
 
 void  AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {
     if ( d->nohup )
         return;
     if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), data.constData(), data.size() ) )
-        throw Exception( err, i18n( "Can not send data" ) );
+        throw Exception( err, i18n( "Cannot send data" ) );
     if ( !moreToCome )
         if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), 0, 0 ) ) // flush
-            throw Exception( err, i18n( "Can not flush data" ) );
+            throw Exception( err, i18n( "Cannot flush data" ) );
 }
 
 int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize ) {

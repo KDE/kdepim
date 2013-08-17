@@ -57,13 +57,13 @@ void FolderArchiveAgentJob::start()
 void FolderArchiveAgentJob::slotCheckFailder(const QString &message)
 {
     //TODO customize it.
-    sendError(i18n("Can not fetch collection."));
+    sendError(i18n("Cannot fetch collection."));
 }
 
 void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
 {
     if ( job->error() ) {
-        sendError(i18n("Can not fetch collection. %1", job->errorString() ));
+        sendError(i18n("Cannot fetch collection. %1", job->errorString() ));
         return;
     }
     Akonadi::CollectionFetchJob *fetchCollectionJob = static_cast<Akonadi::CollectionFetchJob*>(job);
@@ -89,7 +89,7 @@ void FolderArchiveAgentJob::sloMoveMailsToCollection(const Akonadi::Collection &
 void FolderArchiveAgentJob::slotMoveMessages(KJob *job)
 {
     if ( job->error() ) {
-        sendError(i18n("Can not move messages. %1", job->errorString() ));
+        sendError(i18n("Cannot move messages. %1", job->errorString() ));
         return;
     }
     mManager->moveDone();

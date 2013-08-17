@@ -211,7 +211,7 @@ void KMeditorPrivate::startExternalEditor()
                     q, SLOT(slotEditorFinished(int,QProcess::ExitStatus)) );
   mExtEditorProcess->start();
   if ( !mExtEditorProcess->waitForStarted() ) {
-    KMessageBox::error(q->topLevelWidget(),i18n("External editor can not be started. Please verify command \"%1\"",commandLine));
+    KMessageBox::error(q->topLevelWidget(),i18n("External editor cannot be started. Please verify command \"%1\"",commandLine));
     mExtEditorProcess->deleteLater();
     mExtEditorProcess = 0;
     delete mExtEditorTempFile;

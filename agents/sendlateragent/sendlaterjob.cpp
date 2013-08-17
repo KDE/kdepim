@@ -86,7 +86,7 @@ void SendLaterJob::slotMessageTransfered(const Akonadi::Item::List& items)
 void SendLaterJob::slotJobFinished(KJob* job)
 {
     if ( job->error() ) {
-        sendError(i18n("Can not fetch message. %1", job->errorString() ), SendLaterManager::CanNotFetchItem);
+        sendError(i18n("Cannot fetch message. %1", job->errorString() ), SendLaterManager::CanNotFetchItem);
         return;
     }
     if ( !MailTransport::TransportManager::self()->showTransportCreationDialog( 0, MailTransport::TransportManager::IfNoTransportExists ) ) {
@@ -104,7 +104,7 @@ void SendLaterJob::slotJobFinished(KJob* job)
         updateAndCleanMessageBeforeSending(msg);
 
         if (!mManager->sender()->send( msg, MessageComposer::MessageSender::SendImmediate )) {
-            sendError(i18n("Can not send message."), SendLaterManager::MailDispatchDoesntWork);
+            sendError(i18n("Cannot send message."), SendLaterManager::MailDispatchDoesntWork);
         } else {
             if (!mInfo->isRecurrence()) {
                 Akonadi::ItemDeleteJob *fetch = new Akonadi::ItemDeleteJob( mItem, this );

@@ -179,7 +179,7 @@ void FilterManager::Private::itemFetchJobForFilterDone( KJob *job )
     }
 
     if ( !wantedFilter ) {
-      kError() << "Can not find filter object with id" << filterId;
+      kError() << "Cannot find filter object with id" << filterId;
       return;
     }
 

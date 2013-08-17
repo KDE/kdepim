@@ -73,7 +73,7 @@ void FolderArchiveAgentCheckCollection::slotInitialCollectionFetchingFirstLevelD
 {
     if ( job->error() ) {
         qWarning() << job->errorString();
-        Q_EMIT checkFailed(i18n("Can not fetch collection. \"%1\"", job->errorString()));
+        Q_EMIT checkFailed(i18n("Cannot fetch collection. \"%1\"", job->errorString()));
         return;
     }
 
@@ -123,7 +123,7 @@ void FolderArchiveAgentCheckCollection::slotCreateNewFolder(KJob *job)
 {
     if ( job->error() ) {
         qWarning() << job->errorString();
-        Q_EMIT checkFailed(i18n("Unable to create folder.\"%1\"", job->errorString()));
+        Q_EMIT checkFailed(i18n("Unable to create folder. \"%1\"", job->errorString()));
         return;
     }
     Akonadi::CollectionCreateJob *createJob = qobject_cast<Akonadi::CollectionCreateJob*>( job );

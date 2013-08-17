@@ -37,7 +37,7 @@ SendLaterTimeDateWidget::SendLaterTimeDateWidget(QWidget *parent)
 
     mDateComboBox = new KDateComboBox;
     mDateComboBox->setOptions(KDateComboBox::EditDate|KDateComboBox::SelectDate|KDateComboBox::DatePicker|KDateComboBox::DateKeywords|KDateComboBox::WarnOnInvalid);
-    mDateComboBox->setMinimumDate(t.date(), i18n("You can not select a date prior to the current date."));
+    mDateComboBox->setMinimumDate(t.date(), i18n("You cannot select a date prior to the current date."));
     connect(mDateComboBox, SIGNAL(dateChanged(QDate)), this, SLOT(slotDateTimeChanged()));
 
     lay->addWidget(mDateComboBox);
