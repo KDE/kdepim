@@ -53,6 +53,7 @@ void FolderArchiveAgentJob::start()
         Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( Akonadi::Collection(mInfo->archiveTopLevel()), Akonadi::CollectionFetchJob::Base );
         connect( fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
     } else {
+        //TODO verify cache
         FolderArchiveAgentCheckCollection *checkCol = new FolderArchiveAgentCheckCollection(mInfo, this);
         connect(checkCol, SIGNAL(collectionIdFound(Akonadi::Collection)), SLOT(slotCollectionIdFound(Akonadi::Collection)));
         connect(checkCol, SIGNAL(checkFailed(QString)), this, SLOT(slotCheckFailder(QString)));

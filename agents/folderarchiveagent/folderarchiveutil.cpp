@@ -28,7 +28,6 @@ bool FolderArchiveUtil::folderArchiveAgentEnabled()
     return FolderArchiveAgentSettings::enabled();
 }
 
-
 void FolderArchiveUtil::forceReparseConfiguration()
 {
     FolderArchiveAgentSettings::self()->writeConfig();
@@ -51,4 +50,3 @@ bool FolderArchiveUtil::resourceSupportArchiving(const QString &resource)
     }
     return false;
 }
-
