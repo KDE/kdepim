@@ -145,7 +145,7 @@ void SieveEditorGraphicalModeWidget::setImportScript( const QString &script )
         if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Error during importing script. Do you want to switch in text mode ?"))) {
             Q_EMIT switchTextMode(script);
         }
-        qDebug()<<" can not import script";
+        qDebug()<<" cannot import script";
     }
 }
 

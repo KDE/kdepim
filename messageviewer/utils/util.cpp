@@ -189,7 +189,8 @@ QList<KMime::Content*> Util::extractAttachments( const KMime::Message *message )
 bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents )
 {
   KUrl url, dirUrl;
-  if ( contents.count() > 1 ) {
+  const bool multiple = (contents.count() > 1);
+  if ( multiple ) {
     // get the dir
     dirUrl = KFileDialog::getExistingDirectoryUrl( KUrl( QLatin1String("kfiledialog:///saveAttachment") ),
                                                    parent,
@@ -239,7 +240,7 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
     }
     if ( !curUrl.isEmpty() ) {
       //Bug #312954
-      if (contents.count() > 1 && (curUrl.fileName() == QLatin1String("smime.p7s")) ) {
+      if (multiple && (curUrl.fileName() == QLatin1String("smime.p7s")) ) {
          continue;
       }
       // Rename the file if we have already saved one with the same name:
@@ -270,39 +271,21 @@ bool Util::saveContents( QWidget *parent, const QList<KMime::Content*> &contents
 
 
       if( !(result == PimCommon::RenameFileDialog::RENAMEFILE_OVERWRITEALL ||
-              result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL ))
-      {
+              result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL )) {
           if ( KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, parent ) ) {
-              if ( contents.count() == 1 ) {
-                  PimCommon::RenameFileDialog *dlg = new PimCommon::RenameFileDialog(curUrl,false, parent);
-                  result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
-                  if ( result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE )
-                  {
-                      delete dlg;
-                      continue;
-                  }
-                  else if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME )
-                  {
-                      curUrl = dlg->newName();
-                  }
+              PimCommon::RenameFileDialog *dlg = new PimCommon::RenameFileDialog(curUrl, multiple, parent);
+              result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
+              if ( result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE ||
+                   result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL)
+              {
                   delete dlg;
+                  continue;
               }
-              else {
-                  PimCommon::RenameFileDialog *dlg = new PimCommon::RenameFileDialog(curUrl,true, parent);
-                  result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dlg->exec());
-
-                  if ( result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE ||
-                       result == PimCommon::RenameFileDialog::RENAMEFILE_IGNOREALL )
-                  {
-                      delete dlg;
-                      continue;
-                  }
-                  else if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME )
-                  {
-                      curUrl = dlg->newName();
-                  }
-                  delete dlg;
+              else if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME )
+              {
+                  curUrl = dlg->newName();
               }
+              delete dlg;
           }
       }
       // save
@@ -523,7 +506,7 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
   }
 
   if ( !mbox.save() ) {
-      KMessageBox::error( parent, i18n("We can not save message.") , i18n( "Error saving message" ) );
+      KMessageBox::error( parent, i18n("We cannot save message.") , i18n( "Error saving message" ) );
       return false;
   }
   return true;

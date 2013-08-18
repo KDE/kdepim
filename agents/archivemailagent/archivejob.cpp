@@ -49,7 +49,7 @@ void ArchiveJob::execute()
         Akonadi::Collection collection(mInfo->saveCollectionId());
         const QString realPath = MailCommon::Util::fullCollectionPath(collection);
         if (realPath.isEmpty()) {
-            qDebug()<<" We can not find real path, collection doesn't exist";
+            qDebug()<<" We cannot find real path, collection doesn't exist";
             mManager->collectionDoesntExist(mInfo);
             deleteLater();
             return;

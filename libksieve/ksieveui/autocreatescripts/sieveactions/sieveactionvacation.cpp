@@ -104,13 +104,15 @@ bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
-                if (tagValue == QLatin1String("seconds") || tagValue == QLatin1String("days")) {
+                if (tagValue == QLatin1String("seconds")) {
                     if (mHasVacationSecondsSupport) {
                         SelectVacationComboBox *vacationcombobox = w->findChild<SelectVacationComboBox*>(QLatin1String("vacationcombobox"));
                         vacationcombobox->setCode(AutoCreateScriptUtil::tagValue(tagValue), name(), error);
                     } else {
-                        serverDoesNotSupportFeatures(QLatin1String("seconds or days"), error);
+                        serverDoesNotSupportFeatures(QLatin1String("seconds"), error);
                     }
+                } else if (tagValue == QLatin1String("days")) {
+                    //Nothing wait num tag for it.
                 } else if (tagValue == QLatin1String("addresses")) {
                     KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
                     addresses->setText(AutoCreateScriptUtil::strValue(e));

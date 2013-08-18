@@ -146,7 +146,7 @@ void SelectFlagsWidget::setFlags(const QStringList &flags)
 
 QString SelectFlagsWidget::code() const
 {
-    return mEdit->text().isEmpty() ? QLatin1String(";") : mEdit->text();
+    return mEdit->text();
 }
 
 #include "selectflagswidget.moc"

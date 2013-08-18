@@ -44,26 +44,32 @@ void FolderArchiveAgentJob::start()
         sendError(i18n("Archive folder not defined. Please verify settings for account", mInfo->instanceName() ));
         return;
     }
+    if (mLstItem.isEmpty()) {
+        sendError(i18n("Any message selected."));
+        return;
+    }
+
     if (mInfo->folderArchiveType() == FolderArchiveAccountInfo::UniqFolder) {
         Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( Akonadi::Collection(mInfo->archiveTopLevel()), Akonadi::CollectionFetchJob::Base );
         connect( fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
     } else {
+        //TODO verify cache
         FolderArchiveAgentCheckCollection *checkCol = new FolderArchiveAgentCheckCollection(mInfo, this);
-        connect(checkCol, SIGNAL(collectionIdFound(Akonadi::Collection::Id)), SLOT(sloMoveMailsToCollection(Akonadi::Collection)));
+        connect(checkCol, SIGNAL(collectionIdFound(Akonadi::Collection)), SLOT(slotCollectionIdFound(Akonadi::Collection)));
         connect(checkCol, SIGNAL(checkFailed(QString)), this, SLOT(slotCheckFailder(QString)));
+        checkCol->start();
     }
 }
 
 void FolderArchiveAgentJob::slotCheckFailder(const QString &message)
 {
-    //TODO customize it.
-    sendError(i18n("Can not fetch collection."));
+    sendError(i18n("Cannot fetch collection \"%1\".", message));
 }
 
 void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
 {
     if ( job->error() ) {
-        sendError(i18n("Can not fetch collection. %1", job->errorString() ));
+        sendError(i18n("Cannot fetch collection. %1", job->errorString() ));
         return;
     }
     Akonadi::CollectionFetchJob *fetchCollectionJob = static_cast<Akonadi::CollectionFetchJob*>(job);
@@ -73,6 +79,12 @@ void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
         return;
     }
     sloMoveMailsToCollection(collections.first());
+}
+
+void FolderArchiveAgentJob::slotCollectionIdFound(const Akonadi::Collection &col)
+{
+    //TODO cache info.
+    sloMoveMailsToCollection(col);
 }
 
 void FolderArchiveAgentJob::sloMoveMailsToCollection(const Akonadi::Collection &col)
@@ -89,7 +101,7 @@ void FolderArchiveAgentJob::sloMoveMailsToCollection(const Akonadi::Collection &
 void FolderArchiveAgentJob::slotMoveMessages(KJob *job)
 {
     if ( job->error() ) {
-        sendError(i18n("Can not move messages. %1", job->errorString() ));
+        sendError(i18n("Cannot move messages. %1", job->errorString() ));
         return;
     }
     mManager->moveDone();

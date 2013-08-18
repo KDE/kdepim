@@ -36,7 +36,7 @@ QDomDocument ParsingUtil::parseScript(const QString &scriptStr, bool &result)
         result = true;
         return psb.toDom();
     } else {
-        kDebug() << "can not parse file";
+        kDebug() << "cannot parse file";
         result = false;
     }
     return QDomDocument();

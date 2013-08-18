@@ -109,7 +109,7 @@ void FolderArchiveManager::slotFetchCollection(KJob *job)
 {
     if ( job->error() ) {
         moveFailed(i18n("Unable to fetch parent folder. Error reported: %1", job->errorString()));
-        kDebug()<<"can not fetch collection "<<job->errorString();
+        kDebug()<<"cannot fetch collection "<<job->errorString();
         return;
     }
     Akonadi::CollectionFetchJob* jobCol = qobject_cast<Akonadi::CollectionFetchJob*>(job);

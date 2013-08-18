@@ -100,7 +100,7 @@ QMap<QString, QString> CSVTemplateFactory::templateNames()
         addTemplateNames(QDir::currentPath());
 
         QStringList templateDirs =
-            KGlobal::mainComponent().dirs()->findDirs("data", "kaddressbook/csv-templates");
+            KGlobal::mainComponent().dirs()->findDirs("data", QLatin1String("kaddressbook/csv-templates"));
 
         QStringList::const_iterator it    = templateDirs.constBegin();
         QStringList::const_iterator endIt = templateDirs.constEnd();
@@ -119,13 +119,13 @@ QString CSVTemplateFactory::findTemplateFile(const QString& name) const
 {
     if (name.isEmpty()) return QString();
 
-    QString filename = name + ".desktop";
+    QString filename = name + QLatin1String(".desktop");
 
     // check current working directory first
     QFileInfo fileInfo(filename);
     if (fileInfo.exists() && fileInfo.isReadable()) return fileInfo.absoluteFilePath();
 
-    return KStandardDirs::locate("data", "kaddressbook/csv-templates/" + filename);
+    return KStandardDirs::locate("data", QLatin1String("kaddressbook/csv-templates/") + filename);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ void CSVTemplateFactory::addTemplateNames(const QString& directory)
     QFileInfo dirInfo(directory);
     if (!dirInfo.isDir()) return;
 
-    const QString extension = ".desktop";
+    const QString extension = QLatin1String(".desktop");
     const QStringList filters(QString::fromUtf8("*") + extension);
     QDir dir(dirInfo.absoluteFilePath());
     const QFileInfoList fileInfos = dir.entryInfoList(filters);
