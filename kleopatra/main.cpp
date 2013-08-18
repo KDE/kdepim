@@ -283,9 +283,13 @@ int main( int argc, char** argv )
 #endif
 
       const bool daemon = args->isSet("daemon");
+      if ( !daemon && app.isSessionRestored() ) {
+          app.restoreMainWindow();
+      }
 
 #ifndef QT_NO_SPLASHSCREEN
-      if ( !daemon )
+      // Don't show splash screen if daemon or session restore
+      if ( !( daemon || app.isSessionRestored() ) )
           splash.show();
 #endif
       if ( !selfCheck( splash ) )
@@ -307,6 +311,7 @@ int main( int argc, char** argv )
 
       if ( !daemon ) {
           app.newInstance();
+          app.setFirstNewInstance( false );
           kDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: new instance created";
 #ifndef QT_NO_SPLASHSCREEN
           splash.finish( app.mainWindow() );

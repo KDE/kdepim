@@ -141,7 +141,8 @@ class KleopatraApplication::Private {
 public:
     explicit Private( KleopatraApplication * qq )
         : q( qq ),
-          ignoreNewInstance( true )
+          ignoreNewInstance( true ),
+          firstNewInstance( true )
     {
 #ifndef _WIN32_WCE
         KDAB_SET_OBJECT_NAME( readerStatus );
@@ -171,6 +172,7 @@ private:
 
 public:
     bool ignoreNewInstance;
+    bool firstNewInstance;
     QPointer<ConfigureDialog> configureDialog;
     QPointer<MainWindow> mainWindow;
 #ifndef _WIN32_WCE
@@ -350,8 +352,10 @@ int KleopatraApplication::newInstance() {
         (this->*func)( files, openpgp ? GpgME::OpenPGP : cms ? GpgME::CMS : GpgME::UnknownProtocol );
     } else {
         if ( files.empty() ) {
-            kDebug() << "openOrRaiseMainWindow";
-            openOrRaiseMainWindow();
+            if ( ! ( d->firstNewInstance && isSessionRestored() ) ) {
+                kDebug() << "openOrRaiseMainWindow";
+                openOrRaiseMainWindow();
+            }
         } else {
             kDebug() << "files without command"; // possible?
             return 1;
@@ -402,6 +406,43 @@ static void open_or_raise( QWidget * w ) {
     } else {
         w->show();
     }
+}
+
+void KleopatraApplication::toggleMainWindowVisibility()
+{
+    if ( mainWindow() ) {
+        mainWindow()->setVisible( !mainWindow()->isVisible() );
+    } else {
+        openOrRaiseMainWindow();
+    }
+}
+
+void KleopatraApplication::restoreMainWindow() {
+    kDebug() << "restoring main window";
+
+    // Sanity checks
+    if ( !isSessionRestored() ) {
+        kDebug() << "Not in session restore";
+        return;
+    }
+
+    if ( mainWindow() ) {
+        kDebug() << "Already have main window";
+        return;
+    }
+
+
+    MainWindow * mw = new MainWindow;
+    if ( KMainWindow::canBeRestored( 1 ) ) {
+        // restore to hidden state, Mainwindow::readProperties() will
+        // restore saved visibility.
+        mw->restore( 1, false );
+    }
+
+    mw->setAttribute( Qt::WA_DeleteOnClose );
+    setMainWindow( mw );
+    d->connectConfigureDialog();
+
 }
 
 void KleopatraApplication::openOrRaiseMainWindow() {
@@ -481,6 +522,11 @@ void KleopatraApplication::decryptVerifyFiles( const QStringList & files, GpgME:
 void KleopatraApplication::setIgnoreNewInstance( bool ignore ) {
     d->ignoreNewInstance = ignore;
 }
+
+void KleopatraApplication::setFirstNewInstance( bool on ) {
+    d->firstNewInstance = on;
+}
+
 
 bool KleopatraApplication::ignoreNewInstance() const {
     return d->ignoreNewInstance;

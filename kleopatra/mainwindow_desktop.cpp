@@ -58,6 +58,7 @@
 #include "progresswidget/statusbarprogresswidget.h"
 #include "progresswidget/progressdialog.h"
 
+#include <KApplication>
 #include <KActionCollection>
 #include <KLocale>
 #include <KTabWidget>
@@ -128,6 +129,8 @@ static KGuiItem KStandardGuiItem_close() {
     return item;
 }
 
+static bool isQuitting = false;
+
 class MainWindow::Private {
     friend class ::MainWindow;
     MainWindow * const q;
@@ -162,6 +165,7 @@ public:
                                                          QLatin1String("really-quit-") + app.toLower() );
         if ( rc == KMessageBox::Cancel )
             return;
+        isQuitting = true;
         if ( !q->close() )
             return;
         // WARNING: 'this' might be deleted at this point!
@@ -402,9 +406,14 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
             setEnabled( true );
         }
     }
-    d->ui.tabWidget.saveViews( KGlobal::config().data() );
-    saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
-    e->accept();
+    if ( isQuitting || kapp->sessionSaving() ) {
+        d->ui.tabWidget.saveViews( KGlobal::config().data() );
+        saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
+        e->accept();
+    } else {
+        e->ignore();
+        hide();
+    }
 }
 
 void MainWindow::showEvent( QShowEvent * e ) {
@@ -413,7 +422,19 @@ void MainWindow::showEvent( QShowEvent * e ) {
         d->ui.tabWidget.loadViews( KGlobal::config().data() );
         d->firstShow = false;
     }
+
+    if ( previousGeometry.isValid() ) {
+        setGeometry( previousGeometry );
+    }
+
 }
+
+void MainWindow::hideEvent( QHideEvent * e )
+{
+    previousGeometry = geometry();
+    KXmlGuiWindow::hideEvent( e );
+}
+
 
 void MainWindow::importCertificatesFromFile( const QStringList & files ) {
     if ( !files.empty() )
@@ -494,6 +515,31 @@ void MainWindow::dropEvent( QDropEvent * e ) {
         d->createAndStart<ImportCrlCommand>( files );
 
     e->accept();
+}
+
+void MainWindow::readProperties( const KConfigGroup & cg )
+{
+    kDebug();
+    KXmlGuiWindow::readProperties(cg);
+    previousGeometry = cg.readEntry<QRect>("geometry", QRect() );
+    if ( previousGeometry.isValid() ) {
+        setGeometry( previousGeometry );
+    }
+
+    if (! cg.readEntry<bool>("hidden", false))
+        show();
+}
+
+void MainWindow::saveProperties( KConfigGroup & cg )
+{
+    kDebug();
+    KXmlGuiWindow::saveProperties( cg );
+    cg.writeEntry( "hidden", isHidden() );
+    if ( isHidden() ) {
+        cg.writeEntry( "geometry", previousGeometry );
+    } else {
+        cg.writeEntry( "geometry", geometry() );
+    }
 }
 
 #include "moc_mainwindow_desktop.cpp"
