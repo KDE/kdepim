@@ -48,7 +48,7 @@ static void print(const QString &message)
 void Backuper::emitFinished(bool success, const QString &message)
 {
     if (success) {
-        print(QLatin1Char('\n') + i18n("Backup was successful. %1 incidences were saved.", m_calendar->incidences().count()));
+        print(QLatin1Char('\n') + i18np("Backup was successful. %1 incidence was saved.", "Backup was successful. %1 incidences were saved.", m_calendar->incidences().count()));
     } else {
         print(message);
     }
