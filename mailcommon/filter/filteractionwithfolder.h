@@ -46,7 +46,7 @@ class FilterActionWithFolder : public FilterAction
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithFolder( const char *name, const QString &label, QObject *parent = 0 );
+    FilterActionWithFolder(const QString &name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::isEmpty

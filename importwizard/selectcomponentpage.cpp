@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,70 +18,70 @@
 #include "ui_selectcomponentpage.h"
 
 SelectComponentPage::SelectComponentPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::SelectComponentPage)
+    QWidget(parent),
+    ui(new Ui::SelectComponentPage)
 {
-  ui->setupUi(this);
-  connect( ui->everything, SIGNAL(clicked(bool)), this, SLOT(slotEverythingClicked(bool)) );
-  connect( ui->addressbooks, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
-  connect( ui->filters, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
-  connect( ui->mails, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
-  connect( ui->settings, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
-  connect( ui->calendars, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+    ui->setupUi(this);
+    connect( ui->everything, SIGNAL(clicked(bool)), this, SLOT(slotEverythingClicked(bool)) );
+    connect( ui->addressbooks, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+    connect( ui->filters, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+    connect( ui->mails, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+    connect( ui->settings, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
+    connect( ui->calendars, SIGNAL(clicked(bool)), this, SLOT(slotComponentClicked()) );
 }
 
 SelectComponentPage::~SelectComponentPage()
 {
-  delete ui;
+    delete ui;
 }
 
 void SelectComponentPage::slotComponentClicked()
 {
-  const bool componentSelected = ( ui->addressbooks->isChecked() || ui->filters->isChecked() || ui->mails->isChecked() || ui->settings->isChecked()|| ui->calendars->isChecked() || ui->everything->isChecked() );
-  Q_EMIT atLeastOneComponentSelected(componentSelected);
+    const bool componentSelected = ( ui->addressbooks->isChecked() || ui->filters->isChecked() || ui->mails->isChecked() || ui->settings->isChecked()|| ui->calendars->isChecked() || ui->everything->isChecked() );
+    Q_EMIT atLeastOneComponentSelected(componentSelected);
 }
 
 void SelectComponentPage::slotEverythingClicked( bool clicked )
 {
-  ui->addressbooks->setEnabled( !clicked && (mOptions & AbstractImporter::AddressBooks));
-  ui->filters->setEnabled( !clicked && (mOptions & AbstractImporter::Filters));
-  ui->mails->setEnabled( !clicked && (mOptions & AbstractImporter::Mails));
-  ui->settings->setEnabled( !clicked && (mOptions & AbstractImporter::Settings));
-  ui->calendars->setEnabled( !clicked && (mOptions & AbstractImporter::Calendars));
-  slotComponentClicked();
+    ui->addressbooks->setEnabled( !clicked && (mOptions & AbstractImporter::AddressBooks));
+    ui->filters->setEnabled( !clicked && (mOptions & AbstractImporter::Filters));
+    ui->mails->setEnabled( !clicked && (mOptions & AbstractImporter::Mails));
+    ui->settings->setEnabled( !clicked && (mOptions & AbstractImporter::Settings));
+    ui->calendars->setEnabled( !clicked && (mOptions & AbstractImporter::Calendars));
+    slotComponentClicked();
 }
 
 
 void SelectComponentPage::setEnabledComponent(AbstractImporter::TypeSupportedOptions options)
 {
-  mOptions = options;
-  slotEverythingClicked(ui->everything->isChecked());
+    mOptions = options;
+    slotEverythingClicked(ui->everything->isChecked());
 }
 
 AbstractImporter::TypeSupportedOptions SelectComponentPage::selectedComponents() const
 {
-  if( ui->everything->isChecked() ) {
-    return mOptions;
-  } else {
-    AbstractImporter::TypeSupportedOptions newOptions;
-    if(ui->addressbooks->isChecked()) {
-      newOptions|=AbstractImporter::AddressBooks;
-    }
-    if(ui->filters->isChecked()) {
-      newOptions|=AbstractImporter::Filters;
-    }
-    if(ui->mails->isChecked()) {
-      newOptions|=AbstractImporter::Mails;
-    }
-    if(ui->settings->isChecked()) {
-      newOptions|=AbstractImporter::Settings;
-    }
-    if(ui->calendars->isChecked()) {
-      newOptions|=AbstractImporter::Calendars;
-    }
+    if ( ui->everything->isChecked() ) {
+        return mOptions;
+    } else {
+        AbstractImporter::TypeSupportedOptions newOptions;
+        if (ui->addressbooks->isChecked()) {
+            newOptions|=AbstractImporter::AddressBooks;
+        }
+        if (ui->filters->isChecked()) {
+            newOptions|=AbstractImporter::Filters;
+        }
+        if (ui->mails->isChecked()) {
+            newOptions|=AbstractImporter::Mails;
+        }
+        if (ui->settings->isChecked()) {
+            newOptions|=AbstractImporter::Settings;
+        }
+        if (ui->calendars->isChecked()) {
+            newOptions|=AbstractImporter::Calendars;
+        }
 
-    return newOptions;
-  }
+        return newOptions;
+    }
 }
 
 #include "selectcomponentpage.moc"

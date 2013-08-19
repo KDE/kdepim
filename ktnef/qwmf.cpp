@@ -29,7 +29,7 @@
 #include <QDataStream>
 #include <QApplication>
 #include <QBuffer>
-//Added by qt3to4:
+
 //#include <Q3CString>
 #include <QPolygon>
 
@@ -294,7 +294,7 @@ bool QWinMetaFile::load(QBuffer &buffer)
             cmd->parm = new WORD[ rdSize ];
             last = cmd;
 
-            for (i = 0; i < rdSize && !st.atEnd(); i++)
+            for (i = 0; i < rdSize && !st.atEnd(); ++i)
                 st >> cmd->parm[ i ];
 
 
@@ -362,20 +362,20 @@ bool QWinMetaFile::paint(QPaintDevice* aTarget, bool absolute)
         (this->*metaFuncTab[ idx ].method)(cmd->numParm, cmd->parm);
 
         if (QWMF_DEBUG)  {
-            QString str = "", param;
+            QString str, param;
             if (metaFuncTab[ idx ].name == NULL) {
-                str += "UNKNOWN ";
+                str += QLatin1String("UNKNOWN ");
             }
             if (metaFuncTab[ idx ].method == &QWinMetaFile::noop) {
-                str += "UNIMPLEMENTED ";
+                str += QLatin1String("UNIMPLEMENTED ");
             }
-            str += metaFuncTab[ idx ].name;
-            str += " : ";
+            str += QLatin1String(metaFuncTab[ idx ].name);
+            str += QLatin1String(" : ");
 
-            for (i = 0 ; i < cmd->numParm ; i++) {
+            for (i = 0 ; i < cmd->numParm ; ++i) {
                 param.setNum(cmd->parm[ i ]);
                 str += param;
-                str += ' ';
+                str += QLatin1Char(' ');
             }
             kDebug() << str;
         }
@@ -497,7 +497,7 @@ void QWinMetaFile::polyPolygon(long, short* parm)
     // define clipping region
     QRect win = bbox();
     startPolygon = 1 + parm[ 0 ];
-    for (i = 0 ; i < parm[ 0 ] ; i++) {
+    for (i = 0 ; i < parm[ 0 ] ; ++i) {
         QPolygon pa1(parm[ 1+i ]);
         for (j = 0 ; j < parm[ 1+i ] ; j++) {
             pa1.setPoint(j, parm[ startPolygon ], parm[ startPolygon+1 ]);
@@ -518,7 +518,7 @@ void QWinMetaFile::polyPolygon(long, short* parm)
 
         QPolygon* pa;
         int idxPolygon = 1 + parm[ 0 ];
-        for (i = 0 ; i < parm[ 0 ] ; i++) {
+        for (i = 0 ; i < parm[ 0 ] ; ++i) {
             pa = pointArray(parm[ 1+i ], &parm[ idxPolygon ]);
             mPainter.drawPolygon(*pa);
             idxPolygon += parm[ 1+i ] * 2;
@@ -741,7 +741,7 @@ void QWinMetaFile::extTextOut(long num, short* parm)
     QByteArray text(ptStr, parm[ 2 ] + 1);
 
     QFontMetrics fm(mPainter.font());
-    width = fm.width(text) + fm.descent();    // because fm.width(text) isn't rigth with Italic text
+    width = fm.width(QLatin1String(text)) + fm.descent();    // because fm.width(text) isn't rigth with Italic text
     height = fm.height();
 
     mPainter.save();
@@ -771,13 +771,13 @@ void QWinMetaFile::extTextOut(long num, short* parm)
     if ((parm[ 2 ] > 1) && (num >= (idxOffset + parm[ 2 ])) && (parm[ 3 ] == 0)) {
         // offset for each char
         int left = x;
-        mPainter.drawText(left, y, width, height, Qt::AlignLeft | Qt::AlignTop, text.mid(0, 1));
-        for (int i = 1; i < parm[ 2 ] ; i++) {
+        mPainter.drawText(left, y, width, height, Qt::AlignLeft | Qt::AlignTop, QLatin1String(text.mid(0, 1)));
+        for (int i = 1; i < parm[ 2 ] ; ++i) {
             left += parm[ idxOffset + i - 1 ];
-            mPainter.drawText(left, y, width, height, Qt::AlignLeft | Qt::AlignTop, text.mid(i, 1));
+            mPainter.drawText(left, y, width, height, Qt::AlignLeft | Qt::AlignTop, QLatin1String(text.mid(i, 1)));
         }
     } else {
-        mPainter.drawText(x, y, width, height, Qt::AlignLeft | Qt::AlignTop, text);
+        mPainter.drawText(x, y, width, height, Qt::AlignLeft | Qt::AlignTop, QLatin1String(text));
     }
 
     mPainter.restore();
@@ -1004,7 +1004,7 @@ void QWinMetaFile::createFontIndirect(long , short* parm)
     WinObjFontHandle* handle = new WinObjFontHandle;
     addHandle(handle);
 
-    QString family((const char*)&parm[ 9 ]);
+    QString family(QLatin1String((const char*)&parm[ 9 ]));
 
     mRotation = -parm[ 2 ]  / 10;               // text rotation (in 1/10 degree)
     // TODO: memorisation of rotation in object Font
@@ -1042,7 +1042,7 @@ unsigned short QWinMetaFile::calcCheckSum(WmfPlaceableHeader* apmfh)
     // Start with the first word
     wResult = *(lpWord = (WORD*)(apmfh));
     // XOR in each of the other 9 words
-    for (i = 1; i <= 9; i++) {
+    for (i = 1; i <= 9; ++i) {
         wResult ^= lpWord[ i ];
     }
     return wResult;
@@ -1054,7 +1054,7 @@ int QWinMetaFile::findFunc(unsigned short aFunc) const
 {
     int i;
 
-    for (i = 0; metaFuncTab[ i ].name; i++)
+    for (i = 0; metaFuncTab[ i ].name; ++i)
         if (metaFuncTab[ i ].func == aFunc) return i;
 
     // here : unknown function
@@ -1068,7 +1068,7 @@ QPolygon* QWinMetaFile::pointArray(short num, short* parm)
 
     mPoints.resize(num);
 
-    for (i = 0; i < num; i++, parm += 2)
+    for (i = 0; i < num; ++i, parm += 2)
         mPoints.setPoint(i, parm[ 0 ], parm[ 1 ]);
 
     return &mPoints;
@@ -1209,7 +1209,7 @@ QPainter::CompositionMode  QWinMetaFile::winToQtComposition(long parm) const
     };
 
     int i;
-    for (i = 0 ; i < 15 ; i++)
+    for (i = 0 ; i < 15 ; ++i)
         if (opTab[ i ].winRasterOp == parm)
             break;
 

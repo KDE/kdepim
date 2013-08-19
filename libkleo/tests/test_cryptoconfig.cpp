@@ -36,7 +36,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <iostream>
-//Added by qt3to4:
+
 using namespace std;
 
 #include <gpgme++/global.h>

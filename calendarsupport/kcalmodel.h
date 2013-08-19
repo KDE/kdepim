@@ -35,7 +35,7 @@ class CALENDARSUPPORT_EXPORT KCalModel : public Akonadi::ItemModel
       Type
     };
 
-    KCalModel( QObject *parent = 0 );
+    explicit KCalModel( QObject *parent = 0 );
 
     virtual ~KCalModel();
 

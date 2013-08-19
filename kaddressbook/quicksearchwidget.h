@@ -46,7 +46,7 @@ class QuickSearchWidget : public QWidget
      *
      * @param parent The parent widget.
      */
-    QuickSearchWidget( QWidget *parent = 0 );
+    explicit QuickSearchWidget( QWidget *parent = 0 );
 
     /**
      * Destroys the quick search widget.
@@ -80,7 +80,7 @@ class QuickSearchWidget : public QWidget
     void delayedTextChanged();
 
   protected:
-    virtual void keyPressEvent( QKeyEvent * );
+    void keyPressEvent( QKeyEvent * );
 
   private:
     KLineEdit *mEdit;

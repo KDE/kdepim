@@ -101,7 +101,7 @@ void KNCleanUp::expireGroup( KNGroup::Ptr g, bool showResult )
   }
 
   //find all expired
-  for(int i=0; i<g->length(); i++) {
+  for(int i=0; i<g->length(); ++i) {
     art=g->at(i);
     if(art->isRead())
       expDays = conf->maxAgeForRead();
@@ -117,7 +117,7 @@ void KNCleanUp::expireGroup( KNGroup::Ptr g, bool showResult )
 
   //save threads
   if (conf->preserveThreads()) {
-    for(int i=0; i<g->length(); i++) {
+    for(int i=0; i<g->length(); ++i) {
       art=g->at(i);
       if(!art->isExpired()) {
         idRef=art->idRef();
@@ -131,7 +131,7 @@ void KNCleanUp::expireGroup( KNGroup::Ptr g, bool showResult )
   }
 
   //restore threading
-  for(int i=0; i<g->length(); i++) {
+  for(int i=0; i<g->length(); ++i) {
     art=g->at(i);
     if(!art->isExpired()) {
       idRef=art->idRef();
@@ -146,7 +146,7 @@ void KNCleanUp::expireGroup( KNGroup::Ptr g, bool showResult )
   }
 
   //delete expired
-  for(int i=0; i<g->length(); i++) {
+  for(int i=0; i<g->length(); ++i) {
     art=g->at(i);
     if(art->isExpired()) {
       if(art->isRead())

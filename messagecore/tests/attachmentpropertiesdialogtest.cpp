@@ -32,8 +32,8 @@
 #include <kmime/kmime_content.h>
 using namespace KMime;
 
-#include <messagecore/attachmentpart.h>
-#include <messagecore/attachmentpropertiesdialog.h>
+#include <messagecore/attachment/attachmentpart.h>
+#include <messagecore/attachment/attachmentpropertiesdialog.h>
 using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentPropertiesDialogTest, GUI )
@@ -126,10 +126,6 @@ void AttachmentPropertiesDialogTest::testAttachmentPartReadOnly()
   // Show the (read-only) dialog and do some changes.
   AttachmentPropertiesDialog *dialog = new AttachmentPropertiesDialog( part, true, 0 );
   dialog->show();
-  KLineEdit *nameEdit = dialog->findChild<KLineEdit*>( QLatin1String( "name" ) );
-  Q_ASSERT( nameEdit );
-  nameEdit->setText( newName );
-
   // Click on 'OK'.  No changes should have been made.
   dialog->accept();
   delete dialog;
@@ -174,11 +170,6 @@ void AttachmentPropertiesDialogTest::testMimeContentReadOnly()
   // Show the (read-only) dialog and do some changes.
   AttachmentPropertiesDialog *dialog = new AttachmentPropertiesDialog( constContent );
   dialog->show();
-  KLineEdit *nameEdit = dialog->findChild<KLineEdit*>( QLatin1String( "name" ) );
-  QVERIFY( nameEdit->isReadOnly() );
-  QCOMPARE( nameEdit->text(), name );
-  Q_ASSERT( nameEdit );
-  nameEdit->setText( newName );
 
   // Click on 'OK'.  The MIME Content should be untouched.
   dialog->accept();

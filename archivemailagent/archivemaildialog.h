@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,60 +21,87 @@
 #include "ui_archivemailwidget.h"
 #include "archivemailinfo.h"
 #include <QTreeWidgetItem>
-#include <QTreeWidget>
 
+class QTreeWidget;
+class KAboutData;
 class ArchiveMailItem : public QTreeWidgetItem
 {
 public:
-  explicit ArchiveMailItem(QTreeWidget *parent = 0);
-  ~ArchiveMailItem();
+    explicit ArchiveMailItem(QTreeWidget *parent = 0);
+    ~ArchiveMailItem();
 
-  void setInfo(ArchiveMailInfo *info);
-  ArchiveMailInfo *info() const;
+    void setInfo(ArchiveMailInfo *info);
+    ArchiveMailInfo *info() const;
+
 private:
-  ArchiveMailInfo *mInfo;
+    ArchiveMailInfo *mInfo;
 };
 
 class ArchiveMailWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ArchiveMailWidget( QWidget *parent = 0 );
-  ~ArchiveMailWidget();
-  void save();
-  void saveTreeWidgetHeader(KConfigGroup& group);
-  void restoreTreeWidgetHeader(const QByteArray &group);
-private:
-  void load();
-  void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem* item = 0);
+    explicit ArchiveMailWidget( QWidget *parent = 0 );
+    ~ArchiveMailWidget();
 
-  bool verifyExistingArchive(ArchiveMailInfo *info) const;
+    enum ArchiveMailColumn {
+        Name = 0,
+        LastArchiveDate,
+        NextArchive,
+        StorageDirectory
+    };
+
+    void save();
+    void saveTreeWidgetHeader(KConfigGroup &group);
+    void restoreTreeWidgetHeader(const QByteArray &group);
+    void needReloadConfig();
+
+Q_SIGNALS:
+    void archiveNow(ArchiveMailInfo *info);
+
+private:
+    void load();
+    void createOrUpdateItem(ArchiveMailInfo *info, ArchiveMailItem *item = 0);
+    bool verifyExistingArchive(ArchiveMailInfo *info) const;
+    void updateDiffDate(ArchiveMailItem *item, ArchiveMailInfo *info);
 
 private Q_SLOTS:
-  void slotRemoveItem();
-  void slotModifyItem();
-  void slotAddItem();
-  void updateButtons();
-  void slotOpenFolder();
-  void customContextMenuRequested(const QPoint&);
+    void slotRemoveItem();
+    void slotModifyItem();
+    void slotAddItem();
+    void updateButtons();
+    void slotOpenFolder();
+    void customContextMenuRequested(const QPoint &);
+    void slotArchiveNow();
+    void slotItemChanged(QTreeWidgetItem *item, int);
+
 private:
-  bool mChanged;
-  Ui::ArchiveMailWidget *mWidget;
+    bool mChanged;
+    Ui::ArchiveMailWidget *mWidget;
 };
 
 class ArchiveMailDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ArchiveMailDialog(QWidget *parent = 0);
-  ~ArchiveMailDialog();
+    explicit ArchiveMailDialog(QWidget *parent = 0);
+    ~ArchiveMailDialog();
+
+Q_SIGNALS:
+    void archiveNow(ArchiveMailInfo *info);
+
+public Q_SLOTS:
+    void slotNeedReloadConfig();
+
+
 protected Q_SLOTS:
-  void slotSave();
+    void slotSave();
 
 private:
-  void writeConfig();
-  void readConfig();
-  ArchiveMailWidget *mWidget;
+    void writeConfig();
+    void readConfig();
+    ArchiveMailWidget *mWidget;
+    KAboutData *mAboutData;
 };
 
 

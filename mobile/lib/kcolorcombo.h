@@ -116,4 +116,4 @@ private:
 
 }
 
-#endif	// KCOLORCOMBO_H
+#endif        // KCOLORCOMBO_H

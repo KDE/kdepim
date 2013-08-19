@@ -1,7 +1,11 @@
 project(archivemailagent)
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(
    ${CMAKE_SOURCE_DIR}/libkdepim
+   ${CMAKE_SOURCE_DIR}/mailcommon
+   ${CMAKE_SOURCE_DIR}/messagecomposer/
 )
 
 set(archivemailagent_SRCS
@@ -15,9 +19,13 @@ set(archivemailagent_SRCS
    archivemailagentutil.cpp
 )
 
+kde4_add_kcfg_files(archivemailagent_SRCS
+    archivemailagentsettings.kcfgc
+)
+
+
 qt4_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)
 
-#include_directories(${Boost_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/mailimporter )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(archivemailagent_SRCS ui/archivemailwidget.ui )
@@ -37,7 +45,7 @@ if (Q_WS_MAC)
   set_target_properties(akonadi_archivemail_agent PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist.template)
   set_target_properties(akonadi_archivemail_agent PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.archivemail")
   set_target_properties(akonadi_archivemail_agent PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Email Archiver")
-endif (Q_WS_MAC)
+endif ()
 
 install(TARGETS akonadi_archivemail_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

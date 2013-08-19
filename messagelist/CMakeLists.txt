@@ -7,15 +7,17 @@ add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 option(KDEPIM_FOLDEROPEN_PROFILE "Enable debug output for timing folder loading" FALSE)
 configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messagelist.h)
 
-add_subdirectory(pics)
-add_subdirectory(tests)
-
 include_directories(
   ${Boost_INCLUDE_DIRS}
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}/messagecore
   )
+
+
+add_subdirectory(pics)
+add_subdirectory(tests)
 
 set(libmessagelist_SRCS
   core/aggregation.cpp
@@ -84,7 +86,7 @@ set(libmessagelist_HEADERS
 )
 
 soprano_add_ontology(libmessagelist_SRCS
-  ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+  ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
   "MessageTag"
   "Vocabulary"
   "trig"

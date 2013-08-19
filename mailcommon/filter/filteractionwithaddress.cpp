@@ -19,11 +19,11 @@
 
 #include "filteractionwithaddress.h"
 
-#include <messagecore/emailaddressrequester.h>
+#include <messagecore/widgets/emailaddressrequester.h>
 
 using namespace MailCommon;
 
-FilterActionWithAddress::FilterActionWithAddress( const char *name, const QString &label, QObject *parent )
+FilterActionWithAddress::FilterActionWithAddress( const QString &name, const QString &label, QObject *parent )
   : FilterActionWithString( name, label, parent )
 {
 }

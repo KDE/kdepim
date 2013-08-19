@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,25 +18,25 @@
 #ifndef ARCHIVEMAILKERNEL_H
 #define ARCHIVEMAILKERNEL_H
 
-#include <mailcommon/mailinterfaces.h>
+#include <mailcommon/interfaces/mailinterfaces.h>
 
 namespace Akonadi {
-  class EntityTreeModel;
-  class EntityMimeTypeFilterModel;
+class EntityTreeModel;
+class EntityMimeTypeFilterModel;
 }
 
 namespace MailCommon {
-  class FolderCollectionMonitor;
-  class JobScheduler;
+class FolderCollectionMonitor;
+class JobScheduler;
 }
 
 class ArchiveMailKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
-  public:
+public:
     explicit  ArchiveMailKernel( QObject *parent = 0 );
 
     KPIMIdentities::IdentityManager *identityManager();
-    MessageSender *msgSender();
+    MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
     KSharedConfig::Ptr config();
@@ -53,7 +53,7 @@ class ArchiveMailKernel : public QObject, public MailCommon::IKernel, public Mai
     bool showPopupAfterDnD();
     
 
-  private:
+private:
     KPIMIdentities::IdentityManager *mIdentityManager;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;

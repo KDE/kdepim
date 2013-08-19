@@ -23,18 +23,27 @@
 */
 
 #include "bilbomedia.h"
-#include "kicon.h"
-#include "kdebug.h"
-//#include <QMimeData>
+
+#include <kicon.h>
+#include <kdebug.h>
+
 #include <QPixmap>
 
 class BilboMedia::Private
 {
 public:
+    Private()
+        : mBlogId(-1),
+          mMediaId(-1),
+          mIsUploaded(false),
+          mChecksum(0)
+    {
+
+    }
+
     int mBlogId;
     int mMediaId;
     bool mIsUploaded;
-//     bool mIsLocal;
     KUrl mLocalUrl;
     KUrl mRemoteUrl;
     QString mMimeType;
@@ -139,11 +148,11 @@ KIcon BilboMedia::icon() const
         }
     }
 
-    type.replace( QChar( '/' ), QChar( '-' ) );
+    type.replace( QLatin1Char( '/' ), QLatin1Char( '-' ) );
     return KIcon( type );
 }
 
-quint16 BilboMedia::checksum()
+quint16 BilboMedia::checksum() const
 {
     return d->mChecksum;
 }

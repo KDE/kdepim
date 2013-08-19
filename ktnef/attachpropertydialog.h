@@ -37,7 +37,7 @@ class QTreeWidgetItem;
 class AttachPropertyDialog : public QDialog
 {
   public:
-    AttachPropertyDialog( QWidget *parent = 0 );
+    explicit AttachPropertyDialog( QWidget *parent = 0 );
     ~AttachPropertyDialog();
 
     void setAttachment( KTNEFAttach *attach );
@@ -53,7 +53,7 @@ class AttachPropertyDialog : public QDialog
 };
 
 void formatProperties( const QMap<int,KTNEFProperty*> &, QTreeWidget *,
-                       QTreeWidgetItem *, const QString & = "prop" );
+                       QTreeWidgetItem *, const QString & = QLatin1String("prop") );
 void formatPropertySet( KTNEFPropertySet *, QTreeWidget * );
 void saveProperty( QTreeWidget *, KTNEFPropertySet *, QWidget * );
 QPixmap loadRenderingPixmap( KTNEFPropertySet *, const QColor & );

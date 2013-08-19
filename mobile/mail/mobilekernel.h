@@ -21,11 +21,13 @@
 #ifndef MOBILEKERNEL_H
 #define MOBILEKERNEL_H
 
-#include "mailcommon/mailinterfaces.h"
+#include "mailcommon/interfaces/mailinterfaces.h"
 
 #include <KSharedConfig>
 
+namespace MessageComposer {
 class AkonadiSender;
+}
 namespace KPIMIdentities {
 class IdentityManager;
 }
@@ -59,7 +61,7 @@ public:
     /*reimp*/ void syncConfig();
     /*reimp*/ KPIMIdentities::IdentityManager* identityManager();
     /*reimp*/ Akonadi::EntityMimeTypeFilterModel* collectionModel() const { return mCollectionModel; }
-    /*reimp*/ MessageSender* msgSender();
+    /*reimp*/ MessageComposer::MessageSender* msgSender();
 
 //ISettings methods:
     /*reimp*/ void updateSystemTray();
@@ -83,7 +85,7 @@ private:
     Akonadi::ChangeRecorder *mMonitor;
     KPIMIdentities::IdentityManager *mIdentityManager;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;
-    AkonadiSender *mMessageSender;
+    MessageComposer::AkonadiSender *mMessageSender;
     KSharedConfig::Ptr mConfig;
     MessageComposer::ComposerAutoCorrection *mAutoCorrection;
 };

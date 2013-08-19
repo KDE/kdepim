@@ -7,9 +7,6 @@ addresseelineedit
 completionordereditor
 kmailcompletion
 
-# Make private and move to kdepimlibs/akonadi/contact
-sendsmsdialog
-
 # Move to kdepimlibs/kontactinterfaces?
 agentprogressmonitor
 broadcaststatus
@@ -20,10 +17,7 @@ ssllabel
 statusbarprogresswidget
 
 # Move to kdeui/widgets after api review
-kdateedit
 kdatepickerpopup
-ktimeedit
-ktimezonecombobox
 kwidgetlister
 uistatesaver
 
@@ -35,5 +29,4 @@ kresourceprefs       # drop together with kresources, in the meanwhile move to k
 recentaddresses      # replace with live searches?
 
 # Still needed? or replaced by a new parameterized AkonadiDrag object?
-kvcarddrag
 maillistdrag

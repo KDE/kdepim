@@ -178,8 +178,10 @@ void ResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
     connect( d->m_tasks.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
              this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)) );
 
-    Q_FOREACH ( const shared_ptr<Task> & i, d->m_tasks->tasks() ) // create labels for all tags in collection
+    Q_FOREACH ( const shared_ptr<Task> & i, d->m_tasks->tasks() ) { // create labels for all tags in collection
         assert( i && d->labelForTag( i->tag() ) );
+	Q_UNUSED( i );
+    }
     emit completeChanged();
 }
 

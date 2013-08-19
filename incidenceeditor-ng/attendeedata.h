@@ -23,7 +23,7 @@
 
 #include "incidenceeditors-ng_export.h"
 
-#include <libkdepim/multiplyingline.h>
+#include <libkdepim/multiplyingline/multiplyingline.h>
 
 #include <KCalCore/Attendee>
 
@@ -41,7 +41,7 @@ class  INCIDENCEEDITORS_NG_EXPORT AttendeeData
                   Attendee::Role role = Attendee::ReqParticipant, const QString &uid = QString() )
       : KCalCore::Attendee( name, email, rsvp, status, role, uid ) {}
 
-    AttendeeData( const KCalCore::Attendee::Ptr &attendee ) : KCalCore::Attendee( *attendee ) {}
+    explicit AttendeeData( const KCalCore::Attendee::Ptr &attendee ) : KCalCore::Attendee( *attendee ) {}
 
     virtual void clear();
     virtual bool isEmpty() const;

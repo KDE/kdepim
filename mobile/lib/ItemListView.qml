@@ -18,8 +18,9 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 QML.Rectangle {
   color : "#00000000"
@@ -34,11 +35,14 @@ QML.Rectangle {
   property variant navigationModel
   property int itemHeight: height / 7
 
-  KPIM.DecoratedListView {
-    id: itemListView
+  PlasmaExtras.ScrollArea {
     anchors.fill: parent
-    focus: true
-    clip: true
+    flickableItem: QML.ListView {
+      id: itemListView
+
+      focus: true
+      clip: true
+    }
   }
   onCurrentRowChanged : {
     if (navigationModel != undefined)

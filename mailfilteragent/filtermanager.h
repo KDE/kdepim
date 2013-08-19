@@ -23,7 +23,7 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
-#include "mailcommon/searchpattern.h"
+#include "mailcommon/search/searchpattern.h"
 
 namespace MailCommon {
 class MailFilter;
@@ -60,7 +60,7 @@ class FilterManager: public QObject
      *
      * @param parent The parent object.
      */
-    FilterManager( QObject *parent = 0 );
+    explicit FilterManager( QObject *parent = 0 );
 
     /**
      * Destroys the filter manager.

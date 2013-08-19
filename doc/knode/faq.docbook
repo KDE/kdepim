@@ -140,7 +140,7 @@ run.</para>
 <para>Why can I not receive data from my local news server?</para>
 </question> 
 <answer> 
-<para>If you use &knode; together with with a local news server, you
+<para>If you use &knode; together with a local news server, you
 must make sure that this server is correctly set up and started; for
 further details, please consult the documentation of your local news
 server.</para>

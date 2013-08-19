@@ -34,21 +34,23 @@ class UploadMediaDialog : public KDialog
 {
 Q_OBJECT
 public:
-    UploadMediaDialog( QWidget *parent=0 );
+    explicit UploadMediaDialog( QWidget *parent=0 );
     ~UploadMediaDialog();
     enum UploadType{BlogAPI=0, FTP};
+
     void init( const BilboBlog* currentBlog );
-signals:
-//     void error(const QString &msg);
+
+Q_SIGNALS:
     void sigBusy(bool isBusy);
-protected slots:
+
+private Q_SLOTS:
     bool selectNewFile();
-    void currentMediaChanged(QString);
+    void currentMediaChanged(const QString &);
     void slotUploadTypeChanged(int index);
-    void slotButtonClicked(int button);
     void slotMediaObjectUploaded(KJob *);
     void slotMediaObjectUploaded(BilboMedia*);
     void slotError( const QString &msg );
+    void slotButtonClicked(int button);
 private:
     const BilboBlog *mCurrentBlog;
     Ui::UploadMediaBase ui;

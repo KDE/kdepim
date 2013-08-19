@@ -24,15 +24,17 @@
 //krazy:excludeall=crashy to skip false positives due to QSqlQuery.exec() usage
 
 #include "dbman.h"
-#include <kmessagebox.h>
 #include "bilboblog.h"
 #include "bilbopost.h"
+
 #include <kdebug.h>
 #include <KDE/KLocale>
 #include <kdatetime.h>
 #include <kurl.h>
 #include <kwallet.h>
 #include <kio/deletejob.h>
+#include <kmessagebox.h>
+
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QFile>
@@ -54,16 +56,15 @@ public:
 };
 
 DBMan::DBMan()
-: d(new Private)
+    : d(new Private)
 {
-    kDebug();
     d->mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
     if ( d->mWallet ) {
         d->useWallet = true;
-        if ( !d->mWallet->setFolder( "blogilo" ) ) {
-            d->mWallet->createFolder( "blogilo" );
-            d->mWallet->setFolder( "blogilo" );
+        if ( !d->mWallet->hasFolder( QLatin1String("blogilo") ) ) {
+            d->mWallet->createFolder( QLatin1String("blogilo") );
         }
+        d->mWallet->setFolder( QLatin1String("blogilo") );
         kDebug() << "Wallet successfully opened.";
     } else {
         d->useWallet = false;
@@ -83,7 +84,20 @@ DBMan::DBMan()
     reloadBlogList();
 }
 
-QString DBMan::lastErrorText()
+DBMan::~DBMan()
+{
+    kDebug();
+    d->db.close();
+    if(d->useWallet) {
+        d->mWallet->deleteLater();
+        d->mWallet = 0;
+    }
+    delete d;
+    mSelf = 0L;
+}
+
+
+QString DBMan::lastErrorText() const
 {
     return d->mLastErrorText;
 }
@@ -106,9 +120,9 @@ void DBMan::reloadBlogList()
 {
     d->mBlogList.clear();
     QList<BilboBlog*> listBlogs = this->listBlogs();
-    int count = listBlogs.count();
+    const int count = listBlogs.count();
     for ( int i = 0; i < count; ++i ) {
-        d->mBlogList [ listBlogs[i]->id() ] = listBlogs[i];
+        d->mBlogList [ listBlogs.at(i)->id() ] = listBlogs.at(i);
     }
 }
 
@@ -129,17 +143,6 @@ bool DBMan::connectDB()
     return true;
 }
 
-DBMan::~DBMan()
-{
-    kDebug();
-    d->db.close();
-    if(d->useWallet) {
-        d->mWallet->deleteLater();
-        d->mWallet = 0;
-    }
-    delete d;
-    mSelf = 0L;
-}
 
 /**
 Will create configuration database!
@@ -352,7 +355,7 @@ bool DBMan::removeBlog( int blog_id )
         kDebug() << q.lastError().text();
         return res;
     }
-    QString path = KStandardDirs::locateLocal( "data", QString( "blogilo/%1/" ).arg( blog_id ) , false );
+    QString path = KStandardDirs::locateLocal( "data", QString::fromLatin1( "blogilo/%1/" ).arg( blog_id ) , false );
     KIO::del(KUrl(path), KIO::HideProgressInfo);
     reloadBlogList();
     return res;
@@ -504,7 +507,7 @@ bool DBMan::removePost( int id )
     return res;
 }
 
-bool DBMan::removePost( int blog_id, QString postId)
+bool DBMan::removePost( int blog_id, const QString &postId)
 {
     QSqlQuery q;
     q.prepare( "DELETE FROM post WHERE blog_id=? AND postId=?" );
@@ -566,7 +569,7 @@ bool DBMan::clearCategories( int blog_id )
     return res;
 }
 
-int DBMan::addFile( QString name, int blog_id, bool isUploaded, QString localUrl, QString remoteUrl )
+int DBMan::addFile( const QString& name, int blog_id, bool isUploaded, const QString& localUrl, const QString& remoteUrl )
 // int DBMan::addFile( const QString &name, int blog_id, bool isLocal, const QString &localUrl, const QString &remoteUrl )
 {
     QSqlQuery q;

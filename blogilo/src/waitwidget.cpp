@@ -26,7 +26,8 @@
 
 #include <kdebug.h>
 
-WaitWidget::WaitWidget(QWidget* parent ): QDialog(parent)
+WaitWidget::WaitWidget(QWidget* parent )
+    : QDialog(parent)
 {
     kDebug();
     setupUi(this);

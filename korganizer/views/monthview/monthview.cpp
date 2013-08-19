@@ -27,7 +27,7 @@
 #include "koeventpopupmenu.h"
 #include "koprefs.h"
 
-#include <calendarviews/eventviews/month/monthview.h>
+#include <calendarviews/month/monthview.h>
 
 #include <QVBoxLayout>
 
@@ -103,12 +103,6 @@ MonthView::MonthView( QWidget *parent )
 
   connect( d->mMonthView, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)),
            SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
-
-  connect( d->mMonthView, SIGNAL(startMultiModify(QString)),
-           SIGNAL(startMultiModify(QString)) );
-
-  connect( d->mMonthView, SIGNAL(endMultiModify()),
-           SIGNAL(endMultiModify()) );
 
   connect( d->mMonthView, SIGNAL(newEventSignal()),
            SIGNAL(newEventSignal()) );
@@ -200,9 +194,10 @@ void MonthView::showIncidences( const Akonadi::Item::List &incidenceList, const 
   d->mMonthView->showIncidences( incidenceList, date );
 }
 
-void MonthView::changeIncidenceDisplay( const Akonadi::Item &item, int mode )
+void MonthView::changeIncidenceDisplay( const Akonadi::Item &item,
+                                        Akonadi::IncidenceChanger::ChangeType changeType )
 {
-  d->mMonthView->changeIncidenceDisplay( item, mode );
+  d->mMonthView->changeIncidenceDisplay( item, changeType );
 }
 
 void MonthView::updateConfig()
@@ -231,14 +226,14 @@ void MonthView::setDateRange( const KDateTime &start, const KDateTime &end,
   d->mMonthView->setDateRange( start, end, preferredMonth );
 }
 
-void MonthView::setCalendar( CalendarSupport::Calendar *cal )
+void MonthView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   KOEventView::setCalendar( cal );
   d->mPopup->setCalendar( cal );
   d->mMonthView->setCalendar( cal );
 }
 
-void MonthView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
+void MonthView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   d->mMonthView->setIncidenceChanger( changer );
 }

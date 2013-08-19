@@ -31,7 +31,7 @@ class FilterActionDelete : public FilterActionWithNone
 {
   Q_OBJECT
   public:
-    FilterActionDelete( QObject *parent = 0 );
+    explicit FilterActionDelete( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();

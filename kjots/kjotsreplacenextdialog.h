@@ -32,9 +32,9 @@ class KJotsReplaceNextDialog : public KDialog
 {
 Q_OBJECT
 public:
-    KJotsReplaceNextDialog( QWidget *parent );
+    explicit KJotsReplaceNextDialog( QWidget *parent );
     void setLabel( const QString& pattern, const QString& replacement );
-    int answer() { return m_answer; }
+    int answer() const { return m_answer; }
 protected slots:
     void onHandleAll(void);
     void onHandleSkip(void);

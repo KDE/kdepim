@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -28,7 +28,7 @@
 #include <QPointer>
 
 AbstractAddressBook::AbstractAddressBook(ImportWizard *parent)
-  : mImportWizard(parent), mCollection( -1 )
+    : mImportWizard(parent), mCollection( -1 )
 {
 }
 
@@ -39,87 +39,87 @@ AbstractAddressBook::~AbstractAddressBook()
 
 bool AbstractAddressBook::selectAddressBook()
 {
-  addAddressBookImportInfo( i18n( "Creating new contact..." ) );
-  if ( !mCollection.isValid() )
-  {
-    const QStringList mimeTypes( KABC::Addressee::mimeType() );
-    QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mImportWizard );
-    dlg->setMimeTypeFilter( mimeTypes );
-    dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    dlg->setCaption( i18n( "Select Address Book" ) );
-    dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
+    addAddressBookImportInfo( i18n( "Creating new contact..." ) );
+    if ( !mCollection.isValid() )
+    {
+        const QStringList mimeTypes( KABC::Addressee::mimeType() );
+        QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mImportWizard );
+        dlg->setMimeTypeFilter( mimeTypes );
+        dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+        dlg->setCaption( i18n( "Select Address Book" ) );
+        dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
 
-    if ( dlg->exec() == QDialog::Accepted && dlg ) {
-      mCollection = dlg->selectedCollection();
-    } else {
-      addAddressBookImportError( i18n( "Address Book was not selected." ) );
-      delete dlg;
-      return false;
+        if ( dlg->exec() == QDialog::Accepted && dlg ) {
+            mCollection = dlg->selectedCollection();
+        } else {
+            addAddressBookImportError( i18n( "Address Book was not selected." ) );
+            delete dlg;
+            return false;
+        }
+        delete dlg;
     }
-    delete dlg;
-  }
-  return true;
+    return true;
 }
 
 void AbstractAddressBook::createGroup(const KABC::ContactGroup& group)
 {
-  if(selectAddressBook()) {
+    if (selectAddressBook()) {
 
-    Akonadi::Item item;
-    item.setPayload<KABC::ContactGroup>( group );
-    item.setMimeType( KABC::ContactGroup::mimeType() );
+        Akonadi::Item item;
+        item.setPayload<KABC::ContactGroup>( group );
+        item.setMimeType( KABC::ContactGroup::mimeType() );
 
-    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollection );
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
-  }
+        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollection );
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
+    }
 }
 
 void AbstractAddressBook::createContact( const KABC::Addressee& address )
 {
-  if(selectAddressBook()) {
-    Akonadi::Item item;
-    item.setPayload<KABC::Addressee>( address );
-    item.setMimeType( KABC::Addressee::mimeType() );
-    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollection );
-    connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
-  }
+    if (selectAddressBook()) {
+        Akonadi::Item item;
+        item.setPayload<KABC::Addressee>( address );
+        item.setMimeType( KABC::Addressee::mimeType() );
+        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, mCollection );
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotStoreDone(KJob*)) );
+    }
 }
 
 void AbstractAddressBook::slotStoreDone(KJob*job)
 {
-  if ( job->error() ) {
-    kDebug()<<" job->errorString() : "<<job->errorString();
-    addAddressBookImportError( i18n( "Error during create contact : %1", job->errorString() ) );
-    return;
-  }
-  addAddressBookImportInfo( i18n( "Contact created done" ) );
+    if ( job->error() ) {
+        kDebug()<<" job->errorString() : "<<job->errorString();
+        addAddressBookImportError( i18n( "Error during contact creation: %1", job->errorString() ) );
+        return;
+    }
+    addAddressBookImportInfo( i18n( "Contact creation complete" ) );
 }
 
 void AbstractAddressBook::addImportInfo( const QString& log )
 {
-  addAddressBookImportInfo(log);
+    addAddressBookImportInfo(log);
 }
 
 void AbstractAddressBook::addImportError( const QString& log )
 {
-  addAddressBookImportError(log);
+    addAddressBookImportError(log);
 }
 
 void AbstractAddressBook::addAddressBookImportInfo( const QString& log )
 {
-  mImportWizard->importAddressBookPage()->addImportInfo( log );
+    mImportWizard->importAddressBookPage()->addImportInfo( log );
 }
 
 void AbstractAddressBook::addAddressBookImportError( const QString& log )
 {
-  mImportWizard->importAddressBookPage()->addImportError( log );
+    mImportWizard->importAddressBookPage()->addImportError( log );
 }
 
 void AbstractAddressBook::cleanUp()
 {
-  mCollection = Akonadi::Collection();
+    mCollection = Akonadi::Collection();
 }
 
 #include "abstractaddressbook.moc"
 
-  
+

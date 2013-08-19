@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,27 +20,38 @@
 
 #include <QObject>
 
+#include <KSharedConfig>
+#include <Akonadi/Collection>
+
 class ArchiveMailKernel;
 class ArchiveMailInfo;
-namespace Akonadi {
-  class Collection;
-}
 
 class ArchiveMailManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ArchiveMailManager(QObject *parent = 0);
-  ~ArchiveMailManager();
-  void removeCollection(const Akonadi::Collection& collection);
-  void backupDone(ArchiveMailInfo *info);
-  void pause();
-  void resume();
+    explicit ArchiveMailManager(QObject *parent = 0);
+    ~ArchiveMailManager();
+    void removeCollection(const Akonadi::Collection &collection);
+    void backupDone(ArchiveMailInfo *info);
+    void pause();
+    void resume();
+
+    void printArchiveListInfo();
+    void collectionDoesntExist(ArchiveMailInfo *info);
+
 public Q_SLOTS:
-  void load();
+    void load();
+    void slotArchiveNow(ArchiveMailInfo *info);
+
+Q_SIGNALS:
+    void needUpdateConfigDialogBox();
+
 private:
-  QList<ArchiveMailInfo *> mListArchiveInfo;
-  ArchiveMailKernel *mArchiveMailKernel;
+    void removeCollectionId(Akonadi::Collection::Id id);
+    KSharedConfig::Ptr mConfig;
+    QList<ArchiveMailInfo *> mListArchiveInfo;
+    ArchiveMailKernel *mArchiveMailKernel;
 };
 
 

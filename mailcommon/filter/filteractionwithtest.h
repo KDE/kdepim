@@ -31,7 +31,7 @@ class FilterActionWithTest : public FilterAction
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithTest( const char *name, const QString &label, QObject *parent = 0 );
+    FilterActionWithTest(const QString &name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::~FilterAction

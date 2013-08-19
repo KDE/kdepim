@@ -43,7 +43,7 @@ class KCAL_RESOURCEREMOTE_EXPORT ResourceRemoteConfig : public KRES::ConfigWidge
 { 
     Q_OBJECT
   public:
-    ResourceRemoteConfig( QWidget *parent = 0 );
+    explicit ResourceRemoteConfig( QWidget *parent = 0 );
 
   public Q_SLOTS:
     virtual void loadSettings( KRES::Resource *resource );

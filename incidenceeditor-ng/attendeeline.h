@@ -23,8 +23,8 @@
 
 #include "incidenceeditors-ng_export.h"
 
-#include <libkdepim/addresseelineedit.h>
-#include <libkdepim/multiplyingline.h>
+#include <libkdepim/addressline/addresseelineedit.h>
+#include <libkdepim/multiplyingline/multiplyingline.h>
 
 #include <KCalCore/Attendee>
 
@@ -96,7 +96,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeLine : public KPIM::MultiplyingLine
       TodoActions
     };
 
-    AttendeeLine( QWidget *parent );
+    explicit AttendeeLine( QWidget *parent );
     virtual ~AttendeeLine(){}
 
     virtual void activate();

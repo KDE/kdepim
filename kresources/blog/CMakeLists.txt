@@ -1,5 +1,9 @@
 
 ########### next target ###############
+include_directories(
+  ${CMAKE_SOURCE_DIR}/libkdepim/
+)
+
 
 set(kcal_resourceblog_LIB_SRCS resourceblog.cpp resourceblogconfig.cpp )
 

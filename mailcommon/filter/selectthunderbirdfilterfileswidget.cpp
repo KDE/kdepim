@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -26,89 +26,89 @@ SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *
     QWidget(parent),
     ui(new Ui::SelectThunderbirdFilterFilesWidget)
 {
-  ui->setupUi(this);
-  connect(ui->buttonGroup,SIGNAL(buttonClicked(QAbstractButton*)),SLOT(slotButtonClicked(QAbstractButton*)));
-  connect(ui->profiles,SIGNAL(currentIndexChanged(int)),SLOT(slotProfileChanged(int)));
+    ui->setupUi(this);
+    connect(ui->buttonGroup,SIGNAL(buttonClicked(QAbstractButton*)),SLOT(slotButtonClicked(QAbstractButton*)));
+    connect(ui->profiles,SIGNAL(currentIndexChanged(int)),SLOT(slotProfileChanged(int)));
 
-  ui->listFiles->setSelectionMode(QAbstractItemView::MultiSelection);
-  QString defaultProfile;
-  QMap<QString,QString> listProfile = MailImporter::FilterThunderbird::listProfile(defaultProfile);
-  QMap<QString, QString>::const_iterator i = listProfile.constBegin();
-  while (i != listProfile.constEnd()) {
-    QString name = i.key();
-    if(i.value()==defaultProfile){
-      name+=i18n(" (default)");
+    ui->listFiles->setSelectionMode(QAbstractItemView::MultiSelection);
+    QString defaultProfile;
+    QMap<QString,QString> listProfile = MailImporter::FilterThunderbird::listProfile(defaultProfile);
+    QMap<QString, QString>::const_iterator i = listProfile.constBegin();
+    while (i != listProfile.constEnd()) {
+        QString name = i.key();
+        if (i.value()==defaultProfile){
+            name+=i18n(" (default)");
+        }
+        ui->profiles->addItem(name,i.value());
+        ++i;
     }
-    ui->profiles->addItem(name,i.value());
-    ++i;
-  }
-  ui->fileUrl->setEnabled(true);
-  ui->profiles->setEnabled(false);
-  ui->listFiles->setEnabled(false);
-  slotProfileChanged(0);
+    ui->fileUrl->setEnabled(true);
+    ui->profiles->setEnabled(false);
+    ui->listFiles->setEnabled(false);
+    slotProfileChanged(0);
 }
 
 SelectThunderbirdFilterFilesWidget::~SelectThunderbirdFilterFilesWidget()
 {
-  delete ui;
+    delete ui;
 }
 
 void SelectThunderbirdFilterFilesWidget::slotButtonClicked(QAbstractButton*button)
 {
-  if(button == ui->selectFile) {
-    ui->fileUrl->setEnabled(true);
-    ui->profiles->setEnabled(false);
-    ui->listFiles->setEnabled(false);
-  } else {
-    ui->fileUrl->setEnabled(false);
-    ui->profiles->setEnabled(true);
-    ui->listFiles->setEnabled(true);
-  }
+    if (button == ui->selectFile) {
+        ui->fileUrl->setEnabled(true);
+        ui->profiles->setEnabled(false);
+        ui->listFiles->setEnabled(false);
+    } else {
+        ui->fileUrl->setEnabled(false);
+        ui->profiles->setEnabled(true);
+        ui->listFiles->setEnabled(true);
+    }
 }
 
 void SelectThunderbirdFilterFilesWidget::slotProfileChanged(int index)
 {
-  if(index >= ui->profiles->count()) {
-    return;
-  }
-
-  QStringList listFilterFiles;
-  const QString path(MailImporter::FilterThunderbird::defaultSettingsPath() + ui->profiles->itemData(index).toString());
-  QDir dir(path);
-  const QStringList subDir = dir.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
-  Q_FOREACH( const QString& mailPath, subDir ) {
-    const QString subMailPath(path + QLatin1Char('/') + mailPath);
-    QDir dirMail(subMailPath);
-    const QStringList subDirMail = dirMail.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
-    Q_FOREACH( const QString& file, subDirMail ) {
-      const QString filterFile(subMailPath +QLatin1Char('/')+ file + QLatin1String("/msgFilterRules.dat"));
-      if(QFile(filterFile).exists()) {
-          listFilterFiles<<filterFile;
-      }
+    if (index >= ui->profiles->count()) {
+        return;
     }
-  }
-  ui->listFiles->clear();
-  ui->listFiles->addItems(listFilterFiles);
+
+    QStringList listFilterFiles;
+    const QString path(MailImporter::FilterThunderbird::defaultSettingsPath() + ui->profiles->itemData(index).toString());
+    QDir dir(path);
+    const QStringList subDir = dir.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
+    Q_FOREACH( const QString& mailPath, subDir ) {
+        const QString subMailPath(path + QLatin1Char('/') + mailPath);
+        QDir dirMail(subMailPath);
+        const QStringList subDirMail = dirMail.entryList(QDir::AllDirs|QDir::NoDotAndDotDot,QDir::Name);
+        Q_FOREACH( const QString& file, subDirMail ) {
+            const QString filterFile(subMailPath +QLatin1Char('/')+ file + QLatin1String("/msgFilterRules.dat"));
+            if (QFile(filterFile).exists()) {
+                listFilterFiles<<filterFile;
+            }
+        }
+    }
+    ui->listFiles->clear();
+    ui->listFiles->addItems(listFilterFiles);
 }
 
 QStringList SelectThunderbirdFilterFilesWidget::selectedFiles() const
 {
-  QStringList listFiles;
-  if(ui->selectFile->isChecked()) {
-    listFiles<<ui->fileUrl->url().path();
-  } else {
-     QList<QListWidgetItem *> list = ui->listFiles->selectedItems();
-     Q_FOREACH(QListWidgetItem * item, list) {
-       listFiles<<item->text();
-     }
-  }
-  return listFiles;
+    QStringList listFiles;
+    if (ui->selectFile->isChecked()) {
+        listFiles<<ui->fileUrl->url().path();
+    } else {
+        QList<QListWidgetItem *> list = ui->listFiles->selectedItems();
+        Q_FOREACH(QListWidgetItem * item, list) {
+            listFiles<<item->text();
+        }
+    }
+    return listFiles;
 }
 
 void SelectThunderbirdFilterFilesWidget::setStartDir(const KUrl&url)
 {
-  ui->fileUrl->setFilter(QLatin1String("*.dat"));
-  ui->fileUrl->setStartDir(url);
+    ui->fileUrl->setFilter(QLatin1String("*.dat"));
+    ui->fileUrl->setStartDir(url);
 }
 
 #include "selectthunderbirdfilterfileswidget.moc"

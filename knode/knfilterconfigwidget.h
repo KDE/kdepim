@@ -33,7 +33,7 @@ class KNFilterConfigWidget : public QTabWidget
   friend class KNode::SearchDialog;
 
   public:
-    KNFilterConfigWidget( QWidget *parent = 0 );
+    explicit KNFilterConfigWidget( QWidget *parent = 0 );
     ~KNFilterConfigWidget();
 
     void reset();

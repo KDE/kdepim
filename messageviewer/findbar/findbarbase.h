@@ -1,9 +1,5 @@
-#ifndef FINDBARBASE_H
-#define FINDBARBASE_H
-
-
 /* Copyright (C) 2010 Torgny Nyblom <nyblom@kde.org>
- * Copyright (C) 2010,2011, 2012 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2010,2011, 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,6 +17,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef FINDBARBASE_H
+#define FINDBARBASE_H
+
 #include <QWidget>
 
 class QAction;
@@ -32,9 +31,8 @@ namespace MessageViewer
 {
 class FindBarBase : public QWidget
 {
-  Q_OBJECT
-
-  public:
+    Q_OBJECT
+public:
     explicit FindBarBase( QWidget * parent = 0 );
     virtual ~FindBarBase();
 
@@ -42,7 +40,7 @@ class FindBarBase : public QWidget
     void setText( const QString&text );
     void focusAndSetCursor();
     
-  protected:
+protected:
     virtual bool event(QEvent* e);
     virtual void clearSelections();
     virtual void updateHighLight(bool);
@@ -52,28 +50,29 @@ class FindBarBase : public QWidget
     void setFoundMatch( bool match );
     void messageInfo( bool backward, bool isAutoSearch, bool found );
     QMenu *optionsMenu();
-  
-  public slots:
+
+public slots:
     void findNext();
     void findPrev();
     void autoSearch( const QString& str );
     void slotSearchText( bool backward = false, bool isAutoSearch = true );
     void closeBar();
-  private slots:
+
+private slots:
     void caseSensitivityChanged(bool);
     void slotHighlightAllChanged(bool);
     void slotClearSearch();
 
-  protected:
+protected:
     QString mPositiveBackground;
     QString mNegativeBackground;
     QString mLastSearchStr;
-    KLineEdit * m_search;
-    QAction * m_caseSensitiveAct;
+    KLineEdit *mSearch;
+    QAction *mCaseSensitiveAct;
 
-    QPushButton *m_findPrevBtn;
-    QPushButton *m_findNextBtn;
-    QMenu *m_optionsMenu;
+    QPushButton *mFindPrevBtn;
+    QPushButton *mFindNextBtn;
+    QMenu *mOptionsMenu;
 };
 
 }

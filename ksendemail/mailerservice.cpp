@@ -36,7 +36,7 @@ static KUrl makeAbsoluteUrl( const QString& str )
 {
     KUrl url( str );
     if ( url.protocol().isEmpty() ) {
-      const QString newUrl = KCmdLineArgs::cwd() + '/' + url.fileName();
+      const QString newUrl = KCmdLineArgs::cwd() + QLatin1Char('/') + url.fileName();
       return KUrl( newUrl );
     }
     else {
@@ -45,7 +45,7 @@ static KUrl makeAbsoluteUrl( const QString& str )
 }
 
 MailerService::MailerService()
-                : mSuccess( false ), mEventLoop( 0 )
+    : mSuccess( false ), mEventLoop( 0 )
 {
   connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(serviceOwnerChanged(QString,QString,QString)) );
@@ -59,16 +59,16 @@ MailerService::~MailerService()
 
 bool MailerService::start()
 {
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kmail" ) || mEventLoop ) {
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.kmail") ) || mEventLoop ) {
     mSuccess = true;
     return mSuccess;
   }
   //Check if Kontact is already running and if not ...
-  int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Mailer", QString(),
+  int result = KDBusServiceStarter::self()->findServiceFor( QLatin1String("DBUS/Mailer"), QString(),
                                                             &mError, &mDBusService );
   if ( result != 0 ) {
     // ... start Kontact
-    result = KDBusServiceStarter::self()->startServiceFor( "DBUS/Mailer", QString(),
+    result = KDBusServiceStarter::self()->startServiceFor( QLatin1String("DBUS/Mailer"), QString(),
                                                            &mError, &mDBusService );
     if(  result != 0 ) {
       const bool ok = QProcess::startDetached( QLatin1String("kontact") );
@@ -98,7 +98,7 @@ bool MailerService::start()
 void MailerService::serviceOwnerChanged( const QString & name, const QString & oldOwner, const QString & newOwner )
 {
   Q_UNUSED( oldOwner );
-  if ( name == "org.kde.kmail" && !newOwner.isEmpty() && mEventLoop && mEventLoop->isRunning() ) {
+  if ( name == QLatin1String("org.kde.kmail") && !newOwner.isEmpty() && mEventLoop && mEventLoop->isRunning() ) {
      mEventLoop->quit();
      mSuccess = true;
   }
@@ -123,7 +123,7 @@ void MailerService::processArgs( KCmdLineArgs *args )
      // via D-Bus which apparently executes the application with the original
      // command line arguments and those include "-session ..." if
      // kmail/kontact was restored by session management
-        if ( subj == "ession" ) {
+        if ( subj == QLatin1String("ession") ) {
             subj.clear();
             calledWithSession = true;
         }
@@ -163,8 +163,7 @@ void MailerService::processArgs( KCmdLineArgs *args )
         QStringList::ConstIterator end(attachList.constEnd());
         for ( QStringList::ConstIterator it = attachList.constBegin() ; it != end ; ++it )
         {
-            if ( !(*it).isEmpty() )
-            {
+            if ( !(*it).isEmpty() ) {
                 attachURLs.append( makeAbsoluteUrl( *it ).url() );
             }
         }
@@ -180,17 +179,16 @@ void MailerService::processArgs( KCmdLineArgs *args )
     // only read additional command line arguments if kmail/kontact is
     // not called with "-session foo"
         const int numberOfArgs(args->count());
-        for(int i= 0; i < numberOfArgs; i++)
-        {
-            if (args->arg(i).startsWith(QLatin1String("mailto:"), Qt::CaseInsensitive))
-                to += args->url(i).path() + ", ";
-            else {
+        for(int i= 0; i < numberOfArgs; ++i) {
+            if (args->arg(i).startsWith(QLatin1String("mailto:"), Qt::CaseInsensitive)) {
+                to += args->url(i).path() + QLatin1String(", ");
+            } else {
                 const QString tmpArg = args->arg(i);
                 KUrl url( tmpArg );
                 if (url.isValid() && !url.protocol().isEmpty())
                     attachURLs.append( url.url() );
                 else
-                    to += tmpArg + ", ";
+                    to += tmpArg + QLatin1String(", ");
             }
             mailto = true;
         }
@@ -206,11 +204,11 @@ void MailerService::processArgs( KCmdLineArgs *args )
     if( !mailto )
        return;
     if ( mSuccess ) {
-     QDBusInterface kmailObj( "org.kde.kmail", "/KMail", "org.kde.kmail.kmail" );
+     QDBusInterface kmailObj( QLatin1String("org.kde.kmail"), QLatin1String("/KMail"), QLatin1String("org.kde.kmail.kmail") );
 
      QList<QVariant> messages;
      messages << to << cc << bcc << subj << body << false << messageFile.url() << attachURLs << customHeaders;
-     QDBusReply<int> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, "openComposer", messages);
+     QDBusReply<int> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, QLatin1String("openComposer"), messages);
 
      if ( !composerDbusPath.isValid() ) {
       KMessageBox::error( 0, i18n( "Cannot connect to email service." ) );

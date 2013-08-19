@@ -24,8 +24,8 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <kactioncollection.h>
-#include <pimcommon/aclmanager.h>
-#include <pimcommon/imapaclattribute.h>
+#include <pimcommon/acl/aclmanager.h>
+#include <pimcommon/acl/imapaclattribute.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QItemSelectionModel>
@@ -49,13 +49,10 @@ void AclEditor::setCollection( const Akonadi::Collection &collection )
 
 QString AclEditor::collectionName() const
 {
-  if ( !mCollection.isValid() )
+  if ( mCollection.isValid() )
+    return mCollection.displayName();
+  else
     return QString();
-
-  if ( mCollection.hasAttribute<Akonadi::EntityDisplayAttribute>() )
-    return mCollection.attribute<Akonadi::EntityDisplayAttribute>()->displayName();
-
-  return mCollection.name();
 }
 
 bool AclEditor::collectionHasAcls() const

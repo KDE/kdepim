@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,7 +17,7 @@
 #ifndef IMPORTWIZARDKERNEL_H
 #define IMPORTWIZARDKERNEL_H
 
-#include <mailcommon/mailinterfaces.h>
+#include <mailcommon/interfaces/mailinterfaces.h>
 
 namespace Akonadi {
 class EntityTreeModel;
@@ -30,30 +30,30 @@ class FolderCollectionMonitor;
 
 class ImportWizardKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
-  public:
-    ImportWizardKernel( QObject *parent = 0 );
+public:
+    explicit ImportWizardKernel( QObject *parent = 0 );
 
-    virtual KPIMIdentities::IdentityManager *identityManager();
-    virtual MessageSender *msgSender();
+    KPIMIdentities::IdentityManager *identityManager();
+    MessageComposer::MessageSender *msgSender();
 
-    virtual Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
-    virtual KSharedConfig::Ptr config();
-    virtual void syncConfig();
-    virtual MailCommon::JobScheduler* jobScheduler() const;
-    virtual Akonadi::ChangeRecorder *folderCollectionMonitor() const;
-    virtual void updateSystemTray();
+    Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
+    KSharedConfig::Ptr config();
+    void syncConfig();
+    MailCommon::JobScheduler* jobScheduler() const;
+    Akonadi::ChangeRecorder *folderCollectionMonitor() const;
+    void updateSystemTray();
 
-    virtual qreal closeToQuotaThreshold();
-    virtual bool excludeImportantMailFromExpiry();
-    virtual QStringList customTemplates();
-    virtual Akonadi::Entity::Id lastSelectedFolder();
-    virtual void setLastSelectedFolder(const Akonadi::Entity::Id& col);
-    virtual bool showPopupAfterDnD();
+    qreal closeToQuotaThreshold();
+    bool excludeImportantMailFromExpiry();
+    QStringList customTemplates();
+    Akonadi::Entity::Id lastSelectedFolder();
+    void setLastSelectedFolder(const Akonadi::Entity::Id& col);
+    bool showPopupAfterDnD();
     
 
-  private:
+private:
     KPIMIdentities::IdentityManager *mIdentityManager;
-    MessageSender *mMessageSender;
+    MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;

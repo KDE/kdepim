@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -27,55 +27,55 @@
 class ImportWizard;
 
 namespace KPIMIdentities {
-  class Identity;
-  class IdentityManager;
+class Identity;
+class IdentityManager;
 }
 
 namespace MailTransport {
-  class Transport;
+class Transport;
 }
 
 class AbstractSettings : public AbstractBase
 {
 public:
-  explicit AbstractSettings(ImportWizard *parent);
-  ~AbstractSettings();
+    explicit AbstractSettings(ImportWizard *parent);
+    ~AbstractSettings();
 
 protected:
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
+    void addImportInfo( const QString& log );
+    void addImportError( const QString& log );
 
-  void syncKmailConfig();
+    void syncKmailConfig();
 
-  QString uniqueIdentityName(const QString& name);
+    QString uniqueIdentityName(const QString& name);
 
-  QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
+    QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
 
-  KPIMIdentities::Identity* createIdentity(QString& name);
+    KPIMIdentities::Identity* createIdentity(QString& name);
 
-  MailTransport::Transport *createTransport();
-  
-  void storeTransport(MailTransport::Transport * mt, bool isDefault = false );
-  
-  void storeIdentity(KPIMIdentities::Identity* identity);
+    MailTransport::Transport *createTransport();
 
-  void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
-  void addKmailConfig( const QString& groupName, const QString& key, bool value);
-  void addKmailConfig( const QString& groupName, const QString& key, int value);
+    void storeTransport(MailTransport::Transport * mt, bool isDefault = false );
 
-  void addComposerHeaderGroup( const QString& groupName, const QString& name, const QString& value );
+    void storeIdentity(KPIMIdentities::Identity* identity);
 
-  void addKNodeConfig(const QString& groupName, const QString& key, bool value);
-  void addAkregatorConfig(const QString& groupName, const QString& key, bool value);
+    void addKmailConfig( const QString& groupName, const QString& key, const QString& value);
+    void addKmailConfig( const QString& groupName, const QString& key, bool value);
+    void addKmailConfig( const QString& groupName, const QString& key, int value);
+
+    void addComposerHeaderGroup( const QString& groupName, const QString& name, const QString& value );
+
+    void addKNodeConfig(const QString& groupName, const QString& key, bool value);
+    void addAkregatorConfig(const QString& groupName, const QString& key, bool value);
 
 
-  void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
-  void addToManualCheck(const QString& agentIdentifyName,bool manualCheck);
-  int readKmailSettings( const QString&groupName, const QString& key);
+    void addCheckMailOnStartup(const QString& agentIdentifyName,bool loginAtStartup);
+    void addToManualCheck(const QString& agentIdentifyName,bool manualCheck);
+    int readKmailSettings( const QString&groupName, const QString& key);
 
-  ImportWizard *mImportWizard;
-  KPIMIdentities::IdentityManager *mManager;
-  KSharedConfigPtr mKmailConfig;
+    ImportWizard *mImportWizard;
+    KPIMIdentities::IdentityManager *mManager;
+    KSharedConfigPtr mKmailConfig;
 };
 
 #endif // ABSTRACTSETTINGS_H

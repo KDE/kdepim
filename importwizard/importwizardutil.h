@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -24,27 +24,28 @@
 
 struct ldapStruct
 {
-  ldapStruct()
-    : maxHint(-1),
-      port(-1),
-      limit(-1),
-      timeout(-1),
-      useSSL(false),
-      useTLS(false)
-  {
-  }
+    ldapStruct()
+        : maxHint(-1),
+          port(-1),
+          limit(-1),
+          timeout(-1),
+          useSSL(false),
+          useTLS(false)
+    {
+    }
 
-  KUrl ldapUrl;
-  QString dn;
-  QString saslMech;
-  QString fileName;
-  QString description;
-  int maxHint;
-  int port;
-  int limit;
-  int timeout;
-  bool useSSL;
-  bool useTLS;
+    KUrl ldapUrl;
+    QString dn;
+    QString saslMech;
+    QString fileName;
+    QString description;
+    QString password;
+    int maxHint;
+    int port;
+    int limit;
+    int timeout;
+    bool useSSL;
+    bool useTLS;
 
 };
 
@@ -55,8 +56,15 @@ struct tagStruct {
 
 
 namespace ImportWizardUtil {
-  void mergeLdap(const ldapStruct &ldap);
-  void addNepomukTag(const QList<tagStruct> &tagList);
+enum ResourceType {
+    Imap,
+    Pop3,
+    Ldap
+};
+
+void mergeLdap(const ldapStruct &ldap);
+void addNepomukTag(const QList<tagStruct> &tagList);
+void storeInKWallet(const QString &name, ImportWizardUtil::ResourceType type, const QString &password);
 }
 
 #endif // IMPORTWIZARDUTIL_H

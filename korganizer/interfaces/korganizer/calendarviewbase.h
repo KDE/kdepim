@@ -24,6 +24,7 @@
 #define KORG_INTERFACES_CALENDARVIEWBASE_H
 
 #include "korganizer/baseview.h"
+#include <Akonadi/Calendar/ETMCalendar>
 
 namespace KOrg {
 
@@ -37,8 +38,8 @@ class CalendarViewBase : public QWidget
     explicit CalendarViewBase( QWidget *parent ) : QWidget( parent ) {}
     virtual ~CalendarViewBase() {}
 
-    virtual CalendarSupport::Calendar *calendar() const = 0;
-    virtual CalendarSupport::IncidenceChanger *incidenceChanger() const = 0;
+    virtual Akonadi::ETMCalendar::Ptr calendar() const = 0;
+    virtual Akonadi::IncidenceChanger *incidenceChanger() const = 0;
 
     virtual QDate startDate() = 0;
     virtual QDate endDate() = 0;
@@ -57,7 +58,7 @@ class CalendarViewBase : public QWidget
     virtual void updateCategories() = 0;
 
   signals:
-    virtual void newIncidenceChanger( CalendarSupport::IncidenceChanger * ) = 0;
+    virtual void newIncidenceChanger( Akonadi::IncidenceChanger * ) = 0;
 
 };
 

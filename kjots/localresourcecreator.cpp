@@ -117,7 +117,7 @@ void LocalResourceCreator::instanceCreated( KJob *job )
 void LocalResourceCreator::syncDone(KJob* job)
 {
   if ( job->error() ) {
-    kWarning() << "Syncronizing the resource failed:" << job->errorString();
+    kWarning() << "Synchronizing the resource failed:" << job->errorString();
     deleteLater();
     return;
   }
@@ -260,3 +260,5 @@ void LocalResourceCreator::itemCreateFinished(KJob* job)
 
 
 
+
+#include "localresourcecreator.moc"

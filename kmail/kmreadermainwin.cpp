@@ -47,11 +47,11 @@
 #include "kmenubar.h"
 #include "kmenu.h"
 #include "kmmainwidget.h"
-#include "messageviewer/csshelper.h"
+#include "messageviewer/viewer/csshelper.h"
 #include "customtemplatesmenu.h"
 #include "messageactions.h"
 #include "util.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "foldercollection.h"
 
 #include <KActionCollection>
@@ -59,13 +59,13 @@
 #include <kpimutils/email.h>
 #include <kmime/kmime_message.h>
 
-#include <messageviewer/viewer.h>
+#include <messageviewer/viewer/viewer.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemcreatejob.h>
 
-#include "messagecore/messagehelpers.h"
-#include <mailutil.h>
+#include "messagecore/helpers/messagehelpers.h"
+#include <util/mailutil.h>
 
 using namespace MailCommon;
 
@@ -73,7 +73,7 @@ KMReaderMainWin::KMReaderMainWin( bool htmlOverride, bool htmlLoadExtOverride,
                                   char *name )
   : KMail::SecondaryWindow( name ? name : "readerwindow#" )
 {
-  mReaderWin = new KMReaderWin( this, this, actionCollection() );
+  mReaderWin = new KMReaderWin( this, this, actionCollection());
   //mReaderWin->setShowCompleteMessage( true );
   mReaderWin->setHtmlOverride( htmlOverride );
   mReaderWin->setHtmlLoadExtOverride( htmlLoadExtOverride );
@@ -86,7 +86,7 @@ KMReaderMainWin::KMReaderMainWin( bool htmlOverride, bool htmlLoadExtOverride,
 KMReaderMainWin::KMReaderMainWin( char *name )
   : KMail::SecondaryWindow( name ? name : "readerwindow#" )
 {
-  mReaderWin = new KMReaderWin( this, this, actionCollection() );
+  mReaderWin = new KMReaderWin( this, this, actionCollection());
   initKMReaderMainWin();
 }
 
@@ -114,7 +114,6 @@ void KMReaderMainWin::initKMReaderMainWin()
     menuBar()->hide();
     toolBar( "mainToolBar" )->hide();
   }
-
   connect( kmkernel, SIGNAL(configChanged()),
            this, SLOT(slotConfigChanged()) );
   connect( mReaderWin, SIGNAL(showStatusBarMessage(QString)),
@@ -362,6 +361,7 @@ void KMReaderMainWin::setupAccel()
 
   setStandardToolBarMenuEnabled(true);
   KStandardAction::configureToolbars(this, SLOT(slotEditToolbars()), actionCollection());
+  connect(  mReaderWin->viewer(), SIGNAL(moveMessageToTrash()), this, SLOT(slotTrashMsg()) );
 }
 
 //-----------------------------------------------------------------------------
@@ -552,11 +552,17 @@ void KMReaderMainWin::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,c
       menu->addAction( mReaderWin->viewSourceAction() );
       menu->addAction( mReaderWin->toggleFixFontAction() );
       menu->addAction( mReaderWin->toggleMimePartTreeAction() );
+      menu->addSeparator();
+      menu->addAction( mMsgActions->printPreviewAction() );
+      menu->addAction( mMsgActions->printAction() );
       menu->addAction( mReaderWin->saveAsAction() );
       menu->addAction( mSaveAtmAction );
       if ( msg.isValid() ) {
         menu->addSeparator();
         menu->addAction( mMsgActions->createTodoAction() );
+        menu->addSeparator();
+        menu->addAction( mReaderWin->saveMessageDisplayFormatAction() );
+        menu->addAction( mReaderWin->resetMessageDisplayFormatAction() );
       }
     } else {
       menu->addAction( mReaderWin->toggleFixFontAction() );

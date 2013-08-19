@@ -144,7 +144,7 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
     p->setFont( font );
     const QPixmap *pm;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; ++i) {
       pm = pixmap( i );
       if (pm && !pm->isNull()) {
         yPM = (height() - pm->height()) / 2;

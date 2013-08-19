@@ -28,12 +28,12 @@
 
 #include <kdescendantsproxymodel.h>
 
-#include <messageviewer/headerstyle.h>
-#include <messageviewer/headerstrategy.h>
-#include <messageviewer/mailwebview.h>
-#include <messageviewer/markmessagereadhandler.h>
-#include <messageviewer/viewer.h>
-#include <messageviewer/viewer_p.h>
+#include <messageviewer/header/headerstyle.h>
+#include <messageviewer/header/headerstrategy.h>
+#include <messageviewer/viewer/mailwebview.h>
+#include <messageviewer/utils/markmessagereadhandler.h>
+#include <messageviewer/viewer/viewer.h>
+#include <messageviewer/viewer/viewer_p.h>
 #include "attachmentproxymodel.h"
 #include <KAction>
 

@@ -1,7 +1,7 @@
 /*
  *  messagewin.cpp  -  displays an alarm message
  *  Program:  kalarm
- *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2013 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -170,7 +170,7 @@ QMap<QString, unsigned> MessageWin::mErrorMessages;
 // sound files simultaneously would result in a cacophony, and besides
 // that, Phonon currently crashes...
 QPointer<AudioThread> MessageWin::mAudioThread;
-MessageWin*           MessageWin::mAudioOwner = 0;
+MessageWin*           AudioThread::mAudioOwner = 0;
 
 /******************************************************************************
 * Construct the message window for the specified alarm.
@@ -271,7 +271,7 @@ MessageWin::MessageWin(const KAEvent* event, const KAAlarm& alarm, int flags)
     setAutoSaveSettings(QLatin1String("MessageWin"), false);
     mWindowList.append(this);
     if (event->autoClose())
-        mCloseTime = alarm.dateTime().effectiveDateTime().addSecs(event->lateCancel() * 60);
+        mCloseTime = alarm.dateTime().effectiveKDateTime().toUtc().dateTime().addSecs(event->lateCancel() * 60);
     if (mAlwaysHide)
     {
         hide();
@@ -415,7 +415,7 @@ MessageWin::MessageWin()
 MessageWin::~MessageWin()
 {
     kDebug() << mEventId;
-    if (mAudioOwner == this  &&  mAudioThread)
+    if (AudioThread::mAudioOwner == this  &&  !mAudioThread.isNull())
         mAudioThread->quit();
     mErrorMessages.remove(mEventId);
     mWindowList.removeAll(this);
@@ -857,7 +857,7 @@ void MessageWin::cancelReminder(const KAEvent& event, const KAAlarm& alarm)
     mNoPostAction = false;
     mAlarmType = alarm.type();
     if (event.autoClose())
-        mCloseTime = alarm.dateTime().effectiveDateTime().addSecs(event.lateCancel() * 60);
+        mCloseTime = alarm.dateTime().effectiveKDateTime().toUtc().dateTime().addSecs(event.lateCancel() * 60);
     setCaption(i18nc("@title:window", "Message"));
     mTimeLabel->setText(dateTimeToDisplay());
     if (mRemainingText)
@@ -1091,12 +1091,14 @@ void MessageWin::readProperties(const KConfigGroup& config)
     if (dateOnly)
         mDateTime.setDateOnly(true);
     mCloseTime           = config.readEntry("Expiry", invalidDateTime);
+    mCloseTime.setTimeSpec(Qt::UTC);
     mAudioFile           = config.readPathEntry("AudioFile", QString());
     mVolume              = static_cast<float>(config.readEntry("Volume", 0)) / 100;
     mFadeVolume          = -1;
     mFadeSeconds         = 0;
     if (!mAudioFile.isEmpty())   // audio file URL was only saved if it repeats
         mAudioRepeatPause = config.readEntry("AudioPause", 0);
+    mBeep                = false;   // don't beep after restart (similar to not playing non-repeated sound file)
     mSpeak               = config.readEntry("Speak", false);
     mRestoreHeight       = config.readEntry("Height", 0);
     mDefaultDeferMinutes = config.readEntry("DeferMins", 0);
@@ -1498,7 +1500,6 @@ void MessageWin::startAudio()
     {
         kDebug() << QThread::currentThread();
         mAudioThread = new AudioThread(this, mAudioFile, mVolume, mFadeVolume, mFadeSeconds, mAudioRepeatPause);
-        mAudioOwner = this;
         connect(mAudioThread, SIGNAL(readyToPlay()), SLOT(playReady()));
         connect(mAudioThread, SIGNAL(finished()), SLOT(playFinished()));
         if (mSilenceButton)
@@ -1563,12 +1564,25 @@ void MessageWin::playFinished()
         }
     }
     delete mAudioThread.data();
-    // Notify after deleting mAudioThread, so that isAudioPlaying() will
-    // return the correct value.
-    theApp()->notifyAudioPlaying(false);
-    mAudioOwner = 0;
     if (mAlwaysHide)
         close();
+}
+
+/******************************************************************************
+* Constructor for audio thread.
+*/
+AudioThread::AudioThread(MessageWin* parent, const QString& audioFile, float volume, float fadeVolume, int fadeSeconds, int repeatPause)
+    : QThread(parent),
+      mFile(audioFile),
+      mVolume(volume),
+      mFadeVolume(fadeVolume),
+      mFadeSeconds(fadeSeconds),
+      mRepeatPause(repeatPause),
+      mAudioObject(0)
+{
+    if (mAudioOwner)
+        kError() << "mAudioOwner already set";
+    mAudioOwner = parent;
 }
 
 /******************************************************************************
@@ -1581,6 +1595,11 @@ AudioThread::~AudioThread()
     stop(true);   // stop playing and tidy up (timeout 3 seconds)
     delete mAudioObject;
     mAudioObject = 0;
+    if (mAudioOwner == parent())
+        mAudioOwner = 0;
+    // Notify after deleting mAudioThread, so that isAudioPlaying() will
+    // return the correct value.
+    QTimer::singleShot(0, theApp(), SLOT(notifyAudioStopped()));
 }
 
 /******************************************************************************
@@ -1799,7 +1818,7 @@ void MessageWin::show()
     if (mCloseTime.isValid())
     {
         // Set a timer to auto-close the window
-        int delay = KDateTime::currentLocalDateTime().dateTime().secsTo(mCloseTime);
+        int delay = KDateTime::currentUtcDateTime().dateTime().secsTo(mCloseTime);
         if (delay < 0)
             delay = 0;
         QTimer::singleShot(delay * 1000, this, SLOT(close()));
@@ -2181,7 +2200,7 @@ void MessageWin::setButtonsReadOnly(bool ro)
 */
 void MessageWin::setDeferralLimit(const KAEvent& event)
 {
-    mDeferLimit = event.deferralLimit().effectiveKDateTime().toLocalZone().dateTime();
+    mDeferLimit = event.deferralLimit().effectiveKDateTime().toUtc().dateTime();
     MidnightTimer::connect(this, SLOT(checkDeferralLimit()));   // check every day
     mDisableDeferral = false;
     checkDeferralLimit();
@@ -2200,14 +2219,14 @@ void MessageWin::checkDeferralLimit()
 {
     if (!mDeferButton->isEnabled()  ||  !mDeferLimit.isValid())
         return;
-    int n = KDateTime::currentLocalDate().daysTo(mDeferLimit.date());
+    int n = KDateTime::currentLocalDate().daysTo(KDateTime(mDeferLimit, KDateTime::LocalZone).date());
     if (n > 0)
         return;
     MidnightTimer::disconnect(this, SLOT(checkDeferralLimit()));
     if (n == 0)
     {
         // The deferral limit will be reached today
-        n = KDateTime::currentLocalTime().secsTo(mDeferLimit.time());
+        n = KDateTime::currentUtcDateTime().dateTime().secsTo(mDeferLimit);
         if (n > 0)
         {
             QTimer::singleShot(n * 1000, this, SLOT(checkDeferralLimit()));

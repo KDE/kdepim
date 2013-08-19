@@ -47,7 +47,7 @@ class MAILCOMMON_EXPORT FilterController : public QObject
      *
      * @param parent The parent object.
      */
-    FilterController( QObject *parent = 0 );
+    explicit FilterController( QObject *parent = 0 );
 
     /**
      * Destroys the filter controller.

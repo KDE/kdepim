@@ -19,7 +19,7 @@
 
 #include "filteractionsendfakedisposition.h"
 
-#include <messagecore/mdnstateattribute.h>
+#include <messagecore/misc/mdnstateattribute.h>
 
 #include <KDE/KLocale>
 
@@ -42,11 +42,11 @@ static const int numMDNs = sizeof( mdns ) / sizeof( *mdns );
 
 
 FilterActionSendFakeDisposition::FilterActionSendFakeDisposition( QObject *parent )
-  : FilterActionWithStringList( "fake mdn", i18n( "Send Fake MDN" ), parent )
+  : FilterActionWithStringList( QLatin1String("fake mdn"), i18n( "Send Fake MDN" ), parent )
 {
   // if you change this list, also update
   // mdns above
-  mParameterList.append( "" );
+    mParameterList.append( QString() );
   mParameterList.append( i18nc( "MDN type", "Ignore" ) );
   mParameterList.append( i18nc( "MDN type", "Displayed" ) );
   mParameterList.append( i18nc( "MDN type", "Deleted" ) );
@@ -99,7 +99,7 @@ void FilterActionSendFakeDisposition::argsFromString( const QString &argsStr )
       return;
     }
 
-    for ( int i = 0 ; i < numMDNs ; i++ ) {
+    for ( int i = 0 ; i < numMDNs ; ++i ) {
       if ( char( mdns[ i ] ) == argsStr[ 0 ] ) { // send
         mParameter = mParameterList.at( i + 2 );
         return;

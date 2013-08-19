@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2007 Bruno Virlet <bruno.virlet@gmail.com>
-  Copyright 2008-2009 Allen Winter <winter@kde.org>
+  Copyright 2008-2009,2013 Allen Winter <winter@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 
 #include <KCalCore/ICalTimeZones>
 
-#include <KDebug>
 #include <KGlobal>
 #include <KLocale>
 #include <KSystemTimeZone>
@@ -58,13 +57,13 @@ void KTimeZoneComboBox::Private::fillComboBox()
     const KCalCore::ICalTimeZones::ZoneMap calzones = mAdditionalZones->zones();
     for ( KCalCore::ICalTimeZones::ZoneMap::ConstIterator it=calzones.begin();
           it != calzones.end(); ++it ) {
-      kDebug() << "Prepend timezone " << it.key().toUtf8();
       mZones.prepend( it.key().toUtf8() );
     }
   }
-  // Prepend UTC and Floating, for convenience
-  mZones.prepend( "UTC" );      // do not use i18n here
-  mZones.prepend( "Floating" ); // do not use i18n here
+  // Prepend Local, UTC and Floating, for convenience
+  mZones.prepend( "UTC" );      // do not use i18n here  index=2
+  mZones.prepend( "Floating" ); // do not use i18n here  index=1
+  mZones.prepend( KSystemTimeZones::local().name() );  // index=0
 
   // Put translated zones into the combobox
   foreach ( const QString &z, mZones ) {
@@ -108,14 +107,16 @@ void KTimeZoneComboBox::selectTimeSpec( const KDateTime::Spec &spec )
       nCurrentlySet = i;
       break;
     }
-    i++;
+    ++i;
   }
 
   if ( nCurrentlySet == -1 ) {
     if ( spec.isUtc() ) {
-      setCurrentIndex( 1 ); // UTC
+      setCurrentIndex( 2 ); // UTC
+    } else if ( spec.isLocalZone() ) {
+      setCurrentIndex( 0 ); // Local
     } else {
-      setCurrentIndex( 0 ); // Floating event
+      setCurrentIndex( 1 ); // Floating event
     }
   } else {
     setCurrentIndex( nCurrentlySet );
@@ -126,9 +127,11 @@ KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec() const
 {
   KDateTime::Spec spec;
   if ( currentIndex() >= 0 ) {
-    if ( currentIndex() == 0 ) { // Floating event
+    if ( currentIndex() == 0 ) { // Local
+      spec = KDateTime::Spec( KDateTime::LocalZone );
+    } else if ( currentIndex() == 1 ) { // Floating event
       spec = KDateTime::Spec( KDateTime::ClockTime );
-    } else if ( currentIndex() == 1 ) { // UTC
+    } else if ( currentIndex() == 2 ) { // UTC
       spec.setType( KDateTime::UTC );
     } else {
       const KTimeZone systemTz = KSystemTimeZones::zone( d->mZones[currentIndex()] );

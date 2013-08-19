@@ -234,7 +234,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 
     d->mActionMenu->addSeparator();
 
-    KAction *action = new KAction( i18n("Create new tab"), this );
+    KAction *action = new KAction( i18n("Create New Tab"), this );
     action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_T ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "create_new_tab" ), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(onNewTabClicked()) );
@@ -246,7 +246,7 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
     }
 
 
-    d->mCloseTabAction = new KAction( i18n("Close tab"), this );
+    d->mCloseTabAction = new KAction( i18n("Close Tab"), this );
     d->mCloseTabAction->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_W ) );
     d->mXmlGuiClient->actionCollection()->addAction( QLatin1String( "close_current_tab" ), d->mCloseTabAction );
     connect( d->mCloseTabAction, SIGNAL(triggered(bool)), SLOT(onCloseTabClicked()) );
@@ -364,6 +364,20 @@ bool Pane::selectFirstMessageItem( MessageList::Core::MessageTypeFilter messageT
   }
 }
 
+bool Pane::selectLastMessageItem(Core::MessageTypeFilter messageTypeFilter, bool centerItem)
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return true;
+
+    return w->selectLastMessageItem( messageTypeFilter, centerItem );
+  } else {
+    return false;
+  }
+}
+
 void Pane::selectAll()
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
@@ -430,6 +444,8 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
 
   Widget *w = static_cast<Widget*>( q->currentWidget() );
   QItemSelectionModel * s = mWidgetSelectionHash[w];
+
+  w->saveCurrentSelection();
 
   // Deselect old before we select new - so that the messagelist can clear first.
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
@@ -571,7 +587,7 @@ void Pane::Private::closeTab( QWidget *w )
 
 void Pane::Private::changeQuicksearchVisibility(bool show)
 {
-    for ( int i=0; i<q->count(); i++ ) {
+    for ( int i=0; i<q->count(); ++i ) {
       Widget *w = qobject_cast<Widget *>( q->widget( i ) );
       w->changeQuicksearchVisibility(show);
     }
@@ -633,7 +649,7 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
     QList<Widget *> widgets;
     const int index = q->indexOf( w );
 
-    for ( int i=0; i<q->count(); i++ ) {
+    for ( int i=0; i<q->count(); ++i ) {
       if ( i==index) continue; // Skip the current one
 
       Widget *other = qobject_cast<Widget *>( q->widget( i ) );
@@ -972,7 +988,7 @@ void Pane::setPreferEmptyTab( bool emptyTab )
 
 void Pane::saveCurrentSelection()
 {
-  for ( int i=0; i<count(); i++ ) {
+  for ( int i=0; i<count(); ++i ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     w->saveCurrentSelection();
   }
@@ -980,7 +996,7 @@ void Pane::saveCurrentSelection()
 
 void Pane::updateTagComboBox()
 {
-  for ( int i=0; i<count(); i++ ) {
+  for ( int i=0; i<count(); ++i ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     w->populateStatusFilterCombo();
   }
@@ -991,7 +1007,7 @@ void Pane::writeConfig()
   KConfigGroup conf( MessageList::Core::Settings::self()->config(),"MessageListPane");
 
   // Delete list before
-  const QStringList list = conf.groupList().filter( QRegExp( QLatin1String("MessageListTab\\d+") ) );
+  const QStringList list = MessageList::Core::Settings::self()->config()->groupList().filter( QRegExp( QLatin1String("MessageListTab\\d+") ) );
   foreach ( const QString &group, list ) {
     conf.deleteGroup( group );
   }
@@ -999,7 +1015,7 @@ void Pane::writeConfig()
   conf.writeEntry(QLatin1String("currentIndex"),currentIndex());
   conf.writeEntry(QLatin1String("tabNumber"),count());
 
-  for ( int i=0; i<count(); i++ ) {
+  for ( int i=0; i<count(); ++i ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
     grp.writeEntry(QLatin1String("collectionId"),w->currentCollection().id());
@@ -1020,6 +1036,7 @@ void Pane::readConfig()
       for(int i = 0; i<numberOfTab; ++i) {
         KConfigGroup grp(MessageList::Core::Settings::self()->config(),QString::fromLatin1("MessageListTab%1").arg(i));
         QItemSelectionModel *selectionModel = createNewTab();
+        Q_UNUSED( selectionModel );
 #if 0
         Akonadi::Collection::Id id = grp.readEntry(QLatin1String("collectionId"),-1);
         ETMViewStateSaver *saver = new ETMViewStateSaver;

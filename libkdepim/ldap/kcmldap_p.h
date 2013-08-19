@@ -2,6 +2,7 @@
   This file is part of libkldap.
 
   Copyright (c) 2003 - 2009 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2013 Laurent Montel <montel@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General  Public
@@ -29,6 +30,10 @@ class QListWidgetItem;
 class QPushButton;
 class QToolButton;
 
+namespace KLDAP {
+class LdapClientSearchConfig;
+}
+
 class KCMLdap : public KCModule
 {
   Q_OBJECT
@@ -37,9 +42,9 @@ class KCMLdap : public KCModule
     explicit KCMLdap( QWidget *parent, const QVariantList &args );
     ~KCMLdap();
 
-    virtual void load();
-    virtual void save();
-    virtual void defaults();
+    void load();
+    void save();
+    void defaults();
 
   private Q_SLOTS:
     void slotAddHost();
@@ -62,6 +67,7 @@ class KCMLdap : public KCModule
 
     QToolButton* mUpButton;
     QToolButton* mDownButton;
+    KLDAP::LdapClientSearchConfig *mClientSearchConfig;
 };
 
 #endif

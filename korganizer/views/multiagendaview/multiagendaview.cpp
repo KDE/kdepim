@@ -25,14 +25,12 @@
 #include "ui_multiagendaviewconfigwidget.h"
 
 #include <akonadi_next/kcolumnfilterproxymodel.h>
-using namespace Future;
 
-#include <calendarsupport/calendarmodel.h>
-
-#include <calendarviews/eventviews/agenda/agendaview.h>
-#include <calendarviews/eventviews/multiagenda/multiagendaview.h>
+#include <calendarviews/agenda/agendaview.h>
+#include <calendarviews/multiagenda/multiagendaview.h>
 
 #include <Akonadi/EntityTreeView>
+#include <Akonadi/EntityTreeModel>
 
 #include <KCheckableProxyModel>
 
@@ -40,6 +38,7 @@ using namespace Future;
 #include <QSortFilterProxyModel>
 #include <QStandardItem>
 
+using namespace Future;
 using namespace KOrg;
 
 static QString generateColumnLabel( int c )
@@ -118,12 +117,6 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   connect( d->mMultiAgendaView, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)),
            SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
 
-  connect( d->mMultiAgendaView, SIGNAL(startMultiModify(QString)),
-           SIGNAL(startMultiModify(QString)) );
-
-  connect( d->mMultiAgendaView, SIGNAL(endMultiModify()),
-           SIGNAL(endMultiModify()) );
-
   connect( d->mMultiAgendaView, SIGNAL(newEventSignal()),
            SIGNAL(newEventSignal()) );
 
@@ -147,7 +140,7 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
 
 }
 
-void MultiAgendaView::setCalendar( CalendarSupport::Calendar *cal )
+void MultiAgendaView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   d->mMultiAgendaView->setCalendar( cal );
   d->mPopup->setCalendar( cal );
@@ -193,7 +186,7 @@ Akonadi::Collection::Id MultiAgendaView::collectionId() const
   return d->mMultiAgendaView->collectionId();
 }
 
-void MultiAgendaView::changeIncidenceDisplay( const Akonadi::Item &, int )
+void MultiAgendaView::changeIncidenceDisplay( const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType )
 {
 }
 
@@ -213,7 +206,7 @@ bool MultiAgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt,
   return d->mMultiAgendaView->eventDurationHint( startDt, endDt, allDay );
 }
 
-void MultiAgendaView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
+void MultiAgendaView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   d->mMultiAgendaView->setIncidenceChanger( changer );
 }
@@ -252,7 +245,7 @@ bool MultiAgendaView::hasConfigurationDialog() const
 void MultiAgendaView::showConfigurationDialog( QWidget *parent )
 {
   QPointer<MultiAgendaViewConfigDialog> dlg(
-    new MultiAgendaViewConfigDialog( d->mMultiAgendaView->calendar()->treeModel(),
+    new MultiAgendaViewConfigDialog( d->mMultiAgendaView->calendar()->entityTreeModel(),
                                      parent ) );
 
   dlg->setUseCustomColumns( d->mMultiAgendaView->customColumnSetupUsed() );
@@ -418,7 +411,7 @@ void MultiAgendaViewConfigDialog::Private::setUpColumns( int n )
       sortProxy->setSourceModel( baseModel );
 
       KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( sortProxy );
-      columnFilterProxy->setVisibleColumn( CalendarSupport::CalendarModel::CollectionTitle );
+      columnFilterProxy->setVisibleColumn( Akonadi::ETMCalendar::CollectionTitle );
       columnFilterProxy->setSourceModel( sortProxy );
 
       QItemSelectionModel *qsm = new QItemSelectionModel( columnFilterProxy, columnFilterProxy );
@@ -430,6 +423,7 @@ void MultiAgendaViewConfigDialog::Private::setUpColumns( int n )
       AkonadiCollectionView *cview = createView( selection );
       const int idx = ui.selectionStack->addWidget( cview );
       Q_ASSERT( i == idx );
+      Q_UNUSED( idx );
       selections[i] = selection;
       newlyCreated.push_back( selection );
     }

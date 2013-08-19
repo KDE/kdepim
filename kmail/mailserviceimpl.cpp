@@ -31,11 +31,11 @@
 #include "mailserviceimpl.h"
 #include "mailserviceimpl.moc"
 #include <serviceadaptor.h>
-#include "composer.h"
+#include "editor/composer.h"
 #include "kmkernel.h"
 
 // kdepim includes
-#include "messagecomposer/messagehelper.h"
+#include "messagecomposer/helper/messagehelper.h"
 
 #include <kurl.h>
 #include <kdebug.h>

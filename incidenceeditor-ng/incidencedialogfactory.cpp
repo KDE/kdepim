@@ -19,19 +19,21 @@
 */
 
 #include "incidencedialogfactory.h"
-#include "eventortododialog.h"
+#include "incidencedialog.h"
 #include "incidencedefaults.h"
 #include "groupwareintegration.h"
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
 #include <Akonadi/Item>
+#include <Akonadi/Calendar/IncidenceChanger>
 
 using namespace IncidenceEditorNG;
 using namespace KCalCore;
 
 IncidenceDialog *IncidenceDialogFactory::create( bool needsSaving,
                                                  KCalCore::IncidenceBase::IncidenceType type,
+                                                 Akonadi::IncidenceChanger *changer,
                                                  QWidget *parent, Qt::WindowFlags flags )
 {
   switch ( type ) {
@@ -39,8 +41,7 @@ IncidenceDialog *IncidenceDialogFactory::create( bool needsSaving,
   case KCalCore::IncidenceBase::TypeTodo:
   case KCalCore::IncidenceBase::TypeJournal:
   {
-    // TODO: rename EventOrTodoDialog to IncidenceDialog
-    EventOrTodoDialog *dialog = new EventOrTodoDialog( parent, flags );
+    IncidenceDialog *dialog = new IncidenceDialog( changer, parent, flags );
 
     // needs to be save to akonadi?, apply button should be turned on if so.
     dialog->setInitiallyDirty( needsSaving/* mInitiallyDirty */ );
@@ -87,6 +88,7 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
 
   IncidenceDialog *dialog = create( true, /* no need for, we're not editing an existing to-do */
                                     KCalCore::Incidence::TypeTodo,
+                                    0,
                                     parent, flags );
   dialog->selectCollection( defaultCollection );
   dialog->load( item );
@@ -129,6 +131,7 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
   IncidenceDialog *dialog =
     create( false, // not needed for saving, as we're not editing an existing incidence
             KCalCore::Incidence::TypeEvent,
+            0,
             parent, flags );
 
   dialog->selectCollection( defaultCollection );

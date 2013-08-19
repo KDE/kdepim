@@ -39,7 +39,7 @@ class ClockHelper : public QObject
   Q_PROPERTY(int hoursAngle READ hoursAngle NOTIFY hoursAngleChanged)
 
 public:
-  ClockHelper(QObject *parent = 0);
+  explicit ClockHelper(QObject *parent = 0);
   virtual ~ClockHelper();
 
   qreal originX() const;

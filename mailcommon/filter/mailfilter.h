@@ -23,7 +23,7 @@
 #include "../mailcommon_export.h"
 
 #include "filteraction.h"
-#include "../searchpattern.h"
+#include "../search/searchpattern.h"
 
 #include <kshortcut.h>
 #include <akonadi/collection.h>

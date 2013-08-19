@@ -46,7 +46,7 @@
 #include <qtextedit.h>
 #include <QFontMetrics>
 #include <QTimer>
-//Added by qt3to4:
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QCloseEvent>

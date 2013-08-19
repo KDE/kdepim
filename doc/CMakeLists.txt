@@ -1,55 +1,81 @@
 if(BUILD_akregator)
   add_subdirectory(akregator)
-endif(BUILD_akregator)
+endif()
 
 if(BUILD_blogilo)
   add_subdirectory(blogilo)
-endif(BUILD_blogilo)
+endif()
 
 if(BUILD_console)
   add_subdirectory(kabcclient)
   add_subdirectory(konsolekalendar)
-endif(BUILD_console)
+endif()
 
 if(BUILD_kalarm)
   add_subdirectory(kalarm)
-endif(BUILD_kalarm)
+endif()
 
 add_subdirectory(kioslave)
 
 if (BUILD_kjots)
   add_subdirectory(kjots)
-endif (BUILD_kjots)
+endif ()
 
 if(BUILD_kleopatra)
   add_subdirectory(kleopatra)
   add_subdirectory(kwatchgnupg)
-endif(BUILD_kleopatra)
+endif()
 
 if(BUILD_kmail)
   add_subdirectory(kmail)
   if(BUILD_korganizer)
     add_subdirectory(korganizer)
-  endif(BUILD_korganizer)
-endif(BUILD_kmail)
+  endif()
+endif()
 
 if(BUILD_knode)
   add_subdirectory(knode)
-endif(BUILD_knode)
+endif()
 
 if(BUILD_knotes)
   add_subdirectory(knotes)
-endif(BUILD_knotes)
+endif()
 
 if(BUILD_kontact)
   add_subdirectory(kontact)
   add_subdirectory(kontact-admin)
-endif(BUILD_kontact)
+endif()
 
 if(BUILD_ktimetracker)
   add_subdirectory(ktimetracker)
-endif(BUILD_ktimetracker)
+endif()
 
 if(BUILD_ktnef)
   add_subdirectory(ktnef)
-endif(BUILD_ktnef)
+endif()
+
+if(BUILD_headerthemeeditor)
+  add_subdirectory(headerthemeeditor)
+endif()
+
+if(BUILD_archivemailagent)
+  add_subdirectory(akonadi_archivemail_agent)
+endif()
+
+if(BUILD_importwizard)
+  add_subdirectory(importwizard)
+endif()
+
+
+if(BUILD_sendlateragent)
+  add_subdirectory(akonadi_sendlater_agent)
+endif()
+
+if(BUILD_pimsettingexporter)
+  add_subdirectory(pimsettingexporter)
+endif()
+
+if(BUILD_kmailcvt)
+  add_subdirectory(kmailcvt)
+endif()
+

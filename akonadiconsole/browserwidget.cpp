@@ -45,7 +45,7 @@
 #include <akonadi/etmviewstatesaver.h>
 #include <akonadi/favoritecollectionsmodel.h>
 #include <akonadi_next/quotacolorproxymodel.h>
-#include <libkdepim/statisticsproxymodel.h>
+#include <libkdepim/misc/statisticsproxymodel.h>
 #include <kviewstatemaintainer.h>
 
 #include <kabc/addressee.h>
@@ -118,7 +118,8 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   monitor->fetchCollection( true );
   monitor->setAllMonitored( true );
   // TODO: Only fetch the envelope etc if possible.
-  monitor->itemFetchScope().fetchFullPayload(true);
+  monitor->itemFetchScope().fetchFullPayload( true );
+  monitor->itemFetchScope().setCacheOnly( true );
 
   mBrowserModel = new AkonadiBrowserModel( monitor, this );
   mBrowserModel->setItemPopulationStrategy( EntityTreeModel::LazyPopulation );

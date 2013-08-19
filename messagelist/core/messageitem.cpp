@@ -23,7 +23,7 @@
 #include "messageitem_p.h"
 
 #include "messagetag.h"
-#include "messagecore/annotationdialog.h"
+#include "messagecore/widgets/annotationdialog.h"
 #include "core/callbacknepomukresourceretriever.h"
 #include "theme.h"
 
@@ -56,7 +56,7 @@ public:
   QColor mBackgroundColor;
   QFont  mFont;
   QString  mFontKey;
-  int    mPriority;
+  int mPriority;
 };
 
 MessageItem::Tag::Tag( const QPixmap &pix, const QString &tagName, const QString &tagId )

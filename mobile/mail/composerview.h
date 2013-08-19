@@ -21,8 +21,8 @@
 #define COMPOSERVIEW_H
 
 #include "kdeclarativefullscreenview.h"
-#include <messagecomposer/messagesender.h>
-#include <messagecomposer/composerviewbase.h>
+#include <messagecomposer/sender/messagesender.h>
+#include <messagecomposer/composer/composerviewbase.h>
 #include <KActionCollection>
 #include <KMime/Message>
 
@@ -60,7 +60,7 @@ class ComposerView : public KDeclarativeFullScreenView
 
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo );
 
-    void setEditor( Message::KMeditor* editor );
+    void setEditor( MessageComposer::KMeditor* editor );
     void setRecipientsEditor( MessageComposer::RecipientsEditor *editor );
 
     QString subject() const;
@@ -83,15 +83,15 @@ class ComposerView : public KDeclarativeFullScreenView
     QObject* getAction( const QString &name ) const;
 
     /// Send clicked in the user interface
-    void send( MessageSender::SendMethod method = MessageSender::SendDefault,
-               MessageSender::SaveIn saveIn = MessageSender::SaveInNone );
+    void send( MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendDefault,
+               MessageComposer::MessageSender::SaveIn saveIn = MessageComposer::MessageSender::SaveInNone );
 
     void configureIdentity();
     void configureTransport();
     void sendSuccessful();
 
     void enableHtml();
-    void disableHtml( Message::ComposerViewBase::Confirmation confirmation );
+    void disableHtml( MessageComposer::ComposerViewBase::Confirmation confirmation );
     void addAttachment( KMime::Content* part );
 
   signals:
@@ -125,7 +125,7 @@ class ComposerView : public KDeclarativeFullScreenView
     void closeEvent ( QCloseEvent * event );
 
   private:
-    Message::ComposerViewBase* m_composerBase;
+    MessageComposer::ComposerViewBase* m_composerBase;
     QString m_subject;
     KMime::Message::Ptr m_message;
     int m_jobCount;

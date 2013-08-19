@@ -3,6 +3,7 @@
 
     Copyright (C) 2008-2010 Mehrdad Momeny <mehrdad.momeny@gmail.com>
     Copyright (C) 2008-2010 Golnaz Nilieh <g382nilieh@gmail.com>
+    Copyright (C) 2013 Laurent Montel <montel@kde.org> 
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -28,12 +29,10 @@
 #include <QWidget>
 
 #include "kurl.h"
-// #include "kparts/part.h"
-// #include "kparts/browserextension.h"
 
 class QCheckBox;
 class QProgressBar;
-class KHTMLPart;
+class KWebView;
 class KPushButton;
 class KStatusBar;
 
@@ -41,6 +40,7 @@ class KStatusBar;
 * Implements a simple browser widget for use in blogilo Post Preview.
 * In addition to normal browsing tools, it has a button for fetching blog styles
 * from the web.
+This class will use on Win32!
     @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
     @author Golnaz Nilieh <g382nilieh@gmail.com>
 */
@@ -54,7 +54,7 @@ public:
      * tools, and a button for getting blog style.
      * @param parent is parent widget
      */
-    BilboBrowser( QWidget *parent = 0 );
+    explicit BilboBrowser( QWidget *parent = 0 );
 
     /**
      * @brief BilboBrowser destructor.
@@ -69,8 +69,6 @@ public:
     void setHtml( const QString& title, const QString& content );
 
     void stop();
-/*
-    void setBrowserDirection( Qt::LayoutDirection direction );*/
 
 Q_SIGNALS:
     /**
@@ -83,21 +81,16 @@ protected Q_SLOTS:
 
     void slotSetBlogStyle();
 
-    void slotCompleted();
-
-    void slotCanceled( const QString& errMsg );
+    void slotCompleted( bool );
 
     void slotSetStatusBarText( const QString& text );
 
     void slotViewModeChanged();
 
-    void slotOpenRequested( const KUrl& url );
-
 private:
-    void createUi( QWidget *parent = 0 );
+    void createUi( QWidget *parent );
 
-    KHTMLPart *browserPart;
-
+    KWebView *mWebView;
     QCheckBox *viewInBlogStyle;
     KPushButton *btnGetStyle;
     QProgressBar *browserProgress;

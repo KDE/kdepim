@@ -19,7 +19,7 @@
 
 #include "filteractionaddheader.h"
 
-#include <messageviewer/minimumcombobox.h>
+#include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KLineEdit>
 #include <KLocale>
@@ -32,14 +32,14 @@
 using namespace MailCommon;
 
 FilterActionAddHeader::FilterActionAddHeader( QObject *parent )
-  : FilterActionWithStringList( "add header", i18n( "Add Header" ), parent )
+  : FilterActionWithStringList( QLatin1String("add header"), i18n( "Add Header" ), parent )
 {
-  mParameterList << ""
-                 << "Reply-To"
-                 << "Delivered-To"
-                 << "X-KDE-PR-Message"
-                 << "X-KDE-PR-Package"
-                 << "X-KDE-PR-Keywords";
+  mParameterList << QLatin1String("")
+                 << QLatin1String("Reply-To")
+                 << QLatin1String("Delivered-To")
+                 << QLatin1String("X-KDE-PR-Message")
+                 << QLatin1String("X-KDE-PR-Package")
+                 << QLatin1String("X-KDE-PR-Keywords");
 
   mParameter = mParameterList.at( 0 );
 }
@@ -73,8 +73,8 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
   layout->setSpacing( 4 );
   layout->setMargin( 0 );
 
-  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( widget );
-  comboBox->setObjectName( "combo" );
+  PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( widget );
+  comboBox->setObjectName( QLatin1String("combo") );
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
 
@@ -91,7 +91,7 @@ QWidget* FilterActionAddHeader::createParamWidget( QWidget *parent ) const
   layout->addWidget( label, 0 );
 
   KLineEdit *lineEdit = new KLineEdit( widget );
-  lineEdit->setObjectName( "ledit" );
+  lineEdit->setObjectName( QLatin1String("ledit") );
   lineEdit->setTrapReturnKey(true);
   lineEdit->setClearButtonShown( true );
   layout->addWidget( lineEdit, 1 );
@@ -112,7 +112,7 @@ void FilterActionAddHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
   const int index = mParameterList.indexOf( mParameter );
 
-  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
+  PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("combo") );
   Q_ASSERT( comboBox );
   comboBox->clear();
   comboBox->addItems( mParameterList );
@@ -124,7 +124,7 @@ void FilterActionAddHeader::setParamWidgetValue( QWidget *paramWidget ) const
     comboBox->setCurrentIndex( index );
   }
 
-  KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( "ledit" );
+  KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("ledit") );
   Q_ASSERT( lineEdit );
 
   lineEdit->setText( mValue );
@@ -132,22 +132,22 @@ void FilterActionAddHeader::setParamWidgetValue( QWidget *paramWidget ) const
 
 void FilterActionAddHeader::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
+  const PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("combo") );
   Q_ASSERT( comboBox );
   mParameter = comboBox->currentText();
 
-  const KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( "ledit" );
+  const KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("ledit") );
   Q_ASSERT( lineEdit );
   mValue = lineEdit->text();
 }
 
 void FilterActionAddHeader::clearParamWidget( QWidget *paramWidget ) const
 {
-  MessageViewer::MinimumComboBox *comboBox = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "combo" );
+  PimCommon::MinimumComboBox *comboBox = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("combo") );
   Q_ASSERT( comboBox );
   comboBox->setCurrentIndex( 0 );
 
-  KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( "ledit" );
+  KLineEdit *lineEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("ledit") );
   Q_ASSERT( lineEdit );
   lineEdit->clear();
 }

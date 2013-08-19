@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -28,30 +28,30 @@
 
 int main(int argc, char *argv[])
 {
-  KLocale::setMainCatalog("importwizard");
+    KLocale::setMainCatalog("importwizard");
 
-  //FIXME: "wizards" are "assistents" in new KDE slang
-  KAboutData aboutData( "importwizard", 0, ki18n("importwizard"),
-    KDEPIM_VERSION, ki18n("PIM Import Tool"), KAboutData::License_GPL_V2,
-    ki18n("Copyright © 2012 importwizard authors"));
-  aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
-  aboutData.setProgramIconName("kontact-import-wizard");
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    //FIXME: "wizards" are "assistents" in new KDE slang
+    KAboutData aboutData( "importwizard", 0, ki18n("importwizard"),
+                          KDEPIM_VERSION, ki18n("PIM Import Tool"), KAboutData::License_GPL_V2,
+                          ki18n("Copyright © 2012-2013 importwizard authors"));
+    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
+    aboutData.setProgramIconName(QLatin1String("kontact-import-wizard"));
+    KCmdLineArgs::init( argc, argv, &aboutData );
 
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
-  KUniqueApplication::addCmdLineOptions();
+    KCmdLineOptions options;
+    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KUniqueApplication::addCmdLineOptions();
 
-  if ( !KUniqueApplication::start() ) {
-      fprintf( stderr, "importwizard is already running!\n" );
-      exit( 0 );
-  }
-  KUniqueApplication a;
+    if ( !KUniqueApplication::start() ) {
+        fprintf( stderr, "importwizard is already running!\n" );
+        exit( 0 );
+    }
+    KUniqueApplication a;
 
-  ImportWizard *wizard = new ImportWizard();
-  a.setTopWidget(wizard);
-  wizard->show();
-  int ret = a.exec();
-  delete wizard;
-  return ret;
+    ImportWizard *wizard = new ImportWizard();
+    a.setTopWidget(wizard);
+    wizard->show();
+    int ret = a.exec();
+    delete wizard;
+    return ret;
 }

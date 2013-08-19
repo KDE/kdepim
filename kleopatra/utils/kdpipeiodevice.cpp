@@ -346,7 +346,6 @@ void KDPipeIODevice::Private::emitReadyRead()
 
     if ( !thisPointer )
         return;
-    bool mustNotify = false;
     if ( reader ) {
         qDebug( "KDPipeIODevice::Private::emitReadyRead %p: locking reader (CONSUMER THREAD)", (
               void* ) this );
@@ -354,7 +353,6 @@ void KDPipeIODevice::Private::emitReadyRead()
             qDebug( "KDPipeIODevice::Private::emitReadyRead %p: locked reader (CONSUMER THREAD)", (
                   void* ) this );
             reader->readyReadSentCondition.wakeAll();
-            mustNotify = !reader->bufferEmpty() && reader->isReading;
             qDebug( "KDPipeIODevice::Private::emitReadyRead %p: buffer empty: %d reader in ReadFile: %d", ( void* )this, reader->bufferEmpty(), reader->isReading );            
         }
     }

@@ -38,7 +38,7 @@
 
 
 #include "util.h"
-#include "pimcommon/pimutil.h"
+#include "pimcommon/util/pimutil.h"
 #include "imapsettings.h"
 #include "settings.h"
 
@@ -51,98 +51,98 @@ using namespace KSieveUi;
 
 KUrl KSieveUi::Util::findSieveUrlForAccount( const QString &identifier )
 {
-  QScopedPointer<OrgKdeAkonadiImapSettingsInterface> interface( PimCommon::Util::createImapSettingsInterface(identifier) );
+    QScopedPointer<OrgKdeAkonadiImapSettingsInterface> interface( PimCommon::Util::createImapSettingsInterface(identifier) );
 
-  if ( !interface->sieveSupport() )
-    return KUrl();
+    if ( !interface->sieveSupport() )
+        return KUrl();
 
-  if ( interface->sieveReuseConfig() ) {
-    // assemble Sieve url from the settings of the account:
-    KUrl u;
-    u.setProtocol( "sieve" );
-    QString server;
-    QDBusReply<QString> reply = interface->imapServer();
-    if ( reply.isValid() ) {
-      server = reply;
-      server = server.section( ':', 0, 0 );
+    if ( interface->sieveReuseConfig() ) {
+        // assemble Sieve url from the settings of the account:
+        KUrl u;
+        u.setProtocol( QLatin1String("sieve") );
+        QString server;
+        QDBusReply<QString> reply = interface->imapServer();
+        if ( reply.isValid() ) {
+            server = reply;
+            server = server.section( QLatin1Char(':'), 0, 0 );
+        } else {
+            return KUrl();
+        }
+        u.setHost( server );
+        u.setUser( interface->userName() );
+
+        QDBusInterface resourceSettings( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + identifier, QLatin1String("/Settings"), QLatin1String("org.kde.Akonadi.Imap.Wallet") );
+
+        QString pwd;
+        QDBusReply<QString> replyPass = resourceSettings.call( QLatin1String("password") );
+        if ( replyPass.isValid() ) {
+            pwd = replyPass;
+        }
+        u.setPass( pwd );
+        u.setPort( interface->sievePort() );
+        QString authStr;
+        switch( interface->authentication() ) {
+        case MailTransport::Transport::EnumAuthenticationType::CLEAR:
+        case MailTransport::Transport::EnumAuthenticationType::PLAIN:
+            authStr = QLatin1String("PLAIN");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::LOGIN:
+            authStr = QLatin1String("LOGIN");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::CRAM_MD5:
+            authStr = QLatin1String("CRAM-MD5");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5:
+            authStr = QLatin1String("DIGEST-MD5");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::GSSAPI:
+            authStr = QLatin1String("GSSAPI");
+            break;
+        case MailTransport::Transport::EnumAuthenticationType::ANONYMOUS:
+            authStr = QLatin1String("ANONYMOUS");
+            break;
+        default:
+            authStr = QLatin1String("PLAIN");
+            break;
+        }
+        u.addQueryItem( QLatin1String("x-mech"), authStr );
+        const QString resultSafety = interface->safety();
+        if ( resultSafety == QLatin1String("None"))
+            u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
+        u.setFileName( interface->sieveVacationFilename() );
+        return u;
     } else {
-      return KUrl();
+        KUrl u( interface->sieveAlternateUrl() );
+        const QString resultSafety = interface->safety();
+        if ( u.protocol().toLower() == QLatin1String("sieve") && ( resultSafety ==  QLatin1String("None") ) && u.queryItem(QLatin1String("x-allow-unencrypted")).isEmpty() )
+            u.addQueryItem( QLatin1String("x-allow-unencrypted"), QLatin1String("true") );
+        u.setFileName( interface->sieveVacationFilename() );
+        return u;
     }
-    u.setHost( server );
-    u.setUser( interface->userName() );
-
-    QDBusInterface resourceSettings( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + identifier, "/Settings", "org.kde.Akonadi.Imap.Wallet" );
-
-    QString pwd;
-    QDBusReply<QString> replyPass = resourceSettings.call( "password" );
-    if ( replyPass.isValid() ) {
-      pwd = replyPass;
-    }
-    u.setPass( pwd );
-    u.setPort( interface->sievePort() );
-    QString authStr;
-    switch( interface->authentication() ) {
-    case MailTransport::Transport::EnumAuthenticationType::CLEAR:
-    case MailTransport::Transport::EnumAuthenticationType::PLAIN:
-      authStr = "PLAIN";
-      break;
-    case MailTransport::Transport::EnumAuthenticationType::LOGIN:
-      authStr = "LOGIN";
-      break;
-    case MailTransport::Transport::EnumAuthenticationType::CRAM_MD5:
-      authStr = "CRAM-MD5";
-      break;
-    case MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5:
-      authStr = "DIGEST-MD5";
-      break;
-    case MailTransport::Transport::EnumAuthenticationType::GSSAPI:
-      authStr = "GSSAPI";
-      break;
-    case MailTransport::Transport::EnumAuthenticationType::ANONYMOUS:
-      authStr = "ANONYMOUS";
-      break;
-    default:
-      authStr = "PLAIN";
-      break;
-    }
-    u.addQueryItem( "x-mech", authStr );
-    if ( interface->safety() == ( int )( KIMAP::LoginJob::Unencrypted ))
-      u.addQueryItem( "x-allow-unencrypted", "true" );
-    u.setFileName( interface->sieveVacationFilename() );
-    return u;
-  } else {
-    KUrl u( interface->sieveAlternateUrl() );
-    if ( u.protocol().toLower() == "sieve" && ( interface->safety() == ( int )( KIMAP::LoginJob::Unencrypted ) ) && u.queryItem("x-allow-unencrypted").isEmpty() )
-      u.addQueryItem( "x-allow-unencrypted", "true" );
-    u.setFileName( interface->sieveVacationFilename() );
-    return u;
-  }
 }
-
-#define IMAP_RESOURCE_IDENTIFIER "akonadi_imap_resource"
 
 Akonadi::AgentInstance::List KSieveUi::Util::imapAgentInstances()
 {
-  Akonadi::AgentInstance::List relevantInstances;
-  foreach ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
-    if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) &&
-         instance.type().capabilities().contains( "Resource" ) &&
-         !instance.type().capabilities().contains( "Virtual" ) ) {
+    Akonadi::AgentInstance::List relevantInstances;
+    foreach ( const Akonadi::AgentInstance &instance, Akonadi::AgentManager::self()->instances() ) {
+        if ( instance.type().mimeTypes().contains( KMime::Message::mimeType() ) &&
+             instance.type().capabilities().contains( QLatin1String("Resource") ) &&
+             !instance.type().capabilities().contains( QLatin1String("Virtual") ) ) {
 
-      if ( instance.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) )
-        relevantInstances << instance;
+            if ( instance.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) )
+                relevantInstances << instance;
+        }
     }
-  }
 
-  return relevantInstances;
+    return relevantInstances;
 }
 
 bool KSieveUi::Util::checkOutOfOfficeOnStartup()
 {
-  return Settings::self()->checkOutOfOfficeOnStartup();
+    return Settings::self()->checkOutOfOfficeOnStartup();
 }
 
 bool KSieveUi::Util::allowOutOfOfficeSettings()
 {
-  return Settings::self()->allowOutOfOfficeSettings();
+    return Settings::self()->allowOutOfOfficeSettings();
 }

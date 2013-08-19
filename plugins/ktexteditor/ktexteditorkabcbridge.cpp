@@ -64,13 +64,13 @@ extern "C" KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder,
   KABC::Addressee contact;
   contact.setNameFromString( defaultIdentity.fullName() );
 
-  if ( placeHolder == "firstname" )
+  if ( placeHolder == QLatin1String("firstname") )
     return contact.givenName();
-  else if ( placeHolder == "lastname" )
+  else if ( placeHolder == QLatin1String("lastname") )
     return contact.familyName();
-  else if ( placeHolder == "fullname" )
+  else if ( placeHolder == QLatin1String("fullname") )
     return contact.assembledName();
-  else if ( placeHolder == "email" )
+  else if ( placeHolder == QLatin1String("email") )
     return defaultIdentity.primaryEmailAddress();
   else
     return QString();

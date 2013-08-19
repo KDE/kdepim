@@ -36,7 +36,7 @@ class OrgKdeKnodeInterface;
 class KNodeUniqueAppHandler : public KontactInterface::UniqueAppHandler
 {
   public:
-    KNodeUniqueAppHandler( KontactInterface::Plugin *plugin )
+    explicit KNodeUniqueAppHandler( KontactInterface::Plugin *plugin )
       : KontactInterface::UniqueAppHandler( plugin ) {}
     virtual void loadCommandLineOptions();
     virtual int newInstance();
@@ -50,12 +50,12 @@ class KNodePlugin : public KontactInterface::Plugin
     KNodePlugin( KontactInterface::Core *core, const QVariantList & );
     ~KNodePlugin();
 
-    virtual bool createDBUSInterface( const QString &serviceType );
-    virtual bool isRunningStandalone() const;
-    virtual QString tipFile() const;
+    bool createDBUSInterface( const QString &serviceType );
+    bool isRunningStandalone() const;
+    QString tipFile() const;
     int weight() const { return 500; }
 
-    virtual QStringList invisibleToolbarActions() const;
+    QStringList invisibleToolbarActions() const;
 
   protected:
     virtual KParts::ReadOnlyPart *createPart();

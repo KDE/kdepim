@@ -24,6 +24,7 @@ include_directories(
   ${SOPRANO_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/messagecore
+  ${CMAKE_SOURCE_DIR}/messageviewer
 )
 
 kde4_add_kcfg_files(templateparser_LIB_SRCS templatesconfiguration_kfg.kcfgc)
@@ -67,4 +68,4 @@ install(FILES
   DESTINATION ${KCFG_INSTALL_DIR}
 )
 
-#add_subdirectory(tests)
+add_subdirectory(tests)

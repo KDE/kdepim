@@ -24,7 +24,7 @@ class KNSourceViewWindow : public KTextBrowser {
   Q_OBJECT
 
   public:
-    KNSourceViewWindow( const QString &text );
+    explicit KNSourceViewWindow( const QString &text );
     ~KNSourceViewWindow();
 
 };

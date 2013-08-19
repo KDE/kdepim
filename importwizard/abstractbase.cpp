@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,7 +16,7 @@
 */
 
 #include "abstractbase.h"
-#include "pimcommon/createresource.h"
+#include "pimcommon/util/createresource.h"
 
 #include <KLocale>
 #include <KDebug>
@@ -34,29 +34,29 @@ using namespace Akonadi;
 
 AbstractBase::AbstractBase()
 {
-  mCreateResource = new PimCommon::CreateResource();
-  connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SLOT(slotCreateResourceInfo(QString)));
-  connect(mCreateResource,SIGNAL(createResourceError(QString)),SLOT(slotCreateResourceError(QString)));
+    mCreateResource = new PimCommon::CreateResource();
+    connect(mCreateResource,SIGNAL(createResourceInfo(QString)),SLOT(slotCreateResourceInfo(QString)));
+    connect(mCreateResource,SIGNAL(createResourceError(QString)),SLOT(slotCreateResourceError(QString)));
 }
 
 AbstractBase::~AbstractBase()
 {
-  delete mCreateResource;
+    delete mCreateResource;
 }
 
 QString AbstractBase::createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings)
 {
-  return mCreateResource->createResource(resources,name,settings);
+    return mCreateResource->createResource(resources,name,settings);
 }
 
 void AbstractBase::slotCreateResourceError(const QString& msg)
 {
-  addImportError(msg);
+    addImportError(msg);
 }
 
 void AbstractBase::slotCreateResourceInfo(const QString& msg)
 {
-  addImportInfo(msg);
+    addImportInfo(msg);
 }
 
 #include "abstractbase.moc"

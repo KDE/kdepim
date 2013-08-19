@@ -2,7 +2,7 @@
      the same menu entries at the same place in KMail and Kontact  -->
 
 <!DOCTYPE kpartgui>
-<kpartgui version="483" name="kmmainwin" >
+<kpartgui version="486" name="kmmainwin" >
  <MenuBar>
   <Menu noMerge="1" name="file" >
    <text>&amp;File</text>
@@ -189,6 +189,8 @@
    <Separator/>
    <Action name="tools_automatic_archiving"/>
    <Separator/>
+   <Action name="tools_configure_sendlater"/>
+   <Separator/>
    <Action name="accountWizard"/>
    <Action name="antiSpamWizard"/>
    <Action name="antiVirusWizard"/>
@@ -196,6 +198,7 @@
   <Menu noMerge="1" name="settings">
    <text>&amp;Settings</text>
    <Merge name="StandardToolBarMenuHandler"/>
+   <Action name="options_show_menubar" group="settings_configure" />
    <Action name="show_quick_search"/>
    <Action name="filter" append="save_merge"/>
    <Action name="sieveFilters" append="save_merge"/>
@@ -264,6 +267,7 @@
   <Separator/>
   <action name="file_save_as"/>
   <Separator/>
+  <Action name="file_print_preview"/>
   <Action name="file_print"/>
   <Separator/>
   <Action name="akonadi_move_to_trash"/>

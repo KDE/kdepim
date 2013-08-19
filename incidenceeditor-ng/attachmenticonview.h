@@ -45,7 +45,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentIconView : public QListWidget
 {
   friend class EditorAttachments;
   public:
-    AttachmentIconView( QWidget *parent = 0 );
+    explicit AttachmentIconView( QWidget *parent = 0 );
 
     QMimeData *mimeData() const;
     KUrl tempFileForAttachment( const KCalCore::Attachment::Ptr &attachment ) const;

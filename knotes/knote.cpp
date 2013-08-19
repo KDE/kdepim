@@ -600,7 +600,7 @@ void KNote::slotUpdateDesktopActions()
                                               // for old broken gcc
 
   const int count = wm_root.numberOfDesktops();
-  for ( int n = 1; n <= count; n++ ) {
+  for ( int n = 1; n <= count; ++n ) {
     desktops.append( QString( "&%1 %2" ).arg( n ).arg(
       QString::fromUtf8( wm_root.desktopName( n ) ) ) );
   }
@@ -711,6 +711,8 @@ void KNote::createActions()
            SLOT(slotPopupActionToDesktop(int)) );
   connect( m_toDesktop->menu(), SIGNAL(aboutToShow()),
            SLOT(slotUpdateDesktopActions()) );
+  // initially populate it, otherwise stays disabled
+  slotUpdateDesktopActions();
 #endif
 
   // invisible action to walk through the notes to make this configurable

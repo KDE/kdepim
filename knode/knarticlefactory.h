@@ -39,7 +39,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
   public:
     enum replyType { RTgroup, RTmail, RTboth };
 
-    KNArticleFactory( QObject *parent = 0 );
+    explicit KNArticleFactory( QObject *parent = 0 );
     ~KNArticleFactory();
 
     //factory methods

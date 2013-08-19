@@ -25,15 +25,15 @@
 #include <kfiledialog.h>
 #include <kicon.h>
 #include <klocale.h>
-#include <messagecomposer/attachmentcontrollerbase.h>
-#include <messagecomposer/attachmentmodel.h>
+#include <messagecomposer/attachment/attachmentcontrollerbase.h>
+#include <messagecomposer/attachment/attachmentmodel.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QAction>
 #include <QItemSelectionModel>
 
-AttachmentEditor::AttachmentEditor( KActionCollection *actionCollection, Message::AttachmentModel *model,
-                                    Message::AttachmentControllerBase *controller, QObject *parent )
+AttachmentEditor::AttachmentEditor( KActionCollection *actionCollection, MessageComposer::AttachmentModel *model,
+                                    MessageComposer::AttachmentControllerBase *controller, QObject *parent )
   : QObject( parent ),
     mModel( model ),
     mSelectionModel( new QItemSelectionModel( mModel ) ),
@@ -79,8 +79,8 @@ void AttachmentEditor::selectionChanged()
     mSignAction->setEnabled( true );
     mEncryptAction->setEnabled( true );
 
-    const QModelIndex signIndex = mModel->index( mSelectionModel->selectedIndexes().first().row(), Message::AttachmentModel::SignColumn );
-    const QModelIndex encryptIndex = mModel->index( mSelectionModel->selectedIndexes().first().row(), Message::AttachmentModel::EncryptColumn );
+    const QModelIndex signIndex = mModel->index( mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::SignColumn );
+    const QModelIndex encryptIndex = mModel->index( mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::EncryptColumn );
 
     mSignAction->setChecked( signIndex.data( Qt::CheckStateRole ).toBool() );
     mEncryptAction->setChecked( encryptIndex.data( Qt::CheckStateRole ).toBool() );
@@ -93,7 +93,7 @@ void AttachmentEditor::selectionChanged()
   const QModelIndexList selectedRows = mSelectionModel->selectedRows();
   MessageCore::AttachmentPart::List selectedParts;
   foreach( const QModelIndex &index, selectedRows ) {
-    const MessageCore::AttachmentPart::Ptr part = index.data( Message::AttachmentModel::AttachmentPartRole ).value<MessageCore::AttachmentPart::Ptr>();
+    const MessageCore::AttachmentPart::Ptr part = index.data( MessageComposer::AttachmentModel::AttachmentPartRole ).value<MessageCore::AttachmentPart::Ptr>();
     selectedParts.append( part );
   }
 
@@ -105,7 +105,7 @@ void AttachmentEditor::signAttachment( bool value )
   if ( !mSelectionModel->hasSelection() )
     return;
 
-  const QModelIndex index = mModel->index( mSelectionModel->selectedIndexes().first().row(), Message::AttachmentModel::SignColumn );
+  const QModelIndex index = mModel->index( mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::SignColumn );
   mModel->setData( index, value, Qt::CheckStateRole );
 }
 
@@ -114,7 +114,7 @@ void AttachmentEditor::encryptAttachment( bool value )
   if ( !mSelectionModel->hasSelection() )
     return;
 
-  const QModelIndex index = mModel->index( mSelectionModel->selectedIndexes().first().row(), Message::AttachmentModel::EncryptColumn );
+  const QModelIndex index = mModel->index( mSelectionModel->selectedIndexes().first().row(), MessageComposer::AttachmentModel::EncryptColumn );
   mModel->setData( index, value, Qt::CheckStateRole );
 }
 

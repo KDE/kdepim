@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,8 +19,9 @@
 #include "archivemailagentadaptor.h"
 #include "archivemaildialog.h"
 #include "archivemailmanager.h"
+#include "archivemailagentsettings.h"
 
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 #include <akonadi/dbusconnectionpool.h>
 #include <Akonadi/Monitor>
 #include <Akonadi/Session>
@@ -29,85 +30,125 @@
 #include <KWindowSystem>
 
 #include <QTimer>
+#include <QPointer>
 
 //#define DEBUG_ARCHIVEMAILAGENT 1
 
 ArchiveMailAgent::ArchiveMailAgent( const QString &id )
-  : Akonadi::AgentBase( id )
+    : Akonadi::AgentBase( id )
 {
-  mArchiveManager = new ArchiveMailManager(this);
-  KGlobal::locale()->insertCatalog( "libmailcommon" );
-  KGlobal::locale()->insertCatalog( "akonadi_archivemail_agent" );
+    mArchiveManager = new ArchiveMailManager(this);
+    connect(mArchiveManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
+    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
+    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_archivemail_agent") );
 
-  m_collectionMonitor = new Akonadi::Monitor( this );
-  m_collectionMonitor->fetchCollection( true );
-  m_collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
-  m_collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-  m_collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
+    Akonadi::Monitor *collectionMonitor = new Akonadi::Monitor( this );
+    collectionMonitor->fetchCollection( true );
+    collectionMonitor->ignoreSession( Akonadi::Session::defaultSession() );
+    collectionMonitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+    collectionMonitor->setMimeTypeMonitored( KMime::Message::mimeType() );
 
 
-  new ArchiveMailAgentAdaptor( this );
-  Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/ArchiveMailAgent" ), this, QDBusConnection::ExportAdaptors );
-  Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
-  connect( m_collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
-           this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
+    new ArchiveMailAgentAdaptor( this );
+    Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/ArchiveMailAgent" ), this, QDBusConnection::ExportAdaptors );
+    Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.ArchiveMailAgent" ) );
+    connect( collectionMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+             this, SLOT(mailCollectionRemoved(Akonadi::Collection)) );
+
+    if (enabledAgent()) {
 #ifdef DEBUG_ARCHIVEMAILAGENT
-  QTimer::singleShot(1000,mArchiveManager,SLOT(load()));
+        QTimer::singleShot(1000, mArchiveManager, SLOT(load()));
 #else
-  QTimer::singleShot(1000*60*5,mArchiveManager,SLOT(load()));
+        QTimer::singleShot(1000*60*5, mArchiveManager, SLOT(load()));
 #endif
-  mTimer = new QTimer(this);
-  connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
-  mTimer->start(24*60*60*1000);
+    }
+
+    mTimer = new QTimer(this);
+    connect(mTimer, SIGNAL(timeout()), this, SLOT(reload()));
+    mTimer->start(24*60*60*1000);
 }
 
 ArchiveMailAgent::~ArchiveMailAgent()
 {
 }
 
-void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection& collection)
+void ArchiveMailAgent::setEnableAgent(bool enabled)
 {
-  mArchiveManager->removeCollection(collection);
+    ArchiveMailAgentSettings::setEnabled(enabled);
+    ArchiveMailAgentSettings::self()->writeConfig();
+    if (!enabled) {
+        pause();
+    }
+}
+
+bool ArchiveMailAgent::enabledAgent() const
+{
+    return ArchiveMailAgentSettings::enabled();
+}
+
+void ArchiveMailAgent::mailCollectionRemoved(const Akonadi::Collection &collection)
+{
+    mArchiveManager->removeCollection(collection);
 }
 
 void ArchiveMailAgent::showConfigureDialog(qlonglong windowId)
 {
-  ArchiveMailDialog *dialog = new ArchiveMailDialog();
-  if(windowId) {
+    QPointer<ArchiveMailDialog> dialog = new ArchiveMailDialog();
+    if (windowId) {
 #ifndef Q_WS_WIN
-    KWindowSystem::setMainWindow( dialog, windowId );
+        KWindowSystem::setMainWindow( dialog, windowId );
 #else
-    KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
-  }
-  if(dialog->exec()) {
-    mArchiveManager->load();
-  }
-  delete dialog;
+    }
+    connect(dialog, SIGNAL(archiveNow(ArchiveMailInfo*)),mArchiveManager, SLOT(slotArchiveNow(ArchiveMailInfo*)));
+    connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedReloadConfig()));
+    if (dialog->exec()) {
+        mArchiveManager->load();
+    }
+    delete dialog;
 }
 
+void ArchiveMailAgent::doSetOnline(bool online)
+{
+    if (online) {
+        resume();
+    } else {
+        pause();
+    }
+}
 
 void ArchiveMailAgent::reload()
 {
-  mArchiveManager->load();
-  mTimer->start();
+    if (isOnline() && enabledAgent()) {
+        mArchiveManager->load();
+        mTimer->start();
+    }
 }
 
 void ArchiveMailAgent::configure( WId windowId )
 {
-  showConfigureDialog(windowId);
+    showConfigureDialog((qulonglong)windowId);
 }
 
 void ArchiveMailAgent::pause()
 {
-  mArchiveManager->pause();
+    if (isOnline() && enabledAgent()) {
+        mArchiveManager->pause();
+    }
 }
 
 void ArchiveMailAgent::resume()
 {
-  mArchiveManager->resume();
+    if (isOnline() && enabledAgent()) {
+        mArchiveManager->resume();
+    }
 }
 
+void ArchiveMailAgent::printArchiveListInfo()
+{
+    mArchiveManager->printArchiveListInfo();
+}
 
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
 

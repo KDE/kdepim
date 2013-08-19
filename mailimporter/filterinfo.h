@@ -30,34 +30,34 @@ class FilterInfoGui;
 class MAILIMPORTER_EXPORT FilterInfo
 {
 public:
-  explicit FilterInfo();
-  ~FilterInfo();
+    explicit FilterInfo();
+    ~FilterInfo();
 
-  void setFilterInfoGui( FilterInfoGui *filterinfogui );
-  
-  void setStatusMessage( const QString& status );
-  void setFrom( const QString& from );
-  void setTo( const QString& to );
-  void setCurrent( const QString& current );
-  void setCurrent( int percent = 0 );
-  void setOverall( int percent = 0 );
-  void addInfoLogEntry( const QString& log );
-  void addErrorLogEntry( const QString& log );
-  void clear();
-  void alert( const QString& message );
+    void setFilterInfoGui( FilterInfoGui *filterinfogui );
 
-  static void terminateASAP();
-  bool shouldTerminate() const;
-  Akonadi::Collection rootCollection() const;
-  void setRootCollection( const Akonadi::Collection &collection );
+    void setStatusMessage( const QString& status );
+    void setFrom( const QString& from );
+    void setTo( const QString& to );
+    void setCurrent( const QString& current );
+    void setCurrent( int percent = 0 );
+    void setOverall( int percent = 0 );
+    void addInfoLogEntry( const QString& log );
+    void addErrorLogEntry( const QString& log );
+    void clear();
+    void alert( const QString& message );
 
-  QWidget *parent();
-  void setRemoveDupMessage( bool removeDupMessage );
-  bool removeDupMessage() const;
+    static void terminateASAP();
+    bool shouldTerminate() const;
+    Akonadi::Collection rootCollection() const;
+    void setRootCollection( const Akonadi::Collection &collection );
+
+    QWidget *parent();
+    void setRemoveDupMessage( bool removeDupMessage );
+    bool removeDupMessage() const;
 
 private:
-  class Private;
-  Private *const d;
+    class Private;
+    Private *const d;
 };
 }
 

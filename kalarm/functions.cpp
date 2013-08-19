@@ -1,7 +1,7 @@
 /*
  *  functions.cpp  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2013 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1100,8 +1100,9 @@ KAEvent::List getSortedActiveEvents(const KDateTime& startTime, const KDateTime&
     else
         events = AlarmCalendar::resources()->events(CalEvent::ACTIVE);
     KAEvent::List result;
-    for (i = 0, count = events.count();  i < count;  ++i)
+    for (int i = 0, count = events.count();  i < count;  ++i)
     {
+        KAEvent* event = events[i];
         if (event->enabled()  &&  !event->expired())
             result += event;
     }
@@ -1242,6 +1243,7 @@ PrivateNewAlarmDlg::PrivateNewAlarmDlg(EditAlarmDlg* dlg)
     : QObject(dlg)
 {
     connect(dlg, SIGNAL(accepted()), SLOT(okClicked()));
+    connect(dlg, SIGNAL(rejected()), SLOT(cancelClicked()));
 }
 
 /******************************************************************************
@@ -1287,6 +1289,16 @@ void PrivateNewAlarmDlg::accept(EditAlarmDlg* editDlg)
     Undo::saveAdd(event, calendar);
 
     outputAlarmWarnings(editDlg, &event);
+
+    editDlg->deleteLater();
+}
+
+/******************************************************************************
+* Called when the dialogue is rejected (e.g. by clicking the Cancel button).
+*/
+void PrivateNewAlarmDlg::cancelClicked()
+{
+    static_cast<EditAlarmDlg*>(parent())->deleteLater();
 }
 
 /******************************************************************************
@@ -2136,7 +2148,6 @@ bool showFileErrMessage(const QString& filename, FileErr err, FileErr blankError
             case FileErr_Nonexistent:   errmsg = i18nc("@info", "<filename>%1</filename> not found", file);  break;
             case FileErr_Unreadable:    errmsg = i18nc("@info", "<filename>%1</filename> is not readable", file);  break;
             case FileErr_NotTextImage:  errmsg = i18nc("@info", "<filename>%1</filename> appears not to be a text or image file", file);  break;
-            case FileErr_None:
             default:
                 break;
         }

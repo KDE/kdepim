@@ -30,7 +30,7 @@ namespace KontactInterface {
 class KAddressBookUniqueAppHandler : public KontactInterface::UniqueAppHandler
 {
   public:
-    KAddressBookUniqueAppHandler( KontactInterface::Plugin *plugin )
+    explicit KAddressBookUniqueAppHandler( KontactInterface::Plugin *plugin )
       : KontactInterface::UniqueAppHandler( plugin ) {}
     virtual void loadCommandLineOptions();
     virtual int newInstance();
@@ -44,11 +44,11 @@ class KAddressBookPlugin : public KontactInterface::Plugin
     KAddressBookPlugin( KontactInterface::Core *core, const QVariantList & );
     ~KAddressBookPlugin();
 
-    virtual QString tipFile() const;
-    virtual bool isRunningStandalone() const;
+    QString tipFile() const;
+    bool isRunningStandalone() const;
     int weight() const { return 300; }
 
-    virtual QStringList invisibleToolbarActions() const;
+    QStringList invisibleToolbarActions() const;
 
   protected:
     KParts::ReadOnlyPart *createPart();

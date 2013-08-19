@@ -210,7 +210,7 @@ class QWizardPage : public QWidget
     Q_PROPERTY(QString subTitle READ subTitle WRITE setSubTitle)
 
 public:
-    QWizardPage(QWidget *parent = 0);
+    explicit QWizardPage(QWidget *parent = 0);
 
     void setTitle(const QString &title);
     QString title() const;

@@ -132,6 +132,14 @@
         {% endwith %}
       {% endif %}
 
+      {% for customField in contact.customFieldsUrl %}
+        {% with customField.title as title %}
+        {% with customField.value|safe as value %}
+        {% include "contact_row.html" %}
+        {% endwith %}
+        {% endwith %}
+      {% endfor %}
+
       {% for customField in contact.customFields %}
         {% with customField.title as title %}
         {% with customField.value as value %}
@@ -155,8 +163,10 @@
         {% endwith %}
       {% endif %}
     </table>
-    <p align="center">
-     <img src="datamatrix" vspace="1">
-     <img src="qrcode" vspace="1">
-    </p>
+    {% if contact.hasqrcode %}
+      <p align="center">
+       <img src="datamatrix" vspace="1">
+       <img src="qrcode" vspace="1">
+      </p>
+    {% endif %}
   </div>

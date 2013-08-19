@@ -3,6 +3,7 @@
     Copyright (c) 2010 Bertjan Broeksema <broeksema@kde.org>
     Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
     Copyright (c) 2010 Andras Mantia <amantia@kdab.com>
+    Copyright (C) 2013 Michael Bohlender <michael.bohlender@kdemail.net>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,19 +21,25 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.components 0.1 as PlasmaComponents
 
-QML.Rectangle {
-  id: root
+PlasmaComponents.Page {
+
   anchors.fill: parent
-  color: "white"
-  z: 10
 
-  QML.MouseArea {
-    anchors.fill : parent
-    onClicked : {} // do nothing
+  tools: PlasmaComponents.ToolBarLayout {
+
+    PlasmaComponents.ToolButton {
+
+      anchors.left: parent.left
+
+      iconSource: "go-previous"
+
+      onClicked: pageStack.pop()
+    }
   }
 
   QML.Rectangle {
@@ -53,7 +60,7 @@ QML.Rectangle {
         buttonText : KDE.i18n( "Reply to Author" )
         onClicked : {
           application.getAction("message_reply_to_author", "").trigger();
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
       KPIM.Button2 {
@@ -61,7 +68,7 @@ QML.Rectangle {
         buttonText : KDE.i18n( "Reply to All" )
         onClicked : {
           application.getAction("message_reply_to_all", "").trigger();
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
       KPIM.Button2 {
@@ -69,7 +76,7 @@ QML.Rectangle {
         buttonText : KDE.i18n( "Reply to List" )
         onClicked : {
           application.getAction("message_reply_to_list", "").trigger();
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
       KPIM.Button2 {
@@ -77,14 +84,7 @@ QML.Rectangle {
         buttonText : KDE.i18n( "Reply Without Quoting" )
         onClicked : {
           application.getAction("message_reply_without_quoting", "").trigger();
-          root.parent.visible = false
-        }
-      }
-      KPIM.Button2 {
-        width: parent.width
-        buttonText : KDE.i18n( "Discard" )
-        onClicked : {
-          root.parent.visible = false
+          pageStack.pop()
         }
       }
     }

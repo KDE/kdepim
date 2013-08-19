@@ -25,7 +25,7 @@
 
 using namespace MailCommon;
 
-FilterActionWithUrl::FilterActionWithUrl( const char *name, const QString &label, QObject *parent )
+FilterActionWithUrl::FilterActionWithUrl( const QString &name, const QString &label, QObject *parent )
   : FilterAction( name, label, parent )
 {
 }

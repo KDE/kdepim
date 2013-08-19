@@ -63,7 +63,7 @@ class AttachmentHandler::Private
     QPointer<QWidget> mParent;
 };
 
-AttachmentHandler::AttachmentHandler( QWidget *parent ) : d( new Private( parent ) )
+AttachmentHandler::AttachmentHandler( QWidget *parent ) : QObject( parent ), d( new Private( parent ) )
 {
 
 }

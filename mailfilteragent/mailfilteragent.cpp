@@ -24,6 +24,7 @@
 #include "filterlogdialog.h"
 #include "filtermanager.h"
 #include "mailfilteragentadaptor.h"
+#include "pop3resourceattribute.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchjob.h>
@@ -33,13 +34,14 @@
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/kmime/messagestatus.h>
 #include <akonadi/session.h>
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 #include <KLocalizedString>
 #include <KMime/Message>
 #include <KNotification>
 #include <KWindowSystem>
 #include <Akonadi/AgentManager>
 #include <Akonadi/ItemFetchJob>
+#include <Akonadi/AttributeFactory>
 
 #include <QtCore/QVector>
 #include <QtCore/QTimer>
@@ -55,6 +57,7 @@ MailFilterAgent::MailFilterAgent( const QString &id )
   : Akonadi::AgentBase( id ),
     m_filterLogDialog( 0 )
 {
+  Akonadi::AttributeFactory::registerAttribute<Pop3ResourceAttribute>();
   DummyKernel *kernel = new DummyKernel( this );
   CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
   CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
@@ -93,8 +96,8 @@ MailFilterAgent::MailFilterAgent( const QString &id )
     if ( group.hasKey( "Enabled" ) ) {
       if ( group.readEntry( "Enabled", false ) ) {
           m_filterLogDialog = new FilterLogDialog( 0 );
-          const QPixmap pixmap = KIcon( "view-filter" ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
-          KNotification *notify = new KNotification( "mailfilterlogenabled" );
+          const QPixmap pixmap = KIcon( QLatin1String("view-filter") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+          KNotification *notify = new KNotification( QLatin1String("mailfilterlogenabled") );
           notify->setComponentData( componentData() );
           notify->setPixmap( pixmap );
           notify->setText( i18nc("Notification when the filter log was enabled", "Mail Filter Log Enabled" ) );
@@ -141,6 +144,13 @@ void MailFilterAgent::initialCollectionFetchingDone( KJob *job )
       changeRecorder()->setCollectionMonitored( collection, true );
   }
   emit status(AgentBase::Idle, i18n("Ready") );
+  emit percent(100);
+  QTimer::singleShot( 2000, this, SLOT(clearMessage()) );
+}
+
+void MailFilterAgent::clearMessage()
+{
+  emit status(AgentBase::Idle, QString() );
 }
 
 void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
@@ -148,9 +158,8 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
   /* The monitor mimetype filter would override the collection filter, therefor we have to check
    * for the mimetype of the item here.
    */
-  qDebug()<<" MailFilterAgent::itemAdded :"<<item.id();
   if ( item.mimeType() != KMime::Message::mimeType() ) {
-    qDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
+    kDebug() << "MailFilterAgent::itemAdded called for a non-message item!";
     return;
   }
 
@@ -167,6 +176,7 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
     job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope, true );
   }
   job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+  job->fetchScope().fetchAttribute<Pop3ResourceAttribute>();
   job->setProperty( "resource", collection.resource() );
 
   //TODO: Error handling?
@@ -175,7 +185,7 @@ void MailFilterAgent::itemAdded( const Akonadi::Item &item, const Akonadi::Colle
 void MailFilterAgent::itemsReceiviedForFiltering (const Akonadi::Item::List& items)
 {
   if (items.isEmpty()) {
-    qDebug() << "MailFilterAgent::itemsReceiviedForFiltering items is empty!";
+    kDebug() << "MailFilterAgent::itemsReceiviedForFiltering items is empty!";
     return;
   }
 
@@ -184,19 +194,22 @@ void MailFilterAgent::itemsReceiviedForFiltering (const Akonadi::Item::List& ite
    * happens when item no longer exists etc, and queue compression didn't happen yet
    */
   if ( !item.hasPayload() ) {
-    qDebug() << "MailFilterAgent::itemsReceiviedForFiltering item has no payload!";
+    kDebug() << "MailFilterAgent::itemsReceiviedForFiltering item has no payload!";
     return;
   }
 
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( item.flags() );
   if ( status.isRead() || status.isSpam() || status.isIgnored() ) {
-    qDebug() << "MailFilterAgent::itemsReceiviedForFiltering message not filtered because its status: " << status.isRead() << status.isSpam() << status.isIgnored();
     return;
   }
 
-  const QString resource = sender()->property("resource").toString();
-qDebug()<<" itemsReceiviedForFiltering********************************************** :"<<item.id()<<" resource :"<<resource;
+  QString resource = sender()->property("resource").toString();
+  const Pop3ResourceAttribute *pop3ResourceAttribute = item.attribute<Pop3ResourceAttribute>();
+  if ( pop3ResourceAttribute ) {
+      resource = pop3ResourceAttribute->pop3AccountName();
+  }
+
   emitProgressMessage(i18n("Filtering in %1",Akonadi::AgentManager::self()->instance(resource).name()) );
   m_filterManager->process( item, m_filterManager->requiredPart(resource), FilterManager::Inbound, true, resource );
 
@@ -287,7 +300,7 @@ void MailFilterAgent::emitProgress(int p)
 {
   if ( p == 0 ) {
     mProgressTimer->stop();
-    emit status(AgentBase::Idle, "" );
+    emit status(AgentBase::Idle, QString() );
   }
   mProgressCounter = p;
   emit percent(p);

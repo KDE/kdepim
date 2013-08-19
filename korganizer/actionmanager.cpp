@@ -32,11 +32,11 @@
 #include "akonadicollectionview.h"
 #include "calendaradaptor.h"
 #include "calendarview.h"
-#include "history.h"
 #include "htmlexportjob.h"
 #include "htmlexportsettings.h"
 #include "kocore.h"
 #include "kodialogmanager.h"
+#include "korganizeradaptor.h"
 #include "koglobals.h"
 #include "koprefs.h"
 #include "koviewmanager.h"
@@ -44,11 +44,6 @@
 #include "reminderclient.h"
 #include "kocheckableproxymodel.h"
 
-#include <akonadi_next/kcolumnfilterproxymodel.h>
-using namespace Future;
-
-#include <calendarsupport/calendaradaptor.h>
-#include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/collectionselection.h>
 #include <calendarsupport/eventarchiver.h>
 #include <calendarsupport/kcalprefs.h>
@@ -59,16 +54,15 @@ using namespace Future;
 
 #include <Akonadi/AgentInstanceCreateJob>
 #include <Akonadi/AgentManager>
-#include <Akonadi/ChangeRecorder>
 #include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/EntityMimeTypeFilterModel>
 #include <Akonadi/EntityTreeView>
+#include <Akonadi/EntityTreeModel>
 #include <Akonadi/ETMViewStateSaver>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/Session>
+#include <Akonadi/Calendar/History>
 
 #include <KCalCore/FileStorage>
 #include <KCalCore/ICalFormat>
+#include <KCalCore/Person>
 
 #include <KHolidays/Holidays>
 
@@ -98,6 +92,7 @@ using namespace Future;
 #include <KNS3/DownloadDialog>
 
 #include <QApplication>
+#include <QTimer>
 
 KOWindowList *ActionManager::mWindowList = 0;
 
@@ -105,7 +100,7 @@ ActionManager::ActionManager( KXMLGUIClient *client, CalendarView *widget,
                               QObject *parent, KOrg::MainWindow *mainWindow,
                               bool isPart, KMenuBar *menuBar )
   : QObject( parent ),
-    mCollectionViewShowAction( 0 ), mCalendar( 0 ),
+    mCollectionViewShowAction( 0 ),
     mCollectionView( 0 ), mCollectionViewStateSaver( 0 ),
     mCollectionSelectionModelStateSaver( 0 ), mIsClosing( false )
 {
@@ -136,7 +131,6 @@ ActionManager::~ActionManager()
   delete mCollectionViewStateSaver;
 
   delete mCalendarView;
-  delete mCalendar;
 }
 
 void ActionManager::toggleMenubar( bool dontShowWarning )
@@ -211,70 +205,20 @@ void ActionManager::init()
   mCalendarView->checkClipboard();
 }
 
-void ActionManager::slotCollectionChanged( const Akonadi::Collection &collection,
-                                           const QSet<QByteArray> &changedAttributes )
+Akonadi::ETMCalendar::Ptr ActionManager::calendar() const
 {
-  Q_UNUSED( collection );
-
-  if ( changedAttributes.contains( "AccessRights" ) ) {
-    mCalendarView->viewManager()->addChange( EventViews::EventView::ResourcesChanged );
-    mCalendarView->updateView();
-  }
+  return mCalendarView->calendar();
 }
 
 void ActionManager::createCalendarAkonadi()
 {
-  Akonadi::Session *session = new Akonadi::Session( "KOrganizerETM", this );
-  Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
-  connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
-           this, SLOT(slotCollectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
-
-  Akonadi::ItemFetchScope scope;
-  scope.fetchFullPayload( true );
-  scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
-
-  monitor->setSession( session );
-  monitor->setCollectionMonitored( Akonadi::Collection::root() );
-  monitor->fetchCollection( true );
-  monitor->setItemFetchScope( scope );
-  monitor->setMimeTypeMonitored( "text/calendar", true );
-  monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
-  monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
-  monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
-  CalendarSupport::CalendarModel *calendarModel =
-    new CalendarSupport::CalendarModel( monitor, this );
-  calendarModel->setObjectName( "KOrg CalendarModel" );
-  //calendarModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
-
-  // Our calendar tree must be sorted.
-  QSortFilterProxyModel *sortFilterProxy = new QSortFilterProxyModel( this );
-  sortFilterProxy->setObjectName( "Sort" );
-  sortFilterProxy->setDynamicSortFilter( true );
-  sortFilterProxy->setSortCaseSensitivity( Qt::CaseInsensitive );
-  sortFilterProxy->setSourceModel( calendarModel );
-
-  // We're only interested in the CollectionTitle column
-  KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
-  columnFilterProxy->setSourceModel( sortFilterProxy );
-  columnFilterProxy->setVisibleColumn( CalendarSupport::CalendarModel::CollectionTitle );
-  columnFilterProxy->setObjectName( "Remove columns" );
-
-  // Keep track of selected items.
-  QItemSelectionModel *selectionModel = new QItemSelectionModel( columnFilterProxy );
-  selectionModel->setObjectName( "Calendar Selection Model" );
-
-  // Make item selection work by means of checkboxes.
-  KOCheckableProxyModel *checkableProxy = new KOCheckableProxyModel( this );
-  checkableProxy->setSelectionModel( selectionModel );
-  checkableProxy->setSourceModel( columnFilterProxy );
-  checkableProxy->setObjectName( "Add checkboxes" );
-  mCalendarView->setCheckableProxyModel( checkableProxy );
+  Q_ASSERT( calendar() );
 
   KConfig *config = KOGlobals::self()->config();
   mCollectionSelectionModelStateSaver =
     new KViewStateMaintainer<Akonadi::ETMViewStateSaver>(
       config->group( "GlobalCollectionSelection" ) );
-  mCollectionSelectionModelStateSaver->setSelectionModel( checkableProxy->selectionModel() );
+  mCollectionSelectionModelStateSaver->setSelectionModel( calendar()->checkableProxyModel()->selectionModel() );
 
   AkonadiCollectionViewFactory factory( mCalendarView );
   mCalendarView->addExtension( &factory );
@@ -286,49 +230,30 @@ void ActionManager::createCalendarAkonadi()
   connect( mCollectionView, SIGNAL(colorsChanged()),
            mCalendarView, SLOT(updateConfig()) );
 
-  mCollectionViewStateSaver =
-    new KViewStateMaintainer<Akonadi::ETMViewStateSaver>(
-      config->group( "GlobalCollectionView" ) );
+  mCollectionViewStateSaver = new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( config->group( "GlobalCollectionView" ) );
   mCollectionViewStateSaver->setView( mCollectionView->view() );
+
+  KCheckableProxyModel *checkableProxy = calendar()->checkableProxyModel();
+  QItemSelectionModel  *selectionModel = checkableProxy->selectionModel();
 
   mCollectionView->setCollectionSelectionProxyModel( checkableProxy );
 
-  CalendarSupport::CollectionSelection *colSel =
-    new CalendarSupport::CollectionSelection( selectionModel );
-  EventViews::EventView::setGlobalCollectionSelection( colSel );
-  KSelectionProxyModel *selectionProxy = new KSelectionProxyModel( selectionModel );
-  selectionProxy->setObjectName( "Only show items of selected collection" );
-  selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
-  selectionProxy->setSourceModel( calendarModel );
+  CalendarSupport::CollectionSelection *collectionSelection = new CalendarSupport::CollectionSelection( selectionModel );
+  EventViews::EventView::setGlobalCollectionSelection( collectionSelection );
 
-  Akonadi::EntityMimeTypeFilterModel *filterProxy2 =
-    new Akonadi::EntityMimeTypeFilterModel( this );
-  filterProxy2->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-  filterProxy2->setSourceModel( selectionProxy );
-  filterProxy2->setSortRole( CalendarSupport::CalendarModel::SortRole );
-  filterProxy2->setObjectName( "Show headers" );
-
-  mCalendar =
-    new CalendarSupport::Calendar( calendarModel, filterProxy2, KSystemTimeZones::local() );
-  mCalendar->setObjectName( "KOrg Calendar" );
-
-  mCalendarView->setCalendar( mCalendar );
   mCalendarView->readSettings();
 
   // Construct the groupware object, it'll take care of the IncidenceEditors::EditorConfig as well
   if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    IncidenceEditorNG::GroupwareIntegration::activate( mCalendar );
+    IncidenceEditorNG::GroupwareIntegration::activate( calendar() );
   }
 
-  connect( mCalendar, SIGNAL(calendarChanged()),
+  connect( calendar().data(), SIGNAL(calendarChanged()),
            mCalendarView, SLOT(resourcesChanged()) );
-  connect( mCalendar, SIGNAL(signalErrorMessage(QString)),
-           mCalendarView, SLOT(showErrorMessage(QString)) );
   connect( mCalendarView, SIGNAL(configChanged()), SLOT(updateConfig()) );
 
-  mCalendar->setOwner(
-    KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                      CalendarSupport::KCalPrefs::instance()->email() ) );
+  calendar()->setOwner( KCalCore::Person::Ptr( new KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                                                    CalendarSupport::KCalPrefs::instance()->email() ) ) );
 
 }
 
@@ -411,7 +336,7 @@ void ActionManager::initActions()
   /************************** EDIT MENU *********************************/
 
   QAction *pasteAction;
-  KOrg::History *h = mCalendarView->history();
+  Akonadi::History *history = mCalendarView->history();
   if ( mIsPart ) {
     // edit menu
     mCutAction = mACollection->addAction( KStandardAction::Cut, "korganizer_cut",
@@ -421,15 +346,15 @@ void ActionManager::initActions()
     pasteAction = mACollection->addAction( KStandardAction::Paste, "korganizer_paste",
                                            mCalendarView, SLOT(edit_paste()) );
     mUndoAction = mACollection->addAction( KStandardAction::Undo, "korganizer_undo",
-                                           h, SLOT(undo()) );
+                                           history, SLOT(undo()) );
     mRedoAction = mACollection->addAction( KStandardAction::Redo, "korganizer_redo",
-                                           h, SLOT(redo()) );
+                                           history, SLOT(redo()) );
   } else {
     mCutAction = KStandardAction::cut( mCalendarView, SLOT(edit_cut()), mACollection );
     mCopyAction = KStandardAction::copy( mCalendarView, SLOT(edit_copy()), mACollection );
     pasteAction = KStandardAction::paste( mCalendarView, SLOT(edit_paste()), mACollection );
-    mUndoAction = KStandardAction::undo( h, SLOT(undo()), mACollection );
-    mRedoAction = KStandardAction::redo( h, SLOT(redo()), mACollection );
+    mUndoAction = KStandardAction::undo( history, SLOT(undo()), mACollection );
+    mRedoAction = KStandardAction::redo( history, SLOT(redo()), mACollection );
   }
   mDeleteAction = new KAction( KIcon( "edit-delete" ), i18n( "&Delete" ), this );
   mACollection->addAction( "edit_delete", mDeleteAction );
@@ -447,8 +372,7 @@ void ActionManager::initActions()
   mUndoAction->setEnabled( false );
   mRedoAction->setEnabled( false );
   connect( mCalendarView, SIGNAL(pasteEnabled(bool)), pasteAction, SLOT(setEnabled(bool)) );
-  connect( h, SIGNAL(undoAvailable(QString)), SLOT(updateUndoAction(QString)) );
-  connect( h, SIGNAL(redoAvailable(QString)), SLOT(updateRedoAction(QString)) );
+  connect( history, SIGNAL(changed()), SLOT(updateUndoRedoActions()) );
 
   /************************** VIEW MENU *********************************/
 
@@ -791,7 +715,7 @@ void ActionManager::initActions()
            SLOT(showCategoryEditDialog()) );
 
   if ( mIsPart ) {
-    action = new KAction( KIcon( "configure" ), i18n( "&Configure Calendar..." ), this );
+    action = new KAction( KIcon( "configure" ), i18n( "&Configure KOrganizer..." ), this );
     mACollection->addAction( "korganizer_configure", action );
     connect( action, SIGNAL(triggered(bool)), mCalendarView,
              SLOT(edit_options()) );
@@ -821,7 +745,7 @@ void ActionManager::slotResourcesAddedRemoved()
 
 void ActionManager::slotDefaultResourceChanged( const Akonadi::Collection &collection )
 {
-  mCalendarView->incidenceChanger()->setDefaultCollectionId( collection.id() );
+  mCalendarView->incidenceChanger()->setDefaultCollection( collection );
 }
 
 void ActionManager::slotNewEvent()
@@ -1244,8 +1168,7 @@ void ActionManager::exportHTML( KOrg::HTMLExportSettings *settings, bool autoMod
   settings->setCreditName( "KOrganizer" );
   settings->setCreditURL( "http://korganizer.kde.org" );
 
-  KOrg::HtmlExportJob *exportJob =
-    new KOrg::HtmlExportJob( mCalendarView->calendar(), settings, autoMode, mMainWindow, view() );
+  KOrg::HtmlExportJob *exportJob = new KOrg::HtmlExportJob( calendar(), settings, autoMode, mMainWindow, view() );
 
   if ( KOGlobals::self()->holidays() ) {
     KHolidays::Holiday::List holidays = KOGlobals::self()->holidays()->holidays(
@@ -1599,27 +1522,21 @@ void ActionManager::downloadNewStuff()
       continue;
     }
 
-    //AKONADI_PORT avoid this local incidence changer copy...
-    CalendarSupport::IncidenceChanger changer( mCalendar, 0, Akonadi::Collection().id() );
-
-    CalendarSupport::CalendarAdaptor::Ptr cal(
-      new CalendarSupport::CalendarAdaptor(
-        mCalendar, mCalendarView, true/*use default collection*/ ) );
-
-    KCalCore::FileStorage storage( cal );
+    KCalCore::FileStorage storage( calendar() );
     storage.setFileName( file );
     storage.setSaveFormat( new KCalCore::ICalFormat );
     if ( !storage.load() ) {
       KMessageBox::error( mCalendarView, i18n( "Could not load calendar %1.", file ) );
     } else {
-      QStringList eventList;
-      foreach ( KCalCore::Event::Ptr e, cal->events() ) {
-        eventList.append( e->summary() );
+      QStringList eventSummaries;
+      KCalCore::Event::List events = calendar()->events();
+      foreach ( KCalCore::Event::Ptr event, events ) {
+        eventSummaries.append( event->summary() );
       }
 
       const int result = KMessageBox::warningContinueCancelList( mCalendarView,
         i18n( "The downloaded events will be merged into your current calendar." ),
-        eventList );
+        eventSummaries );
 
       if ( result != KMessageBox::Continue ) {
         // FIXME (KNS2): hm, no way out here :-)
@@ -1721,7 +1638,7 @@ void ActionManager::processIncidenceSelection( const Akonadi::Item &item, const 
 
   enableIncidenceActions( true );
 
-  if ( !mCalendarView->calendar()->hasDeleteRights( item ) ) {
+  if ( !mCalendarView->calendar()->hasRight( item, Akonadi::Collection::CanDeleteItem ) ) {
     mCutAction->setEnabled( false );
     mDeleteAction->setEnabled( false );
   }
@@ -2005,33 +1922,27 @@ void ActionManager::showDate( const QDate &date )
   mCalendarView->showDate( date );
 }
 
-void ActionManager::updateUndoAction( const QString &text )
+void ActionManager::updateUndoRedoActions()
 {
-  mUndoAction->setText( i18n( "Undo" ) );
-  if ( text.isEmpty() ) {
-    mUndoAction->setEnabled( false );
-  } else {
-    mUndoAction->setEnabled( true );
-    if ( !text.isEmpty() ) {
-      mUndoAction->setText( i18n( "Undo: %1", text ) );
-    }
-  }
-  mUndoAction->setIconText( i18n( "Undo" ) );
-}
+  Akonadi::History *history = mCalendarView->incidenceChanger()->history();
 
-void ActionManager::updateRedoAction( const QString &text )
-{
-  if ( text.isEmpty() ) {
+  if ( history->undoAvailable() ) {
+    mUndoAction->setEnabled( true );
+    mUndoAction->setText( i18n( "Undo: %1", history->nextUndoDescription() ) );
+  } else {
+    mUndoAction->setEnabled( false );
+    mUndoAction->setText( i18n( "Undo" ) );
+  }
+
+  if ( history->redoAvailable() ) {
+    mRedoAction->setEnabled( true );
+    mRedoAction->setText( i18n( "Redo: %1", history->nextRedoDescription() ) );
+  } else {
     mRedoAction->setEnabled( false );
     mRedoAction->setText( i18n( "Redo" ) );
-  } else {
-    mRedoAction->setEnabled( true );
-    if ( text.isEmpty() ) {
-      mRedoAction->setText( i18n( "Redo" ) );
-    } else {
-      mRedoAction->setText( i18n( "Redo (%1)", text ) );
-    }
   }
+
+  mUndoAction->setIconText( i18n( "Undo" ) );
 }
 
 bool ActionManager::queryClose()
@@ -2112,11 +2023,8 @@ void ActionManager::slotAutoArchive()
 
   mAutoArchiveTimer->stop();
   CalendarSupport::EventArchiver archiver;
-  connect( &archiver, SIGNAL(eventsDeleted()),  //AKONADI_PORT: this signal
-           mCalendarView, SLOT(updateView()) ); //shouldn't be needed anymore?
-  //AKONADI_PORT avoid this local incidence changer copy...
-  CalendarSupport::IncidenceChanger changer( mCalendar, 0, Akonadi::Collection().id() );
-  archiver.runAuto( mCalendarView->calendar(), &changer, mCalendarView, false /*no gui*/);
+
+  archiver.runAuto( calendar(), mCalendarView->incidenceChanger(), mCalendarView, false /*no gui*/);
 
   // restart timer with the correct delay ( especially useful for the first time )
   slotAutoArchivingSettingsModified();

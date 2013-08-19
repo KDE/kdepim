@@ -1,12 +1,30 @@
-TODO 4.10:
-----------
+Import/Export config:
+--------------------
+- templatesconfigurationrc (Need to merge in existing config file)
+- sievetemplaterc (DONE)
+- akonadi_archivemail_agentrc (Need to merge in existing config file)
+- kmailsnippetrc (Need to merge in existing config file)
+- filters (DONE)
+- kabldaprc (DONE)
+- kmail2rc (DONE)
+- emailidentities (DONE)
+- autocorrection file (DONE)
 
+
+
+TODO 4.11:
+----------
 - Allow to merge ldap config (DONE)
 - Allow to merge KMail Snippet config
-- Allow to merge akonadi_archivemail_agentrc config (DONE)
 
-- Import/Export KAddressBook config
-- Import/Export KOrganizer config
-- Rename it.
+- Import/Export KAddressBook config/resources (DONE)
+- Import/Export KOrganizer config/resources (DONE)
+- Import/Export KAlarm config/resources (In progress)
+- Import/Export KJots config/resources (In progress)
 
+TODO 4.12:
+---------
 - Add export mode 
+- Allow to write a report.
+- Allow to save other kontact settings ?
+- Add global default settings (as overwrite all settings etc.)

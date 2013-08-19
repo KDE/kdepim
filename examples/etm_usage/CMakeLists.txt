@@ -1,22 +1,10 @@
 project(etm_usage)
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${etm_usage_SOURCE_DIR})
-  find_package(KDE4 REQUIRED)
-  find_package(Akonadi REQUIRED)
-  find_package(KdepimLibs REQUIRED)
-
-  include(KDE4Defaults)
-  include(MacroLibrary)
-  include(MacroOptionalAddSubdirectory)
-  include(CheckIncludeFiles)
-  include(FindKdepimLibs)
-endif(${CMAKE_SOURCE_DIR} STREQUAL ${etm_usage_SOURCE_DIR})
-
 include_directories(
-  ${KDE4_INCLUDES}
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${kdepim_SOURCE_DIR}
+  ${kdepim_SOURCE_DIR}/messageviewer
   ${Boost_INCLUDE_DIRS}
 )
 

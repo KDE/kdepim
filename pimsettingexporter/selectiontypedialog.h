@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,22 +19,26 @@
 #define SELECTIONTYPEDIALOG_H
 
 #include <KDialog>
-#include "backupmailutil.h"
+#include "utils.h"
 
 class SelectTypeWidget;
+class SelectionTypeTreeWidget;
 
 class SelectionTypeDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit SelectionTypeDialog(QWidget * parent);
-  ~SelectionTypeDialog();
-  BackupMailUtil::BackupTypes backupTypesSelected(int &numberOfStep) const;
-private Q_SLOTS:
-  void slotItemSelected(bool selected);
+    explicit SelectionTypeDialog(QWidget * parent);
+    ~SelectionTypeDialog();
+
+    Utils::StoredTypes kmailTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kaddressbookTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kalarmTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes korganizerTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes kjotsTypesSelected(int &numberOfStep) const;
 
 private:
-  SelectTypeWidget *mWidget;
+    SelectionTypeTreeWidget *mSelectionTreeWidget;
 };
 
 #endif // SELECTIONTYPEDIALOG_H

@@ -1,0 +1,103 @@
+<div class="fancy header" dir="ltr">
+
+    <div dir="ltr"> {{ header.subject|safe }}
+    </div>
+<table class="outer">
+    <tbody>
+    <tr>
+    <td width="100%">
+
+    <table>
+
+    <tr>
+    <th align="left" style="font-size: 10px;">{{ header.fromi18n }}</th>
+    <td style="font-size: 10px;">{{ header.from|safe }}
+
+    {% if header.resentfrom %}
+      &nbsp; {{ header.resentfromi18n }}: {{ header.resentfrom|safe }}
+    {% endif %}
+
+    {% if vCardName %}
+      &nbsp;&nbsp;<a href="{{ header.vcardname|safe }}">{{ header.vcardi18n }}</a>
+    {% endif %}
+
+    {% if header.organization %}
+      &nbsp;&nbsp;("{{ header.organization|safe }}")
+    {% endif %}
+
+    </td>
+    </tr>
+
+    <tr>
+    <th align="left" style="font-size: 10px;">{{ header.toi18n }}</th>
+    <td style="font-size: 10px;">{{ header.to|safe }}</td>
+    </tr>
+
+{% if header.cc %}
+    <tr>
+    <th align="left" style="font-size: 10px;"> {{ header.cci18n }} </th>
+    <td style="font-size: 10px;">{{ header.cc|safe }}</td>
+    </tr>
+{% endif %}
+
+{% if header.bcc %}
+    <tr>
+    <th align="left" style="font-size: 10px;"> {{ header.bcci18n }} </th>
+    <td style="font-size: 10px;">{{ header.bcc|safe }}</td>
+    </tr>
+{% endif %}
+
+{% if header.Sender %}
+    <tr>
+    <th align="left" style="font-size: 10px;"> Sender: </th>
+    <td style="font-size: 10px;">{{ header.Sender|safe }}</td>
+    </tr>
+{% endif %}
+
+{% if header.ListId %}
+    <tr>
+    <th align="left" style="font-size: 10px;"> List-Id: </th>
+    <td style="font-size: 10px;">{{ header.ListId }}</td>
+    </tr>
+{% endif %}
+
+    <tr>
+    <th align="left" style="font-size: 10px;">{{ header.datei18n }} </th>
+    <td dir="{{ dateDir }}" style="font-size: 10px;">{{ header.dateshort }}</td>
+    </tr>
+
+    <tr>
+    <td colspan="2"><div id="attachmentInjectionPoint"></div></td>
+    </tr>
+
+    </table>
+    </td>
+
+{% if header.photourl %}
+    <td align="center">
+    <div style="font-size:0.8em ! important;border:1px solid black ! important;background-color:#3384b3 ! important;">
+      <img src="{{ header.photourl }}" width="{{ header.photowidth }}" height="{{ header.photoheight }}">
+    </div>
+    </td>
+{% endif %}
+
+    </tr>
+
+{% if header.spamHTML %}
+  <table >
+  <tbody>
+  <tr>
+    <td>
+      <div class="spamheader" >
+      <span><b>{{ header.spamstatusi18n }}</b></span>&nbsp;
+      <span>{{ header.spamHTML|safe }}</span>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+  </table>
+{% endif %}
+</tbody>
+</table>
+
+</div>

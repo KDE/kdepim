@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,23 +21,24 @@
 #include <QWidget>
 
 namespace Ui {
-  class ImportSettingPage;
+class ImportSettingPage;
 }
 
 class ImportSettingPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
 public:
-  explicit ImportSettingPage(QWidget *parent = 0);
-  ~ImportSettingPage();
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
-  void setImportButtonEnabled(bool enabled);
+    explicit ImportSettingPage(QWidget *parent = 0);
+    ~ImportSettingPage();
+    void addImportInfo( const QString& log );
+    void addImportError( const QString& log );
+    void setImportButtonEnabled(bool enabled);
+
 Q_SIGNALS:
-  void importSettingsClicked();
+    void importSettingsClicked();
+
 private:
-  Ui::ImportSettingPage *ui;
+    Ui::ImportSettingPage *ui;
 };
 
 #endif // IMPORTSETTINGPAGE_H

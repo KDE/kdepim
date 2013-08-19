@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,42 +19,42 @@
 #include "ui_selectprogrampage.h"
 
 SelectProgramPage::SelectProgramPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::SelectProgramPage)
+    QWidget(parent),
+    ui(new Ui::SelectProgramPage)
 {
-  ui->setupUi(this);
-  connect(ui->listProgramFound,SIGNAL(itemSelectionChanged()),this,SLOT(slotItemSelectionChanged()));
-  connect( ui->listProgramFound, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotItemDoubleClicked(QListWidgetItem*)) );
+    ui->setupUi(this);
+    connect(ui->listProgramFound,SIGNAL(itemSelectionChanged()),this,SLOT(slotItemSelectionChanged()));
+    connect( ui->listProgramFound, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotItemDoubleClicked(QListWidgetItem*)) );
 }
 
 
 SelectProgramPage::~SelectProgramPage()
 {
-  delete ui;
+    delete ui;
 }
 
 void SelectProgramPage::setFoundProgram(const QStringList& list)
 {
-  ui->listProgramFound->addItems(list);
+    ui->listProgramFound->addItems(list);
 }
 
 void SelectProgramPage::slotItemSelectionChanged()
 {
-  if(ui->listProgramFound->currentItem()) {
-    Q_EMIT programSelected(ui->listProgramFound->currentItem()->text());
-  }
+    if (ui->listProgramFound->currentItem()) {
+        Q_EMIT programSelected(ui->listProgramFound->currentItem()->text());
+    }
 }
 
 void SelectProgramPage::slotItemDoubleClicked( QListWidgetItem*item )
 {
-  if ( item ) {
-    Q_EMIT doubleClicked();
-  }
+    if ( item ) {
+        Q_EMIT doubleClicked();
+    }
 }
 
 void SelectProgramPage::disableSelectProgram()
 {
-  ui->listProgramFound->setEnabled( false );
+    ui->listProgramFound->setEnabled( false );
 }
 
 #include "selectprogrampage.moc"

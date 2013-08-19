@@ -20,7 +20,7 @@
 #ifndef MESSAGELIST_CALLBACKNEPOMUKRESOURCERETRIEVER_H
 #define MESSAGELIST_CALLBACKNEPOMUKRESOURCERETRIEVER_H
 
-#include <messagecore/asyncnepomukresourceretriever.h>
+#include <messagecore/nepomukutil/asyncnepomukresourceretriever.h>
 #include "messageitem_p.h"
 
 namespace MessageList {

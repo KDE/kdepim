@@ -38,7 +38,7 @@ class MOBILEUI_EXPORT KBreadcrumbNavigationFactory : public QObject
   Q_PROPERTY( QString selectedDisplayText READ selectedDisplayText NOTIFY selectedDisplayTextChanged )
 
   public:
-    KBreadcrumbNavigationFactory( QObject* parent = 0 );
+    explicit KBreadcrumbNavigationFactory( QObject* parent = 0 );
     ~KBreadcrumbNavigationFactory();
 
     void createBreadcrumbContext( QAbstractItemModel *model, QObject* parent = 0 );

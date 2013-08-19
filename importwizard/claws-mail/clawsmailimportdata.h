@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -23,18 +23,18 @@ class ImportWizard;
 class ClawsMailImportData : public AbstractImporter
 {
 public:
-  explicit ClawsMailImportData(ImportWizard *parent);
-  ~ClawsMailImportData();
+    explicit ClawsMailImportData(ImportWizard *parent);
+    ~ClawsMailImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  bool importAddressBook();
-  bool importSettings();
-  bool importFilters();
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-  QString name() const;
+    bool importMails();
+    bool importAddressBook();
+    bool importSettings();
+    bool importFilters();
+
+    QString name() const;
 
 };
 

@@ -46,7 +46,7 @@ class QCloseEvent;
 class CRLView : public QDialog {
   Q_OBJECT
 public:
-  CRLView( QWidget* parent = 0 );
+  explicit CRLView( QWidget* parent = 0 );
   ~CRLView();
 public slots:
   void slotUpdateView();

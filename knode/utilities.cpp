@@ -16,7 +16,7 @@
 #include <QListWidget>
 #include <QRegExp>
 #include <QCursor>
-//Added by qt3to4:
+
 #include <QHBoxLayout>
 
 #include <klocale.h>
@@ -230,7 +230,7 @@ const QString KNHelper::encryptStr(const QString& aStr)
   uint i,val,len = aStr.length();
   QString result;
 
-  for (i=0; i<len; i++)
+  for (i=0; i<len; ++i)
   {
     val = aStr[i].toLatin1();
     val -= ' ';

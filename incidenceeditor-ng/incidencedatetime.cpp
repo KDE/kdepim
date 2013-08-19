@@ -20,9 +20,10 @@
 
 #include "incidencedatetime.h"
 #ifdef KDEPIM_MOBILE_UI
-#include "ui_eventortodomobile.h"
+#include "ui_dialogmobile.h"
+#include "ui_dialogmoremobile.h"
 #else
-#include "ui_eventortododesktop.h"
+#include "ui_dialogdesktop.h"
 #endif
 //#ifdef KDEPIM_MOBILE_UI
 //#include "ui_iedatetimemobile.h"
@@ -31,6 +32,8 @@
 //#include "ui_incidencedatetime.h"
 //#endif
 
+#include <calendarsupport/kcalprefs.h>
+
 #include <KCalCore/ICalTimeZones>
 #include <KCalUtils/IncidenceFormatter>
 
@@ -38,6 +41,40 @@
 #include <KSystemTimeZone>
 
 using namespace IncidenceEditorNG;
+
+
+/**
+ * Returns true if the incidence's dates are equal to the default ones specified in config.
+ */
+static bool incidenceHasDefaultTimes( const KCalCore::Incidence::Ptr &incidence )
+{
+  if (!incidence || incidence->allDay())
+    return false;
+
+  QTime defaultDuration = CalendarSupport::KCalPrefs::instance()->defaultDuration().time();
+  if ( !defaultDuration.isValid() )
+    return false;
+
+  QTime defaultStart = CalendarSupport::KCalPrefs::instance()->mStartTime.time();
+  if ( !defaultStart.isValid() )
+    return false;
+
+  if ( incidence->dtStart().time() == defaultStart ) {
+    if ( incidence->type() == KCalCore::Incidence::TypeJournal )
+      return true; // no duration to compare with
+
+    const KDateTime start = incidence->dtStart();
+    const KDateTime end   = incidence->dateTime( KCalCore::Incidence::RoleEnd );
+    if (!end.isValid() || !start.isValid())
+      return false;
+
+    const int durationInSeconds = defaultDuration.hour()*3600 + defaultDuration.minute()*60;
+    return start.secsTo(end) == durationInSeconds;
+  }
+
+  return false;
+}
+
 
 IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   : IncidenceEditor( 0 ), mTimeZones( new KCalCore::ICalTimeZones ), mUi( ui ),
@@ -121,16 +158,23 @@ bool IncidenceDateTime::eventFilter( QObject *obj, QEvent *event )
 
 void IncidenceDateTime::load( const KCalCore::Incidence::Ptr &incidence )
 {
+  if (mLoadedIncidence && *mLoadedIncidence == *incidence) {
+    return;
+  }
+
+  const bool isTemplate             = incidence->customProperty( "kdepim", "isTemplate" ) == "true";
+  const bool templateOverridesTimes = incidenceHasDefaultTimes( mLoadedIncidence );
+
   mLoadedIncidence = incidence;
   mLoadingIncidence = true;
 
   // We can only handle events or todos.
   if ( KCalCore::Todo::Ptr todo = IncidenceDateTime::incidence<KCalCore::Todo>() ) {
-    load( todo );
+    load( todo, isTemplate, templateOverridesTimes );
   } else if ( KCalCore::Event::Ptr event = IncidenceDateTime::incidence<KCalCore::Event>() ) {
-    load( event );
+    load( event, isTemplate, templateOverridesTimes );
   } else if ( KCalCore::Journal::Ptr journal = IncidenceDateTime::incidence<KCalCore::Journal>() ) {
-    load( journal );
+    load( journal, isTemplate, templateOverridesTimes );
   } else {
     kDebug() << "Not an Incidence.";
   }
@@ -504,7 +548,7 @@ KDateTime IncidenceDateTime::currentEndDateTime() const
     mUi->mTimeZoneComboEnd->selectedTimeSpec() );
 }
 
-void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
+void IncidenceDateTime::load( const KCalCore::Event::Ptr &event, bool isTemplate, bool templateOverridesTimes )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( false );
@@ -540,35 +584,15 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   mUi->mWholeDayCheck->setChecked( event->allDay() );
   enableTimeEdits();
 
-  bool isTemplate = false; // TODO
-  if ( !isTemplate ) {
+  if ( isTemplate ) {
+    if ( templateOverridesTimes ) {
+        // We only use the template times if the user didn't override them.
+        setTimes( event->dtStart(), event->dtEnd() );
+    }
+  } else {
     KDateTime startDT = event->dtStart();
     KDateTime endDT = event->dtEnd();
-    /*
-    if ( event->recurs() && mActiveDate.isValid() ) {
-      // Consider the active date when editing recurring Events.
-      KDateTime kdt( mActiveDate, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
-      const int eventLength = startDT.daysTo( endDT );
-      kdt = kdt.addSecs( -1 );
-      startDT.setDate( event->recurrence()->getNextDateTime( kdt ).date() );
-      if ( event->hasEndDate() ) {
-        endDT.setDate( startDT.addDays( eventLength ).date() );
-      } else {
-        if ( event->hasDuration() ) {
-          endDT = startDT.addSecs( event->duration().asSeconds() );
-        } else {
-          endDT = startDT;
-        }
-      }
-    }
-    */
-
     setDateTimes( startDT, endDT );
-  } else {
-    // set the start/end time from the template, only as a last resort #190545
-    if ( !event->dtStart().isValid() || !event->dtEnd().isValid() ) {
-      setTimes( event->dtStart(), event->dtEnd() );
-    }
   }
 
   switch( event->transparency() ) {
@@ -581,7 +605,7 @@ void IncidenceDateTime::load( const KCalCore::Event::Ptr &event )
   }
 }
 
-void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
+void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal, bool isTemplate, bool templateOverridesTimes )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( false );
@@ -605,32 +629,23 @@ void IncidenceDateTime::load( const KCalCore::Journal::Ptr &journal )
   mUi->mWholeDayCheck->setChecked( journal->allDay() );
   enableTimeEdits();
 
-  bool isTemplate = false; // TODO
-  if ( !isTemplate ) {
+  if ( isTemplate ) {
+    if ( templateOverridesTimes ) {
+        // We only use the template times if the user didn't override them.
+        setTimes( journal->dtStart(), KDateTime() );
+    }
+  } else {
     KDateTime startDT = journal->dtStart();
 
-    /*
-    if ( journal->recurs() && mActiveDate.isValid() ) {
-      // Consider the active date when editing recurring journals
-      KDateTime kdt( mActiveDate, QTime( 0, 0, 0 ), KSystemTimeZones::local() );
-      kdt = kdt.addSecs( -1 );
-      startDT.setDate( journal->recurrence()->getNextDateTime( kdt ).date() );
-    }
-    */
     // Convert UTC to local timezone, if needed (i.e. for kolab #204059)
     if ( startDT.isUtc() ) {
       startDT = startDT.toLocalZone();
     }
     setDateTimes( startDT, KDateTime() );
-  } else {
-    // set the start/end time from the template, only as a last resort #190545
-    if ( !journal->dtStart().isValid() ) {
-      setTimes( journal->dtStart(), KDateTime() );
-    }
   }
 }
 
-void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
+void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo, bool isTemplate, bool templateOverridesTimes )
 {
   // First en/disable the necessary ui bits and pieces
   mUi->mStartCheck->setVisible( true );
@@ -670,9 +685,16 @@ void IncidenceDateTime::load( const KCalCore::Todo::Ptr &todo )
 
   const KDateTime rightNow = KDateTime( QDate::currentDate(), QTime::currentTime() ).toLocalZone();
 
-  const KDateTime endDT   = todo->hasDueDate() ? todo->dtDue( true/** first */ ) : rightNow;
-  const KDateTime startDT = todo->hasStartDate() ? todo->dtStart( true/** first */ ) : rightNow;
-  setDateTimes( startDT, endDT );
+  if ( isTemplate ) {
+    if ( templateOverridesTimes ) {
+        // We only use the template times if the user didn't override them.
+        setTimes( todo->dtStart(), todo->dateTime(KCalCore::Incidence::RoleEnd) );
+    }
+  } else {
+    const KDateTime endDT   = todo->hasDueDate() ? todo->dtDue( true/** first */ ) : rightNow;
+    const KDateTime startDT = todo->hasStartDate() ? todo->dtStart( true/** first */ ) : rightNow;
+    setDateTimes( startDT, endDT );
+  }
 }
 
 void IncidenceDateTime::save( const KCalCore::Event::Ptr &event )
@@ -710,22 +732,21 @@ void IncidenceDateTime::save( const KCalCore::Todo::Ptr &todo )
     todo->setDtStart( currentStartDateTime() );
     // Set allday must be executed after setDtStart
     todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
+    if ( currentStartDateTime() != mInitialStartDT ) {
+      // We don't offer any way to edit the current completed occurrence.
+      // So, if the start date changes, reset the dtRecurrence
+      todo->setDtRecurrence( currentStartDateTime() );
+    }
   } else {
-    todo->setHasStartDate( false );
+    todo->setDtStart( KDateTime() );
   }
 
   if ( mUi->mEndCheck->isChecked() ) {
     todo->setDtDue( currentEndDateTime(), true/** first */ );
     // Set allday must be executed after setDtDue
     todo->setAllDay( mUi->mWholeDayCheck->isChecked() );
-
-    if ( currentEndDateTime() != mInitialEndDT ) {
-      // We don't offer any way to edit the current completed occurrence.
-      // So, if the due date changes, reset the dtRecurrence
-      todo->setDtRecurrence( currentEndDateTime() );
-    }
   } else {
-    todo->setHasDueDate( false );
+    todo->setDtDue( KDateTime() );
   }
 }
 
@@ -914,6 +935,47 @@ bool IncidenceDateTime::isValid() const
   } else {
     mLastErrorString.clear();
     return true;
+  }
+}
+
+static QString timespecToString(const KDateTime::Spec &spec)
+{
+  QString str = QLatin1String("type=") + QString::number(spec.type()) + QLatin1String("; timezone=") + spec.timeZone().name();
+  return str;
+}
+
+void IncidenceDateTime::printDebugInfo() const
+{
+  qDebug() << "startDateTimeEnabled()          : " << startDateTimeEnabled();
+  qDebug() << "endDateTimeEnabled()            : " << endDateTimeEnabled();
+  qDebug() << "currentStartDateTime().isValid(): " << currentStartDateTime().isValid();
+  qDebug() << "currentEndDateTime().isValid()  : "  << currentEndDateTime().isValid();
+  qDebug() << "currentStartDateTime()          : " << currentStartDateTime().toString();
+  qDebug() << "currentEndDateTime()            : " << currentEndDateTime().toString();
+  qDebug() << "Incidence type                  : " << mLoadedIncidence->type();
+  qDebug() << "allday                          : " << mLoadedIncidence->allDay();
+  qDebug() << "mInitialStartDT                 : " << mInitialStartDT.toString();
+  qDebug() << "mInitialEndDT                   : " << mInitialEndDT.toString();
+
+  qDebug() << "currentStartDateTime().timeSpec(): " << timespecToString(currentStartDateTime().timeSpec());
+  qDebug() << "currentEndDateTime().timeSpec()  : " << timespecToString(currentStartDateTime().timeSpec());
+  qDebug() << "mInitialStartDT.timeSpec()       : " << timespecToString(mInitialStartDT.timeSpec());
+  qDebug() << "mInitialEndDT.timeSpec()         : " << timespecToString(mInitialEndDT.timeSpec());
+
+  qDebug() << "dirty test1: " << ( mLoadedIncidence->allDay() != mUi->mWholeDayCheck->isChecked() );
+  if ( mLoadedIncidence->type() == KCalCore::Incidence::TypeEvent ) {
+    KCalCore::Event::Ptr event = mLoadedIncidence.staticCast<KCalCore::Event>();
+    qDebug() << "dirty test2: " << ( mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Opaque );
+    qDebug() << "dirty test3: " << ( !mUi->mFreeBusyCheck->isChecked() && event->transparency() != KCalCore::Event::Transparent ) ;
+  }
+
+  if ( mLoadedIncidence->allDay() ) {
+    qDebug() << "dirty test4: " << ( mUi->mStartDateEdit->date() != mInitialStartDT.date() || mUi->mEndDateEdit->date() != mInitialEndDT.date() );
+  } else {
+    qDebug() << "dirty test4.1: " << (currentStartDateTime() != mInitialStartDT);
+    qDebug() << "dirty test4.2: " << (currentEndDateTime() != mInitialEndDT);
+    qDebug() << "dirty test4.3: " << (currentStartDateTime().timeSpec() != mInitialStartDT.timeSpec());
+    qDebug() << "dirty test4.4: " << (currentEndDateTime().timeSpec() != mInitialEndDT.timeSpec());
   }
 }
 

@@ -26,7 +26,7 @@
 #include <kuniqueapplication.h>
 #include "global.h"
 #include "constants.h"
-#include "settings.h"
+
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -35,12 +35,12 @@ static const char description[] =
 
 int main( int argc, char *argv[] )
 {
-    qDebug()<<APPNAME<<' '<<VERSION;
     KAboutData about( "blogilo", 0, ki18n( APPNAME ), VERSION, ki18n( description ),
-                      KAboutData::License_GPL_V2, ki18n( "Copyright © 2008–2010 Blogilo authors" ),
+                      KAboutData::License_GPL_V2, ki18n( "Copyright © 2008–2013 Blogilo authors" ),
                       KLocalizedString(), "http://blogilo.gnufolks.org" );
     about.addAuthor( ki18n( "Mehrdad Momeny" ), ki18n( "Core Developer" ), "mehrdad.momeny@gmail.com" );
     about.addAuthor( ki18n( "Golnaz Nilieh" ), ki18n( "Core Developer" ), "g382nilieh@gmail.com" );
+    about.addAuthor( ki18n( "Laurent Montel" ), ki18n( "Core Developer" ), "montel@kde.org" );
     about.addCredit( ki18n( "Roozbeh Shafiee" ), ki18n( "Icon designer" ), "roozbeh@roozbehonline.com");
     about.addCredit( ki18n( "Sajjad Baroodkoo" ), ki18n( "Icon designer" ), "sajjad@graphit.ir");
 
@@ -52,9 +52,10 @@ int main( int argc, char *argv[] )
     KUniqueApplication app;
     global_init();
     KGlobal::locale()->insertCatalog("libkblog");
+    KGlobal::locale()->insertCatalog("libkxmlrpcclient");
+    KGlobal::locale()->insertCatalog("libcomposereditorng");
 
     MainWindow *bilbo = new MainWindow;
-//     bilbo->setAttribute(Qt::WA_DeleteOnClose, false);
 
     bilbo->show();
     int r = app.exec();

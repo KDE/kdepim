@@ -39,41 +39,41 @@ namespace MailImporter {
 class MAILIMPORTER_EXPORT Filter
 {
 public:
-  explicit Filter( const QString& name, const QString& author,
-                   const QString& info = QString() );
-  virtual ~Filter();
-  virtual void import() = 0;
-  
-  QString author() const;
-  QString name() const;
-  QString info() const;
+    explicit Filter( const QString& name, const QString& author,
+                     const QString& info = QString() );
+    virtual ~Filter();
+    virtual void import() = 0;
 
-  void setAuthor(const QString&);
-  void setName(const QString&);
-  void setInfo(const QString&);
+    QString author() const;
+    QString name() const;
+    QString info() const;
+
+    void setAuthor(const QString&);
+    void setName(const QString&);
+    void setInfo(const QString&);
 
 
-  void clear();
-  void setFilterInfo( MailImporter::FilterInfo* info );
+    void clear();
+    void setFilterInfo( MailImporter::FilterInfo* info );
 
-  MailImporter::FilterInfo* filterInfo();
+    MailImporter::FilterInfo* filterInfo();
 
-  void setCountDuplicates( int countDuplicate );
-  int countDuplicates() const;
+    void setCountDuplicates( int countDuplicate );
+    int countDuplicates() const;
 
-  void setMailDir( const QString& mailDir );
-  QString mailDir() const;
-  
+    void setMailDir( const QString& mailDir );
+    QString mailDir() const;
+
 protected:
-  static int countDirectory(const QDir& dir, bool searchHiddenDirectory);
-  /**
+    static int countDirectory(const QDir& dir, bool searchHiddenDirectory);
+    /**
    * Adds a single subcollection to the given base collection and returns it.
    * Use parseFolderString() instead if you want to create hierachies of collections.
    */
-  Akonadi::Collection addSubCollection( const Akonadi::Collection &baseCollection,
-                                        const QString &newCollectionPathName );
+    Akonadi::Collection addSubCollection( const Akonadi::Collection &baseCollection,
+                                          const QString &newCollectionPathName );
 
-  /**
+    /**
    * Creates a hierachy of collections based on the given path string. The collection
    * hierachy will be placed under the root collection.
    * For example, if the folderParseString "foo/bar/test" is passsed to this method, it
@@ -82,35 +82,35 @@ protected:
    * The "test" collection will be returned.
    * An invalid collection will be returned in case of an error.
    */
-  Akonadi::Collection parseFolderString( const QString &folderParseString );
+    Akonadi::Collection parseFolderString( const QString &folderParseString );
 
-  bool addAkonadiMessage( const Akonadi::Collection &collection,
-                          const KMime::Message::Ptr& message, Akonadi::MessageStatus status = Akonadi::MessageStatus() );
+    bool addAkonadiMessage( const Akonadi::Collection &collection,
+                            const KMime::Message::Ptr& message, Akonadi::MessageStatus status = Akonadi::MessageStatus() );
 
-  bool addMessage( const QString& folder,
-                   const QString& msgFile,
-                   Akonadi::MessageStatus status = Akonadi::MessageStatus() );
+    bool addMessage( const QString& folder,
+                     const QString& msgFile,
+                     Akonadi::MessageStatus status = Akonadi::MessageStatus() );
 
-  /**
+    /**
    * Checks for duplicate messages in the collection by message ID.
    * returns true if a duplicate was detected.
    * NOTE: Only call this method if a message ID exists, otherwise
    * you could get false positives.
    */
-  bool checkForDuplicates( const QString& msgID,
-                           const Akonadi::Collection& msgCollection,
-                           const QString& messageFolder );
-  bool addMessage_fastImport( const QString& folder,
-                              const QString& msgFile,
-                              Akonadi::MessageStatus status = Akonadi::MessageStatus() );
-  
+    bool checkForDuplicates( const QString& msgID,
+                             const Akonadi::Collection& msgCollection,
+                             const QString& messageFolder );
+    bool addMessage_fastImport( const QString& folder,
+                                const QString& msgFile,
+                                Akonadi::MessageStatus status = Akonadi::MessageStatus() );
+
 private: 
-  bool doAddMessage( const QString& folderName,
-                     const QString& msgPath,
-                     bool duplicateCheck, 
-                     Akonadi::MessageStatus status = Akonadi::MessageStatus() );
-  class Private;
-  Private *const d;
+    bool doAddMessage( const QString& folderName,
+                       const QString& msgPath,
+                       bool duplicateCheck,
+                       Akonadi::MessageStatus status = Akonadi::MessageStatus() );
+    class Private;
+    Private *const d;
 };
 
 }

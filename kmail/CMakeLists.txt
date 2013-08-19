@@ -2,16 +2,13 @@ project(kmail)
 
 include(CheckIncludeFiles)
 
-if(GRANTLEE_GREATER_0_2)
-  add_definitions(-DGRANTLEE_GREATER_0_2)
-endif()
 
 if (NOT WINCE)
 
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${KDE4_DATA_DIR}/cmake/modules)
 
   qt4_generate_dbus_interface(kmkernel.h org.kde.kmail.kmail.xml OPTIONS -a)
-  qt4_generate_dbus_interface(kmcomposewin.h org.kde.kmail.mailcomposer.xml OPTIONS -a)
+  qt4_generate_dbus_interface(editor/kmcomposewin.h org.kde.kmail.mailcomposer.xml OPTIONS -a)
 
   add_custom_target(kmail_xml ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kmail.kmail.xml
@@ -19,11 +16,12 @@ if (NOT WINCE)
     COMMENT "Helper target for XML stuff. The Kontact plugin, KOrganizer and others depend on it."
   )
 
-endif (NOT WINCE)
+endif ()
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_SOURCE_DIR}/libksieve
+  ${CMAKE_SOURCE_DIR}/libksieve/ksieveui/
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/messagelist
   ${CMAKE_SOURCE_DIR}/messageviewer
@@ -34,9 +32,14 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/messagecore
   ${CMAKE_SOURCE_DIR}/mailcommon
   ${CMAKE_BINARY_DIR}/mailcommon
+  ${CMAKE_SOURCE_DIR}/mailcommon/folder
+  ${CMAKE_SOURCE_DIR}/mailcommon/tag
+  ${CMAKE_SOURCE_DIR}/mailcommon/kernel
   ${CMAKE_SOURCE_DIR}/pimcommon
   ${CMAKE_BINARY_DIR}/pimcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon/util/
   ${CMAKE_SOURCE_DIR}/korganizer
+  ${CMAKE_SOURCE_DIR}/messagecomposer/utils/
   ${GPGME_INCLUDES}
   ${Boost_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/../ontologies
@@ -54,7 +57,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
   add_subdirectory(avscripts)
   add_subdirectory(tests)
   add_subdirectory(kconf_update)
-endif(NOT WINCE AND KDEPIM_BUILD_DESKTOP)
+endif()
 add_subdirectory(kcm_kpimidentities)
 
 ########### kmailprivate ###############
@@ -63,70 +66,70 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
 
   set(kmailprivate_LIB_SRCS
      collectionpane.cpp
-     collectiontemplatespage.cpp
-     collectionmaintenancepage.cpp
-     collectionviewpage.cpp
-     collectionquotapage.cpp
-     collectionquotapage_p.cpp
-     collectionmailinglistpage.cpp
-     colorlistbox.cpp
+     collectionpage/collectiontemplatespage.cpp
+     collectionpage/collectionmaintenancepage.cpp
+     collectionpage/collectionviewpage.cpp
+     collectionpage/collectionquotapage.cpp
+     collectionpage/collectionquotapage_p.cpp
+     collectionpage/collectionmailinglistpage.cpp
+     collectionpage/collectionshortcutpage.cpp
+     configuredialog/colorlistbox.cpp
      kmmainwin.cpp
-     configagentdelegate.cpp
-     configuredialoglistview.cpp
-     configuredialog.cpp
-     configuredialog_p.cpp
-     simplestringlisteditor.cpp
-     identitylistview.cpp
-     identitydialog.cpp
+     configuredialog/configagentdelegate.cpp
+     configuredialog/configuredialoglistview.cpp
+     configuredialog/configuredialog.cpp
+     configuredialog/configuredialog_p.cpp
+     identity/identitylistview.cpp
+     identity/identitydialog.cpp
      globalsettings.cpp
-     snippetwidget.cpp
+     editor/snippetwidget.cpp
      kmreaderwin.cpp
      kmsystemtray.cpp
-     xfaceconfigurator.cpp
+     identity/xfaceconfigurator.cpp
      undostack.cpp
      kmkernel.cpp
-     searchwindow.cpp
+     searchdialog/searchwindow.cpp
      kmcommands.cpp
      kmreadermainwin.cpp
      kmstartup.cpp
      kmmainwidget.cpp
      aboutdata.cpp
      mailserviceimpl.cpp
-     kmcomposereditor.cpp
-     composer.cpp
-     antispamwizard.cpp
+     editor/kmcomposereditor.cpp
+     editor/composer.cpp
+     antispam-virus/antispamwizard.cpp
      secondarywindow.cpp
-     codecaction.cpp
-     codecmanager.cpp
-     foldershortcutdialog.cpp
+     editor/codecaction.cpp
+     editor/codecmanager.cpp
      util.cpp
      messageactions.cpp
      statusbarlabel.cpp
-     kmcomposewin.cpp
-     attachmentcontroller.cpp
-     attachmentview.cpp
+     editor/kmcomposewin.cpp
+     editor/attachmentcontroller.cpp
+     editor/attachmentview.cpp
      archivefolderdialog.cpp
-     searchdescriptionattribute.cpp
-     tagactionmanager.cpp
+     searchdialog/searchdescriptionattribute.cpp
+     tag/tagactionmanager.cpp
      foldershortcutactionmanager.cpp
-     addressvalidationjob.cpp
-     identitypage.cpp
-     newidentitydialog.cpp
-     kmsearchmessagemodel.cpp
-     kmsearchfilterproxymodel.cpp
+     job/addressvalidationjob.cpp
+     identity/identitypage.cpp
+     identity/newidentitydialog.cpp
+     searchdialog/kmsearchmessagemodel.cpp
+     searchdialog/kmsearchfilterproxymodel.cpp
      kmknotify.cpp
-     tagselectdialog.cpp
-     accountconfigorderdialog.cpp
-     identityeditvcarddialog.cpp
-     identityaddvcarddialog.cpp
-     attachmentmissingwarning.cpp
-     createnewcontactjob.cpp
+     tag/tagselectdialog.cpp
+     configuredialog/accountconfigorderdialog.cpp
+     identity/identityeditvcarddialog.cpp
+     identity/identityaddvcarddialog.cpp
+     warningwidgets/attachmentmissingwarning.cpp
+     job/createnewcontactjob.cpp
+     warningwidgets/externaleditorwarning.cpp
   )
 
   # TODO PORT
-  qt4_generate_dbus_interface(kmcomposewin.h org.kde.kmail.mailcomposer.xml OPTIONS -a)
+  qt4_generate_dbus_interface(editor/kmcomposewin.h org.kde.kmail.mailcomposer.xml OPTIONS -a)
   qt4_add_dbus_adaptor(kmailprivate_LIB_SRCS
-    ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.mailcomposer.xml kmcomposewin.h KMComposeWin
+    ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.mailcomposer.xml editor/kmcomposewin.h KMComposeWin
   )
 
   qt4_add_dbus_adaptor(kmailprivate_LIB_SRCS
@@ -143,6 +146,14 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
   qt4_add_dbus_interfaces(kmailprivate_LIB_SRCS
     ${CMAKE_SOURCE_DIR}/archivemailagent/org.freedesktop.Akonadi.ArchiveMailAgent.xml
   )
+  qt4_add_dbus_interfaces(kmailprivate_LIB_SRCS
+    ${CMAKE_SOURCE_DIR}/sendlateragent/org.freedesktop.Akonadi.SendLaterAgent.xml
+  )
+
+  qt4_add_dbus_interfaces(kmailprivate_LIB_SRCS
+    ${CMAKE_SOURCE_DIR}/kmail/dbusinterface/org.freedesktop.Akonadi.NewMailNotifier.xml
+  )
+
 
 
   kde4_add_ui_files(kmailprivate_LIB_SRCS
@@ -151,8 +162,10 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     ui/smimeconfiguration.ui
     ui/miscpagemaintab.ui
     ui/securitypagegeneraltab.ui
+    ui/securitypagemdntab.ui
     ui/identitypage.ui
     ui/accountspagereceivingtab.ui
+    ui/searchwindow.ui
   )
 
   # KCFG files. The main kmail.kcfg is configured by CMake and put
@@ -160,15 +173,15 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
 
   if(KDEPIM_ENTERPRISE_BUILD)
     set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
-  else(KDEPIM_ENTERPRISE_BUILD)
+  else()
     set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
-  endif(KDEPIM_ENTERPRISE_BUILD)
+  endif()
 
   configure_file(kmail.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg)
 
   kde4_add_kcfg_files(kmailprivate_LIB_SRCS
     globalsettings_base.kcfgc
-    custommimeheader.kcfgc
+    editor/custommimeheader.kcfgc
   )
 
 
@@ -214,6 +227,7 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     ${NEPOMUK_QUERY_LIBRARIES}
     ${KDE4_KPRINTUTILS_LIBS}
     ${NEPOMUK_CORE_LIBRARY}
+    sendlater
   )
 
   set_target_properties(kmailprivate
@@ -265,31 +279,31 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
 
   install(TARGETS kmail ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-  install(PROGRAMS KMail2.desktop kmail_view.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+  install(PROGRAMS data/KMail2.desktop data/kmail_view.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
   install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg
     DESTINATION ${KCFG_INSTALL_DIR}
   )
-  install(FILES kmail.antispamrc kmail.antivirusrc  DESTINATION ${CONFIG_INSTALL_DIR})
+  install(FILES antispam-virus/kmail.antispamrc antispam-virus/kmail.antivirusrc  DESTINATION ${CONFIG_INSTALL_DIR})
   install(FILES tips  DESTINATION ${DATA_INSTALL_DIR}/kmail2)
   install(FILES
-    kmail_config_misc.desktop
-    kmail_config_appearance.desktop
-    kmail_config_identity.desktop
-    kmail_config_accounts.desktop
-    kmail_config_composer.desktop
-    kmail_config_security.desktop
+    data/kmail_config_misc.desktop
+    data/kmail_config_appearance.desktop
+    data/kmail_config_identity.desktop
+    data/kmail_config_accounts.desktop
+    data/kmail_config_composer.desktop
+    data/kmail_config_security.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}
   )
   install(FILES
     kmcomposerui.rc
     kmmainwin.rc
     kmreadermainwin.rc
-    kmail2.notifyrc
+    data/kmail2.notifyrc
     kmail_part.rc
     DESTINATION ${DATA_INSTALL_DIR}/kmail2
   )
-  install(FILES dbusmail.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+  install(FILES data/dbusmail.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
   install(TARGETS
     kmailpart
     kcm_kmail
@@ -301,8 +315,8 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
     DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
   )
 
-  install( FILES kmail_addattachmentservicemenu.desktop DESTINATION
+  install( FILES data/kmail_addattachmentservicemenu.desktop DESTINATION
     ${SERVICES_INSTALL_DIR}/ServiceMenus)
 
-endif (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
+endif ()
   

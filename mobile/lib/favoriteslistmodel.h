@@ -31,7 +31,7 @@ class FavoritesListModel : public QStringListModel
   Q_OBJECT
 
   public:
-    FavoritesListModel( const KSharedConfigPtr &config, QObject *parent = 0 );
+    explicit FavoritesListModel( const KSharedConfigPtr &config, QObject *parent = 0 );
 
     void reparseConfiguration();
 

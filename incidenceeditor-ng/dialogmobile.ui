@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EventOrTodoDesktop</class>
+ <widget class="QWidget" name="EventOrTodoDesktop">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>501</width>
+    <height>308</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="1" colspan="3">
+    <widget class="QWidget" name="mInvitationBar" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_10">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string comment="@info">You are Invited, what do you want to do?</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="mAcceptInvitationButton">
+        <property name="toolTip">
+         <string comment="@info:tooltip">Accept the invitation</string>
+        </property>
+        <property name="whatsThis">
+         <string comment="@info:whatsthis">Click this button to accept the invitation.</string>
+        </property>
+        <property name="text">
+         <string comment="@action:button Accept an invitation">Accept</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="mDeclineInvitationButton">
+        <property name="text">
+         <string comment="@action:button decline an invitation">Decline</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_13">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string comment="@info:tooltip">Set the title</string>
+     </property>
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">Sets the Title of this event or to-do.</string>
+     </property>
+     <property name="text">
+      <string comment="@label">T&amp;itle:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>mSummaryEdit</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="3">
+    <widget class="KLineEdit" name="mSummaryEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>430</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string comment="@info:tooltip">Set the title</string>
+     </property>
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">Sets the Title of this event or to-do.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="mLocationLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string comment="@label">&amp;Location:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>mLocationEdit</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="3">
+    <widget class="KLineEdit" name="mLocationEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>430</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string comment="@info:tooltip">Set the location</string>
+     </property>
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">Sets where the event or to-do will take place.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="mStartLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string comment="@label Start date/time of the event or task">Start:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QCheckBox" name="mStartCheck">
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">Sets the start date for this to-do</string>
+     </property>
+     <property name="text">
+      <string comment="@option:check to-do start datetime"/>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="2">
+    <widget class="IncidenceEditorNG::KTimeZoneComboBox" name="mTimeZoneComboStart">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="mEndLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string comment="@label End date/time of the task or event">End:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QCheckBox" name="mEndCheck">
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">Sets the due date for this to-do.</string>
+     </property>
+     <property name="text">
+      <string comment="to-do due datetime"/>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="2">
+    <widget class="IncidenceEditorNG::KTimeZoneComboBox" name="mTimeZoneComboEnd">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1" colspan="3">
+    <widget class="QCheckBox" name="mWholeDayCheck">
+     <property name="whatsThis">
+      <string comment="@info:whatsthis">Set if this to-do's start and due dates have times associated with them.</string>
+     </property>
+     <property name="text">
+      <string comment="@option:check The event or task takes the whole day">All Day</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="3">
+    <widget class="QWidget" name="mCompletionPriorityWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_8">
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QSlider" name="mCompletionSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="mCompletedLabel">
+        <property name="text">
+         <string comment="@label:slider completed percentage of a task">completed</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string comment="@label:listbox Priority of the task">Priority:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+        <widget class="KComboBox" name="mPriorityCombo">
+        <property name="maxVisibleItems">
+          <number>6</number>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox No priority specified for a task">unspecified</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox highest priority for a task">1 (highest)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox">2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox">3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox">4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox medium priority for a task">5 (medium)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox">6</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox">7</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox">8</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="@item:inlistbox lowest priority for a task">9 (lowest)</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="10" column="0" colspan="4">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="mTaskLabel">
+     <property name="text">
+      <string comment="@label Task specific line in the dialog containing progress and priority">Progress:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1" colspan="3">
+    <widget class="QCheckBox" name="mFreeBusyCheck">
+     <property name="text">
+      <string comment="@option:check">Blocks me for other events</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="KDateComboBox" name="mStartDateEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhPreferNumbers</set>
+     </property>
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <property name="maxVisibleItems">
+      <number>1</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="KTimeComboBox" name="mStartTimeEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhPreferNumbers</set>
+     </property>
+     <property name="maxVisibleItems">
+      <number>1</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="KDateComboBox" name="mEndDateEdit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhPreferNumbers</set>
+     </property>
+     <property name="maxVisibleItems">
+      <number>1</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="3">
+    <widget class="KTimeComboBox" name="mEndTimeEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhPreferNumbers</set>
+     </property>
+     <property name="maxVisibleItems">
+      <number>1</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KTimeComboBox</class>
+   <extends>QComboBox</extends>
+   <header>ktimecombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KDateComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kdatecombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>IncidenceEditorNG::KTimeZoneComboBox</class>
+   <extends>KComboBox</extends>
+   <header>ktimezonecombobox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -5,116 +5,114 @@ include_directories(
     ${SOPRANO_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
+    ${CMAKE_SOURCE_DIR}/messagecore
+    ${CMAKE_SOURCE_DIR}/messageviewer
+    ${CMAKE_SOURCE_DIR}/messageviewer/viewer/
+    ${CMAKE_SOURCE_DIR}/messagecomposer/recipient/
+    ${CMAKE_SOURCE_DIR}/messagecomposer/job
+    ${CMAKE_SOURCE_DIR}/messagecomposer/utils/
+    ${CMAKE_SOURCE_DIR}/messagecomposer/composer/
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory( tests )
-if(GRANTLEE_GREATER_0_2)
-  add_definitions(-DGRANTLEE_GREATER_0_2)
-  include_directories(${Grantlee_INCLUDE_DIRS})
-else()
-  message(STATUS "Grantlee > 0.2 was not found. We need Grantlee >= 0.3.0 to improve Plain-text version of HTML messages")
-endif()
+include_directories(${Grantlee_INCLUDE_DIRS})
 
 set( messagecomposer_src
 
-     composer.cpp
-     util.cpp
+     composer/composer.cpp
+     utils/util.cpp
 
-     attachmentcontrollerbase.cpp
-     attachmentmodel.cpp
-     attachmentfrompublickeyjob.cpp
+     attachment/attachmentcontrollerbase.cpp
+     attachment/attachmentmodel.cpp
+     job/attachmentfrompublickeyjob.cpp
 
-     akonadisender.cpp
-     messagehelper.cpp
-     messagefactory.cpp
-     messagecomposersettings.cpp
-     composerviewbase.cpp
+     sender/akonadisender.cpp
+     helper/messagehelper.cpp
+     helper/messagefactory.cpp
+     settings/messagecomposersettings.cpp
+     composer/composerviewbase.cpp
 
-     messagepart.cpp
-     globalpart.cpp
-     infopart.cpp
-     textpart.cpp
+     part/messagepart.cpp
+     part/globalpart.cpp
+     part/infopart.cpp
+     part/textpart.cpp
 
-     jobbase.cpp
-     contentjobbase.cpp
-     attachmentjob.cpp
-     singlepartjob.cpp
-     multipartjob.cpp
-     maintextjob.cpp
-     signjob.cpp
-     encryptjob.cpp
-     signencryptjob.cpp
-     transparentjob.cpp
+     job/jobbase.cpp
+     job/contentjobbase.cpp
+     job/attachmentjob.cpp
+     job/singlepartjob.cpp
+     job/multipartjob.cpp
+     job/maintextjob.cpp
+     job/signjob.cpp
+     job/encryptjob.cpp
+     job/signencryptjob.cpp
+     job/transparentjob.cpp
 
-     skeletonmessagejob.cpp
+     job/skeletonmessagejob.cpp
 
-     kmeditor.cpp
-     inserttextfilejob.cpp
-     signaturecontroller.cpp
-     composerlineedit.cpp
-     recipientspicker.cpp
-     recipient.cpp
-     recipientline.cpp
-     recipientseditor.cpp
-     recipientseditorsidewidget.cpp
-     kwindowpositioner.cpp
+     composer/kmeditor.cpp
+     job/inserttextfilejob.cpp
+     composer/signaturecontroller.cpp
+     composer/composerlineedit.cpp
 
-     aliasesexpandjob.cpp
-     emailaddressresolvejob.cpp
+     recipient/recipientspicker.cpp
+     recipient/recipient.cpp
+     recipient/recipientline.cpp
+     recipient/recipientseditor.cpp
+     recipient/recipientseditorsidewidget.cpp
+     recipient/kwindowpositioner.cpp
 
-     keyresolver.cpp
-     kmsubjectlineedit.cpp
+     job/aliasesexpandjob.cpp
+     job/emailaddressresolvejob.cpp
+
+     composer/keyresolver.cpp
      autocorrection/composerautocorrection.cpp
      autocorrection/composerautocorrectionwidget.cpp
      autocorrection/composerautocorrectionlistwidget.cpp
-     autoimageresizing/autoresizeimagejob.cpp
      autocorrection/composerautocorrectiontreewidget.cpp
      autocorrection/composerautocorrectionlanguage.cpp
      autocorrection/import/importlibreofficeautocorrection.cpp
      autocorrection/import/importkmailautocorrection.cpp
      autocorrection/import/importabstractautocorrection.cpp
-     selectspecialchar.cpp
-     autoimageresizing/autoimageresizedialog.cpp
-     autoimageresizing/autoresizeimagewidget.cpp
+     imagescaling/imagescalingjob.cpp
+     imagescaling/imagescalingwidget.cpp
+     imagescaling/imagescalingutils.cpp
+     imagescaling/imagescalingselectformat.cpp
 )
 
 kde4_add_ui_files(messagecomposer_src
      autocorrection/composerautocorrectionwidget.ui
-     autoimageresizing/autoresizeimagewidget.ui
+     imagescaling/ui/imagescalingwidget.ui
 )
 
 
 if (NOT WINCE)
   # disabled due to no QTreeWidget
   set( messagecomposer_src ${messagecomposer_src}
-     distributionlistdialog.cpp
+     recipient/distributionlistdialog.cpp
   )
-endif (NOT WINCE)
+endif ()
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
   set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT true)
-else(KDEPIM_ENTERPRISE_BUILD)
+else()
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
   set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT false)
-endif(KDEPIM_ENTERPRISE_BUILD)
+endif()
 
-configure_file(messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer.kcfg)
+configure_file(settings/messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer.kcfg)
 
 kde4_add_kcfg_files(messagecomposer_src
-  messagecomposersettings_base.kcfgc 
+  settings/messagecomposersettings_base.kcfgc 
 )
 
 kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
 target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
- messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} )
-
-if(GRANTLEE_GREATER_0_2)
-target_link_libraries( messagecomposer ${Grantlee_GUI_LIBRARIES})
-endif()
+ messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} ${Grantlee_GUI_LIBRARIES} sendlater)
 
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
@@ -125,10 +123,10 @@ install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 #install( FILES
 #         messagecomposer_export.h
 #         composer.h
-#         globalpart.h
-#         infopart.h
+#         part/globalpart.h
+#         part/infopart.h
 #         messagepart.h
-#         textpart.h
+#         part/textpart.h
 #         jobbase.h
 #         contentjobbase.h
 #         attachmentjob.h

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,29 +21,30 @@
 #include "abstractimporter.h"
 
 namespace Ui {
-  class SelectComponentPage;
+class SelectComponentPage;
 }
 
 class SelectComponentPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit SelectComponentPage(QWidget *parent = 0);
-  ~SelectComponentPage();
+    explicit SelectComponentPage(QWidget *parent = 0);
+    ~SelectComponentPage();
+
     void setEnabledComponent(AbstractImporter::TypeSupportedOptions options);
     AbstractImporter::TypeSupportedOptions selectedComponents() const;
 
 private Q_SLOTS:
-  void slotEverythingClicked( bool clicked );
-  void slotComponentClicked();
+    void slotEverythingClicked( bool clicked );
+    void slotComponentClicked();
 
 Q_SIGNALS:
-  void atLeastOneComponentSelected(bool componentSelected);
+    void atLeastOneComponentSelected(bool componentSelected);
 
 private:
-  AbstractImporter::TypeSupportedOptions mOptions;
-  Ui::SelectComponentPage *ui;
+    AbstractImporter::TypeSupportedOptions mOptions;
+    Ui::SelectComponentPage *ui;
 };
 
 #endif // SELECTCOMPONENTPAGE_H

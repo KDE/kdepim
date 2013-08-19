@@ -75,7 +75,7 @@ class KReparentingProxyModel : public QAbstractProxyModel
 {
   Q_OBJECT
 public:
-  KReparentingProxyModel(QObject* parent = 0);
+  explicit KReparentingProxyModel(QObject* parent = 0);
   ~KReparentingProxyModel();
 
   virtual QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;

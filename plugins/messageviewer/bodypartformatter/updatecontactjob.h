@@ -41,7 +41,7 @@ private:
   Private* const d;
 
   Q_PRIVATE_SLOT( d, void slotSearchDone( KJob* ) )
-  Q_PRIVATE_SLOT( d, void void slotUpdateContactDone( KJob * ) )
+  Q_PRIVATE_SLOT( d, void slotUpdateContactDone( KJob * ) )
 };
 
 #endif // UPDATECONTACTJOB_H

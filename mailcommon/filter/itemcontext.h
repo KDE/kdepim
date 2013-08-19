@@ -21,7 +21,7 @@
 #define MAILCOMMON_ITEMCONTEXT_H
 
 #include "../mailcommon_export.h"
-#include "../searchpattern.h"
+#include "../search/searchpattern.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>

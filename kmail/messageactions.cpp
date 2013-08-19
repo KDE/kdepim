@@ -21,18 +21,18 @@
 #include "globalsettings.h"
 #include "kmreaderwin.h"
 #include "kmkernel.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "kmmainwidget.h"
 #include "util.h"
 #include "kmcommands.h"
 #include "customtemplatesmenu.h"
 
-#include "messagecore/annotationdialog.h"
-#include "messagecore/globalsettings.h"
-#include "messagecore/mailinglist.h"
-#include "messagecore/messagehelpers.h"
-#include "messageviewer/csshelper.h"
-#include "messageviewer/globalsettings.h"
+#include "messagecore/widgets/annotationdialog.h"
+#include "messagecore/settings/globalsettings.h"
+#include "messagecore/misc/mailinglist.h"
+#include "messagecore/helpers/messagehelpers.h"
+#include "messageviewer/viewer/csshelper.h"
+#include "messageviewer/settings/globalsettings.h"
 
 #include <Nepomuk2/Resource>
 
@@ -58,8 +58,8 @@
 #include <qwidget.h>
 #include <akonadi/collection.h>
 #include <Akonadi/Monitor>
-#include <mailutil.h>
-#include <asyncnepomukresourceretriever.h>
+#include <util/mailutil.h>
+#include <nepomukutil/asyncnepomukresourceretriever.h>
 #include <nepomuk2/resourcemanager.h>
 #include <Soprano/Vocabulary/NAO>
 
@@ -238,13 +238,28 @@ TemplateParser::CustomTemplatesMenu* MessageActions::customTemplatesMenu() const
   return mCustomTemplatesMenu;
 }
 
-void MessageActions::setCurrentMessage( const Akonadi::Item &msg )
+void MessageActions::setCurrentMessage( const Akonadi::Item &msg, const Akonadi::Item::List &items )
 {
   mMonitor->setItemMonitored( mCurrentItem, false );
   mCurrentItem = msg;
 
+  if (!items.isEmpty()) {
+    Q_FOREACH( const Akonadi::Item& item, mVisibleItems ) {
+      mMonitor->setItemMonitored( item, false );
+    }
+    if (!msg.isValid()) {
+        mVisibleItems.clear();
+    } else {
+      mVisibleItems = items;
+      Q_FOREACH( const Akonadi::Item& item, items ) {
+        mMonitor->setItemMonitored( item, true );
+      }
+    }
+  }
+
   if ( !msg.isValid() ) {
     mVisibleItems.clear();
+    clearMailingListActions();
   }
 
   mMonitor->setItemMonitored( mCurrentItem, true );
@@ -253,8 +268,7 @@ void MessageActions::setCurrentMessage( const Akonadi::Item &msg )
 
 void MessageActions::slotItemRemoved(const Akonadi::Item& item)
 {
-  if ( item == mCurrentItem )
-  {
+  if ( item == mCurrentItem ) {
     mCurrentItem = Akonadi::Item();
     updateActions();
   }
@@ -263,30 +277,17 @@ void MessageActions::slotItemRemoved(const Akonadi::Item& item)
 void MessageActions::slotItemModified( const Akonadi::Item &  item, const QSet< QByteArray > &  partIdentifiers )
 {
   Q_UNUSED( partIdentifiers );
-  if ( item == mCurrentItem )
-  {
+  if ( item == mCurrentItem ) {
     mCurrentItem = item;
     const int numberOfVisibleItems = mVisibleItems.count();
-    for( int i = 0; i < numberOfVisibleItems; ++i ) {
-      Akonadi::Item it = mVisibleItems[i];
+    for ( int i = 0; i < numberOfVisibleItems; ++i ) {
+      Akonadi::Item it = mVisibleItems.at(i);
       if ( item == it ) {
         mVisibleItems[i] = item;
       }
     }
     updateActions();
   }
-}
-
-void MessageActions::setSelectedVisibleItems( const Akonadi::Item::List &items )
-{
-  Q_FOREACH( const Akonadi::Item& item, mVisibleItems ) {
-    mMonitor->setItemMonitored( item, false );
-  }
-  mVisibleItems = items;
-  Q_FOREACH( const Akonadi::Item& item, items ) {
-    mMonitor->setItemMonitored( item, true );
-  }
-  updateActions();
 }
 
 void MessageActions::updateActions()
@@ -312,13 +313,10 @@ void MessageActions::updateActions()
   mReplyListAction->setEnabled( hasPayload );
   mNoQuoteReplyAction->setEnabled( hasPayload );
 
-  if ( Nepomuk2::ResourceManager::instance()->initialized() )
-  {
+  if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
     mAnnotateAction->setEnabled( uniqItem );
     mAsynNepomukRetriever->requestResource( mCurrentItem.url() );
-  }
-  else
-  {
+  } else {
     mAnnotateAction->setEnabled( false );
   }
 
@@ -327,8 +325,7 @@ void MessageActions::updateActions()
   if ( mCurrentItem.hasPayload<KMime::Message::Ptr>() ) {
     if ( mCurrentItem.loadedPayloadParts().contains("RFC822") ) {
       updateMailingListActions( mCurrentItem );
-    } else
-    {
+    } else {
       Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mCurrentItem );
       job->fetchScope().fetchAllAttributes();
       job->fetchScope().fetchFullPayload( true );
@@ -354,15 +351,20 @@ void MessageActions::slotUpdateActionsFetchDone(KJob* job)
   }
 }
 
+void MessageActions::clearMailingListActions()
+{
+    mMailingListActionMenu->setEnabled( false );
+    mListFilterAction->setEnabled( false );
+    mListFilterAction->setText( i18n("Filter on Mailing-List...") );
+}
+
 void MessageActions::updateMailingListActions( const Akonadi::Item& messageItem )
 {
   KMime::Message::Ptr message = messageItem.payload<KMime::Message::Ptr>();
   const MessageCore::MailingList mailList = MessageCore::MailingList::detect( message );
 
   if ( mailList.features() == MessageCore::MailingList::None ) {
-    mMailingListActionMenu->setEnabled( false );
-    mListFilterAction->setEnabled( false );
-    mListFilterAction->setText( i18n("Filter on Mailing-List...") );
+      clearMailingListActions();
   } else {
     // A mailing list menu with only a title is pretty boring
     // so make sure theres at least some content
@@ -409,8 +411,7 @@ void MessageActions::updateMailingListActions( const Akonadi::Item& messageItem 
     QByteArray name;
     QString value;
     const QString lname = MailingList::name( message, name, value );
-    if ( !lname.isEmpty() )
-    {
+    if ( !lname.isEmpty() ) {
       mListFilterAction->setEnabled( true );
       mListFilterAction->setText( i18n( "Filter on Mailing-List %1...", lname ) );
     }
@@ -455,8 +456,7 @@ void MessageActions::setupForwardActions()
     mForwardAttachedAction->setShortcut(QKeySequence(Qt::SHIFT+Qt::Key_F));
     QObject::connect( mForwardActionMenu, SIGNAL(triggered(bool)),
                       mParent, SLOT(slotForwardInlineMsg()) );
-  }
-  else {
+  } else {
     mForwardActionMenu->insertAction( mRedirectAction, mForwardAttachedAction );
     mForwardActionMenu->insertAction( mRedirectAction, mForwardInlineAction );
     mForwardInlineAction->setShortcut(QKeySequence(Qt::Key_F));
@@ -473,8 +473,7 @@ void MessageActions::setupForwardingActionsList( KXMLGUIClient *guiClient )
   if ( GlobalSettings::self()->forwardingInlineByDefault() ) {
     forwardActionList.append( mForwardInlineAction );
     forwardActionList.append( mForwardAttachedAction );
-  }
-  else {
+  } else {
     forwardActionList.append( mForwardAttachedAction );
     forwardActionList.append( mForwardInlineAction );
   }
@@ -530,35 +529,25 @@ void MessageActions::slotMailingListFilter()
 
 void MessageActions::printMessage(bool preview)
 {
-  if ( mMessageView )
-  {
-    bool result = false;
-    if(GlobalSettings::self()->printSelectedText()) {
+  bool result = false;
+  if ( mMessageView ) {  
+    if (GlobalSettings::self()->printSelectedText()) {
       result = mMessageView->printSelectedText(preview);
     }
-    if(!result) {
-      if(preview)
-        mMessageView->viewer()->printPreview();
-      else
-        mMessageView->viewer()->print();
-    }
   }
-  else
-  {
+  if (!result) {
     const bool useFixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
     const QString overrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
 
     const Akonadi::Item message = mCurrentItem;
     KMPrintCommand *command =
       new KMPrintCommand( mParent, message,
-                          0,
-                          0,
-                          false, false,
+                          mMessageView->viewer()->headerStyle(), mMessageView->viewer()->headerStrategy(),
+                          mMessageView->viewer()->htmlOverride(), mMessageView->viewer()->htmlLoadExternal(),
                           useFixedFont, overrideEncoding );
     command->setPrintPreview(preview);
     command->start();
   }
-
 }
 
 void MessageActions::slotPrintPreviewMsg()
@@ -604,16 +593,15 @@ void MessageActions::addMailingListAction( const QString &item, const KUrl &url 
   KAction *act = new KAction( i18nc( "%1 is a 'Contact Owner' or similar action. %2 is a protocol normally web or email though could be irc/ftp or other url variant", "%1 (%2)",  item, protocol ) , this );
   mMailListActionList.append(act);
   const QVariant v(  url.url() );
-  act-> setData( v );
-  act-> setHelpText( prettyUrl );
+  act->setData( v );
+  act->setHelpText( prettyUrl );
   mMailingListActionMenu->addAction( act );
 }
 
 void MessageActions::editCurrentMessage()
 {
   KMCommand *command = 0;
-  if ( mCurrentItem.isValid() )
-  {
+  if ( mCurrentItem.isValid() ) {
     Akonadi::Collection col = mCurrentItem.parentCollection();
     // edit, unlike send again, removes the message from the folder
     // we only want that for templates and drafts folders
@@ -668,12 +656,10 @@ void MessageActions::addWebShortcutsMenu( KMenu *menu, const QString & text )
 
     filterData.setSearchFilteringOptions( KUriFilterData::RetrievePreferredSearchProvidersOnly );
 
-    if ( KUriFilter::self()->filterSearchUri( filterData, KUriFilter::NormalTextFilter ) )
-    {
+    if ( KUriFilter::self()->filterSearchUri( filterData, KUriFilter::NormalTextFilter ) ) {
         const QStringList searchProviders = filterData.preferredSearchProviders();
 
-        if ( !searchProviders.isEmpty() )
-        {
+        if ( !searchProviders.isEmpty() ) {
             KMenu *webShortcutsMenu = new KMenu( menu );
             webShortcutsMenu->setIcon( KIcon( "preferences-web-browser-shortcuts" ) );
 
@@ -682,8 +668,7 @@ void MessageActions::addWebShortcutsMenu( KMenu *menu, const QString & text )
 
             KAction *action = 0;
 
-            foreach( const QString &searchProvider, searchProviders )
-            {
+            foreach( const QString &searchProvider, searchProviders ) {
                 action = new KAction( searchProvider, webShortcutsMenu );
                 action->setIcon( KIcon( filterData.iconNameForPreferredSearchProvider( searchProvider ) ) );
                 action->setData( filterData.queryForPreferredSearchProvider( searchProvider ) );
@@ -707,11 +692,9 @@ void MessageActions::slotHandleWebShortcutAction()
 {
   KAction *action = qobject_cast<KAction*>( sender() );
 
-  if (action)
-  {
+  if (action) {
       KUriFilterData filterData( action->data().toString() );
-      if ( KUriFilter::self()->filterSearchUri( filterData, KUriFilter::WebShortcutFilter ) )
-      {
+      if ( KUriFilter::self()->filterSearchUri( filterData, KUriFilter::WebShortcutFilter ) ) {
           KToolInvocation::invokeBrowser( filterData.uri().url() );
       }
   }
@@ -719,7 +702,7 @@ void MessageActions::slotHandleWebShortcutAction()
 
 void MessageActions::slotConfigureWebShortcuts()
 {
- KToolInvocation::kdeinitExec( QLatin1String("kcmshell4"), QStringList() << QLatin1String("ebrowsing") );
+    KToolInvocation::kdeinitExec( QLatin1String("kcmshell4"), QStringList() << QLatin1String("ebrowsing") );
 }
 
 #include "messageactions.moc"

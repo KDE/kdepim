@@ -26,7 +26,7 @@
 #include <KPIMTextEdit/EMailQuoteHighlighter>
 #include <KConfigGroup>
 #include <QApplication>
-#include <messagecomposer/util.h>
+#include <messagecomposer/utils/util.h>
 
 KNComposerEditor::KNComposerEditor( QWidget *parent)
  :KMeditor(parent)
@@ -57,7 +57,7 @@ void KNComposerEditor::slotRot13()
 {
   QTextCursor cursor = textCursor();
   if ( cursor.hasSelection() )
-    insertPlainText( Message::Util::rot13( cursor.selectedText() ) );
+    insertPlainText( MessageComposer::Util::rot13( cursor.selectedText() ) );
   //FIXME: breaks HTML formatting
 }
 
@@ -91,7 +91,7 @@ void KNComposerEditor::slotRemoveBox()
     if ((x>=0)&&(textLine(x).left(5)==",----")) {
       removeLine(x);
       l--;
-      for (int i=x;i<=l;i++) {     // remove quotation
+      for (int i=x;i<=l;++i) {     // remove quotation
         s = textLine(i);
         if (s.left(2) == "| ") {
           s.remove(0,2);
@@ -107,7 +107,7 @@ void KNComposerEditor::slotRemoveBox()
       x++;
     if ((x<numLines())&&(textLine(x).left(5)=="`----")) {
       removeLine(x);
-      for (int i=l+1;i<x;i++) {     // remove quotation
+      for (int i=l+1;i<x;++i) {     // remove quotation
         s = textLine(i);
         if (s.left(2) == "| ") {
           s.remove(0,2);
@@ -127,22 +127,5 @@ void KNComposerEditor::slotRemoveBox()
 
 void KNComposerEditor::slotAddBox()
 {
-  QTextCursor cursor = textCursor();
-  if ( cursor.hasSelection() )
-  {
-    QString s = cursor.selectedText();
-    s.prepend( QLatin1String(",----[  ]\n| " ));
-    s.replace( QChar::ParagraphSeparator,QLatin1String("\n| ") );
-    s.append( QLatin1String("\n`----") );
-    insertPlainText( s );
-  } else {
-    //int oldPos = cursor.position();
-    cursor.movePosition( QTextCursor::StartOfBlock );
-    cursor.movePosition( QTextCursor::EndOfBlock, QTextCursor::KeepAnchor );
-    QString s = cursor.selectedText();
-    QString str = QString::fromLatin1(",----[  ]\n| %1\n`----").arg(s);
-    cursor.insertText( str );
-    //cursor.setPosition( qMax( 0, oldPos - 2 ) );
-    setTextCursor( cursor );
-  }
+  MessageComposer::Util::addTextBox(this);
 }

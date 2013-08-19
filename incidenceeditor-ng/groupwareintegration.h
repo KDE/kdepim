@@ -20,9 +20,9 @@
 #define INCIDENCEEDITOR_GROUPWAREINTEGRATION_H
 
 #include "incidenceeditors-ng_export.h"
+#include <Akonadi/Calendar/ETMCalendar>
 
-namespace CalendarSupport {
-  class Calendar;
+namespace Akonadi {
   class GroupwareUiDelegate;
 }
 
@@ -32,13 +32,12 @@ class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
 {
   public:
     static bool isActive();
-    static void activate( CalendarSupport::Calendar *calendar = 0 );
-
-    static void setGlobalUiDelegate( CalendarSupport::GroupwareUiDelegate *delegate );
+    static void activate( const Akonadi::ETMCalendar::Ptr &calendar = Akonadi::ETMCalendar::Ptr() );
+    static void setGlobalUiDelegate( Akonadi::GroupwareUiDelegate *delegate );
 
   private:
     static bool sActivated;
-    static CalendarSupport::GroupwareUiDelegate *sDelegate;
+    static Akonadi::GroupwareUiDelegate *sDelegate;
 };
 
 }

@@ -18,7 +18,7 @@
 */
 #include "stringutiltest.h"
 
-#include "../stringutil.h"
+#include "../utils/stringutil.h"
 
 #include "qtest_kde.h"
 

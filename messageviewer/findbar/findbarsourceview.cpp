@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -25,7 +25,7 @@
 using namespace MessageViewer;
 
 FindBarSourceView::FindBarSourceView( QPlainTextEdit * view, QWidget * parent )
-  : FindBarBase( parent ), m_view( view )
+    : FindBarBase( parent ), mView( view )
 {  
 }
 
@@ -36,53 +36,50 @@ FindBarSourceView::~FindBarSourceView()
 
 void FindBarSourceView::searchText( bool backward, bool isAutoSearch )
 {
-  QTextDocument::FindFlags searchOptions = 0;
-  if ( backward )
-    searchOptions |= QTextDocument::FindBackward;
-  if ( m_caseSensitiveAct->isChecked() )
-    searchOptions |= QTextDocument::FindCaseSensitively;
+    QTextDocument::FindFlags searchOptions = 0;
+    if ( backward )
+        searchOptions |= QTextDocument::FindBackward;
+    if ( mCaseSensitiveAct->isChecked() )
+        searchOptions |= QTextDocument::FindCaseSensitively;
 
-  if ( isAutoSearch )
-  {
-    QTextCursor cursor = m_view->textCursor();
-    cursor.setPosition( cursor.selectionStart() );
-    m_view->setTextCursor( cursor );
-  }
-  else if( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ))
-  {
-    clearSelections();
-  }
-  mLastSearchStr = m_search->text();
-  const bool found = m_view->find( mLastSearchStr, searchOptions );
+    if ( isAutoSearch ) {
+        QTextCursor cursor = mView->textCursor();
+        cursor.setPosition( cursor.selectionStart() );
+        mView->setTextCursor( cursor );
+    } else if( !mLastSearchStr.contains( mSearch->text(), Qt::CaseSensitive )) {
+        clearSelections();
+    }
+    mLastSearchStr = mSearch->text();
+    const bool found = mView->find( mLastSearchStr, searchOptions );
 
-  setFoundMatch( found );
-  FindBarBase::messageInfo( backward, isAutoSearch, found );  
+    setFoundMatch( found );
+    FindBarBase::messageInfo( backward, isAutoSearch, found );
 }
 
 
 void FindBarSourceView::clearSelections()
 {
-  QTextCursor textCursor = m_view->textCursor();
-  textCursor.clearSelection();
-  textCursor.setPosition( 0 );
-  m_view->setTextCursor( textCursor );
-                          
-  FindBarBase::clearSelections();
+    QTextCursor textCursor = mView->textCursor();
+    textCursor.clearSelection();
+    textCursor.setPosition( 0 );
+    mView->setTextCursor( textCursor );
+
+    FindBarBase::clearSelections();
 }
 
 void FindBarSourceView::updateHighLight(bool)
 {
-  clearSelections();
+    clearSelections();
 }
 
 void FindBarSourceView::updateSensitivity(bool)
 {
-  QTextDocument::FindFlags searchOptions = 0;
-  if ( m_caseSensitiveAct->isChecked() )
-    searchOptions |= QTextDocument::FindCaseSensitively;
-  mLastSearchStr = m_search->text();
-  const bool found = m_view->find( mLastSearchStr, searchOptions );
-  setFoundMatch( found );
+    QTextDocument::FindFlags searchOptions = 0;
+    if ( mCaseSensitiveAct->isChecked() )
+        searchOptions |= QTextDocument::FindCaseSensitively;
+    mLastSearchStr = mSearch->text();
+    const bool found = mView->find( mLastSearchStr, searchOptions );
+    setFoundMatch( found );
 }
 
 

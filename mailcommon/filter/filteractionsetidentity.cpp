@@ -19,7 +19,7 @@
 
 #include "filteractionsetidentity.h"
 
-#include "../mailkernel.h"
+#include "kernel/mailkernel.h"
 #include "filteractionmissingargumentdialog.h"
 
 #include <KDE/KPIMIdentities/Identity>
@@ -37,7 +37,7 @@ FilterAction* FilterActionSetIdentity::newAction()
 }
 
 FilterActionSetIdentity::FilterActionSetIdentity( QObject *parent )
-  : FilterActionWithUOID( "set identity", i18n( "Set Identity To" ), parent )
+  : FilterActionWithUOID( QLatin1String("set identity"), i18n( "Set Identity To" ), parent )
 {
   mParameter = KernelIf->identityManager()->defaultIdentity().uoid();
 }

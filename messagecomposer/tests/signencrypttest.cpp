@@ -34,28 +34,32 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kjob.h>
 
-#include <messagecomposer/composer.h>
-#include <messagecomposer/encryptjob.h>
-#include <messagecomposer/maintextjob.h>
-#include <messagecomposer/signjob.h>
-#include <messagecomposer/globalpart.h>
-#include <messagecomposer/textpart.h>
+#include <messagecomposer/composer/composer.h>
+#include <messagecomposer/job/encryptjob.h>
+#include <messagecomposer/job/maintextjob.h>
+#include <messagecomposer/job/signjob.h>
+#include <messagecomposer/part/globalpart.h>
+#include <messagecomposer/part/textpart.h>
 
-#include <messageviewer/nodehelper.h>
+#include <messageviewer/viewer/nodehelper.h>
 #include <messagecore/tests/util.h>
 
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 
 QTEST_KDEMAIN( SignEncryptTest, GUI )
 
+void SignEncryptTest::initTestCase()
+{
+  MessageCore::Test::setupEnv();
+}
 
 void SignEncryptTest::testContent() {
 
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  Message::Composer *composer = new Message::Composer;
-  Message::SignJob* sJob = new Message::SignJob( composer );
-  Message::EncryptJob* eJob = new Message::EncryptJob( composer );
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
+  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
+  MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
 
   QVERIFY( composer );
   QVERIFY( sJob );
@@ -65,12 +69,12 @@ void SignEncryptTest::testContent() {
   QList<QByteArray> charsets;
   charsets << "us-ascii";
   composer->globalPart()->setCharsets( charsets );
-  Message::TextPart* part = new Message::TextPart( this );
+  MessageComposer::TextPart* part = new MessageComposer::TextPart( this );
   part->setWordWrappingEnabled(false);
   part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
 
 
-  Message::MainTextJob *mainTextJob = new Message::MainTextJob( part, composer );
+  MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob( part, composer );
 
   QVERIFY( composer );
   QVERIFY( mainTextJob );
@@ -111,9 +115,9 @@ void SignEncryptTest::testHeaders()
 {
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  Message::Composer *composer = new Message::Composer;
-  Message::SignJob* sJob = new Message::SignJob( composer );
-  Message::EncryptJob* eJob = new Message::EncryptJob( composer );
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
+  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
+  MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
 
   QVERIFY( composer );
   QVERIFY( sJob );

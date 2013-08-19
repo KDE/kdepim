@@ -26,7 +26,7 @@
 #include <KZip>
 #include <qtest_kde.h>
 
-#include <messagecore/attachmentcompressjob.h>
+#include <messagecore/attachment/attachmentcompressjob.h>
 using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentCompressJobTest, NoGUI )
@@ -35,7 +35,7 @@ void AttachmentCompressJobTest::testCompress()
 {
   // Some data.
   QByteArray data;
-  for( int i = 0; i < 100; i++ ) {
+  for( int i = 0; i < 100; ++i ) {
     data += "This is some highly compressible text...\n";
   }
   const QString name = QString::fromLatin1( "name" );

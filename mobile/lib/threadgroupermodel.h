@@ -119,7 +119,7 @@ class MOBILEUI_EXPORT ThreadGrouperModel : public QSortFilterProxyModel
      *
      * @note The model does not take ownership of the comparator.
      */
-    ThreadGrouperModel( ThreadGrouperComparator *comparator, QObject* parent = 0 );
+    explicit ThreadGrouperModel( ThreadGrouperComparator *comparator, QObject* parent = 0 );
 
     virtual ~ThreadGrouperModel();
 

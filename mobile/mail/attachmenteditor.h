@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-namespace Message {
+namespace MessageComposer {
 class AttachmentModel;
 class AttachmentControllerBase;
 }
@@ -54,8 +54,8 @@ class AttachmentEditor : public QObject
      * @param controller The attachment controller to use for composing the message.
      * @param parent The parent object.
      */
-    AttachmentEditor( KActionCollection *actionCollection, Message::AttachmentModel *model,
-                      Message::AttachmentControllerBase *controller, QObject *parent = 0 );
+    AttachmentEditor( KActionCollection *actionCollection, MessageComposer::AttachmentModel *model,
+                      MessageComposer::AttachmentControllerBase *controller, QObject *parent = 0 );
 
   public Q_SLOTS:
     /**
@@ -69,10 +69,10 @@ class AttachmentEditor : public QObject
     void encryptAttachment( bool value );
 
   private:
-    Message::AttachmentModel *mModel;
+    MessageComposer::AttachmentModel *mModel;
     QItemSelectionModel *mSelectionModel;
 
-    Message::AttachmentControllerBase *mAttachmentController;
+    MessageComposer::AttachmentControllerBase *mAttachmentController;
     QAction *mAddAction;
     QAction *mDeleteAction;
     QAction *mSignAction;

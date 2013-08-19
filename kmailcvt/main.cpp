@@ -18,34 +18,35 @@
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
+#include <KApplication>
 
 #include "kmailcvt.h"
 #include "kdepim-version.h"
 
 int main(int argc, char *argv[])
 {
-  KLocale::setMainCatalog("kmailcvt");
+    KLocale::setMainCatalog("kmailcvt");
 
-  KAboutData aboutData( "kmailcvt", 0, ki18n("KMailCVT"),
-    KDEPIM_VERSION, ki18n("Mail Import Tool"), KAboutData::License_GPL_V2,
-    ki18n("Copyright © 2000–2012 KMailCVT authors"));
-  aboutData.addAuthor(ki18n("Hans Dijkema"),ki18n("Original author"), "kmailcvt@hum.org");
-  aboutData.addAuthor(ki18n("Danny Kukawka"), ki18n("Maintainer & New filters"), "danny.kukawka@web.de");
-  aboutData.addAuthor(ki18n("Laurence Anderson"), ki18n("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
-  aboutData.addCredit(ki18n("Daniel Molkentin"), ki18n("New GUI & cleanups"), "molkentin@kde.org");
-  aboutData.addCredit(ki18n("Matthew James Leach"), ki18n("Port to Akonadi"), "matthew@theleachfamily.co.uk");
-  aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("New filter & cleanups"), "montel@kde.org");
+    KAboutData aboutData( "kmailcvt", 0, ki18n("KMailCVT"),
+                          KDEPIM_VERSION, ki18n("Mail Import Tool"), KAboutData::License_GPL_V2,
+                          ki18n("Copyright © 2000–2013 KMailCVT authors"));
+    aboutData.addAuthor(ki18n("Hans Dijkema"),ki18n("Original author"), "kmailcvt@hum.org");
+    aboutData.addAuthor(ki18n("Danny Kukawka"), ki18n("Maintainer & New filters"), "danny.kukawka@web.de");
+    aboutData.addAuthor(ki18n("Laurence Anderson"), ki18n("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
+    aboutData.addCredit(ki18n("Daniel Molkentin"), ki18n("New GUI & cleanups"), "molkentin@kde.org");
+    aboutData.addCredit(ki18n("Matthew James Leach"), ki18n("Port to Akonadi"), "matthew@theleachfamily.co.uk");
+    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("New filter & cleanups"), "montel@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
+    KCmdLineArgs::init( argc, argv, &aboutData );
 
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KCmdLineOptions options;
+    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-  KApplication a;
-  KMailCVT *kmailcvt = new KMailCVT();
-  a.setTopWidget(kmailcvt);
-  kmailcvt->show();
-  int ret = a.exec();
-  delete kmailcvt;
-  return ret;
+    KApplication a;
+    KMailCVT *kmailcvt = new KMailCVT();
+    a.setTopWidget(kmailcvt);
+    kmailcvt->show();
+    int ret = a.exec();
+    delete kmailcvt;
+    return ret;
 }

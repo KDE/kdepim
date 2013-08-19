@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 import org.kde.pim.mobileui 4.5 as KPIM
 
 /** Base class for the application top-level view. */
@@ -25,10 +25,4 @@ QML.Rectangle {
   height: 480
   width: 800
   color : "#FAFAFA"
-
-  KPIM.WindowBar {
-    z: 100
-    anchors.top: parent.top
-    anchors.left: parent.left
-  }
 }

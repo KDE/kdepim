@@ -19,15 +19,13 @@
 
 #include "kcalitembrowseritem.h"
 
-#include <calendarsupport/calendar.h>
-
 #include <akonadi/item.h>
 
 using namespace CalendarSupport;
 using namespace CalendarSupport::KCal;
 
-ExtendedIncidenceViewer::ExtendedIncidenceViewer( Calendar *calendar, QWidget *parent )
-  : IncidenceViewer( calendar, parent )
+ExtendedIncidenceViewer::ExtendedIncidenceViewer( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent )
+  : IncidenceViewer( calendar.data(), parent )
 {
 }
 
@@ -39,7 +37,7 @@ void ExtendedIncidenceViewer::itemRemoved()
 
 KCalItemBrowserItem::KCalItemBrowserItem(QDeclarativeItem* parent) : DeclarativeAkonadiItem(parent)
 {
-  m_viewer = new ExtendedIncidenceViewer( 0 );
+  m_viewer = new ExtendedIncidenceViewer( Akonadi::ETMCalendar::Ptr() );
   connect( m_viewer, SIGNAL(incidenceRemoved()), SIGNAL(incidenceRemoved()) );
 
   setWidget( m_viewer );

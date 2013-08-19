@@ -14,7 +14,7 @@
 #ifndef KNODE_CSSHELPER_H
 #define KNODE_CSSHELPER_H
 
-#include <messageviewer/csshelperbase.h>
+#include <messageviewer/viewer/csshelperbase.h>
 
 namespace KNode {
 
@@ -24,7 +24,7 @@ namespace KNode {
 class CSSHelper : public MessageViewer::CSSHelperBase
 {
   public:
-    CSSHelper( const QPaintDevice *pd );
+    explicit CSSHelper( const QPaintDevice *pd );
 
 };
 

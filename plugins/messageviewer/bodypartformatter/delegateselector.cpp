@@ -20,7 +20,7 @@
 
 #include "delegateselector.h"
 
-#include <libkdepim/addresseelineedit.h>
+#include <libkdepim/addressline/addresseelineedit.h>
 
 #include <khbox.h>
 #include <klocale.h>

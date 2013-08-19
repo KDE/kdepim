@@ -32,7 +32,7 @@ class IncidenceDefaultsPrivate;
 class INCIDENCEEDITORS_NG_EXPORT IncidenceDefaults
 {
   public:
-    IncidenceDefaults( bool cleanupAttachmentTEmporaryFiles = false );
+    explicit IncidenceDefaults( bool cleanupAttachmentTEmporaryFiles = false );
     IncidenceDefaults( const IncidenceDefaults &other );
     ~IncidenceDefaults();
 

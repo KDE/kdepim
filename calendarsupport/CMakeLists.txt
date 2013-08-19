@@ -15,53 +15,26 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 set(calendarsupport_LIB_SRCS
   archivedialog.cpp
   attachmenthandler.cpp
-  attributeregistrar.cpp
-  blockalarmsattribute.cpp
-  calendar.cpp
-  calendaradaptor.cpp
-  calendarmodel.cpp
   # calendarsearch.cpp
+  calendarsingleton.cpp
   calendarutils.cpp
-  calfilterproxymodel.cpp
   categoryconfig.cpp
+  categoryhierarchyreader.cpp
   collectiongeneralpage.cpp
   collectionselection.cpp
-  daterangefilterproxymodel.cpp
   eventarchiver.cpp
-  freebusydownloadjob.cpp
-  freebusymanager.cpp
-  groupware.cpp
   identitymanager.cpp
   incidenceattachmentmodel.cpp
-  incidencechanger.cpp
-  incidencefilterproxymodel.cpp
   kcalmodel.cpp
   kcalprefs.cpp
-  mailclient.cpp
-  mailscheduler.cpp
-  nepomukcalendar.cpp
-  publishdialog.cpp
+  messagewidget.cpp
   utils.cpp
 
-  next/akonadicalendar.cpp
-  next/history.cpp
-  next/incidencechanger2.cpp
   next/incidencefetchjob.cpp
   next/incidencesearchjob.cpp
   next/incidenceviewer.cpp
-  next/invitationhandler.cpp
-  next/scheduler.cpp
 )
 
-if(NOT WINCE)
-  add_subdirectory(tests)
-  set(calendarsupport_LIB_SRCS
-    ${calendarsupport_LIB_SRCS}
-    dndfactory.cpp
-  )
-endif()
-
-kde4_add_ui_files(calendarsupport_LIB_SRCS publishdialog_base.ui)
 
 kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 
@@ -69,7 +42,8 @@ kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 
 kde4_add_library(calendarsupport ${LIBRARY_TYPE} ${calendarsupport_LIB_SRCS})
 
-target_link_libraries(calendarsupport
+target_link_libraries(
+  calendarsupport
   kdepimdbusinterfaces
   kdepim
   ${KDEPIMLIBS_AKONADI_LIBS}
@@ -84,6 +58,7 @@ target_link_libraries(calendarsupport
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
+  akonadi-calendar
 )
 
 set_target_properties(calendarsupport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

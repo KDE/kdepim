@@ -30,7 +30,7 @@
 class LDIFXXPort : public XXPort
 {
   public:
-    LDIFXXPort( QWidget *parent = 0 );
+    explicit LDIFXXPort( QWidget *parent = 0 );
 
     bool exportContacts( const KABC::Addressee::List &contacts ) const;
     KABC::Addressee::List importContacts() const;

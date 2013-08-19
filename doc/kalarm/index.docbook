@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year><year>2009</year><year>2010</year><year>2011</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year><year>2009</year><year>2010</year><year>2011</year><year>2012</year><year>2013</year>
 <holder>&David.Jarvie;</holder>
 </copyright>
 
@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2012-08-10</date>
-<releaseinfo>2.09.01 (&kde; 4.9)</releaseinfo>
+<date>2013-05-28</date>
+<releaseinfo>2.10.03 (&kde; 4.11)</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -3309,6 +3309,13 @@ including displaying the
   of the specified name, in order to edit a new alarm.</entry>
 </row>
 <row>
+  <entry><option>--list</option></entry>
+  <entry>Output a list of scheduled alarms to <filename>stdout</filename>.
+  The list shows brief details of each pending alarm: its resource
+  identifier (if using Akonadi), UID, next scheduled time and message
+  text or file.</entry>
+</row>
+<row>
   <entry><option>--tray</option></entry>
   <entry>Display &kalarm; as an icon in the system tray.</entry>
 </row>
@@ -3384,6 +3391,7 @@ request the following functions:</para>
 <listitem><para>cancel an already scheduled alarm</para></listitem>
 <listitem><para>trigger an already scheduled alarm</para></listitem>
 <listitem><para>display the Alarm Edit dialog</para></listitem>
+<listitem><para>list scheduled alarms</para></listitem>
 </itemizedlist>
 
 <para>Each of the above functions is implemented both by a &DBus; call
@@ -4664,6 +4672,39 @@ has an invalid value, or if no template with the name
 alarm. If an alarm type is specified as a parameter, a blank dialog is
 displayed. Alternatively, if an alarm template name is specified as a
 parameter, the dialog is preset with details from the template.</para>
+
+</refsect1>
+</refentry>
+
+<refentry id="dbus_list">
+<refmeta>
+<refentrytitle>list</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>list</refname>
+<refpurpose>Return a list of scheduled alarms.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+QString list()
+</synopsis>
+
+<refsect2>
+<title>Return value</title>
+<para>List of alarms, separated by newlines, each in the format
+<returnvalue><replaceable>resource_id</replaceable>:<replaceable>UID</replaceable> <replaceable>time</replaceable> <replaceable>text</replaceable></returnvalue> (if using Akonadi),
+or
+<returnvalue><replaceable>UID</replaceable> <replaceable>time</replaceable> <replaceable>text</replaceable></returnvalue> (if using KResources).</para>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><function>list()</function> is a &DBus; call to return a string
+containing a summary of scheduled alarms. The list shows brief details
+of each pending alarm: its resource identifier (if using Akonadi), UID,
+next scheduled time and message text or file.</para>
 
 </refsect1>
 </refentry>

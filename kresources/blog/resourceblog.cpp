@@ -39,7 +39,7 @@
 
 #include <kresources/configwidget.h>
 
-#include <libkdepim/progressmanager.h>
+#include <libkdepim/progresswidget/progressmanager.h>
 
 #include <kblog/blogpost.h>
 #include <kblog/blogmedia.h>

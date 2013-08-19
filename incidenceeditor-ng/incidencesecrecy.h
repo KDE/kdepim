@@ -35,9 +35,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceSecrecy : public IncidenceEditor
   Q_OBJECT
   public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceSecrecy( Ui::EventOrTodoMore *ui );
+    explicit IncidenceSecrecy( Ui::EventOrTodoMore *ui );
 #else
-    IncidenceSecrecy( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceSecrecy( Ui::EventOrTodoDesktop *ui );
 #endif
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );

@@ -108,6 +108,7 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "calendarsupport" ); // for error messages while updating events and tasks
   KGlobal::locale()->insertCatalog( "akonadicontact" ); //for identity + vcard
   KGlobal::locale()->insertCatalog( "kabc" ); //need for addressbook
+  KGlobal::locale()->insertCatalog( "libpimcommon" ); //Need for acl
 
   return app.exec();
 }

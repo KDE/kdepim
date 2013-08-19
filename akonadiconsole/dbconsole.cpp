@@ -20,9 +20,13 @@
 #include "dbconsole.h"
 #include "dbaccess.h"
 
+#include <KAction>
 #include <KDebug>
 #include <KGlobalSettings>
+#include <KStandardAction>
 
+#include <QApplication>
+#include <QClipboard>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQueryModel>
@@ -32,6 +36,9 @@ DbConsole::DbConsole(QWidget* parent) :
   mQueryModel( 0 )
 {
   ui.setupUi( this );
+
+  KAction *copyAction = KStandardAction::copy( this, SLOT(copyCell()), this );
+  ui.resultView->addAction( copyAction );
 
   ui.execButton->setIcon( KIcon( "application-x-executable" ) );
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
@@ -57,6 +64,16 @@ void DbConsole::execClicked()
     ui.errorView->clear();
     ui.resultStack->setCurrentWidget( ui.resultViewPage );
   }
+}
+
+void DbConsole::copyCell()
+{
+  QModelIndex index = ui.resultView->currentIndex();
+  if ( !index.isValid() ) {
+    return;
+  }
+  QString text = index.data( Qt::DisplayRole ).toString();
+  QApplication::clipboard()->setText( text );
 }
 
 #include "dbconsole.moc"

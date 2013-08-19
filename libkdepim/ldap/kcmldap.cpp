@@ -2,6 +2,7 @@
   This file is part of libkldap.
 
   Copyright (c) 2002-2009 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2013 Laurent Montel <montel@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General  Public
@@ -21,19 +22,17 @@
 
 #include "kcmldap_p.h"
 
-#include <QtCore/QString>
 #include <QGroupBox>
 #include <QLabel>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <QPushButton>
 #include <QToolButton>
 #include <QVBoxLayout>
+#include <QPushButton>
 
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcomponentdata.h>
-#include <kconfigdialogmanager.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdemacros.h>
@@ -43,8 +42,10 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kvbox.h>
+#include <KMessageBox>
 
-#include "ldapclient.h"
+#include "ldapclientsearch.h"
+#include "ldapclientsearchconfig.h"
 #include <kldap/ldapserver.h>
 
 #include "addhostdialog_p.h"
@@ -98,7 +99,7 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
   about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
   KGlobal::locale()->insertCatalog("libkdepim");
   setAboutData( about );
-
+  mClientSearchConfig = new KLDAP::LdapClientSearchConfig;
   initGUI();
 
   connect( mHostListView, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
@@ -114,6 +115,7 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
 
 KCMLdap::~KCMLdap()
 {
+    delete mClientSearchConfig;
 }
 
 void KCMLdap::slotSelectionChanged( QListWidgetItem *item )
@@ -170,16 +172,18 @@ void KCMLdap::slotEditHost()
 
 void KCMLdap::slotRemoveHost()
 {
-  QListWidgetItem *item = mHostListView->takeItem( mHostListView->currentRow() );
-  if ( !item ) {
-    return;
-  }
+    QListWidgetItem *item = mHostListView->currentItem();
+    if (!item)
+        return;
+    LDAPItem *ldapItem = dynamic_cast<LDAPItem*>( item );
+    if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Do you want to remove setting for host \"%1\"?", ldapItem->server().host() ), i18n("Remove Host")))
+        return;
 
-  delete item;
+    delete mHostListView->takeItem( mHostListView->currentRow() );
 
-  slotSelectionChanged( mHostListView->currentItem() );
+    slotSelectionChanged( mHostListView->currentItem() );
 
-  emit changed( true );
+    emit changed( true );
 }
 
 static void swapItems( LDAPItem *item, LDAPItem *other )
@@ -247,15 +251,13 @@ void KCMLdap::slotMoveDown()
 void KCMLdap::load()
 {
   mHostListView->clear();
-  KConfig *config = KLDAP::LdapClientSearch::config();
+  KConfig *config = KLDAP::LdapClientSearchConfig::config();
   KConfigGroup group( config, "LDAP" );
-
-  QString host;
 
   uint count = group.readEntry( "NumSelectedHosts", 0 );
   for ( uint i = 0; i < count; ++i ) {
     KLDAP::LdapServer server;
-    KLDAP::LdapClientSearch::readConfig( server, group, i, true );
+    mClientSearchConfig->readConfig( server, group, i, true );
     LDAPItem *item = new LDAPItem( mHostListView, server, true );
     item->setCheckState( Qt::Checked );
   }
@@ -263,7 +265,7 @@ void KCMLdap::load()
   count = group.readEntry( "NumHosts", 0 );
   for ( uint i = 0; i < count; ++i ) {
     KLDAP::LdapServer server;
-    KLDAP::LdapClientSearch::readConfig( server, group, i, false );
+    mClientSearchConfig->readConfig( server, group, i, false );
     new LDAPItem( mHostListView, server );
   }
 
@@ -272,7 +274,7 @@ void KCMLdap::load()
 
 void KCMLdap::save()
 {
-  KConfig *config = KLDAP::LdapClientSearch::config();
+  KConfig *config = KLDAP::LdapClientSearchConfig::config();
   config->deleteGroup( "LDAP" );
 
   KConfigGroup group( config, "LDAP" );
@@ -287,10 +289,10 @@ void KCMLdap::save()
 
     KLDAP::LdapServer server = item->server();
     if ( item->checkState() == Qt::Checked ) {
-      KLDAP::LdapClientSearch::writeConfig( server, group, selected, true );
+      mClientSearchConfig->writeConfig( server, group, selected, true );
       selected++;
     } else {
-      KLDAP::LdapClientSearch::writeConfig( server, group, unselected, false );
+      mClientSearchConfig->writeConfig( server, group, unselected, false );
       unselected++;
     }
   }

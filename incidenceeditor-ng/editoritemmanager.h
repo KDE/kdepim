@@ -23,6 +23,8 @@
 
 #include "incidenceeditors-ng_export.h"
 
+#include <Akonadi/Calendar/IncidenceChanger>
+#include <Akonadi/Collection>
 #include <QObject>
 
 namespace Akonadi {
@@ -51,8 +53,10 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
   public:
     /**
      * Creates an ItemEditor for a new Item.
+     * Receives an option IncidenceChanger, so you can share the undo/redo stack with your
+     * application.
      */
-    EditorItemManager( ItemEditorUi *ui );
+    EditorItemManager( ItemEditorUi *ui, Akonadi::IncidenceChanger *changer = 0 );
 
     /**
      * Destructs the ItemEditor. Unsaved changes will get lost at this point.
@@ -75,13 +79,6 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      * a valid item. When the payload is not set it will be fetched.
      */
     void load( const Akonadi::Item &item );
-
-    /**
-     * Reverts the changes that where done by the last call to save. So if an
-     * item was created by save(), it will be deleted and if an item was modified,
-     * the previous values are restored.
-     */
-    void revertLastSave();
 
     /**
      * Saves the new or modified item. This method does nothing when the
@@ -115,6 +112,12 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
      */
     Akonadi::ItemFetchScope &fetchScope();
 
+    /**
+     * Returns the collection where the last item was created.
+     * Or an invalid collection if none was created.
+     */
+    Akonadi::Collection collection() const;
+
     enum SaveAction {
       Create, /**< A new item was created */
       Modify, /**< An existing item was modified */
@@ -142,8 +145,14 @@ class INCIDENCEEDITORS_NG_EXPORT EditorItemManager : public QObject
     Q_PRIVATE_SLOT(d_ptr, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
     Q_PRIVATE_SLOT(d_ptr, void itemFetchResult( KJob* ) )
     Q_PRIVATE_SLOT(d_ptr, void itemMoveResult( KJob* ) )
-    Q_PRIVATE_SLOT(d_ptr, void modifyResult( KJob* ) )
-    Q_PRIVATE_SLOT(d_ptr, void moveAndModifyTransactionFinished( KJob *job ) )
+    Q_PRIVATE_SLOT(d_ptr, void onModifyFinished( int changeId, const Akonadi::Item &item,
+                                                 Akonadi::IncidenceChanger::ResultCode resultCode,
+                                                 const QString &errorString ) )
+    Q_PRIVATE_SLOT(d_ptr, void onCreateFinished( int changeId,
+                                                 const Akonadi::Item &item,
+                                                 Akonadi::IncidenceChanger::ResultCode resultCode,
+                                                 const QString &errorString ) )
+    Q_PRIVATE_SLOT(d_ptr, void moveJobFinished( KJob *job ) )
 };
 
 class INCIDENCEEDITORS_NG_EXPORT ItemEditorUi

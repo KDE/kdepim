@@ -48,7 +48,7 @@ class INCIDENCEEDITORS_NG_EXPORT FreeBusyItemModel : public QAbstractItemModel
         FreeBusyPeriodRole
     };
 
-    FreeBusyItemModel( QObject *parent = 0 );
+    explicit FreeBusyItemModel( QObject *parent = 0 );
     virtual ~FreeBusyItemModel();
 
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;

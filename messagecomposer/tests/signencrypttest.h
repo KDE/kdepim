@@ -25,13 +25,17 @@
 
 class KJob;
 
-namespace Message {
+namespace MessageComposer {
   class EncryptJob;
 }
 
 class SignEncryptTest : public QObject
 {
   Q_OBJECT
+
+  public slots:
+    void initTestCase();
+
   private Q_SLOTS:
     void testContent();
     void testHeaders();

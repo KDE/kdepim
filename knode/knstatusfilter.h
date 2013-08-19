@@ -35,7 +35,7 @@ class StatusFilter
     ~StatusFilter();
 
     StatusFilter& operator=( const StatusFilter &sf )
-      { for(int i=0; i<8; i++) data.setBit(i, sf.data.at(i)); return (*this); }
+      { for(int i=0; i<8; ++i) data.setBit(i, sf.data.at(i)); return (*this); }
 
     void load(const KConfigGroup &conf);
     void save(KConfigGroup &conf);
@@ -57,7 +57,7 @@ class StatusFilterWidget : public QWidget
   Q_OBJECT
 
   public:
-    StatusFilterWidget( QWidget *parent );
+    explicit StatusFilterWidget( QWidget *parent );
     ~StatusFilterWidget();
 
     StatusFilter filter();
@@ -71,7 +71,7 @@ class StatusFilterWidget : public QWidget
     class TFCombo : public QComboBox {
 
       public:
-        TFCombo(QWidget *parent);
+        explicit TFCombo(QWidget *parent);
         ~TFCombo();
         void setValue(bool b) { if(b) setCurrentIndex(0); else setCurrentIndex(1); }
         bool value() const         { return (currentIndex()==0); }

@@ -29,7 +29,7 @@
 
 #include "filterlogdialog.h"
 #include <mailcommon/filter/filterlog.h>
-#include <messageviewer/autoqpointer.h>
+#include <messageviewer/utils/autoqpointer.h>
 
 #include <kdebug.h>
 #include <kfiledialog.h>
@@ -55,7 +55,7 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   KGlobal::locale()->insertCatalog(QLatin1String("akonadi_mailfilter_agent"));
   setCaption( i18n( "Filter Log Viewer" ) );
   setButtons( User1|User2|Close );
-  setWindowIcon( KIcon( "view-filter" ) );
+  setWindowIcon( KIcon( QLatin1String("view-filter") ) );
   setModal( false );
   setDefaultButton( Close );
   setButtonGuiItem( User1, KStandardGuiItem::clear() );
@@ -142,7 +142,7 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   mLogMemLimitSpin->setMaximum( 1024 * 256 ); // 256 MB
   // value in the QSpinBox is in KB while it's in Byte in the FilterLog
   mLogMemLimitSpin->setValue( FilterLog::instance()->maxLogSize() / 1024 );
-  mLogMemLimitSpin->setSuffix( " KB" );
+  mLogMemLimitSpin->setSuffix( i18n(" KB") );
   mLogMemLimitSpin->setSpecialValueText(
     i18nc("@label:spinbox Set the size of the logfile to unlimited.", "unlimited") );
   connect( mLogMemLimitSpin, SIGNAL(valueChanged(int)),
@@ -317,7 +317,7 @@ void FilterLogDialog::slotUser2()
   MessageViewer::AutoQPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
 
   fdlg->setMode( KFile::File );
-  fdlg->setSelection( "kmail-filter.html" );
+  fdlg->setSelection( QLatin1String("kmail-filter.html") );
   fdlg->setOperationMode( KFileDialog::Saving );
   fdlg->setConfirmOverwrite(true);
   if ( fdlg->exec() == QDialog::Accepted && fdlg )

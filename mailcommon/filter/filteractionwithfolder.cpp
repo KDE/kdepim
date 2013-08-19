@@ -19,9 +19,9 @@
 
 #include "filteractionwithfolder.h"
 
-#include "../folderrequester.h"
-#include "../mailkernel.h"
-#include "../mailutil.h"
+#include "folderrequester.h"
+#include "kernel/mailkernel.h"
+#include "util/mailutil.h"
 #include "filteractionmissingargumentdialog.h"
 
 #include <QTextDocument>
@@ -29,7 +29,7 @@
 
 using namespace MailCommon;
 
-FilterActionWithFolder::FilterActionWithFolder( const char *name, const QString &label, QObject *parent )
+FilterActionWithFolder::FilterActionWithFolder( const QString &name, const QString &label, QObject *parent )
   : FilterAction( name, label, parent )
 {
 }

@@ -41,6 +41,7 @@
 #include <Akonadi/AgentTypeDialog>
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/CollectionModel>
+#include <akonadi/calendar/calendarsettings.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Journal>
@@ -1079,7 +1080,7 @@ KOPrefsDialogGroupScheduling::KOPrefsDialogGroupScheduling( const KComponentData
   topLayout->addWidget( useGroupwareBool->checkBox(), 0, 0, 1, 2 );
 
   KPIM::KPrefsWidBool *bcc =
-    addWidBool( CalendarSupport::KCalPrefs::instance()->bccItem(), topFrame );
+    addWidBool( Akonadi::CalendarSettings::self()->bccItem(), topFrame );
   topLayout->addWidget( bcc->checkBox(), 1, 0, 1, 2 );
 
   QLabel *aTransportLabel = new QLabel(
@@ -1091,143 +1092,18 @@ KOPrefsDialogGroupScheduling::KOPrefsDialogGroupScheduling( const KComponentData
   tmw->layout()->setContentsMargins( 0, 0, 0, 0 );
   topLayout->addWidget( tmw, 3, 0, 1, 2 );
 
-  QLabel *aMailsLabel = new QLabel(
-    i18nc( "@label", "Additional email addresses:" ), topFrame );
-  QString whatsThis = i18nc( "@info:whatsthis",
-                             "Add, edit or remove additional e-mails addresses "
-                             "here. These email addresses are the ones you "
-                             "have in addition to the one set in personal "
-                             "preferences. If you are an attendee of one event, "
-                             "but use another email address there, you need to "
-                             "list this address here so KOrganizer can "
-                             "recognize it as yours." );
-  aMailsLabel->setWhatsThis( whatsThis );
-  topLayout->addWidget( aMailsLabel, 4, 0, 1, 2 );
-  mAMails = new QListWidget( topFrame );
-  mAMails->setWhatsThis( whatsThis );
-
-  topLayout->addWidget( mAMails, 5, 0, 1, 2 );
-
-  QLabel *aEmailsEditLabel = new QLabel( i18nc( "@label", "Additional email address:" ), topFrame );
-  whatsThis = i18nc( "@info:whatsthis",
-                     "Edit additional e-mails addresses here. To edit an "
-                     "address select it from the list above "
-                     "or press the \"New\" button below. These email "
-                     "addresses are the ones you have in addition to the "
-                     "one set in personal preferences." );
-  aEmailsEditLabel->setWhatsThis( whatsThis );
-  topLayout->addWidget( aEmailsEditLabel, 6, 0 );
-  aEmailsEdit = new KLineEdit( topFrame );
-  aEmailsEdit->setClearButtonShown( true );
-  aEmailsEdit->setWhatsThis( whatsThis );
-  aEmailsEdit->setEnabled( false );
-  topLayout->addWidget( aEmailsEdit, 6, 1 );
-
-  QPushButton *add = new QPushButton(
-    i18nc( "@action:button add a new email address", "New" ), topFrame );
-  add->setObjectName( "new" );
-  whatsThis = i18nc( "@info:whatsthis",
-                     "Press this button to add a new entry to the "
-                     "additional e-mail addresses list. Use the edit "
-                     "box above to edit the new entry." );
-  add->setWhatsThis( whatsThis );
-  topLayout->addWidget( add, 7, 0 );
-  mRemove = new QPushButton( i18nc( "@action:button", "Remove" ), topFrame );
-  mRemove->setWhatsThis( whatsThis );
-  topLayout->addWidget( mRemove, 7, 1 );
-
   //topLayout->setRowStretch( 2, 1 );
-  connect( add, SIGNAL(clicked()), this, SLOT(addItem()) );
-  connect( mRemove, SIGNAL(clicked()), this, SLOT(removeItem()) );
-  connect( aEmailsEdit, SIGNAL(textChanged(QString)), this, SLOT(updateItem()) );
-  connect( aEmailsEdit, SIGNAL(lostFocus()), this, SLOT(checkEmptyMail()) );
-  connect( mAMails, SIGNAL(itemSelectionChanged()), SLOT(updateInput()) );
+
 
   load();
 }
 
 void KOPrefsDialogGroupScheduling::usrReadConfig()
 {
-  mAMails->clear();
-
-  QStringList::const_iterator begin(
-    CalendarSupport::KCalPrefs::instance()->mAdditionalMails.constBegin() );
-    QStringList::const_iterator end(
-      CalendarSupport::KCalPrefs::instance()->mAdditionalMails.constEnd() );
-
-    for ( QStringList::const_iterator it = begin; it != end; ++it ) {
-    new QListWidgetItem( ( *it ), mAMails );
-  }
 }
 
 void KOPrefsDialogGroupScheduling::usrWriteConfig()
 {
-  CalendarSupport::KCalPrefs::instance()->mAdditionalMails.clear();
-
-  for ( int i = 0; i<mAMails->count(); ++i ) {
-    CalendarSupport::KCalPrefs::instance()->mAdditionalMails.append( mAMails->item( i )->text() );
-  }
-}
-
-void KOPrefsDialogGroupScheduling::addItem()
-{
-  aEmailsEdit->setEnabled( true );
-  mRemove->setEnabled( true );
-  QListWidgetItem *item = new QListWidgetItem( mAMails );
-  mAMails->setCurrentItem( item );
-  aEmailsEdit->setText( i18nc( "@label", "(EmptyEmail)" ) );
-  slotWidChanged();
-}
-
-void KOPrefsDialogGroupScheduling::removeItem()
-{
-  QListWidgetItem *item;
-  item = mAMails->currentItem();
-  if ( !item ) {
-    return;
-  }
-
-  delete mAMails->takeItem( mAMails->row( item ) );
-  item = mAMails->currentItem();
-  if ( !item ) {
-    aEmailsEdit->setText( "" );
-    aEmailsEdit->setEnabled( false );
-    mRemove->setEnabled( false );
-  } else if ( mAMails->count() == 0 ) {
-    aEmailsEdit->setEnabled( false );
-    mRemove->setEnabled( false );
-  }
-  slotWidChanged();
-}
-
-void KOPrefsDialogGroupScheduling::updateItem()
-{
-  QListWidgetItem *item;
-  item = mAMails->currentItem();
-  if ( !item ) {
-    return;
-  }
-
-  item->setText( aEmailsEdit->text() );
-  slotWidChanged();
-}
-
-void KOPrefsDialogGroupScheduling::checkEmptyMail()
-{
-  if ( aEmailsEdit->text().isEmpty() ) {
-    removeItem();
-  }
-}
-
-void KOPrefsDialogGroupScheduling::updateInput()
-{
-  QListWidgetItem *item;
-  item = mAMails->currentItem();
-  if ( !item ) {
-    return;
-  }
-  aEmailsEdit->setEnabled( true );
-  aEmailsEdit->setText( item->text() );
 }
 
 extern "C"
@@ -1296,63 +1172,62 @@ KOPrefsDialogGroupwareScheduling::~KOPrefsDialogGroupwareScheduling()
 void KOPrefsDialogGroupwareScheduling::usrReadConfig()
 {
   mGroupwarePage->publishEnable->setChecked(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishAuto );
+    Akonadi::CalendarSettings::self()->freeBusyPublishAuto() );
   mGroupwarePage->publishDelay->setValue(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishDelay );
+    Akonadi::CalendarSettings::self()->freeBusyPublishDelay() );
   mGroupwarePage->publishDays->setValue(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishDays );
+    Akonadi::CalendarSettings::self()->freeBusyPublishDays() );
   mGroupwarePage->publishUrl->setText(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishUrl );
+    Akonadi::CalendarSettings::self()->freeBusyPublishUrl() );
   mGroupwarePage->publishUser->setText(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishUser );
+    Akonadi::CalendarSettings::self()->freeBusyPublishUser() );
   mGroupwarePage->publishPassword->setText(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishPassword );
+    Akonadi::CalendarSettings::self()->freeBusyPublishPassword() );
   mGroupwarePage->publishSavePassword->setChecked(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishSavePassword );
+    Akonadi::CalendarSettings::self()->freeBusyPublishSavePassword() );
 
   mGroupwarePage->retrieveEnable->setChecked(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrieveAuto );
+    Akonadi::CalendarSettings::self()->freeBusyRetrieveAuto() );
   mGroupwarePage->fullDomainRetrieval->setChecked(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyFullDomainRetrieval );
+    Akonadi::CalendarSettings::self()->freeBusyFullDomainRetrieval() );
   mGroupwarePage->retrieveUrl->setText(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrieveUrl );
+    Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() );
   mGroupwarePage->retrieveUser->setText(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrieveUser );
+    Akonadi::CalendarSettings::self()->freeBusyRetrieveUser() );
     mGroupwarePage->retrievePassword->setText(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrievePassword );
+    Akonadi::CalendarSettings::self()->freeBusyRetrievePassword() );
   mGroupwarePage->retrieveSavePassword->setChecked(
-    CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrieveSavePassword );
+    Akonadi::CalendarSettings::self()->freeBusyRetrieveSavePassword() );
 }
 
 void KOPrefsDialogGroupwareScheduling::usrWriteConfig()
 {
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishAuto =
-    mGroupwarePage->publishEnable->isChecked();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishDelay =
-    mGroupwarePage->publishDelay->value();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishDays =
-    mGroupwarePage->publishDays->value();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishUrl =
-    mGroupwarePage->publishUrl->text();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishUser =
-    mGroupwarePage->publishUser->text();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishPassword =
-    mGroupwarePage->publishPassword->text();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyPublishSavePassword =
-    mGroupwarePage->publishSavePassword->isChecked();
+  Akonadi::CalendarSettings::self()->setFreeBusyPublishAuto(
+    mGroupwarePage->publishEnable->isChecked());
+  Akonadi::CalendarSettings::self()->setFreeBusyPublishDelay(mGroupwarePage->publishDelay->value());
+  Akonadi::CalendarSettings::self()->setFreeBusyPublishDays(
+    mGroupwarePage->publishDays->value());
+  Akonadi::CalendarSettings::self()->setFreeBusyPublishUrl(
+    mGroupwarePage->publishUrl->text());
+  Akonadi::CalendarSettings::self()->setFreeBusyPublishUser(
+    mGroupwarePage->publishUser->text());
+  Akonadi::CalendarSettings::self()->setFreeBusyPublishPassword(
+    mGroupwarePage->publishPassword->text());
+  Akonadi::CalendarSettings::self()->setFreeBusyPublishSavePassword(
+    mGroupwarePage->publishSavePassword->isChecked());
 
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrieveAuto =
-    mGroupwarePage->retrieveEnable->isChecked();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyFullDomainRetrieval =
-    mGroupwarePage->fullDomainRetrieval->isChecked();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrieveUrl =
-    mGroupwarePage->retrieveUrl->text();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrieveUser =
-    mGroupwarePage->retrieveUser->text();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrievePassword =
-    mGroupwarePage->retrievePassword->text();
-  CalendarSupport::KCalPrefs::instance()->mFreeBusyRetrieveSavePassword =
-    mGroupwarePage->retrieveSavePassword->isChecked();
+  Akonadi::CalendarSettings::self()->setFreeBusyRetrieveAuto(
+    mGroupwarePage->retrieveEnable->isChecked());
+  Akonadi::CalendarSettings::self()->setFreeBusyFullDomainRetrieval(
+    mGroupwarePage->fullDomainRetrieval->isChecked());
+  Akonadi::CalendarSettings::self()->setFreeBusyRetrieveUrl(
+    mGroupwarePage->retrieveUrl->text());
+  Akonadi::CalendarSettings::self()->setFreeBusyRetrieveUser(
+    mGroupwarePage->retrieveUser->text());
+  Akonadi::CalendarSettings::self()->setFreeBusyRetrievePassword(
+    mGroupwarePage->retrievePassword->text());
+  Akonadi::CalendarSettings::self()->setFreeBusyRetrieveSavePassword(
+    mGroupwarePage->retrieveSavePassword->isChecked());
 
   // clear the url cache for our user
   const QString configFile = KStandardDirs::locateLocal( "data", "korganizer/freebusyurls" );
@@ -1511,7 +1386,7 @@ void KOPrefsDialogPlugins::usrWriteConfig()
 {
   QStringList selectedPlugins;
 
-  for ( int i = 0; i < mTreeWidget->topLevelItemCount(); i++) {
+  for ( int i = 0; i < mTreeWidget->topLevelItemCount(); ++i) {
     QTreeWidgetItem *serviceTypeGroup = mTreeWidget->topLevelItem( i );
     for ( int j = 0; j < serviceTypeGroup->childCount(); j++) {
       PluginItem *item = static_cast<PluginItem *>( serviceTypeGroup->child( j ) );

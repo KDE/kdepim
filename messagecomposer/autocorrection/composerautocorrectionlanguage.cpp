@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -22,20 +22,19 @@
 using namespace MessageComposer;
 
 ComposerAutoCorrectionLanguage::ComposerAutoCorrectionLanguage(QWidget *parent)
-  : KComboBox(parent)
+    : KComboBox(parent)
 {
-  KLocale *locale = KGlobal::locale();
-  QStringList lstLang = locale->allLanguagesList();
-  Q_FOREACH(const QString& lang, lstLang) {
-    if(lang != QLatin1String("x-test")) {
-      addItem ( locale->languageCodeToName(lang) , lang );
+    KLocale *locale = KGlobal::locale();
+    const QStringList lstLang = locale->allLanguagesList();
+    Q_FOREACH (const QString& lang, lstLang) {
+        if (lang != QLatin1String("x-test")) {
+            addItem ( locale->languageCodeToName(lang) , lang );
+        }
     }
-  }
-  const QString defaultLang = locale->languageList().first();
-  const int index = findData(defaultLang);
-  setCurrentIndex(index);
-  model()->sort(0);
-
+    const QString defaultLang = locale->languageList().first();
+    const int index = findData(defaultLang);
+    setCurrentIndex(index);
+    model()->sort(0);
 }
 
 ComposerAutoCorrectionLanguage::~ComposerAutoCorrectionLanguage()
@@ -45,11 +44,11 @@ ComposerAutoCorrectionLanguage::~ComposerAutoCorrectionLanguage()
 
 QString ComposerAutoCorrectionLanguage::language() const
 {
-  return itemData ( currentIndex() ).toString();
+    return itemData(currentIndex()).toString();
 }
 
 void ComposerAutoCorrectionLanguage::setLanguage(const QString &language)
 {
-  const int index = findData(language);
-  setCurrentIndex(index);
+    const int index = findData(language);
+    setCurrentIndex(index);
 }

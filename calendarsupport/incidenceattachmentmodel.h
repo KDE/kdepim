@@ -35,8 +35,7 @@ namespace Akonadi {
   class Item;
 }
 
-namespace CalendarSupport
-{
+namespace CalendarSupport {
 class IncidenceAttachmentModelPrivate;
 
 class CALENDARSUPPORT_EXPORT IncidenceAttachmentModel : public QAbstractListModel
@@ -59,7 +58,7 @@ class CALENDARSUPPORT_EXPORT IncidenceAttachmentModel : public QAbstractListMode
 
     explicit IncidenceAttachmentModel( const Akonadi::Item &item, QObject *parent = 0 );
 
-    IncidenceAttachmentModel( QObject *parent = 0 );
+    explicit IncidenceAttachmentModel( QObject *parent = 0 );
 
     ~IncidenceAttachmentModel();
 

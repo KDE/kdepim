@@ -43,9 +43,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceAttachment : public IncidenceEditor
   Q_OBJECT
   public:
 #ifdef KDEPIM_MOBILE_UI
-    IncidenceAttachment( Ui::EventOrTodoMore *ui );
+    explicit IncidenceAttachment( Ui::EventOrTodoMore *ui );
 #else
-    IncidenceAttachment( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceAttachment( Ui::EventOrTodoDesktop *ui );
 #endif
 
     ~IncidenceAttachment();

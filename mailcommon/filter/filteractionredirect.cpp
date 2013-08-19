@@ -19,12 +19,12 @@
 
 #include "filteractionredirect.h"
 
-#include "../mailkernel.h"
-#include "../mailutil.h"
+#include "kernel/mailkernel.h"
+#include "util/mailutil.h"
 
-#include <messagecomposer/messagefactory.h>
-#include <messagecomposer/messagesender.h>
-#include <messagecore/messagehelpers.h>
+#include <messagecomposer/helper/messagefactory.h>
+#include <messagecomposer/sender/messagesender.h>
+#include <messagecore/helpers/messagehelpers.h>
 
 #include <KDE/KLocale>
 
@@ -36,7 +36,7 @@ FilterAction* FilterActionRedirect::newAction()
 }
 
 FilterActionRedirect::FilterActionRedirect( QObject *parent )
-  : FilterActionWithAddress( "redirect", i18n( "Redirect To" ), parent )
+  : FilterActionWithAddress( QLatin1String("redirect"), i18n( "Redirect To" ), parent )
 {
 }
 
@@ -57,7 +57,7 @@ FilterAction::ReturnCode FilterActionRedirect::process( ItemContext &context ) c
 
   sendMDN( context.item(), KMime::MDN::Dispatched );
 
-  if ( !KernelIf->msgSender()->send( rmsg, MessageSender::SendLater ) ) {
+  if ( !KernelIf->msgSender()->send( rmsg, MessageComposer::MessageSender::SendLater ) ) {
     kDebug() << "FilterAction: could not redirect message (sending failed)";
     return ErrorButGoOn; // error: couldn't send
   }

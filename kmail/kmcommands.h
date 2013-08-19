@@ -4,9 +4,9 @@
 #define KMCommands_h
 
 #include "kmail_export.h"
-#include "messagecomposer/messagefactory.h"
+#include "messagecomposer/helper/messagefactory.h"
 #include "messagelist/core/view.h"
-#include "searchpattern.h"
+#include "search/searchpattern.h"
 
 #include <akonadi/kmime/messagestatus.h>
 #include <kio/job.h>
@@ -49,7 +49,7 @@ public:
   enum Result { Undefined, OK, Canceled, Failed };
 
   // Trival constructor, don't retrieve any messages
-  KMCommand( QWidget *parent = 0 );
+  explicit KMCommand( QWidget *parent = 0 );
   KMCommand( QWidget *parent, const Akonadi::Item & );
   // Retrieve all messages in msgList when start is called.
   KMCommand( QWidget *parent, const QList<Akonadi::Item> &msgList );
@@ -380,7 +380,7 @@ class KMAIL_EXPORT KMPrintCommand : public KMCommand
 public:
   KMPrintCommand( QWidget *parent, const Akonadi::Item &msg,
                   MessageViewer::HeaderStyle *headerStyle = 0,
-                  const MessageViewer::HeaderStrategy *headerStrategy = 0,
+                  MessageViewer::HeaderStrategy *headerStrategy = 0,
                   bool htmlOverride = false,
                   bool htmlLoadExtOverride = false,
                   bool useFixedFont = false,
@@ -394,7 +394,7 @@ private:
   virtual Result execute();
 
   MessageViewer::HeaderStyle *mHeaderStyle;
-  const MessageViewer::HeaderStrategy *mHeaderStrategy;
+  MessageViewer::HeaderStrategy *mHeaderStrategy;
   const MessageViewer::AttachmentStrategy *mAttachmentStrategy;
   QFont mOverrideFont;
   QString mEncoding;

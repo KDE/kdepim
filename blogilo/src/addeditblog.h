@@ -28,8 +28,9 @@
 #include <KDialog>
 
 #include "ui_addeditblogbase.h"
-#include <kblog/blog.h>
 #include "bilboblog.h"
+
+#include <kblog/blog.h>
 
 class BilboBlog;
 class KJob;

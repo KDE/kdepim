@@ -40,7 +40,7 @@ class CALENDARSUPPORT_EXPORT IncidenceFetchJob : public Akonadi::Job
 {
   Q_OBJECT
   public:
-    IncidenceFetchJob( QObject *parent = 0 );
+    explicit IncidenceFetchJob( QObject *parent = 0 );
     Akonadi::Item::List items() const;
 
   protected:

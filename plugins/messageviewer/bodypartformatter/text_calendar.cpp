@@ -35,17 +35,16 @@
 #include "delegateselector.h"
 #include "memorycalendarmemento.h"
 
-#include <calendarsupport/groupware.h>
-
+#include <akonadi/calendar/itiphandler.h>
 #include <incidenceeditor-ng/groupwareintegration.h>
 
-#include <messageviewer/globalsettings.h>
-#include <messageviewer/viewer.h>
+#include <messageviewer/settings/globalsettings.h>
+#include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <mailcommon/mailutil.h>
-#include <messageviewer/webkitparthtmlwriter.h>
+#include <mailcommon/util/mailutil.h>
+#include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
 using namespace MessageViewer;
 
 #include <KCalCore/ICalFormat>
@@ -181,7 +180,7 @@ CalendarManager::~CalendarManager()
 
 KCal::CalendarResources * CalendarManager::calendar()
 {
-  K_GLOBAL_STATIC( CalendarManager, _self );
+  K_GLOBAL_STATIC( CalendarManager, _self )
   return _self->mCalendar;
 }
 #endif
@@ -227,7 +226,7 @@ class Formatter : public Interface::BodyPartFormatter
 
           When the memento finishes, this is called a second time, and we can proceed.
 
-          BodyPartMementos are documented in objecttreeparser.h
+          BodyPartMementos are documented in viewer/objecttreeparser.h
       */
       MemoryCalendarMemento *memento = dynamic_cast<MemoryCalendarMemento*>( bodyPart->memento() );
 
@@ -743,7 +742,13 @@ class UrlHandler : public Interface::BodyPartURLHandler
         IncidenceEditorNG::GroupwareIntegration::activate();
       }
 
-      CalendarSupport::Groupware::instance()->handleInvitation( receiver, iCal, type );
+      Akonadi::ITIPHandler *handler = new Akonadi::ITIPHandler();
+
+      // We don't have a parent here, so schedule a deleteLater()
+      QObject::connect( handler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
+                        handler, SLOT(deleteLater()) );
+
+      handler->processiTIPMessage( receiver, iCal, type );
       // TODO: catch signal, and do error handling
       return true;
     }
@@ -896,7 +901,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       // get comment for tentative acceptance
       if ( askForComment( status ) ) {
         bool ok = false;
-        QString comment = KInputDialog::getMultiLineText(
+        const QString comment = KInputDialog::getMultiLineText(
           i18n( "Reaction to Invitation" ), i18n( "Comment:" ), QString(), &ok );
         if ( !ok ) {
           return true;
@@ -916,7 +921,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       // First, save it for KOrganizer to handle
-      QString dir = directoryForStatus( status );
+      const QString dir = directoryForStatus( status );
       if ( dir.isEmpty() ) {
         return true; // unknown status
       }
@@ -1065,7 +1070,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
 
       // get the saveas file name
-      QString saveAsFile =
+      const QString saveAsFile =
         KFileDialog::getSaveFileName( name, QString(), 0, i18n( "Save Invitation Attachment" ) );
 
       if ( saveAsFile.isEmpty() ||

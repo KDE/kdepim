@@ -286,7 +286,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregatio
           return item;
       }
     }
-    i++;
+    ++i;
   }
   return 0;
 }
@@ -303,7 +303,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregatio
       if ( item->aggregation()->id() == aggregationId )
         return item;
     }
-    i++;
+    ++i;
   }
   return 0;
 }
@@ -320,7 +320,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregatio
       if ( item->aggregation() == set )
         return item;
     }
-    i++;
+    ++i;
   }
   return 0;
 }

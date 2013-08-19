@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -31,9 +31,9 @@
 
 
 SylpheedImportData::SylpheedImportData(ImportWizard*parent)
-  :AbstractImporter(parent)
+    :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterSylpheed::defaultSettingsPath();
+    mPath = MailImporter::FilterSylpheed::defaultSettingsPath();
 }
 
 SylpheedImportData::~SylpheedImportData()
@@ -43,67 +43,67 @@ SylpheedImportData::~SylpheedImportData()
 
 bool SylpheedImportData::foundMailer() const
 {
-  QDir directory( mPath );
-  if ( directory.exists() )
-    return true;
-  return false;
+    QDir directory( mPath );
+    if ( directory.exists() )
+        return true;
+    return false;
 }
 
 QString SylpheedImportData::name() const
 {
-  return QLatin1String("Sylpheed");
+    return QLatin1String("Sylpheed");
 }
 
 bool SylpheedImportData::importSettings()
 {
-  const QString accountFile = mPath + QLatin1String("/accountrc");
-  if ( QFile( accountFile ).exists() ) {
-    SylpheedSettings account( mImportWizard );
-    account.importSettings(accountFile, mPath);
-  } else {
-    addImportSettingsInfo(i18n("Sylpheed settings not found."));
-  }
-  return true;
+    const QString accountFile = mPath + QLatin1String("/accountrc");
+    if ( QFile( accountFile ).exists() ) {
+        SylpheedSettings account( mImportWizard );
+        account.importSettings(accountFile, mPath);
+    } else {
+        addImportSettingsInfo(i18n("Sylpheed settings not found."));
+    }
+    return true;
 }
 
 bool SylpheedImportData::importMails()
 {
-  MailImporter::FilterInfo *info = initializeInfo();
+    MailImporter::FilterInfo *info = initializeInfo();
 
-  MailImporter::FilterSylpheed sylpheed;
-  sylpheed.setFilterInfo( info );
-  info->setStatusMessage(i18n("Import in progress"));
-  const QString mailsPath = sylpheed.localMailDirPath();
-  QDir directory(mailsPath);
-  if(directory.exists())
-    sylpheed.importMails(mailsPath);
-  else
-    sylpheed.import();
-  info->setStatusMessage(i18n("Import finished"));
+    MailImporter::FilterSylpheed sylpheed;
+    sylpheed.setFilterInfo( info );
+    info->setStatusMessage(i18n("Import in progress"));
+    const QString mailsPath = sylpheed.localMailDirPath();
+    QDir directory(mailsPath);
+    if(directory.exists())
+        sylpheed.importMails(mailsPath);
+    else
+        sylpheed.import();
+    info->setStatusMessage(i18n("Import finished"));
 
-  delete info;
-  return true;
+    delete info;
+    return true;
 }
 
 bool SylpheedImportData::importFilters()
 {
-  const QString filterPath = mPath + QLatin1String("/filter.xml");
-  return addFilters( filterPath, MailCommon::FilterImporterExporter::SylpheedFilter );
+    const QString filterPath = mPath + QLatin1String("/filter.xml");
+    return addFilters( filterPath, MailCommon::FilterImporterExporter::SylpheedFilter );
 }
 
 bool SylpheedImportData::importAddressBook()
 {
-  const QDir addressbookDir(mPath);
-  SylpheedAddressBook account( addressbookDir, mImportWizard );
-  return true;
+    const QDir addressbookDir(mPath);
+    SylpheedAddressBook account( addressbookDir, mImportWizard );
+    return true;
 }
 
 AbstractImporter::TypeSupportedOptions SylpheedImportData::supportedOption()
 {
-  TypeSupportedOptions options;
-  options |=AbstractImporter::Mails;
-  options |=AbstractImporter::Filters;
-  options |=AbstractImporter::Settings;
-  options |=AbstractImporter::AddressBooks;
-  return options;
+    TypeSupportedOptions options;
+    options |=AbstractImporter::Mails;
+    options |=AbstractImporter::Filters;
+    options |=AbstractImporter::Settings;
+    options |=AbstractImporter::AddressBooks;
+    return options;
 }

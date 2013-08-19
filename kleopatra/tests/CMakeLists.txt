@@ -45,7 +45,7 @@ if(PORT_ME_AWAY_FROM_EVENT_LOOPS)
 
   target_link_libraries(test_useridlistmodels kleo ${KDE4_KDECORE_LIBS})
 
-endif(PORT_ME_AWAY_FROM_EVENT_LOOPS)
+endif()
 
 ########### next target ###############
 
@@ -114,5 +114,5 @@ if(USABLE_ASSUAN_FOUND)
     install(TARGETS test_uiserver ${INSTALL_TARGETS_DEFAULT_ARGS})
   endif()
 
-endif(USABLE_ASSUAN_FOUND)
+endif()
 

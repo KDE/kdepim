@@ -37,7 +37,7 @@ class KNNntpAccountIntervalChecking : public QObject  {
   Q_OBJECT
 
   public:
-    KNNntpAccountIntervalChecking(KNNntpAccount *account);
+    explicit KNNntpAccountIntervalChecking(KNNntpAccount *account);
     ~KNNntpAccountIntervalChecking();
     void installTimer();
     void deinstallTimer();

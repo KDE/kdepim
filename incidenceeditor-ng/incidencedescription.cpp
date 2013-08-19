@@ -20,9 +20,9 @@
 
 #include "incidencedescription.h"
 #ifdef KDEPIM_MOBILE_UI
-#include "ui_eventortodomoremobile.h"
+#include "ui_dialogmoremobile.h"
 #else
-#include "ui_eventortododesktop.h"
+#include "ui_dialogdesktop.h"
 #endif
 
 #include <KDebug>

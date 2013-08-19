@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,24 +21,25 @@
 #include <QWidget>
 
 namespace Ui {
-  class ImportFilterPage;
+class ImportFilterPage;
 }
 
 class ImportFilterPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
 public:
-  explicit ImportFilterPage(QWidget *parent = 0);
-  ~ImportFilterPage();
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
-  void setImportButtonEnabled(bool enabled);
+    explicit ImportFilterPage(QWidget *parent = 0);
+    ~ImportFilterPage();
+
+    void addImportInfo( const QString& log );
+    void addImportError( const QString& log );
+    void setImportButtonEnabled(bool enabled);
+
 Q_SIGNALS:
-  void importFiltersClicked();
-  
+    void importFiltersClicked();
+
 private:
-  Ui::ImportFilterPage *ui;
+    Ui::ImportFilterPage *ui;
 };
 
 #endif // IMPORTFILTERPAGE_H

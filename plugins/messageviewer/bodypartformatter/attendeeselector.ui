@@ -60,7 +60,7 @@
   <customwidget>
    <class>KPIM::AddresseeLineEdit</class>
    <extends>KLineEdit</extends>
-   <header>libkdepim/addresseelineedit.h</header>
+   <header>libkdepim/addressline/addresseelineedit.h</header>
   </customwidget>
   <customwidget>
    <class>KPushButton</class>
@@ -76,7 +76,7 @@
  <includes>
   <include location="local">kpushbutton.h</include>
   <include location="local">kpushbutton.h</include>
-  <include location="local">libkdepim/addresseelineedit.h</include>
+  <include location="local">libkdepim/addressline/addresseelineedit.h</include>
  </includes>
  <resources/>
  <connections/>

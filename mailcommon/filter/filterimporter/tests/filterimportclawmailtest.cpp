@@ -31,3 +31,5 @@ void FilterImportClawMailtest::testImportFilters()
     delete filter;
 }
 
+
+#include "filterimportclawmailtest.moc"

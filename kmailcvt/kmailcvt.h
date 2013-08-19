@@ -14,7 +14,6 @@
 #ifndef KMAILCVT_H
 #define KMAILCVT_H
 
-#include <kapplication.h>
 #include <KAssistantDialog>
 #include <Akonadi/Collection>
 
@@ -24,25 +23,26 @@ class KImportPage;
 
 
 /** KMailCVT is the base class of the project */
-class KMailCVT : public KAssistantDialog {
-  Q_OBJECT
+class KMailCVT : public KAssistantDialog
+{
+    Q_OBJECT
 public:
-  explicit KMailCVT(QWidget* parent=0);
-  ~KMailCVT();
+    explicit KMailCVT(QWidget* parent=0);
+    ~KMailCVT();
 
-  void next();
-  void reject();
-  
+    void next();
+    void reject();
+
 private slots:
-  void help();
-  void collectionChanged( const Akonadi::Collection& selectedCollection );
+    void collectionChanged( const Akonadi::Collection &selectedCollection );
+
 private:
-  void writeConfig();
-  void readConfig();
-  KPageWidgetItem* page1;
-  KPageWidgetItem* page2;
-  KSelFilterPage *selfilterpage;
-  KImportPage *importpage;
+    void writeConfig();
+    void readConfig();
+    KPageWidgetItem* page1;
+    KPageWidgetItem* page2;
+    KSelFilterPage *selfilterpage;
+    KImportPage *importpage;
 
 };
 

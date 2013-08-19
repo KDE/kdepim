@@ -54,7 +54,7 @@ class FilterActionWithStringList : public FilterActionWithString
     /**
      * @copydoc FilterAction::FilterAction
      */
-    FilterActionWithStringList( const char *name, const QString &label, QObject *parent = 0 );
+    FilterActionWithStringList(const QString &name, const QString &label, QObject *parent = 0 );
 
     /**
      * @copydoc FilterAction::createParamWidget

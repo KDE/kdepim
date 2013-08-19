@@ -19,6 +19,8 @@
 
 #include "vcard_xxport.h"
 
+#include "pimcommon/widgets/renamefiledialog.h"
+
 #include <Akonadi/Contact/ContactViewer>
 
 #ifdef QGPGME_FOUND
@@ -210,7 +212,7 @@ KABC::Addressee::List VCardXXPort::importContacts() const
     const QString caption( i18nc( "@title:window", "vCard Import Failed" ) );
     bool anyFailures = false;
 
-    const int numberOfUrl(urls.count());
+    const int numberOfUrl( urls.count() );
     for ( int i = 0; i < numberOfUrl; ++i ) {
       const KUrl url = urls.at( i );
 
@@ -280,24 +282,28 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const
 }
 
 bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data ) const
-{
-  if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
-    int answer =
-      KMessageBox::questionYesNo(
-        parentWidget(),
-        i18nc( "@info", "Do you want to overwrite file \"%1\"", url.toLocalFile() ) );
-    if ( answer == KMessageBox::No ) {
-      return false;
+{   
+    KUrl newUrl(url);
+    if ( newUrl.isLocalFile() && QFileInfo( newUrl.toLocalFile() ).exists() ) {
+        PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
+        PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(newUrl, false, parentWidget());
+        result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
+        if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
+            newUrl = dialog->newName();
+        } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+            delete dialog;
+            return true;
+        }
+        delete dialog;
     }
-  }
 
-  KTemporaryFile tmpFile;
-  tmpFile.open();
+    KTemporaryFile tmpFile;
+    tmpFile.open();
 
-  tmpFile.write( data );
-  tmpFile.flush();
+    tmpFile.write( data );
+    tmpFile.flush();
 
-  return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
+    return KIO::NetAccess::upload( tmpFile.fileName(), newUrl, parentWidget() );
 }
 
 KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &addrList ) const
@@ -315,7 +321,7 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
   }
 
   KABC::Addressee::List::ConstIterator it;
-  KABC::Addressee::List::ConstIterator end(addrList.end());
+  KABC::Addressee::List::ConstIterator end( addrList.end() );
   for ( it = addrList.begin(); it != end; ++it ) {
     KABC::Addressee addr;
 

@@ -2,6 +2,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/incidenceeditor-ng
     ${CMAKE_SOURCE_DIR}/calendarsupport
     ${CMAKE_BINARY_DIR}/calendarsupport
+    ${CMAKE_SOURCE_DIR}/libkdepim/
     ${CMAKE_CURRENT_SOURCE_DIR}/..
     ${Boost_INCLUDE_DIR}
 )
@@ -18,8 +19,8 @@ set(mobileui_calendar_SRCS
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 kde4_add_ui_files(mobileui_calendar_SRCS
-  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/eventortodomobile.ui
-  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/eventortodomoremobile.ui
+  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/dialogmobile.ui
+  ${CMAKE_SOURCE_DIR}/incidenceeditor-ng/dialogmoremobile.ui
 )
 
 add_definitions( -DKDEPIMMOBILEUICALENDAR_STATIC_LIB )
@@ -28,6 +29,7 @@ kde4_add_library(kdepimmobileuicalendar STATIC ${mobileui_calendar_SRCS})
 target_link_libraries(kdepimmobileuicalendar
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KCALCORE_LIBS}
+  akonadi-calendar
   akonadi_next
   incidenceeditorsngmobile
   calendarsupport

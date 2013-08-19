@@ -37,7 +37,7 @@ class DelegateSelector : public KDialog
   Q_OBJECT
 
   public:
-    DelegateSelector( QWidget *parent = 0 );
+    explicit DelegateSelector( QWidget *parent = 0 );
 
     QString delegate() const;
     bool rsvp() const;

@@ -32,7 +32,7 @@ class FilterActionMove: public FilterActionWithFolder
 {
   Q_OBJECT
   public:
-    FilterActionMove( QObject *parent = 0 );
+    explicit FilterActionMove( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual bool requiresBody() const;
     virtual SearchRule::RequiredPart requiredPart() const;

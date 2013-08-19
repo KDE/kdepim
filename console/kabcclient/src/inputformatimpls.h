@@ -233,7 +233,7 @@ private:
 class CSVInput : public InputFormat
 {
 public:
-    CSVInput(CSVTemplateFactory* templateFactory);
+    explicit CSVInput(CSVTemplateFactory* templateFactory);
 
     virtual QString description() const;
 

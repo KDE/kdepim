@@ -47,7 +47,7 @@ class FilterSelectionDialog : public KDialog
   Q_OBJECT
 
   public:
-    FilterSelectionDialog( QWidget * parent = 0 );
+    explicit FilterSelectionDialog( QWidget * parent = 0 );
     virtual ~FilterSelectionDialog();
     void setFilters( const QList<MailFilter*> &filters );
     QList<MailFilter*> selectedFilters() const;

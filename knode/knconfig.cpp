@@ -93,7 +93,7 @@ KNode::DisplayedHeaders::DisplayedHeaders()
         remove(h);
       }
       else {
-        for (int i=0; i<8; i++)
+        for (int i=0; i<8; ++i)
           h->setFlag(i, (flags[i]>0));
         h->createTags();
       }
@@ -141,7 +141,7 @@ void KNode::DisplayedHeaders::save()
     cg.writeEntry("Translate_Name",(*it)->translateName());
     cg.writeEntry("Header",(*it)->header());
     flags.clear();
-    for (int i=0; i<8; i++) {
+    for (int i=0; i<8; ++i) {
       if ((*it)->flag(i))
         flags << 1;
       else

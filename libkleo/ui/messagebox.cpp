@@ -50,8 +50,8 @@
 #include <ksavefile.h>
 #include <kguiitem.h>
 #include <kdebug.h>
+#include <ktextedit.h>
 
-#include <qtextedit.h>
 #include <qtextstream.h>
 
 #include <gpg-error.h>
@@ -83,7 +83,7 @@ static KGuiItem KGuiItem_showAuditLog() {
 AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::WindowFlags f )
     : KDialog( parent, f ),
       m_log( /* sic */ ),
-      m_textEdit( new QTextEdit( this ) )
+      m_textEdit( new KTextEdit( this ) )
 {
     setCaption( i18n("View GnuPG Audit Log") );
     setButtons( Close
@@ -114,9 +114,13 @@ AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::Windo
 #ifndef QT_NO_CLIPBOARD
     connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
 #endif
+    readConfig();
 }
 
-AuditLogViewer::~AuditLogViewer() {}
+AuditLogViewer::~AuditLogViewer()
+{
+    writeConfig();
+}
 
 void AuditLogViewer::setAuditLog( const QString & log ) {
   if ( log == m_log )
@@ -167,6 +171,25 @@ void AuditLogViewer::slotUser2() {
     m_textEdit->textCursor().clearSelection();
 }
 #endif // QT_NO_CLIPBOARD
+
+void AuditLogViewer::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AuditLogViewer" );
+    const QSize size = group.readEntry( "Size", QSize() );
+    if ( size.isValid() ) {
+        resize( size );
+    } else {
+        resize( 600, 400 );
+    }
+}
+
+void AuditLogViewer::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AuditLogViewer" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
 
 // static
 void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & caption ) {

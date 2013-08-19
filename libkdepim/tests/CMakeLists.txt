@@ -1,3 +1,4 @@
+include_directories(../)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 ########### next target ###############

@@ -26,18 +26,14 @@
 #include "korganizer/korganizer_export.h"
 #include "printplugin.h"
 
-#include <calendarsupport/incidencechanger.h>
-
-#include <calendarviews/eventviews/eventview.h>
+#include <Akonadi/Calendar/IncidenceChanger>
+#include <Akonadi/Calendar/ETMCalendar>
+#include <calendarviews/eventview.h>
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 
 #include <QWidget>
-
-namespace CalendarSupport {
-  class Calendar;
-}
 
 namespace KOrg {
 
@@ -70,11 +66,11 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
     */
     virtual ~BaseView();
 
-    virtual void setCalendar( CalendarSupport::Calendar *cal );
+    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
     /**
       Return calendar object of this view.
     */
-    virtual CalendarSupport::Calendar *calendar();
+    virtual Akonadi::ETMCalendar::Ptr calendar();
 
     /**
       @return a list of selected events.  Most views can probably only
@@ -225,7 +221,7 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
     /**
       Assign a new incidence change helper object.
      */
-    virtual void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
+    virtual void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
     /**
       Write all unsaved data back to calendar store.
@@ -235,7 +231,8 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
     /**
       Updates the current display to reflect the changes to one particular incidence.
     */
-    virtual void changeIncidenceDisplay( const Akonadi::Item &, int ) = 0;
+    virtual void changeIncidenceDisplay( const Akonadi::Item &,
+                                         Akonadi::IncidenceChanger::ChangeType ) = 0;
 
     /**
       Re-reads the KOrganizer configuration and picks up relevant
@@ -397,7 +394,7 @@ class KORGANIZER_INTERFACES_EXPORT BaseView : public QWidget
     virtual void calendarReset();
 
   protected:
-    CalendarSupport::IncidenceChanger *mChanger;
+    Akonadi::IncidenceChanger *mChanger;
 
   private:
     class Private;

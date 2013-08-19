@@ -89,3 +89,5 @@ void KJotsSortProxyModel::sortChildrenByCreationTime( const QModelIndex& parent 
   m_dateTimeSorted.insert( id );
   invalidate();
 }
+
+#include "kjotssortproxymodel.moc"

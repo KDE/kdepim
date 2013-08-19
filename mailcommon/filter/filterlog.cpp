@@ -28,7 +28,7 @@
 
 #include "filterlog.h"
 
-#include "messageviewer/util.h"
+#include "messageviewer/utils/util.h"
 
 #include <KDebug>
 

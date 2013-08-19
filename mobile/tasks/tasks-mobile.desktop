@@ -1,6 +1,5 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
 Name=Tasks
 Name[bs]=Zadaci
 Name[ca]=Tasques
@@ -19,6 +18,7 @@ Name[ia]=Cargas
 Name[it]=Tasks
 Name[kk]=Тапсырмалар
 Name[km]=ភារកិច្ច​
+Name[ko]=작업
 Name[lt]=Užduotys
 Name[mr]=कार्ये
 Name[nb]=Oppgaver
@@ -39,6 +39,7 @@ Name[sr@latin]=Zadaci
 Name[sv]=Uppgifter
 Name[ug]=ۋەزىپىلەر
 Name[uk]=Завдання
+Name[wa]=Bouyes
 Name[x-test]=xxTasksxx
 Name[zh_CN]=任务
 Name[zh_TW]=工作

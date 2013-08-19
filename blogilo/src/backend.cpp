@@ -27,6 +27,7 @@
 #include "bilbopost.h"
 #include "bilbomedia.h"
 #include "dbman.h"
+#include "settings.h"
 
 #include <kurl.h>
 #include <kblog/blogger1.h>
@@ -37,10 +38,9 @@
 #include <kblog/blogmedia.h>
 #include <kdebug.h>
 #include <KDE/KLocale>
-// #include <QMimeData>
+
 #include <kio/netaccess.h>
 #include <kio/job.h>
-#include <settings.h>
 
 const QRegExp splitRX("((<hr/?>)?<!--split-->)");
 
@@ -52,8 +52,6 @@ public:
     {}
     KBlog::Blog *kBlog;
     BilboBlog *bBlog;
-//     quint16 mChecksum;
-//     QString mediaLocalUrl;
     QList<Category> mCreatePostCategories;
     QMap<QString, KBlog::BlogPost *> mSetPostCategoriesMap;
     QMap<KBlog::BlogPost *, BilboPost::Status> mSubmitPostStatusMap;
@@ -62,7 +60,7 @@ public:
 };
 
 Backend::Backend( int blog_id, QObject* parent )
-: QObject( parent ), d(new Private)
+    : QObject( parent ), d(new Private)
 {
     kDebug() << "with blog id: " << blog_id;
     d->bBlog = DBMan::self()->blog( blog_id );
@@ -88,16 +86,15 @@ Backend::~Backend()
 void Backend::getCategoryListFromServer()
 {
     kDebug() << "Blog Id: " << d->bBlog->id();
-    if ( d->bBlog->api() == BilboBlog::METAWEBLOG_API || d->bBlog->api() == BilboBlog::MOVABLETYPE_API ||
+    if ( d->bBlog->api() == BilboBlog::METAWEBLOG_API ||
+         d->bBlog->api() == BilboBlog::MOVABLETYPE_API ||
          d->bBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
-        KBlog::MetaWeblog *tmp = dynamic_cast<KBlog::MetaWeblog*>( d->kBlog );
+        KBlog::MetaWeblog *tmp = static_cast<KBlog::MetaWeblog*>( d->kBlog );
         connect( tmp, SIGNAL(listedCategories(QList<QMap<QString,QString> >)),
                  this, SLOT(categoriesListed(QList<QMap<QString,QString> >)) );
         tmp->listCategories();
     } else {
-        char err[] = "Blog API doesn't support getting Category list.";
-        kDebug() << err;
-        error( KBlog::Blog::NotSupported, i18n( err ) );
+        error( KBlog::Blog::NotSupported, i18n( "Blog API doesn't support getting Category list." ) );
     }
 }
 
@@ -106,16 +103,16 @@ void Backend::categoriesListed( const QList< QMap < QString , QString > > & cate
     kDebug() << "Blog Id: " << d->bBlog->id();
     DBMan::self()->clearCategories( d->bBlog->id() );
 
-    for ( int i = 0; i < categories.count(); ++i ) {
-        QString name, description, htmlUrl, rssUrl, categoryId, parentId;
+    const int categoriesCount(categories.count());
+    for ( int i = 0; i < categoriesCount; ++i ) {
         const QMap<QString, QString> &category = categories.at( i );
 
-        name = category.value( "name", QString() );
-        description = category.value( "description", QString() );
-        htmlUrl = category.value( "htmlUrl", QString() );
-        rssUrl = category.value( "rssUrl", QString() );
-        categoryId = category.value( "categoryId", QString() );
-        parentId = category.value( "parentId", QString() );
+        const QString name = category.value( QLatin1String("name"), QString() );
+        const QString description = category.value( QLatin1String("description"), QString() );
+        const QString htmlUrl = category.value( QLatin1String("htmlUrl"), QString() );
+        const QString rssUrl = category.value( QLatin1String("rssUrl"), QString() );
+        QString categoryId = category.value( QLatin1String("categoryId"), QString() );
+        const QString parentId = category.value( QLatin1String("parentId"), QString() );
 
         if(categoryId.isEmpty()) {
             categoryId = QString::number(i);
@@ -140,11 +137,12 @@ void Backend::entriesListed( const QList< KBlog::BlogPost > & posts )
     kDebug() << "Blog Id: " << d->bBlog->id();
 //     DBMan::self()->clearPosts( d->bBlog->id() );
 
-    for ( int i = 0; i < posts.count(); i++ ) {
-        BilboPost tempPost( posts[i] );
+    const int postCount(posts.count());
+    for ( int i = 0; i < postCount; ++i ) {
+        BilboPost tempPost( posts.at(i) );
         if(Settings::changeNToBreak()) {
-            tempPost.setContent( tempPost.content().replace( '\n', "<br/>" ) );
-            tempPost.setAdditionalContent( tempPost.additionalContent().replace( '\n', "<br/>" ) );
+            tempPost.setContent( tempPost.content().replace( QLatin1Char('\n'), QLatin1String("<br/>") ) );
+            tempPost.setAdditionalContent( tempPost.additionalContent().replace( QLatin1Char('\n'), QLatin1String("<br/>") ) );
         }
         DBMan::self()->addPost( tempPost, d->bBlog->id() );
     }
@@ -201,7 +199,6 @@ void Backend::uploadMedia( BilboMedia * media )
             kDebug() << "Emitting sigError...";
             Q_EMIT sigMediaError( tmp, media );
             return;
-            break;
         case BilboBlog::METAWEBLOG_API:
         case BilboBlog::MOVABLETYPE_API:
         case BilboBlog::WORDPRESSBUGGY_API:
@@ -214,16 +211,14 @@ void Backend::uploadMedia( BilboMedia * media )
             KIO::TransferJob *job = KIO::get( media->localUrl(), KIO::Reload, KIO::HideProgressInfo);
             if( !KIO::NetAccess::synchronousRun(job, 0, &data) ){
                 kError()<<"Job error: " << job->errorString();
-                tmp = i18n( "Uploading media failed: Cannot read the media file,\
- please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
+                tmp = i18n( "Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
                 kDebug() << "Emitting sigError...";
                 Q_EMIT sigMediaError( tmp, media );
             }
 
             if ( data.count() == 0 ) {
                 kError() << "Cannot read the media file, please check if it exists.";
-                tmp = i18n( "Uploading media failed: Cannot read the media file,\
- please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
+                tmp = i18n( "Uploading media failed: Cannot read the media file, please check if it exists. Path: %1", media->localUrl().pathOrUrl() );
                 kDebug() << "Emitting sigError...";
                 Q_EMIT sigMediaError( tmp, media );
                 delete m;
@@ -259,7 +254,6 @@ void Backend::uploadMedia( BilboMedia * media )
                      this, SLOT(slotMediaError(KBlog::Blog::ErrorType,QString,KBlog::BlogMedia*)) );
             MWBlog->createMedia( m );
             return;
-            break;
     }
     kError() << "Api type isn't set correctly!";
     tmp = i18n( "API type is not set correctly." );
@@ -426,25 +420,25 @@ void Backend::savePostInDbAndEmitResult( KBlog::BlogPost *post )
 KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
 {
     QString content = post->content();
-    QString html1 = QString();
+    QString html1;
     int i = 0;
     int found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
     while ( found != -1 )
     {
-    html1 += content.mid( i, found-i).remove('\n');
-    i = found;
-    found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
-    if ( found != -1 ) {
-        html1 += content.mid( i, found+5-i);
-        i = found + 5;
-        found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
-    } else {
-        html1 += content.mid( i, content.length()-i );
-        i = -1;
-    }
+        html1 += content.mid( i, found-i).remove('\n');
+        i = found;
+        found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
+        if ( found != -1 ) {
+            html1 += content.mid( i, found+5-i);
+            i = found + 5;
+            found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+        } else {
+            html1 += content.mid( i, content.length()-i );
+            i = -1;
+        }
     }
     if ( i != -1 )
-    html1 += content.mid( i, content.length()-i).remove('\n');
+        html1 += content.mid( i, content.length()-i).remove('\n');
     post->setContent( html1 );
 
     content = post->additionalContent();
@@ -453,20 +447,20 @@ KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
     found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
     while ( found != -1 )
     {
-    html2 += content.mid( i, found-i).remove('\n');
-    i = found;
-    found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
-    if ( found != -1 ) {
-        html2 += content.mid( i, found+5-i);
-        i = found + 5;
-        found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
-    } else {
-        html2 += content.mid( i, content.length()-i );
-        i = -1;
-    }
+        html2 += content.mid( i, found-i).remove('\n');
+        i = found;
+        found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
+        if ( found != -1 ) {
+            html2 += content.mid( i, found+5-i);
+            i = found + 5;
+            found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+        } else {
+            html2 += content.mid( i, content.length()-i );
+            i = -1;
+        }
     }
     if ( i != -1 )
-    html2 += content.mid( i, content.length()-i).remove('\n');
+        html2 += content.mid( i, content.length()-i).remove('\n');
     post->setAdditionalContent( html2 );
 
     //the following two lines are replaced by the above code, because '\n' characters shouldn't
@@ -477,14 +471,14 @@ KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
     if ( d->bBlog->api() == BilboBlog::MOVABLETYPE_API || d->bBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
         QStringList content = post->content().split(splitRX);
         if( content.count() == 2 ) {
-            post->setContent(content[0]);
-            post->setAdditionalContent( content[1] );
+            post->setContent(content.at(0));
+            post->setAdditionalContent( content.at(1) );
         }
     }
-//     if( d->bBlog->api() == BilboBlog::MOVABLETYPE_API && post.categoryList().count() > 0 ) {
-//         mCreatePostCategories = post.categoryList();
-//         categoryListNotSet = true;
-//     }
+    //     if( d->bBlog->api() == BilboBlog::MOVABLETYPE_API && post.categoryList().count() > 0 ) {
+    //         mCreatePostCategories = post.categoryList();
+    //         categoryListNotSet = true;
+    //     }
     return post;//.toKBlogPost();
 }
 

@@ -1,0 +1,11 @@
+[Global]
+PluginName=KDEPimMailCommonWidgets
+Includes=kcomponentdata.h
+Init=new KComponentData("kdepimmailcommonwidgets");
+
+[MailCommon::SearchPatternEdit]
+ToolTip=Search pattern editor (KDE-PIM)
+WhatsThis=This widget is intended to be used in the filter configuration as well as in the message search dialogs.
+IncludeFile=mailcommon/search/searchpatternedit.h
+Group=Input (KDE-PIM)
+

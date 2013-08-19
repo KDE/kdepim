@@ -29,8 +29,7 @@ class QItemSelectionModel;
 class QLabel;
 class QRadioButton;
 
-namespace Akonadi
-{
+namespace Akonadi {
   class Collection;
   class CollectionComboBox;
 }

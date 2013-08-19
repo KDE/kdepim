@@ -30,9 +30,9 @@ class MessagePropertyDialog : public KDialog
 {
   Q_OBJECT
   public:
-    MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg );
+    explicit MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg );
 
-  protected slots:
+  private slots:
     void slotUser1();
 
   private:

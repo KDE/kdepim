@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -23,29 +23,30 @@
 class QListWidgetItem;
 
 namespace Ui {
-  class SelectProgramPage;
+class SelectProgramPage;
 }
 
 class SelectProgramPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit SelectProgramPage(QWidget *parent = 0);
-  ~SelectProgramPage();
-  void setFoundProgram(const QStringList& list);
-  void disableSelectProgram();
+    explicit SelectProgramPage(QWidget *parent = 0);
+    ~SelectProgramPage();
+
+    void setFoundProgram(const QStringList& list);
+    void disableSelectProgram();
 
 private Q_SLOTS:
-  void slotItemSelectionChanged();
-  void slotItemDoubleClicked( QListWidgetItem*item );
+    void slotItemSelectionChanged();
+    void slotItemDoubleClicked( QListWidgetItem*item );
 
 Q_SIGNALS:
-  void programSelected(const QString&);
-  void doubleClicked();
-  
+    void programSelected(const QString&);
+    void doubleClicked();
+
 private:
-  Ui::SelectProgramPage *ui;
+    Ui::SelectProgramPage *ui;
 };
 
 #endif // SELECTPROGRAMPAGE_H

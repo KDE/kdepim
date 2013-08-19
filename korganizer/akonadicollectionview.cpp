@@ -5,6 +5,7 @@
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2009 Sebastian Sauer <sebsauer@kdab.net>
   Copyright (C) 2010 Laurent Montel <montel@kde.org>
+  Copyright (C) 2012 Sérgio Martins <iamsergio@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -51,7 +52,7 @@
 #include <KCheckableProxyModel>
 #include <KColorDialog>
 #include <KMessageBox>
-#include <krecursivefilterproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.9
+#include <KRecursiveFilterProxyModel>
 
 #include <QHeaderView>
 #include <QPainter>
@@ -156,13 +157,8 @@ class ColorProxyModel : public QSortFilterProxyModel
           }
           return font;
         }
-      } else if ( role == Qt::CheckStateRole ) {
-        // Don't show the checkbox if the collection can't contain incidences
-        const Akonadi::Collection collection = CalendarSupport::collectionFromIndex( index );
-        if ( AkonadiCollectionView::isStructuralCollection( collection ) ) {
-          return QVariant();
-        }
       }
+
       return QSortFilterProxyModel::data( index, role );
     }
 
@@ -206,7 +202,7 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
                                               QWidget *parent )
   : CalendarViewExtension( parent ),
     mActionManager(0),
-    mCollectionview(0),
+    mCollectionView(0),
     mBaseModel( 0 ),
     mSelectionProxyModel( 0 ),
     mNotSendAddRemoveSignal( false ),
@@ -224,37 +220,29 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
   //                                                   "textbox, verb to search", "Search" ) );
   //topLayout->addWidget( searchCol );
 
-  Akonadi::CollectionFilterProxyModel *collectionproxymodel =
-    new Akonadi::CollectionFilterProxyModel( this );
-  collectionproxymodel->setObjectName( "Only show collections" );
-  collectionproxymodel->setDynamicSortFilter( true );
-  collectionproxymodel->addMimeTypeFilter( QString::fromLatin1( "text/calendar" ) );
-  collectionproxymodel->setExcludeVirtualCollections( true );
-
   ColorProxyModel *colorProxy = new ColorProxyModel( this );
   colorProxy->setObjectName( "Show calendar colors" );
   colorProxy->setDynamicSortFilter( true );
-  colorProxy->setSourceModel( collectionproxymodel );
-  mBaseModel = collectionproxymodel;
+  mBaseModel = colorProxy;
 
-  mCollectionview = new Akonadi::EntityTreeView( this );
-  topLayout->addWidget( mCollectionview );
-  mCollectionview->header()->hide();
-  mCollectionview->setRootIsDecorated( true );
-  mCollectionview->setItemDelegate( new ColorDelegate( this ) );
+  mCollectionView = new Akonadi::EntityTreeView( this );
+  topLayout->addWidget( mCollectionView );
+  mCollectionView->header()->hide();
+  mCollectionView->setRootIsDecorated( true );
+  mCollectionView->setItemDelegate( new ColorDelegate( this ) );
 
   //Filter tree view.
-  KRecursiveFilterProxyModel *filterTreeViewModel = new KRecursiveFilterProxyModel( this );
-  filterTreeViewModel->setDynamicSortFilter( true );
-  filterTreeViewModel->setSourceModel( colorProxy );
-  filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
-  filterTreeViewModel->setObjectName( "Recursive filtering, for the search bar" );
-  mCollectionview->setModel( filterTreeViewModel );
-  connect( mCollectionview->selectionModel(),
+  //KRecursiveFilterProxyModel *filterTreeViewModel = new KRecursiveFilterProxyModel( this );
+  //filterTreeViewModel->setDynamicSortFilter( true );
+  //filterTreeViewModel->setSourceModel( colorProxy );
+  //filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
+  //filterTreeViewModel->setObjectName( "Recursive filtering, for the search bar" );
+  mCollectionView->setModel( colorProxy );
+  connect( mCollectionView->selectionModel(),
            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
            SLOT(updateMenu()) );
 
-  connect( mCollectionview->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+  connect( mCollectionView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
            SLOT(checkNewCalendar(QModelIndex,int,int)) );
 
   //connect( searchCol, SIGNAL(textChanged(QString)),
@@ -263,13 +251,13 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
   connect( mBaseModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
            this, SLOT(rowsInserted(QModelIndex,int,int)) );
 
-  //mCollectionview->setSelectionMode( QAbstractItemView::NoSelection );
+  //mCollectionView->setSelectionMode( QAbstractItemView::NoSelection );
   KXMLGUIClient *xmlclient = KOCore::self()->xmlguiClient( view );
   if ( xmlclient ) {
-    mCollectionview->setXmlGuiClient( xmlclient );
+    mCollectionView->setXmlGuiClient( xmlclient );
 
     mActionManager =
-      new Akonadi::StandardCalendarActionManager( xmlclient->actionCollection(), mCollectionview );
+      new Akonadi::StandardCalendarActionManager( xmlclient->actionCollection(), mCollectionView );
 
     QList<Akonadi::StandardActionManager::Type> standardActions;
     standardActions << Akonadi::StandardActionManager::CreateCollection
@@ -293,17 +281,17 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
     }
 
     QList<Akonadi::StandardCalendarActionManager::Type> calendarActions;
-    calendarActions <<Akonadi::StandardCalendarActionManager::CreateEvent
-                   <<Akonadi::StandardCalendarActionManager::CreateTodo
-                   <<Akonadi::StandardCalendarActionManager::CreateSubTodo
-                   <<Akonadi::StandardCalendarActionManager::CreateJournal
-                   <<Akonadi::StandardCalendarActionManager::EditIncidence;
+    calendarActions << Akonadi::StandardCalendarActionManager::CreateEvent
+                   << Akonadi::StandardCalendarActionManager::CreateTodo
+                   << Akonadi::StandardCalendarActionManager::CreateSubTodo
+                   << Akonadi::StandardCalendarActionManager::CreateJournal
+                   << Akonadi::StandardCalendarActionManager::EditIncidence;
 
     Q_FOREACH( Akonadi::StandardCalendarActionManager::Type calendarAction, calendarActions ) {
       mActionManager->createAction( calendarAction );
     }
 
-    mActionManager->setCollectionSelectionModel( mCollectionview->selectionModel() );
+    mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
 
     mActionManager->interceptAction( Akonadi::StandardActionManager::CreateResource );
     mActionManager->interceptAction( Akonadi::StandardActionManager::DeleteResources );
@@ -323,9 +311,6 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
                                     Akonadi::StandardActionManager::DialogTitle,
                                     ki18nc( "@title:window", "Properties of Calendar Folder %1" ) );
 
-    mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->
-      setProperty( "ContentMimeTypes", QStringList( KCalCore::Event::eventMimeType() ) );
-
     const QStringList pages =
       QStringList() << QLatin1String( "CalendarSupport::CollectionGeneralPage" )
                     << QLatin1String( "Akonadi::CachePolicyPage" )
@@ -333,20 +318,20 @@ AkonadiCollectionView::AkonadiCollectionView( CalendarView *view, bool hasContex
 
     mActionManager->setCollectionPropertiesPageNames( pages );
 
-    mDisableColor = new KAction( mCollectionview );
+    mDisableColor = new KAction( mCollectionView );
     mDisableColor->setText( i18n( "&Disable Color" ) );
     mDisableColor->setEnabled( false );
     xmlclient->actionCollection()->addAction( QString::fromLatin1( "disable_color" ),
                                               mDisableColor );
     connect( mDisableColor, SIGNAL(triggered(bool)), this, SLOT(disableColor()) );
 
-    mAssignColor = new KAction( mCollectionview );
+    mAssignColor = new KAction( mCollectionView );
     mAssignColor->setText( i18n( "&Assign Color..." ) );
     mAssignColor->setEnabled( false );
     xmlclient->actionCollection()->addAction( QString::fromLatin1( "assign_color" ), mAssignColor );
     connect( mAssignColor, SIGNAL(triggered(bool)), this, SLOT(assignColor()) );
 
-    mDefaultCalendar = new KAction( mCollectionview );
+    mDefaultCalendar = new KAction( mCollectionView );
     mDefaultCalendar->setText( i18n( "Use as &Default Calendar" ) );
     mDefaultCalendar->setEnabled( false );
     xmlclient->actionCollection()->addAction( QString::fromLatin1( "set_standard_calendar" ),
@@ -359,7 +344,7 @@ AkonadiCollectionView::~AkonadiCollectionView()
 {
   Akonadi::ETMViewStateSaver treeStateSaver;
   KConfigGroup group( KOGlobals::self()->config(), "CollectionTreeView" );
-  treeStateSaver.setView( mCollectionview );
+  treeStateSaver.setView( mCollectionView );
   treeStateSaver.setSelectionModel( 0 ); // we only save expand state
   treeStateSaver.saveState( group );
 }
@@ -367,19 +352,19 @@ AkonadiCollectionView::~AkonadiCollectionView()
 void AkonadiCollectionView::restoreTreeState()
 {
   static QPointer<Akonadi::ETMViewStateSaver> treeStateRestorer;
-  if ( treeStateRestorer ) // We don't need more than one to be running at the same time
+  if ( treeStateRestorer ) {// We don't need more than one to be running at the same time
     delete treeStateRestorer;
-
+  }
   treeStateRestorer = new Akonadi::ETMViewStateSaver(); // not a leak
   KConfigGroup group( KOGlobals::self()->config(), "CollectionTreeView" );
-  treeStateRestorer->setView( mCollectionview );
+  treeStateRestorer->setView( mCollectionView );
   treeStateRestorer->setSelectionModel( 0 ); // we only restore expand state
   treeStateRestorer->restoreState( group );
 }
 
 void AkonadiCollectionView::setDefaultCalendar()
 {
-  QModelIndex index = mCollectionview->selectionModel()->currentIndex(); //selectedRows()
+  QModelIndex index = mCollectionView->selectionModel()->currentIndex(); //selectedRows()
   Q_ASSERT( index.isValid() );
   const Akonadi::Collection collection = CalendarSupport::collectionFromIndex( index );
   CalendarSupport::KCalPrefs::instance()->setDefaultCalendarId( collection.id() );
@@ -392,7 +377,7 @@ void AkonadiCollectionView::setDefaultCalendar()
 
 void AkonadiCollectionView::assignColor()
 {
-  QModelIndex index = mCollectionview->selectionModel()->currentIndex(); //selectedRows()
+  QModelIndex index = mCollectionView->selectionModel()->currentIndex(); //selectedRows()
   Q_ASSERT( index.isValid() );
   const Akonadi::Collection collection = CalendarSupport::collectionFromIndex( index );
   Q_ASSERT( collection.isValid() );
@@ -411,7 +396,7 @@ void AkonadiCollectionView::assignColor()
 
 void AkonadiCollectionView::disableColor()
 {
-  QModelIndex index = mCollectionview->selectionModel()->currentIndex(); //selectedRows()
+  QModelIndex index = mCollectionView->selectionModel()->currentIndex(); //selectedRows()
   Q_ASSERT( index.isValid() );
   const Akonadi::Collection collection = CalendarSupport::collectionFromIndex( index );
   Q_ASSERT( collection.isValid() );
@@ -443,7 +428,7 @@ KCheckableProxyModel *AkonadiCollectionView::collectionSelectionProxyModel() con
 
 Akonadi::EntityTreeView *AkonadiCollectionView::view() const
 {
-  return mCollectionview;
+  return mCollectionView;
 }
 
 void AkonadiCollectionView::updateView()
@@ -458,11 +443,11 @@ void AkonadiCollectionView::updateMenu()
   if ( !mHasContextMenu ) {
     return;
   }
-  bool enableAction = mCollectionview->selectionModel()->hasSelection();
+  bool enableAction = mCollectionView->selectionModel()->hasSelection();
   enableAction = enableAction &&
                  ( KOPrefs::instance()->agendaViewColors() != KOPrefs::CategoryOnly );
   mAssignColor->setEnabled( enableAction );
-  QModelIndex index = mCollectionview->selectionModel()->currentIndex(); //selectedRows()
+  QModelIndex index = mCollectionView->selectionModel()->currentIndex(); //selectedRows()
 
   bool disableStuff = false;
 
@@ -526,7 +511,7 @@ void AkonadiCollectionView::newCalendarDone( KJob *job )
 
 void AkonadiCollectionView::deleteCalendar()
 {
-  QModelIndex index = mCollectionview->selectionModel()->currentIndex(); //selectedRows()
+  QModelIndex index = mCollectionView->selectionModel()->currentIndex(); //selectedRows()
   Q_ASSERT( index.isValid() );
   const Akonadi::Collection collection = CalendarSupport::collectionFromIndex( index );
   Q_ASSERT( collection.isValid() );
@@ -586,29 +571,13 @@ void AkonadiCollectionView::rowsInserted( const QModelIndex &, int, int )
   restoreTreeState();
 }
 
-/** static */
-bool AkonadiCollectionView::isStructuralCollection( const Akonadi::Collection &collection )
-{
-  QStringList mimeTypes;
-  mimeTypes << QLatin1String( "text/calendar" )
-            << KCalCore::Event::eventMimeType()
-            << KCalCore::Todo::todoMimeType()
-            << KCalCore::Journal::journalMimeType();
-  const QStringList collectionMimeTypes = collection.contentMimeTypes();
-  foreach ( const QString &mimeType, mimeTypes ) {
-    if ( collectionMimeTypes.contains( mimeType ) ) {
-      return false;
-    }
-  }
-  return true;
-}
-
 Akonadi::Collection AkonadiCollectionView::selectedCollection() const
 {
   Akonadi::Collection collection;
-  QItemSelectionModel *selectionModel = mCollectionview->selectionModel();
-  if ( !selectionModel )
+  QItemSelectionModel *selectionModel = mCollectionView->selectionModel();
+  if ( !selectionModel ) {
     return collection;
+  }
   QModelIndexList indexes = selectionModel->selectedIndexes();
   if ( !indexes.isEmpty() ) {
     collection = indexes.first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
@@ -619,11 +588,13 @@ Akonadi::Collection AkonadiCollectionView::selectedCollection() const
 Akonadi::Collection::List AkonadiCollectionView::checkedCollections() const
 {
   Akonadi::Collection::List collections;
-  if ( !mSelectionProxyModel )
+  if ( !mSelectionProxyModel ) {
     return collections;
+  }
   QItemSelectionModel *selectionModel = mSelectionProxyModel->selectionModel();
-  if ( !selectionModel )
+  if ( !selectionModel ) {
     return collections;
+  }
   QModelIndexList indexes = selectionModel->selectedIndexes();
   foreach( const QModelIndex &index, indexes ) {
     if ( index.isValid() ) {
@@ -635,13 +606,33 @@ Akonadi::Collection::List AkonadiCollectionView::checkedCollections() const
   return collections;
 }
 
+bool AkonadiCollectionView::isChecked(const Akonadi::Collection &collection) const
+{
+    if (!mSelectionProxyModel)
+        return false;
+    QItemSelectionModel *selectionModel = mSelectionProxyModel->selectionModel();
+    if (!selectionModel)
+        return false;
+    QModelIndexList indexes = selectionModel->selectedIndexes();
+    foreach(const QModelIndex &index, indexes) {
+        if (index.isValid()) {
+            Akonadi::Collection c = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+            if (c.id() == collection.id()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 Akonadi::EntityTreeModel *AkonadiCollectionView::entityTreeModel() const
 {
-  QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel*>( mCollectionview->model() );
+  QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel*>( mCollectionView->model() );
   while( proxy ) {
     Akonadi::EntityTreeModel *etm = qobject_cast<Akonadi::EntityTreeModel*>( proxy->sourceModel() );
-    if ( etm )
+    if ( etm ) {
       return etm;
+    }
     proxy = qobject_cast<QAbstractProxyModel*>( proxy->sourceModel() );
   }
 
@@ -655,15 +646,14 @@ void AkonadiCollectionView::checkNewCalendar( const QModelIndex &parent, int beg
   Akonadi::EntityTreeModel *etm = entityTreeModel();
   if ( etm && entityTreeModel()->isCollectionTreeFetched() ) {
     for( int row=begin; row<=end; ++row ) {
-      QModelIndex index = mCollectionview->model()->index( row, 0, parent );
-      if ( index.isValid() ) {
-        mCollectionview->model()->setData( index, Qt::Checked, Qt::CheckStateRole );
-      }
+      QModelIndex index = mCollectionView->model()->index( row, 0, parent );
+      if ( index.isValid() )
+        mCollectionView->model()->setData( index, Qt::Checked, Qt::CheckStateRole );
+    }
+    if ( parent.isValid() ) {
+      mCollectionView->setExpanded( parent, true );
     }
   }
-
-  if ( parent.isValid() )
-    mCollectionview->setExpanded( parent, true );
 }
 
 #include "akonadicollectionview.moc" // for EntityModelStateSaver Q_PRIVATE_SLOT

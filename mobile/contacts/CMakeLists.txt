@@ -4,6 +4,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo/
+  ${CMAKE_SOURCE_DIR}/libkdepim/
   ${Boost_INCLUDE_DIR}
 )
 
@@ -11,7 +12,7 @@ if (WINCE)
   include_directories(
     ${CMAKE_SOURCE_DIR}
   )
-endif(WINCE)
+endif()
 
 set(kab_mobile_srcs
   mainview.cpp
@@ -66,14 +67,14 @@ kde4_add_kcfg_files(kab_mobile_srcs settings.kcfgc)
 
 if (RUNTIME_PLUGINS_STATIC)
   add_definitions(-DMAIL_SERIALIZER_PLUGIN_STATIC)
-endif (RUNTIME_PLUGINS_STATIC)
+endif ()
 
 kde4_add_app_icon(kab_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kaddressbook-mobile.png")
 
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
 if (WINCE)
   SET_TARGET_PROPERTIES(kaddressbook-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
-endif (WINCE)
+endif ()
 
 target_link_libraries(kaddressbook-mobile
     ${QT_QTDECLARATIVE_LIBRARY}
@@ -90,10 +91,10 @@ target_link_libraries(kaddressbook-mobile
 
 if (RUNTIME_PLUGINS_STATIC)
   target_link_libraries(kaddressbook-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup)
-endif (RUNTIME_PLUGINS_STATIC)
+endif ()
 if (WINCE)
   target_link_libraries(kaddressbook-mobile kcm_ldap phone)
-endif (WINCE)
+endif ()
 
 install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS kaddressbook-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})

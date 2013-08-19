@@ -19,9 +19,10 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import QtQuick 1.1
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi 4.5
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 Item {
   id : _topContext
@@ -76,13 +77,17 @@ Item {
         }
       }
 
-      KPIM.DecoratedListView {
-        id : accountsList
-        clip: true
+      PlasmaExtras.ScrollArea {
         width: parent.width
         height : parent.height
-        model : accountsModel
-        delegate : accountDelegate
+
+        flickableItem: ListView {
+          id : accountsList
+          clip: true
+
+          model : accountsModel
+          delegate : accountDelegate
+        }
       }
     }
 
@@ -97,12 +102,16 @@ Item {
         width: parent.width
       }
 
-      KPIM.DecoratedListView {
-        id : favsView
+      PlasmaExtras.ScrollArea {
         width: parent.width
         height: parent.height - contextContainer.height - 2 - 4 * 5
-        delegate : favDelegate
-        clip: true
+
+        flickableItem: ListView {
+          id : favsView
+
+          delegate : favDelegate
+          clip: true
+        }
       }
     }
   }

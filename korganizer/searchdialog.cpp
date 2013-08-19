@@ -32,7 +32,7 @@
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <calendarviews/eventviews/list/listview.h>
+#include <calendarviews/list/listview.h>
 
 #include <KMessageBox>
 
@@ -119,7 +119,7 @@ void SearchDialog::doSearch()
 
   search( re );
   listView->showIncidences( mMatchedEvents, QDate() );
-  if ( mMatchedEvents.count() == 0 ) {
+  if ( mMatchedEvents.isEmpty() ) {
     m_ui->numItems->setText ( QString() );
     KMessageBox::information(
       this,
@@ -150,7 +150,7 @@ void SearchDialog::search( const QRegExp &re )
   const QDate startDt = m_ui->startDate->date();
   const QDate endDt = m_ui->endDate->date();
 
-  Akonadi::Item::List events;
+  KCalCore::Event::List events;
   KDateTime::Spec timeSpec = CalendarSupport::KCalPrefs::instance()->timeSpec();
   if ( m_ui->eventsCheck->isChecked() ) {
     events =
@@ -158,13 +158,13 @@ void SearchDialog::search( const QRegExp &re )
         startDt, endDt, timeSpec, m_ui->inclusiveCheck->isChecked() );
   }
 
-  Akonadi::Item::List todos;
+  KCalCore::Todo::List todos;
+
   if ( m_ui->todosCheck->isChecked() ) {
     if ( m_ui->includeUndatedTodos->isChecked() ) {
       KDateTime::Spec spec = CalendarSupport::KCalPrefs::instance()->timeSpec();
-      Akonadi::Item::List alltodos = m_calendarview->calendar()->todos();
-      Q_FOREACH ( const Akonadi::Item &item, alltodos ) {
-        const KCalCore::Todo::Ptr todo = CalendarSupport::todo( item );
+      KCalCore::Todo::List alltodos = m_calendarview->calendar()->todos();
+      Q_FOREACH ( const KCalCore::Todo::Ptr &todo, alltodos ) {
         Q_ASSERT( todo );
         if ( ( !todo->hasStartDate() && !todo->hasDueDate() ) || // undated
              ( todo->hasStartDate() &&
@@ -176,7 +176,7 @@ void SearchDialog::search( const QRegExp &re )
              ( todo->hasCompletedDate() &&
                ( todo->completed().toTimeSpec( spec ).date() >= startDt ) &&
                ( todo->completed().toTimeSpec( spec ).date() <= endDt ) ) ) {//completed dt in range
-          todos.append( item );
+          todos.append( todo );
         }
       }
     } else {
@@ -188,7 +188,7 @@ void SearchDialog::search( const QRegExp &re )
     }
   }
 
-  Akonadi::Item::List journals;
+  KCalCore::Journal::List journals;
   if ( m_ui->journalsCheck->isChecked() ) {
     QDate dt = startDt;
     while ( dt <= endDt ) {
@@ -198,10 +198,10 @@ void SearchDialog::search( const QRegExp &re )
   }
 
   mMatchedEvents.clear();
-  Q_FOREACH ( const Akonadi::Item &item,
-              CalendarSupport::Calendar::mergeIncidenceList( events, todos, journals ) ) {
-    const KCalCore::Incidence::Ptr ev = CalendarSupport::incidence( item );
+  KCalCore::Incidence::List incidences = Akonadi::ETMCalendar::mergeIncidenceList( events, todos, journals );
+  Q_FOREACH ( const KCalCore::Incidence::Ptr &ev, incidences) {
     Q_ASSERT( ev );
+    Akonadi::Item item = m_calendarview->calendar()->item( ev->uid() );
     if ( m_ui->summaryCheck->isChecked() ) {
       if ( re.indexIn( ev->summary() ) != -1 ) {
         mMatchedEvents.append( item );
@@ -224,6 +224,14 @@ void SearchDialog::search( const QRegExp &re )
       if ( re.indexIn( ev->location() ) != -1 ) {
         mMatchedEvents.append( item );
         continue;
+      }
+    }
+    if ( m_ui->attendeeCheck->isChecked() ) {
+      Q_FOREACH( const KCalCore::Attendee::Ptr &attendee, ev->attendees() ) {
+        if ( re.indexIn( attendee->fullName() ) != -1 ) {
+          mMatchedEvents.append( item );
+          break;
+        }
       }
     }
   }

@@ -30,15 +30,15 @@ namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterEvolution : public Filter
 {
 public:
-  explicit FilterEvolution();
-  ~FilterEvolution();
+    explicit FilterEvolution();
+    ~FilterEvolution();
 
-  void import();
-  void importMails( const QString& maildir );
-  static QString defaultSettingsPath();
+    void import();
+    void importMails( const QString& maildir );
+    static QString defaultSettingsPath();
 private:
-  void importDirContents(const QString&, const QString&, const QString&);
-  void importMBox(const QString&, const QString&, const QString&);
+    void importDirContents(const QString&, const QString&, const QString&);
+    void importMBox(const QString&, const QString&, const QString&);
 };
 }
 

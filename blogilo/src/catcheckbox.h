@@ -25,8 +25,10 @@
 #ifndef CATCHECKBOX_H
 #define CATCHECKBOX_H
 
-#include <QCheckBox>
 #include "category.h"
+
+#include <QCheckBox>
+
 /**
 Extend QCheckBox to add property needed for Category checkboxes.
 
@@ -36,7 +38,7 @@ class CatCheckBox : public QCheckBox
 {
     Q_OBJECT
 public:
-    CatCheckBox( QWidget* parent = 0 );
+    explicit CatCheckBox( QWidget* parent = 0 );
 
     explicit CatCheckBox( const QString& text, QWidget* parent = 0 );
 

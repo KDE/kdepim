@@ -134,7 +134,7 @@ bool TreeWidget::restoreLayout( KConfigGroup &group, const QString &keyName )
   // we also need to save the current sections sizes in order to remain
   // consistent if restoreState() fails for some reason.
   QVector<int> savedSizes( cc );
-  for ( int i = 0 ; i < cc ; i++ )
+  for ( int i = 0 ; i < cc ; ++i )
   {
      savedSizes[ i ] = header()->sectionSize( i );
     header()->resizeSection( i , 10 );
@@ -143,7 +143,7 @@ bool TreeWidget::restoreLayout( KConfigGroup &group, const QString &keyName )
   if ( !header()->restoreState( state ) )
   {
     // failed: be consistent and restore the section sizes before returning
-    for ( int c = 0 ; c < cc ; c++ )
+    for ( int c = 0 ; c < cc ; ++c )
       header()->resizeSection( c , savedSizes[ c ] );
     return false;
   }
@@ -225,7 +225,7 @@ bool TreeWidget::fillHeaderContextMenu( KMenu * menu, const QPoint & )
   if ( cc < 1 )
     return false;
 
-  for ( int i = 1 ; i < cc; i++ )
+  for ( int i = 1 ; i < cc; ++i )
   {
     QAction * act = menu->addAction( hitem->text( i ) );
     act->setCheckable( true );

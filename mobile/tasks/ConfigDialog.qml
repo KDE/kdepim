@@ -17,10 +17,11 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi.tasks 4.5 as Tasks
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 QML.Rectangle {
   id: configDialog
@@ -34,21 +35,25 @@ QML.Rectangle {
     configWidget.load();
   }
 
-  KPIM.DecoratedFlickable {
+  PlasmaExtras.ScrollArea {
     id: configWidgetBox
-    anchors.fill: parent
-    anchors.topMargin: 25
-    contentHeight: configWidget.height;
 
-    content.children: [
-      QML.Item { // dummy item to make the widget visible with the broken QML version on the N900
-        anchors.fill: parent 
-        Tasks.ConfigWidget {
-          id: configWidget
-          width: parent.width - okButton.width
-        }
+    anchors {
+      top: parent.top
+      topMargin: 25
+      bottom: parent.bottom
+      left: parent.left
+      right: okButton.left
+    }
+
+    flickableItem: QML.Flickable {
+      contentHeight: configWidget.height;
+
+      Tasks.ConfigWidget {
+        id: configWidget
+        width: parent.width
       }
-    ]
+    }
   }
 
   KPIM.Button2 {

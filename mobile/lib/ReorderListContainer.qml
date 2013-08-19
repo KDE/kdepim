@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
-
+import QtQuick 1.1
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import org.kde.pim.mobileui 4.5 as KPIM
 
 Rectangle {
@@ -40,22 +40,26 @@ Rectangle {
   signal triggered( string triggeredName )
   signal currentIndexChanged( int index )
 
-  KPIM.DecoratedListView {
-    id : myList
+  PlasmaExtras.ScrollArea {
     anchors.top : _topLevel.top
     anchors.bottom : _topLevel.bottom
     anchors.left : _topLevel.left
     anchors.right : actionColumn.left
-    interactive: count * actionItemHeight > height
-    focus: true
 
-    delegate : ReorderListDelegate {
+    flickableItem: ListView {
+      id : myList
+
+      interactive: count * actionItemHeight > height
+      focus: true
+
+      delegate : ReorderListDelegate {
         height: _topLevel.actionItemHeight
         width: ListView.view.width;
-    }
+      }
 
-    onCurrentIndexChanged : {
-      _topLevel.currentIndexChanged( currentIndex )
+      onCurrentIndexChanged : {
+        _topLevel.currentIndexChanged( currentIndex )
+      }
     }
   }
 

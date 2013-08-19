@@ -33,14 +33,14 @@
 #include "messageviewer/interfaces/bodypartformatter.h"
 #include "messageviewer/interfaces/bodyparturlhandler.h"
 #include "messageviewer/interfaces/bodypart.h"
-#include <messageviewer/nodehelper.h>
+#include <messageviewer/viewer/nodehelper.h>
 #include "updatecontactjob.h"
 #include "vcardmemento.h"
 
 using MessageViewer::Interface::BodyPart;
-#include "messageviewer/webkitparthtmlwriter.h"
+#include "messageviewer/htmlwriter/webkitparthtmlwriter.h"
 
-#include <libkdepim/addcontactjob.h>
+#include <libkdepim/job/addcontactjob.h>
 
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Contact/StandardContactFormatter>
@@ -97,10 +97,10 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
           continue;
         }
         if(!memento) {
-	  if(!a.emails().isEmpty()) {
+          if(!a.emails().isEmpty()) {
             lst.append(a.emails().first());
-	    count++;
-	  }
+            count++;
+          }
         }
       }
       if ( !count ) {

@@ -49,7 +49,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::Set
     /** The posting rights status of this group. */
     enum Status { unknown=0, readOnly=1, postingAllowed=2, moderated=3 };
 
-    KNGroup( KNCollection::Ptr p = KNCollection::Ptr() );
+    explicit KNGroup( KNCollection::Ptr p = KNCollection::Ptr() );
     ~KNGroup();
 
     /// List of groups.

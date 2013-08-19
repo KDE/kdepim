@@ -36,7 +36,7 @@ class ArticleWindow : public KXmlGuiWindow  {
     /** Create a new article window.
      * @param art The article to show in this window.
      */
-    ArticleWindow( KNArticle::Ptr art );
+    explicit ArticleWindow( KNArticle::Ptr art );
     /// Destroy this article viewer window.
     ~ArticleWindow();
     /** Returns the article widget of this window. */

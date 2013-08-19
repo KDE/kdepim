@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5
 // FIXME: how do I do this correctly??
@@ -50,32 +50,6 @@ ActionMenuContainer {
     ActionListItem { name : "import_emails" }
   }
 
-  FavoriteManager{
-    model : favoritesList
-    actionItemHeight: parent.actionItemHeight
-  }
-
-  AgentInstanceList {
-    category : "home"
-    name : "accounts_list"
-    text : KDE.i18n( "Accounts" )
-    actionItemHeight: parent.actionItemHeight
-    model : agentInstanceList
-  }
-
-  FilterEditor {
-    category : "home"
-    name : "filter_menu"
-    text : KDE.i18n( "Filter" )
-    actionItemHeight: parent.actionItemHeight
-    model: filterModel
-  }
-
-  ActionListItem {
-    category : "home"
-    name : "kmail_mobile_identities"
-  }
-
   ActionList {
     category : "account"
     name : "account_menu"
@@ -95,7 +69,6 @@ ActionMenuContainer {
     ActionListItem { name : "akonadi_mark_all_as_read" }
     ActionListItem { name : "move_all_to_trash" }
     ActionListItem { name : "akonadi_remove_duplicates" }
-    ActionListItem { name : "show_expire_properties" }
     ActionListItem { name : "export_selected_emails" }
     ActionListItem { name : "apply_filters" }
     ScriptActionItem { name : "edit_acls"; title : KDE.i18n( "Edit ACLs" ); visible: aclEditor.collectionHasAcls }
@@ -155,7 +128,7 @@ ActionMenuContainer {
     ActionListItem {
       name : "message_reply"
       onPressAndHold: {
-          replyOptionsPage.visible = true
+          pageStack.push(Qt.createComponent("ReplyOptionsPage.qml") )
           actionPanel.collapse()
       }
       reactsOnLongPressed : true
@@ -164,7 +137,7 @@ ActionMenuContainer {
     ActionListItem {
       name : "message_forward"
       onPressAndHold: {
-          forwardOptionsPage.visible = true
+          pageStack.push(Qt.createComponent("ForwardOptionsPage.qml") )
           actionPanel.collapse()
       }
       reactsOnLongPressed : true
@@ -224,7 +197,7 @@ ActionMenuContainer {
 
     onLongPressed : {
       if ( actionName == "add_new_mail" ) {
-          newMailPage.visible = true
+          pageStack.push(Qt.createComponent("NewMailPage.qml") )
           actionPanel.collapse()
       }
     }

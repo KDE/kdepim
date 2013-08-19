@@ -28,7 +28,7 @@ namespace Akonotes
 {
 
 /**
-  This is to become a convenience wrapper around KMime::Message::Ptr.
+  This is to become a convenience wrapper around KMime::MessageComposer::Ptr.
 */
 class AKONADI_NEXT_EXPORT Note
 {

@@ -22,9 +22,9 @@
 
 #include <QMainWindow>
 
-#include <messagecomposer/kmeditor.h>
+#include <messagecomposer/composer/kmeditor.h>
 
-using namespace Message;
+using namespace MessageComposer;
 
 class testKMeditorWindow  : public QMainWindow
 {

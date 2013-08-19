@@ -32,9 +32,9 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kjob.h>
 
-#include <messagecomposer/composer.h>
-#include <messagecomposer/signjob.h>
-#include <messagecomposer/transparentjob.h>
+#include <messagecomposer/composer/composer.h>
+#include <messagecomposer/job/signjob.h>
+#include <messagecomposer/job/transparentjob.h>
 
 #include <messagecore/tests/util.h>
 
@@ -42,12 +42,17 @@
 
 QTEST_KDEMAIN( SignJobTest, GUI )
 
+void SignJobTest::initTestCase()
+{
+  MessageCore::Test::setupEnv();
+}
+
 void SignJobTest::testContentDirect() {
 
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  Message::Composer *composer = new Message::Composer;
-  Message::SignJob* sJob = new Message::SignJob( composer );
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
+  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
 
   QVERIFY( composer );
   QVERIFY( sJob );
@@ -73,11 +78,11 @@ void SignJobTest::testContentChained()
   KMime::Content* content = new KMime::Content;
   content->setBody( data );
 
-  Message::TransparentJob* tJob =  new Message::TransparentJob;
+  MessageComposer::TransparentJob* tJob =  new MessageComposer::TransparentJob;
   tJob->setContent( content );
   
-  Message::Composer *composer = new Message::Composer;
-  Message::SignJob* sJob = new Message::SignJob( composer );
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
+  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
 
   sJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
   sJob->setSigningKeys( keys );
@@ -94,8 +99,8 @@ void SignJobTest::testHeaders()
 {
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  Message::Composer *composer = new Message::Composer;
-  Message::SignJob* sJob = new Message::SignJob( composer );
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
+  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
 
   QVERIFY( composer );
   QVERIFY( sJob );
@@ -126,7 +131,7 @@ void SignJobTest::testHeaders()
 }
 
 
-bool SignJobTest::checkSignJob( Message::SignJob* sJob )
+bool SignJobTest::checkSignJob( MessageComposer::SignJob* sJob )
 {
 
   sJob->exec();
@@ -135,8 +140,8 @@ bool SignJobTest::checkSignJob( Message::SignJob* sJob )
   Q_ASSERT( result );
   result->assemble();
 
-  return ComposerTestUtil::verifySignature( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat );
-  
+  return ComposerTestUtil::verifySignature( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat, KMime::Headers::CE7Bit );
+
 }
 
 #include "signjobtest.moc"

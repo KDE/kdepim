@@ -58,6 +58,7 @@ MailCommon::MailFilter *FilterImporterProcmail::parseLine( QTextStream &stream,
                                                            QString line,
                                                            MailCommon::MailFilter *filter )
 {
+  Q_UNUSED( stream );
   if ( line.isEmpty() ) {
     //Empty line
     return filter;

@@ -26,7 +26,7 @@
 #ifndef TODO_SUMMARYWIDGET_H
 #define TODO_SUMMARYWIDGET_H
 
-#include <calendarsupport/calendaradaptor.h>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <Akonadi/Item>
 
@@ -36,8 +36,7 @@
 
 class TodoPlugin;
 
-namespace CalendarSupport {
-  class Calendar;
+namespace Akonadi {
   class IncidenceChanger;
 }
 
@@ -73,8 +72,6 @@ class TodoSummaryWidget : public KontactInterface::Summary
     void completeTodo( Akonadi::Item::Id id );
 
   private:
-    void createCalendar();
-
     TodoPlugin *mPlugin;
     QGridLayout *mLayout;
 
@@ -87,9 +84,8 @@ class TodoSummaryWidget : public KontactInterface::Summary
     bool mShowMineOnly;
 
     QList<QLabel*> mLabels;
-    CalendarSupport::Calendar *mCalendar;
-    CalendarSupport::CalendarAdaptor::Ptr mCalendarAdaptor;
-    CalendarSupport::IncidenceChanger *mChanger;
+    Akonadi::ETMCalendar::Ptr mCalendar;
+    Akonadi::IncidenceChanger *mChanger;
 
     /**
       Test if the To-do starts today.

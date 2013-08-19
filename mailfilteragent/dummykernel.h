@@ -1,7 +1,7 @@
 #ifndef DUMMYKERNEL_H
 #define DUMMYKERNEL_H
 
-#include <mailcommon/mailinterfaces.h>
+#include <mailcommon/interfaces/mailinterfaces.h>
 
 namespace Akonadi {
 class EntityTreeModel;
@@ -15,10 +15,10 @@ class FolderCollectionMonitor;
 class DummyKernel : public QObject, public MailCommon::IKernel, public MailCommon::ISettings
 {
   public:
-    DummyKernel( QObject *parent = 0 );
+    explicit DummyKernel( QObject *parent = 0 );
 
     virtual KPIMIdentities::IdentityManager *identityManager();
-    virtual MessageSender *msgSender();
+    virtual MessageComposer::MessageSender *msgSender();
 
     virtual Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
     virtual KSharedConfig::Ptr config();
@@ -37,7 +37,7 @@ class DummyKernel : public QObject, public MailCommon::IKernel, public MailCommo
 
   private:
     KPIMIdentities::IdentityManager *mIdentityManager;
-    MessageSender *mMessageSender;
+    MessageComposer::MessageSender *mMessageSender;
     MailCommon::FolderCollectionMonitor *mFolderCollectionMonitor;
     Akonadi::EntityTreeModel *mEntityTreeModel;
     Akonadi::EntityMimeTypeFilterModel *mCollectionModel;

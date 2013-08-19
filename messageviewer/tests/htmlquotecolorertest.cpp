@@ -18,7 +18,7 @@
 */
 #include "htmlquotecolorertest.h"
 
-#include "../htmlquotecolorer.cpp"
+#include "viewer/htmlquotecolorer.cpp"
 
 #include "qtest_kde.h"
 
@@ -74,6 +74,6 @@ void HTMLQuoteColorerTester::test_QuoteColor_data()
                          "No Quote<br>";
 
   QTest::newRow("") << "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;\">&gt; &gt; &gt; Sdf sdfqsdf fqs dfq sfsdfsqfqs</p>"
-	            << "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;\"><font color=\"#0000ff\">&gt; &gt; &gt; Sdf sdfqsdf fqs dfq sfsdfsqfqs</font></p>";
-	 
+                    << "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;\"><font color=\"#0000ff\">&gt; &gt; &gt; Sdf sdfqsdf fqs dfq sfsdfsqfqs</font></p>";
+
 }

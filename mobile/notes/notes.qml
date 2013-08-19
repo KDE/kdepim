@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.0
 import org.kde 4.5
 import org.kde.akonadi 4.5 as Akonadi
 import org.kde.pim.mobileui 4.5 as KPIM
@@ -29,12 +29,12 @@ import "../mobileui/ScreenFunctions.js" as Screen
 KPIM.MainView {
   id: notesMobile
 
-  QML.Connections {
+  Connections {
     target: guiStateManager
     onGuiStateChanged: { updateContextActionStates() }
   }
 
-  QML.Component.onCompleted : updateContextActionStates();
+  Component.onCompleted : updateContextActionStates();
 
   function updateContextActionStates()
   {
@@ -63,7 +63,7 @@ KPIM.MainView {
     width: parent.width
     height: parent.height
 
-    QML.Rectangle {
+    Rectangle {
       anchors.top : noteView.top
       anchors.bottom : noteView.bottom
       anchors.right : noteView.left
@@ -72,16 +72,16 @@ KPIM.MainView {
     }
   }
 
-  QML.Rectangle {
+  Rectangle {
     id : backToMessageListButton
     visible: guiStateManager.inViewSingleItemState
     anchors.right : notesMobile.right
     anchors.rightMargin : 70
     anchors.bottom : notesMobile.bottom
     anchors.bottomMargin : 100
-    QML.Image {
+    Image {
       source : KDE.locate( "data", "mobileui/back-to-list-button.png" );
-      QML.MouseArea {
+      MouseArea {
         anchors.fill : parent;
         onClicked : {
           noteView.saveNote();
@@ -93,7 +93,7 @@ KPIM.MainView {
   }
 
 
-  QML.Item {
+  Item {
     id : mainWorkView
     visible: { guiStateManager.inHomeScreenState ||
                guiStateManager.inAccountScreenState ||
@@ -106,7 +106,7 @@ KPIM.MainView {
     anchors.left: parent.left
     anchors.right : parent.right
 
-    QML.Image {
+    Image {
       id: backgroundImage
       x: 0
       y: 0
@@ -167,7 +167,7 @@ KPIM.MainView {
       favoritesModel : favoritesList
 
       contextActions : [
-        QML.Column {
+        Column {
           anchors.fill: parent
           height : 70
           KPIM.Button2 {
@@ -181,7 +181,7 @@ KPIM.MainView {
       ]
     }
 
-    QML.Rectangle {
+    Rectangle {
       id : emptyFolderPage
       visible: (!guiStateManager.inHomeScreenState && collectionView.hasBreadcrumbs && headerList.count == 0)
       anchors.left : collectionView.right
@@ -189,17 +189,17 @@ KPIM.MainView {
       anchors.bottom : parent.bottom
       anchors.right : parent.right
       color : "#00000000"
-      QML.Text {
+      Text {
         text : KDE.i18n("No notes in this notebook");
         height : 20;
         font.italic : true
-        horizontalAlignment : QML.Text.AlignHCenter
+        horizontalAlignment : Text.AlignHCenter
         anchors.verticalCenter : parent.verticalCenter;
         anchors.horizontalCenter : parent.horizontalCenter
       }
     }
 
-    QML.Rectangle {
+    Rectangle {
       id : notesListPage
       visible: { guiStateManager.inAccountScreenState ||
                  guiStateManager.inSingleFolderScreenState ||
@@ -233,7 +233,7 @@ KPIM.MainView {
         y: height == 0 ? parent.height : parent.height - height
       }
 
-      QML.Connections {
+      Connections {
         target : _itemNavigationModel
         onCurrentRowChanged : {
           headerList.currentRow = _itemNavigationModel.currentRow
@@ -261,7 +261,7 @@ KPIM.MainView {
       handleHeight: 150
       anchors.fill : parent
 
-      QML.Component.onCompleted: {
+      Component.onCompleted: {
         actionPanel.expanded.connect( noteActions, noteActions.refresh );
       }
 
@@ -314,13 +314,13 @@ KPIM.MainView {
     }
   }
 
-  QML.Loader {
+  Loader {
     anchors.fill: parent
     source: guiStateManager.inMultipleFolderSelectionScreenState ? KDE.locate( "module", "imports/org/kde/pim/mobileui/MultipleSelectionScreen.qml" ) : ""
     onLoaded: { item.backgroundImage = backgroundImage.source; }
   }
 
-  QML.Loader {
+  Loader {
     anchors.fill: parent
     source: guiStateManager.inBulkActionScreenState ? "BulkActionComponent.qml" : ""
     onLoaded: {
@@ -345,14 +345,14 @@ KPIM.MainView {
     resultText: KDE.i18np( "One note found", "%1 notes found", searchNotesListView.count )
   }
 
-  QML.Connections {
+  Connections {
     target: startPage
     onFavoriteSelected : {
       application.loadFavorite(favName);
     }
   }
 
-  QML.Loader {
+  Loader {
     id : aboutDialog
     anchors.fill: parent
     visible: false

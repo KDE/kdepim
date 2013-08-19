@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -25,26 +25,26 @@
 
 bool EvolutionUtil::loadInDomDocument( QFile *file, QDomDocument & doc )
 {
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
-    return false;
-  }
-  return true;
+    QString errorMsg;
+    int errorRow;
+    int errorCol;
+    if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+        kDebug() << "Unable to load document.Parse error in line " << errorRow
+                 << ", col " << errorCol << ": " << errorMsg;
+        return false;
+    }
+    return true;
 }
 
 bool EvolutionUtil::loadInDomDocument( const QString &file, QDomDocument & doc )
 {
-  QString errorMsg;
-  int errorRow;
-  int errorCol;
-  if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
-    kDebug() << "Unable to load document.Parse error in line " << errorRow
-             << ", col " << errorCol << ": " << errorMsg;
-    return false;
-  }
-  return true;
+    QString errorMsg;
+    int errorRow;
+    int errorCol;
+    if ( !doc.setContent( file, &errorMsg, &errorRow, &errorCol ) ) {
+        kDebug() << "Unable to load document.Parse error in line " << errorRow
+                 << ", col " << errorCol << ": " << errorMsg;
+        return false;
+    }
+    return true;
 }

@@ -71,7 +71,7 @@ class KOAgendaView : public KOEventView
     bool selectedIsSingleCell();
 
     /* reimp from BaseView */
-    virtual void setCalendar( CalendarSupport::Calendar *cal );
+    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
 
     /** reimpl */
     virtual void setTypeAheadReceiver( QObject *o );
@@ -90,7 +90,7 @@ class KOAgendaView : public KOEventView
     virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date );
 
     void changeIncidenceDisplayAdded( const Akonadi::Item &incidence );
-    void changeIncidenceDisplay( const Akonadi::Item &incidence, int mode );
+    void changeIncidenceDisplay( const Akonadi::Item &incidence, Akonadi::IncidenceChanger::ChangeType );
 
     void clearSelection();
 
@@ -99,7 +99,7 @@ class KOAgendaView : public KOEventView
     void writeSettings( KConfig * );
 
     void enableAgendaUpdate( bool enable );
-    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
+    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
     void zoomInHorizontally( const QDate &date=QDate() );
     void zoomOutHorizontally( const QDate &date=QDate() );

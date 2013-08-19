@@ -22,7 +22,7 @@
 
 #include <QWidget>
 #include <kurl.h>
-#include <messageviewer/viewer.h>
+#include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
 #include <Akonadi/Item>
 class KActionCollection;
@@ -60,7 +60,7 @@ public:
   /** Set the header style and strategy. We only want them to be set
       together. */
   void setHeaderStyleAndStrategy( MessageViewer::HeaderStyle * style,
-                                  const MessageViewer::HeaderStrategy * strategy );
+                                  MessageViewer::HeaderStrategy * strategy );
   /** Getthe message header strategy. */
   const MessageViewer::HeaderStrategy * headerStrategy() const;
 
@@ -76,7 +76,7 @@ public:
   /** Set the override character encoding. */
   void setOverrideEncoding( const QString & encoding );
   virtual void setPrinting(bool enable );
-  
+
   void setMessage( const Akonadi::Item& item, MessageViewer::Viewer::UpdateMode updateMode = MessageViewer::Viewer::Delayed);
 
   void setMessage( KMime::Message::Ptr message );
@@ -146,6 +146,8 @@ public:
   KAction *viewSourceAction();
   KAction *findInMessageAction();
   KAction *saveAsAction();
+  KAction *saveMessageDisplayFormatAction();
+  KAction *resetMessageDisplayFormatAction();
 
   KAction* editContactAction() const { return mEditContactAction; }
 
@@ -161,6 +163,7 @@ public:
   bool printSelectedText(bool preview);
 
   void setContactItem(const Akonadi::Item& contact);
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
@@ -193,6 +196,8 @@ public slots:
 
   void slotPrintComposeResult( KJob *job );
   void slotEditContact();
+  void contactStored( const Akonadi::Item &item );
+  void slotContactEditorError(const QString &error);
 
 protected:
 

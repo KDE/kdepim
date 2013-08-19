@@ -7,18 +7,18 @@
     <x>0</x>
     <y>0</y>
     <width>587</width>
-    <height>455</height>
+    <height>572</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="2">
+   <item row="0" column="0">
     <widget class="QCheckBox" name="enabledAutocorrection">
      <property name="text">
-      <string>Enabled autocorrection</string>
+      <string>Enable autocorrection</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
+   <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="label">
@@ -32,7 +32,7 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item row="2" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
       <number>0</number>
@@ -110,7 +110,7 @@
           <string>When you use _underline_ or *bold*, the text between the underscores or asterisks will be converted to underlined or bold text.</string>
          </property>
          <property name="text">
-          <string>Automatically do &amp;bold and underline formatting (HTML mode)</string>
+          <string>Automatically do &amp;bold, strikeout and underline formatting (HTML mode)</string>
          </property>
         </widget>
        </item>
@@ -141,6 +141,13 @@
        <string>Custom &amp;Quotes</string>
       </attribute>
       <layout class="QGridLayout" name="_3">
+       <item row="2" column="0" colspan="2">
+        <widget class="QCheckBox" name="typographicSingleQuotes">
+         <property name="text">
+          <string>Replace &amp;single quotes with typographical quotes</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0" colspan="2">
         <widget class="QCheckBox" name="typographicDoubleQuotes">
          <property name="text">
@@ -196,13 +203,6 @@
          </item>
         </layout>
        </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QCheckBox" name="typographicSingleQuotes">
-         <property name="text">
-          <string>Replace &amp;single quotes with typographical quotes</string>
-         </property>
-        </widget>
-       </item>
        <item row="3" column="0">
         <layout class="QHBoxLayout" name="_6">
          <property name="spacing">
@@ -251,7 +251,7 @@
          </item>
         </layout>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <spacer>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -263,6 +263,13 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QCheckBox" name="addNonBreakingSpaceInFrench">
+         <property name="text">
+          <string>Add non breaking space before specific punctuation marks in french text</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -394,7 +401,7 @@
       <attribute name="title">
        <string>E&amp;xceptions</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="0" colspan="2">
@@ -465,7 +472,7 @@
        </item>
        <item>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0" colspan="2">
+         <item row="0" column="0">
           <widget class="QLabel" name="label_5">
            <property name="text">
             <string>Accept two uppercase letters in:</string>
@@ -473,36 +480,16 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <widget class="KLineEdit" name="twoUpperLetter">
-             <property name="trapEnterKeyEvent" stdset="0">
-              <bool>true</bool>
-             </property>
-             <property name="showClearButton" stdset="0">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="MessageComposer::ComposerAutoCorrectionListWidget" name="twoUpperLetterList">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::ExtendedSelection</enum>
-             </property>
-             <property name="sortingEnabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="KLineEdit" name="twoUpperLetter">
+           <property name="trapEnterKeyEvent" stdset="0">
+            <bool>true</bool>
+           </property>
+           <property name="showClearButton" stdset="0">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
-         <item row="1" column="1">
+         <item row="1" column="1" rowspan="2">
           <layout class="QVBoxLayout" name="_16">
            <item>
             <widget class="QPushButton" name="add2">
@@ -533,6 +520,22 @@
            </item>
           </layout>
          </item>
+         <item row="2" column="0">
+          <widget class="MessageComposer::ComposerAutoCorrectionListWidget" name="twoUpperLetterList">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -540,24 +543,35 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="KPushButton" name="importAutoCorrection">
-     <property name="text">
-      <string>Import...</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>469</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="KPushButton" name="exportAutoCorrection">
+       <property name="text">
+        <string>Export...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KPushButton" name="importAutoCorrection">
+       <property name="text">
+        <string>Import...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>469</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

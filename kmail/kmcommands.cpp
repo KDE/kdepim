@@ -45,8 +45,8 @@
 
 #include "kmcommands.h"
 #include "collectionpane.h"
-#include "mailkernel.h"
-#include "mailutil.h"
+#include "kernel/mailkernel.h"
+#include "util/mailutil.h"
 
 #include <unistd.h> // link()
 #include <kprogressdialog.h>
@@ -73,36 +73,34 @@
 
 #include "foldercollection.h"
 
-#include "messagecore/mailinglist.h"
-#include "composer.h"
+#include "messagecore/misc/mailinglist.h"
+#include "editor/composer.h"
 #include "mailcommon/filter/filteraction.h"
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/mailfilter.h"
-#include "mailcommon/redirectdialog.h"
+#include "mailcommon/widgets/redirectdialog.h"
 #include "kmmainwidget.h"
 #include "undostack.h"
 #ifndef QT_NO_CURSOR
-#include "messageviewer/kcursorsaver.h"
+#include "messageviewer/utils/kcursorsaver.h"
 #endif
-#include "messageviewer/objecttreeparser.h"
-#include "messageviewer/csshelper.h"
-#include "messageviewer/util.h"
-#include "messageviewer/mailsourceviewer.h"
-#include "messageviewer/viewer.h"
-#include "messageviewer/headerstrategy.h"
-#include "messageviewer/headerstyle.h"
+#include "messageviewer/viewer/objecttreeparser.h"
+#include "messageviewer/viewer/csshelper.h"
+#include "messageviewer/utils/util.h"
+#include "messageviewer/viewer/mailsourceviewer.h"
+#include "messageviewer/viewer/viewer.h"
+#include "messageviewer/header/headerstrategy.h"
+#include "messageviewer/header/headerstyle.h"
 #include "kmreadermainwin.h"
 #include "secondarywindow.h"
 using KMail::SecondaryWindow;
 #include "util.h"
-#include "messageviewer/editorwatcher.h"
-using MessageViewer::EditorWatcher;
-#include "broadcaststatus.h"
+#include "misc/broadcaststatus.h"
 #include "globalsettings.h"
-#include "stringutil.h"
-#include "messageviewer/autoqpointer.h"
-#include "messageviewer/globalsettings.h"
-#include "messagecore/globalsettings.h"
+#include "utils/stringutil.h"
+#include "messageviewer/utils/autoqpointer.h"
+#include "messageviewer/settings/globalsettings.h"
+#include "messagecore/settings/globalsettings.h"
 
 #include <kpimutils/kfileio.h>
 
@@ -118,20 +116,20 @@ using MessageViewer::EditorWatcher;
 using MailTransport::TransportManager;
 
 
-#include "messageviewer/nodehelper.h"
-#include "messageviewer/objecttreeemptysource.h"
+#include "messageviewer/viewer/nodehelper.h"
+#include "messageviewer/viewer/objecttreeemptysource.h"
 
-#include "messagecore/stringutil.h"
-#include "messagecore/messagehelpers.h"
+#include "messagecore/utils/stringutil.h"
+#include "messagecore/helpers/messagehelpers.h"
 
-#include "messagecomposer/messagesender.h"
-#include "messagecomposer/messagehelper.h"
-#include "messagecomposer/messagecomposersettings.h"
-#include "messagecomposer/messagefactory.h"
+#include "messagecomposer/sender/messagesender.h"
+#include "messagecomposer/helper/messagehelper.h"
+#include "messagecomposer/settings/messagecomposersettings.h"
+#include "messagecomposer/helper/messagefactory.h"
 using MessageComposer::MessageFactory;
 
 
-#include "progressmanager.h"
+#include "progresswidget/progressmanager.h"
 using KPIM::ProgressManager;
 using KPIM::ProgressItem;
 #include <kmime/kmime_mdn.h>
@@ -307,16 +305,6 @@ void KMCommand::transferSelectedMsgs()
 
   // TODO once the message list is based on ETM and we get the more advanced caching we need to make that check a bit more clever
   if ( !mFetchScope.isEmpty() ) {
-#if 0 //TODO port to akonadi
-    if ( thisMsg->parent() && !thisMsg->isComplete() &&
-         ( !mProgressDialog || !mProgressDialog->wasCancelled() ) )
-    {
-      totalSize += thisMsg->msgSizeServer();
-      // emitted when the message was transferred successfully
-      connect(job, SIGNAL(messageRetrieved(KMime::Message*)),
-              this, SLOT(slotMsgTransfered(KMime::Message*)));
-    }
-#endif
     complete = false;
     KMCommand::mCountJobs++;
     Akonadi::ItemFetchJob *fetch = new Akonadi::ItemFetchJob( mMsgList, this );
@@ -385,21 +373,6 @@ void KMCommand::slotJobFinished()
 
 void KMCommand::slotTransferCancelled()
 {
-#if 0 //TODO port to akonadi
-  // kill the pending jobs
-  QList<QPointer<KMFolder> >::Iterator fit;
-  for ( fit = mFolders.begin(); fit != mFolders.end(); ++fit ) {
-    if (!(*fit))
-      continue;
-    KMFolder *folder = *fit;
-    KMFolderImap *imapFolder = dynamic_cast<KMFolderImap*>(folder);
-    if (imapFolder && imapFolder->account()) {
-      imapFolder->account()->killAllJobs();
-    }
-  }
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
   KMCommand::mCountJobs = 0;
   mCountMsgs = 0;
   mRetrievedMsgs.clear();
@@ -1041,9 +1014,10 @@ KMCommand::Result KMRedirectCommand::execute()
   if ( !TransportManager::self()->showTransportCreationDialog( parentWidget(), TransportManager::IfNoTransportExists ) )
     return Failed;
 
-  const MessageSender::SendMethod method = (dlg->sendMode() == MailCommon::RedirectDialog::SendNow)
-                                             ? MessageSender::SendImmediate
-                                             : MessageSender::SendLater;
+  //TODO use sendlateragent here too.
+  const MessageComposer::MessageSender::SendMethod method = (dlg->sendMode() == MailCommon::RedirectDialog::SendNow)
+                                             ? MessageComposer::MessageSender::SendImmediate
+                                             : MessageComposer::MessageSender::SendLater;
 
   const int identity = dlg->identity();
   int transportId = dlg->transportId();
@@ -1095,7 +1069,7 @@ KMCommand::Result KMRedirectCommand::execute()
 
 KMPrintCommand::KMPrintCommand( QWidget *parent, const Akonadi::Item &msg,
                                 MessageViewer::HeaderStyle *headerStyle,
-                                const MessageViewer::HeaderStrategy *headerStrategy,
+                                MessageViewer::HeaderStrategy *headerStrategy,
                                 bool htmlOverride, bool htmlLoadExtOverride,
                                 bool useFixedFont, const QString & encoding )
   : KMCommand( parent, msg ),
@@ -1134,7 +1108,7 @@ void KMPrintCommand::setPrintPreview( bool preview )
 KMCommand::Result KMPrintCommand::execute()
 {
   // the window will be deleted after printout is performed, in KMReaderWin::slotPrintMsg()
-  KMReaderWin *printerWin = new KMReaderWin( kmkernel->mainWin(), 0, 0 );
+  KMReaderWin *printerWin = new KMReaderWin( 0, kmkernel->mainWin(), 0, 0 );
   printerWin->setPrinting( true );
   printerWin->readConfig();
   if ( mHeaderStyle != 0 && mHeaderStrategy != 0 )

@@ -17,8 +17,8 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <default>true</default>
       </entry>
         <entry name="ReplyUsingHtml" type="Bool" key="replySameFormat">
-        <label>Reply using HTML if present</label>
-        <default>true</default>
+        <label>Reply or forward using HTML if present</label>
+        <default>false</default>
       </entry>
 
       <entry name="CustomTemplates" type="StringList" key="CustomTemplates" />

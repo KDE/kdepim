@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -24,9 +24,9 @@ namespace MessageComposer {
 class ImportKMailAutocorrection : public ImportAbstractAutocorrection
 {
 public:
-  explicit ImportKMailAutocorrection(QWidget *parent = 0);
-  ~ImportKMailAutocorrection();
-  bool import(const QString& fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All);
+    explicit ImportKMailAutocorrection(QWidget *parent = 0);
+    ~ImportKMailAutocorrection();
+    bool import(const QString& fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All);
 };
 }
 

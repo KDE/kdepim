@@ -1,6 +1,6 @@
 /* ============================================================
 *
-* This file is a part of the rekonq project
+* Based on kspellplugin from rekonq project
 *
 * Copyright (C) 2012 by Lindsay Mathieson <lindsay dot mathieson at gmail dot com>
 *
@@ -24,8 +24,8 @@
 * ============================================================ */
 
 
-#ifndef TESTQWEBSPELLCHECKER_H
-#define TESTQWEBSPELLCHECKER_H
+#ifndef QWEBSPELLCHECKER_H
+#define QWEBSPELLCHECKER_H
 
 
 #include <QtGlobal>
@@ -40,22 +40,22 @@ class KWebSpellChecker : public QWebSpellChecker
 {
     Q_OBJECT
 public:
-    Sonnet::Speller *m_speller;
-
     KWebSpellChecker();
     ~KWebSpellChecker();
 
-    virtual bool isContinousSpellCheckingEnabled() const;
-    virtual void toggleContinousSpellChecking();
-    virtual void learnWord(const QString& word);
-    virtual void ignoreWordInSpellDocument(const QString& word);
-    virtual void checkSpellingOfString(const QString& word, int* misspellingLocation, int* misspellingLength);
-    virtual QString autoCorrectSuggestionForMisspelledWord(const QString& word);
-    virtual void guessesForWord(const QString& word, const QString& context, QStringList& guesses);
+    bool isContinousSpellCheckingEnabled() const;
+    void toggleContinousSpellChecking();
+    void learnWord(const QString& word);
+    void ignoreWordInSpellDocument(const QString& word);
+    void checkSpellingOfString(const QString& word, int* misspellingLocation, int* misspellingLength);
+    QString autoCorrectSuggestionForMisspelledWord(const QString& word);
+    void guessesForWord(const QString& word, const QString& context, QStringList& guesses);
 
-    virtual bool isGrammarCheckingEnabled();
-    virtual void toggleGrammarChecking();
-    virtual void checkGrammarOfString(const QString&, QList<GrammarDetail>&, int* badGrammarLocation, int* badGrammarLength);
+    bool isGrammarCheckingEnabled();
+    void toggleGrammarChecking();
+    void checkGrammarOfString(const QString&, QList<GrammarDetail>&, int* badGrammarLocation, int* badGrammarLength);
+private:
+    Sonnet::Speller *m_speller;
 };
 
 
@@ -68,8 +68,8 @@ public:
     KWebKitPlatformPlugin();
     ~KWebKitPlatformPlugin();
 
-    virtual bool supportsExtension(Extension) const;
-    virtual QObject* createExtension(Extension) const;
+    bool supportsExtension(Extension) const;
+    QObject* createExtension(Extension) const;
 
 };
 

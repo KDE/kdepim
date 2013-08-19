@@ -27,11 +27,11 @@
 #include "kocore.h"
 #include "koeventpopupmenu.h"
 
-#include <calendarsupport/calendar.h>
+#include <Akonadi/Calendar/ETMCalendar>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
-#include <libkdepim/pimmessagebox.h>
+#include <libkdepim/widgets/pimmessagebox.h>
 
 #include <KXMLGUIFactory>
 
@@ -68,7 +68,7 @@ KOEventView::~KOEventView()
 
 KOEventPopupMenu *KOEventView::eventPopup()
 {
-  KOEventPopupMenu *eventPopup = new KOEventPopupMenu( calendar(), this );
+  KOEventPopupMenu *eventPopup = new KOEventPopupMenu( calendar().data(), this );
 
   connect( eventPopup, SIGNAL(editIncidenceSignal(Akonadi::Item)),
            SIGNAL(editIncidenceSignal(Akonadi::Item)));
@@ -170,7 +170,7 @@ void KOEventView::defaultAction( const Akonadi::Item &aitem )
     return;
   }
 
-  if ( !calendar()->hasChangeRights( aitem ) ) {
+  if ( !calendar()->hasRight( aitem, Akonadi::Collection::CanChangeItem ) ) {
     emit showIncidenceSignal( aitem );
   } else {
     emit editIncidenceSignal( aitem );

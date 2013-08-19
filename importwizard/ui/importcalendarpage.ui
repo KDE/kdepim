@@ -46,7 +46,7 @@
   <customwidget>
    <class>KPIM::CustomLogWidget</class>
    <extends>QWidget</extends>
-   <header location="global">libkdepim/customlogwidget.h</header>
+   <header location="global">libkdepim/widgets/customlogwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,43 +16,55 @@
 */
 
 #include "selectiontypedialog.h"
-#include "selecttypewidget.h"
+#include "selectiontypetreewidget.h"
 
 #include <KLocale>
 #include <QHBoxLayout>
 
 SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
-  :KDialog(parent)
+    :KDialog(parent)
 {
-  setCaption( i18n( "Select Type" ) );
-  setButtons( Ok|Cancel );
-  setDefaultButton( Ok );
-  setModal( true );
-  QWidget *mainWidget = new QWidget( this );
-  QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
-  mainLayout->setSpacing( KDialog::spacingHint() );
-  mainLayout->setMargin( KDialog::marginHint() );
-  mWidget = new SelectTypeWidget(this);
-  mainLayout->addWidget(mWidget);
-  setMainWidget( mainWidget );
-  enableButtonOk(false);
-  connect(mWidget,SIGNAL(itemSelected(bool)),SLOT(slotItemSelected(bool)));
-
+    setCaption( i18n( "Select Type" ) );
+    setButtons( Ok|Cancel );
+    setDefaultButton( Ok );
+    setModal( true );
+    QWidget *mainWidget = new QWidget( this );
+    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
+    mainLayout->setSpacing( KDialog::spacingHint() );
+    mainLayout->setMargin( KDialog::marginHint() );
+    mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
+    mainLayout->addWidget(mSelectionTreeWidget);
+    setMainWidget(mainWidget);
+    resize(600, 400);
 }
 
 SelectionTypeDialog::~SelectionTypeDialog()
 {
-
 }
 
-void SelectionTypeDialog::slotItemSelected(bool selected)
+Utils::StoredTypes SelectionTypeDialog::kmailTypesSelected(int &numberOfStep) const
 {
-  enableButtonOk(selected);
+    return mSelectionTreeWidget->kmailStoredType(numberOfStep);
 }
 
-BackupMailUtil::BackupTypes SelectionTypeDialog::backupTypesSelected(int &numberOfStep) const
+Utils::StoredTypes SelectionTypeDialog::kaddressbookTypesSelected(int &numberOfStep) const
 {
-  return mWidget->backupTypesSelected(numberOfStep);
+    return mSelectionTreeWidget->kaddressbookStoredType(numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeDialog::kalarmTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->kalarmStoredType(numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeDialog::korganizerTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->korganizerStoredType(numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeDialog::kjotsTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->kjotsStoredType(numberOfStep);
 }
 
 #include "selectiontypedialog.moc"

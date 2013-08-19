@@ -43,15 +43,15 @@ class QListWidget;
 class KNoteTip : public QFrame
 {
   public:
-    KNoteTip( QListWidget *parent );
+    explicit KNoteTip( QListWidget *parent );
     ~KNoteTip();
 
     void setNote( KNotesIconViewItem *item );
 
   protected:
-    virtual bool eventFilter( QObject *, QEvent *e );
-    virtual void timerEvent( QTimerEvent * );
-    virtual void resizeEvent( QResizeEvent * );
+    bool eventFilter( QObject *, QEvent *e );
+    void timerEvent( QTimerEvent * );
+    void resizeEvent( QResizeEvent * );
 
   private:
     void setColor( const QColor &fg, const QColor &bg );

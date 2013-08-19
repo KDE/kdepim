@@ -24,49 +24,28 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>
-#include <calendarsupport/calendar.h>
-#include <calendarsupport/calendarmodel.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 #include <klocale.h>
 #include <ksystemtimezone.h>
 
 GroupwareUiDelegate::GroupwareUiDelegate()
-  : mCalendar( 0 )
 {
 }
 
-void GroupwareUiDelegate::setCalendar( CalendarSupport::Calendar *calendar )
+void GroupwareUiDelegate::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   mCalendar = calendar;
 }
 
 void GroupwareUiDelegate::createCalendar()
 {
-  Akonadi::Session *session = new Akonadi::Session( "GroupwareIntegration", this );
-  Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
-
-  Akonadi::ItemFetchScope scope;
-  scope.fetchFullPayload( true );
-
-  monitor->setSession( session );
-  monitor->setCollectionMonitored( Akonadi::Collection::root() );
-  monitor->fetchCollection( true );
-  monitor->setItemFetchScope( scope );
-  monitor->setMimeTypeMonitored( "text/calendar" );
-  monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
-  monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
-  monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
-
-  CalendarSupport::CalendarModel *calendarModel =
-    new CalendarSupport::CalendarModel( monitor, this );
-  calendarModel->setObjectName( "Groupware calendar model" );
-
-  mCalendar = new CalendarSupport::Calendar( calendarModel, calendarModel,
-                                             KSystemTimeZones::local() );
+  QStringList mimeTypes;
+  mimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType();
+  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar( mimeTypes ) );
   mCalendar->setObjectName( "Groupware calendar" );
-  mCalendar->setOwner( KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                         CalendarSupport::KCalPrefs::instance()->email() ) );
+  mCalendar->setOwner( KCalCore::Person::Ptr( new KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
+                                         CalendarSupport::KCalPrefs::instance()->email() ) ) );
 }
 
 void GroupwareUiDelegate::requestIncidenceEditor( const Akonadi::Item &item )

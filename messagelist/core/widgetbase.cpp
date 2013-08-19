@@ -171,6 +171,7 @@ Widget::Widget( QWidget *pParent )
   d->mStatusFilterCombo = new KComboBox( this ) ;
   d->mStatusFilterCombo->setVisible( Settings::self()->showQuickSearch() );
   d->mStatusFilterCombo->setMaximumWidth(300);
+  defaultFilterStatus();
   g->addWidget( d->mStatusFilterCombo, 0, 2 );
 
   // The "Open Full Search" button
@@ -246,63 +247,71 @@ void Widget::changeQuicksearchVisibility(bool show)
   Settings::self()->setShowQuickSearch( show );
 }
 
+void Widget::defaultFilterStatus()
+{
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "system-run" )), i18n( "Any Status" ), 0 );
+
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-unread" )),
+                                    i18nc( "@action:inmenu Status of a message", "Unread" ),
+                                    Akonadi::MessageStatus::statusUnread().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-replied" )),
+                                    i18nc( "@action:inmenu Status of a message", "Replied" ),
+                                    Akonadi::MessageStatus::statusReplied().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-forwarded" )),
+                                    i18nc( "@action:inmenu Status of a message", "Forwarded" ),
+                                    Akonadi::MessageStatus::statusForwarded().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "emblem-important" )),
+                                    i18nc( "@action:inmenu Status of a message", "Important"),
+                                    Akonadi::MessageStatus::statusImportant().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-task" )),
+                                    i18nc( "@action:inmenu Status of a message", "Action Item" ),
+                                    Akonadi::MessageStatus::statusToAct().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) ),
+                                    i18nc( "@action:inmenu Status of a message", "Watched" ),
+                                    Akonadi::MessageStatus::statusWatched().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) ),
+                                    i18nc( "@action:inmenu Status of a message", "Ignored" ),
+                                    Akonadi::MessageStatus::statusIgnored().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-attachment" )),
+                                    i18nc( "@action:inmenu Status of a message", "Has Attachment" ),
+                                    Akonadi::MessageStatus::statusHasAttachment().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-invitation" )),
+                                    i18nc( "@action:inmenu Status of a message", "Has Invitation" ),
+                                    Akonadi::MessageStatus::statusHasInvitation().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-mark-junk" )),
+                                    i18nc( "@action:inmenu Status of a message", "Spam" ),
+                                    Akonadi::MessageStatus::statusSpam().toQInt32() );
+
+    d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-mark-notjunk" )),
+                                    i18nc( "@action:inmenu Status of a message", "Ham" ),
+                                    Akonadi::MessageStatus::statusHam().toQInt32() );
+    d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
+}
+
 void Widget::populateStatusFilterCombo()
 {
-  d->mStatusFilterCombo->clear();
+  const int currentIndex = (d->mStatusFilterCombo->currentIndex() != -1) ?  d->mStatusFilterCombo->currentIndex() : 0;
+  disconnect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(statusSelected(int)) );
 
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "system-run" )), i18n( "Any Status" ), 0 );
+  for (int i = d->mFirstTagInComboIndex; i < d->mStatusFilterCombo->count(); ++i) {
+      d->mStatusFilterCombo->removeItem(i);
+  }
 
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-unread" )),
-                                  i18nc( "@action:inmenu Status of a message", "Unread" ),
-                                  Akonadi::MessageStatus::statusUnread().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-replied" )),
-                                  i18nc( "@action:inmenu Status of a message", "Replied" ),
-                                  Akonadi::MessageStatus::statusReplied().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-forwarded" )),
-                                  i18nc( "@action:inmenu Status of a message", "Forwarded" ),
-                                  Akonadi::MessageStatus::statusForwarded().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "emblem-important" )),
-                                  i18nc( "@action:inmenu Status of a message", "Important"),
-                                  Akonadi::MessageStatus::statusImportant().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-task" )),
-                                  i18nc( "@action:inmenu Status of a message", "Action Item" ),
-                                  Akonadi::MessageStatus::statusToAct().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-watch.png" ) ) ),
-                                  i18nc( "@action:inmenu Status of a message", "Watched" ),
-                                  Akonadi::MessageStatus::statusWatched().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( QIcon( KStandardDirs::locate( "data", QLatin1String( "messagelist/pics/mail-thread-ignored.png" ) ) ),
-                                  i18nc( "@action:inmenu Status of a message", "Ignored" ),
-                                  Akonadi::MessageStatus::statusIgnored().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-attachment" )),
-                                  i18nc( "@action:inmenu Status of a message", "Has Attachment" ),
-                                  Akonadi::MessageStatus::statusHasAttachment().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-invitation" )),
-                                  i18nc( "@action:inmenu Status of a message", "Has Invitation" ),
-                                  Akonadi::MessageStatus::statusHasInvitation().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-mark-junk" )),
-                                  i18nc( "@action:inmenu Status of a message", "Spam" ),
-                                  Akonadi::MessageStatus::statusSpam().toQInt32() );
-
-  d->mStatusFilterCombo->addItem( SmallIcon(QLatin1String( "mail-mark-notjunk" )),
-                                  i18nc( "@action:inmenu Status of a message", "Ham" ),
-                                  Akonadi::MessageStatus::statusHam().toQInt32() );
-
-  d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
   fillMessageTagCombo( d->mStatusFilterCombo );
 
-  disconnect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)),
-             this, SLOT(statusSelected(int)) );
   connect( d->mStatusFilterCombo, SIGNAL(currentIndexChanged(int)),
            this, SLOT(statusSelected(int)) );
+
+  d->mStatusFilterCombo->setCurrentIndex(currentIndex>=d->mStatusFilterCombo->count() ? 0 : currentIndex );
 }
 
 MessageItem *Widget::currentMessageItem() const
@@ -393,10 +402,12 @@ void Widget::saveCurrentSelection()
   {
     // Save the current selection
     MessageItem * lastSelectedMessageItem = d->mView->currentMessageItem( false );
-    Manager::instance()->savePreSelectedMessageForStorageModelId(
+    if ( lastSelectedMessageItem ) {
+      Manager::instance()->savePreSelectedMessageForStorageModelId(
         d->mLastStorageModelId,
         lastSelectedMessageItem ? lastSelectedMessageItem->uniqueId() : 0
       );
+    }
   }
 }
 
@@ -411,8 +422,7 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
   d->setDefaultSortOrderForStorageModel( storageModel );
 
   if(!d->mLockSearch->isChecked()) {
-      if ( d->mSearchTimer )
-      {
+      if ( d->mSearchTimer ) {
           d->mSearchTimer->stop();
           delete d->mSearchTimer;
           d->mSearchTimer = 0;
@@ -524,7 +534,7 @@ void Widget::themeSelected( bool )
     return;
 
   QVariant v = act->data();
-  QString id = v.toString();
+  const QString id = v.toString();
 
   if ( id.isEmpty() )
     return;
@@ -570,8 +580,7 @@ void Widget::aggregationMenuAboutToShow(KMenu *menu)
 
   QList<Aggregation * >::ConstIterator endagg( sortedAggregations.constEnd() );
 
-  for ( QList< Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != endagg; ++it )
-  {
+  for ( QList< Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != endagg; ++it ) {
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );
     grp->addAction( act );
@@ -654,8 +663,7 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
 
   options = SortOrder::enumerateMessageSortingOptions( d->mAggregation->threading() );
   QList< QPair< QString, int > >::ConstIterator end( options.constEnd() );
-  for ( it = options.constBegin(); it != end; ++it )
-  {
+  for ( it = options.constBegin(); it != end; ++it ) {
     act = menu->addAction( ( *it ).first );
     act->setCheckable( true );
     grp->addAction( act );
@@ -668,14 +676,12 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
 
   options = SortOrder::enumerateMessageSortDirectionOptions( d->mSortOrder.messageSorting() );
 
-  if ( options.size() >= 2 )
-  {
+  if ( options.size() >= 2 ) {
     menu->addTitle( i18n( "Message Sort Direction" ) );
 
     grp = new QActionGroup( menu );
     end = options.constEnd();
-    for ( it = options.constBegin(); it != end; ++it )
-    {
+    for ( it = options.constBegin(); it != end; ++it ) {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
       grp->addAction( act );
@@ -689,15 +695,13 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
 
   options = SortOrder::enumerateGroupSortingOptions( d->mAggregation->grouping() );
 
-  if ( options.size() >= 2 )
-  {
+  if ( options.size() >= 2 ) {
     menu->addTitle( i18n( "Group Sort Order" ) );
 
     grp = new QActionGroup( menu );
 
     end = options.constEnd();
-    for ( it = options.constBegin(); it != end; ++it )
-    {
+    for ( it = options.constBegin(); it != end; ++it ) {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
       grp->addAction( act );
@@ -712,14 +716,12 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
   options = SortOrder::enumerateGroupSortDirectionOptions( d->mAggregation->grouping(),
                                                            d->mSortOrder.groupSorting() );
 
-  if ( options.size() >= 2 )
-  {
+  if ( options.size() >= 2 ) {
     menu->addTitle( i18n( "Group Sort Direction" ) );
 
     grp = new QActionGroup( menu );
     end = options.constEnd();
-    for ( it = options.constBegin(); it != end; ++it )
-    {
+    for ( it = options.constBegin(); it != end; ++it ) {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
       grp->addAction( act );

@@ -40,8 +40,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2010-07-22</date>
-<releaseinfo>1.7.0 (&kde; 4.5)</releaseinfo>
+<date>2013-05-25</date>
+<releaseinfo>4.11 (&kde; 4.11)</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
@@ -173,7 +173,7 @@ regularly.</para>
 <itemizedlist>
 <listitem><para>
 Go to the menu <guimenu>Feed</guimenu> and choose <guimenuitem>Add
-Feed...</guimenuitem> or use the default keyboard shortcut (<keycap>Insert</keycap>).
+Feed...</guimenuitem> or use the default keyboard shortcut (<keycap>Ins</keycap>).
 The following dialog appears, with an input line labeled <guilabel>Feed
 URL:</guilabel>.
 <screenshot>
@@ -208,10 +208,10 @@ Now Slashdot has been added to your feed list.
 </itemizedlist>
 <para>
 There are multiple other ways to find and add interesting feeds. Within &kde;,
-websites browsed with &konqueror; will display the recognizable &quot;RSS
-lozenge&quot;<inlinemediaobject>
+websites browsed with &konqueror; will display the recognizable &quot;RSS&quot; 
+icon <inlinemediaobject>
   <imageobject>
-    <imagedata fileref="rss3.png" format="PNG"/>
+    <imagedata fileref="feed.png" format="PNG"/>
   </imageobject>
     </inlinemediaobject>in the bottom-right if a compatible news feed is
 detected at the website. Just left-click on the icon and choose
@@ -223,12 +223,12 @@ detected at the website. Just left-click on the icon and choose
 <textobject><phrase>Automatically finding feeds through &konqueror;</phrase></textobject>
 </mediaobject>
 </screenshot>
-On pages with this RSS icon<inlinemediaobject>
+On pages with this &quot;RSS&quot; or this icon<inlinemediaobject>
   <imageobject>
     <imagedata fileref="rss.png" format="PNG"/>
   </imageobject>
     </inlinemediaobject>, right-click on the icon and choose in the context
-    menu <guimenuitem>Add Feed to &akregator;</guimenuitem>:
+    menu <guimenuitem>Copy Link Address</guimenuitem>:
     <screenshot>
       <screeninfo>Automatically finding feeds through &konqueror;</screeninfo>
       <mediaobject>
@@ -238,6 +238,13 @@ On pages with this RSS icon<inlinemediaobject>
             &konqueror;</phrase></textobject>
 </mediaobject>
 </screenshot>
+</para>
+<para>Switch to &akregator;, select <guimenuitem>Add Feed...</guimenuitem> and the 
+<guilabel>Feed URL</guilabel> is filled out with the link address.
+</para>
+
+<para>All feeds added using this procedures appear under <guilabel>Imported Feeds</guilabel> folder 
+in the feed list, and from there you can use your mouse to drag it to a different folder.
 </para>
 </sect1>
 
@@ -382,7 +389,24 @@ aggregators not using caching increases the costs for providers and may decrease
 
 </sect1>
 
- <!--FIXME Share Services Tab missing-->
+<sect1 id="share-services-tab">
+<title>Share Services</title>
+<para>This feature uses &plasma;'s microblog service to help you to share news 
+with your friends using the microblog services (identi.ca and twitter). 
+The post will have the title of the article and a link to it</para>
+<screenshot>
+<screeninfo>The Share Services tab</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="share-services-tab.png" format="PNG" /></imageobject>
+<textobject><phrase>The Share Services tab</phrase></textobject>
+</mediaobject>
+</screenshot>
+
+<para>Select a <guilabel>Service URL</guilabel> and enter your <guilabel>Username</guilabel>
+for this service.
+</para>
+
+</sect1>
  
 <sect1 id="archive-tab">
 <title>Archive</title>
@@ -608,7 +632,8 @@ are not sure about their effect, you can just leave the default ones.</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Archive backend:</guilabel></term>
-<listitem><para>&akregator; currently only uses the Metakit database but for &kde; 4, &akregator; will offer other database backends.</para>
+<listitem><para>&akregator; currently only uses the Metakit database.
+<!--but for &kde; 4, &akregator; will offer other database backends--></para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -648,7 +673,7 @@ article as read after a specified number of seconds.</para>
 <title>Menus and Shortcut Keys</title>
 
 <sect2>
-<title>The <guimenu>File</guimenu> Menu</title>
+<title>The File Menu</title>
 
 <variablelist>
 <varlistentry>
@@ -656,7 +681,9 @@ article as read after a specified number of seconds.</para>
 <guimenu>File</guimenu>
 <guimenuitem>Import feeds...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Open</action> the import feeds dialog</para></listitem>
+<listitem><para><action>Open</action> the import feeds dialog to load <quote>OPML Outlines</quote> 
+with feed subscriptions.
+</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -664,7 +691,8 @@ article as read after a specified number of seconds.</para>
 <guimenu>File</guimenu>
 <guimenuitem>Export feeds...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Open</action> the save as dialog</para></listitem>
+<listitem><para><action>Open</action> the save as dialog and export your feeds and folder structure
+as <filename class="extension">.opml</filename> file.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -682,7 +710,7 @@ article as read after a specified number of seconds.</para>
 </sect2>
 
 <sect2>
-<title>The <guimenu>Edit</guimenu> Menu</title>
+<title>The Edit Menu</title>
 
 <variablelist>
 <varlistentry>
@@ -699,7 +727,7 @@ the Properties dialog</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;<keycap>Delete</keycap></keycombo>
+<keycombo action="simul">&Alt;<keycap>Del</keycap></keycombo>
 </shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Delete feed</guimenuitem>
@@ -711,7 +739,7 @@ the Properties dialog</para></listitem>
 </sect2>
 
 <sect2>
-<title>The <guimenu>View</guimenu> Menu</title>
+<title>The View Menu</title>
 
 <variablelist>
 <varlistentry>
@@ -734,7 +762,7 @@ action="simul">&Ctrl;&Shift;<keycap>3</keycap></keycombo></shortcut>
 <shortcut><keycombo
 action="simul">&Ctrl;<keycap>+</keycap></keycombo></shortcut>
 <guimenu>View</guimenu>
-<guimenuitem>Increase Font Sizes</guimenuitem>
+<guimenuitem>Enlarge Font</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Increase</action> the font size in the article
 viewer</para>
@@ -745,7 +773,7 @@ viewer</para>
 <shortcut><keycombo
 action="simul">&Ctrl;<keycap>-</keycap></keycombo></shortcut>
 <guimenu>View</guimenu>
-<guimenuitem>Decrease Font Sizes</guimenuitem>
+<guimenuitem>Shrink Font</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Decrease</action> the font size in the article
 viewer</para>
@@ -756,7 +784,7 @@ viewer</para>
 </sect2>
 
 <sect2>
-<title>The <guimenu>Go</guimenu> Menu</title>
+<title>The Go Menu</title>
 
 <variablelist>
 <varlistentry>
@@ -838,12 +866,12 @@ list</para></listitem>
 </sect2>
 
 <sect2>
-<title>The <guimenu>Feed</guimenu> Menu</title>
+<title>The Feed Menu</title>
 
 <variablelist>
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycap>Insert</keycap></shortcut>
+<shortcut><keycap>Ins</keycap></shortcut>
 <guimenu>Feed</guimenu>
 <guimenuitem>Add Feed...</guimenuitem>
 </menuchoice></term>
@@ -852,7 +880,7 @@ list</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <shortcut><keycombo
-action="simul">&Shift;<keycap>Insert</keycap></keycombo></shortcut>
+action="simul">&Shift;<keycap>Ins</keycap></keycombo></shortcut>
 <guimenu>Feed</guimenu>
 <guimenuitem>New Folder...</guimenuitem>
 </menuchoice></term>
@@ -896,7 +924,7 @@ action="simul">&Ctrl;<keycap>L</keycap></keycombo></shortcut>
 </varlistentry>
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycap>Escape</keycap></shortcut>
+<shortcut><keycap>Esc</keycap></shortcut>
 <guimenu>Feed</guimenu>
 <guimenuitem>Abort Fetches</guimenuitem>
 </menuchoice></term>
@@ -908,7 +936,7 @@ feeds</para></listitem>
 </sect2>
 
 <sect2>
-<title>The <guimenu>Article</guimenu> Menu</title>
+<title>The Article Menu</title>
 
 <variablelist>
 <varlistentry>
@@ -920,6 +948,18 @@ action="simul">&Shift;<keycap>Return</keycap></keycombo></shortcut>
 </menuchoice></term>
 <listitem><para><action>Open</action> the current article in a
 tab within &akregator;</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice>
+<shortcut><keycap>Return</keycap></shortcut>
+<guimenu>Article</guimenu>
+<guimenuitem>Open in Background Tab</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Load</action> the current article in
+into a new tab, but not automatically activate that tab. 
+That is useful to browse a feed, open all interesting articles into background 
+tabs and later read them all.
+</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><menuchoice>
@@ -947,11 +987,13 @@ important</para></listitem>
 <guimenuitem>Mark as</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Mark</action> the current article as
-Read, New or Unread</para></listitem>
+Read <keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo>, 
+New <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo> or 
+Unread <keycombo action="simul">&Ctrl;<keycap>U</keycap></keycombo></para></listitem>
 </varlistentry>
 <varlistentry>
 <term><menuchoice>
-<shortcut><keycap>Delete</keycap></shortcut>
+<shortcut><keycap>Del</keycap></shortcut>
 <guimenu>Article</guimenu>
 <guimenuitem>Delete</guimenuitem>
 </menuchoice></term>
@@ -974,34 +1016,25 @@ in the mail.</para></listitem>
 in the mail.
 </para></listitem>
 </varlistentry>
-<!--FIXME Share Article missing-->
+<varlistentry>
+<term><menuchoice>
+<shortcut><keycombo
+action="simul">&Ctrl;<keycap>S</keycap></keycombo></shortcut>
+<guimenu>Article</guimenu>
+<guimenuitem>Share Article</guimenuitem>
+</menuchoice></term>
+<listitem><para>Use this action you to share news 
+ with your friends using the microblog services identi.ca and twitter.
+</para></listitem>
+</varlistentry>
 </variablelist>
 
 </sect2>
 
 <sect2>
-<title>The <guimenu>Settings</guimenu> Menu</title>
+<title>The Settings Menu</title>
 
 <variablelist>
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guisubmenu>Toolbars Shown</guisubmenu>
-</menuchoice></term>
-<listitem><para><action>Toggle</action> the toolbars</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice><shortcut><keycombo
-action="simul">&Ctrl;<keycap>M</keycap></keycombo></shortcut>
-<guimenu>Settings</guimenu>
-<guimenuitem>Show Menubar</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Toggle</action> the menubar. To display a hidden menubar
-press the shortcut <keycombo
-action="simul">&Ctrl;<keycap>M</keycap></keycombo>.</para></listitem>
-</varlistentry> 
-
 <varlistentry>
 <term><menuchoice>
 <guimenu>Settings</guimenu>
@@ -1018,52 +1051,21 @@ action="simul">&Ctrl;<keycap>M</keycap></keycombo>.</para></listitem>
 </para></listitem>
 </varlistentry>
 
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Shortcuts...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Open</action> standard &kde; setting dialog that allows
-you to choose different shortcut keys for different actions
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Toolbars...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Configure</action> the items you want to put in the
-toolbar
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure Notifications...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Display</action> the Notifications Settings dialog
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure &akregator;...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Display</action> the &akregator; settings dialog
-</para></listitem>
-</varlistentry>
-
 </variablelist>
 
+<para>
+Additionally &akregator; has the common &kde; <guimenu>Settings</guimenu> and <guimenu>Help</guimenu>
+menu items, for more information read the sections about the <ulink url="help:/fundamentals/ui.html#menus-settings"
+>Settings Menu</ulink> and <ulink url="help:/fundamentals/ui.html#menus-help">Help Menu</ulink>
+of the &kde; Fundamentals.
+</para>
+
+<para>Many actions provided in the menu are also available in the context menus of the feed list, 
+the article list and the article viewer.
+</para>
+
 </sect2>
 
-<sect2>
-<title>The <guimenu>Help</guimenu> Menu</title>
-&help.menu.documentation;
-</sect2>
 </sect1>
 </chapter>
 
@@ -1075,8 +1077,7 @@ toolbar
 &akregator;
 </para>
 <para>
-Program copyright 2004-2006 Frank Osterfeld
-<email>frank.osterfeld@kdemail.net</email> 
+Program copyright 2004-2010 Akregator authors
 </para>
 
 <para>

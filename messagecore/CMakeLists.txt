@@ -11,47 +11,48 @@ include_directories( ${Boost_INCLUDE_DIR}
 
 ########### next target ###############
 
-configure_file(messagetag.ontology.in ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology)
+configure_file(ontology/messagetag.ontology.in ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology)
 
-install(FILES  messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology DESTINATION ${CMAKE_INSTALL_PREFIX}/share/ontology/kde)
+install(FILES  ontology/messagetag.trig ${CMAKE_CURRENT_BINARY_DIR}/messagetag.ontology DESTINATION ${CMAKE_INSTALL_PREFIX}/share/ontology/kde)
 
 
 
 set(messagecore_LIB_SRCS
 
-   asyncnepomukresourceretriever.cpp
-   attachmentcollector.cpp
-   imagecollector.cpp
-   attachmentcompressjob.cpp
-   attachmentfromfolderjob.cpp
-   attachmentfrommimecontentjob.cpp
-   attachmentfromurlbasejob.cpp
-   attachmentfromurljob.cpp
-   attachmentloadjob.cpp
-   attachmentpart.cpp
-   attachmentpropertiesdialog.cpp
-   emailaddressrequester.cpp
-   globalsettings.cpp
-   mailinglist.cpp
-   mdnstateattribute.cpp
-   messagehelpers.cpp
-   nodehelper.cpp
-   stringutil.cpp
+   nepomukutil/asyncnepomukresourceretriever.cpp
+   misc/imagecollector.cpp
+   attachment/attachmentcollector.cpp
+   attachment/attachmentcompressjob.cpp
+   attachment/attachmentfromfolderjob.cpp
+   attachment/attachmentfrommimecontentjob.cpp
+   attachment/attachmentfromurlbasejob.cpp
+   attachment/attachmentfromurljob.cpp
+   attachment/attachmentloadjob.cpp
+   attachment/attachmentpart.cpp
+   attachment/attachmentpropertiesdialog.cpp
+   widgets/emailaddressrequester.cpp
+   settings/globalsettings.cpp
+   misc/mailinglist.cpp
+   misc/mdnstateattribute.cpp
+   helpers/messagehelpers.cpp
+   helpers/nodehelper.cpp
+   utils/stringutil.cpp
 )
 
 if (NOT WINCE)
   set(messagecore_LIB_SRCS
      ${messagecore_LIB_SRCS}
-     annotationdialog.cpp
+     widgets/annotationdialog.cpp
   )
-endif (NOT WINCE)
+endif ()
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS
-  globalsettings_base.kcfgc
+  settings/globalsettings_base.kcfgc
 )
 
 kde4_add_ui_files(messagecore_LIB_SRCS
-  attachmentpropertiesdialog.ui
+  attachment/attachmentpropertiesdialog.ui
+  attachment/attachmentpropertiesdialog_readonly.ui
 )
 
 kde4_add_library(messagecore ${LIBRARY_TYPE} ${messagecore_LIB_SRCS})

@@ -24,6 +24,7 @@
 #include "qstring.h"
 
 class KMMainWidget;
+class KToggleAction;
 namespace KPIM {
    class StatusbarProgressWidget;
    class ProgressDialog;
@@ -38,7 +39,7 @@ class KMMainWin : public KXmlGuiWindow
 public:
   // the main window needs to have a name since else restoring the window
   // settings by kwin doesn't work
-  KMMainWin(QWidget *parent = 0);
+  explicit KMMainWin(QWidget *parent = 0);
   virtual ~KMMainWin();
   KMMainWidget *mainKMWidget() const { return mKMMainWidget; }
   StatusbarProgressWidget* progressWidget() const { return mLittleProgress; }
@@ -68,11 +69,13 @@ protected slots:
 
 private slots:
   void slotNewMailReader();
+  void slotToggleMenubar(bool dontShowWarning = false);
 
 private:
   KMMainWidget *mKMMainWidget;
   StatusbarProgressWidget *mLittleProgress;
   ProgressDialog *mProgressDialog;
+  KToggleAction *mHideMenuBarAction;
   bool mReallyClose;
 };
 

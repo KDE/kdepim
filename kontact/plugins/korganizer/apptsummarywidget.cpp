@@ -29,18 +29,11 @@
 
 #include "korganizer/korganizerinterface.h"
 
-#include <calendarsupport/calendar.h>
-#include <calendarsupport/calendaradaptor.h>
-#include <calendarsupport/calendarmodel.h>
-#include <calendarsupport/groupware.h>
-#include <calendarsupport/incidencechanger.h>
 #include <calendarsupport/utils.h>
+#include <calendarsupport/calendarsingleton.h>
 
 #include <Akonadi/Collection>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/Session>
+#include <Akonadi/Calendar/IncidenceChanger>
 
 #include <KCalCore/Calendar>
 #include <KCalCore/Event>
@@ -59,14 +52,14 @@
 #include <QVBoxLayout>
 
 ApptSummaryWidget::ApptSummaryWidget( KOrganizerPlugin *plugin, QWidget *parent )
-  : KontactInterface::Summary( parent ), mCalendar( 0 ), mPlugin( plugin )
+  : KontactInterface::Summary( parent ), mPlugin( plugin )
 {
   QVBoxLayout *mainLayout = new QVBoxLayout( this );
   mainLayout->setSpacing( 3 );
   mainLayout->setMargin( 3 );
 
   QWidget *header = createHeader(
-    this, "view-calendar-upcoming-events", i18n( "Upcoming Events" ) );
+    this, QLatin1String("view-calendar-upcoming-events"), i18n( "Upcoming Events" ) );
   mainLayout->addWidget( header );
 
   mLayout = new QGridLayout();
@@ -74,11 +67,13 @@ ApptSummaryWidget::ApptSummaryWidget( KOrganizerPlugin *plugin, QWidget *parent 
   mLayout->setSpacing( 3 );
   mLayout->setRowStretch( 6, 1 );
 
-  createCalendar();
+  QStringList mimeTypes;
+  mimeTypes << KCalCore::Event::eventMimeType();
+  mCalendar = CalendarSupport::calendarSingleton();
 
-  mChanger = new CalendarSupport::IncidenceChanger( mCalendar, parent );
+  mChanger = new Akonadi::IncidenceChanger( parent );
 
-  connect( mCalendar, SIGNAL(calendarChanged()), this, SLOT(updateView()) );
+  connect( mCalendar.data(), SIGNAL(calendarChanged()), this, SLOT(updateView()) );
   connect( mPlugin->core(), SIGNAL(dayChanged(QDate)), this, SLOT(updateView()) );
 
   // Update Configuration
@@ -91,7 +86,7 @@ ApptSummaryWidget::~ApptSummaryWidget()
 
 void ApptSummaryWidget::configUpdated()
 {
-  KConfig config( "kcmapptsummaryrc" );
+  KConfig config( QLatin1String("kcmapptsummaryrc") );
 
   KConfigGroup group = config.group( "Days" );
   mDaysAhead = group.readEntry( "DaysToShow", 7 );
@@ -123,107 +118,101 @@ void ApptSummaryWidget::updateView()
   QLabel *label = 0;
   int counter = 0;
 
-  KIconLoader loader( "korganizer" );
-  QPixmap pm = loader.loadIcon( "view-calendar-day", KIconLoader::Small );
-  QPixmap pmb = loader.loadIcon( "view-calendar-birthday", KIconLoader::Small );
-  QPixmap pma = loader.loadIcon( "view-calendar-wedding-anniversary", KIconLoader::Small );
+  KIconLoader loader( QLatin1String("korganizer") );
+  QPixmap pm = loader.loadIcon( QLatin1String("view-calendar-day"), KIconLoader::Small );
+  QPixmap pmb = loader.loadIcon( QLatin1String("view-calendar-birthday"), KIconLoader::Small );
+  QPixmap pma = loader.loadIcon( QLatin1String("view-calendar-wedding-anniversary"), KIconLoader::Small );
 
   QStringList uidList;
   SummaryEventInfo::setShowSpecialEvents( mShowBirthdaysFromCal,
                                           mShowAnniversariesFromCal );
   QDate currentDate = QDate::currentDate();
-  QDate dt;
-  for ( dt = currentDate;
-        dt <= currentDate.addDays( mDaysAhead - 1 );
-        dt = dt.addDays( 1 ) ) {
 
-    SummaryEventInfo::List events = SummaryEventInfo::eventsForDate( dt, mCalendarAdaptor );
+  SummaryEventInfo::List events = SummaryEventInfo::eventsForRange( currentDate, currentDate.addDays( mDaysAhead - 1 ), mCalendar );
 
-    foreach ( SummaryEventInfo *event, events ) {
+  foreach ( SummaryEventInfo *event, events ) {
 
-      // Optionally, show only my Events
+    // Optionally, show only my Events
 /*      if ( mShowMineOnly &&
-            !KCalCore::CalHelper::isMyCalendarIncidence( mCalendarAdaptor, event->ev ) ) {
-        continue;
-      }
-      TODO: CalHelper is deprecated, remove this?
+          !KCalCore::CalHelper::isMyCalendarIncidence( mCalendarAdaptor, event->ev ) ) {
+      continue;
+    }
+    TODO: CalHelper is deprecated, remove this?
 */
 
-      KCalCore::Event::Ptr ev = event->ev;
-      // print the first of the recurring event series only
-      if ( ev->recurs() ) {
-        if ( uidList.contains( ev->uid() ) ) {
-          continue;
-        }
-        uidList.append( ev->uid() );
+    KCalCore::Event::Ptr ev = event->ev;
+    // print the first of the recurring event series only
+    if ( ev->recurs() ) {
+      if ( uidList.contains( ev->instanceIdentifier() ) ) {
+        continue;
       }
-
-      // Icon label
-      label = new QLabel( this );
-      if ( ev->categories().contains( "BIRTHDAY", Qt::CaseInsensitive ) ) {
-        label->setPixmap( pmb );
-      } else if ( ev->categories().contains( "ANNIVERSARY", Qt::CaseInsensitive ) ) {
-        label->setPixmap( pma );
-      } else {
-        label->setPixmap( pm );
-      }
-      label->setMaximumWidth( label->minimumSizeHint().width() );
-      mLayout->addWidget( label, counter, 0 );
-      mLabels.append( label );
-
-      // Start date or date span label
-      QString dateToDisplay = event->startDate;
-      if ( !event->dateSpan.isEmpty() ) {
-        dateToDisplay = event->dateSpan;
-      }
-      label = new QLabel( dateToDisplay, this );
-      label->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
-      mLayout->addWidget( label, counter, 1 );
-      mLabels.append( label );
-      if ( event->makeBold ) {
-        QFont font = label->font();
-        font.setBold( true );
-        label->setFont( font );
-      }
-
-      // Days to go label
-      label = new QLabel( event->daysToGo, this );
-      label->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
-      mLayout->addWidget( label, counter, 2 );
-      mLabels.append( label );
-
-      // Summary label
-      KUrlLabel *urlLabel = new KUrlLabel( this );
-      urlLabel->setText( event->summaryText );
-      urlLabel->setUrl( event->summaryUrl );
-      urlLabel->installEventFilter( this );
-      urlLabel->setTextFormat( Qt::RichText );
-      urlLabel->setWordWrap( true );
-      mLayout->addWidget( urlLabel, counter, 3 );
-      mLabels.append( urlLabel );
-
-      connect( urlLabel, SIGNAL(leftClickedUrl(QString)),
-               this, SLOT(viewEvent(QString)) );
-      connect( urlLabel, SIGNAL(rightClickedUrl(QString)),
-               this, SLOT(popupMenu(QString)) );
-      if ( !event->summaryTooltip.isEmpty() ) {
-        urlLabel->setToolTip( event->summaryTooltip );
-      }
-
-      // Time range label (only for non-floating events)
-      if ( !event->timeRange.isEmpty() ) {
-        label = new QLabel( event->timeRange, this );
-        label->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
-        mLayout->addWidget( label, counter, 4 );
-        mLabels.append( label );
-      }
-
-      counter++;
+      uidList.append( ev->instanceIdentifier() );
     }
 
-    qDeleteAll( events );
-    events.clear();
+    // Icon label
+    label = new QLabel( this );
+    if ( ev->categories().contains( QLatin1String("BIRTHDAY"), Qt::CaseInsensitive ) ) {
+      label->setPixmap( pmb );
+    } else if ( ev->categories().contains( QLatin1String("ANNIVERSARY"), Qt::CaseInsensitive ) ) {
+      label->setPixmap( pma );
+    } else {
+      label->setPixmap( pm );
+    }
+    label->setMaximumWidth( label->minimumSizeHint().width() );
+    mLayout->addWidget( label, counter, 0 );
+    mLabels.append( label );
+
+    // Start date or date span label
+    QString dateToDisplay = event->startDate;
+    if ( !event->dateSpan.isEmpty() ) {
+      dateToDisplay = event->dateSpan;
+    }
+    label = new QLabel( dateToDisplay, this );
+    label->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
+    mLayout->addWidget( label, counter, 1 );
+    mLabels.append( label );
+    if ( event->makeBold ) {
+      QFont font = label->font();
+      font.setBold( true );
+      label->setFont( font );
+    }
+
+    // Days to go label
+    label = new QLabel( event->daysToGo, this );
+    label->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
+    mLayout->addWidget( label, counter, 2 );
+    mLabels.append( label );
+
+    // Summary label
+    KUrlLabel *urlLabel = new KUrlLabel( this );
+    urlLabel->setText( event->summaryText );
+    urlLabel->setUrl( event->summaryUrl );
+    urlLabel->installEventFilter( this );
+    urlLabel->setTextFormat( Qt::RichText );
+    urlLabel->setWordWrap( true );
+    mLayout->addWidget( urlLabel, counter, 3 );
+    mLabels.append( urlLabel );
+
+    connect( urlLabel, SIGNAL(leftClickedUrl(QString)),
+              this, SLOT(viewEvent(QString)) );
+    connect( urlLabel, SIGNAL(rightClickedUrl(QString)),
+              this, SLOT(popupMenu(QString)) );
+    if ( !event->summaryTooltip.isEmpty() ) {
+      urlLabel->setToolTip( event->summaryTooltip );
+    }
+
+    // Time range label (only for non-floating events)
+    if ( !event->timeRange.isEmpty() ) {
+      label = new QLabel( event->timeRange, this );
+      label->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
+      mLayout->addWidget( label, counter, 4 );
+      mLabels.append( label );
+    }
+
+    counter++;
   }
+
+  qDeleteAll( events );
 
   if ( !counter ) {
     QLabel *noEvents = new QLabel(
@@ -242,12 +231,12 @@ void ApptSummaryWidget::updateView()
 
 void ApptSummaryWidget::viewEvent( const QString &uid )
 {
-  Akonadi::Item::Id id = mCalendar->itemIdForIncidenceUid( uid );
+  Akonadi::Item::Id id = mCalendar->item( uid ).id();
 
   if ( id != -1 ) {
-    mPlugin->core()->selectPlugin( "kontact_korganizerplugin" ); //ensure loaded
+    mPlugin->core()->selectPlugin( QLatin1String("kontact_korganizerplugin") ); //ensure loaded
     OrgKdeKorganizerKorganizerInterface korganizer(
-      "org.kde.korganizer", "/Korganizer", QDBusConnection::sessionBus() );
+      QLatin1String("org.kde.korganizer"), QLatin1String("/Korganizer"), QDBusConnection::sessionBus() );
     korganizer.editIncidence( QString::number( id ) );
   }
 }
@@ -267,17 +256,16 @@ void ApptSummaryWidget::popupMenu( const QString &uid )
 
   QAction *delIt = popup.addAction( i18n( "&Delete Appointment" ) );
   delIt->setIcon( KIconLoader::global()->
-                  loadIcon( "edit-delete", KIconLoader::Small ) );
+                  loadIcon( QLatin1String("edit-delete"), KIconLoader::Small ) );
 
-  Akonadi::Item::Id id = mCalendar->itemIdForIncidenceUid( uid );
-  Akonadi::Item eventItem = mCalendar->event( id );
-  delIt->setEnabled( mCalendar->hasDeleteRights( eventItem ) );
+  Akonadi::Item item = mCalendar->item( uid );
+  delIt->setEnabled( mCalendar->hasRight( item, Akonadi::Collection::CanDeleteItem ) );
 
   const QAction *selectedAction = popup.exec( QCursor::pos() );
   if ( selectedAction == editIt ) {
     viewEvent( uid );
   } else if ( selectedAction == delIt ) {
-    removeEvent( eventItem );
+    removeEvent( item );
   }
 }
 
@@ -298,32 +286,7 @@ bool ApptSummaryWidget::eventFilter( QObject *obj, QEvent *e )
 
 QStringList ApptSummaryWidget::configModules() const
 {
-  return QStringList( "kcmapptsummary.desktop" );
-}
-
-void ApptSummaryWidget::createCalendar()
-{
-  Akonadi::Session *session = new Akonadi::Session( "ApptsSummaryWidget", this );
-  Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
-
-  Akonadi::ItemFetchScope scope;
-  scope.fetchFullPayload( true );
-  scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
-
-  monitor->setSession( session );
-  monitor->setCollectionMonitored( Akonadi::Collection::root() );
-  monitor->fetchCollection( true );
-  monitor->setItemFetchScope( scope );
-  monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
-
-  CalendarSupport::CalendarModel *calendarModel =
-    new CalendarSupport::CalendarModel( monitor, this );
-
-  mCalendar = new CalendarSupport::Calendar(
-    calendarModel, calendarModel, KSystemTimeZones::local() );
-
-  mCalendarAdaptor = CalendarSupport::CalendarAdaptor::Ptr(
-    new CalendarSupport::CalendarAdaptor( mCalendar, this ) );
+  return QStringList()<< QLatin1String("kcmapptsummary.desktop");
 }
 
 #include "apptsummarywidget.moc"

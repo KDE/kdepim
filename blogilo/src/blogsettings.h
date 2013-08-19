@@ -33,7 +33,7 @@ class BlogSettings : public QWidget, public Ui::SettingsBlogsBase
 {
     Q_OBJECT
 public:
-    BlogSettings( QWidget *parent = 0 );
+    explicit BlogSettings( QWidget *parent = 0 );
     ~BlogSettings();
 
 signals:
@@ -54,6 +54,10 @@ private slots:
 
 private:
     void addBlogToList( const BilboBlog &blog );
+    enum BlogType {
+        BlogId = QTreeWidgetItem::UserType +1
+    };
+
 };
 
 #endif // SETTINGSBLOGS_H

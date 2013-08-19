@@ -17,14 +17,14 @@
 #include <klocale.h>
 #include <kio/job.h>
 
-#include <libkdepim/progressmanager.h>
+#include <libkdepim/progresswidget/progressmanager.h>
 
 #include "knarticle.h"
 #include "knglobals.h"
 #include "knnntpaccount.h"
 #include "scheduler.h"
 
-//Added by qt3to4:
+
 #include <QTimer>
 
 KNJobConsumer::KNJobConsumer()

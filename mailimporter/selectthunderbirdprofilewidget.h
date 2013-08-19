@@ -24,36 +24,36 @@
 #include <QMap>
 
 namespace Ui {
-  class SelectThunderbirdProfileWidget;
+class SelectThunderbirdProfileWidget;
 }
 
 class MAILIMPORTER_EXPORT SelectThunderbirdProfileWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit SelectThunderbirdProfileWidget(QWidget *parent = 0);
-  ~SelectThunderbirdProfileWidget();
+    explicit SelectThunderbirdProfileWidget(QWidget *parent = 0);
+    ~SelectThunderbirdProfileWidget();
 
-  void fillProfile(const QMap<QString,QString>& map, const QString&defaultProfile);
-  QString selectedProfile() const;
+    void fillProfile(const QMap<QString,QString>& map, const QString&defaultProfile);
+    QString selectedProfile() const;
 
 private:
-  Ui::SelectThunderbirdProfileWidget *ui;
+    Ui::SelectThunderbirdProfileWidget *ui;
 };
 
 
 class SelectThunderbirdProfileDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit SelectThunderbirdProfileDialog(QWidget *parent = 0);
-  ~SelectThunderbirdProfileDialog();
-  QString selectedProfile() const;
-  void fillProfile(const QMap<QString,QString>& map, const QString &defaultProfile);
+    explicit SelectThunderbirdProfileDialog(QWidget *parent = 0);
+    ~SelectThunderbirdProfileDialog();
+    QString selectedProfile() const;
+    void fillProfile(const QMap<QString,QString>& map, const QString &defaultProfile);
 
 private:
-  SelectThunderbirdProfileWidget *mSelectProfile;
+    SelectThunderbirdProfileWidget *mSelectProfile;
 };
 
 

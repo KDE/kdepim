@@ -55,7 +55,7 @@
 
 #include <akonadi/item.h>
 #include <akonadi/kmime/messagestatus.h>
-#include "messagecore/stringutil.h"
+#include "messagecore/utils/stringutil.h"
 
 #include <QApplication>
 #include <QTimer>
@@ -678,8 +678,7 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
 
   d->clear();
 
-  if ( d->mStorageModel )
-  {
+  if ( d->mStorageModel ) {
     disconnect( d->mStorageModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
                 this, SLOT(slotStorageModelRowsInserted(QModelIndex,int,int)) );
     disconnect( d->mStorageModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
@@ -907,47 +906,6 @@ void Model::abortMessagePreSelection()
   d->mUniqueIdOfLastSelectedMessageInFolder = 0;
   d->mLastSelectedMessageInFolder = 0;
 }
-
-void Model::activateMessageAfterLoading( unsigned long uniqueIdOfMessage, int row )
-{
-  Q_ASSERT( d->mLoading ); // you did it: read the docs in the header.
-
-  // Ok. we're still loading.
-  // We can have three cases now.
-
-  // 1) The message hasn't been read from the storage yet. We don't have a MessageItem for it.
-  //    We must then use the pre-selection mechanism to activate the message when loading finishes.
-  // 2) The message has already been read from the storage.
-  //    2a) We're in "disconnected UI" state or the message item is not viewable.
-  //        The Qt side of the model/view framework doesn't know about the MessageItem yet.
-  //        That is, we can't get a valid QModelIndex for the message.
-  //        We again must use the pre-selection method.
-  //    2b) No disconnected UI and MessageItem is viewable. Qt knows about it and we can
-  //        get the QModelIndex. We can select it NOW.
-
-  MessageItem * mi = messageItemByStorageRow( row );
-
-  if( mi )
-  {
-    if( mi->isViewable() && d->mModelForItemFunctions )
-    {
-      // No disconnected UI and the MessageItem is viewable. Activate it now.
-      d->mView->setCurrentMessageItem( mi );
-
-      // Also abort any pending pre-selection.
-      abortMessagePreSelection();
-      return;
-    }
-  }
-
-  // Use the pre-selection method.
-
-  d->mPreSelectionMode = PreSelectLastSelected;
-
-  d->mUniqueIdOfLastSelectedMessageInFolder = mi ? 0 : uniqueIdOfMessage;
-  d->mLastSelectedMessageInFolder = mi;
-}
-
 
 //
 // The "view fill" algorithm implemented in the functions below is quite smart but also quite complex.
@@ -3630,7 +3588,7 @@ static void resetStats()
   layoutChangeTime = 0;
   expandingTreeTime = 0;
   lastPass = -1;
-  for ( int i = 0; i < numberOfPasses; i++ ) {
+  for ( int i = 0; i < numberOfPasses; ++i ) {
     numElements[i] = 0;
     totalTime[i] = 0;
     chunks[i] = 0;
@@ -3644,7 +3602,7 @@ void ModelPrivate::printStatistics()
   using namespace Stats;
   int totalTotalTime = 0;
   int completeTime = firstStartTime.elapsed();
-  for ( int i = 0; i < numberOfPasses; i++ )
+  for ( int i = 0; i < numberOfPasses; ++i )
     totalTotalTime += totalTime[i];
 
   float msgPerSecond = totalMessages / ( totalTotalTime / 1000.0f );
@@ -3689,7 +3647,7 @@ void ModelPrivate::printStatistics()
   kDebug();
   kDebug() << "Now follows a breakdown of the jobs.";
   kDebug();
-  for ( int i = 0; i < numberOfPasses; i++ ) {
+  for ( int i = 0; i < numberOfPasses; ++i ) {
     if ( totalTime[i] == 0 )
       continue;
     float elementsPerSecond = numElements[i] / ( totalTime[i] / 1000.0f );

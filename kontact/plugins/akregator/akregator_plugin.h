@@ -36,7 +36,7 @@ class OrgKdeAkregatorPartInterface;
 class AkregatorUniqueAppHandler : public KontactInterface::UniqueAppHandler
 {
   public:
-    AkregatorUniqueAppHandler( KontactInterface::Plugin *plugin )
+    explicit AkregatorUniqueAppHandler( KontactInterface::Plugin *plugin )
       : KontactInterface::UniqueAppHandler( plugin ) {}
     virtual void loadCommandLineOptions();
     virtual int newInstance();
@@ -50,14 +50,14 @@ class AkregatorPlugin : public KontactInterface::Plugin
     AkregatorPlugin( KontactInterface::Core *core, const QVariantList & );
     ~AkregatorPlugin();
 
-    virtual QString tipFile() const;
+    QString tipFile() const;
     int weight() const { return 475; }
 
     OrgKdeAkregatorPartInterface *interface();
 
     virtual QStringList configModules() const;
-    virtual QStringList invisibleToolbarActions() const;
-    virtual bool isRunningStandalone() const;
+    QStringList invisibleToolbarActions() const;
+    bool isRunningStandalone() const;
     virtual void readProperties( const KConfigGroup &config );
     virtual void saveProperties( KConfigGroup &config );
 

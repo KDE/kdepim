@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -29,7 +29,7 @@
 #include <QFile>
 
 AbstractImporter::AbstractImporter(ImportWizard *parent)
-  :mImportWizard(parent)
+    :mImportWizard(parent)
 {
 }
 
@@ -39,76 +39,76 @@ AbstractImporter::~AbstractImporter()
 
 bool AbstractImporter::importSettings()
 {
-  return false;
+    return false;
 }
 
 bool AbstractImporter::importMails()
 {
-  return false;
+    return false;
 }
 
 bool AbstractImporter::importFilters()
 {
-  return false;
+    return false;
 }
 
 bool AbstractImporter::importAddressBook()
 {
-  return false;
+    return false;
 }
 
 bool AbstractImporter::importCalendar()
 {
-  return false;
+    return false;
 }
 
 MailImporter::FilterInfo* AbstractImporter::initializeInfo()
 {
-  MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
-  ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mImportWizard->importMailPage());
-  info->setFilterInfoGui(infoGui);
-  info->setRootCollection( mImportWizard->importMailPage()->selectedCollection() );
-  info->clear(); // Clear info from last time
-  return info;
+    MailImporter::FilterInfo *info = new MailImporter::FilterInfo();
+    ImportFilterInfoGui *infoGui = new ImportFilterInfoGui(mImportWizard->importMailPage());
+    info->setFilterInfoGui(infoGui);
+    info->setRootCollection( mImportWizard->importMailPage()->selectedCollection() );
+    info->clear(); // Clear info from last time
+    return info;
 }
 
-bool AbstractImporter::addFilters( const QString& filterPath, MailCommon::FilterImporterExporter::FilterType type )
+bool AbstractImporter::addFilters( const QString &filterPath, MailCommon::FilterImporterExporter::FilterType type )
 {
-  if ( QFile( filterPath ).exists() ) {
-    bool canceled = false;
-    MailCommon::FilterImporterExporter importer( mImportWizard );
-    QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, type, filterPath );
-    appendFilters( listFilter );
-    addImportFilterInfo( i18np( "1 filter was imported from \"%2\"", "%1 filters were imported from \"%2\"", listFilter.count(), filterPath ) );
-    return true;
-  } else {
-    addImportFilterError( i18n( "Filters file was not found" ) );
-    return true;
-  }
+    if ( QFile( filterPath ).exists() ) {
+        bool canceled = false;
+        MailCommon::FilterImporterExporter importer( mImportWizard );
+        QList<MailCommon::MailFilter*> listFilter = importer.importFilters( canceled, type, filterPath );
+        appendFilters( listFilter );
+        addImportFilterInfo( i18np( "1 filter was imported from \"%2\"", "%1 filters were imported from \"%2\"", listFilter.count(), filterPath ) );
+        return true;
+    } else {
+        addImportFilterError( i18n( "Filters file was not found" ) );
+        return true;
+    }
 }
 
-void AbstractImporter::appendFilters( const QList<MailCommon::MailFilter*>& filters )
+void AbstractImporter::appendFilters( const QList<MailCommon::MailFilter*> &filters )
 {
-  if ( !filters.isEmpty() )
-    MailCommon::FilterManager::instance()->appendFilters(filters, false );
+    if ( !filters.isEmpty() )
+        MailCommon::FilterManager::instance()->appendFilters(filters, false );
 }
 
-void AbstractImporter::addImportFilterInfo( const QString& log )
+void AbstractImporter::addImportFilterInfo( const QString &log )
 {
-  mImportWizard->importFilterPage()->addImportInfo( log );
+    mImportWizard->importFilterPage()->addImportInfo( log );
 }
 
-void AbstractImporter::addImportFilterError( const QString& log )
+void AbstractImporter::addImportFilterError( const QString &log )
 {
-  mImportWizard->importFilterPage()->addImportError( log );
+    mImportWizard->importFilterPage()->addImportError( log );
 }
 
-void AbstractImporter::addImportSettingsInfo(const QString& log)
+void AbstractImporter::addImportSettingsInfo(const QString &log)
 {
-  mImportWizard->importSettingPage()->addImportError( log );
+    mImportWizard->importSettingPage()->addImportError( log );
 }
 
-void AbstractImporter::addImportCalendarInfo(const QString&log)
+void AbstractImporter::addImportCalendarInfo(const QString &log)
 {
-  mImportWizard->importCalendarPage()->addImportError( log );
+    mImportWizard->importCalendarPage()->addImportError( log );
 }

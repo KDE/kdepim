@@ -1,6 +1,6 @@
 /* ============================================================
 *
-* This file is a part of the rekonq project
+* Based on kspellplugin from rekonq project
 *
 * Copyright (C) 2012 by Lindsay Mathieson <lindsay dot mathieson at gmail dot com>
 *
@@ -28,6 +28,7 @@
 #include <KDebug>
 #include "kspellplugin.h"
 #include <QTextBoundaryFinder>
+#include "globalsettings_base.h"
 
 #define methodDebug() kDebug("KWebSpellChecker: %s", __FUNCTION__)
 
@@ -47,7 +48,7 @@ KWebSpellChecker::~KWebSpellChecker()
 
 bool KWebSpellChecker::isContinousSpellCheckingEnabled() const
 {
-    return true;
+    return ComposerEditorNG::GlobalSettingsBase::autoSpellChecking();
 }
 
 void KWebSpellChecker::toggleContinousSpellChecking()
@@ -139,7 +140,6 @@ QString KWebSpellChecker::autoCorrectSuggestionForMisspelledWord(const QString& 
         return QString("");
     */
 
-
     return QString();
 }
 
@@ -147,7 +147,7 @@ void KWebSpellChecker::guessesForWord(const QString& word, const QString& contex
 {
     Q_UNUSED(context);
 
-    QStringList words = m_speller->suggest(word);
+    const QStringList words = m_speller->suggest(word);
     guesses = words;
 }
 
@@ -194,3 +194,5 @@ QObject* KWebKitPlatformPlugin::createExtension(Extension ext) const
 Q_EXPORT_PLUGIN2(kwebspellchecker, KWebKitPlatformPlugin)
 Q_IMPORT_PLUGIN(kwebspellchecker)
 
+
+#include "kspellplugin.moc"

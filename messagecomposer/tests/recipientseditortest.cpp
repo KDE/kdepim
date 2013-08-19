@@ -23,7 +23,7 @@
 */
 
 #include "recipientseditortest.h"
-#include <messagecomposer/recipientseditor.h>
+#include <messagecomposer/recipient/recipientseditor.h>
 
 #include <kapplication.h>
 #include <kdebug.h>

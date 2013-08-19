@@ -3,7 +3,7 @@
   Author: Marc Mutz <mutz@kde.org>
   based upon work by Stefan Taferner <taferner@kde.org>
 
-  Copyright (c) 2011-2012 Laurent Montel <montel@kde.org>
+  Copyright (c) 2011-2012-2013 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #include "filteraction.h"
 #include "filterimporterexporter.h"
 #include "mailfilter.h"
-#include "searchpattern.h"
+#include "search/searchpattern.h"
 
 #include <KDialog>
 
@@ -49,9 +49,9 @@ class QPushButton;
 class QRadioButton;
 
 namespace MailCommon {
-  class SearchPatternEdit;
-  class FilterActionWidgetLister;
-  class FolderRequester;
+class SearchPatternEdit;
+class FilterActionWidgetLister;
+class FolderRequester;
 }
 
 class KJob;
@@ -84,7 +84,7 @@ namespace MailCommon {
 
 class AccountList : public QTreeWidget
 {
-  public:
+public:
     explicit AccountList( QWidget *parent );
     ~AccountList();
 
@@ -97,8 +97,8 @@ class AccountList : public QTreeWidget
 
 class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Constructor.
      */
@@ -140,7 +140,7 @@ class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
 
     QStringList selectedFilterId( SearchRule::RequiredPart &requiredPart, const QString& resource ) const;
 
-  signals:
+signals:
     /**
      * Emitted when a new filter has been selected by the user or if the
      * current filter has changed after a 'new' or 'delete' operation.
@@ -187,7 +187,7 @@ class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
      */
     void filterOrderAltered();
 
-  public slots:
+public slots:
     /**
      * Called when the name of a filter might have changed (e.g. through
      * changing the first rule in SearchPatternEdit). Updates the corresponding
@@ -201,7 +201,7 @@ class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
      */
     void slotApplyFilterChanges( KDialog::ButtonCode );
 
-  protected slots:
+protected slots:
     /**
      * Called when the user clicks on a filter in the filter list.
      * Calculates the corresponding filter and emits the filterSelected signal.
@@ -262,7 +262,7 @@ class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
 
     void slotSelectionChanged();
 
-  protected:
+protected:
     /** The listbox displaying the filter list. */
     QListWidget *mListWidget;
 
@@ -276,7 +276,7 @@ class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
     QPushButton *mBtnTop;
     QPushButton *mBtnBottom;
 
-  private:
+private:
     void enableControls();
     bool itemIsValid( QListWidgetItem *item ) const;
     QList<QListWidgetItem*> selectedFilter();
@@ -339,9 +339,9 @@ class MAILCOMMON_EXPORT KMFilterListBox : public QGroupBox
  */
 class MAILCOMMON_EXPORT KMFilterDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Creates the filter dialog. The only class which should be able
      * to do this is KMFilterMgr. This ensures that there is only a
@@ -358,10 +358,10 @@ class MAILCOMMON_EXPORT KMFilterDialog : public KDialog
      */
     void createFilter( const QByteArray &field, const QString &value )
     {
-      mFilterList->createFilter( field, value );
+        mFilterList->createFilter( field, value );
     }
 
-  public slots:
+public slots:
     /**
      * Internally connected to KMFilterListBox::filterSelected.
      * Just does a simple check and then calls
@@ -373,7 +373,7 @@ class MAILCOMMON_EXPORT KMFilterDialog : public KDialog
     /** Override QDialog::accept to allow disabling close */
     virtual void accept();
 
-  protected slots:
+protected slots:
     void slotApplicabilityChanged();
     void slotApplicableAccountsChanged();
     void slotStopProcessingButtonToggled( bool aChecked );
@@ -431,10 +431,10 @@ class MAILCOMMON_EXPORT KMFilterDialog : public KDialog
 
     void slotFolderChanged( const Akonadi::Collection & );
 
-  private:
+private:
     void importFilters( MailCommon::FilterImporterExporter::FilterType type );
 
-  protected:
+protected:
     /** The widget that contains the ListBox showing the filters, and the
         controls to remove filters, add new ones and to change their order. */
     KMFilterListBox *mFilterList;
@@ -473,14 +473,14 @@ class MAILCOMMON_EXPORT KMFilterDialog : public KDialog
 
 class QListWidgetFilterItem : public QListWidgetItem
 {
-  public:
+public:
     explicit QListWidgetFilterItem( const QString &text, QListWidget *parent = 0 );
     ~QListWidgetFilterItem();
 
     void setFilter( MailCommon::MailFilter *filter );
     MailCommon::MailFilter *filter();
 
-  private:
+private:
     MailCommon::MailFilter *mFilter;
 };
 

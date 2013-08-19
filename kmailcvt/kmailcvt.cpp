@@ -21,7 +21,7 @@
 #include <filters.h>
 #include "kmailcvtfilterinfogui.h"
 #include "kmailcvtkernel.h"
-#include <mailcommon/mailkernel.h>
+#include <mailcommon/kernel/mailkernel.h>
 
 
 // KDE includes
@@ -29,6 +29,9 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <KHelpMenu>
+#include <KMenu>
+#include <KComponentData>
 
 // Qt includes
 #include <QPushButton>
@@ -37,113 +40,108 @@
 using namespace MailImporter;
 
 KMailCVT::KMailCVT(QWidget *parent)
-  : KAssistantDialog(parent) {
-  setModal(true);
-  setWindowTitle( i18n( "KMailCVT Import Tool" ) );
-  KGlobal::locale()->insertCatalog( "libmailimporter" );
-  KGlobal::locale()->insertCatalog( "libmailcommon" );
-  KMailCVTKernel *kernel = new KMailCVTKernel( this );
-  CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
-  CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+    : KAssistantDialog(parent) {
+    setModal(true);
+    setWindowTitle( i18n( "KMailCVT Import Tool" ) );
+    KGlobal::locale()->insertCatalog( "libmailimporter" );
+    KGlobal::locale()->insertCatalog( "libmailcommon" );
+    KMailCVTKernel *kernel = new KMailCVTKernel( this );
+    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
 
 
-  selfilterpage = new KSelFilterPage;
-  page1 = new KPageWidgetItem( selfilterpage, i18n( "Step 1: Select Filter" ) );
+    selfilterpage = new KSelFilterPage;
+    page1 = new KPageWidgetItem( selfilterpage, i18n( "Step 1: Select Filter" ) );
 
-  addPage( page1);
+    addPage( page1);
 
-  importpage = new KImportPage;
-  page2 = new KPageWidgetItem( importpage, i18n( "Step 2: Importing..." ) );
-  addPage( page2 );
-  connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
+    importpage = new KImportPage;
+    page2 = new KPageWidgetItem( importpage, i18n( "Step 2: Importing..." ) );
+    addPage( page2 );
 
-  // Disable the 'next button to begin with.
-  setValid( currentPage(), false );
+    // Disable the 'next button to begin with.
+    setValid( currentPage(), false );
 
-  connect( selfilterpage->widget()->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)),
-           this, SLOT(collectionChanged(Akonadi::Collection)) );
-  Akonadi::Control::widgetNeedsAkonadi(this);
-  readConfig();
+    connect( selfilterpage->widget()->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)),
+             this, SLOT(collectionChanged(Akonadi::Collection)) );
+    Akonadi::Control::widgetNeedsAkonadi(this);
+    readConfig();
+    KHelpMenu *helpMenu = new KHelpMenu(this, KGlobal::mainComponent().aboutData(), true);
+    setButtonMenu( Help, helpMenu->menu() );
 }
 
 KMailCVT::~KMailCVT()
 {
-  writeConfig();
+    writeConfig();
 }
 
 void KMailCVT::readConfig()
 {
-  KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
-  if ( group.hasKey( "LastSelectedFolder" ) ) {
-     selfilterpage->widget()->mCollectionRequestor->setCollection( CommonKernel->collectionFromId(group.readEntry("LastSelectedFolder", -1 )));
-  }
+    KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
+    if ( group.hasKey( "LastSelectedFolder" ) ) {
+        selfilterpage->widget()->mCollectionRequestor->setCollection( CommonKernel->collectionFromId(group.readEntry("LastSelectedFolder", -1 )));
+    }
 }
 
 void KMailCVT::writeConfig()
 {
-  KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
-  group.writeEntry( "LastSelectedFolder", selfilterpage->widget()->mCollectionRequestor->collection().id() );
-  group.sync();
+    KConfigGroup group( KGlobal::config(), "FolderSelectionDialog" );
+    group.writeEntry( "LastSelectedFolder", selfilterpage->widget()->mCollectionRequestor->collection().id() );
+    group.sync();
 }
 
 void KMailCVT::next()
 {
-  if( currentPage() == page1 ){
-    // Save selected filter
-    Filter *selectedFilter = selfilterpage->getSelectedFilter();
-    Akonadi::Collection selectedCollection = selfilterpage->widget()->mCollectionRequestor->collection();
-    // without filter don't go next
-    if ( !selectedFilter )
-      return;
-    // Ensure we have a valid collection.
-    if( !selectedCollection.isValid() )
-      return;
-    // Goto next page
-    KAssistantDialog::next();
-    // Disable back & finish
-    setValid( currentPage(), false );
-    enableButton(KDialog::User3,false);
-    // Start import
-    FilterInfo *info = new FilterInfo();
-    KMailCvtFilterInfoGui *infoGui = new KMailCvtFilterInfoGui(importpage, this);
-    info->setFilterInfoGui(infoGui);
-    info->setStatusMessage(i18n("Import in progress"));
-    info->setRemoveDupMessage( selfilterpage->removeDupMsg_checked() );
-    info->clear(); // Clear info from last time
-    info->setRootCollection( selectedCollection );
-    selectedFilter->setFilterInfo( info );
-    selectedFilter->import();
-    info->setStatusMessage(i18n("Import finished"));
-    // Cleanup
-    delete info;
-    // Enable finish & back buttons
-    setValid( currentPage(), true );
-    enableButton(KDialog::User3,true);
+    if( currentPage() == page1 ){
+        // Save selected filter
+        Filter *selectedFilter = selfilterpage->getSelectedFilter();
+        Akonadi::Collection selectedCollection = selfilterpage->widget()->mCollectionRequestor->collection();
+        // without filter don't go next
+        if ( !selectedFilter )
+            return;
+        // Ensure we have a valid collection.
+        if( !selectedCollection.isValid() )
+            return;
+        // Goto next page
+        KAssistantDialog::next();
+        // Disable back & finish
+        setValid( currentPage(), false );
+        enableButton(KDialog::User3,false);
+        // Start import
+        FilterInfo *info = new FilterInfo();
+        KMailCvtFilterInfoGui *infoGui = new KMailCvtFilterInfoGui(importpage, this);
+        info->setFilterInfoGui(infoGui);
+        info->setStatusMessage(i18n("Import in progress"));
+        info->setRemoveDupMessage( selfilterpage->removeDupMsg_checked() );
+        info->clear(); // Clear info from last time
+        info->setRootCollection( selectedCollection );
+        selectedFilter->setFilterInfo( info );
+        selectedFilter->import();
+        info->setStatusMessage(i18n("Import finished"));
+        // Cleanup
+        delete info;
+        // Enable finish & back buttons
+        setValid( currentPage(), true );
+        enableButton(KDialog::User3,true);
 
-  }
-  else
-    KAssistantDialog::next();
+    }
+    else
+        KAssistantDialog::next();
 }
 
 void KMailCVT::reject() {
-  if ( currentPage() == page2 )
-    FilterInfo::terminateASAP(); // ie. import in progress
-  KAssistantDialog::reject();
+    if ( currentPage() == page2 )
+        FilterInfo::terminateASAP(); // ie. import in progress
+    KAssistantDialog::reject();
 }
 
-void KMailCVT::collectionChanged( const Akonadi::Collection& selectedCollection )
+void KMailCVT::collectionChanged( const Akonadi::Collection &selectedCollection )
 {
- if( selectedCollection.isValid() ){
-   setValid( currentPage(), true );
- } else {
-   setValid( currentPage(), false );
- }
-}
-
-void KMailCVT::help()
-{
-  KAboutApplicationDialog a( KGlobal::mainComponent().aboutData(), this );
-  a.exec();
+    if( selectedCollection.isValid() ){
+        setValid( currentPage(), true );
+    } else {
+        setValid( currentPage(), false );
+    }
 }
 
 #include "kmailcvt.moc"

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -27,9 +27,9 @@
 
 
 Evolutionv1ImportData::Evolutionv1ImportData(ImportWizard *parent)
-  :AbstractImporter(parent)
+    :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterEvolution::defaultSettingsPath();
+    mPath = MailImporter::FilterEvolution::defaultSettingsPath();
 }
 
 Evolutionv1ImportData::~Evolutionv1ImportData()
@@ -39,38 +39,38 @@ Evolutionv1ImportData::~Evolutionv1ImportData()
 
 bool Evolutionv1ImportData::foundMailer() const
 {
-  QDir directory( mPath );
-  if ( directory.exists() )
-    return true;
-  return false;
+    QDir directory( mPath );
+    if ( directory.exists() )
+        return true;
+    return false;
 }
 
 QString Evolutionv1ImportData::name() const
 {
-  return QLatin1String("Evolution 1.x");
+    return QLatin1String("Evolution 1.x");
 }
 
 bool Evolutionv1ImportData::importMails()
 {
-  MailImporter::FilterInfo *info = initializeInfo();
-  MailImporter::FilterEvolution evolution;
-  evolution.setFilterInfo( info );
-  info->setStatusMessage(i18n("Import in progress"));
-  const QString mailsPath = mPath;
-  QDir directory(mailsPath);
-  if(directory.exists())
-    evolution.importMails(mailsPath);
-  else
-    evolution.import();
-  info->setStatusMessage(i18n("Import finished"));
+    MailImporter::FilterInfo *info = initializeInfo();
+    MailImporter::FilterEvolution evolution;
+    evolution.setFilterInfo( info );
+    info->setStatusMessage(i18n("Import in progress"));
+    const QString mailsPath = mPath;
+    QDir directory(mailsPath);
+    if (directory.exists())
+        evolution.importMails(mailsPath);
+    else
+        evolution.import();
+    info->setStatusMessage(i18n("Import finished"));
 
-  delete info;
-  return true;
+    delete info;
+    return true;
 }
 
 AbstractImporter::TypeSupportedOptions Evolutionv1ImportData::supportedOption()
 {
-  TypeSupportedOptions options;
-  options |=AbstractImporter::Mails;
-  return options;
+    TypeSupportedOptions options;
+    options |=AbstractImporter::Mails;
+    return options;
 }

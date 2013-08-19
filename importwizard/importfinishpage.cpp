@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -32,12 +32,12 @@ ImportFinishPage::~ImportFinishPage()
 
 void ImportFinishPage::addImportInfo( const QString& log )
 {
-  ui->logFinish->addInfoLogEntry( log );
+    ui->logFinish->addInfoLogEntry( log );
 }
 
 void ImportFinishPage::addImportError( const QString& log )
 {
-  ui->logFinish->addErrorLogEntry( log );
+    ui->logFinish->addErrorLogEntry( log );
 }
 
 #include "importfinishpage.moc"

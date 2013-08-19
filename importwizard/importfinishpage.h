@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -26,10 +26,10 @@ class ImportFinishPage;
 class ImportFinishPage : public QWidget
 {
     Q_OBJECT
-    
 public:
     explicit ImportFinishPage(QWidget *parent = 0);
     ~ImportFinishPage();
+
     void addImportInfo( const QString& log );
     void addImportError( const QString& log );
     

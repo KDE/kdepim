@@ -20,20 +20,20 @@
 
 #include "filteraction.h"
 
-#include "../mailkernel.h"
-#include "../mdnadvicedialog.h"
-#include "../mailutil.h"
+#include "../kernel/mailkernel.h"
+#include "mdnadvicedialog.h"
+#include "util/mailutil.h"
 
-#include <messagecomposer/messagefactory.h>
-#include <messagecomposer/messagesender.h>
-#include <messagecore/messagehelpers.h>
-#include <messageviewer/globalsettings.h>
+#include <messagecomposer/helper/messagefactory.h>
+#include <messagecomposer/sender/messagesender.h>
+#include <messagecore/helpers/messagehelpers.h>
+#include <messageviewer/settings/globalsettings.h>
 
 #include <KDE/KLocale>
 
 using namespace MailCommon;
 
-FilterAction::FilterAction( const char *name, const QString &label, QObject *parent )
+FilterAction::FilterAction( const QString &name, const QString &label, QObject *parent )
   : QObject( parent ), mName( name ), mLabel( label )
 {
 }
@@ -109,7 +109,7 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
   if ( mdnSend.first ) {
     const int quote =  MessageViewer::GlobalSettings::self()->quoteMessage();
     QString receiptTo =  msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString();
-    if( receiptTo.isEmpty() ) 
+    if ( receiptTo.isEmpty() ) 
       return;
     MessageComposer::MessageFactory factory( msg, Akonadi::Item().id() );
     factory.setIdentityManager( KernelIf->identityManager() );
@@ -117,7 +117,7 @@ void FilterAction::sendMDN( const Akonadi::Item &item, KMime::MDN::DispositionTy
 
     const KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::AutomaticAction, type, mdnSend.second, quote, modifiers );
     if ( mdn ) {
-      if ( !KernelIf->msgSender()->send( mdn, MessageSender::SendLater ) ) {
+      if ( !KernelIf->msgSender()->send( mdn, MessageComposer::MessageSender::SendLater ) ) {
         kDebug() << "Sending failed.";
       }
     }

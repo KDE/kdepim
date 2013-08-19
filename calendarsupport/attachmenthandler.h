@@ -54,7 +54,7 @@ class AttachmentHandler : public QObject
    * Constructs an AttachmentHandler.
    * @param parent is the parent widget for the dialogs used by this class.
    */
-    AttachmentHandler( QWidget *parent );
+    explicit AttachmentHandler( QWidget *parent );
    ~AttachmentHandler();
 
   /**

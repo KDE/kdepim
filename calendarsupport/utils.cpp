@@ -23,17 +23,16 @@
 */
 
 #include "utils.h"
-#include "calendar.h"
 #include "kcalprefs.h"
-#include "mailclient.h"
-#include "mailscheduler.h"
-#include "publishdialog.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionDialog>
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Item>
+#include <Akonadi/Calendar/ETMCalendar>
+#include <akonadi/calendar/publishdialog.h>
+#include <akonadi/calendar/calendarsettings.h>
 
 #include <KHolidays/Holidays>
 
@@ -45,6 +44,7 @@
 #include <KCalCore/MemoryCalendar>
 #include <KCalCore/Todo>
 #include <KCalCore/ICalFormat>
+#include <KCalCore/FileStorage>
 
 #include <KCalUtils/DndFactory>
 #include <KCalUtils/ICalDrag>
@@ -70,9 +70,11 @@
 
 using namespace CalendarSupport;
 using namespace KHolidays;
+using namespace KCalCore;
 
 KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 {
+  //relying on exception for performance reasons
   try {
     return item.payload<KCalCore::Incidence::Ptr>();
   } catch( Akonadi::PayloadException ) {
@@ -82,6 +84,7 @@ KCalCore::Incidence::Ptr CalendarSupport::incidence( const Akonadi::Item &item )
 
 KCalCore::Event::Ptr CalendarSupport::event( const Akonadi::Item &item )
 {
+  //relying on exception for performance reasons
   try {
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
     if ( incidence && incidence->type() == KCalCore::Incidence::TypeEvent ) {
@@ -491,13 +494,7 @@ Akonadi::Collection::List CalendarSupport::collectionsFromIndexes( const QModelI
   return l;
 }
 
-QString CalendarSupport::displayName( const Akonadi::Collection &c )
-{
-  const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
-  return ( attr && !attr->displayName().isEmpty() ) ? attr->displayName() : c.name();
-}
-
-QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collection &c )
+QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akonadi::Collection &c )
 {
   QString cName = c.name();
   if ( cName.isEmpty() && calendar ) {
@@ -584,20 +581,10 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
     QString ownerStr;        // folder owner: "user@gmail.com"
     if ( calendar ) {
       Akonadi::Collection p = c.parentCollection();
-      Akonadi::EntityDisplayAttribute *pattr =
-        calendar->collection( p.id() ).attribute<Akonadi::EntityDisplayAttribute>();
-      if ( pattr && !pattr->displayName().isEmpty() ) {
-        ownerStr = pattr->displayName();
-      }
+      ownerStr = calendar->collection( p.id() ).displayName();
     }
 
-    const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
-    QString nameStr;         // folder name: can be anything
-    if ( attr && !attr->displayName().isEmpty() ) {
-      nameStr = attr->displayName();
-    } else {
-      nameStr = cName;
-    }
+    const QString nameStr = c.displayName(); // folder name: can be anything
 
     QString typeStr;
     const QString mimeStr = c.contentMimeTypes().join( "," );
@@ -630,13 +617,8 @@ QString CalendarSupport::displayName( Calendar *calendar, const Akonadi::Collect
   } //end google section
 
   // Not groupware so the collection is "mine"
-  const Akonadi::EntityDisplayAttribute *attr = c.attribute<Akonadi::EntityDisplayAttribute>();
-  QString dName;
-  if ( attr && !attr->displayName().isEmpty() ) {
-    dName = attr->displayName();
-  } else {
-    dName = cName;
-  }
+  const QString dName = c.displayName();
+
   if ( !dName.isEmpty() ) {
     return i18n( "My %1", dName );
   } else {
@@ -693,150 +675,6 @@ QStringList CalendarSupport::holiday( const QDate &date )
     hdays.append( list.at( i ).text() );
   }
   return hdays;
-}
-
-void CalendarSupport::sendAsICalendar( const Akonadi::Item &item,
-                                       KPIMIdentities::IdentityManager *identityManager,
-                                       QWidget *parentWidget )
-{
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::information(
-      parentWidget,
-      i18n( "No item selected." ),
-      i18n( "Forwarding" ),
-      "ForwardNoEventSelected" );
-    return;
-  }
-
-  QPointer<PublishDialog> publishdlg = new PublishDialog;
-  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
-    const QString recipients = publishdlg->addresses();
-    if ( incidence->organizer()->isEmpty() ) {
-      incidence->setOrganizer( Person::Ptr(
-                                 new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                             CalendarSupport::KCalPrefs::instance()->email() ) ) );
-    }
-
-    ICalFormat format;
-    const QString from = CalendarSupport::KCalPrefs::instance()->email();
-    const bool bccMe = CalendarSupport::KCalPrefs::instance()->mBcc;
-    const QString messageText = format.createScheduleMessage( incidence, iTIPRequest );
-    CalendarSupport::MailClient mailer;
-    if ( mailer.mailTo(
-           incidence,
-           identityManager->identityForAddress( from ),
-           from, bccMe, recipients, messageText,
-           MailTransport::TransportManager::self()->defaultTransportName() ) ) {
-      KMessageBox::information(
-        parentWidget,
-        i18n( "The item information was successfully sent." ),
-        i18n( "Forwarding" ),
-        "IncidenceForwardSuccess" );
-    } else {
-      KMessageBox::error(
-        parentWidget,
-        i18n( "Unable to forward the item '%1'", incidence->summary() ),
-        i18n( "Forwarding Error" ) );
-    }
-  }
-  delete publishdlg;
-}
-
-void  CalendarSupport::publishItemInformation( const Akonadi::Item &item, Calendar *calendar,
-                                               QWidget *parentWidget )
-{
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::information(
-      parentWidget,
-      i18n( "No item selected." ),
-      "PublishNoEventSelected" );
-    return;
-  }
-
-  QPointer<PublishDialog> publishdlg = new PublishDialog();
-  if ( incidence->attendeeCount() > 0 ) {
-    Attendee::List attendees = incidence->attendees();
-    Attendee::List::ConstIterator it;
-    Attendee::List::ConstIterator end( attendees.constEnd() );
-    for ( it = attendees.constBegin(); it != end; ++it ) {
-      publishdlg->addAttendee( *it );
-    }
-  }
-  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
-    Incidence::Ptr inc( incidence->clone() );
-    inc->registerObserver( 0 );
-    inc->clearAttendees();
-
-    // Send the mail
-    CalendarSupport::MailScheduler scheduler( calendar );
-    if ( scheduler.publish( incidence, publishdlg->addresses() ) ) {
-      KMessageBox::information(
-        parentWidget,
-        i18n( "The item information was successfully sent." ),
-        i18n( "Publishing" ),
-        "IncidencePublishSuccess" );
-    } else {
-      KMessageBox::error(
-        parentWidget,
-        i18n( "Unable to publish the item '%1'", incidence->summary() ) );
-    }
-  }
-  delete publishdlg;
-}
-
-void CalendarSupport::scheduleiTIPMethods( KCalCore::iTIPMethod method,
-                                           const Akonadi::Item &item,
-                                           CalendarSupport::Calendar *calendar,
-                                           QWidget *parentWidget )
-{
-  Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::sorry(
-      parentWidget,
-      i18n( "No item selected." ) );
-    return;
-  }
-
-  if ( incidence->attendeeCount() == 0 && method != iTIPPublish ) {
-    KMessageBox::information(
-      parentWidget,
-      i18n( "The item '%1' has no attendees. "
-            "Therefore no groupware message will be sent.",
-            incidence->summary() ),
-      i18n( "Message Not Sent" ),
-      QLatin1String( "ScheduleNoAttendees" ) );
-    return;
-  }
-
-  Incidence *inc = incidence->clone();
-  inc->registerObserver( 0 );
-  inc->clearAttendees();
-
-  // Send the mail
-  CalendarSupport::MailScheduler scheduler( calendar );
-  if ( scheduler.performTransaction( incidence, method ) ) {
-    KMessageBox::information(
-      parentWidget,
-      i18n( "The groupware message for item '%1' "
-            "was successfully sent.\nMethod: %2",
-            incidence->summary(),
-            ScheduleMessage::methodName( method ) ),
-      i18n( "Sending Free/Busy" ),
-      "FreeBusyPublishSuccess" );
-  } else {
-    KMessageBox::error(
-      parentWidget,
-      i18nc( "Groupware message sending failed. "
-             "%2 is request/reply/add/cancel/counter/etc.",
-             "Unable to send the item '%1'.\nMethod: %2",
-             incidence->summary(),
-             ScheduleMessage::methodName( method ) ) );
-  }
 }
 
 void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *parentWidget )
@@ -901,5 +739,44 @@ void CalendarSupport::saveAttachments( const Akonadi::Item &item, QWidget *paren
       KMessageBox::error( parentWidget, KIO::NetAccess::lastErrorString() );
     }
   }
+}
 
+QStringList CalendarSupport::categories( const KCalCore::Incidence::List &incidences )
+{
+  QStringList cats, thisCats;
+  // @TODO: For now just iterate over all incidences. In the future,
+  // the list of categories should be built when reading the file.
+  Q_FOREACH ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
+    thisCats = incidence->categories();
+    for ( QStringList::ConstIterator si = thisCats.constBegin();
+          si != thisCats.constEnd(); ++si ) {
+      if ( !cats.contains( *si ) ) {
+        cats.append( *si );
+      }
+    }
+  }
+  return cats;
+}
+
+bool CalendarSupport::mergeCalendar(const QString &srcFilename, const KCalCore::Calendar::Ptr &destCalendar)
+{
+    if (srcFilename.isEmpty()) {
+        kError() << "Empty filename.";
+        return false;
+    }
+
+    if (!QFile::exists(srcFilename)) {
+        kError() << "File'" << srcFilename << "' doesn't exist.";
+    }
+
+    bool loadedSuccesfully = true;
+
+    // merge in a file
+    destCalendar->startBatchAdding();
+    KCalCore::FileStorage storage(destCalendar);
+    storage.setFileName(srcFilename);
+    loadedSuccesfully = storage.load();
+    destCalendar->endBatchAdding();
+
+    return loadedSuccesfully;
 }

@@ -27,10 +27,10 @@ namespace MailImporter {
 class MAILIMPORTER_EXPORT FilterPlain : public Filter
 {
 public:
-  explicit FilterPlain();
-  ~FilterPlain();
+    explicit FilterPlain();
+    ~FilterPlain();
 
-  void import();
+    void import();
 };
 }
 

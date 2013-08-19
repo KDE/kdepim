@@ -85,6 +85,16 @@ AkonotesNoteApplet::AkonotesNoteApplet( QObject* parent, const QVariantList& arg
   m_content = new Plasma::TextEdit( this );
   m_content->setText( i18n("content") );
   m_content->installEventFilter( this );
+  {
+    QPalette cp = m_content->nativeWidget()->palette();
+
+    cp.setColor( QPalette::Active, QPalette::Text,
+        QColor( Qt::black ) );
+    cp.setColor( QPalette::Inactive, QPalette::Text,
+        QColor( Qt::black ) );
+
+    m_content->nativeWidget()->setPalette( cp );
+  }
 
   m_theme = new Plasma::FrameSvg( this );
   m_theme->setImagePath( "widgets/stickynote" );
@@ -384,3 +394,5 @@ void AkonotesNoteApplet::itemRemoved()
 {
   destroy();
 }
+
+#include "akonotes_noteapplet.moc"

@@ -45,7 +45,7 @@
 #include <kmime/kmime_message.h>
 #include <Akonadi/AgentInstance>
 #include <Akonadi/Collection>
-#include "mailcommon/foldercollection.h"
+#include "mailcommon/folder/foldercollection.h"
 class KUrl;
 
 class OrgKdeAkonadiImapSettingsInterface;
@@ -97,8 +97,7 @@ namespace Util {
      * Handles a clicked URL, but only in case the viewer didn't handle it.
      * Currently only support mailto.
      */
-    bool handleClickedURL( const KUrl &url,  const QSharedPointer<MailCommon::FolderCollection> &folder );
-    bool handleClickedURL( const KUrl &url );
+    bool handleClickedURL( const KUrl &url, const QSharedPointer<MailCommon::FolderCollection> &folder = QSharedPointer<MailCommon::FolderCollection>() );
 
 
     bool mailingListsHandleURL( const KUrl::List& lst,const QSharedPointer<MailCommon::FolderCollection> &folder );

@@ -30,7 +30,7 @@ class QCsvModel : public QAbstractTableModel
     /**
      * Creates a new csv model.
      */
-    QCsvModel( QObject *parent );
+    explicit QCsvModel( QObject *parent );
 
     /**
      * Destroys the csv model.

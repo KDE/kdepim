@@ -26,7 +26,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
 
   # TODO: Move the next two to akonadi libs when finished
   editoritemmanager.cpp
-  invitationdispatcher.cpp
 
   freebusyurldialog.cpp
 
@@ -55,8 +54,6 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   groupwareintegration.cpp
 
   incidencedefaults.cpp
-
-  categoryhierarchyreader.cpp
   editorconfig.cpp
   korganizereditorconfig.cpp
 
@@ -73,14 +70,13 @@ kde4_add_kcfg_files(incidenceeditors_ng_shared_LIB_SRCS globalsettings_base.kcfg
 if(NOT WINCE)
   set(incidenceeditors_ng_shared_LIB_SRCS
     ${incidenceeditors_ng_shared_LIB_SRCS}
-    incidencedialog.cpp
   )
 
   set(incidenceeditors_ng_desktop_LIB_SRCS
     ${incidenceeditors_ng_shared_LIB_SRCS}
     templatemanagementdialog.cpp
     incidencedialogfactory.cpp
-    eventortododialog.cpp
+    incidencedialog.cpp
     visualfreebusywidget.cpp
   )
 
@@ -89,7 +85,7 @@ if(NOT WINCE)
     categoryselectdialog_base.ui
     categorydialog_base.ui
     template_management_dialog_base.ui
-    eventortododesktop.ui
+    dialogdesktop.ui
     alarmdialog.ui
     attachmenteditdialog.ui
     schedulingdialog.ui
@@ -98,6 +94,7 @@ if(NOT WINCE)
   kde4_add_library(incidenceeditorsng ${LIBRARY_TYPE} ${incidenceeditors_ng_desktop_LIB_SRCS})
 
   target_link_libraries(incidenceeditorsng
+    akonadi-calendar
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
@@ -130,9 +127,9 @@ endif()
     categoryselectdialog_base.ui
     categorydialog_base.ui
     editoralarms_base.ui
-    eventortododesktop.ui
-    eventortodomobile.ui
-    eventortodomoremobile.ui
+    dialogdesktop.ui
+    dialogmobile.ui
+    dialogmoremobile.ui
     attachmenteditdialog.ui
     alarmdialog.ui
     mobileschedulingdialog.ui
@@ -141,6 +138,7 @@ endif()
   kde4_add_library(incidenceeditorsngmobile ${LIBRARY_TYPE} ${incidenceeditors_ng_mobile_LIB_SRCS})
 
   target_link_libraries(incidenceeditorsngmobile
+    akonadi-calendar
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${KDE4_KDEUI_LIBS}
@@ -170,6 +168,7 @@ if(NOT WINCE)
   kde4_add_executable(kincidenceeditor ${testincidenceeditor_SRCS})
 
   target_link_libraries(kincidenceeditor
+    akonadi-calendar
     ${KDE4_KDEUI_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_KCALCORE_LIBS}

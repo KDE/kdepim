@@ -19,9 +19,9 @@
 
 #include "filteractionaddtoaddressbook.h"
 
-#include "messageviewer/minimumcombobox.h"
+#include "pimcommon/widgets/minimumcombobox.h"
 
-#include "libkdepim/addcontactjob.h"
+#include "libkdepim/job/addcontactjob.h"
 
 #include <KDE/Akonadi/CollectionComboBox>
 #include <KDE/KABC/Addressee>
@@ -40,7 +40,7 @@ FilterAction* FilterActionAddToAddressBook::newAction()
 }
 
 FilterActionAddToAddressBook::FilterActionAddToAddressBook( QObject *parent )
-  : FilterActionWithStringList( "add to address book", i18n( "Add to Address Book" ), parent ),
+  : FilterActionWithStringList( QLatin1String("add to address book"), i18n( "Add to Address Book" ), parent ),
     mFromStr( i18nc( "Email sender", "From" ) ),
     mToStr( i18nc( "Email recipient", "To" ) ),
     mCCStr( i18n( "CC" ) ),
@@ -99,15 +99,15 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
   QWidget *widget = new QWidget( parent );
   QGridLayout *layout = new QGridLayout( widget );
 
-  MessageViewer::MinimumComboBox *headerCombo = new MessageViewer::MinimumComboBox( widget );
-  headerCombo->setObjectName( "HeaderComboBox" );
+  PimCommon::MinimumComboBox *headerCombo = new PimCommon::MinimumComboBox( widget );
+  headerCombo->setObjectName( QLatin1String("HeaderComboBox") );
   layout->addWidget( headerCombo, 0, 0, 2, 1, Qt::AlignVCenter );
 
   QLabel *label = new QLabel( i18n( "with category" ), widget );
   layout->addWidget( label, 0, 1 );
 
   KLineEdit *categoryEdit = new KLineEdit( widget );
-  categoryEdit->setObjectName( "CategoryEdit" );
+  categoryEdit->setObjectName( QLatin1String("CategoryEdit") );
   categoryEdit->setTrapReturnKey(true);
   layout->addWidget( categoryEdit, 0, 2 );
 
@@ -118,7 +118,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
   collectionComboBox->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
   collectionComboBox->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
 
-  collectionComboBox->setObjectName( "AddressBookComboBox" );
+  collectionComboBox->setObjectName( QLatin1String("AddressBookComboBox") );
   collectionComboBox->setToolTip( i18n( "<p>This defines the preferred address book.<br />"
         "If it is not accessible, the filter will fallback to the default address book.</p>" ) );
   layout->addWidget( collectionComboBox, 1, 2 );
@@ -137,7 +137,7 @@ QWidget* FilterActionAddToAddressBook::createParamWidget( QWidget *parent ) cons
 
 void FilterActionAddToAddressBook::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  MessageViewer::MinimumComboBox *headerCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "HeaderComboBox" );
+  PimCommon::MinimumComboBox *headerCombo = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("HeaderComboBox") );
   Q_ASSERT( headerCombo );
   headerCombo->clear();
   headerCombo->addItem( mFromStr, FromHeader );
@@ -147,11 +147,11 @@ void FilterActionAddToAddressBook::setParamWidgetValue( QWidget *paramWidget ) c
 
   headerCombo->setCurrentIndex( headerCombo->findData( mHeaderType ) );
 
-  KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( "CategoryEdit" );
+  KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("CategoryEdit") );
   Q_ASSERT( categoryEdit );
   categoryEdit->setText( mCategory );
 
-  Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox*>( "AddressBookComboBox" );
+  Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox*>( QLatin1String("AddressBookComboBox") );
   Q_ASSERT( collectionComboBox );
   collectionComboBox->setDefaultCollection( Akonadi::Collection( mCollectionId ) );
   collectionComboBox->setProperty( "collectionId", mCollectionId );
@@ -159,15 +159,15 @@ void FilterActionAddToAddressBook::setParamWidgetValue( QWidget *paramWidget ) c
 
 void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
 {
-  const MessageViewer::MinimumComboBox *headerCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "HeaderComboBox" );
+  const PimCommon::MinimumComboBox *headerCombo = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("HeaderComboBox") );
   Q_ASSERT( headerCombo );
   mHeaderType = static_cast<HeaderType>( headerCombo->itemData( headerCombo->currentIndex() ).toInt() );
 
-  const KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( "CategoryEdit" );
+  const KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("CategoryEdit") );
   Q_ASSERT( categoryEdit );
   mCategory = categoryEdit->text();
 
-  const Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox*>( "AddressBookComboBox" );
+  const Akonadi::CollectionComboBox *collectionComboBox = paramWidget->findChild<Akonadi::CollectionComboBox*>( QLatin1String("AddressBookComboBox") );
   Q_ASSERT( collectionComboBox );
   const Akonadi::Collection collection = collectionComboBox->currentCollection();
 
@@ -186,11 +186,11 @@ void FilterActionAddToAddressBook::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionAddToAddressBook::clearParamWidget( QWidget *paramWidget ) const
 {
-  MessageViewer::MinimumComboBox *headerCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "HeaderComboBox" );
+  PimCommon::MinimumComboBox *headerCombo = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("HeaderComboBox") );
   Q_ASSERT( headerCombo );
-  headerCombo->setCurrentItem( 0 );
+  headerCombo->setCurrentIndex( 0 );
 
-  KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( "CategoryEdit" );
+  KLineEdit *categoryEdit = paramWidget->findChild<KLineEdit*>( QLatin1String("CategoryEdit") );
   Q_ASSERT( categoryEdit );
   categoryEdit->setText( mCategory );
 }

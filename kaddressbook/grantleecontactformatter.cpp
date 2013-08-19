@@ -33,9 +33,11 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KStringHandler>
+#include <KConfigGroup>
 
 #include <QtCore/QSet>
 #include <QtCore/QRegExp>
+#include <QTextDocument>
 
 using namespace Akonadi;
 
@@ -206,7 +208,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   if ( birthday.isValid() ) {
     contactObject.insert( QLatin1String( "birthday" ), KGlobal::locale()->formatDate( birthday ) );
 
-    contactObject.insert( QLatin1String("birthdayi18n"), i18n("Birthday"));
+    contactObject.insert( QLatin1String( "birthdayi18n" ), i18n( "Birthday" ) );
     const int years = contactAge( birthday );
     contactObject.insert( QLatin1String( "age" ), QString::number( years ) );
   }
@@ -217,7 +219,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   if ( anniversary.isValid() ) {
     contactObject.insert( QLatin1String( "anniversary" ),
                           KGlobal::locale()->formatDate( anniversary ) );
-    contactObject.insert( QLatin1String("anniversaryi18n"), i18n("Anniversary"));
+    contactObject.insert( QLatin1String("anniversaryi18n"), i18n("Anniversary") );
   }
 
   // Emails
@@ -227,10 +229,10 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
     const QString url = QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
       .arg( fullEmail, email );
-    emails<<url;
+    emails << url;
   }
-  contactObject.insert( QLatin1String("emailsi18n"), i18n("Emails"));
-  contactObject.insert( QLatin1String( "emails" ), emails);
+  contactObject.insert( QLatin1String( "emailsi18n" ), i18n( "Emails" ) );
+  contactObject.insert( QLatin1String( "emails" ), emails );
 
   // Phone numbers
   QVariantList phoneNumbers;
@@ -260,7 +262,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
   if ( !blog.isEmpty() ) {
     contactObject.insert( QLatin1String( "blogUrl" ), KStringHandler::tagUrls( blog ) );
-    contactObject.insert( QLatin1String( "blogUrli18n" ), i18n("Blog Feed") );
+    contactObject.insert( QLatin1String( "blogUrli18n" ), i18n( "Blog Feed" ) );
   }
 
   // Address Book
@@ -268,7 +270,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ) );
   if ( !addressBookName.isEmpty() ) {
     contactObject.insert( QLatin1String( "addressBookName" ), addressBookName );
-    contactObject.insert( QLatin1String("addressBookNamei18n"), i18n("Address Book"));
+    contactObject.insert( QLatin1String( "addressBookNamei18n" ), i18n( "Address Book" ) );
   }
 
   // Addresses
@@ -282,7 +284,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   if ( !rawContact.note().isEmpty() ) {
     const QString notes = rawContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ));
     contactObject.insert( QLatin1String( "note" ), notes );
-    contactObject.insert( QLatin1String("notei18n"),i18n("Note"));
+    contactObject.insert( QLatin1String( "notei18n" ),i18n( "Note" ) );
   }
 
   contactObject.insert( QLatin1String( "addresses" ), addresses );
@@ -296,43 +298,43 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   setHashField( contactObject, QLatin1String( "organization" ), rawContact.organization() );
 
   setHashField( contactObject, QLatin1String( "department" ), rawContact.department() );
-  contactObject.insert(QLatin1String("departmenti18n"),i18n("Department"));
+  contactObject.insert(QLatin1String( "departmenti18n" ),i18n( "Department" ) );
 
   setHashField( contactObject, QLatin1String( "note" ), rawContact.note() );
 
   setHashField( contactObject, QLatin1String( "profession" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-Profession" ) ) );
-  contactObject.insert(QLatin1String("Professioni18n"),i18n("Profession"));
+  contactObject.insert(QLatin1String( "Professioni18n" ),i18n( "Profession" ) );
   setHashField( contactObject, QLatin1String( "office" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-Office" ) ) );
-  contactObject.insert(QLatin1String("officei18n"),i18n("Office"));
+  contactObject.insert(QLatin1String( "officei18n" ),i18n( "Office" ) );
 
   setHashField( contactObject, QLatin1String( "manager" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-ManagersName" ) ) );
-  contactObject.insert(QLatin1String("manageri18n"),i18n("Manager's Name"));
+  contactObject.insert(QLatin1String( "manageri18n" ),i18n( "Manager's Name" ) );
 
   setHashField( contactObject, QLatin1String( "assistant" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-AssistantsName" ) ) );
-  contactObject.insert(QLatin1String("assistanti18n"),i18n("Assistant's Name"));
+  contactObject.insert(QLatin1String( "assistanti18n" ),i18n( "Assistant's Name" ) );
 
   setHashField( contactObject, QLatin1String( "spouse" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-SpousesName" ) ) );
-  contactObject.insert(QLatin1String("spousei18n"),i18n("Partner's Name"));
+  contactObject.insert(QLatin1String( "spousei18n" ),i18n( "Partner's Name" ) );
 
   setHashField( contactObject, QLatin1String( "imAddress" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),
                                    QLatin1String( "X-IMAddress" ) ) );
-  contactObject.insert(QLatin1String("imAddressi18n"), i18n("IM Address"));
+  contactObject.insert(QLatin1String( "imAddressi18n" ), i18n( "IM Address" ));
 
   // Custom fields
 
   QVariantList customFields;
-
+  QVariantList customFieldsUrl;
   static QSet<QString> blacklistedKeys;
   if ( blacklistedKeys.isEmpty() ) {
     blacklistedKeys.insert( QLatin1String( "CRYPTOPROTOPREF" ) );
@@ -366,48 +368,60 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
           continue;
         }
 
+        bool addUrl = false;
         // check whether it is a custom local field
         foreach ( const QVariantMap &description, customFieldDescriptions() ) {
           if ( description.value( QLatin1String( "key" ) ).toString() == key ) {
             key = description.value( QLatin1String( "title" ) ).toString();
-
-            if ( description.value( QLatin1String( "type" ) ) ==
-                 QLatin1String( "boolean" ) ) {
+            const QString descriptionType = description.value( QLatin1String( "type" ) ).toString();
+            if ( descriptionType == QLatin1String( "boolean" ) ) {
               if ( value == QLatin1String( "true" ) ) {
                 value = i18nc( "Boolean value", "yes" );
               } else {
                 value = i18nc( "Boolean value", "no" );
               }
 
-            } else if ( description.value( QLatin1String( "type" ) ) ==
-                        QLatin1String( "date" ) ) {
+            } else if ( descriptionType  == QLatin1String( "date" ) ) {
               const QDate date = QDate::fromString( value, Qt::ISODate );
               value = KGlobal::locale()->formatDate( date, KLocale::ShortDate );
 
-            } else if ( description.value( QLatin1String( "type" ) ) ==
-                        QLatin1String( "time" ) ) {
+            } else if ( descriptionType == QLatin1String( "time" ) ) {
               const QTime time = QTime::fromString( value, Qt::ISODate );
               value = KGlobal::locale()->formatTime( time );
 
-            } else if ( description.value( QLatin1String( "type" ) ) ==
-                        QLatin1String( "datetime" ) ) {
+            } else if ( descriptionType == QLatin1String( "datetime" ) ) {
               const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
               value = KGlobal::locale()->formatDateTime( dateTime, KLocale::ShortDate );
+            } else if ( descriptionType == QLatin1String("url") ) {
+              value = KStringHandler::tagUrls( Qt::escape(value) );
+              addUrl = true;
             }
             break;
           }
         }
-
         QVariantHash customFieldObject;
         customFieldObject.insert( QLatin1String( "title" ), key );
         customFieldObject.insert( QLatin1String( "value" ), value );
 
-        customFields.append( customFieldObject );
+        if (addUrl) {
+            customFieldsUrl.append( customFieldObject );
+        } else {
+            customFields.append( customFieldObject );
+        }
       }
     }
   }
 
   contactObject.insert( QLatin1String( "customFields" ), customFields );
+  contactObject.insert( QLatin1String( "customFieldsUrl" ), customFieldsUrl );
+
+#if defined(HAVE_PRISON)
+  KConfig config( QLatin1String( "akonadi_contactrc" ) );
+  KConfigGroup group( &config, QLatin1String( "View" ) );
+  if (group.readEntry( "QRCodes", true )) {
+     contactObject.insert( QLatin1String( "hasqrcode" ), QLatin1String("true") );
+  }
+#endif
 
   QVariantHash colorsObject;
 

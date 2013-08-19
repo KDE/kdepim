@@ -29,13 +29,10 @@
 #include <QFrame>
 
 #include <KCalCore/IncidenceBase> //for DateList typedef
+#include <Akonadi/Calendar/ETMCalendar>
 
 class KODayMatrix;
 class NavigatorBar;
-
-namespace CalendarSupport {
-  class Calendar;
-}
 
 namespace Akonadi {
   class Item;
@@ -47,13 +44,13 @@ class KDateNavigator: public QFrame
 {
   Q_OBJECT
   public:
-    KDateNavigator( QWidget *parent = 0 );
+    explicit KDateNavigator( QWidget *parent = 0 );
     ~KDateNavigator();
 
     /**
       Associate date navigator with a calendar. It is used by KODayMatrix.
     */
-    void setCalendar( CalendarSupport::Calendar * );
+    void setCalendar( const Akonadi::ETMCalendar::Ptr & );
 
     void setBaseDate( const QDate & );
 
@@ -74,7 +71,6 @@ class KDateNavigator: public QFrame
     void setHighlightMode( bool highlightEvents,
                            bool highlightTodos,
                            bool highlightJournals ) const;
-    void setUpdateNeeded();
 
     /**
        Returns the current displayed month.
@@ -91,6 +87,7 @@ class KDateNavigator: public QFrame
     void updateConfig();
     void updateDayMatrix();
     void updateToday();
+    void setUpdateNeeded();
 
   signals:
     void datesSelected( const KCalCore::DateList & );
@@ -131,6 +128,7 @@ class KDateNavigator: public QFrame
 
     KCalCore::DateList mSelectedDates;
     QDate mBaseDate;
+    Akonadi::ETMCalendar::Ptr mCalendar;
 
     // Disabling copy constructor and assignment operator
     KDateNavigator( const KDateNavigator & );

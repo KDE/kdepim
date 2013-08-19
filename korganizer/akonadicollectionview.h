@@ -32,10 +32,6 @@
 
 class AkonadiCollectionView;
 
-namespace CalendarSupport {
-  class CalendarModel;
-}
-
 namespace Akonadi {
   class EntityTreeView;
   class EntityTreeModel;
@@ -43,7 +39,7 @@ namespace Akonadi {
 }
 
 class KAction;
-
+class KJob;
 class QAbstractProxyModel;
 class QModelIndex;
 
@@ -61,7 +57,6 @@ class AkonadiCollectionViewFactory : public CalendarViewExtension::Factory
     CalendarViewExtension *create( QWidget * );
 
   private:
-    CalendarSupport::CalendarModel *mModel;
     CalendarView *mView;
     AkonadiCollectionView *mAkonadiCollectionView;
 };
@@ -81,12 +76,12 @@ class AkonadiCollectionView : public CalendarViewExtension
 
     KCheckableProxyModel *collectionSelectionProxyModel() const;
     void setCollectionSelectionProxyModel( KCheckableProxyModel * );
-    static bool isStructuralCollection( const Akonadi::Collection & );
 
     Akonadi::Collection selectedCollection() const;
     Akonadi::Collection::List checkedCollections() const;
+    bool isChecked(const Akonadi::Collection &) const;
 
-  signals:
+  Q_SIGNALS:
     void resourcesChanged( bool enabled );
     void resourcesAddedRemoved();
     void defaultResourceChanged( const Akonadi::Collection & );
@@ -112,7 +107,7 @@ class AkonadiCollectionView : public CalendarViewExtension
     Akonadi::EntityTreeModel *entityTreeModel() const;
 
     Akonadi::StandardCalendarActionManager *mActionManager;
-    Akonadi::EntityTreeView *mCollectionview;
+    Akonadi::EntityTreeView *mCollectionView;
     QAbstractProxyModel *mBaseModel;
     KCheckableProxyModel *mSelectionProxyModel;
     KAction *mCreateAction;

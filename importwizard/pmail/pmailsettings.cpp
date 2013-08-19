@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,7 +19,7 @@
 #include "importwizardutil.h"
 
 #include <mailtransport/transportmanager.h>
-#include "mailcommon/mailutil.h"
+#include "mailcommon/util/mailutil.h"
 
 #include <kpimidentities/identity.h>
 #include <kpimidentities/signature.h>
@@ -30,19 +30,18 @@
 #include <QFile>
 
 PMailSettings::PMailSettings(const QString& filename,ImportWizard *parent)
-  :AbstractSettings( parent )
+    :AbstractSettings( parent )
 {
-  if(QFile( filename ).exists()) {
-    KConfig config( filename );
+    if (QFile( filename ).exists()) {
+        KConfig config( filename );
 
-    const QStringList accountList = config.groupList().filter( QRegExp( "WinPMail Identity - *" ) );
-    const QStringList::const_iterator end( accountList.constEnd() );
-    for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it )
-    {
-      KConfigGroup group = config.group( *it );
-      readIdentity( group );
+        const QStringList accountList = config.groupList().filter( QRegExp( "WinPMail Identity - *" ) );
+        const QStringList::const_iterator end( accountList.constEnd() );
+        for ( QStringList::const_iterator it = accountList.constBegin(); it!=end; ++it ) {
+            KConfigGroup group = config.group( *it );
+            readIdentity( group );
+        }
     }
-  }
 }
 
 PMailSettings::~PMailSettings()
@@ -55,7 +54,7 @@ void PMailSettings::readIdentity( const KConfigGroup& group )
 
     QString personalNameStr = QLatin1String("Personal name                             ");
     QString personalName;
-    if(group.hasKey(personalNameStr)) {
+    if (group.hasKey(personalNameStr)) {
         personalName = group.readEntry(personalNameStr);
         personalName.remove(0,1); //Remove first space
     }
@@ -64,13 +63,13 @@ void PMailSettings::readIdentity( const KConfigGroup& group )
     newIdentity->setIdentityName( personalName );
 
     const QString emailStr = QLatin1String("Internet E-mail Address                   ");
-    if(group.hasKey(emailStr)) {
+    if (group.hasKey(emailStr)) {
         QString email = group.readEntry(emailStr);
         email.remove(0,1); //Remove first space
         newIdentity->setPrimaryEmailAddress(email);
     }
     const QString replytoStr = QLatin1String("Default reply-to address                  ");
-    if(group.hasKey(replytoStr)) {
+    if (group.hasKey(replytoStr)) {
         QString reply = group.readEntry(replytoStr);
         reply.remove(0,1); //Remove first space
         newIdentity->setReplyToAddr(reply);

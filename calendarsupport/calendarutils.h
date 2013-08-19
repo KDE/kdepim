@@ -25,6 +25,7 @@
 #include "calendarsupport_export.h"
 
 #include <Akonadi/Collection>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include <QtCore/QObject>
 
@@ -34,7 +35,6 @@ namespace Akonadi {
 
 namespace CalendarSupport {
 
-class Calendar;
 class CalendarUtilsPrivate;
 
 /** Some calendar/Incidence related utilitly methods.
@@ -50,14 +50,14 @@ class CALENDARSUPPORT_EXPORT CalendarUtils : public QObject
      * Creates a new CalendarUtils instance. The instance does not take owner ship
      * over the Calendar.
      */
-    explicit CalendarUtils( Calendar *calendar, QObject *parent = 0 );
+    explicit CalendarUtils( const Akonadi::ETMCalendar::Ptr &calendar, QObject *parent = 0 );
 
     ~CalendarUtils();
 
     /**
      * Returns the Caledar on which this utils class is operating.
      */
-    Calendar *calendar() const;
+    Akonadi::ETMCalendar::Ptr calendar() const;
 
     /**
      * Makes the incidence from @param item independent from its parent. Returns
@@ -90,10 +90,10 @@ class CALENDARSUPPORT_EXPORT CalendarUtils : public QObject
     Q_DECLARE_PRIVATE( CalendarUtils )
 
     Q_PRIVATE_SLOT( d_ptr,
-                    void handleChangeFinish( Akonadi::Item,
-                                             Akonadi::Item,
-                                             CalendarSupport::IncidenceChanger::WhatChanged,
-                                             bool ) )
+                    void handleChangeFinish( int changeId,
+                                             const Akonadi::Item &item,
+                                             Akonadi::IncidenceChanger::ResultCode resultCode,
+                                             const QString &errorString ) )
 };
 
 }

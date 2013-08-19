@@ -14,7 +14,7 @@
 
 #include <QLabel>
 #include <QCheckBox>
-//Added by qt3to4:
+
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QGroupBox>

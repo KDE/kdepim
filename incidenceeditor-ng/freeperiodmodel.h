@@ -36,7 +36,7 @@ class INCIDENCEEDITORS_NG_EXPORT FreePeriodModel : public QAbstractTableModel
     enum Roles {
       PeriodRole = Qt::UserRole
     };
-    FreePeriodModel( QObject *parent = 0 );
+    explicit FreePeriodModel( QObject *parent = 0 );
     virtual ~FreePeriodModel();
 
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;

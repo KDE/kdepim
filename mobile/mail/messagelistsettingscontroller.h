@@ -38,7 +38,7 @@ class MessageListSettingsController : public QObject
   Q_PROPERTY( QAction* editAction READ editAction )
 
   public:
-    MessageListSettingsController( QObject *parent = 0 );
+    explicit MessageListSettingsController( QObject *parent = 0 );
 
     QString groupingRole() const;
 

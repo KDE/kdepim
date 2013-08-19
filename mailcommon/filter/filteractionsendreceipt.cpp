@@ -19,18 +19,18 @@
 
 #include "filteractionsendreceipt.h"
 
-#include "../mailkernel.h"
-#include "../mailutil.h"
+#include "kernel/mailkernel.h"
+#include "util/mailutil.h"
 
-#include "messagecomposer/messagefactory.h"
-#include "messagecomposer/messagesender.h"
+#include "messagecomposer/helper/messagefactory.h"
+#include "messagecomposer/sender/messagesender.h"
 
 #include <KDE/KLocale>
 
 using namespace MailCommon;
 
 FilterActionSendReceipt::FilterActionSendReceipt( QObject *parent )
-  : FilterActionWithNone( "confirm delivery", i18n( "Confirm Delivery" ), parent )
+  : FilterActionWithNone( QLatin1String("confirm delivery"), i18n( "Confirm Delivery" ), parent )
 {
 }
 
@@ -48,7 +48,7 @@ FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context 
 
   // Queue message. This is a) so that the user can check
   // the receipt before sending and b) for speed reasons.
-  KernelIf->msgSender()->send( receipt, MessageSender::SendLater );
+  KernelIf->msgSender()->send( receipt, MessageComposer::MessageSender::SendLater );
 
   return GoOn;
 }

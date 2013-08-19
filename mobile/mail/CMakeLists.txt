@@ -8,15 +8,20 @@ add_subdirectory(tests)
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo/
   ${CMAKE_SOURCE_DIR}/libksieve/
+  ${CMAKE_SOURCE_DIR}/libksieve/ksieveui/
   ${CMAKE_SOURCE_DIR}/kmail/
   ${CMAKE_BINARY_DIR}/kmail/kcm_kpimidentities/
   ${CMAKE_SOURCE_DIR}/kmail/kcm_kpimidentities/
   ${CMAKE_SOURCE_DIR}/templateparser
   ${CMAKE_BINARY_DIR}/templateparser
+  ${CMAKE_SOURCE_DIR}/messagecore
   ${CMAKE_SOURCE_DIR}/messagecomposer
   ${CMAKE_BINARY_DIR}/messagecomposer
   ${CMAKE_SOURCE_DIR}/messageviewer
   ${CMAKE_BINARY_DIR}/messageviewer
+  ${CMAKE_SOURCE_DIR}/mailcommon
+  ${CMAKE_SOURCE_DIR}/pimcommon/
+  ${CMAKE_SOURCE_DIR}/libkdepim/
   ${Boost_INCLUDE_DIR}
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
@@ -83,6 +88,7 @@ target_link_libraries(kmail-mobile
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDEPIMLIBS_KMBOX_LIBS}
+  akonadi-calendar
   akonadi_next
   kdepim
   kdepimmobileui
@@ -117,6 +123,8 @@ endif()
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(PROGRAMS kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
+  AboutPage.qml
+  AccountSettingsPage.qml
   AclEditor.qml
   AttachmentEditor.qml
   BulkActionComponent.qml
@@ -128,15 +136,16 @@ install(FILES
   NewMailPage.qml
   ReplyOptionsPage.qml
   EditorView.qml
+  FavoriteManagerPage.qml
   kmail-composer.qml
   kmail-mobile.qml
   KMailActions.qml
   KMailComposerActions.qml
-  kmail-mobile-background.png
   kmail-mobile.notifyrc
-  next-unread-mail.png
+  SettingsPage.qml
   SnippetsEditor.qml
   SnippetsList.qml
+  StartPage.qml
   VacationScriptIndicator.qml
   add-attachment-button.png
   remove-attachment-button.png

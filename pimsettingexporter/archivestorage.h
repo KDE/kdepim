@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -22,22 +22,21 @@ class KZip;
 
 class ArchiveStorage : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ArchiveStorage(const QString &filename, QObject*parent = 0);
-  ~ArchiveStorage();
+    explicit ArchiveStorage(const QString &filename, QObject*parent = 0);
+    ~ArchiveStorage();
 
-  void closeArchive();
-  bool openArchive(bool write);
+    void closeArchive();
+    bool openArchive(bool write);
 
-  KZip *archive();
+    KZip *archive() const;
 
 Q_SIGNALS:
-  void error(const QString&);
+    void error(const QString&);
 
 private:
-  KZip *mArchive;
-
+    KZip *mArchive;
 };
 
 #endif // ARCHIVESTORAGE_H

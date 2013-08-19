@@ -29,7 +29,7 @@ class CsvParser : public QThread, public QCsvBuilderInterface
   Q_OBJECT
 
   public:
-    CsvParser( QObject *parent );
+    explicit CsvParser( QObject *parent );
     ~CsvParser();
 
     void load( QIODevice *device );

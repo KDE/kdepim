@@ -4,6 +4,7 @@
 
 #include "ksieveui_export.h"
 
+#include <QTreeWidget>
 #include <qdialog.h>
 #include <kurl.h>
 
@@ -12,7 +13,7 @@
 class QButtonGroup;
 class QTreeWidgetItem;
 class KPushButton;
-class QTreeWidget;
+
 namespace KManageSieve {
 class SieveJob;
 }
@@ -22,16 +23,37 @@ namespace KSieveUi {
 class SieveEditor;
 class TreeWidgetWithContextMenu;
 
+class ManageSieveTreeView : public QTreeWidget
+{
+    Q_OBJECT
+public:
+    explicit ManageSieveTreeView(QWidget *parent = 0);
+    ~ManageSieveTreeView();
+
+    void setImapFound(bool found);
+
+private Q_SLOTS:
+    void slotGeneralPaletteChanged();
+    void slotGeneralFontChanged();
+
+protected:
+    void paintEvent( QPaintEvent *event );
+
+private:
+    QColor mTextColor;
+    bool mImapFound;
+};
+
 class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    explicit ManageSieveScriptsDialog( QWidget * parent=0, const char * name=0 );
+public:
+    explicit ManageSieveScriptsDialog( QWidget *parent=0 );
     ~ManageSieveScriptsDialog();
 
-  private slots:
-    void slotRefresh( bool disconnectSignal = false );
+private slots:
+    void slotRefresh();
     void slotItem( KManageSieve::SieveJob *, const QString &, bool );
     void slotResult( KManageSieve::SieveJob *, bool, const QString &, bool );
     void slotContextMenuRequested( const QPoint& position );
@@ -42,7 +64,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     void slotDeactivateScript();
     void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
     void slotPutResult( KManageSieve::SieveJob *, bool );
-    void slotPutResultDebug(KManageSieve::SieveJob*,bool success ,const QString& errorMsg);
+    void slotPutResultDebug(KManageSieve::SieveJob *, bool success ,const QString &errorMsg);
 
     void slotSieveEditorOkClicked();
     void slotSieveEditorCancelClicked();
@@ -50,10 +72,10 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     void slotUpdateButtons();
     void slotItemChanged(QTreeWidgetItem*, int);
 
-  private:
+private:
     bool serverHasError(QTreeWidgetItem *item) const;
-    void killAllJobs( bool disconnect = false );
-    void changeActiveScript( QTreeWidgetItem*, bool activate = true );
+    void killAllJobs();
+    void changeActiveScript( QTreeWidgetItem *, bool activate = true );
 
     /**
      * @return whether the specified item's radio button is checked or not
@@ -69,20 +91,22 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     /**
      * Remove everything from the tree widget and clear all caches.
      */
-    void clear( bool disconnect = false );
+    void clear();
 
-    void addFailedMessage( const QString & logEntry );
-    void addOkMessage( const QString & logEntry );
-    void addMessageEntry( const QString & errorMsg, const QColor& color );
+    void addFailedMessage( const QString &logEntry );
+    void addOkMessage( const QString &logEntry );
+    void addMessageEntry( const QString &errorMsg, const QColor &color );
     void updateButtons();
+    void disableManagerScriptsDialog(bool disable);
 
-  private:
+private:
     enum sieveServerStatus
     {
-      SIEVE_SERVER_ERROR = Qt::UserRole +1
+        SIEVE_SERVER_ERROR = Qt::UserRole +1,
+        SIEVE_SERVER_CAPABILITIES = Qt::UserRole +2
     };
 
-    QTreeWidget* mListView;
+    ManageSieveTreeView* mListView;
     SieveEditor * mSieveEditor;
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
     QMap<QTreeWidgetItem*,KUrl> mUrls;
@@ -91,6 +115,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     QMap<QTreeWidgetItem*,QTreeWidgetItem*> mSelectedItems;
 
     KUrl mCurrentURL;
+    QStringList mCurrentCapabilities;
 
     KPushButton *mNewScript;
     KPushButton *mEditScript;
@@ -100,6 +125,7 @@ class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
     bool mIsNewScript : 1;
     bool mWasActive : 1;
     bool mBlockSignal : 1;
+    bool mClearAll : 1;
 };
 
 }

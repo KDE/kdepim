@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -23,14 +23,14 @@ class ImportWizard;
 class Evolutionv1ImportData : public AbstractImporter
 {
 public:
-  explicit Evolutionv1ImportData(ImportWizard *parent);
-  ~Evolutionv1ImportData();
+    explicit Evolutionv1ImportData(ImportWizard *parent);
+    ~Evolutionv1ImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importMails();
-  QString name() const;
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
+
+    bool importMails();
+    QString name() const;
 };
 
 #endif /* Evolutionv1ImportData_H */

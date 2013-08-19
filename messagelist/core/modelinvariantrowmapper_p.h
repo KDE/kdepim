@@ -37,7 +37,7 @@ namespace Core
 class ModelInvariantRowMapperPrivate
 {
 public:
-  ModelInvariantRowMapperPrivate( ModelInvariantRowMapper *owner ) : q( owner ) { }
+  explicit ModelInvariantRowMapperPrivate( ModelInvariantRowMapper *owner ) : q( owner ) { }
 
   /**
    * Internal. Don't look a this :)

@@ -1,6 +1,5 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
 Name=Calendar
 Name[af]=Kalender
 Name[ar]=التقويم
@@ -124,6 +123,7 @@ Keywords[sr@latin]=mobilni
 Keywords[sv]=mobil
 Keywords[tr]=mobil
 Keywords[uk]=мобільний
+Keywords[wa]=axhlåve
 Keywords[x-test]=xxmobilexx
 Keywords[zh_CN]=mobile, 移动版
 Keywords[zh_TW]=行動版

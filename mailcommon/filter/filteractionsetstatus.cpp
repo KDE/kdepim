@@ -29,7 +29,7 @@ FilterAction* FilterActionSetStatus::newAction()
 }
 
 FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
-  : FilterActionStatus( "set status", i18n( "Mark As" ), parent )
+  : FilterActionStatus( QLatin1String("set status"), i18n( "Mark As" ), parent )
 {
 }
 
@@ -51,7 +51,7 @@ FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) 
   }
   else
     status.set( newStatus );
-  if( oldStatus != status ) {
+  if ( oldStatus != status ) {
     context.item().setFlags( status.statusFlags() );
     context.setNeedsFlagStore();
   }

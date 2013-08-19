@@ -6,6 +6,8 @@ include_directories(
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${NEPOMUK_WIDGETS_INCLUDE_DIR}
+  ${CMAKE_SOURCE_DIR}/libkdepim/
+  ${CMAKE_SOURCE_DIR}/messageviewer/
 )
 
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
@@ -73,7 +75,9 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   rawsocketconsole.ui
 )
 
-macro_ensure_version("4.5.74" ${KDE_VERSION} KDE_IS_AT_LEAST_4_5_74)
+if(${KDE_VERSION} VERSION_GREATER "4.5.74")
+  set(KDE_IS_AT_LEAST_4_5_74 TRUE)
+endif()
 
 if(KDE_IS_AT_LEAST_4_5_74)
   kde4_add_ui_files(akonadiconsole_bin_SRCS

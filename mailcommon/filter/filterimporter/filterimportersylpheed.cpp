@@ -135,7 +135,7 @@ void FilterImporterSylpheed::parseConditions( const QDomElement &e, MailCommon::
         } else {
             kDebug() << " tag not recognize " << nexttag;
         }
-        if(fieldName.isEmpty()) {
+        if (fieldName.isEmpty()) {
             kDebug()<<" field not implemented "<<nexttag;
         }
 
@@ -215,7 +215,7 @@ void FilterImporterSylpheed::parseActions( const QDomElement &e,
             break;
         }
 
-        if( actionName.isEmpty() ) {
+        if ( actionName.isEmpty() ) {
             kDebug() << " tag not recognize " << nexttag;
         }
         createFilterAction( filter, actionName, value );

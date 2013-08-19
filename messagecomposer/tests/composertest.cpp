@@ -28,13 +28,13 @@
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <messagecomposer/composer.h>
-#include <messagecomposer/globalpart.h>
-#include <messagecomposer/infopart.h>
-#include <messagecomposer/textpart.h>
-using namespace Message;
+#include <messagecomposer/composer/composer.h>
+#include <messagecomposer/part/globalpart.h>
+#include <messagecomposer/part/infopart.h>
+#include <messagecomposer/part/textpart.h>
+using namespace MessageComposer;
 
-#include <messagecore/attachmentpart.h>
+#include <messagecore/attachment/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
 using MessageCore::AttachmentPart;
 

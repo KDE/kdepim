@@ -101,7 +101,7 @@ VCardInput::VCardInput() : m_converter(0)
 
 QString VCardInput::description() const
 {
-    return i18n("Interprets input as VCard data");
+    return i18n("Interprets input as vCard data");
 }
 
 ///////////////////////////////////////////////////////////////////////////////

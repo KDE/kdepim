@@ -6,8 +6,8 @@
   <include>qtextcodec.h</include>
   <include>kglobalsettings.h</include>
   <include>kcolorscheme.h</include>
-  <include>composer.h</include>
-  <include>messagecomposer/util.h</include>
+  <include>editor/composer.h</include>
+  <include>messagecomposer/utils/util.h</include>
   <kcfgfile name="kmail2rc"/>
   <group name="Behaviour">
       <entry name="ActionEnterFolder"  type="Enum">
@@ -105,11 +105,6 @@
           <label>Close the application when the main window is closed, even if there is a system tray icon active.</label>
         <default>false</default>
       </entry>
-      <entry name="VerboseNewMailNotification" type="Bool">
-        <label>Verbose new mail notification</label>
-        <whatsthis>If this option is enabled then for each folder the number of newly arrived messages is shown in the new mail notification; otherwise, you will only get a simple 'New mail arrived' message.</whatsthis>
-        <default>true</default>
-      </entry>
       <entry name="ExternalEditor" type="String" key="external-editor">
         <label>Specify e&amp;ditor:</label>
         <default>kwrite %f</default>
@@ -127,10 +122,6 @@
       <entry name="CloseToQuotaThreshold" type="Int">
         <label>The threshold for when to warn the user that a folder is nearing its quota limit.</label>
          <default>80</default>
-      </entry>
-      <entry name="BeepOnMail" type="Bool" key="beep-on-mail">
-        <label>Beep upon receiving new mail</label>
-        <default>false</default>
       </entry>
       <entry name="EmptyTrashOnExit" type="Bool" key="empty-trash-on-exit">
         <label>Empty the local trash folder on program exit</label>
@@ -159,6 +150,12 @@
       <entry name="PrintSelectedText" type="Bool" key="print-selected-text">
         <label>Only print selected text in viewer</label>
 	<default>false</default>
+      </entry>
+      <entry key="ShowMenuBar" type="Bool">
+        <default>true</default>
+         <!-- label and whatsthis are already provided by KStandardAction::showMenubar -->
+        <label></label>
+        <whatsthis></whatsthis>
       </entry>
     </group>
 <!-- General -->
@@ -272,7 +269,7 @@
       </entry>
       <entry name="AttachmentKeywords" type="StringList" key="attachment-keywords">
         <default code="true">
-        Message::Util::AttachmentKeywords()
+        MessageComposer::Util::AttachmentKeywords()
         </default>
       </entry>
       <entry name="AutosaveInterval" type="Int" key="autosave">

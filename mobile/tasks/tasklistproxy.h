@@ -21,8 +21,8 @@
 
 #include "listproxy.h"
 
-#include "calendarviews/eventviews/eventview.h"
-#include "calendarviews/eventviews/prefs.h"
+#include "calendarviews/eventview.h"
+#include "calendarviews/prefs.h"
 
 #include <akonadi/entitytreemodel.h>
 

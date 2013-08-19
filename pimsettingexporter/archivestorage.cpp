@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,40 +20,40 @@
 #include <KLocale>
 
 ArchiveStorage::ArchiveStorage(const QString& filename, QObject *parent)
-  :QObject(parent), mArchive(new KZip(filename))
+    :QObject(parent), mArchive(new KZip(filename))
 {
 }
 
 ArchiveStorage::~ArchiveStorage()
 {
-  closeArchive();
-  delete mArchive;
+    closeArchive();
+    delete mArchive;
+    mArchive = 0;
 }
-
 
 void ArchiveStorage::closeArchive()
 {
-  if(mArchive && mArchive->isOpen()) {
-    mArchive->close();
-  }
+    if (mArchive && mArchive->isOpen()) {
+        mArchive->close();
+    }
 }
 
 bool ArchiveStorage::openArchive(bool write)
 {
-  bool result = mArchive->open(write ? QIODevice::WriteOnly : QIODevice::ReadOnly);
-  if(!result) {
-    if(write) {
-      Q_EMIT error(i18n("Archive cannot be opened in write mode."));
-    } else {
-      Q_EMIT error(i18n("Archive cannot be opened in read mode."));
+    bool result = mArchive->open(write ? QIODevice::WriteOnly : QIODevice::ReadOnly);
+    if (!result) {
+        if (write) {
+            Q_EMIT error(i18n("Archive cannot be opened in write mode."));
+        } else {
+            Q_EMIT error(i18n("Archive cannot be opened in read mode."));
+        }
     }
-  }
-  return result;
+    return result;
 }
 
-KZip *ArchiveStorage::archive()
+KZip *ArchiveStorage::archive() const
 {
-  return mArchive;
+    return mArchive;
 }
 
 #include "archivestorage.moc"

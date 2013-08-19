@@ -43,7 +43,7 @@ class SyncUploader : public QObject
 {
 Q_OBJECT
 public:
-    SyncUploader( QObject *parent=0 );
+    explicit SyncUploader( QObject *parent=0 );
     ~SyncUploader();
 
     /**
@@ -55,7 +55,6 @@ public:
 
 private slots:
     void slotMediaFileUploaded( BilboMedia *media );
-//     void slotError( const QString& errMsg );
     void slotMediaError( const QString &errorMessage, BilboMedia* media );
 
 private:

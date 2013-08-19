@@ -19,7 +19,7 @@
 #ifndef KMAIL_MESSAGEACTIONS_H
 #define KMAIL_MESSAGEACTIONS_H
 
-#include "messagecomposer/messagefactory.h"
+#include "messagecomposer/helper/messagefactory.h"
 #include <KUrl>
 
 #include <qobject.h>
@@ -76,8 +76,7 @@ class MessageActions : public QObject
      */
     void setupForwardingActionsList( KXMLGUIClient *guiClient );
 
-    void setCurrentMessage( const Akonadi::Item &item );
-    void setSelectedVisibleItems( const Akonadi::Item::List& items );
+    void setCurrentMessage(const Akonadi::Item &item , const Akonadi::Item::List &items = Akonadi::Item::List());
 
     KActionMenu* replyMenu() const { return mReplyActionMenu; }
     KAction* replyListAction() const { return mReplyListAction; }
@@ -102,7 +101,6 @@ class MessageActions : public QObject
 
 
   signals:
-
     // This signal is emitted when a reply is triggered and the
     // action has finished.
     // This is useful for the stand-alone reader, it might want to close the window in
@@ -120,6 +118,7 @@ class MessageActions : public QObject
     void addMailingListActions( const QString &item, const KUrl::List &list );
     void updateMailingListActions( const Akonadi::Item& messageItem );
     void printMessage(bool preview);
+    void clearMailingListActions();
 
 
   private slots:

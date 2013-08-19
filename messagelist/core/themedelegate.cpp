@@ -23,7 +23,7 @@
 #include "core/groupheaderitem.h"
 #include "core/manager.h"
 
-#include "messagecore/stringutil.h"
+#include "messagecore/utils/stringutil.h"
 
 #include <QStyle>
 #include <QPainter>
@@ -966,7 +966,7 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
             paint_boolean_state_icon( messageItem->status().hasInvitation(),
                                       Manager::instance()->pixmapMessageInvitation(), ci, painter,
                                       l, top, r, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
-	  break;
+          break;
         case Theme::ContentItem::ActionItemStateIcon:
           if ( messageItem )
             paint_boolean_state_icon( messageItem->status().isToAct(),

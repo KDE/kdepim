@@ -2,8 +2,8 @@
 
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
-#include <messagecomposer/akonadisender.h>
-#include <mailcommon/foldercollectionmonitor.h>
+#include <messagecomposer/sender/akonadisender.h>
+#include <mailcommon/folder/foldercollectionmonitor.h>
 #include <akonadi/session.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
@@ -12,12 +12,12 @@
 DummyKernel::DummyKernel( QObject *parent )
   : QObject( parent )
 {
-  mMessageSender = new AkonadiSender( this );
+  mMessageSender = new MessageComposer::AkonadiSender( this );
   mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
-  mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( this );
-
   Akonadi::Session *session = new Akonadi::Session( "MailFilter Kernel ETM", this );
-  folderCollectionMonitor()->setSession( session );
+
+  mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
+
   mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
   mEntityTreeModel->setIncludeUnsubscribed( false );
   mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
@@ -35,7 +35,7 @@ KPIMIdentities::IdentityManager *DummyKernel::identityManager()
   return mIdentityManager;
 }
 
-MessageSender *DummyKernel::msgSender()
+MessageComposer::MessageSender *DummyKernel::msgSender()
 {
   return mMessageSender;
 }

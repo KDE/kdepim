@@ -1,6 +1,8 @@
 project( ksendemail )
 
 if(KMAIL_SUPPORTED)
+  add_definitions( -DQT_NO_CAST_FROM_ASCII )
+  add_definitions( -DQT_NO_CAST_TO_ASCII )
 
   set( ksendemail_SRCS main.cpp mailerservice.cpp )
 
@@ -12,6 +14,6 @@ if(KMAIL_SUPPORTED)
 
   install( TARGETS ksendemail ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-else(KMAIL_SUPPORTED)
+else()
   message(STATUS "Ksendemail will NOT be built.")
-endif(KMAIL_SUPPORTED)
+endif()

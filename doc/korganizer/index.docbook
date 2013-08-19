@@ -383,7 +383,7 @@ resources, import and export actions and the get hot new stuff scheme.</para>
 <filename>$KDEHOME/share/apps/korganizer/std.ics</filename>,
 as its default resource. But this is not your only option: there are several
 other resources you can add: groupware servers, journal entries as blogs,
-network files, &etc;. If you use more than one resource, &korganizer;
+network files, &etc; If you use more than one resource, &korganizer;
 <link linkend="config-main-general-personal">can be configured to use the default
 resource or ask which resource to use</link> when saving new events, to-dos or
 journal entries. &korganizer; will seamlessly merge the items from
@@ -1528,7 +1528,7 @@ the dates directly or use the <link linkend="glossary"
  endterm="gloss-calendar-widget">
 Calendar Widget</link>.  Select the time from quarter hour intervals, or enter
 the desired time directly into the time fields. These fields are only available
-when the <guilabel>Takes the whole day</guilabel> box is not checked.</para></listitem>
+when the <guilabel>All Day</guilabel> box is not checked.</para></listitem>
 </varlistentry>
 
 </variablelist>

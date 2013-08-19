@@ -22,15 +22,10 @@
 #include "incidencedialogfactory.h"
 #include "korganizereditorconfig.h"
 
-#include <calendarsupport/calendar.h>
-#include <calendarsupport/calendarmodel.h>
-#include <calendarsupport/groupware.h>
-#include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
+#include <calendarsupport/calendarsingleton.h>
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/Session>
+#include <Akonadi/Calendar/ITIPHandler>
 
 #include <KSystemTimeZones>
 
@@ -38,7 +33,7 @@ using namespace IncidenceEditorNG;
 
 namespace IncidenceEditorNG {
 
-class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
+class GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
 {
   public:
     GroupwareUiDelegate()
@@ -46,37 +41,16 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
     {
     }
 
-    void setCalendar( CalendarSupport::Calendar *calendar )
+    void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
     {
       mCalendar = calendar;
     }
 
     void createCalendar()
     {
-      Akonadi::Session *session = new Akonadi::Session( "GroupwareIntegration", this );
-      Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
-
-      Akonadi::ItemFetchScope scope;
-      scope.fetchFullPayload( true );
-
-      monitor->setSession( session );
-      monitor->setCollectionMonitored( Akonadi::Collection::root() );
-      monitor->fetchCollection( true );
-      monitor->setItemFetchScope( scope );
-      monitor->setMimeTypeMonitored( "text/calendar" );
-      monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
-      monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
-      monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
-
-      CalendarSupport::CalendarModel *calendarModel =
-        new CalendarSupport::CalendarModel( monitor, this );
-      calendarModel->setObjectName( "Groupware calendar model" );
-
-      mCalendar = new CalendarSupport::Calendar( calendarModel, calendarModel,
-                                                 KSystemTimeZones::local() );
-      mCalendar->setObjectName( "Groupware calendar" );
-      mCalendar->setOwner( KCalCore::Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                             CalendarSupport::KCalPrefs::instance()->email() ) );
+      QStringList mimeTypes;
+      mimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType();
+      mCalendar = CalendarSupport::calendarSingleton();
     }
 
     void requestIncidenceEditor( const Akonadi::Item &item )
@@ -89,8 +63,8 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
       }
 
       IncidenceEditorNG::IncidenceDialog *dialog =
-        IncidenceEditorNG::IncidenceDialogFactory::create( false/*needs initial saving?*/,
-                                                           incidence->type() );
+        IncidenceEditorNG::IncidenceDialogFactory::create( /*needs initial saving=*/ false,
+                                                           incidence->type(), 0 );
       dialog->setIsCounterProposal( true );
       dialog->load( item, QDate::currentDate() );
 #else
@@ -98,12 +72,12 @@ class GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiD
 #endif
     }
 
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
 };
 
 }
 
-CalendarSupport::GroupwareUiDelegate *GroupwareIntegration::sDelegate = 0;
+Akonadi::GroupwareUiDelegate *GroupwareIntegration::sDelegate = 0;
 
 bool GroupwareIntegration::sActivated = false;
 
@@ -112,14 +86,14 @@ bool GroupwareIntegration::isActive()
   return sActivated;
 }
 
-void GroupwareIntegration::activate( CalendarSupport::Calendar *calendar )
+void GroupwareIntegration::activate( const Akonadi::ETMCalendar::Ptr &calendar )
 {
   if ( !sDelegate ) {
     sDelegate = new GroupwareUiDelegate;
   }
 
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
-  CalendarSupport::Groupware::create( sDelegate );
+  //Akonadi::Groupware::create( sDelegate ); TODO_SERGIO
   if ( calendar ) {
     sDelegate->setCalendar( calendar );
   } else {
@@ -128,7 +102,7 @@ void GroupwareIntegration::activate( CalendarSupport::Calendar *calendar )
   sActivated = true;
 }
 
-void GroupwareIntegration::setGlobalUiDelegate( CalendarSupport::GroupwareUiDelegate *delegate )
+void GroupwareIntegration::setGlobalUiDelegate( Akonadi::GroupwareUiDelegate *delegate )
 {
   delete sDelegate;
   sDelegate = delegate;

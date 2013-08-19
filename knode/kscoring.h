@@ -100,8 +100,8 @@ class KNODE_EXPORT ActionBase {
 
 class KNODE_EXPORT ActionColor : public ActionBase {
   public:
-    ActionColor( const QColor & );
-    ActionColor( const QString & );
+    explicit ActionColor( const QColor & );
+    explicit ActionColor( const QString & );
     ActionColor( const ActionColor & );
     virtual ~ActionColor();
     virtual QString toString() const;
@@ -119,9 +119,9 @@ class KNODE_EXPORT ActionColor : public ActionBase {
 
 class KNODE_EXPORT ActionSetScore : public ActionBase {
   public:
-    ActionSetScore( short );
+    explicit ActionSetScore( short );
     ActionSetScore( const ActionSetScore & );
-    ActionSetScore( const QString & );
+    explicit ActionSetScore( const QString & );
     virtual ~ActionSetScore();
     virtual QString toString() const;
     virtual int getType() const { return SETSCORE; }
@@ -138,7 +138,7 @@ class KNODE_EXPORT ActionSetScore : public ActionBase {
 
 class KNODE_EXPORT ActionNotify : public ActionBase {
   public:
-    ActionNotify( const QString & );
+    explicit ActionNotify( const QString & );
     ActionNotify( const ActionNotify & );
     virtual ~ActionNotify() {}
     virtual QString toString() const;
@@ -228,7 +228,7 @@ class KNODE_EXPORT KScoringRule
 {
   friend class KScoringManager;
   public:
-    KScoringRule( const QString &name );
+    explicit KScoringRule( const QString &name );
     KScoringRule( const KScoringRule &r );
     ~KScoringRule();
 
@@ -319,7 +319,7 @@ class KNODE_EXPORT KScoringManager : public QObject
     // this is the container for all rules
     typedef Q3PtrList<KScoringRule> ScoringRuleList;
 
-    KScoringManager( const QString &appName = QString() );
+    explicit KScoringManager( const QString &appName = QString() );
     virtual ~KScoringManager();
 
     // returns a list of all available groups, must be overridden
@@ -426,7 +426,7 @@ class KNODE_EXPORT NotifyDialog : public KDialog
     void slotShowAgainToggled( bool );
 
   private:
-    NotifyDialog( QWidget *p=0 );
+    explicit NotifyDialog( QWidget *p=0 );
     static NotifyDialog *me;
 
     QLabel *note;

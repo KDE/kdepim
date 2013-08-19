@@ -34,22 +34,22 @@
 #include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transportcombobox.h>
 #include <mailtransport/transportmanager.h>
-#include <messageviewer/globalsettings.h>
-#include <messageviewer/objecttreeemptysource.h>
-#include <messageviewer/objecttreeparser.h>
-#include <messagecomposer/kmeditor.h>
-#include <messagecomposer/signaturecontroller.h>
-#include <messagecomposer/composer.h>
-#include <messagecomposer/globalpart.h>
-#include <messagecomposer/infopart.h>
-#include <messagecomposer/textpart.h>
-#include <messagecomposer/emailaddressresolvejob.h>
-#include <messagecomposer/attachmentcontrollerbase.h>
-#include <messagecomposer/attachmentmodel.h>
-#include <messagecomposer/kleo_util.h>
-#include <messagecomposer/messagecomposersettings.h>
-#include <messagecomposer/recipientseditor.h>
-#include <messagecomposer/util.h>
+#include <messageviewer/settings/globalsettings.h>
+#include <messageviewer/viewer/objecttreeemptysource.h>
+#include <messageviewer/viewer/objecttreeparser.h>
+#include <messagecomposer/composer/kmeditor.h>
+#include <messagecomposer/composer/signaturecontroller.h>
+#include <messagecomposer/composer/composer.h>
+#include <messagecomposer/part/globalpart.h>
+#include <messagecomposer/part/infopart.h>
+#include <messagecomposer/part/textpart.h>
+#include <messagecomposer/job/emailaddressresolvejob.h>
+#include <messagecomposer/attachment/attachmentcontrollerbase.h>
+#include <messagecomposer/attachment/attachmentmodel.h>
+#include <messagecomposer/utils/kleo_util.h>
+#include <messagecomposer/settings/messagecomposersettings.h>
+#include <messagecomposer/recipient/recipientseditor.h>
+#include <messagecomposer/utils/util.h>
 #include <akonadi/collectioncombobox.h>
 
 #include <klocalizedstring.h>
@@ -71,7 +71,7 @@
 #include <mailtransport/transportmanagementwidget.h>
 #endif
 
-class DeclarativeEditor : public DeclarativeWidgetBase<Message::KMeditor, ComposerView, &ComposerView::setEditor>
+class DeclarativeEditor : public DeclarativeWidgetBase<MessageComposer::KMeditor, ComposerView, &ComposerView::setEditor>
 {
    Q_OBJECT
    Q_PROPERTY( int availableScreenHeight READ availableScreenHeight WRITE setAvailableScreenHeight )
@@ -119,7 +119,7 @@ void ComposerView::doDelayedInit()
   engine()->rootContext()->setContextProperty( "snippetsModel", m_snippetsEditor->model() );
 
   // ### TODO: make this happens later to show the composer as fast as possible
-  m_composerBase = new Message::ComposerViewBase( this );
+  m_composerBase = new MessageComposer::ComposerViewBase( this );
   m_composerBase->setIdentityManager( MobileKernel::self()->identityManager() );
 
   // Temporarily only in c++, use from QML when ready.
@@ -137,17 +137,17 @@ void ComposerView::doDelayedInit()
   */
 
 
-  connect( m_composerBase, SIGNAL(disableHtml(Message::ComposerViewBase::Confirmation)),
-           this, SLOT(disableHtml(Message::ComposerViewBase::Confirmation)) );
+  connect( m_composerBase, SIGNAL(disableHtml(MessageComposer::ComposerViewBase::Confirmation)),
+           this, SLOT(disableHtml(MessageComposer::ComposerViewBase::Confirmation)) );
   connect( m_composerBase, SIGNAL(enableHtml()),this, SLOT(enableHtml()) );
 
   connect( m_composerBase, SIGNAL(sentSuccessfully()), this, SLOT(sendSuccessful()) );
   connect( m_composerBase, SIGNAL(failed(QString)), this, SLOT(failed(QString)) );
   connect( m_composerBase, SIGNAL(sentSuccessfully()), this, SLOT(success()) );
 
-  Message::AttachmentModel* attachmentModel = new Message::AttachmentModel(this);
+  MessageComposer::AttachmentModel* attachmentModel = new MessageComposer::AttachmentModel(this);
   engine()->rootContext()->setContextProperty( "attachmentModel", QVariant::fromValue( static_cast<QObject*>( attachmentModel ) ) );
-  Message::AttachmentControllerBase* attachmentController = new Message::AttachmentControllerBase(attachmentModel, this, actionCollection());
+  MessageComposer::AttachmentControllerBase* attachmentController = new MessageComposer::AttachmentControllerBase(attachmentModel, this, actionCollection());
   attachmentController->createActions();
   m_composerBase->setAttachmentModel( attachmentModel );
   m_composerBase->setAttachmentController( attachmentController );
@@ -238,7 +238,7 @@ void ComposerView::doDelayedInit()
   connect( action, SIGNAL(triggered(bool)), SLOT(setCryptoFormat()) );
 
   actionCollection()->action( "attach_public_key" )->setText( i18n( "Attach Public Key" ) );
-  actionCollection()->action( "composer_insert_signature" )->setText( i18n( "Insert Signature At Cursor Position" ) );
+  actionCollection()->action( "composer_insert_signature" )->setText( i18n( "Insert Signature at Cursor Position" ) );
 }
 
 void ComposerView::setIdentityCombo( KPIMIdentities::IdentityCombo* combo )
@@ -271,7 +271,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 //   kDebug() << m_identityCombo;
 //   kDebug() << m_editor;
 
-  Message::SignatureController *signatureController = new Message::SignatureController( this );
+  MessageComposer::SignatureController *signatureController = new MessageComposer::SignatureController( this );
   signatureController->setEditor( m_composerBase->editor() );
   signatureController->setIdentityCombo( m_composerBase->identityCombo() );
   signatureController->suspend(); // ComposerView::identityChanged will update the signature
@@ -328,7 +328,7 @@ void ComposerView::setMessage(const KMime::Message::Ptr& msg, bool mayAutoSign)
   emit changed();
 }
 
-void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn saveIn )
+void ComposerView::send( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn )
 {
   kDebug();
 
@@ -336,14 +336,14 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
     return;
 
   if ( m_composerBase->recipientsEditor()->recipients().isEmpty()
-    &&  saveIn != MessageSender::SaveInDrafts && saveIn != MessageSender::SaveInTemplates ) {
+    &&  saveIn != MessageComposer::MessageSender::SaveInDrafts && saveIn != MessageComposer::MessageSender::SaveInTemplates ) {
       KMessageBox::sorry( this,
                           i18n("You should specify at least one recipient for this message."),
                           i18n("No recipients found"));
       return;
   }
 
-  if ( m_subject.isEmpty() && saveIn != MessageSender::SaveInDrafts && saveIn != MessageSender::SaveInTemplates ) {
+  if ( m_subject.isEmpty() && saveIn != MessageComposer::MessageSender::SaveInDrafts && saveIn != MessageComposer::MessageSender::SaveInTemplates ) {
       const int rc = KMessageBox::questionYesNo( this,
                                                  i18n("You did not specify a subject. Do you want to send the message without specifying one?"),
                                                  i18n("No subject"));
@@ -354,7 +354,7 @@ void ComposerView::send( MessageSender::SendMethod method, MessageSender::SaveIn
 
   m_composerBase->setSubject( m_subject ); //needed by checkForMissingAttachments
 
-  if ( Settings::self()->composerDetectMissingAttachments() && m_composerBase->checkForMissingAttachments( Message::Util::AttachmentKeywords() ) ) {
+  if ( Settings::self()->composerDetectMissingAttachments() && m_composerBase->checkForMissingAttachments( MessageComposer::Util::AttachmentKeywords() ) ) {
     return;
   }
 
@@ -514,7 +514,7 @@ void ComposerView::identityChanged( uint newIdentity )
   m_currentIdentity = newIdentity;
 }
 
-void ComposerView::setEditor( Message::KMeditor* editor )
+void ComposerView::setEditor( MessageComposer::KMeditor* editor )
 {
     new ComposerAutoResizer(editor);
     m_composerBase->setEditor( editor );
@@ -568,23 +568,23 @@ void ComposerView::closeEvent( QCloseEvent * event )
 
 void ComposerView::sendLater()
 {
-  const MessageSender::SendMethod method = MessageSender::SendLater;
-  const MessageSender::SaveIn saveIn = MessageSender::SaveInNone;
+  const MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendLater;
+  const MessageComposer::MessageSender::SaveIn saveIn = MessageComposer::MessageSender::SaveInNone;
   send ( method, saveIn );
 }
 
 void ComposerView::saveDraft()
 {
-  const MessageSender::SendMethod method = MessageSender::SendLater;
-  const MessageSender::SaveIn saveIn = MessageSender::SaveInDrafts;
+  const MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendLater;
+  const MessageComposer::MessageSender::SaveIn saveIn = MessageComposer::MessageSender::SaveInDrafts;
   m_draft = true;
   send ( method, saveIn );
 }
 
 void ComposerView::saveAsTemplate()
 {
-  const MessageSender::SendMethod method = MessageSender::SendLater;
-  const MessageSender::SaveIn saveIn = MessageSender::SaveInTemplates;
+  const MessageComposer::MessageSender::SendMethod method = MessageComposer::MessageSender::SendLater;
+  const MessageComposer::MessageSender::SaveIn saveIn = MessageComposer::MessageSender::SaveInTemplates;
   send ( method, saveIn );
 }
 
@@ -662,9 +662,9 @@ void ComposerView::enableHtml()
   m_composerBase->editor()->setActionsEnabled( true );
 }
 
-void ComposerView::disableHtml( Message::ComposerViewBase::Confirmation confirmation )
+void ComposerView::disableHtml( MessageComposer::ComposerViewBase::Confirmation confirmation )
 {
-  if ( confirmation == Message::ComposerViewBase::LetUserConfirm && m_composerBase->editor()->isFormattingUsed() ) {
+  if ( confirmation == MessageComposer::ComposerViewBase::LetUserConfirm && m_composerBase->editor()->isFormattingUsed() ) {
     int choice = KMessageBox::warningContinueCancel( this, i18n( "Turning HTML mode off "
         "will cause the text to lose the formatting. Are you sure?" ),
         i18n( "Lose the formatting?" ), KGuiItem( i18n( "Lose Formatting" ) ), KStandardGuiItem::cancel(),

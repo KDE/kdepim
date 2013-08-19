@@ -20,7 +20,6 @@
 
 #include "combinedincidenceeditor.h"
 
-#include <KMessageBox>
 #include <KDebug>
 
 using namespace IncidenceEditorNG;
@@ -57,7 +56,7 @@ bool CombinedIncidenceEditor::isValid() const
       const QString reason = editor->lastErrorString();
       editor->focusInvalidField();
       if ( !reason.isEmpty() ) {
-        KMessageBox::sorry( mParent, reason );
+        emit showMessage( reason, KMessageWidget::Warning );
       }
       return false;
     }

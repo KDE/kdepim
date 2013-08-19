@@ -24,8 +24,10 @@
 #ifndef KORGAC_KOALARMCLIENT_H
 #define KORGAC_KOALARMCLIENT_H
 
+#include <Akonadi/Calendar/ETMCalendar>
+
 #if !defined(Q_WS_WINCE)
-#include <KSessionManager>
+# include <KSessionManager>
 #endif
 
 #include <QTimer>
@@ -34,13 +36,9 @@
 class AlarmDialog;
 class AlarmDockWindow;
 
-namespace CalendarSupport {
-  class Calendar;
-  class CalendarModel;
-}
-
 namespace Akonadi {
   class Item;
+  class EntityTreeModel;
 }
 
 #if !defined(Q_WS_WINCE)
@@ -51,7 +49,7 @@ class KOAlarmClient : public QObject
 {
   Q_OBJECT
   public:
-    KOAlarmClient( QObject *parent = 0 );
+    explicit KOAlarmClient( QObject *parent = 0 );
     ~KOAlarmClient();
 
 #if !defined(Q_WS_WINCE)
@@ -81,14 +79,15 @@ class KOAlarmClient : public QObject
 
   private:
     bool dockerEnabled();
-    bool collectionsAvailable();
-    void createReminder( CalendarSupport::Calendar *calendar, const Akonadi::Item &incidence,
+    bool collectionsAvailable() const;
+    void createReminder( const Akonadi::ETMCalendar::Ptr &calendar,
+                         const Akonadi::Item &incidence,
                          const QDateTime &dt, const QString &displayText );
     void saveLastCheckTime();
 
     AlarmDockWindow *mDocker;  // the panel icon
-    CalendarSupport::Calendar *mCalendar;
-    CalendarSupport::CalendarModel *mCalendarModel;
+    Akonadi::ETMCalendar::Ptr mCalendar;
+    Akonadi::EntityTreeModel *mETM;
 
     QDateTime mLastChecked;
     QTimer mCheckTimer;

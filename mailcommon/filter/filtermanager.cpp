@@ -64,16 +64,16 @@ class FilterManager::Private
 
 void FilterManager::Private::readConfig()
 {
-  KSharedConfig::Ptr config = KSharedConfig::openConfig( "akonadi_mailfilter_agentrc" );
+  KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("akonadi_mailfilter_agentrc") );
   clear();
   QStringList emptyFilters;
   mFilters = FilterImporterExporter::readFiltersFromConfig( config, emptyFilters );
-  q->emit filtersChanged();
+  emit q->filtersChanged();
 }
 
 void FilterManager::Private::writeConfig( bool withSync ) const
 {
-  KSharedConfig::Ptr config = KSharedConfig::openConfig( "akonadi_mailfilter_agentrc" );
+  KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("akonadi_mailfilter_agentrc") );
 
   // Now, write out the new stuff:
   FilterImporterExporter::writeFiltersToConfig( mFilters, config );
@@ -133,7 +133,7 @@ FilterManager::FilterManager()
 
   qDBusRegisterMetaType<QList<qint64> >();
   Akonadi::ServerManager::State state = Akonadi::ServerManager::self()->state();
-  if(state == Akonadi::ServerManager::Running) {
+  if (state == Akonadi::ServerManager::Running) {
     QTimer::singleShot(0,this,SLOT(slotReadConfig()));
   } else {
     connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
@@ -143,7 +143,7 @@ FilterManager::FilterManager()
 
 void FilterManager::slotServerStateChanged(Akonadi::ServerManager::State state)
 {
-  if(state == Akonadi::ServerManager::Running) {
+  if (state == Akonadi::ServerManager::Running) {
     d->readConfig();
     disconnect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)));
   }
@@ -151,7 +151,7 @@ void FilterManager::slotServerStateChanged(Akonadi::ServerManager::State state)
 
 void FilterManager::updateTagList()
 {
-  if( d->mTagQueryClient )
+  if ( d->mTagQueryClient )
       return;
   d->mTagList.clear();
   d->mTagQueryClient = new Nepomuk2::Query::QueryServiceClient(this);
@@ -162,7 +162,7 @@ void FilterManager::updateTagList()
 
   Nepomuk2::Query::ResourceTypeTerm term( Soprano::Vocabulary::NAO::Tag() );
   Nepomuk2::Query::Query query( term );
-  d->mTagQueryClient->query(query);	
+  d->mTagQueryClient->query(query);
 }
 
 void FilterManager::slotReadConfig()
@@ -194,7 +194,7 @@ void FilterManager::resourceCreated(const Nepomuk2::Resource& res,const QList<QU
 
 void FilterManager::resourceRemoved(const QUrl&url,const QList<QUrl>&)
 {
-    if(d->mTagList.contains(url)) {
+    if (d->mTagList.contains(url)) {
         d->mTagList.remove(url);
     }
     Q_EMIT tagListingFinished();
@@ -202,7 +202,7 @@ void FilterManager::resourceRemoved(const QUrl&url,const QList<QUrl>&)
 
 void FilterManager::propertyChanged(const Nepomuk2::Resource& res)
 {
-    if(d->mTagList.contains(res.uri())) {
+    if (d->mTagList.contains(res.uri())) {
         d->mTagList.insert(res.uri(), res.label() );
     }
     Q_EMIT tagListingFinished();

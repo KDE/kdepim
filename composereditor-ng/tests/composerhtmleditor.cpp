@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,31 +18,38 @@
 
 */
 #include "composerhtmleditor.h"
+#include "widgets/domtreewidget.h"
+#include "composerview.h"
 
 #include <kapplication.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <klocale.h>
 #include <kdebug.h>
+
 #include <QVBoxLayout>
+#include <QSplitter>
 
 ComposerHtmlEditor::ComposerHtmlEditor()
     : KXmlGuiWindow()
 {
+    QSplitter *w = new QSplitter;
+
     editor = new ComposerEditorNG::ComposerEditor(this);
+    ComposerEditorNG::DomTreeWidget *domWidget = new ComposerEditorNG::DomTreeWidget(editor->view(), this);
+    w->addWidget(domWidget);
 
-
-    QVBoxLayout *l = new QVBoxLayout();
-    QWidget *w = new QWidget();
-    l->addWidget( editor );
-    w->setLayout( l );
-
+    w->addWidget( editor );
     setCentralWidget( w );
 
 
-    editor->createActions( actionCollection() );
-    setupGUI();
+    editor->createAllActions();
+    editor->addCreatedActionsToActionCollection( actionCollection() );
+    QList<ComposerEditorNG::ComposerView::ComposerViewAction> lst;
+    lst << ComposerEditorNG::ComposerView::Bold;
+    editor->createToolBar(lst);
     setupActions();
+    setupGUI();
 }
 
 ComposerHtmlEditor::~ComposerHtmlEditor()
@@ -53,18 +60,6 @@ void ComposerHtmlEditor::setupActions()
 {
     KStandardAction::quit( kapp, SLOT(quit()),
                            actionCollection() );
-
-    KStandardAction::open( this, SLOT(openFile()),
-                           actionCollection() );
-
-    KStandardAction::save( this, SLOT(saveFile()),
-                           actionCollection() );
-
-    KStandardAction::saveAs( this, SLOT(saveFileAs()),
-                             actionCollection() );
-
-    KStandardAction::openNew( this, SLOT(newFile()),
-                              actionCollection() );
 }
 
 

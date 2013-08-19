@@ -48,7 +48,7 @@ QWidget* FilterActionSetTransport::createParamWidget( QWidget *parent ) const
 }
 
 FilterActionSetTransport::FilterActionSetTransport( QObject *parent )
-  : FilterAction( "set transport", i18n( "Set Transport To" ), parent ), mParameter( -1 )
+  : FilterAction( QLatin1String("set transport"), i18n( "Set Transport To" ), parent ), mParameter( -1 )
 {
 }
 

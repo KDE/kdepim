@@ -16,7 +16,7 @@
 #include <q3header.h>
 #include <q3stylesheet.h>
 #include <QTimer>
-//Added by qt3to4:
+
 #include <QKeyEvent>
 #include <QEvent>
 #include <QMouseEvent>

@@ -36,7 +36,7 @@ QString JobInfo::stateAsString() const
     switch( state )
     {
         case Initial:
-            return QLatin1String("Initial");
+            return QLatin1String("Waiting");
         case Running:
             return QLatin1String("Running");
         case Ended:
@@ -130,14 +130,14 @@ JobTracker::~JobTracker()
   delete d;
 }
 
-void JobTracker::jobCreated( const QString & session, const QString & job, const QString & parent, const QString & jobType )
+void JobTracker::jobCreated( const QString & session, const QString & job, const QString & parent, const QString & jobType, const QString & debugString )
 {
   if ( d->disabled || session.isEmpty() || job.isEmpty() ) return;
 
   if ( !parent.isEmpty() && !d->jobs.contains( parent ) )
   {
-    qWarning() << "JobTracker: Job arrived before it's parent! Fix the library!";
-    jobCreated( session, parent, QString(),"dummy job type" );
+    qWarning() << "JobTracker: Job arrived before its parent! Fix the library!";
+    jobCreated( session, parent, QString(), "dummy job type", QString() );
   }
   // check if it's a new session, if so, add it
   if ( d->sessions.isEmpty() || !d->sessions.contains( session ) ) {
@@ -160,6 +160,7 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
   info.state = JobInfo::Initial;
   info.timestamp = QDateTime::currentDateTime();
   info.type = jobType;
+  info.debugString = debugString;
   d->infoList.insert( job, info );
   const int id = d->lastId++;
   d->idToSequence.insert( job, id );
@@ -193,6 +194,7 @@ void JobTracker::jobEnded( const QString& job, const QString& error )
     info.state = JobInfo::Failed;
     info.error = error;
   }
+  info.endedTimestamp = QDateTime::currentDateTime();
   d->infoList[job] = info;
 
   d->unpublishedUpdates << QPair<int, int>( d->jobs[jobForId(info.parent)].size()-1, info.parent );
@@ -206,6 +208,7 @@ void JobTracker::jobStarted( const QString & job )
 
   JobInfo info = d->infoList[job];
   info.state = JobInfo::Running;
+  info.startedTimestamp = QDateTime::currentDateTime();
   d->infoList[job] = info;
 
   d->unpublishedUpdates << QPair<int, int>( d->jobs[jobForId(info.parent)].size()-1, info.parent );

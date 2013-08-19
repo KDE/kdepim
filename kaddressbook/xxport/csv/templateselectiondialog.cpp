@@ -150,7 +150,7 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
     {
     }
 
-    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option,
+    void paint( QPainter *painter, const QStyleOptionViewItem &option,
                         const QModelIndex &index ) const
     {
       QStyledItemDelegate::paint( painter, option, index );
@@ -171,7 +171,7 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
       return hint;
     }
 
-    virtual bool editorEvent( QEvent *event, QAbstractItemModel *model,
+    bool editorEvent( QEvent *event, QAbstractItemModel *model,
                               const QStyleOptionViewItem &option, const QModelIndex &index )
     {
       if ( event->type() == QEvent::MouseButtonRelease && index.data( Qt::UserRole ).toBool() ) {

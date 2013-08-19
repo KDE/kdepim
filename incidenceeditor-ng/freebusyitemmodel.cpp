@@ -20,7 +20,7 @@
 
 #include "freebusyitemmodel.h"
 
-#include <calendarsupport/freebusymanager.h>
+#include <akonadi/calendar/freebusymanager.h>
 
 #include <KDebug>
 #include <KGlobal>
@@ -91,7 +91,7 @@ FreeBusyItemModel::FreeBusyItemModel( QObject *parent )
   qRegisterMetaType<KCalCore::FreeBusy::Ptr>( "KCalCore::FreeBusy::Ptr" );
   qRegisterMetaType<KCalCore::Period>( "KCalCore::Period" );
 
-  CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
+  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
   connect( m, SIGNAL(freeBusyRetrieved(KCalCore::FreeBusy::Ptr,QString)),
            SLOT(slotInsertFreeBusy(KCalCore::FreeBusy::Ptr,QString)) );
 

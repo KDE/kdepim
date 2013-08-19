@@ -32,7 +32,7 @@ class FilterActionSendFakeDisposition: public FilterActionWithStringList
 {
   Q_OBJECT
   public:
-    FilterActionSendFakeDisposition( QObject *parent = 0 );
+    explicit FilterActionSendFakeDisposition( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;
 

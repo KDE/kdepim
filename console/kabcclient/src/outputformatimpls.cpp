@@ -123,7 +123,7 @@ VCardOutput::~VCardOutput()
 
 QString VCardOutput::description() const
 {
-    return i18n("Exports to VCard format");
+    return i18n("Exports to vCard format");
 }
 
 ///////////////////////////////////////////////////////////////////////////////

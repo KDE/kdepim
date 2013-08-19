@@ -5,13 +5,20 @@ include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${Grantlee_INCLUDE_DIRS}
+  ${CMAKE_SOURCE_DIR}/pimcommon/
+  ${CMAKE_SOURCE_DIR}/libkdepim/ 
 )
+
+#add_definitions( -DQT_NO_CAST_FROM_ASCII )
+#add_definitions( -DQT_NO_CAST_TO_ASCII )
+
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
-macro_optional_find_package(Prison QUIET)
-macro_log_feature(PRISON_FOUND "Prison" "Prison library" "http://projects.kde.org/prison" FALSE "" "Needed to show mobile barcodes of your contacts")
-if(PRISON_FOUND)
+find_package(Prison QUIET CONFIG)
+set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
+
+if(Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
   include_directories(${PRISON_INCLUDE_DIR})
 endif()
@@ -72,19 +79,16 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_xxport_SRCS}
 )
 
-if(Grantlee_FOUND)
-  set(kaddressbook_LIB_SRCS
-    ${kaddressbook_LIB_SRCS}
-    grantleecontactformatter.cpp
-    grantleecontactgroupformatter.cpp
-    grantlee/theme.cpp
-    grantlee/themecombobox.cpp
-    grantlee/thememanager.cpp
-    grantlee/thememodel.cpp
-  )
-  add_definitions(-DGRANTLEE_FOUND)
-  add_subdirectory(grantlee)
-endif()
+set(kaddressbook_LIB_SRCS
+  ${kaddressbook_LIB_SRCS}
+  grantleecontactformatter.cpp
+  grantleecontactgroupformatter.cpp
+  grantlee/theme.cpp
+  grantlee/themecombobox.cpp
+  grantlee/thememanager.cpp
+  grantlee/thememodel.cpp
+)
+add_subdirectory(grantlee)
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
@@ -97,15 +101,14 @@ target_link_libraries(kaddressbookprivate
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDE4_KCMUTILS_LIBS}
+  ${KDE4_KPRINTUTILS_LIBS}
 )
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
 endif()
 
-if(Grantlee_FOUND)
-  target_link_libraries(kaddressbookprivate ${Grantlee_CORE_LIBRARIES})
-endif()
+target_link_libraries(kaddressbookprivate ${Grantlee_CORE_LIBRARIES})
 
 if(PRISON_FOUND)
   target_link_libraries(kaddressbookprivate ${PRISON_LIBRARIES})

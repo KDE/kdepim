@@ -50,7 +50,7 @@ public:
     ~DBMan();
     const QMap<int, BilboBlog*> & blogList() const;
 
-    QString lastErrorText();
+    QString lastErrorText() const;
     /**
      * \brief Retrieve the instance of DataBase Manager.
      *
@@ -116,7 +116,7 @@ public:
     bool editPost( const BilboPost& post, int blog_id );
 
     bool removePost( int id );
-    bool removePost( int blog_id, QString postId);
+    bool removePost(int blog_id, const QString &postId);
 
     bool clearPosts( int blog_id );
 
@@ -126,7 +126,7 @@ public:
     bool clearCategories( int blog_id );
 
     ///File:
-    int addFile( QString name, int blog_id, bool isUploaded, QString localUrl, QString remoteUrl );
+    int addFile(const QString &name, int blog_id, bool isUploaded, const QString &localUrl, const QString &remoteUrl );
     int addFile( const BilboMedia& file );
     int addFile();
     bool removeFile( int fileid );

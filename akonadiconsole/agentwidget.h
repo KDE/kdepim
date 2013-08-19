@@ -36,7 +36,7 @@ class AgentWidget : public QWidget
   Q_OBJECT
 
   public:
-    AgentWidget( QWidget *parent = 0 );
+    explicit AgentWidget( QWidget *parent = 0 );
     Akonadi::AgentInstanceWidget *widget() const { return ui.instanceWidget; }
 
 protected:

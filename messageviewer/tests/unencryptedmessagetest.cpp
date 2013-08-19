@@ -16,10 +16,10 @@
   Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
 */
-#include "objecttreeparser.h"
+#include "viewer/objecttreeparser.h"
 #include "util.h"
 
-#include "objecttreeemptysource.h"
+#include "viewer/objecttreeemptysource.h"
 
 #include <messagecore/tests/util.h>
 
@@ -44,9 +44,7 @@ QTEST_KDEMAIN( UnencryptedMessageTest, GUI )
 
 void UnencryptedMessageTest::initTestCase()
 {
-  setenv("GNUPGHOME", KDESRCDIR "../../messagecore/tests/gnupg_home" , 1 );
-  setenv("LC_ALL", "C", 1);
-  setenv( "KDEHOME", QFile::encodeName(  QDir::homePath() + QString::fromLatin1(  "/.kde-unit-test" ) ), 1 );
+  MessageCore::Test::setupEnv();
 }
 
 void UnencryptedMessageTest::testMailWithoutEncryption()
@@ -86,6 +84,7 @@ void UnencryptedMessageTest::testForwardedOpenPGPSignedEncrypted()
     TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
   MessageCore::Test::TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  emptySource.setAllowDecryption( true );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
@@ -99,6 +98,7 @@ void UnencryptedMessageTest::testForwardedOpenPGPSignedEncrypted()
 
   // Now, test that the unencrypted message is generated correctly
   KMime::Message::Ptr unencryptedMessage = nodeHelper.unencryptedMessage( originalMessage );
+  QVERIFY( unencryptedMessage.get() );
   QCOMPARE( unencryptedMessage->contentType()->mimeType().data(), "multipart/mixed" );
   QCOMPARE( unencryptedMessage->contents().size(), 2 );
   QCOMPARE( unencryptedMessage->contents().first()->contentType()->mimeType().data(), "text/plain" );
@@ -120,6 +120,7 @@ void UnencryptedMessageTest::testSMIMESignedEncrypted()
 
   NodeHelper nodeHelper;
   EmptySource emptySource;
+  emptySource.setAllowDecryption( true );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
@@ -148,6 +149,7 @@ void UnencryptedMessageTest::testOpenPGPSignedEncrypted()
 
   NodeHelper nodeHelper;
   EmptySource emptySource;
+  emptySource.setAllowDecryption( true );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 
@@ -176,6 +178,7 @@ void UnencryptedMessageTest::testOpenPGPEncrypted()
 
   NodeHelper nodeHelper;
   EmptySource emptySource;
+  emptySource.setAllowDecryption( true );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( originalMessage.get() );
 

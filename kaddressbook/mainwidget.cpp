@@ -27,15 +27,13 @@
 #include "settings.h"
 #include "xxportmanager.h"
 
-#ifdef GRANTLEE_FOUND
 #include "grantleecontactformatter.h"
 #include "grantleecontactgroupformatter.h"
-#endif
 
-#include "libkdepim/uistatesaver.h"
+#include "libkdepim/misc/uistatesaver.h"
 
-#include <pimcommon/collectionaclpage.h>
-#include <pimcommon/imapaclattribute.h>
+#include <pimcommon/acl/collectionaclpage.h>
+#include <pimcommon/acl/imapaclattribute.h>
 
 #include <Akonadi/ETMViewStateSaver>
 #include <Akonadi/CollectionFilterProxyModel>
@@ -48,7 +46,6 @@
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/CollectionPropertiesDialog>
 #include <Akonadi/Contact/ContactDefaultActions>
-#include <Akonadi/Contact/ContactEditorDialog>
 #include <Akonadi/Contact/ContactGroupEditorDialog>
 #include <Akonadi/Contact/ContactGroupViewer>
 #include <Akonadi/Contact/ContactsFilterProxyModel>
@@ -74,6 +71,8 @@
 #include <KToolBar>
 #include <KXmlGuiWindow>
 #include <KCMultiDialog>
+#include <kdeprintdialog.h>
+#include <KPrintPreview>
 
 #include <QAction>
 #include <QActionGroup>
@@ -258,14 +257,14 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   }
 
   QList<Akonadi::StandardContactActionManager::Type> contactActions;
-  contactActions <<Akonadi::StandardContactActionManager::CreateContact
-                 <<Akonadi::StandardContactActionManager::CreateContactGroup
-                 <<Akonadi::StandardContactActionManager::EditItem;
+  contactActions << Akonadi::StandardContactActionManager::CreateContact
+                 << Akonadi::StandardContactActionManager::CreateContactGroup
+                 << Akonadi::StandardContactActionManager::EditItem;
 
   Q_FOREACH( Akonadi::StandardContactActionManager::Type contactAction, contactActions ) {
     mActionManager->createAction( contactAction );
   }
-    static bool pageRegistered = false;
+  static bool pageRegistered = false;
 
   if ( !pageRegistered ) {
     Akonadi::CollectionPropertiesDialog::registerPage( new PimCommon::CollectionAclPageFactory );
@@ -304,8 +303,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 void MainWidget::configure()
 {
   KCMultiDialog dlg( this );
-  dlg.addModule( "akonadicontact_actions.desktop" );
-  dlg.addModule( "kcmldap.desktop" );
+  dlg.addModule( QLatin1String("akonadicontact_actions.desktop") );
+  dlg.addModule( QLatin1String("kcmldap.desktop") );
 
   dlg.exec();
 }
@@ -320,7 +319,7 @@ void MainWidget::delayedInit()
 #if defined(HAVE_PRISON)
   mXmlGuiClient->
     actionCollection()->
-      action( "options_show_qrcodes" )->setChecked( showQRCodes() );
+      action( QLatin1String("options_show_qrcodes") )->setChecked( showQRCodes() );
 #endif
 
   connect( GlobalContactModel::instance()->model(), SIGNAL(modelAboutToBeReset()),
@@ -422,7 +421,7 @@ void MainWidget::setupGui()
   //   - details view stack on the top
   //   - contact switcher at the bottom
   mMainWidgetSplitter1 = new QSplitter(Qt::Horizontal);
-  mMainWidgetSplitter1->setObjectName( "MainWidgetSplitter1" );
+  mMainWidgetSplitter1->setObjectName( QLatin1String("MainWidgetSplitter1") );
   layout->addWidget( mMainWidgetSplitter1 );
 
   // Splitter 2 contains the remaining parts of the GUI:
@@ -431,7 +430,7 @@ void MainWidget::setupGui()
   // The orientation of this splitter is changed for either
   // a three or two column view;  in simple mode it is hidden.
   mMainWidgetSplitter2 = new QSplitter(Qt::Vertical);
-  mMainWidgetSplitter2->setObjectName( "MainWidgetSplitter2" );
+  mMainWidgetSplitter2->setObjectName( QLatin1String("MainWidgetSplitter2") );
   mMainWidgetSplitter1->addWidget( mMainWidgetSplitter2 );
 
   // the collection view
@@ -440,7 +439,7 @@ void MainWidget::setupGui()
 
   // the items view
   mItemView = new Akonadi::EntityTreeView();
-  mItemView->setObjectName( "ContactView" );
+  mItemView->setObjectName( QLatin1String("ContactView") );
   mItemView->setDefaultPopupMenu( QLatin1String( "akonadi_itemview_contextmenu" ) );
   mMainWidgetSplitter2->addWidget( mItemView );
 
@@ -484,8 +483,6 @@ void MainWidget::setupGui()
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
-//#ifdef GRANTLEE_FOUND
-#if 0 // disabled because Grantlee supports no i18n for KDE 4.6 yet
  Akonadi::GrantleeContactFormatter *formatter =
    new Akonadi::GrantleeContactFormatter(
      KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
@@ -497,7 +494,6 @@ void MainWidget::setupGui()
      KStandardDirs::locate( "data", QLatin1String( "kaddressbook/viewertemplates/" ) ) );
 
  mContactGroupDetails->setContactGroupFormatter( groupFormatter );
-#endif
 }
 
 void MainWidget::setupActions( KActionCollection *collection )
@@ -509,11 +505,14 @@ void MainWidget::setupActions( KActionCollection *collection )
     i18nc( "@info:whatsthis",
            "Print the complete address book or a selected number of contacts." ) );
 
-  action = collection->addAction( "quick_search" );
+  if(KPrintPreview::isAvailable())
+    KStandardAction::printPreview( this, SLOT(printPreview()), collection );
+
+  action = collection->addAction( QLatin1String("quick_search") );
   action->setText( i18n( "Quick search" ) );
   action->setDefaultWidget( mQuickSearchWidget );
 
-  action = collection->addAction( "select_all" );
+  action = collection->addAction( QLatin1String("select_all") );
   action->setText( i18n( "Select All" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
   action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
@@ -521,7 +520,7 @@ void MainWidget::setupActions( KActionCollection *collection )
 
 #if defined(HAVE_PRISON)
   KToggleAction *qrtoggleAction;
-  qrtoggleAction = collection->add<KToggleAction>( "options_show_qrcodes" );
+  qrtoggleAction = collection->add<KToggleAction>( QLatin1String("options_show_qrcodes") );
   qrtoggleAction->setText( i18n( "Show QR Codes" ) );
   qrtoggleAction->setWhatsThis( i18n( "Show QR Codes in the contact." ) );
   connect( qrtoggleAction, SIGNAL(toggled(bool)), SLOT(setQRCodeShow(bool)) );
@@ -534,73 +533,89 @@ void MainWidget::setupActions( KActionCollection *collection )
   act->setData( 1 );
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_1 ) );
   act->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
-  collection->addAction( "view_mode_simple", act );
+  collection->addAction( QLatin1String("view_mode_simple"), act );
 
   act = new KAction( i18nc( "@action:inmenu", "Two Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 2 );
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_2 ) );
-  collection->addAction( "view_mode_2columns", act );
+  collection->addAction( QLatin1String("view_mode_2columns"), act );
 
   act = new KAction( i18nc( "@action:inmenu", "Three Columns" ), mViewModeGroup );
   act->setCheckable( true );
   act->setData( 3 );
   act->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_3 ) );
-  collection->addAction( "view_mode_3columns", act );
+  collection->addAction( QLatin1String("view_mode_3columns"), act );
 
   connect( mViewModeGroup, SIGNAL(triggered(QAction*)), SLOT(setViewMode(QAction*)) );
 
   // import actions
-  action = collection->addAction( "file_import_vcard" );
+  action = collection->addAction( QLatin1String("file_import_vcard") );
   action->setText( i18n( "Import vCard..." ) );
   action->setWhatsThis( i18n( "Import contacts from a vCard file." ) );
-  mXXPortManager->addImportAction( action, "vcard30" );
+  mXXPortManager->addImportAction( action, QLatin1String("vcard30") );
 
-  action = collection->addAction( "file_import_csv" );
+  action = collection->addAction( QLatin1String("file_import_csv") );
   action->setText( i18n( "Import CSV file..." ) );
   action->setWhatsThis( i18n( "Import contacts from a file in comma separated value format." ) );
-  mXXPortManager->addImportAction( action, "csv" );
+  mXXPortManager->addImportAction( action, QLatin1String("csv") );
 
-  action = collection->addAction( "file_import_ldif" );
+  action = collection->addAction( QLatin1String("file_import_ldif") );
   action->setText( i18n( "Import LDIF file..." ) );
   action->setWhatsThis( i18n( "Import contacts from an LDIF file." ) );
-  mXXPortManager->addImportAction( action, "ldif" );
+  mXXPortManager->addImportAction( action, QLatin1String("ldif") );
 
-  action = collection->addAction( "file_import_ldap" );
-  action->setText( i18n( "Import from LDAP server..." ) );
+  action = collection->addAction( QLatin1String("file_import_ldap") );
+  action->setText( i18n( "Import From LDAP server..." ) );
   action->setWhatsThis( i18n( "Import contacts from an LDAP server." ) );
-  mXXPortManager->addImportAction( action, "ldap" );
+  mXXPortManager->addImportAction( action, QLatin1String("ldap") );
 
-  action = collection->addAction( "file_import_gmx" );
+  action = collection->addAction( QLatin1String("file_import_gmx") );
   action->setText( i18n( "Import GMX file..." ) );
   action->setWhatsThis( i18n( "Import contacts from a GMX address book file." ) );
-  mXXPortManager->addImportAction( action, "gmx" );
+  mXXPortManager->addImportAction( action, QLatin1String("gmx") );
 
   // export actions
-  action = collection->addAction( "file_export_vcard30" );
+  action = collection->addAction( QLatin1String("file_export_vcard30") );
   action->setText( i18n( "Export vCard 3.0..." ) );
   action->setWhatsThis( i18n( "Export contacts to a vCard 3.0 file." ) );
-  mXXPortManager->addExportAction( action, "vcard30" );
+  mXXPortManager->addExportAction( action, QLatin1String("vcard30") );
 
-  action = collection->addAction( "file_export_vcard21" );
+  action = collection->addAction( QLatin1String("file_export_vcard21") );
   action->setText( i18n( "Export vCard 2.1..." ) );
   action->setWhatsThis( i18n( "Export contacts to a vCard 2.1 file." ) );
-  mXXPortManager->addExportAction( action, "vcard21" );
+  mXXPortManager->addExportAction( action, QLatin1String("vcard21") );
 
-  action = collection->addAction( "file_export_csv" );
+  action = collection->addAction( QLatin1String("file_export_csv") );
   action->setText( i18n( "Export CSV file..." ) );
   action->setWhatsThis( i18n( "Export contacts to a file in comma separated value format." ) );
-  mXXPortManager->addExportAction( action, "csv" );
+  mXXPortManager->addExportAction( action, QLatin1String("csv") );
 
-  action = collection->addAction( "file_export_ldif" );
+  action = collection->addAction( QLatin1String("file_export_ldif") );
   action->setText( i18n( "Export LDIF file..." ) );
   action->setWhatsThis( i18n( "Export contacts to an LDIF file." ) );
-  mXXPortManager->addExportAction( action, "ldif" );
+  mXXPortManager->addExportAction( action, QLatin1String("ldif") );
 
-  action = collection->addAction( "file_export_gmx" );
+  action = collection->addAction( QLatin1String("file_export_gmx") );
   action->setText( i18n( "Export GMX file..." ) );
   action->setWhatsThis( i18n( "Export contacts to a GMX address book file." ) );
-  mXXPortManager->addExportAction( action, "gmx" );
+  mXXPortManager->addExportAction( action, QLatin1String("gmx") );
+}
+
+void MainWidget::printPreview()
+{
+    QPrinter printer;
+    printer.setDocName( i18n( "Address Book" ) );
+    printer.setOutputFileName( Settings::self()->defaultFileName() );
+    printer.setOutputFormat( QPrinter::PdfFormat );
+    printer.setCollateCopies( true );
+
+    KPrintPreview previewdlg( &printer, this );
+    KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
+    wizard.setDefaultAddressBook( currentAddressBook() );
+
+    if (wizard.exec())
+        previewdlg.exec();
 }
 
 void MainWidget::print()
@@ -611,7 +626,8 @@ void MainWidget::print()
   printer.setOutputFormat( QPrinter::PdfFormat );
   printer.setCollateCopies( true );
 
-  QPrintDialog printDialog( &printer, this );
+  QPrintDialog printDialog(KdePrint::createPrintDialog(&printer));
+
   printDialog.setWindowTitle( i18n( "Print Contacts" ) );
   if ( !printDialog.exec() ) { //krazy:exclude=crashy
     return;
@@ -693,10 +709,11 @@ void MainWidget::setQRCodeShow( bool on )
   KConfig config( QLatin1String( "akonadi_contactrc" ) );
   KConfigGroup group( &config, QLatin1String( "View" ) );
   group.writeEntry( "QRCodes", on );
-
   if ( mItemView->model() ) {
     mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
   }
+#else
+    Q_UNUSED( on );
 #endif
 }
 
@@ -739,11 +756,11 @@ void MainWidget::setViewMode( int mode )
   //kDebug() << "cur" << currentMode << "new" << mode;
   if ( mode == currentMode ) return;			// nothing to do
 
-  if ( mode == 0)
-      mode = currentMode;				// initialisation, no save
-  else
+  if ( mode == 0 ) {
+      mode = currentMode;// initialisation, no save
+  } else {
       saveSplitterStates();				// for 2- or 3-column mode
-
+  }
   if ( mode == 1 ) {					// simple mode
     mMainWidgetSplitter2->setVisible( false );
     mDetailsPane->setVisible( true );
@@ -753,10 +770,10 @@ void MainWidget::setViewMode( int mode )
     mMainWidgetSplitter2->setVisible( true );
     mContactSwitcher->setVisible( false );
 
-    if ( mode == 2) {					// 2 columns
+    if ( mode == 2 ) {					// 2 columns
         mMainWidgetSplitter2->setOrientation( Qt::Vertical );
     }
-    else if ( mode == 3) {				// 3 columns
+    else if ( mode == 3 ) {				// 3 columns
         mMainWidgetSplitter2->setOrientation( Qt::Horizontal );
     }
   }

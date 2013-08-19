@@ -71,6 +71,7 @@ namespace KMail {
 namespace KSieveUi {
   class SieveDebugDialog;
   class Vacation;
+  class ManageSieveScriptsDialog;
 }
 
 namespace MailCommon {
@@ -248,7 +249,6 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
 
     void slotStartCheckMail();
     void slotEndCheckMail();
-    void slotEndCheckFetchCollectionsDone(KJob* job);
 
     void slotCollectionProperties();
     void slotRemoveDuplicates();
@@ -365,6 +365,8 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotSelectPreviousUnreadMessage();
     void slotFocusOnNextMessage();
     void slotFocusOnPrevMessage();
+    void slotSelectFirstMessage();
+    void slotSelectLastMessage();
     void slotSelectFocusedMessage();
 
     void slotNextUnreadFolder();
@@ -416,17 +418,19 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void slotShowExpiryProperties();
     void slotItemAdded( const Akonadi::Item &, const Akonadi::Collection& col);
     void slotItemRemoved( const Akonadi::Item & );
-    void slotItemMoved( Akonadi::Item item, Akonadi::Collection from, Akonadi::Collection to );
+    void slotItemMoved( const Akonadi::Item &item, const Akonadi::Collection &from, const Akonadi::Collection &to );
     void slotCollectionStatisticsChanged( const Akonadi::Collection::Id, const Akonadi::CollectionStatistics& );
 
     void slotAkonadiStandardActionUpdated();
     void slotCollectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& );
     void slotCreateNewTab( bool );
-    void slotShowNotification();
+    void slotUpdateActionsAfterMailChecking();
     void slotConfigureAutomaticArchiving();
     void slotExportData();
     void slotCreateAddressBookContact();
     void slotOpenRecentMsg(const KUrl& url);
+    void slotConfigureSendLater();
+
   private:
     void checkAkonadiServerManagerState();
     void updateHtmlMenuEntry();
@@ -435,8 +439,6 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     void updateMoveAction( bool hasUnreadMails, bool hasMails );
 
     void updateAllToTrashAction(int statistics);
-
-    void showNotifications();
 
     /** Get override character encoding. */
     QString overrideEncoding() const;
@@ -486,24 +488,21 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     MailCommon::FolderSelectionDialog* selectFromAllFoldersDialog();
 
 
-    void addInfoInNotification( const Akonadi::Collection&col, Akonadi::Item::Id id );
-    void updateInfoInNotification( const Akonadi::Collection& from, const Akonadi::Collection& to, Akonadi::Item::Id id );
-
     /**
      * Internal helper that applies the current settings so the
      * favorite folder view.
      */
     void refreshFavoriteFoldersViewProperties();
-    bool excludeSpecialFolder( const Akonadi::Collection &collection );
 
     void openFilterDialog(const QByteArray &field, const QString &value);
 
     void showMessagePopup(const Akonadi::Item&msg ,const KUrl&aUrl,const KUrl &imageUrl,const QPoint& aPoint, bool contactAlreadyExists, bool uniqueContactFound);
 
     void showCollectionProperties( const QString &pageToShow );
-    void showCollectionPropertiesContinued( const QString &pageToShow );
+    void showCollectionPropertiesContinued( const QString &pageToShow, QPointer<KPIM::ProgressItem> progressItem );
 
   private slots:
+    void slotMoveMessageToTrash();
     /**
      * Called when a "move to trash" operation is completed
      */
@@ -616,16 +615,13 @@ private:
     bool mGoToFirstUnreadMessageInSelectedFolder;
     MessageList::Core::PreSelectionMode mPreSelectionMode;
 
-    /// Used during mail check to remember how many mails there are in the folders
-    QMap<Akonadi::Collection::Id, QList<Akonadi::Item::Id> > mCheckMail;
+    QTimer mCheckMailTimer;
 
-    bool mCheckMailInProgress;
-    QTimer m_notificationTimer;
-
-    MailCommon::FolderSelectionDialog* mMoveOrCopyToDialog;
-    MailCommon::FolderSelectionDialog* mSelectFromAllFoldersDialog;
+    QPointer<MailCommon::FolderSelectionDialog> mMoveOrCopyToDialog;
+    QPointer<MailCommon::FolderSelectionDialog> mSelectFromAllFoldersDialog;
     KAction *mServerSideSubscription;
     KRecentFilesAction *mOpenRecentAction;
+    QPointer<KSieveUi::ManageSieveScriptsDialog> mManageSieveDialog;
 };
 
 #endif

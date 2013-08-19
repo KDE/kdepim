@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import QtQuick 1.1
 
 import org.kde 4.5
 import CalendarHelper 4.5

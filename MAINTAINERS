@@ -1,10 +1,13 @@
-Applications
+Applications:
+-------------
 akonadiconsole        ?
 akregator             Frank Osterfeld <osterfeld@kde.org>
 archivemailagent      Laurent Montel <montel@kde.org>
 blogilo               Mehrdad Momeny <mehrdad.momeny@gmail.com>
 calendarsupport       Sérgio Martins <iamsergio@gmail.com>
 calendarviews         Sérgio Martins <iamsergio@gmail.com>
+composereditor-ng     Laurent Montel <montel@kde.org>
+headerthemeeditor     Laurent Montel <montel@kde.org>
 importwizard          Laurent Montel <montel@kde.org>
 incidenceeditors-ng   Sérgio Martins <iamsergio@gmail.com>
 kabcclient            Kevin Krammer <kevin.krammer@gmx.at>
@@ -28,10 +31,11 @@ libkdepim             ?
 libkdepimdbusinterfaces ?
 libkleo               Marc Mutz <mutz@kde.org>
 libkpgp               DEPRECATED
-libksieve             Marc Mutz <mutz@kde.org>
+libksieve             Laurent Montel <montel@kde.org>
 mailcommon            <kmail maintainer>
 mailfilteragent       ?
-mailimporter          Laurent Montel <montel@kde.org>
+pimsettingexporter    Laurent Montel <montel@kde.org>
+pimactivity           Laurent Montel <montel@kde.org>  
 messagecomposer       <kmail maintainer>
 messagecore           <kmail maintainer>
 messagelist           <kmail maintainer>
@@ -40,4 +44,5 @@ ontologies            ?
 pimcommon             Laurent Montel <montel@kde.org>
 plugins               ?
 strigi-analyzer       ?
+sendlateragent        Laurent Montel <montel@kde.org>
 templateparser        <kmail maintainer>

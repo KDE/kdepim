@@ -1,4 +1,4 @@
-2012-05-14:
+2013-07-04:
 -----------
 Zip structure is :
 Root
@@ -11,19 +11,64 @@ Root
 |                   |--------- vcard file
 |
 |-----resources
-|       |---------<resource name> (just pop3/imap4)
+|       |---------<resource name>
 |
 |-----mails
 |       |---------<resource name>
+|                   |---------<akonadi agent config file>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+|-----calendar
+|       |---------<resource name>
+|                   |---------<akonadi agent config file>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+|------addressbook
+|       |---------<resource name>
+|                   |---------<akonadi agent config file>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+|
+|------alarm
+|       |---------<resource name>
+|                   |---------<akonadi agent config file>
+|                   |---------<resource config file>
+|                   |---------<archive resource>
+|
+|------jot
+|       |---------<resource name>
+|                   |---------<akonadi agent config file>
 |                   |---------<resource config file>
 |                   |---------<archive resource>
 |
 |-----configs
 |       |---------filters
 |       |---------kmail2rc
+|       |---------sievetemplaterc
+|       |---------customtemplatesrc
+|       |---------akonadi_archivemail_agentrc
+|       |---------kabldaprc
+|       |---------templatesconfigurationrc
+|       |---------kalarmrc
+|       |---------korganizerrc
+|       |---------korganizer_printing.rc 
+|       |---------korgacrc
+|       |---------kaddressbookrc
+|       |---------akonadi_mailfilter_agent.notifyrc
+|       |---------akonadi_sendlater_agent.notifyrc
+|       |---------akonadi_archivemail_agent.notifyrc
+|       |---------kmail2.notifyrc
+|       |---------akonadi_maildispatcher_agent.notifyrc
+|       |---------akonadi_newmailnotifier_agent.notifyrc
 |
 |-----akonadi
 |       |---------<archive akonadi>
+|
 |-----nepomuk
 |       |---------<archive nepomuk>
-
+|
+|-----data
+|       |---------autocorrect/<autocorrection xml file>
+|       |---------korganizer/freebusyurls
+|       |---------korganizer/templates/*
+|       |---------messageviewer/themes/*

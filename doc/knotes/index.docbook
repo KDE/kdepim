@@ -46,8 +46,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2008-09-29</date>
-<releaseinfo>3.9</releaseinfo>
+<date>2013-05-26</date>
+<releaseinfo>4.11 pre (&kde; 4.11)</releaseinfo>
 
 <abstract><para>&knotes; is a sticky notes application for the
 desktop.</para></abstract>
@@ -79,6 +79,10 @@ use helper applications. </para>
 <para>Display features of notes such as color and font may be
 customized for each note.  You may also customize the
 defaults. </para>
+
+<para>After starting &knotes; for the first time you will have a resource installed 
+that saves all notes in a file under <filename>$<envar>HOME</envar>/.kde/share/apps/knotes/notes.ics</filename>.
+</para>
 
 </chapter>
 
@@ -117,9 +121,19 @@ following menu options:</para>
 </shortcut><guimenuitem>Copy</guimenuitem></menuchoice></para></listitem>
 <listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo>
 </shortcut><guimenuitem>Paste</guimenuitem></menuchoice></para></listitem>
-<listitem><para><guimenuitem>Clear</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Delete</guimenuitem></para></listitem>
 <listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo>
 </shortcut><guimenuitem>Select All</guimenuitem></menuchoice></para></listitem>
+<listitem><para><guimenuitem>Check Spelling</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Auto Spell Check</guimenuitem></para></listitem>
+<listitem><para><guimenuitem>Allow Tabulations</guimenuitem></para></listitem>
+<listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
+</shortcut><guimenuitem>Find</guimenuitem></menuchoice></para></listitem>
+<listitem><para><menuchoice><shortcut><keycap>F3</keycap>
+</shortcut><guimenuitem>Find Next</guimenuitem></menuchoice></para></listitem>
+<listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo>
+</shortcut><guimenuitem>Replace</guimenuitem></menuchoice></para></listitem>
+<listitem><para><guimenuitem>Speak Text</guimenuitem></para></listitem>
 </itemizedlist>
 <para>Text may be selected by holding down the &LMB; and moving the
 mouse, or by holding down the &Shift; key and using the
@@ -190,11 +204,59 @@ displayed on the screen.  The note itself will not be deleted.</para>
 </varlistentry>
 
 <varlistentry>
+<term>Setting an alarm:</term>
+<listitem>
+<para>Select <guimenuitem>Set Alarm</guimenuitem> in the context menu of the 
+note titlebar. Check <guilabel>Alarm at</guilabel> in the next dialog and adjust 
+the date and time for the reminder. At alarm time a popup window will
+be displayed and list all notes with the actual alarm date.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Sending a note:</term>
+<listitem>
+<para>To send a note to an other computer select <guimenuitem>Send...</guimenuitem> 
+in the context menu of the note titlebar. Add a hostname or ip or choose a recipient 
+from the list of previously sent notes. If the recipients has enabled incoming notes,
+the note will appear on his screen, indicating the sender id in the titlebar.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Locking a note:</term>
+<listitem>
+<para>To prevent accidental changes in a note select <guimenuitem>Lock</guimenuitem> 
+in the context menu of the note titlebar.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Saving a note:</term>
+<listitem>
+<para>To save a note select <guimenuitem>Save As...</guimenuitem> 
+in the context menu of the note titlebar. The note can be saved as a plain text file 
+or in &HTML; format, if <guilabel>Rich text</guilabel> is enabled.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term>Displaying notes:</term>
 <listitem>
-<para>When you start &knotes;, all notes will display on the screen.  If you
-hide a note and later want to display it, &LMB; on the &knotes; panel
+<para>When you start &knotes;, all notes are hidden.  If you
+want to display them, &LMB; on the &knotes; panel
 icon and select the note you wish to display.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Searching in all notes:</term>
+<listitem>
+<para>Click with the &RMB; on the panel icon and select <menuchoice><shortcut><keycombo 
+action="simul">&Ctrl;<keycap>F</keycap></keycombo>
+</shortcut><guimenuitem>Find</guimenuitem></menuchoice> in the context menu.</para>
+<para>A standard &kde; dialog will open where you enter the text to be searched 
+for in all notes.</para>
 </listitem>
 </varlistentry>
 
@@ -221,15 +283,17 @@ Others</guimenuitem>.</para>
 </listitem>
 </varlistentry>
 
-<!-- missing in 4.2
-Set Alarm...
-Send...
-Save As...
-Lock
-Find...
--->
 </variablelist>
 
+<!--FIXME Not using Akonadi resources and will probably never ported to akonadi framework
+After starting &knotes; for the first time you will have a resource installed 
+that saves all notes in a file under <filename>$<envar>HOME</envar>/.kde/share/apps/knotes/notes.ics</filename>;
+<envar>$KDEHOME</envar> is usually a hidden folder in your Home folder called <filename class="directory">.kde</filename> 
+or <filename class="directory">.kde4</filename>
+"$KDEHOME" is not always defined eg not in kubuntu 11.04
+<filename class="directory">`kde4-config - -localprefix`/share/apps/kvtml</filename>
+(without whitespace between '- -') is afaik always defined
+-->
 </chapter>
 
 <chapter id="configuration">
@@ -243,7 +307,7 @@ Find...
 <guilabel>KNotes Settings</guilabel> dialog will open.</para>
 
 <variablelist>
-<title>The <guilabel>Display</guilabel> Section</title>
+<title>The Display Section</title>
 <varlistentry>
 <term><guilabel>Text color:</guilabel></term>
 <listitem><para>The color square shows the current text color.  By clicking this
@@ -276,16 +340,17 @@ taskbar for each note.  If you prefer they do so, enable this
 option.</para>
 </listitem>
 </varlistentry>
-
+<!--FIXME does not work in 4.11 here
 <varlistentry>
 <term><guilabel>Remember desktop</guilabel></term>
 <listitem><para>.</para>
 </listitem>
 </varlistentry>
+-->
 </variablelist>
 
 <variablelist>
-<title>The <guilabel>Editor</guilabel> Section</title>
+<title>The Editor Section</title>
 <varlistentry>
 <term><guilabel>Tab Size</guilabel></term>
 <listitem><para>This is the size of the indent produced by the &Tab;
@@ -300,7 +365,7 @@ on.</para></listitem>
 <varlistentry>
 <term><guilabel>Rich text</guilabel></term>
 <listitem>
-<para>Not yet implemented</para>
+<para>Check this option to have a format toolbar at the bottom of any note window.</para>
 </listitem>
 </varlistentry>
 
@@ -325,42 +390,45 @@ dialog.</para></listitem>
 </variablelist>
 
 <variablelist>
-<title>The <guilabel>Actions</guilabel> Section</title>
+<title>The Actions Section</title>
 <varlistentry>
 <term><guilabel>Mail action</guilabel></term>
 <listitem><para>Type a mail command and any required command line switches in
 this box.</para>
 <para>By using <token>%f</token> in the command line you can pass
-the filename of the note body to the mail command.</para>
+the plain text of the note and by using <token>%t</token> the title of the note to the mail command.</para>
 </listitem>
 </varlistentry>
 
 </variablelist>
 
-<!-- in 4.2 to be written
 <variablelist>
-<title>The <guilabel>Network</guilabel> Section</title>
+<title>The Network Section</title>
 <varlistentry>
-<term><guilabel>Incoming Notes</guilabel></term>
-<listitem><para> </para></listitem>
+<term><guilabel>Accept incoming notes</guilabel></term>
+<listitem><para>Enable this option to allow receiving notes from other computers.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Outgoing Notes</guilabel></term>
-<listitem><para> </para></listitem>
+<term><guilabel>Sender ID</guilabel></term>
+<listitem><para>The id will be shown in the note title together with the original title, 
+hostname or ip and date of sending.</para></listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Port</guilabel></term>
+<listitem><para>The port used for sending the notes via the network, default is 24837.</para></listitem>
+</varlistentry>
 </variablelist>
 
+
 <variablelist>
-<title>The <guilabel>Style</guilabel> Section</title>
+<title>The Style Section</title>
 <varlistentry>
 <term><guilabel>Style</guilabel></term>
-<listitem><para> </para></listitem>
+<listitem><para>Only <guilabel>Plain</guilabel> text format is selectable so far.</para></listitem>
 </varlistentry>
-
 </variablelist>
--->
 </sect1>
 
 <sect1 id="customizing-display">
@@ -378,66 +446,6 @@ bar and select <guimenuitem>Preferences...</guimenuitem>.</para>
 <para>A dialog with the <guilabel>Display</guilabel> and
 <guilabel>Editor</guilabel> pages will open,
 allowing you to configure the note.</para>
-</sect1>
-
-<sect1 id="configure-resources">
-<title>Configure Resources</title>
-
-<para>&knotes; can use multiple resources for loading and storing
-its contacts. After starting &knotes; for the first time you will have
-a default resource installed that saves all notes in a file
-under <filename>$<envar>HOME</envar>/.kde/share/apps/knotes/notes.ics</filename>; 
-you can add more resources by using the <guilabel>Resource Configuration</guilabel> 
-dialog, which is available in
-the &systemsettings; under <guilabel>Personal Information</guilabel>->
-<guilabel>&kde; Resources</guilabel>:</para>
-
-<para>Load the configuration module you want to add your resource(s) to
-by selecting it from the drop down box at the top of the 
-<guilabel>Resources</guilabel> section. 
-The module for configuring &knotes;'s resources is <guilabel>Notes</guilabel>.</para>
-<para>Launch the <guilabel>Resource Configuration</guilabel> dialog by pushing the 
-<guibutton>Add...</guibutton> button. Choose the resource you want to add to your 
-<guilabel>Notes</guilabel> module and click <guilabel>OK</guilabel> to confirm your choice.</para>
-
-<variablelist>
-<varlistentry>
-<term><guilabel>Notes in Local File</guilabel></term>
-<listitem><para>All notes will be stored in a local file</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>IMAP Server via &kmail;</guilabel></term>
-<listitem><para>This resource stores notes as messages on an IMAP server.  
-&kmail; is used to access the IMAP server, therefore, if you use this 
-type of resource, &kmail; will open whenever you access the address book, 
-if it (or &kontact;) are not already running.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Notes on Scalix Server via &kmail;</guilabel></term>
-<listitem><para>To be written</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>eGroupware Server (via XML-RPC)</guilabel></term>
-<listitem><para>To be written</para></listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>After selecting the type of resource another dialog appears 
-where you can configure the resource-specific settings.</para>
-
-<para>&knotes; needs a standard resource, where all contacts should be
-saved if no other resource is specified; for this reason, after starting
-&knotes; the first time, there is already a resource available.
-If you want to use another resource as the standard resource, use the
-<guibutton>Use as Standard</guibutton> button to select it.  You must have
-both read and write access to the new standard resource, otherwise you
-will not be able to select it.
-</para>
-
 </sect1>
 
 </chapter>

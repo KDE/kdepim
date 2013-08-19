@@ -23,7 +23,7 @@
 
 #include "messageitem.h"
 #include "item_p.h"
-#include "messagecore/annotationdialog.h"
+#include "messagecore/widgets/annotationdialog.h"
 #include <Akonadi/Item>
 #include <QWeakPointer>
 
@@ -34,7 +34,7 @@ class MessageItemPrivate : public ItemPrivate
 {
 public:
 
-  MessageItemPrivate( MessageItem *qq );
+  explicit MessageItemPrivate( MessageItem *qq );
   ~MessageItemPrivate();
 
   /**

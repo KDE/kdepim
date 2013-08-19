@@ -78,6 +78,7 @@
 */
 
 #include "gmx_xxport.h"
+#include "pimcommon/widgets/renamefiledialog.h"
 
 #include <KCodecs>
 #include <KDebug>
@@ -350,13 +351,19 @@ bool GMXXXPort::exportContacts( const KABC::AddresseeList &list ) const
   }
 
   if ( QFileInfo( url.isLocalFile() ?
-    url.toLocalFile() : url.path() ).exists() ) {
-    if ( KMessageBox::questionYesNo(
-           parentWidget(),
-           i18n( "Do you want to overwrite file \"%1\"",
-                 url.isLocalFile() ? url.toLocalFile() : url.path() ) ) == KMessageBox::No ) {
-      return false;
-    }
+                  url.toLocalFile() : url.path() ).exists() ) {
+      if ( url.isLocalFile() && QFileInfo( url.toLocalFile() ).exists() ) {
+          PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
+          PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(url, false, parentWidget());
+          result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
+          if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
+              url = dialog->newName();
+          } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {
+              delete dialog;
+              return true;
+          }
+          delete dialog;
+      }
   }
 
   if ( !url.isLocalFile() ) {
@@ -453,7 +460,7 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list ) const
     const QStringList categories = addressee->categories();
     long int category = 0;
     if ( categories.count() > 0 ) {
-      for ( int i=0; i < categories.count(); i++ ) {
+      for ( int i=0; i < categories.count(); ++i ) {
         if ( categoryMap.contains( categories[i] ) ) {
           category |= 1 << categoryMap.indexOf( categories[i], 0 ) ;
         }
@@ -650,7 +657,7 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list ) const
   //  Write Category List (beware: Category_ID 0 is reserved for none
   //  Interestingly: The index here is an int sequence and does not
   //  correspond to the bit reference used above.
-  for ( int i = 0; i < categoryMap.size(); i++ ) {
+  for ( int i = 0; i < categoryMap.size(); ++i ) {
     t << ( i + 1 ) << DELIM << categoryMap.at( i ) << DELIM << 0 << endl;
   }
   t << "####" << endl;

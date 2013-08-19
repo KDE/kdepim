@@ -41,7 +41,8 @@ enum RecurrenceType {
   RecurrenceTypeWeekly,
   RecurrenceTypeMonthly,
   RecurrenceTypeYearly,
-  RecurrenceTypeUnknown // keep this one at the end always
+  RecurrenceTypeUnknown, // keep this one at the end of the ones which are also in the combobox
+  RecurrenceTypeException
 };
 
 class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
@@ -76,7 +77,6 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
     void updateRemoveExceptionButton();
     void updateWeekDays( const QDate &newStartDate );
     void handleStartDateChange( const QDate & );
-    void handleEndDateChange( const QDate & );
 
   private:
 
@@ -109,7 +109,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceRecurrence : public IncidenceEditor
     void setDuration( int duration );
     void setExceptionDates( const KCalCore::DateList &dates );
     void setFrequency( int freq );
-    void toggleRecurrenceWidgets( bool enable );
+    void toggleRecurrenceWidgets( int enable );
     /** Returns an array with the weekday on which the event occurs set to 1 */
     QBitArray weekday() const;
 

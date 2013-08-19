@@ -22,22 +22,22 @@
 
 #include "mobileuicalendar_export.h"
 
-#include <calendarsupport/groupware.h>
-
+#include <Akonadi/Calendar/ETMCalendar>
+#include <Akonadi/Calendar/ITIPHandler>
 #include <QtCore/QObject>
 
-class MOBILEUICALENDAR_EXPORT GroupwareUiDelegate : public QObject, public CalendarSupport::GroupwareUiDelegate
+class MOBILEUICALENDAR_EXPORT GroupwareUiDelegate : public QObject, public Akonadi::GroupwareUiDelegate
 {
   public:
     GroupwareUiDelegate();
 
-    void setCalendar( CalendarSupport::Calendar *calendar );
+    void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
     void createCalendar();
 
     void requestIncidenceEditor( const Akonadi::Item &item );
 
   private:
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
 };
 
 #endif

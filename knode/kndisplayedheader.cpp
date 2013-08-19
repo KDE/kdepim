@@ -162,7 +162,7 @@ void  KNDisplayedHeader::createTags()
   const char *tokens[] = {  "<big>","</big>","<b>","</b>",
                             "<i>","</i>","<u>","</u>" };
 
-  for ( int i = 0; i < 4; i++ )
+  for ( int i = 0; i < 4; ++i )
     t_ags[i].clear();
 
   if(f_lags.at(0)) {    // <big>

@@ -392,7 +392,7 @@ class  FetchArticleIdDlg : public KDialog
 {
     Q_OBJECT
 public:
-    FetchArticleIdDlg( QWidget *parent );
+    explicit FetchArticleIdDlg( QWidget *parent );
     QString messageId() const;
 
 protected slots:

@@ -24,7 +24,7 @@
 #include "attendeeline.h"
 #include "attendeedata.h"
 
-#include <libkdepim/multiplyinglineeditor.h>
+#include <libkdepim/multiplyingline/multiplyinglineeditor.h>
 
 namespace IncidenceEditorNG {
 
@@ -32,7 +32,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttendeeLineFactory : public KPIM::MultiplyingL
 {
   Q_OBJECT
   public:
-    AttendeeLineFactory( QObject *parent ) : KPIM::MultiplyingLineFactory( parent )
+    explicit AttendeeLineFactory( QObject *parent ) : KPIM::MultiplyingLineFactory( parent )
     {
     }
 

@@ -39,7 +39,7 @@ class ScopedCursorOverride
     /**
       Constructor: change the cursor shape to @p shape.
     */
-    ScopedCursorOverride( Qt::CursorShape shape )
+    explicit ScopedCursorOverride( Qt::CursorShape shape )
       : restored( false )
     {
       QApplication::setOverrideCursor( QCursor( shape ) );

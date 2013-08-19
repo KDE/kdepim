@@ -22,7 +22,7 @@
 
 #include "freebusyitem.h"
 
-#include <calendarsupport/freebusymanager.h>
+#include <akonadi/calendar/freebusymanager.h>
 
 using namespace IncidenceEditorNG;
 
@@ -67,7 +67,7 @@ int FreeBusyItem::updateTimerID() const
 void FreeBusyItem::startDownload( bool forceDownload )
 {
   mIsDownloading = true;
-  CalendarSupport::FreeBusyManager *m = CalendarSupport::FreeBusyManager::self();
+  Akonadi::FreeBusyManager *m = Akonadi::FreeBusyManager::self();
   if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload, mParentWidget ) ) {
     mIsDownloading = false;
   }

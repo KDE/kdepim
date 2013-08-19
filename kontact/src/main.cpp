@@ -60,7 +60,7 @@ KUniqueApplication
   public:
     KontactApp() : mMainWindow( 0 ), mSessionRestored( false )
     {
-      KIconLoader::global()->addAppDir( "kdepim" );
+      KIconLoader::global()->addAppDir( QLatin1String("kdepim") );
     }
     ~KontactApp() {}
 
@@ -92,15 +92,15 @@ static void listPlugins()
   const KService::List offers = KServiceTypeTrader::self()->query(
     QString::fromLatin1( "Kontact/Plugin" ),
     QString::fromLatin1( "[X-KDE-KontactPluginVersion] == %1" ).arg( KONTACT_PLUGIN_VERSION ) );
-  KService::List::ConstIterator end(offers.end());
+  KService::List::ConstIterator end( offers.end() );
   for ( KService::List::ConstIterator it = offers.begin(); it != end; ++it ) {
     KService::Ptr service = (*it);
     // skip summary only plugins
-    QVariant var = service->property( "X-KDE-KontactPluginHasPart" );
+    QVariant var = service->property( QLatin1String("X-KDE-KontactPluginHasPart") );
     if ( var.isValid() && var.toBool() == false ) {
       continue;
     }
-    cout << service->library().remove( "kontact_" ).toLatin1().data() << endl;
+    cout << service->library().remove( QLatin1String("kontact_") ).toLatin1().data() << endl;
   }
 }
 
@@ -161,7 +161,7 @@ int main( int argc, char **argv )
 {
   KAboutData about( "kontact", 0, ki18n( "Kontact" ), version, ki18n(description),
                     KAboutData::License_GPL,
-                    ki18n( "Copyright © 2001–2010 Kontact authors" ),
+                    ki18n( "Copyright © 2001–2013 Kontact authors" ),
                     KLocalizedString(), "http://kontact.org" );
 
   about.addAuthor( ki18n( "Allen Winter" ), KLocalizedString(), "winter@kde.org" );

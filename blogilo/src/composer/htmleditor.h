@@ -48,11 +48,9 @@ public:
 
     KTextEditor::View* createView( QWidget* parent );
 
-//     void setContent( KTextEditor::View* view, const QString &text );
-
     QWidget* configPage( int number, QWidget* parent);
 
-private slots:
+private Q_SLOTS:
     void toggleWordWrap();
     void toggleLineNumber();
 

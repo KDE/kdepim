@@ -1,7 +1,7 @@
 /*
  *  messagewin.h  -  displays an alarm message
  *  Program:  kalarm
- *  Copyright © 2001-2012 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2013 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -160,14 +160,13 @@ class MessageWin : public MainWindowBase
         static QMap<QString, unsigned> mErrorMessages; // error messages currently displayed, by event ID
 #endif
         // Sound file playing
-        static QPointer<AudioThread>   mAudioThread;   // thread to play audio file
-        static MessageWin*             mAudioOwner;    // window which owns mAudioThread
+        static QPointer<AudioThread> mAudioThread;   // thread to play audio file
         // Properties needed by readProperties()
         QString             mMessage;
         QFont               mFont;
         QColor              mBgColour, mFgColour;
         DateTime            mDateTime;        // date/time displayed in the message window
-        QDateTime           mCloseTime;       // local time at which window should be auto-closed
+        QDateTime           mCloseTime;       // UTC time at which window should be auto-closed
 #ifdef USE_AKONADI
         Akonadi::Item::Id   mEventItemId;
         EventId             mEventId;
@@ -211,7 +210,7 @@ class MessageWin : public MainWindowBase
         QCheckBox*          mDontShowAgainCheck;
         EditAlarmDlg*       mEditDlg;         // alarm edit dialog invoked by Edit button
         DeferAlarmDlg*      mDeferDlg;
-        QDateTime           mDeferLimit;      // last time to which the message can currently be deferred
+        QDateTime           mDeferLimit;      // last UTC time to which the message can currently be deferred
         int                 mButtonDelay;     // delay (ms) after window is shown before buttons are enabled
         int                 mScreenNumber;    // screen to display on, or -1 for default
         bool                mAlwaysHide;      // the window should never be displayed

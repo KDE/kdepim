@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,103 +20,103 @@
 #include <KConfigGroup>
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
-#include <mailcommon/foldercollectionmonitor.h>
-#include <messagecomposer/akonadisender.h>
+#include <mailcommon/folder/foldercollectionmonitor.h>
+#include <messagecomposer/sender/akonadisender.h>
 #include <akonadi/session.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/changerecorder.h>
 
 KMailCVTKernel::KMailCVTKernel( QObject *parent )
-  : QObject( parent )
+    : QObject( parent )
 {
-  mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
-  mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( this );
+    mIdentityManager = new KPIMIdentities::IdentityManager( false, this );
+    Akonadi::Session *session = new Akonadi::Session( "KMailCVT Kernel ETM", this );
+    mFolderCollectionMonitor = new MailCommon::FolderCollectionMonitor( session, this );
 
-  Akonadi::Session *session = new Akonadi::Session( "KMailCVT Kernel ETM", this );
-  folderCollectionMonitor()->setSession( session );
-  mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
-  mEntityTreeModel->setIncludeUnsubscribed( false );
-  mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+    mEntityTreeModel = new Akonadi::EntityTreeModel( folderCollectionMonitor(), this );
+    mEntityTreeModel->setIncludeUnsubscribed( false );
+    mEntityTreeModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
-  mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
-  mCollectionModel->setSourceModel( mEntityTreeModel );
-  mCollectionModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  mCollectionModel->setDynamicSortFilter( true );
-  mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+    mCollectionModel = new Akonadi::EntityMimeTypeFilterModel( this );
+    mCollectionModel->setSourceModel( mEntityTreeModel );
+    mCollectionModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+    mCollectionModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+    mCollectionModel->setDynamicSortFilter( true );
+    mCollectionModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
 KPIMIdentities::IdentityManager *KMailCVTKernel::identityManager()
 {
-  return mIdentityManager;
+    return mIdentityManager;
 }
 
-MessageSender *KMailCVTKernel::msgSender()
+MessageComposer::MessageSender *KMailCVTKernel::msgSender()
 {
-  return 0;
+    return 0;
 }
 
 Akonadi::EntityMimeTypeFilterModel *KMailCVTKernel::collectionModel() const
 {
-  return mCollectionModel;
+    return mCollectionModel;
 }
 
 KSharedConfig::Ptr KMailCVTKernel::config()
 {
-  return KGlobal::config();
+    return KGlobal::config();
 }
 
 void KMailCVTKernel::syncConfig()
 {
-  Q_ASSERT( false );
+    Q_ASSERT( false );
 }
 
 MailCommon::JobScheduler* KMailCVTKernel::jobScheduler() const
 {
-  Q_ASSERT( false );
-  return 0;
+    Q_ASSERT( false );
+    return 0;
 }
 
 Akonadi::ChangeRecorder *KMailCVTKernel::folderCollectionMonitor() const
 {
-  return mFolderCollectionMonitor->monitor();
+    return mFolderCollectionMonitor->monitor();
 }
 
 void KMailCVTKernel::updateSystemTray()
 {
-  Q_ASSERT( false );
+    Q_ASSERT( false );
 }
 
 bool KMailCVTKernel::showPopupAfterDnD()
 {
-  return false;
+    return false;
 }
 
 qreal KMailCVTKernel::closeToQuotaThreshold()
 {
-  return 80;
+    return 80;
 }
 
 QStringList KMailCVTKernel::customTemplates()
 {
-  Q_ASSERT( false );
-  return QStringList();
+    Q_ASSERT( false );
+    return QStringList();
 }
 
 bool KMailCVTKernel::excludeImportantMailFromExpiry()
 {
-  Q_ASSERT( false );
-  return true;
+    Q_ASSERT( false );
+    return true;
 }
 
 Akonadi::Entity::Id KMailCVTKernel::lastSelectedFolder()
 {
-  return Akonadi::Entity::Id();
+    return Akonadi::Entity::Id();
 }
 
 void KMailCVTKernel::setLastSelectedFolder(const Akonadi::Entity::Id& col)
 {
+    Q_UNUSED( col );
 }
 
 

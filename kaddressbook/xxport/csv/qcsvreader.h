@@ -102,7 +102,7 @@ class QCsvReader : public QObject
      *
      * @param builder The builder to use.
      */
-    QCsvReader( QCsvBuilderInterface *builder );
+    explicit QCsvReader( QCsvBuilderInterface *builder );
 
     /**
      * Destroys the csv reader.

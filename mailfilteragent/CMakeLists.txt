@@ -2,10 +2,16 @@ project(akonadi_mailfilter_agent)
 
 add_subdirectory( kconf_update )
 
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+
 include_directories(
   ${Boost_INCLUDE_DIR}
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
+  ${CMAKE_SOURCE_DIR}/mailcommon
+  ${CMAKE_SOURCE_DIR}/messagecomposer
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -15,6 +21,7 @@ set(akonadi_mailfilter_agent_SRCS
   filterlogdialog.cpp
   filtermanager.cpp
   mailfilteragent.cpp
+  pop3resourceattribute.cpp
 )
 
 qt4_add_dbus_adaptor(akonadi_mailfilter_agent_SRCS org.freedesktop.Akonadi.MailFilterAgent.xml mailfilteragent.h MailFilterAgent)
@@ -28,7 +35,7 @@ if (Q_WS_MAC)
   set_target_properties(akonadi_mailfilter_agent PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/Info.plist.template)
   set_target_properties(akonadi_mailfilter_agent PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.mailfilter")
   set_target_properties(akonadi_mailfilter_agent PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Akonadi Email Filter")
-endif (Q_WS_MAC)
+endif ()
 
 
 target_link_libraries(akonadi_mailfilter_agent

@@ -55,7 +55,7 @@ class KDEPIM_EXPORT LdapSearchDialog : public KDialog
      *
      * @param parent The parent widget.
      */
-    LdapSearchDialog( QWidget *parent = 0 );
+    explicit LdapSearchDialog( QWidget *parent = 0 );
 
     /**
      * Destroys the ldap search dialog.
@@ -81,11 +81,11 @@ class KDEPIM_EXPORT LdapSearchDialog : public KDialog
     void contactsAdded();
 
   protected Q_SLOTS:
-    virtual void slotUser1();
-    virtual void slotUser2();
+    void slotUser1();
+    void slotUser2();
 
   protected:
-    virtual void closeEvent( QCloseEvent* );
+    void closeEvent( QCloseEvent* );
 
   private:
     //@cond PRIVATE

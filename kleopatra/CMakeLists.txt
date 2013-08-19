@@ -9,15 +9,18 @@ set(kleopatra_version 2.1.1)
 set(kleopatra_release FALSE)
 
 if(NOT kleopatra_release)
-  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
-    if(NOT KdeSubversion_FOUND)
-      find_package(KdeSubversion)
-    endif()
-    if(KdeSubversion_FOUND)
-      kdesubversion_wc_info(${PROJECT_SOURCE_DIR} Kleopatra)
-      string(SUBSTRING "${Kleopatra_WC_LAST_CHANGED_DATE}" 0 10 Kleopatra_WC_LAST_CHANGED_DATE)
-      set(kleopatra_version "${kleopatra_version}-svn${Kleopatra_WC_REVISION} (${Kleopatra_WC_LAST_CHANGED_DATE})")
-    endif()
+  if(GIT_FOUND)
+    execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --oneline --format=%h ${CMAKE_CURRENT_SOURCE_DIR}
+                    WORKING_DIRECTORY ${kdepim_SOURCE_DIR}/kleopatra
+                    OUTPUT_VARIABLE Kleopatra_WC_REVISION)
+    string(REGEX REPLACE "\n" "" Kleopatra_WC_REVISION "${Kleopatra_WC_REVISION}")
+
+    execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --oneline --format=%ci ${CMAKE_CURRENT_SOURCE_DIR}
+                    WORKING_DIRECTORY ${kdepim_SOURCE_DIR}/kleopatra
+                    OUTPUT_VARIABLE Kleopatra_WC_LAST_CHANGED_DATE)
+    string(REGEX REPLACE " [-0-9:+ ]*\n" "" Kleopatra_WC_LAST_CHANGED_DATE "${Kleopatra_WC_LAST_CHANGED_DATE}")
+
+    set(kleopatra_version "${kleopatra_version}-git${Kleopatra_WC_REVISION} (${Kleopatra_WC_LAST_CHANGED_DATE})")
   endif()
 endif()
 
@@ -122,9 +125,9 @@ if(USABLE_ASSUAN_FOUND)
     add_definitions(-DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_USER_1)
   endif()
 
-else(USABLE_ASSUAN_FOUND)
+else()
   set(_kleopatra_uiserver_SRCS)
-endif(USABLE_ASSUAN_FOUND)
+endif()
 
 kde4_add_ui_files(_kleopatra_uiserver_SRCS crypto/gui/signingcertificateselectionwidget.ui)
 

@@ -33,7 +33,7 @@ class KNCollectionView : public FolderTreeWidget
   Q_OBJECT
 
   public:
-    KNCollectionView( QWidget *parent );
+    explicit KNCollectionView( QWidget *parent );
     ~KNCollectionView();
 
     /** Selects @p item and set it the current item. */

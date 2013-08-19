@@ -22,12 +22,18 @@
 #define MESSAGECORE_TESTS_UTIL_H
 
 #include <gpgme++/key.h>
-#include <messageviewer/objecttreeemptysource.h>
-#include <boost/graph/graph_concepts.hpp>
+#include <messageviewer/viewer/objecttreeemptysource.h>
 
 namespace MessageCore {
 
 namespace Test {
+
+  /**
+  * setup a environment variables for tests:
+  * * set LC_ALL to C
+  * * set KDEHOME
+  */
+  void setupEnv();
 
   /**
   * Returns list of keys used in various crypto routines

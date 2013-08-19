@@ -67,7 +67,7 @@ public:
 
   /**
    * Specifies the initial expand status for the item that should be applied
-   * when it's attacched to the viewable tree. Needed as a workaround for
+   * when it's attached to the viewable tree. Needed as a workaround for
    * QTreeView limitations in handling item expansion.
    */
   enum InitialExpandStatus
@@ -113,12 +113,12 @@ public:
 
   /**
    * Return true if Item pointed by it is an ancestor of this item (that is,
-   * if it is it's parent, parent of it's parent, parent of it's parent of it's parent etc...
+   * if it is its parent, parent of its parent, parent of its parent of its parent etc...
    */
   bool hasAncestor( const Item * it ) const;
 
   /**
-   * Makes this item viewable, that is, notifies it's existence to any listener
+   * Makes this item viewable, that is, notifies its existence to any listener
    * attacched to the "rowsInserted()" signal, most notably QTreeView.
    *
    * This will also make all the children viewable.
@@ -196,7 +196,7 @@ public:
   public:
     ChildItemStats()
       : mTotalChildCount( 0 ), mUnreadChildCount( 0 )
-      {};
+      {}
   };
 
   /**

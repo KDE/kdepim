@@ -26,7 +26,7 @@
 #include "koeventpopupmenu.h"
 #include "koprefs.h"
 
-#include <calendarviews/eventviews/agenda/agendaview.h>
+#include <calendarviews/agenda/agendaview.h>
 
 #include <QHBoxLayout>
 
@@ -118,12 +118,6 @@ KOAgendaView::KOAgendaView( QWidget *parent, bool isSideBySide ) :
   connect( d->mAgendaView, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)),
            SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
 
-  connect( d->mAgendaView, SIGNAL(startMultiModify(QString)),
-           SIGNAL(startMultiModify(QString)) );
-
-  connect( d->mAgendaView, SIGNAL(endMultiModify()),
-           SIGNAL(endMultiModify()) );
-
   connect( d->mAgendaView, SIGNAL(newEventSignal()),
            SIGNAL(newEventSignal()) );
 
@@ -153,7 +147,7 @@ KOAgendaView::~KOAgendaView()
   delete d;
 }
 
-void KOAgendaView::setCalendar( CalendarSupport::Calendar *cal )
+void KOAgendaView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
 {
   KOEventView::setCalendar( cal );
   d->mPopup->setCalendar( cal );
@@ -247,7 +241,7 @@ void KOAgendaView::changeIncidenceDisplayAdded( const Akonadi::Item & )
   // Do nothing, EventViews::AgendaView knows when items change
 }
 
-void KOAgendaView::changeIncidenceDisplay( const Akonadi::Item &, int )
+void KOAgendaView::changeIncidenceDisplay( const Akonadi::Item &, Akonadi::IncidenceChanger::ChangeType )
 {
   // Do nothing, EventViews::AgendaView knows when items change
 }
@@ -287,7 +281,7 @@ void KOAgendaView::deleteSelectedDateTime()
   d->mAgendaView->deleteSelectedDateTime();
 }
 
-void KOAgendaView::setIncidenceChanger( CalendarSupport::IncidenceChanger *changer )
+void KOAgendaView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   d->mAgendaView->setIncidenceChanger( changer );
 }

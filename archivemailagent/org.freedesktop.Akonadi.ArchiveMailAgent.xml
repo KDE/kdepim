@@ -6,5 +6,12 @@
     </method>
     <method name="pause"/>
     <method name="resume"/>
+    <method name="printArchiveListInfo"/>
+    <method name="setEnableAgent" >
+      <arg direction="in" type="b" name="enabled" />
+    </method>
+    <method name="enabledAgent" >
+      <arg direction="out" type="b" />
+    </method>
   </interface>
 </node>

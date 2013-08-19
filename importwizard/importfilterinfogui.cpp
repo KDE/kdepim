@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -26,8 +26,8 @@
 #include <QListWidgetItem>
 
 ImportFilterInfoGui::ImportFilterInfoGui(ImportMailPage* parent)
-  : MailImporter::FilterInfoGui(),
-    m_parent( parent )
+    : MailImporter::FilterInfoGui(),
+      m_parent( parent )
 {
 }
 
@@ -37,67 +37,67 @@ ImportFilterInfoGui::~ImportFilterInfoGui()
 
 void ImportFilterInfoGui::setStatusMessage( const QString& status )
 {
-  m_parent->mailWidget()->setStatusMessage(status);
+    m_parent->mailWidget()->setStatusMessage(status);
 }
 
 void ImportFilterInfoGui::setFrom( const QString& from )
 {
-  m_parent->mailWidget()->setFrom(from);
+    m_parent->mailWidget()->setFrom(from);
 }
 
 void ImportFilterInfoGui::setTo( const QString& to )
 {
-  m_parent->mailWidget()->setTo(to);
+    m_parent->mailWidget()->setTo(to);
 }
 
 void ImportFilterInfoGui::setCurrent( const QString& current )
 {
-  m_parent->mailWidget()->setCurrent(current);
-  kapp->processEvents();
+    m_parent->mailWidget()->setCurrent(current);
+    kapp->processEvents();
 }
 
 void  ImportFilterInfoGui::setCurrent( int percent )
 {
-  m_parent->mailWidget()->setCurrent(percent);
-  kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
+    m_parent->mailWidget()->setCurrent(percent);
+    kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
 void  ImportFilterInfoGui::setOverall( int percent )
 {
-  m_parent->mailWidget()->setOverall(percent);
+    m_parent->mailWidget()->setOverall(percent);
 }
 
 void ImportFilterInfoGui::addInfoLogEntry( const QString& log )
 {
-  QListWidgetItem* item =new QListWidgetItem(log);
-  item->setForeground(Qt::blue);
-  m_parent->mailWidget()->addItem( item );
-  m_parent->mailWidget()->setLastCurrentItem();
-  kapp->processEvents();
+    QListWidgetItem* item =new QListWidgetItem(log);
+    item->setForeground(Qt::blue);
+    m_parent->mailWidget()->addItem( item );
+    m_parent->mailWidget()->setLastCurrentItem();
+    kapp->processEvents();
 }
 
 void ImportFilterInfoGui::addErrorLogEntry( const QString& log )
 {
-  QListWidgetItem* item =new QListWidgetItem(log);
-  item->setForeground(Qt::red);
-  m_parent->mailWidget()->addItem( item );
-  m_parent->mailWidget()->setLastCurrentItem();
-  kapp->processEvents();
+    QListWidgetItem* item =new QListWidgetItem(log);
+    item->setForeground(Qt::red);
+    m_parent->mailWidget()->addItem( item );
+    m_parent->mailWidget()->setLastCurrentItem();
+    kapp->processEvents();
 }
 
 
 void ImportFilterInfoGui::clear()
 {
-  m_parent->mailWidget()->clear();
+    m_parent->mailWidget()->clear();
 }
 
 void ImportFilterInfoGui::alert( const QString& message )
 {
-  KMessageBox::information( m_parent, message );
+    KMessageBox::information( m_parent, message );
 }
 
 QWidget *ImportFilterInfoGui::parent()
 {
-  return m_parent;
+    return m_parent;
 }
 

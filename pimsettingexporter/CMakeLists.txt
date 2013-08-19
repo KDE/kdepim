@@ -1,8 +1,14 @@
 project(pimsettingexporter)
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(${AKONADI_INCLUDE_DIR} 
                     ${SOPRANO_INCLUDE_DIR} 
                     ${CMAKE_SOURCE_DIR}/libkdepim
+                    ${CMAKE_SOURCE_DIR}/mailcommon
+                    ${CMAKE_SOURCE_DIR}/messageviewer
+                    ${CMAKE_SOURCE_DIR}/pimcommon
+                    ${CMAKE_SOURCE_DIR}/messagecomposer/
                     ${NEPOMUK_CORE_INCLUDE_DIR}
 )
 
@@ -11,24 +17,28 @@ include_directories(${AKONADI_INCLUDE_DIR}
 
 set(pimsettingexporter_SRCS
   main.cpp
+  selectiontypetreewidget.cpp
   abstractimportexportjob.cpp
-  backupmailwindow.cpp
-  backupmailwidget.cpp
-  exportmailjob.cpp
-  importmailjob.cpp
-  backupmailkernel.cpp
-  backupmailutil.cpp
-  selecttypewidget.cpp
+  pimsettingexporterwindow.cpp
+  logwidget.cpp
+  mail/exportmailjob.cpp
+  mail/importmailjob.cpp
+  pimsettingexporterkernel.cpp
+  utils.cpp
   selectiontypedialog.cpp
   akonadidatabase.cpp
-  exportcalendarjob.cpp
-  importcalendarjob.cpp
+  calendar/exportcalendarjob.cpp
+  calendar/importcalendarjob.cpp
+  addressbook/exportaddressbookjob.cpp
+  addressbook/importaddressbookjob.cpp
+  alarm/exportalarmjob.cpp
+  alarm/importalarmjob.cpp
+  jot/exportjotjob.cpp
+  jot/importjotjob.cpp
   archivestorage.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-
-kde4_add_ui_files(pimsettingexporter_SRCS ui/selecttypewidget.ui )
 
 kde4_add_executable(pimsettingexporter ${pimsettingexporter_SRCS})
 
@@ -40,6 +50,7 @@ target_link_libraries(pimsettingexporter
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${AKONADI_COMMON_LIBRARIES}
+  ${KDEPIMLIBS_KALARMCAL_LIBS}
   mailimporter
   mailcommon
   pimcommon

@@ -26,10 +26,11 @@
 #define BILBOBLOG_H
 
 #include "constants.h"
-#include <QObject>
+
 #include <kurl.h>
-#include <QHash>
 #include <kblog/blog.h>
+
+#include <QObject>
 /**
 Blog definition class!
 

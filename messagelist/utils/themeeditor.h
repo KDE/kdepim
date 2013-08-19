@@ -184,16 +184,18 @@ class ThemeContentItemSourceLabel : public QLabel
 public:
   ThemeContentItemSourceLabel( QWidget * parent, Core::Theme::ContentItem::Type type );
   ~ThemeContentItemSourceLabel();
-private:
-  Core::Theme::ContentItem::Type mType;
-  QPoint mMousePressPoint;
+
 public:
-  Core::Theme::ContentItem::Type type() const
-    { return mType; };
+  Core::Theme::ContentItem::Type type() const;
   void startDrag();
+
 protected:
   void mousePressEvent( QMouseEvent * e );
   void mouseMoveEvent( QMouseEvent * e );
+
+private:
+  Core::Theme::ContentItem::Type mType;
+  QPoint mMousePressPoint;
 };
 
 
@@ -212,8 +214,7 @@ public:
    */
   void editTheme( Core::Theme *set );
 
-  Core::Theme * editedTheme() const
-    { return mCurrentTheme; };
+  Core::Theme * editedTheme() const;
 
   void commit();
 signals:

@@ -1,4 +1,4 @@
-/* Copyright (C) 2011, 2012 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -16,10 +16,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <config-messageviewer.h>
-
 #include "findbarmailwebview.h"
-#include "mailwebview.h"
+#include "viewer/mailwebview.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -27,13 +25,13 @@
 using namespace MessageViewer;
 
 FindBarMailWebView::FindBarMailWebView( MailWebView * view, QWidget * parent )
-  : FindBarBase( parent ), m_view( view )
+    : FindBarBase( parent ), mView( view )
 {  
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-  QMenu * options = optionsMenu();
-  m_highlightAll = options->addAction( i18n( "Highlight all matches" ) );
-  m_highlightAll->setCheckable( true );
-  connect( m_highlightAll, SIGNAL(toggled(bool)), this, SLOT(slotHighlightAllChanged(bool)) );
+    QMenu *options = optionsMenu();
+    mHighlightAll = options->addAction( i18n( "Highlight all matches" ) );
+    mHighlightAll->setCheckable( true );
+    connect( mHighlightAll, SIGNAL(toggled(bool)), this, SLOT(slotHighlightAllChanged(bool)) );
 #endif
 }
 
@@ -43,67 +41,67 @@ FindBarMailWebView::~FindBarMailWebView()
 
 void FindBarMailWebView::searchText( bool backward, bool isAutoSearch )
 {
-  MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
+    MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
 
-  if ( backward )
-    searchOptions |= MailWebView::FindBackward;
-  if ( m_caseSensitiveAct->isChecked() )
-    searchOptions |= MailWebView::FindCaseSensitively;
+    if ( backward )
+        searchOptions |= MailWebView::FindBackward;
+    if ( mCaseSensitiveAct->isChecked() )
+        searchOptions |= MailWebView::FindCaseSensitively;
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-  if ( m_highlightAll->isChecked() )
-    searchOptions |= MailWebView::HighlightAllOccurrences;
+    if ( mHighlightAll->isChecked() )
+        searchOptions |= MailWebView::HighlightAllOccurrences;
 #endif
-  const QString searchWord( m_search->text() );
-  if( !isAutoSearch && !mLastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
-  {
-    clearSelections();
-  }
-  m_view->findText(QString(), MailWebView::HighlightAllOccurrences); //Clear an existing highligh
+    const QString searchWord( mSearch->text() );
+    if( !isAutoSearch && !mLastSearchStr.contains( searchWord, Qt::CaseSensitive ) )
+    {
+        clearSelections();
+    }
+    mView->findText(QString(), MailWebView::HighlightAllOccurrences); //Clear an existing highligh
 
-  mLastSearchStr = searchWord;
-  const bool found = m_view->findText( mLastSearchStr, searchOptions );
+    mLastSearchStr = searchWord;
+    const bool found = mView->findText( mLastSearchStr, searchOptions );
 
-  setFoundMatch( found );
-  FindBarBase::messageInfo( backward, isAutoSearch, found );  
+    setFoundMatch( found );
+    FindBarBase::messageInfo( backward, isAutoSearch, found );
 }
 
 void FindBarMailWebView::updateHighLight(bool highLight)
 {
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-  bool found = false;
-  if ( highLight ) {
-    MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
-    if ( m_caseSensitiveAct->isChecked() )
-      searchOptions |= MailWebView::FindCaseSensitively;
-    searchOptions |= MailWebView::HighlightAllOccurrences;
-    found = m_view->findText(mLastSearchStr, searchOptions);
-  }
-  else
-    found = m_view->findText(QString(), MailWebView::HighlightAllOccurrences);
-  setFoundMatch( found );
+    bool found = false;
+    if ( highLight ) {
+        MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
+        if ( mCaseSensitiveAct->isChecked() )
+            searchOptions |= MailWebView::FindCaseSensitively;
+        searchOptions |= MailWebView::HighlightAllOccurrences;
+        found = mView->findText(mLastSearchStr, searchOptions);
+    } else {
+        found = mView->findText(QString(), MailWebView::HighlightAllOccurrences);
+    }
+    setFoundMatch( found );
 #endif
 }
 
 void FindBarMailWebView::updateSensitivity( bool sensitivity )
 {
-  MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
-  if ( sensitivity ) {
-    searchOptions |= MailWebView::FindCaseSensitively;
-    m_view->findText(QString(), MailWebView::HighlightAllOccurrences); //Clear an existing highligh
-  }
+    MailWebView::FindFlags searchOptions = MailWebView::FindWrapsAroundDocument;
+    if ( sensitivity ) {
+        searchOptions |= MailWebView::FindCaseSensitively;
+        mView->findText(QString(), MailWebView::HighlightAllOccurrences); //Clear an existing highligh
+    }
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-  if ( m_highlightAll->isChecked() )
-    searchOptions |= MailWebView::HighlightAllOccurrences;
+    if ( mHighlightAll->isChecked() )
+        searchOptions |= MailWebView::HighlightAllOccurrences;
 #endif
-  const bool found = m_view->findText(mLastSearchStr, searchOptions);
-  setFoundMatch( found );
+    const bool found = mView->findText(mLastSearchStr, searchOptions);
+    setFoundMatch( found );
 }
 
 
 void FindBarMailWebView::clearSelections()
 {
-  m_view->clearFindSelection();
-  FindBarBase::clearSelections();
+    mView->clearFindSelection();
+    FindBarBase::clearSelections();
 }
 
 #include "findbarmailwebview.moc"

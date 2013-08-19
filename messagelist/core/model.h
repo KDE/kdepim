@@ -85,7 +85,7 @@ public:
   /**
    * Creates the mighty Model attached to the specified View.
    */
-  Model( View *pParent );
+  explicit Model( View *pParent );
 
   /**
    * Destroys the mighty model along with the tree of items it manages.
@@ -120,17 +120,6 @@ public:
    * apply the pre-selection.
    */
   void abortMessagePreSelection();
-
-  /**
-   * Attempt to select the message with the specified unique id AND storage row as soon
-   * as possible (either now or when the view finishes loading). Please note that BOTH the uniqueId
-   * and the storage row are needed in order to perform the operation in all cases.
-   *
-   * This is a very special function. It can be called ONLY when the model is actually
-   * loading: it will assert if you do otherwise. This call is actually the only
-   * way to select an item that hasn't been read from the storage yet.
-   */
-  void activateMessageAfterLoading( unsigned long uniqueIdOfMessage, int row );
 
   /**
    * Returns the hidden root item that all the messages are (or will be) attached to.

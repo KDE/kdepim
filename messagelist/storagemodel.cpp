@@ -18,9 +18,9 @@
 
 #include "storagemodel.h"
 
-#include <messagecore/stringutil.h>
-#include <messagecore/globalsettings.h>
-#include <messagecore/nodehelper.h>
+#include <messagecore/utils/stringutil.h>
+#include <messagecore/settings/globalsettings.h>
+#include <messagecore/helpers/nodehelper.h>
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/collection.h>
@@ -73,7 +73,9 @@ public:
   QItemSelectionModel *mSelectionModel;
 
   Private( StorageModel *owner )
-    : q( owner )
+    : q( owner ),
+      mModel(0),
+      mSelectionModel(0)
   {}
 };
 
@@ -100,7 +102,6 @@ static QAtomicInt _k_attributeInitialized;
 StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent )
   : Core::StorageModel( parent ), d( new Private( this ) )
 {
-  d->mModel = 0;
   d->mSelectionModel = selectionModel;
   if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
     AttributeFactory::registerAttribute<MessageFolderAttribute>();
@@ -160,7 +161,6 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   d->loadSettings();
   connect( Core::Settings::self(), SIGNAL(configChanged()),
            this, SLOT(loadSettings()) );
-
 }
 
 StorageModel::~StorageModel()

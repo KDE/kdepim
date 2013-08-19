@@ -29,12 +29,12 @@
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
 
-#include <messageviewer/objecttreeparser.h>
-#include <messageviewer/objecttreeemptysource.h>
-#include <messageviewer/nodehelper.h>
-#include <messageviewer/csshelper.h>
+#include <messageviewer/viewer/objecttreeparser.h>
+#include <messageviewer/viewer/objecttreeemptysource.h>
+#include <messageviewer/viewer/nodehelper.h>
+#include <messageviewer/viewer/csshelper.h>
 
-#include <messagecore/nodehelper.h>
+#include <messagecore/helpers/nodehelper.h>
 
 #include <KDebug>
 #include <QDir>
@@ -53,56 +53,102 @@ void nullMessageOutput(QtMsgType type, const char *msg)
   Q_UNUSED(msg);
 }
 
-bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f ) {
 
+bool ComposerTestUtil::verify( bool sign, bool encrypt, KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding ) {
+  if ( sign && encrypt ) {
+    Q_UNUSED( encoding );
+    return verifySignatureAndEncryption( content, origContent, f, false );
+  } else if ( sign ) {
+    return verifySignature( content, origContent, f, encoding );
+  } else {
+    Q_UNUSED( encoding );
+    return verifyEncryption(  content, origContent, f );
+  }
+}
+
+bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding ) {
+  kDebug() << "verifySignature";
   // store it in a KMime::Message, that's what OTP needs
   KMime::Message* resultMessage =  new KMime::Message;
   resultMessage->setContent( content->encodedContent() );
   resultMessage->parse();
-  
+
   // parse the result and make sure it is valid in various ways
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
   MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, true, 0 );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh );
   MessageViewer::ProcessResult pResult( nh );
 
   // ensure the signed part exists and is parseable
   if( f & Kleo::OpenPGPMIMEFormat ) {
+    // process the result..
+
+    otp.parseObjectTree( resultMessage );
     KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-signature", true, true );
     Q_ASSERT( signedPart );
+    Q_ASSERT( signedPart->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit );
+    Q_UNUSED( signedPart );
 
-    // process the result..
-    kDebug() << resultMessage->topLevel();
-    otp.parseObjectTree( resultMessage );
-    Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
+    //Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
     // make sure the good sig is of what we think it is
-    Q_ASSERT( MessageCore::NodeHelper::firstChild( resultMessage )->body() == signedContent );
+    Q_ASSERT( otp.plainTextContent().toUtf8() == signedContent );
+    Q_UNUSED( signedContent );
+
+    Q_ASSERT( MessageCore::NodeHelper::firstChild(  resultMessage )->contentTransferEncoding()->encoding() == encoding );
 
     return true;
   } else if( f & Kleo::InlineOpenPGPFormat ) {
+    // process the result..
     qInstallMsgHandler(nullMessageOutput);
-    otp.processTextPlainSubtype( resultMessage, pResult );
+    otp.parseObjectTree( resultMessage );
     qInstallMsgHandler(0);
-    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgFullySigned );
+    Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
+
+    Q_ASSERT( otp.plainTextContent().toUtf8() == signedContent );
+    Q_UNUSED( signedContent );
+
+    Q_ASSERT( resultMessage->contentTransferEncoding()->encoding() == encoding );
 
     return true;
   } else if( f & Kleo::AnySMIME ) {
     if( f & Kleo::SMIMEFormat ) {
       KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-signature", true, true );
       Q_ASSERT( signedPart );
+      Q_ASSERT( signedPart->contentTransferEncoding()->encoding() == KMime::Headers::CEbase64 );
+      Q_ASSERT( signedPart->contentType()->mimeType() == QByteArray( "application/pkcs7-signature" ) );
+      Q_ASSERT( signedPart->contentType()->name() == QString::fromLatin1( "smime.p7s" ) );
+      Q_ASSERT( signedPart->contentDisposition()->disposition() == KMime::Headers::CDattachment );
+      Q_ASSERT( signedPart->contentDisposition()->filename() == QString::fromLatin1( "smime.p7s" ) );
+      Q_UNUSED( signedPart );
+
+      Q_ASSERT( MessageCore::NodeHelper::firstChild( resultMessage )->contentTransferEncoding()->encoding() == encoding );
+
+      Q_ASSERT( resultMessage->contentType()->mimeType() == QByteArray( "multipart/signed" ) );
+      Q_ASSERT( resultMessage->contentType()->parameter( QString::fromLatin1( "protocol" ) ) == QString::fromLatin1( "application/pkcs7-signature" ) );
+      Q_ASSERT( resultMessage->contentType()->parameter( QString::fromLatin1( "micalg" ) ) == QString::fromLatin1( "sha1" ) );
+
     } else if( f & Kleo::SMIMEOpaqueFormat ) {
       KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
       Q_ASSERT( signedPart );
+      Q_ASSERT( signedPart->contentTransferEncoding()->encoding() == KMime::Headers::CEbase64 );
+      Q_ASSERT( signedPart->contentType()->mimeType() == QByteArray( "application/pkcs7-mime" ) );
+      Q_ASSERT( signedPart->contentType()->name() == QString::fromLatin1( "smime.p7m" ) );
+      Q_ASSERT( signedPart->contentType()->parameter( QString::fromLatin1( "smime-type" ) ) == QString::fromLatin1( "signed-data" ) );
+      Q_ASSERT( signedPart->contentDisposition()->disposition() == KMime::Headers::CDattachment );
+      Q_ASSERT( signedPart->contentDisposition()->filename() == QString::fromLatin1( "smime.p7m" ) );
+      Q_UNUSED( signedPart );
     }
     // process the result..
     otp.parseObjectTree( resultMessage );
-    Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
+
+    //Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
     // make sure the good sig is of what we think it is
-    Q_ASSERT( otp.rawDecryptedBody() == signedContent );
+    Q_ASSERT( otp.plainTextContent().toUtf8() == signedContent );
+    Q_UNUSED( signedContent );
 
     return true;
   }
@@ -112,7 +158,6 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
 
 bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray encrContent, Kleo::CryptoMessageFormat f )
 {
-
   // store it in a KMime::Message, that's what OTP needs
   KMime::Message* resultMessage =  new KMime::Message;
   resultMessage->setContent( content->encodedContent() );
@@ -122,48 +167,56 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
   MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
+  testSource.setAllowDecryption( true );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, true, 0 );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh );
   MessageViewer::ProcessResult pResult( nh );
 
   if( f & Kleo::OpenPGPMIMEFormat ) {
     // ensure the enc part exists and is parseable
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-encrypted", true, true );
     Q_ASSERT( encPart );
+    Q_UNUSED( encPart );
 
     // process the result..
-   // kDebug() << resultMessage->topLevel();
+    // kDebug() << resultMessage->topLevel();
     otp.parseObjectTree( resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
-//     kDebug() << "msg:" << resultMessage->encodedContent();
 
-    // make sure the decoded content is what we encrypted
-    // processMultiPartEncrypted will add a child part with the unencrypted data
-    /*     // strip the extra newline from the end of the body
-    QString body = QString::fromUtf8( MessageViewer::NodeHelper::firstChild( resultMessage )->encodedContent() ).trimmed();
-    QString ref = QString::fromUtf8( encrContent ).trimmed();
-    Q_ASSERT( body == ref );
-*/
-//     kDebug() << "raw:" << otp.rawDecryptedBody();
-//     kDebug() << "textContent:" << otp.textualContent();
-    Q_ASSERT( otp.rawDecryptedBody()== encrContent );
+    // kDebug() << "msg:" << resultMessage->encodedContent();
+    Q_ASSERT( otp.plainTextContent().toUtf8() == encrContent );
+    Q_UNUSED( encrContent );
 
     return true;
-    
+
   } else if( f & Kleo::InlineOpenPGPFormat ) {
     qInstallMsgHandler(nullMessageOutput);
     otp.processTextPlainSubtype( resultMessage, pResult );
     qInstallMsgHandler(0);
+
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
+
+    Q_ASSERT( otp.plainTextContent().toUtf8() == encrContent );
+    Q_UNUSED( encrContent );
 
     return true;
   } else if( f & Kleo::AnySMIME) {
     // ensure the enc part exists and is parseable
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
     Q_ASSERT( encPart );
+
+    Q_ASSERT( encPart->contentType()->mimeType() == QByteArray( "application/pkcs7-mime" ) );
+    Q_ASSERT( encPart->contentType()->name() == QString::fromLatin1( "smime.p7m" ) );
+    Q_ASSERT( encPart->contentType()->parameter( QString::fromLatin1( "smime-type" ) ) == QString::fromLatin1( "enveloped-data" ) );
+    Q_ASSERT( encPart->contentDisposition()->disposition() == KMime::Headers::CDattachment );
+    Q_ASSERT( encPart->contentDisposition()->filename() == QString::fromLatin1( "smime.p7m" ) );
+    Q_UNUSED( encPart );
+
     otp.parseObjectTree( resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
-    Q_ASSERT( otp.rawDecryptedBody() == encrContent );
+
+    Q_ASSERT( otp.plainTextContent().toUtf8() == encrContent );
+    Q_UNUSED( encrContent );
 
     return true;
   }
@@ -173,61 +226,68 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
 
 bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, bool withAttachment )
 {
+  Q_UNUSED( withAttachment );
   // store it in a KMime::Message, that's what OTP needs
   KMime::Message::Ptr resultMessage =  KMime::Message::Ptr( new KMime::Message );
   resultMessage->setContent( content->encodedContent() );
   resultMessage->parse();
-  
+
   // parse the result and make sure it is valid in various ways
   TestHtmlWriter testWriter;
   TestCSSHelper testCSSHelper;
   MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
+  testSource.setAllowDecryption( true );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, true, 0  );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh );
   MessageViewer::ProcessResult pResult( nh );
 
   if( f & Kleo::OpenPGPMIMEFormat ) {
     // ensure the enc part exists and is parseable
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage.get(), "application", "pgp-encrypted", true, true );
     Q_ASSERT( encPart );
-
-    otp.parseObjectTree( resultMessage.get() );
-//     kDebug() << "message:" << resultMessage->encodedContent();
-    Q_ASSERT( nh->encryptionState( resultMessage.get() ) == MessageViewer::KMMsgFullyEncrypted );
-
-    KMime::Content* signedPart = MessageCore::NodeHelper::nextSibling( encPart );
-//       kDebug() << "resultMessage:" << resultMessage->encodedContent();
-//       kDebug() << "resultMessage rawresultstr:" << otp.rawDecryptedBody() << "signed?" << resultMessage;
-//       kDebug() << "signed Part:" << signedPart->encodedContent() << "Signed?" << ( nh->signatureState( signedPart ) == MessageViewer::KMMsgFullySigned );
-    QList< KMime::Content* > extra = nh->extraContents( resultMessage.get() );
-    kDebug() << "got extra:" << extra.size() << "for" << resultMessage;
-    foreach( KMime::Content* e, extra )
-        kDebug() << "extran:" << e->encodedContent();
-    Q_ASSERT( extra.size() == 1 );
-    Q_ASSERT( nh->signatureState( extra[ 0 ]  ) == MessageViewer::KMMsgFullySigned );
-
-//     kDebug() << "raw reply and orig: " << otp.rawDecryptedBody() << origContent;
-    Q_ASSERT( otp.rawDecryptedBody() == origContent );
-    return true;
-  } else if( f & Kleo::InlineOpenPGPFormat ) {
-    qInstallMsgHandler(nullMessageOutput);
-    otp.processTextPlainSubtype( resultMessage.get(), pResult );
-    qInstallMsgHandler(0);
-    Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
-    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgFullySigned );
-
-    return true;
-  } else if( f & Kleo::AnySMIME ) {
-    KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage.get(), "application", "pkcs7-mime", true, true );
-    Q_ASSERT( encPart );
+    Q_UNUSED( encPart );
 
     otp.parseObjectTree( resultMessage.get() );
     Q_ASSERT( nh->encryptionState( resultMessage.get() ) == MessageViewer::KMMsgFullyEncrypted );
 
     QList< KMime::Content* > extra = nh->extraContents( resultMessage.get() );
     kDebug() << "size:" << extra.size();
-    Q_ASSERT( nh->signatureState( extra[ extra.size() - 1 ] ) == MessageViewer::KMMsgFullySigned );
-    Q_ASSERT( otp.rawDecryptedBody() == origContent );
+    Q_ASSERT( extra.size() == 1 );
+    Q_ASSERT( nh->signatureState( extra[ 0 ]  ) == MessageViewer::KMMsgFullySigned );
+    Q_ASSERT( otp.plainTextContent().toUtf8() == origContent );
+    Q_UNUSED( origContent );
+
+    return true;
+  } else if( f & Kleo::InlineOpenPGPFormat ) {
+    qInstallMsgHandler(nullMessageOutput);
+    otp.processTextPlainSubtype( resultMessage.get(), pResult );
+    qInstallMsgHandler(0);
+
+    Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
+    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgFullySigned );
+    Q_ASSERT( otp.plainTextContent().toUtf8() == origContent );
+    Q_UNUSED( origContent );
+
+    return true;
+  } else if( f & Kleo::AnySMIME ) {
+    KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage.get(), "application", "pkcs7-mime", true, true );
+    Q_ASSERT( encPart );
+    Q_ASSERT( encPart->contentType()->mimeType() == QByteArray( "application/pkcs7-mime" ) );
+    Q_ASSERT( encPart->contentType()->name() == QString::fromLatin1( "smime.p7m" ) );
+    Q_ASSERT( encPart->contentType()->parameter( QString::fromLatin1( "smime-type" ) ) == QString::fromLatin1( "enveloped-data" ) );
+    Q_ASSERT( encPart->contentDisposition()->disposition() == KMime::Headers::CDattachment );
+    Q_ASSERT( encPart->contentDisposition()->filename() == QString::fromLatin1( "smime.p7m" ) );
+    Q_UNUSED( encPart );
+
+    otp.parseObjectTree( resultMessage.get() );
+    Q_ASSERT( nh->encryptionState( resultMessage.get() ) == MessageViewer::KMMsgFullyEncrypted );
+
+    QList< KMime::Content* > extra = nh->extraContents( resultMessage.get() );
+    kDebug() << "size:" << extra.size();
+    Q_ASSERT( extra.size() == 1 );
+    Q_ASSERT( nh->signatureState( extra[ 0 ] ) == MessageViewer::KMMsgFullySigned );
+    Q_ASSERT( otp.plainTextContent().toUtf8() == origContent );
+    Q_UNUSED( origContent );
 
     return true;
   }

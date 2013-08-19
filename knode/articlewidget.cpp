@@ -51,14 +51,14 @@
 #include <kicon.h>
 #include <kde_file.h>
 
-#include <libkdepim/addemailaddressjob.h>
-#include <libkdepim/openemailaddressjob.h>
+#include <libkdepim/job/addemailaddressjob.h>
+#include <libkdepim/job/openemailaddressjob.h>
 
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
 
-#include <messageviewer/kxface.h>
-#include <messagecomposer/util.h>
+#include <messageviewer/header/kxface.h>
+#include <messagecomposer/utils/util.h>
 #include <kpimutils/kfileio.h>
 #include <kpimutils/linklocator.h>
 #include <kpimutils/email.h>
@@ -942,7 +942,7 @@ QString ArticleWidget::toHtmlString( const QString &line, int flags )
   QString text = line;
   if ( flags & ArticleWidget::AllowROT13 ) {
     if ( mRot13 )
-      text = Message::Util::rot13( line );
+      text = MessageComposer::Util::rot13( line );
   }
   return KPIMUtils::LinkLocator::convertToHtml( text, llflags );
 }

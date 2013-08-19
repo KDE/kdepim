@@ -28,7 +28,7 @@ class RawSocketConsole : public QWidget
 {
   Q_OBJECT
   public:
-    RawSocketConsole( QWidget *parent = 0 );
+    explicit RawSocketConsole( QWidget *parent = 0 );
 
   private slots:
     void execClicked();

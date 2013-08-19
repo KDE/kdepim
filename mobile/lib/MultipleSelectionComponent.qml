@@ -19,9 +19,10 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi 4.5
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
 QML.Rectangle {
   color : "#00000000"
@@ -43,21 +44,24 @@ QML.Rectangle {
     width : parent.width / 3
   }
 
-  KPIM.DecoratedListView {
-    id : selectedView
+  PlasmaExtras.ScrollArea {
     anchors.left : navigationView.right
     anchors.right : parent.right
     anchors.top : parent.top
     anchors.bottom : parent.bottom
 
-    model : _multiSelectionComponentFactory.qmlCheckedItemsModel()
+    flickableItem: QML.ListView {
+      id : selectedView
 
-    delegate : CollectionDelegate{
-      id : selectedDelegate
-      uncheckable : true
-      alternatingRowColors : true
-      checkModel : _multiSelectionComponentFactory.qmlCheckedItemsCheckModel();
-      height : 70
+      model : _multiSelectionComponentFactory.qmlCheckedItemsModel()
+
+      delegate : CollectionDelegate {
+        id : selectedDelegate
+        uncheckable : true
+        alternatingRowColors : true
+        checkModel : _multiSelectionComponentFactory.qmlCheckedItemsCheckModel();
+        height : 70
+      }
     }
   }
 }

@@ -50,12 +50,20 @@ balsa/balsaaddressbook.cpp
 claws-mail/clawsmailimportdata.cpp
 claws-mail/clawsmailsettings.cpp
 claws-mail/clawsmailaddressbook.cpp
+trojita/trojitasettings.cpp
+trojita/trojitaimportdata.cpp
+trojita/trojitaaddressbook.cpp
+kmail1/kmail1importdata.cpp
+kmail1/kmail1settings.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/mailimporter 
                     ${CMAKE_SOURCE_DIR}/mailcommon 
 		    ${CMAKE_SOURCE_DIR}/pimcommon
+                    ${CMAKE_SOURCE_DIR}/messagecomposer/
 		    ${CMAKE_SOURCE_DIR}/mailcommon/filter/
+                    ${CMAKE_SOURCE_DIR}/messageviewer/
+		    ${CMAKE_SOURCE_DIR}/libkdepim/
                     ${NEPOMUK_CORE_INCLUDE_DIR}
                     ${SOPRANO_INCLUDE_DIR})
 
@@ -72,12 +80,13 @@ kde4_add_ui_files(importwizard_SRCS
 		  ui/importcalendarpage.ui)
 
 soprano_add_ontology(importwizard_SRCS
-    ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+    ${CMAKE_SOURCE_DIR}/messagecore/ontology/messagetag.trig
     "MessageTag"
     "Vocabulary"
     "trig"
   )
 
+kde4_add_app_icon(importwizard_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-app-kontact-import-wizard.png")
 
 kde4_add_executable(importwizard ${importwizard_SRCS})
 

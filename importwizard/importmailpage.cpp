@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -19,38 +19,38 @@
 #include "ui_importmailpage.h"
 
 ImportMailPage::ImportMailPage(QWidget *parent) :
-  QWidget(parent),
-  ui(new Ui::ImportMailPage)
+    QWidget(parent),
+    ui(new Ui::ImportMailPage)
 {
-  ui->setupUi(this);
-  connect(ui->importMails,SIGNAL(clicked()),SIGNAL(importMailsClicked()));
-  connect(ui->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)), this, SLOT(collectionChanged(Akonadi::Collection)) );
+    ui->setupUi(this);
+    connect(ui->importMails,SIGNAL(clicked()),SIGNAL(importMailsClicked()));
+    connect(ui->mCollectionRequestor, SIGNAL(folderChanged(Akonadi::Collection)), this, SLOT(collectionChanged(Akonadi::Collection)) );
 }
 
 ImportMailPage::~ImportMailPage()
 {
-  delete ui;
+    delete ui;
 }
 
 MailImporter::ImportMailsWidget *ImportMailPage::mailWidget()
 {
-  return ui->mMailImporterWidget;
+    return ui->mMailImporterWidget;
 }
 
 void ImportMailPage::collectionChanged(const Akonadi::Collection& collection)
 {
-  ui->importMails->setEnabled( collection.isValid() );
+    ui->importMails->setEnabled( collection.isValid() );
 }
 
 Akonadi::Collection ImportMailPage::selectedCollection() const
 {
-  return ui->mCollectionRequestor->collection();
+    return ui->mCollectionRequestor->collection();
 }
 
 
 void ImportMailPage::setImportButtonEnabled(bool enabled)
 {
-  ui->importMails->setEnabled(enabled);
+    ui->importMails->setEnabled(enabled);
 }
 
 #include "importmailpage.moc"

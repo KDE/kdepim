@@ -37,9 +37,9 @@ FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
         QString line = stream.readLine();
         kDebug() << " line :" << line << " filter " << filter;
 
-        if(line.isEmpty()) {
+        if (line.isEmpty()) {
             //Nothing
-        } else if(line.startsWith(QLatin1Char('[')) && line.endsWith(QLatin1Char(']'))) {
+        } else if (line.startsWith(QLatin1Char('[')) && line.endsWith(QLatin1Char(']'))) {
             //TODO
         } else {
             appendFilter(filter);
@@ -68,7 +68,7 @@ MailFilter * FilterImporterClawsMails::parseLine(const QString& line)
     MailFilter *filter = new MailFilter();
     QString tmp = line;
     //Enabled ?
-    if(tmp.startsWith(QLatin1String("enabled"))) {
+    if (tmp.startsWith(QLatin1String("enabled"))) {
         filter->setEnabled(true);
         tmp.remove(QLatin1String("enabled "));
     }

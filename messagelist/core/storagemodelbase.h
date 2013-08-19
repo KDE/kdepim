@@ -27,7 +27,7 @@
 
 namespace Akonadi
 {
-	class MessageStatus;
+        class MessageStatus;
 }
 
 namespace MessageList

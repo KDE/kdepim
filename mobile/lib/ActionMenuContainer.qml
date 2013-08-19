@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7
+import QtQuick 1.1
 
 import org.kde.pim.mobileui 4.5 as KPIM
 
@@ -202,11 +202,11 @@ Item {
     interactive: (actionItemHeight + actionItemSpacing) * (activeCount <= 0 ? count : activeCount) > height
 
     highlight : ActiveActionMenuItemDelegate{
-      id : menuHighLight;
-      visible : menuStyle;
-      spaceAbove : itemModel.spaceAbove;
-      spaceBelow : itemModel.spaceBelow;
-      actionItemHeight: _topLevel.actionItemHeight 
+      id : menuHighLight
+      visible : menuStyle
+      spaceAbove : itemModel.spaceAbove
+      spaceBelow : itemModel.spaceBelow
+      actionItemHeight: _topLevel.actionItemHeight
     }
 
     onHeightChanged : {

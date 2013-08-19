@@ -99,6 +99,7 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   setMainWidget( base );
 
   QGridLayout * g = new QGridLayout( base );
+  g->setContentsMargins( 0, 0, 0, 0 );
 
   d->mThemeList = new ThemeListWidget( base );
   d->mThemeList->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -200,7 +201,7 @@ void ConfigureThemesDialog::Private::okButtonClicked()
       Manager::instance()->addTheme( item->theme() );
       item->forgetTheme();
     }
-    i++;
+    ++i;
   }
 
   Manager::instance()->themesConfigurationCompleted();
@@ -282,7 +283,7 @@ ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemById( const Q
       if ( item->theme()->id() == themeId )
         return item;
     }
-    i++;
+    ++i;
   }
   return 0;
 }
@@ -303,7 +304,7 @@ ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemByName( const
           return item;
       }
     }
-    i++;
+    ++i;
   }
   return 0;
 }
@@ -320,7 +321,7 @@ ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemByTheme( Them
       if ( item->theme() == set )
         return item;
     }
-    i++;
+    ++i;
   }
   return 0;
 }

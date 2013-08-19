@@ -26,6 +26,7 @@ KMime::Message::Ptr readAndParseMail( const QString &mailFile )
   QFile file( QString( MAIL_DATA_DIR ) + '/' + mailFile );
   bool ok = file.open( QIODevice::ReadOnly );
   Q_ASSERT( ok );
+  Q_UNUSED( ok );
   QByteArray rawData;
   while( !file.atEnd() ) {
     char buf[1024];

@@ -12,14 +12,14 @@ set(mailendanalyzer_SRCS
 )
 kde4_add_kcfg_files(mailendanalyzer_SRCS settings.kcfgc)
 
-include_directories(${CMAKE_SOURCE_DIR}/strigi-analyzer ${STRIGI_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/messageviewer ${CMAKE_SOURCE_DIR}/strigi-analyzer ${STRIGI_INCLUDE_DIR})
 add_definitions(-DMAKE_PIMSTRIGIANALYZER_LIB)
 
 if(WINCE)
 kde4_add_library(mail STATIC ${mailendanalyzer_SRCS})
-else(WINCE)
+else()
 kde4_add_library(mail MODULE ${mailendanalyzer_SRCS})
-endif(WINCE)
+endif()
 
 target_link_libraries(mail
   messagecore
@@ -31,7 +31,7 @@ target_link_libraries(mail
 )
 if (NOT WINCE)
 target_link_libraries(mail ${KDE4_KFILE_LIBS} )
-endif(NOT WINCE)
+endif()
 set_target_properties(mail PROPERTIES PREFIX strigiea_)
 install(TARGETS mail LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strigi
                     ARCHIVE DESTINATION ${LIB_INSTALL_DIR}/strigi)

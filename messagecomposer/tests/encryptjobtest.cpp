@@ -32,16 +32,15 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kjob.h>
 
-#include <messagecomposer/composer.h>
-#include <messagecomposer/encryptjob.h>
-#include <messagecomposer/transparentjob.h>
-#include <messagecomposer/maintextjob.h>
-#include <messagecomposer/textpart.h>
-#include <messagecomposer/globalpart.h>
+#include <messagecomposer/composer/composer.h>
+#include <messagecomposer/job/encryptjob.h>
+#include <messagecomposer/job/maintextjob.h>
+#include <messagecomposer/part/textpart.h>
+#include <messagecomposer/part/globalpart.h>
 
-#include <messageviewer/objecttreeparser.h>
-#include <messageviewer/objecttreeemptysource.h>
-#include <messageviewer/nodehelper.h>
+#include <messageviewer/viewer/objecttreeparser.h>
+#include <messageviewer/viewer/objecttreeemptysource.h>
+#include <messageviewer/viewer/nodehelper.h>
 #include <messagecore/tests/util.h>
 
 #include <stdlib.h>
@@ -49,19 +48,24 @@
 
 QTEST_KDEMAIN( EncryptJobTest, GUI )
 
+void EncryptJobTest::initTestCase()
+{
+  MessageCore::Test::setupEnv();
+}
+
 void EncryptJobTest::testContentDirect() {
 
 
-  Message::Composer *composer = new Message::Composer;
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
   QList<QByteArray> charsets;
   charsets << "us-ascii";
   composer->globalPart()->setCharsets( charsets );
-  Message::TextPart* part = new Message::TextPart( this );
+  MessageComposer::TextPart* part = new MessageComposer::TextPart( this );
   part->setWordWrappingEnabled(false);
   part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
 
   
-  Message::MainTextJob *mainTextJob = new Message::MainTextJob( part, composer );
+  MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob( part, composer );
   
   QVERIFY( composer );
   QVERIFY( mainTextJob );
@@ -71,7 +75,7 @@ void EncryptJobTest::testContentDirect() {
 
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  Message::EncryptJob* eJob = new Message::EncryptJob( composer );
+  MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
 
   QVERIFY( eJob );
 
@@ -91,16 +95,16 @@ void EncryptJobTest::testContentDirect() {
 
 void EncryptJobTest::testContentChained()
 {
-  Message::Composer *composer = new Message::Composer;
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
   QList<QByteArray> charsets;
   charsets << "us-ascii";
   composer->globalPart()->setCharsets( charsets );
-  Message::TextPart* part = new Message::TextPart( this );
+  MessageComposer::TextPart* part = new MessageComposer::TextPart( this );
   part->setWordWrappingEnabled(false);
   part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
 
 
-  Message::MainTextJob *mainTextJob = new Message::MainTextJob( part, composer );
+  MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob( part, composer );
 
   QVERIFY( composer );
   QVERIFY( mainTextJob );
@@ -109,7 +113,7 @@ void EncryptJobTest::testContentChained()
   
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
   kDebug() << "done getting keys";
-  Message::EncryptJob* eJob = new Message::EncryptJob( composer );
+  MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
 
   QStringList recipients;
   recipients << QString::fromLocal8Bit( "test@kolab.org" );
@@ -129,8 +133,8 @@ void EncryptJobTest::testHeaders()
 {
    std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
-  Message::Composer *composer = new Message::Composer;
-  Message::EncryptJob* eJob = new Message::EncryptJob( composer );
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
+  MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
 
   QVERIFY( composer );
   QVERIFY( eJob );
@@ -164,7 +168,7 @@ void EncryptJobTest::testHeaders()
 } 
 
 
-bool EncryptJobTest::checkEncryption( Message::EncryptJob* eJob )
+bool EncryptJobTest::checkEncryption( MessageComposer::EncryptJob* eJob )
 {
 
   eJob->exec();

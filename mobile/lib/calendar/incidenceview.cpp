@@ -21,7 +21,7 @@
 #include "calendarhelper.h"
 #include "clockhelper.h"
 
-#include "ui_eventortodomobile.h"
+#include "ui_dialogmobile.h"
 
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
@@ -35,6 +35,7 @@
 #include <KLocalizedString>
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
+#include <Akonadi/Calendar/ETMCalendar>
 
 #include "declarativeeditors.h"
 
@@ -52,7 +53,6 @@
 #include <incidenceeditor-ng/incidencewhatwhere.h>
 #include <incidenceeditor-ng/incidencerecurrence.h>
 #include <incidenceeditor-ng/incidencesecrecy.h>
-#include <incidenceeditor-ng/invitationdispatcher.h>
 
 #include <KMessageBox>
 
@@ -71,17 +71,11 @@ IncidenceView::IncidenceView( QWidget* parent )
   , mIncidenceGeneral( 0 )
   , mDateWidget( 0 )
   , mTimeWidget( 0 )
-  , mInvitationDispatcher( 0 )
   , mIncidenceAttendee( 0 )
 {
   setAttribute(Qt::WA_DeleteOnClose);
   QDeclarativeContext *context = engine()->rootContext();
   context->setContextProperty( "_incidenceview", this );
-
-  if ( KCalPrefs::instance()->useGroupwareCommunication() ) {
-    mInvitationDispatcher = new InvitationDispatcher( 0, this );
-    mInvitationDispatcher->setItemManager( mItemManager );
-  }
 }
 
 void IncidenceView::doDelayedInit()
@@ -273,7 +267,8 @@ void IncidenceView::setDefaultCollection( const Akonadi::Collection &collection 
 void IncidenceView::setIsCounterProposal( bool isCounterProposal )
 {
   mItemManager->setIsCounterProposal( isCounterProposal );
-  mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
+  //TODO_SERGIO
+  //mInvitationDispatcher->setIsCounterProposal( isCounterProposal );
 }
 
 /// ItemEditorUi methods

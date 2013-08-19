@@ -57,7 +57,7 @@ elseif(WINCE)
       ws2
     )
   endif()
-else(WINCE)
+else()
   if(ASSUAN2_FOUND)
     target_link_libraries(kleopatraclientcore
       ${QT_QTCORE_LIBRARY}

@@ -22,7 +22,7 @@
 
 #include <akonadi/agentbase.h>
 
-#include "mailcommon/searchpattern.h"
+#include "mailcommon/search/searchpattern.h"
 #include <Akonadi/Collection>
 #include <akonadi/item.h>
 
@@ -52,17 +52,6 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
 
     void showFilterLogDialog(qlonglong windowId = 0);
 
-    virtual void itemChanged(const Akonadi::Item& item, const QSet< QByteArray >& partIdentifiers) {};
-    virtual void itemLinked(const Akonadi::Item& item, const Akonadi::Collection& collection) {};
-    virtual void itemMoved(const Akonadi::Item& item, const Akonadi::Collection& collectionSource, const Akonadi::Collection& collectionDestination) {};
-    virtual void itemRemoved(const Akonadi::Item& item) {};
-    virtual void itemUnlinked(const Akonadi::Item& item, const Akonadi::Collection& collection) {};
-
-    virtual void collectionAdded(const Akonadi::Collection& collection, const Akonadi::Collection& parent) {};
-    virtual void collectionChanged(const Akonadi::Collection& collection) {};
-    virtual void collectionMoved(const Akonadi::Collection& collection, const Akonadi::Collection& collectionSource, const Akonadi::Collection& collectionDestination) {};
-    virtual void collectionRemoved(const Akonadi::Collection& collection) {};
-
   private Q_SLOTS:
     void initializeCollections();
     void initialCollectionFetchingDone( KJob* );
@@ -72,6 +61,7 @@ class MailFilterAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::Ob
     void emitProgress(int percent = 0);
     void emitProgressMessage(const QString &message);
     void itemsReceiviedForFiltering( const Akonadi::Item::List &items );
+    void clearMessage();
 
   private:
     FilterManager *m_filterManager;

@@ -57,14 +57,14 @@ class KCAL_RESOURCEREMOTE_EXPORT ResourceRemote : public ResourceCached
     /**
       Create resource from configuration information stored in KConfig object.
     */
-    ResourceRemote( const KConfigGroup &group );
+    explicit ResourceRemote( const KConfigGroup &group );
     /**
       Create remote resource.
 
       @param downloadUrl URL used to download iCalendar file
       @param uploadUrl   URL used to upload iCalendar file
     */
-    ResourceRemote( const KUrl &downloadUrl, const KUrl &uploadUrl = KUrl() );
+    explicit ResourceRemote( const KUrl &downloadUrl, const KUrl &uploadUrl = KUrl() );
     virtual ~ResourceRemote();
 
     void readConfig( const KConfigGroup &group );

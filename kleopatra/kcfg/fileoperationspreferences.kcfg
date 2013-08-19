@@ -8,7 +8,7 @@
  <group name="FileOperations">
  <entry name="UsePGPFileExt" key="file-extension-pgp" type="Bool">
    <label>Use pgp as the default extension for generated OpenPGP files</label>
-   <whatsthis>Set this to make kleopatra default to pgp file extesions for OpenPGP files.</whatsthis>
+   <whatsthis>Set this to make kleopatra default to pgp file extensions for OpenPGP files.</whatsthis>
    <default>false</default>
  </entry>
  </group>

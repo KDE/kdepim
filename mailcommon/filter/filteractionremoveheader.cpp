@@ -19,7 +19,7 @@
 
 #include "filteractionremoveheader.h"
 
-#include "messageviewer/minimumcombobox.h"
+#include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KDE/KLocale>
 #include <KDE/KLineEdit>
@@ -32,21 +32,21 @@ FilterAction* FilterActionRemoveHeader::newAction()
 }
 
 FilterActionRemoveHeader::FilterActionRemoveHeader( QObject *parent )
-  : FilterActionWithStringList( "remove header", i18n( "Remove Header" ), parent )
+  : FilterActionWithStringList( QLatin1String("remove header"), i18n( "Remove Header" ), parent )
 {
-  mParameterList << ""
-                 << "Reply-To"
-                 << "Delivered-To"
-                 << "X-KDE-PR-Message"
-                 << "X-KDE-PR-Package"
-                 << "X-KDE-PR-Keywords";
+  mParameterList << QLatin1String("")
+                 << QLatin1String("Reply-To")
+                 << QLatin1String("Delivered-To")
+                 << QLatin1String("X-KDE-PR-Message")
+                 << QLatin1String("X-KDE-PR-Package")
+                 << QLatin1String("X-KDE-PR-Keywords");
 
   mParameter = mParameterList.at( 0 );
 }
 
 QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
 {
-  MessageViewer::MinimumComboBox *comboBox = new MessageViewer::MinimumComboBox( parent );
+  PimCommon::MinimumComboBox *comboBox = new PimCommon::MinimumComboBox( parent );
   comboBox->setEditable( true );
   comboBox->setInsertPolicy( QComboBox::InsertAtBottom );
   setParamWidgetValue( comboBox );
@@ -83,7 +83,7 @@ SearchRule::RequiredPart FilterActionRemoveHeader::requiredPart() const
 
 void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  MessageViewer::MinimumComboBox *comboBox = dynamic_cast<MessageViewer::MinimumComboBox*>(paramWidget );
+  PimCommon::MinimumComboBox *comboBox = dynamic_cast<PimCommon::MinimumComboBox*>(paramWidget );
   Q_ASSERT( comboBox );
 
   const int index = mParameterList.indexOf( mParameter );

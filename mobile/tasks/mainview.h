@@ -25,9 +25,10 @@
 #include "kdeclarativemainview.h"
 
 #include <Akonadi/Entity>
+#include <Akonadi/Calendar/ETMCalendar>
 
-#include <calendarviews/eventviews/eventview.h>
-#include <calendarviews/eventviews/prefs.h>
+#include <calendarviews/eventview.h>
+#include <calendarviews/prefs.h>
 
 class KJob;
 class TasksActionManager;
@@ -35,12 +36,11 @@ class ConfigWidget;
 
 namespace Akonadi {
 class StandardCalendarActionManager;
+class IncidenceChanger;
 }
 
 namespace CalendarSupport {
-class Calendar;
 class CalendarUtils;
-class IncidenceChanger;
 }
 
 class MainView : public KDeclarativeMainView
@@ -92,8 +92,8 @@ class MainView : public KDeclarativeMainView
     Akonadi::StandardCalendarActionManager *mStandardActionManager;
     TasksActionManager *mTasksActionManager;
     EventViews::PrefsPtr mCalendarPrefs;
-    CalendarSupport::Calendar *mCalendar;
-    CalendarSupport::IncidenceChanger *mChanger;
+    Akonadi::ETMCalendar::Ptr mCalendar;
+    Akonadi::IncidenceChanger *mChanger;
 };
 
 #endif // MAINVIEW_H

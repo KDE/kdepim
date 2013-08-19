@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,11 +21,11 @@
 #include <QWidget>
 
 namespace Ui {
-  class ImportMailPage;
+class ImportMailPage;
 }
 
 namespace Akonadi {
-  class Collection;
+class Collection;
 }
 
 namespace MailImporter{
@@ -34,23 +34,22 @@ class ImportMailsWidget;
 
 class ImportMailPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
 public:
-  explicit ImportMailPage(QWidget *parent = 0);
-  ~ImportMailPage();
-  MailImporter::ImportMailsWidget *mailWidget();
-  Akonadi::Collection selectedCollection() const;
-  void setImportButtonEnabled(bool enabled);
+    explicit ImportMailPage(QWidget *parent = 0);
+    ~ImportMailPage();
+    MailImporter::ImportMailsWidget *mailWidget();
+    Akonadi::Collection selectedCollection() const;
+    void setImportButtonEnabled(bool enabled);
 
 private Q_SLOTS:
-  void collectionChanged(const Akonadi::Collection& collection);
-  
+    void collectionChanged(const Akonadi::Collection& collection);
+
 Q_SIGNALS:
-  void importMailsClicked();
+    void importMailsClicked();
 
 private:
-  Ui::ImportMailPage *ui;
+    Ui::ImportMailPage *ui;
 };
 
 #endif // IMPORTMAILPAGE_H

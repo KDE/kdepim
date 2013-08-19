@@ -21,7 +21,7 @@
 #include <QLabel>
 #include <QtDBus/QtDBus>
 #include <qgroupbox.h>
-#include "libkdepim/recentaddresses.h"
+#include "libkdepim/addressline/recentaddresses.h"
 using KPIM::RecentAddresses;
 #include <akonadi/contact/emailaddressselectiondialog.h>
 #include <kcharsets.h>
@@ -72,7 +72,7 @@ void KNLineEdit::contextMenuEvent( QContextMenuEvent*e )
    QMenu *popup = KLineEdit::createStandardContextMenu();
    popup->addSeparator();
    popup->addAction( i18n( "Edit Recent Addresses..." ),
-		   this, SLOT(editRecentAddresses()) );
+                   this, SLOT(editRecentAddresses()) );
    popup->exec( e->globalPos() );
    delete popup;
 }
@@ -144,7 +144,7 @@ void KNLineEditSpell::highLightWord( unsigned int length, unsigned int pos )
 void KNLineEditSpell::spellCheckDone( const QString &s )
 {
     if( s != text() )
-	setText( s );
+        setText( s );
 }
 
 void KNLineEditSpell::spellCheckerMisspelling( const QString &_text, const QStringList &, unsigned int pos)
@@ -510,7 +510,7 @@ void KNComposer::setMessageMode(MessageMode mode)
   v_iew->setMessageMode(m_ode);
   //Laurent fixme
 #if 0
-  QString s = v_iew->editor()->document ()->begin()->text ();
+  QString s = v_iew->editor()->document ()->begin().text ();
   if (m_ode == news_mail) {
     if (!s.contains(i18n("<posted & mailed>"))) {
       QTextCursor cursor(v_iew->editor()->document ()->begin());
@@ -661,7 +661,7 @@ bool KNComposer::hasValidData()
   } else {
     if (notQuoted==0) {
       KMessageBox::sorry(this, i18n("You cannot post an article consisting\n"
-			      "entirely of quoted text."));
+                              "entirely of quoted text."));
       return false;
     }
   }

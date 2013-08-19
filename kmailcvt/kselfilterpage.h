@@ -21,27 +21,29 @@
 #include "ui_kselfilterpagedlg.h"
 #include <QList>
 namespace MailImporter {
-  class Filter;
+class Filter;
 }
 
-class KSelFilterPage : public QWidget  {
-  Q_OBJECT
+class KSelFilterPage : public QWidget
+{
+    Q_OBJECT
 public:
-  explicit KSelFilterPage(QWidget *parent=0);
-  ~KSelFilterPage();
-  void  addFilter(MailImporter::Filter *f);
-  MailImporter::Filter *getSelectedFilter(void);
-  bool removeDupMsg_checked() const;
+    explicit KSelFilterPage(QWidget *parent=0);
+    ~KSelFilterPage();
 
-  Ui::KSelFilterPageDlg *widget();
+    void  addFilter(MailImporter::Filter *f);
+    MailImporter::Filter *getSelectedFilter();
+    bool removeDupMsg_checked() const;
+
+    Ui::KSelFilterPageDlg *widget();
 
 private Q_SLOTS:
-  void filterSelected(int i);
+    void filterSelected(int i);
 
 private:
-  Ui::KSelFilterPageDlg *mWidget;
-  QList<MailImporter::Filter*> mFilterList;
-  
+    Ui::KSelFilterPageDlg *mWidget;
+    QList<MailImporter::Filter*> mFilterList;
+
 };
 
 #endif

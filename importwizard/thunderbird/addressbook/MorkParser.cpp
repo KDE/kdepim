@@ -94,7 +94,7 @@ bool MorkParser::parse()
 	{
 		if ( !isWhiteSpace( cur ) )
 		{
-			i++;
+			++i;
 			// Figure out what a term
 			switch ( cur )
 			{
@@ -312,6 +312,7 @@ bool MorkParser::parseCell()
 
 		cur = nextChar();
 	}
+	Q_UNUSED( bColumnOid );
 	// Apply column and text
     int ColumnId = Column.toInt( 0, 16 );
 

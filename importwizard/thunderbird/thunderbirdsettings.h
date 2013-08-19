@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -30,28 +30,28 @@ class ImportWizard;
 class ThunderbirdSettings : public AbstractSettings
 {
 public:
-  explicit ThunderbirdSettings(const QString& filename, ImportWizard *parent );
-  ~ThunderbirdSettings();
+    explicit ThunderbirdSettings(const QString& filename, ImportWizard *parent );
+    ~ThunderbirdSettings();
 private:
-  void readAccount();
-  void readIdentity( const QString& account );
-  void readTransport();
-  void readGlobalSettings();
-  void readLdapSettings();
-  void readTagSettings();
-  void readExtensionsSettings();
-  int adaptAutoResizeResolution(int index, const QString &configStrList);
+    void readAccount();
+    void readIdentity( const QString& account );
+    void readTransport();
+    void readGlobalSettings();
+    void readLdapSettings();
+    void readTagSettings();
+    void readExtensionsSettings();
+    int adaptAutoResizeResolution(int index, const QString &configStrList);
 
-  void insertIntoMap( const QString& line );
+    void insertIntoMap( const QString& line );
 
-  void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
-  
-  QHash<QString, QVariant> mHashConfig;
-  QHash<QString, QString> mHashSmtp;
-  QStringList mAccountList;
-  QStringList mLdapAccountList;
+    void addAuth(QMap<QString, QVariant>& settings, const QString & argument, const QString &accountName );
 
-  QHash<QString, tagStruct> mHashTag;
+    QHash<QString, QVariant> mHashConfig;
+    QHash<QString, QString> mHashSmtp;
+    QStringList mAccountList;
+    QStringList mLdapAccountList;
+
+    QHash<QString, tagStruct> mHashTag;
 };
 
 #endif /* THUNDERBIRDSETTINGS_H */

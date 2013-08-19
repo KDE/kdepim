@@ -28,20 +28,24 @@
 
 class KJob;
 
-namespace Message {
+namespace MessageComposer {
   class SignJob;
 }
 
 class SignJobTest : public QObject
 {
   Q_OBJECT
+
+  public slots:
+    void initTestCase();
+
   private Q_SLOTS:
     void testContentDirect();
     void testContentChained();
     void testHeaders();
-    
+
   private:
-    bool checkSignJob( Message::SignJob* sJob );
+    bool checkSignJob( MessageComposer::SignJob* sJob );
 
 };
 

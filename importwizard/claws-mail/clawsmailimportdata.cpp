@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -31,9 +31,9 @@
 
 
 ClawsMailImportData::ClawsMailImportData(ImportWizard*parent)
-  :AbstractImporter(parent)
+    :AbstractImporter(parent)
 {
-  mPath = MailImporter::FilterClawsMail::defaultSettingsPath();
+    mPath = MailImporter::FilterClawsMail::defaultSettingsPath();
 }
 
 ClawsMailImportData::~ClawsMailImportData()
@@ -43,69 +43,69 @@ ClawsMailImportData::~ClawsMailImportData()
 
 bool ClawsMailImportData::foundMailer() const
 {
-  QDir directory( mPath );
-  if ( directory.exists() )
-    return true;
-  return false;
+    QDir directory( mPath );
+    if ( directory.exists() )
+        return true;
+    return false;
 }
 
 QString ClawsMailImportData::name() const
 {
-  return QLatin1String("Claws Mails");
+    return QLatin1String("Claws Mails");
 }
 
 bool ClawsMailImportData::importMails()
 {
-  MailImporter::FilterInfo *info = initializeInfo();
+    MailImporter::FilterInfo *info = initializeInfo();
 
-  MailImporter::FilterClawsMail clawsMail;
-  clawsMail.setFilterInfo( info );
-  info->setStatusMessage(i18n("Import in progress"));
-  const QString mailsPath = clawsMail.localMailDirPath();
-  QDir directory(mailsPath);
-  if(directory.exists())
-    clawsMail.importMails(mailsPath);
-  else
-    clawsMail.import();
-  info->setStatusMessage(i18n("Import finished"));
+    MailImporter::FilterClawsMail clawsMail;
+    clawsMail.setFilterInfo( info );
+    info->setStatusMessage(i18n("Import in progress"));
+    const QString mailsPath = clawsMail.localMailDirPath();
+    QDir directory(mailsPath);
+    if (directory.exists())
+        clawsMail.importMails(mailsPath);
+    else
+        clawsMail.import();
+    info->setStatusMessage(i18n("Import finished"));
 
 
-  delete info;
-  return true;
+    delete info;
+    return true;
 }
 
 bool ClawsMailImportData::importAddressBook()
 {
-  const QDir addressbookDir(mPath + QLatin1String("addrbook/"));
-  ClawsMailAddressBook account( addressbookDir, mImportWizard );
-  return true;
+    const QDir addressbookDir(mPath + QLatin1String("addrbook/"));
+    ClawsMailAddressBook account( addressbookDir, mImportWizard );
+    return true;
 }
 
 bool ClawsMailImportData::importSettings()
 {
-  const QString accountFile = mPath + QLatin1String("accountrc");
-  if ( QFile( accountFile ).exists() ) {
-    ClawsMailSettings account( mImportWizard );
-    account.importSettings(accountFile, mPath);
-  } else {
-    addImportSettingsInfo(i18n("Claws Mail settings not found."));
-  }
-  return true;
+    const QString accountFile = mPath + QLatin1String("accountrc");
+    if ( QFile( accountFile ).exists() ) {
+        ClawsMailSettings account( mImportWizard );
+        account.importSettings(accountFile, mPath);
+    } else {
+        addImportSettingsInfo(i18n("Claws Mail settings not found."));
+    }
+    return true;
 }
 
 bool ClawsMailImportData::importFilters()
 {
-  const QString filterPath(mPath + QLatin1String("matcherrc"));
-  return addFilters( filterPath, MailCommon::FilterImporterExporter::ClawsMailFilter );
+    const QString filterPath(mPath + QLatin1String("matcherrc"));
+    return addFilters( filterPath, MailCommon::FilterImporterExporter::ClawsMailFilter );
 }
 
 
 AbstractImporter::TypeSupportedOptions ClawsMailImportData::supportedOption()
 {
-  TypeSupportedOptions options;
-  options |=AbstractImporter::Mails;
-  options |=AbstractImporter::AddressBooks;
-  options |=AbstractImporter::Settings;
-  options |=AbstractImporter::Filters;
-  return options;
+    TypeSupportedOptions options;
+    options |=AbstractImporter::Mails;
+    options |=AbstractImporter::AddressBooks;
+    options |=AbstractImporter::Settings;
+    options |=AbstractImporter::Filters;
+    return options;
 }

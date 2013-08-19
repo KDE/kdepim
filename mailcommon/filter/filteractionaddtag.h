@@ -41,7 +41,7 @@ class FilterActionAddTag: public FilterAction
 {
   Q_OBJECT
   public:
-    FilterActionAddTag( QObject *parent = 0 );
+    explicit FilterActionAddTag( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     SearchRule::RequiredPart requiredPart() const;
 

@@ -1,5 +1,5 @@
 find_package(Sasl2)
-macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" TRUE "" "Required to support authentication of logins on ManageSieve servers.")
+set_package_properties(Sasl2 PROPERTIES DESCRIPTION "Cyrus SASL API" URL "http://asg.web.cmu.edu/sasl/sasl-library.html" TYPE REQUIRED PURPOSE "Required to support authentication of logins on ManageSieve servers.")
 
 include_directories(${SASL2_INCLUDE_DIR})
 

@@ -29,7 +29,7 @@
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <messagecore/attachmentfrommimecontentjob.h>
+#include <messagecore/attachment/attachmentfrommimecontentjob.h>
 using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentFromMimeContentJobTest, NoGUI )

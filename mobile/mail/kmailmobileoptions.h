@@ -26,12 +26,12 @@
 static KCmdLineOptions kmailMobileOptions()
 {
   KCmdLineOptions options;
-  options.add("t <address>",	ki18n("Send message to 'address'"));
-  options.add("s <subject>",	ki18n("Set subject of message"));
-  options.add("c <address>",	ki18n("Send CC: to 'address'"));
-  options.add("b <address>",	ki18n("Send BCC: to 'address'"));
-  options.add("B <text>",	ki18n("Set body of message"));
-  options.add("A <url>",	ki18n("Add an attachment to the mail. This can be repeated"));
+  options.add("t <address>",    ki18n("Send message to 'address'"));
+  options.add("s <subject>",    ki18n("Set subject of message"));
+  options.add("c <address>",    ki18n("Send CC: to 'address'"));
+  options.add("b <address>",    ki18n("Send BCC: to 'address'"));
+  options.add("B <text>",       ki18n("Set body of message"));
+  options.add("A <url>",        ki18n("Add an attachment to the mail. This can be repeated"));
   return options;
 }
 

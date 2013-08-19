@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   code based on calligra autocorrection.
   
   This program is free software; you can redistribute it and/or modify it
@@ -17,7 +17,7 @@
 */
 
 #include "composerautocorrection.h"
-#include "messagecomposersettings.h"
+#include "settings/messagecomposersettings.h"
 #include "import/importkmailautocorrection.h"
 #include <KLocale>
 #include <KGlobal>
@@ -31,194 +31,193 @@
 using namespace MessageComposer;
 
 ComposerAutoCorrection::ComposerAutoCorrection()
-  : mSingleSpaces(true),
-    mUppercaseFirstCharOfSentence(false),
-    mFixTwoUppercaseChars(false),
-    mAutoFractions(true),
-    mCapitalizeWeekDays(false),
-    mReplaceDoubleQuotes(false),
-    mReplaceSingleQuotes(false),
-    mEnabled(false),
-    mSuperScriptAppendix(false)
+    : mSingleSpaces(true),
+      mUppercaseFirstCharOfSentence(false),
+      mFixTwoUppercaseChars(false),
+      mAutoFractions(true),
+      mCapitalizeWeekDays(false),
+      mReplaceDoubleQuotes(false),
+      mReplaceSingleQuotes(false),
+      mEnabled(false),
+      mSuperScriptAppendix(false),
+      mAddNonBreakingSpace(false)
 {
-  // default double quote open 0x201c
-  // default double quote close 0x201d
-  // default single quote open 0x2018
-  // default single quote close 0x2019
-  mTypographicSingleQuotes.begin = QChar(0x2018);
-  mTypographicSingleQuotes.end = QChar(0x2019);
-  mTypographicDoubleQuotes.begin = QChar(0x201c);
-  mTypographicDoubleQuotes.end = QChar(0x201d);
+    // default double quote open 0x201c
+    // default double quote close 0x201d
+    // default single quote open 0x2018
+    // default single quote close 0x2019
+    mTypographicSingleQuotes.begin = QChar(0x2018);
+    mTypographicSingleQuotes.end = QChar(0x2019);
+    mTypographicDoubleQuotes.begin = QChar(0x201c);
+    mTypographicDoubleQuotes.end = QChar(0x201d);
 
-  readConfig();
+    readConfig();
 
-  KLocale *locale = KGlobal::locale();
-  for (int i = 1; i <=7; i++)
-    mCacheNameOfDays.append(locale->calendar()->weekDayName(i).toLower());
-
+    KLocale *locale = KGlobal::locale();
+    for (int i = 1; i <=7; ++i)
+        mCacheNameOfDays.append(locale->calendar()->weekDayName(i).toLower());
 }
 
 ComposerAutoCorrection::~ComposerAutoCorrection()
 {
 }
 
-
 void ComposerAutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
 {
-  cursor.setPosition(cursorPosition);
-  QTextBlock block = cursor.block();
-  cursor.setPosition(block.position());
-  cursorPosition -= block.position();
-  QString string = block.text();
-  int pos = 0;
-  bool space = false;
-  QString::Iterator iter = string.begin();
-  while (iter != string.end()) {
-    if (iter->isSpace()) {
-      if (space)
-          ;// double spaces belong to the previous word
-      else if (pos < cursorPosition)
-        cursor.setPosition(pos + block.position() + 1); // +1 because we don't want to set it on the space itself
-      else
-       space = true;
-    } else if (space) {
-      break;
+    cursor.setPosition(cursorPosition);
+    QTextBlock block = cursor.block();
+    cursor.setPosition(block.position());
+    cursorPosition -= block.position();
+    QString string = block.text();
+    int pos = 0;
+    bool space = false;
+    QString::Iterator iter = string.begin();
+    while (iter != string.end()) {
+        if (iter->isSpace()) {
+            if (space)
+                ;// double spaces belong to the previous word
+            else if (pos < cursorPosition)
+                cursor.setPosition(pos + block.position() + 1); // +1 because we don't want to set it on the space itself
+            else
+                space = true;
+        } else if (space) {
+            break;
+        }
+        pos++;
+        iter++;
     }
-    pos++;
-    iter++;
-  }
-  cursor.setPosition(pos + block.position(), QTextCursor::KeepAnchor);
+    cursor.setPosition(pos + block.position(), QTextCursor::KeepAnchor);
 }
 
 
 void ComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int position)
 {
-  if (!mEnabled)
-    return;
-  mCursor =  QTextCursor(&document);
-  selectWord(mCursor,position);
-  mWord = mCursor.selectedText();
-  if (mWord.isEmpty())
-    return;
+    if (!mEnabled)
+        return;
+    mCursor =  QTextCursor(&document);
+    selectWord(mCursor,position);
+    mWord = mCursor.selectedText();
+    if (mWord.isEmpty())
+        return;
+    mCursor.beginEditBlock();
+    bool done = false;
+    if (htmlMode) {
+        done = autoFormatURLs();
+        if (!done) {
+            done = autoBoldUnderline();
+        }
+        if (!done) {
+            superscriptAppendix();
+        }
+    }
+    if (!done)
+        done = singleSpaces();
+    if (!done)
+        done = autoFractions();
+    if (!done)
+        advancedAutocorrect();
+    if (!done)
+        uppercaseFirstCharOfSentence();
+    if (!done)
+        fixTwoUppercaseChars();
+    if (!done)
+        capitalizeWeekDays();
+    if (!done)
+        replaceTypographicQuotes();
 
-  mCursor.beginEditBlock();
-  bool done = false;
-  if (htmlMode) {
-     done = autoFormatURLs();
-     if(!done) {
-         done = autoBoldUnderline();
-     }
-     if(!done) {
-         superscriptAppendix();
-     }
-  }
-  if (!done)
-    done = singleSpaces();
-  if (!done)
-    done = autoFractions();
-  if (!done)
-    advancedAutocorrect();
-  if (!done)
-    uppercaseFirstCharOfSentence();
-  if (!done)
-    fixTwoUppercaseChars();
-  if (!done)
-    capitalizeWeekDays();
-  if (!done)
-    replaceTypographicQuotes();
-
-  if (mCursor.selectedText() != mWord)
-     mCursor.insertText(mWord);
-  mCursor.endEditBlock();
+    if (mCursor.selectedText() != mWord)
+        mCursor.insertText(mWord);
+    mCursor.endEditBlock();
 }
 
 void ComposerAutoCorrection::readConfig()
 {
-  mAutoBoldUnderline = MessageComposer::MessageComposerSettings::self()->autoBoldUnderline();
-  mAutoFormatUrl = MessageComposer::MessageComposerSettings::self()->autoFormatUrl();
-  mUppercaseFirstCharOfSentence = MessageComposer::MessageComposerSettings::self()->uppercaseFirstCharOfSentence();
-  mFixTwoUppercaseChars = MessageComposer::MessageComposerSettings::self()->fixTwoUppercaseChars();
-  mSingleSpaces = MessageComposer::MessageComposerSettings::self()->singleSpaces();
-  mAutoFractions = MessageComposer::MessageComposerSettings::self()->autoFractions();
-  mCapitalizeWeekDays = MessageComposer::MessageComposerSettings::self()->capitalizeWeekDays();
-  mAdvancedAutocorrect = MessageComposer::MessageComposerSettings::self()->advancedAutocorrect();
-  mReplaceDoubleQuotes = MessageComposer::MessageComposerSettings::self()->replaceDoubleQuotes();
-  mReplaceSingleQuotes = MessageComposer::MessageComposerSettings::self()->replaceSingleQuotes();
-  mEnabled = MessageComposer::MessageComposerSettings::self()->enabled();
-  mSuperScriptAppendix = MessageComposer::MessageComposerSettings::self()->superScript();
-  readAutoCorrectionXmlFile();
+    mAutoBoldUnderline = MessageComposer::MessageComposerSettings::self()->autoBoldUnderline();
+    mAutoFormatUrl = MessageComposer::MessageComposerSettings::self()->autoFormatUrl();
+    mUppercaseFirstCharOfSentence = MessageComposer::MessageComposerSettings::self()->uppercaseFirstCharOfSentence();
+    mFixTwoUppercaseChars = MessageComposer::MessageComposerSettings::self()->fixTwoUppercaseChars();
+    mSingleSpaces = MessageComposer::MessageComposerSettings::self()->singleSpaces();
+    mAutoFractions = MessageComposer::MessageComposerSettings::self()->autoFractions();
+    mCapitalizeWeekDays = MessageComposer::MessageComposerSettings::self()->capitalizeWeekDays();
+    mAdvancedAutocorrect = MessageComposer::MessageComposerSettings::self()->advancedAutocorrect();
+    mReplaceDoubleQuotes = MessageComposer::MessageComposerSettings::self()->replaceDoubleQuotes();
+    mReplaceSingleQuotes = MessageComposer::MessageComposerSettings::self()->replaceSingleQuotes();
+    mEnabled = MessageComposer::MessageComposerSettings::self()->enabled();
+    mSuperScriptAppendix = MessageComposer::MessageComposerSettings::self()->superScript();
+    mAddNonBreakingSpace = MessageComposer::MessageComposerSettings::self()->addNonBreakingSpaceInFrench();
+    readAutoCorrectionXmlFile();
 }
 
 void ComposerAutoCorrection::writeConfig()
 {
-  MessageComposer::MessageComposerSettings::self()->setAutoBoldUnderline(mAutoBoldUnderline);
-  MessageComposer::MessageComposerSettings::self()->setAutoFormatUrl(mAutoFormatUrl);
-  MessageComposer::MessageComposerSettings::self()->setUppercaseFirstCharOfSentence(mUppercaseFirstCharOfSentence);
-  MessageComposer::MessageComposerSettings::self()->setFixTwoUppercaseChars(mFixTwoUppercaseChars);
-  MessageComposer::MessageComposerSettings::self()->setSingleSpaces(mSingleSpaces);
-  MessageComposer::MessageComposerSettings::self()->setAutoFractions(mAutoFractions);
-  MessageComposer::MessageComposerSettings::self()->setCapitalizeWeekDays(mCapitalizeWeekDays);
-  MessageComposer::MessageComposerSettings::self()->setAdvancedAutocorrect(mAdvancedAutocorrect);
-  MessageComposer::MessageComposerSettings::self()->setReplaceDoubleQuotes(mReplaceDoubleQuotes);
-  MessageComposer::MessageComposerSettings::self()->setReplaceSingleQuotes(mReplaceSingleQuotes);
-  MessageComposer::MessageComposerSettings::self()->setEnabled(mEnabled);
-  MessageComposer::MessageComposerSettings::self()->setSuperScript(mSuperScriptAppendix);
-  MessageComposer::MessageComposerSettings::self()->requestSync();
-  writeAutoCorrectionXmlFile();
+    MessageComposer::MessageComposerSettings::self()->setAutoBoldUnderline(mAutoBoldUnderline);
+    MessageComposer::MessageComposerSettings::self()->setAutoFormatUrl(mAutoFormatUrl);
+    MessageComposer::MessageComposerSettings::self()->setUppercaseFirstCharOfSentence(mUppercaseFirstCharOfSentence);
+    MessageComposer::MessageComposerSettings::self()->setFixTwoUppercaseChars(mFixTwoUppercaseChars);
+    MessageComposer::MessageComposerSettings::self()->setSingleSpaces(mSingleSpaces);
+    MessageComposer::MessageComposerSettings::self()->setAutoFractions(mAutoFractions);
+    MessageComposer::MessageComposerSettings::self()->setCapitalizeWeekDays(mCapitalizeWeekDays);
+    MessageComposer::MessageComposerSettings::self()->setAdvancedAutocorrect(mAdvancedAutocorrect);
+    MessageComposer::MessageComposerSettings::self()->setReplaceDoubleQuotes(mReplaceDoubleQuotes);
+    MessageComposer::MessageComposerSettings::self()->setReplaceSingleQuotes(mReplaceSingleQuotes);
+    MessageComposer::MessageComposerSettings::self()->setEnabled(mEnabled);
+    MessageComposer::MessageComposerSettings::self()->setSuperScript(mSuperScriptAppendix);
+    MessageComposer::MessageComposerSettings::self()->setAddNonBreakingSpaceInFrench(mAddNonBreakingSpace);
+    MessageComposer::MessageComposerSettings::self()->requestSync();
+    writeAutoCorrectionXmlFile();
 }
 
 void ComposerAutoCorrection::addAutoCorrect(const QString &currentWord, const QString &replaceWord)
 {
-  mAutocorrectEntries.insert(currentWord, replaceWord);
-  writeAutoCorrectionXmlFile();
+    mAutocorrectEntries.insert(currentWord, replaceWord);
+    writeAutoCorrectionXmlFile();
 }
 
 
-void ComposerAutoCorrection::setUpperCaseExceptions(const QSet<QString>& exceptions)
+void ComposerAutoCorrection::setUpperCaseExceptions(const QSet<QString> &exceptions)
 {
-  mUpperCaseExceptions = exceptions;
+    mUpperCaseExceptions = exceptions;
 }
 
-void ComposerAutoCorrection::setTwoUpperLetterExceptions(const QSet<QString>& exceptions)
+void ComposerAutoCorrection::setTwoUpperLetterExceptions(const QSet<QString> &exceptions)
 {
-  mTwoUpperLetterExceptions = exceptions;
+    mTwoUpperLetterExceptions = exceptions;
 }
 
-void ComposerAutoCorrection::setAutocorrectEntries(const QHash<QString, QString>& entries)
+void ComposerAutoCorrection::setAutocorrectEntries(const QHash<QString, QString> &entries)
 {
-  mAutocorrectEntries = entries;
+    mAutocorrectEntries = entries;
 }
-
 
 ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultSingleQuotes() const
 {
-  ComposerAutoCorrection::TypographicQuotes quote;
-  quote.begin = QChar(0x2018);
-  quote.end = QChar(0x2019);
-  return quote;
+    ComposerAutoCorrection::TypographicQuotes quote;
+    quote.begin = QChar(0x2018);
+    quote.end = QChar(0x2019);
+    return quote;
 }
 
 ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultDoubleQuotes() const
 {
-  ComposerAutoCorrection::TypographicQuotes quote;
-  quote.begin = QChar(0x201c);
-  quote.end = QChar(0x201d);
-  return quote;
+    ComposerAutoCorrection::TypographicQuotes quote;
+    quote.begin = QChar(0x201c);
+    quote.end = QChar(0x201d);
+    return quote;
 }
 
 QSet<QString> ComposerAutoCorrection::upperCaseExceptions() const
 {
-  return mUpperCaseExceptions;
+    return mUpperCaseExceptions;
 }
 
 QSet<QString> ComposerAutoCorrection::twoUpperLetterExceptions() const
 {
-  return mTwoUpperLetterExceptions;
+    return mTwoUpperLetterExceptions;
 }
 
 QHash<QString, QString> ComposerAutoCorrection::autocorrectEntries() const
 {
-  return mAutocorrectEntries;
+    return mAutocorrectEntries;
 }
 
 void ComposerAutoCorrection::superscriptAppendix()
@@ -226,7 +225,7 @@ void ComposerAutoCorrection::superscriptAppendix()
     if (!mSuperScriptAppendix)
         return;
 
-    QString trimmed = mWord.trimmed();
+    const QString trimmed = mWord.trimmed();
     int startPos = -1;
     int endPos = -1;
 
@@ -238,7 +237,7 @@ void ComposerAutoCorrection::superscriptAppendix()
             break;
         }
         else if (i.key() == QLatin1String("othernb")) {
-            int pos = trimmed.indexOf(i.value());
+            const int pos = trimmed.indexOf(i.value());
             if (pos > 0) {
                 QString number = trimmed.left(pos);
                 QString::ConstIterator constIter = number.constBegin();
@@ -282,17 +281,17 @@ bool ComposerAutoCorrection::autoBoldUnderline()
     if (!mAutoBoldUnderline)
         return false;
 
-    QString trimmed = mWord.trimmed();
+    const QString trimmed = mWord.trimmed();
 
     if (trimmed.length() < 3)
         return false;
 
-    bool underline = (trimmed.at(0) == QLatin1Char('_') && trimmed.at(trimmed.length() - 1) == QLatin1Char('_'));
-    bool bold = (trimmed.at(0) == QLatin1Char('*') && trimmed.at(trimmed.length() - 1) == QLatin1Char('*'));
-
-    if (underline || bold) {
+    const bool underline = (trimmed.at(0) == QLatin1Char('_') && trimmed.at(trimmed.length() - 1) == QLatin1Char('_'));
+    const bool bold = (trimmed.at(0) == QLatin1Char('*') && trimmed.at(trimmed.length() - 1) == QLatin1Char('*'));
+    const bool strikeOut = (trimmed.at(0) == QLatin1Char('-') && trimmed.at(trimmed.length() - 1) == QLatin1Char('-'));
+    if (underline || bold || strikeOut) {
         int startPos = mCursor.selectionStart();
-        QString replacement = trimmed.mid(1, trimmed.length() - 2);
+        const QString replacement = trimmed.mid(1, trimmed.length() - 2);
         bool foundLetterNumber = false;
 
         QString::ConstIterator constIter = replacement.constBegin();
@@ -317,14 +316,16 @@ bool ComposerAutoCorrection::autoBoldUnderline()
         QTextCharFormat format;
         format.setFontUnderline(underline ? true : mCursor.charFormat().fontUnderline());
         format.setFontWeight(bold ? QFont::Bold : mCursor.charFormat().fontWeight());
+        format.setFontStrikeOut(strikeOut ? true : mCursor.charFormat().fontStrikeOut());
         mCursor.mergeCharFormat(format);
 
         // to avoid the selection being replaced by mWord
         mWord = mCursor.selectedText();
 
         // don't do this again if the text is already underlined and bold
-        if(mCursor.charFormat().fontUnderline()
-            && mCursor.charFormat().fontWeight() == QFont::Bold) {
+        if (mCursor.charFormat().fontUnderline()
+                && mCursor.charFormat().fontWeight() == QFont::Bold
+                && mCursor.charFormat().fontStrikeOut()) {
             return true;
         } else {
             return autoBoldUnderline();
@@ -345,7 +346,7 @@ bool ComposerAutoCorrection::autoFormatURLs()
     if (link.isNull())
         return false;
 
-    QString trimmed = mWord.trimmed();
+    const QString trimmed = mWord.trimmed();
     int startPos = mCursor.selectionStart();
     mCursor.setPosition(startPos);
     mCursor.setPosition(startPos + trimmed.length(), QTextCursor::KeepAnchor);
@@ -371,33 +372,47 @@ QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
      * from Calligra 1.x branch */
     // kDebug() <<"link:" << word;
 
-    char link_type = 0;
+    bool secure = false;
+    int link_type = 0;
     int pos = word.indexOf(QLatin1String("http://"));
     int tmp_pos = word.indexOf(QLatin1String("https://"));
 
-    if (tmp_pos < pos && tmp_pos != -1)
-          pos = tmp_pos;
+    if (tmp_pos != -1 && pos == -1) {
+        secure = true;
+    }
+
+    if (tmp_pos < pos && tmp_pos != -1) {
+        pos = tmp_pos;
+    }
+
     tmp_pos = word.indexOf(QLatin1String("mailto:/"));
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
-          pos = tmp_pos;
+        pos = tmp_pos;
     tmp_pos = word.indexOf(QLatin1String("ftp://"));
+    const int secureftp = word.indexOf(QLatin1String("ftps://"));
+    if (secureftp != -1 && tmp_pos == -1) {
+        secure = true;
+    }
+
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
-          pos = tmp_pos;
+        pos = tmp_pos;
     tmp_pos = word.indexOf(QLatin1String("ftp."));
+
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1) {
-          pos = tmp_pos;
-          link_type = 3;
+        pos = tmp_pos;
+        link_type = 3;
     }
     tmp_pos = word.indexOf(QLatin1String("file:/"));
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
-          pos = tmp_pos;
+        pos = tmp_pos;
     tmp_pos = word.indexOf(QLatin1String("news:"));
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
-          pos = tmp_pos;
+        pos = tmp_pos;
     tmp_pos = word.indexOf(QLatin1String("www."));
+
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1 && word.indexOf(QLatin1Char('.'), tmp_pos+4) != -1 ) {
-          pos = tmp_pos;
-          link_type = 2;
+        pos = tmp_pos;
+        link_type = 2;
     }
     tmp_pos = word.indexOf(QLatin1Char('@'));
     if (pos == -1 && tmp_pos != -1) {
@@ -423,14 +438,18 @@ QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
         word.remove(0, pos);
         QString newWord = word;
 
-        if (link_type == 1)
+        switch(link_type) {
+        case 1:
             newWord = QLatin1String("mailto:") + word;
-        else if (link_type == 2)
-            newWord = QLatin1String("http://") + word;
-        else if (link_type == 3)
-            newWord = QLatin1String("ftp://") + word;
-
-        kDebug() <<"newWord:" << newWord;
+            break;
+        case 2:
+            newWord = (secure ? QLatin1String("https://") : QLatin1String("http://")) + word;
+            break;
+        case 3:
+            newWord = (secure ? QLatin1String("ftps://") : QLatin1String("ftp://")) + word;
+            break;
+        }
+        //kDebug() <<"newWord:" << newWord;
         return newWord;
     }
 
@@ -439,55 +458,67 @@ QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
 
 void ComposerAutoCorrection::fixTwoUppercaseChars()
 {
-  if (!mFixTwoUppercaseChars)
-    return;
-  if (mWord.length() <= 2)
-    return;
+    if (!mFixTwoUppercaseChars)
+        return;
+    if (mWord.length() <= 2)
+        return;
 
-  if (mTwoUpperLetterExceptions.contains(mWord.trimmed()))
-    return;
+    if (mTwoUpperLetterExceptions.contains(mWord.trimmed()))
+        return;
 
-  QChar firstChar = mWord.at(0);
-  QChar secondChar = mWord.at(1);
+    const QChar firstChar = mWord.at(0);
+    const QChar secondChar = mWord.at(1);
 
-  if (secondChar.isUpper()) {
-    QChar thirdChar = mWord.at(2);
+    if (secondChar.isUpper() && firstChar.isUpper()) {
+        const QChar thirdChar = mWord.at(2);
 
-    if (firstChar.isUpper() && thirdChar.isLower())
-      mWord.replace(1, 1, secondChar.toLower());
-  }
+        if (thirdChar.isLower())
+            mWord.replace(1, 1, secondChar.toLower());
+    }
 }
 
 
 bool ComposerAutoCorrection::singleSpaces()
 {
-  if (!mSingleSpaces)
-      return false;
-  if (!mCursor.atBlockStart() && mWord.length() == 1 && mWord.at(0) == QLatin1Char(' ')) {
-    // then when the prev char is also a space, don't insert one.
-    QTextBlock block = mCursor.block();
-    QString text = block.text();
-    if (text.at(mCursor.position() -1 - block.position()) == QLatin1Char(' ')) {
-      mWord.clear();
-      return true;
+    if (!mSingleSpaces)
+        return false;
+    if (!mCursor.atBlockStart() && mWord.length() == 1 && mWord.at(0) == QLatin1Char(' ')) {
+        // then when the prev char is also a space, don't insert one.
+        const QTextBlock block = mCursor.block();
+        const QString text = block.text();
+        if (text.at(mCursor.position() -1 - block.position()) == QLatin1Char(' ')) {
+            mWord.clear();
+            return true;
+        }
     }
-  }
-  return false;
+    return false;
 }
 
 void ComposerAutoCorrection::capitalizeWeekDays()
 {
-  if (!mCapitalizeWeekDays)
-    return;
+    if (!mCapitalizeWeekDays)
+        return;
 
-  const QString trimmed = mWord.trimmed();
-  Q_FOREACH (const QString & name, mCacheNameOfDays) {
-    if (trimmed == name) {
-       int pos = mWord.indexOf(name);
-       mWord.replace(pos, 1, name.at(0).toUpper());
-       return;
+    const QString trimmed = mWord.trimmed();
+    Q_FOREACH (const QString & name, mCacheNameOfDays) {
+        if (trimmed == name) {
+            const int pos = mWord.indexOf(name);
+            mWord.replace(pos, 1, name.at(0).toUpper());
+            return;
+        }
     }
-  }
+}
+
+bool ComposerAutoCorrection::excludeToUppercase(const QString &word) const
+{
+    if (word.startsWith(QLatin1String("http://")) ||
+            word.startsWith(QLatin1String("www.")) ||
+            word.startsWith(QLatin1String("mailto:")) ||
+            word.startsWith(QLatin1String("ftp://")) ||
+            word.startsWith(QLatin1String("https://")) ||
+            word.startsWith(QLatin1String("ftps://")))
+        return true;
+    return false;
 }
 
 void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
@@ -503,11 +534,12 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
 
     int position = mCursor.selectionEnd();
 
-    QString text = mCursor.selectedText();
+    const QString text = mCursor.selectedText();
 
-    if (text.isEmpty()) // start of a paragraph
-        mWord.replace(0, 1, mWord.at(0).toUpper());
-    else {
+    if (text.isEmpty()) {// start of a paragraph
+        if (!excludeToUppercase(mWord))
+            mWord.replace(0, 1, mWord.at(0).toUpper());
+    } else {
         QString::ConstIterator constIter = text.constEnd();
         constIter--;
 
@@ -523,20 +555,20 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
                     position--;
                     constIter--;
                 }
-                bool replace = true;
                 selectWord(mCursor, --position);
-                QString prevWord = mCursor.selectedText();
+                const QString prevWord = mCursor.selectedText();
 
                 // search for exception
                 if (mUpperCaseExceptions.contains(prevWord.trimmed()))
-                    replace = false;
+                    break;
+                if (excludeToUppercase(mWord))
+                    break;
 
-                if (replace)
-                    mWord.replace(0, 1, mWord.at(0).toUpper());
+                mWord.replace(0, 1, mWord.at(0).toUpper());
+                break;
+            } else {
                 break;
             }
-            else
-                break;
         }
     }
 
@@ -549,11 +581,11 @@ bool ComposerAutoCorrection::autoFractions()
     if (!mAutoFractions)
         return false;
 
-    QString trimmed = mWord.trimmed();
+    const QString trimmed = mWord.trimmed();
     if (trimmed.length() > 3) {
-        QChar x = trimmed.at(3);
+        const QChar x = trimmed.at(3);
         if (!(x.unicode() == '.' || x.unicode() == ',' || x.unicode() == '?' || x.unicode() == '!'
-                || x.unicode() == ':' || x.unicode() == ';'))
+              || x.unicode() == ':' || x.unicode() == ';'))
             return false;
     } else if (trimmed.length() < 3) {
         return false;
@@ -573,53 +605,69 @@ bool ComposerAutoCorrection::autoFractions()
 
 void ComposerAutoCorrection::advancedAutocorrect()
 {
-  if (!mAdvancedAutocorrect)
-    return;
+    if (!mAdvancedAutocorrect)
+        return;
 
-  int startPos = mCursor.selectionStart();
-  int length = mWord.length();
+    const int startPos = mCursor.selectionStart();
+    const int length = mWord.length();
 
-  QString trimmedWord = mWord.toLower().trimmed();
-  QString actualWord = trimmedWord;
+    const QString trimmedWord = mWord.trimmed();
+    QString actualWord = trimmedWord;
 
-  if (actualWord.isEmpty())
-    return;
+    if (actualWord.isEmpty())
+        return;
 
-  // If the last char is punctuation, drop it for now
-  bool hasPunctuation = false;
-  QChar lastChar = actualWord.at(actualWord.length() - 1);
-  if (lastChar.unicode() == '.' || lastChar.unicode() == ',' || lastChar.unicode() == '?' ||
-        lastChar.unicode() == '!' || lastChar.unicode() == ':' || lastChar.unicode() == ';') {
-      hasPunctuation = true;
-      actualWord.chop(1);
-  }
-
-  if (mAutocorrectEntries.contains(actualWord)) {
-    int pos = mWord.toLower().indexOf(trimmedWord);
-    QString replacement = mAutocorrectEntries.value(actualWord);
-    // Keep capitalized words capitalized.
-    // (Necessary to make sure the first letters match???)
-    if (actualWord.at(0) == replacement.at(0).toLower()) {
-      if (mWord.at(0).isUpper()) {
-        replacement[0] = replacement[0].toUpper();
-      }
+    // If the last char is punctuation, drop it for now
+    bool hasPunctuation = false;
+    QChar lastChar = actualWord.at(actualWord.length() - 1);
+    if (lastChar.unicode() == '.' || lastChar.unicode() == ',' || lastChar.unicode() == '?' ||
+            lastChar.unicode() == '!' || lastChar.unicode() == ':' || lastChar.unicode() == ';') {
+        hasPunctuation = true;
+        actualWord.chop(1);
     }
 
-    // If a punctuation mark was on the end originally, add it back on
-    if (hasPunctuation) {
-       replacement.append(lastChar);
+    QString actualWordWithFirstUpperCase = actualWord;
+    actualWordWithFirstUpperCase[0] = actualWordWithFirstUpperCase[0].toUpper();
+    if (mAutocorrectEntries.contains(actualWord) ||
+            mAutocorrectEntries.contains(actualWord.toLower() ) ||
+            mAutocorrectEntries.contains(actualWordWithFirstUpperCase)) {
+        int pos = mWord.indexOf(trimmedWord);
+        QString replacement = mAutocorrectEntries.value(actualWord, QString());
+        if (replacement.isEmpty()) {
+            replacement = mAutocorrectEntries.value(actualWord.toLower());
+            if (replacement.isEmpty()) {
+                replacement = mAutocorrectEntries.value(actualWordWithFirstUpperCase);
+            }
+        }
+
+        // Keep capitalized words capitalized.
+        // (Necessary to make sure the first letters match???)
+        if (actualWord.at(0) == replacement.at(0).toLower()) {
+            if (mWord.at(0).isUpper()) {
+                replacement[0] = replacement[0].toUpper();
+            } else {
+                //Don't replace toUpper letter
+                if (replacement.at(0).isLower()) {
+                    replacement[0] = replacement[0].toLower();
+                }
+            }
+        }
+
+        // If a punctuation mark was on the end originally, add it back on
+        if (hasPunctuation) {
+            replacement.append(lastChar);
+        }
+
+        mWord.replace(pos, pos + trimmedWord.length(), replacement);
+
+        // We do replacement here, since the length of new word might be different from length of
+        // the old world. Length difference might affect other type of autocorrection
+        mCursor.setPosition(startPos);
+        mCursor.setPosition(startPos + length, QTextCursor::KeepAnchor);
+        mCursor.insertText(mWord);
+        mCursor.setPosition(startPos); // also restore the selection
+        mCursor.setPosition(startPos + mWord.length(), QTextCursor::KeepAnchor);
     }
-
-    mWord.replace(pos, pos + trimmedWord.length(), replacement);
-
-    // We do replacement here, since the length of new word might be different from length of
-    // the old world. Length difference might affect other type of autocorrection
-    mCursor.setPosition(startPos);
-    mCursor.setPosition(startPos + length, QTextCursor::KeepAnchor);
-    mCursor.insertText(mWord);
-    mCursor.setPosition(startPos); // also restore the selection
-    mCursor.setPosition(startPos + mWord.length(), QTextCursor::KeepAnchor);
-  }
 }
 
 void ComposerAutoCorrection::replaceTypographicQuotes()
@@ -629,6 +677,9 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
 
     if (!(mReplaceDoubleQuotes && mWord.contains(QLatin1Char('"'))) &&
             !(mReplaceSingleQuotes && mWord.contains(QLatin1Char('\'')))) return;
+
+
+    const bool addNonBreakingSpace = (isFrenchLanguage() && isAddNonBreakingSpace());
 
     // Need to determine if we want a starting or ending quote.
     // we use a starting quote in three cases:
@@ -642,15 +693,13 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
     //     b. and the previous quote of a different kind (so that we get empty quotations right)
 
     bool ending = true;
-    QString::Iterator iter = mWord.end();
-    iter--;
-
-    while (iter != mWord.begin()) {
-        if (*iter == QLatin1Char('"') || *iter == QLatin1Char('\'')) {
-            bool doubleQuotes = *iter == QLatin1Char('"');
-
-            if ((iter - 1) != mWord.begin()) {
-                QChar::Category c1 = (*(iter - 1)).category();
+    const QChar nbsp = QChar(QChar::Nbsp);
+    for (int i = mWord.length(); i>1; --i) {
+        const QChar c = mWord.at(i-1);
+        if (c == QLatin1Char('"') || c == QLatin1Char('\'')) {
+            const bool doubleQuotes = (c == QLatin1Char('"'));
+            if (i > 2) {
+                QChar::Category c1 = mWord.at(i-1).category();
 
                 // case 1 and 2
                 if (c1 == QChar::Separator_Space || c1 == QChar::Separator_Line || c1 == QChar::Separator_Paragraph ||
@@ -667,39 +716,59 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
                         openingQuote = mTypographicSingleQuotes.begin;
 
                     // case 3b
-                    if (*(iter - 1) != openingQuote)
+                    if (mWord.at(i-1) != openingQuote)
                         ending = false;
                 }
             }
-
             // case 2a and 3a
-            if ((iter - 2) != mWord.constBegin() && !ending)
-            {
-                 QChar::Category c2 = (*(iter - 2)).category();
-                 ending = (c2 == QChar::Punctuation_InitialQuote);
+            if ( i > 3 && !ending) {
+                const QChar::Category c2 = (mWord.at(i-2)).category();
+                ending = (c2 == QChar::Punctuation_InitialQuote);
             }
 
             if (doubleQuotes && mReplaceDoubleQuotes) {
-                if (!ending)
-                    *iter = mTypographicDoubleQuotes.begin;
-                else
-                    *iter = mTypographicDoubleQuotes.end;
-            }
-            else if (mReplaceSingleQuotes) {
-                if (!ending)
-                    *iter = mTypographicSingleQuotes.begin;
-                else
-                    *iter = mTypographicSingleQuotes.end;
+
+                if (!ending) {
+                    if (addNonBreakingSpace)
+                        mWord.replace(i-1, 2, QString(nbsp + mTypographicDoubleQuotes.begin));
+                    else
+                        mWord[i-1] = mTypographicDoubleQuotes.begin;
+                } else {
+                    if (addNonBreakingSpace)
+                        mWord.replace(i-1, 2,QString(nbsp + mTypographicDoubleQuotes.end));
+                    else
+                        mWord[i-1] = mTypographicDoubleQuotes.end;
+                }
+            } else if (mReplaceSingleQuotes) {
+                if (!ending) {
+                    if (addNonBreakingSpace)
+                        mWord.replace(i-1, 2,QString(nbsp + mTypographicSingleQuotes.begin));
+                    else
+                        mWord[i-1] = mTypographicSingleQuotes.begin;
+                } else {
+                    if (addNonBreakingSpace)
+                        mWord.replace(i-1, 2,QString(nbsp + mTypographicSingleQuotes.end));
+                    else
+                        mWord[i-1] = mTypographicSingleQuotes.end;
+                }
             }
         }
-        iter--;
     }
 
+
     // first character
-    if (*iter == QLatin1Char('"') && mReplaceDoubleQuotes)
-        *iter = mTypographicDoubleQuotes.begin;
-    else if (*iter == QLatin1Char('\'') && mReplaceSingleQuotes)
-        *iter = mTypographicSingleQuotes.begin;
+    if (mWord.at(0) == QLatin1Char('"') && mReplaceDoubleQuotes) {
+        if (addNonBreakingSpace)
+            mWord.replace(0, 2, QString(mTypographicDoubleQuotes.begin + nbsp));
+        else
+            mWord[0] = mTypographicDoubleQuotes.begin;
+    } else if (mWord.at(0) == QLatin1Char('\'') && mReplaceSingleQuotes) {
+        if (addNonBreakingSpace)
+            mWord.replace(0, 2,QString(mTypographicSingleQuotes.begin + nbsp));
+        else
+            mWord[0] = mTypographicSingleQuotes.begin;
+    }
+
 }
 
 
@@ -719,11 +788,11 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 
     QString LocalFile;
     //Look at local file:
-    if(!forceGlobal) {
+    if (!forceGlobal) {
         if (!mAutoCorrectLang.isEmpty()) {
             LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + mAutoCorrectLang + QLatin1String(".xml"));
         } else {
-            if(!kdelang.isEmpty())
+            if (!kdelang.isEmpty())
                 LocalFile = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/custom-") + kdelang + QLatin1String(".xml"));
             if (LocalFile.isEmpty() && kdelang.contains(QLatin1String("_"))) {
                 kdelang.remove( QRegExp( QLatin1String("_.*") ) );
@@ -734,10 +803,10 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
     QString fname;
     //Load Global directly
     if (!mAutoCorrectLang.isEmpty()) {
-        if(mAutoCorrectLang == QLatin1String("en_US")) {
-          fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
+        if (mAutoCorrectLang == QLatin1String("en_US")) {
+            fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/autocorrect.xml"));
         } else {
-          fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorrectLang + QLatin1String(".xml"));
+            fname = KGlobal::dirs()->findResource("data", QLatin1String("autocorrect/") + mAutoCorrectLang + QLatin1String(".xml"));
         }
     } else {
         if (fname.isEmpty() && !kdelang.isEmpty())
@@ -756,8 +825,8 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
     //qDebug()<<" fname :"<<fname;
     //qDebug()<<" LocalFile:"<<LocalFile;
 
-    if(LocalFile.isEmpty()) {
-        if(fname.isEmpty()) {
+    if (LocalFile.isEmpty()) {
+        if (fname.isEmpty()) {
             mTypographicSingleQuotes = typographicDefaultSingleQuotes();
             mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
         } else {
@@ -769,11 +838,11 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
                 mTypographicSingleQuotes = import.typographicSingleQuotes();
                 mTypographicDoubleQuotes = import.typographicDoubleQuotes();
                 mSuperScriptEntries = import.superScriptEntries();
-		if( forceGlobal ) {
-                   mTypographicSingleQuotes = typographicDefaultSingleQuotes();
-		   mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
+                if ( forceGlobal ) {
+                    mTypographicSingleQuotes = typographicDefaultSingleQuotes();
+                    mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
 
-		}
+                }
 
             }
         }
@@ -794,11 +863,11 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
     }
 }
 
-void ComposerAutoCorrection::writeAutoCorrectionXmlFile()
+void ComposerAutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
 {
-    const QString fname = KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml"));
+    const QString fname = filename.isEmpty() ? KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml")) : filename;
     QFile file(fname);
-    if( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+    if ( !file.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
         kDebug()<<"We can't save in file :"<<fname;
         return;
     }
@@ -878,15 +947,20 @@ void ComposerAutoCorrection::writeAutoCorrectionXmlFile()
 
 QString ComposerAutoCorrection::language() const
 {
-  return mAutoCorrectLang;
+    return mAutoCorrectLang;
 }
 
 void ComposerAutoCorrection::setLanguage(const QString &lang, bool forceGlobal)
 {
-  if(mAutoCorrectLang != lang || forceGlobal) {
-    mAutoCorrectLang = lang;
-    //Re-read xml file
-    readAutoCorrectionXmlFile(forceGlobal);
-  }
+    if (mAutoCorrectLang != lang || forceGlobal) {
+        mAutoCorrectLang = lang;
+        //Re-read xml file
+        readAutoCorrectionXmlFile(forceGlobal);
+    }
+}
+
+bool ComposerAutoCorrection::isFrenchLanguage() const
+{
+    return (mAutoCorrectLang == QLatin1String("FR_fr") || mAutoCorrectLang == QLatin1String("fr"));
 }
 

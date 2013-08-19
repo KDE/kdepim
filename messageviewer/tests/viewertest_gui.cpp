@@ -18,9 +18,9 @@
 */
 
 #include <QFile>
-#include "viewer.h"
-#include "headerstyle.h"
-#include "headerstrategy.h"
+#include "viewer/viewer.h"
+#include "header/headerstyle.h"
+#include "header/headerstrategy.h"
 
 #include <kdebug.h>
 #include <kcmdlineargs.h>

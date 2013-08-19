@@ -43,7 +43,7 @@ set(mobileui_SRCS
 
 if (KDEQMLPLUGIN_STATIC)
   add_definitions(-DKDEQMLPLUGIN_STATIC)
-endif (KDEQMLPLUGIN_STATIC)
+endif ()
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
@@ -62,7 +62,7 @@ target_link_libraries(kdepimmobileui
 
 if (KDEQMLPLUGIN_STATIC)
   target_link_libraries(kdepimmobileui kdeqmlplugin)
-endif (KDEQMLPLUGIN_STATIC)
+endif ()
 
 if (X11_FOUND)
   target_link_libraries(kdepimmobileui ${X11_LIBRARIES})
@@ -72,9 +72,9 @@ endif()
 # but would be nicer if it is flexible
 if (NOT WINCE)
     set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
-else (NOT WINCE)
+else ()
     set( STYLE_IMAGE_PATH /Programme/Kontact-Mobile/${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
-endif(NOT WINCE)
+endif()
 configure_file( stylesheet.css.cmake ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css )
 
 add_subdirectory(images)
@@ -87,7 +87,6 @@ install(FILES
   ActiveActionMenuItemDelegate.qml
   BulkActionScreen.qml
   BulkActionList.qml
-  DecoratedFlickable.qml
   DecoratedListView.qml
   FakeAction.qml
   FavoriteManager.qml
@@ -114,8 +113,6 @@ install(FILES
   ScriptAction.qml
   ScriptActionItem.qml
   StartCanvas.qml
-  Spinner.qml
-  WindowBar.qml
   VerticalSelector.qml
   Clock.qml
   Calendar.qml

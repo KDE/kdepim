@@ -18,7 +18,7 @@
 
 #include "kpgpkey.h"
 #include "kdebug.h"
-//Added by qt3to4:
+
 #include <QByteArray>
 
 namespace Kpgp {

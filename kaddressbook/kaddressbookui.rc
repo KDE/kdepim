@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="10">
+<kpartgui name="kaddressbook" version="11">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -29,6 +29,7 @@
       </Menu>
       <Separator/>
       <Action name="file_print"/>
+      <Action name="file_print_preview"/>
       <Separator/>
       <Action name="file_quit"/>
     </Menu>

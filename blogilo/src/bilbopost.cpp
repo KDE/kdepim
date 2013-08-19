@@ -23,9 +23,9 @@
 */
 
 #include "bilbopost.h"
-#include <QStringList>
 #include <kdatetime.h>
 #include <kdebug.h>
+#include <QStringList>
 
 class BilboPostPrivate
 {
@@ -33,15 +33,13 @@ public:
     QString mAuthor;
     int mId;///id in DB
     int localId;
-//  Position mPosition;
     bool mModifyTimeStamp;///Just for toolbox entry!
     QList<Category> mCategoryList;
 };
 
 BilboPost::BilboPost()
-        : KBlog::BlogPost(), d_ptr(new BilboPostPrivate)
+    : KBlog::BlogPost(), d_ptr(new BilboPostPrivate)
 {
-    kDebug();
     this->setCreationDateTime( KDateTime::currentLocalDateTime() );
     this->setModificationDateTime( KDateTime::currentLocalDateTime() );
     this->setCommentAllowed( true );
@@ -54,18 +52,16 @@ BilboPost::BilboPost()
 }
 
 BilboPost::BilboPost( const KBlog::BlogPost &post )
-        : KBlog::BlogPost( post ), d_ptr(new BilboPostPrivate)
+    : KBlog::BlogPost( post ), d_ptr(new BilboPostPrivate)
 {
-    kDebug()<<"KBlog::BlogPost";
     d_ptr->mId = -1;
     d_ptr->localId = -1;
     d_ptr->mModifyTimeStamp = false;
 }
 
 BilboPost::BilboPost( const BilboPost &post )
-        : KBlog::BlogPost(post), d_ptr(new BilboPostPrivate)
+    : KBlog::BlogPost(post), d_ptr(new BilboPostPrivate)
 {
-    kDebug()<<"BilboPost";
     this->setAuthor( post.author() );
     this->setModifyTimeStamp( post.isModifyTimeStamp() );
     this->setId( post.id() );
@@ -75,7 +71,6 @@ BilboPost::BilboPost( const BilboPost &post )
 
 BilboPost::~BilboPost()
 {
-    kDebug();
     delete d_ptr;
 }
 
@@ -111,9 +106,8 @@ void BilboPost::setLocalId(const int localId)
 
 QString BilboPost::toString() const
 {
-    qDebug( "BilboPost::toString" );
-//  if(!title().isEmpty())
-//   qDebug("BilboPost::toString: title is %s", this->title());
+    //  if(!title().isEmpty())
+    //   qDebug("BilboPost::toString: title is %s", this->title());
     QString ret;
     ret = "\n******* Post Info **********";
     ret += QString( "\nID: " ) + postId();
@@ -148,11 +142,11 @@ void BilboPost::setCategoryList( const QList< Category > & list )
 {
     d_ptr->mCategoryList = list;
     QStringList cats;
-    int count = list.count();
+    const int count = list.count();
     for ( int i = 0; i < count; ++i ) {
-        cats.append( list[i].name );
+        cats.append( list.at(i).name );
     }
-    this->setCategories( cats );
+    setCategories( cats );
 }
 
 void BilboPost::setProperties( const BilboPost& postProp )

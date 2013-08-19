@@ -20,19 +20,26 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as QML
+import QtQuick 1.1 as QML
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 
-QML.Rectangle { // work around strange anchoring behaviour inside Loader
-  id : root
+
+PlasmaComponents.Page {
+
   anchors.fill: parent
-  color: "white"
-  z: 10
 
-  QML.MouseArea {
-    anchors.fill : parent
-    onClicked : {} // do nothing
+  tools: PlasmaComponents.ToolBarLayout {
+    PlasmaComponents.ToolButton {
+
+      anchors.left: parent.left
+
+      iconSource: "go-previous"
+
+      onClicked: pageStack.pop()
+    }
   }
 
   QML.Rectangle {
@@ -46,27 +53,19 @@ QML.Rectangle { // work around strange anchoring behaviour inside Loader
 
     QML.Column {
       anchors.fill: parent
-      KPIM.DecoratedListView {
+      PlasmaExtras.ScrollArea {
         anchors.fill: parent
-        model: _emailTemplateModel
-        focus: true
-        delegate: [
-          KPIM.Button2 {
+        flickableItem: QML.ListView {
+          model: _emailTemplateModel
+          focus: true
+          delegate: KPIM.Button2 {
             width: parent.width
             buttonText : display
             onClicked : {
               application.newMessageFromTemplate( index );
-              root.parent.visible = false
+              pageStack.pop()
             }
           }
-        ]
-      }
-
-      KPIM.Button2 {
-        width: parent.width
-        buttonText : KDE.i18n( "Discard" )
-        onClicked : {
-          root.parent.visible = false
         }
       }
     }

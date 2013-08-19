@@ -21,8 +21,7 @@
 #ifndef GLOBALCONTACTMODEL_H
 #define GLOBALCONTACTMODEL_H
 
-namespace Akonadi
-{
+namespace Akonadi {
   class ChangeRecorder;
   class ContactsTreeModel;
   class Monitor;

@@ -24,7 +24,7 @@ using namespace KPIM;
 class KNScorableArticle : public ScorableArticle
 {
 public:
-  KNScorableArticle( KNRemoteArticle::Ptr a );
+  explicit KNScorableArticle( KNRemoteArticle::Ptr a );
   virtual ~KNScorableArticle();
 
   virtual void addScore(short s);

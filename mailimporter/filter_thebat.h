@@ -31,18 +31,18 @@ class MAILIMPORTER_EXPORT FilterTheBat : public Filter
 {
 
 public:
-  explicit FilterTheBat();
-  ~FilterTheBat();
+    explicit FilterTheBat();
+    ~FilterTheBat();
 
-  void import();
-  void importMails( const QString & maildir );
+    void import();
+    void importMails( const QString &maildir );
 
 private:
-  void importDirContents( const QString&);
-  void importFiles( const QString&);
-  void processDirectory( const QString& path);
-  int mImportDirDone;
-  int mTotalDir;
+    void importDirContents( const QString &);
+    void importFiles( const QString &);
+    void processDirectory( const QString &path);
+    int mImportDirDone;
+    int mTotalDir;
 
 };
 }

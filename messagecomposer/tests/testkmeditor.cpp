@@ -20,11 +20,11 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
-#include <messagecomposer/kmeditor.h>
+#include <messagecomposer/composer/kmeditor.h>
 
 #include <QtCore/QFile>
 
-using namespace Message;
+using namespace MessageComposer;
 
 int main( int argc, char **argv )
 {

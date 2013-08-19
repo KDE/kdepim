@@ -39,7 +39,7 @@ private:
     qint32 maxlen;
 public:
     KmpSearcher() :table(0) { }
-    KmpSearcher(const std::string& query);
+    explicit KmpSearcher(const std::string& query);
     ~KmpSearcher() {
         if (table) {
             free(table);

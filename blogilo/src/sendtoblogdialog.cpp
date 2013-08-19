@@ -29,6 +29,12 @@
 class SendToBlogDialog::Private
 {
 public:
+    Private()
+        : mIsPrivate(false),
+          mIsNew(false)
+    {
+    }
+
     Ui::SendToBlogBase ui;
     bool mIsPrivate;
     bool mIsNew;
@@ -36,19 +42,18 @@ public:
 SendToBlogDialog::SendToBlogDialog( bool isNew, bool isPrivate, QWidget *parent )
     : KDialog(parent), d(new Private)
 {
-    kDebug()<<isNew<<isPrivate;
     QWidget *dialog = new QWidget( this );
     d->ui.setupUi( dialog );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
     this->setMainWidget( dialog );
     setWindowTitle( i18n( "Submitting as..." ) );
-    if( isNew ) {
+    if ( isNew ) {
         d->ui.pubAsModify->setEnabled( false );
         d->ui.pubAsNewPost->setChecked( true );
     } else {
         d->ui.pubAsModify->setChecked( true );
     }
-    if( isPrivate )
+    if ( isPrivate )
         d->ui.saveDraft->setChecked(true);
     d->mIsNew = isNew;
     d->mIsPrivate = isPrivate;
@@ -71,16 +76,8 @@ bool SendToBlogDialog::isNew() const
 
 void SendToBlogDialog::accept()
 {
-    if(d->ui.saveDraft->isChecked()) {
-        d->mIsPrivate = true;
-    } else {
-        d->mIsPrivate = false;
-    }
-    if(d->ui.pubAsModify->isChecked()) {
-        d->mIsNew = false;
-    } else {
-        d->mIsNew = true;
-    }
+    d->mIsPrivate = d->ui.saveDraft->isChecked();
+    d->mIsNew = !d->ui.pubAsModify->isChecked();
     KDialog::accept();
 }
 

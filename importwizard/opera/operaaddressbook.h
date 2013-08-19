@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -25,10 +25,11 @@ class ImportWizard;
 class OperaAddressBook : public AbstractAddressBook
 {
 public:
-  explicit OperaAddressBook(const QString &filename, ImportWizard *parent);
-  ~OperaAddressBook();
+    explicit OperaAddressBook(const QString &filename, ImportWizard *parent);
+    ~OperaAddressBook();
+
 private:
-  void appendContact(KABC::Addressee *contact);
+    void appendContact(KABC::Addressee *contact);
 };
 
 #endif // OPERAADDRESSBOOK_H

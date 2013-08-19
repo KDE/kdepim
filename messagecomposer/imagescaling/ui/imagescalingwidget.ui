@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ImageScalingWidget</class>
+ <widget class="QWidget" name="ImageScalingWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>614</width>
+    <height>453</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QCheckBox" name="enabledAutoResize">
+     <property name="text">
+      <string>Automatically resize images</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>General</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="KeepImageRatio">
+         <property name="text">
+          <string>Keep ratio</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="AskBeforeResizing">
+         <property name="text">
+          <string>Ask before resizing</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Write to format</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="KComboBox" name="WriteToImageFormat"/>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="1">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>350</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="1">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Image</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QCheckBox" name="ReduceImageToMaximum">
+         <property name="text">
+          <string>Reduce image to maximum dimension:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::ExpandingFieldsGrow</enum>
+         </property>
+         <item row="0" column="0">
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Maximum width:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Maximum height:</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="1">
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="KComboBox" name="CBMaximumWidth"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="KComboBox" name="CBMaximumHeight"/>
+           </item>
+           <item row="0" column="1">
+            <widget class="KIntSpinBox" name="customMaximumWidth">
+             <property name="suffix">
+              <string> px</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>999999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="KIntSpinBox" name="customMaximumHeight">
+             <property name="suffix">
+              <string> px</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>999999</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="EnlargeImageToMinimum">
+         <property name="text">
+          <string>Enlarge image to minimum dimension</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Minimum width:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Minimum height:</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="1">
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="KComboBox" name="CBMinimumWidth"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="KComboBox" name="CBMinimumHeight"/>
+           </item>
+           <item row="0" column="1">
+            <widget class="KIntSpinBox" name="customMinimumWidth">
+             <property name="suffix">
+              <string> px</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>999999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="KIntSpinBox" name="customMinimumHeight">
+             <property name="suffix">
+              <string> px</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>999999</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QCheckBox" name="skipImageSizeLower">
+           <property name="text">
+            <string>Skip image whose size of the source file is lower than:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="KIntSpinBox" name="imageSize">
+           <property name="suffix">
+            <string> KiB</string>
+           </property>
+           <property name="maximum">
+            <number>99999</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Filename</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QGroupBox" name="filterSourceGroupBox">
+         <property name="title">
+          <string>Source filter</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QRadioButton" name="notFilterFilename">
+            <property name="text">
+             <string>Do not filter (All files are included)</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="includeFilesWithPattern">
+            <property name="text">
+             <string>Include all files whose names contains one of the patterns</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="excludeFilesWithPattern">
+            <property name="text">
+             <string>Exclude all files whose names contains one of the patterns</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="patternLabel">
+              <property name="text">
+               <string>Pattern:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="KLineEdit" name="pattern">
+              <property name="whatsThis">
+               <string>This line allows to define several pattern. Separate them with ';'.</string>
+              </property>
+              <property name="clickMessage">
+               <string>Specify patterns separate with ';'</string>
+              </property>
+              <property name="showClearButton" stdset="0">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Image Format</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <item>
+           <widget class="QCheckBox" name="resizeImageWithFormats">
+            <property name="text">
+             <string>Resize all images with one of these formats</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="MessageComposer::ImageScalingSelectFormat" name="resizeImageWithFormatsType" native="true"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Resize filename</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QCheckBox" name="renameResizedImage">
+            <property name="text">
+             <string>Rename resized images with following pattern:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="KLineEdit" name="renameResizedImagePattern">
+            <property name="showClearButton" stdset="0">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="help">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>Recipients</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QRadioButton" name="doNotFilterRecipients">
+         <property name="text">
+          <string>Do not filter (All recipients are allowed)</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="resizeEachEmails">
+         <property name="text">
+          <string>Resize if each emails address contains one of the pattern</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="resizeOneEmails">
+         <property name="text">
+          <string>Resize if one emails address contains one of the pattern</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KLineEdit" name="resizeEmailsPattern">
+         <property name="clickMessage">
+          <string>Specify patterns separate with ';'</string>
+         </property>
+         <property name="showClearButton" stdset="0">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="doNotResizeEachEmails">
+         <property name="text">
+          <string>Do not resize if each emails address contains one of the pattern</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="doNotResizeOneEmails">
+         <property name="text">
+          <string>Do not resize if one emails address contains one of the pattern</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KLineEdit" name="doNotResizePattern">
+         <property name="clickMessage">
+          <string>Specify patterns separate with ';'</string>
+         </property>
+         <property name="showClearButton" stdset="0">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MessageComposer::ImageScalingSelectFormat</class>
+   <extends>QWidget</extends>
+   <header>imagescaling/imagescalingselectformat.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

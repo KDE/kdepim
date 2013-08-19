@@ -30,10 +30,11 @@
 #include "korganizer_export.h"
 #include "interfaces/korganizer/calendarviewbase.h"
 
-#include <calendarsupport/calendar.h>
-
 #include <KCalCore/Incidence>
 #include <KCalCore/Visitor>
+#include <KCalCore/ScheduleMessage>
+
+#include <akonadi/calendar/itiphandler.h>
 
 class CalPrinter;
 class DateChecker;
@@ -46,16 +47,22 @@ class NavigatorBar;
 class KOCheckableProxyModel;
 class AkonadiCollectionView;
 namespace KOrg {
-  class History;
   class HTMLExportSettings;
 }
 
 namespace CalendarSupport {
   class IncidenceViewer;
+  class MessageWidget;
 }
 
 namespace IncidenceEditorNG {
   class IncidenceDialog;
+}
+
+namespace Akonadi {
+  class History;
+  class IncidenceChanger;
+  class CalendarClipboard;
 }
 
 class KVBox;
@@ -88,7 +95,7 @@ class CalendarViewExtension : public QWidget
   @author Cornelius Schumacher
 */
 class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
-                                              public CalendarSupport::Calendar::CalendarObserver
+                                              public Akonadi::ETMCalendar::CalendarObserver
 {
   Q_OBJECT
   public:
@@ -96,7 +103,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
       Constructs a new calendar view widget.
       @param parent   parent window
     */
-    CalendarView( QWidget *parent=0 );
+    explicit CalendarView( QWidget *parent=0 );
     virtual ~CalendarView();
 
     class CalendarViewVisitor : public KCalCore::Visitor
@@ -116,40 +123,11 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
         CalendarView *mView;
     };
 
-    class CanDeleteIncidenceVisitor : public CalendarViewVisitor
-    {
-      const Akonadi::Item item;
+    void setCalendar( const Akonadi::ETMCalendar::Ptr & );
+    Akonadi::ETMCalendar::Ptr calendar() const;
 
-      public:
-        explicit CanDeleteIncidenceVisitor( const Akonadi::Item &i ) : item( i )
-        {
-        }
-
-      protected:
-        bool visit( KCalCore::Event::Ptr )
-        {
-          return mView->deleteEvent( item );
-        }
-        bool visit( KCalCore::Todo::Ptr )
-        {
-          return mView->deleteTodo( item );
-        }
-        bool visit( KCalCore::Journal::Ptr )
-        {
-          return mView->deleteJournal( item );
-        }
-        bool visit( KCalCore::FreeBusy::Ptr )
-        {
-          return false;
-        }
-
-    };
-
-    void setCalendar( CalendarSupport::Calendar * );
+    Akonadi::History *history() const;
     void setCheckableProxyModel( KOCheckableProxyModel * );
-    CalendarSupport::Calendar *calendar() const;
-
-    History *history() const { return mHistory; }
 
     KOViewManager *viewManager() const { return mViewManager; }
     KODialogManager *dialogManager() const { return mDialogManager; }
@@ -160,7 +138,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     DateNavigator *dateNavigator() const { return mDateNavigator; }
     // TODO_NG
     //IncidenceEditors::IncidenceEditor *editorDialog( const Akonadi::Item &item ) const;
-    virtual CalendarSupport::IncidenceChanger *incidenceChanger() const { return mChanger; }
+    virtual Akonadi::IncidenceChanger *incidenceChanger() const { return mChanger; }
 
     /**
      * Informs the date navigator which incidence types should be used
@@ -252,12 +230,6 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     /** Emitted, when a day changed (i.e. korganizer was running at midnight).
         The argument is the new date */
     void dayPassed( const QDate & );
-    /**
-      Attendees were removed from this incidence. Only the removed attendees
-      are present in the incidence, so we just need to send a cancel messages
-      to all attendees groupware messages are enabled at all.
-    */
-    void cancelAttendees( const Akonadi::Item &incidence );
 
     /**
       Emitted, when clipboard content changes. Parameter indicates if paste
@@ -272,7 +244,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     /** Emitted when auto-archiving options were modified */
     void autoArchivingSettingsModified();
 
-    void newIncidenceChanger( CalendarSupport::IncidenceChanger * );
+    void newIncidenceChanger( Akonadi::IncidenceChanger * );
     void exportHTML( KOrg::HTMLExportSettings * );
 
     void filtersUpdated( const QStringList &, int );
@@ -287,6 +259,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     /** Calendar configuration was changed, so refresh categories list
     */
     void updateCategories();
+    void handleIncidenceCreated(const Akonadi::Item &item);
 
     /**
       Load calendar from file \a filename. If \a merge is true, load
@@ -370,7 +343,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
                    deleted without prompting for confirmation.
     */
     bool deleteIncidence( const Akonadi::Item &item, bool force=false );
-    bool deleteIncidence( const Akonadi::Item::Id &uid, bool force=false );
+    bool deleteIncidence( Akonadi::Item::Id id, bool force=false );
     void deleteIncidence();
 
      /**
@@ -408,15 +381,6 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
       @param force If true, all sub-todos will be deleted without prompting for confirmation.
     */
     void deleteTodoIncidence ( const Akonadi::Item &todo, bool force=false );
-
-    /** Check if deleting the supplied event is allowed. */
-    bool deleteEvent( const Akonadi::Item & ) { return true; }
-
-    /** Check if deleting the todo is allowed */
-    bool deleteTodo( const Akonadi::Item & ) {return true; }
-
-    /** Check if deleting the supplied journal is allowed. */
-    bool deleteJournal( const Akonadi::Item & ) { return true; }
 
     /** create new todo */
     void newTodo();
@@ -480,15 +444,24 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
 
     /** passes on the message that an event has changed to the currently
      * activated view so that it can make appropriate display changes. */
-    void changeIncidenceDisplay( const Akonadi::Item &incidence, int );
+    void changeIncidenceDisplay( const Akonadi::Item &incidence,
+                                 Akonadi::IncidenceChanger::ChangeType );
 
-    void incidenceAddFinished( const Akonadi::Item &incidence, bool success );
-    void incidenceChangeFinished( const Akonadi::Item &oldEvent,
-                                  const Akonadi::Item &newEvent,
-                                  CalendarSupport::IncidenceChanger::WhatChanged modification,
-                                  bool success );
-    void incidenceToBeDeleted( const Akonadi::Item &incidence );
-    void incidenceDeleteFinished( const Akonadi::Item &incidence, bool success );
+    void slotCreateFinished( int changeId,
+                             const Akonadi::Item &item,
+                             Akonadi::IncidenceChanger::ResultCode resultCode,
+                             const QString &errorString );
+
+    void slotModifyFinished( int changeId,
+                             const Akonadi::Item &item,
+                             Akonadi::IncidenceChanger::ResultCode resultCode,
+                             const QString &errorString );
+
+    void slotDeleteFinished( int changeId,
+                             const QVector<Akonadi::Item::Id> &itemIdList,
+                             Akonadi::IncidenceChanger::ResultCode resultCode,
+                             const QString &errorString );
+
     void startMultiModify( const QString &text );
     void endMultiModify();
 
@@ -506,6 +479,8 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
 
     /** paste the current vobject(s) in the clipboard buffer into calendar */
     void edit_paste();
+
+    void onCutFinished();
 
     /** edit viewing and configuration options. */
     void edit_options();
@@ -559,9 +534,6 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
 
     /** Take ownership of selected event. */
     void takeOverEvent();
-
-    /** Take ownership of all events in calendar. */
-    void takeOverCalendar();
 
     /** query if the calendar is read-only. */
     bool isReadOnly() const;
@@ -690,11 +662,10 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     QDate activeDate( bool fallbackToToday = false );
 
   protected:
-    void setIncidenceChanger( CalendarSupport::IncidenceChanger *changer );
-
     int msgItemDelete( const Akonadi::Item &incidence );
 
     Akonadi::Item selectedTodo();
+    IncidenceEditorNG::IncidenceDialog *incidenceDialog(const Akonadi::Item &);
 
     void warningChangeFailed( const Akonadi::Item & );
     void checkForFilteredChange( const Akonadi::Item &incidence );
@@ -719,18 +690,12 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
 
     void createPrinter();
 
-    void dissociateOccurrence( const Akonadi::Item &incidence, const QDate & );
-    void dissociateFutureOccurrence( const Akonadi::Item &incidence, const QDate & );
+    void dissociateOccurrence( const Akonadi::Item &incidence, const QDate & , bool futureOccurrences);
 
     // Helper function for purgeCompleted that recursively purges a todo and
     // its subitems. If it cannot delete a completed todo (because it has
     // uncompleted subitems), notAllPurged is set to true.
     bool purgeCompletedSubTodos( const Akonadi::Item &todo, bool &notAllPurged );
-
-    // Returns all incidences having item has their parent (or grand parent, etc.)
-    // item is included in the list too.
-    //
-    void getIncidenceHierarchy( const Akonadi::Item &item, Akonadi::Item::List &items );
 
     /**
      * Returns the default collection.
@@ -748,14 +713,13 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     IncidenceEditorNG::IncidenceDialog *createIncidenceEditor(
       const Akonadi::Item &item, const Akonadi::Collection &collection = Akonadi::Collection() );
 
-    KOrg::History *mHistory;
-
     CalPrinter *mCalPrinter;
 
     QSplitter *mPanner;
     QSplitter *mLeftSplitter;
     QWidget *mLeftFrame;
     QStackedWidget *mRightFrame;
+    CalendarSupport::MessageWidget *mMessageWidget;
 
     // This navigator bar is used when in full window month view
     // It has nothing to do with the date navigator
@@ -765,7 +729,7 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
 
     QList<CalendarViewExtension*> mExtensions;
 
-    CalendarSupport::Calendar *mCalendar;
+    Akonadi::ETMCalendar::Ptr mCalendar;
 
     DateNavigator *mDateNavigator;
     DateChecker *mDateChecker;
@@ -786,14 +750,15 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     QDate mSaveDate;
 
     KOTodoView *mTodoList;
-    CalendarSupport::IncidenceChanger *mChanger;
+    Akonadi::IncidenceChanger *mChanger;
+    Akonadi::ITIPHandler *mITIPHandler;
     QList<int> mMainSplitterSizes; // temp store for main splitter sizes while left frame is hidden
     bool mSplitterSizesValid;
     bool mCreatingEnabled;
 
+    Akonadi::CalendarClipboard *mCalendarClipboard;
     KOCheckableProxyModel *mCheckableProxyModel;
     AkonadiCollectionView *mETMCollectionView;
 };
 
 #endif
-

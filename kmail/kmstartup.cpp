@@ -20,29 +20,12 @@
 #include "kmstartup.h"
 
 #include "kmkernel.h" //control center
-#include "messageviewer/kcursorsaver.h"
 
 #include <klocale.h>
-#include <kcomponentdata.h>
-#include <kconfig.h>
 #include <kstandarddirs.h>
-#include <kmessagebox.h>
 #include <kglobal.h>
 #include <kaboutdata.h>
 #include <kiconloader.h>
-#include <kconfiggroup.h>
-#include <kde_file.h>
-
-#include <QHostInfo>
-
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/param.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <qfile.h>
 
 #undef Status // stupid X headers
 
@@ -73,7 +56,8 @@ void checkConfigUpdates() {
     "3.5.4",
     "3.5.7-imap-flag-migration",
     "4.0-misc",
-    "4.2"
+    "4.2",
+    "4.4-akonadi"
   };
   static const int numUpdates = sizeof updates / sizeof *updates;
   // Warning: do not remove entries in the above array, or the update-level check below will break
@@ -106,11 +90,11 @@ void insertLibraryCataloguesAndIcons() {
     "libakonadi_next",
     "libakonadi-kde",
     "libakonadi-kmime",
-    "akonadicontact",
     "libkpimtextedit",
     "libkpimutils",
     "akonadicontact",
-    "kabc"
+    "kabc",
+    "akonadi_sendlater_agent"
 
   };
 

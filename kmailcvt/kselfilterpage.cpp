@@ -53,74 +53,74 @@
 using namespace MailImporter;
 
 KSelFilterPage::KSelFilterPage(QWidget *parent )
-  : QWidget(parent)
+    : QWidget(parent)
 {
-  mWidget = new Ui::KSelFilterPageDlg;
-  mWidget->setupUi( this );
-  mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
-  connect(mWidget->mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
+    mWidget = new Ui::KSelFilterPageDlg;
+    mWidget->setupUi( this );
+    mWidget->mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
+    connect(mWidget->mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
-  // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
-  // The former approach was overengineered and only worked around problems in the design
-  // For now, we have to live without the warm and fuzzy feeling a refactoring might give.
-  // Patches appreciated. (danimo)
+    // Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
+    // The former approach was overengineered and only worked around problems in the design
+    // For now, we have to live without the warm and fuzzy feeling a refactoring might give.
+    // Patches appreciated. (danimo)
 
-  addFilter(new MailImporter::FilterKMailArchive);
-  addFilter(new MailImporter::FilterMBox);
-  addFilter(new MailImporter::FilterEvolution);
-  addFilter(new MailImporter::FilterEvolution_v2);
-  addFilter(new MailImporter::FilterEvolution_v3);
-  addFilter(new MailImporter::FilterKMail_maildir);
-  addFilter(new MailImporter::FilterMailApp);
-  addFilter(new MailImporter::FilterOpera);
-  addFilter(new MailImporter::FilterSylpheed);
-  addFilter(new MailImporter::FilterThunderbird);
-  addFilter(new MailImporter::FilterTheBat);
-  addFilter(new MailImporter::FilterOE);
-  addFilter(new MailImporter::FilterPMail);
-  addFilter(new MailImporter::FilterLNotes);
-  addFilter(new MailImporter::FilterPlain);
+    addFilter(new MailImporter::FilterKMailArchive);
+    addFilter(new MailImporter::FilterMBox);
+    addFilter(new MailImporter::FilterEvolution);
+    addFilter(new MailImporter::FilterEvolution_v2);
+    addFilter(new MailImporter::FilterEvolution_v3);
+    addFilter(new MailImporter::FilterKMail_maildir);
+    addFilter(new MailImporter::FilterMailApp);
+    addFilter(new MailImporter::FilterOpera);
+    addFilter(new MailImporter::FilterSylpheed);
+    addFilter(new MailImporter::FilterThunderbird);
+    addFilter(new MailImporter::FilterTheBat);
+    addFilter(new MailImporter::FilterOE);
+    addFilter(new MailImporter::FilterPMail);
+    addFilter(new MailImporter::FilterLNotes);
+    addFilter(new MailImporter::FilterPlain);
 
-  // Ensure we return the correct type of Akonadi collection.
-  mWidget->mCollectionRequestor->setMustBeReadWrite(true);
+    // Ensure we return the correct type of Akonadi collection.
+    mWidget->mCollectionRequestor->setMustBeReadWrite(true);
 }
 
 KSelFilterPage::~KSelFilterPage() {
-  qDeleteAll(mFilterList);
-  mFilterList.clear();
-  delete mWidget;
+    qDeleteAll(mFilterList);
+    mFilterList.clear();
+    delete mWidget;
 }
 
 void KSelFilterPage::filterSelected(int i)
 {
-  QString info = mFilterList.at(i)->info();
-  const QString author = mFilterList.at(i)->author();
-  if(!author.isEmpty())
-    info += i18n("<p><i>Written by %1.</i></p>", author);
-  mWidget->mDesc->setText(info);
+    QString info = mFilterList.at(i)->info();
+    const QString author = mFilterList.at(i)->author();
+    if(!author.isEmpty())
+        info += i18n("<p><i>Written by %1.</i></p>", author);
+    mWidget->mDesc->setText(info);
 }
 
 void KSelFilterPage::addFilter(Filter *f)
 {
-  mFilterList.append(f);
-  mWidget->mFilterCombo->addItem(f->name());
-  if (mWidget->mFilterCombo->count() == 1)
-    filterSelected(0); // Setup description box with fist filter selected
+    mFilterList.append(f);
+    mWidget->mFilterCombo->addItem(f->name());
+    if (mWidget->mFilterCombo->count() == 1)
+        filterSelected(0); // Setup description box with fist filter selected
 }
 
 bool KSelFilterPage::removeDupMsg_checked() const
 {
-  return mWidget->remDupMsg->isChecked();
+    return mWidget->remDupMsg->isChecked();
 }
 
-Filter * KSelFilterPage::getSelectedFilter(void)
+Filter *KSelFilterPage::getSelectedFilter()
 {
-  return mFilterList.at(mWidget->mFilterCombo->currentIndex());
+    return mFilterList.at(mWidget->mFilterCombo->currentIndex());
 }
 
 Ui::KSelFilterPageDlg *KSelFilterPage::widget()
 {
-  return mWidget;
+    return mWidget;
 }
 
 #include "kselfilterpage.moc"

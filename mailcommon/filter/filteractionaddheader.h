@@ -32,7 +32,7 @@ class FilterActionAddHeader: public FilterActionWithStringList
 {
   Q_OBJECT
   public:
-    FilterActionAddHeader( QObject *parent = 0 );
+    explicit FilterActionAddHeader( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual QWidget* createParamWidget( QWidget *parent ) const;
     virtual void setParamWidgetValue( QWidget *paramWidget ) const;

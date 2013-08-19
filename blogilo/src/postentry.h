@@ -46,20 +46,20 @@ class PostEntry: public QFrame
 {
     Q_OBJECT
 public:
-    PostEntry( QWidget *parent );
+    explicit PostEntry( QWidget *parent );
     ~PostEntry();
     QString postTitle() const;
 
     void setPostTitle( const QString &title );
     void setPostBody( const QString &content, const QString &additionalContent=QString() );
 
-    int currentPostBlogId();
+    int currentPostBlogId() const;
     void setCurrentPostBlogId( int blog_id );
 
     BilboPost* currentPost();
     void setCurrentPost( const BilboPost &post );
 
-    Qt::LayoutDirection defaultLayoutDirection();
+    Qt::LayoutDirection defaultLayoutDirection() const;
     void setDefaultLayoutDirection( Qt::LayoutDirection direction );
 
     /**
@@ -120,7 +120,7 @@ public Q_SLOTS:
 protected Q_SLOTS:
     void slotError( const QString& errMsg );
     void slotPostPublished( int blog_id, BilboPost *post );
-    void slotTitleChanged( const QString& title );
+    void slotTitleChanged();
     void showProgressBar();
     void deleteProgressBar();
     void saveTemporary();
@@ -142,9 +142,9 @@ protected:
      * then copies the content of HtmlEditor into the variable mHtmlContent, and returns it.
      * @return an String which contains html text
      */
-    QString htmlContent();
+    QString htmlContent() const;
 
-    QString plainTextContent();
+    QString plainTextContent() const;
 
     /**
      * Sets the given string as the HtmlEditor and VisualEditor content.
@@ -152,7 +152,7 @@ protected:
      */
     void setHtmlContent( const QString &content );
 
-    QList <BilboMedia*> localImages();
+    QList <BilboMedia*> localImages() const;
     void replaceImageSrc(const QString& src, const QString& dest);
 
 private:

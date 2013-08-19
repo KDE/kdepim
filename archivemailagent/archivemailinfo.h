@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,7 +17,7 @@
 #ifndef ARCHIVEMAILINFO_H
 #define ARCHIVEMAILINFO_H
 
-#include "mailcommon/backupjob.h"
+#include "mailcommon/job/backupjob.h"
 #include <KConfigGroup>
 #include <Akonadi/Collection>
 #include <KUrl>
@@ -27,60 +27,66 @@
 class ArchiveMailInfo
 {
 public:
-  explicit ArchiveMailInfo();
-  explicit ArchiveMailInfo(const KConfigGroup& config);
-  ~ArchiveMailInfo();
+    explicit ArchiveMailInfo();
+    explicit ArchiveMailInfo(const KConfigGroup &config);
+    ArchiveMailInfo(const ArchiveMailInfo &info);
+    ~ArchiveMailInfo();
 
-  enum ArchiveUnit {
-    ArchiveDays = 0,
-    ArchiveWeeks,
-    ArchiveMonths,
-    ArchiveMaxUnits
-  };
+    ArchiveMailInfo& operator=( const ArchiveMailInfo &old );
 
-  KUrl realUrl(const QString &folderName) const;
+    enum ArchiveUnit {
+        ArchiveDays = 0,
+        ArchiveWeeks,
+        ArchiveMonths
+    };
 
-  bool isEmpty() const;
+    KUrl realUrl(const QString &folderName) const;
 
-  Akonadi::Collection::Id saveCollectionId() const;
-  void setSaveCollectionId(Akonadi::Collection::Id collectionId);
+    bool isValid() const;
 
-  void setSaveSubCollection(bool b);
-  bool saveSubCollection() const;
+    Akonadi::Collection::Id saveCollectionId() const;
+    void setSaveCollectionId(Akonadi::Collection::Id collectionId);
 
-  void setUrl(const KUrl& url);
-  KUrl url() const;
+    void setSaveSubCollection(bool b);
+    bool saveSubCollection() const;
 
-  void readConfig(const KConfigGroup& config);
-  void writeConfig(KConfigGroup & config );
+    void setUrl(const KUrl& url);
+    KUrl url() const;
 
-  void setArchiveType( MailCommon::BackupJob::ArchiveType type );
-  MailCommon::BackupJob::ArchiveType archiveType() const;
+    void readConfig(const KConfigGroup &config);
+    void writeConfig(KConfigGroup &config );
 
-  void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
-  ArchiveMailInfo::ArchiveUnit archiveUnit() const;
+    void setArchiveType( MailCommon::BackupJob::ArchiveType type );
+    MailCommon::BackupJob::ArchiveType archiveType() const;
 
-  void setArchiveAge( int age );
-  int archiveAge() const;
+    void setArchiveUnit( ArchiveMailInfo::ArchiveUnit unit );
+    ArchiveMailInfo::ArchiveUnit archiveUnit() const;
 
-  void setLastDateSaved( const QDate& date );
-  QDate lastDateSaved() const;
+    void setArchiveAge( int age );
+    int archiveAge() const;
 
-  int maximumArchiveCount() const;
-  void setMaximumArchiveCount( int max );
+    void setLastDateSaved( const QDate &date );
+    QDate lastDateSaved() const;
 
-  QStringList listOfArchive(const QString& foldername) const;
+    int maximumArchiveCount() const;
+    void setMaximumArchiveCount( int max );
+
+    QStringList listOfArchive(const QString &foldername) const;
+
+    bool isEnabled() const;
+    void setEnabled(bool b);
 
 private:
-  QString dirArchive() const;
-  QDate mLastDateSaved;
-  int mArchiveAge;
-  MailCommon::BackupJob::ArchiveType mArchiveType;
-  ArchiveUnit mArchiveUnit;
-  Akonadi::Collection::Id mSaveCollectionId;
-  KUrl mPath;
-  int mMaximumArchiveCount;
-  bool mSaveSubCollection;
+    QString dirArchive() const;
+    QDate mLastDateSaved;
+    int mArchiveAge;
+    MailCommon::BackupJob::ArchiveType mArchiveType;
+    ArchiveUnit mArchiveUnit;
+    Akonadi::Collection::Id mSaveCollectionId;
+    KUrl mPath;
+    int mMaximumArchiveCount;
+    bool mSaveSubCollection;
+    bool mIsEnabled;
 };
 
 #endif // ARCHIVEMAILINFO_H

@@ -1,12 +1,12 @@
 - Add default html actions (in progress)
 - Add spell checking (in progress)
 - Add background spell checking (qt-webkit-2.3) (In progress)
-- Add hightlighting
-- Add support for signature
-- Add support for images (in progress)
-- Add support for table (in progress)
-- Add support for link (in progress)
-- Add support for anchor
+- Add hightlighting (4.12)
+- Add support for signature (4.12)
+- Add support for images (DONE)
+- Add support for table (in progress ) (need to todo for 4.11)
+- Add support for link (DONE)
+- Add support for anchor (?)
 - Add support for horizontal line (DONE)
 - Add support for emoticon (DONE)
 - Add support for autocorrection
@@ -16,14 +16,15 @@
 - Add support for remove format/style (DONE)
 - Add supportf for insert html code (DONE)
 - Add support for text/background color (DONE)
-- Add hmlmode on/off support (in progress)
+- Add hmlmode on/off support (in progress) (4.12)
 - Add speak support (DONE)
 - Add support for find (DONE)
-- Add support for replace (in progress)
-- Restore default font when switch out of html mode
-- Create a real popup menu (In progress)
-- Add quote support
-- Add change text support
-- Add extra html setting for table/image/link etc.
-- Add support for resize directly image with mouse. (In progress)
-- Add support for resize directly table with mouse. (In progress)
+- Add support for replace (in progress) (4.12)
+- Restore default font when switch out of html mode (4.12)
+- Create a real popup menu (In progress) (4.12)
+- Add quote support (4.12)
+- Add change text support (4.12)
+- Add extra html setting for table/image/link etc. (DONE)
+- Add support for resize directly image with mouse. (In progress) (need to fix it for 4.11)
+- Add support for resize directly table with mouse. (In progress) (4.12 ?)
+- Add support for printing (DONE)

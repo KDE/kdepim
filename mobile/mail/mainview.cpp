@@ -37,22 +37,23 @@
 #include "emailsguistatemanager.h"
 #include "emailsimporthandler.h"
 #include "mailactionmanager.h"
-#include "mailcommon/collectiongeneralpage.h"
+#include "mailcommon/collectionpage/collectiongeneralpage.h"
+#include "mailcommon/collectionpage/collectionexpirypage.h"
 #include "mailcommon/filter/filtermanager.h"
-#include "mailcommon/mailkernel.h"
-#include "mailcommon/redirectdialog.h"
-#include "mailcommon/sendmdnhandler.h"
+#include "mailcommon/kernel/mailkernel.h"
+#include "mailcommon/widgets/redirectdialog.h"
+#include "mailcommon/mdn/sendmdnhandler.h"
 #include "mailthreadgroupercomparator.h"
-#include "messagecomposer/messagehelper.h"
-#include "messagecomposer/messagecomposersettings.h"
-#include "messagecore/messagehelpers.h"
+#include "messagecomposer/helper/messagehelper.h"
+#include "messagecomposer/settings/messagecomposersettings.h"
+#include "messagecore/helpers/messagehelpers.h"
 #include "messagelistproxy.h"
 #include "messagelistsettingscontroller.h"
-#include "messageviewer/globalsettings.h"
-#include "messageviewer/headerstrategy.h"
-#include "messageviewer/headerstyle.h"
-#include "messageviewer/nodehelper.h"
-#include "messageviewer/viewer.h"
+#include "messageviewer/settings/globalsettings.h"
+#include "messageviewer/header/headerstrategy.h"
+#include "messageviewer/header/headerstyle.h"
+#include "messageviewer/viewer/nodehelper.h"
+#include "messageviewer/viewer/viewer.h"
 #include "messageviewitem.h"
 #include "mobilekernel.h"
 #include "savemailcommand_p.h"
@@ -97,14 +98,13 @@
 #include <kpimidentities/identitymanager.h>
 #include <kselectionproxymodel.h>
 #include <kstandarddirs.h>
-#include <mailcommon/expirypropertiesdialog.h>
 #include <mailcommon/filter/filteraction.h>
-#include <mailcommon/foldercollection.h>
-#include <mailcommon/mailutil.h>
-#include <pimcommon/pimutil.h>
+#include <mailcommon/folder/foldercollection.h>
+#include <mailcommon/util/mailutil.h>
+#include <pimcommon/util/pimutil.h>
 #include <mailtransport/transportmanager.h>
-#include <messagecomposer/akonadisender.h>
-#include <messagecore/stringutil.h>
+#include <messagecomposer/sender/akonadisender.h>
+#include <messagecore/utils/stringutil.h>
 #include <qmllistselectionmodel.h>
 #include <qmlcheckableproxymodel.h>
 
@@ -158,6 +158,7 @@ MainView::MainView(QWidget* parent)
   QDBusConnection::sessionBus().registerObject( "/composer", this, QDBusConnection::ExportScriptableSlots );
 
   Akonadi::CollectionPropertiesDialog::registerPage( new MailCommon::CollectionGeneralPageFactory );
+  Akonadi::CollectionPropertiesDialog::registerPage( new MailCommon::CollectionExpiryPageFactory );
 }
 
 MainView::~MainView()
@@ -435,7 +436,7 @@ bool MainView::doNotUseFilterLineEditInCurrentState() const
 void MainView::doDelayedInit()
 {
   if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new GroupwareUiDelegate );
+    IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new ::GroupwareUiDelegate );
   }
 
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
@@ -518,7 +519,6 @@ void MainView::doDelayedInit()
   connect( actionCollection()->action( "prefer_html_to_plain" ), SIGNAL(triggered(bool)), SLOT(preferHTML(bool)) );
   connect( actionCollection()->action( "prefer_html_to_plain_viewer" ), SIGNAL(triggered(bool)), SLOT(preferHtmlViewer(bool)) );
   connect( actionCollection()->action( "load_external_ref" ), SIGNAL(triggered(bool)), SLOT(loadExternalReferences(bool)) );
-  connect( actionCollection()->action( "show_expire_properties" ), SIGNAL(triggered(bool)), SLOT(showExpireProperties()) );
   connect( actionCollection()->action( "move_all_to_trash" ), SIGNAL(triggered(bool)), SLOT(moveToOrEmptyTrash()) );
   connect( actionCollection()->action( "create_todo_reminder" ), SIGNAL(triggered(bool)), SLOT(createToDo()) );
   connect( actionCollection()->action( "create_event" ), SIGNAL(triggered(bool)), SLOT(createEvent()) );
@@ -527,11 +527,7 @@ void MainView::doDelayedInit()
 
   connect( itemSelectionModel()->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged()) );
 
-  KAction *action = new KAction( i18n( "Identities" ), this );
-  connect( action, SIGNAL(triggered(bool)), SLOT(configureIdentity()) );
-  actionCollection()->addAction( "kmail_mobile_identities", action );
-
-  action = new KAction( i18n( "New Email" ), this );
+  KAction *action = new KAction( i18n( "New Email" ), this );
   connect( action, SIGNAL(triggered(bool)), SLOT(startComposer()) );
   actionCollection()->addAction( "add_new_mail", action );
 
@@ -950,9 +946,9 @@ void MainView::forwardFetchResult( KJob* job )
     if ( !status.isRead() )
       MailCommon::FilterAction::sendMDN( item, KMime::MDN::Dispatched );
 
-    const MessageSender::SendMethod method = (dlg.sendMode() == MailCommon::RedirectDialog::SendNow)
-                                               ? MessageSender::SendImmediate
-                                               : MessageSender::SendLater;
+    const MessageComposer::MessageSender::SendMethod method = (dlg.sendMode() == MailCommon::RedirectDialog::SendNow)
+                                               ? MessageComposer::MessageSender::SendImmediate
+                                               : MessageComposer::MessageSender::SendLater;
 
     MobileKernel::self()->msgSender()->send( redirectMessage, method );
 
@@ -1372,7 +1368,8 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
            this, SLOT(launchAccountWizard()) );
 
   const QStringList pages = QStringList() << QLatin1String( "MailCommon::CollectionGeneralPage" )
-                                          << QLatin1String( "Akonadi::CachePolicyPage" );
+                                          << QLatin1String( "Akonadi::CachePolicyPage" )
+                                          << QLatin1String( "MailCommon::CollectionExpiryPage" );
 
   mMailActionManager->setCollectionPropertiesPageNames( pages );
 
@@ -1687,20 +1684,6 @@ void MainView::folderChanged()
     if ( CommonKernel->folderIsTrash( collection ) )
       actionCollection()->action( "move_all_to_trash" )->setText( i18n( "Empty Trash" ) );
   }
-}
-
-void MainView::showExpireProperties()
-{
-  const QItemSelectionModel *collectionSelectionModel = regularSelectionModel();
-  if ( collectionSelectionModel->selection().indexes().isEmpty() )
-    return;
-
-  const QModelIndex index = collectionSelectionModel->selection().indexes().first();
-  const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-  Q_ASSERT( collection.isValid() );
-
-  MailCommon::ExpiryPropertiesDialog *dlg = new MailCommon::ExpiryPropertiesDialog( this, collection );
-  dlg->show();
 }
 
 void MainView::moveToOrEmptyTrash()

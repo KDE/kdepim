@@ -582,6 +582,7 @@ void Kleo::KeySelectionDialog::slotStartCertificateManager( const QString &query
   if ( !query.isEmpty() )
     args << "--external" << "--query" << KUrl::decode_string( query );
 #endif
+  Q_UNUSED( query );
   if( !QProcess::startDetached( "kleopatra", args ) )
     KMessageBox::error( this,
                         i18n( "Could not start certificate manager; "

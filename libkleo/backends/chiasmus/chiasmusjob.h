@@ -60,7 +60,7 @@ namespace Kleo {
     enum Mode {
       Encrypt, Decrypt
     };
-    ChiasmusJob( Mode op );
+    explicit ChiasmusJob( Mode op );
     ~ChiasmusJob();
 
     /*!\reimp SpecialJob */

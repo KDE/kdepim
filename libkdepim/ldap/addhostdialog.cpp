@@ -22,12 +22,10 @@
 #include "addhostdialog_p.h"
 
 #include <QHBoxLayout>
-#include <QPushButton>
 
 #include <kacceleratormanager.h>
 #include <kldap/ldapserver.h>
 #include <kldap/ldapconfigwidget.h>
-#include <klineedit.h>
 #include <klocale.h>
 
 AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget *parent )

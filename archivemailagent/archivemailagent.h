@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -22,34 +22,44 @@
 
 class QTimer;
 
-namespace Akonadi {
-  class Monitor;
-}
 
 class ArchiveMailManager;
+class ArchiveMailInfo;
 
-class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV2
+class ArchiveMailAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit ArchiveMailAgent( const QString &id );
-  ~ArchiveMailAgent();
-  void showConfigureDialog(qlonglong windowId = 0);
+    explicit ArchiveMailAgent( const QString &id );
+    ~ArchiveMailAgent();
+
+    void showConfigureDialog(qlonglong windowId = 0);
+    void printArchiveListInfo();
+
+    void setEnableAgent(bool b);
+    bool enabledAgent() const;
+
+
+Q_SIGNALS:
+    void archiveNow(ArchiveMailInfo *info);
+    void needUpdateConfigDialogBox();
 
 public Q_SLOTS:
-  void configure( WId windowId );
-  void reload();
-  void pause();
-  void resume();
+    void configure( WId windowId );
+    void reload();
+    void pause();
+    void resume();
 
 private Q_SLOTS:
-  void mailCollectionRemoved( const Akonadi::Collection& collection );
+    void mailCollectionRemoved( const Akonadi::Collection &collection );
+
+protected:
+    void doSetOnline(bool online);
 
 private:
-  QTimer *mTimer;
-  Akonadi::Monitor *m_collectionMonitor;
-  ArchiveMailManager *mArchiveManager;
+    QTimer *mTimer;
+    ArchiveMailManager *mArchiveManager;
 };
 
 

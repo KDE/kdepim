@@ -1189,7 +1189,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
 
   // the label where the key id is to be displayed:
   mLabel = new QLabel( this );
-  mLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mLabel->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
 
   // the button to unset any key:
   mEraseButton = new QPushButton( this );
@@ -1386,7 +1386,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     else {
       keyidsL->setText( "0x" + keyIDs[0].toStringList().join( "\n0x" ) );
     }
-    keyidsL->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+    keyidsL->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     /*
     QListBox* keyidLB = new QListBox( hbox );
     if( keyIDs[0].isEmpty() ) {
@@ -1396,7 +1396,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
       keyidLB->insertStringList( keyIDs[0].toStringList() );
     }
     keyidLB->setSelectionMode( QListBox::NoSelection );
-    keyidLB->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+    keyidLB->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     */
     QPushButton *button = new QPushButton( i18n("Change..."), hbox );
     mChangeButtonGroup->addButton( button );
@@ -1443,7 +1443,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     else {
       keyidsL->setText( "0x" + (*kit).toStringList().join( "\n0x" ) );
     }
-    keyidsL->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+    keyidsL->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     /*
     QListBox* keyidLB = new QListBox( hbox );
     if( (*kit).isEmpty() ) {
@@ -1453,7 +1453,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
       keyidLB->insertStringList( (*kit).toStringList() );
     }
     keyidLB->setSelectionMode( QListBox::NoSelection );
-    keyidLB->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+    keyidLB->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     */
     QPushButton *button = new QPushButton( i18n("Change..."), hbox );
     mChangeButtonGroup->addButton( button );
@@ -1579,7 +1579,7 @@ KeyApprovalDialog::slotOk()
 
   if( mPrefsChanged ) {
     // store the changed preferences
-    for( int i = 0; i < mAddressLabels.size(); i++ ) {
+    for( int i = 0; i < mAddressLabels.size(); ++i ) {
       // traverse all Address and Encryption Preference widgets
       EncryptPref encrPref;
       switch( mEncrPrefCombos[i]->currentIndex() ) {

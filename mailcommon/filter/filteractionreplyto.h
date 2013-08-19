@@ -32,7 +32,7 @@ class FilterActionReplyTo: public FilterActionWithAddress
 {
   Q_OBJECT
   public:
-    FilterActionReplyTo( QObject *parent = 0 );
+    explicit FilterActionReplyTo( QObject *parent = 0 );
     virtual ReturnCode process( ItemContext &context ) const;
     virtual SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();

@@ -90,12 +90,12 @@
 
 <legalnotice>&GPLNotice;</legalnotice>
 
-<date>2010-04-27</date>
-<releaseinfo>2.0.14</releaseinfo>
+<date>2013-07-04</date>
+<releaseinfo>2.1.1 (&kde; 4.11)</releaseinfo>
 
 <abstract>
 <para>
-&kleopatra; is a tool for managing X.509 and OpenPGP certificates.
+  &kleopatra; is a tool for managing <ulink url="http://en.wikipedia.org/wiki/X.509">&x509;</ulink> and <ulink url="http://en.wikipedia.org/wiki/Pretty_Good_Privacy#OpenPGP">&openpgp;</ulink> certificates.
 </para>
 </abstract>
 
@@ -116,8 +116,8 @@
 
 <chapter id="introduction"> <title>Introduction</title>
 
-<para>&kleopatra; is the &kde; tool for managing X.509 and OpenPGP certificates in
-the &gpgsm; and &gpg; keyboxes and for retrieving certificates from
+<para>&kleopatra; is the &kde; tool for managing <ulink url="http://en.wikipedia.org/wiki/X.509">&x509;</ulink> and <ulink url="http://en.wikipedia.org/wiki/Pretty_Good_Privacy#OpenPGP">&openpgp;</ulink> certificates in
+  the <ulink url="http://www.gnupg.org/documentation/manuals/gnupg/Invoking-GPGSM.html">&gpgsm;</ulink> and <ulink url="http://en.wikipedia.org/wiki/GNU_Privacy_Guard">&gpg;</ulink> keyboxes and for retrieving certificates from
 &ldap; and other certificate servers.</para>
 
 <para>&kleopatra; can be started from &kmail;'s <menuchoice><guimenu>Tools</guimenu>
@@ -272,7 +272,7 @@ time by pressing the <guibutton>Cancel</guibutton> button.
 
 <varlistentry>
 <term><guilabel>Create a personal OpenPGP key pair</guilabel></term>
-<listitem><para>OpenPGP key pairs are created locally, and certified by your friends and
+<listitem><para>&openpgp; key pairs are created locally, and certified by your friends and
 acquaintances. There is no central certification authority; instead, every
 individual creates a personal Web Of Trust by certifying other user's key
 pairs with his own certificate.</para>
@@ -321,6 +321,31 @@ specify the filename or email address to send the certificate request to.
 </listitem>
 </varlistentry>
 </variablelist>
+
+<!--FIXME modified copy from kgpg-->
+<sect2 id="key-revoke">
+<title>Revoking a key</title>
+
+<para>A key pair that has expired can be brought back into an operational state
+as long as you have access to the private key and the passphrase. To
+reliably render a key unusable you need to revoke it. Revoking is done by
+adding a special revocation signature to the key.</para>
+
+<para>This revocation signature is stored in a separate file. This file can later be imported into
+the keyring and is then attached to the key rendering it unusable. Please
+note that to import this signature to the key no password is required.
+Therefore you should store this revocation signature in a safe place,
+usually one that is different from you key pair. It is a good advise to
+use a place that is detached from your computer, either copy it to an
+external storage device like an USB stick or print it out.</para>
+
+<para>&kleopatra; does not provide a function to create such a revocation signature at any time, 
+but you can do that with the &kde; application &kgpg; by choosing <menuchoice><guimenu>Keys</guimenu>
+<guimenuitem>Revoke key</guimenuitem></menuchoice> and optionally importing the revocation signature
+to your keyring immediately.</para>
+
+</sect2>
+
 </sect1>
 
 
@@ -433,7 +458,7 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
             <itemizedlist>
               <listitem>
                 <para>
-                  For OpenPGP certificates,
+                  For &openpgp; certificates,
                   <filename class="extension">gpg</filename> and
                   <filename class="extension">pgp</filename> will result
                   in a binary file, whereas
@@ -466,8 +491,7 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
                 This function exports only the public keys, even if
                 the secret key is available. Use
                 <xref linkend="file-export-secret-key"/> to export
-                both public and secret keys into a file, but note that
-                this is almost always a bad idea.
+                the secret keys into a file.
               </para>
             </note>
           </listitem>
@@ -481,14 +505,15 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
           </term>
           <listitem>
             <para>
-              <action>Exports both the public and the secret key to a
-              file.</action>
+              <action>Exports the secret key to a file.</action>
             </para>
             <para>
-              In the dialog that opens, you can choose an
-              <guilabel>Output file</guilabel> name, and whether to
+              In the dialog that opens, you can choose whether to
               create a binary or an &ascii;-armored export file
-              (<guilabel>ASCII armor</guilabel>). When exporting
+              (<guilabel>ASCII armor</guilabel>). 
+	      Next click on the folder icon at the right hand side of the 
+	      <guilabel>Output file</guilabel> text box and select folder 
+	      and name of the export file. When exporting
               &smime; secret keys, you can also choose the
               <guilabel>Passphrase charset</guilabel>. See the
               discussion of the
@@ -541,7 +566,7 @@ receive from the &ca; in PKCS#12 format via <xref linkend="file-import-certifica
               <!-- also appears in message box in -->
               <!-- commands/exportopenpgpcertificatestoserver.cpp -->
               <para>
-                When OpenPGP certificates have been exported to a
+                When &openpgp; certificates have been exported to a
                 public directory server, it is nearly impossible to
                 remove them again. Before exporting your certificate
                 to a public directory server, make sure that you have
@@ -853,7 +878,7 @@ linkend="view-hierarchical-key-list"/> is on.</para>
                 linkend="configuration-smime-validation-allow-mark-trusted"><menuchoice><guimenu>S/MIME&nbsp;Validation</guimenu>
                 <guimenuitem>Allow to mark root certificates as
                 trusted</guimenuitem></menuchoice></link> under <xref
-                linkend="settings-configure-kleopatra"/>).
+                linkend="configuration"/>).
               </para>
               <para>
                 Enabling that functionality in the backend can lead to
@@ -1323,6 +1348,10 @@ updated.</para>
 
 <sect1 id="menusettings"><title>Settings Menu</title>
 
+<para>&kleopatra; has a default &kde; <guimenu>Settings</guimenu> menu as described in the 
+<ulink url="help:/fundamentals/ui.html#menus-settings">&kde; Fundamentals</ulink> 
+with one additional entry:</para>
+
       <variablelist>
 
         <varlistentry id="settings-self-test">
@@ -1348,101 +1377,6 @@ updated.</para>
           </listitem>
         </varlistentry>
 
-        <varlistentry id="settings-toolbars">
-          <term>
-            <menuchoice>
-              <guimenu>Settings</guimenu><guisubmenu>Toolbars Shown</guisubmenu></menuchoice></term>
-          <listitem>
-            <para>
-              <action>Shows/hides &kleopatra; toolbars.</action>
-            </para>
-            <para>
-              &kleopatra; has two toolbars:
-              <orderedlist>
-                <listitem>
-                  <para>
-                    <guilabel>Main Toolbar</guilabel>
-                  </para>
-                  <para>
-                    This toolbar carries a selection of common
-                    functions. You can configure which functions you
-                    would like to see here using
-                    <xref linkend="settings-configure-toolbars"/>.
-                  </para>
-                </listitem>
-                <listitem>
-                  <para>
-                    <guilabel>Search Toolbar</guilabel>
-                  </para>
-                  <para>
-                    This toolbar carries the search and filtering controls.
-                  </para>
-                </listitem>
-              </orderedlist>
-            </para>
-          </listitem>
-        </varlistentry>
-
-        <varlistentry id="settings-show-statusbar">
-          <term>
-            <menuchoice>
-              <guimenu>Settings</guimenu><guimenuitem>Show Statusbar</guimenuitem>
-            </menuchoice>
-          </term>
-          <listitem>
-            <para>
-              <action>Toggles the visibility of the bottom status
-              bar.</action>
-            </para>
-          </listitem>
-        </varlistentry>
-
-        <varlistentry id="settings-configure-shortcuts">
-          <term>
-            <menuchoice>
-              <guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...</guimenuitem>
-            </menuchoice>
-          </term>
-          <listitem>
-            <para>
-              <action>Opens the standard &kde; shortcut configuration
-              dialog, where you can assign and re-assign keyboard
-              shortcuts for all menu items.</action>
-            </para>
-          </listitem>
-        </varlistentry>
-
-        <varlistentry id="settings-configure-toolbars">
-          <term>
-            <menuchoice>
-              <guimenu>Settings</guimenu><guimenuitem>Configure Toolbars...</guimenuitem>
-            </menuchoice>
-          </term>
-          <listitem>
-            <para>
-              <action>Opens the standard &kde; toolbar configuration
-              dialog,</action> where you can choose which actions to
-              include in &kleopatra;s toolbars.
-            </para>
-          </listitem>
-        </varlistentry>
-
-        <varlistentry id="settings-configure-kleopatra">
-          <term>
-            <menuchoice>
-              <guimenu>Settings</guimenu><guimenuitem>Configure &kleopatra;...</guimenuitem>
-          </menuchoice>
-          </term>
-          <listitem>
-            <para>
-              <action>Opens &kleopatra;'s configure dialog.</action>
-            </para>
-            <para>
-              See <xref linkend="configuration"/> for details.
-            </para>
-          </listitem>
-        </varlistentry>
-
       </variablelist>
 
     </sect1> <!-- Settings Menu -->
@@ -1456,10 +1390,8 @@ Using the items in this menu you can rename a tab, add a new tab, duplicate the 
 
 <sect1 id="menuhelp"><title>Help Menu</title>
 
-<para>The <guimenu>Help</guimenu> menu contains the standard &kde;
-help menu.</para>
-
-&help.menu.documentation;
+<para>&kleopatra; has a default &kde; <guimenu>Help</guimenu> menu as described in the 
+<ulink url="help:/fundamentals/ui.html#menus-help">&kde; Fundamentals</ulink>.</para>
 
 </sect1>
 
@@ -1475,7 +1407,14 @@ by issuing the command <userinput><command>kleopatra
 <variablelist>
 
 <varlistentry>
-<term><option>--external</option></term>
+<term><option>--uiserver-socket</option> <replaceable>argument</replaceable></term>
+<listitem>
+<para>Location of the socket the ui server is listening on</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--daemon</option></term>
 <listitem>
 <para>Run UI server only, hide main window</para>
 </listitem>
@@ -1484,7 +1423,7 @@ by issuing the command <userinput><command>kleopatra
 <varlistentry>
 <term><option>-p</option> <option>--openpgp</option></term>
 <listitem>
-<para>Use OpenPGP for the following operation</para>
+<para>Use &openpgp; for the following operation</para>
 </listitem>
 </varlistentry>
 
@@ -1557,7 +1496,7 @@ linkend="file-import-certificates"/>.</para>
 
     <para>
       &kleopatra;'s configure dialog can be accessed via
-      <xref linkend="settings-configure-kleopatra"/>.
+      <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kleopatra;...</guimenuitem></menuchoice>
 <!-- ### xref
       or <xref linkend="systray-configure-kleopatra"/> or
       via the UI-Server (see <ref linkend="uiserver-start-confdialog"/>).
@@ -2919,7 +2858,7 @@ C=DE
 	      <entry><varname>is-root-certificate</varname></entry>
 	      <entry>boolean</entry>
 	      <entry>
-		the key is a root certificate. Ignored for OpenPGP
+		the key is a root certificate. Ignored for &openpgp;
 		keys.
 	      </entry>
 	    </row>
@@ -2980,7 +2919,7 @@ C=DE
 	      <entry><varname>is-openpgp-key</varname></entry>
 	      <entry>boolean</entry>
 	      <entry>
-		the key is an OpenPGP key (<literal>true</literal>),
+		the key is an &openpgp; key (<literal>true</literal>),
 		or an &smime; key (<literal>false</literal>).
 	      </entry>
 	    </row>
@@ -3126,7 +3065,7 @@ is-root-certificate=true
 ; ( specificity 4 )<!--
      --></screen>
 	<para>
-	  To check for all disabled OpenPGP keys (not yet supported by &kleopatra;)
+	  To check for all disabled &openpgp; keys (not yet supported by &kleopatra;)
 	  with ownertrust of at least
 	  <quote>marginal</quote>, you would use:
 	</para>

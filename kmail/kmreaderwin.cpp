@@ -25,41 +25,42 @@
 #include "globalsettings.h"
 #include "kmmainwidget.h"
 #include "kmreadermainwin.h"
-#include "mailkernel.h"
+#include "kernel/mailkernel.h"
 
 #include "kdepim-version.h"
 #include <kpimutils/email.h>
-#include <libkdepim/addemailaddressjob.h>
-#include <libkdepim/openemailaddressjob.h>
+#include <libkdepim/job/addemailaddressjob.h>
+#include <libkdepim/job/openemailaddressjob.h>
+#include <libkdepim/misc/broadcaststatus.h>
 #include "kmcommands.h"
-#include "mailcommon/sendmdnhandler.h"
+#include "mailcommon/mdn/sendmdnhandler.h"
 #include <QVBoxLayout>
-#include "messageviewer/headerstrategy.h"
-#include "messageviewer/headerstyle.h"
-#include "messageviewer/mailwebview.h"
-#include "messageviewer/markmessagereadhandler.h"
-#include "messageviewer/globalsettings.h"
-#include "messageviewer/csshelper.h"
+#include "messageviewer/header/headerstrategy.h"
+#include "messageviewer/header/headerstyle.h"
+#include "messageviewer/viewer/mailwebview.h"
+#include "messageviewer/utils/markmessagereadhandler.h"
+#include "messageviewer/settings/globalsettings.h"
+#include "messageviewer/viewer/csshelper.h"
 using MessageViewer::CSSHelper;
 #include "util.h"
-#include "stringutil.h"
+#include "utils/stringutil.h"
 
 #include <kmime/kmime_mdn.h>
 
-#include "messageviewer/viewer.h"
+#include "messageviewer/viewer/viewer.h"
 using namespace MessageViewer;
-#include <messagecore/globalsettings.h>
+#include <messagecore/settings/globalsettings.h>
 
-#include "messageviewer/attachmentstrategy.h"
-#include "messagecomposer/messagesender.h"
-#include "messagecomposer/messagefactory.h"
-#include "messagecomposer/composer.h"
-#include "messagecomposer/textpart.h"
-#include "messagecomposer/infopart.h"
+#include "messageviewer/viewer/attachmentstrategy.h"
+#include "messagecomposer/sender/messagesender.h"
+#include "messagecomposer/helper/messagefactory.h"
+#include "messagecomposer/composer/composer.h"
+#include "messagecomposer/part/textpart.h"
+#include "messagecomposer/part/infopart.h"
 #include <KIO/JobUiDelegate>
 using MessageComposer::MessageFactory;
 
-#include "messagecore/messagehelpers.h"
+#include "messagecore/helpers/messagehelpers.h"
 
 #include <Akonadi/Contact/ContactEditorDialog>
 
@@ -72,6 +73,7 @@ using MessageComposer::MessageFactory;
 #include <ktoggleaction.h>
 #include <kservice.h>
 #include <KActionCollection>
+#include <KMessageBox>
 
 #include <QClipboard>
 
@@ -85,7 +87,7 @@ using MessageComposer::MessageFactory;
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include <mailutil.h>
+#include <util/mailutil.h>
 
 using namespace KMail;
 using namespace MailCommon;
@@ -161,7 +163,7 @@ void KMReaderWin::createActions()
   // forward to
   mMailToForwardAction = new KAction( KIcon( "mail-forward" ),
                                       i18n( "Forward To..." ), this );
-  mMailToForwardAction->setShortcutConfigurable( false );		                                      
+  mMailToForwardAction->setShortcutConfigurable( false );
   ac->addAction( "mailto_forward", mMailToForwardAction );
   connect( mMailToForwardAction, SIGNAL(triggered(bool)),
            SLOT(slotMailtoForward()) );
@@ -243,7 +245,7 @@ void KMReaderWin::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
 }
 
 void KMReaderWin::setHeaderStyleAndStrategy( HeaderStyle * style,
-                                             const HeaderStrategy * strategy ) {
+                                             HeaderStrategy * strategy ) {
   mViewer->setHeaderStyleAndStrategy( style, strategy );
 }
 //-----------------------------------------------------------------------------
@@ -337,7 +339,7 @@ void KMReaderWin::displayAboutPage()
          "%4: First-time user text (only shown on first start); "
          "%5: generated list of important changes; "
          "--- end of comment ---",
-         "<h2 style='margin-top: 0px;'>Welcome to KMail %1</h2><p>KMail is the email client by KDE."
+         "<h2 style='margin-top: 0px;'>Welcome to KMail %1</h2><p>KMail is the email client by KDE. "
          "It is designed to be fully compatible with "
          "Internet mailing standards including MIME, SMTP, POP3, and IMAP."
          "</p>\n"
@@ -358,7 +360,7 @@ void KMReaderWin::displayAboutPage()
            "(compared to KMail %1, which is part of KDE Software Compilation %2):</p>\n",
            QString("1.13"), KDE::versionString() ); // prior KMail and KDE version
     featuresText += "<ul>\n";
-    for ( int i = 0 ; i < numKMailNewFeatures ; i++ )
+    for ( int i = 0 ; i < numKMailNewFeatures ; ++i )
       featuresText += "<li>" + i18n( kmailNewFeatures[i] ) + "</li>\n";
     featuresText += "</ul>\n";
     info = info.subs( featuresText );
@@ -383,7 +385,7 @@ void KMReaderWin::displayAboutPage()
            "Important changes</span> (compared to KMail %1):</p>\n",
        QString("1.13"));
     changesText += "<ul>\n";
-    for ( int i = 0 ; i < numKMailChanges ; i++ )
+    for ( int i = 0 ; i < numKMailChanges ; ++i )
       changesText += i18n("<li>%1</li>\n", i18n( kmailChanges[i] ) );
     changesText += "</ul>\n";
     info = info.subs( changesText );
@@ -475,7 +477,7 @@ void KMReaderWin::slotMailtoAddAddrBook()
   const KUrl url = urlClicked();
   if( url.isEmpty() )
     return;
-  const QString emailString = KPIMUtils::decodeMailtoUrl( url ).toLower();
+  const QString emailString = KPIMUtils::decodeMailtoUrl( url );
 
   KPIM::AddEmailAddressJob *job = new KPIM::AddEmailAddressJob( emailString, mMainWindow, this );
   job->start();
@@ -486,7 +488,7 @@ void KMReaderWin::slotMailtoOpenAddrBook()
 {
   const KUrl url = urlClicked();
   if( url.isEmpty() )
-    return;	
+    return;
   const QString emailString = KPIMUtils::decodeMailtoUrl( url ).toLower();
 
   KPIM::OpenEmailAddressJob *job = new KPIM::OpenEmailAddressJob( emailString, mMainWindow, this );
@@ -686,7 +688,7 @@ void KMReaderWin::slotShowReader( KMime::Content* msgPart, bool htmlMail, const 
 
 void KMReaderWin::slotShowMessage( KMime::Message::Ptr message, const QString& encoding )
 {
-  KMReaderMainWin *win = new KMReaderMainWin();  
+  KMReaderMainWin *win = new KMReaderMainWin();
   win->showMessage( encoding, message );
   win->show();
 }
@@ -704,7 +706,7 @@ bool KMReaderWin::printSelectedText(bool preview)
   const QString str = mViewer->selectedText();
   if(str.isEmpty())
     return false;
-  ::Message::Composer* composer = new ::Message::Composer;
+  ::MessageComposer::Composer* composer = new ::MessageComposer::Composer;
   composer->textPart()->setCleanPlainText(str);
   composer->textPart()->setWrappedPlainText(str);
   KMime::Message::Ptr messagePtr = message().payload<KMime::Message::Ptr>();
@@ -722,21 +724,19 @@ bool KMReaderWin::printSelectedText(bool preview)
 void KMReaderWin::slotPrintComposeResult( KJob *job )
 {
   const bool preview = job->property("preview").toBool();
-  Q_ASSERT( dynamic_cast< ::Message::Composer* >( job ) );
+  Q_ASSERT( dynamic_cast< ::MessageComposer::Composer* >( job ) );
 
-  ::Message::Composer* composer = dynamic_cast< ::Message::Composer* >( job );
-  if( composer->error() == ::Message::Composer::NoError ) {
+  ::MessageComposer::Composer* composer = dynamic_cast< ::MessageComposer::Composer* >( job );
+  if( composer->error() == ::MessageComposer::Composer::NoError ) {
 
     Q_ASSERT( composer->resultMessages().size() == 1 );
     Akonadi::Item printItem;
     printItem.setPayload<KMime::Message::Ptr>( composer->resultMessages().first() );
-    //FIXME
-    //const bool isHtml = ( mComposerBase->editor()->textMode() == KMeditor::Rich );
     const bool useFixedFont = MessageViewer::GlobalSettings::self()->useFixedFont();
     const QString overrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
 
-    KMPrintCommand *command = new KMPrintCommand( this, printItem,0,
-                                             0, false, false,useFixedFont, overrideEncoding );
+    KMPrintCommand *command = new KMPrintCommand( this, printItem, mViewer->headerStyle(), mViewer->headerStrategy()
+                                             , mViewer->htmlOverride(), mViewer->htmlLoadExternal() ,useFixedFont, overrideEncoding );
     command->setPrintPreview( preview );
     command->start();
   } else {
@@ -757,11 +757,37 @@ void KMReaderWin::setContactItem(const Akonadi::Item& contact)
 void KMReaderWin::slotEditContact()
 {
   if( mSearchedContact.isValid() ) {
-    Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode, this );
-    dlg->setContact(mSearchedContact);
+   QPointer<Akonadi::ContactEditorDialog> dlg =
+      new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode, this );
+    connect( dlg, SIGNAL(contactStored(Akonadi::Item)),
+             this, SLOT(contactStored(Akonadi::Item)) );
+    connect( dlg, SIGNAL(error(QString)),
+             this, SLOT(slotContactEditorError(QString)) );
+    dlg->setContact( mSearchedContact );
     dlg->exec();
     delete dlg;
   }
+}
+
+void KMReaderWin::slotContactEditorError(const QString &error)
+{
+    KMessageBox::error(this, i18n("Contact cannot be stored: %1", error), i18n("Failed to store contact"));
+}
+
+void KMReaderWin::contactStored( const Akonadi::Item &item )
+{
+  Q_UNUSED( item );
+  KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Contact modified successfully" ) );
+}
+
+KAction *KMReaderWin::saveMessageDisplayFormatAction()
+{
+    return mViewer->saveMessageDisplayFormatAction();
+}
+
+KAction *KMReaderWin::resetMessageDisplayFormatAction()
+{
+    return mViewer->resetMessageDisplayFormatAction();
 }
 
 #include "kmreaderwin.moc"

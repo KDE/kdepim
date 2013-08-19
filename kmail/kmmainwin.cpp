@@ -21,14 +21,16 @@
 #include "kmmainwin.h"
 #include "kmmainwidget.h"
 #include "kstatusbar.h"
-#include "progressdialog.h"
-#include "statusbarprogresswidget.h"
-#include "broadcaststatus.h"
+#include "progresswidget/progressdialog.h"
+#include "progresswidget/statusbarprogresswidget.h"
+#include "misc/broadcaststatus.h"
 #include "util.h"
-#include "tagactionmanager.h"
+#include "tag/tagactionmanager.h"
 
 #include <QTimer>
 
+#include <KMenuBar>
+#include <KToggleAction>
 #include <kapplication.h>
 #include <klocale.h>
 #include <kedittoolbar.h>
@@ -43,7 +45,7 @@
 #include <kaction.h>
 
 #include <QLabel>
-#include "messagecomposer/messagesender.h"
+#include "messagecomposer/sender/messagesender.h"
 
 
 #include "kmmainwin.moc"
@@ -79,6 +81,11 @@ KMMainWin::KMMainWin(QWidget *)
   KStandardAction::keyBindings( guiFactory(), SLOT(configureShortcuts()),
                                 actionCollection() );
 
+  mHideMenuBarAction = KStandardAction::showMenubar( this, SLOT(slotToggleMenubar()), actionCollection() );
+  mHideMenuBarAction->setChecked( GlobalSettings::self()->showMenuBar() );
+  slotToggleMenubar( true );
+
+
   KStandardAction::quit( this, SLOT(slotQuit()), actionCollection() );
   createGUI( "kmmainwin.rc" );
 
@@ -99,37 +106,20 @@ KMMainWin::~KMMainWin()
 {
   saveMainWindowSettings( KMKernel::self()->config()->group( "Main Window") );
   KMKernel::self()->config()->sync();
-
-#if 0
-  if ( mReallyClose ) {
-    // Check if this was the last KMMainWin
-    uint not_withdrawn = 0;
-    foreach ( KMainWindow* window, KMainWindow::memberList() ) {
-      if ( !window->isHidden() && window->isTopLevel() &&
-           window != this && ::qobject_cast<KMMainWin *>( window ) )
-        not_withdrawn++;
-    }
-
-    if ( not_withdrawn == 0 ) {
-      kDebug() << "Closing last KMMainWin";
-      // In KDE <= 4.4 would would abort mail checks here, but we don't need to do that anymore.
-    }
-  }
-#endif
 }
 
 void KMMainWin::displayStatusMsg( const QString& aText )
 {
   if ( !statusBar() || !mLittleProgress )
     return;
-  int statusWidth = statusBar()->width() - mLittleProgress->width()
+  const int statusWidth = statusBar()->width() - mLittleProgress->width()
                     - fontMetrics().maxWidth();
 
-  QString text = fontMetrics().elidedText( ' ' + aText, Qt::ElideRight,
+  const QString text = fontMetrics().elidedText( ' ' + aText, Qt::ElideRight,
                                            statusWidth );
 
   // ### FIXME: We should disable richtext/HTML (to avoid possible denial of service attacks),
-  // but this code would double the size of the satus bar if the user hovers
+  // but this code would double the size of the status bar if the user hovers
   // over an <foo@bar.com>-style email address :-(
 //  text.replace("&", "&amp;");
 //  text.replace("<", "&lt;");
@@ -137,6 +127,26 @@ void KMMainWin::displayStatusMsg( const QString& aText )
 
   statusBar()->changeItem( text, 1 );
 }
+
+void KMMainWin::slotToggleMenubar(bool dontShowWarning)
+{
+    if ( menuBar() ) {
+        if ( mHideMenuBarAction->isChecked() ) {
+            menuBar()->show();
+        } else {
+            if ( !dontShowWarning ) {
+                const QString accel = mHideMenuBarAction->shortcut().toString();
+                KMessageBox::information( this,
+                                          i18n( "<qt>This will hide the menu bar completely."
+                                                " You can show it again by typing %1.</qt>", accel ),
+                                          i18n("Hide menu bar"), "HideMenuBarWarning" );
+            }
+            menuBar()->hide();
+        }
+        GlobalSettings::self()->setShowMenuBar( mHideMenuBarAction->isChecked() );
+    }
+}
+
 
 //-----------------------------------------------------------------------------
 void KMMainWin::slotNewMailReader()

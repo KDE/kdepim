@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -23,21 +23,21 @@ class ImportWizard;
 class ThunderbirdImportData : public AbstractImporter
 {
 public:
-  explicit ThunderbirdImportData(ImportWizard *parent);
-  ~ThunderbirdImportData();
+    explicit ThunderbirdImportData(ImportWizard *parent);
+    ~ThunderbirdImportData();
     
-  TypeSupportedOptions supportedOption();
-  bool foundMailer() const;
-  
-  bool importSettings();
-  bool importMails();
-  bool importFilters();
-  bool importAddressBook();
-  QString name() const;
-private:
-  QString defaultProfile();
+    TypeSupportedOptions supportedOption();
+    bool foundMailer() const;
 
-  QString mDefaultProfile;
+    bool importSettings();
+    bool importMails();
+    bool importFilters();
+    bool importAddressBook();
+    QString name() const;
+private:
+    QString defaultProfile();
+
+    QString mDefaultProfile;
 };
 
 #endif /* THUNDERBIRDIMPORTDATA_H */

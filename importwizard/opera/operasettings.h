@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -26,13 +26,14 @@ class KConfigGroup;
 class OperaSettings : public AbstractSettings
 {
 public:
-  explicit OperaSettings(const QString& filename, ImportWizard *parent);
-  ~OperaSettings();
+    explicit OperaSettings(const QString& filename, ImportWizard *parent);
+    ~OperaSettings();
+
 private:
-  void readAccount(const KConfigGroup &grp);
-  void readTransport(const KConfigGroup &grp);
-  void readGlobalAccount(const KConfigGroup &grp);
-  void readIdentity(const KConfigGroup &grp);
+    void readAccount(const KConfigGroup &grp);
+    void readTransport(const KConfigGroup &grp);
+    void readGlobalAccount(const KConfigGroup &grp);
+    void readIdentity(const KConfigGroup &grp);
 };
 
 #endif // OPERASETTINGS_H

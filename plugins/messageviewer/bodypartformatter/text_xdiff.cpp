@@ -32,7 +32,7 @@
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <messageviewer/webkitparthtmlwriter.h>
+#include <messageviewer/htmlwriter/webkitparthtmlwriter.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -117,6 +117,9 @@ namespace {
 
       return Ok;
     }
+
+    // unhide the overload with three arguments
+    using MessageViewer::Interface::BodyPartFormatter::format;
   };
 
   class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin {

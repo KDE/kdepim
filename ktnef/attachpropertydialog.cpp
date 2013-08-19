@@ -52,12 +52,12 @@ void AttachPropertyDialog::setAttachment( KTNEFAttach *attach )
   QString s = attach->fileName().isEmpty() ?
                 attach->name() :
                 attach->fileName();
-  mUI.mFilename->setText( "<b>" + s + "</b>" );
+  mUI.mFilename->setText( QLatin1String("<b>") + s + QLatin1String("</b>") );
   setWindowTitle( i18nc( "@title:window", "Properties for Attachment %1", s ) );
   mUI.mDisplay->setText( attach->displayName() );
   mUI.mMime->setText( attach->mimeTag() );
   s.setNum( attach->size() );
-  s.append( " bytes" );
+  s.append( i18n(" bytes") );
   mUI.mSize->setText( s );
   KMimeType::Ptr mimetype = KMimeType::mimeType( attach->mimeTag() );
   QPixmap pix = loadRenderingPixmap( attach, kapp->palette().color( QPalette::Background ) );
@@ -98,32 +98,32 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, QTreeWidget *lv,
       newItem->setExpanded( true );
       newItem->setText( 0,
                         newItem->text( 0 ) +
-                        " [" + QString::number( value.toList().count() ) + ']' );
+                        QLatin1String(" [") + QString::number( value.toList().count() ) + QLatin1Char(']') );
       int i = 0;
       for ( QList<QVariant>::ConstIterator lit = value.toList().constBegin();
-            lit != value.toList().constEnd(); ++lit, i++ ) {
+            lit != value.toList().constEnd(); ++lit, ++i ) {
         new QTreeWidgetItem( newItem,
                              QStringList()
-                               << QString( '[' + QString::number( i ) + ']' )
+                               << QLatin1Char( '[' )  + QString::number( i ) + QLatin1Char( ']' )
                                << QString( KTNEFProperty::formatValue( *lit ) ) );
       }
     } else if ( value.type() == QVariant::DateTime ) {
       newItem->setText( 1, value.toDateTime().toString() );
     } else {
       newItem->setText( 1, ( *it )->valueString() );
-      newItem->setText( 2, prefix + '_' + QString::number( it.key() ) );
+      newItem->setText( 2, prefix + QLatin1Char('_') + QString::number( it.key() ) );
     }
   }
 }
 
 void formatPropertySet( KTNEFPropertySet *pSet, QTreeWidget *lv )
 {
-  formatProperties( pSet->properties(), lv, 0, "prop" );
+  formatProperties( pSet->properties(), lv, 0, QLatin1String("prop") );
   QTreeWidgetItem *item =
     new QTreeWidgetItem( lv,
                          QStringList( i18nc( "@label", "TNEF Attributes" ) ) );
   item->setExpanded( true );
-  formatProperties( pSet->attributes(), 0, item, "attr" );
+  formatProperties( pSet->attributes(), 0, item, QLatin1String("attr") );
 }
 
 void saveProperty( QTreeWidget *lv, KTNEFPropertySet *pSet, QWidget *parent )

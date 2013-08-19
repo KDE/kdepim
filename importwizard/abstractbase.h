@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -24,24 +24,28 @@
 #include <QVariant>
 
 namespace PimCommon {
-  class CreateResource;
+class CreateResource;
 }
 
 class AbstractBase : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit AbstractBase();
-  virtual ~AbstractBase();
-  QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
+    explicit AbstractBase();
+    virtual ~AbstractBase();
+
+    QString createResource(const QString& resources , const QString& name, const QMap<QString, QVariant> &settings);
+
 private Q_SLOTS:
-  void slotCreateResourceError(const QString&);
-  void slotCreateResourceInfo(const QString&);
+    void slotCreateResourceError(const QString&);
+    void slotCreateResourceInfo(const QString&);
+
 protected:
-  virtual void addImportInfo( const QString& log ) = 0;
-  virtual void addImportError( const QString& log ) = 0;
+    virtual void addImportInfo( const QString& log ) = 0;
+    virtual void addImportError( const QString& log ) = 0;
+
 private:
-  PimCommon::CreateResource *mCreateResource;
+    PimCommon::CreateResource *mCreateResource;
 };
 
 #endif // ABSTRACTBASE_H

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
   
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -26,15 +26,16 @@ class KConfigGroup;
 class BalsaSettings : public AbstractSettings
 {
 public:
-  explicit BalsaSettings(const QString& filename, ImportWizard *parent);
-  ~BalsaSettings();
-private:
-  void readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay);
-  void readIdentity(const KConfigGroup &grp);
-  void readTransport(const KConfigGroup &grp);
-  void readGlobalSettings(const KConfig &config);
+    explicit BalsaSettings(const QString& filename, ImportWizard *parent);
+    ~BalsaSettings();
 
-  QHash<QString, QString> mHashSmtp;
+private:
+    void readAccount(const KConfigGroup &grp, bool autoCheck, int autoDelay);
+    void readIdentity(const KConfigGroup &grp);
+    void readTransport(const KConfigGroup &grp);
+    void readGlobalSettings(const KConfig &config);
+
+    QHash<QString, QString> mHashSmtp;
 };
 
 #endif // BalsaSettings_H

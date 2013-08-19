@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -28,9 +28,9 @@
 
 
 OeImportData::OeImportData(ImportWizard*parent)
-  :AbstractImporter(parent)
+    :AbstractImporter(parent)
 {
-  mPath = QDir::homePath();
+    mPath = QDir::homePath();
 }
 
 OeImportData::~OeImportData()
@@ -41,40 +41,40 @@ OeImportData::~OeImportData()
 bool OeImportData::foundMailer() const
 {
 #ifdef Q_OS_WIN
-  //TODO find a method to search it. Perhaps look at binary.
-  QDir directory( mPath );
-  if ( directory.exists() )
-    return true;
+    //TODO find a method to search it. Perhaps look at binary.
+    QDir directory( mPath );
+    if ( directory.exists() )
+        return true;
 #endif
-  return false;
+    return false;
 }
 
 QString OeImportData::name() const
 {
-  return QLatin1String("Outlook Express");
+    return QLatin1String("Outlook Express");
 }
 
 bool OeImportData::importMails()
 {
-  MailImporter::FilterInfo *info = initializeInfo();
+    MailImporter::FilterInfo *info = initializeInfo();
 
-  MailImporter::FilterOE opera;
-  opera.setFilterInfo( info );
-  info->setStatusMessage(i18n("Import in progress"));
-  QDir directory(mPath);
-  if(directory.exists())
-    opera.importMails(mPath);
-  else
-    opera.import();
-  info->setStatusMessage(i18n("Import finished"));
+    MailImporter::FilterOE opera;
+    opera.setFilterInfo( info );
+    info->setStatusMessage(i18n("Import in progress"));
+    QDir directory(mPath);
+    if (directory.exists())
+        opera.importMails(mPath);
+    else
+        opera.import();
+    info->setStatusMessage(i18n("Import finished"));
 
-  delete info;
-  return true;
+    delete info;
+    return true;
 }
 
 AbstractImporter::TypeSupportedOptions OeImportData::supportedOption()
 {
-  TypeSupportedOptions options;
-  options |=AbstractImporter::Mails;
-  return options;
+    TypeSupportedOptions options;
+    options |=AbstractImporter::Mails;
+    return options;
 }

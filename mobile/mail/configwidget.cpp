@@ -19,9 +19,9 @@
 
 #include "configwidget.h"
 
-#include "messagecomposer/messagecomposersettings.h"
+#include "messagecomposer/settings/messagecomposersettings.h"
 #include "messagelistsettings.h"
-#include "messageviewer/globalsettings.h"
+#include "messageviewer/settings/globalsettings.h"
 #include "settings.h"
 #include "stylesheetloader.h"
 #include "templateparser/globalsettings_base.h"
@@ -29,9 +29,9 @@
 
 #include <kconfigdialogmanager.h>
 #include <klocale.h>
-#include <libkdepim/completionordereditor.h>
-#include <libkdepim/ldap/ldapclient.h>
-#include <libkdepim/recentaddresses.h>
+#include <libkdepim/addressline/completionordereditor.h>
+#include <libkdepim/ldap/ldapclientsearch.h>
+#include <libkdepim/addressline/recentaddresses.h>
 
 #include <QLineEdit>
 

@@ -41,7 +41,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
 {
   Q_OBJECT
   public:
-    IncidenceDateTime( Ui::EventOrTodoDesktop *ui );
+    explicit IncidenceDateTime( Ui::EventOrTodoDesktop *ui );
     ~IncidenceDateTime();
 
     virtual void load( const KCalCore::Incidence::Ptr &incidence );
@@ -71,6 +71,7 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool endDateTimeEnabled() const;
 
     /**reimp*/ bool isValid() const;
+    /**reimp*/ void printDebugInfo() const;
 
   signals:
     // used to indicate that the widgets were activated
@@ -110,9 +111,9 @@ class INCIDENCEEDITORS_NG_EXPORT IncidenceDateTime : public IncidenceEditor
     bool eventFilter( QObject *obj, QEvent *event );
 
   private:
-    void load( const KCalCore::Event::Ptr &event );
-    void load( const KCalCore::Todo::Ptr &todo );
-    void load( const KCalCore::Journal::Ptr &journal );
+    void load( const KCalCore::Event::Ptr &event, bool isTemplate = false, bool templateOverridesTimes = false );
+    void load( const KCalCore::Todo::Ptr &todo, bool isTemplate = false, bool templateOverridesTimes = false );
+    void load( const KCalCore::Journal::Ptr &journal, bool isTemplate = false, bool templateOverridesTimes = false );
     void save( const KCalCore::Event::Ptr &event );
     void save( const KCalCore::Todo::Ptr &todo );
     void save( const KCalCore::Journal::Ptr &journal );

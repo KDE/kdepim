@@ -3,7 +3,7 @@
 #ifndef _KMKERNEL_H
 #define _KMKERNEL_H
 
-#include "mailinterfaces.h"
+#include "interfaces/mailinterfaces.h"
 
 #include <QList>
 #include <QObject>
@@ -17,7 +17,7 @@
 #include "globalsettings.h"
 #include <kcomponentdata.h>
 #include <akonadi/servermanager.h>
-#include "messageviewer/viewer.h"
+#include "messageviewer/viewer/viewer.h"
 
 #define kmkernel KMKernel::self()
 #define kmconfig KMKernel::config()
@@ -42,8 +42,8 @@ namespace KPIM {
   class ProgressItem;
 }
 
-class MessageSender;
 namespace MessageComposer {
+  class MessageSender;
   class ComposerAutoCorrection;
 }
 
@@ -60,7 +60,9 @@ namespace KPIM { class ProgressDialog; }
 using KMail::MailServiceImpl;
 using KMail::UndoStack;
 using KPIM::ProgressDialog;
+namespace MessageComposer {
 class AkonadiSender;
+}
 
 namespace KPIMIdentities {
   class Identity;
@@ -175,7 +177,7 @@ public Q_SLOTS:
    * @param attachmentPaths A list of files that will be attached to the message.
    * @param customHeaders A list of custom headers.
    */
-  Q_SCRIPTABLE int openComposer( const QString & to,
+  Q_SCRIPTABLE int openComposer(const QString & to,
                                  const QString & cc,
                                  const QString & bcc,
                                  const QString & subject,
@@ -183,7 +185,7 @@ public Q_SLOTS:
                                  bool hidden,
                                  const QString & messageFile,
                                  const QStringList & attachmentPaths,
-                                 const QStringList & customHeaders );
+                                const QStringList & customHeaders , const QString &replyTo = QString(), const QString &inReplyTo = QString());
 
   /**
    * Opens a composer window and prefills it with different
@@ -328,10 +330,10 @@ public:
   bool doSessionManagement();
   bool firstInstance() const { return the_firstInstance; }
   void setFirstInstance(bool value) { the_firstInstance = value; }
-  void action( bool mailto, bool check, const QString &to, const QString &cc,
+  void action(bool mailto, bool check, const QString &to, const QString &cc,
                const QString &bcc, const QString &subj, const QString &body,
                const KUrl &messageFile, const KUrl::List &attach,
-               const QStringList &customHeaders );
+               const QStringList &customHeaders , const QString &replyTo, const QString &inReplyTo);
 
   bool isImapFolder(const Akonadi::Collection& , bool &isOnline) const;
 
@@ -342,7 +344,7 @@ public:
   void setXmlGuiInstance( const KComponentData &instance ) { mXmlGuiInstance = instance; }
 
   UndoStack *undoStack() { return the_undoStack; }
-  MessageSender *msgSender();
+  MessageComposer::MessageSender *msgSender();
 
   /*reimp*/ void openFilterDialog(bool createDummyFilter = true);
   /*reimp*/ void createFilter(const QByteArray& field, const QString& value);
@@ -471,7 +473,7 @@ private slots:
   /** Updates identities when a transport has been renamed. */
   void transportRenamed( int id, const QString &oldName, const QString &newName );
   void itemDispatchStarted();
-  void instanceStatusChanged( Akonadi::AgentInstance );
+  void instanceStatusChanged( const Akonadi::AgentInstance &);
 
   void akonadiStateChanged( Akonadi::ServerManager::State );
   void slotProgressItemCompletedOrCanceled( KPIM::ProgressItem * item);
@@ -482,6 +484,7 @@ private slots:
   void slotDeleteIdentity( uint identity);
   void slotInstanceRemoved(const Akonadi::AgentInstance&);
   void slotSystemNetworkStatusChanged( Solid::Networking::Status );
+  void slotCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &set);
   
 private:
   void resourceGoOnLine();
@@ -491,7 +494,7 @@ private:
 
   UndoStack *the_undoStack;
   mutable KPIMIdentities::IdentityManager *mIdentityManager;
-  AkonadiSender *the_msgSender;
+  MessageComposer::AkonadiSender *the_msgSender;
   /** previous KMail version. If different from current,
       the user has just updated. read from config */
   QString the_previousVersion;

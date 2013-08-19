@@ -32,13 +32,13 @@ if(BUILD_libkleopatraclient)
     kleopatra_config_cryptooperations.desktop
   )
 
-else(BUILD_libkleopatraclient)
+else()
 
   set(_kcm_kleopatra_libkleopatraclient_extra_SRCS)
   set(_kcm_kleopatra_libkleopatraclient_extra_LIBS)
   set(_kcm_kleopatra_libkleopatraclient_extra_install_FILES)
 
-endif(BUILD_libkleopatraclient)
+endif()
 
 set(kcm_kleopatra_PART_SRCS
   ${_kcm_kleopatra_kleo_only_SRCS}

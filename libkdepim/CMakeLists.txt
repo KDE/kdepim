@@ -3,6 +3,10 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
+#add_definitions( -DQT_NO_CAST_FROM_ASCII )
+#add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+
 add_subdirectory(tests)
 add_subdirectory(pics)
 
@@ -19,45 +23,42 @@ endif ()
 ########### next target ###############
 
 set(kdepim_LIB_SRCS
-   addemailaddressjob.cpp
-   addcontactjob.cpp
-   completionordereditor.cpp
-   openemailaddressjob.cpp
-   kprefsdialog.cpp
-   maillistdrag.cpp
-   addresseelineedit.cpp
-   kdatepickerpopup.cpp
-   kcheckcombobox.cpp
-   kweekdaycheckcombo.cpp
+   job/addemailaddressjob.cpp
+   job/addcontactjob.cpp
+   job/openemailaddressjob.cpp
+   addressline/completionordereditor.cpp
+   addressline/addresseelineedit.cpp
+   addressline/recentaddresses.cpp
+   addressline/kmailcompletion.cpp
+   prefs/kprefsdialog.cpp
+   misc/maillistdrag.cpp
+   widgets/kdatepickerpopup.cpp
+   widgets/kcheckcombobox.cpp
+   widgets/kweekdaycheckcombo.cpp
    ldap/ldapclient.cpp
    ldap/ldapsearchdialog.cpp
-   overlaywidget.cpp
-   progressmanager.cpp
-   progressmanager_akonadiagent.cpp
-   agentprogressmonitor.cpp
-   progressdialog.cpp
-   statusbarprogresswidget.cpp
-   ssllabel.cpp
-   broadcaststatus.cpp
-   kwidgetlister.cpp
-   recentaddresses.cpp
-   sendsmsdialog.cpp
-   kmailcompletion.cpp
-   pimmessagebox.cpp
-   multiplyingline.cpp
-   multiplyinglineeditor.cpp
-   multiplyinglineview_p.cpp
-   uistatesaver.cpp
-   nepomukwarning.cpp
-   statisticsproxymodel.cpp
-   customlogwidget.cpp
+   ldap/ldapclientsearch.cpp
+   ldap/ldapclientsearchconfig.cpp
+   progresswidget/overlaywidget.cpp
+   progresswidget/progressmanager.cpp
+   progresswidget/progressmanager_akonadiagent.cpp
+   progresswidget/agentprogressmonitor.cpp
+   progresswidget/progressdialog.cpp
+   progresswidget/statusbarprogresswidget.cpp
+   progresswidget/ssllabel.cpp
+   misc/broadcaststatus.cpp
+   widgets/kwidgetlister.cpp
+   widgets/pimmessagebox.cpp
+   multiplyingline/multiplyingline.cpp
+   multiplyingline/multiplyinglineeditor.cpp
+   multiplyingline/multiplyinglineview_p.cpp
+   misc/uistatesaver.cpp
+   widgets/nepomukwarning.cpp
+   misc/statisticsproxymodel.cpp
+   widgets/customlogwidget.cpp
+   widgets/spellchecklineedit.cpp
+   widgets/selectedcollectiondialog.cpp
 )
-
-if (KDEPIMLIBS_KRESOURCES_LIBS)
-  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
-    kresourceprefs.cpp
-  )
-endif (KDEPIMLIBS_KRESOURCES_LIBS)
 
 if (KDEPIM_INPROCESS_LDAP)
   set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
@@ -98,7 +99,7 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
 
 if(MINGW)
    target_link_libraries(kdepim oleaut32)
-endif(MINGW)
+endif()
 
 set_target_properties(kdepim PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kdepim ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -108,7 +109,7 @@ install(TARGETS kdepim ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if (QT_QTDESIGNER_FOUND)
   set(kdepimwidgets_PART_SRCS)
-  kde4_add_widget_files(kdepimwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/kdepim.widgets)
+  kde4_add_widget_files(kdepimwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/kdepim.widgets)
 
   kde4_add_plugin(kdepimwidgets ${kdepimwidgets_PART_SRCS})
 
@@ -116,7 +117,7 @@ if (QT_QTDESIGNER_FOUND)
   target_link_libraries(kdepimwidgets  ${KDE4_KIO_LIBS} kdepim)
 
   install(TARGETS kdepimwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
-endif (QT_QTDESIGNER_FOUND)
+endif ()
 
 ########### next target ###############
 
@@ -127,9 +128,9 @@ set( kcm_ldap_SRCS
 
 if (NOT WINCE)
   kde4_add_plugin(kcm_ldap ${kcm_ldap_SRCS})
-else (NOT WINCE)
+else ()
   kde4_add_plugin(kcm_ldap STATIC ${kcm_ldap_SRCS})
-endif (NOT WINCE)
+endif ()
 
 target_link_libraries(kcm_ldap ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} kdepim)
 

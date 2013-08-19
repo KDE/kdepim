@@ -19,15 +19,15 @@
 
 #include "filteractionforward.h"
 
-#include "../mailkernel.h"
-#include "../mailutil.h"
+#include "kernel/mailkernel.h"
+#include "util/mailutil.h"
 #include "filteractionmissingargumentdialog.h"
 
-#include <messageviewer/minimumcombobox.h>
-#include <messagecomposer/messagefactory.h>
-#include <messagecomposer/messagesender.h>
-#include <messagecore/emailaddressrequester.h>
-#include <messagecore/stringutil.h>
+#include <pimcommon/widgets/minimumcombobox.h>
+#include <messagecomposer/helper/messagefactory.h>
+#include <messagecomposer/sender/messagesender.h>
+#include <messagecore/widgets/emailaddressrequester.h>
+#include <messagecore/utils/stringutil.h>
 #include <templateparser/customtemplates.h>
 #include <templateparser/customtemplates_kfg.h>
 
@@ -44,7 +44,7 @@ FilterAction *FilterActionForward::newAction()
 }
 
 FilterActionForward::FilterActionForward( QObject *parent )
-  : FilterActionWithAddress( "forward", i18nc( "Forward directly not with a command", "Forward To" ), parent )
+  : FilterActionWithAddress(QLatin1String( "forward"), i18nc( "Forward directly not with a command", "Forward To" ), parent )
 {
 }
 
@@ -69,7 +69,7 @@ FilterAction::ReturnCode FilterActionForward::process( ItemContext &context ) co
 
   KMime::Message::Ptr fwdMsg = factory.createForward();
   fwdMsg->to()->fromUnicodeString( fwdMsg->to()->asUnicodeString() + QLatin1Char( ',' ) + mParameter, "utf-8" );
-  if ( !KernelIf->msgSender()->send( fwdMsg, MessageSender::SendDefault ) ) {
+  if ( !KernelIf->msgSender()->send( fwdMsg, MessageComposer::MessageSender::SendDefault ) ) {
     kWarning() << "FilterAction: could not forward message (sending failed)";
     return ErrorButGoOn; // error: couldn't send
   } else
@@ -91,7 +91,7 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
   layout->setMargin( 0 );
 
   QWidget *addressEdit = FilterActionWithAddress::createParamWidget( addressAndTemplate );
-  addressEdit->setObjectName( "addressEdit" );
+  addressEdit->setObjectName( QLatin1String("addressEdit") );
   layout->addWidget( addressEdit );
 
   MessageCore::EmailAddressRequester *addressRequester = qobject_cast<MessageCore::EmailAddressRequester*>( addressEdit );
@@ -102,8 +102,8 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
   lineEdit->setToolTip( i18n( "The addressee to whom the message will be forwarded." ) );
   lineEdit->setWhatsThis( i18n( "The filter will forward the message to the addressee entered here." ) );
 
-  MessageViewer::MinimumComboBox *templateCombo = new MessageViewer::MinimumComboBox( addressAndTemplate );
-  templateCombo->setObjectName( "templateCombo" );
+  PimCommon::MinimumComboBox *templateCombo = new PimCommon::MinimumComboBox( addressAndTemplate );
+  templateCombo->setObjectName( QLatin1String("templateCombo") );
   layout->addWidget( templateCombo );
 
   templateCombo->addItem( i18n( "Default Template" ) );
@@ -131,11 +131,11 @@ QWidget* FilterActionForward::createParamWidget( QWidget *parent ) const
 
 void FilterActionForward::applyParamWidgetValue( QWidget *paramWidget )
 {
-  QWidget *addressEdit = paramWidget->findChild<QWidget*>( "addressEdit" );
+  QWidget *addressEdit = paramWidget->findChild<QWidget*>( QLatin1String("addressEdit") );
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::applyParamWidgetValue( addressEdit );
 
-  const MessageViewer::MinimumComboBox *templateCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "templateCombo" );
+  const PimCommon::MinimumComboBox *templateCombo = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("templateCombo") );
   Q_ASSERT( templateCombo );
 
   if ( templateCombo->currentIndex() == 0 ) {
@@ -148,11 +148,11 @@ void FilterActionForward::applyParamWidgetValue( QWidget *paramWidget )
 
 void FilterActionForward::setParamWidgetValue( QWidget *paramWidget ) const
 {
-  QWidget *addressEdit = paramWidget->findChild<QWidget*>( "addressEdit" );
+  QWidget *addressEdit = paramWidget->findChild<QWidget*>( QLatin1String("addressEdit") );
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::setParamWidgetValue( addressEdit );
 
-  MessageViewer::MinimumComboBox *templateCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "templateCombo" );
+  PimCommon::MinimumComboBox *templateCombo = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("templateCombo") );
   Q_ASSERT( templateCombo );
 
   if ( mTemplate.isEmpty() ) {
@@ -169,11 +169,11 @@ void FilterActionForward::setParamWidgetValue( QWidget *paramWidget ) const
 
 void FilterActionForward::clearParamWidget( QWidget *paramWidget ) const
 {
-  QWidget *addressEdit = paramWidget->findChild<QWidget*>( "addressEdit" );
+  QWidget *addressEdit = paramWidget->findChild<QWidget*>( QLatin1String("addressEdit") );
   Q_ASSERT( addressEdit );
   FilterActionWithAddress::clearParamWidget( addressEdit );
 
-  MessageViewer::MinimumComboBox *templateCombo = paramWidget->findChild<MessageViewer::MinimumComboBox*>( "templateCombo" );
+  PimCommon::MinimumComboBox *templateCombo = paramWidget->findChild<PimCommon::MinimumComboBox*>( QLatin1String("templateCombo") );
   Q_ASSERT( templateCombo );
 
   templateCombo->setCurrentIndex( 0 );
@@ -181,7 +181,7 @@ void FilterActionForward::clearParamWidget( QWidget *paramWidget ) const
 
 // We simply place a "@$$@" between the two parameters. The template is the last
 // parameter in the string, for compatibility reasons.
-static const QString forwardFilterArgsSeperator = "@$$@";
+static const QString forwardFilterArgsSeperator = QLatin1String("@$$@");
 
 void FilterActionForward::argsFromString( const QString &argsStr )
 {

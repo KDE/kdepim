@@ -19,11 +19,8 @@
 #ifndef TASKSACTIONMANAGER_H
 #define TASKSACTIONMANAGER_H
 
+#include <Akonadi/Calendar/ETMCalendar>
 #include <QtCore/QObject>
-
-namespace CalendarSupport {
-class Calendar;
-}
 
 class KActionCollection;
 class QItemSelectionModel;
@@ -34,7 +31,7 @@ class TasksActionManager : public QObject
 public:
   explicit TasksActionManager( KActionCollection *actionCollection, QObject *parent = 0 );
 
-  void setCalendar( CalendarSupport::Calendar *calendar );
+  void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar );
   void setItemSelectionModel( QItemSelectionModel *itemSelectionModel );
 
 public slots:
@@ -45,7 +42,7 @@ private:
 
 private:
   KActionCollection         *mActionCollection;
-  CalendarSupport::Calendar *mCalendar;
+  Akonadi::ETMCalendar::Ptr mCalendar;
   QItemSelectionModel       *mItemSelectionModel;
 };
 

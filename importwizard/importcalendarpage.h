@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -21,23 +21,26 @@
 #include <QWidget>
 
 namespace Ui {
-  class ImportCalendarPage;
+class ImportCalendarPage;
 }
 
 class ImportCalendarPage : public QWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit ImportCalendarPage(QWidget *parent = 0);
-  ~ImportCalendarPage();
-  void addImportInfo( const QString& log );
-  void addImportError( const QString& log );
-  void setImportButtonEnabled(bool enabled);
+    explicit ImportCalendarPage(QWidget *parent = 0);
+    ~ImportCalendarPage();
+
+    void addImportInfo( const QString& log );
+    void addImportError( const QString& log );
+    void setImportButtonEnabled(bool enabled);
+
 Q_SIGNALS:
-  void importCalendarClicked();
+    void importCalendarClicked();
+
 private:
-  Ui::ImportCalendarPage *ui;
+    Ui::ImportCalendarPage *ui;
 };
 
 #endif // IMPORTCALENDARPAGE_H

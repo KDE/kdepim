@@ -40,15 +40,17 @@
 #include <incidenceeditor-ng/groupwareintegration.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <calendarsupport/archivedialog.h>
-#include <calendarsupport/calendar.h>
 #include <calendarsupport/calendarutils.h>
 #include <calendarsupport/categoryconfig.h>
-#include <calendarsupport/freebusymanager.h>
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
 
 #include <akonadi/agentactionmanager.h>
 #include <akonadi/calendar/standardcalendaractionmanager.h>
+#include <Akonadi/Calendar/IncidenceChanger>
+#include <akonadi/calendar/freebusymanager.h>
+#include <akonadi/calendar/calendarsettings.h>
+
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemfetchjob.h>
@@ -106,12 +108,13 @@ void MainView::doDelayedInit()
   qmlRegisterType<DeclarativeConfigWidget>( "org.kde.akonadi.tasks", 4, 5, "ConfigWidget" );
   qmlRegisterType<DeclarativeSearchWidget>( "org.kde.akonadi.tasks", 4, 5, "SearchWidget" );
 
-  mCalendar = new CalendarSupport::Calendar( entityTreeModel(), itemModel(),
-                                             KSystemTimeZones::local() );
+  QStringList mimeTypes;
+  mimeTypes << KCalCore::Todo::todoMimeType();
+  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar( mimeTypes ) );
 
-  mChanger = new CalendarSupport::IncidenceChanger( mCalendar, this );
+  mChanger = new Akonadi::IncidenceChanger( this );
 
-  CalendarSupport::FreeBusyManager::self()->setCalendar( mCalendar );
+  Akonadi::FreeBusyManager::self()->setCalendar( mCalendar );
 
   if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
     IncidenceEditorNG::GroupwareIntegration::activate( mCalendar );
@@ -187,7 +190,7 @@ void MainView::newTask()
     //       This method should somehow depend on the calendar selected to which
     //       the incidence is added.
     if ( CalendarSupport::KCalPrefs::instance()->useGroupwareCommunication() )
-      defaults.setGroupWareDomain( KUrl( CalendarSupport::KCalPrefs::instance()->freeBusyRetrieveUrl() ).host() );
+      defaults.setGroupWareDomain( KUrl( Akonadi::CalendarSettings::self()->freeBusyRetrieveUrl() ).host() );
 
     // make it due one day from now
     const KDateTime now = KDateTime::currentLocalDateTime();

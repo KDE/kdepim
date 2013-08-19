@@ -38,8 +38,8 @@
 #include "util.h"
 #include "kmkernel.h"
 
-#include "messagecore/stringutil.h"
-#include "messagecomposer/messagehelper.h"
+#include "messagecore/utils/stringutil.h"
+#include "messagecomposer/helper/messagehelper.h"
 
 #include "templateparser/templateparser.h"
 
@@ -100,40 +100,11 @@ void KMail::Util::launchAccountWizard( QWidget *w )
 
 }
 
-bool KMail::Util::handleClickedURL( const KUrl &url )
-{
-  if ( url.protocol() == QLatin1String( "mailto" ) )
-  {
-    KMime::Message::Ptr msg ( new KMime::Message );
-    MessageHelper::initHeader( msg, KMKernel::self()->identityManager(), 0 );
-    msg->contentType()->setCharset("utf-8");
-
-    QMap<QString, QString> fields =  MessageCore::StringUtil::parseMailtoUrl( url );
-
-    msg->to()->fromUnicodeString( fields.value( "to" ),"utf-8" );
-    if ( !fields.value( "subject" ).isEmpty() )
-      msg->subject()->fromUnicodeString( fields.value( "subject" ),"utf-8" );
-    if ( !fields.value( "body" ).isEmpty() )
-      msg->setBody( fields.value( "body" ).toUtf8() );
-    if ( !fields.value( "cc" ).isEmpty() )
-      msg->cc()->fromUnicodeString( fields.value( "cc" ),"utf-8" );
-
-    KMail::Composer * win = KMail::makeComposer( msg, false, false,KMail::Composer::New, 0 );
-    win->setFocusToSubject();
-    win->show();
-    return true;
-  } else {
-    kWarning() << "Can't handle URL:" << url;
-    return false;
-  }
-}
-
 bool KMail::Util::handleClickedURL( const KUrl &url, const QSharedPointer<MailCommon::FolderCollection> &folder )
 {
-  if ( url.protocol() == QLatin1String( "mailto" ) )
-  {
+  if ( url.protocol() == QLatin1String( "mailto" ) ) {
     KMime::Message::Ptr msg ( new KMime::Message );
-    uint identity = folder->identity();
+    uint identity = !folder.isNull() ? folder->identity() : 0;
     MessageHelper::initHeader( msg, KMKernel::self()->identityManager(), identity );
     msg->contentType()->setCharset("utf-8");
 
@@ -147,13 +118,17 @@ bool KMail::Util::handleClickedURL( const KUrl &url, const QSharedPointer<MailCo
     if ( !fields.value( "cc" ).isEmpty() )
       msg->cc()->fromUnicodeString( fields.value( "cc" ),"utf-8" );
 
-    TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::NewMessage );
-    parser.setIdentityManager( KMKernel::self()->identityManager() );
-    parser.process( msg, folder->collection() );
+    if ( !folder.isNull() ) {
+      TemplateParser::TemplateParser parser( msg, TemplateParser::TemplateParser::NewMessage );
+      parser.setIdentityManager( KMKernel::self()->identityManager() );
+      parser.process( msg, folder->collection() );
+    }
 
     KMail::Composer * win = KMail::makeComposer( msg, false, false, KMail::Composer::New, identity );
     win->setFocusToSubject();
-    win->setCollectionForNewMessage( folder->collection() );
+    if ( !folder.isNull() ) {
+      win->setCollectionForNewMessage( folder->collection() );
+    }
     win->show();
     return true;
   } else {

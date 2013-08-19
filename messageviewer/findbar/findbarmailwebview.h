@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Laurent Montel <montel@kde.org>
+/* Copyright (C) 2011, 2012, 2013 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -15,11 +15,10 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
+
 #ifndef MESSAGEVIEWER_FINDBAR_MAILWEBVIEW_H
 #define MESSAGEVIEWER_FINDBAR_MAILWEBVIEW_H
 
-
-#include <config-messageviewer.h>
 #include "findbarbase.h"
 
 #ifdef KDEPIM_NO_WEBKIT
@@ -27,29 +26,30 @@
 #endif
 
 namespace MessageViewer {
-  class MailWebView;
+class MailWebView;
 }
 
 namespace MessageViewer
 {
 class FindBarMailWebView : public FindBarBase
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit FindBarMailWebView( MailWebView * view, QWidget * parent = 0 );
     virtual ~FindBarMailWebView();
-  
-  private:
-    FindBarMailWebView( QWidget *parent) { Q_UNUSED(parent); }
+
+private:
+    explicit FindBarMailWebView( QWidget *parent) { Q_UNUSED(parent); }
     void clearSelections();
     void searchText( bool backward, bool isAutoSearch );
     void updateHighLight(bool);
     void updateSensitivity( bool sensitivity );
-  private:
-    MailWebView * m_view;
+
+private:
+    MailWebView *mView;
 #ifndef MESSAGEVIEWER_FINDBAR_NO_HIGHLIGHT_ALL
-    QAction * m_highlightAll;
+    QAction *mHighlightAll;
 #endif
 };
 

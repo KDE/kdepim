@@ -24,7 +24,7 @@
 
 #include <qtest_kde.h>
 
-#include <messagecore/attachmentfromurljob.h>
+#include <messagecore/attachment/attachmentfromurljob.h>
 using namespace MessageCore;
 
 QTEST_KDEMAIN( AttachmentFromUrlJobTest, NoGUI )

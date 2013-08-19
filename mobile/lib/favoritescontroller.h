@@ -47,7 +47,7 @@ class FavoritesController : public QObject
      *
      * @param parent The parent object.
      */
-    FavoritesController( const KSharedConfig::Ptr &config, QObject *parent = 0 );
+    explicit FavoritesController( const KSharedConfig::Ptr &config, QObject *parent = 0 );
 
     /**
      * Destroys the favorites controller.

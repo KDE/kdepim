@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012, 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,7 +18,7 @@
 #ifndef KMAILCVTKERNEL_H
 #define KMAILCVTKERNEL_H
 
-#include <mailcommon/mailinterfaces.h>
+#include <mailcommon/interfaces/mailinterfaces.h>
 
 namespace Akonadi {
 class EntityTreeModel;
@@ -35,7 +35,7 @@ class KMailCVTKernel : public QObject, public MailCommon::IKernel, public MailCo
     explicit  KMailCVTKernel( QObject *parent = 0 );
 
     KPIMIdentities::IdentityManager *identityManager();
-    MessageSender *msgSender();
+    MessageComposer::MessageSender *msgSender();
 
     Akonadi::EntityMimeTypeFilterModel *collectionModel() const;
     KSharedConfig::Ptr config();

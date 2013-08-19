@@ -1,1 +1,5 @@
 #cmakedefine HAVE_SYS_INOTIFY_H 1
+
+#define GRANTLEE_PLUGIN_PATH "@Grantlee_PLUGIN_PATH@"
+#define MESSAGEVIEWER_GRANTLEE_PLUGIN_PATH "${PLUGIN_INSTALL_DIR}/plugins/grantlee/${Grantlee_VERSION_MAJOR}.${Grantlee_VERSION_MINOR}"
+

@@ -22,9 +22,9 @@
 #ifndef KORG_KITEMICONCHECKCOMBO_H
 #define KORG_KITEMICONCHECKCOMBO_H
 
-#include <libkdepim/kcheckcombobox.h>
+#include <libkdepim/widgets/kcheckcombobox.h>
 
-#include <calendarviews/eventviews/eventview.h>
+#include <calendarviews/eventview.h>
 
 class KItemIconCheckCombo : public KPIM::KCheckComboBox
 {

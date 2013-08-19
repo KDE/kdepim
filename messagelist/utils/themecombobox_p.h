@@ -38,7 +38,7 @@ class ThemeComboBox;
 class ThemeComboBoxPrivate
 {
 public:
-  ThemeComboBoxPrivate( ThemeComboBox *owner )
+  explicit ThemeComboBoxPrivate( ThemeComboBox *owner )
     : q( owner ) { }
 
   ThemeComboBox * const q;

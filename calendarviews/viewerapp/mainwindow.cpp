@@ -28,20 +28,15 @@
 #include "timeline/timelineview.h"
 #include "prefs.h"
 
-#include <calendarsupport/calendar.h>
-#include <calendarsupport/calendarmodel.h>
-#include <calendarsupport/incidencechanger.h>
 #include <calendarsupport/collectionselection.h>
 
+#include <Akonadi/Calendar/IncidenceChanger>
 #include <KCalCore/Event>
 
-#include <akonadi/changerecorder.h>
-#include <akonadi/collection.h>
-#include <akonadi/control.h>
-#include <akonadi/entitydisplayattribute.h>
-#include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/itemfetchscope.h>
+#include <Akonadi/Collection>
+#include <Akonadi/Control>
 
+#include <KCheckableProxyModel>
 #include <KSystemTimeZones>
 
 using namespace Akonadi;
@@ -51,8 +46,6 @@ using namespace EventViews;
 MainWindow::MainWindow( const QStringList &viewNames )
   : QMainWindow(),
     mViewNames( viewNames ),
-    mChangeRecorder( 0 ),
-    mCalendar( 0 ),
     mIncidenceChanger( 0 ),
     mSettings( 0 ),
     mViewPreferences( 0 )
@@ -91,12 +84,11 @@ void MainWindow::addView( const QString &viewName )
     eventView = new TimelineView( this );
   }
 
-  if ( eventView != 0 ) {
+  if ( eventView ) {
     eventView->setPreferences( *mViewPreferences );
     eventView->setCalendar( mCalendar );
     eventView->setIncidenceChanger( mIncidenceChanger );
     eventView->setDateRange( start, end );
-
     eventView->updateConfig();
     mUi.tabWidget->addTab( eventView, viewName );
   } else {
@@ -113,40 +105,15 @@ void MainWindow::delayedInit()
   // application settings
   mViewPreferences = new PrefsPtr( new Prefs( mSettings ) );
 
-  mChangeRecorder = new ChangeRecorder( this );
-  mChangeRecorder->setCollectionMonitored( Collection::root(), true );
+  mCalendar = Akonadi::ETMCalendar::Ptr( new Akonadi::ETMCalendar() );
+  KCheckableProxyModel *checkableProxy = mCalendar->checkableProxyModel();
+  QItemSelectionModel *selectionModel = checkableProxy->selectionModel();
 
-  ItemFetchScope scope;
-  scope.fetchFullPayload( true );
-  scope.fetchAttribute<EntityDisplayAttribute>();
+  CalendarSupport::CollectionSelection *collectionSelection = new CalendarSupport::CollectionSelection( selectionModel );
+  EventViews::EventView::setGlobalCollectionSelection( collectionSelection );
 
-  mChangeRecorder->fetchCollection( true );
-  mChangeRecorder->setItemFetchScope( scope );
-
-  mChangeRecorder->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
-
-  CalendarModel* calendarModel = new CalendarModel( mChangeRecorder, this );
-
-  // no collections, just items
-  calendarModel->setCollectionFetchStrategy( EntityTreeModel::InvisibleCollectionFetch );
-
-  { // Collection Selection stuff
-
-    QItemSelectionModel* selectionModel = new QItemSelectionModel( calendarModel );
-    CalendarSupport::CollectionSelection *colSel
-      = new CalendarSupport::CollectionSelection( selectionModel );
-
-    EventViews::EventView::setGlobalCollectionSelection( colSel );
-  }
-
-  EntityMimeTypeFilterModel *filterModel = new EntityMimeTypeFilterModel( this );
-  filterModel->setHeaderGroup( EntityTreeModel::ItemListHeaders );
-  filterModel->setSourceModel( calendarModel );
-  filterModel->setSortRole( CalendarModel::SortRole );
-
-  mCalendar = new CalendarSupport::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
-
-  mIncidenceChanger = new IncidenceChanger( mCalendar, this, Collection().id() );
+  mIncidenceChanger = new IncidenceChanger( this );
+  mCalendar->setCollectionFilteringEnabled( false );
 
   Q_FOREACH( const QString &viewName, mViewNames ) {
     addView( viewName );

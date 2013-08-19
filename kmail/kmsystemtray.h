@@ -40,48 +40,49 @@ class QMenu;
 namespace KMail {
 class KMSystemTray : public KStatusNotifierItem
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /** construtor */
-  explicit KMSystemTray(QObject* parent=0);
-  /** destructor */
-  ~KMSystemTray();
+    /** construtor */
+    explicit KMSystemTray(QObject* parent=0);
+    /** destructor */
+    ~KMSystemTray();
 
-  void setShowUnread(bool showUnread);
-  void setMode(int mode);
-  int mode() const;
+    void setShowUnread(bool showUnread);
+    void setMode(int mode);
+    int mode() const;
 
-  void hideKMail();
-  bool hasUnreadMail() const;
+    void hideKMail();
+    bool hasUnreadMail() const;
 
-  void updateSystemTray();
+    void updateSystemTray();
 
 private slots:
-  void slotActivated();
-  void slotContextMenuAboutToShow();
-  void slotSelectCollection(QAction*act);
-  void initListOfCollection();
-  void slotCollectionStatisticsChanged( Akonadi::Collection::Id,const Akonadi::CollectionStatistics& );
-  
-protected:
-  bool mainWindowIsOnCurrentDesktop();
-  void buildPopupMenu();
-  void updateCount();
-  void fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model, const QString& parentName = QString(), const QModelIndex& parentIndex = QModelIndex() );
-  void unreadMail( const QAbstractItemModel *model, const QModelIndex& parentIndex = QModelIndex() );
-  
-  bool excludeFolder( const Akonadi::Collection& collection ) const;
+    void slotActivated();
+    void slotContextMenuAboutToShow();
+    void slotSelectCollection(QAction*act);
+    void initListOfCollection();
+    void slotCollectionStatisticsChanged( Akonadi::Collection::Id,const Akonadi::CollectionStatistics& );
 
 private:
-  KIcon mIcon;
-  int mDesktopOfMainWin;
+    bool mainWindowIsOnCurrentDesktop();
+    bool buildPopupMenu();
+    void updateCount();
+    void fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model, const QString& parentName = QString(), const QModelIndex& parentIndex = QModelIndex() );
+    void unreadMail( const QAbstractItemModel *model, const QModelIndex& parentIndex = QModelIndex() );
+    bool excludeFolder( const Akonadi::Collection& collection ) const;
+    bool ignoreNewMailInFolder(const Akonadi::Collection &collection);
 
-  int mMode;
-  int mCount;
+private:
 
-  bool mShowUnreadMail;
-  QMenu *mNewMessagesPopup;
-  QAction *mSendQueued;
+    KIcon mIcon;
+    int mDesktopOfMainWin;
+
+    int mMode;
+    int mCount;
+
+    bool mShowUnreadMail;
+    QMenu *mNewMessagesPopup;
+    QAction *mSendQueued;
 };
 }
 #endif

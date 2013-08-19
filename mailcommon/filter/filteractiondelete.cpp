@@ -27,7 +27,7 @@
 using namespace MailCommon;
 
 FilterActionDelete::FilterActionDelete( QObject *parent )
-  : FilterActionWithNone( "delete", i18n( "Delete Message" ), parent )
+  : FilterActionWithNone( QLatin1String("delete"), i18n( "Delete Message" ), parent )
 {
 }
 
