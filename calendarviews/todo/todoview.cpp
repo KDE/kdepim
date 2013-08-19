@@ -57,6 +57,7 @@
 #include <QHeaderView>
 #include <QMenu>
 #include <QToolButton>
+#include <QItemSelection>
 
 using namespace EventViews;
 using namespace KCalCore;
@@ -683,21 +684,6 @@ void TodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
     /*const QModelIndex index = */ addTodo( mQuickAdd->text(), KCalCore::Todo::Ptr(),
                                             mProxyModel->categories() );
 
-#ifdef AKONADI_PORT_DISABLED
-    // the todo is added asynchronously now, so we have to wait until
-    // the new item is actually added before selecting the item
-
-    QModelIndexList selection = mView->selectionModel()->selectedRows();
-    if ( selection.size() <= 1 ) {
-      // don't destroy complex selections, not applicable now (only single
-      // selection allowed), but for the future...
-      mView->selectionModel()->select( mProxyModel->mapFromSource( index ),
-                                       QItemSelectionModel::ClearAndSelect |
-                                       QItemSelectionModel::Rows );
-    }
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
   } else if ( modifiers == Qt::ControlModifier ) {
     QModelIndexList selection = mView->selectionModel()->selectedRows();
     if ( selection.count() != 1 ) {
@@ -1074,12 +1060,15 @@ void TodoView::setFlatView( bool flatView, bool notifyOtherViews )
   }
 }
 
-void TodoView::onRowsInserted( const QModelIndex &parent, int, int )
+void TodoView::onRowsInserted( const QModelIndex &parent, int start, int end)
 {
-    if ( !parent.isValid() || sModels->isFlatView() || !calendar() || !calendar()->entityTreeModel() )
+    if ( start != end || !calendar() || !calendar()->entityTreeModel() )
         return;
 
-    QVariant v = parent.data( Akonadi::EntityTreeModel::ItemRole );
+    QModelIndex idx = mView->model()->index( start, 0 );
+
+    // If the collection is currently being populated, we don't do anything
+    QVariant v = idx.data( Akonadi::EntityTreeModel::ItemRole );
     if ( !v.isValid() )
         return;
 
@@ -1089,6 +1078,24 @@ void TodoView::onRowsInserted( const QModelIndex &parent, int, int )
 
     const bool isPopulated = calendar()->entityTreeModel()->isCollectionPopulated( item.storageCollectionId() );
     if ( !isPopulated )
+        return;
+
+    // Case #1, adding an item that doesn't have parent: We select it
+    if ( !parent.isValid() ) {
+        QModelIndexList selection = mView->selectionModel()->selectedRows();
+        if ( selection.size() <= 1 ) {
+          // don't destroy complex selections, not applicable now (only single
+          // selection allowed), but for the future...
+          int colCount = static_cast<int>( TodoModel::ColumnCount );
+          mView->selectionModel()->select( QItemSelection( idx, mView->model()->index( start, colCount-1 ) ),
+                                           QItemSelectionModel::ClearAndSelect |
+                                           QItemSelectionModel::Rows );
+        }
+        return;
+    }
+
+    // Case 2: Adding an item that has a parent: we expand the parent
+    if ( sModels->isFlatView() )
         return;
 
     QModelIndex index = parent;
