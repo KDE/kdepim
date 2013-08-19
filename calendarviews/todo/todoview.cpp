@@ -1107,8 +1107,8 @@ void TodoView::onRowsInserted( const QModelIndex &parent, int start, int end)
 }
 
 void TodoView::getHighlightMode( bool &highlightEvents,
-                                   bool &highlightTodos,
-                                   bool &highlightJournals )
+                                 bool &highlightTodos,
+                                 bool &highlightJournals )
 {
   highlightTodos    = preferences()->highlightTodos();
   highlightEvents   = !highlightTodos;
