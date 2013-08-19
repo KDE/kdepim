@@ -1775,7 +1775,7 @@ you need to debug your filtering process.
   <sect2 id="archiving">
     <title>Automatic Archiving</title>
     <variablelist>
-    <varlistentry id="auto-archive"><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Create Automatic Archiving...</guimenuitem></menuchoice></term>
+    <varlistentry id="auto-archive"><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Create Automatic Archiving...</guimenuitem></menuchoice></term>
       <listitem>
         <para>This is a powerful tool that can be used to assist in backing up your email. To use this, click
           the <guibutton>Add...</guibutton> button, and the <guilabel>Add Archive Mail</guilabel> dialog will pop up.</para>
