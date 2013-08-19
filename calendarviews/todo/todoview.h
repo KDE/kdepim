@@ -141,7 +141,7 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
 
     /** Creates a new todo with the given text as summary under the given parent */
     void addTodo( const QString &summary,
-                  const KCalCore::Todo::Ptr &parent = KCalCore::Todo::Ptr(),
+                  const Akonadi::Item &parentItem,
                   const QStringList &categories = QStringList() );
 
     TodoViewView *mView;
@@ -172,7 +172,7 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     bool mSidebarView;
 };
 
-  
+
 }
 
 #endif

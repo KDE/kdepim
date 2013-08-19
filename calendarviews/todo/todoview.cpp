@@ -143,7 +143,7 @@ struct ModelStack
     prefs->setFlatListTodo( flat );
     prefs->writeConfig();
   }
-  
+
   void setCalendar( const Akonadi::ETMCalendar::Ptr &newCalendar )
   {
     calendar = newCalendar;
@@ -642,12 +642,14 @@ void TodoView::clearSelection()
 }
 
 void TodoView::addTodo( const QString &summary,
-                          const KCalCore::Todo::Ptr &parent,
+                          const Akonadi::Item &parentItem,
                           const QStringList &categories )
 {
   if ( !changer() || summary.trimmed().isEmpty() ) {
     return;
   }
+
+  KCalCore::Todo::Ptr parent = CalendarSupport::todo( parentItem );
 
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
   todo->setSummary( summary.trimmed() );
@@ -661,12 +663,17 @@ void TodoView::addTodo( const QString &summary,
     todo->setRelatedTo( parent->uid() );
   }
 
-  CalendarSupport::CollectionSelection *selection =
-    EventViews::EventView::globalCollectionSelection();
-
   Akonadi::Collection collection;
+
+  // Use the same collection of the parent.
+  if ( parentItem.isValid() ) {
+    // Don't use parentColection() since it might be a virtual collection
+    collection = calendar()->collection( parentItem.storageCollectionId() );
+  }
+
+  CalendarSupport::CollectionSelection *selection = EventViews::EventView::globalCollectionSelection();
   // If we only have one collection, don't ask in which collection to save the to-do.
-  if ( selection && selection->model()->model()->rowCount() == 1 ) {
+  if ( !collection.isValid() && selection && selection->model()->model()->rowCount() == 1 ) {
     QModelIndex index = selection->model()->model()->index( 0, 0 );
     if ( index.isValid() ) {
       collection = CalendarSupport::collectionFromIndex( index );
@@ -679,7 +686,7 @@ void TodoView::addTodo( const QString &summary,
 void TodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
 {
   if ( modifiers == Qt::NoModifier ) {
-    /*const QModelIndex index = */ addTodo( mQuickAdd->text(), KCalCore::Todo::Ptr(),
+    /*const QModelIndex index = */ addTodo( mQuickAdd->text(), Akonadi::Item(),
                                             mProxyModel->categories() );
 
 #ifdef AKONADI_PORT_DISABLED
@@ -707,7 +714,7 @@ void TodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
     mView->expand( selection[0] );
     const Akonadi::Item parent = sModels->todoModel->data( idx,
                       Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-    addTodo( mQuickAdd->text(), CalendarSupport::todo( parent ), mProxyModel->categories() );
+    addTodo( mQuickAdd->text(), parent, mProxyModel->categories() );
   } else {
     return;
   }
