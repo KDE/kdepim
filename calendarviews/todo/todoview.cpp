@@ -143,7 +143,7 @@ struct ModelStack
     prefs->setFlatListTodo( flat );
     prefs->writeConfig();
   }
-  
+
   void setCalendar( const Akonadi::ETMCalendar::Ptr &newCalendar )
   {
     calendar = newCalendar;
@@ -192,6 +192,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
   mProxyModel->setFilterKeyColumn( TodoModel::SummaryColumn );
   mProxyModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
   mProxyModel->setSortRole( Qt::EditRole );
+  connect( mProxyModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex,int,int)) );
 
   if ( !mSidebarView ) {
     mQuickSearch = new TodoViewQuickSearch( calendar(), this );
@@ -1071,6 +1072,31 @@ void TodoView::setFlatView( bool flatView, bool notifyOtherViews )
   if ( notifyOtherViews ) {
     sModels->setFlatView( flatView );
   }
+}
+
+void TodoView::onRowsInserted( const QModelIndex &parent, int, int )
+{
+    if ( !parent.isValid() || sModels->isFlatView() || !calendar() || !calendar()->entityTreeModel() )
+        return;
+
+    QVariant v = parent.data( Akonadi::EntityTreeModel::ItemRole );
+    if ( !v.isValid() )
+        return;
+
+    Akonadi::Item item = v.value<Akonadi::Item>();
+    if ( !item.isValid() )
+        return;
+
+    const bool isPopulated = calendar()->entityTreeModel()->isCollectionPopulated( item.storageCollectionId() );
+    if ( !isPopulated )
+        return;
+
+    QModelIndex index = parent;
+    mView->expand( index );
+    while ( index.parent().isValid() ) {
+      mView->expand( index.parent() );
+      index = index.parent();
+    }
 }
 
 void TodoView::getHighlightMode( bool &highlightEvents,

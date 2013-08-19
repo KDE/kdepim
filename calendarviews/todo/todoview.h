@@ -126,6 +126,8 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
 
     void setFlatView( bool flatView, bool notifyOtherViews = true );
 
+    void onRowsInserted( const QModelIndex &parent, int start, int end );
+
   Q_SIGNALS:
     void purgeCompletedSignal();
     void unSubTodoSignal();
@@ -172,7 +174,7 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     bool mSidebarView;
 };
 
-  
+
 }
 
 #endif
