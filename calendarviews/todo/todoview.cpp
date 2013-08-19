@@ -645,7 +645,7 @@ void TodoView::clearSelection()
 
 void TodoView::addTodo( const QString &summary,
                         const Akonadi::Item &parentItem,
-                        const QStringList &categories)
+                        const QStringList &categories )
 {
   if ( !changer() || summary.trimmed().isEmpty() ) {
     return;
