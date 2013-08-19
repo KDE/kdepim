@@ -301,6 +301,11 @@ bool AgendaView::Private::mightBeVisible( const KCalCore::Incidence::Ptr &incide
   // independently of timezone.
   // The largest difference between two timezones is about 24 hours.
 
+  if ( todo && todo->isOverdue() ) {
+    // Don't optimize this case. Overdue to-dos have their own rules for displaying themselves
+    return true;
+  }
+
   if ( !incidence->recurs() ) {
     // If DTEND/DTDUE is before the 1st visible column
     if ( incidence->dateTime( KCalCore::Incidence::RoleEnd ).date().daysTo( firstVisibleDateTime.date() ) > 2 ) {
