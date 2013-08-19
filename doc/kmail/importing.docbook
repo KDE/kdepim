@@ -50,7 +50,7 @@ you will see one or more of the following screens:</para>
   <itemizedlist>
     <listitem><para>To <guilabel>Import mail messages</guilabel>, you need to select the folder you want your email messages to import into. Once selected, click the <guibutton>Import Mail</guibutton> button.
     Once the progress bar reaches 100%, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para></listitem>
-    <listitem><para>To <guilabel>Import mail filters</guilabel>, click the <guibutton>Import Filters</guibutton> and it will import any filters it found, once finished click the <guibutton>Next</guibutton> button,
+    <listitem><para>To <guilabel>Import mail filters</guilabel>, click the <guibutton>Import Filters</guibutton> button and it will import any filters it found, once finished click the <guibutton>Next</guibutton> button,
     or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para></listitem>
     <listitem><para>To <guilabel>Import settings</guilabel>, click the <guibutton>Import Settings</guibutton> button. The wizard will ask you some questions &eg; which folder to use for account folders that do not exist.
     The wizard will also create your identity. Once complete, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para></listitem>
@@ -62,8 +62,8 @@ you will see one or more of the following screens:</para>
 </sect2>
 
 <sect2 id="import-messages-kmailcvt">
-<title>Import Messages KmailCVT</title>
-<para>&kmail; can easily import several file formats from the following applications with the <application>KmailCVT</application> tool found in
+<title>Import Messages using KMailCVT</title>
+<para>&kmail; can easily import several file formats from the following applications with the <application>KMailCVT</application> tool found in
 <menuchoice><guimenu>File</guimenu><guimenuitem>Import Messages...</guimenuitem></menuchoice>:</para>
   <simplelist>
     <member>KMail Archive</member>
@@ -82,7 +82,7 @@ you will see one or more of the following screens:</para>
     <member>Lotus Notes</member>
     <member>Plain Text</member>
   </simplelist>
-<para>Please see the <application>KmailCVT</application> documentation at <ulink url="help:kmailcvt">KmailCVT</ulink>.</para>
+<para>Please see the <application>KMailCVT</application> documentation at <ulink url="help:kmailcvt">KMailCVT</ulink>.</para>
 </sect2>
 </sect1>
 </chapter>
