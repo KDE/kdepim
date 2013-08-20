@@ -80,7 +80,7 @@
 #include <KPeople/PersonsModel>
 #include <KPeople/PersonsModelFeature>
 #include "kpeople/completionfinder.h"
-
+#include "completionaddressedelegate.h"
 
 using namespace KPeople;
 using namespace KPIM;
@@ -234,14 +234,14 @@ class AddresseeLineEdit::Private
   public:
     Private( AddresseeLineEdit *qq, bool enableCompletion )
       : q( qq ),
+        m_model(0),
         m_useCompletion( enableCompletion ),
         m_completionInitialized( false ),
         m_smartPaste( false ),
         m_addressBookConnected( false ),
         m_lastSearchMode( false ),
         m_searchExtended( false ),
-        m_useSemicolonAsSeparator( false ),
-        m_model(0)
+        m_useSemicolonAsSeparator( false )
     {
         m_delayedQueryTimer.setSingleShot(true);
         connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
@@ -316,7 +316,7 @@ void AddresseeLineEdit::Private::init()
     if ( !s_static->nepomukSearchClient ) {
       s_static->nepomukSearchClient = new Nepomuk2::Query::QueryServiceClient;
       s_static->nepomukCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
-      s_static->kpeopleCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Person found in your data"), -1 );
+      s_static->kpeopleCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Persons found in your data"), -1 );
     }
     s_static->updateLDAPWeights();
 
@@ -327,7 +327,10 @@ void AddresseeLineEdit::Private::init()
       q->connect( q, SIGNAL(returnPressed(QString)),
                   q, SLOT(slotReturnPressed(QString)) );
 
-      KCompletionBox *box = q->completionBox();
+      KCompletionBox* box = q->completionBox();
+      CompletionAddresseDelegate* del = new CompletionAddresseDelegate(box);
+      box->setItemDelegate(del);
+
       q->connect( box, SIGNAL(activated(QString)),
                   q, SLOT(slotPopupCompletion(QString)) );
       q->connect( box, SIGNAL(userCancelled(QString)),
@@ -442,11 +445,13 @@ void AddresseeLineEdit::Private::slotKpeopleModelReady() {
     QPair<QString,QStringList> matchingEmails = matchingSearchString(values, idx.data(Qt::DisplayRole).toString());
 
     if (!matchingEmails.first.isNull()) {
-      kDebug() << "Kpeople Results: "  << matchingEmails.first;
-      foreach (const QString& email, matchingEmails.second) {
+
+      Q_FOREACH(const QString& email, matchingEmails.second) {
+
         // TODO : give a bigger weight to the head list !
-        addCompletionItem( i18n("%1 <%2>", matchingEmails.first, email), 1, s_static->kpeopleCompletionSource );
-        kDebug() << "--" << email;
+        QString title = i18n("%1 <%2>", matchingEmails.first, email) ;
+        addCompletionItem( title, 1, s_static->kpeopleCompletionSource );
+        kDebug() << "Insertion in the Completion List of " << title;
       }
     }
   }
@@ -458,9 +463,8 @@ QPair<QString,QStringList> AddresseeLineEdit::Private::matchingSearchString(QVar
   Q_ASSERT(values.size() == m_compareRoles.size());
 
   QPair<QString, QStringList> results ;
-  // Does the
+  // Does the name is matching ?
   if (name.contains(m_searchString, Qt::CaseInsensitive)) {
-    kDebug() << "Kpeople Found a Match by Name : " << name << "for input : " << m_searchString ;
     return kpeoplePrepareCompletionRow(values,name);
   }
   // Does the Email or Nickname are matching ?
@@ -494,6 +498,7 @@ QPair<QString,QStringList> AddresseeLineEdit::Private::kpeoplePrepareCompletionR
   if (values.last().type() == QVariant::List ) { // trick : email last of m_compareRoles
     Q_FOREACH(const QVariant var, values.last().toList()) {
       email = var.toString(); // keep the current matching on on head of list !
+
       if (email.contains(m_searchString)) {
         results.second.prepend(email);
       }

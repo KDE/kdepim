@@ -30,6 +30,7 @@ set(kdepim_LIB_SRCS
    job/openemailaddressjob.cpp
    addressline/completionordereditor.cpp
    addressline/addresseelineedit.cpp
+   addressline/completionaddressedelegate.cpp
    addressline/recentaddresses.cpp
    addressline/kmailcompletion.cpp
    prefs/kprefsdialog.cpp
