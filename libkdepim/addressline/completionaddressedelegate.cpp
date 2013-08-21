@@ -1,7 +1,7 @@
 /*
   This file is part of libkdepim.
 
-  Copyright (c) 20013 Franck Arrecot
+  Copyright (c) 20013 Franck Arrecot <franck.arrecot@gmail.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
