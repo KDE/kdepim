@@ -32,7 +32,7 @@ FilterImporterBalsa::FilterImporterBalsa( QFile *file )
     :FilterImporterAbstract()
 {
     KConfig config( file->fileName() );
-    const QStringList filterList = config.groupList().filter( QRegExp( "filter-\\d+" ) );
+    const QStringList filterList = config.groupList().filter( QRegExp( QLatin1String("filter-\\d+") ) );
     Q_FOREACH(const QString &filter, filterList) {
         KConfigGroup grp = config.group(filter);
         addFilter(grp);

@@ -32,278 +32,57 @@
 <sect1 id="import-options">
 <title>Import Options in &kmail;</title>
 
-<sect2 id="import-wizard">
-  <title>Import Wizard</title>
-  <para>&kmail; has an import wizard to make the transition from another email application extremely easy.
-    To use this tool, follow the steps below.</para>
-  <variablelist>
-    <varlistentry><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Import Wizard...</guimenuitem></menuchoice></term>
-      <listitem>
-        <para>This brings up the import wizard dialog. The import wizard will detect all known email applications and list them for you in the window.
-          Select the email application you want to import from and click the <guibutton>Next</guibutton> button. The wizard will then ask if you want to import everything,
-          or give you options to select which types of materials you want to import. Depending on your selections in the materials to import screen you will see one or more of the following screens.</para>
-          <itemizedlist>
-            <listitem>
-              <para>To <guilabel>Import mail messages</guilabel>, you need to select the folder you want your email messages to import into. Once selected, click the <guibutton>Import Mail</guibutton> button.
-              Once the progress bar reaches 100%, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para>
-            </listitem>
-            <listitem>
-              <para>To <guilabel>Import mail filters</guilabel>, click the <guibutton>Import Filters</guibutton> and it will import any filters it found, once finished
-                click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para>
-            </listitem>
-            <listitem>
-              <para>To <guilabel>Import settings</guilabel>, click the <guibutton>Import Settings</guibutton> button. The wizard will ask you some questions &eg; which folder to use for account folders that do not exist.
-                The wizard will also create your identity. Once complete, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para>
-            </listitem>
-            <listitem>
-              <para>To <guilabel>Import address books</guilabel>, click the <guibutton>Import address book</guibutton> button, and it will import all address books it finds.
-                Once complete, click the <guibutton>Next</guibutton> button.</para>
-            </listitem>
-          </itemizedlist>
-          <para>Click the <guibutton>Finish</guibutton> button to complete and exit the wizard. If at any time you wish to end the wizard, you can click the <guibutton>Cancel</guibutton> button.</para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
-  </sect2>
-
-<sect2 id="import-messages">
-  <title>Import Messages</title>
-<para>&kmail; offers an import tool for the messages and address books of some
-other email clients. You can access it using <menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Messages</guimenuitem></menuchoice>. Please make sure that you 
-compact your folders in the other email client, whether you are going to use
-the import utility or you are going to copy files manually.
-You only need to read this chapter if this tool does not work for you.</para>
-
-<para>This section is for all users who need to move email messages
-from their previous email client over to &kmail;. &kmail; can store
-messages using <quote>mbox</quote> or <quote>maildir</quote> formats, which
-are the most widely-used mailbox formats on &UNIX; systems. Mbox mailboxes
-store messages in one file, identifying where messages start and end with a
-<literal>From</literal> line (do not confuse this with the
-<literal>From:</literal> header that contains the message's sender); 
-Maildir uses one file per message.  For many &UNIX; email clients, all you
-need do is move your mailboxes to <filename
-class="directory">~/Mail</filename> (or make <filename
-class="symlink">Mail</filename> a symbolic link to the folder containing
-your mailboxes), make sure they are writable by your user, and launch
-&kmail;. The mailboxes should now show up correctly in &kmail;.</para>
-
-<warning><para>Do not use a second email client that accesses the files in
-<filename class="directory">~/Mail</filename> while &kmail; is running or
-you might lose messages. This section only explains how to import mailboxes
-to &kmail; once; it is not useful to you if you're planning to use several
-email clients for your mailboxes in the future.</para></warning>
-
+<sect2>
+<title>Import Wizard</title>
+<para>&kmail; has an import wizard to make the transition from another email application extremely easy.
+To use this tool, follow the steps below.</para>
 <variablelist>
-
-<varlistentry>
-<term><application>Eudora Lite</application>/<application>Eudora
-Pro</application></term>
-<listitem>
-<para><application>Eudora</application> uses the mbox format in its mail
-files. To use them with &kmail;, make sure that your
-<application>Eudora</application> mailboxes have been compacted, then copy the
-<literal role="extension">.mbx</literal> files (&Windows;
-<application>Eudora</application>) or <application>Eudora</application> mailbox
-files (&Mac; <application>Eudora</application>) to your <filename
-class="directory">~/Mail</filename> folder. You do not need to copy the
-<filename>index</filename> files. Once you start &kmail;, the mailboxes should
-appear in the Folders pane and the messages should be accessible in the Headers
-pane.</para>
-<para>If messages do not appear in the Headers pane, your mailbox files may
-still contain &Windows; or &Mac; line-feed characters. Use your favorite
-text editor, the <application>recode</application> command or a scripting
-language to change the &Windows; or &Mac; line feeds to &UNIX; line
-feeds.</para>
-</listitem>
+<varlistentry id="import-wizard">
+<term><menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Import Wizard...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>This brings up the import wizard dialog.</action> The import wizard will detect all supported email applications,
+and list them for you in the window. Select the email application you want to import from,
+and click the <guibutton>Next</guibutton> button. The wizard will then ask if you want to import everything,
+or give you options to select which types of materials you want to import. Depending on your selections in the materials to import screen,
+you will see one or more of the following screens:</para>
+  <itemizedlist>
+    <listitem><para>To <guilabel>Import mail messages</guilabel>, you need to select the folder you want your email messages to import into. Once selected, click the <guibutton>Import Mail</guibutton> button.
+    Once the progress bar reaches 100%, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para></listitem>
+    <listitem><para>To <guilabel>Import mail filters</guilabel>, click the <guibutton>Import Filters</guibutton> button and it will import any filters it found, once finished click the <guibutton>Next</guibutton> button,
+    or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para></listitem>
+    <listitem><para>To <guilabel>Import settings</guilabel>, click the <guibutton>Import Settings</guibutton> button. The wizard will ask you some questions &eg; which folder to use for account folders that do not exist.
+    The wizard will also create your identity. Once complete, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para></listitem>
+    <listitem><para>To <guilabel>Import address books</guilabel>, click the <guibutton>Import address book</guibutton> button, and it will import all address books it finds. Once complete, click the <guibutton>Next</guibutton> button.</para></listitem>
+  </itemizedlist>
+<para>Click the <guibutton>Finish</guibutton> button to complete and exit the wizard. If at any time you wish to end the wizard, you can click the <guibutton>Cancel</guibutton> button.</para></listitem>
 </varlistentry>
-
-<varlistentry>
-<term><application>Mailsmith</application></term>
-<listitem>
-<para><application>Mailsmith</application> runs on &Mac; and uses its own database
-format; however, it is  possible to export mail into mbox format using
-<menuchoice><guimenu>File</guimenu><guimenuitem>Export
-Mail</guimenuitem></menuchoice> on a 
-selected mailbox or on selected messages.  Once the messages have been exported, translate 
-the &Mac; line breaks to &UNIX; line breaks using your favorite editor, or using the following 
-command under &Linux;:</para>
-
-<para><userinput><command>perl</command> <option>-pe 's/\r/\n/g'</option> mail-mac.txt > mail-unix.txt</userinput></para>
-
-<para>&kmail; will only recognize mboxes placed directly in the <filename class="directory">~/Mail/</filename>
-folder. This means that  a folder hierarchy cannot be preserved by simply moving files into the 
-<filename class="directory">~/Mail/</filename> folder, but will need to be reconstructed
-within &kmail; manually.</para>
-
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>MMDF</term>
-<listitem>
-<para>This format is close enough to the mailbox format that &kmail; should be
-able to use these mailboxes if you just copy them to your
-<filename class="directory">~/Mail</filename> folder; however, MMDF mailboxes
-have not been tested with &kmail;, so your results may vary.  If you can get
-this format to work with &kmail;, please let us know so we can include more
-specific directions in the next documentation release.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>MH mailboxes</term>
-<listitem>
-<para>MH mailboxes are folders containing files that correspond to each
-message in that mailbox.  A shell script to convert MH mailboxes to mbox
-mailboxes, <command>mh2kmail</command>, is included at least in the source
-releases of &kmail;, but maybe not in the packaged releases. Running this script
-on a MH folder will convert it to an mbox file.  We strongly suggest that you
-back up your MH mail folders before you use this script.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Forte <application>Agent</application></term>
-<listitem>
-<para>In <application>Agent</application>:</para>
-<procedure>
-<step>
-<para>Select the messages to export</para>
-</step>
-<step>
-<para>Select <menuchoice><guimenu>FILE</guimenu><guimenuitem>SAVE MESSAGES
-AS</guimenuitem></menuchoice></para>
-</step>
-<step>
-<para>Mark the <guilabel>UNIX FORMAT</guilabel> and <guilabel>SAVE
-RAW</guilabel> boxes</para>
-</step>
-<step>
-<para>Give File a  <literal role="extension">.txt</literal> extension and
-save.</para>
-</step>
-</procedure>
-
-<para>In &kde;:</para>
-
-<procedure>
-<step>
-<para>Move the previously-saved file to the correct <filename
-class="directory">~/Mail</filename> folder</para>
-</step>
-<step>
-<para>Rename file without <literal role="extension">.txt</literal>
-extension</para>
-</step>
-</procedure>
-<para>When you open &kmail; the new folder with appropriate messages will be
-there.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>&Netscape; Mail</term>
-<listitem>
-
-<para>If you are using &Netscape; 4.x, the mail files should be found
-in <filename class="directory">~/nsmail</filename>; if you are using
-&Netscape; 6.x, they are buried in a folder deep in the <filename
-class="directory">~/.mozilla</filename> subfolder, something like:
-<filename
-class="directory">/home/user_name/.mozilla/user_name/2ts1ixha.slt/Mail/Mail/server_name</filename>
-(the <filename class="directory">2ts1ixha.slt</filename> string will
-probably vary, so check it on your own system.)  The <filename
-class="directory">[...]/Mail/Mail</filename> folder contains one
-subfolder for each account from which you receive mail through
-Netscape (&eg; <filename
-class="directory">[...]/Mail/Mail/math.university.edu</filename>);
-you will need to copy files from each of them if you want everything to
-be accessible under &kmail;.</para>
-
-<para>If you have no subfolders, just copy all of the &Netscape;
-files to <filename class="directory">~/Mail</filename>, make sure
-that they are writable (only by your user, of course), and restart
-&kmail;: all of the messages will now appear in &kmail; folders.
-(Note that if you use a command like <command>cp
-<parameter>*</parameter> <parameter>~/Mail</parameter></command>, you
-should follow it with <command>rm <option>-f</option>
-<parameter>~/Mail/*.msf</parameter></command>; every &Netscape; 6
-folder has a corresponding <filename>.msf</filename> file, and if you
-do not get rid of them you will have a bunch of spurious empty
-folders.)</para>
-
-<para>If you were using subfolders under &Netscape; (&eg; a main
-folder called <replaceable>Work</replaceable> with subfolders called
-<replaceable>Jim</replaceable> and <replaceable>Nancy</replaceable>),
-there are additional steps required. First, create the main folder
-(<replaceable>Work</replaceable>) in &kmail; and create a temporary
-child folder under it (by right-clicking on the folder name and
-selecting <guilabel>Create child folder</guilabel>); it does not
-matter what you call this folder -- <replaceable>dummy</replaceable>
-or the default <replaceable>unnamed</replaceable>, for example. Once
-a child folder has been requested, &kmail; creates a hidden folder
-in <filename class="directory">~/Mail</filename> called (in this
-example) <filename class="directory">.Work.directory</filename>. You
-can then copy your &Netscape; subfolder files
-(<replaceable>Jim</replaceable> and <replaceable>Nancy</replaceable>)
-into <filename class="directory">~/Mail/.Work.directory</filename>,
-and restart &kmail;; the child folders will appear under the main
-folder <replaceable>Work</replaceable>. Of course, this procedure may
-be extended for sub-subfolders, to any depth. (You can remove the
-temporary child folders afterwards, unless it amuses you to have a
-<replaceable>Work</replaceable> subfolder called
-<replaceable>dummy</replaceable>.)</para>
-
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><application>Pegasus Mail</application></term>
-<listitem>
-<para><application>Pegasus</application> for win32 uses single files for Mail
-folders similar to &kmail;. <application>Pegasus mail</application> folder files
-have the extension <literal role="extension">.pmm</literal> but they are the same format as mbox except the messages
-do not start with the <literal>From</literal> header, but with a control character. To work around
-this, replace each instance of the control character with <literal>From
-aaa@aaa Mon Jan 01 00:00:00 1997</literal>. This <literal>From</literal>
-line should be the first line of every message, before the
-<literal>Received:</literal> and other headers. Make sure to use a text editor
-that lets you save the files in &UNIX; format or create new folders in
-<application>Pegasus</application> that are in &UNIX; format and copy your messages
-there.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Maildir / Outlook Express / xfmail</term>
-<listitem>
-<para>Tools to convert these formats are available at the
-<ulink url="http://userbase.kde.org/KMail/Tools">Tools section of &kmail;'s
-homepage</ulink>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>Lotus <application>Notes</application>, BeOS Mail files, <application>cc:
-Mail</application>, &etc;</term>
-<listitem>
-<para>First you should have a look at <ulink
-url="http://userbase.kde.org/KMail/Tools">Tools section of &kmail;'s homepage</ulink> if 
-there are tools to convert your messages.</para>
-<para>Mail programs not listed here or on the homepage probably do not work with &kmail; as they use
-proprietary mail formats that &kmail; cannot understand. However, there is no
-harm in trying! If the mailbox file looks similar to the mbox format, try
-copying the mailbox file (remember, the index file is not needed) to your
-<filename class="directory">~/Mail</filename> folder and see what happens if you start
-&kmail;. If you get mailboxes from your favorite email client to work in &kmail;,
-please tell us how you did it so that we can include directions in a future
-revision of this documentation. </para>
-</listitem>
-</varlistentry>
-
 </variablelist>
+</sect2>
+
+<sect2 id="import-messages-kmailcvt">
+<title>Import Messages using KMailCVT</title>
+<para>&kmail; can easily import several file formats from the following applications with the <application>KMailCVT</application> tool found in
+<menuchoice><guimenu>File</guimenu><guimenuitem>Import Messages...</guimenuitem></menuchoice>:</para>
+  <simplelist>
+    <member>KMail Archive</member>
+    <member>mbox(Unix, Evolution)</member>
+    <member>Evolution 1.x</member>
+    <member>Evolution 2.x</member>
+    <member>Evolution 3.x</member>
+    <member>&kmail;</member>
+    <member>OS X Mail</member>
+    <member>Opera</member>
+    <member>Sylpheed</member>
+    <member>Thunderbird/Mozilla</member>
+    <member>The Bat!</member>
+    <member>Outlook Express</member>
+    <member>Pegasus-Mail</member>
+    <member>Lotus Notes</member>
+    <member>Plain Text</member>
+  </simplelist>
+<para>Please see the <application>KMailCVT</application> documentation at <ulink url="help:kmailcvt">KMailCVT</ulink>.</para>
 </sect2>
 </sect1>
 </chapter>

@@ -86,7 +86,7 @@ QString SieveConditionHeader::help() const
     return i18n("The \"header\" test evaluates to true if the value of any of the named headers, ignoring leading and trailing whitespace, matches any key.");
 }
 
-void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -97,7 +97,7 @@ void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
             if (tagName == QLatin1String("tag")) {
                 const QString tagValue = e.text();
                 SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
-                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition));
+                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     SelectHeaderTypeComboBox *headerType = w->findChild<SelectHeaderTypeComboBox*>( QLatin1String("headertype") );
@@ -106,6 +106,7 @@ void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
                     value->setText(e.text().replace(QLatin1String("\""), QLatin1String("\\\"")));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
                 }
                 ++index;
@@ -118,15 +119,20 @@ void SieveConditionHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("value") );
                     value->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionHeader::setParamWidgetValue too many argument "<<index;
                 }
                 ++index;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionHeader::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionheader.moc"

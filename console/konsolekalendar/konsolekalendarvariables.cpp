@@ -48,7 +48,7 @@
 #include <unistd.h>
 #include <time.h>
 
-using namespace KCal;
+using namespace KCalCore;
 using namespace std;
 
 KonsoleKalendarVariables::KonsoleKalendarVariables()
@@ -62,22 +62,21 @@ KonsoleKalendarVariables::KonsoleKalendarVariables()
   m_bUseEvents = false;
   m_bUseTodos = false;
   m_bUseJournals = false;
-  m_calendar = "";
   m_exportType = ExportTypeText;
   m_bIsExportFile = false;
   m_bDescription = false;
-  m_description = "";
+  m_description.clear();
   m_bLocation = false;
-  m_location = "Default location";
+  m_location = QLatin1String("Default location"); //i18n ?
   m_bSummary = false;
-  m_summary = "Default summary";
+  m_summary = QLatin1String("Default summary"); //i18n?
   m_bFloating = true;
   m_bAllowGui = false;
+  m_collectionId = -1;
 }
 
 KonsoleKalendarVariables::~KonsoleKalendarVariables()
 {
-  // delete m_resource;
 }
 
 void KonsoleKalendarVariables::setUID( const QString &uid )
@@ -86,12 +85,12 @@ void KonsoleKalendarVariables::setUID( const QString &uid )
   m_UID = uid;
 }
 
-QString KonsoleKalendarVariables::getUID()
+QString KonsoleKalendarVariables::getUID() const
 {
   return m_UID;
 }
 
-bool KonsoleKalendarVariables::isUID()
+bool KonsoleKalendarVariables::isUID() const
 {
   return m_bIsUID;
 }
@@ -102,12 +101,12 @@ void KonsoleKalendarVariables::setStartDateTime( const QDateTime &start )
   m_startDateTime = start;
 }
 
-QDateTime KonsoleKalendarVariables::getStartDateTime()
+QDateTime KonsoleKalendarVariables::getStartDateTime() const
 {
   return m_startDateTime;
 }
 
-bool KonsoleKalendarVariables::isStartDateTime()
+bool KonsoleKalendarVariables::isStartDateTime() const
 {
   return m_bIsStartDateTime;
 }
@@ -118,12 +117,12 @@ void KonsoleKalendarVariables::setEndDateTime( const QDateTime &end )
   m_endDateTime = end;
 }
 
-QDateTime KonsoleKalendarVariables::getEndDateTime()
+QDateTime KonsoleKalendarVariables::getEndDateTime() const
 {
   return m_endDateTime;
 }
 
-bool KonsoleKalendarVariables::isEndDateTime()
+bool KonsoleKalendarVariables::isEndDateTime() const
 {
   return m_bIsEndDateTime;
 }
@@ -133,7 +132,7 @@ void KonsoleKalendarVariables::setNext( bool next )
   m_bNext = next;
 }
 
-bool KonsoleKalendarVariables::isNext()
+bool KonsoleKalendarVariables::isNext() const
 {
   return m_bNext;
 }
@@ -143,7 +142,7 @@ void KonsoleKalendarVariables::setVerbose( bool verbose )
   m_bVerbose = verbose;
 }
 
-bool KonsoleKalendarVariables::isVerbose()
+bool KonsoleKalendarVariables::isVerbose() const
 {
   return m_bVerbose;
 }
@@ -153,7 +152,7 @@ void KonsoleKalendarVariables::setDryRun( bool dryrun )
   m_bDryRun = dryrun;
 }
 
-bool KonsoleKalendarVariables::isDryRun()
+bool KonsoleKalendarVariables::isDryRun() const
 {
   return m_bDryRun;
 }
@@ -163,7 +162,7 @@ void KonsoleKalendarVariables::setUseEvents( bool useEvents )
   m_bUseEvents = useEvents;
 }
 
-bool KonsoleKalendarVariables::getUseEvents()
+bool KonsoleKalendarVariables::getUseEvents() const
 {
   return m_bUseEvents;
 }
@@ -173,7 +172,7 @@ void KonsoleKalendarVariables::setUseTodos( bool useTodos )
   m_bUseTodos = useTodos;
 }
 
-bool KonsoleKalendarVariables::getUseTodos()
+bool KonsoleKalendarVariables::getUseTodos() const
 {
   return m_bUseTodos;
 }
@@ -183,19 +182,19 @@ void KonsoleKalendarVariables::setUseJournals( bool useJournals )
   m_bUseJournals = useJournals;
 }
 
-bool KonsoleKalendarVariables::getUseJournals()
+bool KonsoleKalendarVariables::getUseJournals() const
 {
   return m_bUseJournals;
 }
 
 void KonsoleKalendarVariables::setCalendarFile( const QString &calendar )
 {
-  m_calendar = calendar;
+  m_calendarFile = calendar;
 }
 
-QString KonsoleKalendarVariables::getCalendarFile()
+QString KonsoleKalendarVariables::getCalendarFile() const
 {
-  return m_calendar;
+  return m_calendarFile;
 }
 
 void KonsoleKalendarVariables::setImportFile( const QString &calendar )
@@ -203,19 +202,19 @@ void KonsoleKalendarVariables::setImportFile( const QString &calendar )
   m_import = calendar;
 }
 
-QString KonsoleKalendarVariables::getImportFile()
+QString KonsoleKalendarVariables::getImportFile() const
 {
   return m_import;
 }
 
-void KonsoleKalendarVariables::setCalendar( CalendarResources *resources )
+void KonsoleKalendarVariables::setCalendar( const Akonadi::FetchJobCalendar::Ptr &resources )
 {
-  m_calendarResources = resources;
+  m_calendar = resources;
 }
 
-CalendarResources *KonsoleKalendarVariables::getCalendar()
+Akonadi::FetchJobCalendar::Ptr KonsoleKalendarVariables::getCalendar() const
 {
-  return m_calendarResources;
+  return m_calendar;
 }
 
 void KonsoleKalendarVariables::setExportType( ExportType exportType )
@@ -223,7 +222,7 @@ void KonsoleKalendarVariables::setExportType( ExportType exportType )
   m_exportType = exportType;
 }
 
-ExportType KonsoleKalendarVariables::getExportType()
+ExportType KonsoleKalendarVariables::getExportType() const
 {
   return m_exportType;
 }
@@ -234,17 +233,17 @@ void KonsoleKalendarVariables::setExportFile( const QString &export_file )
   m_bIsExportFile = true;
 }
 
-bool KonsoleKalendarVariables::isExportFile()
+bool KonsoleKalendarVariables::isExportFile() const
 {
   return m_bIsExportFile;
 }
 
-QString KonsoleKalendarVariables::getExportFile()
+QString KonsoleKalendarVariables::getExportFile() const
 {
   return m_exportFile;
 }
 
-bool KonsoleKalendarVariables::isAll()
+bool KonsoleKalendarVariables::isAll() const
 {
   return m_bAll;
 }
@@ -254,7 +253,7 @@ void KonsoleKalendarVariables::setAll( bool all )
   m_bAll = all;
 }
 
-bool KonsoleKalendarVariables::getAll()
+bool KonsoleKalendarVariables::getAll() const
 {
   return m_bAll;
 }
@@ -265,12 +264,12 @@ void KonsoleKalendarVariables::setDescription( const QString &description )
   m_description = description;
 }
 
-QString KonsoleKalendarVariables::getDescription()
+QString KonsoleKalendarVariables::getDescription() const
 {
   return m_description;
 }
 
-bool KonsoleKalendarVariables::isDescription()
+bool KonsoleKalendarVariables::isDescription() const
 {
   return m_bDescription;
 }
@@ -281,12 +280,12 @@ void KonsoleKalendarVariables::setLocation( const QString &location )
   m_location = location;
 }
 
-QString KonsoleKalendarVariables::getLocation()
+QString KonsoleKalendarVariables::getLocation() const
 {
   return m_location;
 }
 
-bool KonsoleKalendarVariables::isLocation()
+bool KonsoleKalendarVariables::isLocation() const
 {
   return m_bLocation;
 }
@@ -297,12 +296,12 @@ void KonsoleKalendarVariables::setSummary( const QString &summary )
   m_summary = summary;
 }
 
-QString KonsoleKalendarVariables::getSummary()
+QString KonsoleKalendarVariables::getSummary() const
 {
   return m_summary;
 }
 
-bool KonsoleKalendarVariables::isSummary()
+bool KonsoleKalendarVariables::isSummary() const
 {
   return m_bSummary;
 }
@@ -312,7 +311,7 @@ void KonsoleKalendarVariables::setFloating( bool floating )
   m_bFloating = floating;
 }
 
-bool KonsoleKalendarVariables::getFloating()
+bool KonsoleKalendarVariables::getFloating() const
 {
   return m_bFloating;
 }
@@ -323,22 +322,32 @@ void KonsoleKalendarVariables::setDaysCount( int count )
   m_bDaysCount = true;
 }
 
-int KonsoleKalendarVariables::getDaysCount()
+int KonsoleKalendarVariables::getDaysCount() const
 {
   return m_daysCount;
 }
 
-bool KonsoleKalendarVariables::isDaysCount()
+bool KonsoleKalendarVariables::isDaysCount() const
 {
   return m_bDaysCount;
 }
 
 void KonsoleKalendarVariables::setAllowGui( bool allow )
 {
-  m_bAllowGui = allow;
+    m_bAllowGui = allow;
 }
 
-bool KonsoleKalendarVariables::allowGui()
+void KonsoleKalendarVariables::setCollectionId(Akonadi::Collection::Id id)
+{
+  m_collectionId = id;
+}
+
+Akonadi::Collection::Id KonsoleKalendarVariables::collectionId() const
+{
+  return m_collectionId;
+}
+
+bool KonsoleKalendarVariables::allowGui() const
 {
   return m_bAllowGui;
 }

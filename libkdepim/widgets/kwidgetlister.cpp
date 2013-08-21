@@ -127,11 +127,11 @@ void KWidgetLister::init( bool fewerMoreButton )
   if ( fewerMoreButton )
   {
     d->mBtnMore = new KPushButton( KGuiItem( i18nc( "more widgets", "More" ),
-                                           "list-add" ), d->mButtonBox );
+                                           QLatin1String("list-add") ), d->mButtonBox );
     d->mButtonBox->setStretchFactor( d->mBtnMore, 0 );
 
     d->mBtnFewer = new KPushButton( KGuiItem( i18nc( "fewer widgets", "Fewer" ),
-                                            "list-remove" ), d->mButtonBox );
+                                            QLatin1String("list-remove") ), d->mButtonBox );
     d->mButtonBox->setStretchFactor( d->mBtnFewer, 0 );
   }
   QWidget *spacer = new QWidget( d->mButtonBox );
@@ -139,7 +139,7 @@ void KWidgetLister::init( bool fewerMoreButton )
 
   d->mBtnClear = new KPushButton( KStandardGuiItem::clear(), d->mButtonBox );
   // FIXME a useful whats this. KStandardGuiItem::clear() returns a text with an edit box
-  d->mBtnClear->setWhatsThis( "" );
+  d->mBtnClear->setWhatsThis( QString() );
   d->mButtonBox->setStretchFactor( d->mBtnClear, 0 );
 
   //---------- connect everything
@@ -280,8 +280,15 @@ void KWidgetLister::addWidgetAfterThisWidget(QWidget*currentWidget, QWidget* wid
   if ( !widget )
     widget = this->createWidget( this );
 
-  d->mLayout->insertWidget( d->mLayout->indexOf( currentWidget ? currentWidget :  d->mButtonBox )+1, widget );
-  d->mWidgetList.append( widget );
+  int index = d->mLayout->indexOf( currentWidget ? currentWidget :  d->mButtonBox )+1;
+  d->mLayout->insertWidget( index, widget );
+  index = 0;
+  if (currentWidget) {
+      index = d->mWidgetList.indexOf(currentWidget);
+      d->mWidgetList.insert(index+1, widget);
+  } else {
+      d->mWidgetList.append(widget);
+  }
   widget->show();
 
   d->enableControls();

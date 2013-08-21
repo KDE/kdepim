@@ -24,6 +24,7 @@
 #include "searchwindow.h"
 
 #include "folderrequester.h"
+#include "searchdebugdialog.h"
 #include "kmcommands.h"
 #include "kmmainwidget.h"
 #include "mailcommon/kernel/mailkernel.h"
@@ -103,7 +104,10 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
     mStopSearchGuiItem = KStandardGuiItem::stop();
     mSearchButton =  mUi.mButtonBox->addButton( mStartSearchGuiItem, QDialogButtonBox::ActionRole );
     connect( mUi.mButtonBox, SIGNAL(rejected()), SLOT(slotClose()) );
-
+#if !defined(NDEBUG)
+    QPushButton *debugButton = mUi.mButtonBox->addButton( i18n("Debug query"), QDialogButtonBox::ActionRole );
+    connect(debugButton, SIGNAL(clicked(bool)), SLOT(slotDebugQuery()));
+#endif
     searchWidget->layout()->setMargin( 0 );
 
     mUi.mCbxFolders->setMustBeReadWrite( false );
@@ -402,6 +406,10 @@ void SearchWindow::slotSearch()
     KUrl::List urls;
     if ( !mUi.mChkbxAllFolders->isChecked() ) {
         const Akonadi::Collection col = mUi.mCbxFolders->collection();
+        if (!col.isValid()) {
+            KMessageBox::error(this, i18n("You did not selected a valid folder."), i18n("Search"));
+            return;
+        }
         urls << col.url( Akonadi::Collection::UrlShort );
         if ( mUi.mChkSubFolders->isChecked() ) {
             childCollectionsFromSelectedCollection( col, urls );
@@ -413,28 +421,40 @@ void SearchWindow::slotSearch()
     SearchPattern searchPattern( mSearchPattern );
     searchPattern.purify();
 
+    MailCommon::SearchPattern::SparqlQueryError queryError = MailCommon::SearchPattern::NoError;
 #ifdef AKONADI_USE_STRIGI_SEARCH
-    const QString query = searchPattern.asXesamQuery();
+    mQuery = searchPattern.asXesamQuery();
     const QString queryLanguage = QLatin1String("XESAM");
 #else
-    const QString query = searchPattern.asSparqlQuery(urls);
+    queryError = searchPattern.asSparqlQuery(mQuery, urls);
     const QString queryLanguage = QLatin1String("SPARQL");
 #endif
 
-    qDebug() << queryLanguage;
-    qDebug() << query;
-    if ( query.isEmpty() )
+    if ( mQuery.isEmpty() ) {
+        switch(queryError) {
+        case MailCommon::SearchPattern::NoError:
+            break;
+        case MailCommon::SearchPattern::MissingCheck:
+            KMessageBox::error(this, i18n("You forgot to define condition."), i18n("Search"));
+            break;
+        case MailCommon::SearchPattern::FolderEmptyOrNotIndexed:
+            KMessageBox::information(this, i18n("All folders selected are empty or were not indexed."), i18n("Search"));
+            break;
+        }
         return;
+    }
+    qDebug() << queryLanguage;
+    qDebug() << mQuery;
     mUi.mSearchFolderOpenBtn->setEnabled( true );
 
     if ( !mFolder.isValid() ) {
         // FIXME if another app created a virtual 'Last Search' folder without
         // out custom attributes it will result in problems
-        mSearchJob = new Akonadi::SearchCreateJob( mUi.mSearchFolderEdt->text(), query, this );
+        mSearchJob = new Akonadi::SearchCreateJob( mUi.mSearchFolderEdt->text(), mQuery, this );
     } else {
         Akonadi::PersistentSearchAttribute *attribute = mFolder.attribute<Akonadi::PersistentSearchAttribute>();
         attribute->setQueryLanguage( queryLanguage );
-        attribute->setQueryString( query );
+        attribute->setQueryString( mQuery );
         mSearchJob = new Akonadi::CollectionModifyJob( mFolder, this );
     }
 
@@ -448,7 +468,7 @@ void SearchWindow::searchDone( KJob* job )
     Q_ASSERT( job == mSearchJob );
     QMetaObject::invokeMethod( this, "enableGUI", Qt::QueuedConnection );
     if ( job->error() ) {
-        KMessageBox::sorry( this, i18n("Can not get search result. %1", job->errorString() ) );
+        KMessageBox::sorry( this, i18n("Cannot get search result. %1", job->errorString() ) );
         if ( mSearchJob ) {
             mSearchJob = 0;
         }
@@ -782,6 +802,12 @@ void SearchWindow::getChildren( const QAbstractItemModel *model,
     }
 }
 
+void SearchWindow::slotDebugQuery()
+{
+    QPointer<SearchDebugDialog> dlg = new SearchDebugDialog(mQuery, this);
+    dlg->exec();
+    delete dlg;
+}
 
 }
 

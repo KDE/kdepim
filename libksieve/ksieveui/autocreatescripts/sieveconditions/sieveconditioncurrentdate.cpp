@@ -88,7 +88,7 @@ QString SieveConditionCurrentDate::help() const
     return i18n("The currentdate test is similar to the date test, except that it operates on the current date/time rather than a value extracted from the message header.");
 }
 
-void SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
 {
     int index = 0;
     QString type;
@@ -104,13 +104,17 @@ void SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
                 } else if (index == 1) {
                     value = e.text();
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionCurrentDate::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtype"));
-                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveConditionCurrentDate::setParamWidgetValue unknown tag "<<tagName;
             }
         }
@@ -118,7 +122,7 @@ void SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
     }
     SelectDateWidget *dateWidget = w->findChild<SelectDateWidget*>(QLatin1String("datewidget"));
     dateWidget->setCode(type, value);
-
+    return true;
 }
 
 #include "sieveconditioncurrentdate.moc"

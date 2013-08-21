@@ -24,7 +24,7 @@
 #include "messagecomposer_export.h"
 #include "sender/messagesender.h"
 #include "messagecomposer/recipient/recipient.h"
-#include "sendlateragent/sendlaterdialog.h"
+#include "agents/sendlateragent/sendlaterdialog.h"
 
 #include <akonadi/collection.h>
 #include <KDE/KMime/Message>

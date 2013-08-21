@@ -1383,6 +1383,7 @@ of key words can be modified.</para>
 	      these are not supported in &kmail; at all, which is a good thing, as most viruses propagate through these.</para>
 	  </listitem>
 	</varlistentry>
+	<!--http://www.aegiap.eu/kdeblog/2013/04/news-in-kdepim-4-11-scam-detection/-->
          <varlistentry id="configure-security-email-scams">
           <term><guilabel>Informs if message reading is a suspected email scam</guilabel></term>
           <listitem>
@@ -2119,7 +2120,7 @@ of key words can be modified.</para>
 <term><guilabel>Ask for confirmation before moving all messages to trash</guilabel></term>
 <listitem>
 <para>Enable this option if you want to be asked for confirmation whenever
-you use <menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Messages to Trash</guimenuitem></menuchoice>.</para>
+you use <menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All to Trash</guimenuitem></menuchoice>.</para>
 </listitem>
 </varlistentry>
 

@@ -156,7 +156,7 @@ KABC::Addressee VCardInput::readAddressee(std::istream& stream)
     if (line.empty()) return KABC::Addressee();
 
     QString input = m_codec->toUnicode(line.c_str(), line.size());
-    input += '\n';
+    input += QLatin1Char('\n');
 
     QString inputLine;
     while (!inputLine.isEmpty() || !stream.eof())
@@ -165,8 +165,8 @@ KABC::Addressee VCardInput::readAddressee(std::istream& stream)
         inputLine = m_codec->toUnicode(line.c_str(), line.size());
 
         input += inputLine;
-        input += '\n';
-        if (inputLine.startsWith("END:VCARD")) break;
+        input += QLatin1Char('\n');
+        if (inputLine.startsWith(QLatin1String("END:VCARD"))) break;
     }
 
     return m_converter->parseVCard(input.toUtf8());
@@ -221,7 +221,7 @@ KABC::Addressee EmailInput::readAddressee(std::istream& stream)
     QString email;
     KABC::Addressee::parseEmailAddress(rawEmail, name, email);
 
-    if (!email.isEmpty() && email.indexOf("@") != -1)
+    if (!email.isEmpty() && email.indexOf(QLatin1String("@")) != -1)
     {
         addressee.insertEmail(email, true);
 
@@ -286,7 +286,7 @@ KABC::Addressee SearchInput::readAddressee(std::istream& stream)
     QString email;
     KABC::Addressee::parseEmailAddress(rawEmail, name, email);
 
-    if (email.isEmpty() || email.indexOf("@") == -1)
+    if (email.isEmpty() || email.indexOf(QLatin1String("@")) == -1)
     {
         addressee.insertEmail(rawEmail, true);
     }
@@ -400,7 +400,7 @@ QString CSVInput::optionUsage() const
     QString usage =
         i18n("Specify one of the following CSV templates:");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
     const QMap<QString, QString> templateNames = m_templateFactory->templateNames();
 
@@ -413,11 +413,11 @@ QString CSVInput::optionUsage() const
 
         usage += name;
 
-        usage += name.length() < 8 ? "\t\t" : "\t";
+        usage += name.length() < 8 ? QLatin1String("\t\t") : QLatin1String("\t");
 
         usage += templateName;
 
-        usage += '\n';
+        usage += QLatin1Char('\n');
     }
 
     return usage;

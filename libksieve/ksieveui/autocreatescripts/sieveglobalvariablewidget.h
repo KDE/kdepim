@@ -40,7 +40,9 @@ public:
     void generatedScript(QString &script);
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
     bool isInitialized() const;
-    void loadScript(const QDomElement &element);
+    void loadScript(const QDomElement &element, QString &error);
+    void setVariableValue(const QString &name);
+    QString variableName() const;
 
 private Q_SLOTS:
     void slotAddWidget();
@@ -68,7 +70,9 @@ public:
     ~SieveGlobalVariableLister();
 
     void generatedScript(QString &script, QStringList &requires);
-    void loadScript(const QDomElement &element);
+    void loadScript(const QDomElement &element, QString &error);
+    void loadSetVariable(const QDomElement &element, QString &error);
+
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
@@ -91,7 +95,8 @@ public:
 
     void generatedScript(QString &script, QStringList &requires);
 
-    void loadScript(const QDomElement &element);
+    void loadScript(const QDomElement &element, QString &error);
+    void loadSetVariable(const QDomElement &element, QString &error);
 
 private Q_SLOTS:
     void slotHelp();

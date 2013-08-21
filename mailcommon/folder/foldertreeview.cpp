@@ -163,7 +163,7 @@ void FolderTreeView::slotHeaderContextMenuRequested( const QPoint &pnt )
   QActionGroup *grp = new QActionGroup( &menu );
   const int nbElement( (int)( sizeof( icon_sizes ) / sizeof( int ) ) );
   for ( int i = 0; i < nbElement; ++i ) {
-    act = menu.addAction( QString( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ) );
+    act = menu.addAction( QString::fromLatin1( "%1x%2" ).arg( icon_sizes[ i ] ).arg( icon_sizes[ i ] ) );
     act->setCheckable( true );
     grp->addAction( act );
     if ( iconSize().width() == icon_sizes[ i ] ) {
@@ -524,7 +524,7 @@ bool FolderTreeView::allowedToEnterFolder( const Akonadi::Collection &collection
       i18n( "Go to Next Unread Message" ),
       KGuiItem( i18n( "Go To" ) ),
       KGuiItem( i18n( "Do Not Go To" ) ), // defaults
-      ":kmail_AskNextFolder", 0 );
+      QLatin1String(":kmail_AskNextFolder"), 0 );
 
   return ( result == KMessageBox::Yes );
 }
@@ -573,7 +573,7 @@ bool FolderTreeView::isUnreadFolder( const QModelIndex &current,
                    i18n( "Go to Next Unread Message" ),
                    KGuiItem( i18n( "Go To" ) ),
                    KGuiItem( i18n( "Do Not Go To" ) ), // defaults
-                   ":kmail_AskNextFolder",
+                   QLatin1String(":kmail_AskNextFolder"),
                    0 ) == KMessageBox::No ) {
               return true; // assume selected (do not continue looping)
             }

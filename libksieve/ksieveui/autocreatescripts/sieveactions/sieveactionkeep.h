@@ -28,6 +28,13 @@ public:
 
     QString code(QWidget *) const;
     QString help() const;
+    QWidget *createParamWidget( QWidget *parent ) const;
+    bool setParamWidgetValue( const QDomElement &element, QWidget *w, QString &error );
+    QStringList needRequires(QWidget *) const;
+
+private:
+    bool mHasFlagSupport;
+    bool mHasImapFlag4Support;
 };
 }
 #endif // SIEVEACTIONKEEP_H

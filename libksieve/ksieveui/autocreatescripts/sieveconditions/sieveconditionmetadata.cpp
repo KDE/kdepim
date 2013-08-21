@@ -119,7 +119,7 @@ QString SieveConditionMetaData::help() const
     return i18n("This test retrieves the value of the mailbox annotation \"annotation-name\" for the mailbox \"mailbox\". The retrieved value is compared to the \"key-list\". The test returns true if the annotation exists and its value matches any of the keys.");
 }
 
-void SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error )
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -146,6 +146,7 @@ void SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
                     break;
                 }
                 default: {
+                    tooManyArgument(tagName, index, 3, error);
                     qDebug()<<" SieveConditionMetaData::setParamWidgetValue too many argument "<<index;
                     break;
                 }
@@ -153,13 +154,17 @@ void SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
                 ++index;
             } else if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *selectType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("selecttype"));
-                selectType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+                selectType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionMetaData::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionmetadata.moc"

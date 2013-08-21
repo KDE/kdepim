@@ -16,6 +16,7 @@
 */
 
 #include "themeeditortabwidget.h"
+#include "editorpage.h"
 
 #include <KLocale>
 #include <KMenu>
@@ -39,24 +40,36 @@ ThemeEditorTabWidget::~ThemeEditorTabWidget()
 {
 }
 
-void ThemeEditorTabWidget::slotTabContextMenuRequest( const QPoint &pos )
+void ThemeEditorTabWidget::slotMainFileNameChanged(const QString &fileName)
 {
     QTabBar *bar = tabBar();
+    if ( count() < 1 )
+        return;
+    bar->setTabText(0, i18n("Editor") + QString::fromLatin1(" (%1)").arg(fileName));
+}
+
+void ThemeEditorTabWidget::slotTabContextMenuRequest( const QPoint &pos )
+{
     if ( count() <= 1 )
         return;
 
+    QTabBar *bar = tabBar();
     const int indexBar = bar->tabAt( bar->mapFrom( this, pos ) );
-    if ( indexBar <= 1 )
+    QWidget *w = widget(indexBar);
+    EditorPage *page = dynamic_cast<EditorPage*>(w);
+    if (!page)
         return;
 
-    KMenu menu( this );
-    QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-    closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
+    if (page->pageType() == EditorPage::ExtraPage) {
+        KMenu menu( this );
+        QAction *closeTab = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
+        closeTab->setIcon( KIcon( QLatin1String( "tab-close" ) ) );
 
-    QAction *action = menu.exec( mapToGlobal( pos ) );
+        QAction *action = menu.exec( mapToGlobal( pos ) );
 
-    if (action == closeTab) {
-        Q_EMIT tabCloseRequested(indexBar);
+        if (action == closeTab) {
+            Q_EMIT tabCloseRequested(indexBar);
+        }
     }
 }
 

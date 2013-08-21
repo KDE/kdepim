@@ -62,7 +62,7 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -81,17 +81,20 @@ void SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                     const QString strValue = AutoCreateScriptUtil::strValue(node);
                     if (!strValue.isEmpty()) {
                         SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
-                        importance->setCode(strValue);
+                        importance->setCode(strValue, name(), error);
                     }
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagValue"<<tagValue;
                 }
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionNotify::code(QWidget *w) const

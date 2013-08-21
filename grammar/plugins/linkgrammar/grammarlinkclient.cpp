@@ -47,7 +47,7 @@ Grammar::GrammarPlugin *GrammarLinkClient::createGrammarChecker(const QString &l
     return plugin;
 }
 
-QStringList GrammarLinkClient::searchLanguages()
+QStringList GrammarLinkClient::searchLanguages() const
 {
     //TODO
     return QStringList();

@@ -79,6 +79,7 @@ public:
           action_print_preview(0),
           action_paste_withoutformatting(0),
           action_insert_specialchar(0),
+          action_insert_anchor(0),
           q(qq),
           imageResizeWidget(0)
     {
@@ -130,6 +131,7 @@ public:
     void _k_slotEditList();
     void _k_slotPasteWithoutFormatting();
     void _k_slotInsertSpecialChar();
+    void _k_slotInsertAnchor();
 
     QAction* getAction ( QWebPage::WebAction action ) const;
     QVariant evaluateJavascript(const QString& command);
@@ -190,6 +192,7 @@ public:
     KAction *action_print_preview;
     KAction *action_paste_withoutformatting;
     KAction *action_insert_specialchar;
+    KAction *action_insert_anchor;
 
     ComposerView *q;
     ComposerImageResizeWidget *imageResizeWidget;

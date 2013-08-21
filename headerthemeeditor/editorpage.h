@@ -19,53 +19,29 @@
 #ifndef EDITORPAGE_H
 #define EDITORPAGE_H
 
-#include <QWidget>
+#include "grantleethemeeditor/editorpage.h"
 
 
 class ThemeTemplateWidget;
 class EditorWidget;
 class KZip;
 class QSplitter;
-class PreviewWidget;
 class ThemeEditorWidget;
+namespace GrantleeThemeEditor {
+class EditorWidget;
+class PreviewWidget;
+}
 
-class EditorPage : public QWidget
+class EditorPage : public GrantleeThemeEditor::EditorPage
 {
     Q_OBJECT
 public:
-    enum PageType {
-        MainPage = 0,
-        ExtraPage = 1
-    };
-
-    explicit EditorPage(PageType type, const QString &projectDirectory, QWidget *parent = 0);
+    explicit EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QString &projectDirectory, QWidget *parent = 0);
     ~EditorPage();
 
-    void saveTheme(const QString &path);
-    void loadTheme(const QString &path);
-
-    void setPageFileName(const QString &filename);
-    QString pageFileName() const;
-
-    PageType pageType() const;
-
-    void createZip(const QString &themeName, KZip *zip);
-    void saveAsFilename(const QString &filename);
-    void installTheme(const QString &themePath);
-    void insertFile(const QString &filename);
-
-    PreviewWidget *preview() const;
-    ThemeEditorWidget *editor() const;
-
-Q_SIGNALS:
-    void needUpdateViewer();
-    void changed();
+    GrantleeThemeEditor::PreviewWidget *preview() const;
 
 private:
-    PageType mType;
-    QString mPageFileName;
-    ThemeEditorWidget *mEditor;
-    PreviewWidget *mPreview;
     ThemeTemplateWidget *mThemeTemplate;
     QSplitter *mMainSplitter;
     QSplitter *mWidgetSplitter;

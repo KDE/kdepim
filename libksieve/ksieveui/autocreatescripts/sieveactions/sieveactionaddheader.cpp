@@ -68,7 +68,7 @@ QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -78,7 +78,7 @@ void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 SelectAddHeaderPositionCombobox *combo = w->findChild<SelectAddHeaderPositionCombobox*>(QLatin1String("selectposition"));
-                combo->setCode(AutoCreateScriptUtil::tagValue(e.text()));
+                combo->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
@@ -87,15 +87,18 @@ void SieveActionAddHeader::setParamWidgetValue(const QDomElement &element, QWidg
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
                     value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveActionAddHeader::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveActionAddHeader::setParamWidgetValue unknown tag "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionAddHeader::code(QWidget *w) const

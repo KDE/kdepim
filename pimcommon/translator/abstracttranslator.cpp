@@ -28,17 +28,17 @@ AbstractTranslator::~AbstractTranslator()
 {
 }
 
-void AbstractTranslator::setInputText(const QString& text)
+void AbstractTranslator::setInputText(const QString &text)
 {
     mInputText = text;
 }
 
-void AbstractTranslator::setFrom(const QString& language)
+void AbstractTranslator::setFrom(const QString &language)
 {
     mFrom = language;
 }
 
-void AbstractTranslator::setTo(const QString& language)
+void AbstractTranslator::setTo(const QString &language)
 {
     mTo = language;
 }
@@ -46,11 +46,6 @@ void AbstractTranslator::setTo(const QString& language)
 QString AbstractTranslator::resultTranslate() const
 {
     return mResult;
-}
-
-void AbstractTranslator::debug()
-{
-    qDebug()<<" not implemented";
 }
 
 #include "abstracttranslator.moc"

@@ -70,7 +70,7 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget *w ,QString &error )
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -81,23 +81,26 @@ void SieveActionConvert::setParamWidgetValue(const QDomElement &element, QWidget
             if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     SelectMimeTypeComboBox *fromMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("from") );
-                    fromMimeType->setCode(e.text());
+                    fromMimeType->setCode(e.text(), name(), error);
                 } else if (index == 1) {
                     SelectMimeTypeComboBox *toMimeType = w->findChild<SelectMimeTypeComboBox*>( QLatin1String("to") );
-                    toMimeType->setCode(e.text());
+                    toMimeType->setCode(e.text(), name(), error);
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveActionConvert::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("list")) {
                SelectConvertParameterWidget *params = w->findChild<SelectConvertParameterWidget*>( QLatin1String("params") );
-               params->setCode(AutoCreateScriptUtil::listValue(e));
+               params->setCode(AutoCreateScriptUtil::listValue(e), error);
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveActionConvert::setParamWidgetValue unknown tag "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionConvert::code(QWidget *w) const

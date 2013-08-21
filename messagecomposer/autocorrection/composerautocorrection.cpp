@@ -189,7 +189,6 @@ void ComposerAutoCorrection::setAutocorrectEntries(const QHash<QString, QString>
     mAutocorrectEntries = entries;
 }
 
-
 ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultSingleQuotes() const
 {
     ComposerAutoCorrection::TypographicQuotes quote;
@@ -373,19 +372,32 @@ QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
      * from Calligra 1.x branch */
     // kDebug() <<"link:" << word;
 
-    char link_type = 0;
+    bool secure = false;
+    int link_type = 0;
     int pos = word.indexOf(QLatin1String("http://"));
     int tmp_pos = word.indexOf(QLatin1String("https://"));
 
-    if (tmp_pos < pos && tmp_pos != -1)
+    if (tmp_pos != -1 && pos == -1) {
+        secure = true;
+    }
+
+    if (tmp_pos < pos && tmp_pos != -1) {
         pos = tmp_pos;
+    }
+
     tmp_pos = word.indexOf(QLatin1String("mailto:/"));
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
         pos = tmp_pos;
     tmp_pos = word.indexOf(QLatin1String("ftp://"));
+    const int secureftp = word.indexOf(QLatin1String("ftps://"));
+    if (secureftp != -1 && tmp_pos == -1) {
+        secure = true;
+    }
+
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
         pos = tmp_pos;
     tmp_pos = word.indexOf(QLatin1String("ftp."));
+
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1) {
         pos = tmp_pos;
         link_type = 3;
@@ -397,6 +409,7 @@ QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1)
         pos = tmp_pos;
     tmp_pos = word.indexOf(QLatin1String("www."));
+
     if ((tmp_pos < pos || pos == -1) && tmp_pos != -1 && word.indexOf(QLatin1Char('.'), tmp_pos+4) != -1 ) {
         pos = tmp_pos;
         link_type = 2;
@@ -425,13 +438,17 @@ QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
         word.remove(0, pos);
         QString newWord = word;
 
-        if (link_type == 1)
+        switch(link_type) {
+        case 1:
             newWord = QLatin1String("mailto:") + word;
-        else if (link_type == 2)
-            newWord = QLatin1String("http://") + word;
-        else if (link_type == 3)
-            newWord = QLatin1String("ftp://") + word;
-
+            break;
+        case 2:
+            newWord = (secure ? QLatin1String("https://") : QLatin1String("http://")) + word;
+            break;
+        case 3:
+            newWord = (secure ? QLatin1String("ftps://") : QLatin1String("ftp://")) + word;
+            break;
+        }
         //kDebug() <<"newWord:" << newWord;
         return newWord;
     }
@@ -495,11 +512,11 @@ void ComposerAutoCorrection::capitalizeWeekDays()
 bool ComposerAutoCorrection::excludeToUppercase(const QString &word) const
 {
     if (word.startsWith(QLatin1String("http://")) ||
+            word.startsWith(QLatin1String("www.")) ||
+            word.startsWith(QLatin1String("mailto:")) ||
             word.startsWith(QLatin1String("ftp://")) ||
             word.startsWith(QLatin1String("https://")) ||
-            word.startsWith(QLatin1String("ftps://")) ||
-            word.startsWith(QLatin1String("www.")) ||
-            word.startsWith(QLatin1String("mailto:")) )
+            word.startsWith(QLatin1String("ftps://")))
         return true;
     return false;
 }

@@ -191,7 +191,7 @@ bool FilterImporterThunderbird::splitConditions( const QString &cond,
   */
 
     QString str = cond.trimmed();
-    str.remove( '(' );
+    str.remove( QLatin1Char('(') );
     str.remove( str.length() - 1, 1 ); //remove last )
 
     const QStringList listOfCond = str.split( QLatin1Char( ',' ) );

@@ -57,7 +57,7 @@ KPIM::NepomukWarning::NepomukWarning( const char *neverShowAgainKey, QWidget *pa
       connect( action, SIGNAL(triggered(bool)), SLOT(explicitlyClosed()) );
     }
 
-    action = new KAction( KIcon( "configure" ), i18n( "&Configure" ), this );
+    action = new KAction( KIcon( QLatin1String("configure") ), i18n( "&Configure" ), this );
     connect( action, SIGNAL(triggered(bool)), SLOT(configure()) );
     addAction( action );
   }
@@ -79,7 +79,7 @@ QString KPIM::NepomukWarning::nepomukWarningGroupName()
 
 void KPIM::NepomukWarning::configure()
 {
-  if ( KService::serviceByStorageId( "kcm_nepomuk.desktop" ) ) {
+  if ( KService::serviceByStorageId( QLatin1String("kcm_nepomuk.desktop") ) ) {
     QProcess::startDetached( KStandardDirs::findExe( QLatin1String( "kcmshell4" ) ),
                              QStringList( QLatin1String( "kcm_nepomuk" ) ) );
   } else {

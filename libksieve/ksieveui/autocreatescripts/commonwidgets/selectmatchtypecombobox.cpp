@@ -16,6 +16,8 @@
 */
 
 #include "selectmatchtypecombobox.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 
@@ -24,6 +26,7 @@ using namespace KSieveUi;
 SelectMatchTypeComboBox::SelectMatchTypeComboBox(QWidget *parent)
     : KComboBox(parent)
 {
+    mHasRegexCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("regex"));
     initialize();
 }
 
@@ -39,6 +42,10 @@ void SelectMatchTypeComboBox::initialize()
     addItem(i18n("not contains"), QLatin1String("[NOT]:contains"));
     addItem(i18n("matches"), QLatin1String(":matches"));
     addItem(i18n("not matches"), QLatin1String("[NOT]:matches"));
+    if (mHasRegexCapability) {
+        addItem(i18n("regex"), QLatin1String(":regex"));
+        addItem(i18n("not regex"), QLatin1String("[NOT]:regex"));
+    }
 }
 
 QString SelectMatchTypeComboBox::code(bool &negative) const
@@ -50,12 +57,13 @@ QString SelectMatchTypeComboBox::code(bool &negative) const
     return value;
 }
 
-void SelectMatchTypeComboBox::setCode(const QString &code)
+void SelectMatchTypeComboBox::setCode(const QString &code, const QString &name, QString &error)
 {
     const int index = findData(code);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
+        AutoCreateScriptUtil::comboboxItemNotFound(code, name, error);
         setCurrentIndex(0);
     }
 }

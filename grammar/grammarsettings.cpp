@@ -17,6 +17,9 @@
 
 #include "grammarsettings.h"
 
+#include <KConfig>
+#include <KConfigGroup>
+
 namespace Grammar {
 
 class GrammarSettingsPrivate
@@ -25,6 +28,7 @@ public:
     GrammarSettingsPrivate()
     {
     }
+    QString defaultLanguage;
 };
 
 GrammarSettings::GrammarSettings()
@@ -36,4 +40,25 @@ GrammarSettings::~GrammarSettings()
 {
     delete d;
 }
+
+void GrammarSettings::setDefaultLanguage(const QString &lang)
+{
+    d->defaultLanguage = lang;
+}
+
+QString GrammarSettings::defaultLanguage() const
+{
+    return d->defaultLanguage;
+}
+
+void GrammarSettings::saveSettings(KConfigGroup &group)
+{
+    group.writeEntry("DefaultLanguage", d->defaultLanguage);
+}
+
+void GrammarSettings::readSettings(const KConfigGroup &group)
+{
+    d->defaultLanguage = group.readEntry("DefaultLanguage");
+}
+
 }

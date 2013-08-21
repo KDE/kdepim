@@ -162,6 +162,8 @@ public:
 
     QMap<QUrl, QString> tagList() const;
 
+    bool initialized() const;
+
 private Q_SLOTS:
     void slotServerStateChanged(Akonadi::ServerManager::State);
     void slotFinishedTagListing();
@@ -180,6 +182,8 @@ Q_SIGNALS:
     void filtersChanged();
 
     void tagListingFinished();
+
+    void loadingFiltersDone();
 
 private:
     FilterManager();

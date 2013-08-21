@@ -669,6 +669,7 @@ QString EventView::iconForItem( const Akonadi::Item &item )
 void EventView::onCollectionChanged(const Akonadi::Collection &collection,
                                     const QSet<QByteArray> &changedAttributes)
 {
+  Q_UNUSED(collection);
   if (changedAttributes.contains("AccessRights")) {
       setChanges(changes() | EventViews::EventView::ResourcesChanged);
       updateView();

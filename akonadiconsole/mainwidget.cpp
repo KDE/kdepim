@@ -30,6 +30,7 @@
 #include "searchwidget.h"
 #include "jobtrackerwidget.h"
 #include "notificationmonitor.h"
+#include "monitorswidget.h"
 #include "querydebugger.h"
 
 #include <akonadi/agentinstancewidget.h>
@@ -67,6 +68,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   tabWidget->addTab( new JobTrackerWidget( "resourcesJobtracker", tabWidget, "Enable tracking of Resource Schedulers" ), "Resources Schedulers" );
   tabWidget->addTab( new NotificationMonitor( tabWidget ), "Notification Monitor" );
   tabWidget->addTab( new SearchWidget( tabWidget ), "Item Search" );
+  tabWidget->addTab( new MonitorsWidget( tabWidget ), "Monitors" );
 
   KAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
   action->setText( "Create Search..." );

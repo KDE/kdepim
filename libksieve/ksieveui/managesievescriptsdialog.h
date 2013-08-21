@@ -52,6 +52,11 @@ public:
     explicit ManageSieveScriptsDialog( QWidget *parent=0 );
     ~ManageSieveScriptsDialog();
 
+    enum SieveEditorMode {
+        NormalEditorMode = 0,
+        Kep14EditorMode
+    };
+
 private slots:
     void slotRefresh();
     void slotItem( KManageSieve::SieveJob *, const QString &, bool );
@@ -100,6 +105,7 @@ private:
     void disableManagerScriptsDialog(bool disable);
 
 private:
+    void checkEditorMode();
     enum sieveServerStatus
     {
         SIEVE_SERVER_ERROR = Qt::UserRole +1,

@@ -169,8 +169,6 @@ private:
     QAction learnCertificatesAction;
 
     QPointer<KAboutApplicationDialog> aboutDialog;
-
-    QRect mainWindowPreviousGeometry;
 };
 
 SysTrayIcon::Private::Private( SysTrayIcon * qq )
@@ -192,11 +190,10 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       updateCardStatusAction( i18n("Update Card Status"), q ),
       setInitialPinAction( i18n("Set NetKey v3 Initial PIN..."), q ),
       learnCertificatesAction( i18n("Learn NetKey v3 Card Certificates"), q ),
-      aboutDialog(),
-      mainWindowPreviousGeometry()
+      aboutDialog()
 {
-    q->setNormalIcon( KIcon( "kleopatra" ) );
-    q->setAttentionIcon( KIcon( "secure-card" ) );
+    q->setNormalIcon( KIcon( QLatin1String("kleopatra") ) );
+    q->setAttentionIcon( KIcon( QLatin1String("secure-card") ) );
 
     KDAB_SET_OBJECT_NAME( menu );
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );
@@ -263,15 +260,6 @@ SysTrayIcon::~SysTrayIcon() {
     KGlobal::deref();
 }
 
-void SysTrayIcon::doMainWindowSet( QWidget * mw ) {
-    if ( mw && !mw->isVisible() && d->mainWindowPreviousGeometry.isValid() )
-        mw->setGeometry( d->mainWindowPreviousGeometry );
-}
-
-void SysTrayIcon::doMainWindowClosed( QWidget * mw ) {
-    d->mainWindowPreviousGeometry = mw->geometry();
-}
-
 MainWindow * SysTrayIcon::mainWindow() const {
     return static_cast<MainWindow*>( SystemTrayIcon::mainWindow() );
 }
@@ -288,8 +276,10 @@ void SysTrayIcon::doActivated() {
         d->slotSetInitialPin();
     else if ( d->anyCardCanLearnKeys )
         d->slotLearnCertificates();
-    else
-        KleopatraApplication::instance()->openOrRaiseMainWindow();
+    else {
+        // Toggle visibility of MainWindow
+        KleopatraApplication::instance()->toggleMainWindowVisibility();
+    }
 }
 
 void SysTrayIcon::setAnyCardHasNullPin( bool on ) {

@@ -58,6 +58,7 @@
 #include "progresswidget/statusbarprogresswidget.h"
 #include "progresswidget/progressdialog.h"
 
+#include <KApplication>
 #include <KActionCollection>
 #include <KLocale>
 #include <KTabWidget>
@@ -128,6 +129,8 @@ static KGuiItem KStandardGuiItem_close() {
     return item;
 }
 
+static bool isQuitting = false;
+
 class MainWindow::Private {
     friend class ::MainWindow;
     MainWindow * const q;
@@ -159,9 +162,10 @@ public:
                                                          i18n("%1 may be used by other applications as a service.\n"
                                                               "You may instead want to close this window without exiting %1.", app ),
                                                          i18n("Really Quit?"), KStandardGuiItem_close(), KStandardGuiItem_quit(), KStandardGuiItem::cancel(),
-                                                         "really-quit-" + app.toLower() );
+                                                         QLatin1String("really-quit-") + app.toLower() );
         if ( rc == KMessageBox::Cancel )
             return;
+        isQuitting = true;
         if ( !q->close() )
             return;
         // WARNING: 'this' might be deleted at this point!
@@ -184,14 +188,14 @@ public:
     void showHandbook();
 
     void gnupgLogViewer() {
-        if( !QProcess::startDetached("kwatchgnupg" ) )
+        if( !QProcess::startDetached(QLatin1String("kwatchgnupg") ) )
             KMessageBox::error( q, i18n( "Could not start the GnuPG Log Viewer (kwatchgnupg). "
                                          "Please check your installation." ),
                                 i18n( "Error Starting KWatchGnuPG" ) );
     }
 
     void gnupgAdministrativeConsole() {
-        if( !QProcess::startDetached("kgpgconf" ) )
+        if( !QProcess::startDetached(QLatin1String("kgpgconf") ) )
             KMessageBox::error( q, i18n( "Could not start the GnuPG Administrative Console (kgpgconf). "
                                          "Please check your installation." ),
                                 i18n( "Error Starting KGpgConf" ) );
@@ -199,7 +203,7 @@ public:
 
     void slotConfigCommitted();
     void slotContextMenuRequested( QAbstractItemView *, const QPoint & p ) {
-        if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( "listview_popup", q ) ) )
+        if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( QLatin1String("listview_popup"), q ) ) )
             menu->exec( p );
         else
             kDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
@@ -270,7 +274,7 @@ MainWindow::Private::Private( MainWindow * qq )
     connect( &controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)),
              q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)) );
 
-    q->createGUI( "kleopatra.rc" );
+    q->createGUI( QLatin1String("kleopatra.rc") );
 
     q->setAcceptDrops( true );
 
@@ -297,7 +301,7 @@ void MainWindow::Private::setupActions() {
     ui.tabWidget.connectSearchBar( searchBar );
 
     searchBarAction->setDefaultWidget( searchBar );
-    coll->addAction( "key_search_bar", searchBarAction );
+    coll->addAction( QLatin1String("key_search_bar"), searchBarAction );
 
     const action_data action_data[] = {
         // most have been MOVED TO keylistcontroller.cpp
@@ -328,7 +332,7 @@ void MainWindow::Private::setupActions() {
 
     make_actions_from_data( action_data, /*sizeof action_data / sizeof *action_data,*/ coll );
 
-    if ( QAction * action = coll->action( "configure_backend" ) )
+    if ( QAction * action = coll->action( QLatin1String("configure_backend") ) )
         action->setMenuRole( QAction::NoRole ); //prevent Qt OS X heuristics for config* actions
 
     KStandardAction::close( q, SLOT(close()), coll );
@@ -402,9 +406,14 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
             setEnabled( true );
         }
     }
-    d->ui.tabWidget.saveViews( KGlobal::config().data() );
-    saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
-    e->accept();
+    if ( isQuitting || kapp->sessionSaving() ) {
+        d->ui.tabWidget.saveViews( KGlobal::config().data() );
+        saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
+        e->accept();
+    } else {
+        e->ignore();
+        hide();
+    }
 }
 
 void MainWindow::showEvent( QShowEvent * e ) {
@@ -413,7 +422,19 @@ void MainWindow::showEvent( QShowEvent * e ) {
         d->ui.tabWidget.loadViews( KGlobal::config().data() );
         d->firstShow = false;
     }
+
+    if ( previousGeometry.isValid() ) {
+        setGeometry( previousGeometry );
+    }
+
 }
+
+void MainWindow::hideEvent( QHideEvent * e )
+{
+    previousGeometry = geometry();
+    KXmlGuiWindow::hideEvent( e );
+}
+
 
 void MainWindow::importCertificatesFromFile( const QStringList & files ) {
     if ( !files.empty() )
@@ -494,6 +515,31 @@ void MainWindow::dropEvent( QDropEvent * e ) {
         d->createAndStart<ImportCrlCommand>( files );
 
     e->accept();
+}
+
+void MainWindow::readProperties( const KConfigGroup & cg )
+{
+    kDebug();
+    KXmlGuiWindow::readProperties(cg);
+    previousGeometry = cg.readEntry<QRect>("geometry", QRect() );
+    if ( previousGeometry.isValid() ) {
+        setGeometry( previousGeometry );
+    }
+
+    if (! cg.readEntry<bool>("hidden", false))
+        show();
+}
+
+void MainWindow::saveProperties( KConfigGroup & cg )
+{
+    kDebug();
+    KXmlGuiWindow::saveProperties( cg );
+    cg.writeEntry( "hidden", isHidden() );
+    if ( isHidden() ) {
+        cg.writeEntry( "geometry", previousGeometry );
+    } else {
+        cg.writeEntry( "geometry", geometry() );
+    }
 }
 
 #include "moc_mainwindow_desktop.cpp"

@@ -33,8 +33,8 @@
 #include "utils/util.h"
 #include "imagescaling/imagescalingutils.h"
 
-#include "sendlateragent/sendlaterinfo.h"
-#include "sendlateragent/sendlaterutil.h"
+#include "agents/sendlateragent/sendlaterinfo.h"
+#include "agents/sendlateragent/sendlaterutil.h"
 
 #include <addressline/recentaddresses.h>
 #include "helper/messagehelper.h"

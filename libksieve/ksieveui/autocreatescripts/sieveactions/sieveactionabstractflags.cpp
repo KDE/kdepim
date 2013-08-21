@@ -17,6 +17,7 @@
 
 #include "sieveactionabstractflags.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "widgets/selectflagswidget.h"
 
 #include <QHBoxLayout>
@@ -43,7 +44,7 @@ QWidget *SieveActionAbstractFlags::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *w )
+bool SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, QWidget *w, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -55,13 +56,15 @@ void SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, 
                 flagsWidget->setFlags(AutoCreateScriptUtil::listValue(e));
             } else if (tagName == QLatin1String("str")) {
                 SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
-                flagsWidget->setCode(e.text());
+                flagsWidget->setFlags(QStringList()<<e.text());
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionAbstractFlags::code(QWidget *w) const
@@ -69,7 +72,7 @@ QString SieveActionAbstractFlags::code(QWidget *w) const
     const SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
     const QString flagCode = flagsWidget->code();
     const QString str = flagsCode();
-    return str + QLatin1Char(' ') + flagCode;
+    return str + QLatin1Char(' ') + (flagCode.isEmpty() ? QLatin1String(";") : flagCode);
 }
 
 QStringList SieveActionAbstractFlags::needRequires(QWidget *) const
@@ -84,10 +87,10 @@ bool SieveActionAbstractFlags::needCheckIfServerHasCapability() const
 
 QString SieveActionAbstractFlags::serverNeedsCapability() const
 {
-    return QLatin1String("imapflags");
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+        return QLatin1String("imap4flags");
+    else
+        return QLatin1String("imapflags");
 }
-
-
-
 
 #include "sieveactionabstractflags.moc"

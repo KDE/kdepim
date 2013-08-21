@@ -1,0 +1,23 @@
+[Desktop Entry]
+Name=MBoxImporter
+Name[es]=MBoxImporter
+Name[fi]=MBoxImporter
+Name[fr]=MBoxImporter
+Name[hu]=MBoxImporter
+Name[nl]=MBoxImporter
+Name[pt]=Importação MBox
+Name[pt_BR]=MBoxImporter
+Name[sk]=MBoxImporter
+Name[sr]=Увозник из мбокса
+Name[sr@ijekavian]=Увозник из мбокса
+Name[sr@ijekavianlatin]=Uvoznik iz mboxa
+Name[sr@latin]=Uvoznik iz mboxa
+Name[sv]=Import av brevlådor
+Name[uk]=Засіб імпортування MBox
+Name[x-test]=xxMBoxImporterxx
+Type=Application
+Exec=mboximporter %u
+Icon=kmail
+MimeType=application/mbox;
+
+X-KDE-StartupNotify=true

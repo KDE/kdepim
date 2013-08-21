@@ -28,6 +28,7 @@ class BackgroundGrammarChecker : QObject
 public:
     explicit BackgroundGrammarChecker(QObject *parent = 0);
     ~BackgroundGrammarChecker();
+
 private:
     friend class BackgroundGrammarCheckerPrivate;
     BackgroundGrammarCheckerPrivate * const d;

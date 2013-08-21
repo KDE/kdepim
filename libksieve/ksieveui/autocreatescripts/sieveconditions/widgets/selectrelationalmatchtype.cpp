@@ -17,6 +17,7 @@
 
 
 #include "selectrelationalmatchtype.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KComboBox>
 
@@ -36,12 +37,13 @@ SelectRelationalMatchType::~SelectRelationalMatchType()
 
 }
 
-void SelectRelationalMatchType::setCode(const QString &type, const QString &comparatorStr)
+void SelectRelationalMatchType::setCode(const QString &type, const QString &comparatorStr, const QString &name, QString &error)
 {
     int index = mType->findData(type);
     if (index != -1) {
         mType->setCurrentIndex(index);
     } else {
+        AutoCreateScriptUtil::comboboxItemNotFound(type, name, error);
         mType->setCurrentIndex(0);
     }
 
@@ -49,6 +51,7 @@ void SelectRelationalMatchType::setCode(const QString &type, const QString &comp
     if (index != -1) {
         mMatch->setCurrentIndex(index);
     } else {
+        AutoCreateScriptUtil::comboboxItemNotFound(comparatorStr, name, error);
         mMatch->setCurrentIndex(0);
     }
 }

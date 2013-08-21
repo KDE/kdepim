@@ -33,7 +33,7 @@ using namespace MailCommon;
 FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
     : KDialog( parent )
 {
-    setObjectName( "filterselection" );
+    setObjectName( QLatin1String("filterselection") );
     setModal( true );
     setCaption( i18n( "Select Filters" ) );
     setButtons( Ok | Cancel );

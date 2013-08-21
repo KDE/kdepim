@@ -22,7 +22,6 @@ endif()
 
 add_definitions( -DDISABLE_NEPOMUK_LEGACY )
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
-
 if(KDEPIM_NO_WEBKIT)
   add_definitions(-DKDEPIM_NO_WEBKIT)
 endif()
@@ -113,7 +112,7 @@ endif()
 find_package(KDE4 4.10 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.11.40)
+find_package(KdepimLibs 4.11.47)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -179,7 +178,7 @@ else()
 # Otherwise...
 ############### Find the stuff we need ###############
   # Akonadi
-  find_package(Akonadi 1.10.43 QUIET CONFIG)
+  find_package(Akonadi 1.10.45 QUIET CONFIG)
   set_package_properties(Akonadi PROPERTIES DESCRIPTION "Akonadi server libraries" URL "http://pim.kde.org/akonadi" TYPE REQUIRED PURPOSE "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
@@ -213,6 +212,9 @@ else()
   # Xsltproc
   find_package(Xsltproc)
   set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces.")
+
+  find_package(QJSON)
+  set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
 
 ############### Desktop vs. Mobile options ##############
 
@@ -299,9 +301,9 @@ else()
   macro_optional_add_subdirectory(messagecomposer)
   add_subdirectory(pimcommon)
   add_subdirectory(mailcommon) # TODO: does this make sense?!?
-  add_subdirectory(mailfilteragent)
   macro_optional_add_subdirectory(kmail)
   macro_optional_add_subdirectory(headerthemeeditor)
+  macro_optional_add_subdirectory(contactthemeeditor)
   add_subdirectory(grantleethemeeditor)
 
   if(KDEPIM_BUILD_MOBILE)
@@ -321,13 +323,12 @@ else()
   macro_optional_add_subdirectory(pimactivity)
   macro_optional_add_subdirectory(korganizer)
   if(KDEPIM_BUILD_DESKTOP)
+    macro_optional_add_subdirectory(agents)
     macro_optional_add_subdirectory(akregator)
-    macro_optional_add_subdirectory(archivemailagent)
-    macro_optional_add_subdirectory(sendlateragent)
-    macro_optional_add_subdirectory(folderarchiveagent)
     macro_optional_add_subdirectory(importwizard)
     macro_optional_add_subdirectory(kaddressbook)
     macro_optional_add_subdirectory(kmailcvt)
+    macro_optional_add_subdirectory(mboximporter)
     macro_optional_add_subdirectory(knotes)
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(ktnef)

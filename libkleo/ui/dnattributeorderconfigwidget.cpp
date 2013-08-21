@@ -113,7 +113,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
            SLOT(slotCurrentOrderSelectionChanged(QTreeWidgetItem*)) );
 
   d->placeHolderItem = new QTreeWidgetItem( d->availableLV );
-  d->placeHolderItem->setText( 0, "_X_" );
+  d->placeHolderItem->setText( 0, QLatin1String("_X_") );
   d->placeHolderItem->setText( 1, i18n("All others") );
 #endif
 
@@ -121,7 +121,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
 
   QGridLayout * xlay = new QGridLayout();
   xlay->setSpacing( 0 );
-  xlay->setObjectName( "xlay" );
+  xlay->setObjectName( QLatin1String("xlay") );
   xlay->setAlignment( Qt::AlignCenter );
 
   static const struct {
@@ -140,7 +140,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
 
   for ( unsigned int i = 0 ; i < sizeof navButtons / sizeof *navButtons ; ++i ) {
     QToolButton * tb = d->navTB[i] = new QToolButton( this );
-    tb->setIcon( KIcon( navButtons[i].icon ) );
+    tb->setIcon( KIcon( QLatin1String(navButtons[i].icon) ) );
     tb->setEnabled( false );
     tb->setToolTip( i18n( navButtons[i].tooltip ) );
     xlay->addWidget( tb, navButtons[i].row, navButtons[i].col );
@@ -168,7 +168,7 @@ void Kleo::DNAttributeOrderConfigWidget::load() {
   QTreeWidgetItem* last = 0;
   for ( QStringList::const_iterator it = order.begin() ; it != order.end() ; ++it ) {
     const QString attr = (*it).toUpper();
-    if ( attr == "_X_" ) {
+    if ( attr == QLatin1String("_X_") ) {
       takePlaceHolderItem();
       d->currentLV->insertTopLevelItem( d->currentLV->topLevelItemCount(), d->placeHolderItem );
       last = d->placeHolderItem;

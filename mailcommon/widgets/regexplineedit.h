@@ -45,33 +45,33 @@ namespace MailCommon {
 
 class MAILCOMMON_EXPORT RegExpLineEdit : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit RegExpLineEdit( const QString &str, QWidget *parent = 0 );
     explicit RegExpLineEdit( QWidget *parent = 0 );
 
     QString text() const;
 
-  public slots:
+public slots:
     void clear();
     void setText( const QString & );
     void showEditButton( bool );
 
-  signals:
+signals:
     void textChanged( const QString & );
     void returnPressed();
 
-  protected slots:
+protected slots:
     void slotEditRegExp();
 
-  private:
+private:
     void initWidget( const QString & = QString() );
 
     KLineEdit *mLineEdit;
     QPushButton *mRegExpEditButton;
     KDialog *mRegExpEditDialog;
-  };
+};
 
 }
 

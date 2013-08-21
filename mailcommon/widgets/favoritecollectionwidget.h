@@ -1,6 +1,6 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
 
-  Copyright (c) 2012 Montel Laurent <montel@kde.org>
+  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -24,25 +24,31 @@
 #include <Akonadi/EntityListView>
 
 class KXMLGUIClient;
+class KActionCollection;
 
 namespace MailCommon {
 
 class MAILCOMMON_EXPORT FavoriteCollectionWidget : public Akonadi::EntityListView
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FavoriteCollectionWidget( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
     ~FavoriteCollectionWidget();
 
     void readConfig();
+    void updateMode();
 
-  protected slots:
+protected slots:
     void slotGeneralFontChanged();
     void slotGeneralPaletteChanged();
+    void slotChangeIconSize(bool);
+    void slotChangeMode(bool);
 
-  protected:
-    virtual void paintEvent(QPaintEvent*);
-  private:
+protected:
+    void paintEvent(QPaintEvent*);
+
+private:
+    void createMenu(KActionCollection *ac);
     class Private;
     Private *const d;
 };

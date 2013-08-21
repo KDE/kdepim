@@ -163,7 +163,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
 {
     assert( component );
     QStringList args;
-    args << "--list-options" << component->name();
+    args << QLatin1String("--list-options") << component->name();
     GpgConfResult res = runGpgConf( args );
 
     std::auto_ptr<ConfigGroup> currentGroup;
@@ -172,13 +172,13 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
     buf.open( QIODevice::ReadOnly );
     while( buf.canReadLine() ) {
         QString line = QString::fromUtf8( buf.readLine() );
-        if ( line.endsWith( '\n' ) )
+        if ( line.endsWith( QLatin1Char('\n') ) )
             line.chop( 1 );
-        if ( line.endsWith( '\r' ) )
+        if ( line.endsWith( QLatin1Char('\r') ) )
             line.chop( 1 );
         //kDebug(5150) <<"GOT LINE:" << line;
         // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
-        const QStringList lst = line.split( ':' );
+        const QStringList lst = line.split( QLatin1Char(':') );
         if ( lst.count() >= 10 ) {
             const int flags = lst[1].toInt();
             const int level = lst[2].toInt();
@@ -198,7 +198,7 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
             } else {
                 // normal entry
                 if ( !currentGroup.get() ) {  // first toplevel entry -> create toplevel group
-                    currentGroup.reset( new ConfigGroup( "<nogroup>" ) );
+                    currentGroup.reset( new ConfigGroup( QLatin1String("<nogroup>") ) );
                 }
                 currentGroup->addEntry( createEntryFromParsedLine( lst ) );
             }
@@ -215,18 +215,18 @@ void ConfigReader::Private::readEntriesForComponent( ConfigComponent* component 
 
 void ConfigReader::Private::readConfConf( Config* cfg ) const
 {
-    GpgConfResult res = runGpgConf( "--list-config" );
+    GpgConfResult res = runGpgConf( QLatin1String("--list-config") );
     QBuffer buf( &(res.stdOut) );
     buf.open( QIODevice::ReadOnly | QIODevice::Text );
     while ( buf.canReadLine() )
     {
-        QString line = buf.readLine();
-        if ( line.endsWith( '\n' ) )
+        QString line = QLatin1String(buf.readLine());
+        if ( line.endsWith( QLatin1Char('\n') ) )
             line.chop( 1 );
-        if ( line.endsWith( '\r' ) )
+        if ( line.endsWith( QLatin1Char('\r') ) )
             line.chop( 1 );
-        const QStringList lst = line.split( ':' );
-        if ( lst.isEmpty() || lst[0] != "r" ) // only parse 'r'-type value entries
+        const QStringList lst = line.split( QLatin1Char(':') );
+        if ( lst.isEmpty() || lst[0] != QLatin1String("r") ) // only parse 'r'-type value entries
             continue;
 
         if ( lst.count() < 8 )
@@ -245,7 +245,7 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
         }
         const QString flag = lst[5];
         const QString value = lst[6];
-        if ( !value.isEmpty() && !value.startsWith( '\"' ) )
+        if ( !value.isEmpty() && !value.startsWith( QLatin1Char('\"') ) )
         {
             throw MalformedGpgConfOutputException( i18n( "gpgconf --list-config: Invalid entry: value must start with '\"': %1", lst[6] ) );
         }
@@ -264,19 +264,19 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
 
 QMap<QString, QString> ConfigReader::Private::readComponentInfo() const
 {
-    GpgConfResult res = runGpgConf( "--list-components" );
+    GpgConfResult res = runGpgConf( QLatin1String("--list-components") );
     QBuffer buf( &(res.stdOut) );
     buf.open( QIODevice::ReadOnly );
     QMap<QString, QString> components;
     while( buf.canReadLine() ) {
         QString line = QString::fromUtf8( buf.readLine() );
-        if ( line.endsWith( '\n' ) )
+        if ( line.endsWith( QLatin1Char('\n') ) )
             line.chop( 1 );
-        if ( line.endsWith( '\r' ) )
+        if ( line.endsWith( QLatin1Char('\r') ) )
             line.chop( 1 );
         //kDebug(5150) <<"GOT LINE:" << line;
         // Format: NAME:DESCRIPTION
-        const QStringList lst = line.split( ':' );
+        const QStringList lst = line.split( QLatin1Char(':') );
         if ( lst.count() >= 2 ) {
             components[lst[0]] = lst[1];
         } else {
@@ -293,7 +293,7 @@ GpgConfResult ConfigReader::Private::runGpgConf( const QString& arg ) const
 
 static QString gpgConfPath() {
     const GpgME::EngineInfo ei = GpgME::engineInfo( GpgME::GpgConfEngine );
-    return ei.fileName() ? QFile::decodeName( ei.fileName() ) : KStandardDirs::findExe( "gpgconf" ) ;
+    return ei.fileName() ? QFile::decodeName( ei.fileName() ) : KStandardDirs::findExe( QLatin1String("gpgconf") ) ;
 }
 
 GpgConfResult ConfigReader::Private::runGpgConf( const QStringList& args ) const

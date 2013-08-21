@@ -486,6 +486,15 @@ private:
         assert( assuan_get_pointer( ctx_ ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
+        char *binOpt = strstr ( line_, "--binary" );
+
+        if ( binOpt && !in ) {
+            /* Note there is also --armor and --base64 allowed but we don't need
+             * to parse those because they are default. 
+             * We remove it here so that it is not parsed as an Option.*/
+            memset (binOpt, ' ', 8 );
+        }
+
         try {
 
             /*const*/ std::map<std::string,std::string> options = upcase_option( "FD", upcase_option( "FILE", parse_commandline( line_ ) ) );
@@ -548,6 +557,12 @@ private:
                 throw gpg_error( GPG_ERR_UNKNOWN_OPTION );
 
             (conn.*which).push_back( io );
+
+            if ( binOpt && !in ) {
+                Output* out = reinterpret_cast <Output*>( io.get() );
+                out->setBinaryOpt( true );
+                kDebug() << "Configured output for binary data";
+            }
 
             kDebug() << "AssuanServerConnection: added" << io->label();
 
@@ -1242,17 +1257,17 @@ void AssuanCommand::sendStatusEncoded( const char * keyword, const std::string &
     if ( d->nohup )
         return;
     if ( const int err = assuan_write_status( d->ctx.get(), keyword, text.c_str() ) )
-        throw Exception( err, i18n( "Can not send \"%1\" status", QString::fromLatin1( keyword ) ) );
+        throw Exception( err, i18n( "Cannot send \"%1\" status", QString::fromLatin1( keyword ) ) );
 }
 
 void  AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {
     if ( d->nohup )
         return;
     if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), data.constData(), data.size() ) )
-        throw Exception( err, i18n( "Can not send data" ) );
+        throw Exception( err, i18n( "Cannot send data" ) );
     if ( !moreToCome )
         if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), 0, 0 ) ) // flush
-            throw Exception( err, i18n( "Can not flush data" ) );
+            throw Exception( err, i18n( "Cannot flush data" ) );
 }
 
 int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize ) {

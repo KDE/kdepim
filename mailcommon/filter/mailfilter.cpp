@@ -387,10 +387,10 @@ bool MailFilter::readConfig(const KConfigGroup & config, bool interactive)
         bApplyOnExplicit = true;
         mApplicability = ButImap;
     } else {
-        bApplyBeforeOutbound = bool(sets.contains("before-send-mail"));
-        bApplyOnInbound = bool(sets.contains("check-mail"));
-        bApplyOnOutbound = bool(sets.contains("send-mail"));
-        bApplyOnExplicit = bool(sets.contains("manual-filtering"));
+        bApplyBeforeOutbound = bool(sets.contains(QLatin1String("before-send-mail")));
+        bApplyOnInbound = bool(sets.contains(QLatin1String("check-mail")));
+        bApplyOnOutbound = bool(sets.contains(QLatin1String("send-mail")));
+        bApplyOnExplicit = bool(sets.contains(QLatin1String("manual-filtering")));
         mApplicability = (AccountType) config.readEntry(
                     "Applicability", (int)ButImap );
     }
@@ -473,13 +473,18 @@ void MailFilter::generateSieveScript(QStringList &requires, QString &code)
     QList<FilterAction*>::const_iterator end( mActions.constEnd() );
 
     code += QLatin1String(")\n{\n");
+    bool firstAction = true;
     for ( it = mActions.constBegin() ; it != end ; ++it) {
-        if ((*it)->canConvertToSieve()) {
-            code += QLatin1String("    ") + (*it)->sieveCode();
-            Q_FOREACH(const QString &str, (*it)->sieveRequires()) {
-                if (!requires.contains(str)) {
-                    requires.append(str);
-                }
+        //Add endline here.
+        if (firstAction) {
+            firstAction = false;
+        } else {
+            code += QLatin1Char('\n');
+        }
+        code += QLatin1String("    ") + (*it)->sieveCode();
+        Q_FOREACH(const QString &str, (*it)->sieveRequires()) {
+            if (!requires.contains(str)) {
+                requires.append(str);
             }
         }
     }
@@ -493,13 +498,13 @@ void MailFilter::writeConfig(KConfigGroup & config, bool exportFilter) const
 
     QStringList sets;
     if ( bApplyOnInbound )
-        sets.append( "check-mail" );
+        sets.append( QLatin1String("check-mail") );
     if ( bApplyBeforeOutbound )
-        sets.append( "before-send-mail" );
+        sets.append( QLatin1String("before-send-mail") );
     if ( bApplyOnOutbound )
-        sets.append( "send-mail" );
+        sets.append( QLatin1String("send-mail") );
     if ( bApplyOnExplicit )
-        sets.append( "manual-filtering" );
+        sets.append( QLatin1String("manual-filtering") );
     config.writeEntry( "apply-on", sets );
 
     config.writeEntry( "StopProcessingHere", bStopProcessingHere );

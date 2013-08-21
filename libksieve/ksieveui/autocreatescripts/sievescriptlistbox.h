@@ -22,6 +22,7 @@
 #include <QListWidgetItem>
 class QListWidget;
 class QDomDocument;
+class QDomNode;
 class KPushButton;
 
 namespace KSieveUi {
@@ -53,7 +54,7 @@ public:
     ~SieveScriptListBox();
 
     QString generatedScript(QString &requires) const;
-    void loadScript(const QDomDocument &doc);
+    void loadScript(const QDomDocument &doc, QString &error);
 
 Q_SIGNALS:
     void addNewPage(QWidget *);
@@ -85,6 +86,7 @@ private:
         TypeBlockForeachBlock
     };
 
+    void loadBlock(QDomNode &n, SieveScriptPage *currentPage, ParseSieveScriptTypeBlock typeBlock, QString &error);
     void clear();
     SieveScriptPage *createNewScript(const QString &newName, const QString &description = QString());
     QString createUniqName();

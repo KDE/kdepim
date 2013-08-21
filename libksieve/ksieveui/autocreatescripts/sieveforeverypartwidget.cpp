@@ -51,14 +51,17 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
     topLayout->addWidget(mForLoop);
 
+
     QLabel *lab = new QLabel(i18n("Name (optional):"));
     lay->addWidget(lab);
 
     mName = new KLineEdit;
+    mName->setEnabled(false);
     lay->addWidget(mName);
 
     topLayout->addWidget(w,0, Qt::AlignTop);
 
+    connect(mForLoop, SIGNAL(clicked(bool)), mName, SLOT(setEnabled(bool)));
     setPageType(KSieveUi::SieveScriptBlockWidget::ForEveryPart);
     setLayout(topLayout);
 }
@@ -86,7 +89,7 @@ void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requ
     }
 }
 
-void SieveForEveryPartWidget::loadScript(const QDomElement &element)
+void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &error)
 {
     QDomNode node = element.firstChild();
     QDomElement e = node.toElement();
@@ -97,10 +100,13 @@ void SieveForEveryPartWidget::loadScript(const QDomElement &element)
             if (tagValue == QLatin1String("name")) {
                 mName->setText(AutoCreateScriptUtil::strValue(e));
             } else {
+                error += i18n("Unknown tagValue \"%1\" during loading loop \"for\"", tagValue);
                 qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagValue "<<tagValue;
             }
             mForLoop->setChecked(true);
+            mName->setEnabled(true);
         } else {
+            error += i18n("Unknown tag \"%1\" during loading loop \"for\"", tagName);
             qDebug()<<" SieveForEveryPartWidget::loadScript unknown tagName "<<tagName;
         }
     }

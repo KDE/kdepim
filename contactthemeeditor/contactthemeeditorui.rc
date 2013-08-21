@@ -1,0 +1,25 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="contactthemeeditor" version="1">
+ <MenuBar>
+  <Menu name="file" >
+   <Action name="new_theme" />
+   <Separator />
+   <Action name="insert_file" />
+   <Separator />
+   <Action name="upload_theme"/>
+   <Separator />
+   <Action name="manage_themes"/>
+  </Menu>
+  <Menu noMerge="1" name="edit" >
+   <text>&amp;Edit</text>
+   <Action name="add_extra_page" />
+   <Separator />
+   <Action name="install_theme" />
+  </Menu>
+  <Menu name="Display" >
+   <text>&amp;Display</text>
+   <Action name="update_view" />
+  </Menu>
+ </MenuBar>
+</kpartgui>
+

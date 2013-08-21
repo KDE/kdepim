@@ -133,7 +133,7 @@ void SearchRuleWidget::initWidget()
 
   // initialize the header field combo box
   mRuleField = new PimCommon::MinimumComboBox( this );
-  mRuleField->setObjectName( "mRuleField" );
+  mRuleField->setObjectName( QLatin1String("mRuleField") );
   mRuleField->setEditable( true );
   KLineEdit *edit = new KLineEdit;
   edit->setClickMessage( i18n("Choose or type your own criteria"));
@@ -165,12 +165,12 @@ void SearchRuleWidget::initWidget()
   hlay->setStretchFactor( mValueStack, 10 );
 
   mAdd = new KPushButton( this );
-  mAdd->setIcon( KIcon( "list-add" ) );
+  mAdd->setIcon( KIcon( QLatin1String("list-add") ) );
   mAdd->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
   hlay->addWidget( mAdd );
 
   mRemove = new KPushButton( this );
-  mRemove->setIcon( KIcon( "list-remove" ) );
+  mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
   mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
   hlay->addWidget( mRemove );
 
@@ -248,7 +248,7 @@ SearchRule::Ptr SearchRuleWidget::rule() const
 void SearchRuleWidget::reset()
 {
   mRuleField->blockSignals( true );
-  mRuleField->setItemText( 0, "" );
+  mRuleField->setItemText( 0, QString() );
   mRuleField->setCurrentIndex( 0 );
   mRuleField->blockSignals( false );
 
@@ -303,11 +303,11 @@ int SearchRuleWidget::ruleFieldToId( const QString & i18nVal )
 static QString displayNameFromInternalName( const QString & internal )
 {
   for ( int i = 0; i < SpecialRuleFieldsCount; ++i ) {
-    if ( internal == SpecialRuleFields[i].internalName ) {
+    if ( internal == QLatin1String(SpecialRuleFields[i].internalName) ) {
       return SpecialRuleFields[i].getLocalizedDisplayName();
     }
   }
-  return internal.toLatin1();
+  return QLatin1String(internal.toLatin1());
 }
 
 int SearchRuleWidget::indexOfRuleField( const QByteArray &aName ) const
@@ -316,7 +316,7 @@ int SearchRuleWidget::indexOfRuleField( const QByteArray &aName ) const
     return -1;
   }
 
-  const QString i18n_aName = displayNameFromInternalName( aName );
+  const QString i18n_aName = displayNameFromInternalName( QLatin1String(aName) );
   const int nbRuleField = mRuleField->count();
   for ( int i = 1; i < nbRuleField; ++i ) {
     if ( mRuleField->itemText( i ) == i18n_aName ) {
@@ -330,7 +330,7 @@ int SearchRuleWidget::indexOfRuleField( const QByteArray &aName ) const
 void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates )
 {
   mFilterFieldList.clear();
-  mFilterFieldList.append( "" ); // empty entry for user input
+  mFilterFieldList.append( QString() ); // empty entry for user input
 
   if ( !headersOnly ) {
     mFilterFieldList.append( SpecialRuleFields[Message].getLocalizedDisplayName() );
@@ -354,11 +354,11 @@ void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates )
 
   // these others only represent message headers and you can add to
   // them as you like
-  mFilterFieldList.append( "List-Id" );
-  mFilterFieldList.append( "Resent-From" );
-  mFilterFieldList.append( "X-Loop" );
-  mFilterFieldList.append( "X-Mailing-List" );
-  mFilterFieldList.append( "X-Spam-Flag" );
+  mFilterFieldList.append( QLatin1String("List-Id") );
+  mFilterFieldList.append( QLatin1String("Resent-From") );
+  mFilterFieldList.append( QLatin1String("X-Loop") );
+  mFilterFieldList.append( QLatin1String("X-Mailing-List") );
+  mFilterFieldList.append( QLatin1String("X-Spam-Flag") );
 }
 
 void SearchRuleWidget::slotRuleFieldChanged( const QString &field )
@@ -544,7 +544,7 @@ SearchPatternEdit::SearchPatternEdit( QWidget *parent, SearchPatternEditOptions 
   : QWidget( parent ), mAllMessageRBtn( 0 )
 {
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-  setObjectName( "SearchPatternEdit" );
+  setObjectName( QLatin1String("SearchPatternEdit") );
   initLayout( options );
 }
 
@@ -565,12 +565,12 @@ void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
     mAllMessageRBtn = new QRadioButton( i18n( "Match all messages" ), this );
   }
 
-  mAllRBtn->setObjectName( "mAllRBtn" );
+  mAllRBtn->setObjectName( QLatin1String("mAllRBtn") );
   mAllRBtn->setChecked( true );
-  mAnyRBtn->setObjectName( "mAnyRBtn" );
+  mAnyRBtn->setObjectName( QLatin1String("mAnyRBtn") );
   mAnyRBtn->setChecked( false );
   if ( matchAllMessages ) {
-    mAllMessageRBtn->setObjectName( "mAllMessageRBtn" );
+    mAllMessageRBtn->setObjectName( QLatin1String("mAllMessageRBtn") );
     mAllMessageRBtn->setChecked(false);
   }
   layout->addWidget( mAllRBtn );

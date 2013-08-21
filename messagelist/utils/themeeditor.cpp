@@ -135,11 +135,6 @@ void ThemeColumnPropertiesDialog::slotOkButtonClicked()
   accept();
 }
 
-
-
-
-
-
 ThemeContentItemSourceLabel::ThemeContentItemSourceLabel( QWidget * parent, Theme::ContentItem::Type type )
   : QLabel( parent ), mType( type )
 {
@@ -149,6 +144,12 @@ ThemeContentItemSourceLabel::ThemeContentItemSourceLabel( QWidget * parent, Them
 ThemeContentItemSourceLabel::~ThemeContentItemSourceLabel()
 {
 }
+
+MessageList::Core::Theme::ContentItem::Type ThemeContentItemSourceLabel::type() const
+{
+    return mType;
+}
+
 
 void ThemeContentItemSourceLabel::mousePressEvent( QMouseEvent * e )
 {
@@ -1613,6 +1614,11 @@ void ThemeEditor::slotIconSizeSpinBoxValueChanged( int val )
   mCurrentTheme->setIconSize( val );
 
   mPreviewWidget->setTheme( mCurrentTheme ); // will trigger a cache reset and a view update
+}
+
+MessageList::Core::Theme *ThemeEditor::editedTheme() const
+{
+    return mCurrentTheme;
 }
 
 

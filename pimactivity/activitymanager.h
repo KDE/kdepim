@@ -37,6 +37,17 @@ public:
     explicit ActivityManager(QObject *parent = 0);
     ~ActivityManager();
 
+    enum SelectComponent {
+        None = 0,
+        Identity = 1,
+        MailTransport = 2,
+        Collection = 4
+    };
+    Q_DECLARE_FLAGS( SelectComponents, SelectComponent )
+
+    void setSelectComponents(ActivityManager::SelectComponents selection);
+    ActivityManager::SelectComponents selectComponents() const;
+
     bool isActive() const;
 
     QStringList listActivities() const;

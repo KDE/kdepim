@@ -38,7 +38,7 @@ public:
     QString name() const;
 
 private:
-    QStringList searchLanguages();
+    QStringList searchLanguages() const;
 };
 
 #endif // GRAMMARLINKCLIENT_H

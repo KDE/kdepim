@@ -21,6 +21,7 @@
 #include "sieveeditortextmodewidget.h"
 #include "scriptsparsing/parsingutil.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
+#include "autocreatescripts/sievescriptparsingerrordialog.h"
 
 #include <klocale.h>
 #include <KStandardGuiItem>
@@ -34,6 +35,7 @@
 #include <QToolBar>
 #include <QDebug>
 #include <QAction>
+#include <QPointer>
 
 using namespace KSieveUi;
 
@@ -273,12 +275,19 @@ void SieveEditor::slotSwitchMode()
         bool result = false;
         const QDomDocument doc = ParsingUtil::parseScript(mTextModeWidget->currentscript(), result);
         if (result) {
-            mGraphicalModeWidget->loadScript(doc);
+            QString error;
+            mGraphicalModeWidget->loadScript(doc, error);
             mTextModeWidget->hideEditorWarning();
             changeMode(GraphicMode);
+            if (!error.isEmpty()) {
+                QPointer<SieveScriptParsingErrorDialog> dlg = new SieveScriptParsingErrorDialog(this);
+                dlg->setError(mTextModeWidget->currentscript(), error);
+                dlg->exec();
+                delete dlg;
+            }
         } else {
             mTextModeWidget->showEditorWarning();
-            qDebug() << "can not parse file";
+            qDebug() << "cannot parse file";
         }
         break;
     }

@@ -29,7 +29,7 @@ namespace AutoCreateScriptUtil
 {
 QString createMultiLine(const QString &str);
 QString createList(const QString &str, const QChar &separator, bool addEndSemiColon = true);
-QString createList(const QStringList &lst, bool addSemiColon = true);
+QString createList(const QStringList &lst, bool addSemiColon = true, bool protectSlash = false);
 QStringList createListFromString(QString str);
 QString createAddressList(const QString &str, bool addSemiColon = true);
 QString negativeString(bool isNegative);
@@ -40,6 +40,7 @@ QStringList listValue(const QDomElement &element);
 QString listValueToStr(const QDomElement &element);
 QString fixListValue(QString valueStr);
 QString quoteStr(QString str);
+void comboboxItemNotFound(const QString &searchItem, const QString &name, QString &error);
 }
 
 #endif // AUTOCREATESCRIPTUTIL_H

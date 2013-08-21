@@ -16,6 +16,7 @@
 */
 
 #include "selectsizetypecombobox.h"
+#include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocale>
 
@@ -44,12 +45,13 @@ QString SelectSizeTypeComboBox::code() const
     return itemData(currentIndex()).toString();
 }
 
-void SelectSizeTypeComboBox::setCode(const QString &code)
+void SelectSizeTypeComboBox::setCode(const QString &code, const QString &name, QString &error)
 {
     const int index = findData(code);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
+        AutoCreateScriptUtil::comboboxItemNotFound(code, name, error);
         setCurrentIndex(0);
     }
 }

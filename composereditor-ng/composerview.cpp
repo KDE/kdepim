@@ -172,6 +172,8 @@ void ComposerView::addCreatedActionsToActionCollection(KActionCollection *action
             actionCollection->addAction(QLatin1String("htmleditor_paste_without_formatting"), d->action_paste_withoutformatting);
         if (d->action_insert_specialchar)
             actionCollection->addAction(QLatin1String("htmleditor_insert_specialchar"), d->action_insert_specialchar);
+        if (d->action_insert_anchor)
+            actionCollection->addAction(QLatin1String("htmleditor_insert_anchor"), d->action_insert_anchor);
     }
 }
 
@@ -191,6 +193,8 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
     const bool listSelected = (elm.tagName().toLower() == QLatin1String("ol") ||
                                elm.tagName().toLower() == QLatin1String("ul") ||
                                elm.tagName().toLower() == QLatin1String("li") );
+
+    const bool anchorSelected = (elm.tagName().toLower() == QLatin1String("a"));
 
     kDebug()<<" elm.tagName().toLower() "<<elm.tagName().toLower();
 
@@ -432,6 +436,10 @@ void ComposerView::createToolBar(const QList<ComposerViewAction> &lstAction, KTo
             toolbar->addAction(d->action_paste_withoutformatting);
             break;
         }
+        case InsertAnchor: {
+            toolbar->addAction(d->action_insert_anchor);
+            break;
+        }
         case LastType: {
             //nothing
             break;
@@ -519,6 +527,8 @@ QAction *ComposerView::action(ComposerViewAction actionType) const
         return d->action_print_preview;
     case PasteWithoutFormatting:
         return d->action_paste_withoutformatting;
+    case InsertAnchor:
+        return d->action_insert_anchor;
     case Separator:
     case LastType:
         break;

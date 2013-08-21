@@ -19,6 +19,9 @@
 */
 
 #include "autocreatescriptutil_p.h"
+
+#include <KLocale>
+
 #include <QStringList>
 #include <QDebug>
 
@@ -49,12 +52,15 @@ QString AutoCreateScriptUtil::quoteStr(QString str)
     return str.replace(QLatin1String("\""), QLatin1String("\\\""));
 }
 
-QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiColon)
+QString AutoCreateScriptUtil::createList(const QStringList &lst, bool addSemiColon, bool protectSlash)
 {
     QString result;
     result = QLatin1String("[");
     bool wasFirst = true;
-    Q_FOREACH (const QString &str, lst) {
+    Q_FOREACH (QString str, lst) {
+        if (protectSlash) {
+            str = str.replace(QLatin1Char('\\'), QLatin1String("\\\\"));
+        }
         result += (wasFirst ? QString() : QLatin1String(",")) + QString::fromLatin1(" \"%1\"").arg(quoteStr(str));
         wasFirst = false;
     }
@@ -157,3 +163,7 @@ QString AutoCreateScriptUtil::fixListValue(QString valueStr)
     return valueStr;
 }
 
+void AutoCreateScriptUtil::comboboxItemNotFound(const QString &searchItem, const QString &name, QString &error)
+{
+    error += i18n("Cannot find item \"%1\" in widget \"%2\"", searchItem, name);
+}

@@ -100,7 +100,7 @@ QString SieveConditionAddress::help() const
     return i18n("The \"address\" test matches Internet addresses in structured headers that contain addresses.  It returns true if any header contains any key in the specified part of the address, as modified by the comparator and the match keyword.");
 }
 
-void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition, QString &error )
 {
     int index = 0;
     int indexStr = 0;
@@ -113,11 +113,12 @@ void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                 const QString tagValue = e.text();
                 if (index == 0) {
                     SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
-                    selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(tagValue));
+                    selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(tagValue), name(), error);
                 } else if (index == 1) {
                     SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
-                    selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition));
+                    selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<"SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
@@ -129,6 +130,7 @@ void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
                     edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
+                    tooManyArgument(tagName, indexStr, 2, error);
                     qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
                 }
                 ++indexStr;
@@ -140,15 +142,20 @@ void SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
                     edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 } else {
+                    tooManyArgument(tagName, indexStr, 2, error);
                     qDebug()<<" SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
                 }
                 ++indexStr;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionAddress::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionaddress.moc"

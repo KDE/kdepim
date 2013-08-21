@@ -57,6 +57,7 @@
 #include <QHeaderView>
 #include <QMenu>
 #include <QToolButton>
+#include <QItemSelection>
 
 using namespace EventViews;
 using namespace KCalCore;
@@ -143,7 +144,7 @@ struct ModelStack
     prefs->setFlatListTodo( flat );
     prefs->writeConfig();
   }
-  
+
   void setCalendar( const Akonadi::ETMCalendar::Ptr &newCalendar )
   {
     calendar = newCalendar;
@@ -192,6 +193,7 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
   mProxyModel->setFilterKeyColumn( TodoModel::SummaryColumn );
   mProxyModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
   mProxyModel->setSortRole( Qt::EditRole );
+  connect( mProxyModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex,int,int)) );
 
   if ( !mSidebarView ) {
     mQuickSearch = new TodoViewQuickSearch( calendar(), this );
@@ -642,12 +644,14 @@ void TodoView::clearSelection()
 }
 
 void TodoView::addTodo( const QString &summary,
-                          const KCalCore::Todo::Ptr &parent,
-                          const QStringList &categories )
+                        const Akonadi::Item &parentItem,
+                        const QStringList &categories )
 {
   if ( !changer() || summary.trimmed().isEmpty() ) {
     return;
   }
+
+  KCalCore::Todo::Ptr parent = CalendarSupport::todo( parentItem );
 
   KCalCore::Todo::Ptr todo( new KCalCore::Todo );
   todo->setSummary( summary.trimmed() );
@@ -661,12 +665,18 @@ void TodoView::addTodo( const QString &summary,
     todo->setRelatedTo( parent->uid() );
   }
 
-  CalendarSupport::CollectionSelection *selection =
-    EventViews::EventView::globalCollectionSelection();
-
   Akonadi::Collection collection;
+
+  // Use the same collection of the parent.
+  if ( parentItem.isValid() ) {
+      // Don't use parentColection() since it might be a virtual collection
+      collection = calendar()->collection( parentItem.storageCollectionId() );
+  }
+
+  CalendarSupport::CollectionSelection *selection = EventViews::EventView::globalCollectionSelection();
+
   // If we only have one collection, don't ask in which collection to save the to-do.
-  if ( selection && selection->model()->model()->rowCount() == 1 ) {
+  if ( !collection.isValid() && selection && selection->model()->model()->rowCount() == 1 ) {
     QModelIndex index = selection->model()->model()->index( 0, 0 );
     if ( index.isValid() ) {
       collection = CalendarSupport::collectionFromIndex( index );
@@ -679,24 +689,9 @@ void TodoView::addTodo( const QString &summary,
 void TodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
 {
   if ( modifiers == Qt::NoModifier ) {
-    /*const QModelIndex index = */ addTodo( mQuickAdd->text(), KCalCore::Todo::Ptr(),
+    /*const QModelIndex index = */ addTodo( mQuickAdd->text(), Akonadi::Item(),
                                             mProxyModel->categories() );
 
-#ifdef AKONADI_PORT_DISABLED
-    // the todo is added asynchronously now, so we have to wait until
-    // the new item is actually added before selecting the item
-
-    QModelIndexList selection = mView->selectionModel()->selectedRows();
-    if ( selection.size() <= 1 ) {
-      // don't destroy complex selections, not applicable now (only single
-      // selection allowed), but for the future...
-      mView->selectionModel()->select( mProxyModel->mapFromSource( index ),
-                                       QItemSelectionModel::ClearAndSelect |
-                                       QItemSelectionModel::Rows );
-    }
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
   } else if ( modifiers == Qt::ControlModifier ) {
     QModelIndexList selection = mView->selectionModel()->selectedRows();
     if ( selection.count() != 1 ) {
@@ -707,7 +702,7 @@ void TodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
     mView->expand( selection[0] );
     const Akonadi::Item parent = sModels->todoModel->data( idx,
                       Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-    addTodo( mQuickAdd->text(), CalendarSupport::todo( parent ), mProxyModel->categories() );
+    addTodo( mQuickAdd->text(), parent, mProxyModel->categories() );
   } else {
     return;
   }
@@ -1073,9 +1068,55 @@ void TodoView::setFlatView( bool flatView, bool notifyOtherViews )
   }
 }
 
+void TodoView::onRowsInserted( const QModelIndex &parent, int start, int end)
+{
+    if ( start != end || !calendar() || !calendar()->entityTreeModel() )
+        return;
+
+    QModelIndex idx = mView->model()->index( start, 0 );
+
+    // If the collection is currently being populated, we don't do anything
+    QVariant v = idx.data( Akonadi::EntityTreeModel::ItemRole );
+    if ( !v.isValid() )
+        return;
+
+    Akonadi::Item item = v.value<Akonadi::Item>();
+    if ( !item.isValid() )
+        return;
+
+    const bool isPopulated = calendar()->entityTreeModel()->isCollectionPopulated( item.storageCollectionId() );
+    if ( !isPopulated )
+        return;
+
+    // Case #1, adding an item that doesn't have parent: We select it
+    if ( !parent.isValid() ) {
+        QModelIndexList selection = mView->selectionModel()->selectedRows();
+        if ( selection.size() <= 1 ) {
+          // don't destroy complex selections, not applicable now (only single
+          // selection allowed), but for the future...
+          int colCount = static_cast<int>( TodoModel::ColumnCount );
+          mView->selectionModel()->select( QItemSelection( idx, mView->model()->index( start, colCount-1 ) ),
+                                           QItemSelectionModel::ClearAndSelect |
+                                           QItemSelectionModel::Rows );
+        }
+        return;
+    }
+
+    // Case 2: Adding an item that has a parent: we expand the parent
+    if ( sModels->isFlatView() )
+        return;
+
+    QModelIndex index = parent;
+    mView->expand( index );
+    while ( index.parent().isValid() ) {
+      mView->expand( index.parent() );
+      index = index.parent();
+    }
+}
+
 void TodoView::getHighlightMode( bool &highlightEvents,
-                                   bool &highlightTodos,
-                                   bool &highlightJournals )
+                                 bool &highlightTodos,
+                                 bool &highlightJournals )
 {
   highlightTodos    = preferences()->highlightTodos();
   highlightEvents   = !highlightTodos;

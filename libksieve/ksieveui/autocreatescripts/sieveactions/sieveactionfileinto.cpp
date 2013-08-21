@@ -24,7 +24,7 @@
 #include <QHBoxLayout>
 #include <QDebug>
 #include <QDomNode>
-
+//Add support for adding flags
 using namespace KSieveUi;
 SieveActionFileInto::SieveActionFileInto(QObject *parent)
     : SieveAction(QLatin1String("fileinto"), i18n("File Into"), parent)
@@ -56,7 +56,7 @@ QString SieveActionFileInto::code(QWidget *w) const
     return result + QString::fromLatin1("\"%1\";").arg(text);
 }
 
-void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -70,6 +70,7 @@ void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                         QCheckBox *copy = w->findChild<QCheckBox*>( QLatin1String("copy") );
                         copy->setChecked(true);
                     } else {
+                        error += i18n("Action \"fileinto\" has \"copy\" argument but current server does not support it") + QLatin1Char('\n');
                         qDebug()<<"SieveActionFileInto::setParamWidgetValue has not copy support ";
                     }
                 } else if (tagValue == QLatin1String("create")) {
@@ -77,6 +78,7 @@ void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                         QCheckBox *create = w->findChild<QCheckBox*>( QLatin1String("create") );
                         create->setChecked(true);
                     } else {
+                        serverDoesNotSupportFeatures(QLatin1String("fileinto"), error);
                         qDebug()<<"SieveActionFileInto::setParamWidgetValue server has not create support ";
                     }
                 }
@@ -85,11 +87,13 @@ void SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                 KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("fileintolineedit") );
                 edit->setText(tagValue);
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionFileInto::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QWidget *SieveActionFileInto::createParamWidget( QWidget *parent ) const

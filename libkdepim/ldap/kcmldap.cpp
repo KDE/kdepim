@@ -97,7 +97,7 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
                                       ki18n( "(c) 2009 - 2010 Tobias Koenig" ) );
 
   about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
-  KGlobal::locale()->insertCatalog("libkdepim");
+  KGlobal::locale()->insertCatalog(QLatin1String("libkdepim"));
   setAboutData( about );
   mClientSearchConfig = new KLDAP::LdapClientSearchConfig;
   initGUI();
@@ -333,12 +333,12 @@ void KCMLdap::initGUI()
   KVBox *upDownBox = new KVBox( hBox );
   upDownBox->setSpacing( 6 );
   mUpButton = new QToolButton( upDownBox );
-  mUpButton->setIcon( KIcon( "go-up" ) );
+  mUpButton->setIcon( KIcon( QLatin1String("go-up") ) );
   mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   mUpButton->setEnabled( false ); // b/c no item is selected yet
 
   mDownButton = new QToolButton( upDownBox );
-  mDownButton->setIcon( KIcon( "go-down" ) );
+  mDownButton->setIcon( KIcon( QLatin1String("go-down") ) );
   mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   mDownButton->setEnabled( false ); // b/c no item is selected yet
 

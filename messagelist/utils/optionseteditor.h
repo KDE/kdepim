@@ -57,15 +57,13 @@ protected:
    * Returns the editor for the name of the OptionSet.
    * Derived classes are responsable of filling this UI element and reading back data from it.
    */
-  KLineEdit * nameEdit() const
-    { return mNameEdit; }
+  KLineEdit * nameEdit() const;
 
   /**
    * Returns the editor for the description of the OptionSet.
    * Derived classes are responsable of filling this UI element and reading back data from it.
    */
-  KTextEdit * descriptionEdit() const
-    { return mDescriptionEdit; }
+  KTextEdit * descriptionEdit() const;
 
 protected slots:
   /**

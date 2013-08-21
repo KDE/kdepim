@@ -46,7 +46,7 @@
 AddDirectoryServiceDialogImpl::AddDirectoryServiceDialogImpl( QWidget* parent,  const char* name, bool modal, Qt::WindowFlags fl )
     : QDialog(parent, fl), AddDirectoryServiceDialog()
 {
-    setObjectName( name );
+    setObjectName( QLatin1String(name) );
     setModal( modal );
     setupUi(this);
     portED->setValidator( new QIntValidator( 0, 65535, portED ) );

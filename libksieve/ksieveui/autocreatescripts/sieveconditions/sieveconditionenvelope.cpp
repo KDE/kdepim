@@ -113,7 +113,7 @@ QString SieveConditionEnvelope::help() const
     return i18n("The \"envelope\" test is true if the specified part of the [SMTP] (or equivalent) envelope matches the specified key.");
 }
 
-void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
 {
     int indexTag = 0;
     int indexStr = 0;
@@ -126,11 +126,12 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                 const QString tagValue = e.text();
                 if (indexTag == 0) {
                     SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
-                    selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(tagValue));
+                    selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(tagValue), name(), error);
                 } else if (indexTag == 1) {
                     SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
-                    selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition));
+                    selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
                 } else {
+                    tooManyArgument(tagName, indexTag, 2, error);
                     qDebug()<<"SieveConditionEnvelope::setParamWidgetValue too many argument :"<<indexTag;
                 }
                 ++indexTag;
@@ -142,6 +143,7 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("editaddress") );
                     edit->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
+                    tooManyArgument(tagName, indexStr, 2, error);
                     qDebug()<<"SieveConditionEnvelope::setParamWidgetValue too many argument indexStr "<<indexStr;
                 }
                 ++indexStr;
@@ -154,11 +156,15 @@ void SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
                     edit->setText(AutoCreateScriptUtil::listValueToStr(e));
                 }
                 ++indexStr;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionEnvelope::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 #include "sieveconditionenvelope.moc"

@@ -242,6 +242,7 @@ public:
    */
 
   QVector<qlonglong> selectionAsMessageItemListId( bool includeCollapsedChildren ) const;
+  QList<Akonadi::Item::Id> selectionAsListMessageId( bool includeCollapsedChildren ) const;
 
   /**
    * Returns the Akonadi::Item bound to the current StorageModel that

@@ -79,6 +79,7 @@ using KPIM::RecentAddresses;
 #include "mailcommon/util/mailutil.h"
 #include "mailcommon/tag/tagwidget.h"
 #include "mailcommon/tag/tag.h"
+#include "mailcommon/mailcommonsettings_base.h"
 
 #include "messagecomposer/settings/messagecomposersettings.h"
 #include "configureagentswidget.h"
@@ -1189,15 +1190,15 @@ AppearancePageLayoutTab::AppearancePageLayoutTab( QWidget * parent )
            this, SLOT(slotEmitChanged()) );
 
   QRadioButton* favoriteFoldersViewHiddenRadio = new QRadioButton( i18n( "Never" ), mFavoriteFoldersViewGroupBox );
-  mFavoriteFoldersViewGroup->addButton( favoriteFoldersViewHiddenRadio, static_cast<int>( GlobalSettings::EnumFavoriteCollectionViewMode::HiddenMode ) );
+  mFavoriteFoldersViewGroup->addButton( favoriteFoldersViewHiddenRadio, static_cast<int>( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::HiddenMode ) );
   mFavoriteFoldersViewGroupBox->layout()->addWidget( favoriteFoldersViewHiddenRadio );
 
   QRadioButton* favoriteFoldersViewIconsRadio = new QRadioButton( i18n( "As icons" ), mFavoriteFoldersViewGroupBox );
-  mFavoriteFoldersViewGroup->addButton( favoriteFoldersViewIconsRadio, static_cast<int>( GlobalSettings::EnumFavoriteCollectionViewMode::IconMode ) );
+  mFavoriteFoldersViewGroup->addButton( favoriteFoldersViewIconsRadio, static_cast<int>( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode ) );
   mFavoriteFoldersViewGroupBox->layout()->addWidget( favoriteFoldersViewIconsRadio );
 
   QRadioButton* favoriteFoldersViewListRadio = new QRadioButton( i18n( "As list" ), mFavoriteFoldersViewGroupBox );
-  mFavoriteFoldersViewGroup->addButton( favoriteFoldersViewListRadio,  static_cast<int>( GlobalSettings::EnumFavoriteCollectionViewMode::ListMode ) );
+  mFavoriteFoldersViewGroup->addButton( favoriteFoldersViewListRadio,  static_cast<int>( MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode ) );
   mFavoriteFoldersViewGroupBox->layout()->addWidget( favoriteFoldersViewListRadio );
 
   vlay->addWidget( mFavoriteFoldersViewGroupBox );
@@ -1237,7 +1238,7 @@ void AppearancePage::LayoutTab::doLoadOther()
 {
   loadWidget( mFolderListGroupBox, mFolderListGroup, GlobalSettings::self()->folderListItem() );
   loadWidget( mReaderWindowModeGroupBox, mReaderWindowModeGroup, GlobalSettings::self()->readerWindowModeItem() );
-  loadWidget( mFavoriteFoldersViewGroupBox, mFavoriteFoldersViewGroup, GlobalSettings::self()->favoriteCollectionViewModeItem() );
+  loadWidget( mFavoriteFoldersViewGroupBox, mFavoriteFoldersViewGroup, MailCommon::MailCommonSettings::self()->favoriteCollectionViewModeItem() );
   mFolderQuickSearchCB->setChecked( GlobalSettings::self()->enableFolderQuickSearch() );
   const int checkedFolderToolTipsPolicy = GlobalSettings::self()->toolTipDisplayPolicy();
   if ( checkedFolderToolTipsPolicy < mFolderToolTipsGroup->buttons().size() && checkedFolderToolTipsPolicy >= 0 )
@@ -1248,7 +1249,7 @@ void AppearancePage::LayoutTab::save()
 {
   saveButtonGroup( mFolderListGroup, GlobalSettings::self()->folderListItem() );
   saveButtonGroup( mReaderWindowModeGroup, GlobalSettings::self()->readerWindowModeItem() );
-  saveButtonGroup( mFavoriteFoldersViewGroup, GlobalSettings::self()->favoriteCollectionViewModeItem() );
+  saveButtonGroup( mFavoriteFoldersViewGroup, MailCommon::MailCommonSettings::self()->favoriteCollectionViewModeItem() );
   GlobalSettings::self()->setEnableFolderQuickSearch( mFolderQuickSearchCB->isChecked() );
   GlobalSettings::self()->setToolTipDisplayPolicy( mFolderToolTipsGroup->checkedId() );
 }
@@ -1990,7 +1991,7 @@ void AppearancePage::MessageTagTab::slotNameLineTextChanged( const QString
   const int count = mTagListBox->count();
   for ( int i=0; i < count; ++i ) {
     if(mTagListBox->item(i)->text() == aText) {
-      KMessageBox::error(this,i18n("We can not create tag. A tag with same name already exists."));
+      KMessageBox::error(this,i18n("We cannot create tag. A tag with same name already exists."));
       disconnect( mTagWidget->tagNameLineEdit(), SIGNAL(textChanged(QString)),
                this, SLOT(slotNameLineTextChanged(QString)) );
       mTagWidget->tagNameLineEdit()->setText(mTagListBox->currentItem()->text());
@@ -2027,7 +2028,7 @@ void AppearancePage::MessageTagTab::slotAddNewTag()
   const int count = mTagListBox->count();
   for ( int i=0; i < count; ++i ) {
     if(mTagListBox->item(i)->text() == newTagName) {
-      KMessageBox::error(this,i18n("We can not create tag. A tag with same name already exists."));
+      KMessageBox::error(this,i18n("We cannot create tag. A tag with same name already exists."));
       return;
     }
   }
@@ -4102,7 +4103,6 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent )
 
   mMMTab.gridLayout->setSpacing( KDialog::spacingHint() );
   mMMTab.gridLayout->setMargin( KDialog::marginHint() );
-  mMMTab.mStartUpFolderLabel->setBuddy( mMMTab.mOnStartupOpenFolder );
   mMMTab.mExcludeImportantFromExpiry->setWhatsThis(
       i18n( GlobalSettings::self()->excludeImportantMailFromExpiryItem()->whatsThis().toUtf8() ) );
 
@@ -4126,7 +4126,10 @@ MiscPageFolderTab::MiscPageFolderTab( QWidget * parent )
            this, SLOT(slotEmitChanged()) );
   connect( mMMTab.mEmptyTrashCheck, SIGNAL(stateChanged(int)),
            this, SLOT(slotEmitChanged()) );
-
+  connect( mMMTab.mStartUpFolderCheck, SIGNAL(toggled(bool)),
+           this, SLOT(slotEmitChanged()) );
+  connect( mMMTab.mStartUpFolderCheck, SIGNAL(toggled(bool)),
+           mOnStartupOpenFolder, SLOT(setEnabled(bool)) );
 }
 
 void MiscPage::FolderTab::doLoadFromGlobalSettings()
@@ -4138,6 +4141,8 @@ void MiscPage::FolderTab::doLoadFromGlobalSettings()
   mMMTab.mDelayedMarkAsRead->setChecked( MessageViewer::GlobalSettings::self()->delayedMarkAsRead() );
   mMMTab.mDelayedMarkTime->setValue( MessageViewer::GlobalSettings::self()->delayedMarkTime() );
   mMMTab.mShowPopupAfterDnD->setChecked( GlobalSettings::self()->showPopupAfterDnD() );
+  mMMTab.mStartUpFolderCheck->setChecked( GlobalSettings::self()->startSpecificFolderAtStartup() );
+  mOnStartupOpenFolder->setEnabled(GlobalSettings::self()->startSpecificFolderAtStartup());
   doLoadOther();
 }
 
@@ -4161,6 +4166,7 @@ void MiscPage::FolderTab::save()
   GlobalSettings::self()->setShowPopupAfterDnD( mMMTab.mShowPopupAfterDnD->isChecked() );
   GlobalSettings::self()->setExcludeImportantMailFromExpiry(
         mMMTab.mExcludeImportantFromExpiry->isChecked() );
+  GlobalSettings::self()->setStartSpecificFolderAtStartup(mMMTab.mStartUpFolderCheck->isChecked() );
 }
 
 MiscPageAgentSettingsTab::MiscPageAgentSettingsTab( QWidget* parent )

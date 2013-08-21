@@ -6,7 +6,8 @@ include_directories(
   ${Boost_INCLUDE_DIR}
   ${Grantlee_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/pimcommon/
-  ${CMAKE_SOURCE_DIR}/libkdepim/ 
+  ${CMAKE_SOURCE_DIR}/libkdepim/
+  ${CMAKE_SOURCE_DIR}/grantleetheme 
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -17,6 +18,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 find_package(Prison QUIET CONFIG)
 set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
+
+add_subdirectory(grantlee)
 
 if(Prison_FOUND)
   add_definitions(-DHAVE_PRISON)
@@ -79,17 +82,12 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_xxport_SRCS}
 )
 
-set(kaddressbook_LIB_SRCS
-  ${kaddressbook_LIB_SRCS}
-  grantlee/grantleecontactformatter.cpp
-  grantlee/grantleecontactgroupformatter.cpp
-)
-
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
 target_link_libraries(kaddressbookprivate
   kdepim
   pimcommon
+  kaddressbookgrantlee
   ${KDE4_KDEUI_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
@@ -97,13 +95,13 @@ target_link_libraries(kaddressbookprivate
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KPRINTUTILS_LIBS}
+  ${Grantlee_CORE_LIBRARIES}
+  grantleetheme
 )
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
 endif()
-
-target_link_libraries(kaddressbookprivate ${Grantlee_CORE_LIBRARIES})
 
 if(PRISON_FOUND)
   target_link_libraries(kaddressbookprivate ${PRISON_LIBRARIES})
@@ -131,6 +129,7 @@ target_link_libraries(kaddressbook
   ${KDE4_KIO_LIBS}
   ${KDE4_PHONON_LIBS}
   kaddressbookprivate
+  grantleetheme
 )
 
 if(QGPGME_FOUND)
@@ -155,5 +154,9 @@ install(FILES
   viewertemplates/contactgroup_embedded.html
   viewertemplates/contactgroup_additionalfieldrow.html
   viewertemplates/contactgroup_memberrow.html
+  viewertemplates/theme.desktop
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/viewertemplates/default/
 )
+
+install(FILES data/kaddressbook_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
+

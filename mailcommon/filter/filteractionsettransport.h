@@ -33,44 +33,44 @@ class FilterActionSetTransport: public FilterAction
     Q_OBJECT
 public:
     explicit FilterActionSetTransport( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual SearchRule::RequiredPart requiredPart() const;
+    ReturnCode process( ItemContext &context ) const;
+    SearchRule::RequiredPart requiredPart() const;
     static FilterAction *newAction();
-    virtual QWidget *createParamWidget( QWidget *parent ) const;
+    QWidget *createParamWidget( QWidget *parent ) const;
     /**
      * @copydoc FilterAction::applyParamWidgetValue
      */
-    virtual void applyParamWidgetValue( QWidget *paramWidget );
+    void applyParamWidgetValue( QWidget *paramWidget );
 
     /**
      * @copydoc FilterAction::setParamWidgetValue
      */
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
+    void setParamWidgetValue( QWidget *paramWidget ) const;
 
     /**
      * @copydoc FilterAction::clearParamWidget
      */
-    virtual void clearParamWidget( QWidget *paramWidget ) const;
+    void clearParamWidget( QWidget *paramWidget ) const;
 
-    virtual bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
+    bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
     /**
      * @copydoc FilterAction::argsFromString
      */
-    virtual void argsFromString( const QString &argsStr );
+    void argsFromString( const QString &argsStr );
     /**
      * @copydoc FilterAction::isEmpty
      */
-    virtual bool isEmpty() const;
+    bool isEmpty() const;
     /**
      * @copydoc FilterAction::argsAsString
      */
-    virtual QString argsAsString() const;
+    QString argsAsString() const;
 
     /**
      * @copydoc FilterAction::displayString
      */
-    virtual QString displayString() const;
+    QString displayString() const;
 
 protected:
     int mParameter;

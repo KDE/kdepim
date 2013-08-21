@@ -52,7 +52,7 @@ QWidget *SieveActionReject::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -64,11 +64,13 @@ void SieveActionReject::setParamWidgetValue(const QDomElement &element, QWidget 
                 MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("rejectmessage") );
                 edit->setText(AutoCreateScriptUtil::quoteStr(tagValue));
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionReject::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionReject::code(QWidget *w) const

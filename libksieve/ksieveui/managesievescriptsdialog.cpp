@@ -294,11 +294,12 @@ void ManageSieveScriptsDialog::slotItem( KManageSieve::SieveJob * job, const QSt
     QTreeWidgetItem * parent = mJobs[job];
     if ( !parent )
         return;
+    const bool oldBlockSignal = mBlockSignal;
+    mBlockSignal = true; // don't trigger slotItemChanged
+
     QTreeWidgetItem* item = new QTreeWidgetItem( parent );
     item->setFlags(item->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
 
-    const bool oldBlockSignal = mBlockSignal;
-    mBlockSignal = true; // don't trigger slotItemChanged
     item->setText(0,filename);
     item->setCheckState(0, isActive ? Qt::Checked : Qt::Unchecked);
     if ( isActive ) {
@@ -365,6 +366,7 @@ void ManageSieveScriptsDialog::changeActiveScript( QTreeWidgetItem *item, bool a
         job = KManageSieve::SieveJob::activate( u );
     else
         job = KManageSieve::SieveJob::deactivate( u );
+    mBlockSignal = true;
     connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotRefresh()) );
 }
@@ -489,12 +491,14 @@ void ManageSieveScriptsDialog::slotNewScript()
         }
     }
 
+    mBlockSignal = true;
     QTreeWidgetItem *newItem = new QTreeWidgetItem( currentItem );
     newItem->setFlags(newItem->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
     newItem->setText(0,name);
     newItem->setCheckState(0,Qt::Unchecked);
     mCurrentURL = u;
     mIsNewScript = true;
+    mBlockSignal = false;
     slotGetResult( 0, true, QString(), false );
 }
 
@@ -544,8 +548,10 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
     mSieveEditor->deleteLater();
     mSieveEditor = 0;
     mCurrentURL = KUrl();
+    mBlockSignal = true;
     if ( mIsNewScript )
         slotRefresh();
+    mBlockSignal = false;
 }
 
 void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob *,bool success ,const QString &errorMsg)
@@ -596,6 +602,11 @@ void ManageSieveScriptsDialog::addMessageEntry( const QString &errorMsg, const Q
 void ManageSieveScriptsDialog::disableManagerScriptsDialog(bool disable)
 {
     setDisabled(disable);
+}
+
+void ManageSieveScriptsDialog::checkEditorMode()
+{
+    //TODO implement it.
 }
 
 

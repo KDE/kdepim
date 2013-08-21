@@ -146,9 +146,9 @@ QString VCardOutput::optionUsage() const
         i18n("Optionally use a different vCard version (default is %1)",
              QString::fromLatin1("3.0"));
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
-    usage += "v2.1\t";
+    usage += QLatin1String("v2.1\t");
     usage += i18n("Uses the vCard version 2.1");
 
     return usage;
@@ -267,7 +267,7 @@ QString EmailOutput::description() const
 
 bool EmailOutput::setOptions(const QByteArray& options)
 {
-    QStringList optionList = QString::fromLocal8Bit(options).split(',', QString::SkipEmptyParts);
+    QStringList optionList = QString::fromLocal8Bit(options).split(QLatin1Char(','), QString::SkipEmptyParts);
 
     QStringList::const_iterator it    = optionList.constBegin();
     QStringList::const_iterator endIt = optionList.constEnd();
@@ -290,14 +290,14 @@ QString EmailOutput::optionUsage() const
 {
     QString usage = i18n("Comma separated list of: allemails, withname");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
-    usage += "allemails\t";
+    usage += QLatin1String("allemails\t");
     usage += i18n("List all email addresses of each contact");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
-    usage += "withname\t";
+    usage += QLatin1String("withname\t");
     usage += i18n("Prepend formatted name, e.g\n\t\tJohn Doe &lt;jdoe@foo.com&gt;");
 
     return usage;
@@ -408,23 +408,23 @@ QString MuttOutput::description() const
 
 bool MuttOutput::setOptions(const QByteArray& options)
 {
-    QStringList optionList = QString::fromLocal8Bit(options).split(',', QString::SkipEmptyParts);
+    QStringList optionList = QString::fromLocal8Bit(options).split(QLatin1Char(','), QString::SkipEmptyParts);
 
     QStringList::const_iterator it    = optionList.constBegin();
     QStringList::const_iterator endIt = optionList.constEnd();
     for (; it != endIt; ++it)
     {
-        if ((*it) == "allemails")
+        if ((*it) == QLatin1String("allemails"))
             m_allEmails = true;
-        else if ((*it) == "query")
+        else if ((*it) == QLatin1String("query"))
             m_queryFormat = true;
-        else if ((*it) == "alias")
+        else if ((*it) == QLatin1String("alias"))
             m_queryFormat = false;
-        else if ((*it) == "altkeys")
+        else if ((*it) == QLatin1String("altkeys"))
             m_altKeyFormat = true;
-        else if ((*it) == "prefernick")
+        else if ((*it) == QLatin1String("prefernick"))
             m_preferNickNameKey = true;
-        else if ((*it) == "alsonick")
+        else if ((*it) == QLatin1String("alsonick"))
             m_alsoNickNameKey = true;
         else
             return false;
@@ -447,40 +447,40 @@ QString MuttOutput::optionUsage() const
         i18n("Comma separated list of: allemails, query, alias, altkeys, prefernick, alsonick. "
              "Default is alias");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
-    usage += "allemails\t";
+    usage += QLatin1String("allemails\t");
     usage += i18n("List all email addresses of each contact");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
-    usage += "query\t\t";
+    usage += QLatin1String("query\t\t");
     usage += i18n("Use mutt's query format, e.g.\n\t\t"
                   "jdoe@foo.com [tab] John Doe\n\t\t"
                   "Conflicts with alias");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
-    usage += "alias\t\t";
+    usage += QLatin1String("alias\t\t");
     usage += i18n("Use mutt's alias format, e.g.\n\t\t"
                   "alias JohDoe[tab]John Doe &lt;jdoe@foo.com&gt;\n\t\t"
                   "Conflicts with query");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
-    usage += "altkeys\t\t";
+    usage += QLatin1String("altkeys\t\t");
     usage += i18n("Use alternative keys with alias format, e.g.\n\t\t"
                   "alias jdoe[tab]John Doe &lt;jdoe@foo.com&gt;");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
-    usage += "prefernick\t";
+    usage += QLatin1String("prefernick\t");
     usage += i18n("If a nick name exists use it instead of the key, e.g.\n\t\t"
                   "alias johnny[tab]John Doe &lt;jdoe@foo.com&gt;");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
-    usage += "alsonick\t";
+    usage += QLatin1String("alsonick\t");
     usage += i18n("Generate additional aliases with the nick name as the key, e.g.\n\t\t"
                   "alias johnny[tab]John Doe &lt;jdoe@foo.com&gt;\n\t\t"
                   "Deactivates 'prefernick' to avoid duplicates");
@@ -652,8 +652,8 @@ QString MuttOutput::key(const KABC::Addressee& addressee) const
 {
     if (m_altKeyFormat)
     {
-        const QChar space = ' ';
-        const QChar underscore = '_';
+        const QChar space = QLatin1Char(' ');
+        const QChar underscore = QLatin1Char('_');
 
         if (addressee.familyName().isEmpty())
             return addressee.givenName().toLower().replace(space, underscore);
@@ -669,8 +669,8 @@ QString MuttOutput::nickNameKey(const KABC::Addressee& addressee) const
 {
     if (!addressee.nickName().isEmpty())
     {
-        const QChar space = ' ';
-        const QChar underscore = '_';
+        const QChar space = QLatin1Char(' ');
+        const QChar underscore = QLatin1Char('_');
         return addressee.nickName().toLower().replace(space, underscore);
     }
     else
@@ -717,7 +717,7 @@ QString CSVOutput::optionUsage() const
     QString usage =
         i18n("Specify one of the following CSV templates:");
 
-    usage += '\n';
+    usage += QLatin1Char('\n');
 
     const QMap<QString, QString> templateNames = m_templateFactory->templateNames();
 
@@ -730,11 +730,11 @@ QString CSVOutput::optionUsage() const
 
         usage += name;
 
-        usage += name.length() < 8 ? "\t\t" : "\t";
+        usage += name.length() < 8 ? QLatin1String("\t\t") : QLatin1String("\t");
 
         usage += templateName;
 
-        usage += '\n';
+        usage += QLatin1Char('\n');
     }
 
     return usage;
@@ -763,7 +763,7 @@ bool CSVOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& s
     for (int i = 0; i < m_template->columns(); ++i)
     {
         QString text = m_template->fieldText(i, addressee);
-        text.replace(QChar('\n'), "\\n");
+        text.replace(QLatin1Char('\n'), QLatin1String("\\n"));
 
         columns.append(m_template->quote() + text + m_template->quote());
     }

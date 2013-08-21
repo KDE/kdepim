@@ -31,6 +31,7 @@ public:
     FilterMBox();
     ~FilterMBox();
 
+    void importMails(const QStringList &filenames);
     void import();
 };
 }

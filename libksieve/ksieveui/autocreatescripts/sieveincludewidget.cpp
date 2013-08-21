@@ -56,12 +56,13 @@ QString SieveIncludeLocation::code() const
     return itemData(currentIndex()).toString();
 }
 
-void SieveIncludeLocation::setCode(const QString &code)
+void SieveIncludeLocation::setCode(const QString &code, QString &error)
 {
     const int index = findData(code);
     if (index != -1) {
         setCurrentIndex(index);
     } else {
+        error += i18n("Unknown location type \"%1\" during parsing includes", code);
         setCurrentIndex(0);
     }
 }
@@ -76,7 +77,7 @@ SieveIncludeActionWidget::~SieveIncludeActionWidget()
 {
 }
 
-void SieveIncludeActionWidget::loadScript(const QDomElement &element)
+void SieveIncludeActionWidget::loadScript(const QDomElement &element, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -87,7 +88,7 @@ void SieveIncludeActionWidget::loadScript(const QDomElement &element)
                 const QString tagValue = e.text();
                 if (tagValue == QLatin1String("personal") ||
                         tagValue == QLatin1String("global")) {
-                    mLocation->setCode(AutoCreateScriptUtil::tagValue(tagValue));
+                    mLocation->setCode(AutoCreateScriptUtil::tagValue(tagValue), error);
                 } else if (tagValue == QLatin1String("optional")) {
                     mOptional->setChecked(true);
                 } else if (tagValue == QLatin1String("once")) {
@@ -217,9 +218,9 @@ void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)
     }
 }
 
-void SieveIncludeWidget::loadScript(const QDomElement &element)
+void SieveIncludeWidget::loadScript(const QDomElement &element, QString &error)
 {
-    mIncludeLister->loadScript(element);
+    mIncludeLister->loadScript(element, error);
 }
 
 SieveIncludeWidgetLister::SieveIncludeWidgetLister(QWidget *parent)
@@ -302,14 +303,14 @@ QWidget *SieveIncludeWidgetLister::createWidget( QWidget *parent )
     return w;
 }
 
-void SieveIncludeWidgetLister::loadScript(const QDomElement &element)
+void SieveIncludeWidgetLister::loadScript(const QDomElement &element, QString &error)
 {
     SieveIncludeActionWidget *w = static_cast<SieveIncludeActionWidget *>(widgets().last());
     if (w->isInitialized()) {
         addWidgetAfterThisWidget(widgets().last());
         w = static_cast<SieveIncludeActionWidget *>(widgets().last());
     }
-    w->loadScript(element);
+    w->loadScript(element, error);
 }
 
 }

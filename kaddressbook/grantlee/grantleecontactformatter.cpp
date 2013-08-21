@@ -20,6 +20,7 @@
 */
 
 #include "grantleecontactformatter.h"
+#include "grantleetheme/grantleetheme.h"
 
 #include <grantlee/context.h>
 #include <grantlee/engine.h>
@@ -44,25 +45,11 @@ using namespace Akonadi;
 class GrantleeContactFormatter::Private
 {
   public:
-    Private( const QString &templatePath )
+    Private()
     {
       mEngine = new Grantlee::Engine;
 
-      mTemplateLoader =
-        Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
-      mTemplateLoader->setTemplateDirs( QStringList() << templatePath );
-      mTemplateLoader->setTheme( QLatin1String( "default" ) );
-
-      mEngine->addTemplateLoader( mTemplateLoader );
-      mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("contact.html") );
-      if ( mSelfcontainedTemplate->error() ) {
-        mErrorMessage += mSelfcontainedTemplate->errorString();
-      }
-
-      mEmbeddableTemplate = mEngine->loadByName( QLatin1String("contact_embedded.html") );
-      if ( mEmbeddableTemplate->error() ) {
-        mErrorMessage += mEmbeddableTemplate->errorString();
-      }
+      mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
     }
 
     ~Private()
@@ -78,8 +65,8 @@ class GrantleeContactFormatter::Private
     QString mErrorMessage;
 };
 
-GrantleeContactFormatter::GrantleeContactFormatter( const QString &templatePath )
-  : d( new Private( templatePath ) )
+GrantleeContactFormatter::GrantleeContactFormatter()
+  : d( new Private )
 {
 }
 
@@ -87,6 +74,23 @@ GrantleeContactFormatter::~GrantleeContactFormatter()
 {
   delete d;
 }
+
+void GrantleeContactFormatter::setGrantleeTheme(const GrantleeTheme::Theme &theme)
+{
+    d->mTemplateLoader->setTemplateDirs( QStringList() << theme.absolutePath() );
+    d->mEngine->addTemplateLoader( d->mTemplateLoader );
+
+    d->mSelfcontainedTemplate = d->mEngine->loadByName( QLatin1String("contact.html") );
+    if ( d->mSelfcontainedTemplate->error() ) {
+        d->mErrorMessage += d->mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
+    }
+
+    d->mEmbeddableTemplate = d->mEngine->loadByName( QLatin1String("contact_embedded.html") );
+    if ( d->mEmbeddableTemplate->error() ) {
+        d->mErrorMessage += d->mEmbeddableTemplate->errorString() + QLatin1String("<br>");
+    }
+}
+
 
 inline static void setHashField( QVariantHash &hash, const QString &name, const QString &value )
 {

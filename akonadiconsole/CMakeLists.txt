@@ -32,6 +32,9 @@ set(akonadiconsole_bin_SRCS
   main.cpp
   mainwidget.cpp
   mainwindow.cpp
+  monitorswidget.cpp
+  monitorsmodel.cpp
+  monitoritem.cpp
   notificationmodel.cpp
   notificationmonitor.cpp
   rawsocketconsole.cpp

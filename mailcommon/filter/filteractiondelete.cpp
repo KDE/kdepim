@@ -59,11 +59,6 @@ FilterAction* FilterActionDelete::newAction()
     return new FilterActionDelete;
 }
 
-bool FilterActionDelete::canConvertToSieve() const
-{
-    return true;
-}
-
 QString FilterActionDelete::sieveCode() const
 {
     return QLatin1String("discard;");

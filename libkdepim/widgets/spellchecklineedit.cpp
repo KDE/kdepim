@@ -188,7 +188,7 @@ void SpellCheckLineEdit::insertFromMimeData(const QMimeData * source)
     }
 }
 
-static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString("kdelibs4"); }
+static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toString(QLatin1String("kdelibs4")); }
 
 void SpellCheckLineEdit::insertLanguageMenu(QMenu* contextMenu)
 {

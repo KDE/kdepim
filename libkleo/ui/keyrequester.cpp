@@ -119,7 +119,7 @@ void Kleo::KeyRequester::init()
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
                                             QSizePolicy::Minimum ) );
-  mEraseButton->setIcon( KIcon( QApplication::isRightToLeft() ? "edit-clear-locationbar-ltr" : "edit-clear-locationbar-rtl" ) );
+  mEraseButton->setIcon( KIcon( QApplication::isRightToLeft() ? QLatin1String("edit-clear-locationbar-ltr") : QLatin1String("edit-clear-locationbar-rtl") ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
@@ -174,7 +174,7 @@ QString Kleo::KeyRequester::fingerprint() const {
   if ( mKeys.empty() )
     return QString();
   else
-    return mKeys.front().primaryFingerprint();
+    return QLatin1String(mKeys.front().primaryFingerprint());
 }
 
 QStringList Kleo::KeyRequester::fingerprints() const {
@@ -182,7 +182,7 @@ QStringList Kleo::KeyRequester::fingerprints() const {
   for ( std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it )
     if ( !it->isNull() )
       if ( const char * fpr = it->primaryFingerprint() )
-        result.push_back( fpr );
+        result.push_back( QLatin1String(fpr) );
   return result;
 }
 
@@ -207,9 +207,9 @@ void Kleo::KeyRequester::updateKeys() {
   for ( std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it ) {
     if ( it->isNull() )
       continue;
-    const QString fpr = it->primaryFingerprint();
+    const QString fpr = QLatin1String(it->primaryFingerprint());
     labelTexts.push_back( fpr.right(8) );
-    toolTipText += fpr.right(8) + ": ";
+    toolTipText += fpr.right(8) + QLatin1String(": ");
     if ( const char * uid = it->userID(0).id() )
       if ( it->protocol() == GpgME::OpenPGP )
         toolTipText += QString::fromUtf8( uid );
@@ -217,10 +217,10 @@ void Kleo::KeyRequester::updateKeys() {
         toolTipText += Kleo::DN( uid ).prettyDN();
     else
       toolTipText += i18n("<placeholder>unknown</placeholder>");
-    toolTipText += '\n';
+    toolTipText += QLatin1Char('\n');
   }
 
-  mLabel->setText( labelTexts.join(", ") );
+  mLabel->setText( labelTexts.join(QLatin1String(", ")) );
   mLabel->setToolTip( toolTipText );
 }
 

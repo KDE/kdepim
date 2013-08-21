@@ -32,6 +32,8 @@
 #include <KPushButton>
 #include <KLocale>
 #include <kio/global.h>
+#include <kio/netaccess.h>
+#include <KMessageBox>
 
 #include <QHBoxLayout>
 #include <QCheckBox>
@@ -193,6 +195,11 @@ void RenameFileDialog::slotRenamePressed()
 {
     if (d->nameEdit->text().isEmpty())
         return;
+    const QString name = newName().path();
+    if ( KIO::NetAccess::exists( name, KIO::NetAccess::DestinationSide, this ) ) {
+        KMessageBox::error(this, i18n("This filename \"%1\" already exists.",name), i18n("File already exists"));
+        return;
+    }
     done(RENAMEFILE_RENAME);
 }
 

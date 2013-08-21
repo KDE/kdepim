@@ -93,9 +93,6 @@ public:
      */
     QString name() const;
 
-
-    virtual bool canConvertToSieve() const;
-
     virtual QStringList sieveRequires() const;
 
     virtual QString sieveCode() const;

@@ -422,8 +422,7 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
   d->setDefaultSortOrderForStorageModel( storageModel );
 
   if(!d->mLockSearch->isChecked()) {
-      if ( d->mSearchTimer )
-      {
+      if ( d->mSearchTimer ) {
           d->mSearchTimer->stop();
           delete d->mSearchTimer;
           d->mSearchTimer = 0;
@@ -581,8 +580,7 @@ void Widget::aggregationMenuAboutToShow(KMenu *menu)
 
   QList<Aggregation * >::ConstIterator endagg( sortedAggregations.constEnd() );
 
-  for ( QList< Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != endagg; ++it )
-  {
+  for ( QList< Aggregation * >::ConstIterator it = sortedAggregations.constBegin(); it != endagg; ++it ) {
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );
     grp->addAction( act );
@@ -665,8 +663,7 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
 
   options = SortOrder::enumerateMessageSortingOptions( d->mAggregation->threading() );
   QList< QPair< QString, int > >::ConstIterator end( options.constEnd() );
-  for ( it = options.constBegin(); it != end; ++it )
-  {
+  for ( it = options.constBegin(); it != end; ++it ) {
     act = menu->addAction( ( *it ).first );
     act->setCheckable( true );
     grp->addAction( act );
@@ -679,14 +676,12 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
 
   options = SortOrder::enumerateMessageSortDirectionOptions( d->mSortOrder.messageSorting() );
 
-  if ( options.size() >= 2 )
-  {
+  if ( options.size() >= 2 ) {
     menu->addTitle( i18n( "Message Sort Direction" ) );
 
     grp = new QActionGroup( menu );
     end = options.constEnd();
-    for ( it = options.constBegin(); it != end; ++it )
-    {
+    for ( it = options.constBegin(); it != end; ++it ) {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
       grp->addAction( act );
@@ -700,15 +695,13 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
 
   options = SortOrder::enumerateGroupSortingOptions( d->mAggregation->grouping() );
 
-  if ( options.size() >= 2 )
-  {
+  if ( options.size() >= 2 ) {
     menu->addTitle( i18n( "Group Sort Order" ) );
 
     grp = new QActionGroup( menu );
 
     end = options.constEnd();
-    for ( it = options.constBegin(); it != end; ++it )
-    {
+    for ( it = options.constBegin(); it != end; ++it ) {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
       grp->addAction( act );
@@ -723,14 +716,12 @@ void Widget::sortOrderMenuAboutToShow(KMenu *menu)
   options = SortOrder::enumerateGroupSortDirectionOptions( d->mAggregation->grouping(),
                                                            d->mSortOrder.groupSorting() );
 
-  if ( options.size() >= 2 )
-  {
+  if ( options.size() >= 2 ) {
     menu->addTitle( i18n( "Group Sort Direction" ) );
 
     grp = new QActionGroup( menu );
     end = options.constEnd();
-    for ( it = options.constBegin(); it != end; ++it )
-    {
+    for ( it = options.constBegin(); it != end; ++it ) {
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
       grp->addAction( act );

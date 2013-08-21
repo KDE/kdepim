@@ -67,7 +67,7 @@ QWidget *SieveActionDeleteHeader::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
 {
     int index = 0;
     QDomNode node = element.firstChild();
@@ -77,11 +77,10 @@ void SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("test")) {
                 QDomNode testNode = e.toElement();
-                setParamWidgetValue(testNode.toElement(), w );
-                return;
+                return setParamWidgetValue(testNode.toElement(), w, error );
             } else if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *combo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
-                combo->setCode(AutoCreateScriptUtil::tagValue(e.text()));
+                combo->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 if (index == 0) {
                     KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("headeredit") );
@@ -90,16 +89,18 @@ void SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
                     KLineEdit *value = w->findChild<KLineEdit*>( QLatin1String("valueedit") );
                     value->setText(e.text());
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveActionAddHeader::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveActionAddHeader::setParamWidgetValue unknown tag "<<tagName;
             }
         }
         node = node.nextSibling();
     }
-
+    return true;
 }
 
 QString SieveActionDeleteHeader::code(QWidget *w) const

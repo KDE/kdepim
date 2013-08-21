@@ -363,7 +363,7 @@ void SimpleStringListEditor::slotSelectionChanged() {
     }
 }
 
-void SimpleStringListEditor::slotContextMenu(const QPoint&pos)
+void SimpleStringListEditor::slotContextMenu(const QPoint &pos)
 {
     QList<QListWidgetItem *> lstSelectedItems = mListBox->selectedItems();
     const bool hasItemsSelected = !lstSelectedItems.isEmpty();

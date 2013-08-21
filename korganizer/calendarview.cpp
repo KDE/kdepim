@@ -52,7 +52,6 @@
 #include "kocheckableproxymodel.h"
 #include "akonadicollectionview.h"
 
-#include <calendarsupport/messagewidget.h>
 #include <calendarsupport/categoryconfig.h>
 #include <calendarsupport/collectiongeneralpage.h>
 #include <calendarsupport/collectionselection.h>
@@ -361,23 +360,6 @@ void CalendarView::createPrinter()
   }
 }
 
-bool CalendarView::openCalendar( const QString &filename, bool merge )
-{
-  if (CalendarSupport::mergeCalendar(filename, mCalendar)) {
-    if ( !merge ) {
-      mViewManager->setDocumentId( filename );
-      mTodoList->setDocumentId( filename );
-    }
-    updateCategories();
-    updateView();
-    return true;
-  } else {
-
-    KMessageBox::error( this, i18n( "Could not load calendar '%1'.", filename ) );
-    return false;
-  }
-}
-
 bool CalendarView::saveCalendar( const QString &filename )
 {
   // Store back all unsaved data into calendar object
@@ -388,14 +370,6 @@ bool CalendarView::saveCalendar( const QString &filename )
   storage.setSaveFormat( new KCalCore::ICalFormat );
 
   return storage.save();
-}
-
-void CalendarView::closeCalendar()
-{
-  // child windows no longer valid
-  emit closingDown();
-  //mCalendar->close();
-  updateView();
 }
 
 void CalendarView::archiveCalendar()
@@ -2845,6 +2819,13 @@ void CalendarView::onCheckableProxyToggled( bool newState )
     if ( todoView )
       todoView->restoreViewState();
   }
+}
+
+void CalendarView::showMessage(const QString &message, KMessageWidget::MessageType type)
+{
+    mMessageWidget->setText(message);
+    mMessageWidget->setMessageType(type);
+    mMessageWidget->show();
 }
 
 Akonadi::Collection CalendarView::selectedCollection() const

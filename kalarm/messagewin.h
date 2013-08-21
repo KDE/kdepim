@@ -166,7 +166,7 @@ class MessageWin : public MainWindowBase
         QFont               mFont;
         QColor              mBgColour, mFgColour;
         DateTime            mDateTime;        // date/time displayed in the message window
-        QDateTime           mCloseTime;       // local time at which window should be auto-closed
+        QDateTime           mCloseTime;       // UTC time at which window should be auto-closed
 #ifdef USE_AKONADI
         Akonadi::Item::Id   mEventItemId;
         EventId             mEventId;
@@ -210,7 +210,7 @@ class MessageWin : public MainWindowBase
         QCheckBox*          mDontShowAgainCheck;
         EditAlarmDlg*       mEditDlg;         // alarm edit dialog invoked by Edit button
         DeferAlarmDlg*      mDeferDlg;
-        QDateTime           mDeferLimit;      // last time to which the message can currently be deferred
+        QDateTime           mDeferLimit;      // last UTC time to which the message can currently be deferred
         int                 mButtonDelay;     // delay (ms) after window is shown before buttons are enabled
         int                 mScreenNumber;    // screen to display on, or -1 for default
         bool                mAlwaysHide;      // the window should never be displayed

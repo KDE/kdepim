@@ -4,7 +4,7 @@
 - Add hightlighting (4.12)
 - Add support for signature (4.12)
 - Add support for images (DONE)
-- Add support for table (in progress ) (need to todo for 4.11)
+- Add support for table (in progress ) (need to todo for 4.12)
 - Add support for link (DONE)
 - Add support for anchor (?)
 - Add support for horizontal line (DONE)
@@ -25,6 +25,8 @@
 - Add quote support (4.12)
 - Add change text support (4.12)
 - Add extra html setting for table/image/link etc. (DONE)
-- Add support for resize directly image with mouse. (In progress) (need to fix it for 4.11)
+- Add support for resize directly image with mouse. (In progress) (need to fix it for 4.12)
 - Add support for resize directly table with mouse. (In progress) (4.12 ?)
 - Add support for printing (DONE)
+
+- Add css support ?

@@ -85,6 +85,7 @@ public:
         Print,
         PrintPreview,
         PasteWithoutFormatting,
+        InsertAnchor,
 
         //Keep at end
         LastType

@@ -109,8 +109,6 @@ KOrganizerPart::~KOrganizerPart()
   delete mActionManager;
   mActionManager = 0;
 
-  closeUrl();
-
   KOCore::self()->removeXMLGUIClient( mTopLevelWidget );
 }
 
@@ -151,7 +149,7 @@ KOrg::CalendarViewBase *KOrganizerPart::view() const
 
 bool KOrganizerPart::openURL( const KUrl &url, bool merge )
 {
-  return mActionManager->openURL( url, merge );
+  return mActionManager->importURL( url, merge );
 }
 
 bool KOrganizerPart::saveURL()
@@ -171,8 +169,7 @@ KUrl KOrganizerPart::getCurrentURL() const
 
 bool KOrganizerPart::openFile()
 {
-  mView->openCalendar( localFilePath() );
-  mView->show();
+  mActionManager->importCalendar( localFilePath() );
   return true;
 }
 

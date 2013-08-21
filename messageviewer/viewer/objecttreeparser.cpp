@@ -2567,24 +2567,25 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
       }
 
       // compose the string for displaying the key ID
-      // either as URL or not linked (for PGP)
+      // either as URL or not linked (for unknown crypto)
       // note: Once we can start PGP key manager programs
       //       from within KMail we could change this and
       //       always show the URL.    (khz, 2002/06/27)
       QString startKeyHREF;
-      if( isSMIME )
+      QString keyWithWithoutURL;
+      if ( cryptProto ) {
           startKeyHREF =
               QString::fromLatin1("<a href=\"kmail:showCertificate#%1 ### %2 ### %3\">")
               .arg( cryptProto->displayName(),
-                    cryptProto->name(),
-                    QString::fromLatin1( block.keyId ) );
-      QString keyWithWithoutURL =
-          // FIXME: Kleopatra misses a -query option, so disable this for now.
-           /*isSMIME
-          ? QString("%1%2</a>")
-              .arg( startKeyHREF,
-                    cannotCheckSignature ? i18n("[Details]") : ("0x" + block.keyId) )
-          : */ QLatin1String("0x") + QString::fromUtf8( block.keyId );
+                  cryptProto->name(),
+                  QString::fromLatin1( block.keyId ) );
+
+          keyWithWithoutURL =
+              QString::fromLatin1("%1%2</a>").arg( startKeyHREF, QString::fromLatin1("0x" + block.keyId) );
+      } else {
+          keyWithWithoutURL = QLatin1String("0x") + QString::fromUtf8( block.keyId );
+      }
+
 
 
       // temporary hack: always show key information!

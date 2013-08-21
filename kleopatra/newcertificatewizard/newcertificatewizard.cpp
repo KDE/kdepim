@@ -193,7 +193,7 @@ namespace NewCertificateUi {
         }
 
     protected:
-#define FIELD(type, name) type name() const { return field( #name ).value<type>(); }
+#define FIELD(type, name) type name() const { return field( QLatin1String(#name) ).value<type>(); }
         FIELD( bool, pgp )
         FIELD( bool, signingAllowed )
         FIELD( bool, encryptionAllowed )
@@ -397,7 +397,7 @@ namespace {
               ui()
         {
             ui.setupUi( this );
-            registerField( "pgp", ui.pgpCLB );
+            registerField( QLatin1String("pgp"), ui.pgpCLB );
         }
 
         void setProtocol( Protocol proto ) {
@@ -450,7 +450,7 @@ namespace {
             ui.setupUi( this );
 
             // set errorLB to have a fixed height of two lines:
-            ui.errorLB->setText( "2<br>1" );
+            ui.errorLB->setText( QLatin1String("2<br>1") );
             ui.errorLB->setFixedHeight( ui.errorLB->minimumSizeHint().height() );
             ui.errorLB->clear();
 
@@ -462,10 +462,10 @@ namespace {
             connect( ui.addEmailToDnCB, SIGNAL(toggled(bool)),
                      SLOT(slotUpdateResultLabel()) );
             registerDialogPropertiesAsFields();
-            registerField( "dn", ui.resultLE );
-            registerField( "name", ui.nameLE );
-            registerField( "email", ui.emailLE );
-            registerField( "comment", ui.commentLE );
+            registerField( QLatin1String("dn"), ui.resultLE );
+            registerField( QLatin1String("name"), ui.nameLE );
+            registerField( QLatin1String("email"), ui.emailLE );
+            registerField( QLatin1String("comment"), ui.commentLE );
             updateForm();
         }
 
@@ -561,7 +561,7 @@ namespace {
             connect( j, SIGNAL(result(GpgME::KeyGenerationResult,QByteArray,QString)),
                      this, SLOT(slotResult(GpgME::KeyGenerationResult,QByteArray,QString)) );
             if ( const Error err = j->start( createGnupgKeyParms() ) )
-                setField( "error", i18n("Could not start certificate creation: %1",
+                setField( QLatin1String("error"), i18n("Could not start certificate creation: %1",
                                         QString::fromLocal8Bit( err.asString() ) ) );
             else
                 job = j;
@@ -575,33 +575,33 @@ namespace {
         {
             Q_UNUSED( auditLog );
             if ( result.error().code() ) {
-                setField( "error", result.error().isCanceled()
+                setField( QLatin1String("error"), result.error().isCanceled()
                           ? i18n("Operation canceled.")
                           : i18n("Could not create certificate: %1",
                                  QString::fromLocal8Bit( result.error().asString() ) ) );
-                setField( "url", QString() );
-                setField( "result", QString() );
+                setField( QLatin1String("url"), QString() );
+                setField( QLatin1String("result"), QString() );
             } else if ( pgp() ) {
-                setField( "error", QString() );
-                setField( "url", QString() );
-                setField( "result", i18n("Certificate created successfully.\n"
-                                         "Fingerprint: %1", result.fingerprint() ) );
+                setField( QLatin1String("error"), QString() );
+                setField( QLatin1String("url"), QString() );
+                setField( QLatin1String("result"), i18n("Certificate created successfully.\n"
+                                         "Fingerprint: %1", QLatin1String(result.fingerprint()) ) );
             } else {
-                QFile file( tmpDir().absoluteFilePath( "request.p10" ) );
+                QFile file( tmpDir().absoluteFilePath( QLatin1String("request.p10") ) );
 
                 if ( !file.open( QIODevice::WriteOnly ) ) {
-                    setField( "error", i18n("Could not write output file %1: %2",
+                    setField( QLatin1String("error"), i18n("Could not write output file %1: %2",
                                             file.fileName(), file.errorString() ) );
-                    setField( "url", QString() );
-                    setField( "result", QString() );
+                    setField( QLatin1String("url"), QString() );
+                    setField( QLatin1String("result"), QString() );
                 } else {
                     file.write( request );
-                    setField( "error", QString() );
-                    setField( "url", QUrl::fromLocalFile( file.fileName() ).toString() );
-                    setField( "result", i18n("Certificate created successfully.") );
+                    setField( QLatin1String("error"), QString() );
+                    setField( QLatin1String("url"), QUrl::fromLocalFile( file.fileName() ).toString() );
+                    setField( QLatin1String("result"), i18n("Certificate created successfully.") );
                 }
             }
-            setField( "fingerprint", QString::fromLatin1( result.fingerprint() ) );
+            setField( QLatin1String("fingerprint"), QString::fromLatin1( result.fingerprint() ) );
             job = 0;
             emit completeChanged();
             QMetaObject::invokeMethod( wizard(), "next", Qt::QueuedConnection );
@@ -623,14 +623,14 @@ namespace {
               ui()
         {
             ui.setupUi( this );
-            ui.dragQueen->setPixmap( KIcon( "kleopatra" ).pixmap( 64, 64 ) );
-            registerField( "error",  ui.errorTB,   "plainText" );
-            registerField( "result", ui.resultTB,  "plainText" );
-            registerField( "url",    ui.dragQueen, "url" );
+            ui.dragQueen->setPixmap( KIcon( QLatin1String("kleopatra") ).pixmap( 64, 64 ) );
+            registerField( QLatin1String("error"),  ui.errorTB,   "plainText" );
+            registerField( QLatin1String("result"), ui.resultTB,  "plainText" );
+            registerField( QLatin1String("url"),    ui.dragQueen, "url" );
             // hidden field, since QWizard can't deal with non-widget-backed fields...
             QLineEdit * le = new QLineEdit( this );
             le->hide();
-            registerField( "fingerprint", le );
+            registerField( QLatin1String("fingerprint"), le );
         }
 
         /* reimp */ void initializePage() {
@@ -703,11 +703,11 @@ namespace {
     private Q_SLOTS:
         void slotSaveRequestToFile() {
             QString fileName = FileDialog::getSaveFileName( this, i18nc("@title", "Save Request"),
-                                                            "imp", i18n("PKCS#10 Requests (*.p10)") );
+                                                            QLatin1String("imp"), i18n("PKCS#10 Requests (*.p10)") );
             if ( fileName.isEmpty() )
                 return;
             if ( !fileName.endsWith( QLatin1String( ".p10" ), Qt::CaseInsensitive ) )
-                fileName += ".p10";
+                fileName += QLatin1String(".p10");
             QFile src( QUrl( url() ).toLocalFile() );
             if ( !src.copy( fileName ) )
                 KMessageBox::error( this,
@@ -740,7 +740,7 @@ namespace {
                 return;
             ExportCertificateCommand * cmd = new ExportCertificateCommand( key() );
             connect( cmd, SIGNAL(finished()), SLOT(slotSendCertificateByEMailContinuation()) );
-            cmd->setOpenPGPFileName( tmpDir().absoluteFilePath( fingerprint() + ".asc" ) );
+            cmd->setOpenPGPFileName( tmpDir().absoluteFilePath( fingerprint() + QLatin1String(".asc") ) );
             cmd->start();
             exportCertificateCommand = cmd;
         }
@@ -792,7 +792,7 @@ namespace {
                                             "<para>If your mail client does not have an attachment, then drag the <application>Kleopatra</application> icon and drop it on the message compose window of your mail client.</para>"
                                             "<para>If that does not work, either, save the request to a file, and then attach that.</para>"),
                                       i18nc("@title", "Sending Mail"),
-                                      "newcertificatewizard-mailto-troubles" );
+                                      QLatin1String("newcertificatewizard-mailto-troubles") );
         }
 
         void slotUploadCertificateToDirectoryServer() {
@@ -834,8 +834,8 @@ namespace {
                 return;
             const bool sign = signingAllowed();
             const bool encr = encryptionAllowed();
-            setField( "signingAllowed",    !sign );
-            setField( "encryptionAllowed", !encr );
+            setField( QLatin1String("signingAllowed"),    !sign );
+            setField( QLatin1String("encryptionAllowed"), !encr );
             // restart and skip to Overview Page:
             wizard()->restart();
             for ( int i = wizard()->currentId() ; i < NewCertificateWizard::OverviewPageId ; ++i )
@@ -858,7 +858,7 @@ class NewCertificateWizard::Private {
 public:
     explicit Private( NewCertificateWizard * qq )
         : q( qq ),
-          tmp( QDir::temp().absoluteFilePath( "kleo-" ) ),
+          tmp( QDir::temp().absoluteFilePath( QLatin1String("kleo-") ) ),
           ui( q )
     {
         q->setWindowTitle( i18nc("@title", "Certificate Creation Wizard") );
@@ -919,11 +919,11 @@ Protocol NewCertificateWizard::protocol() const {
 }
 
 static QString pgpLabel( const QString & attr ) {
-    if ( attr == "NAME" )
+    if ( attr == QLatin1String("NAME") )
         return i18n("Name");
-    if ( attr == "COMMENT" )
+    if ( attr == QLatin1String("COMMENT") )
         return i18n("Comment");
-    if ( attr == "EMAIL" )
+    if ( attr == QLatin1String("EMAIL") )
         return i18n("EMail");
     return QString();
 }
@@ -954,7 +954,7 @@ static QString attributeLabelWithColor( const QString & attr, bool pgp ) {
 #endif
 
 static QString attributeFromKey( QString key ) {
-  return key.remove( '!' );
+  return key.remove( QLatin1Char('!') );
 }
 
 static const char * oidForAttributeName( const QString & attr ) {
@@ -975,7 +975,7 @@ void EnterDetailsPage::registerDialogPropertiesAsFields() {
     for ( unsigned int i = mo->propertyOffset(), end = i + mo->propertyCount() ; i != end ; ++i ) {
         const QMetaProperty mp = mo->property( i );
         if ( mp.isValid() )
-            registerField( mp.name(), &dialog, mp.name(), SIGNAL(accepted()) );
+            registerField( QLatin1String(mp.name()), &dialog, mp.name(), SIGNAL(accepted()) );
     }
 
 }
@@ -1069,9 +1069,9 @@ void EnterDetailsPage::updateForm() {
     QStringList attrOrder = config.readEntry( pgp() ? "OpenPGPAttributeOrder" : "DNAttributeOrder", QStringList() );
     if ( attrOrder.empty() ) {
         if ( pgp() )
-            attrOrder << "NAME!" << "EMAIL!" << "COMMENT";
+            attrOrder << QLatin1String("NAME!") << QLatin1String("EMAIL!") << QLatin1String("COMMENT");
         else
-            attrOrder << "CN!" << "L" << "OU" << "O!" << "C!" << "EMAIL!";
+            attrOrder << QLatin1String("CN!") << QLatin1String("L") << QLatin1String("OU") << QLatin1String("O!") << QLatin1String("C!") << QLatin1String("EMAIL!");
     }
 
     QList<QWidget*> widgets;
@@ -1089,25 +1089,25 @@ void EnterDetailsPage::updateForm() {
         const QString preset = savedValues.value( attr, config.readEntry( attr, QString() ) );
         const bool required = key.endsWith( QLatin1Char('!') );
         const bool readonly = config.isEntryImmutable( attr );
-        const QString label = config.readEntry( attr + "_label",
+        const QString label = config.readEntry( attr + QLatin1String("_label"),
                                                 attributeLabel( attr, pgp() ) );
-        const QString regex = config.readEntry( attr + "_regex" );
+        const QString regex = config.readEntry( attr + QLatin1String("_regex") );
 
         int row;
         bool known = true;
         QValidator * validator = 0;
-        if ( attr == "EMAIL" ) {
+        if ( attr == QLatin1String("EMAIL") ) {
             row = row_index_of( ui.emailLE, ui.gridLayout );
             validator = regex.isEmpty() ? Validation::email() : Validation::email( QRegExp( regex ) ) ;
             if ( !pgp() )
                 ui.addEmailToDnCB->show();
-        } else if ( attr == "NAME" || attr == "CN" ) {
-            if ( ( pgp() && attr == "CN" ) || ( !pgp() && attr == "NAME" ) )
+        } else if ( attr == QLatin1String("NAME") || attr == QLatin1String("CN") ) {
+            if ( ( pgp() && attr == QLatin1String("CN") ) || ( !pgp() && attr == QLatin1String("NAME") ) )
                 continue;
             if ( pgp() )
                 validator = regex.isEmpty() ? Validation::pgpName() : Validation::pgpName( QRegExp( regex ) ) ;
             row = row_index_of( ui.nameLE, ui.gridLayout );
-        } else if ( attr == "COMMENT" ) {
+        } else if ( attr == QLatin1String("COMMENT") ) {
             if ( !pgp() )
                 continue;
             validator = regex.isEmpty() ? Validation::pgpComment() : Validation::pgpComment( QRegExp( regex ) ) ;
@@ -1152,7 +1152,7 @@ QString EnterDetailsPage::cmsDN() const {
         if ( text.isEmpty() )
             continue;
         QString attr = attributeFromKey( it->attr );
-        if ( attr == "EMAIL" && !ui.addEmailToDnCB->isChecked() )
+        if ( attr == QLatin1String("EMAIL") && !ui.addEmailToDnCB->isChecked() )
             continue;
         if ( const char * const oid = oidForAttributeName( attr ) )
             attr = QString::fromUtf8( oid );
@@ -1183,7 +1183,7 @@ static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
     const QString key = line.attr;
     kDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
     if ( le->text().trimmed().isEmpty() ) {
-        if ( key.endsWith('!') ) {
+        if ( key.endsWith(QLatin1Char('!')) ) {
             if ( line.regex.isEmpty() )
                 error = i18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
             else
@@ -1225,14 +1225,14 @@ void EnterDetailsPage::slotAdvancedSettingsClicked() {
 QStringList KeyCreationPage::keyUsages() const {
     QStringList usages;
     if ( signingAllowed() )
-        usages << "sign";
+        usages << QLatin1String("sign");
     if ( encryptionAllowed() && !is_dsa( keyType() ) )
-        usages << "encrypt";
+        usages << QLatin1String("encrypt");
     if ( 0 ) // not needed in pgp (implied) and not supported in cms
     if ( certificationAllowed() )
-        usages << "certify";
+        usages << QLatin1String("certify");
     if ( authenticationAllowed() )
-        usages << "auth";
+        usages << QLatin1String("auth");
     return usages;
 }
 
@@ -1255,7 +1255,7 @@ QStringList KeyCreationPage::subkeyUsages() const {
     if ( encryptionAllowed() && is_dsa( keyType() ) ) {
         assert( subkeyType() );
         assert( is_elg( subkeyType() ) );
-        usages << "encrypt";
+        usages << QLatin1String("encrypt");
     }
     return usages;
 }
@@ -1305,14 +1305,14 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
         s         << Row<        >( i18n("Subject-DN:"),        DN( dn() ).dn( QLatin1String(",<br>") ) );
     }
     if ( details ) {
-        s         << Row<        >( i18n("Key Type:"),          gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) );
+        s         << Row<        >( i18n("Key Type:"),          QLatin1String(gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) )) );
         if ( const unsigned int strength = keyStrength() )
             s     << Row<        >( i18n("Key Strength:"),      i18np("1 bit", "%1 bits", strength ) );
         else
             s     << Row<        >( i18n("Key Strength:"),      i18n("default") );
         s         << Row<        >( i18n("Certificate Usage:"), i18nCombinedKeyUsages().join(i18nc("separator for key usages",",&nbsp;")) );
         if ( const unsigned int subkey = subkeyType() ) {
-            s     << Row<        >( i18n("Subkey Type:"),       gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( subkey ) ) );
+            s     << Row<        >( i18n("Subkey Type:"),       QLatin1String(gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( subkey ) )) );
             if ( const unsigned int strength = subkeyStrength() )
                 s << Row<        >( i18n("Subkey Strength:"),   i18np("1 bit", "%1 bits", strength ) );
             else
@@ -1338,7 +1338,7 @@ static QString encode_dns( const QString & dns ) {
 }
 
 static QString encode_email( const QString & email ) {
-    const int at = email.lastIndexOf( '@' );
+    const int at = email.lastIndexOf( QLatin1Char('@') );
     if ( at < 0 )
         return email;
     return email.left( at + 1 ) + encode_dns( email.mid( at + 1 ) );
@@ -1353,12 +1353,12 @@ QString KeyCreationPage::createGnupgKeyParms() const {
     s     << "key-type:      " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) << endl;
     if ( const unsigned int strength = keyStrength() )
         s << "key-length:    " << strength                 << endl;
-    s     << "key-usage:     " << keyUsages().join(" ")    << endl;
+    s     << "key-usage:     " << keyUsages().join(QLatin1String(" "))    << endl;
     if ( const unsigned int subkey = subkeyType() ) {
         s << "subkey-type:   " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( subkey ) ) << endl;
         if ( const unsigned int strength = subkeyStrength() )
             s << "subkey-length: " << strength             << endl;
-        s << "subkey-usage:  " << subkeyUsages().join(" ") << endl;
+        s << "subkey-usage:  " << subkeyUsages().join(QLatin1String(" ")) << endl;
     }
     if ( pgp() && expiryDate().isValid() )
         s << "expire-date:   " << expiryDate().toString( Qt::ISODate ) << endl;
@@ -1401,9 +1401,9 @@ void AdvancedSettingsDialog::fillKeySizeComboBoxen() {
 
     const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
 
-    const QList<int> rsaKeySizes = config.readEntry( RSA_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 );
+    const QList<int> rsaKeySizes = config.readEntry( RSA_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 << 4096 );
     const QList<int> dsaKeySizes = config.readEntry( DSA_KEYSIZES_ENTRY, QList<int>() << -2048 );
-    const QList<int> elgKeySizes = config.readEntry( ELG_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 );
+    const QList<int> elgKeySizes = config.readEntry( ELG_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 << 4096 );
 
     const QStringList rsaKeySizeLabels = config.readEntry( RSA_KEYSIZE_LABELS_ENTRY, QStringList() );
     const QStringList dsaKeySizeLabels = config.readEntry( DSA_KEYSIZE_LABELS_ENTRY, QStringList() );
@@ -1422,17 +1422,17 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
 
     const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
 
-    const QString entry = protocol == CMS ? CMS_KEY_TYPE_ENTRY : PGP_KEY_TYPE_ENTRY ;
+    const QString entry = protocol == CMS ? QLatin1String(CMS_KEY_TYPE_ENTRY) : QLatin1String(PGP_KEY_TYPE_ENTRY) ;
     const QString keyType = config.readEntry( entry ).trimmed().toUpper();
 
-    if ( protocol == OpenPGP && keyType == "DSA" ) {
+    if ( protocol == OpenPGP && keyType == QLatin1String("DSA") ) {
         setKeyType( GPGME_PK_DSA );
         setSubkeyType( 0 );
-    } else if ( protocol == OpenPGP && keyType == "DSA+ELG" ) {
+    } else if ( protocol == OpenPGP && keyType == QLatin1String("DSA+ELG") ) {
         setKeyType( GPGME_PK_DSA );
         setSubkeyType( GPGME_PK_ELG_E );
     } else {
-        if ( !keyType.isEmpty() && keyType != "RSA" )
+        if ( !keyType.isEmpty() && keyType != QLatin1String("RSA") )
             kWarning() << "invalid value \"" << qPrintable( keyType )
                        << "\" for entry \"[CertificateCreationWizard]"
                        << qPrintable( entry ) << "\"";

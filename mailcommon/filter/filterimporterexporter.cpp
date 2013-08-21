@@ -86,7 +86,7 @@ QList<MailFilter*> FilterImporterExporter::readFiltersFromConfig(
         }
     }
     if ( filterNeedUpdate ) {
-        KSharedConfig::Ptr config = KSharedConfig::openConfig( "akonadi_mailfilter_agentrc" );
+        KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("akonadi_mailfilter_agentrc") );
 
         // Now, write out the new stuff:
         FilterImporterExporter::writeFiltersToConfig( filters, config );
@@ -102,7 +102,7 @@ void FilterImporterExporter::writeFiltersToConfig( const QList<MailFilter*> &fil
 {
     // first, delete all filter groups:
     const QStringList filterGroups =
-            config->groupList().filter( QRegExp( "Filter #\\d+" ) );
+            config->groupList().filter( QRegExp( QLatin1String("Filter #\\d+") ) );
 
     foreach ( const QString &group, filterGroups ) {
         config->deleteGroup( group );
@@ -146,7 +146,7 @@ void FilterImporterExporter::Private::warningInfoAboutInvalidFilter(
                           "(e.g. containing no actions or no search rules)." ),
                     emptyFilters,
                     QString(),
-                    "ShowInvalidFilterWarning" );
+                    QLatin1String("ShowInvalidFilterWarning") );
     }
 }
 
@@ -337,7 +337,7 @@ QList<MailFilter *> FilterImporterExporter::importFilters(
     return QList<MailFilter*>();
 }
 
-void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, const KUrl&fileName, bool saveAll )
+void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, const KUrl &fileName, bool saveAll )
 {
     KUrl saveUrl;
     if (fileName.isEmpty()) {
@@ -346,15 +346,16 @@ void FilterImporterExporter::exportFilters( const QList<MailFilter*> &filters, c
 
         if ( saveUrl.isEmpty() ||
              !MessageViewer::Util::checkOverwrite( saveUrl, d->mParent ) ) {
+            qDeleteAll(filters);
             return;
         }
     } else {
         saveUrl= fileName;
     }
-
     KSharedConfig::Ptr config = KSharedConfig::openConfig( saveUrl.toLocalFile() );
     if (saveAll) {
         writeFiltersToConfig( filters, config, true );
+        qDeleteAll(filters);
     } else {
         MessageViewer::AutoQPointer<FilterSelectionDialog> dlg( new FilterSelectionDialog( d->mParent ) );
         dlg->setFilters( filters );

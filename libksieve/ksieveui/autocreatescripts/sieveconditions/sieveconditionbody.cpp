@@ -94,7 +94,7 @@ QString SieveConditionBody::help() const
     return i18n("The body test matches content in the body of an email message, that is, anything following the first empty line after the header.  (The empty line itself, if present, is not considered to be part of the body.)");
 }
 
-void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
 {
     int index = 0;
     int indexStr = 0;
@@ -113,13 +113,17 @@ void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
                 } else if (index == 1) {
                     tagValueList<<AutoCreateScriptUtil::tagValue(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionBody::setParamWidgetValue too many argument "<<index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("str")) {
                 strValue<<e.text();
                 ++indexStr;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionBody::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
@@ -128,19 +132,20 @@ void SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
 
     if (strValue.count() == 1) {
         SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
-        bodyType->setCode(tagValueList.at(0), QString());
+        bodyType->setCode(tagValueList.at(0), QString(), name(), error);
         SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
-        matchType->setCode(strValue.at(0));
+        matchType->setCode(strValue.at(0), name(), error);
         KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
         edit->setText(AutoCreateScriptUtil::quoteStr(strValue.at(0)));
     } else if (strValue.count() == 2) {
         SelectBodyTypeWidget *bodyType =  w->findChild<SelectBodyTypeWidget*>( QLatin1String("bodytype") );
-        bodyType->setCode(tagValueList.at(0), indexStr == 2 ? strValue.at(0) : QString());
+        bodyType->setCode(tagValueList.at(0), indexStr == 2 ? strValue.at(0) : QString(), name(), error);
         SelectMatchTypeComboBox *matchType = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype"));
-        matchType->setCode(tagValueList.at(1));
+        matchType->setCode(tagValueList.at(1), name(), error);
         KLineEdit *edit = w->findChild<KLineEdit*>( QLatin1String("edit"));
         edit->setText(indexStr == 1 ? AutoCreateScriptUtil::quoteStr(strValue.at(0)) : AutoCreateScriptUtil::quoteStr(strValue.at(1)));
     }
+    return true;
 }
 
 

@@ -97,11 +97,6 @@ void FilterActionRemoveHeader::setParamWidgetValue( QWidget *paramWidget ) const
     }
 }
 
-bool FilterActionRemoveHeader::canConvertToSieve() const
-{
-    return true;
-}
-
 QStringList FilterActionRemoveHeader::sieveRequires() const
 {
     return QStringList() << QLatin1String("editheader");

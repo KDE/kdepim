@@ -42,6 +42,7 @@ public:
     virtual QList<PimCommon::defaultTemplate> defaultTemplates();
     virtual bool addNewTemplate(QString &templateName, QString &templateScript);
     virtual bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
+
 protected:
     QStringList mimeTypes() const;
     QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;

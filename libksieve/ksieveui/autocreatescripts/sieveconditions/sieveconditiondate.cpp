@@ -99,7 +99,7 @@ QString SieveConditionDate::help() const
     return i18n("The date test matches date/time information derived from headers containing date-time values.");
 }
 
-void SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
 {
     int index = 0;
     QString type;
@@ -118,13 +118,17 @@ void SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
                 } else if (index == 2) {
                     value = e.text();
                 } else {
+                    tooManyArgument(tagName, index, 3, error);
                     qDebug()<<" SieveConditionDate::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
             } else if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtype"));
-                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+                selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveConditionDate::setParamWidgetValue unknown tag "<<tagName;
             }
         }
@@ -134,6 +138,7 @@ void SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
     dateWidget->setCode(type, value);
     KLineEdit *header = w->findChild<KLineEdit*>(QLatin1String("header"));
     header->setText(headerStr);
+    return true;
 }
 
 #include "sieveconditiondate.moc"

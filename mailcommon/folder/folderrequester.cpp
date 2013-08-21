@@ -62,7 +62,7 @@ FolderRequester::FolderRequester( QWidget *parent )
   hlay->addWidget( mEdit );
 
   QToolButton *button = new QToolButton( this );
-  button->setIcon( KIcon( "folder" ) );
+  button->setIcon( KIcon( QLatin1String("folder") ) );
   button->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   hlay->addWidget( button );
   connect( button, SIGNAL(clicked()), this, SLOT(slotOpenDialog()) );
@@ -176,6 +176,22 @@ void FolderRequester::keyPressEvent( QKeyEvent *e )
     e->ignore();
   }
 }
+
+void FolderRequester::setMustBeReadWrite( bool readwrite )
+{
+  mMustBeReadWrite = readwrite;
+}
+
+void FolderRequester::setShowOutbox( bool show )
+{
+  mShowOutbox = show;
+}
+
+void FolderRequester::setNotAllowToCreateNewFolder( bool notCreateNewFolder )
+{
+  mNotCreateNewFolder = notCreateNewFolder;
+}
+
 
 } // namespace MailCommon
 

@@ -63,7 +63,7 @@ QString FilterImporterClawsMails::defaultFiltersSettingsPath()
     return QString::fromLatin1( "%1/.claws-mail/matcherrc" ).arg( QDir::homePath() );
 }
 
-MailFilter * FilterImporterClawsMails::parseLine(const QString& line)
+MailFilter * FilterImporterClawsMails::parseLine(const QString &line)
 {
     MailFilter *filter = new MailFilter();
     QString tmp = line;
@@ -103,7 +103,7 @@ QString FilterImporterClawsMails::extractConditions( const QString &line,MailFil
     //Action
     if (line.startsWith(QLatin1String("subject"))) {
         fieldName = "subject";
-    } else if (line.startsWith("age_lower")) {
+    } else if (line.startsWith(QLatin1String("age_lower"))) {
 
     }
     filter->pattern()->setOp( SearchPattern::OpAnd );
@@ -121,12 +121,12 @@ QString FilterImporterClawsMails::extractString( const QString & tmp, int & pos)
         if (i == 0 && (currentChar.isSpace() || currentChar == QLatin1Char('"'))) {
 
         } else {
-            if (currentChar != '"') {
-                if (currentChar != '\\') {
+            if (currentChar != QLatin1Char('"')) {
+                if (currentChar != QLatin1Char('\\')) {
                     name += currentChar;
                 }
             } else {
-                if (previousChar == '\\') {
+                if (previousChar == QLatin1Char('\\')) {
                     name += currentChar;
                 } else {
                     break;

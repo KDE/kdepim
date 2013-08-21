@@ -176,7 +176,7 @@ namespace {
     {
       assert( i < kleo_chiasmus_config_entries_dim );
     }
-    QString name() const { return kleo_chiasmus_config_entries[mIdx].name; }
+    QString name() const { return QLatin1String(kleo_chiasmus_config_entries[mIdx].name); }
     QString description() const { return i18n( kleo_chiasmus_config_entries[mIdx].description ); }
     QString path() const { return name(); }
     bool isOptional() const { return kleo_chiasmus_config_entries[mIdx].is_optional; }
@@ -280,15 +280,15 @@ namespace {
   public:
     ChiasmusGeneralGroup() : Kleo::CryptoConfigGroup(), mConfigObject( 0 ) {}
     ~ChiasmusGeneralGroup() { clear(); delete mConfigObject; }
-    QString name() const { return "General"; }
-    QString iconName() const { return "chiasmus_chi"; }
+    QString name() const { return QLatin1String("General"); }
+    QString iconName() const { return QLatin1String("chiasmus_chi"); }
     QString path() const { return QString(); }
     QString description() const { return i18n( "General" ); }
     Kleo::CryptoConfigEntry::Level level() const { return Kleo::CryptoConfigEntry::Level_Basic; }
     QStringList entryList() const {
       QStringList result;
       for ( unsigned int i = 0 ; i < kleo_chiasmus_config_entries_dim ; ++i )
-        result.push_back( kleo_chiasmus_config_entries[i].name );
+        result.push_back( QLatin1String(kleo_chiasmus_config_entries[i].name ));
       return result;
     }
     Kleo::CryptoConfigEntry * entry( const QString & name ) const {
@@ -296,7 +296,7 @@ namespace {
         return entry;
       const KConfigGroup group( configObject(), "Chiasmus" );
       for ( unsigned int i = 0 ; i < kleo_chiasmus_config_entries_dim ; ++i )
-        if ( name == kleo_chiasmus_config_entries[i].name ) {
+        if ( name == QLatin1String(kleo_chiasmus_config_entries[i].name) ) {
           ChiasmusConfigEntry * entry = new ChiasmusConfigEntry( i );
           entry->read( group );
           return mCache[name] = entry;
@@ -315,7 +315,7 @@ namespace {
     KConfig * configObject() const {
       if ( !mConfigObject )
         // this is unsafe. We're a lib, used by concurrent apps.
-        mConfigObject = new KConfig( "chiasmusbackendrc" );
+        mConfigObject = new KConfig( QLatin1String("chiasmusbackendrc") );
       return mConfigObject;
     }
     void clear() {
@@ -336,12 +336,12 @@ namespace {
         mGeneralGroup->sync();
     }
 
-    QString name() const { return "Chiasmus"; }
-    QString iconName() const { return "chiasmus_chi"; }
+    QString name() const { return QLatin1String("Chiasmus"); }
+    QString iconName() const { return QLatin1String("chiasmus_chi"); }
     QString description() const { return i18n( "Chiasmus" ); }
-    QStringList groupList() const { return QStringList() << "General"; }
+    QStringList groupList() const { return QStringList() << QLatin1String("General"); }
     Kleo::CryptoConfigGroup * group( const QString & name ) const {
-      if ( name != "General" )
+      if ( name != QLatin1String("General") )
         return 0;
       if ( !mGeneralGroup )
         mGeneralGroup = new ChiasmusGeneralGroup();
@@ -357,9 +357,9 @@ public:
   CryptoConfig() : Kleo::CryptoConfig(), mComponent( 0 ) {}
   ~CryptoConfig() { delete mComponent; }
 
-  QStringList componentList() const { return QStringList() << "Chiasmus" ; }
+  QStringList componentList() const { return QStringList() << QLatin1String("Chiasmus") ; }
   ChiasmusComponent * component( const QString & name ) const {
-    if ( name != "Chiasmus" )
+    if ( name != QLatin1String("Chiasmus") )
       return 0;
     if ( !mComponent )
       mComponent = new ChiasmusComponent();
@@ -382,7 +382,7 @@ public:
   }
   ~Protocol() {}
 
-  QString name() const { return "Chiasmus"; }
+  QString name() const { return QLatin1String("Chiasmus"); }
   QString displayName() const { return i18n( "Chiasmus command line tool" ); }
   KeyListJob * keyListJob( bool, bool, bool ) const { return 0; }
   ListAllKeysJob * listAllKeysJob( bool, bool ) const { return 0; }
@@ -433,7 +433,7 @@ Kleo::ChiasmusBackend::~ChiasmusBackend() {
 }
 
 QString Kleo::ChiasmusBackend::name() const {
-  return "Chiasmus";
+  return QLatin1String("Chiasmus");
 }
 
 QString Kleo::ChiasmusBackend::displayName() const {
@@ -457,13 +457,13 @@ Kleo::CryptoBackend::Protocol * Kleo::ChiasmusBackend::protocol( const char * na
 
 bool Kleo::ChiasmusBackend::checkForOpenPGP( QString * reason ) const {
   if ( reason )
-    *reason = i18n( "Unsupported protocol \"%1\"", QString("OpenPGP") );
+    *reason = i18n( "Unsupported protocol \"%1\"", QLatin1String("OpenPGP") );
   return false;
 }
 
 bool Kleo::ChiasmusBackend::checkForSMIME( QString * reason ) const {
   if ( reason )
-    *reason = i18n( "Unsupported protocol \"%1\"", QString("SMIME") );
+    *reason = i18n( "Unsupported protocol \"%1\"", QLatin1String("SMIME") );
   return false;
 }
 
@@ -473,7 +473,7 @@ bool Kleo::ChiasmusBackend::checkForChiasmus( QString * reason ) const {
   std::auto_ptr<Protocol> tmp( mProtocol );
   mProtocol = 0;
 
-  const CryptoConfigEntry * path = config()->entry( "Chiasmus", "General", "path" );
+  const CryptoConfigEntry * path = config()->entry( QLatin1String("Chiasmus"), QLatin1String("General"), QLatin1String("path") );
   assert( path ); assert( path->argType() == CryptoConfigEntry::ArgType_Path );
   const QString chiasmus = path->urlValue().path();
   const QFileInfo fi( KShell::tildeExpand( chiasmus ) );
@@ -492,7 +492,7 @@ bool Kleo::ChiasmusBackend::checkForProtocol( const char * name, QString * reaso
   if ( qstricmp( name, "Chiasmus" ) == 0 )
     return checkForChiasmus( reason );
   if ( reason )
-    *reason = i18n( "Unsupported protocol \"%1\"", name );
+    *reason = i18n( "Unsupported protocol \"%1\"", QLatin1String(name) );
   return 0;
 }
 

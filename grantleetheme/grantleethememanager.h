@@ -39,9 +39,9 @@ public:
 
     void setActionGroup( QActionGroup *actionGroup );
 
-    KToggleAction *actionForHeaderStyle();
+    KToggleAction *actionForTheme();
 
-    void setHeaderMenu(KActionMenu *menu);
+    void setThemeMenu(KActionMenu *menu);
 
     QStringList displayExtraVariables(const QString &themename) const;
 

@@ -41,7 +41,7 @@ class FilterManager::Private
 {
 public:
     Private( FilterManager *qq )
-        : q( qq ), mMailFilterAgentInterface(0), mTagQueryClient(0)
+        : q( qq ), mMailFilterAgentInterface(0), mTagQueryClient(0), mInitialized(false)
     {
         mMailFilterAgentInterface = new org::freedesktop::Akonadi::MailFilterAgent( QLatin1String( "org.freedesktop.Akonadi.MailFilterAgent" ),
                                                                                     QLatin1String( "/MailFilterAgent" ),
@@ -60,6 +60,7 @@ public:
     OrgFreedesktopAkonadiMailFilterAgentInterface *mMailFilterAgentInterface;
     QList<MailCommon::MailFilter *> mFilters;
     Nepomuk2::Query::QueryServiceClient *mTagQueryClient;
+    bool mInitialized;
 };
 
 void FilterManager::Private::readConfig()
@@ -165,9 +166,16 @@ void FilterManager::updateTagList()
     d->mTagQueryClient->query(query);
 }
 
+bool FilterManager::initialized() const
+{
+    return d->mInitialized;
+}
+
 void FilterManager::slotReadConfig()
 {
     d->readConfig();
+    d->mInitialized = true;
+    Q_EMIT loadingFiltersDone();
 }
 
 void FilterManager::slotFinishedTagListing()

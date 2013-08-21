@@ -106,7 +106,7 @@ QString SieveConditionEnvironment::help() const
     return i18n("The environment test retrieves the item of environment information specified by the name string and matches it to the values specified in the key-list argument.");
 }
 
-void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ )
+bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, QWidget *w, bool /*notCondition*/ , QString &error)
 {
     QDomNode node = element.firstChild();
     int index = 0;
@@ -122,15 +122,20 @@ void SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
                     KLineEdit *value =  w->findChild<KLineEdit*>( QLatin1String("value") );
                     value->setText(AutoCreateScriptUtil::quoteStr(e.text()));
                 } else {
+                    tooManyArgument(tagName, index, 2, error);
                     qDebug()<<" SieveConditionEnvironment::setParamWidgetValue to many argument "<<index;
                 }
                 ++index;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionSetVariable::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 #include "sieveconditionenvironment.moc"

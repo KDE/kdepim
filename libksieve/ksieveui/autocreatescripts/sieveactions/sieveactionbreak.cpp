@@ -53,7 +53,7 @@ QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -66,25 +66,29 @@ void SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
                     KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
                     name->setText(AutoCreateScriptUtil::strValue(e));
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionBreak::setParamWidgetValue unknown tagValue "<<tagValue;
                 }
+            } else if (tagName == QLatin1String("str")) {
+                //Nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<"SieveActionBreak::setParamWidgetValue unknown tag "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionBreak::code(QWidget *w) const
 {
-    QString result;
     const KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));
     const QString nameStr = name->text();
     if (!nameStr.isEmpty()) {
-        result = QString::fromLatin1(":name \"%1\"").arg(nameStr);
+        return QString::fromLatin1("break :name \"%1\";").arg(nameStr);
     }
-    return QString::fromLatin1("break %1;").arg(result);
+    return QLatin1String("break;");
 }
 
 QString SieveActionBreak::help() const

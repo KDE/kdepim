@@ -32,7 +32,7 @@ public:
     ~SieveForEveryPartWidget();
 
     void generatedScript(QString &script, QStringList &requires);
-    void loadScript(const QDomElement &element);
+    void loadScript(const QDomElement &element, QString &error);
 
 private Q_SLOTS:
     void slotHelp();

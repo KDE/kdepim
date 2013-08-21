@@ -33,12 +33,10 @@ class FilterActionRemoveHeader: public FilterActionWithStringList
     Q_OBJECT
 public:
     explicit FilterActionRemoveHeader( QObject *parent = 0 );
-    virtual ReturnCode process( ItemContext &context ) const;
-    virtual SearchRule::RequiredPart requiredPart() const;
-    virtual QWidget* createParamWidget( QWidget *parent ) const;
-    virtual void setParamWidgetValue( QWidget *paramWidget ) const;
-
-    bool canConvertToSieve() const;
+    ReturnCode process( ItemContext &context ) const;
+    SearchRule::RequiredPart requiredPart() const;
+    QWidget* createParamWidget( QWidget *parent ) const;
+    void setParamWidgetValue( QWidget *paramWidget ) const;
     QStringList sieveRequires() const;
     QString sieveCode() const;
 

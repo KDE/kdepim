@@ -24,7 +24,7 @@
 #include "editor/composer.h"
 #include "searchdialog/searchwindow.h"
 #include "antispam-virus/antispamwizard.h"
-#include "statusbarlabel.h"
+#include "widgets/statusbarlabel.h"
 #include "undostack.h"
 #include "kmcommands.h"
 #include "kmmainwin.h"
@@ -40,7 +40,7 @@
 #include "foldertreeview.h"
 #include "tag/tagactionmanager.h"
 #include "foldershortcutactionmanager.h"
-#include "collectionpane.h"
+#include "widgets/collectionpane.h"
 #if !defined(NDEBUG)
     #include <ksieveui/debug/sievedebugdialog.h>
     using KSieveUi::SieveDebugDialog;
@@ -57,6 +57,7 @@
 #include "job/createnewcontactjob.h"
 #include "sendlateragentinterface.h"
 #include "folderarchiveagentinterface.h"
+#include "agents/folderarchiveagent/folderarchiveutil.h"
 
 #include "pimcommon/acl/collectionaclpage.h"
 #include "mailcommon/collectionpage/collectiongeneralpage.h"
@@ -65,6 +66,7 @@
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/mailfilter.h"
 #include "mailcommon/widgets/favoritecollectionwidget.h"
+#include "mailcommon/mailcommonsettings_base.h"
 
 // Other PIM includes
 #include "kdepim-version.h"
@@ -209,7 +211,6 @@ using MessageViewer::AttachmentStrategy;
 Q_DECLARE_METATYPE(KPIM::ProgressItem*)
 Q_DECLARE_METATYPE(Akonadi::Job*)
 Q_DECLARE_METATYPE(QPointer<KPIM::ProgressItem>)
-
 K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
 
 //-----------------------------------------------------------------------------
@@ -355,9 +356,11 @@ void KMMainWidget::restoreCollectionFolderViewConfig(Akonadi::Collection::Id id)
   //Restore startup folder
 
   if (id == -1) {
-    Akonadi::Collection::Id startupFolder = GlobalSettings::self()->startupFolder();
-    if ( startupFolder > 0 )
-      saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(startupFolder) );
+    if (GlobalSettings::self()->startSpecificFolderAtStartup()) {
+      Akonadi::Collection::Id startupFolder = GlobalSettings::self()->startupFolder();
+      if ( startupFolder > 0 )
+        saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(startupFolder) );
+    }
   } else {
     saver->restoreCurrentItem( QString::fromLatin1("c%1").arg(id) );
   }
@@ -578,7 +581,7 @@ void KMMainWidget::readPreConfig()
 
   mHtmlPref = MessageViewer::GlobalSettings::self()->htmlMail();
   mHtmlLoadExtPref = MessageViewer::GlobalSettings::self()->htmlLoadExternal();
-  mEnableFavoriteFolderView = ( GlobalSettings::self()->favoriteCollectionViewMode() != GlobalSettings::EnumFavoriteCollectionViewMode::HiddenMode );
+  mEnableFavoriteFolderView = ( MailCommon::MailCommonSettings::self()->favoriteCollectionViewMode() != MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::HiddenMode );
   mEnableFolderQuickSearch = GlobalSettings::self()->enableFolderQuickSearch();
   updateHtmlMenuEntry();
 }
@@ -739,7 +742,7 @@ void KMMainWidget::layoutSplitters()
   int headerWidth = GlobalSettings::self()->searchAndHeaderWidth();
   int messageViewerHeight = GlobalSettings::self()->readerWindowHeight();
 
-  int ffvHeight = mFolderViewSplitter ? GlobalSettings::self()->favoriteCollectionViewHeight() : 0;
+  int ffvHeight = mFolderViewSplitter ? MailCommon::MailCommonSettings::self()->favoriteCollectionViewHeight() : 0;
 
   // If the message viewer was hidden before, make sure it is not zero height
   if ( messageViewerHeight < 10 && readerWindowBelow ) {
@@ -803,14 +806,15 @@ void KMMainWidget::layoutSplitters()
 void KMMainWidget::refreshFavoriteFoldersViewProperties()
 {
   if ( mFavoriteCollectionsView ) {
-    if ( GlobalSettings::self()->favoriteCollectionViewMode() == GlobalSettings::EnumFavoriteCollectionViewMode::IconMode )
+    if ( MailCommon::MailCommonSettings::self()->favoriteCollectionViewMode() == MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::IconMode )
       mFavoriteCollectionsView->setViewMode( QListView::IconMode );
-    else if ( GlobalSettings::self()->favoriteCollectionViewMode() == GlobalSettings::EnumFavoriteCollectionViewMode::ListMode )
+    else if ( MailCommon::MailCommonSettings::self()->favoriteCollectionViewMode() == MailCommon::MailCommonSettings::EnumFavoriteCollectionViewMode::ListMode )
       mFavoriteCollectionsView->setViewMode( QListView::ListMode );
     else
       Q_ASSERT(false); // we should never get here in hidden mode
     mFavoriteCollectionsView->setDropActionMenuEnabled( kmkernel->showPopupAfterDnD() );
     mFavoriteCollectionsView->setWordWrap( true );
+    mFavoriteCollectionsView->updateMode();
   }
 }
 
@@ -906,7 +910,7 @@ void KMMainWidget::writeConfig(bool force)
     GlobalSettings::self()->setSearchAndHeaderHeight( headersHeight );
     GlobalSettings::self()->setSearchAndHeaderWidth( mMessagePane->width() );
     if ( mFavoriteCollectionsView ) {
-      GlobalSettings::self()->setFavoriteCollectionViewHeight( mFavoriteCollectionsView->height() );
+      MailCommon::MailCommonSettings::self()->setFavoriteCollectionViewHeight( mFavoriteCollectionsView->height() );
       GlobalSettings::self()->setFolderTreeHeight( mFolderTreeWidget->height() );
       if ( !mLongFolderList ) {
         GlobalSettings::self()->setFolderViewHeight( mFolderViewSplitter->height() );
@@ -929,6 +933,11 @@ void KMMainWidget::writeConfig(bool force)
       group.writeEntry( "HeaderState", mFolderTreeWidget->folderTreeView()->header()->saveState() );
       //Work around from startup folder
       group.deleteEntry( "Selection" );
+#if 0
+      if (!GlobalSettings::self()->startSpecificFolderAtStartup()) {
+          group.deleteEntry( "Current" );
+      }
+#endif
       group.sync();
     }
 
@@ -991,7 +1000,7 @@ void KMMainWidget::createWidgets()
   connect( mFolderTreeWidget->folderTreeView(), SIGNAL(prefereCreateNewTab(bool)), this, SLOT(slotCreateNewTab(bool)) );
 
   mFolderTreeWidget->setSelectionMode( QAbstractItemView::ExtendedSelection );
-  mMessagePane = new CollectionPane( KMKernel::self()->entityTreeModel(),
+  mMessagePane = new CollectionPane( !GlobalSettings::self()->startSpecificFolderAtStartup(), KMKernel::self()->entityTreeModel(),
                                         mFolderTreeWidget->folderTreeView()->selectionModel(),
                                         this );
   connect( KMKernel::self()->entityTreeModel(), SIGNAL(collectionFetched(int)), this, SLOT(slotCollectionFetched(int)));
@@ -2946,6 +2955,8 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,cons
     menu->addAction( mMsgActions->printAction() );
     menu->addAction( mSaveAsAction );
     menu->addAction( mSaveAttachmentsAction );
+    if (FolderArchive::FolderArchiveUtil::folderArchiveAgentEnabled())
+        menu->addAction( mMsgActions->archiveMailAction());
 
     menu->addSeparator();
     if ( parentCol.isValid() && CommonKernel->folderIsTrash(parentCol) ) {
@@ -3717,6 +3728,12 @@ void KMMainWidget::setupActions()
              SLOT(slotMoveSelectedMessageToFolder()) );
   }
 
+  mArchiveAction = new KAction( i18n("Archive"), this);
+  actionCollection()->addAction( QLatin1String("archive_mails"), mArchiveAction );
+  connect( mArchiveAction, SIGNAL(triggered(bool)),
+           SLOT(slotArchiveMails()) );
+
+
 }
 
 void KMMainWidget::slotAddFavoriteFolder()
@@ -3979,6 +3996,8 @@ void KMMainWidget::updateMessageActionsDelayed()
     actionList << messageActions()->editAction();
   }
   actionList << mSaveAttachmentsAction;
+  if (FolderArchive::FolderArchiveUtil::folderArchiveAgentEnabled() && mCurrentFolder && FolderArchive::FolderArchiveUtil::resourceSupportArchiving(mCurrentFolder->collection().resource()))
+      actionList << mArchiveAction;
   mGUIClient->unplugActionList( QLatin1String( "messagelist_actionlist" ) );
   mGUIClient->plugActionList( QLatin1String( "messagelist_actionlist" ), actionList );
   mSendAgainAction->setEnabled( statusSendAgain );
@@ -4745,7 +4764,7 @@ void KMMainWidget::slotServerSideSubscription()
                     QLatin1String( "/" ), QLatin1String( "org.kde.Akonadi.Imap.Resource" ),
                     DBusConnectionPool::threadConnection(), this );
         if ( !iface.isValid() ) {
-            kDebug()<<"Can not create imap dbus interface";
+            kDebug()<<"Cannot create imap dbus interface";
             return;
         }
         QDBusPendingCall call = iface.asyncCall( QLatin1String( "configureSubscription" ), (qlonglong)winId() );
@@ -4850,4 +4869,15 @@ void KMMainWidget::slotMoveMessageToTrash()
     }
 }
 
-
+void KMMainWidget::slotArchiveMails()
+{
+    OrgFreedesktopAkonadiFolderArchiveAgentInterface folderArchiveInterface(QLatin1String("org.freedesktop.Akonadi.FolderArchiveAgent"), QLatin1String("/FolderArchiveAgent"),QDBusConnection::sessionBus(), this);
+    if (folderArchiveInterface.isValid()) {
+        const QList<Akonadi::Item::Id> selectedMessages = mMessagePane->selectionAsListMessageId();
+        if (mCurrentFolder) {
+            folderArchiveInterface.archiveItems(selectedMessages, mCurrentFolder->collection().resource());
+        }
+    } else {
+        KMessageBox::error(this,i18n("Archive Folder Agent was not registered."));
+    }
+}

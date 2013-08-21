@@ -28,6 +28,9 @@ public:
     explicit ThemeEditorTabWidget(QWidget *parent = 0);
     ~ThemeEditorTabWidget();
 
+public Q_SLOTS:
+    void slotMainFileNameChanged(const QString &fileName);
+
 private Q_SLOTS:
     void slotTabContextMenuRequest( const QPoint &pos );
 };

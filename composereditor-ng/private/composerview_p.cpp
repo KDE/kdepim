@@ -21,6 +21,7 @@
 #include "composerview_p.h"
 #include "utils/composereditorutils_p.h"
 #include "link/composerlinkdialog.h"
+#include "link/composeranchordialog.h"
 #include "list/composerlistdialog.h"
 #include "image/composerimagedialog.h"
 #include "table/composertabledialog.h"
@@ -461,6 +462,15 @@ void ComposerViewPrivate::createAction(ComposerView::ComposerViewAction type)
             action_insert_specialchar = new KAction(i18n( "Insert Special Char..." ), q);
             htmlEditorActionList.append(action_insert_specialchar);
             q->connect( action_insert_specialchar, SIGNAL(triggered()), q, SLOT(_k_slotInsertSpecialChar()) );
+        }
+        break;
+    }
+    case ComposerView::InsertAnchor:
+    {
+        if (!action_insert_anchor) {
+            action_insert_anchor = new KAction(i18n( "Insert Anchor..." ), q);
+            htmlEditorActionList.append(action_insert_anchor);
+            q->connect( action_insert_anchor, SIGNAL(triggered()), q, SLOT(_k_slotInsertAnchor()) );
         }
         break;
     }
@@ -946,6 +956,15 @@ void ComposerViewPrivate::_k_slotInsertSpecialChar()
     if (dlg.exec()) {
         execCommand(QLatin1String("insertHTML"), dlg.currentChar());
     }
+}
+
+void ComposerViewPrivate::_k_slotInsertAnchor()
+{
+    QPointer<ComposerAnchorDialog> dlg = new ComposerAnchorDialog( q );
+    if (dlg->exec() == KDialog::Accepted) {
+        execCommand(QLatin1String("insertHTML"), dlg->html());
+    }
+    delete dlg;
 }
 
 QMap<QString, QString> ComposerViewPrivate::localImages() const

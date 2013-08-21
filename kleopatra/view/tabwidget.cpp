@@ -262,7 +262,7 @@ class TabWidget::Private {
     TabWidget * const q;
 public:
     explicit Private( TabWidget * qq );
-    ~Private() {};
+    ~Private() {}
 
 private:
     void slotContextMenu( const QPoint & p ) {

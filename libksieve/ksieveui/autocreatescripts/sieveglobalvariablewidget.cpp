@@ -53,7 +53,7 @@ void SieveGlobalVariableActionWidget::generatedScript(QString &script)
         return;
     script += QLatin1String("global ");
     script += QString::fromLatin1("\"%1\";\n").arg(variableName);
-    if (mSetValueTo->isChecked()) {
+    if (mSetValueTo->isChecked() && !mVariableValue->text().isEmpty()) {
         script += QString::fromLatin1("set \"%1\" \"%2\";\n").arg(variableName).arg(mVariableValue->text());
     }
 }
@@ -100,7 +100,19 @@ bool SieveGlobalVariableActionWidget::isInitialized() const
     return !mVariableName->text().isEmpty();
 }
 
-void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element)
+QString SieveGlobalVariableActionWidget::variableName() const
+{
+    return mVariableName->text();
+}
+
+void SieveGlobalVariableActionWidget::setVariableValue(const QString &name)
+{
+    mSetValueTo->setChecked(true);
+    mVariableValue->setText(name);
+    mVariableValue->setEnabled(true);
+}
+
+void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element, QString &error)
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -110,6 +122,7 @@ void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element)
             if (tagName == QLatin1String("str")) {
                 mVariableName->setText(e.text());
             } else {
+                error += i18n("Unknown tag \"%1\" during loading of variables.");
                 qDebug()<<" SieveGlobalVariableActionWidget::loadScript unknown tagName "<<tagName;
             }
         }
@@ -170,9 +183,14 @@ void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &re
     }
 }
 
-void SieveGlobalVariableWidget::loadScript(const QDomElement &element)
+void SieveGlobalVariableWidget::loadScript(const QDomElement &element, QString &error)
 {
-    mIncludeLister->loadScript(element);
+    mIncludeLister->loadScript(element, error);
+}
+
+void SieveGlobalVariableWidget::loadSetVariable(const QDomElement &element, QString &error)
+{
+    mIncludeLister->loadSetVariable(element, error);
 }
 
 SieveGlobalVariableLister::SieveGlobalVariableLister(QWidget *parent)
@@ -256,14 +274,48 @@ QWidget *SieveGlobalVariableLister::createWidget( QWidget *parent )
     return w;
 }
 
-void SieveGlobalVariableLister::loadScript(const QDomElement &element)
+void SieveGlobalVariableLister::loadScript(const QDomElement &element, QString &error)
 {
     SieveGlobalVariableActionWidget *w = static_cast<SieveGlobalVariableActionWidget *>(widgets().last());
     if (w->isInitialized()) {
         addWidgetAfterThisWidget(widgets().last());
         w = static_cast<SieveGlobalVariableActionWidget *>(widgets().last());
     }
-    w->loadScript(element);
+    w->loadScript(element, error);
+}
+
+void SieveGlobalVariableLister::loadSetVariable(const QDomElement &element, QString &error)
+{
+    QString variableName;
+    QString variableValue;
+    int index = 0;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("str")) {
+                if (index == 0) {
+                    variableName = e.text();
+                } else if (index == 1) {
+                    variableValue = e.text();
+                } else {
+                    qDebug()<<" SieveGlobalVariableLister::loadSetVariable too many argument:"<<index;
+                }
+                ++index;
+            } else {
+                qDebug()<<" SieveGlobalVariableLister::loadSetVariable unknown tagName "<<tagName;
+            }
+        }
+        node = node.nextSibling();
+    }
+
+    Q_FOREACH (QWidget *widget, widgets()) {
+        SieveGlobalVariableActionWidget *w = static_cast<SieveGlobalVariableActionWidget *>(widget);
+        if (w->variableName() == variableName) {
+            w->setVariableValue(variableValue);
+        }
+    }
 }
 
 }

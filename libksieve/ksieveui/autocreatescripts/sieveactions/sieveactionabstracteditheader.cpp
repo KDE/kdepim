@@ -24,7 +24,7 @@ SieveActionAbstractEditHeader::SieveActionAbstractEditHeader(const QString &name
 {
 }
 
-QStringList SieveActionAbstractEditHeader::needRequires(QWidget *parent) const
+QStringList SieveActionAbstractEditHeader::needRequires(QWidget *) const
 {
     return QStringList() << QLatin1String("editheader");
 }

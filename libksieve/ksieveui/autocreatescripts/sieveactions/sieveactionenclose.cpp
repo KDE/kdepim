@@ -70,7 +70,7 @@ QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
     return w;
 }
 
-void SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget *w )
+bool SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget *w, QString &error )
 {
     QDomNode node = element.firstChild();
     while (!node.isNull()) {
@@ -92,17 +92,20 @@ void SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
                         headers->setText(strValue);
                     }
                 } else {
+                    unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tag value:"<<tagValue;
                 }
             } else if (tagName == QLatin1String("str")) {
                 MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
                 edit->setText(e.text());
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
         node = node.nextSibling();
     }
+    return true;
 }
 
 QString SieveActionEnclose::code(QWidget *w) const

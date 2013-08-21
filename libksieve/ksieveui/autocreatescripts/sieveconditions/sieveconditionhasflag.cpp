@@ -18,6 +18,7 @@
 #include "sieveconditionhasflag.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include <KLocale>
 #include <KLineEdit>
 
@@ -87,7 +88,7 @@ QString SieveConditionHasFlag::code(QWidget *w) const
 
 QStringList SieveConditionHasFlag::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("imap4flags");
+    return QStringList() << QLatin1String("imapflags");
 }
 
 bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
@@ -97,7 +98,10 @@ bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
 
 QString SieveConditionHasFlag::serverNeedsCapability() const
 {
-    return QLatin1String("imap4flags");
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+        return QLatin1String("imap4flags");
+    else
+        return QLatin1String("imapflags");
 }
 
 QString SieveConditionHasFlag::help() const
@@ -105,7 +109,7 @@ QString SieveConditionHasFlag::help() const
     return i18n("The hasflag test evaluates to true if any of the variables matches any flag name.");
 }
 
-void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition )
+bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWidget *w, bool notCondition , QString &error)
 {
     QStringList strList;
     QDomNode node = element.firstChild();
@@ -115,10 +119,13 @@ void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
                 SelectMatchTypeComboBox *matchTypeCombo = w->findChild<SelectMatchTypeComboBox*>( QLatin1String("matchtype") );
-                matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition));
+                matchTypeCombo->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
             } else if (tagName == QLatin1String("str")) {
                 strList << e.text();
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
+                unknownTag(tagName, error);
                 qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;
             }
         }
@@ -141,6 +148,7 @@ void SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
         qDebug()<<" SieveConditionHasFlag::setParamWidgetValue str list count not correct :"<<strList.count();
         break;
     }
+    return true;
 }
 
 #include "sieveconditionhasflag.moc"
