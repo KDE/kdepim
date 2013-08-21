@@ -44,7 +44,7 @@ public :
 
     avatarHelper(const QString& email) {
       m_email = email ;
-      m_defaultPixmap = KStandardDirs::locate("data", "kdepimwidgets/pics/dummy_avatar.png");
+      m_defaultPixmap = KStandardDirs::locate("data", QLatin1String("kdepimwidgets/pics/dummy_avatar.png"));
 
       if (m_defaultPixmap.isNull()) kDebug() << "Failed to load default pixmap" ;
 
@@ -75,7 +75,7 @@ public Q_SLOTS:
 CompletionAddresseDelegate::CompletionAddresseDelegate(KCompletionBox* parent)
 {
   m_view = parent;
-  m_defaultPixmap = KStandardDirs::locate("data", "kdepimwidgets/pics/dummy_avatar.png");
+  m_defaultPixmap = KStandardDirs::locate("data", QLatin1String("kdepimwidgets/pics/dummy_avatar.png"));
   m_defaultPixmap = m_defaultPixmap.scaled(QSize(SIZE_STANDARD_PIXMAP, SIZE_STANDARD_PIXMAP), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 }
 
@@ -93,7 +93,7 @@ void CompletionAddresseDelegate::paint ( QPainter* painter, const QStyleOptionVi
 
   // retrieve the mail inside the string
   QString source = index.data(Qt::DisplayRole).toString() , email;
-  QString begin("<"), end(">");
+  QString begin(QLatin1String("<")), end(QLatin1String(">"));
   int startIndex = source.indexOf(begin)+begin.length();
   int endIndex = source.indexOf(end,startIndex);
 

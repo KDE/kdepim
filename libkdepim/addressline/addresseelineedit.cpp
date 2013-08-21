@@ -79,7 +79,6 @@
 
 #include <KPeople/PersonsModel>
 #include <KPeople/PersonsModelFeature>
-#include "kpeople/completionfinder.h"
 #include "completionaddressedelegate.h"
 
 using namespace KPeople;
@@ -280,7 +279,7 @@ class AddresseeLineEdit::Private
     void slotNepomukSearchFinished();
     void slotTriggerDelayedQueries();
     QVariantList valuesForIndex(const QModelIndex &idx);
-    QPair<QString,QStringList> matchingSearchString(QVariantList value, const QString name ) ;
+    QPair<QString,QStringList> matchingSearchString(QVariantList value, const QString name );
     QPair<QString,QStringList> kpeoplePrepareCompletionRow(QVariantList values, QString matching = QString());
     static KCompletion::CompOrder completionOrder();
 
@@ -346,7 +345,7 @@ void AddresseeLineEdit::Private::init()
 
       m_compareRoles = QVector<int>() << PersonsModel::FullNamesRole
                                       << PersonsModel::NicknamesRole
-                                      << PersonsModel::EmailsRole ; // NOTE: Keep emails at LAST Position !
+                                      << PersonsModel::EmailsRole; // NOTE: Keep emails at LAST Position !
 
       m_completionInitialized = true;
     }
@@ -416,7 +415,7 @@ void AddresseeLineEdit::Private::startNepomukSearch()
 void AddresseeLineEdit::Private::startKpeopleSearch() {
 
     if (!m_model) {
-      kDebug() << "KPeople Model Initialization" ;
+      kDebug() << "KPeople Model Initialization";
       m_model = new PersonsModel();
       m_model->startQuery(QList<PersonsModelFeature>()
       << PersonsModelFeature::emailModelFeature(PersonsModelFeature::Mandatory)
@@ -434,7 +433,7 @@ void AddresseeLineEdit::Private::slotKpeopleModelReady() {
 
   // minimum of character type to start parsing
   if (m_searchString.length() < 4) {
-      return ;
+      return;
   }
   // parsing model to find matching email / name
   for (int i = 0, rows = m_model->rowCount(); i<rows; i++) {
@@ -449,7 +448,7 @@ void AddresseeLineEdit::Private::slotKpeopleModelReady() {
       Q_FOREACH(const QString& email, matchingEmails.second) {
 
         // TODO : give a bigger weight to the head list !
-        QString title = i18n("%1 <%2>", matchingEmails.first, email) ;
+        QString title = i18n("%1 <%2>", matchingEmails.first, email);
         addCompletionItem( title, 1, s_static->kpeopleCompletionSource );
         kDebug() << "Insertion in the Completion List of " << title;
       }
@@ -462,38 +461,33 @@ QPair<QString,QStringList> AddresseeLineEdit::Private::matchingSearchString(QVar
 
   Q_ASSERT(values.size() == m_compareRoles.size());
 
-  QPair<QString, QStringList> results ;
   // Does the name is matching ?
   if (name.contains(m_searchString, Qt::CaseInsensitive)) {
     return kpeoplePrepareCompletionRow(values,name);
   }
   // Does the Email or Nickname are matching ?
-  for (int i = 0; i < m_compareRoles.size(); i++) {
-      QVariant &v = values[i];
-
+  foreach(const QVariant &v, values) {
       if (v.type() == QVariant::List) {
           QVariantList listValue = v.toList();
 
-          if (!listValue.isEmpty()) {
-              Q_FOREACH (const QVariant &v, listValue) {
-                  if (!v.isNull() && v.toString().contains(m_searchString , Qt::CaseInsensitive)) {
-                    return kpeoplePrepareCompletionRow(values,name);
-                  }
-              }
+          Q_FOREACH (const QVariant &v, listValue) {
+            if (!v.isNull() && v.toString().contains(m_searchString , Qt::CaseInsensitive)) {
+              return kpeoplePrepareCompletionRow(values,name);
+            }
           }
       } else if (!v.isNull() && v.toString().contains(m_searchString, Qt::CaseInsensitive)
           && (v.type() != QVariant::String || !v.toString().isEmpty()))
 
         return kpeoplePrepareCompletionRow(values,name);
   }
-  return results;
+  return QPair<QString, QStringList>();
 }
 
 QPair<QString,QStringList> AddresseeLineEdit::Private::kpeoplePrepareCompletionRow(QVariantList values, QString nameMatchingContact)
 {
   QString email;
-  QPair<QString, QStringList> results ;
-  results.first = nameMatchingContact ;
+  QPair<QString, QStringList> results;
+  results.first = nameMatchingContact;
 
   if (values.last().type() == QVariant::List ) { // trick : email last of m_compareRoles
     Q_FOREACH(const QVariant var, values.last().toList()) {
@@ -502,7 +496,7 @@ QPair<QString,QStringList> AddresseeLineEdit::Private::kpeoplePrepareCompletionR
       if (email.contains(m_searchString)) {
         results.second.prepend(email);
       }
-      else results.second.append(email) ;
+      else results.second.append(email);
     }
   }
   else {
