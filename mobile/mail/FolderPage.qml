@@ -34,14 +34,14 @@ PlasmaComponents.Page {
     PlasmaComponents.ToolButton{
       iconSource: "preferences-system"
 
-      onClicked: pageRow.push(Qt.createComponent("SettingsPage.qml") )
+      onClicked: pageRow.push(Qt.resolvedUrl("SettingsPage.qml") )
     }
 
     //FIXME remove this button and push the page when a folder gets selected (requires actual favorite/folderpage)
     PlasmaComponents.ToolButton {
       iconSource: "go-next"
 
-      onClicked: pageRow.push(Qt.createComponent("MailListPage.qml"))
+      onClicked: pageRow.push(Qt.resolvedUrl("MailListPage.qml"))
     }
   }
   //END Tools

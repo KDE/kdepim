@@ -49,7 +49,7 @@ PlasmaComponents.Page {
 
       onClicked: {
         pageRow.pop(root)
-        pageRow.push(Qt.createComponent("AccountSettingsPage.qml"))
+        pageRow.push(Qt.resolvedUrl("AccountSettingsPage.qml"))
       }
     }
     PlasmaComponents.Button {
@@ -62,7 +62,7 @@ PlasmaComponents.Page {
 
       onClicked: {
         pageRow.pop(root)
-        pageRow.push(Qt.createComponent("FavoriteManagerPage.qml"))
+        pageRow.push(Qt.resolvedUrl("FavoriteManagerPage.qml"))
       }
     }
     PlasmaComponents.Button {
@@ -70,7 +70,7 @@ PlasmaComponents.Page {
 
       onClicked: {
         pageRow.pop(root)
-        pageRow.push(Qt.createComponent("FilterEditor.qml"))
+        pageRow.push(Qt.resolvedUrl("FilterEditor.qml"))
       }
     }
     PlasmaComponents.Button {
@@ -78,7 +78,7 @@ PlasmaComponents.Page {
 
       onClicked: {
         pageRow.pop(root)
-        pageRow.push(Qt.createComponent("AboutPage.qml"))
+        pageRow.push(Qt.resolvedUrl("AboutPage.qml"))
       }
     }
   }
