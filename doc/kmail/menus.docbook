@@ -1419,7 +1419,7 @@ Help Menu</ulink> of the &kde; Fundamentals.</para>
 <keycombo action="simul">&Ctrl;&Shift;<keycap>V</keycap></keycombo>
 </shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Paste Without Formatting,</guimenuitem>
+<guimenuitem>Paste Without Formatting</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Pastes the text from the clipboard</action> exactly as is, with no formatting.</para></listitem>
 </varlistentry>
@@ -1822,8 +1822,7 @@ attachment window.</para>
 <sect2>
 <title>Help Menu</title>
 <para>
-<ulink url="help:/fundamentals/ui.html#menus-help">
-Help Menu</ulink> of the &kde; Fundamentals,</para>
+<ulink url="help:/fundamentals/ui.html#menus-help">Help Menu</ulink> of the &kde; Fundamentals.</para>
 </sect2>
 </sect1>
 
