@@ -132,7 +132,7 @@ PlasmaComponents.Page {
 
       onClicked: {
         if (root == pageRow.currentPage) {
-          pageRow.push(Qt.createComponent("MailViewPage.qml"))
+          pageRow.push(Qt.resolvedUrl("MailViewPage.qml"))
         }
         threadView.currentIndex = index
         navigationModel.select(model.index, 3)

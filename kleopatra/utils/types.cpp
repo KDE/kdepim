@@ -42,6 +42,10 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 using namespace Kleo;
 using namespace boost;
 
@@ -105,7 +109,7 @@ void ExecutionContextUser::bringToForeground( QWidget * wid ) {
     else
         wid->show();
 #ifdef Q_WS_WIN
-    KWindowSystem::forceActiveWindow( wid->winId() );
+    SetForegroundWindow( wid->winId() );
 #endif
 }
 

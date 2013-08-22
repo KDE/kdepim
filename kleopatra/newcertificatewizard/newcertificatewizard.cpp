@@ -1401,9 +1401,9 @@ void AdvancedSettingsDialog::fillKeySizeComboBoxen() {
 
     const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
 
-    const QList<int> rsaKeySizes = config.readEntry( RSA_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 );
+    const QList<int> rsaKeySizes = config.readEntry( RSA_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 << 4096 );
     const QList<int> dsaKeySizes = config.readEntry( DSA_KEYSIZES_ENTRY, QList<int>() << -2048 );
-    const QList<int> elgKeySizes = config.readEntry( ELG_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 );
+    const QList<int> elgKeySizes = config.readEntry( ELG_KEYSIZES_ENTRY, QList<int>() << 1536 << -2048 << 3072 << 4096 );
 
     const QStringList rsaKeySizeLabels = config.readEntry( RSA_KEYSIZE_LABELS_ENTRY, QStringList() );
     const QStringList dsaKeySizeLabels = config.readEntry( DSA_KEYSIZE_LABELS_ENTRY, QStringList() );

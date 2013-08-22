@@ -9,7 +9,7 @@ option(KLEO_STATIC_KCMODULES "Build Kleopatra's KCMs into Kleopatra; don't insta
 
 include(MacroOptionalAddSubdirectory)
 
-set(kleopatra_version 2.1.1)
+set(kleopatra_version 2.2.0)
 set(kleopatra_release FALSE)
 
 if(NOT kleopatra_release)

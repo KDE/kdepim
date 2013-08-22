@@ -164,7 +164,8 @@ namespace {
               m_isFinalized( false ),
               m_isFinalizing( false ),
               m_cancelPending( false ),
-              m_canceled( false )
+              m_canceled( false ),
+              m_binaryOpt( false )
         {
 
         }
@@ -172,6 +173,8 @@ namespace {
         /* reimp */ QString label() const { return m_customLabel.isEmpty() ? m_defaultLabel : m_customLabel; }
         /* reimp */ void setLabel( const QString & label ) { m_customLabel = label; }
         void setDefaultLabel( const QString & l ) { m_defaultLabel = l; }
+        /* reimp */ void setBinaryOpt( bool value ) { m_binaryOpt = value; }
+        /* reimp */ bool binaryOpt() const { return m_binaryOpt; }
 
         /* reimp */ QString errorString() const {
             if ( m_errorString.dirty() )
@@ -221,6 +224,7 @@ namespace {
         bool m_isFinalizing  : 1;
         bool m_cancelPending : 1;
         bool m_canceled      : 1;
+        bool m_binaryOpt     : 1;
     };
 
 
@@ -242,8 +246,21 @@ namespace {
 
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_proc; }
         /* reimp */ void doFinalize() {
-            if ( !m_proc->isClosed() )
+            /*
+              Make sure the data is written in the output here. If this
+              is not done the output will be written in small chunks
+              trough the eventloop causing an uncessary delay before
+              the process has even a chance to work and finish.
+              This delay is mainly noticabe on Windows where it can
+              take ~30 seconds to write out a 10MB file in the 512 byte
+              chunks gpgme serves. */
+            kDebug(5151) << "Waiting for " << m_proc->bytesToWrite()
+                         << " Bytes to be written";
+            while ( m_proc->waitForBytesWritten( PROCESS_MAX_RUNTIME_TIMEOUT ) );
+
+            if ( !m_proc->isClosed() ) {
                 m_proc->close();
+            }
             m_proc->waitForFinished( PROCESS_MAX_RUNTIME_TIMEOUT );
         }
         /* reimp */ void doCancel() {
