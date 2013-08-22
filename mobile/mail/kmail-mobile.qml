@@ -50,6 +50,6 @@ KPIM.MainView {
 
     toolBar: toolBar
 
-    initialPage: Qt.createComponent("FolderPage.qml")
+    initialPage: Qt.resolvedUrl("FolderPage.qml")
   }
 }

@@ -36,7 +36,7 @@ PlasmaComponents.Page {
     PlasmaComponents.ToolButton {
       iconSource: "preferences-system"
 
-      onClicked: pageRow.push(Qt.createComponent("SettingsPage.qml"))
+      onClicked: pageRow.push(Qt.resolvedUrl("SettingsPage.qml"))
     }
   }
   //END: Tools
@@ -62,7 +62,7 @@ PlasmaComponents.Page {
       //TODO create FoldersListPage.qml
       onClicked: {
         pageRow.pop(root)
-        pageRow.push(Qt.createComponent("FolderPage.qml"))
+        pageRow.push(Qt.resolvedUrl("FolderPage.qml"))
       }
 
       KPIM.AgentInstanceStatusIndicator {
