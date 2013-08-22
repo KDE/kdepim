@@ -127,7 +127,7 @@ performs a menu item function, the default shortcut is listed with the menu item
 <guimenu>File</guimenu>
 <guimenuitem>Import Messages...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Starts up <application>kmailcvt</application></action>. This application lets you import messages from several email clients into &kmail;.</para></listitem>
+<listitem><para><action>Starts up <application>KMailCVT</application></action>. This application lets you import messages from several email clients into &kmail;.</para></listitem>
 </varlistentry>
 <varlistentry id="file-print-preview">
 <term><menuchoice>
@@ -1471,7 +1471,7 @@ It works on the current selection or the complete message text if there is no se
 </sect2>
 
 <sect2 id="composer-view-menu">
-<title><guimenu>View</guimenu> Menu</title>
+<title>View Menu</title>
 
 <para>This menu lets you toggle the display of the header fields and other
 options in this composer window.</para>
@@ -1532,7 +1532,7 @@ dialog.</para>
 </sect2>
 
 <sect2 id="composer-options-menu">
-<title><guimenu>Options</guimenu> Menu</title>
+<title>Options Menu</title>
 
 <variablelist>
 
@@ -1672,7 +1672,7 @@ to paste long lines that should not wrap.</para>
 
 
 <sect2 id="composer-attach-menu">
-<title><guimenu>Attach</guimenu> Menu</title>
+<title>Attach Menu</title>
 
 <para>This menu lets you select attachment options.</para>
 
@@ -1773,7 +1773,7 @@ attachment window.</para>
 </sect2>
 
 <sect2 id="composer-tools-menu">
-<title><guimenu>Tools</guimenu> Menu</title>
+<title>Tools Menu</title>
 <para>If the menu item you are looking for is missing, please see <ulink url="help:/fundamentals/ui.html#menus-tools">Tools Menu</ulink> of the &kde; Fundamentals.
   The items listed here are &kmail; specific.</para>
 <variablelist>
