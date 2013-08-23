@@ -30,17 +30,17 @@ namespace KManageSieve {
  */
 class Response
 {
-  public:
+public:
     enum Type {
-      None,
-      KeyValuePair,
-      Action,
-      Quantity
+        None,
+        KeyValuePair,
+        Action,
+        Quantity
     };
 
-    Response() 
-      : m_type( None ),
-        m_quantity( 0 )
+    Response()
+        : m_type( None ),
+          m_quantity( 0 )
     {
     }
     Type type() const;
@@ -51,10 +51,10 @@ class Response
     QByteArray extra() const;
 
     enum Result {
-      Ok,
-      No,
-      Bye,
-      Other
+        Ok,
+        No,
+        Bye,
+        Other
     };
 
     Result operationResult() const;
@@ -63,7 +63,7 @@ class Response
     void clear();
     bool parseResponse( const QByteArray &line );
 
-  private:
+private:
     Type m_type;
     uint m_quantity;
     QByteArray m_key;

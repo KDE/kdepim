@@ -26,7 +26,7 @@
 
 class QTextDecoder;
 namespace KIO {
-  class Job;
+class Job;
 }
 
 class KJob;
@@ -43,9 +43,9 @@ class Session;
  */
 class KMANAGESIEVE_EXPORT SieveJob : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Stores a sieve script on an IMAP server.
      *
@@ -105,7 +105,7 @@ class KMANAGESIEVE_EXPORT SieveJob : public QObject
      */
     bool fileExists() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This signal is emitted when a get job has finished.
      *
@@ -142,7 +142,7 @@ class KMANAGESIEVE_EXPORT SieveJob : public QObject
                  const QString &script, bool active);
 
     void errorMessage( KManageSieve::SieveJob *job, bool success,
-                     const QString& errMsg );
+                       const QString& errMsg );
     /**
      * This signal is emitted for each result entry of a list job.
      *
@@ -152,7 +152,7 @@ class KMANAGESIEVE_EXPORT SieveJob : public QObject
      */
     void item( KManageSieve::SieveJob *job, const QString &filename, bool active );
 
-  private:
+private:
     //@cond PRIVATE
     SieveJob( QObject *parent = 0 );
     ~SieveJob();
