@@ -20,7 +20,7 @@
 #include <KConfigGroup>
 
 FolderArchiveAccountInfo::FolderArchiveAccountInfo()
-    : mArchiveType(UniqFolder),
+    : mArchiveType(UniqueFolder),
       mArchiveTopLevelCollectionId(-1),
       mEnabled(false),
       mKeepExistingStructure(false)
@@ -28,7 +28,7 @@ FolderArchiveAccountInfo::FolderArchiveAccountInfo()
 }
 
 FolderArchiveAccountInfo::FolderArchiveAccountInfo(const KConfigGroup &config)
-    : mArchiveType(UniqFolder),
+    : mArchiveType(UniqueFolder),
       mArchiveTopLevelCollectionId(-1),
       mEnabled(false),
       mKeepExistingStructure(false)
@@ -99,7 +99,7 @@ void FolderArchiveAccountInfo::readConfig(const KConfigGroup &config)
 {
     mInstanceName = config.readEntry(QLatin1String("instanceName"));
     mArchiveTopLevelCollectionId = config.readEntry(QLatin1String("topLevelCollectionId"), -1);
-    mArchiveType = static_cast<FolderArchiveType>(config.readEntry("folderArchiveType", (int)UniqFolder));
+    mArchiveType = static_cast<FolderArchiveType>(config.readEntry("folderArchiveType", (int)UniqueFolder));
     mEnabled = config.readEntry("enabled", false);
     mKeepExistingStructure = config.readEntry("keepExistingStructure", false);
 }

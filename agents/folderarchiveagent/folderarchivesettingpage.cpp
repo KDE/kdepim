@@ -42,7 +42,7 @@ FolderArchiveComboBox::~FolderArchiveComboBox()
 
 void FolderArchiveComboBox::initialize()
 {
-    addItem(i18n("Uniq folder"), FolderArchiveAccountInfo::UniqFolder);
+    addItem(i18n("Unique folder"), FolderArchiveAccountInfo::UniqueFolder);
     addItem(i18n("Folder by months"), FolderArchiveAccountInfo::FolderByMonths);
     addItem(i18n("Folder by years"), FolderArchiveAccountInfo::FolderByYears);
 }

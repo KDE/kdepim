@@ -79,7 +79,7 @@ void FolderArchiveAgentCheckCollection::slotInitialCollectionFetchingFirstLevelD
 
     QString folderName;
     switch(mInfo->folderArchiveType()) {
-    case FolderArchiveAccountInfo::UniqFolder:
+    case FolderArchiveAccountInfo::UniqueFolder:
         //Nothing
         break;
     case FolderArchiveAccountInfo::FolderByMonths:
