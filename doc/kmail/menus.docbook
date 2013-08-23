@@ -137,6 +137,7 @@ performs a menu item function, the default shortcut is listed with the menu item
 <para><action>Display a dialog which shows how your email will be printed.</action></para>
 <note><para>This will only be enabled if a printer is available.</para></note></listitem>
 </varlistentry>
+<!--FIXME what means available? Printer Driver installed? Printer connected?-->
 <varlistentry id="file-print">
 <term><menuchoice>
 <shortcut>
@@ -1196,7 +1197,7 @@ Please see next section for details.</para></note></listitem>
 <guisubmenu>Account Wizard...</guisubmenu>
 </menuchoice></term>
 <listitem><para><action>Brings up the Account Wizard dialog</action> which assists in easily setting up accounts.
- Please see <link linkend="account-wizard">Import Wizard</link> for details.</para></listitem>
+ Please see <link linkend="account-wizard">Account Wizard</link> for details.</para></listitem>
 </varlistentry>
 <varlistentry id="tools-anti-spam-wizard">
 <term><menuchoice>
@@ -1240,6 +1241,7 @@ Please see next section for details.</para></note></listitem>
 </menuchoice></term>
 <listitem><para><action>Opens the <link linkend="filters">Message Filters</link> window.</action></para></listitem>
 </varlistentry>
+<!--FIXME http://www.aegiap.eu/kdeblog/2013/08/new-in-kdepim-4-12-sieve-12/ -->
 <varlistentry id="settings-manage-sieve-scripts">
 <term><menuchoice>
 <guimenu>Settings</guimenu>
