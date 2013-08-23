@@ -22,7 +22,7 @@
 
 #include "options.h"
 
-Options::Options() : m_action(ActionNone)
+Options::Options() : m_action(ActionNone), m_stripOldAlarms(false)
 {
 }
 
@@ -49,4 +49,14 @@ void Options::setCollections(const QList<Akonadi::Collection::Id> &collections)
 bool Options::testCollection(Akonadi::Entity::Id id) const
 {
     return m_collectionIds.isEmpty() || m_collectionIds.contains(id);
+}
+
+bool Options::stripOldAlarms() const
+{
+    return m_stripOldAlarms;
+}
+
+void Options::setStripOldAlarms(bool strip)
+{
+    m_stripOldAlarms = strip;
 }

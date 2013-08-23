@@ -71,6 +71,8 @@ private Q_SLOTS:
     void sanityCheck7();
     void sanityCheck8();
 
+    void stripOldAlarms();
+
     void printFound(const Akonadi::Item &item);
 
     void beginTest(const QString &message);
@@ -88,6 +90,7 @@ private:
     Options::SanityCheck m_currentSanityCheck;
     int m_pendingModifications;
     int m_pendingDeletions;
+    bool m_strippingOldAlarms;
 
     QList<Akonadi::Item::Id> m_test1Results;
     QStringList m_test2Results;

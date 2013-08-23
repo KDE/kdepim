@@ -63,9 +63,12 @@ public:
     void setCollections(const QList<Akonadi::Collection::Id> &);
     bool testCollection(Akonadi::Collection::Id) const;
 
+    bool stripOldAlarms() const;
+    void setStripOldAlarms(bool strip);
 private:
     QList<Akonadi::Collection::Id> m_collectionIds;
     Action m_action;
+    bool m_stripOldAlarms;
 };
 
 #endif // OPTIONS_H

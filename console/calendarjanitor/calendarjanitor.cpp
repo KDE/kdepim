@@ -64,12 +64,26 @@ static bool collectionIsReadOnly(const Akonadi::Collection &collection)
            !(collection.rights() & Akonadi::Collection::CanDeleteItem);
 }
 
+static bool incidenceIsOld(const KCalCore::Incidence::Ptr &incidence)
+{
+    if (incidence->recurs() || incidence->type() == KCalCore::Incidence::TypeJournal)
+        return false;
+
+    KDateTime datetime = incidence->dtStart();
+    if (!datetime.isValid() && incidence->type() == KCalCore::Incidence::TypeTodo) {
+        datetime = incidence->dateTime(KCalCore::Incidence::RoleEnd);
+    }
+
+    return datetime.isValid() && datetime.daysTo(KDateTime::currentDateTime(KDateTime::LocalZone)) > 365;
+}
+
 CalendarJanitor::CalendarJanitor(const Options &options, QObject *parent) : QObject(parent)
                                                                           , m_collectionLoader(new CollectionLoader(this))
                                                                           , m_options(options)
                                                                           , m_currentSanityCheck(Options::CheckNone)
                                                                           , m_pendingModifications(0)
                                                                           , m_pendingDeletions(0)
+                                                                          , m_strippingOldAlarms(false)
 {
     m_changer = new Akonadi::IncidenceChanger(this);
     m_changer->setShowDialogsOnError(false);
@@ -114,6 +128,7 @@ void CalendarJanitor::onItemsFetched(KJob *job)
     m_itemsToProcess = ifj->items();
     if (m_itemsToProcess.isEmpty()) {
         print(i18n("Collection is empty, ignoring it."));
+        processNextCollection();
     } else {
         m_incidenceMap.clear();
         foreach (const Akonadi::Item &item, m_itemsToProcess) {
@@ -135,7 +150,9 @@ void CalendarJanitor::onModifyFinished(int changeId, const Akonadi::Item &item,
         bailOut();
         return;
     }
-    print(i18n("Fixed item %1", item.id()));
+    if (!m_options.stripOldAlarms())
+        print(i18n("Fixed item %1", item.id()));
+
     m_pendingModifications--;
     if (m_pendingModifications == 0) {
         runNextTest();
@@ -162,6 +179,7 @@ void CalendarJanitor::processNextCollection()
 {
     m_itemsToProcess.clear();
     m_currentSanityCheck = Options::CheckNone;
+    m_strippingOldAlarms = false;
 
     if (m_collectionsToProcess.isEmpty()) {
         print(QLatin1Char('\n') + QString().leftJustified(TEXT_WIDTH, QLatin1Char('*')));
@@ -174,8 +192,14 @@ void CalendarJanitor::processNextCollection()
     print(QLatin1Char('\n') + QString().leftJustified(TEXT_WIDTH, QLatin1Char('*')));
     print(i18n("Processing collection %1 (id=%2) ...", m_currentCollection.displayName(), m_currentCollection.id()));
 
-    if (collectionIsReadOnly(m_currentCollection) && m_options.action() == Options::ActionScanAndFix) {
-        print(i18n("Collection is read only, disabling fix mode."));
+    if (collectionIsReadOnly(m_currentCollection)) {
+        if (m_options.action() == Options::ActionScanAndFix) {
+            print(i18n("Collection is read only, disabling fix mode."));
+        } else if (m_options.stripOldAlarms()) {
+            print(i18n("Collection is read only, skipping it."));
+            processNextCollection();
+            return;
+        }
     }
 
     Akonadi::ItemFetchJob *ifj = new Akonadi::ItemFetchJob(m_currentCollection, this);
@@ -185,8 +209,20 @@ void CalendarJanitor::processNextCollection()
 
 void CalendarJanitor::runNextTest()
 {
+    if (m_options.stripOldAlarms()) {
+        if (!m_strippingOldAlarms) {
+            m_strippingOldAlarms = true;
+            stripOldAlarms();
+        } else {
+            processNextCollection();
+        }
+
+        return;
+    }
+
     int currentType = static_cast<int>(m_currentSanityCheck);
     m_currentSanityCheck = static_cast<Options::SanityCheck>(currentType+1);
+
     switch(m_currentSanityCheck) {
     case Options::CheckEmptySummary:
         sanityCheck1();
@@ -446,9 +482,7 @@ void CalendarJanitor::sanityCheck8()
 
         m_counts[incidence->type()]++;
 
-        if (incidence->dtStart().isValid() && !incidence->recurs()          &&
-            incidence->dtStart().daysTo(KDateTime::currentDateTime(KDateTime::LocalZone)) > 365 &&
-            incidence->type() != KCalCore::Incidence::TypeJournal) {
+        if (incidenceIsOld(incidence)) {
 
             if (!incidence->alarms().isEmpty())
                 numOldAlarms++;
@@ -474,6 +508,22 @@ void CalendarJanitor::sanityCheck8()
     }
 
     endTest(/**print=*/false);
+}
+
+void CalendarJanitor::stripOldAlarms()
+{
+    beginTest(i18n("Deleting alarms older than 365 days..."));
+
+    foreach (const Akonadi::Item &item, m_itemsToProcess) {
+        KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
+        if (!incidence->alarms().isEmpty() && incidenceIsOld(incidence)) {
+            incidence->clearAlarms();
+            m_pendingModifications++;
+            m_changer->modifyIncidence(item);
+        }
+    }
+
+    endTest();
 }
 
 static QString dateString(const KCalCore::Incidence::Ptr &incidence)

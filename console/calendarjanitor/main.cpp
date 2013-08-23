@@ -91,6 +91,7 @@ int main(int argv, char *argc[])
     options.add("collections <ids>", ki18n("List of collection ids to scan"));
     options.add("fix", ki18n("Fix broken incidences"));
     options.add("backup <output.ics>", ki18n("Backup your calendar"));
+    options.add("strip-old-alarms", ki18n("Delete alarms older than 365 days"));
 
     options.add("", ki18n("\nExamples:\n\nScan all collections:\n"
                           "$ calendarjanitor\n\n"
@@ -101,7 +102,10 @@ int main(int argv, char *argc[])
                           "Backup all collections:\n"
                           "$ calendarjanitor --backup backup.ics\n\n"
                           "Backup some collections:\n"
-                          "$ calendarjanitor --backup backup.ics --collections 10,20"));
+                          "$ calendarjanitor --backup backup.ics --collections 10,20\n\n"
+                          "Strip alarms from incidences older than 365 days:\n"
+                          "$ calendarjanitor --strip-old-alarms --collections 10,20")
+                );
 
     KCmdLineArgs::addCmdLineOptions(options);
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -136,9 +140,21 @@ int main(int argv, char *argc[])
         return -1;
     }
 
+    if (args->isSet("strip-old-alarms") && args->isSet("backup")) {
+        print(i18n("--strip-old-alarms is incompatible with --backup"));
+        return -1;
+    }
+
+    if (args->isSet("strip-old-alarms") && args->isSet("fix")) {
+        print(i18n("--strip-old-alarms is incompatible with --fix"));
+        return -1;
+    }
+
     KApplication app(false);
 
     silenceStderr(); // Switching off mobile phones, movie is about to start
+
+    janitorOptions.setStripOldAlarms(args->isSet("strip-old-alarms"));
 
     QString backupFile;
     if (args->isSet("fix")) {
