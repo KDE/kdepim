@@ -24,7 +24,7 @@
 
 QString AutoCreateScriptUtil::createMultiLine(const QString &str)
 {
-    const QString result = QString::fromLatin1("\n %1\n.\n;\n").arg(str);
+    const QString result = QString::fromLatin1("\n%1\n.\n;\n").arg(str);
     return result;
 }
 
