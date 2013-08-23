@@ -91,6 +91,7 @@
 #include <KTemporaryFile>
 #include <KIO/JobUiDelegate>
 
+
 OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface(
         const QString &ident )
 {
@@ -664,3 +665,4 @@ bool MailCommon::Util::foundMailer()
     }
     return false;
 }
+

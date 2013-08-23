@@ -18,13 +18,14 @@
 
 
 #include "sieveeditorabstractwidget.h"
+#include "pimcommon/util/pimutil.h"
 
 #include <KLocale>
 #include <KMessageBox>
 #include <KFileDialog>
 
-#include <QPointer>
 #include <QTextStream>
+#include <QPointer>
 
 #include <errno.h>
 
@@ -41,36 +42,8 @@ SieveEditorAbstractWidget::~SieveEditorAbstractWidget()
 
 void SieveEditorAbstractWidget::slotSaveAs()
 {
-    KUrl url;
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
-    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, this) );
-
-    fdlg->setMode( KFile::File );
-    fdlg->setOperationMode( KFileDialog::Saving );
-    fdlg->setConfirmOverwrite(true);
-    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
-        const QString fileName = fdlg->selectedFile();
-        if ( !saveToFile( fileName ) ) {
-            KMessageBox::error( this,
-                                i18n( "Could not write the file %1:\n"
-                                      "\"%2\" is the detailed error description.",
-                                      fileName,
-                                      QString::fromLocal8Bit( strerror( errno ) ) ),
-                                i18n( "Sieve Editor Error" ) );
-        }
-    }
-    delete fdlg;
-}
-
-bool SieveEditorAbstractWidget::saveToFile( const QString &filename )
-{
-    QFile file( filename );
-    if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
-        return false;
-    QTextStream out(&file);
-    out.setCodec("UTF-8");
-    out << currentscript();
-    return true;
+    PimCommon::Util::saveTextAs(currentscript(), filter, this);
 }
 
 QString SieveEditorAbstractWidget::currentscript()

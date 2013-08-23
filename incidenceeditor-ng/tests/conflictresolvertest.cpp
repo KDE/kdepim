@@ -342,6 +342,6 @@ void ConflictResolverTest::testPeriodEndsAtSametimeAsTimeframe()
   QCOMPARE( resolver->availableSlots().size(), 0 );
 }
 
-QTEST_KDEMAIN( ConflictResolverTest, GUI );
+QTEST_KDEMAIN( ConflictResolverTest, GUI )
 
 #include "conflictresolvertest.moc"

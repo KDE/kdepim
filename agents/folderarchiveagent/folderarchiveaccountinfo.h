@@ -29,7 +29,7 @@ public:
     ~FolderArchiveAccountInfo();
 
     enum FolderArchiveType {
-        UniqFolder,
+        UniqueFolder,
         FolderByMonths,
         FolderByYears
     };

@@ -41,7 +41,7 @@
 #include "pimcommon_export.h"
 
 class OrgKdeAkonadiImapSettingsInterface;
-
+class QWidget;
 
 #define IMAP_RESOURCE_IDENTIFIER QLatin1String("akonadi_imap_resource")
 
@@ -54,7 +54,8 @@ namespace PimCommon {
 namespace Util {
 
 PIMCOMMON_EXPORT OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
-
+PIMCOMMON_EXPORT void saveTextAs( const QString &text, const QString &filter, QWidget *parent );
+PIMCOMMON_EXPORT bool saveToFile( const QString &filename, const QString &text );
 }
 
 }
