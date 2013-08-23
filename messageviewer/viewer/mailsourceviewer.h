@@ -88,8 +88,6 @@ private slots:
     void slotSaveAs();
 signals:
     void findText();
-private:
-    bool saveToFile( const QString &filename );
 };
 
 namespace HTMLPrettyFormatter

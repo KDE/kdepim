@@ -33,9 +33,9 @@
 
 #include "mailsourceviewer.h"
 #include "utils/util.h"
-#include "errno.h"
 #include "findbar/findbarsourceview.h"
 #include "kpimtextedit/htmlhighlighter.h"
+#include "pimcommon/util/pimutil.h"
 #include <kiconloader.h>
 #include <KLocalizedString>
 #include <kstandardguiitem.h>
@@ -132,36 +132,7 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
 void MailSourceViewTextBrowser::slotSaveAs()
 {
     KUrl url;
-    QPointer<KFileDialog> fdlg( new KFileDialog( url, QString(), this) );
-    fdlg->setMode( KFile::File );
-    fdlg->setOperationMode( KFileDialog::Saving );
-    fdlg->setConfirmOverwrite(true);
-    if ( fdlg->exec() == QDialog::Accepted && fdlg )
-    {
-        const QString fileName = fdlg->selectedFile();
-        if ( !saveToFile( fileName ) )
-        {
-            KMessageBox::error( this,
-                                i18n( "Could not write the file %1:\n"
-                                      "\"%2\" is the detailed error description.",
-                                      fileName,
-                                      QString::fromLocal8Bit( strerror( errno ) ) ),
-                                i18n( "View Source Error" ) );
-        }
-    }
-    delete fdlg;
-
-}
-
-bool MailSourceViewTextBrowser::saveToFile( const QString &filename )
-{
-    QFile file( filename );
-    if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
-        return false;
-    QTextStream out(&file);
-    out.setCodec("UTF-8");
-    out << toPlainText();
-    return true;
+    PimCommon::Util::saveTextAs( toPlainText(), QString(), this );
 }
 
 void MailSourceViewTextBrowser::slotSpeakText()

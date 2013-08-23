@@ -37,7 +37,6 @@ private:
     void writeConfig();
 
 private:
-    bool saveToFile( const QString &filename );
     KTextEdit *mTextEdit;
 };
 

@@ -130,9 +130,6 @@ MAILCOMMON_EXPORT bool foundMailer();
 MAILCOMMON_EXPORT bool isLocalCollection( const QString &resource );
 
 MAILCOMMON_EXPORT bool ignoreNewMailInFolder(const Akonadi::Collection &collection);
-
-MAILCOMMON_EXPORT void saveTextAs( const QString &text, const QString &filter, QWidget *parent);
-MAILCOMMON_EXPORT bool saveToFile( const QString &filename, const QString &text );
 }
 
 }

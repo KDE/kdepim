@@ -89,10 +89,8 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KTemporaryFile>
-#include <KFileDialog>
 #include <KIO/JobUiDelegate>
 
-#include <errno.h>
 
 OrgKdeAkonadiPOP3SettingsInterface *MailCommon::Util::createPop3SettingsInterface(
         const QString &ident )
@@ -666,39 +664,5 @@ bool MailCommon::Util::foundMailer()
         }
     }
     return false;
-}
-
-void MailCommon::Util::saveTextAs( const QString &text, const QString &filter, QWidget *parent )
-{
-    KUrl url;
-    QPointer<KFileDialog> fdlg( new KFileDialog( url, filter, parent) );
-
-    fdlg->setMode( KFile::File );
-    fdlg->setOperationMode( KFileDialog::Saving );
-    fdlg->setConfirmOverwrite(true);
-    if ( fdlg->exec() == QDialog::Accepted && fdlg ) {
-        const QString fileName = fdlg->selectedFile();
-        if ( !saveToFile( fileName, text ) ) {
-            KMessageBox::error( parent,
-                                i18n( "Could not write the file %1:\n"
-                                      "\"%2\" is the detailed error description.",
-                                      fileName,
-                                      QString::fromLocal8Bit( strerror( errno ) ) ),
-                                i18n( "Sieve Editor Error" ) );
-        }
-    }
-    delete fdlg;
-}
-
-bool MailCommon::Util::saveToFile( const QString &filename, const QString &text )
-{
-    QFile file( filename );
-    if ( !file.open( QIODevice::WriteOnly|QIODevice::Text ) )
-        return false;
-    QTextStream out(&file);
-    out.setCodec("UTF-8");
-    out << text;
-    file.close();
-    return true;
 }
 

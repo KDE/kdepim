@@ -39,7 +39,6 @@ private Q_SLOTS:
     void slotSave();
 
 private:
-    bool saveToFile( const QString &filename );
     void readConfig();
     void writeConfig();
     KTextEdit *mEditor;

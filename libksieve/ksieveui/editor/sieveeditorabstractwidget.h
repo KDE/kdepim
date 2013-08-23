@@ -38,7 +38,6 @@ public Q_SLOTS:
 
 private:
     bool loadFromFile( const QString &filename );
-    bool saveToFile( const QString &filename );
 };
 }
 
