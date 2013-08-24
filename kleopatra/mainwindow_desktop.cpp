@@ -423,15 +423,15 @@ void MainWindow::showEvent( QShowEvent * e ) {
         d->firstShow = false;
     }
 
-    if ( previousGeometry.isValid() ) {
-        setGeometry( previousGeometry );
+    if ( !savedGeometry.isEmpty() ) {
+        restoreGeometry( savedGeometry );
     }
 
 }
 
 void MainWindow::hideEvent( QHideEvent * e )
 {
-    previousGeometry = geometry();
+    savedGeometry = saveGeometry();
     KXmlGuiWindow::hideEvent( e );
 }
 
@@ -521,9 +521,9 @@ void MainWindow::readProperties( const KConfigGroup & cg )
 {
     kDebug();
     KXmlGuiWindow::readProperties(cg);
-    previousGeometry = cg.readEntry<QRect>("geometry", QRect() );
-    if ( previousGeometry.isValid() ) {
-        setGeometry( previousGeometry );
+    savedGeometry = cg.readEntry<QByteArray>("savedGeometry", QByteArray() );
+    if ( !savedGeometry.isEmpty() ) {
+        restoreGeometry( savedGeometry );
     }
 
     if (! cg.readEntry<bool>("hidden", false))
@@ -536,9 +536,9 @@ void MainWindow::saveProperties( KConfigGroup & cg )
     KXmlGuiWindow::saveProperties( cg );
     cg.writeEntry( "hidden", isHidden() );
     if ( isHidden() ) {
-        cg.writeEntry( "geometry", previousGeometry );
+        cg.writeEntry( "savedGeometry", savedGeometry );
     } else {
-        cg.writeEntry( "geometry", geometry() );
+        cg.writeEntry( "savedGeometry", saveGeometry() );
     }
 }
 

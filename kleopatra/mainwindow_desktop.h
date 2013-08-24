@@ -47,7 +47,7 @@ public Q_SLOTS:
     void importCertificatesFromFile( const QStringList & files );
 
 protected:
-    QRect previousGeometry;
+    QByteArray savedGeometry;
 
     void closeEvent( QCloseEvent * e );
     void showEvent( QShowEvent * e );
