@@ -483,15 +483,12 @@ void CalendarJanitor::sanityCheck8()
         m_counts[incidence->type()]++;
 
         if (incidenceIsOld(incidence)) {
-
             if (!incidence->alarms().isEmpty())
                 numOldAlarms++;
-
             numOldIncidences++;
         }
 
         numAttachments += incidence->attachments().count();
-        numOldAlarms += incidence->alarms().count();
     }
 
     printStat(i18n("Events"), m_counts[KCalCore::Incidence::TypeEvent]);
