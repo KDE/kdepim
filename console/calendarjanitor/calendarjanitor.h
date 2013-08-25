@@ -28,6 +28,7 @@
 #include <KCalCore/Incidence>
 
 #include <Akonadi/Calendar/IncidenceChanger>
+#include <Akonadi/Calendar/FetchJobCalendar>
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 #include <QObject>
@@ -51,7 +52,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void onCollectionsFetched(bool success);
-    void onItemsFetched(KJob *job);
+    void onItemsFetched(bool success, const QString &errorMessage);
     void onModifyFinished(int changeId, const Akonadi::Item &item,
                           Akonadi::IncidenceChanger::ResultCode resultCode, const QString &errorMessage);
     void onDeleteFinished(int changeId, const QVector<Akonadi::Item::Id> &,
@@ -73,10 +74,11 @@ private Q_SLOTS:
 
     void stripOldAlarms();
 
-    void printFound(const Akonadi::Item &item);
+    void printFound(const Akonadi::Item &item, const QString &explanation = QString());
 
     void beginTest(const QString &message);
-    void endTest(bool print = true);
+    void endTest(bool print = true, const QString fixExplanation = QString(),
+                 const QString &fixExplanation2 = QString());
 
     void deleteIncidence(const Akonadi::Item &item);
 
@@ -101,6 +103,8 @@ private:
     QString m_summary; // to print at the end.
     QMultiMap<QString, KCalCore::Incidence::Ptr> m_incidenceMap;
     QMap<KCalCore::Incidence::Ptr, Akonadi::Item> m_incidenceToItem;
+
+    Akonadi::FetchJobCalendar::Ptr m_calendar;
 };
 
 #endif // CALENDARJANITOR_H

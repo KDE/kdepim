@@ -25,9 +25,6 @@
 
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-
 #include <KCalCore/Attachment>
 #include <KCalCore/Alarm>
 #include <KCalCore/Event>
@@ -102,6 +99,7 @@ void CalendarJanitor::start()
 void CalendarJanitor::onCollectionsFetched(bool success)
 {
     if (!success) {
+        print(i18n("Error while fetching collections"));
         emit finished(false);
         qApp->exit(-1);
         return;
@@ -113,32 +111,27 @@ void CalendarJanitor::onCollectionsFetched(bool success)
     }
 
     if (m_collectionsToProcess.isEmpty()) {
-        print(i18n("There are no collection to process!"));
+        print(i18n("There are no collections to process!"));
         qApp->exit((-1));
         return;
-    } else {
-        processNextCollection();
     }
+
+    // Load all items:
+    m_calendar = Akonadi::FetchJobCalendar::Ptr(new Akonadi::FetchJobCalendar());
+    connect(m_calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onItemsFetched(bool,QString)));
 }
 
-void CalendarJanitor::onItemsFetched(KJob *job)
+void CalendarJanitor::onItemsFetched(bool success, const QString &errorMessage)
 {
-    Akonadi::ItemFetchJob *ifj = qobject_cast<Akonadi::ItemFetchJob *>(job);
-    Q_ASSERT(ifj);
-    m_itemsToProcess = ifj->items();
-    if (m_itemsToProcess.isEmpty()) {
-        print(i18n("Collection is empty, ignoring it."));
-        processNextCollection();
-    } else {
-        m_incidenceMap.clear();
-        foreach (const Akonadi::Item &item, m_itemsToProcess) {
-            KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
-            Q_ASSERT(incidence);
-            m_incidenceMap.insert(incidence->instanceIdentifier(), incidence);
-            m_incidenceToItem.insert(incidence, item);
-        }
-        runNextTest();
+    if (!success) {
+        print(errorMessage);
+        emit finished(false);
+        qApp->exit(-1);
+        return;
     }
+
+    // Start processing collections
+    processNextCollection();
 }
 
 void CalendarJanitor::onModifyFinished(int changeId, const Akonadi::Item &item,
@@ -202,9 +195,20 @@ void CalendarJanitor::processNextCollection()
         }
     }
 
-    Akonadi::ItemFetchJob *ifj = new Akonadi::ItemFetchJob(m_currentCollection, this);
-    ifj->fetchScope().fetchFullPayload(true);
-    connect(ifj, SIGNAL(result(KJob*)), SLOT(onItemsFetched(KJob*)));
+    m_itemsToProcess = m_calendar->items(m_currentCollection.id());
+    if (m_itemsToProcess.isEmpty()) {
+        print(i18n("Collection is empty, ignoring it."));
+        processNextCollection();
+    } else {
+        m_incidenceMap.clear();
+        foreach (const Akonadi::Item &item, m_itemsToProcess) {
+            KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
+            Q_ASSERT(incidence);
+            m_incidenceMap.insert(incidence->instanceIdentifier(), incidence);
+            m_incidenceToItem.insert(incidence, item);
+        }
+        runNextTest();
+    }
 }
 
 void CalendarJanitor::runNextTest()
@@ -240,8 +244,7 @@ void CalendarJanitor::runNextTest()
         sanityCheck5();
         break;
     case Options::CheckOrphans:
-        //sanityCheck6(); // Disabled for now
-        runNextTest();
+        sanityCheck6();
         break;
     case Options::CheckDuplicateUIDs:
         sanityCheck7();
@@ -365,7 +368,7 @@ void CalendarJanitor::sanityCheck4()
 
 void CalendarJanitor::sanityCheck5()
 {
-    beginTest(i18n("Checking for journal with invalid DTSTART..."));
+    beginTest(i18n("Checking for journals with invalid DTSTART..."));
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         if (incidence->type() != KCalCore::Incidence::TypeJournal)
@@ -390,8 +393,8 @@ void CalendarJanitor::sanityCheck6()
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         const QString parentUid = incidence->relatedTo();
-        if (!parentUid.isEmpty() && !m_incidenceMap.contains(parentUid)) {
-            printFound(item);
+        if (!parentUid.isEmpty() && !m_calendar->incidence(parentUid)) {
+            printFound(item, i18n("The following incidences are children of nonexistent parents"));
             if (m_fixingEnabled) {
                 incidence->setRelatedTo(QString());
                 m_changer->modifyIncidence(item);
@@ -400,7 +403,7 @@ void CalendarJanitor::sanityCheck6()
         }
     }
 
-    endTest();
+    endTest(true, i18n("In fix mode these children will be unparented."), i18n("Children were successfully unparented."));
 }
 
 void CalendarJanitor::sanityCheck7()
@@ -493,7 +496,7 @@ void CalendarJanitor::sanityCheck8()
 
     printStat(i18n("Events"), m_counts[KCalCore::Incidence::TypeEvent]);
     printStat(i18n("Todos"), m_counts[KCalCore::Incidence::TypeTodo]);
-    printStat(i18n("Journal"), m_counts[KCalCore::Incidence::TypeJournal]);
+    printStat(i18n("Journals"), m_counts[KCalCore::Incidence::TypeJournal]);
     printStat(i18n("Passed events and to-dos (>365 days)"), numOldIncidences);
     printStat(i18n("Old incidences with alarms"), numOldAlarms);
     printStat(i18n("Inline attachments"), numAttachments);
@@ -548,13 +551,19 @@ static QString dateString(const KCalCore::Incidence::Ptr &incidence)
     return str;
 }
 
-void CalendarJanitor::printFound(const Akonadi::Item &item)
+void CalendarJanitor::printFound(const Akonadi::Item &item, const QString &explanation)
 {
     KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
     m_numDamaged++;
-    if (m_numDamaged == 1)
+    if (m_numDamaged == 1) {
         print(QLatin1String(" [!!]"));
-    print(QLatin1String("    * ") + i18n("Found buggy item:"));
+        if (!explanation.isEmpty()) {
+            print(QLatin1String("    "), false);
+            print(explanation, false);
+            print(QLatin1String(":\n"));
+        }
+    }
+    print(QLatin1String("    * ") + i18n("Found buggy incidence:"));
     print(QLatin1String("        ") + i18n("id=%1; summary=\"%2\"", item.id(), incidence->summary()));
     print(QLatin1String("        ") + dateString(incidence));
 }
@@ -566,10 +575,18 @@ void CalendarJanitor::beginTest(const QString &message)
     print(message.leftJustified(TEXT_WIDTH), false);
 }
 
-void CalendarJanitor::endTest(bool printEnabled)
+void CalendarJanitor::endTest(bool printEnabled, const QString fixExplanation, const QString &fixExplanation2)
 {
     if (m_numDamaged == 0 && printEnabled) {
         print(QLatin1String(" [OK]"));
+    } else if (m_numDamaged > 0) {
+        print(QLatin1String("\n    "), false);
+        if (m_options.action() == Options::ActionScanAndFix)
+            print(fixExplanation2);
+        else
+            print(fixExplanation);
+
+        print(QString());
     }
 
     if (m_pendingDeletions == 0 && m_pendingModifications == 0) {
