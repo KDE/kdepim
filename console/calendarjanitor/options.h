@@ -39,6 +39,7 @@ public:
         CheckJournalDates,    // Check for journals without DTSTART
         CheckOrphans,         // Check for orphan to-dos. Will be unparented." <disabled for now>
         CheckDuplicateUIDs,   // Check for duplicated UIDs. Copies will be deleted if the payload is the same. Otherwise a new UID is assigned.
+        CheckOrphanRecurId,   // Check if incidences with recurrence id belong to an nonexistant master incidence
         CheckStats,           // Gathers some statistics. No fixing is done.
         CheckCount            // For iteration purposes. Keep at end.
     };

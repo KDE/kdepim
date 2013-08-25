@@ -39,7 +39,7 @@
 #include <QTextStream>
 #include <QCoreApplication>
 
-#define TEXT_WIDTH 70
+#define TEXT_WIDTH 75
 
 static void print(const QString &message, bool newline = true)
 {
@@ -251,6 +251,9 @@ void CalendarJanitor::runNextTest()
         break;
     case Options::CheckStats:
         sanityCheck8();
+        break;
+    case Options::CheckOrphanRecurId:
+        sanityCheck9();
         break;
     case Options::CheckCount:
         processNextCollection();
@@ -508,6 +511,53 @@ void CalendarJanitor::sanityCheck8()
     }
 
     endTest(/**print=*/false);
+}
+
+void CalendarJanitor::sanityCheck9()
+{
+    beginTest(i18n("Checking for RECURRING-ID incidences with nonexistant master incidence..."));
+    foreach (const Akonadi::Item &item, m_itemsToProcess) {
+        KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
+        if (incidence->recurs() && incidence->hasRecurrenceId() && !m_calendar->incidence(incidence->uid())) {
+            printFound(item);
+            if (m_fixingEnabled) {
+                bool modified = false;
+
+                KDateTime recId = incidence->recurrenceId();
+                KDateTime start = incidence->dtStart();
+                KDateTime end   = incidence->dateTime(KCalCore::Incidence::RoleEnd);
+
+                KCalCore::Event::Ptr event = incidence.dynamicCast<KCalCore::Event>();
+                KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>();
+
+                if (event && start.isValid() && end.isValid()) {
+                    modified = true;
+                    const int duration = start.daysTo(end.toTimeSpec(start.timeSpec()));
+                    incidence->setDtStart(recId);
+                    event->setDtEnd(recId.addDays(duration));
+                } else if (todo && start.isValid()) {
+                    modified = true;
+                    incidence->setDtStart(recId);
+
+                    if (end.isValid()) {
+                        const int duration = start.daysTo(end.toTimeSpec(start.timeSpec()));
+                        todo->setDtDue(recId.addDays(duration));
+                    }
+                }
+
+                if (modified) {
+                    m_pendingModifications++;
+                    incidence->recreate(); // change uid
+                    incidence->clearRecurrence(); // make it non-recurring
+                    incidence->setRecurrenceId(KDateTime());
+                    m_changer->modifyIncidence(item);
+                }
+            }
+        }
+    }
+
+    endTest(true, i18n("In fix mode the RECURRING-ID property will be unset and UID changed."),
+            i18n("Recurrence cleared."));
 }
 
 void CalendarJanitor::stripOldAlarms()

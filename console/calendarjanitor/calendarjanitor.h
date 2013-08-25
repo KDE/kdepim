@@ -71,6 +71,7 @@ private Q_SLOTS:
     void sanityCheck6();
     void sanityCheck7();
     void sanityCheck8();
+    void sanityCheck9();
 
     void stripOldAlarms();
 
