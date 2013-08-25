@@ -74,10 +74,11 @@ private Q_SLOTS:
 
     void stripOldAlarms();
 
-    void printFound(const Akonadi::Item &item);
+    void printFound(const Akonadi::Item &item, const QString &explanation = QString());
 
     void beginTest(const QString &message);
-    void endTest(bool print = true);
+    void endTest(bool print = true, const QString fixExplanation = QString(),
+                 const QString &fixExplanation2 = QString());
 
     void deleteIncidence(const Akonadi::Item &item);
 
