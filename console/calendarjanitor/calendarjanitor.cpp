@@ -25,9 +25,6 @@
 
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-
 #include <KCalCore/Attachment>
 #include <KCalCore/Alarm>
 #include <KCalCore/Event>
@@ -102,6 +99,7 @@ void CalendarJanitor::start()
 void CalendarJanitor::onCollectionsFetched(bool success)
 {
     if (!success) {
+        print(i18n("Error while fetching collections"));
         emit finished(false);
         qApp->exit(-1);
         return;
@@ -113,32 +111,27 @@ void CalendarJanitor::onCollectionsFetched(bool success)
     }
 
     if (m_collectionsToProcess.isEmpty()) {
-        print(i18n("There are no collection to process!"));
+        print(i18n("There are no collections to process!"));
         qApp->exit((-1));
         return;
-    } else {
-        processNextCollection();
     }
+
+    // Load all items:
+    m_calendar = Akonadi::FetchJobCalendar::Ptr(new Akonadi::FetchJobCalendar());
+    connect(m_calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onItemsFetched(bool,QString)));
 }
 
-void CalendarJanitor::onItemsFetched(KJob *job)
+void CalendarJanitor::onItemsFetched(bool success, const QString &errorMessage)
 {
-    Akonadi::ItemFetchJob *ifj = qobject_cast<Akonadi::ItemFetchJob *>(job);
-    Q_ASSERT(ifj);
-    m_itemsToProcess = ifj->items();
-    if (m_itemsToProcess.isEmpty()) {
-        print(i18n("Collection is empty, ignoring it."));
-        processNextCollection();
-    } else {
-        m_incidenceMap.clear();
-        foreach (const Akonadi::Item &item, m_itemsToProcess) {
-            KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
-            Q_ASSERT(incidence);
-            m_incidenceMap.insert(incidence->instanceIdentifier(), incidence);
-            m_incidenceToItem.insert(incidence, item);
-        }
-        runNextTest();
+    if (!success) {
+        print(errorMessage);
+        emit finished(false);
+        qApp->exit(-1);
+        return;
     }
+
+    // Start processing collections
+    processNextCollection();
 }
 
 void CalendarJanitor::onModifyFinished(int changeId, const Akonadi::Item &item,
@@ -202,9 +195,20 @@ void CalendarJanitor::processNextCollection()
         }
     }
 
-    Akonadi::ItemFetchJob *ifj = new Akonadi::ItemFetchJob(m_currentCollection, this);
-    ifj->fetchScope().fetchFullPayload(true);
-    connect(ifj, SIGNAL(result(KJob*)), SLOT(onItemsFetched(KJob*)));
+    m_itemsToProcess = m_calendar->items(m_currentCollection.id());
+    if (m_itemsToProcess.isEmpty()) {
+        print(i18n("Collection is empty, ignoring it."));
+        processNextCollection();
+    } else {
+        m_incidenceMap.clear();
+        foreach (const Akonadi::Item &item, m_itemsToProcess) {
+            KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
+            Q_ASSERT(incidence);
+            m_incidenceMap.insert(incidence->instanceIdentifier(), incidence);
+            m_incidenceToItem.insert(incidence, item);
+        }
+        runNextTest();
+    }
 }
 
 void CalendarJanitor::runNextTest()
