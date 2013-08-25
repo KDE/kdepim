@@ -369,7 +369,7 @@ void CalendarJanitor::sanityCheck4()
 
 void CalendarJanitor::sanityCheck5()
 {
-    beginTest(i18n("Checking for journal with invalid DTSTART..."));
+    beginTest(i18n("Checking for journals with invalid DTSTART..."));
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         if (incidence->type() != KCalCore::Incidence::TypeJournal)
@@ -497,7 +497,7 @@ void CalendarJanitor::sanityCheck8()
 
     printStat(i18n("Events"), m_counts[KCalCore::Incidence::TypeEvent]);
     printStat(i18n("Todos"), m_counts[KCalCore::Incidence::TypeTodo]);
-    printStat(i18n("Journal"), m_counts[KCalCore::Incidence::TypeJournal]);
+    printStat(i18n("Journals"), m_counts[KCalCore::Incidence::TypeJournal]);
     printStat(i18n("Passed events and to-dos (>365 days)"), numOldIncidences);
     printStat(i18n("Old incidences with alarms"), numOldAlarms);
     printStat(i18n("Inline attachments"), numAttachments);
