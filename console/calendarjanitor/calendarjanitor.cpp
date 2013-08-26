@@ -25,9 +25,6 @@
 
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-
 #include <KCalCore/Attachment>
 #include <KCalCore/Alarm>
 #include <KCalCore/Event>
@@ -42,7 +39,7 @@
 #include <QTextStream>
 #include <QCoreApplication>
 
-#define TEXT_WIDTH 70
+#define TEXT_WIDTH 75
 
 static void print(const QString &message, bool newline = true)
 {
@@ -64,12 +61,26 @@ static bool collectionIsReadOnly(const Akonadi::Collection &collection)
            !(collection.rights() & Akonadi::Collection::CanDeleteItem);
 }
 
+static bool incidenceIsOld(const KCalCore::Incidence::Ptr &incidence)
+{
+    if (incidence->recurs() || incidence->type() == KCalCore::Incidence::TypeJournal)
+        return false;
+
+    KDateTime datetime = incidence->dtStart();
+    if (!datetime.isValid() && incidence->type() == KCalCore::Incidence::TypeTodo) {
+        datetime = incidence->dateTime(KCalCore::Incidence::RoleEnd);
+    }
+
+    return datetime.isValid() && datetime.daysTo(KDateTime::currentDateTime(KDateTime::LocalZone)) > 365;
+}
+
 CalendarJanitor::CalendarJanitor(const Options &options, QObject *parent) : QObject(parent)
                                                                           , m_collectionLoader(new CollectionLoader(this))
                                                                           , m_options(options)
                                                                           , m_currentSanityCheck(Options::CheckNone)
                                                                           , m_pendingModifications(0)
                                                                           , m_pendingDeletions(0)
+                                                                          , m_strippingOldAlarms(false)
 {
     m_changer = new Akonadi::IncidenceChanger(this);
     m_changer->setShowDialogsOnError(false);
@@ -88,6 +99,7 @@ void CalendarJanitor::start()
 void CalendarJanitor::onCollectionsFetched(bool success)
 {
     if (!success) {
+        print(i18n("Error while fetching collections"));
         emit finished(false);
         qApp->exit(-1);
         return;
@@ -99,31 +111,27 @@ void CalendarJanitor::onCollectionsFetched(bool success)
     }
 
     if (m_collectionsToProcess.isEmpty()) {
-        print(i18n("There are no collection to process!"));
+        print(i18n("There are no collections to process!"));
         qApp->exit((-1));
         return;
-    } else {
-        processNextCollection();
     }
+
+    // Load all items:
+    m_calendar = Akonadi::FetchJobCalendar::Ptr(new Akonadi::FetchJobCalendar());
+    connect(m_calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onItemsFetched(bool,QString)));
 }
 
-void CalendarJanitor::onItemsFetched(KJob *job)
+void CalendarJanitor::onItemsFetched(bool success, const QString &errorMessage)
 {
-    Akonadi::ItemFetchJob *ifj = qobject_cast<Akonadi::ItemFetchJob *>(job);
-    Q_ASSERT(ifj);
-    m_itemsToProcess = ifj->items();
-    if (m_itemsToProcess.isEmpty()) {
-        print(i18n("Collection is empty, ignoring it."));
-    } else {
-        m_incidenceMap.clear();
-        foreach (const Akonadi::Item &item, m_itemsToProcess) {
-            KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
-            Q_ASSERT(incidence);
-            m_incidenceMap.insert(incidence->instanceIdentifier(), incidence);
-            m_incidenceToItem.insert(incidence, item);
-        }
-        runNextTest();
+    if (!success) {
+        print(errorMessage);
+        emit finished(false);
+        qApp->exit(-1);
+        return;
     }
+
+    // Start processing collections
+    processNextCollection();
 }
 
 void CalendarJanitor::onModifyFinished(int changeId, const Akonadi::Item &item,
@@ -135,7 +143,9 @@ void CalendarJanitor::onModifyFinished(int changeId, const Akonadi::Item &item,
         bailOut();
         return;
     }
-    print(i18n("Fixed item %1", item.id()));
+    if (!m_options.stripOldAlarms())
+        print(i18n("Fixed item %1", item.id()));
+
     m_pendingModifications--;
     if (m_pendingModifications == 0) {
         runNextTest();
@@ -162,6 +172,7 @@ void CalendarJanitor::processNextCollection()
 {
     m_itemsToProcess.clear();
     m_currentSanityCheck = Options::CheckNone;
+    m_strippingOldAlarms = false;
 
     if (m_collectionsToProcess.isEmpty()) {
         print(QLatin1Char('\n') + QString().leftJustified(TEXT_WIDTH, QLatin1Char('*')));
@@ -174,19 +185,48 @@ void CalendarJanitor::processNextCollection()
     print(QLatin1Char('\n') + QString().leftJustified(TEXT_WIDTH, QLatin1Char('*')));
     print(i18n("Processing collection %1 (id=%2) ...", m_currentCollection.displayName(), m_currentCollection.id()));
 
-    if (collectionIsReadOnly(m_currentCollection) && m_options.action() == Options::ActionScanAndFix) {
-        print(i18n("Collection is read only, disabling fix mode."));
+    if (collectionIsReadOnly(m_currentCollection)) {
+        if (m_options.action() == Options::ActionScanAndFix) {
+            print(i18n("Collection is read only, disabling fix mode."));
+        } else if (m_options.stripOldAlarms()) {
+            print(i18n("Collection is read only, skipping it."));
+            processNextCollection();
+            return;
+        }
     }
 
-    Akonadi::ItemFetchJob *ifj = new Akonadi::ItemFetchJob(m_currentCollection, this);
-    ifj->fetchScope().fetchFullPayload(true);
-    connect(ifj, SIGNAL(result(KJob*)), SLOT(onItemsFetched(KJob*)));
+    m_itemsToProcess = m_calendar->items(m_currentCollection.id());
+    if (m_itemsToProcess.isEmpty()) {
+        print(i18n("Collection is empty, ignoring it."));
+        processNextCollection();
+    } else {
+        m_incidenceMap.clear();
+        foreach (const Akonadi::Item &item, m_itemsToProcess) {
+            KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
+            Q_ASSERT(incidence);
+            m_incidenceMap.insert(incidence->instanceIdentifier(), incidence);
+            m_incidenceToItem.insert(incidence, item);
+        }
+        runNextTest();
+    }
 }
 
 void CalendarJanitor::runNextTest()
 {
+    if (m_options.stripOldAlarms()) {
+        if (!m_strippingOldAlarms) {
+            m_strippingOldAlarms = true;
+            stripOldAlarms();
+        } else {
+            processNextCollection();
+        }
+
+        return;
+    }
+
     int currentType = static_cast<int>(m_currentSanityCheck);
     m_currentSanityCheck = static_cast<Options::SanityCheck>(currentType+1);
+
     switch(m_currentSanityCheck) {
     case Options::CheckEmptySummary:
         sanityCheck1();
@@ -204,14 +244,16 @@ void CalendarJanitor::runNextTest()
         sanityCheck5();
         break;
     case Options::CheckOrphans:
-        //sanityCheck6(); // Disabled for now
-        runNextTest();
+        sanityCheck6();
         break;
     case Options::CheckDuplicateUIDs:
         sanityCheck7();
         break;
     case Options::CheckStats:
         sanityCheck8();
+        break;
+    case Options::CheckOrphanRecurId:
+        sanityCheck9();
         break;
     case Options::CheckCount:
         processNextCollection();
@@ -329,7 +371,7 @@ void CalendarJanitor::sanityCheck4()
 
 void CalendarJanitor::sanityCheck5()
 {
-    beginTest(i18n("Checking for journal with invalid DTSTART..."));
+    beginTest(i18n("Checking for journals with invalid DTSTART..."));
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         if (incidence->type() != KCalCore::Incidence::TypeJournal)
@@ -354,8 +396,8 @@ void CalendarJanitor::sanityCheck6()
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
         KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
         const QString parentUid = incidence->relatedTo();
-        if (!parentUid.isEmpty() && !m_incidenceMap.contains(parentUid)) {
-            printFound(item);
+        if (!parentUid.isEmpty() && !m_calendar->incidence(parentUid)) {
+            printFound(item, i18n("The following incidences are children of nonexistent parents"));
             if (m_fixingEnabled) {
                 incidence->setRelatedTo(QString());
                 m_changer->modifyIncidence(item);
@@ -364,7 +406,7 @@ void CalendarJanitor::sanityCheck6()
         }
     }
 
-    endTest();
+    endTest(true, i18n("In fix mode these children will be unparented."), i18n("Children were successfully unparented."));
 }
 
 void CalendarJanitor::sanityCheck7()
@@ -446,23 +488,18 @@ void CalendarJanitor::sanityCheck8()
 
         m_counts[incidence->type()]++;
 
-        if (incidence->dtStart().isValid() && !incidence->recurs()          &&
-            incidence->dtStart().daysTo(KDateTime::currentDateTime(KDateTime::LocalZone)) > 365 &&
-            incidence->type() != KCalCore::Incidence::TypeJournal) {
-
+        if (incidenceIsOld(incidence)) {
             if (!incidence->alarms().isEmpty())
                 numOldAlarms++;
-
             numOldIncidences++;
         }
 
         numAttachments += incidence->attachments().count();
-        numOldAlarms += incidence->alarms().count();
     }
 
     printStat(i18n("Events"), m_counts[KCalCore::Incidence::TypeEvent]);
     printStat(i18n("Todos"), m_counts[KCalCore::Incidence::TypeTodo]);
-    printStat(i18n("Journal"), m_counts[KCalCore::Incidence::TypeJournal]);
+    printStat(i18n("Journals"), m_counts[KCalCore::Incidence::TypeJournal]);
     printStat(i18n("Passed events and to-dos (>365 days)"), numOldIncidences);
     printStat(i18n("Old incidences with alarms"), numOldAlarms);
     printStat(i18n("Inline attachments"), numAttachments);
@@ -474,6 +511,69 @@ void CalendarJanitor::sanityCheck8()
     }
 
     endTest(/**print=*/false);
+}
+
+void CalendarJanitor::sanityCheck9()
+{
+    beginTest(i18n("Checking for RECURRING-ID incidences with nonexistant master incidence..."));
+    foreach (const Akonadi::Item &item, m_itemsToProcess) {
+        KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
+        if (incidence->recurs() && incidence->hasRecurrenceId() && !m_calendar->incidence(incidence->uid())) {
+            printFound(item);
+            if (m_fixingEnabled) {
+                bool modified = false;
+
+                KDateTime recId = incidence->recurrenceId();
+                KDateTime start = incidence->dtStart();
+                KDateTime end   = incidence->dateTime(KCalCore::Incidence::RoleEnd);
+
+                KCalCore::Event::Ptr event = incidence.dynamicCast<KCalCore::Event>();
+                KCalCore::Todo::Ptr todo = incidence.dynamicCast<KCalCore::Todo>();
+
+                if (event && start.isValid() && end.isValid()) {
+                    modified = true;
+                    const int duration = start.daysTo(end.toTimeSpec(start.timeSpec()));
+                    incidence->setDtStart(recId);
+                    event->setDtEnd(recId.addDays(duration));
+                } else if (todo && start.isValid()) {
+                    modified = true;
+                    incidence->setDtStart(recId);
+
+                    if (end.isValid()) {
+                        const int duration = start.daysTo(end.toTimeSpec(start.timeSpec()));
+                        todo->setDtDue(recId.addDays(duration));
+                    }
+                }
+
+                if (modified) {
+                    m_pendingModifications++;
+                    incidence->recreate(); // change uid
+                    incidence->clearRecurrence(); // make it non-recurring
+                    incidence->setRecurrenceId(KDateTime());
+                    m_changer->modifyIncidence(item);
+                }
+            }
+        }
+    }
+
+    endTest(true, i18n("In fix mode the RECURRING-ID property will be unset and UID changed."),
+            i18n("Recurrence cleared."));
+}
+
+void CalendarJanitor::stripOldAlarms()
+{
+    beginTest(i18n("Deleting alarms older than 365 days..."));
+
+    foreach (const Akonadi::Item &item, m_itemsToProcess) {
+        KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
+        if (!incidence->alarms().isEmpty() && incidenceIsOld(incidence)) {
+            incidence->clearAlarms();
+            m_pendingModifications++;
+            m_changer->modifyIncidence(item);
+        }
+    }
+
+    endTest();
 }
 
 static QString dateString(const KCalCore::Incidence::Ptr &incidence)
@@ -501,13 +601,19 @@ static QString dateString(const KCalCore::Incidence::Ptr &incidence)
     return str;
 }
 
-void CalendarJanitor::printFound(const Akonadi::Item &item)
+void CalendarJanitor::printFound(const Akonadi::Item &item, const QString &explanation)
 {
     KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
     m_numDamaged++;
-    if (m_numDamaged == 1)
+    if (m_numDamaged == 1) {
         print(QLatin1String(" [!!]"));
-    print(QLatin1String("    * ") + i18n("Found buggy item:"));
+        if (!explanation.isEmpty()) {
+            print(QLatin1String("    "), false);
+            print(explanation, false);
+            print(QLatin1String(":\n"));
+        }
+    }
+    print(QLatin1String("    * ") + i18n("Found buggy incidence:"));
     print(QLatin1String("        ") + i18n("id=%1; summary=\"%2\"", item.id(), incidence->summary()));
     print(QLatin1String("        ") + dateString(incidence));
 }
@@ -519,10 +625,18 @@ void CalendarJanitor::beginTest(const QString &message)
     print(message.leftJustified(TEXT_WIDTH), false);
 }
 
-void CalendarJanitor::endTest(bool printEnabled)
+void CalendarJanitor::endTest(bool printEnabled, const QString fixExplanation, const QString &fixExplanation2)
 {
     if (m_numDamaged == 0 && printEnabled) {
         print(QLatin1String(" [OK]"));
+    } else if (m_numDamaged > 0) {
+        print(QLatin1String("\n    "), false);
+        if (m_options.action() == Options::ActionScanAndFix)
+            print(fixExplanation2);
+        else
+            print(fixExplanation);
+
+        print(QString());
     }
 
     if (m_pendingDeletions == 0 && m_pendingModifications == 0) {

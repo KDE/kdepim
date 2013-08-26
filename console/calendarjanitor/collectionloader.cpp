@@ -53,15 +53,14 @@ Akonadi::Collection::List CollectionLoader::collections() const
 void CollectionLoader::onCollectionsLoaded(KJob *job)
 {
     if (job->error() == 0) {
-        QSet<QString> mimeTypeSet = KCalCore::Incidence::mimeTypes().toSet();
         Akonadi::CollectionFetchJob *cfj = qobject_cast<Akonadi::CollectionFetchJob*>(job);
         Q_ASSERT(cfj);
         foreach(const Akonadi::Collection &collection, cfj->collections()) {
+            QSet<QString> mimeTypeSet = KCalCore::Incidence::mimeTypes().toSet();
             if (!mimeTypeSet.intersect(collection.contentMimeTypes().toSet()).isEmpty()) {
                 m_collections << collection;
             }
         }
-
         emit loaded(true);
     } else {
         kError() << job->errorString();
