@@ -1635,12 +1635,12 @@ configuring your signature.</para></listitem>
 <link linkend="configure-identity-signature">Configure Identity Signature</link> for details on
 configuring your signature.</para></listitem>
 </varlistentry>
-<varlistentry id="composer-attach-curser-signature">
+<varlistentry id="composer-attach-cursor-signature">
 <term><menuchoice>
 <guimenu>Attach</guimenu>
-<guimenuitem>Append Signature At Curser Position</guimenuitem>
+<guimenuitem>Append Signature At Cursor Position</guimenuitem>
 </menuchoice></term>
-<listitem><para>Appends your signature to the currrent location  of your curser to the message. Please see
+<listitem><para>Appends your signature to the current location  of your cursor to the message. Please see
 <link linkend="configure-identity-signature">Configure Identity Signature</link> for details on
 configuring your signature.</para></listitem>
 </varlistentry>
@@ -1662,8 +1662,8 @@ configuring your signature.</para></listitem>
 <varlistentry id="composer-attach-file">
 <term><menuchoice>
 <guimenu>Attach</guimenu>
-<guimenuitem>Attach</guimenuitem>
-<guisubmenu>Attach File...</guisubmenu>
+<guisubmenu>Attach</guisubmenu>
+<guimenuitem>Attach File...</guimenuitem>
 </menuchoice></term>
 <listitem><para>Attaches one or more files to the current message. By default attachments are not
 encrypted, please see <link linkend="cryptographic-message-formats">Cryptographic Message Formats</link> for information
@@ -1672,8 +1672,8 @@ on encryption and attachments.</para></listitem>
 <varlistentry id="composer-attach-vcard">
 <term><menuchoice>
 <guimenu>Attach</guimenu>
-<guimenuitem>Attach</guimenuitem>
-<guisubmenu>Attach Own Vcard</guisubmenu>
+<guisubmenu>Attach</guisubmenu>
+<guimenuitem>Attach Own Vcard</guimenuitem>
 </menuchoice></term>
 <listitem><para>Attaches your Vcard to the current message.</para></listitem>
 </varlistentry>
