@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Contact Theme Editor
+Name[de]=Designeditor für Kontakte
 Name[es]=Editor de temas de Contact
 Name[fi]=Yhteystietoteemamuokkain
 Name[fr]=Éditeur de thème pour les contacts
@@ -20,6 +21,7 @@ Exec=contactthemeeditor
 Icon=kaddressbook
 X-DocPath=contactthemeeditor/index.html
 GenericName=Contact Theme Editor
+GenericName[de]=Designeditor für Kontakte
 GenericName[es]=Editor de temas de Contact
 GenericName[fi]=Yhteystietoteemamuokkain
 GenericName[fr]=Éditeur de thème pour les contacts
