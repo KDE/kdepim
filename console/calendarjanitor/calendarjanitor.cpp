@@ -473,6 +473,7 @@ void CalendarJanitor::sanityCheck8()
     int numAttachments = 0;
     int totalAttachmentSize = 0;
     int numOldIncidences = 0;
+    int numEmptyRID = 0;
     QHash<KCalCore::Incidence::IncidenceType, int> m_counts;
 
     foreach (const Akonadi::Item &item, m_itemsToProcess) {
@@ -495,6 +496,9 @@ void CalendarJanitor::sanityCheck8()
         }
 
         numAttachments += incidence->attachments().count();
+
+        if (item.remoteId().isEmpty())
+            numEmptyRID++;
     }
 
     printStat(i18n("Events"), m_counts[KCalCore::Incidence::TypeEvent]);
@@ -503,6 +507,7 @@ void CalendarJanitor::sanityCheck8()
     printStat(i18n("Passed events and to-dos (>365 days)"), numOldIncidences);
     printStat(i18n("Old incidences with alarms"), numOldAlarms);
     printStat(i18n("Inline attachments"), numAttachments);
+    printStat(i18n("Items with empty remote id [!!]"), numEmptyRID);
 
     if (totalAttachmentSize < 1024) {
         printStat(i18n("Total size of inline attachments (bytes)"), totalAttachmentSize);
