@@ -2,10 +2,6 @@ project(akonadi_mailfilter_agent)
 
 add_subdirectory( kconf_update )
 
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
-
-
 include_directories(
   ${Boost_INCLUDE_DIR}
   ${SOPRANO_INCLUDE_DIR}
