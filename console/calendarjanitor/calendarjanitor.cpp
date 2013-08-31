@@ -81,6 +81,7 @@ CalendarJanitor::CalendarJanitor(const Options &options, QObject *parent) : QObj
                                                                           , m_pendingModifications(0)
                                                                           , m_pendingDeletions(0)
                                                                           , m_strippingOldAlarms(false)
+                                                                          , m_returnCode(0)
 {
     m_changer = new Akonadi::IncidenceChanger(this);
     m_changer->setShowDialogsOnError(false);
@@ -177,7 +178,7 @@ void CalendarJanitor::processNextCollection()
     if (m_collectionsToProcess.isEmpty()) {
         print(QLatin1Char('\n') + QString().leftJustified(TEXT_WIDTH, QLatin1Char('*')));
         emit finished(true);
-        qApp->exit(0);
+        qApp->exit(m_returnCode);
         return;
     }
 
@@ -514,6 +515,10 @@ void CalendarJanitor::sanityCheck8()
     } else {
         printStat(i18n("Total size of inline attachments (KB)"), totalAttachmentSize / 1024);
     }
+
+    if (numEmptyRID > 0)
+        m_returnCode = -2;
+
 
     endTest(/**print=*/false);
 }

@@ -106,6 +106,8 @@ private:
     QMap<KCalCore::Incidence::Ptr, Akonadi::Item> m_incidenceToItem;
 
     Akonadi::FetchJobCalendar::Ptr m_calendar;
+
+    int m_returnCode;
 };
 
 #endif // CALENDARJANITOR_H
