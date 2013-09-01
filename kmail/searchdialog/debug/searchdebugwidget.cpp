@@ -35,6 +35,20 @@
 #include <QStringListModel>
 #include <QPushButton>
 
+SearchDebugListDelegate::SearchDebugListDelegate( QObject *parent )
+    : QStyledItemDelegate ( parent )
+{
+}
+
+SearchDebugListDelegate::~SearchDebugListDelegate()
+{
+}
+
+QWidget *SearchDebugListDelegate::createEditor ( QWidget *, const QStyleOptionViewItem  &, const QModelIndex & ) const
+{
+    return 0;
+}
+
 
 SearchDebugWidget::SearchDebugWidget(const QString &query, QWidget *parent)
     : QWidget(parent)
@@ -48,6 +62,7 @@ SearchDebugWidget::SearchDebugWidget(const QString &query, QWidget *parent)
     new Nepomuk2::SparqlSyntaxHighlighter( mTextEdit->document() );
 
     mResultView = new QListView;
+    mResultView->setItemDelegate(new SearchDebugListDelegate(this));
     mItemView = new KTextBrowser;
     layout->addWidget( mTextEdit, 0, 0, 1, 2);
     layout->addWidget( new QLabel( i18n("UIDS:") ), 1, 0 );
@@ -106,7 +121,7 @@ void SearchDebugWidget::slotSearch()
 
 void SearchDebugWidget::indentQuery(QString query)
 {
-    query= query.simplified();
+    query = query.simplified();
     QString newQuery;
     int i = 0;
     int indent = 0;
@@ -116,7 +131,7 @@ void SearchDebugWidget::indentQuery(QString query)
         newQuery.append(query[i]);
         if (query[i] != QLatin1Char('"') && query[i] != QLatin1Char('<') && query[i] != QLatin1Char('\'')) {
             if (query[i] == QLatin1Char('{')) {
-                indent++;
+                ++indent;
                 newQuery.append(QLatin1Char('\n'));
                 newQuery.append(QString().fill(QLatin1Char(' '), indent*space));
             } else if (query[i] == QLatin1Char('.')) {
@@ -147,17 +162,17 @@ void SearchDebugWidget::indentQuery(QString query)
                 }
             }
         } else {
-            i++;
+            ++i;
             while(i < query.size()) {
                 if (query[i] == QLatin1Char('"') || query[i] == QLatin1Char('>') || query[i] == QLatin1Char('\'')) {
                     newQuery.append(query[i]);
                     break;
                 }
                 newQuery.append(query[i]);
-                i++;
+                ++i;
             }
         }
-        i++;
+        ++i;
     }
     mTextEdit->setPlainText( newQuery );
 }

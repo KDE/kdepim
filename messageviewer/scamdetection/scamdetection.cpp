@@ -48,12 +48,12 @@ void ScamDetection::scanPage(QWebFrame *frame)
         mDetails = QLatin1String("<b>") + i18n("Details:") + QLatin1String("</b><ul>");
         bool foundScam = false;
         const QWebElement rootElement = frame->documentElement();
-        bool result = scanFrame(rootElement);
+        bool result = scanFrame(rootElement, mDetails);
         if (result) {
             foundScam = true;
         }
         foreach(QWebFrame *childFrame, frame->childFrames()) {
-            result = scanFrame(childFrame->documentElement());
+            result = scanFrame(childFrame->documentElement(), mDetails);
             if (result) {
                 foundScam = true;
             }
@@ -63,7 +63,7 @@ void ScamDetection::scanPage(QWebFrame *frame)
     }
 }
 
-bool ScamDetection::scanFrame(const QWebElement &rootElement)
+bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
 {
     bool foundScam = false;
     QRegExp ip4regExp;
@@ -73,44 +73,54 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement)
         //1) detect if title has a url and title != href
         const QString href = anchorElement.attribute(QLatin1String("href"));
         const QString title = anchorElement.attribute(QLatin1String("title"));
+        const QUrl url(href);
         if (!title.isEmpty()) {
             if (title.startsWith(QLatin1String("http:"))
                     || title.startsWith(QLatin1String("https:"))
                     || title.startsWith(QLatin1String("www."))) {
-                if (href != title) {
-                    // http://www.kde.org == http://www.kde.org/
-                    if (href != (title + QLatin1Char('/'))) {
-                        foundScam = true;
-                        mDetails += QLatin1String("<li>") + i18n("This email contains a link which reads as '%1' in the text, but actually points to '%2'. This is often the case in scam emails to mislead the recipient", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
+                if (title.startsWith(QLatin1String("www."))) {
+                    const QString completUrl =  url.scheme() + QLatin1String("://") + title;
+                    if ( completUrl != href &&
+                        href != (completUrl + QLatin1Char('/'))){
+                       foundScam = true;
                     }
+                } else {
+                    if (href != title) {
+                        // http://www.kde.org == http://www.kde.org/
+                        if (href != (title + QLatin1Char('/'))) {
+                            foundScam = true;
+                        }
+                    }
+                }
+                if (foundScam) {
+                    details += QLatin1String("<li>") + i18n("This email contains a link which reads as '%1' in the text, but actually points to '%2'. This is often the case in scam emails to mislead the recipient", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
                 }
             }
         }
         //2) detect if url href has ip and not server name.
-        const QUrl url(href);
         const QString hostname = url.host();
         const QString path = url.path();
         if (hostname.contains(ip4regExp) && !hostname.contains(QLatin1String("127.0.0.1"))) { //hostname
-            mDetails += QLatin1String("<li>") + i18n("This email contains a link which points to a numerical IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname))+QLatin1String("</li>");
+            details += QLatin1String("<li>") + i18n("This email contains a link which points to a numerical IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname))+QLatin1String("</li>");
             foundScam = true;
         } else if (hostname.contains(QLatin1Char('%'))) { //Hexa value for ip
-            mDetails += QLatin1String("<li>") + i18n("This email contains a link which points to a hexadecimal IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname))+QLatin1String("</li>");
+            details += QLatin1String("<li>") + i18n("This email contains a link which points to a hexadecimal IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname))+QLatin1String("</li>");
             foundScam = true;
         } else if (path.contains(QLatin1String("url?q="))) { //4) redirect url.
-            mDetails += QLatin1String("<li>") + i18n("This email contains a link (%1) which has a redirection", addWarningColor(path)) +QLatin1String("</li>");
+            details += QLatin1String("<li>") + i18n("This email contains a link (%1) which has a redirection", addWarningColor(path)) +QLatin1String("</li>");
             foundScam = true;
         } else if ((path.count(QLatin1String("http://")) > 1) ||
                    (path.count(QLatin1String("https://")) > 1)) { //5) more that 1 http in url.
-            mDetails += QLatin1String("<li>") + i18n("This email contains a link (%1) which contains multiple http://. This is often the case in scam emails.", addWarningColor(path)) + QLatin1String("</li>");
+            details += QLatin1String("<li>") + i18n("This email contains a link (%1) which contains multiple http://. This is often the case in scam emails.", addWarningColor(path)) + QLatin1String("</li>");
             foundScam = true;
         }
     }
     //3) has form
     if (rootElement.findAll(QLatin1String("form")).count() > 0) {
-        mDetails += QLatin1String("<li></b>") + i18n("Message contains form element. This is often the case in scam emails.") + QLatin1String("</b></li>");
+        details += QLatin1String("<li></b>") + i18n("Message contains form element. This is often the case in scam emails.") + QLatin1String("</b></li>");
         foundScam = true;
     }
-    mDetails += QLatin1String("</ul>");
+    details += QLatin1String("</ul>");
     return foundScam;
 }
 
