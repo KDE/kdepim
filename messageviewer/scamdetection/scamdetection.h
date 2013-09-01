@@ -34,11 +34,12 @@ public:
     void scanPage(QWebFrame *frame);
     void showDetails();
 
+    static bool scanFrame(const QWebElement &rootElement, QString &details);
+
 Q_SIGNALS:
     void messageMayBeAScam();
 
 private:
-    bool scanFrame(const QWebElement &rootElement);
     QString mDetails;
 };
 }
