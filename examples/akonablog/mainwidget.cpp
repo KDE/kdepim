@@ -59,7 +59,7 @@ MainWidget::MainWidget( MainWindow * parent ) :
     
     // Filter the collection to only show the blogs
     Akonadi::AgentFilterProxyModel* proxy = new Akonadi::AgentFilterProxyModel( this );
-    proxy->addMimeTypeFilter( "application/x-vnd.kde.microblog" );
+    proxy->addMimeTypeFilter( QLatin1String("application/x-vnd.kde.microblog") );
     proxy->setSourceModel( model );
     m_resourcesView->setModel( proxy );
 
