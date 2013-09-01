@@ -73,21 +73,31 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement)
         //1) detect if title has a url and title != href
         const QString href = anchorElement.attribute(QLatin1String("href"));
         const QString title = anchorElement.attribute(QLatin1String("title"));
+        const QUrl url(href);
         if (!title.isEmpty()) {
             if (title.startsWith(QLatin1String("http:"))
                     || title.startsWith(QLatin1String("https:"))
                     || title.startsWith(QLatin1String("www."))) {
-                if (href != title) {
-                    // http://www.kde.org == http://www.kde.org/
-                    if (href != (title + QLatin1Char('/'))) {
-                        foundScam = true;
-                        mDetails += QLatin1String("<li>") + i18n("This email contains a link which reads as '%1' in the text, but actually points to '%2'. This is often the case in scam emails to mislead the recipient", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
+                if (title.startsWith(QLatin1String("www."))) {
+                    const QString completUrl =  url.scheme() + QLatin1String("://") + title;
+                    if ( completUrl != href &&
+                        href != (completUrl + QLatin1Char('/'))){
+                       foundScam = true;
                     }
+                } else {
+                    if (href != title) {
+                        // http://www.kde.org == http://www.kde.org/
+                        if (href != (title + QLatin1Char('/'))) {
+                            foundScam = true;
+                        }
+                    }
+                }
+                if (foundScam) {
+                    mDetails += QLatin1String("<li>") + i18n("This email contains a link which reads as '%1' in the text, but actually points to '%2'. This is often the case in scam emails to mislead the recipient", addWarningColor(title), addWarningColor(href)) + QLatin1String("</li>");
                 }
             }
         }
         //2) detect if url href has ip and not server name.
-        const QUrl url(href);
         const QString hostname = url.host();
         const QString path = url.path();
         if (hostname.contains(ip4regExp) && !hostname.contains(QLatin1String("127.0.0.1"))) { //hostname
