@@ -107,6 +107,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
         mEmail->setText(group.readEntry("authorEmail"));
+        mAuthor->setText(group.readEntry("author"));
     }
     connect(mDescription, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 }

@@ -41,6 +41,7 @@ void ConfigureWidget::save()
     KConfigGroup group = config->group(QLatin1String("Global"));
     group.writeEntry("path", ui->defaultPath->url());
     group.writeEntry("authorEmail", ui->authorEmail->text());
+    group.writeEntry("author", ui->author->text());
 }
 
 void ConfigureWidget::load()
@@ -50,6 +51,7 @@ void ConfigureWidget::load()
         KConfigGroup group = config->group(QLatin1String("Global"));
         ui->defaultPath->setUrl(group.readEntry("path", KUrl()));
         ui->authorEmail->setText(group.readEntry("authorEmail"));
+        ui->author->setText(group.readEntry("author"));
     }
 }
 
@@ -57,6 +59,7 @@ void ConfigureWidget::setDefault()
 {
     ui->defaultPath->setUrl(KUrl());
     ui->authorEmail->clear();
+    ui->author->clear();
 }
 
 
