@@ -87,7 +87,6 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
 
     lay->addLayout(hbox);
 
-
     lay->addStretch();
 
     setLayout(lay);
