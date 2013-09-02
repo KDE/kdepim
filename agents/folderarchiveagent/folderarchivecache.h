@@ -33,7 +33,6 @@ struct ArchiveCache
 
     QDate date;
     Akonadi::Collection::Id colId;
-    QString resourceName;
 };
 
 class FolderArchiveCache : public QObject
@@ -46,6 +45,10 @@ public:
     void addToCache(const QString &resourceName, Akonadi::Collection::Id id);
 
     Akonadi::Collection::Id collectionId(const QString &resource) const;
+
+    void clearCacheWithContainsCollection(Akonadi::Collection::Id id);
+
+    void clearCache();
 
 private:
     QHash<QString, ArchiveCache> mCache;

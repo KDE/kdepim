@@ -27,6 +27,23 @@ FolderArchiveCache::~FolderArchiveCache()
 
 }
 
+void FolderArchiveCache::clearCache()
+{
+    mCache.clear();
+}
+
+void FolderArchiveCache::clearCacheWithContainsCollection(Akonadi::Collection::Id id)
+{
+    QHash<QString, ArchiveCache>::iterator i = mCache.begin();
+    while (i!=mCache.end()) {
+        if (i.value().colId == id) {
+            i = mCache.erase(i);
+        } else {
+            ++i;
+        }
+    }
+}
+
 Akonadi::Collection::Id FolderArchiveCache::collectionId(const QString &resource) const
 {
     //TODO verify cache with date
@@ -45,7 +62,6 @@ void FolderArchiveCache::addToCache(const QString &resourceName, Akonadi::Collec
     } else {
         ArchiveCache cache;
         cache.colId = id;
-        cache.resourceName = resourceName;
         mCache.insert(resourceName, cache);
     }
 }

@@ -50,6 +50,8 @@ FolderArchiveAgent::~FolderArchiveAgent()
 
 void FolderArchiveAgent::collectionRemoved( const Akonadi::Collection &collection )
 {
+
+    mFolderArchiveCache->clearCacheWithContainsCollection(collection.id());
     mFolderArchiveManager->collectionRemoved(collection);
 }
 
@@ -74,6 +76,8 @@ void FolderArchiveAgent::showConfigureDialog(qlonglong windowId)
 #endif
     }
     if (dialog->exec()) {
+        //Be sure to clear cache.
+        mFolderArchiveCache->clearCache();
         mFolderArchiveManager->load();
     }
     delete dialog;
