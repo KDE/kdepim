@@ -88,9 +88,9 @@ public:
         } else {
             Akonadi::Item item = items.at(0);
             KABC::Addressee contact = searchJob->contacts()[0];
-            //TODO
-            //TODO if multiple ?
-
+            contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailPreferedFormatting" ), mShowAsHTML ? QLatin1String("HTML") : QLatin1String("TEXT")  );
+            contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailAllowToRemoteContent" ), mRemoteContent ? QLatin1String( "TRUE" ) : QLatin1String( "FALSE" ) );
+            //TODO modify contact.
         }
     }
 
@@ -193,6 +193,8 @@ public:
         KABC::Addressee contact;
         contact.setNameFromString( mName );
         contact.insertEmail( mEmail, true );
+        contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailPreferedFormatting" ), mShowAsHTML ? QLatin1String("HTML") : QLatin1String("TEXT")  );
+        contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailAllowToRemoteContent" ), mRemoteContent ? QLatin1String( "TRUE" ) : QLatin1String( "FALSE" ) );
 
         // create the new item
         Akonadi::Item item;
@@ -212,11 +214,6 @@ public:
             q->emitResult();
             return;
         }
-
-        const Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob*>( job );
-        Akonadi::Item item = createJob->item();
-        //TODO add info.
-
         q->emitResult();
     }
 
