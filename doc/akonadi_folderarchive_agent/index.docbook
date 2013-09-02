@@ -34,8 +34,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2013-04-23</date>
-<releaseinfo>1.0</releaseinfo>
+<date>2013-09-02</date>
+<releaseinfo>&kde; 4.12</releaseinfo>
 
 <abstract>
 <para>
@@ -59,6 +59,15 @@
 <chapter id="using-kapp">
 <title>Using &kapplication;</title>
 <para>using</para>
+
+<!-- kmail-using archive-folder -->
+<para>Use <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice>
+in &kmail;'s reader window to open a dialog to set up the folder archive agent.
+</para>
+
+<para>This dialog allows you to enable/disable the folder archive agent. It is enabled by default, to disable uncheck the <guilabel>Enable</guilabel>
+checkbox. You can change the location of your Archive folder by clicking the folder icon next to
+<guilabel>Archive folder:</guilabel> and selecting the folder you wish to use.</para>
 
 </chapter>
 
