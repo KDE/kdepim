@@ -20,6 +20,9 @@ set(libgrantleethemeeditor_SRCS
     configurewidget.cpp
 )
 
+kde4_add_kcfg_files(libgrantleethemeeditor_SRCS
+  settings/globalsettings_base.kcfgc
+)
 
 kde4_add_ui_files(libgrantleethemeeditor_SRCS
     ui/configurewidget.ui

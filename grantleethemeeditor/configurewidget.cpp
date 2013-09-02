@@ -18,6 +18,7 @@
 
 #include "configurewidget.h"
 #include "ui_configurewidget.h"
+#include "globalsettings_base.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -37,22 +38,17 @@ ConfigureWidget::~ConfigureWidget()
 
 void ConfigureWidget::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
-    KConfigGroup group = config->group(QLatin1String("Global"));
-    group.writeEntry("path", ui->defaultPath->url());
-    group.writeEntry("authorEmail", ui->authorEmail->text());
-    group.writeEntry("author", ui->author->text());
+    GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthorEmail(ui->authorEmail->text());
+    GrantleeThemeEditor::GrantleeThemeEditorSettings::setAuthor(ui->author->text());
+    GrantleeThemeEditor::GrantleeThemeEditorSettings::setPath(ui->defaultPath->url().path());
+    GrantleeThemeEditor::GrantleeThemeEditorSettings::self()->writeConfig();
 }
 
 void ConfigureWidget::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
-    if (config->hasGroup(QLatin1String("Global"))) {
-        KConfigGroup group = config->group(QLatin1String("Global"));
-        ui->defaultPath->setUrl(group.readEntry("path", KUrl()));
-        ui->authorEmail->setText(group.readEntry("authorEmail"));
-        ui->author->setText(group.readEntry("author"));
-    }
+    ui->authorEmail->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::authorEmail());
+    ui->author->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::author());
+    ui->defaultPath->setUrl(KUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
 }
 
 void ConfigureWidget::setDefault()
