@@ -26,6 +26,7 @@
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemModifyJob>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/Collection>
@@ -70,7 +71,6 @@ public:
         createContact();
     }
 
-
     void slotSearchDone( KJob *job )
     {
         if ( job->error() ) {
@@ -90,7 +90,9 @@ public:
             KABC::Addressee contact = searchJob->contacts()[0];
             contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailPreferedFormatting" ), mShowAsHTML ? QLatin1String("HTML") : QLatin1String("TEXT")  );
             contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailAllowToRemoteContent" ), mRemoteContent ? QLatin1String( "TRUE" ) : QLatin1String( "FALSE" ) );
-            //TODO modify contact.
+            item.setPayload<KABC::Addressee>( contact );
+            Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( item );
+            q->connect( job, SIGNAL(result(KJob*)), SLOT(slotAddModifyContactDone(KJob*)) );
         }
     }
 
@@ -203,10 +205,10 @@ public:
 
         // save the new item in akonadi storage
         Akonadi::ItemCreateJob *createJob = new Akonadi::ItemCreateJob( item, addressBook, q );
-        q->connect( createJob, SIGNAL(result(KJob*)), SLOT(slotAddContactDone(KJob*)) );
+        q->connect( createJob, SIGNAL(result(KJob*)), SLOT(slotAddModifyContactDone(KJob*)) );
     }
 
-    void slotAddContactDone( KJob *job )
+    void slotAddModifyContactDone( KJob *job )
     {
         if ( job->error() ) {
             q->setError( job->error() );
@@ -216,17 +218,6 @@ public:
         }
         q->emitResult();
     }
-
-    void slotContactEditorError(const QString &error)
-    {
-        KMessageBox::error(mParentWidget, i18n("Contact cannot be stored: %1", error), i18n("Failed to store contact"));
-    }
-
-    void contactStored( const Akonadi::Item & )
-    {
-        KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Contact created successfully" ) );
-    }
-
 
     AddEmailDiplayJob *q;
     bool mShowAsHTML;
