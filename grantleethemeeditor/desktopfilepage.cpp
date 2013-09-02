@@ -103,6 +103,11 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     }
     setLayout(lay);
 
+    KSharedConfig::Ptr config = KGlobal::config();
+    if (config->hasGroup(QLatin1String("Global"))) {
+        KConfigGroup group = config->group(QLatin1String("Global"));
+        mEmail->setText(group.readEntry("authorEmail"));
+    }
     connect(mDescription, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 }
 
