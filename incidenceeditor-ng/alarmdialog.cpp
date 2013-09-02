@@ -171,27 +171,14 @@ void AlarmDialog::save( const KCalCore::Alarm::Ptr &alarm ) const
   Q_ASSERT( mAllowBeginReminders || mAllowEndReminders );
 
   // TODO: Add possibility to specify a given time for the reminder
-  if ( mAllowBeginReminders && beforeafterpos == 0 ) { // before start
-    alarm->setStartOffset( KCalCore::Duration( offset ) );
-  } else if ( mAllowBeginReminders && beforeafterpos == 1 ) { // after start
-    alarm->setStartOffset( KCalCore::Duration( offset ) );
-  }
 
   // We assume that if mAllowBeginReminders is not set, that mAllowBeginReminders
   // is set.
-  if ( !mAllowBeginReminders && beforeafterpos == 0 ) { // before end
+  if ( !mAllowBeginReminders ) { // before or after DTDUE
+    alarm->setEndOffset( KCalCore::Duration( offset ) );
+  } else if ( beforeafterpos == 0 || beforeafterpos == 1 ) { // before or after DTSTART
     alarm->setStartOffset( KCalCore::Duration( offset ) );
-  } else if ( !mAllowBeginReminders && beforeafterpos == 1 ) { // after end
-    alarm->setStartOffset( KCalCore::Duration( offset ) );
-  } else if ( beforeafterpos == 2 ) { // before end
-    alarm->setStartOffset( KCalCore::Duration( offset ) );
-  } else if ( beforeafterpos == 3 ) { // after end
-    alarm->setStartOffset( KCalCore::Duration( offset ) );
-  }
-
-  if ( beforeafterpos / 2 == 0 ) { // start offset
-    alarm->setStartOffset( KCalCore::Duration( offset ) );
-  } else {
+  } else if ( beforeafterpos == 2 || beforeafterpos == 3) { // before or after DTEND/DTDUE
     alarm->setEndOffset( KCalCore::Duration( offset ) );
   }
 
