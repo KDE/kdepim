@@ -110,6 +110,7 @@ void SieveSyntaxHighlighter::init()
               <<QLatin1String( "\\s:days\\b" )
               <<QLatin1String( "\\s:addresses\\b" )
               <<QLatin1String( "\\s:regex\\b")
+              <<QLatin1String( "\\s:flags\\b" )
               <<QLatin1String( "\\s:subject\\b" );
     Q_FOREACH ( const QString & s, matchType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
@@ -144,9 +145,9 @@ void SieveSyntaxHighlighter::init()
                <<QLatin1String( "\\hasflag\\b" )
                <<QLatin1String( "\\bdeleteheader\\b" )
                <<QLatin1String( "\\baddheader\\b" )
-               <<QLatin1String( "\\notify\\b" )
-               <<QLatin1String( "\\set\\b" )
-               <<QLatin1String( "\\return\\b" )
+               <<QLatin1String( "\\bnotify\\b" )
+               <<QLatin1String( "\\bset\\b" )
+               <<QLatin1String( "\\breturn\\b" )
                <<QLatin1String( "\\bvacation\\b" );
     Q_FOREACH ( const QString & s, actionType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );

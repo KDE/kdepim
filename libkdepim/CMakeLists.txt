@@ -26,6 +26,7 @@ set(kdepim_LIB_SRCS
    job/addemailaddressjob.cpp
    job/addcontactjob.cpp
    job/openemailaddressjob.cpp
+   job/addemaildisplayjob.cpp
    addressline/completionordereditor.cpp
    addressline/addresseelineedit.cpp
    addressline/recentaddresses.cpp

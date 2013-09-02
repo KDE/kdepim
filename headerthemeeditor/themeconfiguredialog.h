@@ -21,6 +21,11 @@
 #include <KDialog>
 class KUrlRequester;
 class KTextEdit;
+class KLineEdit;
+
+namespace GrantleeThemeEditor {
+class ConfigureWidget;
+}
 
 class ThemeConfigureDialog : public KDialog
 {
@@ -37,9 +42,9 @@ private Q_SLOTS:
     void slotDefaultClicked();
 
 private:
-    KUrlRequester *mDefaultUrl;
-    KTextEdit *mDefaultEmail;
+    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
     KTextEdit *mDefaultTemplate;
+    KTextEdit *mDefaultEmail;
 };
 
 #endif // THEMECONFIGUREDIALOG_H

@@ -18,6 +18,8 @@
 #include "themeconfiguredialog.h"
 #include "themeeditorutil.h"
 
+#include "configurewidget.h"
+
 #include <KLocale>
 #include <KUrlRequester>
 #include <KConfig>
@@ -43,17 +45,10 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
-    QHBoxLayout *hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
+    mConfigureWidget = new GrantleeThemeEditor::ConfigureWidget;
+    lay->addWidget(mConfigureWidget);
 
-    QLabel *lab = new QLabel(i18n("Default theme path:"));
-    hbox->addWidget(lab);
-
-    mDefaultUrl = new KUrlRequester;
-    mDefaultUrl->setMode(KFile::Directory);
-    hbox->addWidget(mDefaultUrl);
-
-    lab = new QLabel(i18n("Default email:"));
+    QLabel *lab = new QLabel(i18n("Default email:"));
     lay->addWidget(lab);
 
     mDefaultEmail = new KTextEdit;
@@ -81,7 +76,7 @@ ThemeConfigureDialog::~ThemeConfigureDialog()
 
 void ThemeConfigureDialog::slotDefaultClicked()
 {
-    mDefaultUrl->setUrl(KUrl());
+    mConfigureWidget->setDefault();
     mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
     mDefaultTemplate->clear();
 }
@@ -96,7 +91,7 @@ void ThemeConfigureDialog::readConfig()
     KSharedConfig::Ptr config = KGlobal::config();
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
-        mDefaultUrl->setUrl(group.readEntry("path", KUrl()));
+        mConfigureWidget->readConfig();
         mDefaultEmail->setPlainText(group.readEntry("defaultEmail",themeeditorutil::defaultMail()));
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate",QString()));
     } else {
@@ -116,9 +111,9 @@ void ThemeConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = config->group(QLatin1String("Global"));
-    group.writeEntry("path", mDefaultUrl->url());
     group.writeEntry("defaultEmail", mDefaultEmail->toPlainText());
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
+    mConfigureWidget->writeConfig();
 }
 
 #include "themeconfiguredialog.moc"

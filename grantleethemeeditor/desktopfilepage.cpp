@@ -17,6 +17,8 @@
 
 
 #include "desktopfilepage.h"
+#include "globalsettings_base.h"
+
 #include "pimcommon/widgets/simplestringlisteditor.h"
 
 #include <KLineEdit>
@@ -102,6 +104,9 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
         lay->setRowStretch(row,0);
     }
     setLayout(lay);
+
+    mEmail->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::authorEmail());
+    mAuthor->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::author());
 
     connect(mDescription, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 }

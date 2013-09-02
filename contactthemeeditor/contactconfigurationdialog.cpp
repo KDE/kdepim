@@ -17,6 +17,8 @@
 
 #include "contactconfigurationdialog.h"
 
+#include "configurewidget.h"
+
 #include <KLocale>
 #include <KUrlRequester>
 #include <KConfig>
@@ -38,15 +40,9 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
-    QHBoxLayout *hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
+    mConfigureWidget = new GrantleeThemeEditor::ConfigureWidget;
+    lay->addWidget(mConfigureWidget);
 
-    QLabel *lab = new QLabel(i18n("Default theme path:"));
-    hbox->addWidget(lab);
-
-    mDefaultUrl = new KUrlRequester;
-    mDefaultUrl->setMode(KFile::Directory);
-    hbox->addWidget(mDefaultUrl);
     lay->addStretch();
 
     setMainWidget(w);
@@ -65,7 +61,7 @@ ContactConfigureDialog::~ContactConfigureDialog()
 
 void ContactConfigureDialog::slotDefaultClicked()
 {
-    mDefaultUrl->setUrl(KUrl());
+    mConfigureWidget->setDefault();
 }
 
 void ContactConfigureDialog::slotOkClicked()
@@ -76,10 +72,7 @@ void ContactConfigureDialog::slotOkClicked()
 void ContactConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
-    if (config->hasGroup(QLatin1String("Global"))) {
-        KConfigGroup group = config->group(QLatin1String("Global"));
-        mDefaultUrl->setUrl(group.readEntry("path", KUrl()));
-    }
+    mConfigureWidget->readConfig();
 
     KConfigGroup group = KConfigGroup( config, "ContactConfigureDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize() );
@@ -92,9 +85,7 @@ void ContactConfigureDialog::readConfig()
 
 void ContactConfigureDialog::writeConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
-    KConfigGroup group = config->group(QLatin1String("Global"));
-    group.writeEntry("path", mDefaultUrl->url());
+    mConfigureWidget->writeConfig();
 }
 
 #include "contactconfigurationdialog.moc"

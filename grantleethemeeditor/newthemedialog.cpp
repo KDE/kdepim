@@ -17,6 +17,7 @@
 
 
 #include "newthemedialog.h"
+#include "globalsettings_base.h"
 
 #include <KLineEdit>
 #include <KLocale>
@@ -66,11 +67,7 @@ NewThemeDialog::~NewThemeDialog()
 
 void NewThemeDialog::readConfig()
 {
-    KSharedConfig::Ptr config = KGlobal::config();
-    if (config->hasGroup(QLatin1String("Global"))) {
-        KConfigGroup group = config->group(QLatin1String("Global"));
-        mUrlRequester->setUrl(group.readEntry("path", KUrl()));
-    }
+    mUrlRequester->setUrl(KUrl(GrantleeThemeEditor::GrantleeThemeEditorSettings::path()));
 }
 
 QString NewThemeDialog::themeName() const
