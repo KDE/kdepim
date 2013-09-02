@@ -19,8 +19,12 @@
 #define CONTACTCONFIGUREDIALOG_H
 
 #include <KDialog>
-class KUrlRequester;
 
+namespace GrantleeThemeEditor {
+class ConfigureWidget;
+}
+
+class KUrlRequester;
 class ContactConfigureDialog : public KDialog
 {
     Q_OBJECT
@@ -36,7 +40,7 @@ private Q_SLOTS:
     void slotDefaultClicked();
 
 private:
-    KUrlRequester *mDefaultUrl;
+    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
 };
 
 #endif // CONTACTCONFIGUREDIALOG_H

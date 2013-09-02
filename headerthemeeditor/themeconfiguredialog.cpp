@@ -26,7 +26,6 @@
 #include <KGlobal>
 #include <KConfigGroup>
 #include <KTextEdit>
-#include <KLineEdit>
 
 #include <QVBoxLayout>
 #include <QLabel>
