@@ -17,6 +17,12 @@ set(libgrantleethemeeditor_SRCS
     desktopfilepage.cpp 
     editorpage.cpp
     previewwidget.cpp
+    configurewidget.cpp
+)
+
+
+kde4_add_ui_files(libgrantleethemeeditor_SRCS
+    ui/configurewidget.ui
 )
 
 

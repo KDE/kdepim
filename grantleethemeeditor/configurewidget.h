@@ -15,36 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef THEMECONFIGUREDIALOG_H
-#define THEMECONFIGUREDIALOG_H
 
-#include <KDialog>
-class KUrlRequester;
-class KTextEdit;
-class KLineEdit;
+#ifndef CONFIGUREWIDGET_H
+#define CONFIGUREWIDGET_H
 
-namespace GrantleeThemeEditor {
+#include "grantleethemeeditor_export.h"
+#include <QWidget>
+
+namespace Ui {
 class ConfigureWidget;
 }
 
-class ThemeConfigureDialog : public KDialog
+namespace GrantleeThemeEditor {
+class GRANTLEETHEMEEDITOR_EXPORT ConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ThemeConfigureDialog(QWidget *parent = 0);
-    ~ThemeConfigureDialog();
+    explicit ConfigureWidget(QWidget *parent=0);
+    ~ConfigureWidget();
 
-    void readConfig();
-    void writeConfig();
-
-private Q_SLOTS:
-    void slotOkClicked();
-    void slotDefaultClicked();
+    void save();
+    void load();
+    void setDefault();
 
 private:
-    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultTemplate;
-    KTextEdit *mDefaultEmail;
+    Ui::ConfigureWidget *ui;
 };
+}
 
-#endif // THEMECONFIGUREDIALOG_H
+#endif // CONFIGUREWIDGET_H
