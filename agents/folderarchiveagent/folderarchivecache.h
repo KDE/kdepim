@@ -19,6 +19,22 @@
 #define FOLDERARCHIVECACHE_H
 
 #include <QObject>
+#include <QDateTime>
+#include <QHash>
+#include <Akonadi/Collection>
+
+struct ArchiveCache
+{
+    ArchiveCache()
+        : date(QDate::currentDate()),
+          colId(-1)
+    {
+    }
+
+    QDate date;
+    Akonadi::Collection::Id colId;
+    QString resourceName;
+};
 
 class FolderArchiveCache : public QObject
 {
@@ -26,6 +42,13 @@ class FolderArchiveCache : public QObject
 public:
     explicit FolderArchiveCache(QObject *parent = 0);
     ~FolderArchiveCache();
+
+    void addToCache(const QString &resourceName, Akonadi::Collection::Id id);
+
+    Akonadi::Collection::Id collectionId(const QString &resource) const;
+
+private:
+    QHash<QString, ArchiveCache> mCache;
 };
 
 #endif // FOLDERARCHIVECACHE_H

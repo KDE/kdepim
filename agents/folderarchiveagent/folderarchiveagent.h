@@ -20,6 +20,7 @@
 
 #include <akonadi/agentbase.h>
 class FolderArchiveManager;
+class FolderArchiveCache;
 class FolderArchiveAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
     Q_OBJECT
@@ -42,6 +43,7 @@ public Q_SLOTS:
 
 private:
     FolderArchiveManager *mFolderArchiveManager;
+    FolderArchiveCache *mFolderArchiveCache;
 };
 
 #endif // FOLDERARCHIVEAGENT_H

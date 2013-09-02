@@ -27,4 +27,27 @@ FolderArchiveCache::~FolderArchiveCache()
 
 }
 
+Akonadi::Collection::Id FolderArchiveCache::collectionId(const QString &resource) const
+{
+    //TODO verify cache with date
+    if (mCache.contains(resource)) {
+        return mCache.value(resource).colId;
+    }
+    return -1;
+}
+
+void FolderArchiveCache::addToCache(const QString &resourceName, Akonadi::Collection::Id id)
+{
+    if (mCache.contains(resourceName)) {
+        ArchiveCache cache = mCache.value(resourceName);
+        cache.colId = id;
+        mCache.insert(resourceName, cache);
+    } else {
+        ArchiveCache cache;
+        cache.colId = id;
+        cache.resourceName = resourceName;
+        mCache.insert(resourceName, cache);
+    }
+}
+
 #include "folderarchivecache.moc"
