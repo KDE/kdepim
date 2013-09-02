@@ -105,22 +105,13 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
     int index = 0;
     int indexStr = 0;
     QDomNode node = element.firstChild();
+    QStringList lstTagValue;
     while (!node.isNull()) {
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
             if (tagName == QLatin1String("tag")) {
-                const QString tagValue = e.text();
-                if (index == 0) {
-                    SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
-                    selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(tagValue), name(), error);
-                } else if (index == 1) {
-                    SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
-                    selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(tagValue, notCondition), name(), error);
-                } else {
-                    tooManyArgument(tagName, index, 2, error);
-                    qDebug()<<"SieveConditionAddress::setParamWidgetValue too many argument :"<<index;
-                }
+                lstTagValue << e.text();
                 ++index;
             } else if (tagName == QLatin1String("str")) {
                 if (indexStr == 0) {
@@ -154,6 +145,18 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
             }
         }
         node = node.nextSibling();
+    }
+    if (lstTagValue.count() == 1) {
+        SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+        selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(lstTagValue.at(0), notCondition), name(), error);
+    } else if (lstTagValue.count() == 2) {
+        SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+        selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(lstTagValue.at(0)), name(), error);
+        SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
+        selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(lstTagValue.at(1), notCondition), name(), error);
+    } else if (lstTagValue.count() > 2) {
+        tooManyArgument(QLatin1String("tag"), lstTagValue.count(), 2, error);
+        qDebug()<<"SieveConditionAddress::setParamWidgetValue too many argument :"<<lstTagValue.count();
     }
     return true;
 }
