@@ -21,6 +21,7 @@
 #include <KDialog>
 class KUrlRequester;
 class KTextEdit;
+class KLineEdit;
 
 class ThemeConfigureDialog : public KDialog
 {
@@ -40,6 +41,7 @@ private:
     KUrlRequester *mDefaultUrl;
     KTextEdit *mDefaultEmail;
     KTextEdit *mDefaultTemplate;
+    KLineEdit *mAuthorEmail;
 };
 
 #endif // THEMECONFIGUREDIALOG_H

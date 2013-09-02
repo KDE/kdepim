@@ -24,6 +24,7 @@
 #include <KGlobal>
 #include <KConfigGroup>
 #include <KTextEdit>
+#include <KLineEdit>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -52,6 +53,14 @@ ThemeConfigureDialog::ThemeConfigureDialog(QWidget *parent)
     mDefaultUrl = new KUrlRequester;
     mDefaultUrl->setMode(KFile::Directory);
     hbox->addWidget(mDefaultUrl);
+
+    hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
+
+    lab = new QLabel(i18n("Author email:"));
+    hbox->addWidget(lab);
+    mAuthorEmail = new KLineEdit;
+    hbox->addWidget(mAuthorEmail);
 
     lab = new QLabel(i18n("Default email:"));
     lay->addWidget(lab);
@@ -83,6 +92,7 @@ void ThemeConfigureDialog::slotDefaultClicked()
 {
     mDefaultUrl->setUrl(KUrl());
     mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
+    mAuthorEmail->clear();
     mDefaultTemplate->clear();
 }
 
@@ -99,6 +109,7 @@ void ThemeConfigureDialog::readConfig()
         mDefaultUrl->setUrl(group.readEntry("path", KUrl()));
         mDefaultEmail->setPlainText(group.readEntry("defaultEmail",themeeditorutil::defaultMail()));
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate",QString()));
+        mAuthorEmail->setText(group.readEntry("authorEmail"));
     } else {
         mDefaultEmail->setPlainText(themeeditorutil::defaultMail());
     }
@@ -119,6 +130,7 @@ void ThemeConfigureDialog::writeConfig()
     group.writeEntry("path", mDefaultUrl->url());
     group.writeEntry("defaultEmail", mDefaultEmail->toPlainText());
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
+    group.writeEntry("authorEmail", mAuthorEmail->text());
 }
 
 #include "themeconfiguredialog.moc"
