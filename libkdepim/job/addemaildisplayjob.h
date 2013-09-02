@@ -38,10 +38,10 @@ class KDEPIM_EXPORT AddEmailDiplayJob : public KJob
     AddEmailDiplayJob( const QString &email, QWidget *parentWidget, QObject *parent = 0 );
 
     ~AddEmailDiplayJob();
+    void showAsHTML(bool html);
+    void remoteContent(bool b);
 
     virtual void start();
-
-    Akonadi::Item contact() const;
 
   private:
     //@cond PRIVATE

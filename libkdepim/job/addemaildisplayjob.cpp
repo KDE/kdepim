@@ -50,7 +50,11 @@ class AddEmailDiplayJob::Private
 {
 public:
     Private( AddEmailDiplayJob *qq, const QString &emailString, QWidget *parentWidget )
-        : q( qq ), mCompleteAddress( emailString ), mParentWidget( parentWidget )
+        : q( qq ),
+          mShowAsHTML(false),
+          mRemoteContent(false),
+          mCompleteAddress( emailString ),
+          mParentWidget( parentWidget )
     {
         KABC::Addressee::parseEmailAddress( emailString, mName, mEmail );
     }
@@ -78,23 +82,16 @@ public:
 
         const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
 
-        const KABC::Addressee::List contacts = searchJob->contacts();
-        if ( !contacts.isEmpty() ) {
-            const QString text =
-                    i18nc( "@info",
-                           "A contact with the email address <email>%1</email> "
-                           "is already in your address book.", Qt::escape(mCompleteAddress) );
+        const Akonadi::Item::List items = searchJob->items();
+        if ( items.isEmpty() ) {
+            createContact();
+        } else {
+            Akonadi::Item item = items.at(0);
+            KABC::Addressee contact = searchJob->contacts()[0];
+            //TODO
+            //TODO if multiple ?
 
-            KMessageBox::information(
-                        mParentWidget,
-                        text,
-                        QString(),
-                        QLatin1String( "alreadyInAddressBook" ) );
-            q->setError( UserDefinedError );
-            q->emitResult();
-            return;
         }
-        createContact();
     }
 
     void createContact()
@@ -217,33 +214,9 @@ public:
         }
 
         const Akonadi::ItemCreateJob *createJob = qobject_cast<Akonadi::ItemCreateJob*>( job );
-        mItem = createJob->item();
+        Akonadi::Item item = createJob->item();
+        //TODO add info.
 
-        const QString text =
-                i18nc( "@info",
-                       "<para>A contact for <email>%1</email> was successfully added "
-                       "to your address book.</para>"
-                       "<para>Do you want to edit this new contact now?</para>",
-                       Qt::escape(mCompleteAddress) );
-
-        if ( KMessageBox::questionYesNo(
-                 mParentWidget,
-                 text,
-                 QString(),
-                 KStandardGuiItem::yes(),
-                 KStandardGuiItem::no(),
-                 QLatin1String( "addedtokabc" ) ) == KMessageBox::Yes ) {
-            QPointer<Akonadi::ContactEditorDialog> dlg =
-                    new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode,
-                                                      mParentWidget );
-            dlg->setContact( mItem );
-            connect( dlg, SIGNAL(contactStored(Akonadi::Item)),
-                     q, SLOT(contactStored(Akonadi::Item)) );
-            connect( dlg, SIGNAL(error(QString)),
-                     q, SLOT(slotContactEditorError(QString)) );
-            dlg->exec();
-            delete dlg;
-        }
         q->emitResult();
     }
 
@@ -259,15 +232,15 @@ public:
 
 
     AddEmailDiplayJob *q;
+    bool mShowAsHTML;
+    bool mRemoteContent;
     QString mCompleteAddress;
     QString mEmail;
     QString mName;
     QWidget *mParentWidget;
-    Akonadi::Item mItem;
 };
 
-AddEmailDiplayJob::AddEmailDiplayJob( const QString &email,
-                                      QWidget *parentWidget, QObject *parent )
+AddEmailDiplayJob::AddEmailDiplayJob( const QString &email, QWidget *parentWidget, QObject *parent )
     : KJob( parent ), d( new Private( this, email, parentWidget ) )
 {
 }
@@ -277,6 +250,17 @@ AddEmailDiplayJob::~AddEmailDiplayJob()
     delete d;
 }
 
+void AddEmailDiplayJob::showAsHTML(bool html)
+{
+    d->mShowAsHTML = html;
+}
+
+void AddEmailDiplayJob::remoteContent(bool b)
+{
+    d->mRemoteContent = b;
+}
+
+
 void AddEmailDiplayJob::start()
 {
     // first check whether a contact with the same email exists already
@@ -285,11 +269,6 @@ void AddEmailDiplayJob::start()
     searchJob->setQuery( Akonadi::ContactSearchJob::Email, d->mEmail,
                          Akonadi::ContactSearchJob::ExactMatch );
     connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
-}
-
-Akonadi::Item AddEmailDiplayJob::contact() const
-{
-    return d->mItem;
 }
 
 #include "addemaildisplayjob.moc"
