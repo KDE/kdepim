@@ -52,7 +52,7 @@ void SieveScriptParsingErrorDialog::setError(QString script, QString error)
 {
     QString str;
     str = QLatin1String("<b>") + i18n("Sieve script:") + QLatin1String("</b><br>");
-    str += script.replace(QLatin1Char('\n'), QLatin1String("<br>")) + QLatin1String("<br>");
+    str += script.replace(QLatin1Char('\n'), QLatin1String("<br>")) + QLatin1String("<br><br>");
     str += QLatin1String("<b>") + i18n("Errors reported:") + QLatin1String("</b><br>");
     str += error.replace(QLatin1Char('\n'), QLatin1String("<br>")) + QLatin1String("<br>");
     mTextEdit->setHtml(str);
