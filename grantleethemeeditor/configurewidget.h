@@ -34,8 +34,8 @@ public:
     explicit ConfigureWidget(QWidget *parent=0);
     ~ConfigureWidget();
 
-    void save();
-    void load();
+    void readConfig();
+    void writeConfig();
     void setDefault();
 
 private:

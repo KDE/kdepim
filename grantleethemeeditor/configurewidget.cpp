@@ -35,7 +35,7 @@ ConfigureWidget::~ConfigureWidget()
     delete ui;
 }
 
-void ConfigureWidget::save()
+void ConfigureWidget::writeConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = config->group(QLatin1String("Global"));
@@ -44,7 +44,7 @@ void ConfigureWidget::save()
     group.writeEntry("author", ui->author->text());
 }
 
-void ConfigureWidget::load()
+void ConfigureWidget::readConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     if (config->hasGroup(QLatin1String("Global"))) {

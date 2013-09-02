@@ -72,7 +72,7 @@ void ContactConfigureDialog::slotOkClicked()
 void ContactConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
-    mConfigureWidget->load();
+    mConfigureWidget->readConfig();
 
     KConfigGroup group = KConfigGroup( config, "ContactConfigureDialog" );
     const QSize sizeDialog = group.readEntry( "Size", QSize() );
@@ -85,7 +85,7 @@ void ContactConfigureDialog::readConfig()
 
 void ContactConfigureDialog::writeConfig()
 {
-    mConfigureWidget->save();
+    mConfigureWidget->writeConfig();
 }
 
 #include "contactconfigurationdialog.moc"

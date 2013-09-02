@@ -91,7 +91,7 @@ void ThemeConfigureDialog::readConfig()
     KSharedConfig::Ptr config = KGlobal::config();
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
-        mConfigureWidget->load();
+        mConfigureWidget->readConfig();
         mDefaultEmail->setPlainText(group.readEntry("defaultEmail",themeeditorutil::defaultMail()));
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate",QString()));
     } else {
@@ -113,7 +113,7 @@ void ThemeConfigureDialog::writeConfig()
     KConfigGroup group = config->group(QLatin1String("Global"));
     group.writeEntry("defaultEmail", mDefaultEmail->toPlainText());
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
-    mConfigureWidget->save();
+    mConfigureWidget->writeConfig();
 }
 
 #include "themeconfiguredialog.moc"
