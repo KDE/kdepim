@@ -50,47 +50,58 @@ SieveAction* SieveActionVacation::newAction()
 QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
+    QVBoxLayout *lay = new QVBoxLayout;
     lay->setAlignment(Qt::AlignBottom);
     lay->setMargin(0);
     w->setLayout(lay);
 
     QLabel *lab = 0;
+    QHBoxLayout *hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
     if (mHasVacationSecondsSupport) {
         SelectVacationComboBox *vacation = new SelectVacationComboBox;
         vacation->setObjectName(QLatin1String("vacationcombobox"));
-        lay->addWidget(vacation);
+        hbox->addWidget(vacation);
     } else {
         lab = new QLabel(i18n("day:"));
-        lay->addWidget(lab);
+        hbox->addWidget(lab);
     }
+
 
     QSpinBox *day = new QSpinBox;
     day->setMinimum(1);
     day->setObjectName(QLatin1String("day"));
-    lay->addWidget(day);
+    hbox->addWidget(day);
 
 
+    hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
     lab = new QLabel(i18n("Message subject:"));
-    lay->addWidget(lab);
+    hbox->addWidget(lab);
 
     KLineEdit *subject = new KLineEdit;
     subject->setObjectName(QLatin1String("subject"));
-    lay->addWidget(subject);
+    hbox->addWidget(subject);
+
+    hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
 
     lab = new QLabel(i18n("Additional email:"));
-    lay->addWidget(lab);
+    hbox->addWidget(lab);
 
     KLineEdit *addresses = new KLineEdit;
     addresses->setObjectName(QLatin1String("addresses"));
-    lay->addWidget(addresses);
+    hbox->addWidget(addresses);
 
+
+    hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
     lab = new QLabel(i18n("Vacation reason:"));
-    lay->addWidget(lab);
+    hbox->addWidget(lab);
 
     MultiLineEdit *text = new MultiLineEdit;
     text->setObjectName(QLatin1String("text"));
-    lay->addWidget(text);
+    hbox->addWidget(text);
 
     return w;
 }
