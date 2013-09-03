@@ -816,6 +816,9 @@ void IncidenceDateTime::setDateTimes( const KDateTime &start, const KDateTime &e
   emit startTimeChanged( start.time() );
   emit endDateChanged( end.date() );
   emit endTimeChanged( end.time() );
+
+  updateStartToolTips();
+  updateEndToolTips();
 }
 
 void IncidenceDateTime::updateStartToolTips()
