@@ -30,6 +30,8 @@ TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     setButtonFocus( Ok );
 
     mEdit = new KTextEdit;
+    mEdit->setAcceptRichText(false);
+    mEdit->setReadOnly(true);
 
     setMainWidget( mEdit );
     readConfig();
@@ -38,6 +40,11 @@ TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
 TranslatorDebugDialog::~TranslatorDebugDialog()
 {
     writeConfig();
+}
+
+void TranslatorDebugDialog::setDebug(const QString &debugStr)
+{
+    mEdit->setPlainText(debugStr);
 }
 
 void TranslatorDebugDialog::readConfig()

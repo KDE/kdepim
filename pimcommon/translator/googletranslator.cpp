@@ -17,10 +17,12 @@
 
 #include "googletranslator.h"
 #include "translatorutil.h"
+#include "translatordebugdialog.h"
 
 #include <QDebug>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
+#include <QPointer>
 
 #include <qjson/parser.h>
 
@@ -151,17 +153,17 @@ void GoogleTranslator::slotError(QNetworkReply::NetworkError /*error*/)
 void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
 {
     reply->deleteLater();
-    QString jsonData = QString::fromUtf8(reply->readAll());
+    mJsonData = QString::fromUtf8(reply->readAll());
     //  jsonData contains arrays like this: ["foo",,"bar"]
     //  but this is not valid JSON for QJSON, it expects empty strings: ["foo","","bar"]
-    jsonData = jsonData.replace(QRegExp(QLatin1String(",{3,3}")), QLatin1String(",\"\",\"\","));
-    jsonData = jsonData.replace(QRegExp(QLatin1String(",{2,2}")), QLatin1String(",\"\","));
+    mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{3,3}")), QLatin1String(",\"\",\"\","));
+    mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{2,2}")), QLatin1String(",\"\","));
     //kDebug() << jsonData;
 
     QJson::Parser parser;
     bool ok;
 
-    const QVariantList json = parser.parse(jsonData.toUtf8(), &ok).toList();
+    const QVariantList json = parser.parse(mJsonData.toUtf8(), &ok).toList();
     if (!ok) {
         Q_EMIT translateFailed(ok);
         return;
@@ -232,6 +234,16 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
             Q_EMIT translateDone();
         }
     }
+}
+
+void GoogleTranslator::debug()
+{
+#if !defined(NDEBUG)
+    QPointer<TranslatorDebugDialog> dlg = new TranslatorDebugDialog;
+    dlg->setDebug(mJsonData);
+    dlg->exec();
+    delete dlg;
+#endif
 }
 
 #include "googletranslator.moc"

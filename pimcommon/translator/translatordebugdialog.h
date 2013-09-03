@@ -28,6 +28,8 @@ public:
     explicit TranslatorDebugDialog(QWidget *parent=0);
     ~TranslatorDebugDialog();
 
+    void setDebug(const QString &debugStr);
+
 private:
     void readConfig();
     void writeConfig();
