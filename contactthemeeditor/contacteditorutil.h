@@ -15,34 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CONTACTCONFIGUREDIALOG_H
-#define CONTACTCONFIGUREDIALOG_H
 
-#include <KDialog>
+#ifndef CONTACTEDITORUTIL_H
+#define CONTACTEDITORUTIL_H
 
-namespace GrantleeThemeEditor {
-class ConfigureWidget;
+#include <QString>
+
+namespace contacteditorutil
+{
+    QString defaultContact();
 }
 
-class KUrlRequester;
-class KTextEdit;
-class ContactConfigureDialog : public KDialog
-{
-    Q_OBJECT
-public:
-    explicit ContactConfigureDialog(QWidget *parent = 0);
-    ~ContactConfigureDialog();
-
-    void readConfig();
-    void writeConfig();
-
-private Q_SLOTS:
-    void slotOkClicked();
-    void slotDefaultClicked();
-
-private:
-    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultContact;
-};
-
-#endif // CONTACTCONFIGUREDIALOG_H
+#endif

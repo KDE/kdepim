@@ -22,6 +22,7 @@ set(contactthemeeditor_SRCS
   editorpage.cpp
   contacteditorpage.cpp
   contactconfigurationdialog.cpp
+  contacteditorutil.cpp
 )
 
 
