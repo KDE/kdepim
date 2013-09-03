@@ -46,6 +46,7 @@ ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)
     lay->addWidget(lab);
 
     mListThemes = new QListWidget;
+    mListThemes->setSelectionMode(QAbstractItemView::MultiSelection);
     connect(mListThemes, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()));
     lay->addWidget(mListThemes);
 
@@ -86,12 +87,15 @@ void ManageThemes::writeConfig()
 
 void ManageThemes::slotDeleteTheme()
 {
-    if (mListThemes->currentItem()) {
-        if (KMessageBox::questionYesNo(this, i18n("Do you want to remove selected theme?"), i18n("Remove theme")) == KMessageBox::Yes) {
-            if (KTempDir::removeDir(mLocalDirectory + QDir::separator() + mListThemes->currentItem()->text())) {
-                delete mListThemes->currentItem();
-            } else {
-                KMessageBox::error(this, i18n("Theme \"%1\" cannot be deleted. Please contact your administrator.", mListThemes->currentItem()->text()), i18n("Delete theme failed"));
+    QList<QListWidgetItem *> selectItems = mListThemes->selectedItems ();
+    if (!selectItems.isEmpty()) {
+        if (KMessageBox::questionYesNo(this, i18np("Do you want to remove selected theme?", "Do you want to remove %1 selected themes?", selectItems.count()), i18n("Remove theme")) == KMessageBox::Yes) {
+            Q_FOREACH(QListWidgetItem *item, selectItems) {
+                if (KTempDir::removeDir(mLocalDirectory + QDir::separator() + item->text())) {
+                    delete item;
+                } else {
+                    KMessageBox::error(this, i18n("Theme \"%1\" cannot be deleted. Please contact your administrator.", item->text()), i18n("Delete theme failed"));
+                }
             }
         }
     }
