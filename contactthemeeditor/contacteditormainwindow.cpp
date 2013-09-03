@@ -189,6 +189,7 @@ void ContactEditorMainWindow::slotOpenTheme()
 
         mContactEditor = new ContactEditorPage(QString(), QString());
         connect(mContactEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
+        connect(mContactEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
         mContactEditor->loadTheme(filename);
         setCentralWidget(mContactEditor);
         updateActions();
@@ -220,6 +221,7 @@ bool ContactEditorMainWindow::saveCurrentProject(bool createNewTheme)
         if (!projectDirectory.isEmpty()) {
             mContactEditor = new ContactEditorPage(projectDirectory, newTheme);
             connect(mContactEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
+            connect(mContactEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
             setCentralWidget(mContactEditor);
         } else {
             setCentralWidget(0);
@@ -261,5 +263,11 @@ void ContactEditorMainWindow::slotUpdateView()
         mContactEditor->updatePreview();
     }
 }
+
+void ContactEditorMainWindow::slotCanInsertFile(bool b)
+{
+    mInsertFile->setEnabled(b);
+}
+
 
 #include "contacteditormainwindow.moc"

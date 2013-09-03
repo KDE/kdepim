@@ -213,6 +213,7 @@ void ThemeEditorMainWindow::slotOpenTheme()
 
         mThemeEditor = new ThemeEditorPage(QString(), QString());
         connect(mThemeEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
+        connect(mThemeEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
         mThemeEditor->loadTheme(filename);
         setCentralWidget(mThemeEditor);
         updateActions();
@@ -244,6 +245,7 @@ bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
         if (!projectDirectory.isEmpty()) {
             mThemeEditor = new ThemeEditorPage(projectDirectory, newTheme);
             connect(mThemeEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
+            connect(mThemeEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
             setCentralWidget(mThemeEditor);
         } else {
             setCentralWidget(0);
@@ -284,6 +286,11 @@ void ThemeEditorMainWindow::slotUpdateView()
         mThemeEditor->saveTheme(false);
         mThemeEditor->updatePreview();
     }
+}
+
+void ThemeEditorMainWindow::slotCanInsertFile(bool b)
+{
+    mInsertFile->setEnabled(b);
 }
 
 #include "themeeditormainwindow.moc"

@@ -55,12 +55,14 @@ public:
 
 Q_SIGNALS:
     void changed(bool);
+    void canInsertFile(bool);
 
 private Q_SLOTS:
     void slotUpdateViewer();
     void slotCloseTab(int);
     void slotChanged();
     void slotExtraHeaderDisplayChanged(const QStringList &extraHeaders);
+    void slotCurrentWidgetChanged(QWidget*);
 
 private:
     void setChanged(bool b);
