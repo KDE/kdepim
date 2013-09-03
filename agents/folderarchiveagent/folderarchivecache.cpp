@@ -16,6 +16,7 @@
 */
 
 #include "folderarchivecache.h"
+#include "folderarchiveaccountinfo.h"
 
 FolderArchiveCache::FolderArchiveCache(QObject *parent)
     : QObject(parent)
@@ -44,11 +45,29 @@ void FolderArchiveCache::clearCacheWithContainsCollection(Akonadi::Collection::I
     }
 }
 
-Akonadi::Collection::Id FolderArchiveCache::collectionId(const QString &resource) const
+Akonadi::Collection::Id FolderArchiveCache::collectionId(FolderArchiveAccountInfo *info)
 {
-    //TODO verify cache with date
-    if (mCache.contains(resource)) {
-        return mCache.value(resource).colId;
+    if (mCache.contains(info->instanceName())) {
+        switch(info->folderArchiveType()) {
+        case FolderArchiveAccountInfo::UniqueFolder:
+            return mCache.value(info->instanceName()).colId;
+        case FolderArchiveAccountInfo::FolderByMonths:
+            if (mCache.value(info->instanceName()).date.month() != QDate::currentDate().month()) {
+                mCache.remove(info->instanceName());
+                return -1;
+            } else {
+                return mCache.value(info->instanceName()).colId;
+            }
+        case FolderArchiveAccountInfo::FolderByYears:
+            if (mCache.value(info->instanceName()).date.year() != QDate::currentDate().year()) {
+                mCache.remove(info->instanceName());
+                return -1;
+            } else {
+                return mCache.value(info->instanceName()).colId;
+            }
+            break;
+        }
+        return mCache.value(info->instanceName()).colId;
     }
     return -1;
 }

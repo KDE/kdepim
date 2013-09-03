@@ -23,6 +23,8 @@
 #include <QHash>
 #include <Akonadi/Collection>
 
+class FolderArchiveAccountInfo;
+
 struct ArchiveCache
 {
     ArchiveCache()
@@ -44,7 +46,7 @@ public:
 
     void addToCache(const QString &resourceName, Akonadi::Collection::Id id);
 
-    Akonadi::Collection::Id collectionId(const QString &resource) const;
+    Akonadi::Collection::Id collectionId(FolderArchiveAccountInfo *info);
 
     void clearCacheWithContainsCollection(Akonadi::Collection::Id id);
 
