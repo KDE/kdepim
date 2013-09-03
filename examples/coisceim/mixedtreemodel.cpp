@@ -24,6 +24,7 @@
 #include "mixedtreemodel.h"
 
 #include <KMime/Message>
+#include <KLocale>
 #include <KCalCore/Incidence>
 #include "note.h"
 #include <KABC/Addressee>
@@ -52,9 +53,9 @@ QVariant MixedTreeModel::entityHeaderData(int section, Qt::Orientation orientati
   switch (section)
   {
   case 0:
-    return "Name/Subject";
+    return i18n("Name/Subject");
   case 1:
-    return "Detail";
+    return i18n("Detail");
   default:
     return QVariant();
   }

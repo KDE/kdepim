@@ -50,9 +50,9 @@ QVariant MixedTreeModel::entityHeaderData(int section, Qt::Orientation orientati
   switch (section)
   {
   case 0:
-    return "Name/Subject";
+    return QLatin1String("Name/Subject");
   case 1:
-    return "Email";
+    return QLatin1String("Email");
   default:
     return QVariant();
   }

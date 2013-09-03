@@ -63,11 +63,11 @@ void MicroblogDelegate::updateItemWidgets( const QList<QWidget*> widgets,
     edit->resize( 400,200 );
 
     QString text;
-    text.append( "<table><tr><td><img src=\"" + this->getData( model, row, BlogModel::Picture ).toString() + "\"></td>" );
-    text.append( "<td>" + getData( model, row, BlogModel::Date ).toString() );
-    text.append( "<Br>" + getData( model, row, BlogModel::User ).toString() );
-    text.append( "</td></tr></table>" );
-    text.append( "<Br>" + getData( model, row, BlogModel::Text ).toString() );
+    text.append( QLatin1String("<table><tr><td><img src=\"") + this->getData( model, row, BlogModel::Picture ).toString() + QLatin1String("\"></td>") );
+    text.append( QLatin1String("<td>") + getData( model, row, BlogModel::Date ).toString() );
+    text.append( QLatin1String("<Br>") + getData( model, row, BlogModel::User ).toString() );
+    text.append( QLatin1String("</td></tr></table>") );
+    text.append( QLatin1String("<Br>") + getData( model, row, BlogModel::Text ).toString() );
     //kDebug() << text;
     edit->setHtml( text );
 }

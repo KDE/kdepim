@@ -49,21 +49,21 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
 
   Akonadi::Control::start();
 
-  tabWidget->addTab(new Checkable2(tabWidget), "Checkable2");
-  tabWidget->addTab(new DescTabWidget(tabWidget), "Desc");
-  tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
-  tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");
-  tabWidget->addTab(new Tab2_5Widget(tabWidget), "Type specific data");
-  tabWidget->addTab(new Tab3Widget(tabWidget), "KSelectionProxyModel");
-  tabWidget->addTab(new Tab4Widget(tabWidget), "KSelectionProxyModel Filtered");
-  tabWidget->addTab(new Tab6Widget(tabWidget), "Checkable Collections");
-  tabWidget->addTab(new Tab5Widget(tabWidget), "Categorized Items");
-  tabWidget->addTab(new Tab7Widget(tabWidget), "Tagged Items");
-  tabWidget->addTab(new UnreadMailsWidget(tabWidget), "Unread Mails");
-  tabWidget->addTab(new RecursiveItemListWidget(tabWidget), "Items only");
-  tabWidget->addTab(new EntityFindingWidget(tabWidget), "Find entities");
-  tabWidget->addTab(new CollectionMonitoredWidget(tabWidget), "SetCollectionMonitored");
-  tabWidget->addTab(new UnreadMailsInCollectionsWidget(tabWidget), "UnreadMails");
+  tabWidget->addTab(new Checkable2(tabWidget), QLatin1String("Checkable2"));
+  tabWidget->addTab(new DescTabWidget(tabWidget), QLatin1String("Desc"));
+  tabWidget->addTab(new Tab1Widget(tabWidget),QLatin1String( "EntityTreeModel"));
+  tabWidget->addTab(new Tab2Widget(tabWidget),QLatin1String( "setRootIndex"));
+  tabWidget->addTab(new Tab2_5Widget(tabWidget), QLatin1String("Type specific data"));
+  tabWidget->addTab(new Tab3Widget(tabWidget), QLatin1String("KSelectionProxyModel"));
+  tabWidget->addTab(new Tab4Widget(tabWidget), QLatin1String("KSelectionProxyModel Filtered"));
+  tabWidget->addTab(new Tab6Widget(tabWidget), QLatin1String("Checkable Collections"));
+  tabWidget->addTab(new Tab5Widget(tabWidget), QLatin1String("Categorized Items"));
+  tabWidget->addTab(new Tab7Widget(tabWidget), QLatin1String("Tagged Items"));
+  tabWidget->addTab(new UnreadMailsWidget(tabWidget), QLatin1String("Unread Mails"));
+  tabWidget->addTab(new RecursiveItemListWidget(tabWidget), QLatin1String("Items only"));
+  tabWidget->addTab(new EntityFindingWidget(tabWidget), QLatin1String("Find entities"));
+  tabWidget->addTab(new CollectionMonitoredWidget(tabWidget), QLatin1String("SetCollectionMonitored"));
+  tabWidget->addTab(new UnreadMailsInCollectionsWidget(tabWidget), QLatin1String("UnreadMails"));
 
   setCentralWidget(tabWidget);
 }

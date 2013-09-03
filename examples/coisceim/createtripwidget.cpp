@@ -27,6 +27,7 @@
 
 #include <kconfig.h>
 #include <KMessageBox>
+#include <KLocale>
 #include <KConfig>
 #include <KSharedConfigPtr>
 
@@ -52,15 +53,15 @@ CreateTripWidget::CreateTripWidget(Trip *trip, Akonadi::ChangeRecorder* monitor,
 
   layout->addLayout(configureLayout);
 
-  m_mailWidget = createView("Mail", Trip::MailCollectionRole);
-  m_todoWidget = createView("Todos", Trip::TodoCollectionRole);
-  m_notesWidget = createView("Notes", Trip::NotesCollectionRole);
+  m_mailWidget = createView(QLatin1String("Mail"), Trip::MailCollectionRole);
+  m_todoWidget = createView(QLatin1String("Todos"), Trip::TodoCollectionRole);
+  m_notesWidget = createView(QLatin1String("Notes"), Trip::NotesCollectionRole);
 
   configureLayout->addWidget(m_mailWidget);
   configureLayout->addWidget(m_todoWidget);
   configureLayout->addWidget(m_notesWidget);
 
-  QPushButton *goButton = new QPushButton("Go!");
+  QPushButton *goButton = new QPushButton(i18n("Go!"));
   connect(goButton, SIGNAL(clicked(bool)), SLOT(create()));
 
   layout->addWidget(goButton);
@@ -91,7 +92,7 @@ void CreateTripWidget::create()
 {
   if (!m_tripItem.isValid())
   {
-    KMessageBox::error(this, "You need to select an event first");
+    KMessageBox::error(this, i18n("You need to select an event first"));
     return;
   }
   KSharedConfigPtr config = KGlobal::config();

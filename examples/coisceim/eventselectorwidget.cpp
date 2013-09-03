@@ -25,6 +25,7 @@
 #include <QPushButton>
 #include <QTextBrowser>
 #include <QTreeView>
+#include <KLocale>
 
 #include <calendarsupport/next/incidenceviewer.h>
 
@@ -68,7 +69,7 @@ EventSelectorWidget::EventSelectorWidget(QWidget* parent, Qt::WindowFlags f)
   QVBoxLayout *layout = new QVBoxLayout(this);
   QHBoxLayout *hLayout = new QHBoxLayout;
 
-  QPushButton *change = new QPushButton("Select trip");
+  QPushButton *change = new QPushButton(i18n("Select trip"));
   connect(change, SIGNAL(clicked(bool)), SLOT(selectTrip()));
 
   hLayout->addWidget(change);

@@ -68,9 +68,9 @@ KPApplet::~KPApplet()
 
 void KPApplet::init()
 {
-    KConfigGroup cg = config();
+    //KConfigGroup cg = config();
 
-    m_icon = new Plasma::IconWidget(KIcon("kmail",NULL), QString());
+    m_icon = new Plasma::IconWidget(KIcon(QLatin1String("kmail"),NULL), QString());
 
     Plasma::ToolTipManager::self()->registerWidget(this);
 
@@ -99,7 +99,7 @@ void KPApplet::updateToolTip(const int emails)
 
     m_toolTip = Plasma::ToolTipContent(i18nc("Tooltip main title text", "Your emails"),
                         i18ncp("Tooltip sub text", "One new email", "%1 new emails", emails),
-                        KIcon("kmail").pixmap(IconSize(KIconLoader::Desktop))
+                        KIcon(QLatin1String("kmail")).pixmap(IconSize(KIconLoader::Desktop))
                     );
     Plasma::ToolTipManager::self()->setContent(this, m_toolTip);
 }

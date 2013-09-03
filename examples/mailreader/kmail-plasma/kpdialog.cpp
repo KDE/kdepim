@@ -130,7 +130,7 @@ void KPDialog::setupPane()
       Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( m_folderListWidget );
       monitor->setCollectionMonitored( Akonadi::Collection::root() );
       monitor->fetchCollection( true );
-      monitor->setMimeTypeMonitored( "message/rfc822", true );
+      monitor->setMimeTypeMonitored( QLatin1String("message/rfc822"), true );
       monitor->itemFetchScope().fetchFullPayload(true);
 
       Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( monitor, m_folderListWidget );
