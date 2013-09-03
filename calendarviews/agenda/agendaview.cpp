@@ -515,12 +515,13 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
   if ( event ) {
     const QDate firstVisibleDate = mSelectedDates.first();
     // its crossing bounderies, lets calculate beginX and endX
+    const int duration = event->dtStart().toTimeSpec( q->preferences()->timeSpec() ).daysTo( event->dtEnd() );
     if ( insertAtDate < firstVisibleDate ) {
       beginX = curCol + firstVisibleDate.daysTo( insertAtDate );
-      endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
+      endX   = beginX + duration;
     } else {
       beginX = curCol;
-      endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
+      endX   = beginX + duration;
     }
   } else if ( todo ) {
     if ( !todo->hasDueDate() ) {
