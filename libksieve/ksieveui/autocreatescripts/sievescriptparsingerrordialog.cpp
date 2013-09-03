@@ -81,7 +81,5 @@ void SieveScriptParsingErrorDialog::slotSaveAs()
     PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this);
 }
 
-
-
 #include "sievescriptparsingerrordialog.moc"
 
