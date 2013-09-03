@@ -30,6 +30,8 @@
 #include <QDirIterator>
 #include <QDebug>
 
+static const KCatalogLoader loader( QLatin1String("libgrantleethemeeditor") );
+
 using namespace GrantleeThemeEditor;
 
 ManageThemes::ManageThemes(const QString &relativeThemePath, QWidget *parent)

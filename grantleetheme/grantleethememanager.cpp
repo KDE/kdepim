@@ -34,6 +34,8 @@
 #include <QDirIterator>
 #include <QActionGroup>
 
+static const KCatalogLoader loader( QLatin1String("libgrantleetheme") );
+
 using namespace GrantleeTheme;
 
 class GrantleeThemeManager::Private
