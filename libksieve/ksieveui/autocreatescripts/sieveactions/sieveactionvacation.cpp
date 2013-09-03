@@ -50,58 +50,48 @@ SieveAction* SieveActionVacation::newAction()
 QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QVBoxLayout *lay = new QVBoxLayout;
-    lay->setAlignment(Qt::AlignBottom);
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     QLabel *lab = 0;
-    QHBoxLayout *hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
     if (mHasVacationSecondsSupport) {
         SelectVacationComboBox *vacation = new SelectVacationComboBox;
         vacation->setObjectName(QLatin1String("vacationcombobox"));
-        hbox->addWidget(vacation);
+        grid->addWidget(vacation, 0 ,0);
     } else {
         lab = new QLabel(i18n("day:"));
-        hbox->addWidget(lab);
+        grid->addWidget(lab, 0 ,0);
     }
 
 
     QSpinBox *day = new QSpinBox;
     day->setMinimum(1);
     day->setObjectName(QLatin1String("day"));
-    hbox->addWidget(day);
+    grid->addWidget(day, 0 ,1);
 
 
-    hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
     lab = new QLabel(i18n("Message subject:"));
-    hbox->addWidget(lab);
+    grid->addWidget(lab, 1 ,0);
 
     KLineEdit *subject = new KLineEdit;
     subject->setObjectName(QLatin1String("subject"));
-    hbox->addWidget(subject);
-
-    hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
+    grid->addWidget(subject, 1 ,1);
 
     lab = new QLabel(i18n("Additional email:"));
-    hbox->addWidget(lab);
+    grid->addWidget(lab, 2 ,0);
 
     KLineEdit *addresses = new KLineEdit;
     addresses->setObjectName(QLatin1String("addresses"));
-    hbox->addWidget(addresses);
+    grid->addWidget(addresses, 2 ,1);
 
 
-    hbox = new QHBoxLayout;
-    lay->addLayout(hbox);
     lab = new QLabel(i18n("Vacation reason:"));
-    hbox->addWidget(lab);
+    grid->addWidget(lab, 3 ,0);
 
     MultiLineEdit *text = new MultiLineEdit;
     text->setObjectName(QLatin1String("text"));
-    hbox->addWidget(text);
+    grid->addWidget(text, 3 ,1);
 
     return w;
 }
