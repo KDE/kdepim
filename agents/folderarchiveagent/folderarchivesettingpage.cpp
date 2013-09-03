@@ -125,8 +125,14 @@ void FolderArchiveSettingPage::writeSettings()
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup grp = config->group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + mInstanceName);
     mInfo->setInstanceName(mInstanceName);
-    mInfo->setEnabled(mEnabled->isChecked());
-    mInfo->setArchiveTopLevel(mArchiveFolder->collection().id());
+    if (mArchiveFolder->collection().isValid()) {
+        mInfo->setEnabled(mEnabled->isChecked());
+        mInfo->setArchiveTopLevel(mArchiveFolder->collection().id());
+    } else {
+        mInfo->setEnabled(false);
+        mInfo->setArchiveTopLevel(-1);
+    }
+
     mInfo->setFolderArchiveType(mArchiveNamed->type());
     mInfo->writeConfig(grp);
 }
