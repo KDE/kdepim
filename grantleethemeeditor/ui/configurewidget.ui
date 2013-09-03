@@ -65,6 +65,11 @@
    <header>kurlrequester.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>defaultPath</tabstop>
+  <tabstop>author</tabstop>
+  <tabstop>authorEmail</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
