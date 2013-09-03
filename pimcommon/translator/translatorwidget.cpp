@@ -148,7 +148,6 @@ void TranslatorTextEdit::dropEvent( QDropEvent *event )
     QTextEdit::dropEvent(event);
 }
 
-
 TranslatorWidget::TranslatorWidget( QWidget* parent )
     : QWidget( parent ),
       d( new TranslatorWidgetPrivate )

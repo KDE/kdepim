@@ -21,6 +21,7 @@ set(libpimcommon_SRCS
   translator/translatorutil.cpp
   translator/translatorwidget.cpp
   translator/abstracttranslator.cpp
+  translator/translatordebugdialog.cpp
   #Laurent: disable it we can't use it directly now
   #translator/babelfishtranslator.cpp
   translator/googletranslator.cpp
