@@ -1,0 +1,7 @@
+if not envelope :contains "from" "corpdomain.com" {
+if envelope :contains "to" "betty@corpdomain.com" {
+reject "Betty is not allowed to receive Email from the outside. Please contact
+sales@corpdomain.com";
+stop;
+}
+}
