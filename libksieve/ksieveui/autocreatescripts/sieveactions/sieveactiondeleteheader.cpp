@@ -43,27 +43,27 @@ SieveAction* SieveActionDeleteHeader::newAction()
 QWidget *SieveActionDeleteHeader::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     SelectMatchTypeComboBox *matchType = new SelectMatchTypeComboBox;
     matchType->setObjectName(QLatin1String("matchtype"));
-    lay->addWidget(matchType);
+    grid->addWidget(matchType, 0, 0);
 
     QLabel *lab = new QLabel(i18n("header:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 1);
 
     KLineEdit *headerEdit = new KLineEdit;
     headerEdit->setObjectName(QLatin1String("headeredit"));
-    lay->addWidget(headerEdit);
+    grid->addWidget(headerEdit, 0, 2);
 
     lab = new QLabel(i18n("value:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 1);
 
     KLineEdit *valueEdit = new KLineEdit;
     valueEdit->setObjectName(QLatin1String("valueedit"));
-    lay->addWidget(valueEdit);
+    grid->addWidget(valueEdit, 1, 2);
     return w;
 }
 
