@@ -15,26 +15,37 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef CONTACTPREVIEWWIDGET_H
+#define CONTACTPREVIEWWIDGET_H
 
-#ifndef PREVIEWWIDGET_H
-#define PREVIEWWIDGET_H
+#include <QWidget>
+class QTabWidget;
 
-#include "grantleethemeeditor/previewwidget.h"
-class ContactPreviewWidget;
-class PreviewWidget : public GrantleeThemeEditor::PreviewWidget
+namespace Akonadi {
+class ContactViewer;
+class ContactGroupViewer;
+class GrantleeContactFormatter;
+class GrantleeContactGroupFormatter;
+}
+
+class ContactPreviewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PreviewWidget(const QString &projectDirectory, QWidget *parent = 0);
-    ~PreviewWidget();
+    explicit ContactPreviewWidget(const QString &projectDirectory, QWidget *parent=0);
+    ~ContactPreviewWidget();
 
-    void createScreenShot(const QString &fileName);
-    void loadConfig();
-    void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
     void updateViewer();
+    void createScreenShot(const QString &fileName);
 
 private:
-    ContactPreviewWidget *mPreview;
+    Akonadi::ContactViewer *mContactViewer;
+    Akonadi::ContactGroupViewer *mGroupViewer;
+
+    Akonadi::GrantleeContactFormatter *mFormatter;
+    Akonadi::GrantleeContactGroupFormatter *mGroupFormatter;
+
+    QTabWidget *mTabWidget;
 };
 
-#endif // PREVIEWWIDGET_H
+#endif // CONTACTPREVIEWWIDGET_H

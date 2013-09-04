@@ -23,6 +23,7 @@ set(contactthemeeditor_SRCS
   contacteditorpage.cpp
   contactconfigurationdialog.cpp
   contacteditorutil.cpp
+  contactpreviewwidget.cpp
 )
 
 
@@ -33,6 +34,7 @@ TARGET_LINK_LIBRARIES(contactthemeeditor
                        ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} 
                        ${KDE4_KIO_LIBS} 
                        ${KDE4_KNEWSTUFF3_LIBS} 
+                       ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
                        pimcommon 
                        grantleethemeeditor 
                        kaddressbookgrantlee
