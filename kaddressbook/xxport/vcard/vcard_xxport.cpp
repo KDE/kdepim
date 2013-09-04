@@ -137,11 +137,11 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
                "You have selected a list of contacts, "
                "shall they be exported to several files?" ),
         QString(),
-        KGuiItem( i18nc( "@action:button", "Export to Several Files" ) ),
-        KGuiItem( i18nc( "@action:button", "Export to One File" ) ) );
+        KGuiItem( i18nc( "@action:button", "Export to One File" ) ),
+        KGuiItem( i18nc( "@action:button", "Export to Several Files" ) ) );
 
     switch( answer ) {
-    case KMessageBox::Yes:
+    case KMessageBox::No:
     {
       const KUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
       if ( baseUrl.isEmpty() ) {
@@ -165,7 +165,7 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
       }
       break;
     }
-    case KMessageBox::No:
+    case KMessageBox::Yes:
     {
       url = KFileDialog::getSaveUrl( KUrl( "addressbook.vcf" ) );
       if ( url.isEmpty() ) {
