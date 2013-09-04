@@ -62,10 +62,10 @@ class SearchRuleWidget : public QWidget
      * Constructor. You can give a MailCommon::SearchRule as parameter,
      * which will be used to initialize the widget.
      */
-    explicit SearchRuleWidget( QWidget *parent = 0,
+    explicit SearchRuleWidget(QWidget *parent = 0,
                                MailCommon::SearchRule::Ptr aRule = MailCommon::SearchRule::Ptr(),
                                bool headersOnly = false,
-                               bool absoluteDates = false );
+                               bool absoluteDates = false , bool notShowSize = false);
 
     enum {
       Message,
@@ -151,7 +151,7 @@ class SearchRuleWidget : public QWidget
 
   private:
     void initWidget();
-    void initFieldList( bool headersOnly, bool absoluteDates );
+    void initFieldList(bool headersOnly, bool absoluteDates , bool notShowSize);
 
     QStringList mFilterFieldList;
     KComboBox *mRuleField;

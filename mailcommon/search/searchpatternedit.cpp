@@ -86,13 +86,13 @@ static const int SpecialRuleFieldsCount =
 //=============================================================================
 
 SearchRuleWidget::SearchRuleWidget( QWidget *parent, SearchRule::Ptr aRule,
-                                    bool headersOnly, bool absoluteDates )
+                                    bool headersOnly, bool absoluteDates, bool notShowSize )
   : QWidget( parent ),
     mRuleField( 0 ),
     mFunctionStack( 0 ),
     mValueStack( 0 )
 {
-  initFieldList( headersOnly, absoluteDates );
+  initFieldList( headersOnly, absoluteDates, notShowSize );
   initWidget();
 
   if ( aRule ) {
@@ -304,7 +304,7 @@ int SearchRuleWidget::indexOfRuleField( const QByteArray &aName ) const
   return -1;
 }
 
-void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates )
+void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates, bool notShowSize )
 {
   mFilterFieldList.clear();
   mFilterFieldList.append( QString() ); // empty entry for user input
@@ -315,10 +315,12 @@ void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates )
   }
   mFilterFieldList.append( SpecialRuleFields[AnyHeader].getLocalizedDisplayName() );
   mFilterFieldList.append( SpecialRuleFields[Recipients].getLocalizedDisplayName() );
-  mFilterFieldList.append( SpecialRuleFields[Size].getLocalizedDisplayName() );
+  if ( !notShowSize )
+    mFilterFieldList.append( SpecialRuleFields[Size].getLocalizedDisplayName() );
   if ( !absoluteDates ) {
     mFilterFieldList.append( SpecialRuleFields[AgeInDays].getLocalizedDisplayName() );
   }
+
   mFilterFieldList.append( SpecialRuleFields[Subject].getLocalizedDisplayName() );
   mFilterFieldList.append( SpecialRuleFields[From].getLocalizedDisplayName() );
   mFilterFieldList.append( SpecialRuleFields[To].getLocalizedDisplayName() );
@@ -473,7 +475,7 @@ void SearchRuleWidgetLister::reset()
 QWidget *SearchRuleWidgetLister::createWidget( QWidget *parent )
 {
   SearchRuleWidget *w =
-    new SearchRuleWidget( parent, SearchRule::Ptr(), mHeadersOnly, mAbsoluteDates );
+    new SearchRuleWidget( parent, SearchRule::Ptr(), mHeadersOnly, mAbsoluteDates, mNotShowSize );
   reconnectWidget( w );
   return w;
 }
