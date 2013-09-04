@@ -76,6 +76,10 @@ protected:
     QCheckBox   * mSpamCheck;
     QCheckBox   * mDomainCheck;
     KLineEdit   * mDomainEdit;
+
+private:
+    void writeConfig();
+    void readConfig();
 };
 
 }
