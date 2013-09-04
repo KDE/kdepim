@@ -40,6 +40,8 @@
 #include <QtCore/QRegExp>
 #include <QTextDocument>
 
+static const KCatalogLoader loader( QLatin1String("kaddressbook") );
+
 using namespace Akonadi;
 
 class GrantleeContactFormatter::Private
