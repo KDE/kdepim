@@ -1859,7 +1859,7 @@ void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
   const QList<AgendaItem::QPtr> agendaItemsToRemove = agendaItems( incidence );
 
   if ( agendaItemsToRemove.isEmpty() ) {
-    kWarning() << "Agenda::removeIncidence() Couldn't find any items to remove";
+    kWarning() << "Agenda::removeIncidence() Couldn't find any items to remove. UID=" << incidence->uid();
   } else {
     foreach ( const AgendaItem::QPtr &agendaItem, agendaItemsToRemove ) {
       if ( !removeAgendaItem( agendaItem ) )

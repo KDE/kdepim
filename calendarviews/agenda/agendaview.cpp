@@ -399,6 +399,12 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
     return;
   }
 
+  if ( incidence->dirtyFields().contains( KCalCore::Incidence::FieldUid ) ) {
+    // Uid changed, trigger a fillAgenda()
+    setChanges( q->changes() | IncidencesEdited, incidence );
+    return;
+  }
+
   if ( incidence->hasRecurrenceId() ) {
     // Reevaluate the main event instead
     reevaluateIncidence( q->calendar()->incidence( incidence->uid() ) );
@@ -407,7 +413,7 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
   }
 
   // No need to call setChanges(), that triggers a fillAgenda()
-  // setChanges( q->changes() | IncidencesEdited, CalendarSupport::incidence( incidence ) );
+  // setChanges( q->changes() | IncidencesEdited, incidence );
 }
 
 void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence )
