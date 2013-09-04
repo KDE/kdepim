@@ -351,13 +351,14 @@ void SearchRuleWidget::slotRuleFieldChanged( const QString &field )
 //
 //=============================================================================
 
-SearchRuleWidgetLister::SearchRuleWidgetLister( QWidget *parent, const char *,
-                                                bool headersOnly, bool absoluteDates )
+SearchRuleWidgetLister::SearchRuleWidgetLister( QWidget *parent, const char *, SearchPatternEdit::SearchPatternEditOptions options)
   : KWidgetLister( false, 2, FILTER_MAX_RULES, parent )
 {
   mRuleList = 0;
-  mHeadersOnly = headersOnly;
-  mAbsoluteDates = absoluteDates;
+
+  mHeadersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
+  mAbsoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
+  mNotShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
 }
 
 SearchRuleWidgetLister::~SearchRuleWidgetLister()
@@ -523,6 +524,12 @@ SearchPatternEdit::~SearchPatternEdit()
 {
 }
 
+void SearchPatternEdit::updateSearchPattern()
+{
+  mRuleLister->regenerateRuleListFromWidgets();
+}
+
+
 void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
@@ -565,9 +572,7 @@ void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
   mRuleLister =
     new SearchRuleWidgetLister(
       this,
-      "swl",
-      ( options & MailCommon::SearchPatternEdit::HeadersOnly ),
-      ( options & MailCommon::SearchPatternEdit::AbsoluteDate ) );
+      "swl", options);
 
   mRuleLister->slotClear();
 

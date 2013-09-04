@@ -67,14 +67,6 @@ class SearchRuleWidget : public QWidget
                                bool headersOnly = false,
                                bool absoluteDates = false );
 
-    enum RuleWidgetOption {
-        None = 0,
-        HeaderOnly = 1,
-        AbsoluteDates = 2,
-        NotShowSize = 4
-    };
-    Q_ENUMS(RuleWidgetOption)
-
     enum {
       Message,
       Body,
@@ -170,39 +162,7 @@ class SearchRuleWidget : public QWidget
     bool mAbsoluteDates;
 };
 
-class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
-{
-  Q_OBJECT
 
-  friend class SearchPatternEdit;
-
-  public:
-    explicit SearchRuleWidgetLister( QWidget *parent = 0,
-                                     const char *name = 0,
-                                     bool headersOnly = false,
-                                     bool absoluteDates = false );
-
-    virtual ~SearchRuleWidgetLister();
-
-    void setRuleList( QList<MailCommon::SearchRule::Ptr> *aList );
-
-  public slots:
-    void reset();
-    void slotAddWidget( QWidget * );
-    void slotRemoveWidget( QWidget * );
-
-  protected:
-    virtual void clearWidget( QWidget *aWidget );
-    virtual QWidget *createWidget( QWidget *parent );
-
-  private:
-    void reconnectWidget( SearchRuleWidget *w );
-    void updateAddRemoveButton();
-    void regenerateRuleListFromWidgets();
-    QList<MailCommon::SearchRule::Ptr> *mRuleList;
-    bool mHeadersOnly;
-    bool mAbsoluteDates;
-};
 
 /**
  * This widget is intended to be used in the filter configuration as
@@ -235,7 +195,7 @@ class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
  * @short A widget which allows editing a set of MailCommon::SearchRule's.
  * @author Marc Mutz <mutz@kde.org>
  */
-
+class SearchRuleWidgetLister;
 class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
 {
   Q_OBJECT
@@ -245,7 +205,8 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
       None = 0,
       HeadersOnly = 1,
       AbsoluteDate = 2,
-      MatchAllMessages = 4
+      MatchAllMessages = 4,
+      NotShowSize = 8
     };
     Q_DECLARE_FLAGS( SearchPatternEditOptions, SearchPatternEditOption )
 
@@ -271,10 +232,7 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
     /**
      * Updates the search pattern according to the current widget values.
      */
-    void updateSearchPattern()
-    {
-      mRuleLister->regenerateRuleListFromWidgets();
-    }
+    void updateSearchPattern();
 
   public slots:
     /**
@@ -304,13 +262,47 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
 
   private:
     void initLayout( SearchPatternEditOptions options );
-
     MailCommon::SearchPattern *mPattern;
     QRadioButton *mAllRBtn;
     QRadioButton *mAnyRBtn;
     QRadioButton *mAllMessageRBtn;
     SearchRuleWidgetLister *mRuleLister;
 };
+
+class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
+{
+  Q_OBJECT
+
+  friend class SearchPatternEdit;
+
+  public:
+    explicit SearchRuleWidgetLister(QWidget *parent = 0,
+                                     const char *name = 0,
+                                     SearchPatternEdit::SearchPatternEditOptions opt = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None));
+
+    virtual ~SearchRuleWidgetLister();
+
+    void setRuleList( QList<MailCommon::SearchRule::Ptr> *aList );
+
+  public slots:
+    void reset();
+    void slotAddWidget( QWidget * );
+    void slotRemoveWidget( QWidget * );
+
+  protected:
+    virtual void clearWidget( QWidget *aWidget );
+    virtual QWidget *createWidget( QWidget *parent );
+
+  private:
+    void reconnectWidget( SearchRuleWidget *w );
+    void updateAddRemoveButton();
+    void regenerateRuleListFromWidgets();
+    QList<MailCommon::SearchRule::Ptr> *mRuleList;
+    bool mHeadersOnly;
+    bool mAbsoluteDates;
+    bool mNotShowSize;
+};
+
 
 }
 
