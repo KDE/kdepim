@@ -67,6 +67,14 @@ class SearchRuleWidget : public QWidget
                                bool headersOnly = false,
                                bool absoluteDates = false );
 
+    enum RuleWidgetOption {
+        None = 0,
+        HeaderOnly = 1,
+        AbsoluteDates = 2,
+        NotShowSize = 4
+    };
+    Q_ENUMS(RuleWidgetOption)
+
     enum {
       Message,
       Body,
@@ -84,13 +92,6 @@ class SearchRuleWidget : public QWidget
       Organization,
       Date
     };
-
-    /**
-     * Set whether only header fields can be searched. If @p is true only
-     * header fields can be searched otherwise \<message\> and \<body\>
-     * searches are available also.
-     */
-    void setHeadersOnly( bool headersOnly );
 
     /**
      * Sets the rule. The rule is accepted regardless of the return
@@ -184,7 +185,6 @@ class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
     virtual ~SearchRuleWidgetLister();
 
     void setRuleList( QList<MailCommon::SearchRule::Ptr> *aList );
-    void setHeadersOnly( bool headersOnly );
 
   public slots:
     void reset();
@@ -267,12 +267,6 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
      */
     void setSearchPattern( MailCommon::SearchPattern *aPattern );
 
-    /**
-     * Sets whether only header fields can be searched. If @p is true only
-     * header fields can be searched otherwise \<message\> and \<body\> searches
-     * are available also.
-     */
-    void setHeadersOnly( bool headersOnly );
 
     /**
      * Updates the search pattern according to the current widget values.

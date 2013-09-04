@@ -103,28 +103,6 @@ SearchRuleWidget::SearchRuleWidget( QWidget *parent, SearchRule::Ptr aRule,
   }
 }
 
-void SearchRuleWidget::setHeadersOnly( bool headersOnly )
-{
-  SearchRule::Ptr srule = rule();
-  QByteArray currentText = srule->field();
-
-  initFieldList( headersOnly, mAbsoluteDates );
-
-  mRuleField->clear();
-  mRuleField->addItems( mFilterFieldList );
-  KCompletion *comp = mRuleField->completionObject();
-  comp->clear();
-  comp->insertItems(mFilterFieldList);
-  mRuleField->setMaxCount( mRuleField->count() );
-  mRuleField->adjustSize();
-
-  if ( ( currentText != "<message>") && ( currentText != "<body>" ) ) {
-    mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
-  } else {
-    mRuleField->setItemText( 0, QString() );
-  }
-}
-
 void SearchRuleWidget::initWidget()
 {
   QHBoxLayout *hlay = new QHBoxLayout( this );
@@ -481,13 +459,6 @@ void SearchRuleWidgetLister::updateAddRemoveButton()
   }
 }
 
-void SearchRuleWidgetLister::setHeadersOnly( bool headersOnly )
-{
-  foreach ( QWidget *w, widgets() ) {
-    qobject_cast<SearchRuleWidget*>( w )->setHeadersOnly( headersOnly );
-  }
-}
-
 void SearchRuleWidgetLister::reset()
 {
   if ( mRuleList ) {
@@ -643,12 +614,6 @@ void SearchPatternEdit::setSearchPattern( SearchPattern *aPattern )
   blockSignals( false );
 
   setEnabled( true );
-  emit patternChanged();
-}
-
-void SearchPatternEdit::setHeadersOnly( bool headersOnly )
-{
-  mRuleLister->setHeadersOnly( headersOnly );
   emit patternChanged();
 }
 
