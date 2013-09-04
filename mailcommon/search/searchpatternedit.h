@@ -159,7 +159,6 @@ class SearchRuleWidget : public QWidget
     QStackedWidget *mValueStack;
     KPushButton *mAdd;
     KPushButton *mRemove;
-    bool mAbsoluteDates;
 };
 
 

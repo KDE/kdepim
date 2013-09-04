@@ -90,8 +90,7 @@ SearchRuleWidget::SearchRuleWidget( QWidget *parent, SearchRule::Ptr aRule,
   : QWidget( parent ),
     mRuleField( 0 ),
     mFunctionStack( 0 ),
-    mValueStack( 0 ),
-    mAbsoluteDates( absoluteDates )
+    mValueStack( 0 )
 {
   initFieldList( headersOnly, absoluteDates );
   initWidget();
