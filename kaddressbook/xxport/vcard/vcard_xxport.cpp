@@ -181,7 +181,7 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
     }
     case KMessageBox::Cancel:
     default:
-        return false;
+      return true; // user canceled export
     }
   }
 
