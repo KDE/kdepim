@@ -158,7 +158,7 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
     //  but this is not valid JSON for QJSON, it expects empty strings: ["foo","","bar"]
     mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{3,3}")), QLatin1String(",\"\",\"\","));
     mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{2,2}")), QLatin1String(",\"\","));
-    //kDebug() << jsonData;
+    //qDebug() << mJsonData;
 
     QJson::Parser parser;
     bool ok;
@@ -169,10 +169,11 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
         return;
     }
 
+    //qDebug()<<" json"<<json;
     bool oldVersion = true;
     QMultiMap<int, QPair<QString, double> > sentences;
 
-    // we are going recursively through the nested json-arry
+    // we are going recursively through the nested json-array
     // level0 contains the data of the outer array, level1 of the next one and so on
     Q_FOREACH (const QVariant& level0, json) {
         const QVariantList listLevel0 = level0.toList();
@@ -189,7 +190,7 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
                 const QVariantList listLevel2 = level2.toList();
 
                 // The JSON we get from Google has not always the same structure.
-                // There is a version with addiotanal information like synonyms and frequency,
+                // There is a version with additional information like synonyms and frequency,
                 // this is called newVersion oldVersion doesn't cointain something like this.
 
                 const bool foundWordNew = (listLevel2.size() > 1) && (!listLevel2.at(1).toList().isEmpty());
