@@ -131,7 +131,7 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
     }
   } else {
     const int answer =
-      KMessageBox::questionYesNo(
+      KMessageBox::questionYesNoCancel(
         parentWidget(),
         i18nc( "@info",
                "You have selected a list of contacts, "
@@ -166,7 +166,6 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
       break;
     }
     case KMessageBox::No:
-    default:
     {
       url = KFileDialog::getSaveUrl( KUrl( "addressbook.vcf" ) );
       if ( url.isEmpty() ) {
@@ -178,7 +177,11 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
       } else {
         ok = doExport( url, converter.exportVCards( list, KABC::VCardConverter::v3_0 ) );
       }
+      break;
     }
+    case KMessageBox::Cancel:
+    default:
+        return false;
     }
   }
 
