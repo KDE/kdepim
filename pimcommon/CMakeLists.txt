@@ -60,6 +60,9 @@ target_link_libraries(pimcommon
 set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+add_subdirectory(translator/tests)
+
+
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
   kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
