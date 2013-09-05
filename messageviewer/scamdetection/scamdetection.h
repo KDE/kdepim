@@ -33,9 +33,11 @@ public:
     ~ScamDetection();
 
     void scanPage(QWebFrame *frame);
-    void showDetails();
 
     static bool scanFrame(const QWebElement &rootElement, QString &details);
+
+public Q_SLOTS:
+    void showDetails();
 
 Q_SIGNALS:
     void messageMayBeAScam();

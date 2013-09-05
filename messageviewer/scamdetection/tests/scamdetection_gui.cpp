@@ -45,6 +45,7 @@ ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidge
     lay->addWidget(mWebView);
 
     connect(mScamDetection, SIGNAL(messageMayBeAScam()), mScamWarningWidget, SLOT(slotShowWarning()));
+    connect(mScamWarningWidget, SIGNAL(showDetails()), mScamDetection, SLOT(showDetails()));
     setLayout(lay);
 
     mWebView->load(QUrl(filename));
@@ -68,7 +69,7 @@ int main (int argc, char **argv)
 
     KApplication app;
 
-    const QString fileName = KFileDialog::getOpenFileName();
+    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.html"));
     if (fileName.isEmpty()) {
         return 0;
     }
