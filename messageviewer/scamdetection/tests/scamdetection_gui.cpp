@@ -39,20 +39,25 @@ ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidge
     mScamWarningWidget = new MessageViewer::ScamDetectionWarningWidget();
     lay->addWidget(mScamWarningWidget);
 
-    QWebView *mWebView = new QWebView;
-    mWebView->load(QUrl(filename));
+    mWebView = new QWebView;
+    connect(mWebView, SIGNAL(loadFinished(bool)), SLOT(slotLoadFinished()));
     lay->addWidget(mWebView);
 
-    QWebFrame *mainFrame = mWebView->page()->mainFrame();
-    mScamDetection->scanPage(mainFrame);
     connect(mScamDetection, SIGNAL(messageMayBeAScam()), mScamWarningWidget, SLOT(slotShowWarning()));
-
     setLayout(lay);
+
+    mWebView->load(QUrl(filename));
 }
 
 ScamDetectionTestWidget::~ScamDetectionTestWidget()
 {
     delete mScamDetection;
+}
+
+void ScamDetectionTestWidget::slotLoadFinished()
+{
+    QWebFrame *mainFrame = mWebView->page()->mainFrame();
+    mScamDetection->scanPage(mainFrame);
 }
 
 int main (int argc, char **argv)

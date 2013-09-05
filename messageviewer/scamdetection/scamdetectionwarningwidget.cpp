@@ -21,10 +21,13 @@
 #include <KLocale>
 #include <KAction>
 
+#include <QDebug>
+
 using namespace MessageViewer;
 
 ScamDetectionWarningWidget::ScamDetectionWarningWidget(QWidget *parent)
-    : KMessageWidget(parent)
+    : KMessageWidget(parent),
+      mUseInTestApps(false)
 {
     setVisible(false);
     setCloseButtonVisible(true);
@@ -55,6 +58,11 @@ ScamDetectionWarningWidget::~ScamDetectionWarningWidget()
 {
 }
 
+void ScamDetectionWarningWidget::setUseInTestApps(bool b)
+{
+    mUseInTestApps = b;
+}
+
 void ScamDetectionWarningWidget::slotMessageIsNotAScam()
 {
     Q_EMIT messageIsNotAScam();
@@ -75,8 +83,10 @@ void ScamDetectionWarningWidget::slotShowWarning()
 
 void ScamDetectionWarningWidget::slotDisableScamDetection()
 {
-    MessageViewer::GlobalSettings::self()->setScamDetectionEnabled( false );
-    MessageViewer::GlobalSettings::self()->writeConfig();
+    if (!mUseInTestApps) {
+        MessageViewer::GlobalSettings::self()->setScamDetectionEnabled( false );
+        MessageViewer::GlobalSettings::self()->writeConfig();
+    }
     setVisible(false);
 }
 

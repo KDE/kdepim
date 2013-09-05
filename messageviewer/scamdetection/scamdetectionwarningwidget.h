@@ -30,6 +30,8 @@ public:
     explicit ScamDetectionWarningWidget(QWidget *parent = 0);
     ~ScamDetectionWarningWidget();
 
+    void setUseInTestApps(bool b);
+
 public Q_SLOTS:
     void slotShowWarning();
 
@@ -46,6 +48,9 @@ Q_SIGNALS:
 private Q_SLOTS:
     void slotDisableScamDetection();
     void slotMessageIsNotAScam();
+
+private:
+    bool mUseInTestApps;
 };
 }
 

@@ -32,6 +32,9 @@ public:
     explicit ScamDetectionTestWidget(const QString &filename, QWidget *parent=0);
     ~ScamDetectionTestWidget();
 
+private Q_SLOTS:
+    void slotLoadFinished();
+
 private:
     MessageViewer::ScamDetectionWarningWidget *mScamWarningWidget;
     MessageViewer::ScamDetection *mScamDetection;
