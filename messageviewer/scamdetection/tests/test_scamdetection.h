@@ -29,6 +29,7 @@ private slots:
     void testIp();
     void testNoScam();
     void testHref();
+    void testHexaValue();
 
 private:
     bool scanPage(QWebFrame *frame);
