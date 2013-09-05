@@ -18,13 +18,14 @@
 #ifndef SCAMDETECTION_H
 #define SCAMDETECTION_H
 
+#include "messageviewer/messageviewer_export.h"
 #include <QObject>
 
 class QWebElement;
 class QWebFrame;
 
 namespace MessageViewer {
-class ScamDetection : public QObject
+class MESSAGEVIEWER_EXPORT ScamDetection : public QObject
 {
     Q_OBJECT
 public:

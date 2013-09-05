@@ -21,12 +21,17 @@
 
 #include <qtest_kde.h>
 #include <QObject>
-
+class QWebFrame;
 class ScamDetectionTest : public QObject
 {
     Q_OBJECT
 private slots:
     void testIp();
+    void testNoScam();
+
+private:
+    bool scanPage(QWebFrame *frame);
+    bool testHtml(const QString &content);
 };
 
 #endif

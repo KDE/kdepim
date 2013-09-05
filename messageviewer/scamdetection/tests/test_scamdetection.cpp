@@ -16,10 +16,54 @@
 */
 
 #include "test_scamdetection.h"
+#include "messageviewer/scamdetection/scamdetection.h"
+
+#include <QWebElement>
+#include <QWebFrame>
+#include <QWebSettings>
+#include <QWebPage>
+
+bool ScamDetectionTest::scanPage(QWebFrame *frame)
+{
+    QString details;
+    bool foundScam = false;
+    const QWebElement rootElement = frame->documentElement();
+    bool result = MessageViewer::ScamDetection::scanFrame(rootElement, details);
+    if (result) {
+        foundScam = true;
+    }
+    foreach(QWebFrame *childFrame, frame->childFrames()) {
+        result = MessageViewer::ScamDetection::scanFrame(childFrame->documentElement(), details);
+        if (result) {
+            foundScam = true;
+        }
+    }
+    return foundScam;
+}
+
+bool ScamDetectionTest::testHtml(const QString &content)
+{
+    QWebPage page;
+    page.settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
+    page.settings()->setAttribute( QWebSettings::JavaEnabled, false );
+    page.settings()->setAttribute( QWebSettings::PluginsEnabled, false );
+
+    page.currentFrame()->setHtml( content );
+
+    return scanPage(page.currentFrame());
+}
+
+void ScamDetectionTest::testNoScam()
+{
+    const QString content = QLatin1String("<html><body></body></html>");
+    QCOMPARE(testHtml(content), false);
+}
 
 void ScamDetectionTest::testIp()
 {
     //TODO
+    QString content = QLatin1String("<html><body></body></html>");
+    QCOMPARE(testHtml(content), false);
 }
 
 QTEST_KDEMAIN( ScamDetectionTest, GUI )
