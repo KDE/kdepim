@@ -70,8 +70,7 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   const QStringList logEntries = FilterLog::instance()->logEntries();
   QStringList::ConstIterator end( logEntries.constEnd() ); 
   for ( QStringList::ConstIterator it = logEntries.constBegin();
-        it != end; ++it )
-  {
+        it != end; ++it ) {
     mTextEdit->append(*it);
   }
 
