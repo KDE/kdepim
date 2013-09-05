@@ -3,6 +3,7 @@ IconName=kmail
 Comment=Followup reminder agent
 Comment[nl]=Agent voor herinneren aan vervolgactie
 Comment[pt]=Agente de chamadas de seguimento
+Comment[pt_BR]=Agente de Acompanhamento
 Comment[sk]=Agent pripomienky sledovania
 Comment[sv]=Påminnelseuppföljningsmodul
 Comment[uk]=Агент стеження за нагадуваннями
