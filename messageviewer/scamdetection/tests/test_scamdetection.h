@@ -28,6 +28,7 @@ class ScamDetectionTest : public QObject
 private slots:
     void testIp();
     void testNoScam();
+    void testHref();
 
 private:
     bool scanPage(QWebFrame *frame);

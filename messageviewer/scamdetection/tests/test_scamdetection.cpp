@@ -61,8 +61,13 @@ void ScamDetectionTest::testNoScam()
 
 void ScamDetectionTest::testIp()
 {
-    //TODO
-    QString content = QLatin1String("<html><body></body></html>");
+    QString content = QLatin1String("<html><body><a href=\"http://125.15.55.88/\" title=\"http://www.kde.org\">test</a></body></html>");
+    QCOMPARE(testHtml(content), true);
+}
+
+void ScamDetectionTest::testHref()
+{
+    QString content = QLatin1String("<html><body><a href=\"http://www.kde.org/\" title=\"http://www.kde.org\">test</a></body></html>");
     QCOMPARE(testHtml(content), false);
 }
 
