@@ -29,7 +29,7 @@ class ScamDetectionTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ScamDetectionTestWidget(QWidget *parent=0);
+    explicit ScamDetectionTestWidget(const QString &filename, QWidget *parent=0);
     ~ScamDetectionTestWidget();
 
 private:

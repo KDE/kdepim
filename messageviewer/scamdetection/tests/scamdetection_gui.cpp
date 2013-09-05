@@ -30,7 +30,7 @@
 #include <QWebView>
 #include <QWebPage>
 
-ScamDetectionTestWidget::ScamDetectionTestWidget(QWidget *parent)
+ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidget *parent)
     : QWidget(parent)
 {
     mScamDetection = new MessageViewer::ScamDetection;
@@ -40,10 +40,12 @@ ScamDetectionTestWidget::ScamDetectionTestWidget(QWidget *parent)
     lay->addWidget(mScamWarningWidget);
 
     QWebView *mWebView = new QWebView;
+    mWebView->load(QUrl(filename));
     lay->addWidget(mWebView);
 
     QWebFrame *mainFrame = mWebView->page()->mainFrame();
     mScamDetection->scanPage(mainFrame);
+    connect(mScamDetection, SIGNAL(messageMayBeAScam()), mScamWarningWidget, SLOT(slotShowWarning()));
 
     setLayout(lay);
 }
@@ -60,7 +62,12 @@ int main (int argc, char **argv)
 
     KApplication app;
 
-    ScamDetectionTestWidget *w = new ScamDetectionTestWidget;
+    const QString fileName = KFileDialog::getOpenFileName();
+    if (fileName.isEmpty()) {
+        return 0;
+    }
+
+    ScamDetectionTestWidget *w = new ScamDetectionTestWidget(fileName);
 
     w->show();
     app.exec();

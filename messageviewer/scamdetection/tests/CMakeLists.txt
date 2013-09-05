@@ -24,6 +24,7 @@ target_link_libraries(scamdetection_gui
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}
   ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_KIO_LIBS}
   messageviewer
 )
 
