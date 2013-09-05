@@ -173,7 +173,7 @@ settings.</para>
 <para>Formats the output text according to given formatting rules. See
 <option>-of</option><replaceable> help</replaceable>
 for available formats. Default is
-<emphasis>vcard</emphasis></para>
+<emphasis>vcard</emphasis>.</para>
   </listitem>
   </varlistentry>
   <varlistentry>
@@ -392,7 +392,7 @@ kabcclient -of email -of-opts allemails -S Marilyn
 kabcclient --remove -if dialog
 </literallayout>
 
-<para><emphasis>Export selected contacts to a VCard (default output format) file</emphasis></para>
+<para><emphasis>Export selected contacts to a vCard (default output format) file</emphasis></para>
 <literallayout>
 kabcclient -S -if dialog &gt; contacts.vcf
 </literallayout>

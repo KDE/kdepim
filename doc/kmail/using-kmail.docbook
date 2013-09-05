@@ -77,8 +77,8 @@ and try them out until you find one you like! Details for the various headers ar
   <listitem><para><guilabel>Long Headers</guilabel> Title, Date, From, and To.</para></listitem>
   <listitem><para><guilabel>All Headers</guilabel> List everything you ever wanted to know about the email, including every server it went through, virus/spam scanners it went through &etc;</para></listitem>
   <listitem><para><guilabel>Custom Headers</guilabel> See <link linkend="configure-appearance-message-window">Message Window configuration</link> <guilabel>Headers:</guilabel> to set up custom headers that can be selected here.</para></listitem>
-  <listitem><para><guilabel>Example</guilabel> An example header from the <guilabel>Download New Themes</guilabel></para></listitem>
-  <listitem><para><guilabel>Example Fancy</guilabel> An example fancy header from the <guilabel>Download New Themes</guilabel></para></listitem>
+  <listitem><para><guilabel>Example</guilabel> An example header from the <guilabel>Download New Themes</guilabel>.</para></listitem>
+  <listitem><para><guilabel>Example Fancy</guilabel> An example fancy header from the <guilabel>Download New Themes</guilabel>.</para></listitem>
   <listitem><para><guilabel>Download New Themes</guilabel> Allows you to download custom themes created by other &kmail; users.</para></listitem>
 </itemizedlist>
 <para>If you prefer to view your email in &HTML; format instead of plain text (Default) click on the bar located on the left hand side of the pane.
@@ -1806,7 +1806,7 @@ you need to debug your filtering process.
             <listitem><para>By default <guilabel>Archive all subfolders</guilabel> is enabled. Uncheck this if you only want the parent folder archived.</para></listitem>
             <listitem><para>You can type in the location you would like to save your archive, or click the <guibutton>Open File Dialog</guibutton> button to select the folder.</para></listitem>
             <listitem><para>Select how often you wish to backup through the dropdown menues next to <guilabel>Backup each:</guilabel>.</para></listitem>
-            <listitem><para>If you are limited on drive space you will want to set a limit on <guilabel>Maximum number of archive:</guilabel></para></listitem>
+            <listitem><para>If you are limited on drive space you will want to set a limit on <guilabel>Maximum number of archive:</guilabel>.</para></listitem>
           </itemizedlist>
         </listitem>
       </varlistentry>
