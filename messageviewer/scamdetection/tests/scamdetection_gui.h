@@ -15,38 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SCAMDETECTIONWARNINGWIDGET_H
-#define SCAMDETECTIONWARNINGWIDGET_H
+#ifndef TEST_SCAMDETECTION_GUI_H
+#define TEST_SCAMDETECTION_GUI_H
 
-#include "messageviewer/messageviewer_export.h"
-
-#include <KMessageWidget>
+#include <QWidget>
 
 namespace MessageViewer {
-class MESSAGEVIEWER_EXPORT ScamDetectionWarningWidget : public KMessageWidget
+class ScamDetectionWarningWidget;
+class ScamDetection;
+}
+class QWebView;
+class ScamDetectionTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ScamDetectionWarningWidget(QWidget *parent = 0);
-    ~ScamDetectionWarningWidget();
+    explicit ScamDetectionTestWidget(QWidget *parent=0);
+    ~ScamDetectionTestWidget();
 
-public Q_SLOTS:
-    void slotShowWarning();
-
-private Q_SLOTS:
-    void slotShowDetails(const QString &content);
-    void slotAddToWhiteList();
-
-Q_SIGNALS:
-    void showDetails();
-    void moveMessageToTrash();
-    void messageIsNotAScam();
-    void addToWhiteList();
-
-private Q_SLOTS:
-    void slotDisableScamDetection();
-    void slotMessageIsNotAScam();
+private:
+    MessageViewer::ScamDetectionWarningWidget *mScamWarningWidget;
+    MessageViewer::ScamDetection *mScamDetection;
+    QWebView *mWebView;
 };
-}
 
-#endif // SCAMDETECTIONWARNINGWIDGET_H
+#endif
