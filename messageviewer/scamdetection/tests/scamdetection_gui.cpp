@@ -37,6 +37,7 @@ ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidge
 
     QVBoxLayout *lay = new QVBoxLayout;
     mScamWarningWidget = new MessageViewer::ScamDetectionWarningWidget();
+    mScamWarningWidget->setUseInTestApps(true);
     lay->addWidget(mScamWarningWidget);
 
     mWebView = new QWebView;
