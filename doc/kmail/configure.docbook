@@ -897,7 +897,7 @@ activated, &kmail; will close the message window after replying to or forwarding
 is displayed in the window. This only applies to the separate message window, not to the embedded
 message preview pane.</para>
 <para>By default, <guilabel>Enable access key</guilabel> is enabled. Access keys allow you to use the keyboard keys for functions which would perhaps normally be done with the mouse, such as following links.
-  For more information on access keys please see <ulink url="http://docs.kde.org/stable/en/applications/konqueror/accesskeys.html">Access keys</ulink></para>
+  For more information on access keys please see <ulink url="http://docs.kde.org/stable/en/applications/konqueror/accesskeys.html">Access keys</ulink>.</para>
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
 pane that tells you if a message is &html; or not. This is important because
 &html; messages might imitate the look of a signed and encrypted message, so
@@ -1251,8 +1251,8 @@ of key words can be modified.</para>
              <listitem>
                <para>
                You can enter custom automatic word replacement by checking this option. To enter a custom string to replace automatically
-               enter the word to be replaced in the <guilabel>Find</guilabel> box, and the replacement word in the <guilabel>Replace</guilabel> box and click the add button.
-               To remove a custom word replacement string, highlight the string and click remove.
+               enter the word to be replaced in the <guilabel>Find</guilabel> box, and the replacement word in the <guilabel>Replace</guilabel> box and click the <guibutton>Add</guibutton> button.
+               To remove a custom word replacement string, highlight the string and click <guibutton>Remove</guibutton>.
                </para>
              </listitem>
            </varlistentry>
@@ -1260,8 +1260,8 @@ of key words can be modified.</para>
              <term><guilabel>Exceptions</guilabel></term>
              <listitem>
                <para>
-               This allows you to set exceptions where you would like &kmail; to ignore your autocorrect selections for end of sentence and two uppercase letters. Enter the exception and click add.
-               To remove the exception, highlight the string and click remove.
+		 This allows you to set exceptions where you would like &kmail; to ignore your autocorrect selections for end of sentence and two uppercase letters. Enter the exception and click <guibutton>Add</guibutton> button.
+               To remove the exception, highlight the string and click <guibutton>Remove</guibutton> button.
                </para>
              </listitem>
            </varlistentry>

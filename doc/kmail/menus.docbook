@@ -76,7 +76,7 @@ performs a menu item function, the default shortcut is listed with the menu item
 <guisubmenu>Message from Template</guisubmenu>
 </menuchoice></term>
 <listitem><para><action>Creates a new message from a selected template.</action> Please see <link linkend="new-compose-from-templates">Compose From Templates</link> for additional information on creating templates.</para>
-<para>If you do not have any templates saved, you will see <menuchoice><guimenu>Message</guimenu><guisubmenu>Message from Template</guisubmenu><guimenuitem>(no templates)</guimenuitem></menuchoice></para></listitem>
+<para>If you do not have any templates saved, you will see <menuchoice><guimenu>Message</guimenu><guisubmenu>Message from Template</guisubmenu><guimenuitem>(no templates)</guimenuitem></menuchoice>.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-add-folder">
 <term><menuchoice>
@@ -92,7 +92,7 @@ performs a menu item function, the default shortcut is listed with the menu item
 <guisubmenu>New</guisubmenu>
 <guimenuitem>New AddressBook Contact...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Brings up the new contact dialog</action></para></listitem>
+<listitem><para><action>Brings up the <guilabel>New Contact</guilabel> dialog.</action></para></listitem>
 </varlistentry>
 <varlistentry id="reader-file-open">
 <term><menuchoice>
@@ -245,7 +245,7 @@ This allows you to choose which server to send your queued messages from. They m
 <guimenu>File</guimenu>
 <guimenuitem>Quit</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Exits &kmail;</action></para></listitem>
+<listitem><para><action>Exits &kmail;.</action></para></listitem>
 </varlistentry>
 </variablelist>
 
@@ -467,7 +467,7 @@ servers have been used to send the message by looking at the <literal>Received:<
 <guimenuitem>Use Fixed Font</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Uses a fixed width (Monospace) font to display the messages in the current folder.</action>
- The font to be used can be configured in the <link linkend="configure-appearance-fonts">Configure Appearance Fonts</link> tab of the configuration dialog.</para></listitem>
+ The font to be used can be configured in the <link linkend="configure-appearance-fonts">Fonts</link> tab on the <guilabel>Appearance</guilabel> page of the &kmail; configuration dialog.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-view-set-encoding">
 <term><menuchoice>
@@ -1233,7 +1233,7 @@ Please see next section for details.</para></note></listitem>
 <guimenu>Settings</guimenu>
 <guimenuitem>Configure Notifications...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Opens a dialog that lets you configure what happens when new mail arrives,</action> &eg; play a sound, display a popup.</para></listitem>
+<listitem><para><action>Opens a dialog that lets you configure what happens when new mail arrives,</action> &eg; play a sound, display a popup, &etc;</para></listitem>
 </varlistentry>
 </variablelist>
 </sect2>
@@ -1673,9 +1673,9 @@ on encryption and attachments.</para></listitem>
 <term><menuchoice>
 <guimenu>Attach</guimenu>
 <guisubmenu>Attach</guisubmenu>
-<guimenuitem>Attach Own Vcard</guimenuitem>
+<guimenuitem>Attach Own vCard</guimenuitem>
 </menuchoice></term>
-<listitem><para>Attaches your Vcard to the current message.</para></listitem>
+<listitem><para>Attaches your vCard to the current message.</para></listitem>
 </varlistentry>
 <varlistentry id="composer-attach-remove-attachment">
 <term><menuchoice>

@@ -48,7 +48,7 @@ and click the <guibutton>Next</guibutton> button. The wizard will then ask if yo
 or give you options to select which types of materials you want to import. Depending on your selections in the materials to import screen,
 you will see one or more of the following screens:</para>
   <itemizedlist>
-    <listitem><para>To <guilabel>Import mail messages</guilabel>, you need to select the folder you want your email messages to import into. Once selected, click the <guibutton>Import Mail</guibutton> button.
+    <listitem><para>To <guilabel>Import mail messages</guilabel>, you need to select the folder you want your email messages to import into. Once selected, click the <guibutton>Import Mails</guibutton> button.
     Once the progress bar reaches 100%, click the <guibutton>Next</guibutton> button, or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para></listitem>
     <listitem><para>To <guilabel>Import mail filters</guilabel>, click the <guibutton>Import Filters</guibutton> button and it will import any filters it found, once finished click the <guibutton>Next</guibutton> button,
     or the <guibutton>Finish</guibutton> button, if this was your last material selection.</para></listitem>
