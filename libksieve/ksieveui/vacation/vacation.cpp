@@ -541,14 +541,14 @@ bool Vacation::parseScript( const QString & script, QString & messageText,
 QString Vacation::defaultMessageText() {
     return i18n( "I am out of office till %1.\n"
                  "\n"
-                 "In urgent cases, please contact Mrs. <placeholder>vacation replacement</placeholder>\n"
+                 "In urgent cases, please contact Mrs. \"vacation replacement\"\n"
                  "\n"
-                 "email: <placeholder>email address of vacation replacement</placeholder>\n"
+                 "email: \"email address of vacation replacement\"\n"
                  "phone: +49 711 1111 11\n"
                  "fax.:  +49 711 1111 12\n"
                  "\n"
                  "Yours sincerely,\n"
-                 "-- <placeholder>enter your name and email address here</placeholder>\n",
+                 "-- \"enter your name and email address here\"\n",
                  KGlobal::locale()->formatDate( QDate::currentDate().addDays( 1 ) ) );
 }
 

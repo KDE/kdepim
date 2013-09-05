@@ -19,6 +19,7 @@
 #include "folderarchiveaccountinfo.h"
 #include "folderarchiveagentcheckcollection.h"
 #include "folderarchivemanager.h"
+#include "folderarchivecache.h"
 
 #include <Akonadi/ItemMoveJob>
 #include <Akonadi/CollectionFetchJob>
@@ -53,11 +54,16 @@ void FolderArchiveAgentJob::start()
         Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( Akonadi::Collection(mInfo->archiveTopLevel()), Akonadi::CollectionFetchJob::Base );
         connect( fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
     } else {
-        //TODO verify cache
-        FolderArchiveAgentCheckCollection *checkCol = new FolderArchiveAgentCheckCollection(mInfo, this);
-        connect(checkCol, SIGNAL(collectionIdFound(Akonadi::Collection)), SLOT(slotCollectionIdFound(Akonadi::Collection)));
-        connect(checkCol, SIGNAL(checkFailed(QString)), this, SLOT(slotCheckFailder(QString)));
-        checkCol->start();
+        Akonadi::Collection::Id id = mManager->folderArchiveCache()->collectionId(mInfo);
+        if (id != -1) {
+            Akonadi::CollectionFetchJob *fetchCollection = new Akonadi::CollectionFetchJob( Akonadi::Collection(id), Akonadi::CollectionFetchJob::Base );
+            connect( fetchCollection, SIGNAL(result(KJob*)), this, SLOT(slotFetchCollection(KJob*)));
+        } else {
+            FolderArchiveAgentCheckCollection *checkCol = new FolderArchiveAgentCheckCollection(mInfo, this);
+            connect(checkCol, SIGNAL(collectionIdFound(Akonadi::Collection)), SLOT(slotCollectionIdFound(Akonadi::Collection)));
+            connect(checkCol, SIGNAL(checkFailed(QString)), this, SLOT(slotCheckFailder(QString)));
+            checkCol->start();
+        }
     }
 }
 
@@ -83,7 +89,7 @@ void FolderArchiveAgentJob::slotFetchCollection(KJob *job)
 
 void FolderArchiveAgentJob::slotCollectionIdFound(const Akonadi::Collection &col)
 {
-    //TODO cache info.
+    mManager->folderArchiveCache()->addToCache(mInfo->instanceName(), col.id());
     sloMoveMailsToCollection(col);
 }
 

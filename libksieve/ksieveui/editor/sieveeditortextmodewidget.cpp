@@ -142,20 +142,22 @@ void SieveEditorTextModeWidget::readConfig()
 
 void SieveEditorTextModeWidget::generateXml()
 {
+#if !defined(NDEBUG)
     const QByteArray script = mTextEdit->toPlainText().toUtf8();
     KSieve::Parser parser( script.begin(),
                            script.begin() + script.length() );
     KSieveUi::XMLPrintingScriptBuilder psb;
     parser.setScriptBuilder( &psb );
     const bool result = parser.parse();
-    QPointer<ParsingResultDialog> dlg = new ParsingResultDialog;
+    QPointer<ParsingResultDialog> dlg = new ParsingResultDialog(this);
     if (result) {
         dlg->setResultParsing(psb.toDom().toString());
     } else {
-        dlg->setResultParsing(QLatin1String("Error during parsing"));
+        dlg->setResultParsing(i18n("Error during parsing"));
     }
     dlg->exec();
     delete dlg;
+#endif
 }
 
 void SieveEditorTextModeWidget::autoGenerateScripts()

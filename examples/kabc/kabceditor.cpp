@@ -34,7 +34,7 @@
 Dialog::Dialog( QWidget *parent )
   : KDialog( parent )
 {
-  setCaption( "Contact Editor" );
+  setCaption( i18n("Contact Editor") );
   setButtons( Close );
 
   showButtonSeparator( true );
@@ -45,18 +45,18 @@ Dialog::Dialog( QWidget *parent )
   mEditor = new Akonadi::ContactEditor( Akonadi::ContactEditor::EditMode, wdg );
   layout->addWidget( mEditor, 0, 0, 1, 3 );
 
-  QLabel *label = new QLabel( "Item Id:", wdg );
+  QLabel *label = new QLabel( i18n("Item Id:"), wdg );
   layout->addWidget( label, 1, 0 );
 
   mId = new QLineEdit( wdg );
   layout->addWidget( mId, 1, 1 );
 
-  QPushButton *button = new QPushButton( "Load", wdg );
+  QPushButton *button = new QPushButton( i18n("Load"), wdg );
   layout->addWidget( button, 1, 2 );
 
   connect( button, SIGNAL(clicked()), SLOT(load()) );
 
-  button = new QPushButton( "Save", wdg );
+  button = new QPushButton( i18n("Save"), wdg );
   layout->addWidget( button, 2, 2 );
 
   connect( button, SIGNAL(clicked()), SLOT(save()) );

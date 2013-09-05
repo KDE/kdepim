@@ -42,30 +42,30 @@ SieveAction* SieveActionEnclose::newAction()
 QWidget *SieveActionEnclose::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     QLabel *lab = new QLabel(i18n("Subject:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab,0,0);
 
     KLineEdit *subject = new KLineEdit;
     subject->setObjectName(QLatin1String("subject"));
-    lay->addWidget(subject);
+    grid->addWidget(subject,0,1);
 
     lab = new QLabel(i18n("headers:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab,1,0);
 
     KLineEdit *headers = new KLineEdit;
     headers->setObjectName(QLatin1String("headers"));
-    lay->addWidget(headers);
+    grid->addWidget(headers,1,1);
 
     lab = new QLabel(i18n("text:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab,2,0);
 
     MultiLineEdit *text = new MultiLineEdit;
     text->setObjectName(QLatin1String("text"));
-    lay->addWidget(text);
+    grid->addWidget(text,2,1);
 
     return w;
 }
@@ -133,7 +133,7 @@ QString SieveActionEnclose::code(QWidget *w) const
 }
 
 
-QStringList SieveActionEnclose::needRequires(QWidget *parent) const
+QStringList SieveActionEnclose::needRequires(QWidget */*parent*/) const
 {
     return QStringList() << QLatin1String("enclose");
 }

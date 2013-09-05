@@ -206,6 +206,7 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QLatin1String("akonadi_newmailnotifier_agent.notifyrc"));
     backupConfigFile(QLatin1String("akonadi_maildispatcher_agent.notifyrc"));
     backupConfigFile(QLatin1String("akonadi_folderarchive_agent.notifyrc"));
+    backupConfigFile(QLatin1String("akonadi_followupreminder_agent.notifyrc"));
 
     const QString folderArchiveAgentConfigurationStr(QLatin1String("akonadi_folderarchive_agentrc"));
     const QString folderArchiveAgentConfigurationrc = KStandardDirs::locateLocal( "config", folderArchiveAgentConfigurationStr );

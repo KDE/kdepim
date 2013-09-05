@@ -46,6 +46,7 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
 {
     QHBoxLayout *lay = new QHBoxLayout;
     mTabWidget = new GrantleeThemeEditor::ThemeEditorTabWidget;
+    connect(mTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentWidgetChanged(QWidget*)));
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
@@ -309,5 +310,10 @@ QString ContactEditorPage::projectDirectory() const
     return mThemeSession->projectDirectory();
 }
 
+void ContactEditorPage::slotCurrentWidgetChanged(QWidget *w)
+{
+    GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
+    Q_EMIT canInsertFile(page);
+}
 
 #include "contacteditorpage.moc"

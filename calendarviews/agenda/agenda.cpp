@@ -1850,13 +1850,21 @@ QList<AgendaItem::QPtr> Agenda::agendaItems( const KCalCore::Incidence::Ptr &inc
 
 void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
+  if ( !incidence )
+    return;
+
   // First find all items to be deleted and store them
   // in its own list. Otherwise removeAgendaItem will reset
   // the current position in the iterator-loop and mess the logic up.
   const QList<AgendaItem::QPtr> agendaItemsToRemove = agendaItems( incidence );
 
-  foreach ( const AgendaItem::QPtr &agendaItem, agendaItemsToRemove ) {
-    removeAgendaItem( agendaItem );
+  if ( agendaItemsToRemove.isEmpty() ) {
+    kWarning() << "Agenda::removeIncidence() Couldn't find any items to remove. UID=" << incidence->uid();
+  } else {
+    foreach ( const AgendaItem::QPtr &agendaItem, agendaItemsToRemove ) {
+      if ( !removeAgendaItem( agendaItem ) )
+        kWarning() << "Failed to remove " << incidence->uid();
+    }
   }
 }
 

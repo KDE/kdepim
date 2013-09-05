@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
                         ki18n( "" ),
                         KLocalizedString(),
                         "http://pim.kde.org/akonadi/" );
-  aboutData.setProgramIconName( "akonadi" );
+  aboutData.setProgramIconName( QLatin1String("akonadi") );
   aboutData.addAuthor( ki18n( "Stephen Kelly" ), ki18n( "Author" ), "steveire@gmail.com" );
 
   KCmdLineArgs::init( argc, argv, &aboutData );

@@ -17,6 +17,8 @@
 
 #include "parsingresultdialog.h"
 #include "xmlprintingsyntaxhighlighter.h"
+#include "pimcommon/util/pimutil.h"
+
 #include <KTextEdit>
 #include <KLocale>
 
@@ -26,19 +28,48 @@ ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Sieve Parsing" ) );
-    setButtons( Close );
+    setButtons( Close|User1 );
+    setButtonText(User1, i18n("Save As..."));
 
     mTextEdit = new KTextEdit( this );
     new XMLPrintingSyntaxHighLighter(mTextEdit->document());
     mTextEdit->setReadOnly( true );
     setMainWidget( mTextEdit );
-    resize(800,600);
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSaveAs()));
+    readConfig();
 }
 
+ParsingResultDialog::~ParsingResultDialog()
+{
+    writeConfig();
+}
 
 void ParsingResultDialog::setResultParsing(const QString &result)
 {
     mTextEdit->setPlainText(result);
+}
+
+void ParsingResultDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "ParsingResultDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 800,600);
+    }
+}
+
+void ParsingResultDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "ParsingResultDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void ParsingResultDialog::slotSaveAs()
+{
+    const QString filter = i18n( "all files (*)" );
+    PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this);
 }
 
 #include "parsingresultdialog.moc"

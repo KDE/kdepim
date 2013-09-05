@@ -16,6 +16,7 @@
 */
 
 #include "folderarchivecache.h"
+#include "folderarchiveaccountinfo.h"
 
 FolderArchiveCache::FolderArchiveCache(QObject *parent)
     : QObject(parent)
@@ -44,12 +45,39 @@ void FolderArchiveCache::clearCacheWithContainsCollection(Akonadi::Collection::I
     }
 }
 
-Akonadi::Collection::Id FolderArchiveCache::collectionId(const QString &resource) const
+Akonadi::Collection::Id FolderArchiveCache::collectionId(FolderArchiveAccountInfo *info)
 {
-    //TODO verify cache with date
-    if (mCache.contains(resource)) {
-        return mCache.value(resource).colId;
+    qDebug()<<" Look at Cache ";
+    if (mCache.contains(info->instanceName())) {
+        qDebug()<<"instance name : "<<info->instanceName();
+        switch(info->folderArchiveType()) {
+        case FolderArchiveAccountInfo::UniqueFolder: {
+            qDebug()<<"FolderArchiveAccountInfo::UniqueFolder has cache "<<mCache.value(info->instanceName()).colId;
+            return mCache.value(info->instanceName()).colId;
+        }
+        case FolderArchiveAccountInfo::FolderByMonths:
+            qDebug()<<"FolderArchiveAccountInfo::ByMonths has cache ?";
+            if (mCache.value(info->instanceName()).date.month() != QDate::currentDate().month()) {
+                qDebug()<<"need to remove current cache month is not good";
+                mCache.remove(info->instanceName());
+                return -1;
+            } else {
+                return mCache.value(info->instanceName()).colId;
+            }
+        case FolderArchiveAccountInfo::FolderByYears:
+            qDebug()<<"FolderArchiveAccountInfo::ByYears has cache ?";
+            if (mCache.value(info->instanceName()).date.year() != QDate::currentDate().year()) {
+                qDebug()<<"need to remove current cache year is not good";
+                mCache.remove(info->instanceName());
+                return -1;
+            } else {
+                return mCache.value(info->instanceName()).colId;
+            }
+            break;
+        }
+        return mCache.value(info->instanceName()).colId;
     }
+    qDebug()<<" Don't have cache for this instancename "<<info->instanceName();
     return -1;
 }
 

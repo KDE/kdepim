@@ -16,6 +16,7 @@
 */
 
 #include "contactconfigurationdialog.h"
+#include "contacteditorutil.h"
 
 #include "configurewidget.h"
 
@@ -24,6 +25,7 @@
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
+#include <KTextEdit>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -42,6 +44,14 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
 
     mConfigureWidget = new GrantleeThemeEditor::ConfigureWidget;
     lay->addWidget(mConfigureWidget);
+
+    QLabel *lab = new QLabel(i18n("Default contact:"));
+    lay->addWidget(lab);
+
+    mDefaultContact = new KTextEdit;
+    mDefaultContact->setAcceptRichText(false);
+    lay->addWidget(mDefaultContact);
+
 
     lay->addStretch();
 
@@ -62,6 +72,7 @@ ContactConfigureDialog::~ContactConfigureDialog()
 void ContactConfigureDialog::slotDefaultClicked()
 {
     mConfigureWidget->setDefault();
+    mDefaultContact->setPlainText(contacteditorutil::defaultContact());
 }
 
 void ContactConfigureDialog::slotOkClicked()
@@ -72,6 +83,14 @@ void ContactConfigureDialog::slotOkClicked()
 void ContactConfigureDialog::readConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
+
+    if (config->hasGroup(QLatin1String("Global"))) {
+        KConfigGroup group = config->group(QLatin1String("Global"));
+        mDefaultContact->setPlainText(group.readEntry("defaultContact",contacteditorutil::defaultContact()));
+    } else {
+        mDefaultContact->setPlainText(contacteditorutil::defaultContact());
+    }
+
     mConfigureWidget->readConfig();
 
     KConfigGroup group = KConfigGroup( config, "ContactConfigureDialog" );
@@ -85,6 +104,9 @@ void ContactConfigureDialog::readConfig()
 
 void ContactConfigureDialog::writeConfig()
 {
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup group = config->group(QLatin1String("Global"));
+    group.writeEntry("defaultContact", mDefaultContact->toPlainText());
     mConfigureWidget->writeConfig();
 }
 

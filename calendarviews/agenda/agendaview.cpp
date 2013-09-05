@@ -358,11 +358,12 @@ QList<QDate> AgendaView::Private::generateDateList( const QDate &start, const QD
 
 void AgendaView::Private::reevaluateIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
-  if ( !incidence ) {
-    kWarning() << "invalid incidence for item";
+  const Akonadi::Item item = q->calendar()->item( incidence );
+  if ( !incidence || !item.isValid() ) {
+    kWarning() << "invalid incidence or item not found." << item.isValid() << incidence;
     return;
   }
-  const Akonadi::Item item = q->calendar()->item( incidence );
+
   q->removeIncidence( incidence );
   q->displayIncidence( item, false );
   mAgenda->checkScrollBoundaries();
@@ -371,69 +372,69 @@ void AgendaView::Private::reevaluateIncidence( const KCalCore::Incidence::Ptr &i
 
 void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence )
 {
-  Q_ASSERT( incidence );
-  Q_ASSERT( !incidence->uid().isEmpty() );
   Akonadi::Item item = q->calendar()->item( incidence );
+  if ( !incidence || incidence->uid().isEmpty() || !item.isValid()) {
+    kError() << "AgendaView::Private::calendarIncidenceAdded() Invalid incidence or item:" << incidence << item.isValid();
+    Q_ASSERT( false );
+    return;
+  }
+
   if ( incidence->hasRecurrenceId() ) {
     // Reevaluate the main event instead, if it was inserted before this one
     KCalCore::Incidence::Ptr mainIncidence = q->calendar()->incidence( incidence->uid() );
     if ( mainIncidence ) {
       reevaluateIncidence( mainIncidence );
     }
-    return;
-  }
-
-  if ( item.isValid() ) {
-    // No need to call setChanges(), that triggers a fillAgenda()
-    if ( q->displayIncidence( item, false ) ) {
-      mAgenda->checkScrollBoundaries();
-      q->scheduleUpdateEventIndicators();
-    }
-  } else {
-    kError() << "AgendaView::Private::calendarIncidenceAdded() Invalid item.";
+  } else if ( q->displayIncidence( item, false ) ) {
+    mAgenda->checkScrollBoundaries();
+    q->scheduleUpdateEventIndicators();
   }
 }
 
 void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence )
 {
-  Q_ASSERT( incidence );
-  Q_ASSERT( !incidence->uid().isEmpty() );
-  if ( incidence->hasRecurrenceId() ) {
-    //Reevaluate the main event instead
-    reevaluateIncidence( q->calendar()->incidence( incidence->uid() ) );
+  if ( !incidence || incidence->uid().isEmpty() ) {
+    kError() << "AgendaView::Private::calendarIncidenceChanged() Invalid incidence or empty UID. " << incidence;
+    Q_ASSERT( false );
     return;
   }
 
-  if ( incidence ) {
-    reevaluateIncidence( incidence );
-  } else {
-    kError() << "AgendaView::Private::calendarIncidenceChanged() Invalid item.";
+  if ( incidence->dirtyFields().contains( KCalCore::Incidence::FieldUid ) ) {
+    // Uid changed, trigger a fillAgenda()
+    setChanges( q->changes() | IncidencesEdited, incidence );
+    return;
   }
+
+  if ( incidence->hasRecurrenceId() ) {
+    // Reevaluate the main event instead
+    reevaluateIncidence( q->calendar()->incidence( incidence->uid() ) );
+  } else {
+    reevaluateIncidence( incidence );
+  }
+
   // No need to call setChanges(), that triggers a fillAgenda()
-  // setChanges( q->changes() | IncidencesEdited, CalendarSupport::incidence( incidence ) );
+  // setChanges( q->changes() | IncidencesEdited, incidence );
 }
 
 void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence )
 {
-  Q_ASSERT( incidence );
-  Q_ASSERT( !incidence->uid().isEmpty() );
+  if ( !incidence || incidence->uid().isEmpty() ) {
+    kWarning() << "invalid incidence or empty uid: " << incidence;
+    Q_ASSERT( false );
+    return;
+  }
+
+  q->removeIncidence( incidence );
+
   if ( incidence->hasRecurrenceId() ) {
     // Reevaluate the main event instead.
     // We need to remove this incidence first, because it's already no longer
     // in the calendar (so the exception removal doesn't work)
-    q->removeIncidence( incidence );
     reevaluateIncidence( q->calendar()->incidence( incidence->uid() ) );
-    return;
-  }
-  if ( !incidence->uid().isEmpty() ) {
-    if ( mightBeVisible( incidence ) ) {
-      // No need to call setChanges(), that triggers a fillAgenda()
-      q->removeIncidence( incidence );
-      mAgenda->checkScrollBoundaries();
-      q->scheduleUpdateEventIndicators();
-    }
-  } else {
-    kError() << "AgendaView::Private::calendarIncidenceDeleted() Invalid item.";
+  } else if ( mightBeVisible( incidence ) ) {
+    // No need to call setChanges(), that triggers a fillAgenda()
+    mAgenda->checkScrollBoundaries();
+    q->scheduleUpdateEventIndicators();
   }
 
   //setChanges( q->changes() | IncidencesDeleted, CalendarSupport::incidence( incidence ) );
@@ -515,12 +516,13 @@ void AgendaView::Private::insertIncidence( const Akonadi::Item &aitem,
   if ( event ) {
     const QDate firstVisibleDate = mSelectedDates.first();
     // its crossing bounderies, lets calculate beginX and endX
+    const int duration = event->dtStart().toTimeSpec( q->preferences()->timeSpec() ).daysTo( event->dtEnd() );
     if ( insertAtDate < firstVisibleDate ) {
       beginX = curCol + firstVisibleDate.daysTo( insertAtDate );
-      endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
+      endX   = beginX + duration;
     } else {
       beginX = curCol;
-      endX   = beginX + event->dtStart().daysTo( event->dtEnd() );
+      endX   = beginX + duration;
     }
   } else if ( todo ) {
     if ( !todo->hasDueDate() ) {

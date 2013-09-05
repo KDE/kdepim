@@ -16,6 +16,7 @@
 */
 
 #include "previewwidget.h"
+#include "contactpreviewwidget.h"
 
 #include <KPushButton>
 #include <KLocale>
@@ -28,6 +29,10 @@
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     : GrantleeThemeEditor::PreviewWidget(parent)
 {
+    QHBoxLayout *lay = new QHBoxLayout;
+    mPreview = new ContactPreviewWidget(projectDirectory);
+    lay->addWidget(mPreview);
+    setLayout(lay);
 }
 
 PreviewWidget::~PreviewWidget()
@@ -41,6 +46,7 @@ void PreviewWidget::loadConfig()
 
 void PreviewWidget::updateViewer()
 {
+    mPreview->updateViewer();
 }
 
 void PreviewWidget::createScreenShot(const QString &fileName)

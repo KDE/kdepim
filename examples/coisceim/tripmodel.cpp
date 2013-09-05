@@ -86,12 +86,12 @@ QVariant TripModel::data(const QModelIndex& index, int role) const
     return QSize(180, 60);
   if (index.row() == rowCount() - 1) {
     if (role == Qt::DisplayRole)
-      return "CREATE";
+      return QLatin1String("CREATE");
     if (role == WidgetRole) {
       return QVariant::fromValue<QWidget*>(m_createWidget);
     }
     if (role == Qt::DecorationRole) {
-      return KIcon("list-add-new");
+      return KIcon(QLatin1String("list-add-new"));
     }
     return QVariant();
   }
@@ -109,7 +109,7 @@ QVariant TripModel::data(const QModelIndex& index, int role) const
 
   if (role == Qt::DecorationRole) {
     const int iconsSize = sizeof(icons) / sizeof(*icons);
-    return KIcon(*(icons + (index.row() % iconsSize)));
+    return KIcon(QLatin1String(*(icons + (index.row() % iconsSize))));
   }
 
   return MixedTreeModel::data(index, role);

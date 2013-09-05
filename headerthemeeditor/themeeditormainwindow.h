@@ -49,6 +49,7 @@ private Q_SLOTS:
     void slotNormalMode();
     void slotManageTheme();
     void slotUpdateView();
+    void slotCanInsertFile(bool b);
 
 private:
     void readConfig();

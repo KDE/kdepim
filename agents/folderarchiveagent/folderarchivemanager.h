@@ -28,6 +28,7 @@ class Collection;
 class FolderArchiveAccountInfo;
 class FolderArchiveKernel;
 class FolderArchiveAgentJob;
+class FolderArchiveCache;
 class KJob;
 class FolderArchiveManager : public QObject
 {
@@ -45,6 +46,8 @@ public:
 
     void collectionRemoved(const Akonadi::Collection &collection);
 
+    FolderArchiveCache *folderArchiveCache() const;
+
 private Q_SLOTS:
     void slotInstanceRemoved(const Akonadi::AgentInstance &instance);
     void slotFetchParentCollection(KJob* job);
@@ -58,6 +61,7 @@ private:
     FolderArchiveAgentJob *mCurrentJob;
     QList<FolderArchiveAccountInfo*> mListAccountInfo;
     FolderArchiveKernel *mFolderArchivelKernel;
+    FolderArchiveCache *mFolderArchiveCache;
 };
 
 #endif // FOLDERARCHIVEMANAGER_H

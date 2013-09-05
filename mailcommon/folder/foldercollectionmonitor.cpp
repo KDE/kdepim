@@ -55,7 +55,6 @@ FolderCollectionMonitor::FolderCollectionMonitor( Akonadi::Session *session, QOb
   mMonitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Envelope );
   mMonitor->itemFetchScope().setFetchModificationTime( false );
   mMonitor->itemFetchScope().setFetchRemoteIdentification( false );
-  qDebug()<<" mMonitor"<<mMonitor->isAllMonitored();
 }
 
 FolderCollectionMonitor::~FolderCollectionMonitor()

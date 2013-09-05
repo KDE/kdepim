@@ -26,10 +26,16 @@ class KSIEVEUI_EXPORT ParsingResultDialog : public KDialog
     Q_OBJECT
 public:
     explicit ParsingResultDialog(QWidget *parent=0);
+    ~ParsingResultDialog();
 
     void setResultParsing(const QString &result);
 
+private Q_SLOTS:
+    void slotSaveAs();
+
 private:
+    void readConfig();
+    void writeConfig();
     KTextEdit *mTextEdit;
 };
 }

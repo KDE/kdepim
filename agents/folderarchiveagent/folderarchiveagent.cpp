@@ -18,7 +18,6 @@
 
 #include "folderarchiveagent.h"
 #include "folderarchiveconfiguredialog.h"
-#include "folderarchivecache.h"
 #include "mailcommon/dbusoperators.h"
 
 #include "folderarchiveagentadaptor.h"
@@ -35,7 +34,6 @@
 FolderArchiveAgent::FolderArchiveAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
-    mFolderArchiveCache = new FolderArchiveCache(this);
     mFolderArchiveManager = new FolderArchiveManager(this);
     new FolderArchiveAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FolderArchiveAgent" ), this, QDBusConnection::ExportAdaptors );
@@ -50,8 +48,6 @@ FolderArchiveAgent::~FolderArchiveAgent()
 
 void FolderArchiveAgent::collectionRemoved( const Akonadi::Collection &collection )
 {
-
-    mFolderArchiveCache->clearCacheWithContainsCollection(collection.id());
     mFolderArchiveManager->collectionRemoved(collection);
 }
 
@@ -76,8 +72,6 @@ void FolderArchiveAgent::showConfigureDialog(qlonglong windowId)
 #endif
     }
     if (dialog->exec()) {
-        //Be sure to clear cache.
-        mFolderArchiveCache->clearCache();
         mFolderArchiveManager->load();
     }
     delete dialog;
@@ -98,7 +92,6 @@ bool FolderArchiveAgent::enabledAgent() const
 {
     return FolderArchiveAgentSettings::enabled();
 }
-
 
 AKONADI_AGENT_MAIN( FolderArchiveAgent )
 

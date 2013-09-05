@@ -1,2 +1,2 @@
 #! /bin/sh
-$XGETTEXT `find . -name '*.h' -o -name '*.cpp'` -o $podir/libpimcommon.pot
+$XGETTEXT `find . -name '*.h' -o -name '*.cpp' | grep -v '/tests/'` -o $podir/libpimcommon.pot

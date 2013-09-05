@@ -20,7 +20,7 @@
 #define PREVIEWWIDGET_H
 
 #include "grantleethemeeditor/previewwidget.h"
-
+class ContactPreviewWidget;
 class PreviewWidget : public GrantleeThemeEditor::PreviewWidget
 {
     Q_OBJECT
@@ -32,6 +32,9 @@ public:
     void loadConfig();
     void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
     void updateViewer();
+
+private:
+    ContactPreviewWidget *mPreview;
 };
 
 #endif // PREVIEWWIDGET_H

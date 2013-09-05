@@ -18,6 +18,7 @@
 #include "folderarchivemanager.h"
 #include "folderarchiveagentjob.h"
 #include "folderarchiveaccountinfo.h"
+#include "folderarchivecache.h"
 #include "folderarchivekernel.h"
 #include "folderarchiveutil.h"
 
@@ -39,6 +40,7 @@ FolderArchiveManager::FolderArchiveManager(QObject *parent)
     : QObject(parent),
       mCurrentJob(0)
 {
+    mFolderArchiveCache = new FolderArchiveCache(this);
     mFolderArchivelKernel = new FolderArchiveKernel( this );
     CommonKernel->registerKernelIf( mFolderArchivelKernel ); //register KernelIf early, it is used by the Filter classes
     CommonKernel->registerSettingsIf( mFolderArchivelKernel ); //SettingsIf is used in FolderTreeWidget
@@ -58,6 +60,7 @@ FolderArchiveManager::~FolderArchiveManager()
 
 void FolderArchiveManager::collectionRemoved(const Akonadi::Collection &collection)
 {
+    mFolderArchiveCache->clearCacheWithContainsCollection(collection.id());
     Q_FOREACH (FolderArchiveAccountInfo *info, mListAccountInfo) {
         if (info->archiveTopLevel() == collection.id()) {
             info->setArchiveTopLevel(-1);
@@ -161,6 +164,8 @@ void FolderArchiveManager::load()
 {
     qDeleteAll(mListAccountInfo);
     mListAccountInfo.clear();
+    //Be sure to clear cache.
+    mFolderArchiveCache->clearCache();
 
     const QStringList accountList = KGlobal::config()->groupList().filter( QRegExp( FolderArchive::FolderArchiveUtil::groupConfigPattern() ) );
     Q_FOREACH (const QString &account, accountList) {
@@ -209,6 +214,11 @@ void FolderArchiveManager::nextJob()
         mCurrentJob = mJobQueue.dequeue();
         mCurrentJob->start();
     }
+}
+
+FolderArchiveCache *FolderArchiveManager::folderArchiveCache() const
+{
+    return mFolderArchiveCache;
 }
 
 #include "folderarchivemanager.moc"

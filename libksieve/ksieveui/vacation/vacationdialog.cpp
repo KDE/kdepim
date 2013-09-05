@@ -121,7 +121,23 @@ VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
     ++row;
     KSeparator *separator = new KSeparator;
     glay->addWidget( separator, row, 0, 1, 2 );
+    readConfig();
+}
 
+VacationDialog::~VacationDialog()
+{
+    kDebug() << "~VacationDialog()";
+    writeConfig();
+}
+
+void VacationDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "VacationDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void VacationDialog::readConfig()
+{
     KConfigGroup group( KGlobal::config(), "VacationDialog" );
     const QSize size = group.readEntry( "Size", QSize() );
     if ( size.isValid() ) {
@@ -129,13 +145,6 @@ VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
     } else {
         resize( sizeHint().width(), sizeHint().height() );
     }
-}
-
-VacationDialog::~VacationDialog()
-{
-    kDebug() << "~VacationDialog()";
-    KConfigGroup group( KGlobal::config(), "VacationDialog" );
-    group.writeEntry( "Size", size() );
 }
 
 bool VacationDialog::activateVacation() const

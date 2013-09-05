@@ -41,28 +41,27 @@ SieveAction* SieveActionSetVariable::newAction()
 QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
-
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     SelectVariableModifierComboBox *modifier = new SelectVariableModifierComboBox;
     modifier->setObjectName(QLatin1String("modifier"));
-    lay->addWidget(modifier);
+    grid->addWidget(modifier, 0, 0);
 
     QLabel *lab = new QLabel(i18n("Value:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 1);
 
     KLineEdit *value = new KLineEdit;
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    grid->addWidget(value, 0, 2);
 
     lab = new QLabel(i18n("In variable:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 1);
 
     KLineEdit *variable = new KLineEdit;
     variable->setObjectName(QLatin1String("variable"));
-    lay->addWidget(variable);
+    grid->addWidget(variable, 1, 2);
 
     return w;
 }

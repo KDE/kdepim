@@ -68,19 +68,19 @@ void ItemViewerWidget::selectionChanged( const QModelIndex &selectedIndex )
 
   QString mimeType = selectedIndex.data(EntityTreeModel::MimeTypeRole).toString();
   Akonadi::Item item = selectedIndex.data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if (mimeType == "message/rfc822")
+  if (mimeType == QLatin1String("message/rfc822"))
   {
     m_widgetStack->setCurrentIndex( 1 );
     m_mailViewer->setMessageItem( item, MessageViewer::Viewer::Force );
     return;
   }
-  if (mimeType == "text/directory")
+  if (mimeType == QLatin1String("text/directory"))
   {
     m_widgetStack->setCurrentIndex( 2 );
     m_contactViewer->setItem( item );
     return;
   }
-  if (mimeType == "text/x-vnd.akonadi.note")
+  if (mimeType == QLatin1String("text/x-vnd.akonadi.note"))
   {
     m_widgetStack->setCurrentIndex( 3 );
     m_noteViewer->setIndex(selectedIndex);

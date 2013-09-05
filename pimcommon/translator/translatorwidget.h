@@ -56,10 +56,10 @@ public:
     explicit TranslatorWidget( QWidget* parent = 0 );
     explicit TranslatorWidget( const QString& text, QWidget* parent = 0 );
     ~TranslatorWidget();
+
     void setTextToTranslate( const QString& );
     void writeConfig();
     void readConfig();
-
 
 public Q_SLOTS:
     void slotTranslate();
@@ -72,6 +72,7 @@ private Q_SLOTS:
     void slotClear();
     void slotTranslateDone();
     void slotTranslateFailed(bool result, const QString &message);
+    void slotDebug();
 
 protected:
     bool event(QEvent* e);

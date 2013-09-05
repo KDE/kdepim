@@ -15,34 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CONTACTCONFIGUREDIALOG_H
-#define CONTACTCONFIGUREDIALOG_H
+#ifndef TRANSLATORDEBUGDIALOG_H
+#define TRANSLATORDEBUGDIALOG_H
 
 #include <KDialog>
 
-namespace GrantleeThemeEditor {
-class ConfigureWidget;
-}
-
-class KUrlRequester;
 class KTextEdit;
-class ContactConfigureDialog : public KDialog
+class TranslatorDebugDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ContactConfigureDialog(QWidget *parent = 0);
-    ~ContactConfigureDialog();
+    explicit TranslatorDebugDialog(QWidget *parent=0);
+    ~TranslatorDebugDialog();
 
-    void readConfig();
-    void writeConfig();
-
-private Q_SLOTS:
-    void slotOkClicked();
-    void slotDefaultClicked();
+    void setDebug(const QString &debugStr);
 
 private:
-    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultContact;
+    void readConfig();
+    void writeConfig();
+    KTextEdit *mEdit;
 };
 
-#endif // CONTACTCONFIGUREDIALOG_H
+#endif // TRANSLATORDEBUGDIALOG_H

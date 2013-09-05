@@ -21,6 +21,7 @@ set(libpimcommon_SRCS
   translator/translatorutil.cpp
   translator/translatorwidget.cpp
   translator/abstracttranslator.cpp
+  translator/translatordebugdialog.cpp
   #Laurent: disable it we can't use it directly now
   #translator/babelfishtranslator.cpp
   translator/googletranslator.cpp
@@ -58,6 +59,9 @@ target_link_libraries(pimcommon
 
 set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+add_subdirectory(translator/tests)
+
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

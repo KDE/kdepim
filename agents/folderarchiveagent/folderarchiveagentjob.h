@@ -32,7 +32,6 @@ public:
 
     void start();
 
-
 private Q_SLOTS:
     void slotFetchCollection(KJob *job);
     void slotMoveMessages(KJob *job);

@@ -29,20 +29,20 @@
 CreateFolderContentsWidget::CreateFolderContentsWidget(Trip *trip, int role, const QString &type, QWidget* parent)
   : QStackedWidget(parent), m_trip(trip), m_role(role)
 {
-  QPushButton *button = new QPushButton("Select " + type);
+  QPushButton *button = new QPushButton(QLatin1String("Select ") + type);
 
   QString iconName;
 
   switch (role)
   {
   case Trip::MailCollectionRole:
-    iconName = "kmail";
+    iconName = QLatin1String("kmail");
     break;
   case Trip::NotesCollectionRole:
-    iconName = "knotes";
+    iconName = QLatin1String("knotes");
     break;
   case Trip::TodoCollectionRole:
-    iconName = "korg-todo";
+    iconName = QLatin1String("korg-todo");
     break;
   }
   KIcon icon(iconName);

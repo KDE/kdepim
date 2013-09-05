@@ -33,6 +33,7 @@ public:
     virtual ~AbstractTranslator();
 
     virtual void translate() = 0;
+    virtual void debug() = 0;
 
     virtual QMap<QString, QMap<QString, QString> > initListLanguage(KComboBox* from) = 0;
 

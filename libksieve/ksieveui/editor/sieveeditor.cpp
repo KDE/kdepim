@@ -235,6 +235,7 @@ void SieveEditor::slotCheckSyntax()
 
 void SieveEditor::slotGenerateXml()
 {
+#if !defined(NDEBUG)
     switch (mMode) {
     case TextMode:
         mTextModeWidget->generateXml();
@@ -242,6 +243,7 @@ void SieveEditor::slotGenerateXml()
     case GraphicMode:
         break;
     }
+#endif
 }
 
 void SieveEditor::slotSaveAs()

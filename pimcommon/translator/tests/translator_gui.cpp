@@ -15,34 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CONTACTCONFIGUREDIALOG_H
-#define CONTACTCONFIGUREDIALOG_H
+#include "translator/translatorwidget.h"
 
-#include <KDialog>
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KFileDialog>
+#include <KCmdLineArgs>
+#include <KLocale>
+#include <QDebug>
+#include <QPointer>
 
-namespace GrantleeThemeEditor {
-class ConfigureWidget;
+int main (int argc, char **argv)
+{
+    KCmdLineArgs::init(argc, argv, "translator_gui", 0, ki18n("TranslatorTest_Gui"),
+                       "1.0", ki18n("Test for translator widget"));
+
+    KApplication app;
+
+    PimCommon::TranslatorWidget *w = new PimCommon::TranslatorWidget();
+    w->show();
+    app.exec();
+    delete w;
+    return 0;
 }
 
-class KUrlRequester;
-class KTextEdit;
-class ContactConfigureDialog : public KDialog
-{
-    Q_OBJECT
-public:
-    explicit ContactConfigureDialog(QWidget *parent = 0);
-    ~ContactConfigureDialog();
-
-    void readConfig();
-    void writeConfig();
-
-private Q_SLOTS:
-    void slotOkClicked();
-    void slotDefaultClicked();
-
-private:
-    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultContact;
-};
-
-#endif // CONTACTCONFIGUREDIALOG_H

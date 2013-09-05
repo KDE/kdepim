@@ -15,34 +15,37 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CONTACTCONFIGUREDIALOG_H
-#define CONTACTCONFIGUREDIALOG_H
+#ifndef CONTACTPREVIEWWIDGET_H
+#define CONTACTPREVIEWWIDGET_H
 
-#include <KDialog>
+#include <QWidget>
+class QTabWidget;
 
-namespace GrantleeThemeEditor {
-class ConfigureWidget;
+namespace Akonadi {
+class ContactViewer;
+class ContactGroupViewer;
+class GrantleeContactFormatter;
+class GrantleeContactGroupFormatter;
 }
 
-class KUrlRequester;
-class KTextEdit;
-class ContactConfigureDialog : public KDialog
+class ContactPreviewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ContactConfigureDialog(QWidget *parent = 0);
-    ~ContactConfigureDialog();
+    explicit ContactPreviewWidget(const QString &projectDirectory, QWidget *parent=0);
+    ~ContactPreviewWidget();
 
-    void readConfig();
-    void writeConfig();
-
-private Q_SLOTS:
-    void slotOkClicked();
-    void slotDefaultClicked();
+    void updateViewer();
+    void createScreenShot(const QString &fileName);
 
 private:
-    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultContact;
+    Akonadi::ContactViewer *mContactViewer;
+    Akonadi::ContactGroupViewer *mGroupViewer;
+
+    Akonadi::GrantleeContactFormatter *mFormatter;
+    Akonadi::GrantleeContactGroupFormatter *mGroupFormatter;
+
+    QTabWidget *mTabWidget;
 };
 
-#endif // CONTACTCONFIGUREDIALOG_H
+#endif // CONTACTPREVIEWWIDGET_H
