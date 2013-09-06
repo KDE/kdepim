@@ -18,22 +18,53 @@
 #include "autocorrection_gui.h"
 #include "messagecomposer/autocorrection/composerautocorrection.h"
 #include "messagecomposer/autocorrection/composerautocorrectionwidget.h"
+#include "messagecomposer/settings/messagecomposersettings.h"
 
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocale>
+#include <KSharedConfig>
 
 #include <QDebug>
 #include <QPointer>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QKeyEvent>
+#include <QToolBar>
+#include <QAction>
+
+
+ConfigureTestDialog::ConfigureTestDialog(MessageComposer::ComposerAutoCorrection *autoCorrection, QWidget *parent)
+    : KDialog(parent)
+{
+    setCaption( QLatin1String("Configure Autocorrection") );
+    setButtons( Ok | Cancel);
+
+    setDefaultButton( KDialog::Ok );
+
+    QHBoxLayout *lay = new QHBoxLayout( mainWidget() );
+    mWidget = new MessageComposer::ComposerAutoCorrectionWidget;
+    lay->addWidget(mWidget);
+    mWidget->setAutoCorrection(autoCorrection);
+    mWidget->loadConfig();
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotSaveSettings()));
+}
+
+ConfigureTestDialog::~ConfigureTestDialog()
+{
+}
+
+void ConfigureTestDialog::slotSaveSettings()
+{
+    mWidget->writeConfig();
+}
 
 TextEditAutoCorrectionWidget::TextEditAutoCorrectionWidget(MessageComposer::ComposerAutoCorrection *autoCorrection, QWidget *parent)
     : QTextEdit(parent),
       mAutoCorrection(autoCorrection)
 {
+    setAcceptRichText(false);
 }
 
 TextEditAutoCorrectionWidget::~TextEditAutoCorrectionWidget()
@@ -45,36 +76,51 @@ void TextEditAutoCorrectionWidget::keyPressEvent ( QKeyEvent *e )
     if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
         if(mAutoCorrection) {
             //TODO customize rich text or not
-            mAutoCorrection->autocorrect(false, *document(),textCursor().position());
+            mAutoCorrection->autocorrect(acceptRichText(), *document(),textCursor().position());
         }
     }
     QTextEdit::keyPressEvent( e );
 }
 
-
 AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
     : QWidget(parent)
 {
+    mConfig = KSharedConfig::openConfig( QLatin1String("autocorrectionguirc") );
+    MessageComposer::MessageComposerSettings::self()->setSharedConfig( mConfig );
+    MessageComposer::MessageComposerSettings::self()->readConfig();
+
     mAutoCorrection = new MessageComposer::ComposerAutoCorrection;
     QVBoxLayout *lay = new QVBoxLayout;
+    QToolBar *bar = new QToolBar;
+    lay->addWidget(bar);
+    bar->addAction(QLatin1String("Configure..."), this, SLOT(slotConfigure()));
+    QAction *richText = new QAction(QLatin1String("HTML mode"), this);
+    richText->setCheckable(true);
+    connect(richText, SIGNAL(toggled(bool)), this, SLOT(slotChangeMode(bool)));
+    bar->addAction(richText);
     mEdit = new TextEditAutoCorrectionWidget(mAutoCorrection);
     lay->addWidget(mEdit);
 
-    QPushButton *configButton = new QPushButton(QLatin1String("Configure..."));
-    connect(configButton, SIGNAL(clicked()), SLOT(slotConfigure()));
-    lay->addWidget(configButton);
 
     setLayout(lay);
 }
 
 AutocorrectionTestWidget::~AutocorrectionTestWidget()
 {
+    mAutoCorrection->writeConfig();
     delete mAutoCorrection;
+}
+
+void AutocorrectionTestWidget::slotChangeMode(bool mode)
+{
+    mEdit->setAcceptRichText(mode);
 }
 
 void AutocorrectionTestWidget::slotConfigure()
 {
-    //TODO
+    QPointer<ConfigureTestDialog> dlg = new ConfigureTestDialog(mAutoCorrection, this);
+    dlg->exec();
+    delete dlg;
 }
 
 int main (int argc, char **argv)

@@ -19,11 +19,29 @@
 #define TEST_AUTOCORRECTION_GUI_H
 
 #include <QWidget>
+#include <KSharedConfig>
+#include <KDialog>
+
 #include <QTextEdit>
 
 namespace MessageComposer {
 class ComposerAutoCorrection;
+class ComposerAutoCorrectionWidget;
 }
+
+class ConfigureTestDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit ConfigureTestDialog(MessageComposer::ComposerAutoCorrection *autoCorrection, QWidget *parent=0);
+    ~ConfigureTestDialog();
+
+private Q_SLOTS:
+    void slotSaveSettings();
+
+private:
+    MessageComposer::ComposerAutoCorrectionWidget *mWidget;
+};
 
 class TextEditAutoCorrectionWidget : public QTextEdit
 {
@@ -48,10 +66,12 @@ public:
 
 private Q_SLOTS:
     void slotConfigure();
+    void slotChangeMode(bool);
 
 private:
     TextEditAutoCorrectionWidget *mEdit;
     MessageComposer::ComposerAutoCorrection *mAutoCorrection;
+    KSharedConfig::Ptr mConfig;
 };
 
 #endif
