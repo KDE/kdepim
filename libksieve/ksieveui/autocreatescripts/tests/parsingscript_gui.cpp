@@ -43,7 +43,7 @@ int main (int argc, char **argv)
                        "1.0", ki18n("Test for parsing script dialog"));
 
     KCmdLineOptions option;
-    option.add("+[url]", ki18n("URL of an archive to be opened"));
+    option.add("+[url]", ki18n("URL of a sieve script to be opened"));
     KCmdLineArgs::addCmdLineOptions(option);
 
 
