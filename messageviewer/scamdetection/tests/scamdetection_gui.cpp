@@ -67,9 +67,21 @@ int main (int argc, char **argv)
     KCmdLineArgs::init(argc, argv, "scamdetection_gui", 0, ki18n("ScamDetectionTest_Gui"),
                        "1.0", ki18n("Test for scamdetection widget"));
 
+    KCmdLineOptions option;
+    option.add("+[url]", ki18n("URL of an html file to be opened"));
+    KCmdLineArgs::addCmdLineOptions(option);
+
+
     KApplication app;
 
-    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.html"));
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+    QString fileName;
+    if (args->count()) {
+        fileName = args->url(0).path();
+    } else {
+        fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.html"));
+    }
     if (fileName.isEmpty()) {
         return 0;
     }
