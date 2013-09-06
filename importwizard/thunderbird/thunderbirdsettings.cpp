@@ -835,7 +835,6 @@ void ThunderbirdSettings::readIdentity( const QString& account )
         }
     }
 
-
     const QString attachVcardStr( identity + QLatin1String( ".attach_vcard" ) );
     if ( mHashConfig.contains( attachVcardStr ) ) {
         const bool attachVcard = mHashConfig.value( attachVcardStr ).toBool();
