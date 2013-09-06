@@ -20,11 +20,13 @@
 
 #include "messageviewer/messageviewer_export.h"
 #include <QObject>
+#include <QPointer>
 
 class QWebElement;
 class QWebFrame;
 
 namespace MessageViewer {
+class ScamDetectionDetailsDialog;
 class MESSAGEVIEWER_EXPORT ScamDetection : public QObject
 {
     Q_OBJECT
@@ -44,6 +46,7 @@ Q_SIGNALS:
 
 private:
     QString mDetails;
+    QPointer<MessageViewer::ScamDetectionDetailsDialog> mDetailsDialog;
 };
 }
 

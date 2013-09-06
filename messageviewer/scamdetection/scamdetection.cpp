@@ -126,9 +126,15 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
 
 void ScamDetection::showDetails()
 {
-    MessageViewer::ScamDetectionDetailsDialog *dlg = new MessageViewer::ScamDetectionDetailsDialog;
-    dlg->setDetails(mDetails);
-    dlg->show();
+    if (mDetailsDialog) {
+        mDetailsDialog->setDetails(mDetails);
+        mDetailsDialog->show();
+        return;
+    }
+
+    mDetailsDialog = new MessageViewer::ScamDetectionDetailsDialog;
+    mDetailsDialog->setDetails(mDetails);
+    mDetailsDialog->show();
 }
 
 
