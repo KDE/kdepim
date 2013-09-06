@@ -86,6 +86,13 @@ void ScamDetectionTest::testHref()
     QCOMPARE(testHtml(content), false);
 }
 
+void ScamDetectionTest::testRedirectUrl()
+{
+    QString content = QLatin1String("<html><body><a href=\"http://www.google.fr/url?q=http://www.yahoo.com\">test</a></body></html>");
+    QCOMPARE(testHtml(content), true);
+}
+
+
 QTEST_KDEMAIN( ScamDetectionTest, GUI )
 
 #include "test_scamdetection.moc"

@@ -30,6 +30,7 @@ private slots:
     void testNoScam();
     void testHref();
     void testHexaValue();
+    void testRedirectUrl();
 
 private:
     bool scanPage(QWebFrame *frame);
