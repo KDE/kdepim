@@ -25,6 +25,7 @@
 #include "folderarchivemanager.h"
 
 #include <KWindowSystem>
+#include <KLocale>
 
 #include <akonadi/dbusconnectionpool.h>
 
@@ -34,8 +35,10 @@
 FolderArchiveAgent::FolderArchiveAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
+    KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
     mFolderArchiveManager = new FolderArchiveManager(this);
     new FolderArchiveAgentAdaptor( this );
+
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/FolderArchiveAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.FolderArchiveAgent" ) );
 

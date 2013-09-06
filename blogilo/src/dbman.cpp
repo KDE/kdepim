@@ -131,8 +131,8 @@ bool DBMan::connectDB()
     kDebug();
     if( d->db.isOpen() )
         return true;
-    d->db = QSqlDatabase::addDatabase( "QSQLITE" );
-    d->db.setDatabaseName( CONF_DB );
+    d->db = QSqlDatabase::addDatabase( QLatin1String("QSQLITE") );
+    d->db.setDatabaseName( QString(CONF_DB) );
 
     if ( !d->db.open() ) {
         KMessageBox::detailedError( 0, i18n( "Cannot connect to database" ),
@@ -159,114 +159,114 @@ bool DBMan::createDB()
 
     QSqlQuery q;
     ///Blog table!
-    if ( !q.exec( "CREATE TABLE blog (id INTEGER PRIMARY KEY, blogid TEXT, blog_url TEXT, username TEXT,\
+    if ( !q.exec( QLatin1String("CREATE TABLE blog (id INTEGER PRIMARY KEY, blogid TEXT, blog_url TEXT, username TEXT,\
                   password TEXT, style_url TEXT, api_type TEXT, title TEXT, direction TEXT,\
-                  local_directory TEXT, icon_url TEXT)" ) ) {
+                  local_directory TEXT, icon_url TEXT)") ) ) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///posts table!
-    if ( !q.exec( "CREATE TABLE post (id INTEGER PRIMARY KEY, postid TEXT NOT NULL, blog_id NUMERIC NOT NULL,\
+    if ( !q.exec( QLatin1String("CREATE TABLE post (id INTEGER PRIMARY KEY, postid TEXT NOT NULL, blog_id NUMERIC NOT NULL,\
                   author TEXT, slug TEXT, post_password TEXT, title TEXT, content TEXT, text_more TEXT,\
                   c_time TEXT, m_time TEXT, is_private NUMERIC, is_comment_allowed NUMERIC,\
                   is_trackback_allowed NUMERIC, link TEXT, perma_link TEXT, summary TEXT, tags TEXT,\
-                  status NUMERIC, trackback_urls TEXT, UNIQUE(postid, blog_id));" ) ) {
+                  status NUMERIC, trackback_urls TEXT, UNIQUE(postid, blog_id));") ) ) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///comments table!
-    if ( !q.exec( "CREATE TABLE comment (id INTEGER PRIMARY KEY, commentid TEXT NOT NULL, blog_id NUMERIC NOT NULL,\
+    if ( !q.exec( QLatin1String("CREATE TABLE comment (id INTEGER PRIMARY KEY, commentid TEXT NOT NULL, blog_id NUMERIC NOT NULL,\
         postId TEXT, author_name TEXT, author_url TEXT, author_email TEXT, title TEXT, content TEXT,\
         c_time TEXT, m_time TEXT, link TEXT, password TEXT,\
-        status NUMERIC, UNIQUE(commentid, blog_id));" ) ) {
+        status NUMERIC, UNIQUE(commentid, blog_id));" ) ) ){
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///categories table!
-    if ( !q.exec( "CREATE TABLE category (catid INTEGER PRIMARY KEY, name TEXT NOT NULL,\
+    if ( !q.exec( QLatin1String("CREATE TABLE category (catid INTEGER PRIMARY KEY, name TEXT NOT NULL,\
                   description TEXT, htmlUrl TEXT, rssUrl TEXT, categoryId TEXT, parentId TEXT,\
-                  blog_id NUMERIC NOT NULL, UNIQUE(name,blog_id));" ) ) {
+                  blog_id NUMERIC NOT NULL, UNIQUE(name,blog_id));" ) ) ) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///files table
-    if( !q.exec( "CREATE TABLE file (fileid INTEGER PRIMARY KEY, name TEXT, blog_id NUMERIC, is_uploaded NUMERIC,\
-        local_url TEXT, remote_url TEXT, mime_type TEXT);" ) ) {
+    if( !q.exec( QLatin1String("CREATE TABLE file (fileid INTEGER PRIMARY KEY, name TEXT, blog_id NUMERIC, is_uploaded NUMERIC,\
+        local_url TEXT, remote_url TEXT, mime_type TEXT);" ) ) ) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///connection bethween posts and categories
-    if ( !q.exec( "CREATE TABLE post_cat (blogId TEXT NOT NULL, postId TEXT NOT NULL,\
-        categoryId TEXT NOT NULL, UNIQUE(blogId,postId,categoryId));" ) ) {
+    if ( !q.exec( QLatin1String("CREATE TABLE post_cat (blogId TEXT NOT NULL, postId TEXT NOT NULL,\
+        categoryId TEXT NOT NULL, UNIQUE(blogId,postId,categoryId));" ) ) ) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///connection bethween posts and media files
-    if ( !q.exec( "CREATE TABLE post_file (post_id INTEGER, file_id INTEGER);" ) ) {
+    if ( !q.exec( QLatin1String("CREATE TABLE post_file (post_id INTEGER, file_id INTEGER);" ) ) ) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///local posts table
-    if( !q.exec( "CREATE TABLE local_post (local_id INTEGER PRIMARY KEY, id INTEGER UNIQUE, postid TEXT, blog_id NUMERIC,\
+    if( !q.exec( QLatin1String("CREATE TABLE local_post (local_id INTEGER PRIMARY KEY, id INTEGER UNIQUE, postid TEXT, blog_id NUMERIC,\
         author TEXT, slug TEXT, post_password TEXT, title TEXT, content TEXT, text_more TEXT,\
         c_time TEXT, m_time TEXT, is_private NUMERIC, is_comment_allowed NUMERIC,\
         is_trackback_allowed NUMERIC, link TEXT, perma_link TEXT, summary TEXT, tags TEXT,\
-        status NUMERIC);" ) ) {
+        status NUMERIC);" ) ) ) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///Connection between local_posts and categories
-    if( !q.exec( "CREATE TABLE local_post_cat (local_id INT, categoryId TEXT);" ) ) {
+    if( !q.exec( QLatin1String("CREATE TABLE local_post_cat (local_id INT, categoryId TEXT);" ) ) ) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///temporary posts table
-    if( !q.exec( "CREATE TABLE temp_post (local_id INTEGER PRIMARY KEY, id INTEGER UNIQUE, postid TEXT, blog_id NUMERIC,\
+    if( !q.exec( QLatin1String("CREATE TABLE temp_post (local_id INTEGER PRIMARY KEY, id INTEGER UNIQUE, postid TEXT, blog_id NUMERIC,\
                  author TEXT, slug TEXT, post_password TEXT, title TEXT, content TEXT, text_more TEXT,\
                  c_time TEXT, m_time TEXT, is_private NUMERIC, is_comment_allowed NUMERIC,\
                  is_trackback_allowed NUMERIC, link TEXT, perma_link TEXT, summary TEXT, tags TEXT,\
-                 status NUMERIC);" ) ) {
+                 status NUMERIC);" ) ) ){
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///Connection between temp_posts and categories
-    if( !q.exec( "CREATE TABLE temp_post_cat (local_id INT, categoryId TEXT);" ) ) {
+    if( !q.exec( QLatin1String("CREATE TABLE temp_post_cat (local_id INT, categoryId TEXT);" ) ) ) {
         ret = false;
         d->mLastErrorText = q.lastError().text();
     }
 
     ///delete related information on DB, On removing a post or a blog
-    q.exec( "CREATE TRIGGER delete_post AFTER DELETE ON post\
+    q.exec( QLatin1String("CREATE TRIGGER delete_post AFTER DELETE ON post\
     BEGIN\
     DELETE FROM post_cat WHERE post_cat.postId=OLD.postid;\
     DELETE FROM post_file WHERE post_file.post_id=OLD.id;\
     DELETE FROM comment WHERE comment.postId=OLD.postid;\
-    END" );
-    q.exec( "CREATE TRIGGER delete_blog AFTER DELETE ON blog \
+    END" ) );
+    q.exec( QLatin1String("CREATE TRIGGER delete_blog AFTER DELETE ON blog \
     BEGIN\
     DELETE FROM category WHERE category.blog_id=OLD.id;\
     DELETE FROM file WHERE file.blog_id=OLD.id;\
     DELETE FROM post WHERE post.blog_id=OLD.id;\
     DELETE FROM comment WHERE comment.blog_id=OLD.id;\
-    END" );
-    q.exec( "CREATE TRIGGER delete_temp_post AFTER DELETE ON temp_post \
+    END" ) );
+    q.exec( QLatin1String("CREATE TRIGGER delete_temp_post AFTER DELETE ON temp_post \
     BEGIN\
     DELETE FROM temp_post_cat WHERE local_id=OLD.local_id;\
-    END" );
-    q.exec( "CREATE TRIGGER delete_local_post AFTER DELETE ON local_post \
+    END" ));
+    q.exec( QLatin1String("CREATE TRIGGER delete_local_post AFTER DELETE ON local_post \
     BEGIN\
     DELETE FROM local_post_cat WHERE local_id=OLD.local_id;\
-    END" );
+    END" ));
 
     return ret;
 }
@@ -275,15 +275,15 @@ int DBMan::addBlog( const BilboBlog & blog )
 {
     QSqlQuery q;
     if( d->useWallet ) {
-        q.prepare( "INSERT INTO blog (blogid, blog_url, username, style_url, api_type, title,\
-               direction, local_directory) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" );
-        if ( d->mWallet && d->mWallet->writePassword( blog.url().url() + '_' + blog.username(), blog.password() ) == 0 )
+        q.prepare( QLatin1String("INSERT INTO blog (blogid, blog_url, username, style_url, api_type, title,\
+               direction, local_directory) VALUES(?, ?, ?, ?, ?, ?, ?, ?)" ) );
+        if ( d->mWallet && d->mWallet->writePassword( blog.url().url() + QLatin1Char('_') + blog.username(), blog.password() ) == 0 )
             kDebug() << "Password stored to kde wallet";
         else
             return -1;
     } else {
-        q.prepare( "INSERT INTO blog (password, blogid, blog_url, username, style_url, api_type, title,\
-               direction, local_directory) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)" );
+        q.prepare( QLatin1String("INSERT INTO blog (password, blogid, blog_url, username, style_url, api_type, title,\
+               direction, local_directory) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)" ) );
         q.addBindValue( blog.password() );
     }
     q.addBindValue( blog.blogid() );
@@ -308,15 +308,15 @@ bool DBMan::editBlog( const BilboBlog & blog )
 {
     QSqlQuery q;
     if( d->useWallet ) {
-        q.prepare( "UPDATE blog SET blogid=?, blog_url=?, username=? , style_url=? , api_type=?, \
-                   title=?, direction=?, local_directory=? WHERE id=?" );
-        if ( d->mWallet && d->mWallet->writePassword( blog.url().url() + '_' + blog.username(), blog.password() ) == 0 )
+        q.prepare( QLatin1String("UPDATE blog SET blogid=?, blog_url=?, username=? , style_url=? , api_type=?, \
+                   title=?, direction=?, local_directory=? WHERE id=?" ) );
+        if ( d->mWallet && d->mWallet->writePassword( blog.url().url() + QLatin1Char('_') + blog.username(), blog.password() ) == 0 )
             kDebug() << "Password stored to kde wallet";
         else
             return false;
     } else {
-        q.prepare( "UPDATE blog SET password=?, blogid=?, blog_url=?, username=? , style_url=? , api_type=?, \
-                    title=?, direction=?, local_directory=? WHERE id=?" );
+        q.prepare( QLatin1String("UPDATE blog SET password=?, blogid=?, blog_url=?, username=? , style_url=? , api_type=?, \
+                    title=?, direction=?, local_directory=? WHERE id=?" ));
         q.addBindValue( blog.password() );
     }
     q.addBindValue( blog.blogid() );
@@ -343,11 +343,11 @@ bool DBMan::removeBlog( int blog_id )
 {
     BilboBlog *tmp = d->mBlogList[ blog_id ];
     if( d->useWallet ) {
-        if ( d->mWallet && d->mWallet->removeEntry( tmp->url().url() + '_' + tmp->username() ) == 0 )
+        if ( d->mWallet && d->mWallet->removeEntry( tmp->url().url() + QLatin1Char('_') + tmp->username() ) == 0 )
             kDebug() << "Password removed to kde wallet";
     }
     QSqlQuery q;
-    q.prepare( "DELETE FROM blog WHERE id=?" );
+    q.prepare( QLatin1String("DELETE FROM blog WHERE id=?" ));
     q.addBindValue( blog_id );
     bool res = q.exec();
     if ( !res ) {
@@ -365,9 +365,9 @@ int DBMan::addPost( const BilboPost & post, int blog_id )
 {
     kDebug() << "Adding post with title: " << post.title() << " to Blog " << blog_id;
     QSqlQuery q;
-    q.prepare( "INSERT OR REPLACE INTO post (postid, blog_id, author, title, content, text_more, c_time, m_time,\
+    q.prepare( QLatin1String("INSERT OR REPLACE INTO post (postid, blog_id, author, title, content, text_more, c_time, m_time,\
                is_private, is_comment_allowed, is_trackback_allowed, link, perma_link, summary, slug,\
-               tags, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" );
+               tags, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" ) );
     q.addBindValue( post.postId() );
     q.addBindValue( blog_id );
     q.addBindValue( post.author() );
@@ -384,7 +384,7 @@ int DBMan::addPost( const BilboPost & post, int blog_id )
     q.addBindValue( post.permaLink().url() );
     q.addBindValue( post.summary() );
     q.addBindValue( post.slug() );
-    q.addBindValue( post.tags().join(QString(',')) );
+    q.addBindValue( post.tags().join(QLatin1String(",")) );
     q.addBindValue( post.status() );
 
     int ret;
@@ -393,7 +393,7 @@ int DBMan::addPost( const BilboPost & post, int blog_id )
 
         ///Delete previouse Categories (if there are any!) :
         QSqlQuery qd;
-        qd.prepare( "DELETE FROM post_cat WHERE postId=? AND blogId=(SELECT blogid FROM blog where id=?)" );
+        qd.prepare( QLatin1String("DELETE FROM post_cat WHERE postId=? AND blogId=(SELECT blogid FROM blog where id=?)" ));
         qd.addBindValue(post.postId());
         qd.addBindValue(blog_id);
         if ( !qd.exec() ) {
@@ -405,9 +405,9 @@ int DBMan::addPost( const BilboPost & post, int blog_id )
         if( cat_count > 0 ) {
 //             kDebug()<< "Adding "<<cat_count<<" category to post.";
             QSqlQuery q2;
-            q2.prepare( "INSERT OR REPLACE INTO post_cat (blogId, postId, categoryId)\
+            q2.prepare( QLatin1String("INSERT OR REPLACE INTO post_cat (blogId, postId, categoryId)\
             VALUES((SELECT blogid FROM blog where id=?), ?, \
-            (SELECT categoryId FROM category WHERE name = ? AND blog_id= ?))" );
+            (SELECT categoryId FROM category WHERE name = ? AND blog_id= ?))" ) );
             for ( int i = 0; i < cat_count; ++i ) {
                 q2.addBindValue(blog_id);
                 q2.addBindValue(post.postId());
@@ -432,9 +432,9 @@ bool DBMan::editPost( const BilboPost & post, int blog_id )
 {
     kDebug();
     QSqlQuery q;
-    q.prepare( "UPDATE post SET author=?, title=?, content=?, text_more=?, c_time=?, m_time=?,\
+    q.prepare( QLatin1String("UPDATE post SET author=?, title=?, content=?, text_more=?, c_time=?, m_time=?,\
                is_private=?, is_comment_allowed=?, is_trackback_allowed=?, link=?, perma_link=?, summary=?,\
-               slug=?, tags=?, status=? WHERE postid=? AND blog_id=?" );
+               slug=?, tags=?, status=? WHERE postid=? AND blog_id=?" ) );
     q.addBindValue( post.author() );
     q.addBindValue( post.title() );
     q.addBindValue( post.content() );
@@ -448,7 +448,7 @@ bool DBMan::editPost( const BilboPost & post, int blog_id )
     q.addBindValue( post.permaLink().url() );
     q.addBindValue( post.summary() );
     q.addBindValue( post.slug() );
-    q.addBindValue( post.tags().join(QString(',')) );
+    q.addBindValue( post.tags().join(QLatin1String(",")) );
     q.addBindValue( post.status() );
 
     q.addBindValue( post.postId() );
@@ -462,7 +462,7 @@ bool DBMan::editPost( const BilboPost & post, int blog_id )
 
     ///Delete previouse Categories:
     QSqlQuery qd;
-    qd.prepare( "DELETE FROM post_cat WHERE postId=? AND blogId=(SELECT blogid FROM blog where id=?)" );
+    qd.prepare( QLatin1String("DELETE FROM post_cat WHERE postId=? AND blogId=(SELECT blogid FROM blog where id=?)" ));
     qd.addBindValue(post.postId());
     qd.addBindValue(blog_id);
     if ( !qd.exec() ) {
@@ -476,9 +476,9 @@ bool DBMan::editPost( const BilboPost & post, int blog_id )
     if( cat_count > 0 ) {
 //             kDebug()<< "Adding "<<cat_count<<" category to post.";
         QSqlQuery q2;
-        q2.prepare( "INSERT OR REPLACE INTO post_cat (blogId, postId, categoryId)\
+        q2.prepare( QLatin1String("INSERT OR REPLACE INTO post_cat (blogId, postId, categoryId)\
         VALUES((SELECT blogid FROM blog where id=?), ?, \
-        (SELECT categoryId FROM category WHERE name = ? AND blog_id= ?))" );
+        (SELECT categoryId FROM category WHERE name = ? AND blog_id= ?))" ) );
         for ( int i = 0; i < cat_count; ++i ) {
             q2.addBindValue(blog_id);
             q2.addBindValue(post.postId());
@@ -497,7 +497,7 @@ bool DBMan::editPost( const BilboPost & post, int blog_id )
 bool DBMan::removePost( int id )
 {
     QSqlQuery q;
-    q.prepare( "DELETE FROM post WHERE id=?" );
+    q.prepare( QLatin1String("DELETE FROM post WHERE id=?" ));
     q.addBindValue( id );
     bool res = q.exec();
     if ( !res ) {
@@ -510,7 +510,7 @@ bool DBMan::removePost( int id )
 bool DBMan::removePost( int blog_id, const QString &postId)
 {
     QSqlQuery q;
-    q.prepare( "DELETE FROM post WHERE blog_id=? AND postId=?" );
+    q.prepare( QLatin1String("DELETE FROM post WHERE blog_id=? AND postId=?" ));
     q.addBindValue( blog_id );
     q.addBindValue( postId );
     bool res = q.exec();
@@ -524,7 +524,7 @@ bool DBMan::removePost( int blog_id, const QString &postId)
 bool DBMan::clearPosts( int blog_id )
 {
     QSqlQuery q;
-    q.prepare( "DELETE FROM post WHERE blog_id=?" );
+    q.prepare( QLatin1String("DELETE FROM post WHERE blog_id=?") );
     q.addBindValue( blog_id );
     bool res = q.exec();
     if ( !res ) {
@@ -538,8 +538,8 @@ int DBMan::addCategory( const QString &name, const QString &description, const Q
                         const QString &rssUrl, const QString &categoryId, const QString &parentId, int blog_id )
 {
     QSqlQuery q;
-    q.prepare( "INSERT OR REPLACE INTO category (name, description, htmlUrl, rssUrl, categoryId, parentId, blog_id)\
-               VALUES(?, ?, ?, ?, ?, ?, ?)" );
+    q.prepare( QLatin1String("INSERT OR REPLACE INTO category (name, description, htmlUrl, rssUrl, categoryId, parentId, blog_id)\
+               VALUES(?, ?, ?, ?, ?, ?, ?)" ) );
     q.addBindValue( name );
     q.addBindValue( description );
     q.addBindValue( htmlUrl );
@@ -559,7 +559,7 @@ int DBMan::addCategory( const QString &name, const QString &description, const Q
 bool DBMan::clearCategories( int blog_id )
 {
     QSqlQuery q;
-    q.prepare( "DELETE FROM category WHERE blog_id=?" );
+    q.prepare( QLatin1String("DELETE FROM category WHERE blog_id=?") );
     q.addBindValue( blog_id );
     bool res = q.exec();
     if ( !res ) {
@@ -574,7 +574,7 @@ int DBMan::addFile( const QString& name, int blog_id, bool isUploaded, const QSt
 {
     QSqlQuery q;
 //  q.prepare("INSERT INTO file(name, blog_id, is_uploaded, local_url, remote_url) VALUES(?, ?, ?, ?, ?)");
-    q.prepare( "INSERT INTO file(name, blog_id, is_local, local_url, remote_url) VALUES(?, ?, ?, ?, ?)" );
+    q.prepare( QLatin1String("INSERT INTO file(name, blog_id, is_local, local_url, remote_url) VALUES(?, ?, ?, ?, ?)") );
     q.addBindValue( name );
     q.addBindValue( blog_id );
     q.addBindValue( isUploaded );
@@ -593,7 +593,7 @@ int DBMan::addFile( const QString& name, int blog_id, bool isUploaded, const QSt
 int DBMan::addFile(const BilboMedia & file)
 {
     QSqlQuery q;
-    q.prepare( "INSERT INTO file(name, blog_id, is_local, local_url, remote_url) VALUES(?, ?, ?, ?, ?)" );
+    q.prepare( QLatin1String("INSERT INTO file(name, blog_id, is_local, local_url, remote_url) VALUES(?, ?, ?, ?, ?)") );
     q.addBindValue( file.name() );
     q.addBindValue( file.blogId() );
     q.addBindValue( file.isUploaded() );
@@ -611,7 +611,7 @@ int DBMan::addFile(const BilboMedia & file)
 bool DBMan::removeFile( int fileid )
 {
     QSqlQuery q;
-    q.prepare( "DELETE FROM file WHERE fileid=?" );
+    q.prepare( QLatin1String("DELETE FROM file WHERE fileid=?") );
     q.addBindValue( fileid );
     bool res = q.exec();
     if ( !res ) {
@@ -624,7 +624,7 @@ bool DBMan::removeFile( int fileid )
 bool DBMan::clearFiles( int blog_id )
 {
     QSqlQuery q;
-    q.prepare( "DELETE FROM file WHERE blog_id=?" );
+    q.prepare( QLatin1String("DELETE FROM file WHERE blog_id=?") );
     q.addBindValue( blog_id );
     bool res = q.exec();
     if ( !res ) {
@@ -652,11 +652,11 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
 //     kDebug()<<"postId: "<<post.postId();
     QString postTable, postCatTable;
     if(state == Local) {
-        postTable = "local_post";
-        postCatTable = "local_post_cat";
+        postTable = QLatin1String("local_post");
+        postCatTable = QLatin1String("local_post_cat");
     } else {
-        postTable = "temp_post";
-        postCatTable = "temp_post_cat";
+        postTable = QLatin1String("temp_post");
+        postCatTable = QLatin1String("temp_post_cat");
     }
     int localId = post.localId();
 //    if(post.status() == KBlog::BlogPost::New) {///Post is new!
@@ -664,10 +664,10 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
         if(post.localId() == -1){
             ///Add new post to temp_post
             kDebug()<<"Add new post to temp_post";
-            q.prepare( "INSERT OR REPLACE INTO "+ postTable +" (postid, blog_id,\
+            q.prepare( QLatin1String("INSERT OR REPLACE INTO ")+ postTable +QLatin1String(" (postid, blog_id,\
             author, title, content, text_more, c_time, m_time, is_private, is_comment_allowed,\
             is_trackback_allowed, link, perma_link, summary, slug, tags, status)\
-            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" );
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" ));
 //             q.addBindValue( post.id() == -1 ? QVariant(QVariant::Int) : post.id() );
             q.addBindValue( post.postId() );
             q.addBindValue( blog_id );
@@ -684,7 +684,7 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
             q.addBindValue( post.permaLink().url() );
             q.addBindValue( post.summary() );
             q.addBindValue( post.slug() );
-            q.addBindValue( post.tags().join(QString(',')) );
+            q.addBindValue( post.tags().join(QLatin1String(",")) );
             q.addBindValue( post.status() );
 
             if ( q.exec() ) {
@@ -697,10 +697,10 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
         } else {
             ///Update post, with id!
             kDebug()<<"Update post, with id!";
-            q.prepare( "UPDATE "+ postTable +" SET postid=?, blog_id=?,\
+            q.prepare( QLatin1String("UPDATE ")+ postTable +QLatin1String(" SET postid=?, blog_id=?,\
             author=?, title=?, content=?, text_more=?, c_time=?, m_time=?, is_private=?, is_comment_allowed=?,\
             is_trackback_allowed=?, link=?, perma_link=?, summary=?, slug=?, tags=?, status=?\
-            WHERE local_id=?" );
+            WHERE local_id=?" ));
 //             q.addBindValue( post.id() == -1 ? QVariant(QVariant::Int) : post.id() );
             q.addBindValue( post.postId() );
             q.addBindValue( blog_id );
@@ -717,7 +717,7 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
             q.addBindValue( post.permaLink().url() );
             q.addBindValue( post.summary() );
             q.addBindValue( post.slug() );
-            q.addBindValue( post.tags().join(QString(',')) );
+            q.addBindValue( post.tags().join(QLatin1String(",")) );
             q.addBindValue( post.status() );
             q.addBindValue( post.localId() );
 
@@ -764,7 +764,7 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
 
     ///Delete previouse Categories:
     QSqlQuery qd;
-    qd.prepare( "DELETE FROM " + postCatTable + " WHERE local_id=?" );
+    qd.prepare( QLatin1String("DELETE FROM ") + postCatTable + QLatin1String(" WHERE local_id=?") );
     qd.addBindValue( localId );
     if ( !qd.exec() ) {
         d->mLastErrorText = q.lastError().text();
@@ -777,8 +777,8 @@ int DBMan::saveTemp_LocalEntry( const BilboPost& basePost, int blog_id, LocalPos
     if( cat_count > 0 ) {
         //kDebug()<< "Adding "<<cat_count<<" category to post.";
         QSqlQuery q2;
-        q2.prepare( "INSERT OR REPLACE INTO " + postCatTable + " (local_id, categoryId)\
-        VALUES(?, (SELECT categoryId FROM category WHERE name = ? AND blog_id= ?))" );
+        q2.prepare( QLatin1String("INSERT OR REPLACE INTO ") + postCatTable + QLatin1String(" (local_id, categoryId)\
+        VALUES(?, (SELECT categoryId FROM category WHERE name = ? AND blog_id= ?))" ) );
         for ( int i = 0; i < cat_count; ++i ) {
             q2.addBindValue(localId);
             q2.addBindValue(post.categories()[i]);
@@ -797,7 +797,7 @@ bool DBMan::removeLocalEntry( const BilboPost &post )
 {
     kDebug();
     QSqlQuery q;
-    q.prepare( "DELETE FROM local_post WHERE local_id=?" );
+    q.prepare( QLatin1String("DELETE FROM local_post WHERE local_id=?") );
     q.addBindValue( post.localId() );
     bool res = q.exec();
     if ( !res ) {
@@ -811,7 +811,7 @@ bool DBMan::removeLocalEntry( int local_id )
 {
     kDebug();
     QSqlQuery q;
-    q.prepare( "DELETE FROM local_post WHERE local_id=?" );
+    q.prepare( QLatin1String("DELETE FROM local_post WHERE local_id=?") );
     q.addBindValue( local_id );
     bool res = q.exec();
     if ( !res ) {
@@ -825,7 +825,7 @@ bool DBMan::removeTempEntry( const BilboPost &post )
 {
     kDebug();
     QSqlQuery q;
-    q.prepare( "DELETE FROM temp_post WHERE local_id=?" );
+    q.prepare( QLatin1String("DELETE FROM temp_post WHERE local_id=?") );
     q.addBindValue( post.localId() );
     bool res = q.exec();
     if ( !res ) {
@@ -840,7 +840,7 @@ bool DBMan::clearTempEntries()
 {
     kDebug();
     QSqlQuery q;
-    bool res = q.exec( "DELETE FROM temp_post" );
+    bool res = q.exec( QLatin1String("DELETE FROM temp_post") );
     if ( !res ) {
         d->mLastErrorText = q.lastError().text();
         kDebug() << q.lastError().text();
@@ -857,8 +857,8 @@ QList< BilboBlog *> DBMan::listBlogs()
 {
     QList<BilboBlog *> list;
     QSqlQuery q;
-    if (q.exec( "SELECT id, blogid, blog_url, username, style_url, api_type, title,\
-            direction, local_directory, password FROM blog" ) ) {
+    if (q.exec( QLatin1String("SELECT id, blogid, blog_url, username, style_url, api_type, title,\
+            direction, local_directory, password FROM blog") ) ) {
         while ( q.next() ) {
             BilboBlog *tmp = new BilboBlog;
             tmp->setId( q.value( 0 ).toInt() );
@@ -872,7 +872,7 @@ QList< BilboBlog *> DBMan::listBlogs()
             tmp->setLocalDirectory( q.value( 8 ).toString() );
             if( d->useWallet ) {
                 QString buffer;
-                if ( d->mWallet && d->mWallet->readPassword( tmp->url().url() + '_' + tmp->username() , buffer )
+                if ( d->mWallet && d->mWallet->readPassword( tmp->url().url() + QLatin1Char('_') + tmp->username() , buffer )
                     == 0 && !buffer.isEmpty() ) {
                     tmp->setPassword( buffer );
                     kDebug() << "Password loaded from kde wallet.";
@@ -892,7 +892,7 @@ QMap< QString, int > DBMan::listBlogsTitle()
 {
     QMap< QString, int > list;
     QSqlQuery q;
-    if( q.exec( "SELECT title, id FROM blog" ) ) {
+    if( q.exec( QLatin1String("SELECT title, id FROM blog") ) ) {
         while ( q.next() ) {
             list[q.value( 0 ).toString()] = q.value( 1 ).toInt();
         }
@@ -906,9 +906,9 @@ QList< BilboPost* > DBMan::listPosts( int blog_id )
 {
     QList<BilboPost *> list;
     QSqlQuery q;
-    q.prepare( "SELECT id, postid, author, title, content, c_time, m_time, is_private, is_comment_allowed,\
+    q.prepare( QLatin1String("SELECT id, postid, author, title, content, c_time, m_time, is_private, is_comment_allowed,\
                is_trackback_allowed, link, perma_link, summary, tags, status, text_more, slug\
-               FROM post WHERE blog_id = ? ORDER BY c_time DESC" );
+               FROM post WHERE blog_id = ? ORDER BY c_time DESC") );
     q.addBindValue( blog_id );
     if ( q.exec() ) {
         while ( q.next() ) {
@@ -926,7 +926,7 @@ QList< BilboPost* > DBMan::listPosts( int blog_id )
             tmp->setLink( KUrl( q.value( 10 ).toString() ) );
             tmp->setPermaLink( KUrl( q.value( 11 ).toString() ) );
             tmp->setSummary( q.value( 12 ).toString() );
-            tmp->setTags( q.value( 13 ).toString().split( ',', QString::SkipEmptyParts ) );
+            tmp->setTags( q.value( 13 ).toString().split( QLatin1Char(','), QString::SkipEmptyParts ) );
             tmp->setStatus(( KBlog::BlogPost::Status ) q.value( 14 ).toInt() );
             tmp->setAdditionalContent( q.value( 15 ).toString() );
             tmp->setSlug( q.value( 16 ).toString() );
@@ -934,10 +934,10 @@ QList< BilboPost* > DBMan::listPosts( int blog_id )
             ///get Category list:
             QList<Category> catList;
             QSqlQuery q2;
-            q2.prepare( "SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
+            q2.prepare( QLatin1String("SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
                         category.categoryId, category.parentId\
                         FROM category JOIN post_cat ON category.categoryId=post_cat.categoryId\
-                        WHERE post_cat.postId = ? AND post_cat.blogId = (SELECT blogid FROM blog where id=?)" );
+                        WHERE post_cat.postId = ? AND post_cat.blogId = (SELECT blogid FROM blog where id=?)" ) );
             q2.addBindValue( tmp->postId() );
             q2.addBindValue( blog_id );
             if ( q2.exec() ) {
@@ -969,9 +969,9 @@ BilboPost DBMan::getPostInfo( int post_id )
 {
     QSqlQuery q;
     BilboPost tmp;
-    q.prepare( "SELECT id, postid, author, title, content, c_time, m_time, is_private, is_comment_allowed,\
+    q.prepare( QLatin1String("SELECT id, postid, author, title, content, c_time, m_time, is_private, is_comment_allowed,\
                is_trackback_allowed, link, perma_link, summary, tags, status, blog_id, text_more, slug\
-               FROM post WHERE id = ?" );
+               FROM post WHERE id = ?") );
     q.addBindValue( post_id );
     if ( q.exec() ) {
         if ( q.next() ) {
@@ -990,7 +990,7 @@ BilboPost DBMan::getPostInfo( int post_id )
             QUrl pu( q.value( 11 ).toString() );
             tmp.setPermaLink( pu );
             tmp.setSummary( q.value( 12 ).toString() );
-            tmp.setTags( q.value( 13 ).toString().split( ',', QString::SkipEmptyParts ) );
+            tmp.setTags( q.value( 13 ).toString().split( QLatin1Char(','), QString::SkipEmptyParts ) );
             tmp.setStatus(( KBlog::BlogPost::Status ) q.value( 14 ).toInt() );
             int blog_id = q.value( 15 ).toInt();
             tmp.setAdditionalContent(  q.value( 16 ).toString() );
@@ -999,10 +999,10 @@ BilboPost DBMan::getPostInfo( int post_id )
             ///get Category list:
             QList<Category> catList;
             QSqlQuery q2;
-            q2.prepare( "SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
+            q2.prepare( QLatin1String("SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
                         category.categoryId, category.parentId, category.blog_id\
                         FROM category JOIN post_cat ON category.categoryId=post_cat.categoryId\
-                        WHERE post_cat.postId = ? AND post_cat.blogId = (SELECT blogid FROM blog where id=?)" );
+                        WHERE post_cat.postId = ? AND post_cat.blogId = (SELECT blogid FROM blog where id=?)") );
             q2.addBindValue( tmp.postId() );
             q2.addBindValue( blog_id );
             if ( q2.exec() ) {
@@ -1039,7 +1039,7 @@ QMap< int, QString > DBMan::listPostsTitle( int blog_id )
 {
     QMap< int, QString >list;
     QSqlQuery q;
-    q.prepare( "SELECT title, id FROM post WHERE blog_id = ? ORDER BY c_time DESC" );
+    q.prepare( QLatin1String("SELECT title, id FROM post WHERE blog_id = ? ORDER BY c_time DESC") );
     q.addBindValue( blog_id );
     if ( q.exec() ) {
         while ( q.next() ) {
@@ -1056,15 +1056,15 @@ QList<QVariantMap> DBMan::listPostsInfo( int blog_id )
 {
     QList<QVariantMap> list;
     QSqlQuery q;
-    q.prepare( "SELECT title, id, c_time, is_private FROM post WHERE blog_id = ? ORDER BY c_time DESC" );
+    q.prepare( QLatin1String("SELECT title, id, c_time, is_private FROM post WHERE blog_id = ? ORDER BY c_time DESC") );
     q.addBindValue( blog_id );
     if ( q.exec() ) {
         while ( q.next() ) {
             QVariantMap entry;
-            entry[ "title" ] = q.value( 0 ).toString();
-            entry[ "id" ] = q.value( 1 ).toInt();
-            entry[ "c_time" ] = KDateTime::fromString( q.value( 2 ).toString() ).dateTime();
-            entry[ "is_private" ] = q.value( 3 ).toBool();
+            entry[ QLatin1String("title") ] = q.value( 0 ).toString();
+            entry[ QLatin1String("id") ] = q.value( 1 ).toInt();
+            entry[ QLatin1String("c_time") ] = KDateTime::fromString( q.value( 2 ).toString() ).dateTime();
+            entry[ QLatin1String("is_private") ] = q.value( 3 ).toBool();
             list.append(entry);
         }
     } else {
@@ -1078,7 +1078,7 @@ QMap< QString, int > DBMan::listCategoriesName( int blog_id )
 {
     QMap< QString, int > list;
     QSqlQuery q;
-    q.prepare( "SELECT name, catid FROM category WHERE blog_id = ?" );
+    q.prepare( QLatin1String("SELECT name, catid FROM category WHERE blog_id = ?") );
     q.addBindValue( blog_id );
     if ( q.exec() ) {
         while ( q.next() ) {
@@ -1095,8 +1095,8 @@ QList< Category > DBMan::listCategories( int blog_id )
 {
     QList< Category > list;
     QSqlQuery q;
-    q.prepare( "SELECT catid, name, description, htmlUrl, rssUrl, categoryId, parentId FROM category\
-               WHERE blog_id = ?" );
+    q.prepare( QLatin1String("SELECT catid, name, description, htmlUrl, rssUrl, categoryId, parentId FROM category\
+               WHERE blog_id = ?") );
     q.addBindValue( blog_id );
     if ( q.exec() ) {
         while ( q.next() ) {
@@ -1122,8 +1122,8 @@ QMap< QString, bool > DBMan::listCategoriesId( int blog_id )
 {
     QMap< QString, bool > list;
     QSqlQuery q;
-    q.prepare( "SELECT categoryId FROM category\
-               WHERE blog_id = ?" );
+    q.prepare( QLatin1String("SELECT categoryId FROM category\
+               WHERE blog_id = ?") );
     q.addBindValue( blog_id );
     if ( q.exec() ) {
         while ( q.next() ) {
@@ -1140,9 +1140,9 @@ QMap<BilboPost*, int> DBMan::listTempPosts()
 {
     QMap<BilboPost*, int> list;
     QSqlQuery q;
-    q.prepare( "SELECT local_id, id, postid, blog_id, author, title, content, text_more, c_time,\
+    q.prepare( QLatin1String("SELECT local_id, id, postid, blog_id, author, title, content, text_more, c_time,\
     m_time, is_private, is_comment_allowed, is_trackback_allowed, link, perma_link, summary, tags, status,\
-    slug FROM temp_post ORDER BY m_time DESC" );
+    slug FROM temp_post ORDER BY m_time DESC") );
     if ( q.exec() ) {
         while ( q.next() ) {
             BilboPost *tmp = new BilboPost();
@@ -1161,17 +1161,17 @@ QMap<BilboPost*, int> DBMan::listTempPosts()
             tmp->setLink( KUrl( q.value( 13 ).toString() ) );
             tmp->setPermaLink( KUrl( q.value( 14 ).toString() ) );
             tmp->setSummary( q.value( 15 ).toString() );
-            tmp->setTags( q.value( 16 ).toString().split( ',', QString::SkipEmptyParts ) );
+            tmp->setTags( q.value( 16 ).toString().split( QLatin1Char(','), QString::SkipEmptyParts ) );
             tmp->setStatus(( KBlog::BlogPost::Status ) q.value( 17 ).toInt() );
             tmp->setSlug( q.value( 18 ).toString() );
 
             ///get Category list:
             QList<Category> catList;
             QSqlQuery q2;
-            q2.prepare( "SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
+            q2.prepare( QLatin1String("SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
             category.categoryId, category.parentId\
             FROM category JOIN temp_post_cat ON category.categoryId=temp_post_cat.categoryId\
-            WHERE temp_post_cat.local_id = ?" );
+            WHERE temp_post_cat.local_id = ?") );
             q2.addBindValue( tmp->localId() );
 //             q2.addBindValue( blog_id );
             if ( q2.exec() ) {
@@ -1205,15 +1205,15 @@ QList<QVariantMap> DBMan::listLocalPosts()
     kDebug();
     QList<QVariantMap> list;
     QSqlQuery q;
-    q.prepare( "SELECT local_post.local_id, local_post.title, local_post.blog_id, blog.title\
-    FROM local_post LEFT JOIN blog ON local_post.blog_id = blog.id ORDER BY m_time DESC" );
+    q.prepare( QLatin1String("SELECT local_post.local_id, local_post.title, local_post.blog_id, blog.title\
+    FROM local_post LEFT JOIN blog ON local_post.blog_id = blog.id ORDER BY m_time DESC") );
     if ( q.exec() ) {
         while ( q.next() ) {
             QVariantMap entry;
-            entry[ "local_id" ] = q.value( 0 ).toInt();
-            entry[ "post_title" ] = q.value( 1 ).toString();
-            entry[ "blog_id" ] = q.value( 2 ).toInt();
-            entry[ "blog_title" ] = q.value( 3 ).toString();
+            entry[ QLatin1String("local_id") ] = q.value( 0 ).toInt();
+            entry[ QLatin1String("post_title") ] = q.value( 1 ).toString();
+            entry[ QLatin1String("blog_id") ] = q.value( 2 ).toInt();
+            entry[ QLatin1String("blog_title") ] = q.value( 3 ).toString();
             list.append(entry);
         }
     } else {
@@ -1227,9 +1227,9 @@ BilboPost DBMan::localPost(int local_id)
 {
     QSqlQuery q;
     BilboPost tmp;
-    q.prepare( "SELECT id, local_id, postid, blog_id, author, title, content, text_more, c_time,\
+    q.prepare( QLatin1String("SELECT id, local_id, postid, blog_id, author, title, content, text_more, c_time,\
     m_time, is_private, is_comment_allowed, is_trackback_allowed, link, perma_link, summary, tags, status,\
-    slug FROM local_post WHERE local_id=?" );
+    slug FROM local_post WHERE local_id=?") );
     q.addBindValue(local_id);
     if ( q.exec() ) {
         if ( q.next() ) {
@@ -1249,17 +1249,17 @@ BilboPost DBMan::localPost(int local_id)
             tmp.setLink( KUrl( q.value( 13 ).toString() ) );
             tmp.setPermaLink( KUrl( q.value( 14 ).toString() ) );
             tmp.setSummary( q.value( 15 ).toString() );
-            tmp.setTags( q.value( 16 ).toString().split( ',', QString::SkipEmptyParts ) );
+            tmp.setTags( q.value( 16 ).toString().split( QLatin1Char(','), QString::SkipEmptyParts ) );
             tmp.setStatus(( KBlog::BlogPost::Status ) q.value( 17 ).toInt() );
             tmp.setSlug( q.value( 18 ).toString() );
 
             ///get Category list:
             QList<Category> catList;
             QSqlQuery q2;
-            q2.prepare( "SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
+            q2.prepare( QLatin1String("SELECT category.name, category.description, category.htmlUrl, category.rssUrl,\
             category.categoryId, category.parentId\
             FROM category JOIN local_post_cat ON category.categoryId=local_post_cat.categoryId\
-            WHERE local_post_cat.local_id = ?" );
+            WHERE local_post_cat.local_id = ?") );
             q2.addBindValue( local_id );
             if ( q2.exec() ) {
                 while ( q2.next() ) {

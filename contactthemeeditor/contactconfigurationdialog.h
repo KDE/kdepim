@@ -43,6 +43,7 @@ private Q_SLOTS:
 private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
     KTextEdit *mDefaultContact;
+    KTextEdit *mDefaultTemplate;
 };
 
 #endif // CONTACTCONFIGUREDIALOG_H

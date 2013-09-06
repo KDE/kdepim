@@ -18,13 +18,16 @@
 #ifndef SCAMDETECTION_H
 #define SCAMDETECTION_H
 
+#include "messageviewer/messageviewer_export.h"
 #include <QObject>
+#include <QPointer>
 
 class QWebElement;
 class QWebFrame;
 
 namespace MessageViewer {
-class ScamDetection : public QObject
+class ScamDetectionDetailsDialog;
+class MESSAGEVIEWER_EXPORT ScamDetection : public QObject
 {
     Q_OBJECT
 public:
@@ -32,15 +35,18 @@ public:
     ~ScamDetection();
 
     void scanPage(QWebFrame *frame);
-    void showDetails();
 
     static bool scanFrame(const QWebElement &rootElement, QString &details);
+
+public Q_SLOTS:
+    void showDetails();
 
 Q_SIGNALS:
     void messageMayBeAScam();
 
 private:
     QString mDetails;
+    QPointer<MessageViewer::ScamDetectionDetailsDialog> mDetailsDialog;
 };
 }
 

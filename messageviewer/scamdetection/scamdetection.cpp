@@ -106,11 +106,11 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
         } else if (hostname.contains(QLatin1Char('%'))) { //Hexa value for ip
             details += QLatin1String("<li>") + i18n("This email contains a link which points to a hexadecimal IP address (%1) instead of a typical textual website address. This is often the case in scam emails.", addWarningColor(hostname))+QLatin1String("</li>");
             foundScam = true;
-        } else if (path.contains(QLatin1String("url?q="))) { //4) redirect url.
+        } else if (url.toString().contains(QLatin1String("url?q="))) { //4) redirect url.
             details += QLatin1String("<li>") + i18n("This email contains a link (%1) which has a redirection", addWarningColor(path)) +QLatin1String("</li>");
             foundScam = true;
-        } else if ((path.count(QLatin1String("http://")) > 1) ||
-                   (path.count(QLatin1String("https://")) > 1)) { //5) more that 1 http in url.
+        } else if ((url.toString().count(QLatin1String("http://")) > 1) ||
+                   (url.toString().count(QLatin1String("https://")) > 1)) { //5) more that 1 http in url.
             details += QLatin1String("<li>") + i18n("This email contains a link (%1) which contains multiple http://. This is often the case in scam emails.", addWarningColor(path)) + QLatin1String("</li>");
             foundScam = true;
         }
@@ -126,9 +126,15 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
 
 void ScamDetection::showDetails()
 {
-    MessageViewer::ScamDetectionDetailsDialog *dlg = new MessageViewer::ScamDetectionDetailsDialog;
-    dlg->setDetails(mDetails);
-    dlg->show();
+    if (mDetailsDialog) {
+        mDetailsDialog->setDetails(mDetails);
+        mDetailsDialog->show();
+        return;
+    }
+
+    mDetailsDialog = new MessageViewer::ScamDetectionDetailsDialog;
+    mDetailsDialog->setDetails(mDetails);
+    mDetailsDialog->show();
 }
 
 

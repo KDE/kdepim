@@ -34,7 +34,6 @@ FolderArchiveAgentCheckCollection::FolderArchiveAgentCheckCollection(FolderArchi
 
 FolderArchiveAgentCheckCollection::~FolderArchiveAgentCheckCollection()
 {
-
 }
 
 void FolderArchiveAgentCheckCollection::start()

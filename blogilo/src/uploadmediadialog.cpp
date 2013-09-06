@@ -51,7 +51,7 @@ UploadMediaDialog::UploadMediaDialog( QWidget *parent )
     ui.kcfg_FtpPath->setText(Settings::ftpServerPath());
     ui.kcfg_httpUrl->setText(Settings::httpUrl());
     setWindowModality(Qt::ApplicationModal);
-    ui.kcfg_urlBrowser->setIcon(KIcon("document-open"));
+    ui.kcfg_urlBrowser->setIcon(KIcon(QLatin1String("document-open")));
     connect( ui.kcfg_urlBrowser, SIGNAL(clicked(bool)), this, SLOT(selectNewFile()) );
     connect(ui.kcfg_uploadType, SIGNAL(currentIndexChanged(int)), this, SLOT(slotUploadTypeChanged(int)));
     connect( ui.kcfg_urlLineEdit, SIGNAL(textChanged(QString)), this, SLOT(currentMediaChanged(QString)) );

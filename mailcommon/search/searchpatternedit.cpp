@@ -102,6 +102,36 @@ SearchRuleWidget::SearchRuleWidget( QWidget *parent, SearchRule::Ptr aRule,
   }
 }
 
+void SearchRuleWidget::setPatternEditOptions( bool headersOnly, bool absoluteDates, bool notShowSize )
+{
+  SearchRule::Ptr srule = rule();
+  QByteArray currentText = srule->field();
+
+  initFieldList( headersOnly, absoluteDates, notShowSize );
+
+  mRuleField->clear();
+  mRuleField->addItems( mFilterFieldList );
+  KCompletion *comp = mRuleField->completionObject();
+  comp->clear();
+  comp->insertItems(mFilterFieldList);
+  mRuleField->setMaxCount( mRuleField->count() );
+  mRuleField->adjustSize();
+
+  if ( headersOnly && ( currentText != "<message>") && ( currentText != "<body>" ) ) {
+    mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
+  } else {
+    mRuleField->setItemText( 0, QString() );
+  }
+
+  if ( notShowSize && ( currentText != "<size>") ) {
+    mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
+  } else {
+    mRuleField->setItemText( 0, QString() );
+  }
+}
+
+
+
 void SearchRuleWidget::initWidget()
 {
   QHBoxLayout *hlay = new QHBoxLayout( this );
@@ -366,6 +396,17 @@ SearchRuleWidgetLister::~SearchRuleWidgetLister()
 {
 }
 
+void SearchRuleWidgetLister::setPatternEditOptions( SearchPatternEdit::SearchPatternEditOptions options )
+{
+    mHeadersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
+    mAbsoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
+    mNotShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
+
+    foreach ( QWidget *w, widgets() ) {
+        qobject_cast<SearchRuleWidget*>( w )->setPatternEditOptions( mHeadersOnly, mAbsoluteDates, mNotShowSize );
+    }
+}
+
 void SearchRuleWidgetLister::setRuleList( QList<SearchRule::Ptr> *aList )
 {
   Q_ASSERT( aList );
@@ -528,6 +569,11 @@ SearchPatternEdit::~SearchPatternEdit()
 void SearchPatternEdit::updateSearchPattern()
 {
   mRuleLister->regenerateRuleListFromWidgets();
+}
+
+void SearchPatternEdit::setPatternEditOptions( SearchPatternEdit::SearchPatternEditOptions options )
+{
+    mRuleLister->setPatternEditOptions(options);
 }
 
 

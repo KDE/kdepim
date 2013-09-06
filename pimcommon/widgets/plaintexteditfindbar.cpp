@@ -16,7 +16,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "sievefindbar.h"
+#include "plaintexteditfindbar.h"
 
 // qt/kde includes
 #include <QtCore/QTimer>
@@ -34,9 +34,9 @@
 #include <KColorScheme>
 #include <QPlainTextEdit>
 
-using namespace KSieveUi;
+using namespace PimCommon;
 
-SieveFindBar::SieveFindBar( QPlainTextEdit * view, QWidget * parent )
+PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * parent )
     : QWidget( parent ), mView( view )
 {
     QHBoxLayout * lay = new QHBoxLayout( this );
@@ -93,33 +93,33 @@ SieveFindBar::SieveFindBar( QPlainTextEdit * view, QWidget * parent )
     hide();
 }
 
-SieveFindBar::~SieveFindBar()
+PlainTextEditFindBar::~PlainTextEditFindBar()
 {
 }
 
-void SieveFindBar::setText( const QString&text )
+void PlainTextEditFindBar::setText( const QString&text )
 {
     mSearch->setText( text );
 }
 
-QString SieveFindBar::text() const
+QString PlainTextEditFindBar::text() const
 {
     return mSearch->text();
 }
 
-void SieveFindBar::focusAndSetCursor()
+void PlainTextEditFindBar::focusAndSetCursor()
 {
     setFocus();
     mSearch->selectAll();
     mSearch->setFocus();
 }
 
-void SieveFindBar::slotClearSearch()
+void PlainTextEditFindBar::slotClearSearch()
 {
     clearSelections();
 }
 
-void SieveFindBar::autoSearch( const QString& str )
+void PlainTextEditFindBar::autoSearch( const QString& str )
 {
     const bool isNotEmpty = ( !str.isEmpty() );
     mFindPrevBtn->setEnabled( isNotEmpty );
@@ -132,12 +132,12 @@ void SieveFindBar::autoSearch( const QString& str )
         clearSelections();
 }
 
-void SieveFindBar::slotSearchText( bool backward, bool isAutoSearch )
+void PlainTextEditFindBar::slotSearchText( bool backward, bool isAutoSearch )
 {
     searchText( backward, isAutoSearch );
 }
 
-void SieveFindBar::messageInfo( bool backward, bool isAutoSearch, bool found )
+void PlainTextEditFindBar::messageInfo( bool backward, bool isAutoSearch, bool found )
 {
     if ( !found && !isAutoSearch ) {
         if ( backward ) {
@@ -148,8 +148,7 @@ void SieveFindBar::messageInfo( bool backward, bool isAutoSearch, bool found )
     }
 }
 
-
-void SieveFindBar::setFoundMatch( bool match )
+void PlainTextEditFindBar::setFoundMatch( bool match )
 {
     QString styleSheet;
 
@@ -173,7 +172,7 @@ void SieveFindBar::setFoundMatch( bool match )
 
 }
 
-void SieveFindBar::searchText( bool backward, bool isAutoSearch )
+void PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
 {
     QTextDocument::FindFlags searchOptions = 0;
     if ( backward )
@@ -200,22 +199,22 @@ void SieveFindBar::searchText( bool backward, bool isAutoSearch )
 }
 
 
-void SieveFindBar::findNext()
+void PlainTextEditFindBar::findNext()
 {
     searchText( false, false );
 }
 
-void SieveFindBar::findPrev()
+void PlainTextEditFindBar::findPrev()
 {
     searchText( true, false );
 }
 
-void SieveFindBar::caseSensitivityChanged(bool b)
+void PlainTextEditFindBar::caseSensitivityChanged(bool b)
 {
     updateSensitivity( b );
 }
 
-void SieveFindBar::updateSensitivity( bool )
+void PlainTextEditFindBar::updateSensitivity( bool )
 {
     QTextDocument::FindFlags searchOptions = 0;
     if ( mCaseSensitiveAct->isChecked() )
@@ -226,12 +225,12 @@ void SieveFindBar::updateSensitivity( bool )
 
 }
 
-void SieveFindBar::slotHighlightAllChanged(bool b)
+void PlainTextEditFindBar::slotHighlightAllChanged(bool b)
 {
     updateHighLight(b);
 }
 
-void SieveFindBar::updateHighLight( bool )
+void PlainTextEditFindBar::updateHighLight( bool )
 {
     QTextCursor textCursor = mView->textCursor();
     textCursor.clearSelection();
@@ -240,12 +239,12 @@ void SieveFindBar::updateHighLight( bool )
     clearSelections();
 }
 
-void SieveFindBar::clearSelections()
+void PlainTextEditFindBar::clearSelections()
 {
     setFoundMatch( false );
 }
 
-void SieveFindBar::closeBar()
+void PlainTextEditFindBar::closeBar()
 {
     // Make sure that all old searches are cleared
     mSearch->setText( QString() );
@@ -253,7 +252,7 @@ void SieveFindBar::closeBar()
     hide();
 }
 
-bool SieveFindBar::event(QEvent* e)
+bool PlainTextEditFindBar::event(QEvent* e)
 {
     // Close the bar when pressing Escape.
     // Not using a QShortcut for this because it could conflict with
@@ -287,4 +286,4 @@ bool SieveFindBar::event(QEvent* e)
     return QWidget::event(e);
 }
 
-#include "sievefindbar.moc"
+#include "plaintexteditfindbar.moc"
