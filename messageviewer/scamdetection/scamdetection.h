@@ -19,11 +19,13 @@
 #define SCAMDETECTION_H
 
 #include <QObject>
+#include <QPointer>
 
 class QWebElement;
 class QWebFrame;
 
 namespace MessageViewer {
+class ScamDetectionDetailsDialog;
 class ScamDetection : public QObject
 {
     Q_OBJECT
@@ -41,6 +43,7 @@ Q_SIGNALS:
 
 private:
     QString mDetails;
+    QPointer<MessageViewer::ScamDetectionDetailsDialog> mDetailsDialog;
 };
 }
 
