@@ -34,6 +34,7 @@ public:
 
 private Q_SLOTS:
     void slotLoadFinished();
+    void slotOpenHtml();
 
 private:
     MessageViewer::ScamDetectionWarningWidget *mScamWarningWidget;

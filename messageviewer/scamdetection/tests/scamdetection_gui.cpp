@@ -29,6 +29,7 @@
 #include <QVBoxLayout>
 #include <QWebView>
 #include <QWebPage>
+#include <QPushButton>
 
 ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidget *parent)
     : QWidget(parent)
@@ -46,9 +47,17 @@ ScamDetectionTestWidget::ScamDetectionTestWidget(const QString &filename, QWidge
 
     connect(mScamDetection, SIGNAL(messageMayBeAScam()), mScamWarningWidget, SLOT(slotShowWarning()));
     connect(mScamWarningWidget, SIGNAL(showDetails()), mScamDetection, SLOT(showDetails()));
-    setLayout(lay);
+
 
     mWebView->load(QUrl(filename));
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    QPushButton *openFile = new QPushButton(i18n("Open html..."));
+    connect(openFile, SIGNAL(clicked()), SLOT(slotOpenHtml()));
+    hbox->addWidget(openFile);
+    lay->addLayout(hbox);
+
+    setLayout(lay);
 }
 
 ScamDetectionTestWidget::~ScamDetectionTestWidget()
@@ -60,6 +69,15 @@ void ScamDetectionTestWidget::slotLoadFinished()
 {
     QWebFrame *mainFrame = mWebView->page()->mainFrame();
     mScamDetection->scanPage(mainFrame);
+}
+
+void ScamDetectionTestWidget::slotOpenHtml()
+{
+    const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.html"));
+    if (!fileName.isEmpty()) {
+        mScamWarningWidget->setVisible(false);
+        mWebView->load(QUrl(fileName));
+    }
 }
 
 int main (int argc, char **argv)
