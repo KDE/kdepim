@@ -111,7 +111,7 @@ void BilboBrowser::setHtml( const QString& title, const QString& content )
         mWebView->setHtml( StyleGetter::styledHtml( __currentBlogId, title, content ),
                            DBMan::self()->blog(__currentBlogId)->url());
     } else {
-        mWebView->setHtml( "<html><body><h2 align='center'>" + title + "</h2>" + content + "</html>" );
+        mWebView->setHtml( QLatin1String("<html><body><h2 align='center'>") + title + QLatin1String("</h2>") + content + QLatin1String("</html>") );
     }
 }
 
@@ -163,7 +163,7 @@ void BilboBrowser::slotCompleted(bool ok)
 void BilboBrowser::slotSetStatusBarText( const QString& text )
 {
     QString statusText = text;
-    statusText.remove( "<qt>" );
+    statusText.remove( QLatin1String("<qt>") );
     browserStatus->showMessage( statusText );
 }
 

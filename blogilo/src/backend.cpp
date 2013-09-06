@@ -42,7 +42,7 @@
 #include <kio/netaccess.h>
 #include <kio/job.h>
 
-const QRegExp splitRX("((<hr/?>)?<!--split-->)");
+const QRegExp splitRX(QLatin1String("((<hr/?>)?<!--split-->)"));
 
 class Backend::Private
 {
@@ -155,8 +155,8 @@ void Backend::publishPost( BilboPost* post )
     kDebug() << "Blog Id: " << d->bBlog->id();
 //     BilboPost tmpPost = post;
     if( Settings::addPoweredBy() ) {
-        QString poweredStr = "<p>=-=-=-=-=<br/>"
-        "<i>Powered by <b><a href='http://blogilo.gnufolks.org/'>Blogilo</a></b></i></p>";
+        QString poweredStr = QLatin1String("<p>=-=-=-=-=<br/>"
+        "<i>Powered by <b><a href='http://blogilo.gnufolks.org/'>Blogilo</a></b></i></p>");
         post->setContent(post->content() + poweredStr);
     }
     preparePost( post );
@@ -394,7 +394,7 @@ void Backend::savePostInDbAndEmitResult( KBlog::BlogPost *post )
 {
     if(!post) {
         kError()<<"ERROR: post is NULL ";
-        Q_EMIT sigError( "post is NULL" );
+        Q_EMIT sigError( i18n("post is NULL") );
         return;
     }
     kDebug()<<"isPrivate: "<<post->isPrivate();
@@ -422,45 +422,45 @@ KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
     QString content = post->content();
     QString html1;
     int i = 0;
-    int found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+    int found = content.indexOf(QLatin1String("<pre>"), i, Qt::CaseInsensitive);
     while ( found != -1 )
     {
-        html1 += content.mid( i, found-i).remove('\n');
+        html1 += content.mid( i, found-i).remove(QLatin1Char('\n'));
         i = found;
-        found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
+        found = content.indexOf(QLatin1String("</pre>"), i, Qt::CaseInsensitive);
         if ( found != -1 ) {
             html1 += content.mid( i, found+5-i);
             i = found + 5;
-            found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+            found = content.indexOf(QLatin1String("<pre>"), i, Qt::CaseInsensitive);
         } else {
             html1 += content.mid( i, content.length()-i );
             i = -1;
         }
     }
     if ( i != -1 )
-        html1 += content.mid( i, content.length()-i).remove('\n');
+        html1 += content.mid( i, content.length()-i).remove(QLatin1Char('\n'));
     post->setContent( html1 );
 
     content = post->additionalContent();
     QString html2 = QString();
     i= 0;
-    found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+    found = content.indexOf(QLatin1String("<pre>"), i, Qt::CaseInsensitive);
     while ( found != -1 )
     {
-        html2 += content.mid( i, found-i).remove('\n');
+        html2 += content.mid( i, found-i).remove(QLatin1Char('\n'));
         i = found;
-        found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
+        found = content.indexOf(QLatin1String("</pre>"), i, Qt::CaseInsensitive);
         if ( found != -1 ) {
             html2 += content.mid( i, found+5-i);
             i = found + 5;
-            found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+            found = content.indexOf(QLatin1String("<pre>"), i, Qt::CaseInsensitive);
         } else {
             html2 += content.mid( i, content.length()-i );
             i = -1;
         }
     }
     if ( i != -1 )
-        html2 += content.mid( i, content.length()-i).remove('\n');
+        html2 += content.mid( i, content.length()-i).remove(QLatin1Char('\n'));
     post->setAdditionalContent( html2 );
 
     //the following two lines are replaced by the above code, because '\n' characters shouldn't

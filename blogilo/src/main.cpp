@@ -51,9 +51,9 @@ int main( int argc, char *argv[] )
 
     KUniqueApplication app;
     global_init();
-    KGlobal::locale()->insertCatalog("libkblog");
-    KGlobal::locale()->insertCatalog("libkxmlrpcclient");
-    KGlobal::locale()->insertCatalog("libcomposereditorng");
+    KGlobal::locale()->insertCatalog(QLatin1String("libkblog"));
+    KGlobal::locale()->insertCatalog(QLatin1String("libkxmlrpcclient"));
+    KGlobal::locale()->insertCatalog(QLatin1String("libcomposereditorng"));
 
     MainWindow *bilbo = new MainWindow;
 

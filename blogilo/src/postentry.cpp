@@ -268,7 +268,7 @@ void PostEntry::setPostBody( const QString & content, const QString &additionalC
     if (additionalContent.isEmpty()) {
         body = content;
     } else {
-        body = content + "<hr/><!--split-->" + additionalContent;
+        body = content + QLatin1String("<hr/><!--split-->") + additionalContent;
         d->mCurrentPost.setAdditionalContent(QString());
     }
     //     if (body.isEmpty()){
