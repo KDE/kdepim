@@ -108,6 +108,8 @@ class SearchRuleWidget : public QWidget
 
     void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
 
+    void setPatternEditOptions( bool headersOnly, bool absoluteDates, bool notShowSize );
+
   public slots:
     void slotFunctionChanged();
     void slotValueChanged();
@@ -219,6 +221,8 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
 
     ~SearchPatternEdit();
 
+    void setPatternEditOptions( SearchPatternEdit::SearchPatternEditOptions options );
+
     /**
      * Sets the search pattern. Rules are inserted regardless of the
      * return value of each rules' MailCommon::SearchRule::isEmpty.
@@ -282,6 +286,8 @@ class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
     virtual ~SearchRuleWidgetLister();
 
     void setRuleList( QList<MailCommon::SearchRule::Ptr> *aList );
+
+    void setPatternEditOptions( SearchPatternEdit::SearchPatternEditOptions options );
 
   public slots:
     void reset();
