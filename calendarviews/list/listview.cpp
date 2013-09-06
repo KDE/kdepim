@@ -108,11 +108,11 @@ bool ListViewItem::operator<( const QTreeWidgetItem &other ) const
   {
     KDateTime thisEnd;
     Incidence::Ptr thisInc = CalendarSupport::incidence( mIncidence );
-    thisEnd = thisInc->dateTime( Incidence::RoleDisplayEnd );
+    thisEnd = thisInc->dateTime( Incidence::RoleEnd );
 
     KDateTime otherEnd;
     Incidence::Ptr otherInc = CalendarSupport::incidence( otheritem->mIncidence );
-    otherEnd = otherInc->dateTime( Incidence::RoleDisplayEnd );
+    otherEnd = otherInc->dateTime( Incidence::RoleEnd );
 
     return otherEnd < thisEnd;
   }
