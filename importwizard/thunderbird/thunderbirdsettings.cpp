@@ -857,8 +857,13 @@ void ThunderbirdSettings::readIdentity( const QString& account )
             file.close();
             newIdentity->setVCardFile(filename);
         }
-
     }
+    const QString signMailStr( identity + QLatin1String( ".sign_mail" ) );
+    if ( mHashConfig.contains( signMailStr ) ) {
+        const bool signMail = mHashConfig.value(signMailStr).toBool();
+        newIdentity->setPgpAutoSign(signMail);
+    }
+
     const QString composeHtmlStr( identity + QLatin1String( ".compose_html" ) );
     //TODO: implement it in kmail
 
