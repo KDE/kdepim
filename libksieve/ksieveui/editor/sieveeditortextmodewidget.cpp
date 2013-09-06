@@ -20,12 +20,13 @@
 #include "templates/sievetemplatewidget.h"
 #include "autocreatescripts/autocreatescriptdialog.h"
 #include "editor/sieveinfowidget.h"
-#include "editor/sievefindbar.h"
 #include "editor/sievetextedit.h"
 #include "editor/sieveeditorwarning.h"
 
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
+
+#include "pimcommon/widgets/plaintexteditfindbar.h"
 
 #include <ksieve/parser.h>
 #include <ksieve/error.h>
@@ -84,7 +85,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     textEditLayout->setMargin(0);
     mTextEdit = new SieveTextEdit;
     textEditLayout->addWidget(mTextEdit);
-    mFindBar = new SieveFindBar( mTextEdit, textEditWidget );
+    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
 
     textEditLayout->addWidget(mFindBar);
     mSieveEditorWarning = new SieveEditorWarning;

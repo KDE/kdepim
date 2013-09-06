@@ -22,9 +22,13 @@
 
 class KLineEdit;
 
+namespace PimCommon {
+class PlainTextEditFindBar;
+}
+
+
 namespace KSieveUi {
 class SieveTextEdit;
-class SieveFindBar;
 class SieveTemplateEditDialog : public KDialog
 {
     Q_OBJECT
@@ -46,7 +50,7 @@ private:
     void readConfig();
     void writeConfig();
     SieveTextEdit *mTextEdit;
-    SieveFindBar *mFindBar;
+    PimCommon::PlainTextEditFindBar *mFindBar;
     KLineEdit *mTemplateNameEdit;
 };
 }

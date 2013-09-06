@@ -16,8 +16,9 @@
 */
 
 #include "sievetemplateeditdialog.h"
-#include "editor/sievefindbar.h"
 #include "editor/sievetextedit.h"
+
+#include "pimcommon/widgets/plaintexteditfindbar.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -58,7 +59,7 @@ SieveTemplateEditDialog::SieveTemplateEditDialog(QWidget *parent, bool defaultTe
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
-    mFindBar = new SieveFindBar( mTextEdit, this );
+    mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, this );
     vbox->addWidget(mFindBar);
 
     QShortcut *shortcut = new QShortcut( this );

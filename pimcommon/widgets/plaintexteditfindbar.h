@@ -16,9 +16,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef KSIEVE_KSIEVEUI_SIEVEFINDBARBASE_H
-#define KSIEVE_KSIEVEUI_SIEVEFINDBARBASE_H
+#ifndef PIMCOMMON_FINDBARBASE_H
+#define PIMCOMMON_FINDBARBASE_H
 
+#include "pimcommon_export.h"
 #include <QWidget>
 
 class QAction;
@@ -28,15 +29,15 @@ class QPushButton;
 class QMenu;
 class QPlainTextEdit;
 
-namespace KSieveUi {
+namespace PimCommon {
 
-class SieveFindBar : public QWidget
+class PIMCOMMON_EXPORT PlainTextEditFindBar : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SieveFindBar( QPlainTextEdit *view, QWidget *parent = 0 );
-    ~SieveFindBar();
+    explicit PlainTextEditFindBar( QPlainTextEdit *view, QWidget *parent = 0 );
+    ~PlainTextEditFindBar();
 
     QString text() const;
     void setText( const QString&text );

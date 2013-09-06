@@ -25,8 +25,11 @@ class KTextEdit;
 class QPushButton;
 class QSplitter;
 
+namespace PimCommon {
+class PlainTextEditFindBar;
+}
+
 namespace KSieveUi {
-class SieveFindBar;
 class SieveInfoWidget;
 class SieveTextEdit;
 class SieveEditorWarning;
@@ -70,7 +73,7 @@ private:
     QStringList mSieveCapabilities;
     SieveTextEdit * mTextEdit;
     KTextEdit *mDebugTextEdit;
-    SieveFindBar *mFindBar;
+    PimCommon::PlainTextEditFindBar *mFindBar;
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;
     QSplitter *mExtraSplitter;
