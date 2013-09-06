@@ -196,8 +196,8 @@ bool ListView::Private::ListItemVisitor::visit( Event::Ptr e )
   mItem->setIcon( Summary_Column, eventPxmp );
 
   KDateTime next;
-  mItem->start = e->dateTime( Incidence::RoleDisplayStart );
-  mItem->end = e->dateTime( Incidence::RoleDisplayEnd );
+  mItem->start = e->dtStart();
+  mItem->end = e->dtEnd();
   if ( e->recurs() ) {
     const int duration = e->dtStart().secsTo( e->dtEnd() );
     KDateTime kdt = KDateTime::currentDateTime(
@@ -231,7 +231,7 @@ bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
 
   if ( t->hasStartDate() ) {
     mItem->setText( StartDateTime_Column, IncidenceFormatter::dateTimeToString(
-                      t->dateTime( Incidence::RoleDisplayStart ), t->allDay(), true,
+                      t->dtStart(), t->allDay(), true,
                       CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
   } else {
     mItem->setText( StartDateTime_Column, QLatin1String("---") );
@@ -239,7 +239,7 @@ bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
 
   if ( t->hasDueDate() ) {
     mItem->setText( EndDateTime_Column, IncidenceFormatter::dateTimeToString(
-                      t->dateTime( Incidence::RoleDisplayEnd ), t->allDay(), true,
+                      t->dtDue(), t->allDay(), true,
                       CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   } else {
@@ -262,7 +262,7 @@ bool ListView::Private::ListItemVisitor::visit( Journal::Ptr j )
     mItem->setText( Summary_Column, cleanSummary( j->summary(), KDateTime() ) );
   }
   mItem->setText( StartDateTime_Column, IncidenceFormatter::dateTimeToString(
-                    j->dateTime( Incidence::RoleDisplayStart ), j->allDay(), true,
+                    j->dtStart(), j->allDay(), true,
                     CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   return true;
