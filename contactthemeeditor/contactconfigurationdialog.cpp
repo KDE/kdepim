@@ -37,8 +37,9 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
     setButtons( Default|Ok|Cancel );
     setButtonFocus( Ok );
 
-    QWidget *w = new QWidget;
+    QTabWidget *tab = new QTabWidget;
 
+    QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
 
@@ -52,10 +53,13 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
     mDefaultContact->setAcceptRichText(false);
     lay->addWidget(mDefaultContact);
 
+    tab->addTab(w, i18n("General"));
 
-    lay->addStretch();
+    mDefaultTemplate = new KTextEdit;
+    mDefaultTemplate->setAcceptRichText(false);
+    tab->addTab(mDefaultTemplate, i18n("Default Template"));
 
-    setMainWidget(w);
+    setMainWidget(tab);
     connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
     readConfig();
@@ -73,6 +77,7 @@ void ContactConfigureDialog::slotDefaultClicked()
 {
     mConfigureWidget->setDefault();
     mDefaultContact->setPlainText(contacteditorutil::defaultContact());
+    mDefaultTemplate->clear();
 }
 
 void ContactConfigureDialog::slotOkClicked()
@@ -87,6 +92,7 @@ void ContactConfigureDialog::readConfig()
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
         mDefaultContact->setPlainText(group.readEntry("defaultContact",contacteditorutil::defaultContact()));
+        mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate",QString()));
     } else {
         mDefaultContact->setPlainText(contacteditorutil::defaultContact());
     }
@@ -106,7 +112,8 @@ void ContactConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = config->group(QLatin1String("Global"));
-    group.writeEntry("defaultContact", mDefaultContact->toPlainText());
+    group.writeEntry("defaultContact", mDefaultContact->toPlainText());    
+    group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
     mConfigureWidget->writeConfig();
 }
 
