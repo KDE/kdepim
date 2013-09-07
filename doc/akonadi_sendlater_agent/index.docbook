@@ -67,7 +67,7 @@ This is useful if you need to send out reminders to someone on a consistent basi
 <para> You can put the message in your queued messages by selecting the <guibutton>Put in outbox</guibutton> 
 button or select the <guibutton>Send Later</guibutton> button to schedule the message immediately.
 </para>
-<para>This agent works independent from &kmail; and does not need a running &kmail; instance or &kmail; beeing 
+<para>This agent works independent from &kmail; and does not need a running &kmail; instance or &kmail; being
 in online mode.</para>
 <para>If you have no network connection when a scheduled message should be sent, the agent will report an error
 and ask if you want to resend it later.</para>
