@@ -52,6 +52,7 @@ class QItemSelection;
 class QMenu;
 class QModelIndex;
 class QToolButton;
+class QTimer;
 
 namespace EventViews {
 
@@ -100,6 +101,7 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     void saveViewState();
 
   protected Q_SLOTS:
+    void resizeEvent( QResizeEvent * ) /*Q_DECL_OVERRIDE*/;
     void addQuickTodo( Qt::KeyboardModifiers modifier );
 
     void contextMenu( const QPoint &pos );
@@ -116,7 +118,8 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     void copyTodoToDate( const QDate &date );
 
   private Q_SLOTS:
-    void resizeColumnsToContent();
+    void scheduleResizeColumns();
+    void resizeColumns();
     void itemDoubleClicked( const QModelIndex &index );
     void setNewDate( const QDate &date );
     void setNewPercentage( QAction *action );
@@ -172,6 +175,8 @@ class EVENTVIEWS_EXPORT TodoView : public EventViews::EventView
     QMap<QAction *,int> mPriority;
     QMap<QAction *,QString> mCategory;
     bool mSidebarView;
+    bool mResizeColumnsScheduled;
+    QTimer *mResizeColumnsTimer;
 };
 
 
