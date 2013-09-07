@@ -233,6 +233,9 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
   TodoPriorityDelegate *priorityDelegate = new TodoPriorityDelegate( mView );
   mView->setItemDelegateForColumn( TodoModel::PriorityColumn, priorityDelegate );
 
+  TodoDueDateDelegate *startDateDelegate = new TodoDueDateDelegate( mView );
+  mView->setItemDelegateForColumn( TodoModel::StartDateColumn, startDateDelegate );
+
   TodoDueDateDelegate *dueDateDelegate = new TodoDueDateDelegate( mView );
   mView->setItemDelegateForColumn( TodoModel::DueDateColumn, dueDateDelegate );
 
@@ -760,6 +763,7 @@ void TodoView::contextMenu( const QPoint &pos )
     case TodoModel::PercentColumn:
       mPercentageCompletedPopupMenu->popup( mView->viewport()->mapToGlobal( pos ) );
       break;
+    case TodoModel::StartDateColumn:
     case TodoModel::DueDateColumn:
       mMovePopupMenu->popup( mView->viewport()->mapToGlobal( pos ) );
       break;
@@ -1130,6 +1134,7 @@ bool TodoView::usesFullWindow()
 
 void TodoView::resizeColumnsToContent()
 {
+  mView->resizeColumnToContents( TodoModel::StartDateColumn );
   mView->resizeColumnToContents( TodoModel::DueDateColumn );
   mView->resizeColumnToContents( TodoModel::SummaryColumn );
 }

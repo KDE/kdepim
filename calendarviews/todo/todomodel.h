@@ -52,6 +52,7 @@ class TodoModel : public QAbstractProxyModel
       CategoriesColumn,
       DescriptionColumn,
       CalendarColumn,
+      StartDateColumn,
       ColumnCount // Just for iteration/column count purposes. Always keep at the end of enum.
     };
 
