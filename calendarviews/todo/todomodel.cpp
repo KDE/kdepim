@@ -624,9 +624,9 @@ QVariant TodoModel::headerData( int column, Qt::Orientation orientation, int rol
     case PercentColumn:
       return QVariant( i18nc( "@title:column percent complete", "Complete" ) );
     case StartDateColumn:
-      return QVariant( i18n( "Start Date/Time" ) );
+      return QVariant( i18n( "Start Date" ) );
     case DueDateColumn:
-      return QVariant( i18n( "Due Date/Time" ) );
+      return QVariant( i18n( "Due Date" ) );
     case CategoriesColumn:
       return QVariant( i18n( "Categories" ) );
     case DescriptionColumn:
