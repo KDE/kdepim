@@ -646,6 +646,8 @@ QVariant TodoModel::headerData( int column, Qt::Orientation orientation, int rol
       case PercentColumn:
       case StartDateColumn:
       case DueDateColumn:
+      case CategoriesColumn:
+      case CalendarColumn:
         return QVariant( Qt::AlignHCenter );
     }
     return QVariant();
