@@ -402,6 +402,8 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
       case PercentColumn:
       case StartDateColumn:
       case DueDateColumn:
+      case CategoriesColumn:
+      case CalendarColumn:
         return QVariant( Qt::AlignHCenter | Qt::AlignVCenter );
     }
     return QVariant( Qt::AlignLeft | Qt::AlignVCenter );
