@@ -49,19 +49,24 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
     selecttype->setObjectName(QLatin1String("matchtype"));
     lay->addWidget(selecttype);
 
+
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    lay->addLayout(grid);
+
     QLabel *lab = new QLabel(i18n("Variable name (if empty it uses internal variable):"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 0);
 
     KLineEdit *variableName = new KLineEdit;
     variableName->setObjectName(QLatin1String("variablename"));
-    lay->addWidget(variableName);
+    grid->addWidget(variableName, 0, 1);
 
     lab = new QLabel(i18n("Value:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    grid->addWidget(value, 1, 1);
 
     return w;
 }
