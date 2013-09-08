@@ -220,4 +220,9 @@ FolderArchiveCache *FolderArchiveManager::folderArchiveCache() const
     return mFolderArchiveCache;
 }
 
+void FolderArchiveManager::debugCache()
+{
+    mFolderArchiveCache->debugCache();
+}
+
 #include "folderarchivemanager.moc"

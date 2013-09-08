@@ -94,4 +94,14 @@ void FolderArchiveCache::addToCache(const QString &resourceName, Akonadi::Collec
     }
 }
 
+void FolderArchiveCache::debugCache()
+{
+    QHashIterator<QString, ArchiveCache> i(mCache);
+    while (i.hasNext()) {
+        i.next();
+        qDebug()<<" resourceName :"<<i.key();
+        qDebug()<<" Creation at: "<<i.value().date.toString()<<" collection id:"<<i.value().colId;
+    }
+}
+
 #include "folderarchivecache.moc"

@@ -37,6 +37,8 @@ public:
 
     void collectionRemoved( const Akonadi::Collection &collection );
 
+    void debugCache();
+
 public Q_SLOTS:
     void configure( WId windowId );
 

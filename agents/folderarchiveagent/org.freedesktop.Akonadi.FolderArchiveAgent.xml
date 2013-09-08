@@ -18,5 +18,6 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QList&lt;qlonglong&gt; &amp;"/>
       <arg name="instanceName" type="s" direction="in"/>
     </method>
+    <method name="debugCache"/>
   </interface>
 </node>
