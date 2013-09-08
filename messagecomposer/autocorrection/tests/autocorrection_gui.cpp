@@ -118,7 +118,8 @@ void AutocorrectionTestWidget::slotChangeMode(bool mode)
 void AutocorrectionTestWidget::slotConfigure()
 {
     QPointer<ConfigureTestDialog> dlg = new ConfigureTestDialog(mAutoCorrection, this);
-    dlg->exec();
+    if(dlg->exec())
+        MessageComposer::MessageComposerSettings::self()->writeConfig();
     delete dlg;
 }
 
