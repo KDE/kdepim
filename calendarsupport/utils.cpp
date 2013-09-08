@@ -496,16 +496,18 @@ Akonadi::Collection::List CalendarSupport::collectionsFromIndexes( const QModelI
 
 QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akonadi::Collection &c )
 {
-  QString cName = c.name();
-  if ( cName.isEmpty() && calendar ) {
-    Akonadi::Collection realCollection = calendar->collection( c.id() );
-    if ( realCollection.isValid() ) {
-      cName = realCollection.name();
-    }
+  Akonadi::Collection fullCollection;
+  if ( calendar && calendar->collection( c.id() ).isValid() ) {
+    fullCollection = calendar->collection( c.id() );
+  } else {
+    fullCollection = c;
   }
 
+  QString cName = fullCollection.name();
+  const QString resourceName = fullCollection.resource();
+
   // Kolab Groupware
-  if ( c.resource().contains( QLatin1String("kolabproxy") ) ) {
+  if ( resourceName.contains( QLatin1String( "kolabproxy" ) ) ) {
     QString typeStr = cName; // contents type: "Calendar", "Tasks", etc
     QString ownerStr;        // folder owner: "fred", "ethel", etc
     QString nameStr;         // folder name: "Public", "Test", etc
@@ -572,12 +574,12 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
   } //end kolab section
 
   // Dav Groupware
-  if ( c.resource().contains( QLatin1String("davgroupware") ) ) {
+  if ( resourceName.contains( QLatin1String( "davgroupware" ) ) ) {
     return i18nc( "%1 is the folder name", "%1 CalDav Calendar", cName );
   } //end caldav section
 
   // Google
-  if ( c.resource().contains( QLatin1String("google") ) ) {
+  if ( resourceName.contains( QLatin1String( "google" ) ) ) {
     QString ownerStr;        // folder owner: "user@gmail.com"
     if ( calendar ) {
       Akonadi::Collection p = c.parentCollection();
@@ -617,7 +619,7 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
   } //end google section
 
   // Not groupware so the collection is "mine"
-  const QString dName = c.displayName();
+  const QString dName = fullCollection.displayName();
 
   if ( !dName.isEmpty() ) {
     return i18n( "My %1", dName );
