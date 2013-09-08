@@ -73,7 +73,10 @@ void ScamDetectionTest::testHexaValue()
 
 void ScamDetectionTest::testIp()
 {
-    QString content = QLatin1String("<html><body><a href=\"http://125.15.55.88/\" title=\"http://www.kde.org\">test</a></body></html>");
+    QString content = QLatin1String("<html><body><a href=\"http://127.0.0.1/\">test</a></body></html>");
+    QCOMPARE(testHtml(content), false);
+
+    content = QLatin1String("<html><body><a href=\"http://125.15.55.88/\" title=\"http://www.kde.org\">test</a></body></html>");
     QCOMPARE(testHtml(content), true);
 
     content = QLatin1String("<html><body><a href=\"http://125.15.55.88/\" title=\"http://125.15.55.88/\">test</a></body></html>");
