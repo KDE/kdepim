@@ -622,7 +622,7 @@ QString CalendarSupport::displayName( Akonadi::ETMCalendar *calendar, const Akon
   const QString dName = fullCollection.displayName();
 
   if ( !dName.isEmpty() ) {
-    return i18n( "My %1", dName );
+    return fullCollection.name().startsWith( QLatin1String( "akonadi_" ) ) ? i18n( "My %1", dName ) : fullCollection.name();
   } else {
     return i18nc( "unknown resource", "Unknown" );
   }
