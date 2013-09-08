@@ -2,9 +2,10 @@
   This file is part of KOrganizer.
 
   Copyright (c) 2000,2001,2003 Cornelius Schumacher <schumacher@kde.org>
-  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
+  Copyright (c) 2013 Sérgio Martins <iamsergio@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -58,6 +59,7 @@
 #include <QMenu>
 #include <QToolButton>
 #include <QItemSelection>
+#include <QTimer>
 
 using namespace EventViews;
 using namespace KCalCore;
@@ -180,7 +182,13 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
   , mQuickAdd( 0 )
   , mTreeStateRestorer( 0 )
   , mSidebarView( sidebarView )
+  , mResizeColumnsScheduled( false )
 {
+  mResizeColumnsTimer = new QTimer( this );
+  connect( mResizeColumnsTimer, SIGNAL(timeout()), SLOT(resizeColumns()) );
+  mResizeColumnsTimer->setInterval( 100 ); // so we don't overdue it when user resizes window manually
+  mResizeColumnsTimer->setSingleShot( true );
+
   setPreferences( prefs );
   if ( !sModels ) {
     sModels = new ModelStack( prefs, parent );
@@ -226,12 +234,18 @@ TodoView::TodoView( const EventViews::PrefsPtr &prefs,
   mView->setEditTriggers( QAbstractItemView::SelectedClicked |
                           QAbstractItemView::EditKeyPressed );
 
+  connect( mView->header(), SIGNAL(geometriesChanged()), SLOT(scheduleResizeColumns()) );
+  connect( mView, SIGNAL(visibleColumnCountChanged()), SLOT(resizeColumns()) );
+
   TodoRichTextDelegate *richTextDelegate = new TodoRichTextDelegate( mView );
   mView->setItemDelegateForColumn( TodoModel::SummaryColumn, richTextDelegate );
   mView->setItemDelegateForColumn( TodoModel::DescriptionColumn, richTextDelegate );
 
   TodoPriorityDelegate *priorityDelegate = new TodoPriorityDelegate( mView );
   mView->setItemDelegateForColumn( TodoModel::PriorityColumn, priorityDelegate );
+
+  TodoDueDateDelegate *startDateDelegate = new TodoDueDateDelegate( mView );
+  mView->setItemDelegateForColumn( TodoModel::StartDateColumn, startDateDelegate );
 
   TodoDueDateDelegate *dueDateDelegate = new TodoDueDateDelegate( mView );
   mView->setItemDelegateForColumn( TodoModel::DueDateColumn, dueDateDelegate );
@@ -558,7 +572,7 @@ void TodoView::restoreLayout( KConfig *config, const QString &group, bool minima
     }
 
     // We don't have any incidences (content) yet, so we delay resizing
-    QTimer::singleShot( 0, this, SLOT(resizeColumnsToContent()) );
+    QTimer::singleShot( 0, this, SLOT(resizeColumns()) );
 
   } else {
       for ( int i = 0;
@@ -760,6 +774,7 @@ void TodoView::contextMenu( const QPoint &pos )
     case TodoModel::PercentColumn:
       mPercentageCompletedPopupMenu->popup( mView->viewport()->mapToGlobal( pos ) );
       break;
+    case TodoModel::StartDateColumn:
     case TodoModel::DueDateColumn:
       mMovePopupMenu->popup( mView->viewport()->mapToGlobal( pos ) );
       break;
@@ -881,6 +896,12 @@ void TodoView::copyTodoToDate( const QDate &date )
   todo->setDtDue( due );
 
   changer()->createIncidence( todo, Akonadi::Collection(), this );
+}
+
+void TodoView::scheduleResizeColumns()
+{
+  mResizeColumnsScheduled = true;
+  mResizeColumnsTimer->start(); // restarts the timer if already active
 }
 
 void TodoView::itemDoubleClicked( const QModelIndex &index )
@@ -1128,10 +1149,51 @@ bool TodoView::usesFullWindow()
   return preferences()->fullViewTodo();
 }
 
-void TodoView::resizeColumnsToContent()
+void TodoView::resizeColumns()
 {
+  mResizeColumnsScheduled = false;
+
+  mView->resizeColumnToContents( TodoModel::StartDateColumn );
   mView->resizeColumnToContents( TodoModel::DueDateColumn );
-  mView->resizeColumnToContents( TodoModel::SummaryColumn );
+  mView->resizeColumnToContents( TodoModel::PriorityColumn);
+  mView->resizeColumnToContents( TodoModel::CalendarColumn);
+  mView->resizeColumnToContents( TodoModel::RecurColumn);
+  mView->resizeColumnToContents( TodoModel::PercentColumn);
+
+  // We have 3 columns that should stretch: summary, description and categories.
+  // Summary is always visible.
+  const bool descriptionVisible = !mView->isColumnHidden(TodoModel::DescriptionColumn);
+  const bool categoriesVisible  = !mView->isColumnHidden(TodoModel::CategoriesColumn);
+
+  // Calculate size of non-stretchable columns:
+  int size = 0;
+  for ( int i=0; i<TodoModel::ColumnCount; i++ ) {
+    if ( !mView->isColumnHidden(i) && i != TodoModel::SummaryColumn && i != TodoModel::DescriptionColumn && i != TodoModel::CategoriesColumn )
+      size += mView->columnWidth(i);
+  }
+
+  // Calculate the remaining space that we have for the stretchable columns
+  int remainingSize = mView->header()->width() - size;
+
+  // 100 for summary, 100 for description
+  const int requiredSize = descriptionVisible ? 200 : 100;
+
+  if ( categoriesVisible ) {
+    const int categorySize = 100;
+    mView->setColumnWidth( TodoModel::CategoriesColumn, categorySize );
+    remainingSize -= categorySize;
+  }
+
+  if ( remainingSize < requiredSize ) {
+    // We have too little size ( that's what she...), so lets use an horizontal scrollbar and make these columns use whatever they need.
+    mView->resizeColumnToContents( TodoModel::SummaryColumn );
+    mView->resizeColumnToContents( TodoModel::DescriptionColumn );
+  } else if ( descriptionVisible ) {
+    mView->setColumnWidth( TodoModel::SummaryColumn, remainingSize / 2 );
+    mView->setColumnWidth( TodoModel::DescriptionColumn, remainingSize / 2 );
+  } else {
+    mView->setColumnWidth( TodoModel::SummaryColumn, remainingSize );
+  }
 }
 
 void TodoView::restoreViewState()
@@ -1170,6 +1232,12 @@ void TodoView::saveViewState()
   KConfigGroup group( preferences()->config(), stateSaverGroup() );
   treeStateSaver.setView( mView );
   treeStateSaver.saveState( group );
+}
+
+void TodoView::resizeEvent( QResizeEvent *event )
+{
+  EventViews::EventView::resizeEvent( event );
+  scheduleResizeColumns();
 }
 
 #include "todoview.moc"

@@ -48,6 +48,7 @@ class TodoModel : public QAbstractProxyModel
       RecurColumn,
       PriorityColumn,
       PercentColumn,
+      StartDateColumn,
       DueDateColumn,
       CategoriesColumn,
       DescriptionColumn,

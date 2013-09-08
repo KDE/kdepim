@@ -691,8 +691,32 @@ void IncidenceMonthItem::setNewDates( const KCalCore::Incidence::Ptr &incidence,
                                       int startOffset, int endOffset )
 {
   if ( mIsTodo ) {
+
+    // For to-dos endOffset is ignored because it will always be == to startOffset because we only
+    // support moving to-dos, not resizing them. There are no multi-day to-dos.
+    // Lets just call it offset to reduce confusion.
+    const int offset = startOffset;
+
     KCalCore::Todo::Ptr todo = incidence.staticCast<Todo>();
-    todo->setDtDue( todo->dtDue().addDays( startOffset ) );
+    KDateTime due   = todo->dtDue();
+    KDateTime start = todo->dtStart();
+    if ( due.isValid() ) { // Due has priority over start.
+      // We will only move the due date, unlike events where we move both.
+      due = due.addDays( offset );
+      todo->setDtDue( due );
+
+      if ( start.isValid() && start > due ) {
+        // Start can't be bigger than due.
+        todo->setDtStart( due );
+      }
+    } else if ( start.isValid() ) {
+      // So we're displaying a to-do that doesn't have due date, only start...
+      start = start.addDays( offset );
+      todo->setDtStart( start );
+    } else {
+      // This never happens
+      kWarning() << "Move what? uid:" << todo->uid() << "; summary=" << todo->summary();
+    }
   } else {
     incidence->setDtStart( incidence->dtStart().addDays( startOffset ) );
     if ( mIsEvent ) {

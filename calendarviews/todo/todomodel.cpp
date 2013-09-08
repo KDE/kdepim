@@ -278,12 +278,12 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
       return QVariant( todo->priority() );
     case PercentColumn:
       return QVariant( todo->percentComplete() );
+    case StartDateColumn:
+      return todo->hasStartDate() ? QVariant( KCalUtils::IncidenceFormatter::dateToString( todo->dtStart() ) )
+                                  : QVariant( QString() );
     case DueDateColumn:
-      if ( todo->hasDueDate() && todo->dtDue().date().isValid() ) {
-        return QVariant( KCalUtils::IncidenceFormatter::dateToString( todo->dtDue() ) );
-      } else {
-        return QVariant( QString() );
-      }
+      return todo->hasDueDate() ? QVariant( KCalUtils::IncidenceFormatter::dateToString( todo->dtDue() ) )
+                                : QVariant( QString() );
     case CategoriesColumn:
     {
       QString categories = todo->categories().join(
@@ -308,6 +308,8 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
       return QVariant( todo->priority() );
     case PercentColumn:
       return QVariant( todo->percentComplete() );
+    case StartDateColumn:
+      return QVariant( todo->dtStart().date() );
     case DueDateColumn:
       return QVariant( todo->dtDue().date() );
     case CategoriesColumn:
@@ -398,7 +400,10 @@ QVariant TodoModel::data( const QModelIndex &index, int role ) const
       case RecurColumn:
       case PriorityColumn:
       case PercentColumn:
+      case StartDateColumn:
       case DueDateColumn:
+      case CategoriesColumn:
+      case CalendarColumn:
         return QVariant( Qt::AlignHCenter | Qt::AlignVCenter );
     }
     return QVariant( Qt::AlignLeft | Qt::AlignVCenter );
@@ -453,6 +458,13 @@ bool TodoModel::setData( const QModelIndex &index, const QVariant &value, int ro
           break;
         case PercentColumn:
           todo->setPercentComplete( value.toInt() );
+          break;
+          case StartDateColumn:
+          {
+            KDateTime tmp = todo->dtStart();
+            tmp.setDate( value.toDate() );
+            todo->setDtStart( tmp );
+          }
           break;
         case DueDateColumn:
           {
@@ -613,8 +625,10 @@ QVariant TodoModel::headerData( int column, Qt::Orientation orientation, int rol
       return QVariant( i18n( "Priority" ) );
     case PercentColumn:
       return QVariant( i18nc( "@title:column percent complete", "Complete" ) );
+    case StartDateColumn:
+      return QVariant( i18n( "Start Date" ) );
     case DueDateColumn:
-      return QVariant( i18n( "Due Date/Time" ) );
+      return QVariant( i18n( "Due Date" ) );
     case CategoriesColumn:
       return QVariant( i18n( "Categories" ) );
     case DescriptionColumn:
@@ -630,7 +644,10 @@ QVariant TodoModel::headerData( int column, Qt::Orientation orientation, int rol
       case RecurColumn:
       case PriorityColumn:
       case PercentColumn:
+      case StartDateColumn:
       case DueDateColumn:
+      case CategoriesColumn:
+      case CalendarColumn:
         return QVariant( Qt::AlignHCenter );
     }
     return QVariant();
@@ -797,6 +814,7 @@ Qt::ItemFlags TodoModel::flags( const QModelIndex &index ) const
     case SummaryColumn:
     case PriorityColumn:
     case PercentColumn:
+    case StartDateColumn:
     case DueDateColumn:
     case CategoriesColumn:
       ret |= Qt::ItemIsEditable;

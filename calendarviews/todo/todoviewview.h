@@ -55,6 +55,9 @@ class TodoViewView : public QTreeView
     QTimer mExpandTimer;
     bool mIgnoreNextMouseRelease;
 
+  signals:
+    void visibleColumnCountChanged();
+
   private slots:
     void toggleColumnHidden( QAction *action );
     void expandParent();

@@ -75,7 +75,6 @@ void TextEditAutoCorrectionWidget::keyPressEvent ( QKeyEvent *e )
 {
     if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
         if(mAutoCorrection) {
-            //TODO customize rich text or not
             mAutoCorrection->autocorrect(acceptRichText(), *document(),textCursor().position());
         }
     }
@@ -119,7 +118,8 @@ void AutocorrectionTestWidget::slotChangeMode(bool mode)
 void AutocorrectionTestWidget::slotConfigure()
 {
     QPointer<ConfigureTestDialog> dlg = new ConfigureTestDialog(mAutoCorrection, this);
-    dlg->exec();
+    if(dlg->exec())
+        MessageComposer::MessageComposerSettings::self()->writeConfig();
     delete dlg;
 }
 

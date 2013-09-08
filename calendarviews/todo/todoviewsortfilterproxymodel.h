@@ -59,6 +59,7 @@ class TodoViewSortFilterProxyModel : public QSortFilterProxyModel
     void setPriorityFilter( const QStringList &priorities );
 
   private:
+    int compareStartDates( const QModelIndex &left, const QModelIndex &right ) const;
     int compareDueDates( const QModelIndex &left, const QModelIndex &right ) const;
     int comparePriorities( const QModelIndex &left, const QModelIndex &right ) const;
     int compareCompletion( const QModelIndex &left, const QModelIndex &right ) const;
