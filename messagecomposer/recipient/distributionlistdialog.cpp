@@ -257,39 +257,38 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
                                         << KABC::ContactGroup::mimeType() );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   dlg->setDescription( i18n( "Select the address book folder to store the contact group in:" ) );
-  if ( !dlg->exec() ) {
-    delete dlg;
-    return;
-  }
+  if ( dlg->exec() ) {
+      const Akonadi::Collection targetCollection = dlg->selectedCollection();
+      delete dlg;
 
-  const Akonadi::Collection targetCollection = dlg->selectedCollection();
-  delete dlg;
+      KABC::ContactGroup group( name );
+      const int numberOfTopLevel( mRecipientsList->topLevelItemCount() );
+      for ( int i = 0; i < numberOfTopLevel; ++i ) {
+        DistributionListItem *item = static_cast<DistributionListItem *>( mRecipientsList->topLevelItem( i ) );
+        if ( item && item->checkState( 0 ) == Qt::Checked ) {
+          kDebug() << item->addressee().fullEmail() << item->addressee().uid();
+          if ( item->isTransient() ) {
+            Akonadi::Item contactItem( KABC::Addressee::mimeType() );
+            contactItem.setPayload<KABC::Addressee>( item->addressee() );
 
-  KABC::ContactGroup group( name );
-  const int numberOfTopLevel( mRecipientsList->topLevelItemCount() );
-  for ( int i = 0; i < numberOfTopLevel; ++i ) {
-    DistributionListItem *item = static_cast<DistributionListItem *>( mRecipientsList->topLevelItem( i ) );
-    if ( item && item->checkState( 0 ) == Qt::Checked ) {
-      kDebug() << item->addressee().fullEmail() << item->addressee().uid();
-      if ( item->isTransient() ) {
-        Akonadi::Item contactItem( KABC::Addressee::mimeType() );
-        contactItem.setPayload<KABC::Addressee>( item->addressee() );
+            Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( contactItem, targetCollection );
+            job->exec();
 
-        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( contactItem, targetCollection );
-        job->exec();
-
-        group.append( KABC::ContactGroup::ContactReference( QString::number( job->item().id() ) ) );
-      } else {
-        group.append( KABC::ContactGroup::Data( item->addressee().realName(), item->email() ) );
+            group.append( KABC::ContactGroup::ContactReference( QString::number( job->item().id() ) ) );
+          } else {
+            group.append( KABC::ContactGroup::Data( item->addressee().realName(), item->email() ) );
+          }
+        }
       }
-    }
+
+      Akonadi::Item groupItem( KABC::ContactGroup::mimeType() );
+      groupItem.setPayload<KABC::ContactGroup>( group );
+
+      Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, targetCollection );
+      connect( createJob, SIGNAL(result(KJob*)), this, SLOT(slotContactGroupCreateJobResult(KJob*)) );
   }
 
-  Akonadi::Item groupItem( KABC::ContactGroup::mimeType() );
-  groupItem.setPayload<KABC::ContactGroup>( group );
-
-  Akonadi::Job *createJob = new Akonadi::ItemCreateJob( groupItem, targetCollection );
-  connect( createJob, SIGNAL(result(KJob*)), this, SLOT(slotContactGroupCreateJobResult(KJob*)) );
+  delete dlg;
 }
 
 void DistributionListDialog::slotContactGroupCreateJobResult( KJob *job )
