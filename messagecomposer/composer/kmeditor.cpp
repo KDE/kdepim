@@ -281,7 +281,15 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
   } else {
     if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
       if(d->mAutoCorrection) {
+        const QTextCharFormat initialTextFormat = textCursor().charFormat();
         d->mAutoCorrection->autocorrect((textMode() == KRichTextEdit::Rich), *document(),textCursor().position());
+        if (e->key() == Qt::Key_Space) {
+          textCursor().insertText(QLatin1String(" "), initialTextFormat);
+          return;
+        } else {
+          textCursor().insertText(QLatin1String("\n"), initialTextFormat);
+          return;
+        }
       }
     }
     TextEdit::keyPressEvent( e );
