@@ -32,6 +32,8 @@
 #include <KPasswordDialog>
 #include <KMessageBox>
 
+#include <QTimer>
+
 static sasl_callback_t callbacks[] = {
     { SASL_CB_ECHOPROMPT, NULL, NULL },
     { SASL_CB_NOECHOPROMPT, NULL, NULL },
@@ -51,6 +53,7 @@ Session::Session( QObject *parent ) :
     m_sasl_conn( 0 ),
     m_sasl_client_interact( 0 ),
     m_currentJob( 0 ),
+    m_sslCheck(0),
     m_state( None ),
     m_pendingQuantity( -1 ),
     m_supportsStartTls( false )
@@ -72,6 +75,7 @@ Session::~Session()
     kDebug();
     disconnectFromHost( false );
     delete m_socket;
+    delete m_sslCheck;
 }
 
 void Session::connectToHost( const KUrl &url )
@@ -321,14 +325,14 @@ bool Session::requestCapabilitiesAfterStartTls() const
     return false;
 }
 
-void Session::startSsl()
+void Session::slotEncryptedDone()
 {
-    kDebug();
-    m_socket->setAdvertisedSslVersion( KTcpSocket::TlsV1 );
-    m_socket->ignoreSslErrors();
-    m_socket->startClientEncryption();
-    const bool encrypted = m_socket->waitForEncrypted( 60 * 1000 );
+    m_sslCheck->stop();
+    sslResult(true);
+}
 
+void Session::sslResult(bool encrypted)
+{
     const KSslCipher cipher = m_socket->sessionCipher();
     if ( !encrypted || m_socket->sslErrors().count() > 0 || m_socket->encryptionMode() != KTcpSocket::SslClientMode
          || cipher.isNull() || cipher.usedBits() == 0 )
@@ -348,6 +352,27 @@ void Session::startSsl()
     if ( requestCapabilitiesAfterStartTls() )
         sendData( "CAPABILITY" );
     m_state = PostTlsCapabilities;
+}
+
+void Session::slotSslTimeout()
+{
+    disconnect(m_socket, SIGNAL(encrypted()), this, SLOT(slotEncryptedDone()));
+    sslResult(false);
+}
+
+void Session::startSsl()
+{
+    kDebug();
+    if (!m_sslCheck) {
+        m_sslCheck = new QTimer;
+        m_sslCheck->setInterval(60*1000);
+        connect(m_sslCheck, SIGNAL(timeout()), this, SLOT(slotSslTimeout()));
+    }
+    m_socket->setAdvertisedSslVersion( KTcpSocket::TlsV1 );
+    m_socket->ignoreSslErrors();
+    connect(m_socket, SIGNAL(encrypted()), SLOT(slotEncryptedDone()));
+    m_sslCheck->start();
+    m_socket->startClientEncryption();
 }
 
 void Session::sendData(const QByteArray& data)

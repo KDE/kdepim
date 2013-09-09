@@ -29,6 +29,7 @@
 #include <QtCore/QQueue>
 #include <QStringList>
 
+class QTimer;
 class KTcpSocket;
 
 namespace KManageSieve {
@@ -72,8 +73,12 @@ private slots:
     void socketError();
     void startSsl();
     void executeNextJob();
+    void slotSslTimeout();
+    void slotEncryptedDone();
 
 private:
+    void sslResult(bool encrypted);
+
     KUrl m_url;
     KTcpSocket *m_socket;
     sasl_conn_t *m_sasl_conn;
@@ -90,6 +95,7 @@ private:
         StartTls,
         Authenticating
     };
+    QTimer *m_sslCheck;
     State m_state;
     Response m_lastResponse;
     QByteArray m_data;

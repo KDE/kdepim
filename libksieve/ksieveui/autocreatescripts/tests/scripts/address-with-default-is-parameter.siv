@@ -1,0 +1,10 @@
+
+if address :detail "to" "shopping" { fileinto "shoppingMania"; stop; }
+##### Send some of my mail to my brother.
+# ':matches' is used for wildcard matches;
+#     *: zero or more characters
+#     ?: a single character
+# This example matches 'Summer vacation photos' ,
+# and also 'Istanbul vacation photo'
+
+

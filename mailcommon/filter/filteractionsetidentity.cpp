@@ -18,6 +18,7 @@
  */
 
 #include "filteractionsetidentity.h"
+#include "messagecore/utils/stringutil.h"
 
 #include "kernel/mailkernel.h"
 #include "dialog/filteractionmissingargumentdialog.h"
@@ -62,15 +63,27 @@ bool FilterActionSetIdentity::argsFromStringInteractive( const QString &argsStr,
 
 FilterAction::ReturnCode FilterActionSetIdentity::process( ItemContext &context ) const
 {
-    if ( KernelIf->identityManager()->identityForUoid( mParameter ).isNull() )
+    const KPIMIdentities::Identity & ident =
+      KernelIf->identityManager()->identityForUoid( mParameter );
+
+    if ( ident.isNull() )
         return ErrorButGoOn;
 
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
-    KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( mParameter ), "utf-8" );
-    msg->setHeader( header );
-    msg->assemble();
+    const uint currentId = msg->headerByType( "X-KMail-Identity" ) ? msg->headerByType( "X-KMail-Identity" )->asUnicodeString().trimmed().toUInt() : 0;
+    if (currentId != mParameter) {
+        KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( mParameter ), "utf-8" );
+        msg->from()->fromUnicodeString( ident.fullEmailAddr(), "utf-8" );
+        if (!ident.bcc().isEmpty()) {
+            const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.bcc() );
+            foreach ( const KMime::Types::Mailbox &mailbox, mailboxes )
+                msg->bcc()->addAddress( mailbox );
+        }
+        msg->setHeader( header );
+        msg->assemble();
 
-    context.setNeedsPayloadStore();
+        context.setNeedsPayloadStore();
+    }
 
     return GoOn;
 }

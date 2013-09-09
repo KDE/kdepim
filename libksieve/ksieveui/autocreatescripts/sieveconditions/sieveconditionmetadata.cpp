@@ -162,6 +162,8 @@ bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
                 selectType->setCode(AutoCreateScriptUtil::tagValueWithCondition(e.text(), notCondition), name(), error);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveConditionMetaData::setParamWidgetValue unknown tagName "<<tagName;

@@ -362,8 +362,10 @@ void SieveConditionWidgetLister::loadScript(const QDomElement &e, bool uniqTest,
                                         w->setCondition(conditionName, testElement, notCondition, error);
                                     }
                                 }
+                            } else if (testTagName == QLatin1String("crlf")) {
+                                //nothing
                             } else {
-                                qDebug()<<" unknown condition tag: "<<testTagName;
+                                qDebug()<<" SieveConditionWidgetLister::loadScript unknown condition tag: "<<testTagName;
                             }
                         }
                         testNode = testNode.nextSibling();

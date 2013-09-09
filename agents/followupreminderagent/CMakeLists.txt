@@ -8,6 +8,7 @@ include_directories(
 
 set(followupreminderagent_SRCS
     followupreminderagent.cpp
+    followupreminderconfiguredialog.cpp
 )
 
 qt4_add_dbus_adaptor(followupreminderagent_SRCS org.freedesktop.Akonadi.FollowUpReminder.xml followupreminderagent.h FollowUpReminderAgent)

@@ -82,6 +82,15 @@ void SieveSyntaxHighlighter::init()
         m_rules.append( Rule( regex, keywordFormat ) );
     }
 
+    // Text keyword
+    QTextCharFormat textKeywordFormat;
+    textKeywordFormat.setForeground( Qt::green );
+    QStringList textKeywords;
+    textKeywords << QLatin1String( "\\btext:" );
+    Q_FOREACH ( const QString & s, textKeywords ) {
+        const QRegExp regex( s, Qt::CaseInsensitive );
+        m_rules.append( Rule( regex, textKeywordFormat ) );
+    }
 
     // Match Type
     QTextCharFormat matchFormat;

@@ -133,6 +133,10 @@ bool SieveActionVacation::setParamWidgetValue(const QDomElement &element, QWidge
             } else if (tagName == QLatin1String("list")) {
                 KLineEdit *addresses = w->findChild<KLineEdit*>( QLatin1String("addresses") );
                 addresses->setText(AutoCreateScriptUtil::listValueToStr(e));
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionVacation::setParamWidgetValue unknown tagName "<<tagName;

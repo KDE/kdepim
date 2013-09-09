@@ -15,39 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CONTACTCONFIGUREDIALOG_H
-#define CONTACTCONFIGUREDIALOG_H
+#include "followupreminderconfiguredialog.h"
 
-#include <KDialog>
-
-namespace GrantleeThemeEditor {
-class ConfigureWidget;
-}
-
-namespace Akonadi {
-class ContactEditor;
-}
-
-class KUrlRequester;
-class KTextEdit;
-class ContactConfigureDialog : public KDialog
+FollowUpReminderConfigureDialog::FollowUpReminderConfigureDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit ContactConfigureDialog(QWidget *parent = 0);
-    ~ContactConfigureDialog();
+}
 
-    void readConfig();
-    void writeConfig();
+FollowUpReminderConfigureDialog::~FollowUpReminderConfigureDialog()
+{
 
-private Q_SLOTS:
-    void slotOkClicked();
-    void slotDefaultClicked();
+}
 
-private:
-    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultTemplate;
-    Akonadi::ContactEditor *mDefaultContact;
-};
-
-#endif // CONTACTCONFIGUREDIALOG_H
+#include "followupreminderconfiguredialog.moc"

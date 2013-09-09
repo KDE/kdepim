@@ -15,39 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CONTACTCONFIGUREDIALOG_H
-#define CONTACTCONFIGUREDIALOG_H
+#ifndef SIEVEEDITORPARSINGWARNING_H
+#define SIEVEEDITORPARSINGWARNING_H
 
-#include <KDialog>
+#include <KMessageWidget>
 
-namespace GrantleeThemeEditor {
-class ConfigureWidget;
-}
-
-namespace Akonadi {
-class ContactEditor;
-}
-
-class KUrlRequester;
-class KTextEdit;
-class ContactConfigureDialog : public KDialog
+namespace KSieveUi {
+class SieveEditorParsingWarning : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit ContactConfigureDialog(QWidget *parent = 0);
-    ~ContactConfigureDialog();
+    explicit SieveEditorParsingWarning(QWidget *parent = 0);
+    ~SieveEditorParsingWarning();
 
-    void readConfig();
-    void writeConfig();
+    void setErrors(const QString &errors, const QString &initialScript);
+
+Q_SIGNALS:
+    void switchToGraphicalMode();
 
 private Q_SLOTS:
-    void slotOkClicked();
-    void slotDefaultClicked();
+    void slotSwitchInGraphicalMode();
+    void slotKeepInTextMode();
+    void slotShowDetails(const QString &content);
+
+
 
 private:
-    GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultTemplate;
-    Akonadi::ContactEditor *mDefaultContact;
+    QString mErrors;
+    QString mScript;
 };
+}
 
-#endif // CONTACTCONFIGUREDIALOG_H
+
+#endif // SIEVEEDITORPARSINGWARNING_H

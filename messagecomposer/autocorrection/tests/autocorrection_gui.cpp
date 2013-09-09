@@ -74,8 +74,16 @@ TextEditAutoCorrectionWidget::~TextEditAutoCorrectionWidget()
 void TextEditAutoCorrectionWidget::keyPressEvent ( QKeyEvent *e )
 {
     if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
-        if(mAutoCorrection) {
+        if(mAutoCorrection && mAutoCorrection->isEnabledAutoCorrection()) {
+            const QTextCharFormat initialTextFormat = textCursor().charFormat();
             mAutoCorrection->autocorrect(acceptRichText(), *document(),textCursor().position());
+            if (e->key() == Qt::Key_Space) {
+                textCursor().insertText(QLatin1String(" "), initialTextFormat);
+                return;
+            } else {
+                textCursor().insertText(QLatin1String("\n"), initialTextFormat);
+                return;
+            }
         }
     }
     QTextEdit::keyPressEvent( e );

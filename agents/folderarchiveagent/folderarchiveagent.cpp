@@ -96,6 +96,11 @@ bool FolderArchiveAgent::enabledAgent() const
     return FolderArchiveAgentSettings::enabled();
 }
 
+void FolderArchiveAgent::debugCache()
+{
+    mFolderArchiveManager->debugCache();
+}
+
 AKONADI_AGENT_MAIN( FolderArchiveAgent )
 
 #include "folderarchiveagent.moc"

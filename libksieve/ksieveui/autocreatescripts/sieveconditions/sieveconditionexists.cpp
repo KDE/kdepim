@@ -97,6 +97,8 @@ bool SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidg
                 selectHeaderType->setCode(AutoCreateScriptUtil::listValueToStr(e));
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveConditionExists::setParamWidgetValue unknown tagName "<<tagName;

@@ -370,11 +370,16 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                 if (tagName == QLatin1String("action") || tagName == QLatin1String("control")/*for break action*/) {
                     if (e.hasAttribute(QLatin1String("name"))) {
                         const QString actionName = e.attribute(QLatin1String("name"));
+                        if (tagName == QLatin1String("control") && actionName == QLatin1String("if")) {
+                            qDebug()<<"We found an loop if in a loop if. Not supported";
+                            error += QLatin1Char('\n') + i18n("We detected a loop if in a loop if. It's not supported") + QLatin1Char('\n');
+                        }
                         if (firstAction) {
                             firstAction = false;
                         } else {
                             addWidgetAfterThisWidget(widgets().last());
                         }
+                        qDebug()<<" actionanle"<<actionName<<" tagName"<<tagName;
                         SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
                         w->setAction(actionName, e, comment, error);
                         comment.clear();

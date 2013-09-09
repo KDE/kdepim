@@ -97,7 +97,7 @@ public:
   /**
    * Send the message with the specified method, saving it in the specified folder.
    */
-  void send( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn );
+  void send( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher = true);
 
   /**
    * Returns true if there is at least one composer job running.

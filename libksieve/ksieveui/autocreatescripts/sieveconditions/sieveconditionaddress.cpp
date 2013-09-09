@@ -139,6 +139,8 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                 ++indexStr;
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveConditionAddress::setParamWidgetValue unknown tagName "<<tagName;
@@ -147,8 +149,13 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
         node = node.nextSibling();
     }
     if (lstTagValue.count() == 1) {
+        QString specificError;
         SelectMatchTypeComboBox *selectMatchCombobox = w->findChild<SelectMatchTypeComboBox*>(QLatin1String("matchtypecombobox"));
-        selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(lstTagValue.at(0), notCondition), name(), error);
+        selectMatchCombobox->setCode(AutoCreateScriptUtil::tagValueWithCondition(lstTagValue.at(0), notCondition), name(), specificError);
+        if (!specificError.isEmpty()) { //Test if default match type == is
+            SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
+            selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(lstTagValue.at(0)), name(), error);
+        }
     } else if (lstTagValue.count() == 2) {
         SelectAddressPartComboBox *selectAddressPart = w->findChild<SelectAddressPartComboBox*>(QLatin1String("addresspartcombobox"));
         selectAddressPart->setCode(AutoCreateScriptUtil::tagValue(lstTagValue.at(0)), name(), error);

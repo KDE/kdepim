@@ -26,8 +26,7 @@ TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Translator Debug" ) );
-    setButtons( Ok|Cancel );
-    setButtonFocus( Ok );
+    setButtons( Close );
 
     mEdit = new KTextEdit;
     mEdit->setAcceptRichText(false);

@@ -443,7 +443,11 @@ bool TodoModel::setData( const QModelIndex &index, const QVariant &value, int ro
   if ( d->m_calendar->hasRight( item, Akonadi::Collection::CanChangeItem ) ) {
     KCalCore::Todo::Ptr oldTodo( todo->clone() );
     if ( role == Qt::CheckStateRole && index.column() == 0 ) {
-      todo->setCompleted( static_cast<Qt::CheckState>( value.toInt() ) == Qt::Checked );
+      const bool checked = static_cast<Qt::CheckState>( value.toInt() ) == Qt::Checked;
+      if ( checked )
+        todo->setCompleted( KDateTime::currentLocalDateTime() );  // Because it calls Todo::recurTodo()
+      else
+        todo->setCompleted( false );
     }
 
     if ( role == Qt::EditRole ) {
