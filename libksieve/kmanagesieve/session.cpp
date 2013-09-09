@@ -329,7 +329,6 @@ void Session::slotEncryptedDone()
 {
     m_sslCheck->stop();
     sslResult(true);
-    qDebug()<<"void Session::slotEncryptedDone() ";
 }
 
 void Session::sslResult(bool encrypted)
@@ -357,7 +356,6 @@ void Session::sslResult(bool encrypted)
 
 void Session::slotSslTimeout()
 {
-    qDebug()<<"void Session::slotSslTimeout(); ";
     disconnect(m_socket, SIGNAL(encrypted()), this, SLOT(slotEncryptedDone()));
     sslResult(false);
 }
