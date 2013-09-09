@@ -20,6 +20,11 @@
 
 #include "configurewidget.h"
 
+#include <Akonadi/Contact/ContactEditor>
+
+#include <KABC/VCardConverter>
+
+
 #include <KLocale>
 #include <KUrlRequester>
 #include <KConfig>
@@ -49,8 +54,7 @@ ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Default contact:"));
     lay->addWidget(lab);
 
-    mDefaultContact = new KTextEdit;
-    mDefaultContact->setAcceptRichText(false);
+    mDefaultContact = new Akonadi::ContactEditor(Akonadi::ContactEditor::CreateMode);
     lay->addWidget(mDefaultContact);
 
     tab->addTab(w, i18n("General"));
@@ -76,7 +80,14 @@ ContactConfigureDialog::~ContactConfigureDialog()
 void ContactConfigureDialog::slotDefaultClicked()
 {
     mConfigureWidget->setDefault();
-    mDefaultContact->setPlainText(contacteditorutil::defaultContact());
+
+    if (!contacteditorutil::defaultContact().isEmpty()) {
+        KABC::VCardConverter converter;
+        KABC::Addressee addr = converter.parseVCard( contacteditorutil::defaultContact().toUtf8() );
+        mDefaultContact->setContactTemplate(addr);
+    } else {
+        mDefaultContact->setContactTemplate(KABC::Addressee());
+    }
     mDefaultTemplate->clear();
 }
 
@@ -91,10 +102,24 @@ void ContactConfigureDialog::readConfig()
 
     if (config->hasGroup(QLatin1String("Global"))) {
         KConfigGroup group = config->group(QLatin1String("Global"));
-        mDefaultContact->setPlainText(group.readEntry("defaultContact",contacteditorutil::defaultContact()));
+        const QString defaultContact = group.readEntry("defaultContact",contacteditorutil::defaultContact());
+        if (!defaultContact.isEmpty()) {
+            KABC::VCardConverter converter;
+            KABC::Addressee addr = converter.parseVCard( defaultContact.toUtf8() );
+            mDefaultContact->setContactTemplate(addr);
+        } else {
+            mDefaultContact->setContactTemplate(KABC::Addressee());
+        }
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate",QString()));
     } else {
-        mDefaultContact->setPlainText(contacteditorutil::defaultContact());
+        mDefaultContact->setContactTemplate(KABC::Addressee());
+        if (!contacteditorutil::defaultContact().isEmpty()) {
+            KABC::VCardConverter converter;
+            KABC::Addressee addr = converter.parseVCard( contacteditorutil::defaultContact().toUtf8() );
+            mDefaultContact->setContactTemplate(addr);
+        } else {
+            mDefaultContact->setContactTemplate(KABC::Addressee());
+        }
     }
 
     mConfigureWidget->readConfig();
@@ -112,7 +137,8 @@ void ContactConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = config->group(QLatin1String("Global"));
-    group.writeEntry("defaultContact", mDefaultContact->toPlainText());    
+    //TODO
+    //group.writeEntry("defaultContact", mDefaultContact->toPlainText());
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
     mConfigureWidget->writeConfig();
 }

@@ -24,6 +24,10 @@ namespace GrantleeThemeEditor {
 class ConfigureWidget;
 }
 
+namespace Akonadi {
+class ContactEditor;
+}
+
 class KUrlRequester;
 class KTextEdit;
 class ContactConfigureDialog : public KDialog
@@ -42,8 +46,8 @@ private Q_SLOTS:
 
 private:
     GrantleeThemeEditor::ConfigureWidget *mConfigureWidget;
-    KTextEdit *mDefaultContact;
     KTextEdit *mDefaultTemplate;
+    Akonadi::ContactEditor *mDefaultContact;
 };
 
 #endif // CONTACTCONFIGUREDIALOG_H
