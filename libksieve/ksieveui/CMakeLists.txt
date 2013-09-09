@@ -38,6 +38,7 @@ set(ksieveui_LIB_SRCS
   editor/sieveeditortextmodewidget.cpp
   editor/sieveeditorabstractwidget.cpp
   editor/sieveeditorwarning.cpp
+  editor/sieveeditorparsingwarning.cpp
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp
