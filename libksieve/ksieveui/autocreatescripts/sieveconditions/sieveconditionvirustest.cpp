@@ -139,6 +139,8 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
                 spinbox->setValue(e.text().toInt());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveConditionVirusTest::setParamWidgetValue unknown tagName "<<tagName;

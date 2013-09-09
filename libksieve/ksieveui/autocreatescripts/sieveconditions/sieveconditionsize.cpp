@@ -96,6 +96,8 @@ bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
                 sizeWidget->setCode(tagValue, numIdentifier, name(), error);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveConditionSize::setParamWidgetValue unknown tagName "<<tagName;

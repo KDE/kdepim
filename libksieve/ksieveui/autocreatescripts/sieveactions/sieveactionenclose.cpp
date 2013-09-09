@@ -100,6 +100,8 @@ bool SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
                 edit->setText(e.text());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tagName "<<tagName;

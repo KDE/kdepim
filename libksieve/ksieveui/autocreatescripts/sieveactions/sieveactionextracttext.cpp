@@ -81,6 +81,8 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
                 variableName->setText(e.text());
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionExtractText::setParamWidgetValue unknown tagName "<<tagName;

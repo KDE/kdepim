@@ -88,6 +88,8 @@ bool SieveActionFileInto::setParamWidgetValue(const QDomElement &element, QWidge
                 edit->setText(tagValue);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionFileInto::setParamWidgetValue unknown tagName "<<tagName;

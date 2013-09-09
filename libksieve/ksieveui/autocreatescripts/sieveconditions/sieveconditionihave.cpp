@@ -94,6 +94,8 @@ bool SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidge
                 edit->setText(tagValue);
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveConditionIhave::setParamWidgetValue unknown tagName "<<tagName;

@@ -139,6 +139,8 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
                 ++indexStr;
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
+            } else if (tagName == QLatin1String("comment")) {
+                //implement in the future ?
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveConditionAddress::setParamWidgetValue unknown tagName "<<tagName;
