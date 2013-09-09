@@ -71,6 +71,20 @@ public:
         createContact();
     }
 
+    void modifyContact()
+    {
+        //TODO
+        /*
+        Akonadi::Item item = contact;
+        KABC::Addressee contact = searchJob->contacts()[0];
+        contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailPreferedFormatting" ), mShowAsHTML ? QLatin1String("HTML") : QLatin1String("TEXT")  );
+        contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailAllowToRemoteContent" ), mRemoteContent ? QLatin1String( "TRUE" ) : QLatin1String( "FALSE" ) );
+        item.setPayload<KABC::Addressee>( contact );
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( item );
+        q->connect( job, SIGNAL(result(KJob*)), SLOT(slotAddModifyContactDone(KJob*)) );
+        */
+    }
+
     void slotSearchDone( KJob *job )
     {
         if ( job->error() ) {
@@ -220,6 +234,7 @@ public:
     }
 
     AddEmailDiplayJob *q;
+    Akonadi::Item contact;
     bool mShowAsHTML;
     bool mRemoteContent;
     QString mCompleteAddress;
@@ -238,25 +253,33 @@ AddEmailDiplayJob::~AddEmailDiplayJob()
     delete d;
 }
 
-void AddEmailDiplayJob::showAsHTML(bool html)
+void AddEmailDiplayJob::setShowAsHTML(bool html)
 {
     d->mShowAsHTML = html;
 }
 
-void AddEmailDiplayJob::remoteContent(bool b)
+void AddEmailDiplayJob::setRemoteContent(bool b)
 {
     d->mRemoteContent = b;
 }
 
+void AddEmailDiplayJob::setContact(const Akonadi::Item &contact)
+{
+    d->contact = contact;
+}
 
 void AddEmailDiplayJob::start()
 {
-    // first check whether a contact with the same email exists already
-    Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
-    searchJob->setLimit( 1 );
-    searchJob->setQuery( Akonadi::ContactSearchJob::Email, d->mEmail,
-                         Akonadi::ContactSearchJob::ExactMatch );
-    connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
+    if (d->contact.isValid()) {
+        d->modifyContact();
+    } else {
+        // first check whether a contact with the same email exists already
+        Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
+        searchJob->setLimit( 1 );
+        searchJob->setQuery( Akonadi::ContactSearchJob::Email, d->mEmail,
+                             Akonadi::ContactSearchJob::ExactMatch );
+        connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
+    }
 }
 
 #include "addemaildisplayjob.moc"
