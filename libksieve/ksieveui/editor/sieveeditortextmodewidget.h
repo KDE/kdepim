@@ -33,6 +33,7 @@ namespace KSieveUi {
 class SieveInfoWidget;
 class SieveTextEdit;
 class SieveEditorWarning;
+class SieveEditorParsingWarning;
 class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
@@ -58,8 +59,13 @@ public:
     void showEditorWarning();
     void hideEditorWarning();
 
+    void showParsingEditorWarning();
+
+    void setParsingEditorWarningError(const QString &script, const QString &error);
+
 Q_SIGNALS:
     void enableButtonOk( bool );
+    void switchToGraphicalMode();
 
 private slots:
     void slotTextChanged();
@@ -79,6 +85,7 @@ private:
     QSplitter *mExtraSplitter;
     QSplitter *mTemplateSplitter;
     SieveEditorWarning *mSieveEditorWarning;
+    SieveEditorParsingWarning *mSieveParsingWarning;
 };
 
 }
