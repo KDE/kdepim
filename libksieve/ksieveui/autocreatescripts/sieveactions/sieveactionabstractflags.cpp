@@ -57,6 +57,8 @@ bool SieveActionAbstractFlags::setParamWidgetValue( const QDomElement &element, 
             } else if (tagName == QLatin1String("str")) {
                 SelectFlagsWidget *flagsWidget = w->findChild<SelectFlagsWidget*>( QLatin1String("flagswidget") );
                 flagsWidget->setFlags(QStringList()<<e.text());
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionAbstractFlags::setParamWidgetValue unknown tag :"<<tagName;

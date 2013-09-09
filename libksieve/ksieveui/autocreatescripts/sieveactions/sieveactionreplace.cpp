@@ -98,6 +98,8 @@ bool SieveActionReplace::setParamWidgetValue(const QDomElement &element, QWidget
                     unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagValue "<<tagValue;
                 }
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionReplace::setParamWidgetValue unknown tagName "<<tagName;

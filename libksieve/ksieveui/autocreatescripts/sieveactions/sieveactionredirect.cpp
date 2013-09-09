@@ -95,6 +95,8 @@ bool SieveActionRedirect::setParamWidgetValue(const QDomElement &element, QWidge
                     unknowTagValue(tagValue, error);
                     qDebug()<<" SieveActionRedirect::setParamWidgetValue tagValue unknown"<<tagValue;
                 }
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionRedirect::setParamWidgetValue unknown tagName "<<tagName;

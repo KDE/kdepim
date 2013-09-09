@@ -79,6 +79,8 @@ bool SieveActionExtractText::setParamWidgetValue(const QDomElement &element, QWi
             } else if (tagName == QLatin1String("str")) {
                 KLineEdit *variableName = w->findChild<KLineEdit*>(QLatin1String("variablename"));
                 variableName->setText(e.text());
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionExtractText::setParamWidgetValue unknown tagName "<<tagName;

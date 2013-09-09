@@ -71,6 +71,8 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
                 }
             } else if (tagName == QLatin1String("str")) {
                 //Nothing
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<"SieveActionBreak::setParamWidgetValue unknown tag "<<tagName;

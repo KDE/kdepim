@@ -98,6 +98,8 @@ bool SieveActionEnclose::setParamWidgetValue(const QDomElement &element, QWidget
             } else if (tagName == QLatin1String("str")) {
                 MultiLineEdit *edit = w->findChild<MultiLineEdit*>( QLatin1String("text") );
                 edit->setText(e.text());
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionEnclose::setParamWidgetValue unknown tagName "<<tagName;

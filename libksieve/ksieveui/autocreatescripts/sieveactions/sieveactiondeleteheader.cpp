@@ -93,6 +93,8 @@ bool SieveActionDeleteHeader::setParamWidgetValue(const QDomElement &element, QW
                     qDebug()<<" SieveActionAddHeader::setParamWidgetValue too many argument :"<<index;
                 }
                 ++index;
+            } else if (tagName == QLatin1String("crlf")) {
+                //nothing
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<"SieveActionAddHeader::setParamWidgetValue unknown tag "<<tagName;
