@@ -137,8 +137,11 @@ void ContactConfigureDialog::writeConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = config->group(QLatin1String("Global"));
-    //TODO
-    //group.writeEntry("defaultContact", mDefaultContact->toPlainText());
+    const KABC::Addressee addr = mDefaultContact->contact();
+    KABC::VCardConverter converter;
+    const QByteArray data = converter.exportVCard( addr, KABC::VCardConverter::v3_0 );
+    group.writeEntry("defaultContact", data);
+
     group.writeEntry("defaultTemplate", mDefaultTemplate->toPlainText());
     mConfigureWidget->writeConfig();
 }
