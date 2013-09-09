@@ -225,7 +225,7 @@ void MessageComposer::ComposerViewBase::updateTemplate ( const KMime::Message::P
   delete msgContent;
 }
 
-void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn )
+void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::SendMethod method, MessageComposer::MessageSender::SaveIn saveIn, bool checkMailDispatcher )
 {
   mSendMethod = method;
   mSaveIn = saveIn;
@@ -302,7 +302,7 @@ void MessageComposer::ComposerViewBase::send ( MessageComposer::MessageSender::S
     m_msg->removeHeader( "X-KMail-CryptoMessageFormat" );
   }
 
-  if( mSendMethod == MessageComposer::MessageSender::SendImmediate )
+  if( mSendMethod == MessageComposer::MessageSender::SendImmediate  && checkMailDispatcher)
     MessageComposer::Util::sendMailDispatcherIsOnline( m_parentWidget );
 
   readyForSending();
