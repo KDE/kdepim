@@ -558,6 +558,10 @@ QString SearchRule::quote( const QString &content ) const
   case SearchRule::FuncNotEndWith:
     newContent = QString::fromLatin1( "%1$" ).arg( content );;
     break;
+  case SearchRule::FuncContains:
+  case SearchRule::FuncContainsNot:
+      newContent = QString::fromLatin1( "\'%1*\'" ).arg( content );
+      break;
   default:
     newContent = QString::fromLatin1( "\'%1\'" ).arg( content );
     break;
