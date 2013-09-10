@@ -17,9 +17,20 @@
 
 #include "followupreminderconfiguredialog.h"
 
+#include <KLocale>
+#include <KIcon>
+
+#include <QHBoxLayout>
+
 FollowUpReminderConfigureDialog::FollowUpReminderConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
+    setCaption( i18n("Configure") );
+    setWindowIcon( KIcon( QLatin1String("kmail") ) );
+    setButtons( Help|Ok|Cancel );
+
+    QWidget *mainWidget = new QWidget( this );
+    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
 }
 
 FollowUpReminderConfigureDialog::~FollowUpReminderConfigureDialog()
