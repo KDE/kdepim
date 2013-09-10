@@ -54,21 +54,25 @@ QWidget *SieveConditionEnvelope::createParamWidget( QWidget *parent ) const
     selectAddressPart->setObjectName(QLatin1String("addresspartcombobox"));
     lay->addWidget(selectAddressPart);
 
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    lay->addLayout(grid);
+
     SelectMatchTypeComboBox *selectMatchCombobox = new SelectMatchTypeComboBox;
     selectMatchCombobox->setObjectName(QLatin1String("matchtypecombobox"));
-    lay->addWidget(selectMatchCombobox);
+    grid->addWidget(selectMatchCombobox, 0, 0);
 
     SelectHeaderTypeComboBox *selectHeaderType = new SelectHeaderTypeComboBox(true);
     selectHeaderType->setObjectName(QLatin1String("headertypecombobox"));
-    lay->addWidget(selectHeaderType);
+    grid->addWidget(selectHeaderType, 0, 1);
 
     QLabel *lab = new QLabel(i18n("address:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *edit = new KLineEdit;
     edit->setClearButtonShown(true);
     edit->setClickMessage(i18n("Use ; to separate emails"));
-    lay->addWidget(edit);
+    grid->addWidget(edit, 1, 1);
     edit->setObjectName(QLatin1String("editaddress"));
 
     return w;
