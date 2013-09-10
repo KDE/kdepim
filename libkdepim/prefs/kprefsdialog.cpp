@@ -81,7 +81,8 @@ KPrefsWid *create( KConfigSkeletonItem *item, QWidget *parent )
       KPrefsWidRadios *radios = new KPrefsWidRadios( enumItem, parent );
       QList<KConfigSkeleton::ItemEnum::Choice>::ConstIterator it;
       int value = 0;
-      for ( it = choices.constBegin(); it != choices.constEnd(); ++it ) {
+      QList<KConfigSkeleton::ItemEnum::Choice>::ConstIterator end(choices.constEnd());
+      for ( it = choices.constBegin(); it != end; ++it ) {
         radios->addRadio( value++, (*it).label );
       }
       return radios;
@@ -808,7 +809,7 @@ void KPrefsDialog::autoCreate()
   KConfigSkeletonItem::List::ConstIterator it;
   for ( it = items.constBegin(); it != items.constEnd(); ++it ) {
     QString group = (*it)->group();
-    QString name = (*it)->name();
+    //QString name = (*it)->name();
 
     QWidget *page;
     QGridLayout *layout;
