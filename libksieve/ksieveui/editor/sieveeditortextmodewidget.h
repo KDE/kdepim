@@ -33,7 +33,7 @@ namespace KSieveUi {
 class SieveInfoWidget;
 class SieveTextEdit;
 class SieveEditorWarning;
-class SieveEditorParsingWarning;
+class SieveEditorParsingMissingFeatureWarning;
 class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
@@ -85,7 +85,7 @@ private:
     QSplitter *mExtraSplitter;
     QSplitter *mTemplateSplitter;
     SieveEditorWarning *mSieveEditorWarning;
-    SieveEditorParsingWarning *mSieveParsingWarning;
+    SieveEditorParsingMissingFeatureWarning *mSieveParsingWarning;
 };
 
 }

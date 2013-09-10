@@ -22,7 +22,7 @@
 #include "editor/sieveinfowidget.h"
 #include "editor/sievetextedit.h"
 #include "editor/sieveeditorwarning.h"
-#include "editor/sieveeditorparsingwarning.h"
+#include "editor/sieveeditorparsingmissingfeaturewarning.h"
 
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
@@ -92,7 +92,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mSieveEditorWarning = new SieveEditorWarning;
     textEditLayout->addWidget(mSieveEditorWarning);
 
-    mSieveParsingWarning = new SieveEditorParsingWarning;
+    mSieveParsingWarning = new SieveEditorParsingMissingFeatureWarning;
     connect(mSieveParsingWarning, SIGNAL(switchToGraphicalMode()), SIGNAL(switchToGraphicalMode()));
     textEditLayout->addWidget(mSieveParsingWarning);
 
