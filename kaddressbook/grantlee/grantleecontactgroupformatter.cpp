@@ -56,6 +56,22 @@ class GrantleeContactGroupFormatter::Private
       delete mEngine;
     }
 
+    void changeGrantleePath(const QString &path)
+    {
+        mTemplateLoader->setTemplateDirs( QStringList() << path );
+        mEngine->addTemplateLoader( mTemplateLoader );
+
+        mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("contactgroup.html") );
+        if ( mSelfcontainedTemplate->error() ) {
+            mErrorMessage += mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
+        }
+
+        mEmbeddableTemplate = mEngine->loadByName( QLatin1String("contactgroup_embedded.html") );
+        if ( mEmbeddableTemplate->error() ) {
+          mErrorMessage += mEmbeddableTemplate->errorString() + QLatin1String("<br>");
+        }
+    }
+
     QVector<QObject*> mObjects;
     Grantlee::Engine *mEngine;
     Grantlee::FileSystemTemplateLoader::Ptr mTemplateLoader;
@@ -74,20 +90,14 @@ GrantleeContactGroupFormatter::~GrantleeContactGroupFormatter()
   delete d;
 }
 
+void GrantleeContactGroupFormatter::setAbsoluteThemePath(const QString &path)
+{
+    d->changeGrantleePath(path);
+}
+
 void GrantleeContactGroupFormatter::setGrantleeTheme(const GrantleeTheme::Theme &theme)
 {
-    d->mTemplateLoader->setTemplateDirs( QStringList() << theme.absolutePath() );
-    d->mEngine->addTemplateLoader( d->mTemplateLoader );
-
-    d->mSelfcontainedTemplate = d->mEngine->loadByName( QLatin1String("contactgroup.html") );
-    if ( d->mSelfcontainedTemplate->error() ) {
-        d->mErrorMessage += d->mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
-    }
-
-    d->mEmbeddableTemplate = d->mEngine->loadByName( QLatin1String("contactgroup_embedded.html") );
-    if ( d->mEmbeddableTemplate->error() ) {
-      d->mErrorMessage += d->mEmbeddableTemplate->errorString() + QLatin1String("<br>");
-    }
+    d->changeGrantleePath(theme.absolutePath());
 }
 
 #ifndef KDE_USE_FINAL

@@ -59,6 +59,23 @@ class GrantleeContactFormatter::Private
       delete mEngine;
     }
 
+    void changeGrantleePath(const QString &path)
+    {
+        mTemplateLoader->setTemplateDirs( QStringList() << path );
+        mEngine->addTemplateLoader( mTemplateLoader );
+
+        mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("contact.html") );
+        if ( mSelfcontainedTemplate->error() ) {
+            mErrorMessage += mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
+        }
+
+        mEmbeddableTemplate = mEngine->loadByName( QLatin1String("contact_embedded.html") );
+        if ( mEmbeddableTemplate->error() ) {
+            mErrorMessage += mEmbeddableTemplate->errorString() + QLatin1String("<br>");
+        }
+    }
+
+
     QVector<QObject*> mObjects;
     Grantlee::Engine *mEngine;
     Grantlee::FileSystemTemplateLoader::Ptr mTemplateLoader;
@@ -77,22 +94,15 @@ GrantleeContactFormatter::~GrantleeContactFormatter()
   delete d;
 }
 
-void GrantleeContactFormatter::setGrantleeTheme(const GrantleeTheme::Theme &theme)
+void GrantleeContactFormatter::setAbsoluteThemePath(const QString &path)
 {
-    d->mTemplateLoader->setTemplateDirs( QStringList() << theme.absolutePath() );
-    d->mEngine->addTemplateLoader( d->mTemplateLoader );
-
-    d->mSelfcontainedTemplate = d->mEngine->loadByName( QLatin1String("contact.html") );
-    if ( d->mSelfcontainedTemplate->error() ) {
-        d->mErrorMessage += d->mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
-    }
-
-    d->mEmbeddableTemplate = d->mEngine->loadByName( QLatin1String("contact_embedded.html") );
-    if ( d->mEmbeddableTemplate->error() ) {
-        d->mErrorMessage += d->mEmbeddableTemplate->errorString() + QLatin1String("<br>");
-    }
+    d->changeGrantleePath(path);
 }
 
+void GrantleeContactFormatter::setGrantleeTheme(const GrantleeTheme::Theme &theme)
+{
+    d->changeGrantleePath(theme.absolutePath());
+}
 
 inline static void setHashField( QVariantHash &hash, const QString &name, const QString &value )
 {
