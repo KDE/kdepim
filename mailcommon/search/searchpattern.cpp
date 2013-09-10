@@ -797,6 +797,10 @@ QString SearchRule::quote( const QString &content ) const
   case SearchRule::FuncNotEndWith:
     newContent = QString::fromLatin1( "%1$" ).arg( content );;
     break;
+  case SearchRule::FuncContains:
+  case SearchRule::FuncContainsNot:
+      newContent = QString::fromLatin1( "\'%1*\'" ).arg( content );
+      break;
   default:
     newContent = QString::fromLatin1( "\'%1\'" ).arg( content );
     break;
@@ -1415,7 +1419,6 @@ bool SearchRuleStatus::isEmpty() const
 
 bool SearchRuleStatus::matches( const Akonadi::Item &item ) const
 {
-  const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( item.flags() );
   bool rc = false;
