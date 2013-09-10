@@ -93,7 +93,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     textEditLayout->addWidget(mSieveEditorWarning);
 
     mSieveParsingWarning = new SieveEditorParsingWarning;
-    connect(mSieveEditorWarning, SIGNAL(switchToGraphicalMode()), SIGNAL(switchToGraphicalMode()));
+    connect(mSieveParsingWarning, SIGNAL(switchToGraphicalMode()), SIGNAL(switchToGraphicalMode()));
     textEditLayout->addWidget(mSieveParsingWarning);
 
     textEditWidget->setLayout(textEditLayout);
