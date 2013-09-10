@@ -58,11 +58,12 @@ PlasmaComponents.Page {
 
       anchors.horizontalCenter: parent.horizontalCenter
 
-      opacity: checkModel.hasSelection ? 1 : 0.5
       spacing: root.width * 0.03
 
       PlasmaComponents.ToolButton {
         iconSource: "mail-mark-unread"
+
+        enabled: checkModel.hasSelection
 
         onClicked: application.getAction("akonadi_mark_as_read", "").trigger()
       }
@@ -70,12 +71,16 @@ PlasmaComponents.Page {
       PlasmaComponents.ToolButton {
         iconSource: "mail-mark-important"
 
+        enabled: checkModel.hasSelection
+
         onClicked: application.getAction("akonadi_mark_as_important", "").trigger()
       }
 
       //TODO usability feature: offer to undo deletion
       PlasmaComponents.ToolButton {
         iconSource: "edit-delete"
+
+        enabled: checkModel.hasSelection
 
         onClicked: application.getAction("akonadi_move_to_trash", "").trigger()
       }
