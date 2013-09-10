@@ -44,7 +44,7 @@ SieveCondition *SieveConditionVirusTest::newAction()
 QWidget *SieveConditionVirusTest::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
+    QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     w->setLayout(lay);
 
