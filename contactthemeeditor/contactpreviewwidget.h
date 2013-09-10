@@ -37,6 +37,7 @@ public:
 
     void updateViewer();
     void createScreenShot(const QString &fileName);
+    void setThemePath(const QString &projectDirectory);
 
 private:
     Akonadi::ContactViewer *mContactViewer;
