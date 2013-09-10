@@ -23,7 +23,6 @@
 #include <Akonadi/Contact/ContactGroupViewer>
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Item>
-#include <KABC/Addressee>
 #include <KLocale>
 
 #include <QTabWidget>
@@ -58,16 +57,21 @@ ContactPreviewWidget::~ContactPreviewWidget()
 {
 }
 
+void ContactPreviewWidget::setContact(const KABC::Addressee &contact)
+{
+    if (mContact != contact) {
+        mContact = contact;
+        updateViewer();
+    }
+}
+
 void ContactPreviewWidget::updateViewer()
 {
     Akonadi::Item item;
-    KABC::Addressee contact;
 
     item.setMimeType( KABC::Addressee::mimeType() );
-    contact.setGivenName( QLatin1String("Konqi") );
-    contact.setFamilyName( QLatin1String("Kde") );
 
-    item.setPayload<KABC::Addressee>( contact );
+    item.setPayload<KABC::Addressee>( mContact );
 
     mContactViewer->setContact(item);
     //mGroupViewer->setContactGroup();
