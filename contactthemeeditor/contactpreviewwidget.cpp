@@ -16,6 +16,9 @@
 */
 
 #include "contactpreviewwidget.h"
+#include "contacteditorutil.h"
+
+#include <KABC/VCardConverter>
 
 #include "kaddressbook/grantlee/grantleecontactformatter.h"
 #include "kaddressbook/grantlee/grantleecontactgroupformatter.h"
@@ -24,6 +27,8 @@
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Item>
 #include <KLocale>
+#include <KGlobal>
+#include <KConfigGroup>
 
 #include <QTabWidget>
 #include <QHBoxLayout>
@@ -84,6 +89,29 @@ void ContactPreviewWidget::updateViewer()
 void ContactPreviewWidget::createScreenShot(const QString &fileName)
 {
     //TODO
+}
+
+void ContactPreviewWidget::loadConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    if (config->hasGroup(QLatin1String("Global"))) {
+        KConfigGroup group = config->group(QLatin1String("Global"));
+        const QString defaultContact = group.readEntry("defaultContact",contacteditorutil::defaultContact());
+        if (!defaultContact.isEmpty()) {
+            KABC::VCardConverter converter;
+            mContact = converter.parseVCard( defaultContact.toUtf8() );
+        } else {
+            mContact = KABC::Addressee();
+        }
+    } else {
+        if (!contacteditorutil::defaultContact().isEmpty()) {
+            KABC::VCardConverter converter;
+            mContact = converter.parseVCard( contacteditorutil::defaultContact().toUtf8() );
+        } else {
+            mContact = KABC::Addressee();
+        }
+    }
 }
 
 void ContactPreviewWidget::setThemePath(const QString &projectDirectory)

@@ -42,6 +42,7 @@ public:
     void createScreenShot(const QString &fileName);
     void setThemePath(const QString &projectDirectory);
     void setDefaultContact(const KABC::Addressee &contact);
+    void loadConfig();
 
 private:
     KABC::Addressee mContact;

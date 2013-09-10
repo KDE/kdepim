@@ -41,6 +41,7 @@ PreviewWidget::~PreviewWidget()
 
 void PreviewWidget::loadConfig()
 {
+    mPreview->loadConfig();
     updateViewer();
 }
 
