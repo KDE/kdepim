@@ -379,7 +379,6 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
                         } else {
                             addWidgetAfterThisWidget(widgets().last());
                         }
-                        qDebug()<<" actionanle"<<actionName<<" tagName"<<tagName;
                         SieveActionWidget *w = qobject_cast<SieveActionWidget*>( widgets().last() );
                         w->setAction(actionName, e, comment, error);
                         comment.clear();
