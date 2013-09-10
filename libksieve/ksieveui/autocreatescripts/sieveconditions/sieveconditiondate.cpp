@@ -50,16 +50,19 @@ QWidget *SieveConditionDate::createParamWidget( QWidget *parent ) const
     matchTypeCombo->setObjectName(QLatin1String("matchtype"));
     lay->addWidget(matchTypeCombo);
 
-    QLabel *lab = new QLabel(i18n("header"));
-    lay->addWidget(lab);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    lay->addLayout(grid);
+    QLabel *lab = new QLabel(i18n("header:"));
+    grid->addWidget(lab, 0, 0);
 
     KLineEdit *header = new KLineEdit;
     header->setObjectName(QLatin1String("header"));
-    lay->addWidget(header);
+    grid->addWidget(header, 0, 1);
 
     SelectDateWidget *dateWidget = new SelectDateWidget;
     dateWidget->setObjectName(QLatin1String("datewidget"));
-    lay->addWidget(dateWidget);
+    grid->addWidget(dateWidget, 1, 0, 1, 2);
 
     return w;
 }
