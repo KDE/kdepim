@@ -126,7 +126,7 @@ class AddresseeLineEditStatic
       int clientIndex = 0;
       foreach ( const KLDAP::LdapClient *client, ldapSearch->clients() ) {
         const int sourceIndex =
-          addCompletionSource( QLatin1String( "LDAP server: " ) + client->server().host(),
+          addCompletionSource( i18n( "LDAP server: %1" ,client->server().host()),
                                   client->completionWeight() );
 
         ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
