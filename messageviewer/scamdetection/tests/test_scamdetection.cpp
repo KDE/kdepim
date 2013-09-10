@@ -67,7 +67,7 @@ void ScamDetectionTest::testNoScam()
 
 void ScamDetectionTest::testHexaValue()
 {
-    QString content = QLatin1String("<html><body><a href=\"http://125.15.55.88/\" title=\"http://0x12.0x1e.0x0A.0x00\">test</a></body></html>");
+    const QString content = QLatin1String("<html><body><a href=\"http://125.15.55.88/\" title=\"http://0x12.0x1e.0x0A.0x00\">test</a></body></html>");
     QCOMPARE(testHtml(content), true);
 }
 
@@ -85,13 +85,13 @@ void ScamDetectionTest::testIp()
 
 void ScamDetectionTest::testHref()
 {
-    QString content = QLatin1String("<html><body><a href=\"http://www.kde.org/\" title=\"http://www.kde.org\">test</a></body></html>");
+    const QString content = QLatin1String("<html><body><a href=\"http://www.kde.org/\" title=\"http://www.kde.org\">test</a></body></html>");
     QCOMPARE(testHtml(content), false);
 }
 
 void ScamDetectionTest::testRedirectUrl()
 {
-    QString content = QLatin1String("<html><body><a href=\"http://www.google.fr/url?q=http://www.yahoo.com\">test</a></body></html>");
+    const QString content = QLatin1String("<html><body><a href=\"http://www.google.fr/url?q=http://www.yahoo.com\">test</a></body></html>");
     QCOMPARE(testHtml(content), true);
 }
 
