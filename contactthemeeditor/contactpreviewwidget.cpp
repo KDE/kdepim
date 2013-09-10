@@ -51,13 +51,16 @@ ContactPreviewWidget::ContactPreviewWidget(const QString &projectDirectory, QWid
     mGroupFormatter = new Akonadi::GrantleeContactGroupFormatter;
 
     mGroupViewer->setContactGroupFormatter( mGroupFormatter );
+
+    mGroupFormatter->setAbsoluteThemePath(projectDirectory);
+    mFormatter->setAbsoluteThemePath(projectDirectory);
 }
 
 ContactPreviewWidget::~ContactPreviewWidget()
 {
 }
 
-void ContactPreviewWidget::setContact(const KABC::Addressee &contact)
+void ContactPreviewWidget::setDefaultContact(const KABC::Addressee &contact)
 {
     if (mContact != contact) {
         mContact = contact;
