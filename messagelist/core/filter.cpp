@@ -132,6 +132,10 @@ void Filter::setSearchString( const QString &search )
     mQueryClient->close();
     return;
   }
+  if (mSearchString.count()<4) {
+      mQueryClient->close();
+      return;
+  }
   const Nepomuk2::Resource parentResource( mCurrentFolder );
   if( !parentResource.exists() ) {
      mQueryClient->close();
@@ -141,7 +145,7 @@ void Filter::setSearchString( const QString &search )
 
   const Nepomuk2::Query::ComparisonTerm bodyTerm(
       Vocabulary::NMO::plainTextMessageContent(),
-      Nepomuk2::Query::LiteralTerm( QString::fromLatin1( "\'%1\'" ).arg( mSearchString ) ),
+      Nepomuk2::Query::LiteralTerm( QString::fromLatin1( "\'%1*\'" ).arg( mSearchString ) ),
       Nepomuk2::Query::ComparisonTerm::Contains );
 
   const Nepomuk2::Query::AndTerm andTerm( isChildTerm, bodyTerm );
