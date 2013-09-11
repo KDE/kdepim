@@ -58,6 +58,7 @@ using namespace MessageViewer;
 #include "messagecomposer/composer/composer.h"
 #include "messagecomposer/part/textpart.h"
 #include "messagecomposer/part/infopart.h"
+
 #include <KIO/JobUiDelegate>
 using MessageComposer::MessageFactory;
 
@@ -763,19 +764,37 @@ void KMReaderWin::slotPrintComposeResult( KJob *job )
 
 }
 
-void KMReaderWin::setContactItem(const Akonadi::Item& contact)
+void KMReaderWin::clearContactItem()
+{
+    mSearchedContact = Akonadi::Item();
+    mSearchedAddress = KABC::Addressee();
+    mLoadExternalReference->setChecked(false);
+    mViewAsHtml->setChecked(false);
+}
+
+void KMReaderWin::setContactItem(const Akonadi::Item& contact, const KABC::Addressee &address)
 {
   mSearchedContact = contact;
+  mSearchedAddress = address;
   updateHtmlActions();
 }
 
 void KMReaderWin::updateHtmlActions()
 {
-    if (mSearchedContact.isValid()) {
+    if (!mSearchedContact.isValid()) {
         mLoadExternalReference->setChecked(false);
         mViewAsHtml->setChecked(false);
     } else {
-        //TODO
+        const QStringList customs = mSearchedAddress.customs();
+        Q_FOREACH ( const QString& custom, customs ) {
+            if ( custom.contains(QLatin1String( "MailPreferedFormatting")) ) {
+                const QString value = mSearchedAddress.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailPreferedFormatting" ) );
+                mViewAsHtml->setChecked(value == QLatin1String( "HTML" ));
+            } else if ( custom.contains(QLatin1String( "MailAllowToRemoteContent")) ) {
+                const QString value = mSearchedAddress.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "MailAllowToRemoteContent" ) );
+                mLoadExternalReference->setChecked(( value == QLatin1String( "TRUE" ) ));
+            }
+        }
     }
 }
 
@@ -789,6 +808,7 @@ void KMReaderWin::slotContactHtmlOptions()
     KPIM::AddEmailDiplayJob *job = new KPIM::AddEmailDiplayJob( emailString, mMainWindow, this );
     job->setRemoteContent(mLoadExternalReference->isChecked());
     job->setShowAsHTML(mViewAsHtml->isChecked());
+    job->setContact(mSearchedContact);
     job->start();
 }
 

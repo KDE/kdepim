@@ -842,13 +842,16 @@ void MainWidget::initGrantleeThemeName()
 void MainWidget::slotGrantleeThemeSelected()
 {
     initGrantleeThemeName();
-    //Update View ?
+    if ( mItemView->model() ) {
+      mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+    }
 }
 
 void MainWidget::slotGrantleeThemesUpdated()
 {
-    //Update view ?
-    //TODO
+    if ( mItemView->model() ) {
+      mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+    }
 }
 
 

@@ -15,27 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "followupreminderconfiguredialog.h"
+#ifndef TEST_TEMPLATEPARSER_GUI_H
+#define TEST_TEMPLATEPARSER_GUI_H
 
-#include <KLocale>
-#include <KIcon>
+#include <QWidget>
 
-#include <QHBoxLayout>
-
-FollowUpReminderConfigureDialog::FollowUpReminderConfigureDialog(QWidget *parent)
-    : KDialog(parent)
+class TemplateEditorTestWidget : public QWidget
 {
-    setCaption( i18n("Configure") );
-    setWindowIcon( KIcon( QLatin1String("kmail") ) );
-    setButtons( Help|Ok|Cancel );
+    Q_OBJECT
+public:
+    explicit TemplateEditorTestWidget(QWidget *parent=0);
+    ~TemplateEditorTestWidget();
+};
 
-    QWidget *mainWidget = new QWidget( this );
-    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
-}
-
-FollowUpReminderConfigureDialog::~FollowUpReminderConfigureDialog()
-{
-
-}
-
-#include "followupreminderconfiguredialog.moc"
+#endif

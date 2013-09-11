@@ -64,6 +64,7 @@ private Q_SLOTS:
     void slotImport();
     void slotSwitchMode();
     void slotSwitchTextMode(const QString &script);
+    void slotSwitchToGraphicalMode();
 
 Q_SIGNALS:
     void checkSyntax();

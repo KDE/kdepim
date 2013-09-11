@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sieveeditorparsingwarning.h"
+#include "sieveeditorparsingmissingfeaturewarning.h"
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
 
 #include <KLocale>
@@ -25,7 +25,7 @@
 
 using namespace KSieveUi;
 
-SieveEditorParsingWarning::SieveEditorParsingWarning(QWidget *parent)
+SieveEditorParsingMissingFeatureWarning::SieveEditorParsingMissingFeatureWarning(QWidget *parent)
     : KMessageWidget(parent)
 {
     setVisible(false);
@@ -45,11 +45,11 @@ SieveEditorParsingWarning::SieveEditorParsingWarning(QWidget *parent)
     setWordWrap(true);
 }
 
-SieveEditorParsingWarning::~SieveEditorParsingWarning()
+SieveEditorParsingMissingFeatureWarning::~SieveEditorParsingMissingFeatureWarning()
 {
 }
 
-void SieveEditorParsingWarning::slotShowDetails(const QString &content)
+void SieveEditorParsingMissingFeatureWarning::slotShowDetails(const QString &content)
 {
     if (content == QLatin1String("sieveerrordetails")) {
         QPointer<SieveScriptParsingErrorDialog> dlg = new SieveScriptParsingErrorDialog(this);
@@ -59,21 +59,21 @@ void SieveEditorParsingWarning::slotShowDetails(const QString &content)
     }
 }
 
-void SieveEditorParsingWarning::setErrors(const QString &errors, const QString &initialScript)
+void SieveEditorParsingMissingFeatureWarning::setErrors(const QString &errors, const QString &initialScript)
 {
     mErrors = errors;
     mScript = initialScript;
 }
 
-void SieveEditorParsingWarning::slotSwitchInGraphicalMode()
+void SieveEditorParsingMissingFeatureWarning::slotSwitchInGraphicalMode()
 {
     Q_EMIT switchToGraphicalMode();
     setVisible(false);
 }
 
-void SieveEditorParsingWarning::slotKeepInTextMode()
+void SieveEditorParsingMissingFeatureWarning::slotKeepInTextMode()
 {
     setVisible(false);
 }
 
-#include "sieveeditorparsingwarning.moc"
+#include "sieveeditorparsingmissingfeaturewarning.moc"

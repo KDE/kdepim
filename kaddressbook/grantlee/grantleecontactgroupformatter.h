@@ -45,6 +45,7 @@ class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactGroupFormatter : public Abstra
     explicit GrantleeContactGroupFormatter();
 
     void setGrantleeTheme(const GrantleeTheme::Theme &theme);
+    void setAbsoluteThemePath(const QString &path);
 
     /**
      * Destroys the grantlee contact group formatter.

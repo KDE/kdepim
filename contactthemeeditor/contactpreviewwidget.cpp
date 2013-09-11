@@ -16,6 +16,9 @@
 */
 
 #include "contactpreviewwidget.h"
+#include "contacteditorutil.h"
+
+#include <KABC/VCardConverter>
 
 #include "kaddressbook/grantlee/grantleecontactformatter.h"
 #include "kaddressbook/grantlee/grantleecontactgroupformatter.h"
@@ -23,8 +26,9 @@
 #include <Akonadi/Contact/ContactGroupViewer>
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Item>
-#include <KABC/Addressee>
 #include <KLocale>
+#include <KGlobal>
+#include <KConfigGroup>
 
 #include <QTabWidget>
 #include <QHBoxLayout>
@@ -52,22 +56,30 @@ ContactPreviewWidget::ContactPreviewWidget(const QString &projectDirectory, QWid
     mGroupFormatter = new Akonadi::GrantleeContactGroupFormatter;
 
     mGroupViewer->setContactGroupFormatter( mGroupFormatter );
+
+    mGroupFormatter->setAbsoluteThemePath(projectDirectory);
+    mFormatter->setAbsoluteThemePath(projectDirectory);
 }
 
 ContactPreviewWidget::~ContactPreviewWidget()
 {
 }
 
+void ContactPreviewWidget::setDefaultContact(const KABC::Addressee &contact)
+{
+    if (mContact != contact) {
+        mContact = contact;
+        updateViewer();
+    }
+}
+
 void ContactPreviewWidget::updateViewer()
 {
     Akonadi::Item item;
-    KABC::Addressee contact;
 
     item.setMimeType( KABC::Addressee::mimeType() );
-    contact.setGivenName( QLatin1String("Konqi") );
-    contact.setFamilyName( QLatin1String("Kde") );
 
-    item.setPayload<KABC::Addressee>( contact );
+    item.setPayload<KABC::Addressee>( mContact );
 
     mContactViewer->setContact(item);
     //mGroupViewer->setContactGroup();
@@ -77,6 +89,35 @@ void ContactPreviewWidget::updateViewer()
 void ContactPreviewWidget::createScreenShot(const QString &fileName)
 {
     //TODO
+}
+
+void ContactPreviewWidget::loadConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    if (config->hasGroup(QLatin1String("Global"))) {
+        KConfigGroup group = config->group(QLatin1String("Global"));
+        const QString defaultContact = group.readEntry("defaultContact",contacteditorutil::defaultContact());
+        if (!defaultContact.isEmpty()) {
+            KABC::VCardConverter converter;
+            mContact = converter.parseVCard( defaultContact.toUtf8() );
+        } else {
+            mContact = KABC::Addressee();
+        }
+    } else {
+        if (!contacteditorutil::defaultContact().isEmpty()) {
+            KABC::VCardConverter converter;
+            mContact = converter.parseVCard( contacteditorutil::defaultContact().toUtf8() );
+        } else {
+            mContact = KABC::Addressee();
+        }
+    }
+}
+
+void ContactPreviewWidget::setThemePath(const QString &projectDirectory)
+{
+    mGroupFormatter->setAbsoluteThemePath(projectDirectory);
+    mFormatter->setAbsoluteThemePath(projectDirectory);
 }
 
 #include "contactpreviewwidget.moc"

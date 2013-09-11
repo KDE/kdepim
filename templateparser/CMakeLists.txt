@@ -30,11 +30,11 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/messageviewer
 )
 
-kde4_add_kcfg_files(templateparser_LIB_SRCS templatesconfiguration_kfg.kcfgc)
+kde4_add_kcfg_files(templateparser_LIB_SRCS settings/templatesconfiguration_kfg.kcfgc)
 
 kde4_add_kcfg_files(templateparser_LIB_SRCS
-  customtemplates_kfg.kcfgc
-  globalsettings_base.kcfgc
+  settings/customtemplates_kfg.kcfgc
+  settings/globalsettings_base.kcfgc
 )
 
 if(NOT WINCE)
@@ -66,8 +66,8 @@ set_target_properties(templateparser PROPERTIES
 install(TARGETS templateparser ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
-  customtemplates_kfg.kcfg
-  templatesconfiguration_kfg.kcfg
+  settings/customtemplates_kfg.kcfg
+  settings/templatesconfiguration_kfg.kcfg
   DESTINATION ${KCFG_INSTALL_DIR}
 )
 

@@ -19,6 +19,9 @@
 #define CONTACTPREVIEWWIDGET_H
 
 #include <QWidget>
+
+#include <KABC/Addressee>
+
 class QTabWidget;
 
 namespace Akonadi {
@@ -37,8 +40,12 @@ public:
 
     void updateViewer();
     void createScreenShot(const QString &fileName);
+    void setThemePath(const QString &projectDirectory);
+    void setDefaultContact(const KABC::Addressee &contact);
+    void loadConfig();
 
 private:
+    KABC::Addressee mContact;
     Akonadi::ContactViewer *mContactViewer;
     Akonadi::ContactGroupViewer *mGroupViewer;
 

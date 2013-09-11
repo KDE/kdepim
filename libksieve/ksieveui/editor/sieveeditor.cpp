@@ -104,6 +104,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
     connect(mGraphicalModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
     connect(mGraphicalModeWidget, SIGNAL(switchTextMode(QString)), this, SLOT(slotSwitchTextMode(QString)));
+    connect(mTextModeWidget, SIGNAL(switchToGraphicalMode()), SLOT(slotSwitchToGraphicalMode()));
     readConfig();
     setMainWidget( w );
     if (KSieveUi::EditorSettings::useGraphicEditorByDefault()) {
@@ -270,6 +271,12 @@ void SieveEditor::slotImport()
     }
 }
 
+void SieveEditor::slotSwitchToGraphicalMode()
+{
+    mTextModeWidget->hideEditorWarning();
+    changeMode(GraphicMode);
+}
+
 void SieveEditor::slotSwitchMode()
 {
     switch (mMode) {
@@ -280,12 +287,11 @@ void SieveEditor::slotSwitchMode()
             QString error;
             mGraphicalModeWidget->loadScript(doc, error);
             mTextModeWidget->hideEditorWarning();
-            changeMode(GraphicMode);
             if (!error.isEmpty()) {
-                QPointer<SieveScriptParsingErrorDialog> dlg = new SieveScriptParsingErrorDialog(this);
-                dlg->setError(mTextModeWidget->currentscript(), error);
-                dlg->exec();
-                delete dlg;
+                mTextModeWidget->setParsingEditorWarningError(mTextModeWidget->currentscript(), error);
+                mTextModeWidget->showParsingEditorWarning();
+            } else {
+                changeMode(GraphicMode);
             }
         } else {
             mTextModeWidget->showEditorWarning();

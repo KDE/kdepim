@@ -41,6 +41,7 @@ PreviewWidget::~PreviewWidget()
 
 void PreviewWidget::loadConfig()
 {
+    mPreview->loadConfig();
     updateViewer();
 }
 
@@ -56,6 +57,8 @@ void PreviewWidget::createScreenShot(const QString &fileName)
 
 void PreviewWidget::setThemePath(const QString &projectDirectory, const QString &mainPageFileName)
 {
+    Q_UNUSED(mainPageFileName)
+    mPreview->setThemePath(projectDirectory);
     updateViewer();
 }
 

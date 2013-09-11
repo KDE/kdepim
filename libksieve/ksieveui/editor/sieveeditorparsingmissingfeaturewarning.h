@@ -15,18 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVEEDITORPARSINGWARNING_H
-#define SIEVEEDITORPARSINGWARNING_H
+#ifndef SIEVEEDITORPARSINGMISSINGFEATUREWARNING_H
+#define SIEVEEDITORPARSINGMISSINGFEATUREWARNING_H
 
 #include <KMessageWidget>
 
 namespace KSieveUi {
-class SieveEditorParsingWarning : public KMessageWidget
+class SieveEditorParsingMissingFeatureWarning : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorParsingWarning(QWidget *parent = 0);
-    ~SieveEditorParsingWarning();
+    explicit SieveEditorParsingMissingFeatureWarning(QWidget *parent = 0);
+    ~SieveEditorParsingMissingFeatureWarning();
 
     void setErrors(const QString &errors, const QString &initialScript);
 
@@ -47,4 +47,4 @@ private:
 }
 
 
-#endif // SIEVEEDITORPARSINGWARNING_H
+#endif // SIEVEEDITORPARSINGMISSINGFEATUREWARNING_H

@@ -50,6 +50,8 @@ class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactFormatter : public AbstractCon
     virtual ~GrantleeContactFormatter();
 
 
+    void setAbsoluteThemePath(const QString &path);
+
     void setGrantleeTheme(const GrantleeTheme::Theme &theme);
 
     /**
