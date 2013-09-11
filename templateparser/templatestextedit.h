@@ -29,7 +29,7 @@ class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public KTextEdit
 {
   Q_OBJECT
   public:
-    explicit TemplatesTextEdit( QWidget *parent );
+    explicit TemplatesTextEdit( QWidget *parent = 0 );
     ~TemplatesTextEdit();
 
   protected Q_SLOTS:

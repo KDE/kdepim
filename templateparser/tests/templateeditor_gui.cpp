@@ -16,6 +16,7 @@
 */
 
 #include "templateeditor_gui.h"
+#include "templateparser/templatestextedit.h"
 
 #include <kdebug.h>
 #include <kapplication.h>
@@ -30,6 +31,9 @@
 TemplateEditorTestWidget::TemplateEditorTestWidget(QWidget *parent)
     : QWidget(parent)
 {
+    QHBoxLayout *lay = new QHBoxLayout;
+    lay->addWidget(new TemplateParser::TemplatesTextEdit);
+    setLayout(lay);
 }
 
 TemplateEditorTestWidget::~TemplateEditorTestWidget()
