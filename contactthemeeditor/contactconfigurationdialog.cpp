@@ -112,7 +112,6 @@ void ContactConfigureDialog::readConfig()
         }
         mDefaultTemplate->setPlainText(group.readEntry("defaultTemplate",QString()));
     } else {
-        mDefaultContact->setContactTemplate(KABC::Addressee());
         if (!contacteditorutil::defaultContact().isEmpty()) {
             KABC::VCardConverter converter;
             KABC::Addressee addr = converter.parseVCard( contacteditorutil::defaultContact().toUtf8() );
@@ -120,6 +119,7 @@ void ContactConfigureDialog::readConfig()
         } else {
             mDefaultContact->setContactTemplate(KABC::Addressee());
         }
+        mDefaultTemplate->setPlainText(QString());
     }
 
     mConfigureWidget->readConfig();
