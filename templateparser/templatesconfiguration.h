@@ -21,7 +21,6 @@
 
 #include "templateparser_export.h"
 #include "ui_templatesconfiguration_base.h"
-#include "templatesinsertcommand.h"
 
 namespace TemplateParser {
 
