@@ -135,14 +135,27 @@ QString FancyHeaderStyle::format( KMime::Message *message ) const {
                 + QLatin1String("</td></tr>\n");
     }
     // to line
-    if ( strategy->showHeader( QLatin1String("to") ) )
+    if ( strategy->showHeader( QLatin1String("to") ) ) {
+        const QList<KMime::Types::Mailbox> resentTo = MessageViewer::HeaderStyleUtil::resentToList(message);
+
+        QString to;
+        if (message->headerByType( "Resent-To" )) {
+            to = StringUtil::emailAddrAsAnchor(resentTo, StringUtil::DisplayFullAddress ) + QLatin1Char(' ') +i18n( "(receiver was %1)", StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress,
+                                                                                                                                                      QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
+                                                                                                                                                      QLatin1String("FullToAddressList"),
+                                                                                                                                                      GlobalSettings::self()->numberOfAddressesToShow() ));
+        } else {
+            to = StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress,
+                                                QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
+                                                QLatin1String("FullToAddressList"),
+                                                GlobalSettings::self()->numberOfAddressesToShow() );
+        }
+
         headerStr.append(QString::fromLatin1("<tr><th>%1</th>\n"
                                              "<td>%2</td></tr>\n")
-                         .arg( i18nc( "To-field of the mail header.","To: " ) )
-                         .arg( StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress,
-                                                              QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
-                                                              QLatin1String("FullToAddressList"),
-                                                              GlobalSettings::self()->numberOfAddressesToShow() ) ) );
+                         .arg( i18nc( "To-field of the mail header.","To: " ))
+                         .arg( to ));
+    }
 
     // cc line, if an
     if ( strategy->showHeader( QLatin1String("cc") ) && message->cc(false))

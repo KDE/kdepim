@@ -162,6 +162,12 @@ QString GrantleeHeaderFormatter::format(Grantlee::Template headerTemplate, const
         headerObject.insert( QLatin1String( "resentfrom" ), StringUtil::emailAddrAsAnchor( resentFrom, StringUtil::DisplayFullAddress ) );
     }
 
+    if ( message->headerByType( "Resent-To" ) ) {
+        const QList<KMime::Types::Mailbox> resentTo = MessageViewer::HeaderStyleUtil::resentToList(message);
+        headerObject.insert( QLatin1String( "resenttoi18n"), i18np("receiver was", "receivers were", resentTo.count()));
+        headerObject.insert( QLatin1String( "resentto" ), StringUtil::emailAddrAsAnchor( resentTo, StringUtil::DisplayFullAddress ) );
+    }
+
     if ( KMime::Headers::Base *organization = message->headerByType("Organization") )
         headerObject.insert( QLatin1String( "organization" ) , MessageViewer::HeaderStyleUtil::strToHtml(organization->asUnicodeString()) );
 

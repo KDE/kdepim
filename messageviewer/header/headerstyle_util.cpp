@@ -240,6 +240,25 @@ QList<KMime::Types::Mailbox> resentFromList(KMime::Message *message)
     return resentFrom;
 }
 
+QList<KMime::Types::Mailbox> resentToList(KMime::Message *message)
+{
+    // Get the resent-from header into a Mailbox
+    QList<KMime::Types::Mailbox> resentTo;
+    if ( message->headerByType( "Resent-To" ) ) {
+        const QByteArray data = message->headerByType( "Resent-To" )->as7BitString( false );
+        const char * start = data.data();
+        const char * end = start + data.length();
+        KMime::Types::AddressList addressList;
+        KMime::HeaderParsing::parseAddressList( start, end, addressList );
+        foreach ( const KMime::Types::Address &addr, addressList ) {
+            foreach ( const KMime::Types::Mailbox &mbox, addr.mailboxList ) {
+                resentTo.append( mbox );
+            }
+        }
+    }
+    return resentTo;
+}
+
 xfaceSettings xface(const MessageViewer::HeaderStyle *style, KMime::Message *message)
 {
 
