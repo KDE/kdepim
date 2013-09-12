@@ -248,6 +248,7 @@ EditorPage *ThemeEditorPage::createExtraPage(const QString &filename)
     connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
     extraPage->setPageFileName(filename);
     mTabWidget->addTab(extraPage, filename);
+    mTabWidget->setCurrentWidget(extraPage);
     mExtraPage.append(extraPage);
     return extraPage;
 }
