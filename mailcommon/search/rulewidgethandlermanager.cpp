@@ -791,6 +791,7 @@ void TextRuleWidgetHandler::reset( QStackedWidget *functionStack,
     valueStack->setCurrentWidget( lineEdit );
   }
 
+#if 0
   PimCommon::MinimumComboBox *combo = valueStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("categoryCombo") );
 
   if ( combo ) {
