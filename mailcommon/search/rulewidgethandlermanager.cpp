@@ -103,7 +103,6 @@ class TextRuleWidgetHandler : public MailCommon::RuleWidgetHandler
                           SearchRule::Function func ) const;
 };
 
-
 class MessageRuleWidgetHandler : public MailCommon::RuleWidgetHandler
 {
   public:
@@ -598,15 +597,12 @@ static const struct {
   { SearchRule::FuncNotEndWith,         I18N_NOOP( "does not end with" )  },
 
   { SearchRule::FuncRegExp,             I18N_NOOP( "matches regular expr." ) },
-  { SearchRule::FuncNotRegExp,          I18N_NOOP( "does not match reg. expr." ) }
-#if 0
-    ,
+  { SearchRule::FuncNotRegExp,          I18N_NOOP( "does not match reg. expr." ) },
   { SearchRule::FuncIsInAddressbook,    I18N_NOOP( "is in address book" ) },
   { SearchRule::FuncIsNotInAddressbook, I18N_NOOP( "is not in address book" ) }
   ,
   { SearchRule::FuncIsInCategory,       I18N_NOOP( "is in category" ) },
   { SearchRule::FuncIsNotInCategory,    I18N_NOOP( "is not in category" ) }
-#endif
 };
 static const int TextFunctionCount =
   sizeof( TextFunctions ) / sizeof( *TextFunctions );
@@ -733,7 +729,13 @@ QString TextRuleWidgetHandler::value( const QByteArray &,
                                       const QStackedWidget *valueStack ) const
 {
   SearchRule::Function func = currentFunction( functionStack );
-  return currentValue( valueStack, func );
+  if ( func == SearchRule::FuncIsInAddressbook ) {
+    return "is in address book"; // just a non-empty dummy value
+  } else if ( func == SearchRule::FuncIsNotInAddressbook ) {
+    return "is not in address book"; // just a non-empty dummy value
+  } else {
+    return currentValue( valueStack, func );
+  }
 }
 
 //---------------------------------------------------------------------------
@@ -744,7 +746,13 @@ QString TextRuleWidgetHandler::prettyValue( const QByteArray &,
 {
   SearchRule::Function func = currentFunction( functionStack );
 
-  return currentValue( valueStack, func );
+  if ( func == SearchRule::FuncIsInAddressbook ) {
+    return i18n( "is in address book" );
+  } else if ( func == SearchRule::FuncIsNotInAddressbook ) {
+    return i18n( "is not in address book" );
+  } else {
+    return currentValue( valueStack, func );
+  }
 }
 
 //---------------------------------------------------------------------------
