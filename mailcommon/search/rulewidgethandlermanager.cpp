@@ -600,9 +600,11 @@ static const struct {
   { SearchRule::FuncNotRegExp,          I18N_NOOP( "does not match reg. expr." ) },
   { SearchRule::FuncIsInAddressbook,    I18N_NOOP( "is in address book" ) },
   { SearchRule::FuncIsNotInAddressbook, I18N_NOOP( "is not in address book" ) }
+#if 0
   ,
   { SearchRule::FuncIsInCategory,       I18N_NOOP( "is in category" ) },
   { SearchRule::FuncIsNotInCategory,    I18N_NOOP( "is not in category" ) }
+#endif
 };
 static const int TextFunctionCount =
   sizeof( TextFunctions ) / sizeof( *TextFunctions );
