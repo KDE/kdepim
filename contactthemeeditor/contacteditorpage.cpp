@@ -49,6 +49,7 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
     connect(mTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentWidgetChanged(QWidget*)));
     lay->addWidget(mTabWidget);
     mEditorPage = new EditorPage(EditorPage::MainPage, projectDir);
+    mEditorPage->setPageFileName(QLatin1String("contact.html"));
     connect(mEditorPage, SIGNAL(needUpdateViewer()), this, SLOT(slotUpdateViewer()));
     connect(mEditorPage, SIGNAL(changed()), SLOT(slotChanged()));
     mTabWidget->addTab(mEditorPage, i18n("Editor") + QLatin1String(" (contact.html)"));
