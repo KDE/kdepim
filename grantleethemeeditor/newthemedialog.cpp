@@ -33,6 +33,9 @@ NewThemeDialog::NewThemeDialog(QWidget *parent)
 {
     setCaption( i18n( "New Theme" ) );
     setButtons( Ok|Cancel );
+    setDefaultButton(Ok);
+    setButtonFocus(Ok);
+
     QWidget *w = new QWidget;
 
     QVBoxLayout *lay = new QVBoxLayout;
