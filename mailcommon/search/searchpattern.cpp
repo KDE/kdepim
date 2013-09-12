@@ -1453,7 +1453,6 @@ SearchRule::RequiredPart SearchRuleStatus::requiredPart() const
   return SearchRule::Envelope;
 }
 
-
 void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
                                    const QString &tagId ) const
 {
@@ -1509,8 +1508,6 @@ void SearchRuleStatus::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
           Nepomuk2::Query::ComparisonTerm::Equal ) );
 
   }
-
-  // TODO
 }
 
 void SearchRuleStatus::addXesamClause( QXmlStreamWriter &stream ) const
