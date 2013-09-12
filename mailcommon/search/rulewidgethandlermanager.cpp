@@ -600,9 +600,11 @@ static const struct {
   { SearchRule::FuncNotRegExp,          I18N_NOOP( "does not match reg. expr." ) },
   { SearchRule::FuncIsInAddressbook,    I18N_NOOP( "is in address book" ) },
   { SearchRule::FuncIsNotInAddressbook, I18N_NOOP( "is not in address book" ) }
+#if 0
   ,
   { SearchRule::FuncIsInCategory,       I18N_NOOP( "is in category" ) },
   { SearchRule::FuncIsNotInCategory,    I18N_NOOP( "is not in category" ) }
+#endif
 };
 static const int TextFunctionCount =
   sizeof( TextFunctions ) / sizeof( *TextFunctions );
@@ -650,6 +652,7 @@ QWidget *TextRuleWidgetHandler::createValueWidget( int number,
     label->setBuddy( valueStack );
     return label;
   }
+#if 0
 
 //FIXME: review what is this about, why is nepomuk used
 
@@ -667,7 +670,7 @@ QWidget *TextRuleWidgetHandler::createValueWidget( int number,
                       receiver, SLOT(slotValueChanged()) );
     return combo;
   }
-
+#endif
   return 0;
 }
 
@@ -699,6 +702,7 @@ SearchRule::Function TextRuleWidgetHandler::function( const QByteArray &,
 QString TextRuleWidgetHandler::currentValue( const QStackedWidget *valueStack,
                                              SearchRule::Function func ) const
 {
+#if 0
   // here we gotta check the combobox which contains the categories
   if ( func  == SearchRule::FuncIsInCategory ||
        func  == SearchRule::FuncIsNotInCategory ) {
@@ -710,6 +714,7 @@ QString TextRuleWidgetHandler::currentValue( const QStackedWidget *valueStack,
       return QString();
     }
   }
+#endif
 
   //in other cases of func it is a lineedit
   const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit*>( QLatin1String("regExpLineEdit") );
@@ -729,11 +734,10 @@ QString TextRuleWidgetHandler::value( const QByteArray &,
                                       const QStackedWidget *valueStack ) const
 {
   SearchRule::Function func = currentFunction( functionStack );
-  //Verify i18n or not ?
   if ( func == SearchRule::FuncIsInAddressbook ) {
-    return QLatin1String("is in address book"); // just a non-empty dummy value
+    return "is in address book"; // just a non-empty dummy value
   } else if ( func == SearchRule::FuncIsNotInAddressbook ) {
-    return QLatin1String("is not in address book"); // just a non-empty dummy value
+    return "is not in address book"; // just a non-empty dummy value
   } else {
     return currentValue( valueStack, func );
   }
@@ -787,6 +791,7 @@ void TextRuleWidgetHandler::reset( QStackedWidget *functionStack,
     valueStack->setCurrentWidget( lineEdit );
   }
 
+#if 0
   PimCommon::MinimumComboBox *combo = valueStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("categoryCombo") );
 
   if ( combo ) {
@@ -794,6 +799,7 @@ void TextRuleWidgetHandler::reset( QStackedWidget *functionStack,
     combo->setCurrentIndex( 0 );
     combo->blockSignals( false );
   }
+#endif
 }
 
 //---------------------------------------------------------------------------
@@ -833,6 +839,7 @@ bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     QWidget *w = valueStack->findChild<QWidget*>( QLatin1String("textRuleValueHider") );
     valueStack->setCurrentWidget( w );
   }
+#if 0
   else if ( func == SearchRule::FuncIsInCategory ||
             func == SearchRule::FuncIsNotInCategory ) {
     PimCommon::MinimumComboBox *combo = valueStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("categoryCombo") );
@@ -852,6 +859,7 @@ bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     combo->blockSignals( false );
     valueStack->setCurrentWidget( combo );
   }
+#endif
   else {
     RegExpLineEdit *lineEdit =
       valueStack->findChild<RegExpLineEdit*>( QLatin1String("regExpLineEdit") );
@@ -883,10 +891,12 @@ bool TextRuleWidgetHandler::update( const QByteArray &,
        func == SearchRule::FuncIsNotInAddressbook ) {
     valueStack->setCurrentWidget( valueStack->findChild<QWidget*>( QLatin1String("textRuleValueHider") ) );
   }
+#if 0
   else if ( func == SearchRule::FuncIsInCategory ||
             func == SearchRule::FuncIsNotInCategory ) {
     valueStack->setCurrentWidget( valueStack->findChild<QWidget*>( QLatin1String("categoryCombo") ) );
   }
+#endif
   else {
     RegExpLineEdit *lineEdit =
       valueStack->findChild<RegExpLineEdit*>( QLatin1String("regExpLineEdit") );

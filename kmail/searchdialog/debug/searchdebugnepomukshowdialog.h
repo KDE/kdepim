@@ -15,26 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SEARCHDEBUGNEPOMUKSHOWDIALOG_H
+#define SEARCHDEBUGNEPOMUKSHOWDIALOG_H
 
-#ifndef PREVIEWWIDGET_H
-#define PREVIEWWIDGET_H
+#include <KDialog>
 
-#include "grantleethemeeditor/previewwidget.h"
-class ContactPreviewWidget;
-class PreviewWidget : public GrantleeThemeEditor::PreviewWidget
+class KTextEdit;
+class SearchDebugNepomukShowDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit PreviewWidget(const QString &projectDirectory, QWidget *parent = 0);
-    ~PreviewWidget();
+    explicit SearchDebugNepomukShowDialog(const QString &nepomukId, QWidget *parent=0);
+    ~SearchDebugNepomukShowDialog();
 
-    void createScreenShot(const QStringList &fileList);
-    void loadConfig();
-    void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
-    void updateViewer();
+private Q_SLOTS:
+    void slotSaveAs();
 
 private:
-    ContactPreviewWidget *mPreview;
+    void executeNepomukShow(const QString &nepomukId);
+    void readConfig();
+    void writeConfig();
+
+private:
+    KTextEdit *mResult;
 };
 
-#endif // PREVIEWWIDGET_H
+#endif // SEARCHDEBUGNEPOMUKSHOWDIALOG_H

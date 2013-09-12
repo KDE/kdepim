@@ -15,26 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef TEST_TEMPLATECONFIGUREWIDGET_GUI_H
+#define TEST_TEMPLATECONFIGUREWIDGET_GUI_H
 
-#ifndef PREVIEWWIDGET_H
-#define PREVIEWWIDGET_H
+#include <QWidget>
 
-#include "grantleethemeeditor/previewwidget.h"
-class ContactPreviewWidget;
-class PreviewWidget : public GrantleeThemeEditor::PreviewWidget
+class TemplateConfigureTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PreviewWidget(const QString &projectDirectory, QWidget *parent = 0);
-    ~PreviewWidget();
-
-    void createScreenShot(const QStringList &fileList);
-    void loadConfig();
-    void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
-    void updateViewer();
-
-private:
-    ContactPreviewWidget *mPreview;
+    explicit TemplateConfigureTestWidget(QWidget *parent=0);
+    ~TemplateConfigureTestWidget();
 };
 
-#endif // PREVIEWWIDGET_H
+#endif

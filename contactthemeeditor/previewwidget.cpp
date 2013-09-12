@@ -50,9 +50,9 @@ void PreviewWidget::updateViewer()
     mPreview->updateViewer();
 }
 
-void PreviewWidget::createScreenShot(const QString &fileName)
+void PreviewWidget::createScreenShot(const QStringList &fileList)
 {
-    mPreview->createScreenShot(fileName);
+    mPreview->createScreenShot(fileList);
 }
 
 void PreviewWidget::setThemePath(const QString &projectDirectory, const QString &mainPageFileName)

@@ -53,7 +53,7 @@ void PreviewWidget::loadConfig()
 
 }
 
-void PreviewWidget::createScreenShot(const QString &fileName)
+void PreviewWidget::createScreenShot(const QStringList &lstFileName)
 {
 }
 

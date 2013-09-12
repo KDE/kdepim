@@ -190,7 +190,9 @@ void ThemeEditorPage::uploadTheme()
     if (zip->open(QIODevice::WriteOnly)) {
         const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
         //qDebug()<<" previewFileName"<<previewFileName;
-        mEditorPage->preview()->createScreenShot(previewFileName);
+        QStringList lst;
+        lst << previewFileName;
+        mEditorPage->preview()->createScreenShot(lst);
 
         const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
         if (!fileAdded) {
@@ -246,6 +248,7 @@ EditorPage *ThemeEditorPage::createExtraPage(const QString &filename)
     connect(extraPage, SIGNAL(changed()), SLOT(slotChanged()));
     extraPage->setPageFileName(filename);
     mTabWidget->addTab(extraPage, filename);
+    mTabWidget->setCurrentWidget(extraPage);
     mExtraPage.append(extraPage);
     return extraPage;
 }

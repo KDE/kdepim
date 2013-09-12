@@ -921,7 +921,7 @@ void SearchRuleString::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
   if ( kasciistricmp( field(), "list-id" ) == 0 ) {
     addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "List-Id" ) );
   } else if ( kasciistricmp( field(), "resent-from" ) == 0 ) {
-    //TODO
+    addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "Resent-From" ) );
   } else if ( kasciistricmp( field(), "x-loop" ) == 0 ) {
     addHeaderTerm( termGroup, Nepomuk2::Query::LiteralTerm( "X-Loop" ) );
   } else if ( kasciistricmp( field(), "x-mailing-list" ) == 0 ) {
@@ -1453,7 +1453,6 @@ SearchRule::RequiredPart SearchRuleStatus::requiredPart() const
   return SearchRule::Envelope;
 }
 
-
 void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
                                    const QString &tagId ) const
 {
@@ -1509,8 +1508,6 @@ void SearchRuleStatus::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) co
           Nepomuk2::Query::ComparisonTerm::Equal ) );
 
   }
-
-  // TODO
 }
 
 void SearchRuleStatus::addXesamClause( QXmlStreamWriter &stream ) const

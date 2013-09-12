@@ -87,9 +87,9 @@ void PreviewWidget::updateViewer()
     mViewer->setMessage(KMime::Message::Ptr(msg));
 }
 
-void PreviewWidget::createScreenShot(const QString &fileName)
+void PreviewWidget::createScreenShot(const QStringList &fileList)
 {
-    mViewer->saveMainFrameScreenshotInFile(fileName);
+    mViewer->saveMainFrameScreenshotInFile(fileList.at(0));
 }
 
 void PreviewWidget::setThemePath(const QString &projectDirectory, const QString &mainPageFileName)

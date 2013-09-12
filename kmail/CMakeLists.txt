@@ -131,7 +131,9 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      configuredialog/configureagentswidget.cpp
      searchdialog/debug/searchdebugdialog.cpp
      searchdialog/debug/sparqlsyntaxhighlighter.cpp
-     searchdialog/debug/searchdebugwidget.cpp
+     searchdialog/debug/searchdebugwidget.cpp 
+     searchdialog/debug/searchdebugnepomukshowdialog.cpp
+     searchdialog/searchpatternwarning.cpp
   )
 
   # TODO PORT

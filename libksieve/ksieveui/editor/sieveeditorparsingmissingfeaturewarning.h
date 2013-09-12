@@ -38,8 +38,6 @@ private Q_SLOTS:
     void slotKeepInTextMode();
     void slotShowDetails(const QString &content);
 
-
-
 private:
     QString mErrors;
     QString mScript;

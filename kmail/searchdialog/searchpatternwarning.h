@@ -16,25 +16,25 @@
 */
 
 
-#ifndef PREVIEWWIDGET_H
-#define PREVIEWWIDGET_H
+#ifndef SEARCHPATTERNWARNING_H
+#define SEARCHPATTERNWARNING_H
 
-#include "grantleethemeeditor/previewwidget.h"
-class ContactPreviewWidget;
-class PreviewWidget : public GrantleeThemeEditor::PreviewWidget
+#include <KMessageWidget>
+
+namespace KMail {
+class SearchPatternWarning : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit PreviewWidget(const QString &projectDirectory, QWidget *parent = 0);
-    ~PreviewWidget();
+    explicit SearchPatternWarning(QWidget *parent=0);
+    ~SearchPatternWarning();
 
-    void createScreenShot(const QStringList &fileList);
-    void loadConfig();
-    void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
-    void updateViewer();
+    void showWarningPattern(const QStringList &lstError);
+    void hideWarningPattern();
 
 private:
-    ContactPreviewWidget *mPreview;
+    void setError(const QStringList &lstError);
 };
+}
 
-#endif // PREVIEWWIDGET_H
+#endif // SEARCHPATTERNWARNING_H

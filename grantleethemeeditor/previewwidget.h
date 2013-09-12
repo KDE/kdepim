@@ -31,7 +31,7 @@ public:
     virtual void updateViewer();
 
     virtual void loadConfig();
-    virtual void createScreenShot(const QString &fileName);
+    virtual void createScreenShot(const QStringList &lstFileName);
     virtual void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
 
     void setPrinting(bool printMode);

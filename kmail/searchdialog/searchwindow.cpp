@@ -36,6 +36,7 @@
 #include "foldertreeview.h"
 #include "kmsearchmessagemodel.h"
 #include "kmsearchfilterproxymodel.h"
+#include "searchpatternwarning.h"
 
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/CollectionModifyJob>
@@ -97,10 +98,20 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
                              qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                                                         IconSize( KIconLoader::Small ) ) );
 
+    QWidget *topWidget = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
+    topWidget->setLayout(lay);
+    mSearchPatternWidget = new SearchPatternWarning;
+    lay->addWidget(mSearchPatternWidget);
+    setMainWidget( topWidget );
+
     QWidget *searchWidget = new QWidget( this );
-    setMainWidget( searchWidget );
     mUi.setupUi( searchWidget );
     mUi.mPatternEdit->setPatternEditOptions(SearchPatternEdit::NotShowSize);
+
+    lay->addWidget(searchWidget);
+
 
     setButtons( None );
     mStartSearchGuiItem = KGuiItem( i18nc( "@action:button Search for messages", "&Search" ), QLatin1String("edit-find") );
@@ -410,7 +421,7 @@ void SearchWindow::slotSearch()
     if ( !mUi.mChkbxAllFolders->isChecked() ) {
         const Akonadi::Collection col = mUi.mCbxFolders->collection();
         if (!col.isValid()) {
-            KMessageBox::error(this, i18n("You did not selected a valid folder."), i18nc("@title:window", "Search"));
+            mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You did not selected a valid folder."));
             return;
         }
         urls << col.url( Akonadi::Collection::UrlShort );
@@ -433,28 +444,30 @@ void SearchWindow::slotSearch()
     const QString queryLanguage = QLatin1String("SPARQL");
 #endif
 
-    if ( mQuery.isEmpty() ) {
-        switch(queryError) {
-        case MailCommon::SearchPattern::NoError:
-            break;
-        case MailCommon::SearchPattern::MissingCheck:
-            KMessageBox::error(this, i18n("You forgot to define condition."), i18nc("@title:window", "Search"));
-            break;
-        case MailCommon::SearchPattern::FolderEmptyOrNotIndexed:
-            KMessageBox::information(this, i18n("All folders selected are empty or were not indexed."), i18nc("@title:window", "Search"));
-            break;
-        }
+    switch(queryError) {
+    case MailCommon::SearchPattern::NoError:
+        break;
+    case MailCommon::SearchPattern::MissingCheck:
+        mUi.mSearchFolderEdt->setEnabled( true );
+        mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You forgot to define condition."));
+        return;
+    case MailCommon::SearchPattern::FolderEmptyOrNotIndexed:
+        mUi.mSearchFolderEdt->setEnabled( true );
+        mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("All folders selected are empty or were not indexed."));
         return;
     }
+    mSearchPatternWidget->hideWarningPattern();
     qDebug() << queryLanguage;
     qDebug() << mQuery;
     mUi.mSearchFolderOpenBtn->setEnabled( true );
 
     if ( !mFolder.isValid() ) {
+        qDebug()<<" create new folder";
         // FIXME if another app created a virtual 'Last Search' folder without
         // out custom attributes it will result in problems
         mSearchJob = new Akonadi::SearchCreateJob( mUi.mSearchFolderEdt->text(), mQuery, this );
     } else {
+        qDebug()<<" use existing folder";
         Akonadi::PersistentSearchAttribute *attribute = mFolder.attribute<Akonadi::PersistentSearchAttribute>();
         attribute->setQueryLanguage( queryLanguage );
         attribute->setQueryString( mQuery );
@@ -476,6 +489,7 @@ void SearchWindow::searchDone( KJob* job )
             mSearchJob = 0;
         }
         enableGUI();
+        mUi.mSearchFolderEdt->setEnabled( true );
     }
     else
     {
@@ -567,9 +581,11 @@ void SearchWindow::renameSearchFolder()
 {
     const QString name = mUi.mSearchFolderEdt->text();
     if ( mFolder.isValid() ) {
-        if ( mFolder.name() != name ) {
+        const QString oldFolderName = mFolder.name();
+        if ( oldFolderName != name ) {
             mFolder.setName( name );
             Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( mFolder, this );
+            job->setProperty("oldfoldername", oldFolderName);
             connect( job, SIGNAL(result(KJob*)),
                      this, SLOT(slotSearchFolderRenameDone(KJob*)) );
         }
@@ -584,7 +600,10 @@ void SearchWindow::slotSearchFolderRenameDone( KJob *job )
         kWarning() << "Job failed:" << job->errorText();
         KMessageBox::information( this, i18n( "There was a problem renaming your search folder. "
                                               "A common reason for this is that another search folder "
-                                              "with the same name already exists." ) );
+                                              "with the same name already exists. Error returned \"%1\".", job->errorText() ) );
+        mUi.mSearchFolderEdt->blockSignals(true);
+        mUi.mSearchFolderEdt->setText(job->property("oldfoldername").toString());
+        mUi.mSearchFolderEdt->blockSignals(false);
     }
 }
 

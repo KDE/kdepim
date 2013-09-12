@@ -76,9 +76,7 @@ void ContactPreviewWidget::setDefaultContact(const KABC::Addressee &contact)
 void ContactPreviewWidget::updateViewer()
 {
     Akonadi::Item item;
-
     item.setMimeType( KABC::Addressee::mimeType() );
-
     item.setPayload<KABC::Addressee>( mContact );
 
     mContactViewer->setContact(item);
@@ -86,7 +84,7 @@ void ContactPreviewWidget::updateViewer()
     //TODO
 }
 
-void ContactPreviewWidget::createScreenShot(const QString &fileName)
+void ContactPreviewWidget::createScreenShot(const QStringList &fileName)
 {
     //TODO
 }

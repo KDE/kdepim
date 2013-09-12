@@ -17,6 +17,9 @@
 
 #include "searchdebugwidget.h"
 #include "sparqlsyntaxhighlighter.h"
+#include "searchdebugnepomukshowdialog.h"
+
+#include "util.h"
 
 #include "pimcommon/widgets/plaintexteditfindbar.h"
 
@@ -34,10 +37,42 @@
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QListView>
 #include <QStringListModel>
 #include <QPushButton>
 #include <QShortcut>
+#include <QContextMenuEvent>
+#include <QMenu>
+#include <QPointer>
+
+SearchResultListView::SearchResultListView(QWidget *parent)
+    : QListView(parent)
+{
+
+}
+
+SearchResultListView::~SearchResultListView()
+{
+
+}
+
+void SearchResultListView::contextMenuEvent( QContextMenuEvent * event )
+{
+    const QModelIndex index = indexAt( event->pos() );
+    if (!index.isValid())
+        return;
+
+    QMenu *popup = new QMenu(this);
+    QAction *searchNepomukShow = new QAction(i18n("Search with nepomuk show..."), popup);
+    popup->addAction(searchNepomukShow);
+    QAction *act = popup->exec( event->globalPos() );
+    delete popup;
+    if (act == searchNepomukShow) {
+        const QString uid = index.data( Qt::DisplayRole ).toString();
+        QPointer<SearchDebugNepomukShowDialog> dlg = new SearchDebugNepomukShowDialog(uid, this);
+        dlg->exec();
+        delete dlg;
+    }
+}
 
 SearchDebugListDelegate::SearchDebugListDelegate( QObject *parent )
     : QStyledItemDelegate ( parent )
@@ -59,17 +94,20 @@ SearchDebugWidget::SearchDebugWidget(const QString &query, QWidget *parent)
     QGridLayout *layout = new QGridLayout;
 
     mTextEdit = new KTextEdit( this );
+    // we install an event filter to catch Ctrl+Return for quick query execution
+    mTextEdit->installEventFilter( this );
 
     mTextEdit->setAcceptRichText(false);
     indentQuery(query);
     new Nepomuk2::SparqlSyntaxHighlighter( mTextEdit->document() );
 
-    mResultView = new QListView;
+    mResultView = new SearchResultListView;
     mResultView->setItemDelegate(new SearchDebugListDelegate(this));
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     mItemView = new QPlainTextEdit;
+    mItemView->setReadOnly(true);
     mFindBar = new PimCommon::PlainTextEditFindBar( mItemView, this );
     lay->addWidget(mItemView);
     lay->addWidget(mFindBar);
@@ -80,11 +118,6 @@ SearchDebugWidget::SearchDebugWidget(const QString &query, QWidget *parent)
     QShortcut *shortcut = new QShortcut( this );
     shortcut->setKey( Qt::Key_F+Qt::CTRL );
     connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
-
-    shortcut = new QShortcut( this );
-    shortcut->setKey( Qt::CTRL+Qt::Key_Enter );
-    connect( shortcut, SIGNAL(activated()), SLOT(slotSearch()) );
-
 
     layout->addWidget( mTextEdit, 0, 0, 1, 2);
     layout->addWidget( new QLabel( i18n("Akonadi Id:") ), 1, 0 );
@@ -119,6 +152,20 @@ SearchDebugWidget::SearchDebugWidget(const QString &query, QWidget *parent)
 
 SearchDebugWidget::~SearchDebugWidget()
 {
+}
+
+bool SearchDebugWidget::eventFilter( QObject *watched, QEvent *event )
+{
+    if( watched == mTextEdit && event->type() == QEvent::KeyPress ) {
+        QKeyEvent* kev = static_cast<QKeyEvent*>(event);
+        if( kev->key() == Qt::Key_Return &&
+                kev->modifiers() == Qt::ControlModifier ) {
+            slotSearch();
+            return true;
+        }
+    }
+
+    return QWidget::eventFilter( watched, event );
 }
 
 void SearchDebugWidget::slotUpdateSearchButton()
@@ -214,12 +261,7 @@ void SearchDebugWidget::indentQuery(QString query)
 void SearchDebugWidget::slotReduceQuery()
 {
     QString query = mTextEdit->toPlainText();
-    QRegExp rx(QLatin1String("<[\\w]+://[\\w\\d-_.]+(/[\\d\\w/-._]+/)*([\\w\\d-._]+)#([\\w\\d]+)>"));
-    query.replace(rx,QLatin1String("\\2:\\3"));
-    query.replace( QLatin1String("rdf-schema:"), QLatin1String("rdfs:") );
-    query.replace( QLatin1String("22-rdf-syntax-ns:"), QLatin1String("rdf:") );
-    query.replace( QLatin1String("XMLSchema:"), QLatin1String("xsd:") );
-    query = query.simplified();
+    KMail::Util::reduceQuery(query);
     indentQuery(query);
 }
 
