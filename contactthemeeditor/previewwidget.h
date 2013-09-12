@@ -28,7 +28,7 @@ public:
     explicit PreviewWidget(const QString &projectDirectory, QWidget *parent = 0);
     ~PreviewWidget();
 
-    void createScreenShot(const QString &fileName);
+    void createScreenShot(const QStringList &fileList);
     void loadConfig();
     void setThemePath(const QString &projectDirectory, const QString &mainPageFileName);
     void updateViewer();

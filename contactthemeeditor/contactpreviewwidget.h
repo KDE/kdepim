@@ -39,7 +39,7 @@ public:
     ~ContactPreviewWidget();
 
     void updateViewer();
-    void createScreenShot(const QString &fileName);
+    void createScreenShot(const QStringList &fileName);
     void setThemePath(const QString &projectDirectory);
     void setDefaultContact(const KABC::Addressee &contact);
     void loadConfig();
