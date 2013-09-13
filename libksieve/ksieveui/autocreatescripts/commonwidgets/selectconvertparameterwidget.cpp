@@ -75,7 +75,7 @@ void SelectConvertParameterWidget::initialize()
     mWidth->setValue(300);
     hbox->addWidget(mWidth);
 
-    QLabel *lab = new QLabel(i18n("x"));
+    QLabel *lab = new QLabel(QLatin1String("x"));
     hbox->addWidget(lab);
 
     mHeight = new QSpinBox;
