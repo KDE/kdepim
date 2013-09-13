@@ -48,7 +48,6 @@ ContactEditorMainWindow::ContactEditorMainWindow()
     setupActions();
     setupGUI();
     updateActions();
-    updateActions();
     readConfig();
 }
 
