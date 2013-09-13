@@ -46,7 +46,6 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
     setupActions();
     setupGUI();
     updateActions();
-    updateActions();
     readConfig();
 }
 
