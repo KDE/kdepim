@@ -23,6 +23,8 @@
 class ThemeEditorPage;
 class KAction;
 class KToggleAction;
+class KRecentFilesAction;
+class KUrl;
 
 class ThemeEditorMainWindow : public KXmlGuiWindow
 {
@@ -50,8 +52,10 @@ private Q_SLOTS:
     void slotManageTheme();
     void slotUpdateView();
     void slotCanInsertFile(bool b);
+    void slotThemeSelected(const KUrl &);
 
 private:
+    void loadTheme(const QString &directory);
     void readConfig();
     void updateActions();
     bool saveCurrentProject(bool createNewTheme);
@@ -70,6 +74,7 @@ private:
     KAction *mUpdateView;
     KToggleAction *mPrintingMode;
     KToggleAction *mNormalMode;
+    KRecentFilesAction *mRecentFileAction;
 };
 
 #endif // THEMEEDITORMAINWINDOW_H
