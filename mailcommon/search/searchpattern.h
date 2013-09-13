@@ -269,7 +269,7 @@ class MAILCOMMON_EXPORT SearchRule
     /**
      * Adds query terms to the given term group.
      */
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const = 0;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const = 0;
 
     /**
      * Adds a serialization of the rule in XESAM format into the stream.
@@ -376,7 +376,7 @@ class SearchRuleString : public SearchRule
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
     /**
      * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
@@ -441,7 +441,7 @@ class SearchRuleNumerical : public SearchRule
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
     /**
      * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
@@ -492,7 +492,7 @@ class SearchRuleDate : public SearchRule
     /**
      * @copydoc SearchRule::addQueryTerms()
      */
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
     /**
      * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
@@ -580,7 +580,7 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
      */
    virtual RequiredPart requiredPart() const;
 
-    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const;
+    virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
     //Not possible to implement optimized form for status searching
     using SearchRule::matches;
@@ -638,7 +638,8 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
     enum SparqlQueryError {
         NoError = 0,
         MissingCheck,
-        FolderEmptyOrNotIndexed
+        FolderEmptyOrNotIndexed,
+        EmptyResult
     };
 
     /**
