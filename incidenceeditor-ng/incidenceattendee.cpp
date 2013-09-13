@@ -359,7 +359,7 @@ void IncidenceAttendee::slotSelectAddresses()
 #endif
   QWeakPointer<Akonadi::EmailAddressSelectionDialog> dialog(
     new Akonadi::EmailAddressSelectionDialog( dialogParent ) );
-  dialog.data()->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+  dialog.data()->view()->view()->setSelectionMode( QAbstractItemView::ExtendedSelection );
 
   if ( dialog.data()->exec() == QDialog::Accepted ) {
 
