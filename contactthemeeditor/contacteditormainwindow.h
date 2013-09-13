@@ -22,7 +22,6 @@
 
 class ContactEditorPage;
 class KAction;
-class KToggleAction;
 class KRecentFilesAction;
 class KUrl;
 

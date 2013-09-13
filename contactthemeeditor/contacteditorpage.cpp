@@ -169,19 +169,25 @@ void ContactEditorPage::uploadTheme()
     if (zip->open(QIODevice::WriteOnly)) {
 
         //TODO reactivate it when we will be able to create a preview
-#if 0
-        const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
-        //qDebug()<<" previewFileName"<<previewFileName;
+        const QString previewContactFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contact_preview.png");
+        const QString previewContactGroupFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contactgroup_preview.png");
+        QStringList lst;
+        lst << previewContactFileName << previewContactGroupFileName;
 
-        mEditorPage->preview()->createScreenShot(previewFileName);
+        mEditorPage->preview()->createScreenShot(lst);
 
-        const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
+        bool fileAdded  = zip->addLocalFile(previewContactFileName, themename + QLatin1Char('/') + QLatin1String("contact_preview.png"));
         if (!fileAdded) {
             KMessageBox::error(this, i18n("We cannot add preview file in zip file"), i18n("Failed to add file."));
             delete zip;
             return;
         }
-#endif
+        fileAdded  = zip->addLocalFile(previewContactGroupFileName, themename + QLatin1Char('/') + QLatin1String("contactgroup_preview.png"));
+        if (!fileAdded) {
+            KMessageBox::error(this, i18n("We cannot add preview file in zip file"), i18n("Failed to add file."));
+            delete zip;
+            return;
+        }
         createZip(themename, zip);
         zip->close();
         //qDebug()<< "zipFilename"<<zipFileName;
@@ -189,9 +195,7 @@ void ContactEditorPage::uploadTheme()
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("kaddressbook_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
         dialog->setUploadName(themename);
-#if 0
-        dialog->setPreviewImageFile(0, KUrl(previewFileName));
-#endif
+        dialog->setPreviewImageFile(0, KUrl(previewContactFileName));
         const QString description = mDesktopPage->description();
         dialog->setDescription(description.isEmpty() ? i18n("My favorite Kaddressbook theme") : description);
         dialog->exec();
