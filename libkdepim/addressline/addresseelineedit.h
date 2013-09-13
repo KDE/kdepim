@@ -127,6 +127,8 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      */
     int addCompletionSource( const QString &name, int weight );
 
+    void removeCompletionSource(const QString &source);
+
     /**
      * Reimplemented for smart insertion of email addresses.
      * Features:
