@@ -22,7 +22,6 @@
 #include <KDialog>
 
 class QListWidget;
-class QListWidgetItem;
 class KPushButton;
 namespace GrantleeThemeEditor {
 
