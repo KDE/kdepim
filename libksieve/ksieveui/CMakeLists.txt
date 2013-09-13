@@ -19,6 +19,7 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	)
 
 add_subdirectory(tests)
+add_subdirectory(editor/tests)
 
 set(ksieveui_LIB_SRCS
   scriptsparsing/xmlprintingscriptbuilder.cpp
