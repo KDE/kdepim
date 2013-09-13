@@ -42,7 +42,6 @@
 #include <KMime/Message>
 
 class QString;
-class KDateTime;
 
 namespace MessageViewer {
 
