@@ -289,14 +289,20 @@ bool ContactEditorPage::saveTheme(bool withConfirmation)
 void ContactEditorPage::loadTheme(const QString &filename)
 {
     if (mThemeSession->loadSession(filename)) {
-        mDesktopPage->loadTheme(mThemeSession->projectDirectory());
-        mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
-        mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+        const QString projectDirectory = mThemeSession->projectDirectory();
+        mDesktopPage->loadTheme(projectDirectory);
+        mEditorGroupPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contactgroup.html"));
+        mEditorGroupEmbeddedPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contactgroup_embedded.html"));
+        mEditorEmbeddedPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contact_embedded.html"));
+
+
+        mEditorPage->loadTheme(projectDirectory + QDir::separator() + mThemeSession->mainPageFileName());
+        mEditorPage->preview()->setThemePath(projectDirectory, mThemeSession->mainPageFileName());
 
         const QStringList lstExtraPages = mThemeSession->extraPages();
         Q_FOREACH(const QString &page, lstExtraPages) {
             EditorPage *extraPage = createExtraPage(page);
-            extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
+            extraPage->loadTheme(projectDirectory + QDir::separator() + page);
         }
         setChanged(false);
     }
