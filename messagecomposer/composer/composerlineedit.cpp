@@ -229,6 +229,7 @@ void ComposerLineEdit::loadContacts()
 {
   //AddresseeLineEdit::loadContacts();
 
+  const QString recentAddressGroupName = i18n( "Recent Addresses" );
   if ( MessageComposerSettings::self()->showRecentAddressesInComposer() ){
     const QStringList recent =
       KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses();
@@ -238,7 +239,7 @@ void ComposerLineEdit::loadContacts()
     KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimcompletionorder") );
     KConfigGroup group( config, "CompletionWeights" );
     const int weight = group.readEntry( "Recent Addresses", 10 );
-    const int idx = addCompletionSource( i18n( "Recent Addresses" ), weight );
+    const int idx = addCompletionSource( recentAddressGroupName, weight );
     QStringList::ConstIterator end = recent.constEnd();
     for ( ; it != end; ++it ) {
       KABC::Addressee addr;
@@ -252,6 +253,8 @@ void ComposerLineEdit::loadContacts()
       addr.insertEmail( email, true );
       addContact( addr, weight, idx );
     }
+  } else {
+      removeCompletionSource( recentAddressGroupName );
   }
 }
 
