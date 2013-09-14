@@ -2177,6 +2177,7 @@ void ViewerPrivate::slotToggleHtmlMode()
 {
   if(mColorBar->isNormal())
     return;
+  mScamDetectionWarning->setVisible(false);
   setHtmlOverride( !htmlMail() );
   update( Viewer::Force );
 }
