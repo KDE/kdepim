@@ -46,7 +46,10 @@ public Q_SLOTS:
     void slotUnselectAllButton();
     void slotSelectAllButton();
     void reject();
+
 private:
+    void writeConfig();
+    void readConfig();
     QListWidget *filtersListWidget;
     QList<MailFilter*> originalFilters;
     KPushButton *selectAllButton;

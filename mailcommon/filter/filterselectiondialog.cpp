@@ -64,17 +64,35 @@ FilterSelectionDialog::FilterSelectionDialog( QWidget *parent )
     connect( selectAllButton, SIGNAL(clicked()), this, SLOT(slotSelectAllButton()) );
     connect( unselectAllButton, SIGNAL(clicked()), this, SLOT(slotUnselectAllButton()) );
 
-    resize( 300, 350 );
+    readConfig();
 }
 
 FilterSelectionDialog::~FilterSelectionDialog()
 {
+    writeConfig();
 }
 
 void FilterSelectionDialog::reject()
 {
     qDeleteAll(originalFilters);
     QDialog::reject();
+}
+
+void FilterSelectionDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "FilterSelectionDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void FilterSelectionDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "FilterSelectionDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    } else {
+        resize( 300, 350 );
+    }
 }
 
 void FilterSelectionDialog::setFilters( const QList<MailFilter *> &filters )
