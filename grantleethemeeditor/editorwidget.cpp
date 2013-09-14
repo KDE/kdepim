@@ -30,7 +30,7 @@ using namespace GrantleeThemeEditor;
 EditorWidget::EditorWidget(QWidget *parent)
     : KTextEdit(parent)
 {
-    new KPIMTextEdit::HtmlHighlighter(document());
+    mHtmlHighlighter = new KPIMTextEdit::HtmlHighlighter(document());
     setAcceptRichText(false);
     initCompleter();
 }
@@ -54,27 +54,27 @@ void EditorWidget::insertFile(const QString &filename)
 
 void EditorWidget::initCompleter()
 {
-    m_completer = new QCompleter( this );
-    m_completer->setModelSorting( QCompleter::CaseSensitivelySortedModel );
-    m_completer->setCaseSensitivity( Qt::CaseInsensitive );
+    mCompleter = new QCompleter( this );
+    mCompleter->setModelSorting( QCompleter::CaseSensitivelySortedModel );
+    mCompleter->setCaseSensitivity( Qt::CaseInsensitive );
 
-    m_completer->setWidget( this );
-    m_completer->setCompletionMode( QCompleter::PopupCompletion );
+    mCompleter->setWidget( this );
+    mCompleter->setCompletionMode( QCompleter::PopupCompletion );
 
-    connect( m_completer, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
+    connect( mCompleter, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
 }
 
 void EditorWidget::createCompleterList(const QStringList &extraCompletion)
 {
     QStringList listWord;
     listWord << extraCompletion;
-    m_completer->setModel( new QStringListModel( listWord, m_completer ) );
+    mCompleter->setModel( new QStringListModel( listWord, mCompleter ) );
 }
 
 void EditorWidget::slotInsertCompletion( const QString &completion )
 {
     QTextCursor tc = textCursor();
-    const int extra = completion.length() - m_completer->completionPrefix().length();
+    const int extra = completion.length() - mCompleter->completionPrefix().length();
     tc.movePosition(QTextCursor::Left);
     tc.movePosition(QTextCursor::EndOfWord);
     tc.insertText(completion.right(extra));
@@ -83,7 +83,7 @@ void EditorWidget::slotInsertCompletion( const QString &completion )
 
 void EditorWidget::keyPressEvent(QKeyEvent* e)
 {
-    if ( m_completer->popup()->isVisible() ) {
+    if ( mCompleter->popup()->isVisible() ) {
         switch (e->key()) {
         case Qt::Key_Enter:
         case Qt::Key_Return:
@@ -101,12 +101,12 @@ void EditorWidget::keyPressEvent(QKeyEvent* e)
     if ( text.length() < 2 ) // min 2 char for completion
         return;
 
-    m_completer->setCompletionPrefix( text );
+    mCompleter->setCompletionPrefix( text );
 
     QRect cr = cursorRect();
-    cr.setWidth( m_completer->popup()->sizeHintForColumn(0)
-                 + m_completer->popup()->verticalScrollBar()->sizeHint().width() );
-    m_completer->complete( cr );
+    cr.setWidth( mCompleter->popup()->sizeHintForColumn(0)
+                 + mCompleter->popup()->verticalScrollBar()->sizeHint().width() );
+    mCompleter->complete( cr );
 }
 
 QString EditorWidget::wordUnderCursor() const
