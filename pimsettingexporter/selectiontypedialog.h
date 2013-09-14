@@ -21,7 +21,6 @@
 #include <KDialog>
 #include "utils.h"
 
-class SelectTypeWidget;
 class SelectionTypeTreeWidget;
 
 class SelectionTypeDialog : public KDialog
