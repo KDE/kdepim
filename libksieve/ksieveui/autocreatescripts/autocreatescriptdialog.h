@@ -22,12 +22,9 @@
 
 #include <KDialog>
 
-class QStackedWidget;
-class QSplitter;
 class QDomDocument;
 
 namespace KSieveUi {
-class SieveScriptListBox;
 class SieveEditorGraphicalModeWidget;
 class KSIEVEUI_EXPORT AutoCreateScriptDialog : public KDialog
 {

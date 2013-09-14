@@ -21,7 +21,6 @@
 #include <QWidget>
 #include "sievescriptblockwidget.h"
 
-class QDomElement;
 
 namespace KSieveUi {
 class SieveScriptBlockWidget;
