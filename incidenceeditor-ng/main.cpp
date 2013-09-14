@@ -120,6 +120,12 @@ int main( int argc, char **argv )
   EditorConfig::setEditorConfig( new KOrganizerEditorConfig );
 
   IncidenceDialog *dialog = new IncidenceDialog();
+
+  Akonadi::Collection collection( CalendarSupport::KCalPrefs::instance()->defaultCalendarId() );
+
+  if ( collection.isValid() )
+    dialog->selectCollection( collection );
+
   dialog->load( item ); // The dialog will show up once the item is loaded.
 
   return app.exec();
