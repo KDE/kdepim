@@ -30,6 +30,9 @@ public:
 
     void setDebug(const QString &debugStr);
 
+private Q_SLOTS:
+    void slotSaveAs();
+
 private:
     void readConfig();
     void writeConfig();
