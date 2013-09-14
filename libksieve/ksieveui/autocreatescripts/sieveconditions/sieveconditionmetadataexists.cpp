@@ -40,23 +40,23 @@ SieveCondition *SieveConditionMetaDataExists::newAction()
 QWidget *SieveConditionMetaDataExists::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     QLabel *lab = new QLabel(i18n("Mailbox:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 0);
 
     KLineEdit *mailbox = new KLineEdit;
     mailbox->setObjectName(QLatin1String("mailbox"));
-    lay->addWidget(mailbox);
+    grid->addWidget(mailbox, 0, 1);
 
     lab = new QLabel(i18n("Annotation:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    grid->addWidget(value, 1, 1);
 
     return w;
 }
