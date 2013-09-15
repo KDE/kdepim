@@ -17,9 +17,10 @@
 
 #include "vacationhelper.h"
 
-namespace KSieveUi {
+using namespace KSieveUi;
 
-VacationHelper::VacationHelper()
+VacationHelper::VacationHelper(QObject *parent)
+    : QObject(parent)
 {
 }
 
@@ -27,4 +28,4 @@ VacationHelper::~VacationHelper()
 {
 }
 
-}
+#include "vacationhelper.moc"

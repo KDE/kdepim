@@ -18,11 +18,16 @@
 #ifndef VACATIONHELPER_H
 #define VACATIONHELPER_H
 
+#include "ksieveui_export.h"
+
+#include <QObject>
+
 namespace KSieveUi {
-class VacationHelper
+class KSIEVEUI_EXPORT VacationHelper : public QObject
 {
+    Q_OBJECT
 public:
-    VacationHelper();
+    explicit VacationHelper(QObject *parent=0);
     ~VacationHelper();
 };
 }

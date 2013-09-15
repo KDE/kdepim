@@ -32,6 +32,7 @@ set(ksieveui_LIB_SRCS
   util.cpp
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
+  vacation/vacationhelper.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp
