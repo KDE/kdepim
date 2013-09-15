@@ -104,10 +104,10 @@ void SnippetDialog::slotTextChanged()
 bool SnippetDialog::snippetIsValid() const
 {
   if ( mUi->groupWidget->isVisible() )
-    return ( !mUi->nameEdit->text().isEmpty() &&
-             !mUi->groupBox->currentText().isEmpty() );
+    return ( !mUi->nameEdit->text().trimmed().isEmpty() &&
+             !mUi->groupBox->currentText().trimmed().isEmpty() );
   else
-    return ( !mUi->nameEdit->text().isEmpty() );
+    return ( !mUi->nameEdit->text().trimmed().isEmpty() );
 }
 
 void SnippetDialog::slotReturnPressed()
