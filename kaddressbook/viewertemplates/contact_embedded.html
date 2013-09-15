@@ -4,13 +4,13 @@
         <td align="right" valign="top" width="30%" rowspan="3">
           <img src="contact_photo" width="100" vspace="1">
         </td>
-        <td align="left" width="70%"><font size="+2"><b>{{ contact.name }}</b></font></td>
+        <td align="left" width="70%" colspan="2"><font size="+2" ><b>{{ contact.name }}</b></font></td>
       </tr>
       <tr>
-        <td align="left" width="70%">{{ contact.role }}</td>
+        <td align="left" colspan="2">{{ contact.job }}</td>
       </tr>
       <tr>
-        <td align="left" width="70%">{{ contact.organization }}</td>
+        <td align="left" colspan="2">{{ contact.organization }}</td>
       </tr>
       {% if contact.birthday %}
         {% with contact.birthdayi18n as title %}
@@ -23,8 +23,10 @@
       {% for phoneNumber in contact.phoneNumbers %}
         {% if phoneNumber.smsLink %}
           {% with phoneNumber.type as title %}
-          {% with phoneNumber.numberLink|safe|add:" "|add:phoneNumber.smsLink|safe as value %}
+          {% with phoneNumber.numberLink|safe as value %}
+          {% with phoneNumber.smsLink|safe as value2 %}
           {% include "contact_row.html" %}
+          {% endwith %}
           {% endwith %}
           {% endwith %}
         {% else %}
@@ -63,7 +65,9 @@
       {% for address in contact.addresses %}
         {% with address.type as title %}
         {% with address.formattedAddressLink|safe as value %}
+        {% with address.formattedAddressIcon|safe as value2 %}
         {% include "contact_row.html" %}
+        {% endwith %}
         {% endwith %}
         {% endwith %}
       {% endfor %}

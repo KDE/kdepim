@@ -127,7 +127,7 @@ static QVariantHash phoneNumberHash( const KABC::PhoneNumber &phoneNumber, int c
 
     if ( phoneNumber.type() & KABC::PhoneNumber::Cell ) {
       const QString url =
-        QString::fromLatin1( "<a href=\"sms:?index=%1\">(SMS)</a>" ).arg( counter );
+        QString::fromLatin1( "<a href=\"sms:?index=%1\"><img src=\"sms_icon\" align=\"top\"/></a>" ).arg( counter );
       numberObject.insert( QLatin1String( "smsLink" ), url );
     }
   }
@@ -169,11 +169,13 @@ static QVariantHash addressHash( const KABC::Address &address, int counter )
   if ( !formattedAddress.isEmpty() ) {
     formattedAddress = formattedAddress.replace( QRegExp( QLatin1String("\n+") ), QLatin1String( "<br/>" ) );
 
-    const QString url =
-      QString::fromLatin1( "<a href=\"address:?index=%1\">%2</a>" ).
-        arg( counter ).
-        arg( formattedAddress );
+    const QString link = QString::fromLatin1( "<a href=\"address:?index=%1\">%2</a>" ).
+      arg( counter );
+    QString url = link.arg( formattedAddress );
     addressObject.insert( QLatin1String("formattedAddressLink"), url );
+
+    url = link.arg( QString::fromLatin1( "<img src=\"map_icon\" align=\"top\"/>" ) );
+    addressObject.insert( QLatin1String("formattedAddressIcon"), url );
   }
 
   return addressObject;
@@ -310,6 +312,15 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   setHashField( contactObject, QLatin1String( "title" ), rawContact.title() );
 
   setHashField( contactObject, QLatin1String( "role" ), rawContact.role() );
+
+  QString job = rawContact.title();
+  if ( job.isEmpty() ) {
+    job = rawContact.role();
+  }
+  if ( job.isEmpty() ) {
+    job = rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) );
+  }
+  setHashField( contactObject, QLatin1String( "job" ), job );
 
   setHashField( contactObject, QLatin1String( "organization" ), rawContact.organization() );
 
