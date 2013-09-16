@@ -612,6 +612,11 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Export GMX file..." ) );
   action->setWhatsThis( i18n( "Export contacts to a GMX address book file." ) );
   mXXPortManager->addExportAction( action, QLatin1String("gmx") );
+
+  KToggleAction *actTheme = mGrantleeThemeManager->actionForTheme();
+  if (actTheme)
+      actTheme->setChecked(true);
+
 }
 
 void MainWidget::printPreview()
