@@ -55,7 +55,6 @@ void FilterMailmanGzip::importMails(const QStringList &filenames)
     int overall_status = 0;
     bool first_msg = true;
 
-
     filterInfo()->setOverall(0);
     QStringList::ConstIterator end( filenames.constEnd() );
     for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != end; ++filename, ++currentFile) {
@@ -99,8 +98,10 @@ void FilterMailmanGzip::importMails(const QStringList &filenames)
 
             l = device->readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
 
-            if ((separate = input.data()).left(5) != "From " )
+            if ((separate = input.data()).left(5) != "From " ) {
+                //TODO need to adapt email
                 tmp.write( input, l );
+            }
 
             while ( ! device->atEnd() && (l = device->readLine(input.data(),MAX_LINE)) &&((separate = input.data()).left(5) != "From ")) {
                 tmp.write( input, l );
