@@ -46,6 +46,7 @@ Q_SIGNALS:
     void scriptListResult(const QStringList &scriptList, const QString &activeScript, bool hasIncludeSupport);
 
 private:
+    void killJob();
     KUrl mUrl;
     QString mAccountName;
     KManageSieve::SieveJob *mSieveJob;
