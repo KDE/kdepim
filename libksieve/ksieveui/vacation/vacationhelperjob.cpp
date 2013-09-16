@@ -15,21 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VACATIONHELPER_H
-#define VACATIONHELPER_H
+#include "vacationhelperjob.h"
 
-#include "ksieveui_export.h"
+using namespace KSieveUi;
 
-#include <QObject>
-
-namespace KSieveUi {
-class KSIEVEUI_EXPORT VacationHelper : public QObject
+VacationHelperJob::VacationHelperJob(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit VacationHelper(QObject *parent=0);
-    ~VacationHelper();
-};
 }
 
-#endif // VACATIONHELPER_H
+VacationHelperJob::~VacationHelperJob()
+{
+}
+
+#include "vacationhelperjob.moc"
