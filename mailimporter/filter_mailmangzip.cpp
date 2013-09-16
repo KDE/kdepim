@@ -41,7 +41,7 @@ FilterMailmanGzip::~FilterMailmanGzip()
 
 void FilterMailmanGzip::import()
 {
-    const QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("gzip Files (*)"), filterInfo()->parent() );
+    const QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*.txt.gz|" + i18n("gzip Files (*.txt.gz)"), filterInfo()->parent() );
     if ( filenames.isEmpty() ) {
         filterInfo()->alert(i18n("No files selected."));
         return;
@@ -99,8 +99,8 @@ void FilterMailmanGzip::importMails(const QStringList &filenames)
             l = device->readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
 
             if ((separate = input.data()).left(5) != "From " ) {
-                //TODO need to adapt email
-                tmp.write( input, l );
+                separate.replace(" at ", "@");
+                tmp.write( separate, separate.length() );
             }
 
             while ( ! device->atEnd() && (l = device->readLine(input.data(),MAX_LINE)) &&((separate = input.data()).left(5) != "From ")) {
