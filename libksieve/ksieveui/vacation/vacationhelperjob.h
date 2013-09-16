@@ -43,7 +43,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void canNotGetScriptList();
     void resourceHasNotSieveSupport();
-    void hasActiveScript(const QString &);
+    void scriptListResult(const QStringList &scriptList, const QString &activeScript, bool hasIncludeSupport);
 
 private:
     KUrl mUrl;
