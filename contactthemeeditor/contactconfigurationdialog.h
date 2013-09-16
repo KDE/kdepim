@@ -28,7 +28,6 @@ namespace Akonadi {
 class ContactEditor;
 }
 
-class KUrlRequester;
 class KTextEdit;
 class ContactConfigureDialog : public KDialog
 {

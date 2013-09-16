@@ -38,12 +38,8 @@
 #include "kmsearchfilterproxymodel.h"
 #include "searchpatternwarning.h"
 
-#include <Akonadi/AttributeFactory>
 #include <Akonadi/CollectionModifyJob>
-#include <Akonadi/CollectionStatisticsJob>
 #include <Akonadi/EntityTreeView>
-#include <Akonadi/ItemModel>
-#include <Akonadi/KMime/MessageModel>
 #include <akonadi/persistentsearchattribute.h>
 #include <Akonadi/SearchCreateJob>
 #include <Akonadi/ChangeRecorder>
@@ -56,7 +52,6 @@
 #include <KIconLoader>
 #include <KLineEdit>
 #include <kmime/kmime_message.h>
-#include <KPushButton>
 #include <KStandardAction>
 #include <KStandardGuiItem>
 #include <KWindowSystem>
@@ -65,16 +60,11 @@
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QCursor>
-#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QKeyEvent>
-#include <QLabel>
 #include <QMenu>
 #include <QRadioButton>
 #include <QVBoxLayout>
-
-#include <assert.h>
-#include <stdlib.h>
 
 using namespace KPIM;
 using namespace MailCommon;
@@ -148,6 +138,7 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
                 mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
             } else {
                 mUi.mChkbxAllFolders->setChecked( true );
+                mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
             }
         } else {
             // it's a search folder, but not one of ours, warn the user that we can't edit it
@@ -450,10 +441,18 @@ void SearchWindow::slotSearch()
     case MailCommon::SearchPattern::MissingCheck:
         mUi.mSearchFolderEdt->setEnabled( true );
         mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You forgot to define condition."));
+        mQuery.clear();
         return;
     case MailCommon::SearchPattern::FolderEmptyOrNotIndexed:
         mUi.mSearchFolderEdt->setEnabled( true );
         mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("All folders selected are empty or were not indexed."));
+        mQuery.clear();
+        return;
+    case MailCommon::SearchPattern::EmptyResult:
+        mUi.mSearchFolderEdt->setEnabled( true );
+        mQuery.clear();
+        mUi.mStatusLbl->setText( i18n("No message found.") );
+        createSearchModel();
         return;
     }
     mSearchPatternWidget->hideWarningPattern();
@@ -790,13 +789,6 @@ void SearchWindow::addRulesToSearchPattern( const SearchPattern &pattern )
     mSearchPattern = p;
     mUi.mPatternEdit->setSearchPattern( &mSearchPattern );
 }
-
-void SearchWindow::setSearchPattern( const SearchPattern &pattern )
-{
-    mSearchPattern = pattern;
-    mUi.mPatternEdit->setSearchPattern( &mSearchPattern );
-}
-
 
 void SearchWindow::childCollectionsFromSelectedCollection( const Akonadi::Collection& collection, KUrl::List&lstUrlCollection )
 {  

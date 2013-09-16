@@ -239,8 +239,6 @@ public:
         if ( job->error() ) {
             q->setError( job->error() );
             q->setErrorText( job->errorText() );
-            q->emitResult();
-            return;
         }
         q->emitResult();
     }

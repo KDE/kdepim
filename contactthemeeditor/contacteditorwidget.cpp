@@ -37,7 +37,7 @@ void ContactEditorWidget::createCompleterList(const QStringList &extraCompletion
     listWord << DefaultCompletion::defaultCompetion();
     listWord << DefaultCompletion::defaultOptions();
     listWord << extraCompletion;
-    m_completer->setModel( new QStringListModel( listWord, m_completer ) );
+    mCompleter->setModel( new QStringListModel( listWord, mCompleter ) );
 }
 
 #include "contacteditorwidget.moc"

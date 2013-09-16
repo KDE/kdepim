@@ -32,7 +32,6 @@
 
 #include <QtCore/QTimer>
 
-class QCheckBox;
 class QCloseEvent;
 class QKeyEvent;
 class KActionMenu;
@@ -42,8 +41,6 @@ class KMSearchMessageModel;
 class QAbstractItemModel;
 class QModelIndex;
 namespace Akonadi {
-//class EntityTreeView;
-class ItemModel;
 class StandardMailActionManager;
 }
 
@@ -99,11 +96,6 @@ public:
      * @return the currently selected message.
      */
     Akonadi::Item selectedMessage() const;
-
-    /**
-     * Loads a search pattern into the search window, replacing the current one.
-     */
-    void setSearchPattern( const MailCommon::SearchPattern &pattern );
 
     /**
      * Loads a search pattern into the search window, appending its rules to the current one.

@@ -101,7 +101,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
         lay->addWidget(mExtraDisplayHeaders, row, 0, 1, 2);
         connect(mExtraDisplayHeaders, SIGNAL(changed()), this, SLOT(slotExtraDisplayHeadersChanged()));
     } else {
-        lay->setRowStretch(row,0);
+        lay->setRowStretch(row,1);
     }
     setLayout(lay);
 

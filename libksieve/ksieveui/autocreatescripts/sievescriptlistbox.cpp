@@ -217,6 +217,7 @@ void SieveScriptListBox::slotDelete()
             SieveScriptListItem *itemScript = static_cast<SieveScriptListItem*>(item);
             Q_EMIT removePage(itemScript->scriptPage());
             delete item;
+            Q_EMIT enableButtonOk(mSieveListScript->count()>0);
             updateButtons();
         }
     }

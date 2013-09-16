@@ -15,28 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TRANSLATORDEBUGDIALOG_H
-#define TRANSLATORDEBUGDIALOG_H
+#ifndef MAILIMPORTER_FILTER_MAILMANGZIP_HXX
+#define MAILIMPORTER_FILTER_MAILMANGZIP_HXX
 
-#include <KDialog>
+#include "filters.h"
 
-class KTextEdit;
-class TranslatorDebugDialog : public KDialog
+namespace MailImporter {
+class MAILIMPORTER_EXPORT FilterMailmanGzip : public Filter
 {
-    Q_OBJECT
 public:
-    explicit TranslatorDebugDialog(QWidget *parent=0);
-    ~TranslatorDebugDialog();
+    FilterMailmanGzip();
+    ~FilterMailmanGzip();
 
-    void setDebug(const QString &debugStr);
-
-private Q_SLOTS:
-    void slotSaveAs();
-
-private:
-    void readConfig();
-    void writeConfig();
-    KTextEdit *mEdit;
+    void importMails(const QStringList &filenames);
+    void import();
 };
+}
 
-#endif // TRANSLATORDEBUGDIALOG_H
+#endif

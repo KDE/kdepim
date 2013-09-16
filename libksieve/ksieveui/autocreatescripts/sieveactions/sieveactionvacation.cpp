@@ -67,6 +67,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
 
     QSpinBox *day = new QSpinBox;
     day->setMinimum(1);
+    day->setMaximum(999);
     day->setObjectName(QLatin1String("day"));
     grid->addWidget(day, 0 ,1);
 

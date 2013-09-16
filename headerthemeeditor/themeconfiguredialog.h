@@ -19,9 +19,7 @@
 #define THEMECONFIGUREDIALOG_H
 
 #include <KDialog>
-class KUrlRequester;
 class KTextEdit;
-class KLineEdit;
 
 namespace GrantleeThemeEditor {
 class ConfigureWidget;

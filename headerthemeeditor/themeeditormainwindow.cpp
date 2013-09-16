@@ -34,6 +34,7 @@
 #include <KDebug>
 #include <KStandardDirs>
 #include <KNS3/KNewStuffAction>
+#include <KRecentFilesAction>
 
 #include <QPointer>
 #include <QCloseEvent>
@@ -46,7 +47,6 @@ ThemeEditorMainWindow::ThemeEditorMainWindow()
     setupActions();
     setupGUI();
     updateActions();
-    updateActions();
     readConfig();
 }
 
@@ -56,6 +56,7 @@ ThemeEditorMainWindow::~ThemeEditorMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("ThemeEditorMainWindow") );
     group.writeEntry( "Size", size() );
+    mRecentFileAction->saveEntries(group);
 }
 
 void ThemeEditorMainWindow::readConfig()
@@ -86,6 +87,13 @@ void ThemeEditorMainWindow::updateActions()
 
 void ThemeEditorMainWindow::setupActions()
 {
+    mRecentFileAction = new KRecentFilesAction(i18n("Load Recent Theme..."), this);
+    connect(mRecentFileAction, SIGNAL(urlSelected(KUrl)), this, SLOT(slotThemeSelected(KUrl)));
+    actionCollection()->addAction( QLatin1String( "load_recent_theme" ), mRecentFileAction );
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup groupConfig = config->group( QLatin1String("ThemeEditorMainWindow") );
+    mRecentFileAction->loadEntries(groupConfig);
+
     mAddExtraPage = new KAction(i18n("Add Extra Page..."), this);
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
@@ -203,6 +211,12 @@ void ThemeEditorMainWindow::slotOpenTheme()
         return;
 
     const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
+    loadTheme(directory);
+    mRecentFileAction->addUrl(KUrl(directory));
+}
+
+void ThemeEditorMainWindow::loadTheme(const QString &directory)
+{
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
@@ -243,6 +257,7 @@ bool ThemeEditorMainWindow::saveCurrentProject(bool createNewTheme)
             projectDirectory = dialog->directory();
         }
         if (!projectDirectory.isEmpty()) {
+            mRecentFileAction->addUrl(KUrl(projectDirectory));
             mThemeEditor = new ThemeEditorPage(projectDirectory, newTheme);
             connect(mThemeEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
             connect(mThemeEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
@@ -291,6 +306,13 @@ void ThemeEditorMainWindow::slotUpdateView()
 void ThemeEditorMainWindow::slotCanInsertFile(bool b)
 {
     mInsertFile->setEnabled(b);
+}
+
+void ThemeEditorMainWindow::slotThemeSelected(const KUrl &url)
+{
+    if (!saveCurrentProject(false))
+        return;
+    loadTheme(url.path());
 }
 
 #include "themeeditormainwindow.moc"

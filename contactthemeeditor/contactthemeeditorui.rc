@@ -4,6 +4,8 @@
   <Menu name="file" >
    <Action name="new_theme" />
    <Separator />
+   <Action name="load_recent_theme" />
+   <Separator />
    <Action name="insert_file" />
    <Separator />
    <Action name="upload_theme"/>

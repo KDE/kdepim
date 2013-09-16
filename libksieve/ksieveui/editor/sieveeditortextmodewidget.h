@@ -22,7 +22,6 @@
 #include "sieveeditorabstractwidget.h"
 
 class KTextEdit;
-class QPushButton;
 class QSplitter;
 
 namespace PimCommon {

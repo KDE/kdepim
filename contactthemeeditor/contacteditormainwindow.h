@@ -22,7 +22,8 @@
 
 class ContactEditorPage;
 class KAction;
-class KToggleAction;
+class KRecentFilesAction;
+class KUrl;
 
 class ContactEditorMainWindow : public KXmlGuiWindow
 {
@@ -48,8 +49,10 @@ private Q_SLOTS:
     void slotUpdateView();
     void slotConfigure();
     void slotCanInsertFile(bool b);
+    void slotThemeSelected(const KUrl &);
 
 private:
+    void loadTheme(const QString &directory);
     void readConfig();
     void updateActions();
     bool saveCurrentProject(bool createNewTheme);
@@ -66,6 +69,7 @@ private:
     KAction *mInsertFile;
     KAction *mManageTheme;
     KAction *mUpdateView;
+    KRecentFilesAction *mRecentFileAction;
 };
 
 #endif // CONTACTEDITORMAINWINDOW_H

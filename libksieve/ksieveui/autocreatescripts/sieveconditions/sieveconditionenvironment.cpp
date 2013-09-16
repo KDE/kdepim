@@ -42,11 +42,11 @@ SieveCondition *SieveConditionEnvironment::newAction()
 QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
     QLabel *lab = new QLabel(i18n("Item:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 0);
 
     KLineEdit *item = new KLineEdit;
     QStringList itemList;
@@ -63,14 +63,14 @@ QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
     item->setCompleter(completer);
 
     item->setObjectName(QLatin1String("item"));
-    lay->addWidget(item);
+    grid->addWidget(item, 0, 1);
 
     lab = new QLabel(i18n("Value:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    grid->addWidget(value, 1, 1);
 
     return w;
 }

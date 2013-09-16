@@ -7,6 +7,7 @@ Comment[fi]=Kansioiden arkistointiohjelma
 Comment[fr]=Agent d'archivage de dossiers
 Comment[hu]=Mappaarchiváló ügynök
 Comment[ia]=Agente de archivar dossier
+Comment[kk]=Қапшық архивтеу агенті
 Comment[nb]=Postarkiv-agent
 Comment[nl]=Agent voor archiveren van map
 Comment[pt]=Agente de Arquivo de Pastas
@@ -25,11 +26,13 @@ Comment[zh_TW]=資料夾歸檔代理程式
 [Event/folderarchivedone]
 Name=Archive Mails in Folder done
 Name[cs]=Archivace pošty ve složce byla dokončena
+Name[de]=E-Mail-Archivierung im Ordner beendet
 Name[es]=Archivado de correos en carpeta terminado
 Name[fi]=Viestien arkistointi kansioihin valmis
 Name[fr]=Archivage des dossiers terminé
 Name[hu]=A levelek archiválása a mappában befejeződött
 Name[ia]=Action de archivar posta in dossier terminate
+Name[kk]=Поштаны қапшықта архивтеу аяқталды
 Name[nb]=Postarkiv fullført
 Name[nl]=E-mail in map archiveren is gereed
 Name[pt]=Arquivo das Mensagens na Pasta Terminado
@@ -48,11 +51,13 @@ Action=None
 
 [Event/folderarchiveerror]
 Name=Folder Archive Error
+Name[de]=Ordner-Archivierungs-Fehler
 Name[es]=Error de archivado de carpeta
 Name[fi]=Kansion arkistointivirhe
 Name[fr]=Erreur d'archivage des dossiers
 Name[hu]=Mappaarchiválási hiba
 Name[ia]=Error de archivo de dossier
+Name[kk]=Қапшық архивтеу қатесі
 Name[nb]=Feil i postarkiv
 Name[nl]=fout in archiveren van map
 Name[pt]=Erro no Arquivo de Pastas

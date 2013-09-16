@@ -27,7 +27,6 @@
 #include <KStandardGuiItem>
 
 #include <QPushButton>
-#include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QStackedWidget>
 #include <QLabel>
@@ -44,14 +43,7 @@ SieveEditor::SieveEditor( QWidget * parent )
       mMode(TextMode)
 {
     setCaption( i18n( "Edit Sieve Script" ) );
-    setButtons( None );    
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-
-    connect(buttonBox, SIGNAL(accepted()), this, SIGNAL(okClicked()));
-    connect(buttonBox, SIGNAL(rejected()), this, SIGNAL(cancelClicked()));
-    connect(this, SIGNAL(accepted()), this, SIGNAL(okClicked()));
-    connect(this, SIGNAL(rejected()), this, SIGNAL(cancelClicked()));
+    setButtons( Ok|Cancel );
 
     setModal( true );
     QWidget *w = new QWidget;
@@ -100,7 +92,6 @@ SieveEditor::SieveEditor( QWidget * parent )
     mStackedWidget->addWidget(mGraphicalModeWidget);
 
     lay->addWidget(mStackedWidget);
-    lay->addWidget(buttonBox);
     connect(mTextModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
     connect(mGraphicalModeWidget, SIGNAL(enableButtonOk(bool)), this, SLOT(slotEnableButtonOk(bool)));
     connect(mGraphicalModeWidget, SIGNAL(switchTextMode(QString)), this, SLOT(slotSwitchTextMode(QString)));
@@ -135,7 +126,7 @@ void SieveEditor::changeMode(EditorMode mode)
 
 void SieveEditor::slotEnableButtonOk(bool b)
 {
-    mOkButton->setEnabled(b);
+    enableButtonOk(b);
     if (mMode == TextMode) {
         mCheckSyntax->setEnabled(b);
     } else {

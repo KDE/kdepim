@@ -23,10 +23,6 @@
 class KUrl;
 class ArchiveStorage;
 
-namespace Akonadi {
-class AgentInstance;
-}
-
 class ExportMailJob : public AbstractImportExportJob
 {
 public:

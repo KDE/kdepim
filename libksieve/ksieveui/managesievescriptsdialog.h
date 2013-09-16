@@ -10,7 +10,6 @@
 
 #include <QMap>
 
-class QButtonGroup;
 class QTreeWidgetItem;
 class KPushButton;
 
@@ -21,7 +20,6 @@ class SieveJob;
 namespace KSieveUi {
 
 class SieveEditor;
-class TreeWidgetWithContextMenu;
 
 class ManageSieveTreeView : public QTreeWidget
 {

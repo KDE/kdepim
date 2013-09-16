@@ -2892,6 +2892,7 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,cons
         menu->addSeparator();
         menu->addAction( mMsgView->copyImageLocation());
         menu->addAction( mMsgView->downloadImageToDiskAction());
+        menu->addAction( mMsgView->shareImage());
       }
       urlMenuAdded = true;
     }
@@ -2947,6 +2948,7 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,cons
         menu->addSeparator();
         menu->addAction( mMsgView->copyImageLocation());
         menu->addAction( mMsgView->downloadImageToDiskAction());
+        menu->addAction( mMsgView->shareImage());
         menu->addSeparator();
       }
       menu->addAction( mMsgView->viewSourceAction() );
@@ -4457,8 +4459,7 @@ void KMMainWidget::slotRequestFullSearchFromQuickSearch()
   if ( !searchString.isEmpty() )
     pattern.append( SearchRule::createInstance( "<message>", SearchRule::FuncContains, searchString ) );
   MessageStatus status = mMessagePane->currentFilterStatus();
-  if ( status.hasAttachment() )
-  {
+  if ( status.hasAttachment() ) {
     pattern.append( SearchRule::createInstance( "<message>", SearchRule::FuncHasAttachment ) );
     status.setHasAttachment( false );
   }
@@ -4467,7 +4468,7 @@ void KMMainWidget::slotRequestFullSearchFromQuickSearch()
     pattern.append( SearchRule::Ptr( new SearchRuleStatus( status ) ) );
   }
 
-  if ( pattern.size() > 0 )
+  if ( !pattern.isEmpty() )
     mSearchWin->addRulesToSearchPattern( pattern );
 }
 

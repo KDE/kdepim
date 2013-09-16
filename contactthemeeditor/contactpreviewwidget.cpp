@@ -59,6 +59,7 @@ ContactPreviewWidget::ContactPreviewWidget(const QString &projectDirectory, QWid
 
     mGroupFormatter->setAbsoluteThemePath(projectDirectory);
     mFormatter->setAbsoluteThemePath(projectDirectory);
+    loadConfig();
 }
 
 ContactPreviewWidget::~ContactPreviewWidget()
@@ -75,11 +76,7 @@ void ContactPreviewWidget::setDefaultContact(const KABC::Addressee &contact)
 
 void ContactPreviewWidget::updateViewer()
 {
-    Akonadi::Item item;
-    item.setMimeType( KABC::Addressee::mimeType() );
-    item.setPayload<KABC::Addressee>( mContact );
-
-    mContactViewer->setContact(item);
+    mContactViewer->setRawContact(mContact);
     //mGroupViewer->setContactGroup();
     //TODO
 }

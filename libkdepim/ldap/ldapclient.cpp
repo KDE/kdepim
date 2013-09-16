@@ -225,8 +225,9 @@ void LdapClient::Private::finishCurrentObject()
 {
   mCurrentObject.setDn( mLdif.dn() );
   KLDAP::LdapAttrValue objectclasses;
+  KLDAP::LdapAttrMap::ConstIterator end = mCurrentObject.attributes().constEnd();
   for ( KLDAP::LdapAttrMap::ConstIterator it = mCurrentObject.attributes().constBegin();
-    it != mCurrentObject.attributes().constEnd(); ++it ) {
+    it != end; ++it ) {
 
     if ( it.key().toLower() == QLatin1String("objectclass") ) {
       objectclasses = it.value();
@@ -235,8 +236,9 @@ void LdapClient::Private::finishCurrentObject()
   }
 
   bool groupofnames = false;
+  KLDAP::LdapAttrValue::ConstIterator endValue(objectclasses.constEnd());
   for ( KLDAP::LdapAttrValue::ConstIterator it = objectclasses.constBegin();
-    it != objectclasses.constEnd(); ++it ) {
+    it != endValue; ++it ) {
 
     QByteArray sClass = (*it).toLower();
     if ( sClass == "groupofnames" || sClass == "kolabgroupofnames" ) {

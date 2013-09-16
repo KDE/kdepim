@@ -41,25 +41,25 @@ SieveAction* SieveActionExtractText::newAction()
 QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    w->setLayout(lay);
+    QGridLayout *grid = new QGridLayout;
+    grid->setMargin(0);
+    w->setLayout(grid);
 
     QLabel *lab = new QLabel(i18n("Number of characters:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 0, 0);
 
     QSpinBox *nbCharacters = new QSpinBox;
     nbCharacters->setMinimum(1);
     nbCharacters->setMaximum(99999);
     nbCharacters->setObjectName(QLatin1String("numberOfCharacters"));
-    lay->addWidget(nbCharacters);
+    grid->addWidget(nbCharacters, 0, 1);
 
     lab = new QLabel(i18n("Stored in variable name:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *variableName = new KLineEdit;
     variableName->setObjectName(QLatin1String("variablename"));
-    lay->addWidget(variableName);
+    grid->addWidget(variableName, 1, 1);
 
     return w;
 }

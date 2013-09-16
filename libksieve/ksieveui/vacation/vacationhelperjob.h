@@ -15,36 +15,41 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef AUTOCREATESCRIPTDIALOG_H
-#define AUTOCREATESCRIPTDIALOG_H
+#ifndef VACATIONHELPERJOB_H
+#define VACATIONHELPERJOB_H
 
 #include "ksieveui_export.h"
 
-#include <KDialog>
+#include <KUrl>
 
-class QDomDocument;
+#include <QObject>
+namespace KManageSieve {
+class SieveJob;
+}
 
 namespace KSieveUi {
-class SieveEditorGraphicalModeWidget;
-class KSIEVEUI_EXPORT AutoCreateScriptDialog : public KDialog
+class KSIEVEUI_EXPORT VacationHelperJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit AutoCreateScriptDialog(QWidget *parent = 0);
-    ~AutoCreateScriptDialog();
+    explicit VacationHelperJob(const QString &accountName, QObject *parent=0);
+    ~VacationHelperJob();
 
-    QString script(QString &requires) const;
-    void setSieveCapabilities(const QStringList &capabilities);
+    void searchActiveJob();
 
-    void loadScript(const QDomDocument &doc, QString &error);
+private Q_SLOTS:
+    void slotGetScriptList(KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript);
+
+Q_SIGNALS:
+    void canNotGetScriptList();
+    void resourceHasNotSieveSupport();
+    void scriptListResult(const QStringList &scriptList, const QString &activeScript, bool hasIncludeSupport);
 
 private:
-    void readConfig();
-    void writeConfig();
-
-private:
-    SieveEditorGraphicalModeWidget *mEditor;
+    KUrl mUrl;
+    QString mAccountName;
+    KManageSieve::SieveJob *mSieveJob;
 };
 }
 
-#endif // AUTOCREATESCRIPTDIALOG_H
+#endif // VACATIONHELPERJOB_H

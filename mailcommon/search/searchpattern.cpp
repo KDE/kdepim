@@ -848,8 +848,9 @@ void SearchRuleString::addHeaderTerm( Nepomuk2::Query::GroupTerm &groupTerm,
 
 }
 
-void SearchRuleString::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
+void SearchRuleString::addQueryTerms(Nepomuk2::Query::GroupTerm &groupTerm , bool &emptyIsNotAnError) const
 {
+  emptyIsNotAnError = false;
   Nepomuk2::Query::OrTerm termGroup;
   if ( kasciistricmp( field(), "<message>" ) == 0 ||
        kasciistricmp( field(), "<recipients>" ) == 0  ||
@@ -1259,8 +1260,9 @@ bool SearchRuleNumerical::matchesInternal( long numericalValue,
 }
 
 
-void SearchRuleNumerical::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
+void SearchRuleNumerical::addQueryTerms(Nepomuk2::Query::GroupTerm &groupTerm , bool &emptyIsNotAnError) const
 {
+  emptyIsNotAnError = false;
   if ( kasciistricmp( field(), "<size>" ) == 0 ) {
     const Nepomuk2::Query::ComparisonTerm sizeTerm(
       Vocabulary::NIE::byteSize(),
@@ -1355,8 +1357,9 @@ SearchRule::RequiredPart SearchRuleDate::requiredPart() const
 
 
 
-void SearchRuleDate::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
+void SearchRuleDate::addQueryTerms(Nepomuk2::Query::GroupTerm &groupTerm , bool &emptyIsNotAnError) const
 {
+    emptyIsNotAnError = false;
     const QDate date = QDate::fromString( contents(), Qt::ISODate );
     const Nepomuk2::Query::ComparisonTerm dateTerm(
       Vocabulary::NMO::sentDate(),
@@ -1457,8 +1460,10 @@ void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
                                    const QString &tagId ) const
 {
   // TODO handle function() == NOT
+    qDebug()<<" tagId"<<tagId;
   const Nepomuk2::Tag tag( tagId );
   if (tag.exists()) {
+      qDebug()<<" tag exist !";
     addAndNegateTerm(
       Nepomuk2::Query::ComparisonTerm(
         Soprano::Vocabulary::NAO::hasTag(),
@@ -1468,8 +1473,9 @@ void SearchRuleStatus::addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm,
   }
 }
 
-void SearchRuleStatus::addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm ) const
+void SearchRuleStatus::addQueryTerms(Nepomuk2::Query::GroupTerm &groupTerm , bool &emptyIsNotAnError) const
 {
+  emptyIsNotAnError = true;
   if ( mStatus.isImportant() ) {
     addTagTerm( groupTerm, "important" );
   } else if ( mStatus.isToAct() ) {
@@ -1780,13 +1786,20 @@ MailCommon::SearchPattern::SparqlQueryError SearchPattern::asSparqlQuery(QString
 
   Nepomuk2::Query::GroupTerm innerGroup = makeGroupTerm( mOperator );
   const_iterator end( constEnd() );
+  bool emptyIsNotAnError = false;
+  bool resultAddQuery = emptyIsNotAnError;
   for ( const_iterator it = constBegin(); it != end; ++it ) {
-    (*it)->addQueryTerms( innerGroup );
+    (*it)->addQueryTerms( innerGroup, emptyIsNotAnError );
+    resultAddQuery &= emptyIsNotAnError;
   }
 
   if ( innerGroup.subTerms().isEmpty() ) {
-    qDebug()<<" innergroup is Empty. Need to report bug";
-    return MissingCheck;
+      if (resultAddQuery) {
+          qDebug()<<" innergroup is Empty. Need to report bug";
+          return MissingCheck;
+      } else {
+          return EmptyResult;
+      }
   }
   if ( !urlList.isEmpty() ) {
     const int numberOfUrl = urlList.count();

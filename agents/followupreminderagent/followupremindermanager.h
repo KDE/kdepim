@@ -15,28 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TRANSLATORDEBUGDIALOG_H
-#define TRANSLATORDEBUGDIALOG_H
+#ifndef FOLLOWUPREMINDERMANAGER_H
+#define FOLLOWUPREMINDERMANAGER_H
 
-#include <KDialog>
+#include <QObject>
 
-class KTextEdit;
-class TranslatorDebugDialog : public KDialog
+class FollowUpReminderManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit TranslatorDebugDialog(QWidget *parent=0);
-    ~TranslatorDebugDialog();
-
-    void setDebug(const QString &debugStr);
-
-private Q_SLOTS:
-    void slotSaveAs();
-
-private:
-    void readConfig();
-    void writeConfig();
-    KTextEdit *mEdit;
+    explicit FollowUpReminderManager(QObject *parent = 0);
+    ~FollowUpReminderManager();
 };
 
-#endif // TRANSLATORDEBUGDIALOG_H
+#endif // FOLLOWUPREMINDERMANAGER_H

@@ -1,7 +1,9 @@
 [Desktop Entry]
 Name=Followup Reminder Agent
+Name[de]=Agent zur Erinnerung an Folgenachrichten
 Name[es]=Agente de recordatorio de seguimiento
 Name[fr]=Agent de rappel des messages suivis
+Name[kk]=Жауап беру туралы ескерту агенті
 Name[nl]=Agent voor herinneren aan vervolgactie
 Name[pt]=Agente de Chamadas de Seguimento
 Name[pt_BR]=Agente de Acompanhamento
@@ -15,8 +17,10 @@ Name[sv]=Påminnelseuppföljningsmodul
 Name[uk]=Агент нагадування про відповіді
 Name[x-test]=xxFollowup Reminder Agentxx
 Comment=Followup Reminder Agent allows to remind you when an email was not answered.
+Comment[de]=Der Agent zur Erinnerung an Folgenachrichten erinnert Sie, wenn eine E-Mail nicht beantwortet wurde.
 Comment[es]=El agente de recordatorio de seguimiento permite recordarle cuando no se contestó un correo.
 Comment[fr]=L'agent de rappel des messages suivis permet de se rappeler lorsqu'il n'y a pas eu de réponse à un courriel.
+Comment[kk]=Жауап беру туралы ескерту агенті эл.поштаға жауап берілмегеніңізді ескереді.
 Comment[nl]=Agent voor herinneren aan vervolgactie stelt u in staat om u te herinneren aan een nog niet beantwoord e-mailbericht.
 Comment[pt]=O Agente de Chamadas de Seguimento permite recordar quando uma mensagem não foi respondida.
 Comment[pt_BR]=O Agente de Acompanhamento permite-lhe lembrar de um e-mail não respondido.

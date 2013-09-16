@@ -40,6 +40,7 @@ SoundTestWidget::SoundTestWidget( QWidget *parent )
     m_playButton = new QPushButton( this );
     m_playButton->setIcon( KIcon( QLatin1String("arrow-right") ) );
     m_playButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+    m_playButton->setToolTip(i18n("Play"));
     layout->addWidget( m_playButton );
 
     m_urlRequester = new KUrlRequester( this );

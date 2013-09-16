@@ -16,6 +16,7 @@
 */
 
 #include "translatordebugdialog.h"
+#include "pimcommon/util/pimutil.h"
 
 #include <KLocale>
 #include <KConfigGroup>
@@ -26,7 +27,9 @@ TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Translator Debug" ) );
-    setButtons( Close );
+    setButtons( Close|User1 );
+    setButtonText(User1, i18n("Save As..."));
+
 
     mEdit = new KTextEdit;
     mEdit->setAcceptRichText(false);
@@ -62,5 +65,12 @@ void TranslatorDebugDialog::writeConfig()
     KConfigGroup group( KGlobal::config(), "TranslatorDebugDialog" );
     group.writeEntry( "Size", size() );
 }
+
+void TranslatorDebugDialog::slotSaveAs()
+{
+    const QString filter = i18n( "all files (*)" );
+    PimCommon::Util::saveTextAs(mEdit->toPlainText(), filter, this);
+}
+
 
 #include "translatordebugdialog.moc"

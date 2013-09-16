@@ -74,7 +74,6 @@ private:
     void readConfig();
 
     QString mOriginalScript;
-    QPushButton *mOkButton;
     SieveEditorTextModeWidget *mTextModeWidget;
     SieveEditorGraphicalModeWidget *mGraphicalModeWidget;
     QStackedWidget *mStackedWidget;

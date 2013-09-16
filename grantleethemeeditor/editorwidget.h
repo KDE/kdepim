@@ -22,6 +22,10 @@
 #include <KTextEdit>
 
 class QCompleter;
+namespace KPIMTextEdit {
+class HtmlHighlighter;
+}
+
 namespace GrantleeThemeEditor {
 class GRANTLEETHEMEEDITOR_EXPORT EditorWidget : public KTextEdit
 {
@@ -41,11 +45,12 @@ protected:
     void keyPressEvent(QKeyEvent* e);
 
 protected:
-    QCompleter *m_completer;
+    QCompleter *mCompleter;
 
 private:
     void initCompleter();
     QString wordUnderCursor() const;
+    KPIMTextEdit::HtmlHighlighter *mHtmlHighlighter;
 };
 }
 

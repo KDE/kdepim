@@ -62,7 +62,7 @@ ContactEditorPage::ContactEditorPage(const QString &projectDir, const QString &t
 
     GrantleeThemeEditor::DesktopFilePage::DesktopFileOptions opt;
     mDesktopPage = new GrantleeThemeEditor::DesktopFilePage(QLatin1String("contact.html"), opt);
-    mDesktopPage->setDefaultDesktopName(QLatin1String("header.desktop"));
+    mDesktopPage->setDefaultDesktopName(QLatin1String("theme.desktop"));
     mDesktopPage->setThemeName(themeName);
     mTabWidget->addTab(mDesktopPage, i18n("Desktop File"));
 
@@ -169,19 +169,25 @@ void ContactEditorPage::uploadTheme()
     if (zip->open(QIODevice::WriteOnly)) {
 
         //TODO reactivate it when we will be able to create a preview
-#if 0
-        const QString previewFileName = tmp.name() + QDir::separator() + themename + QLatin1String("_preview.png");
-        //qDebug()<<" previewFileName"<<previewFileName;
+        const QString previewContactFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contact_preview.png");
+        const QString previewContactGroupFileName = tmp.name() + QDir::separator() + themename + QLatin1String("contactgroup_preview.png");
+        QStringList lst;
+        lst << previewContactFileName << previewContactGroupFileName;
 
-        mEditorPage->preview()->createScreenShot(previewFileName);
+        mEditorPage->preview()->createScreenShot(lst);
 
-        const bool fileAdded  = zip->addLocalFile(previewFileName, themename + QLatin1Char('/') + QLatin1String("theme_preview.png"));
+        bool fileAdded  = zip->addLocalFile(previewContactFileName, themename + QLatin1Char('/') + QLatin1String("contact_preview.png"));
         if (!fileAdded) {
             KMessageBox::error(this, i18n("We cannot add preview file in zip file"), i18n("Failed to add file."));
             delete zip;
             return;
         }
-#endif
+        fileAdded  = zip->addLocalFile(previewContactGroupFileName, themename + QLatin1Char('/') + QLatin1String("contactgroup_preview.png"));
+        if (!fileAdded) {
+            KMessageBox::error(this, i18n("We cannot add preview file in zip file"), i18n("Failed to add file."));
+            delete zip;
+            return;
+        }
         createZip(themename, zip);
         zip->close();
         //qDebug()<< "zipFilename"<<zipFileName;
@@ -189,9 +195,7 @@ void ContactEditorPage::uploadTheme()
         QPointer<KNS3::UploadDialog> dialog = new KNS3::UploadDialog(QLatin1String("kaddressbook_themes.knsrc"), this);
         dialog->setUploadFile(zipFileName);
         dialog->setUploadName(themename);
-#if 0
-        dialog->setPreviewImageFile(0, KUrl(previewFileName));
-#endif
+        dialog->setPreviewImageFile(0, KUrl(previewContactFileName));
         const QString description = mDesktopPage->description();
         dialog->setDescription(description.isEmpty() ? i18n("My favorite Kaddressbook theme") : description);
         dialog->exec();
@@ -289,14 +293,20 @@ bool ContactEditorPage::saveTheme(bool withConfirmation)
 void ContactEditorPage::loadTheme(const QString &filename)
 {
     if (mThemeSession->loadSession(filename)) {
-        mDesktopPage->loadTheme(mThemeSession->projectDirectory());
-        mEditorPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + mThemeSession->mainPageFileName());
-        mEditorPage->preview()->setThemePath(mThemeSession->projectDirectory(), mThemeSession->mainPageFileName());
+        const QString projectDirectory = mThemeSession->projectDirectory();
+        mDesktopPage->loadTheme(projectDirectory);
+        mEditorGroupPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contactgroup.html"));
+        mEditorGroupEmbeddedPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contactgroup_embedded.html"));
+        mEditorEmbeddedPage->loadTheme(projectDirectory + QDir::separator() + QLatin1String("contact_embedded.html"));
+
+
+        mEditorPage->loadTheme(projectDirectory + QDir::separator() + mThemeSession->mainPageFileName());
+        mEditorPage->preview()->setThemePath(projectDirectory, mThemeSession->mainPageFileName());
 
         const QStringList lstExtraPages = mThemeSession->extraPages();
         Q_FOREACH(const QString &page, lstExtraPages) {
             EditorPage *extraPage = createExtraPage(page);
-            extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
+            extraPage->loadTheme(projectDirectory + QDir::separator() + page);
         }
         setChanged(false);
     }

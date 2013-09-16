@@ -35,6 +35,7 @@
 #include <KDebug>
 #include <KStandardDirs>
 #include <KNS3/KNewStuffAction>
+#include <KRecentFilesAction>
 
 #include <QPointer>
 #include <QCloseEvent>
@@ -47,7 +48,6 @@ ContactEditorMainWindow::ContactEditorMainWindow()
     setupActions();
     setupGUI();
     updateActions();
-    updateActions();
     readConfig();
 }
 
@@ -57,6 +57,7 @@ ContactEditorMainWindow::~ContactEditorMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("ContactEditorMainWindow") );
     group.writeEntry( "Size", size() );
+    mRecentFileAction->saveEntries(group);
 }
 
 void ContactEditorMainWindow::readConfig()
@@ -85,6 +86,13 @@ void ContactEditorMainWindow::updateActions()
 
 void ContactEditorMainWindow::setupActions()
 {
+    mRecentFileAction = new KRecentFilesAction(i18n("Load Recent Theme..."), this);
+    connect(mRecentFileAction, SIGNAL(urlSelected(KUrl)), this, SLOT(slotThemeSelected(KUrl)));
+    actionCollection()->addAction( QLatin1String( "load_recent_theme" ), mRecentFileAction );
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup groupConfig = config->group( QLatin1String("ContactEditorMainWindow") );
+    mRecentFileAction->loadEntries(groupConfig);
+
     mAddExtraPage = new KAction(i18n("Add Extra Page..."), this);
     connect(mAddExtraPage, SIGNAL(triggered(bool)),SLOT(slotAddExtraPage()));
     actionCollection()->addAction( QLatin1String( "add_extra_page" ), mAddExtraPage );
@@ -179,6 +187,12 @@ void ContactEditorMainWindow::slotOpenTheme()
         return;
 
     const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///OpenTheme" ), this, i18n("Select theme directory"));
+    loadTheme(directory);
+    mRecentFileAction->addUrl(KUrl(directory));
+}
+
+void ContactEditorMainWindow::loadTheme(const QString &directory)
+{
     if (!directory.isEmpty()) {
         const QString filename = directory + QDir::separator() + QLatin1String("theme.themerc");
         QFile file(filename);
@@ -195,6 +209,7 @@ void ContactEditorMainWindow::slotOpenTheme()
         updateActions();
     }
 }
+
 
 void ContactEditorMainWindow::slotAddExtraPage()
 {
@@ -219,6 +234,7 @@ bool ContactEditorMainWindow::saveCurrentProject(bool createNewTheme)
             projectDirectory = dialog->directory();
         }
         if (!projectDirectory.isEmpty()) {
+            mRecentFileAction->addUrl(KUrl(projectDirectory));
             mContactEditor = new ContactEditorPage(projectDirectory, newTheme);
             connect(mContactEditor, SIGNAL(changed(bool)), mSaveAction, SLOT(setEnabled(bool)));
             connect(mContactEditor, SIGNAL(canInsertFile(bool)), this, SLOT(slotCanInsertFile(bool)));
@@ -267,6 +283,13 @@ void ContactEditorMainWindow::slotUpdateView()
 void ContactEditorMainWindow::slotCanInsertFile(bool b)
 {
     mInsertFile->setEnabled(b);
+}
+
+void ContactEditorMainWindow::slotThemeSelected(const KUrl &url)
+{
+    if (!saveCurrentProject(false))
+        return;
+    loadTheme(url.path());
 }
 
 

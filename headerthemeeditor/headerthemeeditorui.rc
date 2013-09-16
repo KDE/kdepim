@@ -1,8 +1,10 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="headerthemeeditor" version="1">
+<kpartgui name="headerthemeeditor" version="2">
  <MenuBar>
   <Menu name="file" >
    <Action name="new_theme" />
+   <Separator />
+   <Action name="load_recent_theme" />
    <Separator />
    <Action name="insert_file" />
    <Separator />

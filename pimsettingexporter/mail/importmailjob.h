@@ -25,7 +25,6 @@
 
 class KArchiveDirectory;
 class KArchiveFile;
-class KTempDir;
 class ArchiveStorage;
 
 class ImportMailJob : public AbstractImportExportJob

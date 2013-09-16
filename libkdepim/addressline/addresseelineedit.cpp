@@ -153,6 +153,15 @@ class AddresseeLineEditStatic
       }
     }
 
+    void removeCompletionSource( const QString &source )
+    {
+        QMap<QString,int>::iterator it = completionSourceWeights.find( source );
+        if ( it != completionSourceWeights.end() ) {
+            completionSourceWeights.remove(source);
+            completion->clear();
+        }
+    }
+
     KMailCompletion *completion;
     KPIM::CompletionItemsMap completionItemMap;
     QStringList completionSources;
@@ -1419,6 +1428,11 @@ QMenu *AddresseeLineEdit::createStandardContextMenu()
   return menu;
 }
 #endif
+
+void KPIM::AddresseeLineEdit::removeCompletionSource(const QString &source)
+{
+    s_static->removeCompletionSource(source);
+}
 
 int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source, int weight )
 {

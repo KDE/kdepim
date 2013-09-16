@@ -30,6 +30,6 @@ add_subdirectory( tests )
 
 ########### install files ###############
 
-install(FILES kpgp.upd  DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
-install(PROGRAMS kpgp-3.1-upgrade-address-data.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(FILES kconf_update/kpgp.upd  DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(PROGRAMS kconf_update/kpgp-3.1-upgrade-address-data.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
 

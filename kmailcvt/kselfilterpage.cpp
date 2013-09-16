@@ -33,6 +33,7 @@
 #include <filter_sylpheed.h>
 #include <filter_thebat.h>
 #include <filter_lnotes.h>
+#include <filter_mailmangzip.h>
 
 #include <filters.h>
 
@@ -80,6 +81,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent )
     addFilter(new MailImporter::FilterPMail);
     addFilter(new MailImporter::FilterLNotes);
     addFilter(new MailImporter::FilterPlain);
+    addFilter(new MailImporter::FilterMailmanGzip);
 
     // Ensure we return the correct type of Akonadi collection.
     mWidget->mCollectionRequestor->setMustBeReadWrite(true);

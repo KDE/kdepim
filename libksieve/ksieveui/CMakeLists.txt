@@ -19,6 +19,7 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 	)
 
 add_subdirectory(tests)
+add_subdirectory(editor/tests)
 
 set(ksieveui_LIB_SRCS
   scriptsparsing/xmlprintingscriptbuilder.cpp
@@ -31,6 +32,7 @@ set(ksieveui_LIB_SRCS
   util.cpp
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
+  vacation/vacationhelperjob.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp
