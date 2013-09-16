@@ -16,16 +16,58 @@
 */
 
 #include "vacationhelperjob.h"
+#include "kmanagesieve/sievejob.h"
+#include "ksieveui/util.h"
 
 using namespace KSieveUi;
 
-VacationHelperJob::VacationHelperJob(QObject *parent)
-    : QObject(parent)
+VacationHelperJob::VacationHelperJob(const QString &accountName, QObject *parent)
+    : QObject(parent),
+      mAccountName(accountName),
+      mSieveJob(0)
 {
 }
 
 VacationHelperJob::~VacationHelperJob()
 {
+    if ( mSieveJob ) {
+        mSieveJob->kill();
+        mSieveJob = 0;
+    }
+}
+
+void VacationHelperJob::searchActiveJob()
+{
+    if (mSieveJob) {
+        mSieveJob->kill();
+        mSieveJob = 0;
+    }
+
+    const KUrl url = KSieveUi::Util::findSieveUrlForAccount( mAccountName );
+    if ( !url.isValid() ) {
+        Q_EMIT resourceHasNotSieveSupport();
+    } else {
+        mUrl = url;
+
+        mSieveJob = KManageSieve::SieveJob::list( mUrl );
+
+        connect( mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
+                 SLOT(slotGetScriptList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
+    }
+}
+
+void VacationHelperJob::slotGetScriptList( KManageSieve::SieveJob *job, bool success, const QStringList &scriptList, const QString &activeScript )
+{
+    mSieveJob = 0;
+    if (success) {
+        const QStringList caps = job->sieveCapabilities();
+        if (!activeScript.isEmpty()) {
+            Q_EMIT hasActiveScript(activeScript);
+        }
+        //TODO
+    } else {
+        Q_EMIT canNotGetScriptList();
+    }
 }
 
 #include "vacationhelperjob.moc"
