@@ -22,6 +22,7 @@
 
 #include "vcardviewer.h"
 #include "settings/globalsettings.h"
+#include "kaddressbook/grantlee/grantleecontactformatter.h"
 
 #include <akonadi/contact/contactviewer.h>
 
@@ -51,6 +52,13 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     setButtonGuiItem( User2, KGuiItem(i18n("&Next Card")) );
     setButtonGuiItem( User3, KGuiItem(i18n("&Previous Card")) );
     mContactViewer = new Akonadi::ContactViewer(this);
+
+#if 0
+    mFormatter = new Akonadi::GrantleeContactFormatter;
+
+    mContactViewer->setContactFormatter( mFormatter );
+#endif
+
     setMainWidget(mContactViewer);
 
     VCardConverter vcc;
