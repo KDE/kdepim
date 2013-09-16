@@ -31,7 +31,7 @@ FilterMailmanGzip::FilterMailmanGzip() :
             i18n("<p><b>mailman gzip import filter</b></p>"
                  "<p>This filter will import mailman gzipped files into KMail.</p>"
                  "<p><b>Note:</b> Emails will be imported into folders named after the "
-                 "file they came from, prefixed with MBOX-</p>" ))
+                 "file they came from, prefixed with MAILMAN-</p>" ))
 {
 }
 
@@ -67,7 +67,7 @@ void FilterMailmanGzip::importMails(const QStringList &filenames)
 
         device->open(QIODevice::ReadOnly);
         QFileInfo filenameInfo( *filename );
-        QString folderName( "MBOX-" + filenameInfo.completeBaseName() );
+        QString folderName( "MAILMAN-" + filenameInfo.completeBaseName() );
 
         filterInfo()->setCurrent(0);
         filterInfo()->addInfoLogEntry( i18n("Importing emails from %1...", *filename ) );
