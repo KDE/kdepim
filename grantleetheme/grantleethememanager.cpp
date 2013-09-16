@@ -111,7 +111,7 @@ public:
             while ( dirIt.hasNext() ) {
                 dirIt.next();
                 const QString dirName = dirIt.fileName();
-                GrantleeTheme::Theme theme = loadTheme( dirIt.filePath(), dirName );
+                GrantleeTheme::Theme theme = q->loadTheme( dirIt.filePath(), dirName, defaultDesktopFileName );
                 if (theme.isValid()) {
                     QString themeName = theme.name();
                     if (alreadyLoadedThemeName.contains(themeName)) {
@@ -135,21 +135,6 @@ public:
         watch->startScan();
     }
 
-    GrantleeTheme::Theme loadTheme(const QString &themePath, const QString &dirName )
-    {
-        const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
-        KConfig config( themeInfoFile );
-        KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
-
-        GrantleeTheme::Theme theme;
-        theme.setDirName(dirName);
-        theme.setName( group.readEntry( "Name", QString() ) );
-        theme.setDescription( group.readEntry( "Description", QString() ) );
-        theme.setFilename( group.readEntry( "FileName" , QString() ) );
-        theme.setDisplayExtraVariables( group.readEntry( "DisplayExtraVariables", QStringList() ) );
-        theme.setAbsolutePath(themePath);
-        return theme;
-    }
 
     void updateActionList()
     {
@@ -303,5 +288,51 @@ void GrantleeThemeManager::setDownloadNewStuffConfigFile(const QString &configFi
 {
     d->downloadConfigFileName = configFileName;
 }
+
+QString GrantleeThemeManager::pathFromThemes(const QString &themesRelativePath, const QString &themeName, const QString &defaultDesktopFileName)
+{
+    QStringList themesDirectories;
+    if (!themesRelativePath.isEmpty()) {
+        themesDirectories = KGlobal::dirs()->findDirs("data", themesRelativePath);
+        if (themesDirectories.count() < 2) {
+            //Make sure to add local directory
+            const QString localDirectory = KStandardDirs::locateLocal("data", themesRelativePath);
+            if (!themesDirectories.contains(localDirectory)) {
+                themesDirectories.append(localDirectory);
+            }
+        }
+        Q_FOREACH (const QString &directory, themesDirectories) {
+            QDirIterator dirIt( directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
+            while ( dirIt.hasNext() ) {
+                dirIt.next();
+                const QString dirName = dirIt.fileName();
+                GrantleeTheme::Theme theme = loadTheme( dirIt.filePath(), dirName, defaultDesktopFileName );
+                if (theme.isValid()) {
+                    if (dirName == themeName) {
+                        return theme.absolutePath();
+                    }
+                }
+            }
+        }
+    }
+    return QString();
+}
+
+GrantleeTheme::Theme GrantleeThemeManager::loadTheme(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName )
+{
+    const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
+    KConfig config( themeInfoFile );
+    KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
+
+    GrantleeTheme::Theme theme;
+    theme.setDirName(dirName);
+    theme.setName( group.readEntry( "Name", QString() ) );
+    theme.setDescription( group.readEntry( "Description", QString() ) );
+    theme.setFilename( group.readEntry( "FileName" , QString() ) );
+    theme.setDisplayExtraVariables( group.readEntry( "DisplayExtraVariables", QStringList() ) );
+    theme.setAbsolutePath(themePath);
+    return theme;
+}
+
 
 #include "grantleethememanager.moc"
