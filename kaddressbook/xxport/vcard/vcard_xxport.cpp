@@ -21,10 +21,7 @@
 
 #include "pimcommon/widgets/renamefiledialog.h"
 
-#include <kaddressbookgrantlee/formatter/grantleecontactformatter.h>
-#include <kaddressbookgrantlee/grantleeutil.h>
-
-#include <Akonadi/Contact/ContactViewer>
+#include <kaddressbookgrantlee/widget/grantleecontactviewer.h>
 
 #ifdef QGPGME_FOUND
 #include <gpgme++/context.h>
@@ -73,7 +70,7 @@ class VCardViewerDialog : public KDialog
   private:
     void updateView();
 
-    Akonadi::ContactViewer *mView;
+    KAddressBookGrantlee::GrantleeContactViewer *mView;
 
     KABC::Addressee::List mContacts;
     KABC::Addressee::List::Iterator mIt;
@@ -512,15 +509,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
   label->setFont( font );
   layout->addWidget( label );
 
-  mView = new Akonadi::ContactViewer( page );
-
-
-  KAddressBookGrantlee::GrantleeContactFormatter *formatter = new KAddressBookGrantlee::GrantleeContactFormatter;
-
-  mView->setContactFormatter( formatter );
-  //
-  formatter->setAbsoluteThemePath(KAddressBookGrantlee::GrantleeUtil::kaddressBookAbsoluteThemePath());
-
+  mView = new KAddressBookGrantlee::GrantleeContactViewer( page );
 
   layout->addWidget( mView );
 

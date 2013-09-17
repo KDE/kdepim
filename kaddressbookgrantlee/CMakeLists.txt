@@ -17,6 +17,7 @@ if(Prison_FOUND)
 endif()
 
 set(kaddressbook_grantlee_LIB_SRCS
+  widget/grantleecontactviewer.cpp
   formatter/grantleecontactformatter.cpp
   formatter/grantleecontactgroupformatter.cpp
   grantleeutil.cpp

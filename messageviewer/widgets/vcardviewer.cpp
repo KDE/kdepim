@@ -22,10 +22,7 @@
 
 #include "vcardviewer.h"
 #include "settings/globalsettings.h"
-#include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
-#include "kaddressbookgrantlee/grantleeutil.h"
-
-#include <akonadi/contact/contactviewer.h>
+#include "kaddressbookgrantlee/widget/grantleecontactviewer.h"
 
 #include <kabc/vcardconverter.h>
 using KABC::VCardConverter;
@@ -51,13 +48,8 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     setButtonGuiItem( User1, KGuiItem(i18n("&Import")) );
     setButtonGuiItem( User2, KGuiItem(i18n("&Next Card")) );
     setButtonGuiItem( User3, KGuiItem(i18n("&Previous Card")) );
-    mContactViewer = new Akonadi::ContactViewer(this);
 
-    mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
-
-    mContactViewer->setContactFormatter( mFormatter );
-    //
-    mFormatter->setAbsoluteThemePath(KAddressBookGrantlee::GrantleeUtil::kaddressBookAbsoluteThemePath());
+    mContactViewer = new KAddressBookGrantlee::GrantleeContactViewer( this );
     setMainWidget(mContactViewer);
 
     VCardConverter vcc;
