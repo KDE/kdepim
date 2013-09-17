@@ -22,7 +22,7 @@
 
 #include "vcardviewer.h"
 #include "settings/globalsettings.h"
-#include "kaddressbookgrantlee/grantleecontactformatter.h"
+#include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/grantleeutil.h"
 
 #include <akonadi/contact/contactviewer.h>

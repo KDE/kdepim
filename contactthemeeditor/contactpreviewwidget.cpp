@@ -20,8 +20,8 @@
 
 #include <KABC/VCardConverter>
 
-#include "kaddressbookgrantlee/grantleecontactformatter.h"
-#include "kaddressbookgrantlee/grantleecontactgroupformatter.h"
+#include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
+#include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
 
 #include <Akonadi/Contact/ContactGroupViewer>
 #include <Akonadi/Contact/ContactViewer>

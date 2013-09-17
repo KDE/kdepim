@@ -149,6 +149,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/pimcommon
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
+    ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee
     ${Boost_INCLUDE_DIR}
     ${GPGME_INCLUDES}
 )

@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon/
   ${CMAKE_SOURCE_DIR}/grantleethemeeditor
+  ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee
 )
 
 

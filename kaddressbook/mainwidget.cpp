@@ -27,8 +27,8 @@
 #include "settings.h"
 #include "xxportmanager.h"
 
-#include "kaddressbookgrantlee/grantleecontactformatter.h"
-#include "kaddressbookgrantlee/grantleecontactgroupformatter.h"
+#include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
+#include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
 #include "grantleetheme/grantleethememanager.h"
 #include "grantleetheme/globalsettings_base.h"
 

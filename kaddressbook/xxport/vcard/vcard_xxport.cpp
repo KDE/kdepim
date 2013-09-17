@@ -21,7 +21,7 @@
 
 #include "pimcommon/widgets/renamefiledialog.h"
 
-#include <kaddressbookgrantlee/grantleecontactformatter.h>
+#include <kaddressbookgrantlee/formatter/grantleecontactformatter.h>
 #include <kaddressbookgrantlee/grantleeutil.h>
 
 #include <Akonadi/Contact/ContactViewer>
