@@ -393,7 +393,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     /**
      * Make a HTML content valid by adding missing html/head/body tag.
      */
-    QString makeValidHtml( QString &body );
+    void makeValidHtml( QString &body );
 };
 
 }

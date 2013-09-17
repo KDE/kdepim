@@ -1195,7 +1195,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       (!content || !content->hasContent() ) ) {
     htmlBody.clear();
   } else {
-    htmlBody = makeValidHtml( htmlBody );
+    makeValidHtml( htmlBody );
   }
   addProcessedBodyToMessage( plainBody, htmlBody );
 }
@@ -1715,7 +1715,7 @@ QString TemplateParser::plainToHtml( const QString &body ) const
 }
 
 //TODO implement this function using a DOM tree parser
-QString TemplateParser::makeValidHtml( QString &body )
+void TemplateParser::makeValidHtml( QString &body )
 {
   QRegExp regEx;
   regEx.setMinimal( true );
@@ -1732,7 +1732,6 @@ QString TemplateParser::makeValidHtml( QString &body )
     }
     body = QLatin1String("<html>") + body + QLatin1String("</html>");
   }
-  return body;
 }
 
 bool TemplateParser::cursorPositionWasSet() const
