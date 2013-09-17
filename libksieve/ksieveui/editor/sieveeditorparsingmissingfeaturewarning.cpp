@@ -25,7 +25,7 @@
 
 using namespace KSieveUi;
 
-SieveEditorParsingMissingFeatureWarning::SieveEditorParsingMissingFeatureWarning(QWidget *parent)
+SieveEditorParsingMissingFeatureWarning::SieveEditorParsingMissingFeatureWarning(TextEditorType type, QWidget *parent)
     : KMessageWidget(parent)
 {
     setVisible(false);
@@ -34,13 +34,29 @@ SieveEditorParsingMissingFeatureWarning::SieveEditorParsingMissingFeatureWarning
     setText(i18n("Some errors were found during parsing. <a href=\"sieveerrordetails\">(Details...)</a>"));
     connect(this, SIGNAL(linkActivated(QString)), SLOT(slotShowDetails(QString)));
 
-    KAction *action = new KAction( i18n( "Switch in graphical mode" ), this );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotSwitchInGraphicalMode()) );
-    addAction( action );
+    switch (type) {
+    case TextEditor: {
+        KAction *action = new KAction( i18n( "Switch in graphical mode" ), this );
+        connect( action, SIGNAL(triggered(bool)), SLOT(slotSwitchInGraphicalMode()) );
+        addAction( action );
 
-    action = new KAction( i18n( "Keep in text mode" ), this );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotKeepInTextMode()) );
-    addAction( action );
+        action = new KAction( i18n( "Keep in text mode" ), this );
+        connect( action, SIGNAL(triggered(bool)), SLOT(slotInActualMode()) );
+        addAction( action );
+        break;
+    }
+    case GraphicEditor:
+    {
+        KAction *action = new KAction( i18n( "Switch in text mode" ), this );
+        connect( action, SIGNAL(triggered(bool)), SLOT(slotSwitchInTextMode()) );
+        addAction( action );
+
+        action = new KAction( i18n( "Keep in Graphical mode" ), this );
+        connect( action, SIGNAL(triggered(bool)), SLOT(slotInActualMode()) );
+        addAction( action );
+        break;
+    }
+    }
 
     setWordWrap(true);
 }
@@ -65,13 +81,19 @@ void SieveEditorParsingMissingFeatureWarning::setErrors(const QString &errors, c
     mScript = initialScript;
 }
 
+void SieveEditorParsingMissingFeatureWarning::slotSwitchInTextMode()
+{
+    Q_EMIT switchToTextMode();
+    setVisible(false);
+}
+
 void SieveEditorParsingMissingFeatureWarning::slotSwitchInGraphicalMode()
 {
     Q_EMIT switchToGraphicalMode();
     setVisible(false);
 }
 
-void SieveEditorParsingMissingFeatureWarning::slotKeepInTextMode()
+void SieveEditorParsingMissingFeatureWarning::slotInActualMode()
 {
     setVisible(false);
 }

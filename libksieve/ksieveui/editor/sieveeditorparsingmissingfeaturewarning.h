@@ -25,17 +25,24 @@ class SieveEditorParsingMissingFeatureWarning : public KMessageWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorParsingMissingFeatureWarning(QWidget *parent = 0);
+    enum TextEditorType {
+        TextEditor,
+        GraphicEditor
+    };
+
+    explicit SieveEditorParsingMissingFeatureWarning(SieveEditorParsingMissingFeatureWarning::TextEditorType type, QWidget *parent = 0);
     ~SieveEditorParsingMissingFeatureWarning();
 
     void setErrors(const QString &errors, const QString &initialScript);
 
 Q_SIGNALS:
     void switchToGraphicalMode();
+    void switchToTextMode();
 
 private Q_SLOTS:
     void slotSwitchInGraphicalMode();
-    void slotKeepInTextMode();
+    void slotSwitchInTextMode();
+    void slotInActualMode();
     void slotShowDetails(const QString &content);
 
 private:
