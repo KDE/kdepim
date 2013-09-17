@@ -21,6 +21,9 @@
 
 #include "pimcommon/widgets/renamefiledialog.h"
 
+#include <kaddressbookgrantlee/grantleecontactformatter.h>
+#include <kaddressbookgrantlee/grantleeutil.h>
+
 #include <Akonadi/Contact/ContactViewer>
 
 #ifdef QGPGME_FOUND
@@ -510,6 +513,15 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
   layout->addWidget( label );
 
   mView = new Akonadi::ContactViewer( page );
+
+
+  KAddressBookGrantlee::GrantleeContactFormatter *formatter = new KAddressBookGrantlee::GrantleeContactFormatter;
+
+  mView->setContactFormatter( formatter );
+  //
+  formatter->setAbsoluteThemePath(KAddressBookGrantlee::GrantleeUtil::kaddressBookAbsoluteThemePath());
+
+
   layout->addWidget( mView );
 
   setButtonText( Apply, i18nc( "@action:button", "Import All..." ) );
