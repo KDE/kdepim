@@ -33,7 +33,8 @@ public:
     explicit SieveEditorParsingMissingFeatureWarning(SieveEditorParsingMissingFeatureWarning::TextEditorType type, QWidget *parent = 0);
     ~SieveEditorParsingMissingFeatureWarning();
 
-    void setErrors(const QString &errors, const QString &initialScript);
+    void setErrors(const QString &initialScript, const QString &errors);
+    QString initialScript() const;
 
 Q_SIGNALS:
     void switchToGraphicalMode();

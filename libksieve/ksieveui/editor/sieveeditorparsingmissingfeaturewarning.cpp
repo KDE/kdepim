@@ -65,6 +65,11 @@ SieveEditorParsingMissingFeatureWarning::~SieveEditorParsingMissingFeatureWarnin
 {
 }
 
+QString SieveEditorParsingMissingFeatureWarning::initialScript() const
+{
+    return mScript;
+}
+
 void SieveEditorParsingMissingFeatureWarning::slotShowDetails(const QString &content)
 {
     if (content == QLatin1String("sieveerrordetails")) {
@@ -75,7 +80,7 @@ void SieveEditorParsingMissingFeatureWarning::slotShowDetails(const QString &con
     }
 }
 
-void SieveEditorParsingMissingFeatureWarning::setErrors(const QString &errors, const QString &initialScript)
+void SieveEditorParsingMissingFeatureWarning::setErrors(const QString &initialScript, const QString &errors)
 {
     mErrors = errors;
     mScript = initialScript;
