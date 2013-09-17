@@ -38,7 +38,7 @@ namespace KAddressBookGrantlee {
  */
 class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactFormatter : public Akonadi::AbstractContactFormatter
 {
-  public:
+public:
     /**
      * Creates a new grantlee contact formatter.
      */
@@ -59,7 +59,7 @@ class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactFormatter : public Akonadi::Ab
      */
     virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

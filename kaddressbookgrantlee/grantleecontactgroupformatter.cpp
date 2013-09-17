@@ -42,18 +42,18 @@ using namespace KAddressBookGrantlee;
 
 class GrantleeContactGroupFormatter::Private
 {
-  public:
+public:
     Private()
     {
-      mEngine = new Grantlee::Engine;
+        mEngine = new Grantlee::Engine;
 
-      mTemplateLoader =
-        Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
+        mTemplateLoader =
+                Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
     }
 
     ~Private()
     {
-      delete mEngine;
+        delete mEngine;
     }
 
     void changeGrantleePath(const QString &path)
@@ -68,7 +68,7 @@ class GrantleeContactGroupFormatter::Private
 
         mEmbeddableTemplate = mEngine->loadByName( QLatin1String("contactgroup_embedded.html") );
         if ( mEmbeddableTemplate->error() ) {
-          mErrorMessage += mEmbeddableTemplate->errorString() + QLatin1String("<br>");
+            mErrorMessage += mEmbeddableTemplate->errorString() + QLatin1String("<br>");
         }
     }
 
@@ -81,13 +81,13 @@ class GrantleeContactGroupFormatter::Private
 };
 
 GrantleeContactGroupFormatter::GrantleeContactGroupFormatter()
-  : d( new Private )
+    : d( new Private )
 {
 }
 
 GrantleeContactGroupFormatter::~GrantleeContactGroupFormatter()
 {
-  delete d;
+    delete d;
 }
 
 void GrantleeContactGroupFormatter::setAbsoluteThemePath(const QString &path)
@@ -103,117 +103,117 @@ void GrantleeContactGroupFormatter::setGrantleeTheme(const GrantleeTheme::Theme 
 #ifndef KDE_USE_FINAL
 inline static void setHashField( QVariantHash &hash, const QString &name, const QString &value )
 {
-  if ( !value.isEmpty() ) {
-    hash.insert( name, value );
-  }
+    if ( !value.isEmpty() ) {
+        hash.insert( name, value );
+    }
 }
 #endif
 
 static QVariantHash memberHash( const KABC::ContactGroup::Data &data )
 {
-  QVariantHash memberObject;
+    QVariantHash memberObject;
 
-  setHashField( memberObject, QLatin1String( "name" ), data.name() );
-  setHashField( memberObject, QLatin1String( "email" ), data.email() );
+    setHashField( memberObject, QLatin1String( "name" ), data.name() );
+    setHashField( memberObject, QLatin1String( "email" ), data.email() );
 
-  KABC::Addressee contact;
-  contact.setFormattedName( data.name() );
-  contact.insertEmail( data.email() );
+    KABC::Addressee contact;
+    contact.setFormattedName( data.name() );
+    contact.insertEmail( data.email() );
 
-  const QString emailLink = QLatin1String( "<a href=\"mailto:" ) +
-                            QString::fromLatin1( KUrl::toPercentEncoding( contact.fullEmail() ) ) +
-                            QString::fromLatin1( "\">%1</a>" ).arg( contact.preferredEmail() );
+    const QString emailLink = QLatin1String( "<a href=\"mailto:" ) +
+            QString::fromLatin1( KUrl::toPercentEncoding( contact.fullEmail() ) ) +
+            QString::fromLatin1( "\">%1</a>" ).arg( contact.preferredEmail() );
 
-  setHashField( memberObject, QLatin1String( "emailLink" ), emailLink );
+    setHashField( memberObject, QLatin1String( "emailLink" ), emailLink );
 
-  return memberObject;
+    return memberObject;
 }
 
 QString GrantleeContactGroupFormatter::toHtml( HtmlForm form ) const
 {
-  if ( !d->mErrorMessage.isEmpty() ) {
-    return d->mErrorMessage;
-  }
-
-  KABC::ContactGroup group;
-  const Akonadi::Item localItem = item();
-  if ( localItem.isValid() && localItem.hasPayload<KABC::ContactGroup>() ) {
-    group = localItem.payload<KABC::ContactGroup>();
-  } else {
-    group = contactGroup();
-  }
-
-  if ( group.name().isEmpty() && group.count() == 0 ) { // empty group
-    return QString();
-  }
-
-  if ( group.contactReferenceCount() != 0 ) {
-    // we got a contact group with unresolved references -> we have to resolve
-    // it ourself.  this shouldn't be the normal case, actually the calling
-    // code should pass in an already resolved contact group
-    Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( group );
-    if ( job->exec() ) {
-      group.removeAllContactData();
-      foreach ( const KABC::Addressee &contact, job->contacts() ) {
-        group.append( KABC::ContactGroup::Data( contact.realName(), contact.preferredEmail() ) );
-      }
+    if ( !d->mErrorMessage.isEmpty() ) {
+        return d->mErrorMessage;
     }
-  }
 
-  QVariantHash contactGroupObject;
+    KABC::ContactGroup group;
+    const Akonadi::Item localItem = item();
+    if ( localItem.isValid() && localItem.hasPayload<KABC::ContactGroup>() ) {
+        group = localItem.payload<KABC::ContactGroup>();
+    } else {
+        group = contactGroup();
+    }
 
-  setHashField( contactGroupObject, QLatin1String( "name" ), group.name() );
+    if ( group.name().isEmpty() && group.count() == 0 ) { // empty group
+        return QString();
+    }
 
-  // Group members
-  QVariantList members;
-  for ( uint i = 0; i < group.dataCount(); ++i ) {
-    members << memberHash( group.data( i ) );
-  }
+    if ( group.contactReferenceCount() != 0 ) {
+        // we got a contact group with unresolved references -> we have to resolve
+        // it ourself.  this shouldn't be the normal case, actually the calling
+        // code should pass in an already resolved contact group
+        Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( group );
+        if ( job->exec() ) {
+            group.removeAllContactData();
+            foreach ( const KABC::Addressee &contact, job->contacts() ) {
+                group.append( KABC::ContactGroup::Data( contact.realName(), contact.preferredEmail() ) );
+            }
+        }
+    }
 
-  contactGroupObject.insert( QLatin1String( "members" ), members );
+    QVariantHash contactGroupObject;
 
-  // Additional fields
-  QVariantList fields;
-  foreach ( const QVariantMap &field, additionalFields() ) {
-    QVariantHash fieldObject;
-    setHashField( fieldObject, QLatin1String( "key" ),
-                  field.value( QLatin1String( "key" ) ).toString() );
+    setHashField( contactGroupObject, QLatin1String( "name" ), group.name() );
 
-    setHashField( fieldObject, QLatin1String( "title" ),
-                  field.value( QLatin1String( "title" ) ).toString() );
+    // Group members
+    QVariantList members;
+    for ( uint i = 0; i < group.dataCount(); ++i ) {
+        members << memberHash( group.data( i ) );
+    }
 
-    setHashField( fieldObject, QLatin1String( "value" ),
-                  field.value( QLatin1String( "value" ) ).toString() );
+    contactGroupObject.insert( QLatin1String( "members" ), members );
 
-    fields << fieldObject;
-  }
+    // Additional fields
+    QVariantList fields;
+    foreach ( const QVariantMap &field, additionalFields() ) {
+        QVariantHash fieldObject;
+        setHashField( fieldObject, QLatin1String( "key" ),
+                      field.value( QLatin1String( "key" ) ).toString() );
 
-  contactGroupObject.insert( QLatin1String( "additionalFields" ), fields );
+        setHashField( fieldObject, QLatin1String( "title" ),
+                      field.value( QLatin1String( "title" ) ).toString() );
 
-  QVariantHash colorsObject;
-  colorsObject.insert(
-    QLatin1String("linkColor"),
-    KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
+        setHashField( fieldObject, QLatin1String( "value" ),
+                      field.value( QLatin1String( "value" ) ).toString() );
 
-  colorsObject.insert(
-    QLatin1String("textColor"),
-    KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
+        fields << fieldObject;
+    }
 
-  colorsObject.insert(
-    QLatin1String("backgroundColor"),
-    KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() );
+    contactGroupObject.insert( QLatin1String( "additionalFields" ), fields );
 
-  QVariantHash mapping;
-  mapping.insert( QLatin1String("contactGroup"), contactGroupObject );
-  mapping.insert( QLatin1String("colors"), colorsObject );
+    QVariantHash colorsObject;
+    colorsObject.insert(
+                QLatin1String("linkColor"),
+                KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
 
-  Grantlee::Context context( mapping );
+    colorsObject.insert(
+                QLatin1String("textColor"),
+                KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() );
 
-  if ( form == SelfcontainedForm ) {
-    return d->mSelfcontainedTemplate->render( &context );
-  } else if ( form == EmbeddableForm ) {
-    return d->mEmbeddableTemplate->render( &context );
-  } else {
-    return QString();
-  }
+    colorsObject.insert(
+                QLatin1String("backgroundColor"),
+                KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() );
+
+    QVariantHash mapping;
+    mapping.insert( QLatin1String("contactGroup"), contactGroupObject );
+    mapping.insert( QLatin1String("colors"), colorsObject );
+
+    Grantlee::Context context( mapping );
+
+    if ( form == SelfcontainedForm ) {
+        return d->mSelfcontainedTemplate->render( &context );
+    } else if ( form == EmbeddableForm ) {
+        return d->mEmbeddableTemplate->render( &context );
+    } else {
+        return QString();
+    }
 }
