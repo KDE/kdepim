@@ -311,6 +311,7 @@ QString SearchRule::conditionToString(Function function)
 
 void SearchRule::generateSieveScript(QStringList &requires, QString &code)
 {
+    QString contentStr = mContents;
     if (mField == "<size>") {
         QString comparaison;
         int offset = 0;
@@ -407,6 +408,35 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             comparaison = QLatin1String(":regex");
             negative = true;
             break;
+        case FuncStartWith:
+            comparaison = QLatin1String(":regex");
+            if (!requires.contains(QLatin1String("regex")))
+                requires << QLatin1String("regex");
+            contentStr = QLatin1Char('^') + contentStr;
+            break;
+        case FuncNotStartWith:
+            comparaison = QLatin1String(":regex");
+            if (!requires.contains(QLatin1String("regex")))
+                requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            contentStr = QLatin1Char('^') + contentStr;
+            negative = true;
+            break;
+        case FuncEndWith:
+            comparaison = QLatin1String(":regex");
+            if (!requires.contains(QLatin1String("regex")))
+                requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            contentStr = contentStr + QLatin1Char('$');
+            break;
+        case FuncNotEndWith:
+            comparaison = QLatin1String(":regex");
+            if (!requires.contains(QLatin1String("regex")))
+                requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            contentStr = contentStr + QLatin1Char('$');
+            negative = true;
+            break;
         case FuncIsGreater:
         case FuncIsLessOrEqual:
         case FuncIsLess:
@@ -417,14 +447,10 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncIsNotInCategory:
         case FuncHasAttachment:
         case FuncHasNoAttachment:
-        case FuncStartWith:
-        case FuncNotStartWith:
-        case FuncEndWith:
-        case FuncNotEndWith:
             code += QLatin1Char('"') + i18n("\"%1\" is not supported with condition \"%2\"", QLatin1String(mField), conditionToString(mFunction)) + QLatin1Char('"');
             return;
         }
-        code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body :text %1 \"%2\"").arg(comparaison).arg(mContents);
+        code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("body :text %1 \"%2\"").arg(comparaison).arg(contentStr);
     } else {
         QString comparaison;
         bool negative = false;
@@ -456,6 +482,36 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
             comparaison = QLatin1String(":regex");
             negative = true;
             break;
+        case FuncStartWith:
+            comparaison = QLatin1String(":regex");
+            if (!requires.contains(QLatin1String("regex")))
+                requires << QLatin1String("regex");
+            contentStr = QLatin1Char('^') + contentStr;
+            break;
+        case FuncNotStartWith:
+            comparaison = QLatin1String(":regex");
+            if (!requires.contains(QLatin1String("regex")))
+                requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            contentStr = QLatin1Char('^') + contentStr;
+            negative = true;
+            break;
+        case FuncEndWith:
+            comparaison = QLatin1String(":regex");
+            if (!requires.contains(QLatin1String("regex")))
+                requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            contentStr = contentStr + QLatin1Char('$');
+            break;
+        case FuncNotEndWith:
+            comparaison = QLatin1String(":regex");
+            if (!requires.contains(QLatin1String("regex")))
+                requires << QLatin1String("regex");
+            comparaison = QLatin1String(":regex");
+            contentStr = contentStr + QLatin1Char('$');
+            negative = true;
+            break;
+
         case FuncIsGreater:
         case FuncIsLessOrEqual:
         case FuncIsLess:
@@ -466,14 +522,10 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
         case FuncIsNotInCategory:
         case FuncHasAttachment:
         case FuncHasNoAttachment:
-        case FuncStartWith:
-        case FuncNotStartWith:
-        case FuncEndWith:
-        case FuncNotEndWith:
             code += QLatin1Char('"') + i18n("\"%1\" is not supported with condition \"%2\"", QLatin1String(mField), conditionToString(mFunction)) + QLatin1Char('"');
             return;
         }
-        code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 \"%2\" \"%3\"").arg(comparaison).arg(QLatin1String(mField)).arg(mContents);
+        code += (negative ? QLatin1String("not ") : QString()) + QString::fromLatin1("header %1 \"%2\" \"%3\"").arg(comparaison).arg(QLatin1String(mField)).arg(contentStr);
     }
 }
 
