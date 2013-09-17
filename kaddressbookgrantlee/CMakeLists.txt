@@ -1,6 +1,7 @@
 project(kaddressbookgrantlee)
 
 include_directories(
+  ${Grantlee_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/grantleetheme 
 )
 
