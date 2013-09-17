@@ -140,6 +140,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDE4_KNEWSTUFF3_LIBS}
   pimcommon
   grantleetheme
+  kaddressbookgrantlee
 )
 
 include_directories(
