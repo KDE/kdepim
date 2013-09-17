@@ -25,9 +25,11 @@
 
 namespace Akonadi {
 class ContactViewer;
-class GrantleeContactFormatter;
 }
 
+namespace KAddressBookGrantlee {
+class GrantleeContactFormatter;
+}
 
 namespace MessageViewer {
 
@@ -50,7 +52,7 @@ private:
 
     KABC::Addressee::List mAddresseeList;
     KABC::Addressee::List::ConstIterator itAddresseeList;
-    Akonadi::GrantleeContactFormatter *mFormatter;
+    KAddressBookGrantlee::GrantleeContactFormatter *mFormatter;
 };
 
 }

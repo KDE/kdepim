@@ -49,11 +49,11 @@ ContactPreviewWidget::ContactPreviewWidget(const QString &projectDirectory, QWid
     lay->addWidget(mTabWidget);
     setLayout(lay);
 
-    mFormatter = new Akonadi::GrantleeContactFormatter;
+    mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
 
     mContactViewer->setContactFormatter( mFormatter );
 
-    mGroupFormatter = new Akonadi::GrantleeContactGroupFormatter;
+    mGroupFormatter = new KAddressBookGrantlee::GrantleeContactGroupFormatter;
 
     mGroupViewer->setContactGroupFormatter( mGroupFormatter );
 

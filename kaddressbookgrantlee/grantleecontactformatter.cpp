@@ -42,7 +42,7 @@
 
 static const KCatalogLoader loader( QLatin1String("libkaddressbookgrantlee") );
 
-using namespace Akonadi;
+using namespace KAddressBookGrantlee;
 
 class GrantleeContactFormatter::Private
 {

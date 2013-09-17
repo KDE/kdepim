@@ -39,8 +39,11 @@ namespace Akonadi {
   class Item;
   class ItemView;
   class StandardContactActionManager;
-  class GrantleeContactFormatter;
-  class GrantleeContactGroupFormatter;
+}
+
+namespace KAddressBookGrantlee {
+class GrantleeContactFormatter;
+class GrantleeContactGroupFormatter;
 }
 
 class ContactSwitcher;
@@ -130,8 +133,8 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     XXPortManager *mXXPortManager;
     ModelColumnManager *mModelColumnManager;
     KXMLGUIClient *mXmlGuiClient;
-    Akonadi::GrantleeContactFormatter *mFormatter;
-    Akonadi::GrantleeContactGroupFormatter *mGroupFormatter;
+    KAddressBookGrantlee::GrantleeContactFormatter *mFormatter;
+    KAddressBookGrantlee::GrantleeContactGroupFormatter *mGroupFormatter;
     GrantleeTheme::GrantleeThemeManager *mGrantleeThemeManager;
 };
 

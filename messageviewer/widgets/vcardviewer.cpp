@@ -54,7 +54,7 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
     setButtonGuiItem( User3, KGuiItem(i18n("&Previous Card")) );
     mContactViewer = new Akonadi::ContactViewer(this);
 
-    mFormatter = new Akonadi::GrantleeContactFormatter;
+    mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
 
     mContactViewer->setContactFormatter( mFormatter );
     //

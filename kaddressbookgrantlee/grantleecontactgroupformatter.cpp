@@ -38,7 +38,7 @@
 #include <KLocale>
 #include <KStringHandler>
 
-using namespace Akonadi;
+using namespace KAddressBookGrantlee;
 
 class GrantleeContactGroupFormatter::Private
 {
@@ -151,7 +151,7 @@ QString GrantleeContactGroupFormatter::toHtml( HtmlForm form ) const
     // we got a contact group with unresolved references -> we have to resolve
     // it ourself.  this shouldn't be the normal case, actually the calling
     // code should pass in an already resolved contact group
-    ContactGroupExpandJob *job = new ContactGroupExpandJob( group );
+    Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( group );
     if ( job->exec() ) {
       group.removeAllContactData();
       foreach ( const KABC::Addressee &contact, job->contacts() ) {

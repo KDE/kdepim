@@ -29,14 +29,14 @@ namespace GrantleeTheme {
 class Theme;
 }
 
-namespace Akonadi {
+namespace KAddressBookGrantlee {
 
 /**
  * @short A class that formats a contact as HTML code.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactFormatter : public AbstractContactFormatter
+class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactFormatter : public Akonadi::AbstractContactFormatter
 {
   public:
     /**

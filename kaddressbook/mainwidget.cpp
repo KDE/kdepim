@@ -487,11 +487,11 @@ void MainWidget::setupGui()
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
-  mFormatter = new Akonadi::GrantleeContactFormatter;
+  mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
 
   mContactDetails->setContactFormatter( mFormatter );
 
-  mGroupFormatter = new Akonadi::GrantleeContactGroupFormatter;
+  mGroupFormatter = new KAddressBookGrantlee::GrantleeContactGroupFormatter;
 
   mContactGroupDetails->setContactGroupFormatter( mGroupFormatter );
 }

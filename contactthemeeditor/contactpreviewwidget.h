@@ -27,6 +27,9 @@ class QTabWidget;
 namespace Akonadi {
 class ContactViewer;
 class ContactGroupViewer;
+}
+
+namespace KAddressBookGrantlee {
 class GrantleeContactFormatter;
 class GrantleeContactGroupFormatter;
 }
@@ -49,8 +52,8 @@ private:
     Akonadi::ContactViewer *mContactViewer;
     Akonadi::ContactGroupViewer *mGroupViewer;
 
-    Akonadi::GrantleeContactFormatter *mFormatter;
-    Akonadi::GrantleeContactGroupFormatter *mGroupFormatter;
+    KAddressBookGrantlee::GrantleeContactFormatter *mFormatter;
+    KAddressBookGrantlee::GrantleeContactGroupFormatter *mGroupFormatter;
 
     QTabWidget *mTabWidget;
 };
