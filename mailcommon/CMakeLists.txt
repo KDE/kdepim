@@ -110,6 +110,8 @@ set(libmailcommon_SRCS
   search/rulewidgethandlermanager.cpp
   search/searchpattern.cpp
   search/searchpatternedit.cpp
+  search/textrulerwidgethandler.cpp
+  search/statusrulewidgethandler.cpp
   mdn/sendmdnhandler.cpp
   snippets/snippetdialog.cpp
   snippets/snippetsmanager.cpp
