@@ -23,8 +23,7 @@
 #include "vcardviewer.h"
 #include "settings/globalsettings.h"
 #include "kaddressbookgrantlee/grantleecontactformatter.h"
-#include "grantleetheme/grantleethememanager.h"
-#include "grantleetheme/globalsettings_base.h"
+#include "kaddressbookgrantlee/grantleeutil.h"
 
 #include <akonadi/contact/contactviewer.h>
 
@@ -58,17 +57,7 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
 
     mContactViewer->setContactFormatter( mFormatter );
     //
-    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kaddressbookrc") );
-    GrantleeTheme::GrantleeSettings::self()->setSharedConfig(config);
-    GrantleeTheme::GrantleeSettings::self()->readConfig();
-    QString themeName = GrantleeTheme::GrantleeSettings::self()->grantleeThemeName();
-    if (themeName.isEmpty()) {
-        themeName = QLatin1String("default");
-    }
-
-
-    const QString absolutePath = GrantleeTheme::GrantleeThemeManager::pathFromThemes(QLatin1String("kaddressbook/viewertemplates/"), themeName, QString::fromLatin1( "theme.desktop" ));
-    mFormatter->setAbsoluteThemePath(absolutePath);
+    mFormatter->setAbsoluteThemePath(KAddressBookGrantlee::GrantleeUtil::kaddressBookAbsoluteThemePath());
     setMainWidget(mContactViewer);
 
     VCardConverter vcc;
