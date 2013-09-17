@@ -82,6 +82,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     ++row;
     lab = new QLabel(i18n("Version:"));
     mVersion = new KLineEdit;
+    mVersion->setClearButtonShown(true);
     mVersion->setText(QLatin1String("0.1"));
     lay->addWidget(lab, row,0);
     lay->addWidget(mVersion, row,1);
