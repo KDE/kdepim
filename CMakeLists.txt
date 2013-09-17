@@ -216,6 +216,10 @@ else()
   find_package(QJSON)
   set_package_properties(QJSON PROPERTIES DESCRIPTION "QJSON" URL "http://qjson.sourceforge.net/" TYPE REQUIRED PURPOSE "Qt library for handling JSON data")
 
+  find_package(Prison QUIET CONFIG)
+  set_package_properties(Prison PROPERTIES DESCRIPTION "The Prison library" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
+
+
 ############### Desktop vs. Mobile options ##############
 
   if(KDEPIM_MOBILE_UI)
@@ -322,6 +326,7 @@ else()
 
   macro_optional_add_subdirectory(pimactivity)
   macro_optional_add_subdirectory(korganizer)
+  add_subdirectory(kaddressbookgrantlee)
   if(KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(agents)
     macro_optional_add_subdirectory(akregator)
