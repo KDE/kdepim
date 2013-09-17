@@ -57,9 +57,11 @@ ContactPreviewWidget::ContactPreviewWidget(const QString &projectDirectory, QWid
 
     mGroupViewer->setContactGroupFormatter( mGroupFormatter );
 
-    mGroupFormatter->setAbsoluteThemePath(projectDirectory);
-    mFormatter->setAbsoluteThemePath(projectDirectory);
     loadConfig();
+    if (!projectDirectory.isEmpty()) {
+        mGroupFormatter->setAbsoluteThemePath(projectDirectory);
+        mFormatter->setAbsoluteThemePath(projectDirectory);
+    }
 }
 
 ContactPreviewWidget::~ContactPreviewWidget()
