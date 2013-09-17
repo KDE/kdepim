@@ -88,7 +88,8 @@ TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amod
   mDebug( false ), mQuoteString( QLatin1String("> ") ), m_identityManager( 0 ),
   mWrap( true ),
   mColWrap( 80 ),
-  mQuotes( ReplyAsOriginalMessage )
+  mQuotes( ReplyAsOriginalMessage ),
+  mForceCursorPosition(false)
 {
   mMsg = amsg;
 
@@ -277,6 +278,7 @@ void TemplateParser::process( const KMime::Message::Ptr &aorig_msg,
 void TemplateParser::process( const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
                               const Akonadi::Collection &afolder )
 {
+  mForceCursorPosition = false;
   mOrigMsg = aorig_msg;
   mFolder = afolder;
   const QString tmpl = findCustomTemplate( tmplName );
@@ -1144,6 +1146,7 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
           plainBody.append( QLatin1Char('\n') );
         }
         mMsg->setHeader( header );
+        mForceCursorPosition = true;
         //FIXME HTML part for header remaining
       } else if ( cmd.startsWith( QLatin1String( "SIGNATURE" ) ) ) {
         kDebug() << "Command: SIGNATURE";
@@ -1730,6 +1733,11 @@ QString TemplateParser::makeValidHtml( QString &body )
     body = QLatin1String("<html>") + body + QLatin1String("</html>");
   }
   return body;
+}
+
+bool TemplateParser::cursorPositionWasSet() const
+{
+    return mForceCursorPosition;
 }
 
 }
