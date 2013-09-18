@@ -119,6 +119,8 @@ void SearchRuleWidget::setPatternEditOptions( SearchPatternEdit::SearchPatternEd
 
   const bool headersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
   const bool notShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
+  const bool notShowDate = ( options & MailCommon::SearchPatternEdit::NotShowDate );
+  const bool absoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
 
   if ( headersOnly && ( currentText != "<message>") && ( currentText != "<body>" ) ) {
     mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
@@ -127,6 +129,18 @@ void SearchRuleWidget::setPatternEditOptions( SearchPatternEdit::SearchPatternEd
   }
 
   if ( notShowSize && ( currentText != "<size>") ) {
+    mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
+  } else {
+    mRuleField->setItemText( 0, QString() );
+  }
+
+  if ( notShowDate && ( currentText != "<date>") ) {
+    mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
+  } else {
+    mRuleField->setItemText( 0, QString() );
+  }
+
+  if ( !absoluteDates && ( currentText != "<age in days>") ) {
     mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
   } else {
     mRuleField->setItemText( 0, QString() );
@@ -342,6 +356,7 @@ void SearchRuleWidget::initFieldList( SearchPatternEdit::SearchPatternEditOption
   const bool headersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
   const bool absoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
   const bool notShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
+  const bool notShowDate = ( options & MailCommon::SearchPatternEdit::NotShowDate );
 
   mFilterFieldList.clear();
   mFilterFieldList.append( QString() ); // empty entry for user input
@@ -366,7 +381,9 @@ void SearchRuleWidget::initFieldList( SearchPatternEdit::SearchPatternEditOption
   mFilterFieldList.append( SpecialRuleFields[Tag].getLocalizedDisplayName() );
   mFilterFieldList.append( i18n( SpecialRuleFields[ReplyTo].displayName ) );
   mFilterFieldList.append( i18n( SpecialRuleFields[Organization].displayName ) );
-  mFilterFieldList.append( i18n( SpecialRuleFields[Date].displayName ) );
+
+  if (notShowDate)
+      mFilterFieldList.append( i18n( SpecialRuleFields[Date].displayName ) );
 
   // these others only represent message headers and you can add to
   // them as you like
