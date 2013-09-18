@@ -382,7 +382,7 @@ void SearchRuleWidget::initFieldList( SearchPatternEdit::SearchPatternEditOption
   mFilterFieldList.append( i18n( SpecialRuleFields[ReplyTo].displayName ) );
   mFilterFieldList.append( i18n( SpecialRuleFields[Organization].displayName ) );
 
-  if (notShowDate)
+  if ( !notShowDate )
       mFilterFieldList.append( i18n( SpecialRuleFields[Date].displayName ) );
 
   // these others only represent message headers and you can add to
