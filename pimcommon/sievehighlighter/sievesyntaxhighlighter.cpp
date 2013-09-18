@@ -97,6 +97,7 @@ void SieveSyntaxHighlighter::init()
     matchFormat.setForeground( Qt::red );
     QStringList matchType;
     matchType << QLatin1String( "\\s:quoteregex\\b" )
+              << QLatin1String( "\\s:text\\b" )
               << QLatin1String( "\\s:lower\\b" )
               << QLatin1String( "\\s:upper\\b" )
               << QLatin1String( "\\s:lowerfirst\\b" )
