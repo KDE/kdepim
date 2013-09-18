@@ -86,13 +86,13 @@ static const int SpecialRuleFieldsCount =
 //=============================================================================
 
 SearchRuleWidget::SearchRuleWidget( QWidget *parent, SearchRule::Ptr aRule,
-                                    bool headersOnly, bool absoluteDates, bool notShowSize )
+                                    SearchPatternEdit::SearchPatternEditOptions options )
   : QWidget( parent ),
     mRuleField( 0 ),
     mFunctionStack( 0 ),
     mValueStack( 0 )
 {
-  initFieldList( headersOnly, absoluteDates, notShowSize );
+  initFieldList( options );
   initWidget();
 
   if ( aRule ) {
@@ -102,12 +102,12 @@ SearchRuleWidget::SearchRuleWidget( QWidget *parent, SearchRule::Ptr aRule,
   }
 }
 
-void SearchRuleWidget::setPatternEditOptions( bool headersOnly, bool absoluteDates, bool notShowSize )
+void SearchRuleWidget::setPatternEditOptions( SearchPatternEdit::SearchPatternEditOptions options )
 {
   SearchRule::Ptr srule = rule();
   QByteArray currentText = srule->field();
 
-  initFieldList( headersOnly, absoluteDates, notShowSize );
+  initFieldList( options );
 
   mRuleField->clear();
   mRuleField->addItems( mFilterFieldList );
@@ -117,6 +117,11 @@ void SearchRuleWidget::setPatternEditOptions( bool headersOnly, bool absoluteDat
   mRuleField->setMaxCount( mRuleField->count() );
   mRuleField->adjustSize();
 
+  const bool headersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
+  const bool notShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
+  const bool notShowDate = ( options & MailCommon::SearchPatternEdit::NotShowDate );
+  const bool absoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
+
   if ( headersOnly && ( currentText != "<message>") && ( currentText != "<body>" ) ) {
     mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
   } else {
@@ -124,6 +129,18 @@ void SearchRuleWidget::setPatternEditOptions( bool headersOnly, bool absoluteDat
   }
 
   if ( notShowSize && ( currentText != "<size>") ) {
+    mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
+  } else {
+    mRuleField->setItemText( 0, QString() );
+  }
+
+  if ( notShowDate && ( currentText != "<date>") ) {
+    mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
+  } else {
+    mRuleField->setItemText( 0, QString() );
+  }
+
+  if ( !absoluteDates && ( currentText != "<age in days>") ) {
     mRuleField->setItemText( 0, QString::fromLatin1( currentText ) );
   } else {
     mRuleField->setItemText( 0, QString() );
@@ -334,8 +351,13 @@ int SearchRuleWidget::indexOfRuleField( const QByteArray &aName ) const
   return -1;
 }
 
-void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates, bool notShowSize )
+void SearchRuleWidget::initFieldList( SearchPatternEdit::SearchPatternEditOptions options )
 {
+  const bool headersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
+  const bool absoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
+  const bool notShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
+  const bool notShowDate = ( options & MailCommon::SearchPatternEdit::NotShowDate );
+
   mFilterFieldList.clear();
   mFilterFieldList.append( QString() ); // empty entry for user input
 
@@ -359,7 +381,9 @@ void SearchRuleWidget::initFieldList( bool headersOnly, bool absoluteDates, bool
   mFilterFieldList.append( SpecialRuleFields[Tag].getLocalizedDisplayName() );
   mFilterFieldList.append( i18n( SpecialRuleFields[ReplyTo].displayName ) );
   mFilterFieldList.append( i18n( SpecialRuleFields[Organization].displayName ) );
-  mFilterFieldList.append( i18n( SpecialRuleFields[Date].displayName ) );
+
+  if ( !notShowDate )
+      mFilterFieldList.append( i18n( SpecialRuleFields[Date].displayName ) );
 
   // these others only represent message headers and you can add to
   // them as you like
@@ -387,9 +411,7 @@ SearchRuleWidgetLister::SearchRuleWidgetLister( QWidget *parent, const char *, S
 {
   mRuleList = 0;
 
-  mHeadersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
-  mAbsoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
-  mNotShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
+  mOptions = options;
 }
 
 SearchRuleWidgetLister::~SearchRuleWidgetLister()
@@ -398,12 +420,9 @@ SearchRuleWidgetLister::~SearchRuleWidgetLister()
 
 void SearchRuleWidgetLister::setPatternEditOptions( SearchPatternEdit::SearchPatternEditOptions options )
 {
-    mHeadersOnly = ( options & MailCommon::SearchPatternEdit::HeadersOnly );
-    mAbsoluteDates = ( options & MailCommon::SearchPatternEdit::AbsoluteDate );
-    mNotShowSize = ( options & MailCommon::SearchPatternEdit::NotShowSize );
-
+    mOptions = options;
     foreach ( QWidget *w, widgets() ) {
-        qobject_cast<SearchRuleWidget*>( w )->setPatternEditOptions( mHeadersOnly, mAbsoluteDates, mNotShowSize );
+        qobject_cast<SearchRuleWidget*>( w )->setPatternEditOptions( options );
     }
 }
 
@@ -516,7 +535,7 @@ void SearchRuleWidgetLister::reset()
 QWidget *SearchRuleWidgetLister::createWidget( QWidget *parent )
 {
   SearchRuleWidget *w =
-    new SearchRuleWidget( parent, SearchRule::Ptr(), mHeadersOnly, mAbsoluteDates, mNotShowSize );
+    new SearchRuleWidget( parent, SearchRule::Ptr(), mOptions );
   reconnectWidget( w );
   return w;
 }

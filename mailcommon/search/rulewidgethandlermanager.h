@@ -37,7 +37,6 @@
 #include <QVector>
 
 class QObject;
-class QByteArray;
 class QString;
 class QStackedWidget;
 

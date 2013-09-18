@@ -233,6 +233,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     virtual QString getFName( const QString &str );
     virtual QString getLName( const QString &str );
 
+    bool cursorPositionWasSet() const;
   protected:
     Mode mMode;
     Akonadi::Collection mFolder;          //Used to find a template
@@ -253,6 +254,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     MessageViewer::EmptySource *mEmptySource;
     QString mHeadElement;
     Quotes mQuotes;
+    bool mForceCursorPosition;
 
     /**
      * Called by processWithTemplate(). This adds the completely processed body to
@@ -391,7 +393,7 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     /**
      * Make a HTML content valid by adding missing html/head/body tag.
      */
-    QString makeValidHtml( QString &body );
+    void makeValidHtml( QString &body );
 };
 
 }

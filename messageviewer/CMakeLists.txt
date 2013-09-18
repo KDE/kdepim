@@ -140,6 +140,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDE4_KNEWSTUFF3_LIBS}
   pimcommon
   grantleetheme
+  kaddressbookgrantlee
 )
 
 include_directories(
@@ -148,6 +149,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/pimcommon
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_SOURCE_DIR}/libkleo
+    ${CMAKE_SOURCE_DIR}/kaddressbookgrantlee
     ${Boost_INCLUDE_DIR}
     ${GPGME_INCLUDES}
 )

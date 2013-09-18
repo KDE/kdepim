@@ -39,129 +39,6 @@ namespace MailCommon {
 
 class SearchPatternEdit;
 
-  /**
- * A widget to edit a single MailCommon::SearchRule.
- * It consists of an editable KComboBox for the field,
- * a read-only KComboBox for the function and
- * a QLineEdit for the content or the pattern (in case of regexps).
- * It manages the i18n itself, so field name should be in it's english form.
- *
- * To use, you essentially give it the reference to a MailCommon::SearchRule and
- * it does the rest. It will never delete the rule itself, as it assumes
- *  that something outside of it manages this.
- *
- * @short A widget to edit a single MailCommon::SearchRule.
- * @author Marc Mutz <mutz@kde.org>
- */
-class SearchRuleWidget : public QWidget
-{
-  Q_OBJECT
-
-  public:
-    /**
-     * Constructor. You can give a MailCommon::SearchRule as parameter,
-     * which will be used to initialize the widget.
-     */
-    explicit SearchRuleWidget(QWidget *parent = 0,
-                               MailCommon::SearchRule::Ptr aRule = MailCommon::SearchRule::Ptr(),
-                               bool headersOnly = false,
-                               bool absoluteDates = false , bool notShowSize = false);
-
-    enum {
-      Message,
-      Body,
-      AnyHeader,
-      Recipients,
-      Size,
-      AgeInDays,
-      Status,
-      Tag,
-      Subject,
-      From,
-      To,
-      CC,
-      ReplyTo,
-      Organization,
-      Date
-    };
-
-    /**
-     * Sets the rule. The rule is accepted regardless of the return
-     * value of MailCommon::SearchRule::isEmpty. This widget makes a shallow
-     * copy of @p aRule and operates directly on it. If @p aRule is 0,
-     * resets itself, taks user input, but does essentially nothing.
-     * If you pass 0, you should probably disable it.
-     */
-    void setRule( MailCommon::SearchRule::Ptr aRule );
-
-    /**
-     * Returns a reference to the currently-worked-on MailCommon::SearchRule.
-     */
-    MailCommon::SearchRule::Ptr rule() const;
-
-    /**
-     * Resets the rule currently worked on and updates the widget accordingly.
-     */
-    void reset();
-
-    static int ruleFieldToId( const QString &i18nVal );
-
-    void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
-
-    void setPatternEditOptions( bool headersOnly, bool absoluteDates, bool notShowSize );
-
-  public slots:
-    void slotFunctionChanged();
-    void slotValueChanged();
-    void slotReturnPressed();
-
-  signals:
-    /**
-     * This signal is emitted whenever the user alters the field.
-     * The pseudo-headers <...> are returned in their i18n form, but
-     * stored in their English form in the rule.
-     */
-    void fieldChanged( const QString & );
-
-    /**
-     * This signal is emitted whenever the user alters the contents/value
-     * of the rule.
-     */
-    void contentsChanged( const QString & );
-
-    void returnPressed();
-
-    void addWidget( QWidget * );
-    void removeWidget( QWidget * );
-
-  protected:
-    /**
-     * Used internally to translate i18n-ized pseudo-headers back to English.
-     */
-    static QByteArray ruleFieldToEnglish( const QString &i18nVal );
-
-    /**
-     * Used internally to find the corresponding index into the field
-     * ComboBox. Returns the index if found or -1 if the search failed,
-     */
-    int indexOfRuleField( const QByteArray & aName ) const;
-
-  protected slots:
-    void slotRuleFieldChanged( const QString & );
-    void slotAddWidget();
-    void slotRemoveWidget();
-
-  private:
-    void initWidget();
-    void initFieldList(bool headersOnly, bool absoluteDates , bool notShowSize);
-
-    QStringList mFilterFieldList;
-    KComboBox *mRuleField;
-    QStackedWidget *mFunctionStack;
-    QStackedWidget *mValueStack;
-    KPushButton *mAdd;
-    KPushButton *mRemove;
-};
 
 
 
@@ -203,11 +80,12 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
 
   public:
     enum SearchPatternEditOption {
-      None = 0,
-      HeadersOnly = 1,
-      AbsoluteDate = 2,
-      MatchAllMessages = 4,
-      NotShowSize = 8
+        None = 0,
+        HeadersOnly = 1,
+        AbsoluteDate = 2,
+        MatchAllMessages = 4,
+        NotShowSize = 8,
+        NotShowDate = 16
     };
     Q_DECLARE_FLAGS( SearchPatternEditOptions, SearchPatternEditOption )
 
@@ -272,6 +150,130 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
     SearchRuleWidgetLister *mRuleLister;
 };
 
+/**
+* A widget to edit a single MailCommon::SearchRule.
+* It consists of an editable KComboBox for the field,
+* a read-only KComboBox for the function and
+* a QLineEdit for the content or the pattern (in case of regexps).
+* It manages the i18n itself, so field name should be in it's english form.
+*
+* To use, you essentially give it the reference to a MailCommon::SearchRule and
+* it does the rest. It will never delete the rule itself, as it assumes
+*  that something outside of it manages this.
+*
+* @short A widget to edit a single MailCommon::SearchRule.
+* @author Marc Mutz <mutz@kde.org>
+*/
+class SearchRuleWidget : public QWidget
+{
+Q_OBJECT
+
+public:
+  /**
+   * Constructor. You can give a MailCommon::SearchRule as parameter,
+   * which will be used to initialize the widget.
+   */
+  explicit SearchRuleWidget(QWidget *parent = 0,
+                             MailCommon::SearchRule::Ptr aRule = MailCommon::SearchRule::Ptr(),
+                             SearchPatternEdit::SearchPatternEditOptions options = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None));
+
+  enum {
+    Message,
+    Body,
+    AnyHeader,
+    Recipients,
+    Size,
+    AgeInDays,
+    Status,
+    Tag,
+    Subject,
+    From,
+    To,
+    CC,
+    ReplyTo,
+    Organization,
+    Date
+  };
+
+  /**
+   * Sets the rule. The rule is accepted regardless of the return
+   * value of MailCommon::SearchRule::isEmpty. This widget makes a shallow
+   * copy of @p aRule and operates directly on it. If @p aRule is 0,
+   * resets itself, taks user input, but does essentially nothing.
+   * If you pass 0, you should probably disable it.
+   */
+  void setRule( MailCommon::SearchRule::Ptr aRule );
+
+  /**
+   * Returns a reference to the currently-worked-on MailCommon::SearchRule.
+   */
+  MailCommon::SearchRule::Ptr rule() const;
+
+  /**
+   * Resets the rule currently worked on and updates the widget accordingly.
+   */
+  void reset();
+
+  static int ruleFieldToId( const QString &i18nVal );
+
+  void updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled );
+
+  void setPatternEditOptions(MailCommon::SearchPatternEdit::SearchPatternEditOptions options);
+
+public slots:
+  void slotFunctionChanged();
+  void slotValueChanged();
+  void slotReturnPressed();
+
+signals:
+  /**
+   * This signal is emitted whenever the user alters the field.
+   * The pseudo-headers <...> are returned in their i18n form, but
+   * stored in their English form in the rule.
+   */
+  void fieldChanged( const QString & );
+
+  /**
+   * This signal is emitted whenever the user alters the contents/value
+   * of the rule.
+   */
+  void contentsChanged( const QString & );
+
+  void returnPressed();
+
+  void addWidget( QWidget * );
+  void removeWidget( QWidget * );
+
+protected:
+  /**
+   * Used internally to translate i18n-ized pseudo-headers back to English.
+   */
+  static QByteArray ruleFieldToEnglish( const QString &i18nVal );
+
+  /**
+   * Used internally to find the corresponding index into the field
+   * ComboBox. Returns the index if found or -1 if the search failed,
+   */
+  int indexOfRuleField( const QByteArray & aName ) const;
+
+protected slots:
+  void slotRuleFieldChanged( const QString & );
+  void slotAddWidget();
+  void slotRemoveWidget();
+
+private:
+  void initWidget();
+  void initFieldList(MailCommon::SearchPatternEdit::SearchPatternEditOptions options);
+
+  QStringList mFilterFieldList;
+  KComboBox *mRuleField;
+  QStackedWidget *mFunctionStack;
+  QStackedWidget *mValueStack;
+  KPushButton *mAdd;
+  KPushButton *mRemove;
+};
+
+
 class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
 {
   Q_OBJECT
@@ -303,9 +305,7 @@ class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
     void updateAddRemoveButton();
     void regenerateRuleListFromWidgets();
     QList<MailCommon::SearchRule::Ptr> *mRuleList;
-    bool mHeadersOnly;
-    bool mAbsoluteDates;
-    bool mNotShowSize;
+    SearchPatternEdit::SearchPatternEditOptions mOptions;
 };
 
 

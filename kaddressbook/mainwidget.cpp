@@ -27,8 +27,8 @@
 #include "settings.h"
 #include "xxportmanager.h"
 
-#include "grantlee/grantleecontactformatter.h"
-#include "grantlee/grantleecontactgroupformatter.h"
+#include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
+#include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
 #include "grantleetheme/grantleethememanager.h"
 #include "grantleetheme/globalsettings_base.h"
 
@@ -487,11 +487,11 @@ void MainWidget::setupGui()
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
   actions->connectToView( mContactGroupDetails );
-  mFormatter = new Akonadi::GrantleeContactFormatter;
+  mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
 
   mContactDetails->setContactFormatter( mFormatter );
 
-  mGroupFormatter = new Akonadi::GrantleeContactGroupFormatter;
+  mGroupFormatter = new KAddressBookGrantlee::GrantleeContactGroupFormatter;
 
   mContactGroupDetails->setContactGroupFormatter( mGroupFormatter );
 }

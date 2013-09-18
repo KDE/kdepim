@@ -18,11 +18,13 @@
 #include "sieveactionsetvariable.h"
 #include "widgets/selectvariablemodifiercombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 #include <KLocale>
 #include <KLineEdit>
 
 #include <QHBoxLayout>
+#include <QCheckBox>
 #include <QLabel>
 #include <QDomNode>
 #include <QDebug>
@@ -31,6 +33,7 @@ using namespace KSieveUi;
 SieveActionSetVariable::SieveActionSetVariable(QObject *parent)
     : SieveAction(QLatin1String("set"), i18n("Variable"), parent)
 {
+    mHasRegexCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("regex"));
 }
 
 SieveAction* SieveActionSetVariable::newAction()
@@ -49,19 +52,25 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
     modifier->setObjectName(QLatin1String("modifier"));
     grid->addWidget(modifier, 0, 0);
 
+    if (mHasRegexCapability) {
+        QCheckBox *protectAgainstUseRegexp = new QCheckBox(i18n("Protect special character"));
+        protectAgainstUseRegexp->setObjectName(QLatin1String("regexprotect"));
+        grid->addWidget(protectAgainstUseRegexp, 0, 1);
+    }
+
     QLabel *lab = new QLabel(i18n("Value:"));
-    grid->addWidget(lab, 0, 1);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
     value->setObjectName(QLatin1String("value"));
-    grid->addWidget(value, 0, 2);
+    grid->addWidget(value, 1, 1);
 
     lab = new QLabel(i18n("In variable:"));
-    grid->addWidget(lab, 1, 1);
+    grid->addWidget(lab, 2, 0);
 
     KLineEdit *variable = new KLineEdit;
     variable->setObjectName(QLatin1String("variable"));
-    grid->addWidget(variable, 1, 2);
+    grid->addWidget(variable, 2, 1);
 
     return w;
 }
@@ -89,8 +98,18 @@ bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWi
                     return false;
                 }
             } else if (tagName == QLatin1String("tag")) {
-                SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
-                modifier->setCode(AutoCreateScriptUtil::tagValue(e.text()), name(), error);
+                const QString tagValue = e.text();
+                if (tagValue == QLatin1String("quoteregex")) {
+                    if (mHasRegexCapability) {
+                        QCheckBox *protectAgainstUseRegexp = w->findChild<QCheckBox*>(QLatin1String("regexprotect"));
+                        protectAgainstUseRegexp->setChecked(true);
+                    } else {
+                        error += QLatin1Char('\n') + i18n("Script needs regex support, but server does not have it.");
+                    }
+                } else {
+                    SelectVariableModifierComboBox *modifier = w->findChild<SelectVariableModifierComboBox*>(QLatin1String("modifier"));
+                    modifier->setCode(AutoCreateScriptUtil::tagValue(tagValue), name(), error);
+                }
             } else if (tagName == QLatin1String("crlf")) {
                 //nothing
             } else if (tagName == QLatin1String("comment")) {
@@ -113,6 +132,14 @@ QString SieveActionSetVariable::code(QWidget *w) const
     if (!modifierStr.isEmpty()) {
         result += modifierStr + QLatin1Char(' ');
     }
+
+    if (mHasRegexCapability) {
+        const QCheckBox *protectAgainstUseRegexp = w->findChild<QCheckBox*>(QLatin1String("regexprotect"));
+        if (protectAgainstUseRegexp->isChecked()) {
+            result += QLatin1String(":quoteregex ");
+        }
+    }
+
     const KLineEdit *value = w->findChild<KLineEdit*>(QLatin1String("value"));
     const QString valueStr = value->text();
     result += QString::fromLatin1("\"%1\" ").arg(valueStr);
@@ -142,7 +169,12 @@ QString SieveActionSetVariable::serverNeedsCapability() const
 
 QString SieveActionSetVariable::help() const
 {
-    return i18n("The \"set\" action stores the specified value in the variable identified by name.");
+    QString helpStr = i18n("The \"set\" action stores the specified value in the variable identified by name.");
+    if (mHasRegexCapability) {
+        helpStr += QLatin1Char('\n') + i18n("This modifier adds the necessary quoting to ensure that the expanded text will only match a literal occurrence if used as a parameter"
+                                            "to :regex.  Every character with special meaning (. , *, ? , etc.) is prefixed with \\ in the expansion");
+    }
+    return helpStr;
 }
 
 #include "sieveactionsetvariable.moc"

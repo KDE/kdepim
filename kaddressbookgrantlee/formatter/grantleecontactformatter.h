@@ -29,16 +29,16 @@ namespace GrantleeTheme {
 class Theme;
 }
 
-namespace Akonadi {
+namespace KAddressBookGrantlee {
 
 /**
  * @short A class that formats a contact as HTML code.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactFormatter : public AbstractContactFormatter
+class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactFormatter : public Akonadi::AbstractContactFormatter
 {
-  public:
+public:
     /**
      * Creates a new grantlee contact formatter.
      */
@@ -59,7 +59,7 @@ class KADDRESSBOOK_GRANTLEE_EXPORT GrantleeContactFormatter : public AbstractCon
      */
     virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const;
 
-  private:
+private:
     //@cond PRIVATE
     class Private;
     Private *const d;

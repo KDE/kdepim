@@ -1,6 +1,7 @@
 project(kaddressbookgrantlee)
 
 include_directories(
+  ${Grantlee_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/grantleetheme 
 )
 
@@ -16,8 +17,10 @@ if(Prison_FOUND)
 endif()
 
 set(kaddressbook_grantlee_LIB_SRCS
-  grantleecontactformatter.cpp
-  grantleecontactgroupformatter.cpp
+  widget/grantleecontactviewer.cpp
+  formatter/grantleecontactformatter.cpp
+  formatter/grantleecontactgroupformatter.cpp
+  grantleeutil.cpp
 )
 
 kde4_add_library(kaddressbookgrantlee ${LIBRARY_TYPE} ${kaddressbook_grantlee_LIB_SRCS})

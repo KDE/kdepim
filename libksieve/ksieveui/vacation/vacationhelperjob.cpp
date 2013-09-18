@@ -30,6 +30,11 @@ VacationHelperJob::VacationHelperJob(const QString &accountName, QObject *parent
 
 VacationHelperJob::~VacationHelperJob()
 {
+    killJob();
+}
+
+void VacationHelperJob::killJob()
+{
     if ( mSieveJob ) {
         mSieveJob->kill();
         mSieveJob = 0;
@@ -38,10 +43,7 @@ VacationHelperJob::~VacationHelperJob()
 
 void VacationHelperJob::searchActiveJob()
 {
-    if (mSieveJob) {
-        mSieveJob->kill();
-        mSieveJob = 0;
-    }
+    killJob();
 
     const KUrl url = KSieveUi::Util::findSieveUrlForAccount( mAccountName );
     if ( !url.isValid() ) {

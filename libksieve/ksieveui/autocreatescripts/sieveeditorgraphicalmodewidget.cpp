@@ -18,6 +18,7 @@
 
 #include "sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
+#include "ksieveui/editor/sieveeditorparsingmissingfeaturewarning.h"
 #include "sievescriptlistbox.h"
 #include "scriptsparsing/parsingutil.h"
 
@@ -56,6 +57,12 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
 
     mStackWidget = new QStackedWidget;
     mSplitter->addWidget(mStackWidget);
+
+
+    mSieveParsingWarning = new SieveEditorParsingMissingFeatureWarning(SieveEditorParsingMissingFeatureWarning::GraphicEditor);
+    connect(mSieveParsingWarning, SIGNAL(switchToTextMode()), SLOT(slotSwitchToTextMode()));
+    vlay->addWidget(mSieveParsingWarning);
+
     setLayout(vlay);
     readConfig();
 }
@@ -132,14 +139,13 @@ void SieveEditorGraphicalModeWidget::setImportScript( const QString &script )
 {
     bool result = false;
     const QDomDocument doc = ParsingUtil::parseScript(script, result);
+    mSieveParsingWarning->animatedHide();
     if (result) {
         QString error;
         loadScript(doc, error);
         if (!error.isEmpty()) {
-            QPointer<SieveScriptParsingErrorDialog> dlg = new SieveScriptParsingErrorDialog(this);
-            dlg->setError(script, error);
-            dlg->exec();
-            delete dlg;
+            mSieveParsingWarning->setErrors(script, error);
+            mSieveParsingWarning->animatedShow();
         }
     } else {
         if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Error during importing script. Do you want to switch in text mode ?"))) {
@@ -147,6 +153,11 @@ void SieveEditorGraphicalModeWidget::setImportScript( const QString &script )
         }
         qDebug()<<" cannot import script";
     }
+}
+
+void SieveEditorGraphicalModeWidget::slotSwitchToTextMode()
+{
+    switchTextMode(mSieveParsingWarning->initialScript());
 }
 
 #include "sieveeditorgraphicalmodewidget.moc"

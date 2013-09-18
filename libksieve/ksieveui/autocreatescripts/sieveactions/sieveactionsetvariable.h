@@ -33,6 +33,9 @@ public:
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
     QWidget *createParamWidget( QWidget *parent ) const;
+
+private:
+    bool mHasRegexCapability;
 };
 }
 

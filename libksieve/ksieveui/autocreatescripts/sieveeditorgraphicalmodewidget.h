@@ -28,6 +28,7 @@ class QDomDocument;
 
 namespace KSieveUi {
 class SieveScriptListBox;
+class SieveEditorParsingMissingFeatureWarning;
 class SieveEditorGraphicalModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
@@ -54,6 +55,7 @@ private:
     void writeConfig();
 
 private Q_SLOTS:
+    void slotSwitchToTextMode();
     void slotAddScriptPage(QWidget *page);
     void slotRemoveScriptPage(QWidget *page);
     void slotActivateScriptPage(QWidget *page);
@@ -63,7 +65,7 @@ private:
     SieveScriptListBox *mSieveScript;
     QStackedWidget *mStackWidget;
     QSplitter *mSplitter;
-
+    SieveEditorParsingMissingFeatureWarning *mSieveParsingWarning;
 };
 }
 

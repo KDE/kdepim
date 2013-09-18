@@ -20,8 +20,8 @@
 
 #include <KABC/VCardConverter>
 
-#include "kaddressbook/grantlee/grantleecontactformatter.h"
-#include "kaddressbook/grantlee/grantleecontactgroupformatter.h"
+#include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
+#include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
 
 #include <Akonadi/Contact/ContactGroupViewer>
 #include <Akonadi/Contact/ContactViewer>
@@ -49,17 +49,19 @@ ContactPreviewWidget::ContactPreviewWidget(const QString &projectDirectory, QWid
     lay->addWidget(mTabWidget);
     setLayout(lay);
 
-    mFormatter = new Akonadi::GrantleeContactFormatter;
+    mFormatter = new KAddressBookGrantlee::GrantleeContactFormatter;
 
     mContactViewer->setContactFormatter( mFormatter );
 
-    mGroupFormatter = new Akonadi::GrantleeContactGroupFormatter;
+    mGroupFormatter = new KAddressBookGrantlee::GrantleeContactGroupFormatter;
 
     mGroupViewer->setContactGroupFormatter( mGroupFormatter );
 
-    mGroupFormatter->setAbsoluteThemePath(projectDirectory);
-    mFormatter->setAbsoluteThemePath(projectDirectory);
     loadConfig();
+    if (!projectDirectory.isEmpty()) {
+        mGroupFormatter->setAbsoluteThemePath(projectDirectory);
+        mFormatter->setAbsoluteThemePath(projectDirectory);
+    }
 }
 
 ContactPreviewWidget::~ContactPreviewWidget()

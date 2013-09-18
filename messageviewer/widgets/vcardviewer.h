@@ -25,9 +25,11 @@
 
 namespace Akonadi {
 class ContactViewer;
-class GrantleeContactFormatter;
 }
 
+namespace KAddressBookGrantlee {
+class GrantleeContactViewer;
+}
 
 namespace MessageViewer {
 
@@ -46,13 +48,10 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    Akonadi::ContactViewer *mContactViewer;
+    KAddressBookGrantlee::GrantleeContactViewer *mContactViewer;
 
     KABC::Addressee::List mAddresseeList;
     KABC::Addressee::List::ConstIterator itAddresseeList;
-#if 0
-    Akonadi::GrantleeContactFormatter *mFormatter;
-#endif
 };
 
 }
