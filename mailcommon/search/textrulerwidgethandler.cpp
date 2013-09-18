@@ -34,12 +34,6 @@ using MailCommon::RegExpLineEdit;
 #include <KLocale>
 #include <QLabel>
 
-//=============================================================================
-//
-// class TextRuleWidgetHandler
-//
-//=============================================================================
-
 // also see SearchRule::matches() and SearchRule::Function
 // if you change the following strings!
 static const struct {
