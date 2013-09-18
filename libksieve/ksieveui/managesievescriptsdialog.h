@@ -76,6 +76,7 @@ private slots:
     void slotItemChanged(QTreeWidgetItem*, int);
 
 private:
+    bool isProtectedName(const QString &name);
     bool serverHasError(QTreeWidgetItem *item) const;
     void killAllJobs();
     void changeActiveScript( QTreeWidgetItem *, bool activate = true );

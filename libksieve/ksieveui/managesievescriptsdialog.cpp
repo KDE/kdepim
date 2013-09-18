@@ -451,6 +451,17 @@ void ManageSieveScriptsDialog::slotEditScript()
              this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
+
+bool ManageSieveScriptsDialog::isProtectedName(const QString &name)
+{
+    if (name == QLatin1String("master") ||
+            name == QLatin1String("user") ||
+            name == QLatin1String("management")) {
+        return true;
+    }
+    return false;
+}
+
 void ManageSieveScriptsDialog::slotNewScript()
 {
     QTreeWidgetItem *currentItem = mListView->currentItem();
@@ -474,6 +485,11 @@ void ManageSieveScriptsDialog::slotNewScript()
                                                 i18n( "unnamed" ), &ok, this );
     if ( !ok || name.isEmpty() )
         return;
+
+    if (isProtectedName(name.toLower())) {
+        KMessageBox::error(this, i18n("You can not use protected name."), i18n("New Script"));
+        return;
+    }
 
     u.setFileName( name );
 
