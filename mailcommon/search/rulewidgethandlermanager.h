@@ -49,19 +49,19 @@ class RuleWidgetHandler;
  */
 class RuleWidgetHandlerManager
 {
-  static RuleWidgetHandlerManager * self;
+    static RuleWidgetHandlerManager * self;
 
-  RuleWidgetHandlerManager();
+    RuleWidgetHandlerManager();
 
-  public:
+public:
     ~RuleWidgetHandlerManager();
 
     static RuleWidgetHandlerManager *instance()
     {
-      if ( !self ) {
-        self = new RuleWidgetHandlerManager();
-      }
-      return self;
+        if ( !self ) {
+            self = new RuleWidgetHandlerManager();
+        }
+        return self;
     }
 
     void registerHandler( const RuleWidgetHandler *handler );
@@ -72,7 +72,7 @@ class RuleWidgetHandlerManager
                         const QObject *receiver ) const;
 
     MailCommon::SearchRule::Function function( const QByteArray & field,
-                                     const QStackedWidget *functionStack ) const;
+                                               const QStackedWidget *functionStack ) const;
 
     QString value( const QByteArray &field,
                    const QStackedWidget *functionStack,
@@ -97,7 +97,7 @@ class RuleWidgetHandlerManager
                  QStackedWidget *functionStack,
                  QStackedWidget *valueStack ) const;
 
-  private:
+private:
     typedef QVector<const RuleWidgetHandler*>::const_iterator const_iterator;
     typedef QVector<const RuleWidgetHandler*>::iterator iterator;
 
