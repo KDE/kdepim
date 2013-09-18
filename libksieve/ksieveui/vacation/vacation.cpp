@@ -22,7 +22,6 @@
 #include <akonadi/agentinstance.h>
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kimap/loginjob.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_header_parsing.h>
@@ -31,8 +30,6 @@
 #include <ksieve/error.h>
 #include <ksieve/parser.h>
 #include <ksieve/scriptbuilder.h>
-
-#include <QtCore/QByteArray>
 
 #include <cassert>
 #include <limits.h>
@@ -418,11 +415,10 @@ private:
 
 using namespace KSieveUi;
 
-Vacation::Vacation( QObject * parent, bool checkOnly, const char * name )
+Vacation::Vacation(QObject * parent, bool checkOnly)
     : QObject( parent ), mSieveJob( 0 ), mDialog( 0 ), mWasActive( false ),
       mCheckOnly( checkOnly )
 {
-    setObjectName( QString::fromLatin1(name) );
     mUrl = findURL();
     kDebug() << "Vacation: found url \"" << mUrl.prettyUrl() <<"\"";
     if ( mUrl.isEmpty() ) // nothing to do...

@@ -44,7 +44,7 @@ class KSIEVEUI_EXPORT Vacation : public QObject
     Q_OBJECT
 
 public:
-    explicit Vacation( QObject * parent=0, bool checkonly = false, const char * name=0 );
+    explicit Vacation( QObject * parent=0, bool checkonly = false );
     virtual ~Vacation();
 
     bool isUsable() const { return !mUrl.isEmpty(); }
