@@ -271,15 +271,16 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob *job, bool suc
     if ( !parent )
         return;
     (static_cast<SieveTreeWidgetItem*>(parent))->stopAnimation();
-    if (success)
-        parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
+
     mJobs.remove( job );
 
     mListView->expandItem( parent );
 
     mBlockSignal = false;
-    if ( success )
+    if ( success ) {
+        parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
         return;
+    }
 
     parent->setData( 0, SIEVE_SERVER_ERROR, true );
     QTreeWidgetItem * item =
