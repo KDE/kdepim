@@ -279,6 +279,7 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob *job, bool suc
     mBlockSignal = false;
     if ( success ) {
         parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
+        parent->setData( 0, SIEVE_SERVER_ERROR, false );
         return;
     }
 
