@@ -622,10 +622,4 @@ void ManageSieveScriptsDialog::disableManagerScriptsDialog(bool disable)
     setDisabled(disable);
 }
 
-void ManageSieveScriptsDialog::checkEditorMode()
-{
-    //TODO implement it.
-}
-
-
 #include "managesievescriptsdialog.moc"

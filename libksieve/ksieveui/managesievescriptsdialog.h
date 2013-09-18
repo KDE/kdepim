@@ -104,11 +104,11 @@ private:
     void disableManagerScriptsDialog(bool disable);
 
 private:
-    void checkEditorMode();
     enum sieveServerStatus
     {
         SIEVE_SERVER_ERROR = Qt::UserRole +1,
-        SIEVE_SERVER_CAPABILITIES = Qt::UserRole +2
+        SIEVE_SERVER_CAPABILITIES = Qt::UserRole +2,
+        SIEVE_SERVER_MODE = Qt::UserRole +3
     };
 
     ManageSieveTreeView* mListView;
