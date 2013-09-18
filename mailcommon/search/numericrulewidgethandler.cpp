@@ -16,24 +16,15 @@
 */
 
 #include "numericrulewidgethandler.h"
+#include "search/searchpattern.h"
 
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KDebug>
 #include <KIntNumInput>
-
-#include <QLineEdit>
-#include <QObject>
-#include <QStackedWidget>
-
-#include "search/searchpattern.h"
-#include "widgets/regexplineedit.h"
-using MailCommon::RegExpLineEdit;
-
 #include <KLocale>
-#include <QLabel>
 
-
+#include <QStackedWidget>
 
 using namespace MailCommon;
 

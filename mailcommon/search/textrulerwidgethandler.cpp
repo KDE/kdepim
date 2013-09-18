@@ -18,20 +18,21 @@
 #include "textrulerwidgethandler.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
+#include "search/searchpattern.h"
+#include "widgets/regexplineedit.h"
+using MailCommon::RegExpLineEdit;
+
 #include <KDebug>
+#include <KLocale>
 
 #include <QLineEdit>
-#include <QObject>
 #include <QStackedWidget>
 
 
 using namespace MailCommon;
 
-#include "search/searchpattern.h"
-#include "widgets/regexplineedit.h"
-using MailCommon::RegExpLineEdit;
 
-#include <KLocale>
+
 #include <QLabel>
 
 // also see SearchRule::matches() and SearchRule::Function

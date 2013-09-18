@@ -16,21 +16,16 @@
 */
 
 #include "messagerulewidgethandler.h"
-
-#include <pimcommon/widgets/minimumcombobox.h>
-
-#include <KDebug>
-
-#include <QLineEdit>
-#include <QObject>
-#include <QStackedWidget>
-
-
 #include "search/searchpattern.h"
 #include "widgets/regexplineedit.h"
 using MailCommon::RegExpLineEdit;
 
+#include <pimcommon/widgets/minimumcombobox.h>
+
+#include <KDebug>
 #include <KLocale>
+
+#include <QStackedWidget>
 #include <QLabel>
 
 

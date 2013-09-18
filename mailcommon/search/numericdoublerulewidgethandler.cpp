@@ -17,22 +17,19 @@
 
 #include "numericdoublerulewidgethandler.h"
 #include <pimcommon/widgets/minimumcombobox.h>
-
-#include <KDebug>
-
-#include <KDoubleNumInput>
-#include <QObject>
-#include <QStackedWidget>
-
-
-using namespace MailCommon;
-
 #include "search/searchpattern.h"
 #include "widgets/regexplineedit.h"
 using MailCommon::RegExpLineEdit;
 
+
+#include <KDebug>
 #include <KLocale>
-#include <QLabel>
+
+#include <KDoubleNumInput>
+#include <QStackedWidget>
+
+
+using namespace MailCommon;
 
 static const struct {
     SearchRule::Function id;

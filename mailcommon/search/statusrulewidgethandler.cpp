@@ -22,8 +22,6 @@
 #include <KDebug>
 #include <KIconLoader>
 
-#include <QLineEdit>
-#include <QObject>
 #include <QStackedWidget>
 
 using namespace MailCommon;

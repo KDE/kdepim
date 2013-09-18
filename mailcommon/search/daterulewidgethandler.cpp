@@ -16,21 +16,18 @@
 */
 
 #include "daterulewidgethandler.h"
+#include "search/searchpattern.h"
 
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include <KDebug>
-
 #include <KDateComboBox>
+#include <KLocale>
+
 #include <QObject>
 #include <QStackedWidget>
 
-#include "search/searchpattern.h"
-#include "widgets/regexplineedit.h"
-using MailCommon::RegExpLineEdit;
 
-#include <KLocale>
-#include <QLabel>
 
 
 

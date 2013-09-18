@@ -16,26 +16,21 @@
 */
 
 #include "tagrulewidgethandler.h"
-
-#include <pimcommon/widgets/minimumcombobox.h>
-
-#include <KDebug>
-
-#include <QLineEdit>
-#include <QObject>
-#include <QStackedWidget>
-
-#include <Nepomuk2/Tag>
-#include <KIcon>
-
 #include "search/searchpattern.h"
 #include "widgets/regexplineedit.h"
 using MailCommon::RegExpLineEdit;
 
+#include <pimcommon/widgets/minimumcombobox.h>
+
+#include <KDebug>
+#include <KIcon>
 #include <KLocale>
-#include <QLabel>
+
+#include <Nepomuk2/Tag>
 
 
+#include <QLineEdit>
+#include <QStackedWidget>
 
 using namespace MailCommon;
 
