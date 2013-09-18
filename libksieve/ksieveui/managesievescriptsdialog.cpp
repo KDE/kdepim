@@ -280,6 +280,7 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob *job, bool suc
     if ( success ) {
         parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
         parent->setData( 0, SIEVE_SERVER_ERROR, false );
+        parent->setData( 0, SIEVE_SERVER_MODE, job->sieveCapabilities().contains(QLatin1String("include")) ? Kep14EditorMode : NormalEditorMode);
         return;
     }
 
