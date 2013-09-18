@@ -367,6 +367,9 @@ void SearchRule::generateSieveScript(QStringList &requires, QString &code)
     } else if (mField == "<age in days>") {
         //TODO ?
         code += QLatin1Char('"') + i18n("<age in days> not implemented/supported") + QLatin1Char('"');
+    } else if (mField == "<date>") {
+        //TODO ?
+        code += QLatin1Char('"') + i18n("<date> not implemented/supported") + QLatin1Char('"');
     } else if (mField == "<recipients>") {
         //TODO ?
         code += QLatin1Char('"') + i18n("<recipients> not implemented/supported") + QLatin1Char('"');

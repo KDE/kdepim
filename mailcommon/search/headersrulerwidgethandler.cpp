@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "textrulerwidgethandler.h"
+#include "headersrulerwidgethandler.h"
 #include <pimcommon/widgets/minimumcombobox.h>
 
 #include "search/searchpattern.h"
@@ -27,20 +27,16 @@ using MailCommon::RegExpLineEdit;
 
 #include <QLineEdit>
 #include <QStackedWidget>
-
+#include <QLabel>
 
 using namespace MailCommon;
-
-
-
-#include <QLabel>
 
 // also see SearchRule::matches() and SearchRule::Function
 // if you change the following strings!
 static const struct {
     SearchRule::Function id;
     const char *displayName;
-} TextFunctions[] = {
+} HeaderFunctions[] = {
     { SearchRule::FuncContains,           I18N_NOOP( "contains" )          },
     { SearchRule::FuncContainsNot,        I18N_NOOP( "does not contain" )   },
     { SearchRule::FuncEquals,             I18N_NOOP( "equals" )            },
@@ -51,22 +47,16 @@ static const struct {
     { SearchRule::FuncNotEndWith,         I18N_NOOP( "does not end with" )  },
 
     { SearchRule::FuncRegExp,             I18N_NOOP( "matches regular expr." ) },
-    { SearchRule::FuncNotRegExp,          I18N_NOOP( "does not match reg. expr." ) }
-    #if 0
-    ,
+    { SearchRule::FuncNotRegExp,          I18N_NOOP( "does not match reg. expr." ) },
     { SearchRule::FuncIsInAddressbook,    I18N_NOOP( "is in address book" ) },
     { SearchRule::FuncIsNotInAddressbook, I18N_NOOP( "is not in address book" ) }
-    ,
-    { SearchRule::FuncIsInCategory,       I18N_NOOP( "is in category" ) },
-    { SearchRule::FuncIsNotInCategory,    I18N_NOOP( "is not in category" ) }
-    #endif
 };
-static const int TextFunctionCount =
-        sizeof( TextFunctions ) / sizeof( *TextFunctions );
+static const int HeadersFunctionCount =
+        sizeof( HeaderFunctions ) / sizeof( *HeaderFunctions );
 
 //---------------------------------------------------------------------------
 
-QWidget *TextRuleWidgetHandler::createFunctionWidget(
+QWidget *HeadersRuleWidgetHandler::createFunctionWidget(
         int number, QStackedWidget *functionStack, const QObject *receiver ) const
 {
     if ( number != 0 ) {
@@ -74,9 +64,9 @@ QWidget *TextRuleWidgetHandler::createFunctionWidget(
     }
 
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox( functionStack );
-    funcCombo->setObjectName( QLatin1String("textRuleFuncCombo") );
-    for ( int i = 0; i < TextFunctionCount; ++i ) {
-        funcCombo->addItem( i18n( TextFunctions[i].displayName ) );
+    funcCombo->setObjectName( QLatin1String("headerRuleFuncCombo") );
+    for ( int i = 0; i < HeadersFunctionCount; ++i ) {
+        funcCombo->addItem( i18n( HeaderFunctions[i].displayName ) );
     }
     funcCombo->adjustSize();
     QObject::connect( funcCombo, SIGNAL(activated(int)),
@@ -86,7 +76,7 @@ QWidget *TextRuleWidgetHandler::createFunctionWidget(
 
 //---------------------------------------------------------------------------
 
-QWidget *TextRuleWidgetHandler::createValueWidget( int number,
+QWidget *HeadersRuleWidgetHandler::createValueWidget( int number,
                                                    QStackedWidget *valueStack,
                                                    const QObject *receiver ) const
 {
@@ -103,42 +93,23 @@ QWidget *TextRuleWidgetHandler::createValueWidget( int number,
     // blank QLabel to hide value widget for in-address-book rule
     if ( number == 1 ) {
         QLabel *label = new QLabel( valueStack );
-        label->setObjectName( QLatin1String("textRuleValueHider") );
+        label->setObjectName( QLatin1String("headerRuleValueHider") );
         label->setBuddy( valueStack );
         return label;
     }
-#if 0
-
-    //FIXME: review what is this about, why is nepomuk used
-
-    if ( number == 2 ) {
-        PimCommon::MinimumComboBox *combo =  new PimCommon::MinimumComboBox( valueStack );
-        combo->setObjectName( QLatin1String("categoryCombo") );
-        foreach ( const Nepomuk2::Tag &tag, Nepomuk2::Tag::allTags() ) {
-            if ( tag.genericIcon().isEmpty() ) {
-                combo->addItem( tag.label(), tag.uri() );
-            } else {
-                combo->addItem( KIcon( tag.genericIcon() ), tag.label(), tag.uri() );
-            }
-        }
-        QObject::connect( combo, SIGNAL(activated(int)),
-                          receiver, SLOT(slotValueChanged()) );
-        return combo;
-    }
-#endif
     return 0;
 }
 
 //---------------------------------------------------------------------------
 
-SearchRule::Function TextRuleWidgetHandler::currentFunction(
+SearchRule::Function HeadersRuleWidgetHandler::currentFunction(
         const QStackedWidget *functionStack ) const
 {
     const PimCommon::MinimumComboBox *funcCombo =
-            functionStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String( "textRuleFuncCombo" ) );
+            functionStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String( "headerRuleFuncCombo" ) );
 
     if ( funcCombo && funcCombo->currentIndex() >= 0 ) {
-        return TextFunctions[funcCombo->currentIndex()].id;
+        return HeaderFunctions[funcCombo->currentIndex()].id;
     }
 
     return SearchRule::FuncNone;
@@ -146,31 +117,19 @@ SearchRule::Function TextRuleWidgetHandler::currentFunction(
 
 //---------------------------------------------------------------------------
 
-SearchRule::Function TextRuleWidgetHandler::function( const QByteArray &,
+SearchRule::Function HeadersRuleWidgetHandler::function( const QByteArray &field,
                                                       const QStackedWidget *functionStack ) const
 {
+    if ( !handlesField( field ) ) {
+        return SearchRule::FuncNone;
+    }
     return currentFunction( functionStack );
 }
 
 //---------------------------------------------------------------------------
-
-QString TextRuleWidgetHandler::currentValue( const QStackedWidget *valueStack,
+QString HeadersRuleWidgetHandler::currentValue( const QStackedWidget *valueStack,
                                              SearchRule::Function func ) const
 {
-#if 0
-    // here we gotta check the combobox which contains the categories
-    if ( func  == SearchRule::FuncIsInCategory ||
-         func  == SearchRule::FuncIsNotInCategory ) {
-        const PimCommon::MinimumComboBox *combo = valueStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("categoryCombo") );
-
-        if ( combo ) {
-            return combo->currentText();
-        } else {
-            return QString();
-        }
-    }
-#endif
-
     //in other cases of func it is a lineedit
     const RegExpLineEdit *lineEdit = valueStack->findChild<RegExpLineEdit*>( QLatin1String("regExpLineEdit") );
 
@@ -184,10 +143,13 @@ QString TextRuleWidgetHandler::currentValue( const QStackedWidget *valueStack,
 
 //---------------------------------------------------------------------------
 
-QString TextRuleWidgetHandler::value( const QByteArray &,
+QString HeadersRuleWidgetHandler::value( const QByteArray &field,
                                       const QStackedWidget *functionStack,
                                       const QStackedWidget *valueStack ) const
 {
+    if ( !handlesField( field ) ) {
+        return QString();
+    }
     SearchRule::Function func = currentFunction( functionStack );
     if ( func == SearchRule::FuncIsInAddressbook ) {
         return "is in address book"; // just a non-empty dummy value
@@ -200,10 +162,14 @@ QString TextRuleWidgetHandler::value( const QByteArray &,
 
 //---------------------------------------------------------------------------
 
-QString TextRuleWidgetHandler::prettyValue( const QByteArray &,
+QString HeadersRuleWidgetHandler::prettyValue( const QByteArray & field,
                                             const QStackedWidget *functionStack,
                                             const QStackedWidget *valueStack ) const
 {
+    if ( !handlesField( field ) ) {
+        return QString();
+    }
+
     SearchRule::Function func = currentFunction( functionStack );
 
     if ( func == SearchRule::FuncIsInAddressbook ) {
@@ -217,18 +183,18 @@ QString TextRuleWidgetHandler::prettyValue( const QByteArray &,
 
 //---------------------------------------------------------------------------
 
-bool TextRuleWidgetHandler::handlesField( const QByteArray & ) const
+bool HeadersRuleWidgetHandler::handlesField( const QByteArray &field ) const
 {
-    return true; // we handle all fields (as fallback)
+    return ( field == "To" || field == "From" || field == "CC" );
 }
 
 //---------------------------------------------------------------------------
 
-void TextRuleWidgetHandler::reset( QStackedWidget *functionStack,
+void HeadersRuleWidgetHandler::reset( QStackedWidget *functionStack,
                                    QStackedWidget *valueStack ) const
 {
     // reset the function combo box
-    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("textRuleFuncCombo") );
+    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("headerRuleFuncCombo") );
 
     if ( funcCombo ) {
         funcCombo->blockSignals( true );
@@ -246,41 +212,32 @@ void TextRuleWidgetHandler::reset( QStackedWidget *functionStack,
         valueStack->setCurrentWidget( lineEdit );
     }
 
-#if 0
-    PimCommon::MinimumComboBox *combo = valueStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("categoryCombo") );
-
-    if ( combo ) {
-        combo->blockSignals( true );
-        combo->setCurrentIndex( 0 );
-        combo->blockSignals( false );
-    }
-#endif
 }
 
 //---------------------------------------------------------------------------
 
-bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
+bool HeadersRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                      QStackedWidget *valueStack,
                                      const SearchRule::Ptr rule ) const
 {
-    if ( !rule ) {
+    if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );
         return false;
     }
 
     const SearchRule::Function func = rule->function();
     int i = 0;
-    for ( ; i < TextFunctionCount; ++i ) {
-        if ( func == TextFunctions[i].id ) {
+    for ( ; i < HeadersFunctionCount; ++i ) {
+        if ( func == HeaderFunctions[i].id ) {
             break;
         }
     }
 
-    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("textRuleFuncCombo") );
+    PimCommon::MinimumComboBox *funcCombo = functionStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("headerRuleFuncCombo") );
 
     if ( funcCombo ) {
         funcCombo->blockSignals( true );
-        if ( i < TextFunctionCount ) {
+        if ( i < HeadersFunctionCount ) {
             funcCombo->setCurrentIndex( i );
         } else {
             funcCombo->setCurrentIndex( 0 );
@@ -291,30 +248,9 @@ bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
 
     if ( func == SearchRule::FuncIsInAddressbook ||
          func == SearchRule::FuncIsNotInAddressbook ) {
-        QWidget *w = valueStack->findChild<QWidget*>( QLatin1String("textRuleValueHider") );
+        QWidget *w = valueStack->findChild<QWidget*>( QLatin1String("headerRuleValueHider") );
         valueStack->setCurrentWidget( w );
     }
-#if 0
-    else if ( func == SearchRule::FuncIsInCategory ||
-              func == SearchRule::FuncIsNotInCategory ) {
-        PimCommon::MinimumComboBox *combo = valueStack->findChild<PimCommon::MinimumComboBox*>( QLatin1String("categoryCombo") );
-
-        combo->blockSignals( true );
-        const int numberOfElement( combo->count() );
-        for ( i = 0; i < numberOfElement; ++i ) {
-            if ( rule->contents() == combo->itemText( i ) ) {
-                combo->setCurrentIndex( i );
-                break;
-            }
-        }
-
-        if ( i == combo->count() ) {
-            combo->setCurrentIndex( 0 );
-        }
-        combo->blockSignals( false );
-        valueStack->setCurrentWidget( combo );
-    }
-#endif
     else {
         RegExpLineEdit *lineEdit =
                 valueStack->findChild<RegExpLineEdit*>( QLatin1String("regExpLineEdit") );
@@ -333,25 +269,23 @@ bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
 
 //---------------------------------------------------------------------------
 
-bool TextRuleWidgetHandler::update( const QByteArray &,
+bool HeadersRuleWidgetHandler::update( const QByteArray &field,
                                     QStackedWidget *functionStack,
                                     QStackedWidget *valueStack ) const
 {
+    if ( !handlesField( field ) ) {
+        return false;
+    }
+
     // raise the correct function widget
-    functionStack->setCurrentWidget( functionStack->findChild<QWidget*>( QLatin1String("textRuleFuncCombo") ) );
+    functionStack->setCurrentWidget( functionStack->findChild<QWidget*>( QLatin1String("headerRuleFuncCombo") ) );
 
     // raise the correct value widget
     SearchRule::Function func = currentFunction( functionStack );
     if ( func == SearchRule::FuncIsInAddressbook ||
          func == SearchRule::FuncIsNotInAddressbook ) {
-        valueStack->setCurrentWidget( valueStack->findChild<QWidget*>( QLatin1String("textRuleValueHider") ) );
+        valueStack->setCurrentWidget( valueStack->findChild<QWidget*>( QLatin1String("headerRuleValueHider") ) );
     }
-#if 0
-    else if ( func == SearchRule::FuncIsInCategory ||
-              func == SearchRule::FuncIsNotInCategory ) {
-        valueStack->setCurrentWidget( valueStack->findChild<QWidget*>( QLatin1String("categoryCombo") ) );
-    }
-#endif
     else {
         RegExpLineEdit *lineEdit =
                 valueStack->findChild<RegExpLineEdit*>( QLatin1String("regExpLineEdit") );

@@ -36,6 +36,7 @@
 #include "tagrulewidgethandler.h"
 #include "daterulewidgethandler.h"
 #include "numericdoublerulewidgethandler.h"
+#include "headersrulerwidgethandler.h"
 #include "interfaces/rulewidgethandler.h"
 
 #include <messageviewer/viewer/stl_util.h>
@@ -65,6 +66,7 @@ MailCommon::RuleWidgetHandlerManager::RuleWidgetHandlerManager()
     registerHandler( new MailCommon::StatusRuleWidgetHandler() );
     registerHandler( new MailCommon::MessageRuleWidgetHandler() );
     registerHandler( new MailCommon::NumericDoubleRuleWidgetHandler() );
+    registerHandler( new MailCommon::HeadersRuleWidgetHandler() );
     // the TextRuleWidgetHandler is the fallback handler, so it has to be added
     // as last handler
     registerHandler( new MailCommon::TextRuleWidgetHandler() );
