@@ -1911,7 +1911,11 @@ void KMFolderImap::setStatus(QValueList<int>& _ids, KMMsgStatus status, bool tog
    * \SEEN \FLAGGED while the others need to get just \SEEN. Build sets for each
    * of those and sort them, so the server can handle them efficiently. */
 
-  if ( mReadOnly ) { // mUserRights is not available here
+  if ( mReadOnly || mPermanentFlags == 1 ) { // mUserRights is not available here
+    /* For our flags implementation mPermanentFlags == 1 is equal to read only
+     * as we are only allowed to modify the \SEEN flag. Cyrus for example
+     * reports Access = Read/Write even when only setting the \SEEN flag is
+     * allowed. */
     // FIXME duplicated code in KMFolderCachedImap
     QValueList<ulong> seenUids, unseenUids;
     for ( QValueList<int>::ConstIterator it = ids.constBegin(); it != ids.constEnd(); ++it ) {
