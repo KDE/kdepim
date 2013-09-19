@@ -146,13 +146,7 @@ QString TextRuleWidgetHandler::value( const QByteArray &,
                                       const QStackedWidget *valueStack ) const
 {
     SearchRule::Function func = currentFunction( functionStack );
-    if ( func == SearchRule::FuncIsInAddressbook ) {
-        return "is in address book"; // just a non-empty dummy value
-    } else if ( func == SearchRule::FuncIsNotInAddressbook ) {
-        return "is not in address book"; // just a non-empty dummy value
-    } else {
-        return currentValue( valueStack, func );
-    }
+    return currentValue( valueStack, func );
 }
 
 //---------------------------------------------------------------------------
@@ -161,15 +155,8 @@ QString TextRuleWidgetHandler::prettyValue( const QByteArray &,
                                             const QStackedWidget *functionStack,
                                             const QStackedWidget *valueStack ) const
 {
-    SearchRule::Function func = currentFunction( functionStack );
-
-    if ( func == SearchRule::FuncIsInAddressbook ) {
-        return i18n( "is in address book" );
-    } else if ( func == SearchRule::FuncIsNotInAddressbook ) {
-        return i18n( "is not in address book" );
-    } else {
-        return currentValue( valueStack, func );
-    }
+    SearchRule::Function func = currentFunction( functionStack );    
+    return currentValue( valueStack, func );
 }
 
 //---------------------------------------------------------------------------
@@ -235,24 +222,16 @@ bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
         funcCombo->blockSignals( false );
         functionStack->setCurrentWidget( funcCombo );
     }
+    RegExpLineEdit *lineEdit =
+            valueStack->findChild<RegExpLineEdit*>( QLatin1String("regExpLineEdit") );
 
-    if ( func == SearchRule::FuncIsInAddressbook ||
-         func == SearchRule::FuncIsNotInAddressbook ) {
-        QWidget *w = valueStack->findChild<QWidget*>( QLatin1String("textRuleValueHider") );
-        valueStack->setCurrentWidget( w );
-    }
-    else {
-        RegExpLineEdit *lineEdit =
-                valueStack->findChild<RegExpLineEdit*>( QLatin1String("regExpLineEdit") );
-
-        if ( lineEdit ) {
-            lineEdit->blockSignals( true );
-            lineEdit->setText( rule->contents() );
-            lineEdit->blockSignals( false );
-            lineEdit->showEditButton( func == SearchRule::FuncRegExp ||
-                                      func == SearchRule::FuncNotRegExp );
-            valueStack->setCurrentWidget( lineEdit );
-        }
+    if ( lineEdit ) {
+        lineEdit->blockSignals( true );
+        lineEdit->setText( rule->contents() );
+        lineEdit->blockSignals( false );
+        lineEdit->showEditButton( func == SearchRule::FuncRegExp ||
+                                  func == SearchRule::FuncNotRegExp );
+        valueStack->setCurrentWidget( lineEdit );
     }
     return true;
 }
