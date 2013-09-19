@@ -15,33 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILTERCONVERTTOSIEVERESULTDIALOG_H
-#define FILTERCONVERTTOSIEVERESULTDIALOG_H
+#ifndef PLAINTEXTEDITORWIDGET_H
+#define PLAINTEXTEDITORWIDGET_H
 
-#include <KDialog>
+#include "pimcommon_export.h"
+
+#include <QPlainTextEdit>
 
 namespace PimCommon {
-class PlainTextEditorWidget;
-}
-
-namespace MailCommon {
-class FilterConvertToSieveResultDialog : public KDialog
+class PlainTextEditor;
+class PlainTextEditFindBar;
+class PIMCOMMON_EXPORT PlainTextEditorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FilterConvertToSieveResultDialog(QWidget *parent=0);
-    ~FilterConvertToSieveResultDialog();
+    explicit PlainTextEditorWidget(QWidget *parent=0);
+    ~PlainTextEditorWidget();
 
-    void setCode(const QString &code);
+    PlainTextEditor *editor() { return mEditor; }
 
 private Q_SLOTS:
-    void slotSave();
+    void slotFind();
 
 private:
-    void readConfig();
-    void writeConfig();
-    PimCommon::PlainTextEditorWidget *mEditor;
+    PimCommon::PlainTextEditFindBar *mFindBar;
+    PlainTextEditor *mEditor;
 };
 }
 
-#endif // FILTERCONVERTTOSIEVERESULTDIALOG_H
+#endif // PLAINTEXTEDITORWIDGET_H
