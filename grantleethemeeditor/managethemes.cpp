@@ -73,11 +73,9 @@ ManageThemes::~ManageThemes()
 void ManageThemes::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "ManageThemesDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(300, 150) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize(300, 150);
     }
 }
 
