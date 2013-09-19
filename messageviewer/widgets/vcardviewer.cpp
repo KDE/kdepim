@@ -84,11 +84,9 @@ VCardViewer::~VCardViewer()
 void VCardViewer::readConfig()
 {
     KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "VCardViewer" );
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(300, 400) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 300, 400 );
     }
 }
 

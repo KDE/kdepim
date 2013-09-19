@@ -59,11 +59,9 @@ SelectedCollectionDialog::~SelectedCollectionDialog()
 void SelectedCollectionDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SelectedCollectionDialog" );
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 600, 400 );
     }
 }
 

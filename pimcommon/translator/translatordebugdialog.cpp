@@ -52,11 +52,9 @@ void TranslatorDebugDialog::setDebug(const QString &debugStr)
 void TranslatorDebugDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "TranslatorDebugDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize( 800,600);
     }
 }
 

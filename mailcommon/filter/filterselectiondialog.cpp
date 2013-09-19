@@ -87,11 +87,9 @@ void FilterSelectionDialog::writeConfig()
 void FilterSelectionDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "FilterSelectionDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(300, 350) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize( 300, 350 );
     }
 }
 

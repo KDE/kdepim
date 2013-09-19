@@ -143,11 +143,9 @@ void SieveEditor::writeConfig()
 void SieveEditor::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SieveEditor" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize( 800,600);
     }
 }
 

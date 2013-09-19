@@ -101,11 +101,9 @@ void SieveTemplateEditDialog::writeConfig()
 void SieveTemplateEditDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "SieveTemplateEditDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize(600,400);
     }
 }
 

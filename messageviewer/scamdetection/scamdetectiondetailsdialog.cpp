@@ -83,11 +83,9 @@ void ScamDetectionDetailsDialog::setDetails(const QString &details)
 void ScamDetectionDetailsDialog::readConfig()
 {
     KConfigGroup group( MessageViewer::GlobalSettings::self()->config(), "ScamDetectionDetailsDialog" );
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 600, 400 );
     }
 }
 

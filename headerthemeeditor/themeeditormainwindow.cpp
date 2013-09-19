@@ -63,11 +63,9 @@ void ThemeEditorMainWindow::readConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = KConfigGroup( config, "ThemeEditorMainWindow" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize( 600,400);
     }
 }
 
