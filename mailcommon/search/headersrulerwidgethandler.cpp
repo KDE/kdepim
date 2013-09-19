@@ -185,7 +185,7 @@ QString HeadersRuleWidgetHandler::prettyValue( const QByteArray & field,
 
 bool HeadersRuleWidgetHandler::handlesField( const QByteArray &field ) const
 {
-    return ( field == "To" || field == "From" || field == "CC" );
+    return ( field == "To" || field == "From" || field == "CC" || field == "<recipients>");
 }
 
 //---------------------------------------------------------------------------
