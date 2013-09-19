@@ -84,7 +84,7 @@ performs a menu item function, the default shortcut is listed with the menu item
 <guisubmenu>New</guisubmenu>
 <guimenuitem>Add Folder...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Create a new folder</action></para></listitem>
+<listitem><para><action>Create a new folder.</action></para></listitem>
 </varlistentry>
 <varlistentry id="reader-new-addressbook-contact">
 <term><menuchoice>
@@ -343,10 +343,10 @@ If the selected messages are already in the trash folder, they will be permanent
   <listitem><para><guilabel>Message Sort Order</guilabel> has several options, most are self explanatory.
 The following options may not be immediately obvious, therefore deserve an explanation.</para>
   <itemizedlist>
-    <listitem><para><guilabel>Smart Sender/Receiver</guilabel> will display the sender when you are reading in your outbox folder/template folder, and display the receiver when you are in your inbox/inbox subfolders.</para></listitem>
+    <listitem><para><guilabel>By Smart Sender/Receiver</guilabel> will display the sender when you are reading in your outbox folder/template folder, and display the receiver when you are in your inbox/inbox subfolders.</para></listitem>
     <listitem><para><guilabel>By Action Item Status</guilabel> and <guilabel>By Important Status</guilabel> need to be set before they can be sorted. Please see <link linkend="reader-mark-messages">Mark Messages</link> for more information on marking your messages.</para></listitem>
   </itemizedlist></listitem>
-  <listitem><para><guilabel>Message Sort Direction</guilabel> and <guilabel>Group Sort Direction</guilabel> allow you to change the direction of your message/group sort respectively.</para></listitem>
+  <listitem><para><guilabel>Message Sort Direction</guilabel> and <guilabel>Group Sort Direction</guilabel> allow you to change the direction of your messages/groups sort respectively.</para></listitem>
   <listitem><para><guilabel>Folder always Uses this Sort Order</guilabel> allows you to keep your sort settings per folder.</para></listitem>
 </itemizedlist></listitem>
 </varlistentry>
@@ -397,7 +397,7 @@ The following options may not be immediately obvious, therefore deserve an expla
 <guimenuitem>Attachments</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Changes the way attachments appear in the <guilabel>Message Preview Pane</guilabel></action>
-(independent of the &MIME; Tree) Please see <link linkend="using-attachment-view-options">Attachment Options</link> for details on attachments.</para></listitem>
+(independent of the &MIME; Tree). Please see <link linkend="using-attachment-view-options">Attachment Options</link> for details on attachments.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-view-expand-thread-or-group">
 <term><menuchoice>
@@ -891,11 +891,11 @@ Please see next section for details.</para></note></listitem>
 <para>The following options are available to mailing list folders:</para>
 <itemizedlist>
   <listitem><para><guimenuitem>Post New Message(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with the address configured in Post to List.</para></listitem>
-  <listitem><para><guimenuitem>Request Help(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with the address configured in Post to List and help in the <guilabel>Subject:</guilabel> field.</para></listitem>
+  <listitem><para><guimenuitem>Request Help(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with the address configured in Post to List and <literal>help</literal> word in the <guilabel>Subject:</guilabel> field.</para></listitem>
   <listitem><para><guimenuitem>Subscribe to List(web)</guimenuitem> will open your default web browser to the subscribe website of the configured mailing list.</para></listitem>
-  <listitem><para><guimenuitem>Subscribe to List(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with the mailing list subscription address and subscribe in the <guilabel>Subject:</guilabel> field.</para></listitem>
-  <listitem><para><guimenuitem>Unsubscribe to List(web)</guimenuitem> will open your default web browser to the unsubscribe website of the configured mailing list.</para></listitem>
-  <listitem><para><guimenuitem>Unsubscribe to List(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with the mailing list subscription address and unsubscribe in the <guilabel>Subject:</guilabel> field.</para></listitem>
+  <listitem><para><guimenuitem>Subscribe to List(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with the mailing list subscription address and <literal>subscribe</literal> word in the <guilabel>Subject:</guilabel> field.</para></listitem>
+  <listitem><para><guimenuitem>Unsubscribe from List(web)</guimenuitem> will open your default web browser to the unsubscribe website of the configured mailing list.</para></listitem>
+  <listitem><para><guimenuitem>Unsubscribe from List(email)</guimenuitem> will presets the <guilabel>To:</guilabel> with the mailing list subscription address and <literal>unsubscribe</literal> word in the <guilabel>Subject:</guilabel> field.</para></listitem>
 </itemizedlist></listitem>
 </varlistentry>
 <varlistentry id="reader-message-copy-message-to">
@@ -910,7 +910,7 @@ Please see next section for details.</para></note></listitem>
 <guimenu>Message</guimenu>
 <guisubmenu>Move Message To</guisubmenu>
 </menuchoice></term>
-<listitem><para>The same as copy message to, except you <action>permanently move the selected messages to a specified folder.</action>.</para></listitem>
+<listitem><para>The same as copy message to, except you <action>permanently move the selected messages to a specified folder.</action></para></listitem>
 </varlistentry>
 <varlistentry id="reader-mark-messages">
 <term><menuchoice>
@@ -1033,7 +1033,7 @@ Please see next section for details.</para></note></listitem>
   <imageobject>
     <imagedata fileref="mail-thread-watch.png" format="PNG"/></imageobject>
 </inlinemediaobject></entry>
-<entry>Set the watched thread status, which allows you to easily view threads your interested in by selecting Watched in the status sort bar.</entry></row>
+<entry>Set the watched thread status, which allows you to easily view threads your interested in by selecting <guimenu>Watched</guimenu> status in the drop down box found into Quick Search Bar.</entry></row>
 <row>
 <entry><guimenuitem>Ignore Thread</guimenuitem></entry>
 <entry><inlinemediaobject>
@@ -1063,7 +1063,7 @@ Please see next section for details.</para></note></listitem>
 <guimenuitem>Apply Filter</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Allows you to <guimenuitem>Apply all Filters</guimenuitem>.</action> If you have spam filtering set up through
- <link linkend="the-anti-spam-wizard">Anti-Spam Wizard</link> the options <guimenuitem>Filter Classify as Spam</guimenuitem> and <guimenuitem>Filter Classify as NOT Spam</guimenuitem> will be available for spam filtering.</para></listitem>
+ <link linkend="the-anti-spam-wizard">Anti-Spam Wizard</link> the options <guimenuitem>Classify as Spam</guimenuitem> and <guimenuitem>Classify as NOT Spam</guimenuitem> will be available for spam filtering.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-message-create-to-do-reminder">
 <term><menuchoice>

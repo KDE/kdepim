@@ -75,11 +75,11 @@ and try them out until you find one you like! Details for the various headers ar
   <listitem><para><guilabel>Brief Headers</guilabel> Title, and in parentheses you will find From and the date.</para></listitem>
   <listitem><para><guilabel>Standard Headers</guilabel> Title, From, and To.</para></listitem>
   <listitem><para><guilabel>Long Headers</guilabel> Title, Date, From, and To.</para></listitem>
-  <listitem><para><guilabel>All Headers</guilabel> List everything you ever wanted to know about the email, including every server it went through, virus/spam scanners it went through &etc;</para></listitem>
+  <listitem><para><guilabel>All Headers</guilabel> List everything you ever wanted to know about the email, including every server it went through, virus/spam scanners it went through, &etc;</para></listitem>
   <listitem><para><guilabel>Custom Headers</guilabel> See <link linkend="configure-appearance-message-window">Message Window configuration</link> <guilabel>Headers:</guilabel> to set up custom headers that can be selected here.</para></listitem>
-  <listitem><para><guilabel>Example</guilabel> An example header from the <guilabel>Download New Themes</guilabel>.</para></listitem>
-  <listitem><para><guilabel>Example Fancy</guilabel> An example fancy header from the <guilabel>Download New Themes</guilabel>.</para></listitem>
-  <listitem><para><guilabel>Download New Themes</guilabel> Allows you to download custom themes created by other &kmail; users.</para></listitem>
+  <listitem><para><guilabel>Example</guilabel> An example header from the <guilabel>Download New Themes...</guilabel>.</para></listitem>
+  <listitem><para><guilabel>Example Fancy</guilabel> An example fancy header from the <guilabel>Download New Themes...</guilabel>.</para></listitem>
+  <listitem><para><guilabel>Download New Themes...</guilabel> Allows you to download custom themes created by other &kmail; users.</para></listitem>
 </itemizedlist>
 <para>If you prefer to view your email in &HTML; format instead of plain text (Default) click on the bar located on the left hand side of the pane.
 The text on the bar will inform you which view you are in. If this bar is missing you can enable it in the settings dialog, from there you want the <guilabel>Message Window</guilabel>
@@ -95,7 +95,7 @@ Your options are as follows:</para>
   Attachments that cannot be displayed, &eg; compressed files, will still be shown as an icon.</para></listitem>
   <listitem><para><guimenuitem>Hide</guimenuitem> will not show attachments.</para></listitem>
 </itemizedlist>
-<para>For complex messages you can show the structure of the message of the message by selecting
+<para>For complex messages you can show the structure of the message by selecting
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Message Structure</guimenuitem></menuchoice>, this will show in the message structure viewer below the preview pane.</para>
 <para>You can scroll through the message page-by-page using the <keycap>Page Up</keycap> and <keycap>Page Down</keycap> keys, or line-by-line using the
 <keycap>Up arrow</keycap> and <keycap>Down arrow</keycap> keys; you can also use <link linkend="keyboard-shortcuts">keyboard shortcuts</link>
@@ -1796,7 +1796,7 @@ you need to debug your filtering process.
   <sect2 id="archiving">
     <title>Automatic Archiving</title>
     <variablelist>
-    <varlistentry id="auto-archive"><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Create Automatic Archiving...</guimenuitem></menuchoice></term>
+    <varlistentry id="auto-archive"><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Configure Automatic Archiving...</guimenuitem></menuchoice></term>
       <listitem>
         <para>This is a powerful tool that can be used to assist in backing up your email. To use this, click
           the <guibutton>Add...</guibutton> button, and the <guilabel>Add Archive Mail</guilabel> dialog will pop up.</para>
@@ -1810,13 +1810,14 @@ you need to debug your filtering process.
           </itemizedlist>
         </listitem>
       </varlistentry>
+      <!-- fixme: 4.12? incompatible with Tools -> Configure Automatic Archiving... -->
       <varlistentry id="archive-folder"><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice></term>
         <listitem>
           <para>This dialog allows you to enable/disable the folder archive agent. It is enabled by default, to disable uncheck the <guilabel>Enable</guilabel>
             checkbox. You can change the location of your Archive folder by clicking the folder icon next to
             <guilabel>Archive folder:</guilabel> and selecting the folder you wish to use.</para>
         </listitem>
-      </varlistentry>
+	</varlistentry>
     </variablelist>
   </sect2>
   
