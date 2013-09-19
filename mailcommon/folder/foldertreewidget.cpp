@@ -42,7 +42,6 @@
 #include <Akonadi/EntityTreeView>
 #include <Akonadi/ETMViewStateSaver>
 #include <Akonadi/ItemFetchScope>
-#include <Akonadi/Session>
 
 #include <KLineEdit>
 #include <KLocalizedString>
