@@ -26,13 +26,6 @@
 
 using namespace MailCommon;
 
-
-//=============================================================================
-//
-// class StatusRuleWidgetHandler
-//
-//=============================================================================
-
 static const struct {
     SearchRule::Function id;
     const char *displayName;

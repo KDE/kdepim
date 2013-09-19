@@ -28,8 +28,6 @@ using MailCommon::RegExpLineEdit;
 #include <QStackedWidget>
 #include <QLabel>
 
-
-
 using namespace MailCommon;
 
 // also see SearchRule::matches() and SearchRule::Function

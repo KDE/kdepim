@@ -27,10 +27,6 @@
 #include <QObject>
 #include <QStackedWidget>
 
-
-
-
-
 using namespace MailCommon;
 
 
