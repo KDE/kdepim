@@ -821,11 +821,13 @@ void LdapSearchDialog::closeEvent( QCloseEvent *e )
 void LdapSearchDialog::Private::slotUnselectAll()
 {
   mResultView->clearSelection();
+  slotSelectionChanged();
 }
 
 void LdapSearchDialog::Private::slotSelectAll()
 {
   mResultView->selectAll();
+  slotSelectionChanged();
 }
 
 void LdapSearchDialog::slotUser1()
