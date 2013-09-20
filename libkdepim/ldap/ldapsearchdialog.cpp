@@ -51,6 +51,8 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+#include <KPIMUtils/ProgressIndicatorWidget>
+
 using namespace KLDAP;
 
 static QString asUtf8( const QByteArray &val )
@@ -505,6 +507,7 @@ class LdapSearchDialog::Private
     QTableView *mResultView;
     QPushButton *mSearchButton;
     ContactListModel *mModel;
+    KPIMUtils::ProgressIndicatorWidget *progressIndication;
 };
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent )
@@ -583,13 +586,21 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
            SLOT(slotSelectionChanged()) );
   topLayout->addWidget( d->mResultView );
 
+  QHBoxLayout *buttonLayout = new QHBoxLayout;
+  buttonLayout->setMargin(0);
+  topLayout->addLayout(buttonLayout);
+
+  d->progressIndication = new KPIMUtils::ProgressIndicatorWidget;
+  buttonLayout->addWidget(d->progressIndication);
+
   KDialogButtonBox *buttons = new KDialogButtonBox( page, Qt::Horizontal );
   buttons->addButton( i18n( "Select All" ),
                       QDialogButtonBox::ActionRole, this, SLOT(slotSelectAll()) );
   buttons->addButton( i18n( "Unselect All" ),
                       QDialogButtonBox::ActionRole, this, SLOT(slotUnselectAll()) );
 
-  topLayout->addWidget( buttons );
+  buttonLayout->addWidget( buttons );
+
 
 
   setButtonText( User1, i18n( "Add Selected" ) );
@@ -753,6 +764,7 @@ void LdapSearchDialog::Private::slotStartSearch()
   QApplication::setOverrideCursor( Qt::WaitCursor );
 #endif
   mSearchButton->setText( i18n( "Stop" ) );
+  progressIndication->start();
 
   q->disconnect( mSearchButton, SIGNAL(clicked()),
                  q, SLOT(slotStartSearch()) );
@@ -794,6 +806,7 @@ void LdapSearchDialog::Private::slotSearchDone()
               q, SLOT(slotStartSearch()) );
 
   mSearchButton->setText( i18nc( "@action:button Start searching", "&Search" ) );
+  progressIndication->stop();
 #ifndef QT_NO_CURSOR
   QApplication::restoreOverrideCursor();
 #endif
