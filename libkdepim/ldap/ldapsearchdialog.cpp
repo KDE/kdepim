@@ -73,7 +73,8 @@ static QString join( const KLDAP::LdapAttrValue &lst, const QString &sep )
 {
   QString res;
   bool alredy = false;
-  for ( KLDAP::LdapAttrValue::ConstIterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
+  KLDAP::LdapAttrValue::ConstIterator end(lst.constEnd());
+  for ( KLDAP::LdapAttrValue::ConstIterator it = lst.constBegin(); it != end; ++it ) {
     if ( alredy ) {
       res += sep;
     }
@@ -664,8 +665,9 @@ void LdapSearchDialog::Private::restoreSettings()
       ldapClient->setServer( ldapServer );
       QStringList attrs;
 
+      QMap<QString, QString>::ConstIterator end(adrbookattr2ldap().constEnd());
       for ( QMap<QString, QString>::ConstIterator it = adrbookattr2ldap().constBegin();
-            it != adrbookattr2ldap().constEnd(); ++it ) {
+            it != end; ++it ) {
         attrs << *it;
       }
 
