@@ -38,6 +38,8 @@
 #include <QTableView>
 #include <QVBoxLayout>
 #include <QSortFilterProxyModel>
+#include <QMenu>
+#include <QClipboard>
 
 #include <akonadi/collection.h>
 #include <akonadi/itemcreatejob.h>
@@ -593,6 +595,11 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
            SLOT(slotSelectionChanged()) );
   topLayout->addWidget( d->mResultView );
 
+  d->mResultView->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(d->mResultView, SIGNAL(customContextMenuRequested(QPoint)),
+          this, SLOT(slotCustomContextMenuRequested(QPoint)));
+
+
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   buttonLayout->setMargin(0);
   topLayout->addLayout(buttonLayout);
@@ -648,6 +655,20 @@ KABC::Addressee::List LdapSearchDialog::selectedContacts() const
 {
   return d->mSelectedContacts;
 }
+
+void LdapSearchDialog::slotCustomContextMenuRequested(const QPoint &pos)
+{
+    const QModelIndex index = d->mResultView->indexAt(pos);
+    if (index.isValid()) {
+        QMenu menu;
+        QAction *act = menu.addAction(i18n("Copy"));
+        if (menu.exec(QCursor::pos()) == act) {
+            QClipboard *cb = QApplication::clipboard();
+            cb->setText(index.data().toString(), QClipboard::Clipboard);
+        }
+    }
+}
+
 
 void LdapSearchDialog::Private::slotSelectionChanged()
 {

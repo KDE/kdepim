@@ -83,6 +83,7 @@ class KDEPIM_EXPORT LdapSearchDialog : public KDialog
   protected Q_SLOTS:
     void slotUser1();
     void slotUser2();
+    void slotCustomContextMenuRequested(const QPoint&);
 
   protected:
     void closeEvent( QCloseEvent* );
