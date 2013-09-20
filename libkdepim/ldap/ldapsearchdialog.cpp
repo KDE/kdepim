@@ -452,20 +452,6 @@ class ContactListModel : public QAbstractTableModel
     QStringList mServerList;
 };
 
-static QList< QPair<KLDAP::LdapAttrMap, QString> > selectedItems( QAbstractItemView *view )
-{
-  QList< QPair<KLDAP::LdapAttrMap, QString> > contacts;
-
-  ContactListModel *model = static_cast<ContactListModel*>( view->model() );
-
-  const QModelIndexList selected = view->selectionModel()->selectedRows();
-  for ( int i = 0; i < selected.count(); ++i ) {
-    contacts.append( model->contact( selected.at( i ) ) );
-  }
-
-  return contacts;
-}
-
 class LdapSearchDialog::Private
 {
   public:
@@ -476,6 +462,19 @@ class LdapSearchDialog::Private
         mModel( 0 )
     {
     }
+
+    QList< QPair<KLDAP::LdapAttrMap, QString> > selectedItems()
+    {
+      QList< QPair<KLDAP::LdapAttrMap, QString> > contacts;
+
+      const QModelIndexList selected = mResultView->selectionModel()->selectedRows();
+      for ( int i = 0; i < selected.count(); ++i ) {
+        contacts.append( mModel->contact( sortproxy->mapToSource(selected.at( i )) ) );
+      }
+
+      return contacts;
+    }
+
 
     void saveSettings();
     void restoreSettings();
@@ -505,6 +504,7 @@ class LdapSearchDialog::Private
     QTableView *mResultView;
     QPushButton *mSearchButton;
     ContactListModel *mModel;
+    QSortFilterProxyModel *sortproxy;
 };
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent )
@@ -578,10 +578,10 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   d->mResultView->setSelectionBehavior( QTableView::SelectRows );
   d->mModel = new ContactListModel( d->mResultView );
 
-  QSortFilterProxyModel *sortproxy = new QSortFilterProxyModel( this );
-  sortproxy->setSourceModel( d->mModel );
+  d->sortproxy = new QSortFilterProxyModel( this );
+  d->sortproxy->setSourceModel( d->mModel );
 
-  d->mResultView->setModel( sortproxy );
+  d->mResultView->setModel( d->sortproxy );
   d->mResultView->verticalHeader()->hide();
   d->mResultView->setSortingEnabled(true);
   d->mResultView->horizontalHeader()->setSortIndicatorShown(true);
@@ -834,7 +834,7 @@ void LdapSearchDialog::slotUser1()
 
   d->mSelectedContacts.clear();
 
-  const QList< QPair<KLDAP::LdapAttrMap, QString> >& items = selectedItems( d->mResultView );
+  const QList< QPair<KLDAP::LdapAttrMap, QString> >& items = d->selectedItems();
 
   if ( !items.isEmpty() ) {
     const QDateTime now = QDateTime::currentDateTime();
