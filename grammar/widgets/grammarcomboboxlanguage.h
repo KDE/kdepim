@@ -33,6 +33,7 @@ public:
     ~GrammarComboBoxLanguage();
 
     void setCurrentLanguage(const QString &lang);
+    QString currentLanguage() const;
 
 Q_SIGNALS:
     void languageChanged(const QString &language);

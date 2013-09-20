@@ -81,6 +81,11 @@ void GrammarComboBoxLanguage::setCurrentLanguage(const QString &lang)
     d->slotLanguageChanged( idx );
 }
 
+QString GrammarComboBoxLanguage::currentLanguage() const
+{
+      return itemData( currentIndex() ).toString();
+}
+
 }
 
 #include "grammarcomboboxlanguage.moc"

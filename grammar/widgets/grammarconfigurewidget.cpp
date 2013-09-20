@@ -17,8 +17,12 @@
 
 #include "grammarconfigurewidget.h"
 #include "grammarcomboboxlanguage.h"
+#include "grammarloader.h"
+#include "grammarsettings.h"
 
 #include <KLocale>
+#include <KConfig>
+#include <KConfigGroup>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -27,14 +31,18 @@ namespace Grammar {
 
 class GrammarConfigureWidgetPrivate {
 public:
-    GrammarConfigureWidgetPrivate(GrammarConfigureWidget *qq)
-        : q(qq)
+    GrammarConfigureWidgetPrivate(KConfig *_config, GrammarConfigureWidget *qq)
+        : q(qq),
+          config(config)
     {
         init();
     }
 
     void init()
     {
+        loader = GrammarLoader::openGrammarLoader();
+        KConfigGroup group = config->group(QLatin1String("General"));
+        loader->settings()->readSettings(group);
         QHBoxLayout *lay = new QHBoxLayout;
         QLabel *lab = new QLabel(i18n("Default language:"));
         lay->addWidget(lab);
@@ -44,18 +52,53 @@ public:
 
         q->setLayout(lay);
     }
+
+    void setDefault()
+    {
+        //TODO
+    }
+
+    void save()
+    {
+        KConfigGroup group = config->group(QLatin1String("General"));
+        loader->settings()->setDefaultLanguage(language->currentLanguage());
+        loader->settings()->saveSettings(group);
+    }
+
+    void setLanguage(const QString &lang)
+    {
+        language->setCurrentLanguage(lang);
+    }
+
+    GrammarLoader *loader;
     GrammarComboBoxLanguage *language;
     GrammarConfigureWidget *q;
+    KConfig *config;
 };
 
-GrammarConfigureWidget::GrammarConfigureWidget(QWidget *parent)
-    : QWidget(parent), d(new GrammarConfigureWidgetPrivate(this))
+GrammarConfigureWidget::GrammarConfigureWidget(KConfig *config, QWidget *parent)
+    : QWidget(parent), d(new GrammarConfigureWidgetPrivate(config, this))
 {
 }
 
 GrammarConfigureWidget::~GrammarConfigureWidget()
 {
     delete d;
+}
+
+void GrammarConfigureWidget::setDefault()
+{
+    d->setDefault();
+}
+
+void GrammarConfigureWidget::setLanguage(const QString &lang)
+{
+    d->setLanguage(lang);
+}
+
+void GrammarConfigureWidget::save()
+{
+    d->save();
 }
 
 }

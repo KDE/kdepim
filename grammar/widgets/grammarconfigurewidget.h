@@ -21,7 +21,7 @@
 
 #include "grammar_export.h"
 #include <QWidget>
-
+class KConfig;
 namespace Grammar
 {
 class GrammarConfigureWidgetPrivate;
@@ -29,8 +29,13 @@ class GRAMMAR_EXPORT GrammarConfigureWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit GrammarConfigureWidget(QWidget *parent=0);
+    explicit GrammarConfigureWidget(KConfig *config, QWidget *parent=0);
     ~GrammarConfigureWidget();
+
+    void setDefault();
+    void setLanguage(const QString &lang);
+    void save();
+
 private:
     friend class GrammarConfigureWidgetPrivate;
     GrammarConfigureWidgetPrivate * const d;
