@@ -37,6 +37,7 @@
 #include <QPushButton>
 #include <QTableView>
 #include <QVBoxLayout>
+#include <QSortFilterProxyModel>
 
 #include <akonadi/collection.h>
 #include <akonadi/itemcreatejob.h>
@@ -576,8 +577,14 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   d->mResultView->setSelectionMode( QTableView::MultiSelection );
   d->mResultView->setSelectionBehavior( QTableView::SelectRows );
   d->mModel = new ContactListModel( d->mResultView );
-  d->mResultView->setModel( d->mModel );
+
+  QSortFilterProxyModel *sortproxy = new QSortFilterProxyModel( this );
+  sortproxy->setSourceModel( d->mModel );
+
+  d->mResultView->setModel( sortproxy );
   d->mResultView->verticalHeader()->hide();
+  d->mResultView->setSortingEnabled(true);
+  d->mResultView->horizontalHeader()->setSortIndicatorShown(true);
   connect( d->mResultView, SIGNAL(clicked(QModelIndex)),
            SLOT(slotSelectionChanged()) );
   topLayout->addWidget( d->mResultView );
