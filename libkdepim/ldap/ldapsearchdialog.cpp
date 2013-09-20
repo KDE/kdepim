@@ -518,9 +518,9 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 {
   setCaption( i18n( "Import Contacts from LDAP" ) );
 #ifdef _WIN32_WCE
-  setButtons( Help | User1 | Cancel );
+  setButtons( /*Help |*/ User1 | Cancel );
 #else
-  setButtons( Help | User1 | User2 | Cancel );
+  setButtons( /*Help |*/ User1 | User2 | Cancel );
 #endif
   setDefaultButton( User1 );
   setModal( false );
