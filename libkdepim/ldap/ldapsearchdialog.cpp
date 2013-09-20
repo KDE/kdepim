@@ -51,7 +51,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <KPIMUtils/ProgressIndicatorWidget>
+#include <KPIMUtils/ProgressIndicatorLabel>
 
 using namespace KLDAP;
 
@@ -507,7 +507,7 @@ class LdapSearchDialog::Private
     QTableView *mResultView;
     QPushButton *mSearchButton;
     ContactListModel *mModel;
-    KPIMUtils::ProgressIndicatorWidget *progressIndication;
+    KPIMUtils::ProgressIndicatorLabel *progressIndication;
 };
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent )
@@ -590,7 +590,8 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   buttonLayout->setMargin(0);
   topLayout->addLayout(buttonLayout);
 
-  d->progressIndication = new KPIMUtils::ProgressIndicatorWidget;
+  d->progressIndication = new KPIMUtils::ProgressIndicatorLabel;
+  d->progressIndication->setLabel(i18n("Searching..."));
   buttonLayout->addWidget(d->progressIndication);
 
   KDialogButtonBox *buttons = new KDialogButtonBox( page, Qt::Horizontal );
