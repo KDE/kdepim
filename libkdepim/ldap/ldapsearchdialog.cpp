@@ -381,7 +381,7 @@ class ContactListModel : public QAbstractTableModel
         return mServerList.at( index.row() );
       }
 
-      if ( role != Qt::DisplayRole ) {
+      if ( (role != Qt::DisplayRole) &&  (role != Qt::ToolTipRole) ) {
         return QVariant();
       }
 
