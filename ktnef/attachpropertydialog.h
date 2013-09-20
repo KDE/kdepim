@@ -17,9 +17,10 @@
 #ifndef ATTACHPROPERTYDIALOG_H
 #define ATTACHPROPERTYDIALOG_H
 
-#include "ui_attachpropertydialogbase.h"
+#include "ui_attachpropertywidgetbase.h"
 
-#include <QDialog>
+#include <KDialog>
+
 #include <QMap>
 #include <QPixmap>
 
@@ -33,29 +34,32 @@ using namespace KTnef;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-
-class AttachPropertyDialog : public QDialog
+class AttachPropertyDialog : public KDialog
 {
+    Q_OBJECT
   public:
     explicit AttachPropertyDialog( QWidget *parent = 0 );
     ~AttachPropertyDialog();
 
     void setAttachment( KTNEFAttach *attach );
 
-  public slots:
-    void accept();
+    static QPixmap loadRenderingPixmap( KTNEFPropertySet *, const QColor & );
+    static void formatProperties( const QMap<int,KTNEFProperty*> &, QTreeWidget *,
+                           QTreeWidgetItem *, const QString & = QLatin1String("prop") );
+    static void formatPropertySet( KTNEFPropertySet *, QTreeWidget * );
+    static void saveProperty( QTreeWidget *, KTNEFPropertySet *, QWidget * );
+
+  private slots:
+    void slotSave();
 
   protected:
-    Ui::AttachPropertyDialogBase mUI;
+    Ui::AttachPropertyWidgetBase mUI;
 
   private:
+    void readConfig();
+    void writeConfig();
     KTNEFAttach *mAttach;
 };
 
-void formatProperties( const QMap<int,KTNEFProperty*> &, QTreeWidget *,
-                       QTreeWidgetItem *, const QString & = QLatin1String("prop") );
-void formatPropertySet( KTNEFPropertySet *, QTreeWidget * );
-void saveProperty( QTreeWidget *, KTNEFPropertySet *, QWidget * );
-QPixmap loadRenderingPixmap( KTNEFPropertySet *, const QColor & );
 
 #endif

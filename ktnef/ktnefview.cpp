@@ -54,7 +54,7 @@ Attachment::Attachment( QTreeWidget *parent, KTNEFAttach *attach )
   KMimeType::Ptr mimeType = KMimeType::mimeType( mAttach->mimeTag() );
   setText( 1, mimeType->comment() );
 
-  QPixmap pix = loadRenderingPixmap( attach, kapp->palette().color( QPalette::Background ) );
+  QPixmap pix = AttachPropertyDialog::loadRenderingPixmap( attach, kapp->palette().color( QPalette::Background ) );
   if ( !pix.isNull() ) {
     setIcon( 0, pix );
   } else {
@@ -115,8 +115,9 @@ QList<KTNEFAttach *> KTNEFView::getSelection()
     return mAttachments;
   }
 
-  QList<QTreeWidgetItem *>::iterator it;
-  for ( it=list.begin(); it != list.end(); ++it ) {
+  QList<QTreeWidgetItem *>::const_iterator it;
+  QList<QTreeWidgetItem *>::const_iterator end(list.constEnd());
+  for ( it=list.constBegin(); it != end; ++it ) {
     Attachment *a = static_cast<Attachment *>( *it );
     mAttachments.append( a->getAttachment() );
   }
@@ -141,7 +142,7 @@ void KTNEFView::startDrag( Qt::DropActions dropAction )
 
 void KTNEFView::adjustColumnWidth()
 {
-  int w = width() / 2;
+  const int w = width() / 2;
   setColumnWidth( 0, w );
   setColumnWidth( 1, w / 2 );
   setColumnWidth( 2, w / 2 );
