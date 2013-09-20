@@ -31,7 +31,7 @@ QStringList KeyIDList::toStringList() const
 {
   QStringList res;
   for( KeyIDList::ConstIterator it = begin(); it != end(); ++it ) {
-    res << (*it).data();
+    res << QLatin1String((*it).data());
   }
   return res;
 }
@@ -41,7 +41,8 @@ QStringList KeyIDList::toStringList() const
 KeyIDList KeyIDList::fromStringList( const QStringList& l )
 {
   KeyIDList res;
-  for( QStringList::ConstIterator it = l.begin(); it != l.end(); ++it ) {
+  QStringList::ConstIterator end(l.end());
+  for( QStringList::ConstIterator it = l.begin(); it != end; ++it ) {
     res << (*it).toLocal8Bit();
   }
   return res;

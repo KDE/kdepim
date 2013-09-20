@@ -73,7 +73,7 @@ Module::Module()
 {
   pgp = 0;
 
-  config = new KConfig("kpgprc");
+  config = new KConfig(QLatin1String("kpgprc"));
 
   init();
 }
@@ -208,7 +208,7 @@ Module::prepare( bool needPassPhrase, Block* block )
       // the user uses gpg-agent which asks itself for the passphrase
       kDebug( 5326 ) <<"user uses gpg-agent -> don't ask for passphrase";
       // set dummy passphrase (because else signing doesn't work -> FIXME)
-      setPassPhrase( "dummy" );
+      setPassPhrase( QLatin1String("dummy") );
     }
     else {
       QString ID;
@@ -337,7 +337,7 @@ Module::encrypt( Block& block,
 {
   KeyIDList encryptionKeyIds; // list of keys which are used for encryption
   int status = 0;
-  errMsg = "";
+  errMsg = QLatin1String("");
 
   if( 0 == pgp ) assignPGPBase();
 
@@ -469,8 +469,8 @@ Module::encrypt( Block& block,
     errMsg = i18n( "The following error occurred:\n%1" ,
                pgp->lastErrorMessage() );
     QString details = i18n( "This is the error message of %1:\n%2" ,
-                        ( pgpType == tGPG ) ? "GnuPG" : "PGP" ,
-                        block.error().data() );
+                        ( pgpType == tGPG ) ? QLatin1String("GnuPG") : QLatin1String("PGP") ,
+                        QLatin1String(block.error().data()) );
 #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
 #endif
@@ -566,7 +566,7 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
   kDebug( 5326 ) <<"recipientKeyIds = (";
   QVector<KeyIDList>::const_iterator kit;
   for( kit = recipientKeyIds.constBegin(); kit != recipientKeyIds.constEnd(); ++kit ) {
-    kDebug( 5326 ) <<"( 0x" << (*kit).toStringList().join(", 0x" )
+    kDebug( 5326 ) <<"( 0x" << (*kit).toStringList().join(QLatin1String(", 0x") )
                   << " ),\n";
   }
   kDebug( 5326 ) <<")";
@@ -1248,7 +1248,7 @@ Module::getEncryptionKeys( const QString& person )
   KeyIDList keyIds = keysForAddress( address );
   if( !keyIds.isEmpty() ) {
     kDebug( 5326 ) <<"Using encryption keys 0x"
-                  << keyIds.toStringList().join( ", 0x" )
+                  << keyIds.toStringList().join( QLatin1String(", 0x") )
                   << "for" << person;
     // Check if all of the keys are a trusted and valid encryption keys
     bool keysOk = true;
@@ -1390,7 +1390,7 @@ Module::checkForPGP(void)
   havePgp=false;
 
   path = QString::fromLocal8Bit( getenv("PATH") );
-  pSearchPaths = path.split( KPATH_SEPARATOR, QString::SkipEmptyParts );
+  pSearchPaths = path.split( QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts );
 
   haveGpg=false;
   // lets try gpg
@@ -1398,7 +1398,7 @@ Module::checkForPGP(void)
   foreach( const QString& curPath, pSearchPaths )
   {
     path = curPath;
-    path += "/gpg";
+    path += QLatin1String("/gpg");
     if ( QFileInfo(path).isExecutable() )
     {
       kDebug( 5326 ) <<"Kpgp: gpg found";
@@ -1413,7 +1413,7 @@ Module::checkForPGP(void)
   foreach( const QString& curPath, pSearchPaths )
   {
     path = curPath;
-    path += "/pgpe";
+    path += QLatin1String("/pgpe");
     if ( QFileInfo(path).isExecutable() )
     {
       kDebug( 5326 ) <<"Kpgp: pgp 5 found";
@@ -1428,7 +1428,7 @@ Module::checkForPGP(void)
     foreach( const QString& curPath, pSearchPaths )
     {
       path = curPath;
-      path += "/pgp";
+      path += QLatin1String("/pgp");
       if ( QFileInfo(path).isExecutable() )
       {
         kDebug( 5326 ) <<"Kpgp: pgp 2 or 6 found";
@@ -1536,25 +1536,25 @@ Module::canonicalAddress( const QString& _adress )
   address = address.trimmed();
 
   // just leave pure e-mail address.
-  if((index = address.indexOf("<")) != -1)
-    if((index2 = address.indexOf("@",index+1)) != -1)
-      if((index2 = address.indexOf(">",index2+1)) != -1)
+  if((index = address.indexOf(QLatin1String("<"))) != -1)
+    if((index2 = address.indexOf(QLatin1String("@"),index+1)) != -1)
+      if((index2 = address.indexOf(QLatin1String(">"),index2+1)) != -1)
         return address.mid(index,index2-index+1);
 
-  if((index = address.indexOf("@")) == -1)
+  if((index = address.indexOf(QLatin1String("@"))) == -1)
   {
     // local address
     //char hostname[1024];
     //gethostname(hostname,1024);
     //return "<" + address + "@" + hostname + ">";
-    return '<' + address + "@localdomain>";
+    return QLatin1Char('<') + address + QLatin1String("@localdomain>");
   }
   else
   {
-    int index1 = address.lastIndexOf(" ",index);
-    int index2 = address.indexOf(" ",index);
+    int index1 = address.lastIndexOf(QLatin1String(" "),index);
+    int index2 = address.indexOf(QLatin1String(" "),index);
     if(index2 == -1) index2 = address.length();
-    return '<' + address.mid(index1+1 ,index2-index1-1) + '>';
+    return QLatin1Char('<') + address.mid(index1+1 ,index2-index1-1) + QLatin1Char('>');
   }
 }
 
@@ -1817,7 +1817,7 @@ Module::readAddressData()
 
   addressDataDict.clear();
   for( int i=1; i<=num; ++i ) {
-    KConfigGroup addrGroup( config, QString("Address #%1").arg(i) );
+    KConfigGroup addrGroup( config, QString::fromLatin1("Address #%1").arg(i) );
     address = addrGroup.readEntry( "Address" );
     data.keyIds = KeyIDList::fromStringList( addrGroup.readEntry( "Key IDs" , QStringList() ) );
     data.encrPref = (EncryptPref) addrGroup.readEntry( "EncryptionPreference",
@@ -1842,7 +1842,7 @@ Module::writeAddressData()
   for ( i=1, it = addressDataDict.begin();
         it != addressDataDict.end();
         ++it, ++i ) {
-    KConfigGroup addrGroup( config, QString("Address #%1").arg(i));
+    KConfigGroup addrGroup( config, QString::fromLatin1("Address #%1").arg(i));
     addrGroup.writeEntry( "Address", it.key() );
     addrGroup.writeEntry( "Key IDs", it.value().keyIds.toStringList() );
     addrGroup.writeEntry( "EncryptionPreference", (int)it.value().encrPref );

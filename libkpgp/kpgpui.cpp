@@ -75,7 +75,7 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
   setCaption( caption );
   setButtons( Ok|Cancel );
 
-  setPixmap( BarIcon("dialog-password") );
+  setPixmap( BarIcon(QLatin1String("dialog-password")) );
 
   if (keyID.isNull())
     setPrompt(i18n("Please enter your OpenPGP passphrase:"));
@@ -317,10 +317,10 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   mStartSearchTimer->setSingleShot( true );
 
   // load the key status icons
-  mKeyGoodPix    = new QPixmap( UserIcon("key_ok") );
-  mKeyBadPix     = new QPixmap( UserIcon("key_bad") );
-  mKeyUnknownPix = new QPixmap( UserIcon("key_unknown") );
-  mKeyValidPix   = new QPixmap( UserIcon("key") );
+  mKeyGoodPix    = new QPixmap( UserIcon(QLatin1String("key_ok")) );
+  mKeyBadPix     = new QPixmap( UserIcon(QLatin1String("key_bad")) );
+  mKeyUnknownPix = new QPixmap( UserIcon(QLatin1String("key_unknown")) );
+  mKeyValidPix   = new QPixmap( UserIcon(QLatin1String("key")) );
 
   QFrame *page = new QFrame( this );
   setMainWidget( page );
@@ -447,7 +447,7 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
     KeyID curKeyId = key->primaryKeyID();
 
     QTreeWidgetItem* primaryUserID = new QTreeWidgetItem( mListView );
-    primaryUserID->setText( 0, curKeyId );
+    primaryUserID->setText( 0, QLatin1String(curKeyId) );
     primaryUserID->setText( 1, key->primaryUserID() );
 
     // select and open the given key
@@ -561,13 +561,13 @@ QString KeySelectionDialog::keyInfo( const Kpgp::Key *key ) const
   QDateTime dt;
   dt.setTime_t( key->creationDate() );
   if( remark.isEmpty() ) {
-    return ' ' + i18nc("creation date and status of an OpenPGP key",
+    return QLatin1Char(' ') + i18nc("creation date and status of an OpenPGP key",
                       "Creation date: %1, Status: %2",
                        KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate ) ,
                        status );
   }
   else {
-    return ' ' + i18nc("creation date, status and remark of an OpenPGP key",
+    return QLatin1Char(' ') + i18nc("creation date, status and remark of an OpenPGP key",
                       "Creation date: %1, Status: %2 (%3)",
                        KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate ) ,
                        status ,
@@ -619,7 +619,7 @@ QString KeySelectionDialog::beautifyFingerprint( const QByteArray& fpr ) const
     result = fpr;
   }
 
-  return result;
+  return QLatin1String(result);
 }
 
 int KeySelectionDialog::keyValidity( const Kpgp::Key *key ) const
@@ -728,7 +728,7 @@ void KeySelectionDialog::updateKeyInfo( const Kpgp::Key* key,
   // a problem because User Ids shouldn't start with a space
   QTreeWidgetItemIterator it( lvi );
   while ( *it ) {
-    if( lvi->text( 1 ).at(0) == ' ' ) {
+    if( lvi->text( 1 ).at(0) == QLatin1Char(' ') ) {
       lvi->setText( 1, keyInfo( key ) );
       break;
     }
@@ -987,7 +987,7 @@ void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
         }
       }
     }
-    kDebug( 5326 ) <<"Selected keys:" << newKeyIdList.toStringList().join(",");
+    kDebug( 5326 ) <<"Selected keys:" << newKeyIdList.toStringList().join(QLatin1String(","));
     mKeyIds = newKeyIdList;
     if( !keysToBeChecked.isEmpty() ) {
       keysAllowed = keysAllowed && checkKeys( keysToBeChecked );
@@ -1090,9 +1090,9 @@ void KeySelectionDialog::slotFilter()
   }
 
   // OK, so we need to filter:
-  QRegExp keyIdRegExp( "(?:0x)?[A-F0-9]{1,8}", Qt::CaseInsensitive );
+  QRegExp keyIdRegExp( QLatin1String("(?:0x)?[A-F0-9]{1,8}"), Qt::CaseInsensitive );
   if ( keyIdRegExp.exactMatch( mSearchText ) ) {
-    if ( mSearchText.startsWith( "0X" ) )
+    if ( mSearchText.startsWith( QLatin1String("0X") ) )
       // search for keyID only:
       filterByKeyID( mSearchText.mid( 2 ) );
     else
@@ -1123,7 +1123,7 @@ void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
   assert( !str.isEmpty() );
 
   // match beginnings of words:
-  QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
+  QRegExp rx( QLatin1String("\\b") + QRegExp::escape( str ), Qt::CaseInsensitive );
 
   for ( int i = 0; i < mListView->topLevelItemCount(); ++i ) {
     QTreeWidgetItem * item = mListView->topLevelItem( i );
@@ -1138,7 +1138,7 @@ void KeySelectionDialog::filterByUID( const QString & str )
   assert( !str.isEmpty() );
 
   // match beginnings of words:
-  QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
+  QRegExp rx( QLatin1String("\\b") + QRegExp::escape( str ), Qt::CaseInsensitive );
 
   for ( int i = 0; i < mListView->topLevelItemCount(); ++i ) {
     QTreeWidgetItem * item = mListView->topLevelItem( i );
@@ -1182,7 +1182,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
     mAllowedKeys( allowedKeys ),
     d( 0 )
 {
-  setObjectName( name );
+  setObjectName( QLatin1String(name) );
   QHBoxLayout * hlay = new QHBoxLayout( this );
   hlay->setSpacing( KDialog::spacingHint() );
   hlay->setMargin( 0 );
@@ -1196,7 +1196,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
                                             QSizePolicy::Minimum ) );
-  mEraseButton->setIcon( KIcon( "edit-clear-locationbar-rtl" ) );
+  mEraseButton->setIcon( KIcon( QLatin1String("edit-clear-locationbar-rtl") ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
@@ -1231,7 +1231,7 @@ void KeyRequester::setKeyIDs( const KeyIDList & keyIDs ) {
   if ( mKeys.size() > 1 )
     setMultipleKeysEnabled( true );
 
-  QString s = mKeys.toStringList().join(", ");
+  QString s = mKeys.toStringList().join(QLatin1String(", "));
 
   mLabel->setText( s );
   mLabel->setToolTip( s );
@@ -1384,7 +1384,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
       keyidsL->setText( i18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
     else {
-      keyidsL->setText( "0x" + keyIDs[0].toStringList().join( "\n0x" ) );
+      keyidsL->setText( QLatin1String("0x") + keyIDs[0].toStringList().join( QLatin1String("\n0x") ) );
     }
     keyidsL->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     /*
@@ -1441,7 +1441,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
       keyidsL->setText( i18nc( "@info", "<placeholder>none</placeholder> means 'no key'" ) );
     }
     else {
-      keyidsL->setText( "0x" + (*kit).toStringList().join( "\n0x" ) );
+      keyidsL->setText( QLatin1String("0x") + (*kit).toStringList().join( QLatin1String("\n0x") ) );
     }
     keyidsL->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
     /*
@@ -1538,7 +1538,7 @@ KeyApprovalDialog::slotChangeEncryptionKey( int nr )
                                          "be used to encrypt the message "
                                          "to yourself."),
                                     keyIds,
-                                    "",
+                                    QLatin1String(""),
                                     mAllowedKeys );
   }
   else {
@@ -1557,7 +1557,7 @@ KeyApprovalDialog::slotChangeEncryptionKey( int nr )
   if( !keyIds.isEmpty() ) {
     mKeys[nr] = keyIds;
     QLabel* keyidsL = mKeyIdsLabels[nr];
-    keyidsL->setText( "0x" + keyIds.toStringList().join( "\n0x" ) );
+    keyidsL->setText( QLatin1String("0x") + keyIds.toStringList().join( QLatin1String("\n0x") ) );
     /*
     QListBox* qlb = mKeyIdListBoxes[nr];
     qlb->clear();
@@ -1646,7 +1646,7 @@ CipherTextDialog::CipherTextDialog( const QByteArray & text,
     unicodeText = QString::fromLocal8Bit(text.data());
   else {
     bool ok=true;
-    QTextCodec *codec = KGlobal::charsets()->codecForName(charset, ok);
+    QTextCodec *codec = KGlobal::charsets()->codecForName(QLatin1String(charset), ok);
     if(!ok)
       unicodeText = QString::fromLocal8Bit(text.data());
     else

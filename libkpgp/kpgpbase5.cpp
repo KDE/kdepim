@@ -271,7 +271,7 @@ Base5::decrypt( Block& block, const char *passphrase )
     // get signer
     index = error.indexOf('"',index) + 1;
     int index2 = error.indexOf('"', index);
-    block.setSignatureUserId( error.mid(index, index2-index) );
+    block.setSignatureUserId( QLatin1String(error.mid(index, index2-index)) );
 
     /// ### FIXME get signature date
     block.setSignatureDate( "" );
@@ -290,7 +290,7 @@ Base5::decrypt( Block& block, const char *passphrase )
     // get signer
     index = error.indexOf('"',index) + 1;
     int index2 = error.indexOf('"', index);
-    block.setSignatureUserId( error.mid(index, index2-index) );
+    block.setSignatureUserId( QLatin1String(error.mid(index, index2-index)) );
 
     /// ### FIXME get signature date
     block.setSignatureDate( "" );
@@ -659,7 +659,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     { // line contains a uid
       int pos = offset+5;
       QByteArray uid = output.mid( pos, eol-pos );
-      key->addUserID( uid );
+      key->addUserID( QLatin1String(uid) );
       // displaying of uids which contain non-ASCII characters is broken in
       // PGP 5.0i; it shows these characters as \ooo and truncates the uid
       // because it doesn't take the 3 extra characters per non-ASCII char
@@ -801,7 +801,7 @@ Base5::parseTrustDataForKey( Key* key, const QByteArray& str )
 
       // determine the user ID
       int pos = offset + 33;
-      QString uid = str.mid( pos, eol-pos );
+      QString uid = QLatin1String(str.mid( pos, eol-pos ));
 
       // set the validity of the corresponding user ID
       for( UserIDList::Iterator it = userIDs.begin(); it != userIDs.end(); ++it )

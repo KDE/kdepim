@@ -344,7 +344,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
       index = error.indexOf('"',index);
       index2 = error.indexOf('\n',index+1);
       index2 = error.lastIndexOf('"', index2-1);
-      block.setSignatureUserId( error.mid( index+1, index2-index-1 ) );
+      block.setSignatureUserId( QLatin1String(error.mid( index+1, index2-index-1 )) );
     }
     else if( error.indexOf("BAD signature", index) != -1 )
     {
@@ -354,7 +354,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
       index = error.indexOf('"',index);
       index2 = error.indexOf('\n',index+1);
       index2 = error.lastIndexOf('"', index2-1);
-      block.setSignatureUserId( error.mid( index+1, index2-index-1 ) );
+      block.setSignatureUserId( QLatin1String(error.mid( index+1, index2-index-1 )) );
     }
     else if( error.indexOf("Can't find the right public key", index) != -1 )
     {
@@ -622,11 +622,11 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           break;
         case 6: // the creation date (in seconds since 1970-01-01 00:00:00)
           if( pos2 > pos )
-            subkey->setCreationDate( QString(output.mid( pos, pos2-pos )).toLong() );
+            subkey->setCreationDate( QString(QLatin1String(output.mid( pos, pos2-pos ))).toLong() );
           break;
         case 7: // the expiration date (in seconds since 1970-01-01 00:00:00)
           if( pos2 > pos )
-            subkey->setExpirationDate( QString(output.mid( pos, pos2-pos )).toLong() );
+            subkey->setExpirationDate( QString(QLatin1String(output.mid( pos, pos2-pos ))).toLong() );
           else
             subkey->setExpirationDate( -1 ); // key expires never
           break;
@@ -671,7 +671,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     { // line contains a user id
       // Example: uid:f::::::::Philip R. Zimmermann <prz@pgp.com>:
 
-      UserID *userID = new UserID( "" );
+      UserID *userID = new UserID( QLatin1String("") );
 
       int pos = index + 4; // begin of 2nd field
       int pos2 = output.indexOf( ':', pos );
@@ -726,7 +726,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           // because they shouldn't appear in user IDs
           for ( int idx = 0 ; (idx = uid.indexOf( "\\x", idx ) != -1) ; ++idx ) {
             char str[2] = "x";
-            str[0] = (char) QString( uid.mid( idx + 2, 2 ) ).toShort( 0, 16 );
+            str[0] = (char) QString( QLatin1String(uid.mid( idx + 2, 2 )) ).toShort( 0, 16 );
             uid.replace( idx, 4, str );
           }
           QString uidString = QString::fromUtf8( uid.data() );
