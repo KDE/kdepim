@@ -605,8 +605,7 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   buttonLayout->setMargin(0);
   topLayout->addLayout(buttonLayout);
 
-  d->progressIndication = new KPIMUtils::ProgressIndicatorLabel;
-  d->progressIndication->setLabel(i18n("Searching..."));
+  d->progressIndication = new KPIMUtils::ProgressIndicatorLabel(i18n("Searching..."));
   buttonLayout->addWidget(d->progressIndication);
 
   KDialogButtonBox *buttons = new KDialogButtonBox( page, Qt::Horizontal );
