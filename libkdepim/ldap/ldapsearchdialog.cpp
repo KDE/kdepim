@@ -537,6 +537,7 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   boxLayout->addWidget( label, 0, 0 );
 
   d->mSearchEdit = new KLineEdit( groupBox );
+  d->mSearchEdit->setClearButtonShown(true);
   boxLayout->addWidget( d->mSearchEdit, 0, 1 );
   label->setBuddy( d->mSearchEdit );
 
