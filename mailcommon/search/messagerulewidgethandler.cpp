@@ -58,7 +58,9 @@ QWidget *MessageRuleWidgetHandler::createFunctionWidget(
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox( functionStack );
     funcCombo->setObjectName( QLatin1String("messageRuleFuncCombo") );
     for ( int i = 0; i < MessageFunctionCount; ++i ) {
-        funcCombo->addItem( i18n( MessageFunctions[i].displayName ) );
+        if ( !( isNepomukSearch && (MessageFunctions[i].id == SearchRule::FuncHasAttachment || MessageFunctions[i].id == SearchRule::FuncHasNoAttachment) )) {
+            funcCombo->addItem( i18n( MessageFunctions[i].displayName ) );
+        }
     }
     funcCombo->adjustSize();
     QObject::connect( funcCombo, SIGNAL(activated(int)),
@@ -220,6 +222,12 @@ bool MessageRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
 
     const SearchRule::Function func = rule->function();
+
+    if ( ( isNepomukSearch && (func == SearchRule::FuncHasAttachment || func == SearchRule::FuncHasNoAttachment) )) {
+        reset( functionStack, valueStack );
+        return false;
+    }
+
     int i = 0;
     for ( ; i < MessageFunctionCount; ++i ) {
         if ( func == MessageFunctions[i].id ) {
