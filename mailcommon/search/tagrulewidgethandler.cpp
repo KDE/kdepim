@@ -60,7 +60,13 @@ QWidget *TagRuleWidgetHandler::createFunctionWidget(
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox( functionStack );
     funcCombo->setObjectName( QLatin1String("tagRuleFuncCombo") );
     for ( int i = 0; i < TagFunctionCount; ++i ) {
-        funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
+        if (isNepomukSearch) {
+            if (TagFunctions[i].id == SearchRule::FuncContains || TagFunctions[i].id == SearchRule::FuncContainsNot) {
+                funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
+            }
+        } else {
+            funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
+        }
     }
     funcCombo->adjustSize();
     QObject::connect( funcCombo, SIGNAL(activated(int)),
@@ -220,6 +226,14 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
 
     // set the function
     const SearchRule::Function func = rule->function();
+
+    if (isNepomukSearch ) {
+        if(func != SearchRule::FuncContains && func != SearchRule::FuncContainsNot) {
+            reset( functionStack, valueStack );
+            return false;
+        }
+    }
+
     int funcIndex = 0;
     for ( ; funcIndex < TagFunctionCount; ++funcIndex ) {
         if ( func == TagFunctions[funcIndex].id ) {
