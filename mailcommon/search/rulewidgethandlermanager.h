@@ -64,12 +64,14 @@ public:
         return self;
     }
 
+    void setIsNepomukSearch(bool isNepomukSearch);
+
     void registerHandler( const RuleWidgetHandler *handler );
     void unregisterHandler( const RuleWidgetHandler *handler );
 
-    void createWidgets( QStackedWidget *functionStack,
+    void createWidgets(QStackedWidget *functionStack,
                         QStackedWidget *valueStack,
-                        const QObject *receiver ) const;
+                        const QObject *receiver) const;
 
     MailCommon::SearchRule::Function function( const QByteArray & field,
                                                const QStackedWidget *functionStack ) const;
@@ -89,7 +91,7 @@ public:
     void reset( QStackedWidget *functionStack,
                 QStackedWidget *valueStack ) const;
 
-    void setRule( QStackedWidget *functionStack,
+    void setRule(QStackedWidget *functionStack,
                   QStackedWidget *valueStack,
                   const MailCommon::SearchRule::Ptr rule ) const;
 
@@ -102,6 +104,7 @@ private:
     typedef QVector<const RuleWidgetHandler*>::iterator iterator;
 
     QVector<const RuleWidgetHandler*> mHandlers;
+    bool mIsNepomukSearch;
 };
 
 } // namespace MailCommon

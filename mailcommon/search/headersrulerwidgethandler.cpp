@@ -57,7 +57,7 @@ static const int HeadersFunctionCount =
 //---------------------------------------------------------------------------
 
 QWidget *HeadersRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool isNepomukSearch ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -66,7 +66,10 @@ QWidget *HeadersRuleWidgetHandler::createFunctionWidget(
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox( functionStack );
     funcCombo->setObjectName( QLatin1String("headerRuleFuncCombo") );
     for ( int i = 0; i < HeadersFunctionCount; ++i ) {
-        funcCombo->addItem( i18n( HeaderFunctions[i].displayName ) );
+        if (! (isNepomukSearch &&
+                (HeaderFunctions[i].id == SearchRule::FuncIsInAddressbook || HeaderFunctions[i].id == SearchRule::FuncIsNotInAddressbook)))  {
+            funcCombo->addItem( i18n( HeaderFunctions[i].displayName ) );
+        }
     }
     funcCombo->adjustSize();
     QObject::connect( funcCombo, SIGNAL(activated(int)),
@@ -218,7 +221,7 @@ void HeadersRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 bool HeadersRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                      QStackedWidget *valueStack,
-                                     const SearchRule::Ptr rule ) const
+                                     const SearchRule::Ptr rule, bool isNepomukSearch ) const
 {
     if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );
@@ -226,6 +229,14 @@ bool HeadersRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     }
 
     const SearchRule::Function func = rule->function();
+    if ( (isNepomukSearch &&
+            (func == SearchRule::FuncIsInAddressbook || func == SearchRule::FuncIsNotInAddressbook)))  {
+        reset( functionStack, valueStack );
+        return false;
+    }
+
+
+
     int i = 0;
     for ( ; i < HeadersFunctionCount; ++i ) {
         if ( func == HeaderFunctions[i].id ) {

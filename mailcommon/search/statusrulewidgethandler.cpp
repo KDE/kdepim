@@ -39,7 +39,7 @@ static const int StatusFunctionCount =
 //---------------------------------------------------------------------------
 
 QWidget *StatusRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool isNepomukSearch ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -198,7 +198,7 @@ void StatusRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 bool StatusRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                        QStackedWidget *valueStack,
-                                       const SearchRule::Ptr rule ) const
+                                       const SearchRule::Ptr rule, bool isNepomukSearch ) const
 {
     if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );

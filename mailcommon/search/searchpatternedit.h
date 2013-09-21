@@ -89,13 +89,19 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
     };
     Q_DECLARE_FLAGS( SearchPatternEditOptions, SearchPatternEditOption )
 
+    enum SearchModeType {
+        StandardMode = 0,
+        NepomukMode = 1
+    };
+
     /**
      * Constructor. The parent parameter is passed to the underlying
      * QGroupBox, as usual.
      */
     explicit SearchPatternEdit(
-      QWidget *parent = 0,
-      SearchPatternEditOptions options = (SearchPatternEditOptions) (None) );
+            QWidget *parent = 0,
+            SearchPatternEditOptions options = (SearchPatternEditOptions) (None),
+            SearchModeType modeType = StandardMode);
 
     ~SearchPatternEdit();
 
@@ -142,7 +148,7 @@ class MAILCOMMON_EXPORT SearchPatternEdit : public QWidget
     void slotRuleAdded( QWidget *widget );
 
   private:
-    void initLayout( SearchPatternEditOptions options );
+    void initLayout( SearchPatternEditOptions options, SearchModeType modeType );
     MailCommon::SearchPattern *mPattern;
     QRadioButton *mAllRBtn;
     QRadioButton *mAnyRBtn;
@@ -175,7 +181,8 @@ public:
    */
   explicit SearchRuleWidget(QWidget *parent = 0,
                              MailCommon::SearchRule::Ptr aRule = MailCommon::SearchRule::Ptr(),
-                             SearchPatternEdit::SearchPatternEditOptions options = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None));
+                             SearchPatternEdit::SearchPatternEditOptions options = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None),
+                            SearchPatternEdit::SearchModeType modeType = SearchPatternEdit::StandardMode);
 
   enum {
     Message,
@@ -262,7 +269,7 @@ protected slots:
   void slotRemoveWidget();
 
 private:
-  void initWidget();
+  void initWidget(SearchPatternEdit::SearchModeType modeType);
   void initFieldList(MailCommon::SearchPatternEdit::SearchPatternEditOptions options);
 
   QStringList mFilterFieldList;
@@ -282,8 +289,8 @@ class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
 
   public:
     explicit SearchRuleWidgetLister(QWidget *parent = 0,
-                                     const char *name = 0,
-                                     SearchPatternEdit::SearchPatternEditOptions opt = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None));
+                                    SearchPatternEdit::SearchPatternEditOptions opt = (SearchPatternEdit::SearchPatternEditOptions) (SearchPatternEdit::None),
+                                    SearchPatternEdit::SearchModeType modeType = SearchPatternEdit::StandardMode);
 
     virtual ~SearchRuleWidgetLister();
 
@@ -306,6 +313,7 @@ class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
     void regenerateRuleListFromWidgets();
     QList<MailCommon::SearchRule::Ptr> *mRuleList;
     SearchPatternEdit::SearchPatternEditOptions mOptions;
+    SearchPatternEdit::SearchModeType mTypeMode;
 };
 
 

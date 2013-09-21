@@ -59,6 +59,7 @@ using namespace MailCommon;
 MailCommon::RuleWidgetHandlerManager *MailCommon::RuleWidgetHandlerManager::self = 0;
 
 MailCommon::RuleWidgetHandlerManager::RuleWidgetHandlerManager()
+    : mIsNepomukSearch(false)
 {
     registerHandler( new MailCommon::TagRuleWidgetHandler() );
     registerHandler( new MailCommon::DateRuleWidgetHandler() );
@@ -76,6 +77,11 @@ MailCommon::RuleWidgetHandlerManager::~RuleWidgetHandlerManager()
 {
     for_each( mHandlers.begin(), mHandlers.end(),
               MessageViewer::DeleteAndSetToZero<RuleWidgetHandler>() );
+}
+
+void MailCommon::RuleWidgetHandlerManager::setIsNepomukSearch(bool isNepomukSearch)
+{
+    mIsNepomukSearch = isNepomukSearch;
 }
 
 void MailCommon::RuleWidgetHandlerManager::registerHandler( const RuleWidgetHandler *handler )
@@ -114,15 +120,15 @@ int childCount( const QObject *parent, const QString &objName )
 
 }
 
-void MailCommon::RuleWidgetHandlerManager::createWidgets( QStackedWidget *functionStack,
+void MailCommon::RuleWidgetHandlerManager::createWidgets(QStackedWidget *functionStack,
                                                           QStackedWidget *valueStack,
-                                                          const QObject *receiver ) const
+                                                          const QObject *receiver) const
 {
     const_iterator end( mHandlers.constEnd() );
     for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
         QWidget *w = 0;
         for ( int i = 0;
-              ( w = (*it)->createFunctionWidget( i, functionStack, receiver ) );
+              ( w = (*it)->createFunctionWidget( i, functionStack, receiver, mIsNepomukSearch ) );
               ++i ) {
             if ( childCount( functionStack, w->objectName() ) < 2 ) {
                 // there wasn't already a widget with this name, so add this widget
@@ -207,7 +213,7 @@ void MailCommon::RuleWidgetHandlerManager::setRule( QStackedWidget *functionStac
     reset( functionStack, valueStack );
     const_iterator end( mHandlers.constEnd() );
     for ( const_iterator it = mHandlers.constBegin(); it != end; ++it ) {
-        if ( (*it)->setRule( functionStack, valueStack, rule ) ) {
+        if ( (*it)->setRule( functionStack, valueStack, rule, mIsNepomukSearch ) ) {
             return;
         }
     }

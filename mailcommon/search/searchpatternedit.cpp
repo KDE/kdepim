@@ -85,15 +85,16 @@ static const int SpecialRuleFieldsCount =
 //
 //=============================================================================
 
-SearchRuleWidget::SearchRuleWidget( QWidget *parent, SearchRule::Ptr aRule,
-                                    SearchPatternEdit::SearchPatternEditOptions options )
-  : QWidget( parent ),
+SearchRuleWidget::SearchRuleWidget(QWidget *parent, SearchRule::Ptr aRule,
+                                   SearchPatternEdit::SearchPatternEditOptions options ,
+                                   SearchPatternEdit::SearchModeType modeType)
+    : QWidget( parent ),
     mRuleField( 0 ),
     mFunctionStack( 0 ),
     mValueStack( 0 )
 {
   initFieldList( options );
-  initWidget();
+  initWidget( modeType );
 
   if ( aRule ) {
     setRule( aRule );
@@ -149,7 +150,7 @@ void SearchRuleWidget::setPatternEditOptions( SearchPatternEdit::SearchPatternEd
 
 
 
-void SearchRuleWidget::initWidget()
+void SearchRuleWidget::initWidget(SearchPatternEdit::SearchModeType modeType)
 {
   QHBoxLayout *hlay = new QHBoxLayout( this );
   hlay->setSpacing( KDialog::spacingHint() );
@@ -197,6 +198,8 @@ void SearchRuleWidget::initWidget()
   mRemove->setIcon( KIcon( QLatin1String("list-remove") ) );
   mRemove->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
   hlay->addWidget( mRemove );
+
+  RuleWidgetHandlerManager::instance()->setIsNepomukSearch(modeType==SearchPatternEdit::NepomukMode);
 
   RuleWidgetHandlerManager::instance()->createWidgets( mFunctionStack, mValueStack, this );
 
@@ -406,11 +409,12 @@ void SearchRuleWidget::slotRuleFieldChanged( const QString &field )
 //
 //=============================================================================
 
-SearchRuleWidgetLister::SearchRuleWidgetLister( QWidget *parent, const char *, SearchPatternEdit::SearchPatternEditOptions options)
+SearchRuleWidgetLister::SearchRuleWidgetLister( QWidget *parent, SearchPatternEdit::SearchPatternEditOptions options, SearchPatternEdit::SearchModeType modeType)
   : KWidgetLister( false, 2, FILTER_MAX_RULES, parent )
 {
   mRuleList = 0;
 
+  mTypeMode = modeType;
   mOptions = options;
 }
 
@@ -535,7 +539,7 @@ void SearchRuleWidgetLister::reset()
 QWidget *SearchRuleWidgetLister::createWidget( QWidget *parent )
 {
   SearchRuleWidget *w =
-    new SearchRuleWidget( parent, SearchRule::Ptr(), mOptions );
+    new SearchRuleWidget( parent, SearchRule::Ptr(), mOptions, mTypeMode );
   reconnectWidget( w );
   return w;
 }
@@ -573,12 +577,12 @@ void SearchRuleWidgetLister::regenerateRuleListFromWidgets()
 //
 //=============================================================================
 
-SearchPatternEdit::SearchPatternEdit( QWidget *parent, SearchPatternEditOptions options )
+SearchPatternEdit::SearchPatternEdit( QWidget *parent, SearchPatternEditOptions options, SearchModeType modeType )
   : QWidget( parent ), mAllMessageRBtn( 0 )
 {
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
   setObjectName( QLatin1String("SearchPatternEdit") );
-  initLayout( options );
+  initLayout( options, modeType );
 }
 
 SearchPatternEdit::~SearchPatternEdit()
@@ -596,7 +600,7 @@ void SearchPatternEdit::setPatternEditOptions( SearchPatternEdit::SearchPatternE
 }
 
 
-void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
+void SearchPatternEdit::initLayout( SearchPatternEditOptions options, SearchModeType modeType )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
@@ -637,8 +641,7 @@ void SearchPatternEdit::initLayout( SearchPatternEditOptions options )
   //------------the list of SearchRuleWidget's
   mRuleLister =
     new SearchRuleWidgetLister(
-      this,
-      "swl", options);
+      this, options, modeType);
 
   mRuleLister->slotClear();
 
