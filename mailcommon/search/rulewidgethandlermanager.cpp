@@ -230,8 +230,3 @@ void MailCommon::RuleWidgetHandlerManager::update( const QByteArray &field,
         }
     }
 }
-
-
-
-
-
