@@ -271,10 +271,6 @@ class MAILCOMMON_EXPORT SearchRule
      */
     virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const = 0;
 
-    /**
-     * Adds a serialization of the rule in XESAM format into the stream.
-     */
-    virtual void addXesamClause( QXmlStreamWriter &stream ) const = 0;
 
     QDataStream &operator>>( QDataStream & ) const;
 
@@ -294,10 +290,6 @@ class MAILCOMMON_EXPORT SearchRule
      */
     void addAndNegateTerm( const Nepomuk2::Query::Term &term,
                            Nepomuk2::Query::GroupTerm &termGroup ) const;
-    /**
-     * Converts the rule function into the corresponding Xesam query operator.
-     */
-    QString xesamComparator() const;
 
 protected:
     QString quote( const QString &content ) const;
@@ -378,11 +370,6 @@ class SearchRuleString : public SearchRule
      */
     virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
-    /**
-     * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
-     */
-    virtual void addXesamClause( QXmlStreamWriter &stream ) const;
-
   private:
     /**
      * @copydoc SearchRule::addPersonTerms()
@@ -443,10 +430,6 @@ class SearchRuleNumerical : public SearchRule
      */
     virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
-    /**
-     * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
-     */
-    virtual void addXesamClause( QXmlStreamWriter &stream ) const;
 };
 
 
@@ -494,10 +477,6 @@ class SearchRuleDate : public SearchRule
      */
     virtual void addQueryTerms( Nepomuk2::Query::GroupTerm &groupTerm, bool &emptyIsNotAnError ) const;
 
-    /**
-     * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
-     */
-    virtual void addXesamClause( QXmlStreamWriter &stream ) const;
 };
 
 
@@ -586,10 +565,6 @@ class MAILCOMMON_EXPORT SearchRuleStatus : public SearchRule
     using SearchRule::matches;
 
     static Akonadi::MessageStatus statusFromEnglishName( const QString & );
-    /**
-     * @copydoc SearchRule::addXesamClause( QXmlStreamWriter &stream )
-     */
-    virtual void addXesamClause( QXmlStreamWriter &stream ) const;
 
   private:
     void addTagTerm( Nepomuk2::Query::GroupTerm &groupTerm, const QString &tagId ) const;
@@ -750,11 +725,6 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
      */
 
     SparqlQueryError asSparqlQuery(QString &queryStr, const KUrl::List& url = KUrl::List()) const;
-
-    /**
-     * Returns the pattern as a XESAM query.
-     */
-    QString asXesamQuery() const;
 
     /**
      * Overloaded assignment operator. Makes a deep copy.
