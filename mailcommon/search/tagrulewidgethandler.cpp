@@ -37,17 +37,6 @@ using namespace MailCommon;
 static const struct {
     SearchRule::Function id;
     const char *displayName;
-} StatusFunctions[] = {
-    { SearchRule::FuncContains,    I18N_NOOP( "is" )    },
-    { SearchRule::FuncContainsNot, I18N_NOOP( "is not" ) }
-};
-static const int StatusFunctionCount =
-        sizeof( StatusFunctions ) / sizeof( *StatusFunctions );
-
-
-static const struct {
-    SearchRule::Function id;
-    const char *displayName;
 } TagFunctions[] = {
     { SearchRule::FuncContains,           I18N_NOOP( "contains" )          },
     { SearchRule::FuncContainsNot,        I18N_NOOP( "does not contain" )   },
@@ -232,8 +221,8 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
     // set the function
     const SearchRule::Function func = rule->function();
     int funcIndex = 0;
-    for ( ; funcIndex < StatusFunctionCount; ++funcIndex ) {
-        if ( func == StatusFunctions[funcIndex].id ) {
+    for ( ; funcIndex < TagFunctionCount; ++funcIndex ) {
+        if ( func == TagFunctions[funcIndex].id ) {
             break;
         }
     }
@@ -243,7 +232,7 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
 
     if ( funcCombo ) {
         funcCombo->blockSignals( true );
-        if ( funcIndex < StatusFunctionCount ) {
+        if ( funcIndex < TagFunctionCount ) {
             funcCombo->setCurrentIndex( funcIndex );
         } else {
             funcCombo->setCurrentIndex( 0 );
