@@ -280,6 +280,7 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob *job, bool suc
     if ( success ) {
         parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
         parent->setData( 0, SIEVE_SERVER_ERROR, false );
+        parent->setData( 0, SIEVE_SERVER_MODE, job->sieveCapabilities().contains(QLatin1String("include")) ? Kep14EditorMode : NormalEditorMode);
         return;
     }
 
@@ -451,6 +452,17 @@ void ManageSieveScriptsDialog::slotEditScript()
              this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
+
+bool ManageSieveScriptsDialog::isProtectedName(const QString &name)
+{
+    if (name == QLatin1String("master") ||
+            name == QLatin1String("user") ||
+            name == QLatin1String("management")) {
+        return true;
+    }
+    return false;
+}
+
 void ManageSieveScriptsDialog::slotNewScript()
 {
     QTreeWidgetItem *currentItem = mListView->currentItem();
@@ -474,6 +486,11 @@ void ManageSieveScriptsDialog::slotNewScript()
                                                 i18n( "unnamed" ), &ok, this );
     if ( !ok || name.isEmpty() )
         return;
+
+    if (isProtectedName(name.toLower())) {
+        KMessageBox::error(this, i18n("You can not use protected name."), i18n("New Script"));
+        return;
+    }
 
     u.setFileName( name );
 
@@ -605,11 +622,5 @@ void ManageSieveScriptsDialog::disableManagerScriptsDialog(bool disable)
 {
     setDisabled(disable);
 }
-
-void ManageSieveScriptsDialog::checkEditorMode()
-{
-    //TODO implement it.
-}
-
 
 #include "managesievescriptsdialog.moc"

@@ -9,3 +9,9 @@ WhatsThis=A listbox which lets organize list order.
 IncludeFile=pimcommon/widgets/simplestringlisteditor.h
 Group=Input (KDE-PIM)
 
+[PimCommon::PlainTextEditorWidget]
+ToolTip=A QPlaintEditor with integrate search function (KDE-PIM)
+WhatsThis=QPlaintEditor with integrate search function
+IncludeFile=pimcommon/widgets/plaintexteditorwidget.h
+Group=Input (KDE-PIM)
+

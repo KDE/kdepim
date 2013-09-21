@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AttachPropertyDialogBase</class>
- <widget class="QDialog" name="AttachPropertyDialogBase">
+ <class>AttachPropertyWidgetBase</class>
+ <widget class="QWidget" name="AttachPropertyWidgetBase">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -179,35 +179,6 @@
        </property>
       </spacer>
      </item>
-     <item>
-      <widget class="QPushButton" name="mSave">
-       <property name="toolTip">
-        <string>Save Property to File</string>
-       </property>
-       <property name="whatsThis">
-        <string>Push this button if you want to save the selected property to a file. You will be prompted for a file name.</string>
-       </property>
-       <property name="text">
-        <string>&amp;Save...</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="mClose">
-       <property name="toolTip">
-        <string>Close this dialog</string>
-       </property>
-       <property name="whatsThis">
-        <string>Push this button if you want to close this dialog.</string>
-       </property>
-       <property name="text">
-        <string>&amp;Close</string>
-       </property>
-       <property name="default">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item row="3" column="0" colspan="2">
@@ -232,24 +203,4 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
- <resources/>
- <connections>
-  <connection>
-   <sender>mClose</sender>
-   <signal>clicked()</signal>
-   <receiver>AttachPropertyDialogBase</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>340</x>
-     <y>408</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>187</x>
-     <y>212</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
 </ui>

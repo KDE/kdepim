@@ -338,11 +338,9 @@ void RecentAddressDialog::addAddresses(KConfig *config)
 void RecentAddressDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "RecentAddressDialog" );
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 600, 400 );
     }
 }
 

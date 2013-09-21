@@ -58,17 +58,14 @@ if(BUILD_headerthemeeditor)
   add_subdirectory(headerthemeeditor)
 endif()
 
-if(BUILD_archivemailagent)
+if(BUILD_agents)
   add_subdirectory(akonadi_archivemail_agent)
+  add_subdirectory(akonadi_sendlater_agent)
+  add_subdirectory(akonadi_folderarchive_agent)
 endif()
 
 if(BUILD_importwizard)
   add_subdirectory(importwizard)
-endif()
-
-
-if(BUILD_sendlateragent)
-  add_subdirectory(akonadi_sendlater_agent)
 endif()
 
 if(BUILD_pimsettingexporter)
@@ -77,9 +74,4 @@ endif()
 
 if(BUILD_kmailcvt)
   add_subdirectory(kmailcvt)
-endif()
-
-
-if(BUILD_folderarchiveagent)
-  add_subdirectory(akonadi_folderarchive_agent)
 endif()

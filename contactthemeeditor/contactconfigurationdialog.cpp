@@ -125,11 +125,9 @@ void ContactConfigureDialog::readConfig()
     mConfigureWidget->readConfig();
 
     KConfigGroup group = KConfigGroup( config, "ContactConfigureDialog" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize() );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
-    } else {
-        resize( 600,400);
     }
 }
 

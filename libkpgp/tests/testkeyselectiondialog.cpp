@@ -33,7 +33,7 @@ int main(int argc,char **argv)
 
   KApplication app;
 
-  Kpgp::KeySelectionDialog dlg( Kpgp::Module::getKpgp()->publicKeys(), "Public Keys" );
+  Kpgp::KeySelectionDialog dlg( Kpgp::Module::getKpgp()->publicKeys(), QLatin1String("Public Keys") );
   dlg.show();  
   app.exec();
 }

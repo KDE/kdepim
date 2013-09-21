@@ -37,6 +37,9 @@
 #include <QPushButton>
 #include <QTableView>
 #include <QVBoxLayout>
+#include <QSortFilterProxyModel>
+#include <QMenu>
+#include <QClipboard>
 
 #include <akonadi/collection.h>
 #include <akonadi/itemcreatejob.h>
@@ -50,6 +53,8 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+
+#include <KPIMUtils/ProgressIndicatorLabel>
 
 using namespace KLDAP;
 
@@ -73,7 +78,8 @@ static QString join( const KLDAP::LdapAttrValue &lst, const QString &sep )
 {
   QString res;
   bool alredy = false;
-  for ( KLDAP::LdapAttrValue::ConstIterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
+  KLDAP::LdapAttrValue::ConstIterator end(lst.constEnd());
+  for ( KLDAP::LdapAttrValue::ConstIterator it = lst.constBegin(); it != end; ++it ) {
     if ( alredy ) {
       res += sep;
     }
@@ -377,7 +383,7 @@ class ContactListModel : public QAbstractTableModel
         return mServerList.at( index.row() );
       }
 
-      if ( role != Qt::DisplayRole ) {
+      if ( (role != Qt::DisplayRole) &&  (role != Qt::ToolTipRole) ) {
         return QVariant();
       }
 
@@ -451,20 +457,6 @@ class ContactListModel : public QAbstractTableModel
     QStringList mServerList;
 };
 
-static QList< QPair<KLDAP::LdapAttrMap, QString> > selectedItems( QAbstractItemView *view )
-{
-  QList< QPair<KLDAP::LdapAttrMap, QString> > contacts;
-
-  ContactListModel *model = static_cast<ContactListModel*>( view->model() );
-
-  const QModelIndexList selected = view->selectionModel()->selectedRows();
-  for ( int i = 0; i < selected.count(); ++i ) {
-    contacts.append( model->contact( selected.at( i ) ) );
-  }
-
-  return contacts;
-}
-
 class LdapSearchDialog::Private
 {
   public:
@@ -475,6 +467,19 @@ class LdapSearchDialog::Private
         mModel( 0 )
     {
     }
+
+    QList< QPair<KLDAP::LdapAttrMap, QString> > selectedItems()
+    {
+      QList< QPair<KLDAP::LdapAttrMap, QString> > contacts;
+
+      const QModelIndexList selected = mResultView->selectionModel()->selectedRows();
+      for ( int i = 0; i < selected.count(); ++i ) {
+        contacts.append( mModel->contact( sortproxy->mapToSource(selected.at( i )) ) );
+      }
+
+      return contacts;
+    }
+
 
     void saveSettings();
     void restoreSettings();
@@ -504,6 +509,8 @@ class LdapSearchDialog::Private
     QTableView *mResultView;
     QPushButton *mSearchButton;
     ContactListModel *mModel;
+    KPIMUtils::ProgressIndicatorLabel *progressIndication;
+    QSortFilterProxyModel *sortproxy;
 };
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent )
@@ -511,9 +518,9 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
 {
   setCaption( i18n( "Import Contacts from LDAP" ) );
 #ifdef _WIN32_WCE
-  setButtons( Help | User1 | Cancel );
+  setButtons( /*Help |*/ User1 | Cancel );
 #else
-  setButtons( Help | User1 | User2 | Cancel );
+  setButtons( /*Help |*/ User1 | User2 | Cancel );
 #endif
   setDefaultButton( User1 );
   setModal( false );
@@ -536,6 +543,7 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   boxLayout->addWidget( label, 0, 0 );
 
   d->mSearchEdit = new KLineEdit( groupBox );
+  d->mSearchEdit->setClearButtonShown(true);
   boxLayout->addWidget( d->mSearchEdit, 0, 1 );
   label->setBuddy( d->mSearchEdit );
 
@@ -576,11 +584,29 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   d->mResultView->setSelectionMode( QTableView::MultiSelection );
   d->mResultView->setSelectionBehavior( QTableView::SelectRows );
   d->mModel = new ContactListModel( d->mResultView );
-  d->mResultView->setModel( d->mModel );
+
+  d->sortproxy = new QSortFilterProxyModel( this );
+  d->sortproxy->setSourceModel( d->mModel );
+
+  d->mResultView->setModel( d->sortproxy );
   d->mResultView->verticalHeader()->hide();
+  d->mResultView->setSortingEnabled(true);
+  d->mResultView->horizontalHeader()->setSortIndicatorShown(true);
   connect( d->mResultView, SIGNAL(clicked(QModelIndex)),
            SLOT(slotSelectionChanged()) );
   topLayout->addWidget( d->mResultView );
+
+  d->mResultView->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(d->mResultView, SIGNAL(customContextMenuRequested(QPoint)),
+          this, SLOT(slotCustomContextMenuRequested(QPoint)));
+
+
+  QHBoxLayout *buttonLayout = new QHBoxLayout;
+  buttonLayout->setMargin(0);
+  topLayout->addLayout(buttonLayout);
+
+  d->progressIndication = new KPIMUtils::ProgressIndicatorLabel(i18n("Searching..."));
+  buttonLayout->addWidget(d->progressIndication);
 
   KDialogButtonBox *buttons = new KDialogButtonBox( page, Qt::Horizontal );
   buttons->addButton( i18n( "Select All" ),
@@ -588,7 +614,8 @@ LdapSearchDialog::LdapSearchDialog( QWidget *parent )
   buttons->addButton( i18n( "Unselect All" ),
                       QDialogButtonBox::ActionRole, this, SLOT(slotUnselectAll()) );
 
-  topLayout->addWidget( buttons );
+  buttonLayout->addWidget( buttons );
+
 
 
   setButtonText( User1, i18n( "Add Selected" ) );
@@ -629,6 +656,20 @@ KABC::Addressee::List LdapSearchDialog::selectedContacts() const
   return d->mSelectedContacts;
 }
 
+void LdapSearchDialog::slotCustomContextMenuRequested(const QPoint &pos)
+{
+    const QModelIndex index = d->mResultView->indexAt(pos);
+    if (index.isValid()) {
+        QMenu menu;
+        QAction *act = menu.addAction(i18n("Copy"));
+        if (menu.exec(QCursor::pos()) == act) {
+            QClipboard *cb = QApplication::clipboard();
+            cb->setText(index.data().toString(), QClipboard::Clipboard);
+        }
+    }
+}
+
+
 void LdapSearchDialog::Private::slotSelectionChanged()
 {
   q->enableButton( KDialog::User1, mResultView->selectionModel()->hasSelection() );
@@ -664,8 +705,9 @@ void LdapSearchDialog::Private::restoreSettings()
       ldapClient->setServer( ldapServer );
       QStringList attrs;
 
+      QMap<QString, QString>::ConstIterator end(adrbookattr2ldap().constEnd());
       for ( QMap<QString, QString>::ConstIterator it = adrbookattr2ldap().constBegin();
-            it != adrbookattr2ldap().constEnd(); ++it ) {
+            it != end; ++it ) {
         attrs << *it;
       }
 
@@ -751,6 +793,7 @@ void LdapSearchDialog::Private::slotStartSearch()
   QApplication::setOverrideCursor( Qt::WaitCursor );
 #endif
   mSearchButton->setText( i18n( "Stop" ) );
+  progressIndication->start();
 
   q->disconnect( mSearchButton, SIGNAL(clicked()),
                  q, SLOT(slotStartSearch()) );
@@ -792,6 +835,7 @@ void LdapSearchDialog::Private::slotSearchDone()
               q, SLOT(slotStartSearch()) );
 
   mSearchButton->setText( i18nc( "@action:button Start searching", "&Search" ) );
+  progressIndication->stop();
 #ifndef QT_NO_CURSOR
   QApplication::restoreOverrideCursor();
 #endif
@@ -814,11 +858,13 @@ void LdapSearchDialog::closeEvent( QCloseEvent *e )
 void LdapSearchDialog::Private::slotUnselectAll()
 {
   mResultView->clearSelection();
+  slotSelectionChanged();
 }
 
 void LdapSearchDialog::Private::slotSelectAll()
 {
   mResultView->selectAll();
+  slotSelectionChanged();
 }
 
 void LdapSearchDialog::slotUser1()
@@ -827,7 +873,7 @@ void LdapSearchDialog::slotUser1()
 
   d->mSelectedContacts.clear();
 
-  const QList< QPair<KLDAP::LdapAttrMap, QString> >& items = selectedItems( d->mResultView );
+  const QList< QPair<KLDAP::LdapAttrMap, QString> >& items = d->selectedItems();
 
   if ( !items.isEmpty() ) {
     const QDateTime now = QDateTime::currentDateTime();

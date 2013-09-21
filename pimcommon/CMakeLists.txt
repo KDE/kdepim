@@ -28,6 +28,8 @@ set(libpimcommon_SRCS
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp
   widgets/plaintexteditfindbar.cpp
+  widgets/plaintexteditor.cpp
+  widgets/plaintexteditorwidget.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
   sievehighlighter/sievesyntaxhighlighter.cpp

@@ -44,10 +44,11 @@ class KSIEVEUI_EXPORT Vacation : public QObject
     Q_OBJECT
 
 public:
-    explicit Vacation( QObject * parent=0, bool checkonly = false, const char * name=0 );
+    explicit Vacation( QObject * parent=0, bool checkonly = false );
     virtual ~Vacation();
 
     bool isUsable() const { return !mUrl.isEmpty(); }
+    QString serverName() const { return mServerName; }
 
     void showVacationDialog();
 
@@ -65,14 +66,14 @@ protected:
     static bool parseScript( const QString & script, QString & messageText,
                              int & notificationInterval, QStringList & aliases,
                              bool & sendForSpam, QString & domainName );
-    KUrl findURL() const;
+    KUrl findURL(QString &serverName) const;
     void handlePutResult( KManageSieve::SieveJob * job, bool success, bool );
 
 
 signals:
     void result( bool success );
-    // indicates if the vaction script is active or not
-    void scriptActive( bool active );
+    // indicates if the vacation script is active or not
+    void scriptActive( bool active, const QString &serverName );
     void requestEditVacation();
 
 protected slots:
@@ -87,6 +88,7 @@ protected:
     // IO:
     KManageSieve::SieveJob * mSieveJob;
     KUrl mUrl;
+    QString mServerName;
     // GUI:
     VacationDialog * mDialog;
     bool mWasActive;

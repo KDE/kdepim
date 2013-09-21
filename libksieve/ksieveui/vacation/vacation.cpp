@@ -22,7 +22,6 @@
 #include <akonadi/agentinstance.h>
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kimap/loginjob.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_header_parsing.h>
@@ -31,8 +30,6 @@
 #include <ksieve/error.h>
 #include <ksieve/parser.h>
 #include <ksieve/scriptbuilder.h>
-
-#include <QtCore/QByteArray>
 
 #include <cassert>
 #include <limits.h>
@@ -418,12 +415,14 @@ private:
 
 using namespace KSieveUi;
 
-Vacation::Vacation( QObject * parent, bool checkOnly, const char * name )
-    : QObject( parent ), mSieveJob( 0 ), mDialog( 0 ), mWasActive( false ),
+Vacation::Vacation(QObject * parent, bool checkOnly)
+    : QObject( parent ),
+      mSieveJob( 0 ),
+      mDialog( 0 ),
+      mWasActive( false ),
       mCheckOnly( checkOnly )
 {
-    setObjectName( QString::fromLatin1(name) );
-    mUrl = findURL();
+    mUrl = findURL(mServerName);
     kDebug() << "Vacation: found url \"" << mUrl.prettyUrl() <<"\"";
     if ( mUrl.isEmpty() ) // nothing to do...
         return;
@@ -487,7 +486,7 @@ QString Vacation::composeScript( const QString & messageText,
 }
 
 
-KUrl Vacation::findURL() const
+KUrl Vacation::findURL(QString &serverName) const
 {
     const Akonadi::AgentInstance::List instances = Util::imapAgentInstances();
     foreach ( const Akonadi::AgentInstance &instance, instances ) {
@@ -495,8 +494,10 @@ KUrl Vacation::findURL() const
             continue;
 
         const KUrl url = Util::findSieveUrlForAccount( instance.identifier() );
-        if ( !url.isEmpty() )
+        if ( !url.isEmpty() ) {
+            serverName = instance.name();
             return url;
+        }
     }
 
     return KUrl();
@@ -631,7 +632,7 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
         mDialog->show();
     }
 
-    emit scriptActive( mWasActive );
+    emit scriptActive( mWasActive, mServerName );
     if ( mCheckOnly && mWasActive ) {
         if ( KMessageBox::questionYesNo( 0, i18n( "There is still an active out-of-office reply configured.\n"
                                                   "Do you want to edit it?"), i18n("Out-of-office reply still active"),
@@ -664,7 +665,7 @@ void Vacation::slotDialogOk() {
                                           mDialog->sendForSpam(),
                                           mDialog->domainName() );
     const bool active = mDialog->activateVacation();
-    emit scriptActive( active );
+    emit scriptActive( active, mServerName);
 
     kDebug() << "script:" << endl << script;
 
@@ -708,7 +709,7 @@ void Vacation::handlePutResult( KManageSieve::SieveJob *, bool success, bool act
     kDebug() << "( ???," << success << ", ? )";
     mSieveJob = 0; // job deletes itself after returning from this slot!
     emit result( success );
-    emit scriptActive( activated );
+    emit scriptActive( activated, mServerName );
 }
 
 void Vacation::showVacationDialog()

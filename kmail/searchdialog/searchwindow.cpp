@@ -98,11 +98,6 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
 
     QWidget *searchWidget = new QWidget( this );
     mUi.setupUi( searchWidget );
-    SearchPatternEdit::SearchPatternEditOptions opts;
-    opts |= SearchPatternEdit::NotShowSize;
-    opts |= SearchPatternEdit::NotShowDate;
-    opts |= SearchPatternEdit::AbsoluteDate;
-    mUi.mPatternEdit->setPatternEditOptions(opts);
 
     lay->addWidget(searchWidget);
 
@@ -431,13 +426,8 @@ void SearchWindow::slotSearch()
     searchPattern.purify();
 
     MailCommon::SearchPattern::SparqlQueryError queryError = MailCommon::SearchPattern::NoError;
-#ifdef AKONADI_USE_STRIGI_SEARCH
-    mQuery = searchPattern.asXesamQuery();
-    const QString queryLanguage = QLatin1String("XESAM");
-#else
     queryError = searchPattern.asSparqlQuery(mQuery, urls);
     const QString queryLanguage = QLatin1String("SPARQL");
-#endif
 
     switch(queryError) {
     case MailCommon::SearchPattern::NoError:

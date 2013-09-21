@@ -70,7 +70,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       // Find out the key for which the phrase is needed
       index  = error.indexOf(':', index) + 2;
       index2 = error.indexOf('\n', index);
-      block.setRequiredUserId( error.mid(index, index2 - index) );
+      block.setRequiredUserId( QLatin1String(error.mid(index, index2 - index)) );
       //kDebug( 5326 ) <<"Base: key needed is \"" << block.requiredUserId() <<"\"!";
 
       // Test output length to find out, if the passphrase is
@@ -148,7 +148,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       // get signer
       index = error.indexOf('"',index)+1;
       index2 = error.indexOf('"', index);
-      block.setSignatureUserId( error.mid(index, index2-index) );
+      block.setSignatureUserId( QLatin1String(error.mid(index, index2-index)) );
 
       // get key ID of signer
       index = error.indexOf("KeyID:",index2);
@@ -529,7 +529,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         else
         {
           QByteArray uid = output.mid( pos, eol-pos );
-          key->addUserID( uid );
+          key->addUserID( QLatin1String(uid) );
           pos = eol;
           //kDebug( 5326 ) <<"User ID:"<<uid;
         }
@@ -620,7 +620,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         else
         {
           QByteArray uid = output.mid( pos, eol-pos );
-          key->addUserID( uid );
+          key->addUserID( QLatin1String(uid) );
           pos = eol;
           //kDebug( 5326 ) <<"User ID:"<<uid;
         }
@@ -666,7 +666,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         //                               Test key (2nd user ID) <abc@xyz>
 
         //kDebug( 5326 )<<"User ID:"<<output.mid( pos, eol-pos );
-        key->addUserID( output.mid( pos, eol-pos ) );
+        key->addUserID( QLatin1String(output.mid( pos, eol-pos )) );
       }
     }
     else if( !strncmp( output.data() + offset, "sig", 3 ) )
@@ -811,7 +811,7 @@ Base6::parseTrustDataForKey( Key* key, const QByteArray& str )
 
       // determine the user ID
       int pos = offset + 33;
-      QString uid = str.mid( pos, eol-pos );
+      QString uid = QLatin1String(str.mid( pos, eol-pos ));
 
       // set the validity of the corresponding user ID
       for( UserIDList::Iterator it = userIDs.begin(); it != userIDs.end(); ++it )

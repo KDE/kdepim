@@ -270,13 +270,10 @@ void FolderSelectionDialog::readConfig()
 {
   KConfigGroup group( KernelIf->config(), myConfigGroupName );
 
-  const QSize size = group.readEntry( "Size", QSize() );
+  const QSize size = group.readEntry( "Size", QSize(500, 300) );
   if ( size.isValid() ) {
     resize( size );
-  } else {
-    resize( 500, 300 );
   }
-
   if ( d->mUseGlobalSettings ) {
     const Akonadi::Collection::Id id = SettingsIf->lastSelectedFolder();
     if ( id > -1 ) {

@@ -62,7 +62,7 @@ KTNEFMain::KTNEFMain( QWidget *parent )
   mDefaultDir = config.readPathEntry( "defaultdir", QLatin1String("/tmp/") );
   mLastDir = mDefaultDir;
 
-  // create personale temo extract dir
+  // create personal temp extract dir
   KStandardDirs::makeDir( KGlobal::dirs()->localkdedir() + QLatin1String("/share/apps/ktnef/tmp") );
 
   resize( 430, 350 );
@@ -346,7 +346,6 @@ void KTNEFMain::enableExtractAll( bool on )
   }
 
   actionCollection()->action( QLatin1String("extract_all_files") )->setEnabled( on );
-
 }
 
 void KTNEFMain::enableSingleAction( bool on )

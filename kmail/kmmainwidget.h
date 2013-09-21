@@ -66,6 +66,7 @@ namespace KMail {
   class StatusBarLabel;
   class TagActionManager;
   class FolderShortcutActionManager;
+  class VacationManager;
 }
 
 namespace KSieveUi {
@@ -412,7 +413,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     */
     void showOfflinePage();
     void showResourceOfflinePage();
-    void updateVacationScriptStatus( bool active );
+    void updateVacationScriptStatus(bool active , const QString &serverName = QString());
 
 
     void slotShowExpiryProperties();
@@ -588,8 +589,7 @@ private:
     QTimer *menutimer;
     QTimer *mShowBusySplashTimer;
 
-    QPointer<KSieveUi::Vacation> mVacation;
-    QPointer<KSieveUi::Vacation> mCheckVacation;
+    KMail::VacationManager *mVacationManager;
 #if !defined(NDEBUG)
     QPointer<KSieveUi::SieveDebugDialog> mSieveDebugDialog;
 #endif

@@ -21,6 +21,7 @@
 
 #include <kservicetypetrader.h>
 #include <KDebug>
+#include <KConfigGroup>
 
 namespace Grammar {
 class GrammarLoaderPrivate
@@ -30,7 +31,6 @@ public:
         : settings(0),
           q(qq)
     {
-        loadPlugins();
     }
 
     ~GrammarLoaderPrivate()
@@ -93,8 +93,10 @@ GrammarLoader::GrammarLoader()
     : d(new GrammarLoaderPrivate(this))
 {
     d->settings = new GrammarSettings;//
-    //KConfig config(QString::fromLatin1(DEFAULT_CONFIG_FILE));
-    //d->settings->readSettings(&config);
+    d->loadPlugins();
+    KConfig config(QString::fromLatin1("grammarrc"));
+    KConfigGroup grp = config.group(QLatin1String("General"));
+    d->settings->readSettings(grp);
 }
 
 GrammarLoader::~GrammarLoader()

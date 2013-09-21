@@ -95,9 +95,10 @@ CryptoPagePlugin::CryptoPagePlugin()
   // Send preferences/sign (see kleo/kleo/enum.h)
   KHBox* hbox = new KHBox( box );
 
-  new QLabel( i18n( "Sign:" ), hbox );
+  l = new QLabel( i18n( "Sign:" ), hbox );
 
   mSignPref = new KComboBox( hbox );
+  l->setBuddy( mSignPref );
   mSignPref->setEditable( false );
   for ( unsigned int i = Kleo::UnknownSigningPreference; i < Kleo::MaxSigningPreference ; ++i )
     mSignPref->addItem( Kleo::signingPreferenceToLabel(
@@ -107,9 +108,10 @@ CryptoPagePlugin::CryptoPagePlugin()
   // Send preferences/encrypt (see kleo/kleo/enum.h)
   hbox = new KHBox( box );
 
-  new QLabel( i18n( "Encrypt:" ), hbox );
+  l = new QLabel( i18n( "Encrypt:" ), hbox );
 
   mCryptPref = new KComboBox( hbox );
+  l->setBuddy( mCryptPref );
   mCryptPref->setEditable( false );
   for ( unsigned int i = Kleo::UnknownPreference; i < Kleo::MaxEncryptionPreference ; ++i )
     mCryptPref->addItem( Kleo::encryptionPreferenceToLabel(

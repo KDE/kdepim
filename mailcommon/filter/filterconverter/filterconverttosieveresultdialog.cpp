@@ -19,6 +19,8 @@
 #include "filterconverttosieveresultdialog.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighter.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
+#include "pimcommon/widgets/plaintexteditor.h"
+#include "pimcommon/widgets/plaintexteditorwidget.h"
 #include "pimcommon/util/pimutil.h"
 
 #include <KTextEdit>
@@ -50,10 +52,9 @@ FilterConvertToSieveResultDialog::FilterConvertToSieveResultDialog(QWidget *pare
 
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
-    mEditor = new KTextEdit;
-    mSyntaxHighlighter = new PimCommon::SieveSyntaxHighlighter( mEditor->document() );
-    mSyntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());
-    mEditor->setAcceptRichText(false);
+    mEditor = new PimCommon::PlainTextEditorWidget;
+    PimCommon::SieveSyntaxHighlighter *syntaxHighlighter = new PimCommon::SieveSyntaxHighlighter( mEditor->editor()->document() );
+    syntaxHighlighter->addCapabilities(PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities());
     mainLayout->addWidget(mEditor);
     setMainWidget( mainWidget );
     readConfig();
@@ -67,13 +68,13 @@ FilterConvertToSieveResultDialog::~FilterConvertToSieveResultDialog()
 void FilterConvertToSieveResultDialog::slotSave()
 {
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
-    PimCommon::Util::saveTextAs(mEditor->toPlainText(), filter, this);
+    PimCommon::Util::saveTextAs(mEditor->editor()->toPlainText(), filter, this);
 }
 
 
 void FilterConvertToSieveResultDialog::setCode(const QString &code)
 {
-    mEditor->setPlainText(code);
+    mEditor->editor()->setPlainText(code);
 }
 
 static const char *myConfigGroupName = "FilterConvertToSieveResultDialog";
@@ -82,11 +83,9 @@ void FilterConvertToSieveResultDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), myConfigGroupName );
 
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(500, 300) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 500, 300 );
     }
 }
 

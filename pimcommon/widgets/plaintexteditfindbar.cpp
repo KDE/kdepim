@@ -150,6 +150,7 @@ void PlainTextEditFindBar::messageInfo( bool backward, bool isAutoSearch, bool f
 
 void PlainTextEditFindBar::setFoundMatch( bool match )
 {
+#ifndef QT_NO_STYLE_STYLESHEET
     QString styleSheet;
 
     if (!mSearch->text().isEmpty()) {
@@ -166,10 +167,8 @@ void PlainTextEditFindBar::setFoundMatch( bool match )
                 .arg(bgBrush.brush(mSearch).color().name());
     }
 
-#ifndef QT_NO_STYLE_STYLESHEET
     mSearch->setStyleSheet(styleSheet);
 #endif
-
 }
 
 void PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )

@@ -171,7 +171,7 @@ QString SieveActionSetVariable::help() const
 {
     QString helpStr = i18n("The \"set\" action stores the specified value in the variable identified by name.");
     if (mHasRegexCapability) {
-        helpStr += QLatin1Char('\n') + i18n("This modifier adds the necessary quoting to ensure that the expanded text will only match a literal occurrence if used as a parameter"
+        helpStr += QLatin1Char('\n') + i18n("This modifier adds the necessary quoting to ensure that the expanded text will only match a literal occurrence if used as a parameter "
                                             "to :regex.  Every character with special meaning (. , *, ? , etc.) is prefixed with \\ in the expansion");
     }
     return helpStr;

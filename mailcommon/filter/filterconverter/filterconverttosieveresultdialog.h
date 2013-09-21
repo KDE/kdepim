@@ -19,10 +19,9 @@
 #define FILTERCONVERTTOSIEVERESULTDIALOG_H
 
 #include <KDialog>
-class KTextEdit;
 
 namespace PimCommon {
-class SieveSyntaxHighlighter;
+class PlainTextEditorWidget;
 }
 
 namespace MailCommon {
@@ -41,8 +40,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    KTextEdit *mEditor;
-    PimCommon::SieveSyntaxHighlighter *mSyntaxHighlighter;
+    PimCommon::PlainTextEditorWidget *mEditor;
 };
 }
 

@@ -55,8 +55,9 @@ bool VacationManager::activeVacationScriptAvailable() const
   return mVacationScriptIsActive;
 }
 
-void VacationManager::updateVacationScriptActivity( bool active )
+void VacationManager::updateVacationScriptActivity( bool active, const QString &serverName )
 {
+  Q_UNUSED(serverName);
   mVacationScriptIsActive = active;
   emit vacationScriptActivityChanged();
 }
@@ -69,7 +70,7 @@ void VacationManager::checkVacation()
     return;
   
   KSieveUi::Vacation *vacation = new KSieveUi::Vacation( this, true /* check only */ );
-  connect( vacation, SIGNAL(scriptActive(bool)), SLOT(updateVacationScriptActivity(bool)) );
+  connect( vacation, SIGNAL(scriptActive(bool,QString)), SLOT(updateVacationScriptActivity(bool,QString)) );
   connect( vacation, SIGNAL(requestEditVacation()), SLOT(editVacation()) );
 }
 
@@ -82,7 +83,7 @@ void VacationManager::editVacation()
     return;
 
   mVacation = new KSieveUi::Vacation( this );
-  connect( mVacation, SIGNAL(scriptActive(bool)), SLOT(updateVacationScriptActivity(bool)) );
+  connect( mVacation, SIGNAL(scriptActive(bool,QString)), SLOT(updateVacationScriptActivity(bool,QString)) );
   connect( mVacation, SIGNAL(requestEditVacation()), SLOT(editVacation()) );
   if ( mVacation->isUsable() ) {
     connect( mVacation, SIGNAL(result(bool)), mVacation, SLOT(deleteLater()) );

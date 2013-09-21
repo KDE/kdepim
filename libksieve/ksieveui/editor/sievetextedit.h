@@ -21,7 +21,7 @@
 
 #include "ksieveui_export.h"
 
-#include <QPlainTextEdit>
+#include "pimcommon/widgets/plaintexteditor.h"
 
 class QCompleter;
 
@@ -34,7 +34,7 @@ namespace KSieveUi {
 class SieveLineNumberArea;
 
 
-class KSIEVEUI_EXPORT SieveTextEdit : public QPlainTextEdit
+class KSIEVEUI_EXPORT SieveTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 
@@ -51,18 +51,12 @@ private Q_SLOTS:
     void slotInsertCompletion( const QString& );
     void slotUpdateLineNumberAreaWidth(int newBlockCount);
     void slotUpdateLineNumberArea(const QRect &, int);
-    void slotUndoableClear();
-    void slotSpeakText();
 
 protected:
     QString wordUnderCursor() const;
     void initCompleter();
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent *event);
-    void contextMenuEvent( QContextMenuEvent *event );
-
-Q_SIGNALS:
-    void findText();
 
 private:
     QStringList completerList() const;

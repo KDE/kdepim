@@ -69,7 +69,7 @@ void FolderArchiveAgentJob::start()
 
 void FolderArchiveAgentJob::slotCheckFailder(const QString &message)
 {
-    sendError(i18n("Cannot fetch collection \"%1\".", message));
+    sendError(i18n("Cannot fetch collection. %1", message));
 }
 
 void FolderArchiveAgentJob::slotFetchCollection(KJob *job)

@@ -37,17 +37,6 @@ using namespace MailCommon;
 static const struct {
     SearchRule::Function id;
     const char *displayName;
-} StatusFunctions[] = {
-    { SearchRule::FuncContains,    I18N_NOOP( "is" )    },
-    { SearchRule::FuncContainsNot, I18N_NOOP( "is not" ) }
-};
-static const int StatusFunctionCount =
-        sizeof( StatusFunctions ) / sizeof( *StatusFunctions );
-
-
-static const struct {
-    SearchRule::Function id;
-    const char *displayName;
 } TagFunctions[] = {
     { SearchRule::FuncContains,           I18N_NOOP( "contains" )          },
     { SearchRule::FuncContainsNot,        I18N_NOOP( "does not contain" )   },
@@ -62,7 +51,7 @@ static const int TagFunctionCount =
 //---------------------------------------------------------------------------
 
 QWidget *TagRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool isNepomukSearch ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -71,7 +60,13 @@ QWidget *TagRuleWidgetHandler::createFunctionWidget(
     PimCommon::MinimumComboBox *funcCombo = new PimCommon::MinimumComboBox( functionStack );
     funcCombo->setObjectName( QLatin1String("tagRuleFuncCombo") );
     for ( int i = 0; i < TagFunctionCount; ++i ) {
-        funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
+        if (isNepomukSearch) {
+            if (TagFunctions[i].id == SearchRule::FuncContains || TagFunctions[i].id == SearchRule::FuncContainsNot) {
+                funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
+            }
+        } else {
+            funcCombo->addItem( i18n( TagFunctions[i].displayName ) );
+        }
     }
     funcCombo->adjustSize();
     QObject::connect( funcCombo, SIGNAL(activated(int)),
@@ -222,7 +217,7 @@ void TagRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                     QStackedWidget *valueStack,
-                                    const SearchRule::Ptr rule ) const
+                                    const SearchRule::Ptr rule, bool isNepomukSearch ) const
 {
     if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );
@@ -231,9 +226,17 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
 
     // set the function
     const SearchRule::Function func = rule->function();
+
+    if (isNepomukSearch ) {
+        if(func != SearchRule::FuncContains && func != SearchRule::FuncContainsNot) {
+            reset( functionStack, valueStack );
+            return false;
+        }
+    }
+
     int funcIndex = 0;
-    for ( ; funcIndex < StatusFunctionCount; ++funcIndex ) {
-        if ( func == StatusFunctions[funcIndex].id ) {
+    for ( ; funcIndex < TagFunctionCount; ++funcIndex ) {
+        if ( func == TagFunctions[funcIndex].id ) {
             break;
         }
     }
@@ -243,7 +246,7 @@ bool TagRuleWidgetHandler::setRule( QStackedWidget *functionStack,
 
     if ( funcCombo ) {
         funcCombo->blockSignals( true );
-        if ( funcIndex < StatusFunctionCount ) {
+        if ( funcIndex < TagFunctionCount ) {
             funcCombo->setCurrentIndex( funcIndex );
         } else {
             funcCombo->setCurrentIndex( 0 );

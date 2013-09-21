@@ -114,11 +114,9 @@ void FolderArchiveConfigureDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), myConfigGroupName );
 
-    const QSize size = group.readEntry( "Size", QSize() );
+    const QSize size = group.readEntry( "Size", QSize(500, 300) );
     if ( size.isValid() ) {
         resize( size );
-    } else {
-        resize( 500, 300 );
     }
 }
 

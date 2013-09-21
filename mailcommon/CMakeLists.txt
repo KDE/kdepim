@@ -117,6 +117,7 @@ set(libmailcommon_SRCS
   search/numericrulewidgethandler.cpp
   search/daterulewidgethandler.cpp
   search/numericdoublerulewidgethandler.cpp
+  search/headersrulerwidgethandler.cpp
   mdn/sendmdnhandler.cpp
   snippets/snippetdialog.cpp
   snippets/snippetsmanager.cpp

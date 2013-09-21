@@ -289,7 +289,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       // Find out the key for which the phrase is needed
       index  += 17;
       index2 = error.indexOf('\n', index);
-      block.setRequiredUserId( error.mid(index, index2 - index) );
+      block.setRequiredUserId( QLatin1String(error.mid(index, index2 - index)) );
       //kDebug( 5326 ) <<"Base: key needed is \"" << block.requiredUserId() <<"\"!";
 
       if((passphrase != 0) && (error.contains("Bad pass phrase") ))
@@ -427,7 +427,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       // get signer
       index = error.indexOf('"',index2+19);
       index2 = error.indexOf('"', index+1);
-      block.setSignatureUserId( error.mid(index+1, index2-index-1) );
+      block.setSignatureUserId( QLatin1String(error.mid(index+1, index2-index-1)) );
     }
     else if( (index2 = error.indexOf("Bad signature from", index)) != -1 )
     {
@@ -435,7 +435,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       // get signer
       index = error.indexOf('"',index2+19);
       index2 = error.indexOf('"', index+1);
-      block.setSignatureUserId( error.mid(index+1, index2-index-1) );
+      block.setSignatureUserId( QLatin1String(error.mid(index+1, index2-index-1)) );
     }
     else if( error.indexOf("Keyring file", index) != -1 )
     {
@@ -726,7 +726,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
         pos++;
       QByteArray uid = output.mid( pos, index2-pos );
       if( uid != "*** KEY REVOKED ***" )
-        key->addUserID( uid );
+        key->addUserID( QLatin1String(uid) );
       else
       {
         subkey->setRevoked( true );
@@ -802,7 +802,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
         // Example:
         //                               Test key (2nd user ID) <abc@xyz>
 
-        key->addUserID( output.mid( pos, index2-pos ) );
+        key->addUserID( QLatin1String(output.mid( pos, index2-pos )) );
       }
     }
     index = index2 + 1;
@@ -871,7 +871,7 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
       int pos = index + 31;
       if( str[index+2] == ' ' )
         pos++; // additional user IDs start one column later
-      QString uid = str.mid( pos, index2-pos );
+      QString uid = QLatin1String(str.mid( pos, index2-pos ));
 
       // set the validity of the corresponding user ID
       for( UserIDList::Iterator it = userIDs.begin(); it != userIDs.end(); ++it )
@@ -1006,7 +1006,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
         pos++;
       QByteArray uid = output.mid( pos, index2-pos );
       if( uid != "*** KEY REVOKED ***" )
-        key->addUserID( uid );
+        key->addUserID( QLatin1String(uid) );
       else
       {
         subkey->setRevoked( true );
@@ -1081,7 +1081,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
         // Example:
         //                               Test key (2nd user ID) <abc@xyz>
 
-        key->addUserID( output.mid( pos, index2-pos ) );
+        key->addUserID( QLatin1String(output.mid( pos, index2-pos )) );
       }
     }
 
