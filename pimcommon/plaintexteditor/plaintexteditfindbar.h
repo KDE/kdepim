@@ -62,6 +62,23 @@ private:
     QPushButton *mFindNextBtn;
 };
 
+class PlainTextReplaceWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PlainTextReplaceWidget(QWidget *parent=0);
+    ~PlainTextReplaceWidget();
+
+    KLineEdit *replace() const;
+
+Q_SIGNALS:
+    void replaceText();
+
+private:
+    KLineEdit *mReplace;
+    QPushButton *mReplaceBtn;
+};
+
 class PIMCOMMON_EXPORT PlainTextEditFindBar : public QWidget
 {
     Q_OBJECT
@@ -100,7 +117,6 @@ private:
     QString mLastSearchStr;
     PlainTextFindWidget *mFindWidget;
     QPlainTextEdit *mView;
-
 };
 
 }

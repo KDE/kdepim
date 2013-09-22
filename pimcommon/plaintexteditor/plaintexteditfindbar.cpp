@@ -36,11 +36,39 @@
 
 using namespace PimCommon;
 
+PlainTextReplaceWidget::PlainTextReplaceWidget(QWidget *parent)
+    : QWidget(parent)
+{
+    QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
+    QLabel *label = new QLabel( i18nc( "Replace text", "R&eplace:" ), this );
+    lay->addWidget( label );
+
+    mReplace = new KLineEdit;
+    lay->addWidget(mReplace);
+
+    mReplaceBtn = new QPushButton( i18n( "Replace" ), this );
+    connect( mReplaceBtn, SIGNAL(clicked()), this, SIGNAL(replaceText()) );
+    lay->addWidget( mReplaceBtn );
+
+    setLayout(lay);
+}
+
+PlainTextReplaceWidget::~PlainTextReplaceWidget()
+{
+
+}
+
+KLineEdit *PlainTextReplaceWidget::replace() const
+{
+    return mReplace;
+}
 
 PlainTextFindWidget::PlainTextFindWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
     QLabel *label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
     lay->addWidget( label );
 
