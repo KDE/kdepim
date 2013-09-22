@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "pimcommon/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
 
 #include <kdebug.h>
 #include <kapplication.h>
@@ -32,7 +32,7 @@ int main (int argc, char **argv)
 
     KApplication app;
 
-    PimCommon::PlainTextEditor *w = new PimCommon::PlainTextEditor();
+    PimCommon::PlainTextEditorWidget *w = new PimCommon::PlainTextEditorWidget();
     w->show();
     app.exec();
     delete w;
