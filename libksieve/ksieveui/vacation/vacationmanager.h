@@ -25,7 +25,7 @@
 
 
 namespace KSieveUi {
-
+class Vacation;
 struct vacationInfo
 {
     QString displayName;
@@ -39,10 +39,14 @@ public:
     explicit VacationManager(QObject *parent = 0);
     ~VacationManager();
 
+    void checkVacation();
+
 private:
     void findImapResourceWithVacationSupport();
     /*resource identifier, vacationInfo*/
     QHash<QString, vacationInfo> mImapUrl;
+    QHash<QString, Vacation> mJobList;
+    bool mWasInitialized;
 };
 }
 

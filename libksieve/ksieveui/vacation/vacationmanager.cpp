@@ -24,7 +24,8 @@
 
 using namespace KSieveUi;
 VacationManager::VacationManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mWasInitialized(false)
 {
 }
 
@@ -48,7 +49,25 @@ void VacationManager::findImapResourceWithVacationSupport()
             mImapUrl.insert(instance.identifier(), info);
         }
     }
+    mWasInitialized = true;
 }
 
+
+void VacationManager::checkVacation()
+{
+    if (!mWasInitialized) {
+        findImapResourceWithVacationSupport();
+    }
+
+    QHash<QString, vacationInfo>::const_iterator i = mImapUrl.constBegin();
+     while (i != mImapUrl.constEnd()) {
+         Vacation *vacationJob = new Vacation(this, true, i.value().url);
+         connect( vacationJob, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)) );
+         connect( vacationJob, SIGNAL(requestEditVacation()), SIGNAL(editVacation()) );
+         ++i;
+     }
+
+    //TODO check vacation
+}
 
 #include "vacationmanager.moc"
