@@ -281,7 +281,7 @@ private:
 };
 
 
-class MAILCOMMON_EXPORT SearchRuleWidgetLister : public KPIM::KWidgetLister
+class SearchRuleWidgetLister : public KPIM::KWidgetLister
 {
   Q_OBJECT
 
