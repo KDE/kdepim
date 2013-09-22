@@ -36,25 +36,12 @@
 
 using namespace PimCommon;
 
-PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * parent )
-    : QWidget( parent ), mView( view )
+
+PlainTextFindWidget::PlainTextFindWidget(QWidget *parent)
+    : QWidget(parent)
 {
-    QHBoxLayout * lay = new QHBoxLayout( this );
-    lay->setMargin( 2 );
-
-    QToolButton * closeBtn = new QToolButton( this );
-    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
-    closeBtn->setIconSize( QSize( 16, 16 ) );
-    closeBtn->setToolTip( i18n( "Close" ) );
-
-#ifndef QT_NO_ACCESSIBILITY
-    closeBtn->setAccessibleName( i18n( "Close" ) );
-#endif
-
-    closeBtn->setAutoRaise( true );
-    lay->addWidget( closeBtn );
-
-    QLabel * label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
+    QHBoxLayout *lay = new QHBoxLayout;
+    QLabel *label = new QLabel( i18nc( "Find text", "F&ind:" ), this );
     lay->addWidget( label );
 
     mSearch = new KLineEdit( this );
@@ -86,15 +73,76 @@ PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * par
     optionsBtn->setMenu( optionsMenu );
     lay->addWidget( optionsBtn );
 
+    connect( mFindNextBtn, SIGNAL(clicked()), this, SIGNAL(findNext()) );
+    connect( mFindPrevBtn, SIGNAL(clicked()), this, SIGNAL(findPrev()) );
+    connect( mCaseSensitiveAct, SIGNAL(toggled(bool)), this, SIGNAL(updateSearchOptions()) );
+    connect( mWholeWordAct, SIGNAL(toggled(bool)), this, SIGNAL(updateSearchOptions()) );
+    connect( mSearch, SIGNAL(textChanged(QString)), this, SLOT(slotAutoSearch(QString)) );
+    connect( mSearch, SIGNAL(clearButtonClicked()), this, SIGNAL(clearSearch()) );
+    setLayout(lay);
+}
+
+PlainTextFindWidget::~PlainTextFindWidget()
+{
+
+}
+
+void PlainTextFindWidget::slotAutoSearch(const QString &str)
+{
+    const bool isNotEmpty = ( !str.isEmpty() );
+    mFindPrevBtn->setEnabled( isNotEmpty );
+    mFindNextBtn->setEnabled( isNotEmpty );
+    Q_EMIT autoSearch(str);
+}
+
+KLineEdit *PlainTextFindWidget::search() const
+{
+    return mSearch;
+}
+
+
+QTextDocument::FindFlags PlainTextFindWidget::searchOptions() const
+{
+    QTextDocument::FindFlags opt=0;
+    if ( mCaseSensitiveAct->isChecked() )
+        opt |= QTextDocument::FindCaseSensitively;
+    if ( mWholeWordAct->isChecked() )
+        opt |= QTextDocument::FindWholeWords;
+    return opt;
+}
+
+PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * parent )
+    : QWidget( parent ),
+      mView( view )
+{
+    QHBoxLayout * lay = new QHBoxLayout;
+    lay->setMargin( 2 );
+
+    QToolButton * closeBtn = new QToolButton( this );
+    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIconSize( QSize( 16, 16 ) );
+    closeBtn->setToolTip( i18n( "Close" ) );
+
+#ifndef QT_NO_ACCESSIBILITY
+    closeBtn->setAccessibleName( i18n( "Close" ) );
+#endif
+
+    closeBtn->setAutoRaise( true );
+    lay->addWidget( closeBtn );
+
+    mFindWidget = new PlainTextFindWidget;
+    lay->addWidget( mFindWidget );
+
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
-    connect( mFindNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
-    connect( mFindPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
-    connect( mCaseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(slotUpdateSearchOptions()) );
-    connect( mWholeWordAct, SIGNAL(toggled(bool)), this, SLOT(slotUpdateSearchOptions()) );
-    connect( mSearch, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
-    connect( mSearch, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
+    connect( mFindWidget, SIGNAL(findNext()), this, SLOT(findNext()) );
+    connect( mFindWidget, SIGNAL(findPrev()), this, SLOT(findPrev()) );
+    connect( mFindWidget, SIGNAL(updateSearchOptions()), this, SLOT(slotUpdateSearchOptions()) );
+    connect( mFindWidget, SIGNAL(updateSearchOptions()), this, SLOT(slotUpdateSearchOptions()) );
+    connect( mFindWidget, SIGNAL(autoSearch(QString)), this, SLOT(autoSearch(QString)) );
+    connect( mFindWidget, SIGNAL(clearSearch()), this, SLOT(slotClearSearch()) );
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
+    setLayout(lay);
 }
 
 PlainTextEditFindBar::~PlainTextEditFindBar()
@@ -103,19 +151,19 @@ PlainTextEditFindBar::~PlainTextEditFindBar()
 
 void PlainTextEditFindBar::setText( const QString&text )
 {
-    mSearch->setText( text );
+    mFindWidget->search()->setText( text );
 }
 
 QString PlainTextEditFindBar::text() const
 {
-    return mSearch->text();
+    return mFindWidget->search()->text();
 }
 
 void PlainTextEditFindBar::focusAndSetCursor()
 {
     setFocus();
-    mSearch->selectAll();
-    mSearch->setFocus();
+    mFindWidget->search()->selectAll();
+    mFindWidget->search()->setFocus();
 }
 
 void PlainTextEditFindBar::slotClearSearch()
@@ -126,8 +174,6 @@ void PlainTextEditFindBar::slotClearSearch()
 void PlainTextEditFindBar::autoSearch( const QString& str )
 {
     const bool isNotEmpty = ( !str.isEmpty() );
-    mFindPrevBtn->setEnabled( isNotEmpty );
-    mFindNextBtn->setEnabled( isNotEmpty );
     if ( isNotEmpty ) {
         mView->moveCursor(QTextCursor::Start);
         QTimer::singleShot( 0, this, SLOT(slotSearchText()) );
@@ -157,7 +203,7 @@ void PlainTextEditFindBar::setFoundMatch( bool match )
 #ifndef QT_NO_STYLE_STYLESHEET
     QString styleSheet;
 
-    if (!mSearch->text().isEmpty()) {
+    if (! mFindWidget->search()->text().isEmpty()) {
         KColorScheme::BackgroundRole bgColorScheme;
 
         if (match)
@@ -168,32 +214,28 @@ void PlainTextEditFindBar::setFoundMatch( bool match )
         KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
 
         styleSheet = QString::fromLatin1("QLineEdit{ background-color:%1 }")
-                .arg(bgBrush.brush(mSearch).color().name());
+                .arg(bgBrush.brush(mFindWidget->search()).color().name());
     }
 
-    mSearch->setStyleSheet(styleSheet);
+     mFindWidget->search()->setStyleSheet(styleSheet);
 #endif
 }
 
 void PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
 {
-    QTextDocument::FindFlags searchOptions = 0;
+    QTextDocument::FindFlags searchOptions = mFindWidget->searchOptions();
     if ( backward )
         searchOptions |= QTextDocument::FindBackward;
-    if ( mCaseSensitiveAct->isChecked() )
-        searchOptions |= QTextDocument::FindCaseSensitively;
-    if ( mWholeWordAct->isChecked() )
-        searchOptions |= QTextDocument::FindWholeWords;
 
     if ( isAutoSearch ) {
         QTextCursor cursor = mView->textCursor();
         cursor.setPosition( cursor.selectionStart() );
         mView->setTextCursor( cursor );
-    } else if ( !mLastSearchStr.contains( mSearch->text(), Qt::CaseSensitive )) {
+    } else if ( !mLastSearchStr.contains( mFindWidget->search()->text(), Qt::CaseSensitive )) {
         clearSelections();
     }
 
-    mLastSearchStr = mSearch->text();
+    mLastSearchStr = mFindWidget->search()->text();
     const bool found = mView->find( mLastSearchStr, searchOptions );
 
     setFoundMatch( found );
@@ -212,12 +254,8 @@ void PlainTextEditFindBar::findPrev()
 
 void PlainTextEditFindBar::slotUpdateSearchOptions()
 {
-    QTextDocument::FindFlags searchOptions = 0;
-    if ( mCaseSensitiveAct->isChecked() )
-        searchOptions |= QTextDocument::FindCaseSensitively;
-    if ( mWholeWordAct->isChecked() )
-        searchOptions |= QTextDocument::FindWholeWords;
-    mLastSearchStr = mSearch->text();
+    const QTextDocument::FindFlags searchOptions = mFindWidget->searchOptions();
+    mLastSearchStr = mFindWidget->search()->text();
     const bool found = mView->find( mLastSearchStr, searchOptions );
     setFoundMatch( found );
 }
@@ -230,7 +268,7 @@ void PlainTextEditFindBar::clearSelections()
 void PlainTextEditFindBar::closeBar()
 {
     // Make sure that all old searches are cleared
-    mSearch->setText( QString() );
+    mFindWidget->search()->setText( QString() );
     clearSelections();
     hide();
 }

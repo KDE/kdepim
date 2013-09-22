@@ -21,6 +21,7 @@
 
 #include "pimcommon_export.h"
 #include <QWidget>
+#include <QTextDocument>
 
 class QAction;
 class KLineEdit;
@@ -30,6 +31,36 @@ class QMenu;
 class QPlainTextEdit;
 
 namespace PimCommon {
+
+class PlainTextFindWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PlainTextFindWidget(QWidget *parent=0);
+    ~PlainTextFindWidget();
+
+    QTextDocument::FindFlags searchOptions() const;
+
+    KLineEdit *search() const;
+
+private Q_SLOTS:
+    void slotAutoSearch(const QString &str);
+
+Q_SIGNALS:
+    void findNext();
+    void findPrev();
+    void clearSearch();
+    void autoSearch(const QString &);
+    void updateSearchOptions();
+
+private:
+    KLineEdit *mSearch;
+    QAction *mCaseSensitiveAct;
+    QAction *mWholeWordAct;
+
+    QPushButton *mFindPrevBtn;
+    QPushButton *mFindNextBtn;
+};
 
 class PIMCOMMON_EXPORT PlainTextEditFindBar : public QWidget
 {
@@ -67,12 +98,7 @@ private slots:
 
 private:
     QString mLastSearchStr;
-    KLineEdit *mSearch;
-    QAction *mCaseSensitiveAct;
-    QAction *mWholeWordAct;
-
-    QPushButton *mFindPrevBtn;
-    QPushButton *mFindNextBtn;
+    PlainTextFindWidget *mFindWidget;
     QPlainTextEdit *mView;
 
 };
