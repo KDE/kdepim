@@ -64,6 +64,7 @@ set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERS
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(translator/tests)
+add_subdirectory(plaintexteditor/tests)
 
 
 if (QT_QTDESIGNER_FOUND)

@@ -54,7 +54,7 @@ void PlainTextEditorWidget::slotFind()
     if ( mEditor->textCursor().hasSelection() )
         mFindBar->setText( mEditor->textCursor().selectedText() );
     mEditor->moveCursor(QTextCursor::Start);
-    mFindBar->show();
+    mFindBar->showFind();
     mFindBar->focusAndSetCursor();
 }
 

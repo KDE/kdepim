@@ -151,7 +151,6 @@ KLineEdit *PlainTextFindWidget::search() const
     return mSearch;
 }
 
-
 QTextDocument::FindFlags PlainTextFindWidget::searchOptions() const
 {
     QTextDocument::FindFlags opt=0;
@@ -209,6 +208,15 @@ PlainTextEditFindBar::~PlainTextEditFindBar()
 {
 }
 
+void PlainTextEditFindBar::showFind()
+{
+    show();
+    if (mReplaceWidget->isVisible()) {
+        mReplaceWidget->hide();
+        updateGeometry();
+    }
+}
+
 void PlainTextEditFindBar::showReplace()
 {
     if (mView->isReadOnly())
@@ -219,18 +227,6 @@ void PlainTextEditFindBar::showReplace()
         updateGeometry();
     }
 }
-
-/*
-void PlainTextEditFindBar::slotHideReplace()
-{
-    if (mReplaceWidget->isVisible()) {
-        mReplaceWidget->hide();
-    } else {
-        mReplaceWidget->show();
-    }
-    updateGeometry();
-}
-*/
 
 void PlainTextEditFindBar::setText( const QString&text )
 {
@@ -329,6 +325,7 @@ void PlainTextEditFindBar::closeBar()
 {
     // Make sure that all old searches are cleared
     mFindWidget->search()->setText( QString() );
+    mReplaceWidget->replace()->setText( QString() );
     clearSelections();
     hide();
 }

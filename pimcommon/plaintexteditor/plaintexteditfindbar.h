@@ -94,6 +94,7 @@ public:
     void focusAndSetCursor();
 
     void showReplace();
+    void showFind();
 
 protected:
     bool event(QEvent* e);
