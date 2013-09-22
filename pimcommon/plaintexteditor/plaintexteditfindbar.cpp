@@ -115,6 +115,29 @@ PlainTextFindWidget::~PlainTextFindWidget()
 
 }
 
+void PlainTextFindWidget::setFoundMatch( bool match )
+{
+#ifndef QT_NO_STYLE_STYLESHEET
+    QString styleSheet;
+
+    if (! mSearch->text().isEmpty()) {
+        KColorScheme::BackgroundRole bgColorScheme;
+
+        if (match)
+            bgColorScheme = KColorScheme::PositiveBackground;
+        else
+            bgColorScheme = KColorScheme::NegativeBackground;
+
+        KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
+
+        styleSheet = QString::fromLatin1("QLineEdit{ background-color:%1 }")
+                .arg(bgBrush.brush(mSearch).color().name());
+    }
+
+     mSearch->setStyleSheet(styleSheet);
+#endif
+}
+
 void PlainTextFindWidget::slotAutoSearch(const QString &str)
 {
     const bool isNotEmpty = ( !str.isEmpty() );
@@ -226,29 +249,6 @@ void PlainTextEditFindBar::messageInfo( bool backward, bool isAutoSearch, bool f
     }
 }
 
-void PlainTextEditFindBar::setFoundMatch( bool match )
-{
-#ifndef QT_NO_STYLE_STYLESHEET
-    QString styleSheet;
-
-    if (! mFindWidget->search()->text().isEmpty()) {
-        KColorScheme::BackgroundRole bgColorScheme;
-
-        if (match)
-            bgColorScheme = KColorScheme::PositiveBackground;
-        else
-            bgColorScheme = KColorScheme::NegativeBackground;
-
-        KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
-
-        styleSheet = QString::fromLatin1("QLineEdit{ background-color:%1 }")
-                .arg(bgBrush.brush(mFindWidget->search()).color().name());
-    }
-
-     mFindWidget->search()->setStyleSheet(styleSheet);
-#endif
-}
-
 void PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
 {
     QTextDocument::FindFlags searchOptions = mFindWidget->searchOptions();
@@ -266,7 +266,7 @@ void PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
     mLastSearchStr = mFindWidget->search()->text();
     const bool found = mView->find( mLastSearchStr, searchOptions );
 
-    setFoundMatch( found );
+    mFindWidget->setFoundMatch( found );
     messageInfo( backward, isAutoSearch, found );
 }
 
@@ -285,12 +285,12 @@ void PlainTextEditFindBar::slotUpdateSearchOptions()
     const QTextDocument::FindFlags searchOptions = mFindWidget->searchOptions();
     mLastSearchStr = mFindWidget->search()->text();
     const bool found = mView->find( mLastSearchStr, searchOptions );
-    setFoundMatch( found );
+    mFindWidget->setFoundMatch( found );
 }
 
 void PlainTextEditFindBar::clearSelections()
 {
-    setFoundMatch( false );
+    mFindWidget->setFoundMatch( false );
 }
 
 void PlainTextEditFindBar::closeBar()
