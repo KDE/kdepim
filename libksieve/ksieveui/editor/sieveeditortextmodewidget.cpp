@@ -27,7 +27,7 @@
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
 
-#include "pimcommon/widgets/plaintexteditfindbar.h"
+#include "pimcommon/plaintexteditor/plaintexteditfindbar.h"
 
 #include <ksieve/parser.h>
 #include <ksieve/error.h>

@@ -12,6 +12,6 @@ Group=Input (KDE-PIM)
 [PimCommon::PlainTextEditorWidget]
 ToolTip=A QPlaintEditor with integrate search function (KDE-PIM)
 WhatsThis=QPlaintEditor with integrate search function
-IncludeFile=pimcommon/widgets/plaintexteditorwidget.h
+IncludeFile=pimcommon/plaintexteditor/plaintexteditorwidget.h
 Group=Input (KDE-PIM)
 
