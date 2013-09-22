@@ -18,7 +18,14 @@
 
 #include "plaintexteditfindbar.h"
 
-// qt/kde includes
+#include <kicon.h>
+#include <klocale.h>
+#include <kpushbutton.h>
+#include <klineedit.h>
+#include <kmessagebox.h>
+#include <KColorScheme>
+
+#include <QPlainTextEdit>
 #include <QtCore/QTimer>
 #include <QLabel>
 #include <QLayout>
@@ -26,13 +33,6 @@
 #include <QToolButton>
 #include <QEvent>
 #include <QKeyEvent>
-#include <kicon.h>
-#include <klocale.h>
-#include <kpushbutton.h>
-#include <klineedit.h>
-#include <kmessagebox.h>
-#include <KColorScheme>
-#include <QPlainTextEdit>
 
 using namespace PimCommon;
 
@@ -41,7 +41,7 @@ PlainTextReplaceWidget::PlainTextReplaceWidget(QWidget *parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
-    QLabel *label = new QLabel( i18nc( "Replace text", "R&eplace:" ), this );
+    QLabel *label = new QLabel( i18nc( "Replace text", "Replace:" ), this );
     lay->addWidget( label );
 
     mReplace = new KLineEdit;
@@ -166,8 +166,12 @@ PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * par
     : QWidget( parent ),
       mView( view )
 {
+    QVBoxLayout *topLayout = new QVBoxLayout;
+    topLayout->setMargin(0);
     QHBoxLayout * lay = new QHBoxLayout;
     lay->setMargin( 2 );
+
+    topLayout->addLayout(lay);
 
     QToolButton * closeBtn = new QToolButton( this );
     closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
@@ -184,6 +188,11 @@ PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * par
     mFindWidget = new PlainTextFindWidget;
     lay->addWidget( mFindWidget );
 
+    mReplaceWidget = new PlainTextReplaceWidget;
+    topLayout->addWidget(mReplaceWidget);
+    mReplaceWidget->hide();
+
+
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
     connect( mFindWidget, SIGNAL(findNext()), this, SLOT(findNext()) );
     connect( mFindWidget, SIGNAL(findPrev()), this, SLOT(findPrev()) );
@@ -193,12 +202,35 @@ PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * par
     connect( mFindWidget, SIGNAL(clearSearch()), this, SLOT(slotClearSearch()) );
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
-    setLayout(lay);
+    setLayout(topLayout);
 }
 
 PlainTextEditFindBar::~PlainTextEditFindBar()
 {
 }
+
+void PlainTextEditFindBar::showReplace()
+{
+    if (mView->isReadOnly())
+        return;
+
+    if (!mReplaceWidget->isVisible()) {
+        mReplaceWidget->show();
+        updateGeometry();
+    }
+}
+
+/*
+void PlainTextEditFindBar::slotHideReplace()
+{
+    if (mReplaceWidget->isVisible()) {
+        mReplaceWidget->hide();
+    } else {
+        mReplaceWidget->show();
+    }
+    updateGeometry();
+}
+*/
 
 void PlainTextEditFindBar::setText( const QString&text )
 {

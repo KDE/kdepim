@@ -25,7 +25,6 @@
 
 class QAction;
 class KLineEdit;
-class SearchLineWidget;
 class QPushButton;
 class QMenu;
 class QPlainTextEdit;
@@ -94,6 +93,8 @@ public:
 
     void focusAndSetCursor();
 
+    void showReplace();
+
 protected:
     bool event(QEvent* e);
     void clearSelections();
@@ -118,6 +119,7 @@ private slots:
 private:
     QString mLastSearchStr;
     PlainTextFindWidget *mFindWidget;
+    PlainTextReplaceWidget *mReplaceWidget;
     QPlainTextEdit *mView;
 };
 
