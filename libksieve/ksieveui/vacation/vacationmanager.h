@@ -18,15 +18,31 @@
 #ifndef VACATIONMANAGER_H
 #define VACATIONMANAGER_H
 
+#include <KUrl>
+
 #include <QObject>
+#include <QHash>
+
 
 namespace KSieveUi {
+
+struct vacationInfo
+{
+    QString displayName;
+    KUrl url;
+};
+
 class VacationManager : public QObject
 {
     Q_OBJECT
 public:
     explicit VacationManager(QObject *parent = 0);
     ~VacationManager();
+
+private:
+    void findImapResourceWithVacationSupport();
+    /*resource identifier, vacationInfo*/
+    QHash<QString, vacationInfo> mImapUrl;
 };
 }
 

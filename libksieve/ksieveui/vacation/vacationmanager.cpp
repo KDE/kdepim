@@ -16,6 +16,11 @@
 */
 
 #include "vacationmanager.h"
+#include "vacation.h"
+#include "util.h"
+
+#include <akonadi/agentinstance.h>
+
 
 using namespace KSieveUi;
 VacationManager::VacationManager(QObject *parent)
@@ -27,5 +32,23 @@ VacationManager::~VacationManager()
 {
 
 }
+
+void VacationManager::findImapResourceWithVacationSupport()
+{
+    const Akonadi::AgentInstance::List instances = Util::imapAgentInstances();
+    foreach ( const Akonadi::AgentInstance &instance, instances ) {
+        if ( instance.status() == Akonadi::AgentInstance::Broken )
+            continue;
+
+        const KUrl url = Util::findSieveUrlForAccount( instance.identifier() );
+        if ( !url.isEmpty() ) {
+            vacationInfo info;
+            info.displayName = instance.name();
+            info.url = url;
+            mImapUrl.insert(instance.identifier(), info);
+        }
+    }
+}
+
 
 #include "vacationmanager.moc"
