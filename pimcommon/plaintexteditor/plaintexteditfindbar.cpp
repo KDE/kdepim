@@ -80,13 +80,17 @@ PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * par
     mCaseSensitiveAct = optionsMenu->addAction( i18n( "Case sensitive" ) );
     mCaseSensitiveAct->setCheckable( true );
 
+    mWholeWordAct = optionsMenu->addAction( i18n( "Whole word" ) );
+    mWholeWordAct->setCheckable( true );
+
     optionsBtn->setMenu( optionsMenu );
     lay->addWidget( optionsBtn );
 
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(closeBar()) );
     connect( mFindNextBtn, SIGNAL(clicked()), this, SLOT(findNext()) );
     connect( mFindPrevBtn, SIGNAL(clicked()), this, SLOT(findPrev()) );
-    connect( mCaseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(caseSensitivityChanged(bool)) );
+    connect( mCaseSensitiveAct, SIGNAL(toggled(bool)), this, SLOT(slotUpdateSearchOptions()) );
+    connect( mWholeWordAct, SIGNAL(toggled(bool)), this, SLOT(slotUpdateSearchOptions()) );
     connect( mSearch, SIGNAL(textChanged(QString)), this, SLOT(autoSearch(QString)) );
     connect( mSearch, SIGNAL(clearButtonClicked()), this, SLOT(slotClearSearch()) );
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
@@ -178,25 +182,23 @@ void PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
         searchOptions |= QTextDocument::FindBackward;
     if ( mCaseSensitiveAct->isChecked() )
         searchOptions |= QTextDocument::FindCaseSensitively;
+    if ( mWholeWordAct->isChecked() )
+        searchOptions |= QTextDocument::FindWholeWords;
 
-    if ( isAutoSearch )
-    {
+    if ( isAutoSearch ) {
         QTextCursor cursor = mView->textCursor();
         cursor.setPosition( cursor.selectionStart() );
         mView->setTextCursor( cursor );
-    }
-    else if ( !mLastSearchStr.contains( mSearch->text(), Qt::CaseSensitive ))
-    {
+    } else if ( !mLastSearchStr.contains( mSearch->text(), Qt::CaseSensitive )) {
         clearSelections();
     }
+
     mLastSearchStr = mSearch->text();
     const bool found = mView->find( mLastSearchStr, searchOptions );
 
     setFoundMatch( found );
     messageInfo( backward, isAutoSearch, found );
-
 }
-
 
 void PlainTextEditFindBar::findNext()
 {
@@ -208,34 +210,16 @@ void PlainTextEditFindBar::findPrev()
     searchText( true, false );
 }
 
-void PlainTextEditFindBar::caseSensitivityChanged(bool b)
-{
-    updateSensitivity( b );
-}
-
-void PlainTextEditFindBar::updateSensitivity( bool )
+void PlainTextEditFindBar::slotUpdateSearchOptions()
 {
     QTextDocument::FindFlags searchOptions = 0;
     if ( mCaseSensitiveAct->isChecked() )
         searchOptions |= QTextDocument::FindCaseSensitively;
+    if ( mWholeWordAct->isChecked() )
+        searchOptions |= QTextDocument::FindWholeWords;
     mLastSearchStr = mSearch->text();
     const bool found = mView->find( mLastSearchStr, searchOptions );
     setFoundMatch( found );
-
-}
-
-void PlainTextEditFindBar::slotHighlightAllChanged(bool b)
-{
-    updateHighLight(b);
-}
-
-void PlainTextEditFindBar::updateHighLight( bool )
-{
-    QTextCursor textCursor = mView->textCursor();
-    textCursor.clearSelection();
-    textCursor.setPosition( 0 );
-    mView->setTextCursor( textCursor );
-    clearSelections();
 }
 
 void PlainTextEditFindBar::clearSelections()

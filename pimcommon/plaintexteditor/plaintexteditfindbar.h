@@ -62,14 +62,14 @@ public slots:
     void closeBar();
 
 private slots:
-    void caseSensitivityChanged(bool);
-    void slotHighlightAllChanged(bool);
     void slotClearSearch();
+    void slotUpdateSearchOptions();
 
 private:
     QString mLastSearchStr;
     KLineEdit *mSearch;
     QAction *mCaseSensitiveAct;
+    QAction *mWholeWordAct;
 
     QPushButton *mFindPrevBtn;
     QPushButton *mFindNextBtn;
