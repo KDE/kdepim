@@ -96,7 +96,7 @@ class MessageComposer::ComposerPrivate : public JobBasePrivate
     AttachmentPart::List attachmentParts;
     // attachments with different sign/encrypt settings from
     // main message body. added at the end of the process
-    AttachmentPart::List lateAttachmentParts; 
+    AttachmentPart::List lateAttachmentParts;
 
 
     // Stuff that we play with.
@@ -331,7 +331,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
 
     keys = eJob->encryptionKeys();
     recipients = eJob->recipients();
-    
+
     resultContent = contentJob->content(); // content() comes from superclass
     headers = new KMime::Message;
     headers->setHeader( skeletonMessage->from() );
@@ -355,7 +355,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
       keys = encData[ 0 ].second;
       recipients = encData[ 0 ].first;
     }
-    
+
     headers = skeletonMessage;
     resultContent = contentJob->content();
   }
@@ -365,10 +365,10 @@ void ComposerPrivate::contentJobFinished( KJob *job )
   } else {
     composeWithLateAttachments( headers, resultContent, lateAttachmentParts, keys, recipients );
   }
-  
+
 }
 
-void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime::Content* content, AttachmentPart::List parts, std::vector<GpgME::Key> keys, QStringList recipients ) 
+void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime::Content* content, AttachmentPart::List parts, std::vector<GpgME::Key> keys, QStringList recipients )
 {
   Q_Q( Composer );
 
@@ -380,7 +380,7 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
   tJob->setContent( content );
   multiJob->appendSubjob( tJob );
   multiJob->setExtraContent( headers );
-  
+
   kDebug() << "attachment encr key size:" << keys.size() << recipients;
 
   // operate correctly on each attachment that has a different crypto policy than body.
@@ -446,7 +446,7 @@ void ComposerPrivate::attachmentsFinished( KJob* job )
   KMime::Content* headers = contentJob->extraContent();
 
   composeFinalStep( headers, content );
-  
+
 }
 
 void ComposerPrivate::composeFinalStep( KMime::Content* headers, KMime::Content* content )
@@ -509,7 +509,7 @@ void Composer::addAttachmentPart( AttachmentPart::Ptr part, bool autoresizeImage
   Q_D( Composer );
   Q_ASSERT( !d->started );
   Q_ASSERT( !d->attachmentParts.contains( part ) );
-  if( autoresizeImage ) {      
+  if( autoresizeImage ) {
       if (MessageComposer::Utils::resizeImage(part)) {
           MessageComposer::ImageScalingJob *autoResizeJob = new MessageComposer::ImageScalingJob(this);
           if(autoResizeJob->loadImageFromData(part->data())) {
