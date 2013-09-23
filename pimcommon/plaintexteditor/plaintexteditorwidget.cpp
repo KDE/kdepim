@@ -41,12 +41,22 @@ PlainTextEditorWidget::PlainTextEditorWidget(QWidget *parent)
     connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
     connect( mEditor, SIGNAL(findText()), SLOT(slotFind()) );
 
+    shortcut = new QShortcut( this );
+    shortcut->setKey( Qt::Key_R+Qt::CTRL );
+    connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
+    connect( mEditor, SIGNAL(replaceText()), SLOT(slotReplace()) );
+
     setLayout(lay);
 }
 
 PlainTextEditorWidget::~PlainTextEditorWidget()
 {
 
+}
+
+void PlainTextEditorWidget::slotReplace()
+{
+    mFindBar->showReplace();
 }
 
 void PlainTextEditorWidget::slotFind()

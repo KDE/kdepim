@@ -45,6 +45,7 @@ PlainTextReplaceWidget::PlainTextReplaceWidget(QWidget *parent)
     lay->addWidget( label );
 
     mReplace = new KLineEdit;
+    mReplace->setClearButtonShown(true);
     lay->addWidget(mReplace);
 
     mReplaceBtn = new QPushButton( i18n( "Replace" ), this );
@@ -222,6 +223,7 @@ void PlainTextEditFindBar::showReplace()
     if (mView->isReadOnly())
         return;
 
+    show();
     if (!mReplaceWidget->isVisible()) {
         mReplaceWidget->show();
         updateGeometry();

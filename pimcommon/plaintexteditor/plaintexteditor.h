@@ -40,7 +40,7 @@ protected:
 
 Q_SIGNALS:
     void findText();
-
+    void replaceText();
 };
 }
 #endif // PLAINTEXTEDITOR_H
