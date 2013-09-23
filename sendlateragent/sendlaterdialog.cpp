@@ -46,9 +46,9 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
         setButtons( User1|Ok|Cancel );
         setButtonText( Ok, i18n("Send Later"));
         setButtonText( User1, i18n("Put in outbox"));
+        connect(this, SIGNAL(user1Clicked()), this, SLOT(slotPutOutbox()));
     }
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
-    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotPutOutbox()));
 
     QWidget *sendLaterWidget = new QWidget;
     mSendLaterWidget = new Ui::SendLaterWidget;
