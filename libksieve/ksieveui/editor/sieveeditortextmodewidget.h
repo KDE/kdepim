@@ -69,6 +69,7 @@ Q_SIGNALS:
 private slots:
     void slotTextChanged();
     void slotFind();
+    void slotReplace();
 
 private:
     void readConfig();
