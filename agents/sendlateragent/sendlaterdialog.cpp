@@ -40,15 +40,6 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
 {
     setCaption( i18n("Send Later") );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
-    if (info) {
-        setButtons( Ok|Cancel );
-    } else {
-        setButtons( User1|Ok|Cancel );
-        setButtonText( Ok, i18n("Send Later"));
-        setButtonText( User1, i18n("Put in outbox"));
-        connect(this, SIGNAL(user1Clicked()), this, SLOT(slotPutOutbox()));
-    }
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
 
     QWidget *sendLaterWidget = new QWidget;
     mSendLaterWidget = new Ui::SendLaterWidget;
@@ -57,6 +48,20 @@ SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     w->setLayout(lay);
+
+    setButtons( Ok|Cancel );
+
+    if (!info) {
+        setButtonText( Ok, i18n("Send Later"));
+        mDelay = new QCheckBox(i18n("Delay"));
+        mDelay->setChecked(false);
+        slotDelay(false);
+        connect(mDelay, SIGNAL(clicked(bool)), this, SLOT(slotDelay(bool)));
+        lay->addWidget(mDelay);
+    }
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+
     lay->addWidget(sendLaterWidget);
 
     QDateTime t = QDateTime::currentDateTime();
@@ -124,15 +129,21 @@ SendLaterDialog::SendLaterAction SendLaterDialog::action() const
 
 void SendLaterDialog::slotOkClicked()
 {
-    mSendDateTime = mSendLaterWidget->mDateTime->dateTime();
-    mAction = SendDeliveryAtTime;
+    if (mDelay->isChecked()) {
+        mSendDateTime = mSendLaterWidget->mDateTime->dateTime();
+        mAction = SendDeliveryAtTime;
+    } else {
+        mAction = PutInOutbox;
+    }
     accept();
 }
 
-void SendLaterDialog::slotPutOutbox()
+void SendLaterDialog::slotDelay(bool delayEnabled)
 {
-    mAction = PutInOutbox;
-    accept();
+    mSendLaterWidget->mDateTime->setEnabled(delayEnabled);
+    mSendLaterWidget->mRecurrence->setEnabled(delayEnabled);
+    mSendLaterWidget->mRecurrenceValue->setEnabled(delayEnabled && mSendLaterWidget->mRecurrence->isChecked());
+    mSendLaterWidget->mRecurrenceComboBox->setEnabled(delayEnabled && mSendLaterWidget->mRecurrence->isChecked());
 }
 
 #include "sendlaterdialog.moc"

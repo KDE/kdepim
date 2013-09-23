@@ -55,7 +55,7 @@ public:
 private Q_SLOTS:
     void slotRecurrenceClicked(bool);
     void slotOkClicked();
-    void slotPutOutbox();
+    void slotDelay(bool delayEnabled);
 
 private:
     void load(SendLater::SendLaterInfo *info);
@@ -63,6 +63,7 @@ private:
 private:
     QDateTime mSendDateTime;
     SendLaterAction mAction;
+    QCheckBox *mDelay;
     Ui::SendLaterWidget *mSendLaterWidget;
     SendLater::SendLaterInfo *mInfo;
 };
