@@ -57,7 +57,7 @@ static const int TextFunctionCount =
 //---------------------------------------------------------------------------
 
 QWidget *TextRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver, bool isNepomukSearch ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool /*isNepomukSearch*/ ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -195,7 +195,7 @@ void TextRuleWidgetHandler::reset( QStackedWidget *functionStack,
 
 bool TextRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                      QStackedWidget *valueStack,
-                                     const SearchRule::Ptr rule, bool isNepomukSearch ) const
+                                     const SearchRule::Ptr rule, bool /*isNepomukSearch*/ ) const
 {
     if ( !rule ) {
         reset( functionStack, valueStack );
