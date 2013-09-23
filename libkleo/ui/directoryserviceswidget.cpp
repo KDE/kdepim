@@ -794,10 +794,10 @@ bool Model::doSetData( unsigned int row, unsigned int column, const QVariant & v
             }
             return true;
         case UserName:
-            m_items[row].url.setUser( value.toString() );
+            m_items[row].url.setUserName( value.toString() );
             return true;
         case Password:
-            m_items[row].url.setPass( value.toString() );
+            m_items[row].url.setPassword( value.toString() );
             return true;
         }
     if ( role == Qt::CheckStateRole )

@@ -84,8 +84,8 @@ static KUrl parseUrl( ConfigEntry::ArgType argType, const QString& str )
             url.setHost( urlpart_decode( *it++ ) );
             url.setPort( (*it++).toInt() );
             url.setPath( QLatin1String("/") ); // workaround KUrl parsing bug
-            url.setUser( urlpart_decode( *it++ ) );
-            url.setPass( urlpart_decode( *it++ ) );
+            url.setUserName( urlpart_decode( *it++ ) );
+            url.setPassword( urlpart_decode( *it++ ) );
             url.setQuery( urlpart_decode( *it ) );
             return url;
         }
@@ -105,8 +105,8 @@ static QString splitUrl( ConfigEntry::ArgType argType, const KUrl& url )
         assert( url.protocol() == QLatin1String("ldap") );
         return urlpart_encode( url.host() ) + QLatin1Char(':') +
             QString::number( url.port() ) + QLatin1Char(':') +
-            urlpart_encode( url.user() ) + QLatin1Char(':') +
-            urlpart_encode( url.pass() ) + QLatin1Char(':') +
+            urlpart_encode( url.userName() ) + QLatin1Char(':') +
+            urlpart_encode( url.password() ) + QLatin1Char(':') +
             // KUrl automatically encoded the query (e.g. for spaces inside it),
             // so decode it before writing it out to gpgconf (issue119)
             urlpart_encode( KUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );

@@ -637,8 +637,8 @@ static KUrl parseURL( int mRealArgType, const QString& str )
           kWarning(5150) <<"parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
 
       url.setPath( QLatin1String("/") ); // workaround KUrl parsing bug
-      url.setUser( urlpart_decode( *it++ ) );
-      url.setPass( urlpart_decode( *it++ ) );
+      url.setUserName( urlpart_decode( *it++ ) );
+      url.setPassword( urlpart_decode( *it++ ) );
       url.setQuery( urlpart_decode( *it ) );
       return url;
     } else
