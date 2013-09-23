@@ -40,6 +40,7 @@ public:
     ~VacationManager();
 
     void checkVacation();
+    void editVacation();
 
 private:
     void findImapResourceWithVacationSupport();

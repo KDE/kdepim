@@ -70,4 +70,17 @@ void VacationManager::checkVacation()
     //TODO check vacation
 }
 
+void VacationManager::editVacation()
+{
+    if (!mWasInitialized) {
+        findImapResourceWithVacationSupport();
+    }
+
+    QHash<QString, vacationInfo>::const_iterator i = mImapUrl.constBegin();
+     while (i != mImapUrl.constEnd()) {
+         //TODO
+         ++i;
+     }
+}
+
 #include "vacationmanager.moc"
