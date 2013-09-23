@@ -1,4 +1,13 @@
 
+Monday 23 September 2013
+
+Problems addressed
+------------------
+
+* kolab/issue4868: Seen flag not synced in online imap with cyrus when only modifying \SEEN is allowed (RT#10250)
+
+
+
 Thursday 18 July 2013
 
 Problems addressed
