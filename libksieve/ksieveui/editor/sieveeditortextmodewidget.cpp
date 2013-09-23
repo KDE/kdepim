@@ -199,6 +199,7 @@ void SieveEditorTextModeWidget::slotFind()
 void SieveEditorTextModeWidget::slotReplace()
 {
     mFindBar->showReplace();
+    mFindBar->focusAndSetCursor();
 }
 
 QString SieveEditorTextModeWidget::currentscript()

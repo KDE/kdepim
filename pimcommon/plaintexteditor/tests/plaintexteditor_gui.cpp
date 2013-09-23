@@ -30,6 +30,7 @@ int main (int argc, char **argv)
     KApplication app;
 
     PimCommon::PlainTextEditorWidget *w = new PimCommon::PlainTextEditorWidget();
+    w->resize(800, 600);
     w->show();
     app.exec();
     delete w;

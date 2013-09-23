@@ -57,6 +57,7 @@ PlainTextEditorWidget::~PlainTextEditorWidget()
 void PlainTextEditorWidget::slotReplace()
 {
     mFindBar->showReplace();
+    mFindBar->focusAndSetCursor();
 }
 
 void PlainTextEditorWidget::slotFind()

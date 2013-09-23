@@ -370,8 +370,14 @@ bool PlainTextEditFindBar::event(QEvent* e)
 
 void PlainTextEditFindBar::slotReplaceText()
 {
-    if (searchText( false, false )) {
-        mView->textCursor().insertText(mReplaceWidget->replace()->text());
+    if (mView->textCursor().hasSelection()) {
+        if (mView->textCursor().selectedText() == mFindWidget->search()->text()) {
+            mView->textCursor().insertText(mReplaceWidget->replace()->text());
+            //search next after replace text.
+            searchText(false, false);
+        }
+    } else {
+        searchText( false, false );
     }
 }
 
