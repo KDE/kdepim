@@ -212,6 +212,8 @@ PlainTextEditFindBar::~PlainTextEditFindBar()
 
 void PlainTextEditFindBar::showFind()
 {
+    if (mView->toPlainText().isEmpty())
+        return;
     show();
     if (mReplaceWidget->isVisible()) {
         mReplaceWidget->hide();
