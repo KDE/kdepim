@@ -200,6 +200,7 @@ PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * par
     connect( mFindWidget, SIGNAL(updateSearchOptions()), this, SLOT(slotUpdateSearchOptions()) );
     connect( mFindWidget, SIGNAL(autoSearch(QString)), this, SLOT(autoSearch(QString)) );
     connect( mFindWidget, SIGNAL(clearSearch()), this, SLOT(slotClearSearch()) );
+    connect( mReplaceWidget, SIGNAL(replaceText()), this, SLOT(slotReplaceText()));
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
     setLayout(topLayout);
@@ -279,7 +280,7 @@ void PlainTextEditFindBar::messageInfo( bool backward, bool isAutoSearch, bool f
     }
 }
 
-void PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
+bool PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
 {
     QTextDocument::FindFlags searchOptions = mFindWidget->searchOptions();
     if ( backward )
@@ -298,6 +299,7 @@ void PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
 
     mFindWidget->setFoundMatch( found );
     messageInfo( backward, isAutoSearch, found );
+    return found;
 }
 
 void PlainTextEditFindBar::findNext()
@@ -364,6 +366,13 @@ bool PlainTextEditFindBar::event(QEvent* e)
         }
     }
     return QWidget::event(e);
+}
+
+void PlainTextEditFindBar::slotReplaceText()
+{
+    if (searchText( false, false )) {
+        mView->textCursor().insertText(mReplaceWidget->replace()->text());
+    }
 }
 
 #include "plaintexteditfindbar.moc"

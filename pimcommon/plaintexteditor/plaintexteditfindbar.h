@@ -100,7 +100,7 @@ protected:
     bool event(QEvent* e);
     void clearSelections();
     void updateHighLight(bool);
-    void searchText( bool backward, bool isAutoSearch );
+    bool searchText( bool backward, bool isAutoSearch );
     void updateSensitivity( bool );
 
     void setFoundMatch( bool match );
@@ -116,6 +116,7 @@ public slots:
 private slots:
     void slotClearSearch();
     void slotUpdateSearchOptions();
+    void slotReplaceText();
 
 private:
     QString mLastSearchStr;
