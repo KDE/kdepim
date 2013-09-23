@@ -299,6 +299,7 @@ void ThemeEditorPage::loadTheme(const QString &filename)
             extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
         }
         setChanged(false);
+        mTabWidget->setCurrentIndex(0);
     }
 }
 
