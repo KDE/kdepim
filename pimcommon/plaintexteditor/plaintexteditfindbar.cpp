@@ -52,6 +52,10 @@ PlainTextReplaceWidget::PlainTextReplaceWidget(QWidget *parent)
     connect( mReplaceBtn, SIGNAL(clicked()), this, SIGNAL(replaceText()) );
     lay->addWidget( mReplaceBtn );
 
+    mReplaceAllBtn = new QPushButton( i18n( "Replace All" ), this );
+    connect( mReplaceAllBtn, SIGNAL(clicked()), this, SIGNAL(replaceAllText()) );
+    lay->addWidget( mReplaceAllBtn );
+
     setLayout(lay);
 }
 
@@ -201,6 +205,7 @@ PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * par
     connect( mFindWidget, SIGNAL(autoSearch(QString)), this, SLOT(autoSearch(QString)) );
     connect( mFindWidget, SIGNAL(clearSearch()), this, SLOT(slotClearSearch()) );
     connect( mReplaceWidget, SIGNAL(replaceText()), this, SLOT(slotReplaceText()));
+    connect( mReplaceWidget, SIGNAL(replaceAllText()), this, SLOT(slotReplaceAllText()));
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     hide();
     setLayout(topLayout);
@@ -383,6 +388,11 @@ void PlainTextEditFindBar::slotReplaceText()
     } else {
         searchText( false, false );
     }
+}
+
+void PlainTextEditFindBar::slotReplaceAllText()
+{
+    //TODO
 }
 
 #include "plaintexteditfindbar.moc"

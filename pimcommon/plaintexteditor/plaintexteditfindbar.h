@@ -74,10 +74,12 @@ public:
 
 Q_SIGNALS:
     void replaceText();
+    void replaceAllText();
 
 private:
     KLineEdit *mReplace;
     QPushButton *mReplaceBtn;
+    QPushButton *mReplaceAllBtn;
 };
 
 class PIMCOMMON_EXPORT PlainTextEditFindBar : public QWidget
@@ -117,6 +119,7 @@ private slots:
     void slotClearSearch();
     void slotUpdateSearchOptions();
     void slotReplaceText();
+    void slotReplaceAllText();
 
 private:
     QString mLastSearchStr;
