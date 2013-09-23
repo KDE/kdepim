@@ -120,6 +120,17 @@ PlainTextFindWidget::~PlainTextFindWidget()
 
 }
 
+QRegExp PlainTextFindWidget::findRegExp() const
+{
+    QString str = mSearch->text();
+    if ( mWholeWordAct->isChecked() )
+        str = QLatin1String("\\b") + str + QLatin1String("\\b");
+    if ( mCaseSensitiveAct->isChecked() )
+        return QRegExp(str, Qt::CaseSensitive);
+    else
+        return QRegExp(str, Qt::CaseInsensitive);
+}
+
 void PlainTextFindWidget::setFoundMatch( bool match )
 {
 #ifndef QT_NO_STYLE_STYLESHEET
@@ -392,7 +403,7 @@ void PlainTextEditFindBar::slotReplaceText()
 
 void PlainTextEditFindBar::slotReplaceAllText()
 {
-    //TODO
+    mView->setPlainText(mView->toPlainText().replace(mFindWidget->findRegExp(), mReplaceWidget->replace()->text()));
 }
 
 #include "plaintexteditfindbar.moc"

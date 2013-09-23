@@ -43,6 +43,7 @@ public:
     KLineEdit *search() const;
 
     void setFoundMatch( bool match );
+    QRegExp findRegExp() const;
 
 private Q_SLOTS:
     void slotAutoSearch(const QString &str);
