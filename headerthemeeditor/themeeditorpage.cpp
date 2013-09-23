@@ -298,8 +298,8 @@ void ThemeEditorPage::loadTheme(const QString &filename)
             EditorPage *extraPage = createExtraPage(page);
             extraPage->loadTheme(mThemeSession->projectDirectory() + QDir::separator() + page);
         }
-        setChanged(false);
         mTabWidget->setCurrentIndex(0);
+        setChanged(false);
     }
 }
 
