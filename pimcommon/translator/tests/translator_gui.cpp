@@ -19,11 +19,8 @@
 
 #include <kdebug.h>
 #include <kapplication.h>
-#include <KFileDialog>
 #include <KCmdLineArgs>
 #include <KLocale>
-#include <QDebug>
-#include <QPointer>
 
 int main (int argc, char **argv)
 {
