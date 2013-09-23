@@ -41,7 +41,6 @@ PlainTextEditor::PlainTextEditor(QWidget *parent)
 
 PlainTextEditor::~PlainTextEditor()
 {
-
 }
 
 void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
@@ -71,7 +70,9 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                                               popup->actions() );
         popup->addSeparator();
         if (!isReadOnly()) {
-            popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
+            QAction *act = popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
+            if ( emptyDocument )
+                act->setEnabled( false );
             popup->addSeparator();
         }
         QAction *speakAction = popup->addAction(i18n("Speak Text"));

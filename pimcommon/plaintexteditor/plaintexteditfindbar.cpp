@@ -223,6 +223,8 @@ void PlainTextEditFindBar::showReplace()
 {
     if (mView->isReadOnly())
         return;
+    if (mView->toPlainText().isEmpty())
+        return;
 
     show();
     if (!mReplaceWidget->isVisible()) {
