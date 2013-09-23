@@ -41,7 +41,6 @@ PlainTextEditor::PlainTextEditor(QWidget *parent)
 
 PlainTextEditor::~PlainTextEditor()
 {
-
 }
 
 void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
@@ -64,12 +63,21 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
             }
         }
         popup->addSeparator();
-        popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()) , Qt::Key_F+Qt::CTRL);
+        QAction *findAct = popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()), Qt::Key_F+Qt::CTRL);
         //Code from KTextBrowser
         KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                                            : KIconTheme::TextEditor,
                                               popup->actions() );
+        if ( emptyDocument )
+            findAct->setEnabled(false);
+
         popup->addSeparator();
+        if (!isReadOnly()) {
+            QAction *act = popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
+            if ( emptyDocument )
+                act->setEnabled( false );
+            popup->addSeparator();
+        }
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );

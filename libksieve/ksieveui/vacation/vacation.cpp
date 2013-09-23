@@ -415,14 +415,18 @@ private:
 
 using namespace KSieveUi;
 
-Vacation::Vacation(QObject * parent, bool checkOnly)
+Vacation::Vacation(QObject * parent, bool checkOnly, const KUrl &url)
     : QObject( parent ),
       mSieveJob( 0 ),
       mDialog( 0 ),
       mWasActive( false ),
       mCheckOnly( checkOnly )
 {
-    mUrl = findURL(mServerName);
+    if (url.isEmpty()) {
+        mUrl = findURL(mServerName);
+    } else {
+        mUrl = url;
+    }
     kDebug() << "Vacation: found url \"" << mUrl.prettyUrl() <<"\"";
     if ( mUrl.isEmpty() ) // nothing to do...
         return;

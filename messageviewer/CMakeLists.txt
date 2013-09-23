@@ -53,17 +53,36 @@ set(libmessageviewer_SRCS
   viewer/bodypartformatter.cpp
   viewer/bodypartformatterfactory.cpp
   viewer/chiasmuskeyselector.cpp
-  widgets/configurewidget.cpp
-  widgets/printingsettings.cpp
-  header/contactdisplaymessagememento.cpp
   viewer/csshelper.cpp
   viewer/csshelperbase.cpp
   viewer/editorwatcher.cpp
+  viewer/kleojobexecutor.cpp
+  viewer/mailsourceviewer.cpp
+  viewer/htmlquotecolorer.cpp
+  viewer/mimetreemodel.cpp
+  viewer/nodehelper.cpp
+  viewer/attachmenttemporaryfilesdirs.cpp
+  viewer/objecttreeemptysource.cpp
+  viewer/objecttreeparser.cpp
+  viewer/objecttreeparser_p.cpp
+  viewer/objecttreeviewersource.cpp
+  viewer/partnodebodypart.cpp
+  viewer/pluginloaderbase.cpp
+  viewer/viewer.cpp
+  viewer/viewer_p.cpp
+  viewer/messagedisplayformatattribute.cpp
+  viewer/urlhandlermanager.cpp
+  widgets/configurewidget.cpp
+  widgets/printingsettings.cpp
+  widgets/htmlstatusbar.cpp
+  widgets/vcardviewer.cpp
+  widgets/invitationsettings.cpp
   htmlwriter/filehtmlwriter.cpp
   findbar/findbarbase.cpp
   findbar/findbarmailwebview.cpp
   findbar/findbarsourceview.cpp
   settings/globalsettings.cpp
+  header/contactdisplaymessagememento.cpp
   header/headerstrategy.cpp
   header/headerstrategy_p.cpp
   header/headerstyle.cpp
@@ -79,30 +98,11 @@ set(libmessageviewer_SRCS
   header/grantleeheaderformatter.cpp
   header/grantleeheaderteststyle.cpp
   header/kxface.cpp
-  viewer/htmlquotecolorer.cpp
-  widgets/htmlstatusbar.cpp
-  widgets/vcardviewer.cpp
   utils/iconnamecache.cpp
-  widgets/invitationsettings.cpp
-  viewer/kleojobexecutor.cpp
-  viewer/mailsourceviewer.cpp
   utils/markmessagereadhandler.cpp
-  viewer/mimetreemodel.cpp
-  viewer/nodehelper.cpp
-  viewer/attachmenttemporaryfilesdirs.cpp
-  viewer/objecttreeemptysource.cpp
-  viewer/objecttreeparser.cpp
-  viewer/objecttreeparser_p.cpp
-  viewer/objecttreeviewersource.cpp
-  viewer/partnodebodypart.cpp
-  viewer/pluginloaderbase.cpp
   htmlwriter/teehtmlwriter.cpp
-  viewer/urlhandlermanager.cpp
   utils/util.cpp
-  viewer/viewer.cpp
-  viewer/viewer_p.cpp
   htmlwriter/webkitparthtmlwriter.cpp
-  viewer/messagedisplayformatattribute.cpp
   scamdetection/scamdetectionwarningwidget.cpp
   scamdetection/scamdetection.cpp
   scamdetection/scamdetectiondetailsdialog.cpp

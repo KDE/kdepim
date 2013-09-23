@@ -15,24 +15,40 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "translator/translatorwidget.h"
+#ifndef VACATIONMANAGER_H
+#define VACATIONMANAGER_H
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocale>
+#include <KUrl>
 
-int main (int argc, char **argv)
+#include <QObject>
+#include <QHash>
+
+
+namespace KSieveUi {
+class Vacation;
+struct vacationInfo
 {
-    KCmdLineArgs::init(argc, argv, "translator_gui", 0, ki18n("TranslatorTest_Gui"),
-                       "1.0", ki18n("Test for translator widget"));
+    QString displayName;
+    KUrl url;
+};
 
-    KApplication app;
+class VacationManager : public QObject
+{
+    Q_OBJECT
+public:
+    explicit VacationManager(QObject *parent = 0);
+    ~VacationManager();
 
-    PimCommon::TranslatorWidget *w = new PimCommon::TranslatorWidget();
-    w->show();
-    app.exec();
-    delete w;
-    return 0;
+    void checkVacation();
+    void editVacation();
+
+private:
+    void findImapResourceWithVacationSupport();
+    /*resource identifier, vacationInfo*/
+    QHash<QString, vacationInfo> mImapUrl;
+    QHash<QString, Vacation> mJobList;
+    bool mWasInitialized;
+};
 }
 
+#endif // VACATIONMANAGER_H

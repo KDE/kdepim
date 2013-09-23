@@ -32,10 +32,6 @@ set(kdepim_LIB_SRCS
    addressline/recentaddresses.cpp
    addressline/kmailcompletion.cpp
    prefs/kprefsdialog.cpp
-   misc/maillistdrag.cpp
-   widgets/kdatepickerpopup.cpp
-   widgets/kcheckcombobox.cpp
-   widgets/kweekdaycheckcombo.cpp
    ldap/ldapclient.cpp
    ldap/ldapsearchdialog.cpp
    ldap/ldapclientsearch.cpp
@@ -48,17 +44,21 @@ set(kdepim_LIB_SRCS
    progresswidget/statusbarprogresswidget.cpp
    progresswidget/ssllabel.cpp
    misc/broadcaststatus.cpp
-   widgets/kwidgetlister.cpp
-   widgets/pimmessagebox.cpp
+   misc/maillistdrag.cpp
+   misc/uistatesaver.cpp
+   misc/statisticsproxymodel.cpp
    multiplyingline/multiplyingline.cpp
    multiplyingline/multiplyinglineeditor.cpp
    multiplyingline/multiplyinglineview_p.cpp
-   misc/uistatesaver.cpp
-   widgets/nepomukwarning.cpp
-   misc/statisticsproxymodel.cpp
    widgets/customlogwidget.cpp
    widgets/spellchecklineedit.cpp
    widgets/selectedcollectiondialog.cpp
+   widgets/kdatepickerpopup.cpp
+   widgets/kcheckcombobox.cpp
+   widgets/kweekdaycheckcombo.cpp
+   widgets/kwidgetlister.cpp
+   widgets/pimmessagebox.cpp
+   widgets/nepomukwarning.cpp
 )
 
 if (KDEPIM_INPROCESS_LDAP)

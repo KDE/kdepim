@@ -23,7 +23,6 @@
 #include <KCmdLineArgs>
 #include <KLocale>
 
-#include <QDebug>
 #include <QVBoxLayout>
 
 

@@ -61,13 +61,13 @@ namespace {
 
     static KUrl defaultX509Service() {
         KUrl url;
-        url.setProtocol( QLatin1String("ldap") );
+        url.setScheme( QLatin1String("ldap") );
         url.setHost( i18nc("default server name, keep it a valid domain name, ie. no spaces", "server") );
         return url;
     }
     static KUrl defaultOpenPGPService() {
         KUrl url;
-        url.setProtocol( QLatin1String("hkp") );
+        url.setScheme( QLatin1String("hkp") );
         url.setHost( QLatin1String("keys.gnupg.net") );
         return url;
     }
@@ -794,10 +794,10 @@ bool Model::doSetData( unsigned int row, unsigned int column, const QVariant & v
             }
             return true;
         case UserName:
-            m_items[row].url.setUser( value.toString() );
+            m_items[row].url.setUserName( value.toString() );
             return true;
         case Password:
-            m_items[row].url.setPass( value.toString() );
+            m_items[row].url.setPassword( value.toString() );
             return true;
         }
     if ( role == Qt::CheckStateRole )

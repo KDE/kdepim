@@ -27,9 +27,9 @@ set(libpimcommon_SRCS
   translator/googletranslator.cpp
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp
-  widgets/plaintexteditfindbar.cpp
-  widgets/plaintexteditor.cpp
-  widgets/plaintexteditorwidget.cpp
+  plaintexteditor/plaintexteditfindbar.cpp
+  plaintexteditor/plaintexteditor.cpp
+  plaintexteditor/plaintexteditorwidget.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
   sievehighlighter/sievesyntaxhighlighter.cpp
@@ -64,6 +64,7 @@ set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERS
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(translator/tests)
+add_subdirectory(plaintexteditor/tests)
 
 
 if (QT_QTDESIGNER_FOUND)

@@ -192,7 +192,7 @@ KUrl KNJobData::baseUrl() const
   url.setHost( account()->server() );
   url.setPort( account()->port() );
   if ( account()->needsLogon() ) {
-    url.setUser( account()->user() );
+    url.setUserName( account()->user() );
     url.setPass( account()->pass() );
   }
   return url;

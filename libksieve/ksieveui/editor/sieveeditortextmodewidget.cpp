@@ -27,7 +27,7 @@
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
 
-#include "pimcommon/widgets/plaintexteditfindbar.h"
+#include "pimcommon/plaintexteditor/plaintexteditfindbar.h"
 
 #include <ksieve/parser.h>
 #include <ksieve/error.h>
@@ -110,6 +110,11 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
     connect( mTextEdit, SIGNAL(findText()), SLOT(slotFind()) );
 
+    shortcut = new QShortcut( this );
+    shortcut->setKey( Qt::Key_R+Qt::CTRL );
+    connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
+    connect( mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()) );
+
     mDebugTextEdit = new KTextEdit;
     mDebugTextEdit->setReadOnly( true );
     mMainSplitter->addWidget( mTemplateSplitter );
@@ -187,7 +192,13 @@ void SieveEditorTextModeWidget::slotFind()
     if ( mTextEdit->textCursor().hasSelection() )
         mFindBar->setText( mTextEdit->textCursor().selectedText() );
     mTextEdit->moveCursor(QTextCursor::Start);
-    mFindBar->show();
+    mFindBar->showFind();
+    mFindBar->focusAndSetCursor();
+}
+
+void SieveEditorTextModeWidget::slotReplace()
+{
+    mFindBar->showReplace();
     mFindBar->focusAndSetCursor();
 }
 

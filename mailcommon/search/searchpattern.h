@@ -614,7 +614,8 @@ class MAILCOMMON_EXPORT SearchPattern : public QList<SearchRule::Ptr>
         NoError = 0,
         MissingCheck,
         FolderEmptyOrNotIndexed,
-        EmptyResult
+        EmptyResult,
+        NotEnoughCharacters
     };
 
     /**

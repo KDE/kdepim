@@ -41,6 +41,11 @@ PlainTextEditorWidget::PlainTextEditorWidget(QWidget *parent)
     connect( shortcut, SIGNAL(activated()), SLOT(slotFind()) );
     connect( mEditor, SIGNAL(findText()), SLOT(slotFind()) );
 
+    shortcut = new QShortcut( this );
+    shortcut->setKey( Qt::Key_R+Qt::CTRL );
+    connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
+    connect( mEditor, SIGNAL(replaceText()), SLOT(slotReplace()) );
+
     setLayout(lay);
 }
 
@@ -49,12 +54,18 @@ PlainTextEditorWidget::~PlainTextEditorWidget()
 
 }
 
+void PlainTextEditorWidget::slotReplace()
+{
+    mFindBar->showReplace();
+    mFindBar->focusAndSetCursor();
+}
+
 void PlainTextEditorWidget::slotFind()
 {
     if ( mEditor->textCursor().hasSelection() )
         mFindBar->setText( mEditor->textCursor().selectedText() );
     mEditor->moveCursor(QTextCursor::Start);
-    mFindBar->show();
+    mFindBar->showFind();
     mFindBar->focusAndSetCursor();
 }
 

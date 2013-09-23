@@ -36,8 +36,8 @@
 #include <KStringHandler>
 #include <KConfigGroup>
 
-#include <QtCore/QSet>
-#include <QtCore/QRegExp>
+#include <QSet>
+#include <QRegExp>
 #include <QTextDocument>
 
 static const KCatalogLoader loader( QLatin1String("libkaddressbookgrantlee") );

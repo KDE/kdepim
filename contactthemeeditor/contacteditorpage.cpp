@@ -308,6 +308,7 @@ void ContactEditorPage::loadTheme(const QString &filename)
             EditorPage *extraPage = createExtraPage(page);
             extraPage->loadTheme(projectDirectory + QDir::separator() + page);
         }
+        mTabWidget->setCurrentIndex(0);
         setChanged(false);
     }
 }

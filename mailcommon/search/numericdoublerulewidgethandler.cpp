@@ -47,7 +47,7 @@ static const int NumericFunctionCount =
 
 
 QWidget *NumericDoubleRuleWidgetHandler::createFunctionWidget(
-        int number, QStackedWidget *functionStack, const QObject *receiver, bool isNepomukSearch ) const
+        int number, QStackedWidget *functionStack, const QObject *receiver, bool /*isNepomukSearch*/ ) const
 {
     if ( number != 0 ) {
         return 0;
@@ -196,7 +196,7 @@ void initDoubleNumInput( KDoubleNumInput *numInput, const QByteArray &field )
 
 bool NumericDoubleRuleWidgetHandler::setRule( QStackedWidget *functionStack,
                                               QStackedWidget *valueStack,
-                                              const SearchRule::Ptr rule, bool isNepomukSearch ) const
+                                              const SearchRule::Ptr rule, bool /*isNepomukSearch*/ ) const
 {
     if ( !rule || !handlesField( rule->field() ) ) {
         reset( functionStack, valueStack );

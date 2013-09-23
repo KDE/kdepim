@@ -2459,7 +2459,7 @@ static QString makeShowAuditLogLink( const GpgME::Error & err, const QString & a
 
   if ( !auditLog.isEmpty() ) {
     KUrl url;
-    url.setProtocol( QLatin1String("kmail") );
+    url.setScheme( QLatin1String("kmail") );
     url.setPath( QLatin1String("showAuditLog") );
     url.addQueryItem( QLatin1String("log"), auditLog );
 

@@ -36,6 +36,7 @@ public:
 
 private Q_SLOTS:
     void slotFind();
+    void slotReplace();
 
 private:
     PimCommon::PlainTextEditFindBar *mFindBar;

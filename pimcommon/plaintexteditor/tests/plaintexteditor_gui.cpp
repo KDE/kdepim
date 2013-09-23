@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "translator/translatorwidget.h"
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
 
 #include <kdebug.h>
 #include <kapplication.h>
@@ -24,12 +24,13 @@
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "translator_gui", 0, ki18n("TranslatorTest_Gui"),
-                       "1.0", ki18n("Test for translator widget"));
+    KCmdLineArgs::init(argc, argv, "plaintexteditor_gui", 0, ki18n("PlainTextEditorTest_Gui"),
+                       "1.0", ki18n("Test for plaintexteditor widget"));
 
     KApplication app;
 
-    PimCommon::TranslatorWidget *w = new PimCommon::TranslatorWidget();
+    PimCommon::PlainTextEditorWidget *w = new PimCommon::PlainTextEditorWidget();
+    w->resize(800, 600);
     w->show();
     app.exec();
     delete w;

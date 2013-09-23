@@ -21,15 +21,67 @@
 
 #include "pimcommon_export.h"
 #include <QWidget>
+#include <QTextDocument>
 
 class QAction;
 class KLineEdit;
-class SearchLineWidget;
 class QPushButton;
 class QMenu;
 class QPlainTextEdit;
 
 namespace PimCommon {
+
+class PlainTextFindWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PlainTextFindWidget(QWidget *parent=0);
+    ~PlainTextFindWidget();
+
+    QTextDocument::FindFlags searchOptions() const;
+
+    KLineEdit *search() const;
+
+    void setFoundMatch( bool match );
+    QRegExp findRegExp() const;
+
+private Q_SLOTS:
+    void slotAutoSearch(const QString &str);
+
+Q_SIGNALS:
+    void findNext();
+    void findPrev();
+    void clearSearch();
+    void autoSearch(const QString &);
+    void updateSearchOptions();
+
+private:
+    KLineEdit *mSearch;
+    QAction *mCaseSensitiveAct;
+    QAction *mWholeWordAct;
+
+    QPushButton *mFindPrevBtn;
+    QPushButton *mFindNextBtn;
+};
+
+class PlainTextReplaceWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PlainTextReplaceWidget(QWidget *parent=0);
+    ~PlainTextReplaceWidget();
+
+    KLineEdit *replace() const;
+
+Q_SIGNALS:
+    void replaceText();
+    void replaceAllText();
+
+private:
+    KLineEdit *mReplace;
+    QPushButton *mReplaceBtn;
+    QPushButton *mReplaceAllBtn;
+};
 
 class PIMCOMMON_EXPORT PlainTextEditFindBar : public QWidget
 {
@@ -44,11 +96,14 @@ public:
 
     void focusAndSetCursor();
 
+    void showReplace();
+    void showFind();
+
 protected:
     bool event(QEvent* e);
     void clearSelections();
     void updateHighLight(bool);
-    void searchText( bool backward, bool isAutoSearch );
+    bool searchText( bool backward, bool isAutoSearch );
     void updateSensitivity( bool );
 
     void setFoundMatch( bool match );
@@ -62,19 +117,16 @@ public slots:
     void closeBar();
 
 private slots:
-    void caseSensitivityChanged(bool);
-    void slotHighlightAllChanged(bool);
     void slotClearSearch();
+    void slotUpdateSearchOptions();
+    void slotReplaceText();
+    void slotReplaceAllText();
 
 private:
     QString mLastSearchStr;
-    KLineEdit *mSearch;
-    QAction *mCaseSensitiveAct;
-
-    QPushButton *mFindPrevBtn;
-    QPushButton *mFindNextBtn;
+    PlainTextFindWidget *mFindWidget;
+    PlainTextReplaceWidget *mReplaceWidget;
     QPlainTextEdit *mView;
-
 };
 
 }
