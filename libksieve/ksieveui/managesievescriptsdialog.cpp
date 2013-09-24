@@ -488,7 +488,7 @@ void ManageSieveScriptsDialog::slotNewScript()
         return;
 
     if (isProtectedName(name.toLower())) {
-        KMessageBox::error(this, i18n("You can not use protected name."), i18n("New Script"));
+        KMessageBox::error(this, i18n("You cannot use protected name."), i18n("New Script"));
         return;
     }
 
