@@ -59,7 +59,7 @@ using namespace Akonadi;
 QML_DECLARE_TYPE( DeclarativeSearchWidget )
 
 MainView::MainView( QWidget *parent )
-  : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
+  : KDeclarativeMainView( QLatin1String("notes"), new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
 {
 }
 
@@ -73,7 +73,7 @@ void MainView::doDelayedInit()
   rootContext()->setContextProperty( QLatin1String( "KDE" ), new KDEIntegration( this ) );
 #endif
 
-  addMimeType( "text/x-vnd.akonadi.note" );
+  addMimeType( QLatin1String("text/x-vnd.akonadi.note") );
   itemFetchScope().fetchFullPayload();
 
   KAction *action = new KAction( i18n( "New Note" ), this );
@@ -98,7 +98,7 @@ QString MainView::noteTitle( int row ) const
   if ( row < 0 )
     return QString();
 
-  QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel" ).value<QObject *>();
+  QObject *itemModelObject = engine()->rootContext()->contextProperty( QLatin1String("itemModel") ).value<QObject *>();
   QAbstractItemModel *itemModel = qobject_cast<QAbstractItemModel *>( itemModelObject );
 
   if ( !itemModel )
@@ -128,7 +128,7 @@ QString MainView::noteContent( int row ) const
   if ( row < 0 )
     return QString();
 
-  QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel" ).value<QObject *>();
+  QObject *itemModelObject = engine()->rootContext()->contextProperty( QLatin1String("itemModel") ).value<QObject *>();
   QAbstractItemModel *itemModel = qobject_cast<QAbstractItemModel *>( itemModelObject );
 
   if ( !itemModel )
@@ -341,7 +341,7 @@ void MainView::setupStandardActionManager( QItemSelectionModel *collectionSelect
   manager->action( StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Note To" ) );
   manager->setActionText( StandardActionManager::DeleteItems, ki18np( "Delete Note", "Delete Notes" ) );
 
-  actionCollection()->action( "synchronize_all_items" )->setText( i18n( "Synchronize All Accounts" ) );
+  actionCollection()->action( QLatin1String("synchronize_all_items") )->setText( i18n( "Synchronize All Accounts" ) );
 }
 
 void MainView::setupAgentActionManager( QItemSelectionModel *selectionModel )
