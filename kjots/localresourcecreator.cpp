@@ -245,7 +245,7 @@ void LocalResourceCreator::createFinished(KJob* job)
   item.addAttribute(eda);
 
   Akonadi::ItemCreateJob *itemCreateJob = new Akonadi::ItemCreateJob( item,  collectionCreateJob->collection(), this);
-  connect( job, SIGNAL(result(KJob*)), SLOT(itemCreateFinished(KJob*)) );
+  connect( itemCreateJob, SIGNAL(result(KJob*)), SLOT(itemCreateFinished(KJob*)) );
 }
 
 void LocalResourceCreator::itemCreateFinished(KJob* job)
