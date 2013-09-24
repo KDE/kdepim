@@ -53,11 +53,11 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication<MainView> app;
 
-  KGlobal::locale()->insertCatalog( "kabc" );
-  KGlobal::locale()->insertCatalog( "akonadicontact" );
-  KGlobal::locale()->insertCatalog( "libkdepim" );
-  KGlobal::locale()->insertCatalog( "libkldap" ); // for ldap server dialog
-  KGlobal::locale()->insertCatalog( "calendarsupport" ); // for categories
+  KGlobal::locale()->insertCatalog( QLatin1String("kabc") );
+  KGlobal::locale()->insertCatalog( QLatin1String("akonadicontact") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkdepim") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkldap") ); // for ldap server dialog
+  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") ); // for categories
 
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );

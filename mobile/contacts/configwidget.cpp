@@ -56,7 +56,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
 
 void ConfigWidget::load()
 {
-  KConfig config( "akonadi_contactrc" );
+  KConfig config( QLatin1String("akonadi_contactrc") );
   const KConfigGroup group( &config, "Show Address Settings" );
   const QString addressUrl = group.readEntry( "AddressUrl", QString::fromLatin1( "http://open.mapquestapi.com/nominatim/v1/search.php?q=%s,+%z+%l,+%c" ) );
 
@@ -72,7 +72,7 @@ void ConfigWidget::save()
 
   const QString addressUrl = mMapServiceBox->itemData( Settings::self()->mapService() ).toString();
 
-  KConfig config( "akonadi_contactrc" );
+  KConfig config( QLatin1String("akonadi_contactrc") );
   KConfigGroup group( &config, "Show Address Settings" );
   group.writeEntry( "AddressUrl", addressUrl );
   config.sync();

@@ -146,7 +146,7 @@ void ConfigWidget::saveToExternalSettings()
   MessageViewer::GlobalSettings::self()->setShrinkQuotes( Settings::self()->appearanceReduceQuotedFontSize() );
 
   // Composer
-  MessageComposerSettings::self()->setAutoTextSignature( Settings::self()->composerInsertSignature() ? "auto" : "manual" );
+  MessageComposerSettings::self()->setAutoTextSignature( Settings::self()->composerInsertSignature() ? QLatin1String("auto") : QLatin1String("manual") );
   MessageComposerSettings::self()->setPrependSignature( Settings::self()->composertInsertSignatureAboveQuote() );
   MessageComposerSettings::self()->setDashDashSignature( Settings::self()->composerPrependSeparator() );
   TemplateParser::GlobalSettings::self()->setSmartQuote( Settings::self()->composerUseSmartQuoting() );

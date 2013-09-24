@@ -11,14 +11,14 @@ MainWindow::MainWindow(QWidget *parent)
   int counter = 0;
   QStandardItem *parentItem = m_model->invisibleRootItem();
   for (int i = 0; i < 4; ++i) {
-    QStandardItem *topItem = new QStandardItem(QString("item %0").arg(++counter));
+    QStandardItem *topItem = new QStandardItem(QString::fromLatin1("item %1").arg(++counter));
 
     parentItem->appendRow(topItem);
     for (int i = 0; i < 4; ++i) {
-      QStandardItem *childItem = new QStandardItem(QString("item %0").arg(++counter));
+      QStandardItem *childItem = new QStandardItem(QString::fromLatin1("item %1").arg(++counter));
       topItem->appendRow(childItem);
       for (int i = 0; i < 4; ++i) {
-        QStandardItem *grandChildItem = new QStandardItem(QString("item %0").arg(++counter));
+        QStandardItem *grandChildItem = new QStandardItem(QString::fromLatin1("item %1").arg(++counter));
         childItem->appendRow(grandChildItem);
       }
     }

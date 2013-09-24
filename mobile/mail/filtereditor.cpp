@@ -30,12 +30,12 @@
 FilterEditor::FilterEditor( KActionCollection *actionCollection, QObject *parent )
   : QObject( parent ), mFilterController( new MailCommon::FilterController( this ) )
 {
-  actionCollection->addAction( "filtereditor_add", mFilterController->addAction() );
-  actionCollection->addAction( "filtereditor_edit", mFilterController->editAction() );
-  actionCollection->addAction( "filtereditor_delete", mFilterController->removeAction() );
+  actionCollection->addAction( QLatin1String("filtereditor_add"), mFilterController->addAction() );
+  actionCollection->addAction( QLatin1String("filtereditor_edit"), mFilterController->editAction() );
+  actionCollection->addAction( QLatin1String("filtereditor_delete"), mFilterController->removeAction() );
 
-  actionCollection->addAction( "filtereditor_moveup", mFilterController->moveUpAction() );
-  actionCollection->addAction( "filtereditor_movedown", mFilterController->moveDownAction() );
+  actionCollection->addAction( QLatin1String("filtereditor_moveup"), mFilterController->moveUpAction() );
+  actionCollection->addAction( QLatin1String("filtereditor_movedown"), mFilterController->moveDownAction() );
 }
 
 QAbstractItemModel* FilterEditor::model() const
