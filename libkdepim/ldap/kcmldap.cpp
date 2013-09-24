@@ -91,6 +91,7 @@ KCMLdap::KCMLdap( QWidget *parent, const QVariantList& )
   : KCModule( KCMLdapFactory::componentData(), parent )
 #endif // Q_OS_WINCE
 {
+  setButtons(KCModule::Apply);
   KAboutData *about = new KAboutData( I18N_NOOP( "kcmldap" ), 0,
                                       ki18n( "LDAP Server Settings" ),
                                       0, KLocalizedString(), KAboutData::License_LGPL,
