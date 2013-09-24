@@ -47,6 +47,7 @@ class CryptoComposerTest : public QObject
 
     // secondary recipients
     void testBCCEncrypt();
+    void testBCCEncrypt_data();
 
     // inline pgp
     void testOpenPGPInline_data();

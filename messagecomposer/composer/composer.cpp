@@ -182,7 +182,6 @@ void ComposerPrivate::composeStep2()
 
         QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
         q->addSubjob( mainJob );
-        mainJob->start();
       }
     } else {
       SignJob* subJob = new SignJob( q );
@@ -204,9 +203,9 @@ void ComposerPrivate::composeStep2()
       }
       QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
       q->addSubjob( mainJob );
-      mainJob->start();
     }
 
+    mainJob->start();
     return;
   }
 

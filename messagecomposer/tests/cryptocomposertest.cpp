@@ -218,11 +218,19 @@ void CryptoComposerTest::testSignEncryptLateAttachments()
 
 }
 
+void CryptoComposerTest::testBCCEncrypt_data()
+{
+  QTest::addColumn<int>( "format" );
+
+  QTest::newRow( "OpenPGPMime" ) << (int) Kleo::OpenPGPMIMEFormat;
+  QTest::newRow( "InlineOpenPGP" ) << (int) Kleo::InlineOpenPGPFormat;
+}
 
 // secondary recipients
 
 void CryptoComposerTest::testBCCEncrypt()
 {
+  QFETCH( int, format );
   Composer *composer = new Composer;
   QString data( QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ) );
   fillComposerData( composer, data );
@@ -245,7 +253,7 @@ void CryptoComposerTest::testBCCEncrypt()
   encKeys.append( QPair<QStringList, std::vector<GpgME::Key> >( secondRecipients, skeys ) );
 
   composer->setSignAndEncrypt( true, true );
-  composer->setMessageCryptoFormat( Kleo::OpenPGPMIMEFormat );
+  composer->setMessageCryptoFormat( (Kleo::CryptoMessageFormat) format );
 
   composer->setEncryptionKeys( encKeys );
   composer->setSigningKeys( keys );
@@ -258,13 +266,13 @@ void CryptoComposerTest::testBCCEncrypt()
   delete composer;
   composer = 0;
 
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( primMessage.get(), data.toUtf8(), Kleo::OpenPGPMIMEFormat ) );
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( primMessage.get(), data.toUtf8(), (Kleo::CryptoMessageFormat) format ) );
 
   QVERIFY( primMessage->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( primMessage->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
 
 
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( secMessage.get(), data.toUtf8(), Kleo::OpenPGPMIMEFormat ) );
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( secMessage.get(), data.toUtf8(), (Kleo::CryptoMessageFormat) format ) );
 
   QVERIFY( secMessage->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( secMessage->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
