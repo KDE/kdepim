@@ -41,7 +41,8 @@
 FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
         const Akonadi::Collection::List &list, const QString &filtername,
         const QString &argStr, QWidget *parent )
-    : KDialog( parent ), mListwidget( 0 )
+    : KDialog( parent ),
+      mListwidget( 0 )
 {
     setModal( true );
     setCaption( i18n( "Select Folder" ) );
@@ -86,11 +87,30 @@ FilterActionMissingCollectionDialog::FilterActionMissingCollectionDialog(
              this, SLOT(slotFolderChanged(Akonadi::Collection)) );
     lay->addWidget( mFolderRequester );
     enableButtonOk( false );
+    readConfig();
 }
 
 FilterActionMissingCollectionDialog::~FilterActionMissingCollectionDialog()
 {
+    writeConfig();
 }
+
+void FilterActionMissingCollectionDialog::readConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingCollectionDialog" );
+
+    const QSize size = group.readEntry( "Size", QSize(500, 300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void FilterActionMissingCollectionDialog::writeConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingCollectionDialog" );
+    group.writeEntry( "Size", size() );
+}
+
 
 void FilterActionMissingCollectionDialog::slotFolderChanged( const Akonadi::Collection &col )
 {
@@ -193,12 +213,30 @@ FilterActionMissingIdentityDialog::FilterActionMissingIdentityDialog( const QStr
     lay->addWidget( label );
     mComboBoxIdentity = new KPIMIdentities::IdentityCombo( KernelIf->identityManager(), this );
     lay->addWidget( mComboBoxIdentity );
-
+    readConfig();
 }
 
 FilterActionMissingIdentityDialog::~FilterActionMissingIdentityDialog()
 {
+    writeConfig();
 }
+
+void FilterActionMissingIdentityDialog::readConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingMissingIdentity" );
+
+    const QSize size = group.readEntry( "Size", QSize(500, 300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void FilterActionMissingIdentityDialog::writeConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingMissingIdentity" );
+    group.writeEntry( "Size", size() );
+}
+
 
 int FilterActionMissingIdentityDialog::selectedIdentity() const
 {
@@ -223,12 +261,30 @@ FilterActionMissingTransportDialog::FilterActionMissingTransportDialog( const QS
     lay->addWidget( label );
     mComboBoxTransport = new MailTransport::TransportComboBox( this );
     lay->addWidget( mComboBoxTransport );
-
+    readConfig();
 }
 
 FilterActionMissingTransportDialog::~FilterActionMissingTransportDialog()
 {
+    writeConfig();
 }
+
+void FilterActionMissingTransportDialog::readConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingTransportDialog" );
+
+    const QSize size = group.readEntry( "Size", QSize(500, 300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void FilterActionMissingTransportDialog::writeConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingTransportDialog" );
+    group.writeEntry( "Size", size() );
+}
+
 
 int FilterActionMissingTransportDialog::selectedTransport() const
 {
@@ -254,10 +310,29 @@ FilterActionMissingTemplateDialog::FilterActionMissingTemplateDialog(
     mComboBoxTemplate = new KComboBox( this );
     mComboBoxTemplate->addItems( templateList );
     lay->addWidget( mComboBoxTemplate );
+    readConfig();
 }
 
 FilterActionMissingTemplateDialog::~FilterActionMissingTemplateDialog()
 {
+    writeConfig();
+}
+
+
+void FilterActionMissingTemplateDialog::readConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingTemplateDialog" );
+
+    const QSize size = group.readEntry( "Size", QSize(500, 300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void FilterActionMissingTemplateDialog::writeConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingTemplateDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 QString FilterActionMissingTemplateDialog::selectedTemplate() const
@@ -289,10 +364,28 @@ FilterActionMissingAccountDialog::FilterActionMissingAccountDialog( const QStrin
     mAccountList = new MailCommon::AccountList( this );
     mAccountList->applyOnAccount( lstAccount );
     lay->addWidget( mAccountList );
+    readConfig();
 }
 
 FilterActionMissingAccountDialog::~FilterActionMissingAccountDialog()
 {
+    writeConfig();
+}
+
+void FilterActionMissingAccountDialog::readConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingAccountDialog" );
+
+    const QSize size = group.readEntry( "Size", QSize(500, 300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void FilterActionMissingAccountDialog::writeConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingAccountDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 QStringList FilterActionMissingAccountDialog::selectedAccount() const
@@ -358,11 +451,28 @@ FilterActionMissingTagDialog::FilterActionMissingTagDialog(
     connect( mTagList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
              this, SLOT(accept()) );
     lay->addWidget( mTagList );
-
+    readConfig();
 }
 
 FilterActionMissingTagDialog::~FilterActionMissingTagDialog()
 {
+    writeConfig();
+}
+
+void FilterActionMissingTagDialog::readConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingTagDialog" );
+
+    const QSize size = group.readEntry( "Size", QSize(500, 300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void FilterActionMissingTagDialog::writeConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingTagDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 QString FilterActionMissingTagDialog::selectedTag() const
@@ -406,16 +516,35 @@ FilterActionMissingSoundUrlDialog::FilterActionMissingSoundUrlDialog( const QStr
     lay->addWidget( label );
     mUrlWidget = new KUrlRequester( this );
     lay->addWidget( mUrlWidget );
+    readConfig();
 }
 
 FilterActionMissingSoundUrlDialog::~FilterActionMissingSoundUrlDialog()
 {
+    writeConfig();
 }
 
 QString FilterActionMissingSoundUrlDialog::soundUrl() const
 {
     return mUrlWidget->url().path();
 }
+
+void FilterActionMissingSoundUrlDialog::readConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingSoundUrlDialog" );
+
+    const QSize size = group.readEntry( "Size", QSize(500, 300) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void FilterActionMissingSoundUrlDialog::writeConfig()
+{
+    KConfigGroup group( KernelIf->config(), "FilterActionMissingSoundUrlDialog" );
+    group.writeEntry( "Size", size() );
+}
+
 
 #include "filteractionmissingargumentdialog.moc"
 
