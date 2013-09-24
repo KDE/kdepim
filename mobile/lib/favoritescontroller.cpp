@@ -32,7 +32,7 @@
 #include <QAction>
 #include <QItemSelectionModel>
 
-static const char * const sFavoritePrefix = "Favorite_";
+static const QString sFavoritePrefix = QLatin1String("Favorite_");
 static const int sFavoritePrefixLength = 9;
 
 class FavoritesController::Private

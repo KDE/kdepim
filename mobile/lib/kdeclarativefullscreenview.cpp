@@ -143,21 +143,21 @@ void KDeclarativeFullScreenView::delayedInit()
 
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(slotStatusChanged(QDeclarativeView::Status)) );
 
-  engine()->rootContext()->setContextProperty( "window", QVariant::fromValue( static_cast<QObject*>( this ) ) );
+  engine()->rootContext()->setContextProperty( QLatin1String("window"), QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   if ( debugTiming ) {
     kWarning() << "Adding QML import paths" << t.elapsed() << &t;
   }
-  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
+  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String("imports") ) )
     engine()->addImportPath( importPath );
-  QString qmlPath = KStandardDirs::locate( "appdata", m_qmlFileName + ".qml" );
+  QString qmlPath = KStandardDirs::locate( "appdata", m_qmlFileName + QLatin1String(".qml") );
 
   if ( debugTiming ) {
     kWarning() << "Adding QML import paths done" << t.elapsed() << &t;
   }
 
   if ( qmlPath.isEmpty() ) // Try harder
-    qmlPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + m_qmlFileName + ".qml" );
+    qmlPath = KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + m_qmlFileName + QLatin1String(".qml") );
 
   // TODO: Get this from a KXMLGUIClient?
   mActionCollection = new KActionCollection( this );
@@ -195,7 +195,7 @@ void KDeclarativeFullScreenView::setQmlFile(const QString& source)
     t.start();
     kWarning() << "start setSource" << &t << " - " << QDateTime::currentDateTime();
   }
-  qDebug() << "trying to load \"" +  source << "\"";
+  qDebug() << QLatin1String("trying to load \"") +  source << QLatin1String("\"");
   setSource( QUrl::fromLocalFile(source) );
   if ( debugTiming ) {
     kWarning() << "setSourceDone" << t.elapsed() << &t;
