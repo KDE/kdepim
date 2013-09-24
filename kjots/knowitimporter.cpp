@@ -77,33 +77,33 @@ QDomElement KnowItImporter::addNote( const KnowItNote& note)
   kDebug() << note.title << childNotesCount;
   if (childNotesCount > 0)
   {
-    newElement = m_domDoc.createElement("KJotsBook");
+    newElement = m_domDoc.createElement(QLatin1String("KJotsBook"));
 
   } else {
-    newElement = m_domDoc.createElement("KJotsPage");
+    newElement = m_domDoc.createElement(QLatin1String("KJotsPage"));
   }
 
-  QDomElement titleTag = m_domDoc.createElement( "Title" );
+  QDomElement titleTag = m_domDoc.createElement( QLatin1String("Title") );
   titleTag.appendChild( m_domDoc.createTextNode( note.title ) );
   newElement.appendChild( titleTag );
-  QDomElement idTag = m_domDoc.createElement( "ID" );
-  idTag.appendChild( m_domDoc.createTextNode( "0" ) );   // Gets a valid id later.
+  QDomElement idTag = m_domDoc.createElement( QLatin1String("ID") );
+  idTag.appendChild( m_domDoc.createTextNode( QLatin1String("0") ) );   // Gets a valid id later.
   newElement.appendChild( idTag );
 
   if (childNotesCount > 0)
   {
-    QDomElement openTag = m_domDoc.createElement( "Open" );
-    openTag.appendChild( m_domDoc.createTextNode( "1" ) );
+    QDomElement openTag = m_domDoc.createElement( QLatin1String("Open") );
+    openTag.appendChild( m_domDoc.createTextNode( QLatin1String("1") ) );
     newElement.appendChild( openTag );
 
-    QDomElement titlePage = m_domDoc.createElement("KJotsPage");
-    QDomElement titlePageTitleTag = m_domDoc.createElement( "Title" );
+    QDomElement titlePage = m_domDoc.createElement(QLatin1String("KJotsPage"));
+    QDomElement titlePageTitleTag = m_domDoc.createElement( QLatin1String("Title") );
     titlePageTitleTag.appendChild( m_domDoc.createTextNode( note.title ) );
     titlePage.appendChild( titlePageTitleTag );
-    QDomElement titlePageIdTag = m_domDoc.createElement( "ID" );
-    titlePageIdTag.appendChild( m_domDoc.createTextNode( "0" ) );   // Gets a valid id later.
+    QDomElement titlePageIdTag = m_domDoc.createElement( QLatin1String("ID" ));
+    titlePageIdTag.appendChild( m_domDoc.createTextNode( QLatin1String("0") ) );   // Gets a valid id later.
     titlePage.appendChild( titlePageIdTag );
-    QDomElement titlePageTextTag = m_domDoc.createElement( "Text" );
+    QDomElement titlePageTextTag = m_domDoc.createElement( QLatin1String("Text" ));
     titlePageTextTag.appendChild( m_domDoc.createCDATASection( note.content ) );
     titlePage.appendChild( titlePageTextTag );
     newElement.appendChild( titlePage );
@@ -119,18 +119,18 @@ QDomElement KnowItImporter::addNote( const KnowItNote& note)
         if ( contents.endsWith( QLatin1String("</body></html>") ) ) {
           contents.chop( 14 );
         }
-        contents.append( "<br /><br /><p><b>Links:</b></p>\n<ul>\n" );
+        contents.append( QLatin1String("<br /><br /><p><b>Links:</b></p>\n<ul>\n") );
         for ( int i = 0; i < note.links.size(); ++i ) {
           kDebug() << "link" << note.links[i].first << note.links[i].second;
-          contents.append( QString( "<li><a href=\"%1\">%2</a></li>\n" )
+          contents.append( QString::fromLatin1( "<li><a href=\"%1\">%2</a></li>\n" )
               .arg( note.links[i].first )
               .arg( note.links[i].second ) );
         }
-        contents.append( "</ul></body></html>" );
+        contents.append( QLatin1String("</ul></body></html>") );
       }
 
 
-    QDomElement textTag = m_domDoc.createElement( "Text" );
+    QDomElement textTag = m_domDoc.createElement( QLatin1String("Text") );
     textTag.appendChild( m_domDoc.createCDATASection( contents ) );
     newElement.appendChild( textTag );
   }
@@ -142,15 +142,15 @@ QDomElement KnowItImporter::addNote( const KnowItNote& note)
 
 void KnowItImporter::buildDomDocument()
 {
-  QDomElement parent = m_domDoc.createElement( "KJotsBook" );
-  QDomElement titleTag = m_domDoc.createElement( "Title" );
+  QDomElement parent = m_domDoc.createElement( QLatin1String("KJotsBook") );
+  QDomElement titleTag = m_domDoc.createElement( QLatin1String("Title") );
   titleTag.appendChild( m_domDoc.createTextNode( i18nc("Name for the top level book created to hold the imported data.", "KNowIt Import") ) );
   parent.appendChild( titleTag );
-  QDomElement idTag = m_domDoc.createElement( "ID" );
-  idTag.appendChild( m_domDoc.createTextNode( "0" ) );   // Gets a valid id later.
+  QDomElement idTag = m_domDoc.createElement( QLatin1String("ID") );
+  idTag.appendChild( m_domDoc.createTextNode( QLatin1String("0") ) );   // Gets a valid id later.
   parent.appendChild( idTag );
-  QDomElement openTag = m_domDoc.createElement( "Open" );
-  openTag.appendChild( m_domDoc.createTextNode( "1" ) );
+  QDomElement openTag = m_domDoc.createElement( QLatin1String("Open") );
+  openTag.appendChild( m_domDoc.createTextNode( QLatin1String("1") ) );
   parent.appendChild( openTag );
   m_domDoc.appendChild( parent );
 
@@ -184,13 +184,13 @@ void KnowItImporter::buildNoteTree( const KUrl& url )
       }
 
       foreach( const QByteArray &header, entryHeaders ) {
-        if ( line.startsWith( header ) ) {
+        if ( line.startsWith( QLatin1String(header) ) ) {
           kDebug() << "init" << line << header;
           line = line.right( line.size() - header.size() ).trimmed();
           kDebug() << "header tag removed: " << line;
 
-          QStringList list = line.split( ' ' );
-          int startOfTitle = line.indexOf( ' ' );
+          QStringList list = line.split( QLatin1Char(' ') );
+          int startOfTitle = line.indexOf( QLatin1Char(' ') );
           bool ok = false;
 
           kDebug() << "depth" << list.at( 0 ).trimmed();
@@ -211,7 +211,7 @@ void KnowItImporter::buildNoteTree( const KUrl& url )
             }
 
             QString contentLine = in.readLine();
-            QList< QPair <QString, QString> > links;
+            //QList< QPair <QString, QString> > links;
             QString contents;
             QString url;
             QString target;
