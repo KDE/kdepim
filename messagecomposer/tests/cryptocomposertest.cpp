@@ -84,7 +84,7 @@ void CryptoComposerTest::testOpenPGPMime()
   QFETCH( Headers::contentEncoding, cte );
 
   Composer *composer = new Composer;
-  
+
   fillComposerData( composer, data );
   fillComposerCryptoData( composer );
 
@@ -125,7 +125,7 @@ void CryptoComposerTest::testEncryptSameAttachments()
   QString data( QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ) );
   fillComposerData( composer, data );
   fillComposerCryptoData( composer );
-  
+
   AttachmentPart::Ptr attachment = AttachmentPart::Ptr( new AttachmentPart );
   attachment->setData( "abc" );
   attachment->setMimeType( "x-some/x-type" );
@@ -133,7 +133,7 @@ void CryptoComposerTest::testEncryptSameAttachments()
   attachment->setEncrypted( true );
   attachment->setSigned( false );
   composer->addAttachmentPart( attachment );
-  
+
   composer->setSignAndEncrypt( false, true );
   composer->setMessageCryptoFormat( (Kleo::CryptoMessageFormat) format );
 
@@ -243,13 +243,13 @@ void CryptoComposerTest::testBCCEncrypt()
   QList<QPair<QStringList, std::vector<GpgME::Key> > > encKeys;
   encKeys.append( QPair<QStringList, std::vector<GpgME::Key> >( primRecipients, pkeys ) );
   encKeys.append( QPair<QStringList, std::vector<GpgME::Key> >( secondRecipients, skeys ) );
-  
+
   composer->setSignAndEncrypt( true, true );
   composer->setMessageCryptoFormat( Kleo::OpenPGPMIMEFormat );
 
   composer->setEncryptionKeys( encKeys );
   composer->setSigningKeys( keys );
-  
+
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 2 );
 
@@ -262,7 +262,7 @@ void CryptoComposerTest::testBCCEncrypt()
 
   QVERIFY( primMessage->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( primMessage->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
-  
+
 
   QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( secMessage.get(), data.toUtf8(), Kleo::OpenPGPMIMEFormat ) );
 
@@ -374,7 +374,7 @@ void CryptoComposerTest::testCTEquPr_data()
   QTest::newRow( "CTEquPr:Sign" ) << data << true << false << Headers::CEquPr;
   QTest::newRow( "CTEquPr:Encrypt" ) << data << false << true << Headers::CE7Bit;
   QTest::newRow( "CTEquPr:SignEncrypt" ) << data << true << true << Headers::CE7Bit;
-  
+
   data = QString::fromUtf8( "All happy families are alike;\n\n\n\neach unhappy family is unhappy in its own way.\n--\n hallloasdfasdfsadfsdf asdf sadfasdf sdf sdf sdf sadfasdf sdaf daf sdf asdf sadf asdf asdf [ä]" );
   QTest::newRow( "CTEquPr:Sign:Newline" ) << data << true << false << Headers::CEquPr;
   QTest::newRow( "CTEquPr:Encrypt:Newline" ) << data << false << true << Headers::CE7Bit;
