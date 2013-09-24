@@ -85,7 +85,7 @@ void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &
 {
     if (!anchorTarget.isEmpty())
     {
-        statusBar()->changeItem(anchorText + " -> " + anchorTarget, 0);
+        statusBar()->changeItem(anchorText + QLatin1String(" -> ") + anchorTarget, 0);
     } else {
         statusBar()->changeItem(QString(), 0);
     }
