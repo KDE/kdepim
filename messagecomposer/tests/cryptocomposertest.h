@@ -40,8 +40,10 @@ class CryptoComposerTest : public QObject
     void testOpenPGPMime_data();
 
     // the following will do for s-mime as well, as the same sign/enc jobs are used
-    void testSignEncryptSameAttachmentsOpenPGPMime();
-    void testSignEncryptLateAttachmentsOpenPGPMime();
+    void testEncryptSameAttachments();
+    void testEncryptSameAttachments_data();
+    void testSignEncryptLateAttachments();
+    void testSignEncryptLateAttachments_data();
 
     // secondary recipients
     void testBCCEncrypt();

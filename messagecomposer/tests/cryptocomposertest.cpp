@@ -23,6 +23,9 @@
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
 
+#include "testhtmlwriter.h"
+#include "testcsshelper.h"
+
 #include <KDebug>
 #include <qtest_kde.h>
 
@@ -95,9 +98,9 @@ void CryptoComposerTest::testOpenPGPMime()
   delete composer;
   composer = 0;
 
-  kDebug()<< "message:" << message.get()->encodedContent();
+  //kDebug()<< "message:" << message.get()->encodedContent();
   QVERIFY( ComposerTestUtil::verify( sign, encrypt, message.get(), data.toUtf8(),
-           Kleo::OpenPGPMIMEFormat, (Headers::contentEncoding) cte ) );
+           Kleo::OpenPGPMIMEFormat, cte ) );
 
 
   QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
@@ -106,9 +109,18 @@ void CryptoComposerTest::testOpenPGPMime()
 
 
 // the following will do for s-mime as well, as the same sign/enc jobs are used
-
-void CryptoComposerTest::testSignEncryptSameAttachmentsOpenPGPMime()
+void CryptoComposerTest::testEncryptSameAttachments_data()
 {
+  QTest::addColumn<int>( "format" );
+
+  QTest::newRow( "OpenPGPMime" ) << (int) Kleo::OpenPGPMIMEFormat;
+  //TODO: fix Inline PGP with encrypted attachments
+  //QTest::newRow( "InlineOpenPGP" ) << (int) Kleo::InlineOpenPGPFormat;
+}
+
+void CryptoComposerTest::testEncryptSameAttachments()
+{
+  QFETCH( int, format );
   Composer *composer = new Composer;
   QString data( QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ) );
   fillComposerData( composer, data );
@@ -119,11 +131,11 @@ void CryptoComposerTest::testSignEncryptSameAttachmentsOpenPGPMime()
   attachment->setMimeType( "x-some/x-type" );
   attachment->setFileName( QString::fromLocal8Bit( "anattachment.txt" ) );
   attachment->setEncrypted( true );
-  attachment->setSigned( true );
+  attachment->setSigned( false );
   composer->addAttachmentPart( attachment );
   
-  composer->setSignAndEncrypt( true, true );
-  composer->setMessageCryptoFormat( Kleo::OpenPGPMIMEFormat );
+  composer->setSignAndEncrypt( false, true );
+  composer->setMessageCryptoFormat( (Kleo::CryptoMessageFormat) format );
 
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
@@ -133,17 +145,42 @@ void CryptoComposerTest::testSignEncryptSameAttachmentsOpenPGPMime()
   composer = 0;
 
 
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message.get(),
-                                                           data.toUtf8(),
-                                                           Kleo::OpenPGPMIMEFormat, true ) );
+  //kDebug()<< "message:" << message.get()->encodedContent();
+  QVERIFY( ComposerTestUtil::verifyEncryption( message.get(), data.toUtf8(),
+        (Kleo::CryptoMessageFormat) format , true ) );
 
   QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
 
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  MessageCore::Test::TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
+  testSource.setAllowDecryption( true );
+  MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
+  MessageViewer::ObjectTreeParser otp( &testSource, nh );
+  MessageViewer::ProcessResult pResult( nh );
+
+  otp.parseObjectTree( message.get() );
+  KMime::Message::Ptr  unencrypted = nh->unencryptedMessage( message );
+
+  KMime::Content* testAttachment = MessageViewer::ObjectTreeParser::findType( unencrypted.get() , "x-some", "x-type", true, true );
+
+  QCOMPARE( testAttachment->body(), QString::fromLatin1( "abc" ).toUtf8() );
+  QCOMPARE( testAttachment->contentDisposition()->filename(), QString::fromLatin1( "anattachment.txt" ) );
+
 }
 
-void CryptoComposerTest::testSignEncryptLateAttachmentsOpenPGPMime()
+void CryptoComposerTest::testSignEncryptLateAttachments_data()
 {
+  QTest::addColumn<int>( "format" );
+
+  QTest::newRow( "OpenPGPMime" ) << (int) Kleo::OpenPGPMIMEFormat;
+  QTest::newRow( "InlineOpenPGP" ) << (int) Kleo::InlineOpenPGPFormat;
+}
+
+void CryptoComposerTest::testSignEncryptLateAttachments()
+{
+  QFETCH( int, format );
   Composer *composer = new Composer;
   QString data( QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ) );
   fillComposerData( composer, data );
@@ -158,7 +195,7 @@ void CryptoComposerTest::testSignEncryptLateAttachmentsOpenPGPMime()
   composer->addAttachmentPart( attachment );
 
   composer->setSignAndEncrypt( true, true );
-  composer->setMessageCryptoFormat( Kleo::OpenPGPMIMEFormat );
+  composer->setMessageCryptoFormat( (Kleo::CryptoMessageFormat) format );
 
   QVERIFY( composer->exec() );
   QCOMPARE( composer->resultMessages().size(), 1 );
@@ -171,15 +208,13 @@ void CryptoComposerTest::testSignEncryptLateAttachmentsOpenPGPMime()
   KMime::Content * b = MessageCore::NodeHelper::firstChild( message.get() );
   QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( b,
                                                            data.toUtf8(),
-                                                           Kleo::OpenPGPMIMEFormat, true ) );
+                                                           (Kleo::CryptoMessageFormat) format, true ) );
 
   QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
 
   // now check the attachment separately
-  kDebug() << "message:" << message->encodedContent();
   QVERIFY( MessageCore::NodeHelper::nextSibling( MessageCore::NodeHelper::firstChild( message.get() ) )->body() == "abc" );
-//   kDebug() << "attachment:" << attNode->encodedContent();
 
 }
 
@@ -272,6 +307,8 @@ void CryptoComposerTest::testOpenPGPInline()
   delete composer;
   composer = 0;
 
+  if ( sign && !encrypt )
+    data += QString::fromLatin1( "\n" );
   kDebug() << "message:" << message->encodedContent();
   QVERIFY( ComposerTestUtil::verify( sign, encrypt, message.get(), data.toUtf8(),
                                           Kleo::InlineOpenPGPFormat, cte ) );

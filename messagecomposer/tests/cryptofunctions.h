@@ -46,7 +46,7 @@ namespace ComposerTestUtil
   /**
    * Verifies that the given MIME content is encrypted, and that the text is equal
    */
-  bool verifyEncryption( KMime::Content* content, QByteArray encrContent, Kleo::CryptoMessageFormat f );
+  bool verifyEncryption( KMime::Content* content, QByteArray encrContent, Kleo::CryptoMessageFormat f, bool withAttachment = false );
 
   /**
    * Verifies that the given MIME content is signed and then encrypted, and the original text is as specified
