@@ -32,9 +32,12 @@
 
 #include <KColorScheme>
 #include <KGlobal>
+#include <KIconLoader>
 #include <KLocale>
 #include <KStringHandler>
 #include <KConfigGroup>
+
+#include "akonadi/contact/improtocols.h"
 
 #include <QSet>
 #include <QRegExp>
@@ -133,6 +136,25 @@ static QVariantHash phoneNumberHash( const KABC::PhoneNumber &phoneNumber, int c
     }
 
     return numberObject;
+}
+
+static QVariantHash imAddressHash( const QString &typeKey, const QString &imAddress,
+                                   int counter )
+{
+    QVariantHash addressObject;
+
+    const QString dispLabel = i18nc( "@title:row label for an Instant Messaging address, %1 is I18Ned protocol name",
+                                     "IM (%1)", IMProtocols::self()->name( typeKey ) );
+
+    setHashField( addressObject, QLatin1String( "type" ), dispLabel );
+    setHashField( addressObject, QLatin1String( "imAddress" ), imAddress );
+
+    const QString iconUrl = KUrl::fromPath( KIconLoader::global()->iconPath( IMProtocols::self()->icon( typeKey ),
+                                                                             -KIconLoader::SizeSmall) ).url();
+    const QString url = QString::fromLatin1( "<img src=\"%1\" align=\"top\"/>" ).arg( iconUrl );
+    addressObject.insert( QLatin1String( "imIcon" ), url );
+
+    return addressObject;
 }
 
 static QVariantHash addressHash( const KABC::Address &address, int counter )
@@ -262,6 +284,26 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
     contactObject.insert( QLatin1String( "phoneNumbers" ), phoneNumbers );
 
+    // IM
+    QVariantList imAddresses;
+    counter = 0;
+    const QStringList customs = rawContact.customs();
+    if ( !customs.empty() ) {
+        foreach ( const QString &custom, customs ) {
+            if ( custom.startsWith( QLatin1String( "messaging/" ) ) ) {
+                int pos = custom.indexOf( QLatin1Char( ':' ) );
+                QString key = custom.left( pos );
+                key.remove( QLatin1String( "-All" ) );
+                const QString value = custom.mid( pos + 1 );
+
+                imAddresses.append( imAddressHash( key, value, counter ) );
+                ++counter;
+            }
+        }
+    }
+
+    contactObject.insert( QLatin1String( "imAddresses" ), imAddresses );
+
     // Homepage
     if ( rawContact.url().isValid() ) {
         QString url = rawContact.url().url();
@@ -380,8 +422,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
         blacklistedKeys.insert( QLatin1String( "AddressBook" ) );
     }
 
-    if ( !rawContact.customs().empty() ) {
-        const QStringList customs = rawContact.customs();
+    if ( !customs.empty() ) {
         foreach ( QString custom, customs ) { //krazy:exclude=foreach
             if ( custom.startsWith( QLatin1String( "KADDRESSBOOK-" ) ) ) {
                 custom.remove( QLatin1String( "KADDRESSBOOK-X-" ) );
