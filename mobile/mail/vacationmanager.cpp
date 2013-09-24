@@ -41,7 +41,7 @@ VacationManager::VacationManager( KActionCollection *actionCollection, QObject *
 
   if ( KSieveUi::Util::allowOutOfOfficeSettings() ) {
     mEditAction = new KAction( i18n( "Edit \"Out of Office\" Replies" ), this );
-    actionCollection->addAction( "tools_edit_vacation", mEditAction );
+    actionCollection->addAction( QLatin1String("tools_edit_vacation"), mEditAction );
     connect( mEditAction, SIGNAL(triggered(bool)), SLOT(editVacation()) );
   }
 }

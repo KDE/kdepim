@@ -10,13 +10,13 @@
 *
 * This library is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 * Lesser General Public License for more details.
 *
 * You should have received a copy of the GNU Lesser General Public
 * License along with this library; if not, write to the Free Software
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-* 02110-1301  USA
+* 02110-1301  USA
 */
 
 #include "mainview.h"
@@ -93,22 +93,22 @@ int main( int argc, char **argv )
      return 0;
   }
 
-  KGlobal::locale()->insertCatalog( "libakonadi-kmime" );
-  KGlobal::locale()->insertCatalog( "libmessagecore" );
-  KGlobal::locale()->insertCatalog( "libmessagecomposer" );
-  KGlobal::locale()->insertCatalog( "libmessageviewer" );
-  KGlobal::locale()->insertCatalog( "libtemplateparser" );
-  KGlobal::locale()->insertCatalog( "libmailcommon" );
-  KGlobal::locale()->insertCatalog( "kmail" ); // for identity dialog
-  KGlobal::locale()->insertCatalog( "libksieve" ); // for out of office reply dialog
-  KGlobal::locale()->insertCatalog( "akonadi_imap_resource" ); // for account status indicators
-  KGlobal::locale()->insertCatalog( "libkcalutils" ); // for invitation handling
-  KGlobal::locale()->insertCatalog( "libkleopatra" ); // for Krypto format settings in identity dialog
-  KGlobal::locale()->insertCatalog( "libkpimidentities" ); // for signature settings in identity dialog
-  KGlobal::locale()->insertCatalog( "calendarsupport" ); // for error messages while updating events and tasks
-  KGlobal::locale()->insertCatalog( "akonadicontact" ); //for identity + vcard
-  KGlobal::locale()->insertCatalog( "kabc" ); //need for addressbook
-  KGlobal::locale()->insertCatalog( "libpimcommon" ); //Need for acl
+  KGlobal::locale()->insertCatalog( QLatin1String("libakonadi-kmime") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libmessagecore") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libmessagecomposer") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libmessageviewer") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libtemplateparser" ));
+  KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
+  KGlobal::locale()->insertCatalog( QLatin1String("kmail") ); // for identity dialog
+  KGlobal::locale()->insertCatalog( QLatin1String("libksieve") ); // for out of office reply dialog
+  KGlobal::locale()->insertCatalog( QLatin1String("akonadi_imap_resource") ); // for account status indicators
+  KGlobal::locale()->insertCatalog( QLatin1String("libkcalutils") ); // for invitation handling
+  KGlobal::locale()->insertCatalog( QLatin1String("libkleopatra") ); // for Krypto format settings in identity dialog
+  KGlobal::locale()->insertCatalog( QLatin1String("libkpimidentities") ); // for signature settings in identity dialog
+  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") ); // for error messages while updating events and tasks
+  KGlobal::locale()->insertCatalog( QLatin1String("akonadicontact") ); //for identity + vcard
+  KGlobal::locale()->insertCatalog( QLatin1String("kabc") ); //need for addressbook
+  KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") ); //Need for acl
 
   return app.exec();
 }

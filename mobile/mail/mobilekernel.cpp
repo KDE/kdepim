@@ -80,7 +80,7 @@ KSharedConfig::Ptr MobileKernel::config()
 {
   if ( !mConfig )
   {
-    mConfig = KSharedConfig::openConfig( "kmail-mobilerc" );
+    mConfig = KSharedConfig::openConfig( QLatin1String("kmail-mobilerc") );
   }
 
   return mConfig;

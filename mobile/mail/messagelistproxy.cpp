@@ -57,7 +57,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
           else
             l.append(  mbox.addrSpec().asPrettyString() );
         }
-        return l.join( ", " );
+        return l.join( QLatin1String(", ") );
       }
       case DateRole:
       {
@@ -149,7 +149,7 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
           else
             l.append( mbox.addrSpec().asPrettyString() );
         }
-        return l.join( ", " );
+        return l.join( QLatin1String(", ") );
       }
     }
   }

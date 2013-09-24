@@ -62,9 +62,9 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData );
   KDeclarativeApplication<MainView> app;
 
-  KGlobal::locale()->insertCatalog( "libkcalutils" );
-  KGlobal::locale()->insertCatalog( "libincidenceeditors" );
-  KGlobal::locale()->insertCatalog( "calendarsupport" );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkcalutils") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libincidenceeditors") );
+  KGlobal::locale()->insertCatalog( QLatin1String("calendarsupport") );
 
 #ifdef Q_OS_WINCE
   SetCursor( LoadCursor( NULL, NULL ) );

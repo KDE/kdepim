@@ -42,7 +42,7 @@ QString MessageListSettingsController::groupingRole() const
 {
   switch ( mSettings.groupingOption() ) {
     case MessageListSettings::GroupByNone:
-      return QString( "" );
+      return QLatin1String( "" );
       break;
     case MessageListSettings::GroupByDate:
       return QLatin1String( "dateGroup" );
