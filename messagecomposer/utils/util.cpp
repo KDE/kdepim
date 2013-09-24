@@ -45,6 +45,22 @@
 #include <akonadi/agentmanager.h>
 #include <messagecore/helpers/messagehelpers.h>
 
+KMime::Content* setBodyAndCTE( QByteArray &encodedBody, KMime::Headers::ContentType* contentType, KMime::Content* ret ){
+  MessageComposer::Composer composer;
+  MessageComposer::SinglepartJob cteJob( &composer );
+
+  cteJob.contentType()->setMimeType( contentType->mimeType() );
+  cteJob.contentType()->setCharset( contentType->charset() );
+  cteJob.setData( encodedBody );
+  cteJob.exec();
+  cteJob.content()->assemble();
+
+  ret->contentTransferEncoding()->setEncoding( cteJob.contentTransferEncoding()->encoding() );
+  ret->setBody( cteJob.content()->encodedBody() );
+
+  return ret;
+}
+
 KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {
 
@@ -103,16 +119,7 @@ KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* or
       }
       else {
         // fixing ContentTransferEncoding
-        MessageComposer::Composer composer;
-        MessageComposer::SinglepartJob cjob( &composer );
-        cjob.contentType()->setMimeType( orig->contentType()->mimeType() );
-        cjob.contentType()->setCharset( orig->contentType()->charset() );
-        cjob.setData( encodedBody );
-        cjob.exec();
-        cjob.content()->assemble();
-
-        code->contentTransferEncoding()->setEncoding( cjob.contentTransferEncoding()->encoding() );
-        code->setBody( cjob.content()->body() );
+        setBodyAndCTE( encodedBody, orig->contentType(), code );
       }
 
       // compose the multi-part message
@@ -123,29 +130,14 @@ KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* or
       result->addContent( code );
     }
   } else { // not MIME, just plain message
-    QByteArray resultingBody;
-    if( sign && makeMultiMime( format, true ) )
-      resultingBody += orig->body();
-    if( !encodedBody.isEmpty() )
-      resultingBody += encodedBody;
-    else {
-      kDebug() << "Got no encoded payload trying to save as plaintext inline pgp!";
-    }
+    result->setHead( orig->head() );
+    result->parse();
+
+    // should throw a message to user, that the signing/encryption failed
+    Q_ASSERT( !encodedBody.isEmpty() );
 
     // fixing ContentTransferEncoding
-    MessageComposer::Composer composer;
-    MessageComposer::SinglepartJob cjob( &composer );
-    cjob.contentType()->setMimeType( orig->contentType()->mimeType() );
-    cjob.contentType()->setCharset( orig->contentType()->charset() );
-    cjob.setData( resultingBody );
-    cjob.exec();
-    cjob.content()->assemble();
-
-    result->setHead( orig->head() );
-    result->setBody( cjob.content()->encodedBody() );
-    result->parse();
-    result->contentTransferEncoding()->setEncoding( cjob.contentTransferEncoding()->encoding() );
-
+    setBodyAndCTE( encodedBody, orig->contentType(), result );
   }
   return result;
 
