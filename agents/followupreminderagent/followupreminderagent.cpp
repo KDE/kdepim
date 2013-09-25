@@ -18,6 +18,7 @@
 
 #include "followupreminderagent.h"
 #include "followupreminderadaptor.h"
+#include "followupreminderconfiguredialog.h"
 #include "followupreminderagentsettings.h"
 #include <KWindowSystem>
 #include <KLocale>
@@ -66,7 +67,7 @@ void FollowUpReminderAgent::showConfigureDialog(qlonglong windowId)
 
 void FollowUpReminderAgent::configure( WId windowId )
 {
-    //TODO
+    showConfigureDialog((qulonglong)windowId);
 }
 
 
