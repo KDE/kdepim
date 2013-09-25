@@ -36,6 +36,7 @@
 #include <KStandardDirs>
 #include <KNS3/KNewStuffAction>
 #include <KRecentFilesAction>
+#include <KLocale>
 
 #include <QPointer>
 #include <QCloseEvent>
@@ -45,6 +46,8 @@ ContactEditorMainWindow::ContactEditorMainWindow()
     : KXmlGuiWindow(),
       mContactEditor(0)
 {
+    KGlobal::locale()->insertCatalog( QLatin1String("akonadicontact") );
+    KGlobal::locale()->insertCatalog( QLatin1String("kabc") );
     setupActions();
     setupGUI();
     updateActions();
