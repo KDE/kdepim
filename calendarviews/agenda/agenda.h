@@ -233,6 +233,9 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
       RESIZERIGHT
     };
 
+    AgendaItem::QPtr createAgendaItem( const Akonadi::Item &item, int itemPos,
+                                       int itemCount, const KDateTime &qd, bool isSelected );
+
   protected:
     /**
       Draw the background grid of the agenda.

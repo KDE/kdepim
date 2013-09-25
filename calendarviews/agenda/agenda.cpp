@@ -1689,13 +1689,7 @@ AgendaItem::QPtr Agenda::insertItem( const Akonadi::Item &incidence, const KDate
 
   d->mActionType = NOP;
 
-  AgendaItem::QPtr agendaItem = new AgendaItem( d->mAgendaView, d->mCalendar, incidence,
-                                                itemPos, itemCount, qd, isSelected, this );
-
-  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
-           SLOT(removeAgendaItem(AgendaItem::QPtr)) );
-  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
-           SLOT(showAgendaItem(AgendaItem::QPtr)) );
+  AgendaItem::QPtr agendaItem = createAgendaItem( incidence, itemPos, itemCount, qd, isSelected );
 
   if ( YBottom <= YTop ) {
     kDebug() << "Text:" << agendaItem->text() << " YSize<0";
@@ -1738,12 +1732,7 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
 
   d->mActionType = NOP;
 
-  AgendaItem::QPtr agendaItem =
-    new AgendaItem( d->mAgendaView, d->mCalendar, incidence, 1, 1, occurrenceDateTime, isSelected, this );
-  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)),
-           SLOT(removeAgendaItem(AgendaItem::QPtr)) );
-  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)),
-           SLOT(showAgendaItem(AgendaItem::QPtr)) );
+  AgendaItem::QPtr agendaItem = createAgendaItem( incidence, 1, 1, occurrenceDateTime, isSelected );
 
   agendaItem->setCellXY( XBegin, 0, 0 );
   agendaItem->setCellXRight( XEnd );
@@ -1763,6 +1752,18 @@ AgendaItem::QPtr Agenda::insertAllDayItem( const Akonadi::Item &incidence, const
   placeSubCells( agendaItem );
 
   agendaItem->show();
+
+  return agendaItem;
+}
+
+AgendaItem::QPtr Agenda::createAgendaItem( const Akonadi::Item &item, int itemPos,
+                                           int itemCount, const KDateTime &qd, bool isSelected )
+{
+  AgendaItem::QPtr agendaItem = new AgendaItem( d->mAgendaView, d->mCalendar, item,
+                                                itemPos, itemCount, qd, isSelected, this );
+
+  connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem::QPtr)), SLOT(removeAgendaItem(AgendaItem::QPtr)) );
+  connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem::QPtr)), SLOT(showAgendaItem(AgendaItem::QPtr)) );
 
   return agendaItem;
 }
