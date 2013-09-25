@@ -256,6 +256,7 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
   dlg->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType()
                                         << KABC::ContactGroup::mimeType() );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  dlg->setCaption( i18nc( "@title:window", "Select Address Book" ) );
   dlg->setDescription( i18n( "Select the address book folder to store the contact group in:" ) );
   if ( dlg->exec() ) {
       const Akonadi::Collection targetCollection = dlg->selectedCollection();
