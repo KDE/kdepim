@@ -54,6 +54,7 @@ Q_SIGNALS:
     void clearSearch();
     void autoSearch(const QString &);
     void updateSearchOptions();
+    void searchStringEmpty(bool);
 
 private:
     KLineEdit *mSearch;
@@ -72,6 +73,9 @@ public:
     ~PlainTextReplaceWidget();
 
     KLineEdit *replace() const;
+
+public Q_SLOTS:
+    void slotSearchStringEmpty(bool);
 
 Q_SIGNALS:
     void replaceText();
