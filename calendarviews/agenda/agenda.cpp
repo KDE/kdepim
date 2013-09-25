@@ -340,12 +340,12 @@ Agenda::~Agenda()
 
 Akonadi::Item Agenda::selectedIncidence() const
 {
-  return ( d->mSelectedItem ? d->mSelectedItem->incidence() : Akonadi::Item() );
+  return d->mSelectedItem ? d->mSelectedItem->incidence() : Akonadi::Item();
 }
 
 QDate Agenda::selectedIncidenceDate() const
 {
-  return ( d->mSelectedItem ? d->mSelectedItem->occurrenceDate() : QDate() );
+  return d->mSelectedItem ? d->mSelectedItem->occurrenceDate() : QDate();
 }
 
 Akonadi::Item::Id Agenda::lastSelectedItemId() const
