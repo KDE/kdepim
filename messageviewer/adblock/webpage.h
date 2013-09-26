@@ -19,6 +19,7 @@
 #define WEBPAGE_H
 
 #include <KWebPage>
+#include <KUrl>
 
 namespace MessageViewer {
 class WebPage : public KWebPage
@@ -26,6 +27,10 @@ class WebPage : public KWebPage
 public:
     explicit WebPage(QWidget *parent = 0);
     ~WebPage();
+    KUrl loadingUrl();
+
+private:
+    KUrl mLoadingUrl;
 };
 }
 

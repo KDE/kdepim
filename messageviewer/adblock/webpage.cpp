@@ -37,4 +37,9 @@ WebPage::~WebPage()
 {
 }
 
+KUrl WebPage::loadingUrl()
+{
+    return mLoadingUrl;
+}
+
 #include "webpage.moc"
