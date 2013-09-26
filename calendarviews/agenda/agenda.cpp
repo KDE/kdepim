@@ -1863,39 +1863,33 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occur
   marcus_bains();
 }
 
-QList<AgendaItem::QPtr> Agenda::agendaItems( const KCalCore::Incidence::Ptr &incidence ) const
-{
-  Q_ASSERT(incidence);
-  QList<AgendaItem::QPtr> agendaItems;
-  foreach ( const AgendaItem::QPtr &agendaItem, d->mItems ) {
-    if ( !agendaItem ) {
-      continue;
-    }
-    const KCalCore::Incidence::Ptr tmpInc = CalendarSupport::incidence( agendaItem->incidence() );
-    if ( tmpInc && ( tmpInc->instanceIdentifier() == incidence->instanceIdentifier() ) ) {
-      agendaItems.push_back( agendaItem );
-    }
-  }
-  return agendaItems;
-}
-
 void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
-  if ( !incidence )
+  if ( !incidence ) {
+    kWarning() << "Agenda::removeIncidence() incidence is invalid";
     return;
+  }
 
-  // First find all items to be deleted and store them
-  // in its own list. Otherwise removeAgendaItem will reset
-  // the current position in the iterator-loop and mess the logic up.
-  const QList<AgendaItem::QPtr> agendaItemsToRemove = agendaItems( incidence );
+  Akonadi::Item item = d->mCalendar->item( incidence->instanceIdentifier() );
+  if ( !item.isValid() ) {
+    kWarning() << "Agenda::removeIncidence() Item to remove is invalid. uid = "
+               << incidence->instanceIdentifier();
+    return;
+  }
 
-  if ( agendaItemsToRemove.isEmpty() ) {
-    kWarning() << "Agenda::removeIncidence() Couldn't find any items to remove";
-  } else {
-    foreach ( const AgendaItem::QPtr &agendaItem, agendaItemsToRemove ) {
-      if ( !removeAgendaItem( agendaItem ) )
-        kWarning() << "Failed to remove " << incidence->uid();
-    }
+  if ( d->isQueuedForDeletion( item.id() ) ) {
+    return; // It's already queued for deletion
+  }
+
+  AgendaItem::QPtr agendaItem = d->mAgendaItemsById.value( item.id() );
+  if ( !agendaItem ) {
+      kWarning() << "Agenda::removeIncidence() AgendaItem to remove is invalid. uid = "
+                 << incidence->instanceIdentifier();
+    return;
+  }
+
+  if ( !removeAgendaItem( agendaItem ) ) {
+    kWarning() << "Agenda::removeIncidence() Failed to remove " << incidence->uid();
   }
 }
 
@@ -1918,16 +1912,15 @@ void Agenda::showAgendaItem( AgendaItem::QPtr agendaItem )
   agendaItem->show();
 }
 
-bool Agenda::removeAgendaItem( AgendaItem::QPtr item )
+bool Agenda::removeAgendaItem( AgendaItem::QPtr agendaItem )
 {
   // we found the item. Let's remove it and update the conflicts
   bool taken = false;
-  AgendaItem::QPtr thisItem = item;
-  QList<AgendaItem::QPtr> conflictItems = thisItem->conflictItems();
+  QList<AgendaItem::QPtr> conflictItems = agendaItem->conflictItems();
   // removeChild( thisItem );
 
-  taken = d->mItems.removeAll( thisItem ) > 0;
-  d->mAgendaItemsById.remove( item->incidence().id() );
+  taken = d->mItems.removeAll( agendaItem ) > 0;
+  d->mAgendaItemsById.remove( agendaItem->incidence().id() );
 
   QList<AgendaItem::QPtr>::iterator it;
   for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
@@ -1938,12 +1931,13 @@ bool Agenda::removeAgendaItem( AgendaItem::QPtr item )
 
   for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
     // the item itself is also in its own conflictItems list!
-    if ( *it && *it != thisItem ) {
+    if ( *it && *it != agendaItem ) {
       placeSubCells( *it );
     }
   }
-  d->mItemsToDelete.append( thisItem );
-  d->mItemsQueuedForDeletion.insert( thisItem->incidence().id() );
+  d->mItemsToDelete.append( agendaItem );
+  d->mItemsQueuedForDeletion.insert( agendaItem->incidence().id() );
+  agendaItem->setVisible( false );
   QTimer::singleShot( 0, this, SLOT(deleteItemsToDelete()) );
   return taken;
 }

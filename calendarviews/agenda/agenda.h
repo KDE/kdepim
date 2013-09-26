@@ -160,8 +160,6 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
-    QList<AgendaItem::QPtr> agendaItems( const KCalCore::Incidence::Ptr &inc ) const;
-
   public Q_SLOTS:
     void scrollUp();
     void scrollDown();
