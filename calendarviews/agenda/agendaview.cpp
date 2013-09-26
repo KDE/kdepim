@@ -2040,14 +2040,22 @@ void AgendaView::deleteSelectedDateTime()
   d->mTimeSpanInAllDay = false;
 }
 
-void AgendaView::removeIncidence( const KCalCore::Incidence::Ptr &inc )
+void AgendaView::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
-  d->mAgenda->removeIncidence( inc );
-  d->mAllDayAgenda->removeIncidence( inc );
-  if ( !inc->hasRecurrenceId() ) {
-    foreach ( const KCalCore::Incidence::Ptr &exception, calendar()->instances( inc ) ) {
-      d->mAgenda->removeIncidence( exception );
-      d->mAllDayAgenda->removeIncidence( exception );
+  if ( incidence->allDay() ) {
+    d->mAllDayAgenda->removeIncidence( incidence );
+  } else {
+    d->mAgenda->removeIncidence( incidence );
+  }
+
+  if ( !incidence->hasRecurrenceId() ) {
+    KCalCore::Incidence::List exceptions = calendar()->instances( incidence );
+    foreach ( const KCalCore::Incidence::Ptr &exception, exceptions ) {
+      if ( exception->allDay() ) {
+        d->mAllDayAgenda->removeIncidence( exception );
+      } else {
+        d->mAgenda->removeIncidence( exception );
+      }
     }
   }
 }
