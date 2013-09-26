@@ -69,6 +69,12 @@ KLineEdit *PlainTextReplaceWidget::replace() const
     return mReplace;
 }
 
+void PlainTextReplaceWidget::slotSearchStringEmpty(bool isEmpty)
+{
+    mReplaceBtn->setDisabled(isEmpty);
+    mReplaceAllBtn->setDisabled(isEmpty);
+}
+
 PlainTextFindWidget::PlainTextFindWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -159,6 +165,7 @@ void PlainTextFindWidget::slotAutoSearch(const QString &str)
     const bool isNotEmpty = ( !str.isEmpty() );
     mFindPrevBtn->setEnabled( isNotEmpty );
     mFindNextBtn->setEnabled( isNotEmpty );
+    Q_EMIT searchStringEmpty( !isNotEmpty );
     Q_EMIT autoSearch(str);
 }
 
@@ -215,6 +222,7 @@ PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * par
     connect( mFindWidget, SIGNAL(updateSearchOptions()), this, SLOT(slotUpdateSearchOptions()) );
     connect( mFindWidget, SIGNAL(autoSearch(QString)), this, SLOT(autoSearch(QString)) );
     connect( mFindWidget, SIGNAL(clearSearch()), this, SLOT(slotClearSearch()) );
+    connect( mFindWidget, SIGNAL(searchStringEmpty(bool)), mReplaceWidget, SLOT(slotSearchStringEmpty(bool)));
     connect( mReplaceWidget, SIGNAL(replaceText()), this, SLOT(slotReplaceText()));
     connect( mReplaceWidget, SIGNAL(replaceAllText()), this, SLOT(slotReplaceAllText()));
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
@@ -230,6 +238,7 @@ void PlainTextEditFindBar::showFind()
 {
     if (mView->toPlainText().isEmpty())
         return;
+    mReplaceWidget->slotSearchStringEmpty(mFindWidget->search()->text().isEmpty());
     show();
     if (mReplaceWidget->isVisible()) {
         mReplaceWidget->hide();
@@ -243,7 +252,7 @@ void PlainTextEditFindBar::showReplace()
         return;
     if (mView->toPlainText().isEmpty())
         return;
-
+    mReplaceWidget->slotSearchStringEmpty(mFindWidget->search()->text().isEmpty());
     show();
     if (!mReplaceWidget->isVisible()) {
         mReplaceWidget->show();

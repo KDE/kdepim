@@ -40,7 +40,18 @@ if(KDEPIM_NO_WEBKIT)
   set(_mailwebview_cpp viewer/mailwebview_textbrowser.cpp )
   set(_mailwebview_lib )
 else()
-  set(_mailwebview_cpp viewer/mailwebview_webkit.cpp )
+  set(_mailwebview_cpp viewer/mailwebview_webkit.cpp 
+                       adblock/networkaccessmanager.cpp 
+                       adblock/webpage.cpp
+                       adblock/adblockelementhiding.cpp
+                       adblock/adblockhostmatcher.cpp
+                       adblock/adblockmanager.cpp
+                       adblock/adblockrule.cpp
+                       adblock/adblockrulefallbackimpl.cpp
+                       adblock/adblockrulenullimpl.cpp
+                       adblock/adblockruletextmatchimpl.cpp
+                       adblock/adblocksettingwidget.cpp
+                       )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
     add_subdirectory(a11y)
@@ -120,7 +131,10 @@ kde4_add_ui_files(libmessageviewer_SRCS
   ui/settings.ui
   ui/invitationsettings.ui
   ui/printingsettings.ui
+  adblock/ui/settings_adblock.ui
+  adblock/ui/blocked_elements.ui
 )
+
 
 kde4_add_library(messageviewer ${LIBRARY_TYPE} ${libmessageviewer_SRCS})
 

@@ -197,16 +197,16 @@ void KDeclarativeMainView::doDelayedInitInternal()
   }
 
   QDeclarativeContext *context = engine()->rootContext();
-  context->setContextProperty( "searchManager", d->mSearchManager );
+  context->setContextProperty( QLatin1String("searchManager"), d->mSearchManager );
 
-  context->setContextProperty( "_breadcrumbNavigationFactory", d->mBnf );
+  context->setContextProperty( QLatin1String("_breadcrumbNavigationFactory"), d->mBnf );
 
   d->mMultiBnf = new Akonadi::BreadcrumbNavigationFactory( this );
   d->mMultiBnf->createCheckableBreadcrumbContext( mainModel, this );
 
-  context->setContextProperty( "_multiSelectionComponentFactory", d->mMultiBnf );
+  context->setContextProperty( QLatin1String("_multiSelectionComponentFactory"), d->mMultiBnf );
 
-  context->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( mainModel ) ) );
+  context->setContextProperty( QLatin1String("accountsModel"), QVariant::fromValue( static_cast<QObject*>( mainModel ) ) );
 
   Akonadi::EntityMimeTypeFilterModel *filterModel = new Akonadi::EntityMimeTypeFilterModel( this );
   filterModel->setSourceModel( d->mBnf->unfilteredChildItemModel() );
@@ -214,19 +214,19 @@ void KDeclarativeMainView::doDelayedInitInternal()
 
   d->mItemModel = createItemModelContext( context, filterModel );
 
-  context->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
+  context->setContextProperty( QLatin1String("application"), QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   // The global screen manager
   d->mGuiStateManager = createGuiStateManager();
-  context->setContextProperty( "guiStateManager", QVariant::fromValue( static_cast<QObject*>( d->mGuiStateManager ) ) );
+  context->setContextProperty( QLatin1String("guiStateManager"), QVariant::fromValue( static_cast<QObject*>( d->mGuiStateManager ) ) );
   connect( d->mGuiStateManager, SIGNAL(guiStateChanged(int,int)), d, SLOT(guiStateChanged(int,int)) );
 
   // A list of available favorites
   d->mFavoritesEditor = new FavoritesEditor( actionCollection(), KGlobal::config(), this );
   d->mFavoritesEditor->setCollectionSelectionModel( d->mBnf->selectionModel() );
 
-  context->setContextProperty( "favoritesEditor", d->mFavoritesEditor );
-  context->setContextProperty( "favoritesList", d->mFavoritesEditor->model() );
+  context->setContextProperty( QLatin1String("favoritesEditor"), d->mFavoritesEditor );
+  context->setContextProperty( QLatin1String("favoritesList"), d->mFavoritesEditor->model() );
 
   // A list of agent instances
   Akonadi::AgentInstanceModel *agentInstanceModel = new Akonadi::AgentInstanceModel( this );
@@ -234,7 +234,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   d->mAgentInstanceFilterModel->addCapabilityFilter( QLatin1String( "Resource" ) );
   d->mAgentInstanceFilterModel->setSourceModel( agentInstanceModel );
 
-  context->setContextProperty( "agentInstanceList", QVariant::fromValue( static_cast<QObject*>( d->mAgentInstanceFilterModel ) ) );
+  context->setContextProperty( QLatin1String("agentInstanceList"), QVariant::fromValue( static_cast<QObject*>( d->mAgentInstanceFilterModel ) ) );
   d->mAgentInstanceSelectionModel = new QItemSelectionModel( d->mAgentInstanceFilterModel, this );
 
   setupAgentActionManager( d->mAgentInstanceSelectionModel );
@@ -283,7 +283,7 @@ void KDeclarativeMainView::doDelayedInitInternal()
   qmlRegisterUncreatableType<AgentStatusMonitor>( "org.kde.pim.mobileui", 4, 5, "AgentStatusMonitor", QLatin1String( "This type is only exported for its enums" ) );
   d->mAgentStatusMonitor = new  AgentStatusMonitor( this );
   d->mAgentStatusMonitor->setMimeTypeFilter( d->mChangeRecorder->mimeTypesMonitored() );
-  context->setContextProperty( "agentStatusMonitor", QVariant::fromValue<QObject*>( d->mAgentStatusMonitor ) );
+  context->setContextProperty( QLatin1String("agentStatusMonitor"), QVariant::fromValue<QObject*>( d->mAgentStatusMonitor ) );
 
   connect( itemSelectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(itemSelectionChanged()) );
 }
@@ -367,17 +367,17 @@ QAbstractItemModel* KDeclarativeMainView::createItemModelContext( QDeclarativeCo
   setItemNaigationAndActionSelectionModels( itemNavigationSelectionModel, itemActionSelectionModel );
 
   if ( d->mListProxy ) {
-    context->setContextProperty( "itemModel", d->mListProxy );
+    context->setContextProperty( QLatin1String("itemModel"), d->mListProxy );
 
     QMLListSelectionModel *qmlItemNavigationSelectionModel = new QMLListSelectionModel( d->mItemNavigationSelectionModel, this );
     QMLListSelectionModel *qmlItemActionSelectionModel = new QMLListSelectionModel( d->mItemActionSelectionModel, this );
 
-    context->setContextProperty( "_itemNavigationModel", QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
-    context->setContextProperty( "_itemActionModel", QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
+    context->setContextProperty( QLatin1String("_itemNavigationModel"), QVariant::fromValue( static_cast<QObject*>( qmlItemNavigationSelectionModel ) ) );
+    context->setContextProperty( QLatin1String("_itemActionModel"), QVariant::fromValue( static_cast<QObject*>( qmlItemActionSelectionModel ) ) );
 
     Akonadi::BreadcrumbNavigationFactory *bulkActionBnf = new Akonadi::BreadcrumbNavigationFactory( this );
     bulkActionBnf->createCheckableBreadcrumbContext( d->mEtm, this );
-    context->setContextProperty( "_bulkActionBnf", QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
+    context->setContextProperty( QLatin1String("_bulkActionBnf"), QVariant::fromValue( static_cast<QObject*>( bulkActionBnf ) ) );
   }
 
   StateMachineBuilder *builder = new StateMachineBuilder;
@@ -491,7 +491,7 @@ QAbstractItemModel* KDeclarativeMainView::itemModel() const
 void KDeclarativeMainView::launchAccountWizard()
 {
 #ifdef Q_OS_UNIX
-  const QString inProcessAccountWizard = KStandardDirs::locate( "module", "accountwizard_plugin.so" );
+  const QString inProcessAccountWizard = KStandardDirs::locate( "module", QLatin1String("accountwizard_plugin.so") );
   kDebug() << inProcessAccountWizard;
   if ( !inProcessAccountWizard.isEmpty() ) {
     QPluginLoader loader( inProcessAccountWizard );
@@ -508,7 +508,7 @@ void KDeclarativeMainView::launchAccountWizard()
 #endif
 
   QStringList args;
-  args << QLatin1String( "--type" ) << d->mChangeRecorder->mimeTypesMonitored().join( "," );
+  args << QLatin1String( "--type" ) << d->mChangeRecorder->mimeTypesMonitored().join( QLatin1String(",") );
 
   int pid = KProcess::startDetached( QLatin1String( "accountwizard" ), args );
   if ( !pid ) {
@@ -672,20 +672,20 @@ static QString lookupDocumentation( const QString &fileName )
   const QStringList localDirectories = KGlobal::dirs()->resourceDirs( "data" );
 
   QStringList languages = KGlobal::locale()->languageList();
-  languages.append( "en" );
-  languages.removeAll( "C" );
+  languages.append( QLatin1String("en") );
+  languages.removeAll( QLatin1String("C") );
 
   // this is kind of compat hack as we install our docs in en/ but the
   // default language is en_US
   for ( QStringList::Iterator it = languages.begin(); it != languages.end(); ++it ) {
-    if ( *it == "en_US" )
-      *it = "en";
+    if ( *it == QLatin1String("en_US") )
+      *it = QLatin1String("en");
   }
 
   // look up the different languages
   foreach ( const QString &directory, localDirectories ) {
     foreach ( const QString &language, languages ) {
-      searches.append( QString( "%1%2/%3/%4" ).arg( directory, QLatin1String("kontact-touch"), language, fileName ) );
+      searches.append( QString::fromLatin1( "%1%2/%3/%4" ).arg( directory, QLatin1String("kontact-touch"), language, fileName ) );
     }
   }
 
@@ -700,7 +700,7 @@ static QString lookupDocumentation( const QString &fileName )
 
 void KDeclarativeMainView::openManual()
 {
-  const QString path = lookupDocumentation( "manual/index.html" );
+  const QString path = lookupDocumentation( QLatin1String("manual/index.html") );
   const KUrl url = path;
   const bool isValid = url.isValid();
 
@@ -733,9 +733,9 @@ void KDeclarativeMainView::openDocumentation( const QString &relativePath )
 void KDeclarativeMainView::openLicenses()
 {
 #ifdef Q_WS_MAEMO_5
-  d->openHtml( KGlobal::dirs()->findResource( "data", "kontact-touch/licenses.html" ) );
+  d->openHtml( KGlobal::dirs()->findResource( "data", QLatin1String("kontact-touch/licenses.html") ) );
 #else
-  KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", "kontact-touch/licenses.pdf" ),
+  KDeclarativeMainView::openAttachment( KGlobal::dirs()->findResource( "data", QLatin1String("kontact-touch/licenses.pdf") ),
                                         QLatin1String( "application/pdf" ) );
 #endif
 }
@@ -778,7 +778,7 @@ void KDeclarativeMainView::saveAttachment( const QString &url, const QString &de
     filter += patterns.join( QLatin1String( "\n" ) );
     filter += i18n( "\n*|all files" );
   }
-  const QString targetFile = KFileDialog::getSaveFileName( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
+  const QString targetFile = KFileDialog::getSaveFileName( KUrl( QLatin1String("kfiledialog:///saveAttachment/") + fileName ),
                                                            filter,
                                                            this,
                                                            i18n( "Save Attachment" ) );
@@ -907,7 +907,7 @@ QString KDeclarativeMainView::version() const
   if ( svn_rev.isEmpty() ) {
     return i18n( "Version: %1", QLatin1String( KDEPIM_VERSION ) );
   } else {
-    return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), KDEPIM_GIT_REVISION_STRING, KDEPIM_GIT_LAST_CHANGE );
+    return i18n( "Version: %1 (%2)\nLast change: %3", QLatin1String( KDEPIM_VERSION ), QLatin1String(KDEPIM_GIT_REVISION_STRING), QLatin1String(KDEPIM_GIT_LAST_CHANGE) );
   }
 }
 
@@ -984,14 +984,14 @@ void KDeclarativeMainView::reportBug()
     struct utsname unameBuf;
     uname( &unameBuf );
     QString os = QString::fromLatin1( unameBuf.sysname ) +
-          " (" + QString::fromLatin1( unameBuf.machine ) + ") "
-          "release " + QString::fromLatin1( unameBuf.release );
-    KUrl url = KUrl( "https://bugs.kde.org/wizard.cgi" );
-    url.addQueryItem( "os", os );
-    url.addQueryItem( "kdeVersion", kde_version );
-    url.addQueryItem( "appVersion", KGlobal::mainComponent().aboutData()->version() );
-    url.addQueryItem( "package",  KGlobal::mainComponent().aboutData()->productName() );
-    url.addQueryItem( "kbugreport", "1" );
+          QLatin1String(" (") + QString::fromLatin1( unameBuf.machine ) + QLatin1String(") ") +
+          QLatin1String("release ") + QString::fromLatin1( unameBuf.release );
+    KUrl url = KUrl( QLatin1String("https://bugs.kde.org/wizard.cgi") );
+    url.addQueryItem( QLatin1String("os"), os );
+    url.addQueryItem( QLatin1String("kdeVersion"), kde_version );
+    url.addQueryItem( QLatin1String("appVersion"), KGlobal::mainComponent().aboutData()->version() );
+    url.addQueryItem( QLatin1String("package"),  KGlobal::mainComponent().aboutData()->productName() );
+    url.addQueryItem( QLatin1String("kbugreport"), QLatin1String("1") );
 
     KToolInvocation::invokeBrowser( url.url() );
 }

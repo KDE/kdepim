@@ -38,94 +38,94 @@ MailActionManager::MailActionManager( KActionCollection *actionCollection, QObje
     m_itemActionSelectionModel( 0 )
 {
   KAction *action;
-  action = actionCollection->addAction( "mark_message_important" );
+  action = actionCollection->addAction( QLatin1String("mark_message_important") );
   action->setText( i18n( "Important" ) );
-  action->setIcon( KIcon( "emblem-important" ) );
+  action->setIcon( KIcon( QLatin1String("emblem-important") ) );
   action->setCheckable(true);
 
-  action = actionCollection->addAction( "mark_message_action_item" );
+  action = actionCollection->addAction( QLatin1String("mark_message_action_item") );
   action->setText( i18n( "Action Item" ) );
-  action->setIcon( KIcon( "mail-mark-task" ) );
+  action->setIcon( KIcon( QLatin1String("mail-mark-task") ) );
   action->setCheckable( true );
 
-  action = actionCollection->addAction( "write_new_email" );
+  action = actionCollection->addAction( QLatin1String("write_new_email") );
   action->setText( i18n( "Write New Email" ) );
 
-  action = actionCollection->addAction( "send_queued_emails" );
+  action = actionCollection->addAction( QLatin1String("send_queued_emails") );
   action->setText( i18n( "Send All Unsent Emails" ) );
 
-  action = actionCollection->addAction( "send_queued_emails_via" );
+  action = actionCollection->addAction( QLatin1String("send_queued_emails_via") );
   action->setText( i18n( "Send All Unsent Emails" ) );
 
-  action = actionCollection->addAction( "message_reply" );
+  action = actionCollection->addAction( QLatin1String("message_reply") );
   action->setText( i18n( "Reply" ) );
 
-  action = actionCollection->addAction( "message_reply_to_list" );
+  action = actionCollection->addAction( QLatin1String("message_reply_to_list") );
   action->setText( i18n( "Reply to Mailing List" ) );
 
-  action = actionCollection->addAction( "message_reply_without_quoting" );
+  action = actionCollection->addAction( QLatin1String("message_reply_without_quoting") );
   action->setText( i18n( "Reply Without Quoting" ) );
 
-  action = actionCollection->addAction( "message_reply_variants" );
+  action = actionCollection->addAction( QLatin1String("message_reply_variants") );
 
-  action = actionCollection->addAction( "message_forward_as_attachment" );
+  action = actionCollection->addAction( QLatin1String("message_forward_as_attachment") );
   action->setText( i18n( "Forward as Attachment" ) );
 
-  action = actionCollection->addAction( "message_redirect" );
+  action = actionCollection->addAction( QLatin1String("message_redirect") );
   action->setText( i18n( "Redirect" ) );
 
-  action = actionCollection->addAction( "save_favorite" );
+  action = actionCollection->addAction( QLatin1String("save_favorite") );
   action->setText( i18n( "Save Favorite" ) );
 
-  action = actionCollection->addAction( "message_send_again" );
+  action = actionCollection->addAction( QLatin1String("message_send_again") );
   action->setText( i18n( "Send Again" ) );
 
-  action = actionCollection->addAction( "message_save_as" );
+  action = actionCollection->addAction( QLatin1String("message_save_as") );
   action->setText( i18n( "Save Email As" ) );
 
-  action = actionCollection->addAction( "message_edit" );
+  action = actionCollection->addAction( QLatin1String("message_edit") );
   action->setText( i18n( "Edit Email" ) );
 
-  action = actionCollection->addAction( "message_find_in" );
+  action = actionCollection->addAction( QLatin1String("message_find_in") );
   action->setText( i18n( "Find in Email" ) );
 
-  action = actionCollection->addAction( "prefer_html_to_plain" );
+  action = actionCollection->addAction( QLatin1String("prefer_html_to_plain") );
   action->setText( i18n( "Prefer HTML To Plain Text" ) );
   action->setCheckable( true );
   action->setChecked( false );
 
-  action = actionCollection->addAction( "prefer_html_to_plain_viewer" );
+  action = actionCollection->addAction( QLatin1String("prefer_html_to_plain_viewer") );
   action->setText( i18n( "Prefer HTML To Plain Text" ) );
   action->setCheckable(true);
   action->setChecked(false);
 
-  action = actionCollection->addAction( "load_external_ref" );
+  action = actionCollection->addAction( QLatin1String("load_external_ref") );
   action->setText( i18n( "Load External References" ) );
   action->setCheckable( true );
   action->setChecked( false );
 
-  action = actionCollection->addAction( "message_fixed_font" );
+  action = actionCollection->addAction( QLatin1String("message_fixed_font") );
   action->setText( i18n( "Use Fixed Font" ) );
   action->setCheckable( true );
   action->setChecked( false );
 
-  action = actionCollection->addAction( "move_all_to_trash" );
+  action = actionCollection->addAction( QLatin1String("move_all_to_trash") );
   action->setText( i18n( "Move Displayed Emails To Trash" ) );
 
-  action = actionCollection->addAction( "create_todo_reminder" );
+  action = actionCollection->addAction( QLatin1String("create_todo_reminder") );
   action->setText( i18n( "Create Task From Email" ) );
 
-  action = actionCollection->addAction( "create_event" );
+  action = actionCollection->addAction( QLatin1String("create_event") );
   action->setText( i18n( "Create Event From Email" ) );
 
-  action = actionCollection->addAction( "apply_filters" );
+  action = actionCollection->addAction( QLatin1String("apply_filters") );
   action->setText( i18n( "Apply Filters" ) );
 
-  action = actionCollection->addAction( "apply_filters_bulk_action" );
+  action = actionCollection->addAction( QLatin1String("apply_filters_bulk_action") );
   action->setText( i18n( "Apply Filters" ) );
   action->setEnabled( false );
 
-  action = actionCollection->addAction( "new_filter" );
+  action = actionCollection->addAction( QLatin1String("new_filter") );
   action->setText( i18n( "New Filter" ) );
 }
 
@@ -146,11 +146,11 @@ void MailActionManager::setItemActionSelectionModel( QItemSelectionModel *select
 void MailActionManager::updateActions()
 {
   if ( m_itemActionSelectionModel )
-    m_actionCollection->action( "apply_filters_bulk_action" )->setEnabled( m_itemActionSelectionModel->hasSelection() );
+    m_actionCollection->action( QLatin1String("apply_filters_bulk_action") )->setEnabled( m_itemActionSelectionModel->hasSelection() );
 
   if ( !m_itemSelectionModel->hasSelection() ) {
-    m_actionCollection->action( "mark_message_important" )->setEnabled( false );
-    m_actionCollection->action( "mark_message_action_item" )->setEnabled( false );
+    m_actionCollection->action( QLatin1String("mark_message_important") )->setEnabled( false );
+    m_actionCollection->action( QLatin1String("mark_message_action_item") )->setEnabled( false );
     return;
   }
 
@@ -170,8 +170,8 @@ void MailActionManager::updateActions()
   Akonadi::MessageStatus status;
   status.setStatusFromFlags( item.flags() );
 
-  m_actionCollection->action( "mark_message_important" )->setEnabled( true );
-  m_actionCollection->action( "mark_message_action_item" )->setEnabled( true );
-  m_actionCollection->action( "mark_message_important" )->setChecked( status.isImportant() );
-  m_actionCollection->action( "mark_message_action_item" )->setChecked( status.isToAct() );
+  m_actionCollection->action( QLatin1String("mark_message_important") )->setEnabled( true );
+  m_actionCollection->action( QLatin1String("mark_message_action_item") )->setEnabled( true );
+  m_actionCollection->action( QLatin1String("mark_message_important") )->setChecked( status.isImportant() );
+  m_actionCollection->action( QLatin1String("mark_message_action_item") )->setChecked( status.isToAct() );
 }

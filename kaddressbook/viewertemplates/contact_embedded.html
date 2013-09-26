@@ -46,6 +46,16 @@
         {% endwith %}
       {% endfor %}
 
+      {% for imAddress in contact.imAddresses %}
+          {% with imAddress.type as title %}
+          {% with imAddress.imAddress|safe as value %}
+          {% with imAddress.imIcon|safe as value2 %}
+          {% include "contact_row.html" %}
+          {% endwith %}
+          {% endwith %}
+          {% endwith %}
+      {% endfor %}
+
       {% if contact.website %}
         {% with contact.websitei18n as title %}
         {% with contact.website|safe as value %}
@@ -71,14 +81,6 @@
         {% endwith %}
         {% endwith %}
       {% endfor %}
-
-      {% if contact.imAddress %}
-        {% with contact.imAddressi18n as title %}
-        {% with contact.imAddress as value %}
-        {% include "contact_row.html" %}
-        {% endwith %}
-        {% endwith %}
-      {% endif %}
 
       {% if contact.profession %}
         {% with contact.Professioni18n as title %}

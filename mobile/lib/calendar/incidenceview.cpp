@@ -75,7 +75,7 @@ IncidenceView::IncidenceView( QWidget* parent )
 {
   setAttribute(Qt::WA_DeleteOnClose);
   QDeclarativeContext *context = engine()->rootContext();
-  context->setContextProperty( "_incidenceview", this );
+  context->setContextProperty( QLatin1String("_incidenceview"), this );
 }
 
 void IncidenceView::doDelayedInit()

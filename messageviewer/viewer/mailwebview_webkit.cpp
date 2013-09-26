@@ -20,6 +20,7 @@
 */
 #include "mailwebview.h"
 #include "scamdetection/scamdetection.h"
+#include "adblock/webpage.h"
 
 #include <KDebug>
 #include <KActionCollection>
@@ -123,8 +124,11 @@ static void handleDuplicateLinkElements(const QWebElement& element, QHash<QStrin
 
 
 MailWebView::MailWebView( KActionCollection *actionCollection, QWidget *parent )
-    : SuperClass( parent ), mScamDetection(new ScamDetection), mActionCollection(actionCollection)
+    : SuperClass( parent, false ),
+      mScamDetection(new ScamDetection),
+      mActionCollection(actionCollection)
 {
+  setPage(new MessageViewer::WebPage(this));
   page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
   settings()->setAttribute( QWebSettings::JavascriptEnabled, false );
   settings()->setAttribute( QWebSettings::JavaEnabled, false );

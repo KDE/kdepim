@@ -39,7 +39,7 @@ void CustomFieldEditWidget::setCustomField( const CustomField &field )
 {
   mCustomField = field;
 
-  mName->setText( mCustomField.title() + ':' );
+  mName->setText( mCustomField.title() + QLatin1Char(':') );
 
   delete mEditor;
   switch ( mCustomField.type() ) {

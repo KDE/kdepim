@@ -33,7 +33,7 @@
 
 namespace KSieveUi {
 static int MINIMUMINCLUDEACTION = 1;
-static int MAXIMUMINCLUDEACTION = 8;
+static int MAXIMUMINCLUDEACTION = 20;
 
 SieveIncludeLocation::SieveIncludeLocation(QWidget *parent)
     : KComboBox(parent)
@@ -305,6 +305,10 @@ QWidget *SieveIncludeWidgetLister::createWidget( QWidget *parent )
 
 void SieveIncludeWidgetLister::loadScript(const QDomElement &element, QString &error)
 {
+    if (widgets().count() == MAXIMUMINCLUDEACTION) {
+        error += QLatin1Char('\n') + i18n("We can not add more includes elements.") + QLatin1Char('\n');
+        return;
+    }
     SieveIncludeActionWidget *w = static_cast<SieveIncludeActionWidget *>(widgets().last());
     if (w->isInitialized()) {
         addWidgetAfterThisWidget(widgets().last());

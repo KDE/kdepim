@@ -97,7 +97,7 @@ AkonotesNoteApplet::AkonotesNoteApplet( QObject* parent, const QVariantList& arg
   }
 
   m_theme = new Plasma::FrameSvg( this );
-  m_theme->setImagePath( "widgets/stickynote" );
+  m_theme->setImagePath( QLatin1String("widgets/stickynote") );
   m_theme->setEnabledBorders( Plasma::FrameSvg::AllBorders );
 
   m_layout = new QGraphicsLinearLayout;
@@ -145,7 +145,7 @@ void AkonotesNoteApplet::init()
 
 void AkonotesNoteApplet::createInDefaultCollection()
 {
-  KConfig noteCollectionConfig( "notesrc" );
+  KConfig noteCollectionConfig( QLatin1String("notesrc") );
   KConfigGroup generalGroup( &noteCollectionConfig, "General" );
   int unsortedCollectionId = generalGroup.readEntry( "unsortedCollection", -1 );
 
@@ -160,7 +160,7 @@ void AkonotesNoteApplet::createInDefaultCollection()
 
 void AkonotesNoteApplet::createDefaultConcreteCollection()
 {
-  AgentType noteType = AgentManager::self()->type( "akonadi_akonotes_resource" );
+  AgentType noteType = AgentManager::self()->type( QLatin1String("akonadi_akonotes_resource") );
   AgentInstanceCreateJob *noteResourceCreateJob = new AgentInstanceCreateJob( noteType );
   connect( noteResourceCreateJob, SIGNAL(result(KJob*)), SLOT(defaultCreated(KJob*)) );
 
@@ -182,7 +182,7 @@ void AkonotesNoteApplet::defaultCreated( KJob *job )
     kError() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
     return;
   }
-  iface.call( "setPath", KStandardDirs::locateLocal( "data", "unsortednotes/" ) );
+  iface.call( QLatin1String("setPath"), KStandardDirs::locateLocal( "data", QLatin1String("unsortednotes/") ) );
   instance.reconfigure();
 
   ResourceSynchronizationJob *syncJob = new ResourceSynchronizationJob( instance );
@@ -209,7 +209,7 @@ void AkonotesNoteApplet::collectionFetchDone( KJob *job )
   if ( job->error() )
   {
     kWarning() << job->errorString(); // Could be that the collection in the config does not exist.
-    KConfig noteCollectionConfig( "notesrc" );
+    KConfig noteCollectionConfig( QLatin1String("notesrc") );
     KConfigGroup generalGroup( &noteCollectionConfig, "General" );
     generalGroup.writeEntry( "unsortedCollection", -1 );
     static int attempts = 0;
@@ -233,7 +233,7 @@ void AkonotesNoteApplet::collectionFetchDone( KJob *job )
 
   Q_ASSERT( targetCollection.isValid() );
 
-  KConfig noteCollectionConfig( "notesrc" );
+  KConfig noteCollectionConfig( QLatin1String("notesrc") );
   KConfigGroup generalGroup( &noteCollectionConfig, "General" );
   generalGroup.writeEntry( "unsortedCollection", targetCollection.id() );
 
@@ -251,7 +251,7 @@ void AkonotesNoteApplet::collectionFetchDone( KJob *job )
   msg->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
   msg->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
   // Need a non-empty body part so that the serializer regards this as a valid message.
-  msg->mainBodyPart()->fromUnicodeString( " " );
+  msg->mainBodyPart()->fromUnicodeString( QLatin1String(" ") );
 
   msg->assemble();
 

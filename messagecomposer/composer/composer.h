@@ -92,9 +92,6 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     Q_PRIVATE_SLOT( d_func(), void doStart() )
     Q_PRIVATE_SLOT( d_func(), void skeletonJobFinished(KJob*) )
     Q_PRIVATE_SLOT( d_func(), void contentJobFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void contentJobPreCryptFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void contentJobPreInlineFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void signBeforeEncryptJobFinished(KJob*) )
     Q_PRIVATE_SLOT( d_func(), void attachmentsFinished(KJob*) )
 };
 

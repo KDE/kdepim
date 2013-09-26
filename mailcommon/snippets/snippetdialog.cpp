@@ -20,101 +20,101 @@
 #include <klocale.h>
 
 SnippetDialog::SnippetDialog( KActionCollection *actionCollection, bool inGroupMode, QWidget *parent )
-  : KDialog( parent ), mActionCollection( actionCollection )
+    : KDialog( parent ), mActionCollection( actionCollection )
 {
-  mUi = new Ui::SnippetDialog;
-  mUi->setupUi( mainWidget() );
+    mUi = new Ui::SnippetDialog;
+    mUi->setupUi( mainWidget() );
 
-  mUi->keyWidget->setCheckActionCollections( QList<KActionCollection*>() << actionCollection );
-  enableButton( Ok, false );
+    mUi->keyWidget->setCheckActionCollections( QList<KActionCollection*>() << actionCollection );
+    enableButton( Ok, false );
 
-  connect( mUi->nameEdit, SIGNAL(textChanged(QString)),
-           this, SLOT(slotTextChanged()) );
-  connect( mUi->nameEdit, SIGNAL(returnPressed()),
-           this, SLOT(slotReturnPressed()) );
-  connect( mUi->groupBox, SIGNAL(currentIndexChanged(QString)), 
-           this, SLOT(slotGroupChanged()));
+    connect( mUi->nameEdit, SIGNAL(textChanged(QString)),
+             this, SLOT(slotTextChanged()) );
+    connect( mUi->nameEdit, SIGNAL(returnPressed()),
+             this, SLOT(slotReturnPressed()) );
+    connect( mUi->groupBox, SIGNAL(currentIndexChanged(QString)),
+             this, SLOT(slotGroupChanged()));
 
-  mUi->snippetText->setMinimumSize( 500, 300 );
+    mUi->snippetText->setMinimumSize( 500, 300 );
 
-  mUi->groupWidget->setVisible( !inGroupMode );
-  mUi->nameEdit->setFocus();
+    mUi->groupWidget->setVisible( !inGroupMode );
+    mUi->nameEdit->setFocus();
 }
 
 SnippetDialog::~SnippetDialog()
 {
-  delete mUi;
+    delete mUi;
 }
 
 void SnippetDialog::slotGroupChanged()
 {
-  enableButton( Ok, snippetIsValid() );
+    enableButton( Ok, snippetIsValid() );
 }
 
 void SnippetDialog::setName( const QString &name )
 {
-  mUi->nameEdit->setText( name );
+    mUi->nameEdit->setText( name );
 }
 
 QString SnippetDialog::name() const
 {
-  return mUi->nameEdit->text();
+    return mUi->nameEdit->text();
 }
 
 void SnippetDialog::setText( const QString &text )
 {
-  mUi->snippetText->setText( text );
+    mUi->snippetText->setText( text );
 }
 
 QString SnippetDialog::text() const
 {
-  return mUi->snippetText->toPlainText();
+    return mUi->snippetText->toPlainText();
 }
 
 void SnippetDialog::setKeySequence( const QKeySequence &sequence )
 {
-  mUi->keyWidget->setKeySequence( sequence );
+    mUi->keyWidget->setKeySequence( sequence );
 }
 
 QKeySequence SnippetDialog::keySequence() const
 {
-  return mUi->keyWidget->keySequence();
+    return mUi->keyWidget->keySequence();
 }
 
 void SnippetDialog::setGroupModel( QAbstractItemModel *model )
 {
-  mUi->groupBox->setModel( model );
+    mUi->groupBox->setModel( model );
 }
 
 void SnippetDialog::setGroupIndex( const QModelIndex &index )
 {
-  mUi->groupBox->setCurrentIndex( index.row() );
+    mUi->groupBox->setCurrentIndex( index.row() );
 }
 
 QModelIndex SnippetDialog::groupIndex() const
 {
-  return mUi->groupBox->model()->index( mUi->groupBox->currentIndex(), 0 );
+    return mUi->groupBox->model()->index( mUi->groupBox->currentIndex(), 0 );
 }
 
 void SnippetDialog::slotTextChanged()
 {
-  enableButton( Ok, snippetIsValid() );
+    enableButton( Ok, snippetIsValid() );
 }
 
 bool SnippetDialog::snippetIsValid() const
 {
-  if ( mUi->groupWidget->isVisible() )
-    return ( !mUi->nameEdit->text().trimmed().isEmpty() &&
-             !mUi->groupBox->currentText().trimmed().isEmpty() );
-  else
-    return ( !mUi->nameEdit->text().trimmed().isEmpty() );
+    if ( mUi->groupWidget->isVisible() )
+        return ( !mUi->nameEdit->text().trimmed().isEmpty() &&
+                 !mUi->groupBox->currentText().trimmed().isEmpty() );
+    else
+        return ( !mUi->nameEdit->text().trimmed().isEmpty() );
 }
 
 void SnippetDialog::slotReturnPressed()
 {
-  if ( snippetIsValid() ) {
-    accept();
-  }
+    if ( snippetIsValid() ) {
+        accept();
+    }
 }
 
 #include "snippetdialog_p.moc"

@@ -78,8 +78,8 @@ void RangeManager::dump() const
       foo += QString::number( counter );
       counter++;
     }
-    output += foo.join(" ");
+    output += foo.join(QLatin1String(" "));
   }
 
-  qDebug("[%s]", qPrintable( output.join(" | ") ) );
+  qDebug("[%s]", qPrintable( output.join(QLatin1String(" | ")) ) );
 }

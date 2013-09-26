@@ -47,7 +47,7 @@ AkonotesListApplet::AkonotesListApplet(QObject* parent, const QVariantList& args
 {
 
   setHasConfigurationInterface( true );
-  setPopupIcon( "kjots" );
+  setPopupIcon( QLatin1String("kjots") );
   m_treeView = new PlasmaTreeView;
 
   setGraphicsWidget( m_treeView );
@@ -94,7 +94,7 @@ void AkonotesListApplet::createConfigurationInterface(KConfigDialog *configDialo
 {
   QWidget *widget = new QWidget();
   ui.setupUi(widget);
-  configDialog->addPage(widget, i18n("Selected Collection"), "view-media-visualization");
+  configDialog->addPage(widget, i18n("Selected Collection"), QLatin1String("view-media-visualization"));
 
   ui.treeView->header()->hide();
 

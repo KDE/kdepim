@@ -70,7 +70,7 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
     initAction();
 
     // set our XML-UI resource file
-    setXMLFile(KStandardDirs::locate("data", "kjots/kjotspartui.rc"));
+    setXMLFile(KStandardDirs::locate("data", QLatin1String("kjots/kjotspartui.rc")));
 
     QTimer::singleShot(0, this, SLOT(delayedInitialization()));
 }
@@ -82,8 +82,8 @@ KJotsPart::~KJotsPart()
 
 void KJotsPart::initAction()
 {
-  KAction *action = new KAction( KIcon( "configure" ), i18n( "&Configure KJots..." ), this );
-  actionCollection()->addAction( "kjots_configure", action );
+  KAction *action = new KAction( KIcon( QLatin1String("configure") ), i18n( "&Configure KJots..." ), this );
+  actionCollection()->addAction( QLatin1String("kjots_configure"), action );
   connect( action, SIGNAL(triggered(bool)), mComponent,
            SLOT(configure()) );
 }
@@ -103,7 +103,7 @@ void KJotsPart::activeAnchorChanged(const QString &anchorTarget, const QString &
 {
     if (!anchorTarget.isEmpty())
     {
-        mStatusBar->statusBar()->showMessage(anchorText + " -> " + anchorTarget);
+        mStatusBar->statusBar()->showMessage(anchorText + QLatin1String(" -> ") + anchorTarget);
     } else {
         mStatusBar->statusBar()->showMessage(QString());
     }

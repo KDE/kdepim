@@ -31,15 +31,15 @@
 SnippetsEditor::SnippetsEditor( KActionCollection *actionCollection, QObject *parent )
   : QObject( parent ), mSnippetsManager( new MailCommon::SnippetsManager( actionCollection, this ) )
 {
-  actionCollection->addAction( "snippetseditor_add_snippet", mSnippetsManager->addSnippetAction() );
-  actionCollection->addAction( "snippetseditor_edit_snippet", mSnippetsManager->editSnippetAction() );
-  actionCollection->addAction( "snippetseditor_delete_snippet", mSnippetsManager->deleteSnippetAction() );
+  actionCollection->addAction(QLatin1String( "snippetseditor_add_snippet"), mSnippetsManager->addSnippetAction() );
+  actionCollection->addAction( QLatin1String("snippetseditor_edit_snippet"), mSnippetsManager->editSnippetAction() );
+  actionCollection->addAction( QLatin1String("snippetseditor_delete_snippet"), mSnippetsManager->deleteSnippetAction() );
 
-  actionCollection->addAction( "snippetseditor_add_snippetgroup", mSnippetsManager->addSnippetGroupAction() );
-  actionCollection->addAction( "snippetseditor_edit_snippetgroup", mSnippetsManager->editSnippetGroupAction() );
-  actionCollection->addAction( "snippetseditor_delete_snippetgroup", mSnippetsManager->deleteSnippetGroupAction() );
+  actionCollection->addAction( QLatin1String("snippetseditor_add_snippetgroup"), mSnippetsManager->addSnippetGroupAction() );
+  actionCollection->addAction( QLatin1String("snippetseditor_edit_snippetgroup"), mSnippetsManager->editSnippetGroupAction() );
+  actionCollection->addAction( QLatin1String("snippetseditor_delete_snippetgroup"), mSnippetsManager->deleteSnippetGroupAction() );
 
-  actionCollection->addAction( "snippetseditor_insert_snippet", mSnippetsManager->insertSnippetAction() );
+  actionCollection->addAction( QLatin1String("snippetseditor_insert_snippet"), mSnippetsManager->insertSnippetAction() );
 
   mProxyModel = new KDescendantsProxyModel( this );
   mProxyModel->setSourceModel( mSnippetsManager->model() );

@@ -357,8 +357,8 @@ EditorGeneral::EditorGeneral( QWidget *parent )
   connect( d->mUi.collectionSelector->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
            SLOT(availableCollectionsChanged()) );
 
-  d->mUi.saveButton->setIcon( SmallIcon( "document-save", 64 ) );
-  d->mUi.cancelButton->setIcon( SmallIcon( "dialog-cancel", 64 ) );
+  d->mUi.saveButton->setIcon( SmallIcon( QLatin1String("document-save"), 64 ) );
+  d->mUi.cancelButton->setIcon( SmallIcon( QLatin1String("dialog-cancel"), 64 ) );
 }
 
 EditorGeneral::~EditorGeneral()

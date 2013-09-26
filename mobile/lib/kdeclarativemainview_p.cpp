@@ -97,7 +97,7 @@ void KDeclarativeMainViewPrivate::bulkActionFilterLineEditChanged( const QString
 
 void KDeclarativeMainViewPrivate::searchStarted( const Akonadi::Collection &searchCollection )
 {
-  q->persistCurrentSelection( "SelectionBeforeSearchStarted" );
+  q->persistCurrentSelection( QLatin1String("SelectionBeforeSearchStarted") );
 
   const QStringList selection = QStringList() << QLatin1String( "c1" ) // the 'Search' collection
                                               << QString::fromLatin1( "c%1" ).arg( searchCollection.id() );
@@ -116,8 +116,8 @@ void KDeclarativeMainViewPrivate::searchStopped()
 {
   mGuiStateManager->popState();
 
-  q->restorePersistedSelection( "SelectionBeforeSearchStarted" );
-  q->clearPersistedSelection( "SelectionBeforeSearchStarted" );
+  q->restorePersistedSelection( QLatin1String("SelectionBeforeSearchStarted") );
+  q->clearPersistedSelection( QLatin1String("SelectionBeforeSearchStarted") );
 }
 
 void KDeclarativeMainViewPrivate::guiStateChanged( int oldState, int newState )

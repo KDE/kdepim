@@ -303,7 +303,7 @@ namespace {
 
         void setAllowedSchemes( const DirectoryServicesWidget::Schemes schemes ) {
             m_schemes = schemes;
-        };
+        }
         DirectoryServicesWidget::Schemes allowedSchemes() const { return m_schemes; }
 
         /* reimp */

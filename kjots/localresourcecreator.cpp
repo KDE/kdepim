@@ -40,7 +40,7 @@
 #include <KMime/KMimeMessage>
 #include <Akonadi/EntityDisplayAttribute>
 
-static const char * akonadi_notes_instance_name = "akonadi_akonotes_resource";
+static const QString akonadi_notes_instance_name = QLatin1String("akonadi_akonotes_resource");
 
 LocalResourceCreator::LocalResourceCreator(QObject* parent)
   : QObject(parent)
@@ -94,8 +94,8 @@ void LocalResourceCreator::instanceCreated( KJob *job )
   instance.setName( i18nc( "Default name for resource holding notes", "Local Notes" ) );
 
   OrgKdeAkonadiMaildirSettingsInterface *iface = new OrgKdeAkonadiMaildirSettingsInterface(
-    "org.freedesktop.Akonadi.Resource." + instance.identifier(),
-    "/Settings", QDBusConnection::sessionBus(), this );
+    QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(),
+    QLatin1String("/Settings"), QDBusConnection::sessionBus(), this );
 
   // TODO: Make errors user-visible.
   if (!iface->isValid() ) {
@@ -105,7 +105,7 @@ void LocalResourceCreator::instanceCreated( KJob *job )
     return;
   }
 
-  QDBusPendingReply<void> response = iface->setPath( KGlobal::dirs()->localxdgdatadir() + "/notes/" + KRandom::randomString( 10 ) );
+  //QDBusPendingReply<void> response = iface->setPath( KGlobal::dirs()->localxdgdatadir() + "/notes/" + KRandom::randomString( 10 ) );
 
   instance.reconfigure();
 
@@ -197,7 +197,7 @@ void LocalResourceCreator::topLevelFetchFinished(KJob* job)
   collection.setContentMimeTypes( QStringList() << Akonadi::Collection::mimeType() << Akonotes::Note::mimeType() );
 
   Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
-  eda->setIconName( "x-office-address-book" );
+  eda->setIconName( QLatin1String("x-office-address-book") );
   eda->setDisplayName( title );
   collection.addAttribute(eda);
 
@@ -233,19 +233,19 @@ void LocalResourceCreator::createFinished(KJob* job)
   note->subject( true )->fromUnicodeString( title, encoding );
   note->contentType( true )->setMimeType( "text/plain" );
   note->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
-  note->from( true )->fromUnicodeString( "Kjots@kde4", encoding );
+  note->from( true )->fromUnicodeString( QLatin1String("Kjots@kde4"), encoding );
   // Need a non-empty body part so that the serializer regards this as a valid message.
-  note->mainBodyPart()->fromUnicodeString( " " );
+  note->mainBodyPart()->fromUnicodeString( QLatin1String(" ") );
 
   note->assemble();
 
   item.setPayload(note);
   Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
-  eda->setIconName( "text-plain" );
+  eda->setIconName( QLatin1String("text-plain") );
   item.addAttribute(eda);
 
   Akonadi::ItemCreateJob *itemCreateJob = new Akonadi::ItemCreateJob( item,  collectionCreateJob->collection(), this);
-  connect( job, SIGNAL(result(KJob*)), SLOT(itemCreateFinished(KJob*)) );
+  connect( itemCreateJob, SIGNAL(result(KJob*)), SLOT(itemCreateFinished(KJob*)) );
 }
 
 void LocalResourceCreator::itemCreateFinished(KJob* job)

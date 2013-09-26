@@ -35,9 +35,9 @@ AclEditor::AclEditor( KActionCollection *actionCollection, QObject *parent )
 {
   Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
-  actionCollection->addAction( "acleditor_add", mAclManager->addAction() );
-  actionCollection->addAction( "acleditor_edit", mAclManager->editAction() );
-  actionCollection->addAction( "acleditor_delete", mAclManager->deleteAction() );
+  actionCollection->addAction( QLatin1String("acleditor_add"), mAclManager->addAction() );
+  actionCollection->addAction( QLatin1String("acleditor_edit"), mAclManager->editAction() );
+  actionCollection->addAction( QLatin1String("acleditor_delete"), mAclManager->deleteAction() );
 }
 
 void AclEditor::setCollection( const Akonadi::Collection &collection )

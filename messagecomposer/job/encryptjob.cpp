@@ -174,6 +174,7 @@ void EncryptJob::process()
   // for now just do the main recipients
   QByteArray encryptedBody;
   QByteArray content;
+  d->content->assemble();
   if( d->format & Kleo::InlineOpenPGPFormat ) {
     content = d->content->body();
   } else {

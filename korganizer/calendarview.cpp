@@ -122,6 +122,7 @@ CalendarView::CalendarView( QWidget *parent ) : CalendarViewBase( parent ),
   mDialogManager = new KODialogManager( this );
   mTodoPurger = new Akonadi::TodoPurger( this );
   mTodoPurger->setCalendar( mCalendar );
+  mTodoPurger->setIncidenceChager( mChanger );
   connect(mTodoPurger, SIGNAL(todosPurged(bool,int,int)),
           SLOT(onTodosPurged(bool,int,int)));
 
@@ -2501,9 +2502,19 @@ bool CalendarView::deleteIncidence( const Akonadi::Item &item, bool force )
 
 void CalendarView::purgeCompleted()
 {
+  if ( checkedCollections().isEmpty() ) {
+    showMessage( i18n( "All calendars are unchecked in the Calendar Manager. No to-do was purged." ), KMessageWidget::Warning );
+    return;
+  }
+
+  if ( mCalendar->rawTodos().isEmpty() ) {
+    showMessage( i18n( "There are no completed to-dos to purge." ), KMessageWidget::Information );
+    return;
+  }
+
   int result = KMessageBox::warningContinueCancel(
     this,
-    i18n( "Delete all completed to-dos?" ),
+    i18n( "Delete all completed to-dos from checked calendars?" ),
     i18n( "Purge To-dos" ),
     KGuiItem( i18n( "Purge" ) ) );
 

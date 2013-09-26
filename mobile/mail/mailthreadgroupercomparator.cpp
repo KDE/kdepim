@@ -266,7 +266,7 @@ QString MailThreadGrouperComparator::grouperString( const Akonadi::Item &item ) 
       else
         l.append( mbox.addrSpec().asPrettyString() );
     }
-    return l.join( ", " );
+    return l.join( QLatin1String(", ") );
   } else {
     return QLatin1String( "dummy" );
   }

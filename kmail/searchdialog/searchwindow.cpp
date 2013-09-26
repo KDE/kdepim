@@ -37,6 +37,7 @@
 #include "kmsearchmessagemodel.h"
 #include "kmsearchfilterproxymodel.h"
 #include "searchpatternwarning.h"
+#include "selectmulticollectiondialog.h"
 
 #include <Akonadi/CollectionModifyJob>
 #include <Akonadi/EntityTreeView>
@@ -130,14 +131,23 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
             const Akonadi::SearchDescriptionAttribute* searchDescription = collection.attribute<Akonadi::SearchDescriptionAttribute>();
             mSearchPattern.deserialize( searchDescription->description() );
 
-            const Akonadi::Collection col = searchDescription->baseCollection();
-            if ( col.isValid() ) {
-                mUi.mChkbxSpecificFolders->setChecked( true );
-                mUi.mCbxFolders->setCollection( col );
-                mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
+            const QList<Akonadi::Collection::Id> lst = searchDescription->listCollection();
+            if (!lst.isEmpty()) {
+                mUi.mChkMultiFolders->setChecked(true);
+                mCollectionId.clear();
+                Q_FOREACH (Akonadi::Collection::Id col, lst) {
+                    mCollectionId.append(Akonadi::Collection(col));
+                }
             } else {
-                mUi.mChkbxAllFolders->setChecked( true );
-                mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
+                const Akonadi::Collection col = searchDescription->baseCollection();
+                if ( col.isValid() ) {
+                    mUi.mChkbxSpecificFolders->setChecked( true );
+                    mUi.mCbxFolders->setCollection( col );
+                    mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
+                } else {
+                    mUi.mChkbxAllFolders->setChecked( true );
+                    mUi.mChkSubFolders->setChecked( searchDescription->recursive() );
+                }
             }
         } else {
             // it's a search folder, but not one of ours, warn the user that we can't edit it
@@ -180,6 +190,8 @@ SearchWindow::SearchWindow( KMMainWidget *widget, const Akonadi::Collection &col
              this, SLOT(slotViewMsg(Akonadi::Item)) );
     connect( mUi.mLbxMatches, SIGNAL(currentChanged(Akonadi::Item)),
              this, SLOT(slotCurrentChanged(Akonadi::Item)) );
+    connect( mUi.selectMultipleFolders, SIGNAL(clicked()),
+             this, SLOT(slotSelectMultipleFolders()));
 
     connect( KMKernel::self()->folderCollectionMonitor(), SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), this, SLOT(updateCollectionStatistic(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
 
@@ -403,15 +415,30 @@ void SearchWindow::slotSearch()
     mUi.mSearchFolderEdt->setEnabled( false );
 
     KUrl::List urls;
-    if ( !mUi.mChkbxAllFolders->isChecked() ) {
+    if ( mUi.mChkbxSpecificFolders->isChecked() ) {
         const Akonadi::Collection col = mUi.mCbxFolders->collection();
         if (!col.isValid()) {
             mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You did not selected a valid folder."));
+            mUi.mSearchFolderEdt->setEnabled( true );
             return;
         }
         urls << col.url( Akonadi::Collection::UrlShort );
         if ( mUi.mChkSubFolders->isChecked() ) {
             childCollectionsFromSelectedCollection( col, urls );
+        }
+    } else if (mUi.mChkMultiFolders->isChecked()) {
+        if (!mSelectMultiCollectionDialog) {
+            return;
+        }
+        mCollectionId = mSelectMultiCollectionDialog->selectedCollection();
+        Q_FOREACH(const Akonadi::Collection &col, mCollectionId) {
+            urls << col.url( Akonadi::Collection::UrlShort );
+        }
+        if (urls.isEmpty()) {
+            mUi.mSearchFolderEdt->setEnabled( true );
+            mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("You forgot to select collections."));
+            mQuery.clear();
+            return;
         }
     }
 
@@ -445,7 +472,7 @@ void SearchWindow::slotSearch()
         return;
     case MailCommon::SearchPattern::NotEnoughCharacters:
         mUi.mSearchFolderEdt->setEnabled( true );
-        mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("Contains condition can not used with a number of characters inferior to 4."));
+        mSearchPatternWidget->showWarningPattern(QStringList()<<i18n("Contains condition cannot be used with a number of characters inferior to 4."));
         mQuery.clear();
         return;
     }
@@ -505,7 +532,14 @@ void SearchWindow::searchDone( KJob* job )
         Q_ASSERT( !search.isEmpty() );
         Akonadi::SearchDescriptionAttribute *searchDescription = mFolder.attribute<Akonadi::SearchDescriptionAttribute>( Akonadi::Entity::AddIfMissing );
         searchDescription->setDescription( search );
-        if ( !mUi.mChkbxAllFolders->isChecked() ) {
+        if ( mUi.mChkMultiFolders->isChecked()) {
+            searchDescription->setBaseCollection( Akonadi::Collection() );
+            QList<Akonadi::Collection::Id> lst;
+            Q_FOREACH (const Akonadi::Collection &col, mCollectionId) {
+                lst << col.id();
+            }
+            searchDescription->setListCollection(lst);
+        } else if (mUi.mChkbxSpecificFolders->isChecked()) {
             const Akonadi::Collection collection = mUi.mCbxFolders->collection();
             searchDescription->setBaseCollection( collection );
         } else {
@@ -817,6 +851,19 @@ void SearchWindow::slotDebugQuery()
     dlg->exec();
     delete dlg;
 #endif
+}
+
+void SearchWindow::slotSelectMultipleFolders()
+{
+    mUi.mChkMultiFolders->setChecked(true);
+    if (!mSelectMultiCollectionDialog)  {
+        QList<Akonadi::Collection::Id> lst;
+        Q_FOREACH (const Akonadi::Collection &col, mCollectionId) {
+            lst << col.id();
+        }
+        mSelectMultiCollectionDialog = new SelectMultiCollectionDialog(lst, this);
+    }
+    mSelectMultiCollectionDialog->show();
 }
 
 }

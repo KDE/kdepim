@@ -135,6 +135,8 @@ if (NOT WINCE AND KDEPIM_BUILD_DESKTOP)
      searchdialog/debug/searchdebugnepomukshowdialog.cpp
      searchdialog/searchpatternwarning.cpp
      searchdialog/nepomuksearchpatternedit.cpp
+     searchdialog/selectmulticollectionwidget.cpp
+     searchdialog/selectmulticollectiondialog.cpp
      vacationmanager.cpp
   )
 

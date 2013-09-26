@@ -129,7 +129,7 @@ class EditorMore::Private
       dlg.setSelected( mCategories );
       if ( dlg.exec() ) {
         mCategories = dlg.selectedCategories();
-        mCategoriesPage.categoriesEdit->setText( mCategories.join( ", " ) );
+        mCategoriesPage.categoriesEdit->setText( mCategories.join( QLatin1String(", ") ) );
       }
     }
 
@@ -260,7 +260,7 @@ void EditorMore::loadContact( const KABC::Addressee &contact, const Akonadi::Con
 
   // categories page
   d->mCategories = contact.categories();
-  d->mCategoriesPage.categoriesEdit->setText( d->mCategories.join( ", " ) );
+  d->mCategoriesPage.categoriesEdit->setText( d->mCategories.join( QLatin1String(", ") ) );
 }
 
 void EditorMore::loadCustomFields( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData )

@@ -456,7 +456,10 @@ QSize TodoRichTextDelegate::sizeHint( const QStyleOptionViewItem &option,
   if ( ret.height() > option.fontMetrics.height() * 2 ) {
     ret.setHeight( option.fontMetrics.height() * 2 );
   }
-  return ret;
+
+  // This row might not have a checkbox, so give it more height so it appears the same size as other rows.
+  const int checkboxHeight = QApplication::style()->sizeFromContents( QStyle::CT_CheckBox, &option, QSize() ).height();
+  return QSize( ret.width(), qMax( ret.height(), checkboxHeight ) );
 }
 
 #include "tododelegates.moc"

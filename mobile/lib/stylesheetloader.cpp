@@ -31,7 +31,7 @@ class StyleSheetLoaderPrivate
   public:
     StyleSheetLoaderPrivate() : appliedGlobally(false)
     {
-      QFile f( KStandardDirs::locate( "data", "mobileui/stylesheet.css" ) );
+      QFile f( KStandardDirs::locate( "data", QLatin1String("mobileui/stylesheet.css") ) );
       if ( f.open( QFile::ReadOnly ) ) {
         styleSheet = QString::fromUtf8( f.readAll() );
         kDebug() << "loaded stylesheet" << f.fileName();

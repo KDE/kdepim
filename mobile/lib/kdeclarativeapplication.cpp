@@ -87,10 +87,10 @@ void KDeclarativeApplicationBase::postApplicationSetup()
   else if ( KCmdLineArgs::parsedArgs()->isSet( "emulate-maemo6" ) )
     emulateMaemo6();
 
-  KGlobal::locale()->insertCatalog( "libakonadi" );
-  KGlobal::locale()->insertCatalog( "accountwizard" );
-  KGlobal::locale()->insertCatalog( "libkdepimmobileui" );
-  KGlobal::locale()->insertCatalog( "akonadi_serializer_plugins" ); // for conflict handling
+  KGlobal::locale()->insertCatalog( QLatin1String("libakonadi") );
+  KGlobal::locale()->insertCatalog( QLatin1String("accountwizard") );
+  KGlobal::locale()->insertCatalog( QLatin1String("libkdepimmobileui") );
+  KGlobal::locale()->insertCatalog( QLatin1String("akonadi_serializer_plugins") ); // for conflict handling
 }
 
 // static
@@ -113,7 +113,7 @@ void KDeclarativeApplicationBase::preApplicationSetup( const KCmdLineOptions & a
   run = true;
 
   // doesn't really belong here, but needs to be called before the ctor
-  QApplication::setGraphicsSystem( "raster" );
+  QApplication::setGraphicsSystem( QLatin1String("raster") );
 
   KCmdLineOptions options(appOptions);
   options.add("timeit", ki18n("start timers for various parts of the application startup"));
@@ -157,12 +157,12 @@ void KDeclarativeApplicationBase::emulateMaemo5()
 
   setPalette( p );
 
-  setStyle( "plastique" ); // to avoid oxygen artefacts
+  setStyle( QLatin1String("plastique") ); // to avoid oxygen artefacts
 }
 
 void KDeclarativeApplicationBase::emulateMaemo6()
 {
-  setStyle( "windows" ); // no kidding, that's apparently the fallback widget style used there...
+  setStyle( QLatin1String("windows") ); // no kidding, that's apparently the fallback widget style used there...
 
   StyleSheetLoader::applyStyle( qApp ); // ifdef'ed harmattan-only above
 }

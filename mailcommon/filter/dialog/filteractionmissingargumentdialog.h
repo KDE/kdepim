@@ -75,6 +75,8 @@ private:
     };
 
 private:
+    void writeConfig();
+    void readConfig();
     MailCommon::FolderRequester *mFolderRequester;
     QListWidget *mListwidget;
 };
@@ -89,6 +91,8 @@ public:
     int selectedIdentity() const;
 
 private:
+    void writeConfig();
+    void readConfig();
     KPIMIdentities::IdentityCombo *mComboBoxIdentity;
 };
 
@@ -102,6 +106,8 @@ public:
     int selectedTransport() const;
 
 private:
+    void writeConfig();
+    void readConfig();
     MailTransport::TransportComboBox *mComboBoxTransport;
 };
 
@@ -116,6 +122,8 @@ public:
     QString selectedTemplate() const;
 
 private:
+    void readConfig();
+    void writeConfig();
     KComboBox *mComboBoxTemplate;
 };
 
@@ -131,6 +139,8 @@ public:
     static bool allAccountExist( const QStringList & lst );
 
 private:
+    void readConfig();
+    void writeConfig();
     MailCommon::AccountList *mAccountList;
 };
 
@@ -149,6 +159,9 @@ private Q_SLOTS:
     void slotAddTag();
 
 private:
+    void readConfig();
+    void writeConfig();
+
     enum TypeData {
         UrlData = Qt::UserRole + 1
     };
@@ -166,6 +179,8 @@ public:
     QString soundUrl() const;
 
 private:
+    void readConfig();
+    void writeConfig();
     KUrlRequester *mUrlWidget;
 };
 

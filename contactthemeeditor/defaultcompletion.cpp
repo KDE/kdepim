@@ -57,7 +57,18 @@ QStringList DefaultCompletion::defaultCompetion()
         << QLatin1String("contact.officei18n")
         << QLatin1String("contact.office")
         << QLatin1String("contact.department")
-        << QLatin1String("contact.departmenti18n");
+        << QLatin1String("contact.departmenti18n")
+        << QLatin1String("contact.imAddresses")
+        << QLatin1String("phoneNumber.numberLink")
+        << QLatin1String("contact.imAddresses")
+        << QLatin1String("imAddress.type")
+        << QLatin1String("address.formattedAddressLink")
+        << QLatin1String("address.formattedAddressIcon")
+        << QLatin1String("member.emailLink")
+        << QLatin1String("member.name")
+        << QLatin1String("field.title")
+        << QLatin1String("field.value")
+        << QLatin1String("imAddress.imIcon");
     return lst;
 }
 

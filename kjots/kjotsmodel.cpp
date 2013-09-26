@@ -268,11 +268,11 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
   {
     const Item item = index.data( ItemRole ).value<Item>();
     if ( item.isValid() && item.hasAttribute<KJotsLockAttribute>() ) {
-        return KIcon( "emblem-locked" );
+        return KIcon( QLatin1String("emblem-locked") );
     } else {
       const Collection col = index.data( CollectionRole ).value<Collection>();
       if ( col.isValid() && col.hasAttribute<KJotsLockAttribute>() ) {
-        return KIcon( "emblem-locked" );
+        return KIcon(QLatin1String( "emblem-locked") );
       }
     }
   }
