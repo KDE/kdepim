@@ -17,6 +17,7 @@
 
 #include "webpage.h"
 #include "networkaccessmanager.h"
+#include "adblockmanager.h"
 
 using namespace MessageViewer;
 
@@ -31,6 +32,7 @@ WebPage::WebPage(QWidget *parent)
         manager->setWindow(window);
     }
     setNetworkAccessManager(manager);
+    connect(this, SIGNAL(frameCreated(QWebFrame*)), AdBlockManager::self(), SLOT(applyHidingRules(QWebFrame*)));
 }
 
 WebPage::~WebPage()
@@ -42,4 +44,12 @@ KUrl WebPage::loadingUrl()
     return mLoadingUrl;
 }
 
+bool WebPage::acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type)
+{
+    const bool isMainFrameRequest = (frame == mainFrame());
+    if (isMainFrameRequest) {
+        mLoadingUrl = request.url();
+    }
+    return QWebPage::acceptNavigationRequest(frame, request, type);
+}
 #include "webpage.moc"

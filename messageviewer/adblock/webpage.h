@@ -29,6 +29,9 @@ public:
     ~WebPage();
     KUrl loadingUrl();
 
+protected:
+    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
+
 private:
     KUrl mLoadingUrl;
 };
