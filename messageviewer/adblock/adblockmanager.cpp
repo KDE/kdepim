@@ -44,6 +44,7 @@
 #include <QNetworkRequest>
 #include <QtConcurrentRun>
 #include <QFile>
+#include <QDateTime>
 #include <QWebFrame>
 
 using namespace MessageViewer;
@@ -89,23 +90,14 @@ bool AdBlockManager::isHidingElements()
     return GlobalSettings::self()->hideAdsEnabled();
 }
 
+void AdBlockManager::reloadConfig()
+{
+    loadSettings();
+}
 
 void AdBlockManager::loadSettings()
 {
-    // first, check this...
-    QString adblockFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrc"));
-    if (!QFile::exists(adblockFilePath))
-    {
-        QString generalAdblockFilePath = KStandardDirs::locate("appdata" , QLatin1String("adblockrc"));
-        QFile adblockFile(generalAdblockFilePath);
-        bool copied = adblockFile.copy(adblockFilePath);
-        if (!copied)
-        {
-            kDebug() << "oh oh... Problems copying default adblock file";
-            return;
-        }
-    }
-    _adblockConfig = KSharedConfig::openConfig(QLatin1String("adblockrc"), KConfig::SimpleConfig, "appdata");
+    KConfig config(QLatin1String("messagevieweradblockrc"));
     // ----------------
 
     _hostWhiteList.clear();
@@ -118,43 +110,37 @@ void AdBlockManager::loadSettings()
 
     if (!isEnabled())
         return;
-    KConfigGroup settingsGroup(_adblockConfig, "Settings");
-
-
     // ----------------------------------------------------------
 
     QDateTime today = QDateTime::currentDateTime();
-    QDateTime lastUpdate = QDateTime::fromString(settingsGroup.readEntry("lastUpdate", QString()));
-    int days = GlobalSettings::self()->adBlockUpdateInterval();
+    const QDateTime lastUpdate = GlobalSettings::self()->lastUpdate();
+    const int days = GlobalSettings::self()->adBlockUpdateInterval();
 
     bool allSubscriptionsNeedUpdate = (today > lastUpdate.addDays(days));
-    if (allSubscriptionsNeedUpdate)
-    {
-        settingsGroup.writeEntry("lastUpdate", today.toString());
+    if (allSubscriptionsNeedUpdate) {
+        GlobalSettings::self()->setLastUpdate(today);
     }
 
-    // (Eventually) update and load automatic rules
-    KConfigGroup filtersGroup(_adblockConfig, "FiltersList");
-    for (int i = 0; i < 60; i++)
-    {
-        QString n = QString::number(i + 1);
-        if (!filtersGroup.hasKey(QLatin1String("FilterEnabled-") + n))
+    const QStringList itemList = config.groupList().filter( QRegExp( QLatin1String("FilterList \\d+") ) );
+    Q_FOREACH(const QString &item, itemList) {
+        KConfigGroup filtersGroup(&config, item);
+        const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled-"), false);
+        if (isFilterEnabled) {
             continue;
-
-        bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled-") + n, false);
-        if (!isFilterEnabled)
-            continue;
-
-        bool fileExists = subscriptionFileExists(i);
-        if (allSubscriptionsNeedUpdate || !fileExists)
-        {
-            kDebug() << "FILE SHOULDN'T EXIST. updating subscription";
-            updateSubscription(i);
         }
-        else
-        {
-            const QString rulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_") + n);
-            loadRules(rulesFilePath);
+        const QString url = filtersGroup.readEntry(QLatin1String("url"));
+        if (url.isEmpty()) {
+            continue;
+        }
+        const QString path = filtersGroup.readEntry(QLatin1String("path"));
+        if (path.isEmpty())
+            continue;
+
+        const QDateTime lastDateTime = filtersGroup.readEntry(QLatin1String("lastUpdate"), QDateTime());
+        if (!lastDateTime.isValid() || today > lastUpdate.addDays(days) || !QFile(path).exists()) {
+            updateSubscription(path, url);
+        } else {
+            loadRules(path);
         }
     }
 
@@ -287,15 +273,11 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
 }
 
 
-void AdBlockManager::updateSubscription(int i)
+void AdBlockManager::updateSubscription(const QString &path, const QString &url)
 {
-    KConfigGroup filtersGroup(_adblockConfig, "FiltersList");
-    QString n = QString::number(i + 1);
+    KUrl subUrl = KUrl(url);
 
-    QString fUrl = filtersGroup.readEntry(QLatin1String("FilterURL-") + n, QString());
-    KUrl subUrl = KUrl(fUrl);
-
-    QString rulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_") + n);
+    const QString rulesFilePath = path;
     KUrl destUrl = KUrl(rulesFilePath);
 
     KIO::FileCopyJob* job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);

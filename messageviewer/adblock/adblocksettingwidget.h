@@ -49,11 +49,12 @@ public:
 
     bool changed() const;
 
+    void save();
+    void doLoadFromGlobalSettings();
+
+
 Q_SIGNALS:
     void changed(bool);
-
-public Q_SLOTS:
-    void save();
 
 private Q_SLOTS:
     void hasChanged();
@@ -61,9 +62,10 @@ private Q_SLOTS:
     void slotInfoLinkActivated(const QString &);
     void insertRule();
     void removeRule();
+    void slotAddFilter();
+    void slotRemoveSubscription();
 
 private:
-    void load();
 
     bool _changed;
     KSharedConfig::Ptr _adblockConfig;

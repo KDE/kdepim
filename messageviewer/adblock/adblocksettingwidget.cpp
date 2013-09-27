@@ -29,18 +29,21 @@
 // Self Includes
 #include "adblocksettingwidget.h"
 #include "settings/globalsettings.h"
+#include "adblockaddsubscriptiondialog.h"
+#include "adblockmanager.h"
 
 // KDE Includes
 #include <KSharedConfig>
 #include <KStandardDirs>
 #include <KIcon>
 #include <KDebug>
+#include <KMessageBox>
 
 // Qt Includes
-#include <QString>
 #include <QWhatsThis>
 #include <QListWidgetItem>
 #include <QFile>
+#include <QPointer>
 #include <QTextStream>
 
 using namespace MessageViewer;
@@ -65,8 +68,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     removeButton->setIcon(KIcon(QLatin1String("list-remove")));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removeRule()));
-
-    load();
+    connect(removeSubscription, SIGNAL(clicked()), SIGNAL(slotRemoveSubscription()));
 
     spinBox->setSuffix(ki18np(" day", " days"));
 
@@ -76,6 +78,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(checkEnableAdblock, SIGNAL(stateChanged(int)),   this, SLOT(hasChanged()));
     connect(checkHideAds,       SIGNAL(stateChanged(int)),   this, SLOT(hasChanged()));
     connect(spinBox,            SIGNAL(valueChanged(int)),   this, SLOT(hasChanged()));
+    connect(addFilters, SIGNAL(clicked()), this, SLOT(slotAddFilter()));
 
     connect(automaticFiltersListWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(hasChanged()));
 }
@@ -114,7 +117,7 @@ void AdBlockSettingWidget::removeRule()
 }
 
 
-void AdBlockSettingWidget::load()
+void AdBlockSettingWidget::doLoadFromGlobalSettings()
 {
     checkEnableAdblock->setChecked(GlobalSettings::self()->adBlockEnabled());
 
@@ -216,6 +219,7 @@ void AdBlockSettingWidget::save()
     // -------------------------------------------------------------------------------
     _changed = false;
     emit changed(false);
+    AdBlockManager::self()->reloadConfig();
 }
 
 
@@ -232,6 +236,24 @@ void AdBlockSettingWidget::hasChanged()
 bool AdBlockSettingWidget::changed() const
 {
     return _changed;
+}
+
+void AdBlockSettingWidget::slotAddFilter()
+{
+    QPointer<MessageViewer::AdBlockAddSubscriptionDialog> dlg = new MessageViewer::AdBlockAddSubscriptionDialog(this);
+    if (dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
+}
+
+void AdBlockSettingWidget::slotRemoveSubscription()
+{
+    if (automaticFiltersListWidget->currentItem()) {
+        if (KMessageBox::questionYesNo(this, i18n("Do you want to delete current list?"), i18n("Delete current list")) == KMessageBox::Yes) {
+            //TODO
+        }
+    }
 }
 
 #include "adblocksettingwidget.moc"

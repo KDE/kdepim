@@ -130,7 +130,6 @@
 
 // KDE Includes
 #include <KIO/Job>
-#include <KSharedConfig>
 
 // Qt Includes
 #include <QObject>
@@ -169,10 +168,12 @@ public:
 
     bool isAdblockEnabledForHost(const QString &host);
 
+    void reloadConfig();
+
 private:
     AdBlockManager(QObject *parent = 0);
 
-    void updateSubscription(int);
+    void updateSubscription(const QString &path, const QString &url);
     bool subscriptionFileExists(int);
 
     // load a file rule, given a path
@@ -200,7 +201,6 @@ private:
 
     AdBlockElementHiding _elementHiding;
 
-    KSharedConfig::Ptr _adblockConfig;
     QFuture<void> _settingsLoaded;
 
     static QWeakPointer<AdBlockManager> s_adBlockManager;

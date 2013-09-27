@@ -186,6 +186,10 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="whiteReferer" type="StringList">
         <default></default>
     </entry>
+    <entry type="DateTime" name="LastUpdate">
+      <default>QDateTime(QDate(2000,1,1), QTime(7,0))</default>
+    </entry>
+
   </group>
 
   <group name="TextIndex">

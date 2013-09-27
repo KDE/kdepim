@@ -37,11 +37,38 @@
       <attribute name="title">
        <string>Automatic Filters</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0" rowspan="3">
         <widget class="QListWidget" name="automaticFiltersListWidget"/>
        </item>
-       <item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="addFilters">
+         <property name="text">
+          <string>Add Filters subscriptions...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="removeSubscription">
+         <property name="text">
+          <string>Remove subscrition</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>301</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QLabel" name="label_3">
