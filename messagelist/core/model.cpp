@@ -382,7 +382,7 @@ bool ModelPrivate::applyFilterToSubtree( Item * item, const QModelIndex &parentI
 
   if ( !mModelForItemFunctions ) {
     kWarning() << "Cannot apply filter, the UI must be not disconnected.";
-    return;
+    return true;
   }
   Q_ASSERT( item );                    // the item must obviously be valid
   Q_ASSERT( item->isViewable() );      // the item must be viewable
