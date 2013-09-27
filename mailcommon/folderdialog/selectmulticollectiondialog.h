@@ -17,12 +17,13 @@
 
 #ifndef SELECTMULTICOLLECTIONDIALOG_H
 #define SELECTMULTICOLLECTIONDIALOG_H
-
+#include "mailcommon_export.h"
 #include <KDialog>
 #include <Akonadi/Collection>
 
+namespace MailCommon {
 class SelectMultiCollectionWidget;
-class SelectMultiCollectionDialog : public KDialog
+class MAILCOMMON_EXPORT SelectMultiCollectionDialog : public KDialog
 {
     Q_OBJECT
 public:
@@ -38,5 +39,6 @@ private:
     void readConfig();
     SelectMultiCollectionWidget *mSelectMultiCollection;
 };
+}
 
 #endif // SELECTMULTICOLLECTIONDIALOG_H

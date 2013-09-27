@@ -98,6 +98,8 @@ set(libmailcommon_SRCS
   folder/foldertreewidget.cpp
   folder/foldertreewidgetproxymodel.cpp
   folder/entitycollectionorderproxymodel.cpp
+  folderdialog/selectmulticollectionwidget.cpp
+  folderdialog/selectmulticollectiondialog.cpp
   job/jobscheduler.cpp
   job/folderjob.cpp
   job/expirejob.cpp

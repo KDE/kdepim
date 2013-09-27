@@ -21,6 +21,7 @@
 #include <QWidget>
 #include <Akonadi/Collection>
 #include <QModelIndex>
+
 class QItemSelectionModel;
 namespace Akonadi {
 class EntityTreeModel;
@@ -30,6 +31,7 @@ class EntityRightsFilterModel;
 class QTreeView;
 class KCheckableProxyModel;
 
+namespace MailCommon {
 class SelectMultiCollectionWidget : public QWidget
 {
     Q_OBJECT
@@ -55,5 +57,6 @@ private:
     KCheckableProxyModel *mCheckProxy;
     Akonadi::EntityRightsFilterModel *mCollectionFilter;
 };
+}
 
 #endif // SELECTMULTICOLLECTIONWIDGET_H

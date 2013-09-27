@@ -21,6 +21,8 @@
 #include <KLocale>
 #include <KConfigGroup>
 
+using namespace MailCommon;
+
 SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
     : KDialog(parent)
 {

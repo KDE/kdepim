@@ -32,6 +32,7 @@
 #include <QVBoxLayout>
 #include <QTreeView>
 
+using namespace MailCommon;
 SelectMultiCollectionWidget::SelectMultiCollectionWidget(QWidget *parent)
     : QWidget(parent)
 {
