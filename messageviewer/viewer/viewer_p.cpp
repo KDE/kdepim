@@ -3264,7 +3264,8 @@ void ViewerPrivate::slotMessageMayBeAScam()
 {
     if (mMessageItem.isValid()) {
         if (mMessageItem.hasAttribute<MessageViewer::ScamAttribute>()) {
-            if (!mMessageItem.attribute<MessageViewer::ScamAttribute>()->isAScam())
+            const MessageViewer::ScamAttribute* const attr = mMessageItem.attribute<MessageViewer::ScamAttribute>();
+            if (!attr->isAScam())
                 return;
         }
         if ( mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
