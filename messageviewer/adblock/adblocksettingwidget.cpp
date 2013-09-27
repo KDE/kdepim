@@ -28,6 +28,7 @@
 
 // Self Includes
 #include "adblocksettingwidget.h"
+#include "settings/globalsettings.h"
 
 // KDE Includes
 #include <KSharedConfig>
@@ -117,15 +118,14 @@ void AdBlockSettingWidget::load()
     // General settings
     KConfigGroup settingsGroup(_adblockConfig, "Settings");
 
-    const bool isAdBlockEnabled = settingsGroup.readEntry("adBlockEnabled", false);
-    checkEnableAdblock->setChecked(isAdBlockEnabled);
+
+    checkEnableAdblock->setChecked(GlobalSettings::self()->adBlockEnabled());
 
     // update enabled status
-    checkHideAds->setEnabled(isAdBlockEnabled);
-    tabWidget->setEnabled(isAdBlockEnabled);
+    checkHideAds->setEnabled(GlobalSettings::self()->adBlockEnabled());
+    tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
 
-    const bool areImageFiltered = settingsGroup.readEntry("hideAdsEnabled", false);
-    checkHideAds->setChecked(areImageFiltered);
+    checkHideAds->setChecked(GlobalSettings::self()->hideAdsEnabled());
 
     const int days = settingsGroup.readEntry("updateInterval", 7);
     spinBox->setValue(days);
@@ -185,21 +185,20 @@ void AdBlockSettingWidget::save()
 
     // General settings
     KConfigGroup settingsGroup(_adblockConfig, "Settings");
-
-    settingsGroup.writeEntry("adBlockEnabled", checkEnableAdblock->isChecked());
-    settingsGroup.writeEntry("hideAdsEnabled", checkHideAds->isChecked());
+    GlobalSettings::self()->setHideAdsEnabled(checkHideAds->isChecked());
+    GlobalSettings::self()->setAdBlockEnabled(checkHideAds->isChecked());
     settingsGroup.writeEntry("updateInterval", spinBox->value());
 
     // automatic filters
     KConfigGroup autoFiltersGroup(_adblockConfig, "FiltersList");
-    for (int i = 0; i < automaticFiltersListWidget->count(); i++)
+    for (int i = 0; i < automaticFiltersListWidget->count(); ++i)
     {
         QListWidgetItem *subItem = automaticFiltersListWidget->item(i);
         bool active = true;
         if (subItem->checkState() == Qt::Unchecked)
             active = false;
 
-        QString n = QString::number(i + 1);
+        const QString n = QString::number(i + 1);
         autoFiltersGroup.writeEntry(QLatin1String("FilterEnabled-") + n, active);
     }
 
@@ -214,10 +213,9 @@ void AdBlockSettingWidget::save()
     }
 
     QTextStream out(&ruleFile);
-    for (int i = 0; i < manualFiltersListWidget->count(); i++)
-    {
+    for (int i = 0; i < manualFiltersListWidget->count(); ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
-        QString stringRule = subItem->text();
+        const QString stringRule = subItem->text();
         out << stringRule << '\n';
     }
 
@@ -237,7 +235,7 @@ void AdBlockSettingWidget::hasChanged()
 }
 
 
-bool AdBlockSettingWidget::changed()
+bool AdBlockSettingWidget::changed() const
 {
     return _changed;
 }
