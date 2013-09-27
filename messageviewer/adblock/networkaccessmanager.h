@@ -43,10 +43,11 @@ protected:
     virtual QNetworkReply *createRequest(Operation op, const QNetworkRequest &req, QIODevice *outgoingData = 0);
 
 private Q_SLOTS:
-    void slotFinished(bool);
+    void slotApplyHidingBlockedElements(bool ok);
 
 private:
     QMultiHash<QWebFrame*, QUrl> m_blockedRequests;
+    QByteArray mAcceptLanguage;
 };
 
 }

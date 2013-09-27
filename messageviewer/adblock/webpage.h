@@ -24,6 +24,7 @@
 namespace MessageViewer {
 class WebPage : public KWebPage
 {
+    Q_OBJECT
 public:
     explicit WebPage(QWidget *parent = 0);
     ~WebPage();

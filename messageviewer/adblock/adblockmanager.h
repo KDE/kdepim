@@ -194,9 +194,6 @@ Q_SIGNALS:
     void reloadCurrentPage();
 
 private:
-    bool _isAdblockEnabled;
-    bool _isHideAdsEnabled;
-
     AdBlockHostMatcher _hostBlackList;
     AdBlockHostMatcher _hostWhiteList;
     AdBlockRuleList _blackList;

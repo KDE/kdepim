@@ -21,6 +21,7 @@
 #include "networkaccessmanager.h"
 
 #include "settings/globalsettings.h"
+#include "adblockmanager.h"
 
 #include <KDebug>
 #include <KLocalizedString>
@@ -65,38 +66,42 @@ namespace MessageViewer {
 MyNetworkAccessManager::MyNetworkAccessManager(QObject *parent)
     : KIO::AccessManager(parent)
 {
-}
+    QString c = KGlobal::locale()->language();
 
-static bool blockRequest(QNetworkAccessManager::Operation op, const QUrl& requestUrl)
-{
-    if (op != QNetworkAccessManager::GetOperation)
-        return false;
-    if (!GlobalSettings::self()->adBlockEnabled())
-        return false;
-#if 0
-    if (!WebKitSettings::self()->isAdFiltered(requestUrl.toString()))
-        return false;
-#else
-    return false;
-#endif
-    //kDebug() << "*** REQUEST BLOCKED: URL" << requestUrl << "RULE" << WebKitSettings::self()->adFilteredBy(requestUrl.toString());
-    return true;
+    if (c == QLatin1String("C"))
+        c = QLatin1String("en-US");
+    else
+        c = c.replace(QLatin1Char('_') , QLatin1Char('-'));
+
+    c.append(QLatin1String(", en-US; q=0.8, en; q=0.6"));
+
+    mAcceptLanguage = c.toLatin1();
 }
 
 QNetworkReply *MyNetworkAccessManager::createRequest(Operation op, const QNetworkRequest &req, QIODevice *outgoingData)
 {
-    if (!blockRequest(op, req.url())) {
+    bool blocked = false;
+
+    // Handle GET operations with AdBlock
+    if (op == QNetworkAccessManager::GetOperation)
+        blocked = AdBlockManager::self()->blockRequest(req);
+
+    if (!blocked) {
         if (KProtocolInfo::isHelperProtocol(req.url())) {
             (void) new KRun(req.url(), qobject_cast<QWidget*>(req.originatingObject()));
             return new NullNetworkReply(req, this);
         }
+        // set our "nice" accept-language header...
+        QNetworkRequest request = req;
+        request.setRawHeader("Accept-Language", mAcceptLanguage);
+
         return KIO::AccessManager::createRequest(op, req, outgoingData);
     }
 
     QWebFrame* frame = qobject_cast<QWebFrame*>(req.originatingObject());
     if (frame) {
         if (!m_blockedRequests.contains(frame))
-            connect(frame, SIGNAL(loadFinished(bool)), this, SLOT(slotFinished(bool)));
+            connect(frame, SIGNAL(loadFinished(bool)), this, SLOT(slotApplyHidingBlockedElements(bool)));
         m_blockedRequests.insert(frame, req.url());
     }
 
@@ -120,17 +125,17 @@ static void hideBlockedElements(const QUrl& url, QWebElementCollection& collecti
     }
 }
 
-void MyNetworkAccessManager::slotFinished(bool ok)
+void MyNetworkAccessManager::slotApplyHidingBlockedElements(bool ok)
 {
     if (!ok)
         return;
 
     if(!GlobalSettings::self()->adBlockEnabled())
         return;
-#if 0
-    if(!WebKitSettings::self()->isHideAdsEnabled())
+
+    if(!GlobalSettings::self()->hideAdsEnabled())
         return;
-#endif
+
     QWebFrame* frame = qobject_cast<QWebFrame*>(sender());
     if (!frame)
         return;
