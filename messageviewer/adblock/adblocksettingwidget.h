@@ -32,7 +32,7 @@
 
 // Ui Includes
 #include "ui_settings_adblock.h"
-
+#include "messageviewer_export.h"
 // KDE Includes
 #include <KSharedConfig>
 
@@ -40,7 +40,7 @@
 #include <QWidget>
 
 namespace MessageViewer {
-class AdBlockSettingWidget : public QWidget, private Ui::adblock
+class MESSAGEVIEWER_EXPORT AdBlockSettingWidget : public QWidget, private Ui::adblock
 {
     Q_OBJECT
 
