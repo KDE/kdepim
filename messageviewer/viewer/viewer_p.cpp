@@ -323,9 +323,9 @@ KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
          node= mMessage->content( KMime::ContentIndex( path ) );
     }
   } else {
-    QString path = url.toLocalFile();
-    uint right = path.lastIndexOf( QLatin1Char('/') );
-    uint left = path.lastIndexOf( QLatin1Char('.'), right );
+    const QString path = url.toLocalFile();
+    const uint right = path.lastIndexOf( QLatin1Char('/') );
+    const uint left = path.lastIndexOf( QLatin1Char('.'), right );
 
     KMime::ContentIndex index(path.mid( left + 1, right - left - 1 ));
     node = mMessage->content( index );
@@ -835,9 +835,6 @@ void ViewerPrivate::enableMessageDisplay()
 
 void ViewerPrivate::displayMessage()
 {
-  /*FIXME(Andras) port to Akonadi
-  mMimePartTree->clearAndResetSortOrder();
-  */
   showHideMimeTree();
 
   mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
@@ -1835,6 +1832,10 @@ void ViewerPrivate::createActions()
   connect( mCaretBrowsing, SIGNAL(triggered(bool)), SLOT(slotToggleCaretBrowsing(bool)) );
   mCaretBrowsing->setChecked(false);
 #endif
+  mBlockImage = new KAction(i18n("Block image"), this);
+  ac->addAction(QLatin1String("adblock_image"), mBlockImage);
+  mBlockImage->setShortcutConfigurable( false );
+  connect( mBlockImage, SIGNAL(triggered(bool)), SLOT(slotBlockImage()) );
 }
 
 
@@ -3325,6 +3326,11 @@ void ViewerPrivate::slotAddToWhiteList()
             MessageViewer::GlobalSettings::self()->writeConfig();
         }
     }
+}
+
+void ViewerPrivate::slotBlockImage()
+{
+    //TODO
 }
 
 #include "viewer_p.moc"
