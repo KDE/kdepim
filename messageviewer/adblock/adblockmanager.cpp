@@ -239,7 +239,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
             && request.url().scheme() != QLatin1String("https"))
         return false;
 
-    QStringList whiteRefererList;//TODO PORT = ReKonfig::whiteReferer();
+    const QStringList whiteRefererList = GlobalSettings::self()->whiteReferer();
     const QString referer = QString::fromLatin1(request.rawHeader("referer"));
     Q_FOREACH(const QString & host, whiteRefererList)
     {
@@ -415,7 +415,7 @@ void AdBlockManager::applyHidingRules(bool ok)
         return;
 
     QString mainPageHost = page->loadingUrl().host();
-    QStringList hosts;//TODO PORT = ReKonfig::whiteReferer();
+    const QStringList hosts = GlobalSettings::self()->whiteReferer();
     if (hosts.contains(mainPageHost))
         return;
 
