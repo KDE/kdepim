@@ -203,6 +203,7 @@ set_target_properties(mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVER
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(filter/filterimporter/tests)
+add_subdirectory(folderdialog/tests/)
 
 #install(FILES viewer/viewer.h viewer/attachmentstrategy.h header/headerstrategy.h messageviewer_export.h DESTINATION ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
 
