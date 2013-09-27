@@ -23,6 +23,7 @@
 #include <QModelIndex>
 
 class QItemSelectionModel;
+class KRecursiveFilterProxyModel;
 namespace Akonadi {
 class EntityTreeModel;
 class ChangeRecorder;
@@ -55,7 +56,7 @@ private:
     Akonadi::EntityTreeModel *mModel;
     Akonadi::ChangeRecorder *mChangeRecorder;
     KCheckableProxyModel *mCheckProxy;
-    Akonadi::EntityRightsFilterModel *mCollectionFilter;
+    KRecursiveFilterProxyModel *mCollectionFilter;
 };
 }
 

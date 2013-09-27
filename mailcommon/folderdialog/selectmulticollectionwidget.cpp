@@ -24,6 +24,7 @@
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/EntityRightsFilterModel>
 #include <KMime/Message>
+#include <KRecursiveFilterProxyModel>
 
 #include <KCheckableProxyModel>
 #include <KLineEdit>
@@ -81,9 +82,7 @@ void SelectMultiCollectionWidget::initialize()
     connect(mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(slotCollectionsInserted(QModelIndex,int,int)));
 
-
-    mCollectionFilter = new Akonadi::EntityRightsFilterModel(this);
-    //mCollectionFilter->addContentMimeTypeInclusionFilter(QLatin1String("message/rfc822"));
+    mCollectionFilter = new KRecursiveFilterProxyModel(this);
     mCollectionFilter->setSourceModel(mCheckProxy);
     mCollectionFilter->setDynamicSortFilter(true);
     mCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
