@@ -45,7 +45,7 @@ class AdBlockSettingWidget : public QWidget, private Ui::adblock
     Q_OBJECT
 
 public:
-    explicit AdBlockSettingWidget(KSharedConfig::Ptr config, QWidget *parent = 0);
+    explicit AdBlockSettingWidget(QWidget *parent = 0);
 
     bool changed() const;
 

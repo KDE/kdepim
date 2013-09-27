@@ -44,12 +44,13 @@
 #include <QTextStream>
 
 using namespace MessageViewer;
-AdBlockSettingWidget::AdBlockSettingWidget(KSharedConfig::Ptr config, QWidget *parent)
+AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     : QWidget(parent)
     , _changed(false)
-    , _adblockConfig(config)
 {
     setupUi(this);
+
+    _adblockConfig = KSharedConfig::openConfig(QLatin1String("adblockrc"), KConfig::SimpleConfig, "appdata");
 
     hintLabel->setText(i18n("<qt>Filter expression (e.g. <tt>http://www.example.com/ad/*</tt>, <a href=\"filterhelp\">more information</a>):"));
     connect(hintLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotInfoLinkActivated(QString)));
@@ -200,8 +201,7 @@ void AdBlockSettingWidget::save()
     QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
 
     QFile ruleFile(localRulesFilePath);
-    if (!ruleFile.open(QFile::WriteOnly | QFile::Text))
-    {
+    if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
         kDebug() << "Unable to open rule file" << localRulesFilePath;
         return;
     }

@@ -183,7 +183,6 @@ private:
 
 private Q_SLOTS:
     void loadSettings();
-    void showSettings();
 
     void slotFinished(KJob *);
 

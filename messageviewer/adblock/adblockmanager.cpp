@@ -30,9 +30,6 @@
 
 #include "settings/globalsettings.h"
 
-// Local Includes
-#include "adblocksettingwidget.h"
-
 #include "webpage.h"
 
 // KDE Includes
@@ -331,26 +328,6 @@ bool AdBlockManager::subscriptionFileExists(int i)
     QString rulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_") + n);
     return QFile::exists(rulesFilePath);
 }
-
-
-void AdBlockManager::showSettings()
-{
-    // at this point, the settings should be loaded
-    _settingsLoaded.waitForFinished();
-
-    QPointer<KDialog> dialog = new KDialog();
-    dialog->setCaption(i18nc("@title:window", "Ad Block Settings"));
-    dialog->setButtons(KDialog::Ok | KDialog::Cancel);
-
-    AdBlockSettingWidget widget(_adblockConfig);
-    dialog->setMainWidget(&widget);
-    connect(dialog, SIGNAL(okClicked()), &widget, SLOT(save()));
-    connect(dialog, SIGNAL(okClicked()), this, SLOT(loadSettings()));
-    dialog->exec();
-
-    dialog->deleteLater();
-}
-
 
 void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 {
