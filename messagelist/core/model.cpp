@@ -380,7 +380,10 @@ bool ModelPrivate::applyFilterToSubtree( Item * item, const QModelIndex &parentI
   // This function applies the current filter (eventually empty)
   // to a message tree starting at "item".
 
-  Q_ASSERT( mModelForItemFunctions );  // The UI must be not disconnected
+  if ( !mModelForItemFunctions ) {
+    kWarning() << "Cannot apply filter, the UI must be not disconnected.";
+    return;
+  }
   Q_ASSERT( item );                    // the item must obviously be valid
   Q_ASSERT( item->isViewable() );      // the item must be viewable
 
