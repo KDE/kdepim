@@ -266,10 +266,14 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
 
     void changeColumns( int numColumns );
 
+    AgendaItem::List agendaItems( Akonadi::Entity::Id id ) const;
+
     // insertAtDateTime is in the view's timezone
     void insertIncidence( const Akonadi::Item &,
                           const KDateTime &insertAtDateTime, bool createSelected );
     void reevaluateIncidence( const KCalCore::Incidence::Ptr &incidence );
+
+    bool datesEqual( const KCalCore::Incidence::Ptr &one, const KCalCore::Incidence::Ptr &two ) const;
 
     /**
      * Returns false if the incidence is for sure outside of the visible timespan.
@@ -287,6 +291,34 @@ class AgendaView::Private : public Akonadi::ETMCalendar::CalendarObserver
     void calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence );
     void calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence );
 };
+
+bool AgendaView::Private::datesEqual( const KCalCore::Incidence::Ptr &one, const KCalCore::Incidence::Ptr &two ) const
+{
+  const KDateTime start1 = one->dtStart();
+  const KDateTime start2 = two->dtStart();
+  const KDateTime end1   = one->dateTime( KCalCore::Incidence::RoleDisplayEnd );
+  const KDateTime end2   = two->dateTime( KCalCore::Incidence::RoleDisplayEnd );
+
+  if ( start1.isValid() ^ start2.isValid() )
+    return false;
+
+  if ( end1.isValid() ^ end2.isValid() )
+    return false;
+
+  if ( start1.isValid() && start1 != start2 )
+    return false;
+
+  if ( end1.isValid() && end1 != end2 )
+    return false;
+
+  return true;
+}
+
+AgendaItem::List AgendaView::Private::agendaItems( Akonadi::Item::Id id ) const
+{
+  AgendaItem::List allDayAgendaItems = mAllDayAgenda->agendaItems( id );
+  return allDayAgendaItems.isEmpty() ? mAgenda->agendaItems( id ) : allDayAgendaItems;
+}
 
 bool AgendaView::Private::mightBeVisible( const KCalCore::Incidence::Ptr &incidence ) const
 {
@@ -394,10 +426,35 @@ void AgendaView::Private::calendarIncidenceAdded( const KCalCore::Incidence::Ptr
 void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( !incidence || incidence->uid().isEmpty() ) {
-    kError() << "AgendaView::Private::calendarIncidenceChanged() Invalid incidence or empty UID. " << incidence;
+    kError() << "AgendaView::calendarIncidenceChanged() Invalid incidence or empty UID. " << incidence;
     Q_ASSERT( false );
     return;
   }
+
+  Akonadi::Item item = q->calendar()->item( incidence->uid() );
+  if ( !item.isValid() ) {
+    kWarning() << "AgendaView::calendarIncidenceChanged() Invalid item for incidence " << incidence->uid();
+    return;
+  }
+
+  AgendaItem::List agendaItems = this->agendaItems( item.id() );
+  if ( agendaItems.isEmpty() ) {
+    kWarning() << "AgendaView::calendarIncidenceChanged() Invalid agendaItem for incidence " << incidence->uid();
+    return;
+  }
+
+  // Optimization: If the dates didn't change, just repaint it.
+  if ( !incidence->recurs() && agendaItems.count() == 1 ) {
+    KCalCore::Incidence::Ptr originalIncidence = agendaItems.first()->incidence().payload<KCalCore::Incidence::Ptr>();
+    if ( datesEqual( originalIncidence, incidence ) ) {
+      qDebug() << "DEBUG calendarIncidenceChanged() Ignoring incidence update!";
+      foreach ( const AgendaItem::QPtr &agendaItem, agendaItems ) {
+        agendaItem->update();
+      }
+      return;
+    }
+  }
+
 
   if ( incidence->hasRecurrenceId() ) {
     // Reevaluate the main event instead

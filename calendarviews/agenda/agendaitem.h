@@ -81,6 +81,7 @@ class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
   Q_OBJECT
   public:
     typedef QPointer<AgendaItem> QPtr;
+    typedef QList<QPtr> List;
 
     AgendaItem( EventView *eventView,
                 const Akonadi::ETMCalendar::Ptr &calendar,

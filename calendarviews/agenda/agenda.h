@@ -93,6 +93,8 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     QScrollArea *scrollArea() const;
 
+    AgendaItem::List agendaItems( Akonadi::Entity::Id id ) const;
+
     /**
       Returns the uid of the last incidence that was selected. This
       persists across reloads and clear, so that if the same uid

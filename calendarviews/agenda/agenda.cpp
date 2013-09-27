@@ -55,6 +55,7 @@
 #include <QTimer>
 #include <QHash>
 #include <QWheelEvent>
+#include <QMultiHash>
 
 #include <cmath> // for fabs()
 
@@ -231,7 +232,7 @@ class Agenda::Private
       return mItemsQueuedForDeletion.contains( id );
     }
 
-    QHash<Akonadi::Item::Id, AgendaItem::QPtr> mAgendaItemsById;
+    QMultiHash<Akonadi::Item::Id, AgendaItem::QPtr> mAgendaItemsById; // It's a QMultiHash because recurring incidences might have many agenda items
     QSet<Akonadi::Item::Id> mItemsQueuedForDeletion;
 
     AgendaView *mAgendaView;
@@ -1782,11 +1783,6 @@ AgendaItem::QPtr Agenda::createAgendaItem( const Akonadi::Item &item, int itemPo
     return AgendaItem::QPtr();
   }
 
-  if ( d->mAgendaItemsById.contains( item.id() ) ) {
-    kWarning() << "Agenda::createAgendaItem() item is already present " << item.id();
-    return AgendaItem::QPtr();
-  }
-
   AgendaItem::QPtr agendaItem = new AgendaItem( d->mAgendaView, d->mCalendar, item,
                                                 itemPos, itemCount, qd, isSelected, this );
 
@@ -1834,6 +1830,7 @@ void Agenda::insertMultiItem( const Akonadi::Item &event, const KDateTime &occur
       newtext.append( ev->summary() );
 
       current = insertItem( event, occurrenceDateTime, cellX, cellYTop, cellYBottom, count, width, isSelected );
+      Q_ASSERT( current );
       current->setText( newtext );
       multiItems.append( current );
     }
@@ -1870,26 +1867,35 @@ void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
     return;
   }
 
-  Akonadi::Item item = d->mCalendar->item( incidence->instanceIdentifier() );
-  if ( !item.isValid() ) {
-    kWarning() << "Agenda::removeIncidence() Item to remove is invalid. uid = "
-               << incidence->instanceIdentifier();
-    return;
+  // we get the id from the property, because the item might have been deleted from the etm/mCalendar
+  bool ok = false;
+  Akonadi::Item::Id id = incidence->customProperty( "VOLATILE", "AKONADI-ID" ).toLongLong( &ok );
+
+  if ( id == -1 || !ok ) {
+    id = d->mCalendar->item( incidence->instanceIdentifier() ).id();
+
+    if ( id == -1 ) {
+      // Ok, we really don't know the ID, give up.
+      kWarning() << "Agenda::removeIncidence() Item to remove is invalid. uid = "
+                 << incidence->instanceIdentifier();
+      return;
+    }
   }
 
-  if ( d->isQueuedForDeletion( item.id() ) ) {
+  if ( d->isQueuedForDeletion( id ) ) {
     return; // It's already queued for deletion
   }
 
-  AgendaItem::QPtr agendaItem = d->mAgendaItemsById.value( item.id() );
-  if ( !agendaItem ) {
-      kWarning() << "Agenda::removeIncidence() AgendaItem to remove is invalid. uid = "
-                 << incidence->instanceIdentifier();
+  AgendaItem::List agendaItems = d->mAgendaItemsById.values( id );
+  if ( agendaItems.isEmpty() ) {
+    kWarning() << "Agenda::removeIncidence() AgendaItem to remove is invalid. uid = "
+               << incidence->instanceIdentifier();
     return;
   }
-
-  if ( !removeAgendaItem( agendaItem ) ) {
-    kWarning() << "Agenda::removeIncidence() Failed to remove " << incidence->uid();
+  foreach ( const AgendaItem::QPtr &agendaItem, agendaItems ) {
+    if ( !removeAgendaItem( agendaItem ) ) {
+      kWarning() << "Agenda::removeIncidence() Failed to remove " << incidence->uid();
+    }
   }
 }
 
@@ -1920,7 +1926,7 @@ bool Agenda::removeAgendaItem( AgendaItem::QPtr agendaItem )
   // removeChild( thisItem );
 
   taken = d->mItems.removeAll( agendaItem ) > 0;
-  d->mAgendaItemsById.remove( agendaItem->incidence().id() );
+  d->mAgendaItemsById.remove( agendaItem->incidence().id(), agendaItem );
 
   QList<AgendaItem::QPtr>::iterator it;
   for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
@@ -2254,6 +2260,11 @@ QScrollBar * Agenda::verticalScrollBar() const
 QScrollArea *Agenda::scrollArea() const
 {
   return d->mScrollArea;
+}
+
+AgendaItem::List Agenda::agendaItems( Akonadi::Item::Id id ) const
+{
+  return d->mAgendaItemsById.values( id );
 }
 
 AgendaScrollArea::AgendaScrollArea( bool isAllDay, AgendaView *agendaView,
