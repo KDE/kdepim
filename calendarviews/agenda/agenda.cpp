@@ -1888,8 +1888,8 @@ void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 
   AgendaItem::List agendaItems = d->mAgendaItemsById.values( id );
   if ( agendaItems.isEmpty() ) {
-    kWarning() << "Agenda::removeIncidence() AgendaItem to remove is invalid. uid = "
-               << incidence->instanceIdentifier();
+    // We're not displaying such item
+    // kDebug() << "Ignoring";
     return;
   }
   foreach ( const AgendaItem::QPtr &agendaItem, agendaItems ) {
