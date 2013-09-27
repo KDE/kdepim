@@ -128,7 +128,7 @@ void AdBlockManager::loadSettings()
 
     QDateTime today = QDateTime::currentDateTime();
     QDateTime lastUpdate = QDateTime::fromString(settingsGroup.readEntry("lastUpdate", QString()));
-    int days = settingsGroup.readEntry("updateInterval", 7);
+    int days = GlobalSettings::self()->adBlockUpdateInterval();
 
     bool allSubscriptionsNeedUpdate = (today > lastUpdate.addDays(days));
     if (allSubscriptionsNeedUpdate)
@@ -156,13 +156,13 @@ void AdBlockManager::loadSettings()
         }
         else
         {
-            QString rulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_") + n);
+            const QString rulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_") + n);
             loadRules(rulesFilePath);
         }
     }
 
     // load local rules
-    QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
     loadRules(localRulesFilePath);
 }
 
@@ -170,8 +170,7 @@ void AdBlockManager::loadSettings()
 void AdBlockManager::loadRules(const QString &rulesFilePath)
 {
     QFile ruleFile(rulesFilePath);
-    if (!ruleFile.open(QFile::ReadOnly | QFile::Text))
-    {
+    if (!ruleFile.open(QFile::ReadOnly | QFile::Text)) {
         kDebug() << "Unable to open rule file" << rulesFilePath;
         return;
     }

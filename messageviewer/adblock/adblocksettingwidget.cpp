@@ -115,10 +115,6 @@ void AdBlockSettingWidget::removeRule()
 
 void AdBlockSettingWidget::load()
 {
-    // General settings
-    KConfigGroup settingsGroup(_adblockConfig, "Settings");
-
-
     checkEnableAdblock->setChecked(GlobalSettings::self()->adBlockEnabled());
 
     // update enabled status
@@ -127,7 +123,7 @@ void AdBlockSettingWidget::load()
 
     checkHideAds->setChecked(GlobalSettings::self()->hideAdsEnabled());
 
-    const int days = settingsGroup.readEntry("updateInterval", 7);
+    const int days = GlobalSettings::self()->adBlockUpdateInterval();
     spinBox->setValue(days);
 
     // ------------------------------------------------------------------------------
@@ -184,15 +180,13 @@ void AdBlockSettingWidget::save()
         return;
 
     // General settings
-    KConfigGroup settingsGroup(_adblockConfig, "Settings");
     GlobalSettings::self()->setHideAdsEnabled(checkHideAds->isChecked());
     GlobalSettings::self()->setAdBlockEnabled(checkHideAds->isChecked());
-    settingsGroup.writeEntry("updateInterval", spinBox->value());
+    GlobalSettings::self()->setAdBlockUpdateInterval(spinBox->value());
 
     // automatic filters
     KConfigGroup autoFiltersGroup(_adblockConfig, "FiltersList");
-    for (int i = 0; i < automaticFiltersListWidget->count(); ++i)
-    {
+    for (int i = 0; i < automaticFiltersListWidget->count(); ++i) {
         QListWidgetItem *subItem = automaticFiltersListWidget->item(i);
         bool active = true;
         if (subItem->checkState() == Qt::Unchecked)
