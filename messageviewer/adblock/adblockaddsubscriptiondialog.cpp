@@ -29,7 +29,6 @@ AdBlockAddSubscriptionDialog::AdBlockAddSubscriptionDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Add subscription") );
-    setAttribute( Qt::WA_DeleteOnClose );
     setButtons( Ok|Close );
     QWidget *w = new QWidget;
     QHBoxLayout *lay = new QHBoxLayout;

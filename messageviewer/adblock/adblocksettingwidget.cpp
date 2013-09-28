@@ -53,8 +53,6 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 {
     setupUi(this);
 
-    _adblockConfig = KSharedConfig::openConfig(QLatin1String("adblockrc"), KConfig::SimpleConfig, "appdata");
-
     hintLabel->setText(i18n("<qt>Filter expression (e.g. <tt>http://www.example.com/ad/*</tt>, <a href=\"filterhelp\">more information</a>):"));
     connect(hintLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotInfoLinkActivated(QString)));
 
@@ -124,36 +122,37 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     // update enabled status
     checkHideAds->setEnabled(GlobalSettings::self()->adBlockEnabled());
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
-
     checkHideAds->setChecked(GlobalSettings::self()->hideAdsEnabled());
-
     const int days = GlobalSettings::self()->adBlockUpdateInterval();
     spinBox->setValue(days);
 
     // ------------------------------------------------------------------------------
 
     // automatic filters
-    KConfigGroup autoFiltersGroup(_adblockConfig, "FiltersList");
+    KConfig config(QLatin1String("messagevieweradblockrc"));
 
-    int i = 1;
-    QString n = QString::number(i);
-
-    while (autoFiltersGroup.hasKey(QLatin1String("FilterName-") + n))
-    {
-        bool filterEnabled = autoFiltersGroup.readEntry(QLatin1String("FilterEnabled-") + n, false);
-        QString filterName = autoFiltersGroup.readEntry(QLatin1String("FilterName-") + n, QString());
+    const QStringList itemList = config.groupList().filter( QRegExp( QLatin1String("FilterList \\d+") ) );
+    Q_FOREACH(const QString &item, itemList) {
+        KConfigGroup filtersGroup(&config, item);
+        const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled"), false);
+        const QString url = filtersGroup.readEntry(QLatin1String("url"));
+        const QString path = filtersGroup.readEntry(QLatin1String("path"));
+        const QString name = filtersGroup.readEntry(QLatin1String("name"));
+        const QDateTime lastUpdate = filtersGroup.readEntry(QLatin1String("lastUpdate"), QDateTime());
+        if (url.isEmpty() || path.isEmpty() || name.isEmpty())
+            continue;
 
         QListWidgetItem *subItem = new QListWidgetItem(automaticFiltersListWidget);
         subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
-        if (filterEnabled)
+        if (isFilterEnabled)
             subItem->setCheckState(Qt::Checked);
         else
             subItem->setCheckState(Qt::Unchecked);
 
-        subItem->setText(filterName);
-
-        i++;
-        n = QString::number(i);
+        subItem->setData(UrlList, url);
+        subItem->setData(PathList, path);
+        subItem->setData(LastUpdateList, lastUpdate);
+        subItem->setText(name);
     }
 
     // ------------------------------------------------------------------------------
@@ -162,15 +161,13 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
 
     QFile ruleFile(localRulesFilePath);
-    if (!ruleFile.open(QFile::ReadOnly | QFile::Text))
-    {
+    if (!ruleFile.open(QFile::ReadOnly | QFile::Text)) {
         kDebug() << "Unable to open rule file" << localRulesFilePath;
         return;
     }
 
     QTextStream in(&ruleFile);
-    while (!in.atEnd())
-    {
+    while (!in.atEnd()) {
         QString stringRule = in.readLine();
         QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
         subItem->setText(stringRule);
@@ -189,17 +186,28 @@ void AdBlockSettingWidget::save()
     GlobalSettings::self()->setAdBlockUpdateInterval(spinBox->value());
 
     // automatic filters
-    KConfigGroup autoFiltersGroup(_adblockConfig, "FiltersList");
-    for (int i = 0; i < automaticFiltersListWidget->count(); ++i) {
-        QListWidgetItem *subItem = automaticFiltersListWidget->item(i);
-        bool active = true;
-        if (subItem->checkState() == Qt::Unchecked)
-            active = false;
-
-        const QString n = QString::number(i + 1);
-        autoFiltersGroup.writeEntry(QLatin1String("FilterEnabled-") + n, active);
+    KConfig config(QLatin1String("messagevieweradblockrc"));
+    const QStringList list = config.groupList().filter( QRegExp( QLatin1String("MessageListTab\\d+") ) );
+    foreach ( const QString &group, list ) {
+        config.deleteGroup( group );
     }
 
+    const int numberItem(automaticFiltersListWidget->count());
+    for (int i = 0; i < numberItem; ++i) {
+        QListWidgetItem *subItem = automaticFiltersListWidget->item(i);
+        KConfigGroup grp = config.group(QString::fromLatin1("FilterList %1").arg(i));
+        grp.writeEntry(QLatin1String("FilterEnabled"), subItem->checkState() == Qt::Checked);
+        grp.writeEntry(QLatin1String("url"), subItem->data(UrlList).toString());
+        grp.writeEntry(QLatin1String("name"), subItem->text());
+        grp.writeEntry(QLatin1String("lastUpdate"), subItem->data(LastUpdateList).toDateTime());
+        QString path = subItem->data(PathList).toString();
+        if (path.isEmpty()) {
+            path = KStandardDirs::locateLocal("appdata", QString::fromLatin1("adblockrules-%1").arg(i));
+        }
+        grp.writeEntry(QLatin1String("path"), path);
+    }
+
+    config.sync();
     // local filters
     QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
 
@@ -242,7 +250,16 @@ void AdBlockSettingWidget::slotAddFilter()
 {
     QPointer<MessageViewer::AdBlockAddSubscriptionDialog> dlg = new MessageViewer::AdBlockAddSubscriptionDialog(this);
     if (dlg->exec()) {
-        //TODO
+        QString name;
+        QString url;
+        dlg->selectedList(name, url);
+        QListWidgetItem *subItem = new QListWidgetItem(automaticFiltersListWidget);
+        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+        subItem->setCheckState(Qt::Checked);
+        subItem->setText(name);
+        subItem->setData(UrlList, url);
+        subItem->setData(LastUpdateList, QDateTime());
+        subItem->setData(PathList, QString());
     }
     delete dlg;
 }
@@ -251,7 +268,13 @@ void AdBlockSettingWidget::slotRemoveSubscription()
 {
     if (automaticFiltersListWidget->currentItem()) {
         if (KMessageBox::questionYesNo(this, i18n("Do you want to delete current list?"), i18n("Delete current list")) == KMessageBox::Yes) {
-            //TODO
+            QListWidgetItem *item = automaticFiltersListWidget->takeItem(automaticFiltersListWidget->currentRow());
+            QString path = item->data(PathList).toString();
+            if (!path.isEmpty()) {
+                if (!QFile(path).remove())
+                    qDebug()<<" we can remove file:"<<path;
+            }
+            delete item;
         }
     }
 }

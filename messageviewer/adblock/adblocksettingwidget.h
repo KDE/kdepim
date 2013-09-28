@@ -28,13 +28,8 @@
 #ifndef AD_BLOCK_SETTINGS_WIDGET_H
 #define AD_BLOCK_SETTINGS_WIDGET_H
 
-
-
-// Ui Includes
 #include "ui_settings_adblock.h"
 #include "messageviewer_export.h"
-// KDE Includes
-#include <KSharedConfig>
 
 // Qt Includes
 #include <QWidget>
@@ -66,9 +61,13 @@ private Q_SLOTS:
     void slotRemoveSubscription();
 
 private:
+    enum List {
+        UrlList = Qt::UserRole + 1,
+        PathList = Qt::UserRole + 2,
+        LastUpdateList = Qt::UserRole + 3
+    };
 
     bool _changed;
-    KSharedConfig::Ptr _adblockConfig;
 };
 }
 
