@@ -54,7 +54,7 @@ void AdBlockAddSubscriptionDialog::initializeList()
     QMapIterator<QString, QString> i(MessageViewer::AdBlockUtil::listSubscriptions());
     while (i.hasNext()) {
         i.next();
-        mListSubscription->addItem(i.value(), i.key());
+        mListSubscription->addItem(i.key(), i.value());
     }
 }
 

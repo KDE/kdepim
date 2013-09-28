@@ -68,7 +68,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     removeButton->setIcon(KIcon(QLatin1String("list-remove")));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removeRule()));
-    connect(removeSubscription, SIGNAL(clicked()), SIGNAL(slotRemoveSubscription()));
+    connect(removeSubscription, SIGNAL(clicked()), SLOT(slotRemoveSubscription()));
 
     spinBox->setSuffix(ki18np(" day", " days"));
 
