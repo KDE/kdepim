@@ -29,7 +29,8 @@
 
 using namespace MessageViewer;
 AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
-    : KDialog(parent)
+    : KDialog(parent),
+      mTemporaryFile(0)
 {
     setCaption( i18n("Show adblock list") );
     setButtons( Close );
@@ -39,7 +40,7 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     (void)new MessageViewer::AdBlockSyntaxHighlighter(mTextEdit->editor()->document());
     mTextEdit->editor()->setReadOnly(true);
     lay->addWidget(mTextEdit);
-
+    w->setLayout(lay);
     setMainWidget(w);
 }
 
@@ -91,14 +92,13 @@ void AdBlockShowListDialog::slotFinished(KJob *job)
 {
     if (job->error())
         return;
-    mTemporaryFile->close();
 
     QFile f(mTemporaryFile->fileName());
-    if (!f.open(QIODevice::Text)) {
+    if (!f.open(QIODevice::ReadOnly|QIODevice::Text)) {
         return;
-        mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
     }
-
+    mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
+    mTemporaryFile->close();
 }
 
 

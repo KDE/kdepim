@@ -31,6 +31,7 @@
 #include "settings/globalsettings.h"
 #include "adblockaddsubscriptiondialog.h"
 #include "adblockmanager.h"
+#include "adblockshowlistdialog.h"
 
 // KDE Includes
 #include <KSharedConfig>
@@ -71,6 +72,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     spinBox->setSuffix(ki18np(" day", " days"));
 
     removeSubscription->setEnabled(false);
+    showList->setEnabled(false);
     // emit changed signal
     connect(insertButton,       SIGNAL(clicked()),           this, SLOT(hasChanged()));
     connect(removeButton,       SIGNAL(clicked()),           this, SLOT(hasChanged()));
@@ -78,6 +80,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(checkHideAds,       SIGNAL(stateChanged(int)),   this, SLOT(hasChanged()));
     connect(spinBox,            SIGNAL(valueChanged(int)),   this, SLOT(hasChanged()));
     connect(addFilters, SIGNAL(clicked()), this, SLOT(slotAddFilter()));
+    connect(showList, SIGNAL(clicked()), this, SLOT(slotShowList()));
 
     connect(automaticFiltersListWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(hasChanged()));
     connect(automaticFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateButtons()));
@@ -86,7 +89,9 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
 void AdBlockSettingWidget::slotUpdateButtons()
 {
-    removeSubscription->setEnabled(automaticFiltersListWidget->currentItem());
+    const bool enabled = automaticFiltersListWidget->currentItem();
+    removeSubscription->setEnabled(enabled);
+    showList->setEnabled(enabled);
 }
 
 void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
@@ -287,6 +292,17 @@ void AdBlockSettingWidget::slotRemoveSubscription()
             }
             delete item;
         }
+    }
+}
+
+void AdBlockSettingWidget::slotShowList()
+{
+    QListWidgetItem *item = automaticFiltersListWidget->currentItem();
+    if (item) {
+        QPointer<AdBlockShowListDialog> dlg = new AdBlockShowListDialog(this);
+        dlg->setAdBlockListPath(item->data(PathList).toString(), item->data(UrlList).toString());
+        dlg->exec();
+        delete dlg;
     }
 }
 

@@ -38,15 +38,15 @@
        <string>Automatic Filters</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0" rowspan="3">
-        <widget class="MessageViewer::AdBlockListWidget" name="automaticFiltersListWidget"/>
-       </item>
        <item row="0" column="1">
         <widget class="QPushButton" name="addFilters">
          <property name="text">
           <string>Add Filters subscriptions...</string>
          </property>
         </widget>
+       </item>
+       <item row="0" column="0" rowspan="4">
+        <widget class="MessageViewer::AdBlockListWidget" name="automaticFiltersListWidget"/>
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="removeSubscription">
@@ -55,7 +55,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -68,7 +68,7 @@
          </property>
         </spacer>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QLabel" name="label_3">
@@ -107,6 +107,13 @@
           </spacer>
          </item>
         </layout>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="showList">
+         <property name="text">
+          <string>Show List...</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -200,7 +207,6 @@
    <header>messageviewer/adblock/adblocklistwidget.h</header>
    <container>1</container>
   </customwidget>
-
   <customwidget>
    <class>KListWidgetSearchLine</class>
    <extends>KLineEdit</extends>
