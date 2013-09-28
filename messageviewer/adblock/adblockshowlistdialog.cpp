@@ -73,7 +73,6 @@ void AdBlockShowListDialog::setAdBlockListPath(const QString &localPath, const Q
         if (file.exists()) {
             mTextEdit->editor()->setPlainText(QString::fromUtf8(file.readAll()));
         } else {
-            //TODO fix it.
             downLoadList(url);
         }
     } else {
