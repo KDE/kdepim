@@ -39,6 +39,8 @@ private Q_SLOTS:
     void slotFinished(KJob *job);
 
 private:
+    void readConfig();
+    void writeConfig();
     void downLoadList(const QString &url);
 
     PimCommon::PlainTextEditorWidget *mTextEdit;

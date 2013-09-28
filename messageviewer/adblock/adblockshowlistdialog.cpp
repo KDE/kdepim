@@ -42,11 +42,28 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     lay->addWidget(mTextEdit);
     w->setLayout(lay);
     setMainWidget(w);
+    readConfig();
 }
 
 AdBlockShowListDialog::~AdBlockShowListDialog()
 {
     delete mTemporaryFile;
+    writeConfig();
+}
+
+void AdBlockShowListDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AdBlockShowListDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void AdBlockShowListDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AdBlockShowListDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
 }
 
 void AdBlockShowListDialog::setAdBlockListPath(const QString &localPath, const QString &url)
