@@ -20,6 +20,11 @@
 
 #include <KDialog>
 
+class KJob;
+class KTemporaryFile;
+namespace PimCommon {
+class PlainTextEditorWidget;
+}
 namespace MessageViewer {
 class AdBlockShowListDialog : public KDialog
 {
@@ -27,6 +32,17 @@ class AdBlockShowListDialog : public KDialog
 public:
     explicit AdBlockShowListDialog(QWidget *parent = 0);
     ~AdBlockShowListDialog();
+
+    void setAdBlockListPath(const QString &localPath, const QString &url);
+
+private Q_SLOTS:
+    void slotFinished(KJob *job);
+
+private:
+    void downLoadList(const QString &url);
+
+    PimCommon::PlainTextEditorWidget *mTextEdit;
+    KTemporaryFile *mTemporaryFile;
 };
 }
 

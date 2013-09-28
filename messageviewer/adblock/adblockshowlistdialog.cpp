@@ -16,8 +16,16 @@
 */
 
 #include "adblockshowlistdialog.h"
+#include "adblocksyntaxhighlighter.h"
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/plaintexteditor/plaintexteditor.h"
 
 #include <KLocale>
+#include <KIO/Job>
+#include <KTemporaryFile>
+
+#include <QHBoxLayout>
+#include <QDebug>
 
 using namespace MessageViewer;
 AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
@@ -25,11 +33,73 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
 {
     setCaption( i18n("Show adblock list") );
     setButtons( Close );
+    QWidget *w = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    mTextEdit = new PimCommon::PlainTextEditorWidget;
+    (void)new MessageViewer::AdBlockSyntaxHighlighter(mTextEdit->editor()->document());
+    mTextEdit->editor()->setReadOnly(true);
+    lay->addWidget(mTextEdit);
+
+    setMainWidget(w);
 }
 
 AdBlockShowListDialog::~AdBlockShowListDialog()
 {
+    delete mTemporaryFile;
+}
+
+void AdBlockShowListDialog::setAdBlockListPath(const QString &localPath, const QString &url)
+{
+    if (localPath.isEmpty()) {
+        QFile file(localPath);
+        if (file.exists()) {
+            mTextEdit->editor()->setPlainText(QString::fromUtf8(file.readAll()));
+        } else {
+            //TODO fix it.
+            downLoadList(url);
+        }
+    } else {
+        downLoadList(url);
+    }
+}
+
+void AdBlockShowListDialog::downLoadList(const QString &url)
+{
+    delete mTemporaryFile;
+    mTemporaryFile = new KTemporaryFile;
+    if (!mTemporaryFile->open()) {
+        qDebug()<<"can not open temporary file";
+        delete mTemporaryFile;
+        return;
+    }
+    KUrl subUrl = KUrl(url);
+
+    KUrl destUrl = KUrl(mTemporaryFile->fileName());
+
+    KIO::FileCopyJob* job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
+    job->metaData().insert(QLatin1String("ssl_no_client_cert"), QLatin1String("TRUE"));
+    job->metaData().insert(QLatin1String("ssl_no_ui"), QLatin1String("TRUE"));
+    job->metaData().insert(QLatin1String("UseCache"), QLatin1String("false"));
+    job->metaData().insert(QLatin1String("cookies"), QLatin1String("none"));
+    job->metaData().insert(QLatin1String("no-auth"), QLatin1String("true"));
+
+    connect(job, SIGNAL(finished(KJob*)), this, SLOT(slotFinished(KJob*)));
+}
+
+
+void AdBlockShowListDialog::slotFinished(KJob *job)
+{
+    if (job->error())
+        return;
+    mTemporaryFile->close();
+
+    QFile f(mTemporaryFile->fileName());
+    if (!f.open(QIODevice::Text)) {
+        return;
+        mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
+    }
 
 }
+
 
 #include "adblockshowlistdialog.moc"
