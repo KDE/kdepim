@@ -1873,12 +1873,6 @@ void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
   bool ok = false;
   Akonadi::Item::Id id = incidence->customProperty( "VOLATILE", "AKONADI-ID" ).toLongLong( &ok );
 
-  if ( agendaItemsToRemove.isEmpty() ) {
-    kWarning() << "Agenda::removeIncidence() Couldn't find any items to remove. UID=" << incidence->uid();
-  } else {
-    foreach ( const AgendaItem::QPtr &agendaItem, agendaItemsToRemove ) {
-      if ( !removeAgendaItem( agendaItem ) )
-        kWarning() << "Failed to remove " << incidence->uid();
   if ( id == -1 || !ok ) {
     id = d->mCalendar->item( incidence->instanceIdentifier() ).id();
 
