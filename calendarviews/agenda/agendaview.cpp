@@ -447,18 +447,20 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
   if ( !incidence->recurs() && agendaItems.count() == 1 ) {
     KCalCore::Incidence::Ptr originalIncidence = agendaItems.first()->incidence().payload<KCalCore::Incidence::Ptr>();
     if ( datesEqual( originalIncidence, incidence ) ) {
-      qDebug() << "DEBUG calendarIncidenceChanged() Ignoring incidence update!";
       foreach ( const AgendaItem::QPtr &agendaItem, agendaItems ) {
+        Akonadi::Item itemClone = item;
+        itemClone.setPayload<KCalCore::Incidence::Ptr>( KCalCore::Incidence::Ptr( incidence->clone() ) );
+        agendaItem->setIncidence( itemClone );
         agendaItem->update();
       }
       return;
     }
   }
 
-
   if ( incidence->hasRecurrenceId() ) {
-    // Reevaluate the main event instead
-    reevaluateIncidence( q->calendar()->incidence( incidence->uid() ) );
+    // Reevaluate the main event instead, if it exists
+    KCalCore::Incidence::Ptr mainIncidence = q->calendar()->incidence( incidence->uid() );
+    reevaluateIncidence( mainIncidence ? mainIncidence : incidence );
   } else {
     reevaluateIncidence( incidence );
   }
@@ -475,20 +477,23 @@ void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::P
     return;
   }
 
+  qDebug() << "DEBUG calendarIncidenceDeleted hasRec" << incidence->hasRecurrenceId();
+
   q->removeIncidence( incidence );
 
-  if ( incidence->hasRecurrenceId() ) {
-    // Reevaluate the main event instead.
-    // We need to remove this incidence first, because it's already no longer
-    // in the calendar (so the exception removal doesn't work)
-    reevaluateIncidence( q->calendar()->incidence( incidence->uid() ) );
+  if ( incidence->hasRecurrenceId()) {
+    // Reevaluate the main event, if it exists. The exception was removed so the main recurrent series
+    // will no be bigger.
+    KCalCore::Incidence::Ptr mainIncidence = q->calendar()->incidence( incidence->uid() );
+    if ( mainIncidence ) {
+      reevaluateIncidence( mainIncidence  );
+    }
   } else if ( mightBeVisible( incidence ) ) {
     // No need to call setChanges(), that triggers a fillAgenda()
+    // setChanges( q->changes() | IncidencesDeleted, CalendarSupport::incidence( incidence ) );
     mAgenda->checkScrollBoundaries();
     q->scheduleUpdateEventIndicators();
   }
-
-  //setChanges( q->changes() | IncidencesDeleted, CalendarSupport::incidence( incidence ) );
 }
 
 void EventViews::AgendaView::Private::setChanges( EventView::Changes changes,

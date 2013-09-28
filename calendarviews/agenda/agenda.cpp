@@ -229,7 +229,9 @@ class Agenda::Private
 
     bool isQueuedForDeletion( Akonadi::Item::Id id ) const
     {
-      return mItemsQueuedForDeletion.contains( id );
+      // if mAgendaItemsById contains it it means that a createAgendaItem() was called
+      // before the previous agenda items were deleted.
+      return mItemsQueuedForDeletion.contains( id ) && !mAgendaItemsById.contains( id );
     }
 
     QMultiHash<Akonadi::Item::Id, AgendaItem::QPtr> mAgendaItemsById; // It's a QMultiHash because recurring incidences might have many agenda items
@@ -1893,7 +1895,7 @@ void Agenda::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
     return;
   }
   foreach ( const AgendaItem::QPtr &agendaItem, agendaItems ) {
-    if ( !removeAgendaItem( agendaItem ) ) {
+    if ( agendaItem && !removeAgendaItem( agendaItem ) ) {
       kWarning() << "Agenda::removeIncidence() Failed to remove " << incidence->uid();
     }
   }
@@ -1920,6 +1922,7 @@ void Agenda::showAgendaItem( AgendaItem::QPtr agendaItem )
 
 bool Agenda::removeAgendaItem( AgendaItem::QPtr agendaItem )
 {
+  Q_ASSERT( agendaItem );
   // we found the item. Let's remove it and update the conflicts
   bool taken = false;
   QList<AgendaItem::QPtr> conflictItems = agendaItem->conflictItems();
