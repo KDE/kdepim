@@ -44,6 +44,7 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     lay->addWidget(mTextEdit);
 
     mProgress = new KPIMUtils::ProgressIndicatorLabel(i18n("Download..."));
+    lay->addWidget(mProgress);
     w->setLayout(lay);
     setMainWidget(w);
     readConfig();
