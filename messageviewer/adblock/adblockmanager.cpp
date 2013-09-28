@@ -119,7 +119,7 @@ void AdBlockManager::loadSettings()
     Q_FOREACH(const QString &item, itemList) {
         KConfigGroup filtersGroup(&config, item);
         const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled"), false);
-        if (isFilterEnabled) {
+        if (!isFilterEnabled) {
             continue;
         }
         const QString url = filtersGroup.readEntry(QLatin1String("url"));
