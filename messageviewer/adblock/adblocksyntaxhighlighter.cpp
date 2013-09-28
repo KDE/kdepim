@@ -27,7 +27,15 @@ AdBlockSyntaxHighlighter::AdBlockSyntaxHighlighter(QTextDocument *doc)
 
 AdBlockSyntaxHighlighter::~AdBlockSyntaxHighlighter()
 {
+    QTextCharFormat commentFormat;
+    commentFormat.setForeground( Qt::darkYellow );
+    QRegExp commentRegex( QLatin1String( "^!" ) );
+    m_rules.append( Rule( commentRegex, commentFormat ) );
 
+    QTextCharFormat exceptionFormat;
+    exceptionFormat.setForeground( Qt::green );
+    QRegExp exceptionRegex( QLatin1String( "^@@" ) );
+    m_rules.append( Rule( exceptionRegex, exceptionFormat ) );
 }
 
 void AdBlockSyntaxHighlighter::highlightBlock(const QString &text)
