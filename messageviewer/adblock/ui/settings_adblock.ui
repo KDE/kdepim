@@ -39,7 +39,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0" rowspan="3">
-        <widget class="QListWidget" name="automaticFiltersListWidget"/>
+        <widget class="MessageViewer::AdBlockListWidget" name="automaticFiltersListWidget"/>
        </item>
        <item row="0" column="1">
         <widget class="QPushButton" name="addFilters">
@@ -194,6 +194,13 @@
    <header>ktabwidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>MessageViewer::AdBlockListWidget</class>
+   <extends>QListWidget</extends>
+   <header>messageviewer/adblock/adblocklistwidget.h</header>
+   <container>1</container>
+  </customwidget>
+
   <customwidget>
    <class>KListWidgetSearchLine</class>
    <extends>KLineEdit</extends>
