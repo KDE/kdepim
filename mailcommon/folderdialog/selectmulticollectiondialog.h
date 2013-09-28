@@ -15,34 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SEARCHDEBUGNEPOMUKSHOWDIALOG_H
-#define SEARCHDEBUGNEPOMUKSHOWDIALOG_H
-
+#ifndef SELECTMULTICOLLECTIONDIALOG_H
+#define SELECTMULTICOLLECTIONDIALOG_H
+#include "mailcommon_export.h"
 #include <KDialog>
+#include <Akonadi/Collection>
 
-class KTextEdit;
-namespace PimCommon {
-class PlainTextEditorWidget;
-}
-
-class SearchDebugNepomukShowDialog : public KDialog
+namespace MailCommon {
+class SelectMultiCollectionWidget;
+class MAILCOMMON_EXPORT SelectMultiCollectionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SearchDebugNepomukShowDialog(const QString &nepomukId, QWidget *parent=0);
-    ~SearchDebugNepomukShowDialog();
+    explicit SelectMultiCollectionDialog(const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent = 0);
+    explicit SelectMultiCollectionDialog(QWidget *parent = 0);
+    ~SelectMultiCollectionDialog();
 
-private Q_SLOTS:
-    void slotSaveAs();
-    void slotSearchInfoWithNepomuk();
+    QList<Akonadi::Collection> selectedCollection() const;
 
 private:
-    void executeNepomukShow(const QString &nepomukId);
-    void readConfig();
+    void initialize(const QList<Akonadi::Collection::Id> &selectedCollection = QList<Akonadi::Collection::Id>());
     void writeConfig();
-
-private:
-    PimCommon::PlainTextEditorWidget *mResult;
+    void readConfig();
+    SelectMultiCollectionWidget *mSelectMultiCollection;
 };
+}
 
-#endif // SEARCHDEBUGNEPOMUKSHOWDIALOG_H
+#endif // SELECTMULTICOLLECTIONDIALOG_H

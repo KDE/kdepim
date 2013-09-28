@@ -51,6 +51,11 @@ else()
                        adblock/adblockrulenullimpl.cpp
                        adblock/adblockruletextmatchimpl.cpp
                        adblock/adblocksettingwidget.cpp
+                       adblock/adblockutil.cpp
+                       adblock/adblockaddsubscriptiondialog.cpp
+                       adblock/adblocklistwidget.cpp
+                       adblock/adblocksyntaxhighlighter.cpp
+                       adblock/adblockshowlistdialog.cpp
                        )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
@@ -180,3 +185,4 @@ install(FILES header/data/messageviewer_header_themes.knsrc DESTINATION ${CONFIG
 
 add_subdirectory(grantleefilters)
 add_subdirectory(scamdetection/tests)
+add_subdirectory(adblock/tests/)

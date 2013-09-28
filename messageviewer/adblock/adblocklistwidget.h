@@ -15,27 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef WEBPAGE_H
-#define WEBPAGE_H
+#ifndef ADBLOCKLISTWIDGET_H
+#define ADBLOCKLISTWIDGET_H
 
-#include <KWebPage>
-#include <KUrl>
+#include <QListWidget>
 
+class QPaintEvent;
 namespace MessageViewer {
-class WebPage : public KWebPage
+class AdBlockListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit WebPage(QWidget *parent = 0);
-    ~WebPage();
-    KUrl loadingUrl();
+    explicit AdBlockListWidget(QWidget *parent = 0);
+    ~AdBlockListWidget();
+
+private Q_SLOTS:
+    void slotGeneralPaletteChanged();
 
 protected:
-    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
+    void paintEvent( QPaintEvent *event );
 
 private:
-    KUrl mLoadingUrl;
+    QColor mTextColor;
 };
 }
 
-#endif // WEBPAGE_H
+#endif // ADBLOCKLISTWIDGET_H

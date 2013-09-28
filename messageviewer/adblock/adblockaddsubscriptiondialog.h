@@ -15,27 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef WEBPAGE_H
-#define WEBPAGE_H
+#ifndef ADBLOCKADDSUBSCRIPTIONDIALOG_H
+#define ADBLOCKADDSUBSCRIPTIONDIALOG_H
 
-#include <KWebPage>
-#include <KUrl>
+#include <KDialog>
+
+class QComboBox;
 
 namespace MessageViewer {
-class WebPage : public KWebPage
+
+class AdBlockAddSubscriptionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit WebPage(QWidget *parent = 0);
-    ~WebPage();
-    KUrl loadingUrl();
+    explicit AdBlockAddSubscriptionDialog(const QStringList &excludeList, QWidget *parent=0);
+    ~AdBlockAddSubscriptionDialog();
 
-protected:
-    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
+    void selectedList(QString &name, QString &url);
 
 private:
-    KUrl mLoadingUrl;
+    void initializeList(const QStringList &excludeList);
+    QComboBox *mListSubscription;
 };
 }
 
-#endif // WEBPAGE_H
+#endif // ADBLOCKADDSUBSCRIPTIONDIALOG_H

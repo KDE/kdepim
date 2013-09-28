@@ -655,6 +655,12 @@ void Viewer::saveMainFrameScreenshotInFile(const QString &filename)
     return d->saveMainFrameScreenshotInFile(filename);
 }
 
+KAction *Viewer::blockImage()
+{
+    Q_D( Viewer );
+    return d->mBlockImage;
+}
+
 }
 
 #include "viewer.moc"

@@ -28,32 +28,28 @@
 #ifndef AD_BLOCK_SETTINGS_WIDGET_H
 #define AD_BLOCK_SETTINGS_WIDGET_H
 
-
-
-// Ui Includes
 #include "ui_settings_adblock.h"
-
-// KDE Includes
-#include <KSharedConfig>
+#include "messageviewer_export.h"
 
 // Qt Includes
 #include <QWidget>
 
 namespace MessageViewer {
-class AdBlockSettingWidget : public QWidget, private Ui::adblock
+class MESSAGEVIEWER_EXPORT AdBlockSettingWidget : public QWidget, private Ui::adblock
 {
     Q_OBJECT
 
 public:
-    explicit AdBlockSettingWidget(KSharedConfig::Ptr config, QWidget *parent = 0);
+    explicit AdBlockSettingWidget(QWidget *parent = 0);
 
-    bool changed();
+    bool changed() const;
+
+    void save();
+    void doLoadFromGlobalSettings();
+
 
 Q_SIGNALS:
     void changed(bool);
-
-public Q_SLOTS:
-    void save();
 
 private Q_SLOTS:
     void hasChanged();
@@ -61,12 +57,19 @@ private Q_SLOTS:
     void slotInfoLinkActivated(const QString &);
     void insertRule();
     void removeRule();
+    void slotAddFilter();
+    void slotRemoveSubscription();
+    void slotUpdateButtons();
+    void slotShowList();
 
 private:
-    void load();
+    enum List {
+        UrlList = Qt::UserRole + 1,
+        PathList = Qt::UserRole + 2,
+        LastUpdateList = Qt::UserRole + 3
+    };
 
     bool _changed;
-    KSharedConfig::Ptr _adblockConfig;
 };
 }
 

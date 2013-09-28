@@ -15,26 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTMULTICOLLECTIONDIALOG_H
-#define SELECTMULTICOLLECTIONDIALOG_H
+#ifndef ADBLOCKUTIL_H
+#define ADBLOCKUTIL_H
 
-#include <KDialog>
-#include <Akonadi/Collection>
+#include <QString>
+#include <QMap>
 
-class SelectMultiCollectionWidget;
-class SelectMultiCollectionDialog : public KDialog
-{
-    Q_OBJECT
-public:
-    explicit SelectMultiCollectionDialog(const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent = 0);
-    ~SelectMultiCollectionDialog();
+namespace MessageViewer {
+namespace AdBlockUtil {
+QMap<QString, QString> listSubscriptions();
+}
+}
 
-    QList<Akonadi::Collection> selectedCollection() const;
-
-private:
-    void writeConfig();
-    void readConfig();
-    SelectMultiCollectionWidget *mSelectMultiCollection;
-};
-
-#endif // SELECTMULTICOLLECTIONDIALOG_H
+#endif // ADBLOCKUTIL_H

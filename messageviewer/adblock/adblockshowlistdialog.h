@@ -15,27 +15,37 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef WEBPAGE_H
-#define WEBPAGE_H
+#ifndef ADBLOCKSHOWLISTDIALOG_H
+#define ADBLOCKSHOWLISTDIALOG_H
 
-#include <KWebPage>
-#include <KUrl>
+#include <KDialog>
 
+class KJob;
+class KTemporaryFile;
+namespace PimCommon {
+class PlainTextEditorWidget;
+}
 namespace MessageViewer {
-class WebPage : public KWebPage
+class AdBlockShowListDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit WebPage(QWidget *parent = 0);
-    ~WebPage();
-    KUrl loadingUrl();
+    explicit AdBlockShowListDialog(QWidget *parent = 0);
+    ~AdBlockShowListDialog();
 
-protected:
-    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
+    void setAdBlockListPath(const QString &localPath, const QString &url);
+
+private Q_SLOTS:
+    void slotFinished(KJob *job);
 
 private:
-    KUrl mLoadingUrl;
+    void readConfig();
+    void writeConfig();
+    void downLoadList(const QString &url);
+
+    PimCommon::PlainTextEditorWidget *mTextEdit;
+    KTemporaryFile *mTemporaryFile;
 };
 }
 
-#endif // WEBPAGE_H
+#endif // ADBLOCKSHOWLISTDIALOG_H

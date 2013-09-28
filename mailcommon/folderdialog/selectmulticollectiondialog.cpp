@@ -21,8 +21,26 @@
 #include <KLocale>
 #include <KConfigGroup>
 
+using namespace MailCommon;
+
 SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
     : KDialog(parent)
+{
+    initialize(selectedCollection);
+}
+
+SelectMultiCollectionDialog::SelectMultiCollectionDialog(QWidget *parent)
+    : KDialog(parent)
+{
+    initialize();
+}
+
+SelectMultiCollectionDialog::~SelectMultiCollectionDialog()
+{
+    writeConfig();
+}
+
+void SelectMultiCollectionDialog::initialize(const QList<Akonadi::Collection::Id> &selectedCollection)
 {
     setCaption( i18n( "Select Multiple Folders" ) );
     setButtons( Close | Ok );
@@ -30,11 +48,6 @@ SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QList<Akonadi::Co
     mSelectMultiCollection = new SelectMultiCollectionWidget(selectedCollection);
     setMainWidget( mSelectMultiCollection );
     readConfig();
-}
-
-SelectMultiCollectionDialog::~SelectMultiCollectionDialog()
-{
-    writeConfig();
 }
 
 void SelectMultiCollectionDialog::readConfig()

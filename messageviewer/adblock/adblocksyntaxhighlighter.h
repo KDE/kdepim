@@ -15,27 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef WEBPAGE_H
-#define WEBPAGE_H
+#ifndef ADBLOCKSYNTAXHIGHLIGHTER_H
+#define ADBLOCKSYNTAXHIGHLIGHTER_H
 
-#include <KWebPage>
-#include <KUrl>
+#include <QSyntaxHighlighter>
+#include <QList>
+#include <QRegExp>
 
 namespace MessageViewer {
-class WebPage : public KWebPage
+class AdBlockSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
-    explicit WebPage(QWidget *parent = 0);
-    ~WebPage();
-    KUrl loadingUrl();
+    explicit AdBlockSyntaxHighlighter(QTextDocument *doc);
+    ~AdBlockSyntaxHighlighter();
 
-protected:
-    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
+    void highlightBlock(const QString &text);
 
 private:
-    KUrl mLoadingUrl;
+    void init();
+    struct Rule {
+        QRegExp pattern;
+        QTextCharFormat format;
+
+        Rule( const QRegExp &r, const QTextCharFormat &f )
+            : pattern(r), format(f) {}
+    };
+
+    QList<Rule> m_rules;
+
 };
 }
 
-#endif // WEBPAGE_H
+#endif // ADBLOCKSYNTAXHIGHLIGHTER_H

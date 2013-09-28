@@ -600,6 +600,7 @@ public slots:
   void slotCopyImageLocation();
   void slotSaveMessageDisplayFormat();
   void slotResetMessageDisplayFormat();
+  void slotBlockImage();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
@@ -671,6 +672,7 @@ public:
   KAction *mSpeakTextAction;
   KAction *mCopyImageLocation;
   KAction *mTranslateAction;
+  KAction *mBlockImage;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
   KUrl mImageUrl;

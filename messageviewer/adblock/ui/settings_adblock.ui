@@ -37,11 +37,38 @@
       <attribute name="title">
        <string>Automatic Filters</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QListWidget" name="automaticFiltersListWidget"/>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="1">
+        <widget class="QPushButton" name="addFilters">
+         <property name="text">
+          <string>Add Filters subscriptions...</string>
+         </property>
+        </widget>
        </item>
-       <item>
+       <item row="0" column="0" rowspan="4">
+        <widget class="MessageViewer::AdBlockListWidget" name="automaticFiltersListWidget"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="removeSubscription">
+         <property name="text">
+          <string>Remove subscription</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>301</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="4" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QLabel" name="label_3">
@@ -80,6 +107,13 @@
           </spacer>
          </item>
         </layout>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="showList">
+         <property name="text">
+          <string>Show List...</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -147,11 +181,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KListWidgetSearchLine</class>
-   <extends>KLineEdit</extends>
-   <header>klistwidgetsearchline.h</header>
-  </customwidget>
-  <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
@@ -171,6 +200,17 @@
    <extends>QTabWidget</extends>
    <header>ktabwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MessageViewer::AdBlockListWidget</class>
+   <extends>QListWidget</extends>
+   <header>messageviewer/adblock/adblocklistwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KListWidgetSearchLine</class>
+   <extends>KLineEdit</extends>
+   <header>klistwidgetsearchline.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -28,8 +28,7 @@
 // Self Includes
 #include "adblockmanager.h"
 
-// Local Includes
-#include "adblocksettingwidget.h"
+#include "settings/globalsettings.h"
 
 #include "webpage.h"
 
@@ -45,6 +44,7 @@
 #include <QNetworkRequest>
 #include <QtConcurrentRun>
 #include <QFile>
+#include <QDateTime>
 #include <QWebFrame>
 
 using namespace MessageViewer;
@@ -66,8 +66,6 @@ AdBlockManager *AdBlockManager::self()
 
 AdBlockManager::AdBlockManager(QObject *parent)
     : QObject(parent)
-    , _isAdblockEnabled(false)
-    , _isHideAdsEnabled(false)
 {
     // NOTE: launch this in a second thread so that it does not delay startup
     _settingsLoaded = QtConcurrent::run(this, &AdBlockManager::loadSettings);
@@ -83,32 +81,23 @@ AdBlockManager::~AdBlockManager()
 
 bool AdBlockManager::isEnabled()
 {
-    return _isAdblockEnabled;
+    return GlobalSettings::self()->adBlockEnabled();
 }
 
 
 bool AdBlockManager::isHidingElements()
 {
-    return _isHideAdsEnabled;
+    return GlobalSettings::self()->hideAdsEnabled();
 }
 
+void AdBlockManager::reloadConfig()
+{
+    loadSettings();
+}
 
 void AdBlockManager::loadSettings()
 {
-    // first, check this...
-    QString adblockFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrc"));
-    if (!QFile::exists(adblockFilePath))
-    {
-        QString generalAdblockFilePath = KStandardDirs::locate("appdata" , QLatin1String("adblockrc"));
-        QFile adblockFile(generalAdblockFilePath);
-        bool copied = adblockFile.copy(adblockFilePath);
-        if (!copied)
-        {
-            kDebug() << "oh oh... Problems copying default adblock file";
-            return;
-        }
-    }
-    _adblockConfig = KSharedConfig::openConfig(QLatin1String("adblockrc"), KConfig::SimpleConfig, "appdata");
+    KConfig config(QLatin1String("messagevieweradblockrc"));
     // ----------------
 
     _hostWhiteList.clear();
@@ -119,68 +108,46 @@ void AdBlockManager::loadSettings()
 
     _elementHiding.clear();
 
-    KConfigGroup settingsGroup(_adblockConfig, "Settings");
-
-    // no need to load filters if adblock is not enabled :)
-    if (!settingsGroup.readEntry("adBlockEnabled", false))
-    {
-        _isAdblockEnabled = false;
+    if (!isEnabled())
         return;
-    }
-
-    // just to be sure..
-    _isHideAdsEnabled = settingsGroup.readEntry("hideAdsEnabled", false);
-
     // ----------------------------------------------------------
 
     QDateTime today = QDateTime::currentDateTime();
-    QDateTime lastUpdate = QDateTime::fromString(settingsGroup.readEntry("lastUpdate", QString()));
-    int days = settingsGroup.readEntry("updateInterval", 7);
+    const int days = GlobalSettings::self()->adBlockUpdateInterval();
 
-    bool allSubscriptionsNeedUpdate = (today > lastUpdate.addDays(days));
-    if (allSubscriptionsNeedUpdate)
-    {
-        settingsGroup.writeEntry("lastUpdate", today.toString());
-    }
-
-    // (Eventually) update and load automatic rules
-    KConfigGroup filtersGroup(_adblockConfig, "FiltersList");
-    for (int i = 0; i < 60; i++)
-    {
-        QString n = QString::number(i + 1);
-        if (!filtersGroup.hasKey(QLatin1String("FilterEnabled-") + n))
+    const QStringList itemList = config.groupList().filter( QRegExp( QLatin1String("FilterList \\d+") ) );
+    Q_FOREACH(const QString &item, itemList) {
+        KConfigGroup filtersGroup(&config, item);
+        const bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled"), false);
+        if (!isFilterEnabled) {
             continue;
-
-        bool isFilterEnabled = filtersGroup.readEntry(QLatin1String("FilterEnabled-") + n, false);
-        if (!isFilterEnabled)
-            continue;
-
-        bool fileExists = subscriptionFileExists(i);
-        if (allSubscriptionsNeedUpdate || !fileExists)
-        {
-            kDebug() << "FILE SHOULDN'T EXIST. updating subscription";
-            updateSubscription(i);
         }
-        else
-        {
-            QString rulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_") + n);
-            loadRules(rulesFilePath);
+        const QString url = filtersGroup.readEntry(QLatin1String("url"));
+        if (url.isEmpty()) {
+            continue;
+        }
+        const QString path = filtersGroup.readEntry(QLatin1String("path"));
+        if (path.isEmpty())
+            continue;
+
+        const QDateTime lastDateTime = filtersGroup.readEntry(QLatin1String("lastUpdate"), QDateTime());
+        if (!lastDateTime.isValid() || today > lastDateTime.addDays(days) || !QFile(path).exists()) {
+            updateSubscription(path, url);
+        } else {
+            loadRules(path);
         }
     }
 
     // load local rules
-    QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
     loadRules(localRulesFilePath);
-
-    _isAdblockEnabled = true;
 }
 
 
 void AdBlockManager::loadRules(const QString &rulesFilePath)
 {
     QFile ruleFile(rulesFilePath);
-    if (!ruleFile.open(QFile::ReadOnly | QFile::Text))
-    {
+    if (!ruleFile.open(QFile::ReadOnly | QFile::Text)) {
         kDebug() << "Unable to open rule file" << rulesFilePath;
         return;
     }
@@ -241,7 +208,7 @@ void AdBlockManager::loadRuleString(const QString &stringRule)
 
 bool AdBlockManager::blockRequest(const QNetworkRequest &request)
 {
-    if (!_isAdblockEnabled)
+    if (!isEnabled())
         return false;
 
     // we (ad)block just http & https traffic
@@ -249,7 +216,7 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
             && request.url().scheme() != QLatin1String("https"))
         return false;
 
-    QStringList whiteRefererList;//TODO PORT = ReKonfig::whiteReferer();
+    const QStringList whiteRefererList = GlobalSettings::self()->whiteReferer();
     const QString referer = QString::fromLatin1(request.rawHeader("referer"));
     Q_FOREACH(const QString & host, whiteRefererList)
     {
@@ -300,15 +267,11 @@ bool AdBlockManager::blockRequest(const QNetworkRequest &request)
 }
 
 
-void AdBlockManager::updateSubscription(int i)
+void AdBlockManager::updateSubscription(const QString &path, const QString &url)
 {
-    KConfigGroup filtersGroup(_adblockConfig, "FiltersList");
-    QString n = QString::number(i + 1);
+    KUrl subUrl = KUrl(url);
 
-    QString fUrl = filtersGroup.readEntry(QLatin1String("FilterURL-") + n, QString());
-    KUrl subUrl = KUrl(fUrl);
-
-    QString rulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_") + n);
+    const QString rulesFilePath = path;
     KUrl destUrl = KUrl(rulesFilePath);
 
     KIO::FileCopyJob* job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
@@ -342,26 +305,6 @@ bool AdBlockManager::subscriptionFileExists(int i)
     return QFile::exists(rulesFilePath);
 }
 
-
-void AdBlockManager::showSettings()
-{
-    // at this point, the settings should be loaded
-    _settingsLoaded.waitForFinished();
-
-    QPointer<KDialog> dialog = new KDialog();
-    dialog->setCaption(i18nc("@title:window", "Ad Block Settings"));
-    dialog->setButtons(KDialog::Ok | KDialog::Cancel);
-
-    AdBlockSettingWidget widget(_adblockConfig);
-    dialog->setMainWidget(&widget);
-    connect(dialog, SIGNAL(okClicked()), &widget, SLOT(save()));
-    connect(dialog, SIGNAL(okClicked()), this, SLOT(loadSettings()));
-    dialog->exec();
-
-    dialog->deleteLater();
-}
-
-
 void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 {
     // at this point, the settings should be loaded
@@ -393,7 +336,7 @@ void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
 
 bool AdBlockManager::isAdblockEnabledForHost(const QString &host)
 {
-    if (!_isAdblockEnabled)
+    if (!isEnabled())
         return false;
 
     return ! _hostWhiteList.match(host);
@@ -405,7 +348,7 @@ void AdBlockManager::applyHidingRules(QWebFrame *frame)
     if (!frame)
         return;
 
-    if (!_isAdblockEnabled)
+    if (!isEnabled())
         return;
 
     connect(frame, SIGNAL(loadFinished(bool)), this, SLOT(applyHidingRules(bool)));
@@ -420,20 +363,18 @@ void AdBlockManager::applyHidingRules(bool ok)
     QWebFrame *frame = qobject_cast<QWebFrame *>(sender());
     if (!frame)
         return;
-#if 0 //TODO PORT
     MessageViewer::WebPage *page = qobject_cast<MessageViewer::WebPage *>(frame->page());
     if (!page)
         return;
 
-    QString mainPageHost;//TODO PORT = page->loadingUrl().host();
-    QStringList hosts;//TODO PORT = ReKonfig::whiteReferer();
+    QString mainPageHost = page->loadingUrl().host();
+    const QStringList hosts = GlobalSettings::self()->whiteReferer();
     if (hosts.contains(mainPageHost))
         return;
 
     QWebElement document = frame->documentElement();
 
     _elementHiding.apply(document, mainPageHost);
-#endif
 }
 
 #include "adblockmanager.moc"

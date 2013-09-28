@@ -24,6 +24,7 @@
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/EntityRightsFilterModel>
 #include <KMime/Message>
+#include <KRecursiveFilterProxyModel>
 
 #include <KCheckableProxyModel>
 #include <KLineEdit>
@@ -32,9 +33,26 @@
 #include <QVBoxLayout>
 #include <QTreeView>
 
+using namespace MailCommon;
+SelectMultiCollectionWidget::SelectMultiCollectionWidget(QWidget *parent)
+    : QWidget(parent)
+{
+    initialize();
+}
+
+
 SelectMultiCollectionWidget::SelectMultiCollectionWidget(const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
     : QWidget(parent),
       mListCollection(selectedCollection)
+{
+    initialize();
+}
+
+SelectMultiCollectionWidget::~SelectMultiCollectionWidget()
+{
+}
+
+void SelectMultiCollectionWidget::initialize()
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
@@ -64,9 +82,7 @@ SelectMultiCollectionWidget::SelectMultiCollectionWidget(const QList<Akonadi::Co
     connect(mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(slotCollectionsInserted(QModelIndex,int,int)));
 
-
-    mCollectionFilter = new Akonadi::EntityRightsFilterModel(this);
-    //mCollectionFilter->addContentMimeTypeInclusionFilter(QLatin1String("message/rfc822"));
+    mCollectionFilter = new KRecursiveFilterProxyModel(this);
     mCollectionFilter->setSourceModel(mCheckProxy);
     mCollectionFilter->setDynamicSortFilter(true);
     mCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
@@ -83,12 +99,9 @@ SelectMultiCollectionWidget::SelectMultiCollectionWidget(const QList<Akonadi::Co
 
     mFolderView = new QTreeView;
     mFolderView->setAlternatingRowColors(true);
+    mFolderView->setModel(mCollectionFilter);
 
     vbox->addWidget(mFolderView);
-}
-
-SelectMultiCollectionWidget::~SelectMultiCollectionWidget()
-{
 }
 
 void SelectMultiCollectionWidget::updateStatus(const QModelIndex &parent)

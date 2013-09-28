@@ -15,27 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef WEBPAGE_H
-#define WEBPAGE_H
+#include <kdebug.h>
+#include <kcmdlineargs.h>
+#include <kapplication.h>
+#include <KDialog>
+#include "messageviewer/adblock/adblocksettingwidget.h"
 
-#include <KWebPage>
-#include <KUrl>
-
-namespace MessageViewer {
-class WebPage : public KWebPage
+int main (int argc, char **argv)
 {
-    Q_OBJECT
-public:
-    explicit WebPage(QWidget *parent = 0);
-    ~WebPage();
-    KUrl loadingUrl();
+    KCmdLineArgs::init(argc, argv, "adblocksettings_gui", 0, ki18n("adblocksettingstest_Gui"),
+                       "1.0", ki18n("Test for adblocksettings"));
+    KApplication app;
 
-protected:
-    bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
-
-private:
-    KUrl mLoadingUrl;
-};
+    MessageViewer::AdBlockSettingWidget *w = new MessageViewer::AdBlockSettingWidget;
+    KDialog dlg;
+    dlg.setMainWidget(w);
+    w->doLoadFromGlobalSettings();
+    if (dlg.exec()) {
+        w->save();
+    }
+    return 0;
 }
 
-#endif // WEBPAGE_H

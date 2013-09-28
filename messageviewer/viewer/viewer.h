@@ -280,6 +280,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *saveAsAction();
   KAction *saveMessageDisplayFormatAction();
   KAction *resetMessageDisplayFormatAction();
+  KAction *blockImage();
 
   HeaderStrategy * headerStrategy() const;
 
