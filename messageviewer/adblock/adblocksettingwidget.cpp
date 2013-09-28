@@ -120,7 +120,6 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     checkEnableAdblock->setChecked(GlobalSettings::self()->adBlockEnabled());
 
     // update enabled status
-    checkHideAds->setEnabled(GlobalSettings::self()->adBlockEnabled());
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
     checkHideAds->setChecked(GlobalSettings::self()->hideAdsEnabled());
     const int days = GlobalSettings::self()->adBlockUpdateInterval();
@@ -180,9 +179,9 @@ void AdBlockSettingWidget::save()
     if (!_changed)
         return;
 
-    // General settings
+    // General settings    
     GlobalSettings::self()->setHideAdsEnabled(checkHideAds->isChecked());
-    GlobalSettings::self()->setAdBlockEnabled(checkHideAds->isChecked());
+    GlobalSettings::self()->setAdBlockEnabled(checkEnableAdblock->isChecked());
     GlobalSettings::self()->setAdBlockUpdateInterval(spinBox->value());
 
     // automatic filters
