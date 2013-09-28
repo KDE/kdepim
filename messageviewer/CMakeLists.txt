@@ -137,7 +137,6 @@ kde4_add_ui_files(libmessageviewer_SRCS
   ui/invitationsettings.ui
   ui/printingsettings.ui
   adblock/ui/settings_adblock.ui
-  adblock/ui/blocked_elements.ui
 )
 
 
