@@ -54,6 +54,7 @@ else()
                        adblock/adblockutil.cpp
                        adblock/adblockaddsubscriptiondialog.cpp
                        adblock/adblocklistwidget.cpp
+                       adblock/adblocksyntaxhighlighter.cpp
                        )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
