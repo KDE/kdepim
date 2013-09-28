@@ -28,13 +28,13 @@ class AdBlockAddSubscriptionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit AdBlockAddSubscriptionDialog(QWidget *parent=0);
+    explicit AdBlockAddSubscriptionDialog(const QStringList &excludeList, QWidget *parent=0);
     ~AdBlockAddSubscriptionDialog();
 
     void selectedList(QString &name, QString &url);
 
 private:
-    void initializeList();
+    void initializeList(const QStringList &excludeList);
     QComboBox *mListSubscription;
 };
 }

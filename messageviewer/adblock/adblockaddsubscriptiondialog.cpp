@@ -25,7 +25,7 @@
 #include <QHBoxLayout>
 
 using namespace MessageViewer;
-AdBlockAddSubscriptionDialog::AdBlockAddSubscriptionDialog(QWidget *parent)
+AdBlockAddSubscriptionDialog::AdBlockAddSubscriptionDialog(const QStringList &excludeList, QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n("Add subscription") );
@@ -40,7 +40,7 @@ AdBlockAddSubscriptionDialog::AdBlockAddSubscriptionDialog(QWidget *parent)
 
     w->setLayout(lay);
     setMainWidget(w);
-    initializeList();
+    initializeList(excludeList);
 }
 
 AdBlockAddSubscriptionDialog::~AdBlockAddSubscriptionDialog()
@@ -48,12 +48,14 @@ AdBlockAddSubscriptionDialog::~AdBlockAddSubscriptionDialog()
 
 }
 
-void AdBlockAddSubscriptionDialog::initializeList()
+void AdBlockAddSubscriptionDialog::initializeList(const QStringList &excludeList)
 {
     QMapIterator<QString, QString> i(MessageViewer::AdBlockUtil::listSubscriptions());
     while (i.hasNext()) {
         i.next();
-        mListSubscription->addItem(i.key(), i.value());
+        if (!excludeList.contains(i.key())) {
+            mListSubscription->addItem(i.key(), i.value());
+        }
     }
 }
 

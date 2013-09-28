@@ -254,7 +254,12 @@ bool AdBlockSettingWidget::changed() const
 
 void AdBlockSettingWidget::slotAddFilter()
 {
-    QPointer<MessageViewer::AdBlockAddSubscriptionDialog> dlg = new MessageViewer::AdBlockAddSubscriptionDialog(this);
+    QStringList excludeList;
+    const int numberItem(automaticFiltersListWidget->count());
+    for (int i = 0; i < numberItem; ++i) {
+        excludeList << automaticFiltersListWidget->item(i)->text();
+    }
+    QPointer<MessageViewer::AdBlockAddSubscriptionDialog> dlg = new MessageViewer::AdBlockAddSubscriptionDialog(excludeList, this);
     if (dlg->exec()) {
         QString name;
         QString url;
