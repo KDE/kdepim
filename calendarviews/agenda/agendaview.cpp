@@ -444,8 +444,10 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
   }
 
   // Optimization: If the dates didn't change, just repaint it.
-  if ( !incidence->recurs() && agendaItems.count() == 1 ) {
+  // This optimization for now because we need to process collisions between agenda items.
+  if ( false && !incidence->recurs() && agendaItems.count() == 1 ) {
     KCalCore::Incidence::Ptr originalIncidence = agendaItems.first()->incidence().payload<KCalCore::Incidence::Ptr>();
+
     if ( datesEqual( originalIncidence, incidence ) ) {
       foreach ( const AgendaItem::QPtr &agendaItem, agendaItems ) {
         Akonadi::Item itemClone = item;
