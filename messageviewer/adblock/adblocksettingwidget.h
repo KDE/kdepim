@@ -59,6 +59,7 @@ private Q_SLOTS:
     void removeRule();
     void slotAddFilter();
     void slotRemoveSubscription();
+    void slotUpdateButtons();
 
 private:
     enum List {

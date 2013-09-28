@@ -70,6 +70,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     spinBox->setSuffix(ki18np(" day", " days"));
 
+    removeSubscription->setEnabled(false);
     // emit changed signal
     connect(insertButton,       SIGNAL(clicked()),           this, SLOT(hasChanged()));
     connect(removeButton,       SIGNAL(clicked()),           this, SLOT(hasChanged()));
@@ -79,8 +80,14 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(addFilters, SIGNAL(clicked()), this, SLOT(slotAddFilter()));
 
     connect(automaticFiltersListWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(hasChanged()));
+    connect(automaticFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateButtons()));
+
 }
 
+void AdBlockSettingWidget::slotUpdateButtons()
+{
+    removeSubscription->setEnabled(automaticFiltersListWidget->currentItem());
+}
 
 void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
 {
@@ -142,7 +149,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
             continue;
 
         QListWidgetItem *subItem = new QListWidgetItem(automaticFiltersListWidget);
-        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable| Qt::ItemIsSelectable);
         if (isFilterEnabled)
             subItem->setCheckState(Qt::Checked);
         else
@@ -253,7 +260,7 @@ void AdBlockSettingWidget::slotAddFilter()
         QString url;
         dlg->selectedList(name, url);
         QListWidgetItem *subItem = new QListWidgetItem(automaticFiltersListWidget);
-        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
         subItem->setCheckState(Qt::Checked);
         subItem->setText(name);
         subItem->setData(UrlList, url);
