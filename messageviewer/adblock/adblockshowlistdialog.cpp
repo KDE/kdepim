@@ -20,6 +20,8 @@
 #include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/plaintexteditor/plaintexteditor.h"
 
+#include <KPIMUtils/ProgressIndicatorLabel>
+
 #include <KLocale>
 #include <KIO/Job>
 #include <KTemporaryFile>
@@ -40,6 +42,8 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     (void)new MessageViewer::AdBlockSyntaxHighlighter(mTextEdit->editor()->document());
     mTextEdit->editor()->setReadOnly(true);
     lay->addWidget(mTextEdit);
+
+    mProgress = new KPIMUtils::ProgressIndicatorLabel(i18n("Download..."));
     w->setLayout(lay);
     setMainWidget(w);
     readConfig();
@@ -93,6 +97,7 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
 
     KUrl destUrl = KUrl(mTemporaryFile->fileName());
 
+    mProgress->start();
     KIO::FileCopyJob* job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
     job->metaData().insert(QLatin1String("ssl_no_client_cert"), QLatin1String("TRUE"));
     job->metaData().insert(QLatin1String("ssl_no_ui"), QLatin1String("TRUE"));
@@ -105,6 +110,7 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
 
 void AdBlockShowListDialog::slotFinished(KJob *job)
 {
+    mProgress->stop();
     if (job->error()) {
         mTemporaryFile->close();
         delete mTemporaryFile;

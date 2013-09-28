@@ -22,9 +22,15 @@
 
 class KJob;
 class KTemporaryFile;
+
+namespace KPIMUtils {
+class ProgressIndicatorLabel;
+}
+
 namespace PimCommon {
 class PlainTextEditorWidget;
 }
+
 namespace MessageViewer {
 class AdBlockShowListDialog : public KDialog
 {
@@ -45,6 +51,7 @@ private:
 
     PimCommon::PlainTextEditorWidget *mTextEdit;
     KTemporaryFile *mTemporaryFile;
+    KPIMUtils::ProgressIndicatorLabel *mProgress;
 };
 }
 
