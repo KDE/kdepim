@@ -29,7 +29,7 @@ AdBlockAddSubscriptionDialog::AdBlockAddSubscriptionDialog(const QStringList &ex
     : KDialog(parent)
 {
     setCaption( i18n("Add subscription") );
-    setButtons( Ok|Close );
+    setButtons( Ok|Cancel );
     QWidget *w = new QWidget;
     QHBoxLayout *lay = new QHBoxLayout;
     QLabel *lab = new QLabel(i18n("Select List:"));
