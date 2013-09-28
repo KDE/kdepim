@@ -431,7 +431,7 @@ void AgendaView::Private::calendarIncidenceChanged( const KCalCore::Incidence::P
     return;
   }
 
-  Akonadi::Item item = q->calendar()->item( incidence->uid() );
+  Akonadi::Item item = q->calendar()->item( incidence->instanceIdentifier() );
   if ( !item.isValid() ) {
     kWarning() << "AgendaView::calendarIncidenceChanged() Invalid item for incidence " << incidence->uid();
     return;
