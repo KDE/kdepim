@@ -50,9 +50,15 @@ void AdBlockSyntaxHighlighter::init()
     m_rules.append( Rule( commentRegex, commentFormat ) );
 
     QTextCharFormat exceptionFormat;
-    exceptionFormat.setForeground( Qt::green );
+    exceptionFormat.setForeground( Qt::magenta );
     QRegExp exceptionRegex( QLatin1String( "^@@.*" ) );
     m_rules.append( Rule( exceptionRegex, exceptionFormat ) );
+
+    QTextCharFormat headerFormat;
+    headerFormat.setForeground( Qt::red );
+    QRegExp headerRegex( QLatin1String( "^\\[.*" ) );
+    m_rules.append( Rule( headerRegex, headerFormat ) );
+
 }
 
 #include "adblocksyntaxhighlighter.moc"
