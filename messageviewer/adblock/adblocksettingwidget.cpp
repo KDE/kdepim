@@ -74,8 +74,6 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     removeSubscription->setEnabled(false);
     showList->setEnabled(false);
     // emit changed signal
-    connect(insertButton,       SIGNAL(clicked()),           this, SLOT(hasChanged()));
-    connect(removeButton,       SIGNAL(clicked()),           this, SLOT(hasChanged()));
     connect(checkEnableAdblock, SIGNAL(stateChanged(int)),   this, SLOT(hasChanged()));
     connect(checkHideAds,       SIGNAL(stateChanged(int)),   this, SLOT(hasChanged()));
     connect(spinBox,            SIGNAL(valueChanged(int)),   this, SLOT(hasChanged()));
@@ -112,18 +110,23 @@ void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
 
 void AdBlockSettingWidget::insertRule()
 {
-    QString rule = addFilterLineEdit->text();
+    const QString rule = addFilterLineEdit->text();
     if (rule.isEmpty())
         return;
 
     manualFiltersListWidget->addItem(rule);
     addFilterLineEdit->clear();
+    hasChanged();
 }
 
 
 void AdBlockSettingWidget::removeRule()
 {
-    manualFiltersListWidget->takeItem(manualFiltersListWidget->currentRow());
+    const int index = manualFiltersListWidget->currentRow();
+    if ( index > -1) {
+        manualFiltersListWidget->takeItem(index);
+        hasChanged();
+    }
 }
 
 
