@@ -86,7 +86,7 @@ AdBlockRuleFallbackImpl::AdBlockRuleFallbackImpl(const QString &filter)
                 if (option.startsWith(domainKeyword))
                 {
                     options.removeOne(option);
-                    QStringList domainList = option.mid(domainKeyword.length()).split(QLatin1Char('|'));
+                    const QStringList domainList = option.mid(domainKeyword.length()).split(QLatin1Char('|'));
                     Q_FOREACH(const QString & domain, domainList)
                     {
                         if (domain.startsWith(QLatin1Char('~')))

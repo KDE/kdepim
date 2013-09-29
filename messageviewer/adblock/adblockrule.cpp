@@ -72,9 +72,8 @@ RuleTypes AdBlockRule::ruleType(const QString &filter)
 bool AdBlockRule::match(const QNetworkRequest &request, const QString &encodedUrl, const QString &encodedUrlLowerCase) const
 {
     Q_ASSERT(encodedUrl.toLower() == encodedUrlLowerCase);
-    bool b = m_implementation->match(request, encodedUrl, encodedUrlLowerCase);
-    if (b)
-    {
+    const bool b = m_implementation->match(request, encodedUrl, encodedUrlLowerCase);
+    if (b) {
         kDebug() << m_implementation->ruleType() << ": rule string = " << m_implementation->ruleString();
     }
     return b;
