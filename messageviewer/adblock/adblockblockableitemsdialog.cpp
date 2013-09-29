@@ -21,6 +21,7 @@
 
 #include <QVBoxLayout>
 #include <QTreeWidget>
+#include <QWebFrame>
 
 using namespace MessageViewer;
 AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
@@ -38,6 +39,11 @@ AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
 AdBlockBlockableItemsDialog::~AdBlockBlockableItemsDialog()
 {
 
+}
+
+void AdBlockBlockableItemsDialog::setWebFrame(QWebFrame *frame)
+{
+    //TODO
 }
 
 #include "adblockblockableitemsdialog.moc"

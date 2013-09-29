@@ -20,6 +20,7 @@
 
 #include <KDialog>
 class QTreeWidget;
+class QWebFrame;
 namespace MessageViewer {
 class AdBlockBlockableItemsDialog : public KDialog
 {
@@ -27,6 +28,8 @@ class AdBlockBlockableItemsDialog : public KDialog
 public:
     explicit AdBlockBlockableItemsDialog(QWidget *parent=0);
     ~AdBlockBlockableItemsDialog();
+
+    void setWebFrame(QWebFrame *frame);
 
 private:
     QTreeWidget *mListItems;
