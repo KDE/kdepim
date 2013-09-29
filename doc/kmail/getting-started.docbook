@@ -170,8 +170,8 @@ section.</para>
 <para>The way of sending messages configured here will be used for
 your default identity and for all other identities that do not have their own
 way of sending messages. You can use different ways of sending
-messages for different identities by selecting the <guilabel>Special
-transport</guilabel> check box in the <guilabel>Advanced</guilabel>
+messages for different identities by selecting the <guilabel>Outgoing
+Account</guilabel> check box in the <guilabel>Advanced</guilabel>
 tab of the <guilabel>Identities</guilabel> page.</para>
 
 <para>A description of the other options can be found
