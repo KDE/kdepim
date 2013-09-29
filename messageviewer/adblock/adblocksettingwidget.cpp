@@ -58,7 +58,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(hintLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotInfoLinkActivated(QString)));
 
     manualFiltersListWidget->setSortingEnabled(true);
-    manualFiltersListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    manualFiltersListWidget->setSelectionMode(QAbstractItemView::MultiSelection);
 
     searchLine->setListWidget(manualFiltersListWidget);
 
@@ -122,11 +122,14 @@ void AdBlockSettingWidget::insertRule()
 
 void AdBlockSettingWidget::removeRule()
 {
-    const int index = manualFiltersListWidget->currentRow();
-    if ( index > -1) {
-        manualFiltersListWidget->takeItem(index);
-        hasChanged();
+    QList<QListWidgetItem *> select = manualFiltersListWidget->selectedItems();
+    if (select.isEmpty()) {
+        return;
     }
+    Q_FOREACH (QListWidgetItem *item, select) {
+        delete item;
+    }
+    hasChanged();
 }
 
 
@@ -223,7 +226,7 @@ void AdBlockSettingWidget::save()
 
     config.sync();
     // local filters
-    QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
@@ -288,7 +291,7 @@ void AdBlockSettingWidget::slotRemoveSubscription()
     if (automaticFiltersListWidget->currentItem()) {
         if (KMessageBox::questionYesNo(this, i18n("Do you want to delete current list?"), i18n("Delete current list")) == KMessageBox::Yes) {
             QListWidgetItem *item = automaticFiltersListWidget->takeItem(automaticFiltersListWidget->currentRow());
-            QString path = item->data(PathList).toString();
+            const QString path = item->data(PathList).toString();
             if (!path.isEmpty()) {
                 if (!QFile(path).remove())
                     qDebug()<<" we can remove file:"<<path;

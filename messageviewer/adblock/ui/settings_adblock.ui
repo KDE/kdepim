@@ -137,7 +137,11 @@
         </layout>
        </item>
        <item>
-        <widget class="KListWidget" name="manualFiltersListWidget"/>
+        <widget class="KListWidget" name="manualFiltersListWidget">
+         <property name="selectionMode">
+          <enum>QAbstractItemView::MultiSelection</enum>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="hintLabel">
