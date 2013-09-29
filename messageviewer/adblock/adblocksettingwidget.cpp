@@ -98,7 +98,7 @@ void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
 {
     Q_UNUSED(url)
 
-    QString hintHelpString = i18n("<qt><p>Enter an expression to filter. Filters can be defined as either:"
+    const QString hintHelpString = i18n("<qt><p>Enter an expression to filter. Filters can be defined as either:"
                                   "<ul><li>a shell-style wildcard, e.g. <tt>http://www.example.com/ads*</tt>, "
                                   "the wildcards <tt>*?[]</tt> may be used</li>"
                                   "<li>a full regular expression by surrounding the string with '<tt>/</tt>', "
