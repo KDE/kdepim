@@ -20,6 +20,7 @@
 #include <KLocale>
 
 #include <QVBoxLayout>
+#include <QTreeWidget>
 
 using namespace MessageViewer;
 AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
@@ -27,7 +28,11 @@ AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
 {
     setCaption( i18n("Blockable Items") );
     setButtons( Ok|Cancel );
-    QVBoxLayout *lay = new QVBoxLayout;
+    mListItems = new QTreeWidget;
+    QStringList lst;
+    lst << i18n("Address") << i18n("Type");
+    mListItems->setHeaderLabels(lst);
+    setMainWidget(mListItems);
 }
 
 AdBlockBlockableItemsDialog::~AdBlockBlockableItemsDialog()
