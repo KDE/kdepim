@@ -113,6 +113,14 @@ void AdBlockSettingWidget::insertRule()
     const QString rule = addFilterLineEdit->text();
     if (rule.isEmpty())
         return;
+    const int numberItem(manualFiltersListWidget->count());
+    for (int i = 0; i < numberItem; ++i) {
+        if (manualFiltersListWidget->item(i)->text() == rule) {
+            addFilterLineEdit->clear();
+            return;
+        }
+    }
+
 
     manualFiltersListWidget->addItem(rule);
     addFilterLineEdit->clear();
