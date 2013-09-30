@@ -1947,7 +1947,7 @@ void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &inciden
       KCalCore::Incidence::Ptr newIncidence = existingItem.payload<KCalCore::Incidence::Ptr>();
       KCalCore::Incidence::Ptr oldIncidence( newIncidence->clone() );
 
-      if ( newIncidence->dtStart() == newTime ) {
+      if ( newIncidence->dtStart() == newTime && newIncidence->allDay() == allDay ) {
         // Nothing changed
         continue;
       }
