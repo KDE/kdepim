@@ -41,6 +41,12 @@ protected:
     void customContextMenuRequested(const QPoint &);
 
 private:
+    enum BlockType {
+        FilterValue = 0,
+        Url,
+        Type
+    };
+
     void searchBlockableElement(QWebFrame *frame);
 
 private:

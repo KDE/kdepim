@@ -42,7 +42,7 @@ AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
             this, SLOT(customContextMenuRequested(QPoint)));
 
     QStringList lst;
-    lst << i18n("Address") << i18n("Type");
+    lst << i18n("Filter") << i18n("Address") << i18n("Type");
     mListItems->setHeaderLabels(lst);
 
     KTreeWidgetSearchLine *searchLine = new KTreeWidgetSearchLine(this, mListItems);
@@ -82,8 +82,12 @@ void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
 
 void AdBlockBlockableItemsWidget::slotBlockItem()
 {
+    QTreeWidgetItem *item = mListItems->currentItem();
+    if (!item)
+        return;
+
     QPointer<AdBlockCreateFilterDialog> dlg = new AdBlockCreateFilterDialog;
-    dlg->setPattern(QString()); //TODO
+    dlg->setPattern(item->text(Url));
     if (dlg->exec()) {
         //TODO
     }
@@ -92,6 +96,10 @@ void AdBlockBlockableItemsWidget::slotBlockItem()
 
 void AdBlockBlockableItemsWidget::slotCopyItem()
 {
+    QTreeWidgetItem *item = mListItems->currentItem();
+    if (!item)
+        return;
+
     //TODO
 }
 
