@@ -36,8 +36,6 @@ public:
 private Q_SLOTS:
     void slotCopyItem();
     void slotBlockItem();
-
-protected:
     void customContextMenuRequested(const QPoint &);
 
 private:

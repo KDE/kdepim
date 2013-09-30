@@ -34,5 +34,7 @@ target_link_libraries(adblockblockableitemdialog_gui
   ${KDE4_KDECORE_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
+  ${QT_QTWEBKIT_LIBRARY}
+  ${KDEPIMLIBS_KPIMUTILS_LIBS}
   messageviewer
 )

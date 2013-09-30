@@ -25,6 +25,8 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QWebFrame>
+#include <QWebElement>
+#include <QDebug>
 #include <QPointer>
 
 using namespace MessageViewer;
@@ -37,7 +39,8 @@ AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
     mListItems = new QTreeWidget;
 
     mListItems->setContextMenuPolicy(Qt::CustomContextMenu);
-
+    mListItems->setAlternatingRowColors(true);
+    mListItems->setRootIsDecorated(false);
     connect(mListItems, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(customContextMenuRequested(QPoint)));
 
@@ -63,7 +66,17 @@ void AdBlockBlockableItemsWidget::setWebFrame(QWebFrame *frame)
 
 void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
 {
-    //TODO
+    const QWebElementCollection images = frame->findAllElements(QLatin1String("img"));
+    Q_FOREACH (const QWebElement &img, images) {
+        if (img.hasAttribute(QLatin1String("src"))) {
+            const QString src = img.attribute(QLatin1String("src"));
+            if (src.startsWith(QLatin1String("http://")) || src.startsWith(QLatin1String("https://")) ) {
+                QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
+                item->setText(Url, src);
+                item->setText(Type, i18n("Image"));
+            }
+        }
+    }
     foreach(QWebFrame *childFrame, frame->childFrames()) {
         searchBlockableElement(childFrame);
     }
@@ -89,9 +102,10 @@ void AdBlockBlockableItemsWidget::slotBlockItem()
     QPointer<AdBlockCreateFilterDialog> dlg = new AdBlockCreateFilterDialog;
     dlg->setPattern(item->text(Url));
     if (dlg->exec()) {
-        //TODO
+        const QString filter = dlg->filter();
+        item->setText(FilterValue, filter);
     }
-    //TODO
+    delete dlg;
 }
 
 void AdBlockBlockableItemsWidget::slotCopyItem()

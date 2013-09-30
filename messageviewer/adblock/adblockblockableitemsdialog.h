@@ -32,6 +32,8 @@ public:
     void setWebFrame(QWebFrame *frame);
 
 private:
+    void writeConfig();
+    void readConfig();
     AdBlockBlockableItemsWidget *mBlockableItems;
 };
 }

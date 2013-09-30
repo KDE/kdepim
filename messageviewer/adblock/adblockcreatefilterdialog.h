@@ -38,6 +38,8 @@ private Q_SLOTS:
     void slotUpdateFilter();
 
 private:
+    void readConfig();
+    void writeConfig();
     void initialize();
     QString mPattern;
     Ui::AdBlockCreateFilterWidget *mUi;

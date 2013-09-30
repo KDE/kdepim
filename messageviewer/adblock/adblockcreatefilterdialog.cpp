@@ -26,16 +26,33 @@ AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
     mUi = new Ui::AdBlockCreateFilterWidget;
     mUi->setupUi(w);
     setMainWidget(w);
-    connect(mUi->blockingFilter, SIGNAL(clicked()), SLOT(slotUpdateFilter()));
-    connect(mUi->exceptionFilter, SIGNAL(clicked()), SLOT(slotUpdateFilter()));
-    connect(mUi->atTheBeginning, SIGNAL(clicked()), SLOT(slotUpdateFilter()));
-    connect(mUi->atTheEnd, SIGNAL(clicked()), SLOT(slotUpdateFilter()));
+    connect(mUi->blockingFilter, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
+    connect(mUi->exceptionFilter, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
+    connect(mUi->atTheBeginning, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
+    connect(mUi->atTheEnd, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
+    readConfig();
 }
 
 AdBlockCreateFilterDialog::~AdBlockCreateFilterDialog()
 {
+    writeConfig();
     delete mUi;
     mUi = 0;
+}
+
+void AdBlockCreateFilterDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AdBlockCreateFilterDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void AdBlockCreateFilterDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AdBlockCreateFilterDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
 }
 
 void AdBlockCreateFilterDialog::setPattern(const QString &pattern)
@@ -70,6 +87,7 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
     if (mUi->exceptionFilter->isChecked()) {
         pattern = QLatin1String("@@") + pattern;
     }
+    mUi->filterName->setText(pattern);
 }
 
 #include "adblockcreatefilterdialog.moc"

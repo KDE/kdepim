@@ -19,8 +19,12 @@
 #define TEST_SCAMDETECTION_GUI_H
 
 #include <QWidget>
+#include <QWebPage>
 
 class QWebView;
+namespace KPIMUtils {
+class ProgressIndicatorLabel;
+}
 namespace MessageViewer {
 class AdBlockBlockableItemsWidget;
 }
@@ -37,6 +41,8 @@ private Q_SLOTS:
 
 private:
     MessageViewer::AdBlockBlockableItemsWidget *mWidget;
+    QWebPage page;
+    KPIMUtils::ProgressIndicatorLabel *mProgress;
 };
 
 #endif

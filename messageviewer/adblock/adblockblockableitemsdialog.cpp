@@ -36,16 +36,32 @@ AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
     mBlockableItems = new AdBlockBlockableItemsWidget;
 
     setMainWidget(mBlockableItems);
+    readConfig();
 }
 
 AdBlockBlockableItemsDialog::~AdBlockBlockableItemsDialog()
 {
-
+    writeConfig();
 }
 
 void AdBlockBlockableItemsDialog::setWebFrame(QWebFrame *frame)
 {
     mBlockableItems->setWebFrame(frame);
+}
+
+void AdBlockBlockableItemsDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AdBlockBlockableItemsDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void AdBlockBlockableItemsDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "AdBlockBlockableItemsDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(500,300) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
 }
 
 
