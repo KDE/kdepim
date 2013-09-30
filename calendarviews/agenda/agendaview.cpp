@@ -479,8 +479,6 @@ void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::P
     return;
   }
 
-  qDebug() << "DEBUG calendarIncidenceDeleted hasRec" << incidence->hasRecurrenceId();
-
   q->removeIncidence( incidence );
 
   if ( incidence->hasRecurrenceId()) {
