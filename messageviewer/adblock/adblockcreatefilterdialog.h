@@ -15,27 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ADBLOCKBLOCKABLEITEMSDIALOG_H
-#define ADBLOCKBLOCKABLEITEMSDIALOG_H
+#ifndef ADBLOCKCREATEFILTERDIALOG_H
+#define ADBLOCKCREATEFILTERDIALOG_H
 
 #include <KDialog>
-class QTreeWidget;
-class QWebFrame;
-class KTreeWidgetSearchLine;
+
 namespace MessageViewer {
-class AdBlockBlockableItemsDialog : public KDialog
+class AdBlockCreateFilterDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit AdBlockBlockableItemsDialog(QWidget *parent=0);
-    ~AdBlockBlockableItemsDialog();
-
-    void setWebFrame(QWebFrame *frame);
-
-private:
-    QTreeWidget *mListItems;
-    KTreeWidgetSearchLine *mSearchLine;
+    explicit AdBlockCreateFilterDialog(QWidget *parent=0);
+    ~AdBlockCreateFilterDialog();
 };
 }
 
-#endif // ADBLOCKBLOCKABLEITEMSDIALOG_H
+#endif // ADBLOCKCREATEFILTERDIALOG_H
