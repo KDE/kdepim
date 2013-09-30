@@ -33,6 +33,8 @@
 #include "adblockmanager.h"
 #include "adblockshowlistdialog.h"
 
+#include "pimcommon/util/pimutil.h"
+
 // KDE Includes
 #include <KSharedConfig>
 #include <KStandardDirs>
@@ -83,6 +85,8 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(automaticFiltersListWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(hasChanged()));
     connect(automaticFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateButtons()));
 
+    connect(importFilters, SIGNAL(clicked()), SLOT(slotImportFilters()));
+    connect(exportFilters, SIGNAL(clicked()), SLOT(slotExportFilters()));
 }
 
 void AdBlockSettingWidget::slotUpdateButtons()
@@ -319,5 +323,24 @@ void AdBlockSettingWidget::slotShowList()
         delete dlg;
     }
 }
+
+void AdBlockSettingWidget::slotImportFilters()
+{
+
+}
+
+void AdBlockSettingWidget::slotExportFilters()
+{
+    const QString filter = i18n( "*|all files (*)" );
+    QString exportFilters;
+    const int numberOfElement(manualFiltersListWidget->count());
+    for (int i = 0; i < numberOfElement; ++i) {
+        QListWidgetItem *subItem = manualFiltersListWidget->item(i);
+        const QString stringRule = subItem->text();
+        exportFilters += stringRule + QLatin1Char('\n');
+    }
+    PimCommon::Util::saveTextAs(exportFilters, filter, this);
+}
+
 
 #include "adblocksettingwidget.moc"
