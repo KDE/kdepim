@@ -842,8 +842,7 @@ void Agenda::performSelectAction( const QPoint &pos )
   const QPoint gpos = contentsToGrid( pos );
 
   // Scroll if cursor was moved to upper or lower end of agenda.
-  if ( pos.y() - contentsY() < d->mScrollBorderWidth &&
-       contentsY() > 0 ) {
+  if ( pos.y() - contentsY() < d->mScrollBorderWidth && contentsY() > 0 ) {
     d->mScrollUpTimer.start( d->mScrollDelay );
   } else if ( contentsY() + d->mScrollArea->viewport()->height() -
               d->mScrollBorderWidth < pos.y() ) {
@@ -984,7 +983,8 @@ void Agenda::performItemAction( const QPoint &pos )
   }
 
   // Scroll if item was moved to upper or lower end of agenda.
-  if ( pos.y() - contentsY() < d->mScrollBorderWidth ) {
+  const int distanceToTop = pos.y() - contentsY();
+  if ( distanceToTop < d->mScrollBorderWidth && distanceToTop > -d->mScrollBorderWidth ) {
     d->mScrollUpTimer.start( d->mScrollDelay );
   } else if ( contentsY() + d->mScrollArea->viewport()->height() -
               d->mScrollBorderWidth < pos.y() ) {
@@ -1039,7 +1039,7 @@ void Agenda::performItemAction( const QPoint &pos )
         if ( moveItem == firstItem && !d->mAllDayMode ) { // is the first item
           int newY = deltapos.y() + moveItem->cellYTop();
           // If event start moved earlier than 0:00, it starts the previous day
-          if ( newY < 0 ) {
+          if ( newY < 0 && newY > d->mScrollBorderWidth ) {
             moveItem->expandTop( -moveItem->cellYTop() );
             // prepend a new item at ( x-1, rows()+newY to rows() )
             AgendaItem::QPtr newFirst = firstItem->prevMoveItem();
