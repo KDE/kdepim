@@ -296,9 +296,9 @@ void AdBlockSettingWidget::slotAddFilter()
 
 void AdBlockSettingWidget::slotRemoveSubscription()
 {
-    if (automaticFiltersListWidget->currentItem()) {
-        if (KMessageBox::questionYesNo(this, i18n("Do you want to delete current list?"), i18n("Delete current list")) == KMessageBox::Yes) {
-            QListWidgetItem *item = automaticFiltersListWidget->takeItem(automaticFiltersListWidget->currentRow());
+    QListWidgetItem *item = automaticFiltersListWidget->currentItem();
+    if (item) {
+        if (KMessageBox::questionYesNo(this, i18n("Do you want to delete list \"%1\"?", item->text()), i18n("Delete current list")) == KMessageBox::Yes) {
             const QString path = item->data(PathList).toString();
             if (!path.isEmpty()) {
                 if (!QFile(path).remove())
