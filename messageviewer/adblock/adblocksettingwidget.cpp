@@ -326,7 +326,24 @@ void AdBlockSettingWidget::slotShowList()
 
 void AdBlockSettingWidget::slotImportFilters()
 {
+    const QString filter = i18n( "*|all files (*)" );
+    const QString result = PimCommon::Util::loadToFile(filter, this);
+    const QStringList listFilter = result.split(QLatin1Char('\n'));
+    QStringList excludeFilter;
+    const int numberOfElement(manualFiltersListWidget->count());
+    for (int i = 0; i < numberOfElement; ++i) {
+        QListWidgetItem *subItem = manualFiltersListWidget->item(i);
+        excludeFilter.append(subItem->text());
+    }
 
+    Q_FOREACH (const QString &element, listFilter) {
+        if (element == QLatin1String("\n"))
+            continue;
+        if (excludeFilter.contains(element))
+            continue;
+        QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
+        subItem->setText(element);
+    }
 }
 
 void AdBlockSettingWidget::slotExportFilters()
