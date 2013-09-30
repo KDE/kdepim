@@ -38,6 +38,7 @@ private Q_SLOTS:
     void slotCopyItem();
     void slotBlockItem();
     void customContextMenuRequested(const QPoint &);
+    void slotRemoveFilter();
 
 private:
     enum BlockType {

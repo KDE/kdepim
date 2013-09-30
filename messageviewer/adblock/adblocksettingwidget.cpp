@@ -216,7 +216,7 @@ void AdBlockSettingWidget::save()
 
     // automatic filters
     KConfig config(QLatin1String("messagevieweradblockrc"));
-    const QStringList list = config.groupList().filter( QRegExp( QLatin1String("MessageListTab\\d+") ) );
+    const QStringList list = config.groupList().filter( QRegExp( QLatin1String("FilterList \\d+") ) );
     foreach ( const QString &group, list ) {
         config.deleteGroup( group );
     }
@@ -294,6 +294,7 @@ void AdBlockSettingWidget::slotAddFilter()
         subItem->setData(UrlList, url);
         subItem->setData(LastUpdateList, QDateTime());
         subItem->setData(PathList, QString());
+        hasChanged();
     }
     delete dlg;
 }
@@ -310,6 +311,7 @@ void AdBlockSettingWidget::slotRemoveSubscription()
             }
             delete item;
         }
+        hasChanged();
     }
 }
 
@@ -328,6 +330,9 @@ void AdBlockSettingWidget::slotImportFilters()
 {
     const QString filter = i18n( "*|all files (*)" );
     const QString result = PimCommon::Util::loadToFile(filter, this);
+    if (result.isEmpty()) {
+        return;
+    }
     const QStringList listFilter = result.split(QLatin1Char('\n'));
     QStringList excludeFilter;
     const int numberOfElement(manualFiltersListWidget->count());

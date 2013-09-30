@@ -17,17 +17,25 @@
 
 #include "adblockblockableitemswidget.h"
 #include "adblockcreatefilterdialog.h"
+#include "settings/globalsettings.h"
+#include "adblock/adblockmanager.h"
 
 #include <KLocale>
 #include <KTreeWidgetSearchLine>
 #include <KMenu>
+#include <KConfigGroup>
+#include <KStandardDirs>
 
+#include <QHeaderView>
 #include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QWebFrame>
 #include <QWebElement>
 #include <QDebug>
 #include <QPointer>
+#include <QClipboard>
+#include <QApplication>
+#include <QFile>
 
 using namespace MessageViewer;
 
@@ -52,11 +60,16 @@ AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
 
     lay->addWidget(searchLine);
     lay->addWidget(mListItems);
-    //TODO save/restore headers.
+
+    KConfigGroup config( MessageViewer::GlobalSettings::self()->config(),"AdBlockHeaders");
+    mListItems->header()->restoreState(config.readEntry("HeaderState",QByteArray()));
 }
 
 AdBlockBlockableItemsWidget::~AdBlockBlockableItemsWidget()
 {
+    KConfigGroup groupHeader( MessageViewer::GlobalSettings::self()->config(),"AdBlockHeaders" );
+    groupHeader.writeEntry( "HeaderState", mListItems->header()->saveState());
+    groupHeader.sync();
 }
 
 void AdBlockBlockableItemsWidget::setWebFrame(QWebFrame *frame)
@@ -86,12 +99,17 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
 
 void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
 {
-    if (!mListItems->currentItem())
+    QTreeWidgetItem *item = mListItems->currentItem();
+    if (!item)
         return;
 
     KMenu menu;
-    menu.addAction(i18n("Copy"),this,SLOT(slotCopyItem()));
-    menu.addAction(i18n("Block item"),this,SLOT(slotBlockItem()));
+    menu.addAction(i18n("Copy url"),this,SLOT(slotCopyItem()));
+    menu.addAction(i18n("Block item..."),this,SLOT(slotBlockItem()));
+    if (!item->text(FilterValue).isEmpty()) {
+        menu.addSeparator();
+        menu.addAction(i18n("Remove filter"),this,SLOT(slotRemoveFilter()));
+    }
     menu.exec(QCursor::pos());
 }
 
@@ -115,13 +133,48 @@ void AdBlockBlockableItemsWidget::slotCopyItem()
     QTreeWidgetItem *item = mListItems->currentItem();
     if (!item)
         return;
-
-    //TODO
+    QClipboard *cb = QApplication::clipboard();
+    cb->setText(item->text(Url), QClipboard::Clipboard);
 }
 
 void AdBlockBlockableItemsWidget::saveFilters()
 {
-    //TODO
+    const int numberOfElement(mListItems->topLevelItemCount());
+    QString filters;
+    for (int i = 0; i < numberOfElement; ++i) {
+        QTreeWidgetItem *item = mListItems->topLevelItem(i);
+        if (!item->text(FilterValue).isEmpty()) {
+            if (filters.isEmpty()) {
+                filters = item->text(FilterValue);
+            } else {
+                filters += QLatin1Char('\n') + item->text(FilterValue);
+            }
+        }
+    }
+
+    if (filters.isEmpty())
+        return;
+
+    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+
+    QFile ruleFile(localRulesFilePath);
+    if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
+        kDebug() << "Unable to open rule file" << localRulesFilePath;
+        return;
+    }
+
+    QTextStream out(&ruleFile);
+    out << filters;
+
+    AdBlockManager::self()->reloadConfig();
+}
+
+void AdBlockBlockableItemsWidget::slotRemoveFilter()
+{
+    QTreeWidgetItem *item = mListItems->currentItem();
+    if (!item)
+        return;
+    item->setText(FilterValue, QString());
 }
 
 #include "adblockblockableitemswidget.moc"
