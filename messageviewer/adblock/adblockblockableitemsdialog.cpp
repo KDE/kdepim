@@ -16,9 +16,11 @@
 */
 
 #include "adblockblockableitemsdialog.h"
+#include "adblockblockableitemswidget.h"
 
 #include <KLocale>
 #include <KTreeWidgetSearchLine>
+#include <KMenu>
 
 #include <QVBoxLayout>
 #include <QTreeWidget>
@@ -30,21 +32,10 @@ AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
 {
     setCaption( i18n("Blockable Items") );
     setButtons( Ok|Cancel );
-    QWidget *w = new QWidget;
-    QVBoxLayout *lay = new QVBoxLayout;
-    w->setLayout(lay);
-    mListItems = new QTreeWidget;
 
-    QStringList lst;
-    lst << i18n("Address") << i18n("Type");
-    mListItems->setHeaderLabels(lst);
+    mBlockableItems = new AdBlockBlockableItemsWidget;
 
-    KTreeWidgetSearchLine *searchLine = new KTreeWidgetSearchLine(this, mListItems);
-
-    lay->addWidget(searchLine);
-    lay->addWidget(mListItems);
-
-    setMainWidget(w);
+    setMainWidget(mBlockableItems);
 }
 
 AdBlockBlockableItemsDialog::~AdBlockBlockableItemsDialog()
@@ -54,8 +45,8 @@ AdBlockBlockableItemsDialog::~AdBlockBlockableItemsDialog()
 
 void AdBlockBlockableItemsDialog::setWebFrame(QWebFrame *frame)
 {
-    mListItems->clear();
-    //TODO
+    mBlockableItems->setWebFrame(frame);
 }
+
 
 #include "adblockblockableitemsdialog.moc"

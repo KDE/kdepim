@@ -16,6 +16,7 @@
 */
 
 #include "adblockblockableitemdialog_gui.h"
+#include "adblock/adblockblockableitemsdialog.h"
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KFileDialog>
