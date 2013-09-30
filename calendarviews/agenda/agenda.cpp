@@ -555,7 +555,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
   }
 }
 
-bool Agenda::eventFilter_drag( QObject *, QDropEvent *de )
+bool Agenda::eventFilter_drag( QObject *obj, QDropEvent *de )
 {
 #ifndef QT_NO_DRAGANDDROP
   const QMimeData *md = de->mimeData();
@@ -591,7 +591,13 @@ bool Agenda::eventFilter_drag( QObject *, QDropEvent *de )
 
     de->setDropAction( Qt::MoveAction );
 
-    const QPoint gridPosition = contentsToGrid( de->pos() );
+    QWidget *dropTarget = qobject_cast<QWidget*>( obj );
+    QPoint dropPosition = de->pos();
+    if ( dropTarget && dropTarget != this ) {
+      dropPosition = dropTarget->mapTo( this, dropPosition );
+    }
+
+    const QPoint gridPosition = contentsToGrid( dropPosition );
     if ( !incidenceUrls.isEmpty() ) {
       emit droppedIncidences( incidenceUrls, gridPosition, d->mAllDayMode );
     } else {
