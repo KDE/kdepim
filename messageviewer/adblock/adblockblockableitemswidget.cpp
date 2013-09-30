@@ -52,6 +52,7 @@ AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
 
     lay->addWidget(searchLine);
     lay->addWidget(mListItems);
+    //TODO save/restore headers.
 }
 
 AdBlockBlockableItemsWidget::~AdBlockBlockableItemsWidget()
@@ -74,6 +75,7 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
                 QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
                 item->setText(Url, src);
                 item->setText(Type, i18n("Image"));
+                item->setTextColor(FilterValue, Qt::red);
             }
         }
     }
@@ -117,5 +119,9 @@ void AdBlockBlockableItemsWidget::slotCopyItem()
     //TODO
 }
 
+void AdBlockBlockableItemsWidget::saveFilters()
+{
+    //TODO
+}
 
 #include "adblockblockableitemswidget.moc"

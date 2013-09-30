@@ -32,6 +32,7 @@ public:
     ~AdBlockBlockableItemsWidget();
 
     void setWebFrame(QWebFrame *frame);
+    void saveFilters();
 
 private Q_SLOTS:
     void slotCopyItem();

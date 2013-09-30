@@ -49,6 +49,11 @@ void AdBlockBlockableItemsDialog::setWebFrame(QWebFrame *frame)
     mBlockableItems->setWebFrame(frame);
 }
 
+void AdBlockBlockableItemsDialog::saveFilters()
+{
+    mBlockableItems->saveFilters();
+}
+
 void AdBlockBlockableItemsDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "AdBlockBlockableItemsDialog" );

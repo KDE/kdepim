@@ -655,7 +655,7 @@ void MailWebView::openBlockableItemsDialog()
     QPointer<AdBlockBlockableItemsDialog> dlg = new AdBlockBlockableItemsDialog(this);
     dlg->setWebFrame(page()->mainFrame());
     if (dlg->exec()) {
-        //TODO
+        dlg->saveFilters();
     }
     delete dlg;
 }

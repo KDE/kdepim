@@ -30,6 +30,7 @@ public:
     ~AdBlockBlockableItemsDialog();
 
     void setWebFrame(QWebFrame *frame);
+    void saveFilters();
 
 private:
     void writeConfig();
