@@ -21,6 +21,9 @@
 #include <QWidget>
 
 class QWebView;
+namespace MessageViewer {
+class AdBlockBlockableItemsWidget;
+}
 class AdBlockBlockableItemTestDialog : public QWidget
 {
     Q_OBJECT
@@ -33,6 +36,7 @@ private Q_SLOTS:
     void slotOpenHtml();
 
 private:
+    MessageViewer::AdBlockBlockableItemsWidget *mWidget;
 };
 
 #endif

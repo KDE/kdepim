@@ -16,7 +16,7 @@
 */
 
 #include "adblockblockableitemdialog_gui.h"
-#include "adblock/adblockblockableitemsdialog.h"
+#include "adblock/adblockblockableitemswidget.h"
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KFileDialog>
@@ -34,6 +34,10 @@ AdBlockBlockableItemTestDialog::AdBlockBlockableItemTestDialog(const QString &fi
     : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
+
+    mWidget = new MessageViewer::AdBlockBlockableItemsWidget;
+    lay->addWidget(mWidget);
+
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *openFile = new QPushButton(i18n("Open html..."));
     connect(openFile, SIGNAL(clicked()), SLOT(slotOpenHtml()));

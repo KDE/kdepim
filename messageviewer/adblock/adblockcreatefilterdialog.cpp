@@ -16,17 +16,32 @@
 */
 
 #include "adblockcreatefilterdialog.h"
-
+#include "ui_adblockcreatefilterwidget.h"
 using namespace MessageViewer;
 
 AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
     : KDialog(parent)
 {
+    QWidget *w = new QWidget;
+    mUi = new Ui::AdBlockCreateFilterWidget;
+    mUi->setupUi(w);
+    setMainWidget(w);
 }
 
 AdBlockCreateFilterDialog::~AdBlockCreateFilterDialog()
 {
+    delete mUi;
+    mUi = 0;
 }
 
+void AdBlockCreateFilterDialog::setItem(const QString &pattern)
+{
+    //TODO
+}
+
+QString AdBlockCreateFilterDialog::filter() const
+{
+    return mUi->filterName->text();
+}
 
 #include "adblockcreatefilterdialog.moc"

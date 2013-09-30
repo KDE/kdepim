@@ -16,6 +16,7 @@
 */
 
 #include "adblockblockableitemswidget.h"
+#include "adblockcreatefilterdialog.h"
 
 #include <KLocale>
 #include <KTreeWidgetSearchLine>
@@ -24,6 +25,7 @@
 #include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QWebFrame>
+#include <QPointer>
 
 using namespace MessageViewer;
 
@@ -56,23 +58,41 @@ AdBlockBlockableItemsWidget::~AdBlockBlockableItemsWidget()
 void AdBlockBlockableItemsWidget::setWebFrame(QWebFrame *frame)
 {
     mListItems->clear();
-    //TODO
+    searchBlockableElement(frame);
 }
 
+void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
+{
+    //TODO
+    foreach(QWebFrame *childFrame, frame->childFrames()) {
+        searchBlockableElement(childFrame);
+    }
+}
 
 void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
 {
-#if 0
+    if (!mListItems->currentItem())
+        return;
+
     KMenu menu;
-    menu.addAction(i18n("copy"),this,SLOT(slotCopyItem()));
+    menu.addAction(i18n("Copy"),this,SLOT(slotCopyItem()));
+    menu.addAction(i18n("Block item"),this,SLOT(slotBlockItem()));
     menu.exec(QCursor::pos());
-#endif
+}
+
+void AdBlockBlockableItemsWidget::slotBlockItem()
+{
+    QPointer<AdBlockCreateFilterDialog> dlg = new AdBlockCreateFilterDialog;
+    dlg->setItem(QString()); //TODO
+    if (dlg->exec()) {
+        //TODO
+    }
     //TODO
 }
 
 void AdBlockBlockableItemsWidget::slotCopyItem()
 {
-
+    //TODO
 }
 
 

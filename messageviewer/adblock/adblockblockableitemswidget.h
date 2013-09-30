@@ -19,11 +19,12 @@
 #define ADBLOCKBLOCKABLEITEMSWIDGET_H
 
 #include <QWidget>
+#include "messageviewer_export.h"
 
 class QTreeWidget;
 class QWebFrame;
 namespace MessageViewer {
-class AdBlockBlockableItemsWidget : public QWidget
+class MESSAGEVIEWER_EXPORT AdBlockBlockableItemsWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -34,9 +35,13 @@ public:
 
 private Q_SLOTS:
     void slotCopyItem();
+    void slotBlockItem();
 
 protected:
     void customContextMenuRequested(const QPoint &);
+
+private:
+    void searchBlockableElement(QWebFrame *frame);
 
 private:
     QTreeWidget *mListItems;

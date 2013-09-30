@@ -19,7 +19,9 @@
 #define ADBLOCKCREATEFILTERDIALOG_H
 
 #include <KDialog>
-
+namespace Ui {
+class AdBlockCreateFilterWidget;
+}
 namespace MessageViewer {
 class AdBlockCreateFilterDialog : public KDialog
 {
@@ -27,6 +29,13 @@ class AdBlockCreateFilterDialog : public KDialog
 public:
     explicit AdBlockCreateFilterDialog(QWidget *parent=0);
     ~AdBlockCreateFilterDialog();
+
+    void setItem(const QString &pattern);
+
+    QString filter() const;
+
+private:
+    Ui::AdBlockCreateFilterWidget *mUi;
 };
 }
 
