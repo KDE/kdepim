@@ -104,6 +104,7 @@ public:
 #ifndef KDEPIM_NO_WEBKIT
     void scamCheck();
     void saveMainFrameScreenshotInFile(const QString &filename);
+    void openBlockableItemsDialog(); 
 #endif
 
 public Q_SLOTS:
