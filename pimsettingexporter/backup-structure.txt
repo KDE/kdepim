@@ -1,4 +1,4 @@
-2013-09-03:
+2013-09-29:
 -----------
 Zip structure is :
 Root
@@ -61,6 +61,7 @@ Root
 |       |---------akonadi_maildispatcher_agent.notifyrc
 |       |---------akonadi_newmailnotifier_agent.notifyrc
 |       |---------akonadi_followupreminder_agent.notifyrc
+|       |---------messagevieweradblockrc
 |
 |-----akonadi
 |       |---------<archive akonadi>

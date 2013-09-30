@@ -700,6 +700,21 @@ void ImportMailJob::restoreConfig()
         }
     }
 
+    const QString adblockStr(QLatin1String("messagevieweradblockrc"));
+    const KArchiveEntry* adblockentry  = mArchiveDirectory->entry(Utils::configsPath() + adblockStr);
+    if ( adblockentry &&  adblockentry->isFile()) {
+        const KArchiveFile* adblockconfiguration = static_cast<const KArchiveFile*>(adblockentry);
+        const QString adblockrc = KStandardDirs::locateLocal( "config",  adblockStr);
+        if (QFile(adblockrc).exists()) {
+            //TODO 4.12 allow to merge config.
+            if (overwriteConfigMessageBox(adblockStr)) {
+                copyToFile(adblockconfiguration, adblockrc, adblockStr, Utils::configsPath());
+            }
+        } else {
+            copyToFile(adblockconfiguration, adblockrc, adblockStr, Utils::configsPath());
+        }
+    }
+
     //Restore notify file
     QStringList lstNotify;
     lstNotify << QLatin1String("akonadi_mailfilter_agent.notifyrc")

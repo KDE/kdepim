@@ -32,6 +32,7 @@
 #include "settings/globalsettings.h"
 #include "viewer/mailwebview.h"
 #include "viewer/mimetreemodel.h"
+#include "adblock/adblockmanager.h"
 
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/itemfetchjob.h>
@@ -659,6 +660,11 @@ KAction *Viewer::blockImage()
 {
     Q_D( Viewer );
     return d->mBlockImage;
+}
+
+bool Viewer::adblockEnabled() const
+{
+    return MessageViewer::AdBlockManager::self()->isEnabled();
 }
 
 }

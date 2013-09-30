@@ -15,44 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ADBLOCKSHOWLISTDIALOG_H
-#define ADBLOCKSHOWLISTDIALOG_H
+#ifndef ADBLOCKBLOCKABLEITEMSDIALOG_H
+#define ADBLOCKBLOCKABLEITEMSDIALOG_H
 
 #include <KDialog>
-
-class KJob;
-class KTemporaryFile;
-
-namespace KPIMUtils {
-class ProgressIndicatorLabel;
-}
-
-namespace PimCommon {
-class PlainTextEditorWidget;
-}
-
+class QTreeWidget;
+class QWebFrame;
 namespace MessageViewer {
-class AdBlockShowListDialog : public KDialog
+class AdBlockBlockableItemsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit AdBlockShowListDialog(QWidget *parent = 0);
-    ~AdBlockShowListDialog();
+    explicit AdBlockBlockableItemsDialog(QWidget *parent=0);
+    ~AdBlockBlockableItemsDialog();
 
-    void setAdBlockListPath(const QString &localPath, const QString &url);
-
-private Q_SLOTS:
-    void slotFinished(KJob *job);
+    void setWebFrame(QWebFrame *frame);
 
 private:
-    void readConfig();
-    void writeConfig();
-    void downLoadList(const QString &url);
-
-    PimCommon::PlainTextEditorWidget *mTextEdit;
-    KTemporaryFile *mTemporaryFile;
-    KPIMUtils::ProgressIndicatorLabel *mProgress;
+    QTreeWidget *mListItems;
 };
 }
 
-#endif // ADBLOCKSHOWLISTDIALOG_H
+#endif // ADBLOCKBLOCKABLEITEMSDIALOG_H

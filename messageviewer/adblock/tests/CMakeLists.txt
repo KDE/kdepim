@@ -25,3 +25,14 @@ target_link_libraries(adblocksettingsdialog_gui
   messageviewer
 )
 
+set(adblockblockableitemdialog_gui_SRCS adblockblockableitemdialog_gui.cpp)
+kde4_add_executable(adblockblockableitemdialog_gui TEST ${adblockblockableitemdialog_gui_SRCS})
+target_link_libraries(adblockblockableitemdialog_gui
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTCORE_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
+  ${KDE4_KDEUI_LIBS}
+  ${KDE4_KIO_LIBS}
+  messageviewer
+)

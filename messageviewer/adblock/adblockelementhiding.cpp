@@ -46,14 +46,12 @@ bool AdBlockElementHiding::addRule(const QString &rule)
         return true;
     }
 
-    QStringList lst = rule.split(QLatin1String("##"));
-    QString domainSpecificRule = lst[1];
+    const QStringList lst = rule.split(QLatin1String("##"));
+    const QString domainSpecificRule = lst[1];
 
     QStringList domains = lst[0].split(QLatin1Char(','));
-    Q_FOREACH(const QString &domain, domains)
-    {
-        if(domain.startsWith(QLatin1Char('~')))
-        {
+    Q_FOREACH(const QString &domain, domains) {
+        if(domain.startsWith(QLatin1Char('~'))) {
             m_DomainSpecificRulesWhitelist.insert(domain.mid(1),
                                                   domainSpecificRule);
             continue;
@@ -69,26 +67,22 @@ void AdBlockElementHiding::apply(QWebElement &document, const QString &domain) c
 {
 
     //first apply generic rules
-    Q_FOREACH(const QString &rule, m_GenericRules)
-    {
+    Q_FOREACH(const QString &rule, m_GenericRules) {
         applyStringRule(document, rule);
     }
 
     //check for whitelisted rules
     QStringList whiteListedRules;
-    QStringList subdomainList = generateSubdomainList(domain);
+    const QStringList subdomainList = generateSubdomainList(domain);
 
-    Q_FOREACH(const QString &d, subdomainList)
-    {
+    Q_FOREACH(const QString &d, subdomainList) {
         whiteListedRules.append(m_DomainSpecificRulesWhitelist.values(d));
     }
 
     //apply rules if not whitelisted
-    Q_FOREACH(const QString &d, subdomainList)
-    {
+    Q_FOREACH(const QString &d, subdomainList) {
         QList<QString> ruleList = m_DomainSpecificRules.values(d);
-        Q_FOREACH(const QString &rule, ruleList)
-        {
+        Q_FOREACH(const QString &rule, ruleList) {
             if (!whiteListedRules.contains(rule))
                 applyStringRule(document, rule);
         }

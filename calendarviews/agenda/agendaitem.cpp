@@ -75,6 +75,7 @@ AgendaItem::AgendaItem( EventView *eventView, const Akonadi::ETMCalendar::Ptr &c
   }
 
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
+  mIncidence.setPayload( KCalCore::Incidence::Ptr( incidence->clone() ) );
   Q_ASSERT( incidence );
   if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String("YES") ||
        incidence->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String("YES") ) {

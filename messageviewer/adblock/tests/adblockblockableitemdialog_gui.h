@@ -15,44 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ADBLOCKSHOWLISTDIALOG_H
-#define ADBLOCKSHOWLISTDIALOG_H
+#ifndef TEST_SCAMDETECTION_GUI_H
+#define TEST_SCAMDETECTION_GUI_H
 
-#include <KDialog>
+#include <QWidget>
 
-class KJob;
-class KTemporaryFile;
-
-namespace KPIMUtils {
-class ProgressIndicatorLabel;
-}
-
-namespace PimCommon {
-class PlainTextEditorWidget;
-}
-
-namespace MessageViewer {
-class AdBlockShowListDialog : public KDialog
+class QWebView;
+class AdBlockBlockableItemTestDialog : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AdBlockShowListDialog(QWidget *parent = 0);
-    ~AdBlockShowListDialog();
-
-    void setAdBlockListPath(const QString &localPath, const QString &url);
+    explicit AdBlockBlockableItemTestDialog(const QString &filename, QWidget *parent=0);
+    ~AdBlockBlockableItemTestDialog();
 
 private Q_SLOTS:
-    void slotFinished(KJob *job);
+    void slotLoadFinished();
+    void slotOpenHtml();
 
 private:
-    void readConfig();
-    void writeConfig();
-    void downLoadList(const QString &url);
-
-    PimCommon::PlainTextEditorWidget *mTextEdit;
-    KTemporaryFile *mTemporaryFile;
-    KPIMUtils::ProgressIndicatorLabel *mProgress;
 };
-}
 
-#endif // ADBLOCKSHOWLISTDIALOG_H
+#endif

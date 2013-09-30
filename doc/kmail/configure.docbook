@@ -449,7 +449,7 @@ on their drafts at a different location.</para>
 <!-- Templates folder missing-->
  
 <varlistentry>
-<term><guilabel>Special transport</guilabel></term>
+<term><guilabel>Outgoing Account</guilabel></term>
 <listitem>
   <para>Select or enter an alternative &SMTP; server to be used when sending
 messages using this identity.</para>

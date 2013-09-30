@@ -31,6 +31,7 @@
 #include "grantleetheme/globalsettings_base.h"
 #include "scamdetection/scamdetectionwarningwidget.h"
 #include "scamdetection/scamattribute.h"
+#include "adblock/adblockmanager.h"
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "htmlwriter/filehtmlwriter.h"
@@ -3330,7 +3331,9 @@ void ViewerPrivate::slotAddToWhiteList()
 
 void ViewerPrivate::slotBlockImage()
 {
-    //TODO
+    if (mImageUrl.isEmpty())
+        return;
+    MessageViewer::AdBlockManager::self()->addCustomRule(mImageUrl.url(), true);
 }
 
 #include "viewer_p.moc"

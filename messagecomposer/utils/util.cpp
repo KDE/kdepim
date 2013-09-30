@@ -45,110 +45,91 @@
 #include <akonadi/agentmanager.h>
 #include <messagecore/helpers/messagehelpers.h>
 
+KMime::Content* setBodyAndCTE( QByteArray &encodedBody, KMime::Headers::ContentType* contentType, KMime::Content* ret ){
+  MessageComposer::Composer composer;
+  MessageComposer::SinglepartJob cteJob( &composer );
+
+  cteJob.contentType()->setMimeType( contentType->mimeType() );
+  cteJob.contentType()->setCharset( contentType->charset() );
+  cteJob.setData( encodedBody );
+  cteJob.exec();
+  cteJob.content()->assemble();
+
+  ret->contentTransferEncoding()->setEncoding( cteJob.contentTransferEncoding()->encoding() );
+  ret->setBody( cteJob.content()->encodedBody() );
+
+  return ret;
+}
+
 KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {
-
   KMime::Content* result = new KMime::Content;
 
+  // should throw a message to user, that the signing/encryption failed
+  Q_ASSERT( !encodedBody.isEmpty() );
+
   if( !( format & Kleo::InlineOpenPGPFormat ) ) { // make a MIME message
-    // make headers and CE+CTE
     kDebug() << "making MIME message, format:" << format;
     makeToplevelContentType( result, format, sign, hashAlgo );
-    const QByteArray boundary = KMime::multiPartBoundary();
 
-    if( makeMultiMime( format, sign ) ) {
+    if( makeMultiMime( format, sign ) ) {   // sign/enc PGPMime, sign SMIME
+
+      const QByteArray boundary = KMime::multiPartBoundary();
       result->contentType()->setBoundary( boundary );
-    } else {
-      result->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
-      result->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
-      result->contentDisposition()->setFilename( QString::fromLatin1( "smime.p7m" ) );
-    }
 
-    result->assemble();
-    kDebug() << "processed header:" << result->head();
-    // now make the body
-    if( !makeMultiMime( format, sign ) ) {
-      // set body to be body + encoded if there is a orig body
-      // if not, ignore it because the newline messes up decrypting
-      if(  sign && makeMultiPartSigned( format ) ) {
-        result->setBody( orig->body() + '\n' + encodedBody );
-      } else {
-        result->setBody( encodedBody );
-      }
-    } else {
+      result->assemble();
+      //kDebug() << "processed header:" << result->head();
+
       // Build the encapsulated MIME parts.
-      // Build a MIME part holding the version information
-      // taking the body contents returned in
-      // structuring.data.bodyTextVersion.
-      KMime::Content* vers = 0;
-      if( !sign && format == Kleo::OpenPGPMIMEFormat ) {
-        vers = new KMime::Content;
-        vers->contentType()->setMimeType( "application/pgp-encrypted" );
-        vers->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
-        vers->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
-        vers->setBody( "Version: 1" );
-
-      }
-
       // Build a MIME part holding the code information
       // taking the body contents returned in ciphertext.
       KMime::Content* code = new KMime::Content;
       setNestedContentType( code, format, sign );
       setNestedContentDisposition( code, format, sign );
 
-      if( format & Kleo::AnySMIME ) {
-        code->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
-        code->contentTransferEncoding()->needToEncode();
-        code->setBody( encodedBody );
-      }
-      else {
-        // fixing ContentTransferEncoding
-        MessageComposer::Composer composer;
-        MessageComposer::SinglepartJob cjob( &composer );
-        cjob.contentType()->setMimeType( orig->contentType()->mimeType() );
-        cjob.contentType()->setCharset( orig->contentType()->charset() );
-        cjob.setData( encodedBody );
-        cjob.exec();
-        cjob.content()->assemble();
-
-        code->contentTransferEncoding()->setEncoding( cjob.contentTransferEncoding()->encoding() );
-        code->setBody( cjob.content()->body() );
-      }
-
-      // compose the multi-part message
-      if( sign && makeMultiMime( format, true ) )
+      if ( sign ) {                         // sign PGPMime, sign SMIME
+        if( format & Kleo::AnySMIME ) {     // sign SMIME
+          code->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
+          code->contentTransferEncoding()->needToEncode();
+          code->setBody( encodedBody );
+        } else {                            // sign PGPMmime
+          setBodyAndCTE( encodedBody, orig->contentType(), code );
+        }
         result->addContent( orig );
-      if( vers )
+        result->addContent( code );
+      } else {                              // enc PGPMime
+        setBodyAndCTE( encodedBody, orig->contentType(), code );
+
+        // Build a MIME part holding the version information
+        // taking the body contents returned in
+        // structuring.data.bodyTextVersion.
+        KMime::Content* vers = new KMime::Content;
+        vers->contentType()->setMimeType( "application/pgp-encrypted" );
+        vers->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
+        vers->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+        vers->setBody( "Version: 1" );
+
         result->addContent( vers );
-      result->addContent( code );
+        result->addContent( code );
+      }
+    } else {                                //enc SMIME, sign/enc SMIMEOpaque
+      result->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
+      result->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
+      result->contentDisposition()->setFilename( QString::fromLatin1( "smime.p7m" ) );
+
+      result->assemble();
+      //kDebug() << "processed header:" << result->head();
+
+      result->setBody( encodedBody );
     }
-  } else { // not MIME, just plain message
-    QByteArray resultingBody;
-    if( sign && makeMultiMime( format, true ) )
-      resultingBody += orig->body();
-    if( !encodedBody.isEmpty() )
-      resultingBody += encodedBody;
-    else {
-      kDebug() << "Got no encoded payload trying to save as plaintext inline pgp!";
-    }
+  } else {                                  // sign/enc PGPInline
+    result->setHead( orig->head() );
+    result->parse();
 
     // fixing ContentTransferEncoding
-    MessageComposer::Composer composer;
-    MessageComposer::SinglepartJob cjob( &composer );
-    cjob.contentType()->setMimeType( orig->contentType()->mimeType() );
-    cjob.contentType()->setCharset( orig->contentType()->charset() );
-    cjob.setData( resultingBody );
-    cjob.exec();
-    cjob.content()->assemble();
-
-    result->setHead( orig->head() );
-    result->setBody( cjob.content()->encodedBody() );
-    result->parse();
-    result->contentTransferEncoding()->setEncoding( cjob.contentTransferEncoding()->encoding() );
-
+    setBodyAndCTE( encodedBody, orig->contentType(), result );
   }
   return result;
-
 }
 
 // set the correct top-level ContentType on the message

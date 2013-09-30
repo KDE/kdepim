@@ -93,6 +93,8 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     QScrollArea *scrollArea() const;
 
+    AgendaItem::List agendaItems( Akonadi::Entity::Id id ) const;
+
     /**
       Returns the uid of the last incidence that was selected. This
       persists across reloads and clear, so that if the same uid
@@ -159,8 +161,6 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     void setCalendar( const Akonadi::ETMCalendar::Ptr &cal );
 
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
-
-    QList<AgendaItem::QPtr> agendaItems( const KCalCore::Incidence::Ptr &inc ) const;
 
   public Q_SLOTS:
     void scrollUp();
@@ -232,6 +232,9 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
       RESIZELEFT,
       RESIZERIGHT
     };
+
+    AgendaItem::QPtr createAgendaItem( const Akonadi::Item &item, int itemPos,
+                                       int itemCount, const KDateTime &qd, bool isSelected );
 
   protected:
     /**

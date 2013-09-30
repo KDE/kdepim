@@ -20,6 +20,8 @@
 #include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/plaintexteditor/plaintexteditor.h"
 
+#include <KPIMUtils/ProgressIndicatorLabel>
+
 #include <KLocale>
 #include <KIO/Job>
 #include <KTemporaryFile>
@@ -40,6 +42,9 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     (void)new MessageViewer::AdBlockSyntaxHighlighter(mTextEdit->editor()->document());
     mTextEdit->editor()->setReadOnly(true);
     lay->addWidget(mTextEdit);
+
+    mProgress = new KPIMUtils::ProgressIndicatorLabel(i18n("Download..."));
+    lay->addWidget(mProgress);
     w->setLayout(lay);
     setMainWidget(w);
     readConfig();
@@ -73,7 +78,6 @@ void AdBlockShowListDialog::setAdBlockListPath(const QString &localPath, const Q
         if (file.exists()) {
             mTextEdit->editor()->setPlainText(QString::fromUtf8(file.readAll()));
         } else {
-            //TODO fix it.
             downLoadList(url);
         }
     } else {
@@ -94,6 +98,7 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
 
     KUrl destUrl = KUrl(mTemporaryFile->fileName());
 
+    mProgress->start();
     KIO::FileCopyJob* job = KIO::file_copy(subUrl , destUrl, -1, KIO::HideProgressInfo | KIO::Overwrite);
     job->metaData().insert(QLatin1String("ssl_no_client_cert"), QLatin1String("TRUE"));
     job->metaData().insert(QLatin1String("ssl_no_ui"), QLatin1String("TRUE"));
@@ -104,14 +109,22 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
     connect(job, SIGNAL(finished(KJob*)), this, SLOT(slotFinished(KJob*)));
 }
 
-
 void AdBlockShowListDialog::slotFinished(KJob *job)
 {
-    if (job->error())
+    mProgress->stop();
+    if (job->error()) {
+        mTemporaryFile->close();
+        delete mTemporaryFile;
+        mTemporaryFile = 0;
+        mTextEdit->editor()->setPlainText(i18n("An error occurs during download list: \"%1\"", job->errorString()));
         return;
+    }
 
     QFile f(mTemporaryFile->fileName());
     if (!f.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        mTemporaryFile->close();
+        delete mTemporaryFile;
+        mTemporaryFile = 0;
         return;
     }
     mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));

@@ -33,6 +33,8 @@
 #include "adblockmanager.h"
 #include "adblockshowlistdialog.h"
 
+#include "pimcommon/util/pimutil.h"
+
 // KDE Includes
 #include <KSharedConfig>
 #include <KStandardDirs>
@@ -58,7 +60,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(hintLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotInfoLinkActivated(QString)));
 
     manualFiltersListWidget->setSortingEnabled(true);
-    manualFiltersListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    manualFiltersListWidget->setSelectionMode(QAbstractItemView::MultiSelection);
 
     searchLine->setListWidget(manualFiltersListWidget);
 
@@ -74,8 +76,6 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     removeSubscription->setEnabled(false);
     showList->setEnabled(false);
     // emit changed signal
-    connect(insertButton,       SIGNAL(clicked()),           this, SLOT(hasChanged()));
-    connect(removeButton,       SIGNAL(clicked()),           this, SLOT(hasChanged()));
     connect(checkEnableAdblock, SIGNAL(stateChanged(int)),   this, SLOT(hasChanged()));
     connect(checkHideAds,       SIGNAL(stateChanged(int)),   this, SLOT(hasChanged()));
     connect(spinBox,            SIGNAL(valueChanged(int)),   this, SLOT(hasChanged()));
@@ -85,6 +85,8 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(automaticFiltersListWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(hasChanged()));
     connect(automaticFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateButtons()));
 
+    connect(importFilters, SIGNAL(clicked()), SLOT(slotImportFilters()));
+    connect(exportFilters, SIGNAL(clicked()), SLOT(slotExportFilters()));
 }
 
 void AdBlockSettingWidget::slotUpdateButtons()
@@ -98,7 +100,7 @@ void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
 {
     Q_UNUSED(url)
 
-    QString hintHelpString = i18n("<qt><p>Enter an expression to filter. Filters can be defined as either:"
+    const QString hintHelpString = i18n("<qt><p>Enter an expression to filter. Filters can be defined as either:"
                                   "<ul><li>a shell-style wildcard, e.g. <tt>http://www.example.com/ads*</tt>, "
                                   "the wildcards <tt>*?[]</tt> may be used</li>"
                                   "<li>a full regular expression by surrounding the string with '<tt>/</tt>', "
@@ -112,18 +114,34 @@ void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
 
 void AdBlockSettingWidget::insertRule()
 {
-    QString rule = addFilterLineEdit->text();
+    const QString rule = addFilterLineEdit->text();
     if (rule.isEmpty())
         return;
+    const int numberItem(manualFiltersListWidget->count());
+    for (int i = 0; i < numberItem; ++i) {
+        if (manualFiltersListWidget->item(i)->text() == rule) {
+            addFilterLineEdit->clear();
+            return;
+        }
+    }
+
 
     manualFiltersListWidget->addItem(rule);
     addFilterLineEdit->clear();
+    hasChanged();
 }
 
 
 void AdBlockSettingWidget::removeRule()
 {
-    manualFiltersListWidget->takeItem(manualFiltersListWidget->currentRow());
+    QList<QListWidgetItem *> select = manualFiltersListWidget->selectedItems();
+    if (select.isEmpty()) {
+        return;
+    }
+    Q_FOREACH (QListWidgetItem *item, select) {
+        delete item;
+    }
+    hasChanged();
 }
 
 
@@ -220,7 +238,7 @@ void AdBlockSettingWidget::save()
 
     config.sync();
     // local filters
-    QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
+    const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
 
     QFile ruleFile(localRulesFilePath);
     if (!ruleFile.open(QFile::WriteOnly | QFile::Text)) {
@@ -282,10 +300,10 @@ void AdBlockSettingWidget::slotAddFilter()
 
 void AdBlockSettingWidget::slotRemoveSubscription()
 {
-    if (automaticFiltersListWidget->currentItem()) {
-        if (KMessageBox::questionYesNo(this, i18n("Do you want to delete current list?"), i18n("Delete current list")) == KMessageBox::Yes) {
-            QListWidgetItem *item = automaticFiltersListWidget->takeItem(automaticFiltersListWidget->currentRow());
-            QString path = item->data(PathList).toString();
+    QListWidgetItem *item = automaticFiltersListWidget->currentItem();
+    if (item) {
+        if (KMessageBox::questionYesNo(this, i18n("Do you want to delete list \"%1\"?", item->text()), i18n("Delete current list")) == KMessageBox::Yes) {
+            const QString path = item->data(PathList).toString();
             if (!path.isEmpty()) {
                 if (!QFile(path).remove())
                     qDebug()<<" we can remove file:"<<path;
@@ -305,5 +323,41 @@ void AdBlockSettingWidget::slotShowList()
         delete dlg;
     }
 }
+
+void AdBlockSettingWidget::slotImportFilters()
+{
+    const QString filter = i18n( "*|all files (*)" );
+    const QString result = PimCommon::Util::loadToFile(filter, this);
+    const QStringList listFilter = result.split(QLatin1Char('\n'));
+    QStringList excludeFilter;
+    const int numberOfElement(manualFiltersListWidget->count());
+    for (int i = 0; i < numberOfElement; ++i) {
+        QListWidgetItem *subItem = manualFiltersListWidget->item(i);
+        excludeFilter.append(subItem->text());
+    }
+
+    Q_FOREACH (const QString &element, listFilter) {
+        if (element == QLatin1String("\n"))
+            continue;
+        if (excludeFilter.contains(element))
+            continue;
+        QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
+        subItem->setText(element);
+    }
+}
+
+void AdBlockSettingWidget::slotExportFilters()
+{
+    const QString filter = i18n( "*|all files (*)" );
+    QString exportFilters;
+    const int numberOfElement(manualFiltersListWidget->count());
+    for (int i = 0; i < numberOfElement; ++i) {
+        QListWidgetItem *subItem = manualFiltersListWidget->item(i);
+        const QString stringRule = subItem->text();
+        exportFilters += stringRule + QLatin1Char('\n');
+    }
+    PimCommon::Util::saveTextAs(exportFilters, filter, this);
+}
+
 
 #include "adblocksettingwidget.moc"
