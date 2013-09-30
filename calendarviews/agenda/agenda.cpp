@@ -555,7 +555,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
   }
 }
 
-bool Agenda::eventFilter_drag( QObject *, QDropEvent *de )
+bool Agenda::eventFilter_drag( QObject *obj, QDropEvent *de )
 {
 #ifndef QT_NO_DRAGANDDROP
   const QMimeData *md = de->mimeData();
@@ -591,7 +591,13 @@ bool Agenda::eventFilter_drag( QObject *, QDropEvent *de )
 
     de->setDropAction( Qt::MoveAction );
 
-    const QPoint gridPosition = contentsToGrid( de->pos() );
+    QWidget *dropTarget = qobject_cast<QWidget*>( obj );
+    QPoint dropPosition = de->pos();
+    if ( dropTarget && dropTarget != this ) {
+      dropPosition = dropTarget->mapTo( this, dropPosition );
+    }
+
+    const QPoint gridPosition = contentsToGrid( dropPosition );
     if ( !incidenceUrls.isEmpty() ) {
       emit droppedIncidences( incidenceUrls, gridPosition, d->mAllDayMode );
     } else {
@@ -836,8 +842,7 @@ void Agenda::performSelectAction( const QPoint &pos )
   const QPoint gpos = contentsToGrid( pos );
 
   // Scroll if cursor was moved to upper or lower end of agenda.
-  if ( pos.y() - contentsY() < d->mScrollBorderWidth &&
-       contentsY() > 0 ) {
+  if ( pos.y() - contentsY() < d->mScrollBorderWidth && contentsY() > 0 ) {
     d->mScrollUpTimer.start( d->mScrollDelay );
   } else if ( contentsY() + d->mScrollArea->viewport()->height() -
               d->mScrollBorderWidth < pos.y() ) {
@@ -978,7 +983,8 @@ void Agenda::performItemAction( const QPoint &pos )
   }
 
   // Scroll if item was moved to upper or lower end of agenda.
-  if ( pos.y() - contentsY() < d->mScrollBorderWidth ) {
+  const int distanceToTop = pos.y() - contentsY();
+  if ( distanceToTop < d->mScrollBorderWidth && distanceToTop > -d->mScrollBorderWidth ) {
     d->mScrollUpTimer.start( d->mScrollDelay );
   } else if ( contentsY() + d->mScrollArea->viewport()->height() -
               d->mScrollBorderWidth < pos.y() ) {
@@ -1033,7 +1039,7 @@ void Agenda::performItemAction( const QPoint &pos )
         if ( moveItem == firstItem && !d->mAllDayMode ) { // is the first item
           int newY = deltapos.y() + moveItem->cellYTop();
           // If event start moved earlier than 0:00, it starts the previous day
-          if ( newY < 0 ) {
+          if ( newY < 0 && newY > d->mScrollBorderWidth ) {
             moveItem->expandTop( -moveItem->cellYTop() );
             // prepend a new item at ( x-1, rows()+newY to rows() )
             AgendaItem::QPtr newFirst = firstItem->prevMoveItem();
