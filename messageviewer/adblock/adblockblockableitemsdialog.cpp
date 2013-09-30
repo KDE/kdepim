@@ -30,14 +30,21 @@ AdBlockBlockableItemsDialog::AdBlockBlockableItemsDialog(QWidget *parent)
 {
     setCaption( i18n("Blockable Items") );
     setButtons( Ok|Cancel );
+    QWidget *w = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    w->setLayout(lay);
     mListItems = new QTreeWidget;
+
     QStringList lst;
     lst << i18n("Address") << i18n("Type");
     mListItems->setHeaderLabels(lst);
 
-    mSearchLine = new KTreeWidgetSearchLine(this, mListItems);
+    KTreeWidgetSearchLine *searchLine = new KTreeWidgetSearchLine(this, mListItems);
 
-    setMainWidget(mListItems);
+    lay->addWidget(searchLine);
+    lay->addWidget(mListItems);
+
+    setMainWidget(w);
 }
 
 AdBlockBlockableItemsDialog::~AdBlockBlockableItemsDialog()

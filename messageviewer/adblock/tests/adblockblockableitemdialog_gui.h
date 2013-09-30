@@ -15,25 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ADBLOCKBLOCKABLEITEMSDIALOG_H
-#define ADBLOCKBLOCKABLEITEMSDIALOG_H
+#ifndef TEST_SCAMDETECTION_GUI_H
+#define TEST_SCAMDETECTION_GUI_H
 
-#include <KDialog>
-class QTreeWidget;
-class QWebFrame;
-namespace MessageViewer {
-class AdBlockBlockableItemsDialog : public KDialog
+#include <QWidget>
+
+class QWebView;
+class AdBlockBlockableItemTestDialog : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AdBlockBlockableItemsDialog(QWidget *parent=0);
-    ~AdBlockBlockableItemsDialog();
+    explicit AdBlockBlockableItemTestDialog(const QString &filename, QWidget *parent=0);
+    ~AdBlockBlockableItemTestDialog();
 
-    void setWebFrame(QWebFrame *frame);
+private Q_SLOTS:
+    void slotLoadFinished();
+    void slotOpenHtml();
 
 private:
-    QTreeWidget *mListItems;
 };
-}
 
-#endif // ADBLOCKBLOCKABLEITEMSDIALOG_H
+#endif
