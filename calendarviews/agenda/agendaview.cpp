@@ -1956,7 +1956,7 @@ void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &inciden
       incidence->setAllDay( allDay );
       incidence->setUid( KCalCore::CalFormat::createUniqueId() );
       Akonadi::Collection collection( collectionId() );
-      const bool added = 1 != changer()->createIncidence( incidence, collection, this );
+      const bool added = -1 != changer()->createIncidence( incidence, collection, this );
 
       if ( added ) {
         // TODO: make async
