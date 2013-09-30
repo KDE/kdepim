@@ -30,11 +30,16 @@ public:
     explicit AdBlockCreateFilterDialog(QWidget *parent=0);
     ~AdBlockCreateFilterDialog();
 
-    void setItem(const QString &pattern);
+    void setPattern(const QString &pattern);
 
     QString filter() const;
 
+private Q_SLOTS:
+    void slotUpdateFilter();
+
 private:
+    void initialize();
+    QString mPattern;
     Ui::AdBlockCreateFilterWidget *mUi;
 };
 }

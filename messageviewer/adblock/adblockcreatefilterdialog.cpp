@@ -26,6 +26,10 @@ AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
     mUi = new Ui::AdBlockCreateFilterWidget;
     mUi->setupUi(w);
     setMainWidget(w);
+    connect(mUi->blockingFilter, SIGNAL(clicked()), SLOT(slotUpdateFilter()));
+    connect(mUi->exceptionFilter, SIGNAL(clicked()), SLOT(slotUpdateFilter()));
+    connect(mUi->atTheBeginning, SIGNAL(clicked()), SLOT(slotUpdateFilter()));
+    connect(mUi->atTheEnd, SIGNAL(clicked()), SLOT(slotUpdateFilter()));
 }
 
 AdBlockCreateFilterDialog::~AdBlockCreateFilterDialog()
@@ -34,14 +38,38 @@ AdBlockCreateFilterDialog::~AdBlockCreateFilterDialog()
     mUi = 0;
 }
 
-void AdBlockCreateFilterDialog::setItem(const QString &pattern)
+void AdBlockCreateFilterDialog::setPattern(const QString &pattern)
 {
-    //TODO
+    if (mPattern != pattern) {
+        mPattern = pattern;
+        initialize();
+    }
+}
+
+void AdBlockCreateFilterDialog::initialize()
+{
+    mUi->blockingFilter->setChecked(true);
+    mUi->filterName->setText(mPattern);
 }
 
 QString AdBlockCreateFilterDialog::filter() const
 {
     return mUi->filterName->text();
+}
+
+void AdBlockCreateFilterDialog::slotUpdateFilter()
+{
+    QString pattern = mPattern;
+    if (mUi->atTheBeginning->isChecked()) {
+        pattern = QLatin1String("|") + pattern;
+    }
+    if (mUi->atTheEnd->isChecked()) {
+        pattern += QLatin1String("|");
+    }
+
+    if (mUi->exceptionFilter->isChecked()) {
+        pattern = QLatin1String("@@") + pattern;
+    }
 }
 
 #include "adblockcreatefilterdialog.moc"

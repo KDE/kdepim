@@ -83,7 +83,7 @@ void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
 void AdBlockBlockableItemsWidget::slotBlockItem()
 {
     QPointer<AdBlockCreateFilterDialog> dlg = new AdBlockCreateFilterDialog;
-    dlg->setItem(QString()); //TODO
+    dlg->setPattern(QString()); //TODO
     if (dlg->exec()) {
         //TODO
     }
