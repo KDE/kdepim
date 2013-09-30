@@ -1941,7 +1941,7 @@ void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &inciden
   Q_FOREACH ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
     const Akonadi::Item existingItem = calendar()->item( incidence );
     const bool existsInSameCollection = existingItem.isValid() &&
-                                               existingItem.storageCollectionId() == collectionId();
+                                               ( existingItem.storageCollectionId() == collectionId() || collectionId() == -1 );
 
     if ( existingItem.isValid() && existsInSameCollection ) {
       KCalCore::Incidence::Ptr newIncidence = existingItem.payload<KCalCore::Incidence::Ptr>();
