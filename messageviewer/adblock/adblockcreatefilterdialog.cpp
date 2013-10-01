@@ -93,11 +93,12 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
     if (mUi->atTheBeginning->isChecked()) {
         pattern = QLatin1String("|") + pattern;
     }
-    pattern += QLatin1Char('$') + mCurrentType;
-
     if (mUi->atTheEnd->isChecked()) {
         pattern += QLatin1String("|");
     }
+
+    pattern += QLatin1Char('$') + mCurrentType;
+
 
     if (mUi->exceptionFilter->isChecked()) {
         pattern = QLatin1String("@@") + pattern;

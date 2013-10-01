@@ -325,7 +325,7 @@ void AdBlockSettingWidget::slotRemoveSubscription()
             const QString path = item->data(PathList).toString();
             if (!path.isEmpty()) {
                 if (!QFile(path).remove())
-                    qDebug()<<" we can remove file:"<<path;
+                    qDebug()<<" we can not remove file:"<<path;
             }
             delete item;
         }
