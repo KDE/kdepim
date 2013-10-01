@@ -90,6 +90,21 @@ QString AdBlockBlockableItemsWidget::elementTypeToI18n(AdBlockBlockableItemsWidg
     case AdBlockBlockableItemsWidget::Script:
         result = i18n("Script");
         break;
+    case AdBlockBlockableItemsWidget::StyleSheet:
+        result = i18n("Stylesheet");
+        break;
+    case AdBlockBlockableItemsWidget::Font:
+        result = i18n("Font");
+        break;
+    case AdBlockBlockableItemsWidget::Frame:
+        result = i18n("Frame");
+        break;
+    case AdBlockBlockableItemsWidget::XmlRequest:
+        result = i18n("XML Request");
+        break;
+    case AdBlockBlockableItemsWidget::Object:
+        result = i18n("Object");
+        break;
     case AdBlockBlockableItemsWidget::None:
     default:
         result = i18n("Unknown");
@@ -106,6 +121,21 @@ QString AdBlockBlockableItemsWidget::elementType(AdBlockBlockableItemsWidget::Ty
         break;
     case AdBlockBlockableItemsWidget::Script:
         result = QLatin1String("script");
+        break;
+    case AdBlockBlockableItemsWidget::StyleSheet:
+        result = QLatin1String("stylesheet");
+        break;
+    case AdBlockBlockableItemsWidget::Font:
+        result = QLatin1String("font");
+        break;
+    case AdBlockBlockableItemsWidget::Frame:
+        result = QLatin1String("frame");
+        break;
+    case AdBlockBlockableItemsWidget::XmlRequest:
+        result = QLatin1String("xmlhttprequest");
+        break;
+    case AdBlockBlockableItemsWidget::Object:
+        result = QLatin1String("other");
         break;
     case AdBlockBlockableItemsWidget::None:
     default:
@@ -142,6 +172,8 @@ void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
 
     KMenu menu;
     menu.addAction(i18n("Copy url"),this,SLOT(slotCopyItem()));
+    if (!item->text(FilterValue).isEmpty())
+        menu.addAction(i18n("Copy filter"),this,SLOT(slotCopyFilterItem()));
     menu.addAction(i18n("Block item..."),this,SLOT(slotBlockItem()));
     menu.addSeparator();
     menu.addAction(i18n("Open"), this, SLOT(slotOpenItem()));
@@ -150,6 +182,15 @@ void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
         menu.addAction(i18n("Remove filter"),this,SLOT(slotRemoveFilter()));
     }
     menu.exec(QCursor::pos());
+}
+
+void AdBlockBlockableItemsWidget::slotCopyFilterItem()
+{
+    QTreeWidgetItem *item = mListItems->currentItem();
+    if (!item)
+        return;
+    QClipboard *cb = QApplication::clipboard();
+    cb->setText(item->text(FilterValue), QClipboard::Clipboard);
 }
 
 void AdBlockBlockableItemsWidget::slotOpenItem()

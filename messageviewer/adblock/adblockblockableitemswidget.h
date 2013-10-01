@@ -32,6 +32,11 @@ public:
         None = 0,
         Image,
         Script,
+        StyleSheet,
+        Font,
+        Frame,
+        XmlRequest,
+        Object,
 
         MaxTypeElement
     };
@@ -48,6 +53,7 @@ private Q_SLOTS:
     void slotCopyItem();
     void slotBlockItem();
     void slotOpenItem();
+    void slotCopyFilterItem();
     void customContextMenuRequested(const QPoint &);
     void slotRemoveFilter();
 

@@ -115,7 +115,6 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
     for (int i = 0; i < numberOfElement; ++i) {
         QListWidgetItem *item = mUi->applyListElement->item(i);
         if ((item->checkState() == Qt::Checked) && (item->flags() & Qt::ItemIsEnabled)) {
-            qDebug()<<" "<<item->text();
             pattern += QLatin1Char(',') + AdBlockBlockableItemsWidget::elementType(static_cast<AdBlockBlockableItemsWidget::TypeElement>(item->data(ElementValue).toInt()));
         }
     }
