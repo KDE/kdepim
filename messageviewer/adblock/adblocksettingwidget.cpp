@@ -69,6 +69,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     removeButton->setIcon(KIcon(QLatin1String("list-remove")));
     connect(removeButton, SIGNAL(clicked()), this, SLOT(removeRule()));
     connect(removeSubscription, SIGNAL(clicked()), SLOT(slotRemoveSubscription()));
+    connect(manualFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateManualButtons()));
 
     spinBox->setSuffix(ki18np(" day", " days"));
 
@@ -86,6 +87,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     connect(importFilters, SIGNAL(clicked()), SLOT(slotImportFilters()));
     connect(exportFilters, SIGNAL(clicked()), SLOT(slotExportFilters()));
+    slotUpdateManualButtons();
 }
 
 void AdBlockSettingWidget::slotUpdateButtons()
@@ -93,6 +95,12 @@ void AdBlockSettingWidget::slotUpdateButtons()
     const bool enabled = automaticFiltersListWidget->currentItem();
     removeSubscription->setEnabled(enabled);
     showList->setEnabled(enabled);
+}
+
+void AdBlockSettingWidget::slotUpdateManualButtons()
+{
+    const bool enabled = manualFiltersListWidget->currentItem();
+    removeButton->setEnabled(enabled);
 }
 
 void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
