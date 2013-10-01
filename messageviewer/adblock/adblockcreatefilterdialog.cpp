@@ -30,6 +30,10 @@ AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
     connect(mUi->exceptionFilter, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
     connect(mUi->atTheBeginning, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
     connect(mUi->atTheEnd, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
+    connect(mUi->restrictToDomain, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
+    connect(mUi->restrictToDomainStr, SIGNAL(textChanged(QString)), SLOT(slotUpdateFilter()));
+    connect(mUi->firstPartOnly, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
+    connect(mUi->matchCase, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
     readConfig();
 }
 
@@ -86,6 +90,17 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
 
     if (mUi->exceptionFilter->isChecked()) {
         pattern = QLatin1String("@@") + pattern;
+    }
+    if (mUi->restrictToDomain->isChecked()) {
+        if (!mUi->restrictToDomainStr->text().isEmpty()) {
+            pattern += QLatin1String(",domain=") + mUi->restrictToDomainStr->text();
+        }
+    }
+    if (mUi->matchCase->isChecked()) {
+        pattern += QLatin1String(",match-case");
+    }
+    if (mUi->firstPartOnly->isCheckable()) {
+        pattern += QLatin1String(",~third-party");
     }
     mUi->filterName->setText(pattern);
 }
