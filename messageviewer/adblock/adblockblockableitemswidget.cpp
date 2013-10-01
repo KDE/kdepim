@@ -57,6 +57,7 @@ AdBlockBlockableItemsWidget::AdBlockBlockableItemsWidget(QWidget *parent)
     mListItems->setHeaderLabels(lst);
 
     KTreeWidgetSearchLine *searchLine = new KTreeWidgetSearchLine(this, mListItems);
+    searchLine->setPlaceholderText(i18n("Search..."));
 
     lay->addWidget(searchLine);
     lay->addWidget(mListItems);
