@@ -10,8 +10,8 @@ IncludeFile=pimcommon/widgets/simplestringlisteditor.h
 Group=Input (KDE-PIM)
 
 [PimCommon::PlainTextEditorWidget]
-ToolTip=A QPlaintEditor with integrate search function (KDE-PIM)
-WhatsThis=QPlaintEditor with integrate search function
+ToolTip=A QPlaintEditor with integrate search/replace function (KDE-PIM)
+WhatsThis=QPlaintEditor with integrate search/replace function
 IncludeFile=pimcommon/plaintexteditor/plaintexteditorwidget.h
 Group=Input (KDE-PIM)
 

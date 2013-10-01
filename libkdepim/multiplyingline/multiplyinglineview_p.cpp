@@ -24,6 +24,8 @@
 #include "multiplyinglineview_p.h"
 
 #include <KDebug>
+#include <KMessageBox>
+#include <KLocale>
 
 #include <QApplication>
 #include <QLayout>
@@ -68,6 +70,16 @@ MultiplyingLine* MultiplyingLineView::emptyLine() const
 
 MultiplyingLine* MultiplyingLineView::addLine()
 {
+  const int maximumRecipients = mMultiplyingLineFactory->maximumRecipients();
+  if (maximumRecipients != -1) {
+      int numberOfLine = mLines.count();
+      if (numberOfLine++ >= maximumRecipients) {
+          KMessageBox::sorry( this,
+                              i18n("We can not add more recipients. We have reached maximum recipients"));
+
+          return 0;
+      }
+  }
   MultiplyingLine* line = mMultiplyingLineFactory->newLine( widget() );
 
   mTopLayout->addWidget( line );

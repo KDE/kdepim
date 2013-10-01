@@ -18,8 +18,12 @@
 #ifndef ADBLOCKCREATEFILTERDIALOG_H
 #define ADBLOCKCREATEFILTERDIALOG_H
 
-#include <KDialog>
+#include "adblockblockableitemswidget.h"
 
+#include <KDialog>
+namespace Ui {
+class AdBlockCreateFilterWidget;
+}
 namespace MessageViewer {
 class AdBlockCreateFilterDialog : public KDialog
 {
@@ -27,6 +31,25 @@ class AdBlockCreateFilterDialog : public KDialog
 public:
     explicit AdBlockCreateFilterDialog(QWidget *parent=0);
     ~AdBlockCreateFilterDialog();
+
+    void setPattern(AdBlockBlockableItemsWidget::TypeElement type, const QString &pattern);
+
+    QString filter() const;
+
+private Q_SLOTS:
+    void slotUpdateFilter();
+
+private:
+    enum ElementType {
+        ElementValue = Qt::UserRole + 1
+    };
+
+    void readConfig();
+    void writeConfig();
+    void initialize();
+    QString mPattern;
+    AdBlockBlockableItemsWidget::TypeElement mCurrentType;
+    Ui::AdBlockCreateFilterWidget *mUi;
 };
 }
 

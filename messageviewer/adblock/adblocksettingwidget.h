@@ -46,6 +46,7 @@ public:
 
     void save();
     void doLoadFromGlobalSettings();
+    void doResetToDefaultsOther();
 
 
 Q_SIGNALS:
@@ -63,6 +64,7 @@ private Q_SLOTS:
     void slotShowList();
     void slotImportFilters();
     void slotExportFilters();
+    void slotUpdateManualButtons();
 
 private:
     enum List {

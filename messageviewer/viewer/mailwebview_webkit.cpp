@@ -20,6 +20,7 @@
 */
 #include "mailwebview.h"
 #include "scamdetection/scamdetection.h"
+#include "adblock/adblockblockableitemsdialog.h"
 #include "adblock/webpage.h"
 
 #include <KDebug>
@@ -647,6 +648,16 @@ void MailWebView::saveMainFrameScreenshotInFile(const QString &filename)
     frame->documentElement().render(&painter);
     painter.end();
     image.save(filename);
+}
+
+void MailWebView::openBlockableItemsDialog()
+{
+    QPointer<AdBlockBlockableItemsDialog> dlg = new AdBlockBlockableItemsDialog(this);
+    dlg->setWebFrame(page()->mainFrame());
+    if (dlg->exec()) {
+        dlg->saveFilters();
+    }
+    delete dlg;
 }
 
 #include "mailwebview.moc"

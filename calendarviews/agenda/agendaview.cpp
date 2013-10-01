@@ -479,8 +479,6 @@ void AgendaView::Private::calendarIncidenceDeleted( const KCalCore::Incidence::P
     return;
   }
 
-  qDebug() << "DEBUG calendarIncidenceDeleted hasRec" << incidence->hasRecurrenceId();
-
   q->removeIncidence( incidence );
 
   if ( incidence->hasRecurrenceId()) {
@@ -1943,11 +1941,17 @@ void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &inciden
   Q_FOREACH ( const KCalCore::Incidence::Ptr &incidence, incidences ) {
     const Akonadi::Item existingItem = calendar()->item( incidence );
     const bool existsInSameCollection = existingItem.isValid() &&
-                                               existingItem.storageCollectionId() == collectionId();
+                                               ( existingItem.storageCollectionId() == collectionId() || collectionId() == -1 );
 
     if ( existingItem.isValid() && existsInSameCollection ) {
       KCalCore::Incidence::Ptr newIncidence = existingItem.payload<KCalCore::Incidence::Ptr>();
       KCalCore::Incidence::Ptr oldIncidence( newIncidence->clone() );
+
+      if ( newIncidence->dtStart() == newTime && newIncidence->allDay() == allDay ) {
+        // Nothing changed
+        continue;
+      }
+
       newIncidence->setAllDay( allDay );
       newIncidence->setDateTime( newTime, KCalCore::Incidence::RoleDnD );
 
@@ -1958,7 +1962,7 @@ void AgendaView::slotIncidencesDropped( const KCalCore::Incidence::List &inciden
       incidence->setAllDay( allDay );
       incidence->setUid( KCalCore::CalFormat::createUniqueId() );
       Akonadi::Collection collection( collectionId() );
-      const bool added = 1 != changer()->createIncidence( incidence, collection, this );
+      const bool added = -1 != changer()->createIncidence( incidence, collection, this );
 
       if ( added ) {
         // TODO: make async
@@ -2106,11 +2110,10 @@ void AgendaView::deleteSelectedDateTime()
 
 void AgendaView::removeIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
-  if ( incidence->allDay() ) {
-    d->mAllDayAgenda->removeIncidence( incidence );
-  } else {
-    d->mAgenda->removeIncidence( incidence );
-  }
+  // Don't wrap this in a if ( incidence->isAllDay ) because whe all day
+  // property might have changed
+  d->mAllDayAgenda->removeIncidence( incidence );
+  d->mAgenda->removeIncidence( incidence );
 
   if ( !incidence->hasRecurrenceId() ) {
     KCalCore::Incidence::List exceptions = calendar()->instances( incidence );

@@ -667,6 +667,12 @@ bool Viewer::adblockEnabled() const
     return MessageViewer::AdBlockManager::self()->isEnabled();
 }
 
+KAction *Viewer::openBlockableItems()
+{
+    Q_D( Viewer );
+    return d->mBlockableItems;
+}
+
 }
 
 #include "viewer.moc"

@@ -58,6 +58,7 @@ else()
                        adblock/adblockshowlistdialog.cpp
                        adblock/adblockblockableitemsdialog.cpp
                        adblock/adblockcreatefilterdialog.cpp
+                       adblock/adblockblockableitemswidget.cpp
                        )
   if(NOT WINCE)
     set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
@@ -139,6 +140,7 @@ kde4_add_ui_files(libmessageviewer_SRCS
   ui/invitationsettings.ui
   ui/printingsettings.ui
   adblock/ui/settings_adblock.ui
+  adblock/ui/adblockcreatefilterwidget.ui
 )
 
 

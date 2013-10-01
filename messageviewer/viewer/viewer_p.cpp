@@ -1837,6 +1837,10 @@ void ViewerPrivate::createActions()
   ac->addAction(QLatin1String("adblock_image"), mBlockImage);
   mBlockImage->setShortcutConfigurable( false );
   connect( mBlockImage, SIGNAL(triggered(bool)), SLOT(slotBlockImage()) );
+
+  mBlockableItems = new KAction(i18n("Open Blockable Items..."), this);
+  ac->addAction(QLatin1String("adblock_blockable_items"), mBlockableItems);
+  connect( mBlockableItems, SIGNAL(triggered(bool)), SLOT(slotOpenBlockableItems()) );
 }
 
 
@@ -3334,6 +3338,13 @@ void ViewerPrivate::slotBlockImage()
     if (mImageUrl.isEmpty())
         return;
     MessageViewer::AdBlockManager::self()->addCustomRule(mImageUrl.url(), true);
+}
+
+void ViewerPrivate::slotOpenBlockableItems()
+{
+#ifndef KDEPIM_NO_WEBKIT
+    mViewer->openBlockableItemsDialog();
+#endif
 }
 
 #include "viewer_p.moc"

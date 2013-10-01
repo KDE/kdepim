@@ -46,7 +46,17 @@
         </widget>
        </item>
        <item row="0" column="0" rowspan="4">
-        <widget class="MessageViewer::AdBlockListWidget" name="automaticFiltersListWidget"/>
+        <widget class="MessageViewer::AdBlockListWidget" name="automaticFiltersListWidget">
+         <property name="dragEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="dragDropOverwriteMode">
+          <bool>false</bool>
+         </property>
+         <property name="dragDropMode">
+          <enum>QAbstractItemView::InternalMove</enum>
+         </property>
+        </widget>
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="removeSubscription">
@@ -138,6 +148,12 @@
        </item>
        <item row="1" column="0" rowspan="3">
         <widget class="KListWidget" name="manualFiltersListWidget">
+         <property name="dragEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="dragDropMode">
+          <enum>QAbstractItemView::InternalMove</enum>
+         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::MultiSelection</enum>
          </property>

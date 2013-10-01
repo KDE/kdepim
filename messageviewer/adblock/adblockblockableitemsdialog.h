@@ -19,9 +19,9 @@
 #define ADBLOCKBLOCKABLEITEMSDIALOG_H
 
 #include <KDialog>
-class QTreeWidget;
 class QWebFrame;
 namespace MessageViewer {
+class AdBlockBlockableItemsWidget;
 class AdBlockBlockableItemsDialog : public KDialog
 {
     Q_OBJECT
@@ -30,9 +30,12 @@ public:
     ~AdBlockBlockableItemsDialog();
 
     void setWebFrame(QWebFrame *frame);
+    void saveFilters();
 
 private:
-    QTreeWidget *mListItems;
+    void writeConfig();
+    void readConfig();
+    AdBlockBlockableItemsWidget *mBlockableItems;
 };
 }
 

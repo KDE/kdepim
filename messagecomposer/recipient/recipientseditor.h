@@ -41,11 +41,9 @@ class MESSAGECOMPOSER_EXPORT RecipientLineFactory : public KPIM::MultiplyingLine
 {
     Q_OBJECT
 public:
-    explicit RecipientLineFactory( QObject* parent ) : KPIM::MultiplyingLineFactory( parent ) {}
-    virtual KPIM::MultiplyingLine* newLine(  QWidget *parent )
-    {
-        return new RecipientLineNG( parent );
-    }
+    explicit RecipientLineFactory( QObject* parent );
+    virtual KPIM::MultiplyingLine* newLine(  QWidget *parent );
+    virtual int maximumRecipients();
 };
 
 

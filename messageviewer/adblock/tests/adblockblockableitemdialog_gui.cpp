@@ -16,6 +16,8 @@
 */
 
 #include "adblockblockableitemdialog_gui.h"
+#include "adblock/adblockblockableitemswidget.h"
+#include "KPIMUtils/ProgressIndicatorLabel"
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KFileDialog>
@@ -27,12 +29,20 @@
 #include <QVBoxLayout>
 #include <QWebView>
 #include <QWebPage>
+#include <QWebFrame>
 #include <QPushButton>
 
 AdBlockBlockableItemTestDialog::AdBlockBlockableItemTestDialog(const QString &filename, QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
+
+    mWidget = new MessageViewer::AdBlockBlockableItemsWidget;
+    lay->addWidget(mWidget);
+
+    mProgress = new KPIMUtils::ProgressIndicatorLabel(i18n("Rendering page..."));
+    lay->addWidget(mProgress);
+
     QHBoxLayout *hbox = new QHBoxLayout;
     QPushButton *openFile = new QPushButton(i18n("Open html..."));
     connect(openFile, SIGNAL(clicked()), SLOT(slotOpenHtml()));
@@ -40,6 +50,9 @@ AdBlockBlockableItemTestDialog::AdBlockBlockableItemTestDialog(const QString &fi
     lay->addLayout(hbox);
 
     setLayout(lay);
+    connect(&page, SIGNAL(loadFinished(bool)), this, SLOT(slotLoadFinished()));
+    mProgress->start();
+    page.mainFrame()->load(QUrl(filename));
 }
 
 AdBlockBlockableItemTestDialog::~AdBlockBlockableItemTestDialog()
@@ -48,13 +61,16 @@ AdBlockBlockableItemTestDialog::~AdBlockBlockableItemTestDialog()
 
 void AdBlockBlockableItemTestDialog::slotLoadFinished()
 {
+    mProgress->stop();
+    mWidget->setWebFrame(page.mainFrame());
 }
 
 void AdBlockBlockableItemTestDialog::slotOpenHtml()
 {
     const QString fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.html"));
     if (!fileName.isEmpty()) {
-        //mWebView->load(QUrl(fileName));
+        mProgress->start();
+        page.mainFrame()->load(QUrl(fileName));
     }
 }
 

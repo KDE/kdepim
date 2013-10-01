@@ -15,34 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TEST_SCAMDETECTION_GUI_H
-#define TEST_SCAMDETECTION_GUI_H
+#ifndef GENERATEMASTERSCRIPTJOB_H
+#define GENERATEMASTERSCRIPTJOB_H
 
-#include <QWidget>
-#include <QWebPage>
+#include <QObject>
 
-class QWebView;
-namespace KPIMUtils {
-class ProgressIndicatorLabel;
-}
-namespace MessageViewer {
-class AdBlockBlockableItemsWidget;
-}
-class AdBlockBlockableItemTestDialog : public QWidget
+namespace KSieveUi {
+class GenerateMasterScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit AdBlockBlockableItemTestDialog(const QString &filename, QWidget *parent=0);
-    ~AdBlockBlockableItemTestDialog();
+    explicit GenerateMasterScriptJob(QObject *parent=0);
+    ~GenerateMasterScriptJob();
 
-private Q_SLOTS:
-    void slotLoadFinished();
-    void slotOpenHtml();
-
-private:
-    MessageViewer::AdBlockBlockableItemsWidget *mWidget;
-    QWebPage page;
-    KPIMUtils::ProgressIndicatorLabel *mProgress;
+    void writeScript();
 };
+}
 
-#endif
+#endif // GENERATEMASTERSCRIPTJOB_H

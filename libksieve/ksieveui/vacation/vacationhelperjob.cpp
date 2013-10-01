@@ -21,9 +21,9 @@
 
 using namespace KSieveUi;
 
-VacationHelperJob::VacationHelperJob(const QString &accountName, QObject *parent)
+VacationHelperJob::VacationHelperJob(const KUrl &url, QObject *parent)
     : QObject(parent),
-      mAccountName(accountName),
+      mUrl(url),
       mSieveJob(0)
 {
 }
@@ -45,12 +45,9 @@ void VacationHelperJob::searchActiveJob()
 {
     killJob();
 
-    const KUrl url = KSieveUi::Util::findSieveUrlForAccount( mAccountName );
-    if ( !url.isValid() ) {
+    if ( !mUrl.isValid() ) {
         Q_EMIT resourceHasNotSieveSupport();
     } else {
-        mUrl = url;
-
         mSieveJob = KManageSieve::SieveJob::list( mUrl );
 
         connect( mSieveJob, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),

@@ -40,7 +40,7 @@ AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     mTextEdit = new PimCommon::PlainTextEditorWidget;
     (void)new MessageViewer::AdBlockSyntaxHighlighter(mTextEdit->editor()->document());
-    mTextEdit->editor()->setReadOnly(true);
+    mTextEdit->setReadOnly(true);
     lay->addWidget(mTextEdit);
 
     mProgress = new KPIMUtils::ProgressIndicatorLabel(i18n("Download..."));

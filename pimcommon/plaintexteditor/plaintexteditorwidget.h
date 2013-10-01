@@ -28,11 +28,15 @@ class PlainTextEditFindBar;
 class PIMCOMMON_EXPORT PlainTextEditorWidget : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
 public:
     explicit PlainTextEditorWidget(QWidget *parent=0);
     ~PlainTextEditorWidget();
 
     PlainTextEditor *editor() { return mEditor; }
+
+    void setReadOnly(bool readOnly);
+    bool isReadOnly() const;
 
 private Q_SLOTS:
     void slotFind();

@@ -36,7 +36,6 @@
 #include "webkitparthtmlwriter.h"
 
 #include "viewer/mailwebview.h"
-#include "scamdetection/scamdetection.h"
 
 #include <KDebug>
 #include <KUrl>
