@@ -179,7 +179,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
             continue;
 
         QListWidgetItem *subItem = new QListWidgetItem(automaticFiltersListWidget);
-        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable| Qt::ItemIsSelectable);
+        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable| Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
         if (isFilterEnabled)
             subItem->setCheckState(Qt::Checked);
         else
@@ -295,7 +295,7 @@ void AdBlockSettingWidget::slotAddFilter()
         QString url;
         dlg->selectedList(name, url);
         QListWidgetItem *subItem = new QListWidgetItem(automaticFiltersListWidget);
-        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
+        subItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
         subItem->setCheckState(Qt::Checked);
         subItem->setText(name);
         subItem->setData(UrlList, url);
