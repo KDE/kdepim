@@ -80,6 +80,40 @@ void AdBlockBlockableItemsWidget::setWebFrame(QWebFrame *frame)
     searchBlockableElement(frame);
 }
 
+QString AdBlockBlockableItemsWidget::elementTypeToI18n(AdBlockBlockableItemsWidget::TypeElement type)
+{
+    QString result;
+    switch(type) {
+    case AdBlockBlockableItemsWidget::Image:
+        result = i18n("Image");
+        break;
+    case AdBlockBlockableItemsWidget::Script:
+        result = i18n("Script");
+        break;
+    case AdBlockBlockableItemsWidget::None:
+    default:
+        result = i18n("Unknown");
+    }
+    return result;
+}
+
+QString AdBlockBlockableItemsWidget::elementType(AdBlockBlockableItemsWidget::TypeElement type)
+{
+    QString result;
+    switch(type) {
+    case AdBlockBlockableItemsWidget::Image:
+        result = QLatin1String("image");
+        break;
+    case AdBlockBlockableItemsWidget::Script:
+        result = QLatin1String("script");
+        break;
+    case AdBlockBlockableItemsWidget::None:
+    default:
+        qDebug()<<" unknown type "<<type;
+    }
+    return result;
+}
+
 void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
 {
     const QWebElementCollection images = frame->findAllElements(QLatin1String("img"));
@@ -89,7 +123,7 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
             if (src.startsWith(QLatin1String("http://")) || src.startsWith(QLatin1String("https://")) ) {
                 QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
                 item->setText(Url, src);
-                item->setText(Type, i18n("Image"));
+                item->setText(Type, elementTypeToI18n(AdBlockBlockableItemsWidget::Image));
                 item->setTextColor(FilterValue, Qt::red);
                 item->setData(Type, Element, Image);
             }
@@ -134,8 +168,8 @@ void AdBlockBlockableItemsWidget::slotBlockItem()
     if (!item)
         return;
 
-    QPointer<AdBlockCreateFilterDialog> dlg = new AdBlockCreateFilterDialog(static_cast<TypeElement>(item->data(Type, Element).toInt()), this);
-    dlg->setPattern(item->text(Url));
+    QPointer<AdBlockCreateFilterDialog> dlg = new AdBlockCreateFilterDialog(this);
+    dlg->setPattern(static_cast<TypeElement>(item->data(Type, Element).toInt()), item->text(Url));
     if (dlg->exec()) {
         const QString filter = dlg->filter();
         item->setText(FilterValue, filter);

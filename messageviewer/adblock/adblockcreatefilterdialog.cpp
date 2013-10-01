@@ -17,10 +17,13 @@
 
 #include "adblockcreatefilterdialog.h"
 #include "ui_adblockcreatefilterwidget.h"
-using namespace MessageViewer;
 
-AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(AdBlockBlockableItemsWidget::TypeElement type, QWidget *parent)
-    : KDialog(parent)
+#include <QDebug>
+
+using namespace MessageViewer;
+AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
+    : KDialog(parent),
+      mCurrentType(AdBlockBlockableItemsWidget::None)
 {
     QWidget *w = new QWidget;
     mUi = new Ui::AdBlockCreateFilterWidget;
@@ -34,15 +37,8 @@ AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(AdBlockBlockableItemsWidget
     connect(mUi->restrictToDomainStr, SIGNAL(textChanged(QString)), SLOT(slotUpdateFilter()));
     connect(mUi->firstPartOnly, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
     connect(mUi->matchCase, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
+    connect(mUi->applyListElement, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(slotUpdateFilter()));
     readConfig();
-    switch(type) {
-    case AdBlockBlockableItemsWidget::Image:
-        mCurrentType = QLatin1String("image");
-        break;
-    case AdBlockBlockableItemsWidget::Script:
-        mCurrentType = QLatin1String("script");
-        break;
-    }
 }
 
 AdBlockCreateFilterDialog::~AdBlockCreateFilterDialog()
@@ -67,16 +63,26 @@ void AdBlockCreateFilterDialog::readConfig()
     }
 }
 
-void AdBlockCreateFilterDialog::setPattern(const QString &pattern)
+void AdBlockCreateFilterDialog::setPattern(AdBlockBlockableItemsWidget::TypeElement type, const QString &pattern)
 {
     if (mPattern != pattern) {
         mPattern = pattern;
+        mCurrentType = type;
         initialize();
     }
 }
 
 void AdBlockCreateFilterDialog::initialize()
 {
+    mUi->applyListElement->clear();
+    for (int i = 0; i < AdBlockBlockableItemsWidget::MaxTypeElement; ++i) {
+        if (i == (int)mCurrentType)
+            continue;
+        QListWidgetItem *item = new QListWidgetItem(AdBlockBlockableItemsWidget::elementTypeToI18n(static_cast<AdBlockBlockableItemsWidget::TypeElement>(i)), mUi->applyListElement);
+        item->setData(ElementValue, static_cast<AdBlockBlockableItemsWidget::TypeElement>(i));
+        item->setCheckState(Qt::Unchecked);
+    }
+
     mUi->blockingFilter->setChecked(true);
     mUi->filterName->setText(mPattern);
     slotUpdateFilter();
@@ -97,12 +103,20 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
         pattern += QLatin1String("|");
     }
 
-    pattern += QLatin1Char('$') + mCurrentType;
+    pattern += QLatin1Char('$') + AdBlockBlockableItemsWidget::elementType(mCurrentType);
 
 
     if (mUi->exceptionFilter->isChecked()) {
         pattern = QLatin1String("@@") + pattern;
     }
+    const int numberOfElement(mUi->applyListElement->count());
+    for (int i = 0; i < numberOfElement; ++i) {
+        if (mUi->applyListElement->item(i)->checkState() == Qt::Checked) {
+
+        }
+    }
+
+
     if (mUi->restrictToDomain->isChecked()) {
         if (!mUi->restrictToDomainStr->text().isEmpty()) {
             pattern += QLatin1String(",domain=") + mUi->restrictToDomainStr->text();

@@ -29,10 +29,10 @@ class AdBlockCreateFilterDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit AdBlockCreateFilterDialog(AdBlockBlockableItemsWidget::TypeElement type, QWidget *parent=0);
+    explicit AdBlockCreateFilterDialog(QWidget *parent=0);
     ~AdBlockCreateFilterDialog();
 
-    void setPattern(const QString &pattern);
+    void setPattern(AdBlockBlockableItemsWidget::TypeElement type, const QString &pattern);
 
     QString filter() const;
 
@@ -40,11 +40,15 @@ private Q_SLOTS:
     void slotUpdateFilter();
 
 private:
+    enum ElementType {
+        ElementValue = Qt::UserRole + 1
+    };
+
     void readConfig();
     void writeConfig();
     void initialize();
     QString mPattern;
-    QString mCurrentType;
+    AdBlockBlockableItemsWidget::TypeElement mCurrentType;
     Ui::AdBlockCreateFilterWidget *mUi;
 };
 }
