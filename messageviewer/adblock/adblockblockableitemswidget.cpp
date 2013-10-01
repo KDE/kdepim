@@ -90,6 +90,7 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
                 item->setText(Url, src);
                 item->setText(Type, i18n("Image"));
                 item->setTextColor(FilterValue, Qt::red);
+                item->setData(Type, Element, Image);
             }
         }
     }
@@ -120,7 +121,7 @@ void AdBlockBlockableItemsWidget::slotBlockItem()
     if (!item)
         return;
 
-    QPointer<AdBlockCreateFilterDialog> dlg = new AdBlockCreateFilterDialog;
+    QPointer<AdBlockCreateFilterDialog> dlg = new AdBlockCreateFilterDialog(static_cast<TypeElement>(item->data(Type, Element).toInt()), this);
     dlg->setPattern(item->text(Url));
     if (dlg->exec()) {
         const QString filter = dlg->filter();

@@ -19,7 +19,7 @@
 #include "ui_adblockcreatefilterwidget.h"
 using namespace MessageViewer;
 
-AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
+AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(AdBlockBlockableItemsWidget::TypeElement type, QWidget *parent)
     : KDialog(parent)
 {
     QWidget *w = new QWidget;
@@ -35,6 +35,14 @@ AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
     connect(mUi->firstPartOnly, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
     connect(mUi->matchCase, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
     readConfig();
+    switch(type) {
+    case AdBlockBlockableItemsWidget::Image:
+        mCurrentType = QLatin1String("image");
+        break;
+    case AdBlockBlockableItemsWidget::Script:
+        mCurrentType = QLatin1String("script");
+        break;
+    }
 }
 
 AdBlockCreateFilterDialog::~AdBlockCreateFilterDialog()
@@ -71,6 +79,7 @@ void AdBlockCreateFilterDialog::initialize()
 {
     mUi->blockingFilter->setChecked(true);
     mUi->filterName->setText(mPattern);
+    slotUpdateFilter();
 }
 
 QString AdBlockCreateFilterDialog::filter() const
@@ -84,6 +93,8 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
     if (mUi->atTheBeginning->isChecked()) {
         pattern = QLatin1String("|") + pattern;
     }
+    pattern += QLatin1Char('$') + mCurrentType;
+
     if (mUi->atTheEnd->isChecked()) {
         pattern += QLatin1String("|");
     }
@@ -99,7 +110,7 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
     if (mUi->matchCase->isChecked()) {
         pattern += QLatin1String(",match-case");
     }
-    if (mUi->firstPartOnly->isCheckable()) {
+    if (mUi->firstPartOnly->isChecked()) {
         pattern += QLatin1String(",~third-party");
     }
     mUi->filterName->setText(pattern);

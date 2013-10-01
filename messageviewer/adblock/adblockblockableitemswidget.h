@@ -28,6 +28,10 @@ class MESSAGEVIEWER_EXPORT AdBlockBlockableItemsWidget : public QWidget
 {
     Q_OBJECT
 public:
+    enum TypeElement {
+        Image = 0,
+        Script
+    };
     explicit AdBlockBlockableItemsWidget(QWidget *parent=0);
     ~AdBlockBlockableItemsWidget();
 
@@ -45,6 +49,11 @@ private:
         FilterValue = 0,
         Url,
         Type
+    };
+
+
+    enum TypeItem {
+        Element = Qt::UserRole + 1
     };
 
     void searchBlockableElement(QWebFrame *frame);
