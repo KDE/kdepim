@@ -54,6 +54,16 @@ PlainTextEditorWidget::~PlainTextEditorWidget()
 
 }
 
+bool PlainTextEditorWidget::isReadOnly() const
+{
+    return mEditor->isReadOnly();
+}
+
+void PlainTextEditorWidget::setReadOnly(bool readOnly)
+{
+    mEditor->setReadOnly(readOnly);
+}
+
 void PlainTextEditorWidget::slotReplace()
 {
     mFindBar->showReplace();
