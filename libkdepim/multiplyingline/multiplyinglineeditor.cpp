@@ -60,7 +60,7 @@ void MultiplyingLineEditor::addData( const MultiplyingLineData::Ptr &data )
   MultiplyingLine* line = mView->emptyLine();
   if( !line )
     line = mView->addLine();
-  if( data )
+  if( line && data )
     line->setData( data );
 }
 

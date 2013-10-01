@@ -49,6 +49,7 @@ class KDEPIM_EXPORT MultiplyingLineFactory : public QObject
     explicit MultiplyingLineFactory( QObject* parent ) : QObject( parent ) {}
     virtual ~MultiplyingLineFactory() {}
     virtual MultiplyingLine* newLine(  QWidget *parent ) = 0;
+    virtual int maximumRecipients() { return -1; }
 };
 
 /**

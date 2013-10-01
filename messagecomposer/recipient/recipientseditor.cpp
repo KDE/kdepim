@@ -44,7 +44,25 @@
 using namespace MessageComposer;
 using namespace KPIM;
 
-RecipientsEditor::RecipientsEditor( QWidget* parent ): MultiplyingLineEditor( new RecipientLineFactory( 0 ), parent ), mRecentAddressConfig( 0 )
+
+RecipientLineFactory::RecipientLineFactory( QObject* parent )
+    : KPIM::MultiplyingLineFactory( parent )
+{
+
+}
+
+KPIM::MultiplyingLine* RecipientLineFactory::newLine(  QWidget *parent )
+{
+    return new RecipientLineNG( parent );
+}
+
+int RecipientLineFactory::maximumRecipients()
+{
+    return MessageComposer::MessageComposerSettings::self()->maximumRecipients();
+}
+
+RecipientsEditor::RecipientsEditor( QWidget* parent )
+    : MultiplyingLineEditor( new RecipientLineFactory( 0 ), parent ), mRecentAddressConfig( 0 )
 {
     factory()->setParent( this ); // HACK: can't use 'this' above since it's not yet constructed at that point
     mSideWidget = new RecipientsEditorSideWidget( this, this );
