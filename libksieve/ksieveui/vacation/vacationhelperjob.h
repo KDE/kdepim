@@ -32,7 +32,7 @@ class KSIEVEUI_EXPORT VacationHelperJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit VacationHelperJob(const QString &accountName, QObject *parent=0);
+    explicit VacationHelperJob(const KUrl &url, QObject *parent=0);
     ~VacationHelperJob();
 
     void searchActiveJob();
@@ -48,7 +48,6 @@ Q_SIGNALS:
 private:
     void killJob();
     KUrl mUrl;
-    QString mAccountName;
     KManageSieve::SieveJob *mSieveJob;
 };
 }
