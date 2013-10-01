@@ -75,12 +75,14 @@ void AdBlockCreateFilterDialog::setPattern(AdBlockBlockableItemsWidget::TypeElem
 void AdBlockCreateFilterDialog::initialize()
 {
     mUi->applyListElement->clear();
-    for (int i = 0; i < AdBlockBlockableItemsWidget::MaxTypeElement; ++i) {
-        if (i == (int)mCurrentType)
-            continue;
+    for (int i = AdBlockBlockableItemsWidget::None+1; i < AdBlockBlockableItemsWidget::MaxTypeElement; ++i) {
         QListWidgetItem *item = new QListWidgetItem(AdBlockBlockableItemsWidget::elementTypeToI18n(static_cast<AdBlockBlockableItemsWidget::TypeElement>(i)), mUi->applyListElement);
         item->setData(ElementValue, static_cast<AdBlockBlockableItemsWidget::TypeElement>(i));
         item->setCheckState(Qt::Unchecked);
+        if (i == (int)mCurrentType) {
+            item->setFlags(item->flags()&~Qt::ItemIsEnabled);
+        }
+
     }
 
     mUi->blockingFilter->setChecked(true);
@@ -111,8 +113,10 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
     }
     const int numberOfElement(mUi->applyListElement->count());
     for (int i = 0; i < numberOfElement; ++i) {
-        if (mUi->applyListElement->item(i)->checkState() == Qt::Checked) {
-
+        QListWidgetItem *item = mUi->applyListElement->item(i);
+        if ((item->checkState() == Qt::Checked) && (item->flags() & Qt::ItemIsEnabled)) {
+            qDebug()<<" "<<item->text();
+            pattern += QLatin1Char(',') + AdBlockBlockableItemsWidget::elementType(static_cast<AdBlockBlockableItemsWidget::TypeElement>(item->data(ElementValue).toInt()));
         }
     }
 
