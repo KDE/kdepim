@@ -25,6 +25,7 @@
 #include <KMenu>
 #include <KConfigGroup>
 #include <KStandardDirs>
+#include <KRun>
 
 #include <QHeaderView>
 #include <QTreeWidget>
@@ -108,11 +109,23 @@ void AdBlockBlockableItemsWidget::customContextMenuRequested(const QPoint &)
     KMenu menu;
     menu.addAction(i18n("Copy url"),this,SLOT(slotCopyItem()));
     menu.addAction(i18n("Block item..."),this,SLOT(slotBlockItem()));
+    menu.addSeparator();
+    menu.addAction(i18n("Open"), this, SLOT(slotOpenItem()));
     if (!item->text(FilterValue).isEmpty()) {
         menu.addSeparator();
         menu.addAction(i18n("Remove filter"),this,SLOT(slotRemoveFilter()));
     }
     menu.exec(QCursor::pos());
+}
+
+void AdBlockBlockableItemsWidget::slotOpenItem()
+{
+    QTreeWidgetItem *item = mListItems->currentItem();
+    if (!item)
+        return;
+    const KUrl url(item->text(Url));
+    KRun *runner = new KRun( url, this ); // will delete itself
+    runner->setRunExecutables( false );
 }
 
 void AdBlockBlockableItemsWidget::slotBlockItem()

@@ -41,6 +41,7 @@ public:
 private Q_SLOTS:
     void slotCopyItem();
     void slotBlockItem();
+    void slotOpenItem();
     void customContextMenuRequested(const QPoint &);
     void slotRemoveFilter();
 
