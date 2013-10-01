@@ -154,6 +154,8 @@ void AdBlockSettingWidget::removeRule()
 
 void AdBlockSettingWidget::doLoadFromGlobalSettings()
 {
+    manualFiltersListWidget->clear();
+    automaticFiltersListWidget->clear();
     checkEnableAdblock->setChecked(GlobalSettings::self()->adBlockEnabled());
 
     // update enabled status
