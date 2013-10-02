@@ -87,7 +87,7 @@ void GenerateGlobalScriptJob::slotPutMasterResult( KManageSieve::SieveJob *, boo
 
 void GenerateGlobalScriptJob::writeUserScript()
 {
-    QString userScript = QLatin1String(" # USER Management Script\n"
+    QString userScript = QLatin1String("# USER Management Script\n"
                                        "#\n"
                                        "# This script includes the various active sieve scripts\n"
                                        "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
@@ -114,8 +114,12 @@ void GenerateGlobalScriptJob::slotPutUserResult( KManageSieve::SieveJob *, bool 
         KMessageBox::error(0, i18n("Error when we wrote \"User\" script on server."), i18n("Error"));
         return;
     }
-    //TODO make sure to disable all others scripts ?
+    disableAllOtherScripts();
 }
 
+void GenerateGlobalScriptJob::disableAllOtherScripts()
+{
+    //TODO
+}
 
 #include "generateglobalscriptjob.moc"

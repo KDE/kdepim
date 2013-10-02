@@ -41,6 +41,7 @@ private Q_SLOTS:
     void slotPutUserResult( KManageSieve::SieveJob *, bool success );
 
 private:
+    void disableAllOtherScripts();
     void writeMasterScript();
     void writeUserScript();
     QStringList mListUserActiveScripts;
