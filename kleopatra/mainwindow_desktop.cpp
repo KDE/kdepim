@@ -78,7 +78,6 @@
 #include <QAbstractItemView>
 #include <QFile>
 #include <QToolBar>
-#include <QWidgetAction>
 #include <QApplication>
 #include <QCloseEvent>
 #include <QMenu>
@@ -295,7 +294,7 @@ void MainWindow::Private::setupActions() {
 
     KActionCollection * const coll = q->actionCollection();
 
-    QWidgetAction * const searchBarAction = new QWidgetAction( q );
+    KAction * const searchBarAction = new KAction( q );
     SearchBar * const searchBar = new SearchBar( q );
 
     ui.tabWidget.connectSearchBar( searchBar );
@@ -521,7 +520,7 @@ void MainWindow::readProperties( const KConfigGroup & cg )
 {
     kDebug();
     KXmlGuiWindow::readProperties(cg);
-    savedGeometry = cg.readEntry<QByteArray>("savedGeometry", QByteArray() );
+    savedGeometry = cg.readEntry("savedGeometry", QByteArray() );
     if ( !savedGeometry.isEmpty() ) {
         restoreGeometry( savedGeometry );
     }

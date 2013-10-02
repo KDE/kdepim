@@ -81,13 +81,29 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(spinBox,            SIGNAL(valueChanged(int)),   this, SLOT(hasChanged()));
     connect(addFilters, SIGNAL(clicked()), this, SLOT(slotAddFilter()));
     connect(showList, SIGNAL(clicked()), this, SLOT(slotShowList()));
+    connect(editFilter, SIGNAL(clicked()), this, SLOT(slotEditFilter()));
 
     connect(automaticFiltersListWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(hasChanged()));
     connect(automaticFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateButtons()));
 
     connect(importFilters, SIGNAL(clicked()), SLOT(slotImportFilters()));
     connect(exportFilters, SIGNAL(clicked()), SLOT(slotExportFilters()));
+    connect(addFilterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotManualFilterLineEditTextChanged(QString)));
     slotUpdateManualButtons();
+    insertButton->setEnabled(false);
+}
+
+void AdBlockSettingWidget::slotManualFilterLineEditTextChanged(const QString &text)
+{
+    insertButton->setEnabled(!text.isEmpty());
+}
+
+void AdBlockSettingWidget::slotEditFilter()
+{
+    QListWidgetItem *item = manualFiltersListWidget->currentItem();
+    if (item) {
+        manualFiltersListWidget->editItem(item);
+    }
 }
 
 void AdBlockSettingWidget::slotUpdateButtons()
@@ -101,6 +117,7 @@ void AdBlockSettingWidget::slotUpdateManualButtons()
 {
     const bool enabled = manualFiltersListWidget->currentItem();
     removeButton->setEnabled(enabled);
+    editFilter->setEnabled(enabled);
 }
 
 void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
@@ -132,8 +149,7 @@ void AdBlockSettingWidget::insertRule()
         }
     }
 
-
-    manualFiltersListWidget->addItem(rule);
+    addManualFilter(rule);
     addFilterLineEdit->clear();
     hasChanged();
 }
@@ -216,8 +232,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     QTextStream in(&ruleFile);
     while (!in.atEnd()) {
         QString stringRule = in.readLine();
-        QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
-        subItem->setText(stringRule);
+        addManualFilter(stringRule);
     }
 }
 
@@ -268,7 +283,8 @@ void AdBlockSettingWidget::save()
     for (int i = 0; i < manualFiltersListWidget->count(); ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
         const QString stringRule = subItem->text();
-        out << stringRule << '\n';
+        if (!stringRule.isEmpty())
+            out << stringRule << '\n';
     }
 
     // -------------------------------------------------------------------------------
@@ -364,9 +380,15 @@ void AdBlockSettingWidget::slotImportFilters()
             continue;
         if (excludeFilter.contains(element))
             continue;
-        QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
-        subItem->setText(element);
+        addManualFilter(element);
     }
+}
+
+void AdBlockSettingWidget::addManualFilter(const QString &text)
+{
+    QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
+    subItem->setFlags(subItem->flags() | Qt::ItemIsEditable);
+    subItem->setText(text);
 }
 
 void AdBlockSettingWidget::slotExportFilters()
@@ -377,7 +399,8 @@ void AdBlockSettingWidget::slotExportFilters()
     for (int i = 0; i < numberOfElement; ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
         const QString stringRule = subItem->text();
-        exportFilters += stringRule + QLatin1Char('\n');
+        if (!stringRule.isEmpty())
+            exportFilters += stringRule + QLatin1Char('\n');
     }
     PimCommon::Util::saveTextAs(exportFilters, filter, this);
 }

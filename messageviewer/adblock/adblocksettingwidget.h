@@ -54,7 +54,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void hasChanged();
-
     void slotInfoLinkActivated(const QString &);
     void insertRule();
     void removeRule();
@@ -65,8 +64,11 @@ private Q_SLOTS:
     void slotImportFilters();
     void slotExportFilters();
     void slotUpdateManualButtons();
+    void slotEditFilter();
+    void slotManualFilterLineEditTextChanged(const QString &);
 
 private:
+    void addManualFilter(const QString &text);
     enum List {
         UrlList = Qt::UserRole + 1,
         PathList = Qt::UserRole + 2,

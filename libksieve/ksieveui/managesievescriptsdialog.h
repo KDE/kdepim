@@ -57,8 +57,7 @@ public:
 
 private slots:
     void slotRefresh();
-    void slotItem( KManageSieve::SieveJob *, const QString &, bool );
-    void slotResult( KManageSieve::SieveJob *, bool, const QString &, bool );
+    void slotGotList(KManageSieve::SieveJob *,bool success, const QStringList &listScript, const QString &activeScript);
     void slotContextMenuRequested( const QPoint& position );
     void slotDoubleClicked( QTreeWidgetItem* );
     void slotNewScript();

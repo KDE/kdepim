@@ -38,6 +38,7 @@
 #include <KProcess>
 
 #include <QDebug>
+#include <QFile>
 #include <QDir>
 
 ExportMailJob::ExportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
@@ -315,6 +316,10 @@ void ExportMailJob::backupConfig()
         for (int i = 0; i < listSize; ++i) {
             backupFile(listFileInfo.at(i).absoluteFilePath(), Utils::dataPath() + QLatin1String( "autocorrect/" ) , listFileInfo.at(i).fileName());
         }
+    }
+    const QString adblockFilePath = KStandardDirs::locateLocal( "data", QLatin1String( "kmail2/adblockrules_local" ) );
+    if (!adblockFilePath.isEmpty()) {
+        backupFile(adblockFilePath, Utils::dataPath() + QLatin1String( "kmail2/" ) , QLatin1String("adblockrules_local"));
     }
 
     const QString kmailStr(QLatin1String("kmail2rc"));

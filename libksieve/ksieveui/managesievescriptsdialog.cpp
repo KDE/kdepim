@@ -249,10 +249,8 @@ void ManageSieveScriptsDialog::slotRefresh()
             mListView->expandItem( last );
         } else {
             KManageSieve::SieveJob * job = KManageSieve::SieveJob::list( u );
-            connect( job, SIGNAL(item(KManageSieve::SieveJob*,QString,bool)),
-                     this, SLOT(slotItem(KManageSieve::SieveJob*,QString,bool)) );
-            connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
-                     this, SLOT(slotResult(KManageSieve::SieveJob*,bool,QString,bool)) );
+            connect( job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
+                     this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
             mJobs.insert( job, last );
             mUrls.insert( last, u );
             last->startAnimation();
@@ -263,7 +261,7 @@ void ManageSieveScriptsDialog::slotRefresh()
     mListView->setImapFound(imapFound);
 }
 
-void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob *job, bool success, const QString &, bool )
+void ManageSieveScriptsDialog::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript)
 {
     if (mClearAll)
         return;
@@ -273,42 +271,47 @@ void ManageSieveScriptsDialog::slotResult( KManageSieve::SieveJob *job, bool suc
     (static_cast<SieveTreeWidgetItem*>(parent))->stopAnimation();
 
     mJobs.remove( job );
-
-    mListView->expandItem( parent );
-
-    mBlockSignal = false;
-    if ( success ) {
-        parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
-        parent->setData( 0, SIEVE_SERVER_ERROR, false );
-        parent->setData( 0, SIEVE_SERVER_MODE, job->sieveCapabilities().contains(QLatin1String("include")) ? Kep14EditorMode : NormalEditorMode);
+    if (!success) {
+        mBlockSignal = false;
+        parent->setData( 0, SIEVE_SERVER_ERROR, true );
+        QTreeWidgetItem * item =
+                new QTreeWidgetItem( parent );
+        item->setText( 0, i18n( "Failed to fetch the list of scripts" ) );
+        item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
         return;
     }
 
-    parent->setData( 0, SIEVE_SERVER_ERROR, true );
-    QTreeWidgetItem * item =
-            new QTreeWidgetItem( parent );
-    item->setText( 0, i18n( "Failed to fetch the list of scripts" ) );
-    item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
 
-}
-
-void ManageSieveScriptsDialog::slotItem( KManageSieve::SieveJob * job, const QString & filename, bool isActive )
-{
-    QTreeWidgetItem * parent = mJobs[job];
-    if ( !parent )
-        return;
-    const bool oldBlockSignal = mBlockSignal;
     mBlockSignal = true; // don't trigger slotItemChanged
+    Q_FOREACH (const QString &script, listScript) {
+        //Hide protected name.
+        const QString lowerScript(script.toLower());
+        if (isProtectedName(lowerScript))
+            continue;
+        QTreeWidgetItem* item = new QTreeWidgetItem( parent );
+        item->setFlags(item->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
 
-    QTreeWidgetItem* item = new QTreeWidgetItem( parent );
-    item->setFlags(item->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
-
-    item->setText(0,filename);
-    item->setCheckState(0, isActive ? Qt::Checked : Qt::Unchecked);
-    if ( isActive ) {
-        mSelectedItems[parent] = item;
+        item->setText(0, script);
+        const bool isActive = (script == activeScript);
+        item->setCheckState(0, isActive ? Qt::Checked : Qt::Unchecked);
+        if ( isActive ) {
+            mSelectedItems[parent] = item;
+        }
     }
-    mBlockSignal = oldBlockSignal;
+    mBlockSignal = false;
+
+    const bool hasIncludeCapability = job->sieveCapabilities().contains(QLatin1String("include"));
+    const bool hasUserActiveScript = (activeScript.toLower() == QLatin1String("USER"));
+    QStringList mUserActiveScriptList;
+    if (hasUserActiveScript && hasIncludeCapability) {
+        //TODO parse file.
+    }
+
+
+    parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
+    parent->setData( 0, SIEVE_SERVER_ERROR, false );
+    parent->setData( 0, SIEVE_SERVER_MODE, hasIncludeCapability ? Kep14EditorMode : NormalEditorMode);
+    mListView->expandItem( parent );
 }
 
 void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
@@ -556,7 +559,7 @@ void ManageSieveScriptsDialog::slotSieveEditorOkClicked()
     if ( !mSieveEditor )
         return;
     disableManagerScriptsDialog(false);
-    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL,mSieveEditor->script(), mWasActive, mWasActive );
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put(mCurrentURL,mSieveEditor->script(), mWasActive, mWasActive );
     connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)) );
 }
