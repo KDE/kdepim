@@ -74,3 +74,4 @@ Root
 |       |---------korganizer/freebusyurls
 |       |---------korganizer/templates/*
 |       |---------messageviewer/themes/*
+|       |---------kmail2/adblockrules_local
