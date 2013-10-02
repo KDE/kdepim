@@ -266,7 +266,8 @@ void AdBlockSettingWidget::save()
     for (int i = 0; i < manualFiltersListWidget->count(); ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
         const QString stringRule = subItem->text();
-        out << stringRule << '\n';
+        if (!stringRule.isEmpty())
+            out << stringRule << '\n';
     }
 
     // -------------------------------------------------------------------------------
@@ -381,7 +382,8 @@ void AdBlockSettingWidget::slotExportFilters()
     for (int i = 0; i < numberOfElement; ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
         const QString stringRule = subItem->text();
-        exportFilters += stringRule + QLatin1Char('\n');
+        if (!stringRule.isEmpty())
+            exportFilters += stringRule + QLatin1Char('\n');
     }
     PimCommon::Util::saveTextAs(exportFilters, filter, this);
 }
