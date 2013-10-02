@@ -54,7 +54,7 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
     grid->setMargin(0);
     lay->addLayout(grid);
 
-    QLabel *lab = new QLabel(i18n("Variable name (if empty it uses internal variable):"));
+    QLabel *lab = new QLabel(i18n("Variable name\n (if empty it uses internal variable):"));
     grid->addWidget(lab, 0, 0);
 
     KLineEdit *variableName = new KLineEdit;
