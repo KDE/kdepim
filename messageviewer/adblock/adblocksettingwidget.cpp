@@ -132,9 +132,7 @@ void AdBlockSettingWidget::insertRule()
         }
     }
 
-    QListWidgetItem *item = new QListWidgetItem(rule);
-    item->setFlags(item->flags() | Qt::ItemIsEditable);
-    manualFiltersListWidget->addItem(item);
+    addManualFilter(rule);
     addFilterLineEdit->clear();
     hasChanged();
 }
@@ -217,9 +215,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     QTextStream in(&ruleFile);
     while (!in.atEnd()) {
         QString stringRule = in.readLine();
-        QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
-        subItem->setFlags(subItem->flags() | Qt::ItemIsEditable);
-        subItem->setText(stringRule);
+        addManualFilter(stringRule);
     }
 }
 
@@ -366,10 +362,15 @@ void AdBlockSettingWidget::slotImportFilters()
             continue;
         if (excludeFilter.contains(element))
             continue;
-        QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
-        subItem->setFlags(subItem->flags() | Qt::ItemIsEditable);
-        subItem->setText(element);
+        addManualFilter(element);
     }
+}
+
+void AdBlockSettingWidget::addManualFilter(const QString &text)
+{
+    QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
+    subItem->setFlags(subItem->flags() | Qt::ItemIsEditable);
+    subItem->setText(text);
 }
 
 void AdBlockSettingWidget::slotExportFilters()

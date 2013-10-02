@@ -67,6 +67,7 @@ private Q_SLOTS:
     void slotUpdateManualButtons();
 
 private:
+    void addManualFilter(const QString &text);
     enum List {
         UrlList = Qt::UserRole + 1,
         PathList = Qt::UserRole + 2,
