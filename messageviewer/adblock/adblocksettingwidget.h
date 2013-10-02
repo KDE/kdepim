@@ -54,7 +54,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void hasChanged();
-
     void slotInfoLinkActivated(const QString &);
     void insertRule();
     void removeRule();
@@ -65,6 +64,7 @@ private Q_SLOTS:
     void slotImportFilters();
     void slotExportFilters();
     void slotUpdateManualButtons();
+    void slotEditFilter();
 
 private:
     void addManualFilter(const QString &text);

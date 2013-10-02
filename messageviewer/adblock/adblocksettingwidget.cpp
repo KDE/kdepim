@@ -81,6 +81,7 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(spinBox,            SIGNAL(valueChanged(int)),   this, SLOT(hasChanged()));
     connect(addFilters, SIGNAL(clicked()), this, SLOT(slotAddFilter()));
     connect(showList, SIGNAL(clicked()), this, SLOT(slotShowList()));
+    connect(editFilter, SIGNAL(clicked()), this, SLOT(slotEditFilter()));
 
     connect(automaticFiltersListWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(hasChanged()));
     connect(automaticFiltersListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotUpdateButtons()));
@@ -88,6 +89,14 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     connect(importFilters, SIGNAL(clicked()), SLOT(slotImportFilters()));
     connect(exportFilters, SIGNAL(clicked()), SLOT(slotExportFilters()));
     slotUpdateManualButtons();
+}
+
+void AdBlockSettingWidget::slotEditFilter()
+{
+    QListWidgetItem *item = manualFiltersListWidget->currentItem();
+    if (item) {
+        manualFiltersListWidget->editItem(item);
+    }
 }
 
 void AdBlockSettingWidget::slotUpdateButtons()
@@ -101,6 +110,7 @@ void AdBlockSettingWidget::slotUpdateManualButtons()
 {
     const bool enabled = manualFiltersListWidget->currentItem();
     removeButton->setEnabled(enabled);
+    editFilter->setEnabled(enabled);
 }
 
 void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
