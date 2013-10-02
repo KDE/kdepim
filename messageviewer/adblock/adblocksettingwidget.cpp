@@ -132,8 +132,9 @@ void AdBlockSettingWidget::insertRule()
         }
     }
 
-
-    manualFiltersListWidget->addItem(rule);
+    QListWidgetItem *item = new QListWidgetItem(rule);
+    item->setFlags(item->flags() | Qt::ItemIsEditable);
+    manualFiltersListWidget->addItem(item);
     addFilterLineEdit->clear();
     hasChanged();
 }
@@ -217,6 +218,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
     while (!in.atEnd()) {
         QString stringRule = in.readLine();
         QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
+        subItem->setFlags(subItem->flags() | Qt::ItemIsEditable);
         subItem->setText(stringRule);
     }
 }
@@ -365,6 +367,7 @@ void AdBlockSettingWidget::slotImportFilters()
         if (excludeFilter.contains(element))
             continue;
         QListWidgetItem *subItem = new QListWidgetItem(manualFiltersListWidget);
+        subItem->setFlags(subItem->flags() | Qt::ItemIsEditable);
         subItem->setText(element);
     }
 }
