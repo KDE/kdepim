@@ -17,9 +17,15 @@
 
 #include "generateglobalscriptjob.h"
 
+#include "libksieve/kmanagesieve/sievejob.h"
+
+#include <KMessageBox>
+#include <KLocale>
+
 using namespace KSieveUi;
-GenerateGlobalScriptJob::GenerateGlobalScriptJob(QObject *parent)
-    : QObject(parent)
+GenerateGlobalScriptJob::GenerateGlobalScriptJob(const KUrl &url, QObject *parent)
+    : QObject(parent),
+      mCurrentUrl(url)
 {
 }
 
@@ -34,6 +40,11 @@ void GenerateGlobalScriptJob::addUserActiveScripts(const QStringList &lstScript)
 }
 
 void GenerateGlobalScriptJob::writeGlobalScripts()
+{
+    writeMasterScript();
+}
+
+void GenerateGlobalScriptJob::writeMasterScript()
 {
     const QString masterScript = QLatin1String("# MASTER\n"
                                                "#\n"
@@ -58,6 +69,24 @@ void GenerateGlobalScriptJob::writeGlobalScripts()
                                                "# The script(s) maintained by one or more editors available to the user\n"
                                                "include :personal :optional \"USER\";\n");
 
+    KUrl url(mCurrentUrl);
+    url.setFileName(QLatin1String("MASTER"));
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put(url, masterScript, true, true );
+    connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+             this, SLOT(slotPutMasterResult(KManageSieve::SieveJob*,bool)) );
+}
+
+void GenerateGlobalScriptJob::slotPutMasterResult( KManageSieve::SieveJob *, bool success )
+{
+    if (!success) {
+        KMessageBox::error(0, i18n("Error when we wrote \"MASTER\" script on server."), i18n("Error"));
+        return;
+    }
+    writeUserScript();
+}
+
+void GenerateGlobalScriptJob::writeUserScript()
+{
     QString userScript = QLatin1String(" # USER Management Script\n"
                                        "#\n"
                                        "# This script includes the various active sieve scripts\n"
@@ -72,7 +101,21 @@ void GenerateGlobalScriptJob::writeGlobalScripts()
         userScript += QString::fromLatin1("\ninclude :personal \"%1\"").arg(activeScript);
     }
 
-    //TODO
+    KUrl url(mCurrentUrl);
+    url.setFileName(QLatin1String("USER"));
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put(url, userScript, false, false );
+    connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+             this, SLOT(slotPutUserResult(KManageSieve::SieveJob*,bool)) );
 }
+
+void GenerateGlobalScriptJob::slotPutUserResult( KManageSieve::SieveJob *, bool success )
+{
+    if (!success) {
+        KMessageBox::error(0, i18n("Error when we wrote \"User\" script on server."), i18n("Error"));
+        return;
+    }
+    //TODO make sure to disable all others scripts ?
+}
+
 
 #include "generateglobalscriptjob.moc"

@@ -20,21 +20,31 @@
 
 #include <QObject>
 #include <QStringList>
-
+#include <KUrl>
+namespace KManageSieve {
+class SieveJob;
+}
 namespace KSieveUi {
 class GenerateGlobalScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit GenerateGlobalScriptJob(QObject *parent=0);
+    explicit GenerateGlobalScriptJob(const KUrl &url, QObject *parent=0);
     ~GenerateGlobalScriptJob();
 
     void writeGlobalScripts();
 
     void addUserActiveScripts(const QStringList &lstScript);
 
+private Q_SLOTS:
+    void slotPutMasterResult( KManageSieve::SieveJob *, bool success );
+    void slotPutUserResult( KManageSieve::SieveJob *, bool success );
+
 private:
+    void writeMasterScript();
+    void writeUserScript();
     QStringList mListUserActiveScripts;
+    KUrl mCurrentUrl;
 };
 }
 
