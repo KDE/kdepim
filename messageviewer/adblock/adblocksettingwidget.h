@@ -65,6 +65,7 @@ private Q_SLOTS:
     void slotExportFilters();
     void slotUpdateManualButtons();
     void slotEditFilter();
+    void slotManualFilterLineEditTextChanged(const QString &);
 
 private:
     void addManualFilter(const QString &text);

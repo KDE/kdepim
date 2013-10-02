@@ -88,7 +88,14 @@ AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
 
     connect(importFilters, SIGNAL(clicked()), SLOT(slotImportFilters()));
     connect(exportFilters, SIGNAL(clicked()), SLOT(slotExportFilters()));
+    connect(addFilterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotManualFilterLineEditTextChanged(QString)));
     slotUpdateManualButtons();
+    insertButton->setEnabled(false);
+}
+
+void AdBlockSettingWidget::slotManualFilterLineEditTextChanged(const QString &text)
+{
+    insertButton->setEnabled(!text.isEmpty());
 }
 
 void AdBlockSettingWidget::slotEditFilter()
