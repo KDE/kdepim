@@ -153,7 +153,7 @@ void FilterImporterThunderbird::extractConditions( const QString &line,
                 splitConditions( conditionsList.at( i ), filter );
             }
         }
-    } else if ( line.startsWith( QLatin1String( "ALL ALL" ) ) ){
+    } else if ( line.startsWith( QLatin1String( "ALL" ) ) ){
         filter->pattern()->setOp( SearchPattern::OpAll );
     } else {
         kDebug() << " missing extract condition" << line;
