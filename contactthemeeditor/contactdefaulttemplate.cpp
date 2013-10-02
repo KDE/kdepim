@@ -23,10 +23,11 @@
 QList<PimCommon::defaultTemplate> ContactDefaultTemplate::contactTemplates()
 {
     QList<PimCommon::defaultTemplate> lst;
+    /*
     PimCommon::defaultTemplate tmp;
     //TODO
     lst << tmp;
-
+    */
     return lst;
 }
 
