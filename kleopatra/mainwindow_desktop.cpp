@@ -521,7 +521,7 @@ void MainWindow::readProperties( const KConfigGroup & cg )
 {
     kDebug();
     KXmlGuiWindow::readProperties(cg);
-    savedGeometry = cg.readEntry<QByteArray>("savedGeometry", QByteArray() );
+    savedGeometry = cg.readEntry("savedGeometry", QByteArray() );
     if ( !savedGeometry.isEmpty() ) {
         restoreGeometry( savedGeometry );
     }
