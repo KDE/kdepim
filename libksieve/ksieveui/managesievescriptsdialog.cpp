@@ -271,7 +271,6 @@ void ManageSieveScriptsDialog::slotGotList(KManageSieve::SieveJob *job, bool suc
     (static_cast<SieveTreeWidgetItem*>(parent))->stopAnimation();
 
     mJobs.remove( job );
-    mBlockSignal = false;
     if (!success) {
         mBlockSignal = false;
         parent->setData( 0, SIEVE_SERVER_ERROR, true );
@@ -282,8 +281,13 @@ void ManageSieveScriptsDialog::slotGotList(KManageSieve::SieveJob *job, bool suc
         return;
     }
 
+
     mBlockSignal = true; // don't trigger slotItemChanged
     Q_FOREACH (const QString &script, listScript) {
+        //Hide protected name.
+        const QString lowerScript(script.toLower());
+        if (isProtectedName(lowerScript))
+            continue;
         QTreeWidgetItem* item = new QTreeWidgetItem( parent );
         item->setFlags(item->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
 
@@ -296,9 +300,17 @@ void ManageSieveScriptsDialog::slotGotList(KManageSieve::SieveJob *job, bool suc
     }
     mBlockSignal = false;
 
+    const bool hasIncludeCapability = job->sieveCapabilities().contains(QLatin1String("include"));
+    const bool hasUserActiveScript = (activeScript.toLower() == QLatin1String("USER"));
+    QStringList mUserActiveScriptList;
+    if (hasUserActiveScript && hasIncludeCapability) {
+        //TODO parse file.
+    }
+
+
     parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
     parent->setData( 0, SIEVE_SERVER_ERROR, false );
-    parent->setData( 0, SIEVE_SERVER_MODE, job->sieveCapabilities().contains(QLatin1String("include")) ? Kep14EditorMode : NormalEditorMode);
+    parent->setData( 0, SIEVE_SERVER_MODE, hasIncludeCapability ? Kep14EditorMode : NormalEditorMode);
     mListView->expandItem( parent );
 }
 
