@@ -15,21 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GENERATEMASTERSCRIPTJOB_H
-#define GENERATEMASTERSCRIPTJOB_H
+#ifndef GENERATEGLOBALSCRIPTJOB_H
+#define GENERATEGLOBALSCRIPTJOB_H
 
 #include <QObject>
+#include <QStringList>
 
 namespace KSieveUi {
-class GenerateMasterScriptJob : public QObject
+class GenerateGlobalScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit GenerateMasterScriptJob(QObject *parent=0);
-    ~GenerateMasterScriptJob();
+    explicit GenerateGlobalScriptJob(QObject *parent=0);
+    ~GenerateGlobalScriptJob();
 
-    void writeScript();
+    void writeGlobalScripts();
+
+    void addUserActiveScripts(const QStringList &lstScript);
+
+private:
+    QStringList mListUserActiveScripts;
 };
 }
 
-#endif // GENERATEMASTERSCRIPTJOB_H
+#endif // GENERATEGLOBALSCRIPTJOB_H

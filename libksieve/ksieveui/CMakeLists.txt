@@ -34,7 +34,7 @@ set(ksieveui_LIB_SRCS
   vacation/vacationdialog.cpp
   vacation/vacationhelperjob.cpp
   vacation/vacationmanager.cpp
-  vacation/generatemasterscriptjob.cpp
+  vacation/generateglobalscriptjob.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp
