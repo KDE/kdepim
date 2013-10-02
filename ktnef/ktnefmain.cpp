@@ -43,6 +43,7 @@
 #include <KStandardDirs>
 #include <KStatusBar>
 #include <KTemporaryFile>
+#include <KRecentFilesAction>
 
 #include <QContextMenuEvent>
 #include <QDir>
@@ -60,6 +61,10 @@ KTNEFMain::KTNEFMain( QWidget *parent )
 
   KConfigGroup config( KGlobal::config(), "Settings" );
   mDefaultDir = config.readPathEntry( "defaultdir", QLatin1String("/tmp/") );
+
+  config = KConfigGroup( KGlobal::config(), "Recent Files" );
+  mOpenRecentFileAction->loadEntries(config);
+
   mLastDir = mDefaultDir;
 
   // create personal temp extract dir
@@ -97,6 +102,8 @@ void KTNEFMain::setupActions()
 
   // File menu
   KStandardAction::open( this, SLOT(openFile()), actionCollection() );
+
+  mOpenRecentFileAction = KStandardAction::openRecent(this, SLOT(openRecentFile(KUrl)), actionCollection());
 
   // Action menu
   KAction *openAction = actionCollection()->addAction( QLatin1String("view_file") );
@@ -197,6 +204,7 @@ void KTNEFMain::loadFile( const QString &filename )
     mView->setAttachments( QList<KTNEFAttach *>() );
     enableExtractAll( false );
   } else {
+    addRecentFile(KUrl(filename));
     QList<KTNEFAttach *> list = mParser->message()->attachmentList();
     QString msg;
     msg = i18ncp( "@info:status",
@@ -219,6 +227,19 @@ void KTNEFMain::openFile()
   if ( !filename.isEmpty() ) {
     loadFile( filename );
   }
+}
+
+void KTNEFMain::openRecentFile(const KUrl &url)
+{
+    loadFile(url.path());
+}
+
+void KTNEFMain::addRecentFile(const KUrl &url)
+{
+    mOpenRecentFileAction->addUrl(url);
+    KConfigGroup config( KGlobal::config(), "Recent Files" );
+    mOpenRecentFileAction->saveEntries(config);
+    config.sync();
 }
 
 void KTNEFMain::viewFile()
