@@ -283,7 +283,7 @@ void AdBlockSettingWidget::save()
     for (int i = 0; i < manualFiltersListWidget->count(); ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
         const QString stringRule = subItem->text();
-        if (!stringRule.isEmpty())
+        if (!stringRule.trimmed().isEmpty())
             out << stringRule << '\n';
     }
 
