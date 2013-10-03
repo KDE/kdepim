@@ -17,6 +17,9 @@
 
 
 #include "parseuserscriptjob.h"
+#include "ksieveui/scriptsparsing/parsingutil.h"
+#include <kmanagesieve/sievejob.h>
+#include <KLocale>
 
 using namespace KSieveUi;
 ParseUserScriptJob::ParseUserScriptJob(QObject *parent)
@@ -29,9 +32,38 @@ ParseUserScriptJob::~ParseUserScriptJob()
 
 }
 
+void ParseUserScriptJob::scriptUrl(const KUrl &url)
+{
+    mCurrentUrl = url;
+}
+
 void ParseUserScriptJob::start()
 {
-    //TODO
+    if (mCurrentUrl.isEmpty()) {
+        Q_EMIT error(i18n("Path not specify."));
+        return;
+    }
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( mCurrentUrl );
+    connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+             this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
+
+void ParseUserScriptJob::slotGetResult( KManageSieve::SieveJob *, bool, const QString & script, bool )
+{
+    if (script.isEmpty()) {
+        Q_EMIT error(i18n("Script is empty."));
+        return;
+    }
+    bool result;
+    QDomDocument doc = ParsingUtil::parseScript(script, result);
+    if (!result) {
+        Q_EMIT error(i18n("Script parsing error"));
+        return;
+    }
+    QStringList lstScript;
+    //TODO parsing.
+    Q_EMIT success(lstScript);
+}
+
 
 #include "parseuserscriptjob.moc"

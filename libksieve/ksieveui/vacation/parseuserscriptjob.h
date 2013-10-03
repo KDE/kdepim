@@ -19,6 +19,11 @@
 #define PARSEUSERSCRIPTJOB_H
 
 #include <QObject>
+#include <KUrl>
+
+namespace KManageSieve {
+class SieveJob;
+}
 
 namespace KSieveUi {
 class ParseUserScriptJob : public QObject
@@ -30,9 +35,17 @@ public:
 
     void start();
 
+    void scriptUrl(const KUrl &url);
+
+private Q_SLOTS:
+    void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
+
 Q_SIGNALS:
-    void success();
+    void success(const QStringList &activeScriptList);
     void error(const QString &msgError);
+
+private:
+    KUrl mCurrentUrl;
 };
 }
 
