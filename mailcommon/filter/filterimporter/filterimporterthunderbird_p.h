@@ -32,10 +32,12 @@ class MAILCOMMON_EXPORT FilterImporterThunderbird : public FilterImporterAbstrac
 {
 public:
     explicit FilterImporterThunderbird( QFile *file );
+    FilterImporterThunderbird( QString string );
     ~FilterImporterThunderbird();
     static QString defaultFiltersSettingsPath();
 
 private:
+    void readStream(QTextStream &stream);
     static QString cleanArgument( const QString &line, const QString &removeStr );
     void extractConditions( const QString &line, MailCommon::MailFilter *filter );
     QString extractActions( const QString &line, MailFilter *filter, QString &value );

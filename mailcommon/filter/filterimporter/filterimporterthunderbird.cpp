@@ -29,6 +29,22 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
     :FilterImporterAbstract()
 {
     QTextStream stream(file);
+    readStream(stream);
+}
+
+FilterImporterThunderbird::FilterImporterThunderbird( QString string )
+    :FilterImporterAbstract()
+{
+    QTextStream stream(&string);
+    readStream(stream);
+}
+
+FilterImporterThunderbird::~FilterImporterThunderbird()
+{
+}
+
+void FilterImporterThunderbird::readStream(QTextStream &stream)
+{
     MailFilter *filter = 0;
     while ( !stream.atEnd() ) {
         QString line = stream.readLine();
@@ -36,10 +52,6 @@ FilterImporterThunderbird::FilterImporterThunderbird( QFile *file )
         filter = parseLine( stream, line, filter );
     }
     appendFilter(filter);
-}
-
-FilterImporterThunderbird::~FilterImporterThunderbird()
-{
 }
 
 QString FilterImporterThunderbird::defaultFiltersSettingsPath()
