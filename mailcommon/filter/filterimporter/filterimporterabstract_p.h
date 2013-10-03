@@ -18,6 +18,7 @@
 #ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERABSTRACT_P_H
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERABSTRACT_P_H
 
+#include "mailcommon_export.h"
 #include <QDomDocument>
 #include <QList>
 #include <QStringList>
@@ -29,7 +30,7 @@ namespace MailCommon {
 
 class MailFilter;
 
-class FilterImporterAbstract
+class MAILCOMMON_EXPORT FilterImporterAbstract
 {
 public:
     explicit FilterImporterAbstract();

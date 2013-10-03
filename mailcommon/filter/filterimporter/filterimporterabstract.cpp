@@ -55,6 +55,7 @@ void FilterImporterAbstract::appendFilter( MailCommon::MailFilter *filter )
     } else {
         mEmptyFilter << filter->name();
         // the filter is invalid:
+        qDebug()<<" Empty filter";
         delete filter;
     }
 }

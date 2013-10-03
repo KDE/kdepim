@@ -25,11 +25,17 @@ QTEST_KDEMAIN( FilterImportThunderbirdtest, NoGUI )
 void FilterImportThunderbirdtest::testImportFilters()
 {
 #if 0
-    MailCommon::FilterImporterClawsMails importer;
-    MailCommon::MailFilter *filter = importer.parseLine( "enabled rulename \"foo\" subject matchcase \"fff\" add_to_addressbook \"From\" \"addrbook-000002.xml\"");
-    QCOMPARE(filter->toolbarName(), QLatin1String("foo"));
-    QVERIFY(filter->isEnabled());
-    delete filter;
+    QString filter = QLatin1String("version=\"9\"\n"
+                                   "logging=\"no\"\n"
+                                   "name=\"Match All Messages\"\n"
+                                   "enabled=\"yes\"\n"
+                                   "type=\"17\"\n"
+                                   "action=\"Mark read\"\n"
+                                   "condition=\"ALL\"\n");
+    MailCommon::FilterImporterThunderbird importer(filter);
+    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    QCOMPARE(lst.count(), 1);
+    qDeleteAll(lst);
 #endif
 }
 
