@@ -27,7 +27,7 @@
 #include <KTemporaryFile>
 
 #include <QHBoxLayout>
-#include <QDebug>
+#include <KDebug>
 
 using namespace MessageViewer;
 AdBlockShowListDialog::AdBlockShowListDialog(QWidget *parent)
@@ -90,8 +90,9 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
     delete mTemporaryFile;
     mTemporaryFile = new KTemporaryFile;
     if (!mTemporaryFile->open()) {
-        qDebug()<<"can not open temporary file";
+        kDebug()<<"can not open temporary file";
         delete mTemporaryFile;
+        mTemporaryFile = 0;
         return;
     }
     KUrl subUrl = KUrl(url);
