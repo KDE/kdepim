@@ -15,42 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef GENERATEGLOBALSCRIPTJOB_H
-#define GENERATEGLOBALSCRIPTJOB_H
+#ifndef PARSEUSERSCRIPTJOB_H
+#define PARSEUSERSCRIPTJOB_H
 
 #include <QObject>
-#include <QStringList>
-#include <KUrl>
-namespace KManageSieve {
-class SieveJob;
-}
+
 namespace KSieveUi {
-class GenerateGlobalScriptJob : public QObject
+class ParseUserScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit GenerateGlobalScriptJob(const KUrl &url, QObject *parent=0);
-    ~GenerateGlobalScriptJob();
+    explicit ParseUserScriptJob(QObject *parent=0);
+    ~ParseUserScriptJob();
 
-    void writeGlobalScripts();
-
-    void addUserActiveScripts(const QStringList &lstScript);
+    void start();
 
 Q_SIGNALS:
     void success();
     void error(const QString &msgError);
-
-private Q_SLOTS:
-    void slotPutMasterResult( KManageSieve::SieveJob *, bool success );
-    void slotPutUserResult( KManageSieve::SieveJob *, bool success );
-
-private:
-    void disableAllOtherScripts();
-    void writeMasterScript();
-    void writeUserScript();
-    QStringList mListUserActiveScripts;
-    KUrl mCurrentUrl;
 };
 }
 
-#endif // GENERATEGLOBALSCRIPTJOB_H
+#endif // PARSEUSERSCRIPTJOB_H

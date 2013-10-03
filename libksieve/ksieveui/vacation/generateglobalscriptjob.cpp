@@ -19,7 +19,6 @@
 
 #include "libksieve/kmanagesieve/sievejob.h"
 
-#include <KMessageBox>
 #include <KLocale>
 
 using namespace KSieveUi;
@@ -79,7 +78,7 @@ void GenerateGlobalScriptJob::writeMasterScript()
 void GenerateGlobalScriptJob::slotPutMasterResult( KManageSieve::SieveJob *, bool success )
 {
     if (!success) {
-        KMessageBox::error(0, i18n("Error when we wrote \"MASTER\" script on server."), i18n("Error"));
+        Q_EMIT error(i18n("Error when we wrote \"MASTER\" script on server."));
         return;
     }
     writeUserScript();
@@ -111,7 +110,7 @@ void GenerateGlobalScriptJob::writeUserScript()
 void GenerateGlobalScriptJob::slotPutUserResult( KManageSieve::SieveJob *, bool success )
 {
     if (!success) {
-        KMessageBox::error(0, i18n("Error when we wrote \"User\" script on server."), i18n("Error"));
+        Q_EMIT error(i18n("Error when we wrote \"User\" script on server."));
         return;
     }
     disableAllOtherScripts();
@@ -120,6 +119,7 @@ void GenerateGlobalScriptJob::slotPutUserResult( KManageSieve::SieveJob *, bool 
 void GenerateGlobalScriptJob::disableAllOtherScripts()
 {
     //TODO
+    Q_EMIT success();
 }
 
 #include "generateglobalscriptjob.moc"

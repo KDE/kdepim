@@ -28,6 +28,7 @@ set(ksieveui_LIB_SRCS
   scriptsparsing/parsingutil.cpp
   managesievescriptsdialog.cpp
   widgets/sievetreewidgetitem.cpp
+  widgets/managesievetreeview.cpp
   debug/sievedebugdialog.cpp
   util.cpp
   vacation/vacation.cpp
@@ -35,6 +36,7 @@ set(ksieveui_LIB_SRCS
   vacation/vacationhelperjob.cpp
   vacation/vacationmanager.cpp
   vacation/generateglobalscriptjob.cpp
+  vacation/parseuserscriptjob.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp
