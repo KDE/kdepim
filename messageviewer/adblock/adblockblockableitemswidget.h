@@ -70,6 +70,7 @@ private:
     };
 
     void searchBlockableElement(QWebFrame *frame);
+    void adaptSrc(QString &src,const QString &hostName);
 
 private:
     QTreeWidget *mListItems;

@@ -100,6 +100,7 @@ int main (int argc, char **argv)
 
     AdBlockBlockableItemTestDialog *w = new AdBlockBlockableItemTestDialog(fileName);
 
+    w->resize(800, 600);
     w->show();
     app.exec();
     delete w;
