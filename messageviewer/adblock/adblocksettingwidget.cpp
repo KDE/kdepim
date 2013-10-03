@@ -52,7 +52,7 @@
 using namespace MessageViewer;
 AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     : QWidget(parent)
-    , _changed(false)
+    , mChanged(false)
 {
     setupUi(this);
 
@@ -239,7 +239,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
 
 void AdBlockSettingWidget::save()
 {
-    if (!_changed)
+    if (!mChanged)
         return;
 
     // General settings    
@@ -288,7 +288,7 @@ void AdBlockSettingWidget::save()
     }
 
     // -------------------------------------------------------------------------------
-    _changed = false;
+    mChanged = false;
     emit changed(false);
     AdBlockManager::self()->reloadConfig();
 }
@@ -299,14 +299,14 @@ void AdBlockSettingWidget::hasChanged()
     // update enabled status
     checkHideAds->setEnabled(checkEnableAdblock->isChecked());
     tabWidget->setEnabled(checkEnableAdblock->isChecked());
-    _changed = true;
+    mChanged = true;
     emit changed(true);
 }
 
 
 bool AdBlockSettingWidget::changed() const
 {
-    return _changed;
+    return mChanged;
 }
 
 void AdBlockSettingWidget::slotAddFilter()
