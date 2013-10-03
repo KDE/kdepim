@@ -95,7 +95,7 @@ void AdBlockShowListDialog::downLoadList(const QString &url)
         mTemporaryFile = 0;
         return;
     }
-    KUrl subUrl = KUrl(url);
+    KUrl subUrl(url);
 
     KUrl destUrl = KUrl(mTemporaryFile->fileName());
 
@@ -122,14 +122,12 @@ void AdBlockShowListDialog::slotFinished(KJob *job)
     }
 
     QFile f(mTemporaryFile->fileName());
-    if (!f.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        mTemporaryFile->close();
-        delete mTemporaryFile;
-        mTemporaryFile = 0;
-        return;
+    if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
     }
-    mTextEdit->editor()->setPlainText(QString::fromUtf8(f.readAll()));
     mTemporaryFile->close();
+    delete mTemporaryFile;
+    mTemporaryFile = 0;
 }
 
 

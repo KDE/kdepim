@@ -37,7 +37,7 @@ class MyNetworkAccessManager : public KIO::AccessManager
     Q_OBJECT
 
 public:
-    MyNetworkAccessManager(QObject *parent = 0);
+    explicit MyNetworkAccessManager(QObject *parent = 0);
 
 protected:
     virtual QNetworkReply *createRequest(Operation op, const QNetworkRequest &req, QIODevice *outgoingData = 0);
