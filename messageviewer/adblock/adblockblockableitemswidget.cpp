@@ -150,8 +150,10 @@ void AdBlockBlockableItemsWidget::adaptSrc(QString &src,const QString &hostName)
         //Nothing
     } else if (src.startsWith(QLatin1String("//"))) {
         src = QLatin1String("https:") + src;
-    } else if (!src.startsWith(QLatin1String("file://"))) {
+    } else if (src.startsWith(QLatin1Char('/'))){
         src = QLatin1String("https://") + hostName + src;
+    } else {
+        src = QString();
     }
 }
 
@@ -166,6 +168,8 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
             if (src.isEmpty())
                 continue;
             adaptSrc(src, host);
+            if (src.isEmpty())
+                continue;
             QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
             item->setText(Url, src);
             item->setText(Type, elementTypeToI18n(AdBlockBlockableItemsWidget::Image));
@@ -179,6 +183,8 @@ void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
         if (src.isEmpty())
             continue;
         adaptSrc(src, host);
+        if (src.isEmpty())
+            continue;
         QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
         item->setText(Url, src);
         item->setText(Type, elementTypeToI18n(AdBlockBlockableItemsWidget::Script));
