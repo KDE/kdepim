@@ -19,6 +19,7 @@
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERTHUNDERBIRD_P_H
 
 #include "filterimporter/filterimporterabstract_p.h"
+#include "mailcommon_export.h"
 #include <QTextStream>
 
 class QFile;
@@ -27,12 +28,13 @@ namespace MailCommon {
 
 class MailFilter;
 
-class FilterImporterThunderbird : public FilterImporterAbstract
+class MAILCOMMON_EXPORT FilterImporterThunderbird : public FilterImporterAbstract
 {
 public:
     explicit FilterImporterThunderbird( QFile *file );
     ~FilterImporterThunderbird();
     static QString defaultFiltersSettingsPath();
+
 private:
     static QString cleanArgument( const QString &line, const QString &removeStr );
     void extractConditions( const QString &line, MailCommon::MailFilter *filter );

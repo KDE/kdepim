@@ -10,3 +10,4 @@ endmacro()
 
 
 add_filterimport_test( filterimportclawmailtest.cpp )
+add_filterimport_test( filterimportthunderbirdtest.cpp )
