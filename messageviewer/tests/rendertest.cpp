@@ -19,7 +19,7 @@
 
 #include "htmlwriter/filehtmlwriter.h"
 #include "viewer/objecttreeparser.h"
-#include "viewer/csshelper.h"
+#include "tests/testcsshelper.h"
 #include "messagecore/tests/util.h"
 
 #include <KMime/Message>
@@ -82,7 +82,7 @@ class RenderTest : public QObject
       // render the mail
       FileHtmlWriter fileWriter( outFileName );
       QImage paintDevice;
-      CSSHelper cssHelper( &paintDevice );
+      TestCSSHelper cssHelper( &paintDevice );
       NodeHelper nodeHelper;
       MessageCore::Test::TestObjectTreeSource testSource( &fileWriter, &cssHelper );
       testSource.setAllowDecryption( true );
