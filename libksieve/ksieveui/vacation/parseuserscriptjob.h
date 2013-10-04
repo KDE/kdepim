@@ -20,7 +20,8 @@
 
 #include <QObject>
 #include <KUrl>
-
+class QDomDocument;
+class QDomElement;
 namespace KManageSieve {
 class SieveJob;
 }
@@ -45,6 +46,8 @@ Q_SIGNALS:
     void error(const QString &msgError);
 
 private:
+    QString loadInclude(const QDomElement &element);
+    QStringList parsescript(const QDomDocument &doc);
     KUrl mCurrentUrl;
 };
 }

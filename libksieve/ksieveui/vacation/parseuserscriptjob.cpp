@@ -60,10 +60,55 @@ void ParseUserScriptJob::slotGetResult( KManageSieve::SieveJob *, bool, const QS
         Q_EMIT error(i18n("Script parsing error"));
         return;
     }
-    QStringList lstScript;
-    //TODO parsing.
+    const QStringList lstScript = parsescript(doc);
     Q_EMIT success(lstScript);
 }
 
+QStringList ParseUserScriptJob::parsescript(const QDomDocument &doc)
+{
+    QStringList lstScript;
+    QDomElement docElem = doc.documentElement();
+    QDomNode n = docElem.firstChild();
+    while (!n.isNull()) {
+        QDomElement e = n.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            //qDebug()<<" tagName "<<tagName;
+            if (tagName == QLatin1String("action")) {
+                if (e.hasAttribute(QLatin1String("name"))) {
+                    const QString actionName = e.attribute(QLatin1String("name"));
+                    if (actionName == QLatin1String("include")) {
+                        //Load includes
+                        const QString str = loadInclude(e);
+                        if (!str.isEmpty()) {
+                            lstScript.append(str);
+                        }
+                    }
+                }
+            }
+        }
+        n = n.nextSibling();
+    }
+    return lstScript;
+}
+
+QString ParseUserScriptJob::loadInclude(const QDomElement &element)
+{
+    QString scriptName;
+    QDomNode node = element.firstChild();
+    while (!node.isNull()) {
+        QDomElement e = node.toElement();
+        if (!e.isNull()) {
+            const QString tagName = e.tagName();
+            if (tagName == QLatin1String("tag")) {
+                if (tagName == QLatin1String("str")) {
+                    scriptName = e.text();
+                }
+            }
+        }
+        node = node.nextSibling();
+    }
+    return scriptName;
+}
 
 #include "parseuserscriptjob.moc"
