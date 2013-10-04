@@ -28,7 +28,7 @@ class WebPage : public KWebPage
 public:
     explicit WebPage(QWidget *parent = 0);
     ~WebPage();
-    KUrl loadingUrl();
+    KUrl loadingUrl() const;
 
 protected:
     bool acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &request, NavigationType type);
