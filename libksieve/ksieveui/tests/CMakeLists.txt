@@ -1,6 +1,6 @@
-kde4_add_executable(sievemanager TEST sievemanager.cpp)
+kde4_add_executable(sievemanagerdialog TEST sievemanagerdialog.cpp)
 
-target_link_libraries(sievemanager
+target_link_libraries(sievemanagerdialog
   ksieve
   ksieveui
   ${KDE4_KDECORE_LIBS}
