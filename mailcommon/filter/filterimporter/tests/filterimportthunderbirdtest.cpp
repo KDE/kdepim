@@ -16,15 +16,19 @@
 */
 #include "filterimportthunderbirdtest.h"
 #include "../filterimporterthunderbird_p.h"
+#include "filtertestkernel.h"
 #include "mailfilter.h"
 #include <qtest_kde.h>
+#include <mailcommon/kernel/mailkernel.h>
 
 
 QTEST_KDEMAIN( FilterImportThunderbirdtest, NoGUI )
 
 void FilterImportThunderbirdtest::testImportFilters()
 {
-#if 0
+    FilterTestKernel *kernel = new FilterTestKernel( this );
+    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
     QString filter = QLatin1String("version=\"9\"\n"
                                    "logging=\"no\"\n"
                                    "name=\"Match All Messages\"\n"
@@ -32,11 +36,10 @@ void FilterImportThunderbirdtest::testImportFilters()
                                    "type=\"17\"\n"
                                    "action=\"Mark read\"\n"
                                    "condition=\"ALL\"\n");
-    MailCommon::FilterImporterThunderbird importer(filter);
+    MailCommon::FilterImporterThunderbird importer(filter, false);
     QList<MailCommon::MailFilter*> lst = importer.importFilter();
     QCOMPARE(lst.count(), 1);
     qDeleteAll(lst);
-#endif
 }
 
 

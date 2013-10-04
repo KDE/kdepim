@@ -31,8 +31,8 @@ class MailFilter;
 class MAILCOMMON_EXPORT FilterImporterThunderbird : public FilterImporterAbstract
 {
 public:
-    explicit FilterImporterThunderbird( QFile *file );
-    FilterImporterThunderbird( QString string );
+    explicit FilterImporterThunderbird( QFile *file, bool interactive = true );
+    FilterImporterThunderbird( QString string, bool interactive = true );
     ~FilterImporterThunderbird();
     static QString defaultFiltersSettingsPath();
 
@@ -44,7 +44,6 @@ private:
     void extractType( const QString &line, MailCommon::MailFilter *filter );
     bool splitConditions( const QString &cond, MailCommon::MailFilter *filter );
     MailFilter *parseLine( QTextStream &stream, QString line, MailCommon::MailFilter *filter );
-
 };
 
 }

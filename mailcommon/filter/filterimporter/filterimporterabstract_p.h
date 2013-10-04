@@ -40,12 +40,13 @@ public:
 
 protected:
     void appendFilter( MailCommon::MailFilter *filter );
-    void createFilterAction( MailCommon::MailFilter *filter,
+    void createFilterAction(MailCommon::MailFilter *filter,
                              const QString &actionName, const QString &value );
     bool loadDomElement( QDomDocument &doc, QFile *file );
 
     QList<MailFilter*> mListMailFilter;
     QStringList mEmptyFilter;
+    bool mInteractive;
 };
 
 }

@@ -18,12 +18,18 @@
 #include "../filterimporterclawsmail_p.h"
 #include "mailfilter.h"
 #include <qtest_kde.h>
+#include "filtertestkernel.h"
+#include <mailcommon/kernel/mailkernel.h>
 
 
 QTEST_KDEMAIN( FilterImportClawMailtest, NoGUI )
 
 void FilterImportClawMailtest::testImportFilters()
 {
+    FilterTestKernel *kernel = new FilterTestKernel( this );
+    CommonKernel->registerKernelIf( kernel ); //register KernelIf early, it is used by the Filter classes
+    CommonKernel->registerSettingsIf( kernel ); //SettingsIf is used in FolderTreeWidget
+
     MailCommon::FilterImporterClawsMails importer;
     MailCommon::MailFilter *filter = importer.parseLine( "enabled rulename \"foo\" subject matchcase \"fff\" add_to_addressbook \"From\" \"addrbook-000002.xml\"");
     QCOMPARE(filter->toolbarName(), QLatin1String("foo"));

@@ -49,9 +49,10 @@ FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
     appendFilter(filter);
 }
 
-FilterImporterClawsMails::FilterImporterClawsMails()
+FilterImporterClawsMails::FilterImporterClawsMails(bool interactive)
     :FilterImporterAbstract()
 {
+    mInteractive = interactive;
 }
 
 FilterImporterClawsMails::~FilterImporterClawsMails()
