@@ -240,11 +240,30 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
   connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 
   loadCompletionItems();
+  readConfig();
 }
 
 CompletionOrderEditor::~CompletionOrderEditor()
 {
+    writeConfig();
 }
+
+void CompletionOrderEditor::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "CompletionOrderEditor" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void CompletionOrderEditor::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "CompletionOrderEditor" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
 
 void CompletionOrderEditor::addCompletionItemForIndex( const QModelIndex &index )
 {
