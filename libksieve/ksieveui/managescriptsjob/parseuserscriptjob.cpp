@@ -55,7 +55,7 @@ void ParseUserScriptJob::slotGetResult( KManageSieve::SieveJob *, bool, const QS
         return;
     }
     bool result;
-    QDomDocument doc = ParsingUtil::parseScript(script, result);
+    const QDomDocument doc = ParsingUtil::parseScript(script, result);
     if (!result) {
         Q_EMIT error(i18n("Script parsing error"));
         return;
