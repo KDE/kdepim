@@ -19,7 +19,7 @@
 #define EDITORWIDGET_H
 
 #include "grantleethemeeditor_export.h"
-#include <KTextEdit>
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
 
 class QCompleter;
 namespace KPIMTextEdit {
@@ -27,7 +27,7 @@ class HtmlHighlighter;
 }
 
 namespace GrantleeThemeEditor {
-class GRANTLEETHEMEEDITOR_EXPORT EditorWidget : public KTextEdit
+class GRANTLEETHEMEEDITOR_EXPORT EditorWidget : public PimCommon::PlainTextEditorWidget
 {
     Q_OBJECT
 public:
@@ -37,6 +37,10 @@ public:
     void insertFile(const QString &filename);
 
     virtual void createCompleterList(const QStringList &extraCompletion = QStringList());
+
+    QString toPlainText() const;
+    void setPlainText(const QString &str);
+    void clear();
 
 private Q_SLOTS:
     void slotInsertCompletion( const QString &completion );
