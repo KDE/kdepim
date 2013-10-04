@@ -22,6 +22,7 @@ class FilterImportClawMailtest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase();
     void testImportFilters();
 };
 

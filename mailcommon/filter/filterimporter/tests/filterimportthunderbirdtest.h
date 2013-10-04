@@ -22,7 +22,14 @@ class FilterImportThunderbirdtest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void testImportFilters();
+    void testImportFiltersAllCondition();
+    void testImportFiltersEmpty();
+    void testImportFiltersStopExecution();
+    void testImportFiltersDisabled();
+    void testImportTwoFilters();
+    void initTestCase();
+private:
+    void initialize();
 };
 
 #endif // FILTERIMPORTTHUNDERBIRDTEST_H
