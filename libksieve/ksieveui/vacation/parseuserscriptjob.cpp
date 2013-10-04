@@ -40,7 +40,7 @@ void ParseUserScriptJob::scriptUrl(const KUrl &url)
 void ParseUserScriptJob::start()
 {
     if (mCurrentUrl.isEmpty()) {
-        Q_EMIT error(i18n("Path not specify."));
+        Q_EMIT error(i18n("Path is not specified."));
         return;
     }
     KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( mCurrentUrl );
