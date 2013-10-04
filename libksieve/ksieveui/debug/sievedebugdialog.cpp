@@ -12,6 +12,8 @@
 */
 
 #include "sievedebugdialog.h"
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/plaintexteditor/plaintexteditor.h"
 
 #include <akonadi/agentinstance.h>
 #include <kdebug.h>
@@ -38,11 +40,11 @@ SieveDebugDialog::SieveDebugDialog( QWidget *parent )
         mResourceIdentifier << type.identifier();
     }
 
-    mEdit = new KTextEdit( this );
+    mEdit = new PimCommon::PlainTextEditorWidget( this );
     mEdit->setReadOnly( true );
     setMainWidget( mEdit );
 
-    mEdit->setText( i18n( "Collecting diagnostic information about Sieve support...\n\n" ) );
+    mEdit->editor()->setPlainText( i18n( "Collecting diagnostic information about Sieve support...\n\n" ) );
 
     setInitialSize( QSize( 640, 480 ) );
 
@@ -66,13 +68,13 @@ void SieveDebugDialog::slotDiagNextAccount()
         return;
     QString ident = mResourceIdentifier.first();
 
-    mEdit->append( i18n( "Collecting data for account '%1'...\n", ident ) );
-    mEdit->append( i18n( "------------------------------------------------------------\n" ) );
+    mEdit->editor()->appendPlainText( i18n( "Collecting data for account '%1'...\n", ident ) );
+    mEdit->editor()->appendPlainText( i18n( "------------------------------------------------------------\n" ) );
 
     // Detect URL for this IMAP account
     const KUrl url = KSieveUi::Util::findSieveUrlForAccount( ident );
     if ( !url.isValid() ) {
-        mEdit->append( i18n( "(Account does not support Sieve)\n\n" ) );
+        mEdit->editor()->appendPlainText( i18n( "(Account does not support Sieve)\n\n" ) );
     } else {
         mUrl = url;
 
@@ -103,7 +105,7 @@ void SieveDebugDialog::slotDiagNextScript()
     QString scriptFile = mScriptList.first();
     mScriptList.pop_front();
 
-    mEdit->append( i18n( "Contents of script '%1':\n", scriptFile ) );
+    mEdit->editor()->appendPlainText( i18n( "Contents of script '%1':\n", scriptFile ) );
 
     mUrl = KSieveUi::Util::findSieveUrlForAccount( mResourceIdentifier.first() );
 
@@ -125,9 +127,9 @@ void SieveDebugDialog::slotGetScript( KManageSieve::SieveJob * /* job */, bool s
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
     if ( script.isEmpty() ) {
-        mEdit->append( i18n( "(This script is empty.)\n\n" ) );
+        mEdit->editor()->appendPlainText( i18n( "(This script is empty.)\n\n" ) );
     } else {
-        mEdit->append( i18n(
+        mEdit->editor()->appendPlainText( i18n(
                            "------------------------------------------------------------\n"
                            "%1\n"
                            "------------------------------------------------------------\n\n", script ) );
@@ -144,28 +146,28 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
                 ", active:" << activeScript;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
-    mEdit->append( i18n( "Sieve capabilities:\n" ) );
+    mEdit->editor()->appendPlainText( i18n( "Sieve capabilities:\n" ) );
     const QStringList caps = job->sieveCapabilities();
     if ( caps.isEmpty() ) {
-        mEdit->append( i18n( "(No special capabilities available)" ) );
+        mEdit->editor()->appendPlainText( i18n( "(No special capabilities available)" ) );
     } else {
         QStringList::const_iterator end = caps.constEnd();
         for ( QStringList::const_iterator it = caps.constBegin(); it !=end; ++it )
-            mEdit->append( QLatin1String("* ") + *it + QLatin1Char('\n') );
-        mEdit->append( QLatin1String("\n") );
+            mEdit->editor()->appendPlainText( QLatin1String("* ") + *it + QLatin1Char('\n') );
+        mEdit->editor()->appendPlainText( QLatin1String("\n") );
     }
 
-    mEdit->append( i18n( "Available Sieve scripts:\n" ) );
+    mEdit->editor()->appendPlainText( i18n( "Available Sieve scripts:\n" ) );
 
     if ( scriptList.isEmpty() ) {
-        mEdit->append( i18n( "(No Sieve scripts available on this server)\n\n" ) );
+        mEdit->editor()->appendPlainText( i18n( "(No Sieve scripts available on this server)\n\n" ) );
     } else {
         mScriptList = scriptList;
         QStringList::const_iterator end = scriptList.constEnd();
         for ( QStringList::const_iterator it = scriptList.constBegin(); it != end; ++it )
-            mEdit->append( QLatin1String("* ") + *it + QLatin1Char('\n') );
-        mEdit->append( QLatin1String("\n") );
-        mEdit->append( i18n( "Active script: %1\n\n", activeScript ) );
+            mEdit->editor()->appendPlainText( QLatin1String("* ") + *it + QLatin1Char('\n') );
+        mEdit->editor()->appendPlainText( QLatin1String("\n") );
+        mEdit->editor()->appendPlainText( i18n( "Active script: %1\n\n", activeScript ) );
     }
 
     // Handle next job: dump scripts for this server

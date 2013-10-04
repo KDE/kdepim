@@ -27,7 +27,9 @@ class QStringList;
 namespace KManageSieve {
 class SieveJob;
 }
-
+namespace PimCommon {
+class PlainTextEditorWidget;
+}
 namespace KSieveUi {
 
 /**
@@ -57,8 +59,7 @@ protected:
     KManageSieve::SieveJob *mSieveJob;
     KUrl mUrl;
 
-    KTextEdit *mEdit;
-
+    PimCommon::PlainTextEditorWidget * mEdit;
     QStringList mResourceIdentifier;
     QStringList mScriptList;
 };
