@@ -215,12 +215,14 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
 
   KVBox* upDownBox = new KVBox( page );
   mUpButton = new KPushButton( upDownBox );
+  mUpButton->setAutoRepeat(true);
   mUpButton->setObjectName( QLatin1String("mUpButton") );
   mUpButton->setIcon( KIcon(QLatin1String("go-up")) );
   mUpButton->setEnabled( false ); // b/c no item is selected yet
   mUpButton->setFocusPolicy( Qt::StrongFocus );
 
   mDownButton = new KPushButton( upDownBox );
+  mDownButton->setAutoRepeat(true);
   mDownButton->setObjectName( QLatin1String("mDownButton") );
   mDownButton->setIcon( KIcon(QLatin1String("go-down")) );
   mDownButton->setEnabled( false ); // b/c no item is selected yet
