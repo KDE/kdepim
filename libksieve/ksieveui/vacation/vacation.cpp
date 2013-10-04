@@ -15,7 +15,7 @@
 #include "vacation.h"
 
 #include "sieve-vacation.h"
-#include "util.h"
+#include "util/util.h"
 #include "vacationdialog.h"
 #include <kmanagesieve/sievejob.h>
 

@@ -30,7 +30,7 @@ set(ksieveui_LIB_SRCS
   widgets/sievetreewidgetitem.cpp
   widgets/managesievetreeview.cpp
   debug/sievedebugdialog.cpp
-  util.cpp
+  util/util.cpp
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
   vacation/vacationhelperjob.cpp

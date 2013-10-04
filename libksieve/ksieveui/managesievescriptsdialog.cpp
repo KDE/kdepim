@@ -30,7 +30,7 @@
 
 #include <akonadi/agentinstance.h>
 #include <kmanagesieve/sievejob.h>
-#include <ksieveui/util.h>
+#include <ksieveui/util/util.h>
 
 #include <QApplication>
 #include <QMenu>
