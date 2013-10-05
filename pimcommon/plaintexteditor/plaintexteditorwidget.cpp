@@ -25,12 +25,32 @@
 
 using namespace PimCommon;
 
+PlainTextEditorWidget::PlainTextEditorWidget(PlainTextEditor *customEditor, QWidget *parent)
+    : QWidget(parent)
+{
+    init(customEditor);
+}
+
 PlainTextEditorWidget::PlainTextEditorWidget(QWidget *parent)
     : QWidget(parent)
 {
+    init();
+}
+
+PlainTextEditorWidget::~PlainTextEditorWidget()
+{
+
+}
+
+void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
+{
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
-    mEditor = new PlainTextEditor;
+    if (customEditor) {
+        mEditor = customEditor;
+    } else {
+        mEditor = new PlainTextEditor;
+    }
     lay->addWidget(mEditor);
 
     mFindBar = new PimCommon::PlainTextEditFindBar( mEditor, this );
@@ -47,11 +67,6 @@ PlainTextEditorWidget::PlainTextEditorWidget(QWidget *parent)
     connect( mEditor, SIGNAL(replaceText()), SLOT(slotReplace()) );
 
     setLayout(lay);
-}
-
-PlainTextEditorWidget::~PlainTextEditorWidget()
-{
-
 }
 
 bool PlainTextEditorWidget::isReadOnly() const

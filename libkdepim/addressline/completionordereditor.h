@@ -83,6 +83,8 @@ class KDEPIM_EXPORT CompletionOrderEditor : public KDialog
     void slotOk();
 
   private:
+    void readConfig();
+    void writeConfig();
     void loadCompletionItems();
     void addCompletionItemForIndex( const QModelIndex& );
 

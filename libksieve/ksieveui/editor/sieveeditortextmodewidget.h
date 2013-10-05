@@ -26,6 +26,7 @@ class QSplitter;
 
 namespace PimCommon {
 class PlainTextEditFindBar;
+class PlainTextEditorWidget;
 }
 
 namespace KSieveUi {
@@ -46,7 +47,6 @@ public:
     QString script() const;
     void setScript( const QString &script );
 
-    void setDebugColor( const QColor &col );
     void setDebugScript( const QString &debug );
 
     QString currentscript();
@@ -78,7 +78,7 @@ private:
     QString mOriginalScript;
     QStringList mSieveCapabilities;
     SieveTextEdit * mTextEdit;
-    KTextEdit *mDebugTextEdit;
+    PimCommon::PlainTextEditorWidget *mDebugTextEdit;
     PimCommon::PlainTextEditFindBar *mFindBar;
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;

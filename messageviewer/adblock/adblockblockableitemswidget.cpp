@@ -144,20 +144,52 @@ QString AdBlockBlockableItemsWidget::elementType(AdBlockBlockableItemsWidget::Ty
     return result;
 }
 
+void AdBlockBlockableItemsWidget::adaptSrc(QString &src,const QString &hostName)
+{
+    if (src.startsWith(QLatin1String("http://")) || src.startsWith(QLatin1String("https://")) ) {
+        //Nothing
+    } else if (src.startsWith(QLatin1String("//"))) {
+        src = QLatin1String("https:") + src;
+    } else if (src.startsWith(QLatin1Char('/'))){
+        src = QLatin1String("https://") + hostName + src;
+    } else {
+        src = QString();
+    }
+}
+
 void AdBlockBlockableItemsWidget::searchBlockableElement(QWebFrame *frame)
 {
+    const QUrl url = frame->requestedUrl();
+    const QString host = url.host();
     const QWebElementCollection images = frame->findAllElements(QLatin1String("img"));
     Q_FOREACH (const QWebElement &img, images) {
         if (img.hasAttribute(QLatin1String("src"))) {
-            const QString src = img.attribute(QLatin1String("src"));
-            if (src.startsWith(QLatin1String("http://")) || src.startsWith(QLatin1String("https://")) ) {
-                QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
-                item->setText(Url, src);
-                item->setText(Type, elementTypeToI18n(AdBlockBlockableItemsWidget::Image));
-                item->setTextColor(FilterValue, Qt::red);
-                item->setData(Type, Element, Image);
-            }
+            QString src = img.attribute(QLatin1String("src"));
+            if (src.isEmpty())
+                continue;
+            adaptSrc(src, host);
+            if (src.isEmpty())
+                continue;
+            QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
+            item->setText(Url, src);
+            item->setText(Type, elementTypeToI18n(AdBlockBlockableItemsWidget::Image));
+            item->setTextColor(FilterValue, Qt::red);
+            item->setData(Type, Element, Image);
         }
+    }
+    const QWebElementCollection scripts = frame->findAllElements(QLatin1String("script"));
+    Q_FOREACH (const QWebElement &script, scripts) {
+        QString src = script.attribute(QLatin1String("src"));
+        if (src.isEmpty())
+            continue;
+        adaptSrc(src, host);
+        if (src.isEmpty())
+            continue;
+        QTreeWidgetItem *item = new QTreeWidgetItem(mListItems);
+        item->setText(Url, src);
+        item->setText(Type, elementTypeToI18n(AdBlockBlockableItemsWidget::Script));
+        item->setTextColor(FilterValue, Qt::red);
+        item->setData(Type, Element, Script);
     }
     foreach(QWebFrame *childFrame, frame->childFrames()) {
         searchBlockableElement(childFrame);

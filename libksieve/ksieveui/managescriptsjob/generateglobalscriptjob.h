@@ -36,6 +36,10 @@ public:
 
     void addUserActiveScripts(const QStringList &lstScript);
 
+Q_SIGNALS:
+    void success();
+    void error(const QString &msgError);
+
 private Q_SLOTS:
     void slotPutMasterResult( KManageSieve::SieveJob *, bool success );
     void slotPutUserResult( KManageSieve::SieveJob *, bool success );

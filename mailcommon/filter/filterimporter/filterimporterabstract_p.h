@@ -18,6 +18,7 @@
 #ifndef MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERABSTRACT_P_H
 #define MAILCOMMON_FILTERIMPORTER_FILTERIMPORTERABSTRACT_P_H
 
+#include "mailcommon_export.h"
 #include <QDomDocument>
 #include <QList>
 #include <QStringList>
@@ -29,22 +30,24 @@ namespace MailCommon {
 
 class MailFilter;
 
-class FilterImporterAbstract
+class MAILCOMMON_EXPORT FilterImporterAbstract
 {
 public:
-    explicit FilterImporterAbstract();
+    explicit FilterImporterAbstract(bool interactive = true);
     ~FilterImporterAbstract();
     QList<MailFilter*> importFilter() const;
     QStringList emptyFilter() const;
 
 protected:
     void appendFilter( MailCommon::MailFilter *filter );
-    void createFilterAction( MailCommon::MailFilter *filter,
+    void createFilterAction(MailCommon::MailFilter *filter,
                              const QString &actionName, const QString &value );
     bool loadDomElement( QDomDocument &doc, QFile *file );
 
     QList<MailFilter*> mListMailFilter;
     QStringList mEmptyFilter;
+private:
+    bool mInteractive;
 };
 
 }

@@ -34,7 +34,7 @@ class MAILCOMMON_EXPORT FilterImporterClawsMails : public FilterImporterAbstract
 public:
     explicit FilterImporterClawsMails( QFile *file );
     //Use for unittests
-    FilterImporterClawsMails();
+    FilterImporterClawsMails(bool interactive = false);
     ~FilterImporterClawsMails();
     static QString defaultFiltersSettingsPath();
 

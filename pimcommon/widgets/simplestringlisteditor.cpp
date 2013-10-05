@@ -158,6 +158,14 @@ SimpleStringListEditor::SimpleStringListEditor( QWidget * parent,
              this, SLOT(slotSelectionChanged()) );
 }
 
+void SimpleStringListEditor::setUpDownAutoRepeat(bool b)
+{
+    if (mUpButton)
+        mUpButton->setAutoRepeat(b);
+    if (mDownButton)
+        mDownButton->setAutoRepeat(b);
+}
+
 void SimpleStringListEditor::setStringList( const QStringList & strings ) {
     mListBox->clear();
     mListBox->addItems( strings );

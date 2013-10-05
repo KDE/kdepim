@@ -1,6 +1,6 @@
 /*
     Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
-    Copyright (c) 2012 Laurent Montel <montel@kde.org>
+    Copyright (c) 2012-2013 Laurent Montel <montel@kde.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -43,6 +43,9 @@ class QGroupBox;
   The filter log dialog allows a continued observation of the
   filter log of MailFilterAgent.
 */
+namespace PimCommon {
+class PlainTextEditorWidget;
+}
 class FilterLogDialog : public KDialog
 {
   Q_OBJECT
@@ -65,7 +68,7 @@ class FilterLogDialog : public KDialog
     void readConfig();
     void writeConfig();
   protected:
-    KTextEdit * mTextEdit;
+    PimCommon::PlainTextEditorWidget * mTextEdit;
     QCheckBox * mLogActiveBox;
     QGroupBox * mLogDetailsBox;
     QCheckBox * mLogPatternDescBox;

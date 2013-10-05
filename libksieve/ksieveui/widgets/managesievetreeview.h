@@ -15,29 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "themeeditorwidget.h"
-#include "defaultcompletion.h"
-#include <QStringListModel>
-#include <QCompleter>
-#include <QDebug>
 
-ThemeEditorWidget::ThemeEditorWidget(QWidget *parent)
-    : GrantleeThemeEditor::EditorWidget(parent)
+#ifndef MANAGESIEVETREEVIEW_H
+#define MANAGESIEVETREEVIEW_H
+
+
+#include <QTreeWidget>
+class QPaintEvent;
+namespace KSieveUi {
+class ManageSieveTreeView : public QTreeWidget
 {
-    createCompleterList();
+    Q_OBJECT
+public:
+    explicit ManageSieveTreeView(QWidget *parent = 0);
+    ~ManageSieveTreeView();
+
+    void setImapFound(bool found);
+
+private Q_SLOTS:
+    void slotGeneralPaletteChanged();
+    void slotGeneralFontChanged();
+
+protected:
+    void paintEvent( QPaintEvent *event );
+
+private:
+    QColor mTextColor;
+    bool mImapFound;
+};
 }
 
-ThemeEditorWidget::~ThemeEditorWidget()
-{
-}
-
-void ThemeEditorWidget::createCompleterList(const QStringList &extraCompletion)
-{
-    QStringList listWord;
-    listWord << DefaultCompletion::defaultCompetion();
-    listWord << DefaultCompletion::defaultOptions();
-    listWord << extraCompletion;
-    GrantleeThemeEditor::EditorWidget::createCompleterList( listWord );
-}
-
-#include "themeeditorwidget.moc"
+#endif // MANAGESIEVETREEVIEW_H

@@ -20,6 +20,7 @@
 #include "previewwidget.h"
 #include "contacteditorwidget.h"
 #include "contacttemplatewidget.h"
+#include "pimcommon/plaintexteditor/plaintexteditor.h"
 
 #include <KLocale>
 #include <KGlobal>
@@ -59,10 +60,10 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
     mMainSplitter->addWidget(mEditor);
     mMainSplitter->setChildrenCollapsible(false);
     mContactTemplate = new ContactTemplateWidget(i18n("Theme Templates:"));
-    connect(mContactTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
+    connect(mContactTemplate, SIGNAL(insertTemplate(QString)), mEditor->editor(), SLOT(insertPlainText(QString)));
     mMainSplitter->addWidget(mContactTemplate);
 
-    connect(mEditor, SIGNAL(textChanged()), this, SIGNAL(changed()));
+    connect(mEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
 
 
     if (mType == MainPage) {

@@ -75,7 +75,7 @@ private:
         LastUpdateList = Qt::UserRole + 3
     };
 
-    bool _changed;
+    bool mChanged;
 };
 }
 

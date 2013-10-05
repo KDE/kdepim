@@ -30,6 +30,8 @@
 #include "filterlogdialog.h"
 #include <mailcommon/filter/filterlog.h>
 #include <messageviewer/utils/autoqpointer.h>
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/plaintexteditor/plaintexteditor.h"
 
 #include <kdebug.h>
 #include <kfiledialog.h>
@@ -53,6 +55,7 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   : KDialog( parent ), mIsInitialized( false )
 {
   KGlobal::locale()->insertCatalog(QLatin1String("akonadi_mailfilter_agent"));
+  KGlobal::locale()->insertCatalog(QLatin1String("libpimcommon"));
   setCaption( i18n( "Filter Log Viewer" ) );
   setButtons( User1|User2|Close );
   setWindowIcon( KIcon( QLatin1String("view-filter") ) );
@@ -63,15 +66,14 @@ FilterLogDialog::FilterLogDialog( QWidget * parent )
   QFrame *page = new KVBox( this );
   setMainWidget( page );
 
-  mTextEdit = new KTextEdit( page );
+  mTextEdit = new PimCommon::PlainTextEditorWidget( page );
   mTextEdit->setReadOnly( true );
-  mTextEdit->setLineWrapMode ( KTextEdit::NoWrap );
-
+  mTextEdit->editor()->setWordWrapMode(QTextOption::NoWrap);
   const QStringList logEntries = FilterLog::instance()->logEntries();
   QStringList::ConstIterator end( logEntries.constEnd() ); 
   for ( QStringList::ConstIterator it = logEntries.constBegin();
         it != end; ++it ) {
-    mTextEdit->append(*it);
+    mTextEdit->editor()->appendHtml(*it);
   }
 
   mLogActiveBox = new QCheckBox( i18n("&Log filter activities"), page );
@@ -225,7 +227,7 @@ void FilterLogDialog::writeConfig()
 
 void FilterLogDialog::slotLogEntryAdded(const QString& logEntry )
 {
-  mTextEdit->append( logEntry );
+  mTextEdit->editor()->appendHtml( logEntry );
 }
 
 
@@ -233,8 +235,8 @@ void FilterLogDialog::slotLogShrinked()
 {
   // limit the size of the shown log lines as soon as
   // the log has reached it's memory limit
-  if ( mTextEdit->document()->maximumBlockCount () <= 0 ) {
-    mTextEdit->document()->setMaximumBlockCount( mTextEdit->document()->blockCount() );
+  if ( mTextEdit->editor()->document()->maximumBlockCount () <= 0 ) {
+    mTextEdit->editor()->document()->setMaximumBlockCount( mTextEdit->editor()->document()->blockCount() );
   }
 }
 
@@ -295,7 +297,7 @@ void FilterLogDialog::slotSwitchLogState()
 
 void FilterLogDialog::slotChangeLogMemLimit( int value )
 {
-  mTextEdit->document()->setMaximumBlockCount( 0 ); //Reset value
+  mTextEdit->editor()->document()->setMaximumBlockCount( 0 ); //Reset value
   if(value == 1) //unilimited
     FilterLog::instance()->setMaxLogSize(-1);
   else
@@ -306,7 +308,7 @@ void FilterLogDialog::slotChangeLogMemLimit( int value )
 void FilterLogDialog::slotUser1()
 {
   FilterLog::instance()->clear();
-  mTextEdit->clear();
+  mTextEdit->editor()->clear();
 }
 
 

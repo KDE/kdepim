@@ -15,29 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "themeeditorwidget.h"
-#include "defaultcompletion.h"
-#include <QStringListModel>
-#include <QCompleter>
-#include <QDebug>
-
-ThemeEditorWidget::ThemeEditorWidget(QWidget *parent)
-    : GrantleeThemeEditor::EditorWidget(parent)
+#ifndef FILTERIMPORTTHUNDERBIRDTEST_H
+#define FILTERIMPORTTHUNDERBIRDTEST_H
+#include <QObject>
+class FilterImportThunderbirdtest : public QObject
 {
-    createCompleterList();
-}
+    Q_OBJECT
+private Q_SLOTS:
+    void testImportFiltersAllCondition();
+    void testImportFiltersEmpty();
+    void testImportFiltersStopExecution();
+    void testImportFiltersDisabled();
+    void testImportTwoFilters();
+    void initTestCase();
+    void testImportAndFilters();
+    void testImportOrFilters();
+private:
+    void initialize();
+};
 
-ThemeEditorWidget::~ThemeEditorWidget()
-{
-}
-
-void ThemeEditorWidget::createCompleterList(const QStringList &extraCompletion)
-{
-    QStringList listWord;
-    listWord << DefaultCompletion::defaultCompetion();
-    listWord << DefaultCompletion::defaultOptions();
-    listWord << extraCompletion;
-    GrantleeThemeEditor::EditorWidget::createCompleterList( listWord );
-}
-
-#include "themeeditorwidget.moc"
+#endif // FILTERIMPORTTHUNDERBIRDTEST_H

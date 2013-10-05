@@ -17,7 +17,7 @@
 
 #include "vacationmanager.h"
 #include "vacation.h"
-#include "util.h"
+#include "util/util.h"
 
 #include <akonadi/agentinstance.h>
 

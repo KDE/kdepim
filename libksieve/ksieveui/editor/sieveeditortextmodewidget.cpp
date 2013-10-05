@@ -28,6 +28,7 @@
 #include "scriptsparsing/parsingresultdialog.h"
 
 #include "pimcommon/plaintexteditor/plaintexteditfindbar.h"
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
 
 #include <ksieve/parser.h>
 #include <ksieve/error.h>
@@ -115,7 +116,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
     connect( mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()) );
 
-    mDebugTextEdit = new KTextEdit;
+    mDebugTextEdit = new PimCommon::PlainTextEditorWidget;
     mDebugTextEdit->setReadOnly( true );
     mMainSplitter->addWidget( mTemplateSplitter );
     mMainSplitter->addWidget( mDebugTextEdit );
@@ -228,14 +229,10 @@ void SieveEditorTextModeWidget::setScript( const QString &script )
     mTextEdit->setPlainText( script );
 }
 
-void SieveEditorTextModeWidget::setDebugColor( const QColor &col )
-{
-    mDebugTextEdit->setTextColor( col );
-}
-
 void SieveEditorTextModeWidget::setDebugScript( const QString &debug )
 {
-    mDebugTextEdit->setText( debug );
+    mDebugTextEdit->editor()->clear();
+    mDebugTextEdit->editor()->appendHtml( debug );
 }
 
 void SieveEditorTextModeWidget::setSieveCapabilities( const QStringList &capabilities )

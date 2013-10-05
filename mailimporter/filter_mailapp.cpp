@@ -158,7 +158,7 @@ void FilterMailApp::traverseDirectory(const QString &dirName)
         if (fi.isDir() && fi.isReadable()) {
             traverseDirectory(fi.filePath());
         } else {
-            if (!fi.isDir() & &filename == QLatin1String( "mbox" )) {
+            if (!fi.isDir() && (filename == QLatin1String( "mbox" ))) {
                 kDebug() <<"adding the file" << fi.filePath();
                 mMboxFiles.append(fi.filePath());
             }

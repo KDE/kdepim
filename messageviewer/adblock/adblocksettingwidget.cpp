@@ -52,7 +52,7 @@
 using namespace MessageViewer;
 AdBlockSettingWidget::AdBlockSettingWidget(QWidget *parent)
     : QWidget(parent)
-    , _changed(false)
+    , mChanged(false)
 {
     setupUi(this);
 
@@ -118,6 +118,7 @@ void AdBlockSettingWidget::slotUpdateManualButtons()
     const bool enabled = manualFiltersListWidget->currentItem();
     removeButton->setEnabled(enabled);
     editFilter->setEnabled(enabled);
+    exportFilters->setEnabled(manualFiltersListWidget->count()>0);
 }
 
 void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
@@ -150,6 +151,7 @@ void AdBlockSettingWidget::insertRule()
     }
 
     addManualFilter(rule);
+    exportFilters->setEnabled(manualFiltersListWidget->count()>0);
     addFilterLineEdit->clear();
     hasChanged();
 }
@@ -164,6 +166,7 @@ void AdBlockSettingWidget::removeRule()
     Q_FOREACH (QListWidgetItem *item, select) {
         delete item;
     }
+    exportFilters->setEnabled(manualFiltersListWidget->count()>0);
     hasChanged();
 }
 
@@ -239,7 +242,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
 
 void AdBlockSettingWidget::save()
 {
-    if (!_changed)
+    if (!mChanged)
         return;
 
     // General settings    
@@ -283,12 +286,12 @@ void AdBlockSettingWidget::save()
     for (int i = 0; i < manualFiltersListWidget->count(); ++i) {
         QListWidgetItem *subItem = manualFiltersListWidget->item(i);
         const QString stringRule = subItem->text();
-        if (!stringRule.isEmpty())
+        if (!stringRule.trimmed().isEmpty())
             out << stringRule << '\n';
     }
 
     // -------------------------------------------------------------------------------
-    _changed = false;
+    mChanged = false;
     emit changed(false);
     AdBlockManager::self()->reloadConfig();
 }
@@ -299,14 +302,14 @@ void AdBlockSettingWidget::hasChanged()
     // update enabled status
     checkHideAds->setEnabled(checkEnableAdblock->isChecked());
     tabWidget->setEnabled(checkEnableAdblock->isChecked());
-    _changed = true;
+    mChanged = true;
     emit changed(true);
 }
 
 
 bool AdBlockSettingWidget::changed() const
 {
-    return _changed;
+    return mChanged;
 }
 
 void AdBlockSettingWidget::slotAddFilter()

@@ -17,7 +17,7 @@
 
 #include "vacationhelperjob.h"
 #include "kmanagesieve/sievejob.h"
-#include "ksieveui/util.h"
+#include "ksieveui/util/util.h"
 
 using namespace KSieveUi;
 

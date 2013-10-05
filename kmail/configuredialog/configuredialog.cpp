@@ -2814,6 +2814,7 @@ ComposerPageCharsetTab::ComposerPageCharsetTab( QWidget * parent )
     new PimCommon::SimpleStringListEditor( this, PimCommon::SimpleStringListEditor::All,
                                 i18n("A&dd..."), i18n("Remo&ve"),
                                 i18n("&Modify..."), i18n("Enter charset:") );
+  mCharsetListEditor->setUpDownAutoRepeat(true);
   connect( mCharsetListEditor, SIGNAL(changed()),
            this, SLOT(slotEmitChanged()) );
 
@@ -2860,8 +2861,6 @@ void ComposerPage::CharsetTab::slotVerifyCharset( QString & charset )
 
 void ComposerPage::CharsetTab::doLoadOther()
 {
-  KConfigGroup composer( KMKernel::self()->config(), "Composer" );
-
   QStringList charsets = MessageComposer::MessageComposerSettings::preferredCharsets();
   QStringList::Iterator end( charsets.end() );
   for ( QStringList::Iterator it = charsets.begin() ;

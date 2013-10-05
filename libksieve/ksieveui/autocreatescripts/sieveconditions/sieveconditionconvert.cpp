@@ -42,30 +42,30 @@ SieveCondition *SieveConditionConvert::newAction()
 QWidget *SieveConditionConvert::createParamWidget( QWidget *parent ) const
 {
     QWidget *w = new QWidget(parent);
-    QHBoxLayout *lay = new QHBoxLayout;
+    QGridLayout *lay = new QGridLayout;
     lay->setMargin(0);
     w->setLayout(lay);
 
     QLabel *lab = new QLabel(i18n("From:"));
-    lay->addWidget(lab);
+    lay->addWidget(lab, 0, 0);
 
     SelectMimeTypeComboBox *fromMimeType = new SelectMimeTypeComboBox;
     fromMimeType->setObjectName(QLatin1String("from"));
-    lay->addWidget(fromMimeType);
+    lay->addWidget(fromMimeType, 0, 1);
 
     lab = new QLabel(i18n("To:"));
-    lay->addWidget(lab);
+    lay->addWidget(lab, 0, 2);
 
     SelectMimeTypeComboBox *toMimeType = new SelectMimeTypeComboBox;
     toMimeType->setObjectName(QLatin1String("to"));
-    lay->addWidget(toMimeType);
+    lay->addWidget(toMimeType, 0, 3);
 
     lab = new QLabel(i18n("Parameters:"));
-    lay->addWidget(lab);
+    lay->addWidget(lab, 1, 0);
 
     SelectConvertParameterWidget *params = new SelectConvertParameterWidget;
     params->setObjectName(QLatin1String("params"));
-    lay->addWidget(params);
+    lay->addWidget(params, 1, 1, 2, 3);
     return w;
 }
 

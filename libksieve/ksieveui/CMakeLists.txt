@@ -20,7 +20,7 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 
 add_subdirectory(tests)
 add_subdirectory(editor/tests)
-
+add_subdirectory(managescriptsjob/tests)
 set(ksieveui_LIB_SRCS
   scriptsparsing/xmlprintingscriptbuilder.cpp
   scriptsparsing/parsingresultdialog.cpp
@@ -28,13 +28,15 @@ set(ksieveui_LIB_SRCS
   scriptsparsing/parsingutil.cpp
   managesievescriptsdialog.cpp
   widgets/sievetreewidgetitem.cpp
+  widgets/managesievetreeview.cpp
   debug/sievedebugdialog.cpp
-  util.cpp
+  util/util.cpp
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
   vacation/vacationhelperjob.cpp
   vacation/vacationmanager.cpp
-  vacation/generateglobalscriptjob.cpp
+  managescriptsjob/generateglobalscriptjob.cpp
+  managescriptsjob/parseuserscriptjob.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp

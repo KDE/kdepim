@@ -8,6 +8,7 @@ include_directories(
   ${NEPOMUK_CORE_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/mailcommon
   ${CMAKE_SOURCE_DIR}/messagecomposer
+  ${CMAKE_SOURCE_DIR}/pimcommon
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -38,6 +39,7 @@ target_link_libraries(akonadi_mailfilter_agent
   mailcommon
   messagecore
   messagecomposer
+  pimcommon
   ${KDE4_KDEUI_LIBRARY}
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}

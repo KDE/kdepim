@@ -25,7 +25,8 @@
 
 using namespace MailCommon;
 
-FilterImporterAbstract::FilterImporterAbstract()
+FilterImporterAbstract::FilterImporterAbstract(bool interactive)
+    : mInteractive(interactive)
 {
 }
 
@@ -55,6 +56,7 @@ void FilterImporterAbstract::appendFilter( MailCommon::MailFilter *filter )
     } else {
         mEmptyFilter << filter->name();
         // the filter is invalid:
+        qDebug()<<" Empty filter";
         delete filter;
     }
 }
@@ -68,7 +70,11 @@ void FilterImporterAbstract::createFilterAction( MailCommon::MailFilter *filter,
         if ( desc ) {
             FilterAction *fa = desc->create();
             //...create an instance...
-            fa->argsFromStringInteractive( value, filter->name() );
+            if (mInteractive)
+                fa->argsFromStringInteractive( value, filter->name() );
+            else
+                fa->argsFromString( value );
+
             //...check if it's empty and...
             if ( !fa->isEmpty() ) {
                 //...append it if it's not and...

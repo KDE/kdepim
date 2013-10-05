@@ -15,11 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
 #include "editorpage.h"
 #include "editorwidget.h"
 #include "previewwidget.h"
 #include "themeeditorwidget.h"
 #include "themetemplatewidget.h"
+#include "pimcommon/plaintexteditor/plaintexteditor.h"
 
 #include <KLocale>
 #include <KGlobal>
@@ -59,10 +61,10 @@ EditorPage::EditorPage(GrantleeThemeEditor::EditorPage::PageType type, const QSt
     mMainSplitter->addWidget(mEditor);
     mMainSplitter->setChildrenCollapsible(false);
     mThemeTemplate = new ThemeTemplateWidget(i18n("Theme Templates:"));
-    connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor, SLOT(insertPlainText(QString)));
+    connect(mThemeTemplate, SIGNAL(insertTemplate(QString)), mEditor->editor(), SLOT(insertPlainText(QString)));
     mMainSplitter->addWidget(mThemeTemplate);
 
-    connect(mEditor, SIGNAL(textChanged()), this, SIGNAL(changed()));
+    connect(mEditor->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
 
 
     if (mType == MainPage) {

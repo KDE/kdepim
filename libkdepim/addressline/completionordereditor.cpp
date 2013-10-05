@@ -215,12 +215,14 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
 
   KVBox* upDownBox = new KVBox( page );
   mUpButton = new KPushButton( upDownBox );
+  mUpButton->setAutoRepeat(true);
   mUpButton->setObjectName( QLatin1String("mUpButton") );
   mUpButton->setIcon( KIcon(QLatin1String("go-up")) );
   mUpButton->setEnabled( false ); // b/c no item is selected yet
   mUpButton->setFocusPolicy( Qt::StrongFocus );
 
   mDownButton = new KPushButton( upDownBox );
+  mDownButton->setAutoRepeat(true);
   mDownButton->setObjectName( QLatin1String("mDownButton") );
   mDownButton->setIcon( KIcon(QLatin1String("go-down")) );
   mDownButton->setEnabled( false ); // b/c no item is selected yet
@@ -238,11 +240,30 @@ CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearc
   connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
 
   loadCompletionItems();
+  readConfig();
 }
 
 CompletionOrderEditor::~CompletionOrderEditor()
 {
+    writeConfig();
 }
+
+void CompletionOrderEditor::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "CompletionOrderEditor" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void CompletionOrderEditor::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "CompletionOrderEditor" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
 
 void CompletionOrderEditor::addCompletionItemForIndex( const QModelIndex &index )
 {

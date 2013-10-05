@@ -174,11 +174,6 @@ void SieveEditor::setScript( const QString &script )
     mOriginalScript = script;
 }
 
-void SieveEditor::setDebugColor( const QColor &col )
-{
-    mTextModeWidget->setDebugColor( col );
-}
-
 void SieveEditor::setDebugScript( const QString &debug )
 {
     mTextModeWidget->setDebugScript( debug );

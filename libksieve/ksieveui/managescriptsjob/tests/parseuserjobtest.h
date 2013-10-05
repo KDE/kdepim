@@ -15,29 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "themeeditorwidget.h"
-#include "defaultcompletion.h"
-#include <QStringListModel>
-#include <QCompleter>
-#include <QDebug>
+#ifndef PARSEUSERJOBTEST_H
+#define PARSEUSERJOBTEST_H
 
-ThemeEditorWidget::ThemeEditorWidget(QWidget *parent)
-    : GrantleeThemeEditor::EditorWidget(parent)
+#include <QObject>
+class ParseUserTest : public QObject
 {
-    createCompleterList();
-}
+    Q_OBJECT
+private Q_SLOTS:
+    void testParseEmptyUserJob();
+    void testParseUserTwoActiveScriptJob();
+    void testParseUserNoActiveScriptJob();
+    void testParseUserDuplicateActiveScriptJob();
+    void testParseUserErrorScriptJob();
+};
 
-ThemeEditorWidget::~ThemeEditorWidget()
-{
-}
-
-void ThemeEditorWidget::createCompleterList(const QStringList &extraCompletion)
-{
-    QStringList listWord;
-    listWord << DefaultCompletion::defaultCompetion();
-    listWord << DefaultCompletion::defaultOptions();
-    listWord << extraCompletion;
-    GrantleeThemeEditor::EditorWidget::createCompleterList( listWord );
-}
-
-#include "themeeditorwidget.moc"
+#endif // PARSEUSERJOBTEST_H
