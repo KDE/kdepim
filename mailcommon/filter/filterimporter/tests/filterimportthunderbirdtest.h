@@ -28,6 +28,8 @@ private Q_SLOTS:
     void testImportFiltersDisabled();
     void testImportTwoFilters();
     void initTestCase();
+    void testImportAndFilters();
+    void testImportOrFilters();
 private:
     void initialize();
 };

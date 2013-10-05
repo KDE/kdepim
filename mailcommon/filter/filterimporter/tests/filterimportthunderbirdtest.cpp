@@ -33,13 +33,13 @@ void FilterImportThunderbirdtest::initTestCase()
 
 void FilterImportThunderbirdtest::testImportFiltersAllCondition()
 {
-    QString filter = QLatin1String("version=\"9\"\n"
-                                   "logging=\"no\"\n"
-                                   "name=\"Match All Messages\"\n"
-                                   "enabled=\"yes\"\n"
-                                   "type=\"17\"\n"
-                                   "action=\"Mark read\"\n"
-                                   "condition=\"ALL\"\n");
+    const QString filter = QLatin1String("version=\"9\"\n"
+                                         "logging=\"no\"\n"
+                                         "name=\"Match All Messages\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"17\"\n"
+                                         "action=\"Mark read\"\n"
+                                         "condition=\"ALL\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
     QList<MailCommon::MailFilter*> lst = importer.importFilter();
     QCOMPARE(lst.count(), 1);
@@ -61,14 +61,14 @@ void FilterImportThunderbirdtest::testImportFiltersEmpty()
 
 void FilterImportThunderbirdtest::testImportFiltersStopExecution()
 {
-    QString filter = QLatin1String("version=\"9\"\n"
-                                   "logging=\"no\"\n"
-                                   "name=\"Match All Messages\"\n"
-                                   "enabled=\"yes\"\n"
-                                   "type=\"17\"\n"
-                                   "action=\"Stop execution\"\n"
-                                   "action=\"Mark read\"\n"
-                                   "condition=\"ALL\"\n");
+    const QString filter = QLatin1String("version=\"9\"\n"
+                                         "logging=\"no\"\n"
+                                         "name=\"Match All Messages\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"17\"\n"
+                                         "action=\"Stop execution\"\n"
+                                         "action=\"Mark read\"\n"
+                                         "condition=\"ALL\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
     QList<MailCommon::MailFilter*> lst = importer.importFilter();
     MailCommon::MailFilter *f = lst.at(0);
@@ -79,14 +79,14 @@ void FilterImportThunderbirdtest::testImportFiltersStopExecution()
 
 void FilterImportThunderbirdtest::testImportFiltersDisabled()
 {
-    QString filter = QLatin1String("version=\"9\"\n"
-                                   "logging=\"no\"\n"
-                                   "name=\"Match All Messages\"\n"
-                                   "enabled=\"no\"\n"
-                                   "type=\"17\"\n"
-                                   "action=\"Stop execution\"\n"
-                                   "action=\"Mark read\"\n"
-                                   "condition=\"ALL\"\n");
+    const QString filter = QLatin1String("version=\"9\"\n"
+                                         "logging=\"no\"\n"
+                                         "name=\"Match All Messages\"\n"
+                                         "enabled=\"no\"\n"
+                                         "type=\"17\"\n"
+                                         "action=\"Stop execution\"\n"
+                                         "action=\"Mark read\"\n"
+                                         "condition=\"ALL\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
     QList<MailCommon::MailFilter*> lst = importer.importFilter();
     MailCommon::MailFilter *f = lst.at(0);
@@ -97,21 +97,21 @@ void FilterImportThunderbirdtest::testImportFiltersDisabled()
 
 void FilterImportThunderbirdtest::testImportTwoFilters()
 {
-    QString filter = QLatin1String("version=\"9\"\n"
-                                   "logging=\"no\"\n"
-                                   "name=\"Subject contains: kde\"\n"
-                                   "enabled=\"yes\"\n"
-                                   "type=\"17\"\n"
-                                   "action=\"Copy to folder\"\n"
-                                   "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
-                                   "condition=\"AND (subject,contains,konqi)\"\n"
-                                   "name=\"filter1\"\n"
-                                   "enabled=\"yes\"\n"
-                                   "type=\"17\"\n"
-                                   "action=\"Copy to folder\"\n"
-                                   "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
-                                   "action=\"Mark read\"\n"
-                                   "condition=\"AND (subject,contains,kmail) AND (subject,contains,konqueror) AND (subject,contains,kf5) AND (subject,contains,qtcreator)\"\n");
+    const QString filter = QLatin1String("version=\"9\"\n"
+                                         "logging=\"no\"\n"
+                                         "name=\"Subject contains: kde\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"17\"\n"
+                                         "action=\"Copy to folder\"\n"
+                                         "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
+                                         "condition=\"AND (subject,contains,konqi)\"\n"
+                                         "name=\"filter1\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"17\"\n"
+                                         "action=\"Copy to folder\"\n"
+                                         "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
+                                         "action=\"Mark read\"\n"
+                                         "condition=\"AND (subject,contains,kmail) AND (subject,contains,konqueror) AND (subject,contains,kf5) AND (subject,contains,qtcreator)\"\n");
     MailCommon::FilterImporterThunderbird importer(filter, false);
     QList<MailCommon::MailFilter*> lst = importer.importFilter();
     QCOMPARE(lst.count(), 2);
@@ -124,4 +124,39 @@ void FilterImportThunderbirdtest::testImportTwoFilters()
     QCOMPARE(f->pattern()->count(), 4);
     qDeleteAll(lst);
 }
+
+void FilterImportThunderbirdtest::testImportAndFilters()
+{
+    const QString filter = QLatin1String("version=\"9\"\n"
+                                         "logging=\"no\"\n"
+                                         "name=\"Subject contains: kde\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"17\"\n"
+                                         "action=\"Copy to folder\"\n"
+                                         "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
+                                         "condition=\"AND (subject,contains,konqi)\"\n");
+    MailCommon::FilterImporterThunderbird importer(filter, false);
+    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    MailCommon::MailFilter *f = lst.at(0);
+    QCOMPARE(f->pattern()->op(), MailCommon::SearchPattern::OpAnd);
+    qDeleteAll(lst);
+}
+
+void FilterImportThunderbirdtest::testImportOrFilters()
+{
+    const QString filter = QLatin1String("version=\"9\"\n"
+                                         "logging=\"no\"\n"
+                                         "name=\"Subject contains: kde\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"17\"\n"
+                                         "action=\"Copy to folder\"\n"
+                                         "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
+                                         "condition=\"OR (subject,contains,konqi)\"\n");
+    MailCommon::FilterImporterThunderbird importer(filter, false);
+    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+    MailCommon::MailFilter *f = lst.at(0);
+    QCOMPARE(f->pattern()->op(), MailCommon::SearchPattern::OpOr);
+    qDeleteAll(lst);
+}
+
 #include "filterimportthunderbirdtest.moc"
