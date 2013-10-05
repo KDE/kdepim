@@ -52,16 +52,19 @@ QWidget *SieveConditionHeader::createParamWidget( QWidget *parent ) const
     matchTypeCombo->setObjectName(QLatin1String("matchtypecombobox"));
     lay->addWidget(matchTypeCombo);
 
+    QGridLayout *grid = new QGridLayout;
+    lay->addLayout(grid);
+
     SelectHeaderTypeComboBox *headerType = new SelectHeaderTypeComboBox;
     headerType->setObjectName(QLatin1String("headertype"));
-    lay->addWidget(headerType);
+    grid->addWidget(headerType, 0, 0, 1, 2);
 
     QLabel *lab = new QLabel(i18n("With value:"));
-    lay->addWidget(lab);
+    grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
     value->setObjectName(QLatin1String("value"));
-    lay->addWidget(value);
+    grid->addWidget(value, 1, 1);
     return w;
 }
 
