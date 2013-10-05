@@ -37,6 +37,8 @@ public:
     void start();
 
     void scriptUrl(const KUrl &url);
+    QStringList parsescript(const QString &script, bool &result);
+
 
 private Q_SLOTS:
     void slotGetResult( KManageSieve::SieveJob *, bool, const QString &, bool );
@@ -47,7 +49,7 @@ Q_SIGNALS:
 
 private:
     QString loadInclude(const QDomElement &element);
-    QStringList parsescript(const QDomDocument &doc);
+    QStringList extractActiveScript(const QDomDocument &doc);
     KUrl mCurrentUrl;
 };
 }

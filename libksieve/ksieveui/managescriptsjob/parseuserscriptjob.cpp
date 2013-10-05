@@ -55,16 +55,24 @@ void ParseUserScriptJob::slotGetResult( KManageSieve::SieveJob *, bool, const QS
         return;
     }
     bool result;
-    const QDomDocument doc = ParsingUtil::parseScript(script, result);
-    if (!result) {
+    const QStringList lst = parsescript(script, result);
+    if (result)
+        Q_EMIT success(lst);
+    else
         Q_EMIT error(i18n("Script parsing error"));
-        return;
-    }
-    const QStringList lstScript = parsescript(doc);
-    Q_EMIT success(lstScript);
 }
 
-QStringList ParseUserScriptJob::parsescript(const QDomDocument &doc)
+QStringList ParseUserScriptJob::parsescript(const QString &script, bool &result)
+{
+    QStringList lst;
+    const QDomDocument doc = ParsingUtil::parseScript(script, result);
+    if (result) {
+        lst = extractActiveScript(doc);
+    }
+    return lst;
+}
+
+QStringList ParseUserScriptJob::extractActiveScript(const QDomDocument &doc)
 {
     QStringList lstScript;
     QDomElement docElem = doc.documentElement();
