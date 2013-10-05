@@ -85,5 +85,22 @@ void ParseUserTest::testParseUserDuplicateActiveScriptJob()
     QCOMPARE(result, true);
 }
 
+void ParseUserTest::testParseUserErrorScriptJob()
+{
+    QString script = QLatin1String("# USER Management Script\n"
+                                   "#\n"
+                                   "# This script includes the various active sieve scripts\n"
+                                   "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
+                                   "# \n"
+                                   "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
+                                   "#\n"
+                                   "\n"
+                                   "errorscript\n");
+    bool result;
+    const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
+    QCOMPARE(lst.count(), 0);
+    QCOMPARE(result, false);
+}
+
 
 #include "parseuserjobtest.moc"

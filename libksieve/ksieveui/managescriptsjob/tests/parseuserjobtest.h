@@ -27,6 +27,7 @@ private Q_SLOTS:
     void testParseUserTwoActiveScriptJob();
     void testParseUserNoActiveScriptJob();
     void testParseUserDuplicateActiveScriptJob();
+    void testParseUserErrorScriptJob();
 };
 
 #endif // PARSEUSERJOBTEST_H
