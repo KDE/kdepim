@@ -118,6 +118,7 @@ void AdBlockSettingWidget::slotUpdateManualButtons()
     const bool enabled = manualFiltersListWidget->currentItem();
     removeButton->setEnabled(enabled);
     editFilter->setEnabled(enabled);
+    exportFilters->setEnabled(manualFiltersListWidget->count()>0);
 }
 
 void AdBlockSettingWidget::slotInfoLinkActivated(const QString &url)
@@ -150,6 +151,7 @@ void AdBlockSettingWidget::insertRule()
     }
 
     addManualFilter(rule);
+    exportFilters->setEnabled(manualFiltersListWidget->count()>0);
     addFilterLineEdit->clear();
     hasChanged();
 }
@@ -164,6 +166,7 @@ void AdBlockSettingWidget::removeRule()
     Q_FOREACH (QListWidgetItem *item, select) {
         delete item;
     }
+    exportFilters->setEnabled(manualFiltersListWidget->count()>0);
     hasChanged();
 }
 
