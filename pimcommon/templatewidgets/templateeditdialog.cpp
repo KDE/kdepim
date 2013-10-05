@@ -52,6 +52,7 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
     vbox->addLayout(hbox);
 
     mTextEdit = new KTextEdit;
+    mTextEdit->setAcceptRichText(false);
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);
 
