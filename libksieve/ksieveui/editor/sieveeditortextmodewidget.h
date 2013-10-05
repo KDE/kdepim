@@ -26,6 +26,7 @@ class QSplitter;
 
 namespace PimCommon {
 class PlainTextEditFindBar;
+class PlainTextEditorWidget;
 }
 
 namespace KSieveUi {
@@ -78,7 +79,7 @@ private:
     QString mOriginalScript;
     QStringList mSieveCapabilities;
     SieveTextEdit * mTextEdit;
-    KTextEdit *mDebugTextEdit;
+    PimCommon::PlainTextEditorWidget *mDebugTextEdit;
     PimCommon::PlainTextEditFindBar *mFindBar;
     SieveInfoWidget *mSieveInfo;
     QSplitter *mMainSplitter;
