@@ -229,15 +229,10 @@ void SieveEditorTextModeWidget::setScript( const QString &script )
     mTextEdit->setPlainText( script );
 }
 
-void SieveEditorTextModeWidget::setDebugColor( const QColor &col )
-{
-    //TODO PORT IT
-    //mDebugTextEdit->editor()->setTextColor( col );
-}
-
 void SieveEditorTextModeWidget::setDebugScript( const QString &debug )
 {
-    mDebugTextEdit->editor()->setPlainText( debug );
+    mDebugTextEdit->editor()->clear();
+    mDebugTextEdit->editor()->appendHtml( debug );
 }
 
 void SieveEditorTextModeWidget::setSieveCapabilities( const QStringList &capabilities )

@@ -575,8 +575,10 @@ void ManageSieveScriptsDialog::addOkMessage( const QString &err )
 
 void ManageSieveScriptsDialog::addMessageEntry( const QString &errorMsg, const QColor &color )
 {
-    mSieveEditor->setDebugColor( color );
-    mSieveEditor->setDebugScript( errorMsg );
+    const QString logText = QString::fromLatin1( "<font color=%1>%2</font>" )
+            .arg( color.name() ).arg(errorMsg);
+
+    mSieveEditor->setDebugScript( logText );
 }
 
 void ManageSieveScriptsDialog::disableManagerScriptsDialog(bool disable)

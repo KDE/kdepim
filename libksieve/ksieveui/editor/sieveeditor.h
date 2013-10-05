@@ -46,7 +46,6 @@ public:
     QString script() const;
     QString originalScript() const;
     void setScript( const QString &script );
-    void setDebugColor( const QColor &col );
     void setDebugScript( const QString &debug );
     void setScriptName( const QString &name );
 
