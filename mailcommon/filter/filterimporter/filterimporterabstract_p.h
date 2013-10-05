@@ -33,7 +33,7 @@ class MailFilter;
 class MAILCOMMON_EXPORT FilterImporterAbstract
 {
 public:
-    explicit FilterImporterAbstract();
+    explicit FilterImporterAbstract(bool interactive = true);
     ~FilterImporterAbstract();
     QList<MailFilter*> importFilter() const;
     QStringList emptyFilter() const;
@@ -46,6 +46,7 @@ protected:
 
     QList<MailFilter*> mListMailFilter;
     QStringList mEmptyFilter;
+private:
     bool mInteractive;
 };
 

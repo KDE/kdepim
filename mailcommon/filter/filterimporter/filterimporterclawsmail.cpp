@@ -50,9 +50,8 @@ FilterImporterClawsMails::FilterImporterClawsMails( QFile *file )
 }
 
 FilterImporterClawsMails::FilterImporterClawsMails(bool interactive)
-    :FilterImporterAbstract()
+    :FilterImporterAbstract(interactive)
 {
-    mInteractive = interactive;
 }
 
 FilterImporterClawsMails::~FilterImporterClawsMails()

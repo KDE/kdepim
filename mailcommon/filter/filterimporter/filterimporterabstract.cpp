@@ -25,8 +25,8 @@
 
 using namespace MailCommon;
 
-FilterImporterAbstract::FilterImporterAbstract()
-    : mInteractive(true)
+FilterImporterAbstract::FilterImporterAbstract(bool interactive)
+    : mInteractive(interactive)
 {
 }
 
