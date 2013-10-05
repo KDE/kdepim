@@ -37,7 +37,7 @@ public:
     void start();
 
     void scriptUrl(const KUrl &url);
-    QStringList parsescript(const QString &script, bool &result);
+    static QStringList parsescript(const QString &script, bool &result);
 
 
 private Q_SLOTS:
@@ -48,8 +48,8 @@ Q_SIGNALS:
     void error(const QString &msgError);
 
 private:
-    QString loadInclude(const QDomElement &element);
-    QStringList extractActiveScript(const QDomDocument &doc);
+    static QString loadInclude(const QDomElement &element);
+    static QStringList extractActiveScript(const QDomDocument &doc);
     KUrl mCurrentUrl;
 };
 }
