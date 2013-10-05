@@ -91,7 +91,9 @@ QStringList ParseUserScriptJob::extractActiveScript(const QDomDocument &doc)
                         //Load includes
                         const QString str = loadInclude(e);
                         if (!str.isEmpty()) {
-                            lstScript.append(str);
+                            if (!lstScript.contains(str)) {
+                                lstScript.append(str);
+                            }
                         }
                     }
                 }

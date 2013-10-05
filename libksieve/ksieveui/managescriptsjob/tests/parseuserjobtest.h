@@ -25,6 +25,8 @@ class ParseUserTest : public QObject
 private Q_SLOTS:
     void testParseEmptyUserJob();
     void testParseUserTwoActiveScriptJob();
+    void testParseUserNoActiveScriptJob();
+    void testParseUserDuplicateActiveScriptJob();
 };
 
 #endif // PARSEUSERJOBTEST_H
