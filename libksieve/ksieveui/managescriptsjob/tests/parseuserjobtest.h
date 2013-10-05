@@ -23,7 +23,8 @@ class ParseUserTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void testParseUserJob();
+    void testParseEmptyUserJob();
+    void testParseUserTwoActiveScriptJob();
 };
 
 #endif // PARSEUSERJOBTEST_H

@@ -19,7 +19,10 @@
 #include "parseuserscriptjob.h"
 #include "ksieveui/scriptsparsing/parsingutil.h"
 #include <kmanagesieve/sievejob.h>
+
 #include <KLocale>
+
+#include <QDebug>
 
 using namespace KSieveUi;
 ParseUserScriptJob::ParseUserScriptJob(QObject *parent)
@@ -81,7 +84,6 @@ QStringList ParseUserScriptJob::extractActiveScript(const QDomDocument &doc)
         QDomElement e = n.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            //qDebug()<<" tagName "<<tagName;
             if (tagName == QLatin1String("action")) {
                 if (e.hasAttribute(QLatin1String("name"))) {
                     const QString actionName = e.attribute(QLatin1String("name"));
@@ -108,10 +110,8 @@ QString ParseUserScriptJob::loadInclude(const QDomElement &element)
         QDomElement e = node.toElement();
         if (!e.isNull()) {
             const QString tagName = e.tagName();
-            if (tagName == QLatin1String("tag")) {
-                if (tagName == QLatin1String("str")) {
-                    scriptName = e.text();
-                }
+            if (tagName == QLatin1String("str")) {
+                scriptName = e.text();
             }
         }
         node = node.nextSibling();

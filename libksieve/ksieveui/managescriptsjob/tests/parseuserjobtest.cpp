@@ -21,12 +21,32 @@
 
 QTEST_KDEMAIN( ParseUserTest, NoGUI )
 
-void ParseUserTest::testParseUserJob()
+void ParseUserTest::testParseEmptyUserJob()
 {
     QString script;
     bool result;
     const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 0);
+    QCOMPARE(result, true);
+}
+
+void ParseUserTest::testParseUserTwoActiveScriptJob()
+{
+    QString script = QLatin1String("# USER Management Script\n"
+                                   "#\n"
+                                   "# This script includes the various active sieve scripts\n"
+                                   "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
+                                   "# \n"
+                                   "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
+                                   "#\n"
+                                   "\n"
+                                   "require [\"include\"];\n"
+                                   "include :personal \"file1\";\n"
+                                   "include :personal \"file2\";\n");
+    bool result;
+    const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
+    QCOMPARE(lst.count(), 2);
+    QCOMPARE(result, true);
 }
 
 
