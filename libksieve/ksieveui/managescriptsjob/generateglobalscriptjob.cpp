@@ -40,6 +40,10 @@ void GenerateGlobalScriptJob::addUserActiveScripts(const QStringList &lstScript)
 
 void GenerateGlobalScriptJob::writeGlobalScripts()
 {
+    if (mCurrentUrl.isEmpty()) {
+        Q_EMIT error(i18n("Path is not specified."));
+        return;
+    }
     writeMasterScript();
 }
 
