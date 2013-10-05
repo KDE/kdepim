@@ -15,28 +15,40 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef EDITORWIDGET_H
-#define EDITORWIDGET_H
 
-#include "grantleethemeeditor_export.h"
-#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
+#ifndef GRANTLEEPLAINTEXTEDITOR_H
+#define GRANTLEEPLAINTEXTEDITOR_H
 
+#include "pimcommon/plaintexteditor/plaintexteditor.h"
+
+class QCompleter;
+namespace KPIMTextEdit {
+class HtmlHighlighter;
+}
 namespace GrantleeThemeEditor {
-class GRANTLEETHEMEEDITOR_EXPORT EditorWidget : public PimCommon::PlainTextEditorWidget
+class GrantleePlainTextEditor : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 public:
-    explicit EditorWidget(QWidget *parent = 0);
-    ~EditorWidget();
+    explicit GrantleePlainTextEditor(QWidget *parent=0);
+    ~GrantleePlainTextEditor();
 
-    void insertFile(const QString &filename);
+    void createCompleterList(const QStringList &extraCompletion);
 
-    virtual void createCompleterList(const QStringList &extraCompletion = QStringList());
+private Q_SLOTS:
+    void slotInsertCompletion( const QString &completion );
 
-    QString toPlainText() const;
-    void setPlainText(const QString &str);
-    void clear();
+protected:
+    void keyPressEvent(QKeyEvent* e);
+
+protected:
+    QCompleter *mCompleter;
+
+private:
+    void initCompleter();
+    QString wordUnderCursor() const;
+    KPIMTextEdit::HtmlHighlighter *mHtmlHighlighter;
 };
 }
 
-#endif // EDITORWIDGET_H
+#endif // GRANTLEEPLAINTEXTEDITOR_H

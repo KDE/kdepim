@@ -16,7 +16,7 @@
 */
 
 #include "editorwidget.h"
-#include "pimcommon/plaintexteditor/plaintexteditor.h"
+#include "grantleeplaintexteditor.h"
 
 #include <kpimtextedit/htmlhighlighter.h>
 
@@ -29,10 +29,8 @@
 using namespace GrantleeThemeEditor;
 
 EditorWidget::EditorWidget(QWidget *parent)
-    : PimCommon::PlainTextEditorWidget(parent)
+    : PimCommon::PlainTextEditorWidget(new GrantleeThemeEditor::GrantleePlainTextEditor(), parent)
 {
-    mHtmlHighlighter = new KPIMTextEdit::HtmlHighlighter(editor()->document());
-    initCompleter();
 }
 
 EditorWidget::~EditorWidget()
@@ -52,80 +50,9 @@ void EditorWidget::insertFile(const QString &filename)
     }
 }
 
-void EditorWidget::initCompleter()
-{
-    mCompleter = new QCompleter( editor() );
-    mCompleter->setModelSorting( QCompleter::CaseSensitivelySortedModel );
-    mCompleter->setCaseSensitivity( Qt::CaseInsensitive );
-
-    mCompleter->setWidget( editor() );
-    mCompleter->setCompletionMode( QCompleter::PopupCompletion );
-
-    connect( mCompleter, SIGNAL(activated(QString)), this, SLOT(slotInsertCompletion(QString)) );
-}
-
 void EditorWidget::createCompleterList(const QStringList &extraCompletion)
 {
-    QStringList listWord;
-    listWord << extraCompletion;
-    mCompleter->setModel( new QStringListModel( listWord, mCompleter ) );
-}
-
-void EditorWidget::slotInsertCompletion( const QString &completion )
-{
-    QTextCursor tc = editor()->textCursor();
-    const int extra = completion.length() - mCompleter->completionPrefix().length();
-    tc.movePosition(QTextCursor::Left);
-    tc.movePosition(QTextCursor::EndOfWord);
-    tc.insertText(completion.right(extra));
-    editor()->setTextCursor(tc);
-}
-
-void EditorWidget::keyPressEvent(QKeyEvent* e)
-{
-    if ( mCompleter->popup()->isVisible() ) {
-        switch (e->key()) {
-        case Qt::Key_Enter:
-        case Qt::Key_Return:
-        case Qt::Key_Escape:
-        case Qt::Key_Tab:
-        case Qt::Key_Backtab:
-            e->ignore();
-            return; // let the completer do default behavior
-        default:
-            break;
-        }
-    }
-    PimCommon::PlainTextEditorWidget::keyPressEvent(e);
-    const QString text = wordUnderCursor();
-    if ( text.length() < 2 ) // min 2 char for completion
-        return;
-
-    mCompleter->setCompletionPrefix( text );
-
-    QRect cr = editor()->cursorRect();
-    cr.setWidth( mCompleter->popup()->sizeHintForColumn(0)
-                 + mCompleter->popup()->verticalScrollBar()->sizeHint().width() );
-    mCompleter->complete( cr );
-}
-
-QString EditorWidget::wordUnderCursor() const
-{
-    static QString eow = QLatin1String( "~!@#$%^&*()+{}|\"<>,./;'[]\\-= " ); // everything without ':', '?' and '_'
-    QTextCursor tc = editor()->textCursor();
-
-    tc.anchor();
-    while( 1 ) {
-        // vHanda: I don't understand why the cursor seems to give a pos 1 past the last char instead
-        // of just the last char.
-        int pos = tc.position() - 1;
-        if ( pos < 0 || eow.contains( editor()->document()->characterAt(pos) )
-             || editor()->document()->characterAt(pos) == QChar(QChar::LineSeparator)
-             || editor()->document()->characterAt(pos) == QChar(QChar::ParagraphSeparator))
-            break;
-        tc.movePosition( QTextCursor::Left, QTextCursor::KeepAnchor );
-    }
-    return tc.selectedText();
+    (static_cast<GrantleeThemeEditor::GrantleePlainTextEditor *>(editor()))->createCompleterList(extraCompletion);
 }
 
 QString EditorWidget::toPlainText() const

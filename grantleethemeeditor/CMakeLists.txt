@@ -18,6 +18,7 @@ set(libgrantleethemeeditor_SRCS
     editorpage.cpp
     previewwidget.cpp
     configurewidget.cpp
+    grantleeplaintexteditor.cpp
 )
 
 kde4_add_kcfg_files(libgrantleethemeeditor_SRCS
