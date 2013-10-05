@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "parseuserjobtest.h"
+#include "ksieveui/managescriptsjob/parseuserscriptjob.h"
 #include <qtest_kde.h>
 
 
@@ -22,7 +23,10 @@ QTEST_KDEMAIN( ParseUserTest, NoGUI )
 
 void ParseUserTest::testParseUserJob()
 {
-
+    QString script;
+    bool result;
+    const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
+    QCOMPARE(lst.count(), 0);
 }
 
 

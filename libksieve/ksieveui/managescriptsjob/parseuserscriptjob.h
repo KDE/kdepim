@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <KUrl>
+#include "ksieveui_export.h"
 class QDomDocument;
 class QDomElement;
 namespace KManageSieve {
@@ -27,7 +28,7 @@ class SieveJob;
 }
 
 namespace KSieveUi {
-class ParseUserScriptJob : public QObject
+class KSIEVEUI_EXPORT ParseUserScriptJob : public QObject
 {
     Q_OBJECT
 public:
