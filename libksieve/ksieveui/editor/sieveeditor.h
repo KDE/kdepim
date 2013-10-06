@@ -80,6 +80,7 @@ private:
     QAction *mCheckSyntax;
     QAction *mSwitchMode;
     QAction *mAutoGenerateScript;
+    QAction *mSaveAs;
 #if !defined(NDEBUG)
     QAction *mGenerateXml;
 #endif

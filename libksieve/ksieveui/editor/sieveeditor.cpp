@@ -54,7 +54,7 @@ SieveEditor::SieveEditor( QWidget * parent )
     mCheckSyntax = new QAction(i18n("Check Syntax"), this);
     connect(mCheckSyntax, SIGNAL(triggered(bool)), SLOT(slotCheckSyntax()));
     bar->addAction(mCheckSyntax);
-    bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
+    mSaveAs = bar->addAction(KStandardGuiItem::saveAs().text(), this, SLOT(slotSaveAs()));
     bar->addAction(i18n("Import..."), this, SLOT(slotImport()));
 
     mAutoGenerateScript = new QAction(i18n("Autogenerate Script..."), this);
@@ -127,6 +127,7 @@ void SieveEditor::changeMode(EditorMode mode)
 void SieveEditor::slotEnableButtonOk(bool b)
 {
     enableButtonOk(b);
+    mSaveAs->setEnabled(b);
     if (mMode == TextMode) {
         mCheckSyntax->setEnabled(b);
     } else {
