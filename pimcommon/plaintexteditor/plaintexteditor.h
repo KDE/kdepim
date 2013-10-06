@@ -31,6 +31,8 @@ public:
     explicit PlainTextEditor(QWidget *parent=0);
     ~PlainTextEditor();
 
+    void addSearchSupport(bool b);
+
 private Q_SLOTS:
     void slotUndoableClear();
     void slotSpeakText();
@@ -41,6 +43,9 @@ protected:
 Q_SIGNALS:
     void findText();
     void replaceText();
+
+private:
+    bool mHasSearchSupport;
 };
 }
 #endif // PLAINTEXTEDITOR_H
