@@ -105,6 +105,12 @@ QString AdBlockBlockableItemsWidget::elementTypeToI18n(AdBlockBlockableItemsWidg
     case AdBlockBlockableItemsWidget::Object:
         result = i18n("Object");
         break;
+    case AdBlockBlockableItemsWidget::Media:
+        result = i18n("Audio/Video");
+        break;
+    case AdBlockBlockableItemsWidget::Popup:
+        result = i18n("Popup window");
+        break;
     case AdBlockBlockableItemsWidget::None:
     default:
         result = i18n("Unknown");
@@ -136,6 +142,12 @@ QString AdBlockBlockableItemsWidget::elementType(AdBlockBlockableItemsWidget::Ty
         break;
     case AdBlockBlockableItemsWidget::Object:
         result = QLatin1String("other");
+        break;
+    case AdBlockBlockableItemsWidget::Media:
+        result = QLatin1String("media");
+        break;
+    case AdBlockBlockableItemsWidget::Popup:
+        result = QLatin1String("popup");
         break;
     case AdBlockBlockableItemsWidget::None:
     default:
