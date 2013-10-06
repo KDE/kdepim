@@ -11,3 +11,9 @@ endmacro()
 
 add_filterimport_test( filterimportclawmailtest.cpp )
 add_filterimport_test( filterimportthunderbirdtest.cpp )
+add_filterimport_test( filterimportbalsatest.cpp )
+add_filterimport_test( filterimportevolutiontest.cpp )
+add_filterimport_test( filterimportprocmailtest.cpp )
+add_filterimport_test( filterimportsylpheedtest.cpp )
+
+
