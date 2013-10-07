@@ -50,7 +50,10 @@ BlogiloComposerEditor *BlogiloComposerWidget::editor() const
 
 void BlogiloComposerWidget::slotActivateTranslator()
 {
+    const QString text = mEditor->view()->selectedText();
     mTranslatorWidget->show();
+    if(!text.isEmpty())
+        mTranslatorWidget->setTextToTranslate(text);
 }
 
 #include "blogilocomposerwidget.moc"
