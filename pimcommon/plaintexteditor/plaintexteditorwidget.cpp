@@ -42,6 +42,16 @@ PlainTextEditorWidget::~PlainTextEditorWidget()
 
 }
 
+void PlainTextEditorWidget::setPlainText(const QString &text)
+{
+    mEditor->setPlainText(text);
+}
+
+QString PlainTextEditorWidget::toPlainText() const
+{
+    return mEditor->toPlainText();
+}
+
 void PlainTextEditorWidget::init(PlainTextEditor *customEditor)
 {
     QVBoxLayout *lay = new QVBoxLayout;

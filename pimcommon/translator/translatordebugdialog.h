@@ -20,6 +20,9 @@
 
 #include <KDialog>
 
+namespace PimCommon {
+class PlainTextEditorWidget;
+}
 class KTextEdit;
 class TranslatorDebugDialog : public KDialog
 {
@@ -36,7 +39,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    KTextEdit *mEdit;
+    PimCommon::PlainTextEditorWidget *mEdit;
 };
 
 #endif // TRANSLATORDEBUGDIALOG_H

@@ -17,11 +17,11 @@
 
 #include "translatordebugdialog.h"
 #include "pimcommon/util/pimutil.h"
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KLocale>
 #include <KConfigGroup>
 #include <KGlobal>
-#include <KTextEdit>
 
 TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     : KDialog(parent)
@@ -31,8 +31,7 @@ TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     setButtonText(User1, i18n("Save As..."));
 
 
-    mEdit = new KTextEdit;
-    mEdit->setAcceptRichText(false);
+    mEdit = new PimCommon::PlainTextEditorWidget;
     mEdit->setReadOnly(true);
 
     setMainWidget( mEdit );
