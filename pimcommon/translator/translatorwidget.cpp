@@ -20,6 +20,7 @@
 #include "widgets/minimumcombobox.h"
 #include "translatorutil.h"
 #include "googletranslator.h"
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KTextEdit>
 #include <KComboBox>
@@ -65,7 +66,8 @@ public:
     QMap<QString, QMap<QString, QString> > listLanguage;
     QByteArray data;
     TranslatorTextEdit *inputText;
-    TranslatorResultTextEdit *translatedText;
+    PimCommon::PlainTextEditorWidget *translatedText;
+    TranslatorResultTextEdit *translatorResultTextEdit;
     MinimumComboBox *from;
     MinimumComboBox *to;
     KPushButton *translate;
@@ -96,7 +98,7 @@ void TranslatorWidget::TranslatorWidgetPrivate::initLanguage()
 
 
 TranslatorResultTextEdit::TranslatorResultTextEdit(QWidget *parent)
-    : KTextEdit(parent),
+    : PimCommon::PlainTextEditor(parent),
       mResultFailed(false)
 {
     setReadOnly( true );
@@ -123,7 +125,7 @@ void TranslatorResultTextEdit::paintEvent( QPaintEvent *event )
 
         p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n( "Problem when connecting to the translator web site." ) );
     } else {
-        KTextEdit::paintEvent( event );
+        PimCommon::PlainTextEditor::paintEvent( event );
     }
 }
 
@@ -276,7 +278,8 @@ void TranslatorWidget::init()
     connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
 
     d->splitter->addWidget( d->inputText );
-    d->translatedText = new TranslatorResultTextEdit;
+    d->translatorResultTextEdit = new TranslatorResultTextEdit;
+    d->translatedText = new PimCommon::PlainTextEditorWidget(d->translatorResultTextEdit, this);
     d->translatedText->setReadOnly( true );
     d->splitter->addWidget( d->translatedText );
 
@@ -315,7 +318,7 @@ void TranslatorWidget::slotFromLanguageChanged( int index )
 void TranslatorWidget::setTextToTranslate( const QString& text)
 {
     d->inputText->setPlainText( text );
-    d->translatedText->clear();
+    d->translatorResultTextEdit->clear();
     slotTranslate();
 }
 
@@ -324,7 +327,7 @@ void TranslatorWidget::slotTranslate()
     const QString textToTranslate = d->inputText->toPlainText();
     if ( textToTranslate.isEmpty() )
         return;
-    d->translatedText->clear();
+    d->translatorResultTextEdit->clear();
 
     const QString from = d->from->itemData(d->from->currentIndex()).toString();
     const QString to = d->to->itemData(d->to->currentIndex()).toString();
@@ -341,16 +344,16 @@ void TranslatorWidget::slotTranslateDone()
 {
     d->translate->setEnabled( true );
     d->progressIndictor->stop();
-    d->translatedText->setResultFailed(false);
-    d->translatedText->setPlainText(d->abstractTranslator->resultTranslate());
+    d->translatorResultTextEdit->setResultFailed(false);
+    d->translatorResultTextEdit->setPlainText(d->abstractTranslator->resultTranslate());
 }
 
 void TranslatorWidget::slotTranslateFailed(bool signalFailed, const QString &message)
 {
     d->translate->setEnabled( true );
     d->progressIndictor->stop();
-    d->translatedText->setResultFailed(signalFailed);
-    d->translatedText->clear();
+    d->translatorResultTextEdit->setResultFailed(signalFailed);
+    d->translatorResultTextEdit->clear();
     if (!message.isEmpty()) {
         KMessageBox::error(this, message, i18n("Translate error"));
     }
@@ -379,7 +382,7 @@ void TranslatorWidget::slotInvertLanguage()
 void TranslatorWidget::slotCloseWidget()
 {
     d->inputText->clear();
-    d->translatedText->clear();
+    d->translatorResultTextEdit->clear();
     d->progressIndictor->stop();
     hide();
     Q_EMIT translatorWasClosed();
@@ -405,7 +408,7 @@ bool TranslatorWidget::event(QEvent* e)
 void TranslatorWidget::slotClear()
 {
     d->inputText->clear();
-    d->translatedText->clear();
+    d->translatorResultTextEdit->clear();
     d->translate->setEnabled( false );
 }
 

@@ -20,12 +20,13 @@
 #define TRANSLATORWIDGET_H
 
 #include "pimcommon_export.h"
+#include "pimcommon/plaintexteditor/plaintexteditor.h"
 #include <kio/job.h>
 #include <KTextEdit>
 
 namespace PimCommon {
 
-class TranslatorResultTextEdit : public KTextEdit
+class TranslatorResultTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 public:
