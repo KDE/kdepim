@@ -22,6 +22,7 @@
 #include "pimcommon/widgets/simplestringlisteditor.h"
 
 #include <KLineEdit>
+#include <KTextEdit>
 #include <KLocale>
 #include <KDesktopFile>
 #include <KConfigGroup>
@@ -64,8 +65,8 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
 
     ++row;
     lab = new QLabel(i18n("Description:"));
-    mDescription = new KLineEdit;
-    mDescription->setClearButtonShown(true);
+    mDescription = new KTextEdit;
+    mDescription->setAcceptRichText(false);
     lay->addWidget(lab, row ,0);
     lay->addWidget(mDescription, row,1);
 
@@ -109,7 +110,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     mEmail->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::authorEmail());
     mAuthor->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::author());
 
-    connect(mDescription, SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
+    connect(mDescription, SIGNAL(textChanged()), this, SIGNAL(changed()));
 }
 
 DesktopFilePage::~DesktopFilePage()
@@ -185,7 +186,7 @@ void DesktopFilePage::saveAsFilename(const QString &filename)
 {
     KDesktopFile desktopFile(filename);
     desktopFile.desktopGroup().writeEntry(QLatin1String("Name"), mName->text());
-    desktopFile.desktopGroup().writeEntry(QLatin1String("Description"), mDescription->text());
+    desktopFile.desktopGroup().writeEntry(QLatin1String("Description"), mDescription->toPlainText());
     if (mFilename)
         desktopFile.desktopGroup().writeEntry(QLatin1String("FileName"), mFilename->text());
     if (mExtraDisplayHeaders) {
@@ -213,7 +214,7 @@ void DesktopFilePage::setDefaultDesktopName(const QString &name)
 
 QString DesktopFilePage::description() const
 {
-    return mDescription->text();
+    return mDescription->toPlainText();
 }
 
 #include "desktopfilepage.moc"

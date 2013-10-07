@@ -22,6 +22,7 @@
 #include <QWidget>
 #include "grantleethemeeditor_export.h"
 class KLineEdit;
+class KTextEdit;
 class KZip;
 
 namespace PimCommon {
@@ -68,7 +69,7 @@ private:
     void saveAsFilename(const QString &filename);
     QString mDefaultDesktopName;
     KLineEdit *mName;
-    KLineEdit *mDescription;
+    KTextEdit *mDescription;
     KLineEdit *mFilename;
     KLineEdit *mAuthor;
     KLineEdit *mEmail;
