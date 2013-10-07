@@ -20,10 +20,13 @@
 
 #include "blogilocomposerview.h"
 
+#include <KLocale>
+
 #include <QApplication>
 #include <QTimer>
 #include <QMouseEvent>
 #include <QAction>
+#include <QMenu>
 
 BlogiloComposerView::BlogiloComposerView(QWidget * parent)
     :ComposerEditorNG::ComposerView(parent)
@@ -53,5 +56,11 @@ void BlogiloComposerView::slotSendMouseReleaseEvent()
     pageAction( QWebPage::MoveToEndOfDocument )->trigger();
 }
 
+void BlogiloComposerView::addExtraAction(QMenu *menu)
+{
+    menu->addSeparator();
+    QAction *translatorAction = menu->addAction(i18n("Translate..."));
+    connect( translatorAction, SIGNAL(triggered(bool)), this, SIGNAL(activateTranslator()) );
+}
 
 #include "blogilocomposerview.moc"

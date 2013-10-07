@@ -31,6 +31,7 @@ BlogiloComposerWidget::BlogiloComposerWidget(BlogiloComposerView *view, QWidget 
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     mEditor = new BlogiloComposerEditor(view, this);
+    connect(view, SIGNAL(activateTranslator()), SLOT(slotActivateTranslator()));
     lay->addWidget(mEditor);
     mTranslatorWidget = new PimCommon::TranslatorWidget;
     lay->addWidget(mTranslatorWidget);
@@ -45,6 +46,11 @@ BlogiloComposerWidget::~BlogiloComposerWidget()
 BlogiloComposerEditor *BlogiloComposerWidget::editor() const
 {
     return mEditor;
+}
+
+void BlogiloComposerWidget::slotActivateTranslator()
+{
+    mTranslatorWidget->show();
 }
 
 #include "blogilocomposerwidget.moc"
