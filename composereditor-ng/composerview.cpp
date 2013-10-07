@@ -249,8 +249,14 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
     speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
     speakAction->setEnabled(!emptyDocument );
     connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(_k_slotSpeakText()) );
+    addExtraAction(menu);
     menu->exec(event->globalPos());
     delete menu;
+}
+
+void ComposerView::addExtraAction(QMenu *menu)
+{
+    //Redefine if necessary.
 }
 
 void ComposerView::setActionsEnabled(bool enabled)
