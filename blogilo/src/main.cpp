@@ -54,6 +54,7 @@ int main( int argc, char *argv[] )
     KGlobal::locale()->insertCatalog(QLatin1String("libkblog"));
     KGlobal::locale()->insertCatalog(QLatin1String("libkxmlrpcclient"));
     KGlobal::locale()->insertCatalog(QLatin1String("libcomposereditorng"));
+    KGlobal::locale()->insertCatalog(QLatin1String("libpimcommon"));
 
     MainWindow *bilbo = new MainWindow;
 
