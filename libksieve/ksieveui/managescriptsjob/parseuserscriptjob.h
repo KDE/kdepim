@@ -52,6 +52,7 @@ private:
     static QString loadInclude(const QDomElement &element);
     static QStringList extractActiveScript(const QDomDocument &doc);
     KUrl mCurrentUrl;
+    KManageSieve::SieveJob *mSieveJob;
 };
 }
 
