@@ -170,16 +170,17 @@ TranslatorWidget::TranslatorWidget( const QString& text, QWidget* parent )
 
 TranslatorWidget::~TranslatorWidget()
 {
-    if (d->languageSettingsChanged)
-        writeConfig();
+    writeConfig();
     delete d;
 }
 
 void TranslatorWidget::writeConfig()
 {
     KConfigGroup myGroup( KGlobal::config(), "TranslatorWidget" );
-    myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
-    myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
+    if (d->languageSettingsChanged) {
+        myGroup.writeEntry( QLatin1String( "FromLanguage" ), d->from->itemData(d->from->currentIndex()).toString() );
+        myGroup.writeEntry( "ToLanguage", d->to->itemData(d->to->currentIndex()).toString() );
+    }
     myGroup.writeEntry( "mainSplitter", d->splitter->sizes());
     myGroup.sync();
 }
