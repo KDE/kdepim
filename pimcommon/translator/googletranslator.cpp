@@ -124,7 +124,6 @@ QMap<QString, QMap<QString, QString> > GoogleTranslator::initListLanguage(KCombo
 
 void GoogleTranslator::translate()
 {
-
     if (mFrom == mTo) {
         Q_EMIT translateFailed(false, i18n("You used same language for from and to language."));
         return;
@@ -168,7 +167,6 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
         Q_EMIT translateFailed(ok);
         return;
     }
-
     //qDebug()<<" json"<<json;
     bool oldVersion = true;
     QMultiMap<int, QPair<QString, double> > sentences;
@@ -234,6 +232,8 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
             mResult = currentString;
             Q_EMIT translateDone();
         }
+    } else {
+        Q_EMIT translateDone();
     }
 }
 
