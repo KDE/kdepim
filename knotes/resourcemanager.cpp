@@ -62,7 +62,8 @@ void KNotesResourceManager::load()
 
   // Open all active resources
   KRES::Manager<ResourceNotes>::ActiveIterator it;
-  for ( it = m_manager->activeBegin(); it != m_manager->activeEnd(); ++it ) {
+  KRES::Manager<ResourceNotes>::ActiveIterator end( m_manager->activeEnd() );
+  for ( it = m_manager->activeBegin(); it != end; ++it ) {
     if ( (*it)->isOpen() ) {
       kDebug(5500) << (*it)->resourceName() << " is already open";
       continue;
@@ -79,7 +80,8 @@ void KNotesResourceManager::load()
 void KNotesResourceManager::save()
 {
   KRES::Manager<ResourceNotes>::ActiveIterator it;
-  for ( it = m_manager->activeBegin(); it != m_manager->activeEnd(); ++it ) {
+  KRES::Manager<ResourceNotes>::ActiveIterator end(m_manager->activeEnd());
+  for ( it = m_manager->activeBegin(); it != end; ++it ) {
     ( *it )->save();
   }
 }
@@ -137,9 +139,10 @@ KCal::Alarm::List KNotesResourceManager::alarms( const KDateTime &from,
   KRES::Manager<ResourceNotes>::ActiveIterator it;
   for ( it = m_manager->activeBegin(); it != m_manager->activeEnd(); ++it ) {
     KCal::Alarm::List list = ( *it )->alarms( from, to );
-    KCal::Alarm::List::ConstIterator it;
-    for ( it = list.constBegin(); it != list.constEnd(); ++it ) {
-      result.append( *it );
+    KCal::Alarm::List::ConstIterator itList;
+    KCal::Alarm::List::ConstIterator end(list.constEnd());
+    for ( itList = list.constBegin(); itList != end; ++itList ) {
+      result.append( *itList );
     }
   }
 

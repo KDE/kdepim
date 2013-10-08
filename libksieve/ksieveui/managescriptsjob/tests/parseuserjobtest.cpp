@@ -23,7 +23,7 @@ QTEST_KDEMAIN( ParseUserTest, NoGUI )
 
 void ParseUserTest::testParseEmptyUserJob()
 {
-    QString script;
+    const QString script;
     bool result;
     const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 0);
@@ -32,17 +32,17 @@ void ParseUserTest::testParseEmptyUserJob()
 
 void ParseUserTest::testParseUserTwoActiveScriptJob()
 {
-    QString script = QLatin1String("# USER Management Script\n"
-                                   "#\n"
-                                   "# This script includes the various active sieve scripts\n"
-                                   "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
-                                   "# \n"
-                                   "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
-                                   "#\n"
-                                   "\n"
-                                   "require [\"include\"];\n"
-                                   "include :personal \"file1\";\n"
-                                   "include :personal \"file2\";\n");
+    const QString script = QLatin1String("# USER Management Script\n"
+                                         "#\n"
+                                         "# This script includes the various active sieve scripts\n"
+                                         "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
+                                         "# \n"
+                                         "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
+                                         "#\n"
+                                         "\n"
+                                         "require [\"include\"];\n"
+                                         "include :personal \"file1\";\n"
+                                         "include :personal \"file2\";\n");
     bool result;
     const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 2);
@@ -51,15 +51,15 @@ void ParseUserTest::testParseUserTwoActiveScriptJob()
 
 void ParseUserTest::testParseUserNoActiveScriptJob()
 {
-    QString script = QLatin1String("# USER Management Script\n"
-                                   "#\n"
-                                   "# This script includes the various active sieve scripts\n"
-                                   "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
-                                   "# \n"
-                                   "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
-                                   "#\n"
-                                   "\n"
-                                   "require [\"include\"];\n");
+    const QString script = QLatin1String("# USER Management Script\n"
+                                         "#\n"
+                                         "# This script includes the various active sieve scripts\n"
+                                         "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
+                                         "# \n"
+                                         "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
+                                         "#\n"
+                                         "\n"
+                                         "require [\"include\"];\n");
     bool result;
     const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 0);
@@ -68,17 +68,17 @@ void ParseUserTest::testParseUserNoActiveScriptJob()
 
 void ParseUserTest::testParseUserDuplicateActiveScriptJob()
 {
-    QString script = QLatin1String("# USER Management Script\n"
-                                   "#\n"
-                                   "# This script includes the various active sieve scripts\n"
-                                   "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
-                                   "# \n"
-                                   "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
-                                   "#\n"
-                                   "\n"
-                                   "require [\"include\"];\n"
-                                   "include :personal \"file1\";\n"
-                                   "include :personal \"file1\";\n");
+    const QString script = QLatin1String("# USER Management Script\n"
+                                         "#\n"
+                                         "# This script includes the various active sieve scripts\n"
+                                         "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
+                                         "# \n"
+                                         "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
+                                         "#\n"
+                                         "\n"
+                                         "require [\"include\"];\n"
+                                         "include :personal \"file1\";\n"
+                                         "include :personal \"file1\";\n");
     bool result;
     const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 1);
@@ -87,15 +87,15 @@ void ParseUserTest::testParseUserDuplicateActiveScriptJob()
 
 void ParseUserTest::testParseUserErrorScriptJob()
 {
-    QString script = QLatin1String("# USER Management Script\n"
-                                   "#\n"
-                                   "# This script includes the various active sieve scripts\n"
-                                   "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
-                                   "# \n"
-                                   "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
-                                   "#\n"
-                                   "\n"
-                                   "errorscript\n");
+    const QString script = QLatin1String("# USER Management Script\n"
+                                         "#\n"
+                                         "# This script includes the various active sieve scripts\n"
+                                         "# it is AUTOMATICALLY GENERATED. DO NOT EDIT MANUALLY!\n"
+                                         "# \n"
+                                         "# For more information, see http://wiki.kolab.org/KEP:14#USER\n"
+                                         "#\n"
+                                         "\n"
+                                         "errorscript\n");
     bool result;
     const QStringList lst = KSieveUi::ParseUserScriptJob::parsescript(script, result);
     QCOMPARE(lst.count(), 0);

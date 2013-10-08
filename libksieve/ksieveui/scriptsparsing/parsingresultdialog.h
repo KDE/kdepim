@@ -19,7 +19,9 @@
 #include "ksieveui_export.h"
 #include <KDialog>
 
-class KTextEdit;
+namespace PimCommon {
+class PlainTextEditorWidget;
+}
 namespace KSieveUi {
 class KSIEVEUI_EXPORT ParsingResultDialog : public KDialog
 {
@@ -36,7 +38,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    KTextEdit *mTextEdit;
+    PimCommon::PlainTextEditorWidget *mTextEdit;
 };
 }
 

@@ -24,13 +24,18 @@
 using namespace KSieveUi;
 GenerateGlobalScriptJob::GenerateGlobalScriptJob(const KUrl &url, QObject *parent)
     : QObject(parent),
-      mCurrentUrl(url)
+      mCurrentUrl(url),
+      mMasterjob(0),
+      mUserJob(0)
 {
 }
 
 GenerateGlobalScriptJob::~GenerateGlobalScriptJob()
 {
-
+    if (mMasterjob)
+        mMasterjob->kill();
+    if (mUserJob)
+        mUserJob->kill();
 }
 
 void GenerateGlobalScriptJob::addUserActiveScripts(const QStringList &lstScript)
@@ -38,7 +43,7 @@ void GenerateGlobalScriptJob::addUserActiveScripts(const QStringList &lstScript)
     mListUserActiveScripts = lstScript;
 }
 
-void GenerateGlobalScriptJob::writeGlobalScripts()
+void GenerateGlobalScriptJob::start()
 {
     if (mCurrentUrl.isEmpty()) {
         Q_EMIT error(i18n("Path is not specified."));
@@ -74,8 +79,8 @@ void GenerateGlobalScriptJob::writeMasterScript()
 
     KUrl url(mCurrentUrl);
     url.setFileName(QLatin1String("MASTER"));
-    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put(url, masterScript, true, true );
-    connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+    mMasterjob = KManageSieve::SieveJob::put(url, masterScript, true, true );
+    connect( mMasterjob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotPutMasterResult(KManageSieve::SieveJob*,bool)) );
 }
 
@@ -85,6 +90,7 @@ void GenerateGlobalScriptJob::slotPutMasterResult( KManageSieve::SieveJob *, boo
         Q_EMIT error(i18n("Error when we wrote \"MASTER\" script on server."));
         return;
     }
+    mMasterjob = 0;
     writeUserScript();
 }
 
@@ -106,13 +112,14 @@ void GenerateGlobalScriptJob::writeUserScript()
 
     KUrl url(mCurrentUrl);
     url.setFileName(QLatin1String("USER"));
-    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put(url, userScript, false, false );
-    connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+    mUserJob = KManageSieve::SieveJob::put(url, userScript, false, false );
+    connect( mUserJob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotPutUserResult(KManageSieve::SieveJob*,bool)) );
 }
 
 void GenerateGlobalScriptJob::slotPutUserResult( KManageSieve::SieveJob *, bool success )
 {
+    mUserJob = 0;
     if (!success) {
         Q_EMIT error(i18n("Error when we wrote \"User\" script on server."));
         return;

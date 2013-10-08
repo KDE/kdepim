@@ -26,13 +26,16 @@
 
 using namespace KSieveUi;
 ParseUserScriptJob::ParseUserScriptJob(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mSieveJob(0)
 {
 }
 
 ParseUserScriptJob::~ParseUserScriptJob()
 {
-
+    if ( mSieveJob )
+        mSieveJob->kill();
+    mSieveJob = 0;
 }
 
 void ParseUserScriptJob::scriptUrl(const KUrl &url)
@@ -46,13 +49,16 @@ void ParseUserScriptJob::start()
         Q_EMIT error(i18n("Path is not specified."));
         return;
     }
-    KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( mCurrentUrl );
-    connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+    if ( mSieveJob )
+        mSieveJob->kill();
+    mSieveJob = KManageSieve::SieveJob::get( mCurrentUrl );
+    connect( mSieveJob, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
 void ParseUserScriptJob::slotGetResult( KManageSieve::SieveJob *, bool, const QString & script, bool )
 {
+    mSieveJob = 0;
     if (script.isEmpty()) {
         Q_EMIT error(i18n("Script is empty."));
         return;

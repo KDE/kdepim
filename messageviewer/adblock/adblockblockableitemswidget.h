@@ -37,6 +37,8 @@ public:
         Frame,
         XmlRequest,
         Object,
+        Media,
+        Popup,
 
         MaxTypeElement
     };

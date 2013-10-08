@@ -41,7 +41,7 @@ class KNotesAlarm;
 class KNotesResourceManager;
 class KXMLGUIBuilder;
 class KXMLGUIFactory;
-class KStatusNotifierItem;
+class KNotesTray;
 
 namespace KCal {
 class Journal;
@@ -103,17 +103,18 @@ class KNotesApp
     void saveConfigs();
 
   private slots:
+    void slotConfigUpdated();
     void acceptConnection();
     void saveNotes();
     void saveNotes( const QString & uid );
     void updateNoteActions();
-    void updateNetworkListener();
-    void updateStyle();
 
     void createNote( KCal::Journal *journal );
     void killNote( KCal::Journal *journal );
 
   private:
+    void updateNetworkListener();
+    void updateStyle();
     QMap<QString, KNote *> m_notes;
     QList<QAction *>       m_noteActions;
 
@@ -130,7 +131,7 @@ class KNotesApp
 
     KXMLGUIFactory  *m_guiFactory;
     KXMLGUIBuilder  *m_guiBuilder;
-    KStatusNotifierItem *m_tray;
+    KNotesTray *m_tray;
     KAction         *m_findAction;
 
     QDomDocument    m_noteGUI;

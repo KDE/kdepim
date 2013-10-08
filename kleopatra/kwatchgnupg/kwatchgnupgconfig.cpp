@@ -92,7 +92,6 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
 
   glay = new QGridLayout( group );
   glay->setSpacing( spacingHint() );
-  glay->setMargin( 0 );
   glay->setColumnStretch( 1, 1 );
 
   int row = -1;

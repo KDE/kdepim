@@ -775,10 +775,13 @@ void IncidenceDialog::closeEvent( QCloseEvent *event )
       i18nc( "@info", "Do you really want to cancel?" ),
       i18nc( "@title:window", "KOrganizer Confirmation" ) ) == KMessageBox::Yes ) {
     KDialog::reject(); // Discard current changes
+    KDialog::closeEvent( event );
   } else if ( !d->isDirty() ) {
     KDialog::reject(); // No pending changes, just close the dialog.
+    KDialog::closeEvent( event );
+  } else {
+    event->ignore();
   }
-  event->ignore();
 }
 
 void IncidenceDialog::setInitiallyDirty( bool initiallyDirty )

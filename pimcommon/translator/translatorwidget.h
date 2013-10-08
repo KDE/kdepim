@@ -20,12 +20,13 @@
 #define TRANSLATORWIDGET_H
 
 #include "pimcommon_export.h"
+#include "pimcommon/plaintexteditor/plaintexteditor.h"
 #include <kio/job.h>
 #include <KTextEdit>
 
 namespace PimCommon {
 
-class TranslatorResultTextEdit : public KTextEdit
+class TranslatorResultTextEdit : public PimCommon::PlainTextEditor
 {
     Q_OBJECT
 public:
@@ -45,6 +46,10 @@ class TranslatorTextEdit : public KTextEdit
     Q_OBJECT
 public:
     explicit TranslatorTextEdit(QWidget *parent = 0);
+
+Q_SIGNALS:
+    void translateText();
+
 protected:
     void dropEvent( QDropEvent * );
 };
@@ -66,13 +71,14 @@ public Q_SLOTS:
     void slotCloseWidget();
 
 private Q_SLOTS:
-    void slotFromLanguageChanged( int );
+    void slotFromLanguageChanged( int, bool initialize = false );
     void slotTextChanged();
     void slotInvertLanguage();
     void slotClear();
     void slotTranslateDone();
     void slotTranslateFailed(bool result, const QString &message);
     void slotDebug();
+    void slotConfigChanged();
 
 protected:
     bool event(QEvent* e);

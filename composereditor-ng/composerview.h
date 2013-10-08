@@ -92,6 +92,7 @@ public:
     };
 
     virtual void addCreatedActionsToActionCollection(KActionCollection *actionCollection);
+    virtual void addExtraAction(QMenu *menu);
 
     void createActions(const QList<ComposerViewAction> &);
 

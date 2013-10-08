@@ -68,7 +68,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
 
     <entry name="AllowSemicolonAsAddressSeparator" type="Bool">
       <default>${ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT}</default>
-      <label>Allow the semicolon character (';') to be used as separator in the message composer.</label>
+      <label>Allow the semicolon character (';') to be used as separator in the message composer</label>
     </entry>
     <entry name="ShowRecentAddressesInComposer" type="Bool" key="showRecentAddressesInComposer">
       <label>Use recent addresses for autocompletion</label>
@@ -77,7 +77,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
 
     <entry name="MaximumRecipients" type="Int">
-      <label>Maximum number of recipient editor lines.</label>
+      <label>Maximum number of recipient entries:</label>
       <default>200</default>
     </entry>
     <entry name="SecondRecipientTypeDefault" type="Enum">
@@ -92,7 +92,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
 
     <entry name="MaximumAttachmentSize" type="Int">
-        <label>The maximum size in bits that email attachments are allowed to have (-1 for no limit).</label>
+        <label>The maximum size in bits that email attachments are allowed to have (-1 for no limit)</label>
         <default>-1</default>
     </entry>
     <entry name="OutlookCompatibleAttachments" type="Bool" key="outlook-compatible-attachments">
@@ -115,7 +115,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>true</default>
     </entry>
     <entry name="CryptoWarningUnencrypted" type="Bool" key="crypto-warning-unencrypted">
-        <label>Warn before sending unencrypted messages.</label>
+        <label>Warn before sending unencrypted messages</label>
         <default>false</default>
     </entry>
     <entry name="CryptoWarningUnsigned" type="Bool" key="crypto-warning-unsigned">

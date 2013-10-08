@@ -236,12 +236,11 @@ QString KNotesPart::newNote( const QString &name, const QString &text )
   }
 
   mManager->addNewNote( journal );
-  mManager->save();
 
   KNotesIconViewItem *note = mNoteList.value( journal->uid() );
   mNotesView->scrollToItem( note );
   mNotesView->setCurrentItem( note );
-
+  mManager->save();
   return journal->uid();
 }
 
@@ -337,7 +336,7 @@ void KNotesPart::killSelectedNotes()
   foreach ( QListWidgetItem *item, lst ) {
     KNotesIconViewItem *knivi = static_cast<KNotesIconViewItem *>( item );
     items.append( knivi );
-    notes.append( knivi->text() );
+    notes.append( knivi->realName() );
   }
 
   int ret = KMessageBox::warningContinueCancelList(
@@ -440,14 +439,16 @@ void KNotesPart::editNote()
 
 void KNotesPart::renameNote()
 {
-  QString oldName = mNotesView->currentItem()->text();
+  KNotesIconViewItem *knoteItem = static_cast<KNotesIconViewItem *>(mNotesView->currentItem());
+
+  QString oldName = knoteItem->realName();
   bool ok = false;
   QString newName =
     KInputDialog::getText( i18nc( "@title:window", "Rename Popup Note" ),
                            i18nc( "@label:textbox", "New Name:" ),
                            oldName, &ok, mNotesView );
   if ( ok && ( newName != oldName ) ) {
-    static_cast<KNotesIconViewItem *>( mNotesView->currentItem() )->setIconText( newName );
+    knoteItem->setIconText( newName );
     mManager->save();
   }
 }

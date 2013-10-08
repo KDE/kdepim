@@ -30,6 +30,11 @@ public:
     ~BlogiloComposerView();
 
     void startEditing();
+    virtual void addExtraAction(QMenu *menu);
+
+Q_SIGNALS:
+    void activateTranslator();
+
 private Q_SLOTS:
     void slotSendMouseReleaseEvent();
 };

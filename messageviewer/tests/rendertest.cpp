@@ -19,7 +19,7 @@
 
 #include "htmlwriter/filehtmlwriter.h"
 #include "viewer/objecttreeparser.h"
-#include "viewer/csshelper.h"
+#include "tests/testcsshelper.h"
 #include "messagecore/tests/util.h"
 
 #include <KMime/Message>
@@ -82,7 +82,7 @@ class RenderTest : public QObject
       // render the mail
       FileHtmlWriter fileWriter( outFileName );
       QImage paintDevice;
-      CSSHelper cssHelper( &paintDevice );
+      TestCSSHelper cssHelper( &paintDevice );
       NodeHelper nodeHelper;
       MessageCore::Test::TestObjectTreeSource testSource( &fileWriter, &cssHelper );
       testSource.setAllowDecryption( true );
@@ -132,16 +132,6 @@ class RenderTest : public QObject
       proc.start( QLatin1String("diff"), args );
       QVERIFY( proc.waitForFinished() );
 
-      QEXPECT_FAIL( "forward-openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "signed-forward-openpgp-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "smime-signed-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "smime-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "smime-encrypted-octet-stream.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "openpgp-signed-mailinglist.mbox", "Signature verification is currently broken in the testsetup", Continue );
-      QEXPECT_FAIL( "openpgp-encrypted.mbox", "Signature verification is currently broken in the testsetup", Continue );
-
-      QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
       QCOMPARE( proc.exitCode(), 0 );
     }
 };

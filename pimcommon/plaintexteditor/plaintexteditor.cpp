@@ -35,7 +35,8 @@
 using namespace PimCommon;
 
 PlainTextEditor::PlainTextEditor(QWidget *parent)
-    : QPlainTextEdit(parent)
+    : QPlainTextEdit(parent),
+      mHasSearchSupport(true)
 {
 }
 
@@ -62,15 +63,16 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                 popup->insertAction( separatorAction, clearAllAction );
             }
         }
-        popup->addSeparator();
-        QAction *findAct = popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()), Qt::Key_F+Qt::CTRL);
-        //Code from KTextBrowser
-        KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
-                                                           : KIconTheme::TextEditor,
-                                              popup->actions() );
-        if ( emptyDocument )
-            findAct->setEnabled(false);
-
+        if (mHasSearchSupport) {
+            popup->addSeparator();
+            QAction *findAct = popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()), Qt::Key_F+Qt::CTRL);
+            //Code from KTextBrowser
+            KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
+                                                               : KIconTheme::TextEditor,
+                                                  popup->actions() );
+            if ( emptyDocument )
+                findAct->setEnabled(false);
+        }
         popup->addSeparator();
         if (!isReadOnly()) {
             QAction *act = popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
@@ -117,5 +119,9 @@ void PlainTextEditor::slotUndoableClear()
     cursor.endEditBlock();
 }
 
+void PlainTextEditor::addSearchSupport(bool b)
+{
+    mHasSearchSupport = b;
+}
 
 #include "plaintexteditor.moc"

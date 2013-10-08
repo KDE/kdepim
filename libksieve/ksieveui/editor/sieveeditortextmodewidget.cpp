@@ -116,7 +116,8 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect( shortcut, SIGNAL(activated()), SLOT(slotReplace()) );
     connect( mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()) );
 
-    mDebugTextEdit = new PimCommon::PlainTextEditorWidget;
+    mDebugTextEdit = new PimCommon::PlainTextEditor;
+    mDebugTextEdit->addSearchSupport(false);
     mDebugTextEdit->setReadOnly( true );
     mMainSplitter->addWidget( mTemplateSplitter );
     mMainSplitter->addWidget( mDebugTextEdit );
@@ -231,8 +232,8 @@ void SieveEditorTextModeWidget::setScript( const QString &script )
 
 void SieveEditorTextModeWidget::setDebugScript( const QString &debug )
 {
-    mDebugTextEdit->editor()->clear();
-    mDebugTextEdit->editor()->appendHtml( debug );
+    mDebugTextEdit->clear();
+    mDebugTextEdit->appendHtml( debug );
 }
 
 void SieveEditorTextModeWidget::setSieveCapabilities( const QStringList &capabilities )

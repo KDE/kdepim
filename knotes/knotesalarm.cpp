@@ -46,7 +46,7 @@ KNotesAlarm::KNotesAlarm( KNotesResourceManager *manager, QObject *parent,
                           const char *name )
   : QObject( parent ), m_manager( manager )
 {
-  setObjectName( name );
+  setObjectName( QLatin1String(name) );
   // TODO: fix timezone stuff?
 
   connect( &m_checkTimer, SIGNAL(timeout()), SLOT(checkAlarms()) );
@@ -71,7 +71,8 @@ KDateTime::LocalZone ), now );
 
   QStringList notes;
   QList<KCal::Alarm *>::ConstIterator it;
-  for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
+  QList<KCal::Alarm *>::ConstIterator end(alarms.constEnd());
+  for ( it = alarms.constBegin(); it != end; ++it ) {
     KCal::Incidence *incidence = ( *it )->parent();
     notes += incidence->summary();
   }

@@ -39,6 +39,9 @@ public:
     void setReadOnly(bool readOnly);
     bool isReadOnly() const;
 
+    void setPlainText(const QString &text);
+    QString toPlainText() const;
+
 private Q_SLOTS:
     void slotFind();
     void slotReplace();

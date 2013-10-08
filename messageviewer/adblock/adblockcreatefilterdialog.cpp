@@ -38,6 +38,10 @@ AdBlockCreateFilterDialog::AdBlockCreateFilterDialog(QWidget *parent)
     connect(mUi->firstPartOnly, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
     connect(mUi->matchCase, SIGNAL(toggled(bool)), SLOT(slotUpdateFilter()));
     connect(mUi->applyListElement, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(slotUpdateFilter()));
+    mUi->collapseBlocked->addItem(i18n("Use default"), QString());
+    mUi->collapseBlocked->addItem(i18n("Yes"), QLatin1String("collapse"));
+    mUi->collapseBlocked->addItem(i18n("Not"), QLatin1String("~collapse"));
+    connect(mUi->collapseBlocked, SIGNAL(activated(int)), SLOT(slotUpdateFilter()));
     readConfig();
 }
 
@@ -105,7 +109,11 @@ void AdBlockCreateFilterDialog::slotUpdateFilter()
         pattern += QLatin1String("|");
     }
 
-    pattern += QLatin1Char('$') + AdBlockBlockableItemsWidget::elementType(mCurrentType);
+    const QString collapseValue = mUi->collapseBlocked->itemData(mUi->collapseBlocked->currentIndex()).toString();
+    if (!collapseValue.isEmpty())
+        pattern += QLatin1Char('$') + collapseValue;
+
+    pattern += (collapseValue.isEmpty() ? QLatin1String("$") : QLatin1String(",")) + AdBlockBlockableItemsWidget::elementType(mCurrentType);
 
 
     if (mUi->exceptionFilter->isChecked()) {
