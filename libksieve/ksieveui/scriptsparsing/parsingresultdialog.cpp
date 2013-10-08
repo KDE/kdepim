@@ -18,8 +18,9 @@
 #include "parsingresultdialog.h"
 #include "xmlprintingsyntaxhighlighter.h"
 #include "pimcommon/util/pimutil.h"
+#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/plaintexteditor/plaintexteditor.h"
 
-#include <KTextEdit>
 #include <KLocale>
 
 using namespace KSieveUi;
@@ -31,8 +32,8 @@ ParsingResultDialog::ParsingResultDialog(QWidget *parent)
     setButtons( Close|User1 );
     setButtonText(User1, i18n("Save As..."));
 
-    mTextEdit = new KTextEdit( this );
-    new XMLPrintingSyntaxHighLighter(mTextEdit->document());
+    mTextEdit = new PimCommon::PlainTextEditorWidget( this );
+    new XMLPrintingSyntaxHighLighter(mTextEdit->editor()->document());
     mTextEdit->setReadOnly( true );
     setMainWidget( mTextEdit );
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSaveAs()));
