@@ -78,6 +78,7 @@ private Q_SLOTS:
     void slotTranslateDone();
     void slotTranslateFailed(bool result, const QString &message);
     void slotDebug();
+    void slotConfigChanged();
 
 protected:
     bool event(QEvent* e);

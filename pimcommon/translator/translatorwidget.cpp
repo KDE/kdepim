@@ -51,7 +51,8 @@ class TranslatorWidget::TranslatorWidgetPrivate
 {
 public:
     TranslatorWidgetPrivate()
-        : abstractTranslator(0)
+        : abstractTranslator(0),
+          languageSettingsChanged(false)
     {
 
     }
@@ -74,6 +75,7 @@ public:
     PimCommon::AbstractTranslator *abstractTranslator;
     KPIMUtils::ProgressIndicatorWidget *progressIndictor;
     QSplitter *splitter;
+    bool languageSettingsChanged;
 };
 
 void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString &lang )
@@ -168,7 +170,8 @@ TranslatorWidget::TranslatorWidget( const QString& text, QWidget* parent )
 
 TranslatorWidget::~TranslatorWidget()
 {
-    writeConfig();
+    if (d->languageSettingsChanged)
+        writeConfig();
     delete d;
 }
 
@@ -231,6 +234,7 @@ void TranslatorWidget::init()
     hboxLayout->addWidget( label );
     d->to = new MinimumComboBox;
     connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotTranslate()) );
+    connect( d->to, SIGNAL(currentIndexChanged(int)), SLOT(slotConfigChanged()));
     hboxLayout->addWidget( d->to );
 
     KSeparator *separator = new KSeparator;
@@ -289,6 +293,7 @@ void TranslatorWidget::init()
 
     d->initLanguage();
     connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotFromLanguageChanged(int)) );
+    connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotConfigChanged()));
 
     d->from->setCurrentIndex( 0 ); //Fill "to" combobox
     slotFromLanguageChanged( 0 );
@@ -296,6 +301,12 @@ void TranslatorWidget::init()
     readConfig();
     hide();
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+    d->languageSettingsChanged = false;
+}
+
+void TranslatorWidget::slotConfigChanged()
+{
+    d->languageSettingsChanged = true;
 }
 
 void TranslatorWidget::slotTextChanged()
