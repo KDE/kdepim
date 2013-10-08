@@ -32,7 +32,7 @@ public:
     explicit GenerateGlobalScriptJob(const KUrl &url, QObject *parent=0);
     ~GenerateGlobalScriptJob();
 
-    void writeGlobalScripts();
+    void start();
 
     void addUserActiveScripts(const QStringList &lstScript);
 
@@ -50,6 +50,8 @@ private:
     void writeUserScript();
     QStringList mListUserActiveScripts;
     KUrl mCurrentUrl;
+    KManageSieve::SieveJob *mMasterjob;
+    KManageSieve::SieveJob *mUserJob;
 };
 }
 
