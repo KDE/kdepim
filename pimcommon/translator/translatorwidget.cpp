@@ -144,6 +144,7 @@ void TranslatorTextEdit::dropEvent( QDropEvent *event )
             cursor.endEditBlock();
             event->setDropAction(Qt::CopyAction);
             event->accept();
+            Q_EMIT translateText();
             return;
         }
     }
@@ -276,6 +277,7 @@ void TranslatorWidget::init()
     d->inputText->setAcceptRichText(false);
     d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
     connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
+    connect( d->inputText, SIGNAL(translateText()), SLOT(slotTranslate()));
 
     d->splitter->addWidget( d->inputText );
     d->translatorResultTextEdit = new TranslatorResultTextEdit;

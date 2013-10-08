@@ -46,6 +46,10 @@ class TranslatorTextEdit : public KTextEdit
     Q_OBJECT
 public:
     explicit TranslatorTextEdit(QWidget *parent = 0);
+
+Q_SIGNALS:
+    void translateText();
+
 protected:
     void dropEvent( QDropEvent * );
 };
