@@ -233,6 +233,8 @@ void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
             Q_EMIT translateDone();
         }
     } else {
+        //Same value
+        mResult = mInputText;
         Q_EMIT translateDone();
     }
 }
