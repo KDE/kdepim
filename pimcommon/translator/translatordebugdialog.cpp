@@ -29,7 +29,7 @@ TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     setCaption( i18n( "Translator Debug" ) );
     setButtons( Close|User1 );
     setButtonText(User1, i18n("Save As..."));
-
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSaveAs()));
 
     mEdit = new PimCommon::PlainTextEditorWidget;
     mEdit->setReadOnly(true);
