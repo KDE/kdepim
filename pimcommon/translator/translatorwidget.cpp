@@ -74,6 +74,7 @@ public:
     KPushButton *translate;
     PimCommon::AbstractTranslator *abstractTranslator;
     KPIMUtils::ProgressIndicatorWidget *progressIndictor;
+    KPushButton *invert;
     QSplitter *splitter;
     bool languageSettingsChanged;
 };
@@ -242,10 +243,10 @@ void TranslatorWidget::init()
     separator->setOrientation(Qt::Vertical);
     hboxLayout->addWidget( separator );
 
-    KPushButton *invert = new KPushButton(
+    d->invert = new KPushButton(
                 i18nc("Invert language choices so that from becomes to and to becomes from", "Invert"),this);
-    connect(invert, SIGNAL(clicked()), this, SLOT(slotInvertLanguage()));
-    hboxLayout->addWidget(invert);
+    connect(d->invert, SIGNAL(clicked()), this, SLOT(slotInvertLanguage()));
+    hboxLayout->addWidget(d->invert);
 
     KPushButton *clear = new KPushButton(i18n("Clear"),this);
 #ifndef QT_NO_ACCESSIBILITY
@@ -315,9 +316,10 @@ void TranslatorWidget::slotTextChanged()
     d->translate->setEnabled( !d->inputText->document()->isEmpty() );
 }
 
-void TranslatorWidget::slotFromLanguageChanged(int index , bool initialize)
+void TranslatorWidget::slotFromLanguageChanged(int index, bool initialize)
 {
     const QString lang = d->from->itemData(index).toString();
+    d->invert->setEnabled(lang != QLatin1String("auto"));
     const QString to = d->to->itemData(d->to->currentIndex()).toString();
     d->to->blockSignals(true);
     d->fillToCombobox( lang );
