@@ -240,7 +240,8 @@ void ComposerView::contextMenuEvent(QContextMenuEvent *event)
         menu->addSeparator();
     }
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
-    QAction *autoSpellCheckingAction = menu->addAction(i18n("Auto Spell Check"));
+    //Don't use "Auto Spell Check" it will confict with search menu entry in spellchecklineedit.
+    QAction *autoSpellCheckingAction = menu->addAction(i18n("Enable Spell Checking"));
     autoSpellCheckingAction->setCheckable( true );
     autoSpellCheckingAction->setChecked( d->checkSpellingEnabled() );
     connect( autoSpellCheckingAction, SIGNAL(triggered(bool)), this, SLOT(_k_changeAutoSpellChecking(bool)) );
