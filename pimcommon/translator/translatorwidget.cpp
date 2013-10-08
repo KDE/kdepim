@@ -375,9 +375,12 @@ void TranslatorWidget::slotTranslateFailed(bool signalFailed, const QString &mes
 
 void TranslatorWidget::slotInvertLanguage()
 {
-    const QString toLanguage = d->to->itemData(d->to->currentIndex()).toString();
     const QString fromLanguage = d->from->itemData(d->from->currentIndex()).toString();
+    // don't invert when fromLanguage == auto
+    if (fromLanguage == QLatin1String("auto"))
+        return;
 
+    const QString toLanguage = d->to->itemData(d->to->currentIndex()).toString();
     const int indexFrom = d->from->findData( toLanguage );
     if ( indexFrom != -1 ) {
         d->from->setCurrentIndex( indexFrom );
