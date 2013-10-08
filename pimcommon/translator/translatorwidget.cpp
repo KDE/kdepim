@@ -327,7 +327,7 @@ void TranslatorWidget::setTextToTranslate( const QString& text)
 void TranslatorWidget::slotTranslate()
 {
     const QString textToTranslate = d->inputText->toPlainText();
-    if ( textToTranslate.isEmpty() )
+    if ( textToTranslate.trimmed().isEmpty() )
         return;
     d->translatorResultTextEdit->clear();
 
