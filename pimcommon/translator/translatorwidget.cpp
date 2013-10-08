@@ -297,7 +297,7 @@ void TranslatorWidget::init()
     connect( d->from, SIGNAL(currentIndexChanged(int)), SLOT(slotConfigChanged()));
 
     d->from->setCurrentIndex( 0 ); //Fill "to" combobox
-    slotFromLanguageChanged( 0 );
+    slotFromLanguageChanged( 0, true );
     slotTextChanged();
     readConfig();
     hide();
@@ -315,7 +315,7 @@ void TranslatorWidget::slotTextChanged()
     d->translate->setEnabled( !d->inputText->document()->isEmpty() );
 }
 
-void TranslatorWidget::slotFromLanguageChanged( int index )
+void TranslatorWidget::slotFromLanguageChanged(int index , bool initialize)
 {
     const QString lang = d->from->itemData(index).toString();
     const QString to = d->to->itemData(d->to->currentIndex()).toString();
@@ -326,7 +326,8 @@ void TranslatorWidget::slotFromLanguageChanged( int index )
     if ( indexTo != -1 ) {
         d->to->setCurrentIndex( indexTo );
     }
-    slotTranslate();
+    if (!initialize)
+        slotTranslate();
 }
 
 void TranslatorWidget::setTextToTranslate( const QString& text)
