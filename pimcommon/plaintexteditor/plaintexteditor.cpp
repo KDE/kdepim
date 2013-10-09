@@ -63,13 +63,13 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                 popup->insertAction( separatorAction, clearAllAction );
             }
         }
+        //Code from KTextBrowser
+        KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
+                                                           : KIconTheme::TextEditor,
+                                              popup->actions() );
         if (mHasSearchSupport) {
             popup->addSeparator();
             QAction *findAct = popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()), Qt::Key_F+Qt::CTRL);
-            //Code from KTextBrowser
-            KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
-                                                               : KIconTheme::TextEditor,
-                                                  popup->actions() );
             if ( emptyDocument )
                 findAct->setEnabled(false);
             popup->addSeparator();
