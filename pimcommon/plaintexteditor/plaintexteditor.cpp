@@ -72,13 +72,13 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                                                   popup->actions() );
             if ( emptyDocument )
                 findAct->setEnabled(false);
-        }
-        popup->addSeparator();
-        if (!isReadOnly()) {
-            QAction *act = popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
-            if ( emptyDocument )
-                act->setEnabled( false );
             popup->addSeparator();
+            if (!isReadOnly()) {
+                QAction *act = popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
+                if ( emptyDocument )
+                    act->setEnabled( false );
+                popup->addSeparator();
+            }
         }
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
