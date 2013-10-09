@@ -121,9 +121,14 @@ void PlainTextEditor::slotUndoableClear()
     cursor.endEditBlock();
 }
 
-void PlainTextEditor::addSearchSupport(bool b)
+void PlainTextEditor::setSearchSupport(bool b)
 {
     mHasSearchSupport = b;
+}
+
+bool PlainTextEditor::searchSupport() const
+{
+    return mHasSearchSupport;
 }
 
 #include "plaintexteditor.moc"

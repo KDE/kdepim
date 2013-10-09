@@ -27,11 +27,13 @@ namespace PimCommon {
 class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
 {
     Q_OBJECT
+    Q_PROPERTY(bool searchSupport READ searchSupport WRITE setSearchSupport)
 public:
     explicit PlainTextEditor(QWidget *parent=0);
     ~PlainTextEditor();
 
-    void addSearchSupport(bool b);
+    void setSearchSupport(bool b);
+    bool searchSupport() const;
 
 private Q_SLOTS:
     void slotUndoableClear();
