@@ -36,7 +36,6 @@
 
 
 #include <KLocale>
-#include <KTextEdit>
 #include <KStandardGuiItem>
 #include <KFileDialog>
 #include <KMessageBox>

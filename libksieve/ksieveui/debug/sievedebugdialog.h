@@ -19,9 +19,6 @@
 #include <kdialog.h>
 #include <kurl.h>
 
-class KTextEdit;
-
-class QString;
 class QStringList;
 
 namespace KManageSieve {

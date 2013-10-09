@@ -23,7 +23,6 @@
 namespace PimCommon {
 class PlainTextEditorWidget;
 }
-class KTextEdit;
 class TranslatorDebugDialog : public KDialog
 {
     Q_OBJECT

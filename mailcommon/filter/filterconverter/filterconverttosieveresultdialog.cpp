@@ -23,7 +23,6 @@
 #include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/util/pimutil.h"
 
-#include <KTextEdit>
 #include <KLocale>
 #include <KFileDialog>
 #include <KMessageBox>
