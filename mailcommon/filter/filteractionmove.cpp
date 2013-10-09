@@ -36,7 +36,7 @@ FilterActionMove::FilterActionMove( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionMove::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionMove::process(ItemContext &context , bool) const
 {
     if ( !mFolder.isValid() ) {
         const Akonadi::Collection targetFolder = CommonKernel->collectionFromId( mFolder.id() );

@@ -35,7 +35,7 @@ FilterActionSetStatus::FilterActionSetStatus( QObject *parent )
 
 
 
-FilterAction::ReturnCode FilterActionSetStatus::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionSetStatus::process(ItemContext &context , bool) const
 {
     const int index = mParameterList.indexOf( mParameter );
     if ( index < 1 )

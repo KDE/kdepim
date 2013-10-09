@@ -419,6 +419,7 @@ bool FilterManager::process( const Akonadi::Item& item, bool needsFullPayload, c
   }
 
   bool stopIt = false;
+  bool applyOnOutbound = false;
   if ( d->isMatching( item, filter ) ) {
     // do the actual filtering stuff
     if ( !d->beginFiltering( item ) ) {
@@ -427,7 +428,7 @@ bool FilterManager::process( const Akonadi::Item& item, bool needsFullPayload, c
 
     ItemContext context( item, needsFullPayload );
 
-    if ( filter->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
+    if ( filter->execActions( context, stopIt, applyOnOutbound ) == MailCommon::MailFilter::CriticalError ) {
       return false;
     }
 
@@ -508,6 +509,7 @@ bool FilterManager::process(const QList< MailFilter* >& mailFilters, const Akona
           !stopIt && it != end ; ++it ) {
       if ( ( *it )->isEnabled() ) {
 
+        const bool applyOnOutbound = ((set & Outbound) || (set & BeforeOutbound));
         const bool inboundOk = ((set & Inbound) && (*it)->applyOnInbound());
         const bool outboundOk = ((set & Outbound) && (*it)->applyOnOutbound());
         const bool beforeOutboundOk = ((set & BeforeOutbound) && (*it)->applyBeforeOutbound());
@@ -519,7 +521,7 @@ bool FilterManager::process(const QList< MailFilter* >& mailFilters, const Akona
 
           if ( d->isMatching( context.item(), *it ) ) {
             // execute actions:
-            if ( (*it)->execActions( context, stopIt ) == MailCommon::MailFilter::CriticalError ) {
+            if ( (*it)->execActions( context, stopIt, applyOnOutbound ) == MailCommon::MailFilter::CriticalError ) {
               return false;
             }
           }

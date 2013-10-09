@@ -71,7 +71,7 @@ bool FilterActionSetTransport::argsFromStringInteractive( const QString &argsStr
 }
 
 
-FilterAction::ReturnCode FilterActionSetTransport::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionSetTransport::process(ItemContext &context , bool) const
 {
     if ( isEmpty() )
         return ErrorButGoOn;

@@ -56,7 +56,7 @@ bool FilterActionAddToAddressBook::isEmpty() const
     return false;
 }
 
-FilterAction::ReturnCode FilterActionAddToAddressBook::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionAddToAddressBook::process(ItemContext &context , bool) const
 {
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 

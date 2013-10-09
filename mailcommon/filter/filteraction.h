@@ -106,7 +106,7 @@ public:
      * is required, @p GoOn if the message shall be processed by
      * further filters and @p Ok otherwise.
      */
-    virtual ReturnCode process( ItemContext &context ) const = 0;
+    virtual ReturnCode process( ItemContext &context, bool applyOnOutbound ) const = 0;
 
     /**
      * Returns the required part from the item that is needed for the action to

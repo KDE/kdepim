@@ -50,7 +50,7 @@ FilterActionRewriteHeader::FilterActionRewriteHeader( QObject *parent )
     mParameter = mParameterList.at( 0 );
 }
 
-FilterAction::ReturnCode FilterActionRewriteHeader::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionRewriteHeader::process(ItemContext &context , bool) const
 {
     if ( mParameter.isEmpty() || !mRegExp.isValid() )
         return ErrorButGoOn;

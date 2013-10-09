@@ -33,7 +33,7 @@ class FilterActionSetIdentity: public FilterActionWithUOID
     Q_OBJECT
 public:
     explicit FilterActionSetIdentity( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     SearchRule::RequiredPart requiredPart() const;
     bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
     static FilterAction* newAction();

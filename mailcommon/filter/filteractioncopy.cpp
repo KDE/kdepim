@@ -33,7 +33,7 @@ FilterActionCopy::FilterActionCopy( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionCopy::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionCopy::process(ItemContext &context , bool) const
 {
     // copy the message 1:1
     Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( context.item(), mFolder, 0 );

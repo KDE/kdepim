@@ -34,7 +34,7 @@ FilterActionSendReceipt::FilterActionSendReceipt( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionSendReceipt::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionSendReceipt::process(ItemContext &context , bool) const
 {
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
 

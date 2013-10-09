@@ -42,7 +42,7 @@ class FilterActionAddTag: public FilterAction
     Q_OBJECT
 public:
     explicit FilterActionAddTag( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     SearchRule::RequiredPart requiredPart() const;
 
     static FilterAction* newAction();

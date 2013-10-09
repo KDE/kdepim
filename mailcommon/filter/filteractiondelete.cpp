@@ -31,7 +31,7 @@ FilterActionDelete::FilterActionDelete( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionDelete::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionDelete::process(ItemContext &context , bool) const
 {
     context.setDeleteItem();
     return GoOn;
