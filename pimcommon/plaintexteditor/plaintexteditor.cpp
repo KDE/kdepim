@@ -79,6 +79,8 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                     act->setEnabled( false );
                 popup->addSeparator();
             }
+        } else {
+            popup->addSeparator();
         }
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
