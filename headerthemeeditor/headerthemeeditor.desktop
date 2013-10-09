@@ -2,6 +2,7 @@
 Name=KMail Header Theme Editor
 Name[bs]=Uređivač KMail tema zaglavlja
 Name[ca]=Editor de temes de capçalera pel KMail
+Name[ca@valencia]=Editor de temes de capçalera pel KMail
 Name[da]=KMail editor til headertema
 Name[de]=KMail-Designeditor für Vorspann
 Name[el]=Επεξεργαστής θεμάτων επικεφαλίδας του KMail
@@ -37,6 +38,7 @@ X-DocPath=headerthemeeditor/index.html
 GenericName=Mail Header Theme Editor
 GenericName[bs]=Uređivač tema zaglavlja pošte
 GenericName[ca]=Editor de temes de capçalera pel correu
+GenericName[ca@valencia]=Editor de temes de capçalera pel correu
 GenericName[da]=Editor til mail-headertema
 GenericName[de]=Designeditor für E-Mail-Vorspann
 GenericName[el]=Επεξεργαστής θεμάτων επικεφαλίδας μηνυμάτων
