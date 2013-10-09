@@ -23,7 +23,6 @@
 #include <QPlainTextEdit>
 
 namespace PimCommon {
-
 class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
 {
     Q_OBJECT
@@ -47,6 +46,8 @@ Q_SIGNALS:
     void replaceText();
 
 private:
+    class PlainTextEditorPrivate;
+    PlainTextEditorPrivate *const d;
     bool mHasSearchSupport;
 };
 }

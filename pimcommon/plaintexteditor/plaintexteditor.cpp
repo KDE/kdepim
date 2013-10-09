@@ -34,14 +34,26 @@
 
 using namespace PimCommon;
 
+class PlainTextEditor::PlainTextEditorPrivate
+{
+public:
+    PlainTextEditorPrivate()
+        : hasSearchSupport(true)
+    {
+    }
+
+    bool hasSearchSupport;
+};
+
 PlainTextEditor::PlainTextEditor(QWidget *parent)
     : QPlainTextEdit(parent),
-      mHasSearchSupport(true)
+      d(new PlainTextEditor::PlainTextEditorPrivate)
 {
 }
 
 PlainTextEditor::~PlainTextEditor()
 {
+    delete d;
 }
 
 void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
@@ -67,7 +79,7 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
         KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
                                                            : KIconTheme::TextEditor,
                                               popup->actions() );
-        if (mHasSearchSupport) {
+        if (d->hasSearchSupport) {
             popup->addSeparator();
             QAction *findAct = popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()), Qt::Key_F+Qt::CTRL);
             if ( emptyDocument )
@@ -123,12 +135,12 @@ void PlainTextEditor::slotUndoableClear()
 
 void PlainTextEditor::setSearchSupport(bool b)
 {
-    mHasSearchSupport = b;
+    d->hasSearchSupport = b;
 }
 
 bool PlainTextEditor::searchSupport() const
 {
-    return mHasSearchSupport;
+    return d->hasSearchSupport;
 }
 
 #include "plaintexteditor.moc"
