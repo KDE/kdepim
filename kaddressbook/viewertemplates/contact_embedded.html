@@ -14,9 +14,15 @@
       </tr>
       {% if contact.birthday %}
         {% with contact.birthdayi18n as title %}
-        {% with contact.birthday as value %}
-        {% include "contact_row.html" %}
-        {% endwith %}
+        {% if contact.birthdayage %}
+          {% with contact.birthdayage|safe as value %}
+          {% include "contact_row.html" %}
+          {% endwith %}
+        {% else %}
+          {% with contact.birthday|safe as value %}
+          {% include "contact_row.html" %}
+          {% endwith %}
+        {% endif %}
         {% endwith %}
       {% endif %}
 
