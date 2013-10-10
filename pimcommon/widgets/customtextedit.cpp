@@ -64,7 +64,6 @@ QString CustomTextEdit::configName() const
     return d->configFile;
 }
 
-
 void CustomTextEdit::createHighlighter()
 {
     Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, d->configFile);

@@ -39,6 +39,9 @@ private Q_SLOTS:
     void slotSpeakText();
 
 protected:
+    virtual void addExtraMenuEntry(QMenu *menu);
+
+protected:
     void contextMenuEvent( QContextMenuEvent *event );
 
 Q_SIGNALS:
