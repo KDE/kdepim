@@ -27,6 +27,7 @@ set(libpimcommon_SRCS
   translator/googletranslator.cpp
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp
+  widgets/customtextedit.cpp
   plaintexteditor/plaintexteditfindbar.cpp
   plaintexteditor/plaintexteditor.cpp
   plaintexteditor/plaintexteditorwidget.cpp

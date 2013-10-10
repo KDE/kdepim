@@ -21,6 +21,7 @@
 #include "pimcommon_export.h"
 #include <KTextEdit>
 
+class QMenu;
 namespace PimCommon {
 class CustomTextEdit : public KTextEdit
 {
@@ -31,6 +32,14 @@ public:
 
 protected:
     void createHighlighter();
+
+protected Q_SLOTS:
+    void insertLanguageMenu(QMenu* contextMenu);
+    void languageSelected();
+
+private:
+    class Private;
+    Private *const d;
 };
 }
 
