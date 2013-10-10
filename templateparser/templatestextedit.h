@@ -21,11 +21,11 @@
 
 #include "templateparser_export.h"
 
-#include <KTextEdit>
+#include "pimcommon/widgets/customtextedit.h"
 class QCompleter;
 
 namespace TemplateParser {
-class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public KTextEdit
+class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public PimCommon::CustomTextEdit
 {
   Q_OBJECT
   public:

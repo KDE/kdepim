@@ -20,12 +20,12 @@
 
 #include "knoteconfigdlg.h"
 #include "knote.h"
-#include "knotes/resourcemanager.h"
+#include "knotes/resource/resourcemanager.h"
 #include "knotesadaptor.h"
 #include "knotesalarm.h"
 #include "knotesapp.h"
 #include "knotesglobalconfig.h"
-#include "knoteslegacy.h"
+#include "migrations/knoteslegacy.h"
 #include "knotesnetrecv.h"
 #include "knotestray.h"
 
@@ -239,7 +239,6 @@ KNotesApp::~KNotesApp()
   m_publisher=0;
   delete m_findPos;
   m_findPos = 0;
-  //delete m_listener;
   delete m_manager;
   delete m_guiBuilder;
   delete m_tray;
@@ -532,6 +531,7 @@ void KNotesApp::slotNoteKilled( KCal::Journal *journal )
   m_noteUidModify.clear();
   m_manager->deleteNote( journal );
   saveNotes();
+  m_tray->updateNumberOfNotes(m_notes.count());
 }
 
 void KNotesApp::slotQuit()
@@ -595,6 +595,7 @@ void KNotesApp::createNote( KCal::Journal *journal )
   if ( m_alarm ) {
     updateNoteActions();
   }
+  m_tray->updateNumberOfNotes(m_notes.count());
   //TODO
 #if 0
   if (m_tray->isVisible()) {

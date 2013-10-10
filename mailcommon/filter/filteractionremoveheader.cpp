@@ -59,7 +59,7 @@ QWidget* FilterActionRemoveHeader::createParamWidget( QWidget *parent ) const
     return comboBox;
 }
 
-FilterAction::ReturnCode FilterActionRemoveHeader::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionRemoveHeader::process(ItemContext &context , bool) const
 {
     if ( mParameter.isEmpty() )
         return ErrorButGoOn;

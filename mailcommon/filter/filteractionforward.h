@@ -34,7 +34,7 @@ class FilterActionForward: public FilterActionWithAddress
 public:
     explicit FilterActionForward( QObject *parent = 0 );
     static FilterAction* newAction();
-    ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     SearchRule::RequiredPart requiredPart() const;
     QWidget* createParamWidget( QWidget *parent ) const;
     void applyParamWidgetValue( QWidget *paramWidget );

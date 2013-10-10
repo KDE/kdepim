@@ -40,7 +40,7 @@ class FilterActionPlaySound : public FilterActionWithTest
 public:
     FilterActionPlaySound(  );
     ~FilterActionPlaySound();
-    ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
     bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );

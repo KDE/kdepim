@@ -28,6 +28,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkleo
   ${CMAKE_SOURCE_DIR}/messagecore
   ${CMAKE_SOURCE_DIR}/messageviewer
+  ${CMAKE_SOURCE_DIR}/pimcommon
 )
 
 kde4_add_kcfg_files(templateparser_LIB_SRCS settings/templatesconfiguration_kfg.kcfgc)
@@ -55,6 +56,7 @@ target_link_libraries(templateparser
   messagecore
   kleo
   kpgp
+  pimcommon
   ${QGPGME_LIBRARIES}
   ${QT_QTWEBKIT_LIBRARY}
 )

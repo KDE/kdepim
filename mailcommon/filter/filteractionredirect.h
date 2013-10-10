@@ -33,7 +33,7 @@ class FilterActionRedirect: public FilterActionWithAddress
     Q_OBJECT
 public:
     explicit FilterActionRedirect( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
     QString sieveCode() const;

@@ -8,9 +8,11 @@
 #include <QPrintDialog>
 
 #include <kcal/journal.h>
+#include <kdeprintdialog.h>
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <KPrintPreview>
 
 KNotePrinter::KNotePrinter()
 {
@@ -26,17 +28,32 @@ QFont KNotePrinter::defaultFont() const
   return m_defaultFont;
 }
 
+void KNotePrinter::doPrintPreview(const QString &htmlText)
+{
+    QPrinter printer( QPrinter::HighResolution );
+    printer.setOutputFormat( QPrinter::PdfFormat );
+    printer.setCollateCopies( true );
+
+    KPrintPreview previewdlg( &printer, 0 );
+    print(printer, htmlText);
+    previewdlg.exec();
+}
+
 void KNotePrinter::doPrint( const QString &htmlText,
-                            const QString &dialogCaption ) const
+                            const QString &dialogCaption )
 {
   QPrinter printer( QPrinter::HighResolution );
   //printer.setFullPage( true );  //disabled, causes asymmetric margins
-  QPrintDialog printDialog( &printer, 0 );
+  QPrintDialog printDialog(KdePrint::createPrintDialog(&printer));
   printDialog.setWindowTitle( dialogCaption );
   if ( !printDialog.exec() ) {
     return;
   }
-  
+  print(printer, htmlText);
+}
+
+void KNotePrinter::print(QPrinter &printer, const QString &htmlText)
+{
   const int margin = 30; //pt     //set to 40 when setFullPage() works again
   int marginX = margin * printer.logicalDpiX() / 72;
   int marginY = margin * printer.logicalDpiY() / 72;
@@ -74,13 +91,16 @@ void KNotePrinter::doPrint( const QString &htmlText,
 }
 
 void KNotePrinter::printNote( const QString &name,
-                              const QString &htmlText ) const
+                              const QString &htmlText, bool preview )
 {
-  QString dialogCaption = i18n( "Print %1", name );
-  doPrint( htmlText, dialogCaption );
+  const QString dialogCaption = i18n( "Print %1", name );
+  if (preview)
+      doPrintPreview(htmlText);
+  else
+      doPrint( htmlText, dialogCaption );
 }
 
-void KNotePrinter::printNotes( const QList<KCal::Journal *>& journals ) const
+void KNotePrinter::printNotes( const QList<KCal::Journal *>& journals )
 {
   if ( journals.isEmpty() ) {
     return;
@@ -108,7 +128,7 @@ void KNotePrinter::printNotes( const QList<KCal::Journal *>& journals ) const
     }
   }
   
-  QString dialogCaption = i18np( "Print Note", "Print %1 notes",
+  const QString dialogCaption = i18np( "Print Note", "Print %1 notes",
                                  journals.count() );
   doPrint( htmlText, dialogCaption );
   

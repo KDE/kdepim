@@ -314,6 +314,20 @@ void AdBlockManager::addCustomRule(const QString &stringRule, bool reloadPage)
     const QString localRulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_local"));
 
     QFile ruleFile(localRulesFilePath);
+    if (!ruleFile.open(QFile::ReadOnly)) {
+        kDebug() << "Unable to open rule file" << localRulesFilePath;
+        return;
+    }
+
+    QTextStream in(&ruleFile);
+    while (!in.atEnd()) {
+        QString readStringRule = in.readLine();
+        if (stringRule == readStringRule) {
+            ruleFile.close();
+            return;
+        }
+    }
+    ruleFile.close();
     if (!ruleFile.open(QFile::WriteOnly | QFile::Append)) {
         kDebug() << "Unable to open rule file" << localRulesFilePath;
         return;

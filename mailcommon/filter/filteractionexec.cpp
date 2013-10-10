@@ -28,7 +28,7 @@ FilterActionExec::FilterActionExec( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionExec::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionExec::process(ItemContext &context , bool) const
 {
     return FilterActionWithCommand::genericProcess( context, false ); // ignore output
 }

@@ -33,7 +33,7 @@ class FilterActionAddToAddressBook: public FilterActionWithStringList
     Q_OBJECT
 public:
     explicit FilterActionAddToAddressBook( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     static FilterAction* newAction();
 
     SearchRule::RequiredPart requiredPart() const;

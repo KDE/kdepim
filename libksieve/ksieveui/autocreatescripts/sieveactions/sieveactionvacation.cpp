@@ -26,8 +26,6 @@
 #include <KLocale>
 #include <KLineEdit>
 
-#include <KTextEdit>
-
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QSpinBox>

@@ -36,7 +36,6 @@
 
 
 #include <KLocale>
-#include <KTextEdit>
 #include <KStandardGuiItem>
 #include <KFileDialog>
 #include <KMessageBox>
@@ -117,7 +116,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     connect( mTextEdit, SIGNAL(replaceText()), SLOT(slotReplace()) );
 
     mDebugTextEdit = new PimCommon::PlainTextEditor;
-    mDebugTextEdit->addSearchSupport(false);
+    mDebugTextEdit->setSearchSupport(false);
     mDebugTextEdit->setReadOnly( true );
     mMainSplitter->addWidget( mTemplateSplitter );
     mMainSplitter->addWidget( mDebugTextEdit );

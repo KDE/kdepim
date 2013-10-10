@@ -72,6 +72,7 @@
 #include <QTextStream>
 #include <QVBoxLayout>
 #include <QDesktopWidget>
+#include <QPointer>
 
 #ifdef Q_WS_X11
 #include <fixx11h.h>
@@ -82,9 +83,18 @@ using namespace KCal;
 
 
 KNote::KNote( const QDomDocument& buildDoc, Journal *j, QWidget *parent )
-  : QFrame( parent, Qt::FramelessWindowHint ), m_label( 0 ), m_grip( 0 ),
-    m_button( 0 ), m_tool( 0 ), m_editor( 0 ), m_config( 0 ), m_journal( j ),
-    m_find( 0 ), m_kwinConf( KSharedConfig::openConfig( QLatin1String("kwinrc") ) ), m_blockEmitDataChanged( false ),mBlockWriteConfigDuringCommitData( false )
+  : QFrame( parent, Qt::FramelessWindowHint ),
+    m_label( 0 ),
+    m_grip( 0 ),
+    m_button( 0 ),
+    m_tool( 0 ),
+    m_editor( 0 ),
+    m_config( 0 ),
+    m_journal( j ),
+    m_find( 0 ),
+    m_kwinConf( KSharedConfig::openConfig( QLatin1String("kwinrc") ) ),
+    m_blockEmitDataChanged( false ),
+    mBlockWriteConfigDuringCommitData( false )
 {
   setAcceptDrops( true );
   setAttribute( Qt::WA_DeleteOnClose );
@@ -105,7 +115,9 @@ KNote::KNote( const QDomDocument& buildDoc, Journal *j, QWidget *parent )
 
   createActions();
 
-  buildGui();
+  const QString configFile = createConfig();
+
+  buildGui(configFile);
 
   prepare();
 }
@@ -113,6 +125,49 @@ KNote::KNote( const QDomDocument& buildDoc, Journal *j, QWidget *parent )
 KNote::~KNote()
 {
   delete m_config;
+}
+
+QString KNote::createConfig()
+{
+    // the config file location
+    const QString configFile = KGlobal::dirs()->saveLocation( "appdata", QLatin1String("notes/") ) + m_journal->uid();
+
+    // no config file yet? -> use the default display config if available
+    // we want to write to configFile, so use "false"
+    const bool newNote = !KIO::NetAccess::exists( KUrl( configFile ),
+                                            KIO::NetAccess::DestinationSide, 0 );
+
+    m_config = new KNoteConfig( KSharedConfig::openConfig( configFile,
+                                                           KConfig::NoGlobals ) );
+    m_config->readConfig();
+    m_config->setVersion( QLatin1String(KDEPIM_VERSION) );
+
+    if ( newNote ) {
+      // until kdelibs provides copying of KConfigSkeletons (KDE 3.4)
+      KNotesGlobalConfig *globalConfig = KNotesGlobalConfig::self();
+      m_config->setBgColor( globalConfig->bgColor() );
+      m_config->setFgColor( globalConfig->fgColor() );
+      m_config->setWidth( globalConfig->width() );
+      m_config->setHeight( globalConfig->height() );
+
+      m_config->setFont( globalConfig->font() );
+      m_config->setTitleFont( globalConfig->titleFont() );
+      m_config->setAutoIndent( globalConfig->autoIndent() );
+      m_config->setRichText( globalConfig->richText() );
+      m_config->setTabSize( globalConfig->tabSize() );
+      m_config->setReadOnly( globalConfig->readOnly() );
+
+      m_config->setDesktop( globalConfig->desktop() );
+      m_config->setHideNote( globalConfig->hideNote() );
+      m_config->setPosition( globalConfig->position() );
+      m_config->setShowInTaskbar( globalConfig->showInTaskbar() );
+      m_config->setRememberDesktop( globalConfig->rememberDesktop() );
+      m_config->setKeepAbove( globalConfig->keepAbove() );
+      m_config->setKeepBelow( globalConfig->keepBelow() );
+
+      m_config->writeConfig();
+    }
+    return configFile;
 }
 
 void KNote::changeJournal(KCal::Journal *journal)
@@ -465,8 +520,22 @@ void KNote::slotPrint()
   }
   KNotePrinter printer;
   printer.setDefaultFont( m_config->font() );
-  printer.printNote( name(), content );
+  printer.printNote( name(), content, false );
 }
+
+void KNote::slotPrintPreview()
+{
+  QString content;
+  if ( !Qt::mightBeRichText( m_editor->text() ) ) {
+    content = Qt::convertFromPlainText( m_editor->text() );
+  } else {
+    content = m_editor->text();
+  }
+  KNotePrinter printer;
+  printer.setDefaultFont( m_config->font() );
+  printer.printNote( name(), content, true );
+}
+
 
 void KNote::slotSaveAs()
 {
@@ -480,12 +549,17 @@ void KNote::slotSaveAs()
   }
   m_blockEmitDataChanged = true;
   KUrl url;
-  KFileDialog dlg( url, QString(), this, convert );
-  dlg.setOperationMode( KFileDialog::Saving );
-  dlg.setCaption( i18n( "Save As" ) );
-  dlg.exec();
+  QPointer<KFileDialog> dlg = new KFileDialog( url, QString(), this, convert );
+  dlg->setOperationMode( KFileDialog::Saving );
+  dlg->setCaption( i18n( "Save As" ) );
+  if( !dlg->exec() ) {
+      m_blockEmitDataChanged = false;
+      delete dlg;
+      return;
+  }
 
-  QString fileName = dlg.selectedFile();
+  QString fileName = dlg->selectedFile();
+  delete dlg;
   if ( fileName.isEmpty() ) {
     m_blockEmitDataChanged = false;
     return;
@@ -621,10 +695,10 @@ void KNote::slotUpdateDesktopActions()
 
 // -------------------- private methods -------------------- //
 
-void KNote::buildGui()
+void KNote::buildGui(const QString &configFile)
 {
   createNoteHeader();
-  createNoteEditor();
+  createNoteEditor(configFile);
 
   KXMLGUIBuilder builder( this );
   KXMLGUIFactory factory( &builder, this );
@@ -689,6 +763,9 @@ void KNote::createActions()
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSaveAs()) );
   actionCollection()->addAction( KStandardAction::Print,  QLatin1String("print_note"), this,
                                  SLOT(slotPrint()) );
+
+  actionCollection()->addAction( KStandardAction::PrintPreview,  QLatin1String("print_preview_note"), this,
+                                 SLOT(slotPrintPreview()) );
 
   action  = new KAction( KIcon( QLatin1String("configure") ), i18n( "Preferences..." ), this );
   actionCollection()->addAction( QLatin1String("configure_note"), action );
@@ -764,9 +841,9 @@ void KNote::createNoteHeader()
   m_noteLayout->addItem( headerLayout );
 }
 
-void KNote::createNoteEditor()
+void KNote::createNoteEditor(const QString &configFile)
 {
-  m_editor = new KNoteEdit( actionCollection(), this );
+  m_editor = new KNoteEdit( configFile, actionCollection(), this );
   m_noteLayout->addWidget( m_editor );
   m_editor->setNote( this );
   m_editor->installEventFilter( this ); // receive focus events for modified

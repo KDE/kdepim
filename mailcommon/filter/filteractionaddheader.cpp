@@ -44,7 +44,7 @@ FilterActionAddHeader::FilterActionAddHeader( QObject *parent )
     mParameter = mParameterList.at( 0 );
 }
 
-FilterAction::ReturnCode FilterActionAddHeader::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionAddHeader::process(ItemContext &context , bool) const
 {
     if ( mParameter.isEmpty() )
         return ErrorButGoOn;

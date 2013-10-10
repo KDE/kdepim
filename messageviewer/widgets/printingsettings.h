@@ -34,6 +34,7 @@ public:
 
     void save();
     void doLoadFromGlobalSettings();
+    void doResetToDefaultsOther();
 
 Q_SIGNALS:
     void changed();

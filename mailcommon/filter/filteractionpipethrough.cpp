@@ -33,7 +33,7 @@ FilterActionPipeThrough::FilterActionPipeThrough( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionPipeThrough::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionPipeThrough::process(ItemContext &context , bool) const
 {
     return FilterActionWithCommand::genericProcess( context, true ); // use output
 }

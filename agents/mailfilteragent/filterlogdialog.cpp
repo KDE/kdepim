@@ -37,7 +37,6 @@
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktextedit.h>
 #include <kvbox.h>
 
 #include <QCheckBox>

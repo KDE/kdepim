@@ -29,7 +29,7 @@ FilterActionBeep::FilterActionBeep( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionBeep::process( ItemContext &/*context*/ ) const
+FilterAction::ReturnCode FilterActionBeep::process(ItemContext &/*context*/ , bool) const
 {
     KNotification::beep();
     return GoOn;

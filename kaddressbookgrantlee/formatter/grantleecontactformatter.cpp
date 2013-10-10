@@ -246,11 +246,16 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
     // Dates
     const QDate birthday = rawContact.birthday().date();
     if ( birthday.isValid() ) {
-        contactObject.insert( QLatin1String( "birthday" ), KGlobal::locale()->formatDate( birthday ) );
-
         contactObject.insert( QLatin1String( "birthdayi18n" ), i18n( "Birthday" ) );
+
+        const QString formattedBirthday = KGlobal::locale()->formatDate( birthday );
+        contactObject.insert( QLatin1String( "birthday" ), formattedBirthday );
+
         const int years = contactAge( birthday );
         contactObject.insert( QLatin1String( "age" ), QString::number( years ) );
+        contactObject.insert( QLatin1String( "birthdayage" ), QString( formattedBirthday +
+                                                              QLatin1String( "&nbsp;&nbsp;" ) +
+                                                              i18np( "(One year old)", "(%1 years old)", years ) ) );
     }
 
     const QDate anniversary =

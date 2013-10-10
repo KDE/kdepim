@@ -31,7 +31,7 @@ FilterActionUnsetStatus::FilterActionUnsetStatus( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionUnsetStatus::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionUnsetStatus::process(ItemContext &context , bool) const
 {
     const int index = mParameterList.indexOf( mParameter );
     if ( index < 1 )

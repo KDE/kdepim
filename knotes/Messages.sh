@@ -1,3 +1,4 @@
 #! /bin/sh
-$EXTRACTRC *.rc *.kcfg >> rc.cpp
-$XGETTEXT *.cpp -o $podir/knotes.pot
+$EXTRACTRC *.rc settings/*.kcfg >> rc.cpp
+$XGETTEXT `find . -name '*.h' -o -name '*.cpp'` -o $podir/knotes.pot
+rm -f rc.cpp

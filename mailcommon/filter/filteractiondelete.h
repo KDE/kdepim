@@ -32,7 +32,7 @@ class FilterActionDelete : public FilterActionWithNone
     Q_OBJECT
 public:
     explicit FilterActionDelete( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     SearchRule::RequiredPart requiredPart() const;
     static FilterAction* newAction();
     QWidget* createParamWidget( QWidget *parent ) const;

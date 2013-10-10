@@ -61,7 +61,7 @@ bool FilterActionSetIdentity::argsFromStringInteractive( const QString &argsStr,
     return needUpdate;
 }
 
-FilterAction::ReturnCode FilterActionSetIdentity::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionSetIdentity::process(ItemContext &context , bool applyOnOutbound) const
 {
     const KPIMIdentities::Identity & ident =
       KernelIf->identityManager()->identityForUoid( mParameter );
@@ -73,11 +73,13 @@ FilterAction::ReturnCode FilterActionSetIdentity::process( ItemContext &context 
     const uint currentId = msg->headerByType( "X-KMail-Identity" ) ? msg->headerByType( "X-KMail-Identity" )->asUnicodeString().trimmed().toUInt() : 0;
     if (currentId != mParameter) {
         KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Identity", msg.get(), QString::number( mParameter ), "utf-8" );
-        msg->from()->fromUnicodeString( ident.fullEmailAddr(), "utf-8" );
-        if (!ident.bcc().isEmpty()) {
-            const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.bcc() );
-            foreach ( const KMime::Types::Mailbox &mailbox, mailboxes )
-                msg->bcc()->addAddress( mailbox );
+        if (applyOnOutbound) {
+            msg->from()->fromUnicodeString( ident.fullEmailAddr(), "utf-8" );
+            if (!ident.bcc().isEmpty()) {
+                const KMime::Types::Mailbox::List mailboxes = MessageCore::StringUtil::mailboxListFromUnicodeString( ident.bcc() );
+                foreach ( const KMime::Types::Mailbox &mailbox, mailboxes )
+                    msg->bcc()->addAddress( mailbox );
+            }
         }
         msg->setHeader( header );
         msg->assemble();

@@ -22,11 +22,11 @@
 #include <QWidget>
 #include "grantleethemeeditor_export.h"
 class KLineEdit;
-class KTextEdit;
 class KZip;
 
 namespace PimCommon {
 class SimpleStringListEditor;
+class CustomTextEdit;
 }
 namespace GrantleeThemeEditor {
 class GRANTLEETHEMEEDITOR_EXPORT DesktopFilePage : public QWidget
@@ -69,7 +69,7 @@ private:
     void saveAsFilename(const QString &filename);
     QString mDefaultDesktopName;
     KLineEdit *mName;
-    KTextEdit *mDescription;
+    PimCommon::CustomTextEdit *mDescription;
     KLineEdit *mFilename;
     KLineEdit *mAuthor;
     KLineEdit *mEmail;

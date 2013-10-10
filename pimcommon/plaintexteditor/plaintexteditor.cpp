@@ -34,14 +34,26 @@
 
 using namespace PimCommon;
 
+class PlainTextEditor::PlainTextEditorPrivate
+{
+public:
+    PlainTextEditorPrivate()
+        : hasSearchSupport(true)
+    {
+    }
+
+    bool hasSearchSupport;
+};
+
 PlainTextEditor::PlainTextEditor(QWidget *parent)
     : QPlainTextEdit(parent),
-      mHasSearchSupport(true)
+      d(new PlainTextEditor::PlainTextEditorPrivate)
 {
 }
 
 PlainTextEditor::~PlainTextEditor()
 {
+    delete d;
 }
 
 void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
@@ -63,31 +75,38 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
                 popup->insertAction( separatorAction, clearAllAction );
             }
         }
-        if (mHasSearchSupport) {
+        //Code from KTextBrowser
+        KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
+                                                           : KIconTheme::TextEditor,
+                                              popup->actions() );
+        if (d->hasSearchSupport) {
             popup->addSeparator();
             QAction *findAct = popup->addAction( KStandardGuiItem::find().icon(), KStandardGuiItem::find().text(),this, SIGNAL(findText()), Qt::Key_F+Qt::CTRL);
-            //Code from KTextBrowser
-            KIconTheme::assignIconsToContextMenu( isReadOnly() ? KIconTheme::ReadOnlyText
-                                                               : KIconTheme::TextEditor,
-                                                  popup->actions() );
             if ( emptyDocument )
                 findAct->setEnabled(false);
-        }
-        popup->addSeparator();
-        if (!isReadOnly()) {
-            QAction *act = popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
-            if ( emptyDocument )
-                act->setEnabled( false );
+            popup->addSeparator();
+            if (!isReadOnly()) {
+                QAction *act = popup->addAction(i18n("Replace..."),this, SIGNAL(replaceText()), Qt::Key_R+Qt::CTRL);
+                if ( emptyDocument )
+                    act->setEnabled( false );
+                popup->addSeparator();
+            }
+        } else {
             popup->addSeparator();
         }
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
         connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
+        addExtraMenuEntry(popup);
         popup->exec( event->globalPos() );
 
         delete popup;
     }
+}
+
+void PlainTextEditor::addExtraMenuEntry(QMenu *)
+{
 }
 
 void PlainTextEditor::slotSpeakText()
@@ -119,9 +138,14 @@ void PlainTextEditor::slotUndoableClear()
     cursor.endEditBlock();
 }
 
-void PlainTextEditor::addSearchSupport(bool b)
+void PlainTextEditor::setSearchSupport(bool b)
 {
-    mHasSearchSupport = b;
+    d->hasSearchSupport = b;
+}
+
+bool PlainTextEditor::searchSupport() const
+{
+    return d->hasSearchSupport;
 }
 
 #include "plaintexteditor.moc"

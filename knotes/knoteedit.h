@@ -26,7 +26,7 @@
 #include <QTextCharFormat>
 #include <QWidget>
 
-#include <ktextedit.h>
+#include "pimcommon/widgets/customtextedit.h"
 
 class QFont;
 
@@ -37,12 +37,11 @@ class KFontSizeAction;
 class KToggleAction;
 class KNote;
 
-class KNoteEdit
-  : public KTextEdit
+class KNoteEdit : public PimCommon::CustomTextEdit
 {
   Q_OBJECT
   public:
-    explicit KNoteEdit( KActionCollection *actions, QWidget *parent = 0 );
+    explicit KNoteEdit(const QString &configFile, KActionCollection *actions, QWidget *parent = 0 );
     ~KNoteEdit();
 
     void setNote( KNote *_note ) {
@@ -84,16 +83,21 @@ class KNoteEdit
     virtual void focusInEvent( QFocusEvent * );
     virtual void focusOutEvent( QFocusEvent * );
 
+protected slots:
+    void mousePopupMenuImplementation(const QPoint& pos);
+
   private slots:
     void slotCurrentCharFormatChanged( const QTextCharFormat & );
     void slotCursorPositionChanged();
+    void slotUpperCase();
+    void slotLowerCase();
+
   private:
     void autoIndent();
 
     void setTextFormat( const QTextCharFormat & );
 
-    void enableRichTextActions();
-    void disableRichTextActions();
+    void enableRichTextActions(bool enabled);
 
   private:
 
@@ -118,6 +122,7 @@ class KNoteEdit
     KFontAction     *m_textFont;
     KFontSizeAction *m_textSize;
     KNote           *m_note;
+    KActionCollection *m_actions;
     bool m_autoIndentMode;
 };
 

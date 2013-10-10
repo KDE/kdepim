@@ -40,7 +40,7 @@ FilterActionRedirect::FilterActionRedirect( QObject *parent )
 {
 }
 
-FilterAction::ReturnCode FilterActionRedirect::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionRedirect::process(ItemContext &context , bool) const
 {
     if ( mParameter.isEmpty() )
         return ErrorButGoOn;

@@ -33,7 +33,7 @@ class FilterActionSendFakeDisposition: public FilterActionWithStringList
     Q_OBJECT
 public:
     explicit FilterActionSendFakeDisposition( QObject *parent = 0 );
-    ReturnCode process( ItemContext &context ) const;
+    ReturnCode process( ItemContext &context, bool applyOnOutbound ) const;
     SearchRule::RequiredPart requiredPart() const;
 
     static FilterAction* newAction();

@@ -34,7 +34,7 @@ FilterActionReplyTo::FilterActionReplyTo( QObject *parent )
     mParameter.clear();
 }
 
-FilterAction::ReturnCode FilterActionReplyTo::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionReplyTo::process(ItemContext &context , bool) const
 {
     const KMime::Message::Ptr msg = context.item().payload<KMime::Message::Ptr>();
     const QByteArray replyTo("Reply-To");

@@ -173,6 +173,7 @@ void AdBlockSettingWidget::removeRule()
 void AdBlockSettingWidget::doResetToDefaultsOther()
 {
     const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults( true );
+    checkEnableAdblock->setChecked(GlobalSettings::self()->adBlockEnabled());
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
     checkHideAds->setChecked(GlobalSettings::self()->hideAdsEnabled());
     const int days = GlobalSettings::self()->adBlockUpdateInterval();

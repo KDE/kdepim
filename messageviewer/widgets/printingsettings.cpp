@@ -51,4 +51,13 @@ void PrintingSettings::doLoadFromGlobalSettings()
     mPrintingUi->printBackgroundColorAndImages->setChecked(MessageViewer::GlobalSettings::self()->printBackgroundColorImages());
 }
 
+void PrintingSettings::doResetToDefaultsOther()
+{
+    const bool bUseDefaults = GlobalSettings::self()->useDefaults( true );
+    mPrintingUi->mPrintEmptySelectedText->setChecked(MessageViewer::GlobalSettings::self()->printSelectedText());
+    mPrintingUi->respectExpandCollapseSettings->setChecked(MessageViewer::GlobalSettings::self()->respectExpandCollapseSettings());
+    mPrintingUi->printBackgroundColorAndImages->setChecked(MessageViewer::GlobalSettings::self()->printBackgroundColorImages());
+    GlobalSettings::self()->useDefaults( bUseDefaults );
+}
+
 #include "printingsettings.moc"

@@ -247,12 +247,12 @@ else()
 ############### Code used in several places ###############
 # TODO Remove from the top CMakeLists.
 
-# used in knotes, kontact/plugins/knotes, wizard
+# used in knotes, kontact/plugins/knotes
   set(libknotesresources_SRCS
-    ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
-    ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp
-    ${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp
-    ${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
+    ${CMAKE_SOURCE_DIR}/knotes/resource/resourcemanager.cpp
+    ${CMAKE_SOURCE_DIR}/knotes/resource/resourcenotes.cpp
+    ${CMAKE_SOURCE_DIR}/knotes/resource/resourcelocal.cpp
+    ${CMAKE_SOURCE_DIR}/knotes/resource/resourcelocalconfig.cpp
   )
 
 # used in knotes, kontact/plugins/knotes

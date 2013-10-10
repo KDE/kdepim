@@ -31,7 +31,6 @@
 
 #include <kdialog.h>
 
-class KTextEdit;
 class QCheckBox;
 class QSpinBox;
 class QGroupBox;

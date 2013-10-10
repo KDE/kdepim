@@ -23,19 +23,23 @@
 #include <QPlainTextEdit>
 
 namespace PimCommon {
-
 class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
 {
     Q_OBJECT
+    Q_PROPERTY(bool searchSupport READ searchSupport WRITE setSearchSupport)
 public:
     explicit PlainTextEditor(QWidget *parent=0);
     ~PlainTextEditor();
 
-    void addSearchSupport(bool b);
+    void setSearchSupport(bool b);
+    bool searchSupport() const;
 
 private Q_SLOTS:
     void slotUndoableClear();
     void slotSpeakText();
+
+protected:
+    virtual void addExtraMenuEntry(QMenu *menu);
 
 protected:
     void contextMenuEvent( QContextMenuEvent *event );
@@ -45,6 +49,8 @@ Q_SIGNALS:
     void replaceText();
 
 private:
+    class PlainTextEditorPrivate;
+    PlainTextEditorPrivate *const d;
     bool mHasSearchSupport;
 };
 }

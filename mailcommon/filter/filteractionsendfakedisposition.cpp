@@ -68,7 +68,7 @@ bool FilterActionSendFakeDisposition::isEmpty() const
     return false;
 }
 
-FilterAction::ReturnCode FilterActionSendFakeDisposition::process( ItemContext &context ) const
+FilterAction::ReturnCode FilterActionSendFakeDisposition::process(ItemContext &context , bool) const
 {
     const int index = mParameterList.indexOf( mParameter );
     if ( index < 1 )

@@ -32,7 +32,7 @@
 #include "knotesalarm.h"
 #include "knotesglobalconfig.h"
 
-#include "knotes/resourcemanager.h"
+#include "knotes/resource/resourcemanager.h"
 
 #include <kmessagebox.h>
 #include <klocale.h>
@@ -42,11 +42,9 @@
 
 
 
-KNotesAlarm::KNotesAlarm( KNotesResourceManager *manager, QObject *parent,
-                          const char *name )
+KNotesAlarm::KNotesAlarm( KNotesResourceManager *manager, QObject *parent)
   : QObject( parent ), m_manager( manager )
 {
-  setObjectName( QLatin1String(name) );
   // TODO: fix timezone stuff?
 
   connect( &m_checkTimer, SIGNAL(timeout()), SLOT(checkAlarms()) );
@@ -62,10 +60,9 @@ void KNotesAlarm::checkAlarms()
     from.setTime_t( 0 );
   }
 
-  KDateTime now = KDateTime::currentLocalDateTime();
+  const KDateTime now = KDateTime::currentLocalDateTime();
   KNotesGlobalConfig::self()->setAlarmsLastChecked( now.dateTime() );
-  QList<KCal::Alarm *> alarms = m_manager->alarms( KDateTime( from,
-KDateTime::LocalZone ), now );
+  QList<KCal::Alarm *> alarms = m_manager->alarms( KDateTime( from, KDateTime::LocalZone ), now );
   if ( alarms.isEmpty() )
       return;
 

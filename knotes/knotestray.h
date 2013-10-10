@@ -19,13 +19,18 @@
 #define KNOTESTRAY_H
 
 #include <KStatusNotifierItem>
-
+#include <KIcon>
 class KNotesTray : public KStatusNotifierItem
 {
     Q_OBJECT
 public:
     explicit KNotesTray(QWidget *parent=0);
     ~KNotesTray();
+
+    void updateNumberOfNotes(int value);
+
+private:
+    KIcon mIcon;
 };
 
 #endif // KNOTESTRAY_H
