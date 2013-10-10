@@ -20,6 +20,7 @@
 #include "globalsettings_base.h"
 
 #include "pimcommon/widgets/simplestringlisteditor.h"
+#include "pimcommon/widgets/customtextedit.h"
 
 #include <KLineEdit>
 #include <KTextEdit>
@@ -65,7 +66,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
 
     ++row;
     lab = new QLabel(i18n("Description:"));
-    mDescription = new KTextEdit;
+    mDescription = new PimCommon::CustomTextEdit(QString());
     mDescription->setAcceptRichText(false);
     lay->addWidget(lab, row ,0);
     lay->addWidget(mDescription, row,1);
