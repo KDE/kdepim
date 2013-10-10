@@ -30,6 +30,9 @@ public:
     explicit CustomTextEdit(const QString &configName = QString(), QWidget *parent = 0);
     ~CustomTextEdit();
 
+    void setConfigName(const QString &name);
+    QString configName() const;
+
 protected:
     void createHighlighter();
 

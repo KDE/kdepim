@@ -54,6 +54,17 @@ CustomTextEdit::~CustomTextEdit()
     delete d;
 }
 
+void CustomTextEdit::setConfigName(const QString &name)
+{
+    d->configFile = name;
+}
+
+QString CustomTextEdit::configName() const
+{
+    return d->configFile;
+}
+
+
 void CustomTextEdit::createHighlighter()
 {
     Sonnet::Highlighter *highlighter = new Sonnet::Highlighter(this, d->configFile);
