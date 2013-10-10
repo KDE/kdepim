@@ -29,7 +29,6 @@ class QTextDocument;
 namespace Akonadi
 {
 class ChangeRecorder;
-class Session;
 }
 
 using namespace Akonadi;

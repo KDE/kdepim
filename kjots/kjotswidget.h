@@ -35,20 +35,17 @@
 #include <grantlee/templateloader.h>
 
 class QCheckBox;
-class QTextCursor;
 class QTextEdit;
 class QTextCharFormat;
 class QSplitter;
 class QStackedWidget;
 class QModelIndex;
 
-class KActionCollection;
 class KActionMenu;
 class KFindDialog;
 class KJob;
 class KReplaceDialog;
 class KSelectionProxyModel;
-class KTextEdit;
 class KJotsBrowser;
 class KXMLGUIClient;
 
