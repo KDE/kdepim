@@ -70,6 +70,8 @@ static inline QString i18n_kdelibs4(const char *str) { return ki18n(str).toStrin
 
 void CustomTextEdit::insertLanguageMenu(QMenu* contextMenu)
 {
+    if (!checkSpellingEnabled())
+        return;
     QAction* spellCheckAction = 0;
 
     foreach (QAction* action, contextMenu->actions()) {
