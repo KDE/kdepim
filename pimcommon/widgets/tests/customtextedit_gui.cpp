@@ -15,32 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef CUSTOMTEXTEDIT_H
-#define CUSTOMTEXTEDIT_H
+#include "pimcommon/widgets/customtextedit.h"
 
-#include "pimcommon_export.h"
-#include <KTextEdit>
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
+#include <KLocale>
 
-class QMenu;
-namespace PimCommon {
-class PIMCOMMON_EXPORT CustomTextEdit : public KTextEdit
+int main (int argc, char **argv)
 {
-    Q_OBJECT
-public:
-    explicit CustomTextEdit(const QString &configName, QWidget *parent = 0);
-    ~CustomTextEdit();
+    KCmdLineArgs::init(argc, argv, "customtextedit_gui", 0, ki18n("CustomTextEditTest_Gui"),
+                       "1.0", ki18n("Test for customtextedit widget"));
 
-protected:
-    void createHighlighter();
+    KApplication app;
 
-protected Q_SLOTS:
-    void insertLanguageMenu(QMenu* contextMenu);
-    void languageSelected();
-
-private:
-    class Private;
-    Private *const d;
-};
+    PimCommon::CustomTextEdit *w = new PimCommon::CustomTextEdit(QLatin1String("customtextedit_guirc"));
+    w->resize(800, 600);
+    w->show();
+    app.exec();
+    delete w;
+    return 0;
 }
 
-#endif // CUSTOMTEXTEDIT_H

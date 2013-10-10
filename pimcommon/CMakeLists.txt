@@ -66,6 +66,7 @@ install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(translator/tests)
 add_subdirectory(plaintexteditor/tests)
+add_subdirectory(widgets/tests)
 
 
 if (QT_QTDESIGNER_FOUND)
