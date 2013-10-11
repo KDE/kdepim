@@ -34,7 +34,7 @@ public:
     void setSearchSupport(bool b);
     bool searchSupport() const;
 
-    void setReadOnly( bool readOnly );
+    virtual void setReadOnly( bool readOnly );
 
 private Q_SLOTS:
     void slotUndoableClear();

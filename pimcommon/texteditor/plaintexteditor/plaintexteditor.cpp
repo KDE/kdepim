@@ -161,28 +161,28 @@ void PlainTextEditor::wheelEvent( QWheelEvent *event )
 
 void PlainTextEditor::setReadOnly( bool readOnly )
 {
-  if ( readOnly == isReadOnly() )
-    return;
+    if ( readOnly == isReadOnly() )
+        return;
 
-  if ( readOnly ) {
-      d->customPalette = testAttribute( Qt::WA_SetPalette );
-      QPalette p = palette();
-      QColor color = p.color( QPalette::Disabled, QPalette::Background );
-      p.setColor( QPalette::Base, color );
-      p.setColor( QPalette::Background, color );
-      setPalette( p );
-  } else {
-      if ( d->customPalette && testAttribute( Qt::WA_SetPalette ) ) {
-          QPalette p = palette();
-          QColor color = p.color( QPalette::Normal, QPalette::Base );
-          p.setColor( QPalette::Base, color );
-          p.setColor( QPalette::Background, color );
-          setPalette( p );
-      } else
-          setPalette( QPalette() );
-  }
+    if ( readOnly ) {
+        d->customPalette = testAttribute( Qt::WA_SetPalette );
+        QPalette p = palette();
+        QColor color = p.color( QPalette::Disabled, QPalette::Background );
+        p.setColor( QPalette::Base, color );
+        p.setColor( QPalette::Background, color );
+        setPalette( p );
+    } else {
+        if ( d->customPalette && testAttribute( Qt::WA_SetPalette ) ) {
+            QPalette p = palette();
+            QColor color = p.color( QPalette::Normal, QPalette::Base );
+            p.setColor( QPalette::Base, color );
+            p.setColor( QPalette::Background, color );
+            setPalette( p );
+        } else
+            setPalette( QPalette() );
+    }
 
-  QPlainTextEdit::setReadOnly( readOnly );
+    QPlainTextEdit::setReadOnly( readOnly );
 }
 
 
