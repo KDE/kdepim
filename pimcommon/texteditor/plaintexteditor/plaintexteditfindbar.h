@@ -67,7 +67,7 @@ private slots:
     void slotReplaceText();
     void slotReplaceAllText();
 
-private:
+protected:
     QString mLastSearchStr;
     TextFindWidget *mFindWidget;
     TextReplaceWidget *mReplaceWidget;
