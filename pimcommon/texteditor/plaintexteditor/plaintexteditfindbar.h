@@ -44,11 +44,13 @@ public:
     void showReplace();
     void showFind();
 
+
+protected:
     virtual bool viewIsReadOnly() const;
     virtual bool documentIsEmpty() const;
     virtual bool searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions);
+    virtual void autoSearchMoveCursor();
 
-protected:
     bool event(QEvent* e);
     void clearSelections();
     void updateHighLight(bool);
@@ -62,7 +64,7 @@ public slots:
     void findNext();
     void findPrev();
     void autoSearch( const QString &str );
-    void slotSearchText( bool backward = false, bool isAutoSearch = true );
+    virtual void slotSearchText( bool backward = false, bool isAutoSearch = true );
     void closeBar();
 
 private slots:

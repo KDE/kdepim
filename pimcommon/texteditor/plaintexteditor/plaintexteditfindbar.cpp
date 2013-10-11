@@ -142,11 +142,6 @@ void PlainTextEditFindBar::autoSearch( const QString& str )
         clearSelections();
 }
 
-void PlainTextEditFindBar::slotSearchText( bool backward, bool isAutoSearch )
-{
-    mView->moveCursor(QTextCursor::Start);
-    searchText( backward, isAutoSearch );
-}
 
 void PlainTextEditFindBar::messageInfo( bool backward, bool isAutoSearch, bool found )
 {
@@ -159,6 +154,7 @@ void PlainTextEditFindBar::messageInfo( bool backward, bool isAutoSearch, bool f
     }
 }
 
+
 bool PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
 {
     mLastSearchStr = mFindWidget->search()->text();
@@ -167,9 +163,7 @@ bool PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
         searchOptions |= QTextDocument::FindBackward;
 
     if ( isAutoSearch ) {
-        QTextCursor cursor = mView->textCursor();
-        cursor.setPosition( cursor.selectionStart() );
-        mView->setTextCursor( cursor );
+        autoSearchMoveCursor();
     } else if ( !mLastSearchStr.contains( mFindWidget->search()->text(), Qt::CaseSensitive )) {
         clearSelections();
     }
@@ -249,6 +243,12 @@ bool PlainTextEditFindBar::event(QEvent* e)
     return QWidget::event(e);
 }
 
+void PlainTextEditFindBar::slotSearchText( bool backward, bool isAutoSearch )
+{
+    mView->moveCursor(QTextCursor::Start);
+    searchText( backward, isAutoSearch );
+}
+
 bool PlainTextEditFindBar::viewIsReadOnly() const
 {
     return mView->isReadOnly();
@@ -264,6 +264,13 @@ bool PlainTextEditFindBar::searchInDocument(const QString &text, QTextDocument::
     const bool found = mView->find( text, searchOptions );
     mFindWidget->setFoundMatch( found );
     return found;
+}
+
+void PlainTextEditFindBar::autoSearchMoveCursor()
+{
+    QTextCursor cursor = mView->textCursor();
+    cursor.setPosition( cursor.selectionStart() );
+    mView->setTextCursor( cursor );
 }
 
 void PlainTextEditFindBar::slotReplaceText()
