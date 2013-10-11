@@ -71,6 +71,7 @@ install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(translator/tests)
 add_subdirectory(texteditor/plaintexteditor/tests)
+add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(widgets/tests)
 
 
