@@ -86,7 +86,7 @@ PlainTextEditFindBar::~PlainTextEditFindBar()
 
 void PlainTextEditFindBar::showFind()
 {
-    if (mView->toPlainText().isEmpty())
+    if (mView->document()->isEmpty())
         return;
     mReplaceWidget->slotSearchStringEmpty(mFindWidget->search()->text().isEmpty());
     show();
@@ -100,7 +100,7 @@ void PlainTextEditFindBar::showReplace()
 {
     if (mView->isReadOnly())
         return;
-    if (mView->toPlainText().isEmpty())
+    if (mView->document()->isEmpty())
         return;
     mReplaceWidget->slotSearchStringEmpty(mFindWidget->search()->text().isEmpty());
     show();
@@ -161,6 +161,7 @@ void PlainTextEditFindBar::messageInfo( bool backward, bool isAutoSearch, bool f
 
 bool PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
 {
+    mLastSearchStr = mFindWidget->search()->text();
     QTextDocument::FindFlags searchOptions = mFindWidget->searchOptions();
     if ( backward )
         searchOptions |= QTextDocument::FindBackward;
@@ -173,7 +174,7 @@ bool PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
         clearSelections();
     }
 
-    mLastSearchStr = mFindWidget->search()->text();
+
     const bool found = mView->find( mLastSearchStr, searchOptions );
 
     mFindWidget->setFoundMatch( found );
@@ -237,6 +238,9 @@ bool PlainTextEditFindBar::event(QEvent* e)
             if ( shortCutOverride ) {
                 return true;
             }
+            if (mFindWidget->search()->text().isEmpty())
+                return true;
+
             if ( kev->modifiers() & Qt::ShiftModifier )
                 findPrev();
             else if ( kev->modifiers() == Qt::NoModifier )
