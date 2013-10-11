@@ -42,6 +42,16 @@ RichTextEditorWidget::~RichTextEditorWidget()
 
 }
 
+void RichTextEditorWidget::setHtml(const QString &html)
+{
+    mEditor->setHtml(html);
+}
+
+QString RichTextEditorWidget::toHtml() const
+{
+    return mEditor->toHtml();
+}
+
 void RichTextEditorWidget::setPlainText(const QString &text)
 {
     mEditor->setPlainText(text);

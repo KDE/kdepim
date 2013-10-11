@@ -21,13 +21,39 @@
 #include "pimcommon_export.h"
 #include <QTextEdit>
 
+class QContextMenuEvent;
+class QMenu;
+class QWheelEvent;
 namespace PimCommon {
 class PIMCOMMON_EXPORT RichTextEditor : public QTextEdit
 {
     Q_OBJECT
+    Q_PROPERTY(bool searchSupport READ searchSupport WRITE setSearchSupport)
 public:
     explicit RichTextEditor(QWidget *parent=0);
     ~RichTextEditor();
+
+    void setSearchSupport(bool b);
+    bool searchSupport() const;
+
+    virtual void setReadOnly( bool readOnly );
+
+private Q_SLOTS:
+    void slotSpeakText();
+    void slotUndoableClear();
+
+protected:
+    virtual void addExtraMenuEntry(QMenu *menu);
+    void contextMenuEvent( QContextMenuEvent *event );
+    void wheelEvent( QWheelEvent *event );
+
+Q_SIGNALS:
+    void findText();
+    void replaceText();
+
+private:
+    class RichTextEditorPrivate;
+    RichTextEditorPrivate *const d;
 };
 }
 

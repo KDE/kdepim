@@ -39,7 +39,9 @@ public:
     void setReadOnly(bool readOnly);
     bool isReadOnly() const;
 
-    //FIXME
+    void setHtml(const QString &html);
+    QString toHtml() const;
+
     void setPlainText(const QString &text);
     QString toPlainText() const;
 
