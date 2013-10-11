@@ -29,7 +29,7 @@
 
 using namespace PimCommon;
 
-PlainTextReplaceWidget::PlainTextReplaceWidget(QWidget *parent)
+TextReplaceWidget::TextReplaceWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
@@ -52,23 +52,23 @@ PlainTextReplaceWidget::PlainTextReplaceWidget(QWidget *parent)
     setLayout(lay);
 }
 
-PlainTextReplaceWidget::~PlainTextReplaceWidget()
+TextReplaceWidget::~TextReplaceWidget()
 {
 
 }
 
-KLineEdit *PlainTextReplaceWidget::replace() const
+KLineEdit *TextReplaceWidget::replace() const
 {
     return mReplace;
 }
 
-void PlainTextReplaceWidget::slotSearchStringEmpty(bool isEmpty)
+void TextReplaceWidget::slotSearchStringEmpty(bool isEmpty)
 {
     mReplaceBtn->setDisabled(isEmpty);
     mReplaceAllBtn->setDisabled(isEmpty);
 }
 
-PlainTextFindWidget::PlainTextFindWidget(QWidget *parent)
+TextFindWidget::TextFindWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
@@ -114,12 +114,12 @@ PlainTextFindWidget::PlainTextFindWidget(QWidget *parent)
     setLayout(lay);
 }
 
-PlainTextFindWidget::~PlainTextFindWidget()
+TextFindWidget::~TextFindWidget()
 {
 
 }
 
-QRegExp PlainTextFindWidget::findRegExp() const
+QRegExp TextFindWidget::findRegExp() const
 {
     QString str = mSearch->text();
     if ( mWholeWordAct->isChecked() )
@@ -130,7 +130,7 @@ QRegExp PlainTextFindWidget::findRegExp() const
         return QRegExp(str, Qt::CaseInsensitive);
 }
 
-void PlainTextFindWidget::setFoundMatch( bool match )
+void TextFindWidget::setFoundMatch( bool match )
 {
 #ifndef QT_NO_STYLE_STYLESHEET
     QString styleSheet;
@@ -153,7 +153,7 @@ void PlainTextFindWidget::setFoundMatch( bool match )
 #endif
 }
 
-void PlainTextFindWidget::slotAutoSearch(const QString &str)
+void TextFindWidget::slotAutoSearch(const QString &str)
 {
     const bool isNotEmpty = ( !str.isEmpty() );
     mFindPrevBtn->setEnabled( isNotEmpty );
@@ -162,12 +162,12 @@ void PlainTextFindWidget::slotAutoSearch(const QString &str)
     Q_EMIT autoSearch(str);
 }
 
-KLineEdit *PlainTextFindWidget::search() const
+KLineEdit *TextFindWidget::search() const
 {
     return mSearch;
 }
 
-QTextDocument::FindFlags PlainTextFindWidget::searchOptions() const
+QTextDocument::FindFlags TextFindWidget::searchOptions() const
 {
     QTextDocument::FindFlags opt=0;
     if ( mCaseSensitiveAct->isChecked() )

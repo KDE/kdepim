@@ -57,10 +57,10 @@ PlainTextEditFindBar::PlainTextEditFindBar( QPlainTextEdit * view, QWidget * par
     closeBtn->setAutoRaise( true );
     lay->addWidget( closeBtn );
 
-    mFindWidget = new PlainTextFindWidget;
+    mFindWidget = new TextFindWidget;
     lay->addWidget( mFindWidget );
 
-    mReplaceWidget = new PlainTextReplaceWidget;
+    mReplaceWidget = new TextReplaceWidget;
     topLayout->addWidget(mReplaceWidget);
     mReplaceWidget->hide();
 

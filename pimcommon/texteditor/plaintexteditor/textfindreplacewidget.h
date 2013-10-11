@@ -26,12 +26,12 @@ class KLineEdit;
 class QPushButton;
 namespace PimCommon {
 
-class PlainTextFindWidget : public QWidget
+class TextFindWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PlainTextFindWidget(QWidget *parent=0);
-    ~PlainTextFindWidget();
+    explicit TextFindWidget(QWidget *parent=0);
+    ~TextFindWidget();
 
     QTextDocument::FindFlags searchOptions() const;
 
@@ -60,12 +60,12 @@ private:
     QPushButton *mFindNextBtn;
 };
 
-class PlainTextReplaceWidget : public QWidget
+class TextReplaceWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PlainTextReplaceWidget(QWidget *parent=0);
-    ~PlainTextReplaceWidget();
+    explicit TextReplaceWidget(QWidget *parent=0);
+    ~TextReplaceWidget();
 
     KLineEdit *replace() const;
 

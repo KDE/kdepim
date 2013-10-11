@@ -26,8 +26,8 @@
 class QPlainTextEdit;
 
 namespace PimCommon {
-class PlainTextFindWidget;
-class PlainTextReplaceWidget;
+class TextFindWidget;
+class TextReplaceWidget;
 class PIMCOMMON_EXPORT PlainTextEditFindBar : public QWidget
 {
     Q_OBJECT
@@ -69,8 +69,8 @@ private slots:
 
 private:
     QString mLastSearchStr;
-    PlainTextFindWidget *mFindWidget;
-    PlainTextReplaceWidget *mReplaceWidget;
+    TextFindWidget *mFindWidget;
+    TextReplaceWidget *mReplaceWidget;
     QPlainTextEdit *mView;
 };
 
