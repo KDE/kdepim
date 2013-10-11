@@ -19,7 +19,9 @@
 #define SIEVESCRIPTPARSINGERRORDIALOG_H
 #include "ksieveui_export.h"
 #include <KDialog>
-class KTextEdit;
+namespace PimCommon {
+class RichTextEditorWidget;
+}
 class KSIEVEUI_EXPORT SieveScriptParsingErrorDialog : public KDialog
 {
     Q_OBJECT
@@ -37,7 +39,7 @@ private:
     void writeConfig();
 
 private:
-    KTextEdit *mTextEdit;
+    PimCommon::RichTextEditorWidget *mTextEdit;
 };
 
 #endif // SIEVESCRIPTPARSINGERRORDIALOG_H

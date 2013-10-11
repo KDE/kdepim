@@ -18,6 +18,7 @@
 #include "scamdetectiondetailsdialog.h"
 #include "settings/globalsettings.h"
 #include "utils/autoqpointer.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <KLocale>
 
@@ -37,9 +38,8 @@ ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
     setButtons( User1|Close );
     setButtonGuiItem( User1, KStandardGuiItem::saveAs() );
     setModal( false );
-    mDetails = new KTextEdit;
+    mDetails = new PimCommon::RichTextEditorWidget;
     mDetails->setReadOnly(true);
-    mDetails->setAcceptRichText(true);
     setMainWidget(mDetails);
     connect(this, SIGNAL(user1Clicked()), SLOT(slotSaveAs()));
     readConfig();
