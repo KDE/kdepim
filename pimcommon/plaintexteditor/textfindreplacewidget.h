@@ -1,0 +1,85 @@
+/*
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License, version 2, as
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+#ifndef TEXTFINDREPLACEWIDGET_H
+#define TEXTFINDREPLACEWIDGET_H
+
+#include <QWidget>
+#include <QTextDocument>
+
+class QAction;
+class KLineEdit;
+class QPushButton;
+namespace PimCommon {
+
+class PlainTextFindWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PlainTextFindWidget(QWidget *parent=0);
+    ~PlainTextFindWidget();
+
+    QTextDocument::FindFlags searchOptions() const;
+
+    KLineEdit *search() const;
+
+    void setFoundMatch( bool match );
+    QRegExp findRegExp() const;
+
+private Q_SLOTS:
+    void slotAutoSearch(const QString &str);
+
+Q_SIGNALS:
+    void findNext();
+    void findPrev();
+    void clearSearch();
+    void autoSearch(const QString &);
+    void updateSearchOptions();
+    void searchStringEmpty(bool);
+
+private:
+    KLineEdit *mSearch;
+    QAction *mCaseSensitiveAct;
+    QAction *mWholeWordAct;
+
+    QPushButton *mFindPrevBtn;
+    QPushButton *mFindNextBtn;
+};
+
+class PlainTextReplaceWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PlainTextReplaceWidget(QWidget *parent=0);
+    ~PlainTextReplaceWidget();
+
+    KLineEdit *replace() const;
+
+public Q_SLOTS:
+    void slotSearchStringEmpty(bool);
+
+Q_SIGNALS:
+    void replaceText();
+    void replaceAllText();
+
+private:
+    KLineEdit *mReplace;
+    QPushButton *mReplaceBtn;
+    QPushButton *mReplaceAllBtn;
+};
+}
+#endif // TEXTFINDREPLACEWIDGET_H

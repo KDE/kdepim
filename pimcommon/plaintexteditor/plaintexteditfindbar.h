@@ -23,70 +23,11 @@
 #include <QWidget>
 #include <QTextDocument>
 
-class QAction;
-class KLineEdit;
-class QPushButton;
-class QMenu;
 class QPlainTextEdit;
 
 namespace PimCommon {
-
-class PlainTextFindWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit PlainTextFindWidget(QWidget *parent=0);
-    ~PlainTextFindWidget();
-
-    QTextDocument::FindFlags searchOptions() const;
-
-    KLineEdit *search() const;
-
-    void setFoundMatch( bool match );
-    QRegExp findRegExp() const;
-
-private Q_SLOTS:
-    void slotAutoSearch(const QString &str);
-
-Q_SIGNALS:
-    void findNext();
-    void findPrev();
-    void clearSearch();
-    void autoSearch(const QString &);
-    void updateSearchOptions();
-    void searchStringEmpty(bool);
-
-private:
-    KLineEdit *mSearch;
-    QAction *mCaseSensitiveAct;
-    QAction *mWholeWordAct;
-
-    QPushButton *mFindPrevBtn;
-    QPushButton *mFindNextBtn;
-};
-
-class PlainTextReplaceWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit PlainTextReplaceWidget(QWidget *parent=0);
-    ~PlainTextReplaceWidget();
-
-    KLineEdit *replace() const;
-
-public Q_SLOTS:
-    void slotSearchStringEmpty(bool);
-
-Q_SIGNALS:
-    void replaceText();
-    void replaceAllText();
-
-private:
-    KLineEdit *mReplace;
-    QPushButton *mReplaceBtn;
-    QPushButton *mReplaceAllBtn;
-};
-
+class PlainTextFindWidget;
+class PlainTextReplaceWidget;
 class PIMCOMMON_EXPORT PlainTextEditFindBar : public QWidget
 {
     Q_OBJECT
