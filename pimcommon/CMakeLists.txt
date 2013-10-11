@@ -32,6 +32,7 @@ set(libpimcommon_SRCS
   texteditor/plaintexteditor/plaintexteditor.cpp
   texteditor/plaintexteditor/plaintexteditorwidget.cpp
   texteditor/commonwidget/textfindreplacewidget.cpp
+  texteditor/commonwidget/texteditfindbarbase.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
   sievehighlighter/sievesyntaxhighlighter.cpp

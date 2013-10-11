@@ -20,15 +20,12 @@
 #define PIMCOMMON_FINDBARBASE_H
 
 #include "pimcommon_export.h"
-#include <QWidget>
+#include "pimcommon/texteditor/commonwidget/texteditfindbarbase.h"
 #include <QTextDocument>
 
 class QPlainTextEdit;
-
 namespace PimCommon {
-class TextFindWidget;
-class TextReplaceWidget;
-class PIMCOMMON_EXPORT PlainTextEditFindBar : public QWidget
+class PIMCOMMON_EXPORT PlainTextEditFindBar : public TextEditFindBarBase
 {
     Q_OBJECT
 
@@ -36,47 +33,20 @@ public:
     explicit PlainTextEditFindBar( QPlainTextEdit *view, QWidget *parent = 0 );
     ~PlainTextEditFindBar();
 
-    QString text() const;
-    void setText( const QString &text );
-
-    void focusAndSetCursor();
-
-    void showReplace();
-    void showFind();
-
-
 protected:
     virtual bool viewIsReadOnly() const;
     virtual bool documentIsEmpty() const;
     virtual bool searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions);
     virtual void autoSearchMoveCursor();
 
-    bool event(QEvent* e);
-    void clearSelections();
-    void updateHighLight(bool);
-    bool searchText( bool backward, bool isAutoSearch );
-    void updateSensitivity( bool );
-
-    void setFoundMatch( bool match );
-    void messageInfo( bool backward, bool isAutoSearch, bool found );
-
 public slots:
-    void findNext();
-    void findPrev();
-    void autoSearch( const QString &str );
     virtual void slotSearchText( bool backward = false, bool isAutoSearch = true );
-    void closeBar();
 
 private slots:
-    void slotClearSearch();
-    void slotUpdateSearchOptions();
     virtual void slotReplaceText();
     virtual void slotReplaceAllText();
 
-protected:
-    QString mLastSearchStr;
-    TextFindWidget *mFindWidget;
-    TextReplaceWidget *mReplaceWidget;
+private:
     QPlainTextEdit *mView;
 };
 
