@@ -245,6 +245,8 @@ bool FindBarBase::event(QEvent* e)
             if ( shortCutOverride ) {
                 return true;
             }
+            if (mSearch->text().isEmpty())
+                return true;
             if ( kev->modifiers() & Qt::ShiftModifier )
                 findPrev();
             else if ( kev->modifiers() == Qt::NoModifier )
