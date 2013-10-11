@@ -38,11 +38,13 @@ class PlainTextEditor::PlainTextEditorPrivate
 {
 public:
     PlainTextEditorPrivate()
-        : hasSearchSupport(true)
+        : hasSearchSupport(true),
+          customPalette(false)
     {
     }
 
     bool hasSearchSupport;
+    bool customPalette;
 };
 
 PlainTextEditor::PlainTextEditor(QWidget *parent)
@@ -105,8 +107,9 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
     }
 }
 
-void PlainTextEditor::addExtraMenuEntry(QMenu *)
+void PlainTextEditor::addExtraMenuEntry(QMenu *menu)
 {
+    Q_UNUSED(menu);
 }
 
 void PlainTextEditor::slotSpeakText()
@@ -147,5 +150,40 @@ bool PlainTextEditor::searchSupport() const
 {
     return d->hasSearchSupport;
 }
+
+void PlainTextEditor::wheelEvent( QWheelEvent *event )
+{
+    if ( KGlobalSettings::wheelMouseZooms() )
+        QPlainTextEdit::wheelEvent( event );
+    else // thanks, we don't want to zoom, so skip PlainTextEdit's impl.
+        QAbstractScrollArea::wheelEvent( event );
+}
+
+void PlainTextEditor::setReadOnly( bool readOnly )
+{
+  if ( readOnly == isReadOnly() )
+    return;
+
+  if ( readOnly ) {
+      d->customPalette = testAttribute( Qt::WA_SetPalette );
+      QPalette p = palette();
+      QColor color = p.color( QPalette::Disabled, QPalette::Background );
+      p.setColor( QPalette::Base, color );
+      p.setColor( QPalette::Background, color );
+      setPalette( p );
+  } else {
+      if ( d->customPalette && testAttribute( Qt::WA_SetPalette ) ) {
+          QPalette p = palette();
+          QColor color = p.color( QPalette::Normal, QPalette::Base );
+          p.setColor( QPalette::Base, color );
+          p.setColor( QPalette::Background, color );
+          setPalette( p );
+      } else
+          setPalette( QPalette() );
+  }
+
+  QPlainTextEdit::setReadOnly( readOnly );
+}
+
 
 #include "plaintexteditor.moc"

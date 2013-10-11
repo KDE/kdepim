@@ -34,6 +34,8 @@ public:
     void setSearchSupport(bool b);
     bool searchSupport() const;
 
+    void setReadOnly( bool readOnly );
+
 private Q_SLOTS:
     void slotUndoableClear();
     void slotSpeakText();
@@ -43,6 +45,7 @@ protected:
 
 protected:
     void contextMenuEvent( QContextMenuEvent *event );
+    void wheelEvent( QWheelEvent *event );
 
 Q_SIGNALS:
     void findText();
@@ -51,7 +54,6 @@ Q_SIGNALS:
 private:
     class PlainTextEditorPrivate;
     PlainTextEditorPrivate *const d;
-    bool mHasSearchSupport;
 };
 }
 #endif // PLAINTEXTEDITOR_H
