@@ -17,7 +17,7 @@
  */
 
 #include "plaintexteditfindbar.h"
-#include "textfindreplacewidget.h"
+#include "pimcommon/texteditor/commonwidget/textfindreplacewidget.h"
 
 #include <kicon.h>
 #include <klocale.h>
