@@ -12,8 +12,8 @@
 */
 
 #include "sievedebugdialog.h"
-#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
-#include "pimcommon/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 #include <akonadi/agentinstance.h>
 #include <kdebug.h>

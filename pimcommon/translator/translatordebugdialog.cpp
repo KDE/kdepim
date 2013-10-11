@@ -17,7 +17,7 @@
 
 #include "translatordebugdialog.h"
 #include "pimcommon/util/pimutil.h"
-#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KLocale>
 #include <KConfigGroup>

@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <kdebug.h>
 #include <kapplication.h>

@@ -21,7 +21,7 @@
 #include "previewwidget.h"
 #include "themeeditorwidget.h"
 #include "themetemplatewidget.h"
-#include "pimcommon/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 #include <KLocale>
 #include <KGlobal>
