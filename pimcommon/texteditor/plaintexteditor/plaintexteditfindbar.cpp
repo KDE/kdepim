@@ -86,7 +86,7 @@ PlainTextEditFindBar::~PlainTextEditFindBar()
 
 void PlainTextEditFindBar::showFind()
 {
-    if (mView->document()->isEmpty())
+    if (documentIsEmpty())
         return;
     mReplaceWidget->slotSearchStringEmpty(mFindWidget->search()->text().isEmpty());
     show();
@@ -98,9 +98,9 @@ void PlainTextEditFindBar::showFind()
 
 void PlainTextEditFindBar::showReplace()
 {
-    if (mView->isReadOnly())
+    if (viewIsReadOnly())
         return;
-    if (mView->document()->isEmpty())
+    if (documentIsEmpty())
         return;
     mReplaceWidget->slotSearchStringEmpty(mFindWidget->search()->text().isEmpty());
     show();
@@ -136,7 +136,6 @@ void PlainTextEditFindBar::autoSearch( const QString& str )
 {
     const bool isNotEmpty = ( !str.isEmpty() );
     if ( isNotEmpty ) {
-        mView->moveCursor(QTextCursor::Start);
         QTimer::singleShot( 0, this, SLOT(slotSearchText()) );
     }
     else
@@ -145,6 +144,7 @@ void PlainTextEditFindBar::autoSearch( const QString& str )
 
 void PlainTextEditFindBar::slotSearchText( bool backward, bool isAutoSearch )
 {
+    mView->moveCursor(QTextCursor::Start);
     searchText( backward, isAutoSearch );
 }
 
@@ -175,8 +175,7 @@ bool PlainTextEditFindBar::searchText( bool backward, bool isAutoSearch )
     }
 
 
-    const bool found = mView->find( mLastSearchStr, searchOptions );
-
+    const bool found = searchInDocument( mLastSearchStr, searchOptions );
     mFindWidget->setFoundMatch( found );
     messageInfo( backward, isAutoSearch, found );
     return found;
@@ -196,8 +195,7 @@ void PlainTextEditFindBar::slotUpdateSearchOptions()
 {
     const QTextDocument::FindFlags searchOptions = mFindWidget->searchOptions();
     mLastSearchStr = mFindWidget->search()->text();
-    const bool found = mView->find( mLastSearchStr, searchOptions );
-    mFindWidget->setFoundMatch( found );
+    searchInDocument( mLastSearchStr, searchOptions );
 }
 
 void PlainTextEditFindBar::clearSelections()
@@ -249,6 +247,23 @@ bool PlainTextEditFindBar::event(QEvent* e)
         }
     }
     return QWidget::event(e);
+}
+
+bool PlainTextEditFindBar::viewIsReadOnly() const
+{
+    return mView->isReadOnly();
+}
+
+bool PlainTextEditFindBar::documentIsEmpty() const
+{
+    return mView->document()->isEmpty();
+}
+
+bool PlainTextEditFindBar::searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions)
+{
+    const bool found = mView->find( text, searchOptions );
+    mFindWidget->setFoundMatch( found );
+    return found;
 }
 
 void PlainTextEditFindBar::slotReplaceText()

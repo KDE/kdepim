@@ -37,12 +37,16 @@ public:
     ~PlainTextEditFindBar();
 
     QString text() const;
-    void setText( const QString&text );
+    void setText( const QString &text );
 
     void focusAndSetCursor();
 
     void showReplace();
     void showFind();
+
+    virtual bool viewIsReadOnly() const;
+    virtual bool documentIsEmpty() const;
+    virtual bool searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions);
 
 protected:
     bool event(QEvent* e);
@@ -64,8 +68,8 @@ public slots:
 private slots:
     void slotClearSearch();
     void slotUpdateSearchOptions();
-    void slotReplaceText();
-    void slotReplaceAllText();
+    virtual void slotReplaceText();
+    virtual void slotReplaceAllText();
 
 protected:
     QString mLastSearchStr;
