@@ -24,6 +24,9 @@
 class QContextMenuEvent;
 class QMenu;
 class QWheelEvent;
+namespace Sonnet {
+class Highlighter;
+}
 namespace PimCommon {
 class PIMCOMMON_EXPORT RichTextEditor : public QTextEdit
 {
@@ -36,22 +39,46 @@ public:
     void setSearchSupport(bool b);
     bool searchSupport() const;
 
+    void setSpellCheckingConfigFileName(const QString &_fileName);
+
+    bool checkSpellingEnabled() const;
+    void setCheckSpellingEnabled( bool check );
+
+    void setSpellCheckingLanguage(const QString &_language);
+    const QString& spellCheckingLanguage() const;
+
     virtual void setReadOnly( bool readOnly );
+    virtual void createHighlighter();
+
 
 private Q_SLOTS:
     void slotSpeakText();
     void slotUndoableClear();
+    void slotCheckSpelling();
+    void slotSpellCheckerMisspelling( const QString &text, int pos );
+    void slotSpellCheckerCorrected( const QString &, int,const QString &);
+    void slotSpellCheckerAutoCorrect(const QString&,const QString&);
+    void slotSpellCheckerCanceled();
+    void slotSpellCheckerFinished();
+    void slotToggleAutoSpellCheck();
+
 
 protected:
     virtual void addExtraMenuEntry(QMenu *menu);
     void contextMenuEvent( QContextMenuEvent *event );
     void wheelEvent( QWheelEvent *event );
+    void focusInEvent( QFocusEvent *event );
 
 Q_SIGNALS:
     void findText();
     void replaceText();
+    void spellCheckerAutoCorrect(const QString& currentWord, const QString& autoCorrectWord);
+    void checkSpellingChanged(bool);
+    void languageChanged(const QString &);
 
 private:
+    void setHighlighter(Sonnet::Highlighter *_highLighter);
+    void highlightWord( int length, int pos );
     class RichTextEditorPrivate;
     RichTextEditorPrivate *const d;
 };

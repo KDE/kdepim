@@ -25,12 +25,17 @@
 #include <KToolInvocation>
 #include <KStandardAction>
 #include <KAction>
+#include <KCursor>
+#include <Sonnet/Highlighter>
+
+#include <sonnet/backgroundchecker.h>
+#include <Sonnet/Dialog>
 
 #include <QMenu>
 #include <QDBusInterface>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-
+#include <QTextDocumentFragment>
 
 using namespace PimCommon;
 
@@ -38,19 +43,33 @@ class PlainTextEditor::PlainTextEditorPrivate
 {
 public:
     PlainTextEditorPrivate()
-        : hasSearchSupport(true),
+        : highLighter(0),
+          hasSearchSupport(true),
           customPalette(false)
     {
+        KConfig sonnetKConfig(QLatin1String("sonnetrc"));
+        KConfigGroup group(&sonnetKConfig, "Spelling");
+        checkSpellingEnabled = group.readEntry("checkerEnabledByDefault", false);
+    }
+    ~PlainTextEditorPrivate()
+    {
+        delete highLighter;
     }
 
+    QString spellCheckingConfigFileName;
+    QString spellCheckingLanguage;
+    QTextDocumentFragment originalDoc;
+    Sonnet::Highlighter *highLighter;
     bool hasSearchSupport;
     bool customPalette;
+    bool checkSpellingEnabled;
 };
 
 PlainTextEditor::PlainTextEditor(QWidget *parent)
     : QPlainTextEdit(parent),
       d(new PlainTextEditor::PlainTextEditorPrivate)
 {
+    KCursor::setAutoHideCursor(this, true, false);
 }
 
 PlainTextEditor::~PlainTextEditor()
@@ -96,6 +115,21 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
         } else {
             popup->addSeparator();
         }
+
+        if( !isReadOnly() ) {
+            QAction *spellCheckAction = popup->addAction( KIcon( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
+            if (emptyDocument)
+                spellCheckAction->setEnabled(false);
+            popup->addSeparator();
+            /*
+            QAction *autoSpellCheckAction = popup->addAction( i18n( "Auto Spell Check" ), this, SLOT(slotToggleAutoSpellCheck()) );
+            autoSpellCheckAction->setCheckable( true );
+            autoSpellCheckAction->setChecked( checkSpellingEnabled() );
+            popup->addAction(autoSpellCheckAction);
+            popup->addSeparator();
+            */
+        }
+
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
@@ -161,10 +195,14 @@ void PlainTextEditor::wheelEvent( QWheelEvent *event )
 
 void PlainTextEditor::setReadOnly( bool readOnly )
 {
+    if ( !readOnly && hasFocus() && d->checkSpellingEnabled && !d->highLighter )
+        createHighlighter();
     if ( readOnly == isReadOnly() )
         return;
 
     if ( readOnly ) {
+        delete d->highLighter;
+        d->highLighter = 0;
         d->customPalette = testAttribute( Qt::WA_SetPalette );
         QPalette p = palette();
         QColor color = p.color( QPalette::Disabled, QPalette::Background );
@@ -183,6 +221,160 @@ void PlainTextEditor::setReadOnly( bool readOnly )
     }
 
     QPlainTextEdit::setReadOnly( readOnly );
+}
+
+
+void PlainTextEditor::slotCheckSpelling()
+{
+    if(document()->isEmpty()) {
+        KMessageBox::information(this, i18n("Nothing to spell check."));
+        return;
+    }
+    Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
+    if(!d->spellCheckingLanguage.isEmpty())
+        backgroundSpellCheck->changeLanguage(d->spellCheckingLanguage);
+    Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, 0);
+    backgroundSpellCheck->setParent(spellDialog);
+    spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    connect(spellDialog, SIGNAL(replace(QString,int,QString)),
+            this, SLOT(slotSpellCheckerCorrected(QString,int,QString)));
+    connect(spellDialog, SIGNAL(misspelling(QString,int)),
+            this, SLOT(slotSpellCheckerMisspelling(QString,int)));
+    connect(spellDialog, SIGNAL(autoCorrect(QString,QString)),
+            this, SLOT(slotSpellCheckerAutoCorrect(QString,QString)));
+    connect(spellDialog, SIGNAL(done(QString)),
+            this, SLOT(slotSpellCheckerFinished()));
+    connect(spellDialog, SIGNAL(cancel()),
+            this, SLOT(slotSpellCheckerCanceled()));
+    connect(spellDialog, SIGNAL(spellCheckStatus(QString)),
+            this, SIGNAL(slotSpellCheckStatus(QString)));
+    connect(spellDialog, SIGNAL(languageChanged(QString)),
+            this, SIGNAL(languageChanged(QString)));
+    d->originalDoc = QTextDocumentFragment(document());
+    spellDialog->setBuffer(toPlainText());
+    spellDialog->show();
+}
+
+void PlainTextEditor::slotSpellCheckerCanceled()
+{
+    QTextDocument *doc = document();
+    doc->clear();
+    QTextCursor cursor(doc);
+    cursor.insertFragment(d->originalDoc);
+    slotSpellCheckerFinished();
+}
+
+void PlainTextEditor::slotSpellCheckerAutoCorrect(const QString& currentWord,const QString& autoCorrectWord)
+{
+    emit spellCheckerAutoCorrect(currentWord, autoCorrectWord);
+}
+
+void PlainTextEditor::slotSpellCheckerMisspelling( const QString &text, int pos )
+{
+    highlightWord( text.length(), pos );
+}
+
+void PlainTextEditor::slotSpellCheckerCorrected( const QString& oldWord, int pos,const QString &newWord)
+{
+    if (oldWord != newWord ) {
+        QTextCursor cursor(document());
+        cursor.setPosition(pos);
+        cursor.setPosition(pos+oldWord.length(),QTextCursor::KeepAnchor);
+        cursor.insertText(newWord);
+    }
+}
+
+void PlainTextEditor::slotSpellCheckerFinished()
+{
+    QTextCursor cursor(document());
+    cursor.clearSelection();
+    setTextCursor(cursor);
+    if (d->highLighter)
+        d->highLighter->rehighlight();
+}
+
+void PlainTextEditor::highlightWord( int length, int pos )
+{
+    QTextCursor cursor(document());
+    cursor.setPosition(pos);
+    cursor.setPosition(pos+length,QTextCursor::KeepAnchor);
+    setTextCursor(cursor);
+    ensureCursorVisible();
+}
+
+void PlainTextEditor::createHighlighter()
+{
+    //setHighlighter(new Sonnet::Highlighter(this, d->spellCheckingConfigFileName));
+}
+
+void PlainTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
+{
+    delete d->highLighter;
+    d->highLighter = _highLighter;
+}
+
+void PlainTextEditor::focusInEvent( QFocusEvent *event )
+{
+    if ( d->checkSpellingEnabled && !isReadOnly() && !d->highLighter )
+        createHighlighter();
+
+    QPlainTextEdit::focusInEvent( event );
+}
+
+void PlainTextEditor::setSpellCheckingConfigFileName(const QString &_fileName)
+{
+    d->spellCheckingConfigFileName = _fileName;
+}
+
+bool PlainTextEditor::checkSpellingEnabled() const
+{
+    return d->checkSpellingEnabled;
+}
+
+void PlainTextEditor::setCheckSpellingEnabled( bool check )
+{
+    emit checkSpellingChanged( check );
+    if ( check == d->checkSpellingEnabled )
+        return;
+
+    // From the above statment we know know that if we're turning checking
+    // on that we need to create a new highlighter and if we're turning it
+    // off we should remove the old one.
+
+    d->checkSpellingEnabled = check;
+    if ( check ) {
+        if ( hasFocus() ) {
+            createHighlighter();
+            if (!d->spellCheckingLanguage.isEmpty())
+                setSpellCheckingLanguage(spellCheckingLanguage());
+        }
+    } else {
+        delete d->highLighter;
+        d->highLighter = 0;
+    }
+}
+
+const QString& PlainTextEditor::spellCheckingLanguage() const
+{
+    return d->spellCheckingLanguage;
+}
+
+void PlainTextEditor::setSpellCheckingLanguage(const QString &_language)
+{
+    if (d->highLighter) {
+        d->highLighter->setCurrentLanguage(_language);
+        d->highLighter->rehighlight();
+    }
+
+    if (_language != d->spellCheckingLanguage) {
+        d->spellCheckingLanguage = _language;
+        emit languageChanged(_language);
+    }
+}
+
+void PlainTextEditor::slotToggleAutoSpellCheck()
+{
+    setCheckSpellingEnabled( !checkSpellingEnabled() );
 }
 
 

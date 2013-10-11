@@ -22,6 +22,9 @@
 
 #include <QPlainTextEdit>
 
+namespace Sonnet {
+class Highlighter;
+}
 namespace PimCommon {
 class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
 {
@@ -34,24 +37,48 @@ public:
     void setSearchSupport(bool b);
     bool searchSupport() const;
 
+    void setSpellCheckingConfigFileName(const QString &_fileName);
+
+    bool checkSpellingEnabled() const;
+    void setCheckSpellingEnabled( bool check );
+
+    void setSpellCheckingLanguage(const QString &_language);
+    const QString& spellCheckingLanguage() const;
+
+    virtual void createHighlighter();
     virtual void setReadOnly( bool readOnly );
 
 private Q_SLOTS:
     void slotUndoableClear();
     void slotSpeakText();
+    void slotCheckSpelling();
+    void slotSpellCheckerMisspelling( const QString &text, int pos );
+    void slotSpellCheckerCorrected( const QString &, int,const QString &);
+    void slotSpellCheckerAutoCorrect(const QString&, const QString&);
+    void slotSpellCheckerCanceled();
+    void slotSpellCheckerFinished();
+    void slotToggleAutoSpellCheck();
 
 protected:
     virtual void addExtraMenuEntry(QMenu *menu);
+    void focusInEvent( QFocusEvent *event );
+
 
 protected:
     void contextMenuEvent( QContextMenuEvent *event );
     void wheelEvent( QWheelEvent *event );
 
+
 Q_SIGNALS:
     void findText();
     void replaceText();
+    void spellCheckerAutoCorrect(const QString& currentWord, const QString& autoCorrectWord);
+    void checkSpellingChanged(bool);
+    void languageChanged(const QString &);
 
 private:
+    void highlightWord( int length, int pos );
+    void setHighlighter(Sonnet::Highlighter *_highLighter);
     class PlainTextEditorPrivate;
     PlainTextEditorPrivate *const d;
 };
