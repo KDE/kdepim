@@ -61,6 +61,7 @@ private Q_SLOTS:
     void slotSpellCheckerCanceled();
     void slotSpellCheckerFinished();
     void slotToggleAutoSpellCheck();
+    void slotLanguageSelected();
 
 
 protected:

@@ -28,6 +28,7 @@
 #include <sonnet/backgroundchecker.h>
 #include <Sonnet/Dialog>
 #include <Sonnet/Highlighter>
+#include <sonnet/speller.h>
 
 #include <QMenu>
 #include <QContextMenuEvent>
@@ -43,6 +44,7 @@ class RichTextEditor::RichTextEditorPrivate
 public:
     RichTextEditorPrivate()
         : highLighter(0),
+          speller(0),
           hasSearchSupport(true),
           customPalette(false)
     {
@@ -53,12 +55,14 @@ public:
     ~RichTextEditorPrivate()
     {
         delete highLighter;
+        delete speller;
     }
 
     QString spellCheckingConfigFileName;
     QString spellCheckingLanguage;
     QTextDocumentFragment originalDoc;
     Sonnet::Highlighter *highLighter;
+    Sonnet::Speller* speller;
     bool hasSearchSupport;
     bool customPalette;
     bool checkSpellingEnabled;
@@ -126,6 +130,30 @@ void RichTextEditor::contextMenuEvent( QContextMenuEvent *event )
             autoSpellCheckAction->setCheckable( true );
             autoSpellCheckAction->setChecked( checkSpellingEnabled() );
             popup->addAction(autoSpellCheckAction);
+
+            if (checkSpellingEnabled()) {
+                QMenu* languagesMenu = new QMenu(i18n("Spell Checking Language"), popup);
+                QActionGroup* languagesGroup = new QActionGroup(languagesMenu);
+                languagesGroup->setExclusive(true);
+                if (!d->speller)
+                    d->speller = new Sonnet::Speller();
+
+                QMapIterator<QString, QString> i(d->speller->availableDictionaries());
+                QAction* languageAction = 0;
+
+                while (i.hasNext()) {
+                    i.next();
+
+                    languageAction = languagesMenu->addAction(i.key());
+                    languageAction->setCheckable(true);
+                    languageAction->setChecked(spellCheckingLanguage() == i.value() || (spellCheckingLanguage().isEmpty()
+                                                                                        && d->speller->defaultLanguage() == i.value()));
+                    languageAction->setData(i.value());
+                    languageAction->setActionGroup(languagesGroup);
+                    connect(languageAction, SIGNAL(triggered(bool)), this, SLOT(slotLanguageSelected()));
+                }
+                popup->addMenu(languagesMenu);
+            }
             popup->addSeparator();
         }
 
@@ -376,6 +404,13 @@ void RichTextEditor::slotToggleAutoSpellCheck()
 {
     setCheckSpellingEnabled( !checkSpellingEnabled() );
 }
+
+void RichTextEditor::slotLanguageSelected()
+{
+    QAction* languageAction = static_cast<QAction*>(QObject::sender());
+    setSpellCheckingLanguage(languageAction->data().toString());
+}
+
 
 
 #include "richtexteditor.moc"
