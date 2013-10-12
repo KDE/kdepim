@@ -30,8 +30,6 @@
 #include <QFile>
 #include <QDir>
 
-static const QString storeJot = QLatin1String("backupjot/");
-
 ImportNotesJob::ImportNotesJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
 {
