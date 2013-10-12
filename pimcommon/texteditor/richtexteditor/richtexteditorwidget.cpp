@@ -42,6 +42,16 @@ RichTextEditorWidget::~RichTextEditorWidget()
 
 }
 
+void RichTextEditorWidget::setAcceptRichText(bool b)
+{
+    mEditor->setAcceptRichText(b);
+}
+
+bool RichTextEditorWidget::acceptRichText() const
+{
+    return mEditor->acceptRichText();
+}
+
 void RichTextEditorWidget::setHtml(const QString &html)
 {
     mEditor->setHtml(html);

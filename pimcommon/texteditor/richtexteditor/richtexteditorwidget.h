@@ -45,6 +45,9 @@ public:
     void setPlainText(const QString &text);
     QString toPlainText() const;
 
+    void setAcceptRichText(bool b);
+    bool acceptRichText() const;
+
 private Q_SLOTS:
     void slotFind();
     void slotReplace();
