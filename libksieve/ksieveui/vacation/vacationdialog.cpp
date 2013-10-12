@@ -14,7 +14,6 @@
 
 #include "vacationdialog.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
-#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -73,7 +72,7 @@ VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
     glay->setRowStretch( row, 1 );
     mTextEdit = new PimCommon::RichTextEditorWidget( frame );
     mTextEdit->setObjectName( QLatin1String("mTextEdit") );
-    mTextEdit->editor()->setAcceptRichText( false );
+    mTextEdit->setAcceptRichText( false );
     glay->addWidget( mTextEdit, row, 0, 1, 2 );
 
     // "Resent only after" spinbox and label:
