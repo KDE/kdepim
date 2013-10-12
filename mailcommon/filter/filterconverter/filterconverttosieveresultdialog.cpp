@@ -70,7 +70,6 @@ void FilterConvertToSieveResultDialog::slotSave()
     PimCommon::Util::saveTextAs(mEditor->editor()->toPlainText(), filter, this);
 }
 
-
 void FilterConvertToSieveResultDialog::setCode(const QString &code)
 {
     mEditor->editor()->setPlainText(code);

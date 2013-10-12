@@ -45,8 +45,7 @@ SieveEditorParsingMissingFeatureWarning::SieveEditorParsingMissingFeatureWarning
         addAction( action );
         break;
     }
-    case GraphicEditor:
-    {
+    case GraphicEditor: {
         KAction *action = new KAction( i18n( "Switch in text mode" ), this );
         connect( action, SIGNAL(triggered(bool)), SLOT(slotSwitchInTextMode()) );
         addAction( action );

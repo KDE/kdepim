@@ -479,8 +479,7 @@ void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
         if (reps.isEmpty()) {
             QAction *suggestionsAction = menu.addAction(i18n("No suggestions for %1", selectedWord));
             suggestionsAction->setEnabled(false);
-        }
-        else {
+        } else {
             QStringList::const_iterator end(reps.constEnd());
             for (QStringList::const_iterator it = reps.constBegin(); it != end; ++it) {
                 menu.addAction(*it);
