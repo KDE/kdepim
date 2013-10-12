@@ -79,6 +79,7 @@ Q_SIGNALS:
     void spellCheckStatus(const QString &);
 
 private:
+    void defaultPopupMenu(const QPoint &pos);
     void setHighlighter(Sonnet::Highlighter *_highLighter);
     void highlightWord( int length, int pos );
     class RichTextEditorPrivate;

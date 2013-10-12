@@ -82,7 +82,7 @@ RichTextEditor::~RichTextEditor()
     delete d;
 }
 
-void RichTextEditor::contextMenuEvent( QContextMenuEvent *event )
+void RichTextEditor::defaultPopupMenu(const QPoint &pos)
 {
     QMenu *popup = createStandardContextMenu();
     if (popup) {
@@ -162,7 +162,7 @@ void RichTextEditor::contextMenuEvent( QContextMenuEvent *event )
         speakAction->setEnabled(!emptyDocument );
         connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
         addExtraMenuEntry(popup);
-        popup->exec( event->globalPos() );
+        popup->exec( pos );
 
         delete popup;
     }
@@ -411,6 +411,109 @@ void RichTextEditor::slotLanguageSelected()
     setSpellCheckingLanguage(languageAction->data().toString());
 }
 
+void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
+{
+    // Obtain the cursor at the mouse position and the current cursor
+    QTextCursor cursorAtMouse = cursorForPosition(event->pos());
+    const int mousePos = cursorAtMouse.position();
+    QTextCursor cursor = textCursor();
 
+    // Check if the user clicked a selected word
+    const bool selectedWordClicked = cursor.hasSelection() &&
+            mousePos >= cursor.selectionStart() &&
+            mousePos <= cursor.selectionEnd();
+
+    // Get the word under the (mouse-)cursor and see if it is misspelled.
+    // Don't include apostrophes at the start/end of the word in the selection.
+    QTextCursor wordSelectCursor(cursorAtMouse);
+    wordSelectCursor.clearSelection();
+    wordSelectCursor.select(QTextCursor::WordUnderCursor);
+    QString selectedWord = wordSelectCursor.selectedText();
+
+    bool isMouseCursorInsideWord = true;
+    if ((mousePos < wordSelectCursor.selectionStart() ||
+         mousePos >= wordSelectCursor.selectionEnd())
+            && (selectedWord.length() > 1)) {
+        isMouseCursorInsideWord = false;
+    }
+
+    // Clear the selection again, we re-select it below (without the apostrophes).
+    wordSelectCursor.setPosition(wordSelectCursor.position()-selectedWord.size());
+    if (selectedWord.startsWith(QLatin1Char('\'')) || selectedWord.startsWith(QLatin1Char('\"'))) {
+        selectedWord = selectedWord.right(selectedWord.size() - 1);
+        wordSelectCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::MoveAnchor);
+    }
+    if (selectedWord.endsWith(QLatin1Char('\'')) || selectedWord.endsWith(QLatin1Char('\"')))
+        selectedWord.chop(1);
+
+    wordSelectCursor.movePosition(QTextCursor::NextCharacter,
+                                  QTextCursor::KeepAnchor, selectedWord.size());
+
+    const bool wordIsMisspelled = isMouseCursorInsideWord &&
+            checkSpellingEnabled() &&
+            !selectedWord.isEmpty() &&
+            d->highLighter &&
+            d->highLighter->isWordMisspelled(selectedWord);
+
+    // If the user clicked a selected word, do nothing.
+    // If the user clicked somewhere else, move the cursor there.
+    // If the user clicked on a misspelled word, select that word.
+    // Same behavior as in OpenOffice Writer.
+    if (!selectedWordClicked) {
+        if (wordIsMisspelled)
+            setTextCursor(wordSelectCursor);
+        else
+            setTextCursor(cursorAtMouse);
+        cursor = textCursor();
+    }
+
+    // Use standard context menu for already selected words, correctly spelled
+    // words and words inside quotes.
+    if (!wordIsMisspelled || selectedWordClicked) {
+        defaultPopupMenu(event->globalPos());
+    } else {
+        QMenu menu; //don't use KMenu here we don't want auto management accelerator
+
+        //Add the suggestions to the menu
+        const QStringList reps = d->highLighter->suggestionsForWord(selectedWord);
+        if (reps.isEmpty()) {
+            QAction *suggestionsAction = menu.addAction(i18n("No suggestions for %1", selectedWord));
+            suggestionsAction->setEnabled(false);
+        }
+        else {
+            QStringList::const_iterator end(reps.constEnd());
+            for (QStringList::const_iterator it = reps.constBegin(); it != end; ++it) {
+                menu.addAction(*it);
+            }
+        }
+
+        menu.addSeparator();
+
+        QAction *ignoreAction = menu.addAction(i18n("Ignore"));
+        QAction *addToDictAction = menu.addAction(i18n("Add to Dictionary"));
+        //Execute the popup inline
+        const QAction *selectedAction = menu.exec(event->globalPos());
+
+        if (selectedAction) {
+            Q_ASSERT(cursor.selectedText() == selectedWord);
+
+            if (selectedAction == ignoreAction) {
+                d->highLighter->ignoreWord(selectedWord);
+                d->highLighter->rehighlight();
+            } else if (selectedAction == addToDictAction) {
+                d->highLighter->addWordToDictionary(selectedWord);
+                d->highLighter->rehighlight();
+            }
+
+            // Other actions can only be one of the suggested words
+            else {
+                const QString replacement = selectedAction->text();
+                Q_ASSERT(reps.contains(replacement));
+                cursor.insertText(replacement);
+                setTextCursor(cursor);
+            }
+        }
+    }
+}
 
 #include "richtexteditor.moc"
