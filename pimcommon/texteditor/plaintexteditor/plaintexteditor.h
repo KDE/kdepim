@@ -37,15 +37,12 @@ public:
     void setSearchSupport(bool b);
     bool searchSupport() const;
 
-    void setSpellCheckingConfigFileName(const QString &_fileName);
-
     bool checkSpellingEnabled() const;
     void setCheckSpellingEnabled( bool check );
 
     void setSpellCheckingLanguage(const QString &_language);
     const QString& spellCheckingLanguage() const;
 
-    virtual void createHighlighter();
     virtual void setReadOnly( bool readOnly );
 
 private Q_SLOTS:
@@ -57,12 +54,9 @@ private Q_SLOTS:
     void slotSpellCheckerAutoCorrect(const QString&, const QString&);
     void slotSpellCheckerCanceled();
     void slotSpellCheckerFinished();
-    void slotToggleAutoSpellCheck();
 
 protected:
     virtual void addExtraMenuEntry(QMenu *menu);
-    void focusInEvent( QFocusEvent *event );
-
 
 protected:
     void contextMenuEvent( QContextMenuEvent *event );
@@ -78,7 +72,6 @@ Q_SIGNALS:
 
 private:
     void highlightWord( int length, int pos );
-    void setHighlighter(Sonnet::Highlighter *_highLighter);
     class PlainTextEditorPrivate;
     PlainTextEditorPrivate *const d;
 };
