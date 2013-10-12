@@ -9,6 +9,7 @@ add_subdirectory(tests)
 include_directories( ${Boost_INCLUDE_DIR} 
                      ${SOPRANO_INCLUDE_DIR}
 		     ${NEPOMUK_CORE_INCLUDE_DIR}
+                     ${CMAKE_SOURCE_DIR}/pimcommon
                    )
 
 ########### next target ###############
@@ -70,6 +71,7 @@ target_link_libraries(messagecore
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${NEPOMUK_CORE_LIBRARY}
+  pimcommon
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES

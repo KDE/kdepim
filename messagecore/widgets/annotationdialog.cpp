@@ -18,13 +18,15 @@
 */
 
 #include "annotationdialog.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <Nepomuk2/Resource>
 #include <Soprano/Vocabulary/NAO>
 
 #include <KMessageBox>
 #include <KLocale>
-#include <KTextEdit>
+
 
 #include <QLabel>
 #include <QGridLayout>
@@ -42,7 +44,7 @@ class AnnotationEditDialog::Private
     }
 
     QUrl mNepomukResourceUri;
-    KTextEdit *mTextEdit;
+    PimCommon::RichTextEditorWidget *mTextEdit;
     bool mHasAnnotation;
 };
 
@@ -66,7 +68,8 @@ AnnotationEditDialog::AnnotationEditDialog( const QUrl &uri, QWidget *parent )
 
   QLabel *label = new QLabel( i18n( "Enter the text that should be stored as a note to the mail:" ) );
   QGridLayout *grid = new QGridLayout( mainWidget() );
-  d->mTextEdit = new KTextEdit( this );
+  d->mTextEdit = new PimCommon::RichTextEditorWidget( this );
+  d->mTextEdit->editor()->setAcceptRichText(false);
   grid->addWidget( label );
   grid->addWidget( d->mTextEdit );
   d->mTextEdit->setFocus();
