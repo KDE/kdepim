@@ -294,7 +294,7 @@ void RichTextEditor::slotSpellCheckerCanceled()
 
 void RichTextEditor::slotSpellCheckerAutoCorrect(const QString& currentWord,const QString& autoCorrectWord)
 {
-    emit spellCheckerAutoCorrect(currentWord, autoCorrectWord);
+    Q_EMIT spellCheckerAutoCorrect(currentWord, autoCorrectWord);
 }
 
 void RichTextEditor::slotSpellCheckerMisspelling( const QString &text, int pos )
@@ -361,7 +361,7 @@ bool RichTextEditor::checkSpellingEnabled() const
 
 void RichTextEditor::setCheckSpellingEnabled( bool check )
 {
-    emit checkSpellingChanged( check );
+    Q_EMIT checkSpellingChanged( check );
     if ( check == d->checkSpellingEnabled )
         return;
 
@@ -396,7 +396,7 @@ void RichTextEditor::setSpellCheckingLanguage(const QString &_language)
 
     if (_language != d->spellCheckingLanguage) {
         d->spellCheckingLanguage = _language;
-        emit languageChanged(_language);
+        Q_EMIT languageChanged(_language);
     }
 }
 
