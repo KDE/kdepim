@@ -24,11 +24,6 @@
 
 class QItemSelectionModel;
 class KRecursiveFilterProxyModel;
-namespace Akonadi {
-class EntityTreeModel;
-class ChangeRecorder;
-class EntityRightsFilterModel;
-}
 class QTreeView;
 class KCheckableProxyModel;
 
@@ -53,8 +48,6 @@ private:
     QList<Akonadi::Collection::Id> mListCollection;
     QTreeView *mFolderView;
     QItemSelectionModel *mSelectionModel;
-    Akonadi::EntityTreeModel *mModel;
-    Akonadi::ChangeRecorder *mChangeRecorder;
     KCheckableProxyModel *mCheckProxy;
     KRecursiveFilterProxyModel *mCollectionFilter;
 };
