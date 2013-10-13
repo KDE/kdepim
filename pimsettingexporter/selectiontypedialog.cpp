@@ -35,11 +35,27 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
     mainLayout->addWidget(mSelectionTreeWidget);
     setMainWidget(mainWidget);
-    resize(600, 400);
+    readConfig();
 }
 
 SelectionTypeDialog::~SelectionTypeDialog()
 {
+    writeConfig();
+}
+
+void SelectionTypeDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectionTypeDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void SelectionTypeDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SelectionTypeDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
 }
 
 Utils::StoredTypes SelectionTypeDialog::kmailTypesSelected(int &numberOfStep) const
