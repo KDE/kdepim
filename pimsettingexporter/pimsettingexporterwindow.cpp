@@ -112,7 +112,7 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
 
 void PimSettingExporterWindow::slotSaveLog()
 {
-    const QString filter(QLatin1String("*.txt"));
+    const QString filter(QLatin1String("*.html"));
     PimCommon::Util::saveTextAs(mLogWidget->toHtml(), filter, this);
 }
 
