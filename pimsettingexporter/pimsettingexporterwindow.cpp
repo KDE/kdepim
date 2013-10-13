@@ -101,7 +101,15 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     restoreAction->setText(i18n("Restore Data..."));
     restoreAction->setEnabled(canZipFile);
 
+    KAction *saveLogAction = ac->addAction(QLatin1String("save_log"), this, SLOT(slotSaveLog()));
+    saveLogAction->setText(i18n("Save log..."));
+
     KStandardAction::quit( this, SLOT(close()), ac );
+}
+
+void PimSettingExporterWindow::slotSaveLog()
+{
+    //TODO
 }
 
 void PimSettingExporterWindow::slotBackupData()
