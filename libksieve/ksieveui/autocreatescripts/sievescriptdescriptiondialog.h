@@ -21,7 +21,7 @@
 #include <KDialog>
 
 namespace PimCommon {
-class CustomTextEdit;
+class RichTextEditorWidget;
 }
 namespace KSieveUi {
 class SieveScriptDescriptionDialog : public KDialog
@@ -39,7 +39,7 @@ private:
     void writeConfig();
 
 private:
-    PimCommon::CustomTextEdit *mEdit;
+    PimCommon::RichTextEditorWidget *mEdit;
 };
 }
 
