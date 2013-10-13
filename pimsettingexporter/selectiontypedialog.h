@@ -38,6 +38,8 @@ public:
     Utils::StoredTypes knotesTypesSelected(int &numberOfStep) const;
 
 private:
+    void readConfig();
+    void writeConfig();
     SelectionTypeTreeWidget *mSelectionTreeWidget;
 };
 
