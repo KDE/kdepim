@@ -66,6 +66,10 @@ void SelectionTypeTreeWidget::initialize()
     mKjotsItem->setText(0, QLatin1String("KJots"));
     createSubItem(mKjotsItem, Utils::Resources);
     createSubItem(mKjotsItem, Utils::Config);
+
+    mKNotesItem = new QTreeWidgetItem(this);
+    mKNotesItem->setText(0, QLatin1String("KNotes"));
+    createSubItem(mKNotesItem, Utils::Config);
 }
 
 
@@ -106,6 +110,11 @@ Utils::StoredTypes SelectionTypeTreeWidget::korganizerStoredType(int &numberOfSt
 Utils::StoredTypes SelectionTypeTreeWidget::kjotsStoredType(int &numberOfStep) const
 {
     return typeChecked(mKjotsItem, numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeTreeWidget::knotesStoredType(int &numberOfStep) const
+{
+    return typeChecked(mKNotesItem, numberOfStep);
 }
 
 void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::StoredType type)

@@ -67,4 +67,9 @@ Utils::StoredTypes SelectionTypeDialog::kjotsTypesSelected(int &numberOfStep) co
     return mSelectionTreeWidget->kjotsStoredType(numberOfStep);
 }
 
+Utils::StoredTypes SelectionTypeDialog::knotesTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->knotesStoredType(numberOfStep);
+}
+
 #include "selectiontypedialog.moc"
