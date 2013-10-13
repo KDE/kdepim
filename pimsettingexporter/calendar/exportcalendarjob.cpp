@@ -44,6 +44,7 @@ ExportCalendarJob::~ExportCalendarJob()
 
 void ExportCalendarJob::start()
 {
+    Q_EMIT title(i18n("Start export korganizer settings..."));
     mArchiveDirectory = archive()->directory();
     createProgressDialog();
 

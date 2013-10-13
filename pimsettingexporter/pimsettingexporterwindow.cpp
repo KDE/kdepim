@@ -198,6 +198,11 @@ void PimSettingExporterWindow::slotAddError(const QString& info)
     mLogWidget->addErrorLogEntry(info);
 }
 
+void PimSettingExporterWindow::slotAddTitle(const QString &info)
+{
+    mLogWidget->addTitleLogEntry(info);
+}
+
 void PimSettingExporterWindow::slotRestoreData()
 {
     if (KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
@@ -274,6 +279,7 @@ void PimSettingExporterWindow::executeJob()
 {
     connect(mImportExportData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
     connect(mImportExportData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
+    connect(mImportExportData, SIGNAL(title(QString)), SLOT(slotAddTitle(QString)));
     mImportExportData->start();
     delete mImportExportData;
     mImportExportData = 0;

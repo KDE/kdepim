@@ -65,6 +65,7 @@ void ExportMailJob::start()
     if (!checkProgram())
         return;
 
+    Q_EMIT title(i18n("Start export knotes settings..."));
     createProgressDialog();
 
     if (mTypeSelected & Utils::Identity) {

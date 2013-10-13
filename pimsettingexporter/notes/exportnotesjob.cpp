@@ -43,6 +43,7 @@ ExportNotesJob::~ExportNotesJob()
 
 void ExportNotesJob::start()
 {
+    Q_EMIT title(i18n("Start export knotes settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config) {
         backupConfig();

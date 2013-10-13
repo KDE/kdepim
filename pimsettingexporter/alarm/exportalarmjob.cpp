@@ -43,6 +43,7 @@ ExportAlarmJob::~ExportAlarmJob()
 
 void ExportAlarmJob::start()
 {
+    Q_EMIT title(i18n("Start export kalarm settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Resources) {
         backupResources();

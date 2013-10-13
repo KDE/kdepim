@@ -44,6 +44,7 @@ ImportJotJob::~ImportJotJob()
 
 void ImportJotJob::start()
 {
+    Q_EMIT title(i18n("Start import kjots settings..."));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory ,QString());
     if (mTypeSelected & Utils::Resources)
