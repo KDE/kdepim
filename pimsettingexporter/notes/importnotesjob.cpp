@@ -45,14 +45,19 @@ void ImportNotesJob::start()
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config)
         restoreConfig();
+    if (mTypeSelected & Utils::Data)
+        restoreData();
 }
-
-
 
 void ImportNotesJob::restoreConfig()
 {
     //TODO
     Q_EMIT info(i18n("Config restored."));
+}
+
+void ImportNotesJob::restoreData()
+{
+    //TODO
 }
 
 #include "importnotesjob.moc"

@@ -70,6 +70,7 @@ void SelectionTypeTreeWidget::initialize()
     mKNotesItem = new QTreeWidgetItem(this);
     mKNotesItem->setText(0, QLatin1String("KNotes"));
     createSubItem(mKNotesItem, Utils::Config);
+    createSubItem(mKNotesItem, Utils::Data);
 }
 
 
@@ -174,6 +175,14 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Nepomuk Database"));
+        item->setCheckState(0, Qt::Unchecked);
+        item->setData(0, action, type);
+        break;
+    }
+    case Utils::Data:
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, i18n("Data"));
         item->setCheckState(0, Qt::Unchecked);
         item->setData(0, action, type);
         break;

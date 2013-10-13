@@ -34,6 +34,7 @@ public:
 
 private:
     void restoreConfig();
+    void restoreData();
 };
 
 #endif // IMPORTNOTESJOB_H
