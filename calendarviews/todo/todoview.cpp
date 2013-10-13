@@ -687,17 +687,7 @@ void TodoView::addTodo( const QString &summary,
       collection = calendar()->collection( parentItem.storageCollectionId() );
   }
 
-  CalendarSupport::CollectionSelection *selection = EventViews::EventView::globalCollectionSelection();
-
-  // If we only have one collection, don't ask in which collection to save the to-do.
-  if ( !collection.isValid() && selection && selection->model()->model()->rowCount() == 1 ) {
-    QModelIndex index = selection->model()->model()->index( 0, 0 );
-    if ( index.isValid() ) {
-      collection = CalendarSupport::collectionFromIndex( index );
-    }
-  }
-
-  changer()->createIncidence( todo, collection, this );
+  changer()->createIncidence( todo, Akonadi::Collection(), this );
 }
 
 void TodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
