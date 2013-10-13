@@ -72,22 +72,15 @@
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/KMime/MessageParts>
 
-#include <KIMAP/LoginJob>
-
 #include <KMime/KMimeMessage>
 
 #include <KPIMUtils/Email>
 
-#include <Mailtransport/Transport>
-
-#include <KCharsets>
 #include <KColorScheme>
 #include <KDBusServiceStarter>
 #include <KJob>
 #include <KLocale>
-#include <KMenu>
 #include <KMessageBox>
-#include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KIO/JobUiDelegate>
 
