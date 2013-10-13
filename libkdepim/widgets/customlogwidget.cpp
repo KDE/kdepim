@@ -127,3 +127,8 @@ void CustomLogWidget::addErrorLogEntry( const QString& log )
   addItem( item );
 }
 
+QString CustomLogWidget::toHtml() const
+{
+    return QString();
+}
+

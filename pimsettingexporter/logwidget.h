@@ -33,6 +33,7 @@ public:
     void addInfoLogEntry( const QString& log );
     void addErrorLogEntry( const QString& log );
     void clear();
+    QString toHtml() const;
 
 private:
     KPIM::CustomLogWidget *mCustomLogWidget;

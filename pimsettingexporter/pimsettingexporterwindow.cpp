@@ -44,6 +44,9 @@
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/filter/filtermanager.h>
 
+#include "pimcommon/util/pimutil.h"
+
+
 #include <Akonadi/Control>
 
 #include <KStandardAction>
@@ -109,7 +112,8 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
 
 void PimSettingExporterWindow::slotSaveLog()
 {
-    //TODO
+    const QString filter(QLatin1String("*.txt"));
+    PimCommon::Util::saveTextAs(mLogWidget->toHtml(), filter, this);
 }
 
 void PimSettingExporterWindow::slotBackupData()

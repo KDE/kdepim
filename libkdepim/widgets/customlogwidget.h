@@ -48,6 +48,8 @@ public:
 
     void addInfoLogEntry( const QString& log );
     void addErrorLogEntry( const QString& log );
+
+    QString toHtml() const;
 };
 }
 

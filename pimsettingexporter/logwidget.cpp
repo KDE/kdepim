@@ -52,3 +52,7 @@ void LogWidget::addErrorLogEntry( const QString &log )
     mCustomLogWidget->addErrorLogEntry(log);
 }
 
+QString LogWidget::toHtml() const
+{
+    return mCustomLogWidget->toHtml();
+}
