@@ -30,6 +30,8 @@ private Q_SLOTS:
     void initTestCase();
     void testImportAndFilters();
     void testImportOrFilters();
+    void testImportTypeFilters();
+
 private:
     void initialize();
 };

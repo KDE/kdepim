@@ -161,4 +161,50 @@ void FilterImportThunderbirdtest::testImportOrFilters()
     qDeleteAll(lst);
 }
 
+void FilterImportThunderbirdtest::testImportTypeFilters()
+{
+    const QString filter = QLatin1String("version=\"9\"\n"
+                                         "logging=\"no\"\n"
+                                         "name=\"Subject contains: kde\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"17\"\n"
+                                         "action=\"Copy to folder\"\n"
+                                         "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
+                                         "condition=\"AND (subject,contains,konqi)\"\n"
+                                         "name=\"filter1\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"16\"\n"
+                                         "action=\"Copy to folder\"\n"
+                                         "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
+                                         "action=\"Mark read\"\n"
+                                         "condition=\"AND (subject,contains,kmail) AND (subject,contains,konqueror) AND (subject,contains,kf5) AND (subject,contains,qtcreator)\"\n"
+                                         "name=\"filter1\"\n"
+                                         "enabled=\"yes\"\n"
+                                         "type=\"1\"\n"
+                                         "action=\"Copy to folder\"\n"
+                                         "actionValue=\"mailbox://kde@pop.kde.org/Inbox\"\n"
+                                         "action=\"Mark read\"\n"
+                                         "condition=\"AND (subject,contains,kmail) AND (subject,contains,konqueror) AND (subject,contains,kf5) AND (subject,contains,qtcreator)\"\n");
+    MailCommon::FilterImporterThunderbird importer(filter, false);
+    QList<MailCommon::MailFilter*> lst = importer.importFilter();
+
+    MailCommon::MailFilter *f = lst.at(0);
+    //17
+    QCOMPARE(f->applyOnInbound(), true);
+    QCOMPARE(f->applyOnExplicit(), true);
+
+    f = lst.at(1);
+    //16
+    QCOMPARE(f->applyOnInbound(), false);
+    QCOMPARE(f->applyOnExplicit(), true);
+
+    f = lst.at(2);
+    //1
+    QCOMPARE(f->applyOnInbound(), true);
+    QCOMPARE(f->applyOnExplicit(), false);
+
+    qDeleteAll(lst);
+}
+
+
 #include "filterimportthunderbirdtest.moc"
