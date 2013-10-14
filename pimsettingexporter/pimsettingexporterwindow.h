@@ -33,8 +33,10 @@ public:
 private Q_SLOTS:
     void slotBackupData();
     void slotRestoreData();
-    void slotAddInfo(const QString& info);
-    void slotAddError(const QString& info);
+    void slotAddInfo(const QString &info);
+    void slotAddError(const QString &info);
+    void slotAddTitle(const QString &info);
+    void slotSaveLog();
 
 private:
     void executeJob();

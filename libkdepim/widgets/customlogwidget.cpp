@@ -20,6 +20,8 @@
 #include <QPainter>
 #include <QApplication>
 #include <QAbstractTextDocumentLayout>
+
+#include <KDebug>
 using namespace KPIM;
 
 LogItemDelegate::LogItemDelegate( QObject *parent )
@@ -113,17 +115,64 @@ CustomLogWidget::~CustomLogWidget()
 {
 }
 
-void CustomLogWidget::addInfoLogEntry( const QString& log )
+void CustomLogWidget::addTitleLogEntry( const QString &log )
+{
+    QListWidgetItem* item =new QListWidgetItem(log);
+    item->setForeground(Qt::black);
+    item->setData(ItemLogType, Title);
+    addItem( item );
+}
+
+void CustomLogWidget::addInfoLogEntry( const QString &log )
 {
   QListWidgetItem* item =new QListWidgetItem(log);
   item->setForeground(Qt::blue);
+  item->setData(ItemLogType, Info);
   addItem( item );
 }
 
-void CustomLogWidget::addErrorLogEntry( const QString& log )
+void CustomLogWidget::addErrorLogEntry( const QString &log )
 {
   QListWidgetItem* item =new QListWidgetItem(log);
   item->setForeground(Qt::red);
+  item->setData(ItemLogType, Error);
   addItem( item );
 }
 
+QString CustomLogWidget::toHtml() const
+{
+    QString result = QLatin1String("<html>\n<body>\n");
+    for (int i=0; i < count(); ++i)  {
+        QListWidgetItem *itemWidget = item(i);
+        const QString itemText(itemWidget->text());
+        QString logText;
+        LogType type = static_cast<LogType>(itemWidget->data(CustomLogWidget::ItemLogType).toInt());
+        switch(type) {
+        case Title:
+            logText = QString::fromUtf8( "<font color=%1>%2</font>" ).arg(QColor(Qt::black).name()).arg(itemText);
+            break;
+        case Error:
+            logText = QString::fromUtf8( "<font color=%1>%2</font>" ).arg(QColor(Qt::red).name()).arg(itemText);
+            break;
+        case Info:
+            logText = QString::fromUtf8( "<font color=%1>%2</font>" ).arg(QColor(Qt::green).name()).arg(itemText);
+            break;
+        default:
+            kDebug()<<"LogType undefined"<<type;
+            logText += itemWidget->text();
+            break;
+        }
+        result += QLatin1String("<p>") + logText + QLatin1String("<br>") + QLatin1String("</p>");
+    }
+    result += QLatin1String( "</body>\n</html>\n" );
+    return result;
+}
+
+QString CustomLogWidget::toPlainText() const
+{
+    QString result;
+    for (int i=0; i < count(); ++i)  {
+        result += item(i)->text() + QLatin1Char('\n');
+    }
+    return result;
+}

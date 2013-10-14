@@ -15,43 +15,39 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef PLAINTEXTEDITOR_H
-#define PLAINTEXTEDITOR_H
+#ifndef RICHTEXTEDITFINDBAR_H
+#define RICHTEXTEDITFINDBAR_H
 
 #include "pimcommon_export.h"
+#include "pimcommon/texteditor/commonwidget/texteditfindbarbase.h"
+#include <QTextDocument>
 
-#include <QPlainTextEdit>
-
+class QTextEdit;
 namespace PimCommon {
-class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
+class PIMCOMMON_EXPORT RichTextEditFindBar : public TextEditFindBarBase
 {
     Q_OBJECT
-    Q_PROPERTY(bool searchSupport READ searchSupport WRITE setSearchSupport)
 public:
-    explicit PlainTextEditor(QWidget *parent=0);
-    ~PlainTextEditor();
-
-    void setSearchSupport(bool b);
-    bool searchSupport() const;
-
-private Q_SLOTS:
-    void slotUndoableClear();
-    void slotSpeakText();
+    explicit RichTextEditFindBar( QTextEdit *view, QWidget *parent = 0 );
+    ~RichTextEditFindBar();
 
 protected:
-    virtual void addExtraMenuEntry(QMenu *menu);
+    virtual bool viewIsReadOnly() const;
+    virtual bool documentIsEmpty() const;
+    virtual bool searchInDocument(const QString &text, QTextDocument::FindFlags searchOptions);
+    virtual void autoSearchMoveCursor();
 
-protected:
-    void contextMenuEvent( QContextMenuEvent *event );
+public slots:
+    virtual void slotSearchText( bool backward = false, bool isAutoSearch = true );
 
-Q_SIGNALS:
-    void findText();
-    void replaceText();
+private slots:
+    virtual void slotReplaceText();
+    virtual void slotReplaceAllText();
 
 private:
-    class PlainTextEditorPrivate;
-    PlainTextEditorPrivate *const d;
-    bool mHasSearchSupport;
+    QTextEdit *mView;
 };
+
 }
-#endif // PLAINTEXTEDITOR_H
+
+#endif // RICHTEXTEDITFINDBAR_H

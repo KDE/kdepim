@@ -43,6 +43,7 @@ ExportJotJob::~ExportJotJob()
 
 void ExportJotJob::start()
 {
+    Q_EMIT title(i18n("Start export kjots settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Resources) {
         backupResources();

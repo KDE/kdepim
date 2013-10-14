@@ -30,9 +30,12 @@ public:
     explicit LogWidget(QWidget *parent);
     ~LogWidget();
 
-    void addInfoLogEntry( const QString& log );
-    void addErrorLogEntry( const QString& log );
+    void addInfoLogEntry( const QString &log );
+    void addErrorLogEntry( const QString &log );
+    void addTitleLogEntry( const QString &log );
     void clear();
+    QString toHtml() const;
+    QString toPlainText() const;
 
 private:
     KPIM::CustomLogWidget *mCustomLogWidget;

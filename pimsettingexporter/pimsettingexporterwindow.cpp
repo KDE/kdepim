@@ -33,6 +33,9 @@
 #include "jot/exportjotjob.h"
 #include "jot/importjotjob.h"
 
+#include "notes/exportnotesjob.h"
+#include "notes/importnotesjob.h"
+
 #include "pimsettingexporterkernel.h"
 #include "selectiontypedialog.h"
 #include "utils.h"
@@ -40,6 +43,9 @@
 
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/filter/filtermanager.h>
+
+#include "pimcommon/util/pimutil.h"
+
 
 #include <Akonadi/Control>
 
@@ -98,7 +104,16 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     restoreAction->setText(i18n("Restore Data..."));
     restoreAction->setEnabled(canZipFile);
 
+    KAction *saveLogAction = ac->addAction(QLatin1String("save_log"), this, SLOT(slotSaveLog()));
+    saveLogAction->setText(i18n("Save log..."));
+
     KStandardAction::quit( this, SLOT(close()), ac );
+}
+
+void PimSettingExporterWindow::slotSaveLog()
+{
+    const QString filter(QLatin1String("*.html"));
+    PimCommon::Util::saveTextAs(mLogWidget->toHtml(), filter, this);
 }
 
 void PimSettingExporterWindow::slotBackupData()
@@ -116,11 +131,13 @@ void PimSettingExporterWindow::slotBackupData()
         int kalarmNumberOfStep = 0;
         int kaddressbookNumberOfStep = 0;
         int kjotsNumberOfStep = 0;
+        int knotesNumberOfStep = 0;
         const Utils::StoredTypes kmailTypeSelected = dialog->kmailTypesSelected(kmailNumberOfStep);
         const Utils::StoredTypes kaddressbookTypeSelected = dialog->kaddressbookTypesSelected(kaddressbookNumberOfStep);
         const Utils::StoredTypes korganizerTypeSelected = dialog->korganizerTypesSelected(korganizerNumberOfStep);
         const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);
         const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
+        const Utils::StoredTypes knotesTypeSelected = dialog->knotesTypesSelected(knotesNumberOfStep);
         delete dialog;
         mLogWidget->clear();
         delete mImportExportData;
@@ -159,7 +176,10 @@ void PimSettingExporterWindow::slotBackupData()
             mImportExportData = new ExportJotJob(this, kjotsTypeSelected, archiveStorage, kjotsNumberOfStep);
             executeJob();
         }
-
+        if (knotesNumberOfStep != 0) {
+            mImportExportData = new ExportNotesJob(this, knotesTypeSelected, archiveStorage, knotesNumberOfStep);
+            executeJob();
+        }
         //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
@@ -178,6 +198,11 @@ void PimSettingExporterWindow::slotAddError(const QString& info)
     mLogWidget->addErrorLogEntry(info);
 }
 
+void PimSettingExporterWindow::slotAddTitle(const QString &info)
+{
+    mLogWidget->addTitleLogEntry(info);
+}
+
 void PimSettingExporterWindow::slotRestoreData()
 {
     if (KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
@@ -193,11 +218,13 @@ void PimSettingExporterWindow::slotRestoreData()
         int kalarmNumberOfStep = 0;
         int kaddressbookNumberOfStep = 0;
         int kjotsNumberOfStep = 0;
+        int knotesNumberOfStep = 0;
         const Utils::StoredTypes kmailTypeSelected = dialog->kmailTypesSelected(kmailNumberOfStep);
         const Utils::StoredTypes kaddressbookTypeSelected = dialog->kaddressbookTypesSelected(kaddressbookNumberOfStep);
         const Utils::StoredTypes korganizerTypeSelected = dialog->korganizerTypesSelected(korganizerNumberOfStep);
         const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);        
         const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
+        const Utils::StoredTypes knotesTypeSelected = dialog->knotesTypesSelected(knotesNumberOfStep);
 
         delete dialog;
         mLogWidget->clear();
@@ -237,7 +264,10 @@ void PimSettingExporterWindow::slotRestoreData()
             mImportExportData = new ImportJotJob(this, kjotsTypeSelected, archiveStorage, kjotsNumberOfStep);
             executeJob();
         }
-
+        if (knotesNumberOfStep != 0) {
+            mImportExportData = new ImportNotesJob(this, knotesTypeSelected, archiveStorage, knotesNumberOfStep);
+            executeJob();
+        }
         archiveStorage->closeArchive();
         delete archiveStorage;
     } else {
@@ -249,6 +279,7 @@ void PimSettingExporterWindow::executeJob()
 {
     connect(mImportExportData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
     connect(mImportExportData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
+    connect(mImportExportData, SIGNAL(title(QString)), SLOT(slotAddTitle(QString)));
     mImportExportData->start();
     delete mImportExportData;
     mImportExportData = 0;

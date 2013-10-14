@@ -13,6 +13,7 @@
 
 
 #include "vacationdialog.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -69,7 +70,7 @@ VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
     // Message text edit:
     ++row;
     glay->setRowStretch( row, 1 );
-    mTextEdit = new KTextEdit( frame );
+    mTextEdit = new PimCommon::RichTextEditorWidget( frame );
     mTextEdit->setObjectName( QLatin1String("mTextEdit") );
     mTextEdit->setAcceptRichText( false );
     glay->addWidget( mTextEdit, row, 0, 1, 2 );
@@ -164,7 +165,7 @@ QString VacationDialog::messageText() const
 
 void VacationDialog::setMessageText( const QString &text )
 {
-    mTextEdit->setText( text );
+    mTextEdit->setPlainText( text );
     const int height = ( mTextEdit->fontMetrics().lineSpacing() + 1 ) * 11;
     mTextEdit->setMinimumHeight( height );
 }

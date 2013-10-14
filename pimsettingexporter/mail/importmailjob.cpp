@@ -66,6 +66,7 @@ ImportMailJob::~ImportMailJob()
 
 void ImportMailJob::start()
 {
+    Q_EMIT title(i18n("Start import kmail settings..."));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory,QString());
     if (!mFileList.isEmpty()|| !mHashMailArchive.isEmpty()) {

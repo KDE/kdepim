@@ -59,17 +59,17 @@ void SelectMultiCollectionWidget::initialize()
 
 
     // Create a new change recorder.
-    mChangeRecorder = new Akonadi::ChangeRecorder( this );
-    mChangeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
+    Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder( this );
+    changeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
 
-    mModel = new Akonadi::EntityTreeModel( mChangeRecorder, this );
+    Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel( changeRecorder, this );
     // Set the model to show only collections, not items.
-    mModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::NoItemPopulation );
+    model->setItemPopulationStrategy( Akonadi::EntityTreeModel::NoItemPopulation );
 
     Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel( this );
     mimeTypeProxy->setExcludeVirtualCollections( true );
     mimeTypeProxy->addMimeTypeFilters( QStringList() << KMime::Message::mimeType() );
-    mimeTypeProxy->setSourceModel( mModel );
+    mimeTypeProxy->setSourceModel( model );
 
 
 
@@ -79,7 +79,7 @@ void SelectMultiCollectionWidget::initialize()
     mCheckProxy->setSelectionModel( mSelectionModel );
     mCheckProxy->setSourceModel( mimeTypeProxy );
 
-    connect(mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(slotCollectionsInserted(QModelIndex,int,int)));
 
     mCollectionFilter = new KRecursiveFilterProxyModel(this);

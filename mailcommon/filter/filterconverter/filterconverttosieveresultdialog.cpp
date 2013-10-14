@@ -19,8 +19,8 @@
 #include "filterconverttosieveresultdialog.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighter.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
-#include "pimcommon/plaintexteditor/plaintexteditor.h"
-#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/util/pimutil.h"
 
 #include <KLocale>
@@ -69,7 +69,6 @@ void FilterConvertToSieveResultDialog::slotSave()
     const QString filter = i18n( "*.siv|sieve files (*.siv)\n*|all files (*)" );
     PimCommon::Util::saveTextAs(mEditor->editor()->toPlainText(), filter, this);
 }
-
 
 void FilterConvertToSieveResultDialog::setCode(const QString &code)
 {

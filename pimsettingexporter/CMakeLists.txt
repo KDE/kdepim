@@ -35,6 +35,8 @@ set(pimsettingexporter_SRCS
   alarm/importalarmjob.cpp
   jot/exportjotjob.cpp
   jot/importjotjob.cpp
+  notes/exportnotesjob.cpp
+  notes/importnotesjob.cpp
   archivestorage.cpp
 )
 

@@ -20,7 +20,7 @@
 #include "widgets/minimumcombobox.h"
 #include "translatorutil.h"
 #include "googletranslator.h"
-#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KTextEdit>
 #include <KComboBox>

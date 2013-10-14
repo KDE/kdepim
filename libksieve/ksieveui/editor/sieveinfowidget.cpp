@@ -30,6 +30,7 @@ SieveInfoWidget::SieveInfoWidget(QWidget *parent)
     mInfo = new KTextEdit;
     mInfo->setReadOnly(true);
     mInfo->setAcceptRichText(true);
+    mInfo->enableFindReplace(false);
     lay->addWidget(mInfo);
     setLayout(lay);
 }

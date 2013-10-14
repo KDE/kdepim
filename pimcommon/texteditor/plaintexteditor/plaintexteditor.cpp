@@ -25,12 +25,16 @@
 #include <KToolInvocation>
 #include <KStandardAction>
 #include <KAction>
+#include <KCursor>
+
+#include <sonnet/backgroundchecker.h>
+#include <Sonnet/Dialog>
 
 #include <QMenu>
 #include <QDBusInterface>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-
+#include <QTextDocumentFragment>
 
 using namespace PimCommon;
 
@@ -38,17 +42,25 @@ class PlainTextEditor::PlainTextEditorPrivate
 {
 public:
     PlainTextEditorPrivate()
-        : hasSearchSupport(true)
+        : hasSearchSupport(true),
+          customPalette(false)
+    {
+    }
+    ~PlainTextEditorPrivate()
     {
     }
 
+    QString spellCheckingLanguage;
+    QTextDocumentFragment originalDoc;
     bool hasSearchSupport;
+    bool customPalette;
 };
 
 PlainTextEditor::PlainTextEditor(QWidget *parent)
     : QPlainTextEdit(parent),
       d(new PlainTextEditor::PlainTextEditorPrivate)
 {
+    KCursor::setAutoHideCursor(this, true, false);
 }
 
 PlainTextEditor::~PlainTextEditor()
@@ -94,6 +106,14 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
         } else {
             popup->addSeparator();
         }
+
+        if( !isReadOnly() ) {
+            QAction *spellCheckAction = popup->addAction( KIcon( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
+            if (emptyDocument)
+                spellCheckAction->setEnabled(false);
+            popup->addSeparator();
+        }
+
         QAction *speakAction = popup->addAction(i18n("Speak Text"));
         speakAction->setIcon(KIcon(QLatin1String("preferences-desktop-text-to-speech")));
         speakAction->setEnabled(!emptyDocument );
@@ -105,8 +125,9 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
     }
 }
 
-void PlainTextEditor::addExtraMenuEntry(QMenu *)
+void PlainTextEditor::addExtraMenuEntry(QMenu *menu)
 {
+    Q_UNUSED(menu);
 }
 
 void PlainTextEditor::slotSpeakText()
@@ -146,6 +167,117 @@ void PlainTextEditor::setSearchSupport(bool b)
 bool PlainTextEditor::searchSupport() const
 {
     return d->hasSearchSupport;
+}
+
+void PlainTextEditor::wheelEvent( QWheelEvent *event )
+{
+    if ( KGlobalSettings::wheelMouseZooms() )
+        QPlainTextEdit::wheelEvent( event );
+    else // thanks, we don't want to zoom, so skip PlainTextEdit's impl.
+        QAbstractScrollArea::wheelEvent( event );
+}
+
+void PlainTextEditor::setReadOnly( bool readOnly )
+{
+    if ( readOnly == isReadOnly() )
+        return;
+
+    if ( readOnly ) {
+        d->customPalette = testAttribute( Qt::WA_SetPalette );
+        QPalette p = palette();
+        QColor color = p.color( QPalette::Disabled, QPalette::Background );
+        p.setColor( QPalette::Base, color );
+        p.setColor( QPalette::Background, color );
+        setPalette( p );
+    } else {
+        if ( d->customPalette && testAttribute( Qt::WA_SetPalette ) ) {
+            QPalette p = palette();
+            QColor color = p.color( QPalette::Normal, QPalette::Base );
+            p.setColor( QPalette::Base, color );
+            p.setColor( QPalette::Background, color );
+            setPalette( p );
+        } else
+            setPalette( QPalette() );
+    }
+
+    QPlainTextEdit::setReadOnly( readOnly );
+}
+
+
+void PlainTextEditor::slotCheckSpelling()
+{
+    if(document()->isEmpty()) {
+        KMessageBox::information(this, i18n("Nothing to spell check."));
+        return;
+    }
+    Sonnet::BackgroundChecker *backgroundSpellCheck = new Sonnet::BackgroundChecker;
+    if(!d->spellCheckingLanguage.isEmpty())
+        backgroundSpellCheck->changeLanguage(d->spellCheckingLanguage);
+    Sonnet::Dialog *spellDialog = new Sonnet::Dialog(backgroundSpellCheck, 0);
+    backgroundSpellCheck->setParent(spellDialog);
+    spellDialog->setAttribute(Qt::WA_DeleteOnClose, true);
+    connect(spellDialog, SIGNAL(replace(QString,int,QString)),
+            this, SLOT(slotSpellCheckerCorrected(QString,int,QString)));
+    connect(spellDialog, SIGNAL(misspelling(QString,int)),
+            this, SLOT(slotSpellCheckerMisspelling(QString,int)));
+    connect(spellDialog, SIGNAL(autoCorrect(QString,QString)),
+            this, SLOT(slotSpellCheckerAutoCorrect(QString,QString)));
+    connect(spellDialog, SIGNAL(done(QString)),
+            this, SLOT(slotSpellCheckerFinished()));
+    connect(spellDialog, SIGNAL(cancel()),
+            this, SLOT(slotSpellCheckerCanceled()));
+    connect(spellDialog, SIGNAL(spellCheckStatus(QString)),
+            this, SIGNAL(slotSpellCheckStatus(QString)));
+    connect(spellDialog, SIGNAL(languageChanged(QString)),
+            this, SIGNAL(languageChanged(QString)));
+    d->originalDoc = QTextDocumentFragment(document());
+    spellDialog->setBuffer(toPlainText());
+    spellDialog->show();
+}
+
+void PlainTextEditor::slotSpellCheckerCanceled()
+{
+    QTextDocument *doc = document();
+    doc->clear();
+    QTextCursor cursor(doc);
+    cursor.insertFragment(d->originalDoc);
+    slotSpellCheckerFinished();
+}
+
+void PlainTextEditor::slotSpellCheckerAutoCorrect(const QString& currentWord,const QString& autoCorrectWord)
+{
+    emit spellCheckerAutoCorrect(currentWord, autoCorrectWord);
+}
+
+void PlainTextEditor::slotSpellCheckerMisspelling( const QString &text, int pos )
+{
+    highlightWord( text.length(), pos );
+}
+
+void PlainTextEditor::slotSpellCheckerCorrected( const QString& oldWord, int pos,const QString &newWord)
+{
+    if (oldWord != newWord ) {
+        QTextCursor cursor(document());
+        cursor.setPosition(pos);
+        cursor.setPosition(pos+oldWord.length(),QTextCursor::KeepAnchor);
+        cursor.insertText(newWord);
+    }
+}
+
+void PlainTextEditor::slotSpellCheckerFinished()
+{
+    QTextCursor cursor(document());
+    cursor.clearSelection();
+    setTextCursor(cursor);
+}
+
+void PlainTextEditor::highlightWord( int length, int pos )
+{
+    QTextCursor cursor(document());
+    cursor.setPosition(pos);
+    cursor.setPosition(pos+length,QTextCursor::KeepAnchor);
+    setTextCursor(cursor);
+    ensureCursorVisible();
 }
 
 #include "plaintexteditor.moc"

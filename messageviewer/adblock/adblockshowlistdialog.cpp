@@ -17,8 +17,8 @@
 
 #include "adblockshowlistdialog.h"
 #include "adblocksyntaxhighlighter.h"
-#include "pimcommon/plaintexteditor/plaintexteditorwidget.h"
-#include "pimcommon/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 #include <KPIMUtils/ProgressIndicatorLabel>
 

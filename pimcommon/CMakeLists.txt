@@ -28,9 +28,14 @@ set(libpimcommon_SRCS
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp
   widgets/customtextedit.cpp
-  plaintexteditor/plaintexteditfindbar.cpp
-  plaintexteditor/plaintexteditor.cpp
-  plaintexteditor/plaintexteditorwidget.cpp
+  texteditor/plaintexteditor/plaintexteditfindbar.cpp
+  texteditor/plaintexteditor/plaintexteditor.cpp
+  texteditor/plaintexteditor/plaintexteditorwidget.cpp
+  texteditor/commonwidget/textfindreplacewidget.cpp
+  texteditor/commonwidget/texteditfindbarbase.cpp
+  texteditor/richtexteditor/richtexteditor.cpp
+  texteditor/richtexteditor/richtexteditfindbar.cpp
+  texteditor/richtexteditor/richtexteditorwidget.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
   sievehighlighter/sievesyntaxhighlighter.cpp
@@ -65,7 +70,8 @@ set_target_properties(pimcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERS
 install(TARGETS pimcommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(translator/tests)
-add_subdirectory(plaintexteditor/tests)
+add_subdirectory(texteditor/plaintexteditor/tests)
+add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(widgets/tests)
 
 

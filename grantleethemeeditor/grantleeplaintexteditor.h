@@ -19,7 +19,7 @@
 #ifndef GRANTLEEPLAINTEXTEDITOR_H
 #define GRANTLEEPLAINTEXTEDITOR_H
 
-#include "pimcommon/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 class QCompleter;
 namespace KPIMTextEdit {

@@ -20,7 +20,7 @@
 #include "previewwidget.h"
 #include "contacteditorwidget.h"
 #include "contacttemplatewidget.h"
-#include "pimcommon/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 #include <KLocale>
 #include <KGlobal>

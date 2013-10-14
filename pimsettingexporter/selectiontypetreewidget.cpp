@@ -66,6 +66,11 @@ void SelectionTypeTreeWidget::initialize()
     mKjotsItem->setText(0, QLatin1String("KJots"));
     createSubItem(mKjotsItem, Utils::Resources);
     createSubItem(mKjotsItem, Utils::Config);
+
+    mKNotesItem = new QTreeWidgetItem(this);
+    mKNotesItem->setText(0, QLatin1String("KNotes"));
+    createSubItem(mKNotesItem, Utils::Config);
+    createSubItem(mKNotesItem, Utils::Data);
 }
 
 
@@ -106,6 +111,11 @@ Utils::StoredTypes SelectionTypeTreeWidget::korganizerStoredType(int &numberOfSt
 Utils::StoredTypes SelectionTypeTreeWidget::kjotsStoredType(int &numberOfStep) const
 {
     return typeChecked(mKjotsItem, numberOfStep);
+}
+
+Utils::StoredTypes SelectionTypeTreeWidget::knotesStoredType(int &numberOfStep) const
+{
+    return typeChecked(mKNotesItem, numberOfStep);
 }
 
 void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::StoredType type)
@@ -165,6 +175,14 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Nepomuk Database"));
+        item->setCheckState(0, Qt::Unchecked);
+        item->setData(0, action, type);
+        break;
+    }
+    case Utils::Data:
+    {
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, i18n("Data"));
         item->setCheckState(0, Qt::Unchecked);
         item->setData(0, action, type);
         break;

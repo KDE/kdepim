@@ -53,6 +53,7 @@ public:
 Q_SIGNALS:
     void info(const QString &);
     void error(const QString &);
+    void title(const QString &);
 
 protected:
     void copyToDirectory(const KArchiveEntry *entry, const QString &dest);

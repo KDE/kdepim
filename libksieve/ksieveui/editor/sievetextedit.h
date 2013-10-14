@@ -21,7 +21,7 @@
 
 #include "ksieveui_export.h"
 
-#include "pimcommon/plaintexteditor/plaintexteditor.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 class QCompleter;
 

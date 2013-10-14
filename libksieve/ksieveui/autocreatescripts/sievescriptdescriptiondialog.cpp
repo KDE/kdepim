@@ -16,8 +16,8 @@
 */
 
 #include "sievescriptdescriptiondialog.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <KTextEdit>
 #include <KLocale>
 
 #include <QHBoxLayout>
@@ -29,7 +29,7 @@ SieveScriptDescriptionDialog::SieveScriptDescriptionDialog(QWidget *parent)
 {
     setCaption( i18n( "Description" ) );
     setButtons( Ok|Cancel );
-    mEdit = new KTextEdit;
+    mEdit = new PimCommon::RichTextEditorWidget;
     mEdit->setAcceptRichText(false);
     setMainWidget(mEdit);
     readConfig();

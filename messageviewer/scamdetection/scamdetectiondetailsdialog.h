@@ -21,6 +21,9 @@
 #include <KDialog>
 
 class KTextEdit;
+namespace PimCommon {
+class RichTextEditorWidget;
+}
 
 namespace MessageViewer {
 class ScamDetectionDetailsDialog : public KDialog
@@ -38,7 +41,7 @@ private Q_SLOTS:
 private:
     void writeConfig();
     void readConfig();
-    KTextEdit *mDetails;
+    PimCommon::RichTextEditorWidget *mDetails;
 };
 }
 

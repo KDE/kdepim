@@ -42,7 +42,8 @@ enum StoredType {
     Resources = 8,
     Config = 16,
     AkonadiDb = 32,
-    Nepomuk = 64
+    Nepomuk = 64,
+    Data = 128
     //TODO add more type to import/export
 };
 Q_DECLARE_FLAGS(StoredTypes, StoredType)

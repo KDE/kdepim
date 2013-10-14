@@ -1,11 +1,14 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="BackupMailApplication" version="1">
+<kpartgui name="BackupMailApplication" version="2">
 <MenuBar>
   <Menu name="file"><text>&amp;File</text>
     <Action name="file_new"/>
     <Action name="file_open"/>
+    <Separator/>
     <Action name="backup"/>
     <Action name="restore"/>
+    <Separator/>
+    <Action name="save_log"/>
     <Separator/>
     <Action name="file_quit"/>
   </Menu>

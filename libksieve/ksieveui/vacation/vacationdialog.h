@@ -20,6 +20,10 @@ class KIntSpinBox;
 class KLineEdit;
 class KTextEdit;
 
+namespace PimCommon {
+class RichTextEditorWidget;
+}
+
 class QCheckBox;
 template <typename T> class QList;
 
@@ -72,7 +76,7 @@ protected:
     QCheckBox   * mActiveCheck;
     KIntSpinBox * mIntervalSpin;
     KLineEdit   * mMailAliasesEdit;
-    KTextEdit   * mTextEdit;
+    PimCommon::RichTextEditorWidget   * mTextEdit;
     QCheckBox   * mSpamCheck;
     QCheckBox   * mDomainCheck;
     KLineEdit   * mDomainEdit;

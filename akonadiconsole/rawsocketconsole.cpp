@@ -20,6 +20,7 @@
 #include "rawsocketconsole.h"
 
 #include <akonadi/private/xdgbasedirs_p.h>
+#include <akonadi/servermanager.h>
 
 #include <KDebug>
 #include <KGlobalSettings>
@@ -89,7 +90,16 @@ void RawSocketConsole::connectClicked()
   if ( mSocket->state() == QLocalSocket::ConnectedState ) {
     mSocket->close();
   } else {
-    const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
+    QString connectionConfigFile;
+    if ( Akonadi::ServerManager::self()->hasInstanceIdentifier() ) {
+      const QString akonadiPath = XdgBaseDirs::findResourceDir( "config", QLatin1String( "akonadi" ) );
+      connectionConfigFile = akonadiPath + QLatin1String( "/instance/" )
+                           + Akonadi::ServerManager::self()->instanceIdentifier()
+                           + QLatin1String( "/akonadiconnectionrc" );
+    } else {
+      connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
+    }
+
     if ( !QFile::exists( connectionConfigFile ) ) {
       kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
       << "akonadi/akonadiconnectionrc cannot be found in '"

@@ -28,6 +28,7 @@
 #include "migrations/knoteslegacy.h"
 #include "knotesnetrecv.h"
 #include "knotestray.h"
+#include "knoteskeydialog.h"
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -59,40 +60,6 @@
 
 #include <dnssd/publicservice.h>
 
-
-class KNotesKeyDialog
-  : public KDialog
-{
-  public:
-    KNotesKeyDialog( KActionCollection *globals, QWidget *parent )
-      : KDialog( parent )
-    {
-      setCaption( i18n( "Configure Shortcuts" ) );
-      setButtons( Default | Ok | Cancel );
-
-      m_keyChooser = new KShortcutsEditor( globals, this );
-      setMainWidget( m_keyChooser );
-      connect( this, SIGNAL(defaultClicked()),
-               m_keyChooser, SLOT(allDefault()) );
-    }
-
-    void insert( KActionCollection *actions )
-    {
-        m_keyChooser->addCollection( actions, i18n( "Note Actions" ) );
-    }
-
-    void configure()
-    {
-        if ( exec() == Accepted ) {
-            m_keyChooser->save();
-        }
-    }
-
-  private:
-    KShortcutsEditor *m_keyChooser;
-};
-
-
 static bool qActionLessThan( const QAction *a1, const QAction *a2 )
 {
   return ( a1->text() < a2->text() );
@@ -116,12 +83,6 @@ KNotesApp::KNotesApp()
 
   connect( m_tray, SIGNAL(activateRequested(bool,QPoint)), this, SLOT(slotActivateRequested(bool,QPoint)) );
   connect( m_tray, SIGNAL(secondaryActivateRequested(QPoint)), this, SLOT(slotSecondaryActivateRequested(QPoint)) );
-
-  // set the initial style
-#ifdef __GNUC__
-#warning FIXME
-#endif
-  //    KNote::setStyle( KNotesGlobalConfig::style() );
 
   // create the GUI...
   KAction *action  = new KAction( KIcon( QLatin1String("document-new") ),
@@ -182,9 +143,11 @@ KNotesApp::KNotesApp()
   QString doc;
   KXMLGUIClient::findMostRecentXMLFile( fileList, doc );
   m_noteGUI.setContent( doc );
-
-  // clean up old config files
-  KNotesLegacy::cleanUp();
+  const bool needConvert = (KNotesGlobalConfig::self()->notesVersion()<1);
+  if ( needConvert ) {
+      // clean up old config files
+      KNotesLegacy::cleanUp();
+  }
 
   // create the resource manager
   m_manager = new KNotesResourceManager();
@@ -196,18 +159,22 @@ KNotesApp::KNotesApp()
   // read the notes
   m_manager->load();
 
-  // read the old config files, convert and add them
-  KCal::CalendarLocal calendar( QString::fromLatin1( "UTC" ) );
-  if ( KNotesLegacy::convert( &calendar ) ) {
-    KCal::Journal::List notes = calendar.journals();
-    KCal::Journal::List::ConstIterator it;
-    KCal::Journal::List::ConstIterator end(notes.constEnd());
-    for ( it = notes.constBegin(); it != end; ++it ) {
-      m_manager->addNewNote( *it );
-    }
+  if (needConvert) {
+      // read the old config files, convert and add them
+      KCal::CalendarLocal calendar( QString::fromLatin1( "UTC" ) );
+      if ( KNotesLegacy::convert( &calendar ) ) {
+          KCal::Journal::List notes = calendar.journals();
+          KCal::Journal::List::ConstIterator it;
+          KCal::Journal::List::ConstIterator end(notes.constEnd());
+          for ( it = notes.constBegin(); it != end; ++it ) {
+              m_manager->addNewNote( *it );
+          }
 
-    m_manager->save();
+          m_manager->save();
+      }
+      KNotesGlobalConfig::self()->setNotesVersion(1);
   }
+
 
   // set up the alarm reminder - do it after loading the notes because this
   // is used as a check if updateNoteActions has to be called for a new note
@@ -479,35 +446,35 @@ void KNotesApp::slotPreferences()
 void KNotesApp::slotConfigUpdated()
 {
     updateNetworkListener();
-    updateStyle();
 }
 
 void KNotesApp::slotConfigureAccels()
 {
-  KNotesKeyDialog keys( actionCollection(), this );
+    QPointer<KNotesKeyDialog> keys = new KNotesKeyDialog( actionCollection(), this );
 
-  QMap<QString, KNote *>::const_iterator it = m_notes.constBegin();
+    QMap<QString, KNote *>::const_iterator it = m_notes.constBegin();
 
-  if ( !m_notes.isEmpty() ) {
-    keys.insert( ( *it )->actionCollection() );
-  }
+    if ( !m_notes.isEmpty() ) {
+        keys->insert( ( *it )->actionCollection() );
+    }
 
-  keys.configure();
+    if (keys->exec()) {
+        keys->save();
 
-  // update GUI doc for new notes
-  m_noteGUI.setContent(
-    KXMLGUIFactory::readConfigFile( componentData().componentName() + QLatin1String("ui.rc"),
-                                    componentData() )
-                      );
+        // update GUI doc for new notes
+        m_noteGUI.setContent(
+                    KXMLGUIFactory::readConfigFile( componentData().componentName() + QLatin1String("ui.rc"),
+                                                    componentData() )
+                    );
 
-  if ( m_notes.isEmpty() ) {
-    return;
-  }
+        if ( !m_notes.isEmpty() ) {
+            QMap<QString, KNote *>::const_iterator end = m_notes.constEnd();
 
-  foreach ( QAction *action, ( *it )->actionCollection()->actions() ) {
-    it = m_notes.constBegin();
-    for ( ++it; it != m_notes.constEnd(); ++it ) {
-/*
+            foreach ( QAction *action, ( *it )->actionCollection()->actions() ) {
+                it = m_notes.constBegin();
+
+                for ( ++it; it != end; ++it ) {
+                    /*
     // Not sure if this is what this message has in mind but since both
     // action->objectName() and KAction::action() are QStrings, this
     // might be fine.
@@ -516,14 +483,15 @@ void KNotesApp::slotConfigureAccels()
 #warning Port KAction::action() to QString
 #endif
 */
-      QAction *toChange =
-        ( *it )->actionCollection()->action( action->objectName() );
-
-      if ( toChange ) {
-        toChange->setShortcuts( action->shortcuts() );
-      }
+                    QAction *toChange = ( *it )->actionCollection()->action( action->objectName() );
+                    if ( toChange ) {
+                        toChange->setShortcuts( action->shortcuts() );
+                    }
+                }
+            }
+        }
     }
-  }
+    delete keys;
 }
 
 void KNotesApp::slotNoteKilled( KCal::Journal *journal )
@@ -712,18 +680,6 @@ void KNotesApp::updateNetworkListener()
         m_publisher=new DNSSD::PublicService(KNotesGlobalConfig::senderID(), QLatin1String("_knotes._tcp"), KNotesGlobalConfig::port());
         m_publisher->publishAsync();
     }
-}
-
-void KNotesApp::updateStyle()
-{
-#ifdef __GNUC__
-#warning FIXME!
-#endif
-  //    KNote::setStyle( KNotesGlobalConfig::style() );
-
-  foreach ( KNote *note, m_notes ) {
-    QApplication::postEvent( note, new QEvent( QEvent::LayoutRequest ) );
-  }
 }
 
 #include "knotesapp.moc"

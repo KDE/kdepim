@@ -434,13 +434,14 @@ void KNote::slotInsDate()
 void KNote::slotSetAlarm()
 {
     m_blockEmitDataChanged = true;
-  KNoteAlarmDlg dlg( name(), this );
-  dlg.setIncidence( m_journal );
+    QPointer<KNoteAlarmDlg> dlg = new KNoteAlarmDlg( name(), this );
+    dlg->setIncidence( m_journal );
 
-  if ( dlg.exec() == QDialog::Accepted ) {
-    emit sigDataChanged(noteId());
-  }
-  m_blockEmitDataChanged = false;
+    if ( dlg->exec() ) {
+        emit sigDataChanged(noteId());
+    }
+    delete dlg;
+    m_blockEmitDataChanged = false;
 }
 
 void KNote::slotPreferences()
@@ -461,31 +462,30 @@ void KNote::slotPreferences()
 
 void KNote::slotSend()
 {
-  // pop up dialog to get the IP
-  KNoteHostDlg hostDlg( i18n( "Send \"%1\"", name() ), this );
-  const bool ok = ( hostDlg.exec() == QDialog::Accepted );
+    // pop up dialog to get the IP
+    QPointer<KNoteHostDlg> hostDlg = new KNoteHostDlg( i18n( "Send \"%1\"", name() ), this );
+    if( hostDlg->exec() ) {
 
-  if ( !ok ) { // handle cancel
-    return;
-  }
-  const QString host = hostDlg.host();
-  quint16 port = hostDlg.port();
+        const QString host = hostDlg->host();
+        quint16 port = hostDlg->port();
 
-  if ( !port ) { // not specified, use default
-    port = KNotesGlobalConfig::port();
-  }
+        if ( !port ) { // not specified, use default
+            port = KNotesGlobalConfig::port();
+        }
 
-  if ( host.isEmpty() ) {
-    KMessageBox::sorry( this, i18n( "The host cannot be empty." ) );
-    return;
-  }
+        if ( host.isEmpty() ) {
+            KMessageBox::sorry( this, i18n( "The host cannot be empty." ) );
+            return;
+        }
 
-  // Send the note
+        // Send the note
 
-  KNotesNetworkSender *sender = new KNotesNetworkSender(
-    KSocketFactory::connectToHost( QLatin1String("knotes"), host, port ) );
-  sender->setSenderId( KNotesGlobalConfig::senderID() );
-  sender->setNote( name(), text() ); // FIXME: plainText ??
+        KNotesNetworkSender *sender = new KNotesNetworkSender(
+                    KSocketFactory::connectToHost( QLatin1String("knotes"), host, port ) );
+        sender->setSenderId( KNotesGlobalConfig::senderID() );
+        sender->setNote( name(), text() ); // FIXME: plainText ??
+    }
+    delete hostDlg;
 }
 
 void KNote::slotMail()
@@ -665,29 +665,25 @@ void KNote::slotUpdateShowInTaskbar()
 void KNote::slotUpdateDesktopActions()
 {
 #ifdef Q_WS_X11
+  m_toDesktop->clear();
   NETRootInfo wm_root( QX11Info::display(), NET::NumberOfDesktops |
                        NET::DesktopNames );
   NETWinInfo wm_client( QX11Info::display(), winId(),
                         QX11Info::appRootWindow(), NET::WMDesktop );
 
-  QStringList desktops;
-  desktops.append( i18n( "&All Desktops" ) );
-  desktops.append( QString::null );           // Separator
-                                              // krazy:exclude=nullstrassign
-                                              // for old broken gcc
-
+  KAction *act = m_toDesktop->addAction(i18n( "&All Desktops" ));
+  if (wm_client.desktop() == NETWinInfo::OnAllDesktops) {
+      act->setChecked(true);
+  }
+  QAction *separator = new QAction(m_toDesktop);
+  separator->setSeparator(true);
+  m_toDesktop->addAction(separator);
   const int count = wm_root.numberOfDesktops();
   for ( int n = 1; n <= count; ++n ) {
-    desktops.append( QString::fromLatin1( "&%1 %2" ).arg( n ).arg(
-      QString::fromUtf8( wm_root.desktopName( n ) ) ) );
-  }
-  m_toDesktop->setItems( desktops );
-
-  if ( wm_client.desktop() == NETWinInfo::OnAllDesktops ) {
-    m_toDesktop->setCurrentItem( 0 );
-  } else {
-    m_toDesktop->setCurrentItem( wm_client.desktop() + 1 ); // compensate for
-                                                            // separator (+1)
+      KAction *desktopAct = m_toDesktop->addAction(QString::fromLatin1( "&%1 %2" ).arg( n ).arg(QString::fromUtf8( wm_root.desktopName( n ) ) ));
+      if (wm_client.desktop() == n) {
+          desktopAct->setChecked(true);
+      }
   }
 #endif
 }

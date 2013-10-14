@@ -17,8 +17,8 @@
 
 #include "sievescriptparsingerrordialog.h"
 #include "pimcommon/util/pimutil.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <KTextEdit>
 #include <KFileDialog>
 #include <KLocale>
 #include <KMessageBox>
@@ -35,9 +35,8 @@ SieveScriptParsingErrorDialog::SieveScriptParsingErrorDialog(QWidget *parent)
     setButtons( Close | User1 );
     setButtonText(User1, i18n("Save As..."));
 
-    mTextEdit = new KTextEdit( this );
+    mTextEdit = new PimCommon::RichTextEditorWidget( this );
     mTextEdit->setReadOnly( true );
-    mTextEdit->setAcceptRichText(true);
     setMainWidget( mTextEdit );
     readConfig();
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSaveAs()));
