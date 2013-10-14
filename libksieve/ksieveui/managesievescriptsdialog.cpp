@@ -191,7 +191,7 @@ void ManageSieveScriptsDialog::slotRefresh()
     clear();
     SieveTreeWidgetItem *last = 0;
     Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
-    bool imapFound = false;
+    bool noImapFound = true;
     foreach ( const Akonadi::AgentInstance &type, lst ) {
         if ( type.status() == Akonadi::AgentInstance::Broken )
             continue;
@@ -214,10 +214,10 @@ void ManageSieveScriptsDialog::slotRefresh()
             mUrls.insert( last, u );
             last->startAnimation();
         }
-        imapFound = true;
+        noImapFound = false;
     }
     slotUpdateButtons();
-    mListView->setImapFound(imapFound);
+    mListView->setNoImapFound(noImapFound);
 }
 
 void ManageSieveScriptsDialog::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript)

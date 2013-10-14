@@ -15,28 +15,37 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "managesievetreeview.h"
 
-#include <KLocale>
+#ifndef CUSTOMTREEVIEW_H
+#define CUSTOMTREEVIEW_H
 
-using namespace KSieveUi;
-
-ManageSieveTreeView::ManageSieveTreeView(QWidget *parent)
-    : PimCommon::CustomTreeView(parent)
+#include <QTreeWidget>
+#include "pimcommon_export.h"
+class QPaintEvent;
+namespace PimCommon {
+class PIMCOMMON_EXPORT CustomTreeView : public QTreeWidget
 {
-    setDefaultText(i18n( "No imap server configured..." ));
+    Q_OBJECT
+public:
+    explicit CustomTreeView(QWidget *parent = 0);
+    ~CustomTreeView();
+
+    void setDefaultText(const QString &text);
+
+private Q_SLOTS:
+    void slotGeneralPaletteChanged();
+    void slotGeneralFontChanged();
+
+protected:
+    void paintEvent( QPaintEvent *event );
+
+protected:
+    bool mShowDefaultText;
+
+private:
+    QColor mTextColor;
+    QString mDefaultText;
+};
 }
 
-ManageSieveTreeView::~ManageSieveTreeView()
-{
-}
-
-void ManageSieveTreeView::setNoImapFound(bool found)
-{
-    if (mShowDefaultText != found) {
-        mShowDefaultText = found;
-        update();
-    }
-}
-
-#include "managesievetreeview.moc"
+#endif

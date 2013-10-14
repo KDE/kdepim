@@ -20,27 +20,20 @@
 #define MANAGESIEVETREEVIEW_H
 
 
-#include <QTreeWidget>
+#include "pimcommon/widgets/customtreeview.h"
 class QPaintEvent;
+
 namespace KSieveUi {
-class ManageSieveTreeView : public QTreeWidget
+class ManageSieveTreeView : public PimCommon::CustomTreeView
 {
     Q_OBJECT
 public:
     explicit ManageSieveTreeView(QWidget *parent = 0);
     ~ManageSieveTreeView();
 
-    void setImapFound(bool found);
-
-private Q_SLOTS:
-    void slotGeneralPaletteChanged();
-    void slotGeneralFontChanged();
-
-protected:
-    void paintEvent( QPaintEvent *event );
+    void setNoImapFound(bool found);
 
 private:
-    QColor mTextColor;
     bool mImapFound;
 };
 }
