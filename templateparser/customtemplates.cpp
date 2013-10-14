@@ -21,6 +21,7 @@
 #include "customtemplates_kfg.h"
 #include "globalsettings_base.h"
 #include "ui_customtemplates_base.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KIconLoader>
 #include <KLocale>
@@ -256,11 +257,11 @@ void CustomTemplates::save()
 
 void CustomTemplates::slotInsertCommand( const QString &cmd, int adjustCursor )
 {
-  QTextCursor cursor = mUi->mEdit->textCursor();
+  QTextCursor cursor = mUi->mEdit->editor()->textCursor();
   cursor.insertText( cmd );
   cursor.setPosition( cursor.position() + adjustCursor );
-  mUi->mEdit->setTextCursor( cursor );
-  mUi->mEdit->setFocus();
+  mUi->mEdit->editor()->setTextCursor( cursor );
+  mUi->mEdit->editor()->setFocus();
 }
 
 bool CustomTemplates::nameAlreadyExists( const QString &str, QTreeWidgetItem *item )
@@ -398,7 +399,7 @@ void CustomTemplates::slotListSelectionChanged()
     mUi->mDuplicate->setEnabled(true);
     CustomTemplateItem *vitem = static_cast<CustomTemplateItem*>( item );
     mBlockChangeSignal = true;
-    mUi->mEdit->setText( vitem->content() );
+    mUi->mEdit->setPlainText( vitem->content() );
     mUi->mKeySequenceWidget->setKeySequence( vitem->shortcut(),
                                              KKeySequenceWidget::NoValidate );
     CustomTemplates::Type type =  vitem->customType();
@@ -416,7 +417,7 @@ void CustomTemplates::slotListSelectionChanged()
     mUi->mKeySequenceWidget->setEnabled( type != TUniversal );
   } else {
     mUi->mEditFrame->setEnabled( false );
-    mUi->mEdit->clear();
+    mUi->mEdit->editor()->clear();
     // see above
     mUi->mKeySequenceWidget->clearKeySequence();
     mUi->mType->setCurrentIndex( 0 );

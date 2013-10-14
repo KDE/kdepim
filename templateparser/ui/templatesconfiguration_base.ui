@@ -82,9 +82,6 @@
          <property name="whatsThis">
           <string comment="@info:whatsthis">In this area you create the template for new email messages.  For more information about how to create the template, press the &quot;How does this work?&quot; link on this dialog.</string>
          </property>
-         <property name="lineWrapMode">
-          <enum>QTextEdit::NoWrap</enum>
-         </property>
          <property name="acceptRichText">
           <bool>false</bool>
          </property>
@@ -135,9 +132,6 @@
          </property>
          <property name="whatsThis">
           <string comment="@info:whatsthis">In this area you create the template for messages replies. For more information about how to create the template, press the &quot;How does this work?&quot; link on this dialog.</string>
-         </property>
-         <property name="lineWrapMode">
-          <enum>QTextEdit::NoWrap</enum>
          </property>
          <property name="acceptRichText">
           <bool>false</bool>
@@ -190,9 +184,6 @@
          <property name="whatsThis">
           <string comment="@info:whatsthis">In this area you create the template for reply-to-all messages or replies to a mailing list.  For more information about how to create the template, press the &quot;How does this work?&quot; link on this dialog.</string>
          </property>
-         <property name="lineWrapMode">
-          <enum>QTextEdit::NoWrap</enum>
-         </property>
          <property name="acceptRichText">
           <bool>false</bool>
          </property>
@@ -243,9 +234,6 @@
          </property>
          <property name="whatsThis">
           <string comment="@info:whatsthis">In this area you create the template for message forwards.  For more information about how to create the template, press the &quot;How does this work?&quot; link on this dialog.</string>
-         </property>
-         <property name="lineWrapMode">
-          <enum>QTextEdit::NoWrap</enum>
          </property>
          <property name="acceptRichText">
           <bool>false</bool>

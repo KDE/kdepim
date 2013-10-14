@@ -21,7 +21,7 @@
 
 #include "templateparser_export.h"
 #include "ui_templatesconfiguration_base.h"
-
+class QTextEdit;
 namespace TemplateParser {
 
 class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::TemplatesConfigurationBase
@@ -59,7 +59,7 @@ class TEMPLATEPARSER_EXPORT TemplatesConfiguration : public QWidget, Ui::Templat
     QString mHelpString;
 
   private:
-    KTextEdit *currentTextEdit() const;
+    QTextEdit *currentTextEdit() const;
 
   private Q_SLOTS:
     void slotHelpLinkClicked( const QString & );

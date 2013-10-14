@@ -218,9 +218,6 @@
          <property name="whatsThis">
           <string comment="@info:whatsthis">This area contains the associated custom template.</string>
          </property>
-         <property name="lineWrapMode">
-          <enum>QTextEdit::NoWrap</enum>
-         </property>
          <property name="acceptRichText">
           <bool>false</bool>
          </property>
