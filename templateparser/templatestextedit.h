@@ -26,8 +26,8 @@
 namespace TemplateParser {
 class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public PimCommon::RichTextEditorWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit TemplatesTextEdit( QWidget *parent = 0 );
     ~TemplatesTextEdit();
 };
