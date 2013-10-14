@@ -59,6 +59,9 @@ void ExportNotesJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    const QString knotesStr(QLatin1String("knotesrc"));
+    const QString knotesrc = KStandardDirs::locateLocal( "config", knotesStr);
+    backupFile(knotesrc, Utils::configsPath(), knotesStr);
 
     Q_EMIT info(i18n("Config backup done."));
 }
