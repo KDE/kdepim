@@ -21,7 +21,7 @@ endif()
 
 ########### next target ###############
 
-set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp memorycalendarmemento.cpp)
+set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp memorycalendarmemento.cpp syncitiphandler.cpp)
 
 qt4_add_dbus_interfaces(messageviewer_bodypartformatter_text_calendar_PART_SRCS
   ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
