@@ -26,7 +26,7 @@ class KZip;
 
 namespace PimCommon {
 class SimpleStringListEditor;
-class CustomTextEdit;
+class RichTextEditorWidget;
 }
 namespace GrantleeThemeEditor {
 class GRANTLEETHEMEEDITOR_EXPORT DesktopFilePage : public QWidget
@@ -69,7 +69,7 @@ private:
     void saveAsFilename(const QString &filename);
     QString mDefaultDesktopName;
     KLineEdit *mName;
-    PimCommon::CustomTextEdit *mDescription;
+    PimCommon::RichTextEditorWidget *mDescription;
     KLineEdit *mFilename;
     KLineEdit *mAuthor;
     KLineEdit *mEmail;
