@@ -12,7 +12,7 @@ TODO 4.12:
 
 - Import/Export KAlarm config/resources (In progress)
 - Import/Export KJots config/resources (In progress)
+- Import/Export KNotes config/data (In progress)
 - Add export mode 
-- Allow to write a report.
 - Allow to save other kontact settings ?
 - Add global default settings (as overwrite all settings etc.)
