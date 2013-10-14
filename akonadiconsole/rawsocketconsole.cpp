@@ -41,6 +41,7 @@ RawSocketConsole::RawSocketConsole(QWidget* parent) :
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
   connect( ui.commandEdit, SIGNAL(returnPressed()), SLOT(execClicked()) );
   connect( ui.connectButton, SIGNAL(clicked()), SLOT(connectClicked()) );
+  connect( ui.clearButton, SIGNAL(clicked()), ui.protocolView, SLOT(clear()) );
   ui.protocolView->setFont( KGlobalSettings::fixedFont() );
 
   connect( mSocket, SIGNAL(readyRead()), SLOT(dataReceived()) );

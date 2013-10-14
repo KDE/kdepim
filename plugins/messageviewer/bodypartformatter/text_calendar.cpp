@@ -34,8 +34,8 @@
 #include "calendarinterface.h"
 #include "delegateselector.h"
 #include "memorycalendarmemento.h"
+#include "syncitiphandler.h"
 
-#include <akonadi/calendar/itiphandler.h>
 #include <incidenceeditor-ng/groupwareintegration.h>
 
 #include <messageviewer/settings/globalsettings.h>
@@ -742,15 +742,15 @@ class UrlHandler : public Interface::BodyPartURLHandler
         IncidenceEditorNG::GroupwareIntegration::activate();
       }
 
-      Akonadi::ITIPHandler *handler = new Akonadi::ITIPHandler();
+      // This will block. There's no way to make it async without refactoring the memento mechanism
+      SyncItipHandler *itipHandler = new SyncItipHandler( receiver, iCal, type );
 
-      // We don't have a parent here, so schedule a deleteLater()
-      QObject::connect( handler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
-                        handler, SLOT(deleteLater()) );
+      const bool success = itipHandler->result() == Akonadi::ITIPHandler::ResultSuccess;
+      if ( !success ) {
+        kError() << "Error while processing invitation: " << itipHandler->errorMessage();
+      }
 
-      handler->processiTIPMessage( receiver, iCal, type );
-      // TODO: catch signal, and do error handling
-      return true;
+      return success;
     }
 
     bool cancelPastInvites( const Incidence::Ptr incidence, const QString &path ) const
@@ -927,7 +927,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
       }
       if ( status != Attendee::Delegated ) {
         // we do that below for delegated incidences
-        saveFile( receiver, iCal, dir );
+        if ( !saveFile( receiver, iCal, dir ) ) {
+          return false;
+        }
       }
 
       QString delegateString;
@@ -1026,7 +1028,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
         ICalFormat format;
         format.setTimeSpec( KSystemTimeZones::local() );
         const QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
-        saveFile( receiver, iCal, dir );
+        if ( !saveFile( receiver, iCal, dir ) ) {
+          return false;
+        }
 
         ok = mail( viewerInstance, incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
       }
@@ -1181,10 +1185,10 @@ class UrlHandler : public Interface::BodyPartURLHandler
       if ( receiver.isEmpty() ) {
         return true;
       }
-      saveFile( receiver, iCal, QLatin1String("counter") );
+
       // Don't delete the invitation here in any case, if the counter proposal
       // is declined you might need it again.
-      return true;
+      return saveFile( receiver, iCal, QLatin1String("counter") );
     }
 
     bool handleClick( Viewer *viewerInstance,
