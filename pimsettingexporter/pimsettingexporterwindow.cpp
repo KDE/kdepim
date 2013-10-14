@@ -112,8 +112,13 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
 
 void PimSettingExporterWindow::slotSaveLog()
 {
+    const QString log = mLogWidget->toHtml();
+    if (log.isEmpty()) {
+        KMessageBox::information(this, i18n("Log is empty."), i18n("Save log"));
+        return;
+    }
     const QString filter(QLatin1String("*.html"));
-    PimCommon::Util::saveTextAs(mLogWidget->toHtml(), filter, this);
+    PimCommon::Util::saveTextAs(log, filter, this);
 }
 
 void PimSettingExporterWindow::slotBackupData()
