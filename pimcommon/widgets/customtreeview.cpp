@@ -38,6 +38,19 @@ CustomTreeView::~CustomTreeView()
 {
 }
 
+void CustomTreeView::setShowDefaultText(bool b)
+{
+    if (mShowDefaultText != b) {
+        mShowDefaultText = b;
+        update();
+    }
+}
+
+bool CustomTreeView::showDefaultText() const
+{
+    return mShowDefaultText;
+}
+
 void CustomTreeView::setDefaultText(const QString &text)
 {
     mDefaultText = text;

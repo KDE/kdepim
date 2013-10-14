@@ -32,6 +32,9 @@ public:
 
     void setDefaultText(const QString &text);
 
+    bool showDefaultText() const;
+    void setShowDefaultText(bool b);
+
 private Q_SLOTS:
     void slotGeneralPaletteChanged();
     void slotGeneralFontChanged();
