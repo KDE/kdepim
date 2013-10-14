@@ -156,6 +156,7 @@ SendLaterWidget::SendLaterWidget( QWidget *parent )
     mWidget->treeWidget->setRootIsDecorated(false);
     mWidget->treeWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mWidget->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    mWidget->treeWidget->setDefaultText(i18n("No messages waiting..."));
 
     connect(mWidget->treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(customContextMenuRequested(QPoint)));
@@ -231,6 +232,7 @@ void SendLaterWidget::load()
         SendLater::SendLaterInfo *info = new SendLater::SendLaterInfo(group);
         createOrUpdateItem(info);
     }
+    mWidget->treeWidget->setShowDefaultText(numberOfItem==0);
 }
 
 void SendLaterWidget::createOrUpdateItem(SendLater::SendLaterInfo *info, SendLaterItem *item)
@@ -244,6 +246,7 @@ void SendLaterWidget::createOrUpdateItem(SendLater::SendLaterInfo *info, SendLat
     item->setText(Subject, info->subject());
     item->setText(To, info->to());
     item->setInfo(info);
+    mWidget->treeWidget->setShowDefaultText(false);
 }
 
 void SendLaterWidget::save()
@@ -293,6 +296,7 @@ void SendLaterWidget::slotRemoveItem()
         delete item;
     }
     mChanged = true;
+    mWidget->treeWidget->setShowDefaultText(mWidget->treeWidget->topLevelItemCount()==0);
     updateButtons();
 }
 

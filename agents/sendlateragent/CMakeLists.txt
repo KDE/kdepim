@@ -1,6 +1,7 @@
 project(sendlateragent)
 
 include_directories(
+   ${CMAKE_SOURCE_DIR}/pimcommon/
    ${CMAKE_SOURCE_DIR}/messagecomposer/
    ${CMAKE_SOURCE_DIR}/messagecore/
    ${CMAKE_SOURCE_DIR}/libkleo
@@ -58,6 +59,7 @@ target_link_libraries(akonadi_sendlater_agent
   ${KDEPIMLIBS_KMIME_LIBS}
   messagecomposer
   messagecore
+  pimcommon
 )
 
 if (Q_WS_MAC)
