@@ -48,20 +48,13 @@ class DistributionListItem : public QTreeWidgetItem
 {
   public:
     DistributionListItem( QTreeWidget *tree )
-      : QTreeWidgetItem( tree ), mIsTransient(false)
+      : QTreeWidgetItem( tree )
     {
       setFlags( flags() | Qt::ItemIsUserCheckable );
     }
 
     void setAddressee( const KABC::Addressee &a, const QString &email )
     {
-      mIsTransient = false;
-      init( a, email );
-    }
-
-    void setTransientAddressee( const KABC::Addressee &a, const QString &email )
-    {
-      mIsTransient = true;
       init( a, email );
     }
 
@@ -69,6 +62,7 @@ class DistributionListItem : public QTreeWidgetItem
     {
       mAddressee = a;
       mEmail = email;
+      mId = -1;
       setText( 0, mAddressee.realName() );
       setText( 1, mEmail );
     }
@@ -85,13 +79,23 @@ class DistributionListItem : public QTreeWidgetItem
 
     bool isTransient() const
     {
-      return mIsTransient;
+      return mId == -1;
+    }
+
+    void setId( Akonadi::Entity::Id id )
+    {
+      mId = id;
+    }
+
+    Akonadi::Entity::Id id() const
+    {
+      return mId;
     }
 
   private:
     KABC::Addressee mAddressee;
     QString mEmail;
-    bool mIsTransient;
+    Akonadi::Entity::Id mId;
 };
 }
 
@@ -145,6 +149,7 @@ DistributionListDialog::~DistributionListDialog()
   writeConfig();
 }
 
+// This starts one ContactSearchJob for each of the specified recipients.
 void DistributionListDialog::setRecipients( const Recipient::List &recipients )
 {
   Recipient::List::ConstIterator end( recipients.constEnd() );
@@ -166,10 +171,13 @@ void DistributionListDialog::setRecipients( const Recipient::List &recipients )
   }
 }
 
+// This result slot will be called once for each of the original recipients.
+// There could potentially be more than one Akonadi item returned per
+// recipient, in the case where email addresses are duplicated between contacts.
 void DistributionListDialog::slotDelayedSetRecipients( KJob *job )
 {
   const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
-  const KABC::Addressee::List contacts = searchJob->contacts();
+  const Akonadi::Item::List akItems = searchJob->items();
 
   const QString email = searchJob->property( "email" ).toString();
   QString name = searchJob->property( "name" ).toString();
@@ -182,21 +190,38 @@ void DistributionListDialog::slotDelayedSetRecipients( KJob *job )
     }
   }
 
-  DistributionListItem *item = new DistributionListItem( mRecipientsList );
-
-  if ( contacts.isEmpty() ) {
+  if ( akItems.isEmpty() ) {
     KABC::Addressee contact;
     contact.setNameFromString( name );
     contact.insertEmail( email );
-    item->setTransientAddressee( contact, email );
+
+    DistributionListItem *item = new DistributionListItem( mRecipientsList );
+    item->setAddressee( contact, email );
     item->setCheckState( 0, Qt::Checked );
   } else {
     bool isFirst = true;
-    foreach ( const KABC::Addressee &contact, contacts ) {
-      item->setAddressee( contact, email );
-      if ( isFirst ) {
-        item->setCheckState( 0, Qt::Checked );
-        isFirst = false;
+    foreach ( const Akonadi::Item &akItem, akItems ) {
+      if ( akItem.hasPayload<KABC::Addressee>() ) {
+        const KABC::Addressee contact = akItem.payload<KABC::Addressee>();
+
+        DistributionListItem *item = new DistributionListItem( mRecipientsList );
+        item->setAddressee( contact, email );
+
+        // Need to record the Akonadi ID of the contact, so that
+        // it can be added as a reference later.  Setting an ID
+        // makes the item non-transient.
+        item->setId( akItem.id() );
+
+        // If there were multiple contacts returned for an email address,
+        // then check the first one and uncheck any subsequent ones.
+        if ( isFirst ) {
+          item->setCheckState( 0, Qt::Checked );
+          isFirst = false;
+        } else {
+          // Need this to create an unchecked item, as otherwise the
+          // item will have no checkbox at all.
+          item->setCheckState( 0, Qt::Unchecked );
+        }
       }
     }
   }
@@ -269,15 +294,13 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
         if ( item && item->checkState( 0 ) == Qt::Checked ) {
           kDebug() << item->addressee().fullEmail() << item->addressee().uid();
           if ( item->isTransient() ) {
-            Akonadi::Item contactItem( KABC::Addressee::mimeType() );
-            contactItem.setPayload<KABC::Addressee>( item->addressee() );
-
-            Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( contactItem, targetCollection );
-            job->exec();
-
-            group.append( KABC::ContactGroup::ContactReference( QString::number( job->item().id() ) ) );
-          } else {
             group.append( KABC::ContactGroup::Data( item->addressee().realName(), item->email() ) );
+          } else {
+            KABC::ContactGroup::ContactReference reference( QString::number( item->id() ) );
+            if ( item->email() != item->addressee().preferredEmail() ) {
+              reference.setPreferredEmail( item->email() );
+            }
+            group.append( reference );
           }
         }
       }
