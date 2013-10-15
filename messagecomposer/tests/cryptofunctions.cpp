@@ -44,16 +44,6 @@
 #include <gpgme++/keylistresult.h>
 #include <messagecore/tests/util.h>
 
-// This is used to override the default message output handler. In unit tests, the special message
-// output handler can write messages to stdout delayed, i.e. after the actual kDebug() call. This
-// interfers with KPGP, since KPGP reads output from stdout, which needs to be kept clean.
-void nullMessageOutput(QtMsgType type, const char *msg)
-{
-  Q_UNUSED(type);
-  Q_UNUSED(msg);
-}
-
-
 bool ComposerTestUtil::verify( bool sign, bool encrypt, KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, KMime::Headers::contentEncoding encoding ) {
   if ( sign && encrypt ) {
     Q_UNUSED( encoding );
@@ -102,9 +92,7 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
     return true;
   } else if( f & Kleo::InlineOpenPGPFormat ) {
     // process the result..
-    qInstallMsgHandler(nullMessageOutput);
     otp.parseObjectTree( resultMessage );
-    qInstallMsgHandler(0);
     Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
     Q_ASSERT( otp.plainTextContent().toUtf8() == signedContent );
@@ -195,9 +183,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
       resultMessage->parse();
     }
 
-    qInstallMsgHandler(nullMessageOutput);
     otp.processTextPlainSubtype( resultMessage.get(), pResult );
-    qInstallMsgHandler(0);
 
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
     Q_ASSERT( otp.plainTextContent().toUtf8() == encrContent );
@@ -262,9 +248,7 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
 
     return true;
   } else if( f & Kleo::InlineOpenPGPFormat ) {
-    qInstallMsgHandler(nullMessageOutput);
     otp.processTextPlainSubtype( resultMessage.get(), pResult );
-    qInstallMsgHandler(0);
 
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgFullyEncrypted );
     Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgFullySigned );

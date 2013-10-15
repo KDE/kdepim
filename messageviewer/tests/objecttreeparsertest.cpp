@@ -140,15 +140,6 @@ void ObjectTreeParserTester::test_missingContentTypeHeader()
   QVERIFY( otp.htmlContent().isEmpty() );
 }
 
-// This is used to override the default message output handler. In unit tests, the special message
-// output handler can write messages to stdout delayed, i.e. after the actual kDebug() call. This
-// interfers with KPGP, since KPGP reads output from stdout, which needs to be kept clean.
-void nullMessageOutput(QtMsgType type, const char *msg)
-{
-  Q_UNUSED(type);
-  Q_UNUSED(msg);
-}
-
 void ObjectTreeParserTester::test_inlinePGPDecryption()
 {
   KMime::Message::Ptr msg = readAndParseMail( QLatin1String("inlinepgpencrypted.mbox") );
@@ -162,9 +153,8 @@ void ObjectTreeParserTester::test_inlinePGPDecryption()
   MessageCore::Test::TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
 
-  qInstallMsgHandler(nullMessageOutput);
+  emptySource.setAllowDecryption( true );
   otp.parseObjectTree( msg.get() );
-  qInstallMsgHandler(0);
 
   QCOMPARE( otp.plainTextContent().toLatin1().data(), "some random text" );
   QCOMPARE( otp.convertedTextContent().toLatin1().data(), "some random text\n" );
