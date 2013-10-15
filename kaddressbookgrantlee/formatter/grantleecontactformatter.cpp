@@ -425,6 +425,8 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
         blacklistedKeys.insert( QLatin1String( "SpousesName" ) );
         blacklistedKeys.insert( QLatin1String( "IMAddress" ) );
         blacklistedKeys.insert( QLatin1String( "AddressBook" ) );
+        blacklistedKeys.insert( QLatin1String( "MailPreferedFormatting" ) );
+        blacklistedKeys.insert( QLatin1String( "MailAllowToRemoteContent" ) );
     }
 
     if ( !customs.empty() ) {
