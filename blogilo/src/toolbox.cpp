@@ -485,6 +485,8 @@ void Toolbox::setDateTimeNow()
 
 void Toolbox::requestEntriesListContextMenu( const QPoint & pos )
 {
+    if ( lstEntriesList->selectedItems().isEmpty() )
+        return;
     Q_UNUSED(pos);
     KMenu *entriesContextMenu = new KMenu;
     KAction *actEntriesOpenInBrowser = new KAction( KIcon(QLatin1String("applications-internet")),
