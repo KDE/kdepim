@@ -282,7 +282,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
   }
   // Note
   if ( !rawContact.note().isEmpty() ) {
-    const QString notes = rawContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ));
+    const QString notes = QString::fromLatin1( "<a>%1</a>" ).arg(rawContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" )));
     contactObject.insert( QLatin1String( "note" ), notes );
     contactObject.insert( QLatin1String( "notei18n" ),i18n( "Note" ) );
   }
@@ -299,8 +299,6 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
   setHashField( contactObject, QLatin1String( "department" ), rawContact.department() );
   contactObject.insert(QLatin1String( "departmenti18n" ),i18n( "Department" ) );
-
-  setHashField( contactObject, QLatin1String( "note" ), rawContact.note() );
 
   setHashField( contactObject, QLatin1String( "profession" ),
                 rawContact.custom( QLatin1String( "KADDRESSBOOK" ),

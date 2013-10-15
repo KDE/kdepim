@@ -157,7 +157,7 @@
       {% endif %}
       {% if contact.note %}
         {% with contact.notei18n as title %}
-        {% with contact.note as value %}
+        {% with contact.note|safe as value %}
         {% include "contact_row.html" %}
         {% endwith %}
         {% endwith %}
