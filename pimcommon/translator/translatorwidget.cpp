@@ -280,6 +280,7 @@ void TranslatorWidget::init()
     d->splitter = new QSplitter;
     d->splitter->setChildrenCollapsible( false );
     d->inputText = new TranslatorTextEdit;
+    d->inputText->enableFindReplace(false);
     d->inputText->setAcceptRichText(false);
     d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
     connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );
