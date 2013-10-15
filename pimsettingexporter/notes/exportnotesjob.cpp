@@ -52,6 +52,13 @@ void ExportNotesJob::start()
             return;
         }
     }
+    if (mTypeSelected & Utils::Data) {
+        backupData();
+        increaseProgressDialog();
+        if (wasCanceled()) {
+            return;
+        }
+    }
 }
 
 
@@ -64,6 +71,11 @@ void ExportNotesJob::backupConfig()
     backupFile(knotesrc, Utils::configsPath(), knotesStr);
 
     Q_EMIT info(i18n("Config backup done."));
+}
+
+void ExportNotesJob::backupData()
+{
+
 }
 
 #include "exportnotesjob.moc"

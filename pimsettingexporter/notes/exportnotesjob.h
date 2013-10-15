@@ -34,6 +34,7 @@ public:
 
 private:
     void backupConfig();
+    void backupData();
 };
 
 #endif // EXPORTNOTESJOB_H
