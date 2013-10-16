@@ -169,7 +169,7 @@ void Toolbox::slotLoadEntriesFromDB( int blog_id )
             lstItem->setForeground(QBrush(Qt::blue));
             lstItem->setToolTip(i18n("%1 (Draft)",lstItem->toolTip()));
         }
-        lstItem->setData( 32, listEntries.at(i).value(QLatin1String("id")).toInt() );
+        lstItem->setData( BlogEntryID, listEntries.at(i).value(QLatin1String("id")).toInt() );
         lstEntriesList->addItem( lstItem );
     }
     d->statusbar->showMessage( i18n( "List of entries received." ), STATUSTIMEOUT );
@@ -207,7 +207,7 @@ void Toolbox::slotRemoveSelectedEntryFromServer()
     if ( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
     == KMessageBox::Yes) {
         BilboPost *post = new BilboPost( DBMan::self()->getPostInfo( lstEntriesList->currentItem()->
-                                                                     data(32).toInt() ) );
+                                                                     data(BlogEntryID).toInt() ) );
         Backend *b = new Backend( d->mCurrentBlogId, this);
         connect(b, SIGNAL(sigPostRemoved(int,BilboPost)), this, SLOT(slotPostRemoved(int,BilboPost)) );
         connect(b, SIGNAL(sigError(QString)), this, SLOT(slotError(QString)));
@@ -376,7 +376,7 @@ QStringList Toolbox::currentTags()
 
 void Toolbox::slotEntrySelected( QListWidgetItem * item )
 {
-    BilboPost post = DBMan::self()->getPostInfo( item->data( 32 ).toInt() );
+    BilboPost post = DBMan::self()->getPostInfo( item->data( BlogEntryID ).toInt() );
     kDebug() << "Emiting sigEntrySelected...";
     Q_EMIT sigEntrySelected( post, d->mCurrentBlogId );
 }
@@ -391,7 +391,7 @@ void Toolbox::slotEntriesCopyUrl()
     if ( lstEntriesList->currentItem() == 0 ) {
         return;
     }
-    BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( 32 ).toInt() );
+    BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( BlogEntryID ).toInt() );
     if ( !post.permaLink().isEmpty() )
         QApplication::clipboard()->setText( post.permaLink().prettyUrl() );
     else if ( !post.link().isEmpty() )
@@ -509,7 +509,7 @@ void Toolbox::openPostInBrowser()
 {
     if ( lstEntriesList->selectedItems().isEmpty() )
         return;
-    BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( 32 ).toInt() );
+    BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data( BlogEntryID ).toInt() );
     QString url;
     if ( !post.permaLink().isEmpty() )
         url = post.permaLink().pathOrUrl();

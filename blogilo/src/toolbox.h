@@ -87,6 +87,11 @@ private:
         LocalEntryID = QTreeWidgetItem::UserType +1
     };
 
+    enum BlogEntryType {
+        BlogEntryID = QListWidgetItem::UserType +1
+    };
+
+
     QStringList selectedCategoriesTitle() const;
     QList<Category> selectedCategories() const;
     void setSelectedCategories( const QStringList& );
