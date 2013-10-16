@@ -614,7 +614,8 @@ void MainWidget::printPreview()
     KABPrinting::PrintingWizard wizard( &printer, mItemView->selectionModel(), this );
     wizard.setDefaultAddressBook( currentAddressBook() );
 
-    if (wizard.exec())
+    const int result = wizard.exec();
+    if (result)
         previewdlg.exec();
 }
 
