@@ -208,7 +208,7 @@ void TranslatorWidget::readConfig()
 
 void TranslatorWidget::init()
 {
-    d->abstractTranslator = new /*BabelFishTranslator*/GoogleTranslator();
+    d->abstractTranslator = new GoogleTranslator();
     connect(d->abstractTranslator, SIGNAL(translateDone()), SLOT(slotTranslateDone()));
     connect(d->abstractTranslator, SIGNAL(translateFailed(bool,QString)), SLOT(slotTranslateFailed(bool,QString)));
 
