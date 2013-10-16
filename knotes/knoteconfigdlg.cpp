@@ -42,40 +42,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QVBoxLayout>
-
-
-KNoteSimpleConfigDlg::KNoteSimpleConfigDlg( KNoteConfig *config, const QString &title,
-                                QWidget *parent, const QString &name )
-  : KConfigDialog( parent, name, config )
-{
-  setFaceType( KPageDialog::List );
-  setButtons( Default | Ok | Apply | Cancel  );
-  setDefaultButton( Ok );
-
-  setCaption( title );
-#ifdef Q_WS_X11
-  KWindowSystem::setIcons( winId(),
-                           qApp->windowIcon().pixmap(
-                             IconSize( KIconLoader::Desktop ),
-                             IconSize( KIconLoader::Desktop ) ),
-                           qApp->windowIcon().pixmap(
-                             IconSize( KIconLoader::Small ),
-                             IconSize( KIconLoader::Small ) ) );
-#endif
-  showButtonSeparator( true );
-
-  addPage( new KNoteDisplayConfigWidget( false ), i18n( "Display" ), QLatin1String("knotes"),
-             i18n( "Display Settings" ) );
-  addPage( new KNoteEditorConfigWidget( false ), i18n( "Editor" ), QLatin1String("accessories-text-editor"),
-             i18n( "Editor Settings" ) );
-  config->setVersion( QLatin1String(KDEPIM_VERSION) );
-}
-
-
-void KNoteSimpleConfigDlg::slotUpdateCaption(const QString & name)
-{
-    setCaption( name );
-}
+#include <QWhatsThis>
 
 KNoteConfigDlg::KNoteConfigDlg( const QString &title,
                                 QWidget *parent )
@@ -219,6 +186,7 @@ KNoteDisplayConfigWidget::KNoteDisplayConfigWidget( bool defaults )
         layout->addWidget( kcfg_RememberDesktop, 3, 0 );
 #endif
     }
+    layout->setRowStretch(4,1);
 }
 
 KNoteDisplayConfig::KNoteDisplayConfig( const KComponentData &inst, QWidget *parent )
@@ -285,6 +253,7 @@ KNoteEditorConfigWidget::KNoteEditorConfigWidget( bool defaults )
     kcfg_TitleFont->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
                                                 QSizePolicy::Fixed ) );
     layout->addWidget( kcfg_TitleFont, 2, 1, 1, 2 );
+    layout->setRowStretch(4,1);
 }
 
 KNoteEditorConfig::KNoteEditorConfig( const KComponentData &inst, QWidget *parent )
@@ -325,9 +294,29 @@ KNoteActionConfig::KNoteActionConfig(const KComponentData &inst, QWidget *parent
     kcfg_MailAction->setObjectName( QLatin1String("kcfg_MailAction") );
     label_MailAction->setBuddy( kcfg_MailAction );
     layout->addWidget( kcfg_MailAction, 0, 1 );
+
+    QLabel *howItWorks = new QLabel(i18n( "<a href=\"whatsthis\">How does this work?</a>" ));
+    connect( howItWorks, SIGNAL(linkActivated(QString)),SLOT(slotHelpLinkClicked(QString)) );
+    layout->addWidget( howItWorks, 1, 0 );
+
     addConfig( KNotesGlobalConfig::self(), w );
     lay->addStretch();
     load();
+}
+
+void KNoteActionConfig::slotHelpLinkClicked(const QString &)
+{
+    const QString help =
+            i18n( "<qt>"
+                  "<p>You can customize command line. "
+                  "You can use:</p>"
+                  "<ul>"
+                  "<li>%t returns current note title</li>"
+                  "<li>%f returns current note text</li>"
+                  "</ul>"
+                  "</qt>" );
+
+    QWhatsThis::showText( QCursor::pos(), help );
 }
 
 void KNoteActionConfig::save()

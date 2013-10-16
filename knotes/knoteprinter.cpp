@@ -44,7 +44,7 @@ void KNotePrinter::doPrint( const QString &htmlText,
 {
   QPrinter printer( QPrinter::HighResolution );
   //printer.setFullPage( true );  //disabled, causes asymmetric margins
-  QPrintDialog printDialog(KdePrint::createPrintDialog(&printer));
+  QPrintDialog printDialog(/*KdePrint::createPrintDialog*/(&printer));
   printDialog.setWindowTitle( dialogCaption );
   if ( !printDialog.exec() ) {
     return;
@@ -100,7 +100,7 @@ void KNotePrinter::printNote( const QString &name,
       doPrint( htmlText, dialogCaption );
 }
 
-void KNotePrinter::printNotes( const QList<KCal::Journal *>& journals )
+void KNotePrinter::printNotes( const QList<KCal::Journal *>& journals, bool preview )
 {
   if ( journals.isEmpty() ) {
     return;
@@ -130,8 +130,10 @@ void KNotePrinter::printNotes( const QList<KCal::Journal *>& journals )
   
   const QString dialogCaption = i18np( "Print Note", "Print %1 notes",
                                  journals.count() );
-  doPrint( htmlText, dialogCaption );
-  
+  if (preview)
+      doPrintPreview(htmlText);
+  else
+      doPrint( htmlText, dialogCaption );
 #if 0
   //### This should work more reliably but it doesn't work at all.
   

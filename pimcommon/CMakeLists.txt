@@ -28,6 +28,7 @@ set(libpimcommon_SRCS
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp
   widgets/customtextedit.cpp
+  widgets/customtreeview.cpp
   texteditor/plaintexteditor/plaintexteditfindbar.cpp
   texteditor/plaintexteditor/plaintexteditor.cpp
   texteditor/plaintexteditor/plaintexteditorwidget.cpp

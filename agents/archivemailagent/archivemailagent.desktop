@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Archive Mail Agent
 Name[bs]=Arhiva poštanskih agenata
-Name[ca]=Agent d'arxivat de correus
+Name[ca]=Agent per arxivar el correu
 Name[ca@valencia]=Agent d'arxivat de correus
 Name[da]=Agent til mail-arkivering
 Name[de]=Agent zur E-Mail-Archivierung
@@ -40,7 +40,7 @@ Name[zh_CN]=邮件归档代理
 Name[zh_TW]=歸檔郵件代理程式
 Comment=Archive Mail Agent
 Comment[bs]=Arhiva poštanskih agenata
-Comment[ca]=Agent d'arxivat de correus
+Comment[ca]=Agent per arxivar el correu
 Comment[ca@valencia]=Agent d'arxivat de correus
 Comment[da]=Agent til mail-arkivering
 Comment[de]=Agent zur E-Mail-Archivierung

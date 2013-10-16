@@ -20,7 +20,7 @@
 #include "globalsettings_base.h"
 
 #include "pimcommon/widgets/simplestringlisteditor.h"
-#include "pimcommon/widgets/customtextedit.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <KLineEdit>
 #include <KTextEdit>
@@ -66,7 +66,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
 
     ++row;
     lab = new QLabel(i18n("Description:"));
-    mDescription = new PimCommon::CustomTextEdit(QString());
+    mDescription = new PimCommon::RichTextEditorWidget;
     mDescription->setAcceptRichText(false);
     lay->addWidget(lab, row ,0);
     lay->addWidget(mDescription, row,1);
@@ -165,7 +165,7 @@ void DesktopFilePage::loadTheme(const QString &path)
     const QString filename = path + QDir::separator() + mDefaultDesktopName;
     KDesktopFile desktopFile(filename);
     mName->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Name")));
-    mDescription->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Description")));
+    mDescription->setPlainText(desktopFile.desktopGroup().readEntry(QLatin1String("Description")));
     if (mFilename)
         mFilename->setText(desktopFile.desktopGroup().readEntry(QLatin1String("FileName")));
     mAuthor->setText(desktopFile.desktopGroup().readEntry(QLatin1String("Author")));

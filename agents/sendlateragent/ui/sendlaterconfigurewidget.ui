@@ -43,7 +43,7 @@
     </layout>
    </item>
    <item row="0" column="0">
-    <widget class="QTreeWidget" name="treeWidget">
+    <widget class="PimCommon::CustomTreeView" name="treeWidget">
      <column>
       <property name="text">
        <string notr="true">1</string>
@@ -53,6 +53,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PimCommon::CustomTreeView</class>
+   <extends>QTreeWidget</extends>
+   <header>pimcommon/widgets/customtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

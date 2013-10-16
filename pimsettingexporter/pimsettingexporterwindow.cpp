@@ -112,8 +112,13 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
 
 void PimSettingExporterWindow::slotSaveLog()
 {
+    const QString log = mLogWidget->toHtml();
+    if (log.isEmpty()) {
+        KMessageBox::information(this, i18n("Log is empty."), i18n("Save log"));
+        return;
+    }
     const QString filter(QLatin1String("*.html"));
-    PimCommon::Util::saveTextAs(mLogWidget->toHtml(), filter, this);
+    PimCommon::Util::saveTextAs(log, filter, this);
 }
 
 void PimSettingExporterWindow::slotBackupData()
@@ -143,7 +148,12 @@ void PimSettingExporterWindow::slotBackupData()
         delete mImportExportData;
         mImportExportData = 0;
 
-        if ((kmailNumberOfStep==0) && (korganizerNumberOfStep==0) && (kalarmNumberOfStep==0) && (kaddressbookNumberOfStep==0) && (kjotsNumberOfStep==0))
+        if ((kmailNumberOfStep==0) &&
+                (korganizerNumberOfStep==0) &&
+                (kalarmNumberOfStep==0) &&
+                (kaddressbookNumberOfStep==0) &&
+                (kjotsNumberOfStep==0) &&
+                (knotesTypeSelected==0))
             return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
@@ -231,9 +241,13 @@ void PimSettingExporterWindow::slotRestoreData()
         delete mImportExportData;
         mImportExportData = 0;
 
-        if ((kmailNumberOfStep==0) && (korganizerNumberOfStep==0) && (kalarmNumberOfStep==0) && (kaddressbookNumberOfStep==0) && (kjotsNumberOfStep==0))
+        if ((kmailNumberOfStep==0) &&
+                (korganizerNumberOfStep==0) &&
+                (kalarmNumberOfStep==0) &&
+                (kaddressbookNumberOfStep==0) &&
+                (kjotsNumberOfStep==0) &&
+                (knotesTypeSelected==0))
             return;
-
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
         if (!archiveStorage->openArchive(false)) {
             delete archiveStorage;

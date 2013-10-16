@@ -73,20 +73,20 @@ QString CompactStyle::contactsToHtml( const KABC::Addressee::List &contacts ) co
             << ContactFields::HomeAddressLocality
             << ContactFields::HomePhone
             << ContactFields::MobilePhone;
-  };
+  }
   if (this->withBusinessAddress) {
     fields  << ContactFields::BusinessAddressStreet
             << ContactFields::BusinessAddressPostalCode
             << ContactFields::BusinessAddressLocality
             << ContactFields::BusinessPhone;
-  };
+  }
   if (this->withEMail) {
     fields  << ContactFields::PreferredEmail
             << ContactFields::Email2;
-  };
+  }
   if (this->withBirthday) {
     fields  << ContactFields::Birthday;
-  };
+  }
 
   QString content;
 

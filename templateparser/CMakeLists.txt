@@ -19,6 +19,7 @@ if(NOT WINCE)
     templatesinsertcommand.cpp
     templatessyntaxhighlighter.cpp
     templatestextedit.cpp
+    templatestexteditor.cpp
   )
 endif()
 

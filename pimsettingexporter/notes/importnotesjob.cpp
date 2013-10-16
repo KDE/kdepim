@@ -52,13 +52,25 @@ void ImportNotesJob::start()
 
 void ImportNotesJob::restoreConfig()
 {
-    //TODO
+    const KArchiveEntry *knotesEntry  = mArchiveDirectory->entry(Utils::configsPath() + QLatin1String( "knotesrc" ) );
+    if (knotesEntry && knotesEntry->isFile()) {
+        const KArchiveEntry *entry = static_cast<const KArchiveEntry*>(knotesEntry);
+        copyToDirectory(entry, KGlobal::dirs()->saveLocation( "config", QLatin1String( "knotesrc" )));
+    }
+
     Q_EMIT info(i18n("Config restored."));
 }
 
 void ImportNotesJob::restoreData()
 {
-    //TODO
+    const KArchiveEntry *notesEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "knotes/" ) );
+    if (notesEntry && notesEntry->isDirectory()) {
+        //TODO 4.12 verify if notes already exists.
+        const QString notesPath = KGlobal::dirs()->saveLocation("data", QLatin1String("knotes/"));
+        const KArchiveDirectory *notesDir = static_cast<const KArchiveDirectory*>(notesEntry);
+        notesDir->copyTo(notesPath);
+    }
+    Q_EMIT info(i18n("Data restored."));
 }
 
 #include "importnotesjob.moc"

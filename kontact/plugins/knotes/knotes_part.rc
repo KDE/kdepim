@@ -1,13 +1,16 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="knotes" version="394">
+<kpartgui name="knotes" version="401">
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
       <Merge/>
       <Action name="print_note"/>
+      <Action name="print_preview_note"/>
     </Menu>
     <Menu name="edit"><text>&amp;Edit</text>
       <Action name="edit_note"/>
       <Action name="edit_rename"/>
+      <Separator/>
+      <Action name="configure_note"/>
       <Separator/>
       <Action name="edit_delete"/>
     </Menu>
@@ -17,6 +20,8 @@
     <Action name="edit_note"/>
     <Action name="edit_rename"/>
     <Action name="print_note"/>
+    <Separator/>
+    <Action name="configure_note"/>
     <Separator/>
     <Action name="edit_delete"/>
   </Menu>

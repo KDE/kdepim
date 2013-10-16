@@ -26,8 +26,9 @@
 #include <KParts/ReadOnlyPart>
 #include <QListWidgetItem>
 
-class KNoteEditDlg;
+class KNoteEditDialog;
 class KNotesIconView;
+class KNotesWidget;
 class KNotesIconViewItem;
 class KNotesResourceManager;
 class KNoteTip;
@@ -42,7 +43,7 @@ class KNotesPart : public KParts::ReadOnlyPart
   Q_OBJECT
 
   public:
-    explicit KNotesPart( QObject *parent = 0 );
+    explicit KNotesPart(KNotesResourceManager *manager, QObject *parent = 0 );
     ~KNotesPart();
 
     bool openFile();
@@ -79,15 +80,19 @@ class KNotesPart : public KParts::ReadOnlyPart
 
     void killSelectedNotes();
 
-    void printSelectedNotes();
+    void slotPrintSelectedNotes();
+    void slotPrintPreviewSelectedNotes();
     void requestToolTip( const QModelIndex & );
 
     void hideToolTip();
+    void slotPreferences();
+    void slotApplyConfig();
 
   private:
-    KNotesIconView *mNotesView;
+    void printSelectedNotes(bool preview);
+    KNotesWidget *mNotesWidget;
     KNoteTip *mNoteTip;
-    KNoteEditDlg *mNoteEditDlg;
+    KNoteEditDialog *mNoteEditDlg;
 
     KNotesResourceManager *mManager;
     QMultiHash<QString, KNotesIconViewItem*> mNoteList;

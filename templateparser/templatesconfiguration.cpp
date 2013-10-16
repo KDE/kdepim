@@ -20,6 +20,7 @@
 #include "templatesconfiguration.h"
 #include "globalsettings_base.h"
 #include "templatesconfiguration_kfg.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KMessageBox>
 
@@ -36,13 +37,13 @@ TemplatesConfiguration::TemplatesConfiguration( QWidget *parent, const QString &
   setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
   sizeHint();
 
-  connect( textEdit_new, SIGNAL(textChanged()),
+  connect( textEdit_new->editor(), SIGNAL(textChanged()),
            this, SLOT(slotTextChanged()) );
-  connect( textEdit_reply, SIGNAL(textChanged()),
+  connect( textEdit_reply->editor(), SIGNAL(textChanged()),
            this, SLOT(slotTextChanged()) );
-  connect( textEdit_reply_all, SIGNAL(textChanged()),
+  connect( textEdit_reply_all->editor(), SIGNAL(textChanged()),
            this, SLOT(slotTextChanged()) );
-  connect( textEdit_forward, SIGNAL(textChanged()),
+  connect( textEdit_forward->editor(), SIGNAL(textChanged()),
            this, SLOT(slotTextChanged()) );
   connect( lineEdit_quote, SIGNAL(textChanged(QString)),
            this, SLOT(slotTextChanged()) );
@@ -105,21 +106,21 @@ void TemplatesConfiguration::resetToDefault()
   } else if ( choice == KMessageBox::Yes ) {
     const int toolboxCurrentIndex( toolBox1->currentIndex() );
     if( toolBox1->widget( toolboxCurrentIndex ) == page_new ) {
-      textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
+      textEdit_new->setPlainText( DefaultTemplates::defaultNewMessage() );
     } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply ) {
-      textEdit_reply->setText( DefaultTemplates::defaultReply() );
+      textEdit_reply->setPlainText( DefaultTemplates::defaultReply() );
     } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply_all ) {
-      textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
+      textEdit_reply_all->setPlainText( DefaultTemplates::defaultReplyAll() );
     } else if( toolBox1->widget( toolboxCurrentIndex ) == page_forward ) {
-      textEdit_forward->setText( DefaultTemplates::defaultForward() );
+      textEdit_forward->setPlainText( DefaultTemplates::defaultForward() );
     } else {
       kDebug() << "Unknown current page in TemplatesConfiguration!";
     }
   } else {
-    textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
-    textEdit_reply->setText( DefaultTemplates::defaultReply() );
-    textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
-    textEdit_forward->setText( DefaultTemplates::defaultForward() );
+    textEdit_new->setPlainText( DefaultTemplates::defaultNewMessage() );
+    textEdit_reply->setPlainText( DefaultTemplates::defaultReply() );
+    textEdit_reply_all->setPlainText( DefaultTemplates::defaultReplyAll() );
+    textEdit_forward->setPlainText( DefaultTemplates::defaultForward() );
   }
   lineEdit_quote->setText( DefaultTemplates::defaultQuoteString() );
 }
@@ -129,27 +130,27 @@ void TemplatesConfiguration::loadFromGlobal()
   QString str;
   str = GlobalSettings::self()->templateNewMessage();
   if ( str.isEmpty() ) {
-    textEdit_new->setText( DefaultTemplates::defaultNewMessage() );
+    textEdit_new->setPlainText( DefaultTemplates::defaultNewMessage() );
   } else {
-    textEdit_new->setText(str);
+    textEdit_new->setPlainText(str);
   }
   str = GlobalSettings::self()->templateReply();
   if ( str.isEmpty() ) {
-    textEdit_reply->setText( DefaultTemplates::defaultReply() );
+    textEdit_reply->setPlainText( DefaultTemplates::defaultReply() );
   } else {
-    textEdit_reply->setText( str );
+    textEdit_reply->setPlainText( str );
   }
   str = GlobalSettings::self()->templateReplyAll();
   if ( str.isEmpty() ) {
-    textEdit_reply_all->setText( DefaultTemplates::defaultReplyAll() );
+    textEdit_reply_all->setPlainText( DefaultTemplates::defaultReplyAll() );
   } else {
-    textEdit_reply_all->setText( str );
+    textEdit_reply_all->setPlainText( str );
   }
   str = GlobalSettings::self()->templateForward();
   if ( str.isEmpty() ) {
-    textEdit_forward->setText( DefaultTemplates::defaultForward() );
+    textEdit_forward->setPlainText( DefaultTemplates::defaultForward() );
   } else {
-    textEdit_forward->setText( str );
+    textEdit_forward->setPlainText( str );
   }
   str = GlobalSettings::self()->quoteString();
   if ( str.isEmpty() ) {
@@ -182,7 +183,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultNewMessage();
   }
-  textEdit_new->setText( str );
+  textEdit_new->setPlainText( str );
 
   str = t.templateReply();
   if ( str.isEmpty() ) {
@@ -191,7 +192,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReply();
   }
-  textEdit_reply->setText( str );
+  textEdit_reply->setPlainText( str );
 
   str = t.templateReplyAll();
   if ( str.isEmpty() ) {
@@ -200,7 +201,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReplyAll();
   }
-  textEdit_reply_all->setText( str );
+  textEdit_reply_all->setPlainText( str );
 
   str = t.templateForward();
   if ( str.isEmpty() ) {
@@ -209,7 +210,7 @@ void TemplatesConfiguration::loadFromIdentity( uint id )
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultForward();
   }
-  textEdit_forward->setText( str );
+  textEdit_forward->setPlainText( str );
 
   str = t.quoteString();
   if ( str.isEmpty() ) {
@@ -253,7 +254,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultNewMessage();
   }
-  textEdit_new->setText( str );
+  textEdit_new->setPlainText( str );
 
   str = t.templateReply();
   if ( str.isEmpty() && tid ) {
@@ -265,7 +266,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReply();
   }
-  textEdit_reply->setText( str );
+  textEdit_reply->setPlainText( str );
 
   str = t.templateReplyAll();
   if ( str.isEmpty() && tid ) {
@@ -277,7 +278,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultReplyAll();
   }
-  textEdit_reply_all->setText( str );
+  textEdit_reply_all->setPlainText( str );
 
   str = t.templateForward();
   if ( str.isEmpty() && tid ) {
@@ -289,7 +290,7 @@ void TemplatesConfiguration::loadFromFolder( const QString &id, uint identity )
   if ( str.isEmpty() ) {
     str = DefaultTemplates::defaultForward();
   }
-  textEdit_forward->setText( str );
+  textEdit_forward->setPlainText( str );
 
   str = t.quoteString();
   if ( str.isEmpty() && tid ) {
@@ -318,19 +319,19 @@ void TemplatesConfiguration::saveToFolder( const QString &id )
   t.writeConfig();
 }
 
-KTextEdit *TemplatesConfiguration::currentTextEdit() const
+QTextEdit *TemplatesConfiguration::currentTextEdit() const
 {
-  KTextEdit *edit;
+  QTextEdit *edit;
 
   const int toolboxCurrentIndex( toolBox1->currentIndex() );
   if( toolBox1->widget( toolboxCurrentIndex ) == page_new ) {
-    edit = textEdit_new;
+    edit = textEdit_new->editor();
   } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply ) {
-    edit = textEdit_reply;
+    edit = textEdit_reply->editor();
   } else if( toolBox1->widget( toolboxCurrentIndex ) == page_reply_all ) {
-    edit = textEdit_reply_all;
+    edit = textEdit_reply_all->editor();
   } else if( toolBox1->widget( toolboxCurrentIndex ) == page_forward ) {
-    edit = textEdit_forward;
+    edit = textEdit_forward->editor();
   } else {
     kDebug() << "Unknown current page in TemplatesConfiguration!";
     edit = 0;
@@ -340,7 +341,7 @@ KTextEdit *TemplatesConfiguration::currentTextEdit() const
 
 void TemplatesConfiguration::slotInsertCommand( const QString &cmd, int adjustCursor )
 {
-  KTextEdit *edit = currentTextEdit();
+  QTextEdit *edit = currentTextEdit();
   if ( !edit ) {
     return;
   }

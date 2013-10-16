@@ -21,27 +21,15 @@
 
 #include "templateparser_export.h"
 
-#include "pimcommon/widgets/customtextedit.h"
-class QCompleter;
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 namespace TemplateParser {
-class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public PimCommon::CustomTextEdit
+class TEMPLATEPARSER_EXPORT TemplatesTextEdit : public PimCommon::RichTextEditorWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit TemplatesTextEdit( QWidget *parent = 0 );
     ~TemplatesTextEdit();
-
-  protected Q_SLOTS:
-    void slotInsertCompletion( const QString & );
-    QString wordUnderCursor();
-
-  protected:
-    void initCompleter();
-    void keyPressEvent( QKeyEvent *e );
-
-  private:
-    QCompleter *m_completer;
 };
 
 }

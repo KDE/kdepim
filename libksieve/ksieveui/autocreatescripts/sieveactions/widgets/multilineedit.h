@@ -18,10 +18,10 @@
 #ifndef MULTILINEEDIT_H
 #define MULTILINEEDIT_H
 
-#include <KTextEdit>
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 namespace KSieveUi {
-class MultiLineEdit : public KTextEdit
+class MultiLineEdit : public PimCommon::RichTextEditor
 {
     Q_OBJECT
 public:

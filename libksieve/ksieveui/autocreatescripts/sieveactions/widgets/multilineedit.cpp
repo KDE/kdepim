@@ -16,16 +16,16 @@
 */
 
 #include "multilineedit.h"
-
 #include <QStyleOptionFrameV2>
 #include <QApplication>
 
 using namespace KSieveUi;
 
 MultiLineEdit::MultiLineEdit(QWidget *parent)
-    : KTextEdit(parent)
+    : PimCommon::RichTextEditor(parent)
 {
     setAcceptRichText(false);
+    setSearchSupport(false);
     setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed));
 }
 

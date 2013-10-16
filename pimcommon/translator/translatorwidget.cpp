@@ -208,7 +208,7 @@ void TranslatorWidget::readConfig()
 
 void TranslatorWidget::init()
 {
-    d->abstractTranslator = new /*BabelFishTranslator*/GoogleTranslator();
+    d->abstractTranslator = new GoogleTranslator();
     connect(d->abstractTranslator, SIGNAL(translateDone()), SLOT(slotTranslateDone()));
     connect(d->abstractTranslator, SIGNAL(translateFailed(bool,QString)), SLOT(slotTranslateFailed(bool,QString)));
 
@@ -280,6 +280,7 @@ void TranslatorWidget::init()
     d->splitter = new QSplitter;
     d->splitter->setChildrenCollapsible( false );
     d->inputText = new TranslatorTextEdit;
+    d->inputText->enableFindReplace(false);
     d->inputText->setAcceptRichText(false);
     d->inputText->setClickMessage(i18n("Drag text that you want to translate."));
     connect( d->inputText, SIGNAL(textChanged()), SLOT(slotTextChanged()) );

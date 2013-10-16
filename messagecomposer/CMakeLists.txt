@@ -119,7 +119,7 @@ set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION}
 install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 add_subdirectory(autocorrection/tests)
-
+add_subdirectory(imagescaling/tests)
 #install( TARGETS messagecomposer EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 #install( FILES

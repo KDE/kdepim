@@ -117,7 +117,8 @@ void StylePage::initFieldCombo()
   qSort( mFields.begin(), mFields.end(), contactFieldsNameLesser );
 
   ContactFields::Fields::ConstIterator it;
-  for ( it = mFields.constBegin(); it != mFields.constEnd(); ++it ) {
+  ContactFields::Fields::ConstIterator end(mFields.constEnd());
+  for ( it = mFields.constBegin(); it != end; ++it ) {
     mFieldCombo->addItem( ContactFields::label( *it ) );
   }
 }

@@ -2,7 +2,7 @@
 IconName=view-filter
 Comment=Mail Filter Agent
 Comment[bs]=Agent poštanskog filtera
-Comment[ca]=Agent de filtre de correu
+Comment[ca]=Agent per filtrar el correu
 Comment[ca@valencia]=Agent de filtre de correu
 Comment[cs]=Agent filtrování pošty
 Comment[da]=Mailfilteragent
@@ -41,7 +41,7 @@ Comment[zh_CN]=邮件过滤代理
 Comment[zh_TW]=郵件過濾代理程式
 Name=Mail Filter Agent
 Name[bs]=Agent poštanskog filtera
-Name[ca]=Agent de filtre de correu
+Name[ca]=Agent per filtrar el correu
 Name[ca@valencia]=Agent de filtre de correu
 Name[cs]=Agent filtrování pošty
 Name[da]=Mailfilteragent
@@ -82,7 +82,7 @@ Name[zh_TW]=郵件過濾代理程式
 [Event/mailfilterlogenabled]
 Name=Mail filter log enabled
 Name[bs]=Poštanski filter omogućen
-Name[ca]=Activat el registre de filtratge de correu
+Name[ca]=Activat el registre pel filtratge de correu
 Name[ca@valencia]=Activat el registre de filtratge de correu
 Name[cs]=Záznam filtrování pošty povolen
 Name[da]=Mailfilterlog aktiveret

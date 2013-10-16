@@ -44,6 +44,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="KPushButton" name="clearButton">
+       <property name="text">
+        <string>Clear</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
