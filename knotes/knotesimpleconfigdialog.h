@@ -15,38 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KNOTESICONVIEW_H
-#define KNOTESICONVIEW_H
 
-#include "knotes_part.h"
-#include <KListWidget>
-#include <QListWidgetItem>
+#ifndef KNoteSimpleConfigDialog_H
+#define KNoteSimpleConfigDialog_H
+#include "knotes_export.h"
+
+#include <KConfigDialog>
 class KNoteConfig;
-class KNotesIconView : public KListWidget
+
+class KNOTES_EXPORT KNoteSimpleConfigDialog : public KConfigDialog
 {
+    Q_OBJECT
 public:
-    explicit KNotesIconView( KNotesPart * );
+    explicit KNoteSimpleConfigDialog( KNoteConfig *config, const QString &title,
+                    QWidget *parent, const QString &name );
+    ~KNoteSimpleConfigDialog();
 
-protected:
-    void mousePressEvent( QMouseEvent * );
-
-private:
-    KNotesPart *m_part;
+public Q_SLOTS:
+    void slotUpdateCaption(const QString & name);
 };
 
-class KNotesIconViewItem : public QListWidgetItem
-{
-public:
-    KNotesIconViewItem( QListWidget *parent, Journal *journal );
-    ~KNotesIconViewItem();
-    Journal *journal() const;
-    QString realName() const;
-    void setIconText( const QString &text );
-    KNoteConfig *config();
-    void updateColor();
-private:
-    Journal *mJournal;
-    KNoteConfig *mConfig;
-};
-
-#endif // KNOTESICONVIEW_H
+#endif // KNoteSimpleConfigDialog_H

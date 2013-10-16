@@ -15,38 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KNOTESICONVIEW_H
-#define KNOTESICONVIEW_H
+#ifndef KNOTEUTILS_H
+#define KNOTEUTILS_H
+#include "knotes_export.h"
 
-#include "knotes_part.h"
-#include <KListWidget>
-#include <QListWidgetItem>
+class QWidget;
 class KNoteConfig;
-class KNotesIconView : public KListWidget
+namespace KCal {
+class Journal;
+}
+
+namespace KNoteUtils
 {
-public:
-    explicit KNotesIconView( KNotesPart * );
+KNOTES_EXPORT KNoteConfig *createConfig(KCal::Journal *journal, QString &configPath);
+KNOTES_EXPORT void setProperty(KCal::Journal *journal, KNoteConfig *config);
+KNOTES_EXPORT void removeNote(KCal::Journal *journal, QWidget *parent);
+}
 
-protected:
-    void mousePressEvent( QMouseEvent * );
-
-private:
-    KNotesPart *m_part;
-};
-
-class KNotesIconViewItem : public QListWidgetItem
-{
-public:
-    KNotesIconViewItem( QListWidget *parent, Journal *journal );
-    ~KNotesIconViewItem();
-    Journal *journal() const;
-    QString realName() const;
-    void setIconText( const QString &text );
-    KNoteConfig *config();
-    void updateColor();
-private:
-    Journal *mJournal;
-    KNoteConfig *mConfig;
-};
-
-#endif // KNOTESICONVIEW_H
+#endif // KNOTEUTILS_H
