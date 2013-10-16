@@ -93,6 +93,7 @@ void PrintingWizard::accept()
 {
   print();
   close();
+  setResult(QDialog::Accepted);
 }
 
 void PrintingWizard::registerStyles()
