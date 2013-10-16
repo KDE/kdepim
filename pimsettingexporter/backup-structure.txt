@@ -76,3 +76,5 @@ Root
 |       |---------korganizer/templates/*
 |       |---------messageviewer/themes/*
 |       |---------kmail2/adblockrules_local
+|       |---------knotes/notes.ics
+|       |---------knotes/notes/*
