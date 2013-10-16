@@ -32,6 +32,7 @@
 
 #include <QTabWidget>
 #include <QHBoxLayout>
+#include <QPainter>
 
 ContactPreviewWidget::ContactPreviewWidget(const QString &projectDirectory, QWidget *parent)
     : QWidget(parent)
@@ -85,7 +86,32 @@ void ContactPreviewWidget::updateViewer()
 
 void ContactPreviewWidget::createScreenShot(const QStringList &fileName)
 {
-    //TODO
+    if (fileName.isEmpty())
+        return;
+    if (fileName.count() > 0) {
+        QImage image(mContactViewer->size(), QImage::Format_ARGB32_Premultiplied);
+        image.fill(Qt::transparent);
+
+        QPainter painter(&image);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setRenderHint(QPainter::TextAntialiasing, true);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+        mContactViewer->render(&painter);
+        painter.end();
+        image.save(fileName.at(0));
+    }
+    if (fileName.count() > 1) {
+        QImage image(mContactViewer->size(), QImage::Format_ARGB32_Premultiplied);
+        image.fill(Qt::transparent);
+
+        QPainter painter(&image);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setRenderHint(QPainter::TextAntialiasing, true);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+        mGroupViewer->render(&painter);
+        painter.end();
+        image.save(fileName.at(1));
+    }
 }
 
 void ContactPreviewWidget::loadConfig()
