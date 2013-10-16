@@ -52,6 +52,7 @@ Name[x-test]=xxKTnefxx
 Name[zh_CN]=KTnef
 Name[zh_TW]=KTnef
 GenericName=TNEF File Viewer (proprietary format used by outlook)
+GenericName[ca]=Visor de fitxers TNEF (format utilitzat per Outlook)
 GenericName[de]=TNEF-Dateibetrachter (Proprietäres Format von Outlook)
 GenericName[es]=Visor de archivos TNEF (formato propietario usado por outlook)
 GenericName[fi]=TNEF-tiedostokatselin (Outlookin käyttämä suljettu tiedostomuoto)
