@@ -147,7 +147,7 @@ void PimSettingExporterWindow::slotBackupData()
         const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);
         const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
         const Utils::StoredTypes knotesTypeSelected = dialog->knotesTypesSelected(knotesNumberOfStep);
-        const Utils::StoredTypes akregatorTypeSelected = dialog->knotesTypesSelected(akregatorNumberOfStep);
+        const Utils::StoredTypes akregatorTypeSelected = dialog->akregatorTypesSelected(akregatorNumberOfStep);
         delete dialog;
         mLogWidget->clear();
         delete mImportExportData;
@@ -246,7 +246,7 @@ void PimSettingExporterWindow::slotRestoreData()
         const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);        
         const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
         const Utils::StoredTypes knotesTypeSelected = dialog->knotesTypesSelected(knotesNumberOfStep);
-        const Utils::StoredTypes akregatorTypeSelected = dialog->knotesTypesSelected(akregatorNumberOfStep);
+        const Utils::StoredTypes akregatorTypeSelected = dialog->akregatorTypesSelected(akregatorNumberOfStep);
 
         delete dialog;
         mLogWidget->clear();
