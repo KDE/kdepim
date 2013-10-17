@@ -53,20 +53,7 @@ void ImportAkregatorJob::start()
 void ImportAkregatorJob::restoreConfig()
 {
     const QString akregatorStr(QLatin1String("akregatorrc"));
-    const KArchiveEntry* akregatorentry  = mArchiveDirectory->entry(Utils::configsPath() + akregatorStr);
-    if ( akregatorentry &&  akregatorentry->isFile()) {
-        const KArchiveFile* akregatorconfiguration = static_cast<const KArchiveFile*>(akregatorentry);
-        const QString akregatorrc = KStandardDirs::locateLocal( "config",  akregatorStr);
-        if (QFile(akregatorrc).exists()) {
-            //TODO 4.12 allow to merge config.
-            if (overwriteConfigMessageBox(akregatorStr)) {
-                copyToFile(akregatorconfiguration, akregatorrc, akregatorStr, Utils::configsPath());
-            }
-        } else {
-            copyToFile(akregatorconfiguration, akregatorrc, akregatorStr, Utils::configsPath());
-        }
-    }
-
+    restoreConfigFile(akregatorStr);
     Q_EMIT info(i18n("Config restored."));
 }
 

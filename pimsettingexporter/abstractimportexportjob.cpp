@@ -373,4 +373,21 @@ bool AbstractImportExportJob::backupFullDirectory(const KUrl &url, const QString
     return fileAdded;
 }
 
+void AbstractImportExportJob::restoreConfigFile(const QString &configNameStr)
+{
+    const KArchiveEntry* configNameentry  = mArchiveDirectory->entry(Utils::configsPath() + configNameStr);
+    if ( configNameentry &&  configNameentry->isFile()) {
+        const KArchiveFile* configNameconfiguration = static_cast<const KArchiveFile*>(configNameentry);
+        const QString configNamerc = KStandardDirs::locateLocal( "config",  configNameStr);
+        if (QFile(configNamerc).exists()) {
+            //TODO 4.12 allow to merge config.
+            if (overwriteConfigMessageBox(configNameStr)) {
+                copyToFile(configNameconfiguration, configNamerc, configNameStr, Utils::configsPath());
+            }
+        } else {
+            copyToFile(configNameconfiguration, configNamerc, configNameStr, Utils::configsPath());
+        }
+    }
+}
+
 #include "abstractimportexportjob.moc"
