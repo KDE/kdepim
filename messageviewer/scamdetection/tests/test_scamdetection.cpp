@@ -95,6 +95,24 @@ void ScamDetectionTest::testRedirectUrl()
     QCOMPARE(testHtml(content), true);
 }
 
+void ScamDetectionTest::testUrlWithNumericValue()
+{
+    QString content = QLatin1String("<html><body><a href=\"http://baseball2.2ndhalfplays.com/nested/attribs/\">http://baseball2.2ndhalfplays.com/nested/attribs</html>");
+    QCOMPARE(testHtml(content), false);
+    content = QLatin1String("<html><body><a href=\"http://25.15.55.88/\">test</a></body></html>");
+    QCOMPARE(testHtml(content), true);
+    content = QLatin1String("<html><body><a href=\"http://255.0.1.1/\">test</a></body></html>");
+    QCOMPARE(testHtml(content), true);
+    content = QLatin1String("<html><body><a href=\"http://1.0.1.1/\">test</a></body></html>");
+    QCOMPARE(testHtml(content), true);
+    content = QLatin1String("<html><body><a href=\"http://255.500.1.1/\">test</a></body></html>");
+    QCOMPARE(testHtml(content), true);
+    content = QLatin1String("<html><body><a href=\"http://baseball.2ndhalfplays.com/nested/attribs/\">http://baseball2.2ndhalfplays.com/nested/attribs</html>");
+    QCOMPARE(testHtml(content), false);
+    content = QLatin1String("<html><body><a href=\"http://baseball.2ndhalfplays.com/nested/attribs/\">http://baseball2.2ndhalfplays.com/nested/attribs</html>");
+    QCOMPARE(testHtml(content), false);
+}
+
 
 QTEST_KDEMAIN( ScamDetectionTest, GUI )
 
