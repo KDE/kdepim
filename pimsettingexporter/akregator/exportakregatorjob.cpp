@@ -43,7 +43,7 @@ ExportAkregatorJob::~ExportAkregatorJob()
 
 void ExportAkregatorJob::start()
 {
-    Q_EMIT title(i18n("Start export knotes settings..."));
+    Q_EMIT title(i18n("Start export akregator settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config) {
         backupConfig();
@@ -66,10 +66,11 @@ void ExportAkregatorJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+#if 0
     const QString knotesStr(QLatin1String("knotesrc"));
     const QString knotesrc = KStandardDirs::locateLocal( "config", knotesStr);
     backupFile(knotesrc, Utils::configsPath(), knotesStr);
-
+#endif
     Q_EMIT info(i18n("Config backup done."));
 }
 
@@ -77,20 +78,7 @@ void ExportAkregatorJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    const QString icsfileStr = QLatin1String( "notes.ics" );
-    const QString icsfile = KStandardDirs::locateLocal( "data", QLatin1String( "knotes/" ) + icsfileStr );
-
-    backupFile(icsfile, Utils::dataPath() +  QLatin1String( "/knotes/" ), icsfileStr);
-
-
-    const QString notesDir = KStandardDirs::locateLocal( "data", QLatin1String( "knotes/notes/" ) );
-    QDir notesDirectory( notesDir );
-    if (notesDirectory.exists()) {
-        const bool notesDirAdded = archive()->addLocalDirectory(notesDir, Utils::dataPath() +  QLatin1String( "/knotes/notes/" ));
-        if (!notesDirAdded) {
-            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", notesDir));
-        }
-    }
+    //TODO
     Q_EMIT info(i18n("Data backup done."));
 }
 
