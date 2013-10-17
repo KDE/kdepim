@@ -19,17 +19,17 @@
 
 QString contacteditorutil::defaultContact()
 {
-    //TODO fix me
-    const QString contact = QString::fromLatin1("From: montel@example.com\n"
-                                             "To: kde@example.com\n"
-                                             "Sender: montel@example.com\n"
-                                             "MIME-Version: 1.0\n"
-                                             "Date: 28 Apr 2013 23:58:21 -0000\n"
-                                             "Subject: Test message\n"
-                                             "Content-Type: text/plain\n"
-                                             "X-Length: 0\n"
-                                             "X-UID: 6161\n"
-                                             "\n"
-                                             "Hello this is a test mail\n");
+
+    const QString contact = QString::fromLatin1("BEGIN:VCARD\n"
+                                                "ADR;TYPE=home:;;10 street Eiffel Tower\n;Paris;;75016;France\n"
+                                                "EMAIL:test@kde.org\n"
+                                                "FN:Test\n"
+                                                "N:Test;;;;\n"
+                                                "ORG:kde\n"
+                                                "TEL;TYPE=HOME:+33 12345678\n"
+                                                "UID:{851e0b81-8f95-40d2-a6a6-a9dbee2be12d}\n"
+                                                "URL:www.kde.org\n"
+                                                "VERSION:3.0\n"
+                                                "END:VCARD");
     return contact;
 }
