@@ -208,11 +208,11 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   topLevelLayout->addWidget( topSideBox );
 }
 
-void MultiAgendaView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
+void MultiAgendaView::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
 {
-  EventView::setCalendar( cal );
-  Q_FOREACH ( KCheckableProxyModel *const i, d->mCollectionSelectionModels ) {
-    i->setSourceModel( cal->entityTreeModel() );
+  EventView::setCalendar( calendar );
+  Q_FOREACH ( KCheckableProxyModel *proxy, d->mCollectionSelectionModels ) {
+    proxy->setSourceModel( calendar->entityTreeModel() );
   }
   recreateViews();
 }
