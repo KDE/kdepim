@@ -52,10 +52,19 @@ void ImportNotesJob::start()
 
 void ImportNotesJob::restoreConfig()
 {
-    const KArchiveEntry *knotesEntry  = mArchiveDirectory->entry(Utils::configsPath() + QLatin1String( "knotesrc" ) );
-    if (knotesEntry && knotesEntry->isFile()) {
-        const KArchiveEntry *entry = static_cast<const KArchiveEntry*>(knotesEntry);
-        copyToDirectory(entry, KGlobal::dirs()->saveLocation( "config", QLatin1String( "knotesrc" )));
+    const QString knotesStr(QLatin1String("knotesrc"));
+    const KArchiveEntry* knotesentry  = mArchiveDirectory->entry(Utils::configsPath() + knotesStr);
+    if ( knotesentry &&  knotesentry->isFile()) {
+        const KArchiveFile* knotesconfiguration = static_cast<const KArchiveFile*>(knotesentry);
+        const QString knotesrc = KStandardDirs::locateLocal( "config",  knotesStr);
+        if (QFile(knotesrc).exists()) {
+            //TODO 4.12 allow to merge config.
+            if (overwriteConfigMessageBox(knotesStr)) {
+                copyToFile(knotesconfiguration, knotesrc, knotesStr, Utils::configsPath());
+            }
+        } else {
+            copyToFile(knotesconfiguration, knotesrc, knotesStr, Utils::configsPath());
+        }
     }
 
     Q_EMIT info(i18n("Config restored."));

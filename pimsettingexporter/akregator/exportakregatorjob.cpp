@@ -66,11 +66,9 @@ void ExportAkregatorJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-#if 0
-    const QString knotesStr(QLatin1String("knotesrc"));
-    const QString knotesrc = KStandardDirs::locateLocal( "config", knotesStr);
-    backupFile(knotesrc, Utils::configsPath(), knotesStr);
-#endif
+    const QString akregatorStr(QLatin1String("akregatorrc"));
+    const QString akregatorsrc = KStandardDirs::locateLocal( "config", akregatorStr);
+    backupFile(akregatorsrc, Utils::configsPath(), akregatorStr);
     Q_EMIT info(i18n("Config backup done."));
 }
 
@@ -78,7 +76,14 @@ void ExportAkregatorJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    //TODO
+    const QString akregatorDir = KStandardDirs::locateLocal( "data", QLatin1String( "akregator" ) );
+    QDir akregatorDirectory( akregatorDir );
+    if (akregatorDirectory.exists()) {
+        const bool akregatorDirAdded = archive()->addLocalDirectory(akregatorDir, Utils::dataPath() +  QLatin1String( "/akregator" ));
+        if (!akregatorDirAdded) {
+            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", akregatorDir));
+        }
+    }
     Q_EMIT info(i18n("Data backup done."));
 }
 

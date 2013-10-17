@@ -52,11 +52,33 @@ void ImportAkregatorJob::start()
 
 void ImportAkregatorJob::restoreConfig()
 {
+    const QString akregatorStr(QLatin1String("akregatorrc"));
+    const KArchiveEntry* akregatorentry  = mArchiveDirectory->entry(Utils::configsPath() + akregatorStr);
+    if ( akregatorentry &&  akregatorentry->isFile()) {
+        const KArchiveFile* akregatorconfiguration = static_cast<const KArchiveFile*>(akregatorentry);
+        const QString akregatorrc = KStandardDirs::locateLocal( "config",  akregatorStr);
+        if (QFile(akregatorrc).exists()) {
+            //TODO 4.12 allow to merge config.
+            if (overwriteConfigMessageBox(akregatorStr)) {
+                copyToFile(akregatorconfiguration, akregatorrc, akregatorStr, Utils::configsPath());
+            }
+        } else {
+            copyToFile(akregatorconfiguration, akregatorrc, akregatorStr, Utils::configsPath());
+        }
+    }
+
     Q_EMIT info(i18n("Config restored."));
 }
 
 void ImportAkregatorJob::restoreData()
 {
+    const KArchiveEntry *akregatorEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "akregator/" ) );
+    if (akregatorEntry && akregatorEntry->isDirectory()) {
+        //TODO 4.12 verify if akregator already exists.
+        const QString akregatorPath = KGlobal::dirs()->saveLocation("data", QLatin1String("akregator/"));
+        const KArchiveDirectory *akregatorDir = static_cast<const KArchiveDirectory*>(akregatorEntry);
+        akregatorDir->copyTo(akregatorPath);
+    }
     Q_EMIT info(i18n("Data restored."));
 }
 
