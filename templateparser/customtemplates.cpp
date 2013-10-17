@@ -51,7 +51,7 @@ CustomTemplates::CustomTemplates( const QList<KActionCollection*> &actionCollect
   mUi->mEditFrame->setEnabled( false );
 
   mUi->mName->setTrapReturnKey( true );
-  connect( mUi->mEdit, SIGNAL(textChanged()),
+  connect( mUi->mEdit->editor(), SIGNAL(textChanged()),
            this, SLOT(slotTextChanged()) );
   connect( mUi->mToEdit, SIGNAL(textChanged()),
            this, SLOT(slotTextChanged()) );
