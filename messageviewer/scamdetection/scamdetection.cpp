@@ -24,8 +24,7 @@
 #include <QDebug>
 
 using namespace MessageViewer;
-static QString IPv4_PATTERN = QLatin1String("[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");
-
+static QString IPv4_PATTERN = QLatin1String("\\b[0-9]{1,3}\\.[0-9]{1,3}(?:\\.[0-9]{0,3})?(?:\\.[0-9]{0,3})?");
 static QString addWarningColor(const QString &url)
 {
     const QString error = QString::fromLatin1("<font color=#FF0000>%1</font>").arg(url);
