@@ -214,6 +214,13 @@ void MultiAgendaView::setCalendar( const Akonadi::ETMCalendar::Ptr &cal )
   Q_FOREACH ( KCheckableProxyModel *const i, d->mCollectionSelectionModels ) {
     i->setSourceModel( cal->entityTreeModel() );
   }
+
+  disconnect( 0, SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
+              this, SLOT(forceRecreateViews()));
+
+  connect( collectionSelection(), SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
+           SLOT(forceRecreateViews()) );
+
   recreateViews();
 }
 
@@ -260,7 +267,12 @@ void MultiAgendaView::recreateViews()
   QTimer::singleShot( 0, this, SLOT(setupScrollBar()) );
 
   d->mTimeLabelsZone->updateTimeLabelsPosition();
+}
 
+void MultiAgendaView::forceRecreateViews()
+{
+  d->mPendingChanges = true;
+  recreateViews();
 }
 
 void MultiAgendaView::Private::deleteViews()
