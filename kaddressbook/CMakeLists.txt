@@ -2,6 +2,7 @@ project(kaddressbook)
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
+  ${CMAKE_CURRENT_SOURCE_DIR}/printing/
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${Grantlee_INCLUDE_DIRS}
@@ -31,20 +32,20 @@ if(QGPGME_FOUND)
 endif()
 
 set(kaddressbook_printing_SRCS
-  printing/detailledstyle.cpp
-  printing/mikesstyle.cpp
+  printing/detailled/detailledstyle.cpp
+  printing/mike/mikesstyle.cpp
   printing/printingwizard.cpp
   printing/printprogress.cpp
   printing/printstyle.cpp
-  printing/ringbinderstyle.cpp
-  printing/compactstyle.cpp
+  printing/ringbinder/ringbinderstyle.cpp
+  printing/compact/compactstyle.cpp
   printing/stylepage.cpp
 )
 
 kde4_add_ui_files(kaddressbook_printing_SRCS
-  printing/rbs_appearance.ui
-  printing/ds_appearance.ui
-  printing/compactstyle.ui
+  printing/ringbinder/rbs_appearance.ui
+  printing/detailled/ds_appearance.ui
+  printing/compact/compactstyle.ui
 )
 
 set(kaddressbook_xxport_SRCS
