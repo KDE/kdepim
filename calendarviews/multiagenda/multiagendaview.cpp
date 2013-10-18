@@ -663,40 +663,46 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
       d->mCustomColumnTitles[i] = generateColumnLabel( i );
     }
   }
+
   QVector<KCheckableProxyModel*> oldModels = d->mCollectionSelectionModels;
   d->mCollectionSelectionModels.clear();
-  d->mCollectionSelectionModels.resize( d->mCustomNumberOfColumns );
-  for ( int i = 0; i < d->mCustomNumberOfColumns; ++i ) {
-    // Sort the calanders by name
-    QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel( this );
-    sortProxy->setDynamicSortFilter( true );
-    if ( calendar() ) {
-      sortProxy->setSourceModel( calendar()->entityTreeModel() );
+
+
+  if ( d->mCustomColumnSetupUsed ) {
+    d->mCollectionSelectionModels.resize( d->mCustomNumberOfColumns );
+    for ( int i = 0; i < d->mCustomNumberOfColumns; ++i ) {
+      // Sort the calanders by name
+      QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel( this );
+      sortProxy->setDynamicSortFilter( true );
+      if ( calendar() ) {
+        sortProxy->setSourceModel( calendar()->entityTreeModel() );
+      }
+
+      // Only show the first column
+      KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
+      columnFilterProxy->setVisibleColumn( Akonadi::ETMCalendar::CollectionTitle );
+      columnFilterProxy->setSourceModel( sortProxy );
+
+      // Keep track of selection.
+      QItemSelectionModel *qsm = new QItemSelectionModel( columnFilterProxy );
+
+      // Make the model checkable.
+      KCheckableProxyModel *checkableProxy = new KCheckableProxyModel( this );
+      checkableProxy->setSourceModel( columnFilterProxy );
+      checkableProxy->setSelectionModel( qsm );
+      const QString groupName = configGroup.name() + "_subView_" + QByteArray::number( i );
+      const KConfigGroup group = configGroup.config()->group( groupName );
+
+      if ( !d->mSelectionSavers.contains( groupName ) ) {
+        d->mSelectionSavers.insert( groupName, new KViewStateMaintainer<ETMViewStateSaver>( group ) );
+        d->mSelectionSavers[groupName]->setSelectionModel( checkableProxy->selectionModel() );
+      }
+
+      d->mSelectionSavers[groupName]->restoreState();
+      d->mCollectionSelectionModels[i] = checkableProxy;
     }
-
-    // Only show the first column
-    KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
-    columnFilterProxy->setVisibleColumn( Akonadi::ETMCalendar::CollectionTitle );
-    columnFilterProxy->setSourceModel( sortProxy );
-
-    // Keep track of selection.
-    QItemSelectionModel *qsm = new QItemSelectionModel( columnFilterProxy );
-
-    // Make the model checkable.
-    KCheckableProxyModel *checkableProxy = new KCheckableProxyModel( this );
-    checkableProxy->setSourceModel( columnFilterProxy );
-    checkableProxy->setSelectionModel( qsm );
-    const QString groupName = configGroup.name() + "_subView_" + QByteArray::number( i );
-    const KConfigGroup group = configGroup.config()->group( groupName );
-
-    if ( !d->mSelectionSavers.contains( groupName ) ) {
-      d->mSelectionSavers.insert( groupName, new KViewStateMaintainer<ETMViewStateSaver>( group ) );
-      d->mSelectionSavers[groupName]->setSelectionModel( checkableProxy->selectionModel() );
-    }
-
-    d->mSelectionSavers[groupName]->restoreState();
-    d->mCollectionSelectionModels[i] = checkableProxy;
   }
+
   d->mPendingChanges = true;
   recreateViews();
   qDeleteAll( oldModels );
