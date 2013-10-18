@@ -35,10 +35,12 @@
 
 using namespace KABPrinting;
 
-static QString contactsToHtml( const KABC::Addressee::List &contacts )
+QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contacts )
 {
-    QString content;
     //TODO
+    QVariantHash mapping;
+    Grantlee::Context context( mapping );
+    QString content = mSelfcontainedTemplate->render( &context );
     return content;
 }
 
@@ -48,6 +50,13 @@ GrantleePrintStyle::GrantleePrintStyle( PrintingWizard *parent )
     mEngine = new Grantlee::Engine;
     mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
     //setPreview( QLatin1String("") );
+
+    //TODO
+    //mTemplateLoader->setTemplateDirs( QStringList() << path );
+    mEngine->addTemplateLoader( mTemplateLoader );
+
+    mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("print.html") );
+
     setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 }
 

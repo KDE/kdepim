@@ -39,8 +39,10 @@ public:
 
     void print( const KABC::Addressee::List &, PrintProgress * );
 private:
+    QString contactsToHtml( const KABC::Addressee::List &contacts );
     Grantlee::Engine *mEngine;
     Grantlee::FileSystemTemplateLoader::Ptr mTemplateLoader;
+    Grantlee::Template mSelfcontainedTemplate;
 };
 
 class GrantleeStyleFactory : public PrintStyleFactory
