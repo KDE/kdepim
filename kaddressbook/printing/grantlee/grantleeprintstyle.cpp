@@ -21,6 +21,10 @@
 #include "printprogress.h"
 #include "printstyle.h"
 
+#include <grantlee/context.h>
+#include <grantlee/engine.h>
+#include <grantlee/templateloader.h>
+
 #include <KABC/Addressee>
 
 #include <KDebug>
@@ -41,12 +45,15 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts )
 GrantleePrintStyle::GrantleePrintStyle( PrintingWizard *parent )
     : PrintStyle( parent )
 {
+    mEngine = new Grantlee::Engine;
+    mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
     //setPreview( QLatin1String("") );
     setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 }
 
 GrantleePrintStyle::~GrantleePrintStyle()
 {
+    delete mEngine;
 }
 
 void GrantleePrintStyle::print( const KABC::Addressee::List &contacts, PrintProgress *progress )

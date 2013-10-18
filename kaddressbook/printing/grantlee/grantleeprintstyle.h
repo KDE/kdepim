@@ -19,6 +19,11 @@
 #define GRANTLEEPRINTSTYLE_H
 
 #include "printstyle.h"
+#include <grantlee/templateloader.h>
+
+namespace Grantlee {
+class Engine;
+}
 
 namespace KABPrinting {
 
@@ -26,18 +31,21 @@ class PrintProgress;
 
 class GrantleePrintStyle : public PrintStyle
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit GrantleePrintStyle( PrintingWizard *parent );
     ~GrantleePrintStyle();
 
     void print( const KABC::Addressee::List &, PrintProgress * );
+private:
+    Grantlee::Engine *mEngine;
+    Grantlee::FileSystemTemplateLoader::Ptr mTemplateLoader;
 };
 
 class GrantleeStyleFactory : public PrintStyleFactory
 {
-  public:
+public:
     explicit GrantleeStyleFactory( PrintingWizard *parent );
 
     PrintStyle *create() const;
