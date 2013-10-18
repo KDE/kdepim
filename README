@@ -34,7 +34,10 @@ What it is
 * ksendemail: commandline email tool.
 * ktimetracker: Time tracker.
 * ktnef: Viewer for mail attachments using TNEF format
-
+* pimsettingexporter: Application to import/export pim config/data
+* headerthemeeditor: Application to generate grantlee header mail
+* contactthemeeditor: Application to generate grantlee kaddressbook theme
+* mboximporter: Application to import mbox directly
 
 Mailing List, getting involved
 ------------------------------
