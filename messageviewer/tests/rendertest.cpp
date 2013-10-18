@@ -105,6 +105,8 @@ class RenderTest : public QObject
       // TODO add proper cmake check for xmllint and diff
       QStringList args = QStringList()
         << QLatin1String("--format")
+        << QLatin1String("--encode")
+        << QLatin1String("UTF8")
         << QLatin1String("--output")
         << htmlFileName
         << outFileName;
