@@ -39,6 +39,7 @@ set(kaddressbook_printing_SRCS
   printing/printstyle.cpp
   printing/ringbinder/ringbinderstyle.cpp
   printing/compact/compactstyle.cpp
+  printing/grantlee/grantleeprintstyle.cpp
   printing/stylepage.cpp
 )
 
