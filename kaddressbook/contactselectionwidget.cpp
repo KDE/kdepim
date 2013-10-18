@@ -125,6 +125,7 @@ void ContactSelectionWidget::initGui()
   mAddressBookSelection = new Akonadi::CollectionComboBox;
   mAddressBookSelection->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
   mAddressBookSelection->setAccessRightsFilter( Akonadi::Collection::ReadOnly );
+  mAddressBookSelection->setExcludeVirtualCollections( true );
   mAddressBookSelectionRecursive = new QCheckBox( i18nc( "@option:check", "Include Subfolders" ) );
   mAddressBookSelectionRecursive->setToolTip(
     i18nc( "@info:tooltip", "Select all subfolders including the top-level folder" ) );
