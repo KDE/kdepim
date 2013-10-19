@@ -200,6 +200,9 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   d->mRightSplitter = new QSplitter( Qt::Vertical, topSideBox );
   d->mRightSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
+  connect( d->mLeftSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
+  connect( d->mRightSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
+
   d->mRightDummyWidget = new QWidget( d->mRightSplitter );
 
   d->mScrollBar = new QScrollBar( Qt::Vertical, d->mRightSplitter );
@@ -261,8 +264,6 @@ void MultiAgendaView::recreateViews()
   connect( d->mScrollBar, SIGNAL(valueChanged(int)),
            timeLabel->verticalScrollBar(), SLOT(setValue(int)) );
 
-  connect( d->mLeftSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
-  connect( d->mRightSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
   QTimer::singleShot( 0, this, SLOT(resizeSplitters()) );
   QTimer::singleShot( 0, this, SLOT(setupScrollBar()) );
 
