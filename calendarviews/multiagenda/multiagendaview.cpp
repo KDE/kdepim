@@ -576,7 +576,7 @@ void MultiAgendaView::resizeSplitters()
 
   QSplitter *lastMovedSplitter = qobject_cast<QSplitter*>( sender() );
   if ( !lastMovedSplitter ) {
-    lastMovedSplitter = d->mAgendaViews.first()->splitter();
+    lastMovedSplitter = d->mLeftSplitter;
   }
   foreach ( AgendaView *agenda, d->mAgendaViews ) {
     if ( agenda->splitter() == lastMovedSplitter ) {
