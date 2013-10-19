@@ -666,6 +666,12 @@ bool MultiAgendaView::hasConfigurationDialog() const
 
 void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
 {
+  if ( !calendar() ) {
+    kError() << "Calendar is not set.";
+    Q_ASSERT( false );
+    return;
+  }
+
   d->mCustomColumnSetupUsed = configGroup.readEntry( "UseCustomColumnSetup", false );
   d->mCustomNumberOfColumns = configGroup.readEntry( "CustomNumberOfColumns", 2 );
   d->mCustomColumnTitles =  configGroup.readEntry( "ColumnTitles", QStringList() ).toVector();
@@ -687,9 +693,8 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
       // Sort the calanders by name
       QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel( this );
       sortProxy->setDynamicSortFilter( true );
-      if ( calendar() ) {
-        sortProxy->setSourceModel( calendar()->entityTreeModel() );
-      }
+
+      sortProxy->setSourceModel( calendar()->entityTreeModel() );
 
       // Only show the first column
       KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
