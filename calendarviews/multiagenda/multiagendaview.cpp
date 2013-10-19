@@ -200,6 +200,9 @@ MultiAgendaView::MultiAgendaView( QWidget *parent )
   d->mRightSplitter = new QSplitter( Qt::Vertical, topSideBox );
   d->mRightSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
+  connect( d->mLeftSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
+  connect( d->mRightSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
+
   d->mRightDummyWidget = new QWidget( d->mRightSplitter );
 
   d->mScrollBar = new QScrollBar( Qt::Vertical, d->mRightSplitter );
@@ -214,6 +217,13 @@ void MultiAgendaView::setCalendar( const Akonadi::ETMCalendar::Ptr &calendar )
   Q_FOREACH ( KCheckableProxyModel *proxy, d->mCollectionSelectionModels ) {
     proxy->setSourceModel( calendar->entityTreeModel() );
   }
+
+  disconnect( 0, SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
+              this, SLOT(forceRecreateViews()));
+
+  connect( collectionSelection(), SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
+           SLOT(forceRecreateViews()) );
+
   recreateViews();
 }
 
@@ -254,13 +264,16 @@ void MultiAgendaView::recreateViews()
   connect( d->mScrollBar, SIGNAL(valueChanged(int)),
            timeLabel->verticalScrollBar(), SLOT(setValue(int)) );
 
-  connect( d->mLeftSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
-  connect( d->mRightSplitter, SIGNAL(splitterMoved(int,int)), SLOT(resizeSplitters()) );
-  QTimer::singleShot( 0, this, SLOT(resizeSplitters()) );
+  resizeSplitters();
   QTimer::singleShot( 0, this, SLOT(setupScrollBar()) );
 
   d->mTimeLabelsZone->updateTimeLabelsPosition();
+}
 
+void MultiAgendaView::forceRecreateViews()
+{
+  d->mPendingChanges = true;
+  recreateViews();
 }
 
 void MultiAgendaView::Private::deleteViews()
@@ -564,7 +577,7 @@ void MultiAgendaView::resizeSplitters()
 
   QSplitter *lastMovedSplitter = qobject_cast<QSplitter*>( sender() );
   if ( !lastMovedSplitter ) {
-    lastMovedSplitter = d->mAgendaViews.first()->splitter();
+    lastMovedSplitter = d->mLeftSplitter;
   }
   foreach ( AgendaView *agenda, d->mAgendaViews ) {
     if ( agenda->splitter() == lastMovedSplitter ) {
@@ -663,40 +676,46 @@ void MultiAgendaView::doRestoreConfig( const KConfigGroup &configGroup )
       d->mCustomColumnTitles[i] = generateColumnLabel( i );
     }
   }
+
   QVector<KCheckableProxyModel*> oldModels = d->mCollectionSelectionModels;
   d->mCollectionSelectionModels.clear();
-  d->mCollectionSelectionModels.resize( d->mCustomNumberOfColumns );
-  for ( int i = 0; i < d->mCustomNumberOfColumns; ++i ) {
-    // Sort the calanders by name
-    QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel( this );
-    sortProxy->setDynamicSortFilter( true );
-    if ( calendar() ) {
-      sortProxy->setSourceModel( calendar()->entityTreeModel() );
+
+
+  if ( d->mCustomColumnSetupUsed ) {
+    d->mCollectionSelectionModels.resize( d->mCustomNumberOfColumns );
+    for ( int i = 0; i < d->mCustomNumberOfColumns; ++i ) {
+      // Sort the calanders by name
+      QSortFilterProxyModel *sortProxy = new QSortFilterProxyModel( this );
+      sortProxy->setDynamicSortFilter( true );
+      if ( calendar() ) {
+        sortProxy->setSourceModel( calendar()->entityTreeModel() );
+      }
+
+      // Only show the first column
+      KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
+      columnFilterProxy->setVisibleColumn( Akonadi::ETMCalendar::CollectionTitle );
+      columnFilterProxy->setSourceModel( sortProxy );
+
+      // Keep track of selection.
+      QItemSelectionModel *qsm = new QItemSelectionModel( columnFilterProxy );
+
+      // Make the model checkable.
+      KCheckableProxyModel *checkableProxy = new KCheckableProxyModel( this );
+      checkableProxy->setSourceModel( columnFilterProxy );
+      checkableProxy->setSelectionModel( qsm );
+      const QString groupName = configGroup.name() + QLatin1String("_subView_") + QString::number( i );
+      const KConfigGroup group = configGroup.config()->group( groupName );
+
+      if ( !d->mSelectionSavers.contains( groupName ) ) {
+        d->mSelectionSavers.insert( groupName, new KViewStateMaintainer<ETMViewStateSaver>( group ) );
+        d->mSelectionSavers[groupName]->setSelectionModel( checkableProxy->selectionModel() );
+      }
+
+      d->mSelectionSavers[groupName]->restoreState();
+      d->mCollectionSelectionModels[i] = checkableProxy;
     }
-
-    // Only show the first column
-    KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
-    columnFilterProxy->setVisibleColumn( Akonadi::ETMCalendar::CollectionTitle );
-    columnFilterProxy->setSourceModel( sortProxy );
-
-    // Keep track of selection.
-    QItemSelectionModel *qsm = new QItemSelectionModel( columnFilterProxy );
-
-    // Make the model checkable.
-    KCheckableProxyModel *checkableProxy = new KCheckableProxyModel( this );
-    checkableProxy->setSourceModel( columnFilterProxy );
-    checkableProxy->setSelectionModel( qsm );
-    const QString groupName = configGroup.name() + QLatin1String("_subView_") + QString::number( i );
-    const KConfigGroup group = configGroup.config()->group( groupName );
-
-    if ( !d->mSelectionSavers.contains( groupName ) ) {
-      d->mSelectionSavers.insert( groupName, new KViewStateMaintainer<ETMViewStateSaver>( group ) );
-      d->mSelectionSavers[groupName]->setSelectionModel( checkableProxy->selectionModel() );
-    }
-
-    d->mSelectionSavers[groupName]->restoreState();
-    d->mCollectionSelectionModels[i] = checkableProxy;
   }
+
   d->mPendingChanges = true;
   recreateViews();
   qDeleteAll( oldModels );
