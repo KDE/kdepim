@@ -264,7 +264,7 @@ void MultiAgendaView::recreateViews()
   connect( d->mScrollBar, SIGNAL(valueChanged(int)),
            timeLabel->verticalScrollBar(), SLOT(setValue(int)) );
 
-  QTimer::singleShot( 0, this, SLOT(resizeSplitters()) );
+  resizeSplitters();
   QTimer::singleShot( 0, this, SLOT(setupScrollBar()) );
 
   d->mTimeLabelsZone->updateTimeLabelsPosition();
