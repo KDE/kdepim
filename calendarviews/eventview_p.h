@@ -48,7 +48,6 @@ class EventViewPrivate
       all events in mTypeAheadEvents to the receiver.
      */
     void finishTypeAhead();
-    void reconnectCollectionSelection();
 
   public: // virtual functions
     void setUpModels();

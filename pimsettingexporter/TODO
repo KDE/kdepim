@@ -11,11 +11,9 @@ TODO 4.12:
 - Allow to merge KMail Snippet config
 - Import/Export KAlarm config/resources (In progress)
 - Import/Export KJots config/resources (In progress)
-- Import/Export KNotes config/data (In progress) Add export data
 - Add export mode 
 - Allow to save other kontact settings ?
 - Add global default settings (as overwrite all settings etc.)
 
 - Add support for blogilo ?
-- Add support for akregator ?
 - Add support for knodes ?

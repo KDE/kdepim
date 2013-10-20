@@ -36,6 +36,7 @@ public:
     Utils::StoredTypes korganizerTypesSelected(int &numberOfStep) const;
     Utils::StoredTypes kjotsTypesSelected(int &numberOfStep) const;
     Utils::StoredTypes knotesTypesSelected(int &numberOfStep) const;
+    Utils::StoredTypes akregatorTypesSelected(int &numberOfStep) const;
 
 private:
     void readConfig();

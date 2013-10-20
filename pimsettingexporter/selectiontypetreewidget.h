@@ -37,6 +37,7 @@ public:
     Utils::StoredTypes korganizerStoredType(int &numberOfStep) const;
     Utils::StoredTypes kjotsStoredType(int &numberOfStep) const;
     Utils::StoredTypes knotesStoredType(int &numberOfStep) const;
+    Utils::StoredTypes akregatorStoredType(int &numberOfStep) const;
 
 private:
     enum ActionType {
@@ -53,6 +54,7 @@ private:
     QTreeWidgetItem *mKorganizerItem;
     QTreeWidgetItem *mKjotsItem;
     QTreeWidgetItem *mKNotesItem;
+    QTreeWidgetItem *mAkregatorItem;
 };
 
 #endif // SELECTIONTYPETREEWIDGET_H

@@ -27,6 +27,7 @@
 namespace MessageComposer {
 class ComposerAutoCorrection;
 class ComposerAutoCorrectionWidget;
+class SubjectLineEditWithAutoCorrection;
 }
 
 class ConfigureTestDialog : public KDialog
@@ -70,6 +71,7 @@ private Q_SLOTS:
 
 private:
     TextEditAutoCorrectionWidget *mEdit;
+    MessageComposer::SubjectLineEditWithAutoCorrection *mSubject;
     MessageComposer::ComposerAutoCorrection *mAutoCorrection;
     KSharedConfig::Ptr mConfig;
 };

@@ -36,6 +36,9 @@
 #include "notes/exportnotesjob.h"
 #include "notes/importnotesjob.h"
 
+#include "akregator/exportakregatorjob.h"
+#include "akregator/importakregatorjob.h"
+
 #include "pimsettingexporterkernel.h"
 #include "selectiontypedialog.h"
 #include "utils.h"
@@ -137,12 +140,14 @@ void PimSettingExporterWindow::slotBackupData()
         int kaddressbookNumberOfStep = 0;
         int kjotsNumberOfStep = 0;
         int knotesNumberOfStep = 0;
+        int akregatorNumberOfStep = 0;
         const Utils::StoredTypes kmailTypeSelected = dialog->kmailTypesSelected(kmailNumberOfStep);
         const Utils::StoredTypes kaddressbookTypeSelected = dialog->kaddressbookTypesSelected(kaddressbookNumberOfStep);
         const Utils::StoredTypes korganizerTypeSelected = dialog->korganizerTypesSelected(korganizerNumberOfStep);
         const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);
         const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
         const Utils::StoredTypes knotesTypeSelected = dialog->knotesTypesSelected(knotesNumberOfStep);
+        const Utils::StoredTypes akregatorTypeSelected = dialog->akregatorTypesSelected(akregatorNumberOfStep);
         delete dialog;
         mLogWidget->clear();
         delete mImportExportData;
@@ -153,7 +158,8 @@ void PimSettingExporterWindow::slotBackupData()
                 (kalarmNumberOfStep==0) &&
                 (kaddressbookNumberOfStep==0) &&
                 (kjotsNumberOfStep==0) &&
-                (knotesTypeSelected==0))
+                (knotesTypeSelected==0) &&
+                (akregatorTypeSelected==0))
             return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
@@ -188,6 +194,10 @@ void PimSettingExporterWindow::slotBackupData()
         }
         if (knotesNumberOfStep != 0) {
             mImportExportData = new ExportNotesJob(this, knotesTypeSelected, archiveStorage, knotesNumberOfStep);
+            executeJob();
+        }
+        if (akregatorNumberOfStep != 0) {
+            mImportExportData = new ExportAkregatorJob(this, akregatorTypeSelected, archiveStorage, akregatorNumberOfStep);
             executeJob();
         }
         //At the end
@@ -229,12 +239,14 @@ void PimSettingExporterWindow::slotRestoreData()
         int kaddressbookNumberOfStep = 0;
         int kjotsNumberOfStep = 0;
         int knotesNumberOfStep = 0;
+        int akregatorNumberOfStep = 0;
         const Utils::StoredTypes kmailTypeSelected = dialog->kmailTypesSelected(kmailNumberOfStep);
         const Utils::StoredTypes kaddressbookTypeSelected = dialog->kaddressbookTypesSelected(kaddressbookNumberOfStep);
         const Utils::StoredTypes korganizerTypeSelected = dialog->korganizerTypesSelected(korganizerNumberOfStep);
         const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);        
         const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
         const Utils::StoredTypes knotesTypeSelected = dialog->knotesTypesSelected(knotesNumberOfStep);
+        const Utils::StoredTypes akregatorTypeSelected = dialog->akregatorTypesSelected(akregatorNumberOfStep);
 
         delete dialog;
         mLogWidget->clear();
@@ -246,7 +258,8 @@ void PimSettingExporterWindow::slotRestoreData()
                 (kalarmNumberOfStep==0) &&
                 (kaddressbookNumberOfStep==0) &&
                 (kjotsNumberOfStep==0) &&
-                (knotesTypeSelected==0))
+                (knotesTypeSelected==0)&&
+                (akregatorTypeSelected==0))
             return;
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
         if (!archiveStorage->openArchive(false)) {
@@ -280,6 +293,10 @@ void PimSettingExporterWindow::slotRestoreData()
         }
         if (knotesNumberOfStep != 0) {
             mImportExportData = new ImportNotesJob(this, knotesTypeSelected, archiveStorage, knotesNumberOfStep);
+            executeJob();
+        }
+        if (akregatorNumberOfStep != 0) {
+            mImportExportData = new ImportAkregatorJob(this, akregatorTypeSelected, archiveStorage, akregatorNumberOfStep);
             executeJob();
         }
         archiveStorage->closeArchive();

@@ -25,8 +25,9 @@ using namespace KCal;
 #include <KDialog>
 #include <KLocale>
 #include <KToolBar>
+#include <KLineEdit>
+
 #include <KXMLGUIBuilder>
-#include <KXMLGUIClient>
 #include <KXMLGUIFactory>
 
 #include <QAction>
@@ -78,8 +79,14 @@ KNoteEditDialog::KNoteEditDialog(QWidget *parent)
 
     actionCollection()->addAssociatedWidget( this );
     foreach ( QAction *action, actionCollection()->actions() ) {
-      action->setShortcutContext( Qt::WidgetWithChildrenShortcut );
+        action->setShortcutContext( Qt::WidgetWithChildrenShortcut );
     }
+    readConfig();
+}
+
+KNoteEditDialog::~KNoteEditDialog()
+{
+    writeConfig();
 }
 
 void KNoteEditDialog::setAcceptRichText(bool b)
@@ -87,6 +94,48 @@ void KNoteEditDialog::setAcceptRichText(bool b)
     mNoteEdit->setAcceptRichText( b );
     mTool->setVisible(b);
 }
+
+void KNoteEditDialog::readConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "KNoteEditDialog" );
+    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void KNoteEditDialog::writeConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "KNoteEditDialog" );
+    grp.writeEntry( "Size", size() );
+    grp.sync();
+}
+
+QString KNoteEditDialog::text() const
+{
+    return mNoteEdit->text();
+}
+
+void KNoteEditDialog::setText( const QString &text )
+{
+    mNoteEdit->setText( text );
+}
+
+QString KNoteEditDialog::title() const
+{
+    return mTitleEdit->text();
+}
+
+void KNoteEditDialog::setTitle( const QString &text )
+{
+    mTitleEdit->setText( text );
+}
+
+KNoteEdit *KNoteEditDialog::noteEdit() const
+{
+    return mNoteEdit;
+}
+
 
 #include "knoteseditdialog.moc"
 

@@ -88,4 +88,9 @@ Utils::StoredTypes SelectionTypeDialog::knotesTypesSelected(int &numberOfStep) c
     return mSelectionTreeWidget->knotesStoredType(numberOfStep);
 }
 
+Utils::StoredTypes SelectionTypeDialog::akregatorTypesSelected(int &numberOfStep) const
+{
+    return mSelectionTreeWidget->akregatorStoredType(numberOfStep);
+}
+
 #include "selectiontypedialog.moc"

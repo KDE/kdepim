@@ -27,7 +27,7 @@
 #include "knotesiconview.h"
 #include "knoteswidget.h"
 #include "knotetip.h"
-#include "knotes/knoteprinter.h"
+#include "knotes/print/knoteprinter.h"
 #include "knotes/resource/resourcemanager.h"
 #include "knotes/knoteedit.h"
 #include "knotes/knotesglobalconfig.h"
@@ -490,8 +490,6 @@ void KNotesPart::slotPreferences()
     QPointer<KNoteSimpleConfigDialog> dialog = new KNoteSimpleConfigDialog( knoteItem->config(), name, widget(), knoteItem->journal()->uid() );
     connect( dialog, SIGNAL(settingsChanged(QString)) , this,
              SLOT(slotApplyConfig()) );
-    connect( this, SIGNAL(sigNameChanged(QString)), dialog,
-             SLOT(slotUpdateCaption(QString)) );
     dialog->exec();
     delete dialog;
 }
@@ -500,6 +498,7 @@ void KNotesPart::slotApplyConfig()
 {
     KNotesIconViewItem *knoteItem = static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->currentItem());
     knoteItem->updateColor();
+    mManager->save();
 }
 
 

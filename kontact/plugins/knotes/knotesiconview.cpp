@@ -58,7 +58,6 @@ KNotesIconViewItem::KNotesIconViewItem( QListWidget *parent, Journal *journal )
     QString configPath;
 
     mConfig = KNoteUtils::createConfig(journal, configPath);
-    qDebug()<<" configPath"<<configPath;
     KNoteUtils::setProperty(journal, mConfig);
 
     updateColor();
@@ -67,6 +66,7 @@ KNotesIconViewItem::KNotesIconViewItem( QListWidget *parent, Journal *journal )
 
 void KNotesIconViewItem::updateColor()
 {
+    KNoteUtils::savePreferences(mJournal, mConfig);
     KIconEffect effect;
     QColor color( mConfig->bgColor() );
     QPixmap icon = KIconLoader::global()->loadIcon( QLatin1String("knotes"), KIconLoader::Desktop );

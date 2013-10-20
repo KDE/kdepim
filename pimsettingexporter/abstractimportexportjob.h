@@ -72,7 +72,7 @@ protected:
     void restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath);
     bool backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename);
     virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
-
+    void restoreConfigFile(const QString &configNameStr);
 
     KZip *archive();
 

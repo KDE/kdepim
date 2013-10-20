@@ -33,10 +33,10 @@
 #include "stylepage.h"
 
 // including the styles
-#include "detailledstyle.h"
-#include "mikesstyle.h"
-#include "ringbinderstyle.h"
-#include "compactstyle.h"
+#include "detailled/detailledstyle.h"
+#include "mike/mikesstyle.h"
+#include "ringbinder/ringbinderstyle.h"
+#include "compact/compactstyle.h"
 
 #include <KApplication>
 #include <KDebug>

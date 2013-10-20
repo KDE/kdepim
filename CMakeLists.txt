@@ -112,7 +112,7 @@ endif()
 find_package(KDE4 4.10 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.11.54)
+find_package(KdepimLibs 4.11.55)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
@@ -165,7 +165,7 @@ if(KDEPIM_ONLY_KLEO)
   find_package(QGpgme)
   set_package_properties(QGpgme PROPERTIES DESCRIPTION "The QGpgME library" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "QGpgME is required to build Kleopatra.")
 
-  add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS} -DQT3_SUPPORT_WARNINGS)
+  add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
   include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${QT_QTDBUS_INCLUDE_DIR})
   include(kleopatra/ConfigureChecks.cmake)
 
@@ -285,7 +285,6 @@ else()
   endif()
 
   # The following components depend on QGpgME.
-  set(MESSAGEVIEWER_SUPPORTED TRUE)
   add_subdirectory(messageviewer)
   macro_optional_add_subdirectory(messagecomposer)
   add_subdirectory(pimcommon)

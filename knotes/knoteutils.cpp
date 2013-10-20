@@ -30,7 +30,7 @@ using namespace KCal;
 KNoteConfig *KNoteUtils::createConfig(KCal::Journal *journal, QString &configPath)
 {
     // the config file location
-    configPath = KGlobal::dirs()->saveLocation( "appdata", QLatin1String("notes/") ) + journal->uid();
+    configPath = KGlobal::dirs()->saveLocation( "data", QLatin1String("knotes/") ) + QLatin1String("notes/") + journal->uid();
 
     // no config file yet? -> use the default display config if available
     // we want to write to configFile, so use "false"
@@ -99,11 +99,20 @@ void KNoteUtils::setProperty(KCal::Journal *journal, KNoteConfig *config)
 
 void KNoteUtils::removeNote(KCal::Journal *journal, QWidget *parent)
 {
-    QString configFile = KGlobal::dirs()->saveLocation( "appdata", QLatin1String("notes/") );
-    configFile += journal->uid();
-    qDebug()<<" configFile"<<configFile;
+    const QString configFile = KGlobal::dirs()->saveLocation( "data", QLatin1String("knotes/") ) + QLatin1String("notes/") + journal->uid();
     if ( !KIO::NetAccess::del( KUrl( configFile ), parent ) ) {
         qDebug() <<"Can't remove the note config:" << configFile;
     }
+
+}
+
+void KNoteUtils::savePreferences( KCal::Journal *journal, KNoteConfig *config)
+{
+    journal->setCustomProperty( "KNotes", "FgColor",
+                                  config->fgColor().name() );
+    journal->setCustomProperty( "KNotes", "BgColor",
+                                  config->bgColor().name() );
+    journal->setCustomProperty( "KNotes", "RichText",
+                                  config->richText() ? QLatin1String("true") : QLatin1String("false") );
 
 }

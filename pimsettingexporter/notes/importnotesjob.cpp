@@ -52,12 +52,8 @@ void ImportNotesJob::start()
 
 void ImportNotesJob::restoreConfig()
 {
-    const KArchiveEntry *knotesEntry  = mArchiveDirectory->entry(Utils::configsPath() + QLatin1String( "knotesrc" ) );
-    if (knotesEntry && knotesEntry->isFile()) {
-        const KArchiveEntry *entry = static_cast<const KArchiveEntry*>(knotesEntry);
-        copyToDirectory(entry, KGlobal::dirs()->saveLocation( "config", QLatin1String( "knotesrc" )));
-    }
-
+    const QString knotesStr(QLatin1String("knotesrc"));
+    restoreConfigFile(knotesStr);
     Q_EMIT info(i18n("Config restored."));
 }
 

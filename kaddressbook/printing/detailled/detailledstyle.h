@@ -24,7 +24,7 @@
 #ifndef DETAILLEDSTYLE_H
 #define DETAILLEDSTYLE_H
 
-#include "printstyle.h"
+#include "printing/printstyle.h"
 
 #include <KABC/Addressee>
 

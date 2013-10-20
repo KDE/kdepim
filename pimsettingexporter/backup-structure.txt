@@ -1,4 +1,4 @@
-2013-10-14:
+2013-10-17:
 -----------
 Zip structure is :
 Root
@@ -63,6 +63,7 @@ Root
 |       |---------akonadi_followupreminder_agent.notifyrc
 |       |---------messagevieweradblockrc
 |       |---------knotesrc
+|       |---------akregatorrc
 |
 |-----akonadi
 |       |---------<archive akonadi>
@@ -78,3 +79,4 @@ Root
 |       |---------kmail2/adblockrules_local
 |       |---------knotes/notes.ics
 |       |---------knotes/notes/*
+|       |---------akregator/*

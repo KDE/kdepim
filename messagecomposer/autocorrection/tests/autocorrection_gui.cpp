@@ -18,6 +18,7 @@
 #include "autocorrection_gui.h"
 #include "messagecomposer/autocorrection/composerautocorrection.h"
 #include "messagecomposer/autocorrection/composerautocorrectionwidget.h"
+#include "messagecomposer/autocorrection/subjectlineeditwithautocorrection.h"
 #include "messagecomposer/settings/messagecomposersettings.h"
 
 #include <kdebug.h>
@@ -105,6 +106,11 @@ AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
     richText->setCheckable(true);
     connect(richText, SIGNAL(toggled(bool)), this, SLOT(slotChangeMode(bool)));
     bar->addAction(richText);
+
+    mSubject = new MessageComposer::SubjectLineEditWithAutoCorrection(this, QLatin1String("autocorrectionguirc"));
+    mSubject->setAutocorrection(mAutoCorrection);
+    lay->addWidget(mSubject);
+
     mEdit = new TextEditAutoCorrectionWidget(mAutoCorrection);
     lay->addWidget(mEdit);
 
