@@ -20,6 +20,7 @@
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
+#include "contactgrantleeprintobject.h"
 
 #include <grantlee/context.h>
 #include <grantlee/engine.h>
@@ -56,6 +57,10 @@ GrantleePrintStyle::GrantleePrintStyle( const QString &themePath, PrintingWizard
     mEngine->addTemplateLoader( mTemplateLoader );
 
     mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("print.html") );
+    QString errorMessage;
+    if ( mSelfcontainedTemplate->error() ) {
+        errorMessage = mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
+    }
 
     setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 }
