@@ -34,6 +34,8 @@ class ContactGrantleePrintObject : public QObject
     Q_PROPERTY(QString name READ suffix)
     Q_PROPERTY(QString name READ nickName)
     Q_PROPERTY(QStringList emails READ emails)
+    Q_PROPERTY(QString organization READ organization)
+    Q_PROPERTY(QString note READ note)
     //Add more functions
 public:
     explicit ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent=0);
@@ -48,6 +50,8 @@ public:
     QString suffix() const;
     QString nickName() const;
     QStringList emails() const;
+    QString organization() const;
+    QString note() const;
 
 private:
     KABC::Addressee mAddress;
