@@ -20,6 +20,7 @@ set(kaddressbook_grantlee_LIB_SRCS
   widget/grantleecontactviewer.cpp
   formatter/grantleecontactformatter.cpp
   formatter/grantleecontactgroupformatter.cpp
+  formatter/grantleecontactutils.cpp
   grantleeutil.cpp
 )
 

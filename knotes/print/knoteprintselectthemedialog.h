@@ -15,32 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteprintobject.h"
 
-#include <QTextDocument>
-#include <QDebug>
+#ifndef KNOTEPRINTSELECTTHEMEDIALOG_H
+#define KNOTEPRINTSELECTTHEMEDIALOG_H
 
-#include <kcal/journal.h>
+#include <KDialog>
+#include "knotes_export.h"
 
-KNotePrintObject::KNotePrintObject(KCal::Journal *journal, QObject *parent)
-    : QObject(parent),
-      mJournal(journal)
+class KNotePrintSelectThemeComboBox;
+class KNOTES_EXPORT KNotePrintSelectThemeDialog : public KDialog
 {
-}
+    Q_OBJECT
+public:
+    explicit KNotePrintSelectThemeDialog(QWidget *parent=0);
+    ~KNotePrintSelectThemeDialog();
 
-KNotePrintObject::~KNotePrintObject()
-{
+    QString selectedTheme() const;
 
-}
+private:
+    KNotePrintSelectThemeComboBox *mThemes;
+};
 
-QString KNotePrintObject::description() const
-{
-    return mJournal->description();
-}
-
-QString KNotePrintObject::name() const
-{
-    return mJournal->summary();
-}
-
-#include "knoteprintobject.moc"
+#endif // KNOTEPRINTSELECTTHEMEDIALOG_H

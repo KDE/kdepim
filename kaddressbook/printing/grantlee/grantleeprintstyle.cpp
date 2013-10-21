@@ -20,6 +20,9 @@
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
+#include "contactgrantleeprintobject.h"
+
+#include "kaddressbookgrantlee/formatter/grantleecontactutils.h"
 
 #include <grantlee/context.h>
 #include <grantlee/engine.h>
@@ -37,25 +40,50 @@ using namespace KABPrinting;
 
 QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contacts )
 {
-    //TODO
+    QList<ContactGrantleePrintObject*> lst;
+    Q_FOREACH (const KABC::Addressee &address, contacts) {
+        lst.append(new ContactGrantleePrintObject(address));
+    }
     QVariantHash mapping;
+    QVariantHash contactI18n;
+    contactI18n.insert( QLatin1String( "birthdayi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("birthdayi18n") ) );
+    contactI18n.insert( QLatin1String("anniversaryi18n"), GrantleeContactUtils::variableI18n(QLatin1String("anniversaryi18n") ) );
+    contactI18n.insert( QLatin1String( "emailsi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("emailsi18n") ) );
+    contactI18n.insert( QLatin1String( "websitei18n" ), GrantleeContactUtils::variableI18n(QLatin1String("websitei18n") ) );
+    contactI18n.insert( QLatin1String( "blogUrli18n" ), GrantleeContactUtils::variableI18n(QLatin1String("blogUrli18n")) );
+    contactI18n.insert( QLatin1String( "addressBookNamei18n" ), GrantleeContactUtils::variableI18n(QLatin1String("addressBookNamei18n") ));
+    contactI18n.insert( QLatin1String( "notei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("notei18n") ) );
+    contactI18n.insert(QLatin1String( "departmenti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("departmenti18n") ) );
+    contactI18n.insert(QLatin1String( "Professioni18n" ),GrantleeContactUtils::variableI18n(QLatin1String("Professioni18n") ) );
+    contactI18n.insert(QLatin1String( "officei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("officei18n") ) );
+    contactI18n.insert(QLatin1String( "manageri18n" ),GrantleeContactUtils::variableI18n(QLatin1String("manageri18n") ) );
+    contactI18n.insert(QLatin1String( "assistanti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("assistanti18n") ) );
+    contactI18n.insert(QLatin1String( "spousei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("spousei18n") ) );
+    contactI18n.insert(QLatin1String( "imAddressi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("imAddressi18n") ));
+    mapping.insert( QLatin1String("contacti18n"), contactI18n );
     Grantlee::Context context( mapping );
-    QString content = mSelfcontainedTemplate->render( &context );
+    if (!mErrorMessage.isEmpty())
+        return mErrorMessage;
+    const QString content = mSelfcontainedTemplate->render( &context );
+    qDeleteAll(lst);
     return content;
 }
 
-GrantleePrintStyle::GrantleePrintStyle( PrintingWizard *parent )
+GrantleePrintStyle::GrantleePrintStyle( const QString &themePath, PrintingWizard *parent )
     : PrintStyle( parent )
 {
     mEngine = new Grantlee::Engine;
     mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
+    //TODO themePath + preview.png ?
     //setPreview( QLatin1String("") );
 
-    //TODO
-    //mTemplateLoader->setTemplateDirs( QStringList() << path );
+    mTemplateLoader->setTemplateDirs( QStringList() << themePath );
     mEngine->addTemplateLoader( mTemplateLoader );
 
     mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("print.html") );
+    if ( mSelfcontainedTemplate->error() ) {
+        mErrorMessage = mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
+    }
 
     setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 }
@@ -84,17 +112,20 @@ void GrantleePrintStyle::print( const KABC::Addressee::List &contacts, PrintProg
     progress->addMessage( i18nc( "Finished printing", "Done" ) );
 }
 
-GrantleeStyleFactory::GrantleeStyleFactory( PrintingWizard *parent )
-    : PrintStyleFactory( parent )
+GrantleeStyleFactory::GrantleeStyleFactory(const QString &themePath, PrintingWizard *parent )
+    : PrintStyleFactory( parent ),
+      mThemePath(themePath)
 {
 }
 
 PrintStyle *GrantleeStyleFactory::create() const
 {
-    return new GrantleePrintStyle( mParent );
+    return new GrantleePrintStyle( mThemePath, mParent );
 }
 
 QString GrantleeStyleFactory::description() const
 {
     return i18n( "Grantlee Printing Style" );
 }
+
+#include "grantleeprintstyle.moc"

@@ -16,19 +16,43 @@
 */
 
 #include "knoteprintselectednotesdialog.h"
+#include "knoteprintselectthemecombobox.h"
+#include "knoteprintobject.h"
+#include "knote.h"
 
 #include <KLocale>
 #include <KConfigGroup>
 
 #include <QListWidget>
+#include <QHBoxLayout>
+#include <QLabel>
 
 KNotePrintSelectedNotesDialog::KNotePrintSelectedNotesDialog(QWidget *parent)
-    : KDialog(parent)
+    : KDialog(parent),
+      mPreview(false)
 {
     setCaption( i18n( "Select notes" ) );
-    setButtons( Ok | Cancel );
+    setButtons( User1 | Ok | Cancel );
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    w->setLayout(vbox);
+
     mListNotes = new QListWidget;
-    setMainWidget(mListNotes);
+    mListNotes->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    vbox->addWidget(mListNotes);
+
+    QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
+    vbox->addLayout(lay);
+    QLabel *lab = new QLabel(i18n("Printing theme:"));
+    lay->addWidget(lab);
+    mTheme = new KNotePrintSelectThemeComboBox;
+    lay->addWidget(mTheme);
+
+    setButtonText(User1, i18n("Preview"));
+    setButtonText(Ok, i18n("Print"));
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotPreview()));
+    setMainWidget(w);
     readConfig();
 }
 
@@ -37,9 +61,40 @@ KNotePrintSelectedNotesDialog::~KNotePrintSelectedNotesDialog()
     writeConfig();
 }
 
-void KNotePrintSelectedNotesDialog::setNotes()
+void KNotePrintSelectedNotesDialog::setNotes(const QMap<QString, KNote *> &notes)
 {
-    //TODO
+    mNotes = notes;
+    QMapIterator<QString, KNote *> i(notes);
+    while (i.hasNext()) {
+        i.next();
+        QListWidgetItem *item =new QListWidgetItem(mListNotes);
+        item->setText(i.value()->name());
+        item->setData(JournalId, i.key());
+    }
+}
+
+QList<KNotePrintObject *> KNotePrintSelectedNotesDialog::selectedNotes() const
+{
+    QList<KNotePrintObject *> lstPrintObj;
+    QList<QListWidgetItem *> lst = mListNotes->selectedItems ();
+    Q_FOREACH(QListWidgetItem *item, lst) {
+        const QString journalId = item->data(JournalId).toString();
+        if (!journalId.isEmpty()) {
+            KNotePrintObject *obj = new KNotePrintObject(mNotes.value(journalId)->journal());
+            lstPrintObj.append(obj);
+        }
+    }
+    return lstPrintObj;
+}
+
+QString KNotePrintSelectedNotesDialog::selectedTheme() const
+{
+    return mTheme->selectedTheme();
+}
+
+bool KNotePrintSelectedNotesDialog::preview() const
+{
+    return mPreview;
 }
 
 void KNotePrintSelectedNotesDialog::readConfig()
@@ -56,6 +111,12 @@ void KNotePrintSelectedNotesDialog::writeConfig()
     KConfigGroup grp( KGlobal::config(), "KNotePrintSelectedNotesDialog" );
     grp.writeEntry( "Size", size() );
     grp.sync();
+}
+
+void KNotePrintSelectedNotesDialog::slotPreview()
+{
+    mPreview = true;
+    accept();
 }
 
 #include "knoteprintselectednotesdialog.moc"

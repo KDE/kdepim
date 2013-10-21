@@ -83,4 +83,20 @@ QStringList ContactGrantleePrintObject::emails() const
     return emails;
 }
 
+QString ContactGrantleePrintObject::organization() const
+{
+    return mAddress.organization();
+}
+
+QString ContactGrantleePrintObject::note() const
+{
+    return mAddress.note();
+}
+
+QString ContactGrantleePrintObject::webPage() const
+{
+    return mAddress.url().prettyUrl();
+}
+
+
 #include "contactgrantleeprintobject.moc"

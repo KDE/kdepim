@@ -1,0 +1,13 @@
+<html>
+
+{% if contacts %}
+{% for contact in contacts %}
+<p>{{ contact.realName }}</p>
+<p>{{ contact.emails }}</p>
+<br>
+<br>
+{% endfor %}
+{% endif %}
+
+</html>
+

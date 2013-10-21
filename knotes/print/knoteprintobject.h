@@ -19,7 +19,7 @@
 #define KNOTEPRINTOBJECT_H
 
 #include <QObject>
-
+#include <qmetatype.h>
 #include "knotes_export.h"
 
 namespace KCal {
@@ -32,7 +32,7 @@ class KNOTES_EXPORT KNotePrintObject : public QObject
     Q_PROPERTY(QString description READ description)
     Q_PROPERTY(QString name READ name)
 public:
-    explicit KNotePrintObject(KCal::Journal *journal, QObject *parent);
+    explicit KNotePrintObject(KCal::Journal *journal, QObject *parent=0);
     ~KNotePrintObject();
 
     QString description() const;
@@ -42,4 +42,5 @@ private:
     KCal::Journal *mJournal;
 };
 
+Q_DECLARE_METATYPE(QList<KNotePrintObject*>)
 #endif // KNOTEPRINTOBJECT_H

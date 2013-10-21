@@ -24,6 +24,8 @@
 #include "knotesadaptor.h"
 #include "knotesalarm.h"
 #include "knotesapp.h"
+#include "print/knoteprinter.h"
+#include "print/knoteprintobject.h"
 #include "knotesglobalconfig.h"
 #include "migrations/knoteslegacy.h"
 #include "network/knotesnetrecv.h"
@@ -189,7 +191,7 @@ KNotesApp::KNotesApp()
 
     updateNetworkListener();
 
-    if ( m_notes.size() == 0 && !kapp->isSessionRestored() ) {
+    if ( m_notes.isEmpty() && !kapp->isSessionRestored() ) {
         newNote();
     }
 
@@ -693,8 +695,15 @@ void KNotesApp::updateNetworkListener()
 void KNotesApp::slotPrintSelectedNotes()
 {
     QPointer<KNotePrintSelectedNotesDialog> dlg = new KNotePrintSelectedNotesDialog(this);
+    dlg->setNotes(m_notes);
     if (dlg->exec()) {
-        //TODO
+        const QList<KNotePrintObject *> lst = dlg->selectedNotes();
+        if (!lst.isEmpty()) {
+            const QString selectedTheme = dlg->selectedTheme();
+            KNotePrinter printer;
+            printer.printNotes( lst, selectedTheme, dlg->preview() );
+            qDeleteAll(lst);
+        }
     }
     delete dlg;
 }

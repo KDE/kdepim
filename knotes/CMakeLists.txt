@@ -5,6 +5,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon
+  ${Grantlee_INCLUDE_DIRS}
 )
 
 ########### next target ###############
@@ -17,11 +18,15 @@ set(libknotesprivate_lib_SRCS
     knoteedit.cpp
     print/knoteprinter.cpp
     print/knoteprintobject.cpp
+    print/knoteprintselectthemedialog.cpp
+    print/knoteprintselectthemecombobox.cpp
     knotesimpleconfigdialog.cpp
     knoteconfigdlg.cpp
     knoteutils.cpp
     migrations/knoteslegacy.cpp
 )
+
+configure_file(settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg )
 
 set( libknotesprivate_kcfg_lib_SRCS settings/knoteconfig.kcfgc settings/knotesglobalconfig.kcfgc )
 
@@ -29,7 +34,7 @@ kde4_add_kcfg_files(libknotesprivate_kcfg_lib_SRCS ${libknotesprivate_kcfg_lib_S
 
 kde4_add_library(knotesprivate ${LIBRARY_TYPE} ${libknotesprivate_lib_SRCS} ${libknotesprivate_kcfg_lib_SRCS} )
 
-target_link_libraries(knotesprivate ${KDEPIMLIBS_KCAL_LIBS} kdepim ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDE4_KIO_LIBS} pimcommon ${KDE4_KPRINTUTILS_LIBS} ${KDE4_KCMUTILS_LIBS})
+target_link_libraries(knotesprivate ${KDEPIMLIBS_KCAL_LIBS} kdepim ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDE4_KIO_LIBS} pimcommon ${KDE4_KPRINTUTILS_LIBS} ${KDE4_KCMUTILS_LIBS} ${Grantlee_CORE_LIBRARIES})
 
 set_target_properties(knotesprivate
   PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
@@ -82,14 +87,20 @@ install(FILES
 	data/knote_config_display.desktop
 	data/knote_config_editor.desktop
 	data/knote_config_network.desktop
+        data/knote_config_print.desktop
 	DESTINATION ${SERVICES_INSTALL_DIR})
 
 ########### install files ###############
 
 install( PROGRAMS data/knotes.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-install( FILES settings/knoteconfig.kcfg settings/knotesglobalconfig.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
+install( FILES settings/knoteconfig.kcfg ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 install( FILES data/local.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/knotes)
 install( FILES data/knotes_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
 install( FILES knotesappui.rc knotesui.rc  DESTINATION ${DATA_INSTALL_DIR}/knotes)
 install( FILES org.kde.KNotes.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}) 
 
+install(FILES
+  print/themes/default/theme.desktop
+  print/themes/default/theme.html
+  DESTINATION ${DATA_INSTALL_DIR}/knotes/print/themes/default/
+)

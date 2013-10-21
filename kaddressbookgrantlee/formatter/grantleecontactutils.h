@@ -15,32 +15,14 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteprintobject.h"
+#ifndef GRANTLEECONTACTUTILS_H
+#define GRANTLEECONTACTUTILS_H
 
-#include <QTextDocument>
-#include <QDebug>
+#include "kaddressbook_grantlee_export.h"
 
-#include <kcal/journal.h>
-
-KNotePrintObject::KNotePrintObject(KCal::Journal *journal, QObject *parent)
-    : QObject(parent),
-      mJournal(journal)
+namespace GrantleeContactUtils
 {
+KADDRESSBOOK_GRANTLEE_EXPORT QString variableI18n(const QString &variable);
 }
 
-KNotePrintObject::~KNotePrintObject()
-{
-
-}
-
-QString KNotePrintObject::description() const
-{
-    return mJournal->description();
-}
-
-QString KNotePrintObject::name() const
-{
-    return mJournal->summary();
-}
-
-#include "knoteprintobject.moc"
+#endif // GRANTLEECONTACTUTILS_H

@@ -15,32 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteprintobject.h"
+#ifndef KNOTEPRINTSELECTTHEMECOMBOBOX_H
+#define KNOTEPRINTSELECTTHEMECOMBOBOX_H
 
-#include <QTextDocument>
-#include <QDebug>
+#include <QComboBox>
+#include "knotes_export.h"
 
-#include <kcal/journal.h>
-
-KNotePrintObject::KNotePrintObject(KCal::Journal *journal, QObject *parent)
-    : QObject(parent),
-      mJournal(journal)
+class KNOTES_EXPORT KNotePrintSelectThemeComboBox : public QComboBox
 {
-}
+    Q_OBJECT
+public:
+    explicit KNotePrintSelectThemeComboBox(QWidget *parent=0);
+    ~KNotePrintSelectThemeComboBox();
 
-KNotePrintObject::~KNotePrintObject()
-{
+    QString selectedTheme() const;
 
-}
+private:
+    void loadThemes();
+};
 
-QString KNotePrintObject::description() const
-{
-    return mJournal->description();
-}
-
-QString KNotePrintObject::name() const
-{
-    return mJournal->summary();
-}
-
-#include "knoteprintobject.moc"
+#endif // KNOTEPRINTSELECTTHEMECOMBOBOX_H
