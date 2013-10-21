@@ -160,3 +160,9 @@ install(FILES
 
 install(FILES data/kaddressbook_themes.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
 
+install(FILES
+  printing/grantlee/themes/default/theme.desktop
+  printing/grantlee/themes/default/theme.html
+  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/printing/themes/default/
+)
+
