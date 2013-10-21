@@ -116,9 +116,6 @@ void PrintingWizard::loadGrantleeStyle()
         QStringList alreadyLoadedThemeName;
         while ( dirIt.hasNext() ) {
             dirIt.next();
-            const QString dirName = dirIt.fileName();
-            qDebug()<<" dirName "<<dirName;
-
             const QString themeInfoFile = dirIt.filePath() + QDir::separator() + QLatin1String("theme.desktop");
             KConfig config( themeInfoFile );
             KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
