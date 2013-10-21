@@ -22,6 +22,8 @@
 #include "printstyle.h"
 #include "contactgrantleeprintobject.h"
 
+#include "kaddressbookgrantlee/formatter/grantleecontactutils.h"
+
 #include <grantlee/context.h>
 #include <grantlee/engine.h>
 #include <grantlee/templateloader.h>
@@ -43,6 +45,22 @@ QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contact
         lst.append(new ContactGrantleePrintObject(address));
     }
     QVariantHash mapping;
+    QVariantHash contactI18n;
+    contactI18n.insert( QLatin1String( "birthdayi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("birthdayi18n") ) );
+    contactI18n.insert( QLatin1String("anniversaryi18n"), GrantleeContactUtils::variableI18n(QLatin1String("anniversaryi18n") ) );
+    contactI18n.insert( QLatin1String( "emailsi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("emailsi18n") ) );
+    contactI18n.insert( QLatin1String( "websitei18n" ), GrantleeContactUtils::variableI18n(QLatin1String("websitei18n") ) );
+    contactI18n.insert( QLatin1String( "blogUrli18n" ), GrantleeContactUtils::variableI18n(QLatin1String("blogUrli18n")) );
+    contactI18n.insert( QLatin1String( "addressBookNamei18n" ), GrantleeContactUtils::variableI18n(QLatin1String("addressBookNamei18n") ));
+    contactI18n.insert( QLatin1String( "notei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("notei18n") ) );
+    contactI18n.insert(QLatin1String( "departmenti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("departmenti18n") ) );
+    contactI18n.insert(QLatin1String( "Professioni18n" ),GrantleeContactUtils::variableI18n(QLatin1String("Professioni18n") ) );
+    contactI18n.insert(QLatin1String( "officei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("officei18n") ) );
+    contactI18n.insert(QLatin1String( "manageri18n" ),GrantleeContactUtils::variableI18n(QLatin1String("manageri18n") ) );
+    contactI18n.insert(QLatin1String( "assistanti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("assistanti18n") ) );
+    contactI18n.insert(QLatin1String( "spousei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("spousei18n") ) );
+    contactI18n.insert(QLatin1String( "imAddressi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("imAddressi18n") ));
+    mapping.insert( QLatin1String("contacti18n"), contactI18n );
     Grantlee::Context context( mapping );
     if (!mErrorMessage.isEmpty())
         return mErrorMessage;
