@@ -223,7 +223,7 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
     return existingFileName.toLocalFile();
   }
 
-  QString fname = createTempDir( node->index().toString() );
+  QString fname = createTempDir( persistentIndex( node ) );
   if ( fname.isEmpty() )
     return QString();
 
@@ -237,7 +237,6 @@ QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
   fname += '/' + fileName;
 
   //kDebug() << "Create temp file: " << fname;
-
   QByteArray data = node->decodedContent();
   if ( node->contentType()->isText() && data.size() > 0 ) {
     // convert CRLF to LF before writing text attachments to disk
@@ -260,7 +259,7 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
   if (!node)
     return KUrl();
 
-  const QString index = node->index().toString();
+  const QString index = persistentIndex( node );
 
   foreach ( const QString &path, mAttachmentFilesDir->temporaryFiles() ) {
     int right = path.lastIndexOf( '/' );
