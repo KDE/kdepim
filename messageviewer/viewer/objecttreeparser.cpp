@@ -803,7 +803,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
       bIsOpaqueSigned = true;
 
       CryptoProtocolSaver cpws( this, cryptProto );
-      createAndParseTempNode( data, doCheck ? cleartext.data() : cleartextData->data(),
+      createAndParseTempNode( &sign, doCheck ? cleartext.data() : cleartextData->data(),
                               "opaque signed data" );
 
       if ( htmlWriter() )
