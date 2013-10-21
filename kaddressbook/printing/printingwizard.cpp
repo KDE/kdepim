@@ -96,12 +96,19 @@ void PrintingWizard::accept()
   setResult(QDialog::Accepted);
 }
 
+void PrintingWizard::loadGrantleeStyle()
+{
+    //TODO
+}
+
 void PrintingWizard::registerStyles()
 {
   mStyleFactories.append( new DetailledPrintStyleFactory( this ) );
   mStyleFactories.append( new MikesStyleFactory( this ) );
   mStyleFactories.append( new RingBinderPrintStyleFactory( this ) );
   mStyleFactories.append( new CompactStyleFactory( this ) );
+
+  loadGrantleeStyle();
 
   mStylePage->clearStyleNames();
   for ( int i = 0; i < mStyleFactories.count(); ++i ) {

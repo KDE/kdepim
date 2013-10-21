@@ -128,6 +128,9 @@ class PrintingWizard : public KAssistantDialog
      * window, for example (hint, hint).
      */
     void accept();
+
+private:
+    void loadGrantleeStyle();
 };
 
 }
