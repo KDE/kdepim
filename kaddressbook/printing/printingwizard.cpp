@@ -37,15 +37,18 @@
 #include "mike/mikesstyle.h"
 #include "ringbinder/ringbinderstyle.h"
 #include "compact/compactstyle.h"
+#include "printing/grantlee/grantleeprintstyle.h"
 
 #include <KApplication>
 #include <KDebug>
 #include <KDialog>
 #include <KGlobal>
 #include <KLocale>
+#include <KStandardDirs>
 
 #include <QPushButton>
 #include <QPrinter>
+#include <QDirIterator>
 
 using namespace KABPrinting;
 
@@ -98,7 +101,46 @@ void PrintingWizard::accept()
 
 void PrintingWizard::loadGrantleeStyle()
 {
-    //TODO
+    const QString relativePath = QLatin1String("kaddressbook/printing/themes/");
+    QStringList themesDirectories = KGlobal::dirs()->findDirs("data", relativePath);
+    if (themesDirectories.count() < 2) {
+        //Make sure to add local directory
+        const QString localDirectory = KStandardDirs::locateLocal("data", relativePath);
+        if (!themesDirectories.contains(localDirectory)) {
+            themesDirectories.append(localDirectory);
+        }
+    }
+
+    Q_FOREACH (const QString &directory, themesDirectories) {
+        QDirIterator dirIt( directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
+        QStringList alreadyLoadedThemeName;
+        while ( dirIt.hasNext() ) {
+            dirIt.next();
+            const QString dirName = dirIt.fileName();
+            qDebug()<<" dirName "<<dirName;
+
+            const QString themeInfoFile = dirIt.filePath() + QDir::separator() + QLatin1String("theme.desktop");
+            KConfig config( themeInfoFile );
+            KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
+            QString name = group.readEntry( "Name", QString() );
+            if (name.isEmpty()) {
+                continue;
+            }
+            if (alreadyLoadedThemeName.contains(name)) {
+                int i = 2;
+                const QString originalName(name);
+                while (alreadyLoadedThemeName.contains(name)) {
+                    name = originalName + QString::fromLatin1(" (%1)").arg(i);
+                    ++i;
+                }
+            }
+            const QString printThemePath(dirIt.filePath() + QDir::separator());
+            if (!printThemePath.isEmpty()) {
+                alreadyLoadedThemeName << name;
+                mStyleFactories.append( new GrantleeStyleFactory(printThemePath, this) );
+            }
+        }
+    }
 }
 
 void PrintingWizard::registerStyles()
