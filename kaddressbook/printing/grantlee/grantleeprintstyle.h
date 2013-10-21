@@ -34,7 +34,7 @@ class GrantleePrintStyle : public PrintStyle
     Q_OBJECT
 
 public:
-    explicit GrantleePrintStyle( PrintingWizard *parent );
+    explicit GrantleePrintStyle(const QString &themePath, PrintingWizard *parent );
     ~GrantleePrintStyle();
 
     void print( const KABC::Addressee::List &, PrintProgress * );
@@ -48,10 +48,12 @@ private:
 class GrantleeStyleFactory : public PrintStyleFactory
 {
 public:
-    explicit GrantleeStyleFactory( PrintingWizard *parent );
+    explicit GrantleeStyleFactory( const QString &themePath, PrintingWizard *parent );
 
     PrintStyle *create() const;
     QString description() const;
+private:
+    QString mThemePath;
 };
 
 }

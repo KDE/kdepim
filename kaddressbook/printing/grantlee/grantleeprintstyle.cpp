@@ -37,22 +37,22 @@ using namespace KABPrinting;
 
 QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contacts )
 {
-    //TODO
+    //TODO create contactgrantleeprintObject
     QVariantHash mapping;
     Grantlee::Context context( mapping );
     QString content = mSelfcontainedTemplate->render( &context );
     return content;
 }
 
-GrantleePrintStyle::GrantleePrintStyle( PrintingWizard *parent )
+GrantleePrintStyle::GrantleePrintStyle( const QString &themePath, PrintingWizard *parent )
     : PrintStyle( parent )
 {
     mEngine = new Grantlee::Engine;
     mTemplateLoader = Grantlee::FileSystemTemplateLoader::Ptr( new Grantlee::FileSystemTemplateLoader );
+    //TODO themePath + preview.png ?
     //setPreview( QLatin1String("") );
 
-    //TODO
-    //mTemplateLoader->setTemplateDirs( QStringList() << path );
+    mTemplateLoader->setTemplateDirs( QStringList() << themePath );
     mEngine->addTemplateLoader( mTemplateLoader );
 
     mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("print.html") );
@@ -84,17 +84,20 @@ void GrantleePrintStyle::print( const KABC::Addressee::List &contacts, PrintProg
     progress->addMessage( i18nc( "Finished printing", "Done" ) );
 }
 
-GrantleeStyleFactory::GrantleeStyleFactory( PrintingWizard *parent )
-    : PrintStyleFactory( parent )
+GrantleeStyleFactory::GrantleeStyleFactory(const QString &themePath, PrintingWizard *parent )
+    : PrintStyleFactory( parent ),
+      mThemePath(themePath)
 {
 }
 
 PrintStyle *GrantleeStyleFactory::create() const
 {
-    return new GrantleePrintStyle( mParent );
+    return new GrantleePrintStyle( mThemePath, mParent );
 }
 
 QString GrantleeStyleFactory::description() const
 {
     return i18n( "Grantlee Printing Style" );
 }
+
+#include "grantleeprintstyle.moc"
