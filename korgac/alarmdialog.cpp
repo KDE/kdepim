@@ -794,6 +794,8 @@ void AlarmDialog::toggleDetails( QTreeWidgetItem *item )
     if ( mLastItem == item ) {
       resize( size().width(), size().height() - mDetailView->height() - 50 );
       mDetailView->hide();
+    } else {
+      showDetails( item );
     }
   } else {
     resize( size().width(), size().height() + mDetailView->height() + 50 );
