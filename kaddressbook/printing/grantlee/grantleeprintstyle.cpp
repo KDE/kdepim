@@ -43,9 +43,12 @@ QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contact
     if (!mErrorMessage.isEmpty())
         return mErrorMessage;
 
+    QVariantList contactsList;
     QList<ContactGrantleePrintObject*> lst;
     Q_FOREACH (const KABC::Addressee &address, contacts) {
-        lst.append(new ContactGrantleePrintObject(address));
+        ContactGrantleePrintObject *contactPrintObject = new ContactGrantleePrintObject(address);
+        lst.append(contactPrintObject);
+        contactsList << QVariant::fromValue(static_cast<QObject*>(contactPrintObject));
     }
     QVariantHash mapping;
     QVariantHash contactI18n;
@@ -64,10 +67,11 @@ QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contact
     contactI18n.insert(QLatin1String( "spousei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("spousei18n") ) );
     contactI18n.insert(QLatin1String( "imAddressi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("imAddressi18n") ));
     mapping.insert( QLatin1String("contacti18n"), contactI18n );
+
     Grantlee::Context context( mapping );
-    if (!mErrorMessage.isEmpty())
-        return mErrorMessage;
+    context.insert(QLatin1String("contacts"), contactsList);
     const QString content = mSelfcontainedTemplate->render( &context );
+    qDebug()<<" content"<<content;
     qDeleteAll(lst);
     return content;
 }

@@ -59,5 +59,5 @@ private:
     KABC::Addressee mAddress;
 };
 }
-
+Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintObject*>)
 #endif // CONTACTGRANTLEEPRINTOBJECT_H
