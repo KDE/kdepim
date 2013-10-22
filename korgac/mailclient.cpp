@@ -375,4 +375,3 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   kDebug() << "Send mail finished. Time elapsed in ms:" << timer.elapsed();
   return true;
 }
-

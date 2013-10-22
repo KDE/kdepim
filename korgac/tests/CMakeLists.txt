@@ -36,4 +36,3 @@ target_link_libraries(testalarmdlg
   ${KDE4_KDEUI_LIBS}
   ${KDE4_PHONON_LIBS}
 )
-
