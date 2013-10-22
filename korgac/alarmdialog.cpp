@@ -622,7 +622,8 @@ void AlarmDialog::eventNotification()
 
         // if the program name contains spaces escape it
         if ( program.contains( QLatin1Char(' ') )   &&
-             !( program.startsWith( QLatin1Char('\"') ) && program.endsWith( QLatin1Char('\"') ) ) ) {
+             !( program.startsWith( QLatin1Char('\"') ) &&
+                program.endsWith( QLatin1Char('\"') ) ) ) {
           program = QLatin1Char('\"') + program + QLatin1Char('\"');
         }
 
@@ -630,7 +631,8 @@ void AlarmDialog::eventNotification()
       } else if ( alarm->type() == Alarm::Audio ) {
         beeped = true;
         Phonon::MediaObject *player =
-          Phonon::createPlayer( Phonon::NotificationCategory, alarm->audioFile() );
+          Phonon::createPlayer( Phonon::NotificationCategory,
+                                KUrl( alarm->audioFile() ) );
         player->setParent( this );
         connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
         player->play();
