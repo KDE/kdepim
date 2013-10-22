@@ -514,4 +514,87 @@ void RichTextEditor::contextMenuEvent(QContextMenuEvent *event)
     }
 }
 
+static void deleteWord(QTextCursor cursor, QTextCursor::MoveOperation op)
+{
+    cursor.clearSelection();
+    cursor.movePosition( op, QTextCursor::KeepAnchor );
+    cursor.removeSelectedText();
+}
+
+void RichTextEditor::deleteWordBack()
+{
+    deleteWord(textCursor(), QTextCursor::PreviousWord);
+}
+
+void RichTextEditor::deleteWordForward()
+{
+    deleteWord(textCursor(), QTextCursor::WordRight);
+}
+
+bool RichTextEditor::event(QEvent* ev)
+{
+    if (ev->type() == QEvent::ShortcutOverride) {
+        QKeyEvent *e = static_cast<QKeyEvent *>( ev );
+        if (overrideShortcut(e)) {
+            e->accept();
+            return true;
+        }
+    }
+    return QTextEdit::event(ev);
+}
+
+bool RichTextEditor::overrideShortcut(const QKeyEvent* event)
+{
+    const int key = event->key() | event->modifiers();
+
+    if ( KStandardShortcut::copy().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::paste().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::cut().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::undo().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::redo().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::deleteWordBack().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::deleteWordForward().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::backwardWord().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::forwardWord().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::next().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::prior().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::begin().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::end().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::beginningOfLine().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::endOfLine().contains( key ) ) {
+        return true;
+    } else if ( KStandardShortcut::pasteSelection().contains( key ) ) {
+        return true;
+    } else if (d->hasSearchSupport && KStandardShortcut::find().contains(key)) {
+        return true;
+    } else if (d->hasSearchSupport && KStandardShortcut::findNext().contains(key)) {
+        return true;
+    } else if (d->hasSearchSupport && KStandardShortcut::replace().contains(key)) {
+        return true;
+    } else if (event->matches(QKeySequence::SelectAll)) { // currently missing in QTextEdit
+        return true;
+    } else if (event->modifiers() == Qt::ControlModifier &&
+               (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) &&
+               qobject_cast<KDialog*>(window()) ) {
+        // ignore Ctrl-Return so that KDialogs can close the dialog
+        return true;
+    }
+    return false;
+}
+
+
 #include "richtexteditor.moc"
