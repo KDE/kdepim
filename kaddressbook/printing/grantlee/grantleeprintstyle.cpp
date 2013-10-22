@@ -80,7 +80,7 @@ GrantleePrintStyle::GrantleePrintStyle( const QString &themePath, PrintingWizard
     mTemplateLoader->setTemplateDirs( QStringList() << themePath );
     mEngine->addTemplateLoader( mTemplateLoader );
 
-    mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("print.html") );
+    mSelfcontainedTemplate = mEngine->loadByName( QLatin1String("theme.html") );
     if ( mSelfcontainedTemplate->error() ) {
         mErrorMessage = mSelfcontainedTemplate->errorString() + QLatin1String("<br>");
     }
