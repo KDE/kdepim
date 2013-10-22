@@ -139,8 +139,7 @@ static QVariantHash phoneNumberHash( const KABC::PhoneNumber &phoneNumber, int c
     return numberObject;
 }
 
-static QVariantHash imAddressHash( const QString &typeKey, const QString &imAddress,
-                                   int counter )
+static QVariantHash imAddressHash( const QString &typeKey, const QString &imAddress )
 {
     QVariantHash addressObject;
 
@@ -292,8 +291,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
 
     // IM
     QVariantList imAddresses;
-    counter = 0;
-    const QStringList customs = rawContact.customs();
+   const QStringList customs = rawContact.customs();
     if ( !customs.empty() ) {
         foreach ( const QString &custom, customs ) {
             if ( custom.startsWith( QLatin1String( "messaging/" ) ) ) {
@@ -302,8 +300,7 @@ QString GrantleeContactFormatter::toHtml( HtmlForm form ) const
                 key.remove( QLatin1String( "-All" ) );
                 const QString value = custom.mid( pos + 1 );
 
-                imAddresses.append( imAddressHash( key, value, counter ) );
-                ++counter;
+                imAddresses.append( imAddressHash( key, value ) );
             }
         }
     }
