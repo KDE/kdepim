@@ -40,6 +40,9 @@ using namespace KABPrinting;
 
 QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contacts )
 {
+    if (!mErrorMessage.isEmpty())
+        return mErrorMessage;
+
     QList<ContactGrantleePrintObject*> lst;
     Q_FOREACH (const KABC::Addressee &address, contacts) {
         lst.append(new ContactGrantleePrintObject(address));
