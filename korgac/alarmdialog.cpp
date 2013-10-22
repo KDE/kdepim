@@ -819,7 +819,6 @@ void AlarmDialog::showDetails( QTreeWidgetItem *item )
       mDetailView->setHeaderText( txt );
     }
     Incidence::Ptr incidence = CalendarSupport::incidence( reminderItem->mIncidence );
-    kDebug() << "SHOW FOR" << incidence->summary();
     mDetailView->setIncidence( reminderItem->mIncidence, reminderItem->mRemindAt.date() );
   }
 }
@@ -835,19 +834,14 @@ void AlarmDialog::update()
 
 void AlarmDialog::popupItemMenu( const QPoint &point )
 {
-  kDebug() << "HELLO";
   QTreeWidgetItem *item = mIncidenceTree->itemAt( point );
   if ( !item ) {
-    kDebug() << "SORRY NOT ITEM HERE";
     return;
   }
 
   ReminderTreeItem *reminderItem = dynamic_cast<ReminderTreeItem *>( item );
   if ( reminderItem ) {
     Incidence::Ptr incidence = CalendarSupport::incidence( reminderItem->mIncidence );
-    if ( incidence ) {
-      kDebug() << "YES: INCIDENCE=" << incidence->summary();
-    }
   }
 
 }
