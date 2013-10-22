@@ -59,19 +59,18 @@ QString GrantleePrintStyle::contactsToHtml( const KABC::Addressee::List &contact
     contactI18n.insert( QLatin1String( "blogUrli18n" ), GrantleeContactUtils::variableI18n(QLatin1String("blogUrli18n")) );
     contactI18n.insert( QLatin1String( "addressBookNamei18n" ), GrantleeContactUtils::variableI18n(QLatin1String("addressBookNamei18n") ));
     contactI18n.insert( QLatin1String( "notei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("notei18n") ) );
-    contactI18n.insert(QLatin1String( "departmenti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("departmenti18n") ) );
-    contactI18n.insert(QLatin1String( "Professioni18n" ),GrantleeContactUtils::variableI18n(QLatin1String("Professioni18n") ) );
-    contactI18n.insert(QLatin1String( "officei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("officei18n") ) );
-    contactI18n.insert(QLatin1String( "manageri18n" ),GrantleeContactUtils::variableI18n(QLatin1String("manageri18n") ) );
-    contactI18n.insert(QLatin1String( "assistanti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("assistanti18n") ) );
-    contactI18n.insert(QLatin1String( "spousei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("spousei18n") ) );
-    contactI18n.insert(QLatin1String( "imAddressi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("imAddressi18n") ));
+    contactI18n.insert( QLatin1String( "departmenti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("departmenti18n") ) );
+    contactI18n.insert( QLatin1String( "Professioni18n" ),GrantleeContactUtils::variableI18n(QLatin1String("Professioni18n") ) );
+    contactI18n.insert( QLatin1String( "officei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("officei18n") ) );
+    contactI18n.insert( QLatin1String( "manageri18n" ),GrantleeContactUtils::variableI18n(QLatin1String("manageri18n") ) );
+    contactI18n.insert( QLatin1String( "assistanti18n" ),GrantleeContactUtils::variableI18n(QLatin1String("assistanti18n") ) );
+    contactI18n.insert( QLatin1String( "spousei18n" ),GrantleeContactUtils::variableI18n(QLatin1String("spousei18n") ) );
+    contactI18n.insert( QLatin1String( "imAddressi18n" ), GrantleeContactUtils::variableI18n(QLatin1String("imAddressi18n") ));
     mapping.insert( QLatin1String("contacti18n"), contactI18n );
 
     Grantlee::Context context( mapping );
     context.insert(QLatin1String("contacts"), contactsList);
     const QString content = mSelfcontainedTemplate->render( &context );
-    qDebug()<<" content"<<content;
     qDeleteAll(lst);
     return content;
 }
