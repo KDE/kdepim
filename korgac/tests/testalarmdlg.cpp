@@ -24,15 +24,14 @@
 
 #include "../alarmdialog.h" //fullpath since incidenceeditors also has an alarmdialog.h
 
-#include <kcalcore/event.h>
-#include <kcalcore/todo.h>
-#include <kaboutdata.h>
-#include <kapplication.h>
-#include <kdebug.h>
-#include <klocale.h>
-#include <kcmdlineargs.h>
-#include <akonadi/item.h>
-#include <QWidget>
+#include <Akonadi/Item>
+
+#include <KCalCore/Event>
+#include <KCalCore/Todo>
+
+#include <KAboutData>
+#include <KApplication>
+#include <KCmdLineArgs>
 
 using namespace KCalCore;
 

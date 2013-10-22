@@ -223,7 +223,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
            SLOT(update()) );
   connect( mIncidenceTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            SLOT(edit()) );
-  connect( mIncidenceTree, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(popupItemMenu(const QPoint&)) );
+  connect( mIncidenceTree, SIGNAL(customContextMenuRequested(QPoint)), SLOT(popupItemMenu(QPoint)) );
 
   mDetailView = new CalendarSupport::IncidenceViewer( mCalendar.data(), topBox );
   QString s;
