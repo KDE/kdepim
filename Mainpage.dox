@@ -45,9 +45,9 @@
         * - <a href="korganizer/html/index.html"><b>korganizer</b></a>
         *   (<a href="korganizer/html/classes.html">classes</a>)\n
         *   <i>The calendar and scheduling program for KDE.</i>
-        * - <a href="korganizer/korgac/html/index.html"><b>korgac</b></a>
-        *   (<a href="korganizer/korgac/html/classes.html">classes</a>)\n
-        *   <i>An alarm client for KOrganizer.</i>
+        * - <a href="korgac/html/index.html"><b>korgac</b></a>
+        *   (<a href="korgac/html/classes.html">classes</a>)\n
+        *   <i>A reminder client for KOrganizer.</i>
         * - <a href="ktimetracker/html/index.html"><b>ktimetracker</b></a>
         *   (<a href="ktimetracker/html/classes.html">classes</a>)\n
         *   <i>A time tracker.</i>
