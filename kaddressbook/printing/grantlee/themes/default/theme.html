@@ -4,7 +4,7 @@
 {% for contact in contacts %}
 <p>{{ contact.realName|safe }}</p>
 <p>{{ contact.emails|safe }}</p>
-<p>{{ contact.note }}</p>
+<p>{{ contact.note|safe }}</p>
 <br>
 <br>
 {% endfor %}

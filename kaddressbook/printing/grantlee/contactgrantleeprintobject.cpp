@@ -90,7 +90,7 @@ QString ContactGrantleePrintObject::organization() const
 
 QString ContactGrantleePrintObject::note() const
 {
-    return mAddress.note();
+    return mAddress.note().replace(QLatin1Char('\n'), QLatin1String("<br>"));
 }
 
 QString ContactGrantleePrintObject::webPage() const
