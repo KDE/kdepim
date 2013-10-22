@@ -98,5 +98,19 @@ QString ContactGrantleePrintObject::webPage() const
     return mAddress.url().prettyUrl();
 }
 
+QString ContactGrantleePrintObject::title() const
+{
+    return mAddress.title();
+}
+
+QString ContactGrantleePrintObject::preferredEmail() const
+{
+    return mAddress.preferredEmail();
+}
+
+QString ContactGrantleePrintObject::role() const
+{
+    return mAddress.role();
+}
 
 #include "contactgrantleeprintobject.moc"
