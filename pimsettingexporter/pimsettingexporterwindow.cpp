@@ -152,53 +152,53 @@ void PimSettingExporterWindow::slotBackupData()
 
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
-            //cout << i.key() << ": " << i.value() << endl;
+            qDebug()<<" i.value().types"<<i.value().types<<" i.value().numberSteps"<<i.value().numberSteps;
             switch(i.key()) {
             case Utils::KMail:
                 if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    mImportExportData = new ExportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
                     executeJob();
                 }
                 break;
             case Utils::KAddressBook:
                 if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    mImportExportData = new ExportAddressbookJob(this, i.value().types, archiveStorage, i.value().numberSteps);
                     executeJob();
                 }
                 break;
             case Utils::KAlarm:
                 if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    mImportExportData = new ExportAlarmJob(this, i.value().types, archiveStorage, i.value().numberSteps);
                     executeJob();
                 }
                 break;
             case Utils::KOrganizer:
                 if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    mImportExportData = new ExportCalendarJob(this, i.value().types, archiveStorage, i.value().numberSteps);
                     executeJob();
                 }
                 break;
             case Utils::KJots:
                 if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    mImportExportData = new ExportJotJob(this, i.value().types, archiveStorage, i.value().numberSteps);
                     executeJob();
                 }
                 break;
             case Utils::KNotes:
                 if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    mImportExportData = new ExportNotesJob(this, i.value().types, archiveStorage, i.value().numberSteps);
                     executeJob();
                 }
                 break;
             case Utils::Akregator:
                 if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    mImportExportData = new ExportAkregatorJob(this, i.value().types, archiveStorage, i.value().numberSteps);
                     executeJob();
                 }
                 break;
             case Utils::Blogilo:
                 if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportBlogiloJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    mImportExportData = new ExportBlogiloJob(this, i.value().types, archiveStorage, i.value().numberSteps);
                     executeJob();
                 }
                 break;
