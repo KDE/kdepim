@@ -39,7 +39,7 @@ SelectionTypeTreeWidget::~SelectionTypeTreeWidget()
 void SelectionTypeTreeWidget::initialize()
 {
     mKmailItem = new QTreeWidgetItem(this);
-    mKmailItem->setText(0, QLatin1String("KMail"));
+    mKmailItem->setText(0, i18n("KMail"));
     createSubItem(mKmailItem, Utils::Identity);
     createSubItem(mKmailItem, Utils::Mails);
     createSubItem(mKmailItem, Utils::MailTransport);
@@ -48,32 +48,32 @@ void SelectionTypeTreeWidget::initialize()
     createSubItem(mKmailItem, Utils::AkonadiDb);
 
     mKaddressbookItem = new QTreeWidgetItem(this);
-    mKaddressbookItem->setText(0, QLatin1String("KAddressBook"));
+    mKaddressbookItem->setText(0, i18n("KAddressBook"));
     createSubItem(mKaddressbookItem, Utils::Resources);
     createSubItem(mKaddressbookItem, Utils::Config);
 
     mKalarmItem = new QTreeWidgetItem(this);
-    mKalarmItem->setText(0, QLatin1String("KAlarm"));
+    mKalarmItem->setText(0, i18n("KAlarm"));
     createSubItem(mKalarmItem, Utils::Resources);
     createSubItem(mKalarmItem, Utils::Config);
 
     mKorganizerItem = new QTreeWidgetItem(this);
-    mKorganizerItem->setText(0, QLatin1String("KOrganizer"));
+    mKorganizerItem->setText(0, i18n("KOrganizer"));
     createSubItem(mKorganizerItem, Utils::Resources);
     createSubItem(mKorganizerItem, Utils::Config);
 
     mKjotsItem = new QTreeWidgetItem(this);
-    mKjotsItem->setText(0, QLatin1String("KJots"));
+    mKjotsItem->setText(0, i18n("KJots"));
     createSubItem(mKjotsItem, Utils::Resources);
     createSubItem(mKjotsItem, Utils::Config);
 
     mKNotesItem = new QTreeWidgetItem(this);
-    mKNotesItem->setText(0, QLatin1String("KNotes"));
+    mKNotesItem->setText(0, i18n("KNotes"));
     createSubItem(mKNotesItem, Utils::Config);
     createSubItem(mKNotesItem, Utils::Data);
 
     mAkregatorItem = new QTreeWidgetItem(this);
-    mAkregatorItem->setText(0, QLatin1String("Akregator"));
+    mAkregatorItem->setText(0, i18n("Akregator"));
     createSubItem(mAkregatorItem, Utils::Config);
     createSubItem(mAkregatorItem, Utils::Data);
 }
