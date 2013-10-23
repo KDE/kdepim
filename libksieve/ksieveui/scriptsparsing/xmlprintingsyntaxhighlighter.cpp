@@ -76,6 +76,10 @@ void XMLPrintingSyntaxHighLighter::init()
         m_rules.append( Rule( regex, misc ) );
     }
 
+    QTextCharFormat header;
+    header.setForeground( Qt::black );
+    header.setFontWeight( QFont::Bold );
+    m_rules.append( Rule( QRegExp(QLatin1String("<\\?xml.*"), Qt::CaseInsensitive), header ) );
 
 }
 
