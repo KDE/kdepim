@@ -39,6 +39,8 @@ set(pimsettingexporter_SRCS
   notes/importnotesjob.cpp
   akregator/exportakregatorjob.cpp
   akregator/importakregatorjob.cpp
+  blogilo/exportblogilojob.cpp
+  blogilo/importblogilojob.cpp
   archivestorage.cpp
 )
 

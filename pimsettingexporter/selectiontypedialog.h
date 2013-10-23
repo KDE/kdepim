@@ -30,14 +30,7 @@ public:
     explicit SelectionTypeDialog(QWidget * parent);
     ~SelectionTypeDialog();
 
-    Utils::StoredTypes kmailTypesSelected(int &numberOfStep) const;
-    Utils::StoredTypes kaddressbookTypesSelected(int &numberOfStep) const;
-    Utils::StoredTypes kalarmTypesSelected(int &numberOfStep) const;
-    Utils::StoredTypes korganizerTypesSelected(int &numberOfStep) const;
-    Utils::StoredTypes kjotsTypesSelected(int &numberOfStep) const;
-    Utils::StoredTypes knotesTypesSelected(int &numberOfStep) const;
-    Utils::StoredTypes akregatorTypesSelected(int &numberOfStep) const;
-
+    QHash<Utils::AppsType, Utils::importExportParameters> storedType() const;
 private:
     void readConfig();
     void writeConfig();

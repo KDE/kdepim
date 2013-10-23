@@ -32,28 +32,34 @@ class KNotesWidget;
 class KNotesIconViewItem;
 class KNotesResourceManager;
 class KNoteTip;
+class KNotesAlarm;
+class QTcpServer;
+
+namespace DNSSD {
+class PublicService;
+}
 
 namespace KCal {
-  class Journal;
+class Journal;
 }
 using namespace KCal;
 
 class KNotesPart : public KParts::ReadOnlyPart
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit KNotesPart(KNotesResourceManager *manager, QObject *parent = 0 );
     ~KNotesPart();
 
     bool openFile();
 
-  public slots:
+public slots:
     QString newNote( const QString &name = QString(),
                      const QString &text = QString() );
     QString newNoteFromClipboard( const QString &name = QString() );
 
-  public:
+public:
     void killNote( const QString &id );
     void killNote( const QString &id, bool force );
 
@@ -67,7 +73,7 @@ class KNotesPart : public KParts::ReadOnlyPart
     void popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoint &globalPos );
     void mouseMoveOnListWidget( const QPoint &pos );
 
-  private slots:
+private slots:
     void createNote( KCal::Journal *journal );
     void killNote( KCal::Journal *journal );
 
@@ -85,10 +91,17 @@ class KNotesPart : public KParts::ReadOnlyPart
     void requestToolTip( const QModelIndex & );
 
     void hideToolTip();
+    void slotNotePreferences();
     void slotPreferences();
     void slotApplyConfig();
+    void slotMail();
+    void slotSendToNetwork();
+    void slotConfigUpdated();
+    void slotAcceptConnection();
+    void slotSetAlarm();
 
-  private:
+private:
+    void updateNetworkListener();
     void printSelectedNotes(bool preview);
     KNotesWidget *mNotesWidget;
     KNoteTip *mNoteTip;
@@ -96,6 +109,9 @@ class KNotesPart : public KParts::ReadOnlyPart
 
     KNotesResourceManager *mManager;
     QMultiHash<QString, KNotesIconViewItem*> mNoteList;
+    QTcpServer *mListener;
+    DNSSD::PublicService *mPublisher;
+    KNotesAlarm *mAlarm;
 };
 
 #endif

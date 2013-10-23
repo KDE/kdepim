@@ -34,26 +34,25 @@
 #define KNOTESNETSEND_H
 
 #include <QTcpSocket>
+#include "knotes_export.h"
 
-
-class KNotesNetworkSender
-  : public QObject
+class KNOTES_EXPORT KNotesNetworkSender : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit KNotesNetworkSender(  QTcpSocket *socket );
     ~KNotesNetworkSender();
     
     void setSenderId( const QString &sender );
     void setNote( const QString &title, const QString &text );
     
-  protected slots:
+protected slots:
     void slotConnected();
     void slotError();
     void slotClosed();
     void slotWritten( qint64 );
     
-  private:
+private:
     QTcpSocket *m_socket;
     QByteArray m_note;
     QByteArray m_title;

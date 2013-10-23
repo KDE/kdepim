@@ -1,3 +1,20 @@
+/*
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License, version 2, as
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 #include "knoteprinter.h"
 #include "print/knoteprintobject.h"
 
@@ -76,7 +93,6 @@ void KNotePrinter::print(QPrinter &printer, const QString &htmlText)
                     printer.width() - marginX * 2,
                     printer.height() - marginY * 2 );
 
-    qDebug()<<" htmlText :"<<htmlText;
     QTextDocument textDoc;
     textDoc.setHtml( htmlText );
     textDoc.documentLayout()->setPaintDevice( &printer );
@@ -94,10 +110,11 @@ void KNotePrinter::print(QPrinter &printer, const QString &htmlText)
         painter.translate( 0, -typeArea.height() );
 
         painter.setFont( m_defaultFont );
+        const QString pageNumber(QString::number( page ));
         painter.drawText(
-                    clip.right() - painter.fontMetrics().width( QString::number( page ) ),
+                    clip.right() - painter.fontMetrics().width( pageNumber ),
                     clip.bottom() + painter.fontMetrics().ascent() + 5,
-                    QString::number( page ) );
+                    pageNumber );
 
         if ( page < textDoc.pageCount() ) {
             printer.newPage();

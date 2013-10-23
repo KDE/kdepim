@@ -33,15 +33,19 @@
 #include <QPoint>
 #include <QTimer>
 
-namespace CalendarSupport {
-  class IncidenceViewer;
-}
-
 namespace Akonadi {
   class Item;
 }
 
-class ReminderListItem;
+namespace KPIMIdentities {
+  class IdentityManager;
+}
+
+namespace CalendarSupport {
+  class IncidenceViewer;
+}
+
+class ReminderTreeItem;
 
 class KComboBox;
 
@@ -90,7 +94,7 @@ class AlarmDialog : public KDialog
 
   private Q_SLOTS:
     void update();
-    void toggleDetails( QTreeWidgetItem *item, int column );
+    void popupItemMenu( const QPoint &point );
 
   protected:
     void keyPressEvent( QKeyEvent *e );
@@ -111,18 +115,20 @@ class AlarmDialog : public KDialog
     bool openIncidenceEditorNG( const Akonadi::Item &incidence );
 
     bool startKOrganizer();
-    ReminderListItem *searchByItem( const Akonadi::Item &incidence );
+    ReminderTreeItem *searchByItem( const Akonadi::Item &incidence );
     void setTimer();
-    void dismiss( QList<ReminderListItem *> selections );
+    void dismiss( QList<ReminderTreeItem *> selections );
     int activeCount();
-    QList<ReminderListItem *> selectedItems() const;
+    QList<ReminderTreeItem *> selectedItems() const;
     void updateButtons();
-    void showDetails();
+    void toggleDetails( QTreeWidgetItem *item );
+    void showDetails( QTreeWidgetItem *item );
 
     Akonadi::ETMCalendar::Ptr mCalendar;
     QVBoxLayout *mTopLayout;
     QTreeWidget *mIncidenceTree;
     CalendarSupport::IncidenceViewer *mDetailView;
+    KPIMIdentities::IdentityManager *mIdentityManager;
 
     QPoint mPos;
     QSpinBox *mSuspendSpin;

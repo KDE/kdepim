@@ -29,37 +29,26 @@
  your version.
 *******************************************************************/
 
-#ifndef KNOTEALARMDLG_H
-#define KNOTEALARMDLG_H
+#ifndef KNOTESALARM_H
+#define KNOTESALARM_H
 
-#include <KDialog>
+#include <QTimer>
+#include "knotes_export.h"
+class KNotesResourceManager;
 
-namespace KCal {
-  class Journal;
-}
-class KDateComboBox;
-class KTimeComboBox;
-class QButtonGroup;
-
-class KNoteAlarmDlg
-  : public KDialog
+class KNOTES_EXPORT KNotesAlarm : public QObject
 {
-  Q_OBJECT
-  public:
-    explicit KNoteAlarmDlg( const QString &caption, QWidget *parent = 0 );
-
-    void setIncidence( KCal::Journal *journal );
-
-  private slots:
-    void slotOk();
-    void slotButtonChanged( int );
-
-  private:
-    KCal::Journal *m_journal;
-
-    KDateComboBox *m_atDate;
-    KTimeComboBox *m_atTime, *m_inTime;
-    QButtonGroup *m_buttons;
+    Q_OBJECT
+public:
+    explicit KNotesAlarm(KNotesResourceManager *manager,
+                         QObject *parent = 0);
+    
+private slots:
+    void checkAlarms();
+    
+private:
+    KNotesResourceManager *m_manager;
+    QTimer m_checkTimer;
 };
 
 #endif

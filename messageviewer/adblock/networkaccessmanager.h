@@ -46,7 +46,7 @@ private Q_SLOTS:
     void slotApplyHidingBlockedElements(bool ok);
 
 private:
-    QMultiHash<QWebFrame*, QUrl> m_blockedRequests;
+    QMultiHash<QWebFrame*, QUrl> mBlockedRequests;
     QByteArray mAcceptLanguage;
 };
 

@@ -310,6 +310,7 @@ else()
 
   macro_optional_add_subdirectory(pimactivity)
   macro_optional_add_subdirectory(korganizer)
+  macro_optional_add_subdirectory(korgac)
   add_subdirectory(kaddressbookgrantlee)
   if(KDEPIM_BUILD_DESKTOP)
     macro_optional_add_subdirectory(agents)

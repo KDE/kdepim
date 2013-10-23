@@ -61,7 +61,7 @@ protected:
 protected:
     void contextMenuEvent( QContextMenuEvent *event );
     void wheelEvent( QWheelEvent *event );
-
+    bool event(QEvent* ev);
 
 Q_SIGNALS:
     void findText();
@@ -69,8 +69,12 @@ Q_SIGNALS:
     void spellCheckerAutoCorrect(const QString& currentWord, const QString& autoCorrectWord);
     void checkSpellingChanged(bool);
     void languageChanged(const QString &);
+    void spellCheckStatus(const QString &);
 
 private:
+    bool overrideShortcut(const QKeyEvent* event);
+    void deleteWordBack();
+    void deleteWordForward();
     void highlightWord( int length, int pos );
     class PlainTextEditorPrivate;
     PlainTextEditorPrivate *const d;

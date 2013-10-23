@@ -24,15 +24,29 @@
 #define KNOTES_PLUGIN_H
 
 #include <KontactInterface/Plugin>
+#include <KontactInterface/UniqueAppHandler>
+
 class KNotesResourceManager;
+
+class KNotesUniqueAppHandler : public KontactInterface::UniqueAppHandler
+{
+  public:
+    explicit KNotesUniqueAppHandler( KontactInterface::Plugin *plugin )
+      : KontactInterface::UniqueAppHandler( plugin ) {}
+    virtual void loadCommandLineOptions();
+    virtual int newInstance();
+};
+
 class KNotesPlugin : public KontactInterface::Plugin
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     KNotesPlugin( KontactInterface::Core *core, const QVariantList & );
     ~KNotesPlugin();
 
     virtual KontactInterface::Summary *createSummaryWidget( QWidget *parentWidget );
+
+    bool isRunningStandalone() const;
 
     QString tipFile() const;
     int weight() const { return 600; }
@@ -42,16 +56,17 @@ class KNotesPlugin : public KontactInterface::Plugin
     bool canDecodeMimeData( const QMimeData *data ) const;
     void processDropEvent( QDropEvent * );
 
-  protected:
+protected:
     KParts::ReadOnlyPart *createPart();
 
-  private slots:
+private slots:
     void slotNewNote();
     void slotSyncNotes();
 
-  private:
+private:
     mutable KAboutData *mAboutData;
     KNotesResourceManager *mManager;
+    KontactInterface::UniqueAppWatcher *mUniqueAppWatcher;
 };
 
 #endif

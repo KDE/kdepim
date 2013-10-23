@@ -69,6 +69,7 @@ protected:
     void contextMenuEvent( QContextMenuEvent *event );
     void wheelEvent( QWheelEvent *event );
     void focusInEvent( QFocusEvent *event );
+    bool event(QEvent* ev);
 
 Q_SIGNALS:
     void findText();
@@ -79,6 +80,9 @@ Q_SIGNALS:
     void spellCheckStatus(const QString &);
 
 private:
+    bool overrideShortcut(const QKeyEvent* event);
+    void deleteWordBack();
+    void deleteWordForward();
     void defaultPopupMenu(const QPoint &pos);
     void setHighlighter(Sonnet::Highlighter *_highLighter);
     void highlightWord( int length, int pos );

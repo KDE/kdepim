@@ -1,18 +1,24 @@
-remove_definitions(-DKDE_DEFAULT_DEBUG_AREA=5850) #remove korganizer debug area
-add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5890)
+project(korgac)
 
 option(KORGAC_AKONADI_AGENT FALSE "Build Korgac as Akonadi agent instead of a stand-alone process")
 if(KORGAC_AKONADI_AGENT)
   add_definitions(-DKORGAC_AKONADI_AGENT)
 endif()
 
-add_subdirectory(pixmaps)
-add_subdirectory(tests)
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5890)
+add_definitions( -DQT_NO_CAST_FROM_ASCII )
+add_definitions( -DQT_NO_CAST_TO_ASCII )
+
+# enable exception handling
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/korganizer
-  ${CMAKE_BINARY_DIR}/korganizer
+  ${CMAKE_SOURCE_DIR}/calendarsupport
+  ${CMAKE_BINARY_DIR}/calendarsupport
 )
+
+add_subdirectory(pixmaps)
+add_subdirectory(tests)
 
 ########### next target ###############
 
@@ -90,10 +96,6 @@ target_link_libraries(korgac
 
 if(RUNTIME_PLUGINS_STATIC)
   target_link_libraries(korgac akonadi_serializer_kcalcore)
-endif()
-
-if(NOT WINCE)
-  target_link_libraries(korgac korganizer_core)
 endif()
 
 # TODO: move this to FindQt4.cmake

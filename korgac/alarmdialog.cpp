@@ -25,12 +25,12 @@
 */
 
 #include "alarmdialog.h"
-#include "kocore.h"
 #include "korganizer_interface.h"
 #include "mailclient.h"
 
 #include <calendarsupport/next/incidenceviewer.h>
 #include <calendarsupport/kcalprefs.h>
+#include <calendarsupport/identitymanager.h>
 #include <calendarsupport/utils.h>
 
 #include <incidenceeditor-ng/incidencedialog.h>
@@ -73,12 +73,36 @@ using namespace KCalUtils;
 static int defSuspendVal = 5;
 static int defSuspendUnit = 0; // 0=>minutes, 1=>hours, 2=>days, 3=>weeks
 
-class ReminderListItem : public QTreeWidgetItem
+class ReminderTree : public QTreeWidget
 {
   public:
-    ReminderListItem( const Akonadi::Item &incidence, QTreeWidget *parent )
+    ReminderTree( QWidget *parent ) : QTreeWidget( parent )
+    {
+    }
+
+    /*reimp*/
+    void mouseReleaseEvent( QMouseEvent *event );
+};
+
+void ReminderTree::mouseReleaseEvent( QMouseEvent *event )
+{
+  QTreeWidgetItem *item = itemAt( event->pos() );
+  if ( item ) {
+    if ( event->button() == Qt::LeftButton ) {
+      emit itemActivated( item, 0 );
+    } else if ( event->button() == Qt::RightButton ) {
+      emit customContextMenuRequested( event->pos() );
+    }
+  }
+}
+
+class ReminderTreeItem : public QTreeWidgetItem
+{
+  public:
+    ReminderTreeItem( const Akonadi::Item &incidence, QTreeWidget *parent )
       : QTreeWidgetItem( parent ), mIncidence( incidence ), mNotified( false )
-    {}
+    {
+    }
     bool operator<( const QTreeWidgetItem & other ) const;
 
     QString mDisplayText;
@@ -96,17 +120,17 @@ struct ConfItem {
   QDateTime remindAt;
 };
 
-bool ReminderListItem::operator<( const QTreeWidgetItem &other ) const
+bool ReminderTreeItem::operator<( const QTreeWidgetItem &other ) const
 {
   switch( treeWidget()->sortColumn() ) {
   case 1: // happening datetime
   {
-    const ReminderListItem *item = static_cast<const ReminderListItem *>( &other );
+    const ReminderTreeItem *item = static_cast<const ReminderTreeItem *>( &other );
     return item->mHappening.secsTo( mHappening );
   }
   case 2: // trigger datetime
   {
-    const ReminderListItem *item = static_cast<const ReminderListItem *>( &other );
+    const ReminderTreeItem *item = static_cast<const ReminderTreeItem *>( &other );
     return item->mTrigger.secsTo( mTrigger );
   }
   default:
@@ -114,7 +138,7 @@ bool ReminderListItem::operator<( const QTreeWidgetItem &other ) const
   }
 }
 
-typedef QList<ReminderListItem *> ReminderList;
+typedef QList<ReminderTreeItem *> ReminderList;
 
 AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *parent )
   : KDialog( parent, Qt::WindowStaysOnTopHint ),
@@ -170,7 +194,7 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
     topBox );
   mTopLayout->addWidget( label );
 
-  mIncidenceTree = new QTreeWidget( topBox );
+  mIncidenceTree = new ReminderTree( topBox );
   mIncidenceTree->setColumnCount( 3 );
   mIncidenceTree->setSortingEnabled( true );
   const QStringList headerLabels =
@@ -195,18 +219,11 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
 
   mTopLayout->addWidget( mIncidenceTree );
 
-  connect( mIncidenceTree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-           SLOT(update()) );
   connect( mIncidenceTree, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
-           SLOT(update()) );
-  connect( mIncidenceTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
-           SLOT(toggleDetails(QTreeWidgetItem*,int)) );
-  connect( mIncidenceTree, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
            SLOT(update()) );
   connect( mIncidenceTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
            SLOT(edit()) );
-  connect( mIncidenceTree, SIGNAL(itemSelectionChanged()),
-           SLOT(update()) );
+  connect( mIncidenceTree, SIGNAL(customContextMenuRequested(QPoint)), SLOT(popupItemMenu(QPoint)) );
 
   mDetailView = new CalendarSupport::IncidenceViewer( mCalendar.data(), topBox );
   QString s;
@@ -260,19 +277,22 @@ AlarmDialog::AlarmDialog( const Akonadi::ETMCalendar::Ptr &calendar, QWidget *pa
   connect( this, SIGNAL(user1Clicked()), this, SLOT(slotUser1()) );
   connect( this, SIGNAL(user2Clicked()), this, SLOT(slotUser2()) );
   connect( this, SIGNAL(user3Clicked()), this, SLOT(slotUser3()) );
+
+  mIdentityManager = new CalendarSupport::IdentityManager;
 }
 
 AlarmDialog::~AlarmDialog()
 {
   mIncidenceTree->clear();
+  delete mIdentityManager;
 }
 
-ReminderListItem *AlarmDialog::searchByItem( const Akonadi::Item &incidence )
+ReminderTreeItem *AlarmDialog::searchByItem( const Akonadi::Item &incidence )
 {
-  ReminderListItem *found = 0;
+  ReminderTreeItem *found = 0;
   QTreeWidgetItemIterator it( mIncidenceTree );
   while ( *it ) {
-    ReminderListItem *item = static_cast<ReminderListItem *>( *it );
+    ReminderTreeItem *item = static_cast<ReminderTreeItem *>( *it );
     if ( item->mIncidence == incidence ) {
       found = item;
       break;
@@ -301,9 +321,9 @@ void AlarmDialog::addIncidence( const Akonadi::Item &incidenceitem,
                                 const QString &displayText )
 {
   Incidence::Ptr incidence = CalendarSupport::incidence( incidenceitem );
-  ReminderListItem *item = searchByItem( incidenceitem );
+  ReminderTreeItem *item = searchByItem( incidenceitem );
   if ( !item ) {
-    item = new ReminderListItem( incidenceitem, mIncidenceTree );
+    item = new ReminderTreeItem( incidenceitem, mIncidenceTree );
   }
   item->mNotified = false;
   item->mHappening = KDateTime();
@@ -345,7 +365,7 @@ void AlarmDialog::addIncidence( const Akonadi::Item &incidenceitem,
   item->setData( 0, QTreeWidgetItem::UserType, false );
 
   mIncidenceTree->setCurrentItem( item );
-  showDetails();
+  showDetails( item );
   slotSave();
 }
 
@@ -388,7 +408,7 @@ void AlarmDialog::dismissAll()
   QTreeWidgetItemIterator it( mIncidenceTree );
   while ( *it ) {
     if ( !(*it)->isDisabled() ) { //do not disable suspended reminders
-      selections.append( static_cast<ReminderListItem *>( *it ) );
+      selections.append( static_cast<ReminderTreeItem *>( *it ) );
     }
     ++it;
   }
@@ -460,13 +480,13 @@ void AlarmDialog::suspend()
       break;
   }
 
-  ReminderListItem *selitem = 0;
+  ReminderTreeItem *selitem = 0;
   QTreeWidgetItemIterator it( mIncidenceTree );
   while ( *it ) {
     if ( (*it)->isSelected() && !(*it)->isDisabled() ) { //suspend selected, non-suspended reminders
       (*it)->setSelected( false );
       (*it)->setDisabled( true );
-      ReminderListItem *item = static_cast<ReminderListItem *>( *it );
+      ReminderTreeItem *item = static_cast<ReminderTreeItem *>( *it );
       item->mRemindAt = QDateTime::currentDateTime().addSecs( unit * mSuspendSpin->value() );
       item->mHappening = KDateTime( item->mRemindAt, KDateTime::Spec::LocalZone() );
       item->mNotified = false;
@@ -503,7 +523,7 @@ void AlarmDialog::setTimer()
 
   QTreeWidgetItemIterator it( mIncidenceTree );
   while ( *it ) {
-    ReminderListItem *item = static_cast<ReminderListItem *>( *it );
+    ReminderTreeItem *item = static_cast<ReminderTreeItem *>( *it );
     if ( item->mRemindAt > QDateTime::currentDateTime() ) {
       const int secs = QDateTime::currentDateTime().secsTo( item->mRemindAt );
       nextReminderAt = nextReminderAt <= 0 ? secs : qMin( nextReminderAt, secs );
@@ -528,7 +548,7 @@ void AlarmDialog::show()
   // select the first item that hasn't already been notified
   QTreeWidgetItemIterator it( mIncidenceTree );
   while ( *it ) {
-    ReminderListItem *item = static_cast<ReminderListItem *>( *it );
+    ReminderTreeItem *item = static_cast<ReminderTreeItem *>( *it );
     if ( !item->mNotified ) {
       (*it)->setSelected( true );
       break;
@@ -580,7 +600,7 @@ void AlarmDialog::eventNotification()
 
   QTreeWidgetItemIterator it( mIncidenceTree );
   while ( *it ) {
-    ReminderListItem *item = static_cast<ReminderListItem *>( *it );
+    ReminderTreeItem *item = static_cast<ReminderTreeItem *>( *it );
     ++it;
     if ( item->isDisabled() || item->mNotified ) {
       //skip suspended reminders or reminders that have been notified
@@ -602,7 +622,8 @@ void AlarmDialog::eventNotification()
 
         // if the program name contains spaces escape it
         if ( program.contains( QLatin1Char(' ') )   &&
-             !( program.startsWith( QLatin1Char('\"') ) && program.endsWith( QLatin1Char('\"') ) ) ) {
+             !( program.startsWith( QLatin1Char('\"') ) &&
+                program.endsWith( QLatin1Char('\"') ) ) ) {
           program = QLatin1Char('\"') + program + QLatin1Char('\"');
         }
 
@@ -610,13 +631,14 @@ void AlarmDialog::eventNotification()
       } else if ( alarm->type() == Alarm::Audio ) {
         beeped = true;
         Phonon::MediaObject *player =
-          Phonon::createPlayer( Phonon::NotificationCategory, alarm->audioFile() );
+          Phonon::createPlayer( Phonon::NotificationCategory,
+                                KUrl( alarm->audioFile() ) );
         player->setParent( this );
         connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
         player->play();
       } else if ( alarm->type() == Alarm::Email ) {
         QString from = CalendarSupport::KCalPrefs::instance()->email();
-        Identity id = KOCore::self()->identityManager()->identityForAddress( from );
+        Identity id = mIdentityManager->identityForAddress( from );
         QString to;
         if ( alarm->mailAddresses().isEmpty() ) {
           to = from;
@@ -668,8 +690,12 @@ void AlarmDialog::wakeUp()
 {
   bool activeReminders = false;
   QTreeWidgetItemIterator it( mIncidenceTree );
+  QTreeWidgetItem *firstItem = 0;
   while ( *it ) {
-    ReminderListItem *item = static_cast<ReminderListItem *>( *it );
+    if ( !firstItem ) {
+      firstItem = *it;
+    }
+    ReminderTreeItem *item = static_cast<ReminderTreeItem *>( *it );
     Incidence::Ptr incidence = CalendarSupport::incidence( item->mIncidence );
 
     if ( item->mRemindAt <= QDateTime::currentDateTime() ) {
@@ -689,7 +715,7 @@ void AlarmDialog::wakeUp()
     show();
   }
   setTimer();
-  showDetails();
+  showDetails( firstItem );
   emit reminderCount( activeCount() );
 }
 
@@ -701,7 +727,7 @@ void AlarmDialog::slotSave()
 
   QTreeWidgetItemIterator it( mIncidenceTree );
   while ( *it ) {
-    ReminderListItem *item = static_cast<ReminderListItem *>( *it );
+    ReminderTreeItem *item = static_cast<ReminderTreeItem *>( *it );
     KConfigGroup incidenceConfig( config,
                                   QString::fromLatin1( "Incidence-%1" ).arg( numReminders + 1 ) );
 
@@ -724,7 +750,7 @@ ReminderList AlarmDialog::selectedItems() const
   QTreeWidgetItemIterator it( mIncidenceTree );
   while ( *it ) {
     if ( (*it)->isSelected() ) {
-      list.append( static_cast<ReminderListItem *>( *it ) );
+      list.append( static_cast<ReminderTreeItem *>( *it ) );
     }
     ++it;
   }
@@ -760,41 +786,68 @@ void AlarmDialog::updateButtons()
   enableButton( Ok, count > 0 );     // enable Suspend, if >1 selected
 }
 
-void AlarmDialog::toggleDetails( QTreeWidgetItem *item, int column )
+void AlarmDialog::toggleDetails( QTreeWidgetItem *item )
 {
-  Q_UNUSED( column );
+  if ( !item ) {
+    return;
+  }
+
   if ( !mDetailView->isHidden() ) {
     if ( mLastItem == item ) {
       resize( size().width(), size().height() - mDetailView->height() - 50 );
       mDetailView->hide();
+    } else {
+      showDetails( item );
     }
   } else {
     resize( size().width(), size().height() + mDetailView->height() + 50 );
+    showDetails( item );
     mDetailView->show();
   }
   mLastItem = item;
 }
 
-void AlarmDialog::showDetails()
+void AlarmDialog::showDetails( QTreeWidgetItem *item )
 {
-  QList<QTreeWidgetItem*> items = mIncidenceTree->selectedItems();
-  ReminderListItem *item = items.isEmpty() ? 0 : dynamic_cast<ReminderListItem *>( items.first() );
-
   if ( !item ) {
+    return;
+  }
+
+  ReminderTreeItem *reminderItem = dynamic_cast<ReminderTreeItem *>( item );
+
+   if ( !reminderItem ) {
     mDetailView->setIncidence( Akonadi::Item() );
   } else {
-    if ( !item->mDisplayText.isEmpty() ) {
-      QString txt = QLatin1String("<qt><p><b>") + item->mDisplayText + QLatin1String("</b></p></qt>");
+    if ( !reminderItem->mDisplayText.isEmpty() ) {
+      QString txt = QLatin1String("<qt><p><b>") + reminderItem->mDisplayText + QLatin1String("</b></p></qt>");
       mDetailView->setHeaderText( txt );
     }
-    mDetailView->setIncidence( item->mIncidence, item->mRemindAt.date() );
+    Incidence::Ptr incidence = CalendarSupport::incidence( reminderItem->mIncidence );
+    mDetailView->setIncidence( reminderItem->mIncidence, reminderItem->mRemindAt.date() );
   }
 }
 
 void AlarmDialog::update()
 {
   updateButtons();
-  showDetails();
+  if ( !mIncidenceTree->selectedItems().isEmpty() ) {
+    QTreeWidgetItem *item = mIncidenceTree->selectedItems().first();
+    toggleDetails( item );
+  }
+}
+
+void AlarmDialog::popupItemMenu( const QPoint &point )
+{
+  QTreeWidgetItem *item = mIncidenceTree->itemAt( point );
+  if ( !item ) {
+    return;
+  }
+
+  ReminderTreeItem *reminderItem = dynamic_cast<ReminderTreeItem *>( item );
+  if ( reminderItem ) {
+    Incidence::Ptr incidence = CalendarSupport::incidence( reminderItem->mIncidence );
+  }
+
 }
 
 void AlarmDialog::accept()
@@ -841,7 +894,7 @@ void AlarmDialog::slotCalendarChanged()
   Akonadi::Item::List items = mCalendar->itemList( incidences );
   for ( Akonadi::Item::List::ConstIterator it = items.constBegin();
         it != items.constEnd(); ++it ) {
-    ReminderListItem *item = searchByItem( *it );
+    ReminderTreeItem *item = searchByItem( *it );
 
     if ( item ) {
       Incidence::Ptr incidence = CalendarSupport::incidence( *it );

@@ -19,19 +19,17 @@
 *******************************************************************/
 
 #include "knote.h"
-#include "knotealarmdlg.h"
-#include "knotesimpleconfigdialog.h"
+#include "alarms/knotealarmdlg.h"
+#include "configdialog/knotesimpleconfigdialog.h"
 #include "print/knoteprintselectthemedialog.h"
 #include "knotebutton.h"
 #include "knoteconfig.h"
 #include "knoteutils.h"
-#include "knoteconfigdlg.h"
+#include "configdialog/knoteconfigdlg.h"
 #include "knoteedit.h"
-#include "network/knotehostdlg.h"
 #include "print/knoteprinter.h"
 #include "print/knoteprintobject.h"
 #include "knotesglobalconfig.h"
-#include "network/knotesnetsend.h"
 #include "kdepim-version.h"
 
 #include <kaction.h>
@@ -418,52 +416,12 @@ void KNote::slotPreferences()
 
 void KNote::slotSend()
 {
-    // pop up dialog to get the IP
-    QPointer<KNoteHostDlg> hostDlg = new KNoteHostDlg( i18n( "Send \"%1\"", name() ), this );
-    if( hostDlg->exec() ) {
-
-        const QString host = hostDlg->host();
-        quint16 port = hostDlg->port();
-
-        if ( !port ) { // not specified, use default
-            port = KNotesGlobalConfig::port();
-        }
-
-        if ( host.isEmpty() ) {
-            KMessageBox::sorry( this, i18n( "The host cannot be empty." ) );
-            return;
-        }
-
-        // Send the note
-
-        KNotesNetworkSender *sender = new KNotesNetworkSender(
-                    KSocketFactory::connectToHost( QLatin1String("knotes"), host, port ) );
-        sender->setSenderId( KNotesGlobalConfig::senderID() );
-        sender->setNote( name(), text() ); // FIXME: plainText ??
-    }
-    delete hostDlg;
+    KNoteUtils::sendToNetwork(this, name(), text());
 }
 
 void KNote::slotMail()
 {
-    // get the mail action command
-    const QStringList cmd_list = KNotesGlobalConfig::mailAction().split( QLatin1Char(' '),
-                                                                         QString::SkipEmptyParts );
-
-    KProcess mail;
-    foreach ( const QString &cmd, cmd_list ) {
-        if ( cmd == QLatin1String("%f") ) {
-            mail << m_editor->toPlainText();
-        } else if ( cmd == QLatin1String("%t") ) {
-            mail << m_label->text();
-        } else {
-            mail << cmd;
-        }
-    }
-
-    if ( !mail.startDetached() ) {
-        KMessageBox::sorry( this, i18n( "Unable to start the mail process." ) );
-    }
+    KNoteUtils::sendMail(this, m_label->text(), m_editor->toPlainText());
 }
 
 void KNote::slotPrint()
@@ -478,13 +436,19 @@ void KNote::slotPrintPreview()
 
 void KNote::print(bool preview)
 {
-
     QString content;
     if ( !Qt::mightBeRichText( m_editor->text() ) ) {
         content = Qt::convertFromPlainText( m_editor->text() );
     } else {
         content = m_editor->text();
     }
+    if ( isModified() ) {
+        saveConfig();
+        if ( !m_blockEmitDataChanged ) {
+            saveData();
+        }
+    }
+
     KNotePrinter printer;
     QList<KNotePrintObject*> lst;
     lst.append(new KNotePrintObject(m_journal));

@@ -27,16 +27,33 @@ using KSieve::Parser;
 #include <ksieve/scriptbuilder.h>
 
 #include <KFileDialog>
+#include <KCmdLineOptions>
+#include <KApplication>
 
 #include <QDebug>
 #include <QDomDocument>
 
 int main( int argc, char** argv )
 {
-    QApplication app( argc, argv );
+    KCmdLineArgs::init(argc, argv, "scriptsieveparsing", 0, ki18n("ScriptSieveParsingTest_Gui"),
+                       "1.0", ki18n("Test for script sieve parsing"));
+
+    KCmdLineOptions option;
+    option.add("+[url]", ki18n("URL of a sieve script to be opened"));
+    KCmdLineArgs::addCmdLineOptions(option);
+
+
+    KApplication app;
 
     QByteArray script;
-    const QString fileName = KFileDialog::getOpenFileName();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+    QString fileName;
+    if (args->count()) {
+        fileName = args->url(0).path();
+    } else {
+        fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.siv"));
+    }
     if (!fileName.isEmpty()) {
         QFile file(fileName);
         if (file.open(QIODevice::ReadOnly)) {
@@ -58,6 +75,7 @@ int main( int argc, char** argv )
     KSieveUi::ParsingResultDialog dlg;
     dlg.setResultParsing(psb.toDom().toString());
 
-    dlg.exec();
+    dlg.show();
+    app.exec();
     return 0;
 }

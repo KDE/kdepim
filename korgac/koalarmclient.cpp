@@ -34,13 +34,13 @@
 
 #include <calendarsupport/utils.h>
 
-#include <Akonadi/Item>
-#include <Akonadi/EntityTreeModel>
 #include <Akonadi/ChangeRecorder>
-#include <Akonadi/Session>
 #include <Akonadi/Collection>
+#include <Akonadi/DBusConnectionPool>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/Item>
 #include <Akonadi/ItemFetchScope>
-#include <akonadi/dbusconnectionpool.h> // fix when forwarding header is there
+#include <Akonadi/Session>
 
 #include <KCalCore/Calendar>
 

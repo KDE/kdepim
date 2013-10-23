@@ -1,4 +1,4 @@
-2013-10-17:
+2013-10-23:
 -----------
 Zip structure is :
 Root
@@ -64,6 +64,7 @@ Root
 |       |---------messagevieweradblockrc
 |       |---------knotesrc
 |       |---------akregatorrc
+|       |---------blogilorc
 |
 |-----akonadi
 |       |---------<archive akonadi>
@@ -80,3 +81,4 @@ Root
 |       |---------knotes/notes.ics
 |       |---------knotes/notes/*
 |       |---------akregator/*
+|       |---------blogilo/blogilo.db

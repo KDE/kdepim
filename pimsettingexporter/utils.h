@@ -48,6 +48,30 @@ enum StoredType {
 };
 Q_DECLARE_FLAGS(StoredTypes, StoredType)
 
+enum AppsType {
+    KMail = 0,
+    KAddressBook,
+    KAlarm,
+    KOrganizer,
+    KJots,
+    KNotes,
+    Akregator,
+    Blogilo
+};
+
+struct importExportParameters
+{
+    importExportParameters()
+        : numberSteps(0),
+          types(None)
+    {
+
+    }
+    int numberSteps;
+    Utils::StoredTypes types;
+};
+
+
 KUrl resourcePath(KSharedConfigPtr resourceConfig);
 QString transportsPath();
 QString resourcesPath();

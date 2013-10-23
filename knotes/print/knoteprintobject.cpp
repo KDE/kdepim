@@ -18,9 +18,12 @@
 #include "knoteprintobject.h"
 
 #include <QTextDocument>
-#include <QDebug>
 
 #include <kcal/journal.h>
+
+#include <KLocale>
+#include <KGlobal>
+#include <KDateTime>
 
 KNotePrintObject::KNotePrintObject(KCal::Journal *journal, QObject *parent)
     : QObject(parent),
@@ -35,12 +38,22 @@ KNotePrintObject::~KNotePrintObject()
 
 QString KNotePrintObject::description() const
 {
-    return mJournal->description();
+    if ( Qt::mightBeRichText( mJournal->description() ) ) {
+        return mJournal->description();
+    } else {
+        return mJournal->description().replace(QLatin1Char('\n'), QLatin1String("<br>"));
+    }
 }
 
 QString KNotePrintObject::name() const
 {
     return mJournal->summary();
+}
+
+QString KNotePrintObject::currentDateTime() const
+{
+    const QDateTime now = QDateTime::currentDateTime();
+    return KGlobal::locale()->formatDateTime( now );
 }
 
 #include "knoteprintobject.moc"

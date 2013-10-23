@@ -39,7 +39,7 @@ SelectionTypeTreeWidget::~SelectionTypeTreeWidget()
 void SelectionTypeTreeWidget::initialize()
 {
     mKmailItem = new QTreeWidgetItem(this);
-    mKmailItem->setText(0, QLatin1String("KMail"));
+    mKmailItem->setText(0, i18n("KMail"));
     createSubItem(mKmailItem, Utils::Identity);
     createSubItem(mKmailItem, Utils::Mails);
     createSubItem(mKmailItem, Utils::MailTransport);
@@ -48,40 +48,59 @@ void SelectionTypeTreeWidget::initialize()
     createSubItem(mKmailItem, Utils::AkonadiDb);
 
     mKaddressbookItem = new QTreeWidgetItem(this);
-    mKaddressbookItem->setText(0, QLatin1String("KAddressBook"));
+    mKaddressbookItem->setText(0, i18n("KAddressBook"));
     createSubItem(mKaddressbookItem, Utils::Resources);
     createSubItem(mKaddressbookItem, Utils::Config);
 
     mKalarmItem = new QTreeWidgetItem(this);
-    mKalarmItem->setText(0, QLatin1String("KAlarm"));
+    mKalarmItem->setText(0, i18n("KAlarm"));
     createSubItem(mKalarmItem, Utils::Resources);
     createSubItem(mKalarmItem, Utils::Config);
 
     mKorganizerItem = new QTreeWidgetItem(this);
-    mKorganizerItem->setText(0, QLatin1String("KOrganizer"));
+    mKorganizerItem->setText(0, i18n("KOrganizer"));
     createSubItem(mKorganizerItem, Utils::Resources);
     createSubItem(mKorganizerItem, Utils::Config);
 
     mKjotsItem = new QTreeWidgetItem(this);
-    mKjotsItem->setText(0, QLatin1String("KJots"));
+    mKjotsItem->setText(0, i18n("KJots"));
     createSubItem(mKjotsItem, Utils::Resources);
     createSubItem(mKjotsItem, Utils::Config);
 
     mKNotesItem = new QTreeWidgetItem(this);
-    mKNotesItem->setText(0, QLatin1String("KNotes"));
+    mKNotesItem->setText(0, i18n("KNotes"));
     createSubItem(mKNotesItem, Utils::Config);
     createSubItem(mKNotesItem, Utils::Data);
 
     mAkregatorItem = new QTreeWidgetItem(this);
-    mAkregatorItem->setText(0, QLatin1String("Akregator"));
+    mAkregatorItem->setText(0, i18n("Akregator"));
     createSubItem(mAkregatorItem, Utils::Config);
     createSubItem(mAkregatorItem, Utils::Data);
+
+    mBlogiloItem = new QTreeWidgetItem(this);
+    mBlogiloItem->setText(0, i18n("Blogilo"));
+    createSubItem(mBlogiloItem, Utils::Config);
+    createSubItem(mBlogiloItem, Utils::Data);
 }
 
-
-Utils::StoredTypes SelectionTypeTreeWidget::typeChecked(QTreeWidgetItem *parent, int &numberOfStep) const
+QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeTreeWidget::storedType() const
 {
-    numberOfStep = 0;
+    QHash<Utils::AppsType, Utils::importExportParameters> stored;
+    stored.insert(Utils::KMail, typeChecked(mKmailItem));
+    stored.insert(Utils::KAlarm, typeChecked(mKalarmItem));
+    stored.insert(Utils::KAddressBook, typeChecked(mKaddressbookItem));
+    stored.insert(Utils::KOrganizer, typeChecked(mKorganizerItem));
+    stored.insert(Utils::KJots, typeChecked(mKjotsItem));
+    stored.insert(Utils::KNotes, typeChecked(mKNotesItem));
+    stored.insert(Utils::Akregator, typeChecked(mAkregatorItem));
+    stored.insert(Utils::Blogilo, typeChecked(mBlogiloItem));
+    return stored;
+}
+
+Utils::importExportParameters SelectionTypeTreeWidget::typeChecked(QTreeWidgetItem *parent) const
+{
+    Utils::importExportParameters parameters;
+    int numberOfStep = 0;
     Utils::StoredTypes types = Utils::None;
     for (int i = 0; i<parent->childCount(); ++i) {
         QTreeWidgetItem *item = parent->child(i);
@@ -90,42 +109,11 @@ Utils::StoredTypes SelectionTypeTreeWidget::typeChecked(QTreeWidgetItem *parent,
             ++numberOfStep;
         }
     }
-    return types;
+    parameters.types = types;
+    parameters.numberSteps = numberOfStep;
+    return parameters;
 }
 
-Utils::StoredTypes SelectionTypeTreeWidget::kmailStoredType(int &numberOfStep) const
-{
-    return typeChecked(mKmailItem, numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeTreeWidget::kaddressbookStoredType(int &numberOfStep) const
-{
-    return typeChecked(mKaddressbookItem, numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeTreeWidget::kalarmStoredType(int &numberOfStep) const
-{
-    return typeChecked(mKalarmItem, numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeTreeWidget::korganizerStoredType(int &numberOfStep) const
-{
-    return typeChecked(mKorganizerItem, numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeTreeWidget::kjotsStoredType(int &numberOfStep) const
-{
-    return typeChecked(mKjotsItem, numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeTreeWidget::knotesStoredType(int &numberOfStep) const
-{
-    return typeChecked(mKNotesItem, numberOfStep);
-}
-Utils::StoredTypes SelectionTypeTreeWidget::akregatorStoredType(int &numberOfStep) const
-{
-    return typeChecked(mAkregatorItem, numberOfStep);
-}
 
 void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::StoredType type)
 {

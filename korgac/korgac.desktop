@@ -129,5 +129,3 @@ X-DBUS-StartupType=Unique
 #do not uncomment the following line, else autostart fails
 #NoDisplay=true
 OnlyShowIn=KDE;
-
-

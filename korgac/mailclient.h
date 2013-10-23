@@ -43,6 +43,7 @@ namespace KOrg {
 
 class MailClient : public QObject
 {
+  Q_OBJECT
   public:
     MailClient();
     ~MailClient();

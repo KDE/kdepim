@@ -99,9 +99,9 @@ QNetworkReply *MyNetworkAccessManager::createRequest(Operation op, const QNetwor
 
     QWebFrame* frame = qobject_cast<QWebFrame*>(req.originatingObject());
     if (frame) {
-        if (!m_blockedRequests.contains(frame))
+        if (!mBlockedRequests.contains(frame))
             connect(frame, SIGNAL(loadFinished(bool)), this, SLOT(slotApplyHidingBlockedElements(bool)));
-        m_blockedRequests.insert(frame, req.url());
+        mBlockedRequests.insert(frame, req.url());
     }
 
     return new NullNetworkReply(req, this);
@@ -139,7 +139,7 @@ void MyNetworkAccessManager::slotApplyHidingBlockedElements(bool ok)
     if (!frame)
         return;
 
-    QList<QUrl> urls = m_blockedRequests.values(frame);
+    QList<QUrl> urls = mBlockedRequests.values(frame);
     if (urls.isEmpty())
         return;
 

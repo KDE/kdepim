@@ -17,6 +17,8 @@
 
 #include "knoteutils.h"
 #include "knoteconfig.h"
+#include "network/knotehostdlg.h"
+#include "network/knotesnetsend.h"
 #include "kdepim-version.h"
 #include "knotes/knotesglobalconfig.h"
 
@@ -26,6 +28,12 @@ using namespace KCal;
 #include <KIO/NetAccess>
 #include <KSharedConfig>
 #include <KStandardDirs>
+#include <KProcess>
+#include <KMessageBox>
+#include <KLocale>
+#include <ksocketfactory.h>
+
+#include <QPointer>
 
 KNoteConfig *KNoteUtils::createConfig(KCal::Journal *journal, QString &configPath)
 {
@@ -114,5 +122,56 @@ void KNoteUtils::savePreferences( KCal::Journal *journal, KNoteConfig *config)
                                   config->bgColor().name() );
     journal->setCustomProperty( "KNotes", "RichText",
                                   config->richText() ? QLatin1String("true") : QLatin1String("false") );
-
 }
+
+
+void KNoteUtils::sendMail(QWidget *parent, const QString &title, const QString &message)
+{
+    // get the mail action command
+    const QStringList cmd_list = KNotesGlobalConfig::mailAction().split( QLatin1Char(' '), QString::SkipEmptyParts );
+    KProcess mail;
+    foreach ( const QString &cmd, cmd_list ) {
+        if ( cmd == QLatin1String("%f") ) {
+            mail << message;
+        } else if ( cmd == QLatin1String("%t") ) {
+            mail << title;
+        } else {
+            mail << cmd;
+        }
+    }
+
+    if ( !mail.startDetached() ) {
+        KMessageBox::sorry( parent, i18n( "Unable to start the mail process." ) );
+    }
+}
+
+
+void KNoteUtils::sendToNetwork(QWidget *parent, const QString &title, const QString &message)
+{
+    // pop up dialog to get the IP
+    QPointer<KNoteHostDlg> hostDlg = new KNoteHostDlg( i18n( "Send \"%1\"", title ), parent );
+    if( hostDlg->exec() ) {
+
+        const QString host = hostDlg->host();
+        quint16 port = hostDlg->port();
+
+        if ( !port ) { // not specified, use default
+            port = KNotesGlobalConfig::port();
+        }
+
+        if ( host.isEmpty() ) {
+            KMessageBox::sorry( parent, i18n( "The host cannot be empty." ) );
+            delete hostDlg;
+            return;
+        }
+
+        // Send the note
+
+        KNotesNetworkSender *sender = new KNotesNetworkSender(
+                    KSocketFactory::connectToHost( QLatin1String("knotes"), host, port ) );
+        sender->setSenderId( KNotesGlobalConfig::senderID() );
+        sender->setNote( title, message ); // FIXME: plainText ??
+    }
+    delete hostDlg;
+}
+
