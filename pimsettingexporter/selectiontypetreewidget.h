@@ -19,7 +19,7 @@
 #define SELECTIONTYPETREEWIDGET_H
 
 #include <QTreeWidget>
-
+#include <QHash>
 #include "utils.h"
 
 class QTreeWidgetItem;
@@ -31,13 +31,7 @@ public:
     explicit SelectionTypeTreeWidget(QWidget *parent=0);
     ~SelectionTypeTreeWidget();
 
-    Utils::StoredTypes kmailStoredType(int &numberOfStep) const;
-    Utils::StoredTypes kaddressbookStoredType(int &numberOfStep) const;
-    Utils::StoredTypes kalarmStoredType(int &numberOfStep) const;
-    Utils::StoredTypes korganizerStoredType(int &numberOfStep) const;
-    Utils::StoredTypes kjotsStoredType(int &numberOfStep) const;
-    Utils::StoredTypes knotesStoredType(int &numberOfStep) const;
-    Utils::StoredTypes akregatorStoredType(int &numberOfStep) const;
+    QHash<Utils::AppsType, Utils::importExportParameters> storedType() const;
 
 private:
     enum ActionType {
@@ -46,7 +40,8 @@ private:
 
     void initialize();
     void createSubItem(QTreeWidgetItem *parent, Utils::StoredType type);
-    Utils::StoredTypes typeChecked(QTreeWidgetItem *parent, int &numberOfStep) const;
+
+    Utils::importExportParameters typeChecked(QTreeWidgetItem *parent) const;
 
     QTreeWidgetItem *mKmailItem;
     QTreeWidgetItem *mKalarmItem;
@@ -55,6 +50,7 @@ private:
     QTreeWidgetItem *mKjotsItem;
     QTreeWidgetItem *mKNotesItem;
     QTreeWidgetItem *mAkregatorItem;
+    QTreeWidgetItem *mBlogiloItem;
 };
 
 #endif // SELECTIONTYPETREEWIDGET_H

@@ -58,39 +58,9 @@ void SelectionTypeDialog::readConfig()
     }
 }
 
-Utils::StoredTypes SelectionTypeDialog::kmailTypesSelected(int &numberOfStep) const
+QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeDialog::storedType() const
 {
-    return mSelectionTreeWidget->kmailStoredType(numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeDialog::kaddressbookTypesSelected(int &numberOfStep) const
-{
-    return mSelectionTreeWidget->kaddressbookStoredType(numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeDialog::kalarmTypesSelected(int &numberOfStep) const
-{
-    return mSelectionTreeWidget->kalarmStoredType(numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeDialog::korganizerTypesSelected(int &numberOfStep) const
-{
-    return mSelectionTreeWidget->korganizerStoredType(numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeDialog::kjotsTypesSelected(int &numberOfStep) const
-{
-    return mSelectionTreeWidget->kjotsStoredType(numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeDialog::knotesTypesSelected(int &numberOfStep) const
-{
-    return mSelectionTreeWidget->knotesStoredType(numberOfStep);
-}
-
-Utils::StoredTypes SelectionTypeDialog::akregatorTypesSelected(int &numberOfStep) const
-{
-    return mSelectionTreeWidget->akregatorStoredType(numberOfStep);
+    return mSelectionTreeWidget->storedType();
 }
 
 #include "selectiontypedialog.moc"

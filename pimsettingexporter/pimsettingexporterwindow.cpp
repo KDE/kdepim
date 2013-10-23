@@ -39,6 +39,9 @@
 #include "akregator/exportakregatorjob.h"
 #include "akregator/importakregatorjob.h"
 
+#include "blogilo/exportblogilojob.h"
+#include "blogilo/importblogilojob.h"
+
 #include "pimsettingexporterkernel.h"
 #include "selectiontypedialog.h"
 #include "utils.h"
@@ -134,33 +137,12 @@ void PimSettingExporterWindow::slotBackupData()
         return;
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
-        int kmailNumberOfStep = 0;
-        int korganizerNumberOfStep = 0;
-        int kalarmNumberOfStep = 0;
-        int kaddressbookNumberOfStep = 0;
-        int kjotsNumberOfStep = 0;
-        int knotesNumberOfStep = 0;
-        int akregatorNumberOfStep = 0;
-        const Utils::StoredTypes kmailTypeSelected = dialog->kmailTypesSelected(kmailNumberOfStep);
-        const Utils::StoredTypes kaddressbookTypeSelected = dialog->kaddressbookTypesSelected(kaddressbookNumberOfStep);
-        const Utils::StoredTypes korganizerTypeSelected = dialog->korganizerTypesSelected(korganizerNumberOfStep);
-        const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);
-        const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
-        const Utils::StoredTypes knotesTypeSelected = dialog->knotesTypesSelected(knotesNumberOfStep);
-        const Utils::StoredTypes akregatorTypeSelected = dialog->akregatorTypesSelected(akregatorNumberOfStep);
+        const QHash<Utils::AppsType, Utils::importExportParameters> stored = dialog->storedType();
+
         delete dialog;
         mLogWidget->clear();
         delete mImportExportData;
         mImportExportData = 0;
-
-        if ((kmailNumberOfStep==0) &&
-                (korganizerNumberOfStep==0) &&
-                (kalarmNumberOfStep==0) &&
-                (kaddressbookNumberOfStep==0) &&
-                (kjotsNumberOfStep==0) &&
-                (knotesTypeSelected==0) &&
-                (akregatorTypeSelected==0))
-            return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
         if (!archiveStorage->openArchive(true)) {
@@ -168,38 +150,62 @@ void PimSettingExporterWindow::slotBackupData()
             return;
         }
 
-        if (kmailNumberOfStep != 0) {
-            mImportExportData = new ExportMailJob(this, kmailTypeSelected, archiveStorage, kmailNumberOfStep);
-            executeJob();
+        QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
+        while (i != stored.constEnd()) {
+            //cout << i.key() << ": " << i.value() << endl;
+            switch(i.key()) {
+            case Utils::KMail:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KAddressBook:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KAlarm:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KOrganizer:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KJots:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KNotes:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::Akregator:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::Blogilo:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportBlogiloJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            }
+            ++i;
         }
 
-        if (kaddressbookNumberOfStep != 0) {
-            mImportExportData = new ExportAddressbookJob(this, kaddressbookTypeSelected, archiveStorage, kaddressbookNumberOfStep);
-            executeJob();
-        }
-
-        if (korganizerNumberOfStep != 0) {
-            mImportExportData = new ExportCalendarJob(this, korganizerTypeSelected, archiveStorage, korganizerNumberOfStep);
-            executeJob();
-        }
-
-        if (kalarmNumberOfStep != 0) {
-            mImportExportData = new ExportAlarmJob(this, kalarmTypeSelected, archiveStorage, kalarmNumberOfStep);
-            executeJob();
-        }
-
-        if (kjotsNumberOfStep != 0) {
-            mImportExportData = new ExportJotJob(this, kjotsTypeSelected, archiveStorage, kjotsNumberOfStep);
-            executeJob();
-        }
-        if (knotesNumberOfStep != 0) {
-            mImportExportData = new ExportNotesJob(this, knotesTypeSelected, archiveStorage, knotesNumberOfStep);
-            executeJob();
-        }
-        if (akregatorNumberOfStep != 0) {
-            mImportExportData = new ExportAkregatorJob(this, akregatorTypeSelected, archiveStorage, akregatorNumberOfStep);
-            executeJob();
-        }
         //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
@@ -233,72 +239,76 @@ void PimSettingExporterWindow::slotRestoreData()
 
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
-        int kmailNumberOfStep = 0;
-        int korganizerNumberOfStep = 0;
-        int kalarmNumberOfStep = 0;
-        int kaddressbookNumberOfStep = 0;
-        int kjotsNumberOfStep = 0;
-        int knotesNumberOfStep = 0;
-        int akregatorNumberOfStep = 0;
-        const Utils::StoredTypes kmailTypeSelected = dialog->kmailTypesSelected(kmailNumberOfStep);
-        const Utils::StoredTypes kaddressbookTypeSelected = dialog->kaddressbookTypesSelected(kaddressbookNumberOfStep);
-        const Utils::StoredTypes korganizerTypeSelected = dialog->korganizerTypesSelected(korganizerNumberOfStep);
-        const Utils::StoredTypes kalarmTypeSelected = dialog->kalarmTypesSelected(kalarmNumberOfStep);        
-        const Utils::StoredTypes kjotsTypeSelected = dialog->kjotsTypesSelected(kjotsNumberOfStep);
-        const Utils::StoredTypes knotesTypeSelected = dialog->knotesTypesSelected(knotesNumberOfStep);
-        const Utils::StoredTypes akregatorTypeSelected = dialog->akregatorTypesSelected(akregatorNumberOfStep);
+        const QHash<Utils::AppsType, Utils::importExportParameters> stored = dialog->storedType();
 
         delete dialog;
         mLogWidget->clear();
         delete mImportExportData;
         mImportExportData = 0;
 
-        if ((kmailNumberOfStep==0) &&
-                (korganizerNumberOfStep==0) &&
-                (kalarmNumberOfStep==0) &&
-                (kaddressbookNumberOfStep==0) &&
-                (kjotsNumberOfStep==0) &&
-                (knotesTypeSelected==0)&&
-                (akregatorTypeSelected==0))
-            return;
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
-        if (!archiveStorage->openArchive(false)) {
+        if (!archiveStorage->openArchive(true)) {
             delete archiveStorage;
             return;
         }
 
-        if (kmailNumberOfStep != 0) {
-            mImportExportData = new ImportMailJob(this, kmailTypeSelected, archiveStorage, kmailNumberOfStep);
-            executeJob();
+        QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
+        while (i != stored.constEnd()) {
+            //cout << i.key() << ": " << i.value() << endl;
+            switch(i.key()) {
+            case Utils::KMail:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KAddressBook:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportAddressbookJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KAlarm:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportAlarmJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KOrganizer:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportCalendarJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KJots:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportJotJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KNotes:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportNotesJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::Akregator:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportAkregatorJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::Blogilo:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportBlogiloJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            }
+            ++i;
         }
 
-        if (kaddressbookNumberOfStep != 0) {
-            mImportExportData = new ImportAddressbookJob(this, kaddressbookTypeSelected, archiveStorage, kaddressbookNumberOfStep);
-            executeJob();
-        }
-
-        if (korganizerNumberOfStep != 0) {
-            mImportExportData = new ImportCalendarJob(this, korganizerTypeSelected, archiveStorage, korganizerNumberOfStep);
-            executeJob();
-        }
-
-        if (kalarmNumberOfStep != 0) {
-            mImportExportData = new ImportAlarmJob(this, kalarmTypeSelected, archiveStorage, kalarmNumberOfStep);
-            executeJob();
-        }
-
-        if (kjotsNumberOfStep != 0) {
-            mImportExportData = new ImportJotJob(this, kjotsTypeSelected, archiveStorage, kjotsNumberOfStep);
-            executeJob();
-        }
-        if (knotesNumberOfStep != 0) {
-            mImportExportData = new ImportNotesJob(this, knotesTypeSelected, archiveStorage, knotesNumberOfStep);
-            executeJob();
-        }
-        if (akregatorNumberOfStep != 0) {
-            mImportExportData = new ImportAkregatorJob(this, akregatorTypeSelected, archiveStorage, akregatorNumberOfStep);
-            executeJob();
-        }
+        //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
     } else {
