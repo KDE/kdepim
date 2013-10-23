@@ -21,6 +21,7 @@
 
 #include "pimcommon/widgets/simplestringlisteditor.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KLineEdit>
 #include <KTextEdit>
@@ -111,7 +112,7 @@ DesktopFilePage::DesktopFilePage(const QString &defaultFileName, DesktopFilePage
     mEmail->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::authorEmail());
     mAuthor->setText(GrantleeThemeEditor::GrantleeThemeEditorSettings::author());
 
-    connect(mDescription, SIGNAL(textChanged()), this, SIGNAL(changed()));
+    connect(mDescription->editor(), SIGNAL(textChanged()), this, SIGNAL(changed()));
 }
 
 DesktopFilePage::~DesktopFilePage()
