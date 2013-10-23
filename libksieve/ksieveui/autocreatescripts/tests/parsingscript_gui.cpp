@@ -56,7 +56,7 @@ int main (int argc, char **argv)
     if (args->count()) {
         fileName = args->url(0).path();
     } else {
-        fileName = KFileDialog::getOpenFileName();
+        fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.siv"));
     }
     if (!fileName.isEmpty()) {
         QFile file(fileName);
