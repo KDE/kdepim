@@ -16,6 +16,7 @@
 */
 
 #include "templateeditdialog.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
 #include <KLocale>
 #include <KLineEdit>
@@ -51,7 +52,7 @@ TemplateEditDialog::TemplateEditDialog(QWidget *parent, bool defaultTemplate)
 
     vbox->addLayout(hbox);
 
-    mTextEdit = new KTextEdit;
+    mTextEdit = new PimCommon::RichTextEditorWidget;
     mTextEdit->setAcceptRichText(false);
     mTextEdit->setReadOnly(defaultTemplate);
     vbox->addWidget(mTextEdit);

@@ -23,6 +23,7 @@
 class KLineEdit;
 class KTextEdit;
 namespace PimCommon {
+class RichTextEditorWidget;
 class TemplateEditDialog : public KDialog
 {
     Q_OBJECT
@@ -42,7 +43,7 @@ private Q_SLOTS:
 private:
     void readConfig();
     void writeConfig();
-    KTextEdit *mTextEdit;
+    PimCommon::RichTextEditorWidget *mTextEdit;
     KLineEdit *mTemplateNameEdit;
 };
 }
