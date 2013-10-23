@@ -81,4 +81,4 @@ Root
 |       |---------knotes/notes.ics
 |       |---------knotes/notes/*
 |       |---------akregator/*
-|       |---------blogilo/*
+|       |---------blogilo/blogilo.db

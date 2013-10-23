@@ -152,7 +152,6 @@ void PimSettingExporterWindow::slotBackupData()
 
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
-            qDebug()<<" i.value().types"<<i.value().types<<" i.value().numberSteps"<<i.value().numberSteps;
             switch(i.key()) {
             case Utils::KMail:
                 if (i.value().numberSteps != 0) {
@@ -254,7 +253,6 @@ void PimSettingExporterWindow::slotRestoreData()
 
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
-            //cout << i.key() << ": " << i.value() << endl;
             switch(i.key()) {
             case Utils::KMail:
                 if (i.value().numberSteps != 0) {
