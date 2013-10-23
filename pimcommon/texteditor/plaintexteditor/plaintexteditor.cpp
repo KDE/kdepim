@@ -227,7 +227,7 @@ void PlainTextEditor::slotCheckSpelling()
     connect(spellDialog, SIGNAL(cancel()),
             this, SLOT(slotSpellCheckerCanceled()));
     connect(spellDialog, SIGNAL(spellCheckStatus(QString)),
-            this, SIGNAL(slotSpellCheckStatus(QString)));
+            this, SIGNAL(spellCheckStatus(QString)));
     connect(spellDialog, SIGNAL(languageChanged(QString)),
             this, SIGNAL(languageChanged(QString)));
     d->originalDoc = QTextDocumentFragment(document());

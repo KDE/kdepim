@@ -69,6 +69,7 @@ Q_SIGNALS:
     void spellCheckerAutoCorrect(const QString& currentWord, const QString& autoCorrectWord);
     void checkSpellingChanged(bool);
     void languageChanged(const QString &);
+    void spellCheckStatus(const QString &);
 
 private:
     bool overrideShortcut(const QKeyEvent* event);
