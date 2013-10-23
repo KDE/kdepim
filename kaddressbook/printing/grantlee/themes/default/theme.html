@@ -2,7 +2,7 @@
 
 {% if contacts %}
 {% for contact in contacts %}
-<p>{{ contact.realName|safe }}</p>
+<h2>{{ contact.realName|safe }}</h2>
 <p>{{ contact.emails|safe }}</p>
 <p>{{ contact.note|safe }}</p>
 <br>
