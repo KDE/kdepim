@@ -144,6 +144,9 @@ void PimSettingExporterWindow::slotBackupData()
         delete mImportExportData;
         mImportExportData = 0;
 
+        if (stored.isEmpty())
+            return;
+
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
         if (!archiveStorage->openArchive(true)) {
             delete archiveStorage;
@@ -244,6 +247,9 @@ void PimSettingExporterWindow::slotRestoreData()
         mLogWidget->clear();
         delete mImportExportData;
         mImportExportData = 0;
+
+        if (stored.isEmpty())
+            return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
         if (!archiveStorage->openArchive(true)) {
