@@ -1116,26 +1116,27 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     void showCalendar( const QDate &date ) const
     {
-      MailCommon::Util::ensureKorganizerRunning( true );
-      QDBusInterface *kontact =
-        new QDBusInterface( QLatin1String("org.kde.kontact"), QLatin1String("/KontactInterface"),
-                            QLatin1String("org.kde.kontact.KontactInterface"), QDBusConnection::sessionBus() );
-      if ( kontact->isValid() ) {
-        kontact->call( QLatin1String("selectPlugin"), QLatin1String("kontact_korganizerplugin") );
-      }
-      delete kontact;
+      if (MailCommon::Util::ensureKorganizerRunning( true )) {
+          QDBusInterface *kontact =
+                  new QDBusInterface( QLatin1String("org.kde.kontact"), QLatin1String("/KontactInterface"),
+                                      QLatin1String("org.kde.kontact.KontactInterface"), QDBusConnection::sessionBus() );
+          if ( kontact->isValid() ) {
+              kontact->call( QLatin1String("selectPlugin"), QLatin1String("kontact_korganizerplugin") );
+          }
+          delete kontact;
 
-      OrgKdeKorganizerCalendarInterface *iface =
-        new OrgKdeKorganizerCalendarInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/Calendar"),
-                                               QDBusConnection::sessionBus(), 0 );
-      if ( !iface->isValid() ) {
-        kDebug() << "Calendar interface is not valid! " << iface->lastError().message();
-        delete iface;
-        return;
+          OrgKdeKorganizerCalendarInterface *iface =
+                  new OrgKdeKorganizerCalendarInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/Calendar"),
+                                                         QDBusConnection::sessionBus(), 0 );
+          if ( !iface->isValid() ) {
+              kDebug() << "Calendar interface is not valid! " << iface->lastError().message();
+              delete iface;
+              return;
+          }
+          iface->showEventView();
+          iface->showDate( date );
+          delete iface;
       }
-      iface->showEventView();
-      iface->showDate( date );
-      delete iface;
     }
 
     bool handleIgnore( Viewer *viewerInstance ) const

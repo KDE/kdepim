@@ -167,9 +167,8 @@ Akonadi::AgentInstance::List MailCommon::Util::agentInstances( bool excludeMailD
 }
 
 /* static */
-void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
+bool MailCommon::Util::ensureKorganizerRunning( bool switchTo )
 {
-    // FIXME: this function returns void, but there can be errors.
     // FIXME: this function should be inside a QObject, and async,
     //         and emit a signal when korg registered itself successfuly
 
@@ -237,6 +236,7 @@ void MailCommon::Util::ensureKorganizerRunning( bool switchTo )
     } else {
         kWarning() << "Couldn't start DBUS/Organizer:" << dbusService << error;
     }
+    return result;
 }
 
 static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type,
@@ -395,37 +395,38 @@ static bool createIncidenceFromMail( KCalCore::IncidenceBase::IncidenceType type
     }
 #else
     kDebug() << "mobile";
-    MailCommon::Util::ensureKorganizerRunning( false );
-    kDebug() << "opening editor";
-    OrgKdeKorganizerCalendarInterface *iface =
-            new OrgKdeKorganizerCalendarInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/Calendar"),
-                                                   QDBusConnection::sessionBus() );
-    switch( type ) {
-    case KCalCore::IncidenceBase::TypeEvent:
-        iface->openEventEditor(
-                    i18n( "Mail: %1", msg->subject()->asUnicodeString() ),
-                    incidenceDescription,
-                    attachmentUris,
-                    QStringList(),
-                    attachmentMimeTypes,
-                    isInlineAttachment );
-        break;
+    if (MailCommon::Util::ensureKorganizerRunning( false )) {
+        kDebug() << "opening editor";
+        OrgKdeKorganizerCalendarInterface *iface =
+                new OrgKdeKorganizerCalendarInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/Calendar"),
+                                                       QDBusConnection::sessionBus() );
+        switch( type ) {
+        case KCalCore::IncidenceBase::TypeEvent:
+            iface->openEventEditor(
+                        i18n( "Mail: %1", msg->subject()->asUnicodeString() ),
+                        incidenceDescription,
+                        attachmentUris,
+                        QStringList(),
+                        attachmentMimeTypes,
+                        isInlineAttachment );
+            break;
 
-    case KCalCore::IncidenceBase::TypeTodo:
-        iface->openTodoEditor(
-                    i18n( "Mail: %1", msg->subject()->asUnicodeString() ),
-                    incidenceDescription,
-                    attachmentUris,
-                    QStringList(),
-                    attachmentMimeTypes,
-                    isInlineAttachment );
-        break;
+        case KCalCore::IncidenceBase::TypeTodo:
+            iface->openTodoEditor(
+                        i18n( "Mail: %1", msg->subject()->asUnicodeString() ),
+                        incidenceDescription,
+                        attachmentUris,
+                        QStringList(),
+                        attachmentMimeTypes,
+                        isInlineAttachment );
+            break;
 
-    default:
-        Q_ASSERT( false );
-        break;
+        default:
+            Q_ASSERT( false );
+            break;
+        }
+        delete iface;
     }
-    delete iface;
 #endif
 
     tf.close();
