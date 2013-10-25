@@ -16,6 +16,7 @@
 */
 
 #include "selectmulticollectionwidget.h"
+#include "checkedcollectionwidget.h"
 
 #include <Akonadi/RecursiveCollectionFilterProxyModel>
 #include <Akonadi/CollectionFilterProxyModel>
@@ -57,65 +58,24 @@ void SelectMultiCollectionWidget::initialize()
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
 
-
-    // Create a new change recorder.
-    Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder( this );
-    changeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
-
-    Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel( changeRecorder, this );
-    // Set the model to show only collections, not items.
-    model->setItemPopulationStrategy( Akonadi::EntityTreeModel::NoItemPopulation );
-
-    Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel( this );
-    mimeTypeProxy->setExcludeVirtualCollections( true );
-    mimeTypeProxy->addMimeTypeFilters( QStringList() << KMime::Message::mimeType() );
-    mimeTypeProxy->setSourceModel( model );
-
-
-
-    // Create the Check proxy model.
-    mSelectionModel = new QItemSelectionModel( mimeTypeProxy );
-    mCheckProxy = new KCheckableProxyModel( this );
-    mCheckProxy->setSelectionModel( mSelectionModel );
-    mCheckProxy->setSourceModel( mimeTypeProxy );
-
-    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)),
+    mCheckedCollectionWidget = new MailCommon::CheckedCollectionWidget;
+    connect(mCheckedCollectionWidget->entityTreeModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(slotCollectionsInserted(QModelIndex,int,int)));
 
-    mCollectionFilter = new KRecursiveFilterProxyModel(this);
-    mCollectionFilter->setSourceModel(mCheckProxy);
-    mCollectionFilter->setDynamicSortFilter(true);
-    mCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
-
-
-    KLineEdit *searchLine = new KLineEdit(this);
-    searchLine->setPlaceholderText(i18n("Search..."));
-    searchLine->setClearButtonShown(true);
-    connect(searchLine, SIGNAL(textChanged(QString)),
-            this, SLOT(slotSetCollectionFilter(QString)));
-
-    vbox->addWidget(searchLine);
-
-
-    mFolderView = new QTreeView;
-    mFolderView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mFolderView->setAlternatingRowColors(true);
-    mFolderView->setModel(mCollectionFilter);
-
-    vbox->addWidget(mFolderView);
+    vbox->addWidget(mCheckedCollectionWidget);
 }
 
 void SelectMultiCollectionWidget::updateStatus(const QModelIndex &parent)
 {
-    const int nbCol = mCheckProxy->rowCount( parent );
+    const int nbCol = mCheckedCollectionWidget->checkableProxy()->rowCount( parent );
     for ( int i = 0; i < nbCol; ++i ) {
-        const QModelIndex child = mCheckProxy->index( i, 0, parent );
+        const QModelIndex child = mCheckedCollectionWidget->checkableProxy()->index( i, 0, parent );
 
         const Akonadi::Collection col =
-                mCheckProxy->data( child, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+                mCheckedCollectionWidget->checkableProxy()->data( child, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 
         if (mListCollection.contains(col.id())) {
-            mCheckProxy->setData( child, Qt::Checked, Qt::CheckStateRole );
+            mCheckedCollectionWidget->checkableProxy()->setData( child, Qt::Checked, Qt::CheckStateRole );
         }
         updateStatus( child );
     }
@@ -126,33 +86,26 @@ void SelectMultiCollectionWidget::slotCollectionsInserted(const QModelIndex &, i
     if (!mListCollection.isEmpty()) {
         updateStatus(QModelIndex());
     }
-    mFolderView->expandAll();
+    mCheckedCollectionWidget->folderTreeView()->expandAll();
 }
 
 QList<Akonadi::Collection> SelectMultiCollectionWidget::selectedCollection(const QModelIndex &parent) const
 {
     QList<Akonadi::Collection> lst;
 
-    const int nbCol = mCheckProxy->rowCount( parent );
+    const int nbCol = mCheckedCollectionWidget->checkableProxy()->rowCount( parent );
     for ( int i = 0; i < nbCol; ++i ) {
-      const QModelIndex child = mCheckProxy->index( i, 0, parent );
+      const QModelIndex child = mCheckedCollectionWidget->checkableProxy()->index( i, 0, parent );
 
       const Akonadi::Collection col =
-        mCheckProxy->data( child, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+        mCheckedCollectionWidget->checkableProxy()->data( child, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 
-      if (mCheckProxy->data( child, Qt::CheckStateRole ).value<int>())
+      if (mCheckedCollectionWidget->checkableProxy()->data( child, Qt::CheckStateRole ).value<int>())
           lst << col;
       lst << selectedCollection( child );
     }
     return lst;
 }
-
-void SelectMultiCollectionWidget::slotSetCollectionFilter(const QString &filter)
-{
-    mCollectionFilter->setFilterWildcard(filter);
-    mFolderView->expandAll();
-}
-
 
 
 #include "selectmulticollectionwidget.moc"

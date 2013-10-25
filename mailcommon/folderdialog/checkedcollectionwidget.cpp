@@ -101,6 +101,11 @@ QItemSelectionModel *CheckedCollectionWidget::selectionModel() const
     return mSelectionModel;
 }
 
+KCheckableProxyModel *CheckedCollectionWidget::checkableProxy() const
+{
+    return mCheckProxy;
+}
+
 void CheckedCollectionWidget::slotSetCollectionFilter(const QString &filter)
 {
     mCollectionFilter->setFilterWildcard(filter);

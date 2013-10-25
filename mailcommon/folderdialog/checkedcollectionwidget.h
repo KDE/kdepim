@@ -45,6 +45,8 @@ public:
 
     QItemSelectionModel *selectionModel() const;
 
+    KCheckableProxyModel *checkableProxy() const;
+
 private Q_SLOTS:
     void slotSetCollectionFilter(const QString &filter);
 
