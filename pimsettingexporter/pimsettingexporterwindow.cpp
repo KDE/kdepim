@@ -141,8 +141,9 @@ void PimSettingExporterWindow::slotBackupData()
 
         delete dialog;
         mLogWidget->clear();
-        delete mImportExportData;
-        mImportExportData = 0;
+
+        if (stored.isEmpty())
+            return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
         if (!archiveStorage->openArchive(true)) {
@@ -208,6 +209,8 @@ void PimSettingExporterWindow::slotBackupData()
         //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
+        delete mImportExportData;
+        mImportExportData = 0;
     } else {
         delete dialog;
     }
@@ -242,8 +245,9 @@ void PimSettingExporterWindow::slotRestoreData()
 
         delete dialog;
         mLogWidget->clear();
-        delete mImportExportData;
-        mImportExportData = 0;
+
+        if (stored.isEmpty())
+            return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
         if (!archiveStorage->openArchive(true)) {
@@ -309,6 +313,8 @@ void PimSettingExporterWindow::slotRestoreData()
         //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
+        delete mImportExportData;
+        mImportExportData = 0;
     } else {
         delete dialog;
     }

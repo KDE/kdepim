@@ -49,12 +49,13 @@ private:
 class GrantleeStyleFactory : public PrintStyleFactory
 {
 public:
-    explicit GrantleeStyleFactory( const QString &themePath, PrintingWizard *parent );
+    explicit GrantleeStyleFactory( const QString &name, const QString &themePath, PrintingWizard *parent );
 
     PrintStyle *create() const;
     QString description() const;
 private:
     QString mThemePath;
+    QString mName;
 };
 
 }

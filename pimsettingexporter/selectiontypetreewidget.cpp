@@ -86,14 +86,30 @@ void SelectionTypeTreeWidget::initialize()
 QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeTreeWidget::storedType() const
 {
     QHash<Utils::AppsType, Utils::importExportParameters> stored;
-    stored.insert(Utils::KMail, typeChecked(mKmailItem));
-    stored.insert(Utils::KAlarm, typeChecked(mKalarmItem));
-    stored.insert(Utils::KAddressBook, typeChecked(mKaddressbookItem));
-    stored.insert(Utils::KOrganizer, typeChecked(mKorganizerItem));
-    stored.insert(Utils::KJots, typeChecked(mKjotsItem));
-    stored.insert(Utils::KNotes, typeChecked(mKNotesItem));
-    stored.insert(Utils::Akregator, typeChecked(mAkregatorItem));
-    stored.insert(Utils::Blogilo, typeChecked(mBlogiloItem));
+    Utils::importExportParameters var = typeChecked(mKmailItem);
+    if (!var.isEmpty())
+        stored.insert(Utils::KMail, var);
+    var = typeChecked(mKalarmItem);
+    if (!var.isEmpty())
+        stored.insert(Utils::KAlarm, var);
+    var = typeChecked(mKaddressbookItem);
+    if (!var.isEmpty())
+        stored.insert(Utils::KAddressBook, var);
+    var = typeChecked(mKorganizerItem);
+    if (!var.isEmpty())
+        stored.insert(Utils::KOrganizer, var);
+    var = typeChecked(mKjotsItem);
+    if (!var.isEmpty())
+        stored.insert(Utils::KJots, var);
+    var = typeChecked(mKNotesItem);
+    if (!var.isEmpty())
+        stored.insert(Utils::KNotes, var);
+    var = typeChecked(mAkregatorItem);
+    if (!var.isEmpty())
+        stored.insert(Utils::Akregator, var);
+    var = typeChecked(mBlogiloItem);
+    if (!var.isEmpty())
+        stored.insert(Utils::Blogilo, var);
     return stored;
 }
 

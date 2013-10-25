@@ -33,6 +33,8 @@ class KNotesIconViewItem;
 class KNotesResourceManager;
 class KNoteTip;
 class KNotesAlarm;
+class KAction;
+class KToggleAction;
 class QTcpServer;
 
 namespace DNSSD {
@@ -99,19 +101,33 @@ private slots:
     void slotConfigUpdated();
     void slotAcceptConnection();
     void slotSetAlarm();
+    void slotNewNoteFromClipboard();
+    void slotSaveAs();
+    void slotUpdateReadOnly();
 
 private:
     void updateNetworkListener();
     void printSelectedNotes(bool preview);
     KNotesWidget *mNotesWidget;
     KNoteTip *mNoteTip;
-    KNoteEditDialog *mNoteEditDlg;
 
     KNotesResourceManager *mManager;
     QMultiHash<QString, KNotesIconViewItem*> mNoteList;
     QTcpServer *mListener;
     DNSSD::PublicService *mPublisher;
     KNotesAlarm *mAlarm;
+    KAction *mNoteEdit;
+    KAction *mNoteRename;
+    KAction *mNoteDelete;
+    KAction *mNotePrint;
+    KAction *mNotePrintPreview;
+    KAction *mNoteConfigure;
+    KAction *mNoteSendMail;
+    KAction *mNoteSendNetwork;
+    KAction *mNoteSetAlarm;
+    KAction *mNewNote;
+    KAction *mSaveAs;
+    KToggleAction *mReadOnly;
 };
 
 #endif

@@ -27,7 +27,7 @@
 #include "knotesiconview.h"
 #include "knoteswidget.h"
 #include "knotetip.h"
-#include "knotes/configdialog/knoteconfigdlg.h"
+#include "knotes/configdialog/knoteconfigdialog.h"
 #include "knotes/network/knotesnetrecv.h"
 #include "knotes/print/knoteprinter.h"
 #include "knotes/print/knoteprintobject.h"
@@ -37,7 +37,7 @@
 #include "knotes/knotesglobalconfig.h"
 #include "knotes/configdialog/knotesimpleconfigdialog.h"
 #include "knoteutils.h"
-#include "alarms/knotealarmdlg.h"
+#include "alarms/knotealarmdialog.h"
 #include "alarms/knotesalarm.h"
 #include <KCal/Journal>
 using namespace KCal;
@@ -49,6 +49,9 @@ using namespace KCal;
 #include <KXMLGUIFactory>
 #include <KPrintPreview>
 #include <ksocketfactory.h>
+#include <KApplication>
+#include <KFileDialog>
+#include <KToggleAction>
 
 #include <QApplication>
 #include <QClipboard>
@@ -61,11 +64,11 @@ KNotesPart::KNotesPart( KNotesResourceManager *manager, QObject *parent )
     : KParts::ReadOnlyPart( parent ),
       mNotesWidget( new KNotesWidget(this) ),
       mNoteTip( new KNoteTip( mNotesWidget->notesView() ) ),
-      mNoteEditDlg( 0 ),
       mManager( manager ),
       mListener(0),
       mPublisher(0),
-      mAlarm(0)
+      mAlarm(0),
+      mNotePrintPreview(0)
 {
     (void) new KNotesAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String("/KNotes"), this );
@@ -73,87 +76,101 @@ KNotesPart::KNotesPart( KNotesResourceManager *manager, QObject *parent )
     setComponentData( KComponentData( "knotes" ) );
 
     // create the actions
-    KAction *action =
-            new KAction( KIcon( QLatin1String("knotes") ),
-                         i18nc( "@action:inmenu create new popup note", "&New" ), this );
-    actionCollection()->addAction( QLatin1String("file_new"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(newNote()) );
-    action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
-    action->setHelpText(
+    mNewNote = new KAction( KIcon( QLatin1String("knotes") ),
+                            i18nc( "@action:inmenu create new popup note", "&New" ), this );
+    actionCollection()->addAction( QLatin1String("file_new"), mNewNote );
+    connect( mNewNote, SIGNAL(triggered(bool)), SLOT(newNote()) );
+    mNewNote->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+    mNewNote->setHelpText(
                 i18nc( "@info:status", "Create a new popup note" ) );
-    action->setWhatsThis(
+    mNewNote->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "You will be presented with a dialog where you can add a new popup note." ) );
 
-    action = new KAction( KIcon( QLatin1String("document-edit") ),
+    mNoteEdit = new KAction( KIcon( QLatin1String("document-edit") ),
                           i18nc( "@action:inmenu", "Edit..." ), this );
-    actionCollection()->addAction( QLatin1String("edit_note"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(editNote()) );
-    action->setHelpText(
+    actionCollection()->addAction( QLatin1String("edit_note"), mNoteEdit );
+    connect( mNoteEdit, SIGNAL(triggered(bool)), SLOT(editNote()) );
+    mNoteEdit->setHelpText(
                 i18nc( "@info:status", "Edit popup note" ) );
-    action->setWhatsThis(
+    mNoteEdit->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "You will be presented with a dialog where you can modify an existing popup note." ) );
 
-    action = new KAction( KIcon( QLatin1String("edit-rename") ),
+    mNoteRename = new KAction( KIcon( QLatin1String("edit-rename") ),
                           i18nc( "@action:inmenu", "Rename..." ), this );
-    actionCollection()->addAction( QLatin1String("edit_rename"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(renameNote()) );
-    action->setHelpText(
+    actionCollection()->addAction( QLatin1String("edit_rename"), mNoteRename );
+    connect( mNoteRename, SIGNAL(triggered(bool)), SLOT(renameNote()) );
+    mNoteRename->setHelpText(
                 i18nc( "@info:status", "Rename popup note" ) );
-    action->setWhatsThis(
+    mNoteRename->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "You will be presented with a dialog where you can rename an existing popup note." ) );
 
-    action = new KAction( KIcon( QLatin1String("edit-delete") ),
+    mNoteDelete = new KAction( KIcon( QLatin1String("edit-delete") ),
                           i18nc( "@action:inmenu", "Delete" ), this );
-    actionCollection()->addAction( QLatin1String("edit_delete"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(killSelectedNotes()) );
-    action->setShortcut( QKeySequence( Qt::Key_Delete ) );
-    action->setHelpText(
+    actionCollection()->addAction( QLatin1String("edit_delete"), mNoteDelete );
+    connect( mNoteDelete, SIGNAL(triggered(bool)), SLOT(killSelectedNotes()) );
+    mNoteDelete->setShortcut( QKeySequence( Qt::Key_Delete ) );
+    mNoteDelete->setHelpText(
                 i18nc( "@info:status", "Delete popup note" ) );
-    action->setWhatsThis(
+    mNoteDelete->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "You will be prompted if you really want to permanently remove "
                        "the selected popup note." ) );
 
-    action = new KAction( KIcon( QLatin1String("document-print") ),
+    mNotePrint = new KAction( KIcon( QLatin1String("document-print") ),
                           i18nc( "@action:inmenu", "Print Selected Notes..." ), this );
-    actionCollection()->addAction( QLatin1String("print_note"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotPrintSelectedNotes()) );
-    action->setHelpText(
+    actionCollection()->addAction( QLatin1String("print_note"), mNotePrint );
+    connect( mNotePrint, SIGNAL(triggered(bool)), SLOT(slotPrintSelectedNotes()) );
+    mNotePrint->setHelpText(
                 i18nc( "@info:status", "Print popup note" ) );
-    action->setWhatsThis(
+    mNotePrint->setWhatsThis(
                 i18nc( "@info:whatsthis",
                        "You will be prompted to print the selected popup note." ) );
 
     if(KPrintPreview::isAvailable()) {
 
-        action = new KAction( KIcon( QLatin1String("document-print-preview") ),i18nc( "@action:inmenu", "Print Preview Selected Notes..." ), this );
-        actionCollection()->addAction( QLatin1String("print_preview_note"), action );
+        mNotePrintPreview = new KAction( KIcon( QLatin1String("document-print-preview") ),i18nc( "@action:inmenu", "Print Preview Selected Notes..." ), this );
+        actionCollection()->addAction( QLatin1String("print_preview_note"), mNotePrintPreview );
 
-        connect( action, SIGNAL(triggered(bool)), SLOT(slotPrintPreviewSelectedNotes()) );
+        connect( mNotePrintPreview, SIGNAL(triggered(bool)), SLOT(slotPrintPreviewSelectedNotes()) );
     }
 
-    action  = new KAction( KIcon( QLatin1String("configure") ), i18n( "Note settings..." ), this );
-    actionCollection()->addAction( QLatin1String("configure_note"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotNotePreferences()) );
+    mNoteConfigure  = new KAction( KIcon( QLatin1String("configure") ), i18n( "Note settings..." ), this );
+    actionCollection()->addAction( QLatin1String("configure_note"), mNoteConfigure );
+    connect( mNoteConfigure, SIGNAL(triggered(bool)), SLOT(slotNotePreferences()) );
 
-    action  = new KAction( KIcon( QLatin1String("configure") ), i18n( "Preferences KNotes..." ), this );
-    actionCollection()->addAction( QLatin1String("knotes_configure"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotPreferences()) );
+    KAction *act  = new KAction( KIcon( QLatin1String("configure") ), i18n( "Preferences KNotes..." ), this );
+    actionCollection()->addAction( QLatin1String("knotes_configure"), act );
+    connect( act, SIGNAL(triggered(bool)), SLOT(slotPreferences()) );
 
-    action  = new KAction( KIcon( QLatin1String("mail-send") ), i18n( "Mail..." ), this );
-    actionCollection()->addAction( QLatin1String("mail_note"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotMail()) );
+    mNoteSendMail = new KAction( KIcon( QLatin1String("mail-send") ), i18n( "Mail..." ), this );
+    actionCollection()->addAction( QLatin1String("mail_note"), mNoteSendMail );
+    connect( mNoteSendMail, SIGNAL(triggered(bool)), SLOT(slotMail()) );
 
-    action  = new KAction( KIcon( QLatin1String("network-wired") ), i18n( "Send..." ), this );
-    actionCollection()->addAction( QLatin1String("send_note"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotSendToNetwork()) );
+    mNoteSendNetwork  = new KAction( KIcon( QLatin1String("network-wired") ), i18n( "Send..." ), this );
+    actionCollection()->addAction( QLatin1String("send_note"), mNoteSendNetwork );
+    connect( mNoteSendNetwork, SIGNAL(triggered(bool)), SLOT(slotSendToNetwork()) );
 
-    action  = new KAction( KIcon( QLatin1String("knotes_alarm") ), i18n( "Set Alarm..." ), this );
-    actionCollection()->addAction( QLatin1String("set_alarm"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotSetAlarm()) );
+    mNoteSetAlarm  = new KAction( KIcon( QLatin1String("knotes_alarm") ), i18n( "Set Alarm..." ), this );
+    actionCollection()->addAction( QLatin1String("set_alarm"), mNoteSetAlarm );
+    connect( mNoteSetAlarm, SIGNAL(triggered(bool)), SLOT(slotSetAlarm()) );
+
+    act  = new KAction( KIcon( QLatin1String("edit-paste") ),
+                           i18n( "New Note From Clipboard" ), this );
+    actionCollection()->addAction( QLatin1String("new_note_clipboard"), act );
+    connect( act, SIGNAL(triggered()), SLOT(slotNewNoteFromClipboard()) );
+
+
+    mSaveAs  = new KAction( KIcon( QLatin1String("document-save-as") ), i18n( "Save As..." ), this );
+    actionCollection()->addAction( QLatin1String("save_note"), mSaveAs );
+    connect( mSaveAs, SIGNAL(triggered(bool)), SLOT(slotSaveAs()) );
+
+    mReadOnly  = new KToggleAction( KIcon( QLatin1String("object-locked") ), i18n( "Lock" ), this );
+    actionCollection()->addAction( QLatin1String("lock_note"), mReadOnly );
+    connect( mReadOnly, SIGNAL(triggered(bool)), SLOT(slotUpdateReadOnly()) );
+    mReadOnly->setCheckedState( KGuiItem( i18n( "Unlock" ), QLatin1String("object-unlocked") ) );
 
 
     // TODO icons: s/editdelete/knotes_delete/ or the other way round in knotes
@@ -276,27 +293,28 @@ QString KNotesPart::newNote( const QString &name, const QString &text )
 
     // Edit the new note if text is empty
     if ( text.isNull() ) {
-        delete mNoteEditDlg;
-        mNoteEditDlg = new KNoteEditDialog( widget() );
+        QPointer<KNoteEditDialog> dlg = new KNoteEditDialog( false, widget() );
 
-        mNoteEditDlg->setTitle( journal->summary() );
-        mNoteEditDlg->setText( journal->description() );
+        dlg->setTitle( journal->summary() );
+        dlg->setText( journal->description() );
 
 
         const QString property = journal->customProperty("KNotes", "RichText");
         if ( !property.isNull() ) {
-            mNoteEditDlg->setAcceptRichText( property == QLatin1String("true") ? true : false );
+            dlg->setAcceptRichText( property == QLatin1String("true") ? true : false );
         } else {
             KNotesGlobalConfig *globalConfig = KNotesGlobalConfig::self();
-            mNoteEditDlg->setAcceptRichText( globalConfig->richText());
+            dlg->setAcceptRichText( globalConfig->richText());
         }
 
 
-        mNoteEditDlg->noteEdit()->setFocus();
-        if ( mNoteEditDlg->exec() == QDialog::Accepted ) {
-            journal->setSummary( mNoteEditDlg->title() );
-            journal->setDescription( mNoteEditDlg->text() );
+        dlg->noteEdit()->setFocus();
+        if ( dlg->exec() == QDialog::Accepted ) {
+            journal->setSummary( dlg->title() );
+            journal->setDescription( dlg->text() );
+            delete dlg;
         } else {
+            delete dlg;
             delete journal;
             return QString();
         }
@@ -394,20 +412,25 @@ QMap<QString, QString> KNotesPart::notes() const
 
 void KNotesPart::killSelectedNotes()
 {
-    QList<KNotesIconViewItem*> items;
-    QStringList notes;
     QList<QListWidgetItem *> lst = mNotesWidget->notesView()->selectedItems ();
     if ( lst.isEmpty() ) {
         return;
     }
+    QStringList notes;
+    QList<KNotesIconViewItem*> items;
 
     foreach ( QListWidgetItem *item, lst ) {
         KNotesIconViewItem *knivi = static_cast<KNotesIconViewItem *>( item );
-        items.append( knivi );
-        notes.append( knivi->realName() );
+        if (!knivi->readOnly()) {
+            items.append( knivi );
+            notes.append( knivi->realName() );
+        }
     }
 
-    int ret = KMessageBox::warningContinueCancelList(
+    if (items.isEmpty())
+        return;
+
+    const int ret = KMessageBox::warningContinueCancelList(
                 mNotesWidget,
                 i18ncp( "@info",
                         "Do you really want to delete this note?",
@@ -430,18 +453,37 @@ void KNotesPart::popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoin
 {
     Q_UNUSED( item );
 
-    QMenu *contextMenu = 0;
+    QMenu *contextMenu = new QMenu(widget());
     if ( mNotesWidget->notesView()->itemAt ( pos ) ) {
-        contextMenu = static_cast<QMenu *>( factory()->container( QLatin1String("note_context"), this ) );
+        contextMenu->addAction(mNewNote);
+        const bool uniqueNoteSelected = (mNotesWidget->notesView()->selectedItems().count() == 1);
+        if (uniqueNoteSelected) {
+            contextMenu->addSeparator();
+            contextMenu->addAction(mSaveAs);
+            contextMenu->addSeparator();
+            contextMenu->addAction(mNoteEdit);
+            contextMenu->addAction(mReadOnly);
+            contextMenu->addAction(mNoteRename);
+            contextMenu->addSeparator();
+            contextMenu->addAction(mNoteSendMail);
+            contextMenu->addSeparator();
+            contextMenu->addAction(mNoteSendNetwork);
+        }
+        contextMenu->addSeparator();
+        contextMenu->addAction(mNotePrint);
+
+        if (uniqueNoteSelected) {
+            contextMenu->addSeparator();
+            contextMenu->addAction(mNoteConfigure);
+        }
+        contextMenu->addSeparator();
+        contextMenu->addAction(mNoteDelete);
     } else {
-        contextMenu = static_cast<QMenu *>( factory()->container( QLatin1String("notepart_context"), this ) );
+        contextMenu->addAction(mNewNote);
     }
 
-    if ( !contextMenu ) {
-        return;
-    }
-
-    contextMenu->popup( mNotesWidget->notesView()->mapFromParent( globalPos ) );
+    contextMenu->exec( mNotesWidget->notesView()->mapFromParent( globalPos ) );
+    delete contextMenu;
 }
 
 void KNotesPart::mouseMoveOnListWidget( const QPoint & pos )
@@ -467,28 +509,27 @@ void KNotesPart::killNote( KCal::Journal *journal )
 
 void KNotesPart::editNote( QListWidgetItem *item )
 {
-    if ( !mNoteEditDlg ) {
-        mNoteEditDlg = new KNoteEditDialog( widget() );
-    }
-
-    Journal *journal = static_cast<KNotesIconViewItem *>( item )->journal();
-    mNoteEditDlg->setTitle( journal->summary() );
-    mNoteEditDlg->setText( journal->description() );
+    KNotesIconViewItem * knotesItem = static_cast<KNotesIconViewItem *>( item );
+    QPointer<KNoteEditDialog> dlg = new KNoteEditDialog( knotesItem->readOnly(), widget() );
+    Journal *journal = knotesItem->journal();
+    dlg->setTitle( journal->summary() );
+    dlg->setText( journal->description() );
 
     const QString property = journal->customProperty("KNotes", "RichText");
     if ( !property.isNull() ) {
-        mNoteEditDlg->setAcceptRichText( property == QLatin1String("true") ? true : false );
+        dlg->setAcceptRichText( property == QLatin1String("true") ? true : false );
     } else {
         KNotesGlobalConfig *globalConfig = KNotesGlobalConfig::self();
-        mNoteEditDlg->setAcceptRichText( globalConfig->richText());
+        dlg->setAcceptRichText( globalConfig->richText());
     }
 
-    mNoteEditDlg->noteEdit()->setFocus();
-    if ( mNoteEditDlg->exec() == QDialog::Accepted ) {
-        static_cast<KNotesIconViewItem *>( item )->setIconText( mNoteEditDlg->title() );
-        journal->setDescription( mNoteEditDlg->text() );
+    dlg->noteEdit()->setFocus();
+    if ( dlg->exec() == QDialog::Accepted ) {
+        static_cast<KNotesIconViewItem *>( item )->setIconText( dlg->title() );
+        journal->setDescription( dlg->text() );
         mManager->save();
     }
+    delete dlg;
 }
 
 void KNotesPart::editNote()
@@ -517,23 +558,19 @@ void KNotesPart::renameNote()
 
 void KNotesPart::slotOnCurrentChanged( )
 {
-    QAction *renameAction = actionCollection()->action( QLatin1String("edit_rename") );
-    QAction *deleteAction = actionCollection()->action( QLatin1String("edit_delete") );
-    QAction *editAction = actionCollection()->action( QLatin1String("edit_note") );
-    QAction *configureAction = actionCollection()->action( QLatin1String("configure_note") );
-    QAction *sendMailAction = actionCollection()->action( QLatin1String("mail_note") );
-    QAction *sendToNetworkAction = actionCollection()->action( QLatin1String("send_note") );
-    QAction *setAlarmAction = actionCollection()->action( QLatin1String("set_alarm") );
-
     const bool uniqueNoteSelected = (mNotesWidget->notesView()->selectedItems().count() == 1);
     const bool enabled(mNotesWidget->notesView()->currentItem());
-    renameAction->setEnabled( enabled );
-    deleteAction->setEnabled( enabled );
-    editAction->setEnabled( enabled );
-    configureAction->setEnabled( uniqueNoteSelected );
-    sendMailAction->setEnabled(uniqueNoteSelected);
-    sendToNetworkAction->setEnabled(uniqueNoteSelected);
-    setAlarmAction->setEnabled(uniqueNoteSelected);
+    mNoteRename->setEnabled( enabled && uniqueNoteSelected);
+    mNoteEdit->setEnabled( enabled && uniqueNoteSelected);
+    mNoteConfigure->setEnabled( uniqueNoteSelected );
+    mNoteSendMail->setEnabled(uniqueNoteSelected);
+    mNoteSendNetwork->setEnabled(uniqueNoteSelected);
+    mNoteSetAlarm->setEnabled(uniqueNoteSelected);
+    mSaveAs->setEnabled(uniqueNoteSelected);
+    mReadOnly->setEnabled(uniqueNoteSelected);
+    if (uniqueNoteSelected) {
+        mReadOnly->setChecked(static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->currentItem())->readOnly());
+    }
 }
 
 void KNotesPart::slotNotePreferences()
@@ -560,7 +597,7 @@ void KNotesPart::slotApplyConfig()
 void KNotesPart::slotPreferences()
 {
     // create a new preferences dialog...
-    KNoteConfigDlg *dialog = new KNoteConfigDlg( i18n( "Settings" ), widget());
+    KNoteConfigDialog *dialog = new KNoteConfigDialog( i18n( "Settings" ), widget());
     connect( dialog, SIGNAL(configWrote()), this, SLOT(slotConfigUpdated()));
     dialog->show();
 }
@@ -620,7 +657,7 @@ void KNotesPart::slotSetAlarm()
         return;
     KNotesIconViewItem *knoteItem = static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->currentItem());
 
-    QPointer<KNoteAlarmDlg> dlg = new KNoteAlarmDlg( knoteItem->realName(), widget() );
+    QPointer<KNoteAlarmDialog> dlg = new KNoteAlarmDialog( knoteItem->realName(), widget() );
     dlg->setIncidence( knoteItem->journal() );
     if ( dlg->exec() ) {
         mManager->save();
@@ -628,5 +665,59 @@ void KNotesPart::slotSetAlarm()
     delete dlg;
 }
 
+void KNotesPart::slotNewNoteFromClipboard()
+{
+    const QString &text = KApplication::clipboard()->text();
+    newNote( QString(), text );
+}
+
+void KNotesPart::slotSaveAs()
+{
+    if (!mNotesWidget->notesView()->currentItem())
+        return;
+    KNotesIconViewItem *knoteItem = static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->currentItem());
+
+    KUrl url;
+    QPointer<KFileDialog> dlg = new KFileDialog( url, QString(), widget() );
+    dlg->setOperationMode( KFileDialog::Saving );
+    dlg->setCaption( i18n( "Save As" ) );
+    if( !dlg->exec() ) {
+        delete dlg;
+        return;
+    }
+
+    const QString fileName = dlg->selectedFile();
+    delete dlg;
+    if ( fileName.isEmpty() ) {
+        return;
+    }
+
+    QFile file( fileName );
+    if ( file.exists() &&
+         KMessageBox::warningContinueCancel( widget(),
+                                             i18n( "<qt>A file named <b>%1</b> already exists.<br />"
+                                                   "Are you sure you want to overwrite it?</qt>",
+                                                   QFileInfo( file ).fileName() ) ) != KMessageBox::Continue ) {
+        return;
+    }
+
+    if ( file.open( QIODevice::WriteOnly ) ) {
+        QTextStream stream( &file );
+        stream<<knoteItem->realName() + QLatin1Char('\n');
+        //TODO verify richtext
+        stream<<knoteItem->journal()->description();
+    }
+}
+
+void KNotesPart::slotUpdateReadOnly()
+{
+    if (!mNotesWidget->notesView()->currentItem())
+        return;
+    KNotesIconViewItem *knoteItem = static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->currentItem());
+
+    const bool readOnly = mReadOnly->isChecked();
+
+    knoteItem->setReadOnly( readOnly );
+}
 
 #include "knotes_part.moc"

@@ -20,7 +20,6 @@
 
 #include <KDialog>
 #include <KXMLGUIClient>
-#include "knotes/knoteedit.h"
 
 class KNoteEdit;
 class KTextEdit;
@@ -31,7 +30,7 @@ class KNoteEditDialog : public KDialog, virtual public KXMLGUIClient
 {
     Q_OBJECT
 public:
-    explicit KNoteEditDialog( QWidget *parent = 0 );
+    explicit KNoteEditDialog( bool readOnly, QWidget *parent = 0 );
     ~KNoteEditDialog();
 
     void setAcceptRichText(bool b);
@@ -45,7 +44,10 @@ public:
 
     KNoteEdit *noteEdit() const;
 
+    void setReadOnly(bool b);
+
 private:
+    void init(bool readOnly);
     void readConfig();
     void writeConfig();
     KLineEdit *mTitleEdit;

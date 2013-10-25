@@ -79,7 +79,7 @@ MAILCOMMON_EXPORT bool showJobErrorMessage( KJob *job );
 
 MAILCOMMON_EXPORT Akonadi::AgentInstance::List agentInstances( bool excludeMailTransport = true );
 
-MAILCOMMON_EXPORT void ensureKorganizerRunning( bool switchTo );
+MAILCOMMON_EXPORT bool ensureKorganizerRunning( bool switchTo );
 
 MAILCOMMON_EXPORT bool createTodoFromMail( const Akonadi::Item &mailItem );
 

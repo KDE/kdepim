@@ -98,6 +98,7 @@ void SelectMultiCollectionWidget::initialize()
 
 
     mFolderView = new QTreeView;
+    mFolderView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mFolderView->setAlternatingRowColors(true);
     mFolderView->setModel(mCollectionFilter);
 

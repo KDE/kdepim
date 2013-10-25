@@ -67,6 +67,9 @@ struct importExportParameters
     {
 
     }
+    bool isEmpty() const {
+        return (types == None);
+    }
     int numberSteps;
     Utils::StoredTypes types;
 };

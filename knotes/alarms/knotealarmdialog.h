@@ -1,8 +1,7 @@
 /*******************************************************************
  KNotes -- Notes for the KDE project
 
- Copyright (c) 2003, Daniel Martin <daniel.martin@pirack.com>
-               2004, Michael Brade <brade@kde.org>
+ Copyright (c) 2005, Michael Brade <brade@kde.org>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -30,41 +29,36 @@
  your version.
 *******************************************************************/
 
-#ifndef KNOTEHOSTDLG_H
-#define KNOTEHOSTDLG_H
+#ifndef KNOTEALARMDIALOG_H
+#define KNOTEALARMDIALOG_H
 
-#include <kdialog.h>
+#include <KDialog>
 #include "knotes_export.h"
-class KHistoryComboBox;
-class QTableView;
-class QModelIndex;
+namespace KCal {
+class Journal;
+}
+class KDateComboBox;
+class KTimeComboBox;
+class QButtonGroup;
 
-
-/**
- * A dialog that allows to select network service or request a hostname or IP address.
- */
-class KNOTES_EXPORT KNoteHostDlg
-        : public KDialog
+class KNOTES_EXPORT KNoteAlarmDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KNoteHostDlg( const QString &caption, QWidget *parent = 0 );
-    ~KNoteHostDlg();
-    
-    QString host() const;
-    /**
-     * Returns 0 if port was not specified
-     */
-    quint16 port() const;
-    
+    explicit KNoteAlarmDialog( const QString &caption, QWidget *parent = 0 );
+
+    void setIncidence( KCal::Journal *journal );
+
 private slots:
-    void slotTextChanged( const QString & );
-    void serviceSelected( const QModelIndex& );
-    
+    void slotOk();
+    void slotButtonChanged( int );
+
 private:
-    void readConfig();
-    KHistoryComboBox *m_hostCombo;
-    QTableView *m_servicesView;
+    KCal::Journal *m_journal;
+
+    KDateComboBox *m_atDate;
+    KTimeComboBox *m_atTime, *m_inTime;
+    QButtonGroup *m_buttons;
 };
 
 #endif

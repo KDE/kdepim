@@ -16,6 +16,7 @@
 */
 
 #include "knoteseditdialog.h"
+#include "knotes/knoteedit.h"
 
 #include <KCal/Journal>
 using namespace KCal;
@@ -37,12 +38,17 @@ using namespace KCal;
 #include <QDebug>
 
 
-KNoteEditDialog::KNoteEditDialog(QWidget *parent)
+KNoteEditDialog::KNoteEditDialog(bool readOnly, QWidget *parent)
     : KDialog(parent)
 {
-    setCaption( i18nc( "@title:window", "Edit Popup Note" ) );
-    setButtons( Ok | Cancel );
-    setDefaultButton( Ok );
+    init(readOnly);
+}
+
+void KNoteEditDialog::init(bool readOnly)
+{
+    setCaption( readOnly ? i18nc( "@title:window", "Show Popup Note" ) : i18nc( "@title:window", "Edit Popup Note" ) );
+    setButtons( readOnly ? Close : Ok | Cancel );
+    setDefaultButton( readOnly ? Close : Ok );
     setModal( true );
     showButtonSeparator( true );
     // this dialog is modal to prevent one from editing the same note twice
@@ -82,6 +88,7 @@ KNoteEditDialog::KNoteEditDialog(QWidget *parent)
         action->setShortcutContext( Qt::WidgetWithChildrenShortcut );
     }
     readConfig();
+    setReadOnly(readOnly);
 }
 
 KNoteEditDialog::~KNoteEditDialog()
@@ -93,6 +100,13 @@ void KNoteEditDialog::setAcceptRichText(bool b)
 {
     mNoteEdit->setAcceptRichText( b );
     mTool->setVisible(b);
+}
+
+void KNoteEditDialog::setReadOnly(bool b)
+{
+    mNoteEdit->setEnabled( !b );
+    mTool->setEnabled(!b);
+    mTitleEdit->setEnabled(!b);
 }
 
 void KNoteEditDialog::readConfig()

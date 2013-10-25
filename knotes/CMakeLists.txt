@@ -21,14 +21,14 @@ set(libknotesprivate_lib_SRCS
     print/knoteprintselectthemedialog.cpp
     print/knoteprintselectthemecombobox.cpp
     configdialog/knotesimpleconfigdialog.cpp
-    configdialog/knoteconfigdlg.cpp
+    configdialog/knoteconfigdialog.cpp
     knoteutils.cpp
     migrations/knoteslegacy.cpp
     alarms/knotesalarm.cpp
-    alarms/knotealarmdlg.cpp
+    alarms/knotealarmdialog.cpp
     network/knotesnetrecv.cpp
     network/knotesnetsend.cpp
-    network/knotehostdlg.cpp
+    network/knotehostdialog.cpp
 )
 
 configure_file(settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg )
@@ -78,7 +78,7 @@ target_link_libraries(knotes_local  knotesprivate ${KDE4_KIO_LIBS}  ${KDEPIMLIBS
 install(TARGETS knotes_local  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
-set(kcm_knotes_PART_SRCS configdialog/knoteconfigdlg.cpp )
+set(kcm_knotes_PART_SRCS configdialog/knoteconfigdialog.cpp )
 
 kde4_add_plugin(kcm_knote ${kcm_knotes_PART_SRCS} ${libknotesconfig_SRCS})
 
@@ -104,14 +104,6 @@ install( FILES data/knotes_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/
 install( FILES knotesappui.rc knotesui.rc  DESTINATION ${DATA_INSTALL_DIR}/knotes)
 install( FILES org.kde.KNotes.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}) 
 
-install(FILES
-  print/themes/default/theme.desktop
-  print/themes/default/theme.html
-  DESTINATION ${DATA_INSTALL_DIR}/knotes/print/themes/default/
-)
-install(FILES
-  print/themes/big-title/theme.desktop
-  print/themes/big-title/theme.html
-  DESTINATION ${DATA_INSTALL_DIR}/knotes/print/themes/big-title/
-)
+install(DIRECTORY print/themes/ DESTINATION ${DATA_INSTALL_DIR}/knotes/print/themes )
+
 

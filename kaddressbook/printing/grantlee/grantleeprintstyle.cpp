@@ -118,9 +118,10 @@ void GrantleePrintStyle::print( const KABC::Addressee::List &contacts, PrintProg
     progress->addMessage( i18nc( "Finished printing", "Done" ) );
 }
 
-GrantleeStyleFactory::GrantleeStyleFactory(const QString &themePath, PrintingWizard *parent )
+GrantleeStyleFactory::GrantleeStyleFactory( const QString &name,const QString &themePath, PrintingWizard *parent )
     : PrintStyleFactory( parent ),
-      mThemePath(themePath)
+      mThemePath(themePath),
+      mName(name)
 {
 }
 
@@ -131,7 +132,7 @@ PrintStyle *GrantleeStyleFactory::create() const
 
 QString GrantleeStyleFactory::description() const
 {
-    return i18n( "Grantlee Printing Style" );
+    return mName;
 }
 
 #include "grantleeprintstyle.moc"

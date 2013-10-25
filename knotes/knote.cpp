@@ -19,13 +19,13 @@
 *******************************************************************/
 
 #include "knote.h"
-#include "alarms/knotealarmdlg.h"
+#include "alarms/knotealarmdialog.h"
 #include "configdialog/knotesimpleconfigdialog.h"
 #include "print/knoteprintselectthemedialog.h"
 #include "knotebutton.h"
 #include "knoteconfig.h"
 #include "knoteutils.h"
-#include "configdialog/knoteconfigdlg.h"
+#include "configdialog/knoteconfigdialog.h"
 #include "knoteedit.h"
 #include "print/knoteprinter.h"
 #include "print/knoteprintobject.h"
@@ -330,7 +330,6 @@ void KNote::slotUpdateReadOnly()
 
     // enable/disable actions accordingly
     actionCollection()->action( QLatin1String("configure_note") )->setEnabled( !readOnly );
-    actionCollection()->action( QLatin1String("insert_date") )->setEnabled( !readOnly );
     actionCollection()->action( QLatin1String("delete_note") )->setEnabled( !readOnly );
     actionCollection()->action( QLatin1String("format_bold") )->setEnabled( !readOnly );
     actionCollection()->action( QLatin1String("format_italic") )->setEnabled( !readOnly );
@@ -380,15 +379,10 @@ void KNote::slotClose()
     hide();
 }
 
-void KNote::slotInsDate()
-{
-    m_editor->slotInsertDate();
-}
-
 void KNote::slotSetAlarm()
 {
     m_blockEmitDataChanged = true;
-    QPointer<KNoteAlarmDlg> dlg = new KNoteAlarmDlg( name(), this );
+    QPointer<KNoteAlarmDialog> dlg = new KNoteAlarmDialog( name(), this );
     dlg->setIncidence( m_journal );
 
     if ( dlg->exec() ) {
@@ -666,10 +660,6 @@ void KNote::createActions()
     action  = new KAction( KIcon( QLatin1String("edit-delete") ), i18n( "Delete" ), this );
     actionCollection()->addAction( QLatin1String("delete_note"), action );
     connect( action, SIGNAL(triggered(bool)), SLOT(slotKill()),Qt::QueuedConnection );
-
-    action  = new KAction( KIcon( QLatin1String("knotes_date") ), i18n( "Insert Date" ), this );
-    actionCollection()->addAction( QLatin1String("insert_date"), action );
-    connect( action, SIGNAL(triggered(bool)), SLOT(slotInsDate()) );
 
     action  = new KAction( KIcon( QLatin1String("knotes_alarm") ), i18n( "Set Alarm..." ),
                            this );
