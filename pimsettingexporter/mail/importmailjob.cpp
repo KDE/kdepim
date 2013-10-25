@@ -725,13 +725,14 @@ void ImportMailJob::restoreConfig()
               << QLatin1String("akonadi_newmailnotifier_agent.notifyrc")
               << QLatin1String("akonadi_maildispatcher_agent.notifyrc")
               << QLatin1String("akonadi_folderarchive_agent.notifyrc")
-              << QLatin1String("akonadi_followupreminder_agent.notifyrc");
+              << QLatin1String("akonadi_followupreminder_agent.notifyrc")
+              << QLatin1String("messageviewer.notifyrc");
 
     //We can't merge it.
     Q_FOREACH (const QString &filename, lstNotify) {
         const KArchiveEntry* notifyentry  = mArchiveDirectory->entry(Utils::configsPath() + filename);
         if ( notifyentry &&  notifyentry->isFile()) {
-            const KArchiveFile* notify = static_cast<const KArchiveFile*>(notifyentry);
+            const KArchiveFile *notify = static_cast<const KArchiveFile*>(notifyentry);
             const QString notifyrc = KStandardDirs::locateLocal( "config",  filename);
             if (QFile(notifyrc).exists()) {
                 if (overwriteConfigMessageBox(filename)) {
@@ -892,10 +893,10 @@ void ImportMailJob::restoreAkonadiDb()
     Q_EMIT info(i18n("Restore Akonadi Database..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
-    const KArchiveEntry* akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
+    const KArchiveEntry *akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
     if (akonadiDataBaseEntry && akonadiDataBaseEntry->isFile()) {
 
-        const KArchiveFile* akonadiDataBaseFile = static_cast<const KArchiveFile*>(akonadiDataBaseEntry);
+        const KArchiveFile *akonadiDataBaseFile = static_cast<const KArchiveFile*>(akonadiDataBaseEntry);
 
         KTemporaryFile tmp;
         tmp.open();
