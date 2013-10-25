@@ -134,7 +134,7 @@ void PrintingWizard::loadGrantleeStyle()
             const QString printThemePath(dirIt.filePath() + QDir::separator());
             if (!printThemePath.isEmpty()) {
                 alreadyLoadedThemeName << name;
-                mStyleFactories.append( new GrantleeStyleFactory(printThemePath, this) );
+                mStyleFactories.append( new GrantleeStyleFactory(name, printThemePath, this) );
             }
         }
     }
