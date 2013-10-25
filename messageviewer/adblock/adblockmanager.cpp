@@ -35,6 +35,7 @@
 // KDE Includes
 #include <KIO/FileCopyJob>
 #include <KStandardDirs>
+#include <KNotification>
 
 // Qt Includes
 #include <QUrl>
@@ -287,8 +288,18 @@ void AdBlockManager::updateSubscription(const QString &path, const QString &url)
 
 void AdBlockManager::slotFinished(KJob *job)
 {
-    if (job->error())
+    if (job->error()) {
+        KNotification *notify = new KNotification( QLatin1String("adblock-list-download-failed") );
+        notify->setComponentData( KComponentData("messageviewer") );
+        notify->setText( i18n("Download new ad-block list was failed." ) );
+        notify->sendEvent();
         return;
+    }
+
+    KNotification *notify = new KNotification( QLatin1String("adblock-list-download-done") );
+    notify->setComponentData( KComponentData("messageviewer") );
+    notify->setText( i18n("Download new ad-block list was done." ) );
+    notify->sendEvent();
 
     KIO::FileCopyJob *fJob = qobject_cast<KIO::FileCopyJob *>(job);
     KUrl url = fJob->destUrl();
@@ -299,7 +310,7 @@ void AdBlockManager::slotFinished(KJob *job)
 
 bool AdBlockManager::subscriptionFileExists(int i)
 {
-    QString n = QString::number(i + 1);
+    const QString n = QString::number(i + 1);
 
     QString rulesFilePath = KStandardDirs::locateLocal("appdata" , QLatin1String("adblockrules_") + n);
     return QFile::exists(rulesFilePath);

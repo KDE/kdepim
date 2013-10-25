@@ -1,0 +1,14 @@
+[Global]
+IconName=kmail
+Comment=MessageViewer
+
+[Event/adblock-list-download-done]
+Name=New Ad-Block list download done
+Comment=New Ad-Block list download done
+Action=Popup
+
+[Event/adblock-list-download-failed]
+Name=New Ad-Block list download failed
+Comment=New Ad-Block list download failed
+Action=Popup
+
