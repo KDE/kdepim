@@ -45,7 +45,7 @@ QTextDocument* LogItemDelegate::document ( const QStyleOptionViewItem &option, c
 
   QString text = option4.text;
 
-  QString content = QString::fromLatin1 (
+  const QString content = QString::fromLatin1 (
                           "<html style=\"color:%1\">"
                           "<body> %2" ).arg ( textColor.name().toUpper() ).arg( text )
                       + QLatin1String ( "</table></body></html>" );
@@ -97,7 +97,7 @@ QSize LogItemDelegate::sizeHint ( const QStyleOptionViewItem &option, const QMod
   return size;
 }
 
-QWidget  * LogItemDelegate::createEditor ( QWidget *, const QStyleOptionViewItem  &, const QModelIndex & ) const
+QWidget  *LogItemDelegate::createEditor ( QWidget *, const QStyleOptionViewItem  &, const QModelIndex & ) const
 {
   return 0;
 }
@@ -119,6 +119,9 @@ void CustomLogWidget::addTitleLogEntry( const QString &log )
 {
     QListWidgetItem* item =new QListWidgetItem(log);
     item->setForeground(Qt::black);
+    QFont font = item->font();
+    font.setBold(true);
+    item->setFont(font);
     item->setData(ItemLogType, Title);
     addItem( item );
 }
