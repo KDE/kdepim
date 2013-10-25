@@ -96,6 +96,11 @@ QTreeView *CheckedCollectionWidget::folderTreeView() const
     return mFolderView;
 }
 
+QItemSelectionModel *CheckedCollectionWidget::selectionModel() const
+{
+    return mSelectionModel;
+}
+
 void CheckedCollectionWidget::slotSetCollectionFilter(const QString &filter)
 {
     mCollectionFilter->setFilterWildcard(filter);

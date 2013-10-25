@@ -43,6 +43,8 @@ public:
 
     QTreeView *folderTreeView() const;
 
+    QItemSelectionModel *selectionModel() const;
+
 private Q_SLOTS:
     void slotSetCollectionFilter(const QString &filter);
 
