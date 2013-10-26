@@ -250,7 +250,7 @@ void PimSettingExporterWindow::slotRestoreData()
             return;
 
         ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
-        if (!archiveStorage->openArchive(true)) {
+        if (!archiveStorage->openArchive(false)) {
             delete archiveStorage;
             return;
         }
