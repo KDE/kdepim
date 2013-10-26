@@ -165,7 +165,7 @@ QString CustomLogWidget::toHtml() const
             logText += itemWidget->text();
             break;
         }
-        result += QLatin1String("<p>") + logText + QLatin1String("<br>") + QLatin1String("</p>");
+        result += QLatin1String("<p>") + logText + QLatin1String("</p>");
     }
     result += QLatin1String( "</body>\n</html>\n" );
     return result;
