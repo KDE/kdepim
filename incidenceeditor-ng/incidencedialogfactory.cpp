@@ -21,7 +21,6 @@
 #include "incidencedialogfactory.h"
 #include "incidencedialog.h"
 #include "incidencedefaults.h"
-#include "groupwareintegration.h"
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
@@ -81,11 +80,6 @@ IncidenceDialog * IncidenceDialogFactory::createTodoEditor( const QString &summa
   Akonadi::Item item;
   item.setPayload( todo );
 
-  // Construct the groupware object, it'll take care of the IncidenceEditors::EditorConfig as well
-  if ( !GroupwareIntegration::isActive() ) {
-    GroupwareIntegration::activate();
-  }
-
   IncidenceDialog *dialog = create( true, /* no need for, we're not editing an existing to-do */
                                     KCalCore::Incidence::TypeTodo,
                                     0,
@@ -122,11 +116,6 @@ IncidenceDialog * IncidenceDialogFactory::createEventEditor( const QString &summ
 
   Akonadi::Item item;
   item.setPayload( event );
-
-  // Construct the groupware object, it'll take care of the IncidenceEditors::EditorConfig as well
-  if ( !GroupwareIntegration::isActive() ) {
-    GroupwareIntegration::activate();
-  }
 
   IncidenceDialog *dialog =
     create( false, // not needed for saving, as we're not editing an existing incidence
