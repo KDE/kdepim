@@ -1,3 +1,25 @@
 [Desktop Entry]
 Name=Example big title
+Name[de]=Beispiel mit großem Titel
+Name[nl]=Voorbeeld van grote titel
+Name[pt]=Título grande de exemplo
+Name[pt_BR]=Exemplo de título grande
+Name[sk]=Ukážkový veľký titulok
+Name[sr]=Пример великог наслова
+Name[sr@ijekavian]=Пример великог наслова
+Name[sr@ijekavianlatin]=Primer velikog naslova
+Name[sr@latin]=Primer velikog naslova
+Name[uk]=Приклад великого заголовка
+Name[x-test]=xxExample big titlexx
 Description=Example big title grantlee printing theme
+Description[de]=Beispiel für Grantlee-Druckstil mit großem Titel
+Description[nl]=Voorbeeld van grote titel in grantlee afdrukthema
+Description[pt]=Tema de impressão de exemplo do Grantlee com um título grande
+Description[pt_BR]=Exemplo de tema de impressão de título grande do Grantlee
+Description[sk]=Ukážková veľká tlačová téma grantlee
+Description[sr]=Пример великог наслова, Грантлијева тема за штампање
+Description[sr@ijekavian]=Пример великог наслова, Грантлијева тема за штампање
+Description[sr@ijekavianlatin]=Primer velikog naslova, Grantleejeva tema za štampanje
+Description[sr@latin]=Primer velikog naslova, Grantleejeva tema za štampanje
+Description[uk]=Приклад великого заголовка у темі для друку grantlee
+Description[x-test]=xxExample big title grantlee printing themexx

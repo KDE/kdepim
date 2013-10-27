@@ -20,7 +20,7 @@
 
 
 #include "knoteconfigdialog.h"
-#include "knote.h"
+#include "notes/knote.h"
 #include "print/knoteprintselectthemecombobox.h"
 #include "knotesglobalconfig.h"
 
@@ -435,6 +435,7 @@ void KNotePrintConfig::save()
 
 void KNotePrintConfig::load()
 {
+    //Nothing it's done in KNotePrintSelectThemeComboBox directly
 }
 
 

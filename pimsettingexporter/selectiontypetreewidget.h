@@ -33,12 +33,16 @@ public:
 
     QHash<Utils::AppsType, Utils::importExportParameters> storedType() const;
 
+    void selectAllItems();
+    void unSelectAllItems();
 private:
     enum ActionType {
         action = Qt::UserRole + 1
     };
 
     void initialize();
+    void setSelectItems(bool b);
+    void changeState(QTreeWidgetItem *item, bool b);
     void createSubItem(QTreeWidgetItem *parent, Utils::StoredType type);
 
     Utils::importExportParameters typeChecked(QTreeWidgetItem *parent) const;

@@ -2,6 +2,7 @@
   This file is part of Kontact.
 
   Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2013 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,16 +30,14 @@
 #include <KViewStateMaintainer>
 
 namespace Akonadi {
-  class EntityTreeModel;
-  class ChangeRecorder;
-  class ETMViewStateSaver;
+class ETMViewStateSaver;
 }
 
-class KCheckableProxyModel;
-
 class QCheckBox;
-class QTreeView;
-class QItemSelectionModel;
+
+namespace MailCommon {
+class CheckedCollectionWidget;
+}
 
 class KCMKMailSummary : public KCModule
 {
@@ -60,12 +59,8 @@ class KCMKMailSummary : public KCModule
     void loadFolders();
     void storeFolders();
 
-    QTreeView *mFolderView;
+    MailCommon::CheckedCollectionWidget *mCheckedCollectionWidget;
     QCheckBox *mFullPath;
-    QItemSelectionModel *mSelectionModel;
-    Akonadi::EntityTreeModel *mModel;
-    Akonadi::ChangeRecorder *mChangeRecorder;
-    KCheckableProxyModel *mCheckProxy;
     KViewStateMaintainer<Akonadi::ETMViewStateSaver> *mModelState;
 };
 

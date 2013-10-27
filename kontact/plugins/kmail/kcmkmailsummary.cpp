@@ -2,6 +2,7 @@
   This file is part of Kontact.
 
   Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2013 Laurent Montel <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,10 +25,13 @@
 
 #include "kcmkmailsummary.h"
 
+#include "mailcommon/folderdialog/checkedcollectionwidget.h"
+
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/ETMViewStateSaver>
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/CollectionFilterProxyModel>
+#include <KRecursiveFilterProxyModel>
 
 #include <KMime/KMimeMessage>
 
@@ -38,6 +42,7 @@
 #include <KDebug>
 #include <KDialog>
 #include <KLocale>
+#include <KLineEdit>
 
 #include <QCheckBox>
 #include <QTreeView>
@@ -57,7 +62,7 @@ KCMKMailSummary::KCMKMailSummary( const KComponentData &inst, QWidget *parent )
 {
   initGUI();
 
-  connect( mFolderView, SIGNAL(clicked(QModelIndex)),
+  connect( mCheckedCollectionWidget->folderTreeView(), SIGNAL(clicked(QModelIndex)),
            SLOT(modified()) );
   connect( mFullPath, SIGNAL(toggled(bool)), SLOT(modified()) );
 
@@ -87,8 +92,8 @@ void KCMKMailSummary::initGUI()
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( 0 );
 
-  mFolderView = new QTreeView( this );
-  mFolderView->setEditTriggers( QAbstractItemView::NoEditTriggers );
+  mCheckedCollectionWidget = new MailCommon::CheckedCollectionWidget;
+
   mFullPath = new QCheckBox( i18n( "Show full path for folders" ), this );
   mFullPath->setToolTip(
     i18nc( "@info:tooltip", "Show full path for each folder" ) );
@@ -97,38 +102,17 @@ void KCMKMailSummary::initGUI()
            "Enable this option if you want to see the full path "
            "for each folder listed in the summary. If this option is "
            "not enabled, then only the base folder path will be shown." ) );
-  layout->addWidget( mFolderView );
+  layout->addWidget( mCheckedCollectionWidget );
   layout->addWidget( mFullPath );
 }
 
 void KCMKMailSummary::initFolders()
 {
-  // Create a new change recorder.
-  mChangeRecorder = new Akonadi::ChangeRecorder( this );
-  mChangeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
-
-  mModel = new Akonadi::EntityTreeModel( mChangeRecorder, this );
-  // Set the model to show only collections, not items.
-  mModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::NoItemPopulation );
-
-  Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel( this );
-  mimeTypeProxy->setExcludeVirtualCollections( true );
-  mimeTypeProxy->addMimeTypeFilters( QStringList() << KMime::Message::mimeType() );
-  mimeTypeProxy->setSourceModel( mModel );
-
-  // Create the Check proxy model.
-  mSelectionModel = new QItemSelectionModel( mimeTypeProxy );
-  mCheckProxy = new KCheckableProxyModel( this );
-  mCheckProxy->setSelectionModel( mSelectionModel );
-  mCheckProxy->setSourceModel( mimeTypeProxy );
-
-  mFolderView->setModel( mCheckProxy );
-
   KSharedConfigPtr _config = KSharedConfig::openConfig( QLatin1String("kcmkmailsummaryrc") );
 
   mModelState =
     new KViewStateMaintainer<Akonadi::ETMViewStateSaver>( _config->group( "CheckState" ), this );
-  mModelState->setSelectionModel( mSelectionModel );
+  mModelState->setSelectionModel( mCheckedCollectionWidget->selectionModel() );
 }
 
 void KCMKMailSummary::loadFolders()

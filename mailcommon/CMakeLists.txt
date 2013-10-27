@@ -100,6 +100,7 @@ set(libmailcommon_SRCS
   folder/entitycollectionorderproxymodel.cpp
   folderdialog/selectmulticollectionwidget.cpp
   folderdialog/selectmulticollectiondialog.cpp
+  folderdialog/checkedcollectionwidget.cpp
   job/jobscheduler.cpp
   job/folderjob.cpp
   job/expirejob.cpp

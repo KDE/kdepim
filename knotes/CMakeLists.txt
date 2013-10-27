@@ -29,6 +29,7 @@ set(libknotesprivate_lib_SRCS
     network/knotesnetrecv.cpp
     network/knotesnetsend.cpp
     network/knotehostdialog.cpp
+    widgets/knotesselectnoteswidget.cpp
 )
 
 configure_file(settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg )
@@ -48,8 +49,15 @@ set_target_properties(knotesprivate
 install(TARGETS knotesprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 
-set(knotes_SRCS main.cpp knoteskeydialog.cpp knotestray.cpp application.cpp knotesapp.cpp print/knoteprintselectednotesdialog.cpp 
-                knote.cpp knotebutton.cpp )
+set(knotes_SRCS main.cpp 
+                knoteskeydialog.cpp 
+                knotestray.cpp 
+                application.cpp 
+                knotesapp.cpp 
+                print/knoteprintselectednotesdialog.cpp 
+                notes/knote.cpp 
+                notes/knotebutton.cpp 
+)
 
 
 qt4_add_dbus_adaptor(knotes_SRCS org.kde.KNotes.xml knotesapp.h KNotesApp )

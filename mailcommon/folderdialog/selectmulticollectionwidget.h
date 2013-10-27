@@ -22,12 +22,8 @@
 #include <Akonadi/Collection>
 #include <QModelIndex>
 
-class QItemSelectionModel;
-class KRecursiveFilterProxyModel;
-class QTreeView;
-class KCheckableProxyModel;
-
 namespace MailCommon {
+class CheckedCollectionWidget;
 class SelectMultiCollectionWidget : public QWidget
 {
     Q_OBJECT
@@ -40,16 +36,12 @@ public:
 
 private Q_SLOTS:
     void slotCollectionsInserted(const QModelIndex &parent, int start, int end);
-    void slotSetCollectionFilter(const QString &filter);
 
 private:
     void initialize();
     void updateStatus(const QModelIndex &parent);
+    MailCommon::CheckedCollectionWidget *mCheckedCollectionWidget;
     QList<Akonadi::Collection::Id> mListCollection;
-    QTreeView *mFolderView;
-    QItemSelectionModel *mSelectionModel;
-    KCheckableProxyModel *mCheckProxy;
-    KRecursiveFilterProxyModel *mCollectionFilter;
 };
 }
 

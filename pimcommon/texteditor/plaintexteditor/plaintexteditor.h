@@ -40,6 +40,9 @@ public:
     bool checkSpellingEnabled() const;
     void setCheckSpellingEnabled( bool check );
 
+    bool spellCheckingSupport() const;
+    void setSpellCheckingSupport( bool check );
+
     void setSpellCheckingLanguage(const QString &_language);
     const QString& spellCheckingLanguage() const;
 

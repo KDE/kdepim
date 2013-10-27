@@ -1,14 +1,69 @@
 [Global]
 IconName=kmail
 Comment=MessageViewer
+Comment[de]=Nachrichtenanzeige
+Comment[nl]=MessageViewer
+Comment[pt]=Visualizador da Mensagem
+Comment[pt_BR]=Visualizador de mensagens
+Comment[sk]=Prehliadač správ
+Comment[sr]=Приказивач порука
+Comment[sr@ijekavian]=Приказивач порука
+Comment[sr@ijekavianlatin]=Prikazivač poruka
+Comment[sr@latin]=Prikazivač poruka
+Comment[uk]=Перегляд повідомлень
+Comment[x-test]=xxMessageViewerxx
 
 [Event/adblock-list-download-done]
 Name=New Ad-Block list download done
+Name[de]=Das Herunterladen der neuen Werbefilterliste ist abgeschlossen
+Name[nl]=Downloaden van nieuwe lijst voor Ad-Block gedaan
+Name[pt]=Transferência da nova lista de bloqueios completa
+Name[pt_BR]=Download da nova lista de bloqueio de anúncios concluído
+Name[sk]=Nový zoznam Ad-Blocku hotový
+Name[sr]=Завршено преузимање нове Адблокове листе
+Name[sr@ijekavian]=Завршено преузимање нове Адблокове листе
+Name[sr@ijekavianlatin]=Završeno preuzimanje nove AdBlockove liste
+Name[sr@latin]=Završeno preuzimanje nove AdBlockove liste
+Name[uk]=Завершено отримання нового списку блокування реклами
+Name[x-test]=xxNew Ad-Block list download donexx
 Comment=New Ad-Block list download done
+Comment[de]=Das Herunterladen der neuen Werbefilterliste ist abgeschlossen
+Comment[nl]=Downloaden van nieuwe lijst voor Ad-Block gedaan
+Comment[pt]=A transferência da nova lista de bloqueios de anúncios terminou
+Comment[pt_BR]=Download da nova lista de bloqueio de anúncios concluído
+Comment[sk]=Nový zoznam Ad-Blocku hotový
+Comment[sr]=Завршено преузимање нове Адблокове листе
+Comment[sr@ijekavian]=Завршено преузимање нове Адблокове листе
+Comment[sr@ijekavianlatin]=Završeno preuzimanje nove AdBlockove liste
+Comment[sr@latin]=Završeno preuzimanje nove AdBlockove liste
+Comment[uk]=Завершено отримання нового списку блокування реклами
+Comment[x-test]=xxNew Ad-Block list download donexx
 Action=Popup
 
 [Event/adblock-list-download-failed]
 Name=New Ad-Block list download failed
+Name[de]=Das Herunterladen der neuen Werbefilterliste ist fehlgeschlagen
+Name[nl]=Downloaden van nieuwe lijst voor Ad-Block is mislukt
+Name[pt]=Transferência da nova lista de bloqueios mal-sucedida
+Name[pt_BR]=Falha no download da nova lista de bloqueio de anúncios
+Name[sk]=Nový zoznam Ad-Blocku zlyhal
+Name[sr]=Пропало преузимање нове Адблокове листе
+Name[sr@ijekavian]=Пропало преузимање нове Адблокове листе
+Name[sr@ijekavianlatin]=Propalo preuzimanje nove AdBlockove liste
+Name[sr@latin]=Propalo preuzimanje nove AdBlockove liste
+Name[uk]=Не вдалося отримати новий список блокування реклами
+Name[x-test]=xxNew Ad-Block list download failedxx
 Comment=New Ad-Block list download failed
+Comment[de]=Das Herunterladen der neuen Werbefilterliste ist fehlgeschlagen
+Comment[nl]=Downloaden van nieuwe lijst voor Ad-Block is mislukt
+Comment[pt]=A transferência da nova lista de bloqueios de anúncios foi mal-sucedida
+Comment[pt_BR]=Falha no download da nova lista de bloqueio de anúncios
+Comment[sk]=Nový zoznam Ad-Blocku zlyhal
+Comment[sr]=Пропало преузимање нове Адблокове листе
+Comment[sr@ijekavian]=Пропало преузимање нове Адблокове листе
+Comment[sr@ijekavianlatin]=Propalo preuzimanje nove AdBlockove liste
+Comment[sr@latin]=Propalo preuzimanje nove AdBlockove liste
+Comment[uk]=Не вдалося отримати новий список блокування реклами
+Comment[x-test]=xxNew Ad-Block list download failedxx
 Action=Popup
 

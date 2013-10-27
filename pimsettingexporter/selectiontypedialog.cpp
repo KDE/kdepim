@@ -20,20 +20,32 @@
 
 #include <KLocale>
 #include <QHBoxLayout>
+#include <QPushButton>
 
 SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
-    :KDialog(parent)
+    : KDialog(parent)
 {
     setCaption( i18n( "Select Type" ) );
     setButtons( Ok|Cancel );
     setDefaultButton( Ok );
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
-    QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
+    QVBoxLayout *mainLayout = new QVBoxLayout( mainWidget );
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
     mSelectionTreeWidget = new SelectionTypeTreeWidget(this);
     mainLayout->addWidget(mSelectionTreeWidget);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    mSelectAll = new QPushButton(i18n("Select All"));
+    connect(mSelectAll, SIGNAL(clicked()), this, SLOT(slotSelectAll()));
+    hbox->addWidget(mSelectAll);
+
+    mUnselectAll = new QPushButton(i18n("Unselect All"));
+    connect(mUnselectAll, SIGNAL(clicked()), this, SLOT(slotUnselectAll()));
+    hbox->addWidget(mUnselectAll);
+    mainLayout->addLayout(hbox);
+
     setMainWidget(mainWidget);
     readConfig();
 }
@@ -62,5 +74,16 @@ QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeDialog::store
 {
     return mSelectionTreeWidget->storedType();
 }
+
+void SelectionTypeDialog::slotSelectAll()
+{
+    mSelectionTreeWidget->selectAllItems();
+}
+
+void SelectionTypeDialog::slotUnselectAll()
+{
+    mSelectionTreeWidget->unSelectAllItems();
+}
+
 
 #include "selectiontypedialog.moc"

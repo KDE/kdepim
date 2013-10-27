@@ -42,7 +42,7 @@ ImportBlogiloJob::~ImportBlogiloJob()
 
 void ImportBlogiloJob::start()
 {
-    Q_EMIT title(i18n("Start import knotes settings..."));
+    Q_EMIT title(i18n("Start import blogilo settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config)
         restoreConfig();

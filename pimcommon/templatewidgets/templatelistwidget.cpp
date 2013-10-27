@@ -113,6 +113,28 @@ public:
         }
     }
 
+    void slotDuplicate()
+    {
+        QListWidgetItem *item = q->currentItem();
+        if (item) {
+            QStringList name;
+            for ( int i = 0; i < q->count(); ++i ) {
+                name.append(q->item(i)->text());
+            }
+            QString templateName = item->text() + QString::fromLatin1(" (%1)");
+            QString newName;
+            int i = 1;
+            do {
+                newName = templateName.arg(i);
+                i++;
+            } while(name.contains(newName));
+
+            const QString templateScript = item->data(TemplateListWidget::Text).toString();
+            createListWidgetItem(newName, templateScript, false);
+            dirty = true;
+        }
+    }
+
     void slotImportTemplates()
     {
         const QString templateFile = KFileDialog::getOpenFileName();
@@ -148,6 +170,7 @@ public:
             const bool defaultTemplate = lstSelectedItems.first()->data(TemplateListWidget::DefaultTemplate).toBool();
             if (lstSelectedItems.count() == 1) {
                 menu->addAction( defaultTemplate ? i18n("Show...") : i18n("Modify..."), q, SLOT(slotModify()));
+                menu->addAction( i18n("Duplicate"), q, SLOT(slotDuplicate()));
             }
             if (lstSelectedItems.count() == 1 && !defaultTemplate) {
                 menu->addAction( i18n("Remove"), q, SLOT(slotRemove()));

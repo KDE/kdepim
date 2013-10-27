@@ -725,13 +725,14 @@ void ImportMailJob::restoreConfig()
               << QLatin1String("akonadi_newmailnotifier_agent.notifyrc")
               << QLatin1String("akonadi_maildispatcher_agent.notifyrc")
               << QLatin1String("akonadi_folderarchive_agent.notifyrc")
-              << QLatin1String("akonadi_followupreminder_agent.notifyrc");
+              << QLatin1String("akonadi_followupreminder_agent.notifyrc")
+              << QLatin1String("messageviewer.notifyrc");
 
     //We can't merge it.
     Q_FOREACH (const QString &filename, lstNotify) {
         const KArchiveEntry* notifyentry  = mArchiveDirectory->entry(Utils::configsPath() + filename);
         if ( notifyentry &&  notifyentry->isFile()) {
-            const KArchiveFile* notify = static_cast<const KArchiveFile*>(notifyentry);
+            const KArchiveFile *notify = static_cast<const KArchiveFile*>(notifyentry);
             const QString notifyrc = KStandardDirs::locateLocal( "config",  filename);
             if (QFile(notifyrc).exists()) {
                 if (overwriteConfigMessageBox(filename)) {
@@ -755,19 +756,26 @@ void ImportMailJob::restoreConfig()
                 QString autocorrectionPath = KGlobal::dirs()->saveLocation("data", QLatin1String("autocorrect/"), false);
                 if (QFile(autocorrectionPath).exists()) {
                     if (overwriteConfigMessageBox(name)) {
-                        copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
+                        copyToFile(autocorrectionFile, autocorrectionPath + QLatin1Char('/') + name, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                     }
                 } else {
                     autocorrectionPath = KGlobal::dirs()->saveLocation("data", QLatin1String("autocorrect/"), true);
-                    copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
+                    copyToFile(autocorrectionFile, autocorrectionPath + QLatin1Char('/') + name, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                 }
             }
         }
     }
     const KArchiveEntry* kmail2Entry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "kmail2/adblockrules_local" ) );
     if (kmail2Entry && kmail2Entry->isFile()) {
-        const KArchiveEntry *entry = static_cast<const KArchiveEntry*>(kmail2Entry);
-        copyToDirectory(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2/adblockrules_local" )));
+        const KArchiveFile *entry = static_cast<const KArchiveFile*>(kmail2Entry);
+        const QString adblockPath = KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2") + QLatin1String("/adblockrules_local"), false);
+        if (QFile(adblockPath).exists()) {
+            if (overwriteConfigMessageBox(QLatin1String("adblockrules_local"))) {
+                copyToFile(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2")) + QLatin1String("/adblockrules_local"), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String( "kmail2/"));
+            }
+        } else {
+            copyToFile(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2")) + QLatin1String("/adblockrules_local"), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String( "kmail2/"));
+        }
     }
 
     const KArchiveEntry* themeEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "messageviewer/themes/" ) );
@@ -892,10 +900,10 @@ void ImportMailJob::restoreAkonadiDb()
     Q_EMIT info(i18n("Restore Akonadi Database..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
 
-    const KArchiveEntry* akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
+    const KArchiveEntry *akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
     if (akonadiDataBaseEntry && akonadiDataBaseEntry->isFile()) {
 
-        const KArchiveFile* akonadiDataBaseFile = static_cast<const KArchiveFile*>(akonadiDataBaseEntry);
+        const KArchiveFile *akonadiDataBaseFile = static_cast<const KArchiveFile*>(akonadiDataBaseEntry);
 
         KTemporaryFile tmp;
         tmp.open();

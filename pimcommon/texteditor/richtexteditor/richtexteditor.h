@@ -39,6 +39,9 @@ public:
     void setSearchSupport(bool b);
     bool searchSupport() const;
 
+    bool spellCheckingSupport() const;
+    void setSpellCheckingSupport( bool check );
+
     void setSpellCheckingConfigFileName(const QString &_fileName);
 
     bool checkSpellingEnabled() const;

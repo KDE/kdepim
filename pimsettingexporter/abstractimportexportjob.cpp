@@ -209,10 +209,12 @@ void AbstractImportExportJob::copyToDirectory(const KArchiveEntry *entry, const 
 void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const QString &dest, const QString &filename, const QString &prefix)
 {
     QDir dir(mTempDirName);
-    dir.mkdir(prefix);
-
     const QString copyToDirName(mTempDirName + QLatin1Char('/') + prefix);
-    //qDebug()<<" copyToDirName"<<copyToDirName;
+    const bool created = dir.mkpath(copyToDirName);
+    if (!created) {
+        qDebug()<<" directory :"<<prefix<<" not created";
+    }
+
     archivefile->copyTo(copyToDirName);
     QFile file;
     file.setFileName(copyToDirName + QLatin1Char('/') + filename);
