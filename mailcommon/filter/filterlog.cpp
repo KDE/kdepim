@@ -214,6 +214,7 @@ bool FilterLog::saveToFile( const QString &fileName ) const
     fchmod( file.handle(), MessageViewer::Util::getWritePermissions() );
 
     file.write( "<html>\n<body>\n" );
+    file.write( "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n");
     foreach ( const QString &entry, d->mLogEntries ) {
         const QString line = QLatin1String( "<p>" ) + entry + QLatin1String( "</p>" ) + QLatin1Char( '\n' );
         file.write( line.toLocal8Bit() );
