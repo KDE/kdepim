@@ -206,4 +206,14 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     }
 }
 
+void SelectionTypeTreeWidget::selectAllItems()
+{
+
+}
+
+void SelectionTypeTreeWidget::unSelectAllItems()
+{
+
+}
+
 #include "selectiontypetreewidget.moc"

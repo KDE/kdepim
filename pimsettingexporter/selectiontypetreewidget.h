@@ -33,6 +33,8 @@ public:
 
     QHash<Utils::AppsType, Utils::importExportParameters> storedType() const;
 
+    void selectAllItems();
+    void unSelectAllItems();
 private:
     enum ActionType {
         action = Qt::UserRole + 1

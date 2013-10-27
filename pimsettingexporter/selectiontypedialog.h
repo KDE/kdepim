@@ -31,10 +31,17 @@ public:
     ~SelectionTypeDialog();
 
     QHash<Utils::AppsType, Utils::importExportParameters> storedType() const;
+
+private Q_SLOTS:
+    void slotSelectAll();
+    void slotUnselectAll();
+
 private:
     void readConfig();
     void writeConfig();
     SelectionTypeTreeWidget *mSelectionTreeWidget;
+    QPushButton *mSelectAll;
+    QPushButton *mUnselectAll;
 };
 
 #endif // SELECTIONTYPEDIALOG_H
