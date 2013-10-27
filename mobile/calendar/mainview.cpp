@@ -75,7 +75,6 @@
 #include <ksystemtimezone.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>
-#include <incidenceeditor-ng/groupwareintegration.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <libkdepimdbusinterfaces/reminderclient.h>
 
@@ -194,11 +193,7 @@ void MainView::doDelayedInit()
   engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar.data() ) ) );
   Akonadi::FreeBusyManager::self()->setCalendar( m_calendar );
 
-  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    // TODO_SERGIO
-    //IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new GroupwareUiDelegate );
-    IncidenceEditorNG::GroupwareIntegration::activate( m_calendar );
-  }
+  // TODO: set a groupware delegate to handle counter proposals
 
   m_changer = new Akonadi::IncidenceChanger( this );
 

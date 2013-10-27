@@ -36,8 +36,6 @@
 #include "memorycalendarmemento.h"
 #include "syncitiphandler.h"
 
-#include <incidenceeditor-ng/groupwareintegration.h>
-
 #include <messageviewer/settings/globalsettings.h>
 #include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
@@ -758,10 +756,6 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     bool saveFile( const QString &receiver, const QString &iCal, const QString &type ) const
     {
-      if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-        IncidenceEditorNG::GroupwareIntegration::activate();
-      }
-
       // This will block. There's no way to make it async without refactoring the memento mechanism
       SyncItipHandler *itipHandler = new SyncItipHandler( receiver, iCal, type );
 
