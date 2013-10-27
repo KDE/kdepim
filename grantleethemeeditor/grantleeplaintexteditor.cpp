@@ -30,6 +30,7 @@ GrantleePlainTextEditor::GrantleePlainTextEditor(QWidget *parent)
     : PimCommon::PlainTextEditor(parent)
 {
     mHtmlHighlighter = new KPIMTextEdit::HtmlHighlighter(document());
+    setSpellCheckingSupport(false);
     initCompleter();
 }
 
