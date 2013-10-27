@@ -43,7 +43,8 @@ class PlainTextEditor::PlainTextEditorPrivate
 public:
     PlainTextEditorPrivate()
         : hasSearchSupport(true),
-          customPalette(false)
+          customPalette(false),
+          hasSpellCheckingSupport(true)
     {
     }
     ~PlainTextEditorPrivate()
@@ -54,6 +55,7 @@ public:
     QTextDocumentFragment originalDoc;
     bool hasSearchSupport;
     bool customPalette;
+    bool hasSpellCheckingSupport;
 };
 
 PlainTextEditor::PlainTextEditor(QWidget *parent)
@@ -107,7 +109,7 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
             popup->addSeparator();
         }
 
-        if( !isReadOnly() ) {
+        if( !isReadOnly() && d->hasSearchSupport) {
             QAction *spellCheckAction = popup->addAction( KIcon( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
             if (emptyDocument)
                 spellCheckAction->setEnabled(false);
@@ -167,6 +169,16 @@ void PlainTextEditor::setSearchSupport(bool b)
 bool PlainTextEditor::searchSupport() const
 {
     return d->hasSearchSupport;
+}
+
+bool PlainTextEditor::spellCheckingSupport() const
+{
+    return d->hasSpellCheckingSupport;
+}
+
+void PlainTextEditor::setSpellCheckingSupport( bool check )
+{
+    d->hasSpellCheckingSupport = check;
 }
 
 void PlainTextEditor::wheelEvent( QWheelEvent *event )

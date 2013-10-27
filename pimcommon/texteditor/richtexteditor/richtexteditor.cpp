@@ -46,7 +46,8 @@ public:
         : highLighter(0),
           speller(0),
           hasSearchSupport(true),
-          customPalette(false)
+          customPalette(false),
+          hasSpellCheckingSupport(true)
     {
         KConfig sonnetKConfig(QLatin1String("sonnetrc"));
         KConfigGroup group(&sonnetKConfig, "Spelling");
@@ -66,6 +67,7 @@ public:
     bool hasSearchSupport;
     bool customPalette;
     bool checkSpellingEnabled;
+    bool hasSpellCheckingSupport;
 };
 
 
@@ -121,7 +123,7 @@ void RichTextEditor::defaultPopupMenu(const QPoint &pos)
             popup->addSeparator();
         }
 
-        if( !isReadOnly() ) {
+        if( !isReadOnly() && d->hasSpellCheckingSupport) {
             QAction *spellCheckAction = popup->addAction( KIcon( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
             if (emptyDocument)
                 spellCheckAction->setEnabled(false);
@@ -195,6 +197,16 @@ void RichTextEditor::setSearchSupport(bool b)
 bool RichTextEditor::searchSupport() const
 {
     return d->hasSearchSupport;
+}
+
+bool RichTextEditor::spellCheckingSupport() const
+{
+    return d->hasSpellCheckingSupport;
+}
+
+void RichTextEditor::setSpellCheckingSupport( bool check )
+{
+    d->hasSpellCheckingSupport = check;
 }
 
 void RichTextEditor::addExtraMenuEntry(QMenu *menu)
@@ -343,7 +355,7 @@ void RichTextEditor::setHighlighter(Sonnet::Highlighter *_highLighter)
 
 void RichTextEditor::focusInEvent( QFocusEvent *event )
 {
-    if ( d->checkSpellingEnabled && !isReadOnly() && !d->highLighter )
+    if ( d->checkSpellingEnabled && !isReadOnly() && !d->highLighter && d->hasSpellCheckingSupport)
         createHighlighter();
 
     QTextEdit::focusInEvent( event );
