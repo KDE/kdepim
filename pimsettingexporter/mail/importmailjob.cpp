@@ -756,11 +756,11 @@ void ImportMailJob::restoreConfig()
                 QString autocorrectionPath = KGlobal::dirs()->saveLocation("data", QLatin1String("autocorrect/"), false);
                 if (QFile(autocorrectionPath).exists()) {
                     if (overwriteConfigMessageBox(name)) {
-                        copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
+                        copyToFile(autocorrectionFile, autocorrectionPath + QLatin1Char('/') + name, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                     }
                 } else {
                     autocorrectionPath = KGlobal::dirs()->saveLocation("data", QLatin1String("autocorrect/"), true);
-                    copyToFile(autocorrectionFile, autocorrectionPath, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
+                    copyToFile(autocorrectionFile, autocorrectionPath + QLatin1Char('/') + name, name, Utils::dataPath() + QLatin1String( "autocorrect/" ));
                 }
             }
         }
@@ -768,7 +768,7 @@ void ImportMailJob::restoreConfig()
     const KArchiveEntry* kmail2Entry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "kmail2/adblockrules_local" ) );
     if (kmail2Entry && kmail2Entry->isFile()) {
         const KArchiveFile *entry = static_cast<const KArchiveFile*>(kmail2Entry);
-        copyToFile(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2/")), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String( "kmail2/"));
+        copyToFile(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2")) + QLatin1String("/adblockrules_local"), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String( "kmail2/"));
     }
 
     const KArchiveEntry* themeEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "messageviewer/themes/" ) );
