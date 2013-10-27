@@ -186,6 +186,26 @@ KCal::CalendarResources * CalendarManager::calendar()
 #endif
 #endif
 
+static bool occurredAlready( const Incidence::Ptr &incidence )
+{
+  Q_ASSERT( incidence );
+  const KDateTime now = KDateTime::currentLocalDateTime();
+  const QDate today = now.date();
+
+  if ( incidence->recurs() ) {
+    const KDateTime nextDate = incidence->recurrence()->getNextDateTime( now );
+
+    return !nextDate.isValid();
+  } else {
+    const KDateTime incidenceDate = incidence->dateTime( Incidence::RoleDisplayEnd );
+    if ( incidenceDate.isValid() ) {
+      return incidence->allDay() ? ( incidenceDate.date() < today ) : ( incidenceDate < now );
+    }
+  }
+
+  return false;
+}
+
 class KMInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
 {
   public:
@@ -760,17 +780,18 @@ class UrlHandler : public Interface::BodyPartURLHandler
       KDateTime now = KDateTime::currentLocalDateTime();
       QDate today = now.date();
       Incidence::IncidenceType type = Incidence::TypeUnknown;
+      const bool occurred = occurredAlready( incidence );
       if ( incidence->type() == Incidence::TypeEvent ) {
         type = Incidence::TypeEvent;
         Event::Ptr event = incidence.staticCast<Event>();
         if ( !event->allDay() ) {
-          if ( event->dtEnd() < now ) {
+          if ( occurred ) {
             warnStr = i18n( "\"%1\" occurred already.", event->summary() );
           } else if ( event->dtStart() <= now && now <= event->dtEnd() ) {
             warnStr = i18n( "\"%1\" is currently in-progress.", event->summary() );
           }
         } else {
-          if ( event->dtEnd().date() < today ) {
+          if ( occurred ) {
             warnStr = i18n( "\"%1\" occurred already.", event->summary() );
           } else if ( event->dtStart().date() <= today && today <= event->dtEnd().date() ) {
             warnStr = i18n( "\"%1\", happening all day today, is currently in-progress.",
