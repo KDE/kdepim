@@ -140,7 +140,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Identity"));
-        item->setCheckState(0, Qt::Unchecked);
+        item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
@@ -148,7 +148,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Mails"));
-        item->setCheckState(0, Qt::Unchecked);
+        item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
@@ -156,7 +156,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Mail Transport"));
-        item->setCheckState(0, Qt::Unchecked);
+        item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
@@ -164,7 +164,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Resources"));
-        item->setCheckState(0, Qt::Unchecked);
+        item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
@@ -172,7 +172,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Config"));
-        item->setCheckState(0, Qt::Unchecked);
+        item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
@@ -180,7 +180,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Akonadi Database"));
-        item->setCheckState(0, Qt::Unchecked);
+        item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
@@ -188,7 +188,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Nepomuk Database"));
-        item->setCheckState(0, Qt::Unchecked);
+        item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }
@@ -196,7 +196,7 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, i18n("Data"));
-        item->setCheckState(0, Qt::Unchecked);
+        item->setCheckState(0, Qt::Checked);
         item->setData(0, action, type);
         break;
     }

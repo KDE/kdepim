@@ -22,7 +22,7 @@
 #include <QHBoxLayout>
 
 SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
-    :KDialog(parent)
+    : KDialog(parent)
 {
     setCaption( i18n( "Select Type" ) );
     setButtons( Ok|Cancel );
