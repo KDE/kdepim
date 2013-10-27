@@ -109,7 +109,7 @@ void PlainTextEditor::contextMenuEvent( QContextMenuEvent *event )
             popup->addSeparator();
         }
 
-        if( !isReadOnly() && d->hasSearchSupport) {
+        if( !isReadOnly() && d->hasSpellCheckingSupport) {
             QAction *spellCheckAction = popup->addAction( KIcon( QLatin1String("tools-check-spelling") ), i18n( "Check Spelling..." ), this, SLOT(slotCheckSpelling()) );
             if (emptyDocument)
                 spellCheckAction->setEnabled(false);
