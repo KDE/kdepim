@@ -145,6 +145,7 @@ void CustomLogWidget::addErrorLogEntry( const QString &log )
 QString CustomLogWidget::toHtml() const
 {
     QString result = QLatin1String("<html>\n<body>\n");
+    result += QLatin1String("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">");
     for (int i=0; i < count(); ++i)  {
         QListWidgetItem *itemWidget = item(i);
         const QString itemText(itemWidget->text());
