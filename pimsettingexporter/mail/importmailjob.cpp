@@ -768,7 +768,14 @@ void ImportMailJob::restoreConfig()
     const KArchiveEntry* kmail2Entry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "kmail2/adblockrules_local" ) );
     if (kmail2Entry && kmail2Entry->isFile()) {
         const KArchiveFile *entry = static_cast<const KArchiveFile*>(kmail2Entry);
-        copyToFile(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2")) + QLatin1String("/adblockrules_local"), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String( "kmail2/"));
+        const QString adblockPath = KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2") + QLatin1String("/adblockrules_local"), false);
+        if (QFile(adblockPath).exists()) {
+            if (overwriteConfigMessageBox(QLatin1String("adblockrules_local"))) {
+                copyToFile(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2")) + QLatin1String("/adblockrules_local"), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String( "kmail2/"));
+            }
+        } else {
+            copyToFile(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2")) + QLatin1String("/adblockrules_local"), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String( "kmail2/"));
+        }
     }
 
     const KArchiveEntry* themeEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "messageviewer/themes/" ) );
