@@ -767,9 +767,8 @@ void ImportMailJob::restoreConfig()
     }
     const KArchiveEntry* kmail2Entry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "kmail2/adblockrules_local" ) );
     if (kmail2Entry && kmail2Entry->isFile()) {
-        const KArchiveEntry *entry = static_cast<const KArchiveEntry*>(kmail2Entry);
-         //FIXME copyToFile
-        //copyToDirectory(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2/adblockrules_local" )));
+        const KArchiveFile *entry = static_cast<const KArchiveFile*>(kmail2Entry);
+        copyToFile(entry, KGlobal::dirs()->saveLocation( "data", QLatin1String( "kmail2/")), QLatin1String("adblockrules_local"), Utils::dataPath() + QLatin1String( "kmail2/"));
     }
 
     const KArchiveEntry* themeEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "messageviewer/themes/" ) );
