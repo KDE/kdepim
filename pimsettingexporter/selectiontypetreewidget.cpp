@@ -208,12 +208,32 @@ void SelectionTypeTreeWidget::createSubItem(QTreeWidgetItem *parent, Utils::Stor
 
 void SelectionTypeTreeWidget::selectAllItems()
 {
-
+    setSelectItems(true);
 }
 
 void SelectionTypeTreeWidget::unSelectAllItems()
 {
+    setSelectItems(false);
+}
 
+void SelectionTypeTreeWidget::setSelectItems(bool b)
+{
+    changeState(mKmailItem, b);
+    changeState(mKalarmItem, b);
+    changeState(mKaddressbookItem, b);
+    changeState(mKorganizerItem, b);
+    changeState(mKjotsItem, b);
+    changeState(mKNotesItem, b);
+    changeState(mAkregatorItem, b);
+    changeState(mBlogiloItem, b);
+
+}
+
+void SelectionTypeTreeWidget::changeState(QTreeWidgetItem *item, bool b)
+{
+    for (int i=0; i < item->childCount(); ++i) {
+        item->child(i)->setCheckState(0, b ? Qt::Checked : Qt::Unchecked);
+    }
 }
 
 #include "selectiontypetreewidget.moc"

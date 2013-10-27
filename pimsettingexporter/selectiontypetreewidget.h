@@ -41,6 +41,8 @@ private:
     };
 
     void initialize();
+    void setSelectItems(bool b);
+    void changeState(QTreeWidgetItem *item, bool b);
     void createSubItem(QTreeWidgetItem *parent, Utils::StoredType type);
 
     Utils::importExportParameters typeChecked(QTreeWidgetItem *parent) const;
