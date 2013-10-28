@@ -75,3 +75,4 @@ install(FILES
 ########### install files ###############
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
+add_subdirectory(tests)
