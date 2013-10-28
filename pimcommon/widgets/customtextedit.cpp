@@ -42,6 +42,11 @@ public:
     Sonnet::Speller* speller;
 };
 
+CustomTextEdit::CustomTextEdit(QWidget *parent)
+    : KTextEdit(parent), d(new Private(QString()))
+{
+    connect(this, SIGNAL(aboutToShowContextMenu(QMenu*)), this, SLOT(insertLanguageMenu(QMenu*)));
+}
 
 CustomTextEdit::CustomTextEdit(const QString &configName, QWidget *parent)
     : KTextEdit(parent), d(new Private(configName))
