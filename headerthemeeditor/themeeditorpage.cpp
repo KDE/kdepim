@@ -253,19 +253,21 @@ EditorPage *ThemeEditorPage::createExtraPage(const QString &filename)
     return extraPage;
 }
 
-void ThemeEditorPage::storeTheme()
+void ThemeEditorPage::storeTheme(const QString &directory)
 {
+    const QString themeDirectory = directory.isEmpty() ? projectDirectory() : directory;
     //set default page filename before saving
     mEditorPage->setPageFileName(mDesktopPage->filename());
-    mEditorPage->saveTheme(projectDirectory());
+    mEditorPage->saveTheme(themeDirectory);
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->saveTheme(projectDirectory());
+        page->saveTheme(themeDirectory);
     }
-    mDesktopPage->saveTheme(projectDirectory());
+    mDesktopPage->saveTheme(themeDirectory);
     mThemeSession->setMainPageFileName(mDesktopPage->filename());
-    mThemeSession->writeSession();
-    setChanged(false);
+    mThemeSession->writeSession(directory);
+    if (directory.isEmpty())
+        setChanged(false);
 }
 
 bool ThemeEditorPage::saveTheme(bool withConfirmation)
@@ -313,5 +315,9 @@ QString ThemeEditorPage::projectDirectory() const
     return mThemeSession->projectDirectory();
 }
 
+void ThemeEditorPage::saveThemeAs(const QString &directory)
+{
+    storeTheme(directory);
+}
 
 #include "themeeditorpage.moc"

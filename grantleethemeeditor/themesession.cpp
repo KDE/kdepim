@@ -85,9 +85,9 @@ bool ThemeSession::loadSession(const QString &session)
     }
 }
 
-void ThemeSession::writeSession()
+void ThemeSession::writeSession(const QString &directory)
 {
-    KConfig config(mProjectDirectory + QDir::separator() + QLatin1String("theme.themerc"));
+    KConfig config((directory.isEmpty() ? mProjectDirectory : directory) + QDir::separator() + QLatin1String("theme.themerc"));
     KConfigGroup global = config.group(QLatin1String("Global"));
     global.writeEntry(QLatin1String("path"), mProjectDirectory);
     global.writeEntry(QLatin1String("mainPageName"), mMainPageFileName);

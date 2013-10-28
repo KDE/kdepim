@@ -28,7 +28,7 @@ public:
     ThemeSession(const QString &projectDirectory, const QString &themeTypeName);
     ~ThemeSession();
     bool loadSession(const QString &session);
-    void writeSession();
+    void writeSession(const QString &directory = QString());
 
     QString projectDirectory() const;
 

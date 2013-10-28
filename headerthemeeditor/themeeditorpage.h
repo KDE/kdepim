@@ -35,6 +35,7 @@ public:
     explicit ThemeEditorPage(const QString &projectDir, const QString &themeName, QWidget *parent = 0);
     ~ThemeEditorPage();
 
+    void saveThemeAs(const QString &directory);
     bool saveTheme(bool withConfirmation = true);
     void loadTheme(const QString &filename);
 
@@ -66,7 +67,7 @@ private Q_SLOTS:
 
 private:
     void setChanged(bool b);
-    void storeTheme();
+    void storeTheme(const QString &directory = QString());
     QString projectDirectory() const;
     void createZip(const QString &themeName, KZip *zip);
     EditorPage *createExtraPage(const QString &filename);
