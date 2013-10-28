@@ -71,6 +71,7 @@ install(FILES
     DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter
 )
 
+install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter)
 
 ########### install files ###############
 
