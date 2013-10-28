@@ -85,7 +85,7 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     mLogWidget = new LogWidget(this);
 
     setCentralWidget(mLogWidget);
-    resize( 640, 480 );
+    resize( 800, 600 );
     Akonadi::Control::widgetNeedsAkonadi(this);
     if (!canZipFile) {
         KMessageBox::error(this,i18n("Zip program not found. Install it before to launch this application."),i18n("Zip program not found."));
