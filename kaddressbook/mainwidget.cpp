@@ -441,6 +441,7 @@ void MainWidget::setupGui()
   mItemView = new Akonadi::EntityTreeView();
   mItemView->setObjectName( QLatin1String("ContactView") );
   mItemView->setDefaultPopupMenu( QLatin1String( "akonadi_itemview_contextmenu" ) );
+  mItemView->setAlternatingRowColors(true);
   mMainWidgetSplitter2->addWidget( mItemView );
 
   // the details pane that contains the details view stack and contact switcher
