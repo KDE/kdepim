@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Example big title
 Name[de]=Beispiel mit großem Titel
+Name[kk]=Үлкен атау мысалы
 Name[nl]=Voorbeeld van grote titel
 Name[pt]=Título grande de exemplo
 Name[pt_BR]=Exemplo de título grande
@@ -13,6 +14,7 @@ Name[uk]=Приклад великого заголовка
 Name[x-test]=xxExample big titlexx
 Description=Example big title grantlee printing theme
 Description[de]=Beispiel für Grantlee-Druckstil mit großem Titel
+Description[kk]=Grantlee басып шығару нақыштың үлкен атау мысалы
 Description[nl]=Voorbeeld van grote titel in grantlee afdrukthema
 Description[pt]=Tema de impressão de exemplo do Grantlee com um título grande
 Description[pt_BR]=Exemplo de tema de impressão de título grande do Grantlee
