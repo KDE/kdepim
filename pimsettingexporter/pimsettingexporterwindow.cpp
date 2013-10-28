@@ -47,6 +47,8 @@
 #include "utils.h"
 #include "archivestorage.h"
 
+#include "backupfilestructureinfodialog.h"
+
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/filter/filtermanager.h>
 
@@ -112,6 +114,9 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
 
     KAction *saveLogAction = ac->addAction(QLatin1String("save_log"), this, SLOT(slotSaveLog()));
     saveLogAction->setText(i18n("Save log..."));
+
+    KAction *archiveStructureInfo = ac->addAction(QLatin1String("show_structure_info"), this, SLOT(slotShowStructureInfos()));
+    archiveStructureInfo->setText(i18n("Show Archive Structure Informations..."));
 
     KStandardAction::quit( this, SLOT(close()), ac );
 }
@@ -351,6 +356,13 @@ bool PimSettingExporterWindow::canZip() const
         return false;
     }
     return true;
+}
+
+void PimSettingExporterWindow::slotShowStructureInfos()
+{
+    QPointer<BackupFileStructureInfoDialog> dlg = new BackupFileStructureInfoDialog(this);
+    dlg->exec();
+    delete dlg;
 }
 
 #include "pimsettingexporterwindow.moc"

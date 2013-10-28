@@ -21,6 +21,12 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KLocale>
+#include <KStandardDirs>
+
+#include <QHBoxLayout>
+#include <QFile>
+#include <QLabel>
+#include <QDebug>
 
 BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
     : KDialog(parent)
@@ -29,19 +35,55 @@ BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
     setButtons( Close );
     setDefaultButton( Close );
     setModal( true );
+
+    QWidget *w = new QWidget;
+
+    QVBoxLayout *lay = new QVBoxLayout;
+    w->setLayout(lay);
+
+    QLabel *lab = new QLabel(i18n("Backup Archive Structure:"));
+    lay->addWidget(lab);
+
     mEditor = new PimCommon::PlainTextEditorWidget;
     mEditor->setReadOnly(true);
-    setMainWidget(mEditor);
+    lay->addWidget(mEditor);
+    setMainWidget(w);
     loadStructure();
+    readConfig();
 }
 
 BackupFileStructureInfoDialog::~BackupFileStructureInfoDialog()
 {
+    writeConfig();
 }
 
 void BackupFileStructureInfoDialog::loadStructure()
 {
-    //TODO
+    const QString fileName( KStandardDirs::locate( "data", QLatin1String("pimsettingexporter/backup-structure.txt") ) );
+    if (!fileName.isEmpty()) {
+        QFile f(fileName);
+        if (!f.open(QIODevice::ReadOnly)) {
+            qDebug() <<" Can not read backup-structure";
+            return;
+        }
+        mEditor->setPlainText(QString::fromLatin1(f.readAll()));
+    }
 }
+
+void BackupFileStructureInfoDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "BackupFileStructureInfoDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void BackupFileStructureInfoDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "BackupFileStructureInfoDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
+}
+
 
 #include "backupfilestructureinfodialog.moc"

@@ -30,6 +30,8 @@ public:
     ~BackupFileStructureInfoDialog();
 
 private:
+    void readConfig();
+    void writeConfig();
     void loadStructure();
     PimCommon::PlainTextEditorWidget *mEditor;
 };
