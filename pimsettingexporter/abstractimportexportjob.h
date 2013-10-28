@@ -54,6 +54,7 @@ Q_SIGNALS:
     void info(const QString &);
     void error(const QString &);
     void title(const QString &);
+    void endLine();
 
 protected:
     void copyToDirectory(const KArchiveEntry *entry, const QString &dest);

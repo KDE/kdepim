@@ -36,6 +36,7 @@ private Q_SLOTS:
     void slotAddInfo(const QString &info);
     void slotAddError(const QString &info);
     void slotAddTitle(const QString &info);
+    void slotAddEndLine();
     void slotSaveLog();
 
 private:

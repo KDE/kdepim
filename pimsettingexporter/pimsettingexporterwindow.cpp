@@ -152,6 +152,7 @@ void PimSettingExporterWindow::slotBackupData()
         }
 
         slotAddInfo(i18n("Start to backup data in \'%1\'", filename));
+        slotAddEndLine();
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -234,6 +235,11 @@ void PimSettingExporterWindow::slotAddTitle(const QString &info)
     mLogWidget->addTitleLogEntry(info);
 }
 
+void PimSettingExporterWindow::slotAddEndLine()
+{
+    mLogWidget->addEndLineLogEntry();
+}
+
 void PimSettingExporterWindow::slotRestoreData()
 {
     if (KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
@@ -259,6 +265,7 @@ void PimSettingExporterWindow::slotRestoreData()
         }
 
         slotAddInfo(i18n("Start to restore data from \'%1\'", filename));
+        slotAddEndLine();
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -330,7 +337,9 @@ void PimSettingExporterWindow::executeJob()
     connect(mImportExportData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
     connect(mImportExportData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
     connect(mImportExportData, SIGNAL(title(QString)), SLOT(slotAddTitle(QString)));
+    connect(mImportExportData, SIGNAL(endLine()), SLOT(slotAddEndLine()));
     mImportExportData->start();
+    slotAddEndLine();
     delete mImportExportData;
     mImportExportData = 0;
 }

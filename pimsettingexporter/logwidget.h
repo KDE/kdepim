@@ -33,6 +33,7 @@ public:
     void addInfoLogEntry( const QString &log );
     void addErrorLogEntry( const QString &log );
     void addTitleLogEntry( const QString &log );
+    void addEndLineLogEntry();
     void clear();
     QString toHtml() const;
     QString toPlainText() const;
