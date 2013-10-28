@@ -1,3 +1,3 @@
 #! /bin/sh
-$XGETTEXT `find -name '*.cpp'` -o $podir/pimsettingexporter.pot
+$XGETTEXT `find -name '*.cpp' | grep -v '/tests/'` -o $podir/pimsettingexporter.pot
 
