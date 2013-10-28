@@ -213,6 +213,7 @@ void PimSettingExporterWindow::slotBackupData()
         delete archiveStorage;
         delete mImportExportData;
         mImportExportData = 0;
+        KMessageBox::information(this, i18n("For restoring datas, you must use \"pimsettingexporter\". Becareful it can overwrite existing settings, datas."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
     } else {
         delete dialog;
     }
