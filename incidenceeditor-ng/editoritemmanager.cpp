@@ -354,6 +354,7 @@ void EditorItemManager::save()
     }
   } else { // An invalid item. Means we're creating.
     if ( d->mIsCounterProposal ) {
+      // We don't write back to akonadi, that will be done in ITipHandler.
       emit itemSaveFinished( EditorItemManager::Modify );
     } else {
       Q_ASSERT( d->mItemUi->selectedCollection().isValid() );
