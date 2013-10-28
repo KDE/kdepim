@@ -42,6 +42,7 @@ set(pimsettingexporter_SRCS
   blogilo/exportblogilojob.cpp
   blogilo/importblogilojob.cpp
   archivestorage.cpp
+  backupfilestructureinfodialog.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
