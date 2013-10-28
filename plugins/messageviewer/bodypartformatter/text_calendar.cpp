@@ -761,8 +761,11 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       const bool success = itipHandler->result() == Akonadi::ITIPHandler::ResultSuccess;
       if ( !success ) {
-        kError() << "Error while processing invitation: " << itipHandler->errorMessage();
-        KMessageBox::error( 0, itipHandler->errorMessage() );
+        const QString errorMessage = itipHandler->errorMessage();
+        if ( !errorMessage.isEmpty() ) {
+          kError() << "Error while processing invitation: " << errorMessage;
+          KMessageBox::error( 0, errorMessage );
+        }
       }
 
       return success;
