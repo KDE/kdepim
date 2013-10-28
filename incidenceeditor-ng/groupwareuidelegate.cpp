@@ -28,6 +28,11 @@ using namespace IncidenceEditorNG;
 
 void GroupwareUiDelegate::requestIncidenceEditor(const Akonadi::Item &item)
 {
+
+// TODO_KDE5:
+// The GroupwareUiDelegate interface should be a QObject. Right now we have no way of emitting a
+// finished signal, so we have to use dialog->exec();
+
 #ifndef KDEPIM_MOBILE_UI
     const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence(item);
     if (!incidence) {
@@ -37,8 +42,16 @@ void GroupwareUiDelegate::requestIncidenceEditor(const Akonadi::Item &item)
 
     IncidenceDialog *dialog = IncidenceDialogFactory::create(/*needs initial saving=*/ false,
                                                              incidence->type(), 0);
+    dialog->setAttribute( Qt::WA_DeleteOnClose, false );
     dialog->setIsCounterProposal(true);
     dialog->load(item, QDate::currentDate());
+    dialog->exec();
+    dialog->deleteLater();
+    Akonadi::Item newItem = dialog->item();
+    if (newItem.hasPayload<KCalCore::Incidence::Ptr>()) {
+        KCalCore::IncidenceBase::Ptr newIncidence = newItem.payload<KCalCore::Incidence::Ptr>();
+        *incidence.staticCast<KCalCore::IncidenceBase>() = *newIncidence;
+    }
 #else
     Q_UNUSED(item);
 #endif
