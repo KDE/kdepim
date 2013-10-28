@@ -81,10 +81,28 @@ PrintingWizard::PrintingWizard( QPrinter *printer, QItemSelectionModel *selectio
   mStylePage->setSortOrder( Settings::self()->sortOrder() == 0 ?
                               Qt::AscendingOrder :
                               Qt::DescendingOrder );
+  readConfig();
 }
 
 PrintingWizard::~PrintingWizard()
 {
+    writeConfig();
+}
+
+void PrintingWizard::readConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "PrintingWizard" );
+    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void PrintingWizard::writeConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "PrintingWizard" );
+    grp.writeEntry( "Size", size() );
+    grp.sync();
 }
 
 void PrintingWizard::setDefaultAddressBook( const Akonadi::Collection &addressBook )
