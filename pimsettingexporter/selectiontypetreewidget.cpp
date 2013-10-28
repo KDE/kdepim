@@ -260,11 +260,11 @@ void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
         QTreeWidgetItem *parent = item->parent();
         bool allSameState = false;
         Qt::CheckState state;
-        for (int i=0; i < item->childCount(); ++i) {
+        for (int i=0; i < parent->childCount(); ++i) {
             if (i == 0) {
-                state = item->child(i)->checkState(0);
+                state = parent->child(i)->checkState(0);
             } else {
-                allSameState = (state == item->child(i)->checkState(0));
+                allSameState = (state == parent->child(i)->checkState(0));
                 if (!allSameState)
                     break;
             }
