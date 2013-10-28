@@ -151,6 +151,7 @@ void PimSettingExporterWindow::slotBackupData()
             return;
         }
 
+        slotAddInfo(i18n("Start to backup data in \'%1\'", filename));
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -206,6 +207,7 @@ void PimSettingExporterWindow::slotBackupData()
             ++i;
         }
 
+        slotAddInfo(i18n("Backup in \'%1\' done.", filename));
         //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
@@ -255,6 +257,7 @@ void PimSettingExporterWindow::slotRestoreData()
             return;
         }
 
+        slotAddInfo(i18n("Start to restore data from \'%1\'", filename));
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -310,6 +313,7 @@ void PimSettingExporterWindow::slotRestoreData()
             ++i;
         }
 
+        slotAddInfo(i18n("Restoring data from \'%1\' done.", filename));
         //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
