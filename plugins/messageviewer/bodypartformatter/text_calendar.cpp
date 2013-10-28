@@ -759,8 +759,9 @@ class UrlHandler : public Interface::BodyPartURLHandler
       // This will block. There's no way to make it async without refactoring the memento mechanism
       SyncItipHandler *itipHandler = new SyncItipHandler( receiver, iCal, type );
 
-      const bool success = itipHandler->result() == Akonadi::ITIPHandler::ResultSuccess;
-      if ( !success ) {
+      // If result is ResultCancelled, then we don't show the message box and return false so kmail
+      // doesn't delete the e-mail.
+      if ( itipHandler->result() == Akonadi::ITIPHandler::ResultError ) {
         const QString errorMessage = itipHandler->errorMessage();
         if ( !errorMessage.isEmpty() ) {
           kError() << "Error while processing invitation: " << errorMessage;
@@ -768,7 +769,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
         }
       }
 
-      return success;
+      return itipHandler->result() == Akonadi::ITIPHandler::ResultSuccess;
     }
 
     bool cancelPastInvites( const Incidence::Ptr incidence, const QString &path ) const
