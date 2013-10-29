@@ -34,8 +34,6 @@
 
 #include "messagecore/utils/stringutil.h"
 
-#include <Nepomuk2/ResourceManager>
-
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
 #include <Akonadi/Item>
@@ -2408,7 +2406,7 @@ bool View::event( QEvent *e )
         tip += htmlCodeForStandardRow.arg(  mi->formattedDate() ).arg( i18n( "Date" ) );
       }
 
-      QString status = mi->statusDescription(Nepomuk2::ResourceManager::instance()->initialized());
+      QString status = mi->statusDescription();
       const QString tags = mi->tagListDescription();
       if ( !tags.isEmpty () )
       {
