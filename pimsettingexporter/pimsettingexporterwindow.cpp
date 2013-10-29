@@ -116,7 +116,7 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     saveLogAction->setText(i18n("Save log..."));
 
     KAction *archiveStructureInfo = ac->addAction(QLatin1String("show_structure_info"), this, SLOT(slotShowStructureInfos()));
-    archiveStructureInfo->setText(i18n("Show Archive Structure Informations..."));
+    archiveStructureInfo->setText(i18n("Show Archive Structure Information..."));
 
     KStandardAction::quit( this, SLOT(close()), ac );
 }
@@ -219,7 +219,7 @@ void PimSettingExporterWindow::slotBackupData()
         delete archiveStorage;
         delete mImportExportData;
         mImportExportData = 0;
-        KMessageBox::information(this, i18n("For restoring datas, you must use \"pimsettingexporter\". Becareful it can overwrite existing settings, datas."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
+        KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
     } else {
         delete dialog;
     }
