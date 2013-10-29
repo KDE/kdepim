@@ -820,6 +820,8 @@ void AlarmDialog::showDetails( QTreeWidgetItem *item )
     if ( !reminderItem->mDisplayText.isEmpty() ) {
       QString txt = QLatin1String("<qt><p><b>") + reminderItem->mDisplayText + QLatin1String("</b></p></qt>");
       mDetailView->setHeaderText( txt );
+    } else {
+      mDetailView->setHeaderText( QString() );
     }
     Incidence::Ptr incidence = CalendarSupport::incidence( reminderItem->mIncidence );
     mDetailView->setIncidence( reminderItem->mIncidence, reminderItem->mRemindAt.date() );
