@@ -1,4 +1,5 @@
-/* Copyright 2010 Thomas McGuire <mcguire@kde.org>
+/*
+   Copyright 2010 Thomas McGuire <mcguire@kde.org>
 
    Copyright 2013 Laurent Montel <monte@kde.org>
 
@@ -20,6 +21,7 @@
 */
 #include "mailwebview.h"
 #include "scamdetection/scamdetection.h"
+#include "scamdetection/scamcheckshorturl.h"
 #include "adblock/adblockblockableitemsdialog.h"
 #include "adblock/webpage.h"
 
@@ -658,6 +660,11 @@ void MailWebView::openBlockableItemsDialog()
         dlg->saveFilters();
     }
     delete dlg;
+}
+
+void MailWebView::expandUrl(const KUrl &url)
+{
+    mScamDetection->scamCheckShortUrl()->expandedUrl(url);
 }
 
 #include "mailwebview.moc"
