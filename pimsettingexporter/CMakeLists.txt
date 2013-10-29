@@ -42,6 +42,7 @@ set(pimsettingexporter_SRCS
   blogilo/exportblogilojob.cpp
   blogilo/importblogilojob.cpp
   archivestorage.cpp
+  backupfilestructureinfodialog.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -71,7 +72,9 @@ install(FILES
     DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter
 )
 
+install(FILES backup-structure.txt DESTINATION ${DATA_INSTALL_DIR}/pimsettingexporter)
 
 ########### install files ###############
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
+add_subdirectory(tests)

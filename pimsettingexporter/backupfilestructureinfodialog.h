@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,31 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef LOGWIDGET_H
-#define LOGWIDGET_H
+#ifndef BACKUPFILESTRUCTUREINFODIALOG_H
+#define BACKUPFILESTRUCTUREINFODIALOG_H
 
-#include <QWidget>
-
-namespace KPIM {
-class CustomLogWidget;
+#include <KDialog>
+namespace PimCommon {
+class PlainTextEditorWidget;
 }
-
-class LogWidget : public QWidget
+class BackupFileStructureInfoDialog : public KDialog
 {
+    Q_OBJECT
 public:
-    explicit LogWidget(QWidget *parent);
-    ~LogWidget();
-
-    void addInfoLogEntry( const QString &log );
-    void addErrorLogEntry( const QString &log );
-    void addTitleLogEntry( const QString &log );
-    void addEndLineLogEntry();
-    void clear();
-    QString toHtml() const;
-    QString toPlainText() const;
+    explicit BackupFileStructureInfoDialog(QWidget *parent=0);
+    ~BackupFileStructureInfoDialog();
 
 private:
-    KPIM::CustomLogWidget *mCustomLogWidget;
+    void readConfig();
+    void writeConfig();
+    void loadStructure();
+    PimCommon::PlainTextEditorWidget *mEditor;
 };
 
-#endif // LOGWIDGET_H
+#endif // BACKUPFILESTRUCTUREINFODIALOG_H

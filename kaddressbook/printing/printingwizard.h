@@ -130,6 +130,8 @@ class PrintingWizard : public KAssistantDialog
     void accept();
 
 private:
+    void writeConfig();
+    void readConfig();
     void loadGrantleeStyle();
 };
 

@@ -121,7 +121,7 @@ void ManageThemes::initialize()
 
 void ManageThemes::slotItemSelectionChanged()
 {
-    mDeleteTheme->setEnabled(mListThemes->currentItem());
+    mDeleteTheme->setEnabled(!mListThemes->selectedItems().isEmpty());
 }
 
 #include "managethemes.moc"

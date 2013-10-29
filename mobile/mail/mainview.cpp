@@ -81,7 +81,6 @@
 #include <akonadi/kmime/standardmailactionmanager.h>
 #include <akonadi_next/quotacolorproxymodel.h>
 #include <akonadibreadcrumbnavigationfactory.h>
-#include <incidenceeditor-ng/groupwareintegration.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcmdlineargs.h>
@@ -433,10 +432,6 @@ bool MainView::doNotUseFilterLineEditInCurrentState() const
 
 void MainView::doDelayedInit()
 {
-  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    IncidenceEditorNG::GroupwareIntegration::setGlobalUiDelegate( new ::GroupwareUiDelegate );
-  }
-
   static const bool debugTiming = KCmdLineArgs::parsedArgs()->isSet( "timeit" );
   MobileKernel::self()->setFolderCollectionMonitor( monitor() );
 

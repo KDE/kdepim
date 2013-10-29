@@ -47,6 +47,8 @@
 #include "utils.h"
 #include "archivestorage.h"
 
+#include "backupfilestructureinfodialog.h"
+
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/filter/filtermanager.h>
 
@@ -85,7 +87,7 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     mLogWidget = new LogWidget(this);
 
     setCentralWidget(mLogWidget);
-    resize( 640, 480 );
+    resize( 800, 600 );
     Akonadi::Control::widgetNeedsAkonadi(this);
     if (!canZipFile) {
         KMessageBox::error(this,i18n("Zip program not found. Install it before to launch this application."),i18n("Zip program not found."));
@@ -112,6 +114,9 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
 
     KAction *saveLogAction = ac->addAction(QLatin1String("save_log"), this, SLOT(slotSaveLog()));
     saveLogAction->setText(i18n("Save log..."));
+
+    KAction *archiveStructureInfo = ac->addAction(QLatin1String("show_structure_info"), this, SLOT(slotShowStructureInfos()));
+    archiveStructureInfo->setText(i18n("Show Archive Structure Informations..."));
 
     KStandardAction::quit( this, SLOT(close()), ac );
 }
@@ -151,6 +156,8 @@ void PimSettingExporterWindow::slotBackupData()
             return;
         }
 
+        slotAddInfo(i18n("Start to backup data in \'%1\'", filename));
+        slotAddEndLine();
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -206,11 +213,13 @@ void PimSettingExporterWindow::slotBackupData()
             ++i;
         }
 
+        slotAddInfo(i18n("Backup in \'%1\' done.", filename));
         //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
         delete mImportExportData;
         mImportExportData = 0;
+        KMessageBox::information(this, i18n("For restoring datas, you must use \"pimsettingexporter\". Becareful it can overwrite existing settings, datas."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
     } else {
         delete dialog;
     }
@@ -229,6 +238,11 @@ void PimSettingExporterWindow::slotAddError(const QString& info)
 void PimSettingExporterWindow::slotAddTitle(const QString &info)
 {
     mLogWidget->addTitleLogEntry(info);
+}
+
+void PimSettingExporterWindow::slotAddEndLine()
+{
+    mLogWidget->addEndLineLogEntry();
 }
 
 void PimSettingExporterWindow::slotRestoreData()
@@ -255,6 +269,8 @@ void PimSettingExporterWindow::slotRestoreData()
             return;
         }
 
+        slotAddInfo(i18n("Start to restore data from \'%1\'", filename));
+        slotAddEndLine();
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -310,6 +326,7 @@ void PimSettingExporterWindow::slotRestoreData()
             ++i;
         }
 
+        slotAddInfo(i18n("Restoring data from \'%1\' done.", filename));
         //At the end
         archiveStorage->closeArchive();
         delete archiveStorage;
@@ -325,7 +342,9 @@ void PimSettingExporterWindow::executeJob()
     connect(mImportExportData, SIGNAL(info(QString)), SLOT(slotAddInfo(QString)));
     connect(mImportExportData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
     connect(mImportExportData, SIGNAL(title(QString)), SLOT(slotAddTitle(QString)));
+    connect(mImportExportData, SIGNAL(endLine()), SLOT(slotAddEndLine()));
     mImportExportData->start();
+    slotAddEndLine();
     delete mImportExportData;
     mImportExportData = 0;
 }
@@ -337,6 +356,13 @@ bool PimSettingExporterWindow::canZip() const
         return false;
     }
     return true;
+}
+
+void PimSettingExporterWindow::slotShowStructureInfos()
+{
+    QPointer<BackupFileStructureInfoDialog> dlg = new BackupFileStructureInfoDialog(this);
+    dlg->exec();
+    delete dlg;
 }
 
 #include "pimsettingexporterwindow.moc"

@@ -16,30 +16,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef INCIDENCEEDITOR_GROUPWAREINTEGRATION_H
-#define INCIDENCEEDITOR_GROUPWAREINTEGRATION_H
-
 #include "incidenceeditors-ng_export.h"
-#include <Akonadi/Calendar/ETMCalendar>
 
-namespace Akonadi {
-  class GroupwareUiDelegate;
-}
+#include <akonadi/calendar/itiphandler.h>
 
+// Class to edit counter proposals through incidence editors
 namespace IncidenceEditorNG {
 
-class INCIDENCEEDITORS_NG_EXPORT GroupwareIntegration
+class INCIDENCEEDITORS_NG_EXPORT GroupwareUiDelegate : public Akonadi::GroupwareUiDelegate
 {
   public:
-    static bool isActive();
-    static void activate( const Akonadi::ETMCalendar::Ptr &calendar = Akonadi::ETMCalendar::Ptr() );
-    static void setGlobalUiDelegate( Akonadi::GroupwareUiDelegate *delegate );
 
-  private:
-    static bool sActivated;
-    static Akonadi::GroupwareUiDelegate *sDelegate;
+    void requestIncidenceEditor(const Akonadi::Item &item) /** Q_DECL_OVERRIDE */;
+    void setCalendar(const Akonadi::ETMCalendar::Ptr &calendar) /** Q_DECL_OVERRIDE */;
+    void createCalendar() /** Q_DECL_OVERRIDE */;
 };
 
 }
-
-#endif

@@ -37,7 +37,6 @@
 
 #include <incidenceeditor-ng/categoryeditdialog.h>
 #include <incidenceeditor-ng/editorconfig.h>
-#include <incidenceeditor-ng/groupwareintegration.h>
 #include <incidenceeditor-ng/incidencedefaults.h>
 #include <calendarsupport/archivedialog.h>
 #include <calendarsupport/calendarutils.h>
@@ -115,10 +114,6 @@ void MainView::doDelayedInit()
   mChanger = new Akonadi::IncidenceChanger( this );
 
   Akonadi::FreeBusyManager::self()->setCalendar( mCalendar );
-
-  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    IncidenceEditorNG::GroupwareIntegration::activate( mCalendar );
-  }
 
   mCalendarUtils = new CalendarSupport::CalendarUtils( mCalendar, this );
   mCalendar->setParent( mCalendarUtils );

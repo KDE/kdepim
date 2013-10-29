@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,31 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef LOGWIDGET_H
-#define LOGWIDGET_H
+#include "../selectiontypedialog.h"
 
-#include <QWidget>
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
+#include <KLocale>
 
-namespace KPIM {
-class CustomLogWidget;
+int main (int argc, char **argv)
+{
+    KCmdLineArgs::init(argc, argv, "selectiontypedialog_gui", 0, ki18n("SelectionTypeTest_Gui"),
+                       "1.0", ki18n("Test for selectiontypedialog"));
+
+    KApplication app;
+    SelectionTypeDialog *dialog = new SelectionTypeDialog;
+    dialog->resize(800, 600);
+    dialog->show();
+    app.exec();
+    delete dialog;
+    return 0;
 }
 
-class LogWidget : public QWidget
-{
-public:
-    explicit LogWidget(QWidget *parent);
-    ~LogWidget();
-
-    void addInfoLogEntry( const QString &log );
-    void addErrorLogEntry( const QString &log );
-    void addTitleLogEntry( const QString &log );
-    void addEndLineLogEntry();
-    void clear();
-    QString toHtml() const;
-    QString toPlainText() const;
-
-private:
-    KPIM::CustomLogWidget *mCustomLogWidget;
-};
-
-#endif // LOGWIDGET_H

@@ -32,6 +32,7 @@
 #ifndef SYNCITIPHANDLER_H
 #define SYNCITIPHANDLER_H
 
+#include <incidenceeditor-ng/groupwareuidelegate.h>
 #include <Akonadi/Calendar/ITIPHandler>
 
 #include <QObject>
@@ -55,6 +56,7 @@ private:
     QString m_errorMessage;
     Akonadi::ITIPHandler::Result m_result;
     QEventLoop m_eventLoop;
+    IncidenceEditorNG::GroupwareUiDelegate *m_counterProposalEditorDelegate;
 };
 
 #endif // SYNCITIPHANDLER_H

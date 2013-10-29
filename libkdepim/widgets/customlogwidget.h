@@ -49,6 +49,7 @@ public:
     void addInfoLogEntry( const QString &log );
     void addErrorLogEntry( const QString &log );
     void addTitleLogEntry( const QString &log );
+    void addEndLineLogEntry();
 
     QString toHtml() const;
     QString toPlainText() const;
@@ -61,7 +62,8 @@ private:
     enum LogType {
         Title=0,
         Error,
-        Info
+        Info,
+        EndLine
     };
 };
 }
