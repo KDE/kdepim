@@ -58,7 +58,7 @@ QByteArray CollectionAnnotationsAttribute::serialized() const
 {
     QByteArray result = "";
 
-    foreach ( const QByteArray &key, mAnnotations ) {
+    foreach ( const QByteArray &key, mAnnotations.keys() ) {
         result += key;
         result += ' ';
         result += mAnnotations[key];
