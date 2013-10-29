@@ -36,8 +36,6 @@
 #include "memorycalendarmemento.h"
 #include "syncitiphandler.h"
 
-#include <incidenceeditor-ng/groupwareintegration.h>
-
 #include <messageviewer/settings/globalsettings.h>
 #include <messageviewer/viewer/viewer.h>
 #include <messageviewer/interfaces/bodypart.h>
@@ -185,6 +183,26 @@ KCal::CalendarResources * CalendarManager::calendar()
 }
 #endif
 #endif
+
+static bool occurredAlready( const Incidence::Ptr &incidence )
+{
+  Q_ASSERT( incidence );
+  const KDateTime now = KDateTime::currentLocalDateTime();
+  const QDate today = now.date();
+
+  if ( incidence->recurs() ) {
+    const KDateTime nextDate = incidence->recurrence()->getNextDateTime( now );
+
+    return !nextDate.isValid();
+  } else {
+    const KDateTime incidenceDate = incidence->dateTime( Incidence::RoleDisplayEnd );
+    if ( incidenceDate.isValid() ) {
+      return incidence->allDay() ? ( incidenceDate.date() < today ) : ( incidenceDate < now );
+    }
+  }
+
+  return false;
+}
 
 class KMInvitationFormatterHelper : public KCalUtils::InvitationFormatterHelper
 {
@@ -738,20 +756,20 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
     bool saveFile( const QString &receiver, const QString &iCal, const QString &type ) const
     {
-      if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-        IncidenceEditorNG::GroupwareIntegration::activate();
-      }
-
       // This will block. There's no way to make it async without refactoring the memento mechanism
       SyncItipHandler *itipHandler = new SyncItipHandler( receiver, iCal, type );
 
-      const bool success = itipHandler->result() == Akonadi::ITIPHandler::ResultSuccess;
-      if ( !success ) {
-        kError() << "Error while processing invitation: " << itipHandler->errorMessage();
-        KMessageBox::error( 0, itipHandler->errorMessage() );
+      // If result is ResultCancelled, then we don't show the message box and return false so kmail
+      // doesn't delete the e-mail.
+      if ( itipHandler->result() == Akonadi::ITIPHandler::ResultError ) {
+        const QString errorMessage = itipHandler->errorMessage();
+        if ( !errorMessage.isEmpty() ) {
+          kError() << "Error while processing invitation: " << errorMessage;
+          KMessageBox::error( 0, errorMessage );
+        }
       }
 
-      return success;
+      return itipHandler->result() == Akonadi::ITIPHandler::ResultSuccess;
     }
 
     bool cancelPastInvites( const Incidence::Ptr incidence, const QString &path ) const
@@ -760,17 +778,18 @@ class UrlHandler : public Interface::BodyPartURLHandler
       KDateTime now = KDateTime::currentLocalDateTime();
       QDate today = now.date();
       Incidence::IncidenceType type = Incidence::TypeUnknown;
+      const bool occurred = occurredAlready( incidence );
       if ( incidence->type() == Incidence::TypeEvent ) {
         type = Incidence::TypeEvent;
         Event::Ptr event = incidence.staticCast<Event>();
         if ( !event->allDay() ) {
-          if ( event->dtEnd() < now ) {
+          if ( occurred ) {
             warnStr = i18n( "\"%1\" occurred already.", event->summary() );
           } else if ( event->dtStart() <= now && now <= event->dtEnd() ) {
             warnStr = i18n( "\"%1\" is currently in-progress.", event->summary() );
           }
         } else {
-          if ( event->dtEnd().date() < today ) {
+          if ( occurred ) {
             warnStr = i18n( "\"%1\" occurred already.", event->summary() );
           } else if ( event->dtStart().date() <= today && today <= event->dtEnd().date() ) {
             warnStr = i18n( "\"%1\", happening all day today, is currently in-progress.",

@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  based on ktp code
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,17 +16,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SCAMCHECKSHORTURL_H
+#define SCAMCHECKSHORTURL_H
 
-#include "knotesselectnoteswidget.h"
+#include <QObject>
 
-KNotesSelectNotesWidget::KNotesSelectNotesWidget(QWidget *parent)
-    : QWidget(parent)
+#include <KUrl>
+
+#include <QStringList>
+
+namespace MessageViewer {
+class ScamCheckShortUrl : public QObject
 {
+    Q_OBJECT
+public:
+    explicit ScamCheckShortUrl(QObject *parent=0);
+    ~ScamCheckShortUrl();
+
+    static bool needCheckUrl(const KUrl &url);
+
+    void expandedUrl(const KUrl &url);
+
+Q_SIGNALS:
+    void urlExpanded(const QString &shortUrl, const QString &expandedUrl);
+
+private:
+    void loadLongUrlServices();
+
+    static QStringList sSupportedServices;
+};
 }
 
-KNotesSelectNotesWidget::~KNotesSelectNotesWidget()
-{
-
-}
-
-#include "knotesselectnoteswidget.moc"
+#endif // SCAMCHECKSHORTURL_H

@@ -29,7 +29,6 @@ set(libknotesprivate_lib_SRCS
     network/knotesnetrecv.cpp
     network/knotesnetsend.cpp
     network/knotehostdialog.cpp
-    widgets/knotesselectnoteswidget.cpp
 )
 
 configure_file(settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg )
@@ -50,17 +49,17 @@ install(TARGETS knotesprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_S
 
 
 set(knotes_SRCS main.cpp 
-                knoteskeydialog.cpp 
-                knotestray.cpp 
-                application.cpp 
-                knotesapp.cpp 
+                dialog/knoteskeydialog.cpp 
+                apps/knotestray.cpp 
+                apps/application.cpp 
+                apps/knotesapp.cpp 
                 print/knoteprintselectednotesdialog.cpp 
                 notes/knote.cpp 
                 notes/knotebutton.cpp 
 )
 
 
-qt4_add_dbus_adaptor(knotes_SRCS org.kde.KNotes.xml knotesapp.h KNotesApp )
+qt4_add_dbus_adaptor(knotes_SRCS org.kde.KNotes.xml apps/knotesapp.h KNotesApp )
 
 kde4_add_app_icon(knotes_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-knotes.png")
 
@@ -109,7 +108,7 @@ install( PROGRAMS data/knotes.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES settings/knoteconfig.kcfg ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 install( FILES data/local.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/knotes)
 install( FILES data/knotes_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
-install( FILES knotesappui.rc knotesui.rc  DESTINATION ${DATA_INSTALL_DIR}/knotes)
+install( FILES data/knotesappui.rc data/knotesui.rc  DESTINATION ${DATA_INSTALL_DIR}/knotes)
 install( FILES org.kde.KNotes.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}) 
 
 install(DIRECTORY print/themes/ DESTINATION ${DATA_INSTALL_DIR}/knotes/print/themes )

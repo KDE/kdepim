@@ -35,6 +35,10 @@ public:
 
     void selectAllItems();
     void unSelectAllItems();
+
+private Q_SLOTS:
+    void slotItemChanged(QTreeWidgetItem*,int);
+
 private:
     enum ActionType {
         action = Qt::UserRole + 1

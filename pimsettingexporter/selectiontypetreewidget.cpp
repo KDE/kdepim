@@ -39,6 +39,7 @@ SelectionTypeTreeWidget::~SelectionTypeTreeWidget()
 void SelectionTypeTreeWidget::initialize()
 {
     mKmailItem = new QTreeWidgetItem(this);
+    mKmailItem->setCheckState(0, Qt::Checked);
     mKmailItem->setText(0, i18n("KMail"));
     createSubItem(mKmailItem, Utils::Identity);
     createSubItem(mKmailItem, Utils::Mails);
@@ -49,38 +50,46 @@ void SelectionTypeTreeWidget::initialize()
 
     mKaddressbookItem = new QTreeWidgetItem(this);
     mKaddressbookItem->setText(0, i18n("KAddressBook"));
+    mKaddressbookItem->setCheckState(0, Qt::Checked);
     createSubItem(mKaddressbookItem, Utils::Resources);
     createSubItem(mKaddressbookItem, Utils::Config);
 
     mKalarmItem = new QTreeWidgetItem(this);
     mKalarmItem->setText(0, i18n("KAlarm"));
+    mKalarmItem->setCheckState(0, Qt::Checked);
     createSubItem(mKalarmItem, Utils::Resources);
     createSubItem(mKalarmItem, Utils::Config);
 
     mKorganizerItem = new QTreeWidgetItem(this);
     mKorganizerItem->setText(0, i18n("KOrganizer"));
+    mKorganizerItem->setCheckState(0, Qt::Checked);
     createSubItem(mKorganizerItem, Utils::Resources);
     createSubItem(mKorganizerItem, Utils::Config);
 
     mKjotsItem = new QTreeWidgetItem(this);
     mKjotsItem->setText(0, i18n("KJots"));
+    mKjotsItem->setCheckState(0, Qt::Checked);
     createSubItem(mKjotsItem, Utils::Resources);
     createSubItem(mKjotsItem, Utils::Config);
 
     mKNotesItem = new QTreeWidgetItem(this);
     mKNotesItem->setText(0, i18n("KNotes"));
+    mKNotesItem->setCheckState(0, Qt::Checked);
     createSubItem(mKNotesItem, Utils::Config);
     createSubItem(mKNotesItem, Utils::Data);
 
     mAkregatorItem = new QTreeWidgetItem(this);
     mAkregatorItem->setText(0, i18n("Akregator"));
+    mAkregatorItem->setCheckState(0, Qt::Checked);
     createSubItem(mAkregatorItem, Utils::Config);
     createSubItem(mAkregatorItem, Utils::Data);
 
     mBlogiloItem = new QTreeWidgetItem(this);
     mBlogiloItem->setText(0, i18n("Blogilo"));
+    mBlogiloItem->setCheckState(0, Qt::Checked);
     createSubItem(mBlogiloItem, Utils::Config);
     createSubItem(mBlogiloItem, Utils::Data);
+    connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(slotItemChanged(QTreeWidgetItem*,int)));
 }
 
 QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeTreeWidget::storedType() const
@@ -231,8 +240,41 @@ void SelectionTypeTreeWidget::setSelectItems(bool b)
 
 void SelectionTypeTreeWidget::changeState(QTreeWidgetItem *item, bool b)
 {
+    blockSignals(true);
+    item->setCheckState(0, b ? Qt::Checked : Qt::Unchecked);
     for (int i=0; i < item->childCount(); ++i) {
         item->child(i)->setCheckState(0, b ? Qt::Checked : Qt::Unchecked);
+    }
+    blockSignals(false);
+}
+
+void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
+{
+    if (column!=0)
+        return;
+    //Parent
+    if (item->childCount()!=0) {
+        changeState(item, item->checkState(0) == Qt::Checked);
+    } else { //child
+        blockSignals(true);
+        QTreeWidgetItem *parent = item->parent();
+        bool allSameState = false;
+        Qt::CheckState state;
+        for (int i=0; i < parent->childCount(); ++i) {
+            if (i == 0) {
+                state = parent->child(i)->checkState(0);
+            } else {
+                allSameState = (state == parent->child(i)->checkState(0));
+                if (!allSameState)
+                    break;
+            }
+        }
+        if (allSameState) {
+            parent->setCheckState(0, state);
+        } else {
+            parent->setCheckState(0, Qt::PartiallyChecked);
+        }
+        blockSignals(false);
     }
 }
 

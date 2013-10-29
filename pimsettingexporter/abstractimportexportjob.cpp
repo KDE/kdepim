@@ -130,6 +130,24 @@ bool AbstractImportExportJob::overwriteConfigMessageBox(const QString &configNam
     return (KMessageBox::warningYesNo(mParent,i18n("\"%1\" already exists. Do you want to overwrite it?", configName),i18n("Restore")) == KMessageBox::Yes);
 }
 
+void AbstractImportExportJob::overwriteDirectory(const QString &path, const KArchiveEntry *entry)
+{
+    if (QDir(path).exists()) {
+        if (overwriteDirectoryMessageBox(path)) {
+            const KArchiveDirectory *dirEntry = static_cast<const KArchiveDirectory*>(entry);
+            dirEntry->copyTo(path);
+        }
+    } else {
+        const KArchiveDirectory *dirEntry = static_cast<const KArchiveDirectory*>(entry);
+        dirEntry->copyTo(path);
+    }
+}
+
+bool AbstractImportExportJob::overwriteDirectoryMessageBox(const QString &directory) const
+{
+    return (KMessageBox::warningYesNo(mParent,i18n("Directory \"%1\" already exists. Do you want to overwrite it?", directory),i18n("Restore")) == KMessageBox::Yes);
+}
+
 void AbstractImportExportJob::convertRealPathToCollection(KConfigGroup &group, const QString &currentKey, bool addCollectionPrefix)
 {
     if (group.hasKey(currentKey)) {

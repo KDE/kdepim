@@ -453,13 +453,15 @@ void KNotesPart::popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoin
     if ( mNotesWidget->notesView()->itemAt ( pos ) ) {
         contextMenu->addAction(mNewNote);
         const bool uniqueNoteSelected = (mNotesWidget->notesView()->selectedItems().count() == 1);
+        const bool readOnly = uniqueNoteSelected ? static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->selectedItems().at(0))->readOnly() : false;
         if (uniqueNoteSelected) {
             contextMenu->addSeparator();
             contextMenu->addAction(mSaveAs);
             contextMenu->addSeparator();
             contextMenu->addAction(mNoteEdit);
             contextMenu->addAction(mReadOnly);
-            contextMenu->addAction(mNoteRename);
+            if (!readOnly)
+                contextMenu->addAction(mNoteRename);
             contextMenu->addSeparator();
             contextMenu->addAction(mNoteSendMail);
             contextMenu->addSeparator();
@@ -473,8 +475,10 @@ void KNotesPart::popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoin
             contextMenu->addSeparator();
             contextMenu->addAction(mNoteConfigure);
         }
-        contextMenu->addSeparator();
-        contextMenu->addAction(mNoteDelete);
+        if (!readOnly) {
+            contextMenu->addSeparator();
+            contextMenu->addAction(mNoteDelete);
+        }
     } else {
         contextMenu->addAction(mNewNote);
     }
@@ -519,6 +523,9 @@ void KNotesPart::editNote( QListWidgetItem *item )
         KNotesGlobalConfig *globalConfig = KNotesGlobalConfig::self();
         dlg->setAcceptRichText( globalConfig->richText());
     }
+    dlg->setTabSize(knotesItem->tabSize());
+    dlg->setAutoIndentMode(knotesItem->autoIndent());
+    dlg->setTextFont(knotesItem->textFont());
 
     dlg->noteEdit()->setFocus();
     if ( dlg->exec() == QDialog::Accepted ) {
@@ -591,7 +598,7 @@ void KNotesPart::slotNotePreferences()
 void KNotesPart::slotApplyConfig()
 {
     KNotesIconViewItem *knoteItem = static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->currentItem());
-    knoteItem->updateColor();
+    knoteItem->updateSettings();
     mManager->save();
 }
 
@@ -717,6 +724,8 @@ void KNotesPart::slotUpdateReadOnly()
     KNotesIconViewItem *knoteItem = static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->currentItem());
 
     const bool readOnly = mReadOnly->isChecked();
+
+    mNoteEdit->setText(readOnly ? i18n("Show Note...") : i18nc( "@action:inmenu", "Edit..." ));
 
     knoteItem->setReadOnly( readOnly );
 }

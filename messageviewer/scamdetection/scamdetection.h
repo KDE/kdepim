@@ -27,6 +27,7 @@ class QWebFrame;
 
 namespace MessageViewer {
 class ScamDetectionDetailsDialog;
+class ScamCheckShortUrl;
 class MESSAGEVIEWER_EXPORT ScamDetection : public QObject
 {
     Q_OBJECT
@@ -35,6 +36,8 @@ public:
     ~ScamDetection();
 
     void scanPage(QWebFrame *frame);
+
+    ScamCheckShortUrl *scamCheckShortUrl() const;
 
     static bool scanFrame(const QWebElement &rootElement, QString &details);
 
@@ -47,6 +50,7 @@ Q_SIGNALS:
 private:
     QString mDetails;
     QPointer<MessageViewer::ScamDetectionDetailsDialog> mDetailsDialog;
+    ScamCheckShortUrl *mCheckShortUrl;
 };
 }
 

@@ -30,8 +30,9 @@
 
 using namespace MessageViewer;
 
-ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(QWidget *parent)
-    : KDialog(parent)
+ScamDetectionDetailsDialog::ScamDetectionDetailsDialog(MessageViewer::ScamCheckShortUrl *scamUrl, QWidget *parent)
+    : KDialog(parent),
+      mScamCheckUrl(scamUrl)
 {
     setCaption( i18n("Details") );
     setAttribute( Qt::WA_DeleteOnClose );

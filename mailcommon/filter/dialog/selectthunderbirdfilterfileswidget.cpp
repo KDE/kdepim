@@ -105,7 +105,7 @@ QStringList SelectThunderbirdFilterFilesWidget::selectedFiles() const
     return listFiles;
 }
 
-void SelectThunderbirdFilterFilesWidget::setStartDir(const KUrl&url)
+void SelectThunderbirdFilterFilesWidget::setStartDir(const KUrl &url)
 {
     ui->fileUrl->setFilter(QLatin1String("*.dat"));
     ui->fileUrl->setStartDir(url);

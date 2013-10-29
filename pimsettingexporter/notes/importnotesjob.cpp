@@ -61,10 +61,8 @@ void ImportNotesJob::restoreData()
 {
     const KArchiveEntry *notesEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "knotes/" ) );
     if (notesEntry && notesEntry->isDirectory()) {
-        //TODO 4.12 verify if notes already exists.
         const QString notesPath = KGlobal::dirs()->saveLocation("data", QLatin1String("knotes/"));
-        const KArchiveDirectory *notesDir = static_cast<const KArchiveDirectory*>(notesEntry);
-        notesDir->copyTo(notesPath);
+        overwriteDirectory(notesPath, notesEntry);
     }
     Q_EMIT info(i18n("Data restored."));
 }

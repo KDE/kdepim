@@ -51,7 +51,7 @@ set(incidenceeditors_ng_shared_LIB_SRCS
   freeperiodmodel.cpp
   conflictresolver.cpp
   schedulingdialog.cpp
-  groupwareintegration.cpp
+  groupwareuidelegate.cpp
 
   incidencedefaults.cpp
   editorconfig.cpp

@@ -15,19 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "../selectiontypedialog.h"
 
-#ifndef KNOTESSELECTNOTESWIDGET_H
-#define KNOTESSELECTNOTESWIDGET_H
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
+#include <KLocale>
 
-#include "knotes_export.h"
-#include <QWidget>
-
-class KNOTES_EXPORT KNotesSelectNotesWidget : public QWidget
+int main (int argc, char **argv)
 {
-    Q_OBJECT
-public:
-    explicit KNotesSelectNotesWidget(QWidget *parent=0);
-    ~KNotesSelectNotesWidget();
-};
+    KCmdLineArgs::init(argc, argv, "selectiontypedialog_gui", 0, ki18n("SelectionTypeTest_Gui"),
+                       "1.0", ki18n("Test for selectiontypedialog"));
 
-#endif // KNOTESSELECTNOTESWIDGET_H
+    KApplication app;
+    SelectionTypeDialog *dialog = new SelectionTypeDialog;
+    dialog->resize(800, 600);
+    dialog->show();
+    app.exec();
+    delete dialog;
+    return 0;
+}
+

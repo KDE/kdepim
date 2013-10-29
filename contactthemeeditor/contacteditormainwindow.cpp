@@ -83,6 +83,7 @@ void ContactEditorMainWindow::updateActions()
     mInstallTheme->setEnabled(projectDirectoryIsEmpty);
     mInsertFile->setEnabled(projectDirectoryIsEmpty);
     mUpdateView->setEnabled(projectDirectoryIsEmpty);
+    mSaveAsAction->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ContactEditorMainWindow::setupActions()
@@ -107,6 +108,8 @@ void ContactEditorMainWindow::setupActions()
     mOpenAction->setText(i18n("Open theme..."));
     mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
     mSaveAction->setText(i18n("Save theme..."));
+    mSaveAsAction = KStandardAction::saveAs(this, SLOT(slotSaveAsTheme()), actionCollection());
+    mSaveAsAction->setText(i18n("Save theme as..."));
 
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
@@ -293,5 +296,13 @@ void ContactEditorMainWindow::slotThemeSelected(const KUrl &url)
     loadTheme(url.path());
 }
 
+void ContactEditorMainWindow::slotSaveAsTheme()
+{
+    const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///SaveTheme" ), this, i18n("Select theme directory"));
+    if (!directory.isEmpty()) {
+        if (mContactEditor)
+            mContactEditor->saveThemeAs(directory);
+    }
+}
 
 #include "contacteditormainwindow.moc"

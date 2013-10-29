@@ -81,6 +81,7 @@ void ThemeEditorMainWindow::updateActions()
     mPrintingMode->setEnabled(projectDirectoryIsEmpty);
     mNormalMode->setEnabled(projectDirectoryIsEmpty);
     mUpdateView->setEnabled(projectDirectoryIsEmpty);
+    mSaveAsAction->setEnabled(projectDirectoryIsEmpty);
 }
 
 void ThemeEditorMainWindow::setupActions()
@@ -105,6 +106,9 @@ void ThemeEditorMainWindow::setupActions()
     mOpenAction->setText(i18n("Open theme..."));
     mSaveAction = KStandardAction::save(this, SLOT(slotSaveTheme()), actionCollection());
     mSaveAction->setText(i18n("Save theme..."));
+
+    mSaveAsAction = KStandardAction::saveAs(this, SLOT(slotSaveAsTheme()), actionCollection());
+    mSaveAsAction->setText(i18n("Save theme as..."));
 
     mCloseAction = KStandardAction::close( this, SLOT(slotCloseTheme()), actionCollection());
     KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
@@ -311,6 +315,15 @@ void ThemeEditorMainWindow::slotThemeSelected(const KUrl &url)
     if (!saveCurrentProject(false))
         return;
     loadTheme(url.path());
+}
+
+void ThemeEditorMainWindow::slotSaveAsTheme()
+{
+    const QString directory = KFileDialog::getExistingDirectory(KUrl( "kfiledialog:///SaveTheme" ), this, i18n("Select theme directory"));
+    if (!directory.isEmpty()) {
+        if (mThemeEditor)
+            mThemeEditor->saveThemeAs(directory);
+    }
 }
 
 #include "themeeditormainwindow.moc"

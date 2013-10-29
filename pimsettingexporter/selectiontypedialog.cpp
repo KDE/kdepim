@@ -37,13 +37,13 @@ SelectionTypeDialog::SelectionTypeDialog(QWidget *parent)
     mainLayout->addWidget(mSelectionTreeWidget);
 
     QHBoxLayout *hbox = new QHBoxLayout;
-    mSelectAll = new QPushButton(i18n("Select All"));
-    connect(mSelectAll, SIGNAL(clicked()), this, SLOT(slotSelectAll()));
-    hbox->addWidget(mSelectAll);
+    QPushButton *selectAll = new QPushButton(i18n("Select All"));
+    connect(selectAll, SIGNAL(clicked()), this, SLOT(slotSelectAll()));
+    hbox->addWidget(selectAll);
 
-    mUnselectAll = new QPushButton(i18n("Unselect All"));
-    connect(mUnselectAll, SIGNAL(clicked()), this, SLOT(slotUnselectAll()));
-    hbox->addWidget(mUnselectAll);
+    QPushButton *unselectAll = new QPushButton(i18n("Unselect All"));
+    connect(unselectAll, SIGNAL(clicked()), this, SLOT(slotUnselectAll()));
+    hbox->addWidget(unselectAll);
     mainLayout->addLayout(hbox);
 
     setMainWidget(mainWidget);

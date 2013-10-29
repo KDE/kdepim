@@ -35,7 +35,6 @@
 
 #include <incidenceeditor-ng/incidencedialog.h>
 #include <incidenceeditor-ng/incidencedialogfactory.h>
-#include <incidenceeditor-ng/groupwareintegration.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Todo>
@@ -821,6 +820,8 @@ void AlarmDialog::showDetails( QTreeWidgetItem *item )
     if ( !reminderItem->mDisplayText.isEmpty() ) {
       QString txt = QLatin1String("<qt><p><b>") + reminderItem->mDisplayText + QLatin1String("</b></p></qt>");
       mDetailView->setHeaderText( txt );
+    } else {
+      mDetailView->setHeaderText( QString() );
     }
     Incidence::Ptr incidence = CalendarSupport::incidence( reminderItem->mIncidence );
     mDetailView->setIncidence( reminderItem->mIncidence, reminderItem->mRemindAt.date() );
@@ -986,10 +987,6 @@ return true;
 
 bool AlarmDialog::openIncidenceEditorNG( const Akonadi::Item &item )
 {
-  if ( !IncidenceEditorNG::GroupwareIntegration::isActive() ) {
-    //TODO: Why do we need this to have a simple editor?
-    IncidenceEditorNG::GroupwareIntegration::activate( mCalendar );
-  }
   Incidence::Ptr incidence = CalendarSupport::incidence( item );
   IncidenceEditorNG::IncidenceDialog *dialog =
     IncidenceEditorNG::IncidenceDialogFactory::create(

@@ -705,9 +705,8 @@ void IncidenceDialog::selectCollection( const Akonadi::Collection &collection )
 
 void IncidenceDialog::setIsCounterProposal( bool isCounterProposal )
 {
-  //Q_D( IncidenceDialog );
-  //if (d->mInvitationDispatcher)
-      //d->mInvitationDispatcher->setIsCounterProposal( isCounterProposal ); TODO_SERGIO
+  Q_D( IncidenceDialog );
+  d->mItemManager->setIsCounterProposal( isCounterProposal );
 }
 
 QObject *IncidenceDialog::typeAheadReceiver() const
@@ -788,6 +787,12 @@ void IncidenceDialog::setInitiallyDirty( bool initiallyDirty )
 {
   Q_D( IncidenceDialog );
   d->mInitiallyDirty = initiallyDirty;
+}
+
+Akonadi::Item IncidenceDialog::item() const
+{
+  Q_D( const IncidenceDialog );
+  return d->mItemManager->item();
 }
 
 void IncidenceDialog::handleSelectedCollectionChange( const Akonadi::Collection &collection )

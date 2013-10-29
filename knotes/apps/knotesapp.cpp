@@ -30,7 +30,7 @@
 #include "migrations/knoteslegacy.h"
 #include "network/knotesnetrecv.h"
 #include "knotestray.h"
-#include "knoteskeydialog.h"
+#include "dialog/knoteskeydialog.h"
 #include "print/knoteprintselectednotesdialog.h"
 
 #include <kaction.h>
@@ -191,10 +191,13 @@ KNotesApp::KNotesApp()
 
     updateNetworkListener();
 
+    /*
     if ( m_notes.isEmpty() && !kapp->isSessionRestored() ) {
         newNote();
     }
+    */
 
+    m_tray->updateNumberOfNotes(m_notes.count());
     updateNoteActions();
 }
 

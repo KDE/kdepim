@@ -25,7 +25,7 @@
 using namespace KPIM;
 
 LogItemDelegate::LogItemDelegate( QObject *parent )
-  : QStyledItemDelegate( parent )
+    : QStyledItemDelegate( parent )
 {
 }
 
@@ -35,80 +35,80 @@ LogItemDelegate::~LogItemDelegate()
 
 QTextDocument* LogItemDelegate::document ( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-  if ( !index.isValid() )
-    return 0;
-  QTextDocument *document = new QTextDocument ( 0 );
-  document->setDocumentMargin( 1 );
-  const QColor textColor = index.data( Qt::ForegroundRole ).value<QColor>();
-  QStyleOptionViewItemV4 option4 = option;
-  QStyledItemDelegate::initStyleOption( &option4, index );
+    if ( !index.isValid() )
+        return 0;
+    QTextDocument *document = new QTextDocument ( 0 );
+    document->setDocumentMargin( 1 );
+    const QColor textColor = index.data( Qt::ForegroundRole ).value<QColor>();
+    QStyleOptionViewItemV4 option4 = option;
+    QStyledItemDelegate::initStyleOption( &option4, index );
 
-  QString text = option4.text;
+    QString text = option4.text;
 
-  const QString content = QString::fromLatin1 (
-                          "<html style=\"color:%1\">"
-                          "<body> %2" ).arg ( textColor.name().toUpper() ).arg( text )
-                      + QLatin1String ( "</table></body></html>" );
+    const QString content = QString::fromLatin1 (
+                "<html style=\"color:%1\">"
+                "<body> %2" ).arg ( textColor.name().toUpper() ).arg( text )
+            + QLatin1String ( "</table></body></html>" );
 
-  document->setHtml ( content );
-  
-  return document;
+    document->setHtml ( content );
+
+    return document;
 }
 
 
 void LogItemDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-  if ( !index.isValid() )
-    return;
-  QTextDocument *doc = document ( option, index );
-  if ( !doc )
-    return;
-  doc->setTextWidth( option.rect.width() );
-  painter->setRenderHint ( QPainter::Antialiasing );
-  
-  QPen pen = painter->pen();
+    if ( !index.isValid() )
+        return;
+    QTextDocument *doc = document ( option, index );
+    if ( !doc )
+        return;
+    doc->setTextWidth( option.rect.width() );
+    painter->setRenderHint ( QPainter::Antialiasing );
 
-  QStyleOptionViewItemV4 opt ( option );
-  opt.showDecorationSelected = true;
-  QApplication::style()->drawPrimitive ( QStyle::PE_PanelItemViewItem, &opt, painter ); 
-  painter->save();
-  painter->translate ( option.rect.topLeft() );
-  
-  doc->drawContents ( painter );
-  
-  painter->restore();
-  painter->setPen( pen );
+    QPen pen = painter->pen();
 
-  delete doc;
+    QStyleOptionViewItemV4 opt ( option );
+    opt.showDecorationSelected = true;
+    QApplication::style()->drawPrimitive ( QStyle::PE_PanelItemViewItem, &opt, painter );
+    painter->save();
+    painter->translate ( option.rect.topLeft() );
+
+    doc->drawContents ( painter );
+
+    painter->restore();
+    painter->setPen( pen );
+
+    delete doc;
 }
 
 QSize LogItemDelegate::sizeHint ( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-  if ( !index.isValid() )
-    return QSize ( 0, 0 );
+    if ( !index.isValid() )
+        return QSize ( 0, 0 );
 
-  QTextDocument *doc = document ( option, index );
-  if ( !doc )
-    return QSize ( 0, 0 );
+    QTextDocument *doc = document ( option, index );
+    if ( !doc )
+        return QSize ( 0, 0 );
 
-  const QSize size = doc->documentLayout()->documentSize().toSize();
-  delete doc;
+    const QSize size = doc->documentLayout()->documentSize().toSize();
+    delete doc;
 
-  return size;
+    return size;
 }
 
 QWidget  *LogItemDelegate::createEditor ( QWidget *, const QStyleOptionViewItem  &, const QModelIndex & ) const
 {
-  return 0;
+    return 0;
 }
 
 
 
 CustomLogWidget::CustomLogWidget( QWidget * parent )
-  :QListWidget( parent )
+    :QListWidget( parent )
 {
-  LogItemDelegate *itemDelegate = new LogItemDelegate( this );
-  setItemDelegate( itemDelegate );
+    LogItemDelegate *itemDelegate = new LogItemDelegate( this );
+    setItemDelegate( itemDelegate );
 }
 
 CustomLogWidget::~CustomLogWidget()
@@ -128,18 +128,25 @@ void CustomLogWidget::addTitleLogEntry( const QString &log )
 
 void CustomLogWidget::addInfoLogEntry( const QString &log )
 {
-  QListWidgetItem* item =new QListWidgetItem(log);
-  item->setForeground(Qt::blue);
-  item->setData(ItemLogType, Info);
-  addItem( item );
+    QListWidgetItem* item =new QListWidgetItem(log);
+    item->setForeground(Qt::blue);
+    item->setData(ItemLogType, Info);
+    addItem( item );
 }
 
 void CustomLogWidget::addErrorLogEntry( const QString &log )
 {
-  QListWidgetItem* item =new QListWidgetItem(log);
-  item->setForeground(Qt::red);
-  item->setData(ItemLogType, Error);
-  addItem( item );
+    QListWidgetItem* item =new QListWidgetItem(log);
+    item->setForeground(Qt::red);
+    item->setData(ItemLogType, Error);
+    addItem( item );
+}
+
+void CustomLogWidget::addEndLineLogEntry()
+{
+    QListWidgetItem* item =new QListWidgetItem;
+    item->setData(ItemLogType, EndLine);
+    addItem( item );
 }
 
 QString CustomLogWidget::toHtml() const
@@ -160,6 +167,9 @@ QString CustomLogWidget::toHtml() const
             break;
         case Info:
             logText = QString::fromUtf8( "<font color=%1>%2</font>" ).arg(QColor(Qt::green).name()).arg(itemText);
+            break;
+        case EndLine:
+            logText = QLatin1String("<br/>");
             break;
         default:
             kDebug()<<"LogType undefined"<<type;

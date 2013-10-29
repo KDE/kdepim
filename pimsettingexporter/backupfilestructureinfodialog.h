@@ -15,36 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SCAMDETECTIONDETAILSDIALOG_H
-#define SCAMDETECTIONDETAILSDIALOG_H
+#ifndef BACKUPFILESTRUCTUREINFODIALOG_H
+#define BACKUPFILESTRUCTUREINFODIALOG_H
 
 #include <KDialog>
-
-class KTextEdit;
 namespace PimCommon {
-class RichTextEditorWidget;
+class PlainTextEditorWidget;
 }
-
-namespace MessageViewer {
-class ScamCheckShortUrl;
-class ScamDetectionDetailsDialog : public KDialog
+class BackupFileStructureInfoDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ScamDetectionDetailsDialog(MessageViewer::ScamCheckShortUrl *scamUrl, QWidget *parent = 0);
-    ~ScamDetectionDetailsDialog();
-
-    void setDetails(const QString &details);
-
-private Q_SLOTS:
-    void slotSaveAs();
+    explicit BackupFileStructureInfoDialog(QWidget *parent=0);
+    ~BackupFileStructureInfoDialog();
 
 private:
-    void writeConfig();
     void readConfig();
-    PimCommon::RichTextEditorWidget *mDetails;
-    MessageViewer::ScamCheckShortUrl *mScamCheckUrl;
+    void writeConfig();
+    void loadStructure();
+    PimCommon::PlainTextEditorWidget *mEditor;
 };
-}
 
-#endif // SCAMDETECTIONDETAILSDIALOG_H
+#endif // BACKUPFILESTRUCTUREINFODIALOG_H
