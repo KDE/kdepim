@@ -40,8 +40,6 @@ private:
     void readConfig();
     void writeConfig();
     SelectionTypeTreeWidget *mSelectionTreeWidget;
-    QPushButton *mSelectAll;
-    QPushButton *mUnselectAll;
 };
 
 #endif // SELECTIONTYPEDIALOG_H
