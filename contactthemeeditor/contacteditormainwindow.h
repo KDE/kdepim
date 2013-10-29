@@ -50,6 +50,7 @@ private Q_SLOTS:
     void slotConfigure();
     void slotCanInsertFile(bool b);
     void slotThemeSelected(const KUrl &);
+    void slotSaveAsTheme();
 
 private:
     void loadTheme(const QString &directory);
@@ -69,6 +70,7 @@ private:
     KAction *mInsertFile;
     KAction *mManageTheme;
     KAction *mUpdateView;
+    KAction *mSaveAsAction;
     KRecentFilesAction *mRecentFileAction;
 };
 

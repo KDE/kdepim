@@ -51,6 +51,8 @@ public:
 
     void updatePreview();
 
+    void saveThemeAs(const QString &directory);
+
 Q_SIGNALS:
     void changed(bool);
     void canInsertFile(bool);
@@ -63,7 +65,7 @@ private Q_SLOTS:
 
 private:
     void setChanged(bool b);
-    void storeTheme();
+    void storeTheme(const QString &directory = QString());
     QString projectDirectory() const;
     void createZip(const QString &themeName, KZip *zip);
     EditorPage *createExtraPage(const QString &filename);

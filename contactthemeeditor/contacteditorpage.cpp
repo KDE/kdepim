@@ -254,22 +254,24 @@ EditorPage *ContactEditorPage::createExtraPage(const QString &filename)
     return extraPage;
 }
 
-void ContactEditorPage::storeTheme()
+void ContactEditorPage::storeTheme(const QString &directory)
 {
-    mEditorPage->saveTheme(projectDirectory());
+    const QString themeDirectory = directory.isEmpty() ? projectDirectory() : directory;
+    mEditorPage->saveTheme(themeDirectory);
 
-    mEditorGroupPage->saveTheme(projectDirectory());
-    mEditorGroupEmbeddedPage->saveTheme(projectDirectory());
-    mEditorEmbeddedPage->saveTheme(projectDirectory());
+    mEditorGroupPage->saveTheme(themeDirectory);
+    mEditorGroupEmbeddedPage->saveTheme(themeDirectory);
+    mEditorEmbeddedPage->saveTheme(themeDirectory);
 
 
     Q_FOREACH (EditorPage *page, mExtraPage) {
-        page->saveTheme(projectDirectory());
+        page->saveTheme(themeDirectory);
     }
-    mDesktopPage->saveTheme(projectDirectory());
+    mDesktopPage->saveTheme(themeDirectory);
     mThemeSession->setMainPageFileName(mEditorPage->pageFileName());
-    mThemeSession->writeSession();
-    setChanged(false);
+    mThemeSession->writeSession(themeDirectory);
+    if (directory.isEmpty())
+        setChanged(false);
 }
 
 bool ContactEditorPage::saveTheme(bool withConfirmation)
@@ -327,6 +329,11 @@ void ContactEditorPage::slotCurrentWidgetChanged(QWidget *w)
 {
     GrantleeThemeEditor::EditorPage *page = dynamic_cast<GrantleeThemeEditor::EditorPage *>(w);
     Q_EMIT canInsertFile(page);
+}
+
+void ContactEditorPage::saveThemeAs(const QString &directory)
+{
+    storeTheme(directory);
 }
 
 #include "contacteditorpage.moc"
