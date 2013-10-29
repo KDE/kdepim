@@ -55,7 +55,10 @@ class MAILCOMMON_EXPORT CollectionGeneralPage : public Akonadi::CollectionProper
       ContentsTypeNote,
       ContentsTypeTask,
       ContentsTypeJournal,
-      ContentsTypeLast = ContentsTypeJournal
+      ContentsTypeConfiguration,
+      ContentsTypeFreebusy,
+      ContentsTypeFile,
+      ContentsTypeLast = ContentsTypeFile
     };
 
     enum IncidencesFor {

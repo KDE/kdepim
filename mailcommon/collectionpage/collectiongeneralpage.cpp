@@ -117,6 +117,12 @@ static QString folderContentDescription( CollectionGeneralPage::FolderContentsTy
     return ( i18nc( "type of folder content", "Tasks" ) );
   case CollectionGeneralPage::ContentsTypeJournal:
     return ( i18nc( "type of folder content", "Journal" ) );
+  case CollectionGeneralPage::ContentsTypeConfiguration:
+    return ( i18nc( "type of folder content", "Configuration" ) );
+  case CollectionGeneralPage::ContentsTypeFreebusy:
+    return ( i18nc( "type of folder content", "Freebusy" ) );
+  case CollectionGeneralPage::ContentsTypeFile:
+    return ( i18nc( "type of folder content", "Files" ) );
   default:
     return ( i18nc( "type of folder content", "Unknown" ) );
   }
@@ -142,6 +148,15 @@ static CollectionGeneralPage::FolderContentsType contentsTypeFromString( const Q
   if ( type == i18nc( "type of folder content", "Journal" ) ) {
     return CollectionGeneralPage::ContentsTypeJournal;
   }
+  if ( type == i18nc( "type of folder content", "Configuration" ) ) {
+    return CollectionGeneralPage::ContentsTypeConfiguration;
+  }
+  if ( type == i18nc( "type of folder content", "Freebusy" ) ) {
+    return CollectionGeneralPage::ContentsTypeFreebusy;
+  }
+  if ( type == i18nc( "type of folder content", "Files" ) ) {
+    return CollectionGeneralPage::ContentsTypeFile;
+  }
 
   return CollectionGeneralPage::ContentsTypeMail; //safety return value
 }
@@ -163,6 +178,15 @@ static QString typeNameFromKolabType( const QByteArray &type )
   if ( type == "journal" || type == "journal.default" ) {
     return i18nc( "type of folder content", "Journal" );
   }
+  if ( type == "configuration" || type == "configuration.default" ) {
+    return i18nc( "type of folder content", "Configuration" );
+  }
+  if ( type == "freebusy" || type == "freebusy.default" ) {
+    return i18nc( "type of folder content", "Freebusy" );
+  }
+  if ( type == "file" || type == "file.default" ) {
+    return i18nc( "type of folder content", "Files" );
+  }
 
   return i18nc( "type of folder content", "Mail" );
 }
@@ -180,6 +204,12 @@ static QByteArray kolabNameFromType( CollectionGeneralPage::FolderContentsType t
     return "task";
   case CollectionGeneralPage::ContentsTypeJournal:
     return "journal";
+  case CollectionGeneralPage::ContentsTypeConfiguration:
+    return "configuration";
+  case CollectionGeneralPage::ContentsTypeFreebusy:
+    return "freebusy";
+  case CollectionGeneralPage::ContentsTypeFile:
+    return "file";
   default:
     return QByteArray();
   }
@@ -201,6 +231,15 @@ static CollectionGeneralPage::FolderContentsType typeFromKolabName( const QByteA
   }
   if ( name == "journal" || name == "journal.default" ) {
     return CollectionGeneralPage::ContentsTypeJournal;
+  }
+  if ( name == "configuration" || name == "configuration.default" ) {
+    return CollectionGeneralPage::ContentsTypeConfiguration;
+  }
+  if ( name == "freebusy" || name == "freebusy.default" ) {
+    return CollectionGeneralPage::ContentsTypeFreebusy;
+  }
+  if ( name == "file" || name == "file.default" ) {
+    return CollectionGeneralPage::ContentsTypeFile;
   }
 
   return CollectionGeneralPage::ContentsTypeMail;
@@ -342,6 +381,9 @@ void CollectionGeneralPage::init( const Akonadi::Collection &collection )
     mContentsComboBox->addItem( folderContentDescription( ContentsTypeNote ) );
     mContentsComboBox->addItem( folderContentDescription( ContentsTypeTask ) );
     mContentsComboBox->addItem( folderContentDescription( ContentsTypeJournal ) );
+    mContentsComboBox->addItem( folderContentDescription( ContentsTypeConfiguration ) );
+    mContentsComboBox->addItem( folderContentDescription( ContentsTypeFreebusy ) );
+    mContentsComboBox->addItem( folderContentDescription( ContentsTypeFile ) );
 
     mContentsComboBox->setCurrentIndex( contentsType );
 
@@ -520,6 +562,15 @@ void CollectionGeneralPage::save( Collection &collection )
         break;
       case ContentsTypeJournal:
         iconName = QString::fromLatin1( "view-pim-journal" );
+        break;
+      case ContentsTypeConfiguration:
+        iconName = QString::fromLatin1( "configure" );
+        break;
+      case ContentsTypeFreebusy:
+        iconName = QString::fromLatin1( "view-calendar-agenda" );
+        break;
+      case ContentsTypeFile:
+        iconName = QString::fromLatin1( "document-open" );
         break;
       case ContentsTypeMail:
       default:
