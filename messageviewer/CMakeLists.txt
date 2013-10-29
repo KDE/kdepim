@@ -1,7 +1,7 @@
 KDE4_NO_ENABLE_FINAL(messageviewer)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-include_directories(${Grantlee_INCLUDE_DIRS})
+include_directories(${Grantlee_INCLUDE_DIRS} ${QJSON_INCLUDE_DIR})
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
@@ -126,6 +126,7 @@ set(libmessageviewer_SRCS
   scamdetection/scamdetection.cpp
   scamdetection/scamdetectiondetailsdialog.cpp
   scamdetection/scamattribute.cpp
+  scamdetection/scamcheckshorturl.cpp
   antispam/spamheaderanalyzer.cpp
   antispam/antispamconfig.cpp
   ${_mailwebview_cpp}
@@ -160,6 +161,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${_mailwebview_lib}
   ${Grantlee_CORE_LIBRARIES} 
   ${KDE4_KNEWSTUFF3_LIBS}
+  ${QJSON_LIBRARIES}
   pimcommon
   grantleetheme
   kaddressbookgrantlee
@@ -190,4 +192,4 @@ add_subdirectory(grantleefilters)
 add_subdirectory(scamdetection/tests)
 add_subdirectory(adblock/tests/)
 install(FILES notify/messageviewer.notifyrc DESTINATION ${DATA_INSTALL_DIR}/messageviewer )
-
+install(FILES scamdetection/data/longurlServices.json DESTINATION ${DATA_INSTALL_DIR}/messageviewer )

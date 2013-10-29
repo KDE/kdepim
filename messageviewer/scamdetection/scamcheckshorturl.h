@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  based on ktp code
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,36 +16,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SCAMDETECTIONDETAILSDIALOG_H
-#define SCAMDETECTIONDETAILSDIALOG_H
+#ifndef SCAMCHECKSHORTURL_H
+#define SCAMCHECKSHORTURL_H
 
-#include <KDialog>
+#include <QObject>
 
-class KTextEdit;
-namespace PimCommon {
-class RichTextEditorWidget;
-}
+#include <KUrl>
+
+#include <QStringList>
 
 namespace MessageViewer {
-class ScamCheckShortUrl;
-class ScamDetectionDetailsDialog : public KDialog
+class ScamCheckShortUrl : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScamDetectionDetailsDialog(MessageViewer::ScamCheckShortUrl *scamUrl, QWidget *parent = 0);
-    ~ScamDetectionDetailsDialog();
+    explicit ScamCheckShortUrl(QObject *parent=0);
+    ~ScamCheckShortUrl();
 
-    void setDetails(const QString &details);
+    static bool needCheckUrl(const KUrl &url);
 
-private Q_SLOTS:
-    void slotSaveAs();
+    void expandedUrl(const KUrl &url);
+
+Q_SIGNALS:
+    void urlExpanded(const QString &shortUrl, const QString &expandedUrl);
 
 private:
-    void writeConfig();
-    void readConfig();
-    PimCommon::RichTextEditorWidget *mDetails;
-    MessageViewer::ScamCheckShortUrl *mScamCheckUrl;
+    void loadLongUrlServices();
+
+    static QStringList sSupportedServices;
 };
 }
 
-#endif // SCAMDETECTIONDETAILSDIALOG_H
+#endif // SCAMCHECKSHORTURL_H

@@ -17,6 +17,7 @@
 
 #include "scamdetection.h"
 #include "scamdetectiondetailsdialog.h"
+#include "scamcheckshorturl.h"
 #include "settings/globalsettings.h"
 
 #include <QWebElement>
@@ -32,12 +33,18 @@ static QString addWarningColor(const QString &url)
 }
 
 ScamDetection::ScamDetection(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mCheckShortUrl(new ScamCheckShortUrl(this))
 {
 }
 
 ScamDetection::~ScamDetection()
 {
+}
+
+ScamCheckShortUrl *ScamDetection::scamCheckShortUrl() const
+{
+    return mCheckShortUrl;
 }
 
 void ScamDetection::scanPage(QWebFrame *frame)
@@ -114,6 +121,14 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
                 foundScam = true;
             }
         }
+        //Check shortUrl
+        if (!foundScam) {
+            if (ScamCheckShortUrl::needCheckUrl(url)) {
+                details += QLatin1String("<li>") + i18n("This email contains a shorturl (%1). It can redirect to another server.", addWarningColor(url.toString())) + QLatin1String("</li>");
+                //TODO allow to show long url
+                foundScam = true;
+            }
+        }
     }
     //3) has form
     if (rootElement.findAll(QLatin1String("form")).count() > 0) {
@@ -126,13 +141,10 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
 
 void ScamDetection::showDetails()
 {
-    if (mDetailsDialog) {
-        mDetailsDialog->setDetails(mDetails);
-        mDetailsDialog->show();
-        return;
+    if (!mDetailsDialog) {
+        mDetailsDialog = new MessageViewer::ScamDetectionDetailsDialog(mCheckShortUrl);
     }
 
-    mDetailsDialog = new MessageViewer::ScamDetectionDetailsDialog;
     mDetailsDialog->setDetails(mDetails);
     mDetailsDialog->show();
 }
