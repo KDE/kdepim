@@ -61,10 +61,8 @@ void ImportBlogiloJob::restoreData()
 {
     const KArchiveEntry *blogiloEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "blogilo/" ) );
     if (blogiloEntry && blogiloEntry->isDirectory()) {
-        //TODO 4.12 verify if blogilo already exists.
         const QString blogiloPath = KGlobal::dirs()->saveLocation("data", QLatin1String("blogilo/"));
-        const KArchiveDirectory *blogiloDir = static_cast<const KArchiveDirectory*>(blogiloEntry);
-        blogiloDir->copyTo(blogiloPath);
+        overwriteDirectory(blogiloPath, blogiloEntry);
     }
     Q_EMIT info(i18n("Data restored."));
 }

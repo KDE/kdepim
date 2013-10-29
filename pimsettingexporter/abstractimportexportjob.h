@@ -74,6 +74,9 @@ protected:
     bool backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename);
     virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
     void restoreConfigFile(const QString &configNameStr);
+    bool overwriteDirectoryMessageBox(const QString &directory) const;
+    void overwriteDirectory(const QString &path, const KArchiveEntry *entry);
+
 
     KZip *archive();
 

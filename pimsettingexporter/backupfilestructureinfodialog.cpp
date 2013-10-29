@@ -22,6 +22,7 @@
 
 #include <KLocale>
 #include <KStandardDirs>
+#include <KMessageBox>
 
 #include <QHBoxLayout>
 #include <QFile>
@@ -63,7 +64,7 @@ void BackupFileStructureInfoDialog::loadStructure()
     if (!fileName.isEmpty()) {
         QFile f(fileName);
         if (!f.open(QIODevice::ReadOnly)) {
-            qDebug() <<" Can not read backup-structure";
+            KMessageBox::error(this, i18n("backup-structure.txt file was not found."));
             return;
         }
         mEditor->setPlainText(QString::fromLatin1(f.readAll()));

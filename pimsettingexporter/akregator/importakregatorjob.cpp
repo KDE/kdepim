@@ -61,10 +61,8 @@ void ImportAkregatorJob::restoreData()
 {
     const KArchiveEntry *akregatorEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "akregator/" ) );
     if (akregatorEntry && akregatorEntry->isDirectory()) {
-        //TODO 4.12 verify if akregator already exists.
         const QString akregatorPath = KGlobal::dirs()->saveLocation("data", QLatin1String("akregator/"));
-        const KArchiveDirectory *akregatorDir = static_cast<const KArchiveDirectory*>(akregatorEntry);
-        akregatorDir->copyTo(akregatorPath);
+        overwriteDirectory(akregatorPath, akregatorEntry);
     }
     Q_EMIT info(i18n("Data restored."));
 }
