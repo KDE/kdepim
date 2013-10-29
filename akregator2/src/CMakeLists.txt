@@ -11,6 +11,7 @@ include_directories (
     ${CMAKE_BINARY_DIR}/akregator2/interfaces
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${NEPOMUK_CORE_INCLUDE_DIR}
+    ${SOPRANO_INCLUDE_DIR}
     )
 
 ########### next target ###############
