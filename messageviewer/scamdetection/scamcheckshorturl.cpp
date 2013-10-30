@@ -48,7 +48,7 @@ void ScamCheckShortUrl::expandedUrl(const KUrl &url)
     //TODO send request
 }
 
-bool ScamCheckShortUrl::needCheckUrl(const KUrl &url)
+bool ScamCheckShortUrl::isShortUrl(const KUrl &url)
 {
     if (!url.path().isEmpty() && QString::compare(url.path(),QLatin1String("/")) && sSupportedServices.contains(url.host())) {
         return true;

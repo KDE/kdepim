@@ -673,6 +673,18 @@ KAction *Viewer::openBlockableItems()
     return d->mBlockableItems;
 }
 
+bool Viewer::isAShortUrl(const KUrl &url) const
+{
+    Q_D( const Viewer );
+    return d->isAShortUrl(url);
+}
+
+KAction *Viewer::expandShortUrlAction()
+{
+    Q_D( Viewer );
+    return d->mExpandUrlAction;
+}
+
 }
 
 #include "viewer.moc"

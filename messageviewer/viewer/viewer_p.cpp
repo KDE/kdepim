@@ -1841,6 +1841,12 @@ void ViewerPrivate::createActions()
   mBlockableItems = new KAction(i18n("Open Blockable Items..."), this);
   ac->addAction(QLatin1String("adblock_blockable_items"), mBlockableItems);
   connect( mBlockableItems, SIGNAL(triggered(bool)), SLOT(slotOpenBlockableItems()) );
+
+
+  mExpandUrlAction = new KAction(i18n("Expand short url..."), this);
+  ac->addAction(QLatin1String("expand_short_url"), mExpandUrlAction);
+  mExpandUrlAction->setShortcutConfigurable( false );
+  connect( mExpandUrlAction, SIGNAL(triggered(bool)), SLOT(slotExpandShortUrl()) );
 }
 
 
@@ -3345,6 +3351,18 @@ void ViewerPrivate::slotOpenBlockableItems()
 #ifndef KDEPIM_NO_WEBKIT
     mViewer->openBlockableItemsDialog();
 #endif
+}
+
+bool ViewerPrivate::isAShortUrl(const KUrl &url) const
+{
+    return mViewer->isAShortUrl(url);
+}
+
+void ViewerPrivate::slotExpandShortUrl()
+{
+    if (mClickedUrl.isValid()) {
+        mViewer->expandUrl(mClickedUrl);
+    }
 }
 
 #include "viewer_p.moc"

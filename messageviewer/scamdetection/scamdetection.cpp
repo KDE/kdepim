@@ -123,7 +123,7 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
         }
         //Check shortUrl
         if (!foundScam) {
-            if (ScamCheckShortUrl::needCheckUrl(url)) {
+            if (ScamCheckShortUrl::isShortUrl(url)) {
                 details += QLatin1String("<li>") + i18n("This email contains a shorturl (%1). It can redirect to another server.", addWarningColor(url.toString())) + QLatin1String("</li>");
                 //TODO allow to show long url
                 foundScam = true;

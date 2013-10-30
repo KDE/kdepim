@@ -327,4 +327,16 @@ void MailWebView::slotShowDetails()
 {
 }
 
+void MailWebView::expandUrl(const KUrl &url)
+{
+    Q_UNUSED(url)
+}
+
+bool MailWebView::isAShortUrl(const KUrl &url) const
+{
+    Q_UNUSED(url)
+    return false;
+}
+
+
 #include "mailwebview.moc"

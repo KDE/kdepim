@@ -35,7 +35,7 @@ public:
     explicit ScamCheckShortUrl(QObject *parent=0);
     ~ScamCheckShortUrl();
 
-    static bool needCheckUrl(const KUrl &url);
+    static bool isShortUrl(const KUrl &url);
 
     void expandedUrl(const KUrl &url);
 

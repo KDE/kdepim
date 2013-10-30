@@ -101,11 +101,14 @@ public:
 
     void setScrollBarPolicy( Qt::Orientation orientation, Qt::ScrollBarPolicy policy );
     Qt::ScrollBarPolicy scrollBarPolicy( Qt::Orientation orientation ) const;
+
+    bool isAShortUrl(const KUrl &url) const;
+    void expandUrl(const KUrl &url);
+
 #ifndef KDEPIM_NO_WEBKIT
     void scamCheck();
     void saveMainFrameScreenshotInFile(const QString &filename);
     void openBlockableItemsDialog();
-    void expandUrl(const KUrl &url);
 #endif
 
 public Q_SLOTS:
