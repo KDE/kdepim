@@ -1,4 +1,13 @@
 
+Wednesday 30 October 2013
+
+Problems addressed
+------------------
+
+* kolab/issue4869: KMail composer shows blue encryption line although 'Encrypt Message' button already disabled (rt#10255)
+
+
+
 Monday 23 September 2013
 
 Problems addressed
