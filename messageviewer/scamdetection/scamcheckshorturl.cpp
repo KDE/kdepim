@@ -88,7 +88,6 @@ void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
 
 void ScamCheckShortUrl::slotError(QNetworkReply::NetworkError error)
 {
-    qDebug()<<" void ScamCheckShortUrl::slotError(QNetworkReply::NetworkError error)";
     Q_EMIT expandUrlError(error);
 }
 

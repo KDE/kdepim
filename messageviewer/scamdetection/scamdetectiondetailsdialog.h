@@ -26,12 +26,11 @@ class RichTextEditorWidget;
 }
 
 namespace MessageViewer {
-class ScamCheckShortUrl;
 class ScamDetectionDetailsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ScamDetectionDetailsDialog(MessageViewer::ScamCheckShortUrl *scamUrl, QWidget *parent = 0);
+    explicit ScamDetectionDetailsDialog(QWidget *parent = 0);
     ~ScamDetectionDetailsDialog();
 
     void setDetails(const QString &details);
@@ -43,7 +42,6 @@ private:
     void writeConfig();
     void readConfig();
     PimCommon::RichTextEditorWidget *mDetails;
-    MessageViewer::ScamCheckShortUrl *mScamCheckUrl;
 };
 }
 

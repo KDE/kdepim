@@ -142,7 +142,7 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
 void ScamDetection::showDetails()
 {
     if (!mDetailsDialog) {
-        mDetailsDialog = new MessageViewer::ScamDetectionDetailsDialog(mCheckShortUrl);
+        mDetailsDialog = new MessageViewer::ScamDetectionDetailsDialog;
     }
 
     mDetailsDialog->setDetails(mDetails);
