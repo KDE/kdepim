@@ -18,8 +18,11 @@
 
 #include "scamcheckshorturl.h"
 
+#include <libkdepim/misc/broadcaststatus.h>
+
 #include <KGlobal>
 #include <KStandardDirs>
+#include <KLocale>
 
 #include <qjson/parser.h>
 
@@ -46,31 +49,41 @@ ScamCheckShortUrl::~ScamCheckShortUrl()
 
 void ScamCheckShortUrl::expandedUrl(const KUrl &url)
 {
+    const QUrl newUrl = QString::fromLatin1("http://api.longurl.org/v2/expand?url=%1&format=json").arg(url.url());
 
-    QUrl newUrl = QString::fromLatin1("http://api.longurl.org/v2/expand?url=%1&format=json").arg(url.url());
-
-    qDebug()<<" newUrl "<<newUrl;
+    //qDebug()<<" newUrl "<<newUrl;
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(newUrl));
+    reply->setProperty("shortUrl", url.url());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
 {
+    KUrl shortUrl;
+    if (!reply->property("shortUrl").isNull()) {
+        shortUrl.setUrl(reply->property("shortUrl").toString());
+    }
     reply->deleteLater();
     const QString jsonData = QString::fromUtf8(reply->readAll());
 
-    qDebug() << jsonData;
+    //qDebug() << jsonData;
 
     QJson::Parser parser;
     bool ok;
 
-    qDebug()<<" parser.parse(jsonData.toUtf8(), &ok)"<<parser.parse(jsonData.toUtf8(), &ok);
-    const QVariantList json = parser.parse(jsonData.toUtf8(), &ok).toList();
+    const QMap<QString, QVariant> map = parser.parse(jsonData.toUtf8(), &ok).toMap();
     if (!ok) {
-        //Q_EMIT translateFailed(ok);
         return;
     }
-    qDebug()<<" json "<<json;
+
+    KUrl longUrl;
+    if (map.contains(QLatin1String("long-url"))) {
+        longUrl.setUrl(map.value(QLatin1String("long-url")).toString());
+    } else {
+        return;
+    }
+
+    KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Short url \'%1\' redirects to \'%2\'.", shortUrl.url(), longUrl.prettyUrl() ) );
 }
 
 void ScamCheckShortUrl::slotError(QNetworkReply::NetworkError error)
