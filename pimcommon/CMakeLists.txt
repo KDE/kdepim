@@ -41,6 +41,11 @@ set(libpimcommon_SRCS
   templatewidgets/templateeditdialog.cpp
   sievehighlighter/sievesyntaxhighlighter.cpp
   sievehighlighter/sievesyntaxhighlighterutil.cpp
+  shorturl/abstractshorturl.cpp
+  shorturl/shorturlwidget.cpp
+  shorturl/googleshorturl.cpp
+  shorturl/shorturlconfigurewidget.cpp
+  shorturl/shorturlutils.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
@@ -74,6 +79,7 @@ add_subdirectory(translator/tests)
 add_subdirectory(texteditor/plaintexteditor/tests)
 add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(widgets/tests)
+add_subdirectory(shorturl/tests)
 
 
 if (QT_QTDESIGNER_FOUND)

@@ -15,34 +15,39 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SCAMDETECTIONDETAILSDIALOG_H
-#define SCAMDETECTIONDETAILSDIALOG_H
+#ifndef SHORTURLWIDGET_H
+#define SHORTURLWIDGET_H
 
-#include <KDialog>
+#include <QWidget>
+#include "pimcommon_export.h"
 
-class KTextEdit;
+class KLineEdit;
+class QPushButton;
 namespace PimCommon {
-class RichTextEditorWidget;
-}
-
-namespace MessageViewer {
-class ScamDetectionDetailsDialog : public KDialog
+class AbstractShortUrl;
+class PIMCOMMON_EXPORT ShortUrlWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ScamDetectionDetailsDialog(QWidget *parent = 0);
-    ~ScamDetectionDetailsDialog();
-
-    void setDetails(const QString &details);
+    explicit ShortUrlWidget(QWidget *parent=0);
+    ~ShortUrlWidget();
 
 private Q_SLOTS:
-    void slotSaveAs();
+    void slotConvertUrl();
+    void slotPasteToClipboard();
+    void slotOriginalUrlChanged(const QString &text);
+    void slotShortUrlChanged(const QString &text);
+    void slotShortUrlDone(const QString &url);
+    void slotShortUrlFailed(const QString &errMsg);
 
 private:
-    void writeConfig();
-    void readConfig();
-    PimCommon::RichTextEditorWidget *mDetails;
+    void loadEngine();
+    KLineEdit *mOriginalUrl;
+    KLineEdit *mShortUrl;
+    QPushButton *mConvertButton;
+    QPushButton *mPasteToClipboard;
+    AbstractShortUrl *mEngine;
 };
 }
 
-#endif // SCAMDETECTIONDETAILSDIALOG_H
+#endif // SHORTURLWIDGET_H

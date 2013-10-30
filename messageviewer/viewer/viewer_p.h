@@ -453,6 +453,8 @@ public:
   void goOnline();
   void goResourceOnline();
 
+  bool isAShortUrl(const KUrl &url) const;
+
 private slots:
   void slotModifyItemDone(KJob* job);
   void slotMessageMayBeAScam();
@@ -602,6 +604,7 @@ public slots:
   void slotResetMessageDisplayFormat();
   void slotBlockImage();
   void slotOpenBlockableItems();
+  void slotExpandShortUrl();
 signals:
   void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
@@ -675,6 +678,7 @@ public:
   KAction *mTranslateAction;
   KAction *mBlockImage;
   KAction *mBlockableItems;
+  KAction *mExpandUrlAction;
   KUrl mHoveredUrl;
   KUrl mClickedUrl;
   KUrl mImageUrl;

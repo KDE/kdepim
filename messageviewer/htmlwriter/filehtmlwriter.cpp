@@ -75,7 +75,7 @@ namespace MessageViewer {
   }
 
   void FileHtmlWriter::write( const QString & str ) {
-    mStream << str;
+    mStream << str.toUtf8();
     flush();
   }
 

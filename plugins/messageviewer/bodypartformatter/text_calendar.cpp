@@ -761,6 +761,7 @@ class UrlHandler : public Interface::BodyPartURLHandler
 
       // If result is ResultCancelled, then we don't show the message box and return false so kmail
       // doesn't delete the e-mail.
+      kDebug() << "ITIPHandler result was " << itipHandler->result();
       if ( itipHandler->result() == Akonadi::ITIPHandler::ResultError ) {
         const QString errorMessage = itipHandler->errorMessage();
         if ( !errorMessage.isEmpty() ) {

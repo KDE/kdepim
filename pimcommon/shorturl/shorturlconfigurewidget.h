@@ -15,28 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TEST_SCAMDETECTION_H
-#define TEST_SCAMDETECTION_H
+#ifndef SHORTURLCONFIGUREWIDGET_H
+#define SHORTURLCONFIGUREWIDGET_H
 
+#include "pimcommon_export.h"
 
-#include <qtest_kde.h>
-#include <QObject>
-class QWebFrame;
-class ScamDetectionTest : public QObject
+#include <QWidget>
+#include <QComboBox>
+
+namespace PimCommon {
+class PIMCOMMON_EXPORT ShortUrlConfigureWidget : public QWidget
 {
     Q_OBJECT
-private slots:
-    void testIp();
-    void testNoScam();
-    void testHref();
-    void testHexaValue();
-    void testRedirectUrl();
-    void testUrlWithNumericValue();
-    void testShortUrl();
+public:
+    explicit ShortUrlConfigureWidget(QWidget *parent=0);
+    ~ShortUrlConfigureWidget();
+
+    void loadConfig();
+    void writeConfig();
+    void resetToDefault();
 
 private:
-    bool scanPage(QWebFrame *frame);
-    bool testHtml(const QString &content);
+    void init();
+    QComboBox *mShortUrlServer;
 };
+}
 
-#endif
+#endif // SHORTURLCONFIGUREWIDGET_H

@@ -2874,6 +2874,10 @@ void KMMainWidget::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,cons
       menu->addAction( mMsgView->addBookmarksAction() );
       menu->addAction( mMsgView->urlSaveAsAction() );
       menu->addAction( mMsgView->copyURLAction() );
+      if (mMsgView->isAShortUrl(url)) {
+         menu->addSeparator();
+         menu->addAction( mMsgView->expandShortUrlAction() );
+      }
       if (!imageUrl.isEmpty()) {
         menu->addSeparator();
         menu->addAction( mMsgView->copyImageLocation());

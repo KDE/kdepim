@@ -19,31 +19,42 @@
 #ifndef SCAMCHECKSHORTURL_H
 #define SCAMCHECKSHORTURL_H
 
+#include "messageviewer_export.h"
+
 #include <QObject>
 
 #include <KUrl>
 
 #include <QStringList>
+#include <QNetworkReply>
 
+class QNetworkAccessManager;
+class QNetworkReply;
 namespace MessageViewer {
-class ScamCheckShortUrl : public QObject
+class MESSAGEVIEWER_EXPORT ScamCheckShortUrl : public QObject
 {
     Q_OBJECT
 public:
     explicit ScamCheckShortUrl(QObject *parent=0);
     ~ScamCheckShortUrl();
 
-    static bool needCheckUrl(const KUrl &url);
+    static bool isShortUrl(const KUrl &url);
 
     void expandedUrl(const KUrl &url);
 
+    static void loadLongUrlServices();
+
+private Q_SLOTS:
+    void slotExpandFinished(QNetworkReply*);
+    void slotError(QNetworkReply::NetworkError error);
+
 Q_SIGNALS:
     void urlExpanded(const QString &shortUrl, const QString &expandedUrl);
+    void expandUrlError(QNetworkReply::NetworkError error);
 
 private:
-    void loadLongUrlServices();
-
     static QStringList sSupportedServices;
+    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 

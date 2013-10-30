@@ -15,28 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TEST_SCAMDETECTION_H
-#define TEST_SCAMDETECTION_H
+#ifndef SHORTURLUTILS_H
+#define SHORTURLUTILS_H
 
-
-#include <qtest_kde.h>
 #include <QObject>
-class QWebFrame;
-class ScamDetectionTest : public QObject
+
+namespace PimCommon {
+class AbstractShortUrl;
+namespace ShortUrlUtils
 {
-    Q_OBJECT
-private slots:
-    void testIp();
-    void testNoScam();
-    void testHref();
-    void testHexaValue();
-    void testRedirectUrl();
-    void testUrlWithNumericValue();
-    void testShortUrl();
+    enum EngineType {
+        Google = 0,
+        //TODO add more engine.
+        EndListEngine
+    };
+    QString stringFromEngineType(EngineType type);
+    AbstractShortUrl *loadEngine(QObject *parent);
+}
+}
 
-private:
-    bool scanPage(QWebFrame *frame);
-    bool testHtml(const QString &content);
-};
-
-#endif
+#endif // SHORTURLUTILS_H

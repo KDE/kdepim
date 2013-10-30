@@ -30,15 +30,6 @@
 #include "qtest_kde.h"
 #include "kdebug.h"
 
-// This is used to override the default message output handler. In unit tests, the special message
-// output handler can write messages to stdout delayed, i.e. after the actual kDebug() call. This
-// interfers with KPGP, since KPGP reads output from stdout, which needs to be kept clean.
-void nullMessageOutput( QtMsgType type, const char *msg )
-{
-  Q_UNUSED( type );
-  Q_UNUSED( msg );
-}
-
 using namespace MessageViewer;
 
 void TemplateParserTester::test_convertedHtml_data()
@@ -167,9 +158,7 @@ void TemplateParserTester::test_processWithTemplatesForBody()
   parser.setAllowDecryption( true );
   parser.mOrigMsg = msg;
 
-  qInstallMsgHandler( nullMessageOutput );
   parser.processWithTemplate( command );
-  qInstallMsgHandler( 0 );
 
   identMan->deleteLater();
   QCOMPARE( QString::fromLatin1( msg->encodedBody() ), expected );

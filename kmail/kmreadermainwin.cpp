@@ -491,6 +491,10 @@ void KMReaderMainWin::showMessagePopup(const Akonadi::Item&msg ,const KUrl&url,c
       menu->addAction( mReaderWin->addBookmarksAction() );
       menu->addAction( mReaderWin->urlSaveAsAction() );
       menu->addAction( mReaderWin->copyURLAction() );
+      if (mReaderWin->isAShortUrl(url)) {
+         menu->addSeparator();
+         menu->addAction( mReaderWin->expandShortUrlAction() );
+      }
       if(!imageUrl.isEmpty()) {
         menu->addSeparator();
         menu->addAction( mReaderWin->copyImageLocation());

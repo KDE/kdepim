@@ -15,28 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TEST_SCAMDETECTION_H
-#define TEST_SCAMDETECTION_H
+#include "shorturl/shorturlwidget.h"
 
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
+#include <KLocale>
 
-#include <qtest_kde.h>
-#include <QObject>
-class QWebFrame;
-class ScamDetectionTest : public QObject
+int main (int argc, char **argv)
 {
-    Q_OBJECT
-private slots:
-    void testIp();
-    void testNoScam();
-    void testHref();
-    void testHexaValue();
-    void testRedirectUrl();
-    void testUrlWithNumericValue();
-    void testShortUrl();
+    KCmdLineArgs::init(argc, argv, "shorturl_gui", 0, ki18n("ShortUrlTest_Gui"),
+                       "1.0", ki18n("Test for short url widget"));
 
-private:
-    bool scanPage(QWebFrame *frame);
-    bool testHtml(const QString &content);
-};
+    KApplication app;
 
-#endif
+    PimCommon::ShortUrlWidget *w = new PimCommon::ShortUrlWidget();
+    w->show();
+    app.exec();
+    delete w;
+    return 0;
+}
+

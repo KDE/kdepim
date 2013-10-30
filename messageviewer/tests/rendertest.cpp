@@ -27,15 +27,6 @@
 #include <QDir>
 #include <QObject>
 
-// This is used to override the default message output handler. In unit tests, the special message
-// output handler can write messages to stdout delayed, i.e. after the actual kDebug() call. This
-// interfers with KPGP, since KPGP reads output from stdout, which needs to be kept clean.
-void nullMessageOutput( QtMsgType type, const char *msg )
-{
-  Q_UNUSED( type );
-  Q_UNUSED( msg );
-}
-
 using namespace MessageViewer;
 
 class RenderTest : public QObject
@@ -91,9 +82,7 @@ class RenderTest : public QObject
       fileWriter.begin( QString() );
       fileWriter.queue( cssHelper.htmlHead( false ) );
 
-      qInstallMsgHandler( nullMessageOutput );
       otp.parseObjectTree( msg.get() );
-      qInstallMsgHandler( 0 );
 
       fileWriter.queue(QLatin1String("</body></html>"));
       fileWriter.flush();
@@ -105,6 +94,8 @@ class RenderTest : public QObject
       // TODO add proper cmake check for xmllint and diff
       QStringList args = QStringList()
         << QLatin1String("--format")
+        << QLatin1String("--encode")
+        << QLatin1String("UTF8")
         << QLatin1String("--output")
         << htmlFileName
         << outFileName;

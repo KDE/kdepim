@@ -282,6 +282,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   KAction *resetMessageDisplayFormatAction();
   KAction *blockImage();
   KAction *openBlockableItems();
+  KAction *expandShortUrlAction();
 
   HeaderStrategy * headerStrategy() const;
 
@@ -339,6 +340,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   void saveMainFrameScreenshotInFile(const QString &filename);
   bool adblockEnabled() const;
+  bool isAShortUrl(const KUrl &url) const;
 
 
 signals:

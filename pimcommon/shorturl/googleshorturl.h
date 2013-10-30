@@ -15,28 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TEST_SCAMDETECTION_H
-#define TEST_SCAMDETECTION_H
+#ifndef GOOGLESHORTURL_H
+#define GOOGLESHORTURL_H
 
+#include "shorturl/abstractshorturl.h"
 
-#include <qtest_kde.h>
-#include <QObject>
-class QWebFrame;
-class ScamDetectionTest : public QObject
+namespace PimCommon {
+class GoogleShortUrl : public PimCommon::AbstractShortUrl
 {
     Q_OBJECT
-private slots:
-    void testIp();
-    void testNoScam();
-    void testHref();
-    void testHexaValue();
-    void testRedirectUrl();
-    void testUrlWithNumericValue();
-    void testShortUrl();
+public:
+    explicit GoogleShortUrl(QObject *parent = 0);
+    ~GoogleShortUrl();
 
-private:
-    bool scanPage(QWebFrame *frame);
-    bool testHtml(const QString &content);
+    void start();
 };
+}
 
-#endif
+#endif // GOOGLESHORTURL_H
