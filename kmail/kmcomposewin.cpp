@@ -4980,6 +4980,9 @@ void KMComposeWin::slotIdentityChanged( uint uoid )
 
   // make sure the From and BCC fields are shown if necessary
   rethinkFields( false );
+
+  // make sure sign/encrypt status is updated accordingly
+  slotUpdateSignatureAndEncrypionStateIndicators();
 }
 
 //-----------------------------------------------------------------------------
