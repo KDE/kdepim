@@ -28,4 +28,9 @@ AbstractShortUrl::~AbstractShortUrl()
 
 }
 
+void AbstractShortUrl::shortUrl(const QString &url)
+{
+    mOriginalUrl = url;
+}
+
 #include "abstractshorturl.moc"

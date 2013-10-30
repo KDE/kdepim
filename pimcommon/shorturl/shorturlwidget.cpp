@@ -16,9 +16,12 @@
 */
 
 #include "shorturlwidget.h"
+#include "shorturlutils.h"
+#include "abstractshorturl.h"
 
 #include <KLineEdit>
 #include <KLocale>
+#include <KMessageBox>
 
 #include <QLabel>
 #include <QGridLayout>
@@ -67,12 +70,15 @@ ShortUrlWidget::~ShortUrlWidget()
 
 void ShortUrlWidget::loadEngine()
 {
-    //TODO
+    mEngine = PimCommon::ShortUrlUtils::loadEngine(this);
+    connect(mEngine, SIGNAL(shortUrlDone(QString)), this, SLOT(slotShortUrlDone(QString)));
+    connect(mEngine, SIGNAL(shortUrlFailed(QString)), this, SLOT(slotShortUrlFailed(QString)));
 }
 
 void ShortUrlWidget::slotConvertUrl()
 {
-    //TODO
+    mEngine->shortUrl(mOriginalUrl->text());
+    mEngine->start();
 }
 
 void ShortUrlWidget::slotPasteToClipboard()
@@ -90,6 +96,16 @@ void ShortUrlWidget::slotOriginalUrlChanged(const QString &text)
 void ShortUrlWidget::slotShortUrlChanged(const QString &text)
 {
     mPasteToClipboard->setEnabled(!text.isEmpty());
+}
+
+void ShortUrlWidget::slotShortUrlDone(const QString &url)
+{
+    mShortUrl->setText(url);
+}
+
+void ShortUrlWidget::slotShortUrlFailed(const QString &errMsg)
+{
+    KMessageBox::error(this, i18n("An error occurs: \"%1\"", errMsg));
 }
 
 #include "shorturlwidget.moc"

@@ -28,11 +28,6 @@ GoogleShortUrl::~GoogleShortUrl()
 
 }
 
-void GoogleShortUrl::shortUrl(const QString &url)
-{
-    //TODO
-}
-
 void GoogleShortUrl::start()
 {
     //TODO

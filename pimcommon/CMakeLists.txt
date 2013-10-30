@@ -45,6 +45,7 @@ set(libpimcommon_SRCS
   shorturl/shorturlwidget.cpp
   shorturl/googleshorturl.cpp
   shorturl/shorturlconfigurewidget.cpp
+  shorturl/shorturlutils.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)

@@ -28,7 +28,6 @@ public:
     explicit GoogleShortUrl(QObject *parent = 0);
     ~GoogleShortUrl();
 
-    void shortUrl(const QString &url);
     void start();
 };
 }

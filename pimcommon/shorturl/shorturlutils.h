@@ -15,30 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SHORTURLCONFIGUREWIDGET_H
-#define SHORTURLCONFIGUREWIDGET_H
+#ifndef SHORTURLUTILS_H
+#define SHORTURLUTILS_H
 
-#include "pimcommon_export.h"
-
-#include <QWidget>
-#include <QComboBox>
+#include <QObject>
 
 namespace PimCommon {
-class PIMCOMMON_EXPORT ShortUrlConfigureWidget : public QWidget
+class AbstractShortUrl;
+namespace ShortUrlUtils
 {
-    Q_OBJECT
-public:
-    explicit ShortUrlConfigureWidget(QWidget *parent=0);
-    ~ShortUrlConfigureWidget();
-
-    void loadConfig();
-    void writeConfig();
-    void resetToDefault();
-
-private:
-    void init();
-    QComboBox *mShortUrlServer;
-};
+    enum EngineType {
+        Google = 0,
+        //TODO add more engine.
+        EndListEngine
+    };
+    QString stringFromEngineType(EngineType type);
+    AbstractShortUrl *loadEngine(QObject *parent);
+}
 }
 
-#endif // SHORTURLCONFIGUREWIDGET_H
+#endif // SHORTURLUTILS_H

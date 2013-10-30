@@ -16,6 +16,7 @@
 */
 
 #include "shorturlconfigurewidget.h"
+#include "shorturlutils.h"
 
 #include <KLocale>
 
@@ -36,11 +37,19 @@ ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
     mShortUrlServer = new QComboBox;
     lay->addWidget(mShortUrlServer);
     setLayout(lay);
+    init();
 }
 
 ShortUrlConfigureWidget::~ShortUrlConfigureWidget()
 {
 
+}
+
+void ShortUrlConfigureWidget::init()
+{
+    for (int i=0; i <PimCommon::ShortUrlUtils::EndListEngine; ++i) {
+        mShortUrlServer->addItem(PimCommon::ShortUrlUtils::stringFromEngineType(static_cast<PimCommon::ShortUrlUtils::EngineType>(i)), i);
+    }
 }
 
 void ShortUrlConfigureWidget::loadConfig()

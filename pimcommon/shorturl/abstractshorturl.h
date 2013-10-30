@@ -30,12 +30,15 @@ public:
     explicit AbstractShortUrl(QObject *parent=0);
     ~AbstractShortUrl();
 
-    virtual void shortUrl(const QString &url) = 0;
+    virtual void shortUrl(const QString &url);
     virtual void start() = 0;
 
 Q_SIGNALS:
     void shortUrlDone(const QString &url);
     void shortUrlFailed(const QString &error);
+
+protected:
+    QString mOriginalUrl;
 };
 }
 

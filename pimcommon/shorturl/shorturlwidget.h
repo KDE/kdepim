@@ -24,6 +24,7 @@
 class KLineEdit;
 class QPushButton;
 namespace PimCommon {
+class AbstractShortUrl;
 class PIMCOMMON_EXPORT ShortUrlWidget : public QWidget
 {
     Q_OBJECT
@@ -36,6 +37,8 @@ private Q_SLOTS:
     void slotPasteToClipboard();
     void slotOriginalUrlChanged(const QString &text);
     void slotShortUrlChanged(const QString &text);
+    void slotShortUrlDone(const QString &url);
+    void slotShortUrlFailed(const QString &errMsg);
 
 private:
     void loadEngine();
@@ -43,6 +46,7 @@ private:
     KLineEdit *mShortUrl;
     QPushButton *mConvertButton;
     QPushButton *mPasteToClipboard;
+    AbstractShortUrl *mEngine;
 };
 }
 
