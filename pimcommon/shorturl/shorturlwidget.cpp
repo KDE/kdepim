@@ -23,18 +23,22 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <QPushButton>
+#include <QApplication>
+#include <QClipboard>
 
 using namespace PimCommon;
 
 ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     : QWidget(parent)
 {
+    loadEngine();
     QGridLayout *grid = new QGridLayout;
 
     QLabel *lab = new QLabel(i18n("Original url:"));
     grid->addWidget(lab, 0, 0);
 
     mOriginalUrl = new KLineEdit;
+    mOriginalUrl->setClearButtonShown(true);
     connect(mOriginalUrl, SIGNAL(textChanged(QString)), this, SLOT(slotOriginalUrlChanged(QString)));
     grid->addWidget(mOriginalUrl, 0, 1);
 
@@ -61,6 +65,11 @@ ShortUrlWidget::~ShortUrlWidget()
 {
 }
 
+void ShortUrlWidget::loadEngine()
+{
+    //TODO
+}
+
 void ShortUrlWidget::slotConvertUrl()
 {
     //TODO
@@ -68,7 +77,9 @@ void ShortUrlWidget::slotConvertUrl()
 
 void ShortUrlWidget::slotPasteToClipboard()
 {
-    //TODO
+    if (!mShortUrl->text().isEmpty()) {
+        QApplication::clipboard()->setText(mShortUrl->text());
+    }
 }
 
 void ShortUrlWidget::slotOriginalUrlChanged(const QString &text)

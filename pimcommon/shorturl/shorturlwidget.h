@@ -38,6 +38,7 @@ private Q_SLOTS:
     void slotShortUrlChanged(const QString &text);
 
 private:
+    void loadEngine();
     KLineEdit *mOriginalUrl;
     KLineEdit *mShortUrl;
     QPushButton *mConvertButton;
