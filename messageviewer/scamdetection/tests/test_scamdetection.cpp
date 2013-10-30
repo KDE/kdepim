@@ -17,6 +17,7 @@
 
 #include "test_scamdetection.h"
 #include "messageviewer/scamdetection/scamdetection.h"
+#include "messageviewer/scamdetection/scamcheckshorturl.h"
 
 #include <QWebElement>
 #include <QWebFrame>
@@ -111,6 +112,13 @@ void ScamDetectionTest::testUrlWithNumericValue()
     QCOMPARE(testHtml(content), false);
     content = QLatin1String("<html><body><a href=\"http://baseball.2ndhalfplays.com/nested/attribs/\">http://baseball2.2ndhalfplays.com/nested/attribs</html>");
     QCOMPARE(testHtml(content), false);
+}
+
+void ScamDetectionTest::testShortUrl()
+{
+    MessageViewer::ScamCheckShortUrl::loadLongUrlServices();
+    const QString content = QLatin1String("<html><body><a href=\"http://tinyurl.com/6d3x\">http://tinyurl.com/6d3x</a></body></html>");
+    QCOMPARE(testHtml(content), true);
 }
 
 

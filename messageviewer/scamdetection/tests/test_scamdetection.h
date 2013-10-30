@@ -32,6 +32,7 @@ private slots:
     void testHexaValue();
     void testRedirectUrl();
     void testUrlWithNumericValue();
+    void testShortUrl();
 
 private:
     bool scanPage(QWebFrame *frame);

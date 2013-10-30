@@ -42,6 +42,8 @@ public:
 
     void expandedUrl(const KUrl &url);
 
+    static void loadLongUrlServices();
+
 private Q_SLOTS:
     void slotExpandFinished(QNetworkReply*);
     void slotError(QNetworkReply::NetworkError error);
@@ -51,8 +53,6 @@ Q_SIGNALS:
     void expandUrlError(QNetworkReply::NetworkError error);
 
 private:
-    void loadLongUrlServices();
-
     static QStringList sSupportedServices;
     QNetworkAccessManager *mNetworkAccessManager;
 };
