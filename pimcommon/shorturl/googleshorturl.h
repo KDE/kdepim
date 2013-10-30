@@ -15,17 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "abstractshorturl.h"
+#ifndef GOOGLESHORTURL_H
+#define GOOGLESHORTURL_H
 
-using namespace PimCommon;
-AbstractShortUrl::AbstractShortUrl(QObject *parent)
-    : QObject(parent)
+#include "shorturl/abstractshorturl.h"
+
+namespace PimCommon {
+class GoogleShortUrl : public PimCommon::AbstractShortUrl
 {
+    Q_OBJECT
+public:
+    explicit GoogleShortUrl(QObject *parent = 0);
+    ~GoogleShortUrl();
+
+    void shortUrl(const QString &url);
+    void start();
+};
 }
 
-AbstractShortUrl::~AbstractShortUrl()
-{
-
-}
-
-#include "abstractshorturl.moc"
+#endif // GOOGLESHORTURL_H

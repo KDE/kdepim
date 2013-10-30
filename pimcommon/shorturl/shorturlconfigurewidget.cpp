@@ -15,17 +15,42 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "abstractshorturl.h"
+#include "shorturlconfigurewidget.h"
+
+#include <KLocale>
+
+#include <QLabel>
+#include <QComboBox>
+#include <QHBoxLayout>
 
 using namespace PimCommon;
-AbstractShortUrl::AbstractShortUrl(QObject *parent)
-    : QObject(parent)
+ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
+    : QWidget(parent)
 {
+    QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
+    setLayout(lay);
 }
 
-AbstractShortUrl::~AbstractShortUrl()
+ShortUrlConfigureWidget::~ShortUrlConfigureWidget()
 {
 
 }
 
-#include "abstractshorturl.moc"
+void ShortUrlConfigureWidget::loadConfig()
+{
+
+}
+
+void ShortUrlConfigureWidget::writeConfig()
+{
+
+}
+
+void ShortUrlConfigureWidget::resetToDefault()
+{
+
+}
+
+
+#include "shorturlconfigurewidget.moc"

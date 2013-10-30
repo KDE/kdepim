@@ -41,6 +41,10 @@ set(libpimcommon_SRCS
   templatewidgets/templateeditdialog.cpp
   sievehighlighter/sievesyntaxhighlighter.cpp
   sievehighlighter/sievesyntaxhighlighterutil.cpp
+  shorturl/abstractshorturl.cpp
+  shorturl/shorturlwidget.cpp
+  shorturl/googleshorturl.cpp
+  shorturl/shorturlconfigurewidget.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)

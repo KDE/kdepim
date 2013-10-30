@@ -15,17 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "abstractshorturl.h"
+#ifndef SHORTURLWIDGET_H
+#define SHORTURLWIDGET_H
 
-using namespace PimCommon;
-AbstractShortUrl::AbstractShortUrl(QObject *parent)
-    : QObject(parent)
+#include <QWidget>
+#include "pimcommon_export.h"
+
+class KLineEdit;
+class QPushButton;
+namespace PimCommon {
+class PIMCOMMON_EXPORT ShortUrlWidget : public QWidget
 {
+    Q_OBJECT
+public:
+    explicit ShortUrlWidget(QWidget *parent=0);
+    ~ShortUrlWidget();
+
+private Q_SLOTS:
+    void slotConvertUrl();
+    void slotPasteToClipboard();
+    void slotOriginalUrlChanged(const QString &text);
+    void slotShortUrlChanged(const QString &text);
+
+private:
+    KLineEdit *mOriginalUrl;
+    KLineEdit *mShortUrl;
+    QPushButton *mConvertButton;
+    QPushButton *mPasteToClipboard;
+};
 }
 
-AbstractShortUrl::~AbstractShortUrl()
-{
-
-}
-
-#include "abstractshorturl.moc"
+#endif // SHORTURLWIDGET_H
