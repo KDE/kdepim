@@ -36,7 +36,7 @@ public:
     void resetToDefault();
 
 private:
-    QComboBox *mShortCutServer;
+    QComboBox *mShortUrlServer;
 };
 }
 

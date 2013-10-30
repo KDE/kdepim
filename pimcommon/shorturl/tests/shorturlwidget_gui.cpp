@@ -15,48 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "shorturlconfigurewidget.h"
+#include "shorturl/shorturlwidget.h"
 
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
 #include <KLocale>
 
-#include <QLabel>
-#include <QComboBox>
-#include <QHBoxLayout>
-
-using namespace PimCommon;
-ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
-    : QWidget(parent)
+int main (int argc, char **argv)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
+    KCmdLineArgs::init(argc, argv, "shorturl_gui", 0, ki18n("ShortUrlTest_Gui"),
+                       "1.0", ki18n("Test for short url widget"));
 
-    QLabel *lab = new QLabel(i18n("Select Short Url server:"));
-    lay->addWidget(lab);
+    KApplication app;
 
-    mShortUrlServer = new QComboBox;
-    lay->addWidget(mShortUrlServer);
-    setLayout(lay);
+    PimCommon::ShortUrlWidget *w = new PimCommon::ShortUrlWidget();
+    w->show();
+    app.exec();
+    delete w;
+    return 0;
 }
 
-ShortUrlConfigureWidget::~ShortUrlConfigureWidget()
-{
-
-}
-
-void ShortUrlConfigureWidget::loadConfig()
-{
-
-}
-
-void ShortUrlConfigureWidget::writeConfig()
-{
-
-}
-
-void ShortUrlConfigureWidget::resetToDefault()
-{
-
-}
-
-
-#include "shorturlconfigurewidget.moc"

@@ -78,6 +78,7 @@ add_subdirectory(translator/tests)
 add_subdirectory(texteditor/plaintexteditor/tests)
 add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(widgets/tests)
+add_subdirectory(shorturl/tests)
 
 
 if (QT_QTDESIGNER_FOUND)
