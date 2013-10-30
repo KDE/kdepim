@@ -26,14 +26,18 @@
 #include <QFile>
 #include <QVariantMap>
 #include <QDebug>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
 
 using namespace MessageViewer;
 QStringList ScamCheckShortUrl::sSupportedServices = QStringList();
 
 ScamCheckShortUrl::ScamCheckShortUrl(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mNetworkAccessManager(new QNetworkAccessManager(this))
 {
     loadLongUrlServices();
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExpandFinished(QNetworkReply*)));
 }
 
 ScamCheckShortUrl::~ScamCheckShortUrl()
@@ -42,10 +46,37 @@ ScamCheckShortUrl::~ScamCheckShortUrl()
 
 void ScamCheckShortUrl::expandedUrl(const KUrl &url)
 {
-    KUrl request = KUrl(QLatin1String("http://api.longurl.org/v2/expand"));
-    request.addQueryItem(QLatin1String("url"), url.url());
-    request.addQueryItem(QLatin1String("format"), QLatin1String("json"));
-    //TODO send request
+
+    QUrl newUrl = QString::fromLatin1("http://api.longurl.org/v2/expand?url=%1&format=json").arg(url.url());
+
+    qDebug()<<" newUrl "<<newUrl;
+    QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(newUrl));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+void ScamCheckShortUrl::slotExpandFinished(QNetworkReply *reply)
+{
+    reply->deleteLater();
+    const QString jsonData = QString::fromUtf8(reply->readAll());
+
+    qDebug() << jsonData;
+
+    QJson::Parser parser;
+    bool ok;
+
+    qDebug()<<" parser.parse(jsonData.toUtf8(), &ok)"<<parser.parse(jsonData.toUtf8(), &ok);
+    const QVariantList json = parser.parse(jsonData.toUtf8(), &ok).toList();
+    if (!ok) {
+        //Q_EMIT translateFailed(ok);
+        return;
+    }
+    qDebug()<<" json "<<json;
+}
+
+void ScamCheckShortUrl::slotError(QNetworkReply::NetworkError error)
+{
+    qDebug()<<" void ScamCheckShortUrl::slotError(QNetworkReply::NetworkError error)";
+    Q_EMIT expandUrlError(error);
 }
 
 bool ScamCheckShortUrl::isShortUrl(const KUrl &url)
