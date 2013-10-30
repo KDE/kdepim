@@ -19,6 +19,8 @@
 #ifndef SCAMCHECKSHORTURL_H
 #define SCAMCHECKSHORTURL_H
 
+#include "messageviewer_export.h"
+
 #include <QObject>
 
 #include <KUrl>
@@ -26,7 +28,7 @@
 #include <QStringList>
 
 namespace MessageViewer {
-class ScamCheckShortUrl : public QObject
+class MESSAGEVIEWER_EXPORT ScamCheckShortUrl : public QObject
 {
     Q_OBJECT
 public:
