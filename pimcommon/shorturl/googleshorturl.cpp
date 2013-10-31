@@ -24,6 +24,9 @@
 #include <QUrl>
 #include <QDebug>
 
+#include <qjson/parser.h>
+
+
 using namespace PimCommon;
 GoogleShortUrl::GoogleShortUrl(QObject *parent)
     : PimCommon::AbstractShortUrl(parent),
@@ -39,6 +42,7 @@ GoogleShortUrl::~GoogleShortUrl()
 
 void GoogleShortUrl::start()
 {
+    mErrorFound = false;
     QNetworkRequest request(QUrl(QLatin1String("https://www.googleapis.com/urlshortener/v1/url")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/json"));
 
@@ -52,16 +56,27 @@ void GoogleShortUrl::start()
 void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
     reply->deleteLater();
+    if (mErrorFound)
+        return;
+
     const QString jsonData = QString::fromUtf8(reply->readAll());
 
-    qDebug()<<"void GoogleShortUrl::slotShortUrlFinished(QNetworkReply*)" << jsonData;
-    //Q_EMIT void shortUrlDone(const QString &url);
+    QJson::Parser parser;
+    bool ok;
+    const QMap<QString, QVariant> map = parser.parse(jsonData.toUtf8(), &ok).toMap();
+    if (!ok) {
+        qDebug()<<" Error during parsing";
+        return;
+    }
+    if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
+        Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
+    }
 }
 
 void GoogleShortUrl::slotError(QNetworkReply::NetworkError error)
 {
-    qDebug()<<" error !!!!!!!!!"<<error;
-    Q_EMIT shortUrlFailed(i18n("Error reported by server"));
+    mErrorFound = true;
+    Q_EMIT shortUrlFailed(i18n("Error reported by server: \'%1\'", error));
 }
 
 

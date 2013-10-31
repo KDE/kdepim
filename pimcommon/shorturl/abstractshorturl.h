@@ -39,6 +39,7 @@ Q_SIGNALS:
 
 protected:
     QString mOriginalUrl;
+    bool mErrorFound;
 };
 }
 
