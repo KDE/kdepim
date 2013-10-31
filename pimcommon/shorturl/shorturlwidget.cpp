@@ -32,7 +32,8 @@
 using namespace PimCommon;
 
 ShortUrlWidget::ShortUrlWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mEngine(0)
 {
     loadEngine();
     QGridLayout *grid = new QGridLayout;
@@ -71,8 +72,14 @@ ShortUrlWidget::~ShortUrlWidget()
 {
 }
 
+void ShortUrlWidget::settingsUpdated()
+{
+    loadEngine();
+}
+
 void ShortUrlWidget::loadEngine()
 {
+    delete mEngine;
     mEngine = PimCommon::ShortUrlUtils::loadEngine(this);
     connect(mEngine, SIGNAL(shortUrlDone(QString)), this, SLOT(slotShortUrlDone(QString)));
     connect(mEngine, SIGNAL(shortUrlFailed(QString)), this, SLOT(slotShortUrlFailed(QString)));

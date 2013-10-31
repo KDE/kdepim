@@ -32,6 +32,9 @@ public:
     explicit ShortUrlWidget(QWidget *parent=0);
     ~ShortUrlWidget();
 
+public Q_SLOTS:
+    void settingsUpdated();
+
 private Q_SLOTS:
     void slotConvertUrl();
     void slotPasteToClipboard();

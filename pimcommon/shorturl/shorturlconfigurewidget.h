@@ -35,9 +35,16 @@ public:
     void writeConfig();
     void resetToDefault();
 
+private Q_SLOTS:
+    void slotChanged();
+
+Q_SIGNALS:
+    void settingsChanged();
+
 private:
     void init();
     QComboBox *mShortUrlServer;
+    bool mChanged;
 };
 }
 

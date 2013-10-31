@@ -2,7 +2,7 @@ include_directories(${CMAKE_SOURCE_DIR}/pimcommon/
 )
 
 
-set(shorturlwidget_gui_SRCS shorturlwidget_gui.cpp)
+set(shorturlwidget_gui_SRCS shorturlwidget_gui.cpp shorturlmainwidget.cpp)
 kde4_add_executable(shorturlwidget_gui TEST ${shorturlwidget_gui_SRCS})
 target_link_libraries(shorturlwidget_gui
   ${QT_QTTEST_LIBRARY}

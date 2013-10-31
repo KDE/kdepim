@@ -28,7 +28,8 @@
 
 using namespace PimCommon;
 ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mChanged(false)
 {
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
@@ -37,6 +38,7 @@ ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
     lay->addWidget(lab);
 
     mShortUrlServer = new QComboBox;
+    connect(mShortUrlServer, SIGNAL(activated(int)), this, SLOT(slotChanged()));
     lay->addWidget(mShortUrlServer);
     setLayout(lay);
     init();
@@ -46,6 +48,11 @@ ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
 ShortUrlConfigureWidget::~ShortUrlConfigureWidget()
 {
 
+}
+
+void ShortUrlConfigureWidget::slotChanged()
+{
+    mChanged = true;
 }
 
 void ShortUrlConfigureWidget::init()
@@ -59,16 +66,21 @@ void ShortUrlConfigureWidget::loadConfig()
 {
     const int engineType = PimCommon::ShortUrlUtils::readEngineSettings();
     mShortUrlServer->setCurrentIndex(mShortUrlServer->findData(engineType));
+    mChanged = false;
 }
 
 void ShortUrlConfigureWidget::writeConfig()
 {
-    PimCommon::ShortUrlUtils::writeEngineSettings(mShortUrlServer->itemData(mShortUrlServer->currentIndex()).toInt());
+    if (mChanged) {
+        PimCommon::ShortUrlUtils::writeEngineSettings(mShortUrlServer->itemData(mShortUrlServer->currentIndex()).toInt());
+        Q_EMIT settingsChanged();
+    }
 }
 
 void ShortUrlConfigureWidget::resetToDefault()
 {
     mShortUrlServer->setCurrentIndex(0);
+    mChanged = false;
 }
 
 #include "shorturlconfigurewidget.moc"
