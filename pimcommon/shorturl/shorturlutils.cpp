@@ -32,7 +32,7 @@ PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(QObject *paren
     KConfigGroup grp( KGlobal::config(), "ShortUrl" );
 
     PimCommon::AbstractShortUrl *engine = 0;
-    PimCommon::ShortUrlUtils::EngineType type = static_cast<PimCommon::ShortUrlUtils::EngineType>(grp.readEntry("Engine", 0));
+    PimCommon::ShortUrlUtils::EngineType type = static_cast<PimCommon::ShortUrlUtils::EngineType>(grp.readEntry("Engine", static_cast<int>(Google)));
     switch (type) {
     case Google:
         engine = new PimCommon::GoogleShortUrl(parent);

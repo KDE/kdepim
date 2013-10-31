@@ -58,7 +58,7 @@ void ShortUrlConfigureWidget::init()
 void ShortUrlConfigureWidget::loadConfig()
 {
     KConfigGroup grp( KGlobal::config(), "ShortUrl" );
-    const int engineType = grp.readEntry("Engine", 0);
+    const int engineType = grp.readEntry("Engine", static_cast<int>(PimCommon::ShortUrlUtils::Google));
     mShortUrlServer->setCurrentIndex(mShortUrlServer->findData(engineType));
 }
 
@@ -72,6 +72,5 @@ void ShortUrlConfigureWidget::resetToDefault()
 {
     mShortUrlServer->setCurrentIndex(0);
 }
-
 
 #include "shorturlconfigurewidget.moc"
