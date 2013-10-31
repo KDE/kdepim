@@ -429,7 +429,7 @@ void ImportMailJob::restoreMails()
 
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-            KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
+            const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
 
 
             QMap<QString, QVariant> settings;
