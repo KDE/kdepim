@@ -104,6 +104,7 @@ void ImportAddressbookJob::restoreResources()
                     }
 
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcarddir_resource"), filename, settings );
+                    infoAboutNewResource(newResource);
                     qDebug()<<" newResource"<<newResource;
                 }
             }

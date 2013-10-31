@@ -199,6 +199,7 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QLatin1String("kmailsnippetrc"));
     backupConfigFile(QLatin1String("sievetemplaterc"));
     backupConfigFile(QLatin1String("customtemplatesrc"));
+    backupConfigFile(QLatin1String("kontactrc"));
 
     //Notify file config
     backupConfigFile(QLatin1String("akonadi_mailfilter_agent.notifyrc"));

@@ -56,7 +56,6 @@ void ImportCalendarJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
     restoreResourceFile(QString::fromLatin1("akonadi_ical_resource"), Utils::calendarPath(), storeCalendar);
-    Q_EMIT info(i18n("Resources restored."));
 }
 
 void ImportCalendarJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
