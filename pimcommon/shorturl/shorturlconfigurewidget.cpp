@@ -19,6 +19,8 @@
 #include "shorturlutils.h"
 
 #include <KLocale>
+#include <KConfigGroup>
+#include <KGlobal>
 
 #include <QLabel>
 #include <QComboBox>
@@ -38,6 +40,7 @@ ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
     lay->addWidget(mShortUrlServer);
     setLayout(lay);
     init();
+    loadConfig();
 }
 
 ShortUrlConfigureWidget::~ShortUrlConfigureWidget()
@@ -54,17 +57,20 @@ void ShortUrlConfigureWidget::init()
 
 void ShortUrlConfigureWidget::loadConfig()
 {
-
+    KConfigGroup grp( KGlobal::config(), "ShortUrl" );
+    const int engineType = grp.readEntry("Engine", 0);
+    mShortUrlServer->setCurrentIndex(mShortUrlServer->findData(engineType));
 }
 
 void ShortUrlConfigureWidget::writeConfig()
 {
-
+    KConfigGroup grp( KGlobal::config(), "ShortUrl" );
+    grp.writeEntry("Engine", mShortUrlServer->itemData(mShortUrlServer->currentIndex()).toInt());
 }
 
 void ShortUrlConfigureWidget::resetToDefault()
 {
-
+    mShortUrlServer->setCurrentIndex(0);
 }
 
 
