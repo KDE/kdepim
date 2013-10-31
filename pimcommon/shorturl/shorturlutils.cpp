@@ -18,6 +18,7 @@
 #include "shorturlutils.h"
 #include "pimcommon/shorturl/abstractshorturl.h"
 #include "pimcommon/shorturl/googleshorturl.h"
+#include "pimcommon/shorturl/tinyurlshorturl.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -36,6 +37,9 @@ PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(QObject *paren
     case Google:
         engine = new PimCommon::GoogleShortUrl(parent);
         break;
+    case Tinyurl:
+        engine = new PimCommon::TinyurlShortUrl(parent);
+        break;
     case EndListEngine:
     default:
         qDebug()<<" Engine type undefined "<<type;
@@ -51,6 +55,9 @@ QString PimCommon::ShortUrlUtils::stringFromEngineType(EngineType type)
     switch (type) {
     case Google:
         name = i18n("Google");
+        break;
+    case Tinyurl:
+        name = i18n("Tinyurl");
         break;
     case EndListEngine:
     default:

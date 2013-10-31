@@ -15,24 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SHORTURLUTILS_H
-#define SHORTURLUTILS_H
 
-#include <QObject>
+#ifndef TINYURLSHORTURL_H
+#define TINYURLSHORTURL_H
+#include "abstractshorturl.h"
+
+#include <QNetworkReply>
+
+class QNetworkAccessManager;
 
 namespace PimCommon {
-class AbstractShortUrl;
-namespace ShortUrlUtils
+class TinyurlShortUrl : public PimCommon::AbstractShortUrl
 {
-    enum EngineType {
-        Google = 0,
-        Tinyurl = 1,
-        //TODO add more engine.
-        EndListEngine
-    };
-    QString stringFromEngineType(EngineType type);
-    AbstractShortUrl *loadEngine(QObject *parent);
-}
+    Q_OBJECT
+public:
+    explicit TinyurlShortUrl(QObject *parent = 0);
+    ~TinyurlShortUrl();
+
+    void start();
+
+private Q_SLOTS:
+    void slotShortUrlFinished(QNetworkReply*reply);
+    void slotError(QNetworkReply::NetworkError error);
+
+private:
+    QNetworkAccessManager *mNetworkAccessManager;
+};
 }
 
-#endif // SHORTURLUTILS_H
+#endif // TINYURLSHORTURL_H

@@ -42,7 +42,9 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
 
     mOriginalUrl = new KLineEdit;
     mOriginalUrl->setClearButtonShown(true);
+    mOriginalUrl->setTrapReturnKey(true);
     connect(mOriginalUrl, SIGNAL(textChanged(QString)), this, SLOT(slotOriginalUrlChanged(QString)));
+    connect(mOriginalUrl, SIGNAL(returnPressed(QString)), this, SLOT(slotConvertUrl()));
     grid->addWidget(mOriginalUrl, 0, 1);
 
     mConvertButton = new QPushButton(i18n("Convert"));
@@ -78,7 +80,10 @@ void ShortUrlWidget::loadEngine()
 
 void ShortUrlWidget::slotConvertUrl()
 {
+    if (mOriginalUrl->text().isEmpty())
+        return;
     mEngine->shortUrl(mOriginalUrl->text());
+    mShortUrl->clear();
     mEngine->start();
 }
 
