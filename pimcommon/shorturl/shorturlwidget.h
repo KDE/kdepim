@@ -45,7 +45,7 @@ private:
     KLineEdit *mOriginalUrl;
     KLineEdit *mShortUrl;
     QPushButton *mConvertButton;
-    QPushButton *mPasteToClipboard;
+    QPushButton *mCopyToClipboard;
     AbstractShortUrl *mEngine;
 };
 }
