@@ -201,8 +201,8 @@ void MessageItemPrivate::fillTagList( const Nepomuk2::Resource &resource ) const
   if ( !nepomukTagList.isEmpty() ) {
     foreach( const Nepomuk2::Tag &nepomukTag, nepomukTagList ) {
       QString symbol = QLatin1String( "mail-tagged" );
-      if ( !nepomukTag.symbols().isEmpty() ) {
-        symbol = nepomukTag.symbols().first();
+      if ( !nepomukTag.genericIcon().isEmpty() ) {
+        symbol = nepomukTag.genericIcon();
       }
       MessageItem::Tag *messageListTag =
           new MessageItem::Tag( SmallIcon( symbol ),
