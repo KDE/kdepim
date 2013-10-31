@@ -57,15 +57,13 @@ void ShortUrlConfigureWidget::init()
 
 void ShortUrlConfigureWidget::loadConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "ShortUrl" );
-    const int engineType = grp.readEntry("Engine", static_cast<int>(PimCommon::ShortUrlUtils::Google));
+    const int engineType = PimCommon::ShortUrlUtils::readEngineSettings();
     mShortUrlServer->setCurrentIndex(mShortUrlServer->findData(engineType));
 }
 
 void ShortUrlConfigureWidget::writeConfig()
 {
-    KConfigGroup grp( KGlobal::config(), "ShortUrl" );
-    grp.writeEntry("Engine", mShortUrlServer->itemData(mShortUrlServer->currentIndex()).toInt());
+    PimCommon::ShortUrlUtils::writeEngineSettings(mShortUrlServer->itemData(mShortUrlServer->currentIndex()).toInt());
 }
 
 void ShortUrlConfigureWidget::resetToDefault()

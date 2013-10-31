@@ -32,6 +32,9 @@ namespace ShortUrlUtils
     };
     QString stringFromEngineType(EngineType type);
     AbstractShortUrl *loadEngine(QObject *parent);
+
+    int readEngineSettings();
+    void writeEngineSettings(int value);
 }
 }
 
