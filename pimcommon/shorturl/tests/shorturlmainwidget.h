@@ -15,25 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "shorturlmainwidget.h"
+#ifndef SHORTURLMAINWIDGET_H
+#define SHORTURLMAINWIDGET_H
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocale>
+#include <QWidget>
 
-int main (int argc, char **argv)
-{
-    KCmdLineArgs::init(argc, argv, "shorturl_gui", 0, ki18n("ShortUrlTest_Gui"),
-                       "1.0", ki18n("Test for short url widget"));
-
-    KApplication app;
-
-    ShortUrlMainWidget *w = new ShortUrlMainWidget;
-
-    w->show();
-    app.exec();
-    delete w;
-    return 0;
+namespace PimCommon {
+class ShortUrlConfigureWidget;
+class ShortUrlWidget;
 }
 
+class ShortUrlMainWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit ShortUrlMainWidget(QWidget *parent=0);
+
+private Q_SLOTS:
+    void slotSaveConfig();
+
+private:
+    PimCommon::ShortUrlConfigureWidget *mConfigWidget;
+    PimCommon::ShortUrlWidget *mShortUrlWidget;
+};
+
+#endif // SHORTURLMAINWIDGET_H

@@ -225,16 +225,20 @@ void ImportMailJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    QDir dir(mTempDirName);
+    dir.mkdir(Utils::resourcesPath());
     Q_FOREACH(const QString& filename, mFileList) {
         if (filename.startsWith(Utils::resourcesPath())) {
             const KArchiveEntry* fileEntry = mArchiveDirectory->entry(filename);
             if (fileEntry && fileEntry->isFile()) {
                 const KArchiveFile* file = static_cast<const KArchiveFile*>(fileEntry);
-                KTemporaryFile tmp;
-                tmp.open();
-                file->copyTo(tmp.fileName());
-                KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(tmp.fileName());
+                const QString destDirectory = mTempDirName + QLatin1Char('/') + Utils::resourcesPath();
+
+                file->copyTo(destDirectory);
+
                 const QString filename(file->name());
+                const QString resourceFileName = destDirectory + QLatin1Char('/') + filename;
+                KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(resourceFileName);
                 QMap<QString, QVariant> settings;
                 if (filename.contains(QLatin1String("pop3"))) {
                     KConfigGroup general = resourceConfig->group(QLatin1String("General"));
@@ -306,8 +310,10 @@ void ImportMailJob::restoreResources()
                         settings.insert(QLatin1String("DownloadLater"),leaveOnserver.readEntry("downloadLater",QStringList()));
                     }
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_pop3_resource"), filename, settings );
-                    if (!newResource.isEmpty())
+                    if (!newResource.isEmpty()) {
                         mHashResources.insert(filename,newResource);
+                        infoAboutNewResource(newResource);
+                    }
                 } else if (filename.contains(QLatin1String("imap"))) {
                     KConfigGroup network = resourceConfig->group(QLatin1String("network"));
                     if (network.hasKey(QLatin1String("Authentication"))) {
@@ -393,10 +399,11 @@ void ImportMailJob::restoreResources()
                         settings.insert(QLatin1String("SieveVacationFilename"),siever.readEntry("SieveVacationFilename"));
                     }
 
-
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_imap_resource"), filename, settings );
-                    if (!newResource.isEmpty())
+                    if (!newResource.isEmpty()) {
                         mHashResources.insert(filename,newResource);
+                        infoAboutNewResource(newResource);
+                    }
                 } else {
                     kDebug()<<" problem with resource";
                 }
@@ -426,7 +433,7 @@ void ImportMailJob::restoreMails()
 
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-            KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
+            const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
 
 
             QMap<QString, QVariant> settings;
@@ -472,6 +479,7 @@ void ImportMailJob::restoreMails()
                 const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_mbox_resource"), filename, settings );
                 if (!newResource.isEmpty()) {
                     mHashResources.insert(filename,newResource);
+                    infoAboutNewResource(newResource);
                 }
 
             } else if (resourceName.contains(QLatin1String("akonadi_maildir_resource_")) ||
@@ -492,8 +500,10 @@ void ImportMailJob::restoreMails()
                                                                                  QString::fromLatin1("akonadi_mixedmaildir_resource")
                                                                                : QString::fromLatin1("akonadi_maildir_resource")
                                                                                  , filename, settings );
-                if (!newResource.isEmpty())
+                if (!newResource.isEmpty()) {
                     mHashResources.insert(filename,newResource);
+                    infoAboutNewResource(newResource);
+                }
 
                 const QString mailFile = res.value();
                 const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(mailFile);
@@ -713,6 +723,20 @@ void ImportMailJob::restoreConfig()
             }
         } else {
             copyToFile(adblockconfiguration, adblockrc, adblockStr, Utils::configsPath());
+        }
+    }
+
+    const QString kontactStr(QLatin1String("kontactrc"));
+    const KArchiveEntry* kontactentry  = mArchiveDirectory->entry(Utils::configsPath() + kontactStr);
+    if ( kontactentry &&  kontactentry->isFile()) {
+        const KArchiveFile* kontactconfiguration = static_cast<const KArchiveFile*>(kontactentry);
+        const QString kontactrc = KStandardDirs::locateLocal( "config",  kontactStr);
+        if (QFile(kontactrc).exists()) {
+            if (overwriteConfigMessageBox(kontactStr)) {
+                copyToFile(kontactconfiguration, kontactrc, kontactStr, Utils::configsPath());
+            }
+        } else {
+            copyToFile(kontactconfiguration, kontactrc, kontactStr, Utils::configsPath());
         }
     }
 

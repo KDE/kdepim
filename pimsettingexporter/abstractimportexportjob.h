@@ -57,6 +57,7 @@ Q_SIGNALS:
     void endLine();
 
 protected:
+    void infoAboutNewResource(const QString &resourceName);
     void copyToDirectory(const KArchiveEntry *entry, const QString &dest);
     void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination);
 

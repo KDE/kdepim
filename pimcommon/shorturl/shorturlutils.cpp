@@ -18,6 +18,8 @@
 #include "shorturlutils.h"
 #include "pimcommon/shorturl/abstractshorturl.h"
 #include "pimcommon/shorturl/googleshorturl.h"
+#include "pimcommon/shorturl/tinyurlshorturl.h"
+#include "pimcommon/shorturl/migremeshorturl.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -28,13 +30,17 @@
 
 PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(QObject *parent)
 {
-    KConfigGroup grp( KGlobal::config(), "ShortUrl" );
-
     PimCommon::AbstractShortUrl *engine = 0;
-    PimCommon::ShortUrlUtils::EngineType type = static_cast<PimCommon::ShortUrlUtils::EngineType>(grp.readEntry("Engine", 0));
+    PimCommon::ShortUrlUtils::EngineType type = static_cast<PimCommon::ShortUrlUtils::EngineType>(readEngineSettings());
     switch (type) {
     case Google:
         engine = new PimCommon::GoogleShortUrl(parent);
+        break;
+    case Tinyurl:
+        engine = new PimCommon::TinyurlShortUrl(parent);
+        break;
+    case MigreMe:
+        engine = new PimCommon::MigremeShortUrl(parent);
         break;
     case EndListEngine:
     default:
@@ -52,9 +58,28 @@ QString PimCommon::ShortUrlUtils::stringFromEngineType(EngineType type)
     case Google:
         name = i18n("Google");
         break;
+    case Tinyurl:
+        name = i18n("Tinyurl");
+        break;
+    case MigreMe:
+        name = i18n("Migre.Me");
+        break;
     case EndListEngine:
     default:
         qDebug()<<" not supported engine type "<<type;
     }
     return name;
+}
+
+int PimCommon::ShortUrlUtils::readEngineSettings()
+{
+    KConfigGroup grp( KGlobal::config(), "ShortUrl" );
+    const int engineType = grp.readEntry("Engine", static_cast<int>(PimCommon::ShortUrlUtils::Google));
+    return engineType;
+}
+
+void PimCommon::ShortUrlUtils::writeEngineSettings(int value)
+{
+    KConfigGroup grp( KGlobal::config(), "ShortUrl" );
+    grp.writeEntry("Engine", value);
 }

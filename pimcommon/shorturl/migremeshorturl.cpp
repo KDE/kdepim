@@ -15,7 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "googleshorturl.h"
+
+#include "migremeshorturl.h"
 
 #include <KLocale>
 
@@ -24,58 +25,45 @@
 #include <QUrl>
 #include <QDebug>
 
-#include <qjson/parser.h>
-
 
 using namespace PimCommon;
-GoogleShortUrl::GoogleShortUrl(QObject *parent)
+
+MigremeShortUrl::MigremeShortUrl(QObject *parent)
     : PimCommon::AbstractShortUrl(parent),
       mNetworkAccessManager(new QNetworkAccessManager(this))
 {
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotShortUrlFinished(QNetworkReply*)));
 }
 
-GoogleShortUrl::~GoogleShortUrl()
+MigremeShortUrl::~MigremeShortUrl()
 {
-
 }
 
-void GoogleShortUrl::start()
+void MigremeShortUrl::start()
 {
-    QNetworkRequest request(QUrl(QLatin1String("https://www.googleapis.com/urlshortener/v1/url")));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/json"));
-
-    const QString data = QString::fromLatin1("{\"longUrl\": \"%1/\"}").arg(mOriginalUrl);
-
-    QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
+    const QString requestUrl = QString::fromLatin1("http://migre.me/api.txt?url=%1").arg(mOriginalUrl);
+    QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(requestUrl));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
+void MigremeShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
     reply->deleteLater();
     if (mErrorFound)
         return;
 
-    const QString jsonData = QString::fromUtf8(reply->readAll());
-
-    QJson::Parser parser;
-    bool ok;
-    const QMap<QString, QVariant> map = parser.parse(jsonData.toUtf8(), &ok).toMap();
-    if (!ok) {
-        qDebug()<<" Error during parsing";
-        return;
-    }
-    if (map.contains(QLatin1String("id")) && map.contains(QLatin1String("kind"))) {
-        Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
+    const QString data = QString::fromUtf8(reply->readAll());
+    if (!data.isEmpty()) {
+        Q_EMIT shortUrlDone(data);
     }
 }
 
-void GoogleShortUrl::slotError(QNetworkReply::NetworkError error)
+void MigremeShortUrl::slotError(QNetworkReply::NetworkError error)
 {
     mErrorFound = true;
     Q_EMIT shortUrlFailed(i18n("Error reported by server: \'%1\'", error));
 }
 
 
-#include "googleshorturl.moc"
+
+#include "migremeshorturl.moc"

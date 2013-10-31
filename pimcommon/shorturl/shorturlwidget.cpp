@@ -32,7 +32,8 @@
 using namespace PimCommon;
 
 ShortUrlWidget::ShortUrlWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mEngine(0)
 {
     loadEngine();
     QGridLayout *grid = new QGridLayout;
@@ -42,7 +43,9 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
 
     mOriginalUrl = new KLineEdit;
     mOriginalUrl->setClearButtonShown(true);
+    mOriginalUrl->setTrapReturnKey(true);
     connect(mOriginalUrl, SIGNAL(textChanged(QString)), this, SLOT(slotOriginalUrlChanged(QString)));
+    connect(mOriginalUrl, SIGNAL(returnPressed(QString)), this, SLOT(slotConvertUrl()));
     grid->addWidget(mOriginalUrl, 0, 1);
 
     mConvertButton = new QPushButton(i18n("Convert"));
@@ -57,19 +60,26 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     mShortUrl->setReadOnly(true);
     grid->addWidget(mShortUrl, 1, 1);
 
-    mPasteToClipboard = new QPushButton(i18n("Paste to clipboard"));
-    connect(mPasteToClipboard, SIGNAL(clicked()), this, SLOT(slotPasteToClipboard()));
+    mCopyToClipboard = new QPushButton(i18n("Copy to clipboard"));
+    connect(mCopyToClipboard, SIGNAL(clicked()), this, SLOT(slotPasteToClipboard()));
+    grid->addWidget(mCopyToClipboard, 1, 2);
     setLayout(grid);
     mConvertButton->setEnabled(false);
-    mPasteToClipboard->setEnabled(false);
+    mCopyToClipboard->setEnabled(false);
 }
 
 ShortUrlWidget::~ShortUrlWidget()
 {
 }
 
+void ShortUrlWidget::settingsUpdated()
+{
+    loadEngine();
+}
+
 void ShortUrlWidget::loadEngine()
 {
+    delete mEngine;
     mEngine = PimCommon::ShortUrlUtils::loadEngine(this);
     connect(mEngine, SIGNAL(shortUrlDone(QString)), this, SLOT(slotShortUrlDone(QString)));
     connect(mEngine, SIGNAL(shortUrlFailed(QString)), this, SLOT(slotShortUrlFailed(QString)));
@@ -77,7 +87,10 @@ void ShortUrlWidget::loadEngine()
 
 void ShortUrlWidget::slotConvertUrl()
 {
+    if (mOriginalUrl->text().isEmpty())
+        return;
     mEngine->shortUrl(mOriginalUrl->text());
+    mShortUrl->clear();
     mEngine->start();
 }
 
@@ -95,7 +108,7 @@ void ShortUrlWidget::slotOriginalUrlChanged(const QString &text)
 
 void ShortUrlWidget::slotShortUrlChanged(const QString &text)
 {
-    mPasteToClipboard->setEnabled(!text.isEmpty());
+    mCopyToClipboard->setEnabled(!text.isEmpty());
 }
 
 void ShortUrlWidget::slotShortUrlDone(const QString &url)

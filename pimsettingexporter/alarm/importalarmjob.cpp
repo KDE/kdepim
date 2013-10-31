@@ -60,7 +60,6 @@ void ImportAlarmJob::restoreResources()
     //TODO we don't have several resource.
     Q_EMIT info(i18n("Restore resources..."));
     restoreResourceFile(QString::fromLatin1("akonadi_kalarm_resource"), Utils::calendarPath(), storeAlarm);
-    Q_EMIT info(i18n("Resources restored."));
 }
 
 void ImportAlarmJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)

@@ -60,6 +60,7 @@ public slots:
     QString newNote( const QString &name = QString(),
                      const QString &text = QString() );
     QString newNoteFromClipboard( const QString &name = QString() );
+    QStringList notesList() const;
 
 public:
     void killNote( const QString &id );
@@ -73,7 +74,6 @@ public:
 
     QMap<QString, QString> notes() const;
     void popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoint &globalPos );
-    void mouseMoveOnListWidget( const QPoint &pos );
 
 private slots:
     void createNote( KCal::Journal *journal );

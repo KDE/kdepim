@@ -216,6 +216,18 @@ KNotesPart::~KNotesPart()
     mNoteTip = 0;
 }
 
+QStringList KNotesPart::notesList() const
+{
+    QStringList notes;
+
+    QHashIterator<QString, KNotesIconViewItem*> i(mNoteList);
+    while ( i.hasNext() ) {
+        i.next();
+        notes.append(i.value()->journal()->uid());
+    }
+    return notes;
+}
+
 void KNotesPart::requestToolTip( const QModelIndex &index )
 {
     const QRect m_itemRect = mNotesWidget->notesView()->visualRect( index );
@@ -485,12 +497,6 @@ void KNotesPart::popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoin
 
     contextMenu->exec( mNotesWidget->notesView()->mapFromParent( globalPos ) );
     delete contextMenu;
-}
-
-void KNotesPart::mouseMoveOnListWidget( const QPoint & pos )
-{
-    QListWidgetItem *item = mNotesWidget->notesView()->itemAt( pos );
-    mNoteTip->setNote( dynamic_cast<KNotesIconViewItem *>( item ) );
 }
 
 // TODO: also with takeItem, clear(),

@@ -26,11 +26,16 @@ namespace ShortUrlUtils
 {
     enum EngineType {
         Google = 0,
+        Tinyurl = 1,
+        MigreMe = 2,
         //TODO add more engine.
         EndListEngine
     };
     QString stringFromEngineType(EngineType type);
     AbstractShortUrl *loadEngine(QObject *parent);
+
+    int readEngineSettings();
+    void writeEngineSettings(int value);
 }
 }
 

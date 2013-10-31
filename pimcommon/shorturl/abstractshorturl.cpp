@@ -19,7 +19,8 @@
 
 using namespace PimCommon;
 AbstractShortUrl::AbstractShortUrl(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mErrorFound(false)
 {
 }
 
@@ -30,6 +31,7 @@ AbstractShortUrl::~AbstractShortUrl()
 
 void AbstractShortUrl::shortUrl(const QString &url)
 {
+    mErrorFound = false;
     mOriginalUrl = url;
 }
 

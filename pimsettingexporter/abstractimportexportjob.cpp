@@ -329,10 +329,15 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseNam
                     addSpecificResourceSettings(resourceConfig, resourceBaseName, settings);
 
                     const QString newResource = mCreateResource->createResource( resourceBaseName, filename, settings );
+                    infoAboutNewResource(newResource);
+
                     qDebug()<<" newResource"<<newResource;
                 }
             }
         }
+        Q_EMIT info(i18n("Resources restored."));
+    } else {
+        Q_EMIT error(i18n("No resources files found."));
     }
 }
 
@@ -408,6 +413,11 @@ void AbstractImportExportJob::restoreConfigFile(const QString &configNameStr)
             copyToFile(configNameconfiguration, configNamerc, configNameStr, Utils::configsPath());
         }
     }
+}
+
+void AbstractImportExportJob::infoAboutNewResource(const QString &resourceName)
+{
+    Q_EMIT info(i18n("Resource  \'%1\' created.", resourceName));
 }
 
 #include "abstractimportexportjob.moc"

@@ -1,4 +1,4 @@
-2013-10-25:
+2013-10-30:
 -----------
 Zip structure is :
 Root
@@ -66,6 +66,7 @@ Root
 |       |---------akregatorrc
 |       |---------blogilorc
 |       |---------messageviewer.notifyrc
+|       |---------kontactrc
 |
 |-----akonadi
 |       |---------<archive akonadi>

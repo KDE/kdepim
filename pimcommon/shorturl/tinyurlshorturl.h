@@ -15,25 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "shorturlmainwidget.h"
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocale>
+#ifndef TINYURLSHORTURL_H
+#define TINYURLSHORTURL_H
+#include "abstractshorturl.h"
 
-int main (int argc, char **argv)
+#include <QNetworkReply>
+
+class QNetworkAccessManager;
+
+namespace PimCommon {
+class TinyurlShortUrl : public PimCommon::AbstractShortUrl
 {
-    KCmdLineArgs::init(argc, argv, "shorturl_gui", 0, ki18n("ShortUrlTest_Gui"),
-                       "1.0", ki18n("Test for short url widget"));
+    Q_OBJECT
+public:
+    explicit TinyurlShortUrl(QObject *parent = 0);
+    ~TinyurlShortUrl();
 
-    KApplication app;
+    void start();
 
-    ShortUrlMainWidget *w = new ShortUrlMainWidget;
+private Q_SLOTS:
+    void slotShortUrlFinished(QNetworkReply*reply);
+    void slotError(QNetworkReply::NetworkError error);
 
-    w->show();
-    app.exec();
-    delete w;
-    return 0;
+private:
+    QNetworkAccessManager *mNetworkAccessManager;
+};
 }
 
+#endif // TINYURLSHORTURL_H
