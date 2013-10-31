@@ -224,16 +224,20 @@ void ImportMailJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    QDir dir(mTempDirName);
+    dir.mkdir(Utils::resourcesPath());
     Q_FOREACH(const QString& filename, mFileList) {
         if (filename.startsWith(Utils::resourcesPath())) {
             const KArchiveEntry* fileEntry = mArchiveDirectory->entry(filename);
             if (fileEntry && fileEntry->isFile()) {
                 const KArchiveFile* file = static_cast<const KArchiveFile*>(fileEntry);
-                KTemporaryFile tmp;
-                tmp.open();
-                file->copyTo(tmp.fileName());
-                KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(tmp.fileName());
+                const QString destDirectory = mTempDirName + QLatin1Char('/') + Utils::resourcesPath();
+
+                file->copyTo(destDirectory);
+
                 const QString filename(file->name());
+                const QString resourceFileName = destDirectory + QLatin1Char('/') + filename;
+                KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(resourceFileName);
                 QMap<QString, QVariant> settings;
                 if (filename.contains(QLatin1String("pop3"))) {
                     KConfigGroup general = resourceConfig->group(QLatin1String("General"));
@@ -391,7 +395,6 @@ void ImportMailJob::restoreResources()
                     if (siever.hasKey(QLatin1String("SieveVacationFilename"))) {
                         settings.insert(QLatin1String("SieveVacationFilename"),siever.readEntry("SieveVacationFilename"));
                     }
-
 
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_imap_resource"), filename, settings );
                     if (!newResource.isEmpty())
