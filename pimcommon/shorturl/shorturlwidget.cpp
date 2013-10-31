@@ -57,7 +57,7 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     mShortUrl->setReadOnly(true);
     grid->addWidget(mShortUrl, 1, 1);
 
-    mPasteToClipboard = new QPushButton(i18n("Paste to clipboard"));
+    mPasteToClipboard = new QPushButton(i18n("Copy to clipboard"));
     connect(mPasteToClipboard, SIGNAL(clicked()), this, SLOT(slotPasteToClipboard()));
     setLayout(grid);
     mConvertButton->setEnabled(false);
