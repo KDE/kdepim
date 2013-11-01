@@ -17,8 +17,6 @@
 
 #include "googleshorturl.h"
 
-#include <KLocale>
-
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QUrl>
@@ -48,7 +46,7 @@ void GoogleShortUrl::start()
     const QString data = QString::fromLatin1("{\"longUrl\": \"%1/\"}").arg(mOriginalUrl);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotErrorFound(QNetworkReply::NetworkError)));
 }
 
 void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
@@ -70,12 +68,5 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
         Q_EMIT shortUrlDone(map.value(QLatin1String("id")).toString());
     }
 }
-
-void GoogleShortUrl::slotError(QNetworkReply::NetworkError error)
-{
-    mErrorFound = true;
-    Q_EMIT shortUrlFailed(i18n("Error reported by server: \'%1\'", error));
-}
-
 
 #include "googleshorturl.moc"

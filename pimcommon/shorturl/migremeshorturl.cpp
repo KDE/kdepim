@@ -18,8 +18,6 @@
 
 #include "migremeshorturl.h"
 
-#include <KLocale>
-
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QUrl>
@@ -43,7 +41,7 @@ void MigremeShortUrl::start()
 {
     const QString requestUrl = QString::fromLatin1("http://migre.me/api.txt?url=%1").arg(mOriginalUrl);
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(requestUrl));
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotErrorFound(QNetworkReply::NetworkError)));
 }
 
 void MigremeShortUrl::slotShortUrlFinished(QNetworkReply *reply)
@@ -57,13 +55,6 @@ void MigremeShortUrl::slotShortUrlFinished(QNetworkReply *reply)
         Q_EMIT shortUrlDone(data);
     }
 }
-
-void MigremeShortUrl::slotError(QNetworkReply::NetworkError error)
-{
-    mErrorFound = true;
-    Q_EMIT shortUrlFailed(i18n("Error reported by server: \'%1\'", error));
-}
-
 
 
 #include "migremeshorturl.moc"
