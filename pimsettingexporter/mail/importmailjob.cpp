@@ -509,6 +509,7 @@ void ImportMailJob::restoreMails()
                 const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(mailFile);
                 if (dataResouceEntry->isFile()) {
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                    //TODO Fix me not correct zip filename.
                     extractZipFile(file, copyToDirName, newUrl.path());
                 }
             } else {

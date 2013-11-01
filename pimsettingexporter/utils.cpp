@@ -249,6 +249,7 @@ QString Utils::akonadiAgentName(KSharedConfig::Ptr config)
 KZip *Utils::openZip(const QString &filename, QString &errorMsg)
 {
     KZip *zip = new KZip(filename);
+    qDebug()<<" filename"<<filename;
     const bool result = zip->open(QIODevice::ReadOnly);
     if (!result) {
         errorMsg = i18n("Archive cannot be opened in read mode.");
