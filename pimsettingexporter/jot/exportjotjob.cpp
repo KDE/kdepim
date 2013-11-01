@@ -70,7 +70,7 @@ void ExportJotJob::backupResources()
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_akonotes_resource_"))) {
-            backupResourceFile(agent, Utils::jotPath());
+            backupResourceDirectory(agent, Utils::jotPath());
         }
     }
 
