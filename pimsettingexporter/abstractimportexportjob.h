@@ -66,6 +66,7 @@ protected:
     void copyToFile(const KArchiveFile * archivefile, const QString &dest, const QString &filename, const QString &prefix);
     void initializeImportJob();
     void backupFile(const QString &filename, const QString &path, const QString &storedName);
+    void backupResourceDirectory(const Akonadi::AgentInstance &agent, const QString &defaultPath);
     void backupConfigFile(const QString &configFileName);
     int mergeConfigMessageBox(const QString &configName) const;
     bool overwriteConfigMessageBox(const QString &configName) const;
