@@ -417,7 +417,7 @@ void AbstractImportExportJob::restoreConfigFile(const QString &configNameStr)
 
 void AbstractImportExportJob::infoAboutNewResource(const QString &resourceName)
 {
-    Q_EMIT info(i18n("Resource  \'%1\' created.", resourceName));
+    Q_EMIT info(i18n("Resource \'%1\' created.", resourceName));
 }
 
 #include "abstractimportexportjob.moc"
