@@ -113,6 +113,7 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const 
             const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
             //TODO implement it
+            //TODO implement ResourceFiles struct !
             if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 const QString name(lst.at(0));
