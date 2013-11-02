@@ -282,7 +282,7 @@ void AbstractImportExportJob::backupResourceDirectory(const Akonadi::AgentInstan
                 Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
             }
         } else {
-            Q_EMIT error(i18n("Resource was not configured correctly, not archive it."));
+            Q_EMIT error(i18n("Resource was not configured correctly, not archiving it."));
         }
     }
 }
