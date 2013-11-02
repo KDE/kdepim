@@ -310,6 +310,13 @@ void TranslatorWidget::init()
 
     connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    Solid::Networking::Status networkStatus = Solid::Networking::status();
+    if ( ( networkStatus == Solid::Networking::Unconnected ) ||
+         ( networkStatus == Solid::Networking::Disconnecting ) ||
+         ( networkStatus == Solid::Networking::Connecting ))
+        d->networkUp = false;
+    else
+        d->networkUp = true;
 }
 
 void TranslatorWidget::slotConfigChanged()
@@ -448,7 +455,6 @@ void TranslatorWidget::slotDebug()
 
 void TranslatorWidget::slotSystemNetworkStatusChanged( Solid::Networking::Status status )
 {
-    qDebug()<<"void TranslatorWidget::slotSystemNetworkStatusChanged( Solid::Networking::Status status ) ";
     if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
         d->networkUp = true;
     } else {
