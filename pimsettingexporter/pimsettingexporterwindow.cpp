@@ -65,7 +65,7 @@
 #include <KStandardDirs>
 #include <KLocale>
 #include <KStatusBar>
-
+#include <KRecentFilesAction>
 #include <QPointer>
 
 
@@ -98,6 +98,9 @@ PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
 PimSettingExporterWindow::~PimSettingExporterWindow()
 {
     delete mImportExportData;
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
+    mRecentFilesAction->saveEntries(groupConfig);
 }
 
 void PimSettingExporterWindow::setupActions(bool canZipFile)
@@ -119,6 +122,18 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     archiveStructureInfo->setText(i18n("Show Archive Structure Information..."));
 
     KStandardAction::quit( this, SLOT(close()), ac );
+    mRecentFilesAction = KStandardAction::openRecent(this, SLOT(slotRestoreFile(KUrl)), ac);
+
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
+    mRecentFilesAction->loadEntries(groupConfig);
+}
+
+void PimSettingExporterWindow::slotRestoreFile(const KUrl &url)
+{
+    if (!url.isEmpty()) {
+        loadData(url.path());
+    }
 }
 
 void PimSettingExporterWindow::slotSaveLog()
@@ -140,6 +155,8 @@ void PimSettingExporterWindow::slotBackupData()
     const QString filename = KFileDialog::getSaveFileName(KUrl("kfiledialog:///pimsettingexporter"),QLatin1String("*.zip"),this,i18n("Create backup"),KFileDialog::ConfirmOverwrite);
     if (filename.isEmpty())
         return;
+    mRecentFilesAction->addUrl(KUrl(filename));
+
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
         const QHash<Utils::AppsType, Utils::importExportParameters> stored = dialog->storedType();
@@ -247,12 +264,16 @@ void PimSettingExporterWindow::slotAddEndLine()
 
 void PimSettingExporterWindow::slotRestoreData()
 {
-    if (KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
-        return;
     const QString filename = KFileDialog::getOpenFileName(KUrl("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"), this, i18n("Restore backup"));
     if (filename.isEmpty())
         return;
+    loadData(filename);
+}
 
+void PimSettingExporterWindow::loadData(const QString &filename)
+{
+    if (KMessageBox::warningYesNo(this,i18n("Before to restore data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
+        return;
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
         const QHash<Utils::AppsType, Utils::importExportParameters> stored = dialog->storedType();
