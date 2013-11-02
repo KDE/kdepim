@@ -17,3 +17,8 @@ TODO 4.12:
 
 - Add support for blogilo ?
 - Add support for knodes ?
+
+TODO 4.13:
+----------
+- Add versionning
+- Use QDomDocument
