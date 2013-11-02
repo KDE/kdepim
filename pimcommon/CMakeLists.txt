@@ -72,6 +72,7 @@ target_link_libraries(pimcommon
     ${KDE4_KDEUI_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
     ${QJSON_LIBRARIES}
+    ${KDE4_SOLID_LIBS}
     kdepim
 )
 
