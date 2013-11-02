@@ -16,6 +16,7 @@ Comment[sr@latin]=Prikazivač poruka
 Comment[sv]=Brevvisning
 Comment[uk]=Перегляд повідомлень
 Comment[x-test]=xxMessageViewerxx
+Comment[zh_TW]=訊息檢視器
 
 [Event/adblock-list-download-done]
 Name=New Ad-Block list download done
@@ -34,6 +35,7 @@ Name[sr@latin]=Završeno preuzimanje nove AdBlockove liste
 Name[sv]=Nerladdning av ny reklamblockeringslista gjord
 Name[uk]=Завершено отримання нового списку блокування реклами
 Name[x-test]=xxNew Ad-Block list download donexx
+Name[zh_TW]=新增 Ad-Block 清單下載完成
 Comment=New Ad-Block list download done
 Comment[de]=Das Herunterladen der neuen Werbefilterliste ist abgeschlossen
 Comment[es]=Realizada la descarga de la nueva lista de Ad-Block
@@ -50,6 +52,7 @@ Comment[sr@latin]=Završeno preuzimanje nove AdBlockove liste
 Comment[sv]=Nerladdning av ny reklamblockeringslista gjord
 Comment[uk]=Завершено отримання нового списку блокування реклами
 Comment[x-test]=xxNew Ad-Block list download donexx
+Comment[zh_TW]=新增 Ad-Block 清單下載完成
 Action=Popup
 
 [Event/adblock-list-download-failed]
@@ -69,6 +72,7 @@ Name[sr@latin]=Propalo preuzimanje nove AdBlockove liste
 Name[sv]=Nerladdning av ny reklamblockeringslista misslyckades
 Name[uk]=Не вдалося отримати новий список блокування реклами
 Name[x-test]=xxNew Ad-Block list download failedxx
+Name[zh_TW]=新增 Ad-Block 清單下載失敗
 Comment=New Ad-Block list download failed
 Comment[de]=Das Herunterladen der neuen Werbefilterliste ist fehlgeschlagen
 Comment[es]=Falló la descarga de la nueva lista de Ad-Block
@@ -85,5 +89,6 @@ Comment[sr@latin]=Propalo preuzimanje nove AdBlockove liste
 Comment[sv]=Nerladdning av ny reklamblockeringslista misslyckades
 Comment[uk]=Не вдалося отримати новий список блокування реклами
 Comment[x-test]=xxNew Ad-Block list download failedxx
+Comment[zh_TW]=新增 Ad-Block 清單下載失敗
 Action=Popup
 

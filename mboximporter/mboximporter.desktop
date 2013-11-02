@@ -20,6 +20,7 @@ Name[sr@latin]=Uvoznik iz mboxa
 Name[sv]=Import av brevlådor
 Name[uk]=Засіб імпортування MBox
 Name[x-test]=xxMBoxImporterxx
+Name[zh_TW]=信箱檔匯入器
 Type=Application
 Exec=mboximporter %u
 Icon=kmail

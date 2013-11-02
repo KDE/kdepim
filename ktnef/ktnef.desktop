@@ -71,6 +71,7 @@ GenericName[sr@latin]=Prikazivač TNEF fajlova (vlasnički format iz Outlooka)
 GenericName[sv]=TNEF-filvisare (tillverkarspecifikt format använt av Outlook)
 GenericName[uk]=Засіб перегляду файлів TNEF (закритого формату даних, що використовується Outlook)
 GenericName[x-test]=xxTNEF File Viewer (proprietary format used by outlook)xx
+GenericName[zh_TW]=TNEF 檔案檢視器（outlook 所使用的私有格式）
 Exec=ktnef %f
 Icon=ktnef
 Type=Application
