@@ -2,6 +2,7 @@
 Name=Example big title
 Name[de]=Beispiel mit großem Titel
 Name[es]=Ejemplo de título grande
+Name[fr]=Exemple avec grand titre
 Name[ia]=Exemplo Titulo grande
 Name[kk]=Үлкен атау мысалы
 Name[nl]=Voorbeeld van grote titel
@@ -19,6 +20,7 @@ Name[zh_TW]=範例大標題
 Description=Example big title grantlee printing theme
 Description[de]=Beispiel für Grantlee-Druckstil mit großem Titel
 Description[es]=Ejemplo de título grande de tema de impresión grantlee
+Description[fr]=Thème d'impression Grantlee avec un grand titre
 Description[ia]=Exemplo Thema de imprimer grantlee a titulo grande
 Description[kk]=Grantlee басып шығару нақыштың үлкен атау мысалы
 Description[nl]=Voorbeeld van grote titel in grantlee afdrukthema
