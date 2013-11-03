@@ -3,7 +3,7 @@
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (c) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
-  Copyright (c) 2012 Allen Winter <winter@kde.org>
+  Copyright (c) 2012-2013 Allen Winter <winter@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,18 +25,19 @@
 */
 
 //TODO: put a reminder and/or recurs icon on the item?
-// remove customlistitem.h
 
 #include "listview.h"
 #include "helper.h"
 
-#include <Akonadi/Calendar/ETMCalendar>
-#include <Akonadi/Calendar/IncidenceChanger>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
 
+#include <Akonadi/Calendar/ETMCalendar>
+#include <Akonadi/Calendar/IncidenceChanger>
+
 #include <KCalUtils/IncidenceFormatter>
 #include <KCalCore/Visitor>
+
 #include <KIconLoader>
 
 #include <QBoxLayout>
@@ -57,16 +58,18 @@ enum {
 
 static QString cleanSummary( const QString &summary, const KDateTime &next )
 {
-  static QString etc = i18nc( "@label an elipsis", "..." );
-  int maxLen = 40;
-
   QString retStr = summary;
+<<<<<<< HEAD
   retStr.replace( QLatin1Char('\n'), QLatin1Char(' ') );
   if ( retStr.length() > maxLen ) {
     maxLen -= etc.length();
     retStr = retStr.left( maxLen );
     retStr += etc;
   }
+=======
+  retStr.replace( QLatin1Char( '\n' ), QLatin1Char( ' ' ) );
+
+>>>>>>> don't chop-off the summary at 37chars in the treewidget column
   if ( next.isValid() ) {
     const QString dateStr =
       KGlobal::locale()->formatDate(
@@ -186,10 +189,17 @@ class ListView::Private::ListItemVisitor : public KCalCore::Visitor
 bool ListView::Private::ListItemVisitor::visit( Event::Ptr e )
 {
   QPixmap eventPxmp;
+<<<<<<< HEAD
   if ( e->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String("YES") ) {
     eventPxmp = cachedSmallIcon( QLatin1String("view-calendar-wedding-anniversary") );
   } else if ( e->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String("YES") ) {
     eventPxmp = cachedSmallIcon( QLatin1String("view-calendar-birthday") );
+=======
+  if ( e->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String( "YES" ) ) {
+    eventPxmp = cachedSmallIcon( QLatin1String( "view-calendar-wedding-anniversary" ) );
+  } else if ( e->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String( "YES" ) ) {
+    eventPxmp = cachedSmallIcon( QLatin1String( "view-calendar-birthday" ) );
+>>>>>>> don't chop-off the summary at 37chars in the treewidget column
   } else {
     eventPxmp = cachedSmallIcon( e->iconName() );
   }
@@ -234,7 +244,11 @@ bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
                       t->dtStart(), t->allDay(), true,
                       CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
   } else {
+<<<<<<< HEAD
     mItem->setText( StartDateTime_Column, QLatin1String("---") );
+=======
+    mItem->setText( StartDateTime_Column, QLatin1String( "---" ) );
+>>>>>>> don't chop-off the summary at 37chars in the treewidget column
   }
 
   if ( t->hasDueDate() ) {
@@ -243,7 +257,11 @@ bool ListView::Private::ListItemVisitor::visit( Todo::Ptr t )
                       CalendarSupport::KCalPrefs::instance()->timeSpec() ) );
 
   } else {
+<<<<<<< HEAD
     mItem->setText( EndDateTime_Column, QLatin1String("---") );
+=======
+    mItem->setText( EndDateTime_Column, QLatin1String( "---" ) );
+>>>>>>> don't chop-off the summary at 37chars in the treewidget column
   }
   mItem->setText( Categories_Column, t->categoriesStr() );
 
@@ -256,7 +274,11 @@ bool ListView::Private::ListItemVisitor::visit( Journal::Ptr j )
   mItem->setIcon( Summary_Column, jrnalPxmp );
   if ( j->summary().isEmpty() ) {
     mItem->setText( Summary_Column,
+<<<<<<< HEAD
                     cleanSummary( j->description().section( QLatin1Char('\n'), 0, 0 ),
+=======
+                    cleanSummary( j->description().section( QLatin1Char( '\n' ), 0, 0 ),
+>>>>>>> don't chop-off the summary at 37chars in the treewidget column
                                   KDateTime() ) );
   } else {
     mItem->setText( Summary_Column, cleanSummary( j->summary(), KDateTime() ) );
@@ -337,7 +359,14 @@ DateList ListView::selectedIncidenceDates() const
 
 void ListView::updateView()
 {
-  for ( int col = 0; col < Dummy_EOF_Column; ++col ) {
+  static int maxLen = 38;
+
+  /* Set the width of the summary column to show 'maxlen' chars, at most */
+  int width = qMin( maxLen * fontMetrics().averageCharWidth(), maxLen * 12 );
+  width += 24; //for the icon
+
+  d->mTreeWidget->setColumnWidth( Summary_Column, width );
+  for ( int col = StartDateTime_Column; col < Dummy_EOF_Column; ++col ) {
     d->mTreeWidget->resizeColumnToContents( col );
   }
   d->mTreeWidget->sortItems( StartDateTime_Column, Qt::DescendingOrder );
@@ -399,27 +428,34 @@ void ListView::Private::addIncidence( const Akonadi::ETMCalendar::Ptr &calendar,
   Q_ASSERT( calendar );
   if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
     addIncidence( calendar, item.payload<KCalCore::Incidence::Ptr>(), date );
-  }  
+  }
 }
 
 void ListView::Private::addIncidence( const Akonadi::ETMCalendar::Ptr &calendar,
                                       const KCalCore::Incidence::Ptr &incidence,
                                       const QDate &date )
 {
-  
-  if ( !incidence )
+  if ( !incidence ) {
     return;
+  }
 
   Akonadi::Item aitem = calendar->item( incidence );
 
-  if ( !aitem.isValid() || mItems.contains( aitem.id() ) )
+  if ( !aitem.isValid() || mItems.contains( aitem.id() ) ) {
     return;
+  }
+
   mDateList.insert( aitem.id(), date );
   mItems.insert( aitem.id(), aitem );
   Incidence::Ptr tinc = incidence;
 
+<<<<<<< HEAD
   if ( tinc->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String("YES") ||
        tinc->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String("YES") ) {
+=======
+  if ( tinc->customProperty( "KABC", "BIRTHDAY" ) == QLatin1String( "YES" ) ||
+       tinc->customProperty( "KABC", "ANNIVERSARY" ) == QLatin1String( "YES" ) ) {
+>>>>>>> don't chop-off the summary at 37chars in the treewidget column
     const int years = EventViews::yearDiff( tinc->dtStart().date(), mEndDate );
     if ( years > 0 ) {
       tinc = Incidence::Ptr( incidence->clone() );
