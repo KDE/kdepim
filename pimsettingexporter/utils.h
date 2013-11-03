@@ -105,5 +105,7 @@ KZip *openZip(const QString &filename, QString &errorMsg);
 void addVersion(KZip *archive);
 int archiveVersion(KZip *archive);
 
+int currentArchiveVersion();
+
 }
 #endif // UTILS_H
