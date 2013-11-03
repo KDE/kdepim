@@ -27,10 +27,8 @@
 using namespace PimCommon;
 
 TinyurlShortUrl::TinyurlShortUrl(QObject *parent)
-    : PimCommon::AbstractShortUrl(parent),
-      mNetworkAccessManager(new QNetworkAccessManager(this))
+    : PimCommon::AbstractShortUrl(parent)
 {
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotShortUrlFinished(QNetworkReply*)));
 }
 
 TinyurlShortUrl::~TinyurlShortUrl()

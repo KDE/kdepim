@@ -41,10 +41,12 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     void slotErrorFound(QNetworkReply::NetworkError error);
+    virtual void slotShortUrlFinished(QNetworkReply *reply);
 
 protected:
     QString mOriginalUrl;
     bool mErrorFound;
+    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 

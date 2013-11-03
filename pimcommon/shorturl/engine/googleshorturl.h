@@ -20,7 +20,6 @@
 
 #include "shorturl/abstractshorturl.h"
 
-class QNetworkAccessManager;
 namespace PimCommon {
 class GoogleShortUrl : public PimCommon::AbstractShortUrl
 {
@@ -33,9 +32,6 @@ public:
 
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply*reply);
-
-private:
-    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 

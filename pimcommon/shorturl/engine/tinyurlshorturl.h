@@ -20,8 +20,6 @@
 #define TINYURLSHORTURL_H
 #include "abstractshorturl.h"
 
-class QNetworkAccessManager;
-
 namespace PimCommon {
 class TinyurlShortUrl : public PimCommon::AbstractShortUrl
 {
@@ -34,9 +32,6 @@ public:
 
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply*reply);
-
-private:
-    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 
