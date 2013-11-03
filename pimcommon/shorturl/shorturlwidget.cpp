@@ -72,6 +72,16 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     setLayout(grid);
     mConvertButton->setEnabled(false);
     mCopyToClipboard->setEnabled(false);
+
+    connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    Solid::Networking::Status networkStatus = Solid::Networking::status();
+    if ( ( networkStatus == Solid::Networking::Unconnected ) ||
+         ( networkStatus == Solid::Networking::Disconnecting ) ||
+         ( networkStatus == Solid::Networking::Connecting ))
+        mNetworkUp = false;
+    else
+        mNetworkUp = true;
 }
 
 ShortUrlWidget::~ShortUrlWidget()
@@ -93,6 +103,10 @@ void ShortUrlWidget::loadEngine()
 
 void ShortUrlWidget::slotConvertUrl()
 {
+    if (!mNetworkUp) {
+        KMessageBox::information(this, i18n("No network connection detected, we cannot short url."), i18n("No network"));
+        return;
+    }
     if (mOriginalUrl->text().isEmpty())
         return;
     mIndicatorLabel->start();
@@ -128,6 +142,15 @@ void ShortUrlWidget::slotShortUrlFailed(const QString &errMsg)
 {
     KMessageBox::error(this, i18n("An error occurs: \"%1\"", errMsg));
     mIndicatorLabel->stop();
+}
+
+void ShortUrlWidget::slotSystemNetworkStatusChanged( Solid::Networking::Status status )
+{
+    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+        mNetworkUp = true;
+    } else {
+        mNetworkUp = false;
+    }
 }
 
 #include "shorturlwidget.moc"
