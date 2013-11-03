@@ -23,6 +23,11 @@
 
 class KLineEdit;
 class QPushButton;
+
+namespace KPIMUtils {
+class ProgressIndicatorLabel;
+}
+
 namespace PimCommon {
 class AbstractShortUrl;
 class PIMCOMMON_EXPORT ShortUrlWidget : public QWidget
@@ -50,6 +55,7 @@ private:
     QPushButton *mConvertButton;
     QPushButton *mCopyToClipboard;
     AbstractShortUrl *mEngine;
+    KPIMUtils::ProgressIndicatorLabel *mIndicatorLabel;
 };
 }
 

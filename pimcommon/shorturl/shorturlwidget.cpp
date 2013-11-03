@@ -19,6 +19,8 @@
 #include "shorturlutils.h"
 #include "abstractshorturl.h"
 
+#include <KPIMUtils/ProgressIndicatorLabel>
+
 #include <KLineEdit>
 #include <KLocale>
 #include <KMessageBox>
@@ -38,31 +40,35 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     loadEngine();
     QGridLayout *grid = new QGridLayout;
 
+    mIndicatorLabel = new KPIMUtils::ProgressIndicatorLabel(i18n("In progress to generate short url..."));
+    grid->addWidget(mIndicatorLabel, 0, 0, 1, 2);
+
+
     QLabel *lab = new QLabel(i18n("Original url:"));
-    grid->addWidget(lab, 0, 0);
+    grid->addWidget(lab, 1, 0);
 
     mOriginalUrl = new KLineEdit;
     mOriginalUrl->setClearButtonShown(true);
     mOriginalUrl->setTrapReturnKey(true);
     connect(mOriginalUrl, SIGNAL(textChanged(QString)), this, SLOT(slotOriginalUrlChanged(QString)));
     connect(mOriginalUrl, SIGNAL(returnPressed(QString)), this, SLOT(slotConvertUrl()));
-    grid->addWidget(mOriginalUrl, 0, 1);
+    grid->addWidget(mOriginalUrl, 1, 1);
 
     mConvertButton = new QPushButton(i18n("Convert"));
-    grid->addWidget(mConvertButton, 0, 2);
+    grid->addWidget(mConvertButton, 1, 2);
     connect(mConvertButton, SIGNAL(clicked()), this, SLOT(slotConvertUrl()));
 
     lab = new QLabel(i18n("Short url:"));
-    grid->addWidget(lab, 1, 0);
+    grid->addWidget(lab, 2, 0);
 
     mShortUrl = new KLineEdit;
     connect(mShortUrl, SIGNAL(textChanged(QString)), this, SLOT(slotShortUrlChanged(QString)));
     mShortUrl->setReadOnly(true);
-    grid->addWidget(mShortUrl, 1, 1);
+    grid->addWidget(mShortUrl, 2, 1);
 
     mCopyToClipboard = new QPushButton(i18n("Copy to clipboard"));
     connect(mCopyToClipboard, SIGNAL(clicked()), this, SLOT(slotPasteToClipboard()));
-    grid->addWidget(mCopyToClipboard, 1, 2);
+    grid->addWidget(mCopyToClipboard, 2, 2);
     setLayout(grid);
     mConvertButton->setEnabled(false);
     mCopyToClipboard->setEnabled(false);
@@ -89,6 +95,7 @@ void ShortUrlWidget::slotConvertUrl()
 {
     if (mOriginalUrl->text().isEmpty())
         return;
+    mIndicatorLabel->start();
     mEngine->shortUrl(mOriginalUrl->text());
     mShortUrl->clear();
     mEngine->start();
@@ -114,11 +121,13 @@ void ShortUrlWidget::slotShortUrlChanged(const QString &text)
 void ShortUrlWidget::slotShortUrlDone(const QString &url)
 {
     mShortUrl->setText(url);
+    mIndicatorLabel->stop();
 }
 
 void ShortUrlWidget::slotShortUrlFailed(const QString &errMsg)
 {
     KMessageBox::error(this, i18n("An error occurs: \"%1\"", errMsg));
+    mIndicatorLabel->stop();
 }
 
 #include "shorturlwidget.moc"
