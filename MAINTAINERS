@@ -14,7 +14,8 @@ headerthemeeditor     Laurent Montel <montel@kde.org>
 importwizard          Laurent Montel <montel@kde.org>
 incidenceeditors-ng   Sérgio Martins <iamsergio@gmail.com>
 kabcclient            Kevin Krammer <kevin.krammer@gmx.at>
-kaddressbook          Tobias Koenig <tokoe@kde.org>
+kaddressbook          Laurent Montel <montel@kde.org>
+kaddressbookgrantlee  Laurent Montel <montel@kde.org>
 kalarm                David Jarvie <djarvie@kde.org>
 kdgantt2              KDAB
 kjots                 Stephen Kelly <steveire@gmail.com>
@@ -22,7 +23,7 @@ kleopatra             Marc Mutz <mutz@kde.org>
 kmail                 Laurent Montel <montel@kde.org>
 kmailcvt              Laurent Montel <montel@kde.org>
 knode                 Olivier Trichet <nive@nivalis.org>
-knotes                DEPRECATED
+knotes                Laurent Montel <montel@kde.org>
 konsolekalendar       Allen Winter <winter@kde.org>
 kontact               ?
 korganizer            Allen Winter <winter@kde.org>
@@ -36,18 +37,19 @@ libkdepimdbusinterfaces ?
 libkleo               Marc Mutz <mutz@kde.org>
 libkpgp               DEPRECATED
 libksieve             Laurent Montel <montel@kde.org>
-mailcommon            <kmail maintainer>
+mailcommon            Laurent Montel <montel@kde.org>
 mailfilteragent       ?
 mailcommon            Laurent Montel <montel@kde.org>
+mboximporter          Laurent Montel <montel@kde.org>
 pimsettingexporter    Laurent Montel <montel@kde.org>
 pimactivity           Laurent Montel <montel@kde.org>  
-messagecomposer       <kmail maintainer>
-messagecore           <kmail maintainer>
-messagelist           <kmail maintainer>
-messageviewer         <kmail maintainer>
+messagecomposer       Laurent Montel <montel@kde.org>
+messagecore           Laurent Montel <montel@kde.org>
+messagelist           Laurent Montel <montel@kde.org>
+messageviewer         Laurent Montel <montel@kde.org>
 ontologies            ?
 pimcommon             Laurent Montel <montel@kde.org>
 plugins               ?
 strigi-analyzer       ?
 sendlateragent        Laurent Montel <montel@kde.org>
-templateparser        <kmail maintainer>
+templateparser        Laurent Montel <montel@kde.org>
