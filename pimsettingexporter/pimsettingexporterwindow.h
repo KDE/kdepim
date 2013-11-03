@@ -19,9 +19,10 @@
 #ifndef PIMSETTINGEXPORTERWINDOW_H
 #define PIMSETTINGEXPORTERWINDOW_H
 #include <kxmlguiwindow.h>
-
 class LogWidget;
 class AbstractImportExportJob;
+class KRecentFilesAction;
+class KUrl;
 
 class PimSettingExporterWindow: public KXmlGuiWindow
 {
@@ -39,13 +40,16 @@ private Q_SLOTS:
     void slotAddEndLine();
     void slotSaveLog();
     void slotShowStructureInfos();
+    void slotRestoreFile(const KUrl &url);
 
 private:
+    void loadData(const QString &filename);
     void executeJob();
     bool canZip() const;
     void setupActions(bool canZipFile);
     LogWidget *mLogWidget;
     AbstractImportExportJob *mImportExportData;
+    KRecentFilesAction *mRecentFilesAction;
 };
 
 

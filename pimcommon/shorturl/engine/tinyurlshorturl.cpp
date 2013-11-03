@@ -16,9 +16,7 @@
 */
 
 
-#include "migremeshorturl.h"
-
-#include <KLocale>
+#include "tinyurlshorturl.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -28,25 +26,23 @@
 
 using namespace PimCommon;
 
-MigremeShortUrl::MigremeShortUrl(QObject *parent)
-    : PimCommon::AbstractShortUrl(parent),
-      mNetworkAccessManager(new QNetworkAccessManager(this))
-{
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotShortUrlFinished(QNetworkReply*)));
-}
-
-MigremeShortUrl::~MigremeShortUrl()
+TinyurlShortUrl::TinyurlShortUrl(QObject *parent)
+    : PimCommon::AbstractShortUrl(parent)
 {
 }
 
-void MigremeShortUrl::start()
+TinyurlShortUrl::~TinyurlShortUrl()
 {
-    const QString requestUrl = QString::fromLatin1("http://migre.me/api.txt?url=%1").arg(mOriginalUrl);
+}
+
+void TinyurlShortUrl::start()
+{
+    const QString requestUrl = QString::fromLatin1("http://tinyurl.com/api-create.php?url=%1").arg(mOriginalUrl);
     QNetworkReply *reply = mNetworkAccessManager->get(QNetworkRequest(requestUrl));
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotErrorFound(QNetworkReply::NetworkError)));
 }
 
-void MigremeShortUrl::slotShortUrlFinished(QNetworkReply *reply)
+void TinyurlShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
     reply->deleteLater();
     if (mErrorFound)
@@ -58,12 +54,4 @@ void MigremeShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     }
 }
 
-void MigremeShortUrl::slotError(QNetworkReply::NetworkError error)
-{
-    mErrorFound = true;
-    Q_EMIT shortUrlFailed(i18n("Error reported by server: \'%1\'", error));
-}
-
-
-
-#include "migremeshorturl.moc"
+#include "tinyurlshorturl.moc"

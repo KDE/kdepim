@@ -15,32 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef GOOGLESHORTURL_H
+#define GOOGLESHORTURL_H
 
-#ifndef MIGREMESHORTURL_H
-#define MIGREMESHORTURL_H
-#include "abstractshorturl.h"
-
-#include <QNetworkReply>
-
-class QNetworkAccessManager;
+#include "shorturl/abstractshorturl.h"
 
 namespace PimCommon {
-class MigremeShortUrl : public PimCommon::AbstractShortUrl
+class GoogleShortUrl : public PimCommon::AbstractShortUrl
 {
     Q_OBJECT
 public:
-    explicit MigremeShortUrl(QObject *parent = 0);
-    ~MigremeShortUrl();
+    explicit GoogleShortUrl(QObject *parent = 0);
+    ~GoogleShortUrl();
 
     void start();
 
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply*reply);
-    void slotError(QNetworkReply::NetworkError error);
-
-private:
-    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 
-#endif // MIGREMESHORTURL_H
+#endif // GOOGLESHORTURL_H

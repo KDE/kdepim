@@ -17,9 +17,9 @@
 
 #include "shorturlutils.h"
 #include "pimcommon/shorturl/abstractshorturl.h"
-#include "pimcommon/shorturl/googleshorturl.h"
-#include "pimcommon/shorturl/tinyurlshorturl.h"
-#include "pimcommon/shorturl/migremeshorturl.h"
+#include "pimcommon/shorturl/engine/googleshorturl.h"
+#include "pimcommon/shorturl/engine/tinyurlshorturl.h"
+#include "pimcommon/shorturl/engine/migremeshorturl.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>

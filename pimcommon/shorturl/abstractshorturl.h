@@ -18,9 +18,11 @@
 #ifndef ABSTRACTSHORTURL_H
 #define ABSTRACTSHORTURL_H
 
-#include <QObject>
-
 #include "pimcommon_export.h"
+
+#include <QObject>
+#include <QNetworkReply>
+
 
 namespace PimCommon {
 class PIMCOMMON_EXPORT AbstractShortUrl : public QObject
@@ -37,9 +39,14 @@ Q_SIGNALS:
     void shortUrlDone(const QString &url);
     void shortUrlFailed(const QString &error);
 
+protected Q_SLOTS:
+    void slotErrorFound(QNetworkReply::NetworkError error);
+    virtual void slotShortUrlFinished(QNetworkReply *reply);
+
 protected:
     QString mOriginalUrl;
     bool mErrorFound;
+    QNetworkAccessManager *mNetworkAccessManager;
 };
 }
 

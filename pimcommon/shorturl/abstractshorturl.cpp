@@ -17,11 +17,15 @@
 
 #include "abstractshorturl.h"
 
+#include <KLocale>
+
 using namespace PimCommon;
 AbstractShortUrl::AbstractShortUrl(QObject *parent)
     : QObject(parent),
-      mErrorFound(false)
+      mErrorFound(false),
+      mNetworkAccessManager(new QNetworkAccessManager(this))
 {
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotShortUrlFinished(QNetworkReply*)));
 }
 
 AbstractShortUrl::~AbstractShortUrl()
@@ -33,6 +37,16 @@ void AbstractShortUrl::shortUrl(const QString &url)
 {
     mErrorFound = false;
     mOriginalUrl = url;
+}
+
+void AbstractShortUrl::slotErrorFound(QNetworkReply::NetworkError error)
+{
+    mErrorFound = true;
+    Q_EMIT shortUrlFailed(i18n("Error reported by server: \'%1\'", error));
+}
+
+void AbstractShortUrl::slotShortUrlFinished(QNetworkReply *reply)
+{
 }
 
 #include "abstractshorturl.moc"

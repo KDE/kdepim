@@ -87,6 +87,7 @@ QString calendarPath();
 QString addressbookPath();
 QString alarmPath();
 QString jotPath();
+QString infoPath();
 QString prefixAkonadiConfigFile();
 QString akonadiAgentName(KSharedConfig::Ptr config);
 
@@ -100,5 +101,8 @@ KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedDat
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
 KUrl akonadiAgentConfigPath(const QString &identifier);
 KZip *openZip(const QString &filename, QString &errorMsg);
+
+void addVersion(KZip *archive);
+
 }
 #endif // UTILS_H

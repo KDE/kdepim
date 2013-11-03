@@ -89,7 +89,7 @@ void AbstractImportExportJob::increaseProgressDialog()
     }
 }
 
-void AbstractImportExportJob::showInfo(const QString&text)
+void AbstractImportExportJob::showInfo(const QString &text)
 {
     if (mProgressDialog) {
         mProgressDialog->setLabelText(text);
@@ -249,6 +249,43 @@ void AbstractImportExportJob::copyToFile(const KArchiveFile *archivefile, const 
     }
 }
 
+void AbstractImportExportJob::backupResourceDirectory(const Akonadi::AgentInstance &agent, const QString &defaultPath)
+{
+    const QString identifier = agent.identifier();
+    const QString archivePath = defaultPath + identifier + QDir::separator();
+
+    KUrl url = Utils::resourcePath(agent);
+    if (!url.isEmpty()) {
+        QString filename = url.fileName();
+        if (QDir(url.path()).exists()) {
+            const bool fileAdded  = archive()->addLocalDirectory(url.path(), archivePath + filename);
+            if (fileAdded) {
+                const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                if (!errorStr.isEmpty())
+                    Q_EMIT error(errorStr);
+                Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+
+                url = Utils::akonadiAgentConfigPath(identifier);
+                if (!url.isEmpty()) {
+                    filename = url.fileName();
+
+                    if (QDir(url.path()).exists()) {
+                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                        if (fileAdded)
+                            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                        else
+                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                    }
+                }
+
+            } else {
+                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+            }
+        } else {
+            Q_EMIT error(i18n("Resource was not configured correctly, not archiving it."));
+        }
+    }
+}
 
 void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {
@@ -417,7 +454,7 @@ void AbstractImportExportJob::restoreConfigFile(const QString &configNameStr)
 
 void AbstractImportExportJob::infoAboutNewResource(const QString &resourceName)
 {
-    Q_EMIT info(i18n("Resource  \'%1\' created.", resourceName));
+    Q_EMIT info(i18n("Resource \'%1\' created.", resourceName));
 }
 
 #include "abstractimportexportjob.moc"

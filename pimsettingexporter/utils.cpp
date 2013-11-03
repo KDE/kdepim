@@ -91,6 +91,11 @@ QString Utils::prefixAkonadiConfigFile()
     return QLatin1String("agent_config_");
 }
 
+QString Utils::infoPath()
+{
+    return QLatin1String("information/");
+}
+
 KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
 {
     const KUrl url = Utils::resourcePath(resourceConfig);
@@ -256,4 +261,15 @@ KZip *Utils::openZip(const QString &filename, QString &errorMsg)
         return 0;
     }
     return zip;
+}
+
+void Utils::addVersion(KZip *archive)
+{
+    KTemporaryFile tmp;
+    tmp.open();
+    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), infoPath() + QString::fromLatin1("VERSION_%1").arg(1));
+    if (!fileAdded) {
+        //TODO add i18n ?
+        qDebug()<<"version file can not add to archive";
+    }
 }

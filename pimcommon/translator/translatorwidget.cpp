@@ -52,7 +52,8 @@ class TranslatorWidget::TranslatorWidgetPrivate
 public:
     TranslatorWidgetPrivate()
         : abstractTranslator(0),
-          languageSettingsChanged(false)
+          languageSettingsChanged(false),
+          networkUp(true)
     {
 
     }
@@ -77,6 +78,7 @@ public:
     KPushButton *invert;
     QSplitter *splitter;
     bool languageSettingsChanged;
+    bool networkUp;
 };
 
 void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString &lang )
@@ -305,6 +307,16 @@ void TranslatorWidget::init()
     hide();
     setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
     d->languageSettingsChanged = false;
+
+    connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    Solid::Networking::Status networkStatus = Solid::Networking::status();
+    if ( ( networkStatus == Solid::Networking::Unconnected ) ||
+         ( networkStatus == Solid::Networking::Disconnecting ) ||
+         ( networkStatus == Solid::Networking::Connecting ))
+        d->networkUp = false;
+    else
+        d->networkUp = true;
 }
 
 void TranslatorWidget::slotConfigChanged()
@@ -342,9 +354,14 @@ void TranslatorWidget::setTextToTranslate( const QString& text)
 
 void TranslatorWidget::slotTranslate()
 {
+    if (!d->networkUp) {
+        KMessageBox::information(this, i18n("No network connection detected, we cannot translate text."), i18n("No network"));
+        return;
+    }
     const QString textToTranslate = d->inputText->toPlainText();
     if ( textToTranslate.trimmed().isEmpty() )
         return;
+
     d->translatorResultTextEdit->clear();
 
     const QString from = d->from->itemData(d->from->currentIndex()).toString();
@@ -434,6 +451,15 @@ void TranslatorWidget::slotDebug()
 #if !defined(NDEBUG)
     d->abstractTranslator->debug();
 #endif
+}
+
+void TranslatorWidget::slotSystemNetworkStatusChanged( Solid::Networking::Status status )
+{
+    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+        d->networkUp = true;
+    } else {
+        d->networkUp = false;
+    }
 }
 
 #include "translatorwidget.moc"

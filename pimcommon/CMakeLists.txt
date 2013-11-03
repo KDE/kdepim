@@ -1,6 +1,7 @@
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim
   ${CMAKE_CURRENT_SOURCE_DIR}/util/
+  ${CMAKE_CURRENT_SOURCE_DIR}/shorturl/
   ${QJSON_INCLUDE_DIR}
 )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -43,11 +44,11 @@ set(libpimcommon_SRCS
   sievehighlighter/sievesyntaxhighlighterutil.cpp
   shorturl/abstractshorturl.cpp
   shorturl/shorturlwidget.cpp
-  shorturl/tinyurlshorturl.cpp
-  shorturl/googleshorturl.cpp
+  shorturl/engine/tinyurlshorturl.cpp
+  shorturl/engine/googleshorturl.cpp
   shorturl/shorturlconfigurewidget.cpp
   shorturl/shorturlutils.cpp
-  shorturl/migremeshorturl.cpp
+  shorturl/engine/migremeshorturl.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
@@ -71,6 +72,7 @@ target_link_libraries(pimcommon
     ${KDE4_KDEUI_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
     ${QJSON_LIBRARIES}
+    ${KDE4_SOLID_LIBS}
     kdepim
 )
 
