@@ -175,6 +175,8 @@ void PimSettingExporterWindow::slotBackupData()
 
         slotAddInfo(i18n("Start to backup data in \'%1\'", filename));
         slotAddEndLine();
+        //Add version
+        Utils::addVersion(archiveStorage->archive());
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {

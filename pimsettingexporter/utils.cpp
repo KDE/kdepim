@@ -262,3 +262,13 @@ KZip *Utils::openZip(const QString &filename, QString &errorMsg)
     }
     return zip;
 }
+
+void Utils::addVersion(KZip *archive)
+{
+    KTemporaryFile tmp;
+    tmp.open();
+    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), infoPath() + QString::fromLatin1("VERSION_%1").arg(1));
+    if (!fileAdded) {
+        qDebug()<<"version file can not add to archive";
+    }
+}
