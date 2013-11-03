@@ -89,7 +89,7 @@ void AbstractImportExportJob::increaseProgressDialog()
     }
 }
 
-void AbstractImportExportJob::showInfo(const QString&text)
+void AbstractImportExportJob::showInfo(const QString &text)
 {
     if (mProgressDialog) {
         mProgressDialog->setLabelText(text);

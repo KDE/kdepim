@@ -91,6 +91,11 @@ QString Utils::prefixAkonadiConfigFile()
     return QLatin1String("agent_config_");
 }
 
+QString Utils::infoPath()
+{
+    return QLatin1String("information/");
+}
+
 KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData)
 {
     const KUrl url = Utils::resourcePath(resourceConfig);
