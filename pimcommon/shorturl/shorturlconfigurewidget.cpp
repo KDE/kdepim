@@ -75,6 +75,7 @@ void ShortUrlConfigureWidget::writeConfig()
         PimCommon::ShortUrlUtils::writeEngineSettings(mShortUrlServer->itemData(mShortUrlServer->currentIndex()).toInt());
         Q_EMIT settingsChanged();
     }
+    mChanged = false;
 }
 
 void ShortUrlConfigureWidget::resetToDefault()
