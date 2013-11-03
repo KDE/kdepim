@@ -103,6 +103,7 @@ KUrl akonadiAgentConfigPath(const QString &identifier);
 KZip *openZip(const QString &filename, QString &errorMsg);
 
 void addVersion(KZip *archive);
+int archiveVersion(KZip *archive);
 
 }
 #endif // UTILS_H
