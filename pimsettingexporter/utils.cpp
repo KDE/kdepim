@@ -269,6 +269,7 @@ void Utils::addVersion(KZip *archive)
     tmp.open();
     const bool fileAdded  = archive->addLocalFile(tmp.fileName(), infoPath() + QString::fromLatin1("VERSION_%1").arg(1));
     if (!fileAdded) {
+        //TODO add i18n ?
         qDebug()<<"version file can not add to archive";
     }
 }
