@@ -124,6 +124,7 @@ void CustomLogWidget::addTitleLogEntry( const QString &log )
     item->setFont(font);
     item->setData(ItemLogType, Title);
     addItem( item );
+    scrollToItem(item);
 }
 
 void CustomLogWidget::addInfoLogEntry( const QString &log )
@@ -132,6 +133,7 @@ void CustomLogWidget::addInfoLogEntry( const QString &log )
     item->setForeground(Qt::blue);
     item->setData(ItemLogType, Info);
     addItem( item );
+    scrollToItem(item);
 }
 
 void CustomLogWidget::addErrorLogEntry( const QString &log )
@@ -140,6 +142,7 @@ void CustomLogWidget::addErrorLogEntry( const QString &log )
     item->setForeground(Qt::red);
     item->setData(ItemLogType, Error);
     addItem( item );
+    scrollToItem(item);
 }
 
 void CustomLogWidget::addEndLineLogEntry()
@@ -147,6 +150,7 @@ void CustomLogWidget::addEndLineLogEntry()
     QListWidgetItem* item =new QListWidgetItem;
     item->setData(ItemLogType, EndLine);
     addItem( item );
+    scrollToItem(item);
 }
 
 QString CustomLogWidget::toHtml() const
