@@ -162,6 +162,7 @@ target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${Grantlee_CORE_LIBRARIES} 
   ${KDE4_KNEWSTUFF3_LIBS}
   ${QJSON_LIBRARIES}
+  ${KDE4_SOLID_LIBS}
   pimcommon
   grantleetheme
   kaddressbookgrantlee

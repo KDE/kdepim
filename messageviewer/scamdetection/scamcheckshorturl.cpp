@@ -41,6 +41,15 @@ ScamCheckShortUrl::ScamCheckShortUrl(QObject *parent)
 {
     loadLongUrlServices();
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotExpandFinished(QNetworkReply*)));
+    connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+    Solid::Networking::Status networkStatus = Solid::Networking::status();
+    if ( ( networkStatus == Solid::Networking::Unconnected ) ||
+         ( networkStatus == Solid::Networking::Disconnecting ) ||
+         ( networkStatus == Solid::Networking::Connecting ))
+        mNetworkUp = false;
+    else
+        mNetworkUp = true;
 }
 
 ScamCheckShortUrl::~ScamCheckShortUrl()
@@ -49,6 +58,10 @@ ScamCheckShortUrl::~ScamCheckShortUrl()
 
 void ScamCheckShortUrl::expandedUrl(const KUrl &url)
 {
+    if (!mNetworkUp) {
+        KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "No network connection detected, we cannot expand url.") );
+        return;
+    }
     const QUrl newUrl = QString::fromLatin1("http://api.longurl.org/v2/expand?url=%1&format=json").arg(url.url());
 
     //qDebug()<<" newUrl "<<newUrl;
@@ -108,6 +121,15 @@ void ScamCheckShortUrl::loadLongUrlServices()
     } else {
         const QVariantMap response = QJson::Parser().parse(&servicesFile).toMap();
         sSupportedServices = response.uniqueKeys();
+    }
+}
+
+void ScamCheckShortUrl::slotSystemNetworkStatusChanged( Solid::Networking::Status status )
+{
+    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+        mNetworkUp = true;
+    } else {
+        mNetworkUp = false;
     }
 }
 
