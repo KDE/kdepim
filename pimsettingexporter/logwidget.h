@@ -37,6 +37,7 @@ public:
     void clear();
     QString toHtml() const;
     QString toPlainText() const;
+    bool isEmpty() const;
 
 private:
     KPIM::CustomLogWidget *mCustomLogWidget;

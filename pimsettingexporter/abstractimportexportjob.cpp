@@ -35,6 +35,8 @@
 #include <QFile>
 #include <QDir>
 
+int AbstractImportExportJob::sArchiveVersion = -1;
+
 AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep)
     : QObject(parent),
       mTypeSelected(typeSelected),
@@ -113,11 +115,13 @@ void AbstractImportExportJob::backupConfigFile(const QString &configFileName)
 
 void AbstractImportExportJob::backupFile(const QString&filename, const QString& path, const QString&storedName)
 {
-    const bool fileAdded  = archive()->addLocalFile(filename, path + storedName);
-    if (fileAdded)
-        Q_EMIT info(i18n("\"%1\" backup done.",storedName));
-    else
-        Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
+    if (QFile(filename).exists()) {
+        const bool fileAdded  = archive()->addLocalFile(filename, path + storedName);
+        if (fileAdded)
+            Q_EMIT info(i18n("\"%1\" backup done.",storedName));
+        else
+            Q_EMIT error(i18n("\"%1\" cannot be exported.",storedName));
+    }
 }
 
 int AbstractImportExportJob::mergeConfigMessageBox(const QString &configName) const
@@ -388,6 +392,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     file->copyTo(source);
     QString errorMsg;
     KZip *zip = Utils::openZip(source + QLatin1Char('/') + file->name(), errorMsg);
+    qDebug()<<" file->name()"<<file->name()<<" destination "<<destination;
     if (zip) {
         const KArchiveDirectory *zipDir = zip->directory();
         Q_FOREACH(const QString &entryName, zipDir->entries()) {
@@ -456,5 +461,16 @@ void AbstractImportExportJob::infoAboutNewResource(const QString &resourceName)
 {
     Q_EMIT info(i18n("Resource \'%1\' created.", resourceName));
 }
+
+int AbstractImportExportJob::archiveVersion()
+{
+    return sArchiveVersion;
+}
+
+void AbstractImportExportJob::setArchiveVersion(int version)
+{
+    sArchiveVersion = version;
+}
+
 
 #include "abstractimportexportjob.moc"

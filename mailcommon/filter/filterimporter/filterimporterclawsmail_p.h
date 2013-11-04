@@ -23,7 +23,6 @@
 #include <QDomElement>
 
 class QFile;
-class KConfigGroup;
 
 namespace MailCommon {
 

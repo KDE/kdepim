@@ -100,6 +100,7 @@ void ImportJotJob::storeJotArchiveResource(const KArchiveDirectory *dir, const Q
                         files.akonadiResources = archPath + name;
                     }
                 }
+                files.debug();
                 mListResourceFile.append(files);
             } else {
                 kDebug()<<" Problem in archive. number of file "<<lst.count();

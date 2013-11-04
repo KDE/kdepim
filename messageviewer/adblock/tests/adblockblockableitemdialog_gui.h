@@ -21,7 +21,6 @@
 #include <QWidget>
 #include <QWebPage>
 
-class QWebView;
 namespace KPIMUtils {
 class ProgressIndicatorLabel;
 }

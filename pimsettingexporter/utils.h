@@ -20,6 +20,7 @@
 #include <QString>
 #include <KUrl>
 #include <KSharedConfig>
+#include <QDebug>
 class KZip;
 namespace Akonadi {
 class AgentInstance;
@@ -31,6 +32,9 @@ struct resourceFiles
     QString akonadiConfigFile;
     QString akonadiResources;
     QString akonadiAgentConfigFile;
+    void debug() const {
+        qDebug() <<" akonadiconfigfile :"<<akonadiConfigFile<<" akonadiResources:"<<akonadiResources<<" akonadiAgentConfigFile:"<<akonadiAgentConfigFile;
+    }
 };
 
 namespace Utils {
@@ -103,6 +107,9 @@ KUrl akonadiAgentConfigPath(const QString &identifier);
 KZip *openZip(const QString &filename, QString &errorMsg);
 
 void addVersion(KZip *archive);
+int archiveVersion(KZip *archive);
+
+int currentArchiveVersion();
 
 }
 #endif // UTILS_H

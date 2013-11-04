@@ -44,7 +44,6 @@ public:
     void updateViewer();
     void createScreenShot(const QStringList &fileName);
     void setThemePath(const QString &projectDirectory);
-    void setDefaultContact(const KABC::Addressee &contact);
     void loadConfig();
 
 private:

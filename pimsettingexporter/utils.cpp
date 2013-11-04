@@ -30,6 +30,11 @@
 
 #include <QDir>
 
+int Utils::currentArchiveVersion()
+{
+    //Increase it when we add major feature!
+    return 1;
+}
 
 QString Utils::transportsPath()
 {
@@ -267,9 +272,19 @@ void Utils::addVersion(KZip *archive)
 {
     KTemporaryFile tmp;
     tmp.open();
-    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), infoPath() + QString::fromLatin1("VERSION_%1").arg(1));
+    const bool fileAdded  = archive->addLocalFile(tmp.fileName(), Utils::infoPath() + QString::fromLatin1("VERSION_%1").arg(currentArchiveVersion()));
     if (!fileAdded) {
         //TODO add i18n ?
         qDebug()<<"version file can not add to archive";
     }
+}
+
+int Utils::archiveVersion(KZip *archive)
+{
+    const KArchiveEntry *informationFile = archive->directory()->entry(Utils::infoPath() + QLatin1String( "VERSION_1" ) );
+    if (informationFile && informationFile->isFile()) {
+        return 1;
+    }
+    //TODO add more version when new version
+    return 0;
 }

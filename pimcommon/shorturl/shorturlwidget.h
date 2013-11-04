@@ -21,6 +21,8 @@
 #include <QWidget>
 #include "pimcommon_export.h"
 
+#include <Solid/Networking>
+
 class KLineEdit;
 class QPushButton;
 
@@ -47,6 +49,7 @@ private Q_SLOTS:
     void slotShortUrlChanged(const QString &text);
     void slotShortUrlDone(const QString &url);
     void slotShortUrlFailed(const QString &errMsg);
+    void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
 
 private:
     void loadEngine();
@@ -56,6 +59,7 @@ private:
     QPushButton *mCopyToClipboard;
     AbstractShortUrl *mEngine;
     KPIMUtils::ProgressIndicatorLabel *mIndicatorLabel;
+    bool mNetworkUp;
 };
 }
 

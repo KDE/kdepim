@@ -30,7 +30,6 @@
 #include <QWidget>
 
 class QModelIndex;
-class QItemSelectionModel;
 class QStandardItemModel;
 
 class KJob;

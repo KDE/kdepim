@@ -21,7 +21,6 @@
 #include <KDialog>
 
 class KLineEdit;
-class KTextEdit;
 namespace PimCommon {
 class RichTextEditorWidget;
 class TemplateEditDialog : public KDialog

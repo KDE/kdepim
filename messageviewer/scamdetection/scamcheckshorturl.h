@@ -27,6 +27,7 @@
 
 #include <QStringList>
 #include <QNetworkReply>
+#include <Solid/Networking>
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -47,6 +48,7 @@ public:
 private Q_SLOTS:
     void slotExpandFinished(QNetworkReply*);
     void slotError(QNetworkReply::NetworkError error);
+    void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
 
 Q_SIGNALS:
     void urlExpanded(const QString &shortUrl, const QString &expandedUrl);
@@ -55,6 +57,7 @@ Q_SIGNALS:
 private:
     static QStringList sSupportedServices;
     QNetworkAccessManager *mNetworkAccessManager;
+    bool mNetworkUp;
 };
 }
 

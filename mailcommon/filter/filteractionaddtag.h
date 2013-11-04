@@ -22,15 +22,6 @@
 
 #include "filteractionwithstringlist.h"
 
-namespace Nepomuk2
-{
-namespace Query
-{
-class Result;
-class QueryServiceClient;
-}
-}
-
 namespace MailCommon {
 
 //=============================================================================

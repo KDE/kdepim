@@ -50,6 +50,9 @@ public:
 
     bool wasCanceled() const;
 
+    static int archiveVersion();
+    static void setArchiveVersion(int version);
+
 Q_SIGNALS:
     void info(const QString &);
     void error(const QString &);
@@ -101,6 +104,7 @@ protected:
     const KArchiveDirectory* mArchiveDirectory;
     int mNumberOfStep;
     PimCommon::CreateResource *mCreateResource;
+    static int sArchiveVersion;
 };
 
 #endif // ABSTRACTIMPORTEXPORTJOB_H

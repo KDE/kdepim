@@ -396,7 +396,6 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
 {
   KUrl::List urls;
   bool probablyWeHaveUris = false;
-  bool weCanCopy = true;
   QStringList labels;
 
   if ( KABC::VCardDrag::canDecode( mimeData ) ) {
@@ -431,6 +430,7 @@ void IncidenceAttachment::handlePasteOrDrop( const QMimeData *mimeData )
   if ( probablyWeHaveUris ) {
     linkAction = menu.addAction( KIcon( "insert-link" ), i18nc( "@action:inmenu", "&Link here" ) );
     // we need to check if we can reasonably expect to copy the objects
+    bool weCanCopy = true;
     for ( KUrl::List::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it ) {
       if ( !( weCanCopy = KProtocolManager::supportsReading( *it ) ) ) {
         break; // either we can copy them all, or no copying at all

@@ -37,7 +37,6 @@
 
 using Akonadi::MessageStatus;
 
-class QXmlStreamWriter;
 
 namespace Akonadi {
   class Item;
