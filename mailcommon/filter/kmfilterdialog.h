@@ -37,7 +37,6 @@
 #include <QTreeWidget>
 
 class KActionCollection;
-class KComboBox;
 class KIconButton;
 class KKeySequenceWidget;
 

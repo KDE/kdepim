@@ -39,7 +39,6 @@ class KJob;
 
 namespace MailCommon {
 
-class ExpireCollectionAttribute;
 
 class ExpireJob : public ScheduledJob
 {
