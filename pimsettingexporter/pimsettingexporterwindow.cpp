@@ -292,7 +292,10 @@ void PimSettingExporterWindow::loadData(const QString &filename)
             return;
         }
 
-        qDebug()<<"version :"<<Utils::archiveVersion(archiveStorage->archive());
+        const int version = Utils::archiveVersion(archiveStorage->archive());
+        qDebug()<<" version "<<version;
+        AbstractImportExportJob::setArchiveVersion(version);
+
         slotAddInfo(i18n("Start to restore data from \'%1\'", filename));
         slotAddEndLine();
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();

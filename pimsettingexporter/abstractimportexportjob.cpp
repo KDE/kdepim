@@ -35,6 +35,8 @@
 #include <QFile>
 #include <QDir>
 
+int AbstractImportExportJob::sArchiveVersion = -1;
+
 AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage *archiveStorage, Utils::StoredTypes typeSelected, int numberOfStep)
     : QObject(parent),
       mTypeSelected(typeSelected),
@@ -456,5 +458,16 @@ void AbstractImportExportJob::infoAboutNewResource(const QString &resourceName)
 {
     Q_EMIT info(i18n("Resource \'%1\' created.", resourceName));
 }
+
+int AbstractImportExportJob::archiveVersion()
+{
+    return sArchiveVersion;
+}
+
+void AbstractImportExportJob::setArchiveVersion(int version)
+{
+    sArchiveVersion = version;
+}
+
 
 #include "abstractimportexportjob.moc"
