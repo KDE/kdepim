@@ -20,6 +20,7 @@
 #include <QString>
 #include <KUrl>
 #include <KSharedConfig>
+#include <QDebug>
 class KZip;
 namespace Akonadi {
 class AgentInstance;
@@ -31,6 +32,9 @@ struct resourceFiles
     QString akonadiConfigFile;
     QString akonadiResources;
     QString akonadiAgentConfigFile;
+    void debug() {
+        qDebug() <<" akonadiconfigfile :"<<akonadiConfigFile<<" akonadiResources:"<<akonadiResources<<" akonadiAgentConfigFile:"<<akonadiAgentConfigFile;
+    }
 };
 
 namespace Utils {

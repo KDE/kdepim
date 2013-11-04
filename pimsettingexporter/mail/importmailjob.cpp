@@ -112,18 +112,23 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const 
         if (entry && entry->isDirectory()) {
             const KArchiveDirectory*resourceDir = static_cast<const KArchiveDirectory*>(entry);
             const QStringList lst = resourceDir->entries();
-            //TODO implement it
-            //TODO implement ResourceFiles struct !
             if (lst.count() >= 2) {
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
-                const QString name(lst.at(0));
-                if (name.endsWith(QLatin1String("rc"))&&
-                        (name.contains(QLatin1String("akonadi_mbox_resource_")) ||
-                         name.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ||
-                         name.contains(QLatin1String("akonadi_maildir_resource_")))) {
-                    mHashMailArchive.insert(archPath + name,archPath +lst.at(1));
-                } else {
-                    mHashMailArchive.insert(archPath +lst.at(1),archPath + name);
+                resourceFiles files;
+                Q_FOREACH(const QString &name, lst) {
+                    if (name.endsWith(QLatin1String("rc"))&&
+                            (name.contains(QLatin1String("akonadi_mbox_resource_")) ||
+                             name.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ||
+                             name.contains(QLatin1String("akonadi_maildir_resource_")))) {
+                        files.akonadiConfigFile = archPath + name;
+                    } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
+                        files.akonadiAgentConfigFile = archPath + name;
+                    } else {
+                        files.akonadiResources = archPath + name;
+                    }
+                    //Show debug:
+                    files.debug();
+                    mListResourceFile.append(files);
                 }
             } else {
                 kDebug()<<" Problem in archive. number of file "<<lst.count();

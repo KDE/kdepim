@@ -109,6 +109,7 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
                         files.akonadiResources = archPath + name;
                     }
                 }
+                files.debug();
                 mListResourceFile.append(files);
             } else {
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
