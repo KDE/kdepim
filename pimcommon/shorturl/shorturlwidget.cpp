@@ -104,7 +104,7 @@ void ShortUrlWidget::loadEngine()
 void ShortUrlWidget::slotConvertUrl()
 {
     if (!mNetworkUp) {
-        KMessageBox::information(this, i18n("No network connection detected, we cannot short url."), i18n("No network"));
+        KMessageBox::information(this, i18n("No network connection detected, we cannot shorten url."), i18n("No network"));
         return;
     }
     if (mOriginalUrl->text().isEmpty())
