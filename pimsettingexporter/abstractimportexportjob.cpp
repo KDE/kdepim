@@ -392,6 +392,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
     file->copyTo(source);
     QString errorMsg;
     KZip *zip = Utils::openZip(source + QLatin1Char('/') + file->name(), errorMsg);
+    qDebug()<<" file->name()"<<file->name()<<" destination "<<destination;
     if (zip) {
         const KArchiveDirectory *zipDir = zip->directory();
         Q_FOREACH(const QString &entryName, zipDir->entries()) {
