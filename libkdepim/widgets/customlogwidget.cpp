@@ -194,3 +194,8 @@ QString CustomLogWidget::toPlainText() const
     }
     return result;
 }
+
+bool CustomLogWidget::isEmpty() const
+{
+    return (count() == 0);
+}

@@ -67,6 +67,11 @@ QString LogWidget::toPlainText() const
     return mCustomLogWidget->toPlainText();
 }
 
+bool LogWidget::isEmpty() const
+{
+    return mCustomLogWidget->isEmpty();
+}
+
 void LogWidget::addEndLineLogEntry()
 {
     mCustomLogWidget->addEndLineLogEntry();

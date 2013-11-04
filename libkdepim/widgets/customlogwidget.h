@@ -53,6 +53,7 @@ public:
 
     QString toHtml() const;
     QString toPlainText() const;
+    bool isEmpty() const;
 
 private:
     enum ItemType {

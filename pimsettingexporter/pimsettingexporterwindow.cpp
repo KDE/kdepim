@@ -138,11 +138,11 @@ void PimSettingExporterWindow::slotRestoreFile(const KUrl &url)
 
 void PimSettingExporterWindow::slotSaveLog()
 {
-    const QString log = mLogWidget->toHtml();
-    if (log.isEmpty()) {
+    if (mLogWidget->isEmpty()) {
         KMessageBox::information(this, i18n("Log is empty."), i18n("Save log"));
         return;
     }
+    const QString log = mLogWidget->toHtml();
     const QString filter(QLatin1String("*.html"));
     PimCommon::Util::saveTextAs(log, filter, this);
 }
