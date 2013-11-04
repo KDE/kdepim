@@ -34,9 +34,6 @@
 
 #include "pimcommon_export.h"
 
-class QCheckBox;
-class KPushButton;
-class KLineEdit;
 
 namespace PimCommon {
 class RenameFileDialogPrivate;

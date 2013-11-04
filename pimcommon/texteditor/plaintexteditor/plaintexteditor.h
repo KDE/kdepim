@@ -23,7 +23,6 @@
 #include <QPlainTextEdit>
 
 namespace Sonnet {
-class Highlighter;
 }
 namespace PimCommon {
 class PIMCOMMON_EXPORT PlainTextEditor : public QPlainTextEdit
