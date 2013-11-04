@@ -60,8 +60,6 @@ private:
     void mergeSieveTemplate(const KArchiveFile *archivefile, const QString &filename, const QString &prefix);
     QString uniqueIdentityName(const QString &name);
 
-    //config file "rc"/ config akonadi resource
-    QHash<QString, QString> mHashMailArchive;
     QHash<uint, uint> mHashIdentity;
     QHash<int, int> mHashTransport;
     QHash<QString, QString> mHashResources;

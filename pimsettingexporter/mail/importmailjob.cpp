@@ -69,7 +69,7 @@ void ImportMailJob::start()
     Q_EMIT title(i18n("Start import kmail settings..."));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory,QString());
-    if (!mFileList.isEmpty()|| !mHashMailArchive.isEmpty()) {
+    if (!mFileList.isEmpty()|| !mListResourceFile.isEmpty()) {
         if (mTypeSelected & Utils::MailTransport)
             restoreTransports();
         if (mTypeSelected & Utils::Resources)
@@ -426,10 +426,11 @@ void ImportMailJob::restoreMails()
     QDir dir(mTempDirName);
     dir.mkdir(Utils::mailsPath());
     const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::mailsPath());
-    QHashIterator<QString, QString> res(mHashMailArchive);
-    while (res.hasNext()) {
-        res.next();
-        const QString resourceFile = res.key();
+    for (int i = 0; i < mListResourceFile.size(); ++i) {
+
+        resourceFiles value = mListResourceFile.at(i);
+        value.debug();
+        const QString resourceFile = value.akonadiConfigFile;
         const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(resourceFile);
         if (fileResouceEntry && fileResouceEntry->isFile()) {
             const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
@@ -444,7 +445,7 @@ void ImportMailJob::restoreMails()
 
             QMap<QString, QVariant> settings;
             if (resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
-                const QString dataFile = res.value();
+                const QString dataFile = value.akonadiResources;
                 const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                 if (dataResouceEntry->isFile()) {
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
@@ -511,9 +512,9 @@ void ImportMailJob::restoreMails()
                     infoAboutNewResource(newResource);
                 }
 
-                const QString mailFile = res.value();
+                const QString mailFile = value.akonadiResources;
                 const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(mailFile);
-                if (dataResouceEntry->isFile()) {
+                if (dataResouceEntry && dataResouceEntry->isFile()) {
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
                     //TODO Fix me not correct zip filename.
                     extractZipFile(file, copyToDirName, newUrl.path());
