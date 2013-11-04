@@ -98,7 +98,7 @@ void ImportMailJob::searchAllFiles(const KArchiveDirectory*dir,const QString&pre
             } else {
                 searchAllFiles(static_cast<const KArchiveDirectory*>(entry), newPrefix);
             }
-        } else {
+        } else if (entry) {
             const QString fileName = prefix.isEmpty() ? entry->name() : prefix + QLatin1Char('/') + entry->name();
             mFileList<<fileName;
         }
