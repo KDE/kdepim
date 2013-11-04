@@ -32,7 +32,7 @@ struct resourceFiles
     QString akonadiConfigFile;
     QString akonadiResources;
     QString akonadiAgentConfigFile;
-    void debug() {
+    void debug() const {
         qDebug() <<" akonadiconfigfile :"<<akonadiConfigFile<<" akonadiResources:"<<akonadiResources<<" akonadiAgentConfigFile:"<<akonadiAgentConfigFile;
     }
 };
