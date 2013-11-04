@@ -104,7 +104,7 @@ void ScamCheckShortUrl::loadLongUrlServices()
 {
     QFile servicesFile(KGlobal::dirs()->findResource("data", QLatin1String("messageviewer/longurlServices.json")));
     if (!servicesFile.open(QIODevice::ReadOnly)) {
-        qDebug()<<" json file not found";
+        qDebug()<<" json file \'longurlServices.json\' not found";
     } else {
         const QVariantMap response = QJson::Parser().parse(&servicesFile).toMap();
         sSupportedServices = response.uniqueKeys();
