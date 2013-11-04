@@ -69,14 +69,6 @@ ContactPreviewWidget::~ContactPreviewWidget()
 {
 }
 
-void ContactPreviewWidget::setDefaultContact(const KABC::Addressee &contact)
-{
-    if (mContact != contact) {
-        mContact = contact;
-        updateViewer();
-    }
-}
-
 void ContactPreviewWidget::updateViewer()
 {
     mContactViewer->setRawContact(mContact);
