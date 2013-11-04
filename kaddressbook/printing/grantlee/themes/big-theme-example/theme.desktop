@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Example big title
+Name[ca]=Títol gran d'exemple
 Name[de]=Beispiel mit großem Titel
 Name[es]=Ejemplo de título grande
 Name[fr]=Exemple avec grand titre
@@ -18,6 +19,7 @@ Name[uk]=Приклад великого заголовка
 Name[x-test]=xxExample big titlexx
 Name[zh_TW]=範例大標題
 Description=Example big title grantlee printing theme
+Description[ca]=Tema d'impressió d'exemple de Grantlee amb un títol gran
 Description[de]=Beispiel für Grantlee-Druckstil mit großem Titel
 Description[es]=Ejemplo de título grande de tema de impresión grantlee
 Description[fr]=Thème d'impression Grantlee avec un grand titre
