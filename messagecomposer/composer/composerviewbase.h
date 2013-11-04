@@ -34,7 +34,6 @@
 #include <kleo/enum.h>
 
 class QTimer;
-class QAction;
 class KJob;
 class QWidget;
 
