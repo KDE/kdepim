@@ -25,7 +25,6 @@
 #include "notificationmanagerinterface.h"
 
 class MonitorItem;
-class QDBusPendingCallWatcher;
 
 class MonitorsModel : public QAbstractItemModel
 {

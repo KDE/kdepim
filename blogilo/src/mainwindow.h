@@ -33,7 +33,6 @@
 #include <QPointer>
 
 class KStatusNotifierItem;
-class KTabWidget;
 class QProgressBar;
 class QToolButton;
 class Toolbox;

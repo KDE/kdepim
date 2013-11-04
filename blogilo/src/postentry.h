@@ -28,12 +28,7 @@
 #include <QFrame>
 #include "bilbopost.h"
 
-class QGridLayout;
-class QLabel;
-class QHBoxLayout;
-class KLineEdit;
 class BilboMedia;
-class QProgressBar;
 class Backend;
 
 /**

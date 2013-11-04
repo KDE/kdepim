@@ -29,11 +29,7 @@
 #include "category.h"
 #include "ui_toolboxbase.h"
 
-class KStatusBar;
-class QButtonGroup;
 class BilboPost;
-class BilboBlog;
-class CatCheckBox;
 /**
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
  @author Golnaz Nilieh <g382nilieh@gmail.com>

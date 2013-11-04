@@ -30,8 +30,6 @@
 #include <kblog/blogpost.h>
 
 
-class QUrl;
-class QDateTime;
 class BilboPostPrivate;
 
 /**
