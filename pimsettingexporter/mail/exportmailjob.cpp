@@ -540,8 +540,8 @@ void ExportMailJob::writeDirectory(const QString &path, const QString &relativeP
         if (lst.at(i).isDir()) {
             writeDirectory(relativePath + path + QLatin1Char('/') + filename,relativePath,mailArchive);
         } else {
-            QString currentPath(path);
-            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),currentPath + QLatin1Char('/') + filename);
+            const QString currentPath(currentPath + QLatin1Char('/') + filename);
+            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),currentPath);
         }
     }
 }
