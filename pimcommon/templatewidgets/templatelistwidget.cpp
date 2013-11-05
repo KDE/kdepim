@@ -24,6 +24,7 @@
 #include <KLocale>
 #include <KMenu>
 #include <KFileDialog>
+#include <KNS3/DownloadDialog>
 
 
 #include <QListWidgetItem>
@@ -239,7 +240,9 @@ public:
 
     void slotDownloadTemplates()
     {
-        //TODO
+        QPointer<KNS3::DownloadDialog> downloadThemesDialog = new KNS3::DownloadDialog(knewstuffConfigName);
+        downloadThemesDialog->exec();
+        delete downloadThemesDialog;
     }
 
     void save()
@@ -349,6 +352,11 @@ void TemplateListWidget::dropEvent( QDropEvent * event )
 void TemplateListWidget::setKNewStuffConfigFile(const QString &configName)
 {
     d->knewstuffConfigName = configName;
+}
+
+void TemplateListWidget::addDefaultTemplate(const QString &templateName, const QString &templateScript)
+{
+    d->createListWidgetItem(templateName, templateScript, true);
 }
 
 }

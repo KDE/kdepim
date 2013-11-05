@@ -45,6 +45,8 @@ public:
 
     void setKNewStuffConfigFile(const QString &configName);
 
+    void addDefaultTemplate(const QString &templateName, const QString &templateScript);
+
 protected:
     QStringList mimeTypes() const;
     QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
@@ -54,6 +56,7 @@ protected:
 Q_SIGNALS:
     void insertTemplate(const QString &);
     void insertNewTemplate(const QString &);
+
 private:
     friend class TemplateListWidgetPrivate;
     TemplateListWidgetPrivate * const d;
