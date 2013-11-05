@@ -70,6 +70,7 @@ Root
 |       |---------blogilorc
 |       |---------messageviewer.notifyrc
 |       |---------kontactrc
+|       |---------kontact_summaryrc
 |
 |-----akonadi
 |       |---------<archive akonadi>
