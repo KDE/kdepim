@@ -748,6 +748,20 @@ void ImportMailJob::restoreConfig()
         }
     }
 
+    const QString kontactSummaryStr(QLatin1String("kontact_summaryrc"));
+    const KArchiveEntry* kontactSummaryentry  = mArchiveDirectory->entry(Utils::configsPath() + kontactSummaryStr);
+    if ( kontactSummaryentry &&  kontactSummaryentry->isFile()) {
+        const KArchiveFile* kontactSummaryconfiguration = static_cast<const KArchiveFile*>(kontactSummaryentry);
+        const QString kontactSummaryrc = KStandardDirs::locateLocal( "config",  kontactSummaryStr);
+        if (QFile(kontactSummaryrc).exists()) {
+            if (overwriteConfigMessageBox(kontactSummaryStr)) {
+                copyToFile(kontactSummaryconfiguration, kontactSummaryrc, kontactSummaryStr, Utils::configsPath());
+            }
+        } else {
+            copyToFile(kontactSummaryconfiguration, kontactSummaryrc, kontactSummaryStr, Utils::configsPath());
+        }
+    }
+
     //Restore notify file
     QStringList lstNotify;
     lstNotify << QLatin1String("akonadi_mailfilter_agent.notifyrc")
