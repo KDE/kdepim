@@ -15,29 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SHORTURLUTILS_H
-#define SHORTURLUTILS_H
 
-#include <QObject>
+#ifndef TRIOPABSHORTURL_H
+#define TRIOPABSHORTURL_H
+
+#include "abstractshorturl.h"
 
 namespace PimCommon {
-class AbstractShortUrl;
-namespace ShortUrlUtils
+class TriopabShortUrl : public PimCommon::AbstractShortUrl
 {
-    enum EngineType {
-        Google = 0,
-        Tinyurl = 1,
-        MigreMe = 2,
-        TriopAB = 3,
-        //TODO add more engine.
-        EndListEngine
-    };
-    QString stringFromEngineType(EngineType type);
-    AbstractShortUrl *loadEngine(QObject *parent);
+    Q_OBJECT
+public:
+    explicit TriopabShortUrl(QObject *parent = 0);
+    ~TriopabShortUrl();
 
-    int readEngineSettings();
-    void writeEngineSettings(int value);
-}
+    void start();
+
+private Q_SLOTS:
+    void slotShortUrlFinished(QNetworkReply*reply);
+};
 }
 
-#endif // SHORTURLUTILS_H
+
+#endif // TRIOPABSHORTURL_H

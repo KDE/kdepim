@@ -49,6 +49,7 @@ set(libpimcommon_SRCS
   shorturl/shorturlconfigurewidget.cpp
   shorturl/shorturlutils.cpp
   shorturl/engine/migremeshorturl.cpp
+  shorturl/engine/triopabshorturl.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
