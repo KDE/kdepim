@@ -106,8 +106,8 @@ QString SearchWidget::query() const
                                                     "</equals>"
                                                   ).arg( mUi.collectionCombo->currentCollection().id() );
 
-  const QString startDate = mUi.startDate->date().toString( "yyyyMMdd" );
-  const QString endDate = mUi.endDate->date().toString( "yyyyMMdd" );
+  const QString startDate = mUi.startDate->date().toString( QLatin1String( "yyyyMMdd" ) );
+  const QString endDate = mUi.endDate->date().toString( QLatin1String( "yyyyMMdd" ) );
 
   const QString inTimeRange = QString::fromLatin1(
                                                    "<greaterThanEquals>"
