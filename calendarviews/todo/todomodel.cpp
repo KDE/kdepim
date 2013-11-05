@@ -736,7 +736,7 @@ bool TodoModel::dropMimeData( const QMimeData *data, Qt::DropAction action,
         tmp = CalendarSupport::incidence( d->m_calendar->item( parentUid ) );
       }
 
-      if (!destTodo->hasRecurrenceId()) {
+      if (!destTodo || !destTodo->hasRecurrenceId()) {
         KCalCore::Todo::Ptr oldTodo = KCalCore::Todo::Ptr( todo->clone() );
         // destTodo is empty when we drag a to-do out of a relationship
         todo->setRelatedTo( destTodo ? destTodo->uid() : QString() );
