@@ -91,6 +91,14 @@ void ExportNotesJob::backupData()
             Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", notesDir));
         }
     }
+    const QString notesThemeDir = KStandardDirs::locateLocal( "data", QLatin1String( "knotes/print/" ) );
+    QDir notesThemeDirectory( notesThemeDir );
+    if (notesThemeDirectory.exists()) {
+        const bool notesDirAdded = archive()->addLocalDirectory(notesDir, Utils::dataPath() +  QLatin1String( "/knotes/print" ));
+        if (!notesDirAdded) {
+            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", notesDir));
+        }
+    }
     Q_EMIT info(i18n("Data backup done."));
 }
 
