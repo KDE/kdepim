@@ -181,6 +181,10 @@ public:
             menu->addAction( i18n("Export..."), q, SLOT(slotExportTemplates()));
         menu->addAction( i18n("Import..."), q, SLOT(slotImportTemplates()));
 
+        if (!knewstuffConfigName.isEmpty()) {
+            menu->addAction( i18n("Download new Templates..."), q, SLOT(slotDownloadTemplates()));
+        }
+
         menu->exec( q->mapToGlobal( pos ) );
         delete menu;
     }
@@ -233,6 +237,11 @@ public:
         configFile->sync();
     }
 
+    void slotDownloadTemplates()
+    {
+        //TODO
+    }
+
     void save()
     {
         if (!dirty)
@@ -241,6 +250,7 @@ public:
         saveTemplates(&(*config));
         dirty = false;
     }
+    QString knewstuffConfigName;
     bool dirty;
     KSharedConfig::Ptr config;
     TemplateListWidget *q;
@@ -295,14 +305,14 @@ QMimeData *TemplateListWidget::mimeData ( const QList<QListWidgetItem *> items )
 bool TemplateListWidget::addNewTemplate(QString &templateName, QString &templateScript)
 {
     QPointer<TemplateEditDialog> dlg = new TemplateEditDialog(this);
+    bool result = false;
     if (dlg->exec()) {
         templateName = dlg->templateName();
         templateScript = dlg->script();
-        delete dlg;
-        return true;
+        result = true;
     }
     delete dlg;
-    return false;
+    return result;
 }
 
 bool TemplateListWidget::modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate)
@@ -322,7 +332,7 @@ bool TemplateListWidget::modifyTemplate(QString &templateName, QString &template
     return false;
 }
 
-void TemplateListWidget::dropEvent ( QDropEvent * event )
+void TemplateListWidget::dropEvent( QDropEvent * event )
 {
     if ( event->source() == this ) {
         event->ignore();
@@ -334,6 +344,11 @@ void TemplateListWidget::dropEvent ( QDropEvent * event )
         event->accept();
     }
     QListWidget::dropEvent( event );
+}
+
+void TemplateListWidget::setKNewStuffConfigFile(const QString &configName)
+{
+    d->knewstuffConfigName = configName;
 }
 
 }

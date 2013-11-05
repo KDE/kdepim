@@ -43,6 +43,8 @@ public:
     virtual bool addNewTemplate(QString &templateName, QString &templateScript);
     virtual bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
 
+    void setKNewStuffConfigFile(const QString &configName);
+
 protected:
     QStringList mimeTypes() const;
     QMimeData *mimeData( const QList<QListWidgetItem *> items ) const;
@@ -64,6 +66,7 @@ private:
     Q_PRIVATE_SLOT( d, void slotExportTemplates() )
     Q_PRIVATE_SLOT( d, void slotImportTemplates() )
     Q_PRIVATE_SLOT( d, void slotDuplicate() )
+    Q_PRIVATE_SLOT( d, void slotDownloadTemplates() )
     enum TemplateData {
         Text = Qt::UserRole + 1,
         DefaultTemplate = Qt::UserRole + 2
