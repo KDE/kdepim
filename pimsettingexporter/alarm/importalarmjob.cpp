@@ -57,9 +57,9 @@ void ImportAlarmJob::start()
 
 void ImportAlarmJob::restoreResources()
 {
-    //TODO we don't have several resource.
     Q_EMIT info(i18n("Restore resources..."));
-    restoreResourceFile(QString::fromLatin1("akonadi_kalarm_resource"), Utils::calendarPath(), storeAlarm);
+    //We don't want to create multiple resources for kalarm. Overwrite existing
+    restoreResourceFile(QString::fromLatin1("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm, true);
 }
 
 void ImportAlarmJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)

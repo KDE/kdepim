@@ -67,7 +67,8 @@ void ImportAddressbookJob::restoreResources()
         for (int i = 0; i < mListResourceFile.size(); ++i) {
             resourceFiles value = mListResourceFile.at(i);
             QMap<QString, QVariant> settings;
-            if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
+            if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
+                    value.akonadiConfigFile.contains(QLatin1String("akonadi_contacts_resource_")) ) {
                 const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
                 if (fileResouceEntry && fileResouceEntry->isFile()) {
                     const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
@@ -80,6 +81,7 @@ void ImportAddressbookJob::restoreResources()
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
+                    //TODO fix default path
                     const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAddressbook);
 
                     const QString dataFile = value.akonadiResources;
@@ -102,8 +104,15 @@ void ImportAddressbookJob::restoreResources()
                             filename = Utils::akonadiAgentName(akonadiAgentConfig);
                         }
                     }
+                    QString instanceType;
+                    if (value.akonadiConfigFile.contains(QLatin1String("akonadi_vcarddir_resource_")))
+                        instanceType = QLatin1String("akonadi_vcarddir_resource");
+                    else if (value.akonadiConfigFile.contains(QLatin1String("akonadi_contacts_resource_")))
+                        instanceType = QLatin1String("akonadi_contacts_resource");
+                    else
+                        qDebug()<<" not supported"<<value.akonadiConfigFile;
 
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_vcarddir_resource"), filename, settings );
+                    const QString newResource = mCreateResource->createResource( instanceType, filename, settings );
                     infoAboutNewResource(newResource);
                     qDebug()<<" newResource"<<newResource;
                 }

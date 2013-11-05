@@ -68,7 +68,7 @@ void ExportAddressbookJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
+        if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_")) || identifier.contains(QLatin1String("akonadi_contacts_resource_")) ) {
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent);

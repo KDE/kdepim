@@ -75,7 +75,7 @@ protected:
     bool overwriteConfigMessageBox(const QString &configName) const;
     Akonadi::Collection::Id convertPathToId(const QString &path);
     void backupResourceFile(const Akonadi::AgentInstance &agent, const QString &defaultPath);
-    void restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath);
+    void restoreResourceFile(const QString &resourceName, const QString &defaultPath, const QString &storePath, bool overwriteResources = false);
     bool backupFullDirectory(const KUrl &url, const QString &archivePath, const QString &archivename);
     virtual void addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings);
     void restoreConfigFile(const QString &configNameStr);
