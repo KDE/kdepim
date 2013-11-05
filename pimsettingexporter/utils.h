@@ -60,7 +60,8 @@ enum AppsType {
     KJots,
     KNotes,
     Akregator,
-    Blogilo
+    Blogilo,
+    KNode
 };
 
 struct importExportParameters

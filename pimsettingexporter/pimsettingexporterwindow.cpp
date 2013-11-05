@@ -42,6 +42,9 @@
 #include "blogilo/exportblogilojob.h"
 #include "blogilo/importblogilojob.h"
 
+#include "knode/exportknodejob.h"
+#include "knode/importknodejob.h"
+
 #include "pimsettingexporterkernel.h"
 #include "selectiontypedialog.h"
 #include "utils.h"
@@ -228,6 +231,12 @@ void PimSettingExporterWindow::slotBackupData()
                     executeJob();
                 }
                 break;
+            case Utils::KNode:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ExportKnodeJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
             }
             ++i;
         }
@@ -346,6 +355,12 @@ void PimSettingExporterWindow::loadData(const QString &filename)
             case Utils::Blogilo:
                 if (i.value().numberSteps != 0) {
                     mImportExportData = new ImportBlogiloJob(this, i.value().types, archiveStorage, i.value().numberSteps);
+                    executeJob();
+                }
+                break;
+            case Utils::KNode:
+                if (i.value().numberSteps != 0) {
+                    mImportExportData = new ImportKnodeJob(this, i.value().types, archiveStorage, i.value().numberSteps);
                     executeJob();
                 }
                 break;
