@@ -81,4 +81,3 @@ QString ClearCrlCacheCommand::successMessage( const QStringList & ) const {
     return i18n( "CRL cache cleared successfully." );
 }
 
-#include "moc_clearcrlcachecommand.cpp"

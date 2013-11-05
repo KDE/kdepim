@@ -236,4 +236,3 @@ void TodoViewView::expandParent()
   }
 }
 
-#include "todoviewview.moc"

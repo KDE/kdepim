@@ -125,4 +125,4 @@ void ThemeComboBoxPrivate::setCurrentTheme( const Theme *theme )
   q->setCurrentIndex( themeIndex );
 }
 
-#include "themecombobox.moc"
+#include "moc_themecombobox.cpp"

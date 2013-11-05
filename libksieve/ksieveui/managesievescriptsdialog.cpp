@@ -586,4 +586,3 @@ void ManageSieveScriptsDialog::disableManagerScriptsDialog(bool disable)
     setDisabled(disable);
 }
 
-#include "managesievescriptsdialog.moc"

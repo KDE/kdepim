@@ -66,4 +66,3 @@ void TodoViewQuickAddLine::resizeEvent ( QResizeEvent * event )
                      width() - clearButtonUsedSize().width() ) );
 }
 
-#include "todoviewquickaddline.moc"

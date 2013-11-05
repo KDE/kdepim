@@ -103,4 +103,3 @@ GpgME::Error Kleo::MultiDeleteJob::startAJob() {
   return mJob->start( *mIt, mAllowSecretKeyDeletion );
 }
 
-#include "multideletejob.moc"

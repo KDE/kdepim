@@ -356,4 +356,3 @@ void StringUtilTest::test_stripOffMessagePrefix()
   }
 }
 
-#include "stringutiltest.moc"

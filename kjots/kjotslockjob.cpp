@@ -69,4 +69,3 @@ void KJotsLockJob::slotResult(KJob* job)
     emitResult();
 }
 
-#include "kjotslockjob.moc"

@@ -135,4 +135,4 @@ bool AttachmentCompressJob::isCompressedPartLarger() const
   return d->mCompressedPartLarger;
 }
 
-#include "attachmentcompressjob.moc"
+#include "moc_attachmentcompressjob.cpp"

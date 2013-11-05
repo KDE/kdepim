@@ -206,4 +206,3 @@ void SinglepartJob::process()
   emitResult();
 }
 
-#include "singlepartjob.moc"

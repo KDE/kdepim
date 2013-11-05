@@ -402,4 +402,4 @@ bool LdapClientSearch::isAvailable() const
   return !d->mNoLDAPLookup;
 }
 
-#include "ldapclientsearch.moc"
+#include "moc_ldapclientsearch.cpp"

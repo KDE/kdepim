@@ -201,4 +201,4 @@ QString ComposerLinkDialog::html() const
 
 }
 
-#include "composerlinkdialog.moc"
+#include "moc_composerlinkdialog.cpp"

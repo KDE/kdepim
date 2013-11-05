@@ -129,4 +129,3 @@ void CustomTextEdit::languageSelected()
 }
 
 
-#include "customtextedit.moc"

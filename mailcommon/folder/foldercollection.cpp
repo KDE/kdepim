@@ -353,4 +353,3 @@ void FolderCollection::setMailingList( const MailingList &mlist )
 
 }
 
-#include "foldercollection.moc"

@@ -170,4 +170,3 @@ void BabelFishTranslator::slotJobDone ( KJob *job )
   }
 }
 
-#include "babelfishtranslator.moc"

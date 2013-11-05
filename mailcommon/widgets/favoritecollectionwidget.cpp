@@ -234,4 +234,3 @@ void FavoriteCollectionWidget::paintEvent( QPaintEvent *event )
     }
 }
 
-#include "favoritecollectionwidget.moc"

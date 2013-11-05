@@ -77,4 +77,4 @@ ThemeConfigButton::~ThemeConfigButton()
 }
 
 
-#include "themeconfigbutton.moc"
+#include "moc_themeconfigbutton.cpp"

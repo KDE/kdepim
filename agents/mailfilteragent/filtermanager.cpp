@@ -633,4 +633,4 @@ void FilterManager::applyFilters( const QList<Akonadi::Item> &selectedMessages, 
            SLOT(itemsFetchJobForFilterDone(KJob*)) );
 }
 
-#include "filtermanager.moc"
+#include "moc_filtermanager.cpp"

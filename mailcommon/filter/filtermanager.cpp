@@ -318,4 +318,3 @@ void FilterManager::endUpdate()
     emit filtersChanged();
 }
 
-#include "filtermanager.moc"

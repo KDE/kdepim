@@ -75,4 +75,3 @@ void KCMPimActivity::defaults()
     mConfigure->defaults();
 }
 
-#include "kcmpimactivity.moc"

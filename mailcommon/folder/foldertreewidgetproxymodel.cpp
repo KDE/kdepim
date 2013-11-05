@@ -267,4 +267,3 @@ void FolderTreeWidgetProxyModel::addContentMimeTypeInclusionFilter( const QStrin
 
 }
 
-#include "foldertreewidgetproxymodel.moc"

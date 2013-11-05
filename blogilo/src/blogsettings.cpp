@@ -139,4 +139,3 @@ void BlogSettings::addBlogToList( const BilboBlog &blog )
     item->setData(0, BlogId, blog.id());
 }
 
-#include "blogsettings.moc"

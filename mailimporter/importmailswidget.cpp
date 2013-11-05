@@ -98,4 +98,3 @@ void ImportMailsWidget::clear()
     setTo( QString() );
 }
 
-#include "importmailswidget.moc"

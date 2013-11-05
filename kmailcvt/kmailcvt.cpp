@@ -144,5 +144,4 @@ void KMailCVT::collectionChanged( const Akonadi::Collection &selectedCollection 
     }
 }
 
-#include "kmailcvt.moc"
 

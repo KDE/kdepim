@@ -39,4 +39,3 @@ void ComposerAutoCorrectionTreeWidget::keyPressEvent( QKeyEvent *event )
     }
 }
 
-#include "composerautocorrectiontreewidget.moc"

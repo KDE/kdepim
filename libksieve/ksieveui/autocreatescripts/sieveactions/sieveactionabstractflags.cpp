@@ -97,4 +97,3 @@ QString SieveActionAbstractFlags::serverNeedsCapability() const
         return QLatin1String("imapflags");
 }
 
-#include "sieveactionabstractflags.moc"

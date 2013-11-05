@@ -320,4 +320,3 @@ void ThemeEditorPage::saveThemeAs(const QString &directory)
     storeTheme(directory);
 }
 
-#include "themeeditorpage.moc"

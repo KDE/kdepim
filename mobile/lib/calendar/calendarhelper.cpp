@@ -289,4 +289,3 @@ void CalendarHelper::updateWeeks()
   }
 }
 
-#include "calendarhelper.moc"

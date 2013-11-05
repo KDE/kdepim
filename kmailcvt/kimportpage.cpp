@@ -38,5 +38,4 @@ Ui::KImportPageDlg *KImportPage::widget()
     return mWidget;
 }
 
-#include "kimportpage.moc"
 

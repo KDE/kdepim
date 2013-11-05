@@ -91,4 +91,4 @@ void AkonadiTabBar::setResource( const QString &resource )
 }
 
 
-#include "akonaditabbar.moc"
+#include "moc_akonaditabbar.cpp"

@@ -113,4 +113,3 @@ void GlobalPart::setMDNRequested(bool requestMDN)
   d->MDNRequested = requestMDN;
 }
 
-#include "globalpart.moc"

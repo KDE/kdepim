@@ -803,4 +803,4 @@ void IncidenceDialog::handleSelectedCollectionChange( const Akonadi::Collection 
   }
 }
 
-#include "incidencedialog.moc"
+#include "moc_incidencedialog.cpp"

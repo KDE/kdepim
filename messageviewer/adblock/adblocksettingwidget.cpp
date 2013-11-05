@@ -410,4 +410,3 @@ void AdBlockSettingWidget::slotExportFilters()
 }
 
 
-#include "adblocksettingwidget.moc"

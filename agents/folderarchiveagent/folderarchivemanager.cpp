@@ -225,4 +225,3 @@ void FolderArchiveManager::debugCache()
     mFolderArchiveCache->debugCache();
 }
 
-#include "folderarchivemanager.moc"

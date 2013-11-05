@@ -293,4 +293,3 @@ void MainTextJob::process()
   emitResult();
 }
 
-#include "maintextjob.moc"

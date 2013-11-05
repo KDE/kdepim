@@ -140,4 +140,3 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
     return true;
 }
 
-#include "sieveconditionenvironment.moc"

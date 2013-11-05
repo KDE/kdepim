@@ -168,4 +168,3 @@ void TimelineViewItem::gotoPrevious()
   m_view->blockSignals( false );
 }
 
-#include "timelineviewitem.moc"

@@ -295,4 +295,4 @@ void SaveMailCommand::slotSaveResult(KJob *job)
   }
 }
 
-#include "savemailcommand_p.moc"
+#include "moc_savemailcommand_p.cpp"

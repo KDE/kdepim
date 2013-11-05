@@ -113,4 +113,4 @@ QString ComposerTableDialog::html() const
 
 }
 
-#include "composertabledialog.moc"
+#include "moc_composertabledialog.cpp"

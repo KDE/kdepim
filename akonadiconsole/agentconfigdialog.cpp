@@ -51,4 +51,3 @@ void AgentConfigDialog::reconfigure()
   m_instance.reconfigure();
 }
 
-#include "agentconfigdialog.moc"

@@ -312,4 +312,4 @@ ComposerTableActionMenu::~ComposerTableActionMenu()
 
 }
 
-#include "composertableactionmenu.moc"
+#include "moc_composertableactionmenu.cpp"

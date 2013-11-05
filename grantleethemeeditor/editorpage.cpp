@@ -127,4 +127,3 @@ void EditorPage::installTheme(const QString &themePath)
 
 
 
-#include "editorpage.moc"

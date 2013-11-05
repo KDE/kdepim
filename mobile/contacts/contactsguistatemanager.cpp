@@ -36,4 +36,3 @@ void ContactsGuiStateManager::emitChangedSignal()
   emit guiStateChanged();
 }
 
-#include "contactsguistatemanager.moc"

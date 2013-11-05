@@ -320,4 +320,4 @@ void LdapClient::setCompletionWeight( int weight )
 }
 
 
-#include "ldapclient.moc"
+#include "moc_ldapclient.cpp"

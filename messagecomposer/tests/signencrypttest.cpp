@@ -156,4 +156,3 @@ void SignEncryptTest::testHeaders()
   QCOMPARE( result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit );
 }
 
-#include "signencrypttest.moc"

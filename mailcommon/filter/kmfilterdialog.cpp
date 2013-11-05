@@ -1723,4 +1723,3 @@ void KMFilterDialog::slotExportAsSieveScript()
 
 }
 
-#include "kmfilterdialog.moc"

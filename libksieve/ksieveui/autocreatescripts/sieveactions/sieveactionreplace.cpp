@@ -157,4 +157,3 @@ QString SieveActionReplace::help() const
     return i18n("The \"replace\" command is defined to allow a MIME part to be replaced with the text supplied in the command.");
 }
 
-#include "sieveactionreplace.moc"

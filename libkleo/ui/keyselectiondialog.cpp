@@ -889,4 +889,3 @@ void Kleo::KeySelectionDialog::showAllItems() {
     item->setHidden( false );
 }
 
-#include "keyselectiondialog.moc"

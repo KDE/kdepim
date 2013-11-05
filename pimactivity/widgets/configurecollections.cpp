@@ -111,4 +111,3 @@ void ConfigureCollections::setDefault()
 
 }
 
-#include "configurecollections.moc"

@@ -219,4 +219,3 @@ void UploadMediaDialog::slotError( const QString &msg )
     }
 }
 
-#include "uploadmediadialog.moc"

@@ -276,5 +276,4 @@ bool ForwardingProxyModel::setData( const QModelIndex& index, const QVariant& va
     return sourceModel()->setData( mapToSource( index ), value, role );
 }
 
-#include "moc_kdganttforwardingproxymodel.cpp"
 

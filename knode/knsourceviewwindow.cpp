@@ -56,4 +56,3 @@ KNSourceViewWindow::~KNSourceViewWindow()
 }
 
 
-#include "knsourceviewwindow.moc"

@@ -54,4 +54,3 @@ void TriopabShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     }
 }
 
-#include "triopabshorturl.moc"

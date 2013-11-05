@@ -469,4 +469,4 @@ void DecryptVerifyFilesController::cancel()
     }
 }
 
-#include "decryptverifyfilescontroller.moc"
+#include "moc_decryptverifyfilescontroller.cpp"

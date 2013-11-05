@@ -81,5 +81,4 @@ QStringList AttachmentTemporaryFilesDirs::temporaryFiles() const
     return mTempFiles;
 }
 
-#include "attachmenttemporaryfilesdirs.moc"
 

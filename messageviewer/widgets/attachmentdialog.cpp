@@ -108,4 +108,3 @@ void AttachmentDialog::openWithClicked()
 
 //---------------------------------------------------------------------
 
-#include "attachmentdialog.moc"

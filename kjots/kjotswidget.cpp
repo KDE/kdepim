@@ -1835,4 +1835,3 @@ void KJotsWidget::actionSortChildrenByDate()
   }
 }
 
-#include "kjotswidget.moc"

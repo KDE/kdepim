@@ -197,4 +197,3 @@ QVariant SubkeyListModel::data( const QModelIndex & idx, int role ) const {
     return QVariant();
 }
 
-#include "moc_subkeylistmodel.cpp"

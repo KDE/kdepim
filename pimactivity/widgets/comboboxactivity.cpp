@@ -80,4 +80,4 @@ ComboBoxActivity::~ComboBoxActivity()
 
 }
 
-#include "comboboxactivity.moc"
+#include "moc_comboboxactivity.cpp"

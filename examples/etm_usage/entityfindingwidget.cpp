@@ -137,5 +137,4 @@ void EntityFindingWidget::findItem()
   m_etw->view()->scrollTo( idx );
 }
 
-#include "entityfindingwidget.moc"
 

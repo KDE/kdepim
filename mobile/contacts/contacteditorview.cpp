@@ -315,4 +315,4 @@ void ContactEditorView::closeEvent( QCloseEvent *event )
   cancel();
 }
 
-#include "contacteditorview.moc"
+#include "moc_contacteditorview.cpp"

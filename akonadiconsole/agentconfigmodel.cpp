@@ -143,4 +143,3 @@ void AgentConfigModel::writeConfig()
   m_interface->call( "writeConfig" );
 }
 
-#include "agentconfigmodel.moc"

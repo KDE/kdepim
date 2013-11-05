@@ -329,4 +329,3 @@ QIcon KeyFilterManager::icon( const Key & key ) const {
     return icon.isEmpty() ? QIcon() : QIcon( KIcon( icon ) ) ;
 }
 
-#include "keyfiltermanager.moc"

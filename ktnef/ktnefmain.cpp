@@ -552,4 +552,3 @@ void KTNEFMain::slotSaveMessageText()
   }
 }
 
-#include "ktnefmain.moc"

@@ -154,4 +154,3 @@ void ExportCalendarJob::backupConfig()
     Q_EMIT info(i18n("Config backup done."));
 }
 
-#include "exportcalendarjob.moc"

@@ -333,5 +333,5 @@ Qt::ItemFlags QCsvModel::flags( const QModelIndex &index ) const
   return flags;
 }
 
-#include "qcsvmodel.moc"
-#include "qcsvmodel_p.moc"
+#include "moc_qcsvmodel.cpp"
+#include "moc_qcsvmodel_p.cpp"

@@ -56,4 +56,3 @@ void BlogiloComposerWidget::slotActivateTranslator()
         mTranslatorWidget->setTextToTranslate(text);
 }
 
-#include "blogilocomposerwidget.moc"

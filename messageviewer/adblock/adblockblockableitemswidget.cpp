@@ -311,4 +311,3 @@ void AdBlockBlockableItemsWidget::slotRemoveFilter()
     item->setText(FilterValue, QString());
 }
 
-#include "adblockblockableitemswidget.moc"

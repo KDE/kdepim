@@ -181,4 +181,3 @@ void XXPortManager::slotExport( const QString &identifier )
   delete xxport;
 }
 
-#include "xxportmanager.moc"

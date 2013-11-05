@@ -210,4 +210,3 @@ void DebugWidget::saveRichText()
   file.close();
 }
 
-#include "debugwidget.moc"

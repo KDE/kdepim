@@ -314,4 +314,3 @@ void MailFilterAgent::emitProgressMessage (const QString& message)
 
 AKONADI_AGENT_MAIN( MailFilterAgent )
 
-#include "mailfilteragent.moc"

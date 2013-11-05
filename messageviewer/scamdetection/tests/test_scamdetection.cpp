@@ -124,4 +124,3 @@ void ScamDetectionTest::testShortUrl()
 
 QTEST_KDEMAIN( ScamDetectionTest, GUI )
 
-#include "test_scamdetection.moc"

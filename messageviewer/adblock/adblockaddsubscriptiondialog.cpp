@@ -65,4 +65,3 @@ void AdBlockAddSubscriptionDialog::selectedList(QString &name, QString &url)
     url = mListSubscription->itemData(mListSubscription->currentIndex()).toString();
 }
 
-#include "adblockaddsubscriptiondialog.moc"

@@ -51,4 +51,3 @@ void EventsGuiStateManager::emitChangedSignal()
   emit guiStateChanged();
 }
 
-#include "eventsguistatemanager.moc"

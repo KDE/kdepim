@@ -233,5 +233,4 @@ KUrl RenameFileDialog::newName() const
 }
 
 
-#include "renamefiledialog.moc"
 

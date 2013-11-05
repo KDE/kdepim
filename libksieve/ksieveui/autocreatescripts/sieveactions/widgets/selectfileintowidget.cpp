@@ -78,4 +78,3 @@ QString SelectFileIntoWidget::selectedFolder() const
     return mLineEdit->text();
 }
 
-#include "selectfileintowidget.moc"

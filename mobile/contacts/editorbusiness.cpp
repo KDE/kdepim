@@ -97,4 +97,3 @@ void EditorBusiness::saveContact( KABC::Addressee &contact, Akonadi::ContactMeta
   contact.setNote( d->mUi.noteTextEdit->toPlainText() );
 }
 
-#include "editorbusiness.moc"

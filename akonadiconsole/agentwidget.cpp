@@ -423,4 +423,3 @@ void AgentWidget::resizeEvent( QResizeEvent *event )
   ui.detailsBox->setVisible( event->size().height() > 400 );
 }
 
-#include "agentwidget.moc"

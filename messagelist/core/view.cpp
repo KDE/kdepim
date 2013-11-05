@@ -2774,4 +2774,4 @@ void View::setExpandItem(const QModelIndex& index)
 
 
 
-#include "view.moc"
+#include "moc_view.cpp"

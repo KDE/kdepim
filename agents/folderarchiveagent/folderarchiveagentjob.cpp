@@ -118,4 +118,3 @@ void FolderArchiveAgentJob::sendError(const QString &error)
     mManager->moveFailed(error);
 }
 
-#include "folderarchiveagentjob.moc"

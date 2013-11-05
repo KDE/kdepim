@@ -157,4 +157,3 @@ QString SieveActionRedirect::help() const
 }
 
 
-#include "sieveactionredirect.moc"

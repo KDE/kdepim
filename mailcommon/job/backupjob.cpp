@@ -457,5 +457,4 @@ void BackupJob::setDisplayMessageBox(bool display)
     mDisplayMessageBox = display;
 }
 
-#include "backupjob.moc"
 

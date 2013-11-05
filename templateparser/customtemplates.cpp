@@ -595,4 +595,3 @@ void CustomTemplateItem::setOldName( const QString &name )
   mName = name;
 }
 
-#include "customtemplates.moc"

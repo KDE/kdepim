@@ -165,4 +165,3 @@ void SignatureController::applyCurrentSignature()
 
 
 
-#include "signaturecontroller.moc"

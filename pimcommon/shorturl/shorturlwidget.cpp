@@ -183,4 +183,3 @@ void ShortUrlWidget::setStandalone(bool b)
     mStandalone = b;
 }
 
-#include "shorturlwidget.moc"

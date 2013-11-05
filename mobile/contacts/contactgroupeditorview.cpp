@@ -233,4 +233,4 @@ void ContactGroupEditorView::closeEvent( QCloseEvent *event )
   cancel();
 }
 
-#include "contactgroupeditorview.moc"
+#include "moc_contactgroupeditorview.cpp"

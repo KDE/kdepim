@@ -43,4 +43,3 @@ FilterAction* FilterActionExec::newAction()
     return new FilterActionExec();
 }
 
-#include "filteractionexec.moc"

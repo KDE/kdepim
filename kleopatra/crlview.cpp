@@ -146,4 +146,3 @@ void CRLView::slotProcessExited(int, QProcess::ExitStatus _status)
   }
 }
 
-#include "crlview.moc"

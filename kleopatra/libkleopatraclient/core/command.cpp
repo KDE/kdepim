@@ -652,4 +652,3 @@ void Command::Private::run() {
 }
 
 #include "moc_command_p.cpp"
-#include "moc_command.cpp"

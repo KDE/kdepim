@@ -38,4 +38,3 @@ FollowUpReminderConfigureDialog::~FollowUpReminderConfigureDialog()
 
 }
 
-#include "followupreminderconfiguredialog.moc"

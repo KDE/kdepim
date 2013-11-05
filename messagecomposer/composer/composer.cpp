@@ -618,4 +618,4 @@ void Composer::slotResult( KJob *job )
   }
 }
 
-#include "composer.moc"
+#include "moc_composer.cpp"

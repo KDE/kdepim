@@ -88,4 +88,3 @@ void NewThemeDialog::slotUpdateOkButton()
     enableButtonOk(!mUrlRequester->lineEdit()->text().isEmpty() && !mThemeName->text().isEmpty());
 }
 
-#include "newthemedialog.moc"

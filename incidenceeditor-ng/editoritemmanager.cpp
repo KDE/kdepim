@@ -399,4 +399,4 @@ bool ItemEditorUi::isValid() const
 
 } // namespace
 
-#include "editoritemmanager.moc"
+#include "moc_editoritemmanager.cpp"

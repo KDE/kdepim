@@ -256,4 +256,3 @@ Recipient::Ptr RecipientLineNG::recipient() const
 }
 
 
-#include "recipientline.moc"

@@ -73,4 +73,3 @@ void FollowUpReminderAgent::configure( WId windowId )
 
 AKONADI_AGENT_MAIN( FollowUpReminderAgent )
 
-#include "followupreminderagent.moc"

@@ -207,4 +207,3 @@ void ModelColumnManager::adaptHeaderView()
   }
 }
 
-#include "modelcolumnmanager.moc"

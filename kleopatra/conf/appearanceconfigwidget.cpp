@@ -595,4 +595,4 @@ void AppearanceConfigWidget::Private::slotTooltipDetailsChanged( bool )
 }
 
 
-#include "appearanceconfigwidget.moc"
+#include "moc_appearanceconfigwidget.cpp"

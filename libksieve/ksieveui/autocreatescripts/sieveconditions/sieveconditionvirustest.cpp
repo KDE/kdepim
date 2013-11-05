@@ -151,5 +151,4 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
     return true;
 }
 
-#include "sieveconditionvirustest.moc"
 

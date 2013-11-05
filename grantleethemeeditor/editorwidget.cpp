@@ -71,4 +71,3 @@ void EditorWidget::clear()
 }
 
 
-#include "editorwidget.moc"

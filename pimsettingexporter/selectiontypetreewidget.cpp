@@ -289,4 +289,3 @@ void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
     }
 }
 
-#include "selectiontypetreewidget.moc"

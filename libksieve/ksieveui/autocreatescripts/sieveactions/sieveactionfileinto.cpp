@@ -165,4 +165,3 @@ QString SieveActionFileInto::help() const
     return helpStr;
 }
 
-#include "sieveactionfileinto.moc"

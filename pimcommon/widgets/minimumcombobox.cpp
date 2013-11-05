@@ -33,5 +33,4 @@ QSize MinimumComboBox::minimumSizeHint() const
 }
 
 
-#include "minimumcombobox.moc"
 

@@ -285,4 +285,3 @@ void MainTextJobTest::testHtmlWithImages()
   }
 }
 
-#include "maintextjobtest.moc"

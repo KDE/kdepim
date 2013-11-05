@@ -1349,4 +1349,4 @@ void VerifyDetachedTask::doStart()
     }
 }
 
-#include "decryptverifytask.moc"
+#include "moc_decryptverifytask.cpp"

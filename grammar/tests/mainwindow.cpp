@@ -37,4 +37,3 @@ MainWindow::MainWindow()
     setCentralWidget(w);
 }
 
-#include "mainwindow.moc"

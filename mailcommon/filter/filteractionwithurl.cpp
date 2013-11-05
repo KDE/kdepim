@@ -83,4 +83,3 @@ QString FilterActionWithUrl::displayString() const
 }
 
 
-#include "filteractionwithurl.moc"

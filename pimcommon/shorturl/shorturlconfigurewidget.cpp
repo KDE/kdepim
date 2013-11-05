@@ -84,4 +84,3 @@ void ShortUrlConfigureWidget::resetToDefault()
     mChanged = false;
 }
 
-#include "shorturlconfigurewidget.moc"

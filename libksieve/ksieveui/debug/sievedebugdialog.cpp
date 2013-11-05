@@ -173,4 +173,3 @@ void SieveDebugDialog::slotGetScriptList( KManageSieve::SieveJob *job, bool succ
     QTimer::singleShot( 0, this, SLOT(slotDiagNextScript()) );
 }
 
-#include "sievedebugdialog.moc"

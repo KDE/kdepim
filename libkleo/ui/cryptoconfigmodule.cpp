@@ -1018,5 +1018,4 @@ void Kleo::CryptoConfigEntryKeyserver::slotOpenDialog()
   }
 }
 
-#include "cryptoconfigmodule.moc"
-#include "cryptoconfigmodule_p.moc"
+#include "moc_cryptoconfigmodule_p.cpp"

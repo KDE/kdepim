@@ -621,4 +621,3 @@ void TemplatesInsertCommand::slotMapped( int cmd )
   }
 }
 
-#include "templatesinsertcommand.moc"

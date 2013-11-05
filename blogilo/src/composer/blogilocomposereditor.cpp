@@ -177,4 +177,3 @@ void BlogiloComposerEditor::execCommand( const QString &cmd, const QString &arg 
 
 
 
-#include "blogilocomposereditor.moc"

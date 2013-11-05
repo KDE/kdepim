@@ -280,4 +280,3 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
 
 }
 
-#include "sievescriptblockwidget.moc"

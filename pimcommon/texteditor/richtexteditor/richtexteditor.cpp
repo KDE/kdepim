@@ -608,4 +608,3 @@ bool RichTextEditor::overrideShortcut(const QKeyEvent* event)
 }
 
 
-#include "richtexteditor.moc"

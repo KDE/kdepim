@@ -49,4 +49,3 @@ int EntriesCountDialog::count() const
     return ui.spinCount->value();
 }
 
-#include "entriescountdialog.moc"

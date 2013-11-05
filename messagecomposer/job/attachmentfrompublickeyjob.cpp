@@ -132,4 +132,4 @@ void AttachmentFromPublicKeyJob::doStart()
   }
 }
 
-#include "attachmentfrompublickeyjob.moc"
+#include "moc_attachmentfrompublickeyjob.cpp"

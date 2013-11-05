@@ -233,4 +233,3 @@ MessageComposer::AkonadiSender *SendLaterManager::sender() const
     return mSender;
 }
 
-#include "sendlatermanager.moc"

@@ -311,4 +311,4 @@ void FileSystemWatcher::removePath( const QString& path )
     removePaths( QStringList( path ) );
 }
 
-#include "filesystemwatcher.moc"
+#include "moc_filesystemwatcher.cpp"

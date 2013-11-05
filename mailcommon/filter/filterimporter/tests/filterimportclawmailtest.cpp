@@ -42,4 +42,3 @@ void FilterImportClawMailtest::testImportFilters()
 }
 
 
-#include "filterimportclawmailtest.moc"

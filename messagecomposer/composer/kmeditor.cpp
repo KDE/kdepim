@@ -840,4 +840,4 @@ void KMeditor::insertPlainTextImplementation()
   }
 }
 
-#include "kmeditor.moc"
+#include "moc_kmeditor.cpp"

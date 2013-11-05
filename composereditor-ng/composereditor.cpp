@@ -220,4 +220,3 @@ QMap<QString, QString> ComposerEditor::localImages() const
 
 }
 
-#include "composereditor.moc"

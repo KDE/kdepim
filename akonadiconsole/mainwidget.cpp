@@ -145,4 +145,3 @@ void MainWidget::configureServer()
 }
 
 
-#include "mainwidget.moc"

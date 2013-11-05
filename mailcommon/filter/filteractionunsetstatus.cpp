@@ -91,4 +91,3 @@ QStringList FilterActionUnsetStatus::sieveRequires() const
     return QStringList() << QLatin1String("imap4flags");
 }
 
-#include "filteractionunsetstatus.moc"

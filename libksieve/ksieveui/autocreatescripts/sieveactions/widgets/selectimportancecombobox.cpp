@@ -56,4 +56,3 @@ void SelectImportanceCombobox::setCode(const QString &code, const QString &name,
     }
 }
 
-#include "selectimportancecombobox.moc"

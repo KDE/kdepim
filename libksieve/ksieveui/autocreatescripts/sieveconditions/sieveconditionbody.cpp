@@ -151,4 +151,3 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
 }
 
 
-#include "sieveconditionbody.moc"

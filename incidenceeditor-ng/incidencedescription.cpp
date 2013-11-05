@@ -225,4 +225,3 @@ void IncidenceDescription::printDebugInfo() const
   }
 }
 
-#include "moc_incidencedescription.cpp"

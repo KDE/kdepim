@@ -40,4 +40,3 @@ SieveWidgetPageAbstract::PageType SieveWidgetPageAbstract::pageType() const
 
 }
 
-#include "sievewidgetpageabstract.moc"

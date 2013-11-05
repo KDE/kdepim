@@ -54,4 +54,3 @@ void TinyurlShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     }
 }
 
-#include "tinyurlshorturl.moc"

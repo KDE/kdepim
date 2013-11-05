@@ -288,4 +288,3 @@ void JobTrackerModel::jobsUpdated( const QList< QPair< int, int > > & jobs )
 #undef PAIR
 }
 
-#include "jobtrackermodel.moc"

@@ -609,4 +609,3 @@ QSize ListView::sizeHint() const
                 s.height() );
 }
 
-#include "listview.moc"

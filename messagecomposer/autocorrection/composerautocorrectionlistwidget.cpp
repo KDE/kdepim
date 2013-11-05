@@ -39,4 +39,3 @@ void ComposerAutoCorrectionListWidget::keyPressEvent( QKeyEvent *event )
     }
 }
 
-#include "composerautocorrectionlistwidget.moc"

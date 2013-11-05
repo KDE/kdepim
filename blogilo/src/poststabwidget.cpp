@@ -91,4 +91,3 @@ void PostsTabWidget::slotTabContextMenuRequest( const QPoint &pos )
 }
 
 
-#include "poststabwidget.moc"

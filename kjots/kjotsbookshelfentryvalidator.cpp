@@ -66,4 +66,3 @@ QValidator::State KJotsBookshelfEntryValidator::validate( QString& input, int& p
 }
 
 
-#include "kjotsbookshelfentryvalidator.moc"

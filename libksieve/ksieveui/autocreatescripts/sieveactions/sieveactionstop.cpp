@@ -41,4 +41,3 @@ QString SieveActionStop::help() const
     return i18n("The \"stop\" action ends all processing.  If the implicit keep has not been cancelled, then it is taken.");
 }
 
-#include "sieveactionstop.moc"

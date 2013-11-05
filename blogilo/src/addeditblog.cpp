@@ -635,4 +635,3 @@ void AddEditBlog::hideWaitWidget()
     d->wait = 0;
 }
 
-#include "addeditblog.moc"

@@ -236,4 +236,3 @@ void PrintingWizard::print()
   mStyle->print( contacts, mProgress );
 }
 
-#include "printingwizard.moc"

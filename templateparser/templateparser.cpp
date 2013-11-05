@@ -1741,4 +1741,3 @@ bool TemplateParser::cursorPositionWasSet() const
 
 }
 
-#include "templateparser.moc"

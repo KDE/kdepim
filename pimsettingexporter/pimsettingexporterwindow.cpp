@@ -407,4 +407,3 @@ void PimSettingExporterWindow::slotShowStructureInfos()
     delete dlg;
 }
 
-#include "pimsettingexporterwindow.moc"

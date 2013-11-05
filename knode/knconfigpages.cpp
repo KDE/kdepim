@@ -188,4 +188,3 @@ extern "C"
 }
 
 
-#include "knconfigpages.moc"

@@ -4588,4 +4588,4 @@ void Model::deletePersistentSet( MessageItemSetReference ref )
   }
 }
 
-#include "model.moc"
+#include "moc_model.cpp"

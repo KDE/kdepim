@@ -116,4 +116,4 @@ KLineEdit* EmailAddressRequester::lineEdit() const
   return d->mLineEdit;
 }
 
-#include "emailaddressrequester.moc"
+#include "moc_emailaddressrequester.cpp"

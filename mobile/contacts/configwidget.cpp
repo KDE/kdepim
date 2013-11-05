@@ -106,4 +106,3 @@ void DeclarativeConfigWidget::save()
   mConfigWidget->save();
 }
 
-#include "configwidget.moc"

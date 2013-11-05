@@ -216,4 +216,3 @@ void KWatchGnuPGConfig::slotSave()
   emit reconfigure();
 }
 
-#include "kwatchgnupgconfig.moc"

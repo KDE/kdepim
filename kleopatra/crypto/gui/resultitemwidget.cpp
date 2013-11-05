@@ -213,4 +213,4 @@ void ResultItemWidget::showDetails( bool show )
     emit detailsToggled( show );
 }
 
-#include "resultitemwidget.moc"
+#include "moc_resultitemwidget.cpp"

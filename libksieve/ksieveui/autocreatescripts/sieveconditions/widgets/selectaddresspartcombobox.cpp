@@ -70,4 +70,3 @@ void SelectAddressPartComboBox::setCode(const QString &code, const QString &name
 }
 
 
-#include "selectaddresspartcombobox.moc"

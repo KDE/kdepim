@@ -1011,4 +1011,3 @@ void IncidenceDateTime::setTimeZoneLabelEnabled( bool enable )
 #endif
 }
 
-#include "moc_incidencedatetime.cpp"

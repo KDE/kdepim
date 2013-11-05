@@ -230,4 +230,3 @@ KNCollection::Ptr KNNntpAccount::selfPtr()
 }
 
 
-#include "knnntpaccount.moc"

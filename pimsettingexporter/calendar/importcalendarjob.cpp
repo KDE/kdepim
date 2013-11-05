@@ -261,4 +261,3 @@ void ImportCalendarJob::importkorganizerConfig(const KArchiveFile* file, const Q
 }
 
 
-#include "importcalendarjob.moc"

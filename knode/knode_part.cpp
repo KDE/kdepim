@@ -123,5 +123,4 @@ QWidget* KNodePart::parentWidget() const
 
 
 
-#include "knode_part.moc"
 

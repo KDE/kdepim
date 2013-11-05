@@ -107,4 +107,3 @@ QString FilterActionRemoveHeader::sieveCode() const
     return QString::fromLatin1("deleteheader \"%1\";").arg(mParameter);
 }
 
-#include "filteractionremoveheader.moc"

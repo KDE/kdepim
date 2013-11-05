@@ -146,5 +146,4 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
     return true;
 }
 
-#include "sieveconditiondate.moc"
 

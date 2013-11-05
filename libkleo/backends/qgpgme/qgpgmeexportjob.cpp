@@ -72,4 +72,3 @@ Error QGpgMEExportJob::start( const QStringList & patterns ) {
   return Error();
 }
 
-#include "qgpgmeexportjob.moc"

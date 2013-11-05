@@ -207,4 +207,3 @@ void FilterImportThunderbirdtest::testImportTypeFilters()
 }
 
 
-#include "filterimportthunderbirdtest.moc"

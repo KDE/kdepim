@@ -147,4 +147,3 @@ void QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & captio
       MessageBox::error( parent, mResult, this, caption );
 }
 
-#include "qgpgmeencryptjob.moc"

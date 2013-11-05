@@ -240,4 +240,3 @@ QString FilterActionForward::displayString() const
 }
 
 
-#include "filteractionforward.moc"

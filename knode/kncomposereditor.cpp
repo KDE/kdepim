@@ -20,7 +20,6 @@
  */
 
 #include "kncomposereditor.h"
-#include "kncomposereditor.moc"
 #include "knglobals.h"
 #include "utilities.h"
 #include <KPIMTextEdit/EMailQuoteHighlighter>

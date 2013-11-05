@@ -87,4 +87,3 @@ void AttendeeSelector::selectionChanged()
   ui.removeButton->setEnabled( ui.attendeeList->currentItem() );
 }
 
-#include "attendeeselector.moc"

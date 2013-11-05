@@ -689,5 +689,4 @@ void ComposerView::setAutoSaveFileName(const QString &fileName)
 
 
 #include "composerview.moc"
-#include "moc_composerview.cpp"
 

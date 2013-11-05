@@ -126,4 +126,3 @@ void CategoryConfig::setCustomCategories( const QStringList &categories )
 
 const QString CategoryConfig::categorySeparator( QLatin1Char(':') );
 
-#include "categoryconfig.moc"

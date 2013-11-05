@@ -496,4 +496,4 @@ void StorageModel::resetModelStorage()
   reset();
 }
 
-#include "storagemodel.moc"
+#include "moc_storagemodel.cpp"

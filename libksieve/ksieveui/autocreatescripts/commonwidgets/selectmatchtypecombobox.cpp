@@ -69,4 +69,3 @@ void SelectMatchTypeComboBox::setCode(const QString &code, const QString &name, 
 }
 
 
-#include "selectmatchtypecombobox.moc"

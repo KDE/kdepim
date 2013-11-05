@@ -71,4 +71,3 @@ void ParsingResultDialog::slotSaveAs()
     PimCommon::Util::saveTextAs(mTextEdit->toPlainText(), filter, this);
 }
 
-#include "parsingresultdialog.moc"

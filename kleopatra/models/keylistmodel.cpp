@@ -891,7 +891,6 @@ AbstractKeyListModel * AbstractKeyListModel::createHierarchicalKeyListModel( QOb
     return m;
 }
 
-#include "moc_keylistmodel.cpp"
 #include "keylistmodel.moc"
 
 /*!

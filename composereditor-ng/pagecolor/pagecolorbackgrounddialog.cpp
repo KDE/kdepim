@@ -154,4 +154,4 @@ PageColorBackgroundDialog::~PageColorBackgroundDialog()
 
 }
 
-#include "pagecolorbackgrounddialog.moc"
+#include "moc_pagecolorbackgrounddialog.cpp"

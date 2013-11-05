@@ -173,4 +173,3 @@ SieveScriptBlockWidget *SieveScriptPage::blockIfWidget() const
 
 }
 
-#include "sievescriptpage.moc"

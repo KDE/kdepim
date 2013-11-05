@@ -199,4 +199,3 @@ void TodoViewQuickSearch::emitFilterPriorityChanged()
   emit filterPriorityChanged( mPriorityCombo->checkedItems( Qt::UserRole ) );
 }
 
-#include "todoviewquicksearch.moc"

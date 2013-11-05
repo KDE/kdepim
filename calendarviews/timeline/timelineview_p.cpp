@@ -227,4 +227,3 @@ void TimelineView::Private::itemChanged( QStandardItem *item )
   parent->moveItems( i, tlit->originalStart().secsTo( newStart ), duration + allDayOffset );
 }
 
-#include "timelineview_p.moc"

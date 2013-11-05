@@ -135,4 +135,3 @@ QString GrantleeStyleFactory::description() const
     return mName;
 }
 
-#include "grantleeprintstyle.moc"

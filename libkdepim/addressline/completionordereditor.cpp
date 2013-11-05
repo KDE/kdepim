@@ -383,5 +383,4 @@ void CompletionOrderEditor::slotOk()
   KDialog::accept();
 }
 
-#include "completionordereditor_p.moc"
-#include "completionordereditor.moc"
+#include "moc_completionordereditor_p.cpp"

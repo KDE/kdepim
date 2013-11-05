@@ -183,4 +183,3 @@ void ResourceBlogConfig::slotBlogAPIChanged( int index )
   mBlogs->setEnabled( false );
 }
 
-#include "resourceblogconfig.moc"

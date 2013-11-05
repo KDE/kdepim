@@ -212,4 +212,3 @@ void StylePage::setPrintingStyle( int index )
   mStyleCombo->setCurrentIndex( index );
 }
 
-#include "stylepage.moc"

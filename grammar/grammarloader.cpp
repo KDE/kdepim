@@ -121,4 +121,3 @@ GrammarSettings *GrammarLoader::settings() const
 
 }
 
-#include "grammarloader.moc"

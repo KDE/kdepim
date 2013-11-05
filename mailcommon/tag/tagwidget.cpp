@@ -222,4 +222,3 @@ void TagWidget::recordTagSettings( MailCommon::Tag::Ptr tag)
   tag->inToolbar = mInToolbarCheck->isChecked();
 }
 
-#include "tagwidget.moc"

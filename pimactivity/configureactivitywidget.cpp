@@ -182,4 +182,4 @@ void ConfigureActivityWidget::defaults()
 }
 
 
-#include "configureactivitywidget.moc"
+#include "moc_configureactivitywidget.cpp"

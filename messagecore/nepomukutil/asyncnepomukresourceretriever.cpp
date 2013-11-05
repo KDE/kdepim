@@ -176,4 +176,4 @@ void AsyncNepomukResourceRetriever::resourceAvailable(const QUrl& url, const Nep
 }
 
 
-#include "asyncnepomukresourceretriever.moc"
+#include "moc_asyncnepomukresourceretriever.cpp"

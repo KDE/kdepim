@@ -81,4 +81,3 @@ void SendToBlogDialog::accept()
     KDialog::accept();
 }
 
-#include "sendtoblogdialog.moc"

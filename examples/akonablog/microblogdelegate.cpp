@@ -111,4 +111,3 @@ QSize MicroblogDelegate::sizeHint( const QStyleOptionViewItem &option, const QMo
 
     return QSize( 410, 210 );
 }
-#include "microblogdelegate.moc"

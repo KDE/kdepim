@@ -56,4 +56,3 @@ ContactTemplateWidget::~ContactTemplateWidget()
 {
 }
 
-#include "contacttemplatewidget.moc"

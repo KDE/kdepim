@@ -81,4 +81,3 @@ void MultipartJob::process()
   emitResult();
 }
 
-#include "multipartjob.moc"

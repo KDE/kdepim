@@ -145,4 +145,3 @@ void ImportAlarmJob::importkalarmConfig(const KArchiveFile* kalarmFile, const QS
     kalarmConfig->sync();
 }
 
-#include "importalarmjob.moc"

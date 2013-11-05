@@ -72,4 +72,3 @@ void SelectedCollectionDialog::writeConfig()
     group.sync();
 }
 }
-#include "selectedcollectiondialog.moc"

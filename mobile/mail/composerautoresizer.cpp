@@ -84,4 +84,3 @@ void ComposerAutoResizer::textEditChanged()
   }
 }
 
-#include "composerautoresizer.moc"

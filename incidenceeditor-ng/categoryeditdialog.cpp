@@ -254,4 +254,3 @@ void CategoryEditDialog::expandIfToplevel( QTreeWidgetItem *item )
   }
 }
 
-#include "categoryeditdialog.moc"

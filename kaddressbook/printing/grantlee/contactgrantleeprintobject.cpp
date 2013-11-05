@@ -113,4 +113,3 @@ QString ContactGrantleePrintObject::role() const
     return mAddress.role();
 }
 
-#include "contactgrantleeprintobject.moc"

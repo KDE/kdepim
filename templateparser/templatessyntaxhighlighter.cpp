@@ -71,5 +71,4 @@ void TemplatesSyntaxHighlighter::init()
 
 }
 
-#include "templatessyntaxhighlighter.moc"
 

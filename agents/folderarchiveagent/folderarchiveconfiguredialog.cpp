@@ -128,4 +128,3 @@ void FolderArchiveConfigureDialog::writeConfig()
 }
 
 
-#include "folderarchiveconfiguredialog.moc"

@@ -585,4 +585,3 @@ QPoint KDLogTextWidget::Private::scrollOffset() const {
                    get_scrollbar_offset( q->verticalScrollBar() ) );
 }
 
-#include "moc_kdlogtextwidget.cpp"

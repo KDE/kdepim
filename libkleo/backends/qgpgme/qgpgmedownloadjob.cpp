@@ -95,4 +95,3 @@ Error QGpgMEDownloadJob::start( const QByteArray & fpr, const boost::shared_ptr<
   return Error();
 }
 
-#include "qgpgmedownloadjob.moc"

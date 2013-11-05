@@ -203,4 +203,3 @@ void CryptoPagePlugin::setReadOnly( bool readOnly )
 
 Q_EXPORT_PLUGIN2( cryptopageplugin, CryptoPagePlugin )
 
-#include "cryptopageplugin.moc"

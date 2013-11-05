@@ -288,4 +288,3 @@ bool KWatchGnuPGMainWindow::queryClose()
   return KMainWindow::queryClose();
 }
 
-#include "kwatchgnupgmainwin.moc"

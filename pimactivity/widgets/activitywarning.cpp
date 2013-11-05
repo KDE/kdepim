@@ -47,4 +47,3 @@ void ActivityWarning::setServiceStatusChanged(KActivities::Consumer::ServiceStat
 
 }
 
-#include "activitywarning.moc"

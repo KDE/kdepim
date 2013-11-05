@@ -298,4 +298,3 @@ void MDNAdviceDialog::slotButtonClicked( int button )
     reject();
 }
 
-#include "mdnadvicedialog.moc"

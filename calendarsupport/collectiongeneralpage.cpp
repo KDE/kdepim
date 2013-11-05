@@ -170,4 +170,3 @@ void CollectionGeneralPage::save( Collection &collection )
 
 }
 
-#include "collectiongeneralpage.moc"

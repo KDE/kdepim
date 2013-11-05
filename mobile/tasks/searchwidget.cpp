@@ -156,4 +156,3 @@ QString DeclarativeSearchWidget::query() const
   return mSearchWidget->query();
 }
 
-#include "searchwidget.moc"

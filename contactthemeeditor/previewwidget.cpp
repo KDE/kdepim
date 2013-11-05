@@ -62,4 +62,3 @@ void PreviewWidget::setThemePath(const QString &projectDirectory, const QString 
     updateViewer();
 }
 
-#include "previewwidget.moc"

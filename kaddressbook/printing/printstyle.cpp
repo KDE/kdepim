@@ -134,4 +134,3 @@ PrintStyleFactory::~PrintStyleFactory()
 {
 }
 
-#include "printstyle.moc"

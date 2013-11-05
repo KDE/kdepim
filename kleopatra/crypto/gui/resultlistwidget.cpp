@@ -233,4 +233,4 @@ void ResultListWidget::setStandaloneMode( bool standalone ) {
     d->m_progressLabel->setVisible( standalone );
 }
 
-#include "resultlistwidget.moc"
+#include "moc_resultlistwidget.cpp"

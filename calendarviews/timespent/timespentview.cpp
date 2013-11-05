@@ -257,4 +257,3 @@ void TimeSpentView::updateView()
   mView->repaint();
 }
 
-#include "timespentview.moc"

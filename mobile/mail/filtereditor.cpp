@@ -50,4 +50,3 @@ void FilterEditor::setRowSelected( int row )
   selectionModel->select( mFilterController->model()->index( row, 0 ), QItemSelectionModel::ClearAndSelect );
 }
 
-#include "filtereditor.moc"

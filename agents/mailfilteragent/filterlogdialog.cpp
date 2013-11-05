@@ -336,4 +336,3 @@ void FilterLogDialog::slotUser2()
   }
 }
 
-#include "filterlogdialog.moc"

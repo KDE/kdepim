@@ -433,4 +433,3 @@ void VisualFreeBusyWidget::splitterMoved()
 //  mLeftView->setColumnWidth( 0, mLeftView->width() );
 }
 
-#include "visualfreebusywidget.moc"

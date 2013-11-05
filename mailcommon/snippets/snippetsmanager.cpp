@@ -766,4 +766,4 @@ QString SnippetsManager::selectedName() const
     return d->mSelectionModel->selectedIndexes().first().data( SnippetsModel::NameRole ).toString();
 }
 
-#include "snippetsmanager.moc"
+#include "moc_snippetsmanager.cpp"

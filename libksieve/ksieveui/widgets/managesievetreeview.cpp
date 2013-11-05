@@ -39,4 +39,3 @@ void ManageSieveTreeView::setNoImapFound(bool found)
     }
 }
 
-#include "managesievetreeview.moc"

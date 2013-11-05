@@ -63,4 +63,3 @@ void NotificationMonitor::contextMenu(const QPoint& pos)
   menu.exec( mapToGlobal( pos ) );
 }
 
-#include "notificationmonitor.moc"

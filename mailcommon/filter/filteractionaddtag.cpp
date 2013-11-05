@@ -155,4 +155,3 @@ QString FilterActionAddTag::displayString() const
     return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
-#include "filteractionaddtag.moc"

@@ -336,4 +336,3 @@ void ContactEditorPage::saveThemeAs(const QString &directory)
     storeTheme(directory);
 }
 
-#include "contacteditorpage.moc"

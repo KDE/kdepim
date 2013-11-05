@@ -73,4 +73,3 @@ void SigningCertificateSelectionDialog::setAllowedProtocols( const QVector<GpgME
     widget->setAllowedProtocols( allowedProtocols );
 }
 
-#include "moc_signingcertificateselectiondialog.cpp"

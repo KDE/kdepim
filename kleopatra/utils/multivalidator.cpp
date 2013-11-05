@@ -97,4 +97,3 @@ void MultiValidator::_kdmv_slotDestroyed( QObject * o ) {
                         m_validators.end() );
 }
 
-#include "moc_multivalidator.cpp"

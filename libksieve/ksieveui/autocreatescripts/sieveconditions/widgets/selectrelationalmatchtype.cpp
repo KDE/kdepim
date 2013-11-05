@@ -82,4 +82,3 @@ void SelectRelationalMatchType::initialize()
     lay->addWidget(mMatch);
 }
 
-#include "selectrelationalmatchtype.moc"

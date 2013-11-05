@@ -244,4 +244,4 @@ QString ComposerImageDialog::html() const
 
 }
 
-#include "composerimagedialog.moc"
+#include "moc_composerimagedialog.cpp"

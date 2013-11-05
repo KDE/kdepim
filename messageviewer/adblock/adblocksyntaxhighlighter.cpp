@@ -65,4 +65,3 @@ void AdBlockSyntaxHighlighter::init()
     m_rules.append( Rule( elementRegex, elementFormat ) );
 }
 
-#include "adblocksyntaxhighlighter.moc"

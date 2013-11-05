@@ -303,4 +303,3 @@ void FolderSelectionDialog::hideEvent( QHideEvent * )
 
 }
 
-#include "folderselectiondialog.moc"

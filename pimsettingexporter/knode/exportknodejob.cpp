@@ -81,4 +81,3 @@ void ExportKnodeJob::backupData()
     Q_EMIT info(i18n("Data backup done."));
 }
 
-#include "exportknodejob.moc"

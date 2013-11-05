@@ -59,4 +59,3 @@ void AbstractBase::slotCreateResourceInfo(const QString& msg)
     addImportInfo(msg);
 }
 
-#include "abstractbase.moc"

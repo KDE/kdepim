@@ -551,4 +551,4 @@ QMap<QString, QString> ComposerView::localImages() const
 
 }
 
-#include "composerview.moc"
+#include "moc_composerview.cpp"

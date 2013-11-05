@@ -56,4 +56,3 @@ KZip *ArchiveStorage::archive() const
     return mArchive;
 }
 
-#include "archivestorage.moc"

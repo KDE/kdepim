@@ -174,4 +174,4 @@ void KDatePickerPopup::setDate( const QDate &date )
   d->mDatePicker->setDate( date );
 }
 
-#include "kdatepickerpopup.moc"
+#include "moc_kdatepickerpopup.cpp"

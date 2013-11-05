@@ -71,4 +71,3 @@ QList<Akonadi::Collection> SelectMultiCollectionDialog::selectedCollection() con
 }
 
 
-#include "selectmulticollectiondialog.moc"

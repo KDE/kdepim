@@ -124,4 +124,3 @@ void ManageThemes::slotItemSelectionChanged()
     mDeleteTheme->setEnabled(!mListThemes->selectedItems().isEmpty());
 }
 
-#include "managethemes.moc"

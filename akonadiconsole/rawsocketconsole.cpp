@@ -119,4 +119,3 @@ void RawSocketConsole::connectClicked()
   }
 }
 
-#include "rawsocketconsole.moc"

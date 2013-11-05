@@ -88,4 +88,3 @@ void AclEditor::setRowSelected( int row )
   selectionModel->select( model->index( row, 0 ), QItemSelectionModel::ClearAndSelect );
 }
 
-#include "acleditor.moc"

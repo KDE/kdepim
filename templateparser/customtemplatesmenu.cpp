@@ -209,4 +209,3 @@ void CustomTemplatesMenu::slotForwardSelected( int idx )
   emit forwardTemplateSelected( mCustomTemplates.at( idx ) );
 }
 
-#include "customtemplatesmenu.moc"

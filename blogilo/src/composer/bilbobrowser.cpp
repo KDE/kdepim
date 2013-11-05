@@ -173,4 +173,3 @@ void BilboBrowser::slotViewModeChanged()
     setHtml( currentTitle, currentContent );
 }
 
-#include "composer/bilbobrowser.moc"

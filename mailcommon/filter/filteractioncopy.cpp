@@ -77,4 +77,3 @@ QStringList FilterActionCopy::sieveRequires() const
 }
 
 
-#include "filteractioncopy.moc"

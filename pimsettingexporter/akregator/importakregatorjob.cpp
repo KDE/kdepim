@@ -67,4 +67,3 @@ void ImportAkregatorJob::restoreData()
     Q_EMIT info(i18n("Data restored."));
 }
 
-#include "importakregatorjob.moc"

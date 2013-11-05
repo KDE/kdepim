@@ -116,4 +116,3 @@ QString SieveActionBreak::serverNeedsCapability() const
 }
 
 
-#include "sieveactionbreak.moc"

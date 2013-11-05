@@ -104,4 +104,3 @@ void KJotsMain::onQuit()
 }
 
 
-#include "KJotsMain.moc"

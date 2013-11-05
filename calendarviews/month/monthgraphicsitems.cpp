@@ -394,4 +394,3 @@ void MonthGraphicsItem::updateGeometry()
   }
 }
 
-#include "monthgraphicsitems.moc"

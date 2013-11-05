@@ -647,4 +647,3 @@ void CollectionGeneralPage::slotNameChanged( const QString &name )
 #endif
 }
 
-#include "collectiongeneralpage.moc"

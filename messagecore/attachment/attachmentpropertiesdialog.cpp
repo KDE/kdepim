@@ -360,4 +360,4 @@ void AttachmentPropertiesDialog::accept()
   KDialog::accept();
 }
 
-#include "attachmentpropertiesdialog.moc"
+#include "moc_attachmentpropertiesdialog.cpp"

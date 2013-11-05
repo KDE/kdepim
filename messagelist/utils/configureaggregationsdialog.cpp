@@ -449,4 +449,4 @@ void ConfigureAggregationsDialog::Private::exportAggregationButtonClicked()
 }
 
 
-#include "configureaggregationsdialog.moc"
+#include "moc_configureaggregationsdialog.cpp"

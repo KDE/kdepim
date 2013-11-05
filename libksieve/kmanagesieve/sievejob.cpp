@@ -349,4 +349,3 @@ SieveJob* SieveJob::activate( const KUrl &url )
     return job;
 }
 
-#include "sievejob.moc"

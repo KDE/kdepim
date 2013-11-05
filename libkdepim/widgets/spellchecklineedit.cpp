@@ -245,4 +245,3 @@ void SpellCheckLineEdit::languageSelected()
 }
 
 
-#include "spellchecklineedit.moc"

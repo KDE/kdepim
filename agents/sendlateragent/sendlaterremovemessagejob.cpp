@@ -49,4 +49,3 @@ void SendLaterRemoveMessageJob::slotItemDeleteDone(KJob* job)
     deleteItem();
 }
 
-#include "sendlaterremovemessagejob.moc"

@@ -113,4 +113,3 @@ QString TemplateEditDialog::templateName() const
     return mTemplateNameEdit->text();
 }
 
-#include "templateeditdialog.moc"

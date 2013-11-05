@@ -150,4 +150,3 @@ void ScamDetection::showDetails()
 }
 
 
-#include "scamdetection.moc"

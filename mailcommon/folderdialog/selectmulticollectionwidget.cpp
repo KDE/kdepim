@@ -108,4 +108,3 @@ QList<Akonadi::Collection> SelectMultiCollectionWidget::selectedCollection(const
 }
 
 
-#include "selectmulticollectionwidget.moc"

@@ -101,4 +101,3 @@ void ResourceRemoteConfig::saveSettings( KRES::Resource *resource )
   }
 }
 
-#include "resourceremoteconfig.moc"

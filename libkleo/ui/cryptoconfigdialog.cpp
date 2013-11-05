@@ -99,4 +99,3 @@ void Kleo::CryptoConfigDialog::slotChanged()
   enableButton( Apply, true );
 }
 
-#include "cryptoconfigdialog.moc"

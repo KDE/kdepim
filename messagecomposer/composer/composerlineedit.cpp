@@ -264,4 +264,3 @@ void ComposerLineEdit::setRecentAddressConfig ( KConfig* config )
 }
 
 
-#include "composerlineedit.moc"

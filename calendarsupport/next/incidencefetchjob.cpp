@@ -100,4 +100,3 @@ void CalendarSupport::IncidenceFetchJob::itemFetchResult( KJob *job )
   }
 }
 
-#include "incidencefetchjob.moc"

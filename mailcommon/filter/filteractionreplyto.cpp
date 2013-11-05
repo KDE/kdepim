@@ -58,4 +58,3 @@ SearchRule::RequiredPart FilterActionReplyTo::requiredPart() const
 }
 
 
-#include "filteractionreplyto.moc"

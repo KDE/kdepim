@@ -163,4 +163,3 @@ void AttachmentFromFolderJob::doStart()
     d->compressFolder();
 }
 
-#include "attachmentfromfolderjob.moc"

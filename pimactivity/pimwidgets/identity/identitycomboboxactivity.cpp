@@ -100,4 +100,4 @@ void IdentityComboboxActivity::setCurrentIdentity( uint uoid )
 
 }
 
-#include "identitycomboboxactivity.moc"
+#include "moc_identitycomboboxactivity.cpp"

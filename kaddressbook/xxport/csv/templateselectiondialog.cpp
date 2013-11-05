@@ -237,4 +237,3 @@ void TemplateSelectionDialog::updateButtons()
   button( Ok )->setEnabled( mView->currentIndex().isValid() );
 }
 
-#include "templateselectiondialog.moc"

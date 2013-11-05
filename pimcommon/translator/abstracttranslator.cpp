@@ -48,4 +48,3 @@ QString AbstractTranslator::resultTranslate() const
     return mResult;
 }
 
-#include "abstracttranslator.moc"

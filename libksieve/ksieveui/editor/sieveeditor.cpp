@@ -299,5 +299,4 @@ void SieveEditor::slotSwitchTextMode(const QString &script)
     mTextModeWidget->setScript(script);
 }
 
-#include "sieveeditor.moc"
 

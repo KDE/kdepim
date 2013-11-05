@@ -200,4 +200,3 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModel
     return true;
 }
 
-#include "moc_keylistsortfilterproxymodel.cpp"

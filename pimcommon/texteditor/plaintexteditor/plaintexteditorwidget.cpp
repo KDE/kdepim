@@ -105,4 +105,3 @@ void PlainTextEditorWidget::slotFind()
 }
 
 
-#include "plaintexteditorwidget.moc"

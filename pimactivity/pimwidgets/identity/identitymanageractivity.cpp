@@ -656,4 +656,3 @@ void IdentityManagerActivity::slotIdentitiesChanged( const QString &id )
 
 }
 
-#include "identitymanageractivity.moc"

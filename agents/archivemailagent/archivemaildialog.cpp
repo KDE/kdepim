@@ -401,4 +401,3 @@ void ArchiveMailWidget::slotItemChanged(QTreeWidgetItem *item,int col)
     }
 }
 
-#include "archivemaildialog.moc"

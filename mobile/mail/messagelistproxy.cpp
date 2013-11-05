@@ -178,4 +178,3 @@ void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   setRoleNames( names );
 }
 
-#include "messagelistproxy.moc"

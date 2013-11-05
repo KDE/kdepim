@@ -151,4 +151,4 @@ GpgME::Error Kleo::HierarchicalKeyListJob::startAJob() {
   return mJob->start( patterns, false );
 }
 
-#include "hierarchicalkeylistjob.moc"
+#include "moc_hierarchicalkeylistjob.cpp"

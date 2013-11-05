@@ -93,4 +93,3 @@ void KAddressBookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
    KParts::ReadOnlyPart::guiActivateEvent( e );
 }
 
-#include "kaddressbookpart.moc"

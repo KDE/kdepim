@@ -322,4 +322,4 @@ int ThreadModel::rowCount( const QModelIndex& ) const
   return d->m_rangeManager.count();
 }
 
-#include "threadmodel.moc"
+#include "moc_threadmodel.cpp"

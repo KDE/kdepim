@@ -53,4 +53,3 @@ void FilterActionWithAddress::clearParamWidget( QWidget *paramWidget ) const
     qobject_cast<MessageCore::EmailAddressRequester*>( paramWidget )->clear();
 }
 
-#include "filteractionwithaddress.moc"

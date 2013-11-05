@@ -101,4 +101,3 @@ extern "C" KDE_EXPORT KCModule *create_kleopatra_config_gnupgsystem( QWidget * p
     return page;
 }
 
-#include "gnupgsystemconfigurationpage.moc"

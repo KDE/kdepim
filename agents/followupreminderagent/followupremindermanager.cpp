@@ -27,4 +27,3 @@ FollowUpReminderManager::~FollowUpReminderManager()
 
 }
 
-#include "followupremindermanager.moc"

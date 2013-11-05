@@ -504,4 +504,3 @@ bool TimelineView::eventFilter( QObject *object, QEvent *event )
   return EventView::eventFilter( object, event );
 }
 
-#include "timelineview.moc"

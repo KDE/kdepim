@@ -126,4 +126,4 @@ ExtendAttributesDialog::~ExtendAttributesDialog()
 
 }
 
-#include "extendattributesdialog.moc"
+#include "moc_extendattributesdialog.cpp"

@@ -65,4 +65,3 @@ QString FilterActionDelete::sieveCode() const
 }
 
 
-#include "filteractiondelete.moc"

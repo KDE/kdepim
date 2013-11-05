@@ -167,4 +167,3 @@ void KDeclarativeApplicationBase::emulateMaemo6()
   StyleSheetLoader::applyStyle( qApp ); // ifdef'ed harmattan-only above
 }
 
-#include "kdeclarativeapplication.moc"

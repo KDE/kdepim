@@ -181,4 +181,3 @@ bool EncryptJobTest::checkEncryption( MessageComposer::EncryptJob* eJob )
 
 }
 
-#include "encryptjobtest.moc"

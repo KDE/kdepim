@@ -484,4 +484,3 @@ void Kleo::SigningKeyRequester::virtual_hook( int id, void * data ) {
   KeyRequester::virtual_hook( id, data );
 }
 
-#include "keyrequester.moc"

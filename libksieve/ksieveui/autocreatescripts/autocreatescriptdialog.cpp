@@ -76,4 +76,3 @@ void AutoCreateScriptDialog::writeConfig()
     group.writeEntry( "Size", size() );
 }
 
-#include "autocreatescriptdialog.moc"

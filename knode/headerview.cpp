@@ -589,4 +589,3 @@ void KNHeaderViewToolTip::maybeTip( const QPoint &p )
 
 //END: KNHeaderViewToolTip ====================================================
 
-#include "headerview.moc"

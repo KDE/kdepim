@@ -46,4 +46,3 @@ void ImportSettingPage::setImportButtonEnabled(bool enabled)
     ui->importSettings->setEnabled(enabled);
 }
 
-#include "importsettingpage.moc"

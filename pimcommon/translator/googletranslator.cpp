@@ -249,4 +249,3 @@ void GoogleTranslator::debug()
 #endif
 }
 
-#include "googletranslator.moc"

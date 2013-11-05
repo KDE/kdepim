@@ -88,4 +88,3 @@ extern "C"
   }
 }
 
-#include "appearanceconfigpage.moc"

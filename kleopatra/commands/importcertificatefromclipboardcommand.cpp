@@ -137,6 +137,5 @@ bool ImportCertificateFromClipboardCommand::Private::ensureHaveClipboard() {
 #undef d
 #undef q
 
-#include "moc_importcertificatefromclipboardcommand.cpp"
 
 #endif // QT_NO_CLIPBOARD

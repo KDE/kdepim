@@ -119,4 +119,3 @@ void KNMainWindow::slotShowStatusMsg( const QString &msg ) {
   mStatusMsgLabel->setText( msg );
 }
 
-#include "knode.moc"

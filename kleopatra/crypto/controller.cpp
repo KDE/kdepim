@@ -101,4 +101,3 @@ void Controller::emitDoneOrError() {
         emit done();
 }
 
-#include "controller.moc"

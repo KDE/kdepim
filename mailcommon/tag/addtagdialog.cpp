@@ -93,4 +93,3 @@ QString AddTagDialog::nepomukUrl() const
   return mNepomukUrl;
 }
 
-#include "addtagdialog.moc"

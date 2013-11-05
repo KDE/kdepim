@@ -212,4 +212,3 @@ void AlarmDockWindow::changeSystrayIcon( bool alarmsEnabled )
   }
 }
 
-#include "alarmdockwindow.moc"

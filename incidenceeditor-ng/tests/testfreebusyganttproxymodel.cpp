@@ -107,4 +107,3 @@ void FreeBusyGanttProxyModelTest::testModelValidity()
   QCOMPARE( child1_1.data( KDGantt::StartTimeRole ).value<QDateTime>(), dt4.dateTime() );
 }
 
-#include "testfreebusyganttproxymodel.moc"

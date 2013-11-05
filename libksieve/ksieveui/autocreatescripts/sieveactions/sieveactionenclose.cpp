@@ -158,4 +158,3 @@ QString SieveActionEnclose::help() const
 }
 
 
-#include "sieveactionenclose.moc"

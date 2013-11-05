@@ -24,7 +24,6 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <testkmeditorwin.h>
-#include "testkmeditorwin.moc"
 
 testKMeditorWindow::testKMeditorWindow()
 {

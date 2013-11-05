@@ -131,4 +131,3 @@ ArticleWindow::~ArticleWindow()
 
 //--------------------------------
 
-#include "knarticlewindow.moc"

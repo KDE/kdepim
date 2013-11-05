@@ -269,4 +269,3 @@ void CollectionExpiryPage::slotChanged()
   mChanged = true;
 }
 
-#include "collectionexpirypage.moc"

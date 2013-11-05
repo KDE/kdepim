@@ -256,4 +256,3 @@ void VacationDialog::enableDomainAndSendForSpam( bool enable )
     mSpamCheck->setEnabled( enable );
 }
 
-#include "vacationdialog.moc"

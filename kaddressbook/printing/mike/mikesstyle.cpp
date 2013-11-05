@@ -155,4 +155,3 @@ QString MikesStyleFactory::description() const
   return i18n( "Mike's Printing Style" );
 }
 
-#include "mikesstyle.moc"

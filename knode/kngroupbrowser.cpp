@@ -486,4 +486,3 @@ KNGroupBrowser::GroupItem::~GroupItem()
 
 //-----------------------------------------
 
-#include "kngroupbrowser.moc"

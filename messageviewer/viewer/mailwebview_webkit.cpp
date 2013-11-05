@@ -672,4 +672,4 @@ bool MailWebView::isAShortUrl(const KUrl &url) const
     return mScamDetection->scamCheckShortUrl()->isShortUrl(url);
 }
 
-#include "mailwebview.moc"
+#include "moc_mailwebview.cpp"

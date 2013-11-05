@@ -1030,4 +1030,4 @@ AgentActionManager* KDeclarativeMainView::createAgentActionManager(QItemSelectio
   return manager;
 }
 
-#include "kdeclarativemainview.moc"
+#include "moc_kdeclarativemainview.cpp"

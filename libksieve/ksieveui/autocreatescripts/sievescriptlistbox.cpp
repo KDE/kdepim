@@ -460,4 +460,3 @@ QString SieveScriptListBox::createUniqName()
     return pattern;
 }
 
-#include "sievescriptlistbox.moc"

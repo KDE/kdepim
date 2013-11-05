@@ -51,4 +51,3 @@ void SieveInfoWidget::setServerInfo(QStringList serverInfos)
     mInfo->setHtml(result);
 }
 
-#include "sieveinfowidget.moc"

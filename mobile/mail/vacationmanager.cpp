@@ -109,4 +109,3 @@ bool VacationManager::askToGoOnline() const
   return result;
 }
 
-#include "vacationmanager.moc"

@@ -133,4 +133,3 @@ void IdentityWidget::modifyIdentities()
 
 } // namespace KNode
 
-#include "identity_widget.moc"

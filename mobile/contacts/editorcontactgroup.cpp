@@ -319,4 +319,4 @@ void EditorContactGroup::setDefaultCollection( const Akonadi::Collection &collec
   d->mUi.collectionSelector->setDefaultCollection( collection );
 }
 
-#include "editorcontactgroup.moc"
+#include "moc_editorcontactgroup.cpp"

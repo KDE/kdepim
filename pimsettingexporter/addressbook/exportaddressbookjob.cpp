@@ -137,4 +137,3 @@ void ExportAddressbookJob::backupConfig()
     Q_EMIT info(i18n("Config backup done."));
 }
 
-#include "exportaddressbookjob.moc"

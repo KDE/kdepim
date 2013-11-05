@@ -78,4 +78,3 @@ static bool taskMatchesFilter( const KCalCore::Todo::Ptr &task, const QString &f
   return false;
 }
 
-#include "tasksfilterproxymodel.moc"

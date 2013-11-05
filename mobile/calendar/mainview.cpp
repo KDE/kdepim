@@ -840,4 +840,3 @@ void MainView::changeCalendarColor()
 
 
 
-#include "mainview.moc"

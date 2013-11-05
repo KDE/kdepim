@@ -1661,6 +1661,5 @@ void KNComposer::AttachmentPropertiesDlg::slotMimeTypeTextChanged(const QString 
 
 //--------------------------------
 
-#include "kncomposer.moc"
 
 // kate: space-indent on; indent-width 2;

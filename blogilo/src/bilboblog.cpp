@@ -268,4 +268,3 @@ bool BilboBlog::supportTag() const
     return d->mSupportedFeatures[QLatin1String("tag")];
 }
 
-#include "bilboblog.moc"

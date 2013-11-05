@@ -250,4 +250,3 @@ void StyleGetter::slotError( const QString & errMsg )
     b->deleteLater();
 }
 
-#include "composer/stylegetter.moc"

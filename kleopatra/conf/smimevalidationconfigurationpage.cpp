@@ -84,4 +84,3 @@ extern "C" KDE_EXPORT KCModule *create_kleopatra_config_smimevalidation( QWidget
     return page;
 }
 
-#include "smimevalidationconfigurationpage.moc"

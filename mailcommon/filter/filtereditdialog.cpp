@@ -83,4 +83,4 @@ void FilterEditDialog::save()
     FilterManager::instance()->endUpdate();
 }
 
-#include "filtereditdialog_p.moc"
+#include "moc_filtereditdialog_p.cpp"

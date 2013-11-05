@@ -132,4 +132,3 @@ void AnnotationEditDialog::writeConfig()
 
 
 
-#include "annotationdialog.moc"

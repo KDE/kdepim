@@ -105,4 +105,3 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
     return true;
 }
 
-#include "sieveconditionmailboxexists.moc"

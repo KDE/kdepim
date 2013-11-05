@@ -372,4 +372,3 @@ QString TimeLabels::headerToolTip() const
   return toolTip;
 }
 
-#include "timelabels.moc"

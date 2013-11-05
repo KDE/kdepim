@@ -184,4 +184,3 @@ bool ProxyModel::setData( const QModelIndex& proxyIdx, const QVariant& value, in
     return model->setData( model->index( proxyIdx.row(), scol, mapToSource( proxyIdx.parent() ) ), value, srole );
 }
 
-#include "moc_kdganttproxymodel.cpp"

@@ -37,4 +37,3 @@ void FilterImportBalsatest::testImportFilters()
 }
 
 
-#include "filterimportbalsatest.moc"

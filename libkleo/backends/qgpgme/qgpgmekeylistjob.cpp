@@ -156,4 +156,3 @@ void QGpgMEKeyListJob::showErrorDialog( QWidget * parent, const QString & captio
   KMessageBox::error( parent, msg, caption );
 }
 
-#include "qgpgmekeylistjob.moc"

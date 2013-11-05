@@ -372,5 +372,4 @@ bool Kernel::folderIsInbox( const Akonadi::Collection &collection, bool withoutP
 
 }
 
-#include "mailkernel.moc"
 

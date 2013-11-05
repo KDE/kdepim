@@ -124,4 +124,3 @@ void VCardViewer::slotUser3()
     enableButton(User2, true);
 }
 
-#include "vcardviewer.moc"

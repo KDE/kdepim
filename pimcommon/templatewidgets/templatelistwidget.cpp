@@ -360,4 +360,4 @@ void TemplateListWidget::addDefaultTemplate(const QString &templateName, const Q
 }
 
 }
-#include "templatelistwidget.moc"
+#include "moc_templatelistwidget.cpp"

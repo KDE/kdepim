@@ -163,4 +163,3 @@ bool EntityCollectionOrderProxyModel::isManualSortingActive() const
 
 }
 
-#include "entitycollectionorderproxymodel.moc"

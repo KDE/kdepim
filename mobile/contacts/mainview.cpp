@@ -444,4 +444,3 @@ void MainView::configureCategories()
     config.writeConfig();
 }
 
-#include "mainview.moc"

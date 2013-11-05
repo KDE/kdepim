@@ -450,4 +450,4 @@ void EditorGeneral::updateName( const KABC::Addressee &contact )
   blockSignals( false );
 }
 
-#include "editorgeneral.moc"
+#include "moc_editorgeneral.cpp"

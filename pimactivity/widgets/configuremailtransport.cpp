@@ -101,4 +101,3 @@ void ConfigureMailtransport::setDefault()
 
 }
 
-#include "configuremailtransport.moc"

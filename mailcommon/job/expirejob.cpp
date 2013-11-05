@@ -301,4 +301,3 @@ void ExpireJob::slotExpireDone( KJob *job )
 
 }
 
-#include "expirejob.moc"

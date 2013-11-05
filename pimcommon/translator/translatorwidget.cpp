@@ -470,7 +470,6 @@ void TranslatorWidget::slotSystemNetworkStatusChanged( Solid::Networking::Status
     }
 }
 
-#include "translatorwidget.moc"
 
 
 

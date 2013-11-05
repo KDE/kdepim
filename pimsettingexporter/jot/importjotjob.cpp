@@ -143,4 +143,3 @@ void ImportJotJob::importjotConfig(const KArchiveFile* jotFile, const QString &j
     kjotConfig->sync();
 }
 
-#include "importjotjob.moc"

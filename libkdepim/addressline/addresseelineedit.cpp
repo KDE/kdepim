@@ -1620,4 +1620,4 @@ void AddresseeLineEdit::emitTextCompleted()
 
 
 
-#include "addresseelineedit.moc"
+#include "moc_addresseelineedit.cpp"

@@ -81,4 +81,3 @@ void JobTrackerWidget::contextMenu( const QPoint &pos )
 }
 
 
-#include "jobtrackerwidget.moc"

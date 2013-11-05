@@ -69,4 +69,3 @@ void FavoritesEditor::setRowSelected( int row )
   selectionModel->select( model->index( row, 0, QModelIndex() ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
 }
 
-#include "favoriteseditor.moc"

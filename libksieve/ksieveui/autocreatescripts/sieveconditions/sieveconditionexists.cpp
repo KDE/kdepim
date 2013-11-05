@@ -109,4 +109,3 @@ bool SieveConditionExists::setParamWidgetValue(const QDomElement &element, QWidg
     return true;
 }
 
-#include "sieveconditionexists.moc"

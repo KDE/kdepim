@@ -124,4 +124,3 @@ QString TemplatesTextEditor::wordUnderCursor()
     return tc.selectedText();
 }
 
-#include "templatestexteditor.moc"

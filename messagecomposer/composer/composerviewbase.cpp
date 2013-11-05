@@ -1911,4 +1911,3 @@ SendLater::SendLaterInfo *MessageComposer::ComposerViewBase::sendLaterInfo()
     return mSendLaterInfo;
 }
 
-#include "composerviewbase.moc"

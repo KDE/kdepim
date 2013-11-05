@@ -63,4 +63,3 @@ void ComposerHtmlEditor::setupActions()
 }
 
 
-#include "composerhtmleditor.moc"

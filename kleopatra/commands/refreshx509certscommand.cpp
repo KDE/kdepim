@@ -101,4 +101,3 @@ QString RefreshX509CertsCommand::successMessage( const QStringList & ) const {
     return i18nc( "@info", "X.509 certificates refreshed successfully." );
 }
 
-#include "moc_refreshx509certscommand.cpp"

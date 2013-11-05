@@ -462,4 +462,3 @@ QSize TodoRichTextDelegate::sizeHint( const QStyleOptionViewItem &option,
   return QSize( ret.width(), qMax( ret.height(), checkboxHeight ) );
 }
 
-#include "tododelegates.moc"

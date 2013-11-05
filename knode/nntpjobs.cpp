@@ -283,4 +283,3 @@ void KNode::ArticlePostJob::slotResult( KJob * job )
   emitFinished();
 }
 
-#include "nntpjobs.moc"

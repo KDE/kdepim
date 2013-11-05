@@ -39,4 +39,3 @@ void DeclarativeWidgetWrapperBase::geometryChanged(const QRectF& newGeometry, co
   m_proxy->resize( newGeometry.size() );
 }
 
-#include "declarativewidgetwrapper.moc"

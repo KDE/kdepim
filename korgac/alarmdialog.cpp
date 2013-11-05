@@ -1036,4 +1036,3 @@ void AlarmDialog::removeFromConfig( const QList<Akonadi::Item::Id> &ids )
   genGroup.sync();
 }
 
-#include "alarmdialog.moc"

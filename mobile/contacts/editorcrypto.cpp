@@ -130,4 +130,3 @@ void EditorCrypto::saveContact( KABC::Addressee &contact, Akonadi::ContactMetaDa
   storeCustom( contact, QLatin1String( "SMIMEFP" ), sfp.join( QLatin1String( "," ) ) );
 }
 
-#include "editorcrypto.moc"

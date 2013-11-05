@@ -84,5 +84,4 @@ Akonadi::EntityTreeView *PlasmaTreeView::nativeWidget() const
 
 }
 
-#include "plasmatreeview.moc"
 

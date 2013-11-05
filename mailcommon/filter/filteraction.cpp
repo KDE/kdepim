@@ -134,4 +134,3 @@ QString FilterAction::sieveCode() const
     return i18n("### \"%1 not supported\"", name());
 }
 
-#include "filteraction.moc"

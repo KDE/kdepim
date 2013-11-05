@@ -79,4 +79,3 @@ QObject* KCalItemBrowserItem::attachmentModel() const
   return m_viewer->attachmentModel();
 }
 
-#include "kcalitembrowseritem.moc"

@@ -325,4 +325,4 @@ void FindReplaceBar::showAndFocus()
 }
 
 }
-#include "findreplacebar.moc"
+#include "moc_findreplacebar.cpp"

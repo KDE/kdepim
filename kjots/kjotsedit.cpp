@@ -445,6 +445,5 @@ void KJotsEdit::savePage()
 
 
 
-#include "kjotsedit.moc"
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
 /* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

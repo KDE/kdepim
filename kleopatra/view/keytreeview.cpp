@@ -381,4 +381,3 @@ bool KeyTreeView::connectSearchBar( const QObject * bar ) {
     return true;
 }
 
-#include "moc_keytreeview.cpp"

@@ -83,4 +83,3 @@ void XMLPrintingSyntaxHighLighter::init()
 
 }
 
-#include "xmlprintingsyntaxhighlighter.moc"

@@ -119,4 +119,3 @@ void Kleo::ObtainKeysJob::showErrorDialog( QWidget * parent, const QString & cap
   KMessageBox::error( parent, msg, caption );
 }
 
-#include "obtainkeysjob.moc"

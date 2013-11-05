@@ -1195,4 +1195,3 @@ bool Widget::searchEditHasFocus() const
   return d->mSearchEdit->hasFocus();
 }
 
-#include "widgetbase.moc"

@@ -393,4 +393,3 @@ Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry( const 
     return entry;
 }
 
-#include "dirservconfigpage.moc"

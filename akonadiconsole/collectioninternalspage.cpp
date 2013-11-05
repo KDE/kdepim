@@ -48,4 +48,3 @@ void CollectionInternalsPage::save(Akonadi::Collection & col)
   col.setVirtual( ui.virtCheck->isChecked() );
 }
 
-#include "collectioninternalspage.moc"

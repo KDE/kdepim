@@ -71,4 +71,3 @@ void SnippetsEditor::setRowSelected( int row )
   selectionModel->select( mProxyModel->mapToSource( proxyIndex ), QItemSelectionModel::ClearAndSelect );
 }
 
-#include "snippetseditor.moc"

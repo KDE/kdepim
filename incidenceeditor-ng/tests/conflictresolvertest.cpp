@@ -344,4 +344,3 @@ void ConflictResolverTest::testPeriodEndsAtSametimeAsTimeframe()
 
 QTEST_KDEMAIN( ConflictResolverTest, GUI )
 
-#include "conflictresolvertest.moc"

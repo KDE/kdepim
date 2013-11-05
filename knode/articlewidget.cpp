@@ -1496,4 +1496,3 @@ void ArticleWidget::slotSaveAttachment()
   knGlobals.articleManager()->saveContentToFile( c, this );
 }
 
-#include "articlewidget.moc"

@@ -111,4 +111,3 @@ void SelectThunderbirdFilterFilesWidget::setStartDir(const KUrl &url)
     ui->fileUrl->setStartDir(url);
 }
 
-#include "selectthunderbirdfilterfileswidget.moc"

@@ -724,4 +724,3 @@ void Widget::slotExpandItem()
   view()->setExpandItem(d->mGroupHeaderItemIndex);
 }
 
-#include "widget.moc"

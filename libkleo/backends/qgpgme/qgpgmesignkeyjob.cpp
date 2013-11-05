@@ -116,5 +116,4 @@ void QGpgMESignKeyJob::setNonRevocable( bool nonRevocable ) {
     m_nonRevocable = nonRevocable;
 }
 
-#include "qgpgmesignkeyjob.moc"
 

@@ -31,5 +31,4 @@ TemplatesTextEdit::~TemplatesTextEdit()
 }
 
 
-#include "templatestextedit.moc"
 

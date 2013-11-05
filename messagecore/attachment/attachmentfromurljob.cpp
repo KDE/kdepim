@@ -163,4 +163,4 @@ void AttachmentFromUrlJob::doStart()
 #endif
 }
 
-#include "attachmentfromurljob.moc"
+#include "moc_attachmentfromurljob.cpp"

@@ -65,4 +65,3 @@ void AdBlockListWidget::paintEvent( QPaintEvent *event )
 }
 
 
-#include "adblocklistwidget.moc"

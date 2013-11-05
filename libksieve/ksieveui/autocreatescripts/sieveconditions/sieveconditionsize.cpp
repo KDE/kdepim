@@ -108,4 +108,3 @@ bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
     return true;
 }
 
-#include "sieveconditionsize.moc"

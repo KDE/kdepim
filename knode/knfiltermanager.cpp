@@ -385,4 +385,3 @@ void KNFilterManager::setMenuAction(KNFilterSelectAction *a, QAction *keybA)
 
 //--------------------------------
 
-#include "knfiltermanager.moc"

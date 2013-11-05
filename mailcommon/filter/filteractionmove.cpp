@@ -76,4 +76,3 @@ QStringList FilterActionMove::sieveRequires() const
     return QStringList() << QLatin1String("fileinto");
 }
 
-#include "filteractionmove.moc"

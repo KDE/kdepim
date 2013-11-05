@@ -186,4 +186,3 @@ void TestLDAPClient::slotLDAPDone()
   emit leaveModality();
 }
 
-#include "testldapclient.moc"

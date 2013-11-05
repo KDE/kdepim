@@ -107,4 +107,3 @@ void mailreaderView::slotConfigure()
   dialog->show();
 }
 
-#include "mailreaderview.moc"

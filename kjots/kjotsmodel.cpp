@@ -290,4 +290,3 @@ QVariant KJotsModel::entityData( const Akonadi::Item& item, int column, int role
   return EntityTreeModel::entityData( item, column, role );
 }
 
-#include "kjotsmodel.moc"

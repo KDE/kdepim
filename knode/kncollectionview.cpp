@@ -483,4 +483,3 @@ void KNCollectionView::startDrag( Qt::DropActions supportedActions )
 }
 
 
-#include "kncollectionview.moc"

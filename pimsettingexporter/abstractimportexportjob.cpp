@@ -478,4 +478,3 @@ void AbstractImportExportJob::setArchiveVersion(int version)
 }
 
 
-#include "abstractimportexportjob.moc"

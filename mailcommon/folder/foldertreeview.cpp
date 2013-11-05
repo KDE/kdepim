@@ -635,4 +635,3 @@ void FolderTreeView::keyboardSearch( const QString & )
 
 }
 
-#include "foldertreeview.moc"

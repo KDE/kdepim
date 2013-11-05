@@ -84,4 +84,3 @@ void PrintProgress::setProgress( int step )
   kapp->processEvents();
 }
 
-#include "printprogress.moc"

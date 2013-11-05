@@ -232,4 +232,3 @@ void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile* file, co
 }
 
 
-#include "importaddressbookjob.moc"
