@@ -27,7 +27,7 @@
 #include <QtCore/QVector>
 
 CsvParser::CsvParser( QObject *parent )
-  : QThread( parent ), mDevice( 0 )
+  : QThread( parent ), mDevice( 0 ), mRowCount( 0 ), mColumnCount( 0 ), mCacheCounter( 0 )
 {
   mReader = new QCsvReader( this );
 }

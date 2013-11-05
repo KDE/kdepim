@@ -322,6 +322,7 @@ void SieveActionWidgetLister::reconnectWidget( SieveActionWidget *w )
 
 void SieveActionWidgetLister::clearWidget( QWidget *aWidget )
 {
+    Q_UNUSED(aWidget);
     //TODO
 }
 
@@ -339,7 +340,6 @@ int SieveActionWidgetLister::actionNumber() const
 
 void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyActions, QString &error)
 {
-    bool firstAction = true;
     QString comment;
     if (onlyActions) {
         if (!element.isNull()) {
@@ -362,6 +362,7 @@ void SieveActionWidgetLister::loadScript(const QDomElement &element, bool onlyAc
             }
         }
     } else {
+        bool firstAction = true;
         QDomNode node = element.firstChild();
         while (!node.isNull()) {
             QDomElement e = node.toElement();

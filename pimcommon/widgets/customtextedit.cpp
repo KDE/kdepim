@@ -105,12 +105,11 @@ void CustomTextEdit::insertLanguageMenu(QMenu* contextMenu)
             d->speller = new Sonnet::Speller();
 
         QMapIterator<QString, QString> i(d->speller->availableDictionaries());
-        QAction* languageAction = 0;
 
         while (i.hasNext()) {
             i.next();
 
-            languageAction = languagesMenu->addAction(i.key());
+            QAction* languageAction = languagesMenu->addAction(i.key());
             languageAction->setCheckable(true);
             languageAction->setChecked(spellCheckingLanguage() == i.value() || (spellCheckingLanguage().isEmpty()
                 && d->speller->defaultLanguage() == i.value()));

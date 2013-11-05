@@ -249,8 +249,8 @@ void SieveScriptBlockWidget::loadScript(const QDomElement &element, bool onlyAct
             QDomElement e = node.toElement();
             if (!e.isNull()) {
                 const QString tagName = e.tagName();
-                bool notCondition = false;
                 if (tagName == QLatin1String("test")) {
+                    bool notCondition = false;
                     if (e.hasAttribute(QLatin1String("name"))) {
                         const QString typeCondition = e.attribute(QLatin1String("name"));
                         if (typeCondition == QLatin1String("anyof")) {
