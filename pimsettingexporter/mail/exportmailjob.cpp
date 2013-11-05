@@ -307,8 +307,7 @@ void ExportMailJob::backupConfig()
     if (themeDirectory.exists()) {
         const bool themeDirAdded = archive()->addLocalDirectory(themeDirectory.path(), Utils::dataPath() + QLatin1String( "messageviewer/themes/" ));
         if (!themeDirAdded) {
-            //TODO fix i18n
-            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", themeDirectory.path()));
+            Q_EMIT error(i18n("Theme directory \"%1\" cannot be added to backup file.", themeDirectory.path()));
         }
     }
 
