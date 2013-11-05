@@ -102,6 +102,8 @@ set(KDEPIM_VERSION "4.13${KDEPIM_DEV_VERSION}")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
+set(CMAKE_AUTOMOC ON)
+
 ############### search packages used by KDE ###############
 
 # It is needed otherwise it finds the kde4-config of the target platform
