@@ -15,8 +15,11 @@ TODO 4.12:
 - Allow to save other kontact settings (In progress)
 - Add global default settings (as overwrite all settings etc.)
 
-- Add support for knodes ?
+
+- Add support for store kaddressbook printing theme.
+
 
 TODO 4.13:
 ----------
 - Use QDomDocument
+- Add support for knodes ?
