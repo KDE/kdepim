@@ -29,4 +29,4 @@ CustomStackedWidget::~CustomStackedWidget()
 
 }
 
-#include "customstackedwidget.moc"
+#include "moc_customstackedwidget.cpp"

@@ -30,6 +30,7 @@ set(libpimcommon_SRCS
   widgets/simplestringlisteditor.cpp
   widgets/customtextedit.cpp
   widgets/customtreeview.cpp
+  widgets/customstackedwidget.cpp
   texteditor/plaintexteditor/plaintexteditfindbar.cpp
   texteditor/plaintexteditor/plaintexteditor.cpp
   texteditor/plaintexteditor/plaintexteditorwidget.cpp
