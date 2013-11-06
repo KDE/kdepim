@@ -1,0 +1,5 @@
+require ["copy"];
+if header :contains "Subject" "foo" { 
+  redirect :copy "other@example.net";
+}
+

@@ -157,7 +157,7 @@ set_target_properties(
 
 install(TARGETS ksieveui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES data/ksieve_script.knsrc DESTINATION ${CONFIG_INSTALL_DIR} )
-
+install(DIRECTORY data/scripts/ DESTINATION ${DATA_INSTALL_DIR}/sieve/scripts/ )
 
 add_subdirectory(autocreatescripts/tests)
 add_subdirectory(scriptsparsing/tests)

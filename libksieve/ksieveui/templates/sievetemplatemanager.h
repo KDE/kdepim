@@ -45,9 +45,8 @@ private Q_SLOTS:
 
 private:
     void setTemplatePath();
-    void loadTemplates();
-    void initTemplatesDirectories(const QString &themesRelativePath);
-    TemplateInfo loadTemplate(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName);
+    void initTemplatesDirectories(const QString &templatesRelativePath);
+    TemplateInfo loadTemplate(const QString &themePath, const QString &defaultDesktopFileName);
 
     QStringList mTemplatesDirectories;
 

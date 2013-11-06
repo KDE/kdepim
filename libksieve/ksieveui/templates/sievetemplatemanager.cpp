@@ -24,6 +24,7 @@
 #include <KConfig>
 
 #include <QDirIterator>
+#include <QDebug>
 
 using namespace KSieveUi;
 SieveTemplateManager::SieveTemplateManager(SieveTemplateWidget *sieveTemplateWidget)
@@ -42,29 +43,24 @@ SieveTemplateManager::~SieveTemplateManager()
 
 }
 
-
-void SieveTemplateManager::loadTemplates()
-{
-
-}
-
 void SieveTemplateManager::slotDirectoryChanged()
 {
     setTemplatePath();
 }
 
-void SieveTemplateManager::initTemplatesDirectories(const QString &themesRelativePath)
+void SieveTemplateManager::initTemplatesDirectories(const QString &templatesRelativePath)
 {
-    if (!themesRelativePath.isEmpty()) {
-        mTemplatesDirectories = KGlobal::dirs()->findDirs("data", themesRelativePath);
+    if (!templatesRelativePath.isEmpty()) {
+        mTemplatesDirectories = KGlobal::dirs()->findDirs("data", templatesRelativePath);
         if (mTemplatesDirectories.count() < 2) {
             //Make sure to add local directory
-            const QString localDirectory = KStandardDirs::locateLocal("data", themesRelativePath);
+            const QString localDirectory = KStandardDirs::locateLocal("data", templatesRelativePath);
             if (!mTemplatesDirectories.contains(localDirectory)) {
                 mTemplatesDirectories.append(localDirectory);
             }
         }
     }
+    qDebug()<<" void SieveTemplateManager::initTemplatesDirectories(const QString &templatesRelativePath)"<<mTemplatesDirectories;
 }
 
 void SieveTemplateManager::setTemplatePath()
@@ -78,13 +74,11 @@ void SieveTemplateManager::setTemplatePath()
         return;
     }
 
-
     Q_FOREACH (const QString &directory, mTemplatesDirectories) {
         QDirIterator dirIt( directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
         while ( dirIt.hasNext() ) {
             dirIt.next();
-            const QString dirName = dirIt.fileName();
-            TemplateInfo info = loadTemplate(dirIt.filePath(), dirName, QLatin1String("template.desktop"));
+            TemplateInfo info = loadTemplate(dirIt.filePath(), QLatin1String("template.desktop"));
             if (info.isValid()) {
                 mSieveTemplateWidget->addDefaultTemplate(info.name, info.script);
             }
@@ -94,7 +88,7 @@ void SieveTemplateManager::setTemplatePath()
     mDirWatch->startScan();
 }
 
-TemplateInfo SieveTemplateManager::loadTemplate(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName)
+TemplateInfo SieveTemplateManager::loadTemplate(const QString &themePath, const QString &defaultDesktopFileName)
 {
     TemplateInfo info;
     const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
@@ -102,15 +96,18 @@ TemplateInfo SieveTemplateManager::loadTemplate(const QString &themePath, const 
     KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
 
     info.name = group.readEntry( "Name", QString() );
+    qDebug()<<" info :"<<info.name;
     const QString filename = group.readEntry( "FileName" , QString() );
     if (!filename.isEmpty()) {
-        QFile file(themePath + QDir::separator() + dirName + QDir::separator() + filename);
+        QFile file(themePath + QDir::separator() + filename);
+        qDebug()<<" file."<<file.fileName();
         if (file.exists()) {
             if (file.open(QIODevice::ReadOnly)) {
                 info.script = QString::fromUtf8(file.readAll());
             }
         }
     }
+    qDebug()<<" info :"<<info.script;
     return info;
 }
 
