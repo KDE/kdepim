@@ -27,14 +27,6 @@
 
 #include <Akonadi/KMime/MessageStatus>
 #include <KUrl>
-#include <Nepomuk2/Query/Query>
-#include <Nepomuk2/Query/Result>
-
-namespace Nepomuk2 {
-  namespace Query {
-    class QueryServiceClient;
-  }
-}
 
 namespace MessageList
 {
@@ -116,19 +108,12 @@ public:
 Q_SIGNALS:
   void finished();
 
-private Q_SLOTS:
-  void newEntries( const QList<Nepomuk2::Query::Result>& );
-  void finishedListing();
-
 private:
-  bool containString(const QString& searchInString) const;
   Akonadi::MessageStatus mStatus;    ///< Messages must match this status, if non 0
   QString mSearchString;             ///< Messages must match this search string, if not empty
   QString mTagId;                    ///< Messages must have this tag, if not empty
-  QStringList mSearchList;
   KUrl mCurrentFolder;
   QSet<qint64> mMatchingItemIds;
-  Nepomuk2::Query::QueryServiceClient *mQueryClient;
 };
 
 } // namespace Core
