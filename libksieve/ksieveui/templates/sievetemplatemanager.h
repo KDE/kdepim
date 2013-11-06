@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QDebug>
 
 class KDirWatch;
 namespace KSieveUi {
@@ -30,6 +31,9 @@ struct TemplateInfo {
     QString script;
     bool isValid() const {
         return (!name.isEmpty() && !script.isEmpty());
+    }
+    void debug() const {
+        qDebug()<<" name :"<<name<<" script :"<<script;
     }
 };
 

@@ -96,18 +96,15 @@ TemplateInfo SieveTemplateManager::loadTemplate(const QString &themePath, const 
     KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
 
     info.name = group.readEntry( "Name", QString() );
-    qDebug()<<" info :"<<info.name;
     const QString filename = group.readEntry( "FileName" , QString() );
     if (!filename.isEmpty()) {
         QFile file(themePath + QDir::separator() + filename);
-        qDebug()<<" file."<<file.fileName();
         if (file.exists()) {
             if (file.open(QIODevice::ReadOnly)) {
                 info.script = QString::fromUtf8(file.readAll());
             }
         }
     }
-    qDebug()<<" info :"<<info.script;
     return info;
 }
 
