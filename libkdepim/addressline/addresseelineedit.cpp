@@ -41,12 +41,7 @@
 #include <Akonadi/Session>
 #include <Akonadi/Job>
 
-#include <Nepomuk2/Query/Query>
-#include <Nepomuk2/Query/QueryServiceClient>
-#include <Nepomuk2/Query/Result>
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/Vocabulary/NCO>
-#include <Nepomuk2/ResourceManager>
+#include <baloo/pim/contactcompleter.h>
 
 #include <KPIMUtils/Email>
 
@@ -92,14 +87,12 @@ class AddresseeLineEditStatic
         ldapTimer( 0 ),
         ldapSearch( 0 ),
         ldapLineEdit( 0 ),
-        nepomukSearchClient( 0 ),
         akonadiSession( new Akonadi::Session("contactsCompletionSession") ),
-        nepomukCompletionSource( 0 ),
+        balooCompletionSource( 0 ),
         contactsListed( false )
     {
       KConfig config( QLatin1String( "kpimcompletionorder" ) );
       const KConfigGroup group( &config, QLatin1String( "General" ) );
-      useNepomukCompletion = group.readEntry( "UseNepomuk", true );
     }
 
     ~AddresseeLineEditStatic()
@@ -107,7 +100,6 @@ class AddresseeLineEditStatic
       delete completion;
       delete ldapTimer;
       delete ldapSearch;
-      delete nepomukSearchClient;
     }
 
     void slotEditCompletionOrder()
@@ -180,11 +172,9 @@ class AddresseeLineEditStatic
     QMap<Akonadi::Collection::Id, int> akonadiCollectionToCompletionSourceMap;
     // a list of akonadi items (contacts) that have not had their collection fetched yet
     Akonadi::Item::List akonadiPendingItems;
-    Nepomuk2::Query::QueryServiceClient* nepomukSearchClient;
     Akonadi::Session *akonadiSession;
     QVector<QWeakPointer<Akonadi::Job> > akonadiJobsInFlight;
-    bool useNepomukCompletion;
-    int nepomukCompletionSource;
+    int balooCompletionSource;
     bool contactsListed;
 };
 
@@ -272,10 +262,7 @@ class AddresseeLineEdit::Private
     void slotAkonadiSearchResult( KJob * );
     void slotAkonadiSearchDbResult( KJob* );
     void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
-    void startNepomukSearch();
-    void stopNepomukSearch();
-    void slotNepomukHits( const QList<Nepomuk2::Query::Result>& result );
-    void slotNepomukSearchFinished();
+    void searchInBaloo();
     void slotTriggerDelayedQueries();
     static KCompletion::CompOrder completionOrder();
 
@@ -306,10 +293,7 @@ void AddresseeLineEdit::Private::init()
 
     }
 
-    if ( !s_static->nepomukSearchClient ) {
-      s_static->nepomukSearchClient = new Nepomuk2::Query::QueryServiceClient;
-      s_static->nepomukCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
-    }
+    s_static->balooCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
 
     s_static->updateLDAPWeights();
 
@@ -330,9 +314,6 @@ void AddresseeLineEdit::Private::init()
       q->connect( s_static->ldapSearch, SIGNAL(searchData(KLDAP::LdapResult::List)),
                   SLOT(slotLDAPSearchData(KLDAP::LdapResult::List)) );
 
-      q->connect( s_static->nepomukSearchClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
-                  q, SLOT(slotNepomukHits(QList<Nepomuk2::Query::Result>)) );
-      q->connect( s_static->nepomukSearchClient, SIGNAL(finishedListing()), q, SLOT(slotNepomukSearchFinished()));
       m_completionInitialized = true;
     }
   }
@@ -363,86 +344,17 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
   s_static->ldapLineEdit = 0;
 }
 
-
-static const char* sparqlquery =
-    "select distinct ?email ?fullname where {"
-    "{"
-        "?r nco:hasEmailAddress   ?em ."
-        "?em nco:emailAddress ?email ."
-        "?r ?p ?fullname ."
-        "FILTER( ?p in (nco:fullname, nco:nameFamily, nco:nameGiven, nco:nickname, nco:nameAdditional)  )."
-        "FILTER( bif:contains(?fullname, \"'%1*'\")  )."
-    "} UNION {"
-        "?r nco:hasEmailAddress   ?em ."
-        "?em nco:emailAddress ?email ."
-        "FILTER( bif:contains(?email, \"'%1*'\")  )."
-        "?r nco:fullname ?fullname ."
-    "}"
-    "}";
-
-void AddresseeLineEdit::Private::startNepomukSearch()
+void AddresseeLineEdit::Private::searchInBaloo()
 {
-  // We do a word boundary substring search, which will easily yield hundreds
-  // of hits. Since the nepomuk search is mostly an auxiliary measure,
-  // we limit it to substrings of size 4 (min. of bif:contains) or larger.
-  if ( m_searchString.size() <= 3 || !s_static->useNepomukCompletion ) {
-    return;
+  Baloo::PIM::ContactCompleter com(m_searchString.trimmed(), 20);
+  Q_FOREACH (const QString& email, com.complete()) {
+    addCompletionItem(email, 1, s_static->balooCompletionSource);
   }
-  const QString query = QString::fromLatin1( sparqlquery ).arg( m_searchString );
-  Nepomuk2::Query::RequestPropertyMap requestPropertyMap;
-  requestPropertyMap.insert( QLatin1String("email"), Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
-  requestPropertyMap.insert( QLatin1String("fullname"), Nepomuk2::Vocabulary::NCO::fullname() );
-  const bool result = s_static->nepomukSearchClient->sparqlQuery( query, requestPropertyMap );
-  if (!result) {
-    kDebug() << "Starting the nepomuk lookup failed. Search string: " << m_searchString;
-  }
+  doCompletion( m_lastSearchMode );
+        //  if ( q->hasFocus() || q->completionBox()->hasFocus() ) {
+        //}
 }
 
-void AddresseeLineEdit::Private::stopNepomukSearch()
-{
-  s_static->nepomukSearchClient->close();
-}
-
-void AddresseeLineEdit::Private::slotNepomukHits( const QList<Nepomuk2::Query::Result>& results )
-{
-  if ( results.isEmpty() || ( !q->hasFocus() && !q->completionBox()->hasFocus() ) ) {
-    return;
-  }
-  // Extract and process the hits
-  Q_FOREACH( const Nepomuk2::Query::Result& result, results) {
-    Soprano::Node node = result.requestProperty( Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
-    if ( node.isValid() && node.isLiteral() ) {
-      const QString fullEmail = node.literal().toString();
-      Q_ASSERT(!fullEmail.isEmpty()); // the query took care of that, right?
-      QString formattedName;
-      // extract name, if we have one
-      Soprano::Node nodeName = result.requestProperty( Nepomuk2::Vocabulary::NCO::fullname() );
-      if ( nodeName.isValid() && nodeName.isLiteral() ) {
-        formattedName = nodeName.literal().toString();
-      }
-      Q_ASSERT(s_static);
-
-      if ( formattedName.isEmpty() ) {
-        addCompletionItem( fullEmail, 1, s_static->nepomukCompletionSource );
-      } else {
-        const QString byFirstName = formattedName + QLatin1String(" <") + fullEmail + QLatin1Char('>');
-        addCompletionItem( byFirstName, 1, s_static->nepomukCompletionSource );
-      }
-    }
-  }
-}
-
-void AddresseeLineEdit::Private::slotNepomukSearchFinished()
-{
-  if ( q->hasFocus() || q->completionBox()->hasFocus() ) {
-    // only complete again if the user didn't change the selection while
-    // we were waiting; otherwise the completion box will be closed
-    const QListWidgetItem *current = q->completionBox()->currentItem();
-    if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
-      doCompletion( m_lastSearchMode );
-    }
-  }
-}
 
 void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bool autoSuggest )
 {
@@ -659,12 +571,18 @@ void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
     akonadiPerformSearch();
     // additionally, we ask Nepomuk directly, to get hits that
     // did not come in through Akonadi
-    startNepomukSearch();
+
+    // vHanda: It probably makes more sense to only search in Baloo
+    // instead of doing a ContactSearchJob and Baloo. Specially since
+    // the ContactSearchJob internally uses Baloo
+    searchInBaloo();
 }
 
 void AddresseeLineEdit::Private::startSearches()
 {
-    if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
+    // vHanda FIXME: We're now always using Baloo?
+    // if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
+    if ( true) {
         if (!m_delayedQueryTimer.isActive())
             m_delayedQueryTimer.start(500);
     } else {
@@ -974,9 +892,6 @@ void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )
     stopLDAPLookup();
   }
 
-  if ( s_static->nepomukSearchClient ) {
-    stopNepomukSearch();
-  }
   q->userCancelled( m_previousAddresses + cancelText ); // in KLineEdit
 }
 
@@ -1101,9 +1016,6 @@ AddresseeLineEdit::~AddresseeLineEdit()
 {
   if ( s_static->ldapSearch && s_static->ldapLineEdit == this ) {
     d->stopLDAPLookup();
-  }
-  if( s_static->nepomukSearchClient ) {
-    d->stopNepomukSearch();
   }
   delete d;
 }

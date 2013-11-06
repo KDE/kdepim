@@ -13,6 +13,7 @@ add_subdirectory(pics)
 add_definitions(${QT_QTDBUS_DEFINITIONS})
 
 include_directories( ${Boost_INCLUDE_DIR} )
+include_directories( ${BALOO_INCLUDE_DIR} )
 include_directories( ${SOPRANO_INCLUDE_DIR} ${NEPOMUK_CORE_INCLUDE_DIR} )
 
 option(KDEPIM_INPROCESS_LDAP "Use in-process rather than KIO slave LDAP" FALSE)
@@ -84,6 +85,7 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   ${NEPOMUK_CORE_LIBRARY}
+  ${BALOO_LIBRARIES}
 )
 
 
