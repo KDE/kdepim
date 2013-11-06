@@ -24,6 +24,15 @@
 class KDirWatch;
 namespace KSieveUi {
 class SieveTemplateWidget;
+
+struct TemplateInfo {
+    QString name;
+    QString script;
+    bool isValid() const {
+        return (!name.isEmpty() && !script.isEmpty());
+    }
+};
+
 class SieveTemplateManager : public QObject
 {
     Q_OBJECT
@@ -38,6 +47,7 @@ private:
     void setTemplatePath();
     void loadTemplates();
     void initTemplatesDirectories(const QString &themesRelativePath);
+    TemplateInfo loadTemplate(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName);
 
     QStringList mTemplatesDirectories;
 

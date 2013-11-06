@@ -20,6 +20,8 @@
 
 #include <KDirWatch>
 #include <KStandardDirs>
+#include <KConfigGroup>
+#include <KConfig>
 
 #include <QDirIterator>
 
@@ -48,7 +50,7 @@ void SieveTemplateManager::loadTemplates()
 
 void SieveTemplateManager::slotDirectoryChanged()
 {
-
+    setTemplatePath();
 }
 
 void SieveTemplateManager::initTemplatesDirectories(const QString &themesRelativePath)
@@ -79,37 +81,37 @@ void SieveTemplateManager::setTemplatePath()
 
     Q_FOREACH (const QString &directory, mTemplatesDirectories) {
         QDirIterator dirIt( directory, QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot );
-        QStringList alreadyLoadedThemeName;
         while ( dirIt.hasNext() ) {
             dirIt.next();
             const QString dirName = dirIt.fileName();
-
-            //TODO mSieveTemplateWidget->addDefaultTemplate(const QString &templateName, const QString &templateScript)
-
-            /*
-            GrantleeTheme::Theme theme = q->loadTheme( dirIt.filePath(), dirName, defaultDesktopFileName );
-            if (theme.isValid()) {
-                QString themeName = theme.name();
-                if (alreadyLoadedThemeName.contains(themeName)) {
-                    int i = 2;
-                    const QString originalName(theme.name());
-                    while (alreadyLoadedThemeName.contains(themeName)) {
-                        themeName = originalName + QString::fromLatin1(" (%1)").arg(i);
-                        ++i;
-                    }
-                    theme.setName(themeName);
-                }
-                alreadyLoadedThemeName << themeName;
-                themes.insert( dirName, theme );
-                //kDebug()<<" theme.name()"<<theme.name();
+            TemplateInfo info = loadTemplate(dirIt.filePath(), dirName, QLatin1String("template.desktop"));
+            if (info.isValid()) {
+                mSieveTemplateWidget->addDefaultTemplate(info.name, info.script);
             }
-            */
         }
         mDirWatch->addDir( directory );
     }
-
     mDirWatch->startScan();
 }
 
+TemplateInfo SieveTemplateManager::loadTemplate(const QString &themePath, const QString &dirName, const QString &defaultDesktopFileName)
+{
+    TemplateInfo info;
+    const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
+    KConfig config( themeInfoFile );
+    KConfigGroup group( &config, QLatin1String( "Desktop Entry" ) );
+
+    info.name = group.readEntry( "Name", QString() );
+    const QString filename = group.readEntry( "FileName" , QString() );
+    if (!filename.isEmpty()) {
+        QFile file(themePath + QDir::separator() + dirName + QDir::separator() + filename);
+        if (file.exists()) {
+            if (file.open(QIODevice::ReadOnly)) {
+                info.script = QString::fromUtf8(file.readAll());
+            }
+        }
+    }
+    return info;
+}
 
 #include "moc_sievetemplatemanager.cpp"
