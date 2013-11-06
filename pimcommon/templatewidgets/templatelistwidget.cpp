@@ -183,7 +183,9 @@ public:
         menu->addAction( i18n("Import..."), q, SLOT(slotImportTemplates()));
 
         if (!knewstuffConfigName.isEmpty()) {
-            menu->addAction( i18n("Download new Templates..."), q, SLOT(slotDownloadTemplates()));
+            menu->addSeparator();
+            QAction *act = menu->addAction( i18n("Download new Templates..."), q, SLOT(slotDownloadTemplates()));
+            act->setIcon(KIcon(QLatin1String("get-hot-new-stuff")));
         }
 
         menu->exec( q->mapToGlobal( pos ) );
