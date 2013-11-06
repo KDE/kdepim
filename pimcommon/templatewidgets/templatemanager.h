@@ -15,17 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SIEVETEMPLATEMANAGER_H
-#define SIEVETEMPLATEMANAGER_H
+#ifndef TEMPLATEMANAGER_H
+#define TEMPLATEMANAGER_H
 
+#include "pimcommon_export.h"
 #include <QObject>
 #include <QStringList>
 #include <QDebug>
 
-class KDirWatch;
-namespace KSieveUi {
-class SieveTemplateWidget;
 
+class KDirWatch;
+namespace PimCommon {
+class TemplateListWidget;
 struct TemplateInfo {
     QString name;
     QString script;
@@ -37,26 +38,26 @@ struct TemplateInfo {
     }
 };
 
-class SieveTemplateManager : public QObject
+class PIMCOMMON_EXPORT TemplateManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit SieveTemplateManager(SieveTemplateWidget *sieveTemplateWidget);
-    ~SieveTemplateManager();
+    explicit TemplateManager(const QString &relativeTemplateDir, PimCommon::TemplateListWidget *sieveTemplateWidget);
+    ~TemplateManager();
 
 private Q_SLOTS:
     void slotDirectoryChanged();
 
 private:
-    void setTemplatePath();
+    void loadTemplates();
     void initTemplatesDirectories(const QString &templatesRelativePath);
     TemplateInfo loadTemplate(const QString &themePath, const QString &defaultDesktopFileName);
 
     QStringList mTemplatesDirectories;
 
-    SieveTemplateWidget *mSieveTemplateWidget;
+    PimCommon::TemplateListWidget *mTemplateListWidget;
     KDirWatch *mDirWatch;
 };
 }
 
-#endif // SIEVETEMPLATEMANAGER_H
+#endif // TEMPLATEMANAGER_H

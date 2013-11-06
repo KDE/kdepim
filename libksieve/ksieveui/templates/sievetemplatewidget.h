@@ -20,6 +20,10 @@
 
 #include "pimcommon/templatewidgets/templatelistwidget.h"
 
+namespace PimCommon {
+class TemplateManager;
+}
+
 namespace KSieveUi {
 class SieveTemplateManager;
 class SieveTemplateListWidget : public PimCommon::TemplateListWidget
@@ -32,6 +36,9 @@ public:
     QList<PimCommon::defaultTemplate> defaultTemplates();
     bool addNewTemplate(QString &templateName, QString &templateScript);
     bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
+
+private:
+    PimCommon::TemplateManager *mTemplateManager;
 };
 
 class SieveTemplateWidget : public QWidget
@@ -41,14 +48,11 @@ public:
     explicit SieveTemplateWidget(const QString &title, QWidget *parent = 0);
     ~SieveTemplateWidget();
 
-    void addDefaultTemplate(const QString &templateName, const QString &templateScript);
-
 Q_SIGNALS:
     void insertTemplate(const QString &);
 
 private:
     SieveTemplateListWidget *mListTemplate;
-    SieveTemplateManager *mTemplateManager;
 };
 }
 

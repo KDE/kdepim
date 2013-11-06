@@ -41,6 +41,7 @@ set(libpimcommon_SRCS
   texteditor/richtexteditor/richtexteditorwidget.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
+  templatewidgets/templatemanager.cpp
   sievehighlighter/sievesyntaxhighlighter.cpp
   sievehighlighter/sievesyntaxhighlighterutil.cpp
   shorturl/abstractshorturl.cpp

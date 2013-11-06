@@ -18,7 +18,7 @@
 #include "sievetemplatewidget.h"
 #include "sievetemplateeditdialog.h"
 #include "sievedefaulttemplate.h"
-#include "sievetemplatemanager.h"
+#include "pimcommon/templatewidgets/templatemanager.h"
 
 #include <KLocale>
 
@@ -31,10 +31,12 @@
 namespace KSieveUi {
 
 SieveTemplateListWidget::SieveTemplateListWidget(const QString &configName, QWidget *parent)
-    : PimCommon::TemplateListWidget(configName, parent)
+    : PimCommon::TemplateListWidget(configName, parent),
+      mTemplateManager(0)
 {
     setKNewStuffConfigFile(QLatin1String("ksieve_script.knsrc"));
     loadTemplates();
+    mTemplateManager = new PimCommon::TemplateManager(QLatin1String("sieve/scripts"), this);
 }
 
 SieveTemplateListWidget::~SieveTemplateListWidget()
@@ -49,14 +51,14 @@ QList<PimCommon::defaultTemplate> SieveTemplateListWidget::defaultTemplates()
 bool SieveTemplateListWidget::addNewTemplate(QString &templateName, QString &templateScript)
 {
     QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
+    bool result = false;
     if (dlg->exec()) {
         templateName = dlg->templateName();
         templateScript = dlg->script();
-        delete dlg;
-        return true;
+        result = true;
     }
     delete dlg;
-    return false;
+    return result;
 }
 
 bool SieveTemplateListWidget::modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate)
@@ -64,22 +66,21 @@ bool SieveTemplateListWidget::modifyTemplate(QString &templateName, QString &tem
     QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this, defaultTemplate);
     dlg->setTemplateName(templateName);
     dlg->setScript(templateScript);
+    bool result = false;
     if (dlg->exec()) {
         if (!defaultTemplate) {
             templateName = dlg->templateName();
             templateScript = dlg->script();
         }
-        delete dlg;
-        return true;
+        result = true;
     }
     delete dlg;
-    return false;
+    return result;
 }
 
 
 SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)
-    : QWidget(parent),
-      mTemplateManager(0)
+    : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     QLabel *lab = new QLabel(title);
@@ -88,18 +89,12 @@ SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)
     mListTemplate->setWhatsThis(i18n("You can drag and drop element on editor to import template"));
     connect(mListTemplate, SIGNAL(insertTemplate(QString)), SIGNAL(insertTemplate(QString)));
     lay->addWidget(mListTemplate);
-    mTemplateManager = new SieveTemplateManager(this);
     setLayout(lay);
 }
 
 
 SieveTemplateWidget::~SieveTemplateWidget()
 {
-}
-
-void SieveTemplateWidget::addDefaultTemplate(const QString &templateName, const QString &templateScript)
-{
-    mListTemplate->addDefaultTemplate(templateName, templateScript);
 }
 
 }

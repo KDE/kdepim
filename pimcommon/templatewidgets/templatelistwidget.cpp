@@ -325,16 +325,16 @@ bool TemplateListWidget::modifyTemplate(QString &templateName, QString &template
     QPointer<TemplateEditDialog> dlg = new TemplateEditDialog(this, defaultTemplate);
     dlg->setTemplateName(templateName);
     dlg->setScript(templateScript);
+    bool result = false;
     if (dlg->exec()) {
         if (!defaultTemplate) {
             templateName = dlg->templateName();
             templateScript = dlg->script();
         }
-        delete dlg;
-        return true;
+        result = true;
     }
     delete dlg;
-    return false;
+    return result;
 }
 
 void TemplateListWidget::dropEvent( QDropEvent * event )

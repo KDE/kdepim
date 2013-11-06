@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "sievetemplatemanager.h"
-#include "sievetemplatewidget.h"
+#include "templatemanager.h"
+#include "templatewidgets/templatelistwidget.h"
 
 #include <KDirWatch>
 #include <KStandardDirs>
@@ -26,29 +26,30 @@
 #include <QDirIterator>
 #include <QDebug>
 
-using namespace KSieveUi;
-SieveTemplateManager::SieveTemplateManager(SieveTemplateWidget *sieveTemplateWidget)
-    : QObject(sieveTemplateWidget),
-      mSieveTemplateWidget(sieveTemplateWidget)
+using namespace PimCommon;
+TemplateManager::TemplateManager(const QString &relativeTemplateDir, PimCommon::TemplateListWidget *templateListWidget)
+    : QObject(templateListWidget),
+      mTemplateListWidget(templateListWidget)
 {
     mDirWatch = new KDirWatch( this );
-    initTemplatesDirectories(QLatin1String("sieve/scripts"));
+    initTemplatesDirectories(relativeTemplateDir);
 
     connect( mDirWatch, SIGNAL(dirty(QString)), SLOT(slotDirectoryChanged()) );
-    setTemplatePath();
+    loadTemplates();
 }
 
-SieveTemplateManager::~SieveTemplateManager()
+TemplateManager::~TemplateManager()
 {
 
 }
 
-void SieveTemplateManager::slotDirectoryChanged()
+void TemplateManager::slotDirectoryChanged()
 {
-    setTemplatePath();
+    mTemplateListWidget->loadTemplates();
+    loadTemplates();
 }
 
-void SieveTemplateManager::initTemplatesDirectories(const QString &templatesRelativePath)
+void TemplateManager::initTemplatesDirectories(const QString &templatesRelativePath)
 {
     if (!templatesRelativePath.isEmpty()) {
         mTemplatesDirectories = KGlobal::dirs()->findDirs("data", templatesRelativePath);
@@ -60,10 +61,9 @@ void SieveTemplateManager::initTemplatesDirectories(const QString &templatesRela
             }
         }
     }
-    qDebug()<<" void SieveTemplateManager::initTemplatesDirectories(const QString &templatesRelativePath)"<<mTemplatesDirectories;
 }
 
-void SieveTemplateManager::setTemplatePath()
+void TemplateManager::loadTemplates()
 {
     if ( !mTemplatesDirectories.isEmpty() ) {
         mDirWatch->stopScan();
@@ -80,7 +80,7 @@ void SieveTemplateManager::setTemplatePath()
             dirIt.next();
             TemplateInfo info = loadTemplate(dirIt.filePath(), QLatin1String("template.desktop"));
             if (info.isValid()) {
-                mSieveTemplateWidget->addDefaultTemplate(info.name, info.script);
+                mTemplateListWidget->addDefaultTemplate(info.name, info.script);
             }
         }
         mDirWatch->addDir( directory );
@@ -88,7 +88,7 @@ void SieveTemplateManager::setTemplatePath()
     mDirWatch->startScan();
 }
 
-TemplateInfo SieveTemplateManager::loadTemplate(const QString &themePath, const QString &defaultDesktopFileName)
+TemplateInfo TemplateManager::loadTemplate(const QString &themePath, const QString &defaultDesktopFileName)
 {
     TemplateInfo info;
     const QString themeInfoFile = themePath + QDir::separator() + defaultDesktopFileName;
@@ -108,4 +108,4 @@ TemplateInfo SieveTemplateManager::loadTemplate(const QString &themePath, const 
     return info;
 }
 
-#include "moc_sievetemplatemanager.cpp"
+#include "moc_templatemanager.cpp"
