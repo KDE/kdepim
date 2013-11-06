@@ -83,6 +83,8 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     mCopyToClipboard = new QPushButton(i18n("Copy to clipboard"));
     connect(mCopyToClipboard, SIGNAL(clicked()), this, SLOT(slotPasteToClipboard()));
     grid->addWidget(mCopyToClipboard, 2, 2);
+
+    grid->setRowStretch(3,1);
     mConvertButton->setEnabled(false);
     mCopyToClipboard->setEnabled(false);
 
