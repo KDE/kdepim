@@ -19,7 +19,9 @@
 #define SIEVETEMPLATEMANAGER_H
 
 #include <QObject>
+#include <QStringList>
 
+class KDirWatch;
 namespace KSieveUi {
 class SieveTemplateWidget;
 class SieveTemplateManager : public QObject
@@ -29,9 +31,18 @@ public:
     explicit SieveTemplateManager(SieveTemplateWidget *sieveTemplateWidget);
     ~SieveTemplateManager();
 
+private Q_SLOTS:
+    void slotDirectoryChanged();
+
 private:
+    void setTemplatePath();
     void loadTemplates();
+    void initTemplatesDirectories(const QString &themesRelativePath);
+
+    QStringList mTemplatesDirectories;
+
     SieveTemplateWidget *mSieveTemplateWidget;
+    KDirWatch *mDirWatch;
 };
 }
 

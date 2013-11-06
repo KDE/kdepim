@@ -96,6 +96,9 @@ SieveTemplateWidget::~SieveTemplateWidget()
 {
 }
 
-
+void SieveTemplateWidget::addDefaultTemplate(const QString &templateName, const QString &templateScript)
+{
+    mListTemplate->addDefaultTemplate(templateName, templateScript);
+}
 
 }

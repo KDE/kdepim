@@ -41,6 +41,8 @@ public:
     explicit SieveTemplateWidget(const QString &title, QWidget *parent = 0);
     ~SieveTemplateWidget();
 
+    void addDefaultTemplate(const QString &templateName, const QString &templateScript);
+
 Q_SIGNALS:
     void insertTemplate(const QString &);
 
