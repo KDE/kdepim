@@ -15,18 +15,31 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "customstackedwidget.h"
+#ifndef CUSTOMTOOLSWIDGET_H
+#define CUSTOMTOOLSWIDGET_H
 
-using namespace PimCommon;
+#include "pimcommon/pimcommon_export.h"
 
-CustomStackedWidget::CustomStackedWidget(QWidget *parent)
-    : QWidget(parent)
+#include <QWidget>
+
+class QStackedWidget;
+namespace PimCommon {
+class PIMCOMMON_EXPORT CustomToolsWidget : public QWidget
 {
+    Q_OBJECT
+public:
+    enum ToolType {
+        TranslatorTool = 0,
+        ShortUrlTool = 1
+    };
+
+    explicit CustomToolsWidget(QWidget *parent=0);
+    ~CustomToolsWidget();
+
+    void switchToTool(CustomToolsWidget::ToolType type);
+
+private:
+    QStackedWidget *mStackedWidget;
+};
 }
-
-CustomStackedWidget::~CustomStackedWidget()
-{
-
-}
-
-#include "moc_customstackedwidget.cpp"
+#endif // CUSTOMTOOLSWIDGET_H
