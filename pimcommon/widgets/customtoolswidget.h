@@ -24,6 +24,8 @@
 
 class QStackedWidget;
 namespace PimCommon {
+class ShortUrlWidget;
+class TranslatorWidget;
 class PIMCOMMON_EXPORT CustomToolsWidget : public QWidget
 {
     Q_OBJECT
@@ -38,8 +40,13 @@ public:
 
     void switchToTool(CustomToolsWidget::ToolType type);
 
+private Q_SLOTS:
+    void slotHideTools();
+
 private:
     QStackedWidget *mStackedWidget;
+    ShortUrlWidget *mShortUrlWidget;
+    TranslatorWidget *mTranslatorWidget;
 };
 }
 #endif // CUSTOMTOOLSWIDGET_H

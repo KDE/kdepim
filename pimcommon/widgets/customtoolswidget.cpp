@@ -17,8 +17,12 @@
 
 #include "customtoolswidget.h"
 
+#include "pimcommon/shorturl/shorturlwidget.h"
+#include "pimcommon/translator/translatorwidget.h"
+
 #include <QHBoxLayout>
 #include <QStackedWidget>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -29,6 +33,13 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent)
     mStackedWidget = new QStackedWidget;
     lay->addWidget(mStackedWidget);
     setLayout(lay);
+
+    mShortUrlWidget = new ShortUrlWidget;
+    mTranslatorWidget = new TranslatorWidget;
+    mStackedWidget->addWidget(mShortUrlWidget);
+    mStackedWidget->addWidget(mTranslatorWidget);
+    connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SLOT(slotHideTools()));
+    connect(mTranslatorWidget, SIGNAL(translatorWasClosed()), this, SLOT(slotHideTools()));
 }
 
 CustomToolsWidget::~CustomToolsWidget()
@@ -38,7 +49,22 @@ CustomToolsWidget::~CustomToolsWidget()
 
 void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
 {
-    //TODO
+    switch (type) {
+    case TranslatorTool:
+        mStackedWidget->setCurrentWidget(mTranslatorWidget);
+        break;
+    case ShortUrlTool:
+        mStackedWidget->setCurrentWidget(mShortUrlWidget);
+        break;
+    default:
+        qDebug()<<" type unknown :"<<type;
+        break;
+    }
+}
+
+void CustomToolsWidget::slotHideTools()
+{
+    hide();
 }
 
 #include "moc_customtoolswidget.cpp"
