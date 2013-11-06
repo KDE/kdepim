@@ -18,6 +18,7 @@
 #include "sievetemplatewidget.h"
 #include "sievetemplateeditdialog.h"
 #include "sievedefaulttemplate.h"
+#include "sievetemplatemanager.h"
 
 #include <KLocale>
 
@@ -77,7 +78,8 @@ bool SieveTemplateListWidget::modifyTemplate(QString &templateName, QString &tem
 
 
 SieveTemplateWidget::SieveTemplateWidget(const QString &title, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mTemplateManager(new SieveTemplateManager(this))
 {
     QVBoxLayout *lay = new QVBoxLayout;
     QLabel *lab = new QLabel(title);

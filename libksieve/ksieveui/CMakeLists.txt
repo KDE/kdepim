@@ -48,6 +48,7 @@ set(ksieveui_LIB_SRCS
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp
+  templates/sievetemplatemanager.cpp
   autocreatescripts/sievescriptparsingerrordialog.cpp
   autocreatescripts/sieveeditorgraphicalmodewidget.cpp 
   autocreatescripts/autocreatescriptdialog.cpp

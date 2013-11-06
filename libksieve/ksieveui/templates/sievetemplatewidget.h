@@ -21,6 +21,7 @@
 #include "pimcommon/templatewidgets/templatelistwidget.h"
 
 namespace KSieveUi {
+class SieveTemplateManager;
 class SieveTemplateListWidget : public PimCommon::TemplateListWidget
 {
     Q_OBJECT
@@ -45,6 +46,7 @@ Q_SIGNALS:
 
 private:
     SieveTemplateListWidget *mListTemplate;
+    SieveTemplateManager *mTemplateManager;
 };
 }
 
