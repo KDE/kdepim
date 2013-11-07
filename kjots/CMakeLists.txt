@@ -33,7 +33,7 @@ kde4_add_ui_files(kjots_config_SRCS confpagemisc.ui)
 
 set (kjots_common_SRCS
      aboutdata.cpp
-     kjotslockattribute.cpp
+     notelockattribute.cpp
      kjotslockjob.cpp
      kjotsedit.cpp
      kjotstreeview.cpp

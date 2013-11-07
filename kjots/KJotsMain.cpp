@@ -42,7 +42,7 @@
 #include "kjotsedit.h"
 #include "kjotsbrowser.h"
 #include "kjotswidget.h"
-#include "kjotslockattribute.h"
+#include "notelockattribute.h"
 
 #include <QApplication>
 
@@ -69,7 +69,7 @@ KJotsMain::KJotsMain()
     setupGUI();
     connect(component, SIGNAL(captionChanged(QString)), SLOT(updateCaption(QString)));
 
-    Akonadi::AttributeFactory::registerAttribute<KJotsLockAttribute>();
+    Akonadi::AttributeFactory::registerAttribute<NoteLockAttribute>();
 
 }
 

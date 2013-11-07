@@ -8,7 +8,7 @@ set(akonotes_note_plasmoid_SRCS
 
 set(akonotes_noteslist_plasmoid_SRCS
     akonotes_noteslistapplet.cpp
-    ../kjotslockattribute.cpp
+    ../notelockattribute.cpp
     ../kjotsmodel.cpp
     plasmatreeview.cpp
 )

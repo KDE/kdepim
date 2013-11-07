@@ -19,39 +19,25 @@
     02110-1301, USA.
 */
 
-#include "kjotslockattribute.h"
+#ifndef KJOTS_LOCK_ATTRIBUTE_H
+#define KJOTS_LOCK_ATTRIBUTE_H
 
-#include <QByteArray>
+#include <Akonadi/Attribute>
 
-KJotsLockAttribute::KJotsLockAttribute()
-  : Akonadi::Attribute()
+class NoteLockAttribute : public Akonadi::Attribute
 {
+public:
+  NoteLockAttribute();
+  ~NoteLockAttribute();
 
-}
+  QByteArray type() const;
 
-KJotsLockAttribute::~KJotsLockAttribute()
-{
+  NoteLockAttribute* clone() const;
 
-}
+  QByteArray serialized() const;
 
-KJotsLockAttribute* KJotsLockAttribute::clone() const
-{
-  return new KJotsLockAttribute();
-}
+  void deserialize( const QByteArray &data );
 
-void KJotsLockAttribute::deserialize(const QByteArray& data)
-{
-  Q_UNUSED( data );
-}
+};
 
-QByteArray KJotsLockAttribute::serialized() const
-{
-  return "-";
-}
-
-QByteArray KJotsLockAttribute::type() const
-{
-  return "KJotsLockAttribute";
-}
-
-
+#endif
