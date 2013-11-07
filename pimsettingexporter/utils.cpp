@@ -124,11 +124,13 @@ KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
     return newUrl;
 }
 
-KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig)
+KUrl Utils::resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath)
 {
     KConfigGroup group = resourceConfig->group(QLatin1String("General"));
-    QString url = group.readEntry(QLatin1String("Path"),QString());
-    url.replace(QLatin1String("$HOME"), QDir::homePath());
+    QString url = group.readEntry(QLatin1String("Path"), defaultPath);
+    if (!url.isEmpty()) {
+        url.replace(QLatin1String("$HOME"), QDir::homePath());
+    }
     return KUrl(url);
 }
 
@@ -198,13 +200,13 @@ void Utils::convertCollectionToRealPath(KConfigGroup &group, const QString &curr
     }
 }
 
-KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent)
+KUrl Utils::resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath)
 {
     const QString agentFileName = agent.identifier() + QLatin1String("rc");
     const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
-    KUrl url = Utils::resourcePath(resourceConfig);
+    KUrl url = Utils::resourcePath(resourceConfig, defaultPath);
     return url;
 }
 
