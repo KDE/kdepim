@@ -16,6 +16,11 @@
 */
 
 #include "contactgrantleeprintobject.h"
+#include "contactgrantleeprintaddressobject.h"
+#include "contactgrantleeprintphoneobject.h"
+#include "contactgrantleeprintimobject.h"
+#include <KABC/Address>
+#include <KABC/PhoneNumber>
 #include <KLocale>
 #include <KGlobal>
 
@@ -25,11 +30,31 @@ ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &ad
     : QObject(parent),
       mAddress(address)
 {
+    Q_FOREACH ( const KABC::Address &addr, address.addresses() ) {
+        mListAddress<<new ContactGrantleePrintAddressObject(addr);
+    }
+    Q_FOREACH ( const KABC::PhoneNumber &phone, address.phoneNumbers() ) {
+        mListPhones<<new ContactGrantleePrintPhoneObject(phone);
+    }
+    const QStringList customs = mAddress.customs();
+    if ( !customs.empty() ) {
+        Q_FOREACH ( const QString &custom, customs ) {
+            if ( custom.startsWith( QLatin1String( "messaging/" ) ) ) {
+                const int pos = custom.indexOf( QLatin1Char( ':' ) );
+                QString key = custom.left( pos );
+                key.remove( QLatin1String( "-All" ) );
+                const QString value = custom.mid( pos + 1 );
+                mListIm << new ContactGrantleePrintImObject(key, value);
+            }
+        }
+    }
 }
 
 ContactGrantleePrintObject::~ContactGrantleePrintObject()
 {
-
+    qDeleteAll(mListAddress);
+    qDeleteAll(mListPhones);
+    qDeleteAll(mListIm);
 }
 
 QString ContactGrantleePrintObject::realName() const
@@ -125,3 +150,23 @@ QString ContactGrantleePrintObject::department() const
     return mAddress.department();
 }
 
+QVariant ContactGrantleePrintObject::addresses() const
+{
+    return QVariant::fromValue(mListAddress);
+}
+
+QVariant ContactGrantleePrintObject::phones() const
+{
+    return QVariant::fromValue(mListAddress);
+}
+
+QVariant ContactGrantleePrintObject::instantManging() const
+{
+    return QVariant::fromValue(mListIm);
+}
+
+QString ContactGrantleePrintObject::addressBookName() const
+{
+    const QString addressBookName = mAddress.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ) );
+    return addressBookName;
+}

@@ -41,6 +41,9 @@ set(kaddressbook_printing_SRCS
   printing/compact/compactstyle.cpp
   printing/grantlee/grantleeprintstyle.cpp
   printing/grantlee/contactgrantleeprintobject.cpp
+  printing/grantlee/contactgrantleeprintaddressobject.cpp
+  printing/grantlee/contactgrantleeprintphoneobject.cpp
+  printing/grantlee/contactgrantleeprintimobject.cpp
   printing/stylepage.cpp
 )
 

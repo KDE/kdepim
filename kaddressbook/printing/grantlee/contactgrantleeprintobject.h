@@ -22,6 +22,9 @@
 
 
 namespace KABPrinting {
+class ContactGrantleePrintAddressObject;
+class ContactGrantleePrintPhoneObject;
+class ContactGrantleePrintImObject;
 class ContactGrantleePrintObject : public QObject
 {
     Q_OBJECT
@@ -42,6 +45,10 @@ class ContactGrantleePrintObject : public QObject
     Q_PROPERTY(QString role READ role)
     Q_PROPERTY(QString birthday READ birthday)
     Q_PROPERTY(QString department READ department)
+    Q_PROPERTY(QVariant addresses READ addresses)
+    Q_PROPERTY(QVariant phones READ phones)
+    Q_PROPERTY(QVariant instantManging READ instantManging)
+    Q_PROPERTY(QString addressBookName READ addressBookName)
     //Add more functions
 public:
     explicit ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent=0);
@@ -63,11 +70,21 @@ public:
     QString preferredEmail() const;
     QString role() const;
     QString birthday() const;
-    QString department() const;
+    QString department() const;    
+    QVariant addresses() const;
+    QVariant phones() const;
+    QString addressBookName() const;
+    QVariant instantManging() const;
 
 private:
+    QList<ContactGrantleePrintAddressObject*> mListAddress;
+    QList<ContactGrantleePrintPhoneObject*> mListPhones;
+    QList<ContactGrantleePrintImObject*> mListIm;
     KABC::Addressee mAddress;
 };
 }
 Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintObject*>)
+Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintAddressObject*>)
+Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintPhoneObject*>)
+Q_DECLARE_METATYPE(QList<KABPrinting::ContactGrantleePrintImObject*>)
 #endif // CONTACTGRANTLEEPRINTOBJECT_H
