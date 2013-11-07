@@ -44,12 +44,6 @@ Root
 |                   |---------<resource config file>
 |                   |---------<archive resource>
 |
-|------knode
-|       |---------<resource name>
-|                   |---------<akonadi agent config file>
-|                   |---------<resource config file>
-|                   |---------<archive resource>
-|
 |-----configs
 |       |---------filters
 |       |---------kmail2rc
@@ -77,6 +71,7 @@ Root
 |       |---------messageviewer.notifyrc
 |       |---------kontactrc
 |       |---------kontact_summaryrc
+|       |---------knoderc
 |
 |-----akonadi
 |       |---------<archive akonadi>
@@ -95,3 +90,4 @@ Root
 |       |---------knotes/print/*
 |       |---------akregator/*
 |       |---------blogilo/blogilo.db
+|       |---------knode/*

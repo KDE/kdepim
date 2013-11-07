@@ -77,7 +77,14 @@ void ExportKnodeJob::backupData()
 {
     showInfo(i18n("Backing up data..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    //TODO
+    const QString nodeDir = KStandardDirs::locateLocal( "data", QLatin1String( "knode/" ) );
+    QDir nodeDirectory( nodeDir );
+    if (nodeDirectory.exists()) {
+        const bool nodeDirAdded = archive()->addLocalDirectory(nodeDir, Utils::dataPath() +  QLatin1String( "/knode/" ));
+        if (!nodeDirAdded) {
+            Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", nodeDir));
+        }
+    }
     Q_EMIT info(i18n("Data backup done."));
 }
 

@@ -2,8 +2,6 @@ Import/Export config:
 --------------------
 - templatesconfigurationrc (Need to merge in existing config file)
 - akonadi_archivemail_agentrc (Need to merge in existing config file)
-- kmailsnippetrc (Need to merge in existing config file)
-
 
 TODO 4.12:
 ---------

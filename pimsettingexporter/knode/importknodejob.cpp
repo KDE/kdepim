@@ -59,13 +59,11 @@ void ImportKnodeJob::restoreConfig()
 
 void ImportKnodeJob::restoreData()
 {
-    /*
-    const KArchiveEntry *notesEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "knotes/" ) );
-    if (notesEntry && notesEntry->isDirectory()) {
-        const QString notesPath = KGlobal::dirs()->saveLocation("data", QLatin1String("knotes/"));
-        overwriteDirectory(notesPath, notesEntry);
+    const KArchiveEntry *nodeEntry  = mArchiveDirectory->entry(Utils::dataPath() + QLatin1String( "knode/" ) );
+    if (nodeEntry && nodeEntry->isDirectory()) {
+        const QString nodePath = KGlobal::dirs()->saveLocation("data", QLatin1String("knode/"));
+        overwriteDirectory(nodePath, nodeEntry);
     }
-    */
     Q_EMIT info(i18n("Data restored."));
 }
 
