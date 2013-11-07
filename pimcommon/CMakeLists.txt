@@ -50,6 +50,7 @@ set(libpimcommon_SRCS
   shorturl/engine/googleshorturl.cpp
   shorturl/shorturlconfigurewidget.cpp
   shorturl/shorturlutils.cpp
+  shorturl/shorturlconfiguredialog.cpp
   shorturl/engine/migremeshorturl.cpp
   shorturl/engine/triopabshorturl.cpp
 )
