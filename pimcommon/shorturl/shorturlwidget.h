@@ -52,7 +52,8 @@ private Q_SLOTS:
     void slotShortUrlDone(const QString &url);
     void slotShortUrlFailed(const QString &errMsg);
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
-    void slotCloseWidget();
+    void slotCloseWidget();    
+    void slotConfigure();
 
 Q_SIGNALS:
     void shortUrlWasClosed();

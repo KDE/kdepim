@@ -18,6 +18,7 @@
 #include "shorturlwidget.h"
 #include "shorturlutils.h"
 #include "abstractshorturl.h"
+#include "shorturl/shorturlconfiguredialog.h"
 
 #include <KPIMUtils/ProgressIndicatorLabel>
 
@@ -54,8 +55,13 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
 
     grid->addWidget(closeBtn, 0, 0);
+
+    QPushButton *configure = new QPushButton(i18n("Configure..."));
+    connect(configure, SIGNAL(clicked()), this, SLOT(slotConfigure()));
+    grid->addWidget(configure, 0, 2);
+
     mIndicatorLabel = new KPIMUtils::ProgressIndicatorLabel(i18n("In progress to generate short url..."));
-    grid->addWidget(mIndicatorLabel, 0, 1, 1, 2);
+    grid->addWidget(mIndicatorLabel, 0, 1);
 
 
     QLabel *lab = new QLabel(i18n("Original url:"));
@@ -101,6 +107,15 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
 
 ShortUrlWidget::~ShortUrlWidget()
 {
+}
+
+void ShortUrlWidget::slotConfigure()
+{
+    QPointer<ShortUrlConfigureDialog> dlg = new ShortUrlConfigureDialog(this);
+    if (dlg->exec()) {
+        loadEngine();
+    }
+    delete dlg;
 }
 
 void ShortUrlWidget::settingsUpdated()
