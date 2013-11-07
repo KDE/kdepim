@@ -27,12 +27,13 @@ ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure engine" ) );
-    setButtons( Close | Ok );
+    setButtons( Close | Ok | Default );
 
     mConfigureWidget = new ShortUrlConfigureWidget();
     mConfigureWidget->loadConfig();
     setMainWidget(mConfigureWidget);
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
 }
 
 
@@ -45,6 +46,11 @@ void ShortUrlConfigureDialog::slotOkClicked()
 {
     mConfigureWidget->writeConfig();
     accept();
+}
+
+void ShortUrlConfigureDialog::slotDefaultClicked()
+{
+    mConfigureWidget->resetToDefault();
 }
 
 #include "moc_shorturlconfiguredialog.cpp"

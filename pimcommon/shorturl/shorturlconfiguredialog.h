@@ -32,6 +32,7 @@ public:
 
 private Q_SLOTS:
     void slotOkClicked();
+    void slotDefaultClicked();
 
 private:
     ShortUrlConfigureWidget *mConfigureWidget;
