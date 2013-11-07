@@ -80,7 +80,7 @@ struct importExportParameters
 };
 
 
-KUrl resourcePath(KSharedConfigPtr resourceConfig);
+KUrl resourcePath(KSharedConfigPtr resourceConfig, const QString &defaultPath = QString());
 QString transportsPath();
 QString resourcesPath();
 QString identitiesPath();
@@ -101,7 +101,7 @@ void convertCollectionToRealPath(KConfigGroup &group, const QString &currentKey)
 
 void convertCollectionIdsToRealPath(KConfigGroup &group, const QString &currentKey);
 
-KUrl resourcePath(const Akonadi::AgentInstance &agent);
+KUrl resourcePath(const Akonadi::AgentInstance &agent, const QString &defaultPath = QString());
 KUrl adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &storedData);
 QString storeResources(KZip *archive, const QString &identifier, const QString &path);
 KUrl akonadiAgentConfigPath(const QString &identifier);
