@@ -174,6 +174,7 @@ public:
                 menu->addAction( i18n("Duplicate"), q, SLOT(slotDuplicate()));
             }
             if (lstSelectedItems.count() == 1 && !defaultTemplate) {
+                menu->addSeparator();
                 menu->addAction( i18n("Remove"), q, SLOT(slotRemove()));
             }
         }
