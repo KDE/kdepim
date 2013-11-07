@@ -37,4 +37,3 @@ void FilterImportSylpheedtest::testImportFilters()
 }
 
 
-#include "filterimportsylpheedtest.moc"

@@ -56,4 +56,3 @@ void SelectSizeTypeComboBox::setCode(const QString &code, const QString &name, Q
     }
 }
 
-#include "selectsizetypecombobox.moc"

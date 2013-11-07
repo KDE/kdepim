@@ -63,4 +63,3 @@ void BlogiloComposerView::addExtraAction(QMenu *menu)
     connect( translatorAction, SIGNAL(triggered(bool)), this, SIGNAL(activateTranslator()) );
 }
 
-#include "blogilocomposerview.moc"

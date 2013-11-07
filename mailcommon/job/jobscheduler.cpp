@@ -244,4 +244,3 @@ ScheduledJob::~ScheduledJob()
 
 }
 
-#include "jobscheduler.moc"

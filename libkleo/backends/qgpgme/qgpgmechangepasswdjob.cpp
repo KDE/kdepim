@@ -74,4 +74,3 @@ Error QGpgMEChangePasswdJob::start( const Key & key ) {
   return Error();
 }
 
-#include "qgpgmechangepasswdjob.moc"

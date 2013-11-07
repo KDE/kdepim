@@ -1132,4 +1132,3 @@ void KScoringEditorWidget::slotRuleEdited( const QString &ruleName )
   ruleLister->updateRuleList();
 }
 
-#include "kscoringeditor.moc"

@@ -650,6 +650,3 @@ void Command::Private::run() {
     // copy outputs to where Command can see them:
     outputs = out;
 }
-
-#include "moc_command_p.cpp"
-#include "moc_command.cpp"

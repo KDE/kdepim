@@ -287,4 +287,4 @@ void AddEmailDiplayJob::start()
     }
 }
 
-#include "addemaildisplayjob.moc"
+#include "moc_addemaildisplayjob.cpp"

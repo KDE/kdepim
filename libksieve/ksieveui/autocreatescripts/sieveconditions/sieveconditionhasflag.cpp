@@ -158,5 +158,4 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
     return true;
 }
 
-#include "sieveconditionhasflag.moc"
 

@@ -1,4 +1,4 @@
-2013-11-03:
+2013-11-05:
 -----------
 Zip structure is :
 Root
@@ -70,6 +70,8 @@ Root
 |       |---------blogilorc
 |       |---------messageviewer.notifyrc
 |       |---------kontactrc
+|       |---------kontact_summaryrc
+|       |---------knoderc
 |
 |-----akonadi
 |       |---------<archive akonadi>
@@ -85,5 +87,7 @@ Root
 |       |---------kmail2/adblockrules_local
 |       |---------knotes/notes.ics
 |       |---------knotes/notes/*
+|       |---------knotes/print/*
 |       |---------akregator/*
 |       |---------blogilo/blogilo.db
+|       |---------knode/*

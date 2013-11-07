@@ -50,4 +50,3 @@ KABC::Addressee::List ContactSelectionDialog::selectedContacts() const
   return mSelectionWidget->selectedContacts();
 }
 
-#include "contactselectiondialog.moc"

@@ -73,4 +73,3 @@ void AddDirectoryServiceDialogImpl::slotCancel()
 }
 
 
-#include "adddirectoryservicedialogimpl.moc"

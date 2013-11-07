@@ -117,4 +117,4 @@ void SnippetDialog::slotReturnPressed()
     }
 }
 
-#include "snippetdialog_p.moc"
+#include "moc_snippetdialog_p.cpp"

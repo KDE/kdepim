@@ -165,5 +165,4 @@ void KNGroupSelectDialog::slotArrowBtn2()
 
 // -----------------------------------------------------------------------------
 
-#include "kngroupselectdialog.moc"
 

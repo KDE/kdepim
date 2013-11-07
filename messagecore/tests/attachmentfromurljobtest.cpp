@@ -102,4 +102,3 @@ void AttachmentFromUrlJobTest::testAttachmentCharset()
   QCOMPARE( part->charset(), charset );
 }
 
-#include "attachmentfromurljobtest.moc"

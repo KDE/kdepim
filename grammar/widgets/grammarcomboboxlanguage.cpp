@@ -88,4 +88,4 @@ QString GrammarComboBoxLanguage::currentLanguage() const
 
 }
 
-#include "grammarcomboboxlanguage.moc"
+#include "moc_grammarcomboboxlanguage.cpp"

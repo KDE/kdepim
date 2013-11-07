@@ -171,4 +171,3 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
     return true;
 }
 
-#include "sieveconditionaddress.moc"

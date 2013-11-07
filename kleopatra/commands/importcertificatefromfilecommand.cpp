@@ -177,6 +177,5 @@ bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
 #undef d
 #undef q
 
-#include "moc_importcertificatefromfilecommand.cpp"
 
 

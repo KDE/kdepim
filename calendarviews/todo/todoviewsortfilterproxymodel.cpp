@@ -331,4 +331,3 @@ int TodoViewSortFilterProxyModel::comparePriorities( const QModelIndex &left,
     }
   }
 }
-#include "todoviewsortfilterproxymodel.moc"

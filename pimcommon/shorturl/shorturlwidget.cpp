@@ -18,6 +18,7 @@
 #include "shorturlwidget.h"
 #include "shorturlutils.h"
 #include "abstractshorturl.h"
+#include "shorturl/shorturlconfiguredialog.h"
 
 #include <KPIMUtils/ProgressIndicatorLabel>
 
@@ -30,18 +31,37 @@
 #include <QPushButton>
 #include <QApplication>
 #include <QClipboard>
+#include <QToolButton>
 
 using namespace PimCommon;
 
 ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     : QWidget(parent),
-      mEngine(0)
+      mEngine(0),
+      mStandalone(false)
 {
     loadEngine();
     QGridLayout *grid = new QGridLayout;
+    setLayout(grid);
+
+    QToolButton *closeBtn = new QToolButton( this );
+    closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
+    closeBtn->setIconSize( QSize( 16, 16 ) );
+    closeBtn->setToolTip( i18n( "Close" ) );
+#ifndef QT_NO_ACCESSIBILITY
+    closeBtn->setAccessibleName( i18n( "Close" ) );
+#endif
+    closeBtn->setAutoRaise( true );
+    connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
+
+    grid->addWidget(closeBtn, 0, 0);
+
+    QPushButton *configure = new QPushButton(i18n("Configure..."));
+    connect(configure, SIGNAL(clicked()), this, SLOT(slotConfigure()));
+    grid->addWidget(configure, 0, 2);
 
     mIndicatorLabel = new KPIMUtils::ProgressIndicatorLabel(i18n("In progress to generate short url..."));
-    grid->addWidget(mIndicatorLabel, 0, 0, 1, 2);
+    grid->addWidget(mIndicatorLabel, 0, 1);
 
 
     QLabel *lab = new QLabel(i18n("Original url:"));
@@ -69,7 +89,8 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     mCopyToClipboard = new QPushButton(i18n("Copy to clipboard"));
     connect(mCopyToClipboard, SIGNAL(clicked()), this, SLOT(slotPasteToClipboard()));
     grid->addWidget(mCopyToClipboard, 2, 2);
-    setLayout(grid);
+
+    grid->setRowStretch(3,1);
     mConvertButton->setEnabled(false);
     mCopyToClipboard->setEnabled(false);
 
@@ -86,6 +107,15 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
 
 ShortUrlWidget::~ShortUrlWidget()
 {
+}
+
+void ShortUrlWidget::slotConfigure()
+{
+    QPointer<ShortUrlConfigureDialog> dlg = new ShortUrlConfigureDialog(this);
+    if (dlg->exec()) {
+        loadEngine();
+    }
+    delete dlg;
 }
 
 void ShortUrlWidget::settingsUpdated()
@@ -153,4 +183,20 @@ void ShortUrlWidget::slotSystemNetworkStatusChanged( Solid::Networking::Status s
     }
 }
 
-#include "shorturlwidget.moc"
+void ShortUrlWidget::slotCloseWidget()
+{
+    mOriginalUrl->clear();
+    mShortUrl->clear();
+    mIndicatorLabel->stop();
+
+    if (mStandalone)
+        hide();
+
+    Q_EMIT shortUrlWasClosed();
+}
+
+void ShortUrlWidget::setStandalone(bool b)
+{
+    mStandalone = b;
+}
+

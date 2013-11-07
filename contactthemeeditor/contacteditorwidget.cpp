@@ -40,4 +40,3 @@ void ContactEditorWidget::createCompleterList(const QStringList &extraCompletion
     GrantleeThemeEditor::EditorWidget::createCompleterList(listWord);
 }
 
-#include "contacteditorwidget.moc"

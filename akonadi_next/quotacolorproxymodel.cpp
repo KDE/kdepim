@@ -111,5 +111,4 @@ void QuotaColorProxyModel::setSourceModel( QAbstractItemModel *sourceModel )
   }
 }
 
-#include "quotacolorproxymodel.moc"
 

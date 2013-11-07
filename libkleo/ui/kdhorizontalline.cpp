@@ -168,4 +168,3 @@ int KDHorizontalLine::indentHint() {
   return 30;
 }
 
-#include "kdhorizontalline.moc"

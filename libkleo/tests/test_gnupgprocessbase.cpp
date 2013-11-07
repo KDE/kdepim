@@ -136,4 +136,4 @@ int main( int argc, char** argv ) {
   return app.exec();
 }
 
-#include "gnupgviewer.moc"
+#include "moc_gnupgviewer.cpp"

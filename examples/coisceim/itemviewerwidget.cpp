@@ -96,5 +96,4 @@ void ItemViewerWidget::selectionChanged( const QModelIndex &selectedIndex )
   m_widgetStack->setCurrentIndex( 0 );
 }
 
-#include "itemviewerwidget.moc"
 

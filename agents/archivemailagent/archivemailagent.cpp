@@ -152,4 +152,3 @@ void ArchiveMailAgent::printArchiveListInfo()
 
 AKONADI_AGENT_MAIN( ArchiveMailAgent )
 
-#include "archivemailagent.moc"

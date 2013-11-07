@@ -786,4 +786,3 @@ void MonthGraphicsView::resizeEvent( QResizeEvent *event )
   mScene->updateGeometry();
 }
 
-#include "monthscene.moc"

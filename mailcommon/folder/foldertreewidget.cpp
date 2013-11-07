@@ -436,4 +436,3 @@ bool FolderTreeWidget::eventFilter( QObject *o, QEvent *e )
 
 }
 
-#include "foldertreewidget.moc"

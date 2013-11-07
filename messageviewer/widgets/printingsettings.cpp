@@ -60,4 +60,3 @@ void PrintingSettings::doResetToDefaultsOther()
     GlobalSettings::self()->useDefaults( bUseDefaults );
 }
 
-#include "printingsettings.moc"

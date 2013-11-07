@@ -335,4 +335,4 @@ GrantleeTheme::Theme GrantleeThemeManager::loadTheme(const QString &themePath, c
 }
 
 
-#include "grantleethememanager.moc"
+#include "moc_grantleethememanager.cpp"

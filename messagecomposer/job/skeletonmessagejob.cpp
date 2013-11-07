@@ -250,4 +250,4 @@ void SkeletonMessageJob::start()
   d->doStart();
 }
 
-#include "skeletonmessagejob.moc"
+#include "moc_skeletonmessagejob.cpp"

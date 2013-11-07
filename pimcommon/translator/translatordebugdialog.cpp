@@ -70,4 +70,3 @@ void TranslatorDebugDialog::slotSaveAs()
 }
 
 
-#include "translatordebugdialog.moc"

@@ -84,4 +84,3 @@ KLineEdit * OptionSetEditor::nameEdit() const
 }
 
 
-#include "optionseteditor.moc"

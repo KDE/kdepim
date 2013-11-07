@@ -137,4 +137,3 @@ void RegExpLineEdit::slotEditRegExp()
 
 } // namespace MailCommon
 
-#include "regexplineedit.moc"

@@ -1078,4 +1078,3 @@ void Manager::saveConfiguration()
 }
 
 
-#include "manager.moc"

@@ -928,4 +928,3 @@ void QGpgMECryptoConfigEntry::setDirty( bool b )
   mDirty = b;
 }
 
-#include "qgpgmecryptoconfig.moc"

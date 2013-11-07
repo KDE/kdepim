@@ -327,4 +327,3 @@ QString DetailledPrintStyleFactory::description() const
   return i18n( "Detailed Style" );
 }
 
-#include "detailledstyle.moc"

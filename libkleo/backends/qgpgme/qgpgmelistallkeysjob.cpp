@@ -158,4 +158,3 @@ void QGpgMEListAllKeysJob::showErrorDialog( QWidget * parent, const QString & ca
   KMessageBox::error( parent, msg, caption );
 }
 
-#include "qgpgmelistallkeysjob.moc"

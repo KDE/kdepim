@@ -89,6 +89,14 @@ void SelectionTypeTreeWidget::initialize()
     mBlogiloItem->setCheckState(0, Qt::Checked);
     createSubItem(mBlogiloItem, Utils::Config);
     createSubItem(mBlogiloItem, Utils::Data);
+
+    mKNodeItem = new QTreeWidgetItem(this);
+    mKNodeItem->setText(0, i18n("KNode"));
+    mKNodeItem->setCheckState(0, Qt::Checked);
+    createSubItem(mKNodeItem, Utils::Config);
+    createSubItem(mKNodeItem, Utils::Data);
+
+
     connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(slotItemChanged(QTreeWidgetItem*,int)));
 }
 
@@ -119,6 +127,9 @@ QHash<Utils::AppsType, Utils::importExportParameters> SelectionTypeTreeWidget::s
     var = typeChecked(mBlogiloItem);
     if (!var.isEmpty())
         stored.insert(Utils::Blogilo, var);
+    var = typeChecked(mKNodeItem);
+    if (!var.isEmpty())
+        stored.insert(Utils::KNode, var);
     return stored;
 }
 
@@ -235,7 +246,7 @@ void SelectionTypeTreeWidget::setSelectItems(bool b)
     changeState(mKNotesItem, b);
     changeState(mAkregatorItem, b);
     changeState(mBlogiloItem, b);
-
+    changeState(mKNodeItem, b);
 }
 
 void SelectionTypeTreeWidget::changeState(QTreeWidgetItem *item, bool b)
@@ -278,4 +289,3 @@ void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
     }
 }
 
-#include "selectiontypetreewidget.moc"

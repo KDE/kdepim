@@ -84,4 +84,3 @@ QColor GrammarHighlighter::grammarColor() const
 
 
 }
-#include "grammarhighlighter.moc"

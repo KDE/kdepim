@@ -174,4 +174,3 @@ bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
     return true;
 }
 
-#include "sieveconditionmetadata.moc"

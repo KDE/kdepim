@@ -84,4 +84,3 @@ AbstractImporter::TypeSupportedOptions SelectComponentPage::selectedComponents()
     }
 }
 
-#include "selectcomponentpage.moc"

@@ -114,4 +114,4 @@ void OpenEmailAddressJob::start()
   connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
 }
 
-#include "openemailaddressjob.moc"
+#include "moc_openemailaddressjob.cpp"

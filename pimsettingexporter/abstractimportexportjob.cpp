@@ -322,7 +322,7 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
     }
 }
 
-void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseName, const QString &defaultPath, const QString &storePath)
+void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseName, const QString &defaultPath, const QString &storePath, bool overwriteResources)
 {
     //TODO fix sync config after created a resource
     if (!mListResourceFile.isEmpty()) {
@@ -346,7 +346,12 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseNam
 
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
-                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storePath);
+                    KUrl newUrl;
+                    if (overwriteResources) {
+                        newUrl = Utils::resourcePath(resourceConfig);
+                    } else {
+                        newUrl = Utils::adaptResourcePath(resourceConfig, storePath);
+                    }
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
@@ -473,4 +478,3 @@ void AbstractImportExportJob::setArchiveVersion(int version)
 }
 
 
-#include "abstractimportexportjob.moc"

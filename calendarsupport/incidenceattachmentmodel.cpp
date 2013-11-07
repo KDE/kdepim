@@ -217,4 +217,4 @@ QVariant IncidenceAttachmentModel::headerData( int section,
   return QAbstractItemModel::headerData( section, orientation, role );
 }
 
-#include "incidenceattachmentmodel.moc"
+#include "moc_incidenceattachmentmodel.cpp"

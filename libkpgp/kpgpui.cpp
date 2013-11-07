@@ -1688,4 +1688,3 @@ void SecretKeyRequester::virtual_hook( int id, void* data ) {
 
 
 
-#include "kpgpui.moc"

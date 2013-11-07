@@ -53,7 +53,8 @@ public:
     TranslatorWidgetPrivate()
         : abstractTranslator(0),
           languageSettingsChanged(false),
-          networkUp(true)
+          networkUp(true),
+          standalone(true)
     {
 
     }
@@ -79,6 +80,7 @@ public:
     QSplitter *splitter;
     bool languageSettingsChanged;
     bool networkUp;
+    bool standalone;
 };
 
 void TranslatorWidget::TranslatorWidgetPrivate::fillToCombobox( const QString &lang )
@@ -413,12 +415,18 @@ void TranslatorWidget::slotInvertLanguage()
     slotTranslate();
 }
 
+void TranslatorWidget::setStandalone(bool b)
+{
+    d->standalone = b;
+}
+
 void TranslatorWidget::slotCloseWidget()
 {
     d->inputText->clear();
     d->translatorResultTextEdit->clear();
     d->progressIndictor->stop();
-    hide();
+    if (d->standalone)
+        hide();
     Q_EMIT translatorWasClosed();
 }
 
@@ -462,7 +470,6 @@ void TranslatorWidget::slotSystemNetworkStatusChanged( Solid::Networking::Status
     }
 }
 
-#include "translatorwidget.moc"
 
 
 

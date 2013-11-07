@@ -52,4 +52,3 @@ bool WebPage::acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &r
     }
     return QWebPage::acceptNavigationRequest(frame, request, type);
 }
-#include "webpage.moc"

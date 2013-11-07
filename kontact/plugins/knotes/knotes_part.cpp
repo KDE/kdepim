@@ -59,6 +59,7 @@ using namespace KCal;
 #include <QTcpServer>
 #include <QMenu>
 #include <QPointer>
+#include <QCheckBox>
 
 #include <dnssd/publicservice.h>
 
@@ -467,6 +468,10 @@ void KNotesPart::popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoin
         const bool uniqueNoteSelected = (mNotesWidget->notesView()->selectedItems().count() == 1);
         const bool readOnly = uniqueNoteSelected ? static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->selectedItems().at(0))->readOnly() : false;
         if (uniqueNoteSelected) {
+            if (!readOnly) {
+                contextMenu->addSeparator();
+                contextMenu->addAction(mNoteSetAlarm);
+            }
             contextMenu->addSeparator();
             contextMenu->addAction(mSaveAs);
             contextMenu->addSeparator();
@@ -486,8 +491,6 @@ void KNotesPart::popupRMB( QListWidgetItem *item, const QPoint &pos, const QPoin
         if (!readOnly) {
             contextMenu->addSeparator();
             contextMenu->addAction(mNoteConfigure);
-        }
-        if (!readOnly) {
             contextMenu->addSeparator();
             contextMenu->addAction(mNoteDelete);
         }
@@ -692,7 +695,13 @@ void KNotesPart::slotSaveAs()
     KNotesIconViewItem *knoteItem = static_cast<KNotesIconViewItem *>(mNotesWidget->notesView()->currentItem());
 
     KUrl url;
-    QPointer<KFileDialog> dlg = new KFileDialog( url, QString(), widget() );
+    QCheckBox *convert = 0;
+
+    if ( knoteItem->isRichText() ) {
+        convert = new QCheckBox( 0 );
+        convert->setText( i18n( "Save note as plain text" ) );
+    }
+    QPointer<KFileDialog> dlg = new KFileDialog( url, QString(), widget(), convert );
     dlg->setOperationMode( KFileDialog::Saving );
     dlg->setCaption( i18n( "Save As" ) );
     if( !dlg->exec() ) {
@@ -717,9 +726,14 @@ void KNotesPart::slotSaveAs()
 
     if ( file.open( QIODevice::WriteOnly ) ) {
         QTextStream stream( &file );
-        stream<<knoteItem->realName() + QLatin1Char('\n');
-        //TODO verify richtext
-        stream<<knoteItem->journal()->description();
+        QTextDocument doc;
+        doc.setHtml(knoteItem->journal()->description());
+        if ( convert && !convert->isChecked() ) {
+            stream << doc.toHtml();
+        } else {
+            stream << knoteItem->realName() + QLatin1Char('\n');
+            stream << doc.toPlainText();
+        }
     }
 }
 
@@ -736,4 +750,3 @@ void KNotesPart::slotUpdateReadOnly()
     knoteItem->setReadOnly( readOnly );
 }
 
-#include "knotes_part.moc"

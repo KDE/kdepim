@@ -171,4 +171,3 @@ QModelIndex MonitorsModel::index( int row, int column, const QModelIndex &parent
   return createIndex( row, column, mData.value( key ) );
 }
 
-#include "monitorsmodel.moc"

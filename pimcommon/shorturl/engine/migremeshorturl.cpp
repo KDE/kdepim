@@ -55,4 +55,3 @@ void MigremeShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 }
 
 
-#include "migremeshorturl.moc"

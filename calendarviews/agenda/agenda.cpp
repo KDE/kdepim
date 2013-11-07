@@ -2308,6 +2308,5 @@ Agenda *AgendaScrollArea::agenda() const
   return mAgenda;
 }
 
-#include "agenda.moc"
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

@@ -113,4 +113,3 @@ void SieveAction::serverDoesNotSupportFeatures(const QString &feature, QString &
 }
 
 
-#include "sieveaction.moc"

@@ -92,4 +92,3 @@ void PlainTextEditFindBar::slotReplaceAllText()
     mView->setPlainText(mView->toPlainText().replace(mFindWidget->findRegExp(), mReplaceWidget->replace()->text()));
 }
 
-#include "plaintexteditfindbar.moc"

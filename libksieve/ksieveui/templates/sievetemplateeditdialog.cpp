@@ -132,4 +132,3 @@ QString SieveTemplateEditDialog::templateName() const
     return mTemplateNameEdit->text();
 }
 
-#include "sievetemplateeditdialog.moc"

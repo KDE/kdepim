@@ -1230,4 +1230,3 @@ void TodoView::resizeEvent( QResizeEvent *event )
   scheduleResizeColumns();
 }
 
-#include "todoview.moc"

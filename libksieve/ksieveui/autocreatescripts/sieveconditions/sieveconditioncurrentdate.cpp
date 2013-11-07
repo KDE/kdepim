@@ -127,4 +127,3 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
     return true;
 }
 
-#include "sieveconditioncurrentdate.moc"

@@ -127,4 +127,3 @@ QString SieveActionDeleteHeader::help() const
     return i18n("By default, the deleteheader action deletes all occurrences of the named header field.");
 }
 
-#include "sieveactiondeleteheader.moc"

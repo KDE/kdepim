@@ -238,4 +238,4 @@ bool NewResultPage::isComplete() const
 }
 
 
-#include "newresultpage.moc"
+#include "moc_newresultpage.cpp"

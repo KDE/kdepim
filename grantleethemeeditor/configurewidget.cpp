@@ -59,4 +59,3 @@ void ConfigureWidget::setDefault()
 }
 
 
-#include "configurewidget.moc"

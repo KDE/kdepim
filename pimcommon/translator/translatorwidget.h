@@ -66,6 +66,7 @@ public:
     void setTextToTranslate( const QString& );
     void writeConfig();
     void readConfig();
+    void setStandalone(bool b);
 
 public Q_SLOTS:
     void slotTranslate();

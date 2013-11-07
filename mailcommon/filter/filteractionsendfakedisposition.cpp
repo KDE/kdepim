@@ -125,4 +125,3 @@ QString FilterActionSendFakeDisposition::displayString() const
 }
 
 
-#include "filteractionsendfakedisposition.moc"

@@ -252,5 +252,5 @@ void IncidenceViewer::itemRemoved()
   d->mBrowser->clear();
 }
 
-#include "incidenceviewer.moc"
-#include "incidenceviewer_p.moc"
+#include "moc_incidenceviewer.cpp"
+#include "moc_incidenceviewer_p.cpp"

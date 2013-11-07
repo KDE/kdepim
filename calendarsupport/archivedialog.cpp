@@ -342,4 +342,3 @@ void ArchiveDialog::showWhatsThis()
   }
 }
 
-#include "archivedialog.moc"

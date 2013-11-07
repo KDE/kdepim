@@ -74,4 +74,3 @@ void ThemeEditorTabWidget::slotTabContextMenuRequest( const QPoint &pos )
 }
 
 
-#include "themeeditortabwidget.moc"

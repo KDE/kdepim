@@ -75,4 +75,4 @@ void AggregationConfigButtonPrivate::slotConfigureAggregations()
   dialog->show();
 }
 
-#include "aggregationconfigbutton.moc"
+#include "moc_aggregationconfigbutton.cpp"

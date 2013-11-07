@@ -66,4 +66,3 @@ void VacationHelperJob::slotGetScriptList( KManageSieve::SieveJob *job, bool suc
     }
 }
 
-#include "vacationhelperjob.moc"

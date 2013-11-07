@@ -104,4 +104,3 @@ void KPApplet::updateToolTip(const int emails)
     Plasma::ToolTipManager::self()->setContent(this, m_toolTip);
 }
 
-#include "kpapplet.moc"

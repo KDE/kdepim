@@ -177,4 +177,3 @@ QTextDocument::FindFlags TextFindWidget::searchOptions() const
     return opt;
 }
 
-#include "textfindreplacewidget.moc"

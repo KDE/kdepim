@@ -65,4 +65,3 @@ void FolderJob::kill()
 
 }
 
-#include "folderjob.moc"

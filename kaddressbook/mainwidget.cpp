@@ -862,4 +862,3 @@ void MainWidget::slotGrantleeThemesUpdated()
 }
 
 
-#include "mainwidget.moc"

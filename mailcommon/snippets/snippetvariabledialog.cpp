@@ -95,4 +95,4 @@ void SnippetVariableDialog::slotButtonClicked( int button )
     KDialog::slotButtonClicked( button );
 }
 
-#include "snippetvariabledialog_p.moc"
+#include "moc_snippetvariabledialog_p.cpp"

@@ -65,4 +65,4 @@ ExtendAttributesButton::~ExtendAttributesButton()
 }
 }
 
-#include "extendattributesbutton.moc"
+#include "moc_extendattributesbutton.cpp"

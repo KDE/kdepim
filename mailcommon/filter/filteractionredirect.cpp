@@ -77,4 +77,3 @@ QString FilterActionRedirect::sieveCode() const
 }
 
 
-#include "filteractionredirect.moc"

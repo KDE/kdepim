@@ -727,4 +727,3 @@ void KXFace::PushGreys(char *f, int wid, int hei)
 }
 
 
-#include "kxface.moc"

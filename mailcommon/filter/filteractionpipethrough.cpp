@@ -44,4 +44,3 @@ SearchRule::RequiredPart FilterActionPipeThrough::requiredPart() const
 }
 
 
-#include "filteractionpipethrough.moc"

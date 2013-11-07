@@ -78,4 +78,3 @@ QString FilterActionWithString::displayString() const
 }
 
 
-#include "filteractionwithstring.moc"

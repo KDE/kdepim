@@ -725,4 +725,3 @@ void Vacation::showVacationDialog()
     }
 }
 
-#include "vacation.moc"

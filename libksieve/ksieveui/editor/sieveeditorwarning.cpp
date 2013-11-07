@@ -34,4 +34,3 @@ SieveEditorWarning::~SieveEditorWarning()
 {
 }
 
-#include "sieveeditorwarning.moc"

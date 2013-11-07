@@ -1965,4 +1965,3 @@ void MainView::messageListSettingsChanged( const MessageListSettings &settings )
 
 // #############################################################
 
-#include "mainview.moc"

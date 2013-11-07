@@ -676,5 +676,4 @@ void EventView::onCollectionChanged(const Akonadi::Collection &collection,
   }
 }
 
-#include "eventview.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;

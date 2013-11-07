@@ -160,7 +160,6 @@
 #include <boost/shared_ptr.hpp>
 
 // MOC
-#include "kmcomposewin.moc"
 
 using Sonnet::DictionaryComboBox;
 using MailTransport::TransportManager;
@@ -401,9 +400,7 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
            this, SLOT(slotSpellCheckingStatus(QString)) );
   connect( editor, SIGNAL(insertModeChanged()),
            this, SLOT(slotOverwriteModeChanged()) );
-#ifdef HAVE_FORCESPELLCHECKING
   connect(editor,SIGNAL(spellCheckingFinished()),this,SLOT(slotCheckSendNow()));
-#endif
   mSnippetWidget = new SnippetWidget( editor, actionCollection(), mSnippetSplitter );
   mSnippetWidget->setVisible( GlobalSettings::self()->showSnippetManager() );
   mSnippetSplitter->addWidget( mSnippetWidget );
@@ -2909,11 +2906,7 @@ void KMComposeWin::slotSendNow()
     return;
 
   if( GlobalSettings::self()->checkSpellingBeforeSend()) {
-#ifdef HAVE_FORCESPELLCHECKING
     mComposerBase->editor()->forceSpellChecking();
-#else
-    slotCheckSendNow();
-#endif
   } else {
     slotCheckSendNow();
   }

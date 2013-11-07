@@ -478,5 +478,4 @@ void AttendeeLine::aboutToBeDeleted()
   emit changed( mData->attendee(), KCalCore::Attendee::Ptr( new KCalCore::Attendee( "", "" ) ) );
 }
 
-#include "attendeeline.moc"
 

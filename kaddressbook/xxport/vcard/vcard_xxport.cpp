@@ -288,9 +288,8 @@ bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data ) const
 {   
     KUrl newUrl(url);
     if ( newUrl.isLocalFile() && QFileInfo( newUrl.toLocalFile() ).exists() ) {
-        PimCommon::RenameFileDialog::RenameFileDialogResult result = PimCommon::RenameFileDialog::RENAMEFILE_IGNORE;
         PimCommon::RenameFileDialog *dialog = new PimCommon::RenameFileDialog(newUrl, false, parentWidget());
-        result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
+        PimCommon::RenameFileDialog::RenameFileDialogResult result = static_cast<PimCommon::RenameFileDialog::RenameFileDialogResult>(dialog->exec());
         if ( result == PimCommon::RenameFileDialog::RENAMEFILE_RENAME ) {
             newUrl = dialog->newName();
         } else if (result == PimCommon::RenameFileDialog::RENAMEFILE_IGNORE) {

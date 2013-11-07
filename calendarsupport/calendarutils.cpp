@@ -265,4 +265,4 @@ void CalendarUtils::purgeCompletedTodos()
   }
 }
 
-#include "calendarutils.moc"
+#include "moc_calendarutils.cpp"

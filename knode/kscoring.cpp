@@ -1294,4 +1294,3 @@ void RuleStack::drop()
   stack.remove();
 }
 
-#include "kscoring.moc"

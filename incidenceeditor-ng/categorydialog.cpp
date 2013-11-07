@@ -324,4 +324,3 @@ void CategoryDialog::setSelected( const QStringList &selList )
   mWidgets->setSelected( selList );
 }
 
-#include "categorydialog.moc"

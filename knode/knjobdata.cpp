@@ -204,4 +204,3 @@ void KNJobData::setError( int err, const QString & errMsg )
   mErrorString = errMsg;
 }
 
-#include "knjobdata.moc"

@@ -112,6 +112,15 @@ if(USABLE_ASSUAN_FOUND)
     libkleopatraclient/core/command.cpp
     selftest/uiservercheck.cpp
   )
+  set_source_files_properties(libkleopatraclient/core/command.cpp PROPERTIES SKIP_AUTOMOC TRUE)
+
+  qt4_generate_moc(libkleopatraclient/core/command_p.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command_p.cpp")
+  qt4_generate_moc(libkleopatraclient/core/command.h "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command.cpp")
+
+  list(APPEND _kleopatra_uiserver_SRCS
+    "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command_p.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/libkleopatraclient/core/moc_command.cpp"
+  )
 
   if(ASSUAN2_FOUND)
     set(_kleopatra_uiserver_extra_libs ${ASSUAN2_LIBRARIES})

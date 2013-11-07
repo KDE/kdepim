@@ -199,4 +199,3 @@ void mailreader::slotNextMessage()
                                         true, true );
 }
 
-#include "mailreader.moc"

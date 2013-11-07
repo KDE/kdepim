@@ -211,4 +211,3 @@ void SignEncryptJob::process()
   emitResult();
 }
 
-#include "signencryptjob.moc"

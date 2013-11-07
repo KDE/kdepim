@@ -214,4 +214,3 @@ void SearchWidget::itemFetched( KJob *job )
   }
 }
 
-#include "searchwidget.moc"

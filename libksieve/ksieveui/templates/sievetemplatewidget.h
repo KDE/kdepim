@@ -20,7 +20,12 @@
 
 #include "pimcommon/templatewidgets/templatelistwidget.h"
 
+namespace PimCommon {
+class TemplateManager;
+}
+
 namespace KSieveUi {
+class SieveTemplateManager;
 class SieveTemplateListWidget : public PimCommon::TemplateListWidget
 {
     Q_OBJECT
@@ -31,6 +36,9 @@ public:
     QList<PimCommon::defaultTemplate> defaultTemplates();
     bool addNewTemplate(QString &templateName, QString &templateScript);
     bool modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate);
+
+private:
+    PimCommon::TemplateManager *mTemplateManager;
 };
 
 class SieveTemplateWidget : public QWidget

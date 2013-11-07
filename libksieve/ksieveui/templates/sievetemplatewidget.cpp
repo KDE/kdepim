@@ -18,6 +18,7 @@
 #include "sievetemplatewidget.h"
 #include "sievetemplateeditdialog.h"
 #include "sievedefaulttemplate.h"
+#include "pimcommon/templatewidgets/templatemanager.h"
 
 #include <KLocale>
 
@@ -30,9 +31,12 @@
 namespace KSieveUi {
 
 SieveTemplateListWidget::SieveTemplateListWidget(const QString &configName, QWidget *parent)
-    : PimCommon::TemplateListWidget(configName, parent)
+    : PimCommon::TemplateListWidget(configName, parent),
+      mTemplateManager(0)
 {
+    setKNewStuffConfigFile(QLatin1String("ksieve_script.knsrc"));
     loadTemplates();
+    mTemplateManager = new PimCommon::TemplateManager(QLatin1String("sieve/scripts"), this);
 }
 
 SieveTemplateListWidget::~SieveTemplateListWidget()
@@ -47,14 +51,14 @@ QList<PimCommon::defaultTemplate> SieveTemplateListWidget::defaultTemplates()
 bool SieveTemplateListWidget::addNewTemplate(QString &templateName, QString &templateScript)
 {
     QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this);
+    bool result = false;
     if (dlg->exec()) {
         templateName = dlg->templateName();
         templateScript = dlg->script();
-        delete dlg;
-        return true;
+        result = true;
     }
     delete dlg;
-    return false;
+    return result;
 }
 
 bool SieveTemplateListWidget::modifyTemplate(QString &templateName, QString &templateScript, bool defaultTemplate)
@@ -62,16 +66,16 @@ bool SieveTemplateListWidget::modifyTemplate(QString &templateName, QString &tem
     QPointer<SieveTemplateEditDialog> dlg = new SieveTemplateEditDialog(this, defaultTemplate);
     dlg->setTemplateName(templateName);
     dlg->setScript(templateScript);
+    bool result = false;
     if (dlg->exec()) {
         if (!defaultTemplate) {
             templateName = dlg->templateName();
             templateScript = dlg->script();
         }
-        delete dlg;
-        return true;
+        result = true;
     }
     delete dlg;
-    return false;
+    return result;
 }
 
 
@@ -93,7 +97,4 @@ SieveTemplateWidget::~SieveTemplateWidget()
 {
 }
 
-
-
 }
-#include "sievetemplatewidget.moc"

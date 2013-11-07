@@ -67,9 +67,7 @@ SpellCheckLineEdit::SpellCheckLineEdit(QWidget* parent, const QString& configFil
     d->configFile = configFile;
 
     enableFindReplace(false);
-#ifdef HAVE_SHOWTABACTION
     showTabAction(false);
-#endif
     setAcceptRichText(false);
     setTabChangesFocus( true );
     // widget may not be resized vertically
@@ -245,4 +243,3 @@ void SpellCheckLineEdit::languageSelected()
 }
 
 
-#include "spellchecklineedit.moc"

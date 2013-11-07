@@ -78,4 +78,3 @@ static bool eventMatchesFilter( const KCalCore::Event::Ptr &event, const QString
   return false;
 }
 
-#include "eventsfilterproxymodel.moc"

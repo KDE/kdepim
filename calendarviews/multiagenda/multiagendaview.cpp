@@ -788,4 +788,3 @@ QVector<QString> MultiAgendaView::customColumnTitles() const
   return d->mCustomColumnTitles;
 }
 
-#include "multiagendaview.moc"

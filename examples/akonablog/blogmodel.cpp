@@ -128,4 +128,3 @@ QVariant BlogModel::headerData( int section, Qt::Orientation orientation, int ro
     return ItemModel::headerData( section, orientation, role );
 }
 
-#include "blogmodel.moc"

@@ -140,4 +140,3 @@ void QMLListSelectionModel::clearSelection()
   m_selectionModel->select(QItemSelection(), QItemSelectionModel::Clear);
 }
 
-#include "qmllistselectionmodel.moc"

@@ -70,4 +70,3 @@ void ComposerImageResizeToolTip::displaySize(const QSize &s)
 
 }
 
-#include "composerimageresizetooltip.moc"

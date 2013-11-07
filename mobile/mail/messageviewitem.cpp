@@ -136,4 +136,3 @@ void MessageViewItem::copyAllToClipboard()
 }
 
 
-#include "messageviewitem.moc"

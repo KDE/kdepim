@@ -102,4 +102,3 @@ void SieveCondition::serverDoesNotSupportFeatures(const QString &feature, QStrin
     error += i18n("A feature \"%1\" in condition \"%2\" is not supported by server", feature, name()) + QLatin1Char('\n');
 }
 
-#include "sievecondition.moc"

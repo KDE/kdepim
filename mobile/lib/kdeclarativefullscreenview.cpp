@@ -354,4 +354,3 @@ void KDeclarativeFullScreenView::blockSwipeRegion( const int x, const int y, con
 }
 #endif // MEEGO_EDITION_HARMATTAN
 
-#include "kdeclarativefullscreenview.moc"

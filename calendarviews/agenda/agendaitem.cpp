@@ -1382,4 +1382,3 @@ bool AgendaItem::event( QEvent *event )
   return QWidget::event( event );
 }
 
-#include "agendaitem.moc"

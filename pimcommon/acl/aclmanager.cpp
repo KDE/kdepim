@@ -484,4 +484,4 @@ void AclManager::save()
     new Akonadi::CollectionModifyJob( d->mCollection );
 }
 
-#include "aclmanager.moc"
+#include "moc_aclmanager.cpp"

@@ -66,4 +66,3 @@ QString GrammarLinkClient::name() const
 }
 
 
-#include "grammarlinkclient.moc"

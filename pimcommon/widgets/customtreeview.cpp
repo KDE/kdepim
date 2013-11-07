@@ -89,4 +89,3 @@ void CustomTreeView::paintEvent( QPaintEvent *event )
     }
 }
 
-#include "customtreeview.moc"

@@ -55,4 +55,3 @@ MonitorsWidget::~MonitorsWidget()
 }
 
 
-#include "monitorswidget.moc"

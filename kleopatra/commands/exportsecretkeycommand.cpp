@@ -148,4 +148,3 @@ QString ExportSecretKeyCommand::successMessage( const QStringList & ) const {
     return i18nc( "@info", "Secret key successfully exported." );
 }
 
-#include "moc_exportsecretkeycommand.cpp"

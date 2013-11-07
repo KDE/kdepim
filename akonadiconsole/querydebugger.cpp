@@ -165,4 +165,3 @@ QString QueryDebugger::variantToString( const QVariant &val )
 
 
 
-#include "querydebugger.moc"

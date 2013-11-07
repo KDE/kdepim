@@ -178,4 +178,3 @@ void Filter::finishedListing()
   emit finished(); // let the view update according to restrictions _and_ matching full-text search results
 }
 
-#include "filter.moc"

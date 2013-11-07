@@ -144,4 +144,3 @@ bool SignJobTest::checkSignJob( MessageComposer::SignJob* sJob )
 
 }
 
-#include "signjobtest.moc"

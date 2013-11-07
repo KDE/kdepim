@@ -421,4 +421,4 @@ void FilterActionWidgetLister::clearWidget( QWidget *widget )
     }
 }
 
-#include "filteractionwidget.moc"
+#include "moc_filteractionwidget.cpp"

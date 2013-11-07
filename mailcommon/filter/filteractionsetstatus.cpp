@@ -89,4 +89,3 @@ QStringList FilterActionSetStatus::sieveRequires() const
 }
 
 
-#include "filteractionsetstatus.moc"

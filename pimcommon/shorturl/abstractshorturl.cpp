@@ -49,4 +49,3 @@ void AbstractShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
 }
 
-#include "abstractshorturl.moc"

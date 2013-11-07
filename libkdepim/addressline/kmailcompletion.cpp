@@ -110,4 +110,3 @@ void KMailCompletion::postProcessMatches( QStringList *pMatches ) const
   pMatches->clear();                        //delete keywords
   (*pMatches) += mailAddrDistinct.toList(); //add emailAddr
 }
-#include "kmailcompletion.moc"

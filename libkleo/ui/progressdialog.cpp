@@ -97,6 +97,5 @@ void Kleo::ProgressDialog::slotDone() {
 }
 
 
-#include "progressdialog.moc"
 
 #endif // QT_NO_PROGRESSDIALOG

@@ -148,4 +148,3 @@ void QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption )
       MessageBox::error( parent, mResult, this, caption );
 }
 
-#include "qgpgmesignjob.moc"

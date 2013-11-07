@@ -92,4 +92,3 @@ void MainWindow::newToolbarConfig()
   applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
 }
 
-#include "mainwindow.moc"

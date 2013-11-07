@@ -145,4 +145,3 @@ void CustomFieldEditWidget::edit()
     setCustomField( dlg.customField() );
 }
 
-#include "customfieldeditwidget.moc"

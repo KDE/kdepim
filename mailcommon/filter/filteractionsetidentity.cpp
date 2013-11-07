@@ -132,4 +132,3 @@ void FilterActionSetIdentity::setParamWidgetValue( QWidget *paramWidget ) const
 
 
 
-#include "filteractionsetidentity.moc"

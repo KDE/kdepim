@@ -164,4 +164,3 @@ void MessageAnalyzer::update( MessageViewer::Viewer::UpdateMode mode )
     processContent( m_message );
 }
 
-#include "messageanalyzer.moc"

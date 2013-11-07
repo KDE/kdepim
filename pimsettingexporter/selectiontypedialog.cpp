@@ -86,4 +86,3 @@ void SelectionTypeDialog::slotUnselectAll()
 }
 
 
-#include "selectiontypedialog.moc"

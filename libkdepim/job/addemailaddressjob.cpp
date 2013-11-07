@@ -293,4 +293,4 @@ Akonadi::Item AddEmailAddressJob::contact() const
   return d->mItem;
 }
 
-#include "addemailaddressjob.moc"
+#include "moc_addemailaddressjob.cpp"

@@ -362,4 +362,4 @@ void  KCheckComboBox::setAlwaysShowDefaultText( bool always )
   }
 }
 
-#include "kcheckcombobox.moc"
+#include "moc_kcheckcombobox.cpp"

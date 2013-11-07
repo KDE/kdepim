@@ -65,4 +65,3 @@ void CollectionAclPage::save(Collection & col)
   col.setRights( rights );
 }
 
-#include "collectionaclpage.moc"

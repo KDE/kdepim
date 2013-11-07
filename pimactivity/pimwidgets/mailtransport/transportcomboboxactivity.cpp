@@ -79,4 +79,4 @@ void TransportComboboxActivity::updateComboboxList()
 
 }
 
-#include "transportcomboboxactivity.moc"
+#include "moc_transportcomboboxactivity.cpp"

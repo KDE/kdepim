@@ -190,4 +190,3 @@ void Kleo::QGpgMESecretKeyExportJob::slotProcessExited(int exitCode, QProcess::E
   deleteLater();
 }
 
-#include "qgpgmesecretkeyexportjob.moc"

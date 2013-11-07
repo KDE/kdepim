@@ -319,4 +319,3 @@ void JournalFrame::readJournal( const Akonadi::Item &j )
 
 }
 
-#include "journalframe.moc"

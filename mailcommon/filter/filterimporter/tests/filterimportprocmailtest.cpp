@@ -37,4 +37,3 @@ void FilterImportProcmailtest::testImportFilters()
 }
 
 
-#include "filterimportprocmailtest.moc"

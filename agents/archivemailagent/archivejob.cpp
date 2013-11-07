@@ -117,4 +117,3 @@ MailCommon::ScheduledJob *ScheduledArchiveTask::run()
 }
 
 
-#include "archivejob.moc"

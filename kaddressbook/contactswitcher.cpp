@@ -129,4 +129,3 @@ void ContactSwitcher::updateStatus()
                                 "%1 out of %2", row + 1, mView->model()->rowCount() ) );
 }
 
-#include "contactswitcher.moc"

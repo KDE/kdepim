@@ -19,7 +19,7 @@
  */
 
 #include "kalarm.h"
-#include "alarmcalendar.moc"
+#include "alarmcalendar.h"
 
 #ifdef USE_AKONADI
 #include "collectionmodel.h"
@@ -2347,5 +2347,6 @@ KACalendar::Compat fix(const FileStorage::Ptr& fileStorage)
     return KACalendar::Current;
 }
 #endif
+#include "moc_alarmcalendar.cpp"
 
 // vim: et sw=4:

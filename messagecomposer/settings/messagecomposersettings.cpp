@@ -61,4 +61,3 @@ MessageComposerSettings::~MessageComposerSettings()
 {
 }
 
-#include "messagecomposersettings.moc"

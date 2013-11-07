@@ -306,5 +306,4 @@ void MailSourceViewer::setFixedFont()
 #endif
 }
 
-#include "mailsourceviewer.moc"
 }

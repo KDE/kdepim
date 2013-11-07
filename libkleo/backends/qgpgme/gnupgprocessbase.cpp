@@ -196,4 +196,3 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
 }
 #endif
 
-#include "gnupgprocessbase.moc"

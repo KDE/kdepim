@@ -428,4 +428,3 @@ bool MultiplyingLineView::dynamicSizeHint() const
   return mDynamicSizeHint;
 }
 
-#include "multiplyinglineview_p.moc"

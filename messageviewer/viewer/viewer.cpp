@@ -687,6 +687,5 @@ KAction *Viewer::expandShortUrlAction()
 
 }
 
-#include "viewer.moc"
 
 

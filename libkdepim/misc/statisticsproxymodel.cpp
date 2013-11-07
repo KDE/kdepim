@@ -550,5 +550,5 @@ QItemSelection StatisticsProxyModel::mapSelectionToSource(const QItemSelection& 
     return sourceSelection;
 }
 
-#include "statisticsproxymodel.moc"
+#include "moc_statisticsproxymodel.cpp"
 

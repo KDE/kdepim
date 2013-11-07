@@ -219,4 +219,3 @@ void LdapClientSearchConfig::writeConfig( const KLDAP::LdapServer &server, KConf
 }
 
 
-#include "ldapclientsearchconfig.moc"

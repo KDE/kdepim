@@ -126,4 +126,4 @@ void AggregationComboBoxPrivate::setCurrentAggregation( const Aggregation *aggre
   q->setCurrentIndex( aggregationIndex );
 }
 
-#include "aggregationcombobox.moc"
+#include "moc_aggregationcombobox.cpp"

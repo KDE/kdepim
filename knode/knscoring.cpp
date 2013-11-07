@@ -139,4 +139,3 @@ void KNScoringManager::configure()
   }
 }
 
-#include "knscoring.moc"

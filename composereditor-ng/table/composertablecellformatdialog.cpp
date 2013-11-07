@@ -230,4 +230,4 @@ ComposerTableCellFormatDialog::~ComposerTableCellFormatDialog()
 
 }
 
-#include "composertablecellformatdialog.moc"
+#include "moc_composertablecellformatdialog.cpp"

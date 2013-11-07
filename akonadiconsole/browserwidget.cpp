@@ -491,4 +491,3 @@ void BrowserWidget::updateItemFetchScope()
   mBrowserMonitor->itemFetchScope().setCacheOnly( mCacheOnlyAction->isChecked() );
 }
 
-#include "browserwidget.moc"

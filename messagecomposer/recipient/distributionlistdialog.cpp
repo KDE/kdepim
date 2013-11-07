@@ -350,4 +350,3 @@ void DistributionListDialog::writeConfig()
 }
 
 
-#include "distributionlistdialog.moc"

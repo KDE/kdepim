@@ -114,4 +114,3 @@ void ThemeConfigureDialog::writeConfig()
     mConfigureWidget->writeConfig();
 }
 
-#include "themeconfiguredialog.moc"

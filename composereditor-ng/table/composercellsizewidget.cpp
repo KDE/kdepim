@@ -167,4 +167,4 @@ void ComposerCellSizeWidget::setLabel(const QString& str)
 
 }
 
-#include "composercellsizewidget.moc"
+#include "moc_composercellsizewidget.cpp"

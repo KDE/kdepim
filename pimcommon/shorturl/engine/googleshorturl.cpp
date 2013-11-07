@@ -67,4 +67,3 @@ void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
     }
 }
 
-#include "googleshorturl.moc"

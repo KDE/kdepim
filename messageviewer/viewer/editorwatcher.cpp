@@ -179,4 +179,3 @@ void EditorWatcher::checkEditDone()
   deleteLater();
 }
 }
-#include "editorwatcher.moc"

@@ -145,4 +145,4 @@ void AddHostDialog::slotOk()
   KDialog::accept();
 }
 
-#include "addhostdialog_p.moc"
+#include "moc_addhostdialog_p.cpp"

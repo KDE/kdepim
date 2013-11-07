@@ -110,4 +110,3 @@ void ExportAlarmJob::backupConfig()
 
 }
 
-#include "exportalarmjob.moc"

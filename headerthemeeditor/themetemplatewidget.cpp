@@ -56,4 +56,3 @@ ThemeTemplateWidget::~ThemeTemplateWidget()
 {
 }
 
-#include "themetemplatewidget.moc"

@@ -38,6 +38,7 @@ KNotePrintSelectThemeComboBox::~KNotePrintSelectThemeComboBox()
 
 void KNotePrintSelectThemeComboBox::loadThemes()
 {
+    clear();
     const QString defaultTheme = KNotesGlobalConfig::self()->theme();
 
     const QString relativePath = QLatin1String("knotes/print/themes/");
@@ -92,4 +93,3 @@ QString KNotePrintSelectThemeComboBox::selectedTheme() const
 }
 
 
-#include "knoteprintselectthemecombobox.moc"

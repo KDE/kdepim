@@ -76,4 +76,3 @@ void DbConsole::copyCell()
   QApplication::clipboard()->setText( text );
 }
 
-#include "dbconsole.moc"

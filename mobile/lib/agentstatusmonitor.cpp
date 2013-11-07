@@ -77,4 +77,3 @@ void AgentStatusMonitor::setMimeTypeFilter( const QStringList &mimeTypes )
   updateStatus();
 }
 
-#include "agentstatusmonitor.moc"

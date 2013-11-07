@@ -86,4 +86,3 @@ void DIEMore::setCurrentIndex( int index )
   widget()->setCurrentIndex( index );
 }
 
-#include "declarativeeditors.moc"

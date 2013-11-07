@@ -81,5 +81,4 @@ void MobileLineEdit::clear()
   d->mEdit->clear();
 }
 
-#include "mobilelineedit.moc"
 

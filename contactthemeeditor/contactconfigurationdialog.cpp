@@ -144,4 +144,3 @@ void ContactConfigureDialog::writeConfig()
     mConfigureWidget->writeConfig();
 }
 
-#include "contactconfigurationdialog.moc"

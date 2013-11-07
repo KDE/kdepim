@@ -211,4 +211,3 @@ void Kleo::QGpgMERefreshKeysJob::slotProcessExited(int exitCode, QProcess::ExitS
   deleteLater();
 }
 
-#include "qgpgmerefreshkeysjob.moc"

@@ -899,4 +899,4 @@ void AttachmentControllerBase::setIdentityHasOwnVcard(bool state)
   d->addOwnVcardAction->setEnabled(state);
 }
 
-#include "attachmentcontrollerbase.moc"
+#include "moc_attachmentcontrollerbase.cpp"

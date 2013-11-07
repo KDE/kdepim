@@ -263,4 +263,3 @@ void SieveEditorTextModeWidget::setParsingEditorWarningError(const QString &scri
     mSieveParsingWarning->setErrors(script, error);
 }
 
-#include "sieveeditortextmodewidget.moc"

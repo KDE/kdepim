@@ -261,4 +261,4 @@ void ExtendAttributesWidget::changeAttributes()
 }
 
 
-#include "extendattributeswidget.moc"
+#include "moc_extendattributeswidget.cpp"

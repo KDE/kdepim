@@ -179,4 +179,3 @@ void TimeLabelsZone::setPreferences( const PrefsPtr &prefs )
   }
 }
 
-#include "timelabelszone.moc"

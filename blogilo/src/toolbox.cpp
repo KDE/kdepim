@@ -526,4 +526,3 @@ void Toolbox::copyPostTitle()
         QApplication::clipboard()->setText( lstEntriesList->currentItem()->text() );
 }
 
-#include "toolbox.moc"

@@ -254,4 +254,3 @@ QVariant MimeTreeModel::headerData(int section, Qt::Orientation orientation, int
   return QAbstractItemModel::headerData( section, orientation, role );
 }
 
-#include "mimetreemodel.moc"

@@ -48,4 +48,3 @@ QString FilterActionWithUOID::displayString() const
     return label() + QLatin1String( " \"" ) + Qt::escape( argsAsString() ) + QLatin1String( "\"" );
 }
 
-#include "filteractionwithuoid.moc"

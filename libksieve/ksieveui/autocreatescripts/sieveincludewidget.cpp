@@ -319,4 +319,3 @@ void SieveIncludeWidgetLister::loadScript(const QDomElement &element, QString &e
 
 }
 
-#include "sieveincludewidget.moc"

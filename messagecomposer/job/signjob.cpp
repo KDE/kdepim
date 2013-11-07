@@ -192,4 +192,3 @@ void SignJob::process()
   emitResult();
 }
 
-#include "signjob.moc"

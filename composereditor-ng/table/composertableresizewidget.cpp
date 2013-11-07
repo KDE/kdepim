@@ -44,4 +44,3 @@ ComposerTableResizeWidget::~ComposerTableResizeWidget()
 
 }
 
-#include "composertableresizewidget.moc"

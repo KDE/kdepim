@@ -318,4 +318,3 @@ QVariant UserIDListModel::data( const QModelIndex & idx, int role ) const {
     return QVariant();
 }
 
-#include "moc_useridlistmodel.cpp"

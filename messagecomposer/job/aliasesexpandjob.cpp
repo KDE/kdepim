@@ -250,5 +250,4 @@ void AliasesExpandJob::finishExpansion()
   emitResult();
 }
 
-#include "aliasesexpandjob.moc"
-#include "aliasesexpandjob_p.moc"
+#include "moc_aliasesexpandjob_p.cpp"

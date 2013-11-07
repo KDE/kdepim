@@ -261,4 +261,3 @@ void LocalResourceCreator::itemCreateFinished(KJob* job)
 
 
 
-#include "localresourcecreator.moc"

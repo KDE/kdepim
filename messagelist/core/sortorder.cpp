@@ -328,4 +328,4 @@ SortOrder::GroupSorting SortOrder::groupSortingForName( const QString& name )
                               name.toLatin1().constData() ) );
 }
 
-#include "sortorder.moc"
+#include "moc_sortorder.cpp"

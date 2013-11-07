@@ -145,4 +145,3 @@ void FilterSelectionDialog::slotSelectAllButton()
     }
 }
 
-#include "filterselectiondialog.moc"

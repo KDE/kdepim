@@ -686,6 +686,7 @@ KMOpenMsgCommand::KMOpenMsgCommand( QWidget *parent, const KUrl & url,
                                     const QString & encoding, KMMainWidget *main )
     : KMCommand( parent ),
       mUrl( url ),
+      mJob( 0 ),
       mEncoding( encoding ),
       mMainWidget( main )
 {
@@ -1573,4 +1574,3 @@ KMCommand::Result KMShareImageCommand::execute()
     return OK;
 }
 
-#include "kmcommands.moc"

@@ -375,4 +375,3 @@ bool PlainTextEditor::overrideShortcut(const QKeyEvent* event)
 }
 
 
-#include "plaintexteditor.moc"

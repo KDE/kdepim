@@ -20,6 +20,7 @@
 #include "pimcommon/shorturl/engine/googleshorturl.h"
 #include "pimcommon/shorturl/engine/tinyurlshorturl.h"
 #include "pimcommon/shorturl/engine/migremeshorturl.h"
+#include "pimcommon/shorturl/engine/triopabshorturl.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -42,6 +43,9 @@ PimCommon::AbstractShortUrl *PimCommon::ShortUrlUtils::loadEngine(QObject *paren
     case MigreMe:
         engine = new PimCommon::MigremeShortUrl(parent);
         break;
+    case TriopAB:
+        engine = new PimCommon::TriopabShortUrl(parent);
+        break;
     case EndListEngine:
     default:
         qDebug()<<" Engine type undefined "<<type;
@@ -63,6 +67,9 @@ QString PimCommon::ShortUrlUtils::stringFromEngineType(EngineType type)
         break;
     case MigreMe:
         name = i18n("Migre.Me");
+        break;
+    case TriopAB:
+        name = i18n("TriopAB");
         break;
     case EndListEngine:
     default:

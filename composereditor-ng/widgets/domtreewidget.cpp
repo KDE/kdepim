@@ -102,4 +102,4 @@ DomTreeWidget::~DomTreeWidget()
 
 }
 
-#include "domtreewidget.moc"
+#include "moc_domtreewidget.cpp"

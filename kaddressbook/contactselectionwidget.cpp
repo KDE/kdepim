@@ -236,4 +236,3 @@ KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
   return contacts;
 }
 
-#include "contactselectionwidget.moc"

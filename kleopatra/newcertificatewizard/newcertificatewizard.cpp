@@ -1483,5 +1483,4 @@ void AdvancedSettingsDialog::updateWidgetVisibility() {
     slotKeyMaterialSelectionChanged();
 }
 
-#include "moc_newcertificatewizard.cpp"
 #include "newcertificatewizard.moc"

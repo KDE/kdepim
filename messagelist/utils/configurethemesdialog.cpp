@@ -469,4 +469,4 @@ void ConfigureThemesDialog::Private::exportThemeButtonClicked()
 }
 
 
-#include "configurethemesdialog.moc"
+#include "moc_configurethemesdialog.cpp"

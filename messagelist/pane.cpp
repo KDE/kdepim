@@ -1111,4 +1111,4 @@ void Pane::themeMenuAboutToShow()
 }
 
 
-#include "pane.moc"
+#include "moc_pane.cpp"

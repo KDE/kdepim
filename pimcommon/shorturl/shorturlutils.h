@@ -28,6 +28,7 @@ namespace ShortUrlUtils
         Google = 0,
         Tinyurl = 1,
         MigreMe = 2,
+        TriopAB = 3,
         //TODO add more engine.
         EndListEngine
     };

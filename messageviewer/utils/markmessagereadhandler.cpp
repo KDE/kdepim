@@ -96,4 +96,4 @@ void MarkMessageReadHandler::setItem( const Akonadi::Item &item )
   }
 }
 
-#include "markmessagereadhandler.moc"
+#include "moc_markmessagereadhandler.cpp"

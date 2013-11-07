@@ -87,4 +87,3 @@ void ExportAkregatorJob::backupData()
     Q_EMIT info(i18n("Data backup done."));
 }
 
-#include "exportakregatorjob.moc"

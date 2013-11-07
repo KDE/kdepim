@@ -195,4 +195,3 @@ void FolderRequester::setNotAllowToCreateNewFolder( bool notCreateNewFolder )
 
 } // namespace MailCommon
 
-#include "folderrequester.moc"

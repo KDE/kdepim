@@ -86,4 +86,3 @@ void FreePeriodModelTest::testSplitByDay()
   QCOMPARE( period2.end(), endDt );
 }
 
-#include "testfreeperiodmodel.moc"

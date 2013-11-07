@@ -116,4 +116,3 @@ QString GrantleePlainTextEditor::wordUnderCursor() const
 }
 
 
-#include "grantleeplaintexteditor.moc"

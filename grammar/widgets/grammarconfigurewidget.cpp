@@ -103,4 +103,3 @@ void GrammarConfigureWidget::save()
 
 }
 
-#include "grammarconfigurewidget.moc"

@@ -180,4 +180,4 @@ ComposerTableFormatDialog::~ComposerTableFormatDialog()
 
 }
 
-#include "composertableformatdialog.moc"
+#include "moc_composertableformatdialog.cpp"

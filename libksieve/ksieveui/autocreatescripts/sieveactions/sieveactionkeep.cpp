@@ -122,4 +122,3 @@ QStringList SieveActionKeep::needRequires(QWidget *) const
     return requiresLst;
 }
 
-#include "sieveactionkeep.moc"

@@ -98,4 +98,3 @@ void FreeBusyUrlWidget::saveConfig()
   KCalCore::FreeBusyUrlStore::self()->sync();
 }
 
-#include "freebusyurldialog.moc"

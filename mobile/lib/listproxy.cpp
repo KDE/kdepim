@@ -45,4 +45,3 @@ void ListProxy::setSourceModel(QAbstractItemModel* sourceModel)
 }
 
 
-#include "listproxy.moc"

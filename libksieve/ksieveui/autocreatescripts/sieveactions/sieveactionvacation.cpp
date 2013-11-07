@@ -209,5 +209,4 @@ QString SieveActionVacation::help() const
     return helpStr;
 }
 
-#include "sieveactionvacation.moc"
 

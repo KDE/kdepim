@@ -82,4 +82,3 @@ void InsertTextFileJob::start()
   job->start();
 }
 
-#include "inserttextfilejob.moc"

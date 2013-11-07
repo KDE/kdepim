@@ -104,4 +104,4 @@ void FilterModel::filterListUpdated()
     emit dataChanged( index( 0, 0 ), index( rowCount() - 1, 0 ) );
 }
 
-#include "filtermodel_p.moc"
+#include "moc_filtermodel_p.cpp"

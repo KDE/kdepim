@@ -209,4 +209,3 @@ void SieveSyntaxHighlighter::init()
     m_rules.append( Rule( literalRegex, literalFormat ) );
 }
 
-#include "sievesyntaxhighlighter.moc"

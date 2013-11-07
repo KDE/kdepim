@@ -532,4 +532,3 @@ bool KleopatraApplication::ignoreNewInstance() const {
     return d->ignoreNewInstance;
 }
 
-#include "moc_kleopatraapplication.cpp"

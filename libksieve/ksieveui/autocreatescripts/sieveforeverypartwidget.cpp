@@ -113,4 +113,3 @@ void SieveForEveryPartWidget::loadScript(const QDomElement &element, QString &er
 }
 }
 
-#include "sieveforeverypartwidget.moc"

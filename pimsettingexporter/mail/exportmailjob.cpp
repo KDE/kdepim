@@ -200,6 +200,7 @@ void ExportMailJob::backupConfig()
     backupConfigFile(QLatin1String("sievetemplaterc"));
     backupConfigFile(QLatin1String("customtemplatesrc"));
     backupConfigFile(QLatin1String("kontactrc"));
+    backupConfigFile(QLatin1String("kontact_summaryrc"));
 
     //Notify file config
     backupConfigFile(QLatin1String("akonadi_mailfilter_agent.notifyrc"));
@@ -307,8 +308,7 @@ void ExportMailJob::backupConfig()
     if (themeDirectory.exists()) {
         const bool themeDirAdded = archive()->addLocalDirectory(themeDirectory.path(), Utils::dataPath() + QLatin1String( "messageviewer/themes/" ));
         if (!themeDirAdded) {
-            //TODO fix i18n
-            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.", themeDirectory.path()));
+            Q_EMIT error(i18n("Theme directory \"%1\" cannot be added to backup file.", themeDirectory.path()));
         }
     }
 
@@ -540,8 +540,8 @@ void ExportMailJob::writeDirectory(const QString &path, const QString &relativeP
         if (lst.at(i).isDir()) {
             writeDirectory(relativePath + path + QLatin1Char('/') + filename,relativePath,mailArchive);
         } else {
-            QString currentPath(path);
-            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),currentPath + QLatin1Char('/') + filename);
+            const QString currentPath(currentPath + QLatin1Char('/') + filename);
+            mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),currentPath);
         }
     }
 }

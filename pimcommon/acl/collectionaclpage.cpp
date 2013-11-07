@@ -150,4 +150,3 @@ void CollectionAclPage::save( Akonadi::Collection &collection )
     collection.addAttribute( attribute->clone() );
 }
 
-#include "collectionaclpage.moc"

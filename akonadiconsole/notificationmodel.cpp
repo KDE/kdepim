@@ -380,7 +380,6 @@ void NotificationModel::setEnabled( bool enable )
 }
 
 
-#include "notificationmodel.moc"
 
 
 

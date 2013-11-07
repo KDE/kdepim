@@ -149,4 +149,3 @@ QString SelectFlagsWidget::code() const
     return mEdit->text();
 }
 
-#include "selectflagswidget.moc"

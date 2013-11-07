@@ -145,4 +145,3 @@ void QGpgMESignEncryptJob::resultHook( const result_type & tuple ) {
   mResult = std::make_pair( get<0>( tuple ), get<1>( tuple ) );
 }
 
-#include "qgpgmesignencryptjob.moc"

@@ -214,4 +214,3 @@ void TemplateParserTester::test_processWithTemplatesForContent()
 
 QTEST_KDEMAIN( TemplateParserTester, GUI )
 
-#include "templateparsertest.moc"

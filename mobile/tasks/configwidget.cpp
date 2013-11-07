@@ -108,4 +108,3 @@ void DeclarativeConfigWidget::save()
   widget()->save();
 }
 
-#include "configwidget.moc"

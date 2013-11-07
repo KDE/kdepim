@@ -25,11 +25,10 @@
 #define ITEMVIEWERWIDGET_H
 
 #include <QWidget>
-
+#include <QItemSelection>
 class NoteViewer;
 
 class QItemSelectionModel;
-class QItemSelection;
 class QStackedWidget;
 
 namespace MessageViewer

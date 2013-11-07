@@ -215,4 +215,3 @@ void Kleo::ChiasmusJob::showErrorDialog( QWidget * parent, const QString & capti
   }
 }
 
-#include "chiasmusjob.moc"

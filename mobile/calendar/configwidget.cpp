@@ -300,4 +300,3 @@ void DeclarativeConfigWidget::setNewTime( int hour, int minute )
   widget()->setNewTime( hour, minute );
 }
 
-#include "configwidget.moc"

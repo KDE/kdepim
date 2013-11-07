@@ -63,5 +63,4 @@ void WaitWidget::setBusyState()
     progressBar->setMaximum( 0 );
 }
 
-#include "waitwidget.moc"
 

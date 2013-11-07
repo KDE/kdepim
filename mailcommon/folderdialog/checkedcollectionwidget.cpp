@@ -112,4 +112,3 @@ void CheckedCollectionWidget::slotSetCollectionFilter(const QString &filter)
     mFolderView->expandAll();
 }
 
-#include "checkedcollectionwidget.moc"

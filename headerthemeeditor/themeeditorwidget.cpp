@@ -40,4 +40,3 @@ void ThemeEditorWidget::createCompleterList(const QStringList &extraCompletion)
     GrantleeThemeEditor::EditorWidget::createCompleterList( listWord );
 }
 
-#include "themeeditorwidget.moc"

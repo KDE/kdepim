@@ -91,4 +91,4 @@ void CollectionFetchWatcher::start()
            this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
 }
 
-#include "collectionfetchwatcher.moc"
+#include "moc_collectionfetchwatcher.cpp"

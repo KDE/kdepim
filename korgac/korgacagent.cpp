@@ -42,4 +42,3 @@ KorgacAgent::~KorgacAgent()
 
 AKONADI_AGENT_FACTORY( KorgacAgent, korgac )
 
-#include "korgacagent.moc"

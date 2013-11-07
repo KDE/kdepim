@@ -47,4 +47,3 @@ FilterAction* FilterActionBeep::newAction()
     return new FilterActionBeep;
 }
 
-#include "filteractionbeep.moc"

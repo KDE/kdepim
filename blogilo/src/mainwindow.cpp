@@ -671,4 +671,3 @@ void MainWindow::slotOpenCurrentBlogInBrowser()
     ///else show a message to the user saying that a blog should be selected before.
 }
 
-#include "mainwindow.moc"

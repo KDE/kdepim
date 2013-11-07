@@ -167,4 +167,3 @@ void ArchiveMailManager::printArchiveListInfo()
     }
 }
 
-#include "archivemailmanager.moc"

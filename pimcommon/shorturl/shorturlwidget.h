@@ -39,6 +39,8 @@ public:
     explicit ShortUrlWidget(QWidget *parent=0);
     ~ShortUrlWidget();
 
+    void setStandalone(bool b);
+
 public Q_SLOTS:
     void settingsUpdated();
 
@@ -50,6 +52,11 @@ private Q_SLOTS:
     void slotShortUrlDone(const QString &url);
     void slotShortUrlFailed(const QString &errMsg);
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
+    void slotCloseWidget();    
+    void slotConfigure();
+
+Q_SIGNALS:
+    void shortUrlWasClosed();
 
 private:
     void loadEngine();
@@ -60,6 +67,7 @@ private:
     AbstractShortUrl *mEngine;
     KPIMUtils::ProgressIndicatorLabel *mIndicatorLabel;
     bool mNetworkUp;
+    bool mStandalone;
 };
 }
 

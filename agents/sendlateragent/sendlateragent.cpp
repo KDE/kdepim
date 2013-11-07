@@ -140,4 +140,3 @@ void SendLaterAgent::printDebugInfo()
 
 AKONADI_AGENT_MAIN( SendLaterAgent )
 
-#include "sendlateragent.moc"

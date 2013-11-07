@@ -266,4 +266,4 @@ void ThreadGrouperModel::setDynamicModelRepopulation( bool enabled )
   d->m_dynamicModelRepopulation = enabled;
 }
 
-#include "threadgroupermodel.moc"
+#include "moc_threadgroupermodel.cpp"

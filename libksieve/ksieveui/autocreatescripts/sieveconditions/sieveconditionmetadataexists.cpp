@@ -126,4 +126,3 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
     return true;
 }
 
-#include "sieveconditionmetadataexists.moc"

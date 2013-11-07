@@ -242,4 +242,4 @@ ComposerListDialog::~ComposerListDialog()
 
 }
 
-#include "composerlistdialog.moc"
+#include "moc_composerlistdialog.cpp"

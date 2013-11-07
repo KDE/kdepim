@@ -285,4 +285,3 @@ bool Kleo::CryptoBackendFactory::knowsAboutProtocol( const char * name ) const {
                     CaseInsensitiveString( name ) ) != mAvailableProtocols.end();
 }
 
-#include "cryptobackendfactory.moc"

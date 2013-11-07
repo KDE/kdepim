@@ -90,4 +90,3 @@ void SelectConvertParameterWidget::initialize()
 
 }
 
-#include "selectconvertparameterwidget.moc"

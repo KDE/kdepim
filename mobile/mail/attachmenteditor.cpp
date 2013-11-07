@@ -118,4 +118,3 @@ void AttachmentEditor::encryptAttachment( bool value )
   mModel->setData( index, value, Qt::CheckStateRole );
 }
 
-#include "attachmenteditor.moc"

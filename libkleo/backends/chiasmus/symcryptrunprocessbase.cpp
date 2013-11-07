@@ -103,4 +103,3 @@ void Kleo::SymCryptRunProcessBase::slotReadyReadStandardError() {
   mStderr += QLatin1String(readAllStandardError());
 }
 
-#include "symcryptrunprocessbase.moc"

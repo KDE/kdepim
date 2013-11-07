@@ -67,4 +67,3 @@ void KWatchGnuPGTray::setAttention( bool att )
   else setIcon( mNormalPix );
 }
 
-#include "tray.moc"

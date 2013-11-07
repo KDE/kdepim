@@ -3365,4 +3365,3 @@ void ViewerPrivate::slotExpandShortUrl()
     }
 }
 
-#include "viewer_p.moc"

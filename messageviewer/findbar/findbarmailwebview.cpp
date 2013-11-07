@@ -104,4 +104,3 @@ void FindBarMailWebView::clearSelections()
     FindBarBase::clearSelections();
 }
 
-#include "findbarmailwebview.moc"

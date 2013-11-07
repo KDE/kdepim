@@ -734,20 +734,9 @@ void ImportMailJob::restoreConfig()
         }
     }
 
-    const QString kontactStr(QLatin1String("kontactrc"));
-    const KArchiveEntry* kontactentry  = mArchiveDirectory->entry(Utils::configsPath() + kontactStr);
-    if ( kontactentry &&  kontactentry->isFile()) {
-        const KArchiveFile* kontactconfiguration = static_cast<const KArchiveFile*>(kontactentry);
-        const QString kontactrc = KStandardDirs::locateLocal( "config",  kontactStr);
-        if (QFile(kontactrc).exists()) {
-            if (overwriteConfigMessageBox(kontactStr)) {
-                copyToFile(kontactconfiguration, kontactrc, kontactStr, Utils::configsPath());
-            }
-        } else {
-            copyToFile(kontactconfiguration, kontactrc, kontactStr, Utils::configsPath());
-        }
-    }
+    restoreConfigFile(QLatin1String("kontactrc"));
 
+    restoreConfigFile(QLatin1String("kontact_summaryrc"));
     //Restore notify file
     QStringList lstNotify;
     lstNotify << QLatin1String("akonadi_mailfilter_agent.notifyrc")
@@ -762,18 +751,7 @@ void ImportMailJob::restoreConfig()
 
     //We can't merge it.
     Q_FOREACH (const QString &filename, lstNotify) {
-        const KArchiveEntry* notifyentry  = mArchiveDirectory->entry(Utils::configsPath() + filename);
-        if ( notifyentry &&  notifyentry->isFile()) {
-            const KArchiveFile *notify = static_cast<const KArchiveFile*>(notifyentry);
-            const QString notifyrc = KStandardDirs::locateLocal( "config",  filename);
-            if (QFile(notifyrc).exists()) {
-                if (overwriteConfigMessageBox(filename)) {
-                    copyToFile(notify, notifyrc, filename, Utils::configsPath());
-                }
-            } else {
-                copyToFile(notify, notifyrc, filename, Utils::configsPath());
-            }
-        }
+        restoreConfigFile(filename);
     }
 
 

@@ -756,4 +756,3 @@ void QGpgMENewCryptoConfigEntry::setDirty( bool b )
 }
 #endif
 
-#include "qgpgmenewcryptoconfig.moc"

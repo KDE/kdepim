@@ -373,4 +373,4 @@ QWidget* KCMLdap::dialogParent()
 #endif
 }
 
-#include "kcmldap_p.moc"
+#include "moc_kcmldap_p.cpp"

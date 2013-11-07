@@ -49,4 +49,3 @@ void DbBrowser::refreshClicked()
   ui.tableView->setModel( mTableModel );
 }
 
-#include "dbbrowser.moc"

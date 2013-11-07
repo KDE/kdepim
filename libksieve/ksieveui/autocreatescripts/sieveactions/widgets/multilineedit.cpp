@@ -57,4 +57,3 @@ QSize MultiLineEdit::minimumSizeHint() const
     return sizeHint();
 }
 
-#include "multilineedit.moc"

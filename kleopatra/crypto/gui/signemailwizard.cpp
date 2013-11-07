@@ -154,4 +154,3 @@ void SignEMailWizard::setQuickMode( bool quick )
 
 SignEMailWizard::~SignEMailWizard() {}
 
-#include "moc_signemailwizard.cpp"

@@ -492,4 +492,3 @@ int KNFolderManager::loadCustomFolders()
 }
 
 
-#include "knfoldermanager.moc"

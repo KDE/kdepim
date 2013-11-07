@@ -30,6 +30,7 @@ set(libpimcommon_SRCS
   widgets/simplestringlisteditor.cpp
   widgets/customtextedit.cpp
   widgets/customtreeview.cpp
+  widgets/customtoolswidget.cpp
   texteditor/plaintexteditor/plaintexteditfindbar.cpp
   texteditor/plaintexteditor/plaintexteditor.cpp
   texteditor/plaintexteditor/plaintexteditorwidget.cpp
@@ -40,6 +41,7 @@ set(libpimcommon_SRCS
   texteditor/richtexteditor/richtexteditorwidget.cpp
   templatewidgets/templatelistwidget.cpp
   templatewidgets/templateeditdialog.cpp
+  templatewidgets/templatemanager.cpp
   sievehighlighter/sievesyntaxhighlighter.cpp
   sievehighlighter/sievesyntaxhighlighterutil.cpp
   shorturl/abstractshorturl.cpp
@@ -48,7 +50,9 @@ set(libpimcommon_SRCS
   shorturl/engine/googleshorturl.cpp
   shorturl/shorturlconfigurewidget.cpp
   shorturl/shorturlutils.cpp
+  shorturl/shorturlconfiguredialog.cpp
   shorturl/engine/migremeshorturl.cpp
+  shorturl/engine/triopabshorturl.cpp
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
@@ -73,6 +77,7 @@ target_link_libraries(pimcommon
     ${QT_QTWEBKIT_LIBRARY}
     ${QJSON_LIBRARIES}
     ${KDE4_SOLID_LIBS}
+    ${KDE4_KNEWSTUFF3_LIBS}
     kdepim
 )
 

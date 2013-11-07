@@ -145,4 +145,3 @@ void AkonotesListApplet::configAccepted()
 
 
 
-#include "akonotes_noteslistapplet.moc"

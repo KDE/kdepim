@@ -37,4 +37,3 @@ int StorageModel::initialUnreadRowCountGuess() const
 }
 
 
-#include "storagemodelbase.moc"

@@ -519,4 +519,3 @@ void PostEntry::slotPostModified()
     d->isPostContentModified = true;
 }
 
-#include "postentry.moc"

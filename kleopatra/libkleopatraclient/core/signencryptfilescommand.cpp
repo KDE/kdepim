@@ -32,4 +32,3 @@ SignEncryptFilesCommand::SignEncryptFilesCommand( QObject * p )
 
 SignEncryptFilesCommand::~SignEncryptFilesCommand() {}
 
-#include "moc_signencryptfilescommand.cpp"

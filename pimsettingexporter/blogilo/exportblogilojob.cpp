@@ -86,4 +86,3 @@ void ExportBlogiloJob::backupData()
     Q_EMIT info(i18n("Data backup done."));
 }
 
-#include "exportblogilojob.moc"

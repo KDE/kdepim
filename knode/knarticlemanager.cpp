@@ -1106,4 +1106,3 @@ void KNArticleManager::setView(KNHeaderView* v) {
 }
 
 //-----------------------------
-#include "knarticlemanager.moc"

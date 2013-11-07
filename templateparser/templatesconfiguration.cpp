@@ -379,4 +379,3 @@ QString TemplatesConfiguration::configIdString( uint id )
   return QString::fromLatin1( "IDENTITY_%1" ).arg( id );
 }
 
-#include "templatesconfiguration.moc"

@@ -215,4 +215,4 @@ QAction *FilterController::moveDownAction() const
     return d->mMoveDownAction;
 }
 
-#include "filtercontroller.moc"
+#include "moc_filtercontroller.cpp"

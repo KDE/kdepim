@@ -83,4 +83,3 @@ void VacationManager::editVacation()
      }
 }
 
-#include "vacationmanager.moc"

@@ -162,4 +162,3 @@ void RecipientsEditorSideWidget::pickRecipient()
     }
 }
 
-#include "recipientseditorsidewidget.moc"

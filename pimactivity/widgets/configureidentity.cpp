@@ -105,4 +105,3 @@ void ConfigureIdentity::setDefault()
 
 }
 
-#include "configureidentity.moc"

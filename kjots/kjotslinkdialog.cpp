@@ -180,4 +180,3 @@ QString KJotsLinkDialog::linkUrl() const
     }
 }
 
-#include "kjotslinkdialog.moc"

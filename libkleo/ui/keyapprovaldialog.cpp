@@ -212,4 +212,3 @@ void Kleo::KeyApprovalDialog::slotPrefsChanged() {
   d->prefsChanged = true;
 }
 
-#include "keyapprovaldialog.moc"

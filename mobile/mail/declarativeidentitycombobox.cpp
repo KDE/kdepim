@@ -29,4 +29,3 @@ DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* par
 {
 }
 
-#include "declarativeidentitycombobox.moc"

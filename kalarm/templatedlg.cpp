@@ -19,7 +19,7 @@
  */
 
 #include "kalarm.h"
-#include "templatedlg.moc"
+#include "templatedlg.h"
 
 #include "editdlg.h"
 #include "alarmcalendar.h"

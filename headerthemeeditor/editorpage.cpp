@@ -91,4 +91,3 @@ GrantleeThemeEditor::PreviewWidget *EditorPage::preview() const
     return mPreview;
 }
 
-#include "editorpage.moc"

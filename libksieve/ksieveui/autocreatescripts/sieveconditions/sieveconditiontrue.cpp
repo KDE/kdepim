@@ -62,4 +62,3 @@ bool SieveConditionTrue::setParamWidgetValue(const QDomElement &, QWidget *, boo
     return true;
 }
 
-#include "sieveconditiontrue.moc"

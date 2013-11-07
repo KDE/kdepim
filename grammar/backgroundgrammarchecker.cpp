@@ -41,4 +41,3 @@ BackgroundGrammarChecker::~BackgroundGrammarChecker()
 }
 }
 
-#include "backgroundgrammarchecker.moc"

@@ -78,4 +78,3 @@ void SearchManager::cleanUpSearch()
   mCurrentSearchCollection = -1;
 }
 
-#include "searchmanager.moc"

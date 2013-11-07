@@ -48,4 +48,3 @@ void KResettingProxyModel::slotEndReset()
   QMetaObject::invokeMethod(this, "_q_sourceReset", Qt::DirectConnection);
 }
 
-#include "kresettingproxymodel.moc"

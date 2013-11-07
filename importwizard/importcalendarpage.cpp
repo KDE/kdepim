@@ -47,4 +47,3 @@ void ImportCalendarPage::setImportButtonEnabled(bool enabled)
 }
 
 
-#include "importcalendarpage.moc"

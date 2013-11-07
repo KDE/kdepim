@@ -613,4 +613,3 @@ void ComposerAutoCorrectionWidget::slotExportAutoCorrection()
     mAutoCorrection->writeAutoCorrectionXmlFile(saveUrl.toLocalFile());
 }
 
-#include "composerautocorrectionwidget.moc"

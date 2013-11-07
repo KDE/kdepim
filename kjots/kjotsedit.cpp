@@ -50,7 +50,7 @@
 
 #include <kdebug.h>
 #include "kjotsmodel.h"
-#include "kjotslockattribute.h"
+#include "notelockattribute.h"
 
 
 #ifndef KDE_USE_FINAL
@@ -172,7 +172,7 @@ void KJotsEdit::tryDisableEditing()
   if ( !item.isValid() )
     return setReadOnly(true);
 
-  if ( item.hasAttribute<KJotsLockAttribute>() )
+  if ( item.hasAttribute<NoteLockAttribute>() )
     return setReadOnly(true);
 
   setReadOnly(false);
@@ -445,6 +445,5 @@ void KJotsEdit::savePage()
 
 
 
-#include "kjotsedit.moc"
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
 /* kate: tab-indents off; replace-tabs on; tab-width 4; remove-trailing-space on; encoding utf-8;*/

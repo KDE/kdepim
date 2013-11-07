@@ -125,5 +125,4 @@ Ui::KSelFilterPageDlg *KSelFilterPage::widget()
     return mWidget;
 }
 
-#include "kselfilterpage.moc"
 

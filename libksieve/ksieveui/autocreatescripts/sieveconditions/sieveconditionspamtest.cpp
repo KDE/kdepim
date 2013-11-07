@@ -178,5 +178,4 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
     return true;
 }
 
-#include "sieveconditionspamtest.moc"
 

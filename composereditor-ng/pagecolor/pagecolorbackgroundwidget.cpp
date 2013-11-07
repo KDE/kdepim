@@ -116,4 +116,3 @@ void PageColorBackgroundWidget::setVisitedLinkColor(const QColor &col)
     ui->visitedLinkColor->setColor(col);
 }
 
-#include "pagecolorbackgroundwidget.moc"

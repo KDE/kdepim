@@ -150,4 +150,4 @@ AgentProgressMonitor::~AgentProgressMonitor()
     delete d;
 }
 
-#include "agentprogressmonitor.moc"
+#include "moc_agentprogressmonitor.cpp"

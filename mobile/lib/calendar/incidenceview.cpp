@@ -378,4 +378,3 @@ void IncidenceView::cancel()
   deleteLater();
 }
 
-#include "incidenceview.moc"

@@ -305,4 +305,3 @@ void ContactEditorMainWindow::slotSaveAsTheme()
     }
 }
 
-#include "contacteditormainwindow.moc"

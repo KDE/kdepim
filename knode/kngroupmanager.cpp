@@ -711,4 +711,3 @@ void KNGroupManager::slotCheckForNewGroups( KNNntpAccount::Ptr a, QDate date )
 
 //--------------------------------
 
-#include "kngroupmanager.moc"

@@ -167,4 +167,4 @@ void AddContactJob::start()
   connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
 }
 
-#include "addcontactjob.moc"
+#include "moc_addcontactjob.cpp"

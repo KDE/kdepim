@@ -202,4 +202,4 @@ bool ResultPage::isComplete() const
 }
 
 
-#include "resultpage.moc"
+#include "moc_resultpage.cpp"

@@ -191,4 +191,3 @@ void TemplateManagementDialog::slotOk()
   }
 }
 
-#include "templatemanagementdialog.moc"

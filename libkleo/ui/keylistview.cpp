@@ -513,4 +513,3 @@ void Kleo::KeyListView::keyPressEvent(QKeyEvent* event)
 }
 
 
-#include "keylistview.moc"

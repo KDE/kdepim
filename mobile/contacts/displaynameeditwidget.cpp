@@ -241,4 +241,3 @@ void DisplayNameEditWidget::updateView()
   mView->setCurrentIndex( (int)mDisplayType );
 }
 
-#include "displaynameeditwidget.moc"

@@ -108,4 +108,3 @@ void FolderArchiveCache::debugCache()
     }
 }
 
-#include "folderarchivecache.moc"

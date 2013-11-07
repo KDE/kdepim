@@ -623,4 +623,3 @@ QString FolderTreeWidgetItem::elidedLabelText( const QFontMetrics &metrics, unsi
 
 }
 
-#include "foldertreewidget.moc"

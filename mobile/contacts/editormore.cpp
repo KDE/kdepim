@@ -453,4 +453,4 @@ void EditorMore::updateName( const KABC::Addressee &contact )
   blockSignals( false );
 }
 
-#include "editormore.moc"
+#include "moc_editormore.cpp"

@@ -209,4 +209,3 @@ QString FilterActionAddHeader::sieveCode() const
 }
 
 
-#include "filteractionaddheader.moc"

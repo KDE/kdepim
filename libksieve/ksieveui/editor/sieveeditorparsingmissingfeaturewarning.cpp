@@ -102,4 +102,3 @@ void SieveEditorParsingMissingFeatureWarning::slotInActualMode()
     setVisible(false);
 }
 
-#include "sieveeditorparsingmissingfeaturewarning.moc"

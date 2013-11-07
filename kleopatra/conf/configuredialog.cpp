@@ -121,4 +121,3 @@ ConfigureDialog::~ConfigureDialog() {
 #undef addMyModule
 #undef KCM_IMPORT_PLUGIN
 
-#include "configuredialog.moc"

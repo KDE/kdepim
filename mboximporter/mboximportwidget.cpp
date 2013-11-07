@@ -53,4 +53,3 @@ void MBoxImportWidget::setImportButtonEnabled(bool enabled)
     ui->importMails->setEnabled(enabled);
 }
 
-#include "mboximportwidget.moc"

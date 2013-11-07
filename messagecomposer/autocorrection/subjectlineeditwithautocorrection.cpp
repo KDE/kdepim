@@ -65,4 +65,3 @@ void SubjectLineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
     KPIM::SpellCheckLineEdit::keyPressEvent( e );
 }
 
-#include "subjectlineeditwithautocorrection.moc"

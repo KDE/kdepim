@@ -203,4 +203,4 @@ void FavoritesController::saveFavorite( const QString &name )
   d->mModel->setStringList( d->rereadFavoritesList() );
 }
 
-#include "favoritescontroller.moc"
+#include "moc_favoritescontroller.cpp"

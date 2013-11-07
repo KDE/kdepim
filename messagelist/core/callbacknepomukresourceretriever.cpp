@@ -48,4 +48,3 @@ void CallbackNepomukResourceRetriever::resourceAvailable(const QUrl& url, const 
     item->resourceReceived( resource );
 }
 
-#include "callbacknepomukresourceretriever.moc"

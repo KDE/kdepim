@@ -109,4 +109,3 @@ void ExportJotJob::backupConfig()
 
 }
 
-#include "exportjotjob.moc"

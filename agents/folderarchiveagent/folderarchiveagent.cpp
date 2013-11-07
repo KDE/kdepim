@@ -103,4 +103,3 @@ void FolderArchiveAgent::debugCache()
 
 AKONADI_AGENT_MAIN( FolderArchiveAgent )
 
-#include "folderarchiveagent.moc"

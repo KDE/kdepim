@@ -286,4 +286,3 @@ void KNAccountManager::slotWalletOpened( bool success )
 
 //--------------------------------
 
-#include "knaccountmanager.moc"

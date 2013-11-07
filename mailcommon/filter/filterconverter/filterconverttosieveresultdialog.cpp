@@ -95,4 +95,3 @@ void FilterConvertToSieveResultDialog::writeConfig()
 }
 
 
-#include "filterconverttosieveresultdialog.moc"

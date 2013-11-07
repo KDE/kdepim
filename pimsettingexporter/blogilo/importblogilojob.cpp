@@ -67,4 +67,3 @@ void ImportBlogiloJob::restoreData()
     Q_EMIT info(i18n("Data restored."));
 }
 
-#include "importblogilojob.moc"

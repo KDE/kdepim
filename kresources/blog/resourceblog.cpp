@@ -573,4 +573,3 @@ QPair<QString, QString> ResourceBlog::blog() const {
   return qMakePair( mBlogID, mBlogName );
 }
 
-#include "resourceblog.moc"

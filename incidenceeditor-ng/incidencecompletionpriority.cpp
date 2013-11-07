@@ -159,4 +159,4 @@ bool IncidenceCompletionPriority::isDirty() const
   return false;
 }
 
-#include "incidencecompletionpriority.moc"
+#include "moc_incidencecompletionpriority.cpp"

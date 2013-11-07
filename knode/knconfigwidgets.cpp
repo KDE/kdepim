@@ -1666,5 +1666,4 @@ void KNode::CleanupWidget::slotFolderCBtoggled(bool b)
 //END: Cleanup configuration widgets -----------------------------------------
 
 //------------------------
-#include "knconfigwidgets.moc"
 

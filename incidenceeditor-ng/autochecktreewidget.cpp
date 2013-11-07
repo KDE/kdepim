@@ -159,5 +159,4 @@ void AutoCheckTreeWidget::slotDataChanged( const QModelIndex &topLeft,
   }
 }
 
-#include "autochecktreewidget.moc"
 

@@ -131,4 +131,3 @@ void AlternateLabel::setFixedType( TextType type )
   }
 }
 
-#include "alternatelabel.moc"

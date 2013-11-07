@@ -40,4 +40,3 @@ QString FilterActionWithNone::argsAsString() const
     return QString();
 }
 
-#include "filteractionwithnone.moc"

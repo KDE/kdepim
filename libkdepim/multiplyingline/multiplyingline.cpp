@@ -66,4 +66,3 @@ void MultiplyingLine::aboutToBeDeleted()
 }
 
 
-#include "multiplyingline.moc"

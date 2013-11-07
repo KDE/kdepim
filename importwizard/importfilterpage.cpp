@@ -45,4 +45,3 @@ void ImportFilterPage::setImportButtonEnabled(bool enabled)
     ui->importFilters->setEnabled(enabled);
 }
 
-#include "importfilterpage.moc"

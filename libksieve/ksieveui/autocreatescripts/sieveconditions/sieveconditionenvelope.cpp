@@ -173,4 +173,3 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
     }
     return true;
 }
-#include "sieveconditionenvelope.moc"

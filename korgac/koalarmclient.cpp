@@ -362,4 +362,3 @@ void KOAlarmClient::show()
 #endif
 }
 
-#include "koalarmclient.moc"

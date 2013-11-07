@@ -59,4 +59,3 @@ void SelectVariableModifierComboBox::setCode(const QString &code, const QString 
     }
 }
 
-#include "selectvariablemodifiercombobox.moc"

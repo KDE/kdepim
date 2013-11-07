@@ -165,4 +165,4 @@ ActivityManager::SelectComponents ActivityManager::selectComponents() const
 
 }
 
-#include "activitymanager.moc"
+#include "moc_activitymanager.cpp"

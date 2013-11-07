@@ -482,4 +482,3 @@ KBlog::BlogPost* Backend::preparePost( KBlog::BlogPost* post )
     return post;//.toKBlogPost();
 }
 
-#include "backend.moc"

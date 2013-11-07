@@ -211,4 +211,4 @@ void RedirectDialog::accept()
     }
 }
 
-#include "redirectdialog.moc"
+#include "moc_redirectdialog.cpp"

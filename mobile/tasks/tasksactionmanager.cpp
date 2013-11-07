@@ -113,4 +113,3 @@ void TasksActionManager::initActions()
   action->setText( i18n( "Archive Old Tasks" ) );
 }
 
-#include "tasksactionmanager.moc"

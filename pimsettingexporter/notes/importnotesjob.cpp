@@ -67,4 +67,3 @@ void ImportNotesJob::restoreData()
     Q_EMIT info(i18n("Data restored."));
 }
 
-#include "importnotesjob.moc"

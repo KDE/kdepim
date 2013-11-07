@@ -214,4 +214,3 @@ void SieveTextEdit::setSieveCapabilities( const QStringList &capabilities )
     setCompleterList(completerList() + capabilities);
 }
 
-#include "sievetextedit.moc"

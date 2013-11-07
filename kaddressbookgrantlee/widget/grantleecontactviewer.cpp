@@ -33,4 +33,3 @@ GrantleeContactViewer::~GrantleeContactViewer()
 {
 }
 
-#include "grantleecontactviewer.moc"

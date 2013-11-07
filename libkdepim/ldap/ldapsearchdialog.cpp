@@ -908,4 +908,4 @@ void LdapSearchDialog::slotUser2()
   }
 }
 
-#include "ldapsearchdialog.moc"
+#include "moc_ldapsearchdialog.cpp"

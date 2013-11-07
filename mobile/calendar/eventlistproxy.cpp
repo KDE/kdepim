@@ -163,4 +163,3 @@ void EventListProxy::dataChanged( const QModelIndex &topLeft, const QModelIndex 
   }
 }
 
-#include "eventlistproxy.moc"

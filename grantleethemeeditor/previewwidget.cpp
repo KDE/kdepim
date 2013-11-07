@@ -72,4 +72,3 @@ void PreviewWidget::slotExtraHeaderDisplayChanged(const QStringList &headers)
 }
 
 
-#include "previewwidget.moc"

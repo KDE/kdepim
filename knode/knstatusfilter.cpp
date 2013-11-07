@@ -222,4 +222,3 @@ KNode::StatusFilterWidget::TFCombo::~TFCombo()
 
 //--------------------------------
 
-#include "knstatusfilter.moc"

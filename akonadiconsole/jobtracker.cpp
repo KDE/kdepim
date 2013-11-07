@@ -335,4 +335,3 @@ void JobTracker::signalUpdates()
   d->unpublishedUpdates.clear();
 }
 
-#include "jobtracker.moc"

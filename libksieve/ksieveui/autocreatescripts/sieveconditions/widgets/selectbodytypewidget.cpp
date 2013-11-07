@@ -89,4 +89,3 @@ void SelectBodyTypeWidget::setCode(const QString &type, const QString &content, 
 
 
 
-#include "selectbodytypewidget.moc"

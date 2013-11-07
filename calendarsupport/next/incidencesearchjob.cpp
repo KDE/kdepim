@@ -200,4 +200,3 @@ KCalCore::Incidence::List IncidenceSearchJob::incidences() const
   return incidences;
 }
 
-#include "incidencesearchjob.moc"

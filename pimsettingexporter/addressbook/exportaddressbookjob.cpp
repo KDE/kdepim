@@ -68,10 +68,10 @@ void ExportAddressbookJob::backupResources()
     const Akonadi::AgentInstance::List list = manager->instances();
     foreach( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
-        if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_"))) {
+        if (identifier.contains(QLatin1String("akonadi_vcarddir_resource_")) || identifier.contains(QLatin1String("akonadi_contacts_resource_")) ) {
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
-            KUrl url = Utils::resourcePath(agent);
+            KUrl url = Utils::resourcePath(agent, QLatin1String("$HOME/.local/share/contacts/"));
             if (!url.isEmpty()) {
                 const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("addressbook.zip"));
                 if (fileAdded) {
@@ -137,4 +137,3 @@ void ExportAddressbookJob::backupConfig()
     Q_EMIT info(i18n("Config backup done."));
 }
 
-#include "exportaddressbookjob.moc"

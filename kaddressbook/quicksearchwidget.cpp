@@ -88,4 +88,3 @@ void QuickSearchWidget::keyPressEvent( QKeyEvent *event )
   QWidget::keyPressEvent( event );
 }
 
-#include "quicksearchwidget.moc"

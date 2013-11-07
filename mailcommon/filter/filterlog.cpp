@@ -229,4 +229,3 @@ QString FilterLog::recode( const QString &plain )
     return Qt::escape( plain );
 }
 
-#include "filterlog.moc"

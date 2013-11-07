@@ -65,4 +65,3 @@ void AddressLineEdit::focusOutEvent(QFocusEvent *ev)
     KLineEdit::focusOutEvent(ev);
 }
 
-#include "addresslineedit.moc"

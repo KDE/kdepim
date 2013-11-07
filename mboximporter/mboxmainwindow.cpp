@@ -67,4 +67,3 @@ void MBoxMainWindow::slotImportMBox()
     delete info;
 }
 
-#include "mboxmainwindow.moc"

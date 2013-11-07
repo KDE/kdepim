@@ -240,5 +240,4 @@ QString Task::Result::iconPath( VisualCode code )
 QString Task::Result::icon() const { return iconPath( code() ); }
 
 
-#include "task_p.moc"
-#include "moc_task.cpp"
+#include "moc_task_p.cpp"

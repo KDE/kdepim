@@ -1075,4 +1075,3 @@ void KNSendErrorDialog::slotHighlighted(int idx)
 }
 
 //-------------------------------
-#include "knarticlefactory.moc"

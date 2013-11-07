@@ -168,4 +168,3 @@ void KPDialog::setupPane()
       //       this, SLOT(slotMessageSelected(Akonadi::Item)) );
 
 }
-#include "kpdialog.moc"

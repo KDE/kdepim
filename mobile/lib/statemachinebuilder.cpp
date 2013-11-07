@@ -236,4 +236,3 @@ NotifyingStateMachine* StateMachineBuilder::getMachine(QObject *parent) const
   return machine;
 }
 
-#include "statemachinebuilder.moc"

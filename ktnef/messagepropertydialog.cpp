@@ -49,4 +49,3 @@ void MessagePropertyDialog::slotUser1()
   AttachPropertyDialog::saveProperty( mListView, mMessage, this );
 }
 
-#include "messagepropertydialog.moc"

@@ -76,4 +76,3 @@ void Kleo::QGpgMEImportFromKeyserverJob::resultHook( const result_type & tuple )
   mResult = get<0>( tuple );
 }
 
-#include "qgpgmeimportfromkeyserverjob.moc"

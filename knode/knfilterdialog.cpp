@@ -137,4 +137,3 @@ void KNFilterDialog::slotOk()
 
 //--------------------------------
 
-#include "knfilterdialog.moc"

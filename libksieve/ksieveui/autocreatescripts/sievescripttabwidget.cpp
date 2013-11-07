@@ -68,4 +68,3 @@ void SieveScriptTabWidget::slotTabContextMenuRequest( const QPoint &pos )
 
 }
 
-#include "sievescripttabwidget.moc"

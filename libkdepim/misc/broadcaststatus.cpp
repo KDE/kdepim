@@ -180,4 +180,3 @@ void BroadcastStatus::reset()
 
 }
 
-#include "broadcaststatus.moc"

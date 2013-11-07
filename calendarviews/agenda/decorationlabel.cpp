@@ -212,4 +212,3 @@ void DecorationLabel::useShortText( bool allowAutomaticSqueeze )
   setToolTip( mExtensiveText.isEmpty() ? mLongText : mExtensiveText );
 }
 
-#include "decorationlabel.moc"

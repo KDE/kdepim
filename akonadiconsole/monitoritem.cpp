@@ -143,4 +143,3 @@ void MonitorItem::ignoredSessionsChanged()
   Q_EMIT changed( MonitorsModel::MonitorsModel::MonitorsModel::IgnoredSessionsColumn );
 }
 
-#include "monitoritem.moc"

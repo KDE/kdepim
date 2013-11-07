@@ -51,7 +51,6 @@
 #include <QGroupBox>
 #include <KHBox>
 
-#include "kprefsdialog.moc"
 
 using namespace KPIM;
 

@@ -771,5 +771,4 @@ void ReaderStatus::updateStatus() {
     d->ping();
 }
 
-#include "moc_readerstatus.cpp"
 #include "readerstatus.moc"

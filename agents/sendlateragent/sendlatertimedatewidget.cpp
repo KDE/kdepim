@@ -73,4 +73,3 @@ void SendLaterTimeDateWidget::setDateTime(const QDateTime &datetime)
     mDateComboBox->setDate(datetime.date());
 }
 
-#include "sendlatertimedatewidget.moc"

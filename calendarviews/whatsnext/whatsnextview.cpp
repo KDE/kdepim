@@ -330,4 +330,3 @@ void WhatsNextView::showIncidence( const QString &uid )
   }
 }
 
-#include "whatsnextview.moc"

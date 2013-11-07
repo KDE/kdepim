@@ -120,4 +120,3 @@ void CombinedIncidenceEditor::save( const KCalCore::Incidence::Ptr &incidence )
   }
 }
 
-#include "moc_combinedincidenceeditor.cpp"

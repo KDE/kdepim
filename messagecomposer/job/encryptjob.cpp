@@ -201,4 +201,3 @@ void EncryptJob::process()
 
 }
 
-#include "encryptjob.moc"

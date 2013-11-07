@@ -672,4 +672,4 @@ void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
   // if we're here then no more work needs to be done.
 }
 
-#include "modelinvariantrowmapper.moc"
+#include "moc_modelinvariantrowmapper.cpp"

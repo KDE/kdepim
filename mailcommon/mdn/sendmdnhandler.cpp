@@ -136,4 +136,4 @@ void SendMdnHandler::setItem( const Akonadi::Item &item )
   d->handleMessages();
 }
 
-#include "sendmdnhandler.moc"
+#include "moc_sendmdnhandler.cpp"

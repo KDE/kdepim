@@ -140,4 +140,4 @@ QString ComposerAnchorDialog::html() const
 
 }
 
-#include "composeranchordialog.moc"
+#include "moc_composeranchordialog.cpp"

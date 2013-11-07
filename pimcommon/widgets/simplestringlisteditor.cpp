@@ -402,4 +402,3 @@ QSize SimpleStringListEditor::sizeHint() const
 }
 
 
-#include "simplestringlisteditor.moc"

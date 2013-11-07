@@ -125,4 +125,3 @@ void HtmlEditor::toggleLineNumber()
     interface->setConfigValue( QLatin1String("line-numbers"), !( result ) );
 }
 
-#include "composer/htmleditor.moc"

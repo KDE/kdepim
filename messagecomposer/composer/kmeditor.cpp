@@ -321,9 +321,7 @@ KMeditor::~KMeditor()
 
 void KMeditorPrivate::init()
 {
-#ifdef HAVE_AUTOCORRECTFEATURE
   q->showAutoCorrectButton(true);
-#endif
   QShortcut * insertMode = new QShortcut( QKeySequence( Qt::Key_Insert ), q );
   q->connect( insertMode, SIGNAL(activated()),
               q, SLOT(slotChangeInsertMode()) );
@@ -840,4 +838,4 @@ void KMeditor::insertPlainTextImplementation()
   }
 }
 
-#include "kmeditor.moc"
+#include "moc_kmeditor.cpp"

@@ -67,4 +67,3 @@ void KJotsReplaceNextDialog::onHandleReplace()
     accept();
 }
 
-#include "kjotsreplacenextdialog.moc"

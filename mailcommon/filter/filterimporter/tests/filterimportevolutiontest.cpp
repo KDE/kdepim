@@ -37,4 +37,3 @@ void FilterImportEvolutiontest::testImportFilters()
 }
 
 
-#include "filterimportevolutiontest.moc"

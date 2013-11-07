@@ -27,4 +27,3 @@ EditorBase::~EditorBase()
 {
 }
 
-#include "editorbase.moc"

@@ -351,4 +351,3 @@ void Kleo::DNAttributeOrderConfigWidget::slotRightButtonClicked() {
 
 void Kleo::DNAttributeOrderConfigWidget::virtual_hook( int, void* ) {}
 
-#include "dnattributeorderconfigwidget.moc"
