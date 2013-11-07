@@ -16,6 +16,8 @@
 */
 
 #include "contactgrantleeprintobject.h"
+#include <KLocale>
+#include <KGlobal>
 
 using namespace KABPrinting;
 
@@ -111,5 +113,15 @@ QString ContactGrantleePrintObject::preferredEmail() const
 QString ContactGrantleePrintObject::role() const
 {
     return mAddress.role();
+}
+
+QString ContactGrantleePrintObject::birthday() const
+{
+    return KGlobal::locale()->formatDate( mAddress.birthday().date(), KLocale::LongDate );
+}
+
+QString ContactGrantleePrintObject::department() const
+{
+    return mAddress.department();
 }
 

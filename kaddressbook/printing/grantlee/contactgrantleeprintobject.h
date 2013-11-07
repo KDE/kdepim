@@ -40,6 +40,8 @@ class ContactGrantleePrintObject : public QObject
     Q_PROPERTY(QString title READ title)
     Q_PROPERTY(QString preferredEmail READ preferredEmail)
     Q_PROPERTY(QString role READ role)
+    Q_PROPERTY(QString birthday READ birthday)
+    Q_PROPERTY(QString department READ department)
     //Add more functions
 public:
     explicit ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent=0);
@@ -60,6 +62,8 @@ public:
     QString title() const;
     QString preferredEmail() const;
     QString role() const;
+    QString birthday() const;
+    QString department() const;
 
 private:
     KABC::Addressee mAddress;
