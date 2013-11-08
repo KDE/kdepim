@@ -53,7 +53,7 @@ QString ContactFields::label( Field field )
     return KABC::Addressee::birthdayLabel();
     break;
   case Anniversary:
-    return i18n( "Anniversary" );
+    return i18nc( "The wedding anniversary of a contact", "Anniversary" );
     break;
   case HomeAddressStreet:
     return KABC::Addressee::homeAddressStreetLabel();

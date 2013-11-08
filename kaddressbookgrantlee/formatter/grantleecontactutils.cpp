@@ -25,7 +25,7 @@ QString GrantleeContactUtils::variableI18n(const QString &variable)
     if (variable == QLatin1String("birthdayi18n")) {
         return i18n( "Birthday" );
     } else if (variable == QLatin1String("anniversaryi18n")) {
-        return i18n("Anniversary");
+        return i18nc( "The wedding anniversary of a contact", "Anniversary" );
     } else if (variable == QLatin1String("emailsi18n")) {
         return i18n( "Emails" );
     } else if (variable == QLatin1String("websitei18n")) {
