@@ -73,6 +73,8 @@ void ExportAlarmJob::backupResources()
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_kalarm_resource_"))) {
             backupResourceFile(agent, Utils::alarmPath());
+        } else if (identifier.contains(QLatin1String("akonadi_kalarm_dir_resource_"))) {
+            //TODO
         }
     }
 
