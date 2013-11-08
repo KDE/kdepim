@@ -19,10 +19,13 @@
 #include "contactgrantleeprintaddressobject.h"
 #include "contactgrantleeprintphoneobject.h"
 #include "contactgrantleeprintimobject.h"
+
 #include <KABC/Address>
 #include <KABC/PhoneNumber>
 #include <KLocale>
 #include <KGlobal>
+
+#include <QBuffer>
 
 using namespace KABPrinting;
 
@@ -169,4 +172,13 @@ QString ContactGrantleePrintObject::addressBookName() const
 {
     const QString addressBookName = mAddress.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ) );
     return addressBookName;
+}
+
+QString ContactGrantleePrintObject::imgToDataUrl( const QImage &image )
+{
+    QByteArray ba;
+    QBuffer buffer( &ba );
+    buffer.open( QIODevice::WriteOnly );
+    image.save( &buffer, "PNG" );
+    return QString::fromLatin1("data:image/%1;base64,%2").arg( QString::fromLatin1( "PNG" ), QString::fromLatin1( ba.toBase64() ) );
 }

@@ -77,6 +77,7 @@ public:
     QVariant instantManging() const;
 
 private:
+    QString imgToDataUrl( const QImage &image );
     QList<ContactGrantleePrintAddressObject*> mListAddress;
     QList<ContactGrantleePrintPhoneObject*> mListPhones;
     QList<ContactGrantleePrintImObject*> mListIm;
