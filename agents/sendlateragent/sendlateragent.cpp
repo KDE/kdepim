@@ -54,6 +54,7 @@ SendLaterAgent::SendLaterAgent(const QString &id)
     changeRecorder()->itemFetchScope().setFetchModificationTime( false );
     changeRecorder()->setChangeRecordingEnabled( false );
     changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
+    setNeedsNetwork(true);
 
     if (SendLaterAgentSettings::enabled()) {
 #ifdef DEBUG_SENDLATERAGENT
