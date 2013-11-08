@@ -128,6 +128,7 @@ protected slots:
   void exportSelectionToPlainText();
   void exportSelectionToXml();
   void printSelection();
+  void printPreviewSelection();
 
   void deletePage();
   void deleteBook();
@@ -172,6 +173,7 @@ private slots:
   void updateConfiguration();
 
 private:
+  void print(QPrinter &printer);
   KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;
   KJotsBrowser   *browser;

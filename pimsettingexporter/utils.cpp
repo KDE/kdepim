@@ -108,6 +108,10 @@ KUrl Utils::adaptResourcePath(KSharedConfigPtr resourceConfig, const QString &st
     if (!url.path().contains(QDir::homePath())) {
         //qDebug()<<" url "<<url.path();
         newUrl.setPath(QDir::homePath() + QLatin1Char('/') + storedData + url.fileName());
+        if (!QDir(QDir::homePath() + QLatin1Char('/') + storedData).exists()) {
+            QDir dir(QDir::homePath());
+            dir.mkdir(storedData);
+        }
     }
     if (QFile(newUrl.path()).exists()) {
         QString newFileName = newUrl.path();
@@ -214,6 +218,7 @@ QString Utils::storeResources(KZip *archive, const QString &identifier, const QS
 {
     const QString agentFileName = identifier + QLatin1String("rc");
     const QString configFileName = KStandardDirs::locateLocal( "config", agentFileName );
+    qDebug()<<"configFileName "<<configFileName<<"agentFileName "<<configFileName;
 
     KSharedConfigPtr resourceConfig = KSharedConfig::openConfig( configFileName );
     KTemporaryFile tmp;
