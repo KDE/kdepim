@@ -57,7 +57,7 @@ void ImportAddressbookJob::start()
 void ImportAddressbookJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    restoreResourceFile(QString::fromLatin1("akonadi_vcard_resource"), Utils::addressbookPath(), storeAddressbook);
+    restoreResourceFile(QString::fromLatin1("akonadi_vcard_resource"), Utils::addressbookPath(), QDir::homePath() + QLatin1String("/.kde/share/apps/kabc/"));
 
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
@@ -77,13 +77,10 @@ void ImportAddressbookJob::restoreResources()
 
                     QString filename(file->name());
                     //TODO adapt filename otherwise it will use all the time the same filename.
-                    qDebug()<<" filename :"<<filename;
-
                     KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
                     //TODO fix default path
-                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAddressbook);
-
+                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, QDir::homePath() + QLatin1String("/.local/share/contacts/"));
                     const QString dataFile = value.akonadiResources;
                     const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
                     if (dataResouceEntry->isFile()) {
@@ -167,7 +164,8 @@ void ImportAddressbookJob::storeAddressBookArchiveResource(const KArchiveDirecto
                 resourceFiles files;
                 Q_FOREACH(const QString &name, lst) {
                     if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_vcarddir_resource_")) ||
-                                                               name.contains(QLatin1String("akonadi_vcard_resource_")))) {
+                                                               name.contains(QLatin1String("akonadi_vcard_resource_")) ||
+                                                               name.contains(QLatin1String("akonadi_contacts_resource_")))) {
                         files.akonadiConfigFile = archPath + name;
                     } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {
                         files.akonadiAgentConfigFile = archPath + name;

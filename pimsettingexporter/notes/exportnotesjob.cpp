@@ -61,7 +61,6 @@ void ExportNotesJob::start()
     }
 }
 
-
 void ExportNotesJob::backupConfig()
 {
     showInfo(i18n("Backing up config..."));
