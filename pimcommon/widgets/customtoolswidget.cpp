@@ -40,6 +40,7 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent)
     mStackedWidget->addWidget(mTranslatorWidget);
     connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SLOT(slotHideTools()));
     connect(mTranslatorWidget, SIGNAL(translatorWasClosed()), this, SLOT(slotHideTools()));
+    mStackedWidget->setCurrentWidget(mTranslatorWidget);
 }
 
 CustomToolsWidget::~CustomToolsWidget()
