@@ -50,6 +50,7 @@ class ContactGrantleePrintObject : public QObject
     Q_PROPERTY(QVariant instantManging READ instantManging)
     Q_PROPERTY(QString addressBookName READ addressBookName)
     Q_PROPERTY(QString photo READ photo)
+    Q_PROPERTY(QString logo READ logo)
     //Add more functions
 public:
     explicit ContactGrantleePrintObject(const KABC::Addressee &address, QObject *parent=0);
@@ -77,6 +78,7 @@ public:
     QString addressBookName() const;
     QVariant instantManging() const;    
     QString photo() const;
+    QString logo() const;
 private:
     QString imgToDataUrl( const QImage &image ) const;
     QList<ContactGrantleePrintAddressObject*> mListAddress;
