@@ -36,6 +36,7 @@ TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
 
     setMainWidget( mEdit );
     readConfig();
+    enableButton(User1, !mEdit->toPlainText().isEmpty());
 }
 
 TranslatorDebugDialog::~TranslatorDebugDialog()
@@ -46,6 +47,7 @@ TranslatorDebugDialog::~TranslatorDebugDialog()
 void TranslatorDebugDialog::setDebug(const QString &debugStr)
 {
     mEdit->setPlainText(debugStr);
+    enableButton(User1, !debugStr.isEmpty());
 }
 
 void TranslatorDebugDialog::readConfig()
