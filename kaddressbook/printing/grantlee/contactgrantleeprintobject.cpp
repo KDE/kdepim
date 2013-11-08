@@ -26,6 +26,7 @@
 #include <KGlobal>
 
 #include <QBuffer>
+#include <QDebug>
 
 using namespace KABPrinting;
 
@@ -174,7 +175,18 @@ QString ContactGrantleePrintObject::addressBookName() const
     return addressBookName;
 }
 
-QString ContactGrantleePrintObject::imgToDataUrl( const QImage &image )
+QString ContactGrantleePrintObject::photo() const
+{
+    if (mAddress.photo().isEmpty()) {
+        return QString();
+    } else {
+        const QString photoStr = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
+                    .arg( imgToDataUrl( mAddress.photo().data() ), QString::number( 60 ), QString::number( 60 ));
+        return photoStr;
+    }
+}
+
+QString ContactGrantleePrintObject::imgToDataUrl( const QImage &image ) const
 {
     QByteArray ba;
     QBuffer buffer( &ba );
