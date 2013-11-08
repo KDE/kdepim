@@ -181,7 +181,7 @@ QString ContactGrantleePrintObject::photo() const
         return QString();
     } else {
         const QString photoStr = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
-                    .arg( imgToDataUrl( mAddress.photo().data() ), QString::number( 60 ), QString::number( 60 ));
+                .arg( imgToDataUrl( mAddress.photo().data() ), QString::number( 60 ), QString::number( 60 ));
         return photoStr;
     }
 }
@@ -201,7 +201,7 @@ QString ContactGrantleePrintObject::logo() const
         return QString();
     } else {
         const QString photoStr = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
-                    .arg( imgToDataUrl( mAddress.logo().data() ), QString::number( 60 ), QString::number( 60 ));
+                .arg( imgToDataUrl( mAddress.logo().data() ), QString::number( 60 ), QString::number( 60 ));
         return photoStr;
     }
 }
