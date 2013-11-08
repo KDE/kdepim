@@ -81,6 +81,7 @@
 #include <KGlobalSettings>
 #include <KXMLGUIClient>
 #include <KProcess>
+#include <KPrintPreview>
 
 // KMime
 #include <KMime/KMimeMessage>
@@ -391,6 +392,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   exportMenu->menu()->addAction( action );
 
   KStandardAction::print(this, SLOT(printSelection()), actionCollection);
+  KStandardAction::printPreview(this, SLOT(printPreviewSelection()), actionCollection);
 
   if ( !KJotsSettings::splitterSizes().isEmpty() )
   {
@@ -1094,13 +1096,24 @@ void KJotsWidget::exportSelectionToXml()
   m_loader->setTheme(currentTheme);
 }
 
+void KJotsWidget::printPreviewSelection()
+{
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setDocName(QLatin1String("KJots_Print"));
+    printer.setFullPage(false);
+    printer.setCreator(QLatin1String("KJots"));
+    KPrintPreview previewdlg( &printer, 0 );
+    print(printer);
+    previewdlg.exec();
+}
+
 void KJotsWidget::printSelection()
 {
 
-  QPrinter *printer = new QPrinter();
-  printer->setDocName(QLatin1String("KJots_Print"));
-  printer->setFullPage(false);
-  printer->setCreator(QLatin1String("KJots"));
+  QPrinter printer(QPrinter::HighResolution);
+  printer.setDocName(QLatin1String("KJots_Print"));
+  printer.setFullPage(false);
+  printer.setCreator(QLatin1String("KJots"));
   //Not supported in Qt?
   //printer->setPageSelection(QPrinter::ApplicationSide);
 
@@ -1109,7 +1122,7 @@ void KJotsWidget::printSelection()
   //are before I setup the printer?
 
 
-  QPointer<QPrintDialog> printDialog = new QPrintDialog(printer, this);
+  QPointer<QPrintDialog> printDialog = new QPrintDialog(&printer, this);
 
   QAbstractPrintDialog::PrintDialogOptions options = printDialog->enabledOptions();
   options &= ~QAbstractPrintDialog::PrintPageRange;
@@ -1119,8 +1132,15 @@ void KJotsWidget::printSelection()
 
   printDialog->setWindowTitle(i18n("Send To Printer"));
   if (printDialog->exec() == QDialog::Accepted) {
+      print(printer);
+  }
+  delete printDialog;
+}
+
+void KJotsWidget::print(QPrinter &printer)
+{
     QTextDocument printDocument;
-    if ( printer->printRange() == QPrinter::Selection )
+    if ( printer.printRange() == QPrinter::Selection )
     {
       printDocument.setHtml( activeEditor()->textCursor().selection().toHtml() );
     } else {
@@ -1131,7 +1151,7 @@ void KJotsWidget::printSelection()
       m_loader->setTheme( currentTheme );
     }
 
-    QPainter p(printer);
+    QPainter p(&printer);
 
     // Check that there is a valid device to print to.
     if (p.isActive()) {
@@ -1158,7 +1178,7 @@ void KJotsWidget::printSelection()
 
       doc->setPageSize(body.size());
 
-      int docCopies = printer->numCopies();
+      int docCopies = printer.numCopies();
       for (int copy = 0; copy < docCopies; ++copy) {
 
         int lastPage = layout->pageCount();
@@ -1193,15 +1213,11 @@ void KJotsWidget::printSelection()
           p.restore();
 
           if ( (page+1) <= lastPage ) {
-            printer->newPage();
+            printer.newPage();
           }
         }
       }
     }
-  }
-  delete printDialog;
-
-  delete printer;
 
 }
 

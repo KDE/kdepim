@@ -16,6 +16,17 @@
 */
 
 #include "contactgrantleeprintobject.h"
+#include "contactgrantleeprintaddressobject.h"
+#include "contactgrantleeprintphoneobject.h"
+#include "contactgrantleeprintimobject.h"
+
+#include <KABC/Address>
+#include <KABC/PhoneNumber>
+#include <KLocale>
+#include <KGlobal>
+
+#include <QBuffer>
+#include <QDebug>
 
 using namespace KABPrinting;
 
@@ -23,11 +34,31 @@ ContactGrantleePrintObject::ContactGrantleePrintObject(const KABC::Addressee &ad
     : QObject(parent),
       mAddress(address)
 {
+    Q_FOREACH ( const KABC::Address &addr, address.addresses() ) {
+        mListAddress<<new ContactGrantleePrintAddressObject(addr);
+    }
+    Q_FOREACH ( const KABC::PhoneNumber &phone, address.phoneNumbers() ) {
+        mListPhones<<new ContactGrantleePrintPhoneObject(phone);
+    }
+    const QStringList customs = mAddress.customs();
+    if ( !customs.empty() ) {
+        Q_FOREACH ( const QString &custom, customs ) {
+            if ( custom.startsWith( QLatin1String( "messaging/" ) ) ) {
+                const int pos = custom.indexOf( QLatin1Char( ':' ) );
+                QString key = custom.left( pos );
+                key.remove( QLatin1String( "-All" ) );
+                const QString value = custom.mid( pos + 1 );
+                mListIm << new ContactGrantleePrintImObject(key, value);
+            }
+        }
+    }
 }
 
 ContactGrantleePrintObject::~ContactGrantleePrintObject()
 {
-
+    qDeleteAll(mListAddress);
+    qDeleteAll(mListPhones);
+    qDeleteAll(mListIm);
 }
 
 QString ContactGrantleePrintObject::realName() const
@@ -113,3 +144,64 @@ QString ContactGrantleePrintObject::role() const
     return mAddress.role();
 }
 
+QString ContactGrantleePrintObject::birthday() const
+{
+    return KGlobal::locale()->formatDate( mAddress.birthday().date(), KLocale::LongDate );
+}
+
+QString ContactGrantleePrintObject::department() const
+{
+    return mAddress.department();
+}
+
+QVariant ContactGrantleePrintObject::addresses() const
+{
+    return QVariant::fromValue(mListAddress);
+}
+
+QVariant ContactGrantleePrintObject::phones() const
+{
+    return QVariant::fromValue(mListAddress);
+}
+
+QVariant ContactGrantleePrintObject::instantManging() const
+{
+    return QVariant::fromValue(mListIm);
+}
+
+QString ContactGrantleePrintObject::addressBookName() const
+{
+    const QString addressBookName = mAddress.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ) );
+    return addressBookName;
+}
+
+QString ContactGrantleePrintObject::photo() const
+{
+    if (mAddress.photo().isEmpty()) {
+        return QString();
+    } else {
+        const QString photoStr = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
+                .arg( imgToDataUrl( mAddress.photo().data() ), QString::number( 60 ), QString::number( 60 ));
+        return photoStr;
+    }
+}
+
+QString ContactGrantleePrintObject::imgToDataUrl( const QImage &image ) const
+{
+    QByteArray ba;
+    QBuffer buffer( &ba );
+    buffer.open( QIODevice::WriteOnly );
+    image.save( &buffer, "PNG" );
+    return QString::fromLatin1("data:image/%1;base64,%2").arg( QString::fromLatin1( "PNG" ), QString::fromLatin1( ba.toBase64() ) );
+}
+
+QString ContactGrantleePrintObject::logo() const
+{
+    if (mAddress.logo().isEmpty()) {
+        return QString();
+    } else {
+        const QString photoStr = QString::fromLatin1("<img src=\"%1\" width=\"%2\" height=\"%3\"> &nbsp;")
+                .arg( imgToDataUrl( mAddress.logo().data() ), QString::number( 60 ), QString::number( 60 ));
+        return photoStr;
+    }
+}
