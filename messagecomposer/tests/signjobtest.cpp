@@ -36,6 +36,7 @@
 #include <messagecomposer/job/signjob.h>
 #include <messagecomposer/job/transparentjob.h>
 
+#include <messagecore/helpers/nodehelper.h>
 #include <messagecore/tests/util.h>
 
 #include <stdlib.h>
@@ -130,6 +131,40 @@ void SignJobTest::testHeaders()
   QCOMPARE( result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit );
 }
 
+void SignJobTest::testRecommentationRFC3156()
+{
+  std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
+
+  QString data = QString::fromUtf8( "Magic foo\nFrom test\n\n-- quaak\nOhno");
+  KMime::Headers::contentEncoding cte = KMime::Headers::CEquPr;
+
+  MessageComposer::Composer *composer = new MessageComposer::Composer;
+  MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
+
+  QVERIFY( composer );
+  QVERIFY( sJob );
+
+  KMime::Content* content = new KMime::Content;
+  content->setBody( data.toUtf8() );
+
+  sJob->setContent( content );
+  sJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
+  sJob->setSigningKeys( keys );
+
+  VERIFYEXEC( sJob );
+
+  KMime::Content *result = sJob->content();
+  result->assemble();
+  kDebug() << result->encodedContent();
+
+  QByteArray body = MessageCore::NodeHelper::firstChild( result )->body();
+  QCOMPARE( QString::fromUtf8( body ),
+      QString::fromUtf8( "Magic foo\nFrom=20test\n\n=2D- quaak\nOhno" ) );
+
+  ComposerTestUtil::verify( true, false, result, data.toUtf8(),
+           Kleo::OpenPGPMIMEFormat, cte );
+
+}
 
 bool SignJobTest::checkSignJob( MessageComposer::SignJob* sJob )
 {

@@ -28,6 +28,7 @@
 #include "util.h"
 
 #include <kdebug.h>
+#include <kmime/kmime_headers.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
@@ -165,6 +166,51 @@ void SignJob::process()
   if( d->format & Kleo::InlineOpenPGPFormat ) {
     content = d->content->body();
   } else if( !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
+
+    // replace "From " and "--" at the beginning of lines
+    // with encoded versions according to RfC 3156, 3
+    // Note: If any line begins with the string "From ", it is strongly
+    //   suggested that either the Quoted-Printable or Base64 MIME encoding
+    //   be applied.
+    if (d->content->contentTransferEncoding()->encoding() == KMime::Headers::CEquPr ||
+        d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit )
+    {
+      QByteArray body = d->content->body();
+      bool changed = false;
+      QStringList search;
+      QStringList replacements;
+
+      search << QString::fromAscii( "From " )
+             << QString::fromAscii( "from " )
+             << QString::fromAscii( "-" );
+      replacements << QString::fromAscii( "From=20" )
+                   << QString::fromAscii( "from=20" )
+                   << QString::fromAscii( "=2D" );
+
+      for ( int i = 0; i < search.size(); ++i ) {
+        QString start = QString::fromAscii( "\n" ) % search[i];
+        QString replace = QString::fromAscii( "\n" ) % replacements[i];
+        if ( body.indexOf( start.toAscii() ) > -1 ){
+          changed = true;
+          body.replace( start.toAscii(), replace.toAscii() );
+        }
+
+        if ( body.startsWith( search[i].toAscii() ) )
+        {
+          changed = true;
+          body.replace( 0, search[i].size(), replacements[i].toAscii());
+        }
+      }
+
+      if ( changed ) {
+        kDebug() << "Content changed";
+        d->content->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
+        d->content->assemble();
+        d->content->setBody( body );
+        d->content->contentTransferEncoding()->setDecoded( false );
+      }
+    }
+
     content = KMime::LFtoCRLF( d->content->encodedContent() );
   } else {                    // SMimeOpaque doesn't need LFtoCRLF, else it gets munged
     content = d->content->encodedContent();
