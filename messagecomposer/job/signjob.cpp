@@ -173,8 +173,7 @@ void SignJob::process()
     //   suggested that either the Quoted-Printable or Base64 MIME encoding
     //   be applied.
     if (d->content->contentTransferEncoding()->encoding() == KMime::Headers::CEquPr ||
-        d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit )
-    {
+        d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit ) {
       QByteArray body = d->content->body();
       bool changed = false;
       QStringList search;
@@ -195,8 +194,7 @@ void SignJob::process()
           body.replace( start.toAscii(), replace.toAscii() );
         }
 
-        if ( body.startsWith( search[i].toAscii() ) )
-        {
+        if ( body.startsWith( search[i].toAscii() ) ) {
           changed = true;
           body.replace( 0, search[i].size(), replacements[i].toAscii());
         }
