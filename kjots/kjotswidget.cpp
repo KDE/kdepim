@@ -100,7 +100,7 @@
 #include <kdebug.h>
 
 #include <memory>
-#include "notelockattribute.h"
+#include "noteshared/attributes/notelockattribute.h"
 #include "localresourcecreator.h"
 #include <krandom.h>
 #include "kjotsbrowser.h"
@@ -149,7 +149,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   ItemFetchScope scope;
   scope.fetchFullPayload( true ); // Need to have full item when adding it to the internal data structure
   scope.fetchAttribute< EntityDisplayAttribute >();
-  scope.fetchAttribute< NoteLockAttribute >();
+  scope.fetchAttribute< NoteShared::NoteLockAttribute >();
 
   ChangeRecorder *monitor = new ChangeRecorder( this );
   monitor->fetchCollection( true );
@@ -747,7 +747,7 @@ void KJotsWidget::deletePage()
   if ( !item.isValid() )
     return;
 
-  if( item.hasAttribute<NoteLockAttribute>() ) {
+  if( item.hasAttribute<NoteShared::NoteLockAttribute>() ) {
 
         KMessageBox::information(topLevelWidget(),
             i18n("This page is locked. You can only delete it when you first unlock it."),
@@ -780,7 +780,7 @@ void KJotsWidget::deleteBook()
   if ( col.parentCollection() == Collection::root() )
     return;
 
-  if( col.hasAttribute<NoteLockAttribute>() ) {
+  if( col.hasAttribute<NoteShared::NoteLockAttribute>() ) {
 
       KMessageBox::information(topLevelWidget(),
           i18n("This book is locked. You can only delete it when you first unlock it."),

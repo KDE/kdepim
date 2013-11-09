@@ -50,7 +50,7 @@
 
 #include <kdebug.h>
 #include "kjotsmodel.h"
-#include "notelockattribute.h"
+#include "noteshared/attributes/notelockattribute.h"
 
 
 #ifndef KDE_USE_FINAL
@@ -172,7 +172,7 @@ void KJotsEdit::tryDisableEditing()
   if ( !item.isValid() )
     return setReadOnly(true);
 
-  if ( item.hasAttribute<NoteLockAttribute>() )
+  if ( item.hasAttribute<NoteShared::NoteLockAttribute>() )
     return setReadOnly(true);
 
   setReadOnly(false);
