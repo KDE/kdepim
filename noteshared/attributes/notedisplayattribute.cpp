@@ -20,6 +20,8 @@
 
 #include <QByteArray>
 
+using namespace NoteShared;
+
 NoteDisplayAttribute::NoteDisplayAttribute()
     : Akonadi::Attribute(),
       mFont(KGlobalSettings::generalFont()),

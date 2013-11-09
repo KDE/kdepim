@@ -18,7 +18,7 @@
 #include "notealarmattribute.h"
 
 #include <QByteArray>
-
+using namespace NoteShared;
 NoteAlarmAttribute::NoteAlarmAttribute()
     : Akonadi::Attribute()
 {

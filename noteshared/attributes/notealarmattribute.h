@@ -18,11 +18,12 @@
 #ifndef NOTE_ALARM_ATTRIBUTE_H
 #define NOTE_ALARM_ATTRIBUTE_H
 
+#include "noteshared_export.h"
 #include <Akonadi/Attribute>
 
 #include <KDateTime>
-
-class NoteAlarmAttribute : public Akonadi::Attribute
+namespace NoteShared {
+class NOTESHARED_EXPORT NoteAlarmAttribute : public Akonadi::Attribute
 {
 public:
     NoteAlarmAttribute();
@@ -42,5 +43,6 @@ public:
 private:
     KDateTime mDateTime;
 };
+}
 
 #endif

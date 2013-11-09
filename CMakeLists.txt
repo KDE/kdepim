@@ -254,6 +254,7 @@ else()
   # These targets will always be built before anything else.
 
   add_subdirectory(ontologies) # must be the first one.
+  add_subdirectory(noteshared)
   add_subdirectory(akonadi_next)
   add_subdirectory(libkdepim)
   add_subdirectory(calendarsupport)

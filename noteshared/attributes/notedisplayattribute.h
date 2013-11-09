@@ -18,6 +18,7 @@
 #ifndef NOTE_DISPLAY_ATTRIBUTE_H
 #define NOTE_DISPLAY_ATTRIBUTE_H
 
+#include "noteshared_export.h"
 #include <Akonadi/Attribute>
 
 #include <QColor>
@@ -25,7 +26,8 @@
 #include <QFont>
 #include <QPoint>
 
-class NoteDisplayAttribute : public Akonadi::Attribute
+namespace NoteShared {
+class NOTESHARED_EXPORT NoteDisplayAttribute : public Akonadi::Attribute
 {
 public:
     NoteDisplayAttribute();
@@ -90,5 +92,5 @@ private:
     bool mKeepBelove;
     bool mKeepBelow;
 };
-
+}
 #endif

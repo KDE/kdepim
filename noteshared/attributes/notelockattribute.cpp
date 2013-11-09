@@ -22,7 +22,7 @@
 #include "notelockattribute.h"
 
 #include <QByteArray>
-
+using namespace NoteShared;
 NoteLockAttribute::NoteLockAttribute()
     : Akonadi::Attribute()
 {

@@ -22,9 +22,10 @@
 #ifndef KJOTS_LOCK_ATTRIBUTE_H
 #define KJOTS_LOCK_ATTRIBUTE_H
 
+#include "noteshared_export.h"
 #include <Akonadi/Attribute>
-
-class NoteLockAttribute : public Akonadi::Attribute
+namespace NoteShared {
+class NOTESHARED_EXPORT NoteLockAttribute : public Akonadi::Attribute
 {
 public:
     NoteLockAttribute();
@@ -38,5 +39,6 @@ public:
 
     void deserialize( const QByteArray &data );
 };
+}
 
 #endif
