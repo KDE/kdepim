@@ -43,6 +43,7 @@ class SignJobTest : public QObject
     void testContentDirect();
     void testContentChained();
     void testHeaders();
+    void testRecommentationRFC3156();
 
   private:
     bool checkSignJob( MessageComposer::SignJob* sJob );
