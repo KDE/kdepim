@@ -87,8 +87,8 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
                 if (title.startsWith(QLatin1String("www."))) {
                     const QString completUrl =  url.scheme() + QLatin1String("://") + title;
                     if ( completUrl != href &&
-                        href != (completUrl + QLatin1Char('/'))){
-                       foundScam = true;
+                         href != (completUrl + QLatin1Char('/'))) {
+                        foundScam = true;
                     }
                 } else {
                     if (href != title) {
@@ -125,7 +125,6 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
         if (!foundScam) {
             if (ScamCheckShortUrl::isShortUrl(url)) {
                 details += QLatin1String("<li>") + i18n("This email contains a shorturl (%1). It can redirect to another server.", addWarningColor(url.toString())) + QLatin1String("</li>");
-                //TODO allow to show long url
                 foundScam = true;
             }
         }
