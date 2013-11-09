@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui version="10" name="kjots" >
+<kpartgui version="11" name="kjots" >
  <MenuBar>
 
   <Menu name="file">
@@ -12,6 +12,7 @@
    <Action name="del_folder"/>
    <Separator/>
    <Action name="rename_entry"/>
+   <Separator/>
    <Action name="file_print"/>
    <Action name="file_print_preview"/>
    <Separator/>
