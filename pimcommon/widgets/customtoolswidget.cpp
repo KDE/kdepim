@@ -63,6 +63,18 @@ void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
     }
 }
 
+CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
+{
+    if (mStackedWidget->currentWidget() == mTranslatorWidget)
+        return TranslatorTool;
+    else if (mStackedWidget->currentWidget() == mShortUrlWidget)
+        return ShortUrlTool;
+    else {
+        qDebug()<<" unknow tool";
+        return TranslatorTool;
+    }
+}
+
 void CustomToolsWidget::slotHideTools()
 {
     hide();

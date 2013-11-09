@@ -40,6 +40,8 @@ public:
 
     void switchToTool(CustomToolsWidget::ToolType type);
 
+    CustomToolsWidget::ToolType toolType() const;
+
 private Q_SLOTS:
     void slotHideTools();
 
