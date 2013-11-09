@@ -64,14 +64,12 @@ void EncryptJobTest::testContentDirect() {
   part->setWordWrappingEnabled(false);
   part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
 
-  
   MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob( part, composer );
-  
+
   QVERIFY( composer );
   QVERIFY( mainTextJob );
 
-
-  mainTextJob->exec();
+  VERIFYEXEC( mainTextJob );
 
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
 
@@ -87,9 +85,7 @@ void EncryptJobTest::testContentDirect() {
   eJob->setRecipients( recipients );
   eJob->setEncryptionKeys( keys );
 
-  bool encrWorked = checkEncryption( eJob );
-  QVERIFY( encrWorked );
-  
+  checkEncryption( eJob );
 
 }
 
@@ -103,14 +99,13 @@ void EncryptJobTest::testContentChained()
   part->setWordWrappingEnabled(false);
   part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
 
-
   MessageComposer::MainTextJob *mainTextJob = new MessageComposer::MainTextJob( part, composer );
 
   QVERIFY( composer );
   QVERIFY( mainTextJob );
 
-  mainTextJob->exec();  
-  
+  VERIFYEXEC( mainTextJob );
+
   std::vector< GpgME::Key > keys = MessageCore::Test::getKeys();
   kDebug() << "done getting keys";
   MessageComposer::EncryptJob* eJob = new MessageComposer::EncryptJob( composer );
@@ -122,9 +117,8 @@ void EncryptJobTest::testContentChained()
   eJob->setRecipients( recipients );
   eJob->setEncryptionKeys( keys );
   eJob->setContent( mainTextJob->content() );
- 
-  bool eWorked = checkEncryption( eJob );
-  QVERIFY( eWorked );
+
+  checkEncryption( eJob );
 
 }
 
@@ -168,16 +162,16 @@ void EncryptJobTest::testHeaders()
 } 
 
 
-bool EncryptJobTest::checkEncryption( MessageComposer::EncryptJob* eJob )
+void EncryptJobTest::checkEncryption( MessageComposer::EncryptJob* eJob )
 {
 
-  eJob->exec();
+  VERIFYEXEC( eJob );
 
   KMime::Content* result = eJob->content();
   Q_ASSERT( result );
   result->assemble();
 
-  return ComposerTestUtil::verifyEncryption( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat );
+  ComposerTestUtil::verifyEncryption( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat );
 
 }
 
