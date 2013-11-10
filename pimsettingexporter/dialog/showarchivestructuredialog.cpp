@@ -16,10 +16,12 @@
 */
 
 #include "showarchivestructuredialog.h"
+#include "pimsettingexporter/utils.h"
 
 #include <KDialog>
 #include <KLocale>
 #include <KZip>
+#include <KMessageBox>
 
 #include <QTreeWidget>
 
@@ -41,7 +43,29 @@ ShowArchiveStructureDialog::~ShowArchiveStructureDialog()
 
 void ShowArchiveStructureDialog::fillTree(const KUrl &archiveUrl)
 {
-    //TODO
+    KZip *zip = new KZip(archiveUrl.path());
+    bool result = zip->open(QIODevice::ReadOnly);
+    if (!result) {
+        KMessageBox::error(this, i18n("Archive cannot be opened in read mode."), i18n("Can not open archive"));
+        delete zip;
+        return;
+    }
+    const KArchiveDirectory *topDirectory = zip->directory();
+    QString topLevel = Utils::mailsPath();
+    topDirectory->entry(topLevel);
+    if (topDirectory) {
+        addTopItem(QLatin1String("kmail"));
+    }
+
+    delete zip;
+}
+
+QTreeWidgetItem* ShowArchiveStructureDialog::addTopItem(const QString &name)
+{
+    QTreeWidgetItem *item = new QTreeWidgetItem;
+    item->setText(0,name);
+    mTreeWidget->addTopLevelItem(item);
+    return item;
 }
 
 #include "moc_showarchivestructuredialog.cpp"

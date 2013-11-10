@@ -12,7 +12,7 @@ target_link_libraries(selectiontreewidget_gui
   ${KDE4_KDEUI_LIBS}
 )
 
-set(showarchivestructuredialog_gui_SRCS showarchivestructuredialog_gui.cpp ../dialog/showarchivestructuredialog.cpp )
+set(showarchivestructuredialog_gui_SRCS showarchivestructuredialog_gui.cpp ../dialog/showarchivestructuredialog.cpp ../utils.cpp)
 kde4_add_executable(showarchivestructuredialog_gui TEST ${showarchivestructuredialog_gui_SRCS})
 target_link_libraries(showarchivestructuredialog_gui
   ${QT_QTTEST_LIBRARY}
@@ -20,4 +20,7 @@ target_link_libraries(showarchivestructuredialog_gui
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KFILE_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
+  ${AKONADI_COMMON_LIBRARIES}
+  mailcommon
 )

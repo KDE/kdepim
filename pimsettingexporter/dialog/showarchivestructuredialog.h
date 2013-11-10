@@ -21,6 +21,7 @@
 #include <KDialog>
 
 class QTreeWidget;
+class QTreeWidgetItem;
 
 class ShowArchiveStructureDialog : public KDialog
 {
@@ -33,6 +34,8 @@ private:
     void fillTree(const KUrl &archiveUrl);
 
 private:
+    QTreeWidgetItem *addTopItem(const QString &name);
+
     QTreeWidget *mTreeWidget;
 };
 
