@@ -26,7 +26,7 @@
 #include <QTreeWidget>
 #include <QHeaderView>
 
-ShowArchiveStructureDialog::ShowArchiveStructureDialog(const KUrl &archiveUrl, QWidget *parent)
+ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Show Archive Content" ) );
@@ -35,17 +35,19 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const KUrl &archiveUrl, Q
     mTreeWidget = new QTreeWidget;
     mTreeWidget->header()->hide();
     setMainWidget(mTreeWidget);
-    fillTree(archiveUrl);
+    fillTree(filename);
     mTreeWidget->expandAll();
+    readConfig();
 }
 
 ShowArchiveStructureDialog::~ShowArchiveStructureDialog()
 {
+    writeConfig();
 }
 
-void ShowArchiveStructureDialog::fillTree(const KUrl &archiveUrl)
+void ShowArchiveStructureDialog::fillTree(const QString &filename)
 {
-    KZip *zip = new KZip(archiveUrl.path());
+    KZip *zip = new KZip(filename);
     bool result = zip->open(QIODevice::ReadOnly);
     if (!result) {
         KMessageBox::error(this, i18n("Archive cannot be opened in read mode."), i18n("Can not open archive"));
@@ -102,7 +104,6 @@ QTreeWidgetItem *ShowArchiveStructureDialog::addItem(QTreeWidgetItem *parent,con
     return item;
 }
 
-
 QTreeWidgetItem *ShowArchiveStructureDialog::addTopItem(const QString &name)
 {
     QTreeWidgetItem *item = new QTreeWidgetItem;
@@ -113,5 +114,21 @@ QTreeWidgetItem *ShowArchiveStructureDialog::addTopItem(const QString &name)
     mTreeWidget->addTopLevelItem(item);
     return item;
 }
+
+void ShowArchiveStructureDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "ShowArchiveStructureDialog" );
+    group.writeEntry( "Size", size() );
+}
+
+void ShowArchiveStructureDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "ShowArchiveStructureDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
+}
+
 
 #include "moc_showarchivestructuredialog.cpp"

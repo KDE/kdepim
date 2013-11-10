@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="BackupMailApplication" version="5">
+<kpartgui name="BackupMailApplication" version="6">
 <MenuBar>
   <Menu name="file"><text>&amp;File</text>
     <Action name="file_open_recent"/>
@@ -12,6 +12,10 @@
     <Action name="show_structure_info"/>
     <Separator/>
     <Action name="file_quit"/>
+  </Menu>
+  <Menu noMerge="1" name="tools">
+   <text>&amp;Tools</text>
+   <Action name="show_archive_info"/>
   </Menu>
 </MenuBar>
 </kpartgui>

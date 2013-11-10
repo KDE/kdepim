@@ -29,13 +29,16 @@ class ShowArchiveStructureDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ShowArchiveStructureDialog(const KUrl &archiveUrl, QWidget *parent=0);
+    explicit ShowArchiveStructureDialog(const QString &filename, QWidget *parent=0);
     ~ShowArchiveStructureDialog();
 
 private:
-    void fillTree(const KUrl &archiveUrl);
+    void fillTree(const QString &filename);
 
 private:
+    void readConfig();
+    void writeConfig();
+
     void searchArchiveElement(const QString &path, const KArchiveDirectory *topDirectory, const QString &name);
     QTreeWidgetItem *addTopItem(const QString &name);
     void addSubItems(QTreeWidgetItem *parent, const KArchiveEntry *entry);

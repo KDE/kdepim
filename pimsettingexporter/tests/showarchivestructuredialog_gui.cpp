@@ -43,7 +43,7 @@ int main (int argc, char **argv)
     }
     if (fileName.isEmpty())
         return 0;
-    ShowArchiveStructureDialog *dialog = new ShowArchiveStructureDialog(KUrl(fileName));
+    ShowArchiveStructureDialog *dialog = new ShowArchiveStructureDialog(fileName);
     dialog->resize(800, 600);
     dialog->show();
     app.exec();
