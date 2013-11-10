@@ -46,6 +46,7 @@ set(pimsettingexporter_SRCS
   knode/exportknodejob.cpp
   knode/importknodejob.cpp
   dialog/backupfilestructureinfodialog.cpp
+  dialog/showarchivestructuredialog.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
