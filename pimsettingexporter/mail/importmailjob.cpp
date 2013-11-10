@@ -1284,8 +1284,3 @@ void ImportMailJob::mergeSieveTemplate(const KArchiveFile *archivefile, const QS
     grpExisting.writeEntry(QLatin1String("templateCount"), numberOfExistingTemplate);
     grpExisting.sync();
 }
-
-QString ImportMailJob::componentName() const
-{
-    return QLatin1String("KMail");
-}
