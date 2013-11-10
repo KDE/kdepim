@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../selectiontypedialog.h"
+#include "../dialog/selectiontypedialog.h"
 
 #include <kdebug.h>
 #include <kapplication.h>

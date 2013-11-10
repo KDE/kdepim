@@ -9,6 +9,7 @@ include_directories(${AKONADI_INCLUDE_DIR}
                     ${CMAKE_SOURCE_DIR}/messageviewer
                     ${CMAKE_SOURCE_DIR}/pimcommon
                     ${CMAKE_SOURCE_DIR}/messagecomposer/
+                    ${CMAKE_SOURCE_DIR}/pimsettingexporter/ 
                     ${NEPOMUK_CORE_INCLUDE_DIR}
 )
 
@@ -25,7 +26,7 @@ set(pimsettingexporter_SRCS
   mail/importmailjob.cpp
   pimsettingexporterkernel.cpp
   utils.cpp
-  selectiontypedialog.cpp
+  dialog/selectiontypedialog.cpp
   akonadidatabase.cpp
   calendar/exportcalendarjob.cpp
   calendar/importcalendarjob.cpp
@@ -42,9 +43,9 @@ set(pimsettingexporter_SRCS
   blogilo/exportblogilojob.cpp
   blogilo/importblogilojob.cpp
   archivestorage.cpp
-  backupfilestructureinfodialog.cpp
   knode/exportknodejob.cpp
   knode/importknodejob.cpp
+  dialog/backupfilestructureinfodialog.cpp
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )

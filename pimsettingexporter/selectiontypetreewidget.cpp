@@ -269,22 +269,18 @@ void SelectionTypeTreeWidget::slotItemChanged(QTreeWidgetItem *item, int column)
     } else { //child
         blockSignals(true);
         QTreeWidgetItem *parent = item->parent();
-        bool allSameState = false;
-        Qt::CheckState state;
+        Qt::CheckState state = Qt::PartiallyChecked;
         for (int i=0; i < parent->childCount(); ++i) {
             if (i == 0) {
                 state = parent->child(i)->checkState(0);
             } else {
-                allSameState = (state == parent->child(i)->checkState(0));
-                if (!allSameState)
+                if (state != parent->child(i)->checkState(0)) {
+                    state = Qt::PartiallyChecked;
                     break;
+                }
             }
         }
-        if (allSameState) {
-            parent->setCheckState(0, state);
-        } else {
-            parent->setCheckState(0, Qt::PartiallyChecked);
-        }
+        parent->setCheckState(0, state);
         blockSignals(false);
     }
 }
