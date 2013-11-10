@@ -10,9 +10,15 @@ set(libnoteshared_SRCS
     attributes/notealarmattribute.cpp
     attributes/notedisplayattribute.cpp
     attributes/notelockattribute.cpp
+    noteutils.cpp
 )
 
-kde4_add_library(noteshared ${LIBRARY_TYPE} ${libnoteshared_SRCS})
+set( libnoteshared_kcfg_lib_SRCS settings/notesharedglobalconfig.kcfgc )
+
+kde4_add_kcfg_files(libnoteshared_kcfg_lib_SRCS ${libnoteshared_kcfg_lib_SRCS})
+
+
+kde4_add_library(noteshared ${LIBRARY_TYPE} ${libnoteshared_SRCS} ${libnoteshared_kcfg_lib_SRCS} )
 
 target_link_libraries(noteshared
      ${KDEPIMLIBS_AKONADI_LIBS}
