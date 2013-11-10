@@ -22,6 +22,8 @@
 
 class QTreeWidget;
 class QTreeWidgetItem;
+class KArchiveEntry;
+class KArchiveDirectory;
 
 class ShowArchiveStructureDialog : public KDialog
 {
@@ -34,7 +36,10 @@ private:
     void fillTree(const KUrl &archiveUrl);
 
 private:
+    void searchArchiveElement(const QString &path, const KArchiveDirectory *topDirectory, const QString &name);
     QTreeWidgetItem *addTopItem(const QString &name);
+    void addSubItems(QTreeWidgetItem *parent, const KArchiveEntry *entry);
+    QTreeWidgetItem *addItem(QTreeWidgetItem *parent, const QString &name);
 
     QTreeWidget *mTreeWidget;
 };
