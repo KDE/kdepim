@@ -611,8 +611,3 @@ KUrl ExportMailJob::subdirPath( const KUrl& url) const
     path.append( QLatin1Char('.') + filename + QLatin1String(".directory") );
     return KUrl(path);
 }
-
-QString ExportMailJob::componentName() const
-{
-    return QLatin1String("KMail");
-}

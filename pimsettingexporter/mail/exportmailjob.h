@@ -30,7 +30,6 @@ public:
     ~ExportMailJob();
 
     void start();
-    QString componentName() const;
 
 private:
     KUrl subdirPath(const KUrl &url ) const;

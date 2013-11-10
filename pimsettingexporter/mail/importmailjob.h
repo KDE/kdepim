@@ -34,7 +34,6 @@ public:
     ~ImportMailJob();
 
     void start();
-    QString componentName() const;
 
 private:
     void restoreTransports();
