@@ -2986,6 +2986,8 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
       std::vector<GpgME::Signature> signatures;
       bool passphraseError;
       PartMetaData messagePart;
+      messagePart.isEncrypted = false;
+      messagePart.isSigned = false;
 
       QString text;
 
@@ -3034,22 +3036,18 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
           messagePart.auditLogError = m->auditLogError();
           messagePart.auditLog = m->auditLogAsHtml();
           signatures = m->verifyResult().signatures();
-          messagePart.isSigned = true;
+          messagePart.isSigned = signatures.size() > 0;
         }
       }
-      else { // block is neither message block nor clearsigned block
-        const QString text = aCodec->toUnicode( block.text() );
-        plainTextStr += text;
-        if ( htmlWriter() ) {
-          htmlStr += quotedHTML( text, decorate );
-        }
-        continue;
+
+      if (!messagePart.isEncrypted && !messagePart.isSigned ) {
+        text = aCodec->toUnicode( block.text() );
       }
 
       if ( messagePart.isEncrypted )
         inlineEncryptionState = KMMsgPartiallyEncrypted;
 
-      if (  messagePart.isSigned ) {
+      if ( messagePart.isSigned ) {
         inlineSignatureState = KMMsgPartiallySigned;
 
         //copied from ObjectTreeParser::writeOpaqueOrMultipartSignedData
@@ -3126,14 +3124,17 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
 
       plainTextStr += text;
 
+      if ( htmlWriter() ) {
+        if (messagePart.isEncrypted || messagePart.isSigned)
+          htmlStr += writeSigstatHeader( messagePart, cryptProto, fromAddress );
 
-      if (  htmlWriter() ) {
-        htmlStr += writeSigstatHeader( messagePart, cryptProto, fromAddress );
         if (messagePart.isEncrypted && !messagePart.isDecryptable)
           htmlStr += text;                        //Do not quote ErrorText
         else
           htmlStr += quotedHTML( text, decorate );
-        htmlStr += writeSigstatFooter( messagePart );
+
+        if ( messagePart.isEncrypted || messagePart.isSigned )
+          htmlStr += writeSigstatFooter( messagePart );
       }
 
 
