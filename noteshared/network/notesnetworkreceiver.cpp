@@ -3,6 +3,7 @@
 
  Copyright (c) 2003, Daniel Martin <daniel.martin@pirack.com>
                2004, 2006, Michael Brade <brade@kde.org>
+ Copyright (c) 2013, Laurent Montel <montel@kde.org>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -30,7 +31,7 @@
  your version.
 *******************************************************************/
 
-#include "knotesnetrecv.h"
+#include "notesnetworkreceiver.h"
 
 #include <QDateTime>
 #include <QHostAddress>
@@ -53,8 +54,9 @@
 
 // Small buffer's size
 #define SBSIZE 512
+using namespace NoteShared;
 
-KNotesNetworkReceiver::KNotesNetworkReceiver( QTcpSocket *s )
+NotesNetworkReceiver::NotesNetworkReceiver( QTcpSocket *s )
     : QObject(),
       m_buffer( new QByteArray() ),
       m_sock( s )
@@ -81,13 +83,13 @@ KNotesNetworkReceiver::KNotesNetworkReceiver( QTcpSocket *s )
     m_timer->start( MAXTIME );
 }
 
-KNotesNetworkReceiver::~KNotesNetworkReceiver()
+NotesNetworkReceiver::~NotesNetworkReceiver()
 {
     delete m_buffer;
     delete m_sock;
 }
 
-void KNotesNetworkReceiver::slotDataAvailable()
+void NotesNetworkReceiver::slotDataAvailable()
 {
     char smallBuffer[SBSIZE];
     int smallBufferLen;
@@ -115,12 +117,12 @@ void KNotesNetworkReceiver::slotDataAvailable()
     }
 }
 
-void KNotesNetworkReceiver::slotReceptionTimeout()
+void NotesNetworkReceiver::slotReceptionTimeout()
 {
     m_sock->close();
 }
 
-void KNotesNetworkReceiver::slotConnectionClosed()
+void NotesNetworkReceiver::slotConnectionClosed()
 {
     QTextCodec *codec = QTextCodec::codecForLocale();
 
@@ -141,7 +143,7 @@ void KNotesNetworkReceiver::slotConnectionClosed()
     deleteLater();
 }
 
-void KNotesNetworkReceiver::slotError( QAbstractSocket::SocketError error )
+void NotesNetworkReceiver::slotError( QAbstractSocket::SocketError error )
 {
     kWarning( 5500 ) <<"error type :"<< ( int ) error <<" error string : "<<m_sock->errorString();
 }

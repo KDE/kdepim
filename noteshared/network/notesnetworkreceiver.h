@@ -2,6 +2,7 @@
  KNotes -- Notes for the KDE project
 
  Copyright (c) 2003, Daniel Martin <daniel.martin@pirack.com>
+ Copyright (c) 2013, Laurent Montel <montel@kde.org>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -29,10 +30,10 @@
  your version.
 *******************************************************************/
 
-#ifndef KNOTESNETRECV_H
-#define KNOTESNETRECV_H
+#ifndef NOTESNETWORKRECEIVER_H
+#define NOTESNETWORKRECEIVER_H
 
-#include "knotes_export.h"
+#include "noteshared_export.h"
 #include <QObject>
 #include <QAbstractSocket>
 
@@ -40,12 +41,13 @@ class QTcpSocket;
 class QTimer;
 
 
-class KNOTES_EXPORT KNotesNetworkReceiver : public QObject
+namespace NoteShared {
+class NOTESHARED_EXPORT NotesNetworkReceiver : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNotesNetworkReceiver( QTcpSocket * );
-    ~KNotesNetworkReceiver();
+    explicit NotesNetworkReceiver( QTcpSocket * );
+    ~NotesNetworkReceiver();
 
 signals:
     void sigNoteReceived( const QString &, const QString & );
@@ -64,5 +66,5 @@ private:
 
     QString m_titleAddon;
 };
-
+}
 #endif
