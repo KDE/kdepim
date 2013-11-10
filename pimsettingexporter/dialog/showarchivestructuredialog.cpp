@@ -24,6 +24,7 @@
 #include <KMessageBox>
 
 #include <QTreeWidget>
+#include <QHeaderView>
 
 ShowArchiveStructureDialog::ShowArchiveStructureDialog(const KUrl &archiveUrl, QWidget *parent)
     : KDialog(parent)
@@ -32,9 +33,10 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const KUrl &archiveUrl, Q
     setButtons( Close );
     setModal( true );
     mTreeWidget = new QTreeWidget;
+    mTreeWidget->header()->hide();
     setMainWidget(mTreeWidget);
-
     fillTree(archiveUrl);
+    mTreeWidget->expandAll();
 }
 
 ShowArchiveStructureDialog::~ShowArchiveStructureDialog()
