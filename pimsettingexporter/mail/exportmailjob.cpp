@@ -166,7 +166,6 @@ void ExportMailJob::backupResources()
                     if (!errorStr.isEmpty()) {
                         Q_EMIT error(errorStr);
                     }
-
                 } else {
                     qDebug()<<" resource \""<<identifier<<"\" will not store";
                 }
@@ -502,12 +501,11 @@ void ExportMailJob::backupMails()
                     //Store akonadi agent config
                     KUrl url = Utils::resourcePath(agent);
 
-                    if (backupMailData(url, archivePath)) {
-                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath );
-                        if (!errorStr.isEmpty()) {
+                    const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("mail.zip"));
+                    if (fileAdded) {
+                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                        if (!errorStr.isEmpty())
                             Q_EMIT error(errorStr);
-                        }
-                        Q_EMIT info(i18n("\"%1\" was backuped.",url.fileName()));
                         url = Utils::akonadiAgentConfigPath(identifier);
                         if (!url.isEmpty()) {
                             const QString filename = url.fileName();
@@ -517,7 +515,6 @@ void ExportMailJob::backupMails()
                             else
                                 Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
                         }
-
                     }
                 }
             }
@@ -544,45 +541,6 @@ void ExportMailJob::writeDirectory(const QString &path, const QString &relativeP
             const QString currentPath(currentPath + QLatin1Char('/') + filename);
             mailArchive->addLocalFile(lst.at(i).absoluteFilePath(),currentPath);
         }
-    }
-}
-
-bool ExportMailJob::backupMailData(const KUrl& url,const QString &archivePath)
-{
-    const QString filename = url.fileName();
-    KTemporaryFile tmp;
-    tmp.open();
-    KZip *mailArchive = new KZip(tmp.fileName());
-    bool result = mailArchive->open(QIODevice::WriteOnly);
-    if (!result) {
-        Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
-        delete mailArchive;
-        return false;
-    }
-
-    QString relatifPath = url.path();
-    const int parentDirEndIndex = relatifPath.lastIndexOf( filename );
-    relatifPath = relatifPath.left( parentDirEndIndex );
-
-    writeDirectory(url.path(),relatifPath, mailArchive);
-    KUrl subDir = subdirPath(url);
-    if (QFile(subDir.path()).exists()) {
-        writeDirectory(subDir.path(),relatifPath,mailArchive);
-    }
-    mailArchive->close();
-
-    //TODO: store as an unique file
-    mailArchive->setCompression(KZip::NoCompression);
-    const bool fileAdded = archive()->addLocalFile(tmp.fileName(), archivePath + filename);
-    mailArchive->setCompression(KZip::DeflateCompression);
-    delete mailArchive;
-
-    if (fileAdded) {
-        Q_EMIT info(i18n("Mail \"%1\" was backuped.",filename));
-        return true;
-    } else {
-        Q_EMIT error(i18n("Mail \"%1\" file cannot be added to backup file.",filename));
-        return false;
     }
 }
 
