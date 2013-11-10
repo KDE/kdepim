@@ -67,7 +67,7 @@
  </MenuBar>
 
  <ToolBar name="mainToolBar" fullWidth="true" noMerge="1" iconText="icononly">
-  <text>Main Toobar</text>
+  <text>Main Toolbar</text>
   <Separator/>
   <Action name="file_print"/>
   <Separator/>
