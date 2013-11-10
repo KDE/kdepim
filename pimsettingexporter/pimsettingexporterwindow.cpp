@@ -43,11 +43,11 @@
 #include "blogilo/importblogilojob.h"
 
 #include "pimsettingexporterkernel.h"
-#include "selectiontypedialog.h"
+#include "dialog/selectiontypedialog.h"
 #include "utils.h"
 #include "archivestorage.h"
 
-#include "backupfilestructureinfodialog.h"
+#include "dialog/backupfilestructureinfodialog.h"
 
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/filter/filtermanager.h>
