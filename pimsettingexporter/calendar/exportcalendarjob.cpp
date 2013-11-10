@@ -78,20 +78,23 @@ void ExportCalendarJob::backupResources()
             const QString archivePath = Utils::calendarPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent);
-            if (!url.isEmpty()) {
-                const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("calendar.zip"));
-                if (fileAdded) {
-                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    if (!errorStr.isEmpty())
-                        Q_EMIT error(errorStr);
-                    url = Utils::akonadiAgentConfigPath(identifier);
-                    if (!url.isEmpty()) {
-                        const QString filename = url.fileName();
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                        if (fileAdded)
-                            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
-                        else
-                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+            if (!mAgentPaths.contains(url.path())) {
+                if (!url.isEmpty()) {
+                    mAgentPaths << url.path();
+                    const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("calendar.zip"));
+                    if (fileAdded) {
+                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                        if (!errorStr.isEmpty())
+                            Q_EMIT error(errorStr);
+                        url = Utils::akonadiAgentConfigPath(identifier);
+                        if (!url.isEmpty()) {
+                            const QString filename = url.fileName();
+                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                            if (fileAdded)
+                                Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                            else
+                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                        }
                     }
                 }
             }

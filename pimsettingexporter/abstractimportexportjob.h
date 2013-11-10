@@ -20,6 +20,7 @@
 
 #include "utils.h"
 #include <Akonadi/Collection>
+#include <QStringList>
 
 class QWidget;
 class QProgressDialog;
@@ -104,6 +105,7 @@ protected:
     const KArchiveDirectory* mArchiveDirectory;
     int mNumberOfStep;
     PimCommon::CreateResource *mCreateResource;
+    QStringList mAgentPaths;
     static int sArchiveVersion;
 };
 
