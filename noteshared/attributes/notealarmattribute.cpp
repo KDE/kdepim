@@ -17,7 +17,12 @@
 
 #include "notealarmattribute.h"
 
+#include <kglobal.h>
+
 #include <QByteArray>
+
+static const KCatalogLoader loader( QLatin1String("libnoteshared") );
+
 using namespace NoteShared;
 NoteAlarmAttribute::NoteAlarmAttribute()
     : Akonadi::Attribute()
