@@ -20,12 +20,20 @@
 
 #include <KDialog>
 
+class QTreeWidget;
+
 class ShowArchiveStructureDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit ShowArchiveStructureDialog(const KUrl &archiveUrl, QWidget *parent=0);
     ~ShowArchiveStructureDialog();
+
+private:
+    void fillTree(const KUrl &archiveUrl);
+
+private:
+    QTreeWidget *mTreeWidget;
 };
 
 #endif // SHOWARCHIVESTRUCTUREDIALOG_H

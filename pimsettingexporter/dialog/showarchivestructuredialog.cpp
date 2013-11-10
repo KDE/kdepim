@@ -16,23 +16,32 @@
 */
 
 #include "showarchivestructuredialog.h"
+
 #include <KDialog>
 #include <KLocale>
+#include <KZip>
+
+#include <QTreeWidget>
 
 ShowArchiveStructureDialog::ShowArchiveStructureDialog(const KUrl &archiveUrl, QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Show Archive Content" ) );
     setButtons( Close );
-    setDefaultButton( Ok );
     setModal( true );
-    QWidget *mainWidget = new QWidget( this );
-    setMainWidget(mainWidget);
+    mTreeWidget = new QTreeWidget;
+    setMainWidget(mTreeWidget);
+
+    fillTree(archiveUrl);
 }
 
 ShowArchiveStructureDialog::~ShowArchiveStructureDialog()
 {
+}
 
+void ShowArchiveStructureDialog::fillTree(const KUrl &archiveUrl)
+{
+    //TODO
 }
 
 #include "moc_showarchivestructuredialog.cpp"
