@@ -11,6 +11,7 @@ set(libnoteshared_SRCS
     attributes/notedisplayattribute.cpp
     attributes/notelockattribute.cpp
     noteutils.cpp
+    network/notesnetworksender.cpp
 )
 
 set( libnoteshared_kcfg_lib_SRCS settings/notesharedglobalconfig.kcfgc )

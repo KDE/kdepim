@@ -30,14 +30,14 @@
  your version.
 *******************************************************************/
 
-#include "knotesnetsend.h"
+#include "notesnetworksender.h"
 
 #include <klocale.h>
 #include <kmessagebox.h>
 
 #include <QTextCodec>
-
-KNotesNetworkSender::KNotesNetworkSender( QTcpSocket *socket )
+using namespace NoteShared;
+NotesNetworkSender::NotesNetworkSender( QTcpSocket *socket )
     : QObject(),
       m_socket( socket ),
       m_note(),
@@ -54,25 +54,25 @@ KNotesNetworkSender::KNotesNetworkSender( QTcpSocket *socket )
                       SLOT(slotWritten(qint64)) );
 }
 
-KNotesNetworkSender::~KNotesNetworkSender()
+NotesNetworkSender::~NotesNetworkSender()
 {
     delete m_socket;
 }
 
-void KNotesNetworkSender::setSenderId( const QString &sender )
+void NotesNetworkSender::setSenderId( const QString &sender )
 {
     QTextCodec *codec = QTextCodec::codecForLocale();
     m_sender = codec->fromUnicode( sender );
 }
 
-void KNotesNetworkSender::setNote( const QString &title, const QString &text )
+void NotesNetworkSender::setNote( const QString &title, const QString &text )
 {
     QTextCodec *codec = QTextCodec::codecForLocale();
     m_title = codec->fromUnicode( title );
     m_note = codec->fromUnicode( text );
 }
 
-void KNotesNetworkSender::slotConnected()
+void NotesNetworkSender::slotConnected()
 {
     if ( m_sender.isEmpty() ) {
         m_note.prepend( m_title + "\n" );
@@ -83,7 +83,7 @@ void KNotesNetworkSender::slotConnected()
     m_socket->write( m_note );
 }
 
-void KNotesNetworkSender::slotWritten( qint64 )
+void NotesNetworkSender::slotWritten( qint64 )
 {
     // If end of text reached, close connection
     if ( m_socket->bytesToWrite() == 0 ) {
@@ -91,14 +91,14 @@ void KNotesNetworkSender::slotWritten( qint64 )
     }
 }
 
-void KNotesNetworkSender::slotError()
+void NotesNetworkSender::slotError()
 {
     KMessageBox::sorry( 0, i18n( "Communication error: %1",
                                  m_socket->errorString() ) );
     slotClosed();
 }
 
-void KNotesNetworkSender::slotClosed()
+void NotesNetworkSender::slotClosed()
 {
     deleteLater();
 }

@@ -30,7 +30,7 @@ NOTESHARED_EXPORT bool NoteShared::sendToMail(QWidget *parent, const QString &ti
         return false;
     }
     KProcess mail;
-    foreach ( const QString &cmd, cmd_list ) {
+    Q_FOREACH ( const QString &cmd, cmd_list ) {
         if ( cmd == QLatin1String("%f") ) {
             mail << message;
         } else if ( cmd == QLatin1String("%t") ) {

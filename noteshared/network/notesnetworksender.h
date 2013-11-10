@@ -30,18 +30,18 @@
  your version.
 *******************************************************************/
 
-#ifndef KNOTESNETSEND_H
-#define KNOTESNETSEND_H
+#ifndef NOTENETWORKSENDER_H
+#define NOTENETWORKSENDER_H
 
 #include <QTcpSocket>
-#include "knotes_export.h"
-
-class KNOTES_EXPORT KNotesNetworkSender : public QObject
+#include "noteshared_export.h"
+namespace NoteShared {
+class NOTESHARED_EXPORT NotesNetworkSender : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNotesNetworkSender(  QTcpSocket *socket );
-    ~KNotesNetworkSender();
+    explicit NotesNetworkSender(  QTcpSocket *socket );
+    ~NotesNetworkSender();
     
     void setSenderId( const QString &sender );
     void setNote( const QString &title, const QString &text );
@@ -58,5 +58,6 @@ private:
     QByteArray m_title;
     QByteArray m_sender;
 };
+}
 
 #endif
