@@ -23,7 +23,7 @@ kde4_add_kcfg_files(libnoteshared_kcfg_lib_SRCS ${libnoteshared_kcfg_lib_SRCS})
 kde4_add_library(noteshared ${LIBRARY_TYPE} ${libnoteshared_SRCS} ${libnoteshared_kcfg_lib_SRCS} )
 
 target_link_libraries(noteshared
-     ${KDEPIMLIBS_AKONADI_LIBS}
+     ${KDEPIMLIBS_AKONADI_LIBS} ${QT_QTNETWORK_LIBRARY}
 )
 
 set_target_properties(noteshared PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
