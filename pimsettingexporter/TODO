@@ -1,15 +1,10 @@
-Import/Export config:
---------------------
-- templatesconfigurationrc (Need to merge in existing config file)
-- akonadi_archivemail_agentrc (Need to merge in existing config file)
-
 TODO 4.13:
 ---------
 
+- templatesconfigurationrc (Need to merge in existing config file)
+- akonadi_archivemail_agentrc (Need to merge in existing config file)
 - Allow to merge KMail Snippet config
 - Add export mode 
 - Allow to save other kontact settings (In progress)
 - Add global default settings (as overwrite all settings etc.)
-
-
 - Add support for store kaddressbook printing theme.
