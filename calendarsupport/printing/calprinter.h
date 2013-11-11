@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 1998 Preston Brown <pbrown@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
@@ -22,28 +20,26 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CALPRINTER_H
-#define CALPRINTER_H
+#ifndef CALENDARSUPPORT_PRINTING_CALPRINTER_H
+#define CALENDARSUPPORT_PRINTING_CALPRINTER_H
 
-#include "korganizer/korganizer_export.h"
-#include "korganizer/printplugin.h"
-
-#include <Akonadi/Calendar/ETMCalendar>
+#include "../calendarsupport_export.h"
+#include "printplugin.h"
 
 #include <KComboBox>
 #include <KDialog>
 
-using namespace KCalCore;
-
 class QButtonGroup;
 class QStackedWidget;
+
+namespace CalendarSupport {
 
 /**
   CalPrinter is a class for printing Calendars.  It can print in several
   different formats (day, week, month).  It also provides a way for setting
   up the printer and remembering these preferences.
 */
-class KORGANIZERPRIVATE_EXPORT CalPrinter : public QObject, public KOrg::CalPrinterBase
+class CALENDARSUPPORT_EXPORT CalPrinter : public QObject, public CalPrinterBase
 {
   Q_OBJECT
   public:
@@ -58,13 +54,12 @@ class KORGANIZERPRIVATE_EXPORT CalPrinter : public QObject, public KOrg::CalPrin
     /**
       \param par parent widget for dialogs
       \param cal calendar to be printed
-      \param helper is a pointer to the KOrg::CoreHelper object
       \param uniqItem if true, indicates the calendar print dialog will only
       provide the option to print an single incidence; else, all possible types
       of print types will be shown
     */
     CalPrinter( QWidget *par, const Akonadi::ETMCalendar::Ptr &calendar,
-                KOrg::CoreHelper *helper, bool uniqItem = false );
+                bool uniqItem = false );
 
     virtual ~CalPrinter();
 
@@ -82,25 +77,23 @@ class KORGANIZERPRIVATE_EXPORT CalPrinter : public QObject, public KOrg::CalPrin
     void updateConfig();
 
   private Q_SLOTS:
-    void doPrint( KOrg::PrintPlugin *selectedStyle,
+    void doPrint( PrintPlugin *selectedStyle,
                   ePrintOrientation dlgorientation, bool preview = false );
 
   public:
     void print( int type, const QDate &fd, const QDate &td,
-                Incidence::List selectedIncidences = Incidence::List(),
+                KCalCore::Incidence::List selectedIncidences = KCalCore::Incidence::List(),
                 bool preview = false );
-
     Akonadi::ETMCalendar::Ptr calendar() const;
     KConfig *config() const;
 
   protected:
-    KOrg::PrintPlugin::List mPrintPlugins;
+    PrintPlugin::List mPrintPlugins;
 
   private:
     Akonadi::ETMCalendar::Ptr mCalendar;
     QWidget *mParent;
     KConfig *mConfig;
-    KOrg::CoreHelper *mCoreHelper;
     bool mUniqItem;
 };
 
@@ -108,12 +101,12 @@ class CalPrintDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit CalPrintDialog( int initialPrintType, KOrg::PrintPlugin::List plugins,
+    explicit CalPrintDialog( int initialPrintType, PrintPlugin::List plugins,
                              QWidget *parent = 0, bool mUniqItem = false );
 
     virtual ~CalPrintDialog();
 
-    KOrg::PrintPlugin *selectedPlugin();
+    PrintPlugin *selectedPlugin();
     void setOrientation( CalPrinter::ePrintOrientation orientation );
     CalPrinter::ePrintOrientation orientation()
     {
@@ -130,11 +123,13 @@ class CalPrintDialog : public KDialog
   private:
     QButtonGroup *mTypeGroup;
     QStackedWidget *mConfigArea;
-    QMap<int, KOrg::PrintPlugin*> mPluginIDs;
+    QMap<int, PrintPlugin*> mPluginIDs;
     QString mPreviewText;
     KComboBox *mOrientationSelection;
 
     CalPrinter::ePrintOrientation mOrientation;
 };
+
+}
 
 #endif

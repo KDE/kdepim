@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -22,15 +20,16 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_PLUGINS_PRINTING_YEARPRINT_H
-#define KORG_PLUGINS_PRINTING_YEARPRINT_H
+#ifndef CALENDARSUPPORT_PRINTING_YEARPRINT_H
+#define CALENDARSUPPORT_PRINTING_YEARPRINT_H
 
+#include "../calendarsupport_export.h"
 #include "calprintpluginbase.h"
 #include "ui_calprintyearconfig_base.h"
 
-using namespace KOrg;
+namespace CalendarSupport {
 
-class CalPrintYear : public CalPrintPluginBase
+class CALENDARSUPPORT_EXPORT  CalPrintYear : public CalPrintPluginBase
 {
   public:
     CalPrintYear():CalPrintPluginBase() {}
@@ -57,7 +56,8 @@ class CalPrintYear : public CalPrintPluginBase
     int mSubDaysEvents, mHolidaysEvents;
 };
 
-class CalPrintYearConfig : public QWidget, public Ui::CalPrintYearConfig_Base
+class CALENDARSUPPORT_EXPORT CalPrintYearConfig
+  : public QWidget, public Ui::CalPrintYearConfig_Base
 {
   public:
     explicit CalPrintYearConfig( QWidget *parent ) : QWidget( parent )
@@ -65,5 +65,7 @@ class CalPrintYearConfig : public QWidget, public Ui::CalPrintYearConfig_Base
       setupUi( this );
     }
 };
+
+}
 
 #endif

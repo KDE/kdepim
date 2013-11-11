@@ -1,6 +1,4 @@
 /*
-  This file is part of the KOrganizer interfaces.
-
   Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   This library is free software; you can redistribute it and/or
@@ -19,25 +17,21 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KORG_INTERFACES_PRINTPLUGIN_H
-#define KORG_INTERFACES_PRINTPLUGIN_H
+#ifndef CALENDARSUPPORT_PRINTING_PRINTPLUGIN_H
+#define CALENDARSUPPORT_PRINTING_PRINTPLUGIN_H
 
-#include <calendarsupport/plugin.h>
+#include "../plugin.h"
+
 #include <Akonadi/Calendar/ETMCalendar>
 
 #include <KCalCore/Incidence>
 
 #include <QPrinter>
 
-namespace Akonadi {
-  class ETMCalendar;
-}
-namespace KOrg {
-
-class CoreHelper;
+namespace CalendarSupport {
 
 /**
-  Base class of KOrganizer printer class.
+  Base class of Calendar printer class.
 */
 class CalPrinterBase
 {
@@ -56,24 +50,18 @@ class CalPrinterBase
 };
 
 /**
-  Base class for KOrganizer printing classes. Each sub class represents one
+  Base class for Calendar printing classes. Each sub class represents one
   calendar print format.
 */
-class PrintPlugin : public CalendarSupport::Plugin
+class PrintPlugin : public Plugin
 {
   public:
-    PrintPlugin() : CalendarSupport::Plugin(), mConfigWidget(0), mCoreHelper(0), mPrinter(0),
+  PrintPlugin() : Plugin(), mConfigWidget(0), mPrinter(0),
          mCalendar(0), mConfig(0) {}
     virtual ~PrintPlugin() {}
 
     typedef QList<PrintPlugin*> List;
     static int interfaceVersion() { return 2; }
-
-    static QString serviceType()
-    { return QLatin1String( "KOrganizer/PrintPlugin" ); }
-
-    virtual void setKOrgCoreHelper( KOrg::CoreHelper *helper )
-    { mCoreHelper = helper; }
 
     virtual void setConfig( KConfig *cfg ) { mConfig = cfg; }
 
@@ -174,7 +162,6 @@ class PrintPlugin : public CalendarSupport::Plugin
 
   protected:
     QPointer<QWidget> mConfigWidget;
-    KOrg::CoreHelper *mCoreHelper;
     /** The printer object. This will only be available in the doPrint method
         of the selected plugin */
     QPrinter *mPrinter;
@@ -183,7 +170,7 @@ class PrintPlugin : public CalendarSupport::Plugin
     KConfig *mConfig;
 };
 
-class PrintPluginFactory : public CalendarSupport::PluginFactory
+class PrintPluginFactory : public PluginFactory
 {
   public:
     virtual PrintPlugin *createPluginFactory() = 0;

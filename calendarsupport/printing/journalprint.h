@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -22,15 +20,16 @@
   without including the source code for Qt in the source distribution.
 */
 
-#ifndef KORG_PLUGINS_PRINTING_JOURNALPRINT_H
-#define KORG_PLUGINS_PRINTING_JOURNALPRINT_H
+#ifndef CALENDARSUPPORT_PRINTING_JOURNALPRINT_H
+#define CALENDARSUPPORT_PRINTING_JOURNALPRINT_H
 
+#include "../calendarsupport_export.h"
 #include "calprintpluginbase.h"
 #include "ui_calprintjournalconfig_base.h"
 
-using namespace KOrg;
+namespace CalendarSupport {
 
-class CalPrintJournal : public CalPrintPluginBase
+class CALENDARSUPPORT_EXPORT CalPrintJournal : public CalPrintPluginBase
 {
   public:
     CalPrintJournal():CalPrintPluginBase() {}
@@ -55,12 +54,16 @@ class CalPrintJournal : public CalPrintPluginBase
     bool mUseDateRange;
 };
 
-class CalPrintJournalConfig : public QWidget, public Ui::CalPrintJournalConfig_Base
+class CALENDARSUPPORT_EXPORT CalPrintJournalConfig
+  : public QWidget, public Ui::CalPrintJournalConfig_Base
 {
   public:
-    explicit CalPrintJournalConfig( QWidget *parent ) : QWidget( parent ) {
+    explicit CalPrintJournalConfig( QWidget *parent ) : QWidget( parent )
+    {
       setupUi( this );
     }
 };
+
+}
 
 #endif

@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -26,13 +24,8 @@
 
 #include <KCalendarSystem>
 
-class YearPrintFactory : public KOrg::PrintPluginFactory
-{
-  public:
-    KOrg::PrintPlugin *createPluginFactory() { return new CalPrintYear; }
-};
+using namespace CalendarSupport;
 
-K_EXPORT_PLUGIN( YearPrintFactory )
 
 /**************************************************************
  *           Print Year

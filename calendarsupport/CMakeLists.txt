@@ -1,4 +1,4 @@
-KDE4_NO_ENABLE_FINAL(calendarsupport)
+kde4_no_enable_final(calendarsupport)
 # Commented because it uses your real calendar. You can loose data.
 # I'll uncomment this when tests use testrunner.
 # add_subdirectory(next/tests)
@@ -7,8 +7,8 @@ include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
 )
-add_definitions( -DQT_NO_CAST_FROM_ASCII )
-add_definitions( -DQT_NO_CAST_TO_ASCII )
+add_definitions(-DQT_NO_CAST_FROM_ASCII)
+add_definitions(-DQT_NO_CAST_TO_ASCII)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
@@ -32,11 +32,27 @@ set(calendarsupport_LIB_SRCS
   messagewidget.cpp
   utils.cpp
 
+  printing/calprintpluginbase.cpp
+  printing/calprintdefaultplugins.cpp
+  printing/calprinter.cpp
+  printing/cellitem.cpp
+  printing/journalprint.cpp
+  printing/yearprint.cpp
+
   next/incidencefetchjob.cpp
   next/incidencesearchjob.cpp
   next/incidenceviewer.cpp
 )
 
+kde4_add_ui_files(calendarsupport_LIB_SRCS
+  printing/calprintdayconfig_base.ui
+  printing/calprintincidenceconfig_base.ui
+  printing/calprintjournalconfig_base.ui
+  printing/calprintmonthconfig_base.ui
+  printing/calprinttodoconfig_base.ui
+  printing/calprintweekconfig_base.ui
+  printing/calprintyearconfig_base.ui
+)
 
 kde4_add_kcfg_files(calendarsupport_LIB_SRCS kcalprefs_base.kcfgc)
 
@@ -60,10 +76,14 @@ target_link_libraries(
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
+  ${KDE4_KUTILS_LIBS}
   akonadi-calendar
 )
 
-set_target_properties(calendarsupport PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(calendarsupport
+  PROPERTIES VERSION ${GENERIC_LIB_VERSION}
+  SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
 install(TARGETS calendarsupport ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES calendarplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

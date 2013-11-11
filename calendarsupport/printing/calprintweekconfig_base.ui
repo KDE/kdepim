@@ -238,7 +238,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QRadioButton" name="mPrintTypeTimetable">
         <property name="whatsThis">
-         <string>This view is similar to the weekview in KOrganizer. The week is printed in landscape layout. You can even use the same colors for the items if you check &lt;i&gt;Use Colors&lt;/i&gt;.</string>
+         <string>This view is similar to the weekview. The week is printed in landscape layout. You can even use the same colors for the items if you check &lt;i&gt;Use Colors&lt;/i&gt;.</string>
         </property>
         <property name="text">
          <string>Print as &amp;timetable view</string>
@@ -248,7 +248,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QRadioButton" name="mPrintTypeSplitWeek">
         <property name="whatsThis">
-         <string>This view is similar to the week view in KOrganizer. The only difference with the timetable view is the page layout. Timetables are printed in landscape, the split week view in portrait.</string>
+         <string>This view is similar to the week view. The only difference with the timetable view is the page layout. Timetables are printed in landscape, the split week view in portrait.</string>
         </property>
         <property name="text">
          <string>Print as split week view</string>

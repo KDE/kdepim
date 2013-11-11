@@ -1,6 +1,4 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
   This program is free software; you can redistribute it and/or modify
@@ -23,16 +21,9 @@
 */
 
 #include "journalprint.h"
+#include "utils.h"
 
-#include <calendarsupport/utils.h>
-
-class JournalPrintFactory : public KOrg::PrintPluginFactory
-{
-  public:
-    KOrg::PrintPlugin *createPluginFactory() { return new CalPrintJournal; }
-};
-
-K_EXPORT_PLUGIN( JournalPrintFactory )
+using namespace CalendarSupport;
 
 /**************************************************************
  *           Print Journal

@@ -1,10 +1,8 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 1998 Preston Brown <pbrown@kde.org>
   Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2008 Ron Goodheart <rong.dev@gmail.com>
-  Copyright (c) 2012 Allen Winter <winter@kde.org>
+  Copyright (c) 2012-2013 Allen Winter <winter@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,9 +22,10 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CALPRINTDEFAULTPLUGINS_H
-#define CALPRINTDEFAULTPLUGINS_H
+#ifndef CALENDARSUPPORT_CALPRINTDEFAULTPLUGINS_H
+#define CALENDARSUPPORT_CALPRINTDEFAULTPLUGINS_H
 
+#include "../calendarsupport_export.h"
 #include "calprintpluginbase.h"
 
 #include "ui_calprintincidenceconfig_base.h"
@@ -37,10 +36,9 @@
 
 #include <KLocale>
 
-using namespace KCalCore;
-using namespace KOrg;
+namespace CalendarSupport {
 
-class CalPrintIncidence : public CalPrintPluginBase
+class CALENDARSUPPORT_EXPORT CalPrintIncidence : public CalPrintPluginBase
 {
   public:
     CalPrintIncidence();
@@ -359,5 +357,7 @@ class CalPrintTodoConfig : public QWidget, public Ui::CalPrintTodoConfig_Base
       setupUi( this );
     }
 };
+
+}
 
 #endif

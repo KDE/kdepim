@@ -1,10 +1,8 @@
 /*
-  This file is part of KOrganizer.
-
   Copyright (c) 1998 Preston Brown <pbrown@kde.org>
   Copyright (C) 2003 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2008 Ron Goodheart <rong.dev@gmail.com>
-  Copyright (c) 2012 Allen Winter <winter@kde.org>
+  Copyright (c) 2012-2013 Allen Winter <winter@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,12 +22,11 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef CALPRINTPLUGINBASE_H
-#define CALPRINTPLUGINBASE_H
+#ifndef CALENDARSUPPORT_PRINTING_CALPRINTPLUGINBASE_H
+#define CALENDARSUPPORT_PRINTING_CALPRINTPLUGINBASE_H
 
-#include "korganizer/korganizer_export.h"
-#include "korganizer/printplugin.h"
-#include "korganizer/corehelper.h"
+#include "../calendarsupport_export.h"
+#include "printplugin.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
 
@@ -43,8 +40,6 @@
 class PrintCellItem;
 class QWidget;
 
-using namespace KCalCore;
-
 #define PORTRAIT_HEADER_HEIGHT 72   // header height, for portrait orientation
 #define LANDSCAPE_HEADER_HEIGHT 54  // header height, for landscape orientation
 #define SUBHEADER_HEIGHT 20         // subheader height, for all orientations
@@ -57,11 +52,13 @@ using namespace KCalCore;
 
 #define TIMELINE_WIDTH 50           // width of timeline (day and timetable)
 
+namespace CalendarSupport {
+
 /**
-  Base class for KOrganizer printing classes. Each sub class represents one
+  Base class for Calendar printing classes. Each sub class represents one
   calendar print format.
 */
-class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
+class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
 {
   public:
     enum DisplayFlags {
@@ -114,19 +111,11 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
 
   /** HELPER FUNCTIONS */
   public:
-    void setKOrgCoreHelper( KOrg::CoreHelper *helper );
-
     bool useColors() const;
     void setUseColors( bool useColors );
 
     bool printFooter() const;
     void setPrintFooter( bool printFooter );
-
-    /** Helper functions to hide the KOrg::CoreHelper */
-    QColor categoryBgColor( const Incidence::Ptr &incidence );
-    QTime dayStart();
-    QString holidayString( const QDate &dt );
-    Event::Ptr holiday( const QDate &dt );
 
     /**
       Determines the column of the given weekday ( 1=Monday, 7=Sunday ), taking the
@@ -134,7 +123,6 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param weekday Index of the weekday
     */
     static int weekdayColumn( int weekday );
-    void setCategoryColors( QPainter &p, const Incidence::Ptr &incidence );
 
     QPrinter::Orientation orientation() const;
 
@@ -165,7 +153,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     int borderWidth() const;
     void setBorderWidth( const int border );
 
-    const KCalendarSystem *calendarSystem() const;
+    const KCalendarSystem *calendarSystem();
     void setCalendarSystem( const KCalendarSystem *calsys );
 
   /*****************************************************************
@@ -207,7 +195,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param flags is a bitwise OR of Qt::AlignmentFlags and Qt::TextFlags values.
     */
     void showEventBox( QPainter &p, int linewidth, const QRect &box,
-                       const Incidence::Ptr &incidence, const QString &str, int flags = -1 );
+                       const KCalCore::Incidence::Ptr &incidence, const QString &str, int flags = -1 );
 
     /**
       Draw a subheader box with a shaded background and the given string
@@ -606,7 +594,7 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
       @param pageHeight Total height allowed for the list on a page. If an item
                    would be below that line, a new page is started.
     */
-    void drawJournal( const Journal::Ptr &journal, QPainter &p, int x, int &y,
+    void drawJournal( const KCalCore::Journal::Ptr &journal, QPainter &p, int x, int &y,
                       int width, int pageHeight );
     /**
       Draws text lines splitting on page boundaries.
@@ -633,6 +621,9 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     void drawNoteLines( QPainter &p, const QRect &box, int startY );
 
   protected:
+    QTime dayStart() const;
+    QColor categoryBgColor( const KCalCore::Incidence::Ptr &incidence ) const;
+
     void drawIncidence( QPainter &p, const QRect &dayBox, const QString &time,
                         const QString &summary, const QString &description,
                         int &textY, bool singleLineLimit,
@@ -657,7 +648,26 @@ class KORGANIZERPRIVATE_EXPORT CalPrintPluginBase : public KOrg::PrintPlugin
     int mBorder;
     const KCalendarSystem *mCalSys;
 
-  public:
+  private:
+    QColor categoryColor( const QStringList &categories ) const;
+
+    /**
+     * Sets the QPainter's brush and pen color according to the Incidence's category.
+     */
+    void setColorsByIncidenceCategory( QPainter &p,
+                                       const KCalCore::Incidence::Ptr &incidence ) const;
+
+
+    QString holidayString( const QDate &date ) const;
+
+    KCalCore::Event::Ptr holidayEvent( const QDate &date ) const;
+
+    /**
+     * Returns a nice QColor for text, give the input color &c.
+     */
+    QColor getTextColor( const QColor &c ) const;
 };
+
+}
 
 #endif
