@@ -39,7 +39,7 @@
 #include <grantlee/markupdirector.h>
 #include <grantlee/texthtmlbuilder.h>
 #include <grantlee/plaintextmarkupbuilder.h>
-#include "notelockattribute.h"
+#include "noteshared/attributes/notelockattribute.h"
 
 Q_DECLARE_METATYPE(QTextDocument*)
 KJotsEntity::KJotsEntity(const QModelIndex &index, QObject *parent)
@@ -267,11 +267,11 @@ QVariant KJotsModel::data( const QModelIndex &index, int role ) const
   if ( role == Qt::DecorationRole )
   {
     const Item item = index.data( ItemRole ).value<Item>();
-    if ( item.isValid() && item.hasAttribute<NoteLockAttribute>() ) {
+    if ( item.isValid() && item.hasAttribute<NoteShared::NoteLockAttribute>() ) {
         return KIcon( QLatin1String("emblem-locked") );
     } else {
       const Collection col = index.data( CollectionRole ).value<Collection>();
-      if ( col.isValid() && col.hasAttribute<NoteLockAttribute>() ) {
+      if ( col.isValid() && col.hasAttribute<NoteShared::NoteLockAttribute>() ) {
         return KIcon(QLatin1String( "emblem-locked") );
       }
     }

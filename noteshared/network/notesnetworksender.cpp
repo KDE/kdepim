@@ -3,6 +3,7 @@
 
  Copyright (c) 2003, Daniel Martin <daniel.martin@pirack.com>
                2004, 2006, Michael Brade <brade@kde.org>
+ Copyright (c) 2013, Laurent Montel <montel@kde.org>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -30,15 +31,19 @@
  your version.
 *******************************************************************/
 
-#include "knotesnetsend.h"
+#include "notesnetworksender.h"
 
 #include <klocale.h>
 #include <kmessagebox.h>
 
 #include <QTextCodec>
-
-KNotesNetworkSender::KNotesNetworkSender( QTcpSocket *socket )
-    : QObject(), m_socket( socket ), m_note(), m_title(), m_sender()
+using namespace NoteShared;
+NotesNetworkSender::NotesNetworkSender( QTcpSocket *socket )
+    : QObject(),
+      m_socket( socket ),
+      m_note(),
+      m_title(),
+      m_sender()
 {
     // QObject:: prefix needed, otherwise the KStreamSocket::connect()
     // method is called!!!
@@ -50,25 +55,25 @@ KNotesNetworkSender::KNotesNetworkSender( QTcpSocket *socket )
                       SLOT(slotWritten(qint64)) );
 }
 
-KNotesNetworkSender::~KNotesNetworkSender()
+NotesNetworkSender::~NotesNetworkSender()
 {
     delete m_socket;
 }
 
-void KNotesNetworkSender::setSenderId( const QString &sender )
+void NotesNetworkSender::setSenderId( const QString &sender )
 {
     QTextCodec *codec = QTextCodec::codecForLocale();
     m_sender = codec->fromUnicode( sender );
 }
 
-void KNotesNetworkSender::setNote( const QString &title, const QString &text )
+void NotesNetworkSender::setNote( const QString &title, const QString &text )
 {
     QTextCodec *codec = QTextCodec::codecForLocale();
     m_title = codec->fromUnicode( title );
     m_note = codec->fromUnicode( text );
 }
 
-void KNotesNetworkSender::slotConnected()
+void NotesNetworkSender::slotConnected()
 {
     if ( m_sender.isEmpty() ) {
         m_note.prepend( m_title + "\n" );
@@ -79,7 +84,7 @@ void KNotesNetworkSender::slotConnected()
     m_socket->write( m_note );
 }
 
-void KNotesNetworkSender::slotWritten( qint64 )
+void NotesNetworkSender::slotWritten( qint64 )
 {
     // If end of text reached, close connection
     if ( m_socket->bytesToWrite() == 0 ) {
@@ -87,14 +92,14 @@ void KNotesNetworkSender::slotWritten( qint64 )
     }
 }
 
-void KNotesNetworkSender::slotError()
+void NotesNetworkSender::slotError()
 {
     KMessageBox::sorry( 0, i18n( "Communication error: %1",
                                  m_socket->errorString() ) );
     slotClosed();
 }
 
-void KNotesNetworkSender::slotClosed()
+void NotesNetworkSender::slotClosed()
 {
     deleteLater();
 }

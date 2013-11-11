@@ -72,10 +72,10 @@ void ImportMailJob::start()
     if (!mFileList.isEmpty()|| !mListResourceFile.isEmpty()) {
         if (mTypeSelected & Utils::MailTransport)
             restoreTransports();
-        if (mTypeSelected & Utils::Resources)
-            restoreResources();
         if (mTypeSelected & Utils::Mails)
             restoreMails();
+        if (mTypeSelected & Utils::Resources)
+            restoreResources();
         if (mTypeSelected & Utils::Identity)
             restoreIdentity();
         if (mTypeSelected & Utils::Config)
@@ -1283,9 +1283,4 @@ void ImportMailJob::mergeSieveTemplate(const KArchiveFile *archivefile, const QS
     }
     grpExisting.writeEntry(QLatin1String("templateCount"), numberOfExistingTemplate);
     grpExisting.sync();
-}
-
-QString ImportMailJob::componentName() const
-{
-    return QLatin1String("KMail");
 }

@@ -72,20 +72,23 @@ void ExportAddressbookJob::backupResources()
             const QString archivePath = Utils::addressbookPath() + identifier + QDir::separator();
 
             KUrl url = Utils::resourcePath(agent, QLatin1String("$HOME/.local/share/contacts/"));
-            if (!url.isEmpty()) {
-                const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("addressbook.zip"));
-                if (fileAdded) {
-                    const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
-                    if (!errorStr.isEmpty())
-                        Q_EMIT error(errorStr);
-                    url = Utils::akonadiAgentConfigPath(identifier);
-                    if (!url.isEmpty()) {
-                        const QString filename = url.fileName();
-                        const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
-                        if (fileAdded)
-                            Q_EMIT info(i18n("\"%1\" was backuped.",filename));
-                        else
-                            Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+            if (!mAgentPaths.contains(url.path())) {
+                mAgentPaths << url.path();
+                if (!url.isEmpty()) {
+                    const bool fileAdded = backupFullDirectory(url, archivePath, QLatin1String("addressbook.zip"));
+                    if (fileAdded) {
+                        const QString errorStr = Utils::storeResources(archive(), identifier, archivePath);
+                        if (!errorStr.isEmpty())
+                            Q_EMIT error(errorStr);
+                        url = Utils::akonadiAgentConfigPath(identifier);
+                        if (!url.isEmpty()) {
+                            const QString filename = url.fileName();
+                            const bool fileAdded  = archive()->addLocalFile(url.path(), archivePath + filename);
+                            if (fileAdded)
+                                Q_EMIT info(i18n("\"%1\" was backuped.",filename));
+                            else
+                                Q_EMIT error(i18n("\"%1\" file cannot be added to backup file.",filename));
+                        }
                     }
                 }
             }

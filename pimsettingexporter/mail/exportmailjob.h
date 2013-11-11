@@ -30,7 +30,6 @@ public:
     ~ExportMailJob();
 
     void start();
-    QString componentName() const;
 
 private:
     KUrl subdirPath(const KUrl &url ) const;
@@ -43,7 +42,6 @@ private:
     void backupAkonadiDb();
     void backupNepomuk();
     void writeDirectory(const QString &path, const QString &relativePath, KZip *mailArchive);
-    bool backupMailData(const KUrl &url, const QString &archivePath);
     bool checkProgram();
     time_t mArchiveTime;
 };

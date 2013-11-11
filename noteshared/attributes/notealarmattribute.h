@@ -15,18 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "filestorageinfo.h"
+#ifndef NOTE_ALARM_ATTRIBUTE_H
+#define NOTE_ALARM_ATTRIBUTE_H
 
-FileStorageInfo::FileStorageInfo()
+#include "noteshared_export.h"
+#include <Akonadi/Attribute>
+
+#include <KDateTime>
+namespace NoteShared {
+class NOTESHARED_EXPORT NoteAlarmAttribute : public Akonadi::Attribute
 {
+public:
+    NoteAlarmAttribute();
+    ~NoteAlarmAttribute();
+
+    QByteArray type() const;
+
+    NoteAlarmAttribute* clone() const;
+
+    QByteArray serialized() const;
+
+    void deserialize( const QByteArray &data );
+
+    void setDateTime(const KDateTime &dateTime);
+    KDateTime dateTime() const;
+
+private:
+    KDateTime mDateTime;
+};
 }
 
-FileStorageInfo::~FileStorageInfo()
-{
-
-}
-
-void FileStorageInfo::generateInfos()
-{
-    //TODO
-}
+#endif

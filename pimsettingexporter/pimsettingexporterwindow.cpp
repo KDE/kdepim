@@ -17,6 +17,7 @@
 
 #include "pimsettingexporterwindow.h"
 #include "logwidget.h"
+#include "dialog/showarchivestructuredialog.h"
 
 #include "mail/exportmailjob.h"
 #include "mail/importmailjob.h"
@@ -46,11 +47,11 @@
 #include "knode/importknodejob.h"
 
 #include "pimsettingexporterkernel.h"
-#include "selectiontypedialog.h"
+#include "dialog/selectiontypedialog.h"
 #include "utils.h"
 #include "archivestorage.h"
 
-#include "backupfilestructureinfodialog.h"
+#include "dialog/backupfilestructureinfodialog.h"
 
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/filter/filtermanager.h>
@@ -124,6 +125,10 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     KAction *archiveStructureInfo = ac->addAction(QLatin1String("show_structure_info"), this, SLOT(slotShowStructureInfos()));
     archiveStructureInfo->setText(i18n("Show Archive Structure Information..."));
 
+    KAction *showArchiveInformationsAction = ac->addAction(QLatin1String("show_archive_info"), this, SLOT(slotShowArchiveInformations()));
+    showArchiveInformationsAction->setText(i18n("Show Archive Information..."));
+
+
     KStandardAction::quit( this, SLOT(close()), ac );
     mRecentFilesAction = KStandardAction::openRecent(this, SLOT(slotRestoreFile(KUrl)), ac);
 
@@ -137,6 +142,17 @@ void PimSettingExporterWindow::slotRestoreFile(const KUrl &url)
     if (!url.isEmpty()) {
         loadData(url.path());
     }
+}
+
+void PimSettingExporterWindow::slotShowArchiveInformations()
+{
+    const QString filename = KFileDialog::getOpenFileName(KUrl("kfiledialog:///pimsettingexporter"), QLatin1String("*.zip"), this, i18n("Select Archive"));
+    if (filename.isEmpty())
+        return;
+
+    QPointer<ShowArchiveStructureDialog> dlg = new ShowArchiveStructureDialog(filename, this);
+    dlg->exec();
+    delete dlg;
 }
 
 void PimSettingExporterWindow::slotSaveLog()

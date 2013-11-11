@@ -15,20 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "../dialog/selectiontypedialog.h"
+#include "../dialog/showarchivestructuredialog.h"
 
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocale>
+#include <KFileDialog>
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "selectiontypedialog_gui", 0, ki18n("SelectionTypeTest_Gui"),
-                       "1.0", ki18n("Test for selectiontypedialog"));
+    KCmdLineArgs::init(argc, argv, "showarchivestructuredialog_gui", 0, ki18n("showarchivestructuredialog_Gui"),
+                       "1.0", ki18n("Test for showarchivestructuredialog"));
 
+    KCmdLineOptions option;
+    option.add("+[url]", ki18n("URL of a archive to open"));
+    KCmdLineArgs::addCmdLineOptions(option);
     KApplication app;
-    SelectionTypeDialog *dialog = new SelectionTypeDialog;
+
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+    QString fileName;
+    if (args->count()) {
+        fileName = args->url(0).path();
+    } else {
+        fileName = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*.zip"));
+    }
+    if (fileName.isEmpty())
+        return 0;
+    ShowArchiveStructureDialog *dialog = new ShowArchiveStructureDialog(fileName);
     dialog->resize(800, 600);
     dialog->show();
     app.exec();

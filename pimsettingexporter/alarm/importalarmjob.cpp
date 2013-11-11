@@ -58,8 +58,59 @@ void ImportAlarmJob::start()
 void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    //We don't want to create multiple resources for kalarm. Overwrite existing
-    restoreResourceFile(QString::fromLatin1("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm, true);
+    restoreResourceFile(QString::fromLatin1("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm, false);
+
+    if (!mListResourceFile.isEmpty()) {
+        QDir dir(mTempDirName);
+        dir.mkdir(Utils::alarmPath());
+        const QString copyToDirName(mTempDirName + QLatin1Char('/') + Utils::alarmPath());
+
+        for (int i = 0; i < mListResourceFile.size(); ++i) {
+            resourceFiles value = mListResourceFile.at(i);
+            QMap<QString, QVariant> settings;
+            if (value.akonadiConfigFile.contains(QLatin1String("akonadi_kalarm_dir_resource_"))) {
+                const KArchiveEntry* fileResouceEntry = mArchiveDirectory->entry(value.akonadiConfigFile);
+                if (fileResouceEntry && fileResouceEntry->isFile()) {
+                    const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
+                    file->copyTo(copyToDirName);
+                    QString resourceName(file->name());
+
+                    QString filename(file->name());
+                    //TODO adapt filename otherwise it will use all the time the same filename.
+                    qDebug()<<" filename :"<<filename;
+
+                    KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+
+                    const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeAlarm);
+
+                    const QString dataFile = value.akonadiResources;
+                    const KArchiveEntry* dataResouceEntry = mArchiveDirectory->entry(dataFile);
+                    if (dataResouceEntry->isFile()) {
+                        const KArchiveFile* file = static_cast<const KArchiveFile*>(dataResouceEntry);
+                        //TODO  adapt directory name too
+                        extractZipFile(file, copyToDirName, newUrl.path());
+                    }
+                    settings.insert(QLatin1String("Path"), newUrl.path());
+
+                    const QString agentConfigFile = value.akonadiAgentConfigFile;
+                    if (!agentConfigFile.isEmpty()) {
+                        const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
+                        if (akonadiAgentConfigEntry->isFile()) {
+                            const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
+                            file->copyTo(copyToDirName);
+                            resourceName = file->name();
+                            KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+                            filename = Utils::akonadiAgentName(akonadiAgentConfig);
+                        }
+                    }
+
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_kalarm_dir_resource"), filename, settings );
+                    infoAboutNewResource(newResource);
+                    qDebug()<<" newResource"<<newResource;
+                }
+            }
+        }
+    }
 }
 
 void ImportAlarmJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
@@ -94,7 +145,7 @@ void ImportAlarmJob::storeAlarmArchiveResource(const KArchiveDirectory *dir, con
                 const QString archPath(prefix + QLatin1Char('/') + entryName + QLatin1Char('/'));
                 resourceFiles files;
                 Q_FOREACH(const QString &name, lst) {
-                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_alarm_resource_"))
+                    if (name.endsWith(QLatin1String("rc")) && (name.contains(QLatin1String("akonadi_kalarm_resource_"))
                                                                || name.contains(QLatin1String("akonadi_kalarm_dir_resource_")))) {
                         files.akonadiConfigFile = archPath + name;
                     } else if (name.startsWith(Utils::prefixAkonadiConfigFile())) {

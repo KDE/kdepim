@@ -15,21 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FILESTORAGEINFO_H
-#define FILESTORAGEINFO_H
+#ifndef NOTEUTILS_H
+#define NOTEUTILS_H
 
-#include <QDomDocument>
-
-class FileStorageInfo
+#include "noteshared_export.h"
+#include <QString>
+class QWidget;
+namespace NoteShared
 {
-public:
-    FileStorageInfo();
-    ~FileStorageInfo();
+NOTESHARED_EXPORT bool sendToMail(QWidget *parent, const QString &title, const QString &message);
+}
 
-    void generateInfos();
-
-private:
-    QDomDocument mDoc;
-};
-
-#endif // FILESTORAGEINFO_H
+#endif // NOTEUTILS_H

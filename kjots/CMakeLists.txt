@@ -11,6 +11,7 @@ include_directories(
   ${KDEPIMLIBS_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${Grantlee_INCLUDE_DIRS}
+  ${CMAKE_SOURCE_DIR}/noteshared
 )
 
 set(kjotsLibs ${KDE4_KIO_LIBS} kdepim)
@@ -33,7 +34,6 @@ kde4_add_ui_files(kjots_config_SRCS confpagemisc.ui)
 
 set (kjots_common_SRCS
      aboutdata.cpp
-     notelockattribute.cpp
      kjotslockjob.cpp
      kjotsedit.cpp
      kjotstreeview.cpp
@@ -104,6 +104,7 @@ target_link_libraries(kjots
   ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
    ${KDE4_KPRINTUTILS_LIBS}
   akonadi_next
+  noteshared
 )
 
 
@@ -143,6 +144,7 @@ install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXC
     ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
     ${KDE4_KPRINTUTILS_LIBS}
     akonadi_next
+    noteshared
   )
 
   install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )

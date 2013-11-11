@@ -2,7 +2,7 @@
  KNotes -- Notes for the KDE project
 
  Copyright (c) 2003, Daniel Martin <daniel.martin@pirack.com>
-               2004, 2006, Michael Brade <brade@kde.org>
+ Copyright (c) 2013, Laurent Montel <montel@kde.org>
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -30,33 +30,41 @@
  your version.
 *******************************************************************/
 
-#ifndef KNOTESNETSEND_H
-#define KNOTESNETSEND_H
+#ifndef NOTESNETWORKRECEIVER_H
+#define NOTESNETWORKRECEIVER_H
 
-#include <QTcpSocket>
-#include "knotes_export.h"
+#include "noteshared_export.h"
+#include <QObject>
+#include <QAbstractSocket>
 
-class KNOTES_EXPORT KNotesNetworkSender : public QObject
+class QTcpSocket;
+class QTimer;
+
+
+namespace NoteShared {
+class NOTESHARED_EXPORT NotesNetworkReceiver : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNotesNetworkSender(  QTcpSocket *socket );
-    ~KNotesNetworkSender();
-    
-    void setSenderId( const QString &sender );
-    void setNote( const QString &title, const QString &text );
-    
-protected slots:
-    void slotConnected();
-    void slotError();
-    void slotClosed();
-    void slotWritten( qint64 );
-    
-private:
-    QTcpSocket *m_socket;
-    QByteArray m_note;
-    QByteArray m_title;
-    QByteArray m_sender;
-};
+    explicit NotesNetworkReceiver( QTcpSocket * );
+    ~NotesNetworkReceiver();
 
+signals:
+    void sigNoteReceived( const QString &, const QString & );
+
+private slots:
+    void slotDataAvailable();
+    void slotReceptionTimeout();
+    void slotConnectionClosed();
+    void slotError( QAbstractSocket::SocketError );
+
+private:
+    QTimer *m_timer;       // to avoid memory and connection floods
+
+    QByteArray *m_buffer;
+    QTcpSocket *m_sock;
+
+    QString m_titleAddon;
+};
+}
 #endif

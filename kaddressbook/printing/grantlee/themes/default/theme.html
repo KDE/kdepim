@@ -3,9 +3,12 @@
 {% if contacts %}
 {% for contact in contacts %}
 <h2>{{ contact.realName|safe }}</h2>
+<h2>{{ contact.organization }}</h2>
+<h2>{{ contact.nickName }}</h2>
 <p>{{ contact.emails|safe }}</p>
 <p>{{ contact.note|safe }}</p>
-<p>{{ contact.photo|safe }}</p>
+<p>{{ contacti18n.notei18n }} : {{ contact.note|safe }}</p>
+<p>
 <br>
 <br>
 {% endfor %}

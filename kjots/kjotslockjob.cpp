@@ -22,7 +22,7 @@
 #include "kjotslockjob.h"
 #include <Akonadi/CollectionModifyJob>
 #include <Akonadi/ItemModifyJob>
-#include "notelockattribute.h"
+#include "noteshared/attributes/notelockattribute.h"
 
 KJotsLockJob::KJotsLockJob( const Akonadi::Collection::List& collections, const Akonadi::Item::List& items, KJotsLockJob::Type type, QObject* parent )
   : Job( parent ), m_collections( collections ), m_items( items ), m_type( type )
@@ -45,18 +45,18 @@ void KJotsLockJob::doStart()
   {
     Akonadi::Collection col = _col;
     if ( m_type == LockJob )
-      col.addAttribute( new NoteLockAttribute() );
+      col.addAttribute( new NoteShared::NoteLockAttribute() );
     else
-      col.removeAttribute<NoteLockAttribute>();
+      col.removeAttribute<NoteShared::NoteLockAttribute>();
     new Akonadi::CollectionModifyJob( col, this );
   }
   foreach ( const Akonadi::Item &_item, m_items )
   {
     Akonadi::Item item = _item;
     if ( m_type == LockJob )
-      item.addAttribute( new NoteLockAttribute() );
+      item.addAttribute( new NoteShared::NoteLockAttribute() );
     else
-      item.removeAttribute<NoteLockAttribute>();
+      item.removeAttribute<NoteShared::NoteLockAttribute>();
 
     new Akonadi::ItemModifyJob( item, this );
   }
