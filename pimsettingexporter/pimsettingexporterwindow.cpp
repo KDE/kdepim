@@ -16,7 +16,7 @@
 */
 
 #include "pimsettingexporterwindow.h"
-#include "logwidget.h"
+#include "widgets/logwidget.h"
 
 #include "mail/exportmailjob.h"
 #include "mail/importmailjob.h"

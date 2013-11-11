@@ -16,7 +16,7 @@
 */
 
 #include "selectiontypedialog.h"
-#include "selectiontypetreewidget.h"
+#include "widgets/selectiontypetreewidget.h"
 
 #include <KLocale>
 #include <QHBoxLayout>

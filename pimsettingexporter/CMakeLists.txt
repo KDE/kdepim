@@ -18,10 +18,10 @@ include_directories(${AKONADI_INCLUDE_DIR}
 
 set(pimsettingexporter_SRCS
   main.cpp
-  selectiontypetreewidget.cpp
+  widgets/selectiontypetreewidget.cpp
   abstractimportexportjob.cpp
   pimsettingexporterwindow.cpp
-  logwidget.cpp
+  widgets/logwidget.cpp
   mail/exportmailjob.cpp
   mail/importmailjob.cpp
   pimsettingexporterkernel.cpp
