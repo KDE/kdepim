@@ -50,12 +50,12 @@ void ShowArchiveStructureDialog::fillTree(const QString &filename)
     KZip *zip = new KZip(filename);
     bool result = zip->open(QIODevice::ReadOnly);
     if (!result) {
-        KMessageBox::error(this, i18n("Archive cannot be opened in read mode."), i18n("Can not open archive"));
+        KMessageBox::error(this, i18n("Archive cannot be opened in read mode."), i18n("Cannot open archive"));
         delete zip;
         return;
     }
     const KArchiveDirectory *topDirectory = zip->directory();
-    searchArchiveElement(Utils::infoPath(), topDirectory, i18n("Infos"));
+    searchArchiveElement(Utils::infoPath(), topDirectory, i18n("Info"));
     searchArchiveElement(Utils::mailsPath(), topDirectory, i18n("KMail"));
     searchArchiveElement(Utils::alarmPath(), topDirectory, i18n("KAlarm"));
     searchArchiveElement(Utils::calendarPath(), topDirectory, i18n("KOrganizer"));
@@ -65,7 +65,7 @@ void ShowArchiveStructureDialog::fillTree(const QString &filename)
     searchArchiveElement(Utils::resourcesPath(), topDirectory, i18n("Resources"));
     searchArchiveElement(Utils::configsPath(), topDirectory, i18n("Configs"));
     searchArchiveElement(Utils::transportsPath(), topDirectory, i18n("Transports Config"));
-    searchArchiveElement(Utils::dataPath(), topDirectory, i18n("Datas"));
+    searchArchiveElement(Utils::dataPath(), topDirectory, i18n("Data"));
     searchArchiveElement(Utils::akonadiPath(), topDirectory, i18n("Akonadi"));
     delete zip;
 }

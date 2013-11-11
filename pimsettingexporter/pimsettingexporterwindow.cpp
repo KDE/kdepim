@@ -126,7 +126,7 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     archiveStructureInfo->setText(i18n("Show Archive Structure Information..."));
 
     KAction *showArchiveInformationsAction = ac->addAction(QLatin1String("show_archive_info"), this, SLOT(slotShowArchiveInformations()));
-    showArchiveInformationsAction->setText(i18n("Show Archive Informations..."));
+    showArchiveInformationsAction->setText(i18n("Show Archive Information..."));
 
 
     KStandardAction::quit( this, SLOT(close()), ac );
