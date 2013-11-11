@@ -22,6 +22,7 @@ set(calendarsupport_LIB_SRCS
   calendarutils.cpp
   categoryconfig.cpp
   categoryhierarchyreader.cpp
+  cellitem.cpp
   collectiongeneralpage.cpp
   collectionselection.cpp
   eventarchiver.cpp
@@ -35,7 +36,6 @@ set(calendarsupport_LIB_SRCS
   printing/calprintpluginbase.cpp
   printing/calprintdefaultplugins.cpp
   printing/calprinter.cpp
-  printing/cellitem.cpp
   printing/journalprint.cpp
   printing/yearprint.cpp
 

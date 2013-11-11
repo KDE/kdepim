@@ -24,15 +24,16 @@
 #define EVENTVIEWS_AGENDAITEM_H
 
 #include "eventviews_export.h"
-#include "cellitem.h"
+
+#include <calendarsupport/cellitem.h>
 
 #include <Akonadi/Calendar/ETMCalendar>
 #include <Akonadi/Item>
+
 #include <KDateTime>
 
 #include <QWidget>
 #include <QPointer>
-
 
 namespace EventViews {
 
@@ -76,7 +77,7 @@ struct MultiItemInfo
   for that longer sequence including all (shown and hidden) items.
 */
 
-class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CellItem
+class EVENTVIEWS_EXPORT AgendaItem : public QWidget, public CalendarSupport::CellItem
 {
   Q_OBJECT
   public:

@@ -23,7 +23,7 @@
 #ifndef CALENDARSUPPORT_PRINTING_YEARPRINT_H
 #define CALENDARSUPPORT_PRINTING_YEARPRINT_H
 
-#include "../calendarsupport_export.h"
+#include "calendarsupport_export.h"
 #include "calprintpluginbase.h"
 #include "ui_calprintyearconfig_base.h"
 

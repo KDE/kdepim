@@ -20,7 +20,7 @@
 #ifndef CALENDARSUPPORT_PRINTING_PRINTPLUGIN_H
 #define CALENDARSUPPORT_PRINTING_PRINTPLUGIN_H
 
-#include "../plugin.h"
+#include "plugin.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
 

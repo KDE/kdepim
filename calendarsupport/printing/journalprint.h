@@ -23,7 +23,7 @@
 #ifndef CALENDARSUPPORT_PRINTING_JOURNALPRINT_H
 #define CALENDARSUPPORT_PRINTING_JOURNALPRINT_H
 
-#include "../calendarsupport_export.h"
+#include "calendarsupport_export.h"
 #include "calprintpluginbase.h"
 #include "ui_calprintjournalconfig_base.h"
 

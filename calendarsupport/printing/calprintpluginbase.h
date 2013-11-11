@@ -25,7 +25,7 @@
 #ifndef CALENDARSUPPORT_PRINTING_CALPRINTPLUGINBASE_H
 #define CALENDARSUPPORT_PRINTING_CALPRINTPLUGINBASE_H
 
-#include "../calendarsupport_export.h"
+#include "calendarsupport_export.h"
 #include "printplugin.h"
 
 #include <Akonadi/Calendar/ETMCalendar>

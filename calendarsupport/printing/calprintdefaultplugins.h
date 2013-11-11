@@ -25,7 +25,7 @@
 #ifndef CALENDARSUPPORT_CALPRINTDEFAULTPLUGINS_H
 #define CALENDARSUPPORT_CALPRINTDEFAULTPLUGINS_H
 
-#include "../calendarsupport_export.h"
+#include "calendarsupport_export.h"
 #include "calprintpluginbase.h"
 
 #include "ui_calprintincidenceconfig_base.h"

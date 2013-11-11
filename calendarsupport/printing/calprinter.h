@@ -23,7 +23,7 @@
 #ifndef CALENDARSUPPORT_PRINTING_CALPRINTER_H
 #define CALENDARSUPPORT_PRINTING_CALPRINTER_H
 
-#include "../calendarsupport_export.h"
+#include "calendarsupport_export.h"
 #include "printplugin.h"
 
 #include <KComboBox>

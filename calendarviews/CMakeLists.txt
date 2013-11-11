@@ -49,7 +49,6 @@ set(eventviews_LIB_SRCS
   agenda/agendaview.cpp
   agenda/alternatelabel.cpp
   agenda/calendardecoration.cpp
-  agenda/cellitem.cpp
   agenda/decorationlabel.cpp
   agenda/timelabels.cpp
   agenda/timelabelszone.cpp
