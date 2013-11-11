@@ -54,7 +54,7 @@ Root
 |       |---------templatesconfigurationrc
 |       |---------kalarmrc
 |       |---------korganizerrc
-|       |---------korganizer_printing.rc 
+|       |---------calendar_printing.rc 
 |       |---------korgacrc
 |       |---------kaddressbookrc
 |       |---------akonadi_mailfilter_agent.notifyrc
