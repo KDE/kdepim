@@ -80,7 +80,7 @@ NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
     m_hostCombo->setDuplicatesEnabled( false );
 
     // Read known hosts from configfile
-    m_hostCombo->setHistoryItems( NoteSharedGlobalConfig::knownHosts(), true );
+    m_hostCombo->setHistoryItems( NoteShared::NoteSharedGlobalConfig::knownHosts(), true );
     m_hostCombo->setFocus();
     connect( m_hostCombo->lineEdit(), SIGNAL(textChanged(QString)),
              this, SLOT(slotTextChanged(QString)) );
@@ -95,14 +95,14 @@ NoteHostDialog::~NoteHostDialog()
     }
 
     // Write known hosts to configfile
-    NoteSharedGlobalConfig::setKnownHosts( m_hostCombo->historyItems() );
-    NoteSharedGlobalConfig::setNoteHostDialogSize(size());
-    NoteSharedGlobalConfig::self()->writeConfig();
+    NoteShared::NoteSharedGlobalConfig::setKnownHosts( m_hostCombo->historyItems() );
+    NoteShared::NoteSharedGlobalConfig::setNoteHostDialogSize(size());
+    NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
 }
 
 void NoteHostDialog::readConfig()
 {
-    const QSize size = NoteSharedGlobalConfig::noteHostDialogSize();
+    const QSize size = NoteShared::NoteSharedGlobalConfig::noteHostDialogSize();
     if ( size.isValid() ) {
         resize( size );
     }

@@ -24,7 +24,7 @@
 NOTESHARED_EXPORT bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const QString &title, const QString &message)
 {
     // get the mail action command
-    const QStringList cmd_list = NoteSharedGlobalConfig::mailAction().split( QLatin1Char(' '), QString::SkipEmptyParts );
+    const QStringList cmd_list = NoteShared::NoteSharedGlobalConfig::mailAction().split( QLatin1Char(' '), QString::SkipEmptyParts );
     if (cmd_list.isEmpty()) {
         KMessageBox::sorry( parent, i18n( "Please configure send mail action." ) );
         return false;
