@@ -51,7 +51,7 @@
 #include <kdebug.h>
 #include "kjotsmodel.h"
 #include "noteshared/attributes/notelockattribute.h"
-
+#include "noteshared/editor/noteeditorutils.h"
 
 #ifndef KDE_USE_FINAL
 Q_DECLARE_METATYPE(QTextDocument*)
@@ -283,9 +283,7 @@ void KJotsEdit::onLinkify ( void )
 void KJotsEdit::addCheckmark( void )
 {
     QTextCursor cursor = textCursor();
-    static const QChar unicode[] = {0x2713};
-    int size = sizeof(unicode) / sizeof(QChar);
-    cursor.insertText( QString::fromRawData(unicode, size) );
+    NoteShared::NoteEditorUtils::addCheckmark(cursor);
 }
 
 bool KJotsEdit::canInsertFromMimeData ( const QMimeData *source ) const
