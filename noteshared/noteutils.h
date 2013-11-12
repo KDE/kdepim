@@ -25,6 +25,7 @@ namespace NoteShared
 {
 namespace NoteUtils {
 NOTESHARED_EXPORT bool sendToMail(QWidget *parent, const QString &title, const QString &message);
+NOTESHARED_EXPORT void sendToNetwork(QWidget *parent, const QString &title, const QString &message);
 }
 }
 

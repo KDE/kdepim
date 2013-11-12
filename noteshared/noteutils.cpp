@@ -16,12 +16,17 @@
 */
 
 #include "noteutils.h"
+#include "network/notesnetworksender.h"
+#include "network/notehostdialog.h"
 #include "notesharedglobalconfig.h"
 #include <KProcess>
+#include <ksocketfactory.h>
 #include <KMessageBox>
 #include <KLocale>
 
-NOTESHARED_EXPORT bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const QString &title, const QString &message)
+#include <QPointer>
+
+bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const QString &title, const QString &message)
 {
     // get the mail action command
     const QStringList cmd_list = NoteShared::NoteSharedGlobalConfig::mailAction().split( QLatin1Char(' '), QString::SkipEmptyParts );
@@ -46,3 +51,34 @@ NOTESHARED_EXPORT bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const 
     }
     return true;
 }
+
+void NoteShared::NoteUtils::sendToNetwork(QWidget *parent, const QString &title, const QString &message)
+{
+    // pop up dialog to get the IP
+    QPointer<NoteShared::NoteHostDialog> hostDlg = new NoteShared::NoteHostDialog( i18n( "Send \"%1\"", title ), parent );
+    if ( hostDlg->exec() ) {
+
+        const QString host = hostDlg->host();
+        quint16 port = hostDlg->port();
+
+        if ( !port ) { // not specified, use default
+            port = NoteShared::NoteSharedGlobalConfig::port();
+        }
+
+        if ( host.isEmpty() ) {
+            KMessageBox::sorry( parent, i18n( "The host cannot be empty." ) );
+            delete hostDlg;
+            return;
+        }
+
+        // Send the note
+
+        //TODO verify connectToHost
+        NoteShared::NotesNetworkSender *sender = new NoteShared::NotesNetworkSender(
+                    KSocketFactory::connectToHost( QLatin1String("notes"), host, port ) );
+        sender->setSenderId( NoteShared::NoteSharedGlobalConfig::senderID() );
+        sender->setNote( title, message ); // FIXME: plainText ??
+    }
+    delete hostDlg;
+}
+
