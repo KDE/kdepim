@@ -15,6 +15,8 @@ set(libnoteshared_SRCS
     network/notesnetworkreceiver.cpp
     network/notehostdialog.cpp
     editor/noteeditorutils.cpp
+    config/noteactionconfig.cpp
+    config/notenetworkconfig.cpp
 )
 
 set( libnoteshared_kcfg_lib_SRCS settings/notesharedglobalconfig.kcfgc )
