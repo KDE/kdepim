@@ -240,8 +240,10 @@ QColor CalPrintPluginBase::getTextColor( const QColor &c ) const
 QTime CalPrintPluginBase::dayStart() const
 {
   QTime start( 8, 0, 0 );
-  // TODO: read default starting time of day from configfile
-  //start = KCalPrefs::instance()->dayStart();
+  QDateTime dayBegins = KCalPrefs::instance()->dayBegins();
+  if ( dayBegins.isValid() ) {
+    start = dayBegins.time();
+  }
   return start;
 }
 
