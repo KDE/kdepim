@@ -34,7 +34,7 @@
 #define KNOTEHOSTDIALOG_H
 
 #include <kdialog.h>
-#include "knotes_export.h"
+#include "noteshared_export.h"
 class KHistoryComboBox;
 class QTableView;
 class QModelIndex;
@@ -43,13 +43,13 @@ class QModelIndex;
 /**
  * A dialog that allows to select network service or request a hostname or IP address.
  */
-class KNOTES_EXPORT KNoteHostDialog
-        : public KDialog
+namespace NoteShared {
+class NOTESHARED_EXPORT NoteHostDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KNoteHostDialog( const QString &caption, QWidget *parent = 0 );
-    ~KNoteHostDialog();
+    explicit NoteHostDialog( const QString &caption, QWidget *parent = 0 );
+    ~NoteHostDialog();
     
     QString host() const;
     /**
@@ -66,5 +66,6 @@ private:
     KHistoryComboBox *m_hostCombo;
     QTableView *m_servicesView;
 };
+}
 
 #endif

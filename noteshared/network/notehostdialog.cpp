@@ -30,8 +30,8 @@
  your version.
 *******************************************************************/
 
-#include "knotehostdialog.h"
-#include "knotesglobalconfig.h"
+#include "notehostdialog.h"
+#include "notesharedglobalconfig.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -50,8 +50,8 @@
 #include <QSortFilterProxyModel>
 #include <QHeaderView>
 
-
-KNoteHostDialog::KNoteHostDialog( const QString &caption, QWidget *parent )
+using namespace NoteShared;
+NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
     : KDialog( parent )
 {
     setCaption( caption );
@@ -80,7 +80,7 @@ KNoteHostDialog::KNoteHostDialog( const QString &caption, QWidget *parent )
     m_hostCombo->setDuplicatesEnabled( false );
 
     // Read known hosts from configfile
-    m_hostCombo->setHistoryItems( KNotesGlobalConfig::knownHosts(), true );
+    m_hostCombo->setHistoryItems( NoteSharedGlobalConfig::knownHosts(), true );
     m_hostCombo->setFocus();
     connect( m_hostCombo->lineEdit(), SIGNAL(textChanged(QString)),
              this, SLOT(slotTextChanged(QString)) );
@@ -88,43 +88,43 @@ KNoteHostDialog::KNoteHostDialog( const QString &caption, QWidget *parent )
     readConfig();
 }
 
-KNoteHostDialog::~KNoteHostDialog()
+NoteHostDialog::~NoteHostDialog()
 {
     if ( result() == Accepted ) {
         m_hostCombo->addToHistory( m_hostCombo->currentText().trimmed() );
     }
 
     // Write known hosts to configfile
-    KNotesGlobalConfig::setKnownHosts( m_hostCombo->historyItems() );
-    KNotesGlobalConfig::setNoteHostDialogSize(size());
-    KNotesGlobalConfig::self()->writeConfig();
+    NoteSharedGlobalConfig::setKnownHosts( m_hostCombo->historyItems() );
+    NoteSharedGlobalConfig::setNoteHostDialogSize(size());
+    NoteSharedGlobalConfig::self()->writeConfig();
 }
 
-void KNoteHostDialog::readConfig()
+void NoteHostDialog::readConfig()
 {
-    const QSize size = KNotesGlobalConfig::noteHostDialogSize();
+    const QSize size = NoteSharedGlobalConfig::noteHostDialogSize();
     if ( size.isValid() ) {
         resize( size );
     }
 }
 
-void KNoteHostDialog::slotTextChanged( const QString &text )
+void NoteHostDialog::slotTextChanged( const QString &text )
 {
     enableButton( Ok, !text.isEmpty() );
 }
 
-void KNoteHostDialog::serviceSelected( const QModelIndex& idx )
+void NoteHostDialog::serviceSelected( const QModelIndex& idx )
 {
     DNSSD::RemoteService::Ptr srv=idx.data( DNSSD::ServiceModel::ServicePtrRole ).value<DNSSD::RemoteService::Ptr>();
     m_hostCombo->lineEdit()->setText( srv->hostName() + QLatin1String(":") + QString::number( srv->port() ) );
 }
 
-QString KNoteHostDialog::host() const
+QString NoteHostDialog::host() const
 {
     return m_hostCombo->currentText().section( QLatin1Char(':'), 0, 0 );
 }
 
-quint16 KNoteHostDialog::port() const
+quint16 NoteHostDialog::port() const
 {
     return m_hostCombo->currentText().section( QLatin1Char(':'), 1 ).toUShort();
 }
