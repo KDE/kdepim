@@ -21,7 +21,7 @@
 #include <KMessageBox>
 #include <KLocale>
 
-NOTESHARED_EXPORT bool NoteShared::sendToMail(QWidget *parent, const QString &title, const QString &message)
+NOTESHARED_EXPORT bool NoteShared::NoteUtils::sendToMail(QWidget *parent, const QString &title, const QString &message)
 {
     // get the mail action command
     const QStringList cmd_list = NoteSharedGlobalConfig::mailAction().split( QLatin1Char(' '), QString::SkipEmptyParts );
