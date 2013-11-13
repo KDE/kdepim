@@ -126,10 +126,10 @@ void ImportMailJob::storeMailArchiveResource(const KArchiveDirectory*dir, const 
                     } else {
                         files.akonadiResources = archPath + name;
                     }
-                    //Show debug:
-                    files.debug();
-                    mListResourceFile.append(files);
                 }
+                //Show debug:
+                files.debug();
+                mListResourceFile.append(files);
             } else {
                 kDebug()<<" Problem in archive. number of file "<<lst.count();
             }
@@ -437,7 +437,7 @@ void ImportMailJob::restoreMails()
             file->copyTo(copyToDirName);
             const QString resourceName(file->name());
             const QString filename(file->name());
-
+            qDebug()<<" filename "<<filename<<" resourceName"<<resourceName;
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
             const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
