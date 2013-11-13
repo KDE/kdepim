@@ -194,10 +194,7 @@ void PimSettingExporterWindow::slotBackupData()
             return;
         }
 
-        slotAddInfo(i18n("Start to backup data in \'%1\'", filename));
-        slotAddEndLine();
-        //Add version
-        Utils::addVersion(mArchiveStorage->archive());
+        backupStart(filename);
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -258,18 +255,30 @@ void PimSettingExporterWindow::slotBackupData()
             }
             ++i;
         }
-
-        slotAddInfo(i18n("Backup in \'%1\' done.", filename));
-        //At the end
-        mArchiveStorage->closeArchive();
-        delete mArchiveStorage;
-        mArchiveStorage = 0;
-        delete mImportExportData;
-        mImportExportData = 0;
-        KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
+        backupFinished(filename);
     } else {
         delete dialog;
     }
+}
+
+void PimSettingExporterWindow::backupStart(const QString &filename)
+{
+    slotAddInfo(i18n("Start to backup data in \'%1\'", filename));
+    slotAddEndLine();
+    //Add version
+    Utils::addVersion(mArchiveStorage->archive());
+}
+
+void PimSettingExporterWindow::backupFinished(const QString &filename)
+{
+    slotAddInfo(i18n("Backup in \'%1\' done.", filename));
+    //At the end
+    mArchiveStorage->closeArchive();
+    delete mArchiveStorage;
+    mArchiveStorage = 0;
+    delete mImportExportData;
+    mImportExportData = 0;
+    KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
 }
 
 void PimSettingExporterWindow::slotAddInfo(const QString& info)
@@ -321,12 +330,7 @@ void PimSettingExporterWindow::loadData(const QString &filename)
             return;
         }
 
-        const int version = Utils::archiveVersion(mArchiveStorage->archive());
-        qDebug()<<" version "<<version;
-        AbstractImportExportJob::setArchiveVersion(version);
-
-        slotAddInfo(i18n("Start to restore data from \'%1\'", filename));
-        slotAddEndLine();
+        restoreStart(filename);
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -387,17 +391,31 @@ void PimSettingExporterWindow::loadData(const QString &filename)
             }
             ++i;
         }
-
-        slotAddInfo(i18n("Restoring data from \'%1\' done.", filename));
-        //At the end
-        mArchiveStorage->closeArchive();
-        delete mArchiveStorage;
-        mArchiveStorage = 0;
-        delete mImportExportData;
-        mImportExportData = 0;
+        restoreFinished(filename);
     } else {
         delete dialog;
     }
+}
+
+void PimSettingExporterWindow::restoreStart(const QString &filename)
+{
+    const int version = Utils::archiveVersion(mArchiveStorage->archive());
+    qDebug()<<" version "<<version;
+    AbstractImportExportJob::setArchiveVersion(version);
+
+    slotAddInfo(i18n("Start to restore data from \'%1\'", filename));
+    slotAddEndLine();
+}
+
+void PimSettingExporterWindow::restoreFinished(const QString &filename)
+{
+    slotAddInfo(i18n("Restoring data from \'%1\' done.", filename));
+    //At the end
+    mArchiveStorage->closeArchive();
+    delete mArchiveStorage;
+    mArchiveStorage = 0;
+    delete mImportExportData;
+    mImportExportData = 0;
 }
 
 void PimSettingExporterWindow::executeJob()
