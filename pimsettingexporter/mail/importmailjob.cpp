@@ -18,6 +18,7 @@
 #include "importmailjob.h"
 #include "akonadidatabase.h"
 #include "archivestorage.h"
+#include "synchronizeresourcejob.h"
 
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
@@ -55,7 +56,8 @@ using namespace Akonadi;
 static const QString storeMails = QLatin1String("backupmail/");
 
 ImportMailJob::ImportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
-    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
+    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
+      mIndex(-1)
 {
     initializeImportJob();
 }
@@ -70,22 +72,53 @@ void ImportMailJob::start()
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory,QString());
     if (!mFileList.isEmpty()|| !mListResourceFile.isEmpty()) {
-        if (mTypeSelected & Utils::MailTransport)
-            restoreTransports();
-        if (mTypeSelected & Utils::Mails)
-            restoreMails();
-        if (mTypeSelected & Utils::Resources)
-            restoreResources();
-        if (mTypeSelected & Utils::Identity)
-            restoreIdentity();
-        if (mTypeSelected & Utils::Config)
-            restoreConfig();
-        if (mTypeSelected & Utils::AkonadiDb)
-            restoreAkonadiDb();
-        if (mTypeSelected & Utils::Nepomuk)
-            restoreNepomuk();
+        initializeListStep();
+        nextStep();
+    } else {
+        Q_EMIT jobFinished();
     }
-    Q_EMIT jobFinished();
+}
+
+void ImportMailJob::nextStep()
+{
+    ++mIndex;
+    if (mIndex < mListStep.count()) {
+        Utils::StoredType type = mListStep.at(mIndex);
+        if (type == Utils::MailTransport)
+            restoreTransports();
+        if (type == Utils::Mails)
+            restoreMails();
+        if (type == Utils::Resources)
+            restoreResources();
+        if (type == Utils::Identity)
+            restoreIdentity();
+        if (type == Utils::Config)
+            restoreConfig();
+        if (type == Utils::AkonadiDb)
+            restoreAkonadiDb();
+        if (type == Utils::Nepomuk)
+            restoreNepomuk();
+    } else {
+        Q_EMIT jobFinished();
+    }
+}
+
+void ImportMailJob::initializeListStep()
+{
+    if (mTypeSelected & Utils::MailTransport)
+        mListStep << Utils::MailTransport;
+    if (mTypeSelected & Utils::Mails)
+        mListStep << Utils::Mails;
+    if (mTypeSelected & Utils::Resources)
+        mListStep << Utils::Resources;
+    if (mTypeSelected & Utils::Identity)
+        mListStep << Utils::Identity;
+    if (mTypeSelected & Utils::Config)
+        mListStep << Utils::Config;
+    if (mTypeSelected & Utils::AkonadiDb)
+        mListStep << Utils::AkonadiDb;
+    if (mTypeSelected & Utils::Nepomuk)
+        mListStep << Utils::Nepomuk;
 }
 
 void ImportMailJob::searchAllFiles(const KArchiveDirectory*dir,const QString&prefix)
@@ -143,6 +176,7 @@ void ImportMailJob::restoreTransports()
     const QString path = Utils::transportsPath()+QLatin1String("mailtransports");
     if (!mFileList.contains(path)) {
         Q_EMIT error(i18n("mailtransports file could not be found in the archive."));
+        nextStep();
         return;
     }
     Q_EMIT info(i18n("Restore transports..."));
@@ -226,6 +260,7 @@ void ImportMailJob::restoreTransports()
     } else {
         Q_EMIT error(i18n("Failed to restore transports file."));
     }
+    nextStep();
 }
 
 void ImportMailJob::restoreResources()
@@ -418,10 +453,12 @@ void ImportMailJob::restoreResources()
         }
     }
     Q_EMIT info(i18n("Resources restored."));
+    nextStep();
 }
 
 void ImportMailJob::restoreMails()
 {
+    QStringList mListResourceToSync;
     Q_EMIT info(i18n("Restore mails..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     QDir dir(mTempDirName);
@@ -442,7 +479,6 @@ void ImportMailJob::restoreMails()
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
             const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
-
 
             QMap<QString, QVariant> settings;
             if (resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
@@ -507,7 +543,7 @@ void ImportMailJob::restoreMails()
                 const QString newResource = mCreateResource->createResource( resourceName.contains(QLatin1String("akonadi_mixedmaildir_resource_")) ?
                                                                                  QString::fromLatin1("akonadi_mixedmaildir_resource")
                                                                                : QString::fromLatin1("akonadi_maildir_resource")
-                                                                                 , filename, settings, true );
+                                                                                 , filename, settings );
                 if (!newResource.isEmpty()) {
                     mHashResources.insert(filename,newResource);
                     infoAboutNewResource(newResource);
@@ -520,6 +556,7 @@ void ImportMailJob::restoreMails()
                     //TODO Fix me not correct zip filename.
                     extractZipFile(file, copyToDirName, newUrl.path());
                 }
+                mListResourceToSync << newResource;
             } else {
                 kDebug()<<" resource name not supported "<<resourceName;
             }
@@ -527,6 +564,28 @@ void ImportMailJob::restoreMails()
         }
     }
     Q_EMIT info(i18n("Mails restored."));
+    SynchronizeResourceJob *job = new SynchronizeResourceJob(this);
+    job->setListResources(mListResourceToSync);
+    connect(job, SIGNAL(synchronizationFinished()), SLOT(slotAllResourceSynchronized()));
+    connect(job, SIGNAL(synchronizationInstanceDone(QString)), SLOT(slotSynchronizeInstanceDone(QString)));
+    connect(job, SIGNAL(synchronizationInstanceFailed(QString)), SLOT(slotSynchronizeInstanceFailed(QString)));
+    job->start();
+}
+
+void ImportMailJob::slotSynchronizeInstanceFailed(const QString &instance)
+{
+    Q_EMIT error(i18n("Failed to synchronize %1.", instance));
+}
+
+void ImportMailJob::slotSynchronizeInstanceDone(const QString &instance)
+{
+    Q_EMIT info(i18n("Resource %1 synchronized.", instance));
+}
+
+void ImportMailJob::slotAllResourceSynchronized()
+{
+    Q_EMIT info(i18n("All resources synchronized."));
+    nextStep();
 }
 
 void ImportMailJob::restoreConfig()
@@ -809,6 +868,7 @@ void ImportMailJob::restoreConfig()
     }
 
     Q_EMIT info(i18n("Config restored."));
+    nextStep();
 }
 
 void ImportMailJob::restoreIdentity()
@@ -816,6 +876,7 @@ void ImportMailJob::restoreIdentity()
     const QString path(Utils::identitiesPath() +QLatin1String("emailidentities"));
     if (!mFileList.contains(path)) {
         Q_EMIT error(i18n("emailidentities file could not be found in the archive."));
+        nextStep();
         return;
     }
     Q_EMIT info(i18n("Restore identities..."));
@@ -888,6 +949,7 @@ void ImportMailJob::restoreIdentity()
     } else {
         Q_EMIT error(i18n("Failed to restore identity file."));
     }
+    nextStep();
 }
 
 QString ImportMailJob::uniqueIdentityName(const QString& name)
@@ -906,6 +968,7 @@ void ImportMailJob::restoreAkonadiDb()
     const QString akonadiDbPath(Utils::akonadiPath() + QLatin1String("akonadidatabase.sql"));
     if (!mFileList.contains(akonadiDbPath)) {
         Q_EMIT error(i18n("akonadi database file could not be found in the archive."));
+        nextStep();
         return;
     }
     Q_EMIT info(i18n("Restore Akonadi Database..."));
@@ -942,11 +1005,15 @@ void ImportMailJob::restoreAkonadiDb()
                    << QLatin1String("--database=") + akonadiDataBase.name();
         } else {
             Q_EMIT error(i18n("Database driver \"%1\" not supported.",dbDriver));
+            nextStep();
             return;
         }
+
         const QString dbRestoreApp = KStandardDirs::findExe( dbRestoreAppName );
+
         if (dbRestoreApp.isEmpty()) {
             Q_EMIT error(i18n("Could not find \"%1\" necessary to restore database.",dbRestoreAppName));
+            nextStep();
             return;
         }
         KProcess *proc = new KProcess( this );
@@ -956,10 +1023,12 @@ void ImportMailJob::restoreAkonadiDb()
         delete proc;
         if ( result != 0 ) {
             Q_EMIT error(i18n("Failed to restore Akonadi Database."));
+            nextStep();
             return;
         }
     }
     Q_EMIT info(i18n("Akonadi Database restored."));
+    nextStep();
 }
 
 void ImportMailJob::restoreNepomuk()
@@ -967,6 +1036,7 @@ void ImportMailJob::restoreNepomuk()
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     Q_EMIT info(i18n("Nepomuk Database restored."));
     Q_EMIT error(i18n("Failed to restore Nepomuk Database."));
+    nextStep();
     //TODO
 }
 

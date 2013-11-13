@@ -19,6 +19,7 @@
 #ifndef PIMSETTINGEXPORTERWINDOW_H
 #define PIMSETTINGEXPORTERWINDOW_H
 #include <kxmlguiwindow.h>
+#include "utils.h"
 class LogWidget;
 class AbstractImportExportJob;
 class KRecentFilesAction;
@@ -46,6 +47,13 @@ private Q_SLOTS:
     void slotShowArchiveInformations();
 
 private:
+    enum Action {
+        Backup,
+        Restore
+    };
+
+    void backupNextStep();
+    void restoreNextStep();
     void backupFinished();
     void backupStart();
     void restoreFinished();
@@ -58,6 +66,9 @@ private:
     AbstractImportExportJob *mImportExportData;
     KRecentFilesAction *mRecentFilesAction;
     ArchiveStorage *mArchiveStorage;
+    QHash<Utils::AppsType, Utils::importExportParameters> mStored;
+    QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator mStoreIterator;
+    Action mAction;
 };
 
 

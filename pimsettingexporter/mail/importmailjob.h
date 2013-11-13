@@ -29,13 +29,21 @@ class ArchiveStorage;
 
 class ImportMailJob : public AbstractImportExportJob
 {
+    Q_OBJECT
 public:
     explicit ImportMailJob(QWidget *widget, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportMailJob();
 
     void start();
 
+private Q_SLOTS:
+    void slotAllResourceSynchronized();
+    void slotSynchronizeInstanceDone(const QString &);
+    void slotSynchronizeInstanceFailed(const QString &instance);
+
 private:
+    void nextStep();
+    void initializeListStep();
     void restoreTransports();
     void restoreResources();
     void restoreMails();
@@ -63,6 +71,8 @@ private:
     QHash<int, int> mHashTransport;
     QHash<QString, QString> mHashResources;
     QStringList mFileList;
+    QList<Utils::StoredType> mListStep;
+    int mIndex;
 };
 
 #endif // ImportMailJob_H
