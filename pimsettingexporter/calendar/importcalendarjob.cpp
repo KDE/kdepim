@@ -175,16 +175,30 @@ void ImportCalendarJob::storeCalendarArchiveResource(const KArchiveDirectory *di
 void ImportCalendarJob::restoreConfig()
 {
     const QString korganizerPrinterrcStr(QLatin1String("calendar_printing.rc"));
-    const KArchiveEntry* korganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerPrinterrcStr);
-    if (korganizerPrinterEntry && korganizerPrinterEntry->isFile()) {
-        const KArchiveFile* korganizerFile = static_cast<const KArchiveFile*>(korganizerPrinterEntry);
-        const QString korganizerPrinterrc = KStandardDirs::locateLocal( "config",  korganizerPrinterrcStr);
-        if (QFile(korganizerPrinterrc).exists()) {
-            if (overwriteConfigMessageBox(korganizerPrinterrcStr)) {
-                copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
+    const QString oldKorganizerPrintrrcStr(QLatin1String("korganizer_printing.rc"));
+    const KArchiveEntry* oldKorganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + oldKorganizerPrintrrcStr);
+    if (oldKorganizerPrinterEntry && oldKorganizerPrinterEntry->isFile()) {
+        const KArchiveFile* korganizerFile = static_cast<const KArchiveFile*>(oldKorganizerPrinterEntry);
+        const QString oldKorganizerPrintrrc = KStandardDirs::locateLocal( "config",  korganizerPrinterrcStr);
+        if (QFile(oldKorganizerPrintrrc).exists()) {
+            if (overwriteConfigMessageBox(oldKorganizerPrintrrc)) {
+                copyToFile(korganizerFile, oldKorganizerPrintrrc, oldKorganizerPrintrrcStr, Utils::configsPath());
             }
         } else {
-            copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
+            copyToFile(korganizerFile, oldKorganizerPrintrrc, oldKorganizerPrintrrcStr, Utils::configsPath());
+        }
+    } else {
+        const KArchiveEntry* korganizerPrinterEntry  = mArchiveDirectory->entry(Utils::configsPath() + korganizerPrinterrcStr);
+        if (korganizerPrinterEntry && korganizerPrinterEntry->isFile()) {
+            const KArchiveFile* korganizerFile = static_cast<const KArchiveFile*>(korganizerPrinterEntry);
+            const QString korganizerPrinterrc = KStandardDirs::locateLocal( "config",  korganizerPrinterrcStr);
+            if (QFile(korganizerPrinterrc).exists()) {
+                if (overwriteConfigMessageBox(korganizerPrinterrcStr)) {
+                    copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
+                }
+            } else {
+                copyToFile(korganizerFile, korganizerPrinterrc, korganizerPrinterrcStr, Utils::configsPath());
+            }
         }
     }
 
