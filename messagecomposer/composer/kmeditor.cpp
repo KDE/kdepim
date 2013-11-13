@@ -285,13 +285,13 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
         const bool richText = (textMode() == KRichTextEdit::Rich);
         d->mAutoCorrection->autocorrect(richText, *document(),textCursor().position());
         if (e->key() == Qt::Key_Space) {
-            if (richText)
+            if (richText && !initialTextFormat.isImageFormat())
                 textCursor().insertText(QLatin1String(" "), initialTextFormat);
             else
                 textCursor().insertText(QLatin1String(" "));
           return;
         } else {
-            if (richText)
+            if (richText && !initialTextFormat.isImageFormat())
                 textCursor().insertText(QLatin1String("\n"), initialTextFormat);
             else
                 textCursor().insertText(QLatin1String("\n"));
