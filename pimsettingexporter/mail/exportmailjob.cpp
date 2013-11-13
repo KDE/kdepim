@@ -62,8 +62,10 @@ bool ExportMailJob::checkProgram()
 
 void ExportMailJob::start()
 {
-    if (!checkProgram())
+    if (!checkProgram()) {
+        Q_EMIT jobFinished();
         return;
+    }
 
     Q_EMIT title(i18n("Start export knotes settings..."));
     createProgressDialog();
@@ -72,6 +74,7 @@ void ExportMailJob::start()
         backupIdentity();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -79,6 +82,7 @@ void ExportMailJob::start()
         backupTransports();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -86,6 +90,7 @@ void ExportMailJob::start()
         backupMails();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -93,6 +98,7 @@ void ExportMailJob::start()
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -100,6 +106,7 @@ void ExportMailJob::start()
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -107,6 +114,7 @@ void ExportMailJob::start()
         backupAkonadiDb();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -114,9 +122,11 @@ void ExportMailJob::start()
         backupNepomuk();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
+    Q_EMIT jobFinished();
 }
 
 void ExportMailJob::backupTransports()

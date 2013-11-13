@@ -85,6 +85,7 @@ void ImportMailJob::start()
         if (mTypeSelected & Utils::Nepomuk)
             restoreNepomuk();
     }
+    Q_EMIT jobFinished();
 }
 
 void ImportMailJob::searchAllFiles(const KArchiveDirectory*dir,const QString&prefix)

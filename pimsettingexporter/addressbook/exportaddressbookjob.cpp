@@ -48,6 +48,7 @@ void ExportAddressbookJob::start()
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -55,9 +56,11 @@ void ExportAddressbookJob::start()
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
+    Q_EMIT jobFinished();
 }
 
 void ExportAddressbookJob::backupResources()

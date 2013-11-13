@@ -60,6 +60,8 @@ Q_SIGNALS:
     void title(const QString &);
     void endLine();
 
+    void jobFinished();
+
 protected:
     void infoAboutNewResource(const QString &resourceName);
     void copyToDirectory(const KArchiveEntry *entry, const QString &dest);

@@ -48,6 +48,7 @@ void ImportNotesJob::start()
         restoreConfig();
     if (mTypeSelected & Utils::Data)
         restoreData();
+    Q_EMIT jobFinished();
 }
 
 void ImportNotesJob::restoreConfig()

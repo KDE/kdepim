@@ -49,6 +49,7 @@ void ExportNotesJob::start()
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -56,9 +57,11 @@ void ExportNotesJob::start()
         backupData();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
+    Q_EMIT jobFinished();
 }
 
 void ExportNotesJob::backupConfig()

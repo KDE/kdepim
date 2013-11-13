@@ -23,6 +23,7 @@ class LogWidget;
 class AbstractImportExportJob;
 class KRecentFilesAction;
 class KUrl;
+class ArchiveStorage;
 
 class PimSettingExporterWindow: public KXmlGuiWindow
 {
@@ -32,6 +33,7 @@ public:
     ~PimSettingExporterWindow();
 
 private Q_SLOTS:
+    void slotJobFinished();
     void slotBackupData();
     void slotRestoreData();
     void slotAddInfo(const QString &info);
@@ -51,6 +53,7 @@ private:
     LogWidget *mLogWidget;
     AbstractImportExportJob *mImportExportData;
     KRecentFilesAction *mRecentFilesAction;
+    ArchiveStorage *mArchiveStorage;
 };
 
 
