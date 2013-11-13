@@ -19,6 +19,9 @@
 #include "printingsettings.h"
 #include "ui_printingsettings.h"
 #include "settings/globalsettings.h"
+#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+using namespace PimCommon::ConfigureImmutableWidgetUtils;
+
 
 using namespace MessageViewer;
 
@@ -39,24 +42,24 @@ PrintingSettings::~PrintingSettings()
 
 void PrintingSettings::save()
 {
-    MessageViewer::GlobalSettings::self()->setPrintSelectedText(mPrintingUi->mPrintEmptySelectedText->isChecked());
-    MessageViewer::GlobalSettings::self()->setRespectExpandCollapseSettings(mPrintingUi->respectExpandCollapseSettings->isChecked());
-    MessageViewer::GlobalSettings::self()->setPrintBackgroundColorImages(mPrintingUi->printBackgroundColorAndImages->isChecked());
+    saveCheckBox(mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
+    saveCheckBox(mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
+    saveCheckBox(mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
 }
 
 void PrintingSettings::doLoadFromGlobalSettings()
 {
-    mPrintingUi->mPrintEmptySelectedText->setChecked(MessageViewer::GlobalSettings::self()->printSelectedText());
-    mPrintingUi->respectExpandCollapseSettings->setChecked(MessageViewer::GlobalSettings::self()->respectExpandCollapseSettings());
-    mPrintingUi->printBackgroundColorAndImages->setChecked(MessageViewer::GlobalSettings::self()->printBackgroundColorImages());
+    loadWidget(mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
+    loadWidget(mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
+    loadWidget(mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
 }
 
 void PrintingSettings::doResetToDefaultsOther()
 {
     const bool bUseDefaults = GlobalSettings::self()->useDefaults( true );
-    mPrintingUi->mPrintEmptySelectedText->setChecked(MessageViewer::GlobalSettings::self()->printSelectedText());
-    mPrintingUi->respectExpandCollapseSettings->setChecked(MessageViewer::GlobalSettings::self()->respectExpandCollapseSettings());
-    mPrintingUi->printBackgroundColorAndImages->setChecked(MessageViewer::GlobalSettings::self()->printBackgroundColorImages());
+    loadWidget(mPrintingUi->mPrintEmptySelectedText, MessageViewer::GlobalSettings::self()->printSelectedTextItem());
+    loadWidget(mPrintingUi->respectExpandCollapseSettings, MessageViewer::GlobalSettings::self()->respectExpandCollapseSettingsItem());
+    loadWidget(mPrintingUi->printBackgroundColorAndImages, MessageViewer::GlobalSettings::self()->printBackgroundColorImagesItem());
     GlobalSettings::self()->useDefaults( bUseDefaults );
 }
 
