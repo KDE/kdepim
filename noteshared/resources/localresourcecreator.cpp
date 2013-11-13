@@ -31,12 +31,6 @@
 #include <KRandom>
 #include <KStandardDirs>
 #include <akonadi/resourcesynchronizationjob.h>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionCreateJob>
-#include <Akonadi/ItemCreateJob>
-#include <akonadi/item.h>
-#include <KMime/KMimeMessage>
-#include <Akonadi/EntityDisplayAttribute>
 
 using namespace NoteShared;
 
