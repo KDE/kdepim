@@ -50,27 +50,6 @@ set (kjots_common_SRCS
 )
 
 #########################################################################
-# Auto creation for local notes.
-#########################################################################
-
-macro(add_resource_iface _kcfgFile _ifaceName _className)
-  kcfg_generate_dbus_interface(${_kcfgFile} ${_ifaceName})
-  string(TOLOWER ${_className} _codeFile)
-  set_source_files_properties( ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml PROPERTIES INCLUDE "metatype.h")
-  qt4_add_dbus_interface(kjots_common_SRCS
-    ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
-  )
-endmacro()
-
-add_resource_iface( ${CMAKE_CURRENT_SOURCE_DIR}/maildirresource.kcfg
-                    org.kde.Akonadi.Maildir.Settings MaildirSettings )
-
-add_custom_target(kjots_settings_xml ALL
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Maildir.Settings.xml
-  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/maildirresource.kcfg
-)
-
-#########################################################################
 # D-Bus interface
 #########################################################################
 

@@ -21,10 +21,6 @@
 
 #include "localresourcecreator.h"
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include "maildirsettings.h"
-
 #include "akonadi_next/note.h"
 
 #include <KDebug>
@@ -32,100 +28,25 @@
 #include <KLocale>
 #include <KRandom>
 #include <KStandardDirs>
-#include <akonadi/resourcesynchronizationjob.h>
 #include <Akonadi/CollectionFetchJob>
+#include <Akonadi/AgentInstance>
+#include <Akonadi/AgentManager>
 #include <Akonadi/CollectionCreateJob>
 #include <Akonadi/ItemCreateJob>
 #include <akonadi/item.h>
 #include <KMime/KMimeMessage>
 #include <Akonadi/EntityDisplayAttribute>
 
-static const QString akonadi_notes_instance_name = QLatin1String("akonadi_akonotes_resource");
-
 LocalResourceCreator::LocalResourceCreator(QObject* parent)
-  : QObject(parent)
+  : NoteShared::LocalResourceCreator(parent)
 {
 
 }
 
-void LocalResourceCreator::createIfMissing()
+void LocalResourceCreator::finishCreateResource()
 {
-  Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
-
-  Akonadi::AgentInstance::List instances = manager->instances();
-  bool found = false;
-  foreach ( const Akonadi::AgentInstance& instance, instances ) {
-    if (instance.type().identifier() == akonadi_notes_instance_name)
-    {
-      found = true;
-      break;
-    }
-  }
-  if (found)
-  {
-    deleteLater();
-    return;
-  }
-  createInstance();
-}
-
-void LocalResourceCreator::createInstance()
-{
-  Akonadi::AgentType notesType = Akonadi::AgentManager::self()->type( akonadi_notes_instance_name );
-
-  Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( notesType );
-  connect( job, SIGNAL(result(KJob*)),
-      this, SLOT(instanceCreated(KJob*)) );
-
-  job->start();
-}
-
-void LocalResourceCreator::instanceCreated( KJob *job )
-{
-  if (job->error()) {
-    kWarning() << job->errorString();
-    deleteLater();
-    return;
-  }
-
-  Akonadi::AgentInstanceCreateJob *createJob = qobject_cast<Akonadi::AgentInstanceCreateJob*>(job);
-  Akonadi::AgentInstance instance = createJob->instance();
-
-  instance.setName( i18nc( "Default name for resource holding notes", "Local Notes" ) );
-
-  OrgKdeAkonadiMaildirSettingsInterface *iface = new OrgKdeAkonadiMaildirSettingsInterface(
-    QLatin1String("org.freedesktop.Akonadi.Resource.") + instance.identifier(),
-    QLatin1String("/Settings"), QDBusConnection::sessionBus(), this );
-
-  // TODO: Make errors user-visible.
-  if (!iface->isValid() ) {
-    kWarning() << "Failed to obtain D-Bus interface for remote configuration.";
-    delete iface;
-    deleteLater();
-    return;
-  }
-
-  //QDBusPendingReply<void> response = iface->setPath( KGlobal::dirs()->localxdgdatadir() + "/notes/" + KRandom::randomString( 10 ) );
-
-  instance.reconfigure();
-
-  Akonadi::ResourceSynchronizationJob *syncJob = new Akonadi::ResourceSynchronizationJob(instance, this);
-  connect( syncJob, SIGNAL(result(KJob*)), SLOT(syncDone(KJob*)));
-  syncJob->start();
-}
-
-void LocalResourceCreator::syncDone(KJob* job)
-{
-  if ( job->error() ) {
-    kWarning() << "Synchronizing the resource failed:" << job->errorString();
-    deleteLater();
-    return;
-  }
-
-  kWarning() << "Instance synchronized";
-
-  Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::FirstLevel, this );
-  connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(rootFetchFinished(KJob*)) );
+    Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::FirstLevel, this );
+    connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(rootFetchFinished(KJob*)) );
 }
 
 void LocalResourceCreator::rootFetchFinished(KJob* job)
@@ -154,7 +75,7 @@ void LocalResourceCreator::rootFetchFinished(KJob* job)
   foreach (const Akonadi::Collection &col, list)
   {
     Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance(col.resource());
-    if (instance.type().identifier() == akonadi_notes_instance_name)
+    if (instance.type().identifier() == akonadiNotesInstanceName())
     {
       Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( col, Akonadi::CollectionFetchJob::FirstLevel, this );
       collectionFetchJob->setProperty("FetchedCollection", col.id());
