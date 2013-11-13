@@ -104,7 +104,7 @@ void ImportAlarmJob::restoreResources()
                         }
                     }
 
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_kalarm_dir_resource"), filename, settings );
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_kalarm_dir_resource"), filename, settings, true );
                     infoAboutNewResource(newResource);
                     qDebug()<<" newResource"<<newResource;
                 }
