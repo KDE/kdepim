@@ -31,6 +31,7 @@ public:
     bool openArchive(bool write);
 
     KZip *archive() const;
+    QString filename() const;
 
 Q_SIGNALS:
     void error(const QString&);

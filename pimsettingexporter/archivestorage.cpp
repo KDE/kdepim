@@ -20,7 +20,8 @@
 #include <KLocale>
 
 ArchiveStorage::ArchiveStorage(const QString& filename, QObject *parent)
-    :QObject(parent), mArchive(new KZip(filename))
+    :QObject(parent),
+      mArchive(new KZip(filename))
 {
 }
 
@@ -36,6 +37,13 @@ void ArchiveStorage::closeArchive()
     if (mArchive && mArchive->isOpen()) {
         mArchive->close();
     }
+}
+
+QString ArchiveStorage::filename() const
+{
+    if (mArchive)
+        return mArchive->fileName();
+    return QString();
 }
 
 bool ArchiveStorage::openArchive(bool write)

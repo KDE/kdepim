@@ -194,7 +194,7 @@ void PimSettingExporterWindow::slotBackupData()
             return;
         }
 
-        backupStart(filename);
+        backupStart();
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -255,23 +255,23 @@ void PimSettingExporterWindow::slotBackupData()
             }
             ++i;
         }
-        backupFinished(filename);
+        backupFinished();
     } else {
         delete dialog;
     }
 }
 
-void PimSettingExporterWindow::backupStart(const QString &filename)
+void PimSettingExporterWindow::backupStart()
 {
-    slotAddInfo(i18n("Start to backup data in \'%1\'", filename));
+    slotAddInfo(i18n("Start to backup data in \'%1\'", mArchiveStorage->filename()));
     slotAddEndLine();
     //Add version
     Utils::addVersion(mArchiveStorage->archive());
 }
 
-void PimSettingExporterWindow::backupFinished(const QString &filename)
+void PimSettingExporterWindow::backupFinished()
 {
-    slotAddInfo(i18n("Backup in \'%1\' done.", filename));
+    slotAddInfo(i18n("Backup in \'%1\' done.", mArchiveStorage->filename()));
     //At the end
     mArchiveStorage->closeArchive();
     delete mArchiveStorage;
@@ -330,7 +330,7 @@ void PimSettingExporterWindow::loadData(const QString &filename)
             return;
         }
 
-        restoreStart(filename);
+        restoreStart();
         QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
         while (i != stored.constEnd()) {
             switch(i.key()) {
@@ -391,25 +391,25 @@ void PimSettingExporterWindow::loadData(const QString &filename)
             }
             ++i;
         }
-        restoreFinished(filename);
+        restoreFinished();
     } else {
         delete dialog;
     }
 }
 
-void PimSettingExporterWindow::restoreStart(const QString &filename)
+void PimSettingExporterWindow::restoreStart()
 {
     const int version = Utils::archiveVersion(mArchiveStorage->archive());
     qDebug()<<" version "<<version;
     AbstractImportExportJob::setArchiveVersion(version);
 
-    slotAddInfo(i18n("Start to restore data from \'%1\'", filename));
+    slotAddInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
     slotAddEndLine();
 }
 
-void PimSettingExporterWindow::restoreFinished(const QString &filename)
+void PimSettingExporterWindow::restoreFinished()
 {
-    slotAddInfo(i18n("Restoring data from \'%1\' done.", filename));
+    slotAddInfo(i18n("Restoring data from \'%1\' done.", mArchiveStorage->filename()));
     //At the end
     mArchiveStorage->closeArchive();
     delete mArchiveStorage;

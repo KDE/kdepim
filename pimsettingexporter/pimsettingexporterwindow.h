@@ -46,10 +46,10 @@ private Q_SLOTS:
     void slotShowArchiveInformations();
 
 private:
-    void backupFinished(const QString &filename);
-    void backupStart(const QString &filename);
-    void restoreFinished(const QString &filename);
-    void restoreStart(const QString &filename);
+    void backupFinished();
+    void backupStart();
+    void restoreFinished();
+    void restoreStart();
     void loadData(const QString &filename);
     void executeJob();
     bool canZip() const;
