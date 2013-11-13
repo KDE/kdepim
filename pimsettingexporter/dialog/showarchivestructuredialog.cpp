@@ -57,17 +57,17 @@ void ShowArchiveStructureDialog::fillTree(const QString &filename)
     }
     const KArchiveDirectory *topDirectory = zip->directory();
     searchArchiveElement(Utils::infoPath(), topDirectory, i18n("Info"));
-    searchArchiveElement(Utils::mailsPath(), topDirectory, i18n("KMail"));
-    searchArchiveElement(Utils::alarmPath(), topDirectory, i18n("KAlarm"));
-    searchArchiveElement(Utils::calendarPath(), topDirectory, i18n("KOrganizer"));
-    searchArchiveElement(Utils::addressbookPath(), topDirectory, i18n("KAddressBook"));
-    searchArchiveElement(Utils::jotPath(), topDirectory, i18n("KJots"));
-    searchArchiveElement(Utils::identitiesPath(), topDirectory, i18n("Identity"));
-    searchArchiveElement(Utils::resourcesPath(), topDirectory, i18n("Resources"));
-    searchArchiveElement(Utils::configsPath(), topDirectory, i18n("Configs"));
-    searchArchiveElement(Utils::transportsPath(), topDirectory, i18n("Transports Config"));
-    searchArchiveElement(Utils::dataPath(), topDirectory, i18n("Data"));
-    searchArchiveElement(Utils::akonadiPath(), topDirectory, i18n("Akonadi"));
+    searchArchiveElement(Utils::mailsPath(), topDirectory, Utils::appTypeToI18n(Utils::KMail));
+    searchArchiveElement(Utils::alarmPath(), topDirectory, Utils::appTypeToI18n(Utils::KAlarm));
+    searchArchiveElement(Utils::calendarPath(), topDirectory, Utils::appTypeToI18n(Utils::KOrganizer));
+    searchArchiveElement(Utils::addressbookPath(), topDirectory, Utils::appTypeToI18n(Utils::KAddressBook));
+    searchArchiveElement(Utils::jotPath(), topDirectory, Utils::appTypeToI18n(Utils::KJots));
+    searchArchiveElement(Utils::identitiesPath(), topDirectory, Utils::storedTypeToI18n(Utils::Identity));
+    searchArchiveElement(Utils::resourcesPath(), topDirectory, Utils::storedTypeToI18n(Utils::Resources));
+    searchArchiveElement(Utils::configsPath(), topDirectory, Utils::storedTypeToI18n(Utils::Config));
+    searchArchiveElement(Utils::transportsPath(), topDirectory, Utils::storedTypeToI18n(Utils::MailTransport));
+    searchArchiveElement(Utils::dataPath(), topDirectory, Utils::storedTypeToI18n(Utils::Data));
+    searchArchiveElement(Utils::akonadiPath(), topDirectory, Utils::storedTypeToI18n(Utils::AkonadiDb));
     delete zip;
 }
 
