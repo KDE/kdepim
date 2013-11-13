@@ -473,12 +473,25 @@ void ImportMailJob::restoreMails()
         if (fileResouceEntry && fileResouceEntry->isFile()) {
             const KArchiveFile* file = static_cast<const KArchiveFile*>(fileResouceEntry);
             file->copyTo(copyToDirName);
-            const QString resourceName(file->name());
-            const QString filename(file->name());
+            QString resourceName(file->name());
+            QString filename(file->name());
             qDebug()<<" filename "<<filename<<" resourceName"<<resourceName;
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
             const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
+
+            const QString agentConfigFile = value.akonadiAgentConfigFile;
+            if (!agentConfigFile.isEmpty()) {
+                const KArchiveEntry *akonadiAgentConfigEntry = mArchiveDirectory->entry(agentConfigFile);
+                if (akonadiAgentConfigEntry->isFile()) {
+                    const KArchiveFile* file = static_cast<const KArchiveFile*>(akonadiAgentConfigEntry);
+                    file->copyTo(copyToDirName);
+                    resourceName = file->name();
+                    KSharedConfig::Ptr akonadiAgentConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
+                    filename = Utils::akonadiAgentName(akonadiAgentConfig);
+                }
+            }
+
 
             QMap<QString, QVariant> settings;
             if (resourceName.contains(QLatin1String("akonadi_mbox_resource_"))) {
