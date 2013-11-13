@@ -53,11 +53,10 @@ void SubjectLineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
 {
     if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
         if (mAutoCorrection) {
-            const QTextCharFormat initialTextFormat = textCursor().charFormat();
             // no Html format in subject.
             mAutoCorrection->autocorrect(false, *document(),textCursor().position());
             if (e->key() == Qt::Key_Space) {
-                textCursor().insertText(QLatin1String(" "), initialTextFormat);
+                textCursor().insertText(QLatin1String(" "));
                 return;
             }
         }
