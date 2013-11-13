@@ -34,6 +34,7 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     setModal( true );
     mTreeWidget = new QTreeWidget;
     mTreeWidget->header()->hide();
+    mTreeWidget->setAlternatingRowColors(true);
     setMainWidget(mTreeWidget);
     fillTree(filename);
     mTreeWidget->expandAll();
@@ -88,6 +89,9 @@ void ShowArchiveStructureDialog::addSubItems(QTreeWidgetItem *parent, const KArc
             if (entry->isDirectory()) {
                 const KArchiveDirectory *dirEntry = static_cast<const KArchiveDirectory *>(entry);
                 QTreeWidgetItem *newTopItem = addItem(parent, dirEntry->name());
+                QFont font(newTopItem->font(0));
+                font.setBold(true);
+                newTopItem->setFont(0, font);
                 addSubItems(newTopItem, entry);
             } else if (entry->isFile()) {
                 const KArchiveFile *file = static_cast<const KArchiveFile *>(entry);
