@@ -1,5 +1,6 @@
 project(knotes)
 add_subdirectory( icons ) 
+add_subdirectory( tests )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
@@ -7,6 +8,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon
   ${Grantlee_INCLUDE_DIRS}
   ${CMAKE_SOURCE_DIR}/noteshared
+  ${CMAKE_BINARY_DIR}/noteshared
 )
 
 ########### next target ###############
@@ -27,7 +29,6 @@ set(libknotesprivate_lib_SRCS
     migrations/knoteslegacy.cpp
     alarms/knotesalarm.cpp
     alarms/knotealarmdialog.cpp
-    network/knotehostdialog.cpp
 )
 
 configure_file(settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg )
@@ -88,7 +89,7 @@ set(kcm_knotes_PART_SRCS configdialog/knoteconfigdialog.cpp )
 
 kde4_add_plugin(kcm_knote ${kcm_knotes_PART_SRCS} ${libknotesconfig_SRCS})
 
-target_link_libraries(kcm_knote knotesprivate ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_KNEWSTUFF3_LIBS})
+target_link_libraries(kcm_knote knotesprivate ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_KNEWSTUFF3_LIBS} noteshared)
 
 install(TARGETS kcm_knote DESTINATION ${PLUGIN_INSTALL_DIR})
 

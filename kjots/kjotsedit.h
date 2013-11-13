@@ -44,9 +44,6 @@ public:
     virtual void insertFromMimeData ( const QMimeData *);
 
 protected:
-#ifndef HAVE_MOUSEPOPUPMENUIMPLEMENTATION
-    virtual void contextMenuEvent( QContextMenuEvent* );
-#endif
     /** Override to make ctrl+click follow links */
     virtual void mouseReleaseEvent(QMouseEvent *);
 

@@ -31,6 +31,7 @@ set(libpimcommon_SRCS
   widgets/customtextedit.cpp
   widgets/customtreeview.cpp
   widgets/customtoolswidget.cpp
+  widgets/configureimmutablewidgetutils.cpp
   texteditor/plaintexteditor/plaintexteditfindbar.cpp
   texteditor/plaintexteditor/plaintexteditor.cpp
   texteditor/plaintexteditor/plaintexteditorwidget.cpp

@@ -111,6 +111,7 @@ void addVersion(KZip *archive);
 int archiveVersion(KZip *archive);
 
 int currentArchiveVersion();
-
+QString appTypeToI18n(AppsType type);
+QString storedTypeToI18n(StoredType type);
 }
 #endif // UTILS_H

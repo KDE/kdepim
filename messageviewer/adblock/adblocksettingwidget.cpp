@@ -32,6 +32,8 @@
 #include "adblockaddsubscriptiondialog.h"
 #include "adblockmanager.h"
 #include "adblockshowlistdialog.h"
+#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 #include "pimcommon/util/pimutil.h"
 
@@ -189,7 +191,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
 
     // update enabled status
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
-    checkHideAds->setChecked(GlobalSettings::self()->hideAdsEnabled());
+    loadWidget(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
     const int days = GlobalSettings::self()->adBlockUpdateInterval();
     spinBox->setValue(days);
 
@@ -247,8 +249,8 @@ void AdBlockSettingWidget::save()
         return;
 
     // General settings    
-    GlobalSettings::self()->setHideAdsEnabled(checkHideAds->isChecked());
     GlobalSettings::self()->setAdBlockEnabled(checkEnableAdblock->isChecked());
+    saveCheckBox(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
     GlobalSettings::self()->setAdBlockUpdateInterval(spinBox->value());
 
     // automatic filters

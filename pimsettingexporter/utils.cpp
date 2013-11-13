@@ -295,3 +295,55 @@ int Utils::archiveVersion(KZip *archive)
     //TODO add more version when new version
     return 0;
 }
+
+QString Utils::appTypeToI18n(AppsType type)
+{
+    switch(type) {
+    case KMail:
+        return i18n("KMail");
+    case KAddressBook:
+        return i18n("KAddressBook");
+    case KAlarm:
+        return i18n("KAlarm");
+    case KOrganizer:
+        return i18n("KOrganizer");
+    case KJots:
+        return i18n("KJots");
+    case KNotes:
+        return i18n("KNotes");
+    case Akregator:
+        return i18n("Akregator");
+    case Blogilo:
+        return i18n("Blogilo");
+    case KNode:
+        return i18n("KNode");
+    }
+    qDebug()<<" type unknown "<<type;
+    return QString();
+}
+
+QString Utils::storedTypeToI18n(StoredType type)
+{
+    switch(type) {
+    case None:
+        return QString();
+    case Identity:
+        return i18n("Identity");
+    case Mails:
+        return i18n("Mails");
+    case MailTransport:
+        return i18n("Mail Transport");
+    case Resources:
+        return i18n("Resources");
+    case Config:
+        return i18n("Config");
+    case AkonadiDb:
+        return i18n("Akonadi Database");
+    case Nepomuk:
+        return i18n("Nepomuk Database");
+    case Data:
+        return i18n("Data");
+    }
+    qDebug()<<" type unknown "<<type;
+    return QString();
+}

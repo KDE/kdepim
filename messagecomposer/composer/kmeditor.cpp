@@ -282,12 +282,19 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
     if((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
       if(d->mAutoCorrection) {
         const QTextCharFormat initialTextFormat = textCursor().charFormat();
-        d->mAutoCorrection->autocorrect((textMode() == KRichTextEdit::Rich), *document(),textCursor().position());
+        const bool richText = (textMode() == KRichTextEdit::Rich);
+        d->mAutoCorrection->autocorrect(richText, *document(),textCursor().position());
         if (e->key() == Qt::Key_Space) {
-          textCursor().insertText(QLatin1String(" "), initialTextFormat);
+            if (richText && !initialTextFormat.isImageFormat())
+                textCursor().insertText(QLatin1String(" "), initialTextFormat);
+            else
+                textCursor().insertText(QLatin1String(" "));
           return;
         } else {
-          textCursor().insertText(QLatin1String("\n"), initialTextFormat);
+            if (richText && !initialTextFormat.isImageFormat())
+                textCursor().insertText(QLatin1String("\n"), initialTextFormat);
+            else
+                textCursor().insertText(QLatin1String("\n"));
           return;
         }
       }

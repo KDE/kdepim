@@ -1410,18 +1410,18 @@ void Agenda::placeSubCells( AgendaItem::QPtr placeItem )
   kDebug() << "Agenda::placeSubCells()...";
 #endif
 
-  QList<CellItem*> cells;
-  foreach ( CellItem *item, d->mItems ) {
+  QList<CalendarSupport::CellItem*> cells;
+  foreach ( CalendarSupport::CellItem *item, d->mItems ) {
     if ( item ) {
       cells.append( item );
     }
   }
 
-  QList<CellItem*> items = CellItem::placeItem( cells, placeItem );
+  QList<CalendarSupport::CellItem*> items = CalendarSupport::CellItem::placeItem( cells, placeItem );
 
   placeItem->setConflictItems( QList<AgendaItem::QPtr>() );
   double newSubCellWidth = calcSubCellWidth( placeItem );
-  QList<CellItem*>::iterator it;
+  QList<CalendarSupport::CellItem*>::iterator it;
   for ( it = items.begin(); it != items.end(); ++it ) {
     if ( *it ) {
       AgendaItem::QPtr item = static_cast<AgendaItem *>( *it );

@@ -4,3 +4,4 @@ Visibility=NOTESHARED_EXPORT
 Mutators=true
 Singleton=true
 IncludeFiles=noteshared_export.h
+NameSpace=NoteShared

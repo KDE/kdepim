@@ -25,11 +25,11 @@
 
 */
 
-
-
 #include "invitationsettings.h"
 #include "ui_invitationsettings.h"
 #include "settings/globalsettings.h"
+#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+using namespace PimCommon::ConfigureImmutableWidgetUtils;
 
 #include <KLocale>
 #include <KMessageBox>
@@ -195,6 +195,4 @@ void InvitationSettings::doResetToDefaultsOther()
                 GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() );
 
     GlobalSettings::self()->useDefaults( bUseDefaults );
-
-
 }

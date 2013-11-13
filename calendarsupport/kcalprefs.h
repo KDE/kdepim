@@ -83,6 +83,9 @@ class CALENDARSUPPORT_EXPORT KCalPrefs : public KCalPrefsBase
     QColor categoryColor( const QString &cat ) const;
     bool hasCategoryColor( const QString &cat ) const;
 
+    void setDayBegins( const QDateTime &dateTime );
+    QDateTime dayBegins() const;
+
   private:
     class Private;
     Private *const d;

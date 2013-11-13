@@ -51,7 +51,7 @@
 #include <kdebug.h>
 #include "kjotsmodel.h"
 #include "noteshared/attributes/notelockattribute.h"
-
+#include "noteshared/editor/noteeditorutils.h"
 
 #ifndef KDE_USE_FINAL
 Q_DECLARE_METATYPE(QTextDocument*)
@@ -84,31 +84,6 @@ KJotsEdit::KJotsEdit ( QItemSelectionModel *selectionModel, QWidget *parent )
 KJotsEdit::~KJotsEdit()
 {
 }
-
-#ifndef HAVE_MOUSEPOPUPMENUIMPLEMENTATION
-void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
-{
-    QMenu *popup = createStandardContextMenu();
-    connect( popup, SIGNAL(triggered(QAction*)),
-             this, SLOT(menuActivated(QAction*)) );
-
-    popup->addSeparator();
-    QAction * act = actionCollection->action(QLatin1String("copyIntoTitle");
-    popup->addAction(act);
-    act = actionCollection->action(QLatin1String("insert_checkmark"));
-    act->setEnabled( !isReadOnly() );
-    popup->addAction(act);
-
-    if (!KApplication::kApplication()->clipboard()->text().isEmpty())
-    {
-      act = actionCollection->action(QLatin1String("paste_plain_text"));
-      act->setEnabled( !isReadOnly() );
-      popup->addAction( act );
-    }
-    popup->exec( event->globalPos() );
-    delete popup;
-}
-#endif
 
 void KJotsEdit::mousePopupMenuImplementation(const QPoint& pos)
 {
@@ -308,9 +283,7 @@ void KJotsEdit::onLinkify ( void )
 void KJotsEdit::addCheckmark( void )
 {
     QTextCursor cursor = textCursor();
-    static const QChar unicode[] = {0x2713};
-    int size = sizeof(unicode) / sizeof(QChar);
-    cursor.insertText( QString::fromRawData(unicode, size) );
+    NoteShared::NoteEditorUtils::addCheckmark(cursor);
 }
 
 bool KJotsEdit::canInsertFromMimeData ( const QMimeData *source ) const
