@@ -68,7 +68,7 @@ static QVariant::Type argumentType( const QMetaObject *mo, const QString &method
     return QVariant::nameToType( argTypes.first() );
 }
 
-QString CreateResource::createResource( const QString &resources, const QString &name, const QMap<QString, QVariant> &settings )
+QString CreateResource::createResource( const QString &resources, const QString &name, const QMap<QString, QVariant> &settings, bool synchronizeTree )
 {
     const AgentType type = AgentManager::self()->type( resources );
     if ( !type.isValid() ) {
@@ -122,6 +122,8 @@ QString CreateResource::createResource( const QString &resources, const QString 
                 }
             }
             instance.reconfigure();
+            if (synchronizeTree)
+                instance.synchronizeCollectionTree();
         }
 
         Q_EMIT createResourceInfo( i18n( "Resource setup completed." ) );

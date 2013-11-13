@@ -109,7 +109,7 @@ void ImportAddressbookJob::restoreResources()
                     else
                         qDebug()<<" not supported"<<value.akonadiConfigFile;
 
-                    const QString newResource = mCreateResource->createResource( instanceType, filename, settings );
+                    const QString newResource = mCreateResource->createResource( instanceType, filename, settings, true );
                     infoAboutNewResource(newResource);
                     qDebug()<<" newResource"<<newResource;
                 }

@@ -101,7 +101,7 @@ void ImportCalendarJob::restoreResources()
                         }
                     }
 
-                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_icaldir_resource"), filename, settings );
+                    const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_icaldir_resource"), filename, settings, true );
                     infoAboutNewResource(newResource);
                     qDebug()<<" newResource"<<newResource;
                 }
