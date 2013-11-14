@@ -142,8 +142,6 @@ void InvitationSettings::doLoadFromGlobalSettings()
 
 void InvitationSettings::save()
 {
-    KConfigGroup groupware( GlobalSettings::self()->config(), "Invitations" );
-
     GlobalSettings::self()->setLegacyMangleFromToHeaders(
                 mInvitationUi->mLegacyMangleFromTo->isChecked() );
 
