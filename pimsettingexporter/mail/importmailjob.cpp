@@ -176,89 +176,88 @@ void ImportMailJob::restoreTransports()
     const QString path = Utils::transportsPath()+QLatin1String("mailtransports");
     if (!mFileList.contains(path)) {
         Q_EMIT error(i18n("mailtransports file could not be found in the archive."));
-        nextStep();
-        return;
-    }
-    Q_EMIT info(i18n("Restore transports..."));
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    const KArchiveEntry* transport = mArchiveDirectory->entry(path);
-    if (transport && transport->isFile()) {
-        const KArchiveFile* fileTransport = static_cast<const KArchiveFile*>(transport);
-
-        fileTransport->copyTo(mTempDirName);
-        KSharedConfig::Ptr transportConfig = KSharedConfig::openConfig(mTempDirName + QLatin1Char('/') +QLatin1String("mailtransports"));
-
-        int defaultTransport = -1;
-        if (transportConfig->hasGroup(QLatin1String("General"))) {
-            KConfigGroup group = transportConfig->group(QLatin1String("General"));
-            defaultTransport = group.readEntry(QLatin1String("default-transport"),-1);
-        }
-
-        const QStringList transportList = transportConfig->groupList().filter( QRegExp( QLatin1String("Transport \\d+") ) );
-        Q_FOREACH(const QString&transport, transportList) {
-            KConfigGroup group = transportConfig->group(transport);
-            const int transportId = group.readEntry(QLatin1String("id"), -1);
-            MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
-            mt->setName(group.readEntry(QLatin1String("name")));
-            const QString hostStr(QLatin1String("host"));
-            if (group.hasKey(hostStr)) {
-                mt->setHost(group.readEntry(hostStr));
-            }
-            const QString portStr(QLatin1String("port"));
-            if (group.hasKey(portStr)) {
-                mt->setPort(group.readEntry(portStr,-1));
-            }
-            const QString userNameStr(QLatin1String("userName"));
-            if (group.hasKey(userNameStr)) {
-                mt->setUserName(group.readEntry(userNameStr));
-            }
-            const QString precommandStr(QLatin1String("precommand"));
-            if (group.hasKey(precommandStr)) {
-                mt->setPrecommand(group.readEntry(precommandStr));
-            }
-            const QString requiresAuthenticationStr(QLatin1String("requiresAuthentication"));
-            if (group.hasKey(requiresAuthenticationStr)) {
-                mt->setRequiresAuthentication(group.readEntry(requiresAuthenticationStr,false));
-            }
-            const QString specifyHostnameStr(QLatin1String("specifyHostname"));
-            if (group.hasKey(specifyHostnameStr)) {
-                mt->setSpecifyHostname(group.readEntry(specifyHostnameStr,false));
-            }
-            const QString localHostnameStr(QLatin1String("localHostname"));
-            if (group.hasKey(localHostnameStr)) {
-                mt->setLocalHostname(group.readEntry(localHostnameStr));
-            }
-            const QString specifySenderOverwriteAddressStr(QLatin1String("specifySenderOverwriteAddress"));
-            if (group.hasKey(specifySenderOverwriteAddressStr)) {
-                mt->setSpecifySenderOverwriteAddress(group.readEntry(specifySenderOverwriteAddressStr,false));
-            }
-            const QString storePasswordStr(QLatin1String("storePassword"));
-            if (group.hasKey(storePasswordStr)) {
-                mt->setStorePassword(group.readEntry(storePasswordStr,false));
-            }
-            const QString senderOverwriteAddressStr(QLatin1String("senderOverwriteAddress"));
-            if (group.hasKey(senderOverwriteAddressStr)) {
-                mt->setSenderOverwriteAddress(group.readEntry(senderOverwriteAddressStr));
-            }
-            const QString encryptionStr(QLatin1String("encryption"));
-            if (group.hasKey(encryptionStr)) {
-                mt->setEncryption(group.readEntry(encryptionStr,1)); //TODO verify
-            }
-            const QString authenticationTypeStr(QLatin1String("authenticationType"));
-            if (group.hasKey(authenticationTypeStr)) {
-                mt->setAuthenticationType(group.readEntry(authenticationTypeStr,1));//TODO verify
-            }
-
-            mt->forceUniqueName();
-            mt->writeConfig();
-            MailTransport::TransportManager::self()->addTransport( mt );
-            if ( transportId == defaultTransport )
-                MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
-            mHashTransport.insert(transportId, mt->id());
-        }
-        Q_EMIT info(i18n("Transports restored."));
     } else {
-        Q_EMIT error(i18n("Failed to restore transports file."));
+        Q_EMIT info(i18n("Restore transports..."));
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+        const KArchiveEntry* transport = mArchiveDirectory->entry(path);
+        if (transport && transport->isFile()) {
+            const KArchiveFile* fileTransport = static_cast<const KArchiveFile*>(transport);
+
+            fileTransport->copyTo(mTempDirName);
+            KSharedConfig::Ptr transportConfig = KSharedConfig::openConfig(mTempDirName + QLatin1Char('/') +QLatin1String("mailtransports"));
+
+            int defaultTransport = -1;
+            if (transportConfig->hasGroup(QLatin1String("General"))) {
+                KConfigGroup group = transportConfig->group(QLatin1String("General"));
+                defaultTransport = group.readEntry(QLatin1String("default-transport"),-1);
+            }
+
+            const QStringList transportList = transportConfig->groupList().filter( QRegExp( QLatin1String("Transport \\d+") ) );
+            Q_FOREACH(const QString&transport, transportList) {
+                KConfigGroup group = transportConfig->group(transport);
+                const int transportId = group.readEntry(QLatin1String("id"), -1);
+                MailTransport::Transport* mt = MailTransport::TransportManager::self()->createTransport();
+                mt->setName(group.readEntry(QLatin1String("name")));
+                const QString hostStr(QLatin1String("host"));
+                if (group.hasKey(hostStr)) {
+                    mt->setHost(group.readEntry(hostStr));
+                }
+                const QString portStr(QLatin1String("port"));
+                if (group.hasKey(portStr)) {
+                    mt->setPort(group.readEntry(portStr,-1));
+                }
+                const QString userNameStr(QLatin1String("userName"));
+                if (group.hasKey(userNameStr)) {
+                    mt->setUserName(group.readEntry(userNameStr));
+                }
+                const QString precommandStr(QLatin1String("precommand"));
+                if (group.hasKey(precommandStr)) {
+                    mt->setPrecommand(group.readEntry(precommandStr));
+                }
+                const QString requiresAuthenticationStr(QLatin1String("requiresAuthentication"));
+                if (group.hasKey(requiresAuthenticationStr)) {
+                    mt->setRequiresAuthentication(group.readEntry(requiresAuthenticationStr,false));
+                }
+                const QString specifyHostnameStr(QLatin1String("specifyHostname"));
+                if (group.hasKey(specifyHostnameStr)) {
+                    mt->setSpecifyHostname(group.readEntry(specifyHostnameStr,false));
+                }
+                const QString localHostnameStr(QLatin1String("localHostname"));
+                if (group.hasKey(localHostnameStr)) {
+                    mt->setLocalHostname(group.readEntry(localHostnameStr));
+                }
+                const QString specifySenderOverwriteAddressStr(QLatin1String("specifySenderOverwriteAddress"));
+                if (group.hasKey(specifySenderOverwriteAddressStr)) {
+                    mt->setSpecifySenderOverwriteAddress(group.readEntry(specifySenderOverwriteAddressStr,false));
+                }
+                const QString storePasswordStr(QLatin1String("storePassword"));
+                if (group.hasKey(storePasswordStr)) {
+                    mt->setStorePassword(group.readEntry(storePasswordStr,false));
+                }
+                const QString senderOverwriteAddressStr(QLatin1String("senderOverwriteAddress"));
+                if (group.hasKey(senderOverwriteAddressStr)) {
+                    mt->setSenderOverwriteAddress(group.readEntry(senderOverwriteAddressStr));
+                }
+                const QString encryptionStr(QLatin1String("encryption"));
+                if (group.hasKey(encryptionStr)) {
+                    mt->setEncryption(group.readEntry(encryptionStr,1)); //TODO verify
+                }
+                const QString authenticationTypeStr(QLatin1String("authenticationType"));
+                if (group.hasKey(authenticationTypeStr)) {
+                    mt->setAuthenticationType(group.readEntry(authenticationTypeStr,1));//TODO verify
+                }
+
+                mt->forceUniqueName();
+                mt->writeConfig();
+                MailTransport::TransportManager::self()->addTransport( mt );
+                if ( transportId == defaultTransport )
+                    MailTransport::TransportManager::self()->setDefaultTransport( mt->id() );
+                mHashTransport.insert(transportId, mt->id());
+            }
+            Q_EMIT info(i18n("Transports restored."));
+        } else {
+            Q_EMIT error(i18n("Failed to restore transports file."));
+        }
     }
     nextStep();
 }
@@ -603,68 +602,69 @@ void ImportMailJob::slotAllResourceSynchronized()
 
 void ImportMailJob::restoreConfig()
 {
+    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const QString filtersPath(Utils::configsPath() + QLatin1String("filters"));
     if (!mFileList.contains(filtersPath)) {
         Q_EMIT error(i18n("filters file could not be found in the archive."));
-    }
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    const KArchiveEntry* filter = mArchiveDirectory->entry(filtersPath);
-    if (filter && filter->isFile()) {
-        const KArchiveFile* fileFilter = static_cast<const KArchiveFile*>(filter);
+    } else {
+        const KArchiveEntry* filter = mArchiveDirectory->entry(filtersPath);
+        if (filter && filter->isFile()) {
+            const KArchiveFile* fileFilter = static_cast<const KArchiveFile*>(filter);
 
-        fileFilter->copyTo(mTempDirName);
-        const QString filterFileName(mTempDirName + QLatin1Char('/') +QLatin1String("filters"));
-        KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(filterFileName);
-        const QStringList filterList = filtersConfig->groupList().filter( QRegExp( QLatin1String("Filter #\\d+") ) );
-        Q_FOREACH(const QString&filterStr, filterList) {
-            KConfigGroup group = filtersConfig->group(filterStr);
-            const QString accountStr(QLatin1String("accounts-set"));
-            if (group.hasKey(accountStr)) {
-                const QString accounts = group.readEntry(accountStr);
-                if (!accounts.isEmpty()) {
-                    const QStringList lstAccounts = accounts.split(QLatin1Char(','));
-                    QStringList newLstAccounts;
-                    Q_FOREACH(const QString&acc, lstAccounts) {
-                        if (mHashResources.contains(acc)) {
-                            newLstAccounts.append(mHashResources.value(acc));
-                        } else {
-                            newLstAccounts.append(acc);
+            fileFilter->copyTo(mTempDirName);
+            const QString filterFileName(mTempDirName + QLatin1Char('/') +QLatin1String("filters"));
+            KSharedConfig::Ptr filtersConfig = KSharedConfig::openConfig(filterFileName);
+            const QStringList filterList = filtersConfig->groupList().filter( QRegExp( QLatin1String("Filter #\\d+") ) );
+            Q_FOREACH(const QString&filterStr, filterList) {
+                KConfigGroup group = filtersConfig->group(filterStr);
+                const QString accountStr(QLatin1String("accounts-set"));
+                if (group.hasKey(accountStr)) {
+                    const QString accounts = group.readEntry(accountStr);
+                    if (!accounts.isEmpty()) {
+                        const QStringList lstAccounts = accounts.split(QLatin1Char(','));
+                        QStringList newLstAccounts;
+                        Q_FOREACH(const QString&acc, lstAccounts) {
+                            if (mHashResources.contains(acc)) {
+                                newLstAccounts.append(mHashResources.value(acc));
+                            } else {
+                                newLstAccounts.append(acc);
+                            }
                         }
-                    }
-                    group.writeEntry(accountStr,newLstAccounts);
-                }
-            }
-            const int numActions = group.readEntry( "actions", 0 );
-            QString actName;
-            QString argsName;
-            for ( int i=0 ; i < numActions ; ++i ) {
-                actName.sprintf("action-name-%d", i);
-                argsName.sprintf("action-args-%d", i);
-                const QString actValue = group.readEntry(actName);
-                if (actValue==QLatin1String("set identity")) {
-                    const int argsValue = group.readEntry(argsName,-1);
-                    if (argsValue!=-1) {
-                        if (mHashIdentity.contains(argsValue)) {
-                            group.writeEntry(argsName,mHashIdentity.value(argsValue));
-                        }
-                    }
-                } else if (actValue==QLatin1String("set transport")) {
-                    const int argsValue = group.readEntry(argsName,-1);
-                    if (argsValue!=-1) {
-                        if (mHashTransport.contains(argsValue)) {
-                            group.writeEntry(argsName,mHashTransport.value(argsValue));
-                        }
+                        group.writeEntry(accountStr,newLstAccounts);
                     }
                 }
+                const int numActions = group.readEntry( "actions", 0 );
+                QString actName;
+                QString argsName;
+                for ( int i=0 ; i < numActions ; ++i ) {
+                    actName.sprintf("action-name-%d", i);
+                    argsName.sprintf("action-args-%d", i);
+                    const QString actValue = group.readEntry(actName);
+                    if (actValue==QLatin1String("set identity")) {
+                        const int argsValue = group.readEntry(argsName,-1);
+                        if (argsValue!=-1) {
+                            if (mHashIdentity.contains(argsValue)) {
+                                group.writeEntry(argsName,mHashIdentity.value(argsValue));
+                            }
+                        }
+                    } else if (actValue==QLatin1String("set transport")) {
+                        const int argsValue = group.readEntry(argsName,-1);
+                        if (argsValue!=-1) {
+                            if (mHashTransport.contains(argsValue)) {
+                                group.writeEntry(argsName,mHashTransport.value(argsValue));
+                            }
+                        }
+                    }
+                }
             }
-        }
-        filtersConfig->sync();
+            filtersConfig->sync();
 
-        bool canceled = false;
-        MailCommon::FilterImporterExporter exportFilters;
-        QList<MailCommon::MailFilter*> lstFilter = exportFilters.importFilters(canceled, MailCommon::FilterImporterExporter::KMailFilter, filterFileName);
-        if (canceled) {
-            MailCommon::FilterManager::instance()->appendFilters(lstFilter);
+            bool canceled = false;
+            MailCommon::FilterImporterExporter exportFilters;
+            QList<MailCommon::MailFilter*> lstFilter = exportFilters.importFilters(canceled, MailCommon::FilterImporterExporter::KMailFilter, filterFileName);
+            if (canceled) {
+                MailCommon::FilterManager::instance()->appendFilters(lstFilter);
+            }
         }
     }
     const QString kmailsnippetrcStr(QLatin1String("kmailsnippetrc"));
@@ -889,78 +889,77 @@ void ImportMailJob::restoreIdentity()
     const QString path(Utils::identitiesPath() +QLatin1String("emailidentities"));
     if (!mFileList.contains(path)) {
         Q_EMIT error(i18n("emailidentities file could not be found in the archive."));
-        nextStep();
-        return;
-    }
-    Q_EMIT info(i18n("Restore identities..."));
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-    const KArchiveEntry* identity = mArchiveDirectory->entry(path);
-    if (identity && identity->isFile()) {
-        const KArchiveFile* fileIdentity = static_cast<const KArchiveFile*>(identity);
-        fileIdentity->copyTo(mTempDirName);
-        KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(mTempDirName + QLatin1Char('/') +QLatin1String("emailidentities"));
-        KConfigGroup general = identityConfig->group(QLatin1String("General"));
-        const int defaultIdentity = general.readEntry(QLatin1String("Default Identity"),-1);
+    } else {
+        Q_EMIT info(i18n("Restore identities..."));
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+        const KArchiveEntry* identity = mArchiveDirectory->entry(path);
+        if (identity && identity->isFile()) {
+            const KArchiveFile* fileIdentity = static_cast<const KArchiveFile*>(identity);
+            fileIdentity->copyTo(mTempDirName);
+            KSharedConfig::Ptr identityConfig = KSharedConfig::openConfig(mTempDirName + QLatin1Char('/') +QLatin1String("emailidentities"));
+            KConfigGroup general = identityConfig->group(QLatin1String("General"));
+            const int defaultIdentity = general.readEntry(QLatin1String("Default Identity"),-1);
 
-        const QStringList identityList = identityConfig->groupList().filter( QRegExp( QLatin1String("Identity #\\d+") ) );
-        Q_FOREACH(const QString&identityStr, identityList) {
-            KConfigGroup group = identityConfig->group(identityStr);
-            int oldUid = -1;
-            const QString uidStr(QLatin1String("uoid"));
-            if (group.hasKey(uidStr)) {
-                oldUid = group.readEntry(uidStr).toUInt();
-                group.deleteEntry(uidStr);
-            }
-            const QString fcc(QLatin1String("Fcc"));
-            convertRealPathToCollection(group, fcc);
+            const QStringList identityList = identityConfig->groupList().filter( QRegExp( QLatin1String("Identity #\\d+") ) );
+            Q_FOREACH(const QString&identityStr, identityList) {
+                KConfigGroup group = identityConfig->group(identityStr);
+                int oldUid = -1;
+                const QString uidStr(QLatin1String("uoid"));
+                if (group.hasKey(uidStr)) {
+                    oldUid = group.readEntry(uidStr).toUInt();
+                    group.deleteEntry(uidStr);
+                }
+                const QString fcc(QLatin1String("Fcc"));
+                convertRealPathToCollection(group, fcc);
 
-            const QString draft = QLatin1String("Drafts");
-            convertRealPathToCollection(group, draft);
+                const QString draft = QLatin1String("Drafts");
+                convertRealPathToCollection(group, draft);
 
-            const QString templates = QLatin1String("Templates");
-            convertRealPathToCollection(group, templates);
+                const QString templates = QLatin1String("Templates");
+                convertRealPathToCollection(group, templates);
 
-            if (oldUid != -1) {
-                const QString vcard = QLatin1String("VCardFile");
-                if (group.hasKey(vcard)) {
-                    const QString vcardFileName = group.readEntry(vcard);
-                    if (!vcardFileName.isEmpty()) {
-                        QFile file(vcardFileName);
+                if (oldUid != -1) {
+                    const QString vcard = QLatin1String("VCardFile");
+                    if (group.hasKey(vcard)) {
+                        const QString vcardFileName = group.readEntry(vcard);
+                        if (!vcardFileName.isEmpty()) {
+                            QFile file(vcardFileName);
 
-                        const KArchiveEntry* vcardEntry = mArchiveDirectory->entry(Utils::identitiesPath() + QString::number(oldUid) + QDir::separator() + file.fileName());
-                        if (vcardEntry && vcardEntry->isFile()) {
-                            const KArchiveFile* vcardFile = static_cast<const KArchiveFile*>(vcardEntry);
-                            QString vcardFilePath = KStandardDirs::locateLocal("appdata",file.fileName() );
-                            int i = 1;
-                            while(QFile(vcardFileName).exists()) {
-                                vcardFilePath = KStandardDirs::locateLocal("appdata", QString::fromLatin1("%1_%2").arg(i).arg(file.fileName()) );
-                                ++i;
+                            const KArchiveEntry* vcardEntry = mArchiveDirectory->entry(Utils::identitiesPath() + QString::number(oldUid) + QDir::separator() + file.fileName());
+                            if (vcardEntry && vcardEntry->isFile()) {
+                                const KArchiveFile* vcardFile = static_cast<const KArchiveFile*>(vcardEntry);
+                                QString vcardFilePath = KStandardDirs::locateLocal("appdata",file.fileName() );
+                                int i = 1;
+                                while(QFile(vcardFileName).exists()) {
+                                    vcardFilePath = KStandardDirs::locateLocal("appdata", QString::fromLatin1("%1_%2").arg(i).arg(file.fileName()) );
+                                    ++i;
+                                }
+                                vcardFile->copyTo(vcardFilePath);
+                                group.writeEntry(vcard, vcardFilePath);
                             }
-                            vcardFile->copyTo(vcardFilePath);
-                            group.writeEntry(vcard, vcardFilePath);
                         }
                     }
                 }
-            }
-            QString name =  group.readEntry(QLatin1String("Name"));
+                QString name =  group.readEntry(QLatin1String("Name"));
 
-            KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( uniqueIdentityName(name) );
-            group.writeEntry(QLatin1String("Name"), name);
-            group.sync();
+                KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( uniqueIdentityName(name) );
+                group.writeEntry(QLatin1String("Name"), name);
+                group.sync();
 
-            identity->readConfig(group);
+                identity->readConfig(group);
 
-            if (oldUid != -1) {
-                mHashIdentity.insert(oldUid,identity->uoid());
-                if (oldUid == defaultIdentity) {
-                    mIdentityManager->setAsDefault(identity->uoid());
+                if (oldUid != -1) {
+                    mHashIdentity.insert(oldUid,identity->uoid());
+                    if (oldUid == defaultIdentity) {
+                        mIdentityManager->setAsDefault(identity->uoid());
+                    }
                 }
+                mIdentityManager->commit();
             }
-            mIdentityManager->commit();
+            Q_EMIT info(i18n("Identities restored."));
+        } else {
+            Q_EMIT error(i18n("Failed to restore identity file."));
         }
-        Q_EMIT info(i18n("Identities restored."));
-    } else {
-        Q_EMIT error(i18n("Failed to restore identity file."));
     }
     nextStep();
 }
@@ -981,66 +980,65 @@ void ImportMailJob::restoreAkonadiDb()
     const QString akonadiDbPath(Utils::akonadiPath() + QLatin1String("akonadidatabase.sql"));
     if (!mFileList.contains(akonadiDbPath)) {
         Q_EMIT error(i18n("akonadi database file could not be found in the archive."));
-        nextStep();
-        return;
+    } else {
+        Q_EMIT info(i18n("Restore Akonadi Database..."));
+        MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+
+        const KArchiveEntry *akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
+        if (akonadiDataBaseEntry && akonadiDataBaseEntry->isFile()) {
+
+            const KArchiveFile *akonadiDataBaseFile = static_cast<const KArchiveFile*>(akonadiDataBaseEntry);
+
+            KTemporaryFile tmp;
+            tmp.open();
+
+            akonadiDataBaseFile->copyTo(tmp.fileName());
+
+            /* Restore the database */
+            AkonadiDataBase akonadiDataBase;
+
+            const QString dbDriver(akonadiDataBase.driver());
+            QStringList params;
+            QString dbRestoreAppName;
+            if ( dbDriver == QLatin1String("QPSQL") ) {
+                dbRestoreAppName = QLatin1String("pg_restore");
+                params << akonadiDataBase.options()
+                       << QLatin1String("--dbname=") + akonadiDataBase.name()
+                       << QLatin1String("--format=custom")
+                       << QLatin1String("--clean")
+                       << QLatin1String("--no-owner")
+                       << QLatin1String("--no-privileges")
+                       << tmp.fileName();
+            } else if (dbDriver == QLatin1String("QMYSQL") ) {
+                dbRestoreAppName = QLatin1String("mysql");
+                params << akonadiDataBase.options()
+                       << QLatin1String("--database=") + akonadiDataBase.name();
+            } else {
+                Q_EMIT error(i18n("Database driver \"%1\" not supported.",dbDriver));
+                nextStep();
+                return;
+            }
+
+            const QString dbRestoreApp = KStandardDirs::findExe( dbRestoreAppName );
+
+            if (dbRestoreApp.isEmpty()) {
+                Q_EMIT error(i18n("Could not find \"%1\" necessary to restore database.",dbRestoreAppName));
+                nextStep();
+                return;
+            }
+            KProcess *proc = new KProcess( this );
+            proc->setProgram( KStandardDirs::findExe( dbRestoreApp ), params );
+            proc->setStandardInputFile(tmp.fileName());
+            const int result = proc->execute();
+            delete proc;
+            if ( result != 0 ) {
+                Q_EMIT error(i18n("Failed to restore Akonadi Database."));
+                nextStep();
+                return;
+            }
+        }
+        Q_EMIT info(i18n("Akonadi Database restored."));
     }
-    Q_EMIT info(i18n("Restore Akonadi Database..."));
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
-
-    const KArchiveEntry *akonadiDataBaseEntry = mArchiveDirectory->entry(akonadiDbPath);
-    if (akonadiDataBaseEntry && akonadiDataBaseEntry->isFile()) {
-
-        const KArchiveFile *akonadiDataBaseFile = static_cast<const KArchiveFile*>(akonadiDataBaseEntry);
-
-        KTemporaryFile tmp;
-        tmp.open();
-
-        akonadiDataBaseFile->copyTo(tmp.fileName());
-
-        /* Restore the database */
-        AkonadiDataBase akonadiDataBase;
-
-        const QString dbDriver(akonadiDataBase.driver());
-        QStringList params;
-        QString dbRestoreAppName;
-        if ( dbDriver == QLatin1String("QPSQL") ) {
-            dbRestoreAppName = QLatin1String("pg_restore");
-            params << akonadiDataBase.options()
-                   << QLatin1String("--dbname=") + akonadiDataBase.name()
-                   << QLatin1String("--format=custom")
-                   << QLatin1String("--clean")
-                   << QLatin1String("--no-owner")
-                   << QLatin1String("--no-privileges")
-                   << tmp.fileName();
-        } else if (dbDriver == QLatin1String("QMYSQL") ) {
-            dbRestoreAppName = QLatin1String("mysql");
-            params << akonadiDataBase.options()
-                   << QLatin1String("--database=") + akonadiDataBase.name();
-        } else {
-            Q_EMIT error(i18n("Database driver \"%1\" not supported.",dbDriver));
-            nextStep();
-            return;
-        }
-
-        const QString dbRestoreApp = KStandardDirs::findExe( dbRestoreAppName );
-
-        if (dbRestoreApp.isEmpty()) {
-            Q_EMIT error(i18n("Could not find \"%1\" necessary to restore database.",dbRestoreAppName));
-            nextStep();
-            return;
-        }
-        KProcess *proc = new KProcess( this );
-        proc->setProgram( KStandardDirs::findExe( dbRestoreApp ), params );
-        proc->setStandardInputFile(tmp.fileName());
-        const int result = proc->execute();
-        delete proc;
-        if ( result != 0 ) {
-            Q_EMIT error(i18n("Failed to restore Akonadi Database."));
-            nextStep();
-            return;
-        }
-    }
-    Q_EMIT info(i18n("Akonadi Database restored."));
     nextStep();
 }
 
