@@ -367,7 +367,7 @@ else()
 endif()
 
 # doc must be a subdir of kdepim or packagers will kill us
-#macro_optional_add_subdirectory(doc)
+macro_optional_add_subdirectory(doc)
 
 # All done, let's display what we found...
 feature_summary(WHAT ALL

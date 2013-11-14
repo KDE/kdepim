@@ -42,16 +42,27 @@ ImportJotJob::~ImportJotJob()
 {
 }
 
+void ImportJotJob::nextStep()
+{
+    ++mIndex;
+    if (mIndex < mListStep.count()) {
+        Utils::StoredType type = mListStep.at(mIndex);
+        if (type == Utils::Resources)
+            restoreResources();
+        if (type == Utils::Config)
+            restoreConfig();
+    } else {
+        Q_EMIT jobFinished();
+    }
+}
+
 void ImportJotJob::start()
 {
     Q_EMIT title(i18n("Start import kjots settings..."));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory ,QString());
-    if (mTypeSelected & Utils::Resources)
-        restoreResources();
-    if (mTypeSelected & Utils::Config)
-        restoreConfig();
-    Q_EMIT jobFinished();
+    initializeListStep();
+    nextStep();
 }
 
 void ImportJotJob::restoreResources()
@@ -59,6 +70,7 @@ void ImportJotJob::restoreResources()
     Q_EMIT info(i18n("Restore resources..."));
     //It's maildir support. Need to add support
     restoreResourceFile(QString::fromLatin1("akonadi_akonotes_resource"), Utils::jotPath(), storeJot);
+    nextStep();
 }
 
 void ImportJotJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
@@ -127,6 +139,7 @@ void ImportJotJob::restoreConfig()
         }
     }
     Q_EMIT info(i18n("Config restored."));
+    nextStep();
 }
 
 void ImportJotJob::importjotConfig(const KArchiveFile* jotFile, const QString &jotrc, const QString &filename,const QString &prefix)

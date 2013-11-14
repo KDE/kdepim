@@ -68,6 +68,7 @@ private Q_SLOTS:
     void slotSynchronizeInstanceFailed(const QString &instance);
 
 protected:
+    void initializeListStep();
     void startSynchronizeResources(const QStringList &listResourceToSync);
     virtual void nextStep();
     void infoAboutNewResource(const QString &resourceName);
@@ -115,6 +116,8 @@ protected:
     int mNumberOfStep;
     PimCommon::CreateResource *mCreateResource;
     QStringList mAgentPaths;
+    QList<Utils::StoredType> mListStep;
+    int mIndex;
     static int sArchiveVersion;
 };
 
