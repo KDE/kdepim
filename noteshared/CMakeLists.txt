@@ -10,6 +10,7 @@ set(libnoteshared_SRCS
     attributes/notealarmattribute.cpp
     attributes/notedisplayattribute.cpp
     attributes/notelockattribute.cpp
+    attributes/attributeregistrar.cpp
     noteutils.cpp
     network/notesnetworksender.cpp
     network/notesnetworkreceiver.cpp
