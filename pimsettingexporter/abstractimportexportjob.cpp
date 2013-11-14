@@ -409,7 +409,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
             if (entry) {
                 if (entry->isDirectory()) {
                     const KArchiveDirectory *dir = static_cast<const KArchiveDirectory*>(entry);
-                    dir->copyTo(destination, true);
+                    dir->copyTo(destination + QDir::separator() + dir->name(), true);
                 } else if (entry->isFile()) {
                     const KArchiveFile *dir = static_cast<const KArchiveFile*>(entry);
                     dir->copyTo(destination);
