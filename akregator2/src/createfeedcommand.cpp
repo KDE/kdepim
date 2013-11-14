@@ -188,3 +188,4 @@ void CreateFeedCommand::doStart()
     d->doCreate();
 }
 
+#include "moc_createfeedcommand.cpp"

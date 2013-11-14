@@ -129,3 +129,4 @@ void ExportFeedListCommand::doStart()
     d->doExport();
 }
 
+#include "moc_exportfeedlistcommand.cpp"

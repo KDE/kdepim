@@ -91,3 +91,4 @@ FrameManager* Kernel::frameManager()
 
 } // namespace Akregator
 
+#include "moc_kernel.cpp"

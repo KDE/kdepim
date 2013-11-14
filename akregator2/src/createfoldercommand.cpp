@@ -128,3 +128,4 @@ void CreateFolderCommand::doStart()
     job->start();
 }
 
+#include "moc_createfoldercommand.cpp"

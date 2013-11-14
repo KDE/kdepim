@@ -342,3 +342,4 @@ void FeedListView::scrollToCollection( const Akonadi::Collection& c, QAbstractIt
     //TODO
 }
 
+#include "moc_feedlistview.cpp"
