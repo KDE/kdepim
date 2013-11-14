@@ -44,7 +44,6 @@ void SynchronizeResourceJob::start()
         nextSync();
     } else {
         Q_EMIT synchronizationFinished();
-        deleteLater();
     }
 }
 
@@ -53,13 +52,12 @@ void SynchronizeResourceJob::nextSync()
     if (mIndex < mListResources.count()) {
         const Akonadi::AgentInstance resource = Akonadi::AgentManager::self()->instance( mListResources.at(mIndex) );
         qDebug()<<" resource.name"<<resource.name();
-        Akonadi::ResourceSynchronizationJob *job = new Akonadi::ResourceSynchronizationJob(resource, this);
+        Akonadi::ResourceSynchronizationJob *job = new Akonadi::ResourceSynchronizationJob(resource);
         job->setCollectionTreeOnly(true);
         connect( job, SIGNAL(result(KJob*)), SLOT(slotSynchronizationFinished(KJob*)) );
         job->start();
     } else {
         Q_EMIT synchronizationFinished();
-        deleteLater();
     }
 }
 
