@@ -48,7 +48,8 @@ AbstractImportExportJob::AbstractImportExportJob(QWidget *parent, ArchiveStorage
       mProgressDialog(0),
       mArchiveDirectory(0),
       mNumberOfStep(numberOfStep),
-      mCreateResource(0)
+      mCreateResource(0),
+      mIndex(-1)
 {
 }
 
@@ -515,4 +516,22 @@ void AbstractImportExportJob::startSynchronizeResources(const QStringList &listR
     connect(job, SIGNAL(synchronizationInstanceDone(QString)), SLOT(slotSynchronizeInstanceDone(QString)));
     connect(job, SIGNAL(synchronizationInstanceFailed(QString)), SLOT(slotSynchronizeInstanceFailed(QString)));
     job->start();
+}
+
+void AbstractImportExportJob::initializeListStep()
+{
+    if (mTypeSelected & Utils::MailTransport)
+        mListStep << Utils::MailTransport;
+    if (mTypeSelected & Utils::Mails)
+        mListStep << Utils::Mails;
+    if (mTypeSelected & Utils::Resources)
+        mListStep << Utils::Resources;
+    if (mTypeSelected & Utils::Identity)
+        mListStep << Utils::Identity;
+    if (mTypeSelected & Utils::Config)
+        mListStep << Utils::Config;
+    if (mTypeSelected & Utils::AkonadiDb)
+        mListStep << Utils::AkonadiDb;
+    if (mTypeSelected & Utils::Nepomuk)
+        mListStep << Utils::Nepomuk;
 }

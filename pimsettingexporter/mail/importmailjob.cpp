@@ -55,8 +55,7 @@ using namespace Akonadi;
 static const QString storeMails = QLatin1String("backupmail/");
 
 ImportMailJob::ImportMailJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
-    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep),
-      mIndex(-1)
+    : AbstractImportExportJob(parent,archiveStorage,typeSelected,numberOfStep)
 {
     initializeImportJob();
 }
@@ -100,24 +99,6 @@ void ImportMailJob::nextStep()
     } else {
         Q_EMIT jobFinished();
     }
-}
-
-void ImportMailJob::initializeListStep()
-{
-    if (mTypeSelected & Utils::MailTransport)
-        mListStep << Utils::MailTransport;
-    if (mTypeSelected & Utils::Mails)
-        mListStep << Utils::Mails;
-    if (mTypeSelected & Utils::Resources)
-        mListStep << Utils::Resources;
-    if (mTypeSelected & Utils::Identity)
-        mListStep << Utils::Identity;
-    if (mTypeSelected & Utils::Config)
-        mListStep << Utils::Config;
-    if (mTypeSelected & Utils::AkonadiDb)
-        mListStep << Utils::AkonadiDb;
-    if (mTypeSelected & Utils::Nepomuk)
-        mListStep << Utils::Nepomuk;
 }
 
 void ImportMailJob::searchAllFiles(const KArchiveDirectory*dir,const QString&prefix)
