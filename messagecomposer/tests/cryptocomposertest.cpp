@@ -60,7 +60,7 @@ void CryptoComposerTest::initTestCase()
   MessageCore::Test::setupEnv();
 }
 
-Q_DECLARE_METATYPE( Headers::contentEncoding );
+Q_DECLARE_METATYPE( Headers::contentEncoding )
 
 // openpgp
 void CryptoComposerTest::testOpenPGPMime_data()

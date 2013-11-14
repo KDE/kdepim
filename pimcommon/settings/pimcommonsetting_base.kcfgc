@@ -1,0 +1,9 @@
+File=pimcommon.kcfg
+ClassName=PimCommonSettingsBase
+NameSpace=PimCommon
+Visibility=PIMCOMMON_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+IncludeFiles=qapplication.h,pimcommon_export.h
+

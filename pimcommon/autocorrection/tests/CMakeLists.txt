@@ -1,8 +1,8 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/messagecomposer
-  ${CMAKE_BINARY_DIR}/messagecomposer
+  ${CMAKE_SOURCE_DIR}/pimcommon
+  ${CMAKE_BINARY_DIR}/pimcommon
 )
 
 set(autocorrection_gui_SRCS autocorrection_gui.cpp)
@@ -14,7 +14,7 @@ target_link_libraries(autocorrection_gui
   ${KDE4_KDEUI_LIBS}
   ${QT_QTWEBKIT_LIBRARY}
   ${KDE4_KIO_LIBS}
-  messagecomposer
+  pimcommon
 )
 
 

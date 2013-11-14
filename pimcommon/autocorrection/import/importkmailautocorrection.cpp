@@ -20,7 +20,7 @@
 #include <QFile>
 #include <QDomDocument>
 #include <KDebug>
-using namespace MessageComposer;
+using namespace PimCommon;
 
 
 ImportKMailAutocorrection::ImportKMailAutocorrection(QWidget *parent)

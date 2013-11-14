@@ -22,7 +22,7 @@
 #include "import/importkmailautocorrection.h"
 #include "import/importabstractautocorrection.h"
 
-#include "settings/messagecomposersettings.h"
+#include "settings/pimcommonsettings.h"
 #include <kpimtextedit/selectspecialchar.h>
 
 #include <KFileDialog>
@@ -31,7 +31,7 @@
 #include <QTreeWidgetItem>
 #include <QMenu>
 
-using namespace MessageComposer;
+using namespace PimCommon;
 
 Q_DECLARE_METATYPE(ComposerAutoCorrectionWidget::ImportFileType)
 
@@ -537,13 +537,13 @@ void ComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
         }
         const QString fileName = KFileDialog::getOpenFileName( QString(), filter, this, title );
         if ( !fileName.isEmpty() ) {
-            MessageComposer::ImportAbstractAutocorrection *importAutoCorrection = 0;
+            PimCommon::ImportAbstractAutocorrection *importAutoCorrection = 0;
             switch(type) {
             case ComposerAutoCorrectionWidget::LibreOffice:
-                importAutoCorrection = new MessageComposer::ImportLibreOfficeAutocorrection(this);
+                importAutoCorrection = new PimCommon::ImportLibreOfficeAutocorrection(this);
                 break;
             case ComposerAutoCorrectionWidget::KMail:
-                importAutoCorrection = new MessageComposer::ImportKMailAutocorrection(this);
+                importAutoCorrection = new PimCommon::ImportKMailAutocorrection(this);
                 break;
             default:
                 return;

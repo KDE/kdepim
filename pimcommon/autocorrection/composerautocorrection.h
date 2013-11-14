@@ -18,14 +18,14 @@
 #ifndef COMPOSERAUTOCORRECTION_H
 #define COMPOSERAUTOCORRECTION_H
 
-#include "messagecomposer_export.h"
+#include "pimcommon_export.h"
 #include <QTextCursor>
 #include <QHash>
 #include <QSet>
 
-namespace MessageComposer {
+namespace PimCommon {
 
-class MESSAGECOMPOSER_EXPORT ComposerAutoCorrection
+class PIMCOMMON_EXPORT ComposerAutoCorrection
 {
 public:
     struct TypographicQuotes {

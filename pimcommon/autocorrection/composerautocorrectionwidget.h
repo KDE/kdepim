@@ -18,7 +18,7 @@
 #ifndef COMPOSERAUTOCORRECTIONWIDGET_H
 #define COMPOSERAUTOCORRECTIONWIDGET_H
 
-#include "messagecomposer_export.h"
+#include "pimcommon_export.h"
 #include "autocorrection/composerautocorrection.h"
 #include <QWidget>
 #include <KDialog>
@@ -29,11 +29,11 @@ namespace Ui {
 class ComposerAutoCorrectionWidget;
 }
 
-namespace MessageComposer {
+namespace PimCommon {
 
 class ComposerAutoCorrection;
 
-class MESSAGECOMPOSER_EXPORT ComposerAutoCorrectionWidget : public QWidget
+class PIMCOMMON_EXPORT ComposerAutoCorrectionWidget : public QWidget
 {
     Q_OBJECT
     
@@ -45,7 +45,7 @@ public:
 
     explicit ComposerAutoCorrectionWidget(QWidget *parent = 0);
     ~ComposerAutoCorrectionWidget();
-    void setAutoCorrection(MessageComposer::ComposerAutoCorrection * autoCorrect);
+    void setAutoCorrection(PimCommon::ComposerAutoCorrection * autoCorrect);
     void loadConfig();
     void writeConfig();
     void resetToDefault();

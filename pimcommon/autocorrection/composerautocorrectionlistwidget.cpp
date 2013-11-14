@@ -1,46 +1,41 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-
+  
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-
+  
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-
+  
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef COMPOSERAUTOCORRECTIONLANGUAGE_H
-#define COMPOSERAUTOCORRECTIONLANGUAGE_H
+#include "composerautocorrectionlistwidget.h"
 
-#include "messagecomposer_export.h"
-#include <KComboBox>
+#include <QKeyEvent>
 
-namespace MessageComposer {
+using namespace PimCommon;
 
-class MESSAGECOMPOSER_EXPORT ComposerAutoCorrectionLanguage : public KComboBox
+
+ComposerAutoCorrectionListWidget::ComposerAutoCorrectionListWidget(QWidget *parent)
+    : QListWidget(parent)
 {
-public:
-    explicit ComposerAutoCorrectionLanguage(QWidget *parent);
-    ~ComposerAutoCorrectionLanguage();
+}
 
-    /**
-    * @brief language
-    * @return specified language
-    */
-    QString language() const;
-
-    /**
-     * @brief setLanguage
-     * @param language define specified language
-     */
-    void setLanguage(const QString &language);
-};
+ComposerAutoCorrectionListWidget::~ComposerAutoCorrectionListWidget()
+{
 
 }
-#endif // COMPOSERAUTOCORRECTIONLANGUAGE_H
+
+void ComposerAutoCorrectionListWidget::keyPressEvent( QKeyEvent *event )
+{
+    if ( event->key() == Qt::Key_Delete ) {
+        Q_EMIT deleteSelectedItems();
+    }
+}
+

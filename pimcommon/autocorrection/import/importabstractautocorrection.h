@@ -24,7 +24,7 @@
 
 #include "autocorrection/composerautocorrection.h"
 
-namespace MessageComposer {
+namespace PimCommon {
 class ImportAbstractAutocorrection
 {
 public:

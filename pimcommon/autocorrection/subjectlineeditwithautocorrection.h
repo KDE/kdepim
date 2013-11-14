@@ -18,29 +18,29 @@
 #ifndef SUBJECTLINEEDITWITHAUTOCORRECTION_H
 #define SUBJECTLINEEDITWITHAUTOCORRECTION_H
 
-#include "messagecomposer_export.h"
+#include "pimcommon_export.h"
 
 #include "libkdepim/widgets/spellchecklineedit.h"
 
-namespace MessageComposer {
+namespace PimCommon {
 class ComposerAutoCorrection;
-class MESSAGECOMPOSER_EXPORT SubjectLineEditWithAutoCorrection : public KPIM::SpellCheckLineEdit
+class PIMCOMMON_EXPORT SubjectLineEditWithAutoCorrection : public KPIM::SpellCheckLineEdit
 {
     Q_OBJECT
 public:
     explicit SubjectLineEditWithAutoCorrection(QWidget* parent, const QString& configFile);
     ~SubjectLineEditWithAutoCorrection();
 
-    MessageComposer::ComposerAutoCorrection* autocorrection() const;
+    PimCommon::ComposerAutoCorrection* autocorrection() const;
 
-    void setAutocorrection(MessageComposer::ComposerAutoCorrection* autocorrect);
+    void setAutocorrection(PimCommon::ComposerAutoCorrection* autocorrect);
     void setAutocorrectionLanguage(const QString &language);
 
 protected:
     void keyPressEvent ( QKeyEvent *e );
 
 private:
-    MessageComposer::ComposerAutoCorrection *mAutoCorrection;
+    PimCommon::ComposerAutoCorrection *mAutoCorrection;
 };
 }
 

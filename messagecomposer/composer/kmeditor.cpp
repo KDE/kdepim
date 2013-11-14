@@ -23,7 +23,7 @@
 #include "kmeditor.h"
 #include "part/textpart.h"
 #include "messageviewer/viewer/nodehelper.h"
-#include "autocorrection/composerautocorrection.h"
+#include "pimcommon/autocorrection/composerautocorrection.h"
 #include "settings/messagecomposersettings.h"
 
 
@@ -111,7 +111,7 @@ class KMeditorPrivate
 
     KProcess *mExtEditorProcess;
     KTemporaryFile *mExtEditorTempFile;
-    MessageComposer::ComposerAutoCorrection *mAutoCorrection;
+    PimCommon::ComposerAutoCorrection *mAutoCorrection;
 };
 
 }
@@ -809,12 +809,12 @@ void KMeditor::fillComposerTextPart ( MessageComposer::TextPart* textPart ) cons
   }
 }
 
-MessageComposer::ComposerAutoCorrection* KMeditor::autocorrection() const
+PimCommon::ComposerAutoCorrection* KMeditor::autocorrection() const
 {
   return d->mAutoCorrection;
 }
 
-void KMeditor::setAutocorrection(MessageComposer::ComposerAutoCorrection* autocorrect)
+void KMeditor::setAutocorrection(PimCommon::ComposerAutoCorrection* autocorrect)
 {
   d->mAutoCorrection = autocorrect;
 }

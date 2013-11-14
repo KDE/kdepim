@@ -20,7 +20,7 @@
 
 #include <QListWidget>
 
-namespace MessageComposer {
+namespace PimCommon {
 
 class ComposerAutoCorrectionListWidget : public QListWidget
 {

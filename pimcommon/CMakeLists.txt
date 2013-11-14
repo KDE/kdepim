@@ -54,6 +54,20 @@ set(libpimcommon_SRCS
   shorturl/shorturlconfiguredialog.cpp
   shorturl/engine/migremeshorturl.cpp
   shorturl/engine/triopabshorturl.cpp
+  settings/pimcommonsettings.cpp
+  autocorrection/composerautocorrection.cpp
+  autocorrection/composerautocorrectionwidget.cpp
+  autocorrection/composerautocorrectionlistwidget.cpp
+  autocorrection/composerautocorrectiontreewidget.cpp
+  autocorrection/composerautocorrectionlanguage.cpp
+  autocorrection/import/importlibreofficeautocorrection.cpp
+  autocorrection/import/importkmailautocorrection.cpp
+  autocorrection/import/importabstractautocorrection.cpp
+  autocorrection/subjectlineeditwithautocorrection.cpp
+)
+
+kde4_add_ui_files(libpimcommon_SRCS
+     autocorrection/ui/composerautocorrectionwidget.ui
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
@@ -65,6 +79,10 @@ macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)
 endmacro()
 
 add_resource_iface(util/imapresource.kcfg org.kde.Akonadi.Imap.Settings ImapSettings imapresourcesettings)
+
+kde4_add_kcfg_files(libpimcommon_SRCS
+  settings/pimcommonsetting_base.kcfgc
+)
 
 kde4_add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
 
@@ -90,7 +108,7 @@ add_subdirectory(texteditor/plaintexteditor/tests)
 add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(widgets/tests)
 add_subdirectory(shorturl/tests)
-
+add_subdirectory(autocorrection/tests)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

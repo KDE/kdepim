@@ -15,27 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "composerautocorrectiontreewidget.h"
+#ifndef IMPORTKMAILAUTOCORRECTION_H
+#define IMPORTKMAILAUTOCORRECTION_H
 
-#include <QKeyEvent>
+#include "importabstractautocorrection.h"
 
-using namespace MessageComposer;
-
-
-ComposerAutoCorrectionTreeWidget::ComposerAutoCorrectionTreeWidget(QWidget *parent)
-    : QTreeWidget(parent)
+namespace PimCommon {
+class ImportKMailAutocorrection : public ImportAbstractAutocorrection
 {
+public:
+    explicit ImportKMailAutocorrection(QWidget *parent = 0);
+    ~ImportKMailAutocorrection();
+    bool import(const QString& fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All);
+};
 }
 
-ComposerAutoCorrectionTreeWidget::~ComposerAutoCorrectionTreeWidget()
-{
-
-}
-
-void ComposerAutoCorrectionTreeWidget::keyPressEvent( QKeyEvent *event )
-{
-    if ( event->key() == Qt::Key_Delete ) {
-        Q_EMIT deleteSelectedItems();
-    }
-}
-
+#endif // IMPORTKMAILAUTOCORRECTION_H

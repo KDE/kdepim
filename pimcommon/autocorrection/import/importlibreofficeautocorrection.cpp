@@ -26,7 +26,7 @@
 #include <QDomDocument>
 #include <QDir>
 
-using namespace MessageComposer;
+using namespace PimCommon;
 
 ImportLibreOfficeAutocorrection::ImportLibreOfficeAutocorrection(QWidget *parent)
     : ImportAbstractAutocorrection(parent), mArchive(0), mTempDir(0)

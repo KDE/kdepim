@@ -20,7 +20,7 @@
 
 #include <QKeyEvent>
 
-using namespace MessageComposer;
+using namespace PimCommon;
 
 SubjectLineEditWithAutoCorrection::SubjectLineEditWithAutoCorrection(QWidget* parent, const QString& configFile)
     : KPIM::SpellCheckLineEdit(parent, configFile),
@@ -33,12 +33,12 @@ SubjectLineEditWithAutoCorrection::~SubjectLineEditWithAutoCorrection()
 
 }
 
-MessageComposer::ComposerAutoCorrection* SubjectLineEditWithAutoCorrection::autocorrection() const
+PimCommon::ComposerAutoCorrection* SubjectLineEditWithAutoCorrection::autocorrection() const
 {
     return mAutoCorrection;
 }
 
-void SubjectLineEditWithAutoCorrection::setAutocorrection(MessageComposer::ComposerAutoCorrection* autocorrect)
+void SubjectLineEditWithAutoCorrection::setAutocorrection(PimCommon::ComposerAutoCorrection* autocorrect)
 {
     mAutoCorrection = autocorrect;
 }

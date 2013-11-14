@@ -17,7 +17,7 @@
 */
 
 #include "composerautocorrection.h"
-#include "settings/messagecomposersettings.h"
+#include "settings/pimcommonsettings.h"
 #include "import/importkmailautocorrection.h"
 #include <KLocale>
 #include <KGlobal>
@@ -28,7 +28,7 @@
 #include <QDomDocument>
 #include <QFile>
 
-using namespace MessageComposer;
+using namespace PimCommon;
 
 ComposerAutoCorrection::ComposerAutoCorrection()
     : mSingleSpaces(true),
@@ -132,38 +132,38 @@ void ComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& document,
 
 void ComposerAutoCorrection::readConfig()
 {
-    mAutoBoldUnderline = MessageComposer::MessageComposerSettings::self()->autoBoldUnderline();
-    mAutoFormatUrl = MessageComposer::MessageComposerSettings::self()->autoFormatUrl();
-    mUppercaseFirstCharOfSentence = MessageComposer::MessageComposerSettings::self()->uppercaseFirstCharOfSentence();
-    mFixTwoUppercaseChars = MessageComposer::MessageComposerSettings::self()->fixTwoUppercaseChars();
-    mSingleSpaces = MessageComposer::MessageComposerSettings::self()->singleSpaces();
-    mAutoFractions = MessageComposer::MessageComposerSettings::self()->autoFractions();
-    mCapitalizeWeekDays = MessageComposer::MessageComposerSettings::self()->capitalizeWeekDays();
-    mAdvancedAutocorrect = MessageComposer::MessageComposerSettings::self()->advancedAutocorrect();
-    mReplaceDoubleQuotes = MessageComposer::MessageComposerSettings::self()->replaceDoubleQuotes();
-    mReplaceSingleQuotes = MessageComposer::MessageComposerSettings::self()->replaceSingleQuotes();
-    mEnabled = MessageComposer::MessageComposerSettings::self()->enabled();
-    mSuperScriptAppendix = MessageComposer::MessageComposerSettings::self()->superScript();
-    mAddNonBreakingSpace = MessageComposer::MessageComposerSettings::self()->addNonBreakingSpaceInFrench();
+    mAutoBoldUnderline = PimCommon::PimCommonSettings::self()->autoBoldUnderline();
+    mAutoFormatUrl = PimCommon::PimCommonSettings::self()->autoFormatUrl();
+    mUppercaseFirstCharOfSentence = PimCommon::PimCommonSettings::self()->uppercaseFirstCharOfSentence();
+    mFixTwoUppercaseChars = PimCommon::PimCommonSettings::self()->fixTwoUppercaseChars();
+    mSingleSpaces = PimCommon::PimCommonSettings::self()->singleSpaces();
+    mAutoFractions = PimCommon::PimCommonSettings::self()->autoFractions();
+    mCapitalizeWeekDays = PimCommon::PimCommonSettings::self()->capitalizeWeekDays();
+    mAdvancedAutocorrect = PimCommon::PimCommonSettings::self()->advancedAutocorrect();
+    mReplaceDoubleQuotes = PimCommon::PimCommonSettings::self()->replaceDoubleQuotes();
+    mReplaceSingleQuotes = PimCommon::PimCommonSettings::self()->replaceSingleQuotes();
+    mEnabled = PimCommon::PimCommonSettings::self()->enabled();
+    mSuperScriptAppendix = PimCommon::PimCommonSettings::self()->superScript();
+    mAddNonBreakingSpace = PimCommon::PimCommonSettings::self()->addNonBreakingSpaceInFrench();
     readAutoCorrectionXmlFile();
 }
 
 void ComposerAutoCorrection::writeConfig()
 {
-    MessageComposer::MessageComposerSettings::self()->setAutoBoldUnderline(mAutoBoldUnderline);
-    MessageComposer::MessageComposerSettings::self()->setAutoFormatUrl(mAutoFormatUrl);
-    MessageComposer::MessageComposerSettings::self()->setUppercaseFirstCharOfSentence(mUppercaseFirstCharOfSentence);
-    MessageComposer::MessageComposerSettings::self()->setFixTwoUppercaseChars(mFixTwoUppercaseChars);
-    MessageComposer::MessageComposerSettings::self()->setSingleSpaces(mSingleSpaces);
-    MessageComposer::MessageComposerSettings::self()->setAutoFractions(mAutoFractions);
-    MessageComposer::MessageComposerSettings::self()->setCapitalizeWeekDays(mCapitalizeWeekDays);
-    MessageComposer::MessageComposerSettings::self()->setAdvancedAutocorrect(mAdvancedAutocorrect);
-    MessageComposer::MessageComposerSettings::self()->setReplaceDoubleQuotes(mReplaceDoubleQuotes);
-    MessageComposer::MessageComposerSettings::self()->setReplaceSingleQuotes(mReplaceSingleQuotes);
-    MessageComposer::MessageComposerSettings::self()->setEnabled(mEnabled);
-    MessageComposer::MessageComposerSettings::self()->setSuperScript(mSuperScriptAppendix);
-    MessageComposer::MessageComposerSettings::self()->setAddNonBreakingSpaceInFrench(mAddNonBreakingSpace);
-    MessageComposer::MessageComposerSettings::self()->requestSync();
+    PimCommon::PimCommonSettings::self()->setAutoBoldUnderline(mAutoBoldUnderline);
+    PimCommon::PimCommonSettings::self()->setAutoFormatUrl(mAutoFormatUrl);
+    PimCommon::PimCommonSettings::self()->setUppercaseFirstCharOfSentence(mUppercaseFirstCharOfSentence);
+    PimCommon::PimCommonSettings::self()->setFixTwoUppercaseChars(mFixTwoUppercaseChars);
+    PimCommon::PimCommonSettings::self()->setSingleSpaces(mSingleSpaces);
+    PimCommon::PimCommonSettings::self()->setAutoFractions(mAutoFractions);
+    PimCommon::PimCommonSettings::self()->setCapitalizeWeekDays(mCapitalizeWeekDays);
+    PimCommon::PimCommonSettings::self()->setAdvancedAutocorrect(mAdvancedAutocorrect);
+    PimCommon::PimCommonSettings::self()->setReplaceDoubleQuotes(mReplaceDoubleQuotes);
+    PimCommon::PimCommonSettings::self()->setReplaceSingleQuotes(mReplaceSingleQuotes);
+    PimCommon::PimCommonSettings::self()->setEnabled(mEnabled);
+    PimCommon::PimCommonSettings::self()->setSuperScript(mSuperScriptAppendix);
+    PimCommon::PimCommonSettings::self()->setAddNonBreakingSpaceInFrench(mAddNonBreakingSpace);
+    PimCommon::PimCommonSettings::self()->requestSync();
     writeAutoCorrectionXmlFile();
 }
 

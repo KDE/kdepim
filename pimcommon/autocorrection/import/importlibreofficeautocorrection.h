@@ -15,19 +15,38 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef IMPORTKMAILAUTOCORRECTION_H
-#define IMPORTKMAILAUTOCORRECTION_H
+#ifndef IMPORTLIBREOFFICEAUTOCORRECTION_H
+#define IMPORTLIBREOFFICEAUTOCORRECTION_H
 
 #include "importabstractautocorrection.h"
 
-namespace MessageComposer {
-class ImportKMailAutocorrection : public ImportAbstractAutocorrection
+class KTempDir;
+class KZip;
+class QDomDocument;
+class QFile;
+class KArchiveDirectory;
+
+namespace PimCommon {
+
+class ImportLibreOfficeAutocorrection : public ImportAbstractAutocorrection
 {
 public:
-    explicit ImportKMailAutocorrection(QWidget *parent = 0);
-    ~ImportKMailAutocorrection();
+    explicit ImportLibreOfficeAutocorrection(QWidget *parent = 0);
+    ~ImportLibreOfficeAutocorrection();
+
     bool import(const QString& fileName, ImportAbstractAutocorrection::LoadAttribute loadAttribute = All);
+
+private:
+    enum Type {DOCUMENT, SENTENCE, WORD };
+
+    void importAutoCorrectionFile();
+    void closeArchive();
+    bool loadDomElement( QDomDocument &doc, QFile *file );
+    bool importFile(Type type, const KArchiveDirectory* archiveDirectory);
+    KZip *mArchive;
+    KTempDir *mTempDir;
 };
+
 }
 
-#endif // IMPORTKMAILAUTOCORRECTION_H
+#endif // IMPORTLIBREOFFICEAUTOCORRECTION_H

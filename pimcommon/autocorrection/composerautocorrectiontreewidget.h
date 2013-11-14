@@ -15,27 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "composerautocorrectionlistwidget.h"
+#ifndef COMPOSERAUTOCORRECTIONTREEWIDGET_H
+#define COMPOSERAUTOCORRECTIONTREEWIDGET_H
 
-#include <QKeyEvent>
+#include <QTreeWidget>
 
-using namespace MessageComposer;
+namespace PimCommon {
 
-
-ComposerAutoCorrectionListWidget::ComposerAutoCorrectionListWidget(QWidget *parent)
-    : QListWidget(parent)
+class ComposerAutoCorrectionTreeWidget : public QTreeWidget
 {
+    Q_OBJECT
+public:
+    explicit ComposerAutoCorrectionTreeWidget(QWidget *parent = 0);
+    ~ComposerAutoCorrectionTreeWidget();
+
+protected:
+    void keyPressEvent( QKeyEvent *event );
+
+Q_SIGNALS:
+    void deleteSelectedItems();
+};
+
 }
 
-ComposerAutoCorrectionListWidget::~ComposerAutoCorrectionListWidget()
-{
-
-}
-
-void ComposerAutoCorrectionListWidget::keyPressEvent( QKeyEvent *event )
-{
-    if ( event->key() == Qt::Key_Delete ) {
-        Q_EMIT deleteSelectedItems();
-    }
-}
-
+#endif // COMPOSERAUTOCORRECTIONTREEWIDGET_H

@@ -19,7 +19,7 @@
 
 
 #include "mobilekernel.h"
-#include <messagecomposer/autocorrection/composerautocorrection.h>
+#include <pimcommon/autocorrection/composerautocorrection.h>
 #include <mailcommon/filter/filteraction.h>
 #include <mailcommon/kernel/mailkernel.h>
 #include <mailcommon/job/jobscheduler.h>
@@ -36,7 +36,7 @@ MobileKernel::MobileKernel() : mMonitor( 0 ), mCollectionModel( 0 ), mMessageSen
 
   mJobScheduler = new JobScheduler(0);
   mIdentityManager = new KPIMIdentities::IdentityManager( false, 0, "mIdentityManager" );
-  mAutoCorrection = new MessageComposer::ComposerAutoCorrection();
+  mAutoCorrection = new PimCommon::ComposerAutoCorrection();
   mMessageSender = new MessageComposer::AkonadiSender;
   CommonKernel->registerKernelIf( this ); //register KernelIf early, it is used by the Filter classes
 
@@ -61,7 +61,7 @@ MobileKernel* MobileKernel::self()
   return mySelf;
 }
 
-MessageComposer::ComposerAutoCorrection* MobileKernel::composerAutoCorrection() const
+PimCommon::ComposerAutoCorrection* MobileKernel::composerAutoCorrection() const
 {
   return mAutoCorrection;
 }

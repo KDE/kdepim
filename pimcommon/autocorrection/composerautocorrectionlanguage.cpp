@@ -19,7 +19,7 @@
 #include <KLocale>
 #include <KGlobal>
 
-using namespace MessageComposer;
+using namespace PimCommon;
 
 ComposerAutoCorrectionLanguage::ComposerAutoCorrectionLanguage(QWidget *parent)
     : KComboBox(parent)
