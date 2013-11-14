@@ -18,7 +18,6 @@
 #include "importmailjob.h"
 #include "akonadidatabase.h"
 #include "archivestorage.h"
-#include "synchronizeresourcejob.h"
 
 #include "mailcommon/filter/filtermanager.h"
 #include "mailcommon/filter/filterimporterexporter.h"
@@ -577,32 +576,6 @@ void ImportMailJob::restoreMails()
     }
     Q_EMIT info(i18n("Mails restored."));
     startSynchronizeResources(listResourceToSync);
-}
-
-void ImportMailJob::startSynchronizeResources(const QStringList &listResourceToSync)
-{
-    SynchronizeResourceJob *job = new SynchronizeResourceJob(this);
-    job->setListResources(listResourceToSync);
-    connect(job, SIGNAL(synchronizationFinished()), SLOT(slotAllResourceSynchronized()));
-    connect(job, SIGNAL(synchronizationInstanceDone(QString)), SLOT(slotSynchronizeInstanceDone(QString)));
-    connect(job, SIGNAL(synchronizationInstanceFailed(QString)), SLOT(slotSynchronizeInstanceFailed(QString)));
-    job->start();
-}
-
-void ImportMailJob::slotSynchronizeInstanceFailed(const QString &instance)
-{
-    Q_EMIT error(i18n("Failed to synchronize %1.", instance));
-}
-
-void ImportMailJob::slotSynchronizeInstanceDone(const QString &instance)
-{
-    Q_EMIT info(i18n("Resource %1 synchronized.", instance));
-}
-
-void ImportMailJob::slotAllResourceSynchronized()
-{
-    Q_EMIT info(i18n("All resources synchronized."));
-    nextStep();
 }
 
 void ImportMailJob::restoreConfig()

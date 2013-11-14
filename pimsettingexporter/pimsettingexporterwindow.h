@@ -25,6 +25,7 @@ class AbstractImportExportJob;
 class KRecentFilesAction;
 class KUrl;
 class ArchiveStorage;
+class KAction;
 
 class PimSettingExporterWindow: public KXmlGuiWindow
 {
@@ -51,7 +52,7 @@ private:
         Backup,
         Restore
     };
-
+    void updateActions(bool inAction);
     void backupNextStep();
     void restoreNextStep();
     void backupFinished();
@@ -62,13 +63,18 @@ private:
     void executeJob();
     bool canZip() const;
     void setupActions(bool canZipFile);
+    QHash<Utils::AppsType, Utils::importExportParameters> mStored;
+    QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator mStoreIterator;
+    Action mAction;
     LogWidget *mLogWidget;
     AbstractImportExportJob *mImportExportData;
     KRecentFilesAction *mRecentFilesAction;
     ArchiveStorage *mArchiveStorage;
-    QHash<Utils::AppsType, Utils::importExportParameters> mStored;
-    QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator mStoreIterator;
-    Action mAction;
+    KAction *mBackupAction;
+    KAction *mRestoreAction;
+    KAction *mSaveLogAction;
+    KAction *mArchiveStructureInfo;
+    KAction *mShowArchiveInformationsAction;
 };
 
 

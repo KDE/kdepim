@@ -36,14 +36,10 @@ public:
 
     void start();
 
-private Q_SLOTS:
-    void slotAllResourceSynchronized();
-    void slotSynchronizeInstanceDone(const QString &);
-    void slotSynchronizeInstanceFailed(const QString &instance);
+protected:
+    void nextStep();
 
 private:
-    void startSynchronizeResources(const QStringList &listResourceToSync);
-    void nextStep();
     void initializeListStep();
     void restoreTransports();
     void restoreResources();
