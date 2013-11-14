@@ -16,6 +16,7 @@
 */
 
 #include "configureimmutablewidgetutils.h"
+#include "simplestringlisteditor.h"
 
 #include <KLocale>
 #include <KDialog>
@@ -79,6 +80,12 @@ void ConfigureImmutableWidgetUtils::loadWidget( QCheckBox * b, const KCoreConfig
     b->setChecked( e->value() );
 }
 
+void ConfigureImmutableWidgetUtils::loadWidget( PimCommon::SimpleStringListEditor * b, const KCoreConfigSkeleton::ItemStringList *e )
+{
+    checkLockDown( b, e );
+    b->setStringList( e->value() );
+}
+
 void ConfigureImmutableWidgetUtils::loadWidget( QGroupBox * box, QButtonGroup * group,
                  const KCoreConfigSkeleton::ItemEnum *e )
 {
@@ -114,4 +121,9 @@ void ConfigureImmutableWidgetUtils::saveButtonGroup( QButtonGroup * group, KCore
     if ( group->checkedId() != -1 ) {
         e->setValue( group->checkedId() );
     }
+}
+
+void ConfigureImmutableWidgetUtils::saveSimpleStringListEditorRequester( PimCommon::SimpleStringListEditor * b, KCoreConfigSkeleton::ItemStringList *e )
+{
+    e->setValue(b->stringList());
 }
