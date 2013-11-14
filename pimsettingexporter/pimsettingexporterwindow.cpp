@@ -75,7 +75,14 @@
 
 PimSettingExporterWindow::PimSettingExporterWindow(QWidget *parent)
     : KXmlGuiWindow(parent),
-      mImportExportData(0)
+      mAction(Backup),
+      mImportExportData(0),
+      mArchiveStorage(0),
+      mBackupAction(0),
+      mRestoreAction(0),
+      mSaveLogAction(0),
+      mArchiveStructureInfo(0),
+      mShowArchiveInformationsAction(0)
 {
     KGlobal::locale()->insertCatalog( QLatin1String("libmailcommon") );
     KGlobal::locale()->insertCatalog( QLatin1String("libpimcommon") );
@@ -111,22 +118,22 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
 {
     KActionCollection* ac=actionCollection();
 
-    KAction *backupAction = ac->addAction(QLatin1String("backup"), this, SLOT(slotBackupData()));
-    backupAction->setText(i18n("Back Up Data..."));
-    backupAction->setEnabled(canZipFile);
+    mBackupAction = ac->addAction(QLatin1String("backup"), this, SLOT(slotBackupData()));
+    mBackupAction->setText(i18n("Back Up Data..."));
+    mBackupAction->setEnabled(canZipFile);
 
-    KAction *restoreAction = ac->addAction(QLatin1String("restore"), this, SLOT(slotRestoreData()));
-    restoreAction->setText(i18n("Restore Data..."));
-    restoreAction->setEnabled(canZipFile);
+    mRestoreAction = ac->addAction(QLatin1String("restore"), this, SLOT(slotRestoreData()));
+    mRestoreAction->setText(i18n("Restore Data..."));
+    mRestoreAction->setEnabled(canZipFile);
 
-    KAction *saveLogAction = ac->addAction(QLatin1String("save_log"), this, SLOT(slotSaveLog()));
-    saveLogAction->setText(i18n("Save log..."));
+    mSaveLogAction = ac->addAction(QLatin1String("save_log"), this, SLOT(slotSaveLog()));
+    mSaveLogAction->setText(i18n("Save log..."));
 
-    KAction *archiveStructureInfo = ac->addAction(QLatin1String("show_structure_info"), this, SLOT(slotShowStructureInfos()));
-    archiveStructureInfo->setText(i18n("Show Archive Structure Information..."));
+    mArchiveStructureInfo = ac->addAction(QLatin1String("show_structure_info"), this, SLOT(slotShowStructureInfos()));
+    mArchiveStructureInfo->setText(i18n("Show Archive Structure Information..."));
 
-    KAction *showArchiveInformationsAction = ac->addAction(QLatin1String("show_archive_info"), this, SLOT(slotShowArchiveInformations()));
-    showArchiveInformationsAction->setText(i18n("Show Archive Information..."));
+    mShowArchiveInformationsAction = ac->addAction(QLatin1String("show_archive_info"), this, SLOT(slotShowArchiveInformations()));
+    mShowArchiveInformationsAction->setText(i18n("Show Archive Information..."));
 
 
     KStandardAction::quit( this, SLOT(close()), ac );
@@ -135,6 +142,15 @@ void PimSettingExporterWindow::setupActions(bool canZipFile)
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
     mRecentFilesAction->loadEntries(groupConfig);
+}
+
+void PimSettingExporterWindow::updateActions(bool inAction)
+{
+    mBackupAction->setEnabled(!inAction);
+    mRestoreAction->setEnabled(!inAction);
+    mSaveLogAction->setEnabled(!inAction);
+    mArchiveStructureInfo->setEnabled(!inAction);
+    mShowArchiveInformationsAction->setEnabled(!inAction);
 }
 
 void PimSettingExporterWindow::slotRestoreFile(const KUrl &url)
@@ -178,95 +194,114 @@ void PimSettingExporterWindow::slotBackupData()
 
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
-        const QHash<Utils::AppsType, Utils::importExportParameters> stored = dialog->storedType();
+        mStored = dialog->storedType();
 
         delete dialog;
         mLogWidget->clear();
 
-        if (stored.isEmpty())
+        if (mStored.isEmpty())
             return;
 
-        ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
-        if (!archiveStorage->openArchive(true)) {
-            delete archiveStorage;
+        mArchiveStorage = new ArchiveStorage(filename,this);
+        if (!mArchiveStorage->openArchive(true)) {
+            delete mArchiveStorage;
+            mArchiveStorage = 0;
             return;
         }
 
-        slotAddInfo(i18n("Start to backup data in \'%1\'", filename));
-        slotAddEndLine();
-        //Add version
-        Utils::addVersion(archiveStorage->archive());
-        QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
-        while (i != stored.constEnd()) {
-            switch(i.key()) {
-            case Utils::KMail:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ExportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KAddressBook:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ExportAddressbookJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KAlarm:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ExportAlarmJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KOrganizer:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ExportCalendarJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KJots:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ExportJotJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KNotes:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ExportNotesJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::Akregator:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ExportAkregatorJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::Blogilo:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ExportBlogiloJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KNode:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ExportKnodeJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            }
-            ++i;
-        }
-
-        slotAddInfo(i18n("Backup in \'%1\' done.", filename));
-        //At the end
-        archiveStorage->closeArchive();
-        delete archiveStorage;
-        delete mImportExportData;
-        mImportExportData = 0;
-        KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
+        backupStart();
     } else {
         delete dialog;
     }
+}
+
+void PimSettingExporterWindow::backupStart()
+{
+    updateActions(true);
+    mAction = Backup;
+    mStoreIterator = mStored.constBegin();
+    slotAddInfo(i18n("Start to backup data in \'%1\'", mArchiveStorage->filename()));
+    slotAddEndLine();
+    //Add version
+    Utils::addVersion(mArchiveStorage->archive());
+    backupNextStep();
+}
+
+void PimSettingExporterWindow::backupNextStep()
+{
+    if (mStoreIterator != mStored.constEnd()) {
+        switch(mStoreIterator.key()) {
+        case Utils::KMail:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ExportMailJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KAddressBook:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ExportAddressbookJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KAlarm:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ExportAlarmJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KOrganizer:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ExportCalendarJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KJots:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ExportJotJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KNotes:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ExportNotesJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::Akregator:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ExportAkregatorJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::Blogilo:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ExportBlogiloJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KNode:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ExportKnodeJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        }
+    } else {
+        backupFinished();
+    }
+}
+
+void PimSettingExporterWindow::backupFinished()
+{
+    slotAddInfo(i18n("Backup in \'%1\' done.", mArchiveStorage->filename()));
+    //At the end
+    mArchiveStorage->closeArchive();
+    delete mArchiveStorage;
+    mArchiveStorage = 0;
+    delete mImportExportData;
+    mImportExportData = 0;
+    KMessageBox::information(this, i18n("For restoring data, you must use \"pimsettingexporter\". Be careful it can overwrite existing settings, data."), i18n("Backup infos."), QLatin1String("ShowInfoBackupInfos"));
+    updateActions(false);
 }
 
 void PimSettingExporterWindow::slotAddInfo(const QString& info)
@@ -303,96 +338,115 @@ void PimSettingExporterWindow::loadData(const QString &filename)
         return;
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
-        const QHash<Utils::AppsType, Utils::importExportParameters> stored = dialog->storedType();
+        mLogWidget->clear();
+        mStored = dialog->storedType();
 
         delete dialog;
-        mLogWidget->clear();
 
-        if (stored.isEmpty())
+        if (mStored.isEmpty())
             return;
 
-        ArchiveStorage *archiveStorage = new ArchiveStorage(filename,this);
-        if (!archiveStorage->openArchive(false)) {
-            delete archiveStorage;
+        mArchiveStorage = new ArchiveStorage(filename,this);
+        if (!mArchiveStorage->openArchive(false)) {
+            delete mArchiveStorage;
+            mArchiveStorage = 0;
             return;
         }
 
-        const int version = Utils::archiveVersion(archiveStorage->archive());
-        qDebug()<<" version "<<version;
-        AbstractImportExportJob::setArchiveVersion(version);
-
-        slotAddInfo(i18n("Start to restore data from \'%1\'", filename));
-        slotAddEndLine();
-        QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator i = stored.constBegin();
-        while (i != stored.constEnd()) {
-            switch(i.key()) {
-            case Utils::KMail:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportMailJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KAddressBook:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportAddressbookJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KAlarm:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportAlarmJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KOrganizer:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportCalendarJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KJots:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportJotJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KNotes:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportNotesJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::Akregator:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportAkregatorJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::Blogilo:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportBlogiloJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            case Utils::KNode:
-                if (i.value().numberSteps != 0) {
-                    mImportExportData = new ImportKnodeJob(this, i.value().types, archiveStorage, i.value().numberSteps);
-                    executeJob();
-                }
-                break;
-            }
-            ++i;
-        }
-
-        slotAddInfo(i18n("Restoring data from \'%1\' done.", filename));
-        //At the end
-        archiveStorage->closeArchive();
-        delete archiveStorage;
-        delete mImportExportData;
-        mImportExportData = 0;
+        restoreStart();
     } else {
         delete dialog;
     }
+}
+
+void PimSettingExporterWindow::restoreNextStep()
+{
+    if (mStoreIterator != mStored.constEnd()) {
+        switch(mStoreIterator.key()) {
+        case Utils::KMail:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ImportMailJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KAddressBook:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ImportAddressbookJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KAlarm:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ImportAlarmJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KOrganizer:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ImportCalendarJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KJots:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ImportJotJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KNotes:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ImportNotesJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::Akregator:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ImportAkregatorJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::Blogilo:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ImportBlogiloJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        case Utils::KNode:
+            if (mStoreIterator.value().numberSteps != 0) {
+                mImportExportData = new ImportKnodeJob(this, mStoreIterator.value().types, mArchiveStorage, mStoreIterator.value().numberSteps);
+                executeJob();
+            }
+            break;
+        }
+    } else {
+        restoreFinished();
+    }
+}
+
+void PimSettingExporterWindow::restoreStart()
+{
+    updateActions(true);
+    mAction = Restore;
+    mStoreIterator = mStored.constBegin();
+    const int version = Utils::archiveVersion(mArchiveStorage->archive());
+    qDebug()<<" version "<<version;
+    AbstractImportExportJob::setArchiveVersion(version);
+
+    slotAddInfo(i18n("Start to restore data from \'%1\'", mArchiveStorage->filename()));
+    slotAddEndLine();
+    restoreNextStep();
+}
+
+void PimSettingExporterWindow::restoreFinished()
+{
+    slotAddInfo(i18n("Restoring data from \'%1\' done.", mArchiveStorage->filename()));
+    //At the end
+    mArchiveStorage->closeArchive();
+    delete mArchiveStorage;
+    mArchiveStorage = 0;
+    delete mImportExportData;
+    mImportExportData = 0;
+    updateActions(false);
 }
 
 void PimSettingExporterWindow::executeJob()
@@ -401,10 +455,24 @@ void PimSettingExporterWindow::executeJob()
     connect(mImportExportData, SIGNAL(error(QString)), SLOT(slotAddError(QString)));
     connect(mImportExportData, SIGNAL(title(QString)), SLOT(slotAddTitle(QString)));
     connect(mImportExportData, SIGNAL(endLine()), SLOT(slotAddEndLine()));
+    connect(mImportExportData, SIGNAL(jobFinished()), SLOT(slotJobFinished()));
     mImportExportData->start();
+}
+
+void PimSettingExporterWindow::slotJobFinished()
+{
+    ++mStoreIterator;
     slotAddEndLine();
     delete mImportExportData;
     mImportExportData = 0;
+    switch(mAction) {
+    case Backup:
+        backupNextStep();
+        break;
+    case Restore:
+        restoreNextStep();
+        break;
+    }
 }
 
 bool PimSettingExporterWindow::canZip() const

@@ -17,6 +17,7 @@
 
 #include "abstractimportexportjob.h"
 #include "archivestorage.h"
+#include "synchronizeresourcejob.h"
 
 #include "mailcommon/util/mailutil.h"
 
@@ -408,7 +409,7 @@ void AbstractImportExportJob::extractZipFile(const KArchiveFile *file, const QSt
             if (entry) {
                 if (entry->isDirectory()) {
                     const KArchiveDirectory *dir = static_cast<const KArchiveDirectory*>(entry);
-                    dir->copyTo(destination, true);
+                    dir->copyTo(destination + QDir::separator() + dir->name(), true);
                 } else if (entry->isFile()) {
                     const KArchiveFile *dir = static_cast<const KArchiveFile*>(entry);
                     dir->copyTo(destination);
@@ -485,4 +486,33 @@ void AbstractImportExportJob::setArchiveVersion(int version)
     sArchiveVersion = version;
 }
 
+void AbstractImportExportJob::slotSynchronizeInstanceFailed(const QString &instance)
+{
+    Q_EMIT error(i18n("Failed to synchronize %1.", instance));
+}
 
+void AbstractImportExportJob::slotSynchronizeInstanceDone(const QString &instance)
+{
+    Q_EMIT info(i18n("Resource %1 synchronized.", instance));
+}
+
+void AbstractImportExportJob::slotAllResourceSynchronized()
+{
+    Q_EMIT info(i18n("All resources synchronized."));
+    nextStep();
+}
+
+void AbstractImportExportJob::nextStep()
+{
+    //Implement in sub class.
+}
+
+void AbstractImportExportJob::startSynchronizeResources(const QStringList &listResourceToSync)
+{
+    SynchronizeResourceJob *job = new SynchronizeResourceJob(this);
+    job->setListResources(listResourceToSync);
+    connect(job, SIGNAL(synchronizationFinished()), SLOT(slotAllResourceSynchronized()));
+    connect(job, SIGNAL(synchronizationInstanceDone(QString)), SLOT(slotSynchronizeInstanceDone(QString)));
+    connect(job, SIGNAL(synchronizationInstanceFailed(QString)), SLOT(slotSynchronizeInstanceFailed(QString)));
+    job->start();
+}

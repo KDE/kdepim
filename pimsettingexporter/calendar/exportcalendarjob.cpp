@@ -52,6 +52,7 @@ void ExportCalendarJob::start()
         backupResources();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
@@ -59,9 +60,11 @@ void ExportCalendarJob::start()
         backupConfig();
         increaseProgressDialog();
         if (wasCanceled()) {
+            Q_EMIT jobFinished();
             return;
         }
     }
+    Q_EMIT jobFinished();
 }
 
 

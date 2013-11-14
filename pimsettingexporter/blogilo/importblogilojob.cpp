@@ -48,6 +48,7 @@ void ImportBlogiloJob::start()
         restoreConfig();
     if (mTypeSelected & Utils::Data)
         restoreData();
+    Q_EMIT jobFinished();
 }
 
 void ImportBlogiloJob::restoreConfig()

@@ -53,6 +53,7 @@ void ImportAlarmJob::start()
         restoreResources();
     if (mTypeSelected & Utils::Config)
         restoreConfig();
+    Q_EMIT jobFinished();
 }
 
 void ImportAlarmJob::restoreResources()

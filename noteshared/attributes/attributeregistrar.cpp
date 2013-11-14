@@ -1,43 +1,38 @@
 /*
-  Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-  
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-  
+
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ARCHIVESTORAGE_H
-#define ARCHIVESTORAGE_H
-#include <QObject>
-class KZip;
+#include "notealarmattribute.h"
+#include "notedisplayattribute.h"
+#include "notelockattribute.h"
 
-class ArchiveStorage : public QObject
+#include <akonadi/attributefactory.h>
+
+namespace {
+
+// Anonymous namespace; function is invisible outside this file.
+bool dummy()
 {
-    Q_OBJECT
-public:
-    explicit ArchiveStorage(const QString &filename, QObject*parent = 0);
-    ~ArchiveStorage();
+  Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteDisplayAttribute>();
+  Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteAlarmAttribute>();
+  Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteLockAttribute>();
+  return true;
+}
 
-    void closeArchive();
-    bool openArchive(bool write);
+// Called when this library is loaded.
+const bool registered = dummy();
 
-    KZip *archive() const;
-    QString filename() const;
-
-Q_SIGNALS:
-    void error(const QString&);
-
-private:
-    KZip *mArchive;
-};
-
-#endif // ARCHIVESTORAGE_H
+} // namespace

@@ -52,6 +52,7 @@ void ImportAddressbookJob::start()
         restoreResources();
     if (mTypeSelected & Utils::Config)
         restoreConfig();
+    Q_EMIT jobFinished();
 }
 
 void ImportAddressbookJob::restoreResources()

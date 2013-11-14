@@ -15,25 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KNOTESAKONADITRAY_H
-#define KNOTESAKONADITRAY_H
+#ifndef SYNCHRONIZERESOURCEJOB_H
+#define SYNCHRONIZERESOURCEJOB_H
 
-#include <KStatusNotifierItem>
-#include <KIcon>
-class KNotesAkonadiTray : public KStatusNotifierItem
+#include <QObject>
+#include <QStringList>
+class KJob;
+class SynchronizeResourceJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNotesAkonadiTray(QWidget *parent=0);
-    ~KNotesAkonadiTray();
+    explicit SynchronizeResourceJob(QObject *parent = 0);
+    ~SynchronizeResourceJob();
 
-    void updateNumberOfNotes(int value);
+    void start();
+    void setListResources(const QStringList &resources);
+
+Q_SIGNALS:
+    void synchronizationFinished();
+    void synchronizationInstanceDone(const QString &);
+    void synchronizationInstanceFailed(const QString &);
 
 private Q_SLOTS:
-    void slotUpdateSystemTray();
+    void slotSynchronizationFinished(KJob*);
 
 private:
-    KIcon mIcon;
+    void nextSync();
+    QStringList mListResources;
+    int mIndex;
 };
 
-#endif // KNOTESAKONADITRAY_H
+#endif // SYNCHRONIZERESOURCEJOB_H

@@ -60,7 +60,16 @@ Q_SIGNALS:
     void title(const QString &);
     void endLine();
 
+    void jobFinished();
+
+private Q_SLOTS:
+    void slotAllResourceSynchronized();
+    void slotSynchronizeInstanceDone(const QString &);
+    void slotSynchronizeInstanceFailed(const QString &instance);
+
 protected:
+    void startSynchronizeResources(const QStringList &listResourceToSync);
+    virtual void nextStep();
     void infoAboutNewResource(const QString &resourceName);
     void copyToDirectory(const KArchiveEntry *entry, const QString &dest);
     void extractZipFile(const KArchiveFile *file, const QString &source, const QString &destination);

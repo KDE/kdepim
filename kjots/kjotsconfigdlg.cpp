@@ -75,3 +75,4 @@ void KJotsConfigMisc::save()
     emit changed( false );
 }
 
+#include "moc_kjotsconfigdlg.cpp"

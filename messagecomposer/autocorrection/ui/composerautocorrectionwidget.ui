@@ -494,7 +494,7 @@
            <item>
             <widget class="QPushButton" name="add2">
              <property name="text">
-              <string>A&amp;dd</string>
+              <string>Add</string>
              </property>
             </widget>
            </item>

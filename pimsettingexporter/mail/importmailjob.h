@@ -29,13 +29,18 @@ class ArchiveStorage;
 
 class ImportMailJob : public AbstractImportExportJob
 {
+    Q_OBJECT
 public:
     explicit ImportMailJob(QWidget *widget, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep);
     ~ImportMailJob();
 
     void start();
 
+protected:
+    void nextStep();
+
 private:
+    void initializeListStep();
     void restoreTransports();
     void restoreResources();
     void restoreMails();
@@ -63,6 +68,8 @@ private:
     QHash<int, int> mHashTransport;
     QHash<QString, QString> mHashResources;
     QStringList mFileList;
+    QList<Utils::StoredType> mListStep;
+    int mIndex;
 };
 
 #endif // ImportMailJob_H

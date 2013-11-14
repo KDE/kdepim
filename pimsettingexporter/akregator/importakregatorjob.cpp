@@ -48,6 +48,7 @@ void ImportAkregatorJob::start()
         restoreConfig();
     if (mTypeSelected & Utils::Data)
         restoreData();
+    Q_EMIT jobFinished();
 }
 
 void ImportAkregatorJob::restoreConfig()

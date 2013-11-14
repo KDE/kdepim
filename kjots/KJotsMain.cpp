@@ -25,7 +25,6 @@
 
 #include "KJotsMain.h"
 
-#include <Akonadi/AttributeFactory>
 
 #include <kicon.h>
 
@@ -42,7 +41,6 @@
 #include "kjotsedit.h"
 #include "kjotsbrowser.h"
 #include "kjotswidget.h"
-#include "noteshared/attributes/notelockattribute.h"
 
 #include <QApplication>
 
@@ -68,8 +66,6 @@ KJotsMain::KJotsMain()
 
     setupGUI();
     connect(component, SIGNAL(captionChanged(QString)), SLOT(updateCaption(QString)));
-
-    Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteLockAttribute>();
 
 }
 

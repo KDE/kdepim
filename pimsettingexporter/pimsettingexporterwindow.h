@@ -19,10 +19,13 @@
 #ifndef PIMSETTINGEXPORTERWINDOW_H
 #define PIMSETTINGEXPORTERWINDOW_H
 #include <kxmlguiwindow.h>
+#include "utils.h"
 class LogWidget;
 class AbstractImportExportJob;
 class KRecentFilesAction;
 class KUrl;
+class ArchiveStorage;
+class KAction;
 
 class PimSettingExporterWindow: public KXmlGuiWindow
 {
@@ -32,6 +35,7 @@ public:
     ~PimSettingExporterWindow();
 
 private Q_SLOTS:
+    void slotJobFinished();
     void slotBackupData();
     void slotRestoreData();
     void slotAddInfo(const QString &info);
@@ -44,13 +48,33 @@ private Q_SLOTS:
     void slotShowArchiveInformations();
 
 private:
+    enum Action {
+        Backup,
+        Restore
+    };
+    void updateActions(bool inAction);
+    void backupNextStep();
+    void restoreNextStep();
+    void backupFinished();
+    void backupStart();
+    void restoreFinished();
+    void restoreStart();
     void loadData(const QString &filename);
     void executeJob();
     bool canZip() const;
     void setupActions(bool canZipFile);
+    QHash<Utils::AppsType, Utils::importExportParameters> mStored;
+    QHash<Utils::AppsType, Utils::importExportParameters>::const_iterator mStoreIterator;
+    Action mAction;
     LogWidget *mLogWidget;
     AbstractImportExportJob *mImportExportData;
     KRecentFilesAction *mRecentFilesAction;
+    ArchiveStorage *mArchiveStorage;
+    KAction *mBackupAction;
+    KAction *mRestoreAction;
+    KAction *mSaveLogAction;
+    KAction *mArchiveStructureInfo;
+    KAction *mShowArchiveInformationsAction;
 };
 
 

@@ -51,6 +51,7 @@ void ImportJotJob::start()
         restoreResources();
     if (mTypeSelected & Utils::Config)
         restoreConfig();
+    Q_EMIT jobFinished();
 }
 
 void ImportJotJob::restoreResources()

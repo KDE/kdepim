@@ -15,25 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KNOTESAKONADITRAY_H
-#define KNOTESAKONADITRAY_H
+#include "knoteschangerecorder.h"
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/CollectionFetchScope>
+#include "akonadi_next/note.h"
 
-#include <KStatusNotifierItem>
-#include <KIcon>
-class KNotesAkonadiTray : public KStatusNotifierItem
+KNotesChangeRecorder::KNotesChangeRecorder(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit KNotesAkonadiTray(QWidget *parent=0);
-    ~KNotesAkonadiTray();
+    mChangeRecorder = new Akonadi::ChangeRecorder( this );
+    mChangeRecorder->setMimeTypeMonitored( Akonotes::Note::mimeType() );
+    mChangeRecorder->fetchCollectionStatistics( true );
+    mChangeRecorder->setAllMonitored( true );
+    mChangeRecorder->collectionFetchScope().setIncludeStatistics( true );
+}
 
-    void updateNumberOfNotes(int value);
-
-private Q_SLOTS:
-    void slotUpdateSystemTray();
-
-private:
-    KIcon mIcon;
-};
-
-#endif // KNOTESAKONADITRAY_H
+Akonadi::ChangeRecorder *KNotesChangeRecorder::changeRecorder() const
+{
+    return mChangeRecorder;
+}
