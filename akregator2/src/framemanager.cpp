@@ -393,6 +393,3 @@ void FrameManager::saveProperties(KConfigGroup & config)
 }
 
 } // namespace Akregator2
-
-#include "framemanager.moc"
-

@@ -87,6 +87,3 @@ KCMAkregator2AppearanceConfig::KCMAkregator2AppearanceConfig( QWidget* parent, c
 
     addConfig( Settings::self(), m_widget );
 }
-
-
-#include "akregator2_config_appearance.moc"

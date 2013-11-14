@@ -94,4 +94,3 @@ void FeedPropertiesDialog::setFetchInterval( int minutes )
     return d->m_ui.updateInput->setValue( minutes );
 }
 
-#include "feedpropertiesdialog.moc"

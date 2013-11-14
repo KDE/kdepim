@@ -187,6 +187,3 @@ QModelIndex SearchProxyModel::Private::sourceParent()
 
     return QModelIndex();
 }
-
-
-#include "searchproxymodel.moc"

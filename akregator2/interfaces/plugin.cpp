@@ -70,4 +70,3 @@ void Plugin::removeGuiClients( KXMLGUIClient* ) {}
 
 }
 
-#include "plugin.moc"

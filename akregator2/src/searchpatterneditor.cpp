@@ -202,6 +202,3 @@ QString SearchPatternEditor::nepomukQuery( const KUrl::List &parentFolders ) con
   query.addRequestProperty( itemIdProperty );
   return query.toSparqlQuery();
 }
-
-
-#include "searchpatterneditor.moc"

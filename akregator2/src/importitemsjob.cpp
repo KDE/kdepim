@@ -195,4 +195,3 @@ void ImportItemsJob::Private::importFinished( KJob* job ) {
     cleanupAndEmitResult();
 }
 
-#include "importitemsjob.moc"

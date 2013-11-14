@@ -77,6 +77,3 @@ void KCMAkregatorShareConfig::load()
     if ( !serviceUrl.isEmpty() )
         ui.kcfg_ServiceUrl->setEditText(serviceUrl);
 }
-
-
-#include "akregator_config_sharemicroblog.moc"

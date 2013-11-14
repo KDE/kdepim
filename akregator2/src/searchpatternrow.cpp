@@ -405,6 +405,3 @@ Nepomuk2::Query::Term SearchPatternRow::stringAsTerm( const QUrl& property ) con
 
   return term;
 }
-
-
-#include "searchpatternrow.moc"

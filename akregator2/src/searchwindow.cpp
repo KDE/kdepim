@@ -524,4 +524,3 @@ void SearchWindow::getChildren( const QAbstractItemModel *model,
 
 } /* namespace Akregator2 */
 
-#include "searchwindow.moc"

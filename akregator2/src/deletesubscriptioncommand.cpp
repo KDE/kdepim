@@ -191,4 +191,3 @@ void DeleteSubscriptionCommand::Private::startDelete()
     job->start();
 }
 
-#include "deletesubscriptioncommand.moc"

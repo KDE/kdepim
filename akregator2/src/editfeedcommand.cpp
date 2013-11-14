@@ -154,7 +154,3 @@ void EditFeedCommand::doStart()
     connect( job, SIGNAL(result(KJob*)), this, SLOT(collectionFetched(KJob*)) );
     job->start();
 }
-
-
-
-#include "editfeedcommand.moc"

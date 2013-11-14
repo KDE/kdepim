@@ -737,6 +737,3 @@ void ArticleViewer::setArticleActionsEnabled(bool enabled)
 }
 
 } // namespace Akregator2
-
-#include "articleviewer.moc"
-

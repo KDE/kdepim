@@ -172,4 +172,3 @@ void ImportFeedListCommand::doStart()
     d->doImport();
 }
 
-#include "importfeedlistcommand.moc"

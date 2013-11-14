@@ -250,6 +250,3 @@ void BrowserFrame::Private::connectPart()
         }
     }
 }
-
-#include "browserframe_p.moc"
-

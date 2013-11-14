@@ -129,5 +129,3 @@ void Command::emitCanceled() {
     setErrorAndEmitResult( i18n("User canceled"), Command::UserCanceled );
 }
 
-#include "command.moc"
-#include "command_p.moc"

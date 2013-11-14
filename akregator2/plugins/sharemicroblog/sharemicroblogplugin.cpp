@@ -177,6 +177,3 @@ void SharePlugin::dataUpdated(const QString &source, const Plasma::DataEngine::D
     Q_UNUSED(source);
     Q_UNUSED(data);
 }
-
-
-#include "sharemicroblogplugin.moc"

@@ -419,4 +419,3 @@ void Part::addFeedsToGroup(const QStringList& urls, const QString& group)
 
 } // namespace Akregator2
 
-#include "akregator2_part.moc"

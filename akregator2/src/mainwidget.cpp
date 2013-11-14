@@ -1215,4 +1215,3 @@ void Akregator2::MainWidget::slotOpenSelectedArticlesInBackground()
     openSelectedArticles( true );
 }
 
-#include "mainwidget.moc"

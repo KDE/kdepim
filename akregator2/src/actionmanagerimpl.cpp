@@ -599,4 +599,3 @@ void ActionManagerImpl::setArticleActionsEnabled( bool enabled ) {
 #undef setActionEnabled
 }
 
-#include "actionmanagerimpl.moc"

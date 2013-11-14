@@ -383,6 +383,3 @@ QString Akregator2::Backend::StorageMK4Impl::restoreTagSet() const
     c4_Row row = d->feedListView.GetAt(0);
     return QString::fromUtf8(d->pTagSet(row));
 }
-
-
-#include "storagemk4impl.moc"

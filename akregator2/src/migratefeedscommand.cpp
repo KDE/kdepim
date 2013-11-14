@@ -351,5 +351,3 @@ void MigrateFeedsCommand::Private::currentIdChanged( int id ) {
     }
 }
 
-#include "migratefeedscommand.moc"
-#include "migratefeedswizard_p.moc"

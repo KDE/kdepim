@@ -174,4 +174,3 @@ void KCMAkregator2FeedListsConfig::restart()
         instance.restart();
 }
 
-#include "akregator2_config_feedlists.moc"
