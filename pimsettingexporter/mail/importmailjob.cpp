@@ -457,7 +457,7 @@ void ImportMailJob::restoreResources()
 
 void ImportMailJob::restoreMails()
 {
-    QStringList mListResourceToSync;
+    QStringList listResourceToSync;
     Q_EMIT info(i18n("Restore mails..."));
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     QDir dir(mTempDirName);
@@ -568,7 +568,7 @@ void ImportMailJob::restoreMails()
                     //TODO Fix me not correct zip filename.
                     extractZipFile(file, copyToDirName, newUrl.path());
                 }
-                mListResourceToSync << newResource;
+                listResourceToSync << newResource;
             } else {
                 kDebug()<<" resource name not supported "<<resourceName;
             }
@@ -576,8 +576,13 @@ void ImportMailJob::restoreMails()
         }
     }
     Q_EMIT info(i18n("Mails restored."));
+    startSynchronizeResources(listResourceToSync);
+}
+
+void ImportMailJob::startSynchronizeResources(const QStringList &listResourceToSync)
+{
     SynchronizeResourceJob *job = new SynchronizeResourceJob(this);
-    job->setListResources(mListResourceToSync);
+    job->setListResources(listResourceToSync);
     connect(job, SIGNAL(synchronizationFinished()), SLOT(slotAllResourceSynchronized()));
     connect(job, SIGNAL(synchronizationInstanceDone(QString)), SLOT(slotSynchronizeInstanceDone(QString)));
     connect(job, SIGNAL(synchronizationInstanceFailed(QString)), SLOT(slotSynchronizeInstanceFailed(QString)));

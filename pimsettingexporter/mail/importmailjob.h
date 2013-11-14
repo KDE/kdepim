@@ -42,6 +42,7 @@ private Q_SLOTS:
     void slotSynchronizeInstanceFailed(const QString &instance);
 
 private:
+    void startSynchronizeResources(const QStringList &listResourceToSync);
     void nextStep();
     void initializeListStep();
     void restoreTransports();
