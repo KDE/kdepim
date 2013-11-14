@@ -138,21 +138,21 @@ void ExportMailJob::backupTransports()
     const QString maitransportsrc = KStandardDirs::locateLocal( "config",  mailtransportsStr);
     if (!QFile(maitransportsrc).exists()) {
         Q_EMIT info(i18n("Transports backup done."));
-        return;
+    } else {
+        KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( mailtransportsStr );
+
+        KTemporaryFile tmp;
+        tmp.open();
+        KConfig *config = mailtransportsConfig->copyTo( tmp.fileName() );
+
+        config->sync();
+        const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::transportsPath() + QLatin1String("mailtransports"));
+        delete config;
+        if (fileAdded)
+            Q_EMIT info(i18n("Transports backup done."));
+        else
+            Q_EMIT error(i18n("Transport file cannot be added to backup file."));
     }
-    KSharedConfigPtr mailtransportsConfig = KSharedConfig::openConfig( mailtransportsStr );
-
-    KTemporaryFile tmp;
-    tmp.open();
-    KConfig *config = mailtransportsConfig->copyTo( tmp.fileName() );
-
-    config->sync();
-    const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::transportsPath() + QLatin1String("mailtransports"));
-    delete config;
-    if (fileAdded)
-        Q_EMIT info(i18n("Transports backup done."));
-    else
-        Q_EMIT error(i18n("Transport file cannot be added to backup file."));
 }
 
 void ExportMailJob::backupResources()
@@ -437,55 +437,55 @@ void ExportMailJob::backupIdentity()
     MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
     const QString emailidentitiesStr(QLatin1String("emailidentities"));
     const QString emailidentitiesrc = KStandardDirs::locateLocal( "config",  emailidentitiesStr);
-    if (!QFile(emailidentitiesrc).exists()) {
-        return;
-    }
+    if (QFile(emailidentitiesrc).exists()) {
 
-    KSharedConfigPtr identity = KSharedConfig::openConfig( emailidentitiesrc );
 
-    KTemporaryFile tmp;
-    tmp.open();
+        KSharedConfigPtr identity = KSharedConfig::openConfig( emailidentitiesrc );
 
-    KConfig *identityConfig = identity->copyTo( tmp.fileName() );
-    const QStringList accountList = identityConfig->groupList().filter( QRegExp( QLatin1String("Identity #\\d+") ) );
-    Q_FOREACH(const QString& account, accountList) {
-        KConfigGroup group = identityConfig->group(account);
-        const QString fcc =QLatin1String("Fcc");
-        if (group.hasKey(fcc)) {
-            group.writeEntry(fcc,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(fcc).toLongLong())));
-        }
-        const QString draft = QLatin1String("Drafts");
-        if (group.hasKey(draft)) {
-            group.writeEntry(draft,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(draft).toLongLong())));
-        }
-        const QString templates = QLatin1String("Templates");
-        if (group.hasKey(templates)) {
-            group.writeEntry(templates,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(templates).toLongLong())));
-        }
-        const QString vcard = QLatin1String("VCardFile");
-        if (group.hasKey(vcard)) {
-            const QString vcardFileName = group.readEntry(vcard);
-            if (!vcardFileName.isEmpty()) {
-                const int uoid = group.readEntry(QLatin1String("uoid"),-1);
-                QFile file(vcardFileName);
-                if (file.exists()) {
-                    const bool fileAdded  = archive()->addLocalFile(vcardFileName, Utils::identitiesPath() + QString::number(uoid) + QDir::separator() + file.fileName());
-                    if (fileAdded)
-                        Q_EMIT error(i18n("vCard file \"%1\" cannot be saved.",file.fileName()));
-                } else {
-                    group.deleteEntry(vcard);
+        KTemporaryFile tmp;
+        tmp.open();
+
+        KConfig *identityConfig = identity->copyTo( tmp.fileName() );
+        const QStringList accountList = identityConfig->groupList().filter( QRegExp( QLatin1String("Identity #\\d+") ) );
+        Q_FOREACH(const QString& account, accountList) {
+            KConfigGroup group = identityConfig->group(account);
+            const QString fcc =QLatin1String("Fcc");
+            if (group.hasKey(fcc)) {
+                group.writeEntry(fcc,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(fcc).toLongLong())));
+            }
+            const QString draft = QLatin1String("Drafts");
+            if (group.hasKey(draft)) {
+                group.writeEntry(draft,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(draft).toLongLong())));
+            }
+            const QString templates = QLatin1String("Templates");
+            if (group.hasKey(templates)) {
+                group.writeEntry(templates,MailCommon::Util::fullCollectionPath(Akonadi::Collection(group.readEntry(templates).toLongLong())));
+            }
+            const QString vcard = QLatin1String("VCardFile");
+            if (group.hasKey(vcard)) {
+                const QString vcardFileName = group.readEntry(vcard);
+                if (!vcardFileName.isEmpty()) {
+                    const int uoid = group.readEntry(QLatin1String("uoid"),-1);
+                    QFile file(vcardFileName);
+                    if (file.exists()) {
+                        const bool fileAdded  = archive()->addLocalFile(vcardFileName, Utils::identitiesPath() + QString::number(uoid) + QDir::separator() + file.fileName());
+                        if (fileAdded)
+                            Q_EMIT error(i18n("vCard file \"%1\" cannot be saved.",file.fileName()));
+                    } else {
+                        group.deleteEntry(vcard);
+                    }
                 }
             }
         }
-    }
 
-    identityConfig->sync();
-    const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::identitiesPath() + QLatin1String("emailidentities"));
-    delete identityConfig;
-    if (fileAdded)
-        Q_EMIT info(i18n("Identity backup done."));
-    else
-        Q_EMIT error(i18n("Identity file cannot be added to backup file."));
+        identityConfig->sync();
+        const bool fileAdded  = archive()->addLocalFile(tmp.fileName(), Utils::identitiesPath() + QLatin1String("emailidentities"));
+        delete identityConfig;
+        if (fileAdded)
+            Q_EMIT info(i18n("Identity backup done."));
+        else
+            Q_EMIT error(i18n("Identity file cannot be added to backup file."));
+    }
 }
 
 void ExportMailJob::backupMails()

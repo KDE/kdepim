@@ -153,7 +153,6 @@ void ExportCalendarJob::backupConfig()
         if (!templateDirAdded) {
             Q_EMIT error(i18n("\"%1\" directory cannot be added to backup file.", templateDir));
         }
-
     }
 
 

@@ -72,7 +72,7 @@ void ExportAlarmJob::backupResources()
 
     Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
     const Akonadi::AgentInstance::List list = manager->instances();
-    foreach( const Akonadi::AgentInstance &agent, list ) {
+    Q_FOREACH ( const Akonadi::AgentInstance &agent, list ) {
         const QString identifier = agent.identifier();
         if (identifier.contains(QLatin1String("akonadi_kalarm_resource_"))) {
             backupResourceFile(agent, Utils::alarmPath());
