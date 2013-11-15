@@ -48,7 +48,6 @@ void SubjectLineEditWithAutoCorrection::setAutocorrectionLanguage(const QString 
     mAutoCorrection->setLanguage(language);
 }
 
-
 void SubjectLineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
 {
     if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {

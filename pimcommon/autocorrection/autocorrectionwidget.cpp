@@ -16,6 +16,8 @@
 */
 
 #include "autocorrectionwidget.h"
+#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include "autocorrection.h"
 #include "ui_autocorrectionwidget.h"
 #include "import/importlibreofficeautocorrection.h"

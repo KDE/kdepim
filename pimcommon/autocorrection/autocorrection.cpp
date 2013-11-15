@@ -300,7 +300,7 @@ bool AutoCorrection::autoBoldUnderline()
                 foundLetterNumber = true;
                 break;
             }
-            constIter++;
+            ++constIter;
         }
 
         // if no letter/number found, don't apply autocorrection like in OOo 2.x
