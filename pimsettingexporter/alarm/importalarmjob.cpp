@@ -43,24 +43,34 @@ ImportAlarmJob::~ImportAlarmJob()
 
 }
 
-
 void ImportAlarmJob::start()
 {
     Q_EMIT title(i18n("Start import kalarm settings..."));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory ,QString());
-    if (mTypeSelected & Utils::Resources)
-        restoreResources();
-    if (mTypeSelected & Utils::Config)
-        restoreConfig();
-    Q_EMIT jobFinished();
+    initializeListStep();
+    nextStep();
+}
+
+void ImportAlarmJob::nextStep()
+{
+    ++mIndex;
+    if (mIndex < mListStep.count()) {
+        Utils::StoredType type = mListStep.at(mIndex);
+        if (type == Utils::Resources)
+            restoreResources();
+        if (type == Utils::Config)
+            restoreConfig();
+    } else {
+        Q_EMIT jobFinished();
+    }
 }
 
 void ImportAlarmJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    restoreResourceFile(QString::fromLatin1("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm, false);
-
+    QStringList listResource;
+    listResource << restoreResourceFile(QString::fromLatin1("akonadi_kalarm_resource"), Utils::alarmPath(), storeAlarm, false);
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
         dir.mkdir(Utils::alarmPath());
@@ -107,11 +117,14 @@ void ImportAlarmJob::restoreResources()
 
                     const QString newResource = mCreateResource->createResource( QString::fromLatin1("akonadi_kalarm_dir_resource"), filename, settings, true );
                     infoAboutNewResource(newResource);
+                    listResource << newResource;
                     qDebug()<<" newResource"<<newResource;
                 }
             }
         }
     }
+    //It's maildir support. Need to add support
+    startSynchronizeResources(listResource);
 }
 
 void ImportAlarmJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
@@ -181,6 +194,7 @@ void ImportAlarmJob::restoreConfig()
         }
     }
     Q_EMIT info(i18n("Config restored."));
+    nextStep();
 }
 
 void ImportAlarmJob::importkalarmConfig(const KArchiveFile* kalarmFile, const QString &kalarmrc, const QString &filename,const QString &prefix)

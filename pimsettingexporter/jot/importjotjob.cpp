@@ -42,6 +42,16 @@ ImportJotJob::~ImportJotJob()
 {
 }
 
+
+void ImportJotJob::start()
+{
+    Q_EMIT title(i18n("Start import kjots settings..."));
+    mArchiveDirectory = archive()->directory();
+    searchAllFiles(mArchiveDirectory ,QString());
+    initializeListStep();
+    nextStep();
+}
+
 void ImportJotJob::nextStep()
 {
     ++mIndex;
@@ -54,15 +64,6 @@ void ImportJotJob::nextStep()
     } else {
         Q_EMIT jobFinished();
     }
-}
-
-void ImportJotJob::start()
-{
-    Q_EMIT title(i18n("Start import kjots settings..."));
-    mArchiveDirectory = archive()->directory();
-    searchAllFiles(mArchiveDirectory ,QString());
-    initializeListStep();
-    nextStep();
 }
 
 void ImportJotJob::restoreResources()

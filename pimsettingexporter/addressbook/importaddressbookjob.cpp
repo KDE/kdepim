@@ -47,18 +47,30 @@ void ImportAddressbookJob::start()
 {
     Q_EMIT title(i18n("Start import kaddressbook settings..."));
     mArchiveDirectory = archive()->directory();
-    searchAllFiles(mArchiveDirectory, QString());
-    if (mTypeSelected & Utils::Resources)
-        restoreResources();
-    if (mTypeSelected & Utils::Config)
-        restoreConfig();
-    Q_EMIT jobFinished();
+    searchAllFiles(mArchiveDirectory ,QString());
+    initializeListStep();
+    nextStep();
+}
+
+void ImportAddressbookJob::nextStep()
+{
+    ++mIndex;
+    if (mIndex < mListStep.count()) {
+        Utils::StoredType type = mListStep.at(mIndex);
+        if (type == Utils::Resources)
+            restoreResources();
+        if (type == Utils::Config)
+            restoreConfig();
+    } else {
+        Q_EMIT jobFinished();
+    }
 }
 
 void ImportAddressbookJob::restoreResources()
 {
     Q_EMIT info(i18n("Restore resources..."));
-    restoreResourceFile(QString::fromLatin1("akonadi_vcard_resource"), Utils::addressbookPath(), QDir::homePath() + QLatin1String("/.kde/share/apps/kabc/"));
+    QStringList listResource;
+    listResource << restoreResourceFile(QString::fromLatin1("akonadi_vcard_resource"), Utils::addressbookPath(), QDir::homePath() + QLatin1String("/.kde/share/apps/kabc/"));
 
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
@@ -113,12 +125,15 @@ void ImportAddressbookJob::restoreResources()
                     const QString newResource = mCreateResource->createResource( instanceType, filename, settings, true );
                     infoAboutNewResource(newResource);
                     qDebug()<<" newResource"<<newResource;
+                    listResource<<newResource;
                 }
             }
         }
     }
 
     Q_EMIT info(i18n("Resources restored."));
+    //It's maildir support. Need to add support
+    startSynchronizeResources(listResource);
 }
 
 void ImportAddressbookJob::addSpecificResourceSettings(KSharedConfig::Ptr resourceConfig, const QString &resourceName, QMap<QString, QVariant> &settings)
@@ -199,6 +214,7 @@ void ImportAddressbookJob::restoreConfig()
         }
     }
     Q_EMIT info(i18n("Config restored."));
+    nextStep();
 }
 
 void ImportAddressbookJob::importkaddressBookConfig(const KArchiveFile* file, const QString &config, const QString &filename,const QString &prefix)
