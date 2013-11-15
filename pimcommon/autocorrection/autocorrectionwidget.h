@@ -15,25 +15,25 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef COMPOSERAUTOCORRECTIONWIDGET_H
-#define COMPOSERAUTOCORRECTIONWIDGET_H
+#ifndef AutoCorrectionWidget_H
+#define AutoCorrectionWidget_H
 
 #include "pimcommon_export.h"
-#include "autocorrection/composerautocorrection.h"
+#include "autocorrection/autocorrection.h"
 #include <QWidget>
 #include <KDialog>
 
 class QTreeWidgetItem;
 
 namespace Ui {
-class ComposerAutoCorrectionWidget;
+class AutoCorrectionWidget;
 }
 
 namespace PimCommon {
 
 class ComposerAutoCorrection;
 
-class PIMCOMMON_EXPORT ComposerAutoCorrectionWidget : public QWidget
+class PIMCOMMON_EXPORT AutoCorrectionWidget : public QWidget
 {
     Q_OBJECT
     
@@ -43,9 +43,9 @@ public:
         KMail
     };
 
-    explicit ComposerAutoCorrectionWidget(QWidget *parent = 0);
-    ~ComposerAutoCorrectionWidget();
-    void setAutoCorrection(PimCommon::ComposerAutoCorrection * autoCorrect);
+    explicit AutoCorrectionWidget(QWidget *parent = 0);
+    ~AutoCorrectionWidget();
+    void setAutoCorrection(AutoCorrection *autoCorrect);
     void loadConfig();
     void writeConfig();
     void resetToDefault();
@@ -95,16 +95,16 @@ private:
     void loadAutoCorrectionAndException();
     void loadGlobalAutoCorrectionAndException();
     void setLanguage(const QString &lang);
-    ComposerAutoCorrection::TypographicQuotes m_singleQuotes;
-    ComposerAutoCorrection::TypographicQuotes m_doubleQuotes;
+    AutoCorrection::TypographicQuotes m_singleQuotes;
+    AutoCorrection::TypographicQuotes m_doubleQuotes;
     QSet<QString> m_upperCaseExceptions;
     QSet<QString> m_twoUpperLetterExceptions;
     QHash<QString, QString> m_autocorrectEntries;
-    Ui::ComposerAutoCorrectionWidget *ui;
-    ComposerAutoCorrection *mAutoCorrection;
+    Ui::AutoCorrectionWidget *ui;
+    AutoCorrection *mAutoCorrection;
     bool mWasChanged;
 };
 
 }
 
-#endif // COMPOSERAUTOCORRECTIONWIDGET_H
+#endif // AutoCorrectionWidget_H

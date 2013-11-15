@@ -22,7 +22,7 @@
 #include <QString>
 #include <QHash>
 
-#include "autocorrection/composerautocorrection.h"
+#include "autocorrection/autocorrection.h"
 
 namespace PimCommon {
 class ImportAbstractAutocorrection
@@ -44,16 +44,16 @@ public:
     QHash<QString, QString> autocorrectEntries() const;
     QHash<QString, QString> superScriptEntries() const;
 
-    ComposerAutoCorrection::TypographicQuotes typographicSingleQuotes() const;
-    ComposerAutoCorrection::TypographicQuotes typographicDoubleQuotes() const;
+    AutoCorrection::TypographicQuotes typographicSingleQuotes() const;
+    AutoCorrection::TypographicQuotes typographicDoubleQuotes() const;
 
 protected:
     QSet<QString> mUpperCaseExceptions;
     QSet<QString> mTwoUpperLetterExceptions;
     QHash<QString, QString> mAutocorrectEntries;
     QHash<QString, QString> mSuperScriptEntries;
-    ComposerAutoCorrection::TypographicQuotes mTypographicSingleQuotes;
-    ComposerAutoCorrection::TypographicQuotes mTypographicDoubleQuotes;
+    AutoCorrection::TypographicQuotes mTypographicSingleQuotes;
+    AutoCorrection::TypographicQuotes mTypographicDoubleQuotes;
     QWidget *mParent;
 };
 }

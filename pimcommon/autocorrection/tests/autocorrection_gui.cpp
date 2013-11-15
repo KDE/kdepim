@@ -16,8 +16,8 @@
 */
 
 #include "autocorrection_gui.h"
-#include "pimcommon/autocorrection/composerautocorrection.h"
-#include "pimcommon/autocorrection/composerautocorrectionwidget.h"
+#include "pimcommon/autocorrection/autocorrection.h"
+#include "pimcommon/autocorrection/autocorrectionwidget.h"
 #include "pimcommon/autocorrection/subjectlineeditwithautocorrection.h"
 #include "pimcommon/settings/pimcommonsettings.h"
 
@@ -36,7 +36,7 @@
 #include <QAction>
 
 
-ConfigureTestDialog::ConfigureTestDialog(PimCommon::ComposerAutoCorrection *autoCorrection, QWidget *parent)
+ConfigureTestDialog::ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent)
     : KDialog(parent)
 {
     setCaption( QLatin1String("Configure Autocorrection") );
@@ -45,7 +45,7 @@ ConfigureTestDialog::ConfigureTestDialog(PimCommon::ComposerAutoCorrection *auto
     setDefaultButton( KDialog::Ok );
 
     QHBoxLayout *lay = new QHBoxLayout( mainWidget() );
-    mWidget = new PimCommon::ComposerAutoCorrectionWidget;
+    mWidget = new PimCommon::AutoCorrectionWidget;
     lay->addWidget(mWidget);
     mWidget->setAutoCorrection(autoCorrection);
     mWidget->loadConfig();
@@ -61,7 +61,7 @@ void ConfigureTestDialog::slotSaveSettings()
     mWidget->writeConfig();
 }
 
-TextEditAutoCorrectionWidget::TextEditAutoCorrectionWidget(PimCommon::ComposerAutoCorrection *autoCorrection, QWidget *parent)
+TextEditAutoCorrectionWidget::TextEditAutoCorrectionWidget(PimCommon::AutoCorrection *autoCorrection, QWidget *parent)
     : QTextEdit(parent),
       mAutoCorrection(autoCorrection)
 {
@@ -97,7 +97,7 @@ AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
     PimCommon::PimCommonSettings::self()->setSharedConfig( mConfig );
     PimCommon::PimCommonSettings::self()->readConfig();
 
-    mAutoCorrection = new PimCommon::ComposerAutoCorrection;
+    mAutoCorrection = new PimCommon::AutoCorrection;
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);

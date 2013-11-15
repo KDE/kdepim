@@ -1,46 +1,41 @@
 /*
   Copyright (c) 2012-2013 Montel Laurent <montel@kde.org>
-
+  
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
   published by the Free Software Foundation.
-
+  
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   General Public License for more details.
-
+  
   You should have received a copy of the GNU General Public License along
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef COMPOSERAUTOCORRECTIONLANGUAGE_H
-#define COMPOSERAUTOCORRECTIONLANGUAGE_H
+#ifndef AutoCorrectionListWidget_H
+#define AutoCorrectionListWidget_H
 
-#include "pimcommon_export.h"
-#include <KComboBox>
+#include <QListWidget>
 
 namespace PimCommon {
 
-class PIMCOMMON_EXPORT ComposerAutoCorrectionLanguage : public KComboBox
+class AutoCorrectionListWidget : public QListWidget
 {
+    Q_OBJECT
 public:
-    explicit ComposerAutoCorrectionLanguage(QWidget *parent);
-    ~ComposerAutoCorrectionLanguage();
+    explicit AutoCorrectionListWidget(QWidget *parent = 0);
+    ~AutoCorrectionListWidget();
 
-    /**
-    * @brief language
-    * @return specified language
-    */
-    QString language() const;
+protected:
+    void keyPressEvent( QKeyEvent *event );
 
-    /**
-     * @brief setLanguage
-     * @param language define specified language
-     */
-    void setLanguage(const QString &language);
+Q_SIGNALS:
+    void deleteSelectedItems();
 };
 
 }
-#endif // COMPOSERAUTOCORRECTIONLANGUAGE_H
+
+#endif // AutoCorrectionListWidget_H

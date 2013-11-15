@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef COMPOSERAUTOCORRECTION_H
-#define COMPOSERAUTOCORRECTION_H
+#ifndef AutoCorrection_H
+#define AutoCorrection_H
 
 #include "pimcommon_export.h"
 #include <QTextCursor>
@@ -25,7 +25,7 @@
 
 namespace PimCommon {
 
-class PIMCOMMON_EXPORT ComposerAutoCorrection
+class PIMCOMMON_EXPORT AutoCorrection
 {
 public:
     struct TypographicQuotes {
@@ -33,8 +33,8 @@ public:
         QChar end;
     };
 
-    explicit ComposerAutoCorrection();
-    ~ComposerAutoCorrection();
+    explicit AutoCorrection();
+    ~AutoCorrection();
 
     void setLanguage(const QString& lang, bool forceGlobal = false);
     void setEnabledAutoCorrection(bool b) { mEnabled = b; }
@@ -143,4 +143,4 @@ private:
 };
 }
 
-#endif // COMPOSERAUTOCORRECTION_H
+#endif // AutoCorrection_H

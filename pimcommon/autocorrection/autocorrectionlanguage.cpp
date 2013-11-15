@@ -15,13 +15,13 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "composerautocorrectionlanguage.h"
+#include "autocorrectionlanguage.h"
 #include <KLocale>
 #include <KGlobal>
 
 using namespace PimCommon;
 
-ComposerAutoCorrectionLanguage::ComposerAutoCorrectionLanguage(QWidget *parent)
+AutoCorrectionLanguage::AutoCorrectionLanguage(QWidget *parent)
     : KComboBox(parent)
 {
     KLocale *locale = KGlobal::locale();
@@ -37,17 +37,17 @@ ComposerAutoCorrectionLanguage::ComposerAutoCorrectionLanguage(QWidget *parent)
     model()->sort(0);
 }
 
-ComposerAutoCorrectionLanguage::~ComposerAutoCorrectionLanguage()
+AutoCorrectionLanguage::~AutoCorrectionLanguage()
 {
 
 }
 
-QString ComposerAutoCorrectionLanguage::language() const
+QString AutoCorrectionLanguage::language() const
 {
     return itemData(currentIndex()).toString();
 }
 
-void ComposerAutoCorrectionLanguage::setLanguage(const QString &language)
+void AutoCorrectionLanguage::setLanguage(const QString &language)
 {
     const int index = findData(language);
     setCurrentIndex(index);

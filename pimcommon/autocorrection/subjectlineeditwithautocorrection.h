@@ -23,7 +23,7 @@
 #include "libkdepim/widgets/spellchecklineedit.h"
 
 namespace PimCommon {
-class ComposerAutoCorrection;
+class AutoCorrection;
 class PIMCOMMON_EXPORT SubjectLineEditWithAutoCorrection : public KPIM::SpellCheckLineEdit
 {
     Q_OBJECT
@@ -31,16 +31,16 @@ public:
     explicit SubjectLineEditWithAutoCorrection(QWidget* parent, const QString& configFile);
     ~SubjectLineEditWithAutoCorrection();
 
-    PimCommon::ComposerAutoCorrection* autocorrection() const;
+    PimCommon::AutoCorrection* autocorrection() const;
 
-    void setAutocorrection(PimCommon::ComposerAutoCorrection* autocorrect);
+    void setAutocorrection(PimCommon::AutoCorrection *autocorrect);
     void setAutocorrectionLanguage(const QString &language);
 
 protected:
     void keyPressEvent ( QKeyEvent *e );
 
 private:
-    PimCommon::ComposerAutoCorrection *mAutoCorrection;
+    PimCommon::AutoCorrection *mAutoCorrection;
 };
 }
 

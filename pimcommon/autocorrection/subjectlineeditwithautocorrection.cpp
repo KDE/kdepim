@@ -16,7 +16,7 @@
 */
 
 #include "subjectlineeditwithautocorrection.h"
-#include "autocorrection/composerautocorrection.h"
+#include "autocorrection/autocorrection.h"
 
 #include <QKeyEvent>
 
@@ -33,12 +33,12 @@ SubjectLineEditWithAutoCorrection::~SubjectLineEditWithAutoCorrection()
 
 }
 
-PimCommon::ComposerAutoCorrection* SubjectLineEditWithAutoCorrection::autocorrection() const
+AutoCorrection *SubjectLineEditWithAutoCorrection::autocorrection() const
 {
     return mAutoCorrection;
 }
 
-void SubjectLineEditWithAutoCorrection::setAutocorrection(PimCommon::ComposerAutoCorrection* autocorrect)
+void SubjectLineEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection* autocorrect)
 {
     mAutoCorrection = autocorrect;
 }

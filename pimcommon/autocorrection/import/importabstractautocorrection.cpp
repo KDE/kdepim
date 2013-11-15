@@ -43,12 +43,12 @@ QHash<QString, QString> ImportAbstractAutocorrection::autocorrectEntries() const
     return mAutocorrectEntries;
 }
 
-ComposerAutoCorrection::TypographicQuotes ImportAbstractAutocorrection::typographicSingleQuotes() const
+AutoCorrection::TypographicQuotes ImportAbstractAutocorrection::typographicSingleQuotes() const
 {
     return mTypographicSingleQuotes;
 }
 
-ComposerAutoCorrection::TypographicQuotes ImportAbstractAutocorrection::typographicDoubleQuotes() const
+AutoCorrection::TypographicQuotes ImportAbstractAutocorrection::typographicDoubleQuotes() const
 {
     return mTypographicDoubleQuotes;
 }

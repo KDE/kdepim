@@ -16,7 +16,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "composerautocorrection.h"
+#include "autocorrection.h"
 #include "settings/pimcommonsettings.h"
 #include "import/importkmailautocorrection.h"
 #include <KLocale>
@@ -30,7 +30,7 @@
 
 using namespace PimCommon;
 
-ComposerAutoCorrection::ComposerAutoCorrection()
+AutoCorrection::AutoCorrection()
     : mSingleSpaces(true),
       mUppercaseFirstCharOfSentence(false),
       mFixTwoUppercaseChars(false),
@@ -58,11 +58,11 @@ ComposerAutoCorrection::ComposerAutoCorrection()
         mCacheNameOfDays.append(locale->calendar()->weekDayName(i).toLower());
 }
 
-ComposerAutoCorrection::~ComposerAutoCorrection()
+AutoCorrection::~AutoCorrection()
 {
 }
 
-void ComposerAutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
+void AutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
 {
     cursor.setPosition(cursorPosition);
     QTextBlock block = cursor.block();
@@ -90,7 +90,7 @@ void ComposerAutoCorrection::selectWord(QTextCursor &cursor, int cursorPosition)
 }
 
 
-void ComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int position)
+void AutoCorrection::autocorrect(bool htmlMode, QTextDocument& document, int position)
 {
     if (!mEnabled)
         return;
@@ -130,7 +130,7 @@ void ComposerAutoCorrection::autocorrect(bool htmlMode, QTextDocument& document,
     mCursor.endEditBlock();
 }
 
-void ComposerAutoCorrection::readConfig()
+void AutoCorrection::readConfig()
 {
     mAutoBoldUnderline = PimCommon::PimCommonSettings::self()->autoBoldUnderline();
     mAutoFormatUrl = PimCommon::PimCommonSettings::self()->autoFormatUrl();
@@ -148,7 +148,7 @@ void ComposerAutoCorrection::readConfig()
     readAutoCorrectionXmlFile();
 }
 
-void ComposerAutoCorrection::writeConfig()
+void AutoCorrection::writeConfig()
 {
     PimCommon::PimCommonSettings::self()->setAutoBoldUnderline(mAutoBoldUnderline);
     PimCommon::PimCommonSettings::self()->setAutoFormatUrl(mAutoFormatUrl);
@@ -167,60 +167,60 @@ void ComposerAutoCorrection::writeConfig()
     writeAutoCorrectionXmlFile();
 }
 
-void ComposerAutoCorrection::addAutoCorrect(const QString &currentWord, const QString &replaceWord)
+void AutoCorrection::addAutoCorrect(const QString &currentWord, const QString &replaceWord)
 {
     mAutocorrectEntries.insert(currentWord, replaceWord);
     writeAutoCorrectionXmlFile();
 }
 
 
-void ComposerAutoCorrection::setUpperCaseExceptions(const QSet<QString> &exceptions)
+void AutoCorrection::setUpperCaseExceptions(const QSet<QString> &exceptions)
 {
     mUpperCaseExceptions = exceptions;
 }
 
-void ComposerAutoCorrection::setTwoUpperLetterExceptions(const QSet<QString> &exceptions)
+void AutoCorrection::setTwoUpperLetterExceptions(const QSet<QString> &exceptions)
 {
     mTwoUpperLetterExceptions = exceptions;
 }
 
-void ComposerAutoCorrection::setAutocorrectEntries(const QHash<QString, QString> &entries)
+void AutoCorrection::setAutocorrectEntries(const QHash<QString, QString> &entries)
 {
     mAutocorrectEntries = entries;
 }
 
-ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultSingleQuotes() const
+AutoCorrection::TypographicQuotes AutoCorrection::typographicDefaultSingleQuotes() const
 {
-    ComposerAutoCorrection::TypographicQuotes quote;
+    AutoCorrection::TypographicQuotes quote;
     quote.begin = QChar(0x2018);
     quote.end = QChar(0x2019);
     return quote;
 }
 
-ComposerAutoCorrection::TypographicQuotes ComposerAutoCorrection::typographicDefaultDoubleQuotes() const
+AutoCorrection::TypographicQuotes AutoCorrection::typographicDefaultDoubleQuotes() const
 {
-    ComposerAutoCorrection::TypographicQuotes quote;
+    AutoCorrection::TypographicQuotes quote;
     quote.begin = QChar(0x201c);
     quote.end = QChar(0x201d);
     return quote;
 }
 
-QSet<QString> ComposerAutoCorrection::upperCaseExceptions() const
+QSet<QString> AutoCorrection::upperCaseExceptions() const
 {
     return mUpperCaseExceptions;
 }
 
-QSet<QString> ComposerAutoCorrection::twoUpperLetterExceptions() const
+QSet<QString> AutoCorrection::twoUpperLetterExceptions() const
 {
     return mTwoUpperLetterExceptions;
 }
 
-QHash<QString, QString> ComposerAutoCorrection::autocorrectEntries() const
+QHash<QString, QString> AutoCorrection::autocorrectEntries() const
 {
     return mAutocorrectEntries;
 }
 
-void ComposerAutoCorrection::superscriptAppendix()
+void AutoCorrection::superscriptAppendix()
 {
     if (!mSuperScriptAppendix)
         return;
@@ -276,7 +276,7 @@ void ComposerAutoCorrection::superscriptAppendix()
     }
 }
 
-bool ComposerAutoCorrection::autoBoldUnderline()
+bool AutoCorrection::autoBoldUnderline()
 {
     if (!mAutoBoldUnderline)
         return false;
@@ -337,7 +337,7 @@ bool ComposerAutoCorrection::autoBoldUnderline()
     return true;
 }
 
-bool ComposerAutoCorrection::autoFormatURLs()
+bool AutoCorrection::autoFormatURLs()
 {
     if (!mAutoFormatUrl)
         return false;
@@ -364,7 +364,7 @@ bool ComposerAutoCorrection::autoFormatURLs()
     return true;
 }
 
-QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
+QString AutoCorrection::autoDetectURL(const QString &_word) const
 {
     QString word = _word;
 
@@ -456,7 +456,7 @@ QString ComposerAutoCorrection::autoDetectURL(const QString &_word) const
     return QString();
 }
 
-void ComposerAutoCorrection::fixTwoUppercaseChars()
+void AutoCorrection::fixTwoUppercaseChars()
 {
     if (!mFixTwoUppercaseChars)
         return;
@@ -478,7 +478,7 @@ void ComposerAutoCorrection::fixTwoUppercaseChars()
 }
 
 
-bool ComposerAutoCorrection::singleSpaces()
+bool AutoCorrection::singleSpaces()
 {
     if (!mSingleSpaces)
         return false;
@@ -494,7 +494,7 @@ bool ComposerAutoCorrection::singleSpaces()
     return false;
 }
 
-void ComposerAutoCorrection::capitalizeWeekDays()
+void AutoCorrection::capitalizeWeekDays()
 {
     if (!mCapitalizeWeekDays)
         return;
@@ -509,7 +509,7 @@ void ComposerAutoCorrection::capitalizeWeekDays()
     }
 }
 
-bool ComposerAutoCorrection::excludeToUppercase(const QString &word) const
+bool AutoCorrection::excludeToUppercase(const QString &word) const
 {
     if (word.startsWith(QLatin1String("http://")) ||
             word.startsWith(QLatin1String("www.")) ||
@@ -521,7 +521,7 @@ bool ComposerAutoCorrection::excludeToUppercase(const QString &word) const
     return false;
 }
 
-void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
+void AutoCorrection::uppercaseFirstCharOfSentence()
 {
     if (!mUppercaseFirstCharOfSentence)
         return;
@@ -576,7 +576,7 @@ void ComposerAutoCorrection::uppercaseFirstCharOfSentence()
     mCursor.setPosition(startPos + mWord.length(), QTextCursor::KeepAnchor);
 }
 
-bool ComposerAutoCorrection::autoFractions()
+bool AutoCorrection::autoFractions()
 {
     if (!mAutoFractions)
         return false;
@@ -603,7 +603,7 @@ bool ComposerAutoCorrection::autoFractions()
     return true;
 }
 
-void ComposerAutoCorrection::advancedAutocorrect()
+void AutoCorrection::advancedAutocorrect()
 {
     if (!mAdvancedAutocorrect)
         return;
@@ -670,7 +670,7 @@ void ComposerAutoCorrection::advancedAutocorrect()
     }
 }
 
-void ComposerAutoCorrection::replaceTypographicQuotes()
+void AutoCorrection::replaceTypographicQuotes()
 {
     /* this method is ported from lib/kotext/KoAutoFormat.cpp KoAutoFormat::doTypographicQuotes
      * from Calligra 1.x branch */
@@ -772,13 +772,13 @@ void ComposerAutoCorrection::replaceTypographicQuotes()
 }
 
 
-void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
+void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 {
     KLocale *locale = KGlobal::locale();
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
-    //qDebug()<<"void ComposerAutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorrectLang;
+    //qDebug()<<"void AutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorrectLang;
 
     mUpperCaseExceptions.clear();
     mAutocorrectEntries.clear();
@@ -863,7 +863,7 @@ void ComposerAutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
     }
 }
 
-void ComposerAutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
+void AutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
 {
     const QString fname = filename.isEmpty() ? KGlobal::dirs()->locateLocal("data", QLatin1String("autocorrect/custom-") + (mAutoCorrectLang == QLatin1String("en_US") ? QLatin1String("autocorrect") : mAutoCorrectLang) + QLatin1String(".xml")) : filename;
     QFile file(fname);
@@ -945,12 +945,12 @@ void ComposerAutoCorrection::writeAutoCorrectionXmlFile(const QString &filename)
 }
 
 
-QString ComposerAutoCorrection::language() const
+QString AutoCorrection::language() const
 {
     return mAutoCorrectLang;
 }
 
-void ComposerAutoCorrection::setLanguage(const QString &lang, bool forceGlobal)
+void AutoCorrection::setLanguage(const QString &lang, bool forceGlobal)
 {
     if (mAutoCorrectLang != lang || forceGlobal) {
         mAutoCorrectLang = lang;
@@ -959,7 +959,7 @@ void ComposerAutoCorrection::setLanguage(const QString &lang, bool forceGlobal)
     }
 }
 
-bool ComposerAutoCorrection::isFrenchLanguage() const
+bool AutoCorrection::isFrenchLanguage() const
 {
     return (mAutoCorrectLang == QLatin1String("FR_fr") || mAutoCorrectLang == QLatin1String("fr"));
 }

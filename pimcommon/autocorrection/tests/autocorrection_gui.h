@@ -25,8 +25,8 @@
 #include <QTextEdit>
 
 namespace PimCommon {
-class ComposerAutoCorrection;
-class ComposerAutoCorrectionWidget;
+class AutoCorrection;
+class AutoCorrectionWidget;
 class SubjectLineEditWithAutoCorrection;
 }
 
@@ -34,28 +34,28 @@ class ConfigureTestDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit ConfigureTestDialog(PimCommon::ComposerAutoCorrection *autoCorrection, QWidget *parent=0);
+    explicit ConfigureTestDialog(PimCommon::AutoCorrection *autoCorrection, QWidget *parent=0);
     ~ConfigureTestDialog();
 
 private Q_SLOTS:
     void slotSaveSettings();
 
 private:
-    PimCommon::ComposerAutoCorrectionWidget *mWidget;
+    PimCommon::AutoCorrectionWidget *mWidget;
 };
 
 class TextEditAutoCorrectionWidget : public QTextEdit
 {
     Q_OBJECT
 public:
-    explicit TextEditAutoCorrectionWidget(PimCommon::ComposerAutoCorrection *autoCorrection, QWidget *parent=0);
+    explicit TextEditAutoCorrectionWidget(PimCommon::AutoCorrection *autoCorrection, QWidget *parent=0);
     ~TextEditAutoCorrectionWidget();
 
 protected:
     void keyPressEvent ( QKeyEvent *e );
 
 private:
-    PimCommon::ComposerAutoCorrection *mAutoCorrection;
+    PimCommon::AutoCorrection *mAutoCorrection;
 };
 
 class AutocorrectionTestWidget : public QWidget
@@ -72,7 +72,7 @@ private Q_SLOTS:
 private:
     TextEditAutoCorrectionWidget *mEdit;
     PimCommon::SubjectLineEditWithAutoCorrection *mSubject;
-    PimCommon::ComposerAutoCorrection *mAutoCorrection;
+    PimCommon::AutoCorrection *mAutoCorrection;
     KSharedConfig::Ptr mConfig;
 };
 

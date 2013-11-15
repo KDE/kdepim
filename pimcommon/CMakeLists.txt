@@ -55,11 +55,11 @@ set(libpimcommon_SRCS
   shorturl/engine/migremeshorturl.cpp
   shorturl/engine/triopabshorturl.cpp
   settings/pimcommonsettings.cpp
-  autocorrection/composerautocorrection.cpp
-  autocorrection/composerautocorrectionwidget.cpp
-  autocorrection/composerautocorrectionlistwidget.cpp
-  autocorrection/composerautocorrectiontreewidget.cpp
-  autocorrection/composerautocorrectionlanguage.cpp
+  autocorrection/autocorrection.cpp
+  autocorrection/autocorrectionwidget.cpp
+  autocorrection/autocorrectionlistwidget.cpp
+  autocorrection/autocorrectiontreewidget.cpp
+  autocorrection/autocorrectionlanguage.cpp
   autocorrection/import/importlibreofficeautocorrection.cpp
   autocorrection/import/importkmailautocorrection.cpp
   autocorrection/import/importabstractautocorrection.cpp
@@ -67,7 +67,7 @@ set(libpimcommon_SRCS
 )
 
 kde4_add_ui_files(libpimcommon_SRCS
-     autocorrection/ui/composerautocorrectionwidget.ui
+     autocorrection/ui/autocorrectionwidget.ui
 )
 
 macro(add_resource_iface _kcfgFile _ifaceName _className _fileName)

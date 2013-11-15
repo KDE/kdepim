@@ -15,9 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "composerautocorrectionwidget.h"
-#include "composerautocorrection.h"
-#include "ui_composerautocorrectionwidget.h"
+#include "autocorrectionwidget.h"
+#include "autocorrection.h"
+#include "ui_autocorrectionwidget.h"
 #include "import/importlibreofficeautocorrection.h"
 #include "import/importkmailautocorrection.h"
 #include "import/importabstractautocorrection.h"
@@ -33,11 +33,11 @@
 
 using namespace PimCommon;
 
-Q_DECLARE_METATYPE(ComposerAutoCorrectionWidget::ImportFileType)
+Q_DECLARE_METATYPE(AutoCorrectionWidget::ImportFileType)
 
-ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
+AutoCorrectionWidget::AutoCorrectionWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ComposerAutoCorrectionWidget),
+    ui(new Ui::AutoCorrectionWidget),
     mAutoCorrection(0),
     mWasChanged(false)
 {
@@ -98,11 +98,11 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
     ui->importAutoCorrection->setMenu( menu );
 
     QAction *act = new QAction( i18n( "LibreOffice Autocorrection" ), this );
-    act->setData( QVariant::fromValue( ComposerAutoCorrectionWidget::LibreOffice ) );
+    act->setData( QVariant::fromValue( AutoCorrectionWidget::LibreOffice ) );
     menu->addAction( act );
 
     act = new QAction( i18n( "KMail/Calligra Autocorrection" ), this );
-    act->setData( QVariant::fromValue( ComposerAutoCorrectionWidget::KMail ) );
+    act->setData( QVariant::fromValue( AutoCorrectionWidget::KMail ) );
     menu->addAction( act );
 
     connect( menu, SIGNAL(triggered(QAction*)), SLOT(slotImportAutoCorrection(QAction*)) );
@@ -110,18 +110,18 @@ ComposerAutoCorrectionWidget::ComposerAutoCorrectionWidget(QWidget *parent) :
     connect(ui->exportAutoCorrection,SIGNAL(clicked()),SLOT(slotExportAutoCorrection()));
 }
 
-ComposerAutoCorrectionWidget::~ComposerAutoCorrectionWidget()
+AutoCorrectionWidget::~AutoCorrectionWidget()
 {
     delete ui;
 }
 
-void ComposerAutoCorrectionWidget::setAutoCorrection(ComposerAutoCorrection * autoCorrect)
+void AutoCorrectionWidget::setAutoCorrection(AutoCorrection * autoCorrect)
 {
     mAutoCorrection = autoCorrect;
     setLanguage(ui->autocorrectionLanguage->language());
 }
 
-void ComposerAutoCorrectionWidget::loadConfig()
+void AutoCorrectionWidget::loadConfig()
 {
     if (!mAutoCorrection)
         return;
@@ -143,7 +143,7 @@ void ComposerAutoCorrectionWidget::loadConfig()
     mWasChanged = false;
 }
 
-void ComposerAutoCorrectionWidget::loadAutoCorrectionAndException()
+void AutoCorrectionWidget::loadAutoCorrectionAndException()
 {
     /* tab 2 - Custom Quotes */
     m_singleQuotes = mAutoCorrection->typographicSingleQuotes();
@@ -172,7 +172,7 @@ void ComposerAutoCorrectionWidget::loadAutoCorrectionAndException()
 
 }
 
-void ComposerAutoCorrectionWidget::addAutoCorrectEntries()
+void AutoCorrectionWidget::addAutoCorrectEntries()
 {
     ui->treeWidget->clear();
     QHash<QString, QString>::const_iterator i = m_autocorrectEntries.constBegin();
@@ -187,7 +187,7 @@ void ComposerAutoCorrectionWidget::addAutoCorrectEntries()
     ui->treeWidget->sortByColumn(0, Qt::AscendingOrder);
 }
 
-void ComposerAutoCorrectionWidget::writeConfig()
+void AutoCorrectionWidget::writeConfig()
 {
     if(!mAutoCorrection)
         return;
@@ -216,7 +216,7 @@ void ComposerAutoCorrectionWidget::writeConfig()
     mWasChanged = false;
 }
 
-void ComposerAutoCorrectionWidget::resetToDefault()
+void AutoCorrectionWidget::resetToDefault()
 {
     ui->autoChangeFormat->setChecked(false);
     ui->autoFormatUrl->setChecked(false);
@@ -236,21 +236,21 @@ void ComposerAutoCorrectionWidget::resetToDefault()
     loadGlobalAutoCorrectionAndException();
 }
 
-void ComposerAutoCorrectionWidget::enableSingleQuotes(bool state)
+void AutoCorrectionWidget::enableSingleQuotes(bool state)
 {
     ui->singleQuote1->setEnabled(state);
     ui->singleQuote2->setEnabled(state);
     ui->singleDefault->setEnabled(state);
 }
 
-void ComposerAutoCorrectionWidget::enableDoubleQuotes(bool state)
+void AutoCorrectionWidget::enableDoubleQuotes(bool state)
 {
     ui->doubleQuote1->setEnabled(state);
     ui->doubleQuote2->setEnabled(state);
     ui->doubleDefault->setEnabled(state);
 }
 
-void ComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
+void AutoCorrectionWidget::selectSingleQuoteCharOpen()
 {
     KPIMTextEdit::SelectSpecialChar dlg(this);
     dlg.setCurrentChar(m_singleQuotes.begin);
@@ -263,7 +263,7 @@ void ComposerAutoCorrectionWidget::selectSingleQuoteCharOpen()
     }
 }
 
-void ComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
+void AutoCorrectionWidget::selectSingleQuoteCharClose()
 {
     KPIMTextEdit::SelectSpecialChar dlg(this);
     dlg.showSelectButton(false);
@@ -276,7 +276,7 @@ void ComposerAutoCorrectionWidget::selectSingleQuoteCharClose()
     }
 }
 
-void ComposerAutoCorrectionWidget::setDefaultSingleQuotes()
+void AutoCorrectionWidget::setDefaultSingleQuotes()
 {
     m_singleQuotes = mAutoCorrection->typographicDefaultSingleQuotes();
     ui->singleQuote1->setText(m_singleQuotes.begin);
@@ -284,7 +284,7 @@ void ComposerAutoCorrectionWidget::setDefaultSingleQuotes()
     emitChanged();
 }
 
-void ComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
+void AutoCorrectionWidget::selectDoubleQuoteCharOpen()
 {
     KPIMTextEdit::SelectSpecialChar dlg(this);
     dlg.showSelectButton(false);
@@ -297,7 +297,7 @@ void ComposerAutoCorrectionWidget::selectDoubleQuoteCharOpen()
     }
 }
 
-void ComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
+void AutoCorrectionWidget::selectDoubleQuoteCharClose()
 {
     KPIMTextEdit::SelectSpecialChar dlg(this);
     dlg.showSelectButton(false);
@@ -310,7 +310,7 @@ void ComposerAutoCorrectionWidget::selectDoubleQuoteCharClose()
     }
 }
 
-void ComposerAutoCorrectionWidget::setDefaultDoubleQuotes()
+void AutoCorrectionWidget::setDefaultDoubleQuotes()
 {
     m_doubleQuotes = mAutoCorrection->typographicDefaultDoubleQuotes();
     ui->doubleQuote1->setText(m_doubleQuotes.begin);
@@ -318,7 +318,7 @@ void ComposerAutoCorrectionWidget::setDefaultDoubleQuotes()
     emitChanged();
 }
 
-void ComposerAutoCorrectionWidget::enableAdvAutocorrection(bool state)
+void AutoCorrectionWidget::enableAdvAutocorrection(bool state)
 {
     ui->findLabel->setEnabled(state);
     ui->find->setEnabled(state);
@@ -334,7 +334,7 @@ void ComposerAutoCorrectionWidget::enableAdvAutocorrection(bool state)
 }
 
 
-void ComposerAutoCorrectionWidget::addAutocorrectEntry()
+void AutoCorrectionWidget::addAutocorrectEntry()
 {
     QTreeWidgetItem *item = ui->treeWidget->currentItem ();
     const QString find = ui->find->text();
@@ -368,7 +368,7 @@ void ComposerAutoCorrectionWidget::addAutocorrectEntry()
     emitChanged();
 }
 
-void ComposerAutoCorrectionWidget::removeAutocorrectEntry()
+void AutoCorrectionWidget::removeAutocorrectEntry()
 {
     QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems ();
     if (listItems.isEmpty())
@@ -395,13 +395,13 @@ void ComposerAutoCorrectionWidget::removeAutocorrectEntry()
     emitChanged();
 }
 
-void ComposerAutoCorrectionWidget::updateAddRemoveButton()
+void AutoCorrectionWidget::updateAddRemoveButton()
 {
     QList<QTreeWidgetItem *> listItems = ui->treeWidget->selectedItems ();
     ui->removeButton->setEnabled(!listItems.isEmpty());
 }
 
-void ComposerAutoCorrectionWidget::enableAddRemoveButton()
+void AutoCorrectionWidget::enableAddRemoveButton()
 {
     const QString find = ui->find->text();
     const QString replace = ui->replace->text();
@@ -431,7 +431,7 @@ void ComposerAutoCorrectionWidget::enableAddRemoveButton()
 
 }
 
-void ComposerAutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem*item ,int column)
+void AutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem*item ,int column)
 {
     Q_UNUSED(column);
     ui->find->setText(item->text(0));
@@ -439,17 +439,17 @@ void ComposerAutoCorrectionWidget::setFindReplaceText(QTreeWidgetItem*item ,int 
 }
 
 
-void ComposerAutoCorrectionWidget::abbreviationChanged(const QString &text)
+void AutoCorrectionWidget::abbreviationChanged(const QString &text)
 {
     ui->add1->setEnabled(!text.isEmpty());
 }
 
-void ComposerAutoCorrectionWidget::twoUpperLetterChanged(const QString &text)
+void AutoCorrectionWidget::twoUpperLetterChanged(const QString &text)
 {
     ui->add2->setEnabled(!text.isEmpty());
 }
 
-void ComposerAutoCorrectionWidget::addAbbreviationEntry()
+void AutoCorrectionWidget::addAbbreviationEntry()
 {
     const QString text = ui->abbreviation->text();
     if (text.isEmpty())
@@ -463,7 +463,7 @@ void ComposerAutoCorrectionWidget::addAbbreviationEntry()
     emitChanged();
 }
 
-void ComposerAutoCorrectionWidget::removeAbbreviationEntry()
+void AutoCorrectionWidget::removeAbbreviationEntry()
 {
     QList<QListWidgetItem *> listItem = ui->abbreviationList->selectedItems ();
     if (listItem.isEmpty())
@@ -476,7 +476,7 @@ void ComposerAutoCorrectionWidget::removeAbbreviationEntry()
     emitChanged();
 }
 
-void ComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
+void AutoCorrectionWidget::addTwoUpperLetterEntry()
 {
     const QString text = ui->twoUpperLetter->text();
     if (text.isEmpty())
@@ -491,7 +491,7 @@ void ComposerAutoCorrectionWidget::addTwoUpperLetterEntry()
 
 }
 
-void ComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
+void AutoCorrectionWidget::removeTwoUpperLetterEntry()
 {
     QList<QListWidgetItem *> listItem = ui->twoUpperLetterList->selectedItems ();
     if (listItem.isEmpty())
@@ -505,32 +505,32 @@ void ComposerAutoCorrectionWidget::removeTwoUpperLetterEntry()
 }
 
 
-void ComposerAutoCorrectionWidget::slotEnableDisableAbreviationList()
+void AutoCorrectionWidget::slotEnableDisableAbreviationList()
 {
     const bool enable = (!ui->abbreviationList->selectedItems ().isEmpty());
     ui->add1->setEnabled(!ui->abbreviation->text().isEmpty());
     ui->remove1->setEnabled(enable);
 }
 
-void ComposerAutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
+void AutoCorrectionWidget::slotEnableDisableTwoUpperEntry()
 {
     const bool enable = (!ui->twoUpperLetterList->selectedItems ().isEmpty());
     ui->add2->setEnabled( !ui->twoUpperLetter->text().isEmpty());
     ui->remove2->setEnabled(enable);
 }
 
-void ComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
+void AutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
 {
     if ( act ) {
-        ComposerAutoCorrectionWidget::ImportFileType type = act->data().value<ComposerAutoCorrectionWidget::ImportFileType>();
+        AutoCorrectionWidget::ImportFileType type = act->data().value<AutoCorrectionWidget::ImportFileType>();
         QString title;
         QString filter;
         switch (type) {
-        case ComposerAutoCorrectionWidget::LibreOffice:
+        case AutoCorrectionWidget::LibreOffice:
             title = i18n("Import LibreOffice Autocorrection");
             filter = QLatin1String("*.dat");
             break;
-        case ComposerAutoCorrectionWidget::KMail:
+        case AutoCorrectionWidget::KMail:
             title = i18n("Import KMail Autocorrection");
             filter = QLatin1String("*.xml");
             break;
@@ -539,10 +539,10 @@ void ComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
         if ( !fileName.isEmpty() ) {
             PimCommon::ImportAbstractAutocorrection *importAutoCorrection = 0;
             switch(type) {
-            case ComposerAutoCorrectionWidget::LibreOffice:
+            case AutoCorrectionWidget::LibreOffice:
                 importAutoCorrection = new PimCommon::ImportLibreOfficeAutocorrection(this);
                 break;
-            case ComposerAutoCorrectionWidget::KMail:
+            case AutoCorrectionWidget::KMail:
                 importAutoCorrection = new PimCommon::ImportKMailAutocorrection(this);
                 break;
             default:
@@ -568,14 +568,14 @@ void ComposerAutoCorrectionWidget::slotImportAutoCorrection(QAction* act)
     }
 }
 
-void ComposerAutoCorrectionWidget::setLanguage(const QString &lang)
+void AutoCorrectionWidget::setLanguage(const QString &lang)
 {
     mAutoCorrection->setLanguage(lang);
     loadAutoCorrectionAndException();
     mWasChanged = false;
 }
 
-void ComposerAutoCorrectionWidget::changeLanguage(int index)
+void AutoCorrectionWidget::changeLanguage(int index)
 {
     if (index == -1)
         return;
@@ -591,13 +591,13 @@ void ComposerAutoCorrectionWidget::changeLanguage(int index)
     mWasChanged = false;
 }
 
-void ComposerAutoCorrectionWidget::emitChanged()
+void AutoCorrectionWidget::emitChanged()
 {
     mWasChanged = true;
     Q_EMIT changed();
 }
 
-void ComposerAutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
+void AutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
 {
     const QString lang = ui->autocorrectionLanguage->itemData (ui->autocorrectionLanguage->currentIndex()).toString();
     mAutoCorrection->setLanguage(lang,true);
@@ -606,7 +606,7 @@ void ComposerAutoCorrectionWidget::loadGlobalAutoCorrectionAndException()
     Q_EMIT changed();
 }
 
-void ComposerAutoCorrectionWidget::slotExportAutoCorrection()
+void AutoCorrectionWidget::slotExportAutoCorrection()
 {
     const KUrl saveUrl= KFileDialog::getSaveUrl(QDir::homePath(), QString(), this, i18n( "Export Autocorrection File" ) );
     if ( saveUrl.isEmpty() ) {

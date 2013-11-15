@@ -31,7 +31,7 @@ namespace KPIMIdentities {
   class Signature;
 }
 namespace PimCommon {
-class ComposerAutoCorrection;
+class AutoCorrection;
 }
 namespace MessageComposer {
 class TextPart;
@@ -177,9 +177,9 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      */
     void fillComposerTextPart( MessageComposer::TextPart* textPart ) const;
 
-    PimCommon::ComposerAutoCorrection* autocorrection() const;
+    PimCommon::AutoCorrection *autocorrection() const;
 
-    void setAutocorrection(PimCommon::ComposerAutoCorrection* autocorrect);
+    void setAutocorrection(PimCommon::AutoCorrection* autocorrect);
 
     void setAutocorrectionLanguage(const QString& lang);
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ComposerAutoCorrectionWidget</class>
- <widget class="QWidget" name="ComposerAutoCorrectionWidget">
+ <class>AutoCorrectionWidget</class>
+ <widget class="QWidget" name="AutoCorrectionWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -28,7 +28,7 @@
       </widget>
      </item>
      <item>
-      <widget class="PimCommon::ComposerAutoCorrectionLanguage" name="autocorrectionLanguage"/>
+      <widget class="PimCommon::AutoCorrectionLanguage" name="autocorrectionLanguage"/>
      </item>
     </layout>
    </item>
@@ -367,7 +367,7 @@
         </layout>
        </item>
        <item row="2" column="0">
-        <widget class="PimCommon::ComposerAutoCorrectionTreeWidget" name="treeWidget">
+        <widget class="PimCommon::AutoCorrectionTreeWidget" name="treeWidget">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
@@ -453,7 +453,7 @@
           </layout>
          </item>
          <item row="2" column="0">
-          <widget class="PimCommon::ComposerAutoCorrectionListWidget" name="abbreviationList">
+          <widget class="PimCommon::AutoCorrectionListWidget" name="abbreviationList">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -521,7 +521,7 @@
           </layout>
          </item>
          <item row="2" column="0">
-          <widget class="PimCommon::ComposerAutoCorrectionListWidget" name="twoUpperLetterList">
+          <widget class="PimCommon::AutoCorrectionListWidget" name="twoUpperLetterList">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -592,19 +592,19 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>PimCommon::ComposerAutoCorrectionListWidget</class>
+   <class>PimCommon::AutoCorrectionListWidget</class>
    <extends>QListWidget</extends>
-   <header>autocorrection/composerautocorrectionlistwidget.h</header>
+   <header>autocorrection/autocorrectionlistwidget.h</header>
   </customwidget>
   <customwidget>
-   <class>PimCommon::ComposerAutoCorrectionTreeWidget</class>
+   <class>PimCommon::AutoCorrectionTreeWidget</class>
    <extends>QTreeWidget</extends>
-   <header>autocorrection/composerautocorrectiontreewidget.h</header>
+   <header>autocorrection/autocorrectiontreewidget.h</header>
   </customwidget>
   <customwidget>
-   <class>PimCommon::ComposerAutoCorrectionLanguage</class>
+   <class>PimCommon::AutoCorrectionLanguage</class>
    <extends>KComboBox</extends>
-   <header>autocorrection/composerautocorrectionlanguage.h</header>
+   <header>autocorrection/autocorrectionlanguage.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
