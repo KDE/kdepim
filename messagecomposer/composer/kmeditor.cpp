@@ -253,6 +253,12 @@ void KMeditor::startExternalEditor()
     }
 }
 
+static bool isSpecial( const QTextCharFormat &charFormat )
+{
+    return charFormat.isFrameFormat() || charFormat.isImageFormat() ||
+            charFormat.isListFormat() || charFormat.isTableFormat() || charFormat.isTableCellFormat();
+}
+
 void KMeditor::keyPressEvent ( QKeyEvent *e )
 {
   if ( d->useExtEditor &&
@@ -285,13 +291,13 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
         const bool richText = (textMode() == KRichTextEdit::Rich);
         d->mAutoCorrection->autocorrect(richText, *document(),textCursor().position());
         if (e->key() == Qt::Key_Space) {
-            if (richText && !initialTextFormat.isImageFormat())
+            if (richText && !isSpecial(initialTextFormat))
                 textCursor().insertText(QLatin1String(" "), initialTextFormat);
             else
                 textCursor().insertText(QLatin1String(" "));
           return;
         } else {
-            if (richText && !initialTextFormat.isImageFormat())
+            if (richText && !isSpecial(initialTextFormat))
                 textCursor().insertText(QLatin1String("\n"), initialTextFormat);
             else
                 textCursor().insertText(QLatin1String("\n"));

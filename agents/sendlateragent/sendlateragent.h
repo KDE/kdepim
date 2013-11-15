@@ -50,6 +50,7 @@ private Q_SLOTS:
 
 protected:
     void itemsRemoved( const Akonadi::Item::List &item );
+    void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destinationCollection);
 
 private:
     SendLaterManager *mManager;
