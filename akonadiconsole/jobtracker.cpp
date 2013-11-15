@@ -147,7 +147,11 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
   }
 
   // deal with the job
-  if ( d->jobs.contains( job ) ) return; // duplicate?
+  if ( d->jobs.contains( job ) ) {
+    if ( d->infoList.value( job ).state == JobInfo::Running )
+      qDebug() << "Job was already known and still running:" << job << "from" << d->infoList.value( job ).timestamp.secsTo( QDateTime::currentDateTime() ) << "s ago";
+    // otherwise it just means the pointer got reused... replace old job
+  }
 
   d->jobs.insert( job, QStringList() );
 
