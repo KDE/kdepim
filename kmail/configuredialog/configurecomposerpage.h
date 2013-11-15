@@ -36,8 +36,10 @@ namespace TemplateParser {
 class CustomTemplates;
 class TemplatesConfiguration;
 }
+namespace PimCommon {
+class AutoCorrectionWidget;
+}
 namespace MessageComposer {
-class ComposerAutoCorrectionWidget;
 class ImageScalingWidget;
 }
 
@@ -237,7 +239,7 @@ private:
     void doResetToDefaultsOther();
 
 private:
-    MessageComposer::ComposerAutoCorrectionWidget *autocorrectionWidget;
+    PimCommon::AutoCorrectionWidget *autocorrectionWidget;
 };
 
 class ComposerPageAutoImageResizeTab : public ConfigModuleTab {

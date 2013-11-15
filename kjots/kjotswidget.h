@@ -53,7 +53,6 @@ namespace Akonadi
 {
 class EntityTreeModel;
 class EntityOrderProxyModel;
-class Session;
 }
 
 namespace Grantlee
@@ -184,7 +183,6 @@ private:
   KJotsSortProxyModel *m_sortProxyModel;
   Akonadi::EntityOrderProxyModel *m_orderProxy;
   KJotsTreeView *treeview;
-  Akonadi::Session *m_session;
   QSplitter *m_splitter;
   QTimer *m_autosaveTimer;
 

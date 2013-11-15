@@ -324,8 +324,9 @@ void AbstractImportExportJob::backupResourceFile(const Akonadi::AgentInstance &a
     }
 }
 
-void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseName, const QString &defaultPath, const QString &storePath, bool overwriteResources)
+QStringList AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseName, const QString &defaultPath, const QString &storePath, bool overwriteResources)
 {
+    QStringList resourceToSync;
     //TODO fix sync config after created a resource
     if (!mListResourceFile.isEmpty()) {
         QDir dir(mTempDirName);
@@ -378,7 +379,7 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseNam
 
                     const QString newResource = mCreateResource->createResource( resourceBaseName, filename, settings );
                     infoAboutNewResource(newResource);
-
+                    resourceToSync << newResource;
                     qDebug()<<" newResource"<<newResource;
                 }
             }
@@ -387,6 +388,7 @@ void AbstractImportExportJob::restoreResourceFile(const QString &resourceBaseNam
     } else {
         Q_EMIT error(i18n("No resources files found."));
     }
+    return resourceToSync;
 }
 
 void AbstractImportExportJob::addSpecificResourceSettings(KSharedConfig::Ptr /*resourceConfig*/, const QString &/*resourceName*/, QMap<QString, QVariant> &/*settings*/)

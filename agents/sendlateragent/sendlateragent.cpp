@@ -24,6 +24,9 @@
 #include "sendlateragentsettings.h"
 #include "sendlaterremovemessagejob.h"
 
+#include <Akonadi/KMime/SpecialMailCollections>
+#include <Akonadi/AgentInstance>
+#include <Akonadi/AgentManager>
 #include <akonadi/dbusconnectionpool.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
@@ -131,6 +134,16 @@ void SendLaterAgent::itemsRemoved( const Akonadi::Item::List &items )
 {
     Q_FOREACH(const Akonadi::Item &item, items) {
        mManager->itemRemoved(item.id());
+    }
+}
+
+void SendLaterAgent::itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &/*sourceCollection*/, const Akonadi::Collection &destinationCollection)
+{
+    if (Akonadi::SpecialMailCollections::self()->specialCollectionType(destinationCollection) != Akonadi::SpecialMailCollections::Trash) {
+        return;
+    }
+    Q_FOREACH(const Akonadi::Item &item, items) {
+        mManager->itemRemoved(item.id());
     }
 }
 

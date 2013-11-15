@@ -19,8 +19,14 @@
 #define KNOTESAKONADIAPP_H
 
 #include <QWidget>
+#include <Akonadi/Item>
 class KNotesAkonadiTray;
 class KNotesChangeRecorder;
+namespace Akonadi {
+class Collection;
+}
+class QModelIndex;
+class KNotesAkonadiTreeModel;
 class KNotesAkonadiApp : public QWidget
 {
     Q_OBJECT
@@ -28,9 +34,15 @@ public:
     explicit KNotesAkonadiApp(QWidget *parent=0);
     ~KNotesAkonadiApp();
 
+private Q_SLOTS:
+    void slotRowInserted(const QModelIndex &, int, int end);
+    void slotRowRemoved(const QModelIndex &, int, int);
+    void slotDataChanged(const QModelIndex &, const QModelIndex &);
+
 private:
     KNotesAkonadiTray *mTray;
     KNotesChangeRecorder *mNoteRecorder;
+    KNotesAkonadiTreeModel *mNoteTreeModel;
 };
 
 #endif // KNOTESAKONADIAPP_H

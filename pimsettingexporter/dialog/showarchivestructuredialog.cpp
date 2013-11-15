@@ -17,7 +17,7 @@
 
 #include "showarchivestructuredialog.h"
 #include "pimsettingexporter/utils.h"
-
+#include "pimcommon/util/pimutil.h"
 #include <KDialog>
 #include <KLocale>
 #include <KZip>
@@ -25,20 +25,24 @@
 
 #include <QTreeWidget>
 #include <QHeaderView>
+#include <QDebug>
 
 ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, QWidget *parent)
-    : KDialog(parent)
+    : KDialog(parent),
+      mFileName(filename)
 {
     setCaption( i18n( "Show Archive Content" ) );
-    setButtons( Close );
+    setButtons( User1 | Close );
     setModal( true );
     mTreeWidget = new QTreeWidget;
     mTreeWidget->header()->hide();
     mTreeWidget->setAlternatingRowColors(true);
     setMainWidget(mTreeWidget);
-    fillTree(filename);
+    fillTree();
     mTreeWidget->expandAll();
     readConfig();
+    setButtonText(User1, i18n("Save As Text..."));
+    connect(this, SIGNAL(user1Clicked()), SLOT(slotExportAsLogFile()));
 }
 
 ShowArchiveStructureDialog::~ShowArchiveStructureDialog()
@@ -46,9 +50,14 @@ ShowArchiveStructureDialog::~ShowArchiveStructureDialog()
     writeConfig();
 }
 
-void ShowArchiveStructureDialog::fillTree(const QString &filename)
+void ShowArchiveStructureDialog::slotExportAsLogFile()
 {
-    KZip *zip = new KZip(filename);
+    PimCommon::Util::saveTextAs(mLogFile, QLatin1String("*.txt"), this);
+}
+
+void ShowArchiveStructureDialog::fillTree()
+{
+    KZip *zip = new KZip(mFileName);
     bool result = zip->open(QIODevice::ReadOnly);
     if (!result) {
         KMessageBox::error(this, i18n("Archive cannot be opened in read mode."), i18n("Cannot open archive"));
@@ -75,14 +84,17 @@ void ShowArchiveStructureDialog::searchArchiveElement(const QString &path, const
 {
     const KArchiveEntry *topEntry = topDirectory->entry(path);
     if (topEntry) {
+        mLogFile += name + QLatin1Char('\n');
         QTreeWidgetItem *item = addTopItem(name);
-        addSubItems(item, topEntry);
+        addSubItems(item, topEntry, 0);
     }
 }
 
-void ShowArchiveStructureDialog::addSubItems(QTreeWidgetItem *parent, const KArchiveEntry *entry)
+void ShowArchiveStructureDialog::addSubItems(QTreeWidgetItem *parent, const KArchiveEntry *entry, int indent)
 {
     const KArchiveDirectory *dir = static_cast<const KArchiveDirectory *>(entry);
+    ++indent;
+    const QString space = QString(indent*2, QLatin1Char(' '));
     Q_FOREACH(const QString& entryName, dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
         if (entry) {
@@ -90,12 +102,14 @@ void ShowArchiveStructureDialog::addSubItems(QTreeWidgetItem *parent, const KArc
                 const KArchiveDirectory *dirEntry = static_cast<const KArchiveDirectory *>(entry);
                 QTreeWidgetItem *newTopItem = addItem(parent, dirEntry->name());
                 QFont font(newTopItem->font(0));
-                font.setBold(true);
+                font.setBold(true);                
+                mLogFile += space + dirEntry->name() + QLatin1Char('\n');
                 newTopItem->setFont(0, font);
-                addSubItems(newTopItem, entry);
+                addSubItems(newTopItem, entry, indent);
             } else if (entry->isFile()) {
                 const KArchiveFile *file = static_cast<const KArchiveFile *>(entry);
-                addItem(parent,file->name());
+                addItem(parent,file->name());                
+                mLogFile += space + file->name() + QLatin1Char('\n');
             }
         }
     }

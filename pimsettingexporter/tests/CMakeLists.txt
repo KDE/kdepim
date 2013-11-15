@@ -26,4 +26,5 @@ target_link_libraries(showarchivestructuredialog_gui
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${AKONADI_COMMON_LIBRARIES}
   mailcommon
+  pimcommon
 )

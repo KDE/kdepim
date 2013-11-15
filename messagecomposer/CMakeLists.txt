@@ -12,6 +12,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/messagecomposer/job
     ${CMAKE_SOURCE_DIR}/messagecomposer/utils/
     ${CMAKE_SOURCE_DIR}/messagecomposer/composer/
+    ${CMAKE_SOURCE_DIR}/pimcommon/
 )
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -69,15 +70,6 @@ set( messagecomposer_src
      job/emailaddressresolvejob.cpp
 
      composer/keyresolver.cpp
-     autocorrection/composerautocorrection.cpp
-     autocorrection/composerautocorrectionwidget.cpp
-     autocorrection/composerautocorrectionlistwidget.cpp
-     autocorrection/composerautocorrectiontreewidget.cpp
-     autocorrection/composerautocorrectionlanguage.cpp
-     autocorrection/import/importlibreofficeautocorrection.cpp
-     autocorrection/import/importkmailautocorrection.cpp
-     autocorrection/import/importabstractautocorrection.cpp
-     autocorrection/subjectlineeditwithautocorrection.cpp
 
      imagescaling/imagescalingjob.cpp
      imagescaling/imagescalingwidget.cpp
@@ -86,7 +78,6 @@ set( messagecomposer_src
 )
 
 kde4_add_ui_files(messagecomposer_src
-     autocorrection/ui/composerautocorrectionwidget.ui
      imagescaling/ui/imagescalingwidget.ui
 )
 
@@ -114,13 +105,12 @@ kde4_add_kcfg_files(messagecomposer_src
 
 kde4_add_library( messagecomposer ${LIBRARY_TYPE} ${messagecomposer_src} )
 target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
- messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} ${Grantlee_GUI_LIBRARIES} sendlater)
+ messagecore messageviewer templateparser kleo kdepim ${QGPGME_LIBRARIES} ${Grantlee_GUI_LIBRARIES} sendlater pimcommon)
 
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-add_subdirectory(autocorrection/tests)
 add_subdirectory(imagescaling/tests)
 #install( TARGETS messagecomposer EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

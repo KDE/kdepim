@@ -23,7 +23,7 @@
 #include "kmeditor.h"
 #include "part/textpart.h"
 #include "messageviewer/viewer/nodehelper.h"
-#include "autocorrection/composerautocorrection.h"
+#include "pimcommon/autocorrection/autocorrection.h"
 #include "settings/messagecomposersettings.h"
 
 
@@ -111,7 +111,7 @@ class KMeditorPrivate
 
     KProcess *mExtEditorProcess;
     KTemporaryFile *mExtEditorTempFile;
-    MessageComposer::ComposerAutoCorrection *mAutoCorrection;
+    PimCommon::AutoCorrection *mAutoCorrection;
 };
 
 }
@@ -253,6 +253,12 @@ void KMeditor::startExternalEditor()
     }
 }
 
+static bool isSpecial( const QTextCharFormat &charFormat )
+{
+    return charFormat.isFrameFormat() || charFormat.isImageFormat() ||
+            charFormat.isListFormat() || charFormat.isTableFormat() || charFormat.isTableCellFormat();
+}
+
 void KMeditor::keyPressEvent ( QKeyEvent *e )
 {
   if ( d->useExtEditor &&
@@ -285,13 +291,13 @@ void KMeditor::keyPressEvent ( QKeyEvent *e )
         const bool richText = (textMode() == KRichTextEdit::Rich);
         d->mAutoCorrection->autocorrect(richText, *document(),textCursor().position());
         if (e->key() == Qt::Key_Space) {
-            if (richText && !initialTextFormat.isImageFormat())
+            if (richText && !isSpecial(initialTextFormat))
                 textCursor().insertText(QLatin1String(" "), initialTextFormat);
             else
                 textCursor().insertText(QLatin1String(" "));
           return;
         } else {
-            if (richText && !initialTextFormat.isImageFormat())
+            if (richText && !isSpecial(initialTextFormat))
                 textCursor().insertText(QLatin1String("\n"), initialTextFormat);
             else
                 textCursor().insertText(QLatin1String("\n"));
@@ -809,12 +815,12 @@ void KMeditor::fillComposerTextPart ( MessageComposer::TextPart* textPart ) cons
   }
 }
 
-MessageComposer::ComposerAutoCorrection* KMeditor::autocorrection() const
+PimCommon::AutoCorrection* KMeditor::autocorrection() const
 {
   return d->mAutoCorrection;
 }
 
-void KMeditor::setAutocorrection(MessageComposer::ComposerAutoCorrection* autocorrect)
+void KMeditor::setAutocorrection(PimCommon::AutoCorrection* autocorrect)
 {
   d->mAutoCorrection = autocorrect;
 }

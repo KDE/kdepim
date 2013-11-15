@@ -17,8 +17,6 @@
 
 #include "synchronizeresourcejob.h"
 
-#include "messageviewer/utils/kcursorsaver.h"
-
 #include <akonadi/resourcesynchronizationjob.h>
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentManager>
@@ -26,16 +24,19 @@
 
 #include <QStringList>
 #include <QDebug>
+#include <QApplication>
+#include <QCursor>
 
 SynchronizeResourceJob::SynchronizeResourceJob(QObject *parent)
     : QObject(parent),
       mIndex(0)
 {
-    MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+    QApplication::setOverrideCursor( QCursor(Qt::WaitCursor) );
 }
 
 SynchronizeResourceJob::~SynchronizeResourceJob()
 {
+    QApplication::restoreOverrideCursor();
 }
 
 void SynchronizeResourceJob::start()

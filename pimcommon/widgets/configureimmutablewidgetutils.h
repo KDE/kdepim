@@ -32,6 +32,7 @@ class QLineEdit;
 class KConfigSkeletonItem;
 class KUrlRequester;
 namespace PimCommon {
+class SimpleStringListEditor;
 namespace ConfigureImmutableWidgetUtils {
 PIMCOMMON_EXPORT void checkLockDown( QWidget * w, const KConfigSkeletonItem *item );
 PIMCOMMON_EXPORT void populateButtonGroup( QGroupBox * box, QButtonGroup * group, int orientation, const KCoreConfigSkeleton::ItemEnum *e );
@@ -40,10 +41,12 @@ PIMCOMMON_EXPORT void loadWidget( QCheckBox * b, const KCoreConfigSkeleton::Item
 PIMCOMMON_EXPORT void loadWidget( QGroupBox * box, QButtonGroup * group, const KCoreConfigSkeleton::ItemEnum *e );
 PIMCOMMON_EXPORT void loadWidget( QLineEdit * b, const KCoreConfigSkeleton::ItemString *e );
 PIMCOMMON_EXPORT void loadWidget( KUrlRequester * b, const KCoreConfigSkeleton::ItemString *e );
+PIMCOMMON_EXPORT void loadWidget( PimCommon::SimpleStringListEditor * b, const KCoreConfigSkeleton::ItemStringList *e );
 
 PIMCOMMON_EXPORT void saveCheckBox( QCheckBox * b, KCoreConfigSkeleton::ItemBool *e );
 PIMCOMMON_EXPORT void saveLineEdit( QLineEdit * b, KCoreConfigSkeleton::ItemString *e );
 PIMCOMMON_EXPORT void saveUrlRequester( KUrlRequester * b, KCoreConfigSkeleton::ItemString *e );
+PIMCOMMON_EXPORT void saveSimpleStringListEditor( PimCommon::SimpleStringListEditor * b, KCoreConfigSkeleton::ItemStringList *e );
 
 PIMCOMMON_EXPORT void saveButtonGroup( QButtonGroup * group, KCoreConfigSkeleton::ItemEnum *e );
 }

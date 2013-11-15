@@ -54,7 +54,6 @@
 #include <Akonadi/ItemDeleteJob>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/session.h>
 
 #include "akonadi/entityorderproxymodel.h"
 #include "akonadi_next/note.h"
