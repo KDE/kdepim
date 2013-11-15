@@ -44,6 +44,12 @@ void RichTextEditWithAutoCorrection::setAutocorrectionLanguage(const QString &la
     mAutoCorrection->setLanguage(language);
 }
 
+static bool isSpecial( const QTextCharFormat &charFormat )
+{
+    return charFormat.isFrameFormat() || charFormat.isImageFormat() ||
+            charFormat.isListFormat() || charFormat.isTableFormat() || charFormat.isTableCellFormat();
+}
+
 void RichTextEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
 {
     if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
@@ -51,13 +57,13 @@ void RichTextEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
         const bool richText = acceptRichText();
         mAutoCorrection->autocorrect(richText, *document(),textCursor().position());
         if (e->key() == Qt::Key_Space) {
-            if (richText && !initialTextFormat.isImageFormat())
+            if (richText && !isSpecial(initialTextFormat))
                 textCursor().insertText(QLatin1String(" "), initialTextFormat);
             else
                 textCursor().insertText(QLatin1String(" "));
           return;
         } else {
-            if (richText && !initialTextFormat.isImageFormat())
+            if (richText && !isSpecial(initialTextFormat))
                 textCursor().insertText(QLatin1String("\n"), initialTextFormat);
             else
                 textCursor().insertText(QLatin1String("\n"));
