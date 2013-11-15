@@ -64,6 +64,7 @@ set(libpimcommon_SRCS
   autocorrection/import/importkmailautocorrection.cpp
   autocorrection/import/importabstractautocorrection.cpp
   autocorrection/widgets/subjectlineeditwithautocorrection.cpp
+  autocorrection/widgets/richtexteditwithautocorrection.cpp
 )
 
 kde4_add_ui_files(libpimcommon_SRCS
