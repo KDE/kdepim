@@ -25,6 +25,7 @@
 #include <QSettings>
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QSqlQuery>
 
 #include <KGlobal>
 #include <KLocale>
@@ -36,6 +37,11 @@ class DbAccessPrivate
 {
   public:
     DbAccessPrivate()
+    {
+      init();
+    }
+
+    void init()
     {
       const QString serverConfigFile = saveDir( "config" ) + QLatin1String("/akonadiserverrc");
       QSettings settings( serverConfigFile, QSettings::IniFormat );
@@ -67,8 +73,14 @@ class DbAccessPrivate
 };
 
 K_GLOBAL_STATIC( DbAccessPrivate, sInstance )
-
 QSqlDatabase DbAccess::database()
 {
+  //hack to detect mysql gone away error
+  QSqlQuery query( QLatin1String("SELECT * FROM schemaversiontable") );
+  if ( !query.exec() && query.lastError().text().contains( "MySQL server has gone away" ) ) {
+    sInstance->database.close();
+    QSqlDatabase::removeDatabase(sInstance->database.connectionName());
+    sInstance->init();
+  }
   return sInstance->database;
 }
