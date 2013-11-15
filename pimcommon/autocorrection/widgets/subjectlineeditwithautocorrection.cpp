@@ -15,7 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "subjectlineeditwithautocorrection.h"
+#include "autocorrection/widgets/subjectlineeditwithautocorrection.h"
 #include "autocorrection/autocorrection.h"
 
 #include <QKeyEvent>

@@ -18,7 +18,7 @@
 #include "autocorrection_gui.h"
 #include "pimcommon/autocorrection/autocorrection.h"
 #include "pimcommon/autocorrection/autocorrectionwidget.h"
-#include "pimcommon/autocorrection/subjectlineeditwithautocorrection.h"
+#include "pimcommon/autocorrection/widgets/subjectlineeditwithautocorrection.h"
 #include "pimcommon/settings/pimcommonsettings.h"
 
 #include <kdebug.h>
