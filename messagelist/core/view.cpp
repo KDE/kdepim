@@ -47,6 +47,7 @@
 #include <QTextDocument>
 #include <QApplication>
 #include <QScrollBar>
+#include <QSignalMapper>
 
 #include <KMenu>
 #include <KLocale>
@@ -759,83 +760,81 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
   // the menu for the columns
   KMenu menu;
 
+  QSignalMapper *showColumnSignalMapper = new QSignalMapper( &menu );
   int idx = 0;
-  QAction * act;
   QList< Theme::Column * >::ConstIterator end(columns.end());
   for ( QList< Theme::Column * >::ConstIterator it = columns.begin(); it != end; ++it )
   {
-    act = menu.addAction( ( *it )->label() );
+    QAction *act = menu.addAction( ( *it )->label() );
     act->setCheckable( true );
     act->setChecked( !header()->isSectionHidden( idx ) );
-    act->setData( QVariant( idx ) );
-    if ( idx == 0)
-       act->setEnabled( false );
+    if ( idx == 0 )
+      act->setEnabled( false );
+    QObject::connect( act, SIGNAL(triggered()), showColumnSignalMapper, SLOT(map()) );
+    showColumnSignalMapper->setMapping( act, idx );
 
     idx++;
   }
+  QObject::connect( showColumnSignalMapper, SIGNAL(mapped(int)), this, SLOT(slotShowHideColumn(int)) );
 
   menu.addSeparator();
-  act = menu.addAction( i18n( "Adjust Column Sizes" ) );
-  act->setData( QVariant( static_cast< int >( gHeaderContextMenuAdjustColumnSizesId ) ) );
-
-  act = menu.addAction( i18n( "Show Default Columns" ) );
-  act->setData( QVariant( static_cast< int >( gHeaderContextMenuShowDefaultColumnsId ) ) );
-
+  {
+    QAction *act = menu.addAction( i18n( "Adjust Column Sizes" ) );
+    QObject::connect( act, SIGNAL(triggered()), this, SLOT(slotAdjustColumnSizes()) );
+  }
+  {
+    QAction *act = menu.addAction( i18n( "Show Default Columns" ) );
+    QObject::connect( act, SIGNAL(triggered()), this, SLOT(slotShowDefaultColumns()) );
+  }
   menu.addSeparator();
-  act = menu.addAction( i18n( "Display Tooltips" ) );
-  act->setCheckable( true );
-  act->setChecked( Settings::self()->messageToolTipEnabled() );
-  act->setData( QVariant( static_cast< int >( gHeaderContextMenuDisplayToolTipsId ) ) );
-
-  QObject::connect(
-      &menu, SIGNAL(triggered(QAction*)),
-      this, SLOT(slotHeaderContextMenuTriggered(QAction*))
-    );
-
+  {
+    QAction *act = menu.addAction( i18n( "Display Tooltips" ) );
+    act->setCheckable( true );
+    act->setChecked( Settings::self()->messageToolTipEnabled() );
+    QObject::connect( act, SIGNAL(triggered(bool)), this, SLOT(slotDisplayTooltips(bool)) );
+  }
   menu.addSeparator();
+
   MessageList::Util::fillViewMenu( &menu, d->mWidget );
 
   menu.exec( header()->mapToGlobal( pnt ) );
 }
 
-void View::slotHeaderContextMenuTriggered( QAction * act )
+void View::slotAdjustColumnSizes()
+{
+  if ( !d->mTheme )
+    return;
+
+  d->mTheme->resetColumnSizes();
+  applyThemeColumns();
+}
+
+void View::slotShowDefaultColumns()
+{
+  if ( !d->mTheme )
+    return;
+
+  d->mTheme->resetColumnState();
+  applyThemeColumns();
+}
+
+void View::slotDisplayTooltips( bool showTooltips )
+{
+  Settings::self()->setMessageToolTipEnabled( showTooltips );
+}
+
+void View::slotShowHideColumn( int columnIdx )
 {
   if ( !d->mTheme )
     return; // oops
 
-  if ( !act )
-    return;
-
-  bool ok;
-  int columnIdx = act->data().toInt( &ok );
-
-  if ( !ok )
-    return;
-
-  if ( columnIdx < 0 )
-  {
-    if ( columnIdx == gHeaderContextMenuAdjustColumnSizesId ) {
-      // "Adjust Column Sizes"
-      d->mTheme->resetColumnSizes();
-      applyThemeColumns();
-    } else if ( columnIdx == gHeaderContextMenuShowDefaultColumnsId ) {
-      // "Show Default Columns"
-      d->mTheme->resetColumnState();
-      applyThemeColumns();
-    } else if ( columnIdx == gHeaderContextMenuDisplayToolTipsId ) {
-      Settings::self()->setMessageToolTipEnabled( act->isChecked() );
-    }
-    return;
-  }
-
-  // Single column show or hide action
   if ( columnIdx == 0 )
     return; // can never be hidden
 
   if ( columnIdx >= d->mTheme->columns().count() )
     return;
 
-  bool showIt = header()->isSectionHidden( columnIdx );
+  const bool showIt = header()->isSectionHidden( columnIdx );
 
   Theme::Column * column = d->mTheme->columns().at( columnIdx );
   Q_ASSERT( column );

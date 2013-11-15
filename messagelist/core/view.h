@@ -638,10 +638,24 @@ protected slots:
   void slotHeaderContextMenuRequested( const QPoint &pnt );
 
   /**
-   * Handles header context menu selections. Shows or hides
-   * the header columns.
+   * Handles the actions of the header context menu for showing/hiding a column.
    */
-  void slotHeaderContextMenuTriggered( QAction * act );
+  void slotShowHideColumn( int columnIndex );
+
+  /**
+   * Handles the Adjust Column Sizes action of the header context menu.
+   */
+  void slotAdjustColumnSizes();
+
+  /**
+   * Handles the Show Default Columns action of the header context menu.
+   */
+  void slotShowDefaultColumns();
+
+  /**
+   * Handles the Display Tooltips action of the header context menu.
+   */
+  void slotDisplayTooltips( bool showTooltips );
 
   /**
    * Handles section resizes in order to save the column widths
