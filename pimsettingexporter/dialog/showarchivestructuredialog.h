@@ -32,18 +32,21 @@ public:
     explicit ShowArchiveStructureDialog(const QString &filename, QWidget *parent=0);
     ~ShowArchiveStructureDialog();
 
-private:
-    void fillTree();
+private Q_SLOTS:
+    void slotExportAsLogFile();
 
 private:
+    void exportAsLogFile();
+    void fillTree();
     void readConfig();
     void writeConfig();
 
     void searchArchiveElement(const QString &path, const KArchiveDirectory *topDirectory, const QString &name);
     QTreeWidgetItem *addTopItem(const QString &name);
-    void addSubItems(QTreeWidgetItem *parent, const KArchiveEntry *entry);
+    void addSubItems(QTreeWidgetItem *parent, const KArchiveEntry *entry, int indent);
     QTreeWidgetItem *addItem(QTreeWidgetItem *parent, const QString &name);
     QString mFileName;
+    QString mLogFile;
     QTreeWidget *mTreeWidget;
 };
 
