@@ -27,7 +27,8 @@
 #include <QHeaderView>
 
 ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, QWidget *parent)
-    : KDialog(parent)
+    : KDialog(parent),
+      mFileName(filename)
 {
     setCaption( i18n( "Show Archive Content" ) );
     setButtons( Close );
@@ -36,7 +37,7 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     mTreeWidget->header()->hide();
     mTreeWidget->setAlternatingRowColors(true);
     setMainWidget(mTreeWidget);
-    fillTree(filename);
+    fillTree();
     mTreeWidget->expandAll();
     readConfig();
 }
@@ -46,9 +47,9 @@ ShowArchiveStructureDialog::~ShowArchiveStructureDialog()
     writeConfig();
 }
 
-void ShowArchiveStructureDialog::fillTree(const QString &filename)
+void ShowArchiveStructureDialog::fillTree()
 {
-    KZip *zip = new KZip(filename);
+    KZip *zip = new KZip(mFileName);
     bool result = zip->open(QIODevice::ReadOnly);
     if (!result) {
         KMessageBox::error(this, i18n("Archive cannot be opened in read mode."), i18n("Cannot open archive"));

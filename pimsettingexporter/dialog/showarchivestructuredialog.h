@@ -33,7 +33,7 @@ public:
     ~ShowArchiveStructureDialog();
 
 private:
-    void fillTree(const QString &filename);
+    void fillTree();
 
 private:
     void readConfig();
@@ -43,7 +43,7 @@ private:
     QTreeWidgetItem *addTopItem(const QString &name);
     void addSubItems(QTreeWidgetItem *parent, const KArchiveEntry *entry);
     QTreeWidgetItem *addItem(QTreeWidgetItem *parent, const QString &name);
-
+    QString mFileName;
     QTreeWidget *mTreeWidget;
 };
 
