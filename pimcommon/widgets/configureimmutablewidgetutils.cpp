@@ -123,7 +123,7 @@ void ConfigureImmutableWidgetUtils::saveButtonGroup( QButtonGroup * group, KCore
     }
 }
 
-void ConfigureImmutableWidgetUtils::saveSimpleStringListEditorRequester( PimCommon::SimpleStringListEditor * b, KCoreConfigSkeleton::ItemStringList *e )
+void ConfigureImmutableWidgetUtils::saveSimpleStringListEditor( PimCommon::SimpleStringListEditor * b, KCoreConfigSkeleton::ItemStringList *e )
 {
     e->setValue(b->stringList());
 }
