@@ -41,6 +41,7 @@ protected:
 
 private:
     PimCommon::AutoCorrection *mAutoCorrection;
+    bool mNeedToDeleteAutoCorrection;
 };
 }
 

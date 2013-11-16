@@ -24,13 +24,16 @@ using namespace PimCommon;
 
 LineEditWithAutoCorrection::LineEditWithAutoCorrection(QWidget* parent, const QString& configFile)
     : KPIM::SpellCheckLineEdit(parent, configFile),
-      mAutoCorrection(0)
+      mAutoCorrection(new PimCommon::AutoCorrection()),
+      mNeedToDeleteAutoCorrection(true)
 {
 }
 
 LineEditWithAutoCorrection::~LineEditWithAutoCorrection()
 {
-
+    if (mNeedToDeleteAutoCorrection) {
+        delete mAutoCorrection;
+    }
 }
 
 AutoCorrection *LineEditWithAutoCorrection::autocorrection() const
@@ -40,6 +43,8 @@ AutoCorrection *LineEditWithAutoCorrection::autocorrection() const
 
 void LineEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection* autocorrect)
 {
+    mNeedToDeleteAutoCorrection = false;
+    delete mAutoCorrection;
     mAutoCorrection = autocorrect;
 }
 
