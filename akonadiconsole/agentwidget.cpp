@@ -228,7 +228,7 @@ void AgentWidget::showTaskList()
   if ( !agent.isValid() )
     return;
 
-  QDBusInterface iface( QString::fromLatin1(  "org.freedesktop.Akonadi.Resource.%1" ).arg( agent.identifier() ),
+  QDBusInterface iface( QString::fromLatin1(  "org.freedesktop.Akonadi.Agent.%1" ).arg( agent.identifier() ),
                         "/Debug", QString() );
 
   QDBusReply<QString> reply = iface.call("dumpToString");
@@ -252,7 +252,7 @@ void AgentWidget::showChangeNotifications()
   if ( !agent.isValid() )
     return;
 
-  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( agent.identifier() ),
+  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Agent.%1" ).arg( agent.identifier() ),
                         "/Debug", QString() );
 
   QDBusReply<QString> reply = iface.call("dumpNotificationListToString");
