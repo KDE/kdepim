@@ -175,7 +175,7 @@ void AdBlockSettingWidget::removeRule()
 void AdBlockSettingWidget::doResetToDefaultsOther()
 {
     const bool bUseDefaults = MessageViewer::GlobalSettings::self()->useDefaults( true );
-    checkEnableAdblock->setChecked(GlobalSettings::self()->adBlockEnabled());
+    loadWidget(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
     checkHideAds->setChecked(GlobalSettings::self()->hideAdsEnabled());
     const int days = GlobalSettings::self()->adBlockUpdateInterval();
@@ -187,7 +187,7 @@ void AdBlockSettingWidget::doLoadFromGlobalSettings()
 {
     manualFiltersListWidget->clear();
     automaticFiltersListWidget->clear();
-    checkEnableAdblock->setChecked(GlobalSettings::self()->adBlockEnabled());
+    loadWidget(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
 
     // update enabled status
     tabWidget->setEnabled(GlobalSettings::self()->adBlockEnabled());
@@ -249,7 +249,7 @@ void AdBlockSettingWidget::save()
         return;
 
     // General settings    
-    GlobalSettings::self()->setAdBlockEnabled(checkEnableAdblock->isChecked());
+    saveCheckBox(checkEnableAdblock,GlobalSettings::self()->adBlockEnabledItem());
     saveCheckBox(checkHideAds, GlobalSettings::self()->hideAdsEnabledItem());
     GlobalSettings::self()->setAdBlockUpdateInterval(spinBox->value());
 
