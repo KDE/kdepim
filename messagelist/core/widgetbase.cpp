@@ -775,7 +775,7 @@ void Widget::Private::switchMessageSorting( SortOrder::MessageSorting messageSor
     }
 
     // if still not found, try again with a wider range
-    if ( logicalHeaderColumnIndex == 1 )
+    if ( logicalHeaderColumnIndex == -1 )
     {
       idx = 0;
       foreach( const Theme::Column* column, columns )
