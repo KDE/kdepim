@@ -65,6 +65,7 @@ set(libpimcommon_SRCS
   autocorrection/import/importabstractautocorrection.cpp
   autocorrection/widgets/lineeditwithautocorrection.cpp
   autocorrection/widgets/richtexteditwithautocorrection.cpp
+  stockageservice/stockageserviceabstract.cpp
 )
 
 kde4_add_ui_files(libpimcommon_SRCS
