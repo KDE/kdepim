@@ -21,6 +21,7 @@
 #include <KAssistantDialog>
 class QItemSelectionModel;
 class ContactSelectionWidget;
+class PotentialDuplicateContacts;
 class SearchDuplicateContactWizard : public KAssistantDialog
 {
     Q_OBJECT
@@ -30,12 +31,16 @@ public:
 
 protected:
     void accept();
+    void next();
 
 private:
     void readConfig();
     void writeConfig();
     void mergeContacts();
     ContactSelectionWidget *mSelectionWidget;
+    PotentialDuplicateContacts *mPotentialDuplicateContactsWidget;
+    KPageWidgetItem *mSelectionPageItem;
+    KPageWidgetItem *mDuplicateContactsPageItem;
 };
 
 #endif // SearchDuplicateContactWizard_H

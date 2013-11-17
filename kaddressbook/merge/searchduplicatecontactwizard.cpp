@@ -16,6 +16,7 @@
 */
 
 #include "searchduplicatecontactwizard.h"
+#include "potentialduplicatecontacts.h"
 #include "contactselectionwidget.h"
 #include <KLocale>
 #include <KConfigGroup>
@@ -26,9 +27,15 @@ SearchDuplicateContactWizard::SearchDuplicateContactWizard(QItemSelectionModel *
     mSelectionWidget = new ContactSelectionWidget( selectionModel, this );
     mSelectionWidget->setMessageText( i18n( "Search potential duplicate contacts" ) );
 
-    KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionWidget, i18n( "Select contacts" ) );
+    mSelectionPageItem = new KPageWidgetItem( mSelectionWidget, i18n( "Select Contacts" ) );
     addPage( mSelectionPageItem );
     setAppropriate( mSelectionPageItem, true );
+
+    mPotentialDuplicateContactsWidget = new PotentialDuplicateContacts(this);
+    mDuplicateContactsPageItem = new KPageWidgetItem( mSelectionWidget, i18n( "Potential Duplicate Contacts" ) );
+    addPage( mDuplicateContactsPageItem );
+    setAppropriate( mDuplicateContactsPageItem, true );
+
     readConfig();
 }
 
@@ -58,6 +65,12 @@ void SearchDuplicateContactWizard::accept()
     mergeContacts();
     close();
     setResult(QDialog::Accepted);
+}
+
+void SearchDuplicateContactWizard::next()
+{
+    //TODO
+    KAssistantDialog::next();
 }
 
 void SearchDuplicateContactWizard::mergeContacts()
