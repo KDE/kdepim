@@ -15,14 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "potentialduplicatecontacts.h"
 
-PotentialDuplicateContacts::PotentialDuplicateContacts(QWidget *parent)
-    : QWidget(parent)
+#include "searchpotentialduplicatecontactjob.h"
+
+SearchPotentialDuplicateContactJob::SearchPotentialDuplicateContactJob(const KABC::AddresseeList &list, QObject *parent)
+    : QObject(parent),
+      mListContact(list)
 {
 }
 
-PotentialDuplicateContacts::~PotentialDuplicateContacts()
+SearchPotentialDuplicateContactJob::~SearchPotentialDuplicateContactJob()
+{
+
+}
+
+void SearchPotentialDuplicateContactJob::start()
 {
 
 }

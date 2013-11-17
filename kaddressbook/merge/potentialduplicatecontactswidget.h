@@ -15,16 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef POTENTIALDUPLICATECONTACTS_H
-#define POTENTIALDUPLICATECONTACTS_H
+#ifndef POTENTIALDUPLICATECONTACTSWIDGET_H
+#define POTENTIALDUPLICATECONTACTSWIDGET_H
 
 #include <QWidget>
-class PotentialDuplicateContacts : public QWidget
+#include <KABC/Addressee>
+
+class PotentialDuplicateContactsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PotentialDuplicateContacts(QWidget *parent=0);
-    ~PotentialDuplicateContacts();
+    explicit PotentialDuplicateContactsWidget(QWidget *parent=0);
+    ~PotentialDuplicateContactsWidget();
+
+    void setAddressList(const KABC::AddresseeList &list);
+
+private:
+    void searchDuplicateContact();
+    KABC::AddresseeList mContactList;
 };
 
-#endif // POTENTIALDUPLICATECONTACTS_H
+#endif // POTENTIALDUPLICATECONTACTSWIDGET_H

@@ -16,8 +16,11 @@
 */
 
 #include "searchduplicatecontactwizard.h"
-#include "potentialduplicatecontacts.h"
+#include "potentialduplicatecontactswidget.h"
 #include "contactselectionwidget.h"
+
+#include <KABC/Addressee>
+
 #include <KLocale>
 #include <KConfigGroup>
 
@@ -31,7 +34,7 @@ SearchDuplicateContactWizard::SearchDuplicateContactWizard(QItemSelectionModel *
     addPage( mSelectionPageItem );
     setAppropriate( mSelectionPageItem, true );
 
-    mPotentialDuplicateContactsWidget = new PotentialDuplicateContacts(this);
+    mPotentialDuplicateContactsWidget = new PotentialDuplicateContactsWidget(this);
     mDuplicateContactsPageItem = new KPageWidgetItem( mSelectionWidget, i18n( "Potential Duplicate Contacts" ) );
     addPage( mDuplicateContactsPageItem );
     setAppropriate( mDuplicateContactsPageItem, true );
@@ -69,7 +72,10 @@ void SearchDuplicateContactWizard::accept()
 
 void SearchDuplicateContactWizard::next()
 {
-    //TODO
+    if (currentPage() == mSelectionPageItem) {
+        KABC::AddresseeList list = mSelectionWidget->selectedContacts();
+        mPotentialDuplicateContactsWidget->setAddressList(list);
+    }
     KAssistantDialog::next();
 }
 
