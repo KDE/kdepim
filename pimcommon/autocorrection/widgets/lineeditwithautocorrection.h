@@ -24,12 +24,12 @@
 
 namespace PimCommon {
 class AutoCorrection;
-class PIMCOMMON_EXPORT SubjectLineEditWithAutoCorrection : public KPIM::SpellCheckLineEdit
+class PIMCOMMON_EXPORT LineEditWithAutoCorrection : public KPIM::SpellCheckLineEdit
 {
     Q_OBJECT
 public:
-    explicit SubjectLineEditWithAutoCorrection(QWidget* parent, const QString& configFile);
-    ~SubjectLineEditWithAutoCorrection();
+    explicit LineEditWithAutoCorrection(QWidget* parent, const QString& configFile);
+    ~LineEditWithAutoCorrection();
 
     PimCommon::AutoCorrection* autocorrection() const;
 
@@ -41,6 +41,7 @@ protected:
 
 private:
     PimCommon::AutoCorrection *mAutoCorrection;
+    bool mNeedToDeleteAutoCorrection;
 };
 }
 

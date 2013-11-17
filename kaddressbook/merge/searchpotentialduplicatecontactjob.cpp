@@ -15,30 +15,21 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteakonadinote.h"
 
-#include <QTextEdit>
-#include <QLineEdit>
-#include <QVBoxLayout>
+#include "searchpotentialduplicatecontactjob.h"
 
-KNoteAkonadiNote::KNoteAkonadiNote(QWidget *parent)
-    : QFrame(parent)
+SearchPotentialDuplicateContactJob::SearchPotentialDuplicateContactJob(const KABC::AddresseeList &list, QObject *parent)
+    : QObject(parent),
+      mListContact(list)
 {
-    // create the main layout
-
-    QVBoxLayout *lay = new QVBoxLayout;
-    lay->setMargin( 0 );
-    mTitle = new QLineEdit;
-    lay->addWidget(mTitle);
-
-    mEdit = new QTextEdit;
-    lay->addWidget(mEdit);
-    setLayout(lay);
-    resize(200,200);
 }
 
-KNoteAkonadiNote::~KNoteAkonadiNote()
+SearchPotentialDuplicateContactJob::~SearchPotentialDuplicateContactJob()
 {
 
 }
 
+void SearchPotentialDuplicateContactJob::start()
+{
+
+}

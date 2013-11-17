@@ -15,30 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteakonadinote.h"
+#ifndef ADDEMAILTOEXISTINGCONTACTJOB_H
+#define ADDEMAILTOEXISTINGCONTACTJOB_H
 
-#include <QTextEdit>
-#include <QLineEdit>
-#include <QVBoxLayout>
+#include <KJob>
+#include <Akonadi/Item>
 
-KNoteAkonadiNote::KNoteAkonadiNote(QWidget *parent)
-    : QFrame(parent)
+class AddEmailToExistingContactJob : public KJob
 {
-    // create the main layout
+    Q_OBJECT
+public:
+    explicit AddEmailToExistingContactJob(const Akonadi::Item &item, const QString &email, QObject *parent = 0);
+    ~AddEmailToExistingContactJob();
 
-    QVBoxLayout *lay = new QVBoxLayout;
-    lay->setMargin( 0 );
-    mTitle = new QLineEdit;
-    lay->addWidget(mTitle);
+    void start();
 
-    mEdit = new QTextEdit;
-    lay->addWidget(mEdit);
-    setLayout(lay);
-    resize(200,200);
-}
+private slots:
+    void slotAddEmailDone(KJob *job);
 
-KNoteAkonadiNote::~KNoteAkonadiNote()
-{
+private:
+    QString mEmail;
+    Akonadi::Item mItem;
+};
 
-}
-
+#endif // ADDEMAILTOEXISTINGCONTACTJOB_H

@@ -15,30 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteakonadinote.h"
+#ifndef POTENTIALDUPLICATECONTACTSWIDGET_H
+#define POTENTIALDUPLICATECONTACTSWIDGET_H
 
-#include <QTextEdit>
-#include <QLineEdit>
-#include <QVBoxLayout>
+#include <QWidget>
+#include <KABC/Addressee>
 
-KNoteAkonadiNote::KNoteAkonadiNote(QWidget *parent)
-    : QFrame(parent)
+class PotentialDuplicateContactsWidget : public QWidget
 {
-    // create the main layout
+    Q_OBJECT
+public:
+    explicit PotentialDuplicateContactsWidget(QWidget *parent=0);
+    ~PotentialDuplicateContactsWidget();
 
-    QVBoxLayout *lay = new QVBoxLayout;
-    lay->setMargin( 0 );
-    mTitle = new QLineEdit;
-    lay->addWidget(mTitle);
+    void setAddressList(const KABC::AddresseeList &list);
 
-    mEdit = new QTextEdit;
-    lay->addWidget(mEdit);
-    setLayout(lay);
-    resize(200,200);
-}
+private:
+    void searchDuplicateContact();
+    KABC::AddresseeList mContactList;
+};
 
-KNoteAkonadiNote::~KNoteAkonadiNote()
-{
-
-}
-
+#endif // POTENTIALDUPLICATECONTACTSWIDGET_H

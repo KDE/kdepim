@@ -20,10 +20,14 @@
 
 #include "noteshared_export.h"
 class QTextCursor;
+class QTextEdit;
 namespace NoteShared
 {
 namespace NoteEditorUtils {
 NOTESHARED_EXPORT void addCheckmark( QTextCursor &cursor);
+NOTESHARED_EXPORT void upperCase( QTextCursor &cursor );
+NOTESHARED_EXPORT void lowerCase( QTextCursor &cursor );
+NOTESHARED_EXPORT void insertDate( QTextEdit *editor );
 }
 }
 

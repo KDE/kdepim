@@ -15,30 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteakonadinote.h"
+#ifndef MERGECONTACTS_H
+#define MERGECONTACTS_H
 
-#include <QTextEdit>
-#include <QLineEdit>
-#include <QVBoxLayout>
+#include <QObject>
+#include <KABC/Addressee>
 
-KNoteAkonadiNote::KNoteAkonadiNote(QWidget *parent)
-    : QFrame(parent)
+class QItemSelectionModel;
+class MergeContacts : public QObject
 {
-    // create the main layout
+    Q_OBJECT
+public:
+    explicit MergeContacts(QItemSelectionModel *model, QObject *parent=0);
+    ~MergeContacts();
 
-    QVBoxLayout *lay = new QVBoxLayout;
-    lay->setMargin( 0 );
-    mTitle = new QLineEdit;
-    lay->addWidget(mTitle);
+private:
+    KABC::Address merge(const KABC::Addressee::List &contacts);
+};
 
-    mEdit = new QTextEdit;
-    lay->addWidget(mEdit);
-    setLayout(lay);
-    resize(200,200);
-}
-
-KNoteAkonadiNote::~KNoteAkonadiNote()
-{
-
-}
-
+#endif // MERGECONTACTS_H

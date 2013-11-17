@@ -68,6 +68,14 @@ set(kaddressbook_xxport_SRCS
   xxport/xxportfactory.cpp
 )
 
+set(kaddressbook_merge_SRCS
+   merge/mergecontacts.cpp
+   merge/mergecontactsdialog.cpp
+   merge/searchduplicatecontactwizard.cpp
+   merge/potentialduplicatecontactswidget.cpp
+   merge/searchpotentialduplicatecontactjob.cpp 
+)
+
 set(kaddressbook_LIB_SRCS
   startup.cpp
   aboutdata.cpp
@@ -81,6 +89,7 @@ set(kaddressbook_LIB_SRCS
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
   xxportmanager.cpp
+  ${kaddressbook_merge_SRCS}
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
 )

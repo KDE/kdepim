@@ -15,30 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteakonadinote.h"
 
-#include <QTextEdit>
-#include <QLineEdit>
-#include <QVBoxLayout>
+#ifndef MERGECONTACTSDIALOG_H
+#define MERGECONTACTSDIALOG_H
 
-KNoteAkonadiNote::KNoteAkonadiNote(QWidget *parent)
-    : QFrame(parent)
+#include <KDialog>
+
+class MergeContactsDialog : public KDialog
 {
-    // create the main layout
+    Q_OBJECT
+public:
+    explicit MergeContactsDialog(QWidget *parent=0);
+    ~MergeContactsDialog();
 
-    QVBoxLayout *lay = new QVBoxLayout;
-    lay->setMargin( 0 );
-    mTitle = new QLineEdit;
-    lay->addWidget(mTitle);
+private:
+    void readConfig();
+    void writeConfig();
+};
 
-    mEdit = new QTextEdit;
-    lay->addWidget(mEdit);
-    setLayout(lay);
-    resize(200,200);
-}
-
-KNoteAkonadiNote::~KNoteAkonadiNote()
-{
-
-}
-
+#endif // MERGECONTACTSDIALOG_H

@@ -1,6 +1,7 @@
 [Global]
 IconName=kmail
 Comment=Followup reminder agent
+Comment[bs]=Agent za podsjećanje na praćenje
 Comment[ca]=Agent per a recordatoris de seguiment
 Comment[de]=Agent zur Erinnerung an Folgenachrichten
 Comment[es]=Agente de recordatorio de seguimiento

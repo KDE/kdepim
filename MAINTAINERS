@@ -4,6 +4,7 @@ akonadiconsole        ?
 akregator             Frank Osterfeld <osterfeld@kde.org>
 archivemailagent      Laurent Montel <montel@kde.org>
 blogilo               Laurent Montel <montel@kde.org>
+calendarjanitor       Sérgio Martins <iamsergio@gmail.com>
 calendarsupport       Sérgio Martins <iamsergio@gmail.com>
 calendarviews         Sérgio Martins <iamsergio@gmail.com>
 contactthemeeditor    Laurent Montel <montel@kde.org>
@@ -26,7 +27,7 @@ knode                 Olivier Trichet <nive@nivalis.org>
 knotes                Laurent Montel <montel@kde.org>
 konsolekalendar       Allen Winter <winter@kde.org>
 kontact               ?
-korganizer            Allen Winter <winter@kde.org>
+korganizer            Allen Winter <winter@kde.org> and Sérgio Martins <iamsergio@gmail.com>
 korgac                Allen Winter <winter@kde.org>
 kresources            DEPRECATED
 ksendemail            ?

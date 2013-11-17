@@ -18,7 +18,7 @@
 #include "autocorrection_gui.h"
 #include "pimcommon/autocorrection/autocorrection.h"
 #include "pimcommon/autocorrection/autocorrectionwidget.h"
-#include "pimcommon/autocorrection/widgets/subjectlineeditwithautocorrection.h"
+#include "pimcommon/autocorrection/widgets/lineeditwithautocorrection.h"
 #include "pimcommon/settings/pimcommonsettings.h"
 
 #include <kdebug.h>
@@ -107,7 +107,7 @@ AutocorrectionTestWidget::AutocorrectionTestWidget(QWidget *parent)
     connect(richText, SIGNAL(toggled(bool)), this, SLOT(slotChangeMode(bool)));
     bar->addAction(richText);
 
-    mSubject = new PimCommon::SubjectLineEditWithAutoCorrection(this, QLatin1String("autocorrectionguirc"));
+    mSubject = new PimCommon::LineEditWithAutoCorrection(this, QLatin1String("autocorrectionguirc"));
     mSubject->setAutocorrection(mAutoCorrection);
     lay->addWidget(mSubject);
 

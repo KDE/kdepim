@@ -15,30 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteakonadinote.h"
+#ifndef ADDEMAILTOEXISTINGCONTACTDIALOG_H
+#define ADDEMAILTOEXISTINGCONTACTDIALOG_H
 
-#include <QTextEdit>
-#include <QLineEdit>
-#include <QVBoxLayout>
-
-KNoteAkonadiNote::KNoteAkonadiNote(QWidget *parent)
-    : QFrame(parent)
-{
-    // create the main layout
-
-    QVBoxLayout *lay = new QVBoxLayout;
-    lay->setMargin( 0 );
-    mTitle = new QLineEdit;
-    lay->addWidget(mTitle);
-
-    mEdit = new QTextEdit;
-    lay->addWidget(mEdit);
-    setLayout(lay);
-    resize(200,200);
+#include <KDialog>
+namespace Akonadi {
+class EmailAddressSelectionWidget;
+class Item;
 }
-
-KNoteAkonadiNote::~KNoteAkonadiNote()
+class AddEmailToExistingContactDialog : public KDialog
 {
+    Q_OBJECT
+public:
+    explicit AddEmailToExistingContactDialog(QWidget *parent);
+    ~AddEmailToExistingContactDialog();
 
-}
+    Akonadi::Item selectedContact() const;
 
+private slots:
+    void slotSelectionChanged();
+
+private:
+    void readConfig();
+    void writeConfig();
+    Akonadi::EmailAddressSelectionWidget *mEmailSelectionWidget;
+};
+
+#endif // ADDEMAILTOEXISTINGCONTACTDIALOG_H

@@ -15,40 +15,45 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "autocorrection/widgets/subjectlineeditwithautocorrection.h"
+#include "autocorrection/widgets/lineeditwithautocorrection.h"
 #include "autocorrection/autocorrection.h"
 
 #include <QKeyEvent>
 
 using namespace PimCommon;
 
-SubjectLineEditWithAutoCorrection::SubjectLineEditWithAutoCorrection(QWidget* parent, const QString& configFile)
+LineEditWithAutoCorrection::LineEditWithAutoCorrection(QWidget* parent, const QString& configFile)
     : KPIM::SpellCheckLineEdit(parent, configFile),
-      mAutoCorrection(0)
+      mAutoCorrection(new PimCommon::AutoCorrection()),
+      mNeedToDeleteAutoCorrection(true)
 {
 }
 
-SubjectLineEditWithAutoCorrection::~SubjectLineEditWithAutoCorrection()
+LineEditWithAutoCorrection::~LineEditWithAutoCorrection()
 {
-
+    if (mNeedToDeleteAutoCorrection) {
+        delete mAutoCorrection;
+    }
 }
 
-AutoCorrection *SubjectLineEditWithAutoCorrection::autocorrection() const
+AutoCorrection *LineEditWithAutoCorrection::autocorrection() const
 {
     return mAutoCorrection;
 }
 
-void SubjectLineEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection* autocorrect)
+void LineEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection* autocorrect)
 {
+    mNeedToDeleteAutoCorrection = false;
+    delete mAutoCorrection;
     mAutoCorrection = autocorrect;
 }
 
-void SubjectLineEditWithAutoCorrection::setAutocorrectionLanguage(const QString &language)
+void LineEditWithAutoCorrection::setAutocorrectionLanguage(const QString &language)
 {
     mAutoCorrection->setLanguage(language);
 }
 
-void SubjectLineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
+void LineEditWithAutoCorrection::keyPressEvent ( QKeyEvent *e )
 {
     if ((e->key() == Qt::Key_Space) || (e->key() == Qt::Key_Enter) || (e->key() == Qt::Key_Return)) {
         if (mAutoCorrection) {

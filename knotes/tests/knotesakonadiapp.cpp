@@ -17,18 +17,25 @@
 
 #include "knotesakonadiapp.h"
 #include "knotesakonaditray.h"
-#include "knotesakonaditreemodel.h"
+#include "../akonadi/knotesakonaditreemodel.h"
 #include "knoteakonadinote.h"
-#include "knoteschangerecorder.h"
+#include "../akonadi/knoteschangerecorder.h"
+
+#include "noteshared/attributes/notelockattribute.h"
+#include "noteshared/attributes/notedisplayattribute.h"
+#include "noteshared/attributes/notealarmattribute.h"
+
 #include <akonadi/control.h>
 #include <Akonadi/ChangeRecorder>
-#include <Akonadi/Item>
 #include <Akonadi/Collection>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Session>
 #include <KMime/KMimeMessage>
 
+#include <QTextEdit>
+#include <QLineEdit>
 #include <QDebug>
+#include <QHash>
 
 KNotesAkonadiApp::KNotesAkonadiApp(QWidget *parent)
     : QWidget(parent)
@@ -43,20 +50,52 @@ KNotesAkonadiApp::KNotesAkonadiApp(QWidget *parent)
 
     connect( mNoteTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
              SLOT(slotRowInserted(QModelIndex,int,int)));
-    connect( mNoteTreeModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-             SLOT(slotRowRemoved(QModelIndex,int,int)) );
-    connect( mNoteTreeModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-             SLOT(slotDataChanged(QModelIndex,QModelIndex)) );
+
+    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
+    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)) );
 }
 
 KNotesAkonadiApp::~KNotesAkonadiApp()
 {
-
+    qDeleteAll(mHashNotes);
 }
 
-void KNotesAkonadiApp::slotDataChanged(const QModelIndex & ,const QModelIndex &)
+void KNotesAkonadiApp::slotItemRemoved(const Akonadi::Item &item)
 {
-    qDebug()<<" Data changed";
+    qDebug()<<" note removed"<<item.id();
+    if (mHashNotes.contains(item.id())) {
+        delete mHashNotes.find(item.id()).value();
+        mHashNotes.remove(item.id());
+    }
+}
+
+void KNotesAkonadiApp::slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &set)
+{
+    if (mHashNotes.contains(item.id())) {
+        qDebug()<<" item changed "<<item.id()<<" info "<<set.toList();
+        KNoteAkonadiNote *note = mHashNotes.find(item.id()).value();
+        if (set.contains("ATR:KJotsLockAttribute")) {
+            note->setEnabled(!item.hasAttribute<NoteShared::NoteLockAttribute>());
+        }
+        if (set.contains("PLD:RFC822")) {
+            KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
+            note->title()->setText(noteMessage->subject(false)->asUnicodeString());
+            if ( noteMessage->contentType()->isHTMLText() ) {
+                note->editor()->setAcceptRichText(true);
+                note->editor()->setHtml(noteMessage->mainBodyPart()->decodedText());
+            } else {
+                note->editor()->setAcceptRichText(false);
+                note->editor()->setPlainText(noteMessage->mainBodyPart()->decodedText());
+            }
+        }
+        if (set.contains("ATR:NoteDisplayAttribute")) {
+
+            //TODO
+        }
+        if (set.contains("ATR:NoteAlarmAttribute")) {
+            //TODO
+        }
+    }
 }
 
 void KNotesAkonadiApp::slotRowInserted(const QModelIndex &parent, int start, int end)
@@ -64,20 +103,39 @@ void KNotesAkonadiApp::slotRowInserted(const QModelIndex &parent, int start, int
     for ( int i = start; i <= end; ++i) {
         if ( mNoteTreeModel->hasIndex( i, 0, parent ) ) {
             const QModelIndex child = mNoteTreeModel->index( i, 0, parent );
-            qDebug()<<" child "<<child;
             Akonadi::Item item =
-                    mNoteTreeModel->data( child, Akonadi::EntityTreeModel::ItemIdRole ).value<Akonadi::Item>();
-            qDebug()<<" BEFORE !!!!!!!!!!!!";
+                    mNoteTreeModel->data( child, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
             if ( !item.hasPayload<KMime::Message::Ptr>() )
                 continue;
-            qDebug()<<" note inserted";
+            KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
             KNoteAkonadiNote *note = new KNoteAkonadiNote(0);
-            note->show();
+            note->title()->setText(noteMessage->subject(false)->asUnicodeString());
+            if ( noteMessage->contentType()->isHTMLText() ) {
+                note->editor()->setAcceptRichText(true);
+                note->editor()->setHtml(noteMessage->mainBodyPart()->decodedText());
+            } else {
+                note->editor()->setAcceptRichText(false);
+                note->editor()->setPlainText(noteMessage->mainBodyPart()->decodedText());
+            }
+            if ( item.hasAttribute<NoteShared::NoteLockAttribute>() ) {
+                note->setEnabled(false);
+            }
+            if ( item.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+                //TODO add display attribute
+                NoteShared::NoteDisplayAttribute *attr = item.attribute<NoteShared::NoteDisplayAttribute>();
+                if (attr->isHidden()) {
+                    note->hide();
+                } else {
+                    note->show();
+                }
+                note->resize(attr->size());
+            } else {
+                note->show();
+            }
+            if ( item.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
+                //TODO add alarm attribute
+            }
+            mHashNotes.insert(item.id(), note);
         }
     }
-}
-
-void KNotesAkonadiApp::slotRowRemoved(const QModelIndex &,int, int)
-{
-    qDebug()<<" note removed";
 }

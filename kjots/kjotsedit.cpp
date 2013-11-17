@@ -123,7 +123,7 @@ void KJotsEdit::delayedInitialization ( KActionCollection *collection )
 
 void KJotsEdit::insertDate()
 {
-  insertPlainText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
+    NoteShared::NoteEditorUtils::insertDate(this);
 }
 
 void KJotsEdit::selectionChanged( const QItemSelection& selected, const QItemSelection& deselected )

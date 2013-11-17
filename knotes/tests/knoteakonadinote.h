@@ -19,13 +19,21 @@
 #define KNOTEAKONADINOTE_H
 
 #include <QFrame>
-
+class QTextEdit;
+class QLineEdit;
 class KNoteAkonadiNote : public QFrame
 {
     Q_OBJECT
 public:
     explicit KNoteAkonadiNote(QWidget *parent = 0);
     ~KNoteAkonadiNote();
+
+    QTextEdit *editor() const { return mEdit; }
+    QLineEdit *title() const { return mTitle; }
+
+private:
+    QTextEdit *mEdit;
+    QLineEdit *mTitle;
 };
 
 #endif // KNOTEAKONADINOTE_H

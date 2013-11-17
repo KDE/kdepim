@@ -15,30 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteakonadinote.h"
+#include "stockageserviceabstract.h"
 
-#include <QTextEdit>
-#include <QLineEdit>
-#include <QVBoxLayout>
+using namespace PimCommon;
 
-KNoteAkonadiNote::KNoteAkonadiNote(QWidget *parent)
-    : QFrame(parent)
+StockageServiceAbstract::StockageServiceAbstract(QObject *parent)
+    : QObject(parent)
 {
-    // create the main layout
-
-    QVBoxLayout *lay = new QVBoxLayout;
-    lay->setMargin( 0 );
-    mTitle = new QLineEdit;
-    lay->addWidget(mTitle);
-
-    mEdit = new QTextEdit;
-    lay->addWidget(mEdit);
-    setLayout(lay);
-    resize(200,200);
 }
 
-KNoteAkonadiNote::~KNoteAkonadiNote()
+StockageServiceAbstract::~StockageServiceAbstract()
 {
 
 }
 
+#include "moc_stockageserviceabstract.cpp"
