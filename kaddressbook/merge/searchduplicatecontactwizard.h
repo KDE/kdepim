@@ -15,21 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SEARCHDUPLICATECONTACTDIALOG_H
-#define SEARCHDUPLICATECONTACTDIALOG_H
+#ifndef SearchDuplicateContactWizard_H
+#define SearchDuplicateContactWizard_H
 
-#include <KDialog>
-
-class SearchDuplicateContactDialog : public KDialog
+#include <KAssistantDialog>
+class QItemSelectionModel;
+class ContactSelectionWidget;
+class SearchDuplicateContactWizard : public KAssistantDialog
 {
     Q_OBJECT
 public:
-    explicit SearchDuplicateContactDialog(QWidget *parent = 0);
-    ~SearchDuplicateContactDialog();
+    explicit SearchDuplicateContactWizard(QItemSelectionModel *selectionModel, QWidget *parent = 0);
+    ~SearchDuplicateContactWizard();
+
+protected:
+    void accept();
 
 private:
     void readConfig();
     void writeConfig();
+    void mergeContacts();
+    ContactSelectionWidget *mSelectionWidget;
 };
 
-#endif // SEARCHDUPLICATECONTACTDIALOG_H
+#endif // SearchDuplicateContactWizard_H

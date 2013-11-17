@@ -19,6 +19,8 @@
 #define MERGECONTACTS_H
 
 #include <QObject>
+#include <KABC/Addressee>
+
 class QItemSelectionModel;
 class MergeContacts : public QObject
 {
@@ -26,6 +28,9 @@ class MergeContacts : public QObject
 public:
     explicit MergeContacts(QItemSelectionModel *model, QObject *parent=0);
     ~MergeContacts();
+
+private:
+    KABC::Address merge(const KABC::Addressee::List &contacts);
 };
 
 #endif // MERGECONTACTS_H

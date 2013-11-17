@@ -29,3 +29,8 @@ MergeContacts::~MergeContacts()
 
 }
 
+KABC::Address MergeContacts::merge(const KABC::Addressee::List &contacts)
+{
+    //TODO
+    return KABC::Address();
+}
