@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Example
+Name[bs]=Primjer
 Name[ca]=Exemple
 Name[ca@valencia]=Exemple
 Name[cs]=Příklad
@@ -34,6 +35,7 @@ Name[wa]=Egzimpe
 Name[x-test]=xxExamplexx
 Name[zh_TW]=範例
 Description=Example theme for header.
+Description[bs]=Primjer teme s zaglavljem
 Description[ca]=Tema d'exemple per a la capçalera.
 Description[ca@valencia]=Tema d'exemple per a la capçalera.
 Description[da]=Eksempeltema på header.
