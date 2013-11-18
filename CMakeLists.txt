@@ -323,6 +323,8 @@ else()
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(mboximporter)
     macro_optional_add_subdirectory(knotes)
+    #temporary directory until knotes ported to akonadi
+    macro_optional_add_subdirectory(knotes2)
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(ktnef)
     macro_optional_add_subdirectory(mailimporter)
