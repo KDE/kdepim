@@ -115,11 +115,13 @@ public:
   void setStorageModel( StorageModel *storageModel, PreSelectionMode preSelectionMode = PreSelectLastSelected );
 
   /**
-   * Aborts any pending message pre-selection. This may be done if the user
+   * Sets the pre-selection mode.
+   *
+   * Called with PreSelectNone to abort any pending message pre-selection. This may be done if the user
    * starts navigating the view and selecting items before we actually could
    * apply the pre-selection.
    */
-  void abortMessagePreSelection();
+  void setPreSelectionMode( PreSelectionMode preSelect );
 
   /**
    * Returns the hidden root item that all the messages are (or will be) attached to.

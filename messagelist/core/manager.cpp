@@ -169,33 +169,6 @@ void Manager::unregisterWidget( Widget *pWidget )
   }
 }
 
-unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *storageModel )
-{
-  KConfigGroup conf( Settings::self()->config(),
-                     MessageList::Util::storageModelSelectedMessageGroup() );
-
-  // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
-  qulonglong defValue = 0;
-
-  return conf.readEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModel->id() ), defValue );
-}
-
-void Manager::savePreSelectedMessageForStorageModelId( const QString &storageModelId, unsigned long uniqueIdOfMessage )
-{
-  KConfigGroup conf( Settings::self()->config(),
-                     MessageList::Util::storageModelSelectedMessageGroup() );
-
-
-  if ( uniqueIdOfMessage )
-  {
-    // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
-    qulonglong val = uniqueIdOfMessage;
-
-    conf.writeEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ), val );
-  } else
-    conf.deleteEntry( MessageList::Util::messageUniqueIdConfigName().arg( storageModelId ) );
-}
-
 const Aggregation * Manager::aggregation( const QString &id )
 {
   Aggregation * opt = mAggregations.value( id );

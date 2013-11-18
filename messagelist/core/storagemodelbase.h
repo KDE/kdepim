@@ -57,6 +57,18 @@ public:
   virtual QString id() const = 0;
 
   /**
+   * Returns the unique id of the last selected message for this StorageModel.
+   * Returns 0 if this value isn't stored in the configuration.
+   */
+  unsigned long preSelectedMessage() const;
+
+  /**
+   * Stores in the unique id of the last selected message for the specified StorageModel.
+   * The uniqueIdOfMessage may be 0 (which means that no selection shall be stored in the configuration).
+   */
+  void savePreSelectedMessage( unsigned long uniqueIdOfMessage );
+
+  /**
    * Returns true if this StorageModel (folder) contains outbound messages and false otherwise.
    */
   virtual bool containsOutboundMessages() const = 0;

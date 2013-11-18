@@ -274,7 +274,6 @@ Model::Model( View *pParent )
   d->mFilter = 0;
   d->mPersistentSetManager = 0;
   d->mInLengthyJobBatch = false;
-  d->mUniqueIdOfLastSelectedMessageInFolder = 0;
   d->mLastSelectedMessageInFolder = 0;
   d->mLoading = false;
 
@@ -633,7 +632,6 @@ void ModelPrivate::clear()
 
   // Kill pre-selection at this stage
   mPreSelectionMode = PreSelectNone;
-  mUniqueIdOfLastSelectedMessageInFolder = 0;
   mLastSelectedMessageInFolder = 0;
   mOldestItem = 0;
   mNewestItem = 0;
@@ -707,7 +705,6 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
   d->mStorageModel->prepareForScan();
 
   d->mPreSelectionMode = preSelectionMode;
-  d->mUniqueIdOfLastSelectedMessageInFolder = Manager::instance()->preSelectedMessageForStorageModel( d->mStorageModel );
   d->mStorageModelContainsOutboundMessages = d->mStorageModel->containsOutboundMessages();
 
   connect( d->mStorageModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
@@ -902,11 +899,9 @@ void ModelPrivate::checkIfDateChanged()
 }
 
 
-void Model::abortMessagePreSelection()
+void Model::setPreSelectionMode( PreSelectionMode preSelect )
 {
-  // This is used to abort a message pre-selection before we actually could apply it.
-  d->mPreSelectionMode = PreSelectNone;
-  d->mUniqueIdOfLastSelectedMessageInFolder = 0;
+  d->mPreSelectionMode = preSelect;
   d->mLastSelectedMessageInFolder = 0;
 }
 
@@ -2677,6 +2672,8 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
   // The end storage index of our work.
   int endIndex = job->endIndex();
 
+  unsigned long msgToSelect = mPreSelectionMode == PreSelectLastSelected ? mStorageModel->preSelectedMessage() : 0;
+
   MessageItem * mi = 0;
 
   while( curIndex <= endIndex )
@@ -2699,18 +2696,13 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
     }
 
     // If we're supposed to pre-select a specific message, check if it's this one.
-    if ( mUniqueIdOfLastSelectedMessageInFolder != 0 )
-    {
-      // Yes.. a pre-selection is pending
-      if( mUniqueIdOfLastSelectedMessageInFolder == mi->uniqueId() )
-      {
-        // Found, it's this one.
-        // But actually it's not viewable (so not selectable). We must wait
-        // until the end of the job to be 100% sure. So here we just translate
-        // the unique id to a MessageItem pointer and wait.
-        mLastSelectedMessageInFolder = mi;
-        mUniqueIdOfLastSelectedMessageInFolder = 0; // already found, don't bother checking anymore
-      }
+    if ( msgToSelect != 0 && msgToSelect == mi->uniqueId() ) {
+      // Found, it's this one.
+      // But actually it's not viewable (so not selectable). We must wait
+      // until the end of the job to be 100% sure. So here we just translate
+      // the unique id to a MessageItem pointer and wait.
+      mLastSelectedMessageInFolder = mi;
+      msgToSelect = 0; // already found, don't bother checking anymore
     }
 
     // Update the newest/oldest message, since we might be supposed to select those later
@@ -2975,7 +2967,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
     if ( dyingMessage == mLastSelectedMessageInFolder )
     {
       mLastSelectedMessageInFolder = 0;
-      mUniqueIdOfLastSelectedMessageInFolder = 0;
+      mPreSelectionMode = PreSelectNone;
     }
 
     // remove the message from any pending user job
@@ -3996,12 +3988,11 @@ void ModelPrivate::viewItemJobStep()
           }
         }
 
-        mUniqueIdOfLastSelectedMessageInFolder = 0;
-        mLastSelectedMessageInFolder = 0;
-        mPreSelectionMode = PreSelectNone;
-
-        if ( bSelectionDone )
+        if ( bSelectionDone ) {
+          mLastSelectedMessageInFolder = 0;
+          mPreSelectionMode = PreSelectNone;
           return; // already taken care of current / selection
+        }
       }
       // deal with current/selection out of the switch
 

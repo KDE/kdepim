@@ -56,6 +56,7 @@ public:
       mActionMenu( 0 ),
       mModel( 0 ),
       mSelectionModel( 0 ),
+      mPreSelectionMode( Core::PreSelectLastSelected ),
       mNewTabButton( 0 ),
       mCloseTabButton( 0 ),
       mCloseTabAction( 0 ),
@@ -93,6 +94,7 @@ public:
 
   QAbstractItemModel *mModel;
   QItemSelectionModel *mSelectionModel;
+  Core::PreSelectionMode mPreSelectionMode;
 
   QHash<Widget*, QItemSelectionModel*> mWidgetSelectionHash;
   QList<const QAbstractProxyModel*> mProxyStack;
@@ -449,6 +451,9 @@ void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QI
 
   // Deselect old before we select new - so that the messagelist can clear first.
   s->select( mapSelectionToSource( deselected ), QItemSelectionModel::Deselect );
+  if ( s->selection().isEmpty() ) {
+      w->view()->model()->setPreSelectionMode( mPreSelectionMode );
+  }
   s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
 
   QString label;
@@ -673,6 +678,7 @@ MessageList::StorageModel *Pane::createStorageModel( QAbstractItemModel *model, 
 
 void Pane::setCurrentFolder( const Akonadi::Collection &collection, bool, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
 {
+  d->mPreSelectionMode = preSelectionMode;
   Widget *w = static_cast<Widget*>( currentWidget() );
   if ( w ) {
     w->setCurrentFolder( collection );

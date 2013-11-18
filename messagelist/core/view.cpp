@@ -1923,11 +1923,6 @@ void View::slotSelectionChanged( const QItemSelection &, const QItemSelection & 
   // We assume that when selection changes, current item also changes.
   QModelIndex current = currentIndex();
 
-  // Abort any pending message pre-selection as the user is probably
-  // already navigating the view (so pre-selection would make his view jump
-  // to an unexpected place).
-  d->mModel->abortMessagePreSelection();
-
   if ( !current.isValid() )
   {
     if ( d->mLastCurrentItem )
@@ -1949,6 +1944,7 @@ void View::slotSelectionChanged( const QItemSelection &, const QItemSelection & 
       QItemSelection selection;
       selection.append( QItemSelectionRange( current ) );
       selectionModel()->select( selection, QItemSelectionModel::Select | QItemSelectionModel::Rows );
+      return; // the above recurses
     } else {
       // something is still selected anyway
       // This is probably a result of CTRL+Click which unselected current: leave it as it is.
@@ -2109,6 +2105,11 @@ void View::mousePressEvent( QMouseEvent * e )
   Item * it = static_cast< Item * >( d->mDelegate->hitItem() );
   if ( !it )
     return; // should never happen
+
+  // Abort any pending message pre-selection as the user is probably
+  // already navigating the view (so pre-selection would make his view jump
+  // to an unexpected place).
+  d->mModel->setPreSelectionMode( PreSelectNone );
 
   switch ( it->type() )
   {
