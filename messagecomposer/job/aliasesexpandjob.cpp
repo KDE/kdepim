@@ -44,11 +44,6 @@ DistributionListExpandJob::~DistributionListExpandJob()
 
 void DistributionListExpandJob::start()
 {
-  if ( mListName.isEmpty() || mListName.contains(QLatin1Char('@')) ) { // speedup: assume list names don't contain '@'
-    emitResult();
-    return;
-  }
-
   Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob( this );
   job->setQuery( Akonadi::ContactGroupSearchJob::Name, mListName );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
@@ -126,6 +121,11 @@ void AliasesExpandJob::start()
   // At first we try to expand the recipient to a distribution list
   // or nick name and save the results in a map for later lookup
   foreach ( const QString &recipient, mRecipients ) {
+
+    // speedup: assume aliases and list names don't contain '@'
+    if ( recipient.isEmpty() || recipient.contains( QLatin1Char( '@' ) ) )
+      continue;
+
     // check for distribution list
     DistributionListExpandJob *expandJob = new DistributionListExpandJob( recipient, this );
     expandJob->setProperty( "recipient", recipient );
