@@ -43,6 +43,8 @@ install(TARGETS knotes2private ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_
 set(knotes2_SRCS apps/main.cpp apps/application.cpp apps/knotesapp.cpp apps/knotesakonaditray.cpp
                 ../knotes/dialog/knoteskeydialog.cpp 
                 ../knotes/notes/knotebutton.cpp 
+                ../knotes/akonadi/knoteschangerecorder.cpp 
+                ../knotes/akonadi/knotesakonaditreemodel.cpp 
                 notes/knote.cpp
 )
 

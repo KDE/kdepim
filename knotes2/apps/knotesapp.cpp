@@ -19,6 +19,14 @@
 *******************************************************************/
 
 #include "configdialog/knoteconfigdialog.h"
+
+#include "../knotes/akonadi/knotesakonaditreemodel.h"
+#include "../knotes/akonadi/knoteschangerecorder.h"
+#include "noteshared/attributes/notelockattribute.h"
+#include "noteshared/attributes/notedisplayattribute.h"
+#include "noteshared/attributes/notealarmattribute.h"
+
+
 #include "notesharedglobalconfig.h"
 #include "notes/knote.h"
 #include "knotes/resource/resourcemanager.h"
@@ -36,6 +44,13 @@
 #include "akonadi_next/note.h"
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/EntityDisplayAttribute>
+
+#include <akonadi/control.h>
+#include <Akonadi/ChangeRecorder>
+#include <Akonadi/Collection>
+#include <Akonadi/EntityTreeModel>
+#include <Akonadi/Session>
+#include <KMime/KMimeMessage>
 
 
 #include <kaction.h>
@@ -183,6 +198,20 @@ KNotesApp::KNotesApp()
     updateNoteActions();
 #endif
 
+    Akonadi::Session *session = new Akonadi::Session( "KNotes Session", this );
+    Akonadi::Control::widgetNeedsAkonadi(this);
+    mNoteRecorder = new KNotesChangeRecorder(this);
+    mNoteRecorder->changeRecorder()->setSession(session);
+    //TODO add systray
+    //mTray = new KNotesAkonadiTray(mNoteRecorder->changeRecorder(), 0);
+
+    mNoteTreeModel = new KNotesAkonadiTreeModel(mNoteRecorder->changeRecorder(), this);
+
+    connect( mNoteTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+             SLOT(slotRowInserted(QModelIndex,int,int)));
+
+    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
+    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)) );
 }
 
 KNotesApp::~KNotesApp()
@@ -203,11 +232,98 @@ KNotesApp::~KNotesApp()
     delete m_guiBuilder;
     delete m_tray;
 #endif
+    qDeleteAll(mNotes);
     delete m_listener;
     m_listener=0;
     delete m_publisher;
     m_publisher=0;
 }
+
+
+void KNotesApp::slotItemRemoved(const Akonadi::Item &item)
+{
+    qDebug()<<" note removed"<<item.id();
+    if (mNotes.contains(item.id())) {
+        delete mNotes.find(item.id()).value();
+        mNotes.remove(item.id());
+    }
+}
+
+void KNotesApp::slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &set)
+{
+#if 0
+    if (mNotes.contains(item.id())) {
+        qDebug()<<" item changed "<<item.id()<<" info "<<set.toList();
+        KNote *note = mNotes.find(item.id()).value();
+        if (set.contains("ATR:KJotsLockAttribute")) {
+            note->setEnabled(!item.hasAttribute<NoteShared::NoteLockAttribute>());
+        }
+        if (set.contains("PLD:RFC822")) {
+            KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
+            note->title()->setText(noteMessage->subject(false)->asUnicodeString());
+            if ( noteMessage->contentType()->isHTMLText() ) {
+                note->editor()->setAcceptRichText(true);
+                note->editor()->setHtml(noteMessage->mainBodyPart()->decodedText());
+            } else {
+                note->editor()->setAcceptRichText(false);
+                note->editor()->setPlainText(noteMessage->mainBodyPart()->decodedText());
+            }
+        }
+        if (set.contains("ATR:NoteDisplayAttribute")) {
+
+            //TODO
+        }
+        if (set.contains("ATR:NoteAlarmAttribute")) {
+            //TODO
+        }
+    }
+#endif
+}
+
+void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
+{
+#if 0
+    for ( int i = start; i <= end; ++i) {
+        if ( mNoteTreeModel->hasIndex( i, 0, parent ) ) {
+            const QModelIndex child = mNoteTreeModel->index( i, 0, parent );
+            Akonadi::Item item =
+                    mNoteTreeModel->data( child, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+            if ( !item.hasPayload<KMime::Message::Ptr>() )
+                continue;
+            KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
+            KNote *note = new KNoteAkonadiNote(0);
+            note->title()->setText(noteMessage->subject(false)->asUnicodeString());
+            if ( noteMessage->contentType()->isHTMLText() ) {
+                note->editor()->setAcceptRichText(true);
+                note->editor()->setHtml(noteMessage->mainBodyPart()->decodedText());
+            } else {
+                note->editor()->setAcceptRichText(false);
+                note->editor()->setPlainText(noteMessage->mainBodyPart()->decodedText());
+            }
+            if ( item.hasAttribute<NoteShared::NoteLockAttribute>() ) {
+                note->setEnabled(false);
+            }
+            if ( item.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+                //TODO add display attribute
+                NoteShared::NoteDisplayAttribute *attr = item.attribute<NoteShared::NoteDisplayAttribute>();
+                if (attr->isHidden()) {
+                    note->hide();
+                } else {
+                    note->show();
+                }
+                note->resize(attr->size());
+            } else {
+                note->show();
+            }
+            if ( item.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
+                //TODO add alarm attribute
+            }
+            mNotes.insert(item.id(), note);
+        }
+    }
+#endif
+}
+
 
 void KNotesApp::newNote(const QString &name, const QString &text)
 {
@@ -245,6 +361,43 @@ void KNotesApp::newNote(const QString &name, const QString &text)
     //Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, Collection(m_containerCollectionId), this );
     //connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
 }
+
+void KNotesApp::showNote(const Akonadi::Entity::Id &id ) const
+{
+    if (mNotes.contains(id)) {
+        KNote *note = mNotes.value(id);
+        showNote( note );
+    } else {
+        kWarning( 5500 ) << "hideNote: no note with id:" << id;
+    }
+}
+
+void KNotesApp::showNote( KNote *note ) const
+{
+    note->show();
+#ifdef Q_WS_X11
+    if ( !note->isDesktopAssigned() ) {
+        note->toDesktop( KWindowSystem::currentDesktop() );
+    } else {
+        KWindowSystem::setCurrentDesktop(
+                    KWindowSystem::windowInfo( note->winId(), NET::WMDesktop ).desktop() );
+    }
+    KWindowSystem::forceActiveWindow( note->winId() );
+#endif
+    note->setFocus();
+}
+
+
+void KNotesApp::hideNote( const Akonadi::Item::Id &id ) const
+{
+    if (mNotes.contains(id)) {
+        KNote *note = mNotes.value(id);
+        note->hide();
+    } else {
+        kWarning( 5500 ) << "hideNote: no note with id:" << id;
+    }
+}
+
 
 void KNotesApp::hideAllNotes() const
 {
@@ -329,25 +482,6 @@ bool KNotesApp::commitData( QSessionManager & )
 
 // -------------------- public D-Bus interface -------------------- //
 
-void KNotesApp::showNote( const QString &id ) const
-{
-    KNote *note = m_notes.value( id );
-    if ( note ) {
-        showNote( note );
-    } else {
-        kWarning( 5500 ) << "showNote: no note with id:" << id;
-    }
-}
-
-void KNotesApp::hideNote( const QString &id ) const
-{
-    KNote *note = m_notes.value( id );
-    if ( note ) {
-        note->hide();
-    } else {
-        kWarning( 5500 ) << "hideNote: no note with id:" << id;
-    }
-}
 
 void KNotesApp::killNote( const QString &id, bool force )
 {
@@ -577,20 +711,6 @@ void KNotesApp::slotQuit()
 
 // -------------------- private methods -------------------- //
 
-void KNotesApp::showNote( KNote *note ) const
-{
-    note->show();
-#ifdef Q_WS_X11
-    if ( !note->isDesktopAssigned() ) {
-        note->toDesktop( KWindowSystem::currentDesktop() );
-    } else {
-        KWindowSystem::setCurrentDesktop(
-                    KWindowSystem::windowInfo( note->winId(), NET::WMDesktop ).desktop() );
-    }
-    KWindowSystem::forceActiveWindow( note->winId() );
-#endif
-    note->setFocus();
-}
 
 void KNotesApp::createNote( KCal::Journal *journal )
 {

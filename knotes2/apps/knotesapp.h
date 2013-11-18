@@ -42,11 +42,14 @@ class KNote;
 class KNotesAlarm;
 class KXMLGUIBuilder;
 class KXMLGUIFactory;
+class KNotesChangeRecorder;
+class KNotesAkonadiTreeModel;
 
 namespace DNSSD {
 class PublicService;
 }
 class KJob;
+class QModelIndex;
 class KNotesApp
         : public QWidget, public KSessionManager, virtual public KXMLGUIClient
 {
@@ -61,17 +64,24 @@ public slots:
     void newNoteFromClipboard( const QString &name = QString() );
     void hideAllNotes() const;
     void showAllNotes() const;
+    void showNote( const Akonadi::Item::Id &id ) const;
+    void hideNote(const Akonadi::Item::Id &id ) const;
+
+private:
+    void showNote( KNote *note ) const;
+
 
 private Q_SLOTS:
     void slotPreferences();
     void slotConfigUpdated();
     void slotAcceptConnection();
     void slotNoteCreationFinished(KJob*);
+    void slotRowInserted(const QModelIndex &, int, int end);
+    void slotItemRemoved(const Akonadi::Item &item);
+    void slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &);
+
 
 #if 0
-    void showNote( const QString &id ) const;
-    void hideNote( const QString &id ) const;
-
     void killNote( const QString &id );
     void killNote( const QString &id, bool force );
 
@@ -142,6 +152,8 @@ private:
     QTcpServer             *m_listener;
     DNSSD::PublicService   *m_publisher;
     QHash<Akonadi::Item::Id, KNote*> mNotes;
+    KNotesChangeRecorder *mNoteRecorder;
+    KNotesAkonadiTreeModel *mNoteTreeModel;
 };
 
 #endif
