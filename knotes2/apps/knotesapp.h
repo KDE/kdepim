@@ -31,6 +31,8 @@
 #include <ksessionmanager.h>
 #include <kxmlguiclient.h>
 
+#include <Akonadi/Item>
+
 class QTcpServer;
 
 class KAction;
@@ -52,6 +54,12 @@ class KNotesApp
 public:
     KNotesApp();
     ~KNotesApp();
+
+private Q_SLOTS:
+    void slotPreferences();
+    void slotConfigUpdated();
+    void slotAcceptConnection();
+
 #if 0
     void showNote( const QString &id ) const;
     void hideNote( const QString &id ) const;
@@ -86,7 +94,6 @@ protected slots:
     void slotOpenFindDialog();
     void slotFindNext();
 
-    void slotPreferences();
     void slotConfigureAccels();
 
     void slotNoteKilled( KCal::Journal *journal );
@@ -98,8 +105,7 @@ private:
     void saveConfigs();
 
 private slots:
-    void slotConfigUpdated();
-    void acceptConnection();
+
     void saveNotes();
     void saveNotes( const QString & uid );
     void updateNoteActions();
@@ -109,14 +115,11 @@ private slots:
     void slotPrintSelectedNotes();
 
 private:
-    void updateNetworkListener();
-    QMap<QString, KNote *> m_notes;
+
     QList<QAction *>       m_noteActions;
 
     KNotesResourceManager  *m_manager;
     KNotesAlarm            *m_alarm;
-    QTcpServer             *m_listener;
-    DNSSD::PublicService   *m_publisher;
 
     KFind           *m_find;
     QMap<QString, KNote *>::iterator *m_findPos;
@@ -132,6 +135,11 @@ private:
     QDomDocument    m_noteGUI;
     QString m_noteUidModify;
 #endif
+private:
+    void updateNetworkListener();
+    QTcpServer             *m_listener;
+    DNSSD::PublicService   *m_publisher;
+    QHash<Akonadi::Item::Id, KNote*> mNotes;
 };
 
 #endif

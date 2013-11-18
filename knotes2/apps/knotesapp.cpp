@@ -52,8 +52,6 @@
 #include <kxmlguibuilder.h>
 #include <kxmlguifactory.h>
 
-#include <kcal/calendarlocal.h>
-#include <kcal/journal.h>
 #include <kiconloader.h>
 
 #include <QPixmap>
@@ -69,12 +67,13 @@ static bool qActionLessThan( const QAction *a1, const QAction *a2 )
 
 
 KNotesApp::KNotesApp()
-    : QWidget()
+    : QWidget(),
+      m_listener( 0 ),
+      m_publisher( 0 )
+
 #if 0
     ,
       m_alarm( 0 ),
-      m_listener( 0 ),
-      m_publisher( 0 ),
       m_find( 0 ),
       m_findPos( 0 )
     #endif
@@ -89,7 +88,7 @@ KNotesApp::KNotesApp()
 
     connect( m_tray, SIGNAL(activateRequested(bool,QPoint)), this, SLOT(slotActivateRequested(bool,QPoint)) );
     connect( m_tray, SIGNAL(secondaryActivateRequested(QPoint)), this, SLOT(slotSecondaryActivateRequested(QPoint)) );
-
+#endif
     // create the GUI...
     KAction *action  = new KAction( KIcon( QLatin1String("document-new") ),
                                     i18n( "New Note" ), this );
@@ -123,8 +122,10 @@ KNotesApp::KNotesApp()
     new KHelpMenu( this, KGlobal::mainComponent().aboutData(), false,
                    actionCollection() );
 
+#if 0
     m_findAction = KStandardAction::find( this, SLOT(slotOpenFindDialog()),
                                           actionCollection() );
+#endif
     KStandardAction::preferences( this, SLOT(slotPreferences()),
                                   actionCollection() );
     KStandardAction::keyBindings( this, SLOT(slotConfigureAccels()),
@@ -132,7 +133,7 @@ KNotesApp::KNotesApp()
     //FIXME: no shortcut removing!?
     KStandardAction::quit( this, SLOT(slotQuit()),
                            actionCollection() )->setShortcut( 0 );
-
+#if 0
     setXMLFile( componentData().componentName() + QLatin1String("appui.rc") );
 
     m_guiBuilder = new KXMLGUIBuilder( this );
@@ -191,9 +192,9 @@ KNotesApp::KNotesApp()
     // set up the alarm reminder - do it after loading the notes because this
     // is used as a check if updateNoteActions has to be called for a new note
     m_alarm = new KNotesAlarm( m_manager, this );
-
+#endif
     updateNetworkListener();
-
+#if 0
     /*
     if ( m_notes.isEmpty() && !kapp->isSessionRestored() ) {
         newNote();
@@ -203,6 +204,7 @@ KNotesApp::KNotesApp()
     m_tray->updateNumberOfNotes(m_notes.count());
     updateNoteActions();
 #endif
+
 }
 
 KNotesApp::~KNotesApp()
@@ -217,17 +219,49 @@ KNotesApp::~KNotesApp()
     m_noteActions.clear();
     blockSignals( false );
 
-    delete m_listener;
-    m_listener=0;
-    delete m_publisher;
-    m_publisher=0;
     delete m_findPos;
     m_findPos = 0;
     delete m_manager;
     delete m_guiBuilder;
     delete m_tray;
 #endif
+    delete m_listener;
+    m_listener=0;
+    delete m_publisher;
+    m_publisher=0;
 }
+
+void KNotesApp::slotAcceptConnection()
+{
+    // Accept the connection and make KNotesNetworkReceiver do the job
+    QTcpSocket *s = m_listener->nextPendingConnection();
+
+    if ( s ) {
+        NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver( s );
+        connect( recv,
+                 SIGNAL(noteReceived(QString,QString)),
+                 SLOT(newNote(QString,QString)) );
+    }
+}
+
+void KNotesApp::updateNetworkListener()
+{
+    delete m_listener;
+    m_listener=0;
+    delete m_publisher;
+    m_publisher=0;
+
+    if ( NoteShared::NoteSharedGlobalConfig::receiveNotes() ) {
+        // create the socket and start listening for connections
+        m_listener=KSocketFactory::listen( QLatin1String("knotes") , QHostAddress::Any,
+                                           NoteShared::NoteSharedGlobalConfig::port() );
+        connect( m_listener, SIGNAL(newConnection()),
+                 SLOT(acceptConnection()) );
+        m_publisher=new DNSSD::PublicService(NoteShared::NoteSharedGlobalConfig::senderID(), QLatin1String("_knotes._tcp"), NoteShared::NoteSharedGlobalConfig::port());
+        m_publisher->publishAsync();
+    }
+}
+
 
 #if 0
 
@@ -455,7 +489,7 @@ void KNotesApp::slotFindNext()
         m_findPos = 0;
     }
 }
-
+#endif
 void KNotesApp::slotPreferences()
 {
     // create a new preferences dialog...
@@ -468,7 +502,7 @@ void KNotesApp::slotConfigUpdated()
 {
     updateNetworkListener();
 }
-
+#if 0
 void KNotesApp::slotConfigureAccels()
 {
     QPointer<KNotesKeyDialog> keys = new KNotesKeyDialog( actionCollection(), this );
@@ -608,18 +642,6 @@ void KNotesApp::killNote( KCal::Journal *journal )
     }
 }
 
-void KNotesApp::acceptConnection()
-{
-    // Accept the connection and make KNotesNetworkReceiver do the job
-    QTcpSocket *s = m_listener->nextPendingConnection();
-
-    if ( s ) {
-        NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver( s );
-        connect( recv,
-                 SIGNAL(noteReceived(QString,QString)),
-                 SLOT(newNote(QString,QString)) );
-    }
-}
 
 void KNotesApp::saveNotes( const QString & uid )
 {
@@ -683,23 +705,6 @@ void KNotesApp::updateNoteActions()
     plugActionList( QLatin1String("notes"), m_noteActions );
 }
 
-void KNotesApp::updateNetworkListener()
-{
-    delete m_listener;
-    m_listener=0;
-    delete m_publisher;
-    m_publisher=0;
-
-    if ( NoteShared::NoteSharedGlobalConfig::receiveNotes() ) {
-        // create the socket and start listening for connections
-        m_listener=KSocketFactory::listen( QLatin1String("knotes") , QHostAddress::Any,
-                                           NoteShared::NoteSharedGlobalConfig::port() );
-        connect( m_listener, SIGNAL(newConnection()),
-                 SLOT(acceptConnection()) );
-        m_publisher=new DNSSD::PublicService(NoteShared::NoteSharedGlobalConfig::senderID(), QLatin1String("_knotes._tcp"), NoteShared::NoteSharedGlobalConfig::port());
-        m_publisher->publishAsync();
-    }
-}
 
 void KNotesApp::slotPrintSelectedNotes()
 {
