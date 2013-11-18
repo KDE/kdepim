@@ -36,8 +36,22 @@ void PotentialDuplicateContactsWidget::setAddressList(const Akonadi::Item::List 
 
 void PotentialDuplicateContactsWidget::searchDuplicateContact()
 {
-    if (mContactList.count()>1) {
+    if (mContactList.count() > 1) {
 
     }
     //TODO
+}
+
+bool PotentialDuplicateContactsWidget::isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB)
+{
+    KABC::Addressee addressA = itemA.payload<KABC::Addressee>();
+    KABC::Addressee addressB = itemB.payload<KABC::Addressee>();
+    if (addressA.name() == addressB.name()) {
+        return true;
+    }
+    if (addressA.nickName() == addressB.nickName()) {
+        return true;
+    }
+
+    return false;
 }

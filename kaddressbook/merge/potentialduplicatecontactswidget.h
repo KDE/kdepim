@@ -40,6 +40,7 @@ private:
     };
 
     void searchDuplicateContact();
+    bool isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB);
     Akonadi::Item::List mContactList;
 };
 
