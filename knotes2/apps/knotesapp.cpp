@@ -20,7 +20,7 @@
 
 #include "configdialog/knoteconfigdialog.h"
 #include "notesharedglobalconfig.h"
-//#include "notes/knote.h"
+#include "notes/knote.h"
 #include "knotes/resource/resourcemanager.h"
 //#include "knotesadaptor.h"
 //#include "alarms/knotesalarm.h"
@@ -31,6 +31,12 @@
 #include "noteshared/network/notesnetworkreceiver.h"
 //#include "dialog/knoteskeydialog.h"
 //#include "print/knoteprintselectednotesdialog.h"
+
+#include <KMime/KMimeMessage>
+#include "akonadi_next/note.h"
+#include <Akonadi/ItemCreateJob>
+#include <Akonadi/EntityDisplayAttribute>
+
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -71,7 +77,7 @@ KNotesApp::KNotesApp()
       m_listener( 0 ),
       m_publisher( 0 )
 
-#if 0
+    #if 0
     ,
       m_alarm( 0 ),
       m_find( 0 ),
@@ -161,34 +167,6 @@ KNotesApp::KNotesApp()
         // clean up old config files
         KNotesLegacy::cleanUp();
     }
-
-    // create the resource manager
-    m_manager = new KNotesResourceManager();
-    connect( m_manager, SIGNAL(sigRegisteredNote(KCal::Journal*)),
-             this,      SLOT(createNote(KCal::Journal*)) );
-    connect( m_manager, SIGNAL(sigDeregisteredNote(KCal::Journal*)),
-             this,      SLOT(killNote(KCal::Journal*)) );
-
-    // read the notes
-    m_manager->load();
-
-    if (needConvert) {
-        // read the old config files, convert and add them
-        KCal::CalendarLocal calendar( QString::fromLatin1( "UTC" ) );
-        if ( KNotesLegacy::convert( &calendar ) ) {
-            KCal::Journal::List notes = calendar.journals();
-            KCal::Journal::List::ConstIterator it;
-            KCal::Journal::List::ConstIterator end(notes.constEnd());
-            for ( it = notes.constBegin(); it != end; ++it ) {
-                m_manager->addNewNote( *it );
-            }
-
-            m_manager->save();
-        }
-        KNotesGlobalConfig::self()->setNotesVersion(1);
-    }
-
-
     // set up the alarm reminder - do it after loading the notes because this
     // is used as a check if updateNoteActions has to be called for a new note
     m_alarm = new KNotesAlarm( m_manager, this );
@@ -229,6 +207,81 @@ KNotesApp::~KNotesApp()
     m_listener=0;
     delete m_publisher;
     m_publisher=0;
+}
+
+void KNotesApp::newNote(const QString &name, const QString &text)
+{
+    Akonadi::Item newItem;
+    newItem.setMimeType( Akonotes::Note::mimeType() );
+
+    KMime::Message::Ptr newPage = KMime::Message::Ptr( new KMime::Message() );
+
+    QString title;
+    if (name.isEmpty()) {
+        title = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() );
+    } else {
+        title = name;
+    }
+    QByteArray encoding( "utf-8" );
+
+    newPage->subject( true )->fromUnicodeString( title, encoding );
+    newPage->contentType( true )->setMimeType( "text/plain" );
+    newPage->contentType()->setCharset("utf-8");
+    newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
+    newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+    newPage->from( true )->fromUnicodeString( QString::fromLatin1( "knotes@kde4" ), encoding );
+    // Need a non-empty body part so that the serializer regards this as a valid message.
+    newPage->mainBodyPart()->fromUnicodeString( text.isEmpty() ? QString::fromLatin1( " " ) : text);
+
+    newPage->assemble();
+
+    newItem.setPayload( newPage );
+
+    Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+    eda->setIconName( QString::fromLatin1( "text-plain" ) );
+    newItem.addAttribute(eda);
+
+    //FIXME define default collection
+    //Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, Collection(m_containerCollectionId), this );
+    //connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
+}
+
+void KNotesApp::hideAllNotes() const
+{
+    QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
+    while (i.hasNext()) {
+        i.next();
+        i.value()->slotClose();
+    }
+}
+
+void KNotesApp::showAllNotes() const
+{
+    QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
+    while (i.hasNext()) {
+        i.next();
+        // workaround to BUG 149116
+        i.value()->hide();
+
+        i.value()->show();
+    }
+}
+
+
+void KNotesApp::newNoteFromClipboard( const QString &name )
+{
+    const QString &text = KApplication::clipboard()->text();
+    newNote( name, text );
+}
+
+
+void KNotesApp::slotNoteCreationFinished(KJob *job)
+{
+    if (job->error())
+    {
+        kWarning() << job->errorString();
+        return;
+    }
 }
 
 void KNotesApp::slotAcceptConnection()
@@ -275,52 +328,6 @@ bool KNotesApp::commitData( QSessionManager & )
 }
 
 // -------------------- public D-Bus interface -------------------- //
-
-QString KNotesApp::newNote( const QString &name, const QString &text )
-{
-    // create the new note
-    KCal::Journal *journal = new KCal::Journal();
-
-    // new notes have the current date/time as title if none was given
-    if ( !name.isEmpty() ) {
-        journal->setSummary( name );
-    } else {
-        journal->setSummary( KGlobal::locale()->formatDateTime(
-                                 QDateTime::currentDateTime() ) );
-    }
-
-    // the body of the note
-    journal->setDescription( text );
-
-    if ( m_manager->addNewNote( journal ) ) {
-        showNote( journal->uid() );
-    }
-
-    return journal->uid();
-}
-
-QString KNotesApp::newNoteFromClipboard( const QString &name )
-{
-    const QString &text = KApplication::clipboard()->text();
-    return newNote( name, text );
-}
-
-void KNotesApp::hideAllNotes() const
-{
-    foreach ( KNote *note, m_notes ) {
-        note->slotClose();
-    }
-}
-
-void KNotesApp::showAllNotes() const
-{
-    foreach ( KNote *note, m_notes ) {
-        // workaround to BUG 149116
-        note->hide();
-
-        note->show();
-    }
-}
 
 void KNotesApp::showNote( const QString &id ) const
 {

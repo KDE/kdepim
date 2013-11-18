@@ -79,7 +79,6 @@ signals:
     void sigNameChanged(const QString &);
     void sigDataChanged(const QString &);
     void sigColorChanged();
-    //void sigKillNote( KCal::Journal * );
 
     void sigFindFinished();
 

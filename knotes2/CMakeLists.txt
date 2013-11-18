@@ -1,6 +1,8 @@
 project(knotes2)
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon
@@ -41,6 +43,7 @@ install(TARGETS knotes2private ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_
 set(knotes2_SRCS apps/main.cpp apps/application.cpp apps/knotesapp.cpp apps/knotesakonaditray.cpp
                 ../knotes/dialog/knoteskeydialog.cpp 
                 ../knotes/notes/knotebutton.cpp 
+                notes/knote.cpp
 )
 
 
@@ -51,7 +54,11 @@ set(knotes2_SRCS apps/main.cpp apps/application.cpp apps/knotesapp.cpp apps/knot
 kde4_add_executable(knotes2 ${knotes2_SRCS})
 
 target_link_libraries(knotes2 knotes2private pimcommon kdepim ${KDE4_KIO_LIBS}
-                             ${KDE4_KCMUTILS_LIBS} ${X11_X11_LIB} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} ${KDE4_KPRINTUTILS_LIBS} ${KDE4_KDNSSD_LIBS} noteshared)
+                             ${KDE4_KCMUTILS_LIBS} ${X11_X11_LIB} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} ${KDE4_KPRINTUTILS_LIBS} ${KDE4_KDNSSD_LIBS} noteshared
+  ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  akonadi_next
+)
 
 install(TARGETS knotes2  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

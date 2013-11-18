@@ -91,7 +91,6 @@ KNote::KNote( const QDomDocument& buildDoc, QWidget *parent )
       m_tool( 0 ),
       m_editor( 0 ),
       m_config( 0 ),
-      m_journal( j ),
       m_find( 0 ),
       m_kwinConf( KSharedConfig::openConfig( QLatin1String("kwinrc") ) ),
       m_blockEmitDataChanged( false ),
@@ -157,9 +156,10 @@ void KNote::slotKill( bool force )
     // delete the configuration first, then the corresponding file
     delete m_config;
     m_config = 0;
-    KNoteUtils::removeNote(m_journal, this);
+    //KNoteUtils::removeNote(m_journal, this);
 
-    emit sigKillNote( m_journal );
+
+    //FIXME emit sigKillNote( m_journal );
 }
 
 
@@ -167,13 +167,14 @@ void KNote::slotKill( bool force )
 
 void KNote::saveData(bool update )
 {
+#if 0
     m_journal->setSummary( m_label->text() );
     m_journal->setDescription( m_editor->text() );
     KNoteUtils::savePreferences( m_journal, m_config);
-
+#endif
     if(update)
     {
-        emit sigDataChanged(noteId());
+        //FIXME emit sigDataChanged(noteId());
         m_editor->document()->setModified( false );
     }
 }
@@ -376,6 +377,7 @@ void KNote::slotClose()
 
 void KNote::slotSetAlarm()
 {
+     #if 0
     m_blockEmitDataChanged = true;
     QPointer<KNoteAlarmDialog> dlg = new KNoteAlarmDialog( name(), this );
     dlg->setIncidence( m_journal );
@@ -385,6 +387,7 @@ void KNote::slotSetAlarm()
     }
     delete dlg;
     m_blockEmitDataChanged = false;
+#endif
 }
 
 void KNote::slotPreferences()
@@ -392,6 +395,7 @@ void KNote::slotPreferences()
     m_blockEmitDataChanged = true;
 
     // create a new preferences dialog...
+#if 0
     QPointer<KNoteSimpleConfigDialog> dialog = new KNoteSimpleConfigDialog( m_config, name(), this, noteId() );
     connect( dialog, SIGNAL(settingsChanged(QString)) , this,
              SLOT(slotApplyConfig()) );
@@ -401,6 +405,7 @@ void KNote::slotPreferences()
     delete dialog;
     m_blockEmitDataChanged = false;
     saveData();
+#endif
 }
 
 void KNote::slotSend()
@@ -757,7 +762,7 @@ void KNote::createNoteHeader()
     m_label->setAutoFillBackground( true );
     m_label->installEventFilter( this );  // receive events ( for dragging &
     // action menu )
-    setName( m_journal->summary() );      // don't worry, no signals are
+    //FIXME setName( m_journal->summary() );      // don't worry, no signals are
     // connected at this stage yet
     m_button = new KNoteButton( QLatin1String("knotes_close"), this );
     headerLayout->addWidget( m_button );
@@ -901,7 +906,7 @@ void KNote::prepare()
     m_editor->setContentsMargins( 0, 0, 0, 0 );
     m_editor->setBackgroundRole( QPalette::Base );
     m_editor->setFrameStyle( NoFrame );
-    m_editor->setText( m_journal->description() );
+    //FIXME m_editor->setText( m_journal->description() );
 
     m_editor->document()->setModified( false );
 }

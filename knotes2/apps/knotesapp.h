@@ -46,7 +46,7 @@ class KXMLGUIFactory;
 namespace DNSSD {
 class PublicService;
 }
-
+class KJob;
 class KNotesApp
         : public QWidget, public KSessionManager, virtual public KXMLGUIClient
 {
@@ -55,10 +55,18 @@ public:
     KNotesApp();
     ~KNotesApp();
 
+public slots:
+    void newNote( const QString &name = QString(),
+                     const QString &text = QString() );
+    void newNoteFromClipboard( const QString &name = QString() );
+    void hideAllNotes() const;
+    void showAllNotes() const;
+
 private Q_SLOTS:
     void slotPreferences();
     void slotConfigUpdated();
     void slotAcceptConnection();
+    void slotNoteCreationFinished(KJob*);
 
 #if 0
     void showNote( const QString &id ) const;
@@ -78,12 +86,6 @@ private Q_SLOTS:
     bool commitData( QSessionManager & );
 
 public slots:
-    QString newNote( const QString &name = QString(),
-                     const QString &text = QString() );
-    QString newNoteFromClipboard( const QString &name = QString() );
-
-    void hideAllNotes() const;
-    void showAllNotes() const;
 
 protected slots:
     void slotActivateRequested( bool, const QPoint& pos);
