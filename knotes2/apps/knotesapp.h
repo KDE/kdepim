@@ -37,7 +37,7 @@ class KAction;
 class KFind;
 class KMenu;
 class KNote;
-//class KNotesAlarm;
+class KNotesAlarm;
 class KXMLGUIBuilder;
 class KXMLGUIFactory;
 
