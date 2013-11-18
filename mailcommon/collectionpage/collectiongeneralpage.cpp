@@ -45,9 +45,9 @@
 #include <QVBoxLayout>
 
 // TODO Where should these be?
-#define KOLAB_FOLDERTYPE "/vendor/kolab/folder-type"
-#define KOLAB_INCIDENCESFOR "/vendor/kolab/incidences-for"
-#define KOLAB_SHAREDSEEN "/vendor/cmu/cyrus-imapd/sharedseen"
+#define KOLAB_FOLDERTYPE "/shared/vendor/kolab/folder-type"
+#define KOLAB_INCIDENCESFOR "/shared/vendor/kolab/incidences-for"
+#define KOLAB_SHAREDSEEN "/shared/vendor/cmu/cyrus-imapd/sharedseen"
 
 using namespace Akonadi;
 using namespace MailCommon;
