@@ -19,7 +19,7 @@
 #define POTENTIALDUPLICATECONTACTSWIDGET_H
 
 #include <QWidget>
-#include <KABC/Addressee>
+#include <Akonadi/Item>
 
 class PotentialDuplicateContactsWidget : public QWidget
 {
@@ -28,11 +28,11 @@ public:
     explicit PotentialDuplicateContactsWidget(QWidget *parent=0);
     ~PotentialDuplicateContactsWidget();
 
-    void setAddressList(const KABC::AddresseeList &list);
+    void setAddressList(const Akonadi::Item::List &list);
 
 private:
     void searchDuplicateContact();
-    KABC::AddresseeList mContactList;
+    Akonadi::Item::List mContactList;
 };
 
 #endif // POTENTIALDUPLICATECONTACTSWIDGET_H

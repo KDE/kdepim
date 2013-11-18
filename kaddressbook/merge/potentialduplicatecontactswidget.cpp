@@ -28,7 +28,7 @@ PotentialDuplicateContactsWidget::~PotentialDuplicateContactsWidget()
 
 }
 
-void PotentialDuplicateContactsWidget::setAddressList(const KABC::AddresseeList &list)
+void PotentialDuplicateContactsWidget::setAddressList(const Akonadi::Item::List &list)
 {
     mContactList = list;
     searchDuplicateContact();

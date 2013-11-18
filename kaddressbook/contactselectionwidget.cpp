@@ -82,6 +82,20 @@ KABC::Addressee::List ContactSelectionWidget::selectedContacts() const
   return KABC::Addressee::List();
 }
 
+Akonadi::Item::List ContactSelectionWidget::selectedContactsItem() const
+{
+  if ( mAllContactsButton->isChecked() ) {
+    return collectAllContactsItem();
+  } else if ( mSelectedContactsButton->isChecked() ) {
+    return collectSelectedContactsItem();
+  } else if ( mAddressBookContactsButton->isChecked() ) {
+    return collectAddressBookContactsItem();
+  }
+
+  return Akonadi::Item::List();
+}
+
+
 void ContactSelectionWidget::initGui()
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
@@ -175,6 +189,46 @@ KABC::Addressee::List ContactSelectionWidget::collectAllContacts() const
   return contacts;
 }
 
+Akonadi::Item::List ContactSelectionWidget::collectAllContactsItem() const
+{
+  Akonadi::RecursiveItemFetchJob *job =
+    new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
+                                        QStringList() << KABC::Addressee::mimeType() );
+  job->fetchScope().fetchFullPayload();
+
+  Akonadi::Item::List lst;
+  if ( !job->exec() ) {
+    return lst;
+  }
+
+  foreach ( const Akonadi::Item &item, job->items() ) {
+    if ( item.isValid() && item.hasPayload<KABC::Addressee>() ) {
+      lst.append( item );
+    }
+  }
+
+  return lst;
+}
+
+Akonadi::Item::List ContactSelectionWidget::collectSelectedContactsItem() const
+{
+    Akonadi::Item::List lst;
+
+    const QModelIndexList indexes = mSelectionModel->selectedRows( 0 );
+    for ( int i = 0; i < indexes.count(); ++i ) {
+      const QModelIndex index = indexes.at( i );
+      if ( index.isValid() ) {
+        const Akonadi::Item item =
+          index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+        if ( item.isValid() && item.hasPayload<KABC::Addressee>() ) {
+          lst.append( item );
+        }
+      }
+    }
+
+    return lst;
+}
+
 KABC::Addressee::List ContactSelectionWidget::collectSelectedContacts() const
 {
   KABC::Addressee::List contacts;
@@ -236,3 +290,45 @@ KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
   return contacts;
 }
 
+
+Akonadi::Item::List ContactSelectionWidget::collectAddressBookContactsItem() const
+{
+  Akonadi::Item::List lst;
+
+  const Akonadi::Collection collection = mAddressBookSelection->currentCollection();
+  if ( !collection.isValid() ) {
+    return lst;
+  }
+
+  if ( mAddressBookSelectionRecursive->isChecked() ) {
+    Akonadi::RecursiveItemFetchJob *job =
+      new Akonadi::RecursiveItemFetchJob( collection,
+                                          QStringList() << KABC::Addressee::mimeType() );
+    job->fetchScope().fetchFullPayload();
+
+    if ( !job->exec() ) {
+      return lst;
+    }
+
+    foreach ( const Akonadi::Item &item, job->items() ) {
+      if ( item.hasPayload<KABC::Addressee>() ) {
+        lst.append( item );
+      }
+    }
+  } else {
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
+    job->fetchScope().fetchFullPayload();
+
+    if ( !job->exec() ) {
+      return lst;
+    }
+
+    foreach ( const Akonadi::Item &item, job->items() ) {
+      if ( item.hasPayload<KABC::Addressee>() ) {
+        lst.append( item );
+      }
+    }
+  }
+
+  return lst;
+}

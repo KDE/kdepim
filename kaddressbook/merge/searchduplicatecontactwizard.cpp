@@ -73,7 +73,7 @@ void SearchDuplicateContactWizard::accept()
 void SearchDuplicateContactWizard::next()
 {
     if (currentPage() == mSelectionPageItem) {
-        KABC::AddresseeList list = mSelectionWidget->selectedContacts();
+        Akonadi::Item::List list = mSelectionWidget->selectedContactsItem();
         mPotentialDuplicateContactsWidget->setAddressList(list);
     }
     KAssistantDialog::next();
