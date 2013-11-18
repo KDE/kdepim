@@ -46,7 +46,7 @@ void SelectionTypeTreeWidget::initialize()
     createSubItem(mKmailItem, Utils::MailTransport);
     createSubItem(mKmailItem, Utils::Resources);
     createSubItem(mKmailItem, Utils::Config);
-    createSubItem(mKmailItem, Utils::AkonadiDb);
+    //createSubItem(mKmailItem, Utils::AkonadiDb);
 
     mKaddressbookItem = new QTreeWidgetItem(this);
     mKaddressbookItem->setText(0, Utils::appTypeToI18n(Utils::KAddressBook));
