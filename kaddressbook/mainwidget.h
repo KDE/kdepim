@@ -73,6 +73,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void print();
     void printPreview();
     void configure();
+    void mergeContacts();
 
   private Q_SLOTS:
     void delayedInit();

@@ -35,7 +35,7 @@ SearchDuplicateContactWizard::SearchDuplicateContactWizard(QItemSelectionModel *
     setAppropriate( mSelectionPageItem, true );
 
     mPotentialDuplicateContactsWidget = new PotentialDuplicateContactsWidget(this);
-    mDuplicateContactsPageItem = new KPageWidgetItem( mSelectionWidget, i18n( "Potential Duplicate Contacts" ) );
+    mDuplicateContactsPageItem = new KPageWidgetItem( mPotentialDuplicateContactsWidget, i18n( "Potential Duplicate Contacts" ) );
     addPage( mDuplicateContactsPageItem );
     setAppropriate( mDuplicateContactsPageItem, true );
 

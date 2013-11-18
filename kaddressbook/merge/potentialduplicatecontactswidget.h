@@ -20,7 +20,7 @@
 
 #include <QWidget>
 #include <Akonadi/Item>
-
+class SearchPotentialDuplicateContactJob;
 class PotentialDuplicateContactsWidget : public QWidget
 {
     Q_OBJECT
@@ -29,6 +29,9 @@ public:
     ~PotentialDuplicateContactsWidget();
 
     void setAddressList(const Akonadi::Item::List &list);
+
+private Q_SLOTS:
+    void slotSearchDuplicateContactFinished(SearchPotentialDuplicateContactJob *);
 
 private:
     enum MatchType {
@@ -39,9 +42,7 @@ private:
         NickName = 8
     };
 
-    void searchDuplicateContact();
-    bool isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB);
-    Akonadi::Item::List mContactList;
+    void searchDuplicateContact(const Akonadi::Item::List &list);
 };
 
 #endif // POTENTIALDUPLICATECONTACTSWIDGET_H

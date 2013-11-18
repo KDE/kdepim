@@ -20,23 +20,24 @@
 #define SEARCHPOTENTIALDUPLICATECONTACTJOB_H
 
 #include <QObject>
-
-#include <KABC/Addressee>
+#include <Akonadi/Item>
 
 class SearchPotentialDuplicateContactJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit SearchPotentialDuplicateContactJob(const KABC::AddresseeList &list, QObject *parent = 0);
+    explicit SearchPotentialDuplicateContactJob(const Akonadi::Item::List &list, QObject *parent = 0);
     ~SearchPotentialDuplicateContactJob();
 
     void start();
 
 Q_SIGNALS:
-    void finished();
+    void finished(SearchPotentialDuplicateContactJob *);
 
 private:
-    KABC::AddresseeList mListContact;
+    QList<Akonadi::Item> checkList(const QList<Akonadi::Item> &lstItem);
+    bool isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB);
+    Akonadi::Item::List mListItem;
 };
 
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOB_H

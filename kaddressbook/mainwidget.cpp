@@ -23,6 +23,7 @@
 #include "globalcontactmodel.h"
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
+#include "merge/searchduplicatecontactwizard.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxportmanager.h"
@@ -618,6 +619,9 @@ void MainWidget::setupActions( KActionCollection *collection )
   if (actTheme)
       actTheme->setChecked(true);
 
+  action = collection->addAction( QLatin1String("merge_contacts") );
+  action->setText( i18n( "Merge Contacts..." ) );
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(mergeContacts()) );
 }
 
 void MainWidget::printPreview()
@@ -861,4 +865,10 @@ void MainWidget::slotGrantleeThemesUpdated()
     }
 }
 
+void MainWidget::mergeContacts()
+{
+    QPointer<SearchDuplicateContactWizard> wizard = new SearchDuplicateContactWizard(mItemView->selectionModel(), this);
+    wizard->exec();
+    delete wizard;
+}
 

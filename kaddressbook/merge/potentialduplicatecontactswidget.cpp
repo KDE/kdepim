@@ -16,6 +16,7 @@
 */
 
 #include "potentialduplicatecontactswidget.h"
+#include "searchpotentialduplicatecontactjob.h"
 #include <KABC/Addressee>
 
 PotentialDuplicateContactsWidget::PotentialDuplicateContactsWidget(QWidget *parent)
@@ -30,28 +31,20 @@ PotentialDuplicateContactsWidget::~PotentialDuplicateContactsWidget()
 
 void PotentialDuplicateContactsWidget::setAddressList(const Akonadi::Item::List &list)
 {
-    mContactList = list;
-    searchDuplicateContact();
+    //Clear widget
+    searchDuplicateContact(list);
 }
 
-void PotentialDuplicateContactsWidget::searchDuplicateContact()
+void PotentialDuplicateContactsWidget::searchDuplicateContact(const Akonadi::Item::List &list)
 {
-    if (mContactList.count() > 1) {
-
+    if (list.count() > 1) {
+        SearchPotentialDuplicateContactJob *job = new SearchPotentialDuplicateContactJob(list, this);
+        connect(job, SIGNAL(finished(SearchPotentialDuplicateContactJob*)), this, SLOT(slotSearchDuplicateContactFinished(SearchPotentialDuplicateContactJob*)));
+        job->start();
     }
+}
+
+void PotentialDuplicateContactsWidget::slotSearchDuplicateContactFinished(SearchPotentialDuplicateContactJob *job)
+{
     //TODO
-}
-
-bool PotentialDuplicateContactsWidget::isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB)
-{
-    KABC::Addressee addressA = itemA.payload<KABC::Addressee>();
-    KABC::Addressee addressB = itemB.payload<KABC::Addressee>();
-    if (addressA.name() == addressB.name()) {
-        return true;
-    }
-    if (addressA.nickName() == addressB.nickName()) {
-        return true;
-    }
-
-    return false;
 }
