@@ -1,7 +1,6 @@
 [Global]
 IconName=kmail
 Comment=Folder Archive Agent
-Comment[bs]=Agent za arhiviranje fascikli pošte
 Comment[ca]=Agent per arxivar una carpeta
 Comment[de]=Agent zur Ordner-Archivierung
 Comment[es]=Agente de archivado de carpeta
@@ -28,7 +27,6 @@ Comment[zh_TW]=資料夾歸檔代理程式
 
 [Event/folderarchivedone]
 Name=Archive Mails in Folder done
-Name[bs]=Završeno arhiviranje pošte
 Name[ca]=S'ha realitzat l'arxivat del correu a la carpeta
 Name[cs]=Archivace pošty ve složce byla dokončena
 Name[de]=E-Mail-Archivierung im Ordner beendet
@@ -57,7 +55,6 @@ Action=None
 
 [Event/folderarchiveerror]
 Name=Folder Archive Error
-Name[bs]=Greška arhiviranja fascikle pošte
 Name[ca]=Error en arxivar la carpeta
 Name[de]=Ordner-Archivierungs-Fehler
 Name[es]=Error de archivado de carpeta
