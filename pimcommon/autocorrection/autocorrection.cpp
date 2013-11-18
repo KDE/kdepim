@@ -541,7 +541,7 @@ void AutoCorrection::uppercaseFirstCharOfSentence()
             mWord.replace(0, 1, mWord.at(0).toUpper());
     } else {
         QString::ConstIterator constIter = text.constEnd();
-        constIter--;
+        --constIter;
 
         while (constIter != text.constBegin()) {
             while (constIter != text.begin() && constIter->isSpace()) {
@@ -778,8 +778,6 @@ void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
     QString kdelang = locale->languageList().first();
     kdelang.remove(QRegExp(QLatin1String("@.*")));
 
-    //qDebug()<<"void AutoCorrection::readAutoCorrectionXmlFile() "<<mAutoCorrectLang;
-
     mUpperCaseExceptions.clear();
     mAutocorrectEntries.clear();
     mTwoUpperLetterExceptions.clear();
@@ -822,8 +820,8 @@ void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
 
     if (mAutoCorrectLang.isEmpty())
         mAutoCorrectLang = kdelang;
-    //qDebug()<<" fname :"<<fname;
-    //qDebug()<<" LocalFile:"<<LocalFile;
+    qDebug()<<" fname :"<<fname;
+    qDebug()<<" LocalFile:"<<LocalFile;
 
     if (LocalFile.isEmpty()) {
         if (fname.isEmpty()) {
@@ -841,9 +839,7 @@ void AutoCorrection::readAutoCorrectionXmlFile( bool forceGlobal )
                 if ( forceGlobal ) {
                     mTypographicSingleQuotes = typographicDefaultSingleQuotes();
                     mTypographicDoubleQuotes = typographicDefaultDoubleQuotes();
-
                 }
-
             }
         }
     } else {
