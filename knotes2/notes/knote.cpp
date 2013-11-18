@@ -23,7 +23,7 @@
 #include "alarms/knotealarmdialog.h"
 #include "configdialog/knotesimpleconfigdialog.h"
 #include "print/knoteprintselectthemedialog.h"
-#include "knotebutton.h"
+#include "knotes/notes/knotebutton.h"
 #include "knoteconfig.h"
 #include "utils/knoteutils.h"
 #include "configdialog/knoteconfigdialog.h"
@@ -82,8 +82,6 @@
 #include <QX11Info>
 #endif
 
-using namespace KCal;
-
 
 KNote::KNote( const QDomDocument& buildDoc, QWidget *parent )
     : QFrame( parent, Qt::FramelessWindowHint ),
@@ -108,13 +106,14 @@ KNote::KNote( const QDomDocument& buildDoc, QWidget *parent )
     m_noteLayout = new QVBoxLayout( this );
     m_noteLayout->setMargin( 0 );
 
+#if 0
     // if there is no title yet, use the start date if valid
     // (KOrganizer's journals don't have titles but a valid start date)
     if ( m_journal->summary().isNull() && m_journal->dtStart().isValid() ) {
         const QString s = KGlobal::locale()->formatDateTime( m_journal->dtStart() );
         m_journal->setSummary( s );
     }
-
+#endif
     createActions();
 
     QString configFile;
@@ -128,6 +127,7 @@ KNote::~KNote()
     delete m_config;
 }
 
+#if 0
 void KNote::changeJournal(KCal::Journal *journal)
 {
     m_journal = journal;
@@ -137,7 +137,7 @@ void KNote::changeJournal(KCal::Journal *journal)
     updateLabelAlignment();
 
 }
-
+#endif
 // -------------------- public slots -------------------- //
 
 void KNote::slotKill( bool force )
@@ -197,10 +197,12 @@ void KNote::saveConfig() const
     m_config->writeConfig();
 }
 
+#if 0
 QString KNote::noteId() const
 {
     return m_journal->uid();
 }
+#endif
 
 QString KNote::name() const
 {
@@ -210,11 +212,6 @@ QString KNote::name() const
 QString KNote::text() const
 {
     return m_editor->text();
-}
-
-KCal::Journal *KNote::journal() const
-{
-    return m_journal;
 }
 
 void KNote::setName( const QString& name )
@@ -428,6 +425,7 @@ void KNote::slotPrintPreview()
 
 void KNote::print(bool preview)
 {
+#if 0
     QString content;
     if ( !Qt::mightBeRichText( m_editor->text() ) ) {
         content = Qt::convertFromPlainText( m_editor->text() );
@@ -458,10 +456,12 @@ void KNote::print(bool preview)
     if (!printingTheme.isEmpty()) {
         printer.printNotes( lst, printingTheme, preview );
     }
+#endif
 }
 
 void KNote::slotSaveAs()
 {
+#if 0
     // TODO: where to put pdf file support? In the printer??!??!
     m_blockEmitDataChanged = true;
     QCheckBox *convert = 0;
@@ -508,6 +508,7 @@ void KNote::slotSaveAs()
         }
     }
     m_blockEmitDataChanged = false;
+#endif
 }
 
 void KNote::slotPopupActionToDesktop( int id )
@@ -520,6 +521,7 @@ void KNote::slotPopupActionToDesktop( int id )
 
 void KNote::slotApplyConfig()
 {
+#if 0
     m_label->setFont( m_config->titleFont() );
     m_editor->setRichText( m_config->richText() );
     m_editor->setTextFont( m_config->font() );
@@ -530,7 +532,9 @@ void KNote::slotApplyConfig()
 
     updateLayout();
     slotUpdateShowInTaskbar();
+#endif
 }
+
 
 void KNote::slotKeepAbove()
 {
@@ -552,6 +556,7 @@ void KNote::slotKeepBelow()
 
 void KNote::slotUpdateKeepAboveBelow()
 {
+#if 0
 #ifdef Q_WS_X11
     unsigned long state = KWindowInfo( KWindowSystem::windowInfo( winId(), NET::WMState ) ).state();
 #else
@@ -571,10 +576,12 @@ void KNote::slotUpdateKeepAboveBelow()
         m_config->setKeepBelow( false );
         KWindowSystem::clearState( winId(), NET::KeepBelow );
     }
+#endif
 }
 
 void KNote::slotUpdateShowInTaskbar()
 {
+#if 0
 #ifdef Q_WS_X11
     if ( !m_config->showInTaskbar() ) {
         KWindowSystem::setState( winId(), KWindowSystem::windowInfo( winId(),
@@ -583,10 +590,12 @@ void KNote::slotUpdateShowInTaskbar()
         KWindowSystem::clearState( winId(), NET::SkipTaskbar );
     }
 #endif
+#endif
 }
 
 void KNote::slotUpdateDesktopActions()
 {
+#if 0
 #ifdef Q_WS_X11
     m_toDesktop->clear();
     NETRootInfo wm_root( QX11Info::display(), NET::NumberOfDesktops |
@@ -608,6 +617,7 @@ void KNote::slotUpdateDesktopActions()
             desktopAct->setChecked(true);
         }
     }
+#endif
 #endif
 }
 
@@ -824,7 +834,7 @@ void KNote::prepare()
         move( position );           // do before calling show() to avoid flicker
     }
 
-    KNoteUtils::setProperty(m_journal, m_config);
+    //KNoteUtils::setProperty(m_journal, m_config);
 
     // read configuration settings...
     slotApplyConfig();
@@ -987,7 +997,6 @@ void KNote::updateFocus()
 {
     if ( hasFocus() )
     {
-
         if ( !m_editor->isReadOnly() )
         {
             if ( m_tool && m_tool->isHidden() && m_editor->acceptRichText() )
@@ -1069,6 +1078,7 @@ void KNote::dragEnterEvent( QDragEnterEvent *e )
 
 void KNote::dropEvent( QDropEvent *e )
 {
+#if 0
     if ( m_config->readOnly() ) {
         return;
     }
@@ -1080,6 +1090,7 @@ void KNote::dropEvent( QDropEvent *e )
         m_journal->setCustomProperty( "KNotes", "BgColor", bg.name() );
         m_config->setBgColor( bg );
     }
+#endif
 }
 
 bool KNote::event( QEvent *ev )
