@@ -15,29 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "potentialduplicatecontactswidget.h"
-#include <KABC/Addressee>
+#include "matchcontact.h"
 
-PotentialDuplicateContactsWidget::PotentialDuplicateContactsWidget(QWidget *parent)
-    : QWidget(parent)
+MatchContact::MatchContact(const Akonadi::Item &items)
+    : mListItem(items)
 {
-}
-
-PotentialDuplicateContactsWidget::~PotentialDuplicateContactsWidget()
-{
-
-}
-
-void PotentialDuplicateContactsWidget::setAddressList(const Akonadi::Item::List &list)
-{
-    mContactList = list;
-    searchDuplicateContact();
-}
-
-void PotentialDuplicateContactsWidget::searchDuplicateContact()
-{
-    if (mContactList.count()>1) {
-
-    }
-    //TODO
 }

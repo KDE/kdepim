@@ -31,6 +31,14 @@ public:
     void setAddressList(const Akonadi::Item::List &list);
 
 private:
+    enum MatchType {
+        None = 0,
+        Name = 1,
+        Emails = 2,
+        Phone = 4,
+        NickName = 8
+    };
+
     void searchDuplicateContact();
     Akonadi::Item::List mContactList;
 };
