@@ -57,8 +57,9 @@ QList<Akonadi::Item> SearchPotentialDuplicateContactJob::checkList(const QList<A
         if (!lst.isEmpty()) {
             lst.append(firstItem);
         }
+        //qDebug()<<" duplicate number"<<lst.count();
     }
-    qDebug()<<" notDuplicate.count"<<notDuplicate.count();
+    //qDebug()<<" notDuplicate.count"<<notDuplicate.count();
     return notDuplicate;
 }
 
@@ -66,11 +67,16 @@ bool SearchPotentialDuplicateContactJob::isDuplicate(const Akonadi::Item &itemA,
 {
     KABC::Addressee addressA = itemA.payload<KABC::Addressee>();
     KABC::Addressee addressB = itemB.payload<KABC::Addressee>();
-    if (addressA.name() == addressB.name()) {
-        return true;
+    //qDebug()<<" addressB"<<addressB.name()<<" addressA.name()"<<addressA.name();
+    if (!addressA.name().isEmpty() && addressB.name().isEmpty()) {
+        if (addressA.name() == addressB.name()) {
+            return true;
+        }
     }
-    if (addressA.nickName() == addressB.nickName()) {
-        return true;
+    if (!addressA.nickName().isEmpty() && !addressB.nickName().isEmpty()) {
+        if (addressA.nickName() == addressB.nickName()) {
+            return true;
+        }
     }
     return false;
 }
