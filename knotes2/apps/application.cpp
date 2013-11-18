@@ -42,8 +42,7 @@ int Application::newInstance()
         mMainWindow = new KNotesApp();
     } else {
         if ( !args()->isSet( "skip-note" ) ) {
-            //FIXME
-            //mMainWindow->newNote();
+            mMainWindow->newNote();
         }
     }
 

@@ -28,6 +28,7 @@
 #include <kconfig.h>
 #include <kxmlguiclient.h>
 #include <KSharedConfig>
+#include <Akonadi/Item>
 
 class QLabel;
 class QLayout;
@@ -46,9 +47,10 @@ class KNote : public QFrame, virtual public KXMLGUIClient
 {
     Q_OBJECT
 public:
-    explicit KNote( const QDomDocument& buildDoc, QWidget *parent = 0 );
+    explicit KNote( const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *parent = 0 );
     ~KNote();
 
+    void setChangeItem(const Akonadi::Item &item);
     void saveData( bool update = true);
     void saveConfig() const;
 
@@ -137,6 +139,7 @@ private:
     void print(bool preview);
 
 private:
+    Akonadi::Item mItem;
     QLayout       *m_noteLayout;
     QLabel        *m_label;
     QSizeGrip     *m_grip;
@@ -144,7 +147,7 @@ private:
     KToolBar      *m_tool;
     KNoteEdit     *m_editor;
 
-    KNoteConfig   *m_config;
+    //KNoteConfig   *m_config;
 
     KFind         *m_find;
     KMenu         *m_menu;
@@ -160,6 +163,7 @@ private:
     KSharedConfig::Ptr m_kwinConf;
     bool m_blockEmitDataChanged;
     bool mBlockWriteConfigDuringCommitData;
+
 };
 
 #endif

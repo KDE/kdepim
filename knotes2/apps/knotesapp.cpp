@@ -25,7 +25,7 @@
 #include "noteshared/attributes/notelockattribute.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "noteshared/attributes/notealarmattribute.h"
-
+#include "apps/knotesakonaditray.h"
 
 #include "notesharedglobalconfig.h"
 #include "notes/knote.h"
@@ -78,6 +78,7 @@
 #include <QPixmap>
 #include <QClipboard>
 #include <QTcpServer>
+#include <QDBusConnection>
 
 #include <dnssd/publicservice.h>
 
@@ -101,15 +102,10 @@ KNotesApp::KNotesApp()
 {
 #if 0
     new KNotesAdaptor( this );
+
+#endif
     QDBusConnection::sessionBus().registerObject( QLatin1String("/KNotes") , this );
     kapp->setQuitOnLastWindowClosed( false );
-
-    // create the dock widget...
-    m_tray = new KNotesTray(0);
-
-    connect( m_tray, SIGNAL(activateRequested(bool,QPoint)), this, SLOT(slotActivateRequested(bool,QPoint)) );
-    connect( m_tray, SIGNAL(secondaryActivateRequested(QPoint)), this, SLOT(slotSecondaryActivateRequested(QPoint)) );
-#endif
     // create the GUI...
     KAction *action  = new KAction( KIcon( QLatin1String("document-new") ),
                                     i18n( "New Note" ), this );
@@ -154,7 +150,6 @@ KNotesApp::KNotesApp()
     //FIXME: no shortcut removing!?
     KStandardAction::quit( this, SLOT(slotQuit()),
                            actionCollection() )->setShortcut( 0 );
-#if 0
     setXMLFile( componentData().componentName() + QLatin1String("appui.rc") );
 
     m_guiBuilder = new KXMLGUIBuilder( this );
@@ -166,7 +161,7 @@ KNotesApp::KNotesApp()
                                               this ) );
     m_noteMenu = static_cast<KMenu *>( m_guiFactory->container(
                                            QLatin1String("notes_menu"), this ) );
-    m_tray->setContextMenu( m_contextMenu );
+
     // get the most recent XML UI file
     QString xmlFileName = componentData().componentName() + QLatin1String("ui.rc");
     QString filter = componentData().componentName() + QLatin1Char('/') + xmlFileName;
@@ -177,34 +172,22 @@ KNotesApp::KNotesApp()
     QString doc;
     KXMLGUIClient::findMostRecentXMLFile( fileList, doc );
     m_noteGUI.setContent( doc );
-    const bool needConvert = (KNotesGlobalConfig::self()->notesVersion()<1);
-    if ( needConvert ) {
-        // clean up old config files
-        KNotesLegacy::cleanUp();
-    }
     // set up the alarm reminder - do it after loading the notes because this
     // is used as a check if updateNoteActions has to be called for a new note
+#if 0
     m_alarm = new KNotesAlarm( m_manager, this );
 #endif
     updateNetworkListener();
-#if 0
-    /*
-    if ( m_notes.isEmpty() && !kapp->isSessionRestored() ) {
-        newNote();
-    }
-    */
-
-    m_tray->updateNumberOfNotes(m_notes.count());
-    updateNoteActions();
-#endif
 
     Akonadi::Session *session = new Akonadi::Session( "KNotes Session", this );
     Akonadi::Control::widgetNeedsAkonadi(this);
     mNoteRecorder = new KNotesChangeRecorder(this);
     mNoteRecorder->changeRecorder()->setSession(session);
-    //TODO add systray
-    //mTray = new KNotesAkonadiTray(mNoteRecorder->changeRecorder(), 0);
+    mTray = new KNotesAkonadiTray(mNoteRecorder->changeRecorder(), 0);
+    connect( mTray, SIGNAL(activateRequested(bool,QPoint)), this, SLOT(slotActivateRequested(bool,QPoint)) );
+    connect( mTray, SIGNAL(secondaryActivateRequested(QPoint)), this, SLOT(slotSecondaryActivateRequested(QPoint)) );
 
+    mTray->setContextMenu( m_contextMenu );
     mNoteTreeModel = new KNotesAkonadiTreeModel(mNoteRecorder->changeRecorder(), this);
 
     connect( mNoteTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
@@ -212,27 +195,22 @@ KNotesApp::KNotesApp()
 
     connect( mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
     connect( mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)) );
+    updateNoteActions();
 }
 
 KNotesApp::~KNotesApp()
 {
-#if 0
-    saveNotes();
-
-    blockSignals( true );
-    qDeleteAll( m_notes );
-    m_notes.clear();
     qDeleteAll( m_noteActions );
     m_noteActions.clear();
-    blockSignals( false );
-
+#if 0
+    saveNotes();
     delete m_findPos;
     m_findPos = 0;
-    delete m_manager;
-    delete m_guiBuilder;
-    delete m_tray;
 #endif
+    delete m_guiBuilder;
+    delete mTray;
     qDeleteAll(mNotes);
+    mNotes.clear();
     delete m_listener;
     m_listener=0;
     delete m_publisher;
@@ -254,7 +232,7 @@ void KNotesApp::slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray
 #if 0
     if (mNotes.contains(item.id())) {
         qDebug()<<" item changed "<<item.id()<<" info "<<set.toList();
-        KNote *note = mNotes.find(item.id()).value();
+        KNote *note = mNotes.value(item.id());
         if (set.contains("ATR:KJotsLockAttribute")) {
             note->setEnabled(!item.hasAttribute<NoteShared::NoteLockAttribute>());
         }
@@ -282,7 +260,6 @@ void KNotesApp::slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray
 
 void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
 {
-#if 0
     for ( int i = start; i <= end; ++i) {
         if ( mNoteTreeModel->hasIndex( i, 0, parent ) ) {
             const QModelIndex child = mNoteTreeModel->index( i, 0, parent );
@@ -290,38 +267,10 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
                     mNoteTreeModel->data( child, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
             if ( !item.hasPayload<KMime::Message::Ptr>() )
                 continue;
-            KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
-            KNote *note = new KNoteAkonadiNote(0);
-            note->title()->setText(noteMessage->subject(false)->asUnicodeString());
-            if ( noteMessage->contentType()->isHTMLText() ) {
-                note->editor()->setAcceptRichText(true);
-                note->editor()->setHtml(noteMessage->mainBodyPart()->decodedText());
-            } else {
-                note->editor()->setAcceptRichText(false);
-                note->editor()->setPlainText(noteMessage->mainBodyPart()->decodedText());
-            }
-            if ( item.hasAttribute<NoteShared::NoteLockAttribute>() ) {
-                note->setEnabled(false);
-            }
-            if ( item.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
-                //TODO add display attribute
-                NoteShared::NoteDisplayAttribute *attr = item.attribute<NoteShared::NoteDisplayAttribute>();
-                if (attr->isHidden()) {
-                    note->hide();
-                } else {
-                    note->show();
-                }
-                note->resize(attr->size());
-            } else {
-                note->show();
-            }
-            if ( item.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
-                //TODO add alarm attribute
-            }
+            KNote *note = new KNote(m_noteGUI,item, 0);
             mNotes.insert(item.id(), note);
         }
     }
-#endif
 }
 
 
@@ -432,8 +381,7 @@ void KNotesApp::newNoteFromClipboard( const QString &name )
 
 void KNotesApp::slotNoteCreationFinished(KJob *job)
 {
-    if (job->error())
-    {
+    if (job->error()) {
         kWarning() << job->errorString();
         return;
     }
@@ -468,6 +416,102 @@ void KNotesApp::updateNetworkListener()
         m_publisher=new DNSSD::PublicService(NoteShared::NoteSharedGlobalConfig::senderID(), QLatin1String("_knotes._tcp"), NoteShared::NoteSharedGlobalConfig::port());
         m_publisher->publishAsync();
     }
+}
+
+QString KNotesApp::name( const Akonadi::Item::Id &id ) const
+{
+    if (mNotes.contains(id)) {
+        return mNotes.value(id)->name();
+    }
+    return QString();
+}
+
+QString KNotesApp::text( const Akonadi::Item::Id &id ) const
+{
+    if (mNotes.contains(id)) {
+        return mNotes.value(id)->text();
+    }
+    return QString();
+}
+
+void KNotesApp::setName( const Akonadi::Item::Id &id, const QString &newName )
+{
+    if (mNotes.contains(id)) {
+        mNotes.value(id)->setName(newName);
+    } else {
+        kWarning( 5500 ) << "setName: no note with id:" << id;
+    }
+}
+
+void KNotesApp::setText( const Akonadi::Item::Id &id, const QString &newText )
+{
+    if (mNotes.contains(id)) {
+        mNotes.value(id)->setText( newText );
+    } else {
+        kWarning( 5500 ) << "setText: no note with id:" << id;
+    }
+}
+
+void KNotesApp::updateNoteActions()
+{
+    unplugActionList( QLatin1String("notes") );
+    m_noteActions.clear();
+
+    QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
+    while (i.hasNext()) {
+        i.next();
+        KNote *note = i.value();
+        // what does this actually mean? ~gamaral
+#ifdef __GNUC__
+#warning utf8: use QString
+#endif
+        KAction *action = new KAction( note->name().replace( QLatin1String("&"), QLatin1String("&&") ), this );
+        //FIXME
+        //action->setObjectName( note->noteId() );
+        connect( action, SIGNAL(triggered(bool)), SLOT(slotShowNote()) );
+        KIconEffect effect;
+        QPixmap icon =
+                effect.apply( qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
+                                                         IconSize( KIconLoader::Small ) ),
+                              KIconEffect::Colorize,
+                              1,
+                              note->palette().color( note->backgroundRole() ),
+                              false );
+
+        action->setIcon( icon );
+        m_noteActions.append( action );
+    }
+
+    if ( m_noteActions.isEmpty() ) {
+        actionCollection()->action( QLatin1String("hide_all_notes") )->setEnabled( false );
+        actionCollection()->action( QLatin1String("show_all_notes") )->setEnabled( false );
+        actionCollection()->action( QLatin1String("print_selected_notes") )->setEnabled( false );
+        //m_findAction->setEnabled( false );
+        KAction *action = new KAction( i18n( "No Notes" ), this );
+        m_noteActions.append( action );
+    } else {
+        qSort( m_noteActions.begin(), m_noteActions.end(), qActionLessThan );
+        actionCollection()->action( QLatin1String("hide_all_notes") )->setEnabled( true );
+        actionCollection()->action( QLatin1String("show_all_notes") )->setEnabled( true );
+        actionCollection()->action( QLatin1String("print_selected_notes") )->setEnabled( true );
+        //m_findAction->setEnabled( true );
+    }
+    plugActionList( QLatin1String("notes"), m_noteActions );
+}
+
+
+void KNotesApp::slotActivateRequested( bool, const QPoint&)
+{
+    if ( mNotes.size() == 1 ) {
+        showNote( mNotes.begin().value() );
+    } else {
+        m_noteMenu->popup( QCursor::pos ());
+    }
+}
+
+void KNotesApp::slotSecondaryActivateRequested( const QPoint & )
+{
+    newNote();
 }
 
 
@@ -512,61 +556,8 @@ QVariantMap KNotesApp::notes() const
     return notes;
 }
 
-QString KNotesApp::name( const QString &id ) const
-{
-    KNote *note = m_notes.value( id );
-    if ( note ) {
-        return note->name();
-    } else {
-        return QString();
-    }
-}
-
-QString KNotesApp::text( const QString &id ) const
-{
-    KNote *note = m_notes.value( id );
-    if ( note ) {
-        return note->text();
-    } else {
-        return QString();
-    }
-}
-
-void KNotesApp::setName( const QString &id, const QString &newName )
-{
-    KNote *note = m_notes.value( id );
-    if ( note ) {
-        note->setName( newName );
-    } else {
-        kWarning( 5500 ) << "setName: no note with id:" << id;
-    }
-}
-
-void KNotesApp::setText( const QString &id, const QString &newText )
-{
-    KNote *note = m_notes.value( id );
-    if ( note ) {
-        note->setText( newText );
-    } else {
-        kWarning( 5500 ) << "setText: no note with id:" << id;
-    }
-}
-
 // -------------------- protected slots -------------------- //
 
-void KNotesApp::slotActivateRequested( bool, const QPoint&)
-{
-    if ( m_notes.size() == 1 ) {
-        showNote( *m_notes.begin() );
-    } else {
-        m_noteMenu->popup( QCursor::pos ());
-    }
-}
-
-void KNotesApp::slotSecondaryActivateRequested( const QPoint & )
-{
-    newNote();
-}
 
 void KNotesApp::slotShowNote()
 {
@@ -790,50 +781,6 @@ void KNotesApp::saveConfigs()
         note->saveConfig();
     }
 }
-
-void KNotesApp::updateNoteActions()
-{
-    unplugActionList( QLatin1String("notes") );
-    m_noteActions.clear();
-
-    foreach ( KNote *note, m_notes ) {
-        // what does this actually mean? ~gamaral
-#ifdef __GNUC__
-#warning utf8: use QString
-#endif
-        KAction *action = new KAction( note->name().replace( QLatin1String("&"), QLatin1String("&&") ), this );
-        action->setObjectName( note->noteId() );
-        connect( action, SIGNAL(triggered(bool)), SLOT(slotShowNote()) );
-        KIconEffect effect;
-        QPixmap icon =
-                effect.apply( qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
-                                                         IconSize( KIconLoader::Small ) ),
-                              KIconEffect::Colorize,
-                              1,
-                              note->palette().color( note->backgroundRole() ),
-                              false );
-
-        action->setIcon( icon );
-        m_noteActions.append( action );
-    }
-
-    if ( m_noteActions.isEmpty() ) {
-        actionCollection()->action( QLatin1String("hide_all_notes") )->setEnabled( false );
-        actionCollection()->action( QLatin1String("show_all_notes") )->setEnabled( false );
-        actionCollection()->action( QLatin1String("print_selected_notes") )->setEnabled( false );
-        m_findAction->setEnabled( false );
-        KAction *action = new KAction( i18n( "No Notes" ), this );
-        m_noteActions.append( action );
-    } else {
-        qSort( m_noteActions.begin(), m_noteActions.end(), qActionLessThan );
-        actionCollection()->action( QLatin1String("hide_all_notes") )->setEnabled( true );
-        actionCollection()->action( QLatin1String("show_all_notes") )->setEnabled( true );
-        actionCollection()->action( QLatin1String("print_selected_notes") )->setEnabled( true );
-        m_findAction->setEnabled( true );
-    }
-    plugActionList( QLatin1String("notes"), m_noteActions );
-}
-
 
 void KNotesApp::slotPrintSelectedNotes()
 {

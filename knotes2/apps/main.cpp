@@ -19,7 +19,7 @@
 *******************************************************************/
 
 #include "kdepim-version.h"
-//#include "apps/application.h"
+#include "apps/application.h"
 #include <KUniqueApplication>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
@@ -59,12 +59,12 @@ int main( int argc, char *argv[] )
 
     // Create Application
 
-    //QApplication app;
+    Application app;
     KGlobal::locale()->insertCatalog(QLatin1String("libkdepim"));
 
     remove_sm_from_client_leader();
 
-    return /*app.exec()*/1;
+    return app.exec();
 }
 
 void remove_sm_from_client_leader()

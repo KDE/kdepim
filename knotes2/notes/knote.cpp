@@ -33,6 +33,13 @@
 #include "knotesglobalconfig.h"
 #include "kdepim-version.h"
 
+#include "noteshared/attributes/notelockattribute.h"
+#include "noteshared/attributes/notedisplayattribute.h"
+#include "noteshared/attributes/notealarmattribute.h"
+
+
+#include <KMime/KMimeMessage>
+
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
@@ -83,14 +90,14 @@
 #endif
 
 
-KNote::KNote( const QDomDocument& buildDoc, QWidget *parent )
+KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *parent )
     : QFrame( parent, Qt::FramelessWindowHint ),
+      mItem(item),
       m_label( 0 ),
       m_grip( 0 ),
       m_button( 0 ),
       m_tool( 0 ),
       m_editor( 0 ),
-      m_config( 0 ),
       m_find( 0 ),
       m_kwinConf( KSharedConfig::openConfig( QLatin1String("kwinrc") ) ),
       m_blockEmitDataChanged( false ),
@@ -108,13 +115,17 @@ KNote::KNote( const QDomDocument& buildDoc, QWidget *parent )
 
     QString configFile;
     buildGui(configFile);
-
     prepare();
 }
 
 KNote::~KNote()
 {
-    delete m_config;
+    //delete m_config;
+}
+
+void KNote::setChangeItem(const Akonadi::Item &item)
+{
+    mItem = item;
 }
 
 #if 0
@@ -144,9 +155,6 @@ void KNote::slotKill( bool force )
         m_blockEmitDataChanged = false;
         return;
     }
-    // delete the configuration first, then the corresponding file
-    delete m_config;
-    m_config = 0;
 
     //FIXME emit sigKillNote( m_journal );
 }
@@ -159,7 +167,6 @@ void KNote::saveData(bool update )
 #if 0
     m_journal->setSummary( m_label->text() );
     m_journal->setDescription( m_editor->text() );
-    KNoteUtils::savePreferences( m_journal, m_config);
 #endif
     if(update)
     {
@@ -170,6 +177,7 @@ void KNote::saveData(bool update )
 
 void KNote::saveConfig() const
 {
+#if 0  //FIXME
     m_config->setWidth( width() );
     m_config->setHeight( height() );
     m_config->setPosition( pos() );
@@ -185,6 +193,7 @@ void KNote::saveConfig() const
 
     // actually store the config on disk
     m_config->writeConfig();
+#endif
 }
 
 #if 0
@@ -243,7 +252,8 @@ void KNote::find( KFind* kfind )
 
 bool KNote::isDesktopAssigned() const
 {
-    return m_config->rememberDesktop();
+    //FIXME return m_config->rememberDesktop();
+    return false;
 }
 
 void KNote::slotFindNext()
@@ -311,7 +321,7 @@ void KNote::slotUpdateReadOnly()
     const bool readOnly = m_readOnly->isChecked();
 
     m_editor->setReadOnly( readOnly );
-    m_config->setReadOnly( readOnly );
+    //m_config->setReadOnly( readOnly );
 
     // enable/disable actions accordingly
     actionCollection()->action( QLatin1String("configure_note") )->setEnabled( !readOnly );
@@ -345,6 +355,7 @@ void KNote::commitData()
 
 void KNote::slotClose()
 {
+#if 0 //FIXME
 #ifdef Q_WS_X11
     NETWinInfo wm_client( QX11Info::display(), winId(),
                           QX11Info::appRootWindow(), NET::WMDesktop );
@@ -362,6 +373,7 @@ void KNote::slotClose()
     }
     // just hide the note so it's still available from the dock window
     hide();
+#endif
 }
 
 void KNote::slotSetAlarm()
@@ -814,27 +826,52 @@ void KNote::createNoteFooter()
 
 void KNote::prepare()
 {
-    // load the display configuration of the note
-    uint width = m_config->width();
-    uint height = m_config->height();
-    resize( width, height );
-
-    // let KWin do the placement if the position is illegal--at least 10 pixels
-    // of a note need to be visible
-    const QPoint& position = m_config->position();
-    QRect desk = kapp->desktop()->rect();
-    desk.adjust( 10, 10, -10, -10 );
-    if ( desk.intersects( QRect( position, QSize( width, height ) ) ) ) {
-        move( position );           // do before calling show() to avoid flicker
+    KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
+    setName(noteMessage->subject(false)->asUnicodeString());
+    if ( noteMessage->contentType()->isHTMLText() ) {
+        m_editor->setAcceptRichText(true);
+        m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
+    } else {
+        m_editor->setAcceptRichText(false);
+        m_editor->setPlainText(noteMessage->mainBodyPart()->decodedText());
     }
 
-    //KNoteUtils::setProperty(m_journal, m_config);
+    if ( mItem.hasAttribute<NoteShared::NoteLockAttribute>() ) {
+        m_editor->setReadOnly(true);
+        m_readOnly->setChecked( true );
+    } else {
+        m_readOnly->setChecked( false );
+    }
+    slotUpdateReadOnly();
+    if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+        //TODO add display attribute
+        NoteShared::NoteDisplayAttribute *attr = mItem.attribute<NoteShared::NoteDisplayAttribute>();
+        if (attr->isHidden()) {
+            hide();
+        } else {
+            show();
+        }
+        resize(attr->size());
+        const QPoint& position = attr->position();
+        QRect desk = kapp->desktop()->rect();
+        desk.adjust( 10, 10, -10, -10 );
+        if ( desk.intersects( QRect( position, attr->size() ) ) ) {
+            move( position );           // do before calling show() to avoid flicker
+        }
 
+    } else {
+        show();
+        //TODO default
+    }
+    if ( mItem.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
+        //TODO add alarm attribute
+    }
     // read configuration settings...
     slotApplyConfig();
 
     // if this is a new note put on current desktop - we can't use defaults
     // in KConfig XT since only _changes_ will be stored in the config file
+#if 0 //FIXME
     int desktop = m_config->desktop();
 
 #ifdef Q_WS_X11
@@ -856,10 +893,8 @@ void KNote::prepare()
         }
 #endif
     }
-
-    m_readOnly->setChecked( m_config->readOnly() );
-    slotUpdateReadOnly();
-
+#endif
+#if 0 //TODO FIXME
     if ( m_config->keepAbove() ) {
         m_keepAbove->setChecked( true );
     } else if ( m_config->keepBelow() ) {
@@ -868,8 +903,9 @@ void KNote::prepare()
         m_keepAbove->setChecked( false );
         m_keepBelow->setChecked( false );
     }
+#endif
     slotUpdateKeepAboveBelow();
-
+#if 0 //FIXME
     // HACK: update the icon color - again after showing the note, to make kicker
     // aware of the new colors
     KIconEffect effect;
@@ -883,8 +919,10 @@ void KNote::prepare()
                                          IconSize( KIconLoader::Small ) ),
                                      KIconEffect::Colorize,
                                      1, m_config->bgColor(), false );
+#endif
 #ifdef Q_WS_X11
-    KWindowSystem::setIcons( winId(), icon, miniIcon );
+    //FIXME
+    //KWindowSystem::setIcons( winId(), icon, miniIcon );
 #endif
 
     // set up the look&feel of the note
@@ -989,10 +1027,8 @@ void KNote::updateLabelAlignment()
 
 void KNote::updateFocus()
 {
-    if ( hasFocus() )
-    {
-        if ( !m_editor->isReadOnly() )
-        {
+    if ( hasFocus() ) {
+        if ( !m_editor->isReadOnly() ) {
             if ( m_tool && m_tool->isHidden() && m_editor->acceptRichText() )
             {
                 m_tool->show();
@@ -1038,6 +1074,7 @@ void KNote::contextMenuEvent( QContextMenuEvent *e )
 
 void KNote::showEvent( QShowEvent * )
 {
+#if 0
     if ( m_config->hideNote() ) {
         // KWin does not preserve these properties for hidden windows
         slotUpdateKeepAboveBelow();
@@ -1046,6 +1083,7 @@ void KNote::showEvent( QShowEvent * )
         move( m_config->position() );
         m_config->setHideNote( false );
     }
+#endif
 }
 
 void KNote::resizeEvent( QResizeEvent *qre )
@@ -1065,9 +1103,11 @@ void KNote::closeEvent( QCloseEvent * event )
 
 void KNote::dragEnterEvent( QDragEnterEvent *e )
 {
+#if 0 //FIXME
     if ( !m_config->readOnly() ) {
         e->setAccepted( e->mimeData()->hasColor() );
     }
+#endif
 }
 
 void KNote::dropEvent( QDropEvent *e )
