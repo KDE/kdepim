@@ -104,15 +104,6 @@ KNote::KNote( const QDomDocument& buildDoc, QWidget *parent )
     // create the main layout
     m_noteLayout = new QVBoxLayout( this );
     m_noteLayout->setMargin( 0 );
-
-#if 0
-    // if there is no title yet, use the start date if valid
-    // (KOrganizer's journals don't have titles but a valid start date)
-    if ( m_journal->summary().isNull() && m_journal->dtStart().isValid() ) {
-        const QString s = KGlobal::locale()->formatDateTime( m_journal->dtStart() );
-        m_journal->setSummary( s );
-    }
-#endif
     createActions();
 
     QString configFile;
@@ -156,8 +147,6 @@ void KNote::slotKill( bool force )
     // delete the configuration first, then the corresponding file
     delete m_config;
     m_config = 0;
-    //KNoteUtils::removeNote(m_journal, this);
-
 
     //FIXME emit sigKillNote( m_journal );
 }
@@ -377,7 +366,7 @@ void KNote::slotClose()
 
 void KNote::slotSetAlarm()
 {
-     #if 0
+#if 0
     m_blockEmitDataChanged = true;
     QPointer<KNoteAlarmDialog> dlg = new KNoteAlarmDialog( name(), this );
     dlg->setIncidence( m_journal );

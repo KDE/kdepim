@@ -357,6 +357,8 @@ void KNotesApp::newNote(const QString &name, const QString &text)
     eda->setIconName( QString::fromLatin1( "text-plain" ) );
     newItem.addAttribute(eda);
 
+    //TODO add default display attributes.
+
     //FIXME define default collection
     //Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, Collection(m_containerCollectionId), this );
     //connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
