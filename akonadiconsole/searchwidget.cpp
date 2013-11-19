@@ -112,77 +112,23 @@ void SearchWidget::querySelected( int index )
   if ( index == 0 ) {
     mQueryWidget->clear();
   } else if ( index == 1 ) {
-    mQueryWidget->setPlainText( ""
-#ifdef AKONADI_USE_STRIGI_SEARCH
-                                "<request>\n"
-                                "  <query>\n"
-                                "    <and>\n"
-                                "      <equals>\n"
-                                "        <field name=\"type\"/>\n"
-                                "        <string>PersonContact</string>\n"
-                                "      </equals>\n"
-                                "      <equals>\n"
-                                "        <field name=\"emailAddress\"/>\n"
-                                "        <string>tokoe@kde.org</string>\n"
-                                "      </equals>\n"
-                                "    </and>\n"
-                                "  </query>\n"
-                                "</request>\n"
-#else
-                                "SELECT ?person WHERE {\n"
+    mQueryWidget->setPlainText( "SELECT ?person WHERE {\n"
                                 "  ?person <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#hasEmailAddress> ?email .\n"
                                 "  ?email <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#emailAddress> \"tokoe@kde.org\"^^<http://www.w3.org/2001/XMLSchema#string> .\n"
                                 " }\n"
-#endif
                               );
   } else if ( index == 2 ) {
-    mQueryWidget->setPlainText( ""
-#ifdef AKONADI_USE_STRIGI_SEARCH
-                                "<request>\n"
-                                "  <query>\n"
-                                "    <and>\n"
-                                "      <equals>\n"
-                                "        <field name=\"type\"/>\n"
-                                "        <string>PersonContact</string>\n"
-                                "      </equals>\n"
-                                "      <equals>\n"
-                                "        <field name=\"fullname\"/>\n"
-                                "        <string>Tobias Koenig</string>\n"
-                                "      </equals>\n"
-                                "    </and>\n"
-                                "  </query>\n"
-                                "</request>\n"
-#else
-                                "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>\n"
+    mQueryWidget->setPlainText( "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>\n"
                                 "SELECT ?r WHERE {\n"
                                 "  ?r nco:fullname \"Tobias Koenig\"^^<http://www.w3.org/2001/XMLSchema#string>.\n"
                                 "}\n"
-#endif
                               );
   } else if ( index == 3 ) {
-    mQueryWidget->setPlainText( ""
-#ifdef AKONADI_USE_STRIGI_SEARCH
-                                "<request>\n"
-                                "  <query>\n"
-                                "    <and>\n"
-                                "      <equals>\n"
-                                "        <field name=\"type\"/>\n"
-                                "        <string>Email</string>\n"
-                                "      </equals>\n"
-                                "      <contains>\n"
-                                "        <field name=\"from\"/>\n"
-                                "        <string>Martin Koller</string>\n"
-                                "      </contains>\n"
-                                "    </and>\n"
-                                "  </query>\n"
-                                "</request>\n"
-#else
-                                "SELECT ?mail WHERE {\n"
+    mQueryWidget->setPlainText( "SELECT ?mail WHERE {\n"
                                 " ?mail <http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#from> ?person .\n"
                                 " ?person <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#fullname> "
                                   "'Martin Koller'^^<http://www.w3.org/2001/XMLSchema#string> .\n"
                                 "}\n"
-#endif
                               );
   }
 }

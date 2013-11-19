@@ -40,18 +40,7 @@ IncidenceSearchJob::IncidenceSearchJob( QObject *parent )
   d->mLimit = -1;
 
   // by default search for all incidences
-  ItemSearchJob::setQuery( QLatin1String( ""
-#ifdef AKONADI_USE_STRIGI_SEARCH
-                                          "<request>"
-                                          "  <query>"
-                                          "    <equals>"
-                                          "      <field name=\"type\"/>"
-                                          "      <string>UnionOfEventJournalTodo</string>"
-                                          "    </equals>"
-                                          "  </query>"
-                                          "</request>"
-#else
-                                          "prefix ncal:<http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#>"
+  ItemSearchJob::setQuery( QLatin1String( "prefix ncal:<http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#>"
                                           "prefix nao:<http://www.semanticdesktop.org/ontologies/2007/08/15/nao#>"
                                           "SELECT DISTINCT ?r WHERE"
                                           "{"
@@ -60,7 +49,6 @@ IncidenceSearchJob::IncidenceSearchJob( QObject *parent )
                                           "?r nao:hasSymbol \"view-pim-calendar\"^^<http://www.w3.org/2001/XMLSchema#string> ."
                                           "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
                                           "}"
-#endif
                          ) );
 }
 
@@ -75,30 +63,11 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
     match = ExactMatch;
   }
 
-  QString query;
-#ifndef AKONADI_USE_STRIGI_SEARCH
-  query = QString::fromLatin1( "prefix ncal:<http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#> " );
-#endif
+  QString query = QString::fromLatin1( "prefix ncal:<http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#> " );
 
   if ( match == ExactMatch ) {
     if ( criterion == IncidenceUid ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-        "<request>"
-        "  <query>"
-        "    <and>"
-        "      <equals>"
-        "        <field name=\"type\"/>"
-        "        <string>UnionOfEventJournalTodo</string>"
-        "      </equals>"
-        "      <equals>"
-        "        <field name=\"uid\"/>"
-        "        <string>%1</string>"
-        "      </equals>"
-        "    </and>"
-        "  </query>"
-        "</request>"
-#else
         "SELECT ?r WHERE {"
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
@@ -106,28 +75,11 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "?r ncal:uid \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
         "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "}"
-#endif
       );
     }
   } else if ( match == StartsWithMatch ) {
     if ( criterion == IncidenceUid ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-        "<request>"
-        "  <query>"
-        "    <and>"
-        "      <equals>"
-        "        <field name=\"type\"/>"
-        "        <string>UnionOfEventJournalTodo</string>"
-        "      </equals>"
-        "      <startsWith>"
-        "        <field name=\"uid\"/>"
-        "        <string>%1</string>"
-        "      </startsWith>"
-        "    </and>"
-        "  </query>"
-        "</request>"
-#else
         "SELECT ?r WHERE"
         "{"
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
@@ -137,28 +89,11 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "FILTER REGEX( ?uid, \"^%1\", 'i')"
         "}"
-#endif
       );
     }
   } else if ( match == ContainsMatch ) {
     if ( criterion == IncidenceUid ) {
       query += QString::fromLatin1(
-#ifdef AKONADI_USE_STRIGI_SEARCH
-        "<request>"
-        "  <query>"
-        "    <and>"
-        "      <equals>"
-        "        <field name=\"type\"/>"
-        "        <string>UnionOfEventJournalTodo</string>"
-        "      </equals>"
-        "      <contains>"
-        "        <field name=\"uid\"/>"
-        "        <string>%1</string>"
-        "      </contains>"
-        "    </and>"
-        "  </query>"
-        "</request>"
-#else
         "SELECT ?r WHERE"
         "{"
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
@@ -168,15 +103,12 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
         "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
         "FILTER REGEX( ?uid, \"%1\", 'i')"
         "}"
-#endif
       );
     }
   }
 
   if ( d->mLimit != -1 ) {
-#ifndef AKONADI_USE_STRIGI_SEARCH
     query += QString::fromLatin1( " LIMIT %1" ).arg( d->mLimit );
-#endif
   }
   query = query.arg( value );
   ItemSearchJob::setQuery( query );
