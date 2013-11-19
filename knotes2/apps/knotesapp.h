@@ -86,14 +86,12 @@ private Q_SLOTS:
     void updateNoteActions();
     void slotActivateRequested( bool, const QPoint& pos);
     void slotSecondaryActivateRequested( const QPoint& );
-
+    void slotPrintSelectedNotes();
+    void slotQuit();
 
 #if 0
     void killNote( const QString &id );
     void killNote( const QString &id, bool force );
-
-    void setName( const QString &id, const QString &newName );
-    void setText( const QString &id, const QString &newText );
 
     QVariantMap notes() const;
 
@@ -110,7 +108,7 @@ protected slots:
 
     void slotNoteKilled( KCal::Journal *journal );
 
-    void slotQuit();
+
 
 private:
     void showNote( KNote *note ) const;
@@ -124,7 +122,7 @@ private slots:
 
     void createNote( KCal::Journal *journal );
     void killNote( KCal::Journal *journal );
-    void slotPrintSelectedNotes();
+
 
 private:
     KNotesAlarm            *m_alarm;

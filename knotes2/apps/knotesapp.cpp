@@ -691,16 +691,6 @@ void KNotesApp::slotNoteKilled( KCal::Journal *journal )
     m_tray->updateNumberOfNotes(m_notes.count());
 }
 
-void KNotesApp::slotQuit()
-{
-    foreach ( KNote *note, m_notes ) {
-        if ( note->isModified() ) {
-            note->saveData(false);
-        }
-    }
-    saveConfigs();
-    kapp->quit();
-}
 
 // -------------------- private methods -------------------- //
 
@@ -782,8 +772,11 @@ void KNotesApp::saveConfigs()
     }
 }
 
+
+#endif
 void KNotesApp::slotPrintSelectedNotes()
 {
+#if 0
     QPointer<KNotePrintSelectedNotesDialog> dlg = new KNotePrintSelectedNotesDialog(this);
     dlg->setNotes(m_notes);
     if (dlg->exec()) {
@@ -796,6 +789,18 @@ void KNotesApp::slotPrintSelectedNotes()
         }
     }
     delete dlg;
+#endif
 }
 
+void KNotesApp::slotQuit()
+{
+#if 0
+    foreach ( KNote *note, m_notes ) {
+        if ( note->isModified() ) {
+            note->saveData(false);
+        }
+    }
+    saveConfigs();
 #endif
+    kapp->quit();
+}
