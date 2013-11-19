@@ -536,18 +536,16 @@ void KNote::slotPopupActionToDesktop( int id )
 
 void KNote::slotApplyConfig()
 {
-#if 0
-    m_label->setFont( m_config->titleFont() );
-    m_editor->setRichText( m_config->richText() );
-    m_editor->setTextFont( m_config->font() );
-    m_editor->setTabStop( m_config->tabSize() );
-    m_editor->setAutoIndentMode( m_config->autoIndent() );
+    m_label->setFont( mDisplayAttribute->titleFont() );
+    //m_editor->setRichText( m_config->richText() );
+    m_editor->setTextFont( mDisplayAttribute->font() );
+    m_editor->setTabStop( mDisplayAttribute->tabSize() );
+    m_editor->setAutoIndentMode( mDisplayAttribute->autoIndent() );
 
-    setColor( m_config->fgColor(), m_config->bgColor() );
+    setColor( mDisplayAttribute->foregroundColor(), mDisplayAttribute->backgroundColor() );
 
     updateLayout();
     slotUpdateShowInTaskbar();
-#endif
 }
 
 
@@ -596,21 +594,18 @@ void KNote::slotUpdateKeepAboveBelow()
 
 void KNote::slotUpdateShowInTaskbar()
 {
-#if 0
 #ifdef Q_WS_X11
-    if ( !m_config->showInTaskbar() ) {
+    if ( !mDisplayAttribute->showInTaskbar() ) {
         KWindowSystem::setState( winId(), KWindowSystem::windowInfo( winId(),
                                                                      NET::WMState ).state() | NET::SkipTaskbar );
     } else {
         KWindowSystem::clearState( winId(), NET::SkipTaskbar );
     }
 #endif
-#endif
 }
 
 void KNote::slotUpdateDesktopActions()
 {
-#if 0
 #ifdef Q_WS_X11
     m_toDesktop->clear();
     NETRootInfo wm_root( QX11Info::display(), NET::NumberOfDesktops |
@@ -632,7 +627,6 @@ void KNote::slotUpdateDesktopActions()
             desktopAct->setChecked(true);
         }
     }
-#endif
 #endif
 }
 
