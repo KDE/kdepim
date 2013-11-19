@@ -35,6 +35,8 @@ private Q_SLOTS:
 
 private:
     void searchDuplicateContact(const Akonadi::Item::List &list);
+    void createWidgets(const QList<QList<Akonadi::Item> > &lst);
+    void createEmptyWidget();
 };
 
 #endif // POTENTIALDUPLICATECONTACTSWIDGET_H

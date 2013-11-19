@@ -19,6 +19,11 @@
 #include "searchpotentialduplicatecontactjob.h"
 #include <KABC/Addressee>
 
+#include <KLocale>
+
+#include <QHBoxLayout>
+#include <QLabel>
+
 PotentialDuplicateContactsWidget::PotentialDuplicateContactsWidget(QWidget *parent)
     : QWidget(parent)
 {
@@ -41,10 +46,31 @@ void PotentialDuplicateContactsWidget::searchDuplicateContact(const Akonadi::Ite
         SearchPotentialDuplicateContactJob *job = new SearchPotentialDuplicateContactJob(list, this);
         connect(job, SIGNAL(finished(SearchPotentialDuplicateContactJob*)), this, SLOT(slotSearchDuplicateContactFinished(SearchPotentialDuplicateContactJob*)));
         job->start();
+    } else {
+        createEmptyWidget();
     }
+
 }
 
 void PotentialDuplicateContactsWidget::slotSearchDuplicateContactFinished(SearchPotentialDuplicateContactJob *job)
 {
-    //TODO
+    QList<QList<Akonadi::Item> > list = job->potentialDuplicateContacts();
+    if (list.isEmpty()) {
+        createEmptyWidget();
+    } else {
+        createWidgets(list);
+    }
+}
+
+void PotentialDuplicateContactsWidget::createWidgets(const QList<QList<Akonadi::Item> > &lst)
+{
+
+}
+
+void PotentialDuplicateContactsWidget::createEmptyWidget()
+{
+    QHBoxLayout *lay = new QHBoxLayout;
+    QLabel *lab = new QLabel(i18n("No duplicate contact found."));
+    lay->addWidget(lab);
+    setLayout(lay);
 }
