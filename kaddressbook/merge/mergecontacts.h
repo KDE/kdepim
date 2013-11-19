@@ -26,7 +26,7 @@ class MergeContacts : public QObject
 {
     Q_OBJECT
 public:
-    explicit MergeContacts(QItemSelectionModel *model, QObject *parent=0);
+    explicit MergeContacts(QObject *parent=0);
     ~MergeContacts();
 
 private:

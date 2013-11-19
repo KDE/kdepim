@@ -19,7 +19,7 @@
 
 #include <QItemSelectionModel>
 
-MergeContacts::MergeContacts(QItemSelectionModel *model, QObject *parent)
+MergeContacts::MergeContacts(QObject *parent)
     : QObject(parent)
 {
 }
