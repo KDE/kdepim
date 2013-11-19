@@ -21,7 +21,7 @@
 
 #include <KLocale>
 
-#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 
 PotentialDuplicateContactsWidget::PotentialDuplicateContactsWidget(QWidget *parent)
@@ -69,7 +69,7 @@ void PotentialDuplicateContactsWidget::createWidgets(const QList<QList<Akonadi::
 
 void PotentialDuplicateContactsWidget::createEmptyWidget()
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QVBoxLayout *lay = new QVBoxLayout;
     QLabel *lab = new QLabel(i18n("No duplicate contact found."));
     lay->addWidget(lab);
     setLayout(lay);
