@@ -29,7 +29,7 @@ class NoteDisplayAttribute;
 class KNoteDisplaySettings
 {
 public:
-    KNoteDisplaySettings(NoteShared::NoteDisplayAttribute *attr);
+    KNoteDisplaySettings(NoteShared::NoteDisplayAttribute *attr=0);
     ~KNoteDisplaySettings();
 
     void setDisplayAttribute(NoteShared::NoteDisplayAttribute* attr);

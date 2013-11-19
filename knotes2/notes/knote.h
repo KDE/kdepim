@@ -30,6 +30,8 @@
 #include <KSharedConfig>
 #include <Akonadi/Item>
 
+class KNoteDisplaySettings;
+
 class QLabel;
 class QLayout;
 class QSizeGrip;
@@ -42,6 +44,7 @@ class KNoteEdit;
 class KSelectAction;
 class KToggleAction;
 class KToolBar;
+
 
 class KNote : public QFrame, virtual public KXMLGUIClient
 {
@@ -163,6 +166,8 @@ private:
     KSharedConfig::Ptr m_kwinConf;
     bool m_blockEmitDataChanged;
     bool mBlockWriteConfigDuringCommitData;
+
+    KNoteDisplaySettings *mDisplayAttribute;
 
 };
 

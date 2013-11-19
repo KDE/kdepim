@@ -33,6 +33,8 @@
 #include "knotesglobalconfig.h"
 #include "kdepim-version.h"
 
+#include "knotedisplaysettings.h"
+
 #include "noteshared/attributes/notelockattribute.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "noteshared/attributes/notealarmattribute.h"
@@ -92,6 +94,7 @@
 
 KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *parent )
     : QFrame( parent, Qt::FramelessWindowHint ),
+
       mItem(item),
       m_label( 0 ),
       m_grip( 0 ),
@@ -101,8 +104,12 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
       m_find( 0 ),
       m_kwinConf( KSharedConfig::openConfig( QLatin1String("kwinrc") ) ),
       m_blockEmitDataChanged( false ),
-      mBlockWriteConfigDuringCommitData( false )
+      mBlockWriteConfigDuringCommitData( false ),
+      mDisplayAttribute(new KNoteDisplaySettings)
 {
+    if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+        mDisplayAttribute->setDisplayAttribute(mItem.attribute<NoteShared::NoteDisplayAttribute>());
+    }
     setAcceptDrops( true );
     setAttribute( Qt::WA_DeleteOnClose );
     setDOMDocument( buildDoc );
@@ -120,11 +127,15 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
 
 KNote::~KNote()
 {
+    delete mDisplayAttribute;
 }
 
 void KNote::setChangeItem(const Akonadi::Item &item)
 {
     mItem = item;
+    if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+        mDisplayAttribute->setDisplayAttribute(mItem.attribute<NoteShared::NoteDisplayAttribute>());
+    }
 }
 
 #if 0
@@ -841,25 +852,16 @@ void KNote::prepare()
         m_readOnly->setChecked( false );
     }
     slotUpdateReadOnly();
-    if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
-        //TODO add display attribute
-        NoteShared::NoteDisplayAttribute *attr = mItem.attribute<NoteShared::NoteDisplayAttribute>();
-        if (attr->isHidden()) {
-            hide();
-        } else {
-            show();
-        }
-        resize(attr->size());
-        const QPoint& position = attr->position();
-        QRect desk = kapp->desktop()->rect();
-        desk.adjust( 10, 10, -10, -10 );
-        if ( desk.intersects( QRect( position, attr->size() ) ) ) {
-            move( position );           // do before calling show() to avoid flicker
-        }
-
-    } else {
+    if (mDisplayAttribute->isHidden())
+        hide();
+    else
         show();
-        //TODO default
+    resize(mDisplayAttribute->size());
+    const QPoint& position = mDisplayAttribute->position();
+    QRect desk = kapp->desktop()->rect();
+    desk.adjust( 10, 10, -10, -10 );
+    if ( desk.intersects( QRect( position, mDisplayAttribute->size() ) ) ) {
+        move( position );           // do before calling show() to avoid flicker
     }
     if ( mItem.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
         //TODO add alarm attribute
@@ -869,17 +871,16 @@ void KNote::prepare()
 
     // if this is a new note put on current desktop - we can't use defaults
     // in KConfig XT since only _changes_ will be stored in the config file
-#if 0 //FIXME
-    int desktop = m_config->desktop();
+    int desktop = mDisplayAttribute->desktop();
 
 #ifdef Q_WS_X11
     if ( ( desktop < 0 && desktop != NETWinInfo::OnAllDesktops ) ||
-         !m_config->rememberDesktop() )
+         !mDisplayAttribute->rememberDesktop() )
         desktop = KWindowSystem::currentDesktop();
 #endif
 
     // show the note if desired
-    if ( desktop != 0 && !m_config->hideNote() ) {
+    if ( desktop != 0 && !mDisplayAttribute->isHidden() ) {
         // to avoid flicker, call this before show()
         toDesktop( desktop );
         show();
@@ -891,19 +892,17 @@ void KNote::prepare()
         }
 #endif
     }
-#endif
-#if 0 //TODO FIXME
-    if ( m_config->keepAbove() ) {
+
+    if ( mDisplayAttribute->keepAbove() ) {
         m_keepAbove->setChecked( true );
-    } else if ( m_config->keepBelow() ) {
+    } else if ( mDisplayAttribute->keepBelow() ) {
         m_keepBelow->setChecked( true );
     } else {
         m_keepAbove->setChecked( false );
         m_keepBelow->setChecked( false );
     }
-#endif
+
     slotUpdateKeepAboveBelow();
-#if 0 //FIXME
     // HACK: update the icon color - again after showing the note, to make kicker
     // aware of the new colors
     KIconEffect effect;
@@ -911,16 +910,14 @@ void KNote::prepare()
                                      IconSize( KIconLoader::Desktop ),
                                      IconSize( KIconLoader::Desktop ) ),
                                  KIconEffect::Colorize,
-                                 1, m_config->bgColor(), false );
+                                 1, mDisplayAttribute->backgroundColor(), false );
     QPixmap miniIcon = effect.apply( qApp->windowIcon().pixmap(
                                          IconSize( KIconLoader::Small ),
                                          IconSize( KIconLoader::Small ) ),
                                      KIconEffect::Colorize,
-                                     1, m_config->bgColor(), false );
-#endif
+                                     1, mDisplayAttribute->backgroundColor(), false );
 #ifdef Q_WS_X11
-    //FIXME
-    //KWindowSystem::setIcons( winId(), icon, miniIcon );
+    KWindowSystem::setIcons( winId(), icon, miniIcon );
 #endif
 
     // set up the look&feel of the note
@@ -1072,16 +1069,14 @@ void KNote::contextMenuEvent( QContextMenuEvent *e )
 
 void KNote::showEvent( QShowEvent * )
 {
-#if 0
-    if ( m_config->hideNote() ) {
+    if ( mDisplayAttribute->isHidden() ) {
         // KWin does not preserve these properties for hidden windows
         slotUpdateKeepAboveBelow();
         slotUpdateShowInTaskbar();
-        toDesktop( m_config->desktop() );
-        move( m_config->position() );
-        m_config->setHideNote( false );
+        toDesktop( mDisplayAttribute->desktop() );
+        move( mDisplayAttribute->position() );
+        //FIXME !!!!!!!!!! m_config->setHideNote( false );
     }
-#endif
 }
 
 void KNote::resizeEvent( QResizeEvent *qre )

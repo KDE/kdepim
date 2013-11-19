@@ -19,6 +19,8 @@
 #include "knotedisplaysettings.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 
+#include <KGlobalSettings>
+
 KNoteDisplaySettings::KNoteDisplaySettings(NoteShared::NoteDisplayAttribute *attr)
     : mDisplayAttribute(attr)
 {
@@ -39,7 +41,7 @@ QColor KNoteDisplaySettings::backgroundColor() const
     if (mDisplayAttribute)
         return mDisplayAttribute->backgroundColor();
     else
-        return QColor(); //TODO
+        return QColor(Qt::yellow);
 }
 
 QColor KNoteDisplaySettings::foregroundColor() const
@@ -47,7 +49,7 @@ QColor KNoteDisplaySettings::foregroundColor() const
     if (mDisplayAttribute)
         return mDisplayAttribute->foregroundColor();
     else
-        return QColor(); //TODO
+        return QColor(Qt::black);
 }
 
 QSize KNoteDisplaySettings::size() const
@@ -55,7 +57,7 @@ QSize KNoteDisplaySettings::size() const
     if (mDisplayAttribute)
         return mDisplayAttribute->size();
     else
-        return QSize();
+        return QSize(300,300);
 }
 
 bool KNoteDisplaySettings::rememberDesktop() const
@@ -63,7 +65,7 @@ bool KNoteDisplaySettings::rememberDesktop() const
     if (mDisplayAttribute)
         return mDisplayAttribute->rememberDesktop();
     else
-        return false;// TODO
+        return true;
 }
 
 int KNoteDisplaySettings::tabSize() const
@@ -71,7 +73,7 @@ int KNoteDisplaySettings::tabSize() const
     if (mDisplayAttribute)
         return mDisplayAttribute->tabSize();
     else
-        return 1;// TODO
+        return 4;
 }
 
 QFont KNoteDisplaySettings::font() const
@@ -79,7 +81,7 @@ QFont KNoteDisplaySettings::font() const
     if (mDisplayAttribute)
         return mDisplayAttribute->font();
     else
-        return QFont();// TODO
+        return KGlobalSettings::generalFont();
 }
 
 QFont KNoteDisplaySettings::titleFont() const
@@ -87,7 +89,7 @@ QFont KNoteDisplaySettings::titleFont() const
     if (mDisplayAttribute)
         return mDisplayAttribute->titleFont();
     else
-        return QFont();// TODO
+        return KGlobalSettings::windowTitleFont();
 }
 
 int KNoteDisplaySettings::desktop() const
@@ -95,7 +97,7 @@ int KNoteDisplaySettings::desktop() const
     if (mDisplayAttribute)
         return mDisplayAttribute->desktop();
     else
-        return 1;// TODO
+        return -10;
 }
 
 bool KNoteDisplaySettings::isHidden() const
@@ -103,7 +105,7 @@ bool KNoteDisplaySettings::isHidden() const
     if (mDisplayAttribute)
         return mDisplayAttribute->isHidden();
     else
-        return false;// TODO
+        return false;
 }
 
 QPoint KNoteDisplaySettings::position() const
@@ -111,7 +113,7 @@ QPoint KNoteDisplaySettings::position() const
     if (mDisplayAttribute)
         return mDisplayAttribute->position();
     else
-        return QPoint();// TODO
+        return QPoint( -10000, -10000 );
 }
 
 bool KNoteDisplaySettings::showInTaskbar() const
@@ -119,7 +121,7 @@ bool KNoteDisplaySettings::showInTaskbar() const
     if (mDisplayAttribute)
         return mDisplayAttribute->showInTaskbar();
     else
-        return false;// TODO
+        return false;
 }
 
 bool KNoteDisplaySettings::keepAbove() const
@@ -127,7 +129,7 @@ bool KNoteDisplaySettings::keepAbove() const
     if (mDisplayAttribute)
         return mDisplayAttribute->keepAbove();
     else
-        return false;// TODO
+        return false;
 }
 
 bool KNoteDisplaySettings::keepBelow() const
@@ -135,7 +137,7 @@ bool KNoteDisplaySettings::keepBelow() const
     if (mDisplayAttribute)
         return mDisplayAttribute->keepBelow();
     else
-        return false;// TODO
+        return false;
 }
 
 bool KNoteDisplaySettings::autoIndent() const
@@ -143,5 +145,5 @@ bool KNoteDisplaySettings::autoIndent() const
     if (mDisplayAttribute)
         return mDisplayAttribute->autoIndent();
     else
-        return false;// TODO
+        return true;
 }
