@@ -58,6 +58,8 @@ public:
     KNotesApp();
     ~KNotesApp();
 
+    bool commitData( QSessionManager & );
+
 public slots:
     void newNote( const QString &name = QString(),
                      const QString &text = QString() );
@@ -95,7 +97,7 @@ private Q_SLOTS:
 
     QVariantMap notes() const;
 
-    bool commitData( QSessionManager & );
+
 
 protected slots:
     void slotShowNote();
@@ -112,11 +114,8 @@ protected slots:
 
 private:
     void showNote( KNote *note ) const;
-    void saveConfigs();
 
 private slots:
-
-    void saveNotes();
     void saveNotes( const QString & uid );
 
 
@@ -136,6 +135,7 @@ private:
     QString m_noteUidModify;
 #endif
 private:
+    void saveNotes();
     void updateNetworkListener();
     KXMLGUIFactory  *m_guiFactory;
     KXMLGUIBuilder  *m_guiBuilder;

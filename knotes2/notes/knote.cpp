@@ -71,6 +71,8 @@
 #include <netwm.h>
 #include <KPrintPreview>
 
+#include <Akonadi/ItemModifyJob>
+
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QFile>
@@ -130,26 +132,36 @@ KNote::~KNote()
     delete mDisplayAttribute;
 }
 
-void KNote::setChangeItem(const Akonadi::Item &item)
+void KNote::setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set)
 {
     mItem = item;
     if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
         mDisplayAttribute->setDisplayAttribute(mItem.attribute<NoteShared::NoteDisplayAttribute>());
     }
-}
+    if (set.contains("ATR:KJotsLockAttribute")) {
+        setEnabled(!item.hasAttribute<NoteShared::NoteLockAttribute>());
+    }
+    if (set.contains("PLD:RFC822")) {
+        KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
+        setName(noteMessage->subject(false)->asUnicodeString());
+        if ( noteMessage->contentType()->isHTMLText() ) {
+            m_editor->setAcceptRichText(true);
+            m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
+        } else {
+            m_editor->setAcceptRichText(false);
+            m_editor->setPlainText(noteMessage->mainBodyPart()->decodedText());
+        }
+    }
+    if (set.contains("ATR:NoteDisplayAttribute")) {
+        //TODO
+    }
+    if (set.contains("ATR:NoteAlarmAttribute")) {
+        //TODO
+    }
 
-#if 0
-void KNote::changeJournal(KCal::Journal *journal)
-{
-    m_journal = journal;
-    m_editor->setText( m_journal->description() );
-    m_editor->document()->setModified( false );
-    m_label->setText( m_journal->summary() );
+    //TODO update display/content etc.
     updateLabelAlignment();
-
 }
-#endif
-// -------------------- public slots -------------------- //
 
 void KNote::slotKill( bool force )
 {
@@ -172,38 +184,31 @@ void KNote::slotKill( bool force )
 
 // -------------------- public member functions -------------------- //
 
-void KNote::saveData(bool update )
+void KNote::saveNote()
 {
-#if 0
-    m_journal->setSummary( m_label->text() );
-    m_journal->setDescription( m_editor->text() );
-#endif
-    if(update)
-    {
-        //FIXME emit sigDataChanged(noteId());
-        m_editor->document()->setModified( false );
-    }
-}
-
-void KNote::saveConfig() const
-{
-#if 0  //FIXME
-    m_config->setWidth( width() );
-    m_config->setHeight( height() );
-    m_config->setPosition( pos() );
-
+    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>( Akonadi::Entity::AddIfMissing );
+    attribute->setPosition(pos());
+    attribute->setSize(QSize(width(), height()));
 #ifdef Q_WS_X11
     NETWinInfo wm_client( QX11Info::display(), winId(),
                           QX11Info::appRootWindow(), NET::WMDesktop );
     if ( ( wm_client.desktop() == NETWinInfo::OnAllDesktops ) ||
          ( wm_client.desktop() > 0 ) ) {
-        m_config->setDesktop( wm_client.desktop() );
+        attribute->setDesktop( wm_client.desktop() );
     }
 #endif
+    KMime::Message::Ptr message = mItem.payload<KMime::Message::Ptr>();
+    //TODO
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+}
 
-    // actually store the config on disk
-    m_config->writeConfig();
-#endif
+void KNote::slotNoteSaved(KJob *job)
+{
+    if ( job->error() ) {
+        qDebug()<<" problem during save note:"<<job->errorString();
+    }
+    m_editor->document()->setModified( false );
 }
 
 #if 0
@@ -229,7 +234,7 @@ void KNote::setName( const QString& name )
     updateLabelAlignment();
 
     if ( m_editor ) {    // not called from CTOR?
-        saveData();
+        saveNote();
     }
 #ifdef Q_WS_X11
     // set the window's name for the taskbar entry to be more helpful (#58338)
@@ -245,7 +250,7 @@ void KNote::setText( const QString& text )
 {
     m_editor->setText( text );
 
-    saveData();
+    saveNote();
 }
 
 void KNote::find( KFind* kfind )
@@ -415,7 +420,7 @@ void KNote::slotPreferences()
     dialog->exec();
     delete dialog;
     m_blockEmitDataChanged = false;
-    saveData();
+    saveNote();
 #endif
 }
 
@@ -451,7 +456,7 @@ void KNote::print(bool preview)
     if ( isModified() ) {
         saveConfig();
         if ( !m_blockEmitDataChanged ) {
-            saveData();
+            saveNote();
         }
     }
 
@@ -786,8 +791,7 @@ void KNote::createNoteEditor(const QString &configFile)
 void KNote::slotRequestNewNote()
 {
     //Be sure to save before to request a new note
-    saveConfig();
-    saveData();
+    saveNote();
     emit sigRequestNewNote();
 }
 
@@ -1177,9 +1181,7 @@ bool KNote::eventFilter( QObject *o, QEvent *ev )
                  fe->reason() != Qt::MouseFocusReason ) {
                 updateFocus();
                 if ( isModified() ) {
-                    saveConfig();
-                    if ( !m_blockEmitDataChanged )
-                        saveData();
+                    saveNote();
                 }
             }
         } else if ( ev->type() == QEvent::FocusIn ) {

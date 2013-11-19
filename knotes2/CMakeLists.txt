@@ -47,6 +47,7 @@ set(knotes2_SRCS apps/main.cpp apps/application.cpp apps/knotesapp.cpp apps/knot
                 ../knotes/akonadi/knotesakonaditreemodel.cpp 
                 notes/knote.cpp
                 notes/knotedisplaysettings.cpp
+                dialog/selectednotefolderdialog.cpp
 )
 
 

@@ -39,11 +39,11 @@ class QSizeGrip;
 class KFind;
 class KMenu;
 class KNoteButton;
-class KNoteConfig;
 class KNoteEdit;
 class KSelectAction;
 class KToggleAction;
 class KToolBar;
+class KJob;
 
 
 class KNote : public QFrame, virtual public KXMLGUIClient
@@ -53,9 +53,8 @@ public:
     explicit KNote( const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *parent = 0 );
     ~KNote();
 
-    void setChangeItem(const Akonadi::Item &item);
-    void saveData( bool update = true);
-    void saveConfig() const;
+    void setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set = QSet<QByteArray>());
+    void saveNote();
 
     QString noteId() const;
     QString name() const;
@@ -124,6 +123,7 @@ private slots:
     void slotKeepBelow();
 
     void slotRequestNewNote();
+    void slotNoteSaved(KJob *job);
 
 private:
     QString createConfig();
@@ -150,8 +150,6 @@ private:
     KToolBar      *m_tool;
     KNoteEdit     *m_editor;
 
-    //KNoteConfig   *m_config;
-
     KFind         *m_find;
     KMenu         *m_menu;
 
@@ -168,7 +166,6 @@ private:
     bool mBlockWriteConfigDuringCommitData;
 
     KNoteDisplaySettings *mDisplayAttribute;
-
 };
 
 #endif

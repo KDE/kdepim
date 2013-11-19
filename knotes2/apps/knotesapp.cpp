@@ -26,6 +26,7 @@
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "noteshared/attributes/notealarmattribute.h"
 #include "apps/knotesakonaditray.h"
+#include "dialog/selectednotefolderdialog.h"
 
 #include "notesharedglobalconfig.h"
 #include "notes/knote.h"
@@ -229,33 +230,11 @@ void KNotesApp::slotItemRemoved(const Akonadi::Item &item)
 
 void KNotesApp::slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &set)
 {
-#if 0
     if (mNotes.contains(item.id())) {
         qDebug()<<" item changed "<<item.id()<<" info "<<set.toList();
         KNote *note = mNotes.value(item.id());
-        if (set.contains("ATR:KJotsLockAttribute")) {
-            note->setEnabled(!item.hasAttribute<NoteShared::NoteLockAttribute>());
-        }
-        if (set.contains("PLD:RFC822")) {
-            KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
-            note->title()->setText(noteMessage->subject(false)->asUnicodeString());
-            if ( noteMessage->contentType()->isHTMLText() ) {
-                note->editor()->setAcceptRichText(true);
-                note->editor()->setHtml(noteMessage->mainBodyPart()->decodedText());
-            } else {
-                note->editor()->setAcceptRichText(false);
-                note->editor()->setPlainText(noteMessage->mainBodyPart()->decodedText());
-            }
-        }
-        if (set.contains("ATR:NoteDisplayAttribute")) {
-
-            //TODO
-        }
-        if (set.contains("ATR:NoteAlarmAttribute")) {
-            //TODO
-        }
+        note->setChangeItem(item, set);
     }
-#endif
 }
 
 void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
@@ -276,41 +255,54 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
 
 void KNotesApp::newNote(const QString &name, const QString &text)
 {
-    Akonadi::Item newItem;
-    newItem.setMimeType( Akonotes::Note::mimeType() );
+    QPointer<SelectedNotefolderDialog> dlg = new SelectedNotefolderDialog(this);
+    if (dlg->exec()) {
+        const Akonadi::Collection col = dlg->selectedCollection();
+        Akonadi::Item newItem;
+        newItem.setMimeType( Akonotes::Note::mimeType() );
 
-    KMime::Message::Ptr newPage = KMime::Message::Ptr( new KMime::Message() );
+        KMime::Message::Ptr newPage = KMime::Message::Ptr( new KMime::Message() );
 
-    QString title;
-    if (name.isEmpty()) {
-        title = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() );
-    } else {
-        title = name;
+        QString title;
+        if (name.isEmpty()) {
+            title = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() );
+        } else {
+            title = name;
+        }
+        QByteArray encoding( "utf-8" );
+
+        newPage->subject( true )->fromUnicodeString( title, encoding );
+        newPage->contentType( true )->setMimeType( "text/plain" );
+        newPage->contentType()->setCharset("utf-8");
+        newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
+        newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+        newPage->from( true )->fromUnicodeString( QString::fromLatin1( "knotes@kde4" ), encoding );
+        // Need a non-empty body part so that the serializer regards this as a valid message.
+        newPage->mainBodyPart()->fromUnicodeString( text.isEmpty() ? QString::fromLatin1( " " ) : text);
+
+        newPage->assemble();
+
+        newItem.setPayload( newPage );
+
+        Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+        eda->setIconName( QString::fromLatin1( "text-plain" ) );
+        newItem.addAttribute(eda);
+
+
+        //TODO add default display attributes.
+
+        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
     }
-    QByteArray encoding( "utf-8" );
+    delete dlg;
+}
 
-    newPage->subject( true )->fromUnicodeString( title, encoding );
-    newPage->contentType( true )->setMimeType( "text/plain" );
-    newPage->contentType()->setCharset("utf-8");
-    newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
-    newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
-    newPage->from( true )->fromUnicodeString( QString::fromLatin1( "knotes@kde4" ), encoding );
-    // Need a non-empty body part so that the serializer regards this as a valid message.
-    newPage->mainBodyPart()->fromUnicodeString( text.isEmpty() ? QString::fromLatin1( " " ) : text);
-
-    newPage->assemble();
-
-    newItem.setPayload( newPage );
-
-    Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
-    eda->setIconName( QString::fromLatin1( "text-plain" ) );
-    newItem.addAttribute(eda);
-
-    //TODO add default display attributes.
-
-    //FIXME define default collection
-    //Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, Collection(m_containerCollectionId), this );
-    //connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
+void KNotesApp::slotNoteCreationFinished(KJob *job)
+{
+    if (job->error()) {
+        kWarning() << job->errorString();
+        return;
+    }
 }
 
 void KNotesApp::showNote(const Akonadi::Entity::Id &id ) const
@@ -378,14 +370,6 @@ void KNotesApp::newNoteFromClipboard( const QString &name )
     newNote( name, text );
 }
 
-
-void KNotesApp::slotNoteCreationFinished(KJob *job)
-{
-    if (job->error()) {
-        kWarning() << job->errorString();
-        return;
-    }
-}
 
 void KNotesApp::slotAcceptConnection()
 {
@@ -517,14 +501,6 @@ void KNotesApp::slotSecondaryActivateRequested( const QPoint & )
 
 #if 0
 
-bool KNotesApp::commitData( QSessionManager & )
-{
-    foreach ( KNote *note, m_notes ) {
-        note->commitData();
-    }
-    saveConfigs();
-    return true;
-}
 
 // -------------------- public D-Bus interface -------------------- //
 
@@ -765,12 +741,6 @@ void KNotesApp::saveNotes()
     m_manager->save();
 }
 
-void KNotesApp::saveConfigs()
-{
-    foreach ( KNote *note, m_notes ) {
-        note->saveConfig();
-    }
-}
 
 
 #endif
@@ -792,15 +762,24 @@ void KNotesApp::slotPrintSelectedNotes()
 #endif
 }
 
+void KNotesApp::saveNotes()
+{
+    QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
+    while (i.hasNext()) {
+        i.next();
+        i.value()->saveNote();
+    }
+}
+
+
 void KNotesApp::slotQuit()
 {
-#if 0
-    foreach ( KNote *note, m_notes ) {
-        if ( note->isModified() ) {
-            note->saveData(false);
-        }
-    }
-    saveConfigs();
-#endif
+    saveNotes();
     kapp->quit();
+}
+
+bool KNotesApp::commitData( QSessionManager & )
+{
+    saveNotes();
+    return true;
 }
