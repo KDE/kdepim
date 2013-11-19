@@ -480,12 +480,10 @@ void KNote::slotSaveAs()
     // TODO: where to put pdf file support? In the printer??!??!
     m_blockEmitDataChanged = true;
     QCheckBox *convert = 0;
-#if 0
     if ( m_editor->acceptRichText() ) {
         convert = new QCheckBox( 0 );
         convert->setText( i18n( "Save note as plain text" ) );
     }
-#endif
     m_blockEmitDataChanged = true;
     KUrl url;
     QPointer<KFileDialog> dlg = new KFileDialog( url, QString(), this, convert );
