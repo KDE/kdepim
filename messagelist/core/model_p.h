@@ -386,18 +386,9 @@ public:
   MessageItem *mNewestItem;
 
   /**
-   * The Unique Id of the message item to pre-select when mPreSelectionMode
-   * is PreSelectLastSelected. This message is "caught" when it "pops up" during
-   * the loading process. This unique id is stored by MessageList::Manager.
-   *
-   * See also setStorageModel() and abortMessagePreSelection()
-   */
-  unsigned long mUniqueIdOfLastSelectedMessageInFolder;
-
-  /**
-   * The above UniqueId is "translated" to a message pointer when it's fetched
+   * The id of the preselected ;essage is "translated" to a message pointer when it's fetched
    * from the storage. This message is then selected when it becomes viewable
-   * (so at the end of the job). 0 If we have no message to select.
+   * (so at the end of the job). 0 if we have no message to select.
    *
    * See also setStorageModel() and abortMessagePreSelection()
    */

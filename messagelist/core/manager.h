@@ -183,18 +183,6 @@ public:
   const QString & cachedLocalizedUnknownText() const
     { return mCachedLocalizedUnknownText; }
 
-  /**
-   * Returns the unique id of the last selected message for the specified StorageModel.
-   * Returns 0 if this value isn't stored in the configuration.
-   */
-  unsigned long preSelectedMessageForStorageModel( const StorageModel *storageModel );
-
-  /**
-   * Stores in the unique id of the last selected message for the specified StorageModel.
-   * The uniqueIdOfMessage may be 0 (which means that no selection shall be stored in the configuration).
-   */
-  void savePreSelectedMessageForStorageModelId( const QString &storageModelId, unsigned long uniqueIdOfMessage );
-
   // aggregation sets management
   const Aggregation * aggregationForStorageModel( const StorageModel *storageModel, bool *storageUsesPrivateAggregation );
   const Aggregation * aggregationForStorageModel( const QString &storageModel, bool *storageUsesPrivateAggregation );
