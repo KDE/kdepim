@@ -1,6 +1,7 @@
 [Global]
 IconName=kmail
 Comment=MessageViewer
+Comment[bs]=Preglednik poruka
 Comment[ca]=Visor de missatge
 Comment[de]=Nachrichtenanzeige
 Comment[es]=Visor de mensajes
@@ -23,6 +24,7 @@ Comment[zh_TW]=訊息檢視器
 
 [Event/adblock-list-download-done]
 Name=New Ad-Block list download done
+Name[bs]=Preuzimanje nove liste za blokiranje reklama završeno
 Name[ca]=La baixada de la nova llista de bloqueig publicitari està completa
 Name[de]=Das Herunterladen der neuen Werbefilterliste ist abgeschlossen
 Name[es]=Realizada la descarga de la nueva lista de Ad-Block
@@ -43,6 +45,7 @@ Name[uk]=Завершено отримання нового списку бло�
 Name[x-test]=xxNew Ad-Block list download donexx
 Name[zh_TW]=新增 Ad-Block 清單下載完成
 Comment=New Ad-Block list download done
+Comment[bs]=Preuzimanje nove liste za blokiranje reklama završeno
 Comment[ca]=La baixada de la nova llista de bloqueig publicitari està completa
 Comment[de]=Das Herunterladen der neuen Werbefilterliste ist abgeschlossen
 Comment[es]=Realizada la descarga de la nueva lista de Ad-Block
@@ -66,6 +69,7 @@ Action=Popup
 
 [Event/adblock-list-download-failed]
 Name=New Ad-Block list download failed
+Name[bs]=Preuzimanje nove liste za blokiranje reklama neuspjelo
 Name[ca]=La baixada de la nova llista de bloqueig publicitari ha fallat
 Name[de]=Das Herunterladen der neuen Werbefilterliste ist fehlgeschlagen
 Name[es]=Falló la descarga de la nueva lista de Ad-Block
@@ -86,6 +90,7 @@ Name[uk]=Не вдалося отримати новий список блоку
 Name[x-test]=xxNew Ad-Block list download failedxx
 Name[zh_TW]=新增 Ad-Block 清單下載失敗
 Comment=New Ad-Block list download failed
+Comment[bs]=Preuzimanje nove liste za blokiranje reklama neuspjelo
 Comment[ca]=La baixada de la nova llista de bloqueig publicitari ha fallat
 Comment[de]=Das Herunterladen der neuen Werbefilterliste ist fehlgeschlagen
 Comment[es]=Falló la descarga de la nueva lista de Ad-Block
