@@ -17,7 +17,8 @@
 
 #include "matchcontact.h"
 
-MatchContact::MatchContact(const Akonadi::Item &items)
-    : mListItem(items)
+MatchContact::MatchContact(const QList<Akonadi::Item> &items)
+    : mListItem(items),
+      mType(None)
 {
 }

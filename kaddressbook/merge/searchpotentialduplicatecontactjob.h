@@ -31,6 +31,8 @@ public:
 
     void start();
 
+    QList<QList<Akonadi::Item> > potentialDuplicateContacts() const;
+
 Q_SIGNALS:
     void finished(SearchPotentialDuplicateContactJob *);
 
@@ -38,6 +40,7 @@ private:
     QList<Akonadi::Item> checkList(const QList<Akonadi::Item> &lstItem);
     bool isDuplicate(const Akonadi::Item &itemA, const Akonadi::Item &itemB);
     Akonadi::Item::List mListItem;
+    QList<QList<Akonadi::Item> > mListDuplicate;
 };
 
 #endif // SEARCHPOTENTIALDUPLICATECONTACTJOB_H

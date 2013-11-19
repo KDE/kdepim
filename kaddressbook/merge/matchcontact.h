@@ -22,9 +22,19 @@
 
 struct MatchContact
 {
-    MatchContact(const Akonadi::Item &items);
+    enum MatchType {
+        None = 0,
+        Name = 1,
+        Emails = 2,
+        Phone = 4,
+        NickName = 8
+    };
+    Q_ENUMS(MatchType)
+    Q_DECLARE_FLAGS(MatchTypes, MatchType)
+    MatchContact(const QList<Akonadi::Item> &items);
 
     QList<Akonadi::Item> mListItem;
+    MatchType mType;
 };
 
 #endif // MATCHCONTACT_H

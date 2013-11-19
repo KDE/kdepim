@@ -34,14 +34,6 @@ private Q_SLOTS:
     void slotSearchDuplicateContactFinished(SearchPotentialDuplicateContactJob *);
 
 private:
-    enum MatchType {
-        None = 0,
-        Name = 1,
-        Emails = 2,
-        Phone = 4,
-        NickName = 8
-    };
-
     void searchDuplicateContact(const Akonadi::Item::List &list);
 };
 

@@ -41,6 +41,11 @@ void SearchPotentialDuplicateContactJob::start()
     Q_EMIT finished(this);
 }
 
+QList<QList<Akonadi::Item> > SearchPotentialDuplicateContactJob::potentialDuplicateContacts() const
+{
+    return mListDuplicate;
+}
+
 QList<Akonadi::Item> SearchPotentialDuplicateContactJob::checkList(const QList<Akonadi::Item> &lstItem)
 {
     QList<Akonadi::Item> notDuplicate;
@@ -56,7 +61,9 @@ QList<Akonadi::Item> SearchPotentialDuplicateContactJob::checkList(const QList<A
         }
         if (!lst.isEmpty()) {
             lst.append(firstItem);
+            mListDuplicate.append(lst);
         }
+
         //qDebug()<<"not duplicate number"<<notDuplicate.count();
         //qDebug()<<" duplicate number "<<lst.count();
     }
