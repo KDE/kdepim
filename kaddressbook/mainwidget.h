@@ -74,6 +74,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void printPreview();
     void configure();
     void mergeContacts();
+    void slotSearchDuplicateContacts();
 
   private Q_SLOTS:
     void delayedInit();

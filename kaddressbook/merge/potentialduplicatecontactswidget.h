@@ -21,6 +21,7 @@
 #include <QWidget>
 #include <Akonadi/Item>
 class SearchPotentialDuplicateContactJob;
+class QVBoxLayout;
 class PotentialDuplicateContactsWidget : public QWidget
 {
     Q_OBJECT
@@ -37,6 +38,8 @@ private:
     void searchDuplicateContact(const Akonadi::Item::List &list);
     void createWidgets(const QList<QList<Akonadi::Item> > &lst);
     void createEmptyWidget();
+    void createDuplicateWidget(const QList<Akonadi::Item> &item);
+    QVBoxLayout *mMainLayout;
 };
 
 #endif // POTENTIALDUPLICATECONTACTSWIDGET_H

@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="13">
+<kpartgui name="kaddressbook" version="14">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -32,6 +32,7 @@
       <Action name="file_print_preview"/>
       <Separator/>
       <Action name="merge_contacts"/>
+      <Action name="search_duplicate_contacts"/>
       <Separator/>
       <Action name="file_quit"/>
     </Menu>

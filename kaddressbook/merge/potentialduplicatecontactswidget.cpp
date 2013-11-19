@@ -25,7 +25,8 @@
 #include <QLabel>
 
 PotentialDuplicateContactsWidget::PotentialDuplicateContactsWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mMainLayout(0)
 {
 }
 
@@ -49,7 +50,6 @@ void PotentialDuplicateContactsWidget::searchDuplicateContact(const Akonadi::Ite
     } else {
         createEmptyWidget();
     }
-
 }
 
 void PotentialDuplicateContactsWidget::slotSearchDuplicateContactFinished(SearchPotentialDuplicateContactJob *job)
@@ -64,13 +64,21 @@ void PotentialDuplicateContactsWidget::slotSearchDuplicateContactFinished(Search
 
 void PotentialDuplicateContactsWidget::createWidgets(const QList<QList<Akonadi::Item> > &lst)
 {
+    Q_FOREACH (const QList<Akonadi::Item> &itemLst, lst) {
+        createDuplicateWidget(itemLst);
+    }
+}
 
+void PotentialDuplicateContactsWidget::createDuplicateWidget(const QList<Akonadi::Item> &item)
+{
+    //TODO
 }
 
 void PotentialDuplicateContactsWidget::createEmptyWidget()
 {
-    QVBoxLayout *lay = new QVBoxLayout;
+    delete mMainLayout;
+    mMainLayout = new QVBoxLayout;
     QLabel *lab = new QLabel(i18n("No duplicate contact found."));
-    lay->addWidget(lab);
-    setLayout(lay);
+    mMainLayout->addWidget(lab);
+    setLayout(mMainLayout);
 }

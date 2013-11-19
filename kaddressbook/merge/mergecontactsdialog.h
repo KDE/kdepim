@@ -20,12 +20,12 @@
 #define MERGECONTACTSDIALOG_H
 
 #include <KDialog>
-
+class QItemSelectionModel;
 class MergeContactsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit MergeContactsDialog(QWidget *parent=0);
+    explicit MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent=0);
     ~MergeContactsDialog();
 
 private:

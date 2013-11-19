@@ -20,7 +20,9 @@
 #include <KConfigGroup>
 #include <KLocale>
 
-MergeContactsDialog::MergeContactsDialog(QWidget *parent)
+#include <QItemSelectionModel>
+
+MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Select Contacts to merge" ) );
