@@ -179,7 +179,7 @@ void KNote::slotKill( bool force )
         return;
     }
 
-    //FIXME emit sigKillNote( m_journal );
+    Q_EMIT sigKillNote( mItem.id() );
 }
 
 

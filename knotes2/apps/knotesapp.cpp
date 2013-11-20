@@ -44,6 +44,7 @@
 #include <KMime/KMimeMessage>
 #include "akonadi_next/note.h"
 #include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemDeleteJob>
 #include <Akonadi/EntityDisplayAttribute>
 
 #include <akonadi/control.h>
@@ -217,13 +218,13 @@ KNotesApp::~KNotesApp()
     m_publisher=0;
 }
 
-
 void KNotesApp::slotItemRemoved(const Akonadi::Item &item)
 {
     qDebug()<<" note removed"<<item.id();
     if (mNotes.contains(item.id())) {
         delete mNotes.find(item.id()).value();
         mNotes.remove(item.id());
+        updateNoteActions();
     }
 }
 
@@ -255,6 +256,9 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
                      SLOT(updateNoteActions()) );
             connect( note, SIGNAL(sigColorChanged()),
                      SLOT(updateNoteActions()) );
+            connect( note, SIGNAL(sigKillNote(Akonadi::Item::Id)),
+                     SLOT(slotNoteKilled(Akonadi::Item::Id)) );
+            updateNoteActions();
         }
     }
 }
@@ -656,6 +660,21 @@ void KNotesApp::slotConfigureAccels()
     }
     delete keys;
 }
+
+void KNotesApp::slotNoteKilled( Akonadi::Item::Id id)
+{
+    Akonadi::ItemDeleteJob *deleteJob = new Akonadi::ItemDeleteJob(Akonadi::Item(id), this);
+    connect( deleteJob, SIGNAL(result(KJob*)), SLOT(slotNoteDeleteFinished(KJob*)) );
+}
+
+void KNotesApp::slotNoteDeleteFinished(KJob* job)
+{
+    if (job->error()) {
+        kWarning() << job->errorString();
+        return;
+    }
+}
+
 #if 0
 void KNotesApp::slotNoteKilled( KCal::Journal *journal )
 {
@@ -733,13 +752,6 @@ void KNotesApp::saveNotes( const QString & uid )
     saveNotes();
 }
 
-void KNotesApp::saveNotes()
-{
-    KNotesGlobalConfig::self()->writeConfig();
-    m_manager->save();
-}
-
-
 
 #endif
 void KNotesApp::slotPrintSelectedNotes()
@@ -762,6 +774,7 @@ void KNotesApp::slotPrintSelectedNotes()
 
 void KNotesApp::saveNotes()
 {
+    KNotesGlobalConfig::self()->writeConfig();
     QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
     while (i.hasNext()) {
         i.next();

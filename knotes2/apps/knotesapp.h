@@ -82,6 +82,7 @@ private Q_SLOTS:
     void slotConfigUpdated();
     void slotAcceptConnection();
     void slotNoteCreationFinished(KJob*);
+    void slotNoteDeleteFinished(KJob*);
     void slotRowInserted(const QModelIndex &, int, int end);
     void slotItemRemoved(const Akonadi::Item &item);
     void slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &);
@@ -93,6 +94,7 @@ private Q_SLOTS:
     void slotConfigureAccels();
     void slotShowNote();
     void slotWalkThroughNotes();
+    void slotNoteKilled( Akonadi::Item::Id );
 
 #if 0
     void killNote( const QString &id );
@@ -105,7 +107,6 @@ private Q_SLOTS:
 protected slots:
     void slotOpenFindDialog();
     void slotFindNext();
-    void slotNoteKilled( KCal::Journal *journal );
 
 private slots:
     void saveNotes( const QString & uid );

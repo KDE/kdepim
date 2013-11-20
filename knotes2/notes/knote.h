@@ -83,7 +83,7 @@ signals:
     void sigNameChanged(const QString &);
     void sigDataChanged(const QString &);
     void sigColorChanged();
-
+    void sigKillNote( Akonadi::Item::Id );
     void sigFindFinished();
 
 protected:
