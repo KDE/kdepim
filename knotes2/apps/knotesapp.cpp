@@ -247,6 +247,10 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
                 continue;
             KNote *note = new KNote(m_noteGUI,item, 0);
             mNotes.insert(item.id(), note);
+            connect( note, SIGNAL(sigShowNextNote()),
+                     SLOT(slotWalkThroughNotes()) ) ;
+            connect( note, SIGNAL(sigRequestNewNote()),
+                     SLOT(newNote()) );
         }
     }
 }
@@ -502,6 +506,24 @@ void KNotesApp::slotShowNote()
     showNote( sender()->objectName().toLongLong() );
 }
 
+void KNotesApp::slotWalkThroughNotes()
+{
+    QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
+    while (i.hasNext()) {
+        i.next();
+        KNote *note = i.value();
+        if ( note->hasFocus() ) {
+            if ( i.value() != mNotes.end().value() ) {
+                showNote( i.value() );
+            } else {
+                showNote( mNotes.begin().value() );
+            }
+            break;
+        }
+    }
+}
+
+
 #if 0
 
 
@@ -539,22 +561,6 @@ QVariantMap KNotesApp::notes() const
 
 
 
-void KNotesApp::slotWalkThroughNotes()
-{
-    // show next note
-    QMap<QString, KNote *>::const_iterator it = m_notes.constBegin();
-    QMap<QString, KNote *>::const_iterator end(m_notes.constEnd());
-    for ( ; it != end; ++it ) {
-        if ( ( *it )->hasFocus() ) {
-            if ( ++it != end ) {
-                showNote( *it );
-            } else {
-                showNote( *m_notes.constBegin() );
-            }
-            break;
-        }
-    }
-}
 
 void KNotesApp::slotOpenFindDialog()
 {

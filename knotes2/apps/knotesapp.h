@@ -92,6 +92,7 @@ private Q_SLOTS:
     void slotQuit();
     void slotConfigureAccels();
     void slotShowNote();
+    void slotWalkThroughNotes();
 
 #if 0
     void killNote( const QString &id );
@@ -102,20 +103,9 @@ private Q_SLOTS:
 
 
 protected slots:
-
-    void slotWalkThroughNotes();
-
     void slotOpenFindDialog();
     void slotFindNext();
-
-
-
     void slotNoteKilled( KCal::Journal *journal );
-
-
-
-private:
-    void showNote( KNote *note ) const;
 
 private slots:
     void saveNotes( const QString & uid );
