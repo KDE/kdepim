@@ -90,6 +90,7 @@ private Q_SLOTS:
     void slotSecondaryActivateRequested( const QPoint& );
     void slotPrintSelectedNotes();
     void slotQuit();
+    void slotConfigureAccels();
 
 #if 0
     void killNote( const QString &id );
@@ -106,7 +107,7 @@ protected slots:
     void slotOpenFindDialog();
     void slotFindNext();
 
-    void slotConfigureAccels();
+
 
     void slotNoteKilled( KCal::Journal *journal );
 

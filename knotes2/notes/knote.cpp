@@ -211,12 +211,10 @@ void KNote::slotNoteSaved(KJob *job)
     m_editor->document()->setModified( false );
 }
 
-#if 0
-QString KNote::noteId() const
+Akonadi::Item::Id KNote::noteId() const
 {
-    return m_journal->uid();
+    return mItem.id();
 }
-#endif
 
 QString KNote::name() const
 {

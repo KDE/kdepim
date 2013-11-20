@@ -38,7 +38,7 @@
 //#include "print/knoteprintobject.h"
 #include "knotesglobalconfig.h"
 #include "noteshared/network/notesnetworkreceiver.h"
-//#include "dialog/knoteskeydialog.h"
+#include "dialog/knoteskeydialog.h"
 //#include "print/knoteprintselectednotesdialog.h"
 
 #include <KMime/KMimeMessage>
@@ -52,10 +52,9 @@
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/Session>
 #include <KMime/KMimeMessage>
-
+#include <KActionCollection>
 
 #include <kaction.h>
-#include <kactioncollection.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kfind.h>
@@ -450,8 +449,7 @@ void KNotesApp::updateNoteActions()
 #warning utf8: use QString
 #endif
         KAction *action = new KAction( note->name().replace( QLatin1String("&"), QLatin1String("&&") ), this );
-        //FIXME
-        //action->setObjectName( note->noteId() );
+        action->setData(note->noteId());
         connect( action, SIGNAL(triggered(bool)), SLOT(slotShowNote()) );
         KIconEffect effect;
         QPixmap icon =
@@ -612,17 +610,16 @@ void KNotesApp::slotConfigUpdated()
 {
     updateNetworkListener();
 }
-#if 0
+
 void KNotesApp::slotConfigureAccels()
 {
     QPointer<KNotesKeyDialog> keys = new KNotesKeyDialog( actionCollection(), this );
 
-    QMap<QString, KNote *>::const_iterator it = m_notes.constBegin();
-
-    if ( !m_notes.isEmpty() ) {
-        keys->insert( ( *it )->actionCollection() );
+    KActionCollection *actionCollection = 0;
+    if ( !mNotes.isEmpty() ) {
+        actionCollection = mNotes.begin().value()->actionCollection();
+        keys->insert( actionCollection );
     }
-
     if (keys->exec()) {
         keys->save();
 
@@ -632,33 +629,24 @@ void KNotesApp::slotConfigureAccels()
                                                     componentData() )
                     );
 
-        if ( !m_notes.isEmpty() ) {
-            QMap<QString, KNote *>::const_iterator end = m_notes.constEnd();
 
-            foreach ( QAction *action, ( *it )->actionCollection()->actions() ) {
-                it = m_notes.constBegin();
-
-                for ( ++it; it != end; ++it ) {
-                    /*
-    // Not sure if this is what this message has in mind but since both
-    // action->objectName() and KAction::action() are QStrings, this
-    // might be fine.
-    // Correct me if I am wrong... ~ gamaral
-#ifdef __GNUC__
-#warning Port KAction::action() to QString
-#endif
-*/
-                    QAction *toChange = ( *it )->actionCollection()->action( action->objectName() );
+        if ( actionCollection ) {
+            QHashIterator<Akonadi::Item::Id, KNote*> i(mNotes);
+            while (i.hasNext()) {
+                i.next();
+                foreach ( QAction *action, actionCollection->actions() ) {
+                    QAction *toChange = i.value()->actionCollection()->action( action->objectName() );
                     if ( toChange ) {
                         toChange->setShortcuts( action->shortcuts() );
                     }
                 }
+
             }
         }
     }
     delete keys;
 }
-
+#if 0
 void KNotesApp::slotNoteKilled( KCal::Journal *journal )
 {
     m_noteUidModify.clear();

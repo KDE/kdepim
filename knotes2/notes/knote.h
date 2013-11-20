@@ -56,9 +56,9 @@ public:
     void setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set = QSet<QByteArray>());
     void saveNote();
 
-    QString noteId() const;
     QString name() const;
     QString text() const;
+    Akonadi::Item::Id noteId() const;
 
     void setName( const QString &name );
     void setText( const QString &text );
