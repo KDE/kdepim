@@ -602,6 +602,16 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
     return QList< MessageComposer::Composer* >() << new MessageComposer::Composer();
   }
 
+  if( encryptSomething && !m_encrypt ) {
+    if ( !id.pgpEncryptionKey().isEmpty() )
+      encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
+    if ( !id.smimeEncryptionKey().isEmpty() )
+      encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
+    if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
+      kDebug() << "Failed to set encryptoToSelf keys!";
+      return QList< MessageComposer::Composer* >();
+    }
+  }
 
   const Kpgp::Result kpgpResult = keyResolver->resolveAllKeys( signSomething, encryptSomething );
   if ( kpgpResult == Kpgp::Canceled ) {
@@ -648,7 +658,7 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
         composer->setSigningKeys( signingKeys );
       }
 
-      composer->setSignAndEncrypt( m_sign, m_encrypt );
+      composer->setSignAndEncrypt( signSomething, encryptSomething );
 
       composers.append( composer );
     }
@@ -668,7 +678,7 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
 
       composer->setSigningKeys( signingKeys );
       composer->setMessageCryptoFormat( concreteSignFormat );
-      composer->setSignAndEncrypt( m_sign, m_encrypt );
+      composer->setSignAndEncrypt( signSomething, encryptSomething );
 
       composers.append( composer );
     }
