@@ -395,7 +395,7 @@ void KNotesApp::updateNetworkListener()
         m_listener=KSocketFactory::listen( QLatin1String("knotes") , QHostAddress::Any,
                                            NoteShared::NoteSharedGlobalConfig::port() );
         connect( m_listener, SIGNAL(newConnection()),
-                 SLOT(acceptConnection()) );
+                 SLOT(slotAcceptConnection()) );
         m_publisher=new DNSSD::PublicService(NoteShared::NoteSharedGlobalConfig::senderID(), QLatin1String("_knotes._tcp"), NoteShared::NoteSharedGlobalConfig::port());
         m_publisher->publishAsync();
     }
