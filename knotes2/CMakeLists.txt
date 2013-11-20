@@ -48,6 +48,7 @@ set(knotes2_SRCS apps/main.cpp apps/application.cpp apps/knotesapp.cpp apps/knot
                 notes/knote.cpp
                 notes/knotedisplaysettings.cpp
                 dialog/selectednotefolderdialog.cpp
+                #configdialog/knotesimpleconfigdialog.cpp
 )
 
 
