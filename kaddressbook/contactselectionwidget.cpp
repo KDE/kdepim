@@ -18,6 +18,7 @@
 */
 
 #include "contactselectionwidget.h"
+#include "utils.h"
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/EntityTreeModel>
@@ -212,19 +213,7 @@ Akonadi::Item::List ContactSelectionWidget::collectAllContactsItem() const
 
 Akonadi::Item::List ContactSelectionWidget::collectSelectedContactsItem() const
 {
-    Akonadi::Item::List lst;
-
-    const QModelIndexList indexes = mSelectionModel->selectedRows( 0 );
-    for ( int i = 0; i < indexes.count(); ++i ) {
-      const QModelIndex index = indexes.at( i );
-      if ( index.isValid() ) {
-        const Akonadi::Item item =
-          index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-        if ( item.isValid() && item.hasPayload<KABC::Addressee>() ) {
-          lst.append( item );
-        }
-      }
-    }
+    Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mSelectionModel);
 
     return lst;
 }

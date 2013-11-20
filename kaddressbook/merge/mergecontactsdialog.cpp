@@ -16,6 +16,9 @@
 */
 
 #include "mergecontactsdialog.h"
+#include "utils.h"
+
+#include <Akonadi/Item>
 
 #include <KConfigGroup>
 #include <KLocale>
@@ -28,6 +31,11 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
     setCaption( i18n( "Select Contacts to merge" ) );
     setButtons( Ok | Cancel );
     readConfig();
+    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(selectionModel);
+    if (lst.isEmpty()) {
+        enableButtonOk(false);
+        //Add info that list is empty
+    }
 }
 
 MergeContactsDialog::~MergeContactsDialog()
