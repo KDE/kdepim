@@ -20,6 +20,7 @@
 #include "noteshared/attributes/notedisplayattribute.h"
 
 #include <KGlobalSettings>
+#include <QDebug>
 
 KNoteDisplaySettings::KNoteDisplaySettings(NoteShared::NoteDisplayAttribute *attr)
     : mDisplayAttribute(attr)
@@ -34,6 +35,7 @@ KNoteDisplaySettings::~KNoteDisplaySettings()
 void KNoteDisplaySettings::setDisplayAttribute(NoteShared::NoteDisplayAttribute *attr)
 {
     mDisplayAttribute = attr;
+    qDebug()<<" set !mDisplayAttribute->position()"<<mDisplayAttribute->position();
 }
 
 QColor KNoteDisplaySettings::backgroundColor() const
@@ -110,8 +112,10 @@ bool KNoteDisplaySettings::isHidden() const
 
 QPoint KNoteDisplaySettings::position() const
 {
-    if (mDisplayAttribute)
+    if (mDisplayAttribute) {
+        qDebug()<<" mDisplayAttribute->position()"<<mDisplayAttribute->position();
         return mDisplayAttribute->position();
+    }
     else
         return QPoint( -10000, -10000 );
 }

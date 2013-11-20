@@ -202,8 +202,8 @@ KNotesApp::~KNotesApp()
 {
     qDeleteAll( m_noteActions );
     m_noteActions.clear();
-#if 0
     saveNotes();
+#if 0
     delete m_findPos;
     m_findPos = 0;
 #endif

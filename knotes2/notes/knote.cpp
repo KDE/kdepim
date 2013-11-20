@@ -135,14 +135,14 @@ KNote::~KNote()
 void KNote::setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set)
 {
     mItem = item;
-    if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
-        mDisplayAttribute->setDisplayAttribute(mItem.attribute<NoteShared::NoteDisplayAttribute>());
+    if ( item.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+        mDisplayAttribute->setDisplayAttribute(item.attribute<NoteShared::NoteDisplayAttribute>());
     }
     if (set.contains("ATR:KJotsLockAttribute")) {
         setEnabled(!item.hasAttribute<NoteShared::NoteLockAttribute>());
     }
     if (set.contains("PLD:RFC822")) {
-        KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
+        KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
         setName(noteMessage->subject(false)->asUnicodeString());
         if ( noteMessage->contentType()->isHTMLText() ) {
             m_editor->setAcceptRichText(true);
@@ -153,6 +153,7 @@ void KNote::setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set
         }
     }
     if (set.contains("ATR:NoteDisplayAttribute")) {
+        qDebug()<<" ATR:NoteDisplayAttribute";
         //TODO
     }
     if (set.contains("ATR:NoteAlarmAttribute")) {
@@ -186,6 +187,8 @@ void KNote::slotKill( bool force )
 
 void KNote::saveNote()
 {
+    if (!m_editor->document()->isModified())
+        return;
     NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>( Akonadi::Entity::AddIfMissing );
     attribute->setPosition(pos());
     attribute->setSize(QSize(width(), height()));
@@ -198,13 +201,26 @@ void KNote::saveNote()
     }
 #endif
     KMime::Message::Ptr message = mItem.payload<KMime::Message::Ptr>();
-    //TODO
+    const QByteArray encoding( "utf-8" );
+    message->subject( true )->fromUnicodeString( name(), encoding );
+    message->contentType( true )->setMimeType( m_editor->acceptRichText() ? "text/html" : "text/plain" );
+    message->contentType()->setCharset(encoding);
+    message->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
+    message->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+    message->mainBodyPart()->fromUnicodeString( text().isEmpty() ? QString::fromLatin1( " " ) : text());
+    qDebug()<<" text()"<<text();
+
+    message->assemble();
+
+    mItem.setPayload( message );
+
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
     connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
 }
 
 void KNote::slotNoteSaved(KJob *job)
 {
+    qDebug()<<" void KNote::slotNoteSaved(KJob *job)";
     if ( job->error() ) {
         qDebug()<<" problem during save note:"<<job->errorString();
     }
@@ -831,6 +847,7 @@ void KNote::prepare()
 {
     KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
     setName(noteMessage->subject(false)->asUnicodeString());
+    qDebug()<<" PREPARE "<<noteMessage->mainBodyPart()->decodedText();
     if ( noteMessage->contentType()->isHTMLText() ) {
         m_editor->setAcceptRichText(true);
         m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
@@ -846,10 +863,7 @@ void KNote::prepare()
         m_readOnly->setChecked( false );
     }
     slotUpdateReadOnly();
-    if (mDisplayAttribute->isHidden())
-        hide();
-    else
-        show();
+    qDebug()<<" mDisplayAttribute->size()"<<mDisplayAttribute->size();
     resize(mDisplayAttribute->size());
     const QPoint& position = mDisplayAttribute->position();
     QRect desk = kapp->desktop()->rect();
@@ -860,6 +874,10 @@ void KNote::prepare()
     if ( mItem.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
         //TODO add alarm attribute
     }
+    if (mDisplayAttribute->isHidden())
+        hide();
+    else
+        show();
     // read configuration settings...
     slotApplyConfig();
 
