@@ -18,6 +18,8 @@ set(libknotes2private_lib_SRCS
     ../knotes/knoteedit.cpp
     ../knotes/configdialog/knotesimpleconfigdialog.cpp
     ../knotes/configdialog/knoteconfigdialog.cpp
+    ../knotes/configdialog/knotedisplayconfigwidget.cpp
+    ../knotes/configdialog/knoteeditorconfigwidget.cpp
     ../knotes/print/knoteprintselectthemedialog.cpp
     ../knotes/print/knoteprintselectthemecombobox.cpp
 
