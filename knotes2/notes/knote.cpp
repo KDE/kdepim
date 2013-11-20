@@ -384,9 +384,9 @@ void KNote::slotClose()
         m_config->setPosition( pos() );
         m_config->writeConfig();
     }
+#endif
     // just hide the note so it's still available from the dock window
     hide();
-#endif
 }
 
 void KNote::slotSetAlarm()

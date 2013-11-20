@@ -251,6 +251,10 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
                      SLOT(slotWalkThroughNotes()) ) ;
             connect( note, SIGNAL(sigRequestNewNote()),
                      SLOT(newNote()) );
+            connect( note, SIGNAL(sigNameChanged(QString)),
+                     SLOT(updateNoteActions()) );
+            connect( note, SIGNAL(sigColorChanged()),
+                     SLOT(updateNoteActions()) );
         }
     }
 }
