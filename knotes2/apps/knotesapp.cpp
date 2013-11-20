@@ -449,7 +449,7 @@ void KNotesApp::updateNoteActions()
 #warning utf8: use QString
 #endif
         KAction *action = new KAction( note->name().replace( QLatin1String("&"), QLatin1String("&&") ), this );
-        action->setData(note->noteId());
+        action->setObjectName(QString::number(note->noteId()));
         connect( action, SIGNAL(triggered(bool)), SLOT(slotShowNote()) );
         KIconEffect effect;
         QPixmap icon =
@@ -496,6 +496,11 @@ void KNotesApp::slotSecondaryActivateRequested( const QPoint & )
     newNote();
 }
 
+void KNotesApp::slotShowNote()
+{
+    // tell the WM to give this note focus
+    showNote( sender()->objectName().toLongLong() );
+}
 
 #if 0
 
@@ -533,11 +538,6 @@ QVariantMap KNotesApp::notes() const
 // -------------------- protected slots -------------------- //
 
 
-void KNotesApp::slotShowNote()
-{
-    // tell the WM to give this note focus
-    showNote( sender()->objectName() );
-}
 
 void KNotesApp::slotWalkThroughNotes()
 {
