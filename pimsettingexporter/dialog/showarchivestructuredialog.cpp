@@ -31,7 +31,7 @@ ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, 
     : KDialog(parent),
       mFileName(filename)
 {
-    setCaption( i18n( "Show Archive Content" ) );
+    setCaption( i18n( "Show Archive Content on file \"%1\"", filename ) );
     setButtons( User1 | Close );
     setModal( true );
     mTreeWidget = new QTreeWidget;
