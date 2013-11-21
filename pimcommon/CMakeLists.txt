@@ -115,6 +115,7 @@ add_subdirectory(texteditor/richtexteditor/tests)
 add_subdirectory(widgets/tests)
 add_subdirectory(shorturl/tests)
 add_subdirectory(autocorrection/tests)
+add_subdirectory(nepomukdebug/tests)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
