@@ -130,5 +130,15 @@ void KNoteDisplayConfigWidget::load(NoteShared::NoteDisplayAttribute *attr)
 
 void KNoteDisplayConfigWidget::save(NoteShared::NoteDisplayAttribute *attr)
 {
-
+    if (attr) {
+        attr->setForegroundColor(kcfg_FgColor->color());
+        attr->setBackgroundColor(kcfg_BgColor->color());
+        attr->setShowInTaskbar(kcfg_ShowInTaskbar->isChecked());
+        if (kcfg_RememberDesktop) {
+            attr->setRememberDesktop(kcfg_RememberDesktop->isChecked());
+        }
+        if (kcfg_Height && kcfg_Width) {
+            attr->setSize(QSize(kcfg_Width->value(), kcfg_Height->value()));
+        }
+    }
 }

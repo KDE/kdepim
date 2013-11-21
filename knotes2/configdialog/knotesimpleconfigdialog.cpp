@@ -32,7 +32,7 @@ KNoteSimpleConfigDialog::KNoteSimpleConfigDialog( const QString &title,
                                                   QWidget *parent )
     : KDialog( parent )
 {
-    setButtons( Default | Ok | Apply | Cancel  );
+    setButtons( /*Default |*/ Ok | Cancel  );
     setDefaultButton( Ok );
 
     setCaption( title );
@@ -55,10 +55,12 @@ KNoteSimpleConfigDialog::KNoteSimpleConfigDialog( const QString &title,
     mTabWidget->addTab(mDisplayConfigWidget, i18n( "Display Settings" ));
 
     setMainWidget(mTabWidget);
+    readConfig();
 }
 
 KNoteSimpleConfigDialog::~KNoteSimpleConfigDialog()
 {
+    writeConfig();
 }
 
 void KNoteSimpleConfigDialog::load(const Akonadi::Item &item)
@@ -76,8 +78,25 @@ void KNoteSimpleConfigDialog::slotUpdateCaption(const QString & name)
     setCaption( name );
 }
 
-void KNoteSimpleConfigDialog::save()
+void KNoteSimpleConfigDialog::save(Akonadi::Item &item)
 {
-
+    NoteShared::NoteDisplayAttribute *attr =  item.attribute<NoteShared::NoteDisplayAttribute>( Akonadi::Entity::AddIfMissing );
+    mEditorConfigWidget->save(attr);
+    mDisplayConfigWidget->save(attr);
 }
 
+void KNoteSimpleConfigDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "KNoteSimpleConfigDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void KNoteSimpleConfigDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "KNoteSimpleConfigDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}

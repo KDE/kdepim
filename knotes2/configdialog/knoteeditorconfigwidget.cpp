@@ -94,5 +94,12 @@ void KNoteEditorConfigWidget::load(NoteShared::NoteDisplayAttribute *attr)
 
 void KNoteEditorConfigWidget::save(NoteShared::NoteDisplayAttribute *attr)
 {
-
+    if (attr) {
+        attr->setTabSize(kcfg_TabSize->value());
+        attr->setAutoIndent(kcfg_AutoIndent->isChecked());
+        //FIXME richtext
+        //kcfg_RichText->setChecked(attr->);
+        attr->setFont(kcfg_Font->font());
+        attr->setTitleFont(kcfg_TitleFont->font());
+    }
 }

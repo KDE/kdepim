@@ -154,7 +154,7 @@ void KNote::setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set
     }
     if (set.contains("ATR:NoteDisplayAttribute")) {
         qDebug()<<" ATR:NoteDisplayAttribute";
-        //TODO
+        slotApplyConfig();
     }
     if (set.contains("ATR:NoteAlarmAttribute")) {
         //TODO
@@ -429,10 +429,15 @@ void KNote::slotPreferences()
     dialog->load(mItem);
     connect( this, SIGNAL(sigNameChanged(QString)), dialog,
              SLOT(slotUpdateCaption(QString)) );
-    dialog->exec();
+    if (dialog->exec() ) {
+        dialog->save(mItem);
+        m_blockEmitDataChanged = false;
+        //Verify it.
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+        //saveNote();
+    }
     delete dialog;
-    m_blockEmitDataChanged = false;
-    saveNote();
 }
 
 void KNote::slotSend()
@@ -466,11 +471,10 @@ void KNote::print(bool preview)
     if ( isModified() ) {
         saveNote();
     }
-#if 0
     KNotePrinter printer;
     QList<KNotePrintObject*> lst;
-    lst.append(new KNotePrintObject(m_journal));
-    printer.setDefaultFont( m_config->font() );
+    lst.append(new KNotePrintObject(mItem));
+    printer.setDefaultFont( mDisplayAttribute->font() );
 
     KNotesGlobalConfig *globalConfig = KNotesGlobalConfig::self();
     QString printingTheme = globalConfig->theme();
@@ -484,7 +488,6 @@ void KNote::print(bool preview)
     if (!printingTheme.isEmpty()) {
         printer.printNotes( lst, printingTheme, preview );
     }
-#endif
 }
 
 void KNote::slotSaveAs()

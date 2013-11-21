@@ -15,35 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef KNOTEPRINTOBJECT_H
+#define KNOTEPRINTOBJECT_H
 
-#ifndef KNoteSimpleConfigDialog_H
-#define KNoteSimpleConfigDialog_H
+#include <QObject>
+#include <qmetatype.h>
 #include "knotes_export.h"
+
 #include <Akonadi/Item>
-#include <KDialog>
-class QTabWidget;
-class KNoteEditorConfigWidget;
-class KNoteDisplayConfigWidget;
-class KNOTES_EXPORT KNoteSimpleConfigDialog : public KDialog
+
+class KNOTES_EXPORT KNotePrintObject : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString description READ description)
+    Q_PROPERTY(QString name READ name)
+    Q_PROPERTY(QString currentDateTime READ currentDateTime)
 public:
-    explicit KNoteSimpleConfigDialog( const QString &title, QWidget *parent=0 );
-    ~KNoteSimpleConfigDialog();
+    explicit KNotePrintObject(const Akonadi::Item &item, QObject *parent=0);
+    ~KNotePrintObject();
 
-    void load(const Akonadi::Item &item);
-    void save(Akonadi::Item &item);
-
-public Q_SLOTS:
-    void slotUpdateCaption(const QString & name);
+    QString description() const;
+    QString name() const;
+    QString currentDateTime() const;
 
 private:
-
-    void readConfig();
-    void writeConfig();
-    QTabWidget *mTabWidget;
-    KNoteEditorConfigWidget *mEditorConfigWidget;
-    KNoteDisplayConfigWidget *mDisplayConfigWidget;
+    Akonadi::Item mItem;
 };
 
-#endif // KNoteSimpleConfigDialog_H
+Q_DECLARE_METATYPE(QList<KNotePrintObject*>)
+#endif // KNOTEPRINTOBJECT_H

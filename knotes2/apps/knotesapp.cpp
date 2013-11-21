@@ -34,12 +34,12 @@
 //#include "knotesadaptor.h"
 //#include "alarms/knotesalarm.h"
 #include "knotesapp.h"
-//#include "print/knoteprinter.h"
-//#include "print/knoteprintobject.h"
+#include "print/knoteprinter.h"
+#include "print/knoteprintobject.h"
 #include "knotesglobalconfig.h"
 #include "noteshared/network/notesnetworkreceiver.h"
 #include "dialog/knoteskeydialog.h"
-//#include "print/knoteprintselectednotesdialog.h"
+#include "print/knoteprintselectednotesdialog.h"
 
 #include <KMime/KMimeMessage>
 #include "akonadi_next/note.h"
