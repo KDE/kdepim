@@ -69,6 +69,7 @@ set(libpimcommon_SRCS
   nepomukdebug/searchdebugnepomukshowdialog.cpp
   nepomukdebug/sparqlsyntaxhighlighter.cpp
   nepomukdebug/akonadiresultlistview.cpp
+  nepomukdebug/nepomukdebugutils.cpp
 )
 
 kde4_add_ui_files(libpimcommon_SRCS
