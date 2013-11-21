@@ -68,6 +68,7 @@ set(libpimcommon_SRCS
   stockageservice/stockageserviceabstract.cpp
   nepomukdebug/searchdebugnepomukshowdialog.cpp
   nepomukdebug/sparqlsyntaxhighlighter.cpp
+  nepomukdebug/akonadiresultlistview.cpp
 )
 
 kde4_add_ui_files(libpimcommon_SRCS
