@@ -20,9 +20,12 @@
 #define NEPOMUKDEBUGDIALOG_H
 
 #include <KDialog>
+class QModelIndex;
 namespace PimCommon {
 class AkonadiResultListView;
+class PlainTextEditorWidget;
 }
+class KJob;
 class QItemSelectionModel;
 class NepomukDebugDialog : public KDialog
 {
@@ -31,10 +34,16 @@ public:
     explicit NepomukDebugDialog(QItemSelectionModel *selectionModel, QWidget *parent=0);
     ~NepomukDebugDialog();
 
+private slots:
+    void slotSearchInfoWithNepomuk();
+    void slotItemFetched(KJob *job);
+    void slotShowItem(const QModelIndex &index);
+
 private:
     void writeConfig();
     void readConfig();
     PimCommon::AkonadiResultListView *mListView;
+    PimCommon::PlainTextEditorWidget *mResult;
 };
 
 #endif // NEPOMUKDEBUGDIALOG_H

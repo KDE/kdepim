@@ -19,24 +19,44 @@
 #include "nepomukdebugdialog.h"
 #include "utils.h"
 
+#include "pimcommon/nepomukdebug/searchdebugnepomukshowdialog.h"
 #include "pimcommon/nepomukdebug/akonadiresultlistview.h"
-
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
+#include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 #include <Akonadi/Item>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
 
 #include <KLocale>
+#include <KMessageBox>
 
 #include <QStringListModel>
+#include <QHBoxLayout>
+#include <QInputDialog>
+#include <QPointer>
 
 NepomukDebugDialog::NepomukDebugDialog(QItemSelectionModel *selectionModel, QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Nepomuk Debug"));
-    setButtons(Close);
+    setButtons(User1|Close);
+    setButtonText(User1, i18n("Search info with nepomukshow..."));
     setDefaultButton( Close );
+
+    QWidget *w = new QWidget;
+    QHBoxLayout *lay = new QHBoxLayout;
+    w->setLayout(lay);
+    mResult = new PimCommon::PlainTextEditorWidget;
+    mResult->setReadOnly(true);
+
     mListView = new PimCommon::AkonadiResultListView;
     QStringListModel *resultModel = new QStringListModel( this );
     mListView->setModel( resultModel );
-    setMainWidget( mListView );
+
+    lay->addWidget(mListView);
+    lay->addWidget(mResult);
+
+    setMainWidget( w );
     const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(selectionModel);
     QStringList uidList;
     Q_FOREACH ( const Akonadi::Item &item, lst ) {
@@ -44,11 +64,40 @@ NepomukDebugDialog::NepomukDebugDialog(QItemSelectionModel *selectionModel, QWid
     }
     resultModel->setStringList( uidList );
     readConfig();
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSearchInfoWithNepomuk()));
+    connect( mListView, SIGNAL(activated(QModelIndex)), this, SLOT(slotShowItem(QModelIndex)) );
 }
 
 NepomukDebugDialog::~NepomukDebugDialog()
 {
     writeConfig();
+}
+
+void NepomukDebugDialog::slotShowItem(const QModelIndex &index)
+{
+    if ( !index.isValid() )
+        return;
+
+    const QString uid = index.data( Qt::DisplayRole ).toString();
+    Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( Akonadi::Item( uid.toLongLong() ) );
+    fetchJob->fetchScope().fetchFullPayload();
+    connect( fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotItemFetched(KJob*)) );
+}
+
+void NepomukDebugDialog::slotItemFetched(KJob *job)
+{
+    mResult->editor()->clear();
+
+    if ( job->error() ) {
+        KMessageBox::error( this, i18n("Error on fetching item") );
+        return;
+    }
+
+    Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+    if ( !fetchJob->items().isEmpty() ) {
+        const Akonadi::Item item = fetchJob->items().first();
+        mResult->editor()->setPlainText( QString::fromUtf8( item.payloadData() ) );
+    }
 }
 
 void NepomukDebugDialog::readConfig()
@@ -67,5 +116,18 @@ void NepomukDebugDialog::writeConfig()
     grp.sync();
 }
 
+void NepomukDebugDialog::slotSearchInfoWithNepomuk()
+{
+    QString defaultValue;
+    if (mResult->editor()->textCursor().hasSelection()) {
+        defaultValue = mResult->editor()->textCursor().selectedText().trimmed();
+    }
+    const QString nepomukId = QInputDialog::getText(this, i18n("Search with nepomukshow"), i18n("Nepomuk id:"), QLineEdit::Normal, defaultValue);
+    if (nepomukId.isEmpty())
+        return;
+    QPointer<PimCommon::SearchDebugNepomukShowDialog> dlg = new PimCommon::SearchDebugNepomukShowDialog(nepomukId, this);
+    dlg->exec();
+    delete dlg;
+}
 
 #include "moc_nepomukdebugdialog.cpp"
