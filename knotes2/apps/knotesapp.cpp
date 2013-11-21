@@ -616,12 +616,10 @@ void KNotesApp::slotFindNext()
 #endif
 void KNotesApp::slotPreferences()
 {
-#if 0 //FIXME
     // create a new preferences dialog...
     KNoteConfigDialog *dialog = new KNoteConfigDialog( i18n( "Settings" ), this);
     connect( dialog, SIGNAL(configWrote()), this, SLOT(slotConfigUpdated()));
     dialog->show();
-#endif
 }
 
 void KNotesApp::slotConfigUpdated()

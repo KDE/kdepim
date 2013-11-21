@@ -16,27 +16,33 @@
 */
 
 
-#ifndef KNoteSimpleConfigDialog_H
-#define KNoteSimpleConfigDialog_H
-#include "knotes_export.h"
-#include <Akonadi/Item>
-#include <KDialog>
+#ifndef KNOTEEDITORCONFIGWIDGET_H
+#define KNOTEEDITORCONFIGWIDGET_H
 
-class KNOTES_EXPORT KNoteSimpleConfigDialog : public KDialog
+#include <QWidget>
+class KIntNumInput;
+class QCheckBox;
+class KFontRequester;
+namespace NoteShared {
+class NoteDisplayAttribute;
+}
+
+class KNoteEditorConfigWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KNoteSimpleConfigDialog( const QString &title, QWidget *parent=0 );
-    ~KNoteSimpleConfigDialog();
+    explicit KNoteEditorConfigWidget(bool defaults , QWidget *parent = 0);
+    ~KNoteEditorConfigWidget();
 
-    void load(const Akonadi::Item &item);
-
-public Q_SLOTS:
-    void slotUpdateCaption(const QString & name);
+    void load(NoteShared::NoteDisplayAttribute *attr);
+    void save(NoteShared::NoteDisplayAttribute *attr);
 
 private:
-    void save();
-
+    KIntNumInput *kcfg_TabSize;
+    QCheckBox *kcfg_AutoIndent;
+    QCheckBox *kcfg_RichText;
+    KFontRequester *kcfg_Font;
+    KFontRequester *kcfg_TitleFont;
 };
 
-#endif // KNoteSimpleConfigDialog_H
+#endif // KNOTEEDITORCONFIGWIDGET_H

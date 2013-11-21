@@ -15,28 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef KNOTEDISPLAYCONFIGWIDGET_H
+#define KNOTEDISPLAYCONFIGWIDGET_H
 
-#ifndef KNoteSimpleConfigDialog_H
-#define KNoteSimpleConfigDialog_H
-#include "knotes_export.h"
-#include <Akonadi/Item>
-#include <KDialog>
-
-class KNOTES_EXPORT KNoteSimpleConfigDialog : public KDialog
+#include <QWidget>
+class KColorButton;
+class QCheckBox;
+class KIntNumInput;
+namespace NoteShared {
+class NoteDisplayAttribute;
+}
+class KNoteDisplayConfigWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KNoteSimpleConfigDialog( const QString &title, QWidget *parent=0 );
-    ~KNoteSimpleConfigDialog();
+    explicit KNoteDisplayConfigWidget(bool defaults , QWidget *parent = 0);
+    ~KNoteDisplayConfigWidget();
 
-    void load(const Akonadi::Item &item);
-
-public Q_SLOTS:
-    void slotUpdateCaption(const QString & name);
+    void load(NoteShared::NoteDisplayAttribute *attr);
+    void save(NoteShared::NoteDisplayAttribute *attr);
 
 private:
-    void save();
-
+    KColorButton *kcfg_FgColor;
+    KColorButton *kcfg_BgColor;
+    QCheckBox *kcfg_ShowInTaskbar;
+    QCheckBox *kcfg_RememberDesktop;
+    KIntNumInput *kcfg_Width;
+    KIntNumInput *kcfg_Height;
 };
 
-#endif // KNoteSimpleConfigDialog_H
+
+#endif // KNOTEDISPLAYCONFIGWIDGET_H

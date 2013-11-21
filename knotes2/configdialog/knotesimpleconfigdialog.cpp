@@ -16,18 +16,19 @@
 */
 
 #include "knotesimpleconfigdialog.h"
-
+#include "knoteconfigdialog.h"
+#include "knotedisplayconfigwidget.h"
+#include "knoteeditorconfigwidget.h"
 #include <KLocale>
 #include <KWindowSystem>
 
 
 #include <QApplication>
 
-KNoteSimpleConfigDialog::KNoteSimpleConfigDialog(const Akonadi::Item &item, const QString &title,
-                                                  QWidget *parent, const QString &name )
-    : KConfigDialog( parent, name )
+KNoteSimpleConfigDialog::KNoteSimpleConfigDialog( const QString &title,
+                                                  QWidget *parent )
+    : KDialog( parent )
 {
-    setFaceType( KPageDialog::List );
     setButtons( Default | Ok | Apply | Cancel  );
     setDefaultButton( Ok );
 
@@ -42,20 +43,25 @@ KNoteSimpleConfigDialog::KNoteSimpleConfigDialog(const Akonadi::Item &item, cons
                                  IconSize( KIconLoader::Small ) ) );
 #endif
     showButtonSeparator( true );
-
-    addPage( new KNoteDisplayConfigWidget( false ), i18n( "Display" ), QLatin1String("knotes"),
-             i18n( "Display Settings" ) );
-    addPage( new KNoteEditorConfigWidget( false ), i18n( "Editor" ), QLatin1String("accessories-text-editor"),
-             i18n( "Editor Settings" ) );
 }
 
 KNoteSimpleConfigDialog::~KNoteSimpleConfigDialog()
 {
 }
 
+void KNoteSimpleConfigDialog::load(const Akonadi::Item &item)
+{
+
+}
+
 
 void KNoteSimpleConfigDialog::slotUpdateCaption(const QString & name)
 {
     setCaption( name );
+}
+
+void KNoteSimpleConfigDialog::save()
+{
+
 }
 

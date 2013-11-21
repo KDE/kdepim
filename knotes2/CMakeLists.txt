@@ -16,10 +16,10 @@ include_directories(
 
 set(libknotes2private_lib_SRCS
     ../knotes/knoteedit.cpp
-    #../knotes/configdialog/knotesimpleconfigdialog.cpp
-    #../knotes/configdialog/knoteconfigdialog.cpp
-    ../knotes/configdialog/knotedisplayconfigwidget.cpp
-    ../knotes/configdialog/knoteeditorconfigwidget.cpp
+    configdialog/knotesimpleconfigdialog.cpp
+    configdialog/knoteconfigdialog.cpp
+    configdialog/knotedisplayconfigwidget.cpp
+    configdialog/knoteeditorconfigwidget.cpp
     ../knotes/print/knoteprintselectthemedialog.cpp
     ../knotes/print/knoteprintselectthemecombobox.cpp
 
@@ -54,7 +54,7 @@ set(knotes2_SRCS apps/main.cpp apps/application.cpp apps/knotesapp.cpp apps/knot
 )
 
 
-#qt4_add_dbus_adaptor(knotes_SRCS  apps/org.kde.KNotes.xml apps/knotesapp.h KNotesApp )
+qt4_add_dbus_adaptor(knotes2_SRCS  apps/org.kde.KNotes.xml apps/knotesapp.h KNotesApp )
 
 #kde4_add_app_icon(knotes_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/icons/hi*-apps-knotes.png")
 
