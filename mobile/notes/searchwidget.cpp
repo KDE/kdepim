@@ -34,59 +34,8 @@ SearchWidget::SearchWidget( QWidget *parent )
 
 QString SearchWidget::query() const
 {
-#ifdef AKONADI_USE_STRIGI_SEARCH
-  QStringList containsPatternParts;
-
-  if ( mUi.inTitles->isChecked() ) {
-    containsPatternParts << QString::fromLatin1( "<contains>"
-                                                 "  <field name=\"subject\"/>"
-                                                 "  <string>%1</string>"
-                                                 "</contains>"
-                                               ).arg( mUi.searchText->text().toLower() );
-  }
-  if ( mUi.inContents->isChecked() ) {
-    containsPatternParts << QString::fromLatin1( "<contains>"
-                                                 "  <field name=\"plainTextMessageContent\"/>"
-                                                 "  <string>%1</string>"
-                                                 "</contains>"
-                                               ).arg( mUi.searchText->text().toLower() );
-  }
-
-  const QString containsPattern = containsPatternParts.isEmpty() ? QString() :
-                                                                   QLatin1String( "<or>" ) +
-                                                                   containsPatternParts.join( QLatin1String( "\n" ) ) +
-                                                                   QLatin1String( "</or>" );
-
-  const QString inCollection = QString::fromLatin1( "<equals>"
-                                                    "  <field name=\"isPartOf\"/>"
-                                                    "  <string>%1</string>"
-                                                    "</equals>"
-                                                  ).arg( mUi.collectionCombo->currentCollection().id() );
-
-  const QString isNote = QString::fromLatin1(
-                                              "<equals>"
-                                              "  <field name=\"type\"/>"
-                                              "  <string>Note</string>"
-                                              "</equals>"
-                                            );
-
-  QString query;
-  query += QLatin1String( "<request><query>" );
-
-  query += QLatin1String( "  <and>" );
-  query += isNote;
-  query += containsPattern;
-  if ( mUi.locatedInSpecificCollection->isChecked() )
-    query += inCollection;
-  query += QLatin1String( "  </and>" );
-
-  query += QLatin1String( "</query></request>" );
-
-  return query;
-#else
-
+  //TODO create search query from dialog
   return QString();
-#endif
 }
 
 DeclarativeSearchWidget::DeclarativeSearchWidget( QGraphicsItem *parent )

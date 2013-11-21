@@ -206,7 +206,8 @@ ActionMenuContainer {
 
     addNewActionName: "akonadi_event_create"
 
-    searchActionTitle: KDE.i18n( "Search For Events" )
+    //TODO enable when SearchWidget::query() is implemented
+    //searchActionTitle: KDE.i18n( "Search For Events" )
     configureActionTitle: KDE.i18n( "Configure Calendar" )
   }
 }

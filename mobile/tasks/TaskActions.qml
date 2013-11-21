@@ -145,8 +145,8 @@ ActionMenuContainer {
     type : "task"
 
     addNewActionName: "akonadi_todo_create"
-
-    searchActionTitle: KDE.i18n( "Search For Tasks" )
+    //TODO enable when SearchWidget::query() is implemented
+    //searchActionTitle: KDE.i18n( "Search For Tasks" )
     configureActionTitle: KDE.i18n( "Configure Tasks" )
   }
 }

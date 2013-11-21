@@ -122,6 +122,7 @@ ActionMenuContainer {
     configureActionVisible: false
 
     addNewActionName: "add_new_note"
-    searchActionTitle: KDE.i18n( "Search For Notes" )
+    //TODO enable when SearchWidget::query() is implemented
+    //searchActionTitle: KDE.i18n( "Search For Notes" )
   }
 }

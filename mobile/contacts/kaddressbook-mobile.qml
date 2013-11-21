@@ -335,13 +335,14 @@ KPIM.MainView {
                 guiStateManager.pushState( KPIM.GuiStateManager.ConfigScreenState );
               }
             },
-            KPIM.ScriptAction {
-              name : "search_contact"
-              script : {
-                actionPanel.collapse();
-                guiStateManager.pushState( KPIM.GuiStateManager.SearchScreenState );
-              }
-            },
+//TODO enable when SearchWidget::query() is implemented
+//             KPIM.ScriptAction {
+//               name : "search_contact"
+//               script : {
+//                 actionPanel.collapse();
+//                 guiStateManager.pushState( KPIM.GuiStateManager.SearchScreenState );
+//               }
+//             },
             KPIM.ScriptAction {
               name : "to_selection_screen"
               script : {
