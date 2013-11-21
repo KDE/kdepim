@@ -460,7 +460,6 @@ void KNote::slotPrintPreview()
 
 void KNote::print(bool preview)
 {
-#if 0
     QString content;
     if ( !Qt::mightBeRichText( m_editor->text() ) ) {
         content = Qt::convertFromPlainText( m_editor->text() );
@@ -468,12 +467,9 @@ void KNote::print(bool preview)
         content = m_editor->text();
     }
     if ( isModified() ) {
-        saveConfig();
-        if ( !m_blockEmitDataChanged ) {
-            saveNote();
-        }
+        saveNote();
     }
-
+#if 0
     KNotePrinter printer;
     QList<KNotePrintObject*> lst;
     lst.append(new KNotePrintObject(m_journal));
@@ -847,7 +843,6 @@ void KNote::prepare()
 {
     KMime::Message::Ptr noteMessage = mItem.payload<KMime::Message::Ptr>();
     setName(noteMessage->subject(false)->asUnicodeString());
-    qDebug()<<" PREPARE "<<noteMessage->mainBodyPart()->decodedText();
     if ( noteMessage->contentType()->isHTMLText() ) {
         m_editor->setAcceptRichText(true);
         m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
@@ -863,7 +858,6 @@ void KNote::prepare()
         m_readOnly->setChecked( false );
     }
     slotUpdateReadOnly();
-    qDebug()<<" mDisplayAttribute->size()"<<mDisplayAttribute->size();
     resize(mDisplayAttribute->size());
     const QPoint& position = mDisplayAttribute->position();
     QRect desk = kapp->desktop()->rect();
@@ -940,8 +934,6 @@ void KNote::prepare()
     m_editor->setContentsMargins( 0, 0, 0, 0 );
     m_editor->setBackgroundRole( QPalette::Base );
     m_editor->setFrameStyle( NoFrame );
-    //FIXME m_editor->setText( m_journal->description() );
-
     m_editor->document()->setModified( false );
 }
 
