@@ -17,7 +17,7 @@ include_directories(
 set(libknotes2private_lib_SRCS
     ../knotes/knoteedit.cpp
     ../knotes/configdialog/knotesimpleconfigdialog.cpp
-    ../knotes/configdialog/knoteconfigdialog.cpp
+    #../knotes/configdialog/knoteconfigdialog.cpp
     ../knotes/configdialog/knotedisplayconfigwidget.cpp
     ../knotes/configdialog/knoteeditorconfigwidget.cpp
     ../knotes/print/knoteprintselectthemedialog.cpp
@@ -25,9 +25,9 @@ set(libknotes2private_lib_SRCS
 
 )
 
-configure_file(../knotes/settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg )
+configure_file( settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg )
 
-set( libknotes2private_kcfg_lib_SRCS ../knotes/settings/knoteconfig.kcfgc ../knotes/settings/knotesglobalconfig.kcfgc )
+set( libknotes2private_kcfg_lib_SRCS settings/knotesglobalconfig.kcfgc )
 
 kde4_add_kcfg_files(libknotes2private_kcfg_lib_SRCS ${libknotes2private_kcfg_lib_SRCS})
 
