@@ -19,13 +19,14 @@
 #ifndef SPARQLSYNTAXHIGHLIGHTER_H
 #define SPARQLSYNTAXHIGHLIGHTER_H
 
-#include <QtCore/QStringList>
-#include <QtCore/QRegExp>
-#include <QtGui/QSyntaxHighlighter>
+#include <QRegExp>
+#include <QSyntaxHighlighter>
 
-namespace Nepomuk2 {
+#include "pimcommon/pimcommon_export.h"
 
-class SparqlSyntaxHighlighter : public QSyntaxHighlighter
+namespace PimCommon {
+
+class PIMCOMMON_EXPORT SparqlSyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
