@@ -77,6 +77,10 @@ set(kaddressbook_merge_SRCS
    merge/searchpotentialduplicatecontactjob.cpp 
 )
 
+set(kaddressbook_debug_SRCS
+   debug/nepomukdebugdialog.cpp
+)
+
 set(kaddressbook_LIB_SRCS
   startup.cpp
   aboutdata.cpp
@@ -94,6 +98,7 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_merge_SRCS}
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
+  ${kaddressbook_debug_SRCS}
 )
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
