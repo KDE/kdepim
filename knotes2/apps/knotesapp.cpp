@@ -283,7 +283,7 @@ void KNotesApp::newNote(const QString &name, const QString &text)
         QByteArray encoding( "utf-8" );
 
         newPage->subject( true )->fromUnicodeString( title, encoding );
-        newPage->contentType( true )->setMimeType( "text/plain" );
+        newPage->contentType( true )->setMimeType( KNotesGlobalConfig::self()->richText() ? "text/html" : "text/plain" );
         newPage->contentType()->setCharset("utf-8");
         newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
         newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
@@ -296,6 +296,8 @@ void KNotesApp::newNote(const QString &name, const QString &text)
         newItem.setPayload( newPage );
 
         Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
+
+
         eda->setIconName( QString::fromLatin1( "text-plain" ) );
         newItem.addAttribute(eda);
 

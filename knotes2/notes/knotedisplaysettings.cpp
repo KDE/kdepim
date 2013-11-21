@@ -134,10 +134,6 @@ bool KNoteDisplaySettings::keepAbove() const
     else
         return KNotesGlobalConfig::self()->keepAbove();
 }
-#if 0
-config->setRichText( globalConfig->richText() );
-config->setReadOnly( globalConfig->readOnly() );
-#endif
 
 bool KNoteDisplaySettings::keepBelow() const
 {
