@@ -24,7 +24,7 @@
 #include "configdialog/knotesimpleconfigdialog.h"
 #include "print/knoteprintselectthemedialog.h"
 #include "knotes/notes/knotebutton.h"
-#include "knoteconfig.h"
+//#include "knoteconfig.h"
 #include "utils/knoteutils.h"
 #include "configdialog/knoteconfigdialog.h"
 #include "knoteedit.h"
