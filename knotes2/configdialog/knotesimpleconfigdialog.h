@@ -15,33 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SEARCHDEBUGNEPOMUKSHOWDIALOG_H
-#define SEARCHDEBUGNEPOMUKSHOWDIALOG_H
 
-#include <KDialog>
+#ifndef KNoteSimpleConfigDialog_H
+#define KNoteSimpleConfigDialog_H
+#include "knotes_export.h"
 
-namespace PimCommon {
-class PlainTextEditorWidget;
-}
+#include <KConfigDialog>
+#include <Akonadi/Item>
 
-class SearchDebugNepomukShowDialog : public KDialog
+class KNoteSimpleConfigDialog : public KConfigDialog
 {
     Q_OBJECT
 public:
-    explicit SearchDebugNepomukShowDialog(const QString &nepomukId, QWidget *parent=0);
-    ~SearchDebugNepomukShowDialog();
+    explicit KNoteSimpleConfigDialog( const Akonadi::Item &item, const QString &title,
+                    QWidget *parent, const QString &name );
+    ~KNoteSimpleConfigDialog();
 
-private Q_SLOTS:
-    void slotSaveAs();
-    void slotSearchInfoWithNepomuk();
-
-private:
-    void executeNepomukShow(const QString &nepomukId);
-    void readConfig();
-    void writeConfig();
-
-private:
-    PimCommon::PlainTextEditorWidget *mResult;
+public Q_SLOTS:
+    void slotUpdateCaption(const QString & name);
 };
 
-#endif // SEARCHDEBUGNEPOMUKSHOWDIALOG_H
+#endif // KNoteSimpleConfigDialog_H

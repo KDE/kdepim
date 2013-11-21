@@ -227,7 +227,6 @@ K_GLOBAL_STATIC( KMMainWidget::PtrList, theMainWidgetList )
     mFolderViewSplitter( 0 ),
     mArchiveFolderAction( 0 ),
     mShowBusySplashTimer( 0 ),
-    mShowingOfflineScreen( false ),
     mMsgActions( 0 ),
     mCurrentFolder( 0 ),
     mVacationIndicatorActive( false ),
@@ -495,27 +494,7 @@ void KMMainWidget::folderSelected( const Akonadi::Collection & col )
   if (mMsgView)
     mMsgView->clear(true);
   const bool newFolder = mCurrentFolder && ( mCurrentFolder->collection() != col );
-  // Re-enable the msg list and quicksearch if we're showing a splash
-  // screen. This is true either if there's no active folder, or if we
-  // have a timer that is no longer active (i.e. it has already fired)
-  // To make the if () a bit more complicated, we suppress the hiding
-  // when the new folder is also an IMAP folder, because that's an
-  // async operation and we don't want flicker if it results in just
-  // a new splash.
-  bool isImapResourceOnline = false;
-  bool folderIsAnImap = KMKernel::self()->isImapFolder( col, isImapResourceOnline );
-  const bool isNewImapFolder = col.isValid() && folderIsAnImap && newFolder;
-  if ( ( !mCurrentFolder  )
-      || ( !isNewImapFolder && mShowBusySplashTimer )
-      || ( newFolder && mShowingOfflineScreen && !( isNewImapFolder && !isImapResourceOnline ) ) ) {
-    if ( mMsgView ) {
-      mMsgView->viewer()->enableMessageDisplay();
-      mMsgView->clear( true );
-    }
-    if ( mMessagePane )
-      mMessagePane->show();
-    mShowingOfflineScreen = false;
-  }
+
   // Delete any pending timer, if needed it will be recreated below
   delete mShowBusySplashTimer;
   mShowBusySplashTimer = 0;
@@ -526,20 +505,6 @@ void KMMainWidget::folderSelected( const Akonadi::Collection & col )
   }
 
   mCurrentFolder = FolderCollection::forCollection( col );
-
-  if ( col.isValid() && folderIsAnImap ) {
-    if ( !isImapResourceOnline )
-    {
-        //mMessageListView->setCurrentFolder( 0 ); <-- useless in the new view: just do nothing
-        // FIXME: Use an "offline tab" ?
-        if (kmkernel->isOffline())
-            showOfflinePage();
-        else
-            showResourceOfflinePage();
-        updateFolderMenu();
-        return;
-    }
-  }
 
   readFolderConfig();
   if (mMsgView)
@@ -2527,7 +2492,6 @@ void KMMainWidget::slotShowBusySplash()
 void KMMainWidget::showOfflinePage()
 {
   if ( !mReaderWindowActive ) return;
-  mShowingOfflineScreen = true;
 
   mMsgView->displayOfflinePage();
 }
@@ -2535,7 +2499,6 @@ void KMMainWidget::showOfflinePage()
 void KMMainWidget::showResourceOfflinePage()
 {
   if ( !mReaderWindowActive ) return;
-  mShowingOfflineScreen = true;
 
   mMsgView->displayResourceOfflinePage();
 }
@@ -2728,7 +2691,7 @@ void KMMainWidget::slotDisplayCurrentMessage()
     slotMessageActivated( mMessagePane->currentItem() );
 }
 
-
+// Called by double-clicked or 'Enter' in the messagelist -> pop up reader window
 void KMMainWidget::slotMessageActivated( const Akonadi::Item &msg )
 {
   if ( !mCurrentFolder || !msg.isValid() )
@@ -2746,16 +2709,12 @@ void KMMainWidget::slotMessageActivated( const Akonadi::Item &msg )
     return;
   }
 
-  bool isImapResourceOnline = false;
-  bool folderIsAnImap = KMKernel::self()->isImapFolder( mCurrentFolder->collection(), isImapResourceOnline );
-  if (folderIsAnImap && !isImapResourceOnline) {
-    return;
-  }
+  // Try to fetch the mail, even in offline mode, it might be cached
   ItemFetchJob *itemFetchJob = MessageViewer::Viewer::createFetchJob( msg );
   connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
            SLOT(slotItemsFetchedForActivation(Akonadi::Item::List)) );
   connect( itemFetchJob, SIGNAL(result(KJob*)),
-           SLOT(itemsFetchDone(KJob*)) );
+           SLOT(itemsFetchForActivationDone(KJob*)) );
 }
 
 void KMMainWidget::slotItemsFetchedForActivation( const Akonadi::Item::List &list )
@@ -2773,6 +2732,14 @@ void KMMainWidget::slotItemsFetchedForActivation( const Akonadi::Item::List &lis
   const Akonadi::Collection parentCollection = MailCommon::Util::parentCollectionFromItem(msg);
   win->showMessage( overrideEncoding(), msg, parentCollection );
   win->show();
+}
+
+void KMMainWidget::itemsFetchForActivationDone( KJob * job )
+{
+    if ( job->error() ) {
+      kDebug() << job->error() << job->errorString();
+      BroadcastStatus::instance()->setStatusMsg( job->errorString() );
+    }
 }
 
 void KMMainWidget::slotMessageStatusChangeRequest( const Akonadi::Item &item, const Akonadi::MessageStatus & set, const Akonadi::MessageStatus &clear )
@@ -4511,6 +4478,8 @@ void KMMainWidget::slotMessageSelected(const Akonadi::Item &item)
       mShowBusySplashTimer->start( GlobalSettings::self()->folderLoadingTimeout() ); //TODO: check if we need a different timeout setting for this
 
       Akonadi::ItemFetchJob *itemFetchJob = MessageViewer::Viewer::createFetchJob( item );
+      const QString resource = mCurrentFolder->collection().resource();
+      itemFetchJob->setProperty( "_resource", QVariant::fromValue(resource) );
       connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
               SLOT(itemsReceived(Akonadi::Item::List)) );
       connect( itemFetchJob, SIGNAL(result(KJob*)), SLOT(itemsFetchDone(KJob*)) );
@@ -4559,7 +4528,29 @@ void KMMainWidget::itemsFetchDone( KJob *job )
   delete mShowBusySplashTimer;
   mShowBusySplashTimer = 0;
   if ( job->error() ) {
-    kDebug() << job->errorString();
+    // Unfortunately job->error() is Job::Unknown in many cases.
+    // (see JobPrivate::handleResponse in akonadi/job.cpp)
+    // So we show the "offline" page after checking the resource status.
+    kDebug() << job->error() << job->errorString();
+
+    const QString resource = job->property("_resource").toString();
+    const Akonadi::AgentInstance agentInstance = Akonadi::AgentManager::self()->instance( resource );
+    if ( !agentInstance.isOnline() ) {
+      // The resource is offline
+      if ( mMsgView ) {
+        mMsgView->viewer()->enableMessageDisplay();
+        mMsgView->clear( true );
+      }
+      mMessagePane->show();
+
+      if (kmkernel->isOffline())
+        showOfflinePage();
+      else
+        showResourceOfflinePage();
+    } else {
+      // Some other error
+      BroadcastStatus::instance()->setStatusMsg( job->errorString() );
+    }
   }
 }
 

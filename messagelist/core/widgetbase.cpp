@@ -101,7 +101,6 @@ public:
 
   View *mView;
   QString mLastAggregationId;
-  QString mLastStorageModelId;
   QString mLastThemeId;
   KLineEdit *mSearchEdit;
   QTimer *mSearchTimer;
@@ -403,8 +402,7 @@ void Widget::saveCurrentSelection()
     // Save the current selection
     MessageItem * lastSelectedMessageItem = d->mView->currentMessageItem( false );
     if ( lastSelectedMessageItem ) {
-      Manager::instance()->savePreSelectedMessageForStorageModelId(
-        d->mLastStorageModelId,
+      d->mStorageModel->savePreSelectedMessage(
         lastSelectedMessageItem ? lastSelectedMessageItem->uniqueId() : 0
       );
     }
@@ -416,7 +414,6 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
   if ( storageModel == d->mStorageModel )
     return; // nuthin to do here
 
-  saveCurrentSelection();
   d->setDefaultAggregationForStorageModel( storageModel );
   d->setDefaultThemeForStorageModel( storageModel );
   d->setDefaultSortOrderForStorageModel( storageModel );
@@ -437,8 +434,6 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
   StorageModel * oldModel = d->mStorageModel;
 
   d->mStorageModel = storageModel;
-  d->mLastStorageModelId = storageModel->id();
-
   d->mView->setStorageModel( d->mStorageModel, preSelectionMode );
 
   delete oldModel;

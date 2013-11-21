@@ -63,20 +63,6 @@ public:
     virtual void save();
 };
 
-class KNoteDisplayConfigWidget :public QWidget
-{
-    Q_OBJECT
-public:
-    explicit KNoteDisplayConfigWidget( bool defaults );
-};
-
-class KNoteEditorConfigWidget : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit KNoteEditorConfigWidget( bool defaults );
-};
-
 class KNotePrintConfig : public KCModule
 {
     Q_OBJECT

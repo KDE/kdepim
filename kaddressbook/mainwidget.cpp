@@ -23,9 +23,12 @@
 #include "globalcontactmodel.h"
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
+#include "merge/searchduplicatecontactwizard.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxportmanager.h"
+#include "debug/nepomukdebugdialog.h"
+
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
 #include "kaddressbookgrantlee/formatter/grantleecontactgroupformatter.h"
@@ -618,6 +621,19 @@ void MainWidget::setupActions( KActionCollection *collection )
   if (actTheme)
       actTheme->setChecked(true);
 
+  action = collection->addAction( QLatin1String("merge_contacts") );
+  action->setText( i18n( "Merge Contacts..." ) );
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(mergeContacts()) );
+
+  action = collection->addAction( QLatin1String("search_duplicate_contacts") );
+  action->setText( i18n( "Search Duplicate Contacts..." ) );
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSearchDuplicateContacts()) );
+
+#if !defined(NDEBUG)
+  action = collection->addAction( QLatin1String("debug_nepomuk") );
+  action->setText( i18n( "Debug Nepomuk..." ) );
+  connect( action, SIGNAL(triggered(bool)), this, SLOT(slotDebugNepomuk()) );
+#endif
 }
 
 void MainWidget::printPreview()
@@ -861,4 +877,21 @@ void MainWidget::slotGrantleeThemesUpdated()
     }
 }
 
+void MainWidget::mergeContacts()
+{
+    //TODO
+}
 
+void MainWidget::slotSearchDuplicateContacts()
+{
+    QPointer<SearchDuplicateContactWizard> wizard = new SearchDuplicateContactWizard(mItemView->selectionModel(), this);
+    wizard->exec();
+    delete wizard;
+}
+
+void MainWidget::slotDebugNepomuk()
+{
+    QPointer<NepomukDebugDialog> dlg = new NepomukDebugDialog(mItemView->selectionModel(), this);
+    dlg->exec();
+    delete dlg;
+}

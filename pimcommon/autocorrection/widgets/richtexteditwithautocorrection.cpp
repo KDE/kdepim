@@ -25,13 +25,22 @@ using namespace PimCommon;
 
 RichTextEditWithAutoCorrection::RichTextEditWithAutoCorrection(QWidget *parent)
     : PimCommon::RichTextEditor(parent),
-      mAutoCorrection(new PimCommon::AutoCorrection())
+      mAutoCorrection(new PimCommon::AutoCorrection()),
+      mNeedToDelete(true)
 {
 }
 
-
 RichTextEditWithAutoCorrection::~RichTextEditWithAutoCorrection()
 {
+    if (mNeedToDelete)
+        delete mAutoCorrection;
+}
+
+void RichTextEditWithAutoCorrection::setAutocorrection(PimCommon::AutoCorrection *autocorrect)
+{
+    mNeedToDelete = false;
+    delete mAutoCorrection;
+    mAutoCorrection = autocorrect;
 }
 
 AutoCorrection *RichTextEditWithAutoCorrection::autocorrection() const

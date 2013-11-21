@@ -22,6 +22,8 @@
 #include "knoteconfigdialog.h"
 #include "notes/knote.h"
 #include "print/knoteprintselectthemecombobox.h"
+#include "knotedisplayconfigwidget.h"
+#include "knoteeditorconfigwidget.h"
 #include "knotesglobalconfig.h"
 #include "notesharedglobalconfig.h"
 #include "noteshared/config/noteactionconfig.h"
@@ -138,75 +140,6 @@ KDE_EXPORT KCModule *create_knote_config_print( QWidget *parent )
 }
 
 
-KNoteDisplayConfigWidget::KNoteDisplayConfigWidget( bool defaults )
-    :QWidget( 0 )
-{
-    QGridLayout *layout = new QGridLayout( this );
-    layout->setSpacing( KDialog::spacingHint() );
-    layout->setMargin( defaults ? KDialog::marginHint() : 0 );
-
-    QLabel *label_FgColor = new QLabel( i18n( "&Text color:" ),this );
-    label_FgColor->setObjectName( QLatin1String("label_FgColor") );
-    layout->addWidget( label_FgColor, 0, 0 );
-
-    KColorButton *kcfg_FgColor = new KColorButton( this );
-    kcfg_FgColor->setObjectName( QLatin1String("kcfg_FgColor") );
-    label_FgColor->setBuddy( kcfg_FgColor );
-    layout->addWidget( kcfg_FgColor, 0, 1 );
-
-    QLabel *label_BgColor = new QLabel( i18n( "&Background color:" ),
-                                        this );
-    label_BgColor->setObjectName( QLatin1String("label_BgColor") );
-    layout->addWidget( label_BgColor, 1, 0 );
-
-    KColorButton *kcfg_BgColor = new KColorButton( this );
-    kcfg_BgColor->setObjectName( QLatin1String("kcfg_BgColor") );
-    label_BgColor->setBuddy( kcfg_BgColor );
-    layout->addWidget( kcfg_BgColor, 1, 1 );
-
-    QCheckBox *kcfg_ShowInTaskbar =
-            new QCheckBox( i18n( "&Show note in taskbar" ), this );
-    kcfg_ShowInTaskbar->setObjectName( QLatin1String("kcfg_ShowInTaskbar") );
-#ifdef Q_WS_X11
-    QCheckBox *kcfg_RememberDesktop =
-            new QCheckBox( i18n( "&Remember desktop" ), this );
-    kcfg_RememberDesktop->setObjectName( QLatin1String("kcfg_RememberDesktop") );
-#endif
-    if ( defaults ) {
-        QLabel *label_Width = new QLabel( i18n( "Default &width:" ), this );
-
-        layout->addWidget( label_Width, 2, 0 );
-
-        KIntNumInput *kcfg_Width = new KIntNumInput( this );
-        kcfg_Width->setObjectName( QLatin1String("kcfg_Width") );
-        label_Width->setBuddy( kcfg_Width );
-        kcfg_Width->setRange( 50, 2000, 10 );
-        kcfg_Width->setSliderEnabled( false );
-        layout->addWidget( kcfg_Width, 2, 1 );
-
-        QLabel *label_Height = new QLabel( i18n( "Default &height:" ),
-                                           this );
-        layout->addWidget( label_Height, 3, 0 );
-
-        KIntNumInput *kcfg_Height = new KIntNumInput( this );
-        kcfg_Height->setObjectName( QLatin1String("kcfg_Height") );
-        kcfg_Height->setRange( 50, 2000, 10 );
-        kcfg_Height->setSliderEnabled( false );
-        label_Height->setBuddy( kcfg_Height );
-        layout->addWidget( kcfg_Height, 3, 1 );
-
-        layout->addWidget( kcfg_ShowInTaskbar, 4, 0 );
-#ifdef Q_WS_X11
-        layout->addWidget( kcfg_RememberDesktop, 5, 0 );
-#endif
-    } else {
-        layout->addWidget( kcfg_ShowInTaskbar, 2, 0 );
-#ifdef Q_WS_X11
-        layout->addWidget( kcfg_RememberDesktop, 3, 0 );
-#endif
-    }
-    layout->setRowStretch(4,1);
-}
 
 KNoteDisplayConfig::KNoteDisplayConfig( const KComponentData &inst, QWidget *parent )
     :KCModule( inst, parent )
@@ -227,52 +160,6 @@ void KNoteDisplayConfig::load()
 void KNoteDisplayConfig::save()
 {
     KCModule::save();
-}
-
-KNoteEditorConfigWidget::KNoteEditorConfigWidget( bool defaults )
-    :QWidget( 0 )
-{
-    QGridLayout *layout = new QGridLayout( this );
-    layout->setSpacing( KDialog::spacingHint() );
-    layout->setMargin( defaults ? KDialog::marginHint() : 0 );
-
-    QLabel *label_TabSize = new QLabel( i18n( "&Tab size:" ), this );
-    layout->addWidget( label_TabSize, 0, 0, 1, 2 );
-
-    KIntNumInput *kcfg_TabSize = new KIntNumInput( this );
-    kcfg_TabSize->setObjectName( QLatin1String("kcfg_TabSize") );
-    kcfg_TabSize->setRange( 1, 40 );
-    kcfg_TabSize->setSliderEnabled( false );
-    label_TabSize->setBuddy( kcfg_TabSize );
-    layout->addWidget( kcfg_TabSize, 0, 2 );
-
-    QCheckBox *kcfg_AutoIndent = new QCheckBox( i18n( "Auto &indent" ),
-                                                this );
-    kcfg_AutoIndent->setObjectName( QLatin1String("kcfg_AutoIndent") );
-    layout->addWidget( kcfg_AutoIndent, 1, 0, 1, 2 );
-
-    QCheckBox *kcfg_RichText = new QCheckBox( i18n( "&Rich text" ), this );
-    kcfg_RichText->setObjectName( QLatin1String("kcfg_RichText") );
-    layout->addWidget( kcfg_RichText, 1, 2 );
-
-    QLabel *label_Font = new QLabel( i18n( "Text font:" ), this );
-    layout->addWidget( label_Font, 3, 0 );
-
-    KFontRequester *kcfg_Font = new KFontRequester( this );
-    kcfg_Font->setObjectName( QLatin1String("kcfg_Font") );
-    kcfg_Font->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
-                                           QSizePolicy::Fixed ) );
-    layout->addWidget( kcfg_Font, 3, 1, 1, 2 );
-
-    QLabel *label_TitleFont = new QLabel( i18n( "Title font:" ), this );
-    layout->addWidget( label_TitleFont, 2, 0 );
-
-    KFontRequester *kcfg_TitleFont = new KFontRequester( this );
-    kcfg_TitleFont->setObjectName( QLatin1String("kcfg_TitleFont") );
-    kcfg_TitleFont->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
-                                                QSizePolicy::Fixed ) );
-    layout->addWidget( kcfg_TitleFont, 2, 1, 1, 2 );
-    layout->setRowStretch(4,1);
 }
 
 KNoteEditorConfig::KNoteEditorConfig( const KComponentData &inst, QWidget *parent )

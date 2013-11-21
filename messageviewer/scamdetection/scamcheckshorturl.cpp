@@ -116,11 +116,11 @@ bool ScamCheckShortUrl::isShortUrl(const KUrl &url)
 void ScamCheckShortUrl::loadLongUrlServices()
 {
     QFile servicesFile(KGlobal::dirs()->findResource("data", QLatin1String("messageviewer/longurlServices.json")));
-    if (!servicesFile.open(QIODevice::ReadOnly)) {
-        qDebug()<<" json file \'longurlServices.json\' not found";
-    } else {
+    if (servicesFile.open(QIODevice::ReadOnly)) {
         const QVariantMap response = QJson::Parser().parse(&servicesFile).toMap();
         sSupportedServices = response.uniqueKeys();
+    } else {
+        qDebug()<<" json file \'longurlServices.json\' not found";
     }
 }
 

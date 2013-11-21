@@ -17,6 +17,8 @@
 
 #include "knotesimpleconfigdialog.h"
 #include "knoteconfigdialog.h"
+#include "knotedisplayconfigwidget.h"
+#include "knoteeditorconfigwidget.h"
 #include "knoteconfig.h"
 #include "kdepim-version.h"
 

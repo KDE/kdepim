@@ -33,6 +33,8 @@ public:
 
     PimCommon::AutoCorrection* autocorrection() const;
 
+    void setAutocorrection(PimCommon::AutoCorrection *autocorrect);
+
     void setAutocorrectionLanguage(const QString &language);
 
 protected:
@@ -40,6 +42,7 @@ protected:
 
 private:
     PimCommon::AutoCorrection *mAutoCorrection;
+    bool mNeedToDelete;
 };
 }
 

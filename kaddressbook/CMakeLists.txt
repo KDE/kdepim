@@ -69,11 +69,16 @@ set(kaddressbook_xxport_SRCS
 )
 
 set(kaddressbook_merge_SRCS
+   merge/matchcontact.cpp
    merge/mergecontacts.cpp
    merge/mergecontactsdialog.cpp
    merge/searchduplicatecontactwizard.cpp
    merge/potentialduplicatecontactswidget.cpp
    merge/searchpotentialduplicatecontactjob.cpp 
+)
+
+set(kaddressbook_debug_SRCS
+   debug/nepomukdebugdialog.cpp
 )
 
 set(kaddressbook_LIB_SRCS
@@ -89,9 +94,11 @@ set(kaddressbook_LIB_SRCS
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
   xxportmanager.cpp
+  utils.cpp
   ${kaddressbook_merge_SRCS}
   ${kaddressbook_printing_SRCS}
   ${kaddressbook_xxport_SRCS}
+  ${kaddressbook_debug_SRCS}
 )
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)

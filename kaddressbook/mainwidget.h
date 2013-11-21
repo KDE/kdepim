@@ -73,6 +73,8 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void print();
     void printPreview();
     void configure();
+    void mergeContacts();
+    void slotSearchDuplicateContacts();
 
   private Q_SLOTS:
     void delayedInit();
@@ -89,6 +91,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 
     void slotGrantleeThemeSelected();
     void slotGrantleeThemesUpdated();
+    void slotDebugNepomuk();
 
   private:
     void initGrantleeThemeName();

@@ -18,14 +18,14 @@
 
 #include "sparqlsyntaxhighlighter.h"
 #include <KDebug>
-
-Nepomuk2::SparqlSyntaxHighlighter::SparqlSyntaxHighlighter(QTextDocument* parent)
+using namespace PimCommon;
+SparqlSyntaxHighlighter::SparqlSyntaxHighlighter(QTextDocument* parent)
     : QSyntaxHighlighter(parent)
 {
     init();
 }
 
-void Nepomuk2::SparqlSyntaxHighlighter::init()
+void SparqlSyntaxHighlighter::init()
 {
     // Keywords
     QTextCharFormat keywordFormat;
@@ -80,7 +80,7 @@ void Nepomuk2::SparqlSyntaxHighlighter::init()
     m_rules.append( Rule( commentRegex, commentFormat ) );
 }
 
-void Nepomuk2::SparqlSyntaxHighlighter::highlightBlock(const QString& text)
+void SparqlSyntaxHighlighter::highlightBlock(const QString& text)
 {
     foreach (const Rule &rule, m_rules) {
         QRegExp expression(rule.pattern);
