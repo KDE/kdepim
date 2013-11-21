@@ -18,6 +18,7 @@
 
 #include "knotedisplaysettings.h"
 #include "noteshared/attributes/notedisplayattribute.h"
+#include "knotesglobalconfig.h"
 
 #include <KGlobalSettings>
 #include <QDebug>
@@ -35,7 +36,6 @@ KNoteDisplaySettings::~KNoteDisplaySettings()
 void KNoteDisplaySettings::setDisplayAttribute(NoteShared::NoteDisplayAttribute *attr)
 {
     mDisplayAttribute = attr;
-    qDebug()<<" set !mDisplayAttribute->position()"<<mDisplayAttribute->position();
 }
 
 QColor KNoteDisplaySettings::backgroundColor() const
@@ -43,7 +43,7 @@ QColor KNoteDisplaySettings::backgroundColor() const
     if (mDisplayAttribute)
         return mDisplayAttribute->backgroundColor();
     else
-        return QColor(Qt::yellow);
+        return KNotesGlobalConfig::self()->bgColor();
 }
 
 QColor KNoteDisplaySettings::foregroundColor() const
@@ -51,7 +51,7 @@ QColor KNoteDisplaySettings::foregroundColor() const
     if (mDisplayAttribute)
         return mDisplayAttribute->foregroundColor();
     else
-        return QColor(Qt::black);
+        return KNotesGlobalConfig::self()->fgColor();
 }
 
 QSize KNoteDisplaySettings::size() const
@@ -59,7 +59,7 @@ QSize KNoteDisplaySettings::size() const
     if (mDisplayAttribute)
         return mDisplayAttribute->size();
     else
-        return QSize(300,300);
+        return QSize(KNotesGlobalConfig::self()->width(), KNotesGlobalConfig::self()->height());
 }
 
 bool KNoteDisplaySettings::rememberDesktop() const
@@ -67,7 +67,7 @@ bool KNoteDisplaySettings::rememberDesktop() const
     if (mDisplayAttribute)
         return mDisplayAttribute->rememberDesktop();
     else
-        return true;
+        return KNotesGlobalConfig::self()->rememberDesktop();
 }
 
 int KNoteDisplaySettings::tabSize() const
@@ -75,7 +75,7 @@ int KNoteDisplaySettings::tabSize() const
     if (mDisplayAttribute)
         return mDisplayAttribute->tabSize();
     else
-        return 4;
+        return KNotesGlobalConfig::self()->tabSize();
 }
 
 QFont KNoteDisplaySettings::font() const
@@ -83,7 +83,7 @@ QFont KNoteDisplaySettings::font() const
     if (mDisplayAttribute)
         return mDisplayAttribute->font();
     else
-        return KGlobalSettings::generalFont();
+        return KNotesGlobalConfig::self()->font();
 }
 
 QFont KNoteDisplaySettings::titleFont() const
@@ -91,7 +91,7 @@ QFont KNoteDisplaySettings::titleFont() const
     if (mDisplayAttribute)
         return mDisplayAttribute->titleFont();
     else
-        return KGlobalSettings::windowTitleFont();
+        return KNotesGlobalConfig::self()->titleFont();
 }
 
 int KNoteDisplaySettings::desktop() const
@@ -99,7 +99,7 @@ int KNoteDisplaySettings::desktop() const
     if (mDisplayAttribute)
         return mDisplayAttribute->desktop();
     else
-        return -10;
+        return KNotesGlobalConfig::self()->desktop();
 }
 
 bool KNoteDisplaySettings::isHidden() const
@@ -107,17 +107,16 @@ bool KNoteDisplaySettings::isHidden() const
     if (mDisplayAttribute)
         return mDisplayAttribute->isHidden();
     else
-        return false;
+        return KNotesGlobalConfig::self()->hideNote();
 }
 
 QPoint KNoteDisplaySettings::position() const
 {
     if (mDisplayAttribute) {
-        qDebug()<<" mDisplayAttribute->position()"<<mDisplayAttribute->position();
         return mDisplayAttribute->position();
     }
     else
-        return QPoint( -10000, -10000 );
+        return KNotesGlobalConfig::self()->position();
 }
 
 bool KNoteDisplaySettings::showInTaskbar() const
@@ -125,7 +124,7 @@ bool KNoteDisplaySettings::showInTaskbar() const
     if (mDisplayAttribute)
         return mDisplayAttribute->showInTaskbar();
     else
-        return false;
+        return KNotesGlobalConfig::self()->showInTaskbar();
 }
 
 bool KNoteDisplaySettings::keepAbove() const
@@ -133,15 +132,19 @@ bool KNoteDisplaySettings::keepAbove() const
     if (mDisplayAttribute)
         return mDisplayAttribute->keepAbove();
     else
-        return false;
+        return KNotesGlobalConfig::self()->keepAbove();
 }
+#if 0
+config->setRichText( globalConfig->richText() );
+config->setReadOnly( globalConfig->readOnly() );
+#endif
 
 bool KNoteDisplaySettings::keepBelow() const
 {
     if (mDisplayAttribute)
         return mDisplayAttribute->keepBelow();
     else
-        return false;
+        return KNotesGlobalConfig::self()->keepBelow();
 }
 
 bool KNoteDisplaySettings::autoIndent() const
@@ -149,5 +152,5 @@ bool KNoteDisplaySettings::autoIndent() const
     if (mDisplayAttribute)
         return mDisplayAttribute->autoIndent();
     else
-        return true;
+        return KNotesGlobalConfig::self()->autoIndent();
 }
