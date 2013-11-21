@@ -28,6 +28,7 @@
 #include <QInputDialog>
 #include <QPointer>
 
+using namespace PimCommon;
 SearchDebugNepomukShowDialog::SearchDebugNepomukShowDialog(const QString &nepomukId, QWidget *parent)
     : KDialog(parent)
 {

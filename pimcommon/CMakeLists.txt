@@ -66,6 +66,7 @@ set(libpimcommon_SRCS
   autocorrection/widgets/lineeditwithautocorrection.cpp
   autocorrection/widgets/richtexteditwithautocorrection.cpp
   stockageservice/stockageserviceabstract.cpp
+  nepomukdebug/searchdebugnepomukshowdialog.cpp
 )
 
 kde4_add_ui_files(libpimcommon_SRCS

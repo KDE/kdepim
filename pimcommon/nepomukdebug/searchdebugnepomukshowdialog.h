@@ -20,11 +20,11 @@
 
 #include <KDialog>
 
+#include "pimcommon/pimcommon_export.h"
+
 namespace PimCommon {
 class PlainTextEditorWidget;
-}
-
-class SearchDebugNepomukShowDialog : public KDialog
+class PIMCOMMON_EXPORT SearchDebugNepomukShowDialog : public KDialog
 {
     Q_OBJECT
 public:
@@ -43,5 +43,6 @@ private:
 private:
     PimCommon::PlainTextEditorWidget *mResult;
 };
+}
 
 #endif // SEARCHDEBUGNEPOMUKSHOWDIALOG_H
