@@ -426,8 +426,7 @@ void KNote::slotPreferences()
 
     // create a new preferences dialog...
     QPointer<KNoteSimpleConfigDialog> dialog = new KNoteSimpleConfigDialog( name(), this );
-    connect( dialog, SIGNAL(settingsChanged(QString)) , this,
-             SLOT(slotApplyConfig()) );
+    dialog->load(mItem);
     connect( this, SIGNAL(sigNameChanged(QString)), dialog,
              SLOT(slotUpdateCaption(QString)) );
     dialog->exec();

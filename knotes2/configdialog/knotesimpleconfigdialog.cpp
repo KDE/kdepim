@@ -19,6 +19,9 @@
 #include "knoteconfigdialog.h"
 #include "knotedisplayconfigwidget.h"
 #include "knoteeditorconfigwidget.h"
+
+#include "noteshared/attributes/notedisplayattribute.h"
+
 #include <KLocale>
 #include <KWindowSystem>
 
@@ -60,7 +63,11 @@ KNoteSimpleConfigDialog::~KNoteSimpleConfigDialog()
 
 void KNoteSimpleConfigDialog::load(const Akonadi::Item &item)
 {
-
+    if (item.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+        NoteShared::NoteDisplayAttribute *attr = item.attribute<NoteShared::NoteDisplayAttribute>();
+        mEditorConfigWidget->load(attr);
+        mDisplayConfigWidget->load(attr);
+    }
 }
 
 

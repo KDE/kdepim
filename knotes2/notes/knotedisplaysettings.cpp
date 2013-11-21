@@ -38,6 +38,11 @@ void KNoteDisplaySettings::setDisplayAttribute(NoteShared::NoteDisplayAttribute 
     mDisplayAttribute = attr;
 }
 
+NoteShared::NoteDisplayAttribute *KNoteDisplaySettings::displayAttribute() const
+{
+    return mDisplayAttribute;
+}
+
 QColor KNoteDisplaySettings::backgroundColor() const
 {
     if (mDisplayAttribute)
