@@ -425,8 +425,7 @@ void KNote::slotPreferences()
     m_blockEmitDataChanged = true;
 
     // create a new preferences dialog...
-#if 0
-    QPointer<KNoteSimpleConfigDialog> dialog = new KNoteSimpleConfigDialog( m_config, name(), this, noteId() );
+    QPointer<KNoteSimpleConfigDialog> dialog = new KNoteSimpleConfigDialog( name(), this );
     connect( dialog, SIGNAL(settingsChanged(QString)) , this,
              SLOT(slotApplyConfig()) );
     connect( this, SIGNAL(sigNameChanged(QString)), dialog,
@@ -435,7 +434,6 @@ void KNote::slotPreferences()
     delete dialog;
     m_blockEmitDataChanged = false;
     saveNote();
-#endif
 }
 
 void KNote::slotSend()

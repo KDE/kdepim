@@ -21,7 +21,9 @@
 #include "knotes_export.h"
 #include <Akonadi/Item>
 #include <KDialog>
-
+class QTabWidget;
+class KNoteEditorConfigWidget;
+class KNoteDisplayConfigWidget;
 class KNOTES_EXPORT KNoteSimpleConfigDialog : public KDialog
 {
     Q_OBJECT
@@ -37,6 +39,9 @@ public Q_SLOTS:
 private:
     void save();
 
+    QTabWidget *mTabWidget;
+    KNoteEditorConfigWidget *mEditorConfigWidget;
+    KNoteDisplayConfigWidget *mDisplayConfigWidget;
 };
 
 #endif // KNoteSimpleConfigDialog_H

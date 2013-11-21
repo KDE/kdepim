@@ -22,7 +22,7 @@
 #include <KLocale>
 #include <KWindowSystem>
 
-
+#include <QTabWidget>
 #include <QApplication>
 
 KNoteSimpleConfigDialog::KNoteSimpleConfigDialog( const QString &title,
@@ -43,6 +43,15 @@ KNoteSimpleConfigDialog::KNoteSimpleConfigDialog( const QString &title,
                                  IconSize( KIconLoader::Small ) ) );
 #endif
     showButtonSeparator( true );
+    mTabWidget = new QTabWidget;
+
+    mEditorConfigWidget = new KNoteEditorConfigWidget(false, this);
+    mTabWidget->addTab(mEditorConfigWidget, i18n( "Editor Settings" ));
+
+    mDisplayConfigWidget = new KNoteDisplayConfigWidget(false, this);
+    mTabWidget->addTab(mDisplayConfigWidget, i18n( "Display Settings" ));
+
+    setMainWidget(mTabWidget);
 }
 
 KNoteSimpleConfigDialog::~KNoteSimpleConfigDialog()
