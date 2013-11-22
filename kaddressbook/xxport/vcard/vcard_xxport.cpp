@@ -55,13 +55,14 @@
 
 class VCardViewerDialog : public KDialog
 {
+    Q_OBJECT
   public:
     VCardViewerDialog( const KABC::Addressee::List &list,
                        QWidget *parent );
 
     KABC::Addressee::List contacts() const;
 
-  protected:
+  protected Q_SLOTS:
     void slotYes();
     void slotNo();
     void slotApply();
@@ -543,6 +544,7 @@ void VCardViewerDialog::slotYes()
 
   if ( mIt == mContacts.end() ) {
     slotApply();
+    return;
   }
 
   updateView();
@@ -554,7 +556,7 @@ void VCardViewerDialog::slotNo()
   mIt = mContacts.erase( mIt );
 
   if ( mIt == mContacts.end() ) {
-    slotApply();
+    return;
   }
 
   updateView();
@@ -568,7 +570,7 @@ void VCardViewerDialog::slotApply()
 void VCardViewerDialog::slotCancel()
 {
   mContacts.clear();
-  KDialog::accept();
+  accept();
 }
 
 // ---------- VCardExportSelection Dialog ---------------- //
@@ -707,3 +709,4 @@ bool VCardExportSelectionDialog::exportDisplayName() const
 {
   return mDisplayNameBox->isChecked();
 }
+#include "vcard_xxport.moc"
