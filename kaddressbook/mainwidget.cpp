@@ -62,6 +62,7 @@
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
+#include <KCmdLineArgs>
 #include <KAction>
 #include <KActionCollection>
 #include <KActionMenu>
@@ -321,6 +322,20 @@ void MainWidget::configure()
 
   dlg.exec();
 }
+
+bool MainWidget::handleCommandLine()
+{
+  bool doneSomething = false;
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  if ( args->isSet( "import" ) ) {
+      for ( int i = 0; i < args->count(); ++i ) {
+          importManager()->importFile( args->url( i ) );
+      }
+  }
+  args->clear();
+  return doneSomething;
+}
+
 
 XXPortManager *MainWidget::importManager() const
 {

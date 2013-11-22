@@ -52,9 +52,9 @@ MainWindow::~MainWindow()
 {
 }
 
-XXPortManager *MainWindow::importManager() const
+MainWidget *MainWindow::mainWidget() const
 {
-    return mMainWidget->importManager();
+    return mMainWidget;
 }
 
 void MainWindow::initActions()

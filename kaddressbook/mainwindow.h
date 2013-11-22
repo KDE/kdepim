@@ -32,7 +32,7 @@ class MainWindow : public KXmlGuiWindow
   public:
     MainWindow();
     ~MainWindow();
-    XXPortManager *importManager() const;
+    MainWidget *mainWidget() const;
   private Q_SLOTS:
     void configure();
     void configureKeyBindings();
