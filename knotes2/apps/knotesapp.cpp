@@ -31,7 +31,7 @@
 #include "notesharedglobalconfig.h"
 #include "notes/knote.h"
 #include "knotes/resource/resourcemanager.h"
-//#include "knotesadaptor.h"
+#include "knotesadaptor.h"
 //#include "alarms/knotesalarm.h"
 #include "knotesapp.h"
 #include "print/knoteprinter.h"
@@ -101,10 +101,7 @@ KNotesApp::KNotesApp()
       m_findPos( 0 )
     #endif
 {
-#if 0
     new KNotesAdaptor( this );
-
-#endif
     QDBusConnection::sessionBus().registerObject( QLatin1String("/KNotes") , this );
     kapp->setQuitOnLastWindowClosed( false );
     // create the GUI...
