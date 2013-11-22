@@ -40,12 +40,6 @@ SearchWidget::SearchWidget( QWidget *parent )
   mUi.endDate->setDate( QDate::currentDate().addYears( 1 ) );
   mUi.collectionCombo->setMimeTypeFilter( QStringList() << KCalCore::Event::eventMimeType()
                                                         << KCalCore::Todo::todoMimeType() );
-
-  // UI workarounds for Maemo5
-#if defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
-  mUi.startDate->setEditable( false );
-  mUi.endDate->setEditable( false );
-#endif
 }
 
 QString SearchWidget::query() const

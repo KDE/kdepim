@@ -90,11 +90,6 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
 
   private:
 
-#ifdef MEEGO_EDITION_HARMATTAN
-    /** Disable the swipe action for a part of the display
-    */
-    void blockSwipeRegion(const int x , const int y, const int w, const int h);
-#endif
     KActionCollection *mActionCollection;
 
     QGLWidget *m_glWidget;

@@ -292,10 +292,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 
   toggleAutomaticWordWrap( actionCollection()->action( QLatin1String("options_wordwrap") )->isChecked() );
   toggleUseFixedFont( actionCollection()->action( QLatin1String("options_fixedfont") )->isChecked() );
-
-#if defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
-  m_composerBase->recipientsEditor()->setCompletionMode( KGlobalSettings::CompletionAuto );
-#endif
+  
   m_composerBase->recipientsEditor()->setAutoResizeView( true );
 
   connect( m_composerBase->recipientsEditor(), SIGNAL(lineAdded(KPIM::MultiplyingLine*)),
