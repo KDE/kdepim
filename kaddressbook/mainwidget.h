@@ -78,7 +78,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void mergeContacts();
     void slotSearchDuplicateContacts();
 
-    Q_SCRIPTABLE bool handleCommandLine();
+    bool handleCommandLine();
 
   private Q_SLOTS:
     void delayedInit();
