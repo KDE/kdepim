@@ -24,14 +24,12 @@
 #include "configdialog/knotesimpleconfigdialog.h"
 #include "print/knoteprintselectthemedialog.h"
 #include "knotes/notes/knotebutton.h"
-//#include "knoteconfig.h"
 #include "utils/knoteutils.h"
 #include "configdialog/knoteconfigdialog.h"
 #include "knoteedit.h"
 #include "print/knoteprinter.h"
 #include "print/knoteprintobject.h"
 #include "knotesglobalconfig.h"
-#include "kdepim-version.h"
 
 #include "knotedisplaysettings.h"
 
@@ -45,7 +43,6 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
-#include <kcal/journal.h>
 #include <kcombobox.h>
 #include <kfiledialog.h>
 #include <kfind.h>
@@ -96,7 +93,6 @@
 
 KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *parent )
     : QFrame( parent, Qt::FramelessWindowHint ),
-
       mItem(item),
       m_label( 0 ),
       m_grip( 0 ),
@@ -281,8 +277,7 @@ void KNote::find( KFind* kfind )
 
 bool KNote::isDesktopAssigned() const
 {
-    //FIXME return m_config->rememberDesktop();
-    return false;
+    return mDisplayAttribute->rememberDesktop();
 }
 
 void KNote::slotFindNext()
@@ -456,7 +451,6 @@ void KNote::slotPreferences()
         //Verify it.
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
         connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
-        //saveNote();
     }
     delete dialog;
 }
@@ -571,7 +565,7 @@ void KNote::slotPopupActionToDesktop( int id )
 void KNote::slotApplyConfig()
 {
     m_label->setFont( mDisplayAttribute->titleFont() );
-    //m_editor->setRichText( m_config->richText() );
+    //FIXME m_editor->setRichText( m_config->richText() );
     m_editor->setTextFont( mDisplayAttribute->font() );
     m_editor->setTabStop( mDisplayAttribute->tabSize() );
     m_editor->setAutoIndentMode( mDisplayAttribute->autoIndent() );
@@ -1220,4 +1214,8 @@ bool KNote::eventFilter( QObject *o, QEvent *ev )
     return false;
 }
 
+Akonadi::Item KNote::item() const
+{
+    return mItem;
+}
 

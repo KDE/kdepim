@@ -585,9 +585,8 @@ void KNotesApp::slotNoteDeleteFinished(KJob* job)
 
 void KNotesApp::slotPrintSelectedNotes()
 {
-#if 0
     QPointer<KNotePrintSelectedNotesDialog> dlg = new KNotePrintSelectedNotesDialog(this);
-    dlg->setNotes(m_notes);
+    dlg->setNotes(mNotes);
     if (dlg->exec()) {
         const QList<KNotePrintObject *> lst = dlg->selectedNotes();
         if (!lst.isEmpty()) {
@@ -598,7 +597,6 @@ void KNotesApp::slotPrintSelectedNotes()
         }
     }
     delete dlg;
-#endif
 }
 
 void KNotesApp::saveNotes()

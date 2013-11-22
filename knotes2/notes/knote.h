@@ -60,6 +60,8 @@ public:
     QString text() const;
     Akonadi::Item::Id noteId() const;
 
+    Akonadi::Item item() const;
+
     void setName( const QString &name );
     void setText( const QString &text );
 

@@ -38,7 +38,6 @@ public Q_SLOTS:
     void slotUpdateCaption(const QString & name);
 
 private:
-
     void readConfig();
     void writeConfig();
     QTabWidget *mTabWidget;

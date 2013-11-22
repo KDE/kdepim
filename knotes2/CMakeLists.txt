@@ -20,7 +20,6 @@ set(libknotes2private_lib_SRCS
     configdialog/knoteconfigdialog.cpp
     configdialog/knotedisplayconfigwidget.cpp
     configdialog/knoteeditorconfigwidget.cpp
-    print/knoteprintselectednotesdialog.cpp
     ../knotes/print/knoteprintselectthemedialog.cpp
     ../knotes/print/knoteprintselectthemecombobox.cpp
     ../knotes/print/knoteprinter.cpp
@@ -51,6 +50,7 @@ set(knotes2_SRCS apps/main.cpp apps/application.cpp apps/knotesapp.cpp apps/knot
                 ../knotes/notes/knotebutton.cpp 
                 ../knotes/akonadi/knoteschangerecorder.cpp 
                 ../knotes/akonadi/knotesakonaditreemodel.cpp 
+                print/knoteprintselectednotesdialog.cpp
                 notes/knote.cpp
                 notes/knotedisplaysettings.cpp
                 dialog/selectednotefolderdialog.cpp

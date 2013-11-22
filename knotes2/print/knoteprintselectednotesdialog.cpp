@@ -20,8 +20,6 @@
 #include "knoteprintobject.h"
 #include "notes/knote.h"
 
-#include <kcal/journal.h>
-
 #include <KLocale>
 #include <KConfigGroup>
 
@@ -82,10 +80,8 @@ void KNotePrintSelectedNotesDialog::setNotes(const QHash<Akonadi::Item::Id, KNot
     while (i.hasNext()) {
         i.next();
         QListWidgetItem *item =new QListWidgetItem(mListNotes);
-#if 0 //FIXME
         item->setText(i.value()->name());
         item->setToolTip(i.value()->text());
-#endif
         item->setData(JournalId, i.key());
     }
 }
@@ -93,17 +89,14 @@ void KNotePrintSelectedNotesDialog::setNotes(const QHash<Akonadi::Item::Id, KNot
 QList<KNotePrintObject *> KNotePrintSelectedNotesDialog::selectedNotes() const
 {
     QList<KNotePrintObject *> lstPrintObj;
-#if 0 //FIXME
     QList<QListWidgetItem *> lst = mListNotes->selectedItems ();
     Q_FOREACH(QListWidgetItem *item, lst) {
-        Akonadi::Item journalId = item->data(JournalId).toLongLong();
+        Akonadi::Item::Id journalId = item->data(JournalId).toLongLong();
         if (journalId != -1) {
-            //FIXME
-            //KNotePrintObject *obj = new KNotePrintObject(mNotes.key(journalId));
-            //lstPrintObj.append(obj);
+            KNotePrintObject *obj = new KNotePrintObject(mNotes.value(journalId)->item());
+            lstPrintObj.append(obj);
         }
     }
-#endif
     return lstPrintObj;
 }
 
