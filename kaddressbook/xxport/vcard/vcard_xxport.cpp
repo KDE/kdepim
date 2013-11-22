@@ -60,6 +60,7 @@ class VCardViewerDialog : public KDialog
   public:
     VCardViewerDialog( const KABC::Addressee::List &list,
                        QWidget *parent );
+    ~VCardViewerDialog();
 
     KABC::Addressee::List contacts() const;
 
@@ -70,6 +71,8 @@ class VCardViewerDialog : public KDialog
     void slotCancel();
 
   private:
+    void readConfig();
+    void writeConfig();
     void updateView();
 
     KAddressBookGrantlee::GrantleeContactViewer *mView;
@@ -526,7 +529,30 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
   connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()) );
 
   updateView();
+  readConfig();
 }
+
+VCardViewerDialog::~VCardViewerDialog()
+{
+    writeConfig();
+}
+
+void VCardViewerDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "VCardViewerDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void VCardViewerDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "VCardViewerDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
 
 KABC::Addressee::List VCardViewerDialog::contacts() const
 {
