@@ -21,11 +21,39 @@
 #include "aboutdata.h"
 #include "mainwindow.h"
 #include "startup.h"
+#include "kaddressbook_options.h"
 
 #include <KCmdLineArgs>
 #include <KDebug>
 #include <KLocale>
-#include <KUniqueApplication>
+#include <kontactinterface/pimuniqueapplication.h>
+
+//-----------------------------------------------------------------------------
+
+class KAddressBookApplication : public KontactInterface::PimUniqueApplication
+{
+public:
+    KAddressBookApplication()
+        : KontactInterface::PimUniqueApplication(),
+          mMainWindow(0)
+    {
+    }
+    virtual int newInstance();
+
+private:
+    MainWindow *mMainWindow;
+};
+
+int KAddressBookApplication::newInstance()
+{
+    kDebug();
+    if (!mMainWindow) {
+        mMainWindow = new MainWindow;
+        mMainWindow->show();
+    }
+    //TODO
+    return 0;
+}
 
 int main( int argc, char **argv )
 {
@@ -33,18 +61,14 @@ int main( int argc, char **argv )
 
   KCmdLineArgs::init( argc, argv, &about );
 
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options );
+  KCmdLineArgs::addCmdLineOptions( kaddressbook_options() ); // Add KAddressBook options
   KUniqueApplication::addCmdLineOptions();
-
-  if ( !KUniqueApplication::start() ) {
-    exit( 0 );
+  if ( !KAddressBookApplication::start() ) {
+      return 0;
   }
 
-  KUniqueApplication app;
+  KAddressBookApplication app;
   KAddressBook::insertLibraryCatalogues();
-  MainWindow *window = new MainWindow;
-  window->show();
 
   return app.exec();
 }

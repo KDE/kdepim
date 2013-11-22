@@ -147,6 +147,7 @@ target_link_libraries(kaddressbook
   ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_PHONON_LIBS}
+  ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
   kaddressbookprivate
   grantleetheme
 )
