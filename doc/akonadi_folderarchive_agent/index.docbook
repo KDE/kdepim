@@ -1,22 +1,19 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
 "dtd/kdex.dtd" [
   <!-- Define an entity for your application if it is not part of KDE
        CVS -->
-  <!ENTITY kapplication "<application>Folder Archive Agent</application>">
-  <!ENTITY kappname "&kapplication;">
+  <!ENTITY i18n-folderarchiveagent "<application>Folder Archive Agent</application>">
+  <!ENTITY kappname "&i18n-folderarchiveagent;">
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
   <!ENTITY imap "<acronym>IMAP</acronym>">
 ]>
 
-<book id="folderarchiveagent" lang="&language;">
-
-<bookinfo id="folderarchiveagentinfo">
-
-<title>The &kapplication; Handbook</title>
-
+<article id="folderarchiveagent" lang="&language;">
+<articleinfo>
+<title>The &i18n-folderarchiveagent; Handbook</title>
 <authorgroup>
 <author>
 <personname>
@@ -42,48 +39,33 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2013-09-02</date>
+<date>2013-11-21</date>
 <releaseinfo>&kde; 4.12</releaseinfo>
+</articleinfo>
 
-<abstract>
-<para>
-&kapplication; is an akonadi agent which allows to store individual emails in an archive folder.
-</para>
-</abstract>
-
-<keywordset>
-<keyword>KDE</keyword>
-<keyword>KMail</keyword>
-<keyword>Archive</keyword>
-</keywordset>
-
-</bookinfo>
-<chapter id="introduction">
+<sect1 id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; can be enabled on a per account basis to allow you to archive individual emails through
+<para>&i18n-folderarchiveagent; can be enabled on a per account basis to allow you to archive individual emails through
 the right click menu.</para>
-</chapter>
 
-<chapter id="using-kapp">
-<title>Using &kapplication;</title>
-<para>
+
+<sect2 id="using-kapp">
+<title>Using &i18n-folderarchiveagent;</title>
+
 <screenshot>
-<screeninfo>Screenshot of &kapplication;</screeninfo>
+<screeninfo>Screenshot of &i18n-folderarchiveagent;</screeninfo>
   <mediaobject>
     <imageobject>
       <imagedata fileref="folderarchiveagent.png" format="PNG" />
     </imageobject>
   </mediaobject>
 </screenshot>
-</para>
 
-<sect1 id="folderarchiveagent-basic-usage">
-<title>&kapplication; Basic Usage</title>
-<para>&kapplication; is used to archive single emails to a specified folder. For instance, you need to archive all of
-those pesky bill receipts in one place. &kapplication; can easily accommodate those needs. Start by
+<para>&i18n-folderarchiveagent; is used to archive single emails to a specified folder. For instance, you need to archive all of
+those pesky bill receipts in one place. &i18n-folderarchiveagent; can easily accommodate those needs. <action>Start by
 using <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice>
-in &kmail;'s reader window to open a dialog to set up the folder archive agent.
+in &kmail;'s reader window to open a dialog to set up the folder archive agent.</action>
 </para>
 
 <para>This dialog will have a tab for each of your configured accounts including Local Folders and you will need to configure all accounts that you wish to
@@ -91,24 +73,24 @@ use this feature with. The first option allows you to enable/disable the folder 
 checkbox. You can set the location of your Archive folder by clicking the folder icon next to
 <guilabel>Archive folder:</guilabel> and selecting the folder you wish to use. For example, you could create
 a folder called bill receipts by clicking the <guibutton>New Subfolder...</guibutton> and typing bill receipts in
-the dialog. You may choose a folder location anywhere, &eg;.. a folder in your Local Folders or on your &imap; server.
+the dialog. You may choose a folder location anywhere, &eg;.. a folder in your Local Folders or on your &imap; server.</para>
+<para>
 You have several choices on how the emails will be archived:
 <itemizedlist id="archivefolder-options">
   <listitem><para><guilabel>Unique Folder</guilabel> Uses the selected folder sorted by date.</para></listitem>
   <listitem><para><guilabel>Folder by months</guilabel>Creates new folders inside the selected folder by months.</para></listitem>
   <listitem><para><guilabel>Folder by years</guilabel>Create new folders inside the selected folder by years.</para></listitem>
 </itemizedlist>
-Now when you receive a bill receipt, right click the email and select <guimenuitem>Archive</guimenuitem> from the menu. The email will be archived
+Now when you receive a bill receipt, &RMB; the email and select <guimenuitem>Archive</guimenuitem> from the menu. The email will be archived
 into your configured archive folder for easy viewing later on.
 </para>
-</sect1>
-</chapter>
+</sect2>
 
-<chapter id="credits">
+<sect2 id="credits">
 
 <title>Credits and License</title>
 
-<para>&kapplication;</para>
+<para>&i18n-folderarchiveagent;</para>
 <para>
 Program copyright 2013 Laurent Montel montel@kde.org 
 </para>
@@ -120,22 +102,10 @@ Documentation Copyright &copy; 2013 Laurent Montel montel@kde.org
 
 &underFDL;               <!-- FDL: do not remove -->
 &underGPL;        	 <!-- GPL License -->
-</chapter>
-
-<appendix id="installation">
-<title>Installation</title>
-
-<sect1 id="compilation">
-<title>Compilation and Installation</title>
-
-&install.compile.documentation;
-
+</sect2>
 </sect1>
 
-</appendix>
-
-&documentation.index;
-</book>
+</article>
 
 <!--
 Local Variables:
