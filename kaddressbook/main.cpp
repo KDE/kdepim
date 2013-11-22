@@ -51,7 +51,12 @@ int KAddressBookApplication::newInstance()
         mMainWindow = new MainWindow;
         mMainWindow->show();
     }
-    //TODO
+
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    // Check for import, merge or ask
+    if ( args->isSet( "import" ) ) {
+        //TODO
+    }
     return 0;
 }
 

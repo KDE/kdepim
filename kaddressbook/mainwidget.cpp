@@ -315,6 +315,11 @@ void MainWidget::configure()
   dlg.exec();
 }
 
+XXPortManager *MainWidget::importManager() const
+{
+    return mXXPortManager;
+}
+
 void MainWidget::delayedInit()
 {
   setViewMode(0);                                        // get default from settings

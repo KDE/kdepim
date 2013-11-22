@@ -24,7 +24,7 @@
 #include <KXmlGuiWindow>
 
 class MainWidget;
-
+class XXPortManager;
 class MainWindow : public KXmlGuiWindow
 {
   Q_OBJECT
@@ -32,7 +32,7 @@ class MainWindow : public KXmlGuiWindow
   public:
     MainWindow();
     ~MainWindow();
-
+    XXPortManager *importManager() const;
   private Q_SLOTS:
     void configure();
     void configureKeyBindings();
