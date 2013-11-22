@@ -28,6 +28,7 @@
 #include "settings.h"
 #include "xxportmanager.h"
 #include "debug/nepomukdebugdialog.h"
+#include "kaddressbookadaptor.h"
 
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
@@ -90,6 +91,7 @@
 #include <QSortFilterProxyModel>
 #include <QSplitter>
 #include <QStackedWidget>
+#include <QDBusConnection>
 
 namespace {
 static bool isStructuralCollection( const Akonadi::Collection &collection )
@@ -136,6 +138,11 @@ class StructuralCollectionsNotCheckableProxy : public KCheckableProxyModel
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
     : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient ), mGrantleeThemeManager(0)
 {
+
+  (void) new KaddressbookAdaptor( this );
+  QDBusConnection::sessionBus().registerObject(QLatin1String("/KAddressBook"), this);
+
+
   mXXPortManager = new XXPortManager( this );
   Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
