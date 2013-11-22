@@ -431,6 +431,8 @@ void ImportMailJob::restoreResources()
             }
         }
     }
+    //TODO synctree ?
+
     Q_EMIT info(i18n("Resources restored."));
     nextStep();
 }
@@ -454,7 +456,7 @@ void ImportMailJob::restoreMails()
             file->copyTo(copyToDirName);
             QString resourceName(file->name());
             QString filename(file->name());
-            qDebug()<<" filename "<<filename<<" resourceName"<<resourceName;
+            //qDebug()<<" filename "<<filename<<" resourceName"<<resourceName;
             KSharedConfig::Ptr resourceConfig = KSharedConfig::openConfig(copyToDirName + QLatin1Char('/') + resourceName);
 
             const KUrl newUrl = Utils::adaptResourcePath(resourceConfig, storeMails);
@@ -632,7 +634,7 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* kmailsnippet = static_cast<const KArchiveFile*>(kmailsnippetentry);
         const QString kmailsnippetrc = KStandardDirs::locateLocal( "config",  kmailsnippetrcStr);
         if (QFile(kmailsnippetrc).exists()) {
-            //TODO 4.11 allow to merge config.
+            //TODO 4.13 allow to merge config.
             if (overwriteConfigMessageBox(kmailsnippetrcStr)) {
                 copyToFile(kmailsnippet, kmailsnippetrc,kmailsnippetrcStr,Utils::configsPath());
             }
@@ -696,7 +698,7 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* templatesconfiguration = static_cast<const KArchiveFile*>(templatesconfigurationentry);
         const QString templatesconfigurationrc = KStandardDirs::locateLocal( "config",  templatesconfigurationrcStr);
         if (QFile(templatesconfigurationrc).exists()) {
-            //TODO 4.12 allow to merge config.
+            //TODO 4.13 allow to merge config.
             if (overwriteConfigMessageBox(templatesconfigurationrcStr)) {
                 importTemplatesConfig(templatesconfiguration, templatesconfigurationrc, templatesconfigurationrcStr, Utils::configsPath());
             }
@@ -742,7 +744,7 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* customtemplateconfiguration = static_cast<const KArchiveFile*>(customtemplatentry);
         const QString customtemplaterc = KStandardDirs::locateLocal( "config",  customTemplateStr);
         if (QFile(customtemplaterc).exists()) {
-            //TODO 4.11 allow to merge config.
+            //TODO 4.13 allow to merge config.
             if (overwriteConfigMessageBox(customTemplateStr)) {
                 copyToFile(customtemplateconfiguration, customtemplaterc, customTemplateStr, Utils::configsPath());
             }
@@ -757,7 +759,7 @@ void ImportMailJob::restoreConfig()
         const KArchiveFile* adblockconfiguration = static_cast<const KArchiveFile*>(adblockentry);
         const QString adblockrc = KStandardDirs::locateLocal( "config",  adblockStr);
         if (QFile(adblockrc).exists()) {
-            //TODO 4.12 allow to merge config.
+            //TODO 4.13 allow to merge config.
             if (overwriteConfigMessageBox(adblockStr)) {
                 copyToFile(adblockconfiguration, adblockrc, adblockStr, Utils::configsPath());
             }
