@@ -555,9 +555,9 @@ void VCardViewerDialog::slotYes()
 
 void VCardViewerDialog::slotNo()
 {
-    if (mContacts.isEmpty()) {
+    if ( mIt == mContacts.end() ) {
         accept();
-        return;
+      return;
     }
     // remove the current contact from the result set
     mIt = mContacts.erase( mIt );
