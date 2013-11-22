@@ -231,7 +231,7 @@ const AttachmentStrategy * AttachmentStrategy::create( const QString & type ) {
   //if ( lowerType == "smart" )    return smart(); // not needed, see below
   if ( lowerType == QLatin1String( "inlined" ) )    return inlined();
   if ( lowerType == QLatin1String( "hidden" ) )     return hidden();
-  if ( lowerType == QLatin1String( "headerOnly" ) ) return headerOnly();
+  if ( lowerType == QLatin1String( "headeronly" ) ) return headerOnly();
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:
   return smart();
