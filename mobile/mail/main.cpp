@@ -25,11 +25,6 @@
 #include <kaboutdata.h>
 #include <kdeclarativeapplication.h>
 
-#ifdef Q_OS_WINCE
-# include <windows.h>
-# include <winuser.h>
-#endif
-
 #include <QtCore/QDateTime>
 
 #ifdef MAIL_SERIALIZER_PLUGIN_STATIC
@@ -73,9 +68,6 @@ int KMailMobileApplication::newInstance()
 int main( int argc, char **argv )
 {
   kWarning() << "Starting main function" << QDateTime::currentDateTime();
-#ifdef Q_OS_WINCE
-  SetCursor( LoadCursor( NULL, IDC_WAIT ) );
-#endif
 
 #ifdef KDEPIM_STATIC_LIBS
     ___MailTransport____INIT();

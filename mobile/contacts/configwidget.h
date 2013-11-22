@@ -26,9 +26,6 @@
 class KCModuleProxy;
 class KComboBox;
 class KConfigDialogManager;
-#ifdef Q_OS_WINCE
-class KCMLdap;
-#endif
 
 class ConfigWidget : public QWidget
 {

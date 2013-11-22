@@ -387,14 +387,10 @@ QString ComposerView::subject() const
 void ComposerView::setSubject ( const QString& subject )
 {
   m_subject = subject;
-#ifndef Q_OS_WINCE
-// Changing the Window Title makes not much sense
-// on systems without a decent Window Manager and complicates
-// to bring the Window back to front correctly
+
   if ( !subject.isEmpty() )
     setWindowTitle( subject );
   else
-#endif
     setWindowTitle( i18n( "New mail" ) );
 }
 

@@ -34,9 +34,6 @@ endif ()
 kde4_add_app_icon(mobile_tasks_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-tasks-mobile.png")
 
 kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
-if (WINCE)
-  SET_TARGET_PROPERTIES(tasks-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
-endif ()
 
 target_link_libraries(tasks-mobile
   ${QT_QTDECLARATIVE_LIBRARY}

@@ -27,9 +27,6 @@ endif()
 kde4_add_app_icon(notes_mobile_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-notes-mobile.png")
 
 kde4_add_executable(notes-mobile ${notes_mobile_SRCS})
-if(WINCE)
-  set_target_properties(notes-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
-endif()
 
 target_link_libraries(notes-mobile
   ${QT_QTDECLARATIVE_LIBRARY}

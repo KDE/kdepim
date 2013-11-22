@@ -48,10 +48,6 @@
 #include <algorithm>
 #include <iterator>
 
-#ifdef Q_OS_WINCE
-#include <windows.h>
-#endif
-
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
 #include <QDeclarativeContext>
@@ -72,16 +68,11 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   m_qmlFileName( qmlFileName ),
   m_splashScreen( 0 )
 {
-#ifdef Q_OS_WINCE
-  closeAllFrontends( qmlFileName );
-  RotateTo270Degrees();
-#endif
 
 #ifdef MEEGO_EDITION_HARMATTAN
   blockSwipeRegion( 0, 0, 100, height() );
 #endif
 
-#ifndef Q_OS_WIN
   bool openGlEnabled = false; // off by default, seems to have random bad side-effects on the N900
   if ( KCmdLineArgs::parsedArgs()->isSet( "enable-opengl" ) )
     openGlEnabled = true;
@@ -101,36 +92,21 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
   } else {
     Akonadi::Control::widgetNeedsAkonadi( this );
   }
-#else
-  Akonadi::Control::widgetNeedsAkonadi( this );
-#endif
 
 #ifdef KDEQMLPLUGIN_STATIC  
   rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
 #endif
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
-#if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE) || defined(MEEGO_EDITION_HARMATTAN)
-  setWindowState( Qt::WindowFullScreen );
-#ifndef Q_OS_WINCE
-  // use the oxygen black on whilte palette instead of the native white on black maemo5 one
-  setPalette( KGlobalSettings::createApplicationPalette( KGlobal::config() ) );
-#endif
-#else
-  // on the desktop start with a nice size
+
   resize(800, 480);
-#endif
 
   qApp->setStartDragDistance(40);
 
-#ifndef Q_OS_WINCE
   m_splashScreen = new QLabel( this );
-//Take out Splashscreen, because it is loaded each time a new window is opened
-//This is too much for wince
   QPixmap splashBackground;
   splashBackground.load( KStandardDirs::locate( "data", QLatin1String( "mobileui" ) + QDir::separator() + QLatin1String( "splashscreenstatic.png" ) ) );
   m_splashScreen->setPixmap( splashBackground );
-#endif
 
   QMetaObject::invokeMethod( this, "delayedInit", Qt::QueuedConnection );
 }
@@ -235,33 +211,6 @@ void KDeclarativeFullScreenView::closeAllFrontends(const QString &qmlFileName)
   }
 }
 
-#ifdef Q_OS_WINCE
-bool KDeclarativeFullScreenView::RotateTo270Degrees()
-{
-  DEVMODE DevMode;
-
-  memset(&DevMode, 0, sizeof (DevMode));
-  DevMode.dmSize               = sizeof (DevMode);
-  DevMode.dmFields             = DM_DISPLAYORIENTATION;
-  DevMode.dmDisplayOrientation = DMDO_270;
-  if (DISP_CHANGE_SUCCESSFUL != ChangeDisplaySettingsEx(NULL, &DevMode, NULL, 0, NULL)){
-    //error cannot change to 270 degrees
-    return false;
-  }
-
-  return true;
-}
-
-bool KDeclarativeFullScreenView::winEvent ( MSG * message, long * result )
-{
-  Q_UNUSED(result);
-  if ( message->message == WM_SETTINGCHANGE ) {
-    RotateTo270Degrees();
-  }
-  return false;
-}
-#endif
-
 void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status status )
 {
   if ( status == QDeclarativeView::Error ) {
@@ -318,18 +267,8 @@ void KDeclarativeFullScreenView::setActionTitle(const QString& name, const QStri
 
 void KDeclarativeFullScreenView::bringToFront()
 {
-#ifdef Q_WS_WINCE
-  const WCHAR * windowName = ( const WCHAR *)m_qmlFileName.utf16();
-  HWND windowID = ::FindWindow( NULL, windowName );
-  if ( windowID ) {
-    ::SetForegroundWindow((HWND)(((ULONG)windowID) | 0x01 ));
-  } else {
-    kError() << "Failed to find the Window for Application " << m_qmlFileName;
-  }
-#else
   activateWindow();
   raise();
-#endif
 }
 
 void KDeclarativeFullScreenView::resizeEvent(QResizeEvent* event)

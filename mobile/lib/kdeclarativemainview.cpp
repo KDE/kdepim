@@ -82,11 +82,6 @@
 
 #include <sys/utsname.h>
 
-#ifdef Q_OS_WINCE
-#include <windows.h>
-#include <Shellapi.h>
-#endif
-
 #define VIEW(model) {                        \
   QTreeView *view = new QTreeView( this );   \
   view->setWindowFlags( Qt::Window );        \
@@ -743,24 +738,8 @@ void KDeclarativeMainView::openLicenses()
 void KDeclarativeMainView::openAttachment( const QString &url, const QString &mimeType )
 {
   qDebug() << "opening attachment: " << url;
-#ifndef Q_OS_WINCE
-   KRun::runUrl( KUrl( url ), mimeType, this );
-#else
-   SHELLEXECUTEINFO execinfo;
-   WCHAR wfile[2048];
-   int num = KUrl(url).toLocalFile().toWCharArray(wfile);
-   wfile[num] = '\0';
 
-   memset(&execinfo, 0, sizeof(SHELLEXECUTEINFO));
-   execinfo.cbSize = sizeof(SHELLEXECUTEINFO);
-   execinfo.lpVerb = L"open";
-   execinfo.lpFile = wfile;
-   execinfo.lpParameters = L"";
-   execinfo.lpDirectory = L"";
-   execinfo.nShow = SW_SHOWNORMAL;
-   execinfo.fMask = SEE_MASK_NOCLOSEPROCESS; // don't close process after ShellExecuteEx function exits
-   ShellExecuteEx(&execinfo);
-#endif
+  KRun::runUrl( KUrl( url ), mimeType, this );
 }
 
 void KDeclarativeMainView::saveAttachment( const QString &url, const QString &defaultFileName )
