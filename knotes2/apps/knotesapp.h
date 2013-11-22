@@ -95,37 +95,10 @@ private Q_SLOTS:
     void slotShowNote();
     void slotWalkThroughNotes();
     void slotNoteKilled( Akonadi::Item::Id );
-
 #if 0
-    void killNote( const QString &id );
-    void killNote( const QString &id, bool force );
-
-    QVariantMap notes() const;
-
-
-
-protected slots:
-    void slotOpenFindDialog();
-    void slotFindNext();
-
-private slots:
-    void saveNotes( const QString & uid );
-
-
-    void createNote( KCal::Journal *journal );
-    void killNote( KCal::Journal *journal );
-
 
 private:
     KNotesAlarm            *m_alarm;
-
-    KFind           *m_find;
-    QMap<QString, KNote *>::iterator *m_findPos;
-
-
-    KAction         *m_findAction;
-
-    QString m_noteUidModify;
 #endif
 private:
     void saveNotes();

@@ -97,8 +97,6 @@ KNotesApp::KNotesApp()
     #if 0
     ,
       m_alarm( 0 ),
-      m_find( 0 ),
-      m_findPos( 0 )
     #endif
 {
     new KNotesAdaptor( this );
@@ -137,10 +135,6 @@ KNotesApp::KNotesApp()
     new KHelpMenu( this, KGlobal::mainComponent().aboutData(), false,
                    actionCollection() );
 
-#if 0
-    m_findAction = KStandardAction::find( this, SLOT(slotOpenFindDialog()),
-                                          actionCollection() );
-#endif
     KStandardAction::preferences( this, SLOT(slotPreferences()),
                                   actionCollection() );
     KStandardAction::keyBindings( this, SLOT(slotConfigureAccels()),
@@ -201,10 +195,6 @@ KNotesApp::~KNotesApp()
     qDeleteAll( m_noteActions );
     m_noteActions.clear();
     saveNotes();
-#if 0
-    delete m_findPos;
-    m_findPos = 0;
-#endif
     delete m_guiBuilder;
     delete mTray;
     qDeleteAll(mNotes);
@@ -530,87 +520,6 @@ void KNotesApp::slotWalkThroughNotes()
     }
 }
 
-
-#if 0
-
-
-// -------------------- public D-Bus interface -------------------- //
-
-
-void KNotesApp::killNote( const QString &id, bool force )
-{
-    KNote *note = m_notes.value( id );
-    if ( note ) {
-        note->slotKill( force );
-    } else {
-        kWarning( 5500 ) << "killNote: no note with id:" << id;
-    }
-}
-
-// "bool force = false" doesn't work with dcop
-void KNotesApp::killNote( const QString &id )
-{
-    killNote( id, false );
-}
-
-QVariantMap KNotesApp::notes() const
-{
-    QVariantMap notes;
-
-    foreach ( KNote *note, m_notes ) {
-        notes.insert( note->noteId(), note->name() );
-    }
-
-    return notes;
-}
-
-// -------------------- protected slots -------------------- //
-
-
-
-
-void KNotesApp::slotOpenFindDialog()
-{
-    KFindDialog findDia( this );
-    findDia.setObjectName( QLatin1String("find_dialog") );
-    findDia.setHasSelection( false );
-    findDia.setHasCursor( false );
-    findDia.setSupportsBackwardsFind( false );
-
-    if ( (findDia.exec() != QDialog::Accepted) ) {
-        delete m_findPos;
-        m_findPos = 0;
-        delete m_find;
-        m_find = 0;
-        return;
-    }
-
-    delete m_findPos;
-    m_findPos = new QMap<QString, KNote *>::iterator();
-    *m_findPos = m_notes.begin();
-
-    // this could be in an own method if searching without a dialog
-    // should be possible
-    delete m_find;
-    m_find = new KFind( findDia.pattern(), findDia.options(), this );
-
-    slotFindNext();
-}
-
-void KNotesApp::slotFindNext()
-{
-    if ( *m_findPos != m_notes.end() ) {
-        KNote *note = * ( (*m_findPos)++ );
-        note->find( m_find );
-    } else {
-        m_find->displayFinalDialog();
-        m_find->deleteLater(); //we can't delete m_find now because it is the signal emitter
-        m_find = 0;
-        delete m_findPos;
-        m_findPos = 0;
-    }
-}
-#endif
 void KNotesApp::slotPreferences()
 {
     // create a new preferences dialog...
@@ -674,85 +583,6 @@ void KNotesApp::slotNoteDeleteFinished(KJob* job)
     }
 }
 
-#if 0
-void KNotesApp::slotNoteKilled( KCal::Journal *journal )
-{
-    m_noteUidModify.clear();
-    m_manager->deleteNote( journal );
-    saveNotes();
-    m_tray->updateNumberOfNotes(m_notes.count());
-}
-
-
-// -------------------- private methods -------------------- //
-
-
-void KNotesApp::createNote( KCal::Journal *journal )
-{
-    if( journal->uid() == m_noteUidModify)
-    {
-        KNote *note = m_notes.value( m_noteUidModify );
-        if ( note )
-            note->changeJournal(journal);
-        return;
-    }
-
-    m_noteUidModify = journal->uid();
-    KNote *newNote = new KNote( m_noteGUI, journal, 0 );
-    m_notes.insert( newNote->noteId(), newNote );
-
-    connect( newNote, SIGNAL(sigRequestNewNote()),
-             SLOT(newNote()) );
-    connect( newNote, SIGNAL(sigShowNextNote()),
-             SLOT(slotWalkThroughNotes()) ) ;
-    connect( newNote, SIGNAL(sigKillNote(KCal::Journal*)),
-             SLOT(slotNoteKilled(KCal::Journal*)) );
-    connect( newNote, SIGNAL(sigNameChanged(QString)),
-             SLOT(updateNoteActions()) );
-    connect( newNote, SIGNAL(sigDataChanged(QString)),
-             SLOT(saveNotes(QString)) );
-    connect( newNote, SIGNAL(sigColorChanged()),
-             SLOT(updateNoteActions()) );
-    connect( newNote, SIGNAL(sigFindFinished()),
-             SLOT(slotFindNext()) );
-
-    // don't call this during startup for each and every loaded note
-    if ( m_alarm ) {
-        updateNoteActions();
-    }
-    m_tray->updateNumberOfNotes(m_notes.count());
-    //TODO
-#if 0
-    if (m_tray->isVisible()) {
-        // we already booted, so this is a new note
-        // sucks, semantically speaking
-        newNote->slotRename();
-    }
-#endif
-}
-
-void KNotesApp::killNote( KCal::Journal *journal )
-{
-    if(m_noteUidModify == journal->uid()) {
-        return;
-    }
-    // this kills the KNote object
-    KNote *note = m_notes.take( journal->uid() );
-    if ( note ) {
-        delete note;
-        updateNoteActions();
-    }
-}
-
-
-void KNotesApp::saveNotes( const QString & uid )
-{
-    m_noteUidModify = uid;
-    saveNotes();
-}
-
-
-#endif
 void KNotesApp::slotPrintSelectedNotes()
 {
 #if 0
