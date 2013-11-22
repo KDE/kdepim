@@ -1121,17 +1121,14 @@ void KNote::closeEvent( QCloseEvent * event )
 
 void KNote::dragEnterEvent( QDragEnterEvent *e )
 {
-#if 0 //FIXME
-    if ( !m_config->readOnly() ) {
+    if ( !m_editor->isReadOnly() ) {
         e->setAccepted( e->mimeData()->hasColor() );
     }
-#endif
 }
 
 void KNote::dropEvent( QDropEvent *e )
 {
-#if 0
-    if ( m_config->readOnly() ) {
+    if ( m_editor->isReadOnly() ) {
         return;
     }
 
@@ -1139,10 +1136,10 @@ void KNote::dropEvent( QDropEvent *e )
     if ( md->hasColor() ) {
         QColor bg =  qvariant_cast<QColor>( md->colorData() );
         setColor( palette().color( foregroundRole() ), bg );
-        m_journal->setCustomProperty( "KNotes", "BgColor", bg.name() );
-        m_config->setBgColor( bg );
+        //FIXME!
+        //m_journal->setCustomProperty( "KNotes", "BgColor", bg.name() );
+        //m_config->setBgColor( bg );
     }
-#endif
 }
 
 bool KNote::event( QEvent *ev )
