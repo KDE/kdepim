@@ -71,38 +71,30 @@ KNoteAlarmDialog::KNoteAlarmDialog( const QString &caption, QWidget *parent )
 
     connect( m_buttons, SIGNAL(buttonClicked(int)),
              SLOT(slotButtonChanged(int)) );
-    connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
+    connect( this, SIGNAL(okClicked()), SLOT(accept()) );
+    m_buttons->button( 0 )->setChecked( true );
+    slotButtonChanged( m_buttons->checkedId() );
 }
 
-#if 0
-void KNoteAlarmDialog::setIncidence( KCal::Journal *journal )
+void KNoteAlarmDialog::setAlarm(const KDateTime &dateTime)
 {
-    m_journal = journal;
-
-    if ( !m_journal->alarms().isEmpty() ) {
-        KCal::Alarm *alarm = m_journal->alarms().first();
-        if ( alarm->hasTime() ) {
-            m_buttons->button( 1 )->setChecked( true );
-            m_atDate->setDate( alarm->time().date() );
-            m_atTime->setTime( alarm->time().time() );
-        } else {
-            m_buttons->button( 0 )->setChecked( true );
-        }
+    if (dateTime.isValid()) {
+        m_buttons->button( 1 )->setChecked( true );
+        m_atDate->setDate( dateTime.date() );
+        m_atTime->setTime( dateTime.time() );
     } else {
         m_buttons->button( 0 )->setChecked( true );
-        slotButtonChanged( m_buttons->checkedId() );
     }
+    slotButtonChanged( m_buttons->checkedId() );
 }
-#endif
+
 void KNoteAlarmDialog::slotButtonChanged( int id )
 {
     switch ( id ) {
-
     case 0:
         m_atDate->setEnabled( false );
         m_atTime->setEnabled( false );
         break;
-
     case 1:
         m_atDate->setEnabled( true );
         m_atTime->setEnabled( true );
@@ -110,27 +102,11 @@ void KNoteAlarmDialog::slotButtonChanged( int id )
     }
 }
 
-void KNoteAlarmDialog::slotOk()
+KDateTime KNoteAlarmDialog::alarm() const
 {
-#if 0
-    if ( m_buttons->checkedId() == 0 ) {
-        m_journal->clearAlarms();
-        return;
-    }
-
-    KCal::Alarm *alarm;
-    if ( m_journal->alarms().isEmpty() ) {
-        alarm = m_journal->newAlarm();
-        alarm->setEnabled( true );
-        alarm->setType( KCal::Alarm::Display );
-    } else {
-        alarm = m_journal->alarms().first();
-    }
-
     if ( m_buttons->checkedId() == 1 ) {
-        alarm->setTime( KDateTime( m_atDate->date(), m_atTime->time(),
-                                   KDateTime::LocalZone ) );
+        return KDateTime( m_atDate->date(), m_atTime->time(), KDateTime::LocalZone );
+    } else {
+        return KDateTime();
     }
-#endif
 }
-

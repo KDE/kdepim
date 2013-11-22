@@ -37,16 +37,17 @@
 class KDateComboBox;
 class KTimeComboBox;
 class QButtonGroup;
+class KDateTime;
 
 class KNOTES_EXPORT KNoteAlarmDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit KNoteAlarmDialog( const QString &caption, QWidget *parent = 0 );
-
+    void setAlarm(const KDateTime &dateTime);
+    KDateTime alarm() const;
 
 private slots:
-    void slotOk();
     void slotButtonChanged( int );
 
 private:

@@ -139,7 +139,7 @@ void KNote::setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set
         mDisplayAttribute->setDisplayAttribute(item.attribute<NoteShared::NoteDisplayAttribute>());
     }
     if (set.contains("ATR:KJotsLockAttribute")) {
-        setEnabled(!item.hasAttribute<NoteShared::NoteLockAttribute>());
+        m_editor->setReadOnly(item.hasAttribute<NoteShared::NoteLockAttribute>());
     }
     if (set.contains("PLD:RFC822")) {
         KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
@@ -350,7 +350,20 @@ void KNote::slotUpdateReadOnly()
     const bool readOnly = m_readOnly->isChecked();
 
     m_editor->setReadOnly( readOnly );
-    //m_config->setReadOnly( readOnly );
+
+    if (mItem.hasAttribute<NoteShared::NoteLockAttribute>()) {
+        if (!readOnly) {
+            mItem.removeAttribute<NoteShared::NoteLockAttribute>();
+        }
+    } else {
+        if (readOnly) {
+            mItem.attribute<NoteShared::NoteLockAttribute>( Akonadi::Entity::AddIfMissing );
+        }
+    }
+    //Verify it!
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+
 
     // enable/disable actions accordingly
     actionCollection()->action( QLatin1String("configure_note") )->setEnabled( !readOnly );
@@ -407,17 +420,25 @@ void KNote::slotClose()
 
 void KNote::slotSetAlarm()
 {
-#if 0
     m_blockEmitDataChanged = true;
     QPointer<KNoteAlarmDialog> dlg = new KNoteAlarmDialog( name(), this );
-    dlg->setIncidence( m_journal );
-
+    if (mItem.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
+        dlg->setAlarm(mItem.attribute<NoteShared::NoteAlarmAttribute>()->dateTime());
+    }
     if ( dlg->exec() ) {
-        emit sigDataChanged(noteId());
+        KDateTime dateTime = dlg->alarm();
+        if (dateTime.isValid()) {
+            NoteShared::NoteAlarmAttribute *attribute =  mItem.attribute<NoteShared::NoteAlarmAttribute>( Akonadi::Entity::AddIfMissing );
+            attribute->setDateTime(dateTime);
+        } else {
+            mItem.removeAttribute<NoteShared::NoteAlarmAttribute>();
+        }
+        //Verify it!
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
     }
     delete dlg;
     m_blockEmitDataChanged = false;
-#endif
 }
 
 void KNote::slotPreferences()
