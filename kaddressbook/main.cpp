@@ -21,6 +21,7 @@
 #include "aboutdata.h"
 #include "mainwindow.h"
 #include "startup.h"
+#include "xxportmanager.h"
 #include "kaddressbook_options.h"
 
 #include <KCmdLineArgs>
@@ -55,7 +56,9 @@ int KAddressBookApplication::newInstance()
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     // Check for import, merge or ask
     if ( args->isSet( "import" ) ) {
-        //TODO
+        for ( int i = 0; i < args->count(); ++i ) {
+            mMainWindow->importManager()->importFile( args->url( i ) );
+        }
     }
     return 0;
 }

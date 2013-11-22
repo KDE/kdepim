@@ -24,7 +24,11 @@
 static KCmdLineOptions kaddressbook_options()
 {
   KCmdLineOptions options;
-  options.add("import <url>",                ki18n("Import the given file" ));
+  options.add("import",                ki18n("Import the given file" ));
+  options.add( "+[urls]",
+               ki18n( "files or urls. "
+                      "the user will be asked whether to import" ) );
+
   return options;
 }
 

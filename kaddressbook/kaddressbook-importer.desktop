@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=KAddressbook import file
+Type=Application
+Exec=kaddressbook --import %u
+Icon=kmail
+MimeType=text/vcard;
+
+X-KDE-StartupNotify=true

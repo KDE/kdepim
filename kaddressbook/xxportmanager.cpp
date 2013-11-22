@@ -76,6 +76,29 @@ void XXPortManager::setDefaultAddressBook( const Akonadi::Collection &addressBoo
   mDefaultAddressBook = addressBook;
 }
 
+void XXPortManager::importFile( const KUrl &url)
+{
+    QString identifier;
+    if (url.path().endsWith(QLatin1String("vcf"))) {
+        identifier = QLatin1String("vcard30");
+    } else if (url.path().endsWith(QLatin1String("ldif"))) {
+        identifier = QLatin1String("ldif");
+    } else if (url.path().endsWith(QLatin1String("gmx"))) {
+        identifier = QLatin1String("gmx");
+    }
+    if (identifier.isEmpty())
+        return;
+    XXPort *xxport = mFactory.createXXPort( identifier, mParentWidget );
+    if( !xxport ) {
+      return;
+    }
+    xxport->setOption(QLatin1String("importUrl"), url.path());
+    const KABC::Addressee::List contacts = xxport->importContacts();
+
+    delete xxport;
+    import(contacts);
+}
+
 void XXPortManager::slotImport( const QString &identifier )
 {
   const XXPort *xxport = mFactory.createXXPort( identifier, mParentWidget );
@@ -86,7 +109,11 @@ void XXPortManager::slotImport( const QString &identifier )
   const KABC::Addressee::List contacts = xxport->importContacts();
 
   delete xxport;
+  import(contacts);
+}
 
+void XXPortManager::import(const KABC::Addressee::List &contacts)
+{
   if ( contacts.isEmpty() ) { // nothing to import
     return;
   }
