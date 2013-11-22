@@ -93,7 +93,7 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
     Akonadi::Control::widgetNeedsAkonadi( this );
   }
 
-#ifdef KDEQMLPLUGIN_STATIC  
+#ifdef KDEQMLPLUGIN_STATIC
   rootContext()->setContextProperty( QLatin1String("KDE"), new KDEIntegration( this ) );
 #endif
 
