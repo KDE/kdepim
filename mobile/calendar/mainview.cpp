@@ -84,51 +84,6 @@
 #include <QDeclarativeContext>
 #include <QGraphicsItem>
 
-#ifdef Q_OS_WINCE
-class WinCEColorDialog : public KDialog
-{
-  public:
-    WinCEColorDialog( QWidget *parent = 0 )
-      : KDialog( parent )
-    {
-      QHBoxLayout *layout = new QHBoxLayout( mainWidget() );
-
-      QLabel *label = new QLabel( i18n( "Color:" ) );
-      mComboBox = new KPIM::KColorCombo;
-
-      layout->addWidget( label );
-      layout->addWidget( mComboBox );
-      layout->setStretch( 1, 1 );
-    }
-
-    void setColor( const QColor &color )
-    {
-      mComboBox->setColor( color );
-    }
-
-    QColor color() const
-    {
-      return mComboBox->color();
-    }
-
-    static int getColor( QColor &color )
-    {
-      WinCEColorDialog dialog;
-      dialog.setColor( color );
-
-      const int status = dialog.exec();
-
-      if ( status == KDialog::Accepted )
-        color = dialog.color();
-
-      return status;
-    }
-
-  private:
-    KPIM::KColorCombo *mComboBox;
-};
-#endif
-
 Q_DECLARE_METATYPE(KCalCore::iTIPMethod)
 
 using namespace Akonadi;
@@ -763,37 +718,7 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob *job )
   }
 
   const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
-#ifndef Q_OS_WINCE
   CalendarSupport::saveAttachments( item, this );
-#else
-  // CalendarSupport is not completely ported for Windows CE so we use the
-  // attachment handling code from KDeclarativeMainView
-  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::sorry(
-      this,
-      i18n( "No item selected." ),
-      "SaveAttachments" );
-    return;
-  }
-
-  KCalCore::Attachment::List attachments = incidence->attachments();
-
-  if ( attachments.empty() )
-    return;
-
-  Q_FOREACH( KCalCore::Attachment::Ptr attachment, attachments ) {
-    QString fileName = attachment->label();
-    QString sourceUrl;
-    if ( attachment->isUri() ) {
-      sourceUrl = attachment->uri();
-    } else {
-      sourceUrl = incidence->writeAttachmentToTempFile( attachment );
-    }
-      saveAttachment( sourceUrl, fileName );
-  }
-#endif //Q_OS_WINCE
 }
 
 void MainView::archiveOldEntries()
@@ -819,11 +744,8 @@ void MainView::changeCalendarColor()
   QColor calendarColor = agendaItem->preferences()->resourceColor( id );
   QColor myColor;
 
-#ifdef Q_OS_WINCE
-  const int result = WinCEColorDialog::getColor( myColor );
-#else
   const int result = KColorDialog::getColor( myColor, calendarColor );
-#endif
+
   if ( result == KDialog::Accepted && myColor != calendarColor ) {
     agendaItem->preferences()->setResourceColor( id, myColor );
     agendaItem->updateConfig();

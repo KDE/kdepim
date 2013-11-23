@@ -68,13 +68,7 @@ void KDeclarativeApplicationBase::postApplicationSetup()
 
   run = true;
 
-#ifdef Q_OS_WINCE
-  QFont f = font();
-  f.setPointSize( 9 );
-  setFont( f );
-#else
   setFont(KGlobalSettings::generalFont());
-#endif
 
 #ifdef MEEGO_EDITION_HARMATTAN
   // we don't have a native widget style on Maemo6, so our CSS is better than nothing

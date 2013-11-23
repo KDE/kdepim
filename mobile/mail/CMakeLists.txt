@@ -75,9 +75,6 @@ endif()
 kde4_add_app_icon(kmail_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kmail-mobile.png")
 
 kde4_add_executable(kmail-mobile ${kmail_mobile_srcs})
-if(WINCE)
-  set_target_properties(kmail-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
-endif()
 
 target_link_libraries(kmail-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
@@ -108,14 +105,6 @@ if(RUNTIME_PLUGINS_STATIC)
     akonadi_serializer_addressee
     akonadi_serializer_contactgroup
     akonadi_serializer_kcalcore
-  )
-endif()
-
-if(WINCE)
-  target_link_libraries(kmail-mobile
-    kcm_kpimidentities
-    messageviewer_bodypartformatter_text_calendar
-    incidenceeditorsngmobile
   )
 endif()
 

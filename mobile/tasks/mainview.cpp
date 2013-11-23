@@ -456,37 +456,7 @@ void MainView::fetchForSaveAllAttachmentsDone( KJob* job )
   }
 
   const Akonadi::Item item = static_cast<Akonadi::ItemFetchJob*>( job )->items().first();
-#ifndef Q_OS_WINCE
   CalendarSupport::saveAttachments( item, this );
-#else
-  // CalendarSupport is not completely ported for Windows CE so we use the
-  // attachment handling code from KDeclarativeMainView
-  KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( item );
-
-  if ( !incidence ) {
-    KMessageBox::sorry(
-      this,
-      i18n( "No item selected." ),
-      QLatin1String("SaveAttachments") );
-    return;
-  }
-
-  KCalCore::Attachment::List attachments = incidence->attachments();
-
-  if ( attachments.empty() )
-    return;
-
-  Q_FOREACH( KCalCore::Attachment::Ptr attachment, attachments ) {
-    QString fileName = attachment->label();
-    QString sourceUrl;
-    if ( attachment->isUri() ) {
-      sourceUrl = attachment->uri();
-    } else {
-      sourceUrl = incidence->writeAttachmentToTempFile( attachment );
-    }
-      saveAttachment( sourceUrl, fileName );
-  }
-#endif //Q_OS_WINCE
 }
 
 void MainView::archiveOldEntries()
