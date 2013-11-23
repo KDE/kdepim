@@ -71,16 +71,27 @@ in &kmail;'s reader window to open a dialog to set up the folder archive agent.<
 <para>This dialog will have a tab for each of your configured accounts including Local Folders and you will need to configure all accounts that you wish to
 use this feature with. The first option allows you to enable/disable the folder archive agent. It is disabled by default, to enable check the <guilabel>Enable</guilabel>
 checkbox. You can set the location of your Archive folder by clicking the folder icon next to
-<guilabel>Archive folder:</guilabel> and selecting the folder you wish to use. For example, you could create
-a folder called bill receipts by clicking the <guibutton>New Subfolder...</guibutton> and typing bill receipts in
-the dialog. You may choose a folder location anywhere, &eg;.. a folder in your Local Folders or on your &imap; server.</para>
+<guilabel>Folder:</guilabel> and selecting the folder you wish to use. For example, you could create
+a folder called <quote>bill receipts</quote> by clicking the <guibutton>New Subfolder...</guibutton> and typing <userinput>bill receipts</userinput> in
+the dialog. You may choose a folder location anywhere, &eg;.. a folder in your <quote>Local Folders</quote> or on your &imap; server.</para>
 <para>
 You have several choices on how the emails will be archived:
-<itemizedlist id="archivefolder-options">
-  <listitem><para><guilabel>Unique Folder</guilabel> Uses the selected folder sorted by date.</para></listitem>
-  <listitem><para><guilabel>Folder by months</guilabel>Creates new folders inside the selected folder by months.</para></listitem>
-  <listitem><para><guilabel>Folder by years</guilabel>Create new folders inside the selected folder by years.</para></listitem>
-</itemizedlist>
+</para>
+<variablelist id="archivefolder-options">
+  <varlistentry>
+  <term><guilabel>Unique folder</guilabel></term>
+  <listitem><para>Uses the selected folder sorted by date.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><guilabel>Folder by months</guilabel></term>
+  <listitem><para>Creates new folders inside the selected folder by months.</para></listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><guilabel>Folder by years</guilabel></term>
+  <listitem><para>Creates new folders inside the selected folder by years.</para></listitem>
+  </varlistentry>
+</variablelist>
+<para>
 Now when you receive a bill receipt, &RMB; the email and select <guimenuitem>Archive</guimenuitem> from the menu. The email will be archived
 into your configured archive folder for easy viewing later on.
 </para>
