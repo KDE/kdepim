@@ -33,6 +33,7 @@ SelectedNotefolderDialog::SelectedNotefolderDialog(QWidget *parent)
     setDescription( i18nc( "@info",
                        "Select the folder where the note will be saved:" ) );
     changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
+    setUseFolderByDefault(false);
     readConfig();
 }
 
