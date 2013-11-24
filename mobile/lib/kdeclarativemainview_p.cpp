@@ -173,12 +173,5 @@ void KDeclarativeMainViewPrivate::configureAgentInstance()
     return;
   Akonadi::AgentInstance instance = mAgentInstanceSelectionModel->selectedRows().first().data( Akonadi::AgentInstanceModel::InstanceRole ).value<Akonadi::AgentInstance>();
 
-  const bool propageStyleSheet = true;
-
-  if ( propageStyleSheet ) {
-    QDBusInterface iface( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + instance.identifier(), QLatin1String("/MainApplication"), QLatin1String("com.trolltech.Qt.QApplication") );
-    iface.setProperty( "styleSheet", StyleSheetLoader::styleSheet() );
-  }
-
   instance.configure( q );
 }

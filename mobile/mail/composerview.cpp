@@ -292,7 +292,7 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 
   toggleAutomaticWordWrap( actionCollection()->action( QLatin1String("options_wordwrap") )->isChecked() );
   toggleUseFixedFont( actionCollection()->action( QLatin1String("options_fixedfont") )->isChecked() );
-  
+
   m_composerBase->recipientsEditor()->setAutoResizeView( true );
 
   connect( m_composerBase->recipientsEditor(), SIGNAL(lineAdded(KPIM::MultiplyingLine*)),
