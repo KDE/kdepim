@@ -856,29 +856,30 @@ void ImportMailJob::restoreIdentity()
 
             const QString templates = QLatin1String("Templates");
             convertRealPathToCollection(group, templates);
+               if (oldUid != -1) {
+                    const QString vcard = QLatin1String("VCardFile");
+                    if (group.hasKey(vcard)) {
+                        const QString vcardFileName = group.readEntry(vcard);
+                        if (!vcardFileName.isEmpty()) {
 
-            if (oldUid != -1) {
-                const QString vcard = QLatin1String("VCardFile");
-                if (group.hasKey(vcard)) {
-                    const QString vcardFileName = group.readEntry(vcard);
-                    if (!vcardFileName.isEmpty()) {
-                        QFile file(vcardFileName);
-
-                        const KArchiveEntry* vcardEntry = mArchiveDirectory->entry(Utils::identitiesPath() + QString::number(oldUid) + QDir::separator() + file.fileName());
-                        if (vcardEntry && vcardEntry->isFile()) {
-                            const KArchiveFile* vcardFile = static_cast<const KArchiveFile*>(vcardEntry);
-                            QString vcardFilePath = KStandardDirs::locateLocal("appdata",file.fileName() );
-                            int i = 1;
-                            while(QFile(vcardFileName).exists()) {
-                                vcardFilePath = KStandardDirs::locateLocal("appdata", QString::fromLatin1("%1_%2").arg(i).arg(file.fileName()) );
-                                ++i;
+                            QFileInfo fileInfo(vcardFileName);
+                            QFile file(vcardFileName);
+                            const KArchiveEntry* vcardEntry = mArchiveDirectory->entry(Utils::identitiesPath() + QString::number(oldUid) + QDir::separator() + file.fileName());
+                            if (vcardEntry && vcardEntry->isFile()) {
+                                const KArchiveFile* vcardFile = static_cast<const KArchiveFile*>(vcardEntry);
+                                QString vcardFilePath = KStandardDirs::locateLocal("data",QString::fromLatin1("kmail2/%1").arg(fileInfo.fileName() ));
+                                int i = 1;
+                                while(QFile(vcardFileName).exists()) {
+                                    vcardFilePath = KStandardDirs::locateLocal("data", QString::fromLatin1("kmail2/%1_%2").arg(i).arg(fileInfo.fileName()) );
+                                    ++i;
+                                }
+                                vcardFile->copyTo(vcardFilePath);
+                                group.writeEntry(vcard, vcardFilePath);
                             }
-                            vcardFile->copyTo(vcardFilePath);
-                            group.writeEntry(vcard, vcardFilePath);
                         }
                     }
                 }
-            }
+
             QString name =  group.readEntry(QLatin1String("Name"));
 
             KPIMIdentities::Identity* identity = &mIdentityManager->newFromScratch( uniqueIdentityName(name) );
