@@ -222,15 +222,17 @@ void SignJob::process()
                                         d->signingMode( d->format ),
                                         signature );
 
+  // exec'ed jobs don't delete themselves
+  job->deleteLater();
+
   if ( res.error() ) {
     kDebug() << "signing failed:" << res.error().asString();
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
     setError( res.error().code() );
     setErrorText( QString::fromLocal8Bit( res.error().asString() ) );
+    emitResult();
+    return;
   }
-
-  // exec'ed jobs don't delete themselves
-  job->deleteLater();
 
   QByteArray signatureHashAlgo =  res.createdSignature( 0 ).hashAlgorithmAsString();
 
