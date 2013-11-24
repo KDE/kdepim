@@ -36,9 +36,7 @@
 
 #include <KABC/Addressee>
 
-#ifndef Q_OS_WINCE
 #include <phonon/mediaobject.h>
-#endif
 
 #include <QtCore/QBuffer>
 #include <QtCore/QSignalMapper>
@@ -138,8 +136,6 @@ class EditorMore::Private
       if ( mContact.sound().data().isEmpty() )
         return;
 
-    // No phonon on WinCE (yet)
-#ifndef Q_OS_WINCE
       Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory );
       QBuffer* soundData = new QBuffer( player );
       soundData->setData( mContact.sound().data() );
@@ -147,7 +143,6 @@ class EditorMore::Private
       player->setParent( q );
       connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
       player->play();
-#endif
     }
 
     void addCustomField()

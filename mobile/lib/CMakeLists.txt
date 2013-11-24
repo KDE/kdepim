@@ -68,13 +68,8 @@ if (X11_FOUND)
   target_link_libraries(kdepimmobileui ${X11_LIBRARIES})
 endif()
 
-#FIXME: Dont use fixed Paths here, we know that under wince it should be installed to /Programme/Kontact-Mobile
-# but would be nicer if it is flexible
-if (NOT WINCE)
-    set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
-else ()
-    set( STYLE_IMAGE_PATH /Programme/Kontact-Mobile/${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
-endif()
+set( STYLE_IMAGE_PATH ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui/images )
+
 configure_file( stylesheet.css.cmake ${CMAKE_CURRENT_BINARY_DIR}/stylesheet.css )
 
 add_subdirectory(images)

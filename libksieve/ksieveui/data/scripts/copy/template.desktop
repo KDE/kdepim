@@ -2,6 +2,7 @@
 Name=Move to directory
 Name[de]=In Ordner schieben
 Name[es]=Mover a directorio
+Name[fi]=Siirrä kansioon
 Name[fr]=Déplacer dans le dossier
 Name[gl]=Mover para o directorio
 Name[ia]=Move a directorio
@@ -14,6 +15,7 @@ Name[sr@ijekavian]=Премести у фасциклу
 Name[sr@ijekavianlatin]=Premesti u fasciklu
 Name[sr@latin]=Premesti u fasciklu
 Name[sv]=Flytta till katalog
+Name[tr]=Dizine taşı
 Name[uk]=Пересунути до каталогу
 Name[x-test]=xxMove to directoryxx
 FileName=template.txt

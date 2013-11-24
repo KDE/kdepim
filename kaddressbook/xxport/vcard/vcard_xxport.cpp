@@ -41,6 +41,7 @@
 #include <KPushButton>
 #include <KTemporaryFile>
 #include <KUrl>
+#include <KStandardGuiItem>
 #include <KIO/NetAccess>
 
 #include <QtCore/QFile>
@@ -55,19 +56,23 @@
 
 class VCardViewerDialog : public KDialog
 {
+    Q_OBJECT
   public:
     VCardViewerDialog( const KABC::Addressee::List &list,
                        QWidget *parent );
+    ~VCardViewerDialog();
 
     KABC::Addressee::List contacts() const;
 
-  protected:
+  protected Q_SLOTS:
     void slotYes();
     void slotNo();
     void slotApply();
     void slotCancel();
 
   private:
+    void readConfig();
+    void writeConfig();
     void updateView();
 
     KAddressBookGrantlee::GrantleeContactViewer *mView;
@@ -267,13 +272,13 @@ KABC::Addressee::List VCardXXPort::importContacts() const
         QPointer<VCardViewerDialog> dlg = new VCardViewerDialog( addrList, parentWidget() );
         if ( dlg->exec() && dlg ) {
           addrList = dlg->contacts();
+        } else {
+            addrList.clear();
         }
-
         delete dlg;
       }
     }
   }
-
   return addrList;
 }
 
@@ -488,8 +493,10 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
     mContacts( list )
 {
   setCaption( i18nc( "@title:window", "Import vCard" ) );
-  setButtons( Yes | No | Apply | Cancel );
-  setDefaultButton( Yes );
+  setButtons( User1 | User2 | Apply | Cancel );
+  setButtonGuiItem(User1, KStandardGuiItem::no());
+  setButtonGuiItem(User2, KStandardGuiItem::yes());
+  setDefaultButton( User1 );
   setModal( true );
   showButtonSeparator( true );
 
@@ -516,13 +523,36 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
 
   mIt = mContacts.begin();
 
-  connect( this, SIGNAL(yesClicked()), this, SLOT(slotYes()) );
-  connect( this, SIGNAL(noClicked()), this, SLOT(slotNo()) );
+  connect( this, SIGNAL(user2Clicked()), this, SLOT(slotYes()) );
+  connect( this, SIGNAL(user1Clicked()), this, SLOT(slotNo()) );
   connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
   connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()) );
 
   updateView();
+  readConfig();
 }
+
+VCardViewerDialog::~VCardViewerDialog()
+{
+    writeConfig();
+}
+
+void VCardViewerDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "VCardViewerDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void VCardViewerDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "VCardViewerDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}
+
 
 KABC::Addressee::List VCardViewerDialog::contacts() const
 {
@@ -543,6 +573,7 @@ void VCardViewerDialog::slotYes()
 
   if ( mIt == mContacts.end() ) {
     slotApply();
+    return;
   }
 
   updateView();
@@ -550,11 +581,14 @@ void VCardViewerDialog::slotYes()
 
 void VCardViewerDialog::slotNo()
 {
-  // remove the current contact from the result set
-  mIt = mContacts.erase( mIt );
-
+    if ( mIt == mContacts.end() ) {
+        accept();
+      return;
+    }
+    // remove the current contact from the result set
+    mIt = mContacts.erase( mIt );
   if ( mIt == mContacts.end() ) {
-    slotApply();
+    return;
   }
 
   updateView();
@@ -568,7 +602,7 @@ void VCardViewerDialog::slotApply()
 void VCardViewerDialog::slotCancel()
 {
   mContacts.clear();
-  KDialog::accept();
+  reject();
 }
 
 // ---------- VCardExportSelection Dialog ---------------- //
@@ -707,3 +741,4 @@ bool VCardExportSelectionDialog::exportDisplayName() const
 {
   return mDisplayNameBox->isChecked();
 }
+#include "vcard_xxport.moc"

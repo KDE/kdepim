@@ -44,7 +44,8 @@ SearchDebugNepomukShowDialog::SearchDebugNepomukShowDialog(const QString &nepomu
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSaveAs()));
     connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSearchInfoWithNepomuk()));
     readConfig();
-    executeNepomukShow(nepomukId);
+    if (!nepomukId.isEmpty())
+        executeNepomukShow(nepomukId);
 }
 
 SearchDebugNepomukShowDialog::~SearchDebugNepomukShowDialog()

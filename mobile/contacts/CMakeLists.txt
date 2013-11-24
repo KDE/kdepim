@@ -8,12 +8,6 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 
-if (WINCE)
-  include_directories(
-    ${CMAKE_SOURCE_DIR}
-  )
-endif()
-
 set(kab_mobile_srcs
   mainview.cpp
   main.cpp
@@ -72,9 +66,6 @@ endif ()
 kde4_add_app_icon(kab_mobile_srcs "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-kaddressbook-mobile.png")
 
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
-if (WINCE)
-  SET_TARGET_PROPERTIES(kaddressbook-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
-endif ()
 
 target_link_libraries(kaddressbook-mobile
     ${QT_QTDECLARATIVE_LIBRARY}
@@ -91,9 +82,6 @@ target_link_libraries(kaddressbook-mobile
 
 if (RUNTIME_PLUGINS_STATIC)
   target_link_libraries(kaddressbook-mobile akonadi_serializer_addressee akonadi_serializer_contactgroup)
-endif ()
-if (WINCE)
-  target_link_libraries(kaddressbook-mobile kcm_ldap phone)
 endif ()
 
 install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

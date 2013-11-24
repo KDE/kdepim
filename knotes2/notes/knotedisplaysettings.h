@@ -33,6 +33,7 @@ public:
     ~KNoteDisplaySettings();
 
     void setDisplayAttribute(NoteShared::NoteDisplayAttribute* attr);
+    NoteShared::NoteDisplayAttribute *displayAttribute() const;
     QColor backgroundColor() const;
 
     QColor foregroundColor() const;

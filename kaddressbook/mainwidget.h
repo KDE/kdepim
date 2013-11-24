@@ -67,6 +67,8 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     explicit MainWidget( KXMLGUIClient *guiClient, QWidget *parent = 0 );
     ~MainWidget();
 
+    XXPortManager *importManager() const;
+
   public Q_SLOTS:
     void newContact();
     void newGroup();
@@ -75,6 +77,8 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void configure();
     void mergeContacts();
     void slotSearchDuplicateContacts();
+
+    bool handleCommandLine();
 
   private Q_SLOTS:
     void delayedInit();

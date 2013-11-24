@@ -22,7 +22,7 @@
 #define XXPORTMANAGER_H
 
 #include "xxport/xxportfactory.h"
-
+#include "kaddressbook_export.h"
 #include <Akonadi/Collection>
 
 #include <QtCore/QObject>
@@ -37,7 +37,7 @@ class QSignalMapper;
 /**
  * @short The class that manages import and export of contacts.
  */
-class XXPortManager : public QObject
+class KADDRESSBOOK_EXPORT XXPortManager : public QObject
 {
   Q_OBJECT
 
@@ -77,6 +77,9 @@ class XXPortManager : public QObject
      */
     void setSelectionModel( QItemSelectionModel *model );
 
+    void importFile( const KUrl &url);
+
+
   public Q_SLOTS:
     /**
      * Sets the @p addressBook that shall be preselected in the
@@ -91,6 +94,7 @@ class XXPortManager : public QObject
     void slotImportJobDone( KJob * );
 
   private:
+    void import(const KABC::Addressee::List &contacts);
     QItemSelectionModel *mSelectionModel;
     QWidget *mParentWidget;
     XXPortFactory mFactory;

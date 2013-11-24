@@ -23,11 +23,6 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 
-#ifdef Q_OS_WINCE
-# include <windows.h>
-# include <winuser.h>
-#endif
-
 #include <incidenceeditor-ng/korganizereditorconfig.h>
 
 #include "mainview.h"
@@ -45,9 +40,6 @@ using namespace IncidenceEditorNG;
 
 int main( int argc, char **argv )
 {
-#ifdef Q_OS_WINCE
-  SetCursor( LoadCursor( NULL, IDC_WAIT ) );
-#endif
   const QByteArray& ba = QByteArray( "tasks-mobile" );
   const KLocalizedString name = ki18n( "Kontact Touch Tasks" );
 
@@ -61,10 +53,6 @@ int main( int argc, char **argv )
 
   KGlobal::locale()->insertCatalog( QLatin1String("libkcalutils") );
   KGlobal::locale()->insertCatalog( QLatin1String("libincidenceeditors") );
-
-#ifdef Q_OS_WINCE
-  SetCursor( LoadCursor( NULL, NULL ) );
-#endif
 
   return app.exec();
 }

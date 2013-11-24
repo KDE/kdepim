@@ -28,6 +28,7 @@
 #include "settings.h"
 #include "xxportmanager.h"
 #include "debug/nepomukdebugdialog.h"
+#include "kaddressbookadaptor.h"
 
 
 #include "kaddressbookgrantlee/formatter/grantleecontactformatter.h"
@@ -61,6 +62,7 @@
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
+#include <KCmdLineArgs>
 #include <KAction>
 #include <KActionCollection>
 #include <KActionMenu>
@@ -90,6 +92,7 @@
 #include <QSortFilterProxyModel>
 #include <QSplitter>
 #include <QStackedWidget>
+#include <QDBusConnection>
 
 namespace {
 static bool isStructuralCollection( const Akonadi::Collection &collection )
@@ -136,6 +139,11 @@ class StructuralCollectionsNotCheckableProxy : public KCheckableProxyModel
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
     : QWidget( parent ), mAllContactsModel( 0 ), mXmlGuiClient( guiClient ), mGrantleeThemeManager(0)
 {
+
+  (void) new KaddressbookAdaptor( this );
+  QDBusConnection::sessionBus().registerObject(QLatin1String("/KAddressBook"), this);
+
+
   mXXPortManager = new XXPortManager( this );
   Akonadi::AttributeFactory::registerAttribute<PimCommon::ImapAclAttribute>();
 
@@ -313,6 +321,25 @@ void MainWidget::configure()
   dlg.addModule( QLatin1String("kcmldap.desktop") );
 
   dlg.exec();
+}
+
+bool MainWidget::handleCommandLine()
+{
+  bool doneSomething = false;
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  if ( args->isSet( "import" ) ) {
+      for ( int i = 0; i < args->count(); ++i ) {
+          importManager()->importFile( args->url( i ) );
+      }
+  }
+  args->clear();
+  return doneSomething;
+}
+
+
+XXPortManager *MainWidget::importManager() const
+{
+    return mXXPortManager;
 }
 
 void MainWidget::delayedInit()

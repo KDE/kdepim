@@ -101,6 +101,8 @@ set(kaddressbook_LIB_SRCS
   ${kaddressbook_debug_SRCS}
 )
 
+qt4_add_dbus_adaptor( kaddressbook_LIB_SRCS org.kde.kaddressbook.xml mainwidget.h MainWidget)
+
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
 target_link_libraries(kaddressbookprivate
@@ -147,6 +149,7 @@ target_link_libraries(kaddressbook
   ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_PHONON_LIBS}
+  ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
   kaddressbookprivate
   grantleetheme
 )
@@ -156,7 +159,7 @@ if(QGPGME_FOUND)
 endif()
 
 install(TARGETS kaddressbook ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(PROGRAMS kaddressbook.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(PROGRAMS kaddressbook.desktop kaddressbook-importer.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES kaddressbookui.rc DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 
 set(kaddressbook_PART_SRCS kaddressbookpart.cpp)

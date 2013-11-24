@@ -20,6 +20,7 @@
 
 #include "mainwindow.h"
 #include "mainwidget.h"
+#include "xxportmanager.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -49,6 +50,11 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
+}
+
+MainWidget *MainWindow::mainWidget() const
+{
+    return mMainWidget;
 }
 
 void MainWindow::initActions()

@@ -42,10 +42,7 @@ endif ()
 kde4_add_app_icon(korganizer_mobile_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/hi*-apps-korganizer-mobile.png")
 
 kde4_add_executable(korganizer-mobile ${korganizer_mobile_SRCS} )
-if (WINCE)
-  SET_TARGET_PROPERTIES(korganizer-mobile PROPERTIES LINK_FLAGS " /FIXED:NO")
-endif ()
-  
+
 target_link_libraries(korganizer-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDE4_KDECORE_LIBS}

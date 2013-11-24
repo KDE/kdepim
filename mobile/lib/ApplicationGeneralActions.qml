@@ -30,7 +30,7 @@ KPIM.ActionList {
   property string type
   property alias addNewActionName: addNewAction.name
   property alias addNewActionReactsOnLongPressed: addNewAction.reactsOnLongPressed
-  property alias searchActionTitle: searchAction.title
+  //property alias searchActionTitle: searchAction.title
   property alias configureActionTitle: configureAction.title
   signal longPressed(string actionName)
 
@@ -48,10 +48,11 @@ KPIM.ActionList {
     }
   }
 
-  KPIM.ScriptActionItem {
-    id : searchAction
-    name : "search_" + type
-  }
+//TODO enable when SearchWidget::query() is implemented
+//   KPIM.ScriptActionItem {
+//     id : searchAction
+//     name : "search_" + type
+//   }
 
   KPIM.ActionListItem {
     name : "akonadi_work_offline"
