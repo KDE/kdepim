@@ -873,7 +873,7 @@ void ImportMailJob::restoreIdentity()
                                     vcardFilePath = KStandardDirs::locateLocal("data", QString::fromLatin1("kmail2/%1_%2").arg(i).arg(fileInfo.fileName()) );
                                     ++i;
                                 }
-                                vcardFile->copyTo(vcardFilePath);
+                                vcardFile->copyTo(QFileInfo(vcardFilePath).absolutePath());
                                 group.writeEntry(vcard, vcardFilePath);
                             }
                         }
