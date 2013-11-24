@@ -227,14 +227,10 @@ void SignJob::process()
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
     setError( res.error().code() );
     setErrorText( QString::fromLocal8Bit( res.error().asString() ) );
+  } else {
+    QByteArray signatureHashAlgo =  res.createdSignature( 0 ).hashAlgorithmAsString();
+    d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, signature, d->format, true, signatureHashAlgo );
   }
-
-  // exec'ed jobs don't delete themselves
-  job->deleteLater();
-
-  QByteArray signatureHashAlgo =  res.createdSignature( 0 ).hashAlgorithmAsString();
-
-  d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, signature, d->format, true, signatureHashAlgo );
   emitResult();
 }
 
