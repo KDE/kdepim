@@ -540,6 +540,28 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
   bool doSignCompletely = m_sign;
   bool encryptSomething = m_encrypt;
   bool doEncryptCompletely = m_encrypt;
+
+  //Add encryptionkeys from id to keyResolver
+  kDebug() << id.pgpEncryptionKey().isEmpty() << id.smimeEncryptionKey().isEmpty();
+  if ( !id.pgpEncryptionKey().isEmpty() )
+    encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
+  if ( !id.smimeEncryptionKey().isEmpty() )
+    encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
+  if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
+    kDebug() << "Failed to set encryptoToSelf keys!";
+    return QList< MessageComposer::Composer* >();
+  }
+
+  //Add signingkeys from id to keyResolver
+  if ( !id.pgpSigningKey().isEmpty() )
+    signKeys.push_back( QLatin1String( id.pgpSigningKey() ) );
+  if ( !id.smimeSigningKey().isEmpty() )
+    signKeys.push_back( QLatin1String( id.smimeSigningKey() ) );
+  if ( keyResolver->setSigningKeys( signKeys ) != Kpgp::Ok ) {
+    kDebug() << "Failed to set signing keys!";
+    return QList< MessageComposer::Composer* >();
+  }
+
   foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
     if( attachment->isSigned() ) {
       signSomething = true;
@@ -550,28 +572,6 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
       encryptSomething = true;
     } else {
       doSignCompletely = false;
-    }
-  }
-
-  if( encryptSomething ) {
-    if ( !id.pgpEncryptionKey().isEmpty() )
-      encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
-    if ( !id.smimeEncryptionKey().isEmpty() )
-      encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
-    if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
-      kDebug() << "Failed to set encryptoToSelf keys!";
-      return QList< MessageComposer::Composer* >();
-    }
-  }
-
-  if( signSomething ) {
-    if ( !id.pgpSigningKey().isEmpty() )
-      signKeys.push_back( QLatin1String( id.pgpSigningKey() ) );
-    if ( !id.smimeSigningKey().isEmpty() )
-      signKeys.push_back( QLatin1String( id.smimeSigningKey() ) );
-    if ( keyResolver->setSigningKeys( signKeys ) != Kpgp::Ok ) {
-      kDebug() << "Failed to set signing keys!";
-      return QList< MessageComposer::Composer* >();
     }
   }
 
@@ -598,19 +598,9 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
       return QList< MessageComposer::Composer*>();
   }
 
+  //No encryption or signing is needed
   if( !signSomething && !encryptSomething ) {
     return QList< MessageComposer::Composer* >() << new MessageComposer::Composer();
-  }
-
-  if( encryptSomething && !m_encrypt ) {
-    if ( !id.pgpEncryptionKey().isEmpty() )
-      encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
-    if ( !id.smimeEncryptionKey().isEmpty() )
-      encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
-    if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
-      kDebug() << "Failed to set encryptoToSelf keys!";
-      return QList< MessageComposer::Composer* >();
-    }
   }
 
   const Kpgp::Result kpgpResult = keyResolver->resolveAllKeys( signSomething, encryptSomething );

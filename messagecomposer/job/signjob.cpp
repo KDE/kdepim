@@ -173,39 +173,52 @@ void SignJob::process()
     //   suggested that either the Quoted-Printable or Base64 MIME encoding
     //   be applied.
     if (d->content->contentTransferEncoding()->encoding() == KMime::Headers::CEquPr ||
-        d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit )
-    {
-      QByteArray body = d->content->body();
+        d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit ) {
+      QByteArray body = d->content->encodedBody();
       bool changed = false;
-      QStringList search;
-      QStringList replacements;
+      QList<QByteArray> search;
+      QList<QByteArray> replacements;
 
-      search << QString::fromAscii( "From " )
-             << QString::fromAscii( "from " )
-             << QString::fromAscii( "-" );
-      replacements << QString::fromAscii( "From=20" )
-                   << QString::fromAscii( "from=20" )
-                   << QString::fromAscii( "=2D" );
+      search       << "From "
+                   << "from "
+                   << "-";
+      replacements << "From=20"
+                   << "from=20"
+                   << "=2D";
+
+      if ( d->content->contentTransferEncoding()->encoding() == KMime::Headers::CE7Bit ) {
+        for ( int i = 0; i < search.size(); ++i ) {
+          QByteArray start = "\n"  % search[i];
+          if ( body.indexOf( start ) > -1 ||
+               body.startsWith( search[i] ) ){
+            changed = true;
+            break;
+          }
+        }
+        if ( changed ) {
+          d->content->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
+          d->content->assemble();
+          body = d->content->encodedBody();
+        }
+      }
+
 
       for ( int i = 0; i < search.size(); ++i ) {
-        QString start = QString::fromAscii( "\n" ) % search[i];
-        QString replace = QString::fromAscii( "\n" ) % replacements[i];
-        if ( body.indexOf( start.toAscii() ) > -1 ){
+        QByteArray start = "\n"  % search[i];
+        QByteArray replace = "\n" % replacements[i];
+        if ( body.indexOf( start ) > -1 ){
           changed = true;
-          body.replace( start.toAscii(), replace.toAscii() );
+          body.replace( start, replace );
         }
 
-        if ( body.startsWith( search[i].toAscii() ) )
-        {
+        if ( body.startsWith( search[i] ) ) {
           changed = true;
-          body.replace( 0, search[i].size(), replacements[i].toAscii());
+          body.replace( 0, search[i].size(), replacements[i] );
         }
       }
 
       if ( changed ) {
         kDebug() << "Content changed";
-        d->content->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
-        d->content->assemble();
         d->content->setBody( body );
         d->content->contentTransferEncoding()->setDecoded( false );
       }
@@ -222,6 +235,9 @@ void SignJob::process()
                                         d->signingMode( d->format ),
                                         signature );
 
+  // exec'ed jobs don't delete themselves
+  job->deleteLater();
+
   if ( res.error() ) {
     kDebug() << "signing failed:" << res.error().asString();
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
@@ -231,6 +247,7 @@ void SignJob::process()
     QByteArray signatureHashAlgo =  res.createdSignature( 0 ).hashAlgorithmAsString();
     d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, signature, d->format, true, signatureHashAlgo );
   }
+
   emitResult();
 }
 
