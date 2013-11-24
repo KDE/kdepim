@@ -169,7 +169,7 @@ p, li { white-space: pre-wrap; }
  <customwidgets>
   <customwidget>
    <class>KDateComboBox</class>
-   <extends>QComboBox</extends>
+   <extends>KComboBox</extends>
    <header>kdatecombobox.h</header>
   </customwidget>
  </customwidgets>
