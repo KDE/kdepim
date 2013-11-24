@@ -178,8 +178,6 @@ void CalPrintPluginBase::doLoadConfig()
     mToDate = group.readEntry( "ToDate", dt ).date();
     mUseColors = group.readEntry( "UseColors", true );
     mPrintFooter = group.readEntry( "PrintFooter", true );
-    mExcludeConfidential = group.readEntry( "Exclude confidential", true );
-    mExcludePrivate = group.readEntry( "Exclude private", true );
     loadConfig();
   } else {
     kDebug() << "No config available in loadConfig!!!!";
@@ -198,8 +196,6 @@ void CalPrintPluginBase::doSaveConfig()
     group.writeEntry( "ToDate", dt );
     group.writeEntry( "UseColors", mUseColors );
     group.writeEntry( "PrintFooter", mPrintFooter );
-    group.writeEntry( "Exclude confidential", mExcludeConfidential );
-    group.writeEntry( "Exclude private", mExcludePrivate );
     mConfig->sync();
   } else {
     kDebug() << "No config available in saveConfig!!!!";
@@ -1539,7 +1535,8 @@ class MonthEventStruct
 
 void CalPrintPluginBase::drawMonth( QPainter &p, const QDate &dt,
                                     const QRect &box, int maxdays,
-                                    int subDailyFlags, int holidaysFlags )
+                                    int subDailyFlags, int holidaysFlags,
+                                    bool excludeConfidential, bool excludePrivate )
 {
   const KCalendarSystem *calsys = calendarSystem();
   QRect subheaderBox( box );
@@ -1641,6 +1638,10 @@ void CalPrintPluginBase::drawMonth( QPainter &p, const QDate &dt,
   KDateTime::Spec timeSpec = KSystemTimeZones::local();
   Q_FOREACH ( const KCalCore::Event::Ptr &e, events ) {
     if ( !e ) {
+      continue;
+    }
+    if ( ( excludeConfidential && e->secrecy() == KCalCore::Incidence::SecrecyConfidential ) ||
+         ( excludePrivate      && e->secrecy() == KCalCore::Incidence::SecrecyPrivate ) ) {
       continue;
     }
     if ( e->recurs() ) {

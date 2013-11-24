@@ -351,7 +351,7 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
     int drawAllDayBox( QPainter &p, const KCalCore::Event::List &eventList,
                         const QDate &qd, bool expandable,
                         const QRect &box,
-                        bool mExcludeConfidential, bool mExcludePrivate );
+                        bool excludeConfidential, bool excludePrivate );
     /**
       Draw the agenda box for the day print style (the box showing all events of that day).
       Also draws a grid with half-hour spacing of the grid lines.
@@ -383,7 +383,7 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
                            const QTime &fromTime, const QTime &toTime,
                            const QRect &box,
                            bool includeDescription, bool excludeTime,
-                           bool mExcludeConfidential, bool mExcludePrivate,
+                           bool excludeConfidential, bool excludePrivate,
                            const QList<QDate> &workDays );
 
     void drawAgendaItem( PrintCellItem *item, QPainter &p,
@@ -528,10 +528,13 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
                            how events that do not cross midnight should be printed.
       @param holidaysFlags Bitfield consisting of DisplayFlags flags to determine
                            how holidays should be printed.
+      @param excludeConfidential Whether to exclude Incidence marked confidential.
+      @param excludePrivate Whether to exclude Incidence marked private.
     */
     void drawMonth( QPainter &p, const QDate &dt, const QRect &box,
                     int maxdays = -1, int subDailyFlags = TimeBoxes,
-                    int holidaysFlags = Text );
+                    int holidaysFlags = Text,
+                    bool excludeConfidential = false, bool excludePrivate = false );
 
     /**
       Internal class representing the start of a todo.
@@ -638,8 +641,6 @@ class CALENDARSUPPORT_EXPORT CalPrintPluginBase : public PrintPlugin
     bool mUseColors;
     bool mPrintFooter;
     bool mShowNoteLines;
-    bool mExcludeConfidential;
-    bool mExcludePrivate;
     int mHeaderHeight;
     int mSubHeaderHeight;
     int mFooterHeight;
