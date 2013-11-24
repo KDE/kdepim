@@ -1,5 +1,14 @@
 [Desktop Entry]
 Name=KAddressbook import file
+Name[de]=Adressbuch-Importdatei
+Name[nl]=Importbestand van KAddressbook
+Name[pt]=Importação de ficheiros do KAddressbook
+Name[pt_BR]=Arquivo de importação do KAddressbook
+Name[sk]=Importný súbor KAddressbook
+Name[sv]=Importfil för adressbok
+Name[tr]=K Adres Defteri içe aktarma dosyası
+Name[uk]=Імпортування файлів KAddressBook
+Name[x-test]=xxKAddressbook import filexx
 Type=Application
 Exec=kaddressbook --import %u
 Icon=kmail
