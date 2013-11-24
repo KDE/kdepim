@@ -30,7 +30,6 @@
 
 #include "notesharedglobalconfig.h"
 #include "notes/knote.h"
-#include "knotes/resource/resourcemanager.h"
 #include "knotesadaptor.h"
 //#include "alarms/knotesalarm.h"
 #include "knotesapp.h"
