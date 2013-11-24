@@ -44,7 +44,7 @@ private Q_SLOTS:
 
 private:
     enum listViewData {
-        JournalId = Qt::UserRole + 1
+        AkonadiId = Qt::UserRole + 1
     };
 
     void writeConfig();

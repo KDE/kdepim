@@ -82,7 +82,7 @@ void KNotePrintSelectedNotesDialog::setNotes(const QHash<Akonadi::Item::Id, KNot
         QListWidgetItem *item =new QListWidgetItem(mListNotes);
         item->setText(i.value()->name());
         item->setToolTip(i.value()->text());
-        item->setData(JournalId, i.key());
+        item->setData(AkonadiId, i.key());
     }
 }
 
@@ -91,9 +91,9 @@ QList<KNotePrintObject *> KNotePrintSelectedNotesDialog::selectedNotes() const
     QList<KNotePrintObject *> lstPrintObj;
     QList<QListWidgetItem *> lst = mListNotes->selectedItems ();
     Q_FOREACH(QListWidgetItem *item, lst) {
-        Akonadi::Item::Id journalId = item->data(JournalId).toLongLong();
-        if (journalId != -1) {
-            KNotePrintObject *obj = new KNotePrintObject(mNotes.value(journalId)->item());
+        Akonadi::Item::Id akonadiId = item->data(AkonadiId).toLongLong();
+        if (akonadiId != -1) {
+            KNotePrintObject *obj = new KNotePrintObject(mNotes.value(akonadiId)->item());
             lstPrintObj.append(obj);
         }
     }
