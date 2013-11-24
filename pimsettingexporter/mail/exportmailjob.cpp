@@ -461,7 +461,7 @@ void ExportMailJob::backupIdentity()
                 QFile file(vcardFileName);
                 if (file.exists()) {
                     const bool fileAdded  = archive()->addLocalFile(vcardFileName, Utils::identitiesPath() + QString::number(uoid) + QDir::separator() + file.fileName());
-                    if (fileAdded)
+                    if (!fileAdded)
                         Q_EMIT error(i18n("vCard file \"%1\" cannot be saved.",file.fileName()));
                 } else {
                     group.deleteEntry(vcard);
