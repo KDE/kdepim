@@ -42,9 +42,12 @@ FolderArchiveComboBox::~FolderArchiveComboBox()
 
 void FolderArchiveComboBox::initialize()
 {
-    addItem(i18n("Unique folder"), FolderArchiveAccountInfo::UniqueFolder);
-    addItem(i18n("Folder by months"), FolderArchiveAccountInfo::FolderByMonths);
-    addItem(i18n("Folder by years"), FolderArchiveAccountInfo::FolderByYears);
+    addItem(i18nc("@item:inlistbox for option \"Archive folder name\"", "Unique"),
+            FolderArchiveAccountInfo::UniqueFolder);
+    addItem(i18nc("@item:inlistbox for option \"Archive folder name\"", "Month and year"),
+            FolderArchiveAccountInfo::FolderByMonths);
+    addItem(i18nc("@item:inlistbox for option \"Archive folder name\"", "Year"),
+            FolderArchiveAccountInfo::FolderByYears);
 }
 
 void FolderArchiveComboBox::setType(FolderArchiveAccountInfo::FolderArchiveType type)
@@ -73,14 +76,16 @@ FolderArchiveSettingPage::FolderArchiveSettingPage(const QString &instanceName, 
     lay->addWidget(mEnabled);
 
     QHBoxLayout *hbox = new QHBoxLayout;
-    QLabel *lab = new QLabel(i18n("Archive folder:"));
+    QLabel *lab = new QLabel(i18nc(
+        "@label:chooser for the folder that messages will be archived under",
+        "Archive into:"));
     hbox->addWidget(lab);
     mArchiveFolder = new MailCommon::FolderRequester;
     hbox->addWidget(mArchiveFolder);
     lay->addLayout(hbox);
 
     hbox = new QHBoxLayout;
-    lab = new QLabel(i18n("Archive folder named:"));
+    lab = new QLabel(i18nc("@label:listbox", "Archive folder name:"));
     hbox->addWidget(lab);
     mArchiveNamed = new FolderArchiveComboBox;
     hbox->addWidget(mArchiveNamed);
