@@ -191,19 +191,24 @@ void SignEncryptJob::process()
                                         false,
                                         encBody );
 
+  // exec'ed jobs don't delete themselves
+  job->deleteLater();
+
   if ( res.first.error() ) {
     kDebug() << "signing failed:" << res.first.error().asString();
     setError( res.first.error().code() );
     setErrorText( QString::fromLocal8Bit( res.first.error().asString() ) );
+    emitResult();
+    return;
   }
   if ( res.second.error() ) {
     kDebug() << "encrypyting failed:" << res.second.error().asString();
     setError( res.second.error().code() );
     setErrorText( QString::fromLocal8Bit( res.second.error().asString() ) );
+    emitResult();
+    return;
   }
 
-  // exec'ed jobs don't delete themselves
-  job->deleteLater();
   QByteArray signatureHashAlgo =  res.first.createdSignature( 0 ).hashAlgorithmAsString();
 
   d->resultContent = MessageComposer::Util::composeHeadersAndBody( d->content, encBody, d->format, true, signatureHashAlgo );
