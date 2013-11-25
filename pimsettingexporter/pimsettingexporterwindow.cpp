@@ -70,6 +70,8 @@
 #include <KLocale>
 #include <KStatusBar>
 #include <KRecentFilesAction>
+#include <KCmdLineArgs>
+
 #include <QPointer>
 
 
@@ -112,6 +114,21 @@ PimSettingExporterWindow::~PimSettingExporterWindow()
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup groupConfig = config->group( QLatin1String("Recent File") );
     mRecentFilesAction->saveEntries(groupConfig);
+}
+
+void PimSettingExporterWindow::handleCommandLine()
+{
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    if ( args->isSet( "import" ) ) {
+        if (args->count() > 0) {
+            loadData(args->url(0).path());
+        }
+    } else if (args->isSet( "export" )) {
+        if (args->count() > 0) {
+            backupData(args->url(0).path());
+        }
+    }
+    args->clear();
 }
 
 void PimSettingExporterWindow::setupActions(bool canZipFile)
@@ -182,6 +199,8 @@ void PimSettingExporterWindow::slotSaveLog()
     PimCommon::Util::saveTextAs(log, filter, this);
 }
 
+
+
 void PimSettingExporterWindow::slotBackupData()
 {
     if (KMessageBox::warningYesNo(this,i18n("Before to backup data, close all kdepim applications. Do you want to continue?"),i18n("Backup"))== KMessageBox::No)
@@ -191,7 +210,11 @@ void PimSettingExporterWindow::slotBackupData()
     if (filename.isEmpty())
         return;
     mRecentFilesAction->addUrl(KUrl(filename));
+    backupData(filename);
+}
 
+void PimSettingExporterWindow::backupData(const QString &filename)
+{
     QPointer<SelectionTypeDialog> dialog = new SelectionTypeDialog(this);
     if (dialog->exec()) {
         mStored = dialog->storedType();

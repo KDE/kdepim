@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
     PimSettingExporterWindow *backupMailWin = new PimSettingExporterWindow();
     a.setTopWidget(backupMailWin);
     backupMailWin->show();
+    backupMailWin->handleCommandLine();
 
     return a.exec();
 }
