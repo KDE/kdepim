@@ -52,7 +52,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintDay : public CalPrintBase
               READ endTime WRITE setEndTime )
 
   public:
-    CalPrintDay( QPrinter *printer );
+    explicit CalPrintDay( QPrinter *printer );
 
     virtual ~CalPrintDay();
 

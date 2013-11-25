@@ -29,7 +29,7 @@
 #include <KGlobal>
 #include <KSystemTimeZones>
 
-#include <qmath.h> // qCeil krazy:exclude=camelcase since no QMath
+#include <qmath.h>
 
 using namespace PimPrint::Calendar;
 

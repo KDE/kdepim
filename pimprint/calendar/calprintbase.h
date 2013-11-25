@@ -106,7 +106,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
     /**
      * Constructor.
      */
-    CalPrintBase( QPrinter *printer );
+    explicit CalPrintBase( QPrinter *printer );
 
     /**
      * Destructor.
