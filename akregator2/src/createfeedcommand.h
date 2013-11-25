@@ -59,7 +59,7 @@ private:
     Private* const d;
     Q_PRIVATE_SLOT( d, void doCreate() )
     Q_PRIVATE_SLOT( d, void creationDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void modificationDone() )
+    Q_PRIVATE_SLOT( d, void modificationDone( KJob* ) )
 
 };
 

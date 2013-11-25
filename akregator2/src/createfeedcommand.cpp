@@ -29,6 +29,7 @@
 #include "editfeedcommand.h"
 #include "command_p.h"
 
+#include <Akonadi/AgentManager>
 #include <Akonadi/CachePolicy>
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionCreateJob>
@@ -60,7 +61,7 @@ public:
 
     void doCreate();
     void creationDone( KJob* );
-    void modificationDone();
+    void modificationDone( KJob* );
 
     Akonadi::Session* m_session;
     QString m_url;
@@ -140,7 +141,7 @@ void CreateFeedCommand::Private::creationDone( KJob* job )
         Akonadi::CollectionCreateJob* createJob = qobject_cast<Akonadi::CollectionCreateJob*>( job );
         Q_ASSERT( createJob );
         EditFeedCommand* cmd = new EditFeedCommand( q );
-        connect( cmd, SIGNAL(finished()), q, SLOT(modificationDone()) );
+        connect( cmd, SIGNAL(finished(KJob*)), q, SLOT(modificationDone(KJob*)) );
         cmd->setParentWidget( q->parentWidget() );
         cmd->setCollection( createJob->collection() );
         cmd->setSession( m_session );
@@ -148,14 +149,20 @@ void CreateFeedCommand::Private::creationDone( KJob* job )
     }
 }
 
-void CreateFeedCommand::Private::modificationDone()
+void CreateFeedCommand::Private::modificationDone( KJob* job )
 {
-    EditFeedCommand* cmd = qobject_cast<EditFeedCommand*>( q->sender() );
+    EditFeedCommand* cmd = qobject_cast<EditFeedCommand*>( job );
     Q_ASSERT( cmd );
     if ( cmd->error() )
+    {
         q->setErrorAndEmitResult( i18n("Could not edit feed: %1", cmd->errorString()) );
+    }
     else
+    {
+        // fetch feed
+        Akonadi::AgentManager::self()->synchronizeCollection( cmd->collection() );
         q->emitResult();
+    }
 }
 
 CreateFeedCommand::CreateFeedCommand( Akonadi::Session* session, QObject* parent ) : Command( parent ), d( new Private( session, this ) )
