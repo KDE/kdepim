@@ -1043,28 +1043,22 @@ void KNote::updateFocus()
 {
     if ( hasFocus() ) {
         if ( !m_editor->isReadOnly() ) {
-            if ( m_tool && m_tool->isHidden() && m_editor->acceptRichText() )
-            {
+            if ( m_tool && m_tool->isHidden() && m_editor->acceptRichText() ) {
                 m_tool->show();
                 updateLayout();
             }
             m_grip->show();
-        }
-        else
-        {
+        } else {
             if ( m_tool && !m_tool->isHidden() ) {
                 m_tool->hide();
                 updateLayout();     // to update the minimum height
             }
             m_grip->hide();
         }
-    }
-    else
-    {
+    } else {
         m_grip->hide();
 
-        if ( m_tool && !m_tool->isHidden() )
-        {
+        if ( m_tool && !m_tool->isHidden() ) {
             m_tool->hide();
             updateLayout();     // to update the minimum height
         }
