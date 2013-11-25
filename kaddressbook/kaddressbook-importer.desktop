@@ -13,6 +13,6 @@ Name[x-test]=xxKAddressbook import filexx
 Type=Application
 Exec=kaddressbook --import %u
 Icon=kmail
-MimeType=text/vcard;
+MimeType=text/vcard;text/x-ldif;
 
 X-KDE-StartupNotify=true
