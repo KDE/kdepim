@@ -5,6 +5,12 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <include>kglobalsettings.h</include>
 
+  <group name="SelectNoteFolder">
+      <entry name="DefaultFolder" type="LongLong">
+        <default>-1</default>
+      </entry>
+  </group>
+
   <group name="Printing">
      <entry name="Theme" type="String">
         <default>${DATA_INSTALL_DIR}/knotes/print/themes/default/</default>
