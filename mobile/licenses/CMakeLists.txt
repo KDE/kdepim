@@ -12,4 +12,3 @@ if(DBLATEX_EXECUTABLE)
 endif()
 
 install(FILES licenses.pdf DESTINATION ${DATA_INSTALL_DIR}/kontact-touch/)
-install(FILES licenses.html DESTINATION ${DATA_INSTALL_DIR}/kontact-touch/)

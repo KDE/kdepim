@@ -33,6 +33,7 @@ class PimSettingExporterWindow: public KXmlGuiWindow
 public:
     explicit PimSettingExporterWindow(QWidget *parent=0);
     ~PimSettingExporterWindow();
+    void handleCommandLine();
 
 private Q_SLOTS:
     void slotJobFinished();
@@ -52,6 +53,7 @@ private:
         Backup,
         Restore
     };
+
     void updateActions(bool inAction);
     void backupNextStep();
     void restoreNextStep();
@@ -59,6 +61,7 @@ private:
     void backupStart();
     void restoreFinished();
     void restoreStart();
+    void backupData(const QString &filename);
     void loadData(const QString &filename);
     void executeJob();
     bool canZip() const;

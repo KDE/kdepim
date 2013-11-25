@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=KAddressbook import file
 Name[de]=Adressbuch-Importdatei
+Name[fi]=Tiedoston tuonti KAddressbookiin
 Name[nl]=Importbestand van KAddressbook
 Name[pt]=Importação de ficheiros do KAddressbook
 Name[pt_BR]=Arquivo de importação do KAddressbook
@@ -12,6 +13,6 @@ Name[x-test]=xxKAddressbook import filexx
 Type=Application
 Exec=kaddressbook --import %u
 Icon=kmail
-MimeType=text/vcard;
+MimeType=text/vcard;text/x-ldif;
 
 X-KDE-StartupNotify=true

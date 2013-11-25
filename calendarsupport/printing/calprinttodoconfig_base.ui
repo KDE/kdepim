@@ -37,14 +37,14 @@ p, li { white-space: pre-wrap; }
      </item>
      <item>
       <widget class="KLineEdit" name="mTitle">
+       <property name="toolTip">
+        <string>Name for this to-do list</string>
+       </property>
+       <property name="whatsThis">
+        <string>Enter a name for this to-do list that will be put at the top of the print-out</string>
+       </property>
        <property name="text">
         <string>To-do List</string>
-       </property>
-        <property name="toolTip">
-         <string>Name for this to-do list</string>
-        </property>
-        <property name="whatsThis">
-         <string>Enter a name for this to-do list that will be put at the top of the print-out</string>
        </property>
       </widget>
      </item>
@@ -140,7 +140,7 @@ p, li { white-space: pre-wrap; }
           <property name="font">
            <font>
             <family>Sans Serif</family>
-            <pointsize>9</pointsize>
+            <pointsize>12</pointsize>
             <weight>50</weight>
             <italic>false</italic>
             <bold>false</bold>
@@ -265,14 +265,14 @@ p, li { white-space: pre-wrap; }
       </property>
       <item>
        <widget class="QCheckBox" name="mDescription">
-        <property name="text">
-         <string>Include &amp;descriptions</string>
-        </property>
         <property name="toolTip">
          <string>Print item descriptions</string>
         </property>
         <property name="whatsThis">
          <string>Check this option if you want to see the item descriptions printed.</string>
+        </property>
+        <property name="text">
+         <string>Include &amp;descriptions</string>
         </property>
        </widget>
       </item>
@@ -410,14 +410,14 @@ p, li { white-space: pre-wrap; }
       </item>
       <item>
        <widget class="QCheckBox" name="mPrintFooter">
-        <property name="text">
-         <string>Print &amp;Footer</string>
-        </property>
         <property name="toolTip">
          <string>Print a datetime footer on each page</string>
         </property>
         <property name="whatsThis">
          <string>Check this box if you want to print a small footer on each page that contains the date of the print.</string>
+        </property>
+        <property name="text">
+         <string>Print &amp;Footer</string>
         </property>
        </widget>
       </item>

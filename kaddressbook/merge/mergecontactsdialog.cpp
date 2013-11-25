@@ -24,6 +24,7 @@
 #include <KLocale>
 
 #include <QItemSelectionModel>
+#include <QLabel>
 
 MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QWidget *parent)
     : KDialog(parent)
@@ -32,9 +33,9 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
     setButtons( Ok | Cancel );
     readConfig();
     const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(selectionModel);
-    if (lst.isEmpty()) {
+    if (lst.count() < 2) {
         enableButtonOk(false);
-        //Add info that list is empty
+        setMainWidget(new QLabel(i18n("You must select at least two elements.")));
     }
 }
 

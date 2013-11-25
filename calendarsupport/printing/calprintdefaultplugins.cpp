@@ -756,6 +756,8 @@ void CalPrintDay::loadConfig()
     mSingleLineLimit = grp.readEntry( "Single line limit", false );
     mShowNoteLines = grp.readEntry( "Note Lines", false );
     mExcludeTime = grp.readEntry( "Exclude time", false );
+    mExcludeConfidential = grp.readEntry( "Exclude confidential", true );
+    mExcludePrivate = grp.readEntry( "Exclude private", true );
   }
   setSettingsWidget();
 }
@@ -777,6 +779,8 @@ void CalPrintDay::saveConfig()
     grp.writeEntry( "Single line limit", mSingleLineLimit );
     grp.writeEntry( "Note Lines", mShowNoteLines );
     grp.writeEntry( "Exclude time", mExcludeTime );
+    grp.writeEntry( "Exclude confidential", mExcludeConfidential );
+    grp.writeEntry( "Exclude private", mExcludePrivate );
   }
 }
 
@@ -1030,6 +1034,8 @@ void CalPrintWeek::loadConfig()
     mWeekPrintType = (eWeekPrintType)( grp.readEntry( "Print type", (int)Filofax ) );
     mIncludeDescription = grp.readEntry( "Include Description", false );
     mExcludeTime = grp.readEntry( "Exclude Time", false );
+    mExcludeConfidential = grp.readEntry( "Exclude confidential", true );
+    mExcludePrivate = grp.readEntry( "Exclude private", true );
   }
   setSettingsWidget();
 }
@@ -1050,6 +1056,8 @@ void CalPrintWeek::saveConfig()
     grp.writeEntry( "Print type", int( mWeekPrintType ) );
     grp.writeEntry( "Include Description", mIncludeDescription );
     grp.writeEntry( "Exclude Time", mExcludeTime );
+    grp.writeEntry( "Exclude confidential", mExcludeConfidential );
+    grp.writeEntry( "Exclude private", mExcludePrivate );
   }
 }
 
@@ -1267,6 +1275,8 @@ void CalPrintMonth::loadConfig()
     mSingleLineLimit = grp.readEntry( "Single line limit", false );
     mShowNoteLines = grp.readEntry( "Note Lines", false );
     mIncludeDescription = grp.readEntry( "Include description", false );
+    mExcludeConfidential = grp.readEntry( "Exclude confidential", true );
+    mExcludePrivate = grp.readEntry( "Exclude private", true );
   }
   setSettingsWidget();
 }
@@ -1283,6 +1293,8 @@ void CalPrintMonth::saveConfig()
     grp.writeEntry( "Single line limit", mSingleLineLimit );
     grp.writeEntry( "Note Lines", mShowNoteLines );
     grp.writeEntry( "Include description", mIncludeDescription );
+    grp.writeEntry( "Exclude confidential", mExcludeConfidential );
+    grp.writeEntry( "Exclude private", mExcludePrivate );
   }
 }
 
@@ -1474,6 +1486,8 @@ void CalPrintTodos::loadConfig()
       (eTodoSortField)grp.readEntry( "Sort field", (int)TodoFieldSummary );
     mTodoSortDirection =
       (eTodoSortDirection)grp.readEntry( "Sort direction", (int)TodoDirectionAscending );
+    mExcludeConfidential = grp.readEntry( "Exclude confidential", true );
+    mExcludePrivate = grp.readEntry( "Exclude private", true );
   }
   setSettingsWidget();
 }
@@ -1493,6 +1507,8 @@ void CalPrintTodos::saveConfig()
     grp.writeEntry( "Strike out completed summaries", mStrikeOutCompleted );
     grp.writeEntry( "Sort field", (int)mTodoSortField );
     grp.writeEntry( "Sort direction", (int)mTodoSortDirection );
+    grp.writeEntry( "Exclude confidential", mExcludeConfidential );
+    grp.writeEntry( "Exclude private", mExcludePrivate );
   }
 }
 

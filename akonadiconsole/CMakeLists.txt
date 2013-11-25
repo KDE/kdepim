@@ -90,23 +90,9 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   dbconsole.ui
   instanceselector.ui
   rawsocketconsole.ui
+  browserwidget_contentview.ui
+  collectioninternalspage.ui
 )
-
-if(${KDE_VERSION} VERSION_GREATER "4.5.74")
-  set(KDE_IS_AT_LEAST_4_5_74 TRUE)
-endif()
-
-if(KDE_IS_AT_LEAST_4_5_74)
-  kde4_add_ui_files(akonadiconsole_bin_SRCS
-    browserwidget_contentview.ui
-    collectioninternalspage.ui
-  )
-else()
-  kde4_add_ui_files(akonadiconsole_bin_SRCS
-    browserwidget_contentview-45.ui
-    collectioninternalspage-45.ui
-  )
-endif()
 
 kde4_add_kcfg_files(akonadiconsole_bin_SRCS settings.kcfgc)
 

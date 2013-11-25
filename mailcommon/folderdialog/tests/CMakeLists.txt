@@ -6,6 +6,7 @@ target_link_libraries(selectmultiselectiondialog_gui
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${KDE4_KDECORE_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
   ${KDE4_KDEUI_LIBS}
   mailcommon
 )

@@ -31,9 +31,6 @@
 
 #include "knotealarmdialog.h"
 
-#include <kcal/alarm.h>
-#include <kcal/journal.h>
-
 #include <KDateComboBox>
 #include <KLocale>
 #include <KTimeComboBox>

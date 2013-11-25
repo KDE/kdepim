@@ -27,14 +27,14 @@ class MAILCOMMON_EXPORT SelectMultiCollectionDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit SelectMultiCollectionDialog(const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent = 0);
-    explicit SelectMultiCollectionDialog(QWidget *parent = 0);
+    explicit SelectMultiCollectionDialog(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent = 0);
+    explicit SelectMultiCollectionDialog(const QString &mimetype, QWidget *parent = 0);
     ~SelectMultiCollectionDialog();
 
     QList<Akonadi::Collection> selectedCollection() const;
 
 private:
-    void initialize(const QList<Akonadi::Collection::Id> &selectedCollection = QList<Akonadi::Collection::Id>());
+    void initialize(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection = QList<Akonadi::Collection::Id>());
     void writeConfig();
     void readConfig();
     SelectMultiCollectionWidget *mSelectMultiCollection;

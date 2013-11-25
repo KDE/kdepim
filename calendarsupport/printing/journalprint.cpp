@@ -55,8 +55,16 @@ void CalPrintJournal::setSettingsWidget()
 
     if ( mUseDateRange ) {
       cfg->mRangeJournals->setChecked( true );
+      cfg->mFromDateLabel->setEnabled( true );
+      cfg->mFromDate->setEnabled( true );
+      cfg->mToDateLabel->setEnabled( true );
+      cfg->mToDate->setEnabled( true );
     } else {
       cfg->mAllJournals->setChecked( true );
+      cfg->mFromDateLabel->setEnabled( false );
+      cfg->mFromDate->setEnabled( false );
+      cfg->mToDateLabel->setEnabled( false );
+      cfg->mToDate->setEnabled( false );
     }
   }
 }

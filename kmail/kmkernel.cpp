@@ -459,6 +459,11 @@ void KMKernel::checkMail () //might create a new reader but won't show!!
   }
 }
 
+void KMKernel::setSystrayIconNotificationsEnabled( bool enabled )
+{
+  mSystemTray->setSystrayIconNotificationsEnabled( enabled );
+}
+
 QStringList KMKernel::accounts()
 {
   QStringList accountLst;
@@ -2016,7 +2021,7 @@ void KMKernel::toggleSystemTray()
     // Set mode of systemtray. If mode has changed, tray will handle this.
     if ( mSystemTray ) {
       mSystemTray->setMode( GlobalSettings::self()->systemTrayPolicy() );
-      mSystemTray->setShowUnread( GlobalSettings::self()->systemTrayShowUnread() );
+      mSystemTray->setShowUnreadCount( GlobalSettings::self()->systemTrayShowUnread() );
     }
 
   }

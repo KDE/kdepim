@@ -65,7 +65,7 @@ KMime::Content* MessageComposer::Util::composeHeadersAndBody( KMime::Content* or
 {
   KMime::Content* result = new KMime::Content;
 
-  // should throw a message to user, that the signing/encryption failed
+  // called should have tested that the signing/encryption failed
   Q_ASSERT( !encodedBody.isEmpty() );
 
   if( !( format & Kleo::InlineOpenPGPFormat ) ) { // make a MIME message

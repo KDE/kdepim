@@ -121,6 +121,12 @@ public Q_SLOTS:
   Q_SCRIPTABLE void openReader() { openReader( false ); }
 
   /**
+   * Enables/disables systray icon changing when mail arrives.
+   * With this disabled the systray icon will always be the same.
+   */
+  Q_SCRIPTABLE void setSystrayIconNotificationsEnabled( bool enabled );
+
+  /**
    * Pauses all background jobs and does not
    * allow new background jobs to be started.
    */

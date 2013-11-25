@@ -46,7 +46,7 @@ void FolderArchiveAgentJob::start()
         return;
     }
     if (mLstItem.isEmpty()) {
-        sendError(i18n("Any message selected."));
+        sendError(i18n("No messages selected."));
         return;
     }
 

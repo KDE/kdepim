@@ -23,8 +23,8 @@
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/EntityRightsFilterModel>
-#include <KMime/Message>
 #include <KRecursiveFilterProxyModel>
+
 
 #include <KCheckableProxyModel>
 #include <KLineEdit>
@@ -35,7 +35,7 @@
 
 using namespace MailCommon;
 
-CheckedCollectionWidget::CheckedCollectionWidget(QWidget *parent)
+CheckedCollectionWidget::CheckedCollectionWidget(const QString &mimetype, QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -44,7 +44,7 @@ CheckedCollectionWidget::CheckedCollectionWidget(QWidget *parent)
 
     // Create a new change recorder.
     Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder( this );
-    changeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
+    changeRecorder->setMimeTypeMonitored( mimetype );
 
     mEntityTreeModel = new Akonadi::EntityTreeModel( changeRecorder, this );
     // Set the model to show only collections, not items.
@@ -52,7 +52,7 @@ CheckedCollectionWidget::CheckedCollectionWidget(QWidget *parent)
 
     Akonadi::CollectionFilterProxyModel *mimeTypeProxy = new Akonadi::CollectionFilterProxyModel( this );
     mimeTypeProxy->setExcludeVirtualCollections( true );
-    mimeTypeProxy->addMimeTypeFilters( QStringList() << KMime::Message::mimeType() );
+    mimeTypeProxy->addMimeTypeFilters( QStringList() << mimetype );
     mimeTypeProxy->setSourceModel( mEntityTreeModel );
 
     // Create the Check proxy model.

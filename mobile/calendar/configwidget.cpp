@@ -96,14 +96,6 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   connect( this, SIGNAL(dailyStartingHourFocus(QObject*)), SLOT(showClock(QObject*)) );
   connect( this, SIGNAL(dailyEndingHourFocus(QObject*)), SLOT(showClock(QObject*)) );
   connect( this, SIGNAL(defaultAppointmentTimeFocus(QObject*)), SLOT(showClock(QObject*)) );
-
-  // UI workarounds for Maemo5
-#if defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
-  mUi->kcfg_DayBegins->setEditable( false );
-  mUi->kcfg_DailyStartingHour->setEditable( false );
-  mUi->kcfg_DailyEndingHour->setEditable( false );
-  mUi->kcfg_DefaultAppointmentTime->setEditable( false );
-#endif
 }
 
 ConfigWidget::~ConfigWidget()

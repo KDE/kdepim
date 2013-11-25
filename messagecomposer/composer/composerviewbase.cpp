@@ -540,6 +540,28 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
   bool doSignCompletely = m_sign;
   bool encryptSomething = m_encrypt;
   bool doEncryptCompletely = m_encrypt;
+
+  //Add encryptionkeys from id to keyResolver
+  kDebug() << id.pgpEncryptionKey().isEmpty() << id.smimeEncryptionKey().isEmpty();
+  if ( !id.pgpEncryptionKey().isEmpty() )
+    encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
+  if ( !id.smimeEncryptionKey().isEmpty() )
+    encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
+  if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
+    kDebug() << "Failed to set encryptoToSelf keys!";
+    return QList< MessageComposer::Composer* >();
+  }
+
+  //Add signingkeys from id to keyResolver
+  if ( !id.pgpSigningKey().isEmpty() )
+    signKeys.push_back( QLatin1String( id.pgpSigningKey() ) );
+  if ( !id.smimeSigningKey().isEmpty() )
+    signKeys.push_back( QLatin1String( id.smimeSigningKey() ) );
+  if ( keyResolver->setSigningKeys( signKeys ) != Kpgp::Ok ) {
+    kDebug() << "Failed to set signing keys!";
+    return QList< MessageComposer::Composer* >();
+  }
+
   foreach( MessageCore::AttachmentPart::Ptr attachment, m_attachmentModel->attachments() ) {
     if( attachment->isSigned() ) {
       signSomething = true;
@@ -550,28 +572,6 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
       encryptSomething = true;
     } else {
       doSignCompletely = false;
-    }
-  }
-
-  if( encryptSomething ) {
-    if ( !id.pgpEncryptionKey().isEmpty() )
-      encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
-    if ( !id.smimeEncryptionKey().isEmpty() )
-      encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
-    if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
-      kDebug() << "Failed to set encryptoToSelf keys!";
-      return QList< MessageComposer::Composer* >();
-    }
-  }
-
-  if( signSomething ) {
-    if ( !id.pgpSigningKey().isEmpty() )
-      signKeys.push_back( QLatin1String( id.pgpSigningKey() ) );
-    if ( !id.smimeSigningKey().isEmpty() )
-      signKeys.push_back( QLatin1String( id.smimeSigningKey() ) );
-    if ( keyResolver->setSigningKeys( signKeys ) != Kpgp::Ok ) {
-      kDebug() << "Failed to set signing keys!";
-      return QList< MessageComposer::Composer* >();
     }
   }
 
@@ -598,19 +598,9 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
       return QList< MessageComposer::Composer*>();
   }
 
+  //No encryption or signing is needed
   if( !signSomething && !encryptSomething ) {
     return QList< MessageComposer::Composer* >() << new MessageComposer::Composer();
-  }
-
-  if( encryptSomething && !m_encrypt ) {
-    if ( !id.pgpEncryptionKey().isEmpty() )
-      encryptToSelfKeys.push_back( QLatin1String( id.pgpEncryptionKey() ) );
-    if ( !id.smimeEncryptionKey().isEmpty() )
-      encryptToSelfKeys.push_back( QLatin1String( id.smimeEncryptionKey() ) );
-    if ( keyResolver->setEncryptToSelfKeys( encryptToSelfKeys ) != Kpgp::Ok ) {
-      kDebug() << "Failed to set encryptoToSelf keys!";
-      return QList< MessageComposer::Composer* >();
-    }
   }
 
   const Kpgp::Result kpgpResult = keyResolver->resolveAllKeys( signSomething, encryptSomething );
@@ -618,7 +608,7 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
     kDebug() << "resolveAllKeys: one key resolution canceled by user";
     return QList< MessageComposer::Composer*>();
   } else if ( kpgpResult != Kpgp::Ok ) {
-    /// TODO handle failure
+    // TODO handle failure
     kDebug() << "resolveAllKeys: failed to resolve keys! oh noes";
     emit failed( i18n( "Failed to resolve keys. Please report a bug." ) );
     return QList< MessageComposer::Composer*>();
@@ -627,69 +617,50 @@ QList< MessageComposer::Composer* > MessageComposer::ComposerViewBase::generateC
 
   QList< MessageComposer::Composer* > composers;
 
-  if( encryptSomething ) {
-    Kleo::CryptoMessageFormat concreteEncryptFormat = Kleo::AutoFormat;
+  if( encryptSomething || signSomething ) {
+    Kleo::CryptoMessageFormat concreteFormat = Kleo::AutoFormat;
     for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
-      if ( keyResolver->encryptionItems( concreteCryptoMessageFormats[i] ).empty() )
+      concreteFormat = concreteCryptoMessageFormats[i];
+      if ( keyResolver->encryptionItems( concreteFormat ).empty() )
         continue;
 
-      if ( !(concreteCryptoMessageFormats[i] & m_cryptoMessageFormat) )
+      if ( !(concreteFormat & m_cryptoMessageFormat) )
         continue;
 
-      concreteEncryptFormat = concreteCryptoMessageFormats[i];
-
-      std::vector<Kleo::KeyResolver::SplitInfo> encData = keyResolver->encryptionItems( concreteEncryptFormat );
-      std::vector<Kleo::KeyResolver::SplitInfo>::iterator it;
-      std::vector<Kleo::KeyResolver::SplitInfo>::iterator end( encData.end() );
-      QList<QPair<QStringList, std::vector<GpgME::Key> > > data;
-      for( it = encData.begin(); it != end; ++it ) {
-        QPair<QStringList, std::vector<GpgME::Key> > p( it->recipients, it->keys );
-        data.append( p );
-        kDebug() << "got resolved keys for:" << it->recipients;
-      }
       MessageComposer::Composer* composer =  new MessageComposer::Composer;
 
-      composer->setEncryptionKeys( data );
-      composer->setMessageCryptoFormat( concreteEncryptFormat );
+      if ( encryptSomething ) {
+        std::vector<Kleo::KeyResolver::SplitInfo> encData = keyResolver->encryptionItems( concreteFormat );
+        std::vector<Kleo::KeyResolver::SplitInfo>::iterator it;
+        std::vector<Kleo::KeyResolver::SplitInfo>::iterator end( encData.end() );
+        QList<QPair<QStringList, std::vector<GpgME::Key> > > data;
+        for( it = encData.begin(); it != end; ++it ) {
+          QPair<QStringList, std::vector<GpgME::Key> > p( it->recipients, it->keys );
+          data.append( p );
+          kDebug() << "got resolved keys for:" << it->recipients;
+        }
+        composer->setEncryptionKeys( data );
+      }
 
       if( signSomething ) {
         // find signing keys for this format
-        std::vector<GpgME::Key> signingKeys = keyResolver->signingKeys( concreteEncryptFormat );
+        std::vector<GpgME::Key> signingKeys = keyResolver->signingKeys( concreteFormat );
         composer->setSigningKeys( signingKeys );
       }
 
+
+      composer->setMessageCryptoFormat( concreteFormat );
       composer->setSignAndEncrypt( signSomething, encryptSomething );
 
       composers.append( composer );
     }
-  } else if( signSomething ) { // just signing, so check sign prefs
-    Kleo::CryptoMessageFormat concreteSignFormat = Kleo::AutoFormat;
-
-    for ( unsigned int i = 0 ; i < numConcreteCryptoMessageFormats ; ++i ) {
-      concreteSignFormat = concreteCryptoMessageFormats[i];
-      if ( keyResolver->encryptionItems( concreteSignFormat ).empty() )
-        continue;
-      if ( !(concreteSignFormat & m_cryptoMessageFormat) )
-        continue;
-
-      std::vector<GpgME::Key> signingKeys = keyResolver->signingKeys( concreteSignFormat );
-
-      MessageComposer::Composer* composer =  new MessageComposer::Composer;
-
-      composer->setSigningKeys( signingKeys );
-      composer->setMessageCryptoFormat( concreteSignFormat );
-      composer->setSignAndEncrypt( signSomething, encryptSomething );
-
-      composers.append( composer );
-    }
-  } else if( !signSomething && !encryptSomething ) {
+  } else {
      MessageComposer::Composer* composer =  new MessageComposer::Composer;
      composers.append( composer );
      //If we canceled sign or encrypt be sure to change status in attachment.
      markAllAttachmentsForSigning(false);
      markAllAttachmentsForSigning(false);
   }
-
 
   if( composers.isEmpty() && ( signSomething || encryptSomething ) )
     Q_ASSERT_X( false, "ComposerViewBase::fillCryptoInfo" , "No concrete sign or encrypt method selected");

@@ -385,6 +385,9 @@ void AgentWidget::currentChanged()
     case AgentInstance::Broken: agentStatus =
         i18nc( "agent is broken somehow", "Broken" );
       break;
+    case AgentInstance::NotConfigured: agentStatus =
+        i18nc( "agent is not yet configured", "Not Configured" );
+      break;
     }
     ui.statusLabel->setText(
       i18nc( "Two statuses, for example \"Online, Running (66%)\" or \"Offline, Broken\"",

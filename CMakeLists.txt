@@ -111,10 +111,10 @@ if(WINCE)
   find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
 endif()
 
-find_package(KDE4 4.11 REQUIRED)
+find_package(KDE4 4.11.3 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.12.40)
+find_package(KdepimLibs 4.12.42)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############

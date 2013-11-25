@@ -28,8 +28,8 @@ class SelectMultiCollectionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SelectMultiCollectionWidget(const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent=0);
-    explicit SelectMultiCollectionWidget(QWidget *parent=0);
+    explicit SelectMultiCollectionWidget(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent=0);
+    explicit SelectMultiCollectionWidget(const QString &mimetype, QWidget *parent=0);
     ~SelectMultiCollectionWidget();
 
     QList<Akonadi::Collection> selectedCollection(const QModelIndex &parent = QModelIndex()) const;
@@ -38,7 +38,7 @@ private Q_SLOTS:
     void slotCollectionsInserted(const QModelIndex &parent, int start, int end);
 
 private:
-    void initialize();
+    void initialize(const QString &mimetype);
     void updateStatus(const QModelIndex &parent);
     MailCommon::CheckedCollectionWidget *mCheckedCollectionWidget;
     QList<Akonadi::Collection::Id> mListCollection;

@@ -24,7 +24,6 @@
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/EntityRightsFilterModel>
-#include <KMime/Message>
 #include <KRecursiveFilterProxyModel>
 
 #include <KCheckableProxyModel>
@@ -35,30 +34,30 @@
 #include <QTreeView>
 
 using namespace MailCommon;
-SelectMultiCollectionWidget::SelectMultiCollectionWidget(QWidget *parent)
+SelectMultiCollectionWidget::SelectMultiCollectionWidget(const QString &mimetype, QWidget *parent)
     : QWidget(parent)
 {
-    initialize();
+    initialize(mimetype);
 }
 
 
-SelectMultiCollectionWidget::SelectMultiCollectionWidget(const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
+SelectMultiCollectionWidget::SelectMultiCollectionWidget(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
     : QWidget(parent),
       mListCollection(selectedCollection)
 {
-    initialize();
+    initialize(mimetype);
 }
 
 SelectMultiCollectionWidget::~SelectMultiCollectionWidget()
 {
 }
 
-void SelectMultiCollectionWidget::initialize()
+void SelectMultiCollectionWidget::initialize(const QString &mimetype)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
 
-    mCheckedCollectionWidget = new MailCommon::CheckedCollectionWidget;
+    mCheckedCollectionWidget = new MailCommon::CheckedCollectionWidget(mimetype);
     connect(mCheckedCollectionWidget->entityTreeModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(slotCollectionsInserted(QModelIndex,int,int)));
 

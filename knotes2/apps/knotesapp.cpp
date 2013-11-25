@@ -30,7 +30,6 @@
 
 #include "notesharedglobalconfig.h"
 #include "notes/knote.h"
-#include "knotes/resource/resourcemanager.h"
 #include "knotesadaptor.h"
 //#include "alarms/knotesalarm.h"
 #include "knotesapp.h"
@@ -253,9 +252,23 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
 
 void KNotesApp::newNote(const QString &name, const QString &text)
 {
-    QPointer<SelectedNotefolderDialog> dlg = new SelectedNotefolderDialog(this);
-    if (dlg->exec()) {
-        const Akonadi::Collection col = dlg->selectedCollection();
+    Akonadi::Collection col;
+    Akonadi::Collection::Id id = KNotesGlobalConfig::self()->defaultFolder();
+    if (id == -1) {
+        QPointer<SelectedNotefolderDialog> dlg = new SelectedNotefolderDialog(this);
+        if (dlg->exec()) {
+            col = dlg->selectedCollection();
+        }
+        if (dlg->useFolderByDefault()) {
+            KNotesGlobalConfig::self()->setDefaultFolder(col.id());
+            KNotesGlobalConfig::self()->writeConfig();
+        }
+        delete dlg;
+    } else {
+        col = Akonadi::Collection(id);
+    }
+
+    if (col.isValid()) {
         Akonadi::Item newItem;
         newItem.setMimeType( Akonotes::Note::mimeType() );
 
@@ -288,13 +301,10 @@ void KNotesApp::newNote(const QString &name, const QString &text)
         eda->setIconName( QString::fromLatin1( "text-plain" ) );
         newItem.addAttribute(eda);
 
-
-        //TODO add default display attributes.
-
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
         connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
     }
-    delete dlg;
+
 }
 
 void KNotesApp::slotNoteCreationFinished(KJob *job)

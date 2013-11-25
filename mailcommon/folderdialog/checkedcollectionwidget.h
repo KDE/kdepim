@@ -36,7 +36,7 @@ class MAILCOMMON_EXPORT CheckedCollectionWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CheckedCollectionWidget(QWidget *parent=0);
+    explicit CheckedCollectionWidget(const QString &mimetype, QWidget *parent=0);
     ~CheckedCollectionWidget();
 
     Akonadi::EntityTreeModel *entityTreeModel() const;

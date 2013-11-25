@@ -29,5 +29,5 @@ Type=Application
 Exec=mboximporter %u
 Icon=kmail
 MimeType=application/mbox;
-
+Categories=Qt;KDE;Office;Network;Email;
 X-KDE-StartupNotify=true
