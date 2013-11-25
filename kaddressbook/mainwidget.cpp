@@ -24,6 +24,7 @@
 #include "modelcolumnmanager.h"
 #include "printing/printingwizard.h"
 #include "merge/searchduplicatecontactwizard.h"
+#include "merge/mergecontactsdialog.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxportmanager.h"
@@ -906,7 +907,9 @@ void MainWidget::slotGrantleeThemesUpdated()
 
 void MainWidget::mergeContacts()
 {
-    //TODO
+    QPointer<MergeContactsDialog> dlg = new MergeContactsDialog(mItemView->selectionModel(), this);
+    dlg->exec();
+    delete dlg;
 }
 
 void MainWidget::slotSearchDuplicateContacts()
