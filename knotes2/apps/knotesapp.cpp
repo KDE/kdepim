@@ -301,9 +301,6 @@ void KNotesApp::newNote(const QString &name, const QString &text)
         eda->setIconName( QString::fromLatin1( "text-plain" ) );
         newItem.addAttribute(eda);
 
-
-        //TODO add default display attributes.
-
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
         connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
     }
