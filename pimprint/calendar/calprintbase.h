@@ -63,71 +63,71 @@ namespace Calendar {
 
 class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
 {
-  Q_OBJECT
-  Q_ENUMS( Style )
-  Q_FLAGS( InfoOptions )
-  Q_FLAGS( TypeOptions )
-  Q_FLAGS( RangeOptions )
-  Q_FLAGS( ExtraOptions )
+    Q_OBJECT
+    Q_ENUMS(Style)
+    Q_FLAGS(InfoOptions)
+    Q_FLAGS(TypeOptions)
+    Q_FLAGS(RangeOptions)
+    Q_FLAGS(ExtraOptions)
 
-  Q_PROPERTY( bool useColor
-              READ useColor WRITE setUseColor )
+    Q_PROPERTY(bool useColor
+               READ useColor WRITE setUseColor)
 
-  Q_PROPERTY( bool useLandscape
-              READ useLandscape WRITE setUseLandscape )
+    Q_PROPERTY(bool useLandscape
+               READ useLandscape WRITE setUseLandscape)
 
-  Q_PROPERTY( int pageWidth
-              READ pageWidth WRITE setPageWidth )
+    Q_PROPERTY(int pageWidth
+               READ pageWidth WRITE setPageWidth)
 
-  Q_PROPERTY( int pageHeight
-              READ pageHeight WRITE setPageHeight )
+    Q_PROPERTY(int pageHeight
+               READ pageHeight WRITE setPageHeight)
 
-  Q_PROPERTY( int headerHeight
-              READ headerHeight WRITE setHeaderHeight )
+    Q_PROPERTY(int headerHeight
+               READ headerHeight WRITE setHeaderHeight)
 
-  Q_PROPERTY( int subheaderHeight
-              READ subHeaderHeight WRITE setSubHeaderHeight )
+    Q_PROPERTY(int subheaderHeight
+               READ subHeaderHeight WRITE setSubHeaderHeight)
 
-  Q_PROPERTY( int footerHeight
-              READ footerHeight WRITE setFooterHeight )
+    Q_PROPERTY(int footerHeight
+               READ footerHeight WRITE setFooterHeight)
 
-  Q_PROPERTY( int padding
-              READ padding WRITE setPadding )
+    Q_PROPERTY(int padding
+               READ padding WRITE setPadding)
 
-  Q_PROPERTY( int margins READ margins )
+    Q_PROPERTY(int margins READ margins)
 
-  Q_PROPERTY( int boxBorderWidth READ boxBorderWidth )
+    Q_PROPERTY(int boxBorderWidth READ boxBorderWidth)
 
-  Q_PROPERTY( int itemBoxBorderWidth READ itemBoxBorderWidth )
+    Q_PROPERTY(int itemBoxBorderWidth READ itemBoxBorderWidth)
 
-  Q_PROPERTY( int timeLineWidth READ timeLineWidth )
+    Q_PROPERTY(int timeLineWidth READ timeLineWidth)
 
-  public:
+public:
     /**
      * Constructor.
      */
-    explicit CalPrintBase( QPrinter *printer );
+    explicit CalPrintBase(QPrinter *printer);
 
     /**
      * Destructor.
      */
     ~CalPrintBase();
 
-    virtual void print( QPainter &p ) = 0;
+    virtual void print(QPainter &p) = 0;
 
     enum Style {
-      None,               //< No print type is set
-      Incidence,          //< Generalized for Events, To-dos and Journals
-      DayFiloFax,         //<
-      DayTimeTable,       //<
-      DaySingleTimeTable, //<
-      WeekFiloFax,        //<
-      WeekTimeTable,      //<
-      WeekSplitWeek,      //<
-      MonthClassic,       //<
-      TodoList,           //<
-      Journal,            //< (how is this different from Incidence for Journals?)
-      Year                //<
+        None,               //< No print type is set
+        Incidence,          //< Generalized for Events, To-dos and Journals
+        DayFiloFax,         //<
+        DayTimeTable,       //<
+        DaySingleTimeTable, //<
+        WeekFiloFax,        //<
+        WeekTimeTable,      //<
+        WeekSplitWeek,      //<
+        MonthClassic,       //<
+        TodoList,           //<
+        Journal,            //< (how is this different from Incidence for Journals?)
+        Year                //<
     };
 
     /**
@@ -135,7 +135,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param useColor if true, then colors are used in the print; greyscale otherwise.
      * @see useColor()
      */
-    void setUseColor( const bool useColor );
+    void setUseColor(const bool useColor);
 
     /**
      * Returns if a color printing is currently set.
@@ -148,7 +148,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param landscape if true use landscape when printing; portrait otherwise.
      * @see useLandscape()
      */
-    void setUseLandscape( const bool landscape );
+    void setUseLandscape(const bool landscape);
 
     /**
      * Returns if the current printed page orientation is landscape.
@@ -161,7 +161,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param height is the height of the desired printed page.
      * @see pageHeight()
      */
-    void setPageHeight( const int height ) const;
+    void setPageHeight(const int height) const;
 
     /**
      * Returns the current printed page height.
@@ -174,7 +174,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param width is the width of the desired printed page.
      * @see pageWidth()
      */
-    void setPageWidth( const int width ) const;
+    void setPageWidth(const int width) const;
 
     /**
      * Returns the current printed page width.
@@ -187,7 +187,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * a default value based on the printer orientation is used.
      * @see headerHeight()
      */
-    void setHeaderHeight( const int height );
+    void setHeaderHeight(const int height);
 
     /**
      * Returns the current height of the page header.  If a height has not been set
@@ -202,7 +202,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * a default value based on the printer orientation is used.
      * @see subHeaderHeight()
      */
-    void setSubHeaderHeight( const int height );
+    void setSubHeaderHeight(const int height);
 
     /**
      * Returns the current height of the page sub-header.  If a height has not been set
@@ -217,7 +217,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * a default value based on the printer orientation is used.
      * @see footerHeight()
      */
-    void setFooterHeight( const int height );
+    void setFooterHeight(const int height);
 
     /**
      * Returns the current height of the page footer.  If a height has not been set
@@ -231,7 +231,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * Sets the padding margin.  If not explicitly set, a nice default value is used.
      * @see padding()
      */
-    void setPadding( const int padding );
+    void setPadding(const int padding);
 
     /**
      * Returns the current padding margin.  If this value has not been set explicitly,
@@ -267,43 +267,43 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
     int timeLineWidth() const;
 
     enum InfoOption {
-      InfoAll          = 0x00000001,
-      InfoDescription  = 0x00000002,
-      InfoLocation     = 0x00000004,
-      InfoAttendees    = 0x00000008,
-      InfoCategories   = 0x00000010,
-      InfoTimeRange    = 0x00000020
+        InfoAll          = 0x00000001,
+        InfoDescription  = 0x00000002,
+        InfoLocation     = 0x00000004,
+        InfoAttendees    = 0x00000008,
+        InfoCategories   = 0x00000010,
+        InfoTimeRange    = 0x00000020
     };
-    Q_DECLARE_FLAGS( InfoOptions, InfoOption )
+    Q_DECLARE_FLAGS(InfoOptions, InfoOption)
 
     enum TypeOption {
-      TypeAll          = 0x00000001,
-      TypeEvent        = 0x00000002,
-      TypeTodo         = 0x00000004,
-      TypeJournal      = 0x00000008,
-      TypeConfidential = 0x00000010,
-      TypePrivate      = 0x00000020
+        TypeAll          = 0x00000001,
+        TypeEvent        = 0x00000002,
+        TypeTodo         = 0x00000004,
+        TypeJournal      = 0x00000008,
+        TypeConfidential = 0x00000010,
+        TypePrivate      = 0x00000020
     };
-    Q_DECLARE_FLAGS( TypeOptions, TypeOption )
+    Q_DECLARE_FLAGS(TypeOptions, TypeOption)
 
     enum RangeOption {
-      RangeTimeExpand  = 0x00000001
+        RangeTimeExpand  = 0x00000001
     };
-    Q_DECLARE_FLAGS( RangeOptions, RangeOption )
+    Q_DECLARE_FLAGS(RangeOptions, RangeOption)
 
     enum ExtraOption {
-      ExtraSingleLine  = 0x00000001,
-      ExtraNoteLines   = 0x00000002,
-      ExtraFooter      = 0x00000004
+        ExtraSingleLine  = 0x00000001,
+        ExtraNoteLines   = 0x00000002,
+        ExtraFooter      = 0x00000004
     };
-    Q_DECLARE_FLAGS( ExtraOptions, ExtraOption )
+    Q_DECLARE_FLAGS(ExtraOptions, ExtraOption)
 
     /**
      * Sets the QPrinter.
      * @param printer is a pointer to a valid QPrinter where the printout will be made.
      * @see thePrinter()
      */
-    void setThePrinter( QPrinter *printer );
+    void setThePrinter(QPrinter *printer);
 
     /**
      * Returns a pointer to the currently set QPrinter.
@@ -316,7 +316,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param calendar is a pointer to a Calendar object containing the data to print.
      * @see printCalendar()
      */
-    void setPrintCalendar( const KCalCore::Calendar::Ptr &calendar );
+    void setPrintCalendar(const KCalCore::Calendar::Ptr &calendar);
 
     /**
      * Returns a pointer to the currently set print calendar.
@@ -329,7 +329,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param calSystem is a pointer to a valid KCalendarSystem object.
      * @see calendarSystem()
      */
-    void setCalendarSystem( KCalendarSystem *calSystem );
+    void setCalendarSystem(KCalendarSystem *calSystem);
 
     /**
      * Returns a pointer to the currently set calendar system.
@@ -342,7 +342,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param style is the Style of print desired.
      * @see style()
      */
-    void setPrintStyle( const Style style );
+    void setPrintStyle(const Style style);
 
     /**
      * Returns the current printing Style.
@@ -355,7 +355,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param flags bitwise ORd InfoOption flags.
      * @see infoFlags()
      */
-    void setInfoOptions( InfoOptions flags );
+    void setInfoOptions(InfoOptions flags);
 
     /**
      * Returns the current information option flags.
@@ -368,7 +368,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param flags bitwise ORd TypeOption flags.
      * @see typeFlags()
      */
-    void setTypeOptions( TypeOptions flags );
+    void setTypeOptions(TypeOptions flags);
 
     /**
      * Returns the current type option flags.
@@ -381,7 +381,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param flags bitwise ORd RangeOption flags.
      * @see rangeFlags()
      */
-    void setRangeOptions( RangeOptions flags );
+    void setRangeOptions(RangeOptions flags);
 
     /**
      * Returns the current time-range option flags.
@@ -394,7 +394,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param flags bitwise ORd ExtraOption flags.
      * @see extraFlags()
      */
-    void setExtraOptions( ExtraOptions flags );
+    void setExtraOptions(ExtraOptions flags);
 
     /**
      * Returns the current extra option flags.
@@ -402,7 +402,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      */
     ExtraOptions extraOptions() const;
 
-  protected:
+protected:
     /**
      * Draws the gray header bar of the printout to the QPainter.
      * It prints the given text and optionally one or two small month views, as
@@ -428,13 +428,13 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      *         is box.bottom, otherwise it is larger than box.bottom
      *         and matches the y-coordinate of the surrounding rectangle.
      */
-    int drawHeader( QPainter &p,
-                    const QRect &box,
-                    const QString &title,
-                    const QDate &leftMonth = QDate(),
-                    const QDate &rightMonth = QDate(),
-                    const bool expand = false,
-                    const QColor &backColor = QColor() ) const;
+    int drawHeader(QPainter &p,
+                   const QRect &box,
+                   const QString &title,
+                   const QDate &leftMonth = QDate(),
+                   const QDate &rightMonth = QDate(),
+                   const bool expand = false,
+                   const QColor &backColor = QColor()) const;
     /**
      * Draws a subheader with a shaded background and the specified string.
      *
@@ -442,7 +442,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param box Coordinates of the box.
      * @param str Text to be printed inside the box.
      */
-    void drawSubHeader( QPainter &p, const QRect &box, const QString &str ) const;
+    void drawSubHeader(QPainter &p, const QRect &box, const QString &str) const;
 
     /**
      * Draws a page footer containing the printing date and possibly other things,
@@ -452,7 +452,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param box coordinates of the footer box.
      * @return The bottom of the printed box.
      */
-    int drawFooter( QPainter &p, const QRect &box ) const;
+    int drawFooter(QPainter &p, const QRect &box) const;
 
     /**
      * Draws a box with given width at the given coordinates.
@@ -461,8 +461,8 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param linewidth The border width of the box.
      * @param box Coordinates of the box.
      */
-  //TODO: make box second arg
-    void drawBox( QPainter &p, const int linewidth, const QRect &box ) const;
+    //TODO: make box second arg
+    void drawBox(QPainter &p, const int linewidth, const QRect &box) const;
 
     /**
      * Draws a shaded box with given width at the given coordinates.
@@ -472,9 +472,9 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param brush The brush to fill the box.
      * @param box Coordinates of the box.
      */
-  //TODO: make box second arg
-    void drawShadedBox( QPainter &p, const int linewidth,
-                        const QBrush &brush, const QRect &box ) const;
+    //TODO: make box second arg
+    void drawShadedBox(QPainter &p, const int linewidth,
+                       const QBrush &brush, const QRect &box) const;
 
     /**
      * Draws an event box with vertical text.
@@ -485,12 +485,12 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param str ext to be printed inside the box
      * @param flags is a bitwise OR of Qt::AlignmentFlags and Qt::TextFlags values.
      */
-  //TODO: make box second arg
-    void drawVerticalBox( QPainter &p,
-                          const int linewidth,
-                          const QRect &box,
-                          const QString &str,
-                          int flags = -1 ) const;
+    //TODO: make box second arg
+    void drawVerticalBox(QPainter &p,
+                         const int linewidth,
+                         const QRect &box,
+                         const QString &str,
+                         int flags = -1) const;
 
     /**
      * Draws the box for the specified item with the given string.
@@ -503,13 +503,13 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param str The string to print inside the box.
      * @param flags is a bitwise OR of Qt::AlignmentFlags and Qt::TextFlags values.
      */
-  //TODO: make box the second arg
-    void drawItemBox( QPainter &p,
-                      int linewidth,
-                      const QRect &box,
-                      const KCalCore::Incidence::Ptr &incidence,
-                      const QString &str,
-                      int flags = -1 ) const;
+    //TODO: make box the second arg
+    void drawItemBox(QPainter &p,
+                     int linewidth,
+                     const QRect &box,
+                     const KCalCore::Incidence::Ptr &incidence,
+                     const QString &str,
+                     int flags = -1) const;
 
     /**
      * Draws the given string (incidence summary) in the given rectangle.
@@ -519,8 +519,8 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param box Coordinates of the surrounding item box.
      * @param str The text to be printed in the box.
      */
-    void drawItemString( QPainter &p, const QRect &box,
-                         const QString &str, int flags = -1 ) const;
+    void drawItemString(QPainter &p, const QRect &box,
+                        const QString &str, int flags = -1) const;
 
     /**
      * Draws the box containing a list of all events and to-dos of the given day.
@@ -537,13 +537,13 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param printRecurDaily Whether daily recurring incidences should be printed.
      * @param printRecurWeekly Whether weekly recurring incidences should be printed.
      */
-  //TODO: make box second arg
-    void drawDayBox( QPainter &p, const QDate &date,
-                     const QTime &startTime, const QTime &endTime,
-                     const QRect &box,
-                     bool fullDate = false,
-                     bool printRecurDaily = true,
-                     bool printRecurWeekly = true ) const;
+    //TODO: make box second arg
+    void drawDayBox(QPainter &p, const QDate &date,
+                    const QTime &startTime, const QTime &endTime,
+                    const QRect &box,
+                    bool fullDate = false,
+                    bool printRecurDaily = true,
+                    bool printRecurWeekly = true) const;
 
     /**
      * Draws the agenda box.
@@ -565,19 +565,19 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      *
      * @param workDays List of workDays
      */
-    void drawAgendaDayBox( QPainter &p,
-                           const QRect &box,
-                           const QDate &date,
-                           const KCalCore::Event::List &eventList,
-                           const QTime &startTime,
-                           const QTime &endTime,
-                           const QList<QDate> &workDays ) const;
+    void drawAgendaDayBox(QPainter &p,
+                          const QRect &box,
+                          const QDate &date,
+                          const KCalCore::Event::List &eventList,
+                          const QTime &startTime,
+                          const QTime &endTime,
+                          const QList<QDate> &workDays) const;
 
-  //TODO: make QPainter the first arg
-    void drawAgendaItem( PrintCellItem *item, QPainter &p,
-                         const KDateTime &startPrintDate,
-                         const KDateTime &endPrintDate,
-                         float minlen, const QRect &box ) const;
+    //TODO: make QPainter the first arg
+    void drawAgendaItem(PrintCellItem *item, QPainter &p,
+                        const KDateTime &startPrintDate,
+                        const KDateTime &endPrintDate,
+                        float minlen, const QRect &box) const;
 
     /**
      * Draws a (vertical) time scale from time startTime to endTime inside the
@@ -590,11 +590,11 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param endTime End time of the time range to display.
      * @param box coordinates of the timeline.
      */
-  //TODO: make box the second arg
-    void drawTimeLine( QPainter &p,
-                       const QTime &startTime,
-                       const QTime &endTime,
-                       const QRect &box ) const;
+    //TODO: make box the second arg
+    void drawTimeLine(QPainter &p,
+                      const QTime &startTime,
+                      const QTime &endTime,
+                      const QRect &box) const;
 
     /**
      * Draws the timetable view of the given time range from startDate to endDate.
@@ -614,17 +614,17 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param expandAll If true, the start and end times are adjusted to include the
      *        whole range of all events of that day, not just of the given time range.
      */
-    void drawTimeTable( QPainter &p, const QRect &box,
-                        const QDate &startDate, const QDate &endDate,
-                        const QTime &startTime, const QTime &endTime,
-                        bool expandAll = false ) const;
+    void drawTimeTable(QPainter &p, const QRect &box,
+                       const QDate &startDate, const QDate &endDate,
+                       const QTime &startTime, const QTime &endTime,
+                       bool expandAll = false) const;
 
     /**
-     * Determines the column of the given weekday ( 1=Monday, 7=Sunday ), taking the
+     * Determines the column of the given weekday (1=Monday, 7=Sunday), taking the
      * start of the week setting into account as given in the user's locale.
      * @param weekday Index of the weekday
      */
-    int weekdayColumn( int weekday ) const;
+    int weekdayColumn(int weekday) const;
 
     /**
      * Cleans a string of newlines and other characters that shouldn't be printed.
@@ -633,7 +633,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param str is the QString to clean.
      * @return a QString with the unwanted characters replaced or removed.
      */
-    QString cleanString( const QString &str ) const;
+    QString cleanString(const QString &str) const;
 
     /**
      * Converts possible rich text to plain text.
@@ -642,14 +642,14 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @return a plain text string representation of the input string.
      * @see cleanStr()
      */
-    QString toPlainText( const QString &htmlText ) const;
+    QString toPlainText(const QString &htmlText) const;
 
-  private:
-  //TODO: move to dpointer
+private:
+    //TODO: move to dpointer
     /**
      * Initializes the QPainter, page height and width, etc.
      */
-    void init( QPrinter *printer ) const;
+    void init(QPrinter *printer) const;
 
     /**
      * De-Initializes everything.
@@ -664,7 +664,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param date Arbitrary Date within the month to be printed.
      * @param box coordinates of the small calendar.
      */
-    void drawSmallMonth( QPainter &p, const QDate &date, const QRect &box ) const;
+    void drawSmallMonth(QPainter &p, const QDate &date, const QRect &box) const;
 
     /**
      * Draws dotted lines for notes in a box.
@@ -673,30 +673,30 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param box coordinates of the box where the lines will be placed.
      * @param startY starting y-coordinate for the first line.
      */
-    void drawNoteLines( QPainter &p, const QRect &box, const int startY ) const;
+    void drawNoteLines(QPainter &p, const QRect &box, const int startY) const;
 
-    void drawDayIncidence( QPainter &p, const QRect &dayBox, const QString &time,
-                           const QString &summary, const QString &description,
-                           int &textY, bool richDescription ) const;
+    void drawDayIncidence(QPainter &p, const QRect &dayBox, const QString &time,
+                          const QString &summary, const QString &description,
+                          int &textY, bool richDescription) const;
 
-    QColor categoryColor( const QStringList &categories ) const;
+    QColor categoryColor(const QStringList &categories) const;
 
-    QColor categoryBgColor( const KCalCore::Incidence::Ptr &incidence ) const;
+    QColor categoryBgColor(const KCalCore::Incidence::Ptr &incidence) const;
 
     /**
      * Sets the QPainter's brush and pen color according to the Incidence's category.
      */
-    void setColorsByIncidenceCategory( QPainter &p,
-                                       const KCalCore::Incidence::Ptr &incidence ) const;
+    void setColorsByIncidenceCategory(QPainter &p,
+                                      const KCalCore::Incidence::Ptr &incidence) const;
 
-    QString holidayString( const QDate &date ) const;
+    QString holidayString(const QDate &date) const;
 
-    KCalCore::Event::Ptr holidayEvent( const QDate &date ) const;
+    KCalCore::Event::Ptr holidayEvent(const QDate &date) const;
 
     /**
      * Returns a nice QColor for text, give the input color &c.
      */
-    QColor getTextColor( const QColor &c ) const;
+    QColor getTextColor(const QColor &c) const;
 
     /**
       Draws a horizontal bar with the weekday names of the given date range
@@ -708,8 +708,8 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
       @param fromDate First date of the printed dates
       @param toDate Last date of the printed dates
     */
-    void drawDaysOfWeek( QPainter &p, const QRect &box,
-                         const QDate &fromDate, const QDate &toDate ) const;
+    void drawDaysOfWeek(QPainter &p, const QRect &box,
+                        const QDate &fromDate, const QDate &toDate) const;
 
     /**
       Draws a single weekday name in a box inside the given area of the painter.
@@ -719,7 +719,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
       @param box coordinates of the weekbox
       @param date Date of the printed day
     */
-    void drawDaysOfWeekBox( QPainter &p, const QRect &box, const QDate &date ) const;
+    void drawDaysOfWeekBox(QPainter &p, const QRect &box, const QDate &date) const;
 
     /**
       Draws the all-day box for the agenda print view (the box on top which
@@ -741,89 +741,89 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
 
       @return The height used for the all-day box.
     */
-    int drawAllDayBox( QPainter &p, const QRect &box,
-                       const QDate &date,
-                       const KCalCore::Event::List &eventList,
-                       bool expandAll = false ) const;
+    int drawAllDayBox(QPainter &p, const QRect &box,
+                      const QDate &date,
+                      const KCalCore::Event::List &eventList,
+                      bool expandAll = false) const;
 
-  private:
-    Q_DISABLE_COPY( CalPrintBase )
+private:
+    Q_DISABLE_COPY(CalPrintBase)
     //@cond PRIVATE
     class Private;
     Private *const d;
     //@endcond
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( CalPrintBase::InfoOptions )
-Q_DECLARE_OPERATORS_FOR_FLAGS( CalPrintBase::TypeOptions )
-Q_DECLARE_OPERATORS_FOR_FLAGS( CalPrintBase::RangeOptions )
-Q_DECLARE_OPERATORS_FOR_FLAGS( CalPrintBase::ExtraOptions )
+Q_DECLARE_OPERATORS_FOR_FLAGS(CalPrintBase::InfoOptions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(CalPrintBase::TypeOptions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(CalPrintBase::RangeOptions)
+Q_DECLARE_OPERATORS_FOR_FLAGS(CalPrintBase::ExtraOptions)
 
 }
 
 }
 
 #if 0
-  public:
-    enum DisplayFlags {
-      Text=0x0001,
-      TimeBoxes=0x0002
-    };
+public:
+enum DisplayFlags {
+    Text = 0x0001,
+    TimeBoxes = 0x0002
+};
 
-  public:
-      Actually do the printing.
+public:
+Actually do the printing.
 
-      @param p QPainter the print result is painted to
-      @param width Width of printable area
-      @param height Height of printable area
-    */
-    virtual void print( QPainter &p, int width, int height ) = 0;
-    /**
-      Start printing.
-    */
-    virtual void doPrint( QPrinter *printer );
+    @param p QPainter the print result is painted to
+    @param width Width of printable area
+    @param height Height of printable area
+    * /
+    virtual void print(QPainter &p, int width, int height) = 0;
+/**
+  Start printing.
+*/
+virtual void doPrint(QPrinter *printer);
 
-  public:
-    bool printFooter() const;
-    void setPrintFooter( bool printFooter );
+public:
+bool printFooter() const;
+void setPrintFooter(bool printFooter);
 
-    /** Helper functions to hide the KOrg::CoreHelper */
-    QTime dayStart();
+/** Helper functions to hide the KOrg::CoreHelper */
+QTime dayStart();
 
-    int margin() const;
-    void setMargin( const int margin );
+int margin() const;
+void setMargin(const int margin);
 
-  /*****************************************************************
-   **               PRINTING HELPER FUNCTIONS                     **
-   *****************************************************************/
+/*****************************************************************
+ **               PRINTING HELPER FUNCTIONS                     **
+ *****************************************************************/
 
-  public:
+public:
 
-    /**
-     * Draws a component box with a heading (printed in bold).
-     *
-     * @param p QPainter of the printout
-     * @param box Coordinates of the box
-     * @param caption Caption string to be printed inside the box
-     * @param contents Normal text contents of the box. If contents.isNull(),
-     *        then no text will be printed, only the caption.
-     * @param sameLine Whether the contents should start on the same line as the
-     *        caption (the space below the caption text will be used as indentation
-     *        in the subsequent lines) or on the next line (no indentation of the
-     *        contents).
-     * @param expand Whether to expand the box vertically to fit the whole text in it.
-     * @param richContents Whether contents contains rich text.
-     *
-     * @return The bottom of the printed box. If expand==true, the bottom of the drawn
-     *         box is returned, if expand is false, the vertical end of the printed
-     *         contents inside the box is returned.  If you want to print some custom
-     *         graphics or text below the contents, use the return value as the
-     *         top-value of your custom contents in that case.
-     */
-    int drawBoxWithCaption( QPainter &p, const QRect &box, const QString &caption,
-                            const QString &contents, bool sameLine, bool expand,
-                            const QFont &captionFont, const QFont &textFont,
-                            bool richContents = false );
+/**
+ * Draws a component box with a heading (printed in bold).
+ *
+ * @param p QPainter of the printout
+ * @param box Coordinates of the box
+ * @param caption Caption string to be printed inside the box
+ * @param contents Normal text contents of the box. If contents.isNull(),
+ *        then no text will be printed, only the caption.
+ * @param sameLine Whether the contents should start on the same line as the
+ *        caption (the space below the caption text will be used as indentation
+ *        in the subsequent lines) or on the next line (no indentation of the
+ *        contents).
+ * @param expand Whether to expand the box vertically to fit the whole text in it.
+ * @param richContents Whether contents contains rich text.
+ *
+ * @return The bottom of the printed box. If expand==true, the bottom of the drawn
+ *         box is returned, if expand is false, the vertical end of the printed
+ *         contents inside the box is returned.  If you want to print some custom
+ *         graphics or text below the contents, use the return value as the
+ *         top-value of your custom contents in that case.
+ */
+int drawBoxWithCaption(QPainter &p, const QRect &box, const QString &caption,
+                       const QString &contents, bool sameLine, bool expand,
+                       const QFont &captionFont, const QFont &textFont,
+                       bool richContents = false);
 };
 
 }

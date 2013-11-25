@@ -34,19 +34,26 @@ namespace Calendar {
 
 class PIMPRINT_CALENDAR_EXPORT CellItem
 {
-  public:
+public:
     CellItem()
-      : mSubCells( 0 ), mSubCell( -1 )
-    {
+        : mSubCells(0), mSubCell(-1) {
     }
     virtual ~CellItem() {}
-    void setSubCells( int v ) { mSubCells = v; }
-    int subCells() const { return mSubCells; }
+    void setSubCells(int v) {
+        mSubCells = v;
+    }
+    int subCells() const {
+        return mSubCells;
+    }
 
-    void setSubCell( int v ) { mSubCell = v; }
-    int subCell() const { return mSubCell; }
+    void setSubCell(int v) {
+        mSubCell = v;
+    }
+    int subCell() const {
+        return mSubCell;
+    }
 
-    virtual bool overlaps( CellItem *other ) const = 0;
+    virtual bool overlaps(CellItem *other) const = 0;
 
     virtual QString label() const;
 
@@ -58,51 +65,45 @@ class PIMPRINT_CALENDAR_EXPORT CellItem
 
       @return Placed items
     */
-    static QList<CellItem*> placeItem( QList<CellItem*> cells, CellItem *placeItem );
+    static QList<CellItem*> placeItem(QList<CellItem*> cells, CellItem *placeItem);
 
-  private:
+private:
     int mSubCells;
     int mSubCell;
 };
 
 class PIMPRINT_CALENDAR_EXPORT PrintCellItem : public CellItem
 {
-  public:
-    PrintCellItem( const KCalCore::Event::Ptr &event,
-                   const KDateTime &start, const KDateTime &end )
-      : mEvent( event ), mStart( start ), mEnd( end )
-    {
+public:
+    PrintCellItem(const KCalCore::Event::Ptr &event,
+                  const KDateTime &start, const KDateTime &end)
+        : mEvent(event), mStart(start), mEnd(end) {
     }
 
-    KCalCore::Event::Ptr event() const
-    {
-      return mEvent;
+    KCalCore::Event::Ptr event() const {
+        return mEvent;
     }
 
-    QString label() const
-    {
-      return mEvent->summary();
+    QString label() const {
+        return mEvent->summary();
     }
 
-    KDateTime start() const
-    {
-      return mStart;
+    KDateTime start() const {
+        return mStart;
     }
 
-    KDateTime end() const
-    {
-      return mEnd;
+    KDateTime end() const {
+        return mEnd;
     }
 
     /** Calculate the start and end date/time of the recurrence that
         happens on the given day */
-    bool overlaps( CellItem *o ) const
-    {
-      PrintCellItem *other = static_cast<PrintCellItem *>( o );
-      return !( other->start() >= end() || other->end() <= start() );
+    bool overlaps(CellItem *o) const {
+        PrintCellItem *other = static_cast<PrintCellItem *>(o);
+        return !(other->start() >= end() || other->end() <= start());
     }
 
-  private:
+private:
     KCalCore::Event::Ptr mEvent;
     KDateTime mStart, mEnd;
 };
