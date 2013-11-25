@@ -1122,11 +1122,14 @@ void KNote::dropEvent( QDropEvent *e )
 
     const QMimeData *md = e->mimeData();
     if ( md->hasColor() ) {
-        QColor bg =  qvariant_cast<QColor>( md->colorData() );
+        const QColor bg =  qvariant_cast<QColor>( md->colorData() );
         setColor( palette().color( foregroundRole() ), bg );
-        //FIXME!
-        //m_journal->setCustomProperty( "KNotes", "BgColor", bg.name() );
-        //m_config->setBgColor( bg );
+
+        //Verify it!
+        NoteShared::NoteDisplayAttribute *attr =  mItem.attribute<NoteShared::NoteDisplayAttribute>( Akonadi::Entity::AddIfMissing );
+        attr->setForegroundColor(bg);
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
     }
 }
 
