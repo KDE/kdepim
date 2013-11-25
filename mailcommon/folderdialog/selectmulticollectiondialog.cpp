@@ -23,16 +23,16 @@
 
 using namespace MailCommon;
 
-SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
+SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
     : KDialog(parent)
 {
-    initialize(selectedCollection);
+    initialize(mimetype, selectedCollection);
 }
 
-SelectMultiCollectionDialog::SelectMultiCollectionDialog(QWidget *parent)
+SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QString &mimetype, QWidget *parent)
     : KDialog(parent)
 {
-    initialize();
+    initialize(mimetype);
 }
 
 SelectMultiCollectionDialog::~SelectMultiCollectionDialog()
@@ -40,12 +40,12 @@ SelectMultiCollectionDialog::~SelectMultiCollectionDialog()
     writeConfig();
 }
 
-void SelectMultiCollectionDialog::initialize(const QList<Akonadi::Collection::Id> &selectedCollection)
+void SelectMultiCollectionDialog::initialize(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection)
 {
     setCaption( i18n( "Select Multiple Folders" ) );
     setButtons( Close | Ok );
 
-    mSelectMultiCollection = new SelectMultiCollectionWidget(selectedCollection);
+    mSelectMultiCollection = new SelectMultiCollectionWidget(mimetype, selectedCollection);
     setMainWidget( mSelectMultiCollection );
     readConfig();
 }
