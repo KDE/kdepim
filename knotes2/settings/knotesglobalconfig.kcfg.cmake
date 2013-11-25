@@ -4,11 +4,6 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <include>kglobalsettings.h</include>
-  <group name="Version">
-     <entry name="NotesVersion" type="UInt">
-        <default>0</default>
-     </entry>
-  </group>
 
   <group name="Printing">
      <entry name="Theme" type="String">
