@@ -204,7 +204,6 @@ void KNote::saveNote()
     message->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
     message->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
     message->mainBodyPart()->fromUnicodeString( text().isEmpty() ? QString::fromLatin1( " " ) : text());
-    qDebug()<<" text()"<<text();
 
     message->assemble();
 
