@@ -24,8 +24,6 @@
 
 #include "calprintbase.h"
 
-#include <Akonadi/Item>
-
 #include <KLocale>
 
 #include <QDate>

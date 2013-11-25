@@ -21,7 +21,6 @@
 
 #include "calprintday.h"
 
-#include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
 
 #include <KCalCore/Event>
@@ -263,20 +262,18 @@ void CalPrintDay::drawDayTimeTable( QPainter &p ) const
   do {
     QRect headerBox = drawHeader( p, curDay, QDate() );
 
-    Akonadi::Item::List eventList =
+    KCalCore::Event::List eventList =
       printCalendar()->events( curDay, timeSpec,
-                               CalendarSupport::EventSortStartDate,
-                               CalendarSupport::SortDirectionAscending );
+                               KCalCore::EventSortStartDate,
+                               KCalCore::SortDirectionAscending );
 
     // split out the all day events as they will be printed in a separate box
-    Akonadi::Item::List alldayEvents, timedEvents;
-    Akonadi::Item::List::ConstIterator it;
-    for ( it = eventList.constBegin(); it != eventList.constEnd(); ++it ) {
-      KCalCore::Event::Ptr event = CalendarSupport::event( *it );
+    KCalCore::Event::List alldayEvents, timedEvents;
+    Q_FOREACH ( const KCalCore::Event::Ptr &event, eventList ) {
       if ( event->allDay() ) {
-        alldayEvents.append( *it );
+        alldayEvents.append( event );
       } else {
-        timedEvents.append( *it );
+        timedEvents.append( event );
       }
     }
 
@@ -307,14 +304,12 @@ void CalPrintDay::drawDayTimeTable( QPainter &p ) const
       // now draw at most maxAllDayEvents in the all-day box
       drawBox( p, boxBorderWidth(), allDayBox );
 
-      Akonadi::Item::List::ConstIterator it;
       QRect itemBox( allDayBox );
       itemBox.setLeft( tlWidth + ( 2 * padMargin ) );
       itemBox.setTop( itemBox.top() + padMargin );
       itemBox.setBottom( itemBox.top() + lineSpacing );
       int count = 0;
-      for ( it = alldayEvents.constBegin(); it != alldayEvents.constEnd(); ++it ) {
-        KCalCore::Event::Ptr event = CalendarSupport::event( *it );
+      Q_FOREACH ( const KCalCore::Event::Ptr &event, alldayEvents ) {
         if ( count == maxAllDayEvents ) {
           break;
         }

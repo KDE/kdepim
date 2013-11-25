@@ -21,13 +21,8 @@
 
 #include "calprintbase.h"
 
-#include <calendarsupport/calendar.h>
 #include <calendarsupport/kcalprefs.h>
 #include <calendarsupport/utils.h>
-
-#include <Akonadi/Item>
-
-#include <KCalCore/Event>
 
 #include <KCalendarSystem>
 #include <KGlobal>
@@ -95,7 +90,7 @@ class PimPrint::Calendar::CalPrintBase::Private
     QPainter mPainter;           // the QPainter
     int mPageHeight;             // page height, depends on page orientation
     int mPageWidth;              // page height, depends on page orientation
-    CalendarSupport::Calendar *mCalendar; // the Calendar
+    KCalCore::Calendar::Ptr mCalendar; // the Calendar
     KCalendarSystem *mCalSystem; // the Calendar System
     CalPrintBase::Style mPrintStyle; // the style to print
     int mHeaderHeight;           // height of header, depends on page orientation
@@ -171,12 +166,12 @@ QPrinter *CalPrintBase::thePrinter() const
   return d->mPrinter;
 }
 
-void CalPrintBase::setPrintCalendar( CalendarSupport::Calendar *calendar )
+void CalPrintBase::setPrintCalendar( const KCalCore::Calendar::Ptr &calendar )
 {
   d->mCalendar = calendar;
 }
 
-CalendarSupport::Calendar *CalPrintBase::printCalendar() const
+KCalCore::Calendar::Ptr CalPrintBase::printCalendar() const
 {
   return d->mCalendar;
 }
@@ -449,6 +444,7 @@ void CalPrintBase::drawSmallMonth( QPainter &p, const QDate &date, const QRect &
   // 3 Pixel after month name, 2 after day names, 1 after the calendar
   double cellHeight = ( box.height() - 5 ) / rownr;
   QFont oldFont( p.font() );
+  //TODO: option for the small month font?
   p.setFont( QFont( "sans-serif", int(cellHeight-2), QFont::Normal ) );
 
   // draw the title
@@ -510,6 +506,7 @@ int CalPrintBase::drawHeader( QPainter &p, const QRect &allbox,
   QRect textRect( allbox );
 
   QFont oldFont( p.font() );
+  //TODO: option for the header font?
   QFont newFont( "sans-serif", ( textRect.height() < 60 ) ? 16 : 18, QFont::Bold );
   if ( expand ) {
     p.setFont( newFont );
@@ -558,6 +555,7 @@ void CalPrintBase::drawSubHeader( QPainter &p, const QRect &box, const QString &
 {
   drawShadedBox( p, boxBorderWidth(), QColor( 232, 232, 232 ), box );
   QFont oldfont( p.font() );
+  //TODO: option for the subheader font?
   p.setFont( QFont( "sans-serif", 10, QFont::Bold ) );
   p.drawText( box, Qt::AlignCenter | Qt::AlignVCenter, str );
   p.setFont( oldfont );
@@ -566,6 +564,7 @@ void CalPrintBase::drawSubHeader( QPainter &p, const QRect &box, const QString &
 int CalPrintBase::drawFooter( QPainter &p, const QRect &footbox ) const
 {
   QFont oldfont( p.font() );
+  //TODO: option for the footer font?
   p.setFont( QFont( "sans-serif", 6 ) );
   QFontMetrics fm( p.font() );
   QString dateStr =
@@ -611,6 +610,7 @@ void CalPrintBase::drawTimeLine( QPainter &p,
       if ( !KGlobal::locale()->use12Clock() ) {
         p.drawLine( xcenter, (int)newY, box.right(), (int)newY );
         numStr.setNum( curTime.hour() );
+        //TODO: option for this font?
         if ( cellHeight > 30 ) {
           p.setFont( QFont( "sans-serif", 14, QFont::Bold ) );
         } else {
@@ -618,6 +618,7 @@ void CalPrintBase::drawTimeLine( QPainter &p,
         }
         p.drawText( box.left() + 4, (int)currY + 2, box.width() / 2 - 2, (int)cellHeight,
                   Qt::AlignTop | Qt::AlignRight, numStr );
+        //TODO: option for this font?
         p.setFont( QFont( "helvetica", 10, QFont::Normal ) );
         p.drawText( xcenter + 4, (int)currY+2, box.width() / 2 + 2, (int)( cellHeight / 2 ) - 3,
                   Qt::AlignTop | Qt::AlignLeft, "00" );
@@ -625,6 +626,7 @@ void CalPrintBase::drawTimeLine( QPainter &p,
         p.drawLine( box.left(), (int)newY, box.right(), (int)newY );
         QTime time( curTime.hour(), 0 );
         numStr = KGlobal::locale()->formatTime( time );
+        //TODO: option for this font?
         if ( box.width() < 60 ) {
           p.setFont( QFont( "sans-serif", 7, QFont::Bold ) ); // for weekprint
         } else {
@@ -655,9 +657,8 @@ void CalPrintBase::drawTimeTable( QPainter &p, const QRect &box,
     QDate curDate( startDate );
     KDateTime::Spec timeSpec = KSystemTimeZones::local();
     while ( curDate <= endDate ) {
-      Akonadi::Item::List eventList = printCalendar()->events( curDate, timeSpec );
-      Q_FOREACH ( const Akonadi::Item &item, eventList ) {
-        const KCalCore::Event::Ptr event = CalendarSupport::event( item );
+      KCalCore::Event::List eventList = printCalendar()->events( curDate, timeSpec );
+      Q_FOREACH ( const KCalCore::Event::Ptr &event, eventList ) {
         Q_ASSERT( event );
         if ( event->allDay() ) {
           continue;
@@ -700,10 +701,10 @@ void CalPrintBase::drawTimeTable( QPainter &p, const QRect &box,
     QRect dayBox( allDayBox );
     dayBox.setTop( tlBox.top() );
     dayBox.setBottom( box.bottom() );
-    Akonadi::Item::List eventList =
+    KCalCore::Event::List eventList =
       printCalendar()->events( curDate, timeSpec,
-                               CalendarSupport::EventSortStartDate,
-                               CalendarSupport::SortDirectionAscending );
+                               KCalCore::EventSortStartDate,
+                               KCalCore::SortDirectionAscending );
 
     alldayHeight = drawAllDayBox( p, allDayBox, curDate, eventList );
 
@@ -717,7 +718,7 @@ void CalPrintBase::drawTimeTable( QPainter &p, const QRect &box,
 void CalPrintBase::drawAgendaDayBox( QPainter &p,
                                      const QRect &box,
                                      const QDate &date,
-                                     const Akonadi::Item::List &eventList,
+                                     const KCalCore::Event::List &eventList,
                                      const QTime &startTime,
                                      const QTime &endTime,
                                      const QList<QDate> &workDays ) const
@@ -745,8 +746,7 @@ void CalPrintBase::drawAgendaDayBox( QPainter &p,
 
   if ( rangeOptions().testFlag( CalPrintBase::RangeTimeExpand ) ) { //TODO should be false by default
     // Adapt start/end times to include complete events
-    Q_FOREACH ( const Akonadi::Item &item, eventList ) {
-      const KCalCore::Event::Ptr event = CalendarSupport::event( item );
+    Q_FOREACH ( const KCalCore::Event::Ptr &event, eventList ) {
       Q_ASSERT( event );
       if ( ( !printConf    && event->secrecy() == KCalCore::Incidence::SecrecyConfidential ) ||
            ( !printPrivate && event->secrecy() == KCalCore::Incidence::SecrecyPrivate ) )  {
@@ -804,9 +804,7 @@ void CalPrintBase::drawAgendaDayBox( QPainter &p,
 
   QList<CellItem *> cells;
 
-  Akonadi::Item::List::ConstIterator itEvents;
-  for ( itEvents = eventList.constBegin(); itEvents != eventList.constEnd(); ++itEvents ) {
-    const KCalCore::Event::Ptr event = CalendarSupport::event( *itEvents );
+  Q_FOREACH ( const KCalCore::Event::Ptr &event, eventList ) {
     if ( event->allDay() ) {
       continue;
     }
@@ -891,6 +889,7 @@ void CalPrintBase::drawAgendaItem( PrintCellItem *item, QPainter &p,
       }
     }
     QFont oldFont( p.font() );
+    //TODO: font option?
     if ( eventBox.height() < 24 ) {
       if ( eventBox.height() < 12 ) {
         if ( eventBox.height() < 8 ) {
@@ -933,25 +932,24 @@ void CalPrintBase::drawDaysOfWeek( QPainter &p, const QRect &box,
 }
 
 int CalPrintBase::drawAllDayBox( QPainter &p, const QRect &box,
-                                 const QDate &date, const Akonadi::Item::List &itemList,
+                                 const QDate &date, const KCalCore::Event::List &eventList,
                                  bool expandAll ) const
 {
   KCalCore::Event::List::Iterator it;
   int offset = box.top();
   QString multiDayStr;
 
-  KCalCore::Event::List eventList = CalendarSupport::eventsFromItems( itemList );
-
+  KCalCore::Event::List evList = eventList;
   KCalCore::Event::Ptr hd = holidayEvent( date );
   if ( hd ) {
-    eventList.prepend( hd );
+    evList.prepend( hd );
   }
 
   const bool printConf = typeOptions().testFlag( CalPrintBase::TypeConfidential ); //TODO should be false by default
   const bool printPrivate = typeOptions().testFlag( CalPrintBase::TypePrivate ); //TODO should be false by default
 
-  it = eventList.begin();
-  while ( it != eventList.end() ) {
+  it = evList.begin();
+  while ( it != evList.end() ) {
     KCalCore::Event::Ptr currEvent = *it;
     if ( ( !printConf    && currEvent->secrecy() == KCalCore::Incidence::SecrecyConfidential ) ||
          ( !printPrivate && currEvent->secrecy() == KCalCore::Incidence::SecrecyPrivate ) ) {
@@ -970,7 +968,7 @@ int CalPrintBase::drawAllDayBox( QPainter &p, const QRect &box,
         }
         multiDayStr += currEvent->summary();
       }
-      it = eventList.erase( it );
+      it = evList.erase( it );
     } else {
       ++it;
     }
@@ -1170,18 +1168,21 @@ void CalPrintBase::drawDayBox( QPainter &p, const QDate &date,
   headerTextBox.setLeft( subHeaderBox.left() + 5 );
   headerTextBox.setRight( subHeaderBox.right() - 5 );
   if ( !hstring.isEmpty() ) {
+    //TODO: option for this font
     p.setFont( QFont( "sans-serif", 8, QFont::Bold, true ) );
     p.drawText( headerTextBox, Qt::AlignLeft | Qt::AlignVCenter, hstring );
   }
+  //TODO: option for this font
   p.setFont( QFont( "sans-serif", 10, QFont::Bold ) );
   p.drawText( headerTextBox, Qt::AlignRight | Qt::AlignVCenter, dayNumStr );
 
-  const Akonadi::Item::List eventList =
+  const KCalCore::Event::List eventList =
     printCalendar()->events( date, KSystemTimeZones::local(),
-                             CalendarSupport::EventSortStartDate,
-                             CalendarSupport::SortDirectionAscending );
+                             KCalCore::EventSortStartDate,
+                             KCalCore::SortDirectionAscending );
 
   QString timeText;
+  //TODO: option for this font
   p.setFont( QFont( "sans-serif", 7 ) );
 
   const bool printConf = typeOptions().testFlag( CalPrintBase::TypeConfidential ); //TODO should be false by default
@@ -1189,8 +1190,7 @@ void CalPrintBase::drawDayBox( QPainter &p, const QDate &date,
 
   int textY = subHeaderHeight(); // gives the relative y-coord of the next printed entry
   unsigned int visibleEventsCounter = 0;
-  Q_FOREACH ( const Akonadi::Item &item, eventList ) {
-    const KCalCore::Event::Ptr currEvent = CalendarSupport::event( item );
+  Q_FOREACH ( const KCalCore::Event::Ptr &currEvent, eventList ) {
     Q_ASSERT( currEvent );
     if ( !currEvent->allDay() ) {
       if ( currEvent->dtEnd().toLocalZone().time() <= myStartTime ||
@@ -1248,10 +1248,8 @@ void CalPrintBase::drawDayBox( QPainter &p, const QDate &date,
   }
 
   if ( textY < box.height() ) {
-    Akonadi::Item::List todos = printCalendar()->todos( date );
-    Akonadi::Item::List::ConstIterator it2;
-    for ( it2=todos.constBegin(); it2 != todos.constEnd() && textY < box.height(); ++it2 ) {
-      KCalCore::Todo::Ptr todo = CalendarSupport::todo( *it2 );
+    KCalCore::Todo::List todoList = printCalendar()->todos( date );
+    Q_FOREACH ( const KCalCore::Todo::Ptr &todo, todoList ) {
       if ( !todo->allDay() ) {
         if ( ( todo->hasDueDate() && todo->dtDue().toLocalZone().time() <= myStartTime ) ||
              ( todo->hasStartDate() && todo->dtStart().toLocalZone().time() > myEndTime ) ) {

@@ -48,17 +48,12 @@
 #include "pimprint_calendar_export.h"
 #include "cellitem.h"
 
-#include <Akonadi/Item>
-
+#include <KCalCore/Calendar>
 #include <KCalCore/Event>
 #include <KCalCore/Incidence>
 
 #include <QPainter>
 #include <QPrinter>
-
-namespace CalendarSupport {
-  class Calendar;
-}
 
 class KCalendarSystem;
 
@@ -321,13 +316,13 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
      * @param calendar is a pointer to a Calendar object containing the data to print.
      * @see printCalendar()
      */
-    void setPrintCalendar( CalendarSupport::Calendar *calendar );
+    void setPrintCalendar( const KCalCore::Calendar::Ptr &calendar );
 
     /**
      * Returns a pointer to the currently set print calendar.
      * @see setPrintCalendar()
      */
-    CalendarSupport::Calendar *printCalendar() const;
+    KCalCore::Calendar::Ptr printCalendar() const;
 
     /**
      * Sets the calendar system to use when printing.
@@ -573,7 +568,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
     void drawAgendaDayBox( QPainter &p,
                            const QRect &box,
                            const QDate &date,
-                           const Akonadi::Item::List &eventList,
+                           const KCalCore::Event::List &eventList,
                            const QTime &startTime,
                            const QTime &endTime,
                            const QList<QDate> &workDays ) const;
@@ -736,19 +731,19 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
       @param p QPainter of the printout
       @param box coordinates of the all day box.
       @param qd The date of the currently printed day
-      @param itemList The list of all-day items that are supposed to be printed
+      @param eventList The list of all-day events that are supposed to be printed
              inside this box
       @param expandable If true, height is the height of one single cell, the printout
              will use as many cells as events in the list and return the total height
              needed for all of them. If false, height specifies the total height
              allowed for all events, and the events are displayed in one cell,
-             with their summaries concatenated by ", ".
+             with their summaries concatenaated by ", ".
 
       @return The height used for the all-day box.
     */
     int drawAllDayBox( QPainter &p, const QRect &box,
                        const QDate &date,
-                       const Akonadi::Item::List &itemList,
+                       const KCalCore::Event::List &eventList,
                        bool expandAll = false ) const;
 
   private:
