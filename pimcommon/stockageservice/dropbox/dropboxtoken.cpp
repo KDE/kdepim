@@ -15,32 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STOCKAGESERVICEABSTRACT_H
-#define STOCKAGESERVICEABSTRACT_H
 
-#include <QObject>
-#include <QUrl>
+#include "dropboxtoken.h"
 
-namespace PimCommon {
-class StockageServiceAbstract : public QObject
+DropBoxToken::DropBoxToken()
 {
-    Q_OBJECT
-public:
-    explicit StockageServiceAbstract(QObject *parent=0);
-    ~StockageServiceAbstract();
-
-    virtual QString name() const = 0;
-    virtual qint64 maximumSize() const = 0;
-    virtual qint64 currentSize() const = 0;
-
-    virtual QUrl sharedUrl() const = 0;
-    virtual void uploadFile(const QString &filename) = 0;
-    virtual QString description() const = 0;
-
-Q_SIGNALS:
-    void downloadDone();
-    void downloadFailed();
-};
 }
-
-#endif // STOCKAGESERVICEABSTRACT_H

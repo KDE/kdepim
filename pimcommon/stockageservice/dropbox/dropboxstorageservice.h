@@ -15,32 +15,26 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STOCKAGESERVICEABSTRACT_H
-#define STOCKAGESERVICEABSTRACT_H
+#ifndef DROPBOXSTORAGESERVICE_H
+#define DROPBOXSTORAGESERVICE_H
 
-#include <QObject>
-#include <QUrl>
+#include "pimcommon/stockageservice/stockageserviceabstract.h"
 
 namespace PimCommon {
-class StockageServiceAbstract : public QObject
+class DropBoxStorageService : public PimCommon::StockageServiceAbstract
 {
     Q_OBJECT
 public:
-    explicit StockageServiceAbstract(QObject *parent=0);
-    ~StockageServiceAbstract();
+    explicit DropBoxStorageService(QObject *parent=0);
+    ~DropBoxStorageService();
 
-    virtual QString name() const = 0;
-    virtual qint64 maximumSize() const = 0;
-    virtual qint64 currentSize() const = 0;
-
-    virtual QUrl sharedUrl() const = 0;
-    virtual void uploadFile(const QString &filename) = 0;
-    virtual QString description() const = 0;
-
-Q_SIGNALS:
-    void downloadDone();
-    void downloadFailed();
+    QString name() const;
+    qint64 maximumSize() const;
+    qint64 currentSize() const;
+    QUrl sharedUrl() const;
+    void uploadFile(const QString &filename);
+    QString description() const;
 };
 }
 
-#endif // STOCKAGESERVICEABSTRACT_H
+#endif // DROPBOXSTORAGESERVICE_H

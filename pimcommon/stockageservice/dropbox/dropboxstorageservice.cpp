@@ -15,32 +15,48 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STOCKAGESERVICEABSTRACT_H
-#define STOCKAGESERVICEABSTRACT_H
+#include "dropboxstorageservice.h"
 
-#include <QObject>
-#include <QUrl>
+#include <KLocale>
 
-namespace PimCommon {
-class StockageServiceAbstract : public QObject
+using namespace PimCommon;
+
+DropBoxStorageService::DropBoxStorageService(QObject *parent)
+    : PimCommon::StockageServiceAbstract(parent)
 {
-    Q_OBJECT
-public:
-    explicit StockageServiceAbstract(QObject *parent=0);
-    ~StockageServiceAbstract();
-
-    virtual QString name() const = 0;
-    virtual qint64 maximumSize() const = 0;
-    virtual qint64 currentSize() const = 0;
-
-    virtual QUrl sharedUrl() const = 0;
-    virtual void uploadFile(const QString &filename) = 0;
-    virtual QString description() const = 0;
-
-Q_SIGNALS:
-    void downloadDone();
-    void downloadFailed();
-};
 }
 
-#endif // STOCKAGESERVICEABSTRACT_H
+DropBoxStorageService::~DropBoxStorageService()
+{
+
+}
+
+QString DropBoxStorageService::name() const
+{
+    return i18n("DropBox");
+}
+
+qint64 DropBoxStorageService::maximumSize() const
+{
+    return -1;
+}
+
+qint64 DropBoxStorageService::currentSize() const
+{
+    return -1;
+}
+
+QUrl DropBoxStorageService::sharedUrl() const
+{
+    return QUrl();
+}
+
+void DropBoxStorageService::uploadFile(const QString &filename)
+{
+    //TODO
+}
+
+QString DropBoxStorageService::description() const
+{
+    return QString();
+}

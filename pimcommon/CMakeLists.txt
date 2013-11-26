@@ -66,6 +66,8 @@ set(libpimcommon_SRCS
   autocorrection/widgets/lineeditwithautocorrection.cpp
   autocorrection/widgets/richtexteditwithautocorrection.cpp
   stockageservice/stockageserviceabstract.cpp
+  stockageservice/dropbox/dropboxstorageservice.cpp
+  stockageservice/dropbox/dropboxtoken.cpp
   nepomukdebug/searchdebugnepomukshowdialog.cpp
   nepomukdebug/sparqlsyntaxhighlighter.cpp
   nepomukdebug/akonadiresultlistview.cpp
