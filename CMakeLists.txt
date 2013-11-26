@@ -186,12 +186,6 @@ else()
   find_package(ZLIB)
   set_package_properties(ZLIB PROPERTIES DESCRIPTION "The Zlib compression library" URL "http://www.zlib.net" TYPE REQUIRED)
 
-  # Strigi is required only if AKONADI_USE_STRIGI_SEARCH is true in AkonadiConfig.cmake
-  if(AKONADI_USE_STRIGI_SEARCH)
-    find_package(Strigi)
-    set_package_properties(Strigi PROPERTIES URL "https://projects.kde.org/strigi" TYPE REQUIRED PURPOSE "Metadata indexing")
-  endif()
-
   find_package(QGpgme)
   set_package_properties(QGpgme PROPERTIES DESCRIPTION "The QGpgMe library" URL "http://www.kde.org" TYPE RECOMMENDED PURPOSE "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
