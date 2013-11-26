@@ -40,7 +40,7 @@
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2013-04-25</date>
+<date>2013-11-25</date>
 <releaseinfo>&kde; 4.11</releaseinfo>
 </chapterinfo>
 
@@ -135,9 +135,8 @@ performs a menu item function, the default shortcut is listed with the menu item
 <guimenuitem>Print Preview...</guimenuitem></menuchoice></term>
 <listitem>
 <para><action>Display a dialog which shows how your email will be printed.</action></para>
-<note><para>This will only be enabled if a printer is available.</para></note></listitem>
+<note><para>This will only be enabled if a printer has been configured and is online available for use.</para></note></listitem>
 </varlistentry>
-<!--FIXME what means available? Printer Driver installed? Printer connected?-->
 <varlistentry id="file-print">
 <term><menuchoice>
 <shortcut>
@@ -230,13 +229,6 @@ composing a message in offline mode, and sending while you have no Internet conn
 <listitem><para><action>Sends the messages that are in your outbox via a specific outgoing account.</action>
 This allows you to choose which server to send your queued messages from. They must be configured in Configure &kmail; dialog, under the <menuchoice><guiicon>Accounts</guiicon><guilabel>Sending</guilabel></menuchoice> tab to show up here.</para></listitem>
 </varlistentry>
-  <!-- Exists, however this seems misplaced or mislabeled, per sgclark & blueck 2013.
-  <varlistentry><term><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo></shortcut>
-        <guimenu>File</guimenu><guimenuitem>New Message</guimenuitem></menuchoice></term>
-    <listitem>
-      <para>The shortcut will open up the New Message compose window. The submenu contains menu entries and shortcuts for various &kontact; tasks.</para>
-    </listitem>
-  </varlistentry>-->
 <varlistentry id="reader-file-quit">
 <term><menuchoice>
 <shortcut>
@@ -1155,21 +1147,6 @@ Please see next section for details.</para></note></listitem>
 <listitem><para><action>Brings up the Export Data Wizard dialog</action> which assists in easily exporting your settings and email.
  Please see <link linkend="export-data-wizard">Export &kmail; Data</link> for details.</para></listitem>
 </varlistentry>
-<varlistentry id="reader-tools-configure-automatic-archiving">
-<term><menuchoice>
-<guimenu>Tools</guimenu>
-<guimenuitem>Configure Automatic Archiving...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Brings up the dialog to set up automatic archiving.</action> Please see <link linkend="auto-archive">Automatic Archiving</link> for details.</para></listitem>
-</varlistentry>
-<varlistentry id="reader-tools-configure-send-later-agent">
-<term><menuchoice>
-<guimenu>Tools</guimenu>
-<guimenuitem>Configure Send Later Agent...</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Brings up a dialog that allows you to modify and remove emails that have been sent using the send later feature.</action>
- Please see <link linkend="send-later">Send Later</link> for details.</para></listitem>
-</varlistentry>
 <varlistentry id="reader-tools-account-wizard">
 <term><menuchoice>
 <guimenu>Tools</guimenu>
@@ -1227,6 +1204,29 @@ Please see next section for details.</para></note></listitem>
 <guimenuitem>Manage Sieve Scripts...</guimenuitem>
 </menuchoice></term>
 <listitem><para>If your mail server supports sieve (server side filtering), you would <action>configure your scripts here</action>.</para></listitem>
+</varlistentry>
+<varlistentry id="reader-settings-configure-automatic-archiving">
+<term><menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Configure Automatic Archiving...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Brings up the dialog to set up automatic archiving.</action> Please see <link linkend="auto-archive">Automatic Archiving</link> for details.</para></listitem>
+</varlistentry>
+<varlistentry id="reader-settings-configure-send-later-agent">
+<term><menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Configure Send Later Agent...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Brings up a dialog that allows you to modify and remove emails that have been sent using the send later feature.</action>
+ Please see <ulink url="help:sendlateragent">Send Later Agent</ulink> for details.</para></listitem>
+</varlistentry>
+<varlistentry id="reader-settings-configure-folder-archive-agent">
+<term><menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Configure Folder Archive Agent...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Brings up a dialog that allows you to configure accounts to use the folder archive agent feature with.</action>
+ Please see <ulink url="help:folderarchiveagent">Folder Archive Agent</ulink> for details.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-settings-configure-notifications">
 <term><menuchoice>
