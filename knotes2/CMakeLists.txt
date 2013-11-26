@@ -20,6 +20,7 @@ set(libknotes2private_lib_SRCS
     configdialog/knoteconfigdialog.cpp
     configdialog/knotedisplayconfigwidget.cpp
     configdialog/knoteeditorconfigwidget.cpp
+    configdialog/knotecollectionconfigwidget.cpp
     ../knotes/print/knoteprintselectthemedialog.cpp
     ../knotes/print/knoteprintselectthemecombobox.cpp
     ../knotes/print/knoteprinter.cpp
@@ -36,7 +37,7 @@ kde4_add_kcfg_files(libknotes2private_kcfg_lib_SRCS ${libknotes2private_kcfg_lib
 
 kde4_add_library(knotes2private ${LIBRARY_TYPE} ${libknotes2private_lib_SRCS} ${libknotes2private_kcfg_lib_SRCS} )
 
-target_link_libraries(knotes2private kdepim ${KDE4_KIO_LIBS} pimcommon ${KDE4_KPRINTUTILS_LIBS} ${KDE4_KCMUTILS_LIBS} ${Grantlee_CORE_LIBRARIES} ${KDE4_KDNSSD_LIBS} ${KDE4_KNEWSTUFF3_LIBS} noteshared)
+target_link_libraries(knotes2private kdepim ${KDE4_KIO_LIBS} pimcommon ${KDE4_KPRINTUTILS_LIBS} ${KDE4_KCMUTILS_LIBS} ${Grantlee_CORE_LIBRARIES} ${KDE4_KDNSSD_LIBS} ${KDE4_KNEWSTUFF3_LIBS} noteshared akonadi_next)
 
 set_target_properties(knotes2private
   PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
@@ -82,4 +83,7 @@ install(TARGETS knotes2  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 #install(DIRECTORY print/themes/ DESTINATION ${DATA_INSTALL_DIR}/knotes/print/themes )
 
+install(FILES 
+        data/knote_config_collection.desktop
+        DESTINATION ${SERVICES_INSTALL_DIR})
 
