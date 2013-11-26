@@ -37,7 +37,8 @@ using namespace PimPrint::Calendar;
 class PimPrint::Calendar::CalPrintDay::Private
 {
 public:
-    Private() {
+    Private()
+    {
     }
 
     QDate mStartDate;  // starting date of print

@@ -1197,7 +1197,7 @@ void CalPrintBase::drawDayBox(QPainter &p, const QDate &date,
         Q_ASSERT(currEvent);
         if (!currEvent->allDay()) {
             if (currEvent->dtEnd().toLocalZone().time() <= myStartTime ||
-                    currEvent->dtStart().toLocalZone().time() > myEndTime) {
+                currEvent->dtStart().toLocalZone().time() > myEndTime) {
                 continue;
             }
         }

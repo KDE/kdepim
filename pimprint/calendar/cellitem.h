@@ -36,20 +36,31 @@ class PIMPRINT_CALENDAR_EXPORT CellItem
 {
 public:
     CellItem()
-        : mSubCells(0), mSubCell(-1) {
+        : mSubCells(0), mSubCell(-1)
+    {
     }
-    virtual ~CellItem() {}
-    void setSubCells(int v) {
+
+    virtual ~CellItem()
+    {
+    }
+
+    void setSubCells(int v)
+    {
         mSubCells = v;
     }
-    int subCells() const {
+
+    int subCells() const
+    {
         return mSubCells;
     }
 
-    void setSubCell(int v) {
+    void setSubCell(int v)
+    {
         mSubCell = v;
     }
-    int subCell() const {
+
+    int subCell() const
+    {
         return mSubCell;
     }
 
@@ -77,28 +88,34 @@ class PIMPRINT_CALENDAR_EXPORT PrintCellItem : public CellItem
 public:
     PrintCellItem(const KCalCore::Event::Ptr &event,
                   const KDateTime &start, const KDateTime &end)
-        : mEvent(event), mStart(start), mEnd(end) {
+        : mEvent(event), mStart(start), mEnd(end)
+    {
     }
 
-    KCalCore::Event::Ptr event() const {
+    KCalCore::Event::Ptr event() const
+    {
         return mEvent;
     }
 
-    QString label() const {
+    QString label() const
+    {
         return mEvent->summary();
     }
 
-    KDateTime start() const {
+    KDateTime start() const
+    {
         return mStart;
     }
 
-    KDateTime end() const {
+    KDateTime end() const
+    {
         return mEnd;
     }
 
     /** Calculate the start and end date/time of the recurrence that
         happens on the given day */
-    bool overlaps(CellItem *o) const {
+    bool overlaps(CellItem *o) const
+    {
         PrintCellItem *other = static_cast<PrintCellItem *>(o);
         return !(other->start() >= end() || other->end() <= start());
     }
