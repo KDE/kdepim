@@ -76,7 +76,7 @@ public:
 
       @return Placed items
     */
-    static QList<CellItem*> placeItem(QList<CellItem*> cells, CellItem *placeItem);
+    static QList<CellItem *> placeItem(QList<CellItem *> cells, CellItem *placeItem);
 
 private:
     int mSubCells;

@@ -269,7 +269,7 @@ void CalPrintDay::drawDayTimeTable(QPainter &p) const
 
         // split out the all day events as they will be printed in a separate box
         KCalCore::Event::List alldayEvents, timedEvents;
-        Q_FOREACH (const KCalCore::Event::Ptr & event, eventList) {
+        Q_FOREACH (const KCalCore::Event::Ptr &event, eventList) {
             if (event->allDay()) {
                 alldayEvents.append(event);
             } else {
@@ -309,7 +309,7 @@ void CalPrintDay::drawDayTimeTable(QPainter &p) const
             itemBox.setTop(itemBox.top() + padMargin);
             itemBox.setBottom(itemBox.top() + lineSpacing);
             int count = 0;
-            Q_FOREACH (const KCalCore::Event::Ptr & event, alldayEvents) {
+            Q_FOREACH (const KCalCore::Event::Ptr &event, alldayEvents) {
                 if (count == maxAllDayEvents) {
                     break;
                 }

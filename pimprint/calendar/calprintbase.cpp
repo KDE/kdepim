@@ -660,7 +660,7 @@ void CalPrintBase::drawTimeTable(QPainter &p, const QRect &box,
         KDateTime::Spec timeSpec = KSystemTimeZones::local();
         while (curDate <= endDate) {
             KCalCore::Event::List eventList = printCalendar()->events(curDate, timeSpec);
-            Q_FOREACH (const KCalCore::Event::Ptr & event, eventList) {
+            Q_FOREACH (const KCalCore::Event::Ptr &event, eventList) {
                 Q_ASSERT(event);
                 if (event->allDay()) {
                     continue;
@@ -743,15 +743,17 @@ void CalPrintBase::drawAgendaDayBox(QPainter &p,
         drawBox(p, boxBorderWidth(), box);
     }
 
-    const bool printConf = typeOptions().testFlag(CalPrintBase::TypeConfidential); //TODO should be false by default
-    const bool printPrivate = typeOptions().testFlag(CalPrintBase::TypePrivate);   //TODO should be false by default
+    const bool printConf = typeOptions().testFlag(
+                               CalPrintBase::TypeConfidential); //TODO should be false by default
+    const bool printPrivate = typeOptions().testFlag(
+                                  CalPrintBase::TypePrivate);   //TODO should be false by default
 
     if (rangeOptions().testFlag(CalPrintBase::RangeTimeExpand)) {//TODO should be false by default
         // Adapt start/end times to include complete events
-        Q_FOREACH (const KCalCore::Event::Ptr & event, eventList) {
+        Q_FOREACH (const KCalCore::Event::Ptr &event, eventList) {
             Q_ASSERT(event);
             if ((!printConf    && event->secrecy() == KCalCore::Incidence::SecrecyConfidential) ||
-                    (!printPrivate && event->secrecy() == KCalCore::Incidence::SecrecyPrivate))  {
+                (!printPrivate && event->secrecy() == KCalCore::Incidence::SecrecyPrivate)) {
                 continue;
             }
             // skip items without times so that we do not adjust for all day items
@@ -806,7 +808,7 @@ void CalPrintBase::drawAgendaDayBox(QPainter &p,
 
     QList<CellItem *> cells;
 
-    Q_FOREACH (const KCalCore::Event::Ptr & event, eventList) {
+    Q_FOREACH (const KCalCore::Event::Ptr &event, eventList) {
         if (event->allDay()) {
             continue;
         }
@@ -842,7 +844,7 @@ void CalPrintBase::drawAgendaItem(PrintCellItem *item, QPainter &p,
     KDateTime startTime = item->start();
     KDateTime endTime = item->end();
     if ((startTime < endPrintDate && endTime > startPrintDate) ||
-            (endTime > startPrintDate && startTime < endPrintDate)) {
+        (endTime > startPrintDate && startTime < endPrintDate)) {
         if (startTime < startPrintDate) {
             startTime = startPrintDate;
         }
@@ -883,7 +885,7 @@ void CalPrintBase::drawAgendaItem(PrintCellItem *item, QPainter &p,
             }
         }
         if (infoOptions().testFlag(CalPrintBase::InfoDescription) &&
-                !event->description().isEmpty()) {
+            !event->description().isEmpty()) {
             str += '\n';
             if (event->descriptionIsRich()) {
                 str += toPlainText(event->description());
@@ -948,8 +950,10 @@ int CalPrintBase::drawAllDayBox(QPainter &p, const QRect &box,
         evList.prepend(hd);
     }
 
-    const bool printConf = typeOptions().testFlag(CalPrintBase::TypeConfidential); //TODO should be false by default
-    const bool printPrivate = typeOptions().testFlag(CalPrintBase::TypePrivate);   //TODO should be false by default
+    const bool printConf = typeOptions().testFlag(
+                               CalPrintBase::TypeConfidential); //TODO should be false by default
+    const bool printPrivate = typeOptions().testFlag(
+                                  CalPrintBase::TypePrivate);   //TODO should be false by default
 
     it = evList.begin();
     while (it != evList.end()) {
@@ -1021,7 +1025,8 @@ void CalPrintBase::drawDayIncidence(QPainter &p, const QRect &dayBox,
     QString descText = toPlainText(description);
     bool boxOverflow = false;
 
-    const bool includeDescription = infoOptions().testFlag(CalPrintBase::InfoDescription);   // TODO should be false by default
+    const bool includeDescription = infoOptions().testFlag(
+                                        CalPrintBase::InfoDescription); // TODO false by default
 
     if (extraOptions().testFlag(CalPrintBase::ExtraSingleLine)) {//TODO should be true by default
         if (includeDescription && !descText.isEmpty()) {
@@ -1188,12 +1193,14 @@ void CalPrintBase::drawDayBox(QPainter &p, const QDate &date,
     //TODO: option for this font
     p.setFont(QFont("sans-serif", 7));
 
-    const bool printConf = typeOptions().testFlag(CalPrintBase::TypeConfidential); //TODO should be false by default
-    const bool printPrivate = typeOptions().testFlag(CalPrintBase::TypePrivate);   //TODO should be false by default
+    const bool printConf = typeOptions().testFlag(
+                               CalPrintBase::TypeConfidential); //TODO should be false by default
+    const bool printPrivate = typeOptions().testFlag(
+                                  CalPrintBase::TypePrivate);   //TODO should be false by default
 
     int textY = subHeaderHeight(); // gives the relative y-coord of the next printed entry
     unsigned int visibleEventsCounter = 0;
-    Q_FOREACH (const KCalCore::Event::Ptr & currEvent, eventList) {
+    Q_FOREACH (const KCalCore::Event::Ptr &currEvent, eventList) {
         Q_ASSERT(currEvent);
         if (!currEvent->allDay()) {
             if (currEvent->dtEnd().toLocalZone().time() <= myStartTime ||
@@ -1253,7 +1260,7 @@ void CalPrintBase::drawDayBox(QPainter &p, const QDate &date,
 
     if (textY < box.height()) {
         KCalCore::Todo::List todoList = printCalendar()->todos(date);
-        Q_FOREACH (const KCalCore::Todo::Ptr & todo, todoList) {
+        Q_FOREACH (const KCalCore::Todo::Ptr &todo, todoList) {
             if (!todo->allDay()) {
                 if ((todo->hasDueDate() && todo->dtDue().toLocalZone().time() <= myStartTime) ||
                     (todo->hasStartDate() && todo->dtStart().toLocalZone().time() > myEndTime)) {

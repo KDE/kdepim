@@ -33,16 +33,16 @@ QString CellItem::label() const
     return i18n("<placeholder>undefined</placeholder>");
 }
 
-QList<CellItem*> CellItem::placeItem(QList<CellItem*> cells, CellItem *placeItem)
+QList<CellItem *> CellItem::placeItem(QList<CellItem *> cells, CellItem *placeItem)
 {
     kDebug(5855) << "Placing" << placeItem->label();
 
-    QList<CellItem*> conflictItems;
+    QList<CellItem *> conflictItems;
     int maxSubCells = 0;
-    QMultiHash<int, CellItem*> subCellDict;
+    QMultiHash<int, CellItem *> subCellDict;
 
     // Find all items which are in same cell
-    QList<CellItem*>::iterator it;
+    QList<CellItem *>::iterator it;
     for (it = cells.begin(); it != cells.end(); ++it) {
         CellItem *item = *it;
         if (item == placeItem) {
@@ -83,7 +83,7 @@ QList<CellItem*> CellItem::placeItem(QList<CellItem*> cells, CellItem *placeItem
         conflictItems.append(placeItem);
         placeItem->setSubCells(maxSubCells);
 
-        QList<CellItem*>::iterator it;
+        QList<CellItem *>::iterator it;
         for (it = conflictItems.begin(); it != conflictItems.end(); ++it) {
             (*it)->setSubCells(maxSubCells);
         }
