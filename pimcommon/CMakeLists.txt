@@ -9,42 +9,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
-
-set(libpimcommon_SRCS
-  acl/aclentrydialog.cpp
-  acl/aclmanager.cpp
-  acl/aclutils.cpp
-  acl/collectionaclpage.cpp
-  acl/imapaclattribute.cpp
-  util/createresource.cpp
-  util/pimutil.cpp
-  widgets/minimumcombobox.cpp
-  translator/translatorutil.cpp
-  translator/translatorwidget.cpp
-  translator/abstracttranslator.cpp
-  translator/translatordebugdialog.cpp
-  #Laurent: disable it we can't use it directly now
-  #translator/babelfishtranslator.cpp
-  translator/googletranslator.cpp
-  widgets/renamefiledialog.cpp
-  widgets/simplestringlisteditor.cpp
-  widgets/customtextedit.cpp
-  widgets/customtreeview.cpp
-  widgets/customtoolswidget.cpp
-  widgets/configureimmutablewidgetutils.cpp
-  texteditor/plaintexteditor/plaintexteditfindbar.cpp
-  texteditor/plaintexteditor/plaintexteditor.cpp
-  texteditor/plaintexteditor/plaintexteditorwidget.cpp
-  texteditor/commonwidget/textfindreplacewidget.cpp
-  texteditor/commonwidget/texteditfindbarbase.cpp
-  texteditor/richtexteditor/richtexteditor.cpp
-  texteditor/richtexteditor/richtexteditfindbar.cpp
-  texteditor/richtexteditor/richtexteditorwidget.cpp
-  templatewidgets/templatelistwidget.cpp
-  templatewidgets/templateeditdialog.cpp
-  templatewidgets/templatemanager.cpp
-  sievehighlighter/sievesyntaxhighlighter.cpp
-  sievehighlighter/sievesyntaxhighlighterutil.cpp
+set(libpimcommon_shorturl_SRCS
   shorturl/abstractshorturl.cpp
   shorturl/shorturlwidget.cpp
   shorturl/engine/tinyurlshorturl.cpp
@@ -54,7 +19,16 @@ set(libpimcommon_SRCS
   shorturl/shorturlconfiguredialog.cpp
   shorturl/engine/migremeshorturl.cpp
   shorturl/engine/triopabshorturl.cpp
-  settings/pimcommonsettings.cpp
+)
+
+set(libpimcommon_storageservice_SRCS
+  stockageservice/stockageserviceabstract.cpp
+  stockageservice/dropbox/dropboxstorageservice.cpp
+  stockageservice/dropbox/dropboxtoken.cpp
+  stockageservice/settings/stockageservicesettingswidget.cpp
+)
+
+set(libpimcommon_autocorrection_SRCS
   autocorrection/autocorrection.cpp
   autocorrection/autocorrectionwidget.cpp
   autocorrection/autocorrectionlistwidget.cpp
@@ -65,9 +39,50 @@ set(libpimcommon_SRCS
   autocorrection/import/importabstractautocorrection.cpp
   autocorrection/widgets/lineeditwithautocorrection.cpp
   autocorrection/widgets/richtexteditwithautocorrection.cpp
-  stockageservice/stockageserviceabstract.cpp
-  stockageservice/dropbox/dropboxstorageservice.cpp
-  stockageservice/dropbox/dropboxtoken.cpp
+)
+
+set(libpimcommon_texteditor_SRCS
+  texteditor/plaintexteditor/plaintexteditfindbar.cpp
+  texteditor/plaintexteditor/plaintexteditor.cpp
+  texteditor/plaintexteditor/plaintexteditorwidget.cpp
+  texteditor/commonwidget/textfindreplacewidget.cpp
+  texteditor/commonwidget/texteditfindbarbase.cpp
+  texteditor/richtexteditor/richtexteditor.cpp
+  texteditor/richtexteditor/richtexteditfindbar.cpp
+  texteditor/richtexteditor/richtexteditorwidget.cpp
+)
+
+set(libpimcommon_translator_SRCS
+  translator/translatorutil.cpp
+  translator/translatorwidget.cpp
+  translator/abstracttranslator.cpp
+  translator/translatordebugdialog.cpp
+  #Laurent: disable it we can't use it directly now
+  #translator/babelfishtranslator.cpp
+  translator/googletranslator.cpp
+)
+
+set(libpimcommon_SRCS
+  acl/aclentrydialog.cpp
+  acl/aclmanager.cpp
+  acl/aclutils.cpp
+  acl/collectionaclpage.cpp
+  acl/imapaclattribute.cpp
+  util/createresource.cpp
+  util/pimutil.cpp
+  widgets/minimumcombobox.cpp
+  widgets/renamefiledialog.cpp
+  widgets/simplestringlisteditor.cpp
+  widgets/customtextedit.cpp
+  widgets/customtreeview.cpp
+  widgets/customtoolswidget.cpp
+  widgets/configureimmutablewidgetutils.cpp
+  templatewidgets/templatelistwidget.cpp
+  templatewidgets/templateeditdialog.cpp
+  templatewidgets/templatemanager.cpp
+  sievehighlighter/sievesyntaxhighlighter.cpp
+  sievehighlighter/sievesyntaxhighlighterutil.cpp
+  settings/pimcommonsettings.cpp
   nepomukdebug/searchdebugnepomukshowdialog.cpp
   nepomukdebug/sparqlsyntaxhighlighter.cpp
   nepomukdebug/akonadiresultlistview.cpp
@@ -75,6 +90,11 @@ set(libpimcommon_SRCS
   folderdialog/selectmulticollectionwidget.cpp
   folderdialog/selectmulticollectiondialog.cpp
   folderdialog/checkedcollectionwidget.cpp
+  ${libpimcommon_texteditor_SRCS}
+  ${libpimcommon_shorturl_SRCS}
+  ${libpimcommon_storageservice_SRCS}
+  ${libpimcommon_autocorrection_SRCS}
+  ${libpimcommon_translator_SRCS}
 )
 
 kde4_add_ui_files(libpimcommon_SRCS
