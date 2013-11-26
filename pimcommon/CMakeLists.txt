@@ -70,6 +70,9 @@ set(libpimcommon_SRCS
   nepomukdebug/sparqlsyntaxhighlighter.cpp
   nepomukdebug/akonadiresultlistview.cpp
   nepomukdebug/nepomukdebugutils.cpp
+  folderdialog/selectmulticollectionwidget.cpp
+  folderdialog/selectmulticollectiondialog.cpp
+  folderdialog/checkedcollectionwidget.cpp
 )
 
 kde4_add_ui_files(libpimcommon_SRCS
@@ -116,6 +119,7 @@ add_subdirectory(widgets/tests)
 add_subdirectory(shorturl/tests)
 add_subdirectory(autocorrection/tests)
 add_subdirectory(nepomukdebug/tests)
+add_subdirectory(folderdialog/tests/)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

@@ -33,7 +33,7 @@
 #include <QVBoxLayout>
 #include <QTreeView>
 
-using namespace MailCommon;
+using namespace PimCommon;
 
 CheckedCollectionWidget::CheckedCollectionWidget(const QString &mimetype, QWidget *parent)
     : QWidget(parent)

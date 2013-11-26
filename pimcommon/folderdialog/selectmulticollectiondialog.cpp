@@ -21,7 +21,7 @@
 #include <KLocale>
 #include <KConfigGroup>
 
-using namespace MailCommon;
+using namespace PimCommon;
 
 SelectMultiCollectionDialog::SelectMultiCollectionDialog(const QString &mimetype, const QList<Akonadi::Collection::Id> &selectedCollection, QWidget *parent)
     : KDialog(parent)

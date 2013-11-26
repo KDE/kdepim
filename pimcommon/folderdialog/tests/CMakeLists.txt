@@ -1,3 +1,7 @@
+include_directories(
+  ${CMAKE_SOURCE_DIR}/pimcommon
+)
+
 
 set(selectmultiselectiondialog_gui_SRCS selectmultiselectiondialog_gui.cpp)
 kde4_add_executable(selectmultiselectiondialog_gui TEST ${selectmultiselectiondialog_gui_SRCS})
@@ -8,6 +12,6 @@ target_link_libraries(selectmultiselectiondialog_gui
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDE4_KDEUI_LIBS}
-  mailcommon
+  pimcommon
 )
 

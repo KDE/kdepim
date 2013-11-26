@@ -22,7 +22,7 @@
 #include <Akonadi/Collection>
 #include <QModelIndex>
 
-namespace MailCommon {
+namespace PimCommon {
 class CheckedCollectionWidget;
 class SelectMultiCollectionWidget : public QWidget
 {
@@ -40,7 +40,7 @@ private Q_SLOTS:
 private:
     void initialize(const QString &mimetype);
     void updateStatus(const QModelIndex &parent);
-    MailCommon::CheckedCollectionWidget *mCheckedCollectionWidget;
+    PimCommon::CheckedCollectionWidget *mCheckedCollectionWidget;
     QList<Akonadi::Collection::Id> mListCollection;
 };
 }

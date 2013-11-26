@@ -20,7 +20,7 @@
 #define CHECKEDCOLLECTIONWIDGET_H
 
 #include <QWidget>
-#include "mailcommon_export.h"
+#include "pimcommon_export.h"
 
 class QItemSelectionModel;
 class KRecursiveFilterProxyModel;
@@ -31,8 +31,8 @@ namespace Akonadi {
 class EntityTreeModel;
 }
 
-namespace MailCommon {
-class MAILCOMMON_EXPORT CheckedCollectionWidget : public QWidget
+namespace PimCommon {
+class PIMCOMMON_EXPORT CheckedCollectionWidget : public QWidget
 {
     Q_OBJECT
 public:

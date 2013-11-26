@@ -17,13 +17,13 @@
 
 #ifndef SELECTMULTICOLLECTIONDIALOG_H
 #define SELECTMULTICOLLECTIONDIALOG_H
-#include "mailcommon_export.h"
+#include "pimcommon_export.h"
 #include <KDialog>
 #include <Akonadi/Collection>
 
-namespace MailCommon {
+namespace PimCommon {
 class SelectMultiCollectionWidget;
-class MAILCOMMON_EXPORT SelectMultiCollectionDialog : public KDialog
+class PIMCOMMON_EXPORT SelectMultiCollectionDialog : public KDialog
 {
     Q_OBJECT
 public:

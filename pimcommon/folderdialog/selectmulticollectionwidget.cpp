@@ -16,7 +16,7 @@
 */
 
 #include "selectmulticollectionwidget.h"
-#include "checkedcollectionwidget.h"
+#include "pimcommon/folderdialog/checkedcollectionwidget.h"
 
 #include <Akonadi/RecursiveCollectionFilterProxyModel>
 #include <Akonadi/CollectionFilterProxyModel>
@@ -33,7 +33,7 @@
 #include <QVBoxLayout>
 #include <QTreeView>
 
-using namespace MailCommon;
+using namespace PimCommon;
 SelectMultiCollectionWidget::SelectMultiCollectionWidget(const QString &mimetype, QWidget *parent)
     : QWidget(parent)
 {
@@ -57,7 +57,7 @@ void SelectMultiCollectionWidget::initialize(const QString &mimetype)
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
 
-    mCheckedCollectionWidget = new MailCommon::CheckedCollectionWidget(mimetype);
+    mCheckedCollectionWidget = new PimCommon::CheckedCollectionWidget(mimetype);
     connect(mCheckedCollectionWidget->entityTreeModel(), SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(slotCollectionsInserted(QModelIndex,int,int)));
 

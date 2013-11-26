@@ -18,7 +18,7 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include "folderdialog/selectmulticollectiondialog.h"
+#include "pimcommon/folderdialog/selectmulticollectiondialog.h"
 #include <KMime/Message>
 
 
@@ -27,7 +27,7 @@ int main (int argc, char **argv)
     KCmdLineArgs::init(argc, argv, "selectmulticollection_gui", 0, ki18n("SelectMultiCollectiontest_Gui"),
                        "1.0", ki18n("Test for selectmulticollection dialog"));
     KApplication app;
-    MailCommon::SelectMultiCollectionDialog *dialog = new MailCommon::SelectMultiCollectionDialog(KMime::Message::mimeType());
+    PimCommon::SelectMultiCollectionDialog *dialog = new PimCommon::SelectMultiCollectionDialog(KMime::Message::mimeType());
     dialog->exec();
     delete dialog;
     return 0;
