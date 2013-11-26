@@ -25,6 +25,7 @@
 #include "noteshared/attributes/notelockattribute.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "noteshared/attributes/notealarmattribute.h"
+#include "noteshared/resources/localresourcecreator.h"
 #include "apps/knotesakonaditray.h"
 #include "dialog/selectednotefolderdialog.h"
 
@@ -98,6 +99,12 @@ KNotesApp::KNotesApp()
       m_alarm( 0 ),
     #endif
 {
+    Akonadi::Control::widgetNeedsAkonadi(this);
+    if (KNotesGlobalConfig::self()->autoCreateResourceOnStart()) {
+        NoteShared::LocalResourceCreator *creator = new NoteShared::LocalResourceCreator( this );
+        creator->createIfMissing();
+    }
+
     new KNotesAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String("/KNotes") , this );
     kapp->setQuitOnLastWindowClosed( false );
@@ -171,7 +178,6 @@ KNotesApp::KNotesApp()
     updateNetworkListener();
 
     Akonadi::Session *session = new Akonadi::Session( "KNotes Session", this );
-    Akonadi::Control::widgetNeedsAkonadi(this);
     mNoteRecorder = new KNotesChangeRecorder(this);
     mNoteRecorder->changeRecorder()->setSession(session);
     mTray = new KNotesAkonadiTray(mNoteRecorder->changeRecorder(), 0);
