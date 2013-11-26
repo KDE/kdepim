@@ -24,8 +24,6 @@
 
 #include "calprintbase.h"
 
-#include <Akonadi/Item>
-
 #include <KLocale>
 
 #include <QDate>
@@ -41,31 +39,31 @@ class PrintCellItem;
 
 class PIMPRINT_CALENDAR_EXPORT CalPrintDay : public CalPrintBase
 {
-  Q_PROPERTY( QDate startDate
-              READ startDate WRITE setStartDate )
+    Q_PROPERTY(QDate startDate
+               READ startDate WRITE setStartDate)
 
-  Q_PROPERTY( QDate endDate
-              READ endDate WRITE setEndDate )
+    Q_PROPERTY(QDate endDate
+               READ endDate WRITE setEndDate)
 
-  Q_PROPERTY( QTime startTime
-              READ startTime WRITE setStartTime )
+    Q_PROPERTY(QTime startTime
+               READ startTime WRITE setStartTime)
 
-  Q_PROPERTY( QTime endTime
-              READ endTime WRITE setEndTime )
+    Q_PROPERTY(QTime endTime
+               READ endTime WRITE setEndTime)
 
-  public:
-    CalPrintDay( QPrinter *printer );
+public:
+    explicit CalPrintDay(QPrinter *printer);
 
     virtual ~CalPrintDay();
 
-    void print( QPainter &p );
+    void print(QPainter &p);
 
     /**
      * Sets the printout starting date.
      * @param dt is the starting date to print.
      * @see startDate(), setEndDate()
      */
-    void setStartDate( const QDate &date );
+    void setStartDate(const QDate &date);
 
     /**
      * Returns the current print starting date.
@@ -78,7 +76,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintDay : public CalPrintBase
      * @param dt is the ending date to print.
      * @see endDate(), setStartDate()
      */
-    void setEndDate( const QDate &date );
+    void setEndDate(const QDate &date);
 
     /**
      * Returns the current print ending date.
@@ -93,7 +91,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintDay : public CalPrintBase
      * @param dt is the starting time to print.
      * @see startTime(), setEndTime()
      */
-    void setStartTime( const QTime &time );
+    void setStartTime(const QTime &time);
 
     /**
      * Returns the current print starting time.
@@ -108,7 +106,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintDay : public CalPrintBase
      * @param dt is the ending time to print.
      * @see endTime(), setStartTime()
      */
-    void setEndTime( const QTime &time );
+    void setEndTime(const QTime &time);
 
     /**
      * Returns the current print ending time.
@@ -116,16 +114,16 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintDay : public CalPrintBase
      */
     QTime endTime() const;
 
-    void drawDayFiloFax( QPainter &p ) const;
-    void drawDaySingleTimeTable( QPainter &p ) const;
-    void drawDayTimeTable( QPainter &p ) const;
+    void drawDayFiloFax(QPainter &p) const;
+    void drawDaySingleTimeTable(QPainter &p) const;
+    void drawDayTimeTable(QPainter &p) const;
 
-  private:
-  //TODO: move to dpointer
-    QRect drawHeader( QPainter &p,
-                      const QDate &startDate, const QDate &endDate ) const;
+private:
+    //TODO: move to dpointer
+    QRect drawHeader(QPainter &p,
+                     const QDate &startDate, const QDate &endDate) const;
 
-    QRect drawFooter( QPainter &p ) const;
+    QRect drawFooter(QPainter &p) const;
 
     /**
      * Draws the (filofax) table for a bunch of days, using drawDayBox.
@@ -137,9 +135,9 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintDay : public CalPrintBase
      * @param endTime End time of the displayed time range.
      * @param box coordinates of the week box.
     */
-    void drawDays( QPainter &p, const QDate &start, const QDate &end,
-                   const QTime &startTime, const QTime &endTime,
-                   const QRect &box ) const;
+    void drawDays(QPainter &p, const QDate &start, const QDate &end,
+                  const QTime &startTime, const QTime &endTime,
+                  const QRect &box) const;
 
     //@cond PRIVATE
     class Private;

@@ -30,31 +30,31 @@ namespace Calendar {
 
 class PIMPRINT_CALENDAR_EXPORT CalPrintWeek : public CalPrintBase
 {
-  Q_PROPERTY( QDate startDate
-              READ startDate WRITE setStartDate )
+    Q_PROPERTY(QDate startDate
+               READ startDate WRITE setStartDate)
 
-  Q_PROPERTY( QDate endDate
-              READ endDate WRITE setEndDate )
+    Q_PROPERTY(QDate endDate
+               READ endDate WRITE setEndDate)
 
-  Q_PROPERTY( QTime startTime
-              READ startTime WRITE setStartTime )
+    Q_PROPERTY(QTime startTime
+               READ startTime WRITE setStartTime)
 
-  Q_PROPERTY( QTime endTime
-              READ endTime WRITE setEndTime )
+    Q_PROPERTY(QTime endTime
+               READ endTime WRITE setEndTime)
 
-  public:
-    CalPrintWeek( QPrinter *printer );
+public:
+    explicit CalPrintWeek(QPrinter *printer);
 
     virtual ~CalPrintWeek();
 
-    void print( QPainter &p );
+    void print(QPainter &p);
 
     /**
      * Sets the printout starting date.
      * @param dt is the starting date to print.
      * @see startDate(), setEndDate()
      */
-    void setStartDate( const QDate &date );
+    void setStartDate(const QDate &date);
 
     /**
      * Returns the current print starting date.
@@ -67,7 +67,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintWeek : public CalPrintBase
      * @param dt is the ending date to print.
      * @see endDate(), setStartDate()
      */
-    void setEndDate( const QDate &date );
+    void setEndDate(const QDate &date);
 
     /**
      * Returns the current print ending date.
@@ -82,7 +82,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintWeek : public CalPrintBase
      * @param dt is the starting time to print.
      * @see startTime(), setEndTime()
      */
-    void setStartTime( const QTime &time );
+    void setStartTime(const QTime &time);
 
     /**
      * Returns the current print starting time.
@@ -97,7 +97,7 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintWeek : public CalPrintBase
      * @param dt is the ending time to print.
      * @see endTime(), setStartTime()
      */
-    void setEndTime( const QTime &time );
+    void setEndTime(const QTime &time);
 
     /**
      * Returns the current print ending time.
@@ -105,20 +105,20 @@ class PIMPRINT_CALENDAR_EXPORT CalPrintWeek : public CalPrintBase
      */
     QTime endTime() const;
 
-    void drawFiloFaxWeek( QPainter &p ) const;
-    void drawTimeTableWeek( QPainter &p ) const;
-    void drawSplitWeek( QPainter &p ) const;
+    void drawFiloFaxWeek(QPainter &p) const;
+    void drawTimeTableWeek(QPainter &p) const;
+    void drawSplitWeek(QPainter &p) const;
 
-  private:
-  //TODO: move to dpointer
-    QRect drawHeader( QPainter &p, const QDate &date, bool printWeekNumber = false ) const;
+private:
+    //TODO: move to dpointer
+    QRect drawHeader(QPainter &p, const QDate &date, bool printWeekNumber = false) const;
 
-    QRect drawFooter( QPainter &p ) const;
+    QRect drawFooter(QPainter &p) const;
 
-    void drawWeek( QPainter &p,
-                   const QDate &qd,
-                   const QTime &fromTime, const QTime &toTime,
-                   const QRect &box ) const;
+    void drawWeek(QPainter &p,
+                  const QDate &qd,
+                  const QTime &fromTime, const QTime &toTime,
+                  const QRect &box) const;
 
     //@cond PRIVATE
     class Private;
