@@ -16,19 +16,38 @@
 */
 
 #include "dropboxstorageservice.h"
+#include "dropboxtoken.h"
 
 #include <KLocale>
+#include <KConfig>
+#include <KGlobal>
+#include <KConfigGroup>
+
 
 using namespace PimCommon;
 
 DropBoxStorageService::DropBoxStorageService(QObject *parent)
-    : PimCommon::StockageServiceAbstract(parent)
+    : PimCommon::StockageServiceAbstract(parent),
+      mDropBoxToken(new PimCommon::DropBoxToken)
 {
+    readConfig();
+    if (mAccessToken.isEmpty()) {
+        mDropBoxToken->getTokenAccess();
+    }
 }
 
 DropBoxStorageService::~DropBoxStorageService()
 {
+    delete mDropBoxToken;
+}
 
+void DropBoxStorageService::readConfig()
+{
+    KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
+
+    mAccessToken = grp.readEntry("Access Token");
+    mAccessTokenSecret = grp.readEntry("Access Secret");
+    mAccessOauthToken = grp.readEntry("Access Oauth Token");
 }
 
 QString DropBoxStorageService::name() const

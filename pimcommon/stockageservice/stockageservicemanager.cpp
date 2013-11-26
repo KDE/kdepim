@@ -15,32 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "stockageservicemanager.h"
 
-#ifndef DROPBOXTOKEN_H
-#define DROPBOXTOKEN_H
+using namespace PimCommon;
 
-#include <QObject>
-#include <QNetworkReply>
-class QNetworkAccessManager;
-namespace PimCommon {
-class DropBoxToken : public QObject
+StockageServiceManager::StockageServiceManager(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit DropBoxToken(QObject *parent=0);
-    ~DropBoxToken();
-
-    void getTokenAccess();
-
-private Q_SLOTS:
-    void slotError(QNetworkReply::NetworkError /*error*/);
-
-private:
-    QNetworkAccessManager *mNetworkAccessManager;
-    QString nonce;
-    QString mAppKey;
-    QString mAppSecret;
-};
 }
 
-#endif // DROPBOXTOKEN_H
+StockageServiceManager::~StockageServiceManager()
+{
+
+}
+

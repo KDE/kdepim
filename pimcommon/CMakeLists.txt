@@ -23,6 +23,7 @@ set(libpimcommon_shorturl_SRCS
 
 set(libpimcommon_storageservice_SRCS
   stockageservice/stockageserviceabstract.cpp
+  stockageservice/stockageservicemanager.cpp
   stockageservice/dropbox/dropboxstorageservice.cpp
   stockageservice/dropbox/dropboxtoken.cpp
   stockageservice/settings/stockageservicesettingswidget.cpp
