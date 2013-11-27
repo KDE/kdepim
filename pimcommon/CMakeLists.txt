@@ -29,6 +29,7 @@ set(libpimcommon_storageservice_SRCS
   stockageservice/settings/stockageservicesettingswidget.cpp
   stockageservice/stockageauthviewwidget.cpp
   stockageservice/stockageauthviewdialog.cpp
+  stockageservice/hubic/hubicstorageservice.cpp
 )
 
 set(libpimcommon_autocorrection_SRCS
