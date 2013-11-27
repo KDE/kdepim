@@ -11,6 +11,7 @@ set(libnoteshared_SRCS
     attributes/notealarmattribute.cpp
     attributes/notedisplayattribute.cpp
     attributes/notelockattribute.cpp
+    attributes/showfoldernotesattribute.cpp
     attributes/attributeregistrar.cpp
     noteutils.cpp
     network/notesnetworksender.cpp

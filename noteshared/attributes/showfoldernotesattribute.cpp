@@ -15,26 +15,38 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "notealarmattribute.h"
-#include "notedisplayattribute.h"
-#include "notelockattribute.h"
+
 #include "showfoldernotesattribute.h"
 
-#include <akonadi/attributefactory.h>
-
-namespace {
-
-// Anonymous namespace; function is invisible outside this file.
-bool dummy()
+#include <QByteArray>
+#include <QIODevice>
+#include <QDataStream>
+using namespace NoteShared;
+ShowFolderNotesAttribute::ShowFolderNotesAttribute()
 {
-  Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteDisplayAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteAlarmAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteLockAttribute>();
-  Akonadi::AttributeFactory::registerAttribute<NoteShared::ShowFolderNotesAttribute>();
-  return true;
 }
 
-// Called when this library is loaded.
-const bool registered = dummy();
+ShowFolderNotesAttribute::~ShowFolderNotesAttribute()
+{
+}
 
-} // namespace
+ShowFolderNotesAttribute *ShowFolderNotesAttribute::clone() const
+{
+    return new ShowFolderNotesAttribute();
+}
+
+QByteArray ShowFolderNotesAttribute::type() const
+{
+    static const QByteArray sType( "showfoldernotesattribute" );
+    return sType;
+}
+
+QByteArray ShowFolderNotesAttribute::serialized() const
+{
+    return "-";
+}
+
+void ShowFolderNotesAttribute::deserialize( const QByteArray &data )
+{
+    Q_UNUSED( data );
+}
