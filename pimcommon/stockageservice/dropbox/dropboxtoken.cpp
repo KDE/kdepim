@@ -117,4 +117,16 @@ void DropBoxToken::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
+void DropBoxToken::uploadFile(const QString &filename)
+{
+    QNetworkRequest request(QUrl(QLatin1String("https://api-content.dropbox.com/1/files_put/dropbox/"))); //Add path (need to store default path
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+}
 
+void DropBoxToken::accountInfo()
+{
+    QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/account/info"))); //Add path (need to store default path
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    //QNetworkReply *reply = mNetworkAccessManager->get(request, postData.encodedQuery());
+    //connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}

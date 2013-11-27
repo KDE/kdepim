@@ -32,6 +32,8 @@ public:
 
     void getTokenAccess();
     void requestTokenAccess();
+    void uploadFile(const QString &filename);
+    void accountInfo();
 
 private Q_SLOTS:
     void slotError(QNetworkReply::NetworkError /*error*/);    
