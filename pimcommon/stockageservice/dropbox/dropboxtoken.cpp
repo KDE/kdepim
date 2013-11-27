@@ -35,7 +35,7 @@ DropBoxToken::DropBoxToken(QObject *parent)
     mOauthSignatureMethod = QLatin1String("PLAINTEXT");
     mTimestamp = QString::number(QDateTime::currentMSecsSinceEpoch()/1000);
     //mNone = generateNonce(8);
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotTranslateFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
 DropBoxToken::~DropBoxToken()
@@ -62,7 +62,7 @@ void DropBoxToken::getTokenAccess()
 
 void DropBoxToken::slotError(QNetworkReply::NetworkError /*error*/)
 {
-    //TODO
+    qDebug()<<" Error ";
 }
 
 void DropBoxToken::slotSendDataFinished(QNetworkReply *reply)
