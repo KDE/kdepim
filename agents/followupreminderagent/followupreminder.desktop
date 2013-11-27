@@ -2,6 +2,7 @@
 Name=Followup Reminder Agent
 Name[bs]=Agent za podsjećanje na praćenje
 Name[ca]=Agent per a recordatoris de seguiment
+Name[ca@valencia]=Agent per a recordatoris de seguiment
 Name[de]=Agent zur Erinnerung an Folgenachrichten
 Name[es]=Agente de recordatorio de seguimiento
 Name[fi]=Vastaamisesta muistuttaja
@@ -27,6 +28,7 @@ Name[zh_TW]=回覆提醒代理程式
 Comment=Followup Reminder Agent allows to remind you when an email was not answered.
 Comment[bs]=Agent za podsjećanje na praćenje vas podsjeća kada e-mail nije odgovoren
 Comment[ca]=L'agent per a recordatoris de seguiment permet recordar quan no s'ha rebut resposta d'un correu electrònic.
+Comment[ca@valencia]=L'agent per a recordatoris de seguiment permet recordar quan no s'ha rebut resposta d'un correu electrònic.
 Comment[de]=Der Agent zur Erinnerung an Folgenachrichten erinnert Sie, wenn eine E-Mail nicht beantwortet wurde.
 Comment[es]=El agente de recordatorio de seguimiento permite recordarle cuando no se contestó un correo.
 Comment[fi]=Vastaamisesta muistuttaja voi muistuttaa sinua, kun sähköpostiin ei ole vastattu.
