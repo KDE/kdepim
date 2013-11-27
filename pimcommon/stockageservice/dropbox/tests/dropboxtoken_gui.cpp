@@ -17,6 +17,8 @@
 
 #include "../dropboxtoken.h"
 
+#include <QWidget>
+
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
@@ -29,9 +31,10 @@ int main (int argc, char **argv)
 
     KApplication app;
 
+    QWidget *w = new QWidget;
     PimCommon::DropBoxToken *token = new PimCommon::DropBoxToken;
+    w->show();
     token->requestTokenAccess();
-    app.exec();
-    return 0;
+    return app.exec();
 }
 

@@ -33,28 +33,32 @@ public:
     void getTokenAccess();
     void requestTokenAccess();
     void uploadFile(const QString &filename);
+    void listFolders();
     void accountInfo();
 
 private Q_SLOTS:
     void slotError(QNetworkReply::NetworkError /*error*/);    
     void slotSendDataFinished(QNetworkReply *);
+    void slotGetToken();
 
 private:
     void parseRequestToken(const QString &result);
     void doAuthentification();
+    void parseResponseAccessToken(const QString &data);
     enum ActionType {
         NoneAction = 0,
         RequestToken,
         AccessToken,
         UploadFiles,
         CreateFolder,
+        ListFolder,
         AccountInfo
     };
 
     QNetworkAccessManager *mNetworkAccessManager;
     QString nonce;
-    QString mAppKey;
-    QString mAppSecret;
+    QString mOauthconsumerKey;
+    QString mOauthSignature;
     QString mOauthVersion;
     QString mOauthSignatureMethod;
     QString mTimestamp;

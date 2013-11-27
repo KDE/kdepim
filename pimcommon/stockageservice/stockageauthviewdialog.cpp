@@ -25,11 +25,12 @@ StockageAuthViewDialog::StockageAuthViewDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Authorize" ) );
-    setButtons( Ok | Cancel );
+    setButtons( User1 |Ok | Cancel );
 
     mView = new StockageAuthViewWidget;
     setMainWidget(mView);
     readConfig();
+    connect(this, SIGNAL(user1Clicked()), SIGNAL(getToken()));
 }
 
 StockageAuthViewDialog::~StockageAuthViewDialog()

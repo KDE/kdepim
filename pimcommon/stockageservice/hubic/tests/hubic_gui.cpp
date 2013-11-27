@@ -15,29 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STOCKAGEAUTHVIEWDIALOG_H
-#define STOCKAGEAUTHVIEWDIALOG_H
+#include <QWidget>
 
-#include <KDialog>
-namespace PimCommon {
-class StockageAuthViewWidget;
-class StockageAuthViewDialog : public KDialog
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
+#include <KLocale>
+
+int main (int argc, char **argv)
 {
-    Q_OBJECT
-public:
-    explicit StockageAuthViewDialog(QWidget *parent=0);
-    ~StockageAuthViewDialog();
+    KCmdLineArgs::init(argc, argv, "dropboxToken_gui", 0, ki18n("dropboxToken_Gui"),
+                       "1.0", ki18n("Test for short dropboxtoken"));
 
-    void setUrl(const QUrl &url);
+    KApplication app;
 
-Q_SIGNALS:
-    void getToken();
-
-private:
-    void readConfig();
-    void writeConfig();
-    StockageAuthViewWidget *mView;
-};
+    QWidget *w = new QWidget;
+    //PimCommon::DropBoxToken *token = new PimCommon::DropBoxToken;
+    w->show();
+    //token->requestTokenAccess();
+    return app.exec();
 }
 
-#endif // STOCKAGEAUTHVIEWDIALOG_H
