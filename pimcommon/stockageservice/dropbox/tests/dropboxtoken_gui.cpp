@@ -30,7 +30,7 @@ int main (int argc, char **argv)
     KApplication app;
 
     PimCommon::DropBoxToken *token = new PimCommon::DropBoxToken;
-    token->getTokenAccess();
+    token->requestTokenAccess();
     app.exec();
     return 0;
 }

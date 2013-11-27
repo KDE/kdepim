@@ -31,6 +31,7 @@ public:
     ~DropBoxToken();
 
     void getTokenAccess();
+    void requestTokenAccess();
 
 private Q_SLOTS:
     void slotError(QNetworkReply::NetworkError /*error*/);    
@@ -44,9 +45,10 @@ private:
     QString mOauthVersion;
     QString mOauthSignatureMethod;
     QString mTimestamp;
-    //QString mNonce;
+    QString mNonce;
     QString mOauthTokenSecret;
     QString mAccessOauthSignature;
+    QString mOauthToken;
 };
 }
 
