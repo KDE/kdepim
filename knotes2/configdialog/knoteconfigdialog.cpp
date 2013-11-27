@@ -149,8 +149,6 @@ KDE_EXPORT KCModule *create_knote_config_print( QWidget *parent )
 }
 }
 
-
-
 KNoteDisplayConfig::KNoteDisplayConfig( const KComponentData &inst, QWidget *parent )
     :KCModule( inst, parent )
 {
@@ -256,8 +254,6 @@ KNoteCollectionConfig::KNoteCollectionConfig(const KComponentData &inst, QWidget
     : KCModule( inst, parent )
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    QLabel *lab = new QLabel(i18n("Select Note Folder:"));
-    lay->addWidget(lab);
     mCollectionConfigWidget = new KNoteCollectionConfigWidget;
     lay->addWidget(mCollectionConfigWidget);
     setLayout(lay);
@@ -267,12 +263,12 @@ KNoteCollectionConfig::KNoteCollectionConfig(const KComponentData &inst, QWidget
 
 void KNoteCollectionConfig::save()
 {
-    mCollectionConfigWidget->save();
+    mCollectionConfigWidget->updateCollectionsRecursive(QModelIndex());
 }
 
 void KNoteCollectionConfig::load()
 {
-    mCollectionConfigWidget->load();
+    //Nothing
 }
 
 

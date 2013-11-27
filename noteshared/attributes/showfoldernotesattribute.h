@@ -19,9 +19,10 @@
 #define SHOWFOLDERNOTESATTRIBUTE_H
 
 #include <akonadi/attribute.h>
+#include "noteshared_export.h"
 
 namespace NoteShared {
-class ShowFolderNotesAttribute : public Akonadi::Attribute
+class NOTESHARED_EXPORT ShowFolderNotesAttribute : public Akonadi::Attribute
 {
 public:
     ShowFolderNotesAttribute();

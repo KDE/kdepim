@@ -25,7 +25,9 @@
 #include "noteshared/attributes/notelockattribute.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "noteshared/attributes/notealarmattribute.h"
+#include "noteshared/attributes/showfoldernotesattribute.h"
 #include "noteshared/resources/localresourcecreator.h"
+
 #include "apps/knotesakonaditray.h"
 #include "dialog/selectednotefolderdialog.h"
 
@@ -236,21 +238,24 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
             const QModelIndex child = mNoteTreeModel->index( i, 0, parent );
             Akonadi::Item item =
                     mNoteTreeModel->data( child, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-            if ( !item.hasPayload<KMime::Message::Ptr>() )
-                continue;
-            KNote *note = new KNote(m_noteGUI,item, 0);
-            mNotes.insert(item.id(), note);
-            connect( note, SIGNAL(sigShowNextNote()),
-                     SLOT(slotWalkThroughNotes()) ) ;
-            connect( note, SIGNAL(sigRequestNewNote()),
-                     SLOT(newNote()) );
-            connect( note, SIGNAL(sigNameChanged(QString)),
-                     SLOT(updateNoteActions()) );
-            connect( note, SIGNAL(sigColorChanged()),
-                     SLOT(updateNoteActions()) );
-            connect( note, SIGNAL(sigKillNote(Akonadi::Item::Id)),
-                     SLOT(slotNoteKilled(Akonadi::Item::Id)) );
-            updateNoteActions();
+            Akonadi::Collection parentCollection = mNoteTreeModel->data( child, Akonadi::EntityTreeModel::ParentCollectionRole).value<Akonadi::Collection>();
+            if (parentCollection.hasAttribute<NoteShared::ShowFolderNotesAttribute>()) {
+                if ( !item.hasPayload<KMime::Message::Ptr>() )
+                    continue;
+                KNote *note = new KNote(m_noteGUI,item, 0);
+                mNotes.insert(item.id(), note);
+                connect( note, SIGNAL(sigShowNextNote()),
+                         SLOT(slotWalkThroughNotes()) ) ;
+                connect( note, SIGNAL(sigRequestNewNote()),
+                         SLOT(newNote()) );
+                connect( note, SIGNAL(sigNameChanged(QString)),
+                         SLOT(updateNoteActions()) );
+                connect( note, SIGNAL(sigColorChanged()),
+                         SLOT(updateNoteActions()) );
+                connect( note, SIGNAL(sigKillNote(Akonadi::Item::Id)),
+                         SLOT(slotNoteKilled(Akonadi::Item::Id)) );
+                updateNoteActions();
+            }
         }
     }
 }

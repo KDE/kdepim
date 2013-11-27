@@ -73,6 +73,15 @@ target_link_libraries(knotes2 knotes2private pimcommon kdepim ${KDE4_KIO_LIBS}
 
 install(TARGETS knotes2  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
+set(kcm_knotes2_PART_SRCS configdialog/knoteconfigdialog.cpp configdialog/knotedisplayconfigwidget.cpp configdialog/knoteeditorconfigwidget.cpp configdialog/knotecollectionconfigwidget.cpp)
+
+kde4_add_plugin(kcm_knote ${kcm_knotes2_PART_SRCS})
+
+target_link_libraries(kcm_knote knotesprivate ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_KNEWSTUFF3_LIBS} noteshared akonadi_next)
+
+install(TARGETS kcm_knote DESTINATION ${PLUGIN_INSTALL_DIR})
+
+
 
 #install( PROGRAMS data/knotes.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 #install( FILES settings/knoteconfig.kcfg ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
