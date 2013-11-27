@@ -42,6 +42,7 @@ private:
     QString mAccessTokenSecret;
     QString mAccessOauthToken;
     DropBoxToken *mDropBoxToken;
+
 };
 }
 

@@ -33,13 +33,20 @@ public:
     void getTokenAccess();
 
 private Q_SLOTS:
-    void slotError(QNetworkReply::NetworkError /*error*/);
+    void slotError(QNetworkReply::NetworkError /*error*/);    
+    void slotSendDataFinished(QNetworkReply *);
 
 private:
     QNetworkAccessManager *mNetworkAccessManager;
     QString nonce;
     QString mAppKey;
     QString mAppSecret;
+    QString mOauthVersion;
+    QString mOauthSignatureMethod;
+    QString mTimestamp;
+    //QString mNonce;
+    QString mOauthTokenSecret;
+    QString mAccessOauthSignature;
 };
 }
 

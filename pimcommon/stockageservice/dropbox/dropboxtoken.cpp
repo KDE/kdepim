@@ -20,7 +20,9 @@
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
-
+#include <QDateTime>
+#include <QStringList>
+#include <QDebug>
 using namespace PimCommon;
 
 DropBoxToken::DropBoxToken(QObject *parent)
@@ -29,6 +31,11 @@ DropBoxToken::DropBoxToken(QObject *parent)
 {
     mAppKey = QLatin1String("enpbp89z8hryano");
     mAppSecret = QLatin1String("axwbl0d9sbajt0i");
+    mOauthVersion = QLatin1String("1.0");
+    mOauthSignatureMethod = QLatin1String("PLAINTEXT");
+    mTimestamp = QString::number(QDateTime::currentMSecsSinceEpoch()/1000);
+    //mNone = generateNonce(8);
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotTranslateFinished(QNetworkReply*)));
 }
 
 DropBoxToken::~DropBoxToken()
@@ -43,23 +50,36 @@ void DropBoxToken::getTokenAccess()
 
     QUrl postData;
     postData.addQueryItem(QLatin1String("oauth_consumer_key"), mAppKey);
-    postData.addQueryItem(QLatin1String(""), mAppKey);
+    postData.addQueryItem(QLatin1String("oauth_signature"), mAppSecret);
+    //postData.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
+    postData.addQueryItem(QLatin1String("oauth_signature_method"),mOauthSignatureMethod);
+    postData.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
+    postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-/*
-    KUrl url("https://api.dropbox.com/1/oauth/access_token");
-    url.addQueryItem("oauth_consumer_key",m_oauth_consumer_key);
-    url.addQueryItem("oauth_nonce", nonce);
-    url.addQueryItem("oauth_signature",m_access_oauth_signature);
-    url.addQueryItem("oauth_signature_method",m_oauth_signature_method);
-    url.addQueryItem("oauth_timestamp", QString::number(timestamp));
-    url.addQueryItem("oauth_version",m_oauth_version);
-    url.addQueryItem("oauth_token",m_oauthToken);
-*/
 }
 
 void DropBoxToken::slotError(QNetworkReply::NetworkError /*error*/)
 {
     //TODO
 }
+
+void DropBoxToken::slotSendDataFinished(QNetworkReply *reply)
+{
+    qDebug()<<"slotSendDataFinished**********************";
+    const QString data = QString::fromUtf8(reply->readAll());
+
+    reply->deleteLater();
+    const QStringList split = data.split(QLatin1Char('&'));
+    qDebug()<<" DATA "<<data;
+    if (split.count() == 2) {
+        const QStringList tokenSecretList = split.at(0).split(QLatin1Char('='));
+        mAppSecret = tokenSecretList.at(1);
+        const QStringList tokenList = split.at(1).split(QLatin1Char('='));
+        mAppKey = tokenList.at(1);
+        mAccessOauthSignature = mAppSecret + mAppSecret;
+    }
+}
+
+

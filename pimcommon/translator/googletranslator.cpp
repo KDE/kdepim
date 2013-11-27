@@ -151,8 +151,8 @@ void GoogleTranslator::slotError(QNetworkReply::NetworkError /*error*/)
 
 void GoogleTranslator::slotTranslateFinished(QNetworkReply *reply)
 {
-    reply->deleteLater();
     mJsonData = QString::fromUtf8(reply->readAll());
+    reply->deleteLater();
     //  jsonData contains arrays like this: ["foo",,"bar"]
     //  but this is not valid JSON for QJSON, it expects empty strings: ["foo","","bar"]
     mJsonData = mJsonData.replace(QRegExp(QLatin1String(",{3,3}")), QLatin1String(",\"\",\"\","));

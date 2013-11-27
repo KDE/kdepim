@@ -26,6 +26,13 @@ class PIMCOMMON_EXPORT StockageServiceManager : public QObject
 {
     Q_OBJECT
 public:
+    enum ServiceType {
+        DropBox = 0,
+
+        //Last element
+        EndListService
+    };
+
     explicit StockageServiceManager(QObject *parent=0);
     ~StockageServiceManager();
 };
