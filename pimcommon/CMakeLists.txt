@@ -27,6 +27,8 @@ set(libpimcommon_storageservice_SRCS
   stockageservice/dropbox/dropboxstorageservice.cpp
   stockageservice/dropbox/dropboxtoken.cpp
   stockageservice/settings/stockageservicesettingswidget.cpp
+  stockageservice/stockageauthviewwidget.cpp
+  stockageservice/stockageauthviewdialog.cpp
 )
 
 set(libpimcommon_autocorrection_SRCS

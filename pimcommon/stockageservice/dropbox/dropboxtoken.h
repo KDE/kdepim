@@ -18,12 +18,12 @@
 
 #ifndef DROPBOXTOKEN_H
 #define DROPBOXTOKEN_H
-
+#include "pimcommon_export.h"
 #include <QObject>
 #include <QNetworkReply>
 class QNetworkAccessManager;
 namespace PimCommon {
-class DropBoxToken : public QObject
+class PIMCOMMON_EXPORT DropBoxToken : public QObject
 {
     Q_OBJECT
 public:
@@ -40,6 +40,17 @@ private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);
 
 private:
+    void parseRequestToken(const QString &result);
+    void doAuthentification();
+    enum ActionType {
+        NoneAction = 0,
+        RequestToken,
+        AccessToken,
+        UploadFiles,
+        CreateFolder,
+        AccountInfo
+    };
+
     QNetworkAccessManager *mNetworkAccessManager;
     QString nonce;
     QString mAppKey;
@@ -51,6 +62,8 @@ private:
     QString mOauthTokenSecret;
     QString mAccessOauthSignature;
     QString mOauthToken;
+    ActionType mActionType;
+    bool mError;
 };
 }
 
