@@ -95,7 +95,7 @@ void DropBoxToken::getTokenAccess()
     postData.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
     postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
     postData.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
-    qDebug()<<" postdata"<<postData;
+    qDebug()<<"getTokenAccess  postdata"<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -159,7 +159,7 @@ void DropBoxToken::doAuthentification()
     QPointer<StockageAuthViewDialog> dlg = new StockageAuthViewDialog;
     dlg->setUrl(url);
     if (dlg->exec()) {
-        //TODO
+        getTokenAccess();
     }
     delete dlg;
 }
@@ -176,8 +176,8 @@ void DropBoxToken::accountInfo()
 {
     mActionType = AccountInfo;
     mError = false;
-    QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/account/info"))); //Add path (need to store default path
+    QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/account/info")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    //QNetworkReply *reply = mNetworkAccessManager->get(request, postData.encodedQuery());
-    //connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
