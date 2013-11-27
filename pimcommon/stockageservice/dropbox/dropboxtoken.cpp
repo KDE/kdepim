@@ -69,7 +69,7 @@ void DropBoxToken::requestTokenAccess()
     postData.addQueryItem(QLatin1String("oauth_signature_method"),mOauthSignatureMethod);
     postData.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
     postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
-    qDebug()<<" postdata"<<postData;
+    qDebug()<<" https://api.dropbox.com/1/oauth/request_token"<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
