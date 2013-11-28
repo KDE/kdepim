@@ -45,6 +45,10 @@ public:
 private Q_SLOTS:
     void slotHideTools();
 
+Q_SIGNALS:
+    void shortUrlWasClosed();
+    void translatorWasClosed();
+
 private:
     QStackedWidget *mStackedWidget;
     ShortUrlWidget *mShortUrlWidget;
