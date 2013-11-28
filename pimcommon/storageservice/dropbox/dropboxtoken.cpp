@@ -17,7 +17,7 @@
 
 
 #include "dropboxtoken.h"
-#include "stockageservice/stockageauthviewdialog.h"
+#include "storageservice/stockageauthviewdialog.h"
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>

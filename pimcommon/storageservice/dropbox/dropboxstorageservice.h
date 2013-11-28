@@ -18,7 +18,7 @@
 #ifndef DROPBOXSTORAGESERVICE_H
 #define DROPBOXSTORAGESERVICE_H
 
-#include "pimcommon/stockageservice/stockageserviceabstract.h"
+#include "pimcommon/storageservice/stockageserviceabstract.h"
 
 namespace PimCommon {
 class DropBoxToken;

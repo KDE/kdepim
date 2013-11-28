@@ -22,14 +22,14 @@ set(libpimcommon_shorturl_SRCS
 )
 
 set(libpimcommon_storageservice_SRCS
-  stockageservice/stockageserviceabstract.cpp
-  stockageservice/stockageservicemanager.cpp
-  stockageservice/dropbox/dropboxstorageservice.cpp
-  stockageservice/dropbox/dropboxtoken.cpp
-  stockageservice/settings/stockageservicesettingswidget.cpp
-  stockageservice/stockageauthviewwidget.cpp
-  stockageservice/stockageauthviewdialog.cpp
-  stockageservice/hubic/hubicstorageservice.cpp
+  storageservice/stockageserviceabstract.cpp
+  storageservice/stockageservicemanager.cpp
+  storageservice/dropbox/dropboxstorageservice.cpp
+  storageservice/dropbox/dropboxtoken.cpp
+  storageservice/settings/stockageservicesettingswidget.cpp
+  storageservice/stockageauthviewwidget.cpp
+  storageservice/stockageauthviewdialog.cpp
+  storageservice/hubic/hubicstorageservice.cpp
 )
 
 set(libpimcommon_autocorrection_SRCS
@@ -146,8 +146,8 @@ add_subdirectory(shorturl/tests)
 add_subdirectory(autocorrection/tests)
 add_subdirectory(nepomukdebug/tests)
 add_subdirectory(folderdialog/tests/)
-add_subdirectory(stockageservice/dropbox/tests)
-add_subdirectory(stockageservice/hubic/tests)
+add_subdirectory(storageservice/dropbox/tests)
+add_subdirectory(storageservice/hubic/tests)
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
   kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)

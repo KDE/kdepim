@@ -18,7 +18,7 @@
 #ifndef HUBICSTORAGESERVICE_H
 #define HUBICSTORAGESERVICE_H
 
-#include "pimcommon/stockageservice/stockageserviceabstract.h"
+#include "pimcommon/storageservice/stockageserviceabstract.h"
 
 namespace PimCommon {
 class HubicStorageService : public PimCommon::StockageServiceAbstract
