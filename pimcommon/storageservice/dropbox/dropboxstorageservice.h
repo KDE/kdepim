@@ -38,6 +38,7 @@ public:
     QUrl serviceUrl() const;
     void listFolder();
 
+    void createFolder();
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void slotAuthorizationFailed();

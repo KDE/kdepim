@@ -37,6 +37,8 @@ public:
     void accountInfo();
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
 
+    void createFolder(const QString &filename=QString());
+
 private Q_SLOTS:
     void slotError(QNetworkReply::NetworkError /*error*/);    
     void slotSendDataFinished(QNetworkReply *);

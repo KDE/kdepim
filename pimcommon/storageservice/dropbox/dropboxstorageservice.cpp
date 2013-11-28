@@ -80,6 +80,11 @@ void DropBoxStorageService::listFolder()
     mDropBoxToken->listFolders();
 }
 
+void DropBoxStorageService::createFolder()
+{
+    mDropBoxToken->createFolder();
+}
+
 void DropBoxStorageService::slotAuthorizationFailed()
 {
     mAccessToken.clear();
