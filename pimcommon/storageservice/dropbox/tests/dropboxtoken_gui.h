@@ -21,7 +21,7 @@
 #include <QWidget>
 class QTextEdit;
 namespace PimCommon {
-class DropBoxToken;
+class DropBoxStorageService;
 }
 class DropboxTestWidget : public QWidget
 {
@@ -30,11 +30,11 @@ public:
     explicit DropboxTestWidget(QWidget *parent=0);
 
 private Q_SLOTS:
-    void slotInitialize();
+    void slotListFolder();
 
 private:
     QTextEdit *mEdit;
-    PimCommon::DropBoxToken *mToken;
+    PimCommon::DropBoxStorageService *mDropBoxStorageService;
 };
 
 #endif

@@ -19,10 +19,10 @@
 #define DROPBOXSTORAGESERVICE_H
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
-
+#include "pimcommon/pimcommon_export.h"
 namespace PimCommon {
 class DropBoxToken;
-class DropBoxStorageService : public PimCommon::StorageServiceAbstract
+class PIMCOMMON_EXPORT DropBoxStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
@@ -36,6 +36,7 @@ public:
     void uploadFile(const QString &filename);
     QString description() const;
     QUrl serviceUrl() const;
+    void listFolder();
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

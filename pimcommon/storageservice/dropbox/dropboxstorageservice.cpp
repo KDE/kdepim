@@ -23,6 +23,8 @@
 #include <KGlobal>
 #include <KConfigGroup>
 
+#include <QDebug>
+
 
 using namespace PimCommon;
 
@@ -35,8 +37,11 @@ DropBoxStorageService::DropBoxStorageService(QObject *parent)
     connect(mDropBoxToken, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
     readConfig();
     if (mAccessToken.isEmpty()) {
-        mDropBoxToken->getTokenAccess();
+        qDebug()<<" try to got accesstoken";
+        mDropBoxToken->requestTokenAccess();
     } else {
+        mDropBoxToken->initializeToken(mAccessToken, mAccessTokenSecret, mAccessOauthSignature);
+        qDebug()<<" access ok";
         mInitialized = true;
     }
 }
@@ -57,6 +62,7 @@ void DropBoxStorageService::readConfig()
 
 void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
 {
+    qDebug()<<"*****************************accessToken "<<accessToken<<" accessTokenSecret"<<accessTokenSecret<<"accessOauthSignature "<<accessOauthSignature;
     mAccessToken = accessToken;
     mAccessTokenSecret = accessTokenSecret;
     mAccessOauthSignature = accessOauthSignature;
@@ -65,7 +71,13 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     grp.writeEntry("Access Token Secret", mAccessTokenSecret);
     grp.writeEntry("Access Oauth Signature", mAccessOauthSignature);
     grp.sync();
+    KGlobal::config()->sync();
     mInitialized = true;
+}
+
+void DropBoxStorageService::listFolder()
+{
+    mDropBoxToken->listFolders();
 }
 
 void DropBoxStorageService::slotAuthorizationFailed()
@@ -98,6 +110,11 @@ QUrl DropBoxStorageService::sharedUrl() const
 
 void DropBoxStorageService::uploadFile(const QString &filename)
 {
+    if (mInitialized) {
+
+    } else {
+        mDropBoxToken->getTokenAccess();
+    }
     //TODO
 }
 

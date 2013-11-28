@@ -35,6 +35,7 @@ public:
     void uploadFile(const QString &filename);
     void listFolders();
     void accountInfo();
+    void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
 
 private Q_SLOTS:
     void slotError(QNetworkReply::NetworkError /*error*/);    

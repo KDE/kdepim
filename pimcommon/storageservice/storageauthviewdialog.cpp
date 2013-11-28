@@ -25,12 +25,11 @@ StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Authorize" ) );
-    setButtons( User1 |Ok | Cancel );
+    setButtons( Ok | Cancel );
 
     mView = new StorageAuthViewWidget;
     setMainWidget(mView);
     readConfig();
-    connect(this, SIGNAL(user1Clicked()), SIGNAL(getToken()));
 }
 
 StorageAuthViewDialog::~StorageAuthViewDialog()

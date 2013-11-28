@@ -58,6 +58,13 @@ DropBoxToken::~DropBoxToken()
 
 }
 
+void DropBoxToken::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
+{
+    mOauthToken = accessToken;
+    mOauthTokenSecret = accessTokenSecret;
+    mAccessOauthSignature = accessOauthSignature;
+}
+
 void DropBoxToken::requestTokenAccess()
 {
     mActionType = RequestToken;
@@ -115,7 +122,7 @@ void DropBoxToken::slotSendDataFinished(QNetworkReply *reply)
         qDebug()<<" error type "<<data;
         return;
     }
-qDebug()<<" data"<<data;
+qDebug()<<" data 111111"<<data<<" mActionType"<<mActionType;
     switch(mActionType) {
     case NoneAction:
         break;
@@ -123,6 +130,7 @@ qDebug()<<" data"<<data;
         parseRequestToken(data);
         break;
     case AccessToken:
+        qDebug()<<" AccessToken";
         parseResponseAccessToken(data);
         break;
     case UploadFiles:
@@ -133,12 +141,11 @@ qDebug()<<" data"<<data;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
-
-    mActionType = NoneAction;
 }
 
-void DropBoxToken::parseResponseAccessToken(const QString& data)
+void DropBoxToken::parseResponseAccessToken(const QString &data)
 {
+    qDebug()<<" DropBoxToken::parseResponseAccessToken"<<data;
     if(data.contains(QLatin1String("error"))) {
         qDebug()<<" return error !";
         Q_EMIT authorizationFailed();
@@ -152,6 +159,7 @@ void DropBoxToken::parseResponseAccessToken(const QString& data)
     QStringList tokenList       = split.at(1).split(QLatin1Char('='));
     mOauthToken = tokenList.at(1);
     mAccessOauthSignature = mOauthSignature + mOauthTokenSecret;
+
     Q_EMIT authorizationDone(mOauthToken, mOauthTokenSecret, mAccessOauthSignature);
 }
 
@@ -180,7 +188,6 @@ void DropBoxToken::doAuthentification()
     url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
     qDebug()<<" void DropBoxToken::doAuthentification()"<<url;
     QPointer<StorageAuthViewDialog> dlg = new StorageAuthViewDialog;
-    connect(dlg, SIGNAL(getToken()), this, SLOT(slotGetToken()));
     dlg->setUrl(url);
     if (dlg->exec()) {
         getTokenAccess();
@@ -223,7 +230,10 @@ void DropBoxToken::accountInfo()
 
 void DropBoxToken::listFolders()
 {
-    QUrl url(QLatin1String("https://api.dropbox.com/1/metadata/dropbox/KDE KMail/"));
+    qDebug()<<" void DropBoxToken::listFolders()";
+    mActionType = ListFolder;
+    mError = false;
+    QUrl url(QLatin1String("https://api.dropbox.com/1/metadata/dropbox/sandbox/"));
     url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey);
     url.addQueryItem(QLatin1String("oauth_nonce"), nonce);
     url.addQueryItem(QLatin1String("oauth_signature"),mAccessOauthSignature);
