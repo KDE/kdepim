@@ -15,26 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "editorutil.h"
 
-#include "noteeditorutils.h"
-
-#include <KGlobal>
-#include <KLocale>
-
-#include <QChar>
-#include <QTextCursor>
-#include <QTextEdit>
-#include <QDateTime>
-
-
-void NoteShared::NoteEditorUtils::addCheckmark( QTextCursor &cursor )
+void PimCommon::EditorUtil::upperCase( QTextCursor &cursor )
 {
-    static const QChar unicode[] = {0x2713};
-    int size = sizeof(unicode) / sizeof(QChar);
-    cursor.insertText( QString::fromRawData(unicode, size) );
+    if (cursor.hasSelection()) {
+        const QString newText = cursor.selectedText().toUpper();
+        cursor.insertText(newText);
+    }
 }
 
-void NoteShared::NoteEditorUtils::insertDate( QTextEdit *editor )
+void PimCommon::EditorUtil::lowerCase( QTextCursor &cursor )
 {
-    editor->insertPlainText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
+    if (cursor.hasSelection()) {
+        const QString newText = cursor.selectedText().toLower();
+        cursor.insertText(newText);
+    }
 }

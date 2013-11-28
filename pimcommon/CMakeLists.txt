@@ -93,6 +93,7 @@ set(libpimcommon_SRCS
   acl/imapaclattribute.cpp
   util/createresource.cpp
   util/pimutil.cpp
+  util/editorutil.cpp
   widgets/minimumcombobox.cpp
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp

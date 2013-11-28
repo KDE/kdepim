@@ -15,26 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef EDITORUTIL_H
+#define EDITORUTIL_H
+#include "pimcommon_export.h"
 
-#include "noteeditorutils.h"
-
-#include <KGlobal>
-#include <KLocale>
-
-#include <QChar>
 #include <QTextCursor>
-#include <QTextEdit>
-#include <QDateTime>
 
-
-void NoteShared::NoteEditorUtils::addCheckmark( QTextCursor &cursor )
-{
-    static const QChar unicode[] = {0x2713};
-    int size = sizeof(unicode) / sizeof(QChar);
-    cursor.insertText( QString::fromRawData(unicode, size) );
+namespace PimCommon {
+namespace EditorUtil {
+PIMCOMMON_EXPORT void upperCase( QTextCursor &cursor );
+PIMCOMMON_EXPORT void lowerCase( QTextCursor &cursor );
+}
 }
 
-void NoteShared::NoteEditorUtils::insertDate( QTextEdit *editor )
-{
-    editor->insertPlainText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + QLatin1Char(' '));
-}
+#endif // EDITORUTIL_H
