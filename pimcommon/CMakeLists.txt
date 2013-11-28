@@ -66,6 +66,25 @@ set(libpimcommon_translator_SRCS
   translator/googletranslator.cpp
 )
 
+set(libpimcommon_templatewidgets_SRCS
+  templatewidgets/templatelistwidget.cpp
+  templatewidgets/templateeditdialog.cpp
+  templatewidgets/templatemanager.cpp
+)
+
+set(libpimcommon_nepomukdebug_SRCS
+  nepomukdebug/searchdebugnepomukshowdialog.cpp
+  nepomukdebug/sparqlsyntaxhighlighter.cpp
+  nepomukdebug/akonadiresultlistview.cpp
+  nepomukdebug/nepomukdebugutils.cpp
+)
+
+set(libpimcommon_folderdialog_SRCS
+  folderdialog/selectmulticollectionwidget.cpp
+  folderdialog/selectmulticollectiondialog.cpp
+  folderdialog/checkedcollectionwidget.cpp
+)
+
 set(libpimcommon_SRCS
   acl/aclentrydialog.cpp
   acl/aclmanager.cpp
@@ -81,24 +100,17 @@ set(libpimcommon_SRCS
   widgets/customtreeview.cpp
   widgets/customtoolswidget.cpp
   widgets/configureimmutablewidgetutils.cpp
-  templatewidgets/templatelistwidget.cpp
-  templatewidgets/templateeditdialog.cpp
-  templatewidgets/templatemanager.cpp
   sievehighlighter/sievesyntaxhighlighter.cpp
   sievehighlighter/sievesyntaxhighlighterutil.cpp
   settings/pimcommonsettings.cpp
-  nepomukdebug/searchdebugnepomukshowdialog.cpp
-  nepomukdebug/sparqlsyntaxhighlighter.cpp
-  nepomukdebug/akonadiresultlistview.cpp
-  nepomukdebug/nepomukdebugutils.cpp
-  folderdialog/selectmulticollectionwidget.cpp
-  folderdialog/selectmulticollectiondialog.cpp
-  folderdialog/checkedcollectionwidget.cpp
   ${libpimcommon_texteditor_SRCS}
   ${libpimcommon_shorturl_SRCS}
   ${libpimcommon_storageservice_SRCS}
   ${libpimcommon_autocorrection_SRCS}
   ${libpimcommon_translator_SRCS}
+  ${libpimcommon_templatewidgets_SRCS}
+  ${libpimcommon_nepomukdebug_SRCS}
+  ${libpimcommon_folderdialog_SRCS}
 )
 
 kde4_add_ui_files(libpimcommon_SRCS
