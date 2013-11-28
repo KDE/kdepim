@@ -1,7 +1,7 @@
 /*
   This file is part of the PimPrint library.
 
-  Copyright (C) 2012  Allen Winter <winter@kde.org>
+  Copyright (C) 2012-2013 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -33,6 +33,7 @@
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextDocumentFragment>
+#include <boost/concept_check.hpp>
 
 using namespace PimPrint::Calendar;
 
@@ -1134,10 +1135,11 @@ void CalPrintBase::drawNoteLines(QPainter &p, const QRect &box, int startY) cons
     p.setPen(oldPen);
 }
 
-void CalPrintBase::drawDayBox(QPainter &p, const QDate &date,
+void CalPrintBase::drawDayBox(QPainter &p,
+                              const QRect &box,
+                              const QDate &date,
                               const QTime &startTime, const QTime &endTime,
-                              const QRect &box, bool fullDate,
-                              bool printRecurDaily, bool printRecurWeekly) const
+                              bool fullDate) const
 {
     QString dayNumStr;
     const KLocale *local = KGlobal::locale();
@@ -1197,6 +1199,10 @@ void CalPrintBase::drawDayBox(QPainter &p, const QDate &date,
                                CalPrintBase::TypeConfidential); //TODO should be false by default
     const bool printPrivate = typeOptions().testFlag(
                                   CalPrintBase::TypePrivate);   //TODO should be false by default
+    const bool printRecurDaily = rangeOptions().testFlag(
+                                     CalPrintBase::RangeRecurDaily); //TODO should be false by default?
+    const bool printRecurWeekly = rangeOptions().testFlag(
+                                      CalPrintBase::RangeRecurWeekly); //TODO should be false by defualt?
 
     int textY = subHeaderHeight(); // gives the relative y-coord of the next printed entry
     unsigned int visibleEventsCounter = 0;

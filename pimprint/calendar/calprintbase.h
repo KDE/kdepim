@@ -287,14 +287,18 @@ public:
     Q_DECLARE_FLAGS(TypeOptions, TypeOption)
 
     enum RangeOption {
-        RangeTimeExpand  = 0x00000001
+        RangeTimeExpand  = 0x00000001,
+        RangeRecurAny    = 0x00000002,
+        RangeRecurDaily  = 0x00000004,
+        RangeRecurWeekly = 0x00000008
     };
     Q_DECLARE_FLAGS(RangeOptions, RangeOption)
 
     enum ExtraOption {
         ExtraSingleLine  = 0x00000001,
         ExtraNoteLines   = 0x00000002,
-        ExtraFooter      = 0x00000004
+        ExtraWeekNumbers = 0x00000004,
+        ExtraFooter      = 0x00000020
     };
     Q_DECLARE_FLAGS(ExtraOptions, ExtraOption)
 
@@ -527,23 +531,19 @@ protected:
      * (with their timesof course). Used in the Filofax and the month print style.
      *
      * @param p QPainter of the printout.
+     * @param box coordinates of the day box.
      * @param date The date of the currently printed day.
      *        All events and to-dos occurring on this day will be printed.
      * @param startTime Start time of the time range to display.
      * @param endTime End time of the time range to display.
-     * @param box coordinates of the day box.
      * @param fullDate Whether the title bar of the box should contain the full
      *        date string or just a short.
-     * @param printRecurDaily Whether daily recurring incidences should be printed.
-     * @param printRecurWeekly Whether weekly recurring incidences should be printed.
      */
-    //TODO: make box second arg
-    void drawDayBox(QPainter &p, const QDate &date,
-                    const QTime &startTime, const QTime &endTime,
+    void drawDayBox(QPainter &p,
                     const QRect &box,
-                    bool fullDate = false,
-                    bool printRecurDaily = true,
-                    bool printRecurWeekly = true) const;
+                    const QDate &date,
+                    const QTime &startTime, const QTime &endTime,
+                    bool fullDate = false) const;
 
     /**
      * Draws the agenda box.
@@ -620,10 +620,24 @@ protected:
                        bool expandAll = false) const;
 
     /**
-     * Determines the column of the given weekday (1=Monday, 7=Sunday), taking the
-     * start of the week setting into account as given in the user's locale.
-     * @param weekday Index of the weekday
-     */
+      * Draws a horizontal bar with the weekday names of the given date range
+      * in the given area of the painter.
+      *
+      * Used for the weekday-bar on top of the timetable view and the month view.
+      *
+      * @param p QPainter of the printout
+      * @param box coordinates of the box for the days of the week
+      * @param fromDate First date of the printed dates
+      * @param toDate Last date of the printed dates
+      */
+    void drawDaysOfWeek(QPainter &p, const QRect &box,
+                        const QDate &fromDate, const QDate &toDate) const;
+
+    /**
+      * Determines the column of the given weekday (1=Monday, 7=Sunday), taking the
+      * start of the week setting into account as given in the user's locale.
+      * @param weekday Index of the weekday
+      */
     int weekdayColumn(int weekday) const;
 
     /**
@@ -697,19 +711,6 @@ private:
      * Returns a nice QColor for text, give the input color &c.
      */
     QColor getTextColor(const QColor &c) const;
-
-    /**
-      Draws a horizontal bar with the weekday names of the given date range
-      in the given area of the painter.
-      This is used for the weekday-bar on top of the timetable view and the month view.
-
-      @param p QPainter of the printout
-      @param box coordinates of the box for the days of the week
-      @param fromDate First date of the printed dates
-      @param toDate Last date of the printed dates
-    */
-    void drawDaysOfWeek(QPainter &p, const QRect &box,
-                        const QDate &fromDate, const QDate &toDate) const;
 
     /**
       Draws a single weekday name in a box inside the given area of the painter.
