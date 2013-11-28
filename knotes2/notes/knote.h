@@ -65,11 +65,8 @@ public:
     void setName( const QString &name );
     void setText( const QString &text );
 
-    void find( KFind* kfind );
-
     bool isModified() const;
     bool isDesktopAssigned() const;
-    void blockEmitDataChanged( bool _b ) { m_blockEmitDataChanged = _b;}
     void commitData();
 
     void toDesktop( int desktop );
@@ -112,9 +109,6 @@ private slots:
     void slotPreferences();
     void slotPopupActionToDesktop( int id );
 
-    void slotFindNext();
-    void slotHighlight( const QString &txt, int idx, int len );
-
     void slotApplyConfig();
     void slotUpdateKeepAboveBelow();
     void slotUpdateShowInTaskbar();
@@ -151,7 +145,6 @@ private:
     KToolBar      *m_tool;
     KNoteEdit     *m_editor;
 
-    KFind         *m_find;
     KMenu         *m_menu;
 
     KToggleAction *m_readOnly;
@@ -163,7 +156,6 @@ private:
     KToggleAction *m_keepBelow;
 
     KSharedConfig::Ptr m_kwinConf;
-    bool m_blockEmitDataChanged;
     bool mBlockWriteConfigDuringCommitData;
 
     KNoteDisplaySettings *mDisplayAttribute;

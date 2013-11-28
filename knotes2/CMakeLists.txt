@@ -24,6 +24,7 @@ set(libknotes2private_lib_SRCS
     ../knotes/print/knoteprintselectthemedialog.cpp
     ../knotes/print/knoteprintselectthemecombobox.cpp
     ../knotes/print/knoteprinter.cpp
+    alarms/knotesalarm.cpp
     alarms/knotealarmdialog.cpp
     print/knoteprintobject.cpp
 

@@ -97,11 +97,7 @@ private Q_SLOTS:
     void slotShowNote();
     void slotWalkThroughNotes();
     void slotNoteKilled( Akonadi::Item::Id );
-#if 0
 
-private:
-    KNotesAlarm            *m_alarm;
-#endif
 private:
     void saveNotes();
     void updateNetworkListener();
@@ -118,6 +114,7 @@ private:
     QHash<Akonadi::Item::Id, KNote*> mNotes;
     NoteShared::NotesChangeRecorder *mNoteRecorder;
     NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;
+    KNotesAlarm            *m_alarm;
 };
 
 #endif
