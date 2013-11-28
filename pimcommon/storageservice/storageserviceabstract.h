@@ -15,40 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "stockageservicesettingswidget.h"
+#ifndef STORAGESERVICEABSTRACT_H
+#define STORAGESERVICEABSTRACT_H
 
-#include <KLocale>
+#include <QObject>
+#include <QUrl>
 
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QListWidget>
-
-using namespace PimCommon;
-
-StockageServiceSettingsWidget::StockageServiceSettingsWidget(QWidget *parent)
-    : QWidget(parent)
+namespace PimCommon {
+class StorageServiceAbstract : public QObject
 {
-    QHBoxLayout *lay = new QHBoxLayout;
-    mListService = new QListWidget;
-    lay->addWidget(mListService);
+    Q_OBJECT
+public:
+    explicit StorageServiceAbstract(QObject *parent=0);
+    ~StorageServiceAbstract();
 
-    mDescription = new QLabel;
-    lay->addWidget(mDescription);
-    setLayout(lay);
+    virtual QString name() const = 0;
+    virtual qint64 maximumSize() const = 0;
+    virtual qint64 currentSize() const = 0;
+
+    virtual QUrl sharedUrl() const = 0;
+    virtual void uploadFile(const QString &filename) = 0;
+    virtual QString description() const = 0;
+
+Q_SIGNALS:
+    void downloadDone();
+    void downloadFailed();
+};
 }
 
-StockageServiceSettingsWidget::~StockageServiceSettingsWidget()
-{
-
-}
-
-void StockageServiceSettingsWidget::loadConfig()
-{
-
-}
-
-void StockageServiceSettingsWidget::writeConfig()
-{
-
-}
-
+#endif // STORAGESERVICEABSTRACT_H

@@ -15,29 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STOCKAGEAUTHVIEWDIALOG_H
-#define STOCKAGEAUTHVIEWDIALOG_H
+#ifndef STORAGESERVICESETTINGSWIDGET_H
+#define STORAGESERVICESETTINGSWIDGET_H
 
-#include <KDialog>
+#include <QWidget>
+
+class QListWidget;
+class QLabel;
 namespace PimCommon {
-class StockageAuthViewWidget;
-class StockageAuthViewDialog : public KDialog
+class StorageServiceSettingsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StockageAuthViewDialog(QWidget *parent=0);
-    ~StockageAuthViewDialog();
+    explicit StorageServiceSettingsWidget(QWidget *parent=0);
+    ~StorageServiceSettingsWidget();
 
-    void setUrl(const QUrl &url);
-
-Q_SIGNALS:
-    void getToken();
+    void loadConfig();
+    void writeConfig();
 
 private:
-    void readConfig();
-    void writeConfig();
-    StockageAuthViewWidget *mView;
+    QListWidget *mListService;
+    QLabel *mDescription;
 };
 }
-
-#endif // STOCKAGEAUTHVIEWDIALOG_H
+#endif // STORAGESERVICESETTINGSWIDGET_H

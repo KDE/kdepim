@@ -15,27 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "storageserviceabstract.h"
 
-#ifndef STOCKAGEAUTHVIEWWIDGET_H
-#define STOCKAGEAUTHVIEWWIDGET_H
+using namespace PimCommon;
 
-#include <QWidget>
-#include <QUrl>
-class QWebView;
-
-namespace PimCommon {
-class StockageAuthViewWidget : public QWidget
+StorageServiceAbstract::StorageServiceAbstract(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit StockageAuthViewWidget(QWidget *parent=0);
-    ~StockageAuthViewWidget();
-
-    void setUrl(const QUrl &url);
-
-private:
-    QWebView *mWebView;
-};
 }
 
-#endif // STOCKAGEAUTHVIEWWIDGET_H
+StorageServiceAbstract::~StorageServiceAbstract()
+{
+
+}
+
+#include "moc_storageserviceabstract.cpp"

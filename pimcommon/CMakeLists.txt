@@ -22,13 +22,13 @@ set(libpimcommon_shorturl_SRCS
 )
 
 set(libpimcommon_storageservice_SRCS
-  storageservice/stockageserviceabstract.cpp
-  storageservice/stockageservicemanager.cpp
+  storageservice/storageserviceabstract.cpp
+  storageservice/storageservicemanager.cpp
   storageservice/dropbox/dropboxstorageservice.cpp
   storageservice/dropbox/dropboxtoken.cpp
-  storageservice/settings/stockageservicesettingswidget.cpp
-  storageservice/stockageauthviewwidget.cpp
-  storageservice/stockageauthviewdialog.cpp
+  storageservice/settings/storageservicesettingswidget.cpp
+  storageservice/storageauthviewwidget.cpp
+  storageservice/storageauthviewdialog.cpp
   storageservice/hubic/hubicstorageservice.cpp
 )
 

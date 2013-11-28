@@ -24,8 +24,8 @@
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "dropboxToken_gui", 0, ki18n("dropboxToken_Gui"),
-                       "1.0", ki18n("Test for short dropboxtoken"));
+    KCmdLineArgs::init(argc, argv, "hubic_gui", 0, ki18n("hubic_Gui"),
+                       "1.0", ki18n("Test for short hubic"));
 
     KApplication app;
 

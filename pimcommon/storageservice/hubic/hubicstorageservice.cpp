@@ -26,7 +26,7 @@
 using namespace PimCommon;
 
 HubicStorageService::HubicStorageService(QObject *parent)
-    : PimCommon::StockageServiceAbstract(parent)
+    : PimCommon::StorageServiceAbstract(parent)
 {
     readConfig();
 }

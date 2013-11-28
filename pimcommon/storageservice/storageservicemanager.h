@@ -15,27 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STOCKAGESERVICESETTINGSWIDGET_H
-#define STOCKAGESERVICESETTINGSWIDGET_H
+#ifndef STORAGESERVICEMANAGER_H
+#define STORAGESERVICEMANAGER_H
 
-#include <QWidget>
+#include <QObject>
+#include "pimcommon_export.h"
 
-class QListWidget;
-class QLabel;
 namespace PimCommon {
-class StockageServiceSettingsWidget : public QWidget
+class PIMCOMMON_EXPORT StorageServiceManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit StockageServiceSettingsWidget(QWidget *parent=0);
-    ~StockageServiceSettingsWidget();
+    enum ServiceType {
+        DropBox = 0,
 
-    void loadConfig();
-    void writeConfig();
+        //Last element
+        EndListService
+    };
 
-private:
-    QListWidget *mListService;
-    QLabel *mDescription;
+    explicit StorageServiceManager(QObject *parent=0);
+    ~StorageServiceManager();
 };
 }
-#endif // STOCKAGESERVICESETTINGSWIDGET_H
+
+#endif // STORAGESERVICEMANAGER_H

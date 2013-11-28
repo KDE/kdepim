@@ -27,7 +27,7 @@
 using namespace PimCommon;
 
 DropBoxStorageService::DropBoxStorageService(QObject *parent)
-    : PimCommon::StockageServiceAbstract(parent),
+    : PimCommon::StorageServiceAbstract(parent),
       mDropBoxToken(new PimCommon::DropBoxToken)
 {
     readConfig();

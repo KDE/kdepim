@@ -15,29 +15,40 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "storageservicesettingswidget.h"
 
-#include "stockageauthviewwidget.h"
-#include <QWebView>
+#include <KLocale>
+
 #include <QHBoxLayout>
+#include <QLabel>
+#include <QListWidget>
 
 using namespace PimCommon;
 
-StockageAuthViewWidget::StockageAuthViewWidget(QWidget *parent)
+StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    mWebView = new QWebView;
-    lay->addWidget(mWebView);
+    mListService = new QListWidget;
+    lay->addWidget(mListService);
+
+    mDescription = new QLabel;
+    lay->addWidget(mDescription);
     setLayout(lay);
 }
 
-StockageAuthViewWidget::~StockageAuthViewWidget()
+StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 {
 
 }
 
-void StockageAuthViewWidget::setUrl(const QUrl &url)
+void StorageServiceSettingsWidget::loadConfig()
 {
-    mWebView->setUrl(url);
+
 }
+
+void StorageServiceSettingsWidget::writeConfig()
+{
+
+}
+

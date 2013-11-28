@@ -18,11 +18,11 @@
 #ifndef DROPBOXSTORAGESERVICE_H
 #define DROPBOXSTORAGESERVICE_H
 
-#include "pimcommon/storageservice/stockageserviceabstract.h"
+#include "pimcommon/storageservice/storageserviceabstract.h"
 
 namespace PimCommon {
 class DropBoxToken;
-class DropBoxStorageService : public PimCommon::StockageServiceAbstract
+class DropBoxStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:

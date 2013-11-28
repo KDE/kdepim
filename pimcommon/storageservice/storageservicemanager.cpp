@@ -15,27 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STOCKAGESERVICEMANAGER_H
-#define STOCKAGESERVICEMANAGER_H
+#include "storageservicemanager.h"
 
-#include <QObject>
-#include "pimcommon_export.h"
+using namespace PimCommon;
 
-namespace PimCommon {
-class PIMCOMMON_EXPORT StockageServiceManager : public QObject
+StorageServiceManager::StorageServiceManager(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    enum ServiceType {
-        DropBox = 0,
-
-        //Last element
-        EndListService
-    };
-
-    explicit StockageServiceManager(QObject *parent=0);
-    ~StockageServiceManager();
-};
 }
 
-#endif // STOCKAGESERVICEMANAGER_H
+StorageServiceManager::~StorageServiceManager()
+{
+
+}
+

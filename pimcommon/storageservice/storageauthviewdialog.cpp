@@ -14,47 +14,47 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#include "stockageauthviewdialog.h"
-#include "stockageauthviewwidget.h"
+#include "storageauthviewdialog.h"
+#include "storageauthviewwidget.h"
 
 #include <KLocale>
 
 using namespace PimCommon;
 
-StockageAuthViewDialog::StockageAuthViewDialog(QWidget *parent)
+StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Authorize" ) );
     setButtons( User1 |Ok | Cancel );
 
-    mView = new StockageAuthViewWidget;
+    mView = new StorageAuthViewWidget;
     setMainWidget(mView);
     readConfig();
     connect(this, SIGNAL(user1Clicked()), SIGNAL(getToken()));
 }
 
-StockageAuthViewDialog::~StockageAuthViewDialog()
+StorageAuthViewDialog::~StorageAuthViewDialog()
 {
     writeConfig();
 }
 
-void StockageAuthViewDialog::readConfig()
+void StorageAuthViewDialog::readConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StockageAuthViewDialog" );
+    KConfigGroup group( KGlobal::config(), "StorageAuthViewDialog" );
     const QSize size = group.readEntry( "Size", QSize(600, 400) );
     if ( size.isValid() ) {
         resize( size );
     }
 }
 
-void StockageAuthViewDialog::writeConfig()
+void StorageAuthViewDialog::writeConfig()
 {
-    KConfigGroup group( KGlobal::config(), "StockageAuthViewDialog" );
+    KConfigGroup group( KGlobal::config(), "StorageAuthViewDialog" );
     group.writeEntry( "Size", size() );
     group.sync();
 }
 
-void StockageAuthViewDialog::setUrl(const QUrl &url)
+void StorageAuthViewDialog::setUrl(const QUrl &url)
 {
     mView->setUrl(url);
 }

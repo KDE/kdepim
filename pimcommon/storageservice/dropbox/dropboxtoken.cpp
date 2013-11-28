@@ -17,7 +17,7 @@
 
 
 #include "dropboxtoken.h"
-#include "storageservice/stockageauthviewdialog.h"
+#include "storageservice/storageauthviewdialog.h"
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
@@ -182,7 +182,7 @@ void DropBoxToken::doAuthentification()
     QUrl url(QLatin1String("https://api.dropbox.com/1/oauth/authorize"));
     url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
     qDebug()<<" void DropBoxToken::doAuthentification()"<<url;
-    QPointer<StockageAuthViewDialog> dlg = new StockageAuthViewDialog;
+    QPointer<StorageAuthViewDialog> dlg = new StorageAuthViewDialog;
     connect(dlg, SIGNAL(getToken()), this, SLOT(slotGetToken()));
     dlg->setUrl(url);
     if (dlg->exec()) {

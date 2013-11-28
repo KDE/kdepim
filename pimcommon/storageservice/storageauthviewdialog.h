@@ -15,18 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "stockageserviceabstract.h"
+#ifndef STORAGEAUTHVIEWDIALOG_H
+#define STORAGEAUTHVIEWDIALOG_H
 
-using namespace PimCommon;
-
-StockageServiceAbstract::StockageServiceAbstract(QObject *parent)
-    : QObject(parent)
+#include <KDialog>
+namespace PimCommon {
+class StorageAuthViewWidget;
+class StorageAuthViewDialog : public KDialog
 {
+    Q_OBJECT
+public:
+    explicit StorageAuthViewDialog(QWidget *parent=0);
+    ~StorageAuthViewDialog();
+
+    void setUrl(const QUrl &url);
+
+Q_SIGNALS:
+    void getToken();
+
+private:
+    void readConfig();
+    void writeConfig();
+    StorageAuthViewWidget *mView;
+};
 }
 
-StockageServiceAbstract::~StockageServiceAbstract()
-{
-
-}
-
-#include "moc_stockageserviceabstract.cpp"
+#endif // STORAGEAUTHVIEWDIALOG_H
