@@ -21,7 +21,6 @@
 
 #include "calprintday.h"
 
-#include <calendarsupport/calendar.h>
 #include <calendarsupport/utils.h>
 
 #include <KCalCore/Event>
@@ -30,14 +29,14 @@
 #include <KGlobal>
 #include <KSystemTimeZones>
 
-#include <qmath.h> // qCeil krazy:exclude=camelcase since no QMath
+#include <qmath.h>
 
 using namespace PimPrint::Calendar;
 
 //@cond PRIVATE
 class PimPrint::Calendar::CalPrintDay::Private
 {
-  public:
+public:
     Private()
     {
     }
@@ -49,312 +48,308 @@ class PimPrint::Calendar::CalPrintDay::Private
 };
 //@endcond
 
-CalPrintDay::CalPrintDay( QPrinter *printer )
-  : CalPrintBase( printer ),
-    d( new PimPrint::Calendar::CalPrintDay::Private )
+CalPrintDay::CalPrintDay(QPrinter *printer)
+    : CalPrintBase(printer),
+      d(new PimPrint::Calendar::CalPrintDay::Private)
 {
-  //TODO:
-  // set the calendar and calendar system
+    //TODO:
+    // set the calendar and calendar system
 
-  // Set default print style
-  setPrintStyle( CalPrintBase::DayTimeTable );
+    // Set default print style
+    setPrintStyle(CalPrintBase::DayTimeTable);
 
-  // Set default Info options
-  setInfoOptions( CalPrintBase::InfoTimeRange );
+    // Set default Info options
+    setInfoOptions(CalPrintBase::InfoTimeRange);
 
-  // Set default Type options
-  setTypeOptions( 0 );
+    // Set default Type options
+    setTypeOptions(0);
 
-  // Set default Range options
-  setRangeOptions( 0 );
+    // Set default Range options
+    setRangeOptions(0);
 
-  // Set default Extra options
-  setExtraOptions( 0 );
+    // Set default Extra options
+    setExtraOptions(0);
 }
 
 CalPrintDay::~CalPrintDay()
 {
-  delete d;
+    delete d;
 }
 
-void CalPrintDay::print( QPainter &p )
+void CalPrintDay::print(QPainter &p)
 {
-  switch ( printStyle() ) {
-  case CalPrintBase::DayFiloFax:
-    drawDayFiloFax( p );
-    break;
-  case CalPrintBase::DaySingleTimeTable:
-    drawDaySingleTimeTable( p );
-    break;
-  case CalPrintBase::DayTimeTable:
-  default:
-    drawDayTimeTable( p );
-    break;
-  }
+    switch (printStyle()) {
+    case CalPrintBase::DayFiloFax:
+        drawDayFiloFax(p);
+        break;
+    case CalPrintBase::DaySingleTimeTable:
+        drawDaySingleTimeTable(p);
+        break;
+    case CalPrintBase::DayTimeTable:
+    default:
+        drawDayTimeTable(p);
+        break;
+    }
 }
 
-void CalPrintDay::setStartDate( const QDate &date )
+void CalPrintDay::setStartDate(const QDate &date)
 {
-  d->mStartDate = date;
+    d->mStartDate = date;
 }
 
 QDate CalPrintDay::startDate() const
 {
-  return d->mStartDate;
+    return d->mStartDate;
 }
 
-void CalPrintDay::setEndDate( const QDate &date )
+void CalPrintDay::setEndDate(const QDate &date)
 {
-  d->mEndDate = date;
+    d->mEndDate = date;
 }
 
 QDate CalPrintDay::endDate() const
 {
-  return d->mEndDate;
+    return d->mEndDate;
 }
 
-void CalPrintDay::setStartTime( const QTime &time )
+void CalPrintDay::setStartTime(const QTime &time)
 {
-  d->mStartTime = time;
+    d->mStartTime = time;
 }
 
 QTime CalPrintDay::startTime() const
 {
-  return d->mStartTime;
+    return d->mStartTime;
 }
 
-void CalPrintDay::setEndTime( const QTime &time )
+void CalPrintDay::setEndTime(const QTime &time)
 {
-  d->mEndTime = time;
+    d->mEndTime = time;
 }
 
 QTime CalPrintDay::endTime() const
 {
-  return d->mEndTime;
+    return d->mEndTime;
 }
 
-QRect CalPrintDay::drawHeader( QPainter &p,
-                               const QDate &startDate, const QDate &endDate ) const
+QRect CalPrintDay::drawHeader(QPainter &p,
+                              const QDate &startDate, const QDate &endDate) const
 {
-  if ( !startDate.isValid() ) {
-    return QRect();
-  }
-
-  KLocale *local = KGlobal::locale();
-
-  QString title;
-  if ( endDate.isValid() ) {
-    const QString line1 = local->formatDate( startDate );
-    const QString line2 = local->formatDate( endDate );
-    if ( useLandscape() ) {
-      title = i18nc( "date from-to", "%1 - %2", line1, line2 );
-    } else {
-      title = i18nc( "date from-\nto", "%1 -\n%2", line1, line2 );
-    }
-  } else {
-    title = local->formatDate( startDate );
-  }
-
-  const QRect headerBox( 0, 0, pageWidth(), headerHeight() );
-  CalPrintBase::drawHeader( p, headerBox, title, startDate );
-  return headerBox;
-}
-
-QRect CalPrintDay::drawFooter( QPainter &p ) const
-{
-  QRect footerBox( 0, pageHeight() - footerHeight(), pageWidth(), footerHeight() );
-
-  CalPrintBase::drawFooter( p, footerBox );
-
-  return footerBox;
-}
-
-void CalPrintDay::drawDays( QPainter &p,
-                            const QDate &start, const QDate &end,
-                            const QTime &startTime, const QTime &endTime,
-                            const QRect &box ) const
-{
-  const int numberOfDays = start.daysTo( end ) + 1;
-
-  int cellWidth, vcells;
-  if ( !useLandscape() ) {
-    // 2 columns
-    vcells = qCeil( static_cast<double>( numberOfDays ) / 2.0 );
-    if ( numberOfDays > 1 ) {
-      cellWidth = box.width() / 2;
-    } else {
-      cellWidth = box.width();
-    }
-  } else {
-    // landscape: N columns
-    vcells = 1;
-    cellWidth = box.width() / numberOfDays;
-  }
-
-  const int cellHeight = box.height() / vcells;
-  QDate weekDate = start;
-  for ( int i = 0; i < numberOfDays; ++i, weekDate = weekDate.addDays(1) ) {
-    const int hpos = i / vcells;
-    const int vpos = i % vcells;
-    const QRect dayBox( box.left() + cellWidth * hpos,
-                        box.top() + cellHeight * vpos,
-                        cellWidth,
-                        cellHeight );
-
-    drawDayBox( p, weekDate, startTime, endTime, dayBox,
-                true, true, true );
-
-  } // for i through all selected days
-}
-
-void CalPrintDay::drawDayFiloFax( QPainter &p ) const
-{
-  QDate curDay( d->mStartDate );
-
-  QRect headerBox = drawHeader( p, d->mStartDate, d->mEndDate );
-
-  QRect daysBox( headerBox );
-  daysBox.setTop( headerBox.bottom() + padding() );
-  daysBox.setBottom( pageHeight() - footerHeight() );
-
-  drawDays( p, d->mStartDate, d->mEndDate, d->mStartTime, d->mEndTime, daysBox );
-
-  if ( extraOptions().testFlag( CalPrintBase::ExtraFooter ) ) {
-    drawFooter( p );
-  }
-}
-
-void CalPrintDay::drawDaySingleTimeTable( QPainter &p ) const
-{
-  QDate curDay( d->mStartDate );
-
-  QRect headerBox = drawHeader( p, d->mStartDate, d->mEndDate );
-
-  QRect daysBox( headerBox );
-  daysBox.setTop( headerBox.bottom() + padding() );
-  daysBox.setBottom( pageHeight() - footerHeight() );
-
-  drawTimeTable( p, daysBox,
-                 d->mStartDate, d->mEndDate,
-                 d->mStartTime, d->mEndTime,
-                 rangeOptions().testFlag( CalPrintBase::RangeTimeExpand ) );
-
-  if ( extraOptions().testFlag( CalPrintBase::ExtraFooter ) ) {
-    drawFooter( p );
-  }
-}
-
-void CalPrintDay::drawDayTimeTable( QPainter &p ) const
-{
-  QDate curDay( d->mStartDate );
-
-  KDateTime::Spec timeSpec = KSystemTimeZones::local();
-
-  QTime curStartTime( d->mStartTime );
-  QTime curEndTime( d->mEndTime );
-
-  // For an invalid time range, simply show one hour, starting at the hour
-  // before the given start time
-  if ( curEndTime <= curStartTime ) {
-    curStartTime = QTime( curStartTime.hour(), 0, 0 );
-    curEndTime = curStartTime.addSecs( 3600 );
-  }
-
-  do {
-    QRect headerBox = drawHeader( p, curDay, QDate() );
-
-    Akonadi::Item::List eventList =
-      printCalendar()->events( curDay, timeSpec,
-                               CalendarSupport::EventSortStartDate,
-                               CalendarSupport::SortDirectionAscending );
-
-    // split out the all day events as they will be printed in a separate box
-    Akonadi::Item::List alldayEvents, timedEvents;
-    Akonadi::Item::List::ConstIterator it;
-    for ( it = eventList.constBegin(); it != eventList.constEnd(); ++it ) {
-      KCalCore::Event::Ptr event = CalendarSupport::event( *it );
-      if ( event->allDay() ) {
-        alldayEvents.append( *it );
-      } else {
-        timedEvents.append( *it );
-      }
+    if (!startDate.isValid()) {
+        return QRect();
     }
 
-    const int fontSize = 11;
-    QFont textFont( "sans-serif", fontSize, QFont::Normal );
-    p.setFont( textFont );
-    const int lineSpacing = p.fontMetrics().lineSpacing();
+    KLocale *local = KGlobal::locale();
 
-    const int tlWidth = timeLineWidth();
-    const int padMargin = padding();
-    const int maxAllDayEvents = 8; // the max we allow to be printed, sorry.
-    int allDayHeight = qMin( alldayEvents.count(), maxAllDayEvents ) * lineSpacing;
-    allDayHeight = qMax( allDayHeight, ( 5 * lineSpacing ) ) + ( 2 * padMargin );
-    QRect allDayBox( tlWidth + padMargin, headerBox.bottom() + padMargin,
-                     pageWidth() - tlWidth - padMargin, allDayHeight );
-    if ( alldayEvents.count() > 0 ) {
-      // draw the side bar for all-day events
-      QFont oldFont( p.font() );
-      p.setFont( QFont( "sans-serif", 9, QFont::Normal ) );
-      drawVerticalBox( p,
-                       boxBorderWidth(),
-                       QRect( 0, headerBox.bottom() + padMargin,
-                              tlWidth, allDayHeight ),
-                       i18n( "Today's Events" ),
-                       Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextWordWrap );
-      p.setFont( oldFont );
-
-      // now draw at most maxAllDayEvents in the all-day box
-      drawBox( p, boxBorderWidth(), allDayBox );
-
-      Akonadi::Item::List::ConstIterator it;
-      QRect itemBox( allDayBox );
-      itemBox.setLeft( tlWidth + ( 2 * padMargin ) );
-      itemBox.setTop( itemBox.top() + padMargin );
-      itemBox.setBottom( itemBox.top() + lineSpacing );
-      int count = 0;
-      for ( it = alldayEvents.constBegin(); it != alldayEvents.constEnd(); ++it ) {
-        KCalCore::Event::Ptr event = CalendarSupport::event( *it );
-        if ( count == maxAllDayEvents ) {
-          break;
-        }
-        count++;
-        QString str;
-        if ( event->location().isEmpty() ) {
-          str = cleanString( event->summary() );
+    QString title;
+    if (endDate.isValid()) {
+        const QString line1 = local->formatDate(startDate);
+        const QString line2 = local->formatDate(endDate);
+        if (useLandscape()) {
+            title = i18nc("date from-to", "%1 - %2", line1, line2);
         } else {
-          str = i18nc( "summary, location", "%1, %2",
-                       cleanString( event->summary() ),
-                       cleanString( event->location() ) );
+            title = i18nc("date from-\nto", "%1 -\n%2", line1, line2);
         }
-        drawItemString( p, itemBox, str );
-        itemBox.setTop( itemBox.bottom() );
-        itemBox.setBottom( itemBox.top() + lineSpacing );
-      }
     } else {
-      allDayBox.setBottom( headerBox.bottom() );
+        title = local->formatDate(startDate);
     }
 
-    QRect dayBox( allDayBox );
-    dayBox.setTop( allDayBox.bottom() + padMargin );
-    dayBox.setBottom( pageHeight() - footerHeight() );
-    QList<QDate> workDays = CalendarSupport::workDays( curDay, curDay );
-    drawAgendaDayBox( p, dayBox, curDay, timedEvents,
-                      curStartTime, curEndTime,
-                      workDays );
+    const QRect headerBox(0, 0, pageWidth(), headerHeight());
+    CalPrintBase::drawHeader(p, headerBox, title, startDate);
+    return headerBox;
+}
 
-    QRect tlBox( dayBox );
-    tlBox.setLeft( 0 );
-    tlBox.setWidth( tlWidth );
-    drawTimeLine( p, curStartTime, curEndTime, tlBox );
+QRect CalPrintDay::drawFooter(QPainter &p) const
+{
+    QRect footerBox(0, pageHeight() - footerHeight(), pageWidth(), footerHeight());
 
-  if ( extraOptions().testFlag( CalPrintBase::ExtraFooter ) ) {
-      drawFooter( p );
+    CalPrintBase::drawFooter(p, footerBox);
+
+    return footerBox;
+}
+
+void CalPrintDay::drawDays(QPainter &p,
+                           const QDate &start, const QDate &end,
+                           const QTime &startTime, const QTime &endTime,
+                           const QRect &box) const
+{
+    const int numberOfDays = start.daysTo(end) + 1;
+
+    int cellWidth, vcells;
+    if (!useLandscape()) {
+        // 2 columns
+        vcells = qCeil(static_cast<double>(numberOfDays) / 2.0);
+        if (numberOfDays > 1) {
+            cellWidth = box.width() / 2;
+        } else {
+            cellWidth = box.width();
+        }
+    } else {
+        // landscape: N columns
+        vcells = 1;
+        cellWidth = box.width() / numberOfDays;
     }
 
-    curDay = curDay.addDays( 1 );
-    if ( curDay <= d->mEndDate ) {
-      thePrinter()->newPage();
+    const int cellHeight = box.height() / vcells;
+    QDate weekDate = start;
+    for (int i = 0; i < numberOfDays; ++i, weekDate = weekDate.addDays(1)) {
+        const int hpos = i / vcells;
+        const int vpos = i % vcells;
+        const QRect dayBox(box.left() + cellWidth * hpos,
+                           box.top() + cellHeight * vpos,
+                           cellWidth,
+                           cellHeight);
+
+        drawDayBox(p, weekDate, startTime, endTime, dayBox,
+                   true, true, true);
+
+    } // for i through all selected days
+}
+
+void CalPrintDay::drawDayFiloFax(QPainter &p) const
+{
+    QDate curDay(d->mStartDate);
+
+    QRect headerBox = drawHeader(p, d->mStartDate, d->mEndDate);
+
+    QRect daysBox(headerBox);
+    daysBox.setTop(headerBox.bottom() + padding());
+    daysBox.setBottom(pageHeight() - footerHeight());
+
+    drawDays(p, d->mStartDate, d->mEndDate, d->mStartTime, d->mEndTime, daysBox);
+
+    if (extraOptions().testFlag(CalPrintBase::ExtraFooter)) {
+        drawFooter(p);
     }
-  } while ( curDay <= d->mEndDate );
+}
+
+void CalPrintDay::drawDaySingleTimeTable(QPainter &p) const
+{
+    QDate curDay(d->mStartDate);
+
+    QRect headerBox = drawHeader(p, d->mStartDate, d->mEndDate);
+
+    QRect daysBox(headerBox);
+    daysBox.setTop(headerBox.bottom() + padding());
+    daysBox.setBottom(pageHeight() - footerHeight());
+
+    drawTimeTable(p, daysBox,
+                  d->mStartDate, d->mEndDate,
+                  d->mStartTime, d->mEndTime,
+                  rangeOptions().testFlag(CalPrintBase::RangeTimeExpand));
+
+    if (extraOptions().testFlag(CalPrintBase::ExtraFooter)) {
+        drawFooter(p);
+    }
+}
+
+void CalPrintDay::drawDayTimeTable(QPainter &p) const
+{
+    QDate curDay(d->mStartDate);
+
+    KDateTime::Spec timeSpec = KSystemTimeZones::local();
+
+    QTime curStartTime(d->mStartTime);
+    QTime curEndTime(d->mEndTime);
+
+    // For an invalid time range, simply show one hour, starting at the hour
+    // before the given start time
+    if (curEndTime <= curStartTime) {
+        curStartTime = QTime(curStartTime.hour(), 0, 0);
+        curEndTime = curStartTime.addSecs(3600);
+    }
+
+    do {
+        QRect headerBox = drawHeader(p, curDay, QDate());
+
+        KCalCore::Event::List eventList =
+            printCalendar()->events(curDay, timeSpec,
+                                    KCalCore::EventSortStartDate,
+                                    KCalCore::SortDirectionAscending);
+
+        // split out the all day events as they will be printed in a separate box
+        KCalCore::Event::List alldayEvents, timedEvents;
+        Q_FOREACH (const KCalCore::Event::Ptr &event, eventList) {
+            if (event->allDay()) {
+                alldayEvents.append(event);
+            } else {
+                timedEvents.append(event);
+            }
+        }
+
+        const int fontSize = 11;
+        QFont textFont("sans-serif", fontSize, QFont::Normal);
+        p.setFont(textFont);
+        const int lineSpacing = p.fontMetrics().lineSpacing();
+
+        const int tlWidth = timeLineWidth();
+        const int padMargin = padding();
+        const int maxAllDayEvents = 8; // the max we allow to be printed, sorry.
+        int allDayHeight = qMin(alldayEvents.count(), maxAllDayEvents) * lineSpacing;
+        allDayHeight = qMax(allDayHeight, (5 * lineSpacing)) + (2 * padMargin);
+        QRect allDayBox(tlWidth + padMargin, headerBox.bottom() + padMargin,
+                        pageWidth() - tlWidth - padMargin, allDayHeight);
+        if (alldayEvents.count() > 0) {
+            // draw the side bar for all-day events
+            QFont oldFont(p.font());
+            p.setFont(QFont("sans-serif", 9, QFont::Normal));
+            drawVerticalBox(p,
+                            boxBorderWidth(),
+                            QRect(0, headerBox.bottom() + padMargin,
+                                  tlWidth, allDayHeight),
+                            i18n("Today's Events"),
+                            Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextWordWrap);
+            p.setFont(oldFont);
+
+            // now draw at most maxAllDayEvents in the all-day box
+            drawBox(p, boxBorderWidth(), allDayBox);
+
+            QRect itemBox(allDayBox);
+            itemBox.setLeft(tlWidth + (2 * padMargin));
+            itemBox.setTop(itemBox.top() + padMargin);
+            itemBox.setBottom(itemBox.top() + lineSpacing);
+            int count = 0;
+            Q_FOREACH (const KCalCore::Event::Ptr &event, alldayEvents) {
+                if (count == maxAllDayEvents) {
+                    break;
+                }
+                count++;
+                QString str;
+                if (event->location().isEmpty()) {
+                    str = cleanString(event->summary());
+                } else {
+                    str = i18nc("summary, location", "%1, %2",
+                                cleanString(event->summary()),
+                                cleanString(event->location()));
+                }
+                drawItemString(p, itemBox, str);
+                itemBox.setTop(itemBox.bottom());
+                itemBox.setBottom(itemBox.top() + lineSpacing);
+            }
+        } else {
+            allDayBox.setBottom(headerBox.bottom());
+        }
+
+        QRect dayBox(allDayBox);
+        dayBox.setTop(allDayBox.bottom() + padMargin);
+        dayBox.setBottom(pageHeight() - footerHeight());
+        QList<QDate> workDays = CalendarSupport::workDays(curDay, curDay);
+        drawAgendaDayBox(p, dayBox, curDay, timedEvents,
+                         curStartTime, curEndTime,
+                         workDays);
+
+        QRect tlBox(dayBox);
+        tlBox.setLeft(0);
+        tlBox.setWidth(tlWidth);
+        drawTimeLine(p, curStartTime, curEndTime, tlBox);
+
+        if (extraOptions().testFlag(CalPrintBase::ExtraFooter)) {
+            drawFooter(p);
+        }
+
+        curDay = curDay.addDays(1);
+        if (curDay <= d->mEndDate) {
+            thePrinter()->newPage();
+        }
+    } while (curDay <= d->mEndDate);
 }

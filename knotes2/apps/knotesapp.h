@@ -42,8 +42,10 @@ class KNote;
 class KNotesAlarm;
 class KXMLGUIBuilder;
 class KXMLGUIFactory;
-class KNotesChangeRecorder;
-class KNotesAkonadiTreeModel;
+namespace NoteShared {
+class NotesChangeRecorder;
+class NotesAkonadiTreeModel;
+}
 
 namespace DNSSD {
 class PublicService;
@@ -103,6 +105,7 @@ private:
 private:
     void saveNotes();
     void updateNetworkListener();
+    void updateSystray();
     KXMLGUIFactory  *m_guiFactory;
     KXMLGUIBuilder  *m_guiBuilder;
     QDomDocument    m_noteGUI;
@@ -113,8 +116,8 @@ private:
     QTcpServer             *m_listener;
     DNSSD::PublicService   *m_publisher;
     QHash<Akonadi::Item::Id, KNote*> mNotes;
-    KNotesChangeRecorder *mNoteRecorder;
-    KNotesAkonadiTreeModel *mNoteTreeModel;
+    NoteShared::NotesChangeRecorder *mNoteRecorder;
+    NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;
 };
 
 #endif

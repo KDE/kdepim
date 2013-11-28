@@ -50,9 +50,12 @@
 #include "custommimeheader.h"
 #include "pimcommon/autocorrection/widgets/lineeditwithautocorrection.h"
 #include "pimcommon/translator/translatorwidget.h"
+#include "pimcommon/widgets/customtoolswidget.h"
 #include "warningwidgets/attachmentmissingwarning.h"
 #include "job/createnewcontactjob.h"
 #include "warningwidgets/externaleditorwarning.h"
+
+#include "pimcommon/util/editorutil.h"
 
 #include "agents/sendlateragent/sendlaterutil.h"
 #include "agents/sendlateragent/sendlaterdialog.h"
@@ -419,9 +422,9 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
   mBtnTransport->setFocusPolicy( Qt::NoFocus );
   mBtnDictionary->setFocusPolicy( Qt::NoFocus );
 
-  mTranslatorWidget = new PimCommon::TranslatorWidget(this);
-  connect(mTranslatorWidget,SIGNAL(translatorWasClosed()),this,SLOT(slotTranslatorWasClosed()));
-  mSplitter->addWidget(mTranslatorWidget);
+  mCustomToolsWidget = new PimCommon::CustomToolsWidget(this);
+  connect(mCustomToolsWidget,SIGNAL(translatorWasClosed()),this,SLOT(slotTranslatorWasClosed()));
+  mSplitter->addWidget(mCustomToolsWidget);
 
   MessageComposer::AttachmentModel* attachmentModel = new MessageComposer::AttachmentModel( this );
   KMail::AttachmentView *attachmentView = new KMail::AttachmentView( attachmentModel, mSplitter );
@@ -1388,7 +1391,7 @@ void KMComposeWin::setupActions( void )
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::ALT + Qt::Key_T ) );
   actionCollection()->addAction( QLatin1String("translator"), mTranslateAction );
   mTranslateAction->setChecked(false);
-  connect(mTranslateAction, SIGNAL(triggered(bool)), mTranslatorWidget,SLOT(setVisible(bool)));
+  connect(mTranslateAction, SIGNAL(triggered(bool)), this,SLOT(slotVisibleTranslatorTools(bool)));
 
   //Chiamus not supported in kmail2
 #if 0
@@ -3531,19 +3534,13 @@ void KMComposeWin::addExtraCustomHeaders( const QMap<QByteArray, QString> &heade
 void KMComposeWin::slotUpperCase()
 {
     QTextCursor textCursor = mComposerBase->editor()->textCursor();
-    if (textCursor.hasSelection()) {
-        const QString newText = textCursor.selectedText().toUpper();
-        textCursor.insertText(newText);
-    }
+    PimCommon::EditorUtil::lowerCase(textCursor);
 }
 
 void KMComposeWin::slotLowerCase()
 {
     QTextCursor textCursor = mComposerBase->editor()->textCursor();
-    if (textCursor.hasSelection()) {
-        const QString newText = textCursor.selectedText().toLower();
-        textCursor.insertText(newText);
-    }
+    PimCommon::EditorUtil::upperCase(textCursor);
 }
 
 void KMComposeWin::slotExternalEditorStarted()
@@ -3558,3 +3555,10 @@ void KMComposeWin::slotExternalEditorClosed()
     mExternalEditorWarning->hide();
 }
 
+void KMComposeWin::slotVisibleTranslatorTools(bool b)
+{
+    if (b) {
+        mCustomToolsWidget->switchToTool(PimCommon::CustomToolsWidget::TranslatorTool);
+    }
+    mCustomToolsWidget->setVisible(b);
+}

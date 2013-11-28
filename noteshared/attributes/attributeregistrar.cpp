@@ -18,6 +18,7 @@
 #include "notealarmattribute.h"
 #include "notedisplayattribute.h"
 #include "notelockattribute.h"
+#include "showfoldernotesattribute.h"
 
 #include <akonadi/attributefactory.h>
 
@@ -29,6 +30,7 @@ bool dummy()
   Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteDisplayAttribute>();
   Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteAlarmAttribute>();
   Akonadi::AttributeFactory::registerAttribute<NoteShared::NoteLockAttribute>();
+  Akonadi::AttributeFactory::registerAttribute<NoteShared::ShowFolderNotesAttribute>();
   return true;
 }
 

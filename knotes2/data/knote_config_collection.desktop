@@ -1,0 +1,34 @@
+[Desktop Entry]
+Icon=preferences-other
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kcm_knote
+X-KDE-FactoryName=knote_config_collection
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=knotes
+X-KDE-ParentComponents=knotes,kontact_knotesplugin
+X-KDE-CfgDlgHierarchy=KNotes
+X-KDE-Weight=200
+
+Name=Collection
+Name[cs]=Sbírka
+Name[de]=Sammlung
+Name[ia]=Collection
+Name[nl]=Verzameling
+Name[pt]=Colecção
+Name[pt_BR]=Coleção
+Name[sv]=Samling
+Name[uk]=Збірка
+Name[x-test]=xxCollectionxx
+Comment=Setup collections for notes
+Comment[cs]=Nastavení sbírek pro poznámky
+Comment[de]=Sammlungen für Notizen einrichten
+Comment[ia]=Configura collectiones pro notas
+Comment[nl]=Verzamelingen instellen voor notities
+Comment[pt]=Configurar as colecções das notas
+Comment[pt_BR]=Configurar as coleções das notas
+Comment[sv]=Ställ in anteckningssamlingar
+Comment[uk]=Налаштовування збірок нотаток
+Comment[x-test]=xxSetup collections for notesxx

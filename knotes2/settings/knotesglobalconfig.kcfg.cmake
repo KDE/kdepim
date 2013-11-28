@@ -5,6 +5,12 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <include>kglobalsettings.h</include>
 
+  <group name="General">
+    <entry name="AutoCreateResourceOnStart" type="Bool">
+      <default>true</default>
+    </entry>
+  </group>
+
   <group name="SelectNoteFolder">
       <entry name="DefaultFolder" type="LongLong">
         <default>-1</default>

@@ -20,19 +20,21 @@
 
 #include "knotes_plugin.h"
 #include "knotes_part.h"
-#include "knotes/resource/resourcemanager.h"
+#include "knotes2/apps/knotes_options.h"
 #include "summarywidget.h"
-#include "migrations/knoteslegacy.h"
 #include "knotes/knotesglobalconfig.h"
+#include <KCalUtils/ICalDrag>
+#include <KCalUtils/VCalDrag>
+
 
 #include "kdepim-version.h"
 
 #include <libkdepim/misc/maillistdrag.h>
 using namespace KPIM;
+using namespace KCalUtils;
+using namespace KCalCore;
 
 #include <KABC/VCardDrag>
-#include <KCal/CalendarLocal>
-#include <KCal/ICalDrag>
 
 #include <KontactInterface/Core>
 
@@ -95,12 +97,12 @@ QString KNotesPlugin::tipFile() const
 
 KParts::ReadOnlyPart *KNotesPlugin::createPart()
 {
-    return new KNotesPart( this );
+    return 0;//FIXME new KNotesPart( this );
 }
 
 KontactInterface::Summary *KNotesPlugin::createSummaryWidget( QWidget *parentWidget )
 {
-    return new KNotesSummaryWidget( /*mCalendar*/0, this, parentWidget );
+    return new KNotesSummaryWidget( this, parentWidget );
 }
 
 const KAboutData *KNotesPlugin::aboutData() const
@@ -195,7 +197,7 @@ void KNotesPlugin::processDropEvent( QDropEvent *event )
                         i18nc( "@info", "Dropping multiple mails is not supported." ) );
         } else {
             MailSummary mail = mails.first();
-            QString txt = i18nc( "@item", "From: %1\nTo: %2\nSubject: %3",
+            const QString txt = i18nc( "@item", "From: %1\nTo: %2\nSubject: %3",
                                  mail.from(), mail.to(), mail.subject() );
             static_cast<KNotesPart *>( part() )->newNote(
                         i18nc( "@item", "Mail: %1", mail.subject() ), txt );
@@ -217,7 +219,7 @@ void KNotesPlugin::slotNewNote()
 
 void KNotesUniqueAppHandler::loadCommandLineOptions()
 {
-    KCmdLineArgs::addCmdLineOptions( KCmdLineOptions() );
+    KCmdLineArgs::addCmdLineOptions( knotesOptions() );
 }
 
 int KNotesUniqueAppHandler::newInstance()

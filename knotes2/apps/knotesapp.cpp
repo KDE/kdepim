@@ -20,11 +20,14 @@
 
 #include "configdialog/knoteconfigdialog.h"
 
-#include "../knotes/akonadi/knotesakonaditreemodel.h"
-#include "../knotes/akonadi/knoteschangerecorder.h"
+#include "noteshared/akonadi/notesakonaditreemodel.h"
+#include "noteshared/akonadi/noteschangerecorder.h"
 #include "noteshared/attributes/notelockattribute.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "noteshared/attributes/notealarmattribute.h"
+#include "noteshared/attributes/showfoldernotesattribute.h"
+#include "noteshared/resources/localresourcecreator.h"
+
 #include "apps/knotesakonaditray.h"
 #include "dialog/selectednotefolderdialog.h"
 
@@ -98,6 +101,12 @@ KNotesApp::KNotesApp()
       m_alarm( 0 ),
     #endif
 {
+    Akonadi::Control::widgetNeedsAkonadi(this);
+    if (KNotesGlobalConfig::self()->autoCreateResourceOnStart()) {
+        NoteShared::LocalResourceCreator *creator = new NoteShared::LocalResourceCreator( this );
+        creator->createIfMissing();
+    }
+
     new KNotesAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String("/KNotes") , this );
     kapp->setQuitOnLastWindowClosed( false );
@@ -171,15 +180,14 @@ KNotesApp::KNotesApp()
     updateNetworkListener();
 
     Akonadi::Session *session = new Akonadi::Session( "KNotes Session", this );
-    Akonadi::Control::widgetNeedsAkonadi(this);
-    mNoteRecorder = new KNotesChangeRecorder(this);
+    mNoteRecorder = new NoteShared::NotesChangeRecorder(this);
     mNoteRecorder->changeRecorder()->setSession(session);
-    mTray = new KNotesAkonadiTray(mNoteRecorder->changeRecorder(), 0);
+    mTray = new KNotesAkonadiTray(0);
     connect( mTray, SIGNAL(activateRequested(bool,QPoint)), this, SLOT(slotActivateRequested(bool,QPoint)) );
     connect( mTray, SIGNAL(secondaryActivateRequested(QPoint)), this, SLOT(slotSecondaryActivateRequested(QPoint)) );
 
     mTray->setContextMenu( m_contextMenu );
-    mNoteTreeModel = new KNotesAkonadiTreeModel(mNoteRecorder->changeRecorder(), this);
+    mNoteTreeModel = new NoteShared::NotesAkonadiTreeModel(mNoteRecorder->changeRecorder(), this);
 
     connect( mNoteTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
              SLOT(slotRowInserted(QModelIndex,int,int)));
@@ -211,6 +219,7 @@ void KNotesApp::slotItemRemoved(const Akonadi::Item &item)
         delete mNotes.find(item.id()).value();
         mNotes.remove(item.id());
         updateNoteActions();
+        updateSystray();
     }
 }
 
@@ -230,25 +239,33 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
             const QModelIndex child = mNoteTreeModel->index( i, 0, parent );
             Akonadi::Item item =
                     mNoteTreeModel->data( child, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-            if ( !item.hasPayload<KMime::Message::Ptr>() )
-                continue;
-            KNote *note = new KNote(m_noteGUI,item, 0);
-            mNotes.insert(item.id(), note);
-            connect( note, SIGNAL(sigShowNextNote()),
-                     SLOT(slotWalkThroughNotes()) ) ;
-            connect( note, SIGNAL(sigRequestNewNote()),
-                     SLOT(newNote()) );
-            connect( note, SIGNAL(sigNameChanged(QString)),
-                     SLOT(updateNoteActions()) );
-            connect( note, SIGNAL(sigColorChanged()),
-                     SLOT(updateNoteActions()) );
-            connect( note, SIGNAL(sigKillNote(Akonadi::Item::Id)),
-                     SLOT(slotNoteKilled(Akonadi::Item::Id)) );
-            updateNoteActions();
+            Akonadi::Collection parentCollection = mNoteTreeModel->data( child, Akonadi::EntityTreeModel::ParentCollectionRole).value<Akonadi::Collection>();
+            if (parentCollection.hasAttribute<NoteShared::ShowFolderNotesAttribute>()) {
+                if ( !item.hasPayload<KMime::Message::Ptr>() )
+                    continue;
+                KNote *note = new KNote(m_noteGUI,item, 0);
+                mNotes.insert(item.id(), note);
+                connect( note, SIGNAL(sigShowNextNote()),
+                         SLOT(slotWalkThroughNotes()) ) ;
+                connect( note, SIGNAL(sigRequestNewNote()),
+                         SLOT(newNote()) );
+                connect( note, SIGNAL(sigNameChanged(QString)),
+                         SLOT(updateNoteActions()) );
+                connect( note, SIGNAL(sigColorChanged()),
+                         SLOT(updateNoteActions()) );
+                connect( note, SIGNAL(sigKillNote(Akonadi::Item::Id)),
+                         SLOT(slotNoteKilled(Akonadi::Item::Id)) );
+                updateNoteActions();
+                updateSystray();
+            }
         }
     }
 }
 
+void KNotesApp::updateSystray()
+{
+    mTray->updateNumberOfNotes(mNotes.count());
+}
 
 void KNotesApp::newNote(const QString &name, const QString &text)
 {

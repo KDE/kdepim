@@ -204,7 +204,6 @@ void KNote::saveNote()
     message->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
     message->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
     message->mainBodyPart()->fromUnicodeString( text().isEmpty() ? QString::fromLatin1( " " ) : text());
-    qDebug()<<" text()"<<text();
 
     message->assemble();
 
@@ -866,13 +865,6 @@ void KNote::prepare()
         m_editor->setPlainText(noteMessage->mainBodyPart()->decodedText());
     }
 
-    if ( mItem.hasAttribute<NoteShared::NoteLockAttribute>() ) {
-        m_editor->setReadOnly(true);
-        m_readOnly->setChecked( true );
-    } else {
-        m_readOnly->setChecked( false );
-    }
-    slotUpdateReadOnly();
     resize(mDisplayAttribute->size());
     const QPoint& position = mDisplayAttribute->position();
     QRect desk = kapp->desktop()->rect();
@@ -890,6 +882,13 @@ void KNote::prepare()
     // read configuration settings...
     slotApplyConfig();
 
+    if ( mItem.hasAttribute<NoteShared::NoteLockAttribute>() ) {
+        m_editor->setReadOnly(true);
+        m_readOnly->setChecked( true );
+    } else {
+        m_readOnly->setChecked( false );
+    }
+    slotUpdateReadOnly();
     // if this is a new note put on current desktop - we can't use defaults
     // in KConfig XT since only _changes_ will be stored in the config file
     int desktop = mDisplayAttribute->desktop();

@@ -27,7 +27,7 @@
 #include <QWidget>
 #include <QDebug>
 
-KNotesAkonadiTray::KNotesAkonadiTray(Akonadi::ChangeRecorder *recorder, QWidget *parent)
+KNotesAkonadiTray::KNotesAkonadiTray(QWidget *parent)
     : KStatusNotifierItem(parent)
 {
     setToolTipTitle( i18n( "KNotes: Sticky notes for KDE" ) );
@@ -36,25 +36,17 @@ KNotesAkonadiTray::KNotesAkonadiTray(Akonadi::ChangeRecorder *recorder, QWidget 
     setCategory( KStatusNotifierItem::ApplicationStatus );
     setStandardActionsEnabled(false);
     mIcon = KIcon( QLatin1String("knotes") );
-    connect(recorder, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), SLOT(slotUpdateSystemTray()));
-    updateNumberOfNotes();
 }
 
 KNotesAkonadiTray::~KNotesAkonadiTray()
 {
 }
 
-void KNotesAkonadiTray::slotUpdateSystemTray()
-{
-    qDebug()<<" void KNotesAkonadiTray::slotUpdateSystemTray()";
-    updateNumberOfNotes();
-}
-
-void KNotesAkonadiTray::updateNumberOfNotes()
+void KNotesAkonadiTray::updateNumberOfNotes(int number)
 {
     const int overlaySize = KIconLoader::SizeSmallMedium;
 
-    const QString countString = QString::number( 1 );
+    const QString countString = QString::number( number );
     QFont countFont = KGlobalSettings::generalFont();
     countFont.setBold(true);
 

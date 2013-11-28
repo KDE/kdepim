@@ -17,20 +17,20 @@ include_directories(
 set(kontact_knotes2plugin_PART_SRCS 
   knotes_plugin.cpp
   knotes_part.cpp
-  ../knotes/summarywidget.cpp
-  ../knotes/knotetip.cpp
-  ../knotes/knotesiconview.cpp
-  ../knotes/knoteslistwidgetsearchline.cpp
-  ../knotes/knoteswidget.cpp
+  summarywidget.cpp
+  knotetip.cpp
+  knotesiconview.cpp
+  knoteslistwidgetsearchline.cpp
+  knoteswidget.cpp
   ../knotes/knoteseditdialog.cpp  
-  ../knotes/knotesselectdeletenotesdialog.cpp
+  knotesselectdeletenotesdialog.cpp
 )
 
-#qt4_add_dbus_adaptor(kontact_knotes2plugin_PART_SRCS ../knotes/org.kde.kontact.KNotes.xml ../knotes/knotes_part.h KNotesPart)
+qt4_add_dbus_adaptor(kontact_knotes2plugin_PART_SRCS ../knotes/org.kde.kontact.KNotes.xml ../knotes/knotes_part.h KNotesPart)
 
-#kde4_add_plugin(kontact_knotes2plugin ${kontact_knotes2plugin_PART_SRCS})
+kde4_add_plugin(kontact_knotes2plugin ${kontact_knotes2plugin_PART_SRCS})
 
-#target_link_libraries(kontact_knotes2plugin knotesprivate ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDE4_KDEPRINT_LIBS} ${KDE4_KPARTS_LIBS} kdepim ${KDE4_KPRINTUTILS_LIBS} pimcommon ${KDE4_KDNSSD_LIBS} noteshared)
+target_link_libraries(kontact_knotes2plugin knotesprivate ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} ${KDEPIMLIBS_KCALCORE_LIBS} ${KDEPIMLIBS_KCALUTILS_LIBS} ${KDE4_KDEPRINT_LIBS} ${KDE4_KPARTS_LIBS} kdepim ${KDE4_KPRINTUTILS_LIBS} pimcommon ${KDE4_KDNSSD_LIBS} noteshared)
 
 ########### next target ###############
 
@@ -39,7 +39,7 @@ set(kcm_knotessummary_PART_SRCS kcmknotessummary.cpp )
 kde4_add_plugin(kcm_knotessummary ${kcm_knotessummary_PART_SRCS})
 #add_dependencies(kcm_knotessummary kmail_xml)
 
-target_link_libraries(kcm_knotessummary ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} akonadi_next mailcommon)
+target_link_libraries(kcm_knotessummary ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} akonadi_next pimcommon)
 
 ########### install files ###############
 
