@@ -2,6 +2,8 @@
 Name=Folder Archive Agent
 Name[bs]=Agent za arhiviranje fascikli pošte
 Name[ca]=Agent per arxivar una carpeta
+Name[ca@valencia]=Agent per arxivar una carpeta
+Name[da]=Agent til mappe-arkivering
 Name[de]=Agent zur Ordner-Archivierung
 Name[es]=Agente de archivado de carpeta
 Name[fi]=Kansioiden arkistointiohjelma
@@ -28,6 +30,8 @@ Name[zh_TW]=資料夾歸檔代理程式
 Comment=Folder Archive Agent allows to store mails in specific archive folder
 Comment[bs]=Agent za arhiviranje fascikli omogućava smiještanje poruka na posebno arhivno mjesto
 Comment[ca]=L'agent per arxivar una carpeta permet emmagatzemar el correu a una carpeta d'arxiu específica
+Comment[ca@valencia]=L'agent per arxivar una carpeta permet emmagatzemar el correu a una carpeta d'arxiu específica
+Comment[da]=Agent til mappe-arkivering muliggør at gemme e-mails i en specifik arkivmappe
 Comment[de]=Der Agent zur Ordner-Archivierung ermöglicht das Speichern von E-Mails in angegebenen Archivordnern
 Comment[es]=El agente de archivado de carpeta permite almacenar correos en una carpeta específica de archivado
 Comment[fi]=Kansioiden arkistointiohjelma mahdollistaa postien tallettamisen erityisiin arkistokansioihin
