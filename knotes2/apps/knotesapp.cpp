@@ -182,7 +182,7 @@ KNotesApp::KNotesApp()
     Akonadi::Session *session = new Akonadi::Session( "KNotes Session", this );
     mNoteRecorder = new NoteShared::NotesChangeRecorder(this);
     mNoteRecorder->changeRecorder()->setSession(session);
-    mTray = new KNotesAkonadiTray(mNoteRecorder->changeRecorder(), 0);
+    mTray = new KNotesAkonadiTray(0);
     connect( mTray, SIGNAL(activateRequested(bool,QPoint)), this, SLOT(slotActivateRequested(bool,QPoint)) );
     connect( mTray, SIGNAL(secondaryActivateRequested(QPoint)), this, SLOT(slotSecondaryActivateRequested(QPoint)) );
 
@@ -219,6 +219,7 @@ void KNotesApp::slotItemRemoved(const Akonadi::Item &item)
         delete mNotes.find(item.id()).value();
         mNotes.remove(item.id());
         updateNoteActions();
+        updateSystray();
     }
 }
 
@@ -255,11 +256,16 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
                 connect( note, SIGNAL(sigKillNote(Akonadi::Item::Id)),
                          SLOT(slotNoteKilled(Akonadi::Item::Id)) );
                 updateNoteActions();
+                updateSystray();
             }
         }
     }
 }
 
+void KNotesApp::updateSystray()
+{
+    mTray->updateNumberOfNotes(mNotes.count());
+}
 
 void KNotesApp::newNote(const QString &name, const QString &text)
 {
