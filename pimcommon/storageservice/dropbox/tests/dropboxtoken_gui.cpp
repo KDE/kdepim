@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "dropboxtoken_gui.h"
 #include "../dropboxtoken.h"
 
 #include <QWidget>
@@ -24,6 +25,28 @@
 #include <KCmdLineArgs>
 #include <KLocale>
 
+#include <QVBoxLayout>
+#include <QToolBar>
+#include <QTextEdit>
+
+DropboxTestWidget::DropboxTestWidget(QWidget *parent)
+    : QWidget(parent)
+{
+    mEdit = new QTextEdit;
+    QVBoxLayout *lay = new QVBoxLayout;
+    QToolBar *bar = new QToolBar;
+    lay->addWidget(bar);
+    bar->addAction(QLatin1String("Initialize..."), this, SLOT(slotInitialize()));
+    lay->addWidget(mEdit);
+    setLayout(lay);
+    mToken = new PimCommon::DropBoxToken(this);
+}
+
+void DropboxTestWidget::slotInitialize()
+{
+    //TODO
+}
+
 int main (int argc, char **argv)
 {
     KCmdLineArgs::init(argc, argv, "dropboxToken_gui", 0, ki18n("dropboxToken_Gui"),
@@ -31,10 +54,8 @@ int main (int argc, char **argv)
 
     KApplication app;
 
-    QWidget *w = new QWidget;
-    PimCommon::DropBoxToken *token = new PimCommon::DropBoxToken;
+    DropboxTestWidget *w = new DropboxTestWidget;
     w->show();
-    token->requestTokenAccess();
     return app.exec();
 }
 
