@@ -79,3 +79,8 @@ QString DropBoxStorageService::description() const
 {
     return QString();
 }
+
+QUrl DropBoxStorageService::serviceUrl() const
+{
+    return QUrl();
+}

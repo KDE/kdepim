@@ -35,6 +35,7 @@ public:
     QUrl sharedUrl() const;
     void uploadFile(const QString &filename);
     QString description() const;
+    QUrl serviceUrl() const;
 
 private:
     void readConfig();
@@ -42,7 +43,6 @@ private:
     QString mAccessTokenSecret;
     QString mAccessOauthToken;
     DropBoxToken *mDropBoxToken;
-
 };
 }
 

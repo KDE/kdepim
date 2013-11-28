@@ -70,3 +70,8 @@ QString HubicStorageService::description() const
 {
     return QString();
 }
+
+QUrl HubicStorageService::serviceUrl() const
+{
+    return QUrl();
+}
