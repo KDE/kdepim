@@ -28,11 +28,16 @@ using namespace PimCommon;
 
 DropBoxStorageService::DropBoxStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent),
-      mDropBoxToken(new PimCommon::DropBoxToken)
+      mDropBoxToken(new PimCommon::DropBoxToken),
+      mInitialized(false)
 {
+    connect(mDropBoxToken, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
+    connect(mDropBoxToken, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
     readConfig();
     if (mAccessToken.isEmpty()) {
         mDropBoxToken->getTokenAccess();
+    } else {
+        mInitialized = true;
     }
 }
 
@@ -46,8 +51,29 @@ void DropBoxStorageService::readConfig()
     KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
 
     mAccessToken = grp.readEntry("Access Token");
-    mAccessTokenSecret = grp.readEntry("Access Secret");
-    mAccessOauthToken = grp.readEntry("Access Oauth Token");
+    mAccessTokenSecret = grp.readEntry("Access Token Secret");
+    mAccessOauthSignature = grp.readEntry("Access Oauth Signature");
+}
+
+void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
+{
+    mAccessToken = accessToken;
+    mAccessTokenSecret = accessTokenSecret;
+    mAccessOauthSignature = accessOauthSignature;
+    KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
+    grp.writeEntry("Access Token", mAccessToken);
+    grp.writeEntry("Access Token Secret", mAccessTokenSecret);
+    grp.writeEntry("Access Oauth Signature", mAccessOauthSignature);
+    grp.sync();
+    mInitialized = true;
+}
+
+void DropBoxStorageService::slotAuthorizationFailed()
+{
+    mAccessToken.clear();
+    mAccessTokenSecret.clear();
+    mAccessOauthSignature.clear();
+    mInitialized = true;
 }
 
 QString DropBoxStorageService::name() const

@@ -37,12 +37,17 @@ public:
     QString description() const;
     QUrl serviceUrl() const;
 
+private slots:
+    void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
+    void slotAuthorizationFailed();
+
 private:
     void readConfig();
     QString mAccessToken;
     QString mAccessTokenSecret;
-    QString mAccessOauthToken;
+    QString mAccessOauthSignature;
     DropBoxToken *mDropBoxToken;
+    bool mInitialized;
 };
 }
 

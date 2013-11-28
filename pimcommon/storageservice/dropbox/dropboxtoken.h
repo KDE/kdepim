@@ -41,6 +41,10 @@ private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);
     void slotGetToken();
 
+Q_SIGNALS:
+    void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
+    void authorizationFailed();
+
 private:
     void parseRequestToken(const QString &result);
     void doAuthentification();

@@ -135,15 +135,13 @@ qDebug()<<" data"<<data;
     }
 
     mActionType = NoneAction;
-    qDebug()<<"slotSendDataFinished**********************";
 }
 
 void DropBoxToken::parseResponseAccessToken(const QString& data)
 {
-    qDebug()<<" sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss";
     if(data.contains(QLatin1String("error"))) {
-        //doOAuth();
         qDebug()<<" return error !";
+        Q_EMIT authorizationFailed();
         return;
     }
 
@@ -154,8 +152,7 @@ void DropBoxToken::parseResponseAccessToken(const QString& data)
     QStringList tokenList       = split.at(1).split(QLatin1Char('='));
     mOauthToken = tokenList.at(1);
     mAccessOauthSignature = mOauthSignature + mOauthTokenSecret;
-    //accountInfo();
-    listFolders();
+    Q_EMIT authorizationDone(mOauthToken, mOauthTokenSecret, mAccessOauthSignature);
 }
 
 void DropBoxToken::parseRequestToken(const QString &result)
