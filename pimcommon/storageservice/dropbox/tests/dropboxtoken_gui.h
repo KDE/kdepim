@@ -33,6 +33,7 @@ private Q_SLOTS:
     void slotListFolder();
 
     void slotCreateFolder();
+    void slotAccountInfo();
 private:
     QTextEdit *mEdit;
     PimCommon::DropBoxStorageService *mDropBoxStorageService;

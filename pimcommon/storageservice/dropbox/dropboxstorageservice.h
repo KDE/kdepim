@@ -30,26 +30,37 @@ public:
     ~DropBoxStorageService();
 
     QString name() const;
-    qint64 maximumSize() const;
-    qint64 currentSize() const;
     QUrl sharedUrl() const;
-    void uploadFile(const QString &filename);
+
     QString description() const;
     QUrl serviceUrl() const;
-    void listFolder();
 
-    void createFolder();
+    void listFolder();
+    void uploadFile(const QString &filename);
+    void accountInfo();
+    void createFolder(const QString &folder);
+
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void slotAuthorizationFailed();
+
+    void slotCreateFolderFailed();
+    void slotCreateFolderDone();
+
+    void slotUploadFileDone();
+    void slotUploadFileFailed();
+
+    void slotAccountInfoFailed();
+    void slotAccountInfoDone(const QString &info);
+
+    void slotListFolderDone();
+    void slotListFolderFailed();
 
 private:
     void readConfig();
     QString mAccessToken;
     QString mAccessTokenSecret;
     QString mAccessOauthSignature;
-    DropBoxToken *mDropBoxToken;
-    bool mInitialized;
 };
 }
 

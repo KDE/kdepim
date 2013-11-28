@@ -38,14 +38,20 @@ DropboxTestWidget::DropboxTestWidget(QWidget *parent)
     lay->addWidget(bar);
     bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
     bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
+    bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
     lay->addWidget(mEdit);
     setLayout(lay);
     mDropBoxStorageService = new PimCommon::DropBoxStorageService(this);
 }
 
+void DropboxTestWidget::slotAccountInfo()
+{
+    mDropBoxStorageService->accountInfo();
+}
+
 void DropboxTestWidget::slotCreateFolder()
 {
-    mDropBoxStorageService->createFolder();
+    mDropBoxStorageService->createFolder(QLatin1String("test"));
 }
 
 void DropboxTestWidget::slotListFolder()

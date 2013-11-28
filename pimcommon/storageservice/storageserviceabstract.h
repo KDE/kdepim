@@ -30,11 +30,12 @@ public:
     ~StorageServiceAbstract();
 
     virtual QString name() const = 0;
-    virtual qint64 maximumSize() const = 0;
-    virtual qint64 currentSize() const = 0;
 
     virtual QUrl sharedUrl() const = 0;
     virtual void uploadFile(const QString &filename) = 0;
+    virtual void accountInfo() = 0;
+    virtual void createFolder(const QString &folder) = 0;
+    virtual void listFolder() = 0;
     virtual QString description() const = 0;
     virtual QUrl serviceUrl() const = 0;
 

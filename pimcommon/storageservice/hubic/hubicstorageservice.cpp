@@ -41,19 +41,24 @@ void HubicStorageService::readConfig()
 
 }
 
+void HubicStorageService::listFolder()
+{
+
+}
+
+void HubicStorageService::createFolder(const QString &folder)
+{
+
+}
+
+void HubicStorageService::accountInfo()
+{
+
+}
+
 QString HubicStorageService::name() const
 {
     return i18n("Hubic");
-}
-
-qint64 HubicStorageService::maximumSize() const
-{
-    return -1;
-}
-
-qint64 HubicStorageService::currentSize() const
-{
-    return -1;
 }
 
 QUrl HubicStorageService::sharedUrl() const
@@ -73,5 +78,5 @@ QString HubicStorageService::description() const
 
 QUrl HubicStorageService::serviceUrl() const
 {
-    return QUrl();
+    return QUrl(QLatin1String("https://hubic.com"));
 }

@@ -25,7 +25,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/storageserviceabstract.cpp
   storageservice/storageservicemanager.cpp
   storageservice/dropbox/dropboxstorageservice.cpp
-  storageservice/dropbox/dropboxtoken.cpp
+  storageservice/dropbox/dropboxjob.cpp
   storageservice/settings/storageservicesettingswidget.cpp
   storageservice/storageauthviewwidget.cpp
   storageservice/storageauthviewdialog.cpp
