@@ -15,16 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knoteschangerecorder.h"
+#include "noteschangerecorder.h"
+
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/ItemFetchScope>
 #include "akonadi_next/note.h"
+
 #include "noteshared/attributes/notealarmattribute.h"
 #include "noteshared/attributes/notelockattribute.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 
-KNotesChangeRecorder::KNotesChangeRecorder(QObject *parent)
+using namespace NoteShared;
+
+NotesChangeRecorder::NotesChangeRecorder(QObject *parent)
     : QObject(parent)
 {
     Akonadi::ItemFetchScope scope;
@@ -42,7 +46,7 @@ KNotesChangeRecorder::KNotesChangeRecorder(QObject *parent)
     mChangeRecorder->setMimeTypeMonitored( Akonotes::Note::mimeType() );
 }
 
-Akonadi::ChangeRecorder *KNotesChangeRecorder::changeRecorder() const
+Akonadi::ChangeRecorder *NotesChangeRecorder::changeRecorder() const
 {
     return mChangeRecorder;
 }

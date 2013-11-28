@@ -15,15 +15,16 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "knotesakonaditreemodel.h"
+#include "notesakonaditreemodel.h"
+using namespace NoteShared;
 
-KNotesAkonadiTreeModel::KNotesAkonadiTreeModel(Akonadi::ChangeRecorder *changeRecorder, QObject *parent)
+NotesAkonadiTreeModel::NotesAkonadiTreeModel(Akonadi::ChangeRecorder *changeRecorder, QObject *parent)
     : Akonadi::EntityTreeModel(changeRecorder, parent)
 {
     setItemPopulationStrategy( Akonadi::EntityTreeModel::ImmediatePopulation );
 }
 
-KNotesAkonadiTreeModel::~KNotesAkonadiTreeModel()
+NotesAkonadiTreeModel::~NotesAkonadiTreeModel()
 {
 
 }

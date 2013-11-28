@@ -20,8 +20,8 @@
 
 #include "configdialog/knoteconfigdialog.h"
 
-#include "../knotes/akonadi/knotesakonaditreemodel.h"
-#include "../knotes/akonadi/knoteschangerecorder.h"
+#include "noteshared/akonadi/notesakonaditreemodel.h"
+#include "noteshared/akonadi/noteschangerecorder.h"
 #include "noteshared/attributes/notelockattribute.h"
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "noteshared/attributes/notealarmattribute.h"
@@ -180,14 +180,14 @@ KNotesApp::KNotesApp()
     updateNetworkListener();
 
     Akonadi::Session *session = new Akonadi::Session( "KNotes Session", this );
-    mNoteRecorder = new KNotesChangeRecorder(this);
+    mNoteRecorder = new NoteShared::NotesChangeRecorder(this);
     mNoteRecorder->changeRecorder()->setSession(session);
     mTray = new KNotesAkonadiTray(mNoteRecorder->changeRecorder(), 0);
     connect( mTray, SIGNAL(activateRequested(bool,QPoint)), this, SLOT(slotActivateRequested(bool,QPoint)) );
     connect( mTray, SIGNAL(secondaryActivateRequested(QPoint)), this, SLOT(slotSecondaryActivateRequested(QPoint)) );
 
     mTray->setContextMenu( m_contextMenu );
-    mNoteTreeModel = new KNotesAkonadiTreeModel(mNoteRecorder->changeRecorder(), this);
+    mNoteTreeModel = new NoteShared::NotesAkonadiTreeModel(mNoteRecorder->changeRecorder(), this);
 
     connect( mNoteTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
              SLOT(slotRowInserted(QModelIndex,int,int)));

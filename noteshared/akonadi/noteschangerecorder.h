@@ -15,17 +15,27 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KNOTESAKONADITREEMODEL_H
-#define KNOTESAKONADITREEMODEL_H
+#ifndef NOTESCHANGERECORDER_H
+#define NOTESCHANGERECORDER_H
 
-#include <Akonadi/EntityTreeModel>
+#include <QObject>
+#include "noteshared_export.h"
 
-class KNotesAkonadiTreeModel : public Akonadi::EntityTreeModel
+namespace Akonadi {
+class ChangeRecorder;
+}
+namespace NoteShared {
+class NOTESHARED_EXPORT NotesChangeRecorder : public QObject
 {
     Q_OBJECT
 public:
-    explicit KNotesAkonadiTreeModel(Akonadi::ChangeRecorder *changeRecorder, QObject *parent = 0);
-    ~KNotesAkonadiTreeModel();
-};
+    explicit NotesChangeRecorder(QObject *parent = 0);
 
-#endif // KNOTESAKONADITREEMODEL_H
+    Akonadi::ChangeRecorder *changeRecorder() const;
+
+private:
+    Akonadi::ChangeRecorder *mChangeRecorder;
+};
+}
+
+#endif // KNOTESCHANGERECORDER_H
