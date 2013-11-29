@@ -19,13 +19,13 @@
 #define STORAGESERVICESETTINGSWIDGET_H
 
 #include <QWidget>
-
+#include "pimcommon_export.h"
 class QListWidget;
 class QLabel;
 class QPushButton;
 class KTextEdit;
 namespace PimCommon {
-class StorageServiceSettingsWidget : public QWidget
+class PIMCOMMON_EXPORT StorageServiceSettingsWidget : public QWidget
 {
     Q_OBJECT
 public:

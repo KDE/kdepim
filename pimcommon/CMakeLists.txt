@@ -163,6 +163,8 @@ add_subdirectory(nepomukdebug/tests)
 add_subdirectory(folderdialog/tests/)
 add_subdirectory(storageservice/dropbox/tests)
 add_subdirectory(storageservice/hubic/tests)
+add_subdirectory(storageservice/tests)
+
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
   kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)
