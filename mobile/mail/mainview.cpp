@@ -144,8 +144,7 @@ MainView::MainView(QWidget* parent)
     mAskingToGoOnline( false ),
     mTransportDialog( 0 ),
     m_grouperComparator( 0 ),
-    mQuotaColorProxyModel( new QuotaColorProxyModel( this ) ),
-    mNetworkAccessHelper( 0 )
+    mQuotaColorProxyModel( new QuotaColorProxyModel( this ) )
 {
   qRegisterMetaType<KMime::Content*>();
 
@@ -779,11 +778,6 @@ bool MainView::askToGoOnline()
       QAction *workOffLineAction = mMailActionManager->action( StandardActionManager::ToggleWorkOffline );
       workOffLineAction->setChecked( true );
       workOffLineAction->trigger();
-
-      if ( !mNetworkAccessHelper )
-        mNetworkAccessHelper = new KPIMUtils::NetworkAccessHelper( this );
-
-      mNetworkAccessHelper->establishConnection();
     }
   }
 

@@ -14,29 +14,24 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#ifndef ADDSERVICESTORAGEDIALOG_H
+#define ADDSERVICESTORAGEDIALOG_H
+#include <KDialog>
+#include "storageservice/storageservicemanager.h"
 
-#ifndef TEST_DROPBOX_GUI_H
-#define TEST_DROPBOX_GUI_H
-
-#include <QWidget>
-class QTextEdit;
 namespace PimCommon {
-class DropBoxStorageService;
-}
-class DropboxTestWidget : public QWidget
+class StorageServiceComboBox;
+class AddServiceStorageDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit DropboxTestWidget(QWidget *parent=0);
+    explicit AddServiceStorageDialog(const QStringList &excludeService, QWidget *parent = 0);
+    ~AddServiceStorageDialog();
 
-private Q_SLOTS:
-    void slotListFolder();
-
-    void slotCreateFolder();
-    void slotAccountInfo();
+    PimCommon::StorageServiceManager::ServiceType serviceSelected() const;
 private:
-    QTextEdit *mEdit;
-    PimCommon::DropBoxStorageService *mDropBoxStorageService;
+    StorageServiceComboBox *mService;
 };
+}
 
-#endif
+#endif // ADDSERVICESTORAGEDIALOG_H

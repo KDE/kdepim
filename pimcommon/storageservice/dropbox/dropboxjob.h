@@ -16,39 +16,51 @@
 */
 
 
-#ifndef DROPBOXTOKEN_H
-#define DROPBOXTOKEN_H
+#ifndef DROPBOXJOB_H
+#define DROPBOXJOB_H
 #include "pimcommon_export.h"
 #include <QObject>
 #include <QNetworkReply>
 class QNetworkAccessManager;
 namespace PimCommon {
-class PIMCOMMON_EXPORT DropBoxToken : public QObject
+class AccountInfo;
+class PIMCOMMON_EXPORT DropBoxJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit DropBoxToken(QObject *parent=0);
-    ~DropBoxToken();
-
-    void getTokenAccess();
+    explicit DropBoxJob(QObject *parent=0);
+    ~DropBoxJob();
     void requestTokenAccess();
+
     void uploadFile(const QString &filename);
-    void listFolders();
+    void listFolder();
     void accountInfo();
+    void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
+
+    void createFolder(const QString &filename=QString());
 
 private Q_SLOTS:
     void slotError(QNetworkReply::NetworkError /*error*/);    
     void slotSendDataFinished(QNetworkReply *);
-    void slotGetToken();
 
 Q_SIGNALS:
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
+
+    void createFolderDone();
+    void uploadFileDone();
+    void listFolderDone();
+
+    void accountInfoDone(const PimCommon::AccountInfo &data);
+
+    void actionFailed(const QString &data);
     void authorizationFailed();
 
 private:
+    void getTokenAccess();
     void parseRequestToken(const QString &result);
     void doAuthentification();
     void parseResponseAccessToken(const QString &data);
+    void parseAccountInfo(const QString &data);
     enum ActionType {
         NoneAction = 0,
         RequestToken,
@@ -71,8 +83,9 @@ private:
     QString mAccessOauthSignature;
     QString mOauthToken;
     ActionType mActionType;
+    bool mInitialized;
     bool mError;
 };
 }
 
-#endif // DROPBOXTOKEN_H
+#endif // DROPBOXJOB_H

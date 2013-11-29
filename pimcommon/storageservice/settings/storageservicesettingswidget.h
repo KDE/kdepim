@@ -19,23 +19,39 @@
 #define STORAGESERVICESETTINGSWIDGET_H
 
 #include <QWidget>
-
+#include <QMap>
+#include "pimcommon_export.h"
 class QListWidget;
 class QLabel;
+class QPushButton;
+class KTextEdit;
 namespace PimCommon {
-class StorageServiceSettingsWidget : public QWidget
+class StorageServiceAbstract;
+class PIMCOMMON_EXPORT StorageServiceSettingsWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit StorageServiceSettingsWidget(QWidget *parent=0);
     ~StorageServiceSettingsWidget();
 
-    void loadConfig();
-    void writeConfig();
+    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
+    QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
 
+private slots:
+    void slotServiceSelected();
+
+    void slotAddService();
+    void slotRemoveService();
 private:
+    enum ServiceData {
+        Name = Qt::UserRole + 1,
+        Type = Qt::UserRole + 2
+    };
+    QMap<QString, PimCommon::StorageServiceAbstract *> mListStorageService;
     QListWidget *mListService;
-    QLabel *mDescription;
+    KTextEdit *mDescription;
+    QPushButton *mAddService;
+    QPushButton *mRemoveService;
 };
 }
 #endif // STORAGESERVICESETTINGSWIDGET_H

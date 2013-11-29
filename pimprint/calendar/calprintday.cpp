@@ -1,7 +1,7 @@
 /*
   This file is part of the PimPrint library.
 
-  Copyright (C) 2012  Allen Winter <winter@kde.org>
+  Copyright (C) 2012-2013 Allen Winter <winter@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -200,8 +200,7 @@ void CalPrintDay::drawDays(QPainter &p,
                            cellWidth,
                            cellHeight);
 
-        drawDayBox(p, weekDate, startTime, endTime, dayBox,
-                   true, true, true);
+        drawDayBox(p, dayBox, weekDate, startTime, endTime, true);
 
     } // for i through all selected days
 }

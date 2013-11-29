@@ -99,9 +99,7 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
       m_button( 0 ),
       m_tool( 0 ),
       m_editor( 0 ),
-      m_find( 0 ),
       m_kwinConf( KSharedConfig::openConfig( QLatin1String("kwinrc") ) ),
-      m_blockEmitDataChanged( false ),
       mBlockWriteConfigDuringCommitData( false ),
       mDisplayAttribute(new KNoteDisplaySettings)
 {
@@ -162,7 +160,6 @@ void KNote::setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set
 
 void KNote::slotKill( bool force )
 {
-    m_blockEmitDataChanged = true;
     if ( !force &&
          ( KMessageBox::warningContinueCancel( this,
                                                i18n( "<qt>Do you really want to delete note <b>%1</b>?</qt>",
@@ -171,7 +168,6 @@ void KNote::slotKill( bool force )
                                                KGuiItem( i18n( "&Delete" ), QLatin1String("edit-delete") ),
                                                KStandardGuiItem::cancel(),
                                                QLatin1String("ConfirmDeleteNote") ) != KMessageBox::Continue ) ) {
-        m_blockEmitDataChanged = false;
         return;
     }
 
@@ -262,58 +258,9 @@ void KNote::setText( const QString& text )
     saveNote();
 }
 
-void KNote::find( KFind* kfind )
-{
-    m_find = kfind;
-    disconnect( m_find );
-    connect( m_find, SIGNAL(highlight(QString,int,int)),
-             this, SLOT(slotHighlight(QString,int,int)) );
-    connect( m_find, SIGNAL(findNext()), this, SLOT(slotFindNext()) );
-
-    m_find->setData( m_editor->toPlainText() );
-    slotFindNext();
-}
-
 bool KNote::isDesktopAssigned() const
 {
     return mDisplayAttribute->rememberDesktop();
-}
-
-void KNote::slotFindNext()
-{
-    // TODO: honor FindBackwards
-
-    // Let KFind inspect the text fragment, and display a dialog if a match is
-    // found
-    KFind::Result res = m_find->find();
-
-    if ( res == KFind::NoMatch ) { // i.e. at end-pos
-
-        QTextCursor c = m_editor->textCursor(); //doesn't return by reference, so we use setTextCursor
-        c.clearSelection();
-        m_editor->setTextCursor( c );
-
-        disconnect( m_find, 0, this, 0 );
-        emit sigFindFinished();
-    } else {
-        if (isHidden()) {
-            show();
-        } else {
-            raise();
-        }
-#ifdef Q_WS_X11
-        KWindowSystem::setCurrentDesktop( KWindowSystem::windowInfo( winId(),
-                                                                     NET::WMDesktop ).desktop() );
-#endif
-    }
-}
-
-void KNote::slotHighlight( const QString& /*str*/, int idx, int len )
-{
-    m_editor->textCursor().clearSelection();
-    m_editor->highlightWord( len, idx );
-
-    // TODO: modify the selection color, use a different QTextCursor?
 }
 
 bool KNote::isModified() const
@@ -325,13 +272,11 @@ bool KNote::isModified() const
 
 void KNote::slotRename()
 {
-    m_blockEmitDataChanged = true;
     // pop up dialog to get the new name
     bool ok;
     const QString oldName = m_label->text();
     const QString newName = KInputDialog::getText( QString::null, //krazy:exclude=nullstrassign for old broken gcc
                                                    i18n( "Please enter the new name:" ), m_label->text(), &ok, this );
-    m_blockEmitDataChanged = false;
     if ( !ok || (oldName == newName) ) { // handle cancel
         return;
     }
@@ -414,31 +359,34 @@ void KNote::slotClose()
 
 void KNote::slotSetAlarm()
 {
-    m_blockEmitDataChanged = true;
     QPointer<KNoteAlarmDialog> dlg = new KNoteAlarmDialog( name(), this );
     if (mItem.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
         dlg->setAlarm(mItem.attribute<NoteShared::NoteAlarmAttribute>()->dateTime());
     }
     if ( dlg->exec() ) {
+        bool needToModify = true;
         KDateTime dateTime = dlg->alarm();
         if (dateTime.isValid()) {
             NoteShared::NoteAlarmAttribute *attribute =  mItem.attribute<NoteShared::NoteAlarmAttribute>( Akonadi::Entity::AddIfMissing );
             attribute->setDateTime(dateTime);
         } else {
-            mItem.removeAttribute<NoteShared::NoteAlarmAttribute>();
+            if (mItem.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
+                mItem.removeAttribute<NoteShared::NoteAlarmAttribute>();
+            } else {
+                needToModify = false;
+            }
         }
-        //Verify it!
-        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+        if (needToModify) {
+            //Verify it!
+            Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+            connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+        }
     }
     delete dlg;
-    m_blockEmitDataChanged = false;
 }
 
 void KNote::slotPreferences()
 {
-    m_blockEmitDataChanged = true;
-
     // create a new preferences dialog...
     QPointer<KNoteSimpleConfigDialog> dialog = new KNoteSimpleConfigDialog( name(), this );
     dialog->load(mItem);
@@ -446,7 +394,6 @@ void KNote::slotPreferences()
              SLOT(slotUpdateCaption(QString)) );
     if (dialog->exec() ) {
         dialog->save(mItem);
-        m_blockEmitDataChanged = false;
         //Verify it.
         Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
         connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
@@ -507,19 +454,16 @@ void KNote::print(bool preview)
 void KNote::slotSaveAs()
 {
     // TODO: where to put pdf file support? In the printer??!??!
-    m_blockEmitDataChanged = true;
     QCheckBox *convert = 0;
     if ( m_editor->acceptRichText() ) {
         convert = new QCheckBox( 0 );
         convert->setText( i18n( "Save note as plain text" ) );
     }
-    m_blockEmitDataChanged = true;
     KUrl url;
     QPointer<KFileDialog> dlg = new KFileDialog( url, QString(), this, convert );
     dlg->setOperationMode( KFileDialog::Saving );
     dlg->setCaption( i18n( "Save As" ) );
     if( !dlg->exec() ) {
-        m_blockEmitDataChanged = false;
         delete dlg;
         return;
     }
@@ -527,7 +471,6 @@ void KNote::slotSaveAs()
     QString fileName = dlg->selectedFile();
     delete dlg;
     if ( fileName.isEmpty() ) {
-        m_blockEmitDataChanged = false;
         return;
     }
 
@@ -538,7 +481,6 @@ void KNote::slotSaveAs()
                                              i18n( "<qt>A file named <b>%1</b> already exists.<br />"
                                                    "Are you sure you want to overwrite it?</qt>",
                                                    QFileInfo( file ).fileName() ) ) != KMessageBox::Continue ) {
-        m_blockEmitDataChanged = false;
         return;
     }
 
@@ -550,7 +492,6 @@ void KNote::slotSaveAs()
             stream << m_editor->toPlainText();
         }
     }
-    m_blockEmitDataChanged = false;
 }
 
 void KNote::slotPopupActionToDesktop( int id )

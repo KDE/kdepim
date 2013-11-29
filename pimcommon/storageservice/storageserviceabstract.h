@@ -22,6 +22,21 @@
 #include <QUrl>
 
 namespace PimCommon {
+
+struct AccountInfo {
+    AccountInfo()
+        : accountSize(-1),
+          quota(-1),
+          shared(-1)
+    {
+
+    }
+    qint64 accountSize;
+    qint64 quota;
+    qint64 shared;
+    QString displayName;
+};
+
 class StorageServiceAbstract : public QObject
 {
     Q_OBJECT
@@ -29,16 +44,17 @@ public:
     explicit StorageServiceAbstract(QObject *parent=0);
     ~StorageServiceAbstract();
 
-    virtual QString name() const = 0;
-    virtual qint64 maximumSize() const = 0;
-    virtual qint64 currentSize() const = 0;
-
     virtual QUrl sharedUrl() const = 0;
     virtual void uploadFile(const QString &filename) = 0;
-    virtual QString description() const = 0;
-    virtual QUrl serviceUrl() const = 0;
+    virtual void accountInfo() = 0;
+    virtual void createFolder(const QString &folder) = 0;
+    virtual void listFolder() = 0;
+    virtual void removeConfig() = 0;
+    virtual void authentification() = 0;
 
 Q_SIGNALS:
+    void actionFailed(const QString &);
+    void accountInfoDone(const PimCommon::AccountInfo &);
     void downloadDone();
     void downloadFailed();
 };

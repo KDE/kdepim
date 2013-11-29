@@ -19,35 +19,44 @@
 #define DROPBOXSTORAGESERVICE_H
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
-
+#include "pimcommon/pimcommon_export.h"
 namespace PimCommon {
 class DropBoxToken;
-class DropBoxStorageService : public PimCommon::StorageServiceAbstract
+class PIMCOMMON_EXPORT DropBoxStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
     explicit DropBoxStorageService(QObject *parent=0);
     ~DropBoxStorageService();
 
-    QString name() const;
-    qint64 maximumSize() const;
-    qint64 currentSize() const;
-    QUrl sharedUrl() const;
+    static QString name();
+    static QString description();
+    static QUrl serviceUrl();
+    static QString serviceName();
+
+
+    void listFolder();
     void uploadFile(const QString &filename);
-    QString description() const;
-    QUrl serviceUrl() const;
+    void accountInfo();
+    void createFolder(const QString &folder);
+    void removeConfig();
+    void authentification();
+    QUrl sharedUrl() const;
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
+    void slotCreateFolderDone();
+    void slotUploadFileDone();
+    void slotAccountInfoDone(const AccountInfo &info);
+    void slotListFolderDone();
     void slotAuthorizationFailed();
 
+    void slotErrorFound(const QString &error);
 private:
     void readConfig();
     QString mAccessToken;
     QString mAccessTokenSecret;
     QString mAccessOauthSignature;
-    DropBoxToken *mDropBoxToken;
-    bool mInitialized;
 };
 }
 

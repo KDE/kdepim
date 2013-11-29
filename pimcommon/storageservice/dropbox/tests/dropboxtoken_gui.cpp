@@ -16,7 +16,7 @@
 */
 
 #include "dropboxtoken_gui.h"
-#include "../dropboxtoken.h"
+#include "../dropboxstorageservice.h"
 
 #include <QWidget>
 
@@ -36,15 +36,27 @@ DropboxTestWidget::DropboxTestWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
-    bar->addAction(QLatin1String("Initialize..."), this, SLOT(slotInitialize()));
+    bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
+    bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
+    bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
     lay->addWidget(mEdit);
     setLayout(lay);
-    mToken = new PimCommon::DropBoxToken(this);
+    mDropBoxStorageService = new PimCommon::DropBoxStorageService(this);
 }
 
-void DropboxTestWidget::slotInitialize()
+void DropboxTestWidget::slotAccountInfo()
 {
-    //TODO
+    mDropBoxStorageService->accountInfo();
+}
+
+void DropboxTestWidget::slotCreateFolder()
+{
+    mDropBoxStorageService->createFolder(QLatin1String("test"));
+}
+
+void DropboxTestWidget::slotListFolder()
+{
+    mDropBoxStorageService->listFolder();
 }
 
 int main (int argc, char **argv)

@@ -15,28 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TEST_DROPBOX_GUI_H
-#define TEST_DROPBOX_GUI_H
+#ifndef STORAGESERVICECOMBOBOX_H
+#define STORAGESERVICECOMBOBOX_H
 
-#include <QWidget>
-class QTextEdit;
+#include <QComboBox>
+#include "storageservice/storageservicemanager.h"
+
 namespace PimCommon {
-class DropBoxStorageService;
-}
-class DropboxTestWidget : public QWidget
+class StorageServiceComboBox : public QComboBox
 {
     Q_OBJECT
 public:
-    explicit DropboxTestWidget(QWidget *parent=0);
+    explicit StorageServiceComboBox(const QStringList &excludeService, QWidget *parent=0);
+    ~StorageServiceComboBox();
 
-private Q_SLOTS:
-    void slotListFolder();
-
-    void slotCreateFolder();
-    void slotAccountInfo();
+    PimCommon::StorageServiceManager::ServiceType service() const;
 private:
-    QTextEdit *mEdit;
-    PimCommon::DropBoxStorageService *mDropBoxStorageService;
+    void initialize(const QStringList &excludeService);
 };
-
-#endif
+}
+#endif // STORAGESERVICECOMBOBOX_H

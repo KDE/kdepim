@@ -14,47 +14,30 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#include "storageauthviewdialog.h"
-#include "storageauthviewwidget.h"
 
+#include "addservicestoragedialog.h"
+#include "storageservicecombobox.h"
+
+#include <KDialog>
 #include <KLocale>
 
 using namespace PimCommon;
 
-StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)
+AddServiceStorageDialog::AddServiceStorageDialog(const QStringList &excludeService, QWidget *parent)
     : KDialog(parent)
 {
-    setCaption( i18n( "Authorize" ) );
+    setCaption( i18n( "Add Service" ) );
     setButtons( Ok | Cancel );
-
-    mView = new StorageAuthViewWidget;
-    setMainWidget(mView);
-    readConfig();
+    mService = new StorageServiceComboBox(excludeService);
+    setMainWidget(mService);
 }
 
-StorageAuthViewDialog::~StorageAuthViewDialog()
+AddServiceStorageDialog::~AddServiceStorageDialog()
 {
-    writeConfig();
+
 }
 
-void StorageAuthViewDialog::readConfig()
+PimCommon::StorageServiceManager::ServiceType AddServiceStorageDialog::serviceSelected() const
 {
-    KConfigGroup group( KGlobal::config(), "StorageAuthViewDialog" );
-    const QSize size = group.readEntry( "Size", QSize(600, 400) );
-    if ( size.isValid() ) {
-        resize( size );
-    }
+    return mService->service();
 }
-
-void StorageAuthViewDialog::writeConfig()
-{
-    KConfigGroup group( KGlobal::config(), "StorageAuthViewDialog" );
-    group.writeEntry( "Size", size() );
-    group.sync();
-}
-
-void StorageAuthViewDialog::setUrl(const QUrl &url)
-{
-    mView->setUrl(url);
-}
-

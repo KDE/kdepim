@@ -30,9 +30,6 @@ public:
 
     void setUrl(const QUrl &url);
 
-Q_SIGNALS:
-    void getToken();
-
 private:
     void readConfig();
     void writeConfig();

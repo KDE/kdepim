@@ -24,6 +24,7 @@ set(libknotes2private_lib_SRCS
     ../knotes/print/knoteprintselectthemedialog.cpp
     ../knotes/print/knoteprintselectthemecombobox.cpp
     ../knotes/print/knoteprinter.cpp
+    alarms/knotesalarm.cpp
     alarms/knotealarmdialog.cpp
     print/knoteprintobject.cpp
 
@@ -73,11 +74,11 @@ install(TARGETS knotes2  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 set(kcm_knotes2_PART_SRCS configdialog/knoteconfigdialog.cpp configdialog/knotedisplayconfigwidget.cpp configdialog/knoteeditorconfigwidget.cpp configdialog/knotecollectionconfigwidget.cpp)
 
-kde4_add_plugin(kcm_knote ${kcm_knotes2_PART_SRCS})
+kde4_add_plugin(kcm_knote2 ${kcm_knotes2_PART_SRCS})
 
-target_link_libraries(kcm_knote knotes2private ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_KNEWSTUFF3_LIBS} noteshared akonadi_next)
+target_link_libraries(kcm_knote2 knotes2private ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_KNEWSTUFF3_LIBS} noteshared akonadi_next)
 
-install(TARGETS kcm_knote DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kcm_knote2 DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 

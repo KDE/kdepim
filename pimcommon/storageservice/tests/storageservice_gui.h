@@ -15,28 +15,42 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef TEST_DROPBOX_GUI_H
-#define TEST_DROPBOX_GUI_H
+#ifndef TEST_STORAGESERVICE_GUI_H
+#define TEST_STORAGESERVICE_GUI_H
 
 #include <QWidget>
+#include <KDialog>
 class QTextEdit;
 namespace PimCommon {
-class DropBoxStorageService;
+class StorageServiceManager;
+class StorageServiceSettingsWidget;
+class StorageServiceAbstract;
 }
-class DropboxTestWidget : public QWidget
+
+class StorageServiceSettingsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit DropboxTestWidget(QWidget *parent=0);
+    explicit StorageServiceSettingsDialog(QWidget *parent=0);
+    QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
+    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
 
-private Q_SLOTS:
-    void slotListFolder();
+private:
+    PimCommon::StorageServiceSettingsWidget *mSettings;
+};
 
-    void slotCreateFolder();
-    void slotAccountInfo();
+class StorageServiceTestWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit StorageServiceTestWidget(QWidget *parent=0);
+
+private slots:
+    void slotSettings();
+
 private:
     QTextEdit *mEdit;
-    PimCommon::DropBoxStorageService *mDropBoxStorageService;
+    PimCommon::StorageServiceManager *mStorageManager;
 };
 
 #endif

@@ -17,15 +17,151 @@
 
 #include "storageservicemanager.h"
 
+#include "settings/pimcommonsettings.h"
+
+#include "dropbox/dropboxstorageservice.h"
+#include "hubic/hubicstorageservice.h"
+
+#include <KLocale>
+#include <KFileDialog>
+
+#include <QMenu>
+
 using namespace PimCommon;
 
 StorageServiceManager::StorageServiceManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mMenuService(0)
 {
+    readConfig();
 }
 
 StorageServiceManager::~StorageServiceManager()
 {
-
+    qDeleteAll(mListService);
 }
 
+QMap<QString, StorageServiceAbstract *> StorageServiceManager::listService() const
+{
+    return mListService;
+}
+
+void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbstract *> &lst)
+{
+    mListService = lst;
+    delete mMenuService;
+    mMenuService = 0;
+    writeConfig();
+    Q_EMIT servicesChanged();
+}
+
+QMenu *StorageServiceManager::menuServices()
+{
+    if (!mMenuService) {
+        mMenuService = new QMenu(i18n("Storage service"));
+        if (mListService.isEmpty()) {
+            QAction *act = new QAction(i18n("No Storage service configured"), mMenuService);
+            act->setEnabled(false);
+            mMenuService->addAction(act);
+        } else {
+            QMapIterator<QString, StorageServiceAbstract *> i(mListService);
+            while (i.hasNext()) {
+                i.next();
+                //FIXME
+                QAction *act = new QAction(/*serviceToI18n(*/i.key(), mMenuService);
+                act->setData(i.key());
+                connect(act, SIGNAL(toggled(bool)), this, SLOT(slotShareFile()));
+                mMenuService->addAction(act);
+            }
+        }
+    }
+    return mMenuService;
+}
+
+void StorageServiceManager::slotShareFile()
+{
+    QAction *act = qobject_cast< QAction* >( sender() );
+    if ( act ) {
+        const QString type = act->data().toString();
+        if (mListService.contains(type)) {
+            StorageServiceAbstract *service = mListService.value(type);
+            const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
+            if (!fileName.isEmpty()) {
+                service->uploadFile(fileName);
+            }
+        }
+    }
+}
+
+void StorageServiceManager::readConfig()
+{
+    const QStringList services = PimCommon::PimCommonSettings::self()->services();
+    Q_FOREACH(const QString &service, services) {
+        if (service == serviceName(DropBox)) {
+            if (!mListService.contains(serviceName(DropBox))) {
+                mListService.insert(service, new DropBoxStorageService());
+            }
+        } else if (service == serviceName(Hubic)) {
+            if (!mListService.contains(serviceName(Hubic))) {
+                mListService.insert(service, new HubicStorageService());
+            }
+        }
+    }
+}
+
+void StorageServiceManager::writeConfig()
+{
+    PimCommon::PimCommonSettings::self()->setServices(mListService.keys());
+    PimCommon::PimCommonSettings::self()->writeConfig();
+}
+
+QString StorageServiceManager::description(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return PimCommon::DropBoxStorageService::description();
+    case Hubic:
+        return PimCommon::HubicStorageService::description();
+    default:
+        return QString();
+    }
+    return QString();
+}
+
+QUrl StorageServiceManager::serviceUrl(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return PimCommon::DropBoxStorageService::serviceUrl();
+    case Hubic:
+        return PimCommon::HubicStorageService::serviceUrl();
+    default:
+        return QString();
+    }
+    return QString();
+}
+
+
+QString StorageServiceManager::serviceName(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return PimCommon::DropBoxStorageService::serviceName();
+    case Hubic:
+        return PimCommon::HubicStorageService::serviceName();
+    default:
+        return QString();
+    }
+}
+
+QString StorageServiceManager::serviceToI18n(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return PimCommon::DropBoxStorageService::name();
+    case Hubic:
+        return PimCommon::HubicStorageService::name();
+    default:
+        return QString();
+    }
+}

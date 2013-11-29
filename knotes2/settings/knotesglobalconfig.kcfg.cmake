@@ -11,6 +11,12 @@
     </entry>
   </group>
 
+  <group name="Misc">
+    <entry name="SystemTrayShowNotes" type="Bool">
+      <default>true</default>
+    </entry>
+  </group>
+
   <group name="SelectNoteFolder">
       <entry name="DefaultFolder" type="LongLong">
         <default>-1</default>

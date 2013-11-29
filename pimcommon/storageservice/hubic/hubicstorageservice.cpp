@@ -41,19 +41,36 @@ void HubicStorageService::readConfig()
 
 }
 
-QString HubicStorageService::name() const
+void HubicStorageService::removeConfig()
+{
+    KConfigGroup grp(KGlobal::config(), "Hubic Settings");
+    grp.deleteGroup();
+    KGlobal::config()->sync();
+}
+
+void HubicStorageService::authentification()
+{
+
+}
+
+void HubicStorageService::listFolder()
+{
+
+}
+
+void HubicStorageService::createFolder(const QString &folder)
+{
+
+}
+
+void HubicStorageService::accountInfo()
+{
+
+}
+
+QString HubicStorageService::name()
 {
     return i18n("Hubic");
-}
-
-qint64 HubicStorageService::maximumSize() const
-{
-    return -1;
-}
-
-qint64 HubicStorageService::currentSize() const
-{
-    return -1;
 }
 
 QUrl HubicStorageService::sharedUrl() const
@@ -66,12 +83,19 @@ void HubicStorageService::uploadFile(const QString &filename)
     //TODO
 }
 
-QString HubicStorageService::description() const
+QString HubicStorageService::description()
 {
-    return QString();
+    return i18n("Hubic is a file hosting service operated by Ovh, Inc. that offers cloud storage, file synchronization, and client software.");
 }
 
-QUrl HubicStorageService::serviceUrl() const
+QUrl HubicStorageService::serviceUrl()
 {
-    return QUrl();
+    return QUrl(QLatin1String("https://hubic.com"));
 }
+
+QString HubicStorageService::serviceName()
+{
+    return QLatin1String("hubic");
+}
+
+
