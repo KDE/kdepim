@@ -34,6 +34,8 @@ public:
     void loadConfig();
     void writeConfig();
 
+    QStringList listServiceRemoved() const;
+
 private slots:
     void slotServiceSelected();
 
@@ -42,7 +44,9 @@ private slots:
 private:
     enum ServiceData {
         Name = Qt::UserRole + 1,
+        Type = Qt::UserRole + 2
     };
+    QStringList mListServiceRemoved;
     QListWidget *mListService;
     QLabel *mDescription;
     QPushButton *mAddService;

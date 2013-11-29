@@ -70,7 +70,13 @@ StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 
 void StorageServiceSettingsWidget::slotRemoveService()
 {
-
+    if (mListService->currentItem()) {
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Delete Service"), i18n("Do you want to delete this service '%1'?", mListService->currentItem()->text()))) {
+            QListWidgetItem *item = mListService->currentItem();
+            mListServiceRemoved.append(item->data(Name).toString());
+            delete item;
+        }
+    }
 }
 
 void StorageServiceSettingsWidget::slotAddService()
@@ -87,34 +93,50 @@ void StorageServiceSettingsWidget::slotAddService()
 void StorageServiceSettingsWidget::slotServiceSelected()
 {
     if (mListService->currentItem()) {
-        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Delete Service"), i18n("Do you want to delete this service '%1'?", mListService->currentItem()->text()))) {
-            //TODO
-        }
+        PimCommon::StorageServiceManager::ServiceType type = static_cast<PimCommon::StorageServiceManager::ServiceType>(mListService->currentItem()->data(Type).toInt());
+
     }
+    //TODO show info
 }
 
 void StorageServiceSettingsWidget::loadConfig()
 {
     const QStringList services = PimCommon::PimCommonSettings::self()->services();
     Q_FOREACH(const QString &service, services) {
-
         QString serviceName;
-        if (service == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::DropBox))
+        PimCommon::StorageServiceManager::ServiceType type;
+        if (service == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::DropBox)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::DropBox);
-        else if (service == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Hubic))
+            type = PimCommon::StorageServiceManager::DropBox;
+        } else if (service == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Hubic)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Hubic);
+            type = PimCommon::StorageServiceManager::Hubic;
+        }
 
         if (serviceName.isEmpty())
             continue;
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(serviceName);
         item->setData(Name,service);
+        item->setData(Type, type);
         mListService->addItem(item);
     }
 }
 
 void StorageServiceSettingsWidget::writeConfig()
 {
-    //TODO
+    QStringList lst;
+    for (int i=0; i < mListService->count(); ++i) {
+        const QString serviceName = mListService->item(i)->data(Name).toString();
+        if (!lst.contains(serviceName)) {
+            lst.append(serviceName);
+        }
+    }
+    PimCommon::PimCommonSettings::self()->setServices(lst);
+}
+
+QStringList StorageServiceSettingsWidget::listServiceRemoved() const
+{
+    return mListServiceRemoved;
 }
 

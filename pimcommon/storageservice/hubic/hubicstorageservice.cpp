@@ -43,7 +43,9 @@ void HubicStorageService::readConfig()
 
 void HubicStorageService::removeConfig()
 {
-    //TODO
+    KConfigGroup grp(KGlobal::config(), "Hubic Settings");
+    grp.deleteGroup();
+    KGlobal::config()->sync();
 }
 
 void HubicStorageService::authentification()
@@ -66,7 +68,7 @@ void HubicStorageService::accountInfo()
 
 }
 
-QString HubicStorageService::name() const
+QString HubicStorageService::name()
 {
     return i18n("Hubic");
 }
@@ -81,12 +83,19 @@ void HubicStorageService::uploadFile(const QString &filename)
     //TODO
 }
 
-QString HubicStorageService::description() const
+QString HubicStorageService::description()
 {
     return QString();
 }
 
-QUrl HubicStorageService::serviceUrl() const
+QUrl HubicStorageService::serviceUrl()
 {
     return QUrl(QLatin1String("https://hubic.com"));
 }
+
+QString HubicStorageService::serviceName()
+{
+    return QLatin1String("hubic");
+}
+
+

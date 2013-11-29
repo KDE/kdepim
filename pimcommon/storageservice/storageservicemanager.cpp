@@ -60,13 +60,40 @@ void StorageServiceManager::writeConfig()
 }
 
 
+QString StorageServiceManager::description(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return PimCommon::DropBoxStorageService::description();
+    case Hubic:
+        return PimCommon::HubicStorageService::description();
+    default:
+        return QString();
+    }
+    return QString();
+}
+
+QUrl StorageServiceManager::serviceUrl(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return PimCommon::DropBoxStorageService::serviceUrl();
+    case Hubic:
+        return PimCommon::HubicStorageService::serviceUrl();
+    default:
+        return QString();
+    }
+    return QString();
+}
+
+
 QString StorageServiceManager::serviceName(ServiceType type)
 {
     switch(type) {
     case DropBox:
-        return QLatin1String("dropbox");
+        return PimCommon::DropBoxStorageService::serviceName();
     case Hubic:
-        return QLatin1String("hubic");
+        return PimCommon::HubicStorageService::serviceName();
     default:
         return QString();
     }
@@ -76,9 +103,9 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
 {
     switch(type) {
     case DropBox:
-        return i18n("Dropbox");
+        return PimCommon::DropBoxStorageService::name();
     case Hubic:
-        return i18n("Hubic");
+        return PimCommon::HubicStorageService::name();
     default:
         return QString();
     }

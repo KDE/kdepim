@@ -29,11 +29,11 @@ public:
     explicit DropBoxStorageService(QObject *parent=0);
     ~DropBoxStorageService();
 
-    QString name() const;
-    QUrl sharedUrl() const;
+    static QString name();
+    static QString description();
+    static QUrl serviceUrl();
+    static QString serviceName();
 
-    QString description() const;
-    QUrl serviceUrl() const;
 
     void listFolder();
     void uploadFile(const QString &filename);
@@ -41,6 +41,7 @@ public:
     void createFolder(const QString &folder);
     void removeConfig();
     void authentification();
+    QUrl sharedUrl() const;
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

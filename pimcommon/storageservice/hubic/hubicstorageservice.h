@@ -28,14 +28,16 @@ public:
     explicit HubicStorageService(QObject *parent=0);
     ~HubicStorageService();
 
-    QString name() const;
+    static QString name();
+    static QString description();
+    static QUrl serviceUrl();
+    static QString serviceName();
+
     QUrl sharedUrl() const;
     void uploadFile(const QString &filename);
     void accountInfo();
     void createFolder(const QString &folder);
     void listFolder();
-    QString description() const;
-    QUrl serviceUrl() const;
     void removeConfig();
     void authentification();
 

@@ -40,7 +40,8 @@ public:
 
     static QString serviceToI18n(ServiceType type);
     static QString serviceName(ServiceType type);
-
+    static QString description(ServiceType type);
+    static QUrl serviceUrl(ServiceType type);
 private:
     void readConfig();
     void writeConfig();

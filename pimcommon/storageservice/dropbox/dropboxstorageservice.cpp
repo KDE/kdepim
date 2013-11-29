@@ -171,23 +171,31 @@ void DropBoxStorageService::slotAuthorizationFailed()
     mAccessOauthSignature.clear();
 }
 
-QString DropBoxStorageService::name() const
-{
-    return i18n("DropBox");
-}
-
 QUrl DropBoxStorageService::sharedUrl() const
 {
     return QUrl();
 }
 
 
-QString DropBoxStorageService::description() const
+QString DropBoxStorageService::name()
+{
+    return i18n("DropBox");
+}
+
+
+
+QString DropBoxStorageService::description()
 {
     return QString();
 }
 
-QUrl DropBoxStorageService::serviceUrl() const
+QUrl DropBoxStorageService::serviceUrl()
 {
     return QUrl(QLatin1String("https://www.dropbox.com/"));
 }
+
+QString DropBoxStorageService::serviceName()
+{
+    return QLatin1String("dropbox");
+}
+
