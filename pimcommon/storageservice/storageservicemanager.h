@@ -22,6 +22,9 @@
 #include <QMap>
 #include "pimcommon_export.h"
 #include "storageserviceabstract.h"
+
+class QMenu;
+
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceManager : public QObject
 {
@@ -38,15 +41,26 @@ public:
 
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
+    QMenu *menuServices();
+    QMap<QString, StorageServiceAbstract *> listService() const;
+    void setListService(const QMap<QString, StorageServiceAbstract *> &lst);
 
     static QString serviceToI18n(ServiceType type);
     static QString serviceName(ServiceType type);
     static QString description(ServiceType type);
     static QUrl serviceUrl(ServiceType type);
+
+Q_SIGNALS:
+    void servicesChanged();
+
+private Q_SLOTS:
+    void slotShareFile();
+
 private:
     void readConfig();
     void writeConfig();
     QMap<QString, StorageServiceAbstract *> mListService;
+    QMenu *mMenuService;
 };
 }
 

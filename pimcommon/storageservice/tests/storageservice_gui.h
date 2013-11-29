@@ -19,14 +19,38 @@
 #define TEST_STORAGESERVICE_GUI_H
 
 #include <QWidget>
+#include <KDialog>
 class QTextEdit;
+namespace PimCommon {
+class StorageServiceManager;
+class StorageServiceSettingsWidget;
+class StorageServiceAbstract;
+}
+
+class StorageServiceSettingsDialog : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit StorageServiceSettingsDialog(QWidget *parent=0);
+    QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
+    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
+
+private:
+    PimCommon::StorageServiceSettingsWidget *mSettings;
+};
+
 class StorageServiceTestWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit StorageServiceTestWidget(QWidget *parent=0);
 
+private slots:
+    void slotSettings();
+
+private:
     QTextEdit *mEdit;
+    PimCommon::StorageServiceManager *mStorageManager;
 };
 
 #endif

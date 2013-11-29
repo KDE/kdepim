@@ -85,7 +85,7 @@ void HubicStorageService::uploadFile(const QString &filename)
 
 QString HubicStorageService::description()
 {
-    return QString();
+    return i18n("Hubic is a file hosting service operated by Ovh, Inc. that offers cloud storage, file synchronization, and client software.");
 }
 
 QUrl HubicStorageService::serviceUrl()

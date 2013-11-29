@@ -26,12 +26,12 @@ class StorageServiceComboBox : public QComboBox
 {
     Q_OBJECT
 public:
-    explicit StorageServiceComboBox(QWidget *parent=0);
+    explicit StorageServiceComboBox(const QStringList &excludeService, QWidget *parent=0);
     ~StorageServiceComboBox();
 
     PimCommon::StorageServiceManager::ServiceType service() const;
 private:
-    void initialize();
+    void initialize(const QStringList &excludeService);
 };
 }
 #endif // STORAGESERVICECOMBOBOX_H

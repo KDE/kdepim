@@ -20,10 +20,10 @@
 
 using namespace PimCommon;
 
-StorageServiceComboBox::StorageServiceComboBox(QWidget *parent)
+StorageServiceComboBox::StorageServiceComboBox(const QStringList &excludeService, QWidget *parent)
     : QComboBox(parent)
 {
-    initialize();
+    initialize(excludeService);
 }
 
 StorageServiceComboBox::~StorageServiceComboBox()
@@ -31,11 +31,13 @@ StorageServiceComboBox::~StorageServiceComboBox()
 
 }
 
-void StorageServiceComboBox::initialize()
+void StorageServiceComboBox::initialize(const QStringList &excludeService)
 {
     for (int i = 0; i < PimCommon::StorageServiceManager::EndListService; ++i) {
         const PimCommon::StorageServiceManager::ServiceType type = static_cast<PimCommon::StorageServiceManager::ServiceType>(i);
-        addItem(PimCommon::StorageServiceManager::serviceToI18n(type), type);
+        if (!excludeService.contains(PimCommon::StorageServiceManager::serviceName(type))) {
+            addItem(PimCommon::StorageServiceManager::serviceToI18n(type), type);
+        }
     }
 }
 

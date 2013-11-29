@@ -120,7 +120,7 @@ void DropBoxStorageService::accountInfo()
 
 void DropBoxStorageService::slotAccountInfoDone(const PimCommon::AccountInfo &info)
 {
-    //qDebug()<<" account info "<<info;
+    Q_EMIT accountInfoDone(info);
 }
 
 void DropBoxStorageService::createFolder(const QString &folder)
@@ -182,11 +182,9 @@ QString DropBoxStorageService::name()
     return i18n("DropBox");
 }
 
-
-
 QString DropBoxStorageService::description()
 {
-    return QString();
+    return i18n("Dropbox is a file hosting service operated by Dropbox, Inc. that offers cloud storage, file synchronization, and client software.");
 }
 
 QUrl DropBoxStorageService::serviceUrl()

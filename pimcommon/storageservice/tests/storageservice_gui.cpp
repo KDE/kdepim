@@ -16,6 +16,7 @@
 */
 
 #include "storageservice_gui.h"
+#include "storageservice/storageservicemanager.h"
 #include "storageservice/settings/storageservicesettingswidget.h"
 #include <QWidget>
 
@@ -23,17 +24,53 @@
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocale>
+#include <KDialog>
 
 #include <QVBoxLayout>
 #include <QToolBar>
 #include <QTextEdit>
+#include <QPointer>
+
+StorageServiceSettingsDialog::StorageServiceSettingsDialog(QWidget *parent)
+    : KDialog(parent)
+{
+    setButtons(Ok|Cancel);
+    mSettings = new PimCommon::StorageServiceSettingsWidget;
+    setMainWidget(mSettings);
+}
+
+QMap<QString, PimCommon::StorageServiceAbstract *> StorageServiceSettingsDialog::listService() const
+{
+    return mSettings->listService();
+}
+
+void StorageServiceSettingsDialog::setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst)
+{
+    mSettings->setListService(lst);
+}
 
 StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     : QWidget(parent)
 {
-    mEdit = new QTextEdit;
     QVBoxLayout *lay = new QVBoxLayout;
+    mStorageManager = new PimCommon::StorageServiceManager(this);
+    QToolBar *bar = new QToolBar;
+    lay->addWidget(bar);
+    bar->addAction(QLatin1String("Settings..."), this, SLOT(slotSettings()));
+
+    mEdit = new QTextEdit;
+    lay->addWidget(mEdit);
     setLayout(lay);
+}
+
+void StorageServiceTestWidget::slotSettings()
+{
+    QPointer<StorageServiceSettingsDialog> dlg = new StorageServiceSettingsDialog(this);
+    dlg->setListService(mStorageManager->listService());
+    if (dlg->exec()) {
+        mStorageManager->setListService(dlg->listService());
+    }
+    delete dlg;
 }
 
 int main (int argc, char **argv)
@@ -42,7 +79,7 @@ int main (int argc, char **argv)
                        "1.0", ki18n("Test for storageservice"));
 
     KApplication app;
-    PimCommon::StorageServiceSettingsWidget *w = new PimCommon::StorageServiceSettingsWidget;
+    StorageServiceTestWidget *w = new StorageServiceTestWidget;
     w->show();
     return app.exec();
 }
