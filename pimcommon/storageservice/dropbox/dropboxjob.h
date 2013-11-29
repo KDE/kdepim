@@ -23,6 +23,7 @@
 #include <QNetworkReply>
 class QNetworkAccessManager;
 namespace PimCommon {
+class AccountInfo;
 class PIMCOMMON_EXPORT DropBoxJob : public QObject
 {
     Q_OBJECT
@@ -49,7 +50,7 @@ Q_SIGNALS:
     void uploadFileDone();
     void listFolderDone();
 
-    void accountInfoDone(const QString &data);
+    void accountInfoDone(const PimCommon::AccountInfo &data);
 
     void actionFailed(const QString &data);
     void authorizationFailed();

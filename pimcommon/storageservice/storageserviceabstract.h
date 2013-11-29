@@ -22,6 +22,21 @@
 #include <QUrl>
 
 namespace PimCommon {
+
+struct AccountInfo {
+    AccountInfo()
+        : accountSize(-1),
+          quota(-1),
+          shared(-1)
+    {
+
+    }
+    qint64 accountSize;
+    qint64 quota;
+    qint64 shared;
+    QString displayName;
+};
+
 class StorageServiceAbstract : public QObject
 {
     Q_OBJECT

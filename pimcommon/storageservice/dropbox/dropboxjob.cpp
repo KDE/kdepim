@@ -18,6 +18,7 @@
 
 #include "dropboxjob.h"
 #include "storageservice/storageauthviewdialog.h"
+#include "storageservice/storageserviceabstract.h"
 
 #include <KLocale>
 
@@ -158,10 +159,10 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
+                deleteLater();
+                break;
             }
         }
-
-
         return;
     }
     switch(mActionType) {
@@ -198,9 +199,25 @@ void DropBoxJob::parseAccountInfo(const QString &data)
     QJson::Parser parser;
     bool ok;
 
-    QMap<QString, QVariant> accountInfo = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" accountInfo"<<accountInfo;
-    Q_EMIT accountInfoDone(data);
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    PimCommon::AccountInfo accountInfo;
+    if (info.contains(QLatin1String("display_name")))
+        accountInfo.displayName = info.value(QLatin1String("display_name")).toString();
+    if (info.contains(QLatin1String("quota_info"))) {
+        QMap<QString, QVariant> quotaInfo = info.value(QLatin1String("quota_info")).toMap();
+        if (quotaInfo.contains(QLatin1String("quota"))) {
+            accountInfo.quota = quotaInfo.value(QLatin1String("quota")).toLongLong();
+        }
+        if (quotaInfo.contains(QLatin1String("normal"))) {
+            accountInfo.accountSize = quotaInfo.value(QLatin1String("normal")).toLongLong();
+        }
+        if (quotaInfo.contains(QLatin1String("shared"))) {
+            accountInfo.shared = quotaInfo.value(QLatin1String("shared")).toLongLong();
+        }
+    }
+
+
+    Q_EMIT accountInfoDone(accountInfo);
     deleteLater();
 }
 
