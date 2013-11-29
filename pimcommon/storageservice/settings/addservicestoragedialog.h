@@ -14,23 +14,22 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-#ifndef STORAGESERVICECOMBOBOX_H
-#define STORAGESERVICECOMBOBOX_H
-
-#include <QComboBox>
-
+#ifndef ADDSERVICESTORAGEDIALOG_H
+#define ADDSERVICESTORAGEDIALOG_H
+#include <KDialog>
 namespace PimCommon {
-class StorageServiceComboBox : public QComboBox
+class StorageServiceComboBox;
+class AddServiceStorageDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceComboBox(QWidget *parent=0);
-    ~StorageServiceComboBox();
+    explicit AddServiceStorageDialog(QWidget *parent = 0);
+    ~AddServiceStorageDialog();
 
-    QString service() const;
+    QString serviceSelected() const;
 private:
-    void initialize();
+    StorageServiceComboBox *mService;
 };
 }
-#endif // STORAGESERVICECOMBOBOX_H
+
+#endif // ADDSERVICESTORAGEDIALOG_H

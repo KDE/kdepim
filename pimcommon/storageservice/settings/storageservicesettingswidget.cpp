@@ -16,30 +16,71 @@
 */
 
 #include "storageservicesettingswidget.h"
-
+#include "addservicestoragedialog.h"
 #include <KLocale>
 
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QListWidget>
+#include <QPushButton>
+#include <QPointer>
 
 using namespace PimCommon;
 
 StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+
+    QVBoxLayout *vlay = new QVBoxLayout;
+
     mListService = new QListWidget;
-    lay->addWidget(mListService);
+    vlay->addWidget(mListService);
+
+    QHBoxLayout *hlay = new QHBoxLayout;
+
+    mAddService = new QPushButton(i18n("Add..."));
+    connect(mAddService, SIGNAL(clicked()), this, SLOT(slotAddService()));
+    hlay->addWidget(mAddService);
+
+    mRemoveService = new QPushButton(i18n("Remove"));
+    connect(mRemoveService, SIGNAL(clicked()), this, SLOT(slotRemoveService()));
+    hlay->addWidget(mRemoveService);
+
+    vlay->addLayout(hlay);
+
+
+    mainLayout->addLayout(vlay);
 
     mDescription = new QLabel;
-    lay->addWidget(mDescription);
-    setLayout(lay);
+    mainLayout->addWidget(mDescription);
+    setLayout(mainLayout);
+    connect(mListService, SIGNAL(itemSelectionChanged()), this, SLOT(slotServiceSelected()));
 }
 
 StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 {
 
+}
+
+void StorageServiceSettingsWidget::slotRemoveService()
+{
+
+}
+
+void StorageServiceSettingsWidget::slotAddService()
+{
+    QPointer<AddServiceStorageDialog> dlg = new AddServiceStorageDialog(this);
+    if (dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
+}
+
+void StorageServiceSettingsWidget::slotServiceSelected()
+{
+    //TODO
 }
 
 void StorageServiceSettingsWidget::loadConfig()

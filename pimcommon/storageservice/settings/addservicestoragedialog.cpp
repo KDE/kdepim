@@ -15,22 +15,29 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STORAGESERVICECOMBOBOX_H
-#define STORAGESERVICECOMBOBOX_H
+#include "addservicestoragedialog.h"
+#include "storageservicecombobox.h"
 
-#include <QComboBox>
+#include <KDialog>
+#include <KLocale>
 
-namespace PimCommon {
-class StorageServiceComboBox : public QComboBox
+using namespace PimCommon;
+
+AddServiceStorageDialog::AddServiceStorageDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit StorageServiceComboBox(QWidget *parent=0);
-    ~StorageServiceComboBox();
-
-    QString service() const;
-private:
-    void initialize();
-};
+    setCaption( i18n( "Add Service" ) );
+    setButtons( Ok | Cancel );
+    mService = new StorageServiceComboBox();
+    setMainWidget(mService);
 }
-#endif // STORAGESERVICECOMBOBOX_H
+
+AddServiceStorageDialog::~AddServiceStorageDialog()
+{
+
+}
+
+QString AddServiceStorageDialog::serviceSelected() const
+{
+    return mService->service();
+}

@@ -16,6 +16,7 @@
 */
 
 #include "storageservicecombobox.h"
+#include "storageservice/storageservicemanager.h"
 
 using namespace PimCommon;
 
@@ -32,5 +33,17 @@ StorageServiceComboBox::~StorageServiceComboBox()
 
 void StorageServiceComboBox::initialize()
 {
-    //TODO
+    for (int i = 0; i < PimCommon::StorageServiceManager::EndListService; ++i) {
+        const PimCommon::StorageServiceManager::ServiceType type = static_cast<PimCommon::StorageServiceManager::ServiceType>(i);
+        addItem(PimCommon::StorageServiceManager::serviceToI18n(type), type);
+    }
+}
+
+QString StorageServiceComboBox::service() const
+{
+    if (currentIndex()!=-1) {
+        const QString serviceStr = itemData(currentIndex()).toString();
+        return serviceStr;
+    }
+    return QString();
 }

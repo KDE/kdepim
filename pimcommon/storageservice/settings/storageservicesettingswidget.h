@@ -22,6 +22,7 @@
 
 class QListWidget;
 class QLabel;
+class QPushButton;
 namespace PimCommon {
 class StorageServiceSettingsWidget : public QWidget
 {
@@ -33,9 +34,16 @@ public:
     void loadConfig();
     void writeConfig();
 
+private slots:
+    void slotServiceSelected();
+
+    void slotAddService();
+    void slotRemoveService();
 private:
     QListWidget *mListService;
     QLabel *mDescription;
+    QPushButton *mAddService;
+    QPushButton *mRemoveService;
 };
 }
 #endif // STORAGESERVICESETTINGSWIDGET_H
