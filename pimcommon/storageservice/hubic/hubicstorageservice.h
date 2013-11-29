@@ -37,6 +37,7 @@ public:
     QString description() const;
     QUrl serviceUrl() const;
     void removeConfig();
+    void authentification();
 
 private:
     void readConfig();

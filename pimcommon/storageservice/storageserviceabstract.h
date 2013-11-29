@@ -54,6 +54,7 @@ public:
     virtual QString description() const = 0;
     virtual QUrl serviceUrl() const = 0;
     virtual void removeConfig() = 0;
+    virtual void authentification() = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &);

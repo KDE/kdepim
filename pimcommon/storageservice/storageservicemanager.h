@@ -38,8 +38,11 @@ public:
     ~StorageServiceManager();
 
     static QString serviceToI18n(ServiceType type);
+    static QString serviceName(ServiceType type);
 
 private:
+    void readConfig();
+    void writeConfig();
     QList<StorageServiceAbstract *> mListService;
 };
 }

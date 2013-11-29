@@ -47,6 +47,16 @@ void DropBoxStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
+void DropBoxStorageService::authentification()
+{
+    if (mAccessToken.isEmpty()) {
+        DropBoxJob *job = new DropBoxJob(this);
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
+        connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
+        job->requestTokenAccess();
+    }
+}
+
 void DropBoxStorageService::readConfig()
 {
     KConfigGroup grp(KGlobal::config(), "Dropbox Settings");

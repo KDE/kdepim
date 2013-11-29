@@ -17,6 +17,9 @@
 
 #include "storageservicemanager.h"
 
+#include "dropbox/dropboxstorageservice.h"
+#include "hubic/hubicstorageservice.h"
+
 #include <KLocale>
 
 using namespace PimCommon;
@@ -31,6 +34,28 @@ StorageServiceManager::~StorageServiceManager()
 
 }
 
+void StorageServiceManager::readConfig()
+{
+
+}
+
+void StorageServiceManager::writeConfig()
+{
+
+}
+
+
+QString StorageServiceManager::serviceName(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return QLatin1String("dropbox");
+    case Hubic:
+        return QLatin1String("hubic");
+    default:
+        return QString();
+    }
+}
 
 QString StorageServiceManager::serviceToI18n(ServiceType type)
 {
