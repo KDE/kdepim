@@ -39,11 +39,11 @@ void StorageServiceComboBox::initialize()
     }
 }
 
-QString StorageServiceComboBox::service() const
+PimCommon::StorageServiceManager::ServiceType StorageServiceComboBox::service() const
 {
     if (currentIndex()!=-1) {
-        const QString serviceStr = itemData(currentIndex()).toString();
-        return serviceStr;
+        const PimCommon::StorageServiceManager::ServiceType serviceType = static_cast<PimCommon::StorageServiceManager::ServiceType>(itemData(currentIndex()).toInt());
+        return serviceType;
     }
-    return QString();
+    return PimCommon::StorageServiceManager::Unknown;
 }

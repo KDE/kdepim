@@ -19,6 +19,7 @@
 #define STORAGESERVICECOMBOBOX_H
 
 #include <QComboBox>
+#include "storageservice/storageservicemanager.h"
 
 namespace PimCommon {
 class StorageServiceComboBox : public QComboBox
@@ -28,7 +29,7 @@ public:
     explicit StorageServiceComboBox(QWidget *parent=0);
     ~StorageServiceComboBox();
 
-    QString service() const;
+    PimCommon::StorageServiceManager::ServiceType service() const;
 private:
     void initialize();
 };

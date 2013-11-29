@@ -37,7 +37,7 @@ AddServiceStorageDialog::~AddServiceStorageDialog()
 
 }
 
-QString AddServiceStorageDialog::serviceSelected() const
+PimCommon::StorageServiceManager::ServiceType AddServiceStorageDialog::serviceSelected() const
 {
     return mService->service();
 }

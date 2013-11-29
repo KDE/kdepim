@@ -21,6 +21,7 @@
 #include "settings/pimcommonsettings.h"
 #include <KLocale>
 #include <KMessageBox>
+#include <KTextEdit>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -32,8 +33,9 @@
 
 using namespace PimCommon;
 
-StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
-    : QWidget(parent)
+StorageServiceSettingsWidget::StorageServiceSettingsWidget(PimCommon::StorageServiceManager *manager, QWidget *parent)
+    : QWidget(parent),
+      mManager(manager)
 {
     QHBoxLayout *mainLayout = new QHBoxLayout;
 
@@ -57,7 +59,10 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
 
     mainLayout->addLayout(vlay);
 
-    mDescription = new QLabel;
+    mDescription = new KTextEdit;
+    mDescription->setReadOnly(true);
+    mDescription->enableFindReplace(false);
+
     mainLayout->addWidget(mDescription);
     setLayout(mainLayout);
     connect(mListService, SIGNAL(itemSelectionChanged()), this, SLOT(slotServiceSelected()));
@@ -83,8 +88,8 @@ void StorageServiceSettingsWidget::slotAddService()
 {
     QPointer<AddServiceStorageDialog> dlg = new AddServiceStorageDialog(this);
     if (dlg->exec()) {
-        const QString service = dlg->serviceSelected();
-        qDebug()<<" service selected "<<service;
+        const PimCommon::StorageServiceManager::ServiceType type = dlg->serviceSelected();
+        qDebug()<<" service selected "<<type;
         //TODO
     }
     delete dlg;
@@ -93,10 +98,14 @@ void StorageServiceSettingsWidget::slotAddService()
 void StorageServiceSettingsWidget::slotServiceSelected()
 {
     if (mListService->currentItem()) {
-        PimCommon::StorageServiceManager::ServiceType type = static_cast<PimCommon::StorageServiceManager::ServiceType>(mListService->currentItem()->data(Type).toInt());
-
+        const PimCommon::StorageServiceManager::ServiceType type = static_cast<PimCommon::StorageServiceManager::ServiceType>(mListService->currentItem()->data(Type).toInt());
+        const QString description = PimCommon::StorageServiceManager::description(type);
+        const QString name = PimCommon::StorageServiceManager::serviceToI18n(type);
+        const QUrl serviceUrl = PimCommon::StorageServiceManager::serviceUrl(type);
+        const QString descriptionStr = QLatin1String("<b>") + i18n("Name: %1",name) + QLatin1String("</b><br>") + description + QLatin1String("<br>") +
+                QString::fromLatin1("<a href=\"%1\">").arg(serviceUrl.path()) + serviceUrl.path() + QLatin1String("</a>");
+        mDescription->setText(descriptionStr);
     }
-    //TODO show info
 }
 
 void StorageServiceSettingsWidget::loadConfig()

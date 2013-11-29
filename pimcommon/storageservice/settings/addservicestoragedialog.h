@@ -17,6 +17,8 @@
 #ifndef ADDSERVICESTORAGEDIALOG_H
 #define ADDSERVICESTORAGEDIALOG_H
 #include <KDialog>
+#include "storageservice/storageservicemanager.h"
+
 namespace PimCommon {
 class StorageServiceComboBox;
 class AddServiceStorageDialog : public KDialog
@@ -26,7 +28,7 @@ public:
     explicit AddServiceStorageDialog(QWidget *parent = 0);
     ~AddServiceStorageDialog();
 
-    QString serviceSelected() const;
+    PimCommon::StorageServiceManager::ServiceType serviceSelected() const;
 private:
     StorageServiceComboBox *mService;
 };

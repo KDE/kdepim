@@ -23,12 +23,14 @@
 class QListWidget;
 class QLabel;
 class QPushButton;
+class KTextEdit;
 namespace PimCommon {
+class StorageServiceManager;
 class StorageServiceSettingsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceSettingsWidget(QWidget *parent=0);
+    explicit StorageServiceSettingsWidget(PimCommon::StorageServiceManager *manager, QWidget *parent=0);
     ~StorageServiceSettingsWidget();
 
     void loadConfig();
@@ -48,9 +50,10 @@ private:
     };
     QStringList mListServiceRemoved;
     QListWidget *mListService;
-    QLabel *mDescription;
+    KTextEdit *mDescription;
     QPushButton *mAddService;
     QPushButton *mRemoveService;
+    PimCommon::StorageServiceManager *mManager;
 };
 }
 #endif // STORAGESERVICESETTINGSWIDGET_H

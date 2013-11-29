@@ -28,6 +28,7 @@ class PIMCOMMON_EXPORT StorageServiceManager : public QObject
     Q_OBJECT
 public:
     enum ServiceType {
+        Unknown = -1,
         DropBox = 0,
         Hubic,
 
