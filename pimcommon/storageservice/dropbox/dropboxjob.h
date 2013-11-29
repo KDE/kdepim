@@ -44,25 +44,22 @@ private Q_SLOTS:
 
 Q_SIGNALS:
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
-    void authorizationFailed();
 
     void createFolderDone();
-    void createFolderFailed();
-
     void uploadFileDone();
-    void uploadFileFailed();
+    void listFolderDone();
 
     void accountInfoDone(const QString &data);
-    void accountInfoFailed();
 
-    void listFolderDone();
-    void listFolderFailed();
+    void actionFailed(const QString &data);
+    void authorizationFailed();
 
 private:
     void getTokenAccess();
     void parseRequestToken(const QString &result);
     void doAuthentification();
     void parseResponseAccessToken(const QString &data);
+    void parseAccountInfo(const QString &data);
     enum ActionType {
         NoneAction = 0,
         RequestToken,

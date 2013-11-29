@@ -40,6 +40,7 @@ public:
     virtual QUrl serviceUrl() const = 0;
 
 Q_SIGNALS:
+    void actionFailed(const QString &);
     void downloadDone();
     void downloadFailed();
 };

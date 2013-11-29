@@ -42,20 +42,13 @@ public:
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
+    void slotCreateFolderDone();
+    void slotUploadFileDone();
+    void slotAccountInfoDone(const QString &info);
+    void slotListFolderDone();
     void slotAuthorizationFailed();
 
-    void slotCreateFolderFailed();
-    void slotCreateFolderDone();
-
-    void slotUploadFileDone();
-    void slotUploadFileFailed();
-
-    void slotAccountInfoFailed();
-    void slotAccountInfoDone(const QString &info);
-
-    void slotListFolderDone();
-    void slotListFolderFailed();
-
+    void slotErrorFound(const QString &error);
 private:
     void readConfig();
     QString mAccessToken;

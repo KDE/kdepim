@@ -19,6 +19,11 @@
 #include "dropboxjob.h"
 #include "storageservice/storageauthviewdialog.h"
 
+#include <KLocale>
+
+#include <qjson/parser.h>
+
+
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QDateTime>
@@ -114,32 +119,6 @@ void DropBoxJob::slotError(QNetworkReply::NetworkError /*error*/)
 {
     qDebug()<<" Error ";
     mError = true;
-    switch(mActionType) {
-    case NoneAction:
-        break;
-    case RequestToken:
-        break;
-    case AccessToken:
-        break;
-    case UploadFiles:
-        Q_EMIT uploadFileFailed();
-        deleteLater();
-        break;
-    case CreateFolder:
-        Q_EMIT createFolderFailed();
-        deleteLater();
-        break;
-    case AccountInfo:
-        Q_EMIT accountInfoFailed();
-        deleteLater();
-        break;
-    case ListFolder:
-        Q_EMIT listFolderFailed();
-        deleteLater();
-        break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
-    }
 }
 
 void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
@@ -148,6 +127,41 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     reply->deleteLater();
     if (mError) {
         qDebug()<<" error type "<<data;
+        QJson::Parser parser;
+        bool ok;
+
+        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
+        if (error.contains(QLatin1String("error"))) {
+            const QString errorStr = error.value(QLatin1String("error")).toString();
+            switch(mActionType) {
+            case NoneAction:
+                break;
+            case RequestToken:
+                break;
+            case AccessToken:
+                break;
+            case UploadFiles:
+                Q_EMIT actionFailed(i18n("Upload File returns an error: %1",errorStr));
+                deleteLater();
+                break;
+            case CreateFolder:
+                Q_EMIT actionFailed(i18n("Create Folder returns an error: %1",errorStr));
+                deleteLater();
+                break;
+            case AccountInfo:
+                Q_EMIT actionFailed(i18n("Get account info returns an error: %1",errorStr));
+                deleteLater();
+                break;
+            case ListFolder:
+                Q_EMIT actionFailed(i18n("List folder returns an error: %1",errorStr));
+                deleteLater();
+                break;
+            default:
+                qDebug()<<" Action Type unknown:"<<mActionType;
+            }
+        }
+
+
         return;
     }
     switch(mActionType) {
@@ -168,8 +182,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case AccountInfo:
-        Q_EMIT accountInfoDone(data);
-        deleteLater();
+        parseAccountInfo(data);
         break;
     case ListFolder:
         Q_EMIT listFolderDone();
@@ -178,6 +191,17 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void DropBoxJob::parseAccountInfo(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    QMap<QString, QVariant> accountInfo = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" accountInfo"<<accountInfo;
+    Q_EMIT accountInfoDone(data);
+    deleteLater();
 }
 
 void DropBoxJob::parseResponseAccessToken(const QString &data)

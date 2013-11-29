@@ -33,6 +33,7 @@ DropBoxStorageService::DropBoxStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
     readConfig();
+    connect(this, SIGNAL(actionFailed(QString)), this, SLOT(slotErrorFound(QString)));
 }
 
 DropBoxStorageService::~DropBoxStorageService()
@@ -60,6 +61,11 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     KGlobal::config()->sync();
 }
 
+void DropBoxStorageService::slotErrorFound(const QString &error)
+{
+    qDebug()<<" error found "<<error;
+}
+
 void DropBoxStorageService::listFolder()
 {
     DropBoxJob *job = new DropBoxJob(this);
@@ -70,7 +76,7 @@ void DropBoxStorageService::listFolder()
     } else {
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
-        connect(job, SIGNAL(listFolderFailed()), this, SLOT(slotListFolderFailed()));
+        connect(job, SIGNAL(actionFailed(QString)), SIGNAL(actionFailed(QString)));
         job->listFolder();
     }
 }
@@ -78,11 +84,6 @@ void DropBoxStorageService::listFolder()
 void DropBoxStorageService::slotListFolderDone()
 {
 
-}
-
-void DropBoxStorageService::slotListFolderFailed()
-{
-    KMessageBox::error(0, i18n("List Folder Failed"), i18n("List Folder"));
 }
 
 void DropBoxStorageService::accountInfo()
@@ -95,7 +96,7 @@ void DropBoxStorageService::accountInfo()
     } else {
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(accountInfoDone(QString)), this, SLOT(slotAccountInfoDone(QString)));
-        connect(job, SIGNAL(accountInfoFailed()), this, SLOT(slotAccountInfoFailed()));
+        connect(job, SIGNAL(actionFailed(QString)), SIGNAL(actionFailed(QString)));
         job->accountInfo();
     }
 }
@@ -103,11 +104,6 @@ void DropBoxStorageService::accountInfo()
 void DropBoxStorageService::slotAccountInfoDone(const QString &info)
 {
     qDebug()<<" account info "<<info;
-}
-
-void DropBoxStorageService::slotAccountInfoFailed()
-{
-    KMessageBox::error(0, i18n("Account Info Failed"), i18n("Account Info"));
 }
 
 void DropBoxStorageService::createFolder(const QString &folder)
@@ -120,7 +116,7 @@ void DropBoxStorageService::createFolder(const QString &folder)
     } else {
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
-        connect(job, SIGNAL(createFolderFailed()), this, SLOT(slotCreateFolderFailed()));
+        connect(job, SIGNAL(actionFailed(QString)), SIGNAL(actionFailed(QString)));
         job->createFolder(folder);
     }
 }
@@ -128,12 +124,6 @@ void DropBoxStorageService::createFolder(const QString &folder)
 void DropBoxStorageService::slotCreateFolderDone()
 {
     qDebug()<<" folder created";
-}
-
-void DropBoxStorageService::slotCreateFolderFailed()
-{
-    qDebug()<<" folder not created";
-    KMessageBox::error(0, i18n("Create folder failed"), i18n("Create Folder"));
 }
 
 void DropBoxStorageService::uploadFile(const QString &filename)
@@ -146,7 +136,7 @@ void DropBoxStorageService::uploadFile(const QString &filename)
     } else {
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
-        connect(job, SIGNAL(uploadFileFailed()), this, SLOT(slotUploadFileFailed()));
+        connect(job, SIGNAL(actionFailed(QString)), SIGNAL(actionFailed(QString)));
         job->uploadFile(filename);
     }
 }
@@ -156,10 +146,6 @@ void DropBoxStorageService::slotUploadFileDone()
     qDebug()<<" Upload file done";
 }
 
-void DropBoxStorageService::slotUploadFileFailed()
-{
-    KMessageBox::error(0, i18n("Upload File failed"), i18n("Upload File"));
-}
 
 void DropBoxStorageService::slotAuthorizationFailed()
 {
