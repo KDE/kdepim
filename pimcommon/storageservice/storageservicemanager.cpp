@@ -17,6 +17,8 @@
 
 #include "storageservicemanager.h"
 
+#include "settings/pimcommonsettings.h"
+
 #include "dropbox/dropboxstorageservice.h"
 #include "hubic/hubicstorageservice.h"
 
@@ -27,21 +29,34 @@ using namespace PimCommon;
 StorageServiceManager::StorageServiceManager(QObject *parent)
     : QObject(parent)
 {
+    readConfig();
 }
 
 StorageServiceManager::~StorageServiceManager()
 {
-
+    qDeleteAll(mListService);
 }
 
 void StorageServiceManager::readConfig()
 {
-
+    const QStringList services = PimCommon::PimCommonSettings::self()->services();
+    Q_FOREACH(const QString &service, services) {
+        if (service == serviceName(DropBox)) {
+            if (!mListService.contains(serviceName(DropBox))) {
+                mListService.insert(service, new DropBoxStorageService());
+            }
+        } else if (service == serviceName(Hubic)) {
+            if (!mListService.contains(serviceName(Hubic))) {
+                mListService.insert(service, new HubicStorageService());
+            }
+        }
+    }
 }
 
 void StorageServiceManager::writeConfig()
 {
-
+    PimCommon::PimCommonSettings::self()->setServices(mListService.keys());
+    PimCommon::PimCommonSettings::self()->writeConfig();
 }
 
 

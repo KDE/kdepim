@@ -19,6 +19,7 @@
 #define STORAGESERVICEMANAGER_H
 
 #include <QObject>
+#include <QMap>
 #include "pimcommon_export.h"
 #include "storageserviceabstract.h"
 namespace PimCommon {
@@ -43,7 +44,7 @@ public:
 private:
     void readConfig();
     void writeConfig();
-    QList<StorageServiceAbstract *> mListService;
+    QMap<QString, StorageServiceAbstract *> mListService;
 };
 }
 

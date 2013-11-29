@@ -17,7 +17,10 @@
 
 #include "storageservicesettingswidget.h"
 #include "addservicestoragedialog.h"
+#include "storageservice/storageservicemanager.h"
+#include "settings/pimcommonsettings.h"
 #include <KLocale>
+#include <KMessageBox>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -25,6 +28,7 @@
 #include <QListWidget>
 #include <QPushButton>
 #include <QPointer>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -73,6 +77,8 @@ void StorageServiceSettingsWidget::slotAddService()
 {
     QPointer<AddServiceStorageDialog> dlg = new AddServiceStorageDialog(this);
     if (dlg->exec()) {
+        const QString service = dlg->serviceSelected();
+        qDebug()<<" service selected "<<service;
         //TODO
     }
     delete dlg;
@@ -80,16 +86,35 @@ void StorageServiceSettingsWidget::slotAddService()
 
 void StorageServiceSettingsWidget::slotServiceSelected()
 {
-    //TODO
+    if (mListService->currentItem()) {
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Delete Service"), i18n("Do you want to delete this service '%1'?", mListService->currentItem()->text()))) {
+            //TODO
+        }
+    }
 }
 
 void StorageServiceSettingsWidget::loadConfig()
 {
+    const QStringList services = PimCommon::PimCommonSettings::self()->services();
+    Q_FOREACH(const QString &service, services) {
 
+        QString serviceName;
+        if (service == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::DropBox))
+            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::DropBox);
+        else if (service == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Hubic))
+            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Hubic);
+
+        if (serviceName.isEmpty())
+            continue;
+        QListWidgetItem *item = new QListWidgetItem;
+        item->setText(serviceName);
+        item->setData(Name,service);
+        mListService->addItem(item);
+    }
 }
 
 void StorageServiceSettingsWidget::writeConfig()
 {
-
+    //TODO
 }
 

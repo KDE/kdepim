@@ -40,6 +40,9 @@ private slots:
     void slotAddService();
     void slotRemoveService();
 private:
+    enum ServiceData {
+        Name = Qt::UserRole + 1,
+    };
     QListWidget *mListService;
     QLabel *mDescription;
     QPushButton *mAddService;
