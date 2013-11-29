@@ -258,7 +258,9 @@ void KNotesApp::slotRowInserted(const QModelIndex &parent, int start, int end)
 
 void KNotesApp::updateSystray()
 {
-    mTray->updateNumberOfNotes(mNotes.count());
+    if (KNotesGlobalConfig::self()->systemTrayShowNotes()) {
+        mTray->updateNumberOfNotes(mNotes.count());
+    }
 }
 
 void KNotesApp::newNote(const QString &name, const QString &text)
@@ -552,6 +554,8 @@ void KNotesApp::slotPreferences()
 void KNotesApp::slotConfigUpdated()
 {
     updateNetworkListener();
+    //Force update if we disable or enable show number in systray
+    mTray->updateNumberOfNotes(mNotes.count());
 }
 
 void KNotesApp::slotConfigureAccels()
@@ -629,7 +633,6 @@ void KNotesApp::saveNotes()
         i.value()->saveNote();
     }
 }
-
 
 void KNotesApp::slotQuit()
 {

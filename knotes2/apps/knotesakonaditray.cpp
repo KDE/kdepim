@@ -17,6 +17,7 @@
 
 #include "knotesakonaditray.h"
 #include <Akonadi/ChangeRecorder>
+#include "knotesglobalconfig.h"
 
 #include <KIconLoader>
 #include <KGlobalSettings>
@@ -36,6 +37,8 @@ KNotesAkonadiTray::KNotesAkonadiTray(QWidget *parent)
     setCategory( KStatusNotifierItem::ApplicationStatus );
     setStandardActionsEnabled(false);
     mIcon = KIcon( QLatin1String("knotes") );
+    //Initialize
+    updateNumberOfNotes(0);
 }
 
 KNotesAkonadiTray::~KNotesAkonadiTray()
@@ -44,42 +47,46 @@ KNotesAkonadiTray::~KNotesAkonadiTray()
 
 void KNotesAkonadiTray::updateNumberOfNotes(int number)
 {
-    const int overlaySize = KIconLoader::SizeSmallMedium;
+    if (KNotesGlobalConfig::self()->systemTrayShowNotes() && number != 0) {
+        const int overlaySize = KIconLoader::SizeSmallMedium;
 
-    const QString countString = QString::number( number );
-    QFont countFont = KGlobalSettings::generalFont();
-    countFont.setBold(true);
+        const QString countString = QString::number( number );
+        QFont countFont = KGlobalSettings::generalFont();
+        countFont.setBold(true);
 
-    // decrease the size of the font for the number of unread messages if the
-    // number doesn't fit into the available space
-    float countFontSize = countFont.pointSizeF();
-    QFontMetrics qfm( countFont );
-    const int width = qfm.width( countString );
-    if ( width > (overlaySize - 2) ) {
-        countFontSize *= float( overlaySize - 2 ) / float( width );
-        countFont.setPointSizeF( countFontSize );
+        // decrease the size of the font for the number of unread messages if the
+        // number doesn't fit into the available space
+        float countFontSize = countFont.pointSizeF();
+        QFontMetrics qfm( countFont );
+        const int width = qfm.width( countString );
+        if ( width > (overlaySize - 2) ) {
+            countFontSize *= float( overlaySize - 2 ) / float( width );
+            countFont.setPointSizeF( countFontSize );
+        }
+
+        // Paint the number in a pixmap
+        QPixmap overlayPixmap( overlaySize, overlaySize );
+        overlayPixmap.fill( Qt::transparent );
+
+        QPainter p( &overlayPixmap );
+        p.setFont( countFont );
+        KColorScheme scheme( QPalette::Active, KColorScheme::View );
+
+        p.setBrush( Qt::NoBrush );
+        p.setPen( scheme.foreground( KColorScheme::LinkText ).color() );
+        p.setOpacity( 1.0 );
+        p.drawText( overlayPixmap.rect(),Qt::AlignCenter, countString );
+        p.end();
+
+        QPixmap iconPixmap = mIcon.pixmap(overlaySize, overlaySize);
+
+        QPainter pp(&iconPixmap);
+        pp.drawPixmap(0, 0, overlayPixmap);
+        pp.end();
+
+        setIconByPixmap( iconPixmap );
+    } else {
+        setIconByPixmap(mIcon);
     }
-
-    // Paint the number in a pixmap
-    QPixmap overlayPixmap( overlaySize, overlaySize );
-    overlayPixmap.fill( Qt::transparent );
-
-    QPainter p( &overlayPixmap );
-    p.setFont( countFont );
-    KColorScheme scheme( QPalette::Active, KColorScheme::View );
-
-    p.setBrush( Qt::NoBrush );
-    p.setPen( scheme.foreground( KColorScheme::LinkText ).color() );
-    p.setOpacity( 1.0 );
-    p.drawText( overlayPixmap.rect(),Qt::AlignCenter, countString );
-    p.end();
-
-    QPixmap iconPixmap = mIcon.pixmap(overlaySize, overlaySize);
-
-    QPainter pp(&iconPixmap);
-    pp.drawPixmap(0, 0, overlayPixmap);
-    pp.end();
-
-    setIconByPixmap( iconPixmap );
 }
 
