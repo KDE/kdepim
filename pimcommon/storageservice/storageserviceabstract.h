@@ -56,6 +56,7 @@ public:
 
 Q_SIGNALS:
     void actionFailed(const QString &);
+    void accountInfoDone(const PimCommon::AccountInfo &);
     void downloadDone();
     void downloadFailed();
 };

@@ -299,7 +299,7 @@ void DropBoxJob::uploadFile(const QString &filename)
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
-
+    //TODO use /shared
 }
 
 void DropBoxJob::accountInfo()

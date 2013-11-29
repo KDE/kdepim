@@ -44,7 +44,7 @@ private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void slotCreateFolderDone();
     void slotUploadFileDone();
-    void slotAccountInfoDone(const QString &info);
+    void slotAccountInfoDone(const AccountInfo &info);
     void slotListFolderDone();
     void slotAuthorizationFailed();
 

@@ -95,15 +95,15 @@ void DropBoxStorageService::accountInfo()
         job->requestTokenAccess();
     } else {
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(accountInfoDone(QString)), this, SLOT(slotAccountInfoDone(QString)));
+        connect(job, SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
         connect(job, SIGNAL(actionFailed(QString)), SIGNAL(actionFailed(QString)));
         job->accountInfo();
     }
 }
 
-void DropBoxStorageService::slotAccountInfoDone(const QString &info)
+void DropBoxStorageService::slotAccountInfoDone(const PimCommon::AccountInfo &info)
 {
-    qDebug()<<" account info "<<info;
+    //qDebug()<<" account info "<<info;
 }
 
 void DropBoxStorageService::createFolder(const QString &folder)
