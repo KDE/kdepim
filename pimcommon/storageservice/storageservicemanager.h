@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include "pimcommon_export.h"
-
+#include "storageserviceabstract.h"
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceManager : public QObject
 {
@@ -28,6 +28,7 @@ class PIMCOMMON_EXPORT StorageServiceManager : public QObject
 public:
     enum ServiceType {
         DropBox = 0,
+        Hubic,
 
         //Last element
         EndListService
@@ -35,6 +36,11 @@ public:
 
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
+
+    static QString serviceToI18n(ServiceType type);
+
+private:
+    QList<StorageServiceAbstract *> mListService;
 };
 }
 

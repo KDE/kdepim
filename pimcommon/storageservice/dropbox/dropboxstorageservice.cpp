@@ -40,6 +40,13 @@ DropBoxStorageService::~DropBoxStorageService()
 {
 }
 
+void DropBoxStorageService::removeConfig()
+{
+    KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
+    grp.deleteGroup();
+    KGlobal::config()->sync();
+}
+
 void DropBoxStorageService::readConfig()
 {
     KConfigGroup grp(KGlobal::config(), "Dropbox Settings");

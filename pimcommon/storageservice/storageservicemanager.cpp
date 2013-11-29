@@ -17,6 +17,8 @@
 
 #include "storageservicemanager.h"
 
+#include <KLocale>
+
 using namespace PimCommon;
 
 StorageServiceManager::StorageServiceManager(QObject *parent)
@@ -29,3 +31,15 @@ StorageServiceManager::~StorageServiceManager()
 
 }
 
+
+QString StorageServiceManager::serviceToI18n(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return i18n("Dropbox");
+    case Hubic:
+        return i18n("Hubic");
+    default:
+        return QString();
+    }
+}

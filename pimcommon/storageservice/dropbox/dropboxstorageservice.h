@@ -39,6 +39,7 @@ public:
     void uploadFile(const QString &filename);
     void accountInfo();
     void createFolder(const QString &folder);
+    void removeConfig();
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

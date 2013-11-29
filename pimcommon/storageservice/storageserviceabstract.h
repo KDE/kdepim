@@ -53,6 +53,7 @@ public:
     virtual void listFolder() = 0;
     virtual QString description() const = 0;
     virtual QUrl serviceUrl() const = 0;
+    virtual void removeConfig() = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &);

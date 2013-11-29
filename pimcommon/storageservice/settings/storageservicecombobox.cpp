@@ -15,33 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef HUBICSTORAGESERVICE_H
-#define HUBICSTORAGESERVICE_H
+#include "storageservicecombobox.h"
 
-#include "pimcommon/storageservice/storageserviceabstract.h"
+using namespace PimCommon;
 
-namespace PimCommon {
-class HubicStorageService : public PimCommon::StorageServiceAbstract
+StorageServiceComboBox::StorageServiceComboBox(QWidget *parent)
+    : QComboBox(parent)
 {
-    Q_OBJECT
-public:
-    explicit HubicStorageService(QObject *parent=0);
-    ~HubicStorageService();
-
-    QString name() const;
-    QUrl sharedUrl() const;
-    void uploadFile(const QString &filename);
-    void accountInfo();
-    void createFolder(const QString &folder);
-    void listFolder();
-    QString description() const;
-    QUrl serviceUrl() const;
-    void removeConfig();
-
-private:
-    void readConfig();
-
-};
+    initialize();
 }
 
-#endif // HUBICSTORAGESERVICE_H
+StorageServiceComboBox::~StorageServiceComboBox()
+{
+
+}
+
+void StorageServiceComboBox::initialize()
+{
+    //TODO
+}

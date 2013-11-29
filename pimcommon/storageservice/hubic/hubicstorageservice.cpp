@@ -41,6 +41,11 @@ void HubicStorageService::readConfig()
 
 }
 
+void HubicStorageService::removeConfig()
+{
+    //TODO
+}
+
 void HubicStorageService::listFolder()
 {
 

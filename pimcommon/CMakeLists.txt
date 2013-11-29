@@ -30,6 +30,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/storageauthviewwidget.cpp
   storageservice/storageauthviewdialog.cpp
   storageservice/hubic/hubicstorageservice.cpp
+  storageservice/settings/storageservicecombobox.cpp
 )
 
 set(libpimcommon_autocorrection_SRCS
