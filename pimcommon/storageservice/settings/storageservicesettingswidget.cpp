@@ -33,9 +33,8 @@
 
 using namespace PimCommon;
 
-StorageServiceSettingsWidget::StorageServiceSettingsWidget(PimCommon::StorageServiceManager *manager, QWidget *parent)
-    : QWidget(parent),
-      mManager(manager)
+StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
+    : QWidget(parent)
 {
     QHBoxLayout *mainLayout = new QHBoxLayout;
 
@@ -89,8 +88,13 @@ void StorageServiceSettingsWidget::slotAddService()
     QPointer<AddServiceStorageDialog> dlg = new AddServiceStorageDialog(this);
     if (dlg->exec()) {
         const PimCommon::StorageServiceManager::ServiceType type = dlg->serviceSelected();
-        qDebug()<<" service selected "<<type;
-        //TODO
+        const QString serviceName = PimCommon::StorageServiceManager::serviceToI18n(type);
+        const QString service = PimCommon::StorageServiceManager::serviceName(type);
+        QListWidgetItem *item = new QListWidgetItem;
+        item->setText(serviceName);
+        item->setData(Name,service);
+        item->setData(Type, type);
+        mListService->addItem(item);
     }
     delete dlg;
 }
@@ -113,7 +117,7 @@ void StorageServiceSettingsWidget::loadConfig()
     const QStringList services = PimCommon::PimCommonSettings::self()->services();
     Q_FOREACH(const QString &service, services) {
         QString serviceName;
-        PimCommon::StorageServiceManager::ServiceType type;
+        PimCommon::StorageServiceManager::ServiceType type = PimCommon::StorageServiceManager::Unknown;
         if (service == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::DropBox)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::DropBox);
             type = PimCommon::StorageServiceManager::DropBox;
