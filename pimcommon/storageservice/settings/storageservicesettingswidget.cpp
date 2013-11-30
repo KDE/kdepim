@@ -21,6 +21,7 @@
 #include "storageservice/storageserviceabstract.h"
 #include "storageservice/dropbox/dropboxstorageservice.h"
 #include "storageservice/hubic/hubicstorageservice.h"
+#include "storageservice/ubuntuone/ubuntuonestorageservice.h"
 #include "settings/pimcommonsettings.h"
 #include <KLocale>
 #include <KMessageBox>
@@ -89,6 +90,9 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Hubic)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Hubic);
             type = PimCommon::StorageServiceManager::Hubic;
+        } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::UbuntuOne)) {
+            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::UbuntuOne);
+            type = PimCommon::StorageServiceManager::UbuntuOne;
         }
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(serviceName);
@@ -140,6 +144,12 @@ void StorageServiceSettingsWidget::slotAddService()
         }
         case PimCommon::StorageServiceManager::Hubic: {
             StorageServiceAbstract *storage = new PimCommon::HubicStorageService;
+            storage->authentification();
+            mListStorageService.insert(service, storage);
+            break;
+        }
+        case PimCommon::StorageServiceManager::UbuntuOne: {
+            StorageServiceAbstract *storage = new PimCommon::UbuntuoneStorageService;
             storage->authentification();
             mListStorageService.insert(service, storage);
             break;
