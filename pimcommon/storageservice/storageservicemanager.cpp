@@ -71,7 +71,7 @@ QMenu *StorageServiceManager::menuServices()
                 //FIXME
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), mMenuService);
                 act->setData(i.key());
-                connect(act, SIGNAL(toggled(bool)), this, SLOT(slotShareFile()));
+                connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
                 mMenuService->addAction(act);
             }
         }
