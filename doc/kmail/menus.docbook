@@ -1137,7 +1137,7 @@ Please see next section for details.</para></note></listitem>
 <guisubmenu>Import Wizard...</guisubmenu>
 </menuchoice></term>
 <listitem><para><action>Brings up the Import Wizard dialog</action> which assists in easily importing settings and email.
- Please see <link linkend="import-wizard">Import Wizard</link> for details.</para></listitem>
+ Please see <ulink url="help:/importwizard">Import Wizard</ulink> for details.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-tools-export-data">
 <term><menuchoice>
