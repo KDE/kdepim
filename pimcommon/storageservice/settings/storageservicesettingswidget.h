@@ -43,6 +43,7 @@ private slots:
     void slotAddService();
     void slotRemoveService();
 private:
+    void updateButtons();
     enum ServiceData {
         Name = Qt::UserRole + 1,
         Type = Qt::UserRole + 2

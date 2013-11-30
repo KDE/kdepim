@@ -69,11 +69,17 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mainLayout->addWidget(mDescription);
     setLayout(mainLayout);
     connect(mListService, SIGNAL(itemSelectionChanged()), this, SLOT(slotServiceSelected()));
+    updateButtons();
 }
 
 StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 {
 
+}
+
+void StorageServiceSettingsWidget::updateButtons()
+{
+    mRemoveService->setEnabled(mListService->currentItem());
 }
 
 void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageServiceAbstract *> &lst)
@@ -172,4 +178,5 @@ void StorageServiceSettingsWidget::slotServiceSelected()
                 QString::fromLatin1("<a href=\"%1\">").arg(serviceUrl.toString()) + serviceUrl.toString() + QLatin1String("</a>");
         mDescription->setText(descriptionStr);
     }
+    updateButtons();
 }
