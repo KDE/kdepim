@@ -105,12 +105,13 @@ public:
      */
     QTime endTime() const;
 
+private:
+    //TODO: move to dpointer
+
     void drawFiloFaxWeek(QPainter &p) const;
     void drawTimeTableWeek(QPainter &p) const;
     void drawSplitWeek(QPainter &p) const;
 
-private:
-    //TODO: move to dpointer
     QRect drawHeader(QPainter &p, const QDate &date, bool printWeekNumber = false) const;
 
     QRect drawFooter(QPainter &p) const;

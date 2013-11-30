@@ -10,6 +10,7 @@ set(pimprint_calendar_LIB_SRCS
   calprintbase.cpp
   calprintday.cpp
   calprintmonth.cpp
+  calprinttodos.cpp
   calprintweek.cpp
 )
 

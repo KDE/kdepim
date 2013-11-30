@@ -25,6 +25,7 @@
 //   <D> style
 //   <D> calendar
 //   <D> calendarsystem
+//   <D> headertext
 //   <D> flagsList
 //
 // properties:
@@ -272,7 +273,10 @@ public:
         InfoLocation     = 0x00000004,
         InfoAttendees    = 0x00000008,
         InfoCategories   = 0x00000010,
-        InfoTimeRange    = 0x00000020
+        InfoPriority     = 0x00000020,
+        InfoDueDate      = 0x00000040, // for to-dos only
+        InfoPercentDone  = 0x00000080, // for to-dos only
+        InfoTimeRange    = 0x00000100
     };
     Q_DECLARE_FLAGS(InfoOptions, InfoOption)
 
@@ -295,10 +299,12 @@ public:
     Q_DECLARE_FLAGS(RangeOptions, RangeOption)
 
     enum ExtraOption {
-        ExtraSingleLine  = 0x00000001,
-        ExtraNoteLines   = 0x00000002,
-        ExtraWeekNumbers = 0x00000004,
-        ExtraFooter      = 0x00000020
+        ExtraSingleLine      = 0x00000001,
+        ExtraNoteLines       = 0x00000002,
+        ExtraWeekNumbers     = 0x00000004,
+        ExtraStrikeDoneTodos = 0x00000008, // for to-dos only, strikeout completed to-dos
+        ExtraConnectSubTodos = 0x00000010, // for to-dos only, connect sub-to-dos with lines
+        ExtraFooter          = 0x00000020
     };
     Q_DECLARE_FLAGS(ExtraOptions, ExtraOption)
 

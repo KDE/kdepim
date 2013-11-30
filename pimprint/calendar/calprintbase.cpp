@@ -85,7 +85,8 @@ public:
           mUseColor(true),
           mUseLandscape(false),
           mPrintFooter(false)
-    {}
+    {
+    }
 
     QPrinter *mPrinter;          // the QPrinter
     QPainter mPainter;           // the QPainter
