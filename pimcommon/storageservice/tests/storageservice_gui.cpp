@@ -30,6 +30,7 @@
 #include <QToolBar>
 #include <QTextEdit>
 #include <QPointer>
+#include <QMenu>
 
 StorageServiceSettingsDialog::StorageServiceSettingsDialog(QWidget *parent)
     : KDialog(parent)
@@ -57,10 +58,23 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
     bar->addAction(QLatin1String("Settings..."), this, SLOT(slotSettings()));
-
+    QAction *act = bar->addAction(QLatin1String("service menu"));
+    QMenu *menu = new QMenu(QLatin1String("Service"));
+    connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotServiceMenu()));
+    act->setMenu(menu);
     mEdit = new QTextEdit;
     lay->addWidget(mEdit);
     setLayout(lay);
+}
+
+void StorageServiceTestWidget::slotServiceMenu()
+{
+    QMenu *menu = qobject_cast<QMenu*>(sender());
+    if (menu) {
+        menu->clear();
+        menu->addMenu(mStorageManager->menuServices());
+    }
+
 }
 
 void StorageServiceTestWidget::slotSettings()

@@ -48,6 +48,7 @@ public:
 private slots:
     void slotSettings();
 
+    void slotServiceMenu();
 private:
     QTextEdit *mEdit;
     PimCommon::StorageServiceManager *mStorageManager;
