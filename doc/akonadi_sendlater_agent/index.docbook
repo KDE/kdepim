@@ -17,6 +17,13 @@
 </personname>
 <email>montel@kde.org</email>
 </author>
+<author>
+<firstname>Scarlett</firstname>
+<surname>Clark</surname>
+<affiliation><address>
+&Scarlett.Clark.mail;
+</address></affiliation>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -25,7 +32,7 @@
 <holder>Laurent Montel</holder>
 </copyright>
 
-<date>2013-08-30</date>
+<date>2013-11-30</date>
 <releaseinfo>&kde; 4.11</releaseinfo>
 
 </articleinfo>
@@ -76,7 +83,7 @@ messages overdue since the last logout if necessary.
 </para>
 
 <!--keep in sync with kmail/menus.docbook id=reader-tools-configure-send-later-agent -->
-<para>To change the options for later scheduled messages use <menuchoice><guimenu>Tools</guimenu>
+<para>To change the options for later scheduled messages use <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure Send Later Agent...</guimenuitem></menuchoice> in &kmail;.
 </para>
 
