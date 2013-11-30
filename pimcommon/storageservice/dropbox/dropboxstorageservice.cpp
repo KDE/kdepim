@@ -179,7 +179,7 @@ QUrl DropBoxStorageService::sharedUrl() const
 
 QString DropBoxStorageService::name()
 {
-    return i18n("DropBox");
+    return i18n("Dropbox");
 }
 
 QString DropBoxStorageService::description()
