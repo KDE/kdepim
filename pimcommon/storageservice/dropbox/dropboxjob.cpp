@@ -291,17 +291,30 @@ void DropBoxJob::createFolder(const QString &folder)
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
-
+#include <QFileInfo>
 void DropBoxJob::uploadFile(const QString &filename)
 {
     QFile *file = new QFile(filename);
     if (file->exists()) {
         mActionType = UploadFiles;
         mError = false;
-        QNetworkRequest request(QUrl(QString::fromLatin1("https://api.dropbox.com/1/files_put/dropbox/test/%1").arg(file->fileName()))); //Add path (need to store default path
+        //QNetworkRequest request(QUrl(QString::fromLatin1("https://api.dropbox.com/1/files_put/dropbox/test/%1").arg(file->fileName()))); //Add path (need to store default path
+        QFileInfo info(filename);
+        QUrl url(QString::fromLatin1("https://api.dropbox.com/1/files_put/dropbox/test/%1").arg(info.fileName()));
+        url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey );
+        url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
+        url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));
+        url.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
+        url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
+        url.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
+        url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
+        url.addQueryItem(QLatin1String("overwrite"), QLatin1String("false"));
 
 
-        request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader,QLatin1String("application/octet-stream"));
+        /*
+        //request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
         QUrl postData;
         postData.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey );
         postData.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
@@ -311,13 +324,14 @@ void DropBoxJob::uploadFile(const QString &filename)
         postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
         postData.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
         postData.addQueryItem(QLatin1String("overwrite"), QLatin1String("false"));
-
-        qDebug()<<"getTokenAccess  postdata"<<postData;
+*/
+        qDebug()<<"getTokenAccess  postdata"<<url;
         if (!file->open(QIODevice::ReadOnly)) {
             delete file;
             return;
         } else {
-            QNetworkReply *reply = mNetworkAccessManager->sendCustomRequest(request, postData.encodedQuery(), file);
+            QNetworkReply *reply = mNetworkAccessManager->put(request, file);
+            file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
         }
     }
