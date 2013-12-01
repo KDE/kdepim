@@ -49,7 +49,7 @@ protected:
     };
 
     QNetworkAccessManager *mNetworkAccessManager;
-
+    ActionType mActionType;
 };
 }
 
