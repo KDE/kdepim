@@ -177,6 +177,8 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         const QString descriptionStr = QLatin1String("<b>") + i18n("Name: %1",name) + QLatin1String("</b><br>") + description + QLatin1String("<br>") +
                 QString::fromLatin1("<a href=\"%1\">").arg(serviceUrl.toString()) + serviceUrl.toString() + QLatin1String("</a>");
         mDescription->setText(descriptionStr);
+    } else {
+        mDescription->clear();
     }
     updateButtons();
 }
