@@ -26,7 +26,7 @@ class LoginDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit LoginDialog(QWidget *parent);
+    explicit LoginDialog(QWidget *parent=0);
     ~LoginDialog();
 
     QString password() const;
