@@ -30,6 +30,7 @@ AddServiceStorageDialog::AddServiceStorageDialog(const QStringList &excludeServi
     setButtons( Ok | Cancel );
     mService = new StorageServiceComboBox(excludeService);
     setMainWidget(mService);
+    enableButtonOk(mService->count() > 0);
 }
 
 AddServiceStorageDialog::~AddServiceStorageDialog()
