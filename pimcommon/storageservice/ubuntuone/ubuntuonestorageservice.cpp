@@ -16,6 +16,7 @@
 */
 
 #include "ubuntuonestorageservice.h"
+#include "ubuntuonejob.h"
 
 #include <KLocale>
 #include <KConfig>
@@ -50,7 +51,9 @@ void UbuntuoneStorageService::removeConfig()
 
 void UbuntuoneStorageService::authentification()
 {
-
+    UbuntuOneJob *job = new UbuntuOneJob(this);
+    job->requestTokenAccess();
+    //TODO connect
 }
 
 void UbuntuoneStorageService::listFolder()

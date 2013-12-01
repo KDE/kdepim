@@ -141,27 +141,26 @@ void StorageServiceSettingsWidget::slotAddService()
         item->setData(Name,service);
         item->setData(Type, type);
         mListService->addItem(item);
+        StorageServiceAbstract *storage = 0;
         switch(type) {
         case PimCommon::StorageServiceManager::DropBox: {
-            StorageServiceAbstract *storage = new PimCommon::DropBoxStorageService;
-            storage->authentification();
-            mListStorageService.insert(service, storage);
+            storage = new PimCommon::DropBoxStorageService;
             break;
         }
         case PimCommon::StorageServiceManager::Hubic: {
-            StorageServiceAbstract *storage = new PimCommon::HubicStorageService;
-            storage->authentification();
-            mListStorageService.insert(service, storage);
+            storage = new PimCommon::HubicStorageService;
             break;
         }
         case PimCommon::StorageServiceManager::UbuntuOne: {
-            StorageServiceAbstract *storage = new PimCommon::UbuntuoneStorageService;
-            storage->authentification();
-            mListStorageService.insert(service, storage);
+            storage = new PimCommon::UbuntuoneStorageService;
             break;
         }
         default:
             break;
+        }
+        if (storage) {
+            storage->authentification();
+            mListStorageService.insert(service, storage);
         }
     }
     delete dlg;
