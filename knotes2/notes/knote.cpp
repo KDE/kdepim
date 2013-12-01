@@ -105,6 +105,8 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
 {
     if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
         mDisplayAttribute->setDisplayAttribute(mItem.attribute<NoteShared::NoteDisplayAttribute>());
+    } else {
+        //save default display value
     }
     setAcceptDrops( true );
     setAttribute( Qt::WA_DeleteOnClose );
