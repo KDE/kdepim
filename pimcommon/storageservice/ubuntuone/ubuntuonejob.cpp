@@ -16,7 +16,10 @@
 */
 
 #include "ubuntuonejob.h"
+#include "logindialog.h"
 #include <QNetworkAccessManager>
+
+#include <QPointer>
 
 using namespace PimCommon;
 
@@ -32,7 +35,14 @@ UbuntuOneJob::~UbuntuOneJob()
 
 void UbuntuOneJob::requestTokenAccess()
 {
-
+    QPointer<LoginDialog> dlg = new LoginDialog;
+    QString password;
+    QString username;
+    if (dlg->exec()) {
+        password = dlg->password();
+        username = dlg->username();
+    }
+    delete dlg;
 }
 
 void UbuntuOneJob::uploadFile(const QString &filename)
