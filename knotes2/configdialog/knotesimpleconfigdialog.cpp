@@ -63,13 +63,11 @@ KNoteSimpleConfigDialog::~KNoteSimpleConfigDialog()
     writeConfig();
 }
 
-void KNoteSimpleConfigDialog::load(const Akonadi::Item &item)
+void KNoteSimpleConfigDialog::load(Akonadi::Item &item)
 {
-    if (item.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
-        NoteShared::NoteDisplayAttribute *attr = item.attribute<NoteShared::NoteDisplayAttribute>();
-        mEditorConfigWidget->load(attr);
-        mDisplayConfigWidget->load(attr);
-    }
+    NoteShared::NoteDisplayAttribute *attr = item.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+    mEditorConfigWidget->load(attr);
+    mDisplayConfigWidget->load(attr);
 }
 
 
