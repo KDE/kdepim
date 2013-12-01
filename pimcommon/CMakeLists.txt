@@ -33,6 +33,8 @@ set(libpimcommon_storageservice_SRCS
   storageservice/settings/storageservicecombobox.cpp
   storageservice/settings/addservicestoragedialog.cpp
   storageservice/ubuntuone/ubuntuonestorageservice.cpp
+  storageservice/hubic/hubicjob.cpp
+  storageservice/ubuntuone/ubuntuonejob.cpp
 )
 
 set(libpimcommon_autocorrection_SRCS
