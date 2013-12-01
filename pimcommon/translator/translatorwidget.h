@@ -24,7 +24,7 @@
 #include <kio/job.h>
 #include <KTextEdit>
 #include <Solid/Networking>
-
+class KToggleAction;
 namespace PimCommon {
 
 class TranslatorResultTextEdit : public PimCommon::PlainTextEditor
@@ -67,6 +67,8 @@ public:
     void writeConfig();
     void readConfig();
     void setStandalone(bool b);
+
+    KToggleAction *toggleAction();
 
 public Q_SLOTS:
     void slotTranslate();
