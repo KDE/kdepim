@@ -19,15 +19,23 @@
 #define HUBICJOB_H
 
 #include <QObject>
-
+#include "storageservice/storageserviceabstractjob.h"
+class QNetworkAccessManager;
 namespace PimCommon {
-
-class HubicJob : public QObject
+class HubicJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
     explicit HubicJob(QObject *parent=0);
     ~HubicJob();
+
+    void requestTokenAccess();
+    void uploadFile(const QString &filename);
+    void listFolder();
+    void accountInfo();
+    void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
+    void createFolder(const QString &filename);
+
 };
 }
 

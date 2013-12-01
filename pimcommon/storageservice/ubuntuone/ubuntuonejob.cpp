@@ -16,15 +16,46 @@
 */
 
 #include "ubuntuonejob.h"
+#include <QNetworkAccessManager>
 
 using namespace PimCommon;
 
 UbuntuOneJob::UbuntuOneJob(QObject *parent)
-    : QObject(parent)
+    : PimCommon::StorageServiceAbstractJob(parent)
 {
 }
 
 UbuntuOneJob::~UbuntuOneJob()
+{
+
+}
+
+void UbuntuOneJob::requestTokenAccess()
+{
+
+}
+
+void UbuntuOneJob::uploadFile(const QString &filename)
+{
+
+}
+
+void UbuntuOneJob::listFolder()
+{
+
+}
+
+void UbuntuOneJob::accountInfo()
+{
+
+}
+
+void UbuntuOneJob::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
+{
+
+}
+
+void UbuntuOneJob::createFolder(const QString &filename)
 {
 
 }

@@ -36,6 +36,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/hubic/hubicjob.cpp
   storageservice/ubuntuone/ubuntuonejob.cpp
   storageservice/ubuntuone/logindialog.cpp
+  storageservice/storageserviceabstractjob.cpp
 )
 
 set(libpimcommon_autocorrection_SRCS

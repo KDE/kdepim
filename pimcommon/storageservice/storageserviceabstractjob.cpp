@@ -15,26 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "storageserviceabstractjob.h"
+#include <QNetworkAccessManager>
 
-#ifndef UBUNTUONEJOB_H
-#define UBUNTUONEJOB_H
+using namespace PimCommon;
 
-#include "storageservice/storageserviceabstractjob.h"
-namespace PimCommon {
-class UbuntuOneJob : public PimCommon::StorageServiceAbstractJob
+StorageServiceAbstractJob::StorageServiceAbstractJob(QObject *parent)
+    : QObject(parent),
+      mNetworkAccessManager(new QNetworkAccessManager(this))
 {
-    Q_OBJECT
-public:
-    explicit UbuntuOneJob(QObject *parent=0);
-    ~UbuntuOneJob();
-
-    void requestTokenAccess();
-    void uploadFile(const QString &filename);
-    void listFolder();
-    void accountInfo();
-    void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
-    void createFolder(const QString &filename);
-};
 }
 
-#endif // UBUNTUONEJOB_H
+StorageServiceAbstractJob::~StorageServiceAbstractJob()
+{
+
+}

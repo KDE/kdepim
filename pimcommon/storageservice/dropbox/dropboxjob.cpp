@@ -24,6 +24,7 @@
 
 #include <qjson/parser.h>
 #include <QFile>
+#include <QFileInfo>
 
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
@@ -47,8 +48,7 @@ QString generateNonce(qint32 length)
 }
 
 DropBoxJob::DropBoxJob(QObject *parent)
-    : QObject(parent),
-      mNetworkAccessManager(new QNetworkAccessManager(this)),
+    : PimCommon::StorageServiceAbstractJob(parent),
       mInitialized(false),
       mError(false)
 {
@@ -291,7 +291,7 @@ void DropBoxJob::createFolder(const QString &folder)
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
-#include <QFileInfo>
+
 void DropBoxJob::uploadFile(const QString &filename)
 {
     QFile *file = new QFile(filename);

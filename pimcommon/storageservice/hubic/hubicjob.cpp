@@ -16,15 +16,46 @@
 */
 
 #include "hubicjob.h"
+#include <QNetworkAccessManager>
 
 using namespace PimCommon;
 
 HubicJob::HubicJob(QObject *parent)
-    : QObject(parent)
+    : PimCommon::StorageServiceAbstractJob(parent)
 {
 }
 
 HubicJob::~HubicJob()
+{
+
+}
+
+void HubicJob::requestTokenAccess()
+{
+
+}
+
+void HubicJob::uploadFile(const QString &filename)
+{
+
+}
+
+void HubicJob::listFolder()
+{
+
+}
+
+void HubicJob::accountInfo()
+{
+
+}
+
+void HubicJob::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
+{
+
+}
+
+void HubicJob::createFolder(const QString &filename)
 {
 
 }
