@@ -54,6 +54,8 @@ set(knotes2_SRCS apps/main.cpp apps/application.cpp apps/knotesapp.cpp apps/knot
                 notes/knote.cpp
                 notes/knotedisplaysettings.cpp
                 dialog/selectednotefolderdialog.cpp
+                dialog/knoteselectednotesdialog.cpp
+                debug/knotesnepomukdebugdialog.cpp
 )
 
 
@@ -80,7 +82,7 @@ target_link_libraries(kcm_knote2 knotes2private ${KDEPIMLIBS_AKONADI_LIBS} ${KDE
 
 install(TARGETS kcm_knote2 DESTINATION ${PLUGIN_INSTALL_DIR})
 
-
+install( FILES data/knotesappui.rc DESTINATION ${DATA_INSTALL_DIR}/knotes)
 
 #install( PROGRAMS data/knotes.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 #install( FILES settings/knoteconfig.kcfg ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg  DESTINATION ${KCFG_INSTALL_DIR})

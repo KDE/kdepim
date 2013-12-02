@@ -20,6 +20,9 @@
 
 #include "configdialog/knoteconfigdialog.h"
 
+#include "dialog/knoteselectednotesdialog.h"
+#include "debug/knotesnepomukdebugdialog.h"
+
 #include "noteshared/akonadi/notesakonaditreemodel.h"
 #include "noteshared/akonadi/noteschangerecorder.h"
 #include "noteshared/attributes/notelockattribute.h"
@@ -135,6 +138,11 @@ KNotesApp::KNotesApp()
     actionCollection()->addAction( QLatin1String("print_selected_notes"), action );
     connect( action, SIGNAL(triggered()), SLOT(slotPrintSelectedNotes()) );
 
+#if !defined(NDEBUG)
+    action = new KAction(i18n("Debug nepomuk..."),this);
+    actionCollection()->addAction( QLatin1String("debug_nepomuk"), action );
+    connect( action, SIGNAL(triggered()), SLOT(slotDebugNepomukSelectedNotes()) );
+#endif
 
     new KHelpMenu( this, KGlobal::mainComponent().aboutData(), false,
                    actionCollection() );
@@ -644,4 +652,16 @@ bool KNotesApp::commitData( QSessionManager & )
 {
     saveNotes();
     return true;
+}
+
+void KNotesApp::slotDebugNepomukSelectedNotes()
+{
+    QPointer<KNoteSelectedNotesDialog> dlg = new KNoteSelectedNotesDialog(this);
+    dlg->setNotes(mNotes);
+    if (dlg->exec()) {
+        QPointer<KNotesNepomukDebugDialog> nepomukDebug = new KNotesNepomukDebugDialog(dlg->selectedNotes(), this);
+        nepomukDebug->exec();
+        delete nepomukDebug;
+    }
+    delete dlg;
 }
