@@ -121,7 +121,7 @@ void DropBoxStorageService::accountInfo()
 void DropBoxStorageService::slotAccountInfoDone(const PimCommon::AccountInfo &info)
 {
     qDebug()<<" DropBoxStorageService::slotAccountInfoDone : accountSize :"<<info.accountSize<<" quota :"<<info.quota<<" shared :"<<info.shared<<" displayName :"<<info.displayName;
-    Q_EMIT accountInfoDone(info);
+    Q_EMIT accountInfoDone(serviceName(), info);
 }
 
 void DropBoxStorageService::createFolder(const QString &folder)
@@ -155,6 +155,7 @@ void DropBoxStorageService::uploadFile(const QString &filename)
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
         connect(job, SIGNAL(actionFailed(QString)), SIGNAL(actionFailed(QString)));
+        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         job->uploadFile(filename);
     }
 }

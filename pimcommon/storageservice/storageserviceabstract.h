@@ -52,9 +52,12 @@ public:
     virtual void removeConfig() = 0;
     virtual void authentification() = 0;
 
+protected Q_SLOTS:
+    void slotUploadFileProgress(qint64,qint64);
+
 Q_SIGNALS:
-    void actionFailed(const QString &);
-    void accountInfoDone(const PimCommon::AccountInfo &);
+    void actionFailed(const QString &error);
+    void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
     void downloadDone();
     void downloadFailed();
 };

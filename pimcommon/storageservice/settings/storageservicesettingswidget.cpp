@@ -18,7 +18,6 @@
 #include "storageservicesettingswidget.h"
 #include "addservicestoragedialog.h"
 #include "storageservice/storageservicemanager.h"
-#include "storageservice/storageserviceabstract.h"
 #include "storageservice/dropbox/dropboxstorageservice.h"
 #include "storageservice/hubic/hubicstorageservice.h"
 #include "storageservice/ubuntuone/ubuntuonestorageservice.h"
@@ -178,10 +177,18 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         mDescription->setText(descriptionStr);
         if (mListStorageService.contains(mListService->currentItem()->data(Name).toString())) {
             StorageServiceAbstract *storage = mListStorageService.value(mListService->currentItem()->data(Name).toString());
+            connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString, PimCommon::AccountInfo)),Qt::UniqueConnection);
             storage->accountInfo();
         }
     } else {
         mDescription->clear();
     }
     updateButtons();
+}
+
+void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
+{
+    if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
+        //TODO
+    }
 }
