@@ -106,6 +106,7 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
     if ( mItem.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
         mDisplayAttribute->setDisplayAttribute(mItem.attribute<NoteShared::NoteDisplayAttribute>());
     } else {
+        setDisplayDefaultValue();
         //save default display value
     }
     setAcceptDrops( true );
@@ -126,6 +127,27 @@ KNote::KNote(const QDomDocument& buildDoc, const Akonadi::Item &item, QWidget *p
 KNote::~KNote()
 {
     delete mDisplayAttribute;
+}
+
+void KNote::setDisplayDefaultValue()
+{
+    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+    attribute->setBackgroundColor(KNotesGlobalConfig::self()->bgColor());
+    attribute->setForegroundColor(KNotesGlobalConfig::self()->fgColor());
+    attribute->setSize(QSize(KNotesGlobalConfig::self()->width(), KNotesGlobalConfig::self()->height()));
+    attribute->setRememberDesktop(KNotesGlobalConfig::self()->rememberDesktop());
+    attribute->setTabSize(KNotesGlobalConfig::self()->tabSize());
+    attribute->setFont(KNotesGlobalConfig::self()->font());
+    attribute->setTitleFont(KNotesGlobalConfig::self()->titleFont());
+    attribute->setDesktop(KNotesGlobalConfig::self()->desktop());
+    attribute->setIsHidden(KNotesGlobalConfig::self()->hideNote());
+    attribute->setPosition(KNotesGlobalConfig::self()->position());
+    attribute->setShowInTaskbar(KNotesGlobalConfig::self()->showInTaskbar());
+    attribute->setKeepAbove(KNotesGlobalConfig::self()->keepAbove());
+    attribute->setKeepBelow(KNotesGlobalConfig::self()->keepBelow());
+    attribute->setAutoIndent(KNotesGlobalConfig::self()->autoIndent());
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
 }
 
 void KNote::setChangeItem(const Akonadi::Item &item, const QSet<QByteArray> &set)
@@ -216,8 +238,9 @@ void KNote::slotNoteSaved(KJob *job)
     qDebug()<<" void KNote::slotNoteSaved(KJob *job)";
     if ( job->error() ) {
         qDebug()<<" problem during save note:"<<job->errorString();
+    } else {
+        m_editor->document()->setModified( false );
     }
-    m_editor->document()->setModified( false );
 }
 
 Akonadi::Item::Id KNote::noteId() const

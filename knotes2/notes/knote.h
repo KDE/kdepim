@@ -135,6 +135,7 @@ private:
 
     void setColor( const QColor &, const QColor & );
     void print(bool preview);
+    void setDisplayDefaultValue();
 
 private:
     Akonadi::Item mItem;
