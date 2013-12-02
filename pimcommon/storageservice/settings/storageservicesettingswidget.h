@@ -23,7 +23,6 @@
 #include "pimcommon_export.h"
 #include "storageservice/storageserviceabstract.h"
 class QListWidget;
-class QLabel;
 class QPushButton;
 class KTextEdit;
 namespace PimCommon {
