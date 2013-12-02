@@ -361,23 +361,23 @@ void KNote::commitData()
 
 void KNote::slotClose()
 {
-#if 0 //FIXME
+    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
 #ifdef Q_WS_X11
     NETWinInfo wm_client( QX11Info::display(), winId(),
                           QX11Info::appRootWindow(), NET::WMDesktop );
     if ( ( wm_client.desktop() == NETWinInfo::OnAllDesktops ) ||
          ( wm_client.desktop() > 0 ) ) {
-        m_config->setDesktop( wm_client.desktop() );
+        attribute->setDesktop(wm_client.desktop());
     }
 #endif
 
     m_editor->clearFocus();
-    if( !mBlockWriteConfigDuringCommitData ) {
-        m_config->setHideNote( true );
-        m_config->setPosition( pos() );
-        m_config->writeConfig();
-    }
-#endif
+    //if( !mBlockWriteConfigDuringCommitData ) {
+        attribute->setIsHidden(true);
+        attribute->setPosition(pos());
+        Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
+    //}
     // just hide the note so it's still available from the dock window
     hide();
 }
@@ -562,27 +562,28 @@ void KNote::slotKeepBelow()
 
 void KNote::slotUpdateKeepAboveBelow()
 {
-#if 0
 #ifdef Q_WS_X11
     unsigned long state = KWindowInfo( KWindowSystem::windowInfo( winId(), NET::WMState ) ).state();
 #else
     unsigned long state = 0; // neutral state, TODO
 #endif
+    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
     if ( m_keepAbove->isChecked() ) {
-        m_config->setKeepAbove( true );
-        m_config->setKeepBelow( false );
+        attribute->setKeepAbove(true);
+        attribute->setKeepBelow(false);
         KWindowSystem::setState( winId(), state | NET::KeepAbove );
     } else if ( m_keepBelow->isChecked() ) {
-        m_config->setKeepAbove( false );
-        m_config->setKeepBelow( true );
+        attribute->setKeepAbove(false);
+        attribute->setKeepBelow(true);
         KWindowSystem::setState( winId(), state | NET::KeepBelow );
     } else {
-        m_config->setKeepAbove( false );
+        attribute->setKeepAbove(false);
+        attribute->setKeepBelow(false);
         KWindowSystem::clearState( winId(), NET::KeepAbove );
-        m_config->setKeepBelow( false );
         KWindowSystem::clearState( winId(), NET::KeepBelow );
     }
-#endif
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
 }
 
 void KNote::slotUpdateShowInTaskbar()
