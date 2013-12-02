@@ -19,9 +19,7 @@
 #define KNOTEPRINTSELECTEDNOTESDIALOG_H
 
 #include <KDialog>
-namespace KCal {
-class Journal;
-}
+#include <Akonadi/Item>
 class QListWidget;
 class KNote;
 class KNotePrintObject;
@@ -33,7 +31,7 @@ public:
     explicit KNotePrintSelectedNotesDialog(QWidget *parent=0);
     ~KNotePrintSelectedNotesDialog();
 
-    void setNotes(const QMap<QString, KNote *> &notes);
+    void setNotes(const QHash<Akonadi::Item::Id, KNote*> &notes);
 
     QList<KNotePrintObject *> selectedNotes() const;
     QString selectedTheme() const;
@@ -46,13 +44,13 @@ private Q_SLOTS:
 
 private:
     enum listViewData {
-        JournalId = Qt::UserRole + 1
+        AkonadiId = Qt::UserRole + 1
     };
 
     void writeConfig();
     void readConfig();
     QListWidget *mListNotes;
-    QMap<QString, KNote *> mNotes;
+    QHash<Akonadi::Item::Id, KNote*> mNotes;
     KNotePrintSelectThemeComboBox *mTheme;
     bool mPreview;
 };
