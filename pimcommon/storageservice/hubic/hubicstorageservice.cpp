@@ -16,6 +16,7 @@
 */
 
 #include "hubicstorageservice.h"
+#include "hubicjob.h"
 
 #include <KLocale>
 #include <KConfig>
@@ -50,7 +51,9 @@ void HubicStorageService::removeConfig()
 
 void HubicStorageService::authentification()
 {
-
+    HubicJob *job = new HubicJob(this);
+    job->requestTokenAccess();
+    //TODO connect
 }
 
 void HubicStorageService::listFolder()

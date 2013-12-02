@@ -31,7 +31,6 @@ class AutoCorrectionWidget;
 
 namespace PimCommon {
 
-class ComposerAutoCorrection;
 
 class PIMCOMMON_EXPORT AutoCorrectionWidget : public QWidget
 {

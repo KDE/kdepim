@@ -1137,7 +1137,7 @@ Please see next section for details.</para></note></listitem>
 <guisubmenu>Import Wizard...</guisubmenu>
 </menuchoice></term>
 <listitem><para><action>Brings up the Import Wizard dialog</action> which assists in easily importing settings and email.
- Please see <link linkend="import-wizard">Import Wizard</link> for details.</para></listitem>
+ Please see <ulink url="help:/importwizard">Import Wizard</ulink> for details.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-tools-export-data">
 <term><menuchoice>
@@ -1207,26 +1207,26 @@ Please see next section for details.</para></note></listitem>
 </varlistentry>
 <varlistentry id="reader-settings-configure-automatic-archiving">
 <term><menuchoice>
-<guimenu>Tools</guimenu>
+<guimenu>Settings</guimenu>
 <guimenuitem>Configure Automatic Archiving...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Brings up the dialog to set up automatic archiving.</action> Please see <link linkend="auto-archive">Automatic Archiving</link> for details.</para></listitem>
+<listitem><para><action>Brings up the dialog to set up automatic archiving.</action> Please see <ulink url="help:/akonadi_archivemail_agent">Automatic Archiving</ulink> for details.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-settings-configure-send-later-agent">
 <term><menuchoice>
-<guimenu>Tools</guimenu>
+<guimenu>Settings</guimenu>
 <guimenuitem>Configure Send Later Agent...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Brings up a dialog that allows you to modify and remove emails that have been sent using the send later feature.</action>
- Please see <ulink url="help:sendlateragent">Send Later Agent</ulink> for details.</para></listitem>
+ Please see <ulink url="help:/akonadi_sendlater_agent">Send Later Agent</ulink> for details.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-settings-configure-folder-archive-agent">
 <term><menuchoice>
-<guimenu>Tools</guimenu>
+<guimenu>Settings</guimenu>
 <guimenuitem>Configure Folder Archive Agent...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Brings up a dialog that allows you to configure accounts to use the folder archive agent feature with.</action>
- Please see <ulink url="help:folderarchiveagent">Folder Archive Agent</ulink> for details.</para></listitem>
+ Please see <ulink url="help:/akonadi_folderarchive_agent">Folder Archive Agent</ulink> for details.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-settings-configure-notifications">
 <term><menuchoice>

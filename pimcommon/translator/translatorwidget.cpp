@@ -31,7 +31,7 @@
 #include <KConfigGroup>
 #include <KSeparator>
 #include <KMessageBox>
-
+#include <KToggleAction>
 #include <kpimutils/progressindicatorwidget.h>
 
 #include <QPair>
@@ -52,6 +52,7 @@ class TranslatorWidget::TranslatorWidgetPrivate
 public:
     TranslatorWidgetPrivate()
         : abstractTranslator(0),
+          action(0),
           languageSettingsChanged(false),
           networkUp(true),
           standalone(true)
@@ -78,6 +79,7 @@ public:
     KPIMUtils::ProgressIndicatorWidget *progressIndictor;
     KPushButton *invert;
     QSplitter *splitter;
+    KToggleAction *action;
     bool languageSettingsChanged;
     bool networkUp;
     bool standalone;
@@ -319,6 +321,16 @@ void TranslatorWidget::init()
         d->networkUp = false;
     else
         d->networkUp = true;
+}
+
+KToggleAction *TranslatorWidget::toggleAction()
+{
+    if (!d->action) {
+        d->action = new KToggleAction( i18n("&Translator"), this );
+        d->action->setShortcut( QKeySequence( Qt::CTRL + Qt::ALT + Qt::Key_T ) );
+        d->action->setChecked(false);
+    }
+    return d->action;
 }
 
 void TranslatorWidget::slotConfigChanged()

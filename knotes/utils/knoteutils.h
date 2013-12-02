@@ -19,18 +19,10 @@
 #define KNOTEUTILS_H
 #include "knotes_export.h"
 
-class QWidget;
-class KNoteConfig;
-namespace KCal {
-class Journal;
-}
 
 namespace KNoteUtils
 {
-KNOTES_EXPORT KNoteConfig *createConfig(KCal::Journal *journal, QString &configPath);
-KNOTES_EXPORT void setProperty(KCal::Journal *journal, KNoteConfig *config);
-KNOTES_EXPORT void removeNote(KCal::Journal *journal, QWidget *parent);
-KNOTES_EXPORT void savePreferences( KCal::Journal *journal, KNoteConfig *config);
+KNOTES_EXPORT void migrateToAkonadi();
 }
 
 #endif // KNOTEUTILS_H

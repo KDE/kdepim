@@ -29,7 +29,7 @@
 #include <QMenu>
 
 BlogiloComposerView::BlogiloComposerView(QWidget * parent)
-    :ComposerEditorNG::ComposerView(parent)
+    : ComposerEditorNG::ComposerView(parent)
 {
     settings()->setFontSize ( QWebSettings::DefaultFontSize, 14 );
 }

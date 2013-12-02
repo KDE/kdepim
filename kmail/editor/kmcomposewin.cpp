@@ -1389,15 +1389,12 @@ void KMComposeWin::setupActions( void )
   actionCollection()->addAction( QLatin1String("setup_spellchecker"), action );
   connect( action, SIGNAL(triggered(bool)), SLOT(slotSpellcheckConfig()) );
 
-  mTranslateAction = new KToggleAction( i18n("&Translator"), this );
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::ALT + Qt::Key_T ) );
+  mTranslateAction = mCustomToolsWidget->action(PimCommon::CustomToolsWidget::TranslatorTool);
   actionCollection()->addAction( QLatin1String("translator"), mTranslateAction );
-  mTranslateAction->setChecked(false);
   connect(mTranslateAction, SIGNAL(triggered(bool)), this,SLOT(slotVisibleTranslatorTools(bool)));
 
-  mGenerateShortenUrl = new KToggleAction( i18n("Generate Shorten Url"), this );
+  mGenerateShortenUrl = mCustomToolsWidget->action(PimCommon::CustomToolsWidget::ShortUrlTool);
   actionCollection()->addAction( QLatin1String("shorten_url"), mGenerateShortenUrl );
-  mGenerateShortenUrl->setChecked(false);
   connect(mGenerateShortenUrl, SIGNAL(triggered(bool)), this,SLOT(slotVisibleShortUrlTools(bool)));
   //Chiamus not supported in kmail2
 #if 0
@@ -2213,13 +2210,13 @@ bool KMComposeWin::insertFromMimeData( const QMimeData *source, bool forceAttach
         }
       } else {
         KMenu p;
-        const QAction *addAsTextAction = p.addAction( i18np("Add URL into Message as &Text", "Add URLs into Message as &Text", urlList.size() ) );
+        const QAction *addAsTextAction = p.addAction( i18np("Add URL into Message", "Add URLs into Message", urlList.size() ) );
         const QAction *addAsAttachmentAction = p.addAction( i18np("Add File as &Attachment", "Add Files as &Attachment", urlList.size() ) );
         const QAction *selectedAction = p.exec( QCursor::pos() );
 
         if ( selectedAction == addAsTextAction ) {
           foreach( const KUrl &url, urlList ) {
-            mComposerBase->editor()->textCursor().insertText(url.url() + QLatin1Char('\n'));
+            mComposerBase->editor()->insertLink(url.url());
           }
         } else if ( selectedAction == addAsAttachmentAction ) {
           foreach( const KUrl &url, urlList ) {
@@ -3566,6 +3563,7 @@ void KMComposeWin::slotVisibleTranslatorTools(bool b)
 {
     if (b) {
         mCustomToolsWidget->switchToTool(PimCommon::CustomToolsWidget::TranslatorTool);
+
     } else {
         slotCustomToolWasClosed();
     }

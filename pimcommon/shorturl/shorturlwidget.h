@@ -24,6 +24,7 @@
 #include <Solid/Networking>
 
 class KLineEdit;
+class KToggleAction;
 class QPushButton;
 
 namespace KPIMUtils {
@@ -40,6 +41,8 @@ public:
     ~ShortUrlWidget();
 
     void setStandalone(bool b);
+    KToggleAction *toggleAction();
+
 
 public Q_SLOTS:
     void settingsUpdated();
@@ -66,6 +69,7 @@ private:
     QPushButton *mCopyToClipboard;
     AbstractShortUrl *mEngine;
     KPIMUtils::ProgressIndicatorLabel *mIndicatorLabel;
+    KToggleAction *mToggleAction;
     bool mNetworkUp;
     bool mStandalone;
 };

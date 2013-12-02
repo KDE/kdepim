@@ -35,6 +35,7 @@
 #include <KProcess>
 #include <KPushButton>
 #include <KTemporaryFile>
+#include <KColorScheme>
 
 #include <QApplication>
 #include <QClipboard>
@@ -849,6 +850,40 @@ void KMeditor::insertPlainTextImplementation()
   } else {
     document()->setPlainText(document()->toPlainText());
   }
+}
+
+void KMeditor::insertLink(const QString &url)
+{
+    if (url.isEmpty())
+        return;
+    if (textMode() == KRichTextEdit::Rich) {
+        QTextCursor cursor = textCursor();
+        cursor.beginEditBlock();
+
+        QTextCharFormat format = cursor.charFormat();
+        // Save original format to create an extra space with the existing char
+        // format for the block
+        const QTextCharFormat originalFormat = format;
+        // Add link details
+        format.setAnchor(true);
+        format.setAnchorHref(url);
+        // Workaround for QTBUG-1814:
+        // Link formatting does not get applied immediately when setAnchor(true)
+        // is called.  So the formatting needs to be applied manually.
+        format.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+        format.setUnderlineColor(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
+        format.setForeground(KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color());
+        // Insert link text specified in dialog, otherwise write out url.
+        cursor.insertText(url, format);
+
+        cursor.setPosition(cursor.selectionEnd());
+        cursor.setCharFormat(originalFormat);
+        cursor.insertText(QLatin1String(" \n"));
+        cursor.endEditBlock();
+    } else {
+        textCursor().insertText(url + QLatin1Char('\n'));
+    }
+
 }
 
 #include "moc_kmeditor.cpp"

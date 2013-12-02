@@ -20,6 +20,8 @@
 #include "pimcommon/shorturl/shorturlwidget.h"
 #include "pimcommon/translator/translatorwidget.h"
 
+#include <KToggleAction>
+
 #include <QHBoxLayout>
 #include <QStackedWidget>
 #include <QDebug>
@@ -40,8 +42,10 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent)
     mTranslatorWidget->setStandalone(false);
     mStackedWidget->addWidget(mShortUrlWidget);
     mStackedWidget->addWidget(mTranslatorWidget);
+
     connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SLOT(slotHideTools()));
     connect(mTranslatorWidget, SIGNAL(translatorWasClosed()), this, SLOT(slotHideTools()));
+
     connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SIGNAL(shortUrlWasClosed()));
     connect(mTranslatorWidget, SIGNAL(translatorWasClosed()), this, SIGNAL(translatorWasClosed()));
 
@@ -54,14 +58,33 @@ CustomToolsWidget::~CustomToolsWidget()
 
 }
 
+KToggleAction *CustomToolsWidget::action(CustomToolsWidget::ToolType type)
+{
+    KToggleAction *act = 0;
+    switch (type) {
+    case TranslatorTool:
+        act = mTranslatorWidget->toggleAction();
+        break;
+    case ShortUrlTool:
+        act = mShortUrlWidget->toggleAction();
+        break;
+    default:
+        qDebug()<<" type unknown :"<<type;
+        break;
+    }
+    return act;
+}
+
 void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
 {
     switch (type) {
     case TranslatorTool:
         mStackedWidget->setCurrentWidget(mTranslatorWidget);
+        mShortUrlWidget->toggleAction()->setChecked(false);
         break;
     case ShortUrlTool:
         mStackedWidget->setCurrentWidget(mShortUrlWidget);
+        mTranslatorWidget->toggleAction()->setChecked(false);
         break;
     default:
         qDebug()<<" type unknown :"<<type;

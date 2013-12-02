@@ -21,7 +21,7 @@
 #include "pimcommon/pimcommon_export.h"
 
 #include <QWidget>
-
+class KToggleAction;
 class QStackedWidget;
 namespace PimCommon {
 class ShortUrlWidget;
@@ -41,6 +41,8 @@ public:
     void switchToTool(CustomToolsWidget::ToolType type);
 
     CustomToolsWidget::ToolType toolType() const;
+
+    KToggleAction *action(CustomToolsWidget::ToolType type);
 
 private Q_SLOTS:
     void slotHideTools();

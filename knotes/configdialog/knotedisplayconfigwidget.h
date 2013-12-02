@@ -22,12 +22,18 @@
 class KColorButton;
 class QCheckBox;
 class KIntNumInput;
+namespace NoteShared {
+class NoteDisplayAttribute;
+}
 class KNoteDisplayConfigWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit KNoteDisplayConfigWidget(bool defaults , QWidget *parent = 0);
     ~KNoteDisplayConfigWidget();
+
+    void load(NoteShared::NoteDisplayAttribute *attr);
+    void save(NoteShared::NoteDisplayAttribute *attr);
 
 private:
     KColorButton *kcfg_FgColor;

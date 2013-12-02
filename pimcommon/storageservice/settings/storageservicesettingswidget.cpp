@@ -18,9 +18,9 @@
 #include "storageservicesettingswidget.h"
 #include "addservicestoragedialog.h"
 #include "storageservice/storageservicemanager.h"
-#include "storageservice/storageserviceabstract.h"
 #include "storageservice/dropbox/dropboxstorageservice.h"
 #include "storageservice/hubic/hubicstorageservice.h"
+#include "storageservice/ubuntuone/ubuntuonestorageservice.h"
 #include "settings/pimcommonsettings.h"
 #include <KLocale>
 #include <KMessageBox>
@@ -68,11 +68,17 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mainLayout->addWidget(mDescription);
     setLayout(mainLayout);
     connect(mListService, SIGNAL(itemSelectionChanged()), this, SLOT(slotServiceSelected()));
+    updateButtons();
 }
 
 StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 {
 
+}
+
+void StorageServiceSettingsWidget::updateButtons()
+{
+    mRemoveService->setEnabled(mListService->currentItem());
 }
 
 void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageServiceAbstract *> &lst)
@@ -89,6 +95,9 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Hubic)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Hubic);
             type = PimCommon::StorageServiceManager::Hubic;
+        } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::UbuntuOne)) {
+            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::UbuntuOne);
+            type = PimCommon::StorageServiceManager::UbuntuOne;
         }
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(serviceName);
@@ -131,21 +140,26 @@ void StorageServiceSettingsWidget::slotAddService()
         item->setData(Name,service);
         item->setData(Type, type);
         mListService->addItem(item);
+        StorageServiceAbstract *storage = 0;
         switch(type) {
         case PimCommon::StorageServiceManager::DropBox: {
-            StorageServiceAbstract *storage = new PimCommon::DropBoxStorageService;
-            storage->authentification();
-            mListStorageService.insert(service, storage);
+            storage = new PimCommon::DropBoxStorageService;
             break;
         }
         case PimCommon::StorageServiceManager::Hubic: {
-            StorageServiceAbstract *storage = new PimCommon::HubicStorageService;
-            storage->authentification();
-            mListStorageService.insert(service, storage);
+            storage = new PimCommon::HubicStorageService;
+            break;
+        }
+        case PimCommon::StorageServiceManager::UbuntuOne: {
+            storage = new PimCommon::UbuntuoneStorageService;
             break;
         }
         default:
             break;
+        }
+        if (storage) {
+            storage->authentification();
+            mListStorageService.insert(service, storage);
         }
     }
     delete dlg;
@@ -161,5 +175,20 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         const QString descriptionStr = QLatin1String("<b>") + i18n("Name: %1",name) + QLatin1String("</b><br>") + description + QLatin1String("<br>") +
                 QString::fromLatin1("<a href=\"%1\">").arg(serviceUrl.toString()) + serviceUrl.toString() + QLatin1String("</a>");
         mDescription->setText(descriptionStr);
+        if (mListStorageService.contains(mListService->currentItem()->data(Name).toString())) {
+            StorageServiceAbstract *storage = mListStorageService.value(mListService->currentItem()->data(Name).toString());
+            connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString, PimCommon::AccountInfo)),Qt::UniqueConnection);
+            storage->accountInfo();
+        }
+    } else {
+        mDescription->clear();
+    }
+    updateButtons();
+}
+
+void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
+{
+    if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
+        //TODO
     }
 }

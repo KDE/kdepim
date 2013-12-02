@@ -25,6 +25,7 @@
 #include <KLineEdit>
 #include <KLocale>
 #include <KMessageBox>
+#include <KToggleAction>
 
 #include <QLabel>
 #include <QGridLayout>
@@ -38,6 +39,7 @@ using namespace PimCommon;
 ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     : QWidget(parent),
       mEngine(0),
+      mToggleAction(0),
       mStandalone(false)
 {
     loadEngine();
@@ -200,3 +202,11 @@ void ShortUrlWidget::setStandalone(bool b)
     mStandalone = b;
 }
 
+KToggleAction *ShortUrlWidget::toggleAction()
+{
+    if (!mToggleAction) {
+        mToggleAction = new KToggleAction( i18n("Generate Shorten Url"), this );
+        mToggleAction->setChecked(false);
+    }
+    return mToggleAction;
+}

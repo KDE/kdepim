@@ -185,6 +185,8 @@ class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
 
     void forcePlainTextMarkup(bool force);
 
+    void insertLink(const QString &url);
+
 
   public Q_SLOTS:
     void startExternalEditor();

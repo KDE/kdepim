@@ -21,6 +21,7 @@
 
 #include "dropbox/dropboxstorageservice.h"
 #include "hubic/hubicstorageservice.h"
+#include "ubuntuone/ubuntuonestorageservice.h"
 
 #include <KLocale>
 #include <KFileDialog>
@@ -70,7 +71,7 @@ QMenu *StorageServiceManager::menuServices()
                 //FIXME
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), mMenuService);
                 act->setData(i.key());
-                connect(act, SIGNAL(toggled(bool)), this, SLOT(slotShareFile()));
+                connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
                 mMenuService->addAction(act);
             }
         }
@@ -105,6 +106,10 @@ void StorageServiceManager::readConfig()
             if (!mListService.contains(serviceName(Hubic))) {
                 mListService.insert(service, new HubicStorageService());
             }
+        } else if (service == serviceName(UbuntuOne)) {
+            if (!mListService.contains(serviceName(UbuntuOne))) {
+                mListService.insert(service, new UbuntuoneStorageService());
+            }
         }
     }
 }
@@ -122,6 +127,8 @@ QString StorageServiceManager::description(ServiceType type)
         return PimCommon::DropBoxStorageService::description();
     case Hubic:
         return PimCommon::HubicStorageService::description();
+    case UbuntuOne:
+        return PimCommon::UbuntuoneStorageService::description();
     default:
         return QString();
     }
@@ -135,6 +142,8 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::DropBoxStorageService::serviceUrl();
     case Hubic:
         return PimCommon::HubicStorageService::serviceUrl();
+    case UbuntuOne:
+        return PimCommon::UbuntuoneStorageService::serviceUrl();
     default:
         return QString();
     }
@@ -149,6 +158,8 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::DropBoxStorageService::serviceName();
     case Hubic:
         return PimCommon::HubicStorageService::serviceName();
+    case UbuntuOne:
+        return PimCommon::UbuntuoneStorageService::serviceName();
     default:
         return QString();
     }
@@ -161,6 +172,8 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::DropBoxStorageService::name();
     case Hubic:
         return PimCommon::HubicStorageService::name();
+    case UbuntuOne:
+        return PimCommon::UbuntuoneStorageService::name();
     default:
         return QString();
     }

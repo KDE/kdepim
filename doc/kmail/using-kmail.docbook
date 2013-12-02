@@ -278,9 +278,7 @@ If your message is not finished yet, select <menuchoice><guimenu>Message</guimen
   If you would like to print your message, select <menuchoice><guimenu>Message</guimenu><guimenuitem>Print Preview</guimenuitem></menuchoice> to preview the message, and
     <menuchoice><guimenu>Message</guimenu><guimenuitem>Print</guimenuitem></menuchoice> to print it.</para>
   <para id="send-later"><menuchoice><guimenu>Message</guimenu><guimenuitem>Send Later</guimenuitem></menuchoice>
-    allows you to schedule your emails to send at a specific date and time. You can configure it to repeat sending the message by checking <guilabel>Repeat every:</guilabel>
-    checkbox and selecting the desired intervals. This is useful if you need to send out reminders to someone on a consistent basis, &eg; employees. You can put the
-    message in your queued messages by selecting the <guibutton>Put in outbox</guibutton> button or select the <guibutton>Send Later</guibutton> button to schedule the message immediately.</para>
+    allows you to schedule your emails to send at a specific date and time. Please see <ulink url="help:/akonadi_sendlater_agent">Send Later Agent</ulink> for details.</para>
 </listitem>
 </varlistentry>
 <varlistentry id="new-compose-from-templates"><term><menuchoice><guimenu>File</guimenu><guisubmenu>New</guisubmenu><guisubmenu>Message From Template</guisubmenu>
@@ -1791,35 +1789,25 @@ you need to debug your filtering process.
 </sect1>
 
 <sect1 id="backups">
-  <title>Backing up &kmail;</title>
-  <para>This section describes various backup solutions within &kmail;.</para>
-  <sect2 id="archiving">
-    <title>Automatic Archiving</title>
-    <variablelist>
-    <varlistentry id="auto-archive"><term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Configure Automatic Archiving...</guimenuitem></menuchoice></term>
-      <listitem>
-        <para>This is a powerful tool that can be used to assist in backing up your email. To use this, click
-          the <guibutton>Add...</guibutton> button, and the <guilabel>Add Archive Mail</guilabel> dialog will pop up.</para>
-          <itemizedlist>
-            <listitem><para>First select the folder you would like to archive.</para></listitem>
-            <listitem><para>Select the format you would like to save it in. &eg; <literal role="extension">.tar.bz2</literal> in the drop down list.</para></listitem>
-            <listitem><para>By default <guilabel>Archive all subfolders</guilabel> is enabled. Uncheck this if you only want the parent folder archived.</para></listitem>
-            <listitem><para>You can type in the location you would like to save your archive, or click the <guibutton>Open File Dialog</guibutton> button to select the folder.</para></listitem>
-            <listitem><para>Select how often you wish to backup through the dropdown menues next to <guilabel>Backup each:</guilabel>.</para></listitem>
-            <listitem><para>If you are limited on drive space you will want to set a limit on <guilabel>Maximum number of archive:</guilabel>.</para></listitem>
-          </itemizedlist>
-        </listitem>
-      </varlistentry>
-      <!-- fixme: 4.12? incompatible with Tools -> Configure Automatic Archiving... -->
-      <varlistentry id="archive-folder"><term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice></term>
-        <listitem>
-          <para>This dialog allows you to enable/disable the folder archive agent. It is enabled by default, to disable uncheck the <guilabel>Enable</guilabel>
-            checkbox. You can change the location of your Archive folder by clicking the folder icon next to
-            <guilabel>Archive folder:</guilabel> and selecting the folder you wish to use.</para>
-        </listitem>
-	</varlistentry>
-    </variablelist>
-  </sect2>
+<title>Backing up &kmail;</title>
+<para>This section describes various backup solutions within &kmail;.</para>
+<sect2 id="archiving">
+<title>Automatic Archiving</title>
+<variablelist>
+<varlistentry id="auto-archive">
+<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Automatic Archiving...</guimenuitem></menuchoice></term>
+<listitem>
+<para>This is a powerful tool that can be used to assist in backing up your email. Please see <ulink url="help:/akonadi_archivemail_agent">Automatic Archiving</ulink> for details.</para>
+</listitem>
+</varlistentry>
+<varlistentry id="archive-folder">
+<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Folder Archive Agent...</guimenuitem></menuchoice></term>
+<listitem>
+<para>This feature allows you to archive single emails to a specified folder. Please see <ulink url="help:/akonadi_folderarchive_agent">Folder Archive Agent</ulink> for details.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
   
 </sect1>
 
