@@ -120,6 +120,7 @@ void DropBoxStorageService::accountInfo()
 
 void DropBoxStorageService::slotAccountInfoDone(const PimCommon::AccountInfo &info)
 {
+    qDebug()<<" DropBoxStorageService::slotAccountInfoDone : accountSize :"<<info.accountSize<<" quota :"<<info.quota<<" shared :"<<info.shared<<" displayName :"<<info.displayName;
     Q_EMIT accountInfoDone(info);
 }
 

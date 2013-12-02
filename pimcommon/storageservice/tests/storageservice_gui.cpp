@@ -62,6 +62,7 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     QMenu *menu = new QMenu(QLatin1String("Service"));
     connect(menu, SIGNAL(aboutToShow()), this, SLOT(slotServiceMenu()));
     act->setMenu(menu);
+
     mEdit = new QTextEdit;
     lay->addWidget(mEdit);
     setLayout(lay);

@@ -298,7 +298,7 @@ void DropBoxJob::uploadFile(const QString &filename)
         mActionType = UploadFiles;
         mError = false;
         QFileInfo info(filename);
-        QUrl url(QString::fromLatin1("https://api.dropbox.com/1/files_put/dropbox////AAAAAA/%1").arg(info.fileName()));
+        QUrl url(QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox/%1").arg(info.fileName()));
         url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey );
         url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
         url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));
@@ -315,7 +315,8 @@ void DropBoxJob::uploadFile(const QString &filename)
             return;
         } else {
             QByteArray tmp = "test";
-            QNetworkReply *reply = mNetworkAccessManager->post(request, tmp);
+            QNetworkReply *reply = mNetworkAccessManager->put(request, tmp);
+            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64, qint64)));
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
         }
@@ -361,4 +362,9 @@ void DropBoxJob::listFolder()
 
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+void DropBoxJob::slotUploadFileProgress(qint64 done, qint64 total)
+{
+    qDebug()<<" done "<<done<<" total :"<<total;
 }

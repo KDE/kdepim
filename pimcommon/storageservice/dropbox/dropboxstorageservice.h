@@ -47,7 +47,7 @@ private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void slotCreateFolderDone();
     void slotUploadFileDone();
-    void slotAccountInfoDone(const AccountInfo &info);
+    void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotListFolderDone();
     void slotAuthorizationFailed();
 
