@@ -1144,8 +1144,8 @@ Please see next section for details.</para></note></listitem>
 <guimenu>Tools</guimenu>
 <guisubmenu>Export &kmail; Data...</guisubmenu>
 </menuchoice></term>
-<listitem><para><action>Brings up the Export Data Wizard dialog</action> which assists in easily exporting your settings and email.
- Please see <link linkend="export-data-wizard">Export &kmail; Data</link> for details.</para></listitem>
+<listitem><para><action>Brings up the PIM Setting Exporter dialog</action> which assists in easily exporting your settings and email.
+ Please see <ulink url="help:/pimsettingexporter">pimsettingexporter</ulink> for details.</para></listitem>
 </varlistentry>
 <varlistentry id="reader-tools-account-wizard">
 <term><menuchoice>
