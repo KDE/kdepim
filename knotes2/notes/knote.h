@@ -36,7 +36,6 @@ class QLabel;
 class QLayout;
 class QSizeGrip;
 
-class KFind;
 class KMenu;
 class KNoteButton;
 class KNoteEdit;

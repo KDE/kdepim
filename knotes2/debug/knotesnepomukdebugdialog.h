@@ -24,7 +24,6 @@ class AkonadiResultListView;
 class PlainTextEditorWidget;
 }
 class KJob;
-class QItemSelectionModel;
 class QModelIndex;
 class KNotesNepomukDebugDialog : public KDialog
 {

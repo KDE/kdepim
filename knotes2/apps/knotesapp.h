@@ -35,8 +35,6 @@
 
 class QTcpServer;
 class KNotesAkonadiTray;
-class KAction;
-class KFind;
 class KMenu;
 class KNote;
 class KNotesAlarm;
