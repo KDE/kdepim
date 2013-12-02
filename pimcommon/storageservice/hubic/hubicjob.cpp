@@ -16,13 +16,19 @@
 */
 
 #include "hubicjob.h"
+
+#include <qjson/parser.h>
+
 #include <QNetworkAccessManager>
+#include <QDebug>
+#include <QNetworkReply>
 
 using namespace PimCommon;
 
 HubicJob::HubicJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
 HubicJob::~HubicJob()
@@ -58,4 +64,60 @@ void HubicJob::initializeToken(const QString &accessToken, const QString &access
 void HubicJob::createFolder(const QString &filename)
 {
 
+}
+
+
+void HubicJob::slotSendDataFinished(QNetworkReply *reply)
+{
+    const QString data = QString::fromUtf8(reply->readAll());
+    reply->deleteLater();
+    if (mError) {
+        qDebug()<<" error type "<<data;
+        QJson::Parser parser;
+        bool ok;
+
+        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
+        if (error.contains(QLatin1String("error"))) {
+            const QString errorStr = error.value(QLatin1String("error")).toString();
+            switch(mActionType) {
+            case NoneAction:
+                break;
+            case RequestToken:
+                break;
+            case AccessToken:
+                break;
+            case UploadFiles:
+                break;
+            case CreateFolder:
+                break;
+            case AccountInfo:
+                break;
+            case ListFolder:
+                break;
+            default:
+                qDebug()<<" Action Type unknown:"<<mActionType;
+                deleteLater();
+                break;
+            }
+        }
+        return;
+    }
+    switch(mActionType) {
+    case NoneAction:
+        break;
+    case RequestToken:
+        break;
+    case AccessToken:
+        break;
+    case UploadFiles:
+        break;
+    case CreateFolder:
+        break;
+    case AccountInfo:
+        break;
+    case ListFolder:
+        break;
+    default:
+        qDebug()<<" Action Type unknown:"<<mActionType;
+    }
 }

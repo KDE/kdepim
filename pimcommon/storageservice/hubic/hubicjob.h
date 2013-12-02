@@ -20,7 +20,7 @@
 
 #include <QObject>
 #include "storageservice/storageserviceabstractjob.h"
-class QNetworkAccessManager;
+class QNetworkReply;
 namespace PimCommon {
 class HubicJob : public PimCommon::StorageServiceAbstractJob
 {
@@ -36,6 +36,8 @@ public:
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename);
 
+private slots:
+    void slotSendDataFinished(QNetworkReply *reply);
 };
 }
 
