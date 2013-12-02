@@ -32,6 +32,9 @@ public:
     QString password() const;
     QString username() const;
 
+private slots:
+    void slotUserNameChanged(const QString &passwd);
+
 private:
     KLineEdit *mUsername;
     KLineEdit *mPassword;

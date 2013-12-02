@@ -55,6 +55,9 @@ void UbuntuOneJob::requestTokenAccess()
         qDebug()<<" postData "<<url;
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+        request.setRawHeader("Accept", "application/json");
+        request.setRawHeader("Authorization", "Basic ss" ); //FIXME
+
         QNetworkReply *reply = mNetworkAccessManager->get(request);
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     }

@@ -48,6 +48,8 @@ LoginDialog::LoginDialog(QWidget *parent)
     mPassword->setEchoMode(KLineEdit::Password);
 
     setMainWidget(w);
+    connect(mUsername, SIGNAL(textChanged(QString)), this, SLOT(slotUserNameChanged(QString)));
+    enableButtonOk(false);
 }
 
 LoginDialog::~LoginDialog()
@@ -63,4 +65,9 @@ QString LoginDialog::password() const
 QString LoginDialog::username() const
 {
     return mUsername->text();
+}
+
+void LoginDialog::slotUserNameChanged(const QString &name)
+{
+    enableButtonOk(!name.isEmpty());
 }
