@@ -103,6 +103,7 @@ private:
     void saveNotes();
     void updateNetworkListener();
     void updateSystray();
+    void migrateToAkonadi();
     KXMLGUIFactory  *m_guiFactory;
     KXMLGUIBuilder  *m_guiBuilder;
     QDomDocument    m_noteGUI;
