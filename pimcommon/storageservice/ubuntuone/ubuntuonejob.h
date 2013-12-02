@@ -20,6 +20,7 @@
 #define UBUNTUONEJOB_H
 
 #include "storageservice/storageserviceabstractjob.h"
+class QNetworkReply;
 namespace PimCommon {
 class UbuntuOneJob : public PimCommon::StorageServiceAbstractJob
 {
@@ -34,6 +35,9 @@ public:
     void accountInfo();
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename);
+
+private Q_SLOTS:
+    void slotSendDataFinished(QNetworkReply *reply);
 };
 }
 

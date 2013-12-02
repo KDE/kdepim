@@ -69,7 +69,6 @@ private:
     QString mAccessOauthSignature;
     QString mOauthToken;
     bool mInitialized;
-    bool mError;
 };
 }
 

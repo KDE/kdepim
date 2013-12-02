@@ -22,7 +22,8 @@ using namespace PimCommon;
 
 StorageServiceAbstractJob::StorageServiceAbstractJob(QObject *parent)
     : QObject(parent),
-      mNetworkAccessManager(new QNetworkAccessManager(this))
+      mNetworkAccessManager(new QNetworkAccessManager(this)),
+      mError(false)
 {
 }
 

@@ -50,6 +50,7 @@ protected:
 
     QNetworkAccessManager *mNetworkAccessManager;
     ActionType mActionType;
+    bool mError;
 };
 }
 
