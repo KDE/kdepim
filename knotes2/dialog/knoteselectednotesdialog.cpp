@@ -30,22 +30,13 @@ KNoteSelectedNotesDialog::KNoteSelectedNotesDialog(QWidget *parent)
 {
     setCaption( i18n( "Select notes" ) );
     setButtons( Ok | Cancel );
-    QWidget *w = new QWidget;
-    QVBoxLayout *vbox = new QVBoxLayout;
-    w->setLayout(vbox);
 
     mListNotes = new QListWidget;
     mListNotes->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    vbox->addWidget(mListNotes);
 
-    QHBoxLayout *lay = new QHBoxLayout;
-    lay->setMargin(0);
-    vbox->addLayout(lay);
-    QLabel *lab = new QLabel(i18n("Printing theme:"));
-    lay->addWidget(lab);
 
     connect(mListNotes, SIGNAL(itemSelectionChanged()), this, SLOT(slotSelectionChanged()));
-    setMainWidget(w);
+    setMainWidget(mListNotes);
     readConfig();
     slotSelectionChanged();
 }
