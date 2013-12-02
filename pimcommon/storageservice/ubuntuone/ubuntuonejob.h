@@ -20,7 +20,7 @@
 #define UBUNTUONEJOB_H
 
 #include "storageservice/storageserviceabstractjob.h"
-class QNetworkReply;
+#include <QNetworkReply>
 namespace PimCommon {
 class UbuntuOneJob : public PimCommon::StorageServiceAbstractJob
 {
@@ -38,6 +38,7 @@ public:
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *reply);
+    void slotError(QNetworkReply::NetworkError);
 };
 }
 

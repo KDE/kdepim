@@ -21,7 +21,6 @@
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
-#include <QNetworkReply>
 #include <QPointer>
 #include <QDebug>
 
@@ -50,11 +49,13 @@ void UbuntuOneJob::requestTokenAccess()
     delete dlg;
     if (!username.isEmpty()) {
         mActionType = RequestToken;
-        QNetworkRequest request(QUrl(QLatin1String("https://login.ubuntu.com/api/1.0/authentications")));
+        QUrl url(QLatin1String("https://login.ubuntu.com/api/1.0/authentications"));
+        url.addQueryItem(QLatin1String("ws.op"), QLatin1String("authenticate"));
+        url.addQueryItem(QLatin1String("token_name"), QLatin1String("Ubuntu One @ foo") );
+        qDebug()<<" postData "<<url;
+        QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-
-        QUrl postData;
-        QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+        QNetworkReply *reply = mNetworkAccessManager->get(request);
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     }
 }
@@ -137,4 +138,10 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::slotError(QNetworkReply::NetworkError )
+{
+    qDebug()<<" Error ";
+    mError = true;
 }
