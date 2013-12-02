@@ -19,13 +19,19 @@
 #define KNOTEFINDDIALOG_H
 
 #include <KDialog>
+#include "knotes_export.h"
+class QPushButton;
 
-class KNoteFindDialog : public KDialog
+class KNOTES_EXPORT KNoteFindDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit KNoteFindDialog(QWidget *parent=0);
     ~KNoteFindDialog();
+
+private:
+    QPushButton *mSearchNote;
+
 };
 
 #endif // KNOTEFINDDIALOG_H

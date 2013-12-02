@@ -17,9 +17,14 @@
 
 #include "knotefinddialog.h"
 
+#include <KLocale>
+#include <QHBoxLayout>
+
 KNoteFindDialog::KNoteFindDialog(QWidget *parent)
     : KDialog(parent)
 {
+    setCaption(i18n("Search Notes"));
+    setButtons(Close);
 }
 
 KNoteFindDialog::~KNoteFindDialog()

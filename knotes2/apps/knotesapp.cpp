@@ -46,6 +46,7 @@
 #include "noteshared/network/notesnetworkreceiver.h"
 #include "dialog/knoteskeydialog.h"
 #include "print/knoteprintselectednotesdialog.h"
+#include "finddialog/knotefinddialog.h"
 
 #include <KMime/KMimeMessage>
 #include "akonadi_next/note.h"
@@ -64,10 +65,7 @@
 
 #include <KMessageBox>
 #include <kaction.h>
-#include <kconfig.h>
 #include <kdebug.h>
-#include <kfind.h>
-#include <kfinddialog.h>
 #include <khelpmenu.h>
 #include <kicon.h>
 #include <kiconeffect.h>
@@ -149,6 +147,9 @@ KNotesApp::KNotesApp()
     actionCollection()->addAction( QLatin1String("debug_nepomuk"), action );
     connect( action, SIGNAL(triggered()), SLOT(slotDebugNepomukSelectedNotes()) );
 #endif
+    mFindAction = KStandardAction::find( this, SLOT(slotOpenFindDialog()), actionCollection());
+
+
 
     new KHelpMenu( this, KGlobal::mainComponent().aboutData(), false,
                    actionCollection() );
@@ -338,6 +339,9 @@ void KNotesApp::slotNoteCreationFinished(KJob *job)
 {
     if (job->error()) {
         kWarning() << job->errorString();
+        KNotesGlobalConfig::self()->setDefaultFolder(-1);
+        KNotesGlobalConfig::self()->writeConfig();
+        KMessageBox::error(this, i18n("Note was not created."), i18n("Create new note"));
         return;
     }
 }
@@ -669,5 +673,12 @@ void KNotesApp::slotDebugNepomukSelectedNotes()
         nepomukDebug->exec();
         delete nepomukDebug;
     }
+    delete dlg;
+}
+
+void KNotesApp::slotOpenFindDialog()
+{
+    QPointer<KNoteFindDialog> dlg = new KNoteFindDialog(this);
+    dlg->exec();
     delete dlg;
 }

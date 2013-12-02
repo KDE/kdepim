@@ -37,6 +37,7 @@ class QTcpServer;
 class KNotesAkonadiTray;
 class KMenu;
 class KNote;
+class KAction;
 class KNotesAlarm;
 class KXMLGUIBuilder;
 class KXMLGUIFactory;
@@ -95,7 +96,8 @@ private Q_SLOTS:
     void slotShowNote();
     void slotWalkThroughNotes();
     void slotNoteKilled( Akonadi::Item::Id );
-    void slotDebugNepomukSelectedNotes();
+    void slotDebugNepomukSelectedNotes();    
+    void slotOpenFindDialog();
 
 private:
     void saveNotes();
@@ -114,6 +116,7 @@ private:
     NoteShared::NotesChangeRecorder *mNoteRecorder;
     NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;
     KNotesAlarm            *m_alarm;
+    KAction *mFindAction;
 };
 
 #endif
