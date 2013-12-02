@@ -27,7 +27,7 @@ set(libknotes2private_lib_SRCS
     alarms/knotesalarm.cpp
     alarms/knotealarmdialog.cpp
     print/knoteprintobject.cpp
-
+    utils/knoteutils.cpp
 )
 
 configure_file( settings/knotesglobalconfig.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/knotesglobalconfig.kcfg )
