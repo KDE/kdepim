@@ -83,6 +83,11 @@ void DropBoxStorageService::slotErrorFound(const QString &error)
     qDebug()<<" error found "<<error;
 }
 
+void DropBoxStorageService::slotUploadFileProgress(qint64 done, qint64 total)
+{
+    Q_EMIT uploadFileProgress(serviceName(), done, total);
+}
+
 void DropBoxStorageService::listFolder()
 {
     DropBoxJob *job = new DropBoxJob(this);

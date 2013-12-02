@@ -21,7 +21,6 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/pimcommon_export.h"
 namespace PimCommon {
-class DropBoxToken;
 class PIMCOMMON_EXPORT DropBoxStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
@@ -52,6 +51,8 @@ private slots:
     void slotAuthorizationFailed();
 
     void slotErrorFound(const QString &error);
+    void slotUploadFileProgress(qint64,qint64);
+
 private:
     void readConfig();
     QString mAccessToken;

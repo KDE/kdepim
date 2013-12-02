@@ -29,9 +29,4 @@ StorageServiceAbstract::~StorageServiceAbstract()
 
 }
 
-void StorageServiceAbstract::slotUploadFileProgress(qint64, qint64)
-{
-    //TODO
-}
-
 #include "moc_storageserviceabstract.cpp"

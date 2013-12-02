@@ -367,4 +367,5 @@ void DropBoxJob::listFolder()
 void DropBoxJob::slotUploadFileProgress(qint64 done, qint64 total)
 {
     qDebug()<<" done "<<done<<" total :"<<total;
+    Q_EMIT uploadFileProgress(done, total);
 }
