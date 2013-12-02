@@ -37,6 +37,7 @@
 #include "noteshared/attributes/notedisplayattribute.h"
 #include "noteshared/attributes/notealarmattribute.h"
 
+#include "pimcommon/nepomukdebug/searchdebugnepomukshowdialog.h"
 
 #include <KMime/KMimeMessage>
 
@@ -723,6 +724,11 @@ void KNote::createActions()
     // initially populate it, otherwise stays disabled
     slotUpdateDesktopActions();
 #endif
+#if !defined(NDEBUG)
+    action  = new KAction( i18n( "Debug nepomuk..." ), this );
+    actionCollection()->addAction( QLatin1String("debug_nepomuk"), action );
+    connect( action, SIGNAL(triggered(bool)), SLOT(slotDebugNepomuk()) );
+#endif
 
     // invisible action to walk through the notes to make this configurable
     action  = new KAction( i18n( "Walk Through Notes" ), this );
@@ -1182,3 +1188,11 @@ Akonadi::Item KNote::item() const
     return mItem;
 }
 
+void KNote::slotDebugNepomuk()
+{
+    if (mItem.isValid()) {
+        QPointer<PimCommon::SearchDebugNepomukShowDialog> dlg = new PimCommon::SearchDebugNepomukShowDialog(QString::fromLatin1("akonadi:?item=%1").arg(mItem.id()), this);
+        dlg->exec();
+        delete dlg;
+    }
+}
