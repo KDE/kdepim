@@ -34,6 +34,7 @@
 #include <QInputDialog>
 #include <QPointer>
 #include <QProcess>
+#include <QSplitter>
 
 using namespace PimCommon;
 
@@ -45,9 +46,13 @@ NepomukDebugDialog::NepomukDebugDialog(const QStringList &listUid, QWidget *pare
     setButtonText(User1, i18n("Search info with nepomukshow..."));
     setDefaultButton( Close );
 
-    QWidget *w = new QWidget;
-    QHBoxLayout *lay = new QHBoxLayout;
-    w->setLayout(lay);
+    QSplitter *horizontalSplitter = new QSplitter(Qt::Horizontal);
+    setMainWidget(horizontalSplitter);
+
+
+    QSplitter *verticalSplitter = new QSplitter(Qt::Vertical);
+
+
     mResult = new PimCommon::PlainTextEditorWidget;
     mResult->setReadOnly(true);
 
@@ -59,15 +64,12 @@ NepomukDebugDialog::NepomukDebugDialog(const QStringList &listUid, QWidget *pare
     mNepomukResult->setReadOnly(true);
 
 
-    lay->addWidget(mListView);
+    horizontalSplitter->addWidget(mListView);
+    horizontalSplitter->addWidget(verticalSplitter);
+    verticalSplitter->addWidget(mResult);
+    verticalSplitter->addWidget(mNepomukResult);
 
-    QVBoxLayout *vbox = new QVBoxLayout;
-    lay->addLayout(vbox);
 
-    vbox->addWidget(mResult);
-    vbox->addWidget(mNepomukResult);
-
-    setMainWidget( w );
     resultModel->setStringList( listUid );
     readConfig();
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSearchInfoWithNepomuk()));
