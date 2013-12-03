@@ -84,6 +84,7 @@ set(libpimcommon_nepomukdebug_SRCS
   nepomukdebug/sparqlsyntaxhighlighter.cpp
   nepomukdebug/akonadiresultlistview.cpp
   nepomukdebug/nepomukdebugutils.cpp
+  nepomukdebug/nepomukdebugdialog.cpp
 )
 
 set(libpimcommon_folderdialog_SRCS

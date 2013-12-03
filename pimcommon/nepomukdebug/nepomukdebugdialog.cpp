@@ -15,9 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "nepomukdebugdialog.h"
-#include "utils.h"
 
 #include "pimcommon/nepomukdebug/searchdebugnepomukshowdialog.h"
 #include "pimcommon/nepomukdebug/akonadiresultlistview.h"
@@ -35,7 +33,9 @@
 #include <QInputDialog>
 #include <QPointer>
 
-NepomukDebugDialog::NepomukDebugDialog(QItemSelectionModel *selectionModel, QWidget *parent)
+using namespace PimCommon;
+
+NepomukDebugDialog::NepomukDebugDialog(const QStringList &listUid, QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Nepomuk Debug"));
@@ -57,20 +57,33 @@ NepomukDebugDialog::NepomukDebugDialog(QItemSelectionModel *selectionModel, QWid
     lay->addWidget(mResult);
 
     setMainWidget( w );
-    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(selectionModel);
-    QStringList uidList;
-    Q_FOREACH ( const Akonadi::Item &item, lst ) {
-        uidList << QString::number( item.id() );
-    }
-    resultModel->setStringList( uidList );
+    resultModel->setStringList( listUid );
     readConfig();
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotSearchInfoWithNepomuk()));
     connect( mListView, SIGNAL(activated(QModelIndex)), this, SLOT(slotShowItem(QModelIndex)) );
+
+    readConfig();
 }
 
 NepomukDebugDialog::~NepomukDebugDialog()
 {
     writeConfig();
+}
+
+void NepomukDebugDialog::readConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "NepomukDebugDialog" );
+    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void NepomukDebugDialog::writeConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "NepomukDebugDialog");
+    grp.writeEntry( "Size", size() );
+    grp.sync();
 }
 
 void NepomukDebugDialog::slotShowItem(const QModelIndex &index)
@@ -100,22 +113,6 @@ void NepomukDebugDialog::slotItemFetched(KJob *job)
     }
 }
 
-void NepomukDebugDialog::readConfig()
-{
-    KConfigGroup grp( KGlobal::config(), "NepomukDebugDialog" );
-    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
-    if ( size.isValid() ) {
-        resize( size );
-    }
-}
-
-void NepomukDebugDialog::writeConfig()
-{
-    KConfigGroup grp( KGlobal::config(), "NepomukDebugDialog");
-    grp.writeEntry( "Size", size() );
-    grp.sync();
-}
-
 void NepomukDebugDialog::slotSearchInfoWithNepomuk()
 {
     QString defaultValue;
@@ -129,5 +126,3 @@ void NepomukDebugDialog::slotSearchInfoWithNepomuk()
     dlg->exec();
     delete dlg;
 }
-
-#include "moc_nepomukdebugdialog.cpp"

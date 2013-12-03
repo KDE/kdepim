@@ -28,7 +28,7 @@
 #include "quicksearchwidget.h"
 #include "settings.h"
 #include "xxportmanager.h"
-#include "debug/nepomukdebugdialog.h"
+#include "utils.h"
 #include "kaddressbookadaptor.h"
 
 
@@ -41,6 +41,8 @@
 
 #include <pimcommon/acl/collectionaclpage.h>
 #include <pimcommon/acl/imapaclattribute.h>
+#include "pimcommon/nepomukdebug/nepomukdebugdialog.h"
+
 
 #include <Akonadi/ETMViewStateSaver>
 #include <Akonadi/CollectionFilterProxyModel>
@@ -921,7 +923,14 @@ void MainWidget::slotSearchDuplicateContacts()
 
 void MainWidget::slotDebugNepomuk()
 {
-    QPointer<NepomukDebugDialog> dlg = new NepomukDebugDialog(mItemView->selectionModel(), this);
+    QStringList uidList;
+    const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(mItemView->selectionModel());
+    Q_FOREACH ( const Akonadi::Item &item, lst ) {
+        uidList << QString::number( item.id() );
+    }
+
+
+    QPointer<PimCommon::NepomukDebugDialog> dlg = new PimCommon::NepomukDebugDialog(uidList, this);
     dlg->exec();
     delete dlg;
 }

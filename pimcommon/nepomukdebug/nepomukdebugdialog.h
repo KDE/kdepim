@@ -15,22 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KNOTESNEPOMUKDEBUGDIALOG_H
-#define KNOTESNEPOMUKDEBUGDIALOG_H
+#ifndef NEPOMUKDEBUGDIALOG_H
+#define NEPOMUKDEBUGDIALOG_H
 
 #include <KDialog>
+#include "pimcommon_export.h"
+class KJob;
+class QModelIndex;
 namespace PimCommon {
 class AkonadiResultListView;
 class PlainTextEditorWidget;
-}
-class KJob;
-class QModelIndex;
-class KNotesNepomukDebugDialog : public KDialog
+class PIMCOMMON_EXPORT NepomukDebugDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KNotesNepomukDebugDialog(const QStringList &listUid, QWidget *parent=0);
-    ~KNotesNepomukDebugDialog();
+    explicit NepomukDebugDialog(const QStringList &listUid, QWidget *parent=0);
+    ~NepomukDebugDialog();
 
 private slots:
     void slotSearchInfoWithNepomuk();
@@ -43,5 +43,6 @@ private:
     PimCommon::AkonadiResultListView *mListView;
     PimCommon::PlainTextEditorWidget *mResult;
 };
+}
 
-#endif // KNOTESNEPOMUKDEBUGDIALOG_H
+#endif // NEPOMUKDEBUGDIALOG_H
