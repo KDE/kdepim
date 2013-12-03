@@ -35,6 +35,7 @@ public:
         DropBox = 0,
         Hubic,
         UbuntuOne,
+        YouSendIt,
 
         //Last element
         EndListService

@@ -21,6 +21,7 @@
 #include "storageservice/dropbox/dropboxstorageservice.h"
 #include "storageservice/hubic/hubicstorageservice.h"
 #include "storageservice/ubuntuone/ubuntuonestorageservice.h"
+#include "storageservice/yousendit/yousenditstorageservice.h"
 #include "settings/pimcommonsettings.h"
 #include <KLocale>
 #include <KMessageBox>
@@ -107,6 +108,9 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::UbuntuOne)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::UbuntuOne);
             type = PimCommon::StorageServiceManager::UbuntuOne;
+        } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::YouSendIt)) {
+            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::YouSendIt);
+            type = PimCommon::StorageServiceManager::YouSendIt;
         }
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(serviceName);
@@ -163,6 +167,10 @@ void StorageServiceSettingsWidget::slotAddService()
             storage = new PimCommon::UbuntuoneStorageService;
             break;
         }
+        case PimCommon::StorageServiceManager::YouSendIt: {
+            storage = new PimCommon::YouSendItStorageService;
+            break;
+        }
         default:
             break;
         }
@@ -191,6 +199,9 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         }
     } else {
         mDescription->clear();
+        mAccountSize->clear();
+        mQuota->clear();
+        mShared->clear();
     }
     updateButtons();
 }

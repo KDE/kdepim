@@ -172,6 +172,7 @@ add_subdirectory(folderdialog/tests/)
 add_subdirectory(storageservice/dropbox/tests)
 add_subdirectory(storageservice/hubic/tests)
 add_subdirectory(storageservice/tests)
+add_subdirectory(storageservice/yousendit/tests)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
