@@ -116,13 +116,6 @@ void DropBoxJob::getTokenAccess()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void DropBoxJob::slotError(QNetworkReply::NetworkError error)
-{
-    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-    qDebug()<<" Error "<<error<<" reply"<<reply->errorString();
-    mError = true;
-}
-
 void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
 {
     const QString data = QString::fromUtf8(reply->readAll());

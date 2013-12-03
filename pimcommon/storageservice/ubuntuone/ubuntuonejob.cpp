@@ -142,9 +142,3 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
 }
-
-void UbuntuOneJob::slotError(QNetworkReply::NetworkError )
-{
-    qDebug()<<" Error ";
-    mError = true;
-}

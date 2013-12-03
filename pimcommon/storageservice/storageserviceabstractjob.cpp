@@ -17,6 +17,7 @@
 
 #include "storageserviceabstractjob.h"
 #include <QNetworkAccessManager>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -30,4 +31,11 @@ StorageServiceAbstractJob::StorageServiceAbstractJob(QObject *parent)
 StorageServiceAbstractJob::~StorageServiceAbstractJob()
 {
 
+}
+
+void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
+    qDebug()<<" Error "<<error<<" reply"<<reply->errorString();
+    mError = true;
 }

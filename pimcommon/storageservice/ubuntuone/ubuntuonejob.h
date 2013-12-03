@@ -38,7 +38,6 @@ public:
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *reply);
-    void slotError(QNetworkReply::NetworkError);
 };
 }
 

@@ -19,6 +19,7 @@
 #define STORAGESERVICEABSTRACTJOB_H
 
 #include <QObject>
+#include <QNetworkReply>
 
 class QNetworkAccessManager;
 namespace PimCommon {
@@ -36,6 +37,9 @@ public:
     virtual void accountInfo() = 0;
     virtual void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature) = 0;
     virtual void createFolder(const QString &filename=QString()) = 0;
+
+protected Q_SLOTS:
+    void slotError(QNetworkReply::NetworkError);
 
 protected:
     enum ActionType {

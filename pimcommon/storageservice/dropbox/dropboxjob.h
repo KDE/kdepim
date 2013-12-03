@@ -37,7 +37,6 @@ public:
     void createFolder(const QString &filename=QString());
 
 private Q_SLOTS:
-    void slotError(QNetworkReply::NetworkError /*error*/);    
     void slotSendDataFinished(QNetworkReply *);    
     void slotUploadFileProgress(qint64 done, qint64 total);
 
