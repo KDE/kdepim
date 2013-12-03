@@ -32,6 +32,7 @@ public:
 
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply*reply);
+    void slotSslErrors(QNetworkReply *, const QList<QSslError> &error);
 };
 }
 

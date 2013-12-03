@@ -21,7 +21,7 @@
 #include <QNetworkRequest>
 #include <QUrl>
 #include <QDebug>
-
+#include <QSslConfiguration>
 #include <qjson/parser.h>
 
 
@@ -29,6 +29,7 @@ using namespace PimCommon;
 GoogleShortUrl::GoogleShortUrl(QObject *parent)
     : PimCommon::AbstractShortUrl(parent)
 {
+    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), this, SLOT(slotSslErrors(QNetworkReply*,QList<QSslError>)));
 }
 
 GoogleShortUrl::~GoogleShortUrl()
@@ -45,6 +46,11 @@ void GoogleShortUrl::start()
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toUtf8());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotErrorFound(QNetworkReply::NetworkError)));
+}
+
+void GoogleShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)
+{
+    reply->ignoreSslErrors(error);
 }
 
 void GoogleShortUrl::slotShortUrlFinished(QNetworkReply *reply)
