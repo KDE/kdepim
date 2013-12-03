@@ -209,8 +209,8 @@ void StorageServiceSettingsWidget::slotServiceSelected()
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
-        mAccountSize->setText(i18n("Account size: %1", info.accountSize));
-        mQuota->setText(i18n("Quota: %1", info.quota));
-        mShared->setText(i18n("Shared: %1", info.accountSize));
+        mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
+        mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
     }
 }
