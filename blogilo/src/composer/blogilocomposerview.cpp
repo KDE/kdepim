@@ -61,5 +61,7 @@ void BlogiloComposerView::addExtraAction(QMenu *menu)
     menu->addSeparator();
     QAction *translatorAction = menu->addAction(i18n("Translate..."));
     connect( translatorAction, SIGNAL(triggered(bool)), this, SIGNAL(activateTranslator()) );
+    QAction *shortUrltranslatorAction = menu->addAction(i18n("Generate Short Url..."));
+    connect( shortUrltranslatorAction, SIGNAL(triggered(bool)), this, SIGNAL(activateShortUrl()) );
 }
 

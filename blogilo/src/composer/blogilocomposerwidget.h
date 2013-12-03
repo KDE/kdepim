@@ -37,8 +37,8 @@ public:
     BlogiloComposerEditor *editor() const;
 
 private Q_SLOTS:
-    void slotActivateTranslator();
-
+    void slotActivateTranslator();    
+    void slotActivateShortUrl();
 private:
     BlogiloComposerEditor *mEditor;
     PimCommon::CustomToolsWidget *mCustomToolsWidget;

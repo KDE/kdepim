@@ -34,6 +34,7 @@ public:
 
 Q_SIGNALS:
     void activateTranslator();
+    void activateShortUrl();
 
 private Q_SLOTS:
     void slotSendMouseReleaseEvent();

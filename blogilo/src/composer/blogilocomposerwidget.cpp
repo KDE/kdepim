@@ -32,7 +32,9 @@ BlogiloComposerWidget::BlogiloComposerWidget(BlogiloComposerView *view, QWidget 
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     mEditor = new BlogiloComposerEditor(view, this);
+
     connect(view, SIGNAL(activateTranslator()), SLOT(slotActivateTranslator()));
+    connect(view, SIGNAL(activateShortUrl()), SLOT(slotActivateShortUrl()));
     lay->addWidget(mEditor);
     mCustomToolsWidget = new PimCommon::CustomToolsWidget;
     lay->addWidget(mCustomToolsWidget);
@@ -47,6 +49,12 @@ BlogiloComposerWidget::~BlogiloComposerWidget()
 BlogiloComposerEditor *BlogiloComposerWidget::editor() const
 {
     return mEditor;
+}
+
+void BlogiloComposerWidget::slotActivateShortUrl()
+{
+    mCustomToolsWidget->show();
+    mCustomToolsWidget->switchToTool(PimCommon::CustomToolsWidget::ShortUrlTool);
 }
 
 void BlogiloComposerWidget::slotActivateTranslator()
