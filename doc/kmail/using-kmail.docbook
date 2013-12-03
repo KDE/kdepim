@@ -18,8 +18,8 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2013-06-14</date>
-<releaseinfo>4.10.60 (&kde; 4.11)</releaseinfo>
+<date>2013-12-02</date>
+<releaseinfo>(&kde; 4.12)</releaseinfo>
 </chapterinfo>
 
 <title>Using &kmail;</title>
@@ -1792,8 +1792,19 @@ you need to debug your filtering process.
 <title>Backing up &kmail;</title>
 <para>This section describes various backup solutions within &kmail;.</para>
 <sect2 id="archiving">
-<title>Automatic Archiving</title>
+<title>Archiving</title>
 <variablelist>
+<varlistentry id="folder-archive">
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Archive Folder...</guimenuitem></menuchoice></term>
+<listitem>
+<para>This feature is also available through the context menu launched with a &RMB;, then select <guimenuitem>Archive Folder...</guimenuitem>. This will
+<action>open a dialog</action> that allows you to create a single archive of the currently selected folder.</para>
+<para>The <guilabel>Folder:</guilabel> shows the currently selected folder, if you wish to change the folder to be archived click the folder icon.
+ The <guilabel>Format:</guilabel> drop down menu allows you to choose a format (choices are: zip, tar, tar.bz2, and tar.gz).
+ If you would like to change the default name or location, click the folder at the end of <guilabel>Archive File</guilabel>.</para>
+ <para>Check the <guilabel>Delete folder and subfolders after completion</guilabel> if you would like everything you archived deleted.
+ By default all subfolders will be archived, uncheck <guilabel>Archive all subfolders</guilabel> if you only want to archive the parent folder.</para>
+</listitem></varlistentry>
 <varlistentry id="auto-archive">
 <term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Automatic Archiving...</guimenuitem></menuchoice></term>
 <listitem>
@@ -1808,7 +1819,17 @@ you need to debug your filtering process.
 </varlistentry>
 </variablelist>
 </sect2>
-  
+<sect2 id="exporting">
+<title>Exporting</title>
+<variablelist>
+<varlistentry id="settingsexport">
+<term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Export &kmail; Data...</guimenuitem></menuchoice></term>
+<listitem>
+<para>This feature exports settings and local mail to a compressed file. Please see <ulink url="help:/pimsettingexporter">pimsettingexporter</ulink> for details.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect2>
 </sect1>
 
 <sect1 id="multiple-accounts">

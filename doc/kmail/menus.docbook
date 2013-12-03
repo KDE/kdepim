@@ -635,11 +635,9 @@ Please see next section for details.</para></note></listitem>
 <guimenu>Folder</guimenu>
 <guimenuitem>Archive Folder...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Brings up a dialog to allow you to create an archive of the currently selected folder.</action>
- In the dialog select a format (choices are: zip, tar, tar.bz2, and tar.gz). If you would like to
- change the default name or location, click the folder at the end of <guilabel>Archive File</guilabel>.
- Check the <guilabel>Delete folder and subfolders after completion</guilabel> if you would like everything you archived deleted.
- By default all subfolders will be archived, uncheck <guilabel>Archive all subfolders</guilabel> if you only want to archive the parent folder.</para></listitem>
+<listitem><para><action>Brings up a dialog to allow you to create an archive of the currently selected folder.</action> Please see
+    <link linkend="folder-archive">Folder Archive</link> for details.</para>
+ </listitem>
 </varlistentry>
 <varlistentry id="reader-folder-delete-folder">
 <term><menuchoice>
