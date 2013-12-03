@@ -44,6 +44,10 @@ public:
 
     KToggleAction *action(CustomToolsWidget::ToolType type);
 
+    ShortUrlWidget *shortUrlWidget() const;
+    TranslatorWidget *translatorWidget() const;
+
+
 private Q_SLOTS:
     void slotHideTools();
 

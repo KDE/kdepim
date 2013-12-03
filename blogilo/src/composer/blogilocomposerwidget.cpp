@@ -21,6 +21,7 @@
 #include "blogilocomposerwidget.h"
 #include "blogilocomposereditor.h"
 #include "blogilocomposerview.h"
+#include "pimcommon/widgets/customtoolswidget.h"
 #include "pimcommon/translator/translatorwidget.h"
 
 #include <QVBoxLayout>
@@ -33,8 +34,8 @@ BlogiloComposerWidget::BlogiloComposerWidget(BlogiloComposerView *view, QWidget 
     mEditor = new BlogiloComposerEditor(view, this);
     connect(view, SIGNAL(activateTranslator()), SLOT(slotActivateTranslator()));
     lay->addWidget(mEditor);
-    mTranslatorWidget = new PimCommon::TranslatorWidget;
-    lay->addWidget(mTranslatorWidget);
+    mCustomToolsWidget = new PimCommon::CustomToolsWidget;
+    lay->addWidget(mCustomToolsWidget);
     setLayout(lay);
 }
 
@@ -51,8 +52,9 @@ BlogiloComposerEditor *BlogiloComposerWidget::editor() const
 void BlogiloComposerWidget::slotActivateTranslator()
 {
     const QString text = mEditor->view()->selectedText();
-    mTranslatorWidget->show();
+    mCustomToolsWidget->show();
+    mCustomToolsWidget->switchToTool(PimCommon::CustomToolsWidget::TranslatorTool);
     if(!text.isEmpty())
-        mTranslatorWidget->setTextToTranslate(text);
+        mCustomToolsWidget->translatorWidget()->setTextToTranslate(text);
 }
 

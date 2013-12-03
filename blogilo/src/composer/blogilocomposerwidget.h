@@ -25,7 +25,7 @@
 class BlogiloComposerEditor;
 class BlogiloComposerView;
 namespace PimCommon {
-class TranslatorWidget;
+class CustomToolsWidget;
 }
 class BlogiloComposerWidget : public QWidget
 {
@@ -41,7 +41,7 @@ private Q_SLOTS:
 
 private:
     BlogiloComposerEditor *mEditor;
-    PimCommon::TranslatorWidget *mTranslatorWidget;
+    PimCommon::CustomToolsWidget *mCustomToolsWidget;
 };
 
 #endif // BLOGILOCOMPOSERWIDGET_H

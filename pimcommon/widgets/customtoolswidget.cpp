@@ -58,6 +58,17 @@ CustomToolsWidget::~CustomToolsWidget()
 
 }
 
+ShortUrlWidget *CustomToolsWidget::shortUrlWidget() const
+{
+    return mShortUrlWidget;
+}
+
+TranslatorWidget *CustomToolsWidget::translatorWidget() const
+{
+    return mTranslatorWidget;
+}
+
+
 KToggleAction *CustomToolsWidget::action(CustomToolsWidget::ToolType type)
 {
     KToggleAction *act = 0;
