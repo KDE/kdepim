@@ -49,13 +49,16 @@ public:
 
 
 private Q_SLOTS:
-    void slotHideTools();
+    void slotHideTools();    
+    void slotVisibleShortUrlTools(bool b);
+    void slotVisibleTranslatorTools(bool b);
 
 Q_SIGNALS:
     void shortUrlWasClosed();
     void translatorWasClosed();
 
 private:
+    void customToolWasClosed();
     QStackedWidget *mStackedWidget;
     ShortUrlWidget *mShortUrlWidget;
     TranslatorWidget *mTranslatorWidget;

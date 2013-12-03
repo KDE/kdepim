@@ -44,9 +44,13 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent)
     mStackedWidget->addWidget(mTranslatorWidget);
 
     connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SLOT(slotHideTools()));
+    connect(mShortUrlWidget->toggleAction(), SIGNAL(triggered(bool)), this,SLOT(slotVisibleShortUrlTools(bool)));
+
     connect(mTranslatorWidget, SIGNAL(translatorWasClosed()), this, SLOT(slotHideTools()));
+    connect(mTranslatorWidget->toggleAction(), SIGNAL(triggered(bool)), this,SLOT(slotVisibleTranslatorTools(bool)));
 
     connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SIGNAL(shortUrlWasClosed()));
+
     connect(mTranslatorWidget, SIGNAL(translatorWasClosed()), this, SIGNAL(translatorWasClosed()));
 
     mStackedWidget->setCurrentWidget(mTranslatorWidget);
@@ -56,6 +60,32 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent)
 CustomToolsWidget::~CustomToolsWidget()
 {
 
+}
+
+void CustomToolsWidget::slotVisibleTranslatorTools(bool b)
+{
+    if (b) {
+        switchToTool(PimCommon::CustomToolsWidget::TranslatorTool);
+    } else {
+        customToolWasClosed();
+    }
+    setVisible(b);
+}
+
+void CustomToolsWidget::slotVisibleShortUrlTools(bool b)
+{
+    if (b) {
+        switchToTool(PimCommon::CustomToolsWidget::ShortUrlTool);
+    } else {
+        customToolWasClosed();
+    }
+    setVisible(b);
+}
+
+void CustomToolsWidget::customToolWasClosed()
+{
+    mShortUrlWidget->toggleAction()->setChecked(false);
+    mTranslatorWidget->toggleAction()->setChecked(false);
 }
 
 ShortUrlWidget *CustomToolsWidget::shortUrlWidget() const
