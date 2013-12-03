@@ -72,6 +72,15 @@ SendLaterAgent::~SendLaterAgent()
 {
 }
 
+void SendLaterAgent::doSetOnline( bool online )
+{
+    if (online) {
+        reload();
+    } else {
+        mManager->stopAll();
+    }
+}
+
 void SendLaterAgent::reload()
 {
     if (SendLaterAgentSettings::enabled())
