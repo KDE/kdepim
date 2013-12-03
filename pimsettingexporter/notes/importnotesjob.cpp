@@ -42,7 +42,7 @@ ImportNotesJob::~ImportNotesJob()
 
 void ImportNotesJob::start()
 {
-    Q_EMIT title(i18n("Start import knotes settings..."));
+    Q_EMIT title(i18n("Start import KNotes settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config)
         restoreConfig();

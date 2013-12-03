@@ -42,7 +42,7 @@ ImportAkregatorJob::~ImportAkregatorJob()
 
 void ImportAkregatorJob::start()
 {
-    Q_EMIT title(i18n("Start import akregator settings..."));
+    Q_EMIT title(i18n("Start import Akregator settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config)
         restoreConfig();

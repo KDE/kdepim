@@ -45,7 +45,7 @@ ImportJotJob::~ImportJotJob()
 
 void ImportJotJob::start()
 {
-    Q_EMIT title(i18n("Start import kjots settings..."));
+    Q_EMIT title(i18n("Start import KJots settings..."));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory ,QString());
     initializeListStep();

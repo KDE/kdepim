@@ -112,7 +112,7 @@ void CalendarJanitor::onCollectionsFetched(bool success)
     }
 
     if (m_collectionsToProcess.isEmpty()) {
-        print(i18n("There are no collections to process!"));
+        print(i18n("There are no collections to process."));
         qApp->exit((-1));
         return;
     }
@@ -140,7 +140,7 @@ void CalendarJanitor::onModifyFinished(int changeId, const Akonadi::Item &item,
 {
     Q_UNUSED(changeId);
     if (resultCode != Akonadi::IncidenceChanger::ResultCodeSuccess) {
-        print(i18n("Error while modifying incidence: %1!", errorMessage));
+        print(i18n("Error while modifying incidence: %1", errorMessage));
         bailOut();
         return;
     }
@@ -158,7 +158,7 @@ void CalendarJanitor::onDeleteFinished(int changeId, const QVector<Akonadi::Enti
 {
     Q_UNUSED(changeId);
     if (resultCode != Akonadi::IncidenceChanger::ResultCodeSuccess) {
-        print(i18n("Error while deleting incidence: %1!", errorMessage));
+        print(i18n("Error while deleting incidence: %1", errorMessage));
         bailOut();
         return;
     }
@@ -184,7 +184,7 @@ void CalendarJanitor::processNextCollection()
 
     m_currentCollection = m_collectionsToProcess.takeFirst();
     print(QLatin1Char('\n') + QString().leftJustified(TEXT_WIDTH, QLatin1Char('*')));
-    print(i18n("Processing collection %1 (id=%2) ...", m_currentCollection.displayName(), m_currentCollection.id()));
+    print(i18n("Processing collection %1 (id=%2)...", m_currentCollection.displayName(), m_currentCollection.id()));
 
     if (collectionIsReadOnly(m_currentCollection)) {
         if (m_options.action() == Options::ActionScanAndFix) {

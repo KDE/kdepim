@@ -1843,7 +1843,7 @@ void ViewerPrivate::createActions()
   connect( mBlockableItems, SIGNAL(triggered(bool)), SLOT(slotOpenBlockableItems()) );
 
 
-  mExpandUrlAction = new KAction(i18n("Expand Short Url..."), this);
+  mExpandUrlAction = new KAction(i18n("Expand Short URL..."), this);
   ac->addAction(QLatin1String("expand_short_url"), mExpandUrlAction);
   mExpandUrlAction->setShortcutConfigurable( false );
   connect( mExpandUrlAction, SIGNAL(triggered(bool)), SLOT(slotExpandShortUrl()) );

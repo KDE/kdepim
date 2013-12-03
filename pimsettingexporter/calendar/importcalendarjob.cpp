@@ -43,7 +43,7 @@ ImportCalendarJob::~ImportCalendarJob()
 
 void ImportCalendarJob::start()
 {
-    Q_EMIT title(i18n("Start import korganizer settings..."));
+    Q_EMIT title(i18n("Start import KOrganizer settings..."));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory ,QString());
     initializeListStep();

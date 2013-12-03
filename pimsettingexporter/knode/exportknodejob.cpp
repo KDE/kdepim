@@ -43,7 +43,7 @@ ExportKnodeJob::~ExportKnodeJob()
 
 void ExportKnodeJob::start()
 {
-    Q_EMIT title(i18n("Start export knode settings..."));
+    Q_EMIT title(i18n("Start export KNode settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config) {
         backupConfig();
