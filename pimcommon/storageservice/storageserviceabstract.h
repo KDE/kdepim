@@ -53,7 +53,7 @@ public:
     virtual void authentification() = 0;
 
 Q_SIGNALS:
-    void actionFailed(const QString &error);
+    void actionFailed(const QString &serviceName, const QString &error);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
     void uploadFileProgress(const QString &serviceName, qint64 done,qint64 total);
     void downloadDone();

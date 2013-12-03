@@ -49,10 +49,8 @@ private slots:
     void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotListFolderDone();
     void slotAuthorizationFailed();
-
-    void slotErrorFound(const QString &error);
-    void slotUploadFileProgress(qint64,qint64);
-
+    void slotUploadFileProgress(qint64,qint64);    
+    void slotActionFailed(const QString &error);
 private:
     void readConfig();
     QString mAccessToken;
