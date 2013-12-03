@@ -24,6 +24,7 @@
 #include "storageservice/storageserviceabstract.h"
 class QListWidget;
 class QPushButton;
+class QLabel;
 class KTextEdit;
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceSettingsWidget : public QWidget
@@ -53,6 +54,9 @@ private:
     KTextEdit *mDescription;
     QPushButton *mAddService;
     QPushButton *mRemoveService;
+    QLabel *mAccountSize;
+    QLabel *mQuota;
+    QLabel *mShared;
 };
 }
 #endif // STORAGESERVICESETTINGSWIDGET_H

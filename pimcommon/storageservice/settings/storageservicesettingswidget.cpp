@@ -61,11 +61,20 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
 
     mainLayout->addLayout(vlay);
 
+    QVBoxLayout *vbox = new QVBoxLayout;
     mDescription = new KTextEdit;
     mDescription->setReadOnly(true);
     mDescription->enableFindReplace(false);
+    vbox->addWidget(mDescription);
 
-    mainLayout->addWidget(mDescription);
+    mAccountSize = new QLabel;
+    mQuota = new QLabel;
+    mShared = new QLabel;
+
+    vbox->addWidget(mAccountSize);
+    vbox->addWidget(mQuota);
+    vbox->addWidget(mShared);
+    mainLayout->addLayout(vbox);
     setLayout(mainLayout);
     connect(mListService, SIGNAL(itemSelectionChanged()), this, SLOT(slotServiceSelected()));
     updateButtons();
@@ -189,6 +198,8 @@ void StorageServiceSettingsWidget::slotServiceSelected()
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
-        //TODO
+        mAccountSize->setText(i18n("Account size: %1", info.accountSize));
+        mQuota->setText(i18n("Quota: %1", info.quota));
+        mShared->setText(i18n("Shared: %1", info.accountSize));
     }
 }
