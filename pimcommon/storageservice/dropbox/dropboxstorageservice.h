@@ -40,7 +40,6 @@ public:
     void createFolder(const QString &folder);
     void removeConfig();
     void authentification();
-    QUrl sharedUrl() const;
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

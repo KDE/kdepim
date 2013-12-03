@@ -76,11 +76,6 @@ QString UbuntuoneStorageService::name()
     return i18n("Ubuntu One");
 }
 
-QUrl UbuntuoneStorageService::sharedUrl() const
-{
-    return QUrl();
-}
-
 void UbuntuoneStorageService::uploadFile(const QString &filename)
 {
     //TODO

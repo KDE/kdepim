@@ -76,11 +76,6 @@ QString HubicStorageService::name()
     return i18n("Hubic");
 }
 
-QUrl HubicStorageService::sharedUrl() const
-{
-    return QUrl();
-}
-
 void HubicStorageService::uploadFile(const QString &filename)
 {
     //TODO

@@ -33,7 +33,6 @@ public:
     static QUrl serviceUrl();
     static QString serviceName();
 
-    QUrl sharedUrl() const;
     void uploadFile(const QString &filename);
     void accountInfo();
     void createFolder(const QString &folder);

@@ -44,7 +44,6 @@ public:
     explicit StorageServiceAbstract(QObject *parent=0);
     ~StorageServiceAbstract();
 
-    virtual QUrl sharedUrl() const = 0;
     virtual void uploadFile(const QString &filename) = 0;
     virtual void accountInfo() = 0;
     virtual void createFolder(const QString &folder) = 0;

@@ -76,11 +76,6 @@ QString YouSendItStorageService::name()
     return i18n("YouSendIt");
 }
 
-QUrl YouSendItStorageService::sharedUrl() const
-{
-    return QUrl();
-}
-
 void YouSendItStorageService::uploadFile(const QString &filename)
 {
     //TODO

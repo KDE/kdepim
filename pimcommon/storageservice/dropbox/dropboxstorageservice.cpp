@@ -178,12 +178,6 @@ void DropBoxStorageService::slotAuthorizationFailed()
     mAccessOauthSignature.clear();
 }
 
-QUrl DropBoxStorageService::sharedUrl() const
-{
-    return QUrl();
-}
-
-
 QString DropBoxStorageService::name()
 {
     return i18n("Dropbox");
