@@ -39,6 +39,8 @@ set(libpimcommon_storageservice_SRCS
   storageservice/storageserviceabstractjob.cpp
   storageservice/yousendit/yousenditjob.cpp
   storageservice/yousendit/yousenditstorageservice.cpp
+  storageservice/webdav/webdavstorageservice.cpp
+  storageservice/webdav/webdavjob.cpp
 )
 
 set(libpimcommon_autocorrection_SRCS
@@ -173,6 +175,7 @@ add_subdirectory(storageservice/dropbox/tests)
 add_subdirectory(storageservice/hubic/tests)
 add_subdirectory(storageservice/tests)
 add_subdirectory(storageservice/yousendit/tests)
+add_subdirectory(storageservice/webdav/tests)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

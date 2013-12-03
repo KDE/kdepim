@@ -24,8 +24,8 @@
 
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "yousendit_gui", 0, ki18n("yousendit_Gui"),
-                       "1.0", ki18n("Test for short yousendit"));
+    KCmdLineArgs::init(argc, argv, "webdav_gui", 0, ki18n("webdav_Gui"),
+                       "1.0", ki18n("Test for webdav"));
 
     KApplication app;
 

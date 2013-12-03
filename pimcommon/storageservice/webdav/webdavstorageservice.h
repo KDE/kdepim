@@ -15,22 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <QWidget>
+#ifndef WEBDAVSTORAGESERVICE_H
+#define WEBDAVSTORAGESERVICE_H
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocale>
+#include "pimcommon/storageservice/storageserviceabstract.h"
 
-int main (int argc, char **argv)
+namespace PimCommon {
+class WebDavStorageService : public PimCommon::StorageServiceAbstract
 {
-    KCmdLineArgs::init(argc, argv, "yousendit_gui", 0, ki18n("yousendit_Gui"),
-                       "1.0", ki18n("Test for short yousendit"));
+    Q_OBJECT
+public:
+    explicit WebDavStorageService(QObject *parent=0);
+    ~WebDavStorageService();
 
-    KApplication app;
+    static QString name();
+    static QString description();
+    static QUrl serviceUrl();
+    static QString serviceName();
 
-    QWidget *w = new QWidget;
-    w->show();
-    return app.exec();
+    void uploadFile(const QString &filename);
+    void accountInfo();
+    void createFolder(const QString &folder);
+    void listFolder();
+    void removeConfig();
+    void authentification();
+
+private:
+    void readConfig();
+
+};
 }
 
+#endif // WEBDAVSTORAGESERVICE_H

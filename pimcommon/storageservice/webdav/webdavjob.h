@@ -15,22 +15,30 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <QWidget>
+#ifndef WEBDAVJOB_H
+#define WEBDAVJOB_H
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocale>
-
-int main (int argc, char **argv)
+#include <QObject>
+#include "storageservice/storageserviceabstractjob.h"
+class QNetworkReply;
+namespace PimCommon {
+class WebDavJob : public PimCommon::StorageServiceAbstractJob
 {
-    KCmdLineArgs::init(argc, argv, "yousendit_gui", 0, ki18n("yousendit_Gui"),
-                       "1.0", ki18n("Test for short yousendit"));
+    Q_OBJECT
+public:
+    explicit WebDavJob(QObject *parent=0);
+    ~WebDavJob();
 
-    KApplication app;
+    void requestTokenAccess();
+    void uploadFile(const QString &filename);
+    void listFolder();
+    void accountInfo();
+    void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
+    void createFolder(const QString &filename);
 
-    QWidget *w = new QWidget;
-    w->show();
-    return app.exec();
+private slots:
+    void slotSendDataFinished(QNetworkReply *reply);
+};
 }
 
+#endif // WEBDAVJOB_H
