@@ -15,18 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef HUBICSTORAGESERVICE_H
-#define HUBICSTORAGESERVICE_H
+#ifndef YOUSENDITSTORAGESERVICE_H
+#define YOUSENDITSTORAGESERVICE_H
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 namespace PimCommon {
-class HubicStorageService : public PimCommon::StorageServiceAbstract
+class YouSendItStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
-    explicit HubicStorageService(QObject *parent=0);
-    ~HubicStorageService();
+    explicit YouSendItStorageService(QObject *parent=0);
+    ~YouSendItStorageService();
 
     static QString name();
     static QString description();
@@ -47,4 +47,4 @@ private:
 };
 }
 
-#endif // HUBICSTORAGESERVICE_H
+#endif // YOUSENDITSTORAGESERVICE_H

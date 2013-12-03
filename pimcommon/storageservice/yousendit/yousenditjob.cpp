@@ -25,49 +25,49 @@
 
 using namespace PimCommon;
 
-YousenditJob::YousenditJob(QObject *parent)
+YouSendItJob::YouSendItJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
-YousenditJob::~YousenditJob()
+YouSendItJob::~YouSendItJob()
 {
 
 }
 
-void YousenditJob::requestTokenAccess()
+void YouSendItJob::requestTokenAccess()
 {
 
 }
 
-void YousenditJob::uploadFile(const QString &filename)
+void YouSendItJob::uploadFile(const QString &filename)
 {
 
 }
 
-void YousenditJob::listFolder()
+void YouSendItJob::listFolder()
 {
 
 }
 
-void YousenditJob::accountInfo()
+void YouSendItJob::accountInfo()
 {
 
 }
 
-void YousenditJob::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
+void YouSendItJob::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
 {
 
 }
 
-void YousenditJob::createFolder(const QString &filename)
+void YouSendItJob::createFolder(const QString &filename)
 {
 
 }
 
 
-void YousenditJob::slotSendDataFinished(QNetworkReply *reply)
+void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
 {
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();

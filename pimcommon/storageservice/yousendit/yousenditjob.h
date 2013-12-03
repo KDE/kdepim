@@ -22,12 +22,12 @@
 #include "storageservice/storageserviceabstractjob.h"
 class QNetworkReply;
 namespace PimCommon {
-class YousenditJob : public PimCommon::StorageServiceAbstractJob
+class YouSendItJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit YousenditJob(QObject *parent=0);
-    ~YousenditJob();
+    explicit YouSendItJob(QObject *parent=0);
+    ~YouSendItJob();
 
     void requestTokenAccess();
     void uploadFile(const QString &filename);

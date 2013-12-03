@@ -26,79 +26,80 @@
 
 using namespace PimCommon;
 
-YousendItStorageService::YousendItStorageService(QObject *parent)
+YouSendItStorageService::YouSendItStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
     readConfig();
 }
 
-YousendItStorageService::~YousendItStorageService()
+YouSendItStorageService::~YouSendItStorageService()
 {
 }
 
-void YousendItStorageService::readConfig()
+void YouSendItStorageService::readConfig()
 {
     KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
 
 }
 
-void YousendItStorageService::removeConfig()
+void YouSendItStorageService::removeConfig()
 {
     KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
     grp.deleteGroup();
     KGlobal::config()->sync();
 }
 
-void YousendItStorageService::authentification()
+void YouSendItStorageService::authentification()
 {
-     *job = new HubicJob(this);
+    YouSendItJob *job = new YouSendItJob(this);
     job->requestTokenAccess();
     //TODO connect
 }
 
-void YousendItStorageService::listFolder()
+void YouSendItStorageService::listFolder()
 {
 
 }
 
-void YousendItStorageService::createFolder(const QString &folder)
+void YouSendItStorageService::createFolder(const QString &folder)
 {
 
 }
 
-void YousendItStorageService::accountInfo()
+void YouSendItStorageService::accountInfo()
 {
 
 }
 
-QString YousendItStorageService::name()
+QString YouSendItStorageService::name()
 {
-    return i18n("Hubic");
+    return i18n("YouSendIt");
 }
 
-QUrl YousendItStorageService::sharedUrl() const
+QUrl YouSendItStorageService::sharedUrl() const
 {
     return QUrl();
 }
 
-void YousendItStorageService::uploadFile(const QString &filename)
+void YouSendItStorageService::uploadFile(const QString &filename)
 {
     //TODO
 }
 
-QString YousendItStorageService::description()
+QString YouSendItStorageService::description()
 {
-    return i18n("Hubic is a file hosting service operated by Ovh, Inc. that offers cloud storage, file synchronization, and client software.");
+    //TODO
+    return i18n("");
 }
 
-QUrl YousendItStorageService::serviceUrl()
+QUrl YouSendItStorageService::serviceUrl()
 {
-    return QUrl(QLatin1String("https://hubic.com"));
+    return QUrl(QLatin1String("https://www.yousendit.com/"));
 }
 
-QString YousendItStorageService::serviceName()
+QString YouSendItStorageService::serviceName()
 {
-    return QLatin1String("hubic");
+    return QLatin1String("yousendit");
 }
 
 
