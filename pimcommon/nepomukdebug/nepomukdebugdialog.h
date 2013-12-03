@@ -40,8 +40,11 @@ private slots:
 private:
     void readConfig();
     void writeConfig();
+    void showNepomukInfo(const QString &uid);
+
     PimCommon::AkonadiResultListView *mListView;
     PimCommon::PlainTextEditorWidget *mResult;
+    PimCommon::PlainTextEditorWidget *mNepomukResult;
 };
 }
 

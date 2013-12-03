@@ -26,12 +26,14 @@
 #include <Akonadi/ItemFetchScope>
 
 #include <KLocale>
+#include <KStandardDirs>
 #include <KMessageBox>
 
 #include <QStringListModel>
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QPointer>
+#include <QProcess>
 
 using namespace PimCommon;
 
@@ -53,8 +55,17 @@ NepomukDebugDialog::NepomukDebugDialog(const QStringList &listUid, QWidget *pare
     QStringListModel *resultModel = new QStringListModel( this );
     mListView->setModel( resultModel );
 
+    mNepomukResult = new PimCommon::PlainTextEditorWidget;
+    mNepomukResult->setReadOnly(true);
+
+
     lay->addWidget(mListView);
-    lay->addWidget(mResult);
+
+    QVBoxLayout *vbox = new QVBoxLayout;
+    lay->addLayout(vbox);
+
+    vbox->addWidget(mResult);
+    vbox->addWidget(mNepomukResult);
 
     setMainWidget( w );
     resultModel->setStringList( listUid );
@@ -95,6 +106,27 @@ void NepomukDebugDialog::slotShowItem(const QModelIndex &index)
     Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( Akonadi::Item( uid.toLongLong() ) );
     fetchJob->fetchScope().fetchFullPayload();
     connect( fetchJob, SIGNAL(result(KJob*)), this, SLOT(slotItemFetched(KJob*)) );
+    showNepomukInfo(QLatin1String("akonadi:?item=") + uid);
+}
+
+void NepomukDebugDialog::showNepomukInfo(const QString &uid)
+{
+    const QString path = KStandardDirs::findExe( QLatin1String("nepomukshow") );
+    if ( path.isEmpty() ) {
+        mNepomukResult->editor()->setPlainText(i18n("Sorry you don't have \"nepomukshow\" installed on your computer."));
+    } else {
+        QStringList arguments;
+        arguments << uid;
+        QProcess proc;
+        proc.start(path, arguments);
+        if (!proc.waitForFinished()) {
+            mNepomukResult->editor()->setPlainText(i18n("Sorry there is a problem with virtuoso."));
+            return;
+        }
+        QByteArray result = proc.readAll();
+        proc.close();
+        mNepomukResult->editor()->setPlainText(QString::fromUtf8(result));
+    }
 }
 
 void NepomukDebugDialog::slotItemFetched(KJob *job)
@@ -118,6 +150,8 @@ void NepomukDebugDialog::slotSearchInfoWithNepomuk()
     QString defaultValue;
     if (mResult->editor()->textCursor().hasSelection()) {
         defaultValue = mResult->editor()->textCursor().selectedText().trimmed();
+    } else {
+        defaultValue = QLatin1String("akonadi:?item=");
     }
     const QString nepomukId = QInputDialog::getText(this, i18n("Search with nepomukshow"), i18n("Nepomuk id:"), QLineEdit::Normal, defaultValue);
     if (nepomukId.isEmpty())

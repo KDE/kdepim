@@ -58,6 +58,8 @@ void SearchDebugNepomukShowDialog::slotSearchInfoWithNepomuk()
     QString defaultValue;
     if (mResult->editor()->textCursor().hasSelection()) {
         defaultValue = mResult->editor()->textCursor().selectedText().trimmed();
+    } else {
+        defaultValue = QLatin1String("akonadi:?item=");
     }
     const QString nepomukId = QInputDialog::getText(this, i18n("Search with nepomukshow"), i18n("Nepomuk id:"), QLineEdit::Normal, defaultValue);
     if (nepomukId.isEmpty())
