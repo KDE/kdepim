@@ -116,9 +116,10 @@ void DropBoxJob::getTokenAccess()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void DropBoxJob::slotError(QNetworkReply::NetworkError /*error*/)
+void DropBoxJob::slotError(QNetworkReply::NetworkError error)
 {
-    qDebug()<<" Error ";
+    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
+    qDebug()<<" Error "<<error<<" reply"<<reply->errorString();
     mError = true;
 }
 
@@ -298,24 +299,16 @@ void DropBoxJob::uploadFile(const QString &filename)
         mActionType = UploadFiles;
         mError = false;
         QFileInfo info(filename);
-        QUrl url(QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox/%1").arg(info.fileName()));
-        url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey );
-        url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
-        url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));
-        url.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
-        url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
-        url.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
-        url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
-        url.addQueryItem(QLatin1String("overwrite"), QLatin1String("false"));
+        const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
+        const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox///test/%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5&overwrite=false").
+                arg(info.fileName()).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp);
+        KUrl url(str);
         QNetworkRequest request(url);
-        request.setHeader(QNetworkRequest::ContentTypeHeader,QLatin1String("application/x-www-form-urlencoded"));
-        qDebug()<<"getTokenAccess  postdata"<<url;
         if (!file->open(QIODevice::ReadOnly)) {
             delete file;
             return;
         } else {
-            QByteArray tmp = "test";
-            QNetworkReply *reply = mNetworkAccessManager->post(request, tmp);
+            QNetworkReply *reply = mNetworkAccessManager->put(request, file);
             connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64, qint64)));
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
