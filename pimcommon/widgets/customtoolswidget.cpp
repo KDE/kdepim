@@ -147,6 +147,7 @@ CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
 
 void CustomToolsWidget::slotHideTools()
 {
+    customToolWasClosed();
     hide();
 }
 
