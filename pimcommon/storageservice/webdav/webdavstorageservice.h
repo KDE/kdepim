@@ -39,7 +39,7 @@ public:
     void listFolder();
     void removeConfig();
     void authentification();
-    void linkShare();
+    void shareLink(const QString &root, const QString &path);
 
 private:
     void readConfig();

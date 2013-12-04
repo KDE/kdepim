@@ -40,7 +40,7 @@ public:
     void createFolder(const QString &folder);
     void removeConfig();
     void authentification();
-    void linkShare();
+    void shareLink(const QString &root, const QString &path);
 
 
 private slots:

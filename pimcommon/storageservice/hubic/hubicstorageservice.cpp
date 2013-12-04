@@ -99,7 +99,7 @@ QString HubicStorageService::serviceName()
 
 
 
-void PimCommon::HubicStorageService::linkShare()
+void PimCommon::HubicStorageService::shareLink(const QString &root, const QString &path)
 {
 
 }

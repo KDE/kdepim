@@ -56,7 +56,7 @@ void DropBoxStorageService::authentification()
     }
 }
 
-void DropBoxStorageService::linkShare()
+void DropBoxStorageService::shareLink(const QString &root, const QString &path)
 {
 
 }

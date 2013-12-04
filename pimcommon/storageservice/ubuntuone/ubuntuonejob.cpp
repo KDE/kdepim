@@ -88,6 +88,11 @@ void UbuntuOneJob::createFolder(const QString &filename)
 
 }
 
+void UbuntuOneJob::shareLink(const QString &root, const QString &path)
+{
+
+}
+
 void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
 {
     const QString data = QString::fromUtf8(reply->readAll());

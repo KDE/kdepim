@@ -99,7 +99,7 @@ QString UbuntuoneStorageService::serviceName()
 
 
 
-void PimCommon::UbuntuoneStorageService::linkShare()
+void PimCommon::UbuntuoneStorageService::shareLink(const QString &root, const QString &path)
 {
 
 }

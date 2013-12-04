@@ -50,7 +50,7 @@ public:
     virtual void listFolder() = 0;
     virtual void removeConfig() = 0;
     virtual void authentification() = 0;
-    virtual void linkShare() = 0;
+    virtual void shareLink(const QString &root, const QString &path) = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);

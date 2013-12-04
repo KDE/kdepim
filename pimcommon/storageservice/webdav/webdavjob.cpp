@@ -121,3 +121,9 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
 }
+
+
+void PimCommon::WebDavJob::shareLink(const QString &root, const QString &path)
+{
+
+}

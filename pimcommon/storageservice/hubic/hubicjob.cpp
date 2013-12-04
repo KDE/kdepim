@@ -66,6 +66,11 @@ void HubicJob::createFolder(const QString &filename)
 
 }
 
+void HubicJob::shareLink(const QString &root, const QString &path)
+{
+
+}
+
 
 void HubicJob::slotSendDataFinished(QNetworkReply *reply)
 {

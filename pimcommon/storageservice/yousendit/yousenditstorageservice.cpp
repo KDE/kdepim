@@ -100,7 +100,7 @@ QString YouSendItStorageService::serviceName()
 
 
 
-void PimCommon::YouSendItStorageService::linkShare()
+void PimCommon::YouSendItStorageService::shareLink(const QString &root, const QString &path)
 {
 
 }

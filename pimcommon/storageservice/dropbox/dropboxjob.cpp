@@ -151,6 +151,10 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 Q_EMIT actionFailed(i18n("List folder returns an error: %1",errorStr));
                 deleteLater();
                 break;
+            case ShareLink:
+                Q_EMIT actionFailed(i18n("Share Link returns an error: %1",errorStr));
+                deleteLater();
+                break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
                 deleteLater();
@@ -181,6 +185,9 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     case ListFolder:
         Q_EMIT listFolderDone();
         deleteLater();
+        break;
+    case ShareLink:
+        parseShareLink(data);
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
@@ -362,12 +369,37 @@ void DropBoxJob::parseUploadFile(const QString &data)
 
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
+    QString root;
+    QString path;
     if (info.contains(QLatin1String("root"))) {
-        qDebug()<<" root "<<info.value(QLatin1String("root")).toString();
+        root = info.value(QLatin1String("root")).toString();
+        qDebug()<<" root "<<root;
     }
     if (info.contains(QLatin1String("path"))) {
-        qDebug()<<" path "<<info.value(QLatin1String("path")).toString();
+        path = info.value(QLatin1String("path")).toString();
+        qDebug()<<" path "<<path;
     }
     Q_EMIT uploadFileDone();
+    shareLink(root, path);
+}
+
+void DropBoxJob::shareLink(const QString &root, const QString &path)
+{
+    mActionType = ShareLink;
+    //QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/shares/") + root + QLatin1Char('/') + path));
+    //request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
+    const QString str = QString::fromLatin1("https://api.dropbox.com/1/shares///%1/%2?oauth_consumer_key=%3&oauth_nonce=%4&oauth_signature=%5&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%6").
+            arg(root).arg(path).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp);
+    KUrl url(str);
+    QNetworkRequest request(url);
+
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+void DropBoxJob::parseShareLink(const QString &data)
+{
+    qDebug()<<" parseShareLink( );data :"<<data;
     deleteLater();
 }

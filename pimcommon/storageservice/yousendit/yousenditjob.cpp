@@ -121,3 +121,9 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
 }
+
+
+void PimCommon::YouSendItJob::shareLink(const QString &root, const QString &path)
+{
+
+}

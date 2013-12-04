@@ -35,6 +35,7 @@ public:
     void accountInfo();
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename);
+    void shareLink(const QString &root, const QString &path);
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *reply);

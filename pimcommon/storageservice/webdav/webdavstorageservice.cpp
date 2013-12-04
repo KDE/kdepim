@@ -56,7 +56,7 @@ void WebDavStorageService::authentification()
     //TODO connect
 }
 
-void WebDavStorageService::linkShare()
+void WebDavStorageService::shareLink(const QString &root, const QString &path)
 {
 
 }
