@@ -59,6 +59,7 @@ private:
     void doAuthentification();
     void parseResponseAccessToken(const QString &data);
     void parseAccountInfo(const QString &data);
+    void parseUploadFile(const QString &data);
     QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;

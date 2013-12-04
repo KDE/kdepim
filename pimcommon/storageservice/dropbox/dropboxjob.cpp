@@ -169,8 +169,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         parseResponseAccessToken(data);
         break;
     case UploadFiles:
-        Q_EMIT uploadFileDone();
-        deleteLater();
+        parseUploadFile(data);
         break;
     case CreateFolder:
         Q_EMIT createFolderDone();
@@ -354,4 +353,21 @@ void DropBoxJob::slotUploadFileProgress(qint64 done, qint64 total)
 {
     qDebug()<<" done "<<done<<" total :"<<total;
     Q_EMIT uploadFileProgress(done, total);
+}
+
+void DropBoxJob::parseUploadFile(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info "<<info;
+    if (info.contains(QLatin1String("root"))) {
+        qDebug()<<" root "<<info.value(QLatin1String("root")).toString();
+    }
+    if (info.contains(QLatin1String("path"))) {
+        qDebug()<<" path "<<info.value(QLatin1String("path")).toString();
+    }
+    Q_EMIT uploadFileDone();
+    deleteLater();
 }
