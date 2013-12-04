@@ -135,12 +135,14 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case AccessToken:
+                deleteLater();
                 break;
             case UploadFiles:
                 break;
             case CreateFolder:
                 break;
             case AccountInfo:
+                deleteLater();
                 break;
             case ListFolder:
                 break;
@@ -160,18 +162,37 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         parseRequestToken(data);
         break;
     case AccessToken:
+        deleteLater();
         break;
     case UploadFiles:
         break;
     case CreateFolder:
         break;
     case AccountInfo:
+        parseAccountInfo(data);
         break;
     case ListFolder:
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::parseAccountInfo(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    PimCommon::AccountInfo accountInfo;
+    if (info.contains(QLatin1String("used"))) {
+       accountInfo.shared = info.value(QLatin1String("used")).toLongLong();
+    }
+    if (info.contains(QLatin1String("total"))) {
+        accountInfo.accountSize = info.value(QLatin1String("total")).toLongLong();
+    }
+    Q_EMIT accountInfoDone(accountInfo);
+    deleteLater();
 }
 
 void UbuntuOneJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *auth)
@@ -208,6 +229,7 @@ void UbuntuOneJob::parseRequestToken(const QString &data)
 
 void UbuntuOneJob::finishGetToken()
 {
+    //FIXME
     mActionType = AccessToken;
     QUrl url(QLatin1String("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/"));
     QNetworkRequest request(url);

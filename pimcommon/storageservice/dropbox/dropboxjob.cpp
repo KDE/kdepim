@@ -358,16 +358,16 @@ void DropBoxJob::parseUploadFile(const QString &data)
     bool ok;
 
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info "<<info;
+    //qDebug()<<" info "<<info;
     QString root;
     QString path;
     if (info.contains(QLatin1String("root"))) {
         root = info.value(QLatin1String("root")).toString();
-        qDebug()<<" root "<<root;
+        //qDebug()<<" root "<<root;
     }
     if (info.contains(QLatin1String("path"))) {
         path = info.value(QLatin1String("path")).toString();
-        qDebug()<<" path "<<path;
+        //qDebug()<<" path "<<path;
     }
     Q_EMIT uploadFileDone();
     shareLink(root, path);

@@ -93,7 +93,13 @@ void UbuntuoneStorageService::accountInfo()
 {
     UbuntuOneJob *job = new UbuntuOneJob(this);
     job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+    connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
     job->accountInfo();
+}
+
+void UbuntuoneStorageService::slotAccountInfoDone(const PimCommon::AccountInfo &info)
+{
+    Q_EMIT accountInfoDone(serviceName(), info);
 }
 
 QString UbuntuoneStorageService::name()
