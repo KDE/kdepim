@@ -40,6 +40,27 @@ void UbuntuoneStorageService::readConfig()
 {
     KConfigGroup grp(KGlobal::config(), "Ubuntu One Settings");
 
+    mCustomerSecret = grp.readEntry("Customer Secret");
+    mToken = grp.readEntry("Token");
+    mCustomerKey = grp.readEntry("Customer Key");
+    mTokenSecret = grp.readEntry("Token Secret");
+}
+
+void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret)
+{
+    mCustomerSecret = customerSecret;
+    mToken = token;
+    mCustomerKey = customerKey;
+    mTokenSecret = tokenSecret;
+
+    KConfigGroup grp(KGlobal::config(), "Ubuntu One Settings");
+    grp.writeEntry("Customer Secret", mCustomerSecret);
+    grp.writeEntry("Token", mToken);
+    grp.writeEntry("Customer Key", mCustomerKey);
+    grp.writeEntry("Token Secret", mTokenSecret);
+
+    grp.sync();
+    KGlobal::config()->sync();
 }
 
 void UbuntuoneStorageService::removeConfig()
@@ -95,9 +116,6 @@ QString UbuntuoneStorageService::serviceName()
 {
     return QLatin1String("ubuntuone");
 }
-
-
-
 
 void PimCommon::UbuntuoneStorageService::shareLink(const QString &root, const QString &path)
 {

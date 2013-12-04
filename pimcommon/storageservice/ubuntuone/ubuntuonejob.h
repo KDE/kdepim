@@ -21,6 +21,7 @@
 
 #include "storageservice/storageserviceabstractjob.h"
 #include <QNetworkReply>
+class QAuthenticator;
 namespace PimCommon {
 class UbuntuOneJob : public PimCommon::StorageServiceAbstractJob
 {
@@ -33,12 +34,22 @@ public:
     void uploadFile(const QString &filename);
     void listFolder();
     void accountInfo();
-    void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *reply);
+    void slotAuthenticationRequired(QNetworkReply*,QAuthenticator*);
+
+private:
+    void parseRequestToken(const QString &data);
+    void finishGetToken();
+    QString mPassword;
+    QString mUsername;
+    QString mCustomerSecret;
+    QString mToken;
+    QString mCustomerKey;
+    QString mTokenSecret;
 };
 }
 

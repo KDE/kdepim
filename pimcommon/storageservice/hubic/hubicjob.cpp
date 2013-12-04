@@ -56,11 +56,6 @@ void HubicJob::accountInfo()
 
 }
 
-void HubicJob::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
-{
-
-}
-
 void HubicJob::createFolder(const QString &filename)
 {
 

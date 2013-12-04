@@ -15,30 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef YOUSENDITJOB_H
-#define YOUSENDITJOB_H
 
-#include <QObject>
-#include "storageservice/storageserviceabstractjob.h"
-class QNetworkReply;
+#ifndef WEBDAVSETTINGSDIALOG_H
+#define WEBDAVSETTINGSDIALOG_H
+
+#include <KDialog>
+
+class KLineEdit;
 namespace PimCommon {
-class YouSendItJob : public PimCommon::StorageServiceAbstractJob
+class WebDavSettingsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit YouSendItJob(QObject *parent=0);
-    ~YouSendItJob();
+    explicit WebDavSettingsDialog(QWidget *parent=0);
+    ~WebDavSettingsDialog();
 
-    void requestTokenAccess();
-    void uploadFile(const QString &filename);
-    void listFolder();
-    void accountInfo();
-    void createFolder(const QString &filename);
-    void shareLink(const QString &root, const QString &path);
+    QString serviceLocation() const;
+
+    QString publicLocation() const;
 
 private slots:
-    void slotSendDataFinished(QNetworkReply *reply);    
+    void slotServiceLocationChanged(const QString &text);
+
+private:
+    KLineEdit *mServiceLocation;
+    KLineEdit *mPublicLocation;
 };
 }
 
-#endif // YOUSENDITJOB_H
+#endif // WEBDAVSETTINGSDIALOG_H

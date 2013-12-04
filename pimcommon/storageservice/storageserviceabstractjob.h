@@ -35,7 +35,6 @@ public:
     virtual void uploadFile(const QString &filename) = 0;
     virtual void listFolder() = 0;
     virtual void accountInfo() = 0;
-    virtual void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature) = 0;
     virtual void createFolder(const QString &filename=QString()) = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
 

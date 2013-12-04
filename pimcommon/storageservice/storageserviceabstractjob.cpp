@@ -24,13 +24,15 @@ using namespace PimCommon;
 StorageServiceAbstractJob::StorageServiceAbstractJob(QObject *parent)
     : QObject(parent),
       mNetworkAccessManager(new QNetworkAccessManager(this)),
+      mActionType(NoneAction),
       mError(false)
 {
+    qDebug()<<"StorageServiceAbstractJob::StorageServiceAbstractJob() "<<this;
 }
 
 StorageServiceAbstractJob::~StorageServiceAbstractJob()
 {
-
+    qDebug()<<"StorageServiceAbstractJob::~StorageServiceAbstractJob() "<<this;
 }
 
 void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)

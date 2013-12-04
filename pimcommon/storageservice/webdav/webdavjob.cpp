@@ -56,11 +56,6 @@ void WebDavJob::accountInfo()
 
 }
 
-void WebDavJob::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
-{
-
-}
-
 void WebDavJob::createFolder(const QString &filename)
 {
 

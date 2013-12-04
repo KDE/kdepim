@@ -41,6 +41,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/yousendit/yousenditstorageservice.cpp
   storageservice/webdav/webdavstorageservice.cpp
   storageservice/webdav/webdavjob.cpp
+  storageservice/webdav/webdavsettingsdialog.cpp
 )
 
 set(libpimcommon_autocorrection_SRCS
@@ -97,15 +98,20 @@ set(libpimcommon_folderdialog_SRCS
   folderdialog/checkedcollectionwidget.cpp
 )
 
-set(libpimcommon_SRCS
+set(libpimcommon_acl_SRCS
   acl/aclentrydialog.cpp
   acl/aclmanager.cpp
   acl/aclutils.cpp
   acl/collectionaclpage.cpp
   acl/imapaclattribute.cpp
-  util/createresource.cpp
-  util/pimutil.cpp
-  util/editorutil.cpp
+)
+
+set(libpimcommon_sieve_SRCS
+  sievehighlighter/sievesyntaxhighlighter.cpp
+  sievehighlighter/sievesyntaxhighlighterutil.cpp
+)
+
+set(libpimcommon_widgets_SRCS
   widgets/minimumcombobox.cpp
   widgets/renamefiledialog.cpp
   widgets/simplestringlisteditor.cpp
@@ -113,8 +119,12 @@ set(libpimcommon_SRCS
   widgets/customtreeview.cpp
   widgets/customtoolswidget.cpp
   widgets/configureimmutablewidgetutils.cpp
-  sievehighlighter/sievesyntaxhighlighter.cpp
-  sievehighlighter/sievesyntaxhighlighterutil.cpp
+)
+
+set(libpimcommon_SRCS
+  util/createresource.cpp
+  util/pimutil.cpp
+  util/editorutil.cpp
   settings/pimcommonsettings.cpp
   ${libpimcommon_texteditor_SRCS}
   ${libpimcommon_shorturl_SRCS}
@@ -124,6 +134,9 @@ set(libpimcommon_SRCS
   ${libpimcommon_templatewidgets_SRCS}
   ${libpimcommon_nepomukdebug_SRCS}
   ${libpimcommon_folderdialog_SRCS}
+  ${libpimcommon_acl_SRCS}
+  ${libpimcommon_sieve_SRCS}
+  ${libpimcommon_widgets_SRCS}
 )
 
 kde4_add_ui_files(libpimcommon_SRCS

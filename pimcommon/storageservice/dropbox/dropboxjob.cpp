@@ -130,6 +130,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
             case NoneAction:
+                deleteLater();
                 break;
             case RequestToken:
                 break;
@@ -392,6 +393,7 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
     const QString str = QString::fromLatin1("https://api.dropbox.com/1/shares///%1/%2?oauth_consumer_key=%3&oauth_nonce=%4&oauth_signature=%5&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%6").
             arg(root).arg(path).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp);
     KUrl url(str);
+    qDebug()<<" url"<<url;
     QNetworkRequest request(url);
 
     QNetworkReply *reply = mNetworkAccessManager->get(request);

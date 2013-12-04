@@ -21,6 +21,7 @@
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
+#include <QAuthenticator>
 #include <QPointer>
 #include <QDebug>
 
@@ -30,6 +31,7 @@ UbuntuOneJob::UbuntuOneJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
 }
 
 UbuntuOneJob::~UbuntuOneJob()
@@ -40,24 +42,18 @@ UbuntuOneJob::~UbuntuOneJob()
 void UbuntuOneJob::requestTokenAccess()
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
-    QString password;
-    QString username;
     if (dlg->exec()) {
-        password = dlg->password();
-        username = dlg->username();
+        mPassword = dlg->password();
+        mUsername = dlg->username();
     }
     delete dlg;
-    if (!username.isEmpty()) {
+    if (!mUsername.isEmpty()) {
         mActionType = RequestToken;
         QUrl url(QLatin1String("https://login.ubuntu.com/api/1.0/authentications"));
         url.addQueryItem(QLatin1String("ws.op"), QLatin1String("authenticate"));
         url.addQueryItem(QLatin1String("token_name"), QLatin1String("Ubuntu One @ foo") );
         qDebug()<<" postData "<<url;
         QNetworkRequest request(url);
-        request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-        request.setRawHeader("Accept", "application/json");
-        request.setRawHeader("Authorization", "Basic ss" ); //FIXME
-
         QNetworkReply *reply = mNetworkAccessManager->get(request);
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     }
@@ -74,11 +70,6 @@ void UbuntuOneJob::listFolder()
 }
 
 void UbuntuOneJob::accountInfo()
-{
-
-}
-
-void UbuntuOneJob::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
 {
 
 }
@@ -128,10 +119,12 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         }
         return;
     }
+    qDebug()<<" Data ? "<<data;
     switch(mActionType) {
     case NoneAction:
         break;
     case RequestToken:
+        parseRequestToken(data);
         break;
     case AccessToken:
         break;
@@ -146,4 +139,44 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *auth)
+{
+    qDebug()<<"slotAuthenticationRequired ";
+    auth->setUser(mUsername);
+    auth->setPassword(mPassword);
+}
+
+void UbuntuOneJob::parseRequestToken(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("consumer_secret"))) {
+        mCustomerSecret = info.value(QLatin1String("consumer_secret")).toString();
+    }
+    if (info.contains(QLatin1String("token"))) {
+        mToken = info.value(QLatin1String("token")).toString();
+    }
+    if (info.contains(QLatin1String("consumer_key"))) {
+        mCustomerKey = info.value(QLatin1String("consumer_key")).toString();
+
+    }
+    if (info.contains(QLatin1String("token_secret"))) {
+        mTokenSecret = info.value(QLatin1String("token_secret")).toString();
+    }
+    finishGetToken();
+}
+
+
+void UbuntuOneJob::finishGetToken()
+{
+    mActionType = AccessToken;
+    QUrl url(QLatin1String("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/"));
+    QNetworkRequest request(url);
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }

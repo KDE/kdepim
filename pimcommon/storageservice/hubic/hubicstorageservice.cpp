@@ -96,9 +96,6 @@ QString HubicStorageService::serviceName()
     return QLatin1String("hubic");
 }
 
-
-
-
 void PimCommon::HubicStorageService::shareLink(const QString &root, const QString &path)
 {
 

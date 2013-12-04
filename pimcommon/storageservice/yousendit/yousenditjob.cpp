@@ -56,11 +56,6 @@ void YouSendItJob::accountInfo()
 
 }
 
-void YouSendItJob::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
-{
-
-}
-
 void YouSendItJob::createFolder(const QString &filename)
 {
 

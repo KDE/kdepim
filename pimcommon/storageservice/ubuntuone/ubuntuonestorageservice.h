@@ -41,9 +41,15 @@ public:
     void authentification();
     void shareLink(const QString &root, const QString &path);
 
+private slots:
+    void slotAuthorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
+
 private:
     void readConfig();
-
+    QString mCustomerSecret;
+    QString mToken;
+    QString mCustomerKey;
+    QString mTokenSecret;
 };
 }
 
