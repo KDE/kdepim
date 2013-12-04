@@ -174,17 +174,14 @@ void KMeditorPrivate::startExternalEditor()
   mExtEditorProcess->start();
   if ( !mExtEditorProcess->waitForStarted() ) {
     KMessageBox::error(q->topLevelWidget(),i18n("External editor cannot be started. Please verify command \"%1\"",commandLine));
-    mExtEditorProcess->deleteLater();
-    mExtEditorProcess = 0;
-    delete mExtEditorTempFile;
-    mExtEditorTempFile = 0;
-    q->setUseExternalEditor( false );
+    q->killExternalEditor();
+    q->setUseExternalEditor( false );    
   } else {
     emit q->externalEditorStarted();
   }
 }
 
-void KMeditorPrivate::slotEditorFinished( int, QProcess::ExitStatus exitStatus )
+void KMeditorPrivate::slotEditorFinished( int codeError, QProcess::ExitStatus exitStatus )
 {
   if ( exitStatus == QProcess::NormalExit ) {
     // the external editor could have renamed the original file and recreated a new file
@@ -195,6 +192,9 @@ void KMeditorPrivate::slotEditorFinished( int, QProcess::ExitStatus exitStatus )
       q->setTextOrHtml( QString::fromUtf8( f.data(), f.size() ) );
       q->document()->setModified( true );
       localFile.close();
+    }
+    if (codeError > 0) {
+        KMessageBox::error(q->topLevelWidget(), i18n("Error was found when we started external editor."), i18n("External Editor Closed"));
     }
     emit q->externalEditorClosed();
   }
