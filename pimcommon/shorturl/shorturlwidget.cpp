@@ -49,9 +49,9 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     QToolButton *closeBtn = new QToolButton( this );
     closeBtn->setIcon( KIcon( QLatin1String("dialog-close") ) );
     closeBtn->setIconSize( QSize( 16, 16 ) );
-    closeBtn->setToolTip( i18n( "Cancel" ) );
+    closeBtn->setToolTip( i18n( "Close" ) );
 #ifndef QT_NO_ACCESSIBILITY
-    closeBtn->setAccessibleName( i18n( "Cancel" ) );
+    closeBtn->setAccessibleName( i18n( "Close" ) );
 #endif
     closeBtn->setAutoRaise( true );
     connect( closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseWidget()) );
