@@ -98,3 +98,9 @@ QString YouSendItStorageService::serviceName()
 }
 
 
+
+
+void PimCommon::YouSendItStorageService::linkShare()
+{
+
+}

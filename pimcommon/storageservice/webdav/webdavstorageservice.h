@@ -39,6 +39,7 @@ public:
     void listFolder();
     void removeConfig();
     void authentification();
+    void linkShare();
 
 private:
     void readConfig();

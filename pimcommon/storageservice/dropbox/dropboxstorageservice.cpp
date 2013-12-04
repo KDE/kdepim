@@ -56,6 +56,11 @@ void DropBoxStorageService::authentification()
     }
 }
 
+void DropBoxStorageService::linkShare()
+{
+
+}
+
 void DropBoxStorageService::readConfig()
 {
     KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
@@ -105,7 +110,7 @@ void DropBoxStorageService::listFolder()
 
 void DropBoxStorageService::slotListFolderDone()
 {
-
+    //TODO
 }
 
 void DropBoxStorageService::accountInfo()
@@ -125,7 +130,6 @@ void DropBoxStorageService::accountInfo()
 
 void DropBoxStorageService::slotAccountInfoDone(const PimCommon::AccountInfo &info)
 {
-    qDebug()<<" DropBoxStorageService::slotAccountInfoDone : accountSize :"<<info.accountSize<<" quota :"<<info.quota<<" shared :"<<info.shared<<" displayName :"<<info.displayName;
     Q_EMIT accountInfoDone(serviceName(), info);
 }
 
@@ -146,6 +150,7 @@ void DropBoxStorageService::createFolder(const QString &folder)
 
 void DropBoxStorageService::slotCreateFolderDone()
 {
+    //TODO
     qDebug()<<" folder created";
 }
 

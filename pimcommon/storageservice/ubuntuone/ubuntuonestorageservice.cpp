@@ -97,3 +97,9 @@ QString UbuntuoneStorageService::serviceName()
 }
 
 
+
+
+void PimCommon::UbuntuoneStorageService::linkShare()
+{
+
+}

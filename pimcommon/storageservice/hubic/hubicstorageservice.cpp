@@ -97,3 +97,9 @@ QString HubicStorageService::serviceName()
 }
 
 
+
+
+void PimCommon::HubicStorageService::linkShare()
+{
+
+}
