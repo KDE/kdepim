@@ -55,6 +55,7 @@ private Q_SLOTS:
 
 Q_SIGNALS:
     void shortUrlWasClosed();
+    void toolSwitched(PimCommon::CustomToolsWidget::ToolType type);
     void translatorWasClosed();
 
 private:

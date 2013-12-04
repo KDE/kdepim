@@ -21,6 +21,9 @@
 #define BLOGILOCOMPOSERVIEW_H
 
 #include <composereditor-ng/composerview.h>
+namespace PimCommon {
+class CustomToolsWidget;
+}
 
 class BlogiloComposerView : public ComposerEditorNG::ComposerView
 {
@@ -32,12 +35,13 @@ public:
     void startEditing();
     virtual void addExtraAction(QMenu *menu);
 
-Q_SIGNALS:
-    void activateTranslator();
-    void activateShortUrl();
+    void setCustomTools(PimCommon::CustomToolsWidget *customTool);
 
 private Q_SLOTS:
     void slotSendMouseReleaseEvent();
+
+private:
+    PimCommon::CustomToolsWidget *mCustomTools;
 };
 
 #endif // BLOGILOCOMPOSERVIEW_H

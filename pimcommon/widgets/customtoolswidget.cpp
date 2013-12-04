@@ -131,6 +131,7 @@ void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
         qDebug()<<" type unknown :"<<type;
         break;
     }
+    Q_EMIT toolSwitched(type);
 }
 
 CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
