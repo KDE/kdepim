@@ -56,6 +56,7 @@ Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
     void uploadFileProgress(const QString &serviceName, qint64 done,qint64 total);
+    void shareLinkDone(const QString &serviceName, const QString &link);
     void downloadDone();
     void downloadFailed();
 };

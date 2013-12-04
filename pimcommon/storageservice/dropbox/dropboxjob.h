@@ -54,6 +54,8 @@ Q_SIGNALS:
     void actionFailed(const QString &data);
     void authorizationFailed();
 
+    void shareLinkDone(const QString &url);
+
 private:
     void getTokenAccess();
     void parseRequestToken(const QString &result);

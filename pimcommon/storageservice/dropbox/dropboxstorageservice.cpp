@@ -58,7 +58,17 @@ void DropBoxStorageService::authentification()
 
 void DropBoxStorageService::shareLink(const QString &root, const QString &path)
 {
-
+    DropBoxJob *job = new DropBoxJob(this);
+    if (mAccessToken.isEmpty()) {
+        connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
+        connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
+        job->requestTokenAccess();
+    } else {
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->shareLink(root, path);
+    }
 }
 
 void DropBoxStorageService::readConfig()
@@ -86,6 +96,11 @@ void DropBoxStorageService::slotActionFailed(const QString &error)
 {
     qDebug()<<" error found "<<error;
     Q_EMIT actionFailed(serviceName(), error);
+}
+
+void DropBoxStorageService::slotShareLinkDone(const QString &url)
+{
+    Q_EMIT shareLinkDone(serviceName(), url);
 }
 
 void DropBoxStorageService::slotUploadFileProgress(qint64 done, qint64 total)

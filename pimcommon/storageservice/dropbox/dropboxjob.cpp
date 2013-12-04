@@ -401,5 +401,15 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
 void DropBoxJob::parseShareLink(const QString &data)
 {
     qDebug()<<" parseShareLink( );data :"<<data;
+    QJson::Parser parser;
+    bool ok;
+    QString url;
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (info.contains(QLatin1String("url"))) {
+        url = info.value(QLatin1String("url")).toString();
+    }
+    qDebug()<<" info "<<info;
+
+    Q_EMIT shareLinkDone(url);
     deleteLater();
 }

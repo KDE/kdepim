@@ -52,6 +52,7 @@ private slots:
     void slotAuthorizationFailed();
     void slotUploadFileProgress(qint64,qint64);    
     void slotActionFailed(const QString &error);
+    void slotShareLinkDone(const QString &url);
 private:
     void readConfig();
     QString mAccessToken;
