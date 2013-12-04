@@ -17,17 +17,38 @@
 
 #include "storageserviceabstractjob.h"
 #include <QNetworkAccessManager>
+#include <QDebug>
 
 using namespace PimCommon;
 
 StorageServiceAbstractJob::StorageServiceAbstractJob(QObject *parent)
     : QObject(parent),
       mNetworkAccessManager(new QNetworkAccessManager(this)),
+      mActionType(NoneAction),
       mError(false)
 {
+    qDebug()<<"StorageServiceAbstractJob::StorageServiceAbstractJob() "<<this;
 }
 
 StorageServiceAbstractJob::~StorageServiceAbstractJob()
 {
+    qDebug()<<"StorageServiceAbstractJob::~StorageServiceAbstractJob() "<<this;
+}
 
+void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
+    qDebug()<<" Error "<<error<<" reply"<<reply->errorString();
+    mError = true;
+}
+
+QString StorageServiceAbstractJob::generateNonce(qint32 length)
+{
+    QString clng;
+
+    for(int i=0; i<length; ++i) {
+        clng += QString::number(int( qrand() / (RAND_MAX + 1.0) * (16 + 1 - 0) + 0 ), 16).toUpper();
+    }
+
+    return clng;
 }

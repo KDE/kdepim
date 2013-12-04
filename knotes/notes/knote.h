@@ -81,7 +81,6 @@ signals:
     void sigNameChanged(const QString &);
     void sigColorChanged();
     void sigKillNote( Akonadi::Item::Id );
-    void sigFindFinished();
 
 protected:
     virtual void contextMenuEvent( QContextMenuEvent * );
@@ -138,6 +137,7 @@ private:
     void setDisplayDefaultValue();
 
 private:
+    void saveNoteContent();
     Akonadi::Item mItem;
     QLayout       *m_noteLayout;
     QLabel        *m_label;

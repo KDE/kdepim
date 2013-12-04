@@ -28,6 +28,7 @@ StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)
     setButtons( Ok | Cancel );
 
     mView = new StorageAuthViewWidget;
+    connect(mView, SIGNAL(urlChanged(QUrl)), SIGNAL(urlChanged(QUrl)));
     setMainWidget(mView);
     readConfig();
 }

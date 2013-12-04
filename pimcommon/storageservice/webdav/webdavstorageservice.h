@@ -15,35 +15,36 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef WEBDAVSTORAGESERVICE_H
+#define WEBDAVSTORAGESERVICE_H
 
-#ifndef NEPOMUKDEBUGDIALOG_H
-#define NEPOMUKDEBUGDIALOG_H
+#include "pimcommon/storageservice/storageserviceabstract.h"
 
-#include <KDialog>
-class QModelIndex;
 namespace PimCommon {
-class AkonadiResultListView;
-class PlainTextEditorWidget;
-}
-class KJob;
-class QItemSelectionModel;
-class NepomukDebugDialog : public KDialog
+class WebDavStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
-    explicit NepomukDebugDialog(QItemSelectionModel *selectionModel, QWidget *parent=0);
-    ~NepomukDebugDialog();
+    explicit WebDavStorageService(QObject *parent=0);
+    ~WebDavStorageService();
 
-private slots:
-    void slotSearchInfoWithNepomuk();
-    void slotItemFetched(KJob *job);
-    void slotShowItem(const QModelIndex &index);
+    static QString name();
+    static QString description();
+    static QUrl serviceUrl();
+    static QString serviceName();
+
+    void uploadFile(const QString &filename);
+    void accountInfo();
+    void createFolder(const QString &folder);
+    void listFolder();
+    void removeConfig();
+    void authentification();
+    void shareLink(const QString &root, const QString &path);
 
 private:
-    void writeConfig();
     void readConfig();
-    PimCommon::AkonadiResultListView *mListView;
-    PimCommon::PlainTextEditorWidget *mResult;
-};
 
-#endif // NEPOMUKDEBUGDIALOG_H
+};
+}
+
+#endif // WEBDAVSTORAGESERVICE_H

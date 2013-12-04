@@ -45,7 +45,7 @@ ImportAlarmJob::~ImportAlarmJob()
 
 void ImportAlarmJob::start()
 {
-    Q_EMIT title(i18n("Start import kalarm settings..."));
+    Q_EMIT title(i18n("Start import KAlarm settings..."));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory ,QString());
     initializeListStep();

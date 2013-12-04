@@ -35,9 +35,9 @@ public:
     void accountInfo();
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename=QString());
+    void shareLink(const QString &root, const QString &path);
 
 private Q_SLOTS:
-    void slotError(QNetworkReply::NetworkError /*error*/);    
     void slotSendDataFinished(QNetworkReply *);    
     void slotUploadFileProgress(qint64 done, qint64 total);
 
@@ -54,12 +54,16 @@ Q_SIGNALS:
     void actionFailed(const QString &data);
     void authorizationFailed();
 
+    void shareLinkDone(const QString &url);
+
 private:
     void getTokenAccess();
     void parseRequestToken(const QString &result);
     void doAuthentification();
     void parseResponseAccessToken(const QString &data);
     void parseAccountInfo(const QString &data);
+    void parseUploadFile(const QString &data);
+    void parseShareLink(const QString &data);
     QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;

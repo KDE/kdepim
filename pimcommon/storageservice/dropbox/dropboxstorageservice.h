@@ -40,7 +40,8 @@ public:
     void createFolder(const QString &folder);
     void removeConfig();
     void authentification();
-    QUrl sharedUrl() const;
+    void shareLink(const QString &root, const QString &path);
+
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
@@ -49,10 +50,9 @@ private slots:
     void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotListFolderDone();
     void slotAuthorizationFailed();
-
-    void slotErrorFound(const QString &error);
-    void slotUploadFileProgress(qint64,qint64);
-
+    void slotUploadFileProgress(qint64,qint64);    
+    void slotActionFailed(const QString &error);
+    void slotShareLinkDone(const QString &url);
 private:
     void readConfig();
     QString mAccessToken;

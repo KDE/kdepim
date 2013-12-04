@@ -33,17 +33,23 @@ public:
     static QUrl serviceUrl();
     static QString serviceName();
 
-    QUrl sharedUrl() const;
     void uploadFile(const QString &filename);
     void accountInfo();
     void createFolder(const QString &folder);
     void listFolder();
     void removeConfig();
     void authentification();
+    void shareLink(const QString &root, const QString &path);
 
+private slots:
+    void slotAuthorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
+    void slotAccountInfoDone(const PimCommon::AccountInfo &info);
 private:
     void readConfig();
-
+    QString mCustomerSecret;
+    QString mToken;
+    QString mCustomerKey;
+    QString mTokenSecret;
 };
 }
 

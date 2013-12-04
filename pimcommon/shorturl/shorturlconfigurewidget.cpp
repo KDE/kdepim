@@ -34,7 +34,7 @@ ShortUrlConfigureWidget::ShortUrlConfigureWidget(QWidget *parent)
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
 
-    QLabel *lab = new QLabel(i18n("Select Short Url server:"));
+    QLabel *lab = new QLabel(i18n("Select Short URL server:"));
     lay->addWidget(lab);
 
     mShortUrlServer = new QComboBox;

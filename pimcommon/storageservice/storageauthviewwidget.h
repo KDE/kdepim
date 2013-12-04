@@ -33,6 +33,9 @@ public:
 
     void setUrl(const QUrl &url);
 
+Q_SIGNALS:
+    void urlChanged(const QUrl &);
+
 private:
     QWebView *mWebView;
 };

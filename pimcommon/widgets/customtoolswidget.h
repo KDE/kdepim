@@ -44,14 +44,22 @@ public:
 
     KToggleAction *action(CustomToolsWidget::ToolType type);
 
+    ShortUrlWidget *shortUrlWidget() const;
+    TranslatorWidget *translatorWidget() const;
+
+
 private Q_SLOTS:
-    void slotHideTools();
+    void slotHideTools();    
+    void slotVisibleShortUrlTools(bool b);
+    void slotVisibleTranslatorTools(bool b);
 
 Q_SIGNALS:
     void shortUrlWasClosed();
+    void toolSwitched(PimCommon::CustomToolsWidget::ToolType type);
     void translatorWasClosed();
 
 private:
+    void customToolWasClosed();
     QStackedWidget *mStackedWidget;
     ShortUrlWidget *mShortUrlWidget;
     TranslatorWidget *mTranslatorWidget;

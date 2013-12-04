@@ -66,7 +66,7 @@ ImportMailJob::~ImportMailJob()
 
 void ImportMailJob::start()
 {
-    Q_EMIT title(i18n("Start import kmail settings..."));
+    Q_EMIT title(i18n("Start import KMail settings..."));
     mArchiveDirectory = archive()->directory();
     searchAllFiles(mArchiveDirectory,QString());
     if (!mFileList.isEmpty()|| !mListResourceFile.isEmpty()) {
@@ -941,7 +941,7 @@ void ImportMailJob::restoreAkonadiDb()
 {
     const QString akonadiDbPath(Utils::akonadiPath() + QLatin1String("akonadidatabase.sql"));
     if (!mFileList.contains(akonadiDbPath)) {
-        Q_EMIT error(i18n("akonadi database file could not be found in the archive."));
+        Q_EMIT error(i18n("Akonadi database file could not be found in the archive."));
     } else {
         Q_EMIT info(i18n("Restore Akonadi Database..."));
         MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );

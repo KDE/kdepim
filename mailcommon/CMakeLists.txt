@@ -26,13 +26,7 @@ include_directories(
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
-set(libmailcommon_SRCS
-  collectionpage/attributeregistrar.cpp
-  collectionpage/collectionannotationsattribute.cpp
-  collectionpage/collectiongeneralpage.cpp
-  collectionpage/collectionexpirypage.cpp
-  collectionpage/expirecollectionattribute.cpp
-  collectionpage/newmailnotifierattribute.cpp
+set(libmailcommon_filter_SRCS
   filter/filterselectiondialog.cpp
   filter/filterconverter/filterconverttosieve.cpp
   filter/filterconverter/filterconverttosieveresultdialog.cpp
@@ -90,6 +84,15 @@ set(libmailcommon_SRCS
   filter/dialog/selectthunderbirdfilterfilesdialog.cpp
   filter/dialog/selectthunderbirdfilterfileswidget.cpp
   filter/mdnadvicedialog.cpp
+)
+
+set(libmailcommon_SRCS
+  collectionpage/attributeregistrar.cpp
+  collectionpage/collectionannotationsattribute.cpp
+  collectionpage/collectiongeneralpage.cpp
+  collectionpage/collectionexpirypage.cpp
+  collectionpage/expirecollectionattribute.cpp
+  collectionpage/newmailnotifierattribute.cpp
   folder/foldercollection.cpp
   folder/foldercollectionmonitor.cpp
   folder/folderrequester.cpp
@@ -126,6 +129,7 @@ set(libmailcommon_SRCS
   tag/tagwidget.cpp
   tag/tag.cpp
   tag/addtagdialog.cpp
+  ${libmailcommon_filter_SRCS}
 )
 
 soprano_add_ontology(libmailcommon_SRCS

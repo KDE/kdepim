@@ -20,7 +20,9 @@
 #define UBUNTUONEJOB_H
 
 #include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/storageserviceabstract.h"
 #include <QNetworkReply>
+class QAuthenticator;
 namespace PimCommon {
 class UbuntuOneJob : public PimCommon::StorageServiceAbstractJob
 {
@@ -33,12 +35,34 @@ public:
     void uploadFile(const QString &filename);
     void listFolder();
     void accountInfo();
-    void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename);
+    void shareLink(const QString &root, const QString &path);
+
+
+    void initializeToken(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *reply);
-    void slotError(QNetworkReply::NetworkError);
+    void slotAuthenticationRequired(QNetworkReply*,QAuthenticator*);
+
+Q_SIGNALS:
+    void authorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
+    void accountInfoDone(const PimCommon::AccountInfo &data);
+
+private:
+    void parseRequestToken(const QString &data);
+    void finishGetToken();
+    void parseAccountInfo(const QString &data);
+    QString mPassword;
+    QString mUsername;
+    QString mCustomerSecret;
+    QString mToken;
+    QString mCustomerKey;
+    QString mTokenSecret;
+    QString mOauthVersion;
+    QString mOauthSignatureMethod;
+    QString mNonce;
+    QString mTimestamp;
 };
 }
 

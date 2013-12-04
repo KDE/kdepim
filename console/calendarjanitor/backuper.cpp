@@ -144,7 +144,7 @@ void Backuper::onCollectionLoaded(KJob *job)
         if (m_pendingCollections.isEmpty()) { // We're done
             KCalCore::FileStorage storage(m_calendar, m_filename);
             bool success = storage.save();
-            QString message = success ? QString() : i18n("An error ocurred");
+            QString message = success ? QString() : i18n("An error occurred");
             emitFinished(success, message);
         }
     }

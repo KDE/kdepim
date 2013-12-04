@@ -22,6 +22,7 @@
 #include "dropbox/dropboxstorageservice.h"
 #include "hubic/hubicstorageservice.h"
 #include "ubuntuone/ubuntuonestorageservice.h"
+#include "yousendit/yousenditstorageservice.h"
 
 #include <KLocale>
 #include <KFileDialog>
@@ -110,6 +111,10 @@ void StorageServiceManager::readConfig()
             if (!mListService.contains(serviceName(UbuntuOne))) {
                 mListService.insert(service, new UbuntuoneStorageService());
             }
+        } else if (service == serviceName(YouSendIt)) {
+            if (!mListService.contains(serviceName(YouSendIt))) {
+                mListService.insert(service, new YouSendItStorageService());
+            }
         }
     }
 }
@@ -144,6 +149,8 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::HubicStorageService::serviceUrl();
     case UbuntuOne:
         return PimCommon::UbuntuoneStorageService::serviceUrl();
+    case YouSendIt:
+        return PimCommon::YouSendItStorageService::serviceUrl();
     default:
         return QString();
     }
@@ -160,6 +167,8 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::HubicStorageService::serviceName();
     case UbuntuOne:
         return PimCommon::UbuntuoneStorageService::serviceName();
+    case YouSendIt:
+        return PimCommon::YouSendItStorageService::serviceName();
     default:
         return QString();
     }
@@ -174,6 +183,8 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::HubicStorageService::name();
     case UbuntuOne:
         return PimCommon::UbuntuoneStorageService::name();
+    case YouSendIt:
+        return PimCommon::YouSendItStorageService::name();
     default:
         return QString();
     }

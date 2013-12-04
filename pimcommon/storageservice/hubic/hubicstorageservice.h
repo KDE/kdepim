@@ -33,13 +33,13 @@ public:
     static QUrl serviceUrl();
     static QString serviceName();
 
-    QUrl sharedUrl() const;
     void uploadFile(const QString &filename);
     void accountInfo();
     void createFolder(const QString &folder);
     void listFolder();
     void removeConfig();
     void authentification();
+    void shareLink(const QString &root, const QString &path);
 
 private:
     void readConfig();

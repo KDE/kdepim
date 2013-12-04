@@ -61,7 +61,7 @@ your user account from the following mailers:</para>
 
 <para>For information about other utilities to import mails please read the 
 <ulink url="help:kmailcvt">KMailCVT Handbook</ulink> and the chapter 
-<ulink url="help:kmail/exporting.html">PIM Setting Exporter</ulink> in &kmail;'s handbook.</para>
+<ulink url="help:/pimsettingexporter">PIM Setting Exporter</ulink> in &kmail;'s handbook.</para>
 
 <sect2 id="using-kapp">
 <title>Using &i18n-importwizard;</title>

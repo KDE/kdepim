@@ -19,8 +19,10 @@
 
 
 #include "blogilocomposerview.h"
+#include "pimcommon/widgets/customtoolswidget.h"
 
 #include <KLocale>
+#include <KToggleAction>
 
 #include <QApplication>
 #include <QTimer>
@@ -29,7 +31,8 @@
 #include <QMenu>
 
 BlogiloComposerView::BlogiloComposerView(QWidget * parent)
-    : ComposerEditorNG::ComposerView(parent)
+    : ComposerEditorNG::ComposerView(parent),
+      mCustomTools(0)
 {
     settings()->setFontSize ( QWebSettings::DefaultFontSize, 14 );
 }
@@ -37,6 +40,11 @@ BlogiloComposerView::BlogiloComposerView(QWidget * parent)
 BlogiloComposerView::~BlogiloComposerView()
 {
 
+}
+
+void BlogiloComposerView::setCustomTools(PimCommon::CustomToolsWidget *customTool)
+{
+    mCustomTools = customTool;
 }
 
 void BlogiloComposerView::startEditing()
@@ -58,8 +66,10 @@ void BlogiloComposerView::slotSendMouseReleaseEvent()
 
 void BlogiloComposerView::addExtraAction(QMenu *menu)
 {
-    menu->addSeparator();
-    QAction *translatorAction = menu->addAction(i18n("Translate..."));
-    connect( translatorAction, SIGNAL(triggered(bool)), this, SIGNAL(activateTranslator()) );
+    if (mCustomTools) {
+        menu->addSeparator();
+        menu->addAction(mCustomTools->action(PimCommon::CustomToolsWidget::TranslatorTool));
+        menu->addAction(mCustomTools->action(PimCommon::CustomToolsWidget::ShortUrlTool));
+    }
 }
 

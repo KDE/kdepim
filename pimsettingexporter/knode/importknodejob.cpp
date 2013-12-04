@@ -42,7 +42,7 @@ ImportKnodeJob::~ImportKnodeJob()
 
 void ImportKnodeJob::start()
 {
-    Q_EMIT title(i18n("Start import knode settings..."));
+    Q_EMIT title(i18n("Start import KNode settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Config)
         restoreConfig();

@@ -19,6 +19,7 @@
 #include "storageauthviewwidget.h"
 #include <QWebView>
 #include <QHBoxLayout>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -28,6 +29,7 @@ StorageAuthViewWidget::StorageAuthViewWidget(QWidget *parent)
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     mWebView = new QWebView;
+    connect(mWebView, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged(QUrl)));
     lay->addWidget(mWebView);
     setLayout(lay);
 }
@@ -39,5 +41,5 @@ StorageAuthViewWidget::~StorageAuthViewWidget()
 
 void StorageAuthViewWidget::setUrl(const QUrl &url)
 {
-    mWebView->setUrl(url);
+    mWebView->load(url);
 }

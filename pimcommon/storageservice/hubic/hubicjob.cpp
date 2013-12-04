@@ -16,18 +16,22 @@
 */
 
 #include "hubicjob.h"
+#include "storageservice/storageauthviewdialog.h"
 
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
+#include <QPointer>
 
 using namespace PimCommon;
 
 HubicJob::HubicJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
+    mClientId = QLatin1String("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
+    mRedirectUri = QLatin1String("https://bugs.kde.org/");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
@@ -38,7 +42,59 @@ HubicJob::~HubicJob()
 
 void HubicJob::requestTokenAccess()
 {
+    mActionType = RequestToken;
+    QUrl url(QLatin1String("https://api.hubic.com/oauth/auth/"));
+    url.addQueryItem(QLatin1String("response_type"), QLatin1String("code"));
+    url.addQueryItem(QLatin1String("client_id"), mClientId);
+    url.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    url.addQueryItem(QLatin1String("scope"),QLatin1String("account.r,links.rw"));
+    mAuthUrl = url;
+    qDebug()<<" url"<<url;
+    delete mAuthDialog;
+    mAuthDialog = new PimCommon::StorageAuthViewDialog;
+    connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
+    mAuthDialog->setUrl(url);
+    if (mAuthDialog->exec()) {
+        //TODO
+    } else {
+        //TODO
+    }
+    delete mAuthDialog;
+}
 
+void HubicJob::slotRedirect(const QUrl &url)
+{
+    if (url != mAuthUrl) {
+        qDebug()<<" Redirect !"<<url;
+        mAuthDialog->accept();
+        parseRedirectUrl(url);
+    }
+}
+
+void HubicJob::parseRedirectUrl(const QUrl &url)
+{
+    const QList<QPair<QString, QString> > listQuery = url.queryItems();
+    qDebug()<< "listQuery "<<listQuery;
+
+    QString authorizeCode;
+    for (int i = 0; i < listQuery.size(); ++i) {
+        const QPair<QString, QString> item = listQuery.at(i);
+        if (item.first == QLatin1String("code")) {
+            authorizeCode = item.second;
+            break;
+        } else if (item.first == QLatin1String("error")) {
+            //TODO
+            //parse error.
+
+        }
+    }
+    if (!authorizeCode.isEmpty()) {
+        //TODO
+        mActionType = AccessToken;
+    } else {
+        //TODO emit error signal
+        deleteLater();
+    }
 }
 
 void HubicJob::uploadFile(const QString &filename)
@@ -56,12 +112,12 @@ void HubicJob::accountInfo()
 
 }
 
-void HubicJob::initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
+void HubicJob::createFolder(const QString &filename)
 {
 
 }
 
-void HubicJob::createFolder(const QString &filename)
+void HubicJob::shareLink(const QString &root, const QString &path)
 {
 
 }
@@ -85,6 +141,8 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
             case RequestToken:
                 break;
             case AccessToken:
+                //TODO emit error.
+                deleteLater();
                 break;
             case UploadFiles:
                 break;
@@ -102,12 +160,14 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
         }
         return;
     }
+    qDebug()<<" data: "<<data;
     switch(mActionType) {
     case NoneAction:
         break;
     case RequestToken:
         break;
     case AccessToken:
+        parseAccessToken(data);
         break;
     case UploadFiles:
         break;
@@ -121,3 +181,9 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
 }
+
+void HubicJob::parseAccessToken(const QString &data)
+{
+    //TODO
+}
+

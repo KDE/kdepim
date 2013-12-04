@@ -44,9 +44,13 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent)
     mStackedWidget->addWidget(mTranslatorWidget);
 
     connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SLOT(slotHideTools()));
+    connect(mShortUrlWidget->toggleAction(), SIGNAL(triggered(bool)), this,SLOT(slotVisibleShortUrlTools(bool)));
+
     connect(mTranslatorWidget, SIGNAL(translatorWasClosed()), this, SLOT(slotHideTools()));
+    connect(mTranslatorWidget->toggleAction(), SIGNAL(triggered(bool)), this,SLOT(slotVisibleTranslatorTools(bool)));
 
     connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SIGNAL(shortUrlWasClosed()));
+
     connect(mTranslatorWidget, SIGNAL(translatorWasClosed()), this, SIGNAL(translatorWasClosed()));
 
     mStackedWidget->setCurrentWidget(mTranslatorWidget);
@@ -57,6 +61,43 @@ CustomToolsWidget::~CustomToolsWidget()
 {
 
 }
+
+void CustomToolsWidget::slotVisibleTranslatorTools(bool b)
+{
+    if (b) {
+        switchToTool(PimCommon::CustomToolsWidget::TranslatorTool);
+    } else {
+        customToolWasClosed();
+    }
+    setVisible(b);
+}
+
+void CustomToolsWidget::slotVisibleShortUrlTools(bool b)
+{
+    if (b) {
+        switchToTool(PimCommon::CustomToolsWidget::ShortUrlTool);
+    } else {
+        customToolWasClosed();
+    }
+    setVisible(b);
+}
+
+void CustomToolsWidget::customToolWasClosed()
+{
+    mShortUrlWidget->toggleAction()->setChecked(false);
+    mTranslatorWidget->toggleAction()->setChecked(false);
+}
+
+ShortUrlWidget *CustomToolsWidget::shortUrlWidget() const
+{
+    return mShortUrlWidget;
+}
+
+TranslatorWidget *CustomToolsWidget::translatorWidget() const
+{
+    return mTranslatorWidget;
+}
+
 
 KToggleAction *CustomToolsWidget::action(CustomToolsWidget::ToolType type)
 {
@@ -90,6 +131,7 @@ void CustomToolsWidget::switchToTool(CustomToolsWidget::ToolType type)
         qDebug()<<" type unknown :"<<type;
         break;
     }
+    Q_EMIT toolSwitched(type);
 }
 
 CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
@@ -106,6 +148,7 @@ CustomToolsWidget::ToolType CustomToolsWidget::toolType() const
 
 void CustomToolsWidget::slotHideTools()
 {
+    customToolWasClosed();
     hide();
 }
 

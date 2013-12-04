@@ -44,18 +44,19 @@ public:
     explicit StorageServiceAbstract(QObject *parent=0);
     ~StorageServiceAbstract();
 
-    virtual QUrl sharedUrl() const = 0;
     virtual void uploadFile(const QString &filename) = 0;
     virtual void accountInfo() = 0;
     virtual void createFolder(const QString &folder) = 0;
     virtual void listFolder() = 0;
     virtual void removeConfig() = 0;
     virtual void authentification() = 0;
+    virtual void shareLink(const QString &root, const QString &path) = 0;
 
 Q_SIGNALS:
-    void actionFailed(const QString &error);
+    void actionFailed(const QString &serviceName, const QString &error);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
     void uploadFileProgress(const QString &serviceName, qint64 done,qint64 total);
+    void shareLinkDone(const QString &serviceName, const QString &link);
     void downloadDone();
     void downloadFailed();
 };

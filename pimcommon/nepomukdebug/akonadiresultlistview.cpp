@@ -44,7 +44,7 @@ void AkonadiResultListView::contextMenuEvent( QContextMenuEvent * event )
         return;
 
     QMenu *popup = new QMenu(this);
-    QAction *searchNepomukShow = new QAction(i18n("Search with nepomuk show..."), popup);
+    QAction *searchNepomukShow = new QAction(i18n("Search with nepomukshow..."), popup);
     popup->addAction(searchNepomukShow);
     QAction *act = popup->exec( event->globalPos() );
     delete popup;

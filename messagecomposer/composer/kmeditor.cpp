@@ -26,6 +26,9 @@
 #include "pimcommon/autocorrection/autocorrection.h"
 #include "settings/messagecomposersettings.h"
 
+#include <kmacroexpander.h>
+#include <KShell>
+
 
 #include <grantlee/plaintextmarkupbuilder.h>
 
@@ -148,59 +151,17 @@ void KMeditorPrivate::startExternalEditor()
   mExtEditorProcess = new KProcess();
   // construct command line...
   const QString commandLine = extEditorPath.trimmed();
-  QStringList command;
-  bool doubleQuoteFound = false;
+  QHash<QChar,QString> map;
+  map.insert(QLatin1Char('l'), QString::number(q->textCursor().blockNumber() + 1));
+  map.insert(QLatin1Char('w'), QString::number((qulonglong)q->winId()));
+  map.insert(QLatin1Char('f'), mExtEditorTempFile->fileName());
+  const QString cmd = KMacroExpander::expandMacrosShellQuote(commandLine, map);
+  const QStringList arg = KShell::splitArgs(cmd);
   bool filenameAdded = false;
-  QString arg;
-  const int commandLineLength( commandLine.length() );
-  for(int i = 0; i < commandLineLength; ++i) {
-    const QChar letter( commandLine.at(i) );
-    if ( doubleQuoteFound ) {
-      if ( letter != QLatin1Char('"') ) {
-        arg.append(letter);
-      } else {
-        doubleQuoteFound = false;
-        command<<arg;
-        arg.clear();
-      }
-    } else {
-      if( letter == QLatin1Char('%') ) { //Be safe
-        if ( i+1 >= commandLineLength ) {
-          arg.append( letter );
-          command<<arg;
-          arg.clear();
-          break;
-        }
-        //Example emacs --parent-id=<number>
-        if(!arg.isEmpty()) {
-         command<<arg;
-         arg.clear();
-        }
-        ++i; //look at next char
-        const QChar nextChar(commandLine.at(i));
-        if( nextChar == QLatin1Char('f') ) {
-          filenameAdded = true;
-          command<<mExtEditorTempFile->fileName();
-        } else if( nextChar == QLatin1Char('l') ) {
-          command<<QString::number(q->textCursor().blockNumber() + 1);  // line number
-        } else if( nextChar == QLatin1Char('w') ) { //Window id
-          command<<QString::number((qulonglong)q->winId());
-        } else {
-          arg.append( letter );
-          arg.append( commandLine.at(i) );
-        }
-      } else if( letter == QLatin1Char('"') ) {
-        doubleQuoteFound = true;
-      } else if( letter == QLatin1Char(' ') ) {
-          if ( !arg.isEmpty() ) {
-            command<<arg;
-            arg.clear();
-          }
-      } else {
-        arg.append( letter );
-      }
-    }
+  if (commandLine.contains(QLatin1String("%f"))) {
+      filenameAdded = true;
   }
+  QStringList command;
   if ( !arg.isEmpty() )
     command<<arg;
   ( *mExtEditorProcess ) << command;
@@ -213,17 +174,14 @@ void KMeditorPrivate::startExternalEditor()
   mExtEditorProcess->start();
   if ( !mExtEditorProcess->waitForStarted() ) {
     KMessageBox::error(q->topLevelWidget(),i18n("External editor cannot be started. Please verify command \"%1\"",commandLine));
-    mExtEditorProcess->deleteLater();
-    mExtEditorProcess = 0;
-    delete mExtEditorTempFile;
-    mExtEditorTempFile = 0;
-    q->setUseExternalEditor( false );
+    q->killExternalEditor();
+    q->setUseExternalEditor( false );    
   } else {
     emit q->externalEditorStarted();
   }
 }
 
-void KMeditorPrivate::slotEditorFinished( int, QProcess::ExitStatus exitStatus )
+void KMeditorPrivate::slotEditorFinished( int codeError, QProcess::ExitStatus exitStatus )
 {
   if ( exitStatus == QProcess::NormalExit ) {
     // the external editor could have renamed the original file and recreated a new file
@@ -234,6 +192,9 @@ void KMeditorPrivate::slotEditorFinished( int, QProcess::ExitStatus exitStatus )
       q->setTextOrHtml( QString::fromUtf8( f.data(), f.size() ) );
       q->document()->setModified( true );
       localFile.close();
+    }
+    if (codeError > 0) {
+        KMessageBox::error(q->topLevelWidget(), i18n("Error was found when we started external editor."), i18n("External Editor Closed"));
     }
     emit q->externalEditorClosed();
   }

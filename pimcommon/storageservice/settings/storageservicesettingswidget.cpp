@@ -21,6 +21,7 @@
 #include "storageservice/dropbox/dropboxstorageservice.h"
 #include "storageservice/hubic/hubicstorageservice.h"
 #include "storageservice/ubuntuone/ubuntuonestorageservice.h"
+#include "storageservice/yousendit/yousenditstorageservice.h"
 #include "settings/pimcommonsettings.h"
 #include <KLocale>
 #include <KMessageBox>
@@ -61,11 +62,20 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
 
     mainLayout->addLayout(vlay);
 
+    QVBoxLayout *vbox = new QVBoxLayout;
     mDescription = new KTextEdit;
     mDescription->setReadOnly(true);
     mDescription->enableFindReplace(false);
+    vbox->addWidget(mDescription);
 
-    mainLayout->addWidget(mDescription);
+    mAccountSize = new QLabel;
+    mQuota = new QLabel;
+    mShared = new QLabel;
+
+    vbox->addWidget(mAccountSize);
+    vbox->addWidget(mQuota);
+    vbox->addWidget(mShared);
+    mainLayout->addLayout(vbox);
     setLayout(mainLayout);
     connect(mListService, SIGNAL(itemSelectionChanged()), this, SLOT(slotServiceSelected()));
     updateButtons();
@@ -98,6 +108,9 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::UbuntuOne)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::UbuntuOne);
             type = PimCommon::StorageServiceManager::UbuntuOne;
+        } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::YouSendIt)) {
+            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::YouSendIt);
+            type = PimCommon::StorageServiceManager::YouSendIt;
         }
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(serviceName);
@@ -154,6 +167,10 @@ void StorageServiceSettingsWidget::slotAddService()
             storage = new PimCommon::UbuntuoneStorageService;
             break;
         }
+        case PimCommon::StorageServiceManager::YouSendIt: {
+            storage = new PimCommon::YouSendItStorageService;
+            break;
+        }
         default:
             break;
         }
@@ -182,6 +199,9 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         }
     } else {
         mDescription->clear();
+        mAccountSize->clear();
+        mQuota->clear();
+        mShared->clear();
     }
     updateButtons();
 }
@@ -189,6 +209,8 @@ void StorageServiceSettingsWidget::slotServiceSelected()
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
-        //TODO
+        mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
+        mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
     }
 }

@@ -20,8 +20,10 @@
 
 #include <QObject>
 #include "storageservice/storageserviceabstractjob.h"
+#include <QPointer>
 class QNetworkReply;
 namespace PimCommon {
+class StorageAuthViewDialog;
 class HubicJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
@@ -33,11 +35,20 @@ public:
     void uploadFile(const QString &filename);
     void listFolder();
     void accountInfo();
-    void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename);
+    void shareLink(const QString &root, const QString &path);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
+    void slotRedirect(const QUrl &url);
+
+private:
+    void parseRedirectUrl(const QUrl &url);
+    void parseAccessToken(const QString &data);
+    QUrl mAuthUrl;
+    QString mClientId;
+    QString mRedirectUri;
+    QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };
 }
 

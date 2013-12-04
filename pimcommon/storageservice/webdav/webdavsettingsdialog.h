@@ -15,33 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef KNOTESNEPOMUKDEBUGDIALOG_H
-#define KNOTESNEPOMUKDEBUGDIALOG_H
+
+#ifndef WEBDAVSETTINGSDIALOG_H
+#define WEBDAVSETTINGSDIALOG_H
 
 #include <KDialog>
+
+class KLineEdit;
 namespace PimCommon {
-class AkonadiResultListView;
-class PlainTextEditorWidget;
-}
-class KJob;
-class QModelIndex;
-class KNotesNepomukDebugDialog : public KDialog
+class WebDavSettingsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KNotesNepomukDebugDialog(const QStringList &listUid, QWidget *parent=0);
-    ~KNotesNepomukDebugDialog();
+    explicit WebDavSettingsDialog(QWidget *parent=0);
+    ~WebDavSettingsDialog();
+
+    QString serviceLocation() const;
+
+    QString publicLocation() const;
 
 private slots:
-    void slotSearchInfoWithNepomuk();
-    void slotItemFetched(KJob *job);
-    void slotShowItem(const QModelIndex &index);
+    void slotServiceLocationChanged(const QString &text);
 
 private:
-    void readConfig();
-    void writeConfig();
-    PimCommon::AkonadiResultListView *mListView;
-    PimCommon::PlainTextEditorWidget *mResult;
+    KLineEdit *mServiceLocation;
+    KLineEdit *mPublicLocation;
 };
+}
 
-#endif // KNOTESNEPOMUKDEBUGDIALOG_H
+#endif // WEBDAVSETTINGSDIALOG_H

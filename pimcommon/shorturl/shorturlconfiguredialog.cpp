@@ -27,7 +27,7 @@ ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure engine" ) );
-    setButtons( Close | Ok | Default );
+    setButtons( Cancel | Ok | Default );
 
     mConfigureWidget = new ShortUrlConfigureWidget();
     mConfigureWidget->loadConfig();

@@ -42,7 +42,7 @@ ExportAddressbookJob::~ExportAddressbookJob()
 
 void ExportAddressbookJob::start()
 {
-    Q_EMIT title(i18n("Start export kaddressbook settings..."));
+    Q_EMIT title(i18n("Start export KAddressBook settings..."));
     mArchiveDirectory = archive()->directory();
     if (mTypeSelected & Utils::Resources) {
         backupResources();
