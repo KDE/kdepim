@@ -73,7 +73,9 @@ void UbuntuoneStorageService::removeConfig()
 void UbuntuoneStorageService::authentification()
 {
     UbuntuOneJob *job = new UbuntuOneJob(this);
+    connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
     job->requestTokenAccess();
+
     //TODO connect
 }
 
@@ -89,7 +91,9 @@ void UbuntuoneStorageService::createFolder(const QString &folder)
 
 void UbuntuoneStorageService::accountInfo()
 {
-
+    UbuntuOneJob *job = new UbuntuOneJob(this);
+    job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+    job->accountInfo();
 }
 
 QString UbuntuoneStorageService::name()

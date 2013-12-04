@@ -30,6 +30,10 @@ using namespace PimCommon;
 UbuntuOneJob::UbuntuOneJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
+    mOauthVersion = QLatin1String("1.0");
+    mOauthSignatureMethod = QLatin1String("PLAINTEXT");
+    mNonce = generateNonce(8);
+    mTimestamp = QString::number(QDateTime::currentMSecsSinceEpoch()/1000);
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
 }
@@ -71,6 +75,26 @@ void UbuntuOneJob::listFolder()
 
 void UbuntuOneJob::accountInfo()
 {
+    mActionType = AccountInfo;
+    mError = false;
+    QUrl url(QLatin1String("https://one.ubuntu.com/api/quota/"));
+    url.addQueryItem(QLatin1String("oauth_consumer_key"), mCustomerKey);
+    url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
+
+    const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
+
+    url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    url.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
+    url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
+    url.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
+    url.addQueryItem(QLatin1String("oauth_token"), mToken);
+    qDebug()<<" accountInfo "<<url;
+    QNetworkRequest request(url);
+    qDebug()<<" url "<<url;
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 
 }
 
@@ -82,6 +106,14 @@ void UbuntuOneJob::createFolder(const QString &filename)
 void UbuntuOneJob::shareLink(const QString &root, const QString &path)
 {
 
+}
+
+void UbuntuOneJob::initializeToken(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret)
+{
+    mCustomerSecret = customerSecret;
+    mToken = token;
+    mCustomerKey = customerKey;
+    mTokenSecret = tokenSecret;
 }
 
 void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
@@ -100,6 +132,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
             case NoneAction:
                 break;
             case RequestToken:
+                deleteLater();
                 break;
             case AccessToken:
                 break;
@@ -168,6 +201,7 @@ void UbuntuOneJob::parseRequestToken(const QString &data)
     if (info.contains(QLatin1String("token_secret"))) {
         mTokenSecret = info.value(QLatin1String("token_secret")).toString();
     }
+    Q_EMIT authorizationDone(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
     finishGetToken();
 }
 

@@ -36,17 +36,6 @@
 
 using namespace PimCommon;
 
-QString generateNonce(qint32 length)
-{
-    QString clng;
-
-    for(int i=0; i<length; ++i) {
-        clng += QString::number(int( qrand() / (RAND_MAX + 1.0) * (16 + 1 - 0) + 0 ), 16).toUpper();
-    }
-
-    return clng;
-}
-
 DropBoxJob::DropBoxJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent),
       mInitialized(false)

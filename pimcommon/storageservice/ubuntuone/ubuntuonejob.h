@@ -37,9 +37,15 @@ public:
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
 
+
+    void initializeToken(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
+
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *reply);
     void slotAuthenticationRequired(QNetworkReply*,QAuthenticator*);
+
+Q_SIGNALS:
+    void authorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
 
 private:
     void parseRequestToken(const QString &data);
@@ -50,6 +56,10 @@ private:
     QString mToken;
     QString mCustomerKey;
     QString mTokenSecret;
+    QString mOauthVersion;
+    QString mOauthSignatureMethod;
+    QString mNonce;
+    QString mTimestamp;
 };
 }
 
