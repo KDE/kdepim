@@ -58,22 +58,30 @@ void WebDavStorageService::authentification()
 
 void WebDavStorageService::shareLink(const QString &root, const QString &path)
 {
-
+    WebDavJob *job = new WebDavJob(this);
+    job->shareLink(root, path);
+    //TODO
 }
 
 void WebDavStorageService::listFolder()
 {
-
+    WebDavJob *job = new WebDavJob(this);
+    job->listFolder();
+    //TODO
 }
 
 void WebDavStorageService::createFolder(const QString &folder)
 {
-
+    WebDavJob *job = new WebDavJob(this);
+    job->createFolder(folder);
+    //TODO
 }
 
 void WebDavStorageService::accountInfo()
 {
-
+    WebDavJob *job = new WebDavJob(this);
+    job->accountInfo();
+    //TODO
 }
 
 QString WebDavStorageService::name()
@@ -83,6 +91,9 @@ QString WebDavStorageService::name()
 
 void WebDavStorageService::uploadFile(const QString &filename)
 {
+    //TODO
+    WebDavJob *job = new WebDavJob(this);
+    job->uploadFile(filename);
     //TODO
 }
 
@@ -101,5 +112,3 @@ QString WebDavStorageService::serviceName()
 {
     return QLatin1String("webdav");
 }
-
-

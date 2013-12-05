@@ -58,17 +58,23 @@ void YouSendItStorageService::authentification()
 
 void YouSendItStorageService::listFolder()
 {
-
+    YouSendItJob *job = new YouSendItJob(this);
+    //TODO
+    job->listFolder();
 }
 
 void YouSendItStorageService::createFolder(const QString &folder)
 {
-
+    YouSendItJob *job = new YouSendItJob(this);
+    //TODO
+    job->createFolder(folder);
 }
 
 void YouSendItStorageService::accountInfo()
 {
-
+    YouSendItJob *job = new YouSendItJob(this);
+    //TODO
+    job->accountInfo();
 }
 
 QString YouSendItStorageService::name()
@@ -79,6 +85,9 @@ QString YouSendItStorageService::name()
 void YouSendItStorageService::uploadFile(const QString &filename)
 {
     //TODO
+    YouSendItJob *job = new YouSendItJob(this);
+    //TODO
+    job->uploadFile(filename);
 }
 
 QString YouSendItStorageService::description()
@@ -97,10 +106,9 @@ QString YouSendItStorageService::serviceName()
     return QLatin1String("yousendit");
 }
 
-
-
-
 void PimCommon::YouSendItStorageService::shareLink(const QString &root, const QString &path)
 {
-
+    YouSendItJob *job = new YouSendItJob(this);
+    //TODO
+    job->shareLink(root, path);
 }

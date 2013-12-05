@@ -58,17 +58,24 @@ void HubicStorageService::authentification()
 
 void HubicStorageService::listFolder()
 {
-
+    HubicJob *job = new HubicJob(this);
+    //TODO
+    job->listFolder();
 }
 
 void HubicStorageService::createFolder(const QString &folder)
 {
+    HubicJob *job = new HubicJob(this);
+    //TODO
+    job->createFolder(folder);
 
 }
 
 void HubicStorageService::accountInfo()
 {
-
+    HubicJob *job = new HubicJob(this);
+    //TODO
+    job->accountInfo();
 }
 
 QString HubicStorageService::name()
@@ -79,6 +86,9 @@ QString HubicStorageService::name()
 void HubicStorageService::uploadFile(const QString &filename)
 {
     //TODO
+    HubicJob *job = new HubicJob(this);
+    //TODO
+    job->uploadFile(filename);
 }
 
 QString HubicStorageService::description()
@@ -98,5 +108,7 @@ QString HubicStorageService::serviceName()
 
 void PimCommon::HubicStorageService::shareLink(const QString &root, const QString &path)
 {
-
+    HubicJob *job = new HubicJob(this);
+    //TODO
+    job->shareLink(root, path);
 }

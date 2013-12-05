@@ -147,11 +147,6 @@ void StorageServiceSettingsWidget::slotAddService()
         const PimCommon::StorageServiceManager::ServiceType type = dlg->serviceSelected();
         const QString serviceName = PimCommon::StorageServiceManager::serviceToI18n(type);
         const QString service = PimCommon::StorageServiceManager::serviceName(type);
-        QListWidgetItem *item = new QListWidgetItem;
-        item->setText(serviceName);
-        item->setData(Name,service);
-        item->setData(Type, type);
-        mListService->addItem(item);
         StorageServiceAbstract *storage = 0;
         switch(type) {
         case PimCommon::StorageServiceManager::DropBox: {
@@ -174,6 +169,11 @@ void StorageServiceSettingsWidget::slotAddService()
             break;
         }
         if (storage) {
+            QListWidgetItem *item = new QListWidgetItem;
+            item->setText(serviceName);
+            item->setData(Name,service);
+            item->setData(Type, type);
+            mListService->addItem(item);
             storage->authentification();
             mListStorageService.insert(service, storage);
         }
