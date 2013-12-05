@@ -122,8 +122,10 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case RequestToken:
+                deleteLater();
                 break;
             case AccessToken:
+                deleteLater();
                 break;
             case UploadFiles:
                 Q_EMIT actionFailed(i18n("Upload File returns an error: %1",errorStr));

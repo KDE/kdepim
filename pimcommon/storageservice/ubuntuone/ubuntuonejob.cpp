@@ -131,6 +131,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
             case NoneAction:
+                deleteLater();
                 break;
             case RequestToken:
                 deleteLater();
@@ -140,13 +141,16 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case UploadFiles:
+                deleteLater();
                 break;
             case CreateFolder:
+                deleteLater();
                 break;
             case AccountInfo:
                 deleteLater();
                 break;
             case ListFolder:
+                deleteLater();
                 break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
@@ -159,6 +163,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     qDebug()<<" Data ? "<<data;
     switch(mActionType) {
     case NoneAction:
+        deleteLater();
         break;
     case RequestToken:
         parseRequestToken(data);
@@ -167,13 +172,16 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case UploadFiles:
+        deleteLater();
         break;
     case CreateFolder:
+        deleteLater();
         break;
     case AccountInfo:
         parseAccountInfo(data);
         break;
     case ListFolder:
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;

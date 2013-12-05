@@ -189,6 +189,7 @@ add_subdirectory(storageservice/hubic/tests)
 add_subdirectory(storageservice/tests)
 add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/webdav/tests)
+add_subdirectory(storageservice/ubuntuone/tests)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

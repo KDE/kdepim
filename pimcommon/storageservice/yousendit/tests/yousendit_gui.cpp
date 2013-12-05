@@ -15,12 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "yousendit_gui.h"
+#include "pimcommon/storageservice/yousendit/yousenditstorageservice.h"
 #include <QWidget>
 
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocale>
+
+YouSendItTestWidget::YouSendItTestWidget(QWidget *parent)
+    : ServiceTestWidget(new PimCommon::YouSendItStorageService(this),parent)
+{
+}
 
 int main (int argc, char **argv)
 {
@@ -29,7 +36,7 @@ int main (int argc, char **argv)
 
     KApplication app;
 
-    QWidget *w = new QWidget;
+    YouSendItTestWidget *w = new YouSendItTestWidget;
     w->show();
     return app.exec();
 }

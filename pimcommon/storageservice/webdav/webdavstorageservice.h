@@ -19,9 +19,10 @@
 #define WEBDAVSTORAGESERVICE_H
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon_export.h"
 
 namespace PimCommon {
-class WebDavStorageService : public PimCommon::StorageServiceAbstract
+class PIMCOMMON_EXPORT WebDavStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:

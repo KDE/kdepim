@@ -19,9 +19,9 @@
 #define YOUSENDITSTORAGESERVICE_H
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
-
+#include "pimcommon_export.h"
 namespace PimCommon {
-class YouSendItStorageService : public PimCommon::StorageServiceAbstract
+class PIMCOMMON_EXPORT YouSendItStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:

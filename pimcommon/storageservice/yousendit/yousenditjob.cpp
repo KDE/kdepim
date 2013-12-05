@@ -84,18 +84,25 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
             case NoneAction:
+                deleteLater();
                 break;
             case RequestToken:
+                deleteLater();
                 break;
             case AccessToken:
+                deleteLater();
                 break;
             case UploadFiles:
+                deleteLater();
                 break;
             case CreateFolder:
+                deleteLater();
                 break;
             case AccountInfo:
+                deleteLater();
                 break;
             case ListFolder:
+                deleteLater();
                 break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
@@ -107,21 +114,29 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     }
     switch(mActionType) {
     case NoneAction:
+        deleteLater();
         break;
     case RequestToken:
+        deleteLater();
         break;
     case AccessToken:
+        deleteLater();
         break;
     case UploadFiles:
+        deleteLater();
         break;
     case CreateFolder:
+        deleteLater();
         break;
     case AccountInfo:
+        deleteLater();
         break;
     case ListFolder:
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
+        deleteLater();
     }
 }
 

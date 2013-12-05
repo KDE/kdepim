@@ -190,7 +190,6 @@ void DropBoxStorageService::slotUploadFileDone()
     qDebug()<<" Upload file done";
 }
 
-
 void DropBoxStorageService::slotAuthorizationFailed()
 {
     mAccessToken.clear();

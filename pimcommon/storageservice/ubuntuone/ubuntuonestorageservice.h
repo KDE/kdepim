@@ -19,9 +19,9 @@
 #define UBUNTUONESTORAGESERVICE_H
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
-
+#include "pimcommon_export.h"
 namespace PimCommon {
-class UbuntuoneStorageService : public PimCommon::StorageServiceAbstract
+class PIMCOMMON_EXPORT UbuntuoneStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
