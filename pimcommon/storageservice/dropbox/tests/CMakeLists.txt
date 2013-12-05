@@ -2,7 +2,7 @@ include_directories(${CMAKE_SOURCE_DIR}/pimcommon/
 )
 
 
-set(dropboxtoken_gui_SRCS dropboxtoken_gui.cpp )
+set(dropboxtoken_gui_SRCS dropboxtoken_gui.cpp ../../tests/servicetestwidget.cpp )
 kde4_add_executable(dropboxtoken_gui TEST ${dropboxtoken_gui_SRCS})
 target_link_libraries(dropboxtoken_gui
   ${QT_QTTEST_LIBRARY}
