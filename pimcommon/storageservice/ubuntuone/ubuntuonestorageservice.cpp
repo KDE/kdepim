@@ -80,12 +80,10 @@ void UbuntuoneStorageService::authentification()
 
 void UbuntuoneStorageService::listFolder()
 {
-    UbuntuOneJob *job = new UbuntuOneJob(this);
     if (mTokenSecret.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-        connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         //TODO connect
         job->listFolder();
@@ -94,12 +92,10 @@ void UbuntuoneStorageService::listFolder()
 
 void UbuntuoneStorageService::createFolder(const QString &folder)
 {
-    UbuntuOneJob *job = new UbuntuOneJob(this);
     if (mTokenSecret.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-        connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         //TODO connect
         job->createFolder(folder);
@@ -116,12 +112,10 @@ void UbuntuoneStorageService::slotAuthorizationFailed()
 
 void UbuntuoneStorageService::accountInfo()
 {
-    UbuntuOneJob *job = new UbuntuOneJob(this);
     if (mTokenSecret.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-        connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
         job->accountInfo();
@@ -140,12 +134,10 @@ QString UbuntuoneStorageService::name()
 
 void UbuntuoneStorageService::uploadFile(const QString &filename)
 {
-    UbuntuOneJob *job = new UbuntuOneJob(this);
     if (mTokenSecret.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-        connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         //TODO connect
         job->uploadFile(filename);
@@ -168,13 +160,11 @@ QString UbuntuoneStorageService::serviceName()
 }
 
 void PimCommon::UbuntuoneStorageService::shareLink(const QString &root, const QString &path)
-{
-    UbuntuOneJob *job = new UbuntuOneJob(this);
+{    
     if (mTokenSecret.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-        connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         //TODO connect
         job->shareLink(root, path);

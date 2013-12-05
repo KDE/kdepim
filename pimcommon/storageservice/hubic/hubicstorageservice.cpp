@@ -67,11 +67,10 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken)
 
 void HubicStorageService::listFolder()
 {
-    HubicJob *job = new HubicJob(this);
     if (mRefreshToken.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        HubicJob *job = new HubicJob(this);
         //TODO
         job->listFolder();
     }
@@ -79,11 +78,10 @@ void HubicStorageService::listFolder()
 
 void HubicStorageService::createFolder(const QString &folder)
 {
-    HubicJob *job = new HubicJob(this);
     if (mRefreshToken.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        HubicJob *job = new HubicJob(this);
         //TODO
         job->createFolder(folder);
     }
@@ -92,11 +90,10 @@ void HubicStorageService::createFolder(const QString &folder)
 
 void HubicStorageService::accountInfo()
 {
-    HubicJob *job = new HubicJob(this);
     if (mRefreshToken.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        HubicJob *job = new HubicJob(this);
         //TODO
         job->accountInfo();
     }
@@ -109,12 +106,10 @@ QString HubicStorageService::name()
 
 void HubicStorageService::uploadFile(const QString &filename)
 {
-    //TODO
-    HubicJob *job = new HubicJob(this);
     if (mRefreshToken.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        HubicJob *job = new HubicJob(this);
         //TODO
         job->uploadFile(filename);
     }
@@ -137,11 +132,10 @@ QString HubicStorageService::serviceName()
 
 void PimCommon::HubicStorageService::shareLink(const QString &root, const QString &path)
 {
-    HubicJob *job = new HubicJob(this);
     if (mRefreshToken.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        HubicJob *job = new HubicJob(this);
         //TODO
         job->shareLink(root, path);
     }
