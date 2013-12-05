@@ -53,8 +53,13 @@ void HubicStorageService::authentification()
 {
     HubicJob *job = new HubicJob(this);
     connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
+    connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
     job->requestTokenAccess();
-    //TODO connect
+}
+
+void HubicStorageService::slotAuthorizationFailed()
+{
+    mRefreshToken.clear();
 }
 
 void HubicStorageService::slotAuthorizationDone(const QString &refreshToken)

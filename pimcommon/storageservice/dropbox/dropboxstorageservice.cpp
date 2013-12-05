@@ -106,12 +106,10 @@ void DropBoxStorageService::slotUploadFileProgress(qint64 done, qint64 total)
 
 void DropBoxStorageService::listFolder()
 {
-    DropBoxJob *job = new DropBoxJob(this);
     if (mAccessToken.isEmpty()) {
-        connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-        connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
-        job->requestTokenAccess();
+        authentification();
     } else {
+        DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));

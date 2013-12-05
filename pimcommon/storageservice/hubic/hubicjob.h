@@ -40,6 +40,7 @@ public:
 
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken);
+    void authorizationFailed();
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);

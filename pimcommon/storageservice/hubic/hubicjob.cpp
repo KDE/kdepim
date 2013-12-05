@@ -171,7 +171,7 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case AccessToken:
-                //TODO emit error.
+                Q_EMIT authorizationFailed();
                 deleteLater();
                 break;
             case UploadFiles:
