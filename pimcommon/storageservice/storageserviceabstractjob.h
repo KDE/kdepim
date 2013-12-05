@@ -42,7 +42,6 @@ protected Q_SLOTS:
     void slotError(QNetworkReply::NetworkError);
 
 protected:
-    QString generateNonce(qint32 length);
     enum ActionType {
         NoneAction = 0,
         RequestToken,

@@ -41,14 +41,3 @@ void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)
     qDebug()<<" Error "<<error<<" reply"<<reply->errorString();
     mError = true;
 }
-
-QString StorageServiceAbstractJob::generateNonce(qint32 length)
-{
-    QString clng;
-
-    for(int i=0; i<length; ++i) {
-        clng += QString::number(int( qrand() / (RAND_MAX + 1.0) * (16 + 1 - 0) + 0 ), 16).toUpper();
-    }
-
-    return clng;
-}

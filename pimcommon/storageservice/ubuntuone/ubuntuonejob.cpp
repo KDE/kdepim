@@ -17,6 +17,7 @@
 
 #include "ubuntuonejob.h"
 #include "pimcommon/storageservice/logindialog.h"
+#include "pimcommon/storageservice/storageserviceutils.h"
 
 #include <qjson/parser.h>
 
@@ -33,7 +34,7 @@ UbuntuOneJob::UbuntuOneJob(QObject *parent)
     mAttachmentVolume = QLatin1String("/~/KMail Attachments");
     mOauthVersion = QLatin1String("1.0");
     mOauthSignatureMethod = QLatin1String("PLAINTEXT");
-    mNonce = generateNonce(8);
+    mNonce = PimCommon::StorageServiceUtils::generateNonce(8);
     mTimestamp = QString::number(QDateTime::currentMSecsSinceEpoch()/1000);
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));

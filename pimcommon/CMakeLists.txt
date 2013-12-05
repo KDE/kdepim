@@ -42,6 +42,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/webdav/webdavstorageservice.cpp
   storageservice/webdav/webdavjob.cpp
   storageservice/webdav/webdavsettingsdialog.cpp
+  storageservice/storageserviceutils.cpp 
 )
 
 set(libpimcommon_autocorrection_SRCS
