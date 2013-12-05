@@ -43,6 +43,7 @@ private slots:
     void slotAddService();
     void slotRemoveService();
     void slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info);
+    void slotModifyService();
 private:
     void updateButtons();
     enum ServiceData {
@@ -54,6 +55,7 @@ private:
     KTextBrowser *mDescription;
     QPushButton *mAddService;
     QPushButton *mRemoveService;
+    QPushButton *mModifyService;
     QLabel *mAccountSize;
     QLabel *mQuota;
     QLabel *mShared;

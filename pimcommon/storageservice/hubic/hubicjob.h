@@ -52,6 +52,7 @@ private:
     QString mRedirectUri;
     QString mRefreshToken;
     QString mToken;
+    qint64 mExpireInTime;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };
 }

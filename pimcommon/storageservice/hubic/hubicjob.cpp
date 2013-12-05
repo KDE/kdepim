@@ -28,7 +28,8 @@
 using namespace PimCommon;
 
 HubicJob::HubicJob(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent)
+    : PimCommon::StorageServiceAbstractJob(parent),
+      mExpireInTime(0)
 {
     mClientId = QLatin1String("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
     mClientSecret = QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
@@ -211,17 +212,19 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
 
 void HubicJob::parseAccessToken(const QString &data)
 {
-    //TODO
     QJson::Parser parser;
     bool ok;
 
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
     if (info.contains(QLatin1String("refresh_token"))) {
         mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
     }
     if (info.contains(QLatin1String("access_token"))) {
         mToken = info.value(QLatin1String("access_token")).toString();
+    }
+    if (info.contains(QLatin1String("expires_in"))) {
+        mExpireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
     //TODO save it.
     deleteLater();

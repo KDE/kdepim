@@ -16,12 +16,14 @@
 */
 
 #include "webdavjob.h"
+#include "webdavsettingsdialog.h"
 
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
+#include <QPointer>
 
 using namespace PimCommon;
 
@@ -38,7 +40,10 @@ WebDavJob::~WebDavJob()
 
 void WebDavJob::requestTokenAccess()
 {
-
+    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
+    if (dlg->exec()) {
+    }
+    delete dlg;
 }
 
 void WebDavJob::uploadFile(const QString &filename)

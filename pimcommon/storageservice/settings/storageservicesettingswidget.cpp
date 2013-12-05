@@ -57,6 +57,11 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     connect(mRemoveService, SIGNAL(clicked()), this, SLOT(slotRemoveService()));
     hlay->addWidget(mRemoveService);
 
+    mModifyService = new QPushButton(i18n("Modify"));
+    connect(mModifyService, SIGNAL(clicked()), this, SLOT(slotModifyService()));
+    hlay->addWidget(mModifyService);
+
+
     vlay->addLayout(hlay);
 
 
@@ -88,6 +93,7 @@ StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 void StorageServiceSettingsWidget::updateButtons()
 {
     mRemoveService->setEnabled(mListService->currentItem());
+    mModifyService->setEnabled(mListService->currentItem());
 }
 
 void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageServiceAbstract *> &lst)
@@ -222,6 +228,17 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceN
             mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
         } else {
             mShared->clear();
+        }
+    }
+}
+
+void StorageServiceSettingsWidget::slotModifyService()
+{
+    if (mListService->currentItem()) {
+        const QString serviceName = mListService->currentItem()->data(Name).toString();
+        if (mListStorageService.contains(serviceName)) {
+            StorageServiceAbstract *storage = mListStorageService.value(serviceName);
+            storage->authentification();
         }
     }
 }

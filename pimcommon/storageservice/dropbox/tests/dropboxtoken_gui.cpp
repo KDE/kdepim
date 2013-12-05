@@ -28,6 +28,7 @@
 #include <QVBoxLayout>
 #include <QToolBar>
 #include <QTextEdit>
+#include <QInputDialog>
 
 DropboxTestWidget::DropboxTestWidget(QWidget *parent)
     : QWidget(parent)
@@ -42,7 +43,6 @@ DropboxTestWidget::DropboxTestWidget(QWidget *parent)
     lay->addWidget(mEdit);
     setLayout(lay);
     mDropBoxStorageService = new PimCommon::DropBoxStorageService(this);
-    //connect(mDropBoxStorageService, SIGNAL())
 }
 
 void DropboxTestWidget::slotAccountInfo()
@@ -52,7 +52,10 @@ void DropboxTestWidget::slotAccountInfo()
 
 void DropboxTestWidget::slotCreateFolder()
 {
-    mDropBoxStorageService->createFolder(QLatin1String("test"));
+    const QString folder = QInputDialog::getText(this,i18n("Folder Name"), i18n("Folder:"));
+    if (!folder.isEmpty()) {
+        mDropBoxStorageService->createFolder(folder);
+    }
 }
 
 void DropboxTestWidget::slotListFolder()
