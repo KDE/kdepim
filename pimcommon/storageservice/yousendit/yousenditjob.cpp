@@ -16,12 +16,13 @@
 */
 
 #include "yousenditjob.h"
-
+#include "pimcommon/storageservice/logindialog.h"
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
+#include <QPointer>
 
 using namespace PimCommon;
 
@@ -38,6 +39,13 @@ YouSendItJob::~YouSendItJob()
 
 void YouSendItJob::requestTokenAccess()
 {
+    QPointer<LoginDialog> dlg = new LoginDialog;
+    if (dlg->exec()) {
+        mPassword = dlg->password();
+        mUsername = dlg->username();
+    }
+    delete dlg;
+
     QUrl url(QLatin1String("https://dpi.yousendit.com/dpi/v1/auth"));
 }
 
