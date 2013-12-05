@@ -42,6 +42,7 @@ DropboxTestWidget::DropboxTestWidget(QWidget *parent)
     lay->addWidget(mEdit);
     setLayout(lay);
     mDropBoxStorageService = new PimCommon::DropBoxStorageService(this);
+    //connect(mDropBoxStorageService, SIGNAL())
 }
 
 void DropboxTestWidget::slotAccountInfo()
