@@ -31,6 +31,7 @@ HubicJob::HubicJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
     mClientId = QLatin1String("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
+    mClientSecret = QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
     mRedirectUri = QLatin1String("https://bugs.kde.org/");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
@@ -89,12 +90,26 @@ void HubicJob::parseRedirectUrl(const QUrl &url)
         }
     }
     if (!authorizeCode.isEmpty()) {
-        //TODO
-        mActionType = AccessToken;
+        getTokenAccess(authorizeCode);
     } else {
         //TODO emit error signal
         deleteLater();
     }
+}
+
+void HubicJob::getTokenAccess(const QString &authorizeCode)
+{
+    mActionType = AccessToken;
+    QNetworkRequest request(QUrl(QLatin1String("https://api.hubic.com/oauth/token/")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("code"), authorizeCode);
+    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
+    postData.addQueryItem(QLatin1String("client_id"), mClientId);
+    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::uploadFile(const QString &filename)
@@ -185,5 +200,18 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
 void HubicJob::parseAccessToken(const QString &data)
 {
     //TODO
+    QJson::Parser parser;
+    bool ok;
+
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("refresh_token"))) {
+        mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
+    }
+    if (info.contains(QLatin1String("access_token"))) {
+        mToken = info.value(QLatin1String("access_token")).toString();
+    }
+    //TODO save it.
+    deleteLater();
 }
 

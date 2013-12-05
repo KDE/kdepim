@@ -45,9 +45,13 @@ private slots:
 private:
     void parseRedirectUrl(const QUrl &url);
     void parseAccessToken(const QString &data);
+    void getTokenAccess(const QString &authorizeCode);
     QUrl mAuthUrl;
     QString mClientId;
+    QString mClientSecret;
     QString mRedirectUri;
+    QString mRefreshToken;
+    QString mToken;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };
 }
