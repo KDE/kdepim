@@ -64,7 +64,6 @@ void DropBoxStorageService::authentification()
 
 void DropBoxStorageService::shareLink(const QString &root, const QString &path)
 {
-
     if (mAccessToken.isEmpty()) {
         authentification();
     } else {

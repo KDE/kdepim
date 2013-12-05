@@ -50,6 +50,7 @@ LoginDialog::LoginDialog(QWidget *parent)
     setMainWidget(w);
     connect(mUsername, SIGNAL(textChanged(QString)), this, SLOT(slotUserNameChanged(QString)));
     enableButtonOk(false);
+    resize(300,100);
 }
 
 LoginDialog::~LoginDialog()
