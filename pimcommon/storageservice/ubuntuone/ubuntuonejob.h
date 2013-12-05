@@ -64,6 +64,7 @@ private:
     QString mOauthSignatureMethod;
     QString mNonce;
     QString mTimestamp;
+    QString mAttachmentVolume;
 };
 }
 
