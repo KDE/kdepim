@@ -19,9 +19,10 @@
 #define HUBICSTORAGESERVICE_H
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon_export.h"
 
 namespace PimCommon {
-class HubicStorageService : public PimCommon::StorageServiceAbstract
+class PIMCOMMON_EXPORT HubicStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:

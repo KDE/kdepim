@@ -15,30 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "hubic_gui.h"
-#include "pimcommon/storageservice/hubic/hubicstorageservice.h"
+#ifndef TEST_HUBIC_GUI_H
+#define TEST_HUBIC_GUI_H
+
 #include <QWidget>
-
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocale>
-
-HubicTestWidget::HubicTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::HubicStorageService(this),parent)
+#include "pimcommon/storageservice/tests/servicetestwidget.h"
+class QTextEdit;
+class HubicTestWidget : public ServiceTestWidget
 {
-}
+    Q_OBJECT
+public:
+    explicit HubicTestWidget(QWidget *parent=0);
+};
 
-
-int main (int argc, char **argv)
-{
-    KCmdLineArgs::init(argc, argv, "hubic_gui", 0, ki18n("hubic_Gui"),
-                       "1.0", ki18n("Test for short hubic"));
-
-    KApplication app;
-
-    HubicTestWidget *w = new HubicTestWidget;
-    w->show();
-    return app.exec();
-}
-
+#endif
