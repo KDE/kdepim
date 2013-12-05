@@ -240,7 +240,27 @@ void HubicJob::parseAccessToken(const QString &data)
     if (info.contains(QLatin1String("expires_in"))) {
         mExpireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
+    Q_EMIT authorizationDone(mRefreshToken);
     //TODO save it.
     deleteLater();
 }
 
+
+void HubicJob::refreshToken()
+{
+    mActionType = AccessToken;
+    QNetworkRequest request(QUrl(QLatin1String("https://api.hubic.com/oauth/token")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+
+    QUrl postData;
+
+    postData.addQueryItem(QLatin1String("refresh_token"), mRefreshToken);
+    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("refresh_token"));
+    postData.addQueryItem(QLatin1String("client_id"), mClientId);
+    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    qDebug()<<"https://api.hubic.com/oauth/token "<<postData;
+
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+
+}

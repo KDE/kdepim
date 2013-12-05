@@ -39,7 +39,7 @@ HubicStorageService::~HubicStorageService()
 void HubicStorageService::readConfig()
 {
     KConfigGroup grp(KGlobal::config(), "Hubic Settings");
-
+    mRefreshToken = grp.readEntry("Refresh Token");
 }
 
 void HubicStorageService::removeConfig()
@@ -52,30 +52,54 @@ void HubicStorageService::removeConfig()
 void HubicStorageService::authentification()
 {
     HubicJob *job = new HubicJob(this);
+    connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
     job->requestTokenAccess();
     //TODO connect
+}
+
+void HubicStorageService::slotAuthorizationDone(const QString &refreshToken)
+{
+    mRefreshToken = refreshToken;
+    KConfigGroup grp(KGlobal::config(), "Hubic Settings");
+    grp.writeEntry("Refresh Token", mRefreshToken);
+    grp.sync();
 }
 
 void HubicStorageService::listFolder()
 {
     HubicJob *job = new HubicJob(this);
-    //TODO
-    job->listFolder();
+    if (mRefreshToken.isEmpty()) {
+        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
+        job->requestTokenAccess();
+    } else {
+        //TODO
+        job->listFolder();
+    }
 }
 
 void HubicStorageService::createFolder(const QString &folder)
 {
     HubicJob *job = new HubicJob(this);
-    //TODO
-    job->createFolder(folder);
+    if (mRefreshToken.isEmpty()) {
+        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
+        job->requestTokenAccess();
+    } else {
+        //TODO
+        job->createFolder(folder);
+    }
 
 }
 
 void HubicStorageService::accountInfo()
 {
     HubicJob *job = new HubicJob(this);
-    //TODO
-    job->accountInfo();
+    if (mRefreshToken.isEmpty()) {
+        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
+        job->requestTokenAccess();
+    } else {
+        //TODO
+        job->accountInfo();
+    }
 }
 
 QString HubicStorageService::name()
@@ -87,8 +111,13 @@ void HubicStorageService::uploadFile(const QString &filename)
 {
     //TODO
     HubicJob *job = new HubicJob(this);
-    //TODO
-    job->uploadFile(filename);
+    if (mRefreshToken.isEmpty()) {
+        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
+        job->requestTokenAccess();
+    } else {
+        //TODO
+        job->uploadFile(filename);
+    }
 }
 
 QString HubicStorageService::description()
@@ -109,6 +138,11 @@ QString HubicStorageService::serviceName()
 void PimCommon::HubicStorageService::shareLink(const QString &root, const QString &path)
 {
     HubicJob *job = new HubicJob(this);
-    //TODO
-    job->shareLink(root, path);
+    if (mRefreshToken.isEmpty()) {
+        connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
+        job->requestTokenAccess();
+    } else {
+        //TODO
+        job->shareLink(root, path);
+    }
 }

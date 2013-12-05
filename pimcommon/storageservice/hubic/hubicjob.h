@@ -38,6 +38,9 @@ public:
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
 
+Q_SIGNALS:
+    void authorizationDone(const QString &refreshToken);
+
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
     void slotRedirect(const QUrl &url);
@@ -46,6 +49,7 @@ private:
     void parseRedirectUrl(const QUrl &url);
     void parseAccessToken(const QString &data);
     void getTokenAccess(const QString &authorizeCode);
+    void refreshToken();
     QUrl mAuthUrl;
     QString mClientId;
     QString mClientSecret;
