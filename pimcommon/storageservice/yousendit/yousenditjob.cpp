@@ -38,7 +38,7 @@ YouSendItJob::~YouSendItJob()
 
 void YouSendItJob::requestTokenAccess()
 {
-
+    QUrl url(QLatin1String("https://dpi.yousendit.com/dpi/v1/auth"));
 }
 
 void YouSendItJob::uploadFile(const QString &filename)

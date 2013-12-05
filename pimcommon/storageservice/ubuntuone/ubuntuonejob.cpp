@@ -16,7 +16,7 @@
 */
 
 #include "ubuntuonejob.h"
-#include "logindialog.h"
+#include "pimcommon/storageservice/logindialog.h"
 
 #include <qjson/parser.h>
 
