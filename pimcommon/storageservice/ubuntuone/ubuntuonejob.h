@@ -48,6 +48,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void authorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
     void accountInfoDone(const PimCommon::AccountInfo &data);
+    void authorizationFailed();
 
 private:
     void parseRequestToken(const QString &data);
