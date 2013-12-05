@@ -25,7 +25,7 @@
 #include "settings/pimcommonsettings.h"
 #include <KLocale>
 #include <KMessageBox>
-#include <KTextEdit>
+#include <KTextBrowser>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -63,9 +63,8 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mainLayout->addLayout(vlay);
 
     QVBoxLayout *vbox = new QVBoxLayout;
-    mDescription = new KTextEdit;
+    mDescription = new KTextBrowser;
     mDescription->setReadOnly(true);
-    mDescription->enableFindReplace(false);
     vbox->addWidget(mDescription);
 
     mAccountSize = new QLabel;
@@ -209,8 +208,20 @@ void StorageServiceSettingsWidget::slotServiceSelected()
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
-        mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
-        mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
-        mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        if (info.accountSize != -1) {
+            mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        } else {
+            mAccountSize->clear();
+        }
+        if (info.quota != -1) {
+            mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
+        } else {
+            mQuota->clear();
+        }
+        if (info.accountSize != -1) {
+            mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        } else {
+            mShared->clear();
+        }
     }
 }
