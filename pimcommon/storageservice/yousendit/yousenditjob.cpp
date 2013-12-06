@@ -29,12 +29,22 @@ using namespace PimCommon;
 YouSendItJob::YouSendItJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
+    mApiKey = QLatin1String("...");
+    //TODO adapt api
+    mDefaultUrl = QLatin1String("https://test2-api.yousendit.com/dpi/v1/");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
 YouSendItJob::~YouSendItJob()
 {
 
+}
+
+void YouSendItJob::initializeToken(const QString &password, const QString &userName, const QString &token)
+{
+    mPassword = password;
+    mUsername = userName;
+    mToken = token;
 }
 
 void YouSendItJob::requestTokenAccess()

@@ -35,6 +35,11 @@ public:
     void accountInfo();
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
+    void initializeToken(const QString &password, const QString &userName, const QString &token);
+
+Q_SIGNALS:
+    void authorizationDone(const QString &password, const QString &username, const QString &token);
+
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
@@ -42,6 +47,9 @@ private slots:
 private:
     QString mPassword;
     QString mUsername;
+    QString mDefaultUrl;
+    QString mApiKey;
+    QString mToken;
 };
 }
 
