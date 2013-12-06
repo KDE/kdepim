@@ -497,7 +497,7 @@ snippetDelimiter=$
   </mediaobject>
 </screenshot>
 <para>Message Folders are used to organize your email messages. When you
-  first start &kmail; the <quote>Local Folders"</quote> containing <guilabel>inbox</guilabel>,
+  first start &kmail; the <quote>Local Folders</quote> containing <guilabel>inbox</guilabel>,
 <guilabel>outbox</guilabel>, <guilabel>sent-mail</guilabel>,
 <guilabel>trash</guilabel>, <guilabel>drafts</guilabel> and <guilabel>templates</guilabel> 
 folders are created. These folders each have special functions:</para>
