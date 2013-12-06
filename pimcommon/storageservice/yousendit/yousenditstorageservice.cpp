@@ -30,7 +30,6 @@ using namespace PimCommon;
 YouSendItStorageService::YouSendItStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    //TODO modify to active url after that.
     readConfig();
 }
 
@@ -61,6 +60,15 @@ void YouSendItStorageService::authentification()
     job->requestTokenAccess();
 }
 
+void YouSendItStorageService::slotAuthorizationFailed()
+{
+    mUsername.clear();
+    mPassword.clear();
+    mToken.clear();
+    Q_EMIT authentificationFailed(serviceName());
+}
+
+
 void YouSendItStorageService::slotAuthorizationDone(const QString &password, const QString &username, const QString &token)
 {
     mUsername = username;
@@ -69,9 +77,12 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
 
     KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
     grp.readEntry("Username", mUsername);
+    //TODO store in kwallet ?
     grp.readEntry("Password", mPassword);
     grp.readEntry("Token", mToken);
     grp.sync();
+    KGlobal::config()->sync();
+    Q_EMIT authentificationDone(serviceName());
 }
 
 void YouSendItStorageService::listFolder()

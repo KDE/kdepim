@@ -58,6 +58,8 @@ Q_SIGNALS:
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
     void uploadFileProgress(const QString &serviceName, qint64 done,qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
+    void authentificationDone(const QString &serviceName);
+    void authentificationFailed(const QString &serviceName);
 
 protected slots:
     void slotActionFailed(const QString &error);

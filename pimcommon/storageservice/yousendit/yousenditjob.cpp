@@ -56,7 +56,19 @@ void YouSendItJob::requestTokenAccess()
     }
     delete dlg;
 
-    QUrl url(QLatin1String("https://dpi.yousendit.com/dpi/v1/auth"));
+    mActionType = RequestToken;
+    QUrl url(mDefaultUrl + QLatin1String("/auth"));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+
+    QUrl postData;
+
+    postData.addQueryItem(QLatin1String("email"), mUsername);
+    postData.addQueryItem(QLatin1String("password"), mPassword);
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::uploadFile(const QString &filename)
@@ -71,7 +83,19 @@ void YouSendItJob::listFolder()
 
 void YouSendItJob::accountInfo()
 {
+    mActionType = AccountInfo;
+    QUrl url(mDefaultUrl + QLatin1String("/user"));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    request.setRawHeader("Accept", "application/json");
 
+    QUrl postData;
+
+    postData.addQueryItem(QLatin1String("email"), mUsername);
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::createFolder(const QString &filename)
@@ -86,39 +110,32 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     reply->deleteLater();
     if (mError) {
         qDebug()<<" error type "<<data;
-        QJson::Parser parser;
-        bool ok;
-
-        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
-        if (error.contains(QLatin1String("error"))) {
-            const QString errorStr = error.value(QLatin1String("error")).toString();
-            switch(mActionType) {
-            case NoneAction:
-                deleteLater();
-                break;
-            case RequestToken:
-                deleteLater();
-                break;
-            case AccessToken:
-                deleteLater();
-                break;
-            case UploadFiles:
-                deleteLater();
-                break;
-            case CreateFolder:
-                deleteLater();
-                break;
-            case AccountInfo:
-                deleteLater();
-                break;
-            case ListFolder:
-                deleteLater();
-                break;
-            default:
-                qDebug()<<" Action Type unknown:"<<mActionType;
-                deleteLater();
-                break;
-            }
+        switch(mActionType) {
+        case NoneAction:
+            deleteLater();
+            break;
+        case RequestToken:
+            deleteLater();
+            break;
+        case AccessToken:
+            deleteLater();
+            break;
+        case UploadFiles:
+            deleteLater();
+            break;
+        case CreateFolder:
+            deleteLater();
+            break;
+        case AccountInfo:
+            deleteLater();
+            break;
+        case ListFolder:
+            deleteLater();
+            break;
+        default:
+            qDebug()<<" Action Type unknown:"<<mActionType;
+            deleteLater();
+            break;
         }
         return;
     }

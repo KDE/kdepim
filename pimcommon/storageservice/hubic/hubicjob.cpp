@@ -42,6 +42,11 @@ HubicJob::~HubicJob()
 
 }
 
+void HubicJob::initializeToken(const QString &refreshToken)
+{
+    mRefreshToken = refreshToken;
+}
+
 void HubicJob::requestTokenAccess()
 {
     mActionType = RequestToken;

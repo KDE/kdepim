@@ -61,6 +61,7 @@ void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecre
 
     grp.sync();
     KGlobal::config()->sync();
+    Q_EMIT authentificationDone(serviceName());
 }
 
 void UbuntuoneStorageService::removeConfig()
@@ -110,6 +111,7 @@ void UbuntuoneStorageService::slotAuthorizationFailed()
     mToken.clear();
     mCustomerKey.clear();
     mTokenSecret.clear();
+    Q_EMIT authentificationFailed(serviceName());
 }
 
 void UbuntuoneStorageService::accountInfo()

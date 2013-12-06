@@ -86,6 +86,7 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     grp.writeEntry("Access Oauth Signature", mAccessOauthSignature);
     grp.sync();
     KGlobal::config()->sync();
+    Q_EMIT authentificationDone(serviceName());
 }
 
 void DropBoxStorageService::listFolder()
@@ -146,6 +147,7 @@ void DropBoxStorageService::slotAuthorizationFailed()
     mAccessToken.clear();
     mAccessTokenSecret.clear();
     mAccessOauthSignature.clear();
+    Q_EMIT authentificationFailed(serviceName());
 }
 
 QString DropBoxStorageService::name()

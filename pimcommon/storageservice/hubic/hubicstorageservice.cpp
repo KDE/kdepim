@@ -60,6 +60,7 @@ void HubicStorageService::authentification()
 void HubicStorageService::slotAuthorizationFailed()
 {
     mRefreshToken.clear();
+    Q_EMIT authentificationFailed(serviceName());
 }
 
 void HubicStorageService::slotAuthorizationDone(const QString &refreshToken)
@@ -68,6 +69,7 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken)
     KConfigGroup grp(KGlobal::config(), "Hubic Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.sync();
+    Q_EMIT authentificationDone(serviceName());
 }
 
 void HubicStorageService::listFolder()
@@ -76,6 +78,7 @@ void HubicStorageService::listFolder()
         authentification();
     } else {
         HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken);
         connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder();
@@ -88,6 +91,7 @@ void HubicStorageService::createFolder(const QString &folder)
         authentification();
     } else {
         HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken);
         connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createFolder(folder);
@@ -101,7 +105,9 @@ void HubicStorageService::accountInfo()
         authentification();
     } else {
         HubicJob *job = new HubicJob(this);
-        //TODO
+        job->initializeToken(mRefreshToken);
+        connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->accountInfo();
     }
 }
@@ -117,7 +123,7 @@ void HubicStorageService::uploadFile(const QString &filename)
         authentification();
     } else {
         HubicJob *job = new HubicJob(this);
-        //TODO
+        job->initializeToken(mRefreshToken);
         connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
@@ -146,6 +152,7 @@ void HubicStorageService::shareLink(const QString &root, const QString &path)
         authentification();
     } else {
         HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->shareLink(root, path);

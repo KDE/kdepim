@@ -43,7 +43,8 @@ public:
     QString storageServiceName() const;
 
 private slots:
-    void slotAuthorizationDone(const QString &password, const QString &username, const QString &token);
+    void slotAuthorizationDone(const QString &password, const QString &username, const QString &token);    
+    void slotAuthorizationFailed();
 
 private:
     void readConfig();
