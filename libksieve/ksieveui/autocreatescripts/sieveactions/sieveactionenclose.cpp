@@ -131,6 +131,8 @@ QString SieveActionEnclose::code(QWidget *w) const
     const QString text = edit->toPlainText();
     if (!text.isEmpty()) {
         result += QString::fromLatin1("text:%1").arg(AutoCreateScriptUtil::createMultiLine(text));
+    } else {
+        result += QLatin1Char(';');
     }
 
     return result;

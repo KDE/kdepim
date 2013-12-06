@@ -16,6 +16,8 @@
 */
 
 #include "knoteutils.h"
+#include "noteshared/attributes/notedisplayattribute.h"
+#include "knotesglobalconfig.h"
 
 #include <KStandardDirs>
 #include <KMessageBox>
@@ -25,6 +27,25 @@
 #include <KConfigGroup>
 
 #include <QFileInfo>
+
+void KNoteUtils::setDefaultValue(Akonadi::Item &item)
+{
+    NoteShared::NoteDisplayAttribute *attribute =  item.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
+    attribute->setBackgroundColor(KNotesGlobalConfig::self()->bgColor());
+    attribute->setForegroundColor(KNotesGlobalConfig::self()->fgColor());
+    attribute->setSize(QSize(KNotesGlobalConfig::self()->width(), KNotesGlobalConfig::self()->height()));
+    attribute->setRememberDesktop(KNotesGlobalConfig::self()->rememberDesktop());
+    attribute->setTabSize(KNotesGlobalConfig::self()->tabSize());
+    attribute->setFont(KNotesGlobalConfig::self()->font());
+    attribute->setTitleFont(KNotesGlobalConfig::self()->titleFont());
+    attribute->setDesktop(KNotesGlobalConfig::self()->desktop());
+    attribute->setIsHidden(KNotesGlobalConfig::self()->hideNote());
+    attribute->setPosition(KNotesGlobalConfig::self()->position());
+    attribute->setShowInTaskbar(KNotesGlobalConfig::self()->showInTaskbar());
+    attribute->setKeepAbove(KNotesGlobalConfig::self()->keepAbove());
+    attribute->setKeepBelow(KNotesGlobalConfig::self()->keepBelow());
+    attribute->setAutoIndent(KNotesGlobalConfig::self()->autoIndent());
+}
 
 void KNoteUtils::migrateToAkonadi()
 {
@@ -46,7 +67,7 @@ void KNoteUtils::migrateToAkonadi()
             const int choice = KMessageBox::questionYesNoCancel( 0, i18n(
                                                                      "<b>Thanks for using KNotes!</b>"
                                                                      "<p>KNotes uses a new storage technology that requires migration of your current KNotes data and configuration.</p>\n"
-                                                                     "<p>The conversion process can take a lot of time (depending on the amount of email you have) and it <em>must not be interrupted</em>.</p>\n"
+                                                                     "<p>The conversion process can take a lot of time (depending on the amount of notes you have) and it <em>must not be interrupted</em>.</p>\n"
                                                                      "<p>You can:</p><ul>"
                                                                      "<li>Migrate now (be prepared to wait)</li>"
                                                                      "<li>Skip the migration and start with fresh data and configuration</li>"

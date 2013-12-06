@@ -16,6 +16,7 @@
 */
 
 #include "webdavstorageservice.h"
+#include "webdavsettingsdialog.h"
 #include "webdavjob.h"
 
 #include <KLocale>
@@ -23,6 +24,7 @@
 #include <KGlobal>
 #include <KConfigGroup>
 
+#include <QPointer>
 
 using namespace PimCommon;
 
@@ -51,29 +53,48 @@ void WebDavStorageService::removeConfig()
 
 void WebDavStorageService::authentification()
 {
-    WebDavJob *job = new WebDavJob(this);
-    job->requestTokenAccess();
+    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
+    if (dlg->exec()) {
+        WebDavJob *job = new WebDavJob(this);
+        job->requestTokenAccess();
+    }
+    delete dlg;
     //TODO connect
 }
 
 void WebDavStorageService::shareLink(const QString &root, const QString &path)
 {
-
+    WebDavJob *job = new WebDavJob(this);
+    connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
+    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+    job->shareLink(root, path);
+    //TODO
 }
 
 void WebDavStorageService::listFolder()
 {
-
+    WebDavJob *job = new WebDavJob(this);
+    connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
+    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+    job->listFolder();
+    //TODO
 }
 
 void WebDavStorageService::createFolder(const QString &folder)
 {
-
+    WebDavJob *job = new WebDavJob(this);
+    connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
+    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+    job->createFolder(folder);
 }
 
 void WebDavStorageService::accountInfo()
 {
-
+    WebDavJob *job = new WebDavJob(this);
+    connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
+    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+    job->accountInfo();
+    //TODO
 }
 
 QString WebDavStorageService::name()
@@ -83,6 +104,12 @@ QString WebDavStorageService::name()
 
 void WebDavStorageService::uploadFile(const QString &filename)
 {
+    //TODO
+    WebDavJob *job = new WebDavJob(this);
+    connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
+    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+    connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+    job->uploadFile(filename);
     //TODO
 }
 
@@ -102,4 +129,7 @@ QString WebDavStorageService::serviceName()
     return QLatin1String("webdav");
 }
 
-
+QString WebDavStorageService::storageServiceName() const
+{
+    return serviceName();
+}

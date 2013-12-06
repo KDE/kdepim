@@ -66,9 +66,7 @@ void SignJobTest::testContentDirect() {
   sJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
   sJob->setSigningKeys( keys );
 
-  bool signWorked = checkSignJob( sJob );
-  QVERIFY( signWorked );
-  
+  checkSignJob( sJob );
 }
 
 void SignJobTest::testContentChained()
@@ -81,7 +79,7 @@ void SignJobTest::testContentChained()
 
   MessageComposer::TransparentJob* tJob =  new MessageComposer::TransparentJob;
   tJob->setContent( content );
-  
+
   MessageComposer::Composer *composer = new MessageComposer::Composer;
   MessageComposer::SignJob* sJob = new MessageComposer::SignJob( composer );
 
@@ -90,9 +88,7 @@ void SignJobTest::testContentChained()
 
   sJob->appendSubjob( tJob );
 
-  bool signWorked = checkSignJob( sJob );
-  QVERIFY( signWorked );
-
+  checkSignJob( sJob );
 }
 
 
@@ -118,11 +114,11 @@ void SignJobTest::testHeaders()
 
   QByteArray mimeType( "multipart/signed" );
   QByteArray charset( "ISO-8859-1" );
-  
+
   KMime::Content *result = sJob->content();
   result->assemble();
   kDebug() << result->encodedContent();
-  
+
   QVERIFY( result->contentType( false ) );
   QCOMPARE( result->contentType()->mimeType(), mimeType );
   QCOMPARE( result->contentType()->charset(), charset );
@@ -166,16 +162,15 @@ void SignJobTest::testRecommentationRFC3156()
 
 }
 
-bool SignJobTest::checkSignJob( MessageComposer::SignJob* sJob )
+void SignJobTest::checkSignJob( MessageComposer::SignJob* sJob )
 {
 
-  sJob->exec();
+  VERIFYEXEC( sJob );
 
   KMime::Content* result = sJob->content();
   Q_ASSERT( result );
   result->assemble();
 
-  return ComposerTestUtil::verifySignature( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat, KMime::Headers::CE7Bit );
-
+  ComposerTestUtil::verifySignature( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat, KMime::Headers::CE7Bit );
 }
 

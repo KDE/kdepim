@@ -35,6 +35,7 @@ public:
     bool needCheckIfServerHasCapability() const;
     bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
     QString help() const;
+    QStringList needRequires(QWidget *) const;
 };
 }
 

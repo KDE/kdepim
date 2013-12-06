@@ -16,7 +16,8 @@
 */
 
 #include "ubuntuonejob.h"
-#include "logindialog.h"
+#include "pimcommon/storageservice/logindialog.h"
+#include "pimcommon/storageservice/storageserviceutils.h"
 
 #include <qjson/parser.h>
 
@@ -30,9 +31,10 @@ using namespace PimCommon;
 UbuntuOneJob::UbuntuOneJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
+    mAttachmentVolume = QLatin1String("/~/KMail Attachments");
     mOauthVersion = QLatin1String("1.0");
     mOauthSignatureMethod = QLatin1String("PLAINTEXT");
-    mNonce = generateNonce(8);
+    mNonce = PimCommon::StorageServiceUtils::generateNonce(8);
     mTimestamp = QString::number(QDateTime::currentMSecsSinceEpoch()/1000);
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
     connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
@@ -130,21 +132,26 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
             case NoneAction:
+                deleteLater();
                 break;
             case RequestToken:
                 deleteLater();
                 break;
             case AccessToken:
+                Q_EMIT authorizationFailed();
                 deleteLater();
                 break;
             case UploadFiles:
+                deleteLater();
                 break;
             case CreateFolder:
+                deleteLater();
                 break;
             case AccountInfo:
                 deleteLater();
                 break;
             case ListFolder:
+                deleteLater();
                 break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
@@ -157,6 +164,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     qDebug()<<" Data ? "<<data;
     switch(mActionType) {
     case NoneAction:
+        deleteLater();
         break;
     case RequestToken:
         parseRequestToken(data);
@@ -165,13 +173,16 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case UploadFiles:
+        deleteLater();
         break;
     case CreateFolder:
+        deleteLater();
         break;
     case AccountInfo:
         parseAccountInfo(data);
         break;
     case ListFolder:
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;

@@ -16,12 +16,14 @@
 */
 
 #include "webdavjob.h"
+#include "webdavsettingsdialog.h"
 
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
+#include <QPointer>
 
 using namespace PimCommon;
 
@@ -38,7 +40,10 @@ WebDavJob::~WebDavJob()
 
 void WebDavJob::requestTokenAccess()
 {
-
+    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
+    if (dlg->exec()) {
+    }
+    delete dlg;
 }
 
 void WebDavJob::uploadFile(const QString &filename)
@@ -76,18 +81,25 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
             case NoneAction:
+                deleteLater();
                 break;
             case RequestToken:
+                deleteLater();
                 break;
             case AccessToken:
+                deleteLater();
                 break;
             case UploadFiles:
+                deleteLater();
                 break;
             case CreateFolder:
+                deleteLater();
                 break;
             case AccountInfo:
+                deleteLater();
                 break;
             case ListFolder:
+                deleteLater();
                 break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
@@ -99,21 +111,29 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     }
     switch(mActionType) {
     case NoneAction:
+        deleteLater();
         break;
     case RequestToken:
+        deleteLater();
         break;
     case AccessToken:
+        deleteLater();
         break;
     case UploadFiles:
+        deleteLater();
         break;
     case CreateFolder:
+        deleteLater();
         break;
     case AccountInfo:
+        deleteLater();
         break;
     case ListFolder:
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
+        deleteLater();
     }
 }
 

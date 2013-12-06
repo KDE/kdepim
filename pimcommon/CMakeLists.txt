@@ -35,13 +35,14 @@ set(libpimcommon_storageservice_SRCS
   storageservice/ubuntuone/ubuntuonestorageservice.cpp
   storageservice/hubic/hubicjob.cpp
   storageservice/ubuntuone/ubuntuonejob.cpp
-  storageservice/ubuntuone/logindialog.cpp
+  storageservice/logindialog.cpp
   storageservice/storageserviceabstractjob.cpp
   storageservice/yousendit/yousenditjob.cpp
   storageservice/yousendit/yousenditstorageservice.cpp
   storageservice/webdav/webdavstorageservice.cpp
   storageservice/webdav/webdavjob.cpp
   storageservice/webdav/webdavsettingsdialog.cpp
+  storageservice/storageserviceutils.cpp 
 )
 
 set(libpimcommon_autocorrection_SRCS
@@ -189,6 +190,7 @@ add_subdirectory(storageservice/hubic/tests)
 add_subdirectory(storageservice/tests)
 add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/webdav/tests)
+add_subdirectory(storageservice/ubuntuone/tests)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

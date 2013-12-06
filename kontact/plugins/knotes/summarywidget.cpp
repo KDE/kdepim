@@ -31,6 +31,7 @@
 #include <Akonadi/Session>
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ETMViewStateSaver>
+#include <Akonadi/CollectionStatistics>
 #include <KCheckableProxyModel>
 
 
@@ -77,8 +78,8 @@ KNotesSummaryWidget::KNotesSummaryWidget(KontactInterface::Plugin *plugin, QWidg
     connect( mNoteTreeModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
              SLOT(slotRowInserted(QModelIndex,int,int)));
 
-    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(slotItemChanged(Akonadi::Item,QSet<QByteArray>)));
-    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(slotItemRemoved(Akonadi::Item)) );
+    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SLOT(updateFolderList()));
+    connect( mNoteRecorder->changeRecorder(), SIGNAL(itemRemoved(Akonadi::Item)), SLOT(updateFolderList()) );
 
     mSelectionModel = new QItemSelectionModel( mNoteTreeModel );
     mModelProxy = new KCheckableProxyModel( this );
@@ -108,9 +109,31 @@ KNotesSummaryWidget::~KNotesSummaryWidget()
 void KNotesSummaryWidget::updateFolderList()
 {
     qDeleteAll( mLabels );
+    int counter = 0;
     mLabels.clear();
     mModelState->restoreState();
+    displayNotes(QModelIndex(), counter);
+}
 
+void KNotesSummaryWidget::displayNotes( const QModelIndex &parent, int &counter)
+{
+    const int nbCol = mModelProxy->rowCount( parent );
+    for ( int i = 0; i < nbCol; ++i ) {
+        const QModelIndex child = mModelProxy->index( i, 0, parent );
+        const Akonadi::Collection col =
+                mModelProxy->data( child,
+                                   Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+        const int showCollection =
+                mModelProxy->data( child, Qt::CheckStateRole ).value<int>();
+
+        if ( col.isValid() ) {
+            const Akonadi::CollectionStatistics stats = col.statistics();
+            if ( ( ( stats.unreadCount() ) != Q_INT64_C(0) ) && showCollection ) {
+                //TODO
+            }
+        }
+        displayNotes( child, counter );
+    }
 }
 
 void KNotesSummaryWidget::slotCollectionChanged( const Akonadi::Collection &col )

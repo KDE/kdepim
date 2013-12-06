@@ -15,12 +15,20 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "hubic_gui.h"
+#include "pimcommon/storageservice/hubic/hubicstorageservice.h"
 #include <QWidget>
 
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
 #include <KLocale>
+
+HubicTestWidget::HubicTestWidget(QWidget *parent)
+    : ServiceTestWidget(new PimCommon::HubicStorageService(this),parent)
+{
+}
+
 
 int main (int argc, char **argv)
 {
@@ -29,10 +37,8 @@ int main (int argc, char **argv)
 
     KApplication app;
 
-    QWidget *w = new QWidget;
-    //PimCommon::DropBoxToken *token = new PimCommon::DropBoxToken;
+    HubicTestWidget *w = new HubicTestWidget;
     w->show();
-    //token->requestTokenAccess();
     return app.exec();
 }
 

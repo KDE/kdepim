@@ -25,7 +25,7 @@
 class QListWidget;
 class QPushButton;
 class QLabel;
-class KTextEdit;
+class KTextBrowser;
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceSettingsWidget : public QWidget
 {
@@ -43,6 +43,7 @@ private slots:
     void slotAddService();
     void slotRemoveService();
     void slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info);
+    void slotModifyService();
 private:
     void updateButtons();
     enum ServiceData {
@@ -51,9 +52,10 @@ private:
     };
     QMap<QString, PimCommon::StorageServiceAbstract *> mListStorageService;
     QListWidget *mListService;
-    KTextEdit *mDescription;
+    KTextBrowser *mDescription;
     QPushButton *mAddService;
     QPushButton *mRemoveService;
+    QPushButton *mModifyService;
     QLabel *mAccountSize;
     QLabel *mQuota;
     QLabel *mShared;

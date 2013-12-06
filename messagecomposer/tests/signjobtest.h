@@ -46,7 +46,7 @@ class SignJobTest : public QObject
     void testRecommentationRFC3156();
 
   private:
-    bool checkSignJob( MessageComposer::SignJob* sJob );
+    void checkSignJob( MessageComposer::SignJob* sJob );
 
 };
 

@@ -15,8 +15,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "webdav_gui.h"
-#include "pimcommon/storageservice/webdav/webdavstorageservice.h"
+#include "ubuntuone_gui.h"
+#include "pimcommon/storageservice/ubuntuone/ubuntuonestorageservice.h"
 #include <QWidget>
 
 #include <kdebug.h>
@@ -24,21 +24,19 @@
 #include <KCmdLineArgs>
 #include <KLocale>
 
-
-WebDavTestWidget::WebDavTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::WebDavStorageService(this),parent)
+UbuntuOneTestWidget::UbuntuOneTestWidget(QWidget *parent)
+    : ServiceTestWidget(new PimCommon::UbuntuoneStorageService(this),parent)
 {
 }
 
-
 int main (int argc, char **argv)
 {
-    KCmdLineArgs::init(argc, argv, "webdav_gui", 0, ki18n("webdav_Gui"),
-                       "1.0", ki18n("Test for webdav"));
+    KCmdLineArgs::init(argc, argv, "UbuntuOne_gui", 0, ki18n("UbuntuOne_Gui"),
+                       "1.0", ki18n("Test for short UbuntuOne"));
 
     KApplication app;
 
-    WebDavTestWidget *w = new WebDavTestWidget;
+    UbuntuOneTestWidget *w = new UbuntuOneTestWidget;
     w->show();
     return app.exec();
 }

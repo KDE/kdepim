@@ -164,16 +164,15 @@ at the bottom.</entry>
 <entry><keycombo action="simul">&Alt;<keycap>Down Arrow</keycap></keycombo></entry>
 <entry>Go to the previous folder in the folder list (if the folder list has focus.)</entry>
 </row>
-<!-- wrong in 4.7 lueck
 <row>
 <entry><keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo></entry>
-<entry>Walk upwards in the list of folders. Use 
+<entry>Focus on previous folder. Use
 <keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to actually
 enter the folder.</entry>
 </row>
 <row>
 <entry><keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo></entry>
-<entry>Walk downwards in the list of folders. Use 
+<entry>Focus on next folder. Use
 <keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo> to actually
 enter the folder.</entry>
 </row>
@@ -183,7 +182,6 @@ enter the folder.</entry>
 to using <keycombo action="simul">&Ctrl;<keycap>Left Arrow</keycap></keycombo> or
 <keycombo action="simul">&Ctrl;<keycap>Right Arrow</keycap></keycombo>.</entry>
 </row>
--->
 <row>
 <entry><keycombo action="simul">&Shift;<keycap>Left Arrow</keycap></keycombo> and
 <keycombo action="simul">&Shift;<keycap>Right Arrow</keycap></keycombo></entry>
@@ -484,24 +482,31 @@ snippetDelimiter=$
 
 <sect1 id="folders">
 <title>Message Folders</title>
-<!-- review and adapt to kmail2/akonadi lueck 31.05.2011-->
-<para>Message Folders are used to organize your email messages. <!-- By default,
-if you have no existing message folders, messages are stored in the folder
-<filename
-class="directory">$<envar>KDEHOME</envar>/share/apps/kmail/</filename>.  If
-you have existing message folders in <filename
-  class="directory">~/Mail</filename>, these will be used instead.-->  When you
-first start &kmail; the <guilabel>inbox</guilabel>,
+<screenshot>
+<screeninfo>Folder Setup Example</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="folder-example.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Folder Setup Example</phrase>
+    </textobject>
+    <caption>
+      <para>Folder Setup Example</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+<para>Message Folders are used to organize your email messages. When you
+  first start &kmail; the <quote>Local Folders</quote> containing <guilabel>inbox</guilabel>,
 <guilabel>outbox</guilabel>, <guilabel>sent-mail</guilabel>,
 <guilabel>trash</guilabel>, <guilabel>drafts</guilabel> and <guilabel>templates</guilabel> 
 folders are created. These folders each have special functions:</para>
-
 <variablelist>
 <varlistentry>
 <term><guilabel>inbox:</guilabel></term>
 <listitem>
 <para>Where &kmail; by default puts your new messages when you ask it to check your
-mail. </para>
+  mail. </para><note><para>&imap; accounts will not use this inbox. The inbox is located on the &imap; server.</para></note>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -509,56 +514,83 @@ mail. </para>
 <listitem>
 <para>Where messages are put while they are waiting to be delivered. Note that
 you should not drag and drop messages here to send them, use the <guiicon>Send</guiicon>
-icon in the composer window instead.<!-- fixme 3.2: has this been 'fixed'? --></para>
-</listitem>
-</varlistentry>
+icon in the composer window instead.<!-- fixme 3.2: has this been 'fixed'? Still cannot drag and drop 12/4/2013 --></para>
+</listitem></varlistentry>
 <varlistentry>
 <term><guilabel>sent-mail:</guilabel></term>
 <listitem>
 <para>By default copies of all messages that you have sent are put into this folder.</para>
-</listitem>
-</varlistentry>
+</listitem></varlistentry>
 <varlistentry>
 <term><guilabel>trash:</guilabel></term>
 <listitem>
 <para>By default all messages that you have moved to trash are moved into this folder.</para>
-</listitem>
-</varlistentry>
+</listitem></varlistentry>
 <varlistentry>
 <term><guilabel>drafts:</guilabel></term>
 <listitem>
 <para>Contains messages you started to edit but then saved to this
-folder instead of sending them.</para>
-</listitem>
-</varlistentry>
-<varlistentry><term><guilabel>templates:</guilabel></term>
-  <listitem>
-    <para>This folder holds your templates created via <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Template</guimenuitem></menuchoice>
-      in the composer window. Please see <link linkend="new-compose-from-templates">New Composer Templates</link> for details.</para>
-  </listitem>
-</varlistentry>
+  folder through <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Draft</guimenuitem></menuchoice>.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><guilabel>templates:</guilabel></term>
+<listitem>
+<para>This folder holds your templates created via <menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Template</guimenuitem></menuchoice>
+in the composer window. Please see <link linkend="new-compose-from-templates">New Composer Templates</link> for details.</para>
+</listitem></varlistentry>
 </variablelist>
-<para>You may find that the standard folders are fine for your
-needs; eventually, though, you will probably need folders to help you organize
-your messages. To create a new folder, select
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Add Folder...</guimenuitem></menuchoice>. 
-The <link linkend="folders-properties-window">folder properties</link> dialog
-will then prompt you for the necessary information. If you ever need to change
-the settings for a folder, select the folder you wish to modify in the Folders pane and select
-<guimenuitem>Folder Properties</guimenuitem> from the context menu.</para>
+<sect2 id="folder-details">
+<title>Creating and Using Folders</title>
 
-<para>To move messages from one folder into another, select the message(s) you
-want to move and press the <keycap>M</keycap> key or select
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Move Messages 
-To</guimenuitem></menuchoice>. A list of folders will appear; select the folder
-from the list that you want to move the messages to.  Messages can also be moved
-by dragging them from the Message list to a folder in the Folder list.</para>
+<para>Organize your emails, &eg; by mailing lists, bill receipts &etc;, by creating new folders. To create a new folder, select
+<menuchoice><guimenu>Folder</guimenu><guimenuitem>Add Folder...</guimenuitem></menuchoice> or <guimenuitem>Add Folder...</guimenuitem> from
+the &RMB; context menu. A dialog will pop up, enter the name of the new folder in the text box. You can fully customize each folder &eg; views, replies, &etc;
+in the properties for a folder by selecting the folder you wish to modify in the folders pane and select <guimenuitem>Folder Properties</guimenuitem> from the &RMB; context menu.
+See <link linkend="folders-properties-window">Properties of Folder</link> for details.</para>
 
-<para>If you want to clear all of the messages out of a folder choose
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Messages to
-Trash</guimenuitem></menuchoice>. You can use 
-<menuchoice><guimenu>Folder</guimenu><guimenuitem>Delete Folder</guimenuitem></menuchoice>
-to remove a folder and all its messages and subfolders.</para>
+<para>To move messages from one folder into another, select the message(s) you want to move and press the <keycap>M</keycap> key or select
+<menuchoice><guimenu>Message</guimenu><guimenuitem>Move Messages To</guimenuitem></menuchoice>. A list of folders will appear; select the folder
+from the list that you want to move the messages to. Messages can also be moved by dragging them from the Message list to a folder in the Folder list.</para>
+
+<para>If you have folders that are frequently accessed, you can add them to your favorite folders pane in the upper left corner. Add them through the &RMB;
+context menu <guimenuitem>Add to Favorite Folders</guimenuitem>.</para>
+
+<para>You can create a virtual folder with search parameters by going to either <menuchoice><guimenu>Edit</guimenu><guimenuitem>Find Messages...</guimenuitem></menuchoice>, <menuchoice><guimenu>Tools</guimenu>
+<guimenuitem>Find Messages...</guimenuitem></menuchoice>, or Keyboard shortcut <keycap>S</keycap>. Enter your search parameters into the dialog. Name
+your search at the bottom <guilabel>Search folder name:</guilabel> textbox, &eg; <replaceable>emails with the word Blog</replaceable>. Click the <guibutton>Search</guibutton> button. Now select
+the <guibutton>Open Search Folder</guibutton>. Your results folder will be at the bottom of the Folder pane.</para>
+
+<para>Creating filters to automatically move messages to specified folders is a great way to organize messages by mailing list, sender, subject &etc;
+Please see <link linkend="filters">Filters</link> for details.</para>
+
+<para>In the case that you receive emails from a trusted source, &eg; a Blog you signed up for, that is formatted in &HTML; and you would like to enable &HTML; view for just those emails. You can achieve this
+by doing the following: Create a new folder, set up a <link linkend="filters">filter</link> to place those emails in the new folder,
+select the folder and select <menuchoice><guimenu>Folder</guimenu><guimenuitem>Prefer &HTML; to Plain Text</guimenuitem></menuchoice>.</para>
+
+<para>Some common folder actions are:</para>
+<variablelist>
+<varlistentry>
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Move All Messages to Trash</guimenuitem></menuchoice></term>
+<listitem>
+<para><action>Moves</action> all your messages in the selected folder to the trash folder.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Archive Folder</guimenuitem></menuchoice></term>
+<listitem>
+<para><action>Create an archive</action> of the folder. See <link linkend="folder-archive">Archive Folder</link> for details.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Delete Folder</guimenuitem></menuchoice></term>
+<listitem>
+<para><action>Remove a folder</action> with all its messages and sub-folders.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><menuchoice><guimenu>Folder</guimenu><guimenuitem>Remove Duplicate Messages</guimenuitem></menuchoice></term>
+<listitem>
+<para>This will <action>search</action> the currently selected folder for duplicates and <action>delete</action> them.</para>
+</listitem></varlistentry>
+</variablelist>
+</sect2>
 
 <sect2 id="folders-properties-window">
 <title>Folder Properties</title>
@@ -1862,7 +1894,7 @@ you need to debug your filtering process.
 <para>&kmail; can easily import several file formats from the following applications with the <application>KMailCVT</application> tool found in
 :</para>
   <simplelist>
-    <member>KMail Archive</member>
+    <member>&kmail; Archive</member>
     <member>mbox(Unix, Evolution)</member>
     <member>Evolution 1.x</member>
     <member>Evolution 2.x</member>

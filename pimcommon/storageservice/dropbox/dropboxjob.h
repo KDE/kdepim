@@ -42,19 +42,7 @@ private Q_SLOTS:
     void slotUploadFileProgress(qint64 done, qint64 total);
 
 Q_SIGNALS:
-    void uploadFileProgress(qint64 done, qint64 total);
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
-
-    void createFolderDone();
-    void uploadFileDone();
-    void listFolderDone();
-
-    void accountInfoDone(const PimCommon::AccountInfo &data);
-
-    void actionFailed(const QString &data);
-    void authorizationFailed();
-
-    void shareLinkDone(const QString &url);
 
 private:
     void getTokenAccess();

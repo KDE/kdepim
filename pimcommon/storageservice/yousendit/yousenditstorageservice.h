@@ -19,9 +19,9 @@
 #define YOUSENDITSTORAGESERVICE_H
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
-
+#include "pimcommon_export.h"
 namespace PimCommon {
-class YouSendItStorageService : public PimCommon::StorageServiceAbstract
+class PIMCOMMON_EXPORT YouSendItStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
@@ -39,12 +39,19 @@ public:
     void listFolder();
     void removeConfig();
     void authentification();
-    void shareLink(const QString &root, const QString &path);
+    void shareLink(const QString &root, const QString &path);    
+    QString storageServiceName() const;
+
+private slots:
+    void slotAuthorizationDone(const QString &password, const QString &username, const QString &token);    
+    void slotAuthorizationFailed();
 
 private:
     void readConfig();
 
-
+    QString mToken;
+    QString mPassword;
+    QString mUsername;
 };
 }
 

@@ -19,9 +19,10 @@
 #define HUBICSTORAGESERVICE_H
 
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon_export.h"
 
 namespace PimCommon {
-class HubicStorageService : public PimCommon::StorageServiceAbstract
+class PIMCOMMON_EXPORT HubicStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
@@ -40,9 +41,16 @@ public:
     void removeConfig();
     void authentification();
     void shareLink(const QString &root, const QString &path);
+    QString storageServiceName() const;
+
+private slots:
+    void slotAuthorizationDone(const QString &refreshToken);
+    void slotAuthorizationFailed();
 
 private:
     void readConfig();
+
+    QString mRefreshToken;
 
 };
 }

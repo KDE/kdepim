@@ -45,7 +45,7 @@ class EncryptJobTest : public QObject
     void testHeaders();
 
   private:
-    bool checkEncryption( MessageComposer::EncryptJob* eJob );
+    void checkEncryption( MessageComposer::EncryptJob* eJob );
 
 };
 

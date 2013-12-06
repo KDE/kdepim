@@ -15,31 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "webdav_gui.h"
-#include "pimcommon/storageservice/webdav/webdavstorageservice.h"
+
+#ifndef SERVICETESTWIDGET_H
+#define SERVICETESTWIDGET_H
+
 #include <QWidget>
+class QTextEdit;
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocale>
-
-
-WebDavTestWidget::WebDavTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::WebDavStorageService(this),parent)
-{
+namespace PimCommon {
+class StorageServiceAbstract;
 }
-
-
-int main (int argc, char **argv)
+class ServiceTestWidget : public QWidget
 {
-    KCmdLineArgs::init(argc, argv, "webdav_gui", 0, ki18n("webdav_Gui"),
-                       "1.0", ki18n("Test for webdav"));
+    Q_OBJECT
+public:
+    explicit ServiceTestWidget(PimCommon::StorageServiceAbstract *, QWidget *parent);
+    ~ServiceTestWidget();
 
-    KApplication app;
+private Q_SLOTS:
+    void slotListFolder();
 
-    WebDavTestWidget *w = new WebDavTestWidget;
-    w->show();
-    return app.exec();
-}
+    void slotCreateFolder();
+    void slotAccountInfo();
 
+private:
+    PimCommon::StorageServiceAbstract *mStorageService;
+    QTextEdit *mEdit;
+};
+
+#endif // SERVICETESTWIDGET_H

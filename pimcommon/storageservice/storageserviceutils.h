@@ -15,31 +15,15 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "webdav_gui.h"
-#include "pimcommon/storageservice/webdav/webdavstorageservice.h"
-#include <QWidget>
+#ifndef STORAGESERVICEUTILS_H
+#define STORAGESERVICEUTILS_H
 
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocale>
+#include <QString>
 
-
-WebDavTestWidget::WebDavTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::WebDavStorageService(this),parent)
-{
+namespace PimCommon {
+namespace StorageServiceUtils {
+QString generateNonce(qint32 length);
+}
 }
 
-
-int main (int argc, char **argv)
-{
-    KCmdLineArgs::init(argc, argv, "webdav_gui", 0, ki18n("webdav_Gui"),
-                       "1.0", ki18n("Test for webdav"));
-
-    KApplication app;
-
-    WebDavTestWidget *w = new WebDavTestWidget;
-    w->show();
-    return app.exec();
-}
-
+#endif // STORAGESERVICEUTILS_H

@@ -46,19 +46,15 @@
 #include <kapplication.h>
 #include <kcombobox.h>
 #include <kfiledialog.h>
-#include <kfind.h>
 #include <kglobalsettings.h>
 #include <kicon.h>
 #include <kiconeffect.h>
 #include <kiconloader.h>
 #include <kinputdialog.h>
-#include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmenu.h>
 #include <kmessagebox.h>
-#include <kprocess.h>
 #include <kselectaction.h>
-#include <ksocketfactory.h>
 #include <kstandardaction.h>
 #include <kstandarddirs.h>
 #include <ktoggleaction.h>
@@ -76,7 +72,6 @@
 #include <QFile>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QObject>
 #include <QPixmap>
 #include <QSize>
 #include <QSizeGrip>
@@ -132,21 +127,7 @@ KNote::~KNote()
 
 void KNote::setDisplayDefaultValue()
 {
-    NoteShared::NoteDisplayAttribute *attribute =  mItem.attribute<NoteShared::NoteDisplayAttribute>(Akonadi::Entity::AddIfMissing);
-    attribute->setBackgroundColor(KNotesGlobalConfig::self()->bgColor());
-    attribute->setForegroundColor(KNotesGlobalConfig::self()->fgColor());
-    attribute->setSize(QSize(KNotesGlobalConfig::self()->width(), KNotesGlobalConfig::self()->height()));
-    attribute->setRememberDesktop(KNotesGlobalConfig::self()->rememberDesktop());
-    attribute->setTabSize(KNotesGlobalConfig::self()->tabSize());
-    attribute->setFont(KNotesGlobalConfig::self()->font());
-    attribute->setTitleFont(KNotesGlobalConfig::self()->titleFont());
-    attribute->setDesktop(KNotesGlobalConfig::self()->desktop());
-    attribute->setIsHidden(KNotesGlobalConfig::self()->hideNote());
-    attribute->setPosition(KNotesGlobalConfig::self()->position());
-    attribute->setShowInTaskbar(KNotesGlobalConfig::self()->showInTaskbar());
-    attribute->setKeepAbove(KNotesGlobalConfig::self()->keepAbove());
-    attribute->setKeepBelow(KNotesGlobalConfig::self()->keepBelow());
-    attribute->setAutoIndent(KNotesGlobalConfig::self()->autoIndent());
+    KNoteUtils::setDefaultValue(mItem);
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob(mItem);
     connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteSaved(KJob*)) );
 }

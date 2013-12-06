@@ -28,9 +28,11 @@
 using namespace PimCommon;
 
 HubicJob::HubicJob(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent)
+    : PimCommon::StorageServiceAbstractJob(parent),
+      mExpireInTime(0)
 {
     mClientId = QLatin1String("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
+    mClientSecret = QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
     mRedirectUri = QLatin1String("https://bugs.kde.org/");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
@@ -38,6 +40,11 @@ HubicJob::HubicJob(QObject *parent)
 HubicJob::~HubicJob()
 {
 
+}
+
+void HubicJob::initializeToken(const QString &refreshToken)
+{
+    mRefreshToken = refreshToken;
 }
 
 void HubicJob::requestTokenAccess()
@@ -89,12 +96,26 @@ void HubicJob::parseRedirectUrl(const QUrl &url)
         }
     }
     if (!authorizeCode.isEmpty()) {
-        //TODO
-        mActionType = AccessToken;
+        getTokenAccess(authorizeCode);
     } else {
         //TODO emit error signal
         deleteLater();
     }
+}
+
+void HubicJob::getTokenAccess(const QString &authorizeCode)
+{
+    mActionType = AccessToken;
+    QNetworkRequest request(QUrl(QLatin1String("https://api.hubic.com/oauth/token/")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("code"), authorizeCode);
+    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
+    postData.addQueryItem(QLatin1String("client_id"), mClientId);
+    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void HubicJob::uploadFile(const QString &filename)
@@ -109,7 +130,19 @@ void HubicJob::listFolder()
 
 void HubicJob::accountInfo()
 {
-
+    mActionType = AccountInfo;
+    QNetworkRequest request(QUrl(QLatin1String("https://api.hubic.com/oauth/account/")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    //FIXME
+    /*
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
+    postData.addQueryItem(QLatin1String("client_id"), mClientId);
+    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+*/
 }
 
 void HubicJob::createFolder(const QString &filename)
@@ -137,20 +170,26 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
             case NoneAction:
+                deleteLater();
                 break;
             case RequestToken:
+                deleteLater();
                 break;
             case AccessToken:
-                //TODO emit error.
+                Q_EMIT authorizationFailed();
                 deleteLater();
                 break;
             case UploadFiles:
+                deleteLater();
                 break;
             case CreateFolder:
+                deleteLater();
                 break;
             case AccountInfo:
+                deleteLater();
                 break;
             case ListFolder:
+                deleteLater();
                 break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
@@ -163,27 +202,70 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
     qDebug()<<" data: "<<data;
     switch(mActionType) {
     case NoneAction:
+        deleteLater();
         break;
     case RequestToken:
+        deleteLater();
         break;
     case AccessToken:
         parseAccessToken(data);
         break;
     case UploadFiles:
+        deleteLater();
         break;
     case CreateFolder:
+        deleteLater();
         break;
     case AccountInfo:
+        deleteLater();
         break;
     case ListFolder:
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
+        deleteLater();
+        break;
     }
 }
 
 void HubicJob::parseAccessToken(const QString &data)
 {
-    //TODO
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("refresh_token"))) {
+        mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
+    }
+    if (info.contains(QLatin1String("access_token"))) {
+        mToken = info.value(QLatin1String("access_token")).toString();
+    }
+    if (info.contains(QLatin1String("expires_in"))) {
+        mExpireInTime = info.value(QLatin1String("expires_in")).toLongLong();
+    }
+    Q_EMIT authorizationDone(mRefreshToken);
+    //TODO save it.
+    deleteLater();
 }
 
+
+void HubicJob::refreshToken()
+{
+    mActionType = AccessToken;
+    QNetworkRequest request(QUrl(QLatin1String("https://api.hubic.com/oauth/token")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+
+    QUrl postData;
+
+    postData.addQueryItem(QLatin1String("refresh_token"), mRefreshToken);
+    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("refresh_token"));
+    postData.addQueryItem(QLatin1String("client_id"), mClientId);
+    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    qDebug()<<"https://api.hubic.com/oauth/token "<<postData;
+
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+
+}

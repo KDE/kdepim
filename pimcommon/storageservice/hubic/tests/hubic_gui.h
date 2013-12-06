@@ -15,31 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "webdav_gui.h"
-#include "pimcommon/storageservice/webdav/webdavstorageservice.h"
+#ifndef TEST_HUBIC_GUI_H
+#define TEST_HUBIC_GUI_H
+
 #include <QWidget>
-
-#include <kdebug.h>
-#include <kapplication.h>
-#include <KCmdLineArgs>
-#include <KLocale>
-
-
-WebDavTestWidget::WebDavTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::WebDavStorageService(this),parent)
+#include "pimcommon/storageservice/tests/servicetestwidget.h"
+class QTextEdit;
+class HubicTestWidget : public ServiceTestWidget
 {
-}
+    Q_OBJECT
+public:
+    explicit HubicTestWidget(QWidget *parent=0);
+};
 
-
-int main (int argc, char **argv)
-{
-    KCmdLineArgs::init(argc, argv, "webdav_gui", 0, ki18n("webdav_Gui"),
-                       "1.0", ki18n("Test for webdav"));
-
-    KApplication app;
-
-    WebDavTestWidget *w = new WebDavTestWidget;
-    w->show();
-    return app.exec();
-}
-
+#endif

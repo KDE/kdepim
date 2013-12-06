@@ -25,7 +25,7 @@
 #include "settings/pimcommonsettings.h"
 #include <KLocale>
 #include <KMessageBox>
-#include <KTextEdit>
+#include <KTextBrowser>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -57,15 +57,19 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     connect(mRemoveService, SIGNAL(clicked()), this, SLOT(slotRemoveService()));
     hlay->addWidget(mRemoveService);
 
+    mModifyService = new QPushButton(i18n("Modify"));
+    connect(mModifyService, SIGNAL(clicked()), this, SLOT(slotModifyService()));
+    hlay->addWidget(mModifyService);
+
+
     vlay->addLayout(hlay);
 
 
     mainLayout->addLayout(vlay);
 
     QVBoxLayout *vbox = new QVBoxLayout;
-    mDescription = new KTextEdit;
+    mDescription = new KTextBrowser;
     mDescription->setReadOnly(true);
-    mDescription->enableFindReplace(false);
     vbox->addWidget(mDescription);
 
     mAccountSize = new QLabel;
@@ -89,6 +93,7 @@ StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 void StorageServiceSettingsWidget::updateButtons()
 {
     mRemoveService->setEnabled(mListService->currentItem());
+    mModifyService->setEnabled(mListService->currentItem());
 }
 
 void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageServiceAbstract *> &lst)
@@ -148,11 +153,6 @@ void StorageServiceSettingsWidget::slotAddService()
         const PimCommon::StorageServiceManager::ServiceType type = dlg->serviceSelected();
         const QString serviceName = PimCommon::StorageServiceManager::serviceToI18n(type);
         const QString service = PimCommon::StorageServiceManager::serviceName(type);
-        QListWidgetItem *item = new QListWidgetItem;
-        item->setText(serviceName);
-        item->setData(Name,service);
-        item->setData(Type, type);
-        mListService->addItem(item);
         StorageServiceAbstract *storage = 0;
         switch(type) {
         case PimCommon::StorageServiceManager::DropBox: {
@@ -175,6 +175,11 @@ void StorageServiceSettingsWidget::slotAddService()
             break;
         }
         if (storage) {
+            QListWidgetItem *item = new QListWidgetItem;
+            item->setText(serviceName);
+            item->setData(Name,service);
+            item->setData(Type, type);
+            mListService->addItem(item);
             storage->authentification();
             mListStorageService.insert(service, storage);
         }
@@ -209,8 +214,31 @@ void StorageServiceSettingsWidget::slotServiceSelected()
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)
 {
     if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
-        mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
-        mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
-        mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        if (info.accountSize != -1) {
+            mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        } else {
+            mAccountSize->clear();
+        }
+        if (info.quota != -1) {
+            mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
+        } else {
+            mQuota->clear();
+        }
+        if (info.accountSize != -1) {
+            mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
+        } else {
+            mShared->clear();
+        }
+    }
+}
+
+void StorageServiceSettingsWidget::slotModifyService()
+{
+    if (mListService->currentItem()) {
+        const QString serviceName = mListService->currentItem()->data(Name).toString();
+        if (mListStorageService.contains(serviceName)) {
+            StorageServiceAbstract *storage = mListStorageService.value(serviceName);
+            storage->authentification();
+        }
     }
 }

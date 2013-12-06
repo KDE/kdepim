@@ -59,6 +59,14 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     message->setObjectName(QLatin1String("message"));
     lay->addWidget(message);
 
+    lab = new QLabel(i18n("method:"));
+    lay->addWidget(lab);
+
+    KLineEdit *method = new KLineEdit;
+    method->setObjectName(QLatin1String("method"));
+    lay->addWidget(method);
+
+
     return w;
 }
 
@@ -91,6 +99,9 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                 //nothing
             } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
+            } else if (tagName == QLatin1String("str")) {
+                KLineEdit *method = w->findChild<KLineEdit*>( QLatin1String("method") );
+                method->setText(AutoCreateScriptUtil::quoteStr(e.text()));
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagName "<<tagName;
@@ -103,13 +114,24 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
 
 QString SieveActionNotify::code(QWidget *w) const
 {
+    QString result = QLatin1String("notify");
     const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
     const QString importanceStr = importance->code();
+    if (!importanceStr.isEmpty()) {
+        result += QString::fromLatin1(" :importance \"%1\"").arg(importanceStr);
+    }
 
     const KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
     const QString messageStr = message->text();
+    if (!messageStr.isEmpty()) {
+        result += QString::fromLatin1(" :message \"%2\"").arg(messageStr);
+    }
 
-    return QString::fromLatin1("notify :importance \"%1\" :message \"%2\";").arg(importanceStr).arg(messageStr);
+    const KLineEdit *method = w->findChild<KLineEdit*>( QLatin1String("method") );
+    const QString methodStr = method->text();
+    result += QString::fromLatin1(" \"%3\";").arg(methodStr);
+
+    return result;
 }
 
 QString SieveActionNotify::serverNeedsCapability() const
@@ -125,5 +147,12 @@ bool SieveActionNotify::needCheckIfServerHasCapability() const
 QString SieveActionNotify::help() const
 {
     return i18n("The \"notify\" action specifies that a notification should be sent to a user.");
+}
+
+QStringList SieveActionNotify::needRequires(QWidget *) const
+{
+    QStringList lst;
+    lst << QLatin1String("enotify");
+    return lst;
 }
 

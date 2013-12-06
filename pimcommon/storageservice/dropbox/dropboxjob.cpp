@@ -19,7 +19,7 @@
 #include "dropboxjob.h"
 #include "storageservice/storageauthviewdialog.h"
 #include "storageservice/storageserviceabstract.h"
-
+#include "storageservice/storageserviceutils.h"
 #include <KLocale>
 
 #include <qjson/parser.h>
@@ -45,7 +45,7 @@ DropBoxJob::DropBoxJob(QObject *parent)
     mOauthVersion = QLatin1String("1.0");
     mOauthSignatureMethod = QLatin1String("PLAINTEXT");
     mTimestamp = QString::number(QDateTime::currentMSecsSinceEpoch()/1000);
-    mNonce = generateNonce(8);
+    mNonce = PimCommon::StorageServiceUtils::generateNonce(8);
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
@@ -122,8 +122,10 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case RequestToken:
+                deleteLater();
                 break;
             case AccessToken:
+                deleteLater();
                 break;
             case UploadFiles:
                 Q_EMIT actionFailed(i18n("Upload File returns an error: %1",errorStr));

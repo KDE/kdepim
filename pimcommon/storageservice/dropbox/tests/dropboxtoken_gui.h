@@ -19,24 +19,13 @@
 #define TEST_DROPBOX_GUI_H
 
 #include <QWidget>
+#include "pimcommon/storageservice/tests/servicetestwidget.h"
 class QTextEdit;
-namespace PimCommon {
-class DropBoxStorageService;
-}
-class DropboxTestWidget : public QWidget
+class DropboxTestWidget : public ServiceTestWidget
 {
     Q_OBJECT
 public:
     explicit DropboxTestWidget(QWidget *parent=0);
-
-private Q_SLOTS:
-    void slotListFolder();
-
-    void slotCreateFolder();
-    void slotAccountInfo();
-private:
-    QTextEdit *mEdit;
-    PimCommon::DropBoxStorageService *mDropBoxStorageService;
 };
 
 #endif

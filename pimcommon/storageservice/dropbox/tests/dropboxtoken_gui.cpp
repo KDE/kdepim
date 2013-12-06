@@ -25,38 +25,10 @@
 #include <KCmdLineArgs>
 #include <KLocale>
 
-#include <QVBoxLayout>
-#include <QToolBar>
-#include <QTextEdit>
 
 DropboxTestWidget::DropboxTestWidget(QWidget *parent)
-    : QWidget(parent)
+    : ServiceTestWidget(new PimCommon::DropBoxStorageService(this),parent)
 {
-    mEdit = new QTextEdit;
-    QVBoxLayout *lay = new QVBoxLayout;
-    QToolBar *bar = new QToolBar;
-    lay->addWidget(bar);
-    bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
-    bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
-    bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
-    lay->addWidget(mEdit);
-    setLayout(lay);
-    mDropBoxStorageService = new PimCommon::DropBoxStorageService(this);
-}
-
-void DropboxTestWidget::slotAccountInfo()
-{
-    mDropBoxStorageService->accountInfo();
-}
-
-void DropboxTestWidget::slotCreateFolder()
-{
-    mDropBoxStorageService->createFolder(QLatin1String("test"));
-}
-
-void DropboxTestWidget::slotListFolder()
-{
-    mDropBoxStorageService->listFolder();
 }
 
 int main (int argc, char **argv)

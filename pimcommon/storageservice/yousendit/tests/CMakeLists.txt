@@ -2,7 +2,7 @@ include_directories(${CMAKE_SOURCE_DIR}/pimcommon/
 )
 
 
-set(yousendit_gui_SRCS yousendit_gui.cpp )
+set(yousendit_gui_SRCS yousendit_gui.cpp ../../tests/servicetestwidget.cpp)
 kde4_add_executable(yousendit_gui TEST ${yousendit_gui_SRCS})
 target_link_libraries(yousendit_gui
   ${QT_QTTEST_LIBRARY}
