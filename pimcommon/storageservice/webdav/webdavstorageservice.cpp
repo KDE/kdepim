@@ -66,6 +66,8 @@ void WebDavStorageService::shareLink(const QString &root, const QString &path)
 void WebDavStorageService::listFolder()
 {
     WebDavJob *job = new WebDavJob(this);
+    connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
+    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
     job->listFolder();
     //TODO
 }
@@ -80,6 +82,8 @@ void WebDavStorageService::createFolder(const QString &folder)
 void WebDavStorageService::accountInfo()
 {
     WebDavJob *job = new WebDavJob(this);
+    connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
+    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
     job->accountInfo();
     //TODO
 }

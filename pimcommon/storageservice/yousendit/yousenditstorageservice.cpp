@@ -59,7 +59,8 @@ void YouSendItStorageService::authentification()
 void YouSendItStorageService::listFolder()
 {
     YouSendItJob *job = new YouSendItJob(this);
-    //TODO
+    connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
+    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
     job->listFolder();
 }
 
@@ -73,7 +74,8 @@ void YouSendItStorageService::createFolder(const QString &folder)
 void YouSendItStorageService::accountInfo()
 {
     YouSendItJob *job = new YouSendItJob(this);
-    //TODO
+    connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
+    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
     job->accountInfo();
 }
 

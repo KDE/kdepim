@@ -46,6 +46,10 @@ Q_SIGNALS:
     void shareLinkDone(const QString &url);
     void accountInfoDone(const PimCommon::AccountInfo &data);
     void uploadFileProgress(qint64 done, qint64 total);
+    void createFolderDone();
+    void uploadFileDone();
+    void listFolderDone();
+    void authorizationFailed();
 
 protected:
     enum ActionType {

@@ -84,8 +84,9 @@ void UbuntuoneStorageService::listFolder()
         authentification();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
+        connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
-        //TODO connect
         job->listFolder();
     }
 }
@@ -118,6 +119,7 @@ void UbuntuoneStorageService::accountInfo()
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->accountInfo();
     }
 }

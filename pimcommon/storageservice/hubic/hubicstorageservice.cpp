@@ -76,7 +76,8 @@ void HubicStorageService::listFolder()
         authentification();
     } else {
         HubicJob *job = new HubicJob(this);
-        //TODO
+        connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder();
     }
 }

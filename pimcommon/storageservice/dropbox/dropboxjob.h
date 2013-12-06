@@ -44,11 +44,6 @@ private Q_SLOTS:
 Q_SIGNALS:
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
 
-    void createFolderDone();
-    void uploadFileDone();
-    void listFolderDone();
-    void authorizationFailed();
-
 private:
     void getTokenAccess();
     void parseRequestToken(const QString &result);
