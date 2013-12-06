@@ -59,6 +59,14 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     message->setObjectName(QLatin1String("message"));
     lay->addWidget(message);
 
+    lab = new QLabel(i18n("method:"));
+    lay->addWidget(lab);
+
+    KLineEdit *method = new KLineEdit;
+    method->setObjectName(QLatin1String("method"));
+    lay->addWidget(method);
+
+
     return w;
 }
 
@@ -91,6 +99,9 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
                 //nothing
             } else if (tagName == QLatin1String("comment")) {
                 //implement in the future ?
+            } else if (tagName == QLatin1String("str")) {
+                KLineEdit *method = w->findChild<KLineEdit*>( QLatin1String("method") );
+                method->setText(AutoCreateScriptUtil::quoteStr(e.text()));
             } else {
                 unknownTag(tagName, error);
                 qDebug()<<" SieveActionNotify::setParamWidgetValue unknown tagName "<<tagName;
@@ -109,7 +120,10 @@ QString SieveActionNotify::code(QWidget *w) const
     const KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
     const QString messageStr = message->text();
 
-    return QString::fromLatin1("notify :importance \"%1\" :message \"%2\";").arg(importanceStr).arg(messageStr);
+    const KLineEdit *method = w->findChild<KLineEdit*>( QLatin1String("method") );
+    const QString methodStr = method->text();
+
+    return QString::fromLatin1("notify :importance \"%1\" :message \"%2\" \"%3\";").arg(importanceStr).arg(messageStr).arg(methodStr);
 }
 
 QString SieveActionNotify::serverNeedsCapability() const
