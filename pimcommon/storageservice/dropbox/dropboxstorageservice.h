@@ -46,9 +46,6 @@ public:
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
-    void slotCreateFolderDone();
-    void slotUploadFileDone();
-    void slotListFolderDone();
     void slotAuthorizationFailed();
 
 private:

@@ -17,11 +17,14 @@
 
 #include "yousenditstorageservice.h"
 #include "yousenditjob.h"
+#include "pimcommon/storageservice/logindialog.h"
 
 #include <KLocale>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
+
+#include <QPointer>
 
 
 using namespace PimCommon;
@@ -29,6 +32,8 @@ using namespace PimCommon;
 YouSendItStorageService::YouSendItStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
+    //TODO
+    mApiKey = QLatin1String("...");
     readConfig();
 }
 
@@ -51,32 +56,50 @@ void YouSendItStorageService::removeConfig()
 
 void YouSendItStorageService::authentification()
 {
-    YouSendItJob *job = new YouSendItJob(this);
-    job->requestTokenAccess();
-    //TODO connect
+    QPointer<LoginDialog> dlg = new LoginDialog;
+    if (dlg->exec()) {
+        const QString password = dlg->password();
+        const QString username = dlg->username();
+        YouSendItJob *job = new YouSendItJob(this);
+        job->requestTokenAccess();
+    }
+    delete dlg;
 }
 
 void YouSendItStorageService::listFolder()
 {
-    YouSendItJob *job = new YouSendItJob(this);
-    connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
-    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-    job->listFolder();
+    if (mToken.isEmpty()) {
+        authentification();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->listFolder();
+    }
 }
 
 void YouSendItStorageService::createFolder(const QString &folder)
 {
-    YouSendItJob *job = new YouSendItJob(this);
-    //TODO
-    job->createFolder(folder);
+    if (mToken.isEmpty()) {
+        authentification();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createFolder(folder);
+    }
 }
 
 void YouSendItStorageService::accountInfo()
 {
-    YouSendItJob *job = new YouSendItJob(this);
-    connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
-    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-    job->accountInfo();
+    if (mToken.isEmpty()) {
+        authentification();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->accountInfo();
+    }
 }
 
 QString YouSendItStorageService::name()
@@ -86,10 +109,16 @@ QString YouSendItStorageService::name()
 
 void YouSendItStorageService::uploadFile(const QString &filename)
 {
-    //TODO
-    YouSendItJob *job = new YouSendItJob(this);
-    //TODO
-    job->uploadFile(filename);
+    if (mToken.isEmpty()) {
+        authentification();
+    } else {
+        //TODO
+        YouSendItJob *job = new YouSendItJob(this);
+        connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+        job->uploadFile(filename);
+    }
 }
 
 QString YouSendItStorageService::description()
@@ -110,9 +139,14 @@ QString YouSendItStorageService::serviceName()
 
 void YouSendItStorageService::shareLink(const QString &root, const QString &path)
 {
-    YouSendItJob *job = new YouSendItJob(this);
-    //TODO
-    job->shareLink(root, path);
+    if (mToken.isEmpty()) {
+        authentification();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->shareLink(root, path);
+    }
 }
 
 QString YouSendItStorageService::storageServiceName() const

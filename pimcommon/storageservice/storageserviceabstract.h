@@ -64,6 +64,9 @@ protected slots:
     void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotShareLinkDone(const QString &url);
     void slotUploadFileProgress(qint64 done, qint64 total);
+    void slotCreateFolderDone();
+    void slotUploadFileDone();
+    void slotListFolderDone();
 };
 }
 

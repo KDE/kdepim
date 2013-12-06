@@ -101,11 +101,6 @@ void DropBoxStorageService::listFolder()
     }
 }
 
-void DropBoxStorageService::slotListFolderDone()
-{
-    //TODO
-}
-
 void DropBoxStorageService::accountInfo()
 {
     if (mAccessToken.isEmpty()) {
@@ -132,12 +127,6 @@ void DropBoxStorageService::createFolder(const QString &folder)
     }
 }
 
-void DropBoxStorageService::slotCreateFolderDone()
-{
-    //TODO
-    qDebug()<<" folder created";
-}
-
 void DropBoxStorageService::uploadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
@@ -150,11 +139,6 @@ void DropBoxStorageService::uploadFile(const QString &filename)
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         job->uploadFile(filename);
     }
-}
-
-void DropBoxStorageService::slotUploadFileDone()
-{
-    qDebug()<<" Upload file done";
 }
 
 void DropBoxStorageService::slotAuthorizationFailed()

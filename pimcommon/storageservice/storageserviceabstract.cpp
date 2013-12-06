@@ -51,5 +51,20 @@ void StorageServiceAbstract::slotUploadFileProgress(qint64 done, qint64 total)
     Q_EMIT uploadFileProgress(storageServiceName(), done, total);
 }
 
+void StorageServiceAbstract::slotCreateFolderDone()
+{
+    //TODO
+}
+
+void StorageServiceAbstract::slotUploadFileDone()
+{
+    //TODO
+}
+
+void StorageServiceAbstract::slotListFolderDone()
+{
+    //TODO
+}
+
 
 #include "moc_storageserviceabstract.cpp"

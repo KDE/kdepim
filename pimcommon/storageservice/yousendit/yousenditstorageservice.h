@@ -45,7 +45,10 @@ public:
 private:
     void readConfig();
 
-
+    QString mApiKey;
+    QString mToken;
+    QString mPassword;
+    QString mUsername;
 };
 }
 

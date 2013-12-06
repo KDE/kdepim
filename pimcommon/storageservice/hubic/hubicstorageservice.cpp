@@ -88,7 +88,8 @@ void HubicStorageService::createFolder(const QString &folder)
         authentification();
     } else {
         HubicJob *job = new HubicJob(this);
-        //TODO
+        connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createFolder(folder);
     }
 
@@ -117,6 +118,9 @@ void HubicStorageService::uploadFile(const QString &filename)
     } else {
         HubicJob *job = new HubicJob(this);
         //TODO
+        connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         job->uploadFile(filename);
     }
 }
