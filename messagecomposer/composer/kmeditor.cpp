@@ -175,7 +175,7 @@ void KMeditorPrivate::startExternalEditor()
   if ( !mExtEditorProcess->waitForStarted() ) {
     KMessageBox::error(q->topLevelWidget(),i18n("External editor cannot be started. Please verify command \"%1\"",commandLine));
     q->killExternalEditor();
-    q->setUseExternalEditor( false );    
+    q->setUseExternalEditor( false );
   } else {
     emit q->externalEditorStarted();
   }
@@ -195,6 +195,7 @@ void KMeditorPrivate::slotEditorFinished( int codeError, QProcess::ExitStatus ex
     }
     if (codeError > 0) {
         KMessageBox::error(q->topLevelWidget(), i18n("Error was found when we started external editor."), i18n("External Editor Closed"));
+        q->setUseExternalEditor( false );
     }
     emit q->externalEditorClosed();
   }
