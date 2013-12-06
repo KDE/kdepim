@@ -112,3 +112,8 @@ QString WebDavStorageService::serviceName()
 {
     return QLatin1String("webdav");
 }
+
+QString WebDavStorageService::storageServiceName() const
+{
+    return serviceName();
+}

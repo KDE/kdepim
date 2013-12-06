@@ -106,9 +106,14 @@ QString YouSendItStorageService::serviceName()
     return QLatin1String("yousendit");
 }
 
-void PimCommon::YouSendItStorageService::shareLink(const QString &root, const QString &path)
+void YouSendItStorageService::shareLink(const QString &root, const QString &path)
 {
     YouSendItJob *job = new YouSendItJob(this);
     //TODO
     job->shareLink(root, path);
+}
+
+QString YouSendItStorageService::storageServiceName() const
+{
+    return serviceName();
 }

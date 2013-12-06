@@ -41,6 +41,7 @@ public:
     void removeConfig();
     void authentification();
     void shareLink(const QString &root, const QString &path);
+    QString storageServiceName() const;
 
 private:
     void readConfig();

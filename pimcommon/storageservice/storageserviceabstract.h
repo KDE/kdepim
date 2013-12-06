@@ -51,12 +51,19 @@ public:
     virtual void removeConfig() = 0;
     virtual void authentification() = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
+    virtual QString storageServiceName() const = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
     void uploadFileProgress(const QString &serviceName, qint64 done,qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
+
+protected slots:
+    void slotActionFailed(const QString &error);
+    void slotAccountInfoDone(const PimCommon::AccountInfo &info);
+    void slotShareLinkDone(const QString &url);
+    void slotUploadFileProgress(qint64 done, qint64 total);
 };
 }
 

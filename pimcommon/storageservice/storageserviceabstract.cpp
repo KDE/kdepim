@@ -16,6 +16,7 @@
 */
 
 #include "storageserviceabstract.h"
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -28,5 +29,27 @@ StorageServiceAbstract::~StorageServiceAbstract()
 {
 
 }
+
+void StorageServiceAbstract::slotAccountInfoDone(const PimCommon::AccountInfo &info)
+{
+    Q_EMIT accountInfoDone(storageServiceName(), info);
+}
+
+void StorageServiceAbstract::slotActionFailed(const QString &error)
+{
+    qDebug()<<" error found "<<error;
+    Q_EMIT actionFailed(storageServiceName(), error);
+}
+
+void StorageServiceAbstract::slotShareLinkDone(const QString &url)
+{
+    Q_EMIT shareLinkDone(storageServiceName(), url);
+}
+
+void StorageServiceAbstract::slotUploadFileProgress(qint64 done, qint64 total)
+{
+    Q_EMIT uploadFileProgress(storageServiceName(), done, total);
+}
+
 
 #include "moc_storageserviceabstract.cpp"

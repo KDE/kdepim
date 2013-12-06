@@ -40,10 +40,10 @@ public:
     void removeConfig();
     void authentification();
     void shareLink(const QString &root, const QString &path);
+    QString storageServiceName() const;
 
 private slots:
     void slotAuthorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
-    void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotAuthorizationFailed();
 private:
     void readConfig();

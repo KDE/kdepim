@@ -88,22 +88,6 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     KGlobal::config()->sync();
 }
 
-void DropBoxStorageService::slotActionFailed(const QString &error)
-{
-    qDebug()<<" error found "<<error;
-    Q_EMIT actionFailed(serviceName(), error);
-}
-
-void DropBoxStorageService::slotShareLinkDone(const QString &url)
-{
-    Q_EMIT shareLinkDone(serviceName(), url);
-}
-
-void DropBoxStorageService::slotUploadFileProgress(qint64 done, qint64 total)
-{
-    Q_EMIT uploadFileProgress(serviceName(), done, total);
-}
-
 void DropBoxStorageService::listFolder()
 {
     if (mAccessToken.isEmpty()) {
@@ -133,11 +117,6 @@ void DropBoxStorageService::accountInfo()
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->accountInfo();
     }
-}
-
-void DropBoxStorageService::slotAccountInfoDone(const PimCommon::AccountInfo &info)
-{
-    Q_EMIT accountInfoDone(serviceName(), info);
 }
 
 void DropBoxStorageService::createFolder(const QString &folder)
@@ -205,3 +184,7 @@ QString DropBoxStorageService::serviceName()
     return QLatin1String("dropbox");
 }
 
+QString DropBoxStorageService::storageServiceName() const
+{
+    return serviceName();
+}

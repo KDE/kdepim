@@ -135,7 +135,7 @@ QString HubicStorageService::serviceName()
     return QLatin1String("hubic");
 }
 
-void PimCommon::HubicStorageService::shareLink(const QString &root, const QString &path)
+void HubicStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mRefreshToken.isEmpty()) {
         authentification();
@@ -144,4 +144,9 @@ void PimCommon::HubicStorageService::shareLink(const QString &root, const QStrin
         //TODO
         job->shareLink(root, path);
     }
+}
+
+QString HubicStorageService::storageServiceName() const
+{
+    return serviceName();
 }

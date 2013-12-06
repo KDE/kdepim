@@ -41,18 +41,16 @@ public:
     void removeConfig();
     void authentification();
     void shareLink(const QString &root, const QString &path);
+    QString storageServiceName() const;
 
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void slotCreateFolderDone();
     void slotUploadFileDone();
-    void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotListFolderDone();
     void slotAuthorizationFailed();
-    void slotUploadFileProgress(qint64,qint64);    
-    void slotActionFailed(const QString &error);
-    void slotShareLinkDone(const QString &url);
+
 private:
     void readConfig();
     QString mAccessToken;

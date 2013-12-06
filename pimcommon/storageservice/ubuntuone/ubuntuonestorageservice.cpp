@@ -122,11 +122,6 @@ void UbuntuoneStorageService::accountInfo()
     }
 }
 
-void UbuntuoneStorageService::slotAccountInfoDone(const PimCommon::AccountInfo &info)
-{
-    Q_EMIT accountInfoDone(serviceName(), info);
-}
-
 QString UbuntuoneStorageService::name()
 {
     return i18n("Ubuntu One");
@@ -159,7 +154,7 @@ QString UbuntuoneStorageService::serviceName()
     return QLatin1String("ubuntuone");
 }
 
-void PimCommon::UbuntuoneStorageService::shareLink(const QString &root, const QString &path)
+void UbuntuoneStorageService::shareLink(const QString &root, const QString &path)
 {    
     if (mTokenSecret.isEmpty()) {
         authentification();
@@ -170,3 +165,9 @@ void PimCommon::UbuntuoneStorageService::shareLink(const QString &root, const QS
         job->shareLink(root, path);
     }
 }
+
+QString UbuntuoneStorageService::storageServiceName() const
+{
+    return serviceName();
+}
+
