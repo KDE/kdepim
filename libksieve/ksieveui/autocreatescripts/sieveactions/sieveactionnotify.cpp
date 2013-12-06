@@ -114,16 +114,24 @@ bool SieveActionNotify::setParamWidgetValue(const QDomElement &element, QWidget 
 
 QString SieveActionNotify::code(QWidget *w) const
 {
+    QString result = QLatin1String("notify");
     const SelectImportanceCombobox *importance = w->findChild<SelectImportanceCombobox*>( QLatin1String("importancecombo") );
     const QString importanceStr = importance->code();
+    if (!importanceStr.isEmpty()) {
+        result += QString::fromLatin1(" :importance \"%1\"").arg(importanceStr);
+    }
 
     const KLineEdit *message = w->findChild<KLineEdit*>( QLatin1String("message") );
     const QString messageStr = message->text();
+    if (!messageStr.isEmpty()) {
+        result += QString::fromLatin1(" :message \"%2\"").arg(messageStr);
+    }
 
     const KLineEdit *method = w->findChild<KLineEdit*>( QLatin1String("method") );
     const QString methodStr = method->text();
+    result += QString::fromLatin1(" \"%3\";").arg(methodStr);
 
-    return QString::fromLatin1("notify :importance \"%1\" :message \"%2\" \"%3\";").arg(importanceStr).arg(messageStr).arg(methodStr);
+    return result;
 }
 
 QString SieveActionNotify::serverNeedsCapability() const
