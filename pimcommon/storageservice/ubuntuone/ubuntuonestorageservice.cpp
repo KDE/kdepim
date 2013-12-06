@@ -141,7 +141,7 @@ void UbuntuoneStorageService::uploadFile(const QString &filename)
 
 QString UbuntuoneStorageService::description()
 {
-    return QString();
+    return i18n("UbuntuOne is a file hosting service operated by Canonical. that offers cloud storage, file synchronization, and client software.");
 }
 
 QUrl UbuntuoneStorageService::serviceUrl()
