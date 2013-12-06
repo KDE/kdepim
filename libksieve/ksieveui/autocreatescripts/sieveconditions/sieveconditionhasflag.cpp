@@ -93,7 +93,13 @@ QString SieveConditionHasFlag::code(QWidget *w) const
 
 QStringList SieveConditionHasFlag::needRequires(QWidget *) const
 {
-    return QStringList() << QLatin1String("imapflags");
+    QStringList lst;
+    if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("imap4flags")))
+        lst << QLatin1String("imap4flags");
+    else
+        lst << QLatin1String("imapflags");
+    lst << QLatin1String("variables");
+    return lst;
 }
 
 bool SieveConditionHasFlag::needCheckIfServerHasCapability() const
