@@ -127,3 +127,10 @@ QString SieveActionNotify::help() const
     return i18n("The \"notify\" action specifies that a notification should be sent to a user.");
 }
 
+QStringList SieveActionNotify::needRequires(QWidget *) const
+{
+    QStringList lst;
+    lst << QLatin1String("enotify");
+    return lst;
+}
+
