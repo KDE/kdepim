@@ -23,7 +23,7 @@
 
 class QNetworkAccessManager;
 namespace PimCommon {
-
+class AccountInfo;
 class StorageServiceAbstractJob : public QObject
 {
     Q_OBJECT
@@ -40,6 +40,12 @@ public:
 
 protected Q_SLOTS:
     void slotError(QNetworkReply::NetworkError);
+
+Q_SIGNALS:
+    void actionFailed(const QString &data);
+    void shareLinkDone(const QString &url);
+    void accountInfoDone(const PimCommon::AccountInfo &data);
+    void uploadFileProgress(qint64 done, qint64 total);
 
 protected:
     enum ActionType {

@@ -141,7 +141,8 @@ void HubicStorageService::shareLink(const QString &root, const QString &path)
         authentification();
     } else {
         HubicJob *job = new HubicJob(this);
-        //TODO
+        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->shareLink(root, path);
     }
 }
