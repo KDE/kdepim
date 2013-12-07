@@ -116,7 +116,7 @@ void WebDavStorageService::uploadFile(const QString &filename)
 QString WebDavStorageService::description()
 {
     //TODO
-    return i18n("");
+    return QString(); // i18n("");
 }
 
 QUrl WebDavStorageService::serviceUrl()
