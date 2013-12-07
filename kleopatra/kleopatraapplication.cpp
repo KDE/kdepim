@@ -296,7 +296,7 @@ int KleopatraApplication::newInstance() {
         // Check for Parent Window id
         WId parentId = 0;
         if ( args->isSet( "parent-windowid" ) ) {
-            parentId = reinterpret_cast<WId>(args->getOption( "parent-windowid" ).toUInt());
+            parentId = args->getOption( "parent-windowid" ).toUInt();
         }
 
         // Search for local keys
