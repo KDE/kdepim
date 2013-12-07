@@ -59,7 +59,6 @@ void WebDavStorageService::authentification()
         job->requestTokenAccess();
     }
     delete dlg;
-    //TODO connect
 }
 
 void WebDavStorageService::shareLink(const QString &root, const QString &path)
@@ -68,7 +67,6 @@ void WebDavStorageService::shareLink(const QString &root, const QString &path)
     connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
     connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
     job->shareLink(root, path);
-    //TODO
 }
 
 void WebDavStorageService::listFolder()
