@@ -146,7 +146,7 @@ void YouSendItStorageService::uploadFile(const QString &filename)
 QString YouSendItStorageService::description()
 {
     //TODO
-    return i18n("");
+    return QString();//i18n("");
 }
 
 QUrl YouSendItStorageService::serviceUrl()
