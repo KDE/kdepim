@@ -21,6 +21,7 @@
 #include <KDialog>
 
 class KLineEdit;
+class QLabel;
 namespace PimCommon {
 class LoginDialog : public KDialog
 {
@@ -28,6 +29,8 @@ class LoginDialog : public KDialog
 public:
     explicit LoginDialog(QWidget *parent=0);
     ~LoginDialog();
+
+    void setUsernameLabel(const QString &labelName);
 
     QString password() const;
     QString username() const;
@@ -38,6 +41,7 @@ private slots:
 private:
     KLineEdit *mUsername;
     KLineEdit *mPassword;
+    QLabel *mLabUsername;
 };
 
 }

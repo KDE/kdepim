@@ -17,6 +17,9 @@
 
 #include "yousenditjob.h"
 #include "pimcommon/storageservice/logindialog.h"
+
+#include <KLocale>
+
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
@@ -49,6 +52,7 @@ void YouSendItJob::initializeToken(const QString &password, const QString &userN
 void YouSendItJob::requestTokenAccess()
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
+    dlg->setUsernameLabel(i18n("Email:"));
     if (dlg->exec()) {
         mPassword = dlg->password();
         mUsername = dlg->username();

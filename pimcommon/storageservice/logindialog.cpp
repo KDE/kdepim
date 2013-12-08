@@ -35,13 +35,13 @@ LoginDialog::LoginDialog(QWidget *parent)
     QGridLayout *grid = new QGridLayout;
     w->setLayout(grid);
 
-    QLabel *lab = new QLabel(i18n("Username:"));
-    grid->addWidget(lab, 0, 0);
+    mLabUsername = new QLabel(i18n("Username:"));
+    grid->addWidget(mLabUsername, 0, 0);
 
     mUsername = new KLineEdit;
     grid->addWidget(mUsername, 0, 1);
 
-    lab = new QLabel(i18n("Password:"));
+    QLabel *lab = new QLabel(i18n("Password:"));
     grid->addWidget(lab, 1, 0);
     mPassword = new KLineEdit;
     grid->addWidget(mPassword, 1, 1);
@@ -56,6 +56,11 @@ LoginDialog::LoginDialog(QWidget *parent)
 LoginDialog::~LoginDialog()
 {
 
+}
+
+void LoginDialog::setUsernameLabel(const QString &labelName)
+{
+    mLabUsername->setText(labelName);
 }
 
 QString LoginDialog::password() const
