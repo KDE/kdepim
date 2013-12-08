@@ -20,6 +20,7 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocale>
+#include <KFileDialog>
 
 #include <QVBoxLayout>
 #include <QToolBar>
@@ -40,6 +41,7 @@ ServiceTestWidget::ServiceTestWidget(PimCommon::StorageServiceAbstract *service,
     bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
     bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
     bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
+    bar->addAction(QLatin1String("Upload File..."), this, SLOT(slotUploadFile()));
     lay->addWidget(mEdit);
     setLayout(lay);
 }
@@ -119,4 +121,12 @@ void ServiceTestWidget::slotCreateFolder()
 void ServiceTestWidget::slotListFolder()
 {
     mStorageService->listFolder();
+}
+
+void ServiceTestWidget::slotUploadFile()
+{
+    const QString filename = KFileDialog::getOpenFileName();
+    if (!filename.isEmpty()) {
+        mStorageService->uploadFile(filename);
+    }
 }
