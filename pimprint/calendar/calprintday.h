@@ -31,9 +31,11 @@
 
 class KCalendarSystem;
 
-namespace PimPrint {
+namespace PimPrint
+{
 
-namespace Calendar {
+namespace Calendar
+{
 
 class PrintCellItem;
 

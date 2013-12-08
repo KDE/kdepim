@@ -24,9 +24,11 @@
 
 #include "calprintbase.h"
 
-namespace PimPrint {
+namespace PimPrint
+{
 
-namespace Calendar {
+namespace Calendar
+{
 
 class PIMPRINT_CALENDAR_EXPORT CalPrintMonth : public CalPrintBase
 {
