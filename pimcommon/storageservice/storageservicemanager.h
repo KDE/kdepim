@@ -36,6 +36,7 @@ public:
         Hubic,
         UbuntuOne,
         YouSendIt,
+        WebDav,
 
         //Last element
         EndListService
