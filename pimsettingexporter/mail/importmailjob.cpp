@@ -31,22 +31,20 @@
 
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
-#include <KZip>
 #include <KStandardDirs>
 #include <KLocale>
 #include <KProcess>
-#include <KTempDir>
 #include <KTemporaryFile>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KMessageBox>
+#include <KArchiveFile>
+#include <KZip>
 
 #include <akonadi/agenttype.h>
 #include <akonadi/agentmanager.h>
 #include <akonadi/agentinstancecreatejob.h>
 
-#include <QDBusReply>
-#include <QDBusInterface>
 #include <QMetaMethod>
 #include <QDir>
 

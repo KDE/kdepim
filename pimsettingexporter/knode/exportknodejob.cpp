@@ -23,12 +23,9 @@
 
 #include <KLocale>
 #include <KStandardDirs>
-#include <KTemporaryFile>
-#include <KConfigGroup>
 #include <KZip>
 
 #include <QWidget>
-#include <QFile>
 #include <QDir>
 
 ExportKnodeJob::ExportKnodeJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)

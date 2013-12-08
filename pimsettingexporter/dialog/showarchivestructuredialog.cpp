@@ -25,7 +25,6 @@
 
 #include <QTreeWidget>
 #include <QHeaderView>
-#include <QDebug>
 
 ShowArchiveStructureDialog::ShowArchiveStructureDialog(const QString &filename, QWidget *parent)
     : KDialog(parent),

@@ -18,7 +18,6 @@
 
 #include "selectiontypetreewidget.h"
 #include "pimsettingexporter/utils.h"
-#include <KLocale>
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>

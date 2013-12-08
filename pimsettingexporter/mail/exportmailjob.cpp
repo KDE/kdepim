@@ -29,7 +29,6 @@
 
 #include <Mailtransport/TransportManager>
 
-#include <KMime/KMimeMessage>
 
 #include <KZip>
 #include <KLocale>

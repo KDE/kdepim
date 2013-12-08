@@ -20,15 +20,11 @@
 
 #include "pimcommon/util/createresource.h"
 
-#include <KTempDir>
-#include <KStandardDirs>
 #include <KArchive>
 #include <KLocale>
-#include <KConfigGroup>
 #include <KZip>
-
-#include <QFile>
-#include <QDir>
+#include <KGlobal>
+#include <KStandardDirs>
 
 ImportAkregatorJob::ImportAkregatorJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage, int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)

@@ -23,13 +23,9 @@
 
 #include <KLocale>
 #include <KStandardDirs>
-#include <KTemporaryFile>
-#include <KConfigGroup>
 #include <KZip>
 
 #include <QWidget>
-#include <QFile>
-#include <QDir>
 
 ExportBlogiloJob::ExportBlogiloJob(QWidget *parent, Utils::StoredTypes typeSelected, ArchiveStorage *archiveStorage,int numberOfStep)
     : AbstractImportExportJob(parent, archiveStorage, typeSelected, numberOfStep)
