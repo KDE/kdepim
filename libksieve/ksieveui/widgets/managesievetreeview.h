@@ -21,7 +21,6 @@
 
 
 #include "pimcommon/widgets/customtreeview.h"
-class QPaintEvent;
 
 namespace KSieveUi {
 class ManageSieveTreeView : public PimCommon::CustomTreeView

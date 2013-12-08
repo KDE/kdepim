@@ -24,7 +24,6 @@
 #include <KXmlGuiWindow>
 
 class MainWidget;
-class XXPortManager;
 class MainWindow : public KXmlGuiWindow
 {
   Q_OBJECT

@@ -25,7 +25,6 @@ class TemplateManager;
 }
 
 namespace KSieveUi {
-class SieveTemplateManager;
 class SieveTemplateListWidget : public PimCommon::TemplateListWidget
 {
     Q_OBJECT
