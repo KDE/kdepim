@@ -24,10 +24,8 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KLineEdit>
-#include <KTextEdit>
 #include <KLocale>
 #include <KDesktopFile>
-#include <KConfigGroup>
 #include <KZip>
 #include <KTemporaryFile>
 #include <KMessageBox>

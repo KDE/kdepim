@@ -28,7 +28,6 @@
 #include <QVBoxLayout>
 #include <QDir>
 #include <QDirIterator>
-#include <QDebug>
 
 static const KCatalogLoader loader( QLatin1String("libgrantleethemeeditor") );
 

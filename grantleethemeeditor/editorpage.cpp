@@ -26,7 +26,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDir>
-#include <QDebug>
 
 
 using namespace GrantleeThemeEditor;
