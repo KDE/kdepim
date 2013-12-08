@@ -32,6 +32,7 @@ ServiceTestWidget::ServiceTestWidget(PimCommon::StorageServiceAbstract *service,
     : QWidget(parent),
       mStorageService(service)
 {
+    connectStorageService();
     mEdit = new QTextEdit;
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
@@ -46,6 +47,60 @@ ServiceTestWidget::ServiceTestWidget(PimCommon::StorageServiceAbstract *service,
 ServiceTestWidget::~ServiceTestWidget()
 {
 
+}
+
+void ServiceTestWidget::connectStorageService()
+{
+    connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString, QString)));
+    connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
+    connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
+    connect(mStorageService, SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
+    connect(mStorageService, SIGNAL(authentificationFailed(QString)), this, SLOT(slotAuthentificationFailed(QString)));
+    connect(mStorageService, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
+    connect(mStorageService, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
+    connect(mStorageService, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+    connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
+}
+
+void ServiceTestWidget::slotActionFailed(const QString &serviceName, const QString &error)
+{
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" return an error: %1\n").arg(error));
+}
+
+void ServiceTestWidget::slotUploadFileProgress(const QString &serviceName, qint64 done ,qint64 total)
+{
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" upload in progress: send:%1 total:%2\n").arg(done).arg(total));
+}
+
+void ServiceTestWidget::slotShareLinkDone(const QString &serviceName, const QString &shareLink)
+{
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" return a share link: %1\n").arg(shareLink));
+}
+
+void ServiceTestWidget::slotAuthentificationDone(const QString &serviceName)
+{
+    mEdit->insertPlainText(serviceName + QLatin1String(" Authentification done\n"));
+}
+
+void ServiceTestWidget::slotCreateFolderDone(const QString &serviceName)
+{
+    mEdit->insertPlainText(serviceName + QLatin1String(" Create folder done done\n"));
+}
+
+void ServiceTestWidget::slotUploadFileDone(const QString &serviceName)
+{
+    mEdit->insertPlainText(serviceName + QLatin1String(" Upload file done\n"));
+}
+
+void ServiceTestWidget::slotListFolderDone(const QString &serviceName)
+{
+    mEdit->insertPlainText(serviceName + QLatin1String(" list folder done\n"));
+}
+
+void ServiceTestWidget::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info)
+{
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" account Info: size: %1, quota: %2, shared: %3, displayName: %4\n")
+                           .arg(info.accountSize).arg(info.quota).arg(info.shared).arg(info.displayName));
 }
 
 void ServiceTestWidget::slotAccountInfo()

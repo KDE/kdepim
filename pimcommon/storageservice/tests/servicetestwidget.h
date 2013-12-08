@@ -24,6 +24,7 @@ class QTextEdit;
 
 namespace PimCommon {
 class StorageServiceAbstract;
+class AccountInfo;
 }
 class ServiceTestWidget : public QWidget
 {
@@ -38,7 +39,16 @@ private Q_SLOTS:
     void slotCreateFolder();
     void slotAccountInfo();
 
+    void slotActionFailed(const QString &serviceName, const QString &error);
+    void slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void slotShareLinkDone(const QString &serviceName, const QString &shareLink);
+    void slotAuthentificationDone(const QString &serviceName);
+    void slotCreateFolderDone(const QString &serviceName);
+    void slotUploadFileDone(const QString &serviceName);
+    void slotListFolderDone(const QString &serviceName);
+    void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info);
 private:
+    void connectStorageService();
     PimCommon::StorageServiceAbstract *mStorageService;
     QTextEdit *mEdit;
 };
