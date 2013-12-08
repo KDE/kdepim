@@ -29,8 +29,7 @@ using namespace PimCommon;
 YouSendItJob::YouSendItJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
-    mApiKey = QLatin1String("...");
-    //TODO adapt api
+    mApiKey = QLatin1String("fnab8fkgwrka7v6zs2ycd34a");
     mDefaultUrl = QLatin1String("https://test2-api.yousendit.com/dpi/v1/");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
@@ -57,7 +56,7 @@ void YouSendItJob::requestTokenAccess()
     delete dlg;
 
     mActionType = RequestToken;
-    QUrl url(mDefaultUrl + QLatin1String("/auth"));
+    QUrl url(mDefaultUrl + QLatin1String("auth"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
@@ -67,6 +66,7 @@ void YouSendItJob::requestTokenAccess()
 
     postData.addQueryItem(QLatin1String("email"), mUsername);
     postData.addQueryItem(QLatin1String("password"), mPassword);
+    qDebug()<<" postData"<<postData;
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -144,7 +144,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case RequestToken:
-        deleteLater();
+        parseRequestToken(data);
         break;
     case AccessToken:
         deleteLater();
@@ -167,8 +167,13 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
+void YouSendItJob::parseRequestToken(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    deleteLater();
+}
 
-void PimCommon::YouSendItJob::shareLink(const QString &root, const QString &path)
+void YouSendItJob::shareLink(const QString &root, const QString &path)
 {
 
 }
