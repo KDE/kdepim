@@ -38,6 +38,7 @@ ServiceTestWidget::ServiceTestWidget(PimCommon::StorageServiceAbstract *service,
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
+    bar->addAction(QLatin1String("Authentification..."), this, SLOT(slotAuthentification()));
     bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
     bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
     bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
@@ -49,6 +50,11 @@ ServiceTestWidget::ServiceTestWidget(PimCommon::StorageServiceAbstract *service,
 ServiceTestWidget::~ServiceTestWidget()
 {
 
+}
+
+void ServiceTestWidget::slotAuthentification()
+{
+    mStorageService->authentification();
 }
 
 void ServiceTestWidget::connectStorageService()
@@ -130,3 +136,4 @@ void ServiceTestWidget::slotUploadFile()
         mStorageService->uploadFile(filename);
     }
 }
+
