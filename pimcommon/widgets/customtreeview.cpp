@@ -19,7 +19,6 @@
 
 #include <KGlobalSettings>
 
-#include <QApplication>
 #include <QPainter>
 
 using namespace PimCommon;

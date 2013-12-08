@@ -24,11 +24,8 @@
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/EntityTreeModel>
 #include <Akonadi/EntityRightsFilterModel>
-#include <KRecursiveFilterProxyModel>
 
 #include <KCheckableProxyModel>
-#include <KLineEdit>
-#include <KLocale>
 
 #include <QVBoxLayout>
 #include <QTreeView>
