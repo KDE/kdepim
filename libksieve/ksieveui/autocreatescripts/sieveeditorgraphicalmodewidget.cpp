@@ -31,7 +31,6 @@
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QDomDocument>
-#include <QPointer>
 #include <QDebug>
 
 

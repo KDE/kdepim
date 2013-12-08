@@ -23,7 +23,6 @@
 #include <KLocale>
 #include <KLineEdit>
 
-#include <QComboBox>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QDomNode>

@@ -24,7 +24,6 @@
 #include <KConfig>
 
 #include <QDirIterator>
-#include <QDebug>
 
 using namespace PimCommon;
 TemplateManager::TemplateManager(const QString &relativeTemplateDir, PimCommon::TemplateListWidget *templateListWidget)

@@ -23,7 +23,6 @@
 #include <KLocale>
 
 #include <QStringList>
-#include <QDebug>
 
 QString AutoCreateScriptUtil::createMultiLine(const QString &str)
 {

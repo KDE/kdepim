@@ -18,10 +18,7 @@
 #include "sieveactionreturn.h"
 
 #include <KLocale>
-#include <KLineEdit>
 
-#include <QHBoxLayout>
-#include <QLabel>
 
 using namespace KSieveUi;
 SieveActionReturn::SieveActionReturn(QObject *parent)

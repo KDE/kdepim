@@ -21,12 +21,11 @@
 #include "autocreatescripts/commonwidgets/selectmimetypecombobox.h"
 
 #include <KLocale>
-#include <KLineEdit>
 
 #include <QLabel>
-#include <QHBoxLayout>
 #include <QDomNode>
 #include <QDebug>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveConditionConvert::SieveConditionConvert(QObject *parent)

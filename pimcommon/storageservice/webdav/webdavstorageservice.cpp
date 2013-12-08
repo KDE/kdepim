@@ -56,45 +56,59 @@ void WebDavStorageService::authentification()
     QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
     if (dlg->exec()) {
         WebDavJob *job = new WebDavJob(this);
+        mServiceLocation = dlg->serviceLocation();
+        mPublicLocation = dlg->publicLocation();
         job->requestTokenAccess();
     }
     delete dlg;
-    //TODO connect
 }
 
 void WebDavStorageService::shareLink(const QString &root, const QString &path)
 {
-    WebDavJob *job = new WebDavJob(this);
-    connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-    job->shareLink(root, path);
-    //TODO
+    if (mServiceLocation.isEmpty()) {
+        authentification();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->shareLink(root, path);
+    }
 }
 
 void WebDavStorageService::listFolder()
 {
-    WebDavJob *job = new WebDavJob(this);
-    connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
-    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-    job->listFolder();
-    //TODO
+    if (mServiceLocation.isEmpty()) {
+        authentification();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->listFolder();
+    }
 }
 
 void WebDavStorageService::createFolder(const QString &folder)
 {
-    WebDavJob *job = new WebDavJob(this);
-    connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
-    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-    job->createFolder(folder);
+    if (mServiceLocation.isEmpty()) {
+        authentification();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createFolder(folder);
+    }
 }
 
 void WebDavStorageService::accountInfo()
 {
-    WebDavJob *job = new WebDavJob(this);
-    connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
-    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-    job->accountInfo();
-    //TODO
+    if (mServiceLocation.isEmpty()) {
+        authentification();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->accountInfo();
+    }
 }
 
 QString WebDavStorageService::name()
@@ -104,19 +118,21 @@ QString WebDavStorageService::name()
 
 void WebDavStorageService::uploadFile(const QString &filename)
 {
-    //TODO
-    WebDavJob *job = new WebDavJob(this);
-    connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
-    connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-    connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-    job->uploadFile(filename);
-    //TODO
+    if (mServiceLocation.isEmpty()) {
+        authentification();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+        job->uploadFile(filename);
+    }
 }
 
 QString WebDavStorageService::description()
 {
     //TODO
-    return i18n("");
+    return QString(); // i18n("");
 }
 
 QUrl WebDavStorageService::serviceUrl()

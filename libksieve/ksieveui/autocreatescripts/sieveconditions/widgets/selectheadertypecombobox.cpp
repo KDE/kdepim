@@ -25,7 +25,6 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QDebug>
 
 using namespace KSieveUi;
 

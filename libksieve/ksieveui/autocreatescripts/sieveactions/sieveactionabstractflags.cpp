@@ -24,7 +24,6 @@
 #include <QDomNode>
 #include <QDebug>
 
-#include <KLocale>
 
 using namespace KSieveUi;
 SieveActionAbstractFlags::SieveActionAbstractFlags(const QString &name, const QString &label, QObject *parent)

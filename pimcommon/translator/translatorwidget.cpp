@@ -23,7 +23,6 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
 #include <KTextEdit>
-#include <KComboBox>
 #include <KPushButton>
 #include <KLocale>
 #include <kio/job.h>
@@ -34,11 +33,9 @@
 #include <KToggleAction>
 #include <kpimutils/progressindicatorwidget.h>
 
-#include <QPair>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QRegExp>
 #include <QToolButton>
 #include <QKeyEvent>
 #include <QShortcut>

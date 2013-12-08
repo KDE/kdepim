@@ -18,7 +18,6 @@
 #include "selectcomparatorcombobox.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
-#include <QDebug>
 
 SelectComparatorComboBox::SelectComparatorComboBox(QWidget *parent)
     : KComboBox(parent)

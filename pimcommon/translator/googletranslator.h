@@ -19,7 +19,6 @@
 #define GOOGLETRANSLATOR_H
 
 #include "abstracttranslator.h"
-#include <QUrl>
 #include <QNetworkReply>
 class QNetworkAccessManager;
 class KComboBox;

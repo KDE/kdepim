@@ -18,10 +18,7 @@
 
 #include "triopabshorturl.h"
 
-#include <QNetworkAccessManager>
 #include <QNetworkRequest>
-#include <QUrl>
-#include <QDebug>
 
 
 using namespace PimCommon;

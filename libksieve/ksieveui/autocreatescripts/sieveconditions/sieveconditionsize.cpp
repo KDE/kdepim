@@ -21,7 +21,6 @@
 
 #include <KLocale>
 
-#include <QSpinBox>
 #include <QHBoxLayout>
 #include <QComboBox>
 #include <QDomNode>

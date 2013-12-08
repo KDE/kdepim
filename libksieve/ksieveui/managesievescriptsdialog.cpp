@@ -36,7 +36,6 @@
 #include <QMenu>
 #include <QTreeWidget>
 #include <QVBoxLayout>
-#include <QDebug>
 
 #include <errno.h>
 

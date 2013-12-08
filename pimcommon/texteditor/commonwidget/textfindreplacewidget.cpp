@@ -24,8 +24,8 @@
 #include <KColorScheme>
 
 #include <QLabel>
-#include <QLayout>
 #include <QMenu>
+#include <QHBoxLayout>
 
 using namespace PimCommon;
 

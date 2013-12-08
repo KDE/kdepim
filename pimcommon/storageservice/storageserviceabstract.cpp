@@ -53,17 +53,17 @@ void StorageServiceAbstract::slotUploadFileProgress(qint64 done, qint64 total)
 
 void StorageServiceAbstract::slotCreateFolderDone()
 {
-    //TODO
+    Q_EMIT createFolderDone(storageServiceName());
 }
 
 void StorageServiceAbstract::slotUploadFileDone()
 {
-    //TODO
+    Q_EMIT uploadFileDone(storageServiceName());
 }
 
 void StorageServiceAbstract::slotListFolderDone()
 {
-    //TODO
+    Q_EMIT listFolderDone(storageServiceName());
 }
 
 

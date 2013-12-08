@@ -21,7 +21,6 @@
 #include <QObject>
 #include <KABC/Addressee>
 
-class QItemSelectionModel;
 class MergeContacts : public QObject
 {
     Q_OBJECT

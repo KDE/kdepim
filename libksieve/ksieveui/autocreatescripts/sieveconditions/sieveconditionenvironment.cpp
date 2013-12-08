@@ -22,11 +22,11 @@
 #include <KLineEdit>
 
 #include <QWidget>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QCompleter>
 #include <QDebug>
 #include <QDomNode>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveConditionEnvironment::SieveConditionEnvironment(QObject *parent)

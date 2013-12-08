@@ -49,8 +49,8 @@ using namespace Kleo;
 using namespace Kleo::_detail;
 using namespace boost;
 
-static const char gnupg_path[] = "HKEY_LOCAL_MACHINE\\Software\\GNU\\GnuPG";
-static const char gnupg_key[] = "gpgProgram";
+static QString gnupg_path = QLatin1String("HKEY_LOCAL_MACHINE\\Software\\GNU\\GnuPG");
+static QString gnupg_key = QLatin1String("gpgProgram");
 
 namespace {
 

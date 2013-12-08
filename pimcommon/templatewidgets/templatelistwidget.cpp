@@ -31,7 +31,6 @@
 #include <QPointer>
 #include <QMimeData>
 #include <QDropEvent>
-#include <QDebug>
 
 namespace PimCommon {
 

@@ -24,10 +24,9 @@
 #include <KStandardDirs>
 #include <KMessageBox>
 
-#include <QHBoxLayout>
 #include <QFile>
 #include <QLabel>
-#include <QDebug>
+#include <QVBoxLayout>
 
 BackupFileStructureInfoDialog::BackupFileStructureInfoDialog(QWidget *parent)
     : KDialog(parent)

@@ -20,11 +20,6 @@
 
 #include <kpimtextedit/htmlhighlighter.h>
 
-#include <QStringListModel>
-#include <QCompleter>
-#include <QKeyEvent>
-#include <QScrollBar>
-#include <QDebug>
 
 using namespace GrantleeThemeEditor;
 

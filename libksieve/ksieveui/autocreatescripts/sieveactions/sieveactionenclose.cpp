@@ -24,9 +24,9 @@
 #include <KLineEdit>
 
 #include <QLabel>
-#include <QHBoxLayout>
 #include <QDomNode>
 #include <QDebug>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveActionEnclose::SieveActionEnclose(QObject *parent)

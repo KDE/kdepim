@@ -22,7 +22,6 @@
 #include <QCompleter>
 #include <QKeyEvent>
 #include <QScrollBar>
-#include <QDebug>
 
 using namespace GrantleeThemeEditor;
 

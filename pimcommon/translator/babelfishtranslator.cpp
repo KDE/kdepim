@@ -20,7 +20,6 @@
 #include <kio/job.h>
 #include <KDebug>
 #include <KComboBox>
-#include <KLocale>
 
 using namespace MessageViewer;
 //Laurent 2012-05-29: Babelfish was replaced by bing translator.

@@ -27,7 +27,6 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QSpinBox>
-#include <QDateEdit>
 #include <QDebug>
 
 Q_DECLARE_METATYPE(KSieveUi::SelectDateWidget::DateType)

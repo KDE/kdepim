@@ -45,7 +45,8 @@ public:
 
 private:
     void readConfig();
-
+    QString mPublicLocation;
+    QString mServiceLocation;
 };
 }
 

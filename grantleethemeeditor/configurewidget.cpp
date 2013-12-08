@@ -20,7 +20,6 @@
 #include "ui_configurewidget.h"
 #include "globalsettings_base.h"
 
-#include <KConfigGroup>
 #include <KSharedConfig>
 
 using namespace GrantleeThemeEditor;

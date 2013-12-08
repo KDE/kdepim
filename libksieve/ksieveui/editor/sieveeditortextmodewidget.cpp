@@ -36,20 +36,12 @@
 
 
 #include <KLocale>
-#include <KStandardGuiItem>
-#include <KFileDialog>
-#include <KMessageBox>
 
-#include <QToolBar>
-#include <QAction>
-#include <QLabel>
 #include <QSplitter>
 #include <QShortcut>
-#include <QHBoxLayout>
 #include <QPointer>
 #include <QPushButton>
-#include <QTextStream>
-#include <QDebug>
+#include <QVBoxLayout>
 
 #include <errno.h>
 

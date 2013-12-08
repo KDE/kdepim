@@ -21,11 +21,7 @@
 #include <KDialog>
 #include "sendlater_export.h"
 
-class KComboBox;
 class QCheckBox;
-class QSpinBox;
-class QDateTimeEdit;
-class QLabel;
 
 namespace Ui {
 class SendLaterWidget;
@@ -33,7 +29,6 @@ class SendLaterWidget;
 
 namespace SendLater {
 class SendLaterInfo;
-class SendLaterTimeDateWidget;
 class SENDLATER_EXPORT SendLaterDialog : public KDialog
 {
     Q_OBJECT

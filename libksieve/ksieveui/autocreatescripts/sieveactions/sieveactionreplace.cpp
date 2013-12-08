@@ -26,7 +26,7 @@
 #include <QLabel>
 #include <QDomNode>
 #include <QDebug>
-#include <QHBoxLayout>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveActionReplace::SieveActionReplace(QObject *parent)

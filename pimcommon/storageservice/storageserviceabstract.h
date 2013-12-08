@@ -60,6 +60,9 @@ Q_SIGNALS:
     void shareLinkDone(const QString &serviceName, const QString &link);
     void authentificationDone(const QString &serviceName);
     void authentificationFailed(const QString &serviceName);
+    void createFolderDone(const QString &serviceName);
+    void uploadFileDone(const QString &serviceName);
+    void listFolderDone(const QString &serviceName);
 
 protected slots:
     void slotActionFailed(const QString &error);

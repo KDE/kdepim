@@ -116,6 +116,9 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::YouSendIt)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::YouSendIt);
             type = PimCommon::StorageServiceManager::YouSendIt;
+        } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::WebDav)) {
+            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::WebDav);
+            type = PimCommon::StorageServiceManager::WebDav;
         }
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(serviceName);

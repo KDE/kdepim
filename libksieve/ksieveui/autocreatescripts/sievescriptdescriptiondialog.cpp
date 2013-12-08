@@ -20,7 +20,6 @@
 
 #include <KLocale>
 
-#include <QHBoxLayout>
 
 using namespace KSieveUi;
 

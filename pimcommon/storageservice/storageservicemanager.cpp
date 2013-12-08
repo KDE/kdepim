@@ -23,6 +23,7 @@
 #include "hubic/hubicstorageservice.h"
 #include "ubuntuone/ubuntuonestorageservice.h"
 #include "yousendit/yousenditstorageservice.h"
+#include "webdav/webdavstorageservice.h"
 
 #include <KLocale>
 #include <KFileDialog>
@@ -115,6 +116,10 @@ void StorageServiceManager::readConfig()
             if (!mListService.contains(serviceName(YouSendIt))) {
                 mListService.insert(service, new YouSendItStorageService());
             }
+        } else if (service == serviceName(WebDav)) {
+            if (!mListService.contains(serviceName(WebDav))) {
+                mListService.insert(service, new WebDavStorageService());
+            }
         }
     }
 }
@@ -134,6 +139,8 @@ QString StorageServiceManager::description(ServiceType type)
         return PimCommon::HubicStorageService::description();
     case UbuntuOne:
         return PimCommon::UbuntuoneStorageService::description();
+    case WebDav:
+        return PimCommon::WebDavStorageService::description();
     default:
         return QString();
     }
@@ -151,6 +158,8 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::UbuntuoneStorageService::serviceUrl();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceUrl();
+    case WebDav:
+        return PimCommon::WebDavStorageService::serviceUrl();
     default:
         return QString();
     }
@@ -169,6 +178,8 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::UbuntuoneStorageService::serviceName();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::serviceName();
+    case WebDav:
+        return PimCommon::WebDavStorageService::serviceName();
     default:
         return QString();
     }
@@ -185,6 +196,8 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::UbuntuoneStorageService::name();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::name();
+    case WebDav:
+        return PimCommon::WebDavStorageService::name();
     default:
         return QString();
     }

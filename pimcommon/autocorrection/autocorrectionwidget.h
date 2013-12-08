@@ -21,7 +21,6 @@
 #include "pimcommon_export.h"
 #include "autocorrection/autocorrection.h"
 #include <QWidget>
-#include <KDialog>
 
 class QTreeWidgetItem;
 

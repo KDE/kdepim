@@ -19,8 +19,7 @@
 #define PLAINTEXTEDITORWIDGET_H
 
 #include "pimcommon_export.h"
-
-#include <QPlainTextEdit>
+#include <QWidget>
 
 namespace PimCommon {
 class PlainTextEditor;

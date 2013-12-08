@@ -20,12 +20,12 @@
 
 #include "pimcommon/util/createresource.h"
 
-#include <KTempDir>
 #include <KStandardDirs>
 #include <KArchive>
 #include <KLocale>
 #include <KConfigGroup>
 #include <KZip>
+#include <KArchiveEntry>
 
 #include <QFile>
 #include <QDir>

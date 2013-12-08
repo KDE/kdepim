@@ -24,7 +24,6 @@
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KPushButton>
-#include <KDialog>
 #include <KLocale>
 
 #include <QGridLayout>

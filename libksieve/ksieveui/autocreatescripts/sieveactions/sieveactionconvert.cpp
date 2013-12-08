@@ -21,7 +21,6 @@
 #include "autocreatescripts/commonwidgets/selectmimetypecombobox.h"
 
 #include <KLocale>
-#include <KLineEdit>
 
 #include <QLabel>
 #include <QHBoxLayout>

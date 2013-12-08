@@ -17,11 +17,9 @@
 
 #include "googleshorturl.h"
 
-#include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QUrl>
 #include <QDebug>
-#include <QSslConfiguration>
 #include <qjson/parser.h>
 
 

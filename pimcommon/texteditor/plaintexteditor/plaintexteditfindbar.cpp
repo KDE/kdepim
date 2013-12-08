@@ -26,11 +26,6 @@
 #include <KColorScheme>
 
 #include <QPlainTextEdit>
-#include <QTimer>
-#include <QLayout>
-#include <QToolButton>
-#include <QEvent>
-#include <QKeyEvent>
 
 using namespace PimCommon;
 

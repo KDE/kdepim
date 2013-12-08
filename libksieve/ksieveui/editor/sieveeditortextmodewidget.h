@@ -25,7 +25,6 @@ class QSplitter;
 
 namespace PimCommon {
 class PlainTextEditFindBar;
-class PlainTextEditorWidget;
 class PlainTextEditor;
 }
 

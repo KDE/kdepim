@@ -58,9 +58,11 @@
 
 class KCalendarSystem;
 
-namespace PimPrint {
+namespace PimPrint
+{
 
-namespace Calendar {
+namespace Calendar
+{
 
 class PIMPRINT_CALENDAR_EXPORT CalPrintBase : public QObject
 {

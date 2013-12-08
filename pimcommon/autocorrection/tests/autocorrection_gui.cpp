@@ -27,7 +27,6 @@
 #include <KLocale>
 #include <KSharedConfig>
 
-#include <QDebug>
 #include <QPointer>
 #include <QVBoxLayout>
 #include <QPushButton>

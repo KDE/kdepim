@@ -16,7 +16,6 @@
 */
 
 #include "abstracttranslator.h"
-#include <QDebug>
 
 using namespace PimCommon;
 

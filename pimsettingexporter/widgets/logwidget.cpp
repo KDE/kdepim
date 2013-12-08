@@ -20,7 +20,6 @@
 #include "libkdepim/widgets/customlogwidget.h"
 
 #include <QHBoxLayout>
-#include <QListWidget>
 
 
 LogWidget::LogWidget(QWidget * parent)

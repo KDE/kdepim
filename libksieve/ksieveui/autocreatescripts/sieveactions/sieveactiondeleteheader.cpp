@@ -22,11 +22,11 @@
 #include <KLocale>
 #include <KLineEdit>
 
-#include <QHBoxLayout>
 #include <QWidget>
 #include <QLabel>
 #include <QDomNode>
 #include <QDebug>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 

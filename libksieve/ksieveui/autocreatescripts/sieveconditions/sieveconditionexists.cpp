@@ -21,7 +21,6 @@
 
 #include <KLocale>
 
-#include <KLineEdit>
 
 #include <QHBoxLayout>
 #include <QComboBox>

@@ -45,6 +45,7 @@ private slots:
     void slotSendDataFinished(QNetworkReply *reply);
 
 private:
+    void parseRequestToken(const QString &data);
     QString mPassword;
     QString mUsername;
     QString mDefaultUrl;

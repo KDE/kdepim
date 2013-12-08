@@ -18,7 +18,6 @@
 
 class KIntSpinBox;
 class KLineEdit;
-class KTextEdit;
 
 namespace PimCommon {
 class RichTextEditorWidget;

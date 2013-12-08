@@ -22,11 +22,9 @@
 
 #include <KLocale>
 
-#include <QListWidget>
 #include <QPointer>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QDebug>
 
 namespace KSieveUi {
 
