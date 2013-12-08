@@ -48,6 +48,7 @@
 #include <QTextCodec>
 #include <QWebFrame>
 #include <QWebPage>
+#include <QTextDocument>
 
 namespace TemplateParser {
 

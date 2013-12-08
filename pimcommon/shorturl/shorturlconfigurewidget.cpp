@@ -19,8 +19,6 @@
 #include "shorturlutils.h"
 
 #include <KLocale>
-#include <KConfigGroup>
-#include <KGlobal>
 
 #include <QLabel>
 #include <QComboBox>

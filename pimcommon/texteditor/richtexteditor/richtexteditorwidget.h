@@ -20,7 +20,7 @@
 
 #include "pimcommon_export.h"
 
-#include <QPlainTextEdit>
+#include <QWidget>
 
 namespace PimCommon {
 class RichTextEditor;

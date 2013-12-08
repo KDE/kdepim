@@ -20,7 +20,6 @@
 #include <KZip>
 #include <KLocale>
 #include <KMessageBox>
-#include <KTemporaryFile>
 #include <KTempDir>
 #include <KDebug>
 #include <QDomDocument>

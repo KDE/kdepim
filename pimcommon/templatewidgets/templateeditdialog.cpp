@@ -20,7 +20,6 @@
 
 #include <KLocale>
 #include <KLineEdit>
-#include <KTextEdit>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

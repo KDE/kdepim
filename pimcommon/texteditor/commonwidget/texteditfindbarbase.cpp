@@ -24,12 +24,12 @@
 #include <klineedit.h>
 #include <KColorScheme>
 
-#include <QPlainTextEdit>
 #include <QTimer>
-#include <QLayout>
 #include <QToolButton>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 using namespace PimCommon;
 
