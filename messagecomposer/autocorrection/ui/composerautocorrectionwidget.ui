@@ -267,7 +267,7 @@
        <item row="4" column="0" colspan="2">
         <widget class="QCheckBox" name="addNonBreakingSpaceInFrench">
          <property name="text">
-          <string>Add non breaking space before specific punctuation marks in french text</string>
+          <string>Add non breaking space before specific punctuation marks in French text</string>
          </property>
         </widget>
        </item>
