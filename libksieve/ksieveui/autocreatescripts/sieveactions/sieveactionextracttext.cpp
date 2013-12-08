@@ -22,10 +22,10 @@
 #include <KLineEdit>
 
 #include <QLabel>
-#include <QHBoxLayout>
 #include <QSpinBox>
 #include <QDomNode>
 #include <QDebug>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveActionExtractText::SieveActionExtractText(QObject *parent)

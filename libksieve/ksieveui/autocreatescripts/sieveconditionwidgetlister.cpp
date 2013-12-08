@@ -23,12 +23,10 @@
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KPushButton>
-#include <KDialog>
 #include <KLocale>
 
 #include <QGridLayout>
 #include <QLabel>
-#include <QStackedWidget>
 #include <QToolButton>
 #include <QWhatsThis>
 #include <QDebug>

@@ -23,10 +23,6 @@
 
 #include <KLocale>
 
-#include <QVBoxLayout>
-#include <QListWidget>
-#include <QSplitter>
-#include <QStackedWidget>
 
 using namespace KSieveUi;
 

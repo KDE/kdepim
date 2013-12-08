@@ -29,7 +29,6 @@
 #include <KMessageBox>
 
 #include <QVBoxLayout>
-#include <QDomElement>
 
 namespace KSieveUi {
 SieveScriptPage::SieveScriptPage(QWidget *parent)

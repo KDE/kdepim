@@ -22,7 +22,6 @@
 
 #include <KLocale>
 
-#include <QDebug>
 
 using namespace KSieveUi;
 ParseUserScriptJob::ParseUserScriptJob(QObject *parent)

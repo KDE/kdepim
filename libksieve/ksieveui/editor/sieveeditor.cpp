@@ -34,7 +34,6 @@
 #include <QToolBar>
 #include <QDebug>
 #include <QAction>
-#include <QPointer>
 
 using namespace KSieveUi;
 

@@ -19,12 +19,8 @@
 #include "pimcommon/util/pimutil.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <KFileDialog>
 #include <KLocale>
-#include <KMessageBox>
 
-#include <QPointer>
-#include <QTextStream>
 
 #include <errno.h>
 

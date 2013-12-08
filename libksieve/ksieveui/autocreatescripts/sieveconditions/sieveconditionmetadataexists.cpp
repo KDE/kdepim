@@ -21,10 +21,10 @@
 #include <KLocale>
 #include <KLineEdit>
 
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QDebug>
 #include <QDomNode>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveConditionMetaDataExists::SieveConditionMetaDataExists(QObject *parent)

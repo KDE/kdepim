@@ -23,11 +23,11 @@
 #include <KLocale>
 #include <KLineEdit>
 
-#include <QHBoxLayout>
 #include <QCheckBox>
 #include <QLabel>
 #include <QDomNode>
 #include <QDebug>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 SieveActionSetVariable::SieveActionSetVariable(QObject *parent)

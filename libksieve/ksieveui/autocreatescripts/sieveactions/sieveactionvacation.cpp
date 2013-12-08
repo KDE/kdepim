@@ -26,11 +26,11 @@
 #include <KLocale>
 #include <KLineEdit>
 
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QSpinBox>
 #include <QDebug>
 #include <QDomNode>
+#include <QGridLayout>
 
 using namespace KSieveUi;
 

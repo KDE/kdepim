@@ -23,7 +23,6 @@
 #include <KLineEdit>
 
 #include <QHBoxLayout>
-#include <QDebug>
 
 using namespace KSieveUi;
 

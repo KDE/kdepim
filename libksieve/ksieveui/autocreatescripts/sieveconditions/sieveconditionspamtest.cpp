@@ -23,12 +23,11 @@
 
 #include <KLocale>
 
-#include <QHBoxLayout>
-#include <QLabel>
 #include <QSpinBox>
 #include <QDebug>
 #include <QDomNode>
 #include <QCheckBox>
+#include <QVBoxLayout>
 
 using namespace KSieveUi;
 

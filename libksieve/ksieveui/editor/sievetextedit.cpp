@@ -21,15 +21,13 @@
 #include "sievesyntaxhighlighter.h"
 
 
-#include <KLocale>
 #include <KGlobalSettings>
 
 #include <QCompleter>
 #include <QStringListModel>
 #include <QKeyEvent>
-#include <QAbstractItemView>
-#include <QScrollBar>
 #include <QPainter>
+#include <QScrollBar>
 
 using namespace KSieveUi;
 
