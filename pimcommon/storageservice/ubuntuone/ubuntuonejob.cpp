@@ -196,6 +196,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
 void UbuntuOneJob::parseListFolder(const QString &data)
 {
     //TODO
+    qDebug()<<" data "<<data;
     Q_EMIT listFolderDone();
     deleteLater();
 }
@@ -203,12 +204,14 @@ void UbuntuOneJob::parseListFolder(const QString &data)
 void UbuntuOneJob::parseCreateFolder(const QString &data)
 {
     //TODO
+    qDebug()<<" data "<<data;
     Q_EMIT createFolderDone();
     deleteLater();
 }
 
 void UbuntuOneJob::parseUploadFiles(const QString &data)
 {
+    qDebug()<<" data "<<data;
     Q_EMIT uploadFileDone();
     deleteLater();
 }

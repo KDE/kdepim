@@ -15,19 +15,19 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef YOUSENDITJOB_H
-#define YOUSENDITJOB_H
+#ifndef BoxJob_H
+#define BoxJob_H
 
 #include <QObject>
 #include "storageservice/storageserviceabstractjob.h"
 class QNetworkReply;
 namespace PimCommon {
-class YouSendItJob : public PimCommon::StorageServiceAbstractJob
+class BoxJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
 public:
-    explicit YouSendItJob(QObject *parent=0);
-    ~YouSendItJob();
+    explicit BoxJob(QObject *parent=0);
+    ~BoxJob();
 
     void requestTokenAccess();
     void uploadFile(const QString &filename);
@@ -35,27 +35,19 @@ public:
     void accountInfo();
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
-    void initializeToken(const QString &password, const QString &userName, const QString &token);
-
-Q_SIGNALS:
-    void authorizationDone(const QString &password, const QString &username, const QString &token);
-
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
 
 private:
-    void parseRequestToken(const QString &data);
-    void parseAccountInfo(const QString &data);
-    void parseCreateFolder(const QString &data);
     void parseUploadFiles(const QString &data);
-    void startUploadFile(const QString &fileId);
-    QString mPassword;
-    QString mUsername;
-    QString mDefaultUrl;
-    QString mApiKey;
-    QString mToken;
+    void parseCreateFolder(const QString &data);
+    void parseAccountInfo(const QString &data);
+    void parseListFolder(const QString &data);
+    QString mClientId;
+    QString mClientSecret;
+    QString mRedirectUri;
 };
 }
 
-#endif // YOUSENDITJOB_H
+#endif // BoxJob_H

@@ -15,8 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "webdavjob.h"
-#include "webdavsettingsdialog.h"
+#include "boxjob.h"
 
 #include <qjson/parser.h>
 
@@ -27,46 +26,46 @@
 
 using namespace PimCommon;
 
-WebDavJob::WebDavJob(QObject *parent)
+BoxJob::BoxJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
+    mClientId = QLatin1String("");
+    mClientSecret = QLatin1String("");
+    mRedirectUri = QLatin1String("https://bugs.kde.org/");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
-WebDavJob::~WebDavJob()
+BoxJob::~BoxJob()
 {
 
 }
 
-void WebDavJob::requestTokenAccess()
+void BoxJob::requestTokenAccess()
 {
-    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
-    if (dlg->exec()) {
-    }
-    delete dlg;
+    //TODO
 }
 
-void WebDavJob::uploadFile(const QString &filename)
+void BoxJob::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
 }
 
-void WebDavJob::listFolder()
+void BoxJob::listFolder()
 {
     mActionType = ListFolder;
 }
 
-void WebDavJob::accountInfo()
+void BoxJob::accountInfo()
 {
     mActionType = AccountInfo;
 }
 
-void WebDavJob::createFolder(const QString &filename)
+void BoxJob::createFolder(const QString &filename)
 {
     mActionType = CreateFolder;
 }
 
-void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
+void BoxJob::slotSendDataFinished(QNetworkReply *reply)
 {
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
@@ -141,32 +140,32 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
-void WebDavJob::parseUploadFiles(const QString &data)
+void BoxJob::parseUploadFiles(const QString &data)
 {
     qDebug()<<" data "<<data;
     deleteLater();
 }
 
-void WebDavJob::parseCreateFolder(const QString &data)
+void BoxJob::parseCreateFolder(const QString &data)
 {
     qDebug()<<" data "<<data;
     deleteLater();
 }
 
-void WebDavJob::parseAccountInfo(const QString &data)
+void BoxJob::parseAccountInfo(const QString &data)
 {
     qDebug()<<" data "<<data;
     deleteLater();
 }
 
-void WebDavJob::parseListFolder(const QString &data)
+void BoxJob::parseListFolder(const QString &data)
 {
     qDebug()<<" data "<<data;
     deleteLater();
 }
 
 
-void WebDavJob::shareLink(const QString &root, const QString &path)
+void BoxJob::shareLink(const QString &root, const QString &path)
 {
 
 }

@@ -78,12 +78,22 @@ void YouSendItJob::requestTokenAccess()
 
 void YouSendItJob::uploadFile(const QString &filename)
 {
+    mActionType = UploadFiles;
+    QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));
+    QNetworkRequest request(url);
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QUrl postData;
 
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::listFolder()
 {
-
+    mActionType = ListFolder;
 }
 
 void YouSendItJob::accountInfo()
@@ -178,7 +188,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case UploadFiles:
-        deleteLater();
+        parseUploadFiles(data);
         break;
     case CreateFolder:
         parseCreateFolder(data);
@@ -243,6 +253,41 @@ void YouSendItJob::parseCreateFolder(const QString &data)
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
     Q_EMIT createFolderDone();
+    deleteLater();
+}
+
+
+void YouSendItJob::parseUploadFiles(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+    qDebug()<<" data "<<data;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    QString fileId;
+    if (info.contains(QLatin1String("fileId"))) {
+        qDebug()<<" fileId "<<info.value(QLatin1String("fileId")).toString();
+        fileId = info.value(QLatin1String("fileId")).toString();
+    }
+    startUploadFile(fileId);
+}
+
+void YouSendItJob::startUploadFile(const QString &fileId)
+{
+    mActionType = UploadFiles;
+    QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/commitUpload"));
+    QNetworkRequest request(url);
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("fileId"), fileId);
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+
+    //TODO
     deleteLater();
 }
 

@@ -37,6 +37,7 @@ public:
         UbuntuOne,
         YouSendIt,
         WebDav,
+        Box,
 
         //Last element
         EndListService

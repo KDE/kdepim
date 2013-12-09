@@ -24,6 +24,7 @@
 #include "ubuntuone/ubuntuonestorageservice.h"
 #include "yousendit/yousenditstorageservice.h"
 #include "webdav/webdavstorageservice.h"
+#include "box/boxstorageservice.h"
 
 #include <KLocale>
 #include <KFileDialog>
@@ -120,6 +121,10 @@ void StorageServiceManager::readConfig()
             if (!mListService.contains(serviceName(WebDav))) {
                 mListService.insert(service, new WebDavStorageService());
             }
+        } else if (service == serviceName(Box)) {
+            if (!mListService.contains(serviceName(Box))) {
+                mListService.insert(service, new BoxStorageService());
+            }
         }
     }
 }
@@ -141,6 +146,8 @@ QString StorageServiceManager::description(ServiceType type)
         return PimCommon::UbuntuoneStorageService::description();
     case WebDav:
         return PimCommon::WebDavStorageService::description();
+    case Box:
+        return PimCommon::BoxStorageService::description();
     default:
         return QString();
     }
@@ -160,6 +167,8 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::YouSendItStorageService::serviceUrl();
     case WebDav:
         return PimCommon::WebDavStorageService::serviceUrl();
+    case Box:
+        return PimCommon::BoxStorageService::serviceUrl();
     default:
         return QString();
     }
@@ -180,6 +189,8 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::YouSendItStorageService::serviceName();
     case WebDav:
         return PimCommon::WebDavStorageService::serviceName();
+    case Box:
+        return PimCommon::BoxStorageService::serviceName();
     default:
         return QString();
     }
@@ -198,6 +209,8 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::YouSendItStorageService::name();
     case WebDav:
         return PimCommon::WebDavStorageService::name();
+    case Box:
+        return PimCommon::BoxStorageService::name();
     default:
         return QString();
     }
@@ -216,6 +229,8 @@ QString StorageServiceManager::icon(ServiceType type)
         return PimCommon::YouSendItStorageService::iconName();
     case WebDav:
         return PimCommon::WebDavStorageService::iconName();
+    case Box:
+        return PimCommon::BoxStorageService::iconName();
     default:
         return QString();
     }

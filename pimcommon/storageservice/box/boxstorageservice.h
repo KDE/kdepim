@@ -15,35 +15,40 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef WEBDAVJOB_H
-#define WEBDAVJOB_H
+#ifndef BoxStorageService_H
+#define BoxStorageService_H
 
-#include <QObject>
-#include "storageservice/storageserviceabstractjob.h"
-class QNetworkReply;
+#include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon_export.h"
+
 namespace PimCommon {
-class WebDavJob : public PimCommon::StorageServiceAbstractJob
+class PIMCOMMON_EXPORT BoxStorageService : public PimCommon::StorageServiceAbstract
 {
     Q_OBJECT
 public:
-    explicit WebDavJob(QObject *parent=0);
-    ~WebDavJob();
+    explicit BoxStorageService(QObject *parent=0);
+    ~BoxStorageService();
 
-    void requestTokenAccess();
+    static QString name();
+    static QString description();
+    static QUrl serviceUrl();
+    static QString serviceName();
+    static QString iconName();
+
     void uploadFile(const QString &filename);
-    void listFolder();
     void accountInfo();
-    void createFolder(const QString &filename);
+    void createFolder(const QString &folder);
+    void listFolder();
+    void removeConfig();
+    void authentification();
     void shareLink(const QString &root, const QString &path);
+    QString storageServiceName() const;
+    KIcon icon() const;
 
 private:
-    void parseUploadFiles(const QString &data);
-    void parseCreateFolder(const QString &data);
-    void parseAccountInfo(const QString &data);
-    void parseListFolder(const QString &data);
-private slots:
-    void slotSendDataFinished(QNetworkReply *reply);
+    void readConfig();
+    QString mToken;
 };
 }
 
-#endif // WEBDAVJOB_H
+#endif // BoxStorageService_H
