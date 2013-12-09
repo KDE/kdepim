@@ -41,6 +41,7 @@ public:
     void authentification();
     void shareLink(const QString &root, const QString &path);    
     QString storageServiceName() const;
+    KIcon icon() const;
 
 private slots:
     void slotAuthorizationDone(const QString &password, const QString &username, const QString &token);    
@@ -52,6 +53,7 @@ private:
     QString mToken;
     QString mPassword;
     QString mUsername;
+
 };
 }
 

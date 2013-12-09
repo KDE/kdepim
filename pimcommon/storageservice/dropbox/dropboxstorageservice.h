@@ -43,6 +43,7 @@ public:
     void shareLink(const QString &root, const QString &path);
     QString storageServiceName() const;
 
+    KIcon icon() const;
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

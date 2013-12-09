@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QUrl>
+#include <KIcon>
 
 namespace PimCommon {
 
@@ -52,6 +53,7 @@ public:
     virtual void authentification() = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual QString storageServiceName() const = 0;
+    virtual KIcon icon() const = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);

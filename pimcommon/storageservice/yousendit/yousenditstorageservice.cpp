@@ -175,3 +175,8 @@ QString YouSendItStorageService::storageServiceName() const
 {
     return serviceName();
 }
+
+KIcon YouSendItStorageService::icon() const
+{
+    return KIcon();
+}

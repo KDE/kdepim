@@ -179,3 +179,8 @@ QString UbuntuoneStorageService::storageServiceName() const
     return serviceName();
 }
 
+KIcon UbuntuoneStorageService::icon() const
+{
+    return KIcon();
+}
+

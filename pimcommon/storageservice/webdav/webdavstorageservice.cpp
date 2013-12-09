@@ -149,3 +149,8 @@ QString WebDavStorageService::storageServiceName() const
 {
     return serviceName();
 }
+
+KIcon WebDavStorageService::icon() const
+{
+    return KIcon();
+}

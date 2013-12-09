@@ -42,6 +42,7 @@ public:
     void authentification();
     void shareLink(const QString &root, const QString &path);
     QString storageServiceName() const;
+    KIcon icon() const;
 
 private:
     void readConfig();

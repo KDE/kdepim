@@ -174,3 +174,8 @@ QString DropBoxStorageService::storageServiceName() const
 {
     return serviceName();
 }
+
+KIcon DropBoxStorageService::icon() const
+{
+    return KIcon();
+}

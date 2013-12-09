@@ -163,3 +163,8 @@ QString HubicStorageService::storageServiceName() const
 {
     return serviceName();
 }
+
+KIcon HubicStorageService::icon() const
+{
+    return KIcon();
+}
