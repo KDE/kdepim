@@ -33,7 +33,7 @@ YouSendItJob::YouSendItJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
     mApiKey = QLatin1String("fnab8fkgwrka7v6zs2ycd34a");
-    mDefaultUrl = QLatin1String("https://test2-api.yousendit.com/dpi/v1/");
+    mDefaultUrl = QLatin1String("https://test2-api.yousendit.com");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
@@ -60,7 +60,7 @@ void YouSendItJob::requestTokenAccess()
     delete dlg;
 
     mActionType = RequestToken;
-    QUrl url(mDefaultUrl + QLatin1String("auth"));
+    QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/auth"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
@@ -88,7 +88,7 @@ void YouSendItJob::listFolder()
 void YouSendItJob::accountInfo()
 {
     mActionType = AccountInfo;
-    QUrl url(mDefaultUrl + QLatin1String("/user"));
+    QUrl url(mDefaultUrl + QLatin1String("/dpi/v2/user"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
