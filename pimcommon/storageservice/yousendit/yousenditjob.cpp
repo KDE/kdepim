@@ -107,10 +107,12 @@ void YouSendItJob::createFolder(const QString &foldername)
     url.addQueryItem(QLatin1String("name"),foldername);
     QNetworkRequest request(url);
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
-    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
     request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QUrl postData;
+
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -210,6 +212,7 @@ void YouSendItJob::parseCreateFolder(const QString &data)
     qDebug()<<" data "<<data;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
+    Q_EMIT createFolderDone();
     deleteLater();
 }
 

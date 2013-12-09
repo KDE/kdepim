@@ -34,6 +34,7 @@ ServiceTestWidget::ServiceTestWidget(QWidget *parent)
       mStorageService(0)
 {
     mEdit = new QTextEdit;
+    mEdit->setReadOnly(true);
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
