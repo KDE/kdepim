@@ -36,7 +36,12 @@ void StorageServiceComboBox::initialize(const QStringList &excludeService)
     for (int i=0; i < PimCommon::StorageServiceManager::EndListService; ++i) {
         const PimCommon::StorageServiceManager::ServiceType type = static_cast<PimCommon::StorageServiceManager::ServiceType>(i);
         if (!excludeService.contains(PimCommon::StorageServiceManager::serviceName(type))) {
-            addItem(KIcon(PimCommon::StorageServiceManager::icon(type)), PimCommon::StorageServiceManager::serviceToI18n(type), type);
+            const KIcon icon = KIcon(PimCommon::StorageServiceManager::icon(type));
+            if (icon.isNull()) {
+                addItem(PimCommon::StorageServiceManager::serviceToI18n(type), type);
+            } else {
+                addItem(KIcon(PimCommon::StorageServiceManager::icon(type)), PimCommon::StorageServiceManager::serviceToI18n(type), type);
+            }
         }
     }
 }

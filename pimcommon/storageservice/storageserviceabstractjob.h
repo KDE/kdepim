@@ -62,6 +62,7 @@ protected:
         AccountInfo,
         ShareLink
     };
+    void errorMessage(PimCommon::StorageServiceAbstractJob::ActionType type, const QString &errorStr);
 
     QNetworkAccessManager *mNetworkAccessManager;
     ActionType mActionType;

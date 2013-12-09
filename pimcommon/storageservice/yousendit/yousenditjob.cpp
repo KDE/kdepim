@@ -17,6 +17,7 @@
 
 #include "yousenditjob.h"
 #include "pimcommon/storageservice/logindialog.h"
+#include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocale>
 
@@ -123,6 +124,16 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     reply->deleteLater();
     if (mError) {
         qDebug()<<" error type "<<data;
+        QJson::Parser parser;
+        bool ok;
+        QString errorStr;
+        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
+        if (error.contains(QLatin1String("errorStatus"))) {
+            const QVariantMap storageMap = error.value(QLatin1String("errorStatus")).toMap();
+            if (storageMap.contains(QLatin1String("message"))) {
+                errorStr = storageMap.value(QLatin1String("message")).toString();
+            }
+        }
         switch(mActionType) {
         case NoneAction:
             deleteLater();
@@ -134,15 +145,19 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             deleteLater();
             break;
         case UploadFiles:
+            errorMessage(mActionType, errorStr);
             deleteLater();
             break;
         case CreateFolder:
+            errorMessage(mActionType, errorStr);
             deleteLater();
             break;
         case AccountInfo:
+            errorMessage(mActionType, errorStr);
             deleteLater();
             break;
         case ListFolder:
+            errorMessage(mActionType, errorStr);
             deleteLater();
             break;
         default:
@@ -177,6 +192,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
         deleteLater();
+        break;
     }
 }
 
@@ -190,8 +206,9 @@ void YouSendItJob::parseRequestToken(const QString &data)
     if (info.contains(QLatin1String("authToken"))) {
         const QString authToken = info.value(QLatin1String("authToken")).toString();
         Q_EMIT authorizationDone(mPassword, mUsername, authToken);
+    } else {
+        Q_EMIT authorizationFailed();
     }
-    qDebug()<<" data "<<data;
     deleteLater();
 }
 
@@ -202,6 +219,19 @@ void YouSendItJob::parseAccountInfo(const QString &data)
     qDebug()<<" data "<<data;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("storage"))) {
+        PimCommon::AccountInfo accountInfo;
+        const QVariantMap storageMap = info.value(QLatin1String("storage")).toMap();
+        if (storageMap.contains(QLatin1String("currentUsage"))) {
+            qDebug()<<" ssss"<<storageMap.value(QLatin1String("currentUsage")).toString();
+            accountInfo.shared = storageMap.value(QLatin1String("currentUsage")).toLongLong();
+        }
+        if (storageMap.contains(QLatin1String("storageQuota"))) {
+            qDebug()<<" ssss"<<storageMap.value(QLatin1String("storageQuota")).toString();
+            accountInfo.quota = storageMap.value(QLatin1String("storageQuota")).toLongLong();
+        }
+        Q_EMIT accountInfoDone(accountInfo);
+    }
     deleteLater();
 }
 

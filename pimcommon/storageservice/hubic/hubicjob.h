@@ -50,6 +50,9 @@ private:
     void parseRedirectUrl(const QUrl &url);
     void parseAccessToken(const QString &data);
     void getTokenAccess(const QString &authorizeCode);
+    void parseUploadFile(const QString &data);
+    void parseCreateFolder(const QString &data);
+    void parseAccountInfo(const QString &data);
     void refreshToken();
     QUrl mAuthUrl;
     QString mClientId;

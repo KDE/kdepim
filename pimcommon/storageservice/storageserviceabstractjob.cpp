@@ -16,6 +16,9 @@
 */
 
 #include "storageserviceabstractjob.h"
+
+#include <KLocale>
+
 #include <QNetworkAccessManager>
 #include <QDebug>
 
@@ -40,4 +43,35 @@ void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
     qDebug()<<" Error "<<error<<" reply"<<reply->errorString();
     mError = true;
+}
+
+void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstractJob::ActionType type, const QString &errorStr)
+{
+    QString error;
+    switch(type) {
+    case NoneAction:
+        break;
+    case RequestToken:
+        break;
+    case AccessToken:
+        break;
+    case UploadFiles:
+        error = i18n("Upload File returns an error: %1",errorStr);
+        break;
+    case CreateFolder:
+        error = i18n("Create Folder returns an error: %1",errorStr);
+        break;
+    case AccountInfo:
+        error = i18n("Get account info returns an error: %1",errorStr);
+        break;
+    case ListFolder:
+        error = i18n("List folder returns an error: %1",errorStr);
+        break;
+    case ShareLink:
+        error = i18n("Share Link returns an error: %1",errorStr);
+        break;
+    default:
+        break;
+    }
+    Q_EMIT actionFailed(error);
 }

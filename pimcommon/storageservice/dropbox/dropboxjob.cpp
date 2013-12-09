@@ -128,23 +128,23 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case UploadFiles:
-                Q_EMIT actionFailed(i18n("Upload File returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case CreateFolder:
-                Q_EMIT actionFailed(i18n("Create Folder returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case AccountInfo:
-                Q_EMIT actionFailed(i18n("Get account info returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case ListFolder:
-                Q_EMIT actionFailed(i18n("List folder returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case ShareLink:
-                Q_EMIT actionFailed(i18n("Share Link returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             default:

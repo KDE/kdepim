@@ -180,15 +180,19 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case UploadFiles:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case CreateFolder:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case AccountInfo:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case ListFolder:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             default:
@@ -211,13 +215,13 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
         parseAccessToken(data);
         break;
     case UploadFiles:
-        deleteLater();
+        parseUploadFile(data);
         break;
     case CreateFolder:
-        deleteLater();
+        parseCreateFolder(data);
         break;
     case AccountInfo:
-        deleteLater();
+        parseAccountInfo(data);
         break;
     case ListFolder:
         deleteLater();
@@ -228,6 +232,27 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
         break;
     }
 }
+
+void HubicJob::parseAccountInfo(const QString &data)
+{
+    //TODO
+    deleteLater();
+}
+
+void HubicJob::parseCreateFolder(const QString &data)
+{
+    //TODO
+    Q_EMIT createFolderDone();
+    deleteLater();
+}
+
+void HubicJob::parseUploadFile(const QString &data)
+{
+    //TODO
+    Q_EMIT uploadFileDone();
+    deleteLater();
+}
+
 
 void HubicJob::parseAccessToken(const QString &data)
 {
