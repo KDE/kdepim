@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Notes Agent
+Comment=Notes Agent allows to get note send by network and show alarms
+Type=AkonadiAgent
+Exec=akonadi_notes_agent
+Icon=kmail
+X-DocPath=akonadi_notes_agent/index.html
+X-Akonadi-MimeTypes=message/rfc822
+X-Akonadi-Capabilities=Unique,Autostart
+X-Akonadi-Identifier=akonadi_notes_agent

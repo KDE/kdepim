@@ -16,13 +16,8 @@
 */
 
 #include "notesagent.h"
-#include "sendlatermanager.h"
-#include "sendlaterconfiguredialog.h"
-#include "sendlaterinfo.h"
-#include "sendlaterutil.h"
-#include "notesagentadaptor.h"
-#include "notesagentsettings.h"
-#include "sendlaterremovemessagejob.h"
+//#include "notesagentadaptor.h"
+//#include "notesagentsettings.h"
 
 #include <Akonadi/KMime/SpecialMailCollections>
 #include <Akonadi/AgentInstance>
@@ -45,10 +40,8 @@
 NotesAgent::NotesAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
-    mManager = new SendLaterManager(this);
-    connect(mManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
-    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_sendlater_agent") );
-    new NotesAgentAdaptor( this );
+    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_notes_agent") );
+    //new NotesAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/NotesAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.NotesAgent" ) );
 
