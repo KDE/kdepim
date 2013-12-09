@@ -25,8 +25,9 @@
 #include <KLocale>
 
 UbuntuOneTestWidget::UbuntuOneTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::UbuntuoneStorageService(this),parent)
+    : ServiceTestWidget(parent)
 {
+    setStorageService(new PimCommon::UbuntuoneStorageService(this));
 }
 
 int main (int argc, char **argv)

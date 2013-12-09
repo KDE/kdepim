@@ -26,8 +26,9 @@
 
 
 WebDavTestWidget::WebDavTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::WebDavStorageService(this),parent)
+    : ServiceTestWidget(parent)
 {
+    setStorageService(new PimCommon::WebDavStorageService(this));
 }
 
 

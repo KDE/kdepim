@@ -25,8 +25,9 @@
 #include <KLocale>
 
 YouSendItTestWidget::YouSendItTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::YouSendItStorageService(this),parent)
+    : ServiceTestWidget(parent)
 {
+    setStorageService(new PimCommon::YouSendItStorageService(this));
 }
 
 int main (int argc, char **argv)

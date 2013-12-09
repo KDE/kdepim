@@ -30,8 +30,10 @@ class ServiceTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ServiceTestWidget(PimCommon::StorageServiceAbstract *, QWidget *parent);
+    explicit ServiceTestWidget(QWidget *parent);
     ~ServiceTestWidget();
+
+    void setStorageService(PimCommon::StorageServiceAbstract *service);
 
 private Q_SLOTS:
     void slotListFolder();

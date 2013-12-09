@@ -29,11 +29,10 @@
 
 
 
-ServiceTestWidget::ServiceTestWidget(PimCommon::StorageServiceAbstract *service,QWidget *parent)
+ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     : QWidget(parent),
-      mStorageService(service)
+      mStorageService(0)
 {
-    connectStorageService();
     mEdit = new QTextEdit;
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
@@ -50,6 +49,12 @@ ServiceTestWidget::ServiceTestWidget(PimCommon::StorageServiceAbstract *service,
 ServiceTestWidget::~ServiceTestWidget()
 {
 
+}
+
+void ServiceTestWidget::setStorageService(PimCommon::StorageServiceAbstract *service)
+{
+    mStorageService = service;
+    connectStorageService();
 }
 
 void ServiceTestWidget::slotAuthentification()
