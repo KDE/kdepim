@@ -45,6 +45,7 @@ private Q_SLOTS:
     void slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void slotShareLinkDone(const QString &serviceName, const QString &shareLink);
     void slotAuthentificationDone(const QString &serviceName);
+    void slotAuthentificationFailed(const QString &serviceName);
     void slotCreateFolderDone(const QString &serviceName);
     void slotUploadFileDone(const QString &serviceName);
     void slotListFolderDone(const QString &serviceName);

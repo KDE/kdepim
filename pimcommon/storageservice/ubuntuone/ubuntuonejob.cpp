@@ -177,20 +177,40 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case UploadFiles:
-        deleteLater();
+        parseUploadFiles(data);
         break;
     case CreateFolder:
-        deleteLater();
+        parseCreateFolder(data);
         break;
     case AccountInfo:
         parseAccountInfo(data);
         break;
     case ListFolder:
-        deleteLater();
+        parseListFolder(data);
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::parseListFolder(const QString &data)
+{
+    //TODO
+    Q_EMIT listFolderDone();
+    deleteLater();
+}
+
+void UbuntuOneJob::parseCreateFolder(const QString &data)
+{
+    //TODO
+    Q_EMIT createFolderDone();
+    deleteLater();
+}
+
+void UbuntuOneJob::parseUploadFiles(const QString &data)
+{
+    Q_EMIT uploadFileDone();
+    deleteLater();
 }
 
 void UbuntuOneJob::parseAccountInfo(const QString &data)

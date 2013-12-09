@@ -91,6 +91,11 @@ void ServiceTestWidget::slotShareLinkDone(const QString &serviceName, const QStr
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" return a share link: %1\n").arg(shareLink));
 }
 
+void ServiceTestWidget::slotAuthentificationFailed(const QString &serviceName)
+{
+    mEdit->insertPlainText(serviceName + QLatin1String(" Authentification failed\n"));
+}
+
 void ServiceTestWidget::slotAuthentificationDone(const QString &serviceName)
 {
     mEdit->insertPlainText(serviceName + QLatin1String(" Authentification done\n"));
