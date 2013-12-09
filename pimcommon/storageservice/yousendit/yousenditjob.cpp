@@ -89,11 +89,13 @@ void YouSendItJob::accountInfo()
 {
     mActionType = AccountInfo;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v2/user"));
+    url.addQueryItem(QLatin1String("email"),mUsername);
+    url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("email", mUsername.toLatin1());
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
     request.setRawHeader("Accept", "application/json");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -156,7 +158,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case AccountInfo:
-        deleteLater();
+        parseAccountInfo(data);
         break;
     case ListFolder:
         deleteLater();
@@ -179,6 +181,16 @@ void YouSendItJob::parseRequestToken(const QString &data)
         Q_EMIT authorizationDone(mPassword, mUsername, authToken);
     }
     qDebug()<<" data "<<data;
+    deleteLater();
+}
+
+void YouSendItJob::parseAccountInfo(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+    qDebug()<<" data "<<data;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
     deleteLater();
 }
 

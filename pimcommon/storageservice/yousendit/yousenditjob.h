@@ -46,6 +46,7 @@ private slots:
 
 private:
     void parseRequestToken(const QString &data);
+    void parseAccountInfo(const QString &data);
     QString mPassword;
     QString mUsername;
     QString mDefaultUrl;
