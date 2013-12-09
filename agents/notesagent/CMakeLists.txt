@@ -7,9 +7,10 @@ include_directories(
 
 set(notesagent_SRCS
     notesagent.cpp
+    notesmanager.cpp
 )
 
-#qt4_add_dbus_adaptor(archivemailagent_SRCS org.freedesktop.Akonadi.ArchiveMailAgent.xml archivemailagent.h ArchiveMailAgent)
+qt4_add_dbus_adaptor(notesagent_SRCS org.freedesktop.Akonadi.NotesAgent.xml notesagent.h NotesAgent)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
@@ -33,6 +34,6 @@ endif ()
 install(TARGETS akonadi_notes_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install(FILES notesagent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
-#install(FILES akonadi_archivemail_agent.notifyrc DESTINATION "${DATA_INSTALL_DIR}/akonadi_archivemail_agent" )
+install(FILES akonadi_notes_agent.notifyrc DESTINATION "${DATA_INSTALL_DIR}/akonadi_notes_agent" )
 
 

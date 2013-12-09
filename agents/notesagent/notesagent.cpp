@@ -16,6 +16,7 @@
 */
 
 #include "notesagent.h"
+#include "notesmanager.h"
 //#include "notesagentadaptor.h"
 //#include "notesagentsettings.h"
 
@@ -40,6 +41,7 @@
 NotesAgent::NotesAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
+    mNotesManager = new NotesManager(this);
     KGlobal::locale()->insertCatalog( QLatin1String("akonadi_notes_agent") );
     //new NotesAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/NotesAgent" ), this, QDBusConnection::ExportAdaptors );

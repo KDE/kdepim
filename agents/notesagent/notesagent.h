@@ -19,7 +19,7 @@
 #define NOTESAGENT_H
 
 #include <akonadi/agentbase.h>
-
+class NotesManager;
 class NotesAgent : public Akonadi::AgentBase, public Akonadi::AgentBase::ObserverV3
 {
     Q_OBJECT
@@ -47,6 +47,8 @@ protected:
     void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destinationCollection);
     void doSetOnline( bool online );
 
+private:
+    NotesManager *mNotesManager;
 };
 
 #endif // NOTESAGENT_H

@@ -1,0 +1,8 @@
+[Global]
+IconName=notes
+Comment=Notes Agent
+
+[Event/receivednotes]
+Name=Received a note
+Action=Popup
+
