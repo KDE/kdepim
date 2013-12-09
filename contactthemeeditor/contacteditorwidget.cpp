@@ -17,9 +17,6 @@
 
 #include "contacteditorwidget.h"
 #include "defaultcompletion.h"
-#include <QStringListModel>
-#include <QCompleter>
-#include <QDebug>
 
 ContactEditorWidget::ContactEditorWidget(QWidget *parent)
     : GrantleeThemeEditor::EditorWidget(parent)

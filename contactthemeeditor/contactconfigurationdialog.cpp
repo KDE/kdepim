@@ -24,9 +24,7 @@
 
 #include <KABC/VCardConverter>
 
-
 #include <KLocale>
-#include <KUrlRequester>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
@@ -34,6 +32,7 @@
 
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QTabWidget>
 
 ContactConfigureDialog::ContactConfigureDialog(QWidget *parent)
     : KDialog(parent)

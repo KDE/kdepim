@@ -18,7 +18,6 @@
 
 #include "contactdefaulttemplate.h"
 
-#include <KLocale>
 
 QList<PimCommon::defaultTemplate> ContactDefaultTemplate::contactTemplates()
 {

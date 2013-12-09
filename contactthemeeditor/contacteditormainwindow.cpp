@@ -22,25 +22,22 @@
 #include "contactconfigurationdialog.h"
 
 
-#include <KTemporaryFile>
-#include <KTempDir>
 #include <KStandardAction>
 #include <KApplication>
 #include <KAction>
-#include <KToggleAction>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KFileDialog>
 #include <KDebug>
 #include <KStandardDirs>
-#include <KNS3/KNewStuffAction>
 #include <KRecentFilesAction>
 #include <KLocale>
 
+#include <KNS3/KNewStuffAction>
+
 #include <QPointer>
 #include <QCloseEvent>
-#include <QActionGroup>
 
 ContactEditorMainWindow::ContactEditorMainWindow()
     : KXmlGuiWindow(),

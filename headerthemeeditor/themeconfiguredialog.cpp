@@ -21,7 +21,6 @@
 #include "configurewidget.h"
 
 #include <KLocale>
-#include <KUrlRequester>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>

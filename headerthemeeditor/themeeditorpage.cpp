@@ -25,7 +25,6 @@
 
 #include <knewstuff3/uploaddialog.h>
 
-#include <KTabWidget>
 #include <KLocale>
 #include <KInputDialog>
 #include <KZip>

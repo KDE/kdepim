@@ -21,8 +21,6 @@
 #include "themeconfiguredialog.h"
 #include "managethemes.h"
 
-#include <KTemporaryFile>
-#include <KTempDir>
 #include <KStandardAction>
 #include <KApplication>
 #include <KAction>
@@ -33,8 +31,8 @@
 #include <KFileDialog>
 #include <KDebug>
 #include <KStandardDirs>
-#include <KNS3/KNewStuffAction>
 #include <KRecentFilesAction>
+#include <KNS3/KNewStuffAction>
 
 #include <QPointer>
 #include <QCloseEvent>
