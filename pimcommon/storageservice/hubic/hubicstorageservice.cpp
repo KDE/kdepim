@@ -146,6 +146,11 @@ QString HubicStorageService::serviceName()
     return QLatin1String("hubic");
 }
 
+QString HubicStorageService::iconName()
+{
+    return QString();
+}
+
 void HubicStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mRefreshToken.isEmpty()) {

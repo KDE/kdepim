@@ -158,6 +158,11 @@ QString YouSendItStorageService::serviceName()
     return QLatin1String("yousendit");
 }
 
+QString YouSendItStorageService::iconName()
+{
+    return QString();
+}
+
 void YouSendItStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {

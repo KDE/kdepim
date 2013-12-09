@@ -161,6 +161,11 @@ QString UbuntuoneStorageService::serviceName()
     return QLatin1String("ubuntuone");
 }
 
+QString UbuntuoneStorageService::iconName()
+{
+    return QString();
+}
+
 void UbuntuoneStorageService::shareLink(const QString &root, const QString &path)
 {    
     if (mTokenSecret.isEmpty()) {

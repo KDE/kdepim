@@ -170,6 +170,11 @@ QString DropBoxStorageService::serviceName()
     return QLatin1String("dropbox");
 }
 
+QString DropBoxStorageService::iconName()
+{
+    return QString();
+}
+
 QString DropBoxStorageService::storageServiceName() const
 {
     return serviceName();
