@@ -51,7 +51,8 @@ public:
     static QString serviceToI18n(ServiceType type);
     static QString serviceName(ServiceType type);
     static QString description(ServiceType type);
-    static QUrl serviceUrl(ServiceType type);
+    static QUrl serviceUrl(ServiceType type);    
+    static QString icon(ServiceType type);
 
 Q_SIGNALS:
     void servicesChanged();

@@ -202,3 +202,21 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return QString();
     }
 }
+
+QString StorageServiceManager::icon(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return PimCommon::DropBoxStorageService::iconName();
+    case Hubic:
+        return PimCommon::HubicStorageService::iconName();
+    case UbuntuOne:
+        return PimCommon::UbuntuoneStorageService::iconName();
+    case YouSendIt:
+        return PimCommon::YouSendItStorageService::iconName();
+    case WebDav:
+        return PimCommon::WebDavStorageService::iconName();
+    default:
+        return QString();
+    }
+}

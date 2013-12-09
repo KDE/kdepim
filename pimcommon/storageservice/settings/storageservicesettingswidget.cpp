@@ -104,24 +104,32 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
         i.next();
         QString serviceName;
         PimCommon::StorageServiceManager::ServiceType type = PimCommon::StorageServiceManager::Unknown;
+        QString icon;
         if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::DropBox)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::DropBox);
             type = PimCommon::StorageServiceManager::DropBox;
+            icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::DropBox);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Hubic)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Hubic);
             type = PimCommon::StorageServiceManager::Hubic;
+            icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Hubic);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::UbuntuOne)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::UbuntuOne);
             type = PimCommon::StorageServiceManager::UbuntuOne;
+            icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::UbuntuOne);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::YouSendIt)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::YouSendIt);
             type = PimCommon::StorageServiceManager::YouSendIt;
+            icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::YouSendIt);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::WebDav)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::WebDav);
             type = PimCommon::StorageServiceManager::WebDav;
+            icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::WebDav);
         }
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(serviceName);
+        if (!icon.isEmpty())
+            item->setIcon(KIcon(icon));
         item->setData(Name, i.key());
         item->setData(Type, type);
         mListService->addItem(item);
@@ -182,6 +190,10 @@ void StorageServiceSettingsWidget::slotAddService()
             item->setText(serviceName);
             item->setData(Name,service);
             item->setData(Type, type);
+            const KIcon icon = storage->icon();
+            if (!icon.isNull()) {
+                item->setIcon(icon);
+            }
             mListService->addItem(item);
             storage->authentification();
             mListStorageService.insert(service, storage);
