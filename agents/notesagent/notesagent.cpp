@@ -1,0 +1,165 @@
+/*
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License, version 2, as
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+#include "notesagent.h"
+#include "sendlatermanager.h"
+#include "sendlaterconfiguredialog.h"
+#include "sendlaterinfo.h"
+#include "sendlaterutil.h"
+#include "notesagentadaptor.h"
+#include "notesagentsettings.h"
+#include "sendlaterremovemessagejob.h"
+
+#include <Akonadi/KMime/SpecialMailCollections>
+#include <Akonadi/AgentInstance>
+#include <Akonadi/AgentManager>
+#include <akonadi/dbusconnectionpool.h>
+#include <akonadi/changerecorder.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/session.h>
+#include <Akonadi/AttributeFactory>
+#include <Akonadi/CollectionFetchScope>
+#include <KMime/Message>
+
+#include <KWindowSystem>
+#include <KLocale>
+
+#include <QPointer>
+
+//#define DEBUG_NOTESAGENT 1
+
+NotesAgent::NotesAgent(const QString &id)
+    : Akonadi::AgentBase( id )
+{
+    mManager = new SendLaterManager(this);
+    connect(mManager, SIGNAL(needUpdateConfigDialogBox()), SIGNAL(needUpdateConfigDialogBox()));
+    KGlobal::locale()->insertCatalog( QLatin1String("akonadi_sendlater_agent") );
+    new NotesAgentAdaptor( this );
+    Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/NotesAgent" ), this, QDBusConnection::ExportAdaptors );
+    Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.NotesAgent" ) );
+
+    changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
+    changeRecorder()->itemFetchScope().setCacheOnly( true );
+    changeRecorder()->itemFetchScope().setFetchModificationTime( false );
+    changeRecorder()->setChangeRecordingEnabled( false );
+    changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
+    setNeedsNetwork(true);
+
+    if (NotesAgentSettings::enabled()) {
+#ifdef DEBUG_NOTESAGENT
+        QTimer::singleShot(1000, mManager, SLOT(load()));
+#else
+        QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
+#endif
+    }
+}
+
+NotesAgent::~NotesAgent()
+{
+}
+
+void NotesAgent::doSetOnline( bool online )
+{
+    if (online) {
+        reload();
+    } else {
+        mManager->stopAll();
+    }
+}
+
+void NotesAgent::reload()
+{
+    if (NotesAgentSettings::enabled())
+        mManager->load(true);
+}
+
+void NotesAgent::setEnableAgent(bool enabled)
+{
+    if (NotesAgentSettings::enabled() == enabled)
+        return;
+
+    NotesAgentSettings::setEnabled(enabled);
+    NotesAgentSettings::self()->writeConfig();
+    if (enabled) {
+        mManager->load();
+    } else {
+        mManager->stopAll();
+    }
+}
+
+bool NotesAgent::enabledAgent() const
+{
+    return NotesAgentSettings::enabled();
+}
+
+void NotesAgent::configure( WId windowId )
+{
+    showConfigureDialog(windowId);
+}
+
+void NotesAgent::slotSendNow(Akonadi::Item::Id id)
+{
+    mManager->sendNow(id);
+}
+
+void NotesAgent::showConfigureDialog(qlonglong windowId)
+{
+    QPointer<SendLaterConfigureDialog> dialog = new SendLaterConfigureDialog();
+    if (windowId) {
+#ifndef Q_WS_WIN
+        KWindowSystem::setMainWindow( dialog, windowId );
+#else
+        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+#endif
+    }
+    connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedToReloadConfig()));
+    connect(dialog, SIGNAL(sendNow(Akonadi::Item::Id)), this, SLOT(slotSendNow(Akonadi::Item::Id)));
+    if (dialog->exec()) {
+        mManager->load();
+        QList<Akonadi::Item::Id> listMessage = dialog->messagesToRemove();
+        if (!listMessage.isEmpty()) {
+            //Will delete in specific job when done.
+            new SendLaterRemoveMessageJob(listMessage, this);
+        }
+    }
+    delete dialog;
+}
+
+void NotesAgent::itemsRemoved( const Akonadi::Item::List &items )
+{
+    Q_FOREACH(const Akonadi::Item &item, items) {
+       mManager->itemRemoved(item.id());
+    }
+}
+
+void NotesAgent::itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &/*sourceCollection*/, const Akonadi::Collection &destinationCollection)
+{
+    if (Akonadi::SpecialMailCollections::self()->specialCollectionType(destinationCollection) != Akonadi::SpecialMailCollections::Trash) {
+        return;
+    }
+    Q_FOREACH(const Akonadi::Item &item, items) {
+        mManager->itemRemoved(item.id());
+    }
+}
+
+void NotesAgent::printDebugInfo()
+{
+    mManager->printDebugInfo();
+}
+
+AKONADI_AGENT_MAIN( NotesAgent )
+
