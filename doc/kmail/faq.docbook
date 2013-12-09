@@ -350,12 +350,8 @@ you delete it.</para>
 <question><para>How can I remove attachments from messages without removing
 the message itself?</para></question>
 <answer>
-<para>This is currently not supported. As a workaround, move the
-message to the drafts folder, double click on it in order to open
-it in the composer, remove the attachments, save the message again to the
-drafts folder, move it back to its folder. The disadvantage of
-this workaround is that the date will be changed to the current date.
-Some other headers might also be changed.</para>
+<para>Open the context menu with a &RMB; click on an attachment and 
+select <guimenuitem>Delete Attachment</guimenuitem></para>
 </answer>
 </qandaentry>
 
@@ -550,8 +546,8 @@ the dictionary and the encoding there.</para></answer>
 <question><para>How do I use my
 <application>Eudora</application>/&Netscape;/<application>Outlook</application>/...
 mail folders in  &kmail;?</para></question>
-<answer><para>See the section <link linkend="importing">Using other Mailbox
-files with &kmail;</link>.</para></answer>
+<answer><para>See the section <link linkend="importing-options">Importing in &kmail;</link>.
+</para></answer>
 </qandaentry>
 
 <qandaentry>
@@ -778,103 +774,14 @@ the &imap; account, the Local Folders will stay collapsed when &kmail; starts.
 
 <qandaentry>
 <question><para>How to use E-Mail Translation?</para></question>
-<answer><para><emphasis>Symptom:</emphasis> you receive mail messages in different languages and want to translate them without doing lots of copy and paste.</para>
-<para><emphasis>Solution:</emphasis> using an external program to translate our E-Mail and display it.</para>
-<para><emphasis>Step by step implementation</emphasis></para>
-<para><warning><para>The provided solution was tested limited number of times and should be used with caution.</para></warning></para>
-<itemizedlist>
-<listitem><para>Prerequisites, make sure you have these before starting
-<itemizedlist>
-<listitem><para>libtranslate
-</para></listitem>
-<listitem><para>perl
-</para></listitem>
-<listitem><para>perl module Email::MIME
-</para></listitem>
-<listitem><para>kmail
-</para></listitem>
-</itemizedlist>
-</para></listitem>
-<listitem><para>Setting up a pipe filter
-<itemizedlist>
-<listitem><para>In &kmail; go to <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure filters</guimenuitem></menuchoice>
-</para></listitem>
-<listitem><para>create a new filter and name it <guilabel>Translate</guilabel>
-</para></listitem>
-<listitem><para>add a Filter Criteria that would be always true (&eg; <menuchoice><guimenu>Subject</guimenu><guisubmenu>Does not equal</guisubmenu><guimenuitem>321546543</guimenuitem></menuchoice>)
-</para></listitem>
-<listitem><para>add a Filter Action <guilabel>Pipe Through</guilabel> <userinput>~/bin/mail_translate.pl</userinput>
-</para></listitem>
-<listitem><para>open the <guilabel>Advanced</guilabel> tab and un-check everything except for <guilabel>Add this filter to the Apply Filter menu</guilabel>, you can also set a shortcut and an icon here.
-</para></listitem>
-</itemizedlist>
-</para></listitem>
-<listitem><para>Putting the script in place and configuring it</para>
-<itemizedlist>
-  <listitem><para>save the following script to a file named mail_translate.pl and put it in your <filename class="directory">~/bin</filename> directory.
-<screen>#!/usr/bin/perl
-use Email::MIME;
-my $from_language = 'en';
-my $to_language = 'he';
-my $translation_command = "translate ";
-my $languages_pair = "-f $from_language -t $to_language";
-my $line;
-my $message='';
-while ($line=&lt;&gt;)
-{
-    $message.=$line;
-}
-my $email = Email::MIME-&gt;new($message);
-my @parts = $email-&gt;parts;
-my $separator = `echo "translation" | $translation_command -f en -t "$to_language" -`;
-chop $separator;
-rec_parts ($email,@parts);
-sub rec_parts
-{
-    my $parent = $_[0];
-    my @parts = $_[1];
-    for $part(@parts)
-    {
-	my @sub_parts = $part-&gt;parts;
-	if (@sub_parts &gt; 1)
-	{
-	    rec_parts ($part,@sub_parts);
-	}
-	my $type=$part-&gt;content_type;
-	if (( $part-&gt;content_type =~ m[text/plain]gi )||( $part-&gt;content_type eq ''))
-	{
-	    my $body = $part-&gt;body;
-	    $body=~s/['"`]*//g;
-	    my $translation_body=`echo "$body" | $translation_command $languages_pair -`;
-	    $translation_body=~s/['"`]*//g;
-	    my $msg=$body."\n\n---"."$separator"."---\n\n".$translation_body;
-	    `kdialog --title "$separator" --msgbox "$msg"`;
-	}
-    }
-}
-print $email-&gt;as_string;
-</screen>
-</para></listitem>
-</itemizedlist>
-</listitem>
-<listitem><para>Make the script executable using <userinput>$chmod a+x ~/bin/mail_translate.pl</userinput>
-</para></listitem>
-<listitem><para>Configuring the script to suit your needs.
-<itemizedlist>
-<listitem><para>Currently the script will translate from English (en) to Hebrew (he), you probably need another type of translation. To change that settings look inside the script for the phrase $from_language = 'en' and $to_language = 'he' and replace the 'en' and 'he' parts with the combination you need, if you are not sure, a full list of language codes is available from <ulink url="http://www.loc.gov/standards/iso639-2/php/code_list.php">the ISO 639-2</ulink> list.
-</para></listitem>
-<listitem><para>Testing
-</para></listitem>
-<listitem><para>before changing innocent emails and translating them, first try that on something you don't mind to lose, look in your trash or spam folder. Right click on any translatable item, choose <menuchoice><guimenu>Apply Filter</guimenu><guimenuitem>Filter Translate</guimenuitem></menuchoice>. A dialog box should popup with the original message followed by its translation.
-</para></listitem>
-<listitem><para>Troubleshooting
-</para></listitem>
-<listitem><para>If the script is not working you can test it outside of &kmail; to narrow down the responsible component. Save a mail message as <filename>1.mbox</filename> file and run in the terminal <userinput>$~/bin/mail_translate.pl &lt;1.mbox &gt;2.mbox</userinput>
-</para></listitem>
-</itemizedlist>
-</para></listitem>
-</itemizedlist><para>If the output file <filename>2.mbox</filename> is not the same as <filename>1.mbox</filename> then there is a problem in the script and it should not be used.</para>
-<para><note><para>this script will only translate the Plain Text parts of an email message and not the &HTML; parts.</para></note></para>
+<answer>
+<para>To translate text in the composer window read the section 
+<link linkend="using-the-translator">Using the Built-in Translator</link>
+</para>
+<para>
+In the message preview pane highlight the text you would like to translate and select 
+<guimenuitem>Translate</guimenuitem> (<keycombo action="simul">&Ctrl;&Alt;<keycap>T</keycap></keycombo>) from the &RMB; context menu.
+</para>
 </answer>
 </qandaentry>
 
