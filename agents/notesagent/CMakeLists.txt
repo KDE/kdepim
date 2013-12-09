@@ -10,6 +10,11 @@ set(notesagent_SRCS
     notesmanager.cpp
 )
 
+kde4_add_kcfg_files(notesagent_SRCS
+    notesagentsettings.kcfgc
+)
+
+
 qt4_add_dbus_adaptor(notesagent_SRCS org.freedesktop.Akonadi.NotesAgent.xml notesagent.h NotesAgent)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )

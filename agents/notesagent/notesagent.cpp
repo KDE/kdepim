@@ -17,8 +17,8 @@
 
 #include "notesagent.h"
 #include "notesmanager.h"
-//#include "notesagentadaptor.h"
-//#include "notesagentsettings.h"
+#include "notesagentadaptor.h"
+#include "notesagentsettings.h"
 
 #include <Akonadi/KMime/SpecialMailCollections>
 #include <Akonadi/AgentInstance>
@@ -43,7 +43,7 @@ NotesAgent::NotesAgent(const QString &id)
 {
     mNotesManager = new NotesManager(this);
     KGlobal::locale()->insertCatalog( QLatin1String("akonadi_notes_agent") );
-    //new NotesAgentAdaptor( this );
+    new NotesAgentAdaptor( this );
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/NotesAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.NotesAgent" ) );
 
@@ -113,25 +113,7 @@ void NotesAgent::slotSendNow(Akonadi::Item::Id id)
 
 void NotesAgent::showConfigureDialog(qlonglong windowId)
 {
-    QPointer<SendLaterConfigureDialog> dialog = new SendLaterConfigureDialog();
-    if (windowId) {
-#ifndef Q_WS_WIN
-        KWindowSystem::setMainWindow( dialog, windowId );
-#else
-        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
-#endif
-    }
-    connect(this, SIGNAL(needUpdateConfigDialogBox()), dialog, SLOT(slotNeedToReloadConfig()));
-    connect(dialog, SIGNAL(sendNow(Akonadi::Item::Id)), this, SLOT(slotSendNow(Akonadi::Item::Id)));
-    if (dialog->exec()) {
-        mManager->load();
-        QList<Akonadi::Item::Id> listMessage = dialog->messagesToRemove();
-        if (!listMessage.isEmpty()) {
-            //Will delete in specific job when done.
-            new SendLaterRemoveMessageJob(listMessage, this);
-        }
-    }
-    delete dialog;
+    //TODO
 }
 
 void NotesAgent::itemsRemoved( const Akonadi::Item::List &items )
