@@ -120,12 +120,12 @@ void HubicJob::getTokenAccess(const QString &authorizeCode)
 
 void HubicJob::uploadFile(const QString &filename)
 {
-
+    mActionType = UploadFiles;
 }
 
 void HubicJob::listFolder()
 {
-
+    mActionType = ListFolder;
 }
 
 void HubicJob::accountInfo()
@@ -147,12 +147,13 @@ void HubicJob::accountInfo()
 
 void HubicJob::createFolder(const QString &filename)
 {
+    mActionType = CreateFolder;
 
 }
 
 void HubicJob::shareLink(const QString &root, const QString &path)
 {
-
+    mActionType = ShareLink;
 }
 
 
@@ -236,12 +237,14 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
 void HubicJob::parseAccountInfo(const QString &data)
 {
     //TODO
+    qDebug()<<" data "<<data;
     deleteLater();
 }
 
 void HubicJob::parseCreateFolder(const QString &data)
 {
     //TODO
+    qDebug()<<" data "<<data;
     Q_EMIT createFolderDone();
     deleteLater();
 }
@@ -249,6 +252,7 @@ void HubicJob::parseCreateFolder(const QString &data)
 void HubicJob::parseUploadFile(const QString &data)
 {
     //TODO
+    qDebug()<<" data "<<data;
     Q_EMIT uploadFileDone();
     deleteLater();
 }
