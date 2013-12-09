@@ -88,17 +88,13 @@ void YouSendItJob::listFolder()
 void YouSendItJob::accountInfo()
 {
     mActionType = AccountInfo;
-    QUrl url(mDefaultUrl + QLatin1String("/dpi/v2 v/user"));
+    QUrl url(mDefaultUrl + QLatin1String("/dpi/v2/user"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("email", mUsername.toLatin1());
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
     request.setRawHeader("Accept", "application/json");
-
-    QUrl postData;
-
-    postData.addQueryItem(QLatin1String("email"), mUsername);
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
