@@ -145,8 +145,7 @@ void YouSendItStorageService::uploadFile(const QString &filename)
 
 QString YouSendItStorageService::description()
 {
-    //TODO
-    return QString();//i18n("");
+    return i18n("YouSendIt is a file hosting that offers cloud storage, file synchronization, and client software.");
 }
 
 QUrl YouSendItStorageService::serviceUrl()
