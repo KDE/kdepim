@@ -100,9 +100,18 @@ void YouSendItJob::accountInfo()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void YouSendItJob::createFolder(const QString &filename)
+void YouSendItJob::createFolder(const QString &foldername)
 {
-
+    mActionType = CreateFolder;
+    QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder"));
+    url.addQueryItem(QLatin1String("name"),foldername);
+    QNetworkRequest request(url);
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 
@@ -155,7 +164,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case CreateFolder:
-        deleteLater();
+        parseCreateFolder(data);
         break;
     case AccountInfo:
         parseAccountInfo(data);
@@ -185,6 +194,16 @@ void YouSendItJob::parseRequestToken(const QString &data)
 }
 
 void YouSendItJob::parseAccountInfo(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+    qDebug()<<" data "<<data;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    deleteLater();
+}
+
+void YouSendItJob::parseCreateFolder(const QString &data)
 {
     QJson::Parser parser;
     bool ok;
