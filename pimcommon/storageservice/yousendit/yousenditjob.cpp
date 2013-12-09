@@ -88,7 +88,7 @@ void YouSendItJob::listFolder()
 void YouSendItJob::accountInfo()
 {
     mActionType = AccountInfo;
-    QUrl url(mDefaultUrl + QLatin1String("/dpi/v2/user"));
+    QUrl url(mDefaultUrl + QLatin1String("/dpi/v2 v/user"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
@@ -173,6 +173,15 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
 
 void YouSendItJob::parseRequestToken(const QString &data)
 {
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("authToken"))) {
+        const QString authToken = info.value(QLatin1String("authToken")).toString();
+        Q_EMIT authorizationDone(mPassword, mUsername, authToken);
+    }
     qDebug()<<" data "<<data;
     deleteLater();
 }
