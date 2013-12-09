@@ -209,18 +209,10 @@ void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status st
   }
 
   if ( status == QDeclarativeView::Ready ) {
-#ifndef _WIN32_WCE
     if ( m_splashScreen ) {
       m_splashScreen->deleteLater();
       m_splashScreen = 0;
     }
-#else
-    show();
-    HWND hWnd = ::FindWindow( _T( "SplashScreen" ), NULL );
-    if (hWnd != NULL)
-      ::ShowWindow( hWnd, SW_HIDE );
-    SetCursor( LoadCursor( NULL, NULL ) );
-#endif
   }
 }
 

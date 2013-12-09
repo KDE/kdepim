@@ -33,9 +33,6 @@ int staticInitKConfigGroupGui();
 
 static inline bool runPreApplicationSetup( const KCmdLineOptions & opts ) {
 
-#ifdef _WIN32_WCE
-  QThread::currentThread()->setPriority(QThread::HighPriority);
-#endif
 #ifdef KDELIBS_STATIC_LIBS
   //This is needed to get KConfig working with QColor
   staticInitKConfigGroupGui();
