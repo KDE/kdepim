@@ -109,7 +109,7 @@ void OAuth2Job::parseRedirectUrl(const QUrl &url)
 void OAuth2Job::getTokenAccess(const QString &authorizeCode)
 {
     mActionType = AccessToken;
-    QNetworkRequest request(QUrl(mServiceUrl + QLatin1String("/oauth/token/")));
+    QNetworkRequest request(QUrl(mServiceUrl + mPathToken));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
     postData.addQueryItem(QLatin1String("code"), authorizeCode);

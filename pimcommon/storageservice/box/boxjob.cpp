@@ -27,6 +27,7 @@ BoxJob::BoxJob(QObject *parent)
     mRedirectUri = QLatin1String("https://bugs.kde.org/");
     mServiceUrl = QLatin1String("https://app.box.com");
     mAuthorizePath = QLatin1String("/api/oauth2/authorize/");
+    mPathToken = QLatin1String("/api/oauth2/token/");
 }
 
 BoxJob::~BoxJob()

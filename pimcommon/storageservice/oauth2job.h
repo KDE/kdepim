@@ -63,6 +63,7 @@ protected:
     QString mToken;
     QString mScope;
     QString mAuthorizePath;
+    QString mPathToken;
     qint64 mExpireInTime;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };

@@ -29,6 +29,7 @@ HubicJob::HubicJob(QObject *parent)
     mServiceUrl = QLatin1String("https://api.hubic.com");
     mScope = QLatin1String("account.r,links.rw");
     mAuthorizePath = QLatin1String("/oauth/auth/");
+    mPathToken = QLatin1String("/oauth/token/");
 }
 
 HubicJob::~HubicJob()
