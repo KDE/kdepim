@@ -80,6 +80,7 @@ void BoxStorageService::shareLink(const QString &root, const QString &path)
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->shareLink(root, path);
@@ -92,6 +93,7 @@ void BoxStorageService::listFolder()
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken);
         connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder();
@@ -104,6 +106,7 @@ void BoxStorageService::createFolder(const QString &folder)
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken);
         connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createFolder(folder);
@@ -116,6 +119,7 @@ void BoxStorageService::accountInfo()
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken);
         connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->accountInfo();
@@ -133,6 +137,7 @@ void BoxStorageService::uploadFile(const QString &filename)
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken);
         connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));

@@ -43,6 +43,11 @@ BoxJob::~BoxJob()
 
 }
 
+void BoxJob::initializeToken(const QString &refreshToken)
+{
+    mRefreshToken = refreshToken;
+}
+
 void BoxJob::requestTokenAccess()
 {
     mActionType = RequestToken;

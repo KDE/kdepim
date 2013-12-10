@@ -37,7 +37,8 @@ public:
     void listFolder();
     void accountInfo();
     void createFolder(const QString &filename);
-    void shareLink(const QString &root, const QString &path);
+    void shareLink(const QString &root, const QString &path);    
+    void initializeToken(const QString &refreshToken);
 
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken);
