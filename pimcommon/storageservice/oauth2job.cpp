@@ -86,22 +86,23 @@ void OAuth2Job::parseRedirectUrl(const QUrl &url)
     qDebug()<< "listQuery "<<listQuery;
 
     QString authorizeCode;
+    QString errorStr;
+    QString errorDescription;
     for (int i = 0; i < listQuery.size(); ++i) {
         const QPair<QString, QString> item = listQuery.at(i);
         if (item.first == QLatin1String("code")) {
             authorizeCode = item.second;
             break;
         } else if (item.first == QLatin1String("error")) {
-            //TODO
-            //parse error.
-
+            errorStr = item.second;
+        } else if (item.first == QLatin1String("error_description")) {
+            errorDescription = item.second;
         }
     }
     if (!authorizeCode.isEmpty()) {
         getTokenAccess(authorizeCode);
     } else {
-        //TODO parse error
-        Q_EMIT authorizationFailed(QString());
+        Q_EMIT authorizationFailed(errorStr + QLatin1Char(' ') + errorDescription);
         deleteLater();
     }
 }

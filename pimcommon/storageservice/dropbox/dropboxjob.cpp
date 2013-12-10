@@ -37,8 +37,7 @@
 using namespace PimCommon;
 
 DropBoxJob::DropBoxJob(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent),
-      mInitialized(false)
+    : PimCommon::StorageServiceAbstractJob(parent)
 {
     mOauthconsumerKey = QLatin1String("e40dvomckrm48ci");
     mOauthSignature = QLatin1String("0icikya464lny9g&");
@@ -59,7 +58,6 @@ void DropBoxJob::initializeToken(const QString &accessToken, const QString &acce
     mOauthToken = accessToken;
     mOauthTokenSecret = accessTokenSecret;
     mAccessOauthSignature = accessOauthSignature;
-    mInitialized = true;
 }
 
 void DropBoxJob::requestTokenAccess()

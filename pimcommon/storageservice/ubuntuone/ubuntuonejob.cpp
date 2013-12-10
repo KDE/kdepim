@@ -249,6 +249,23 @@ void UbuntuOneJob::parseListFolder(const QString &data)
     deleteLater();
 }
 
+void UbuntuOneJob::createServiceFolder()
+{
+    mActionType = CreateServiceFolder;
+    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/") + mAttachmentVolume));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
+
+    postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
+    postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
+    postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
+    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
 void UbuntuOneJob::parseCreateFolder(const QString &data)
 {
     //TODO
