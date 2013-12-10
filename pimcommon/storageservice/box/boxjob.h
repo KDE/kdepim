@@ -19,51 +19,14 @@
 #define BoxJob_H
 
 #include <QObject>
-#include <QPointer>
-#include "storageservice/storageserviceabstractjob.h"
-class QNetworkReply;
+#include "storageservice/oauth2job.h"
 namespace PimCommon {
-class StorageAuthViewDialog;
-
-class BoxJob : public PimCommon::StorageServiceAbstractJob
+class BoxJob : public PimCommon::OAuth2Job
 {
     Q_OBJECT
 public:
     explicit BoxJob(QObject *parent=0);
     ~BoxJob();
-
-    void requestTokenAccess();
-    void uploadFile(const QString &filename);
-    void listFolder();
-    void accountInfo();
-    void createFolder(const QString &filename);
-    void shareLink(const QString &root, const QString &path);    
-    void initializeToken(const QString &refreshToken);
-
-Q_SIGNALS:
-    void authorizationDone(const QString &refreshToken);
-
-private slots:
-    void slotSendDataFinished(QNetworkReply *reply);
-    void slotRedirect(const QUrl &url);
-
-private:
-    void parseUploadFiles(const QString &data);
-    void parseCreateFolder(const QString &data);
-    void parseAccountInfo(const QString &data);
-    void parseListFolder(const QString &data);
-    void parseRedirectUrl(const QUrl &url);
-    void getTokenAccess(const QString &authorizeCode);
-    void parseAccessToken(const QString &data);
-    void refreshToken();
-    QString mClientId;
-    QString mClientSecret;
-    QString mRedirectUri;
-    QString mRefreshToken;
-    QString mToken;
-    qint64 mExpireInTime;
-    QUrl mAuthUrl;
-    QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };
 }
 

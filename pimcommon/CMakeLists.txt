@@ -44,7 +44,8 @@ set(libpimcommon_storageservice_SRCS
   storageservice/webdav/webdavsettingsdialog.cpp
   storageservice/storageserviceutils.cpp
   storageservice/box/boxjob.cpp
-  storageservice/box/boxstorageservice.cpp 
+  storageservice/box/boxstorageservice.cpp
+  storageservice/oauth2job.cpp 
 )
 
 set(libpimcommon_autocorrection_SRCS
