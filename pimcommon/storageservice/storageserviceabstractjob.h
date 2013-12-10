@@ -60,7 +60,8 @@ protected:
         CreateFolder,
         ListFolder,
         AccountInfo,
-        ShareLink
+        ShareLink,
+        CreateServiceFolder
     };
     void errorMessage(PimCommon::StorageServiceAbstractJob::ActionType type, const QString &errorStr);
 

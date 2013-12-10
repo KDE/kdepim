@@ -72,7 +72,24 @@ void UbuntuOneJob::uploadFile(const QString &filename)
 
 void UbuntuOneJob::listFolder()
 {
+    mActionType = ListFolder;
+    QUrl url(QLatin1String("https://one.ubuntu.com/api/file_storage/v1"));
+    url.addQueryItem(QLatin1String("oauth_consumer_key"), mCustomerKey);
+    url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
 
+    const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
+
+    url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    url.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
+    url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
+    url.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
+    url.addQueryItem(QLatin1String("oauth_token"), mToken);
+    QNetworkRequest request(url);
+    qDebug()<<" url "<<url;
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void UbuntuOneJob::accountInfo()
@@ -90,19 +107,17 @@ void UbuntuOneJob::accountInfo()
     url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
     url.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
     url.addQueryItem(QLatin1String("oauth_token"), mToken);
-    qDebug()<<" accountInfo "<<url;
     QNetworkRequest request(url);
     qDebug()<<" url "<<url;
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
 
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-
 }
 
 void UbuntuOneJob::createFolder(const QString &filename)
 {
-
+    mActionType = CreateFolder;
 }
 
 void UbuntuOneJob::shareLink(const QString &root, const QString &path)
@@ -157,6 +172,9 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
+            case CreateServiceFolder:
+                deleteLater();
+                break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
                 deleteLater();
@@ -188,6 +206,10 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     case ListFolder:
         parseListFolder(data);
         break;
+    case CreateServiceFolder:
+        //TODO
+        deleteLater();
+        break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
@@ -195,8 +217,22 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
 
 void UbuntuOneJob::parseListFolder(const QString &data)
 {
-    //TODO
     qDebug()<<" data "<<data;
+    QJson::Parser parser;
+    bool ok;
+
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info "<<info;
+    if (info.contains(QLatin1String("user_node_paths"))) {
+        qDebug()<<" list folder "<<info.value(QLatin1String("user_node_paths"));
+        QVariantList lst = info.value(QLatin1String("user_node_paths")).toList();
+        if (lst.contains(mAttachmentVolume)) {
+            qDebug()<<" Has kmail folder";
+        } else {
+            qDebug()<<"doesn't have kmail folder";
+            //FIXME create folder !
+        }
+    }
     Q_EMIT listFolderDone();
     deleteLater();
 }
@@ -235,6 +271,7 @@ void UbuntuOneJob::parseAccountInfo(const QString &data)
 
 void UbuntuOneJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *auth)
 {
+    //FIXME when account is not ok.
     qDebug()<<"slotAuthenticationRequired ";
     auth->setUser(mUsername);
     auth->setPassword(mPassword);
@@ -269,8 +306,15 @@ void UbuntuOneJob::finishGetToken()
 {
     //FIXME
     mActionType = AccessToken;
-    QUrl url(QLatin1String("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/"));
-    QNetworkRequest request(url);
-    QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+
+    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
+    postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
+    postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
+
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));    
 }
