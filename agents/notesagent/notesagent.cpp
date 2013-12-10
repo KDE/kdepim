@@ -56,9 +56,9 @@ NotesAgent::NotesAgent(const QString &id)
 
     if (NotesAgentSettings::enabled()) {
 #ifdef DEBUG_NOTESAGENT
-        QTimer::singleShot(1000, mManager, SLOT(load()));
+        QTimer::singleShot(1000, mNotesManager, SLOT(load()));
 #else
-        QTimer::singleShot(1000*60*4, mManager, SLOT(load()));
+        QTimer::singleShot(1000*60*4, mNotesManager, SLOT(load()));
 #endif
     }
 }
@@ -72,14 +72,14 @@ void NotesAgent::doSetOnline( bool online )
     if (online) {
         reload();
     } else {
-        mManager->stopAll();
+        mNotesManager->stopAll();
     }
 }
 
 void NotesAgent::reload()
 {
     if (NotesAgentSettings::enabled())
-        mManager->load(true);
+        mNotesManager->load(true);
 }
 
 void NotesAgent::setEnableAgent(bool enabled)
@@ -90,9 +90,9 @@ void NotesAgent::setEnableAgent(bool enabled)
     NotesAgentSettings::setEnabled(enabled);
     NotesAgentSettings::self()->writeConfig();
     if (enabled) {
-        mManager->load();
+        mNotesManager->load();
     } else {
-        mManager->stopAll();
+        mNotesManager->stopAll();
     }
 }
 
@@ -106,36 +106,14 @@ void NotesAgent::configure( WId windowId )
     showConfigureDialog(windowId);
 }
 
-void NotesAgent::slotSendNow(Akonadi::Item::Id id)
-{
-    mManager->sendNow(id);
-}
-
 void NotesAgent::showConfigureDialog(qlonglong windowId)
 {
     //TODO
 }
 
-void NotesAgent::itemsRemoved( const Akonadi::Item::List &items )
-{
-    Q_FOREACH(const Akonadi::Item &item, items) {
-       mManager->itemRemoved(item.id());
-    }
-}
-
-void NotesAgent::itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &/*sourceCollection*/, const Akonadi::Collection &destinationCollection)
-{
-    if (Akonadi::SpecialMailCollections::self()->specialCollectionType(destinationCollection) != Akonadi::SpecialMailCollections::Trash) {
-        return;
-    }
-    Q_FOREACH(const Akonadi::Item &item, items) {
-        mManager->itemRemoved(item.id());
-    }
-}
-
 void NotesAgent::printDebugInfo()
 {
-    mManager->printDebugInfo();
+    mNotesManager->printDebugInfo();
 }
 
 AKONADI_AGENT_MAIN( NotesAgent )

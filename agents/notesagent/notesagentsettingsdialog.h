@@ -15,32 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef NOTESAGENTSETTINGSDIALOG_H
+#define NOTESAGENTSETTINGSDIALOG_H
 
-#include "notesmanager.h"
+#include <KDialog>
 
-NotesManager::NotesManager(QObject *parent)
-    : QObject(parent)
+class KAboutData;
+class NotesAgentSettingsDialog : public KDialog
 {
-}
+    Q_OBJECT
+public:
+    explicit NotesAgentSettingsDialog(QWidget *parent=0);
+    ~NotesAgentSettingsDialog();
 
-NotesManager::~NotesManager()
-{
+private:
+    void writeConfig();
+    void readConfig();
+    KAboutData *mAboutData;
+};
 
-}
-
-
-void NotesManager::printDebugInfo()
-{
-    //TODO
-}
-
-
-void NotesManager::load(bool forced)
-{
-
-}
-
-void NotesManager::stopAll()
-{
-
-}
+#endif // NOTESAGENTSETTINGSDIALOG_H

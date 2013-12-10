@@ -5,5 +5,6 @@ add_subdirectory(folderarchiveagent)
 add_subdirectory(sendlateragent)
 add_subdirectory(archivemailagent)
 add_subdirectory(mailfilteragent)
+add_subdirectory(notesagent)
 #comment until 4.13
 #add_subdirectory(followupreminderagent)

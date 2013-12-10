@@ -29,6 +29,8 @@ public:
     ~NotesManager();
 
     void printDebugInfo();
+    void load(bool forced=false);
+    void stopAll();
 };
 
 #endif // NOTESMANAGER_H

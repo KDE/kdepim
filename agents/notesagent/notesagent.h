@@ -43,8 +43,6 @@ public Q_SLOTS:
     void configure( WId windowId );
 
 protected:
-    void itemsRemoved( const Akonadi::Item::List &item );
-    void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection, const Akonadi::Collection &destinationCollection);
     void doSetOnline( bool online );
 
 private:

@@ -38,7 +38,7 @@
 static QString archiveMailCollectionPattern = QLatin1String( "ArchiveMailCollection \\d+" );
 
 ArchiveMailDialog::ArchiveMailDialog(QWidget *parent)
-    :KDialog(parent)
+    : KDialog(parent)
 {
     setCaption( i18n( "Configure Archive Mail Agent" ) );
     setWindowIcon( KIcon( QLatin1String("kmail") ) );
