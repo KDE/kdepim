@@ -58,6 +58,22 @@ void BoxStorageService::authentification()
     job->requestTokenAccess();
 }
 
+void BoxStorageService::slotAuthorizationFailed()
+{
+    mRefreshToken.clear();
+    Q_EMIT authentificationFailed(serviceName());
+}
+
+void BoxStorageService::slotAuthorizationDone(const QString &refreshToken)
+{
+    mRefreshToken = refreshToken;
+    KConfigGroup grp(KGlobal::config(), "Box Settings");
+    grp.writeEntry("Refresh Token", mRefreshToken);
+    grp.sync();
+    Q_EMIT authentificationDone(serviceName());
+}
+
+
 void BoxStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {

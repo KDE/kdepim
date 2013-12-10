@@ -45,9 +45,14 @@ public:
     QString storageServiceName() const;
     KIcon icon() const;
 
+private slots:
+    void slotAuthorizationDone(const QString &refreshToken);
+    void slotAuthorizationFailed();
+
 private:
     void readConfig();
     QString mToken;
+    QString mRefreshToken;
 };
 }
 

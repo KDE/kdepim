@@ -39,10 +39,13 @@ public:
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
 
+Q_SIGNALS:
+    void authorizationDone(const QString &refreshToken);
+
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
-
     void slotRedirect(const QUrl &url);
+
 private:
     void parseUploadFiles(const QString &data);
     void parseCreateFolder(const QString &data);
