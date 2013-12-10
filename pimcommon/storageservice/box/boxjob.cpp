@@ -43,7 +43,7 @@ BoxJob::~BoxJob()
 void BoxJob::requestTokenAccess()
 {
     mActionType = RequestToken;
-    QUrl url(QLatin1String("https://www.box.com/api/oauth2/authorize/"));
+    QUrl url(QLatin1String("https://app.box.com/api/oauth2/authorize/"));
     url.addQueryItem(QLatin1String("response_type"), QLatin1String("code"));
     url.addQueryItem(QLatin1String("client_id"), mClientId);
     url.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
@@ -100,7 +100,7 @@ void BoxJob::parseRedirectUrl(const QUrl &url)
 void BoxJob::getTokenAccess(const QString &authorizeCode)
 {
     mActionType = AccessToken;
-    QNetworkRequest request(QUrl(QLatin1String("https://www.box.com/api/oauth2/token/")));
+    QNetworkRequest request(QUrl(QLatin1String("https://app.box.com/api/oauth2/token/")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
     postData.addQueryItem(QLatin1String("code"), authorizeCode);
