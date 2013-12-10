@@ -54,6 +54,7 @@ void ContactDisplayMessageMemento::slotSearchJobFinished( KJob *job )
 
     const int contactSize( searchJob->contacts().size() );
     if ( contactSize >= 1 ) {
+        searchPhoto(searchJob->contacts());
         KABC::Addressee addressee = searchJob->contacts().first();
         processAddress( addressee );
         emit update( Viewer::Delayed );
@@ -88,9 +89,18 @@ bool ContactDisplayMessageMemento::forceToText() const
     return ( mForceDisplayTo == Viewer::Text );
 }
 
+void ContactDisplayMessageMemento::searchPhoto(const KABC::AddresseeList &list)
+{
+    Q_FOREACH (const KABC::Addressee &addressee, list) {
+        if (!addressee.photo().isEmpty()) {
+            mPhoto = addressee.photo();
+            break;
+        }
+    }
+}
+
 void ContactDisplayMessageMemento::processAddress( const KABC::Addressee& addressee )
 {
-    mPhoto = addressee.photo();
     const QStringList customs = addressee.customs();
     Q_FOREACH ( const QString& custom, customs ) {
         if ( custom.contains(QLatin1String( "MailPreferedFormatting")) ) {
