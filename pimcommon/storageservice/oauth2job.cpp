@@ -149,10 +149,21 @@ void OAuth2Job::accountInfo()
 */
 }
 
-void OAuth2Job::createFolder(const QString &filename)
+void OAuth2Job::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
-
+    /*
+    QNetworkRequest request(QUrl(mServiceUrl + mPathToken));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("code"), authorizeCode);
+    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
+    postData.addQueryItem(QLatin1String("client_id"), mClientId);
+    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    */
 }
 
 void OAuth2Job::shareLink(const QString &root, const QString &path)
