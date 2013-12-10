@@ -49,7 +49,7 @@ Q_SIGNALS:
     void createFolderDone();
     void uploadFileDone();
     void listFolderDone();
-    void authorizationFailed();
+    void authorizationFailed(const QString &error);
 
 protected:
     enum ActionType {

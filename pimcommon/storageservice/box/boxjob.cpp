@@ -91,7 +91,8 @@ void BoxJob::parseRedirectUrl(const QUrl &url)
     if (!authorizeCode.isEmpty()) {
         getTokenAccess(authorizeCode);
     } else {
-        //TODO emit error signal
+        //TODO?
+        Q_EMIT authorizationFailed(QString());
         deleteLater();
     }
 

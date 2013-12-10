@@ -56,16 +56,16 @@ void YouSendItStorageService::authentification()
 {
     YouSendItJob *job = new YouSendItJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-    connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
 
-void YouSendItStorageService::slotAuthorizationFailed()
+void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mUsername.clear();
     mPassword.clear();
     mToken.clear();
-    Q_EMIT authentificationFailed(serviceName());
+    Q_EMIT authentificationFailed(serviceName(), errorMessage);
 }
 
 

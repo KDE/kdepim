@@ -75,7 +75,7 @@ void UbuntuoneStorageService::authentification()
 {
     UbuntuOneJob *job = new UbuntuOneJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
-    connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
 
@@ -105,13 +105,13 @@ void UbuntuoneStorageService::createFolder(const QString &folder)
     }
 }
 
-void UbuntuoneStorageService::slotAuthorizationFailed()
+void UbuntuoneStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mCustomerSecret.clear();
     mToken.clear();
     mCustomerKey.clear();
     mTokenSecret.clear();
-    Q_EMIT authentificationFailed(serviceName());
+    Q_EMIT authentificationFailed(serviceName(), errorMessage);
 }
 
 void UbuntuoneStorageService::accountInfo()

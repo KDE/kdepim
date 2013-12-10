@@ -98,7 +98,8 @@ void HubicJob::parseRedirectUrl(const QUrl &url)
     if (!authorizeCode.isEmpty()) {
         getTokenAccess(authorizeCode);
     } else {
-        //TODO emit error signal
+        //TODO parse error
+        Q_EMIT authorizationFailed(QString());
         deleteLater();
     }
 }
@@ -177,7 +178,7 @@ void HubicJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case AccessToken:
-                Q_EMIT authorizationFailed();
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case UploadFiles:

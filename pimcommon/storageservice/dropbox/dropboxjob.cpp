@@ -217,7 +217,7 @@ void DropBoxJob::parseResponseAccessToken(const QString &data)
 {
     if(data.contains(QLatin1String("error"))) {
         qDebug()<<" return error !";
-        Q_EMIT authorizationFailed();
+        Q_EMIT authorizationFailed(data);
     } else {
         QStringList split           = data.split(QLatin1Char('&'));
         QStringList tokenSecretList = split.at(0).split(QLatin1Char('='));

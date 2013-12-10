@@ -48,7 +48,7 @@ public:
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
-    void slotAuthorizationFailed();
+    void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
     void readConfig();

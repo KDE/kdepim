@@ -47,7 +47,7 @@ public:
 
 private slots:
     void slotAuthorizationDone(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
-    void slotAuthorizationFailed();
+    void slotAuthorizationFailed(const QString &errorMessage);
 private:
     void readConfig();
     QString mCustomerSecret;

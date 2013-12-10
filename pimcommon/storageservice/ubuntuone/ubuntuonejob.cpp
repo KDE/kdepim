@@ -138,7 +138,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case AccessToken:
-                Q_EMIT authorizationFailed();
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case UploadFiles:

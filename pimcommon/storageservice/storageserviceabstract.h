@@ -61,7 +61,7 @@ Q_SIGNALS:
     void uploadFileProgress(const QString &serviceName, qint64 done,qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
     void authentificationDone(const QString &serviceName);
-    void authentificationFailed(const QString &serviceName);
+    void authentificationFailed(const QString &serviceName, const QString &error = QString());
     void createFolderDone(const QString &serviceName);
     void uploadFileDone(const QString &serviceName);
     void listFolderDone(const QString &serviceName);

@@ -217,7 +217,8 @@ void YouSendItJob::parseRequestToken(const QString &data)
         const QString authToken = info.value(QLatin1String("authToken")).toString();
         Q_EMIT authorizationDone(mPassword, mUsername, authToken);
     } else {
-        Q_EMIT authorizationFailed();
+        //TODO
+        Q_EMIT authorizationFailed(QString());
     }
     deleteLater();
 }
