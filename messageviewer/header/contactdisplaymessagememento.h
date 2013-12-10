@@ -57,6 +57,7 @@ private Q_SLOTS:
     void slotSearchJobFinished( KJob *job );
 
 private:
+    void searchPhoto(const KABC::AddresseeList &list);
     bool mFinished;
     bool mMailAllowToRemoteContent;
     Viewer::ForceDisplayTo mForceDisplayTo;
