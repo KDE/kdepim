@@ -35,7 +35,7 @@ public:
     void uploadFile(const QString &filename);
     void listFolder();
     void accountInfo();
-    void createFolder(const QString &filename);
+    void createFolder(const QString &foldername);
     void shareLink(const QString &root, const QString &path);
 
 

@@ -115,9 +115,21 @@ void UbuntuOneJob::accountInfo()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void UbuntuOneJob::createFolder(const QString &filename)
+void UbuntuOneJob::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
+    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/") + foldername));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
+
+    postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
+    postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
+    postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
+    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void UbuntuOneJob::shareLink(const QString &root, const QString &path)
