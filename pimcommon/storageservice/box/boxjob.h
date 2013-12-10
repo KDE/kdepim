@@ -55,6 +55,7 @@ private:
     void parseRedirectUrl(const QUrl &url);
     void getTokenAccess(const QString &authorizeCode);
     void parseAccessToken(const QString &data);
+    void refreshToken();
     QString mClientId;
     QString mClientSecret;
     QString mRedirectUri;
