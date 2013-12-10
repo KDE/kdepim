@@ -1,20 +1,17 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
 "dtd/kdex.dtd" [
-  <!-- Define an entity for your application if it is not part of KDE
-       CVS -->
-  <!ENTITY kapplication "<application>KMailCVT</application>">
-  <!ENTITY kappname "&kapplication;">
-  <!ENTITY package "kdepim">
+
+  <!ENTITY i18n-kmailcvt "<application>KMailCVT</application>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"> 
 ]>
 
-<book id="kmailcvt" lang="&language;">
+<article id="kmailcvt" lang="&language;">
 
-<bookinfo id="kmailcvtinfo">
+<articleinfo id="kmailcvtinfo">
 
-<title>The &kapplication; Handbook</title>
+<title>The &i18n-kmailcvt; Handbook</title>
 
 <authorgroup>
 <author>
@@ -41,25 +38,15 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2013-06-11</date>
-<releaseinfo>1.0</releaseinfo>
+<date>2013-12-10</date>
+<releaseinfo>&kde; 4.12</releaseinfo>
 
-<abstract>
-<para>
-&kapplication; assists in importing email messages.
-</para>
-</abstract>
+</articleinfo>
 
-<keywordset>
-<keyword>KDE</keyword>
-<keyword>KMail</keyword>
-</keywordset>
-
-</bookinfo>
-<chapter id="introduction">
+<sect1 id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; is to be used to import your email messages if your previous email application/format is listed below.</para>
+<para>&i18n-kmailcvt; is to be used to import your email messages if your previous email application/format is listed below.</para>
   <simplelist>
     <member>KMail Archive</member>
     <member>mbox(Unix, Evolution)</member>
@@ -77,17 +64,17 @@
     <member>Lotus Notes</member>
     <member>Plain Text</member>
   </simplelist>
-<para>If your previous email application/format is not listed here, please see <ulink url="help:/kmail/importing.html">Importing</ulink>
+<para>If your previous email application/format is not listed here, please see <ulink url="help:/kmail/import-restore.html#importing-options">Import Options</ulink>
  for other importing options.</para>
 
-</chapter>
 
-<chapter id="using-kapp">
-<title>Using &kapplication;</title>
+
+<sect2 id="using-kapp">
+<title>Using &i18n-kmailcvt;</title>
 
 <para>
 <screenshot>
-<screeninfo>Screenshot of &kapplication;</screeninfo>
+<screeninfo>Screenshot of &i18n-kmailcvt;</screeninfo>
   <mediaobject>
     <imageobject>
       <imagedata fileref="kmailcvt.png" format="PNG" />
@@ -96,32 +83,25 @@
 </screenshot>
 </para>
 
-
-
-<sect1 id="kmailcvt-basic-usage">
-<title>&kapplication; Basic Usage</title>
-<para>&kapplication; is a tool that allows easy importing from supported application.
+<para>&i18n-kmailcvt; is a tool that allows easy importing from supported applications.
  Access it using <menuchoice><guimenu>File</guimenu><guimenuitem>Import Messages</guimenuitem></menuchoice>
-within &kmail; or run &kapplication; as a stand alone application.</para>
+within &kmail; or run &i18n-kmailcvt; stand alone from the &kde; application launcher.</para>
 <note><para> Please make sure that you compact your folders in the other email client.</para></note>
-<para>Select your previous email program from the drop down box. The center text area of &kapplication; will update
+<para>Select your previous email program from the drop down box. The center text area of &i18n-kmailcvt; will update
  with special instructions (if applicable), and the known location of email message storage for that application.
  Follow these instructions, then select the folder you wish to import your messages to.</para>
-<para>If you want the &kapplication; tool to remove duplicate messages, check <guilabel>Remove duplicate messages during import</guilabel>.
+<para>If you want the &i18n-kmailcvt; tool to remove duplicate messages, check <guilabel>Remove duplicate messages during import</guilabel>.
  A file select dialog will pop up and you need to select the file/folder noted in the instructions.
  Click the <guibutton>Next</guibutton> button to complete the import. When the import is finished you
  can click the <guibutton>Back</guibutton> button to import from another application or the <guibutton>Finish</guibutton> button to exit.
 </para>
+</sect2>
 
-</sect1>
-
-</chapter>
-
-<chapter id="credits">
+<sect2 id="credits">
 
 <title>Credits and License</title>
 
-<para>&kapplication;</para>
+<para>&i18n-kmailcvt;</para>
 <para>
 Program copyright 2013 Laurent Montel montel@kde.org 
 </para>
@@ -134,23 +114,13 @@ and Scarlett Clark scarlett@scarlettgatelyclark.com
 
 &underFDL;               <!-- FDL: do not remove -->
 &underGPL;        	 <!-- GPL License -->
-</chapter>
+</sect2>
 
-<appendix id="installation">
-<title>Installation</title>
-
-<sect1 id="compilation">
-<title>Compilation and Installation</title>
-
-&install.compile.documentation;
 
 </sect1>
 
-</appendix>
 
-&documentation.index;
-</book>
-
+</article>
 <!--
 Local Variables:
 mode: xml
