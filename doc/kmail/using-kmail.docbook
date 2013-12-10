@@ -647,7 +647,7 @@ Message List</link> tab in the <guilabel>Appearance</guilabel> page.</para>
 <title>Retrieval</title>
 <para>If you have an account that does not receive much mail and you don't want &kmail; to query the server as often, you can uncheck <guilabel>Use options from parent folder or account</guilabel> to set
   a higher interval in <guilabel>Automatically synchronize after:</guilabel> spin box.</para>
-<para>In <guilabel>Retrieval Options</guilabel> you can change <guilabel>Always retreive full messages</guilabel> option to <guilabel>Retreive message
+<para>In <guilabel>Retrieval Options</guilabel> you can change <guilabel>Always retrieve full messages</guilabel> option to <guilabel>Retrieve message
 bodies on demand</guilabel> if you have a slow connection. You can set how long the message will remain locally in the following spin box.
 </para>
 
@@ -663,9 +663,9 @@ Standard Templates</link> tab in the <guilabel>Composer</guilabel> page
 <sect3 id="folders-properties-expiry">
 <title>Expiry</title>
 <para>You can set automatic cleanup or deletion of emails in this tab. Check the box if you would like to automatically expire
-read or unread messages respectively. Set the amount of days in the spinbox. If you do not want to permanantly delete the messages you can
-assign a folder to move them to in <guilabel>Move expired messages to:</guilabel> textbox or folder selection dialog. Once you have reviewed the messages and want to permanantly
-delete them, you can go to the folder expiry options of the folder you chose to move them to and set the option <guilabel>Delete expired messages permanantly</guilabel>, then click
+read or unread messages respectively. Set the amount of days in the spinbox. If you do not want to permanently delete the messages you can
+assign a folder to move them to in <guilabel>Move expired messages to:</guilabel> textbox or folder selection dialog. Once you have reviewed the messages and want to permanently
+delete them, you can go to the folder expiry options of the folder you chose to move them to and set the option <guilabel>Delete expired messages permanently</guilabel>, then click
 the <guibutton>Save Settings and Expire Now</guibutton>.
 </para>
 <warning><para>Messages that are deleted during expiration of old messages
