@@ -203,7 +203,7 @@ void Kernel::createDefaultCollectionDone( KJob *job )
 
 void Kernel::slotDefaultCollectionsChanged()
 {
-  disconnect( Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollection
+  disconnect( Akonadi::SpecialMailCollections::self(), SIGNAL(defaultCollectionsChanged()),
               this, SLOT(slotDefaultCollectionsChanged()));
   initFolders();
 }
