@@ -96,7 +96,6 @@ void HubicStorageService::createFolder(const QString &folder)
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createFolder(folder);
     }
-
 }
 
 void HubicStorageService::accountInfo()

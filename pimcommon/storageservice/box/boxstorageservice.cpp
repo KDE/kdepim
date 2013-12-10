@@ -40,7 +40,7 @@ BoxStorageService::~BoxStorageService()
 void BoxStorageService::readConfig()
 {
     KConfigGroup grp(KGlobal::config(), "Box Settings");
-
+    mRefreshToken = grp.readEntry("Refresh Token");
 }
 
 void BoxStorageService::removeConfig()
@@ -147,13 +147,12 @@ void BoxStorageService::uploadFile(const QString &filename)
 
 QString BoxStorageService::description()
 {
-    //TODO
-    return QString(); // i18n("");
+    return i18n("Box.com is a file hosting that offers cloud storage, file synchronization, and client software.");
 }
 
 QUrl BoxStorageService::serviceUrl()
 {
-    return QUrl(QLatin1String(""));
+    return QUrl(QLatin1String("https://app.box.com/"));
 }
 
 QString BoxStorageService::serviceName()
