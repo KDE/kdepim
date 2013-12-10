@@ -21,13 +21,11 @@
 #include "blogilocomposerview.h"
 #include "pimcommon/widgets/customtoolswidget.h"
 
-#include <KLocale>
 #include <KToggleAction>
 
 #include <QApplication>
 #include <QTimer>
 #include <QMouseEvent>
-#include <QAction>
 #include <QMenu>
 
 BlogiloComposerView::BlogiloComposerView(QWidget * parent)

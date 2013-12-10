@@ -26,7 +26,6 @@
 #define HTMLEDITOR_H
 
 #include <QObject>
-#include <QString>
 
 namespace KTextEditor 
 {
