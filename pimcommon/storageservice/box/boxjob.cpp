@@ -16,7 +16,7 @@
 */
 
 #include "boxjob.h"
-
+#include "storageservice/storageauthviewdialog.h"
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
@@ -29,8 +29,8 @@ using namespace PimCommon;
 BoxJob::BoxJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
-    mClientId = QLatin1String("");
-    mClientSecret = QLatin1String("");
+    mClientId = QLatin1String("o4sn4e0dvz50pd3ps6ao3qxehvqv8dyo");
+    mClientSecret = QLatin1String("wLdaOgrblYzi1Y6WN437wStvqighmSJt");
     mRedirectUri = QLatin1String("https://bugs.kde.org/");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
@@ -42,8 +42,76 @@ BoxJob::~BoxJob()
 
 void BoxJob::requestTokenAccess()
 {
-    //TODO
+    mActionType = RequestToken;
+    QUrl url(QLatin1String("https://www.box.com/api/oauth2/authorize/"));
+    url.addQueryItem(QLatin1String("response_type"), QLatin1String("code"));
+    url.addQueryItem(QLatin1String("client_id"), mClientId);
+    url.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    mAuthUrl = url;
+    qDebug()<<" url"<<url;
+    delete mAuthDialog;
+    mAuthDialog = new PimCommon::StorageAuthViewDialog;
+    connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
+    mAuthDialog->setUrl(url);
+    if (mAuthDialog->exec()) {
+        //TODO
+    } else {
+        //TODO
+    }
+    delete mAuthDialog;
 }
+
+void BoxJob::slotRedirect(const QUrl &url)
+{
+    if (url != mAuthUrl) {
+        qDebug()<<" Redirect !"<<url;
+        mAuthDialog->accept();
+        parseRedirectUrl(url);
+    }
+}
+
+
+void BoxJob::parseRedirectUrl(const QUrl &url)
+{
+    const QList<QPair<QString, QString> > listQuery = url.queryItems();
+    qDebug()<< "listQuery "<<listQuery;
+
+    QString authorizeCode;
+    for (int i = 0; i < listQuery.size(); ++i) {
+        const QPair<QString, QString> item = listQuery.at(i);
+        if (item.first == QLatin1String("code")) {
+            authorizeCode = item.second;
+            break;
+        } else if (item.first == QLatin1String("error")) {
+            //TODO
+            //parse error.
+
+        }
+    }
+    if (!authorizeCode.isEmpty()) {
+        getTokenAccess(authorizeCode);
+    } else {
+        //TODO emit error signal
+        deleteLater();
+    }
+
+}
+
+void BoxJob::getTokenAccess(const QString &authorizeCode)
+{
+    mActionType = AccessToken;
+    QNetworkRequest request(QUrl(QLatin1String("https://www.box.com/api/oauth2/token/")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("code"), authorizeCode);
+    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
+    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
+    postData.addQueryItem(QLatin1String("client_id"), mClientId);
+    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
 
 void BoxJob::uploadFile(const QString &filename)
 {

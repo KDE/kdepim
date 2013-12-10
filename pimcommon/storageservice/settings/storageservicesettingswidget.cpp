@@ -22,6 +22,8 @@
 #include "storageservice/hubic/hubicstorageservice.h"
 #include "storageservice/ubuntuone/ubuntuonestorageservice.h"
 #include "storageservice/yousendit/yousenditstorageservice.h"
+#include "storageservice/box/boxstorageservice.h"
+#include "storageservice/webdav/webdavstorageservice.h"
 #include "settings/pimcommonsettings.h"
 #include <KLocale>
 #include <KMessageBox>
@@ -125,6 +127,10 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::WebDav);
             type = PimCommon::StorageServiceManager::WebDav;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::WebDav);
+        } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Box)) {
+            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Box);
+            type = PimCommon::StorageServiceManager::Box;
+            icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Box);
         }
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(serviceName);
@@ -180,6 +186,14 @@ void StorageServiceSettingsWidget::slotAddService()
         }
         case PimCommon::StorageServiceManager::YouSendIt: {
             storage = new PimCommon::YouSendItStorageService;
+            break;
+        }
+        case PimCommon::StorageServiceManager::Box: {
+            storage = new PimCommon::BoxStorageService;
+            break;
+        }
+        case PimCommon::StorageServiceManager::WebDav: {
+            storage = new PimCommon::WebDavStorageService;
             break;
         }
         default:

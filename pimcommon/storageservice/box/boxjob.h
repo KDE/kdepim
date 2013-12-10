@@ -19,9 +19,12 @@
 #define BoxJob_H
 
 #include <QObject>
+#include <QPointer>
 #include "storageservice/storageserviceabstractjob.h"
 class QNetworkReply;
 namespace PimCommon {
+class StorageAuthViewDialog;
+
 class BoxJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
@@ -39,14 +42,19 @@ public:
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
 
+    void slotRedirect(const QUrl &url);
 private:
     void parseUploadFiles(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseListFolder(const QString &data);
+    void parseRedirectUrl(const QUrl &url);
+    void getTokenAccess(const QString &authorizeCode);
     QString mClientId;
     QString mClientSecret;
     QString mRedirectUri;
+    QUrl mAuthUrl;
+    QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };
 }
 

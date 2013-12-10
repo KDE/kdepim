@@ -52,7 +52,10 @@ void BoxStorageService::removeConfig()
 
 void BoxStorageService::authentification()
 {
-    //TODO
+    BoxJob *job = new BoxJob(this);
+    connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
+    connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
+    job->requestTokenAccess();
 }
 
 void BoxStorageService::shareLink(const QString &root, const QString &path)
