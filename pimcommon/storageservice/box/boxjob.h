@@ -53,9 +53,13 @@ private:
     void parseListFolder(const QString &data);
     void parseRedirectUrl(const QUrl &url);
     void getTokenAccess(const QString &authorizeCode);
+    void parseAccessToken(const QString &data);
     QString mClientId;
     QString mClientSecret;
     QString mRedirectUri;
+    QString mRefreshToken;
+    QString mToken;
+    qint64 mExpireInTime;
     QUrl mAuthUrl;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };

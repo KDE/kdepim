@@ -19,6 +19,8 @@
 #include "storageservice/storageauthviewdialog.h"
 #include <qjson/parser.h>
 
+#include <KLocalizedString>
+
 #include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
@@ -27,7 +29,8 @@
 using namespace PimCommon;
 
 BoxJob::BoxJob(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent)
+    : PimCommon::StorageServiceAbstractJob(parent),
+      mExpireInTime(0)
 {
     mClientId = QLatin1String("o4sn4e0dvz50pd3ps6ao3qxehvqv8dyo");
     mClientSecret = QLatin1String("wLdaOgrblYzi1Y6WN437wStvqighmSJt");
@@ -54,11 +57,12 @@ void BoxJob::requestTokenAccess()
     connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
     mAuthDialog->setUrl(url);
     if (mAuthDialog->exec()) {
-        //TODO
+        delete mAuthDialog;
     } else {
-        //TODO
+        Q_EMIT authorizationFailed(i18n("Authorization Canceled."));
+        deleteLater();
+        delete mAuthDialog;
     }
-    delete mAuthDialog;
 }
 
 void BoxJob::slotRedirect(const QUrl &url)
@@ -189,7 +193,7 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case AccessToken:
-        deleteLater();
+        parseAccessToken(data);
         break;
     case UploadFiles:
         parseUploadFiles(data);
@@ -207,6 +211,28 @@ void BoxJob::slotSendDataFinished(QNetworkReply *reply)
         qDebug()<<" Action Type unknown:"<<mActionType;
         deleteLater();
     }
+}
+
+void BoxJob::parseAccessToken(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("refresh_token"))) {
+        mRefreshToken = info.value(QLatin1String("refresh_token")).toString();
+    }
+    if (info.contains(QLatin1String("access_token"))) {
+        mToken = info.value(QLatin1String("access_token")).toString();
+    }
+    if (info.contains(QLatin1String("expires_in"))) {
+        mExpireInTime = info.value(QLatin1String("expires_in")).toLongLong();
+    }
+    Q_EMIT authorizationDone(mRefreshToken);
+
+    deleteLater();
 }
 
 void BoxJob::parseUploadFiles(const QString &data)

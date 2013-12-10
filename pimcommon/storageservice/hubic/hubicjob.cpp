@@ -18,6 +18,8 @@
 #include "hubicjob.h"
 #include "storageservice/storageauthviewdialog.h"
 
+#include <KLocalizedString>
+
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
@@ -62,11 +64,12 @@ void HubicJob::requestTokenAccess()
     connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
     mAuthDialog->setUrl(url);
     if (mAuthDialog->exec()) {
-        //TODO
+        delete mAuthDialog;
     } else {
-        //TODO
-    }
-    delete mAuthDialog;
+        Q_EMIT authorizationFailed(i18n("Authorization canceled."));
+        delete mAuthDialog;
+        deleteLater();
+    }    
 }
 
 void HubicJob::slotRedirect(const QUrl &url)
