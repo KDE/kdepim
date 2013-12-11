@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QUrl>
+#include <KIcon>
 
 namespace PimCommon {
 
@@ -52,6 +53,7 @@ public:
     virtual void authentification() = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual QString storageServiceName() const = 0;
+    virtual KIcon icon() const = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
@@ -59,7 +61,7 @@ Q_SIGNALS:
     void uploadFileProgress(const QString &serviceName, qint64 done,qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
     void authentificationDone(const QString &serviceName);
-    void authentificationFailed(const QString &serviceName);
+    void authentificationFailed(const QString &serviceName, const QString &error = QString());
     void createFolderDone(const QString &serviceName);
     void uploadFileDone(const QString &serviceName);
     void listFolderDone(const QString &serviceName);

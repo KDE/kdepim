@@ -19,46 +19,14 @@
 #define HUBICJOB_H
 
 #include <QObject>
-#include "storageservice/storageserviceabstractjob.h"
-#include <QPointer>
-class QNetworkReply;
+#include "storageservice/oauth2job.h"
 namespace PimCommon {
-class StorageAuthViewDialog;
-class HubicJob : public PimCommon::StorageServiceAbstractJob
+class HubicJob : public PimCommon::OAuth2Job
 {
     Q_OBJECT
 public:
     explicit HubicJob(QObject *parent=0);
     ~HubicJob();
-
-    void requestTokenAccess();
-    void uploadFile(const QString &filename);
-    void listFolder();
-    void accountInfo();
-    void createFolder(const QString &filename);
-    void shareLink(const QString &root, const QString &path);
-    void initializeToken(const QString &refreshToken);
-
-Q_SIGNALS:
-    void authorizationDone(const QString &refreshToken);
-
-private slots:
-    void slotSendDataFinished(QNetworkReply *reply);
-    void slotRedirect(const QUrl &url);
-
-private:
-    void parseRedirectUrl(const QUrl &url);
-    void parseAccessToken(const QString &data);
-    void getTokenAccess(const QString &authorizeCode);
-    void refreshToken();
-    QUrl mAuthUrl;
-    QString mClientId;
-    QString mClientSecret;
-    QString mRedirectUri;
-    QString mRefreshToken;
-    QString mToken;
-    qint64 mExpireInTime;
-    QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
 };
 }
 

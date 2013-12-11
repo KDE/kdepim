@@ -27,8 +27,8 @@
 #include <KEditToolBar>
 #include <KShortcutsDialog>
 #include <KStandardAction>
-#include <KToolBar>
 #include <KLocale>
+#include <KToolBar>
 
 MainWindow::MainWindow()
   : KXmlGuiWindow( 0 )

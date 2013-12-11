@@ -20,7 +20,6 @@
 #include "mailfilter.h"
 
 #include <QPointer>
-#include <QDebug>
 
 using namespace MailCommon;
 

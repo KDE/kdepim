@@ -24,13 +24,8 @@
 #include "pimcommon/util/pimutil.h"
 
 #include <KLocale>
-#include <KFileDialog>
-#include <KMessageBox>
 
-#include <QFile>
 #include <QHBoxLayout>
-#include <QTextStream>
-#include <QPointer>
 
 #include <errno.h>
 

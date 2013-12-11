@@ -28,11 +28,8 @@
 
 #include <KLocale>
 #include <KConfig>
-#include <KConfigGroup>
 
 #include <QDir>
-#include <QWidget>
-#include <QDebug>
 
 
 ThunderbirdImportData::ThunderbirdImportData(ImportWizard*parent)

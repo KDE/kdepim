@@ -30,8 +30,10 @@ class ServiceTestWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ServiceTestWidget(PimCommon::StorageServiceAbstract *, QWidget *parent);
+    explicit ServiceTestWidget(QWidget *parent);
     ~ServiceTestWidget();
+
+    void setStorageService(PimCommon::StorageServiceAbstract *service);
 
 private Q_SLOTS:
     void slotListFolder();
@@ -43,6 +45,7 @@ private Q_SLOTS:
     void slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void slotShareLinkDone(const QString &serviceName, const QString &shareLink);
     void slotAuthentificationDone(const QString &serviceName);
+    void slotAuthentificationFailed(const QString &serviceName, const QString &errorMessage);
     void slotCreateFolderDone(const QString &serviceName);
     void slotUploadFileDone(const QString &serviceName);
     void slotListFolderDone(const QString &serviceName);

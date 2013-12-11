@@ -17,9 +17,6 @@
 
 #include "themeeditorwidget.h"
 #include "defaultcompletion.h"
-#include <QStringListModel>
-#include <QCompleter>
-#include <QDebug>
 
 ThemeEditorWidget::ThemeEditorWidget(QWidget *parent)
     : GrantleeThemeEditor::EditorWidget(parent)

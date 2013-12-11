@@ -27,8 +27,9 @@
 
 
 DropboxTestWidget::DropboxTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::DropBoxStorageService(this),parent)
+    : ServiceTestWidget(parent)
 {
+    setStorageService(new PimCommon::DropBoxStorageService(this));
 }
 
 int main (int argc, char **argv)

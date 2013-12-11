@@ -35,7 +35,7 @@ public:
     void uploadFile(const QString &filename);
     void listFolder();
     void accountInfo();
-    void createFolder(const QString &filename);
+    void createFolder(const QString &foldername);
     void shareLink(const QString &root, const QString &path);
 
 
@@ -52,6 +52,10 @@ private:
     void parseRequestToken(const QString &data);
     void finishGetToken();
     void parseAccountInfo(const QString &data);
+    void parseListFolder(const QString &data);
+    void parseCreateFolder(const QString &data);
+    void parseUploadFiles(const QString &data);
+    void createServiceFolder();
     QString mPassword;
     QString mUsername;
     QString mCustomerSecret;

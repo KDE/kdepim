@@ -55,8 +55,6 @@
 #include <KToolInvocation>
 #include <KMenu>
 
-
-#include <QDir>
 #include <QDockWidget>
 #include <QProgressBar>
 #include <QTimer>

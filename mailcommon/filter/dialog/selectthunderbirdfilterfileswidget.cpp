@@ -20,7 +20,6 @@
 #include "mailimporter/filter_thunderbird.h"
 #include <QAbstractButton>
 #include <QListWidgetItem>
-#include <KUrlRequester>
 
 SelectThunderbirdFilterFilesWidget::SelectThunderbirdFilterFilesWidget(QWidget *parent) :
     QWidget(parent),

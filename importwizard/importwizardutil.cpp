@@ -18,7 +18,6 @@
 #include "importwizardutil.h"
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <QColor>
 #include <Nepomuk2/Tag>
 #include <Nepomuk2/Variant>
 #include "messagetag.h"

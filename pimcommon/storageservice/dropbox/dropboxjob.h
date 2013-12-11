@@ -62,7 +62,6 @@ private:
     QString mOauthTokenSecret;
     QString mAccessOauthSignature;
     QString mOauthToken;
-    bool mInitialized;
 };
 }
 

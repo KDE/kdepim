@@ -19,12 +19,8 @@
 #include "contactpreviewwidget.h"
 
 #include <KPushButton>
-#include <KLocale>
-#include <KConfigGroup>
 
-#include <QVBoxLayout>
-#include <QDir>
-#include <QDebug>
+#include <QHBoxLayout>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     : GrantleeThemeEditor::PreviewWidget(parent)

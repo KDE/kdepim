@@ -65,12 +65,6 @@
 #include <qdeclarativeengine.h>
 #include <qplatformdefs.h>
 
-#ifdef _WIN32_WCE
-#include <identitypage.h>
-#include <kcomponentdata.h>
-#include <mailtransport/transportmanagementwidget.h>
-#endif
-
 class DeclarativeEditor : public DeclarativeWidgetBase<MessageComposer::KMeditor, ComposerView, &ComposerView::setEditor>
 {
    Q_OBJECT
@@ -413,24 +407,11 @@ QObject* ComposerView::getAction( const QString &name ) const
 
 void ComposerView::configureIdentity()
 {
-#ifdef _WIN32_WCE
-  KComponentData instance( QLatin1String("kcmkmail_config_identity") ); // keep in sync with kmail for now to reuse kmail translations until after the string freeze
-  KMail::IdentityPage *page = new KMail::IdentityPage( instance, this );
-  page->setObjectName(QLatin1String( "kcm_kpimidentities") );
-
-  KDialog dialog( this );
-  dialog.setMainWidget( page );
-  dialog.setButtons( KDialog::Ok | KDialog::Cancel );
-  dialog.setWindowState( Qt::WindowFullScreen );
-  connect( &dialog, SIGNAL(okClicked()), page, SLOT(save()) );
-  dialog.exec();
-#else
   KCMultiDialog dlg;
   dlg.addModule( QLatin1String("kcm_kpimidentities") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
-#endif
 }
 
 void ComposerView::sendSuccessful()
@@ -442,22 +423,11 @@ void ComposerView::sendSuccessful()
 
 void ComposerView::configureTransport()
 {
-#ifdef _WIN32_WCE
-  MailTransport::TransportManagementWidget *tmw = new MailTransport::TransportManagementWidget( this );
-
-  KDialog dialog( this );
-  dialog.setMainWidget( tmw );
-  dialog.setButtons( KDialog::Ok | KDialog::Cancel );
-  dialog.setWindowState( Qt::WindowFullScreen );
-  //connect( &dialog, SIGNAL(okClicked()), page, SLOT(save()) );
-  dialog.exec();
-#else
   KCMultiDialog dlg;
   dlg.addModule( QLatin1String("kcm_mailtransport") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
-#endif
 }
 
 void ComposerView::addAttachment(KMime::Content* part)

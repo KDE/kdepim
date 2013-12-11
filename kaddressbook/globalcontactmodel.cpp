@@ -29,7 +29,6 @@
 #include <KABC/Addressee>
 #include <KABC/ContactGroup>
 
-#include <KLocale>
 
 GlobalContactModel *GlobalContactModel::mInstance = 0;
 

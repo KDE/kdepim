@@ -21,8 +21,9 @@
 #include <KFileDialog>
 #include <KIconLoader>
 #include <KLocalizedString>
-#include <KStandardDirs>
 #include <KUrlRequester>
+#include <KLineEdit>
+#include <KStandardDirs>
 
 #include <QHBoxLayout>
 #include <QPushButton>

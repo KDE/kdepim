@@ -58,7 +58,7 @@ void DropBoxStorageService::authentification()
 {
     DropBoxJob *job = new DropBoxJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-    connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
 
@@ -142,12 +142,12 @@ void DropBoxStorageService::uploadFile(const QString &filename)
     }
 }
 
-void DropBoxStorageService::slotAuthorizationFailed()
+void DropBoxStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mAccessToken.clear();
     mAccessTokenSecret.clear();
     mAccessOauthSignature.clear();
-    Q_EMIT authentificationFailed(serviceName());
+    Q_EMIT authentificationFailed(serviceName(), errorMessage);
 }
 
 QString DropBoxStorageService::name()
@@ -170,7 +170,17 @@ QString DropBoxStorageService::serviceName()
     return QLatin1String("dropbox");
 }
 
+QString DropBoxStorageService::iconName()
+{
+    return QString();
+}
+
 QString DropBoxStorageService::storageServiceName() const
 {
     return serviceName();
+}
+
+KIcon DropBoxStorageService::icon() const
+{
+    return KIcon();
 }

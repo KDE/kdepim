@@ -34,8 +34,8 @@
 
 using namespace NoteShared;
 
-NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
+    : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     QWidget * w =  new QWidget( this );
@@ -47,9 +47,9 @@ NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent
     QGroupBox *incoming = new QGroupBox( i18n( "Incoming Notes" ) );
     QHBoxLayout *tmpLayout = new QHBoxLayout;
 
-    QCheckBox *tmpChkB=new QCheckBox( i18n( "Accept incoming notes" ) );
-    tmpChkB->setObjectName( QLatin1String("kcfg_ReceiveNotes") );
-    tmpLayout->addWidget( tmpChkB );
+    mTmpChkB=new QCheckBox( i18n( "Accept incoming notes" ) );
+    mTmpChkB->setObjectName( QLatin1String("kcfg_ReceiveNotes") );
+    tmpLayout->addWidget( mTmpChkB );
     incoming->setLayout( tmpLayout );
     layout->addWidget( incoming );
 
@@ -57,7 +57,7 @@ NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent
     tmpLayout = new QHBoxLayout;
 
     QLabel *label_SenderID = new QLabel( i18n( "&Sender ID:" ) );
-    KLineEdit *kcfg_SenderID = new KLineEdit;
+    kcfg_SenderID = new KLineEdit;
     kcfg_SenderID->setClearButtonShown(true);
     kcfg_SenderID->setObjectName( QLatin1String("kcfg_SenderID") );
     label_SenderID->setBuddy( kcfg_SenderID );
@@ -72,7 +72,7 @@ NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent
 
     tmpLayout->addWidget( label_Port );
 
-    KIntNumInput *kcfg_Port = new KIntNumInput;
+    kcfg_Port = new KIntNumInput;
     kcfg_Port->setObjectName( QLatin1String("kcfg_Port") );
     kcfg_Port->setRange( 0, 65535 );
     kcfg_Port->setSliderEnabled( false );
@@ -80,7 +80,29 @@ NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent
     tmpLayout->addWidget( kcfg_Port );
     layout->addLayout( tmpLayout );
     lay->addStretch();
-    addConfig( NoteShared::NoteSharedGlobalConfig::self(), w );
+}
+
+NoteNetworkConfigWidget::~NoteNetworkConfigWidget()
+{
+
+}
+
+void NoteNetworkConfigWidget::save()
+{
+    //TODO
+}
+
+void NoteNetworkConfigWidget::load()
+{
+    //TODO
+}
+
+
+NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent )
+    :KCModule( inst, parent )
+{
+    NoteNetworkConfigWidget *widget = new NoteNetworkConfigWidget(this);
+    addConfig( NoteShared::NoteSharedGlobalConfig::self(), widget );
     load();
 }
 

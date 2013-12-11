@@ -42,7 +42,11 @@ set(libpimcommon_storageservice_SRCS
   storageservice/webdav/webdavstorageservice.cpp
   storageservice/webdav/webdavjob.cpp
   storageservice/webdav/webdavsettingsdialog.cpp
-  storageservice/storageserviceutils.cpp 
+  storageservice/storageserviceutils.cpp
+  storageservice/box/boxjob.cpp
+  storageservice/box/boxstorageservice.cpp
+  storageservice/oauth2job.cpp
+  storageservice/settings/storagelistwidgetitem.cpp 
 )
 
 set(libpimcommon_autocorrection_SRCS
@@ -191,6 +195,7 @@ add_subdirectory(storageservice/tests)
 add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/webdav/tests)
 add_subdirectory(storageservice/ubuntuone/tests)
+add_subdirectory(storageservice/box/tests)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

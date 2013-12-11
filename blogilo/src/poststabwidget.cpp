@@ -23,7 +23,6 @@
 
 #include <QToolButton>
 #include <QTabBar>
-#include <QDebug>
 
 PostsTabWidget::PostsTabWidget(QWidget *parent)
     : KTabWidget(parent)

@@ -17,7 +17,6 @@
 
 #include "archivemailkernel.h"
 
-#include <KConfigGroup>
 #include <kglobal.h>
 #include <kpimidentities/identitymanager.h>
 #include <mailcommon/folder/foldercollectionmonitor.h>

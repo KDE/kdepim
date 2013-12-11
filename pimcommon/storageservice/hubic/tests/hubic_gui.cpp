@@ -25,8 +25,9 @@
 #include <KLocale>
 
 HubicTestWidget::HubicTestWidget(QWidget *parent)
-    : ServiceTestWidget(new PimCommon::HubicStorageService(this),parent)
+    : ServiceTestWidget(parent)
 {
+    setStorageService(new PimCommon::HubicStorageService(this));
 }
 
 

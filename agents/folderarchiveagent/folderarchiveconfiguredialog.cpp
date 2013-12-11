@@ -32,7 +32,6 @@
 #include <KAboutData>
 
 #include <QTabWidget>
-#include <QDebug>
 
 FolderArchiveConfigureDialog::FolderArchiveConfigureDialog(QWidget *parent)
     : KDialog(parent)

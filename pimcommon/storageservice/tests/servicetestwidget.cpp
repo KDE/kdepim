@@ -29,12 +29,12 @@
 
 
 
-ServiceTestWidget::ServiceTestWidget(PimCommon::StorageServiceAbstract *service,QWidget *parent)
+ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     : QWidget(parent),
-      mStorageService(service)
+      mStorageService(0)
 {
-    connectStorageService();
     mEdit = new QTextEdit;
+    mEdit->setReadOnly(true);
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
@@ -52,6 +52,12 @@ ServiceTestWidget::~ServiceTestWidget()
 
 }
 
+void ServiceTestWidget::setStorageService(PimCommon::StorageServiceAbstract *service)
+{
+    mStorageService = service;
+    connectStorageService();
+}
+
 void ServiceTestWidget::slotAuthentification()
 {
     mStorageService->authentification();
@@ -63,7 +69,7 @@ void ServiceTestWidget::connectStorageService()
     connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
     connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
     connect(mStorageService, SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
-    connect(mStorageService, SIGNAL(authentificationFailed(QString)), this, SLOT(slotAuthentificationFailed(QString)));
+    connect(mStorageService, SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
     connect(mStorageService, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
     connect(mStorageService, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
     connect(mStorageService, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
@@ -83,6 +89,11 @@ void ServiceTestWidget::slotUploadFileProgress(const QString &serviceName, qint6
 void ServiceTestWidget::slotShareLinkDone(const QString &serviceName, const QString &shareLink)
 {
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" return a share link: %1\n").arg(shareLink));
+}
+
+void ServiceTestWidget::slotAuthentificationFailed(const QString &serviceName, const QString &errorMessage)
+{
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Authentification failed: %1\n").arg(errorMessage));
 }
 
 void ServiceTestWidget::slotAuthentificationDone(const QString &serviceName)

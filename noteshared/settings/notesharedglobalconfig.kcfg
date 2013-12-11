@@ -8,6 +8,13 @@
       <default>kmail --subject %t --body %f</default>
     </entry>
   </group>
+  <group name="Alarms">
+    <entry name="CheckInterval" type="UInt">
+      <default>60</default>
+    </entry>
+
+    <entry name="AlarmsLastChecked" type="DateTime"/>
+  </group>
   <group name="Network">
     <entry name="ReceiveNotes" type="Bool">
       <default>false</default>

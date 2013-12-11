@@ -21,14 +21,11 @@
 #include "messageviewer/header/headerstrategy.h"
 #include "messageviewer/header/grantleeheaderteststyle.h"
 
-#include <KMime/Message>
 #include <KPushButton>
 #include <KLocale>
 #include <KConfigGroup>
 
 #include <QVBoxLayout>
-#include <QDir>
-#include <QDebug>
 
 PreviewWidget::PreviewWidget(const QString &projectDirectory, QWidget *parent)
     : GrantleeThemeEditor::PreviewWidget(parent)

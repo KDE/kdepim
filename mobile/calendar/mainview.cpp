@@ -68,9 +68,7 @@
 #include <kcalcore/event.h>
 #include <kcalcore/todo.h>
 #include <kcolorcombo.h>
-#ifndef _WIN32_WCE
 #include <kcolordialog.h>
-#endif
 #include <kmessagebox.h>
 #include <ksystemtimezone.h>
 #include <incidenceeditor-ng/categoryeditdialog.h>

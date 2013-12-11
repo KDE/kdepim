@@ -23,11 +23,7 @@
 #include "stylesheetloader.h"
 #include "ui_configwidget.h"
 
-#ifndef _WIN32_WCE
 #include <kcmoduleproxy.h>
-#else
-#include <libkdepim/ldap/kcmldap_p.h>
-#endif
 #include <kconfigdialogmanager.h>
 #include <klocale.h>
 
@@ -37,11 +33,7 @@ ConfigWidget::ConfigWidget( QWidget *parent )
   Ui_ConfigWidget ui;
   ui.setupUi( this );
 
-#ifndef _WIN32_WCE
   mLdapConfigWidget = new KCModuleProxy( QLatin1String( "kcmldap" ) );
-#else
-  mLdapConfigWidget = new KCMLdap( this, QVariantList() );
-#endif
 
   ui.ldapServerSettingsLayout->addWidget( mLdapConfigWidget, 1, 1 );
 

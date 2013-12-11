@@ -32,6 +32,7 @@ public:
     static QString description();
     static QUrl serviceUrl();
     static QString serviceName();
+    static QString iconName();
 
 
     void listFolder();
@@ -43,10 +44,11 @@ public:
     void shareLink(const QString &root, const QString &path);
     QString storageServiceName() const;
 
+    KIcon icon() const;
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
-    void slotAuthorizationFailed();
+    void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
     void readConfig();

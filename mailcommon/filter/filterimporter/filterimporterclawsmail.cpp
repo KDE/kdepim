@@ -20,11 +20,11 @@
 #include "mailfilter.h"
 
 #include <KConfig>
-#include <KConfigGroup>
 
 #include <KDebug>
 
 #include <QFile>
+#include <QDir>
 
 using namespace MailCommon;
 

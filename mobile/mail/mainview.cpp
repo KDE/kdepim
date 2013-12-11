@@ -115,11 +115,6 @@
 #include <QItemSelectionModel>
 #include <QTreeView>
 
-#ifdef _WIN32_WCE
-#include <identitypage.h>
-#include <kcomponentdata.h>
-#endif
-
 #ifdef KDEQMLPLUGIN_STATIC
 #include "runtime/qml/kde/kdeintegration.h"
 #endif
@@ -1112,24 +1107,11 @@ void MainView::dataChanged()
 
 void MainView::configureIdentity()
 {
-#ifdef _WIN32_WCE
-  KComponentData instance( QLatin1String("kcmkmail_config_identity") ); // keep in sync with kmail for now to reuse kmail translations until after the string freeze
-  KMail::IdentityPage *page = new KMail::IdentityPage( instance, this );
-  page->setObjectName( QLatin1String("kcm_kpimidentities") );
-
-  KDialog dialog( this );
-  dialog.setMainWidget( page );
-  dialog.setButtons( KDialog::Ok | KDialog::Cancel );
-  dialog.setWindowState( Qt::WindowFullScreen );
-  connect( &dialog, SIGNAL(okClicked()), page, SLOT(save()) );
-  dialog.exec();
-#else
   KCMultiDialog dlg;
   dlg.addModule( QLatin1String("kcm_kpimidentities") );
   dlg.currentPage()->setHeader( QLatin1String( "" ) ); // hide header to save space
   dlg.setButtons( KDialog::Ok | KDialog::Cancel );
   dlg.exec();
-#endif
 }
 
 bool MainView::isDraftThreadContent( int row )

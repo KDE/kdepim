@@ -33,7 +33,6 @@
 
 #include <QObject>
 #include <QStringList>
-#include <QTextDocument>
 
 namespace MailCommon {
 

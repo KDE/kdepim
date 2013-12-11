@@ -56,16 +56,16 @@ void YouSendItStorageService::authentification()
 {
     YouSendItJob *job = new YouSendItJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
-    connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
 
-void YouSendItStorageService::slotAuthorizationFailed()
+void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mUsername.clear();
     mPassword.clear();
     mToken.clear();
-    Q_EMIT authentificationFailed(serviceName());
+    Q_EMIT authentificationFailed(serviceName(), errorMessage);
 }
 
 
@@ -145,8 +145,7 @@ void YouSendItStorageService::uploadFile(const QString &filename)
 
 QString YouSendItStorageService::description()
 {
-    //TODO
-    return QString();//i18n("");
+    return i18n("YouSendIt is a file hosting that offers cloud storage, file synchronization, and client software.");
 }
 
 QUrl YouSendItStorageService::serviceUrl()
@@ -157,6 +156,11 @@ QUrl YouSendItStorageService::serviceUrl()
 QString YouSendItStorageService::serviceName()
 {
     return QLatin1String("yousendit");
+}
+
+QString YouSendItStorageService::iconName()
+{
+    return QString();
 }
 
 void YouSendItStorageService::shareLink(const QString &root, const QString &path)
@@ -175,4 +179,9 @@ void YouSendItStorageService::shareLink(const QString &root, const QString &path
 QString YouSendItStorageService::storageServiceName() const
 {
     return serviceName();
+}
+
+KIcon YouSendItStorageService::icon() const
+{
+    return KIcon();
 }

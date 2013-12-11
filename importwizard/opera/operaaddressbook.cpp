@@ -21,7 +21,6 @@
 #include <kabc/contactgroup.h>
 
 
-#include <QDebug>
 #include <QFile>
 
 OperaAddressBook::OperaAddressBook(const QString &filename, ImportWizard *parent)

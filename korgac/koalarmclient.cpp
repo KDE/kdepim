@@ -50,7 +50,6 @@
 #include <KConfigGroup>
 #include <KDebug>
 #include <KStandardDirs>
-#include <KSystemTimeZones>
 
 #ifdef Q_WS_MAEMO_5
 #include <QtMaemo5/QMaemo5InformationBox>

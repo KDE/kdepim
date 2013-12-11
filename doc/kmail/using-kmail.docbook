@@ -594,61 +594,63 @@ select the folder and select <menuchoice><guimenu>Folder</guimenu><guimenuitem>P
 
 <sect2 id="folders-properties-window">
 <title>Folder Properties</title>
-
-<para>The folder's <guilabel>Properties</guilabel> dialog lets you rename and move
-a folder and specify all of its properties. Note that most properties
-are only available for your own folders and not for default folder like
-<guilabel>inbox</guilabel> &etc; Default folders also cannot be moved
-or renamed.</para>
+<screenshot>
+<screeninfo>Folder Properties Example</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="folder-properties.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Folder Properties Example</phrase>
+    </textobject>
+    <caption>
+      <para>Folder Properties Example</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+<para>The <guilabel>Properties of Folder</guilabel> dialog lets you rename and specify all of its properties. Note that most properties
+are only available for your own folders and not for default folder like <guilabel>inbox</guilabel> &etc; Default folders also cannot be renamed.</para>
 
 <sect3 id="folders-properties-general">
 <title>General</title>
-<para>Rename a folder by changing the entry in the <guilabel>Name:</guilabel> field.</para>
-<!-- not in kmail 2.0.96 lueck 31.05.2011
-<para>You can make a folder a subfolder of another folder by choosing a new parent
-folder using the <guilabel>Belongs to</guilabel> selection. </para>
-<para>See the <link linkend="folders-format">Folder Format</link> section
-for information about the <guilabel>Mailbox format.</guilabel></para>
--->
-<para>Check <guilabel>Act on new/unread mail in this folder</guilabel> if you 
-want to be informed about new mail that arrives in this folder. Setting this option is for
-example useful for the folder where you move all detected spam messages to.</para>
-<para>Check <guilabel>Keep replies in this folder</guilabel> if you want
-replies to messages in this folder to be filed also into this folder rather 
-than into a special sent-mail folder.</para>
-<para>Check <guilabel>Hide this folder in the folder selection dialog</guilabel> 
-if you do not want this folder to be shown in folder selection dialogs,
-such as the <guimenuitem>Jump to Folder</guimenuitem> dialog.</para>
-<para>With the <guilabel>Sender identity</guilabel> option you can set the default
-identity that should be used for new messages if this folder is selected.
-Replies to messages that were sent directly
-to you will still default to the message's <quote>To</quote> address if an
+<para>If you need to rename a folder change the entry in the <guilabel>Name:</guilabel> field.</para>
+
+<para><guilabel>Act on new/unread mail in this folder</guilabel> is enabled by default on new folders, it allows notifications about new mail that arrives in the folder. Uncheck this option on folders like SPAM and trash that you do not desire notifications.</para>
+<para>When replying to messages in this folder, check <guilabel>Keep replies in this folder</guilabel> if you want
+the replies to be stored in this folder rather than into the default configured sent-mail folder.</para>
+
+<para>Check <guilabel>Hide this folder in the folder selection dialog</guilabel> if you do not want this folder to be shown in folder selection dialogs,
+such as the <guimenuitem>Jump to Folder</guimenuitem> and <guimenuitem>Move Message to</guimenuitem> dialogs.</para>
+
+<para>By default new folders use the default identity. Uncheck <guilabel>Use default identity</guilabel> and select a new one
+from the <guilabel>Sender identity</guilabel> drop down menu. See <link linkend="configure-identity">Identities configuration</link> for
+information on Identities. Replies to messages that were sent directly to you will still default to the message's <quote>To</quote> address if an
 according identity is found.</para>
+
+<para>If you have groupware, you can change the contents &eg; calendar, notes, &etc; of the folder in the
+<guilabel>Folder contents:</guilabel> drop down box.</para>
+
+<para>If you share the folder with other users, you can <guilabel>Share unread state with all users</guilabel> which will show the same unread state for all users.</para>
+  <informalexample><para>For example, a ticket system that all emails must be read and multiple users are responsible for reading unread tickets.</para></informalexample>
 </sect3>
+
 <sect3 id="folders-properties-view">
 <title>View</title>
-<para>The <guilabel>Use custom icons</guilabel> option lets you choose
-icons that are different from the default ones in the folder list.</para>
-<para>With <guilabel>Show columns</guilabel> you can set the 
-visible columns in the header pane to <guilabel>Default</guilabel>,
-<guilabel>Sender</guilabel> or <guilabel>Receiver</guilabel>. This is useful 
+<para>The <guilabel>Use custom icons</guilabel> option lets you choose icons that are different from the default ones in the folder list.</para>
+<para>With <guilabel>Show column</guilabel> drop down you can set the visible columns in the header pane to Default, Sender, or Receiver. This is useful
 if you use a folder to save your own sent messages.</para>
-<para>In the <guilabel>Message List</guilabel> section you can select and
-configure an <guilabel>Aggregation</guilabel> and <guilabel>Theme</guilabel>
-for this folder different from the default configured in &kmail;s settings.
-For more details see the <link linkend="configure-appearance-message-list">
+<para>In the <guilabel>Message List</guilabel> section you can select and configure an <guilabel>Aggregation</guilabel> and <guilabel>Theme</guilabel>
+for this folder different from the default configured in &kmail;s settings. For more details see the <link linkend="configure-appearance-message-list">
 Message List</link> tab in the <guilabel>Appearance</guilabel> page.</para>
 </sect3>
 <sect3 id="folders-properties-retrieval">
 <title>Retrieval</title>
-<para>Deselect <guilabel>Use options from parent folder or account</guilabel> 
-to set folder-specific options for synchronizing and retrieval of messages.
-<!-- use case ??? where and how to set the defaults??? 
-missing:
-Synchronize when selecting this folder
-Automatically synchronize after
-Retrevial Options - Always retriew full messages, Retrieve nessage bodies on demand, Keep message bodies loacally for
---></para>
+<para>If you have an account that does not receive much mail and you don't want &kmail; to query the server as often, you can uncheck <guilabel>Use options from parent folder or account</guilabel> to set
+  a higher interval in <guilabel>Automatically synchronize after:</guilabel> spin box.</para>
+<para>In <guilabel>Retrieval Options</guilabel> you can change <guilabel>Always retrieve full messages</guilabel> option to <guilabel>Retrieve message
+bodies on demand</guilabel> if you have a slow connection. You can set how long the message will remain locally in the following spin box.
+</para>
+
 </sect3>
 <sect3 id="folders-properties-templates">
 <title>Templates</title>
@@ -657,110 +659,225 @@ For more details see the <link linkend="configure-composer-standard-templates">
 Standard Templates</link> tab in the <guilabel>Composer</guilabel> page
 </para>
 </sect3>
-<sect3 id="folders-properties-maintainance">
-<title>Maintenance</title>
-<para>This tab shows an overview about the folder type and its size, 
-the number of read and unread messages in the folder and allows you to enable
-text indexing.</para>
-</sect3>
-</sect2>
 
-<!-- in kmail 2.0.96  Expiry action in context menu of each folder-->
-<sect2 id="folders-properties-expiry">
-<title>Old Message Expiry</title>
-
-<para>From the context menu of a folder select <guimenuitem>Expire</guimenuitem> 
-to open the <guilabel>Mail Expiry Properties</guilabel> dialog. 
-Here you can select what should happen with old messages in this
-folder. If you enable to expire old read or unread messages in this folder 
-then &kmail; will regularly, depending on your choice, either delete old 
-messages or move old messages to another folder. 
-<!-- not in kmail 2.0.96  lueck 31.05.2011 You can also start
-expiration of old messages manually via <menuchoice><guimenu>Folder</guimenu><guisubmenu>Expire</guisubmenu></menuchoice> and via
-<menuchoice><guimenu>File</guimenu><guisubmenu>Expire
-  All Folders</guisubmenu></menuchoice> -->
+<sect3 id="folders-properties-expiry">
+<title>Expiry</title>
+<para>You can set automatic cleanup or deletion of emails in this tab. Check the box if you would like to automatically expire
+read or unread messages respectively. Set the amount of days in the spinbox. If you do not want to permanently delete the messages you can
+assign a folder to move them to in <guilabel>Move expired messages to:</guilabel> textbox or folder selection dialog. Once you have reviewed the messages and want to permanently
+delete them, you can go to the folder expiry options of the folder you chose to move them to and set the option <guilabel>Delete expired messages permanently</guilabel>, then click
+the <guibutton>Save Settings and Expire Now</guibutton>.
 </para>
-
-<warning><para>Messages that are deleted during expiration of old messages 
+<warning><para>Messages that are deleted during expiration of old messages
 cannot be restored, so be careful with this setting.</para></warning>
+</sect3>
 
-</sect2>
+<sect3 id="folders-properties-acl">
+<title>Access Control tab (&imap; only)</title>
+<para>Here you can manage the access control lists (&acl;s) of &imap; folders.</para>
+<note><para>The &imap; server must have user level &acl; configured and enabled for this tab to be visible.</para></note>
+<para>The currently active &acl; is shown in the list. It consists of pairs of <guilabel>User Id</guilabel>s and the
+ <guilabel>Permissions</guilabel> granted to users identified by that <guilabel>User Id</guilabel>.
+ <footnote>
+ <para>Note that a single <guilabel>User Id</guilabel> might refer to more than one user. Depending on the &imap;
+ server and its configuration, there may be User Ids that correspond to groups of users, anonymous users, or any user.
+ Consult the manual of your specific &imap; server implementation for more information.</para>
+ </footnote> &acl;s are settable per-folder.</para>
+ <note><para>As with everything else when using <emphasis>disconnected &imap;</emphasis>, you need to sync with the server for
+ the changes to be transferred to the server.</para></note>
+<para>&imap; &acl;s define a lot of fine-grained permissions that you can grant or deny other users. For the sake of clarity,
+ &kmail; will present them as the following five categories that you can choose from (see <xref linkend="table-acl-summary"/>
+ for the details if you already know &imap; &acl;s).</para>
+<variablelist>
+<varlistentry id="folders-properties-acl-none">
+<term><guilabel>None</guilabel></term>
+<listitem>
+<para>Grants the users identified by <guilabel>User Id</guilabel> no rights at all. This is also the
+ default for users not explicitly (or implicitly, as a group) listed in the &acl;. These users will not see this folder in the list of
+ &imap; folders presented to them by their mail clients.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-acl-read">
+<term><guilabel>Read</guilabel></term>
+<listitem>
+<para>Grants the users identified by <guilabel>User Id</guilabel> reading rights for this folder. This also
+ includes the ability for their mail clients to mark mails as read and store this information on the server.
+<footnote>
+<para>Every user has their own list of read mail, so none of your unread mails will suddenly be marked as
+ read just because someone else has already read them.</para>
+</footnote>
+</para>
+<para>These users will see this folder in the list of &imap; folders presented to them by their mail clients.</para>
+<para>Use this to create a shared folder that others can read, but not modify.</para>
+<informalexample>
+<para>If you were the editor of a company's news letter, you could create a folder for the purpose of
+ distributing the news letter, grant everyone reading rights, and save the letter to this folder instead
+ of sending it out by email to a catch-all address.</para>
+</informalexample>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-acl-append">
+<term><guilabel>Append</guilabel></term>
+<listitem>
+<para>(also known as <guilabel>Post</guilabel>)</para>
+<para>Grants the users identified by <guilabel>User Id</guilabel> reading (see above) and posting rights for this folder.</para>
+<para>Use this to create a shared folder that others can read and post messages to, but cannot otherwise modify.</para>
+<informalexample>
+<para>If you wanted to create a company-wide discussion forum, instead of using a web-based form or a separate company-private usenet server,
+ you could create a bunch of folders (one per topic), and grant everyone reading and posting rights. Instead of posting to an &nntp;
+ server or writing their messages into a web form, people would just write emails and store them in the folder suiting the topic of the message.</para>
+</informalexample>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-acl-write">
+<term><guilabel>Write</guilabel></term>
+<listitem>
+<para>Grants the users identified by <guilabel>User Id</guilabel> reading, posting (see above), and writing rights for this folder.</para>
+<para>The right to write to a folder includes deleting of messages, creating subfolders, and storing other attributes than
+ read/unread on the server (&eg; answered).</para>
+<para>Use this to create a shared folder that everyone has (almost, see <xref linkend="folders-properties-acl-all"/>) the same rights for.</para>
+<informalexample>
+<para>In the <xref linkend="folders-properties-acl-append"/> example, you could assign write rights to a group of people
+ acting as moderators, which would then be able to remove off-topic posts, and create sub-topic-folders for high-traffic folders.</para>
+</informalexample>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-acl-all">
+<term><guilabel>All</guilabel></term>
+<listitem>
+<para>Grants the users identified by <guilabel>User Id</guilabel> reading, posting, writing (see above),
+ as well as administration rights, &ie; the right to modify the &acl; of this folder.</para>
+<para>This is the default set of rights for the owner of a folder.</para>
+</listitem></varlistentry>
+</variablelist>
+<para><xref linkend="table-acl-summary"/> summarizes the &imap; &acl; rights associated with each permission level.</para>
+<table id="table-acl-summary">
+<title>&acl; Rights Summary</title>
+          <tgroup cols="6">
+            <thead>
+              <row>
+                <entry>&acl; right</entry>
+                <entry><xref linkend="folders-properties-acl-none"/></entry>
+                <entry><xref linkend="folders-properties-acl-read"/></entry>
+                <entry><xref linkend="folders-properties-acl-append"/></entry>
+                <entry><xref linkend="folders-properties-acl-write"/></entry>
+                <entry><xref linkend="folders-properties-acl-all"/></entry>
+              </row>
+            </thead>
+            <!--tfoot/-->
+            <tbody>
+              <row>
+                <entry>Lookup</entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Read</entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Store Seen</entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Insert</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Post</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Write Flags</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Create</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Delete</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+                <entry>x</entry>
+              </row>
+              <row>
+                <entry>Administer</entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry></entry>
+                <entry>x</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+</sect3>
 
-<sect2 id="folders-properties-mailinglist">
+<sect3 id="folders-properties-mailinglist">
 <title>Mailing List</title>
 
-<para>If you are going to use the folder for a mailing list open the 
-<guilabel>Mailinglist Folder Properties</guilabel> dialog with 
+<para>If you are going to use the folder for a mailing list open the
+<guilabel>Mailinglist Folder Properties</guilabel> dialog with
 <menuchoice><guimenu>Folder</guimenu> <guimenuitem>Mailing List Management</guimenuitem>
 </menuchoice> from the menu. Then you should
 check <guilabel>Folder holds a mailing list</guilabel> to associate this folder
-with the mailing list. Next you should
-click on <guilabel>Detect Automatically</guilabel>. &kmail; will then try
+with the mailing list. Next you should click on <guilabel>Detect Automatically</guilabel>. &kmail; will then try
 to guess some information about the mailing list from the currently selected
 message. If &kmail; could not determine some addresses then you can add
-the missing information manually. To do this first select the 
+the missing information manually. To do this first select the
 <guilabel>Address type</guilabel> for which you want to add an address.
 You can choose between:</para>
-
-	<variablelist>
-	  <varlistentry id="folders-properties-mailinglist-post">
-	    <term>
-	      <guilabel>Post to List</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This address is used for sending messages to the
-		mailing list. This is usually an email address.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry id="folders-properties-mailinglist-subscribe">
-	    <term>
-	      <guilabel>Subscribe to List</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This address is used for subscribing to the mailing
-		list. This can be an email address or the address of a
-		web page.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry id="folders-properties-mailinglist-unsubscribe">
-	    <term>
-	      <guilabel>Unsubscribe From List</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This address is used for unsubscribing from the
-		mailing list. This can be an email address or the
-		address of a web page.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry id="folders-properties-mailinglist-archive">
-	    <term>
-	      <guilabel>List Archives</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This is the address of the archive of the mailing
-		list. This is usually the address of a web page.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	  <varlistentry id="folders-properties-mailinglist-help">
-	    <term>
-	      <guilabel>List Help</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		This address is used for requesting help for this
-		mailing list. This is usually an email address.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-	</variablelist>
+<variablelist>
+<varlistentry id="folders-properties-mailinglist-post">
+<term><guilabel>Post to List</guilabel></term>
+<listitem>
+<para>This address is used for sending messages to the mailing list. This is usually an email address.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-mailinglist-subscribe">
+<term><guilabel>Subscribe to List</guilabel></term>
+<listitem>
+<para>This address is used for subscribing to the mailing list. This can be an email address or the address of a web page.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-mailinglist-unsubscribe">
+<term><guilabel>Unsubscribe From List</guilabel></term>
+<listitem><para>This address is used for unsubscribing from the mailing list. This can be an email address or the address of a web page.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-mailinglist-archive">
+<term><guilabel>List Archives</guilabel></term>
+<listitem><para>This is the address of the archive of the mailing list. This is usually the address of a web page.</para>
+</listitem></varlistentry>
+<varlistentry id="folders-properties-mailinglist-help">
+<term><guilabel>List Help</guilabel></term>
+<listitem>
+<para>This address is used for requesting help for this mailing list. This is usually an email address.</para>
+</listitem></varlistentry>
+</variablelist>
 
 <para>After selecting the appropriate <guilabel>Address type</guilabel> you
 enter the email address or the address of the web page and then click on
@@ -768,327 +885,33 @@ enter the email address or the address of the web page and then click on
 addresses.</para>
 
 <para>If all addresses have been added then you can execute an action, &eg;
-go to the list archives, by selecting the appropriate 
+go to the list archives, by selecting the appropriate
 <guilabel>Address type</guilabel> and then clicking on
 <guilabel>Invoke Handler</guilabel>. If there is an email address and an
 address of a web page for the desired action then you will have to select
-the <guilabel>Preferred handler</guilabel> prior to clicking on 
+the <guilabel>Preferred handler</guilabel> prior to clicking on
 <guilabel>Invoke Handler</guilabel>. Select <guilabel>KMail</guilabel> if you
-want to send a message to the email address and select 
+want to send a message to the email address and select
 <guilabel>Browser</guilabel> if you want to go to the web page.</para>
 
-<para>Alternatively to invoking the handler for 
+<para>Alternatively to invoking the handler for
 <guilabel>Post to List</guilabel> you can send a new message to the
 mailing list via <menuchoice><guimenu>Message</guimenu><guimenuitem>New
 Message to Mailing-List...</guimenuitem></menuchoice></para>
+</sect3>
 
+<sect3 id="folders-properties-shortcut">
+<title>Shortcut</title>
+<para>You can define a keyboard shortcut to access the folder.</para>
+</sect3>
+
+<sect3 id="folders-properties-maintainance">
+<title>Maintenance</title>
+<para>This tab shows an overview about the folder type and its size, 
+the number of read and unread messages in the folder and allows you to enable
+text indexing.</para>
+</sect3>
 </sect2>
-
- <sect2 id="folders-properties-acl"><!-- valid for kmail 2.1.96?  lueck 31.05.2011-->
-	<title>Access Control tab (&imap; only)</title>
-
-	<para>
-	  Here you can manage the access control lists (&acl;s) of
-	  &imap; folders.
-	</para>
-
-	<para>
-	  The currently active &acl; is shown in the list. It consists
-	  of pairs of <guilabel>User Id</guilabel>s and the
-	  <guilabel>Permissions</guilabel> granted to users identified
-	  by that <guilabel>User Id</guilabel>.
-	  <footnote>
-	    <para>
-	      Note that a single <guilabel>User Id</guilabel> might
-	      refer to more than one user. Depending on the &imap;
-	      server and its configuration, there may be User Ids
-	      that correspond to groups of users, anonymous users, or
-	      any user. Consult the manual of your specific &imap;
-	      server implementation for more information.
-	    </para>
-	  </footnote>
-	  &acl;s are settable per-folder.
-	</para>
-
-	<note>
-	  <para>
-	    As with everything else when using <emphasis>disconnected
-	    &imap;</emphasis>, you need to sync with the server for
-	    the changes to be transferred to the server.
-	  </para>
-	</note>
-
-	<para>
-	  &imap; &acl;s define a lot of fine-grained permissions that
-	  you can grant or deny other users. For the sake of clarity,
-	  &kmail; will present them as the following five categories
-	  that you can choose from (see <xref
-	  linkend="table-acl-summary"/> for the details if you already
-	  know &imap; &acl;s).
-	</para>
-
-	<variablelist>
-
-	  <varlistentry id="folders-properties-acl-none">
-	    <term>
-	      <guilabel>None</guilabel>
-	      </term>
-	    <listitem>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> no rights at all. This is also the
-		default for users not explicitly (or implicitly, as a
-		group) listed in the &acl;. These users will not see
-		this folder in the list of &imap; folders presented to
-		them by their mail clients.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-
-	  <varlistentry id="folders-properties-acl-read">
-	    <term>
-	      <guilabel>Read</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> reading rights for this folder. This
-		also includes the ability for their mail clients to
-		mark mails as read and store this information on the
-		server.<!-- --><footnote>
-		  <para>
-		    Every user has their own list of read mail, so none
-		    of your unread mails will suddenly be marked as
-		    read just because someone else has already read them.
-		  </para>
-		</footnote>
-	      </para>
-	      <para>
-		These users will see this folder in the list of &imap;
-		folders presented to them by their mail clients.
-	      </para>
-	      <para>
-		Use this to create a shared folder that others can
-		read, but not modify.
-	      </para>
-	      <informalexample>
-		<para>
-		  If you were the editor of a company's news letter,
-		  you could create a folder for the purpose of
-		  distributing the news letter, grant everyone reading
-		  rights, and save the letter to this folder instead
-		  of sending it out by email to a catch-all address.
-		</para>
-	      </informalexample>
-	    </listitem>
-	  </varlistentry>
-
-	  <varlistentry id="folders-properties-acl-append">
-	    <term>
-	      <guilabel>Append</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		(also known as <guilabel>Post</guilabel>)
-	      </para>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> reading (see above) and posting rights
-		for this folder.
-	      </para>
-	      <para>
-		Use this to create a shared folder that others can
-		read and post messages to, but cannot otherwise
-		modify.
-	      </para>
-	      <informalexample>
-		<para>
-		  If you wanted to create a company-wide discussion
-		  forum, instead of using a web-based form or a
-		  separate company-private usenet server, you could
-		  create a bunch of folders (one per topic), and grant
-		  everyone reading and posting rights. Instead of
-		  posting to an &nntp; server or writing their
-		  messages into a web form, people would just write
-		  emails and store them in the folder suiting the
-		  topic of the message.
-		</para>
-	      </informalexample>
-	    </listitem>
-	  </varlistentry>
-
-	  <varlistentry id="folders-properties-acl-write">
-	    <term>
-	      <guilabel>Write</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> reading, posting (see above), and
-		writing rights for this folder.
-	      </para>
-	      <para>
-		The right to write to a folder includes deleting of
-		messages, creating subfolders, and storing other
-		attributes than read/unread on the server (&eg;
-		answered).
-	      </para>
-	      <para>
-		Use this to create a shared folder that everyone has
-		(almost, see <xref linkend="folders-properties-acl-all"/>)
-		the same rights for.
-	      </para>
-	      <informalexample>
-		<para>
-		  In the <xref
-		  linkend="folders-properties-acl-append"/> example,
-		  you could assign write rights to a group of people
-		  acting as moderators, which would then be able to
-		  remove off-topic posts, and create sub-topic-folders
-		  for high-traffic folders.
-		</para>
-	      </informalexample>
-	    </listitem>
-	  </varlistentry>
-
-	  <varlistentry id="folders-properties-acl-all">
-	    <term>
-	      <guilabel>All</guilabel>
-	    </term>
-	    <listitem>
-	      <para>
-		Grants the users identified by <guilabel>User
-		Id</guilabel> reading, posting, writing (see above),
-		as well as administration rights, &ie; the right to
-		modify the &acl; of this folder.
-	      </para>
-	      <para>
-		This is the default set of rights for the owner of a
-		folder.
-	      </para>
-	    </listitem>
-	  </varlistentry>
-
-	</variablelist>
-
-	<para>
-	  <xref linkend="table-acl-summary"/> summarizes the &imap;
-	  &acl; rights associated with each permission level.
-	</para>
-
-	<table id="table-acl-summary">
-	  <title>
-	    &acl; Rights Summary
-	  </title>
-	  <tgroup cols="6">
-	    <thead>
-	      <row>
-		<entry>&acl; right</entry>
-		<entry><xref linkend="folders-properties-acl-none"/></entry>
-		<entry><xref linkend="folders-properties-acl-read"/></entry>
-		<entry><xref linkend="folders-properties-acl-append"/></entry>
-		<entry><xref linkend="folders-properties-acl-write"/></entry>
-		<entry><xref linkend="folders-properties-acl-all"/></entry>
-	      </row>
-	    </thead>
-	    <!--tfoot/-->
-	    <tbody>
-	      <row>
-		<entry>Lookup</entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Read</entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Store Seen</entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Insert</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Post</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Write Flags</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Create</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Delete</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-		<entry>x</entry>
-	      </row>
-	      <row>
-		<entry>Administer</entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry></entry>
-		<entry>x</entry>
-	      </row>
-	    </tbody>
-	  </tgroup>
-	</table>
-
-      </sect2>
-
-<!-- not valid for kmail 2.0.96, adapt to akonadi lueck 31.05.2011
-<sect2 id="folders-format">
-<title>Folder Format</title>
-
-<para>A message folder can be either in <guilabel>mbox</guilabel> or in <guilabel>maildir</guilabel>
-format. <guilabel>mbox</guilabel> saves all messages of a folder to one file,
-whereas <guilabel>maildir</guilabel> saves each message to its own file.
-<guilabel>maildir</guilabel>, which is the default format, can be considered more
-robust, but it can be slower on some file systems. If you are unsure,
-choose <guilabel>maildir</guilabel>.</para>
-
-<para>Note that there is currently no feature in &kmail; that allows you to convert
-between both formats automatically, but you can just move all messages from an old
-<guilabel>mbox</guilabel> folder to a new <guilabel>maildir</guilabel> folder or
-vice-versa.</para>
-
-</sect2>
--->
 </sect1>
 
 <sect1 id="filters">

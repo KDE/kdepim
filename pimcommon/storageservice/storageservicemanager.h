@@ -37,6 +37,7 @@ public:
         UbuntuOne,
         YouSendIt,
         WebDav,
+        Box,
 
         //Last element
         EndListService
@@ -51,10 +52,14 @@ public:
     static QString serviceToI18n(ServiceType type);
     static QString serviceName(ServiceType type);
     static QString description(ServiceType type);
-    static QUrl serviceUrl(ServiceType type);
+    static QUrl serviceUrl(ServiceType type);    
+    static QString icon(ServiceType type);
 
 Q_SIGNALS:
     void servicesChanged();
+    void uploadFileDone(const QString &serviceName);
+    void uploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void shareLinkDone(const QString &serviceName, const QString &link);
 
 private Q_SLOTS:
     void slotShareFile();

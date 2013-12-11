@@ -37,8 +37,7 @@
 using namespace PimCommon;
 
 DropBoxJob::DropBoxJob(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent),
-      mInitialized(false)
+    : PimCommon::StorageServiceAbstractJob(parent)
 {
     mOauthconsumerKey = QLatin1String("e40dvomckrm48ci");
     mOauthSignature = QLatin1String("0icikya464lny9g&");
@@ -59,7 +58,6 @@ void DropBoxJob::initializeToken(const QString &accessToken, const QString &acce
     mOauthToken = accessToken;
     mOauthTokenSecret = accessTokenSecret;
     mAccessOauthSignature = accessOauthSignature;
-    mInitialized = true;
 }
 
 void DropBoxJob::requestTokenAccess()
@@ -128,23 +126,26 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case UploadFiles:
-                Q_EMIT actionFailed(i18n("Upload File returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case CreateFolder:
-                Q_EMIT actionFailed(i18n("Create Folder returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case AccountInfo:
-                Q_EMIT actionFailed(i18n("Get account info returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case ListFolder:
-                Q_EMIT actionFailed(i18n("List folder returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case ShareLink:
-                Q_EMIT actionFailed(i18n("Share Link returns an error: %1",errorStr));
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case CreateServiceFolder:
                 deleteLater();
                 break;
             default:
@@ -180,6 +181,9 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         break;
     case ShareLink:
         parseShareLink(data);
+        break;
+    case CreateServiceFolder:
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
@@ -217,7 +221,7 @@ void DropBoxJob::parseResponseAccessToken(const QString &data)
 {
     if(data.contains(QLatin1String("error"))) {
         qDebug()<<" return error !";
-        Q_EMIT authorizationFailed();
+        Q_EMIT authorizationFailed(data);
     } else {
         QStringList split           = data.split(QLatin1Char('&'));
         QStringList tokenSecretList = split.at(0).split(QLatin1Char('='));
@@ -253,7 +257,6 @@ void DropBoxJob::doAuthentification()
 {
     QUrl url(QLatin1String("https://api.dropbox.com/1/oauth/authorize"));
     url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
-    qDebug()<<" void DropBoxJob::doAuthentification()"<<url;
     QPointer<StorageAuthViewDialog> dlg = new StorageAuthViewDialog;
     dlg->setUrl(url);
     if (dlg->exec()) {
@@ -393,7 +396,6 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
 
 void DropBoxJob::parseShareLink(const QString &data)
 {
-    qDebug()<<" parseShareLink( );data :"<<data;
     QJson::Parser parser;
     bool ok;
     QString url;

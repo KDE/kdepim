@@ -48,24 +48,23 @@ void WebDavJob::requestTokenAccess()
 
 void WebDavJob::uploadFile(const QString &filename)
 {
-
+    mActionType = UploadFiles;
 }
 
 void WebDavJob::listFolder()
 {
-
+    mActionType = ListFolder;
 }
 
 void WebDavJob::accountInfo()
 {
-
+    mActionType = AccountInfo;
 }
 
 void WebDavJob::createFolder(const QString &filename)
 {
-
+    mActionType = CreateFolder;
 }
-
 
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
 {
@@ -87,18 +86,23 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case AccessToken:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case UploadFiles:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case CreateFolder:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case AccountInfo:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             case ListFolder:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             default:
@@ -120,16 +124,16 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case UploadFiles:
-        deleteLater();
+        parseUploadFiles(data);
         break;
     case CreateFolder:
-        deleteLater();
+        parseCreateFolder(data);
         break;
     case AccountInfo:
-        deleteLater();
+        parseAccountInfo(data);
         break;
     case ListFolder:
-        deleteLater();
+        parseListFolder(data);
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
@@ -137,8 +141,32 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
+void WebDavJob::parseUploadFiles(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    deleteLater();
+}
 
-void PimCommon::WebDavJob::shareLink(const QString &root, const QString &path)
+void WebDavJob::parseCreateFolder(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    deleteLater();
+}
+
+void WebDavJob::parseAccountInfo(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    deleteLater();
+}
+
+void WebDavJob::parseListFolder(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    deleteLater();
+}
+
+
+void WebDavJob::shareLink(const QString &root, const QString &path)
 {
 
 }

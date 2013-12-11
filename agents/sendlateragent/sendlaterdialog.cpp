@@ -21,15 +21,11 @@
 #include "ui_sendlaterwidget.h"
 
 #include <KLocale>
-#include <KComboBox>
 #include <KPushButton>
 #include <KSeparator>
 
-#include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QCheckBox>
-#include <QLabel>
-#include <QSpinBox>
 
 using namespace SendLater;
 

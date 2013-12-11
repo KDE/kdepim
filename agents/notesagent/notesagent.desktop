@@ -1,0 +1,25 @@
+[Desktop Entry]
+Name=Notes Agent
+Name[de]=Notizen-Agent
+Name[nl]=Agent voor notities
+Name[pt]=Agente de Notas
+Name[pt_BR]=Agente de Notas
+Name[sk]=Agent poznámok
+Name[sv]=Anteckningsmodul
+Name[uk]=Агент нотаток
+Name[x-test]=xxNotes Agentxx
+Comment=Notes Agent allows to get note send by network and show alarms
+Comment[nl]=Agent voor notities stelt u in staat om notities te ontvangen en te zenden via het netwerk en om herinneringen te tonen
+Comment[pt]=O Agente de Notas permite obter as notas enviadas pela rede e mostrar alarmes
+Comment[pt_BR]=O Agente de Notas permite obter uma nota enviada pela rede e mostrar os alarmes
+Comment[sk]=Agent poznámok vám umožní poslať poznámku po sieti a zobraziť výstrahy
+Comment[sv]=Anteckningsmodulen gör det möjligt att hämta anteckningar skickade av nätverket och visa alarm
+Comment[uk]=Агент нотаток надає змогу отримувати нотатки, надіслані мережею, і показувати нагадування
+Comment[x-test]=xxNotes Agent allows to get note send by network and show alarmsxx
+Type=AkonadiAgent
+Exec=akonadi_notes_agent
+Icon=knotes
+X-DocPath=akonadi_notes_agent/index.html
+X-Akonadi-MimeTypes=message/rfc822
+X-Akonadi-Capabilities=Unique,Autostart
+X-Akonadi-Identifier=akonadi_notes_agent

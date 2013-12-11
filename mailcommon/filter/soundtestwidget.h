@@ -20,9 +20,8 @@
 #ifndef MAILCOMMON_SOUNDTESTWIDGET_H
 #define MAILCOMMON_SOUNDTESTWIDGET_H
 
-#include <KLineEdit>
 
-#include <QString>
+#include <QWidget>
 
 class QPushButton;
 class KUrlRequester;

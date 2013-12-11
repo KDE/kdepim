@@ -20,13 +20,10 @@
 #include "followupreminderadaptor.h"
 #include "followupreminderconfiguredialog.h"
 #include "followupreminderagentsettings.h"
-#include <KWindowSystem>
 #include <KLocale>
 
 #include <akonadi/dbusconnectionpool.h>
 
-#include <QPointer>
-#include <QDebug>
 
 //#define DEBUG_FOLLOWUPREMINDERAGENT 1
 

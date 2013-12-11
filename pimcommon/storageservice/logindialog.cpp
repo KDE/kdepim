@@ -51,6 +51,7 @@ LoginDialog::LoginDialog(QWidget *parent)
     connect(mUsername, SIGNAL(textChanged(QString)), this, SLOT(slotUserNameChanged(QString)));
     enableButtonOk(false);
     resize(300,100);
+    mUsername->setFocus();
 }
 
 LoginDialog::~LoginDialog()

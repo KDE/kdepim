@@ -38,10 +38,8 @@ using MailCommon::FilterImporterExporter;
 #include <Akonadi/AgentType>
 #include <Akonadi/ItemFetchJob>
 
-#include <KComboBox>
 #include <KConfigGroup>
 #include <KDebug>
-#include <KIconDialog>
 #include <KIconLoader>
 #include <KInputDialog>
 #include <KJob>
@@ -52,6 +50,7 @@ using MailCommon::FilterImporterExporter;
 #include <KPushButton>
 #include <KTabWidget>
 #include <KWindowSystem>
+#include <KIconButton>
 
 #include <QApplication>
 #include <QHeaderView>

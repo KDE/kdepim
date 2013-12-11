@@ -24,6 +24,7 @@
 #include "ubuntuone/ubuntuonestorageservice.h"
 #include "yousendit/yousenditstorageservice.h"
 #include "webdav/webdavstorageservice.h"
+#include "box/boxstorageservice.h"
 
 #include <KLocale>
 #include <KFileDialog>
@@ -91,6 +92,9 @@ void StorageServiceManager::slotShareFile()
             const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
             if (!fileName.isEmpty()) {
                 service->uploadFile(fileName);
+                connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
+                connect(service,SIGNAL(uploadFileDone(QString)), this, SIGNAL(uploadFileDone(QString)), Qt::UniqueConnection);
+                connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
             }
         }
     }
@@ -100,26 +104,34 @@ void StorageServiceManager::readConfig()
 {
     const QStringList services = PimCommon::PimCommonSettings::self()->services();
     Q_FOREACH(const QString &service, services) {
+        PimCommon::StorageServiceAbstract *storageService = 0;
         if (service == serviceName(DropBox)) {
             if (!mListService.contains(serviceName(DropBox))) {
-                mListService.insert(service, new DropBoxStorageService());
+                storageService = new DropBoxStorageService();
             }
         } else if (service == serviceName(Hubic)) {
             if (!mListService.contains(serviceName(Hubic))) {
-                mListService.insert(service, new HubicStorageService());
+                storageService = new HubicStorageService();
             }
         } else if (service == serviceName(UbuntuOne)) {
             if (!mListService.contains(serviceName(UbuntuOne))) {
-                mListService.insert(service, new UbuntuoneStorageService());
+                storageService = new UbuntuoneStorageService();
             }
         } else if (service == serviceName(YouSendIt)) {
             if (!mListService.contains(serviceName(YouSendIt))) {
-                mListService.insert(service, new YouSendItStorageService());
+                storageService = new YouSendItStorageService();
             }
         } else if (service == serviceName(WebDav)) {
             if (!mListService.contains(serviceName(WebDav))) {
-                mListService.insert(service, new WebDavStorageService());
+                storageService = new WebDavStorageService();
             }
+        } else if (service == serviceName(Box)) {
+            if (!mListService.contains(serviceName(Box))) {
+                storageService = new BoxStorageService();
+            }
+        }
+        if (storageService) {
+            mListService.insert(service, storageService);
         }
     }
 }
@@ -141,6 +153,8 @@ QString StorageServiceManager::description(ServiceType type)
         return PimCommon::UbuntuoneStorageService::description();
     case WebDav:
         return PimCommon::WebDavStorageService::description();
+    case Box:
+        return PimCommon::BoxStorageService::description();
     default:
         return QString();
     }
@@ -160,6 +174,8 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::YouSendItStorageService::serviceUrl();
     case WebDav:
         return PimCommon::WebDavStorageService::serviceUrl();
+    case Box:
+        return PimCommon::BoxStorageService::serviceUrl();
     default:
         return QString();
     }
@@ -180,6 +196,8 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::YouSendItStorageService::serviceName();
     case WebDav:
         return PimCommon::WebDavStorageService::serviceName();
+    case Box:
+        return PimCommon::BoxStorageService::serviceName();
     default:
         return QString();
     }
@@ -198,6 +216,28 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::YouSendItStorageService::name();
     case WebDav:
         return PimCommon::WebDavStorageService::name();
+    case Box:
+        return PimCommon::BoxStorageService::name();
+    default:
+        return QString();
+    }
+}
+
+QString StorageServiceManager::icon(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return PimCommon::DropBoxStorageService::iconName();
+    case Hubic:
+        return PimCommon::HubicStorageService::iconName();
+    case UbuntuOne:
+        return PimCommon::UbuntuoneStorageService::iconName();
+    case YouSendIt:
+        return PimCommon::YouSendItStorageService::iconName();
+    case WebDav:
+        return PimCommon::WebDavStorageService::iconName();
+    case Box:
+        return PimCommon::BoxStorageService::iconName();
     default:
         return QString();
     }

@@ -49,7 +49,7 @@ Q_SIGNALS:
     void createFolderDone();
     void uploadFileDone();
     void listFolderDone();
-    void authorizationFailed();
+    void authorizationFailed(const QString &error);
 
 protected:
     enum ActionType {
@@ -60,8 +60,10 @@ protected:
         CreateFolder,
         ListFolder,
         AccountInfo,
-        ShareLink
+        ShareLink,
+        CreateServiceFolder
     };
+    void errorMessage(PimCommon::StorageServiceAbstractJob::ActionType type, const QString &errorStr);
 
     QNetworkAccessManager *mNetworkAccessManager;
     ActionType mActionType;

@@ -52,18 +52,18 @@ void HubicStorageService::removeConfig()
 void HubicStorageService::authentification()
 {
     HubicJob *job = new HubicJob(this);
-    connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
-    connect(job, SIGNAL(authorizationFailed()), this, SLOT(slotAuthorizationFailed()));
+    connect(job, SIGNAL(authorizationDone(QString,qint64)), this, SLOT(slotAuthorizationDone(QString,qint64)));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
 
-void HubicStorageService::slotAuthorizationFailed()
+void HubicStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mRefreshToken.clear();
-    Q_EMIT authentificationFailed(serviceName());
+    Q_EMIT authentificationFailed(serviceName(), errorMessage);
 }
 
-void HubicStorageService::slotAuthorizationDone(const QString &refreshToken)
+void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, qint64 expireTime)
 {
     mRefreshToken = refreshToken;
     KConfigGroup grp(KGlobal::config(), "Hubic Settings");
@@ -96,7 +96,6 @@ void HubicStorageService::createFolder(const QString &folder)
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createFolder(folder);
     }
-
 }
 
 void HubicStorageService::accountInfo()
@@ -146,6 +145,11 @@ QString HubicStorageService::serviceName()
     return QLatin1String("hubic");
 }
 
+QString HubicStorageService::iconName()
+{
+    return QString();
+}
+
 void HubicStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mRefreshToken.isEmpty()) {
@@ -162,4 +166,9 @@ void HubicStorageService::shareLink(const QString &root, const QString &path)
 QString HubicStorageService::storageServiceName() const
 {
     return serviceName();
+}
+
+KIcon HubicStorageService::icon() const
+{
+    return KIcon();
 }

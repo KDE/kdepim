@@ -33,6 +33,7 @@ public:
     static QString description();
     static QUrl serviceUrl();
     static QString serviceName();
+    static QString iconName();
 
     void uploadFile(const QString &filename);
     void accountInfo();
@@ -42,6 +43,7 @@ public:
     void authentification();
     void shareLink(const QString &root, const QString &path);
     QString storageServiceName() const;
+    KIcon icon() const;
 
 private:
     void readConfig();

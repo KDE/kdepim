@@ -30,7 +30,6 @@
 #include <akonadi/dbusconnectionpool.h>
 
 #include <QPointer>
-#include <QDebug>
 
 FolderArchiveAgent::FolderArchiveAgent(const QString &id)
     : Akonadi::AgentBase( id )

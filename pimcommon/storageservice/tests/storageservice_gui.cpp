@@ -55,6 +55,9 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     mStorageManager = new PimCommon::StorageServiceManager(this);
+    connect(mStorageManager, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
+    connect(mStorageManager, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
+    connect(mStorageManager, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
     bar->addAction(QLatin1String("Settings..."), this, SLOT(slotSettings()));
@@ -64,8 +67,24 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     act->setMenu(menu);
 
     mEdit = new QTextEdit;
+    mEdit->setReadOnly(true);
     lay->addWidget(mEdit);
     setLayout(lay);
+}
+
+void StorageServiceTestWidget::slotShareLinkDone(const QString &serviceName, const QString &link)
+{
+    mEdit->insertPlainText(QString::fromLatin1("service name: %1, link %2\n").arg(serviceName).arg(link));
+}
+
+void StorageServiceTestWidget::slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total)
+{
+    mEdit->insertPlainText(QString::fromLatin1("service name: %1, upload done: %2 on %3\n").arg(serviceName).arg(done).arg(total));
+}
+
+void StorageServiceTestWidget::slotUploadFileDone(const QString &serviceName)
+{
+    mEdit->insertPlainText(QString::fromLatin1("download done on %1\n").arg(serviceName));
 }
 
 void StorageServiceTestWidget::slotServiceMenu()

@@ -25,6 +25,7 @@
 #include <KDebug>
 
 #include <QFile>
+#include <QDir>
 
 using namespace MailCommon;
 

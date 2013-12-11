@@ -40,7 +40,6 @@
 
 #include <QTableWidget>
 #include <QTimer>
-#include <QTextDocument>
 static const int TIMEOUT = 45000;
 
 class AddEditBlog::Private

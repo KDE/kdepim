@@ -145,7 +145,17 @@ QString WebDavStorageService::serviceName()
     return QLatin1String("webdav");
 }
 
+QString WebDavStorageService::iconName()
+{
+    return QString();
+}
+
 QString WebDavStorageService::storageServiceName() const
 {
     return serviceName();
+}
+
+KIcon WebDavStorageService::icon() const
+{
+    return KIcon();
 }

@@ -20,7 +20,6 @@
 
 #include "filterimporter/filterimporterabstract_p.h"
 #include "mailcommon_export.h"
-#include <QDomElement>
 
 class QFile;
 

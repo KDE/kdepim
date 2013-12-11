@@ -26,7 +26,6 @@
 #include <KGlobal>
 
 #include <QBuffer>
-#include <QDebug>
 
 using namespace KABPrinting;
 

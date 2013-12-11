@@ -33,8 +33,9 @@
 #include <KDebug>
 
 #include <QFile>
-#include <QByteArray>
 #include <QTime>
+#include <QTextDocument>
+#include <QDir>
 
 #include <sys/stat.h>
 
