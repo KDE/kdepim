@@ -23,7 +23,6 @@
 
 #include <KDE/KLocale>
 
-#include <QTextDocument>
 
 using namespace MailCommon;
 

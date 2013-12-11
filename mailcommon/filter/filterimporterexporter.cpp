@@ -50,9 +50,7 @@
 #include <KMessageBox>
 #include <KPushButton>
 
-#include <QListWidget>
 #include <QRegExp>
-#include <QVBoxLayout>
 
 using namespace MailCommon;
 

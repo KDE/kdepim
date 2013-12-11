@@ -20,7 +20,6 @@
 #include "mailfilter.h"
 
 #include <KDebug>
-#include <KFileDialog>
 #include <KListWidgetSearchLine>
 #include <KPushButton>
 
