@@ -47,9 +47,12 @@ private slots:
     void slotRemoveService();
     void slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info);
     void slotModifyService();
+    void slotAuthentificationFailed(const QString &serviceName, const QString &error);
+    void slotAuthentificationDone(const QString &serviceName);
+
 private:
     void updateButtons();
-    void createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon);
+    PimCommon::StorageListWidgetItem *createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon);
     enum ServiceData {
         Name = Qt::UserRole + 1,
         Type = Qt::UserRole + 2

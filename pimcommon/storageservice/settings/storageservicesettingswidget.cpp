@@ -136,7 +136,7 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
     }
 }
 
-void StorageServiceSettingsWidget::createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon)
+PimCommon::StorageListWidgetItem *StorageServiceSettingsWidget::createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon)
 {
     PimCommon::StorageListWidgetItem *item = new PimCommon::StorageListWidgetItem;
     item->setText(serviceName);
@@ -146,6 +146,7 @@ void StorageServiceSettingsWidget::createItem(const QString &serviceName, const 
         item->setIcon(icon);
     }
     mListService->addItem(item);
+    return item;
 }
 
 QMap<QString, StorageServiceAbstract *> StorageServiceSettingsWidget::listService() const
@@ -206,12 +207,37 @@ void StorageServiceSettingsWidget::slotAddService()
             break;
         }
         if (storage) {
-            createItem(serviceName, service, type, storage->icon());
+            PimCommon::StorageListWidgetItem *item = createItem(serviceName, service, type, storage->icon());
+            item->startAnimation();
+            connect(storage,SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
+            connect(storage,SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
             storage->authentification();
             mListStorageService.insert(service, storage);
         }
     }
     delete dlg;
+}
+
+void StorageServiceSettingsWidget::slotAuthentificationFailed(const QString &serviceName, const QString &error)
+{
+    for (int i=0; i <mListService->count(); ++i) {
+        if (mListService->item(i)->data(Name).toString() == serviceName) {
+            PimCommon::StorageListWidgetItem *item = static_cast<PimCommon::StorageListWidgetItem*>(mListService->item(i));
+            item->stopAnimation();
+            break;
+        }
+    }
+}
+
+void StorageServiceSettingsWidget::slotAuthentificationDone(const QString &serviceName)
+{
+    for (int i=0; i <mListService->count(); ++i) {
+        if (mListService->item(i)->data(Name).toString() == serviceName) {
+            PimCommon::StorageListWidgetItem *item = static_cast<PimCommon::StorageListWidgetItem*>(mListService->item(i));
+            item->stopAnimation();
+            break;
+        }
+    }
 }
 
 void StorageServiceSettingsWidget::slotServiceSelected()
@@ -265,6 +291,8 @@ void StorageServiceSettingsWidget::slotModifyService()
         const QString serviceName = mListService->currentItem()->data(Name).toString();
         if (mListStorageService.contains(serviceName)) {
             StorageServiceAbstract *storage = mListStorageService.value(serviceName);
+            connect(storage,SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
+            connect(storage,SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
             storage->authentification();
         }
     }
