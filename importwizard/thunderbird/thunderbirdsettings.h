@@ -21,9 +21,7 @@
 #include "abstractsettings.h"
 #include "importwizardutil.h"
 #include <QHash>
-#include <QColor>
 #include <QStringList>
-#include <KUrl>
 
 class ImportWizard;
 

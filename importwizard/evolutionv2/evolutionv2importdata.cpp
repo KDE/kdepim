@@ -23,7 +23,6 @@
 #include <KLocale>
 
 #include <QDir>
-#include <QWidget>
 
 
 Evolutionv2ImportData::Evolutionv2ImportData(ImportWizard*parent)

@@ -28,7 +28,6 @@
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <QFile>
 #include <QImage>
 
 BalsaSettings::BalsaSettings(const QString &filename, ImportWizard *parent)

@@ -25,7 +25,6 @@
 #include <mailtransport/transportmanager.h>
 
 #include <KConfig>
-#include <KConfigGroup>
 #include <KDebug>
 
 #include <QFile>

@@ -23,10 +23,8 @@
 #include "importfilterinfogui.h"
 #include "importwizard.h"
 
-#include <KLocale>
 
 #include <QDir>
-#include <QWidget>
 
 
 TrojitaImportData::TrojitaImportData(ImportWizard*parent)

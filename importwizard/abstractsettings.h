@@ -20,8 +20,6 @@
 
 #include "abstractbase.h"
 #include <KSharedConfig>
-#include <KUrl>
-#include <QObject>
 #include <QMap>
 
 class ImportWizard;

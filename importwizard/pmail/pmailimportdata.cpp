@@ -25,7 +25,6 @@
 #include <KLocale>
 
 #include <QDir>
-#include <QWidget>
 
 
 PMailImportData::PMailImportData(ImportWizard*parent)

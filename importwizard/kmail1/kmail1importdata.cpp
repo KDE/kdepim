@@ -20,11 +20,8 @@
 #include "importfilterinfogui.h"
 #include "importwizard.h"
 
-#include <KLocale>
 #include <KStandardDirs>
 
-#include <QDir>
-#include <QWidget>
 
 
 KMail1ImportData::KMail1ImportData(ImportWizard*parent)

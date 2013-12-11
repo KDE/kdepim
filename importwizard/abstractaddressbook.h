@@ -18,7 +18,6 @@
 #ifndef ABSTRACTADDRESSBOOK_H
 #define ABSTRACTADDRESSBOOK_H
 
-#include <QObject>
 #include <Akonadi/Collection>
 #include "abstractbase.h"
 

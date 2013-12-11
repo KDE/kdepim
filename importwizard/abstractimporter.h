@@ -17,7 +17,6 @@
 
 #ifndef AbstractImporter_H
 #define AbstractImporter_H
-#include <QObject>
 #include "mailcommon/filter/filterimporterexporter.h"
 
 class ImportWizard;
