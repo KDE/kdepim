@@ -34,8 +34,8 @@
 
 using namespace NoteShared;
 
-NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent )
-    :KCModule( inst, parent )
+NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
+    : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout( this );
     QWidget * w =  new QWidget( this );
@@ -80,7 +80,18 @@ NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent
     tmpLayout->addWidget( kcfg_Port );
     layout->addLayout( tmpLayout );
     lay->addStretch();
-    addConfig( NoteShared::NoteSharedGlobalConfig::self(), w );
+}
+
+NoteNetworkConfigWidget::~NoteNetworkConfigWidget()
+{
+
+}
+
+NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent )
+    :KCModule( inst, parent )
+{
+    NoteNetworkConfigWidget *widget = new NoteNetworkConfigWidget(this);
+    addConfig( NoteShared::NoteSharedGlobalConfig::self(), widget );
     load();
 }
 

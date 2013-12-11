@@ -17,6 +17,8 @@
 
 #include "notesagentsettingsdialog.h"
 
+#include "noteshared/config/notenetworkconfig.h"
+
 #include "kdepim-version.h"
 #include <KMenu>
 #include <KHelpMenu>
@@ -49,6 +51,9 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     mNotify = new KNotifyConfigWidget(this);
     mNotify->setApplication(QLatin1String("akonadi_notes_agent"));
     tab->addTab(mNotify, i18n("Notify"));
+
+    mNetworkConfig = new NoteShared::NoteNetworkConfigWidget(this);
+    tab->addTab(mNetworkConfig, i18n("Network"));
 
 
     setMainWidget(mainWidget);

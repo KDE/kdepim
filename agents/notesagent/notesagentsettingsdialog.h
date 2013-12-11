@@ -22,6 +22,9 @@
 
 class KAboutData;
 class KNotifyConfigWidget;
+namespace NoteShared {
+class NoteNetworkConfigWidget;
+}
 class NotesAgentSettingsDialog : public KDialog
 {
     Q_OBJECT
@@ -37,6 +40,7 @@ private:
     void readConfig();
     KAboutData *mAboutData;
     KNotifyConfigWidget *mNotify;
+    NoteShared::NoteNetworkConfigWidget *mNetworkConfig;
 };
 
 #endif // NOTESAGENTSETTINGSDIALOG_H

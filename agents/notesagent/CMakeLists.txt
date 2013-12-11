@@ -1,8 +1,7 @@
 project(notesagent)
 
 include_directories(
-   ${CMAKE_SOURCE_DIR}/libkdepim
-   ${CMAKE_SOURCE_DIR}/mailcommon
+   ${CMAKE_SOURCE_DIR}/noteshared
 )
 
 set(notesagent_SRCS
@@ -29,7 +28,7 @@ target_link_libraries(akonadi_notes_agent
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_KNOTIFYCONFIG_LIBS}
-  mailcommon
+  noteshared
 )
 
 if (Q_WS_MAC)

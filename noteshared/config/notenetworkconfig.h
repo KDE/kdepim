@@ -22,6 +22,16 @@
 #include <KCModule>
 class KComponentData;
 namespace NoteShared {
+
+class NOTESHARED_EXPORT NoteNetworkConfigWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit NoteNetworkConfigWidget( QWidget *parent = 0);
+    ~NoteNetworkConfigWidget();
+};
+
+
 class NOTESHARED_EXPORT NoteNetworkConfig : public KCModule
 {
     Q_OBJECT
