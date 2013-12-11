@@ -78,7 +78,7 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     KHelpMenu *helpMenu = new KHelpMenu(this, mAboutData, true);
     //Initialize menu
     KMenu *menu = helpMenu->menu();
-    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("kmail")));
+    helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(KIcon(QLatin1String("knotes")));
     setButtonMenu( Help, menu );
 }
 
