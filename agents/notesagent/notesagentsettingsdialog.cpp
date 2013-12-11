@@ -23,8 +23,10 @@
 #include <KLocale>
 #include <KIcon>
 #include <KAboutData>
+#include <KNotifyConfigWidget>
 
 #include <QHBoxLayout>
+#include <QTabWidget>
 
 NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     : KDialog(parent)
@@ -33,11 +35,22 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
     setWindowIcon( KIcon( QLatin1String("knotes") ) );
     setButtons( Help | Ok|Cancel );
     setDefaultButton( Ok );
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+
     setModal( true );
     QWidget *mainWidget = new QWidget( this );
     QHBoxLayout *mainLayout = new QHBoxLayout( mainWidget );
     mainLayout->setSpacing( KDialog::spacingHint() );
     mainLayout->setMargin( KDialog::marginHint() );
+
+    QTabWidget *tab = new QTabWidget;
+    mainLayout->addWidget(tab);
+
+    mNotify = new KNotifyConfigWidget(this);
+    mNotify->setApplication(QLatin1String("akonadi_notes_agent"));
+    tab->addTab(mNotify, i18n("Notify"));
+
+
     setMainWidget(mainWidget);
     readConfig();
     mAboutData = new KAboutData(
@@ -86,4 +99,9 @@ void NotesAgentSettingsDialog::readConfig()
     KConfigGroup group( KGlobal::config(), myConfigGroupName );
     group.writeEntry( "Size", size() );
     group.sync();
+}
+
+void NotesAgentSettingsDialog::slotOkClicked()
+{
+    mNotify->save();
 }

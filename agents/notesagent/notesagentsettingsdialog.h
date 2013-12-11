@@ -21,6 +21,7 @@
 #include <KDialog>
 
 class KAboutData;
+class KNotifyConfigWidget;
 class NotesAgentSettingsDialog : public KDialog
 {
     Q_OBJECT
@@ -28,10 +29,14 @@ public:
     explicit NotesAgentSettingsDialog(QWidget *parent=0);
     ~NotesAgentSettingsDialog();
 
+private slots:
+    void slotOkClicked();
+
 private:
     void writeConfig();
     void readConfig();
     KAboutData *mAboutData;
+    KNotifyConfigWidget *mNotify;
 };
 
 #endif // NOTESAGENTSETTINGSDIALOG_H

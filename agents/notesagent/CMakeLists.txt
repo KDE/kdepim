@@ -28,6 +28,7 @@ target_link_libraries(akonadi_notes_agent
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   ${KDE4_KIO_LIBS}
+  ${KDE4_KNOTIFYCONFIG_LIBS}
   mailcommon
 )
 
