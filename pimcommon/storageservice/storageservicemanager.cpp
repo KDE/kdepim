@@ -87,11 +87,15 @@ void StorageServiceManager::slotShareFile()
     QAction *act = qobject_cast< QAction* >( sender() );
     if ( act ) {
         const QString type = act->data().toString();
+        qDebug()<<" type "<<type;
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
             const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
             if (!fileName.isEmpty()) {
                 service->uploadFile(fileName);
+                connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
+                connect(service,SIGNAL(uploadFileDone(QString)), this, SIGNAL(uploadFileDone(QString)), Qt::UniqueConnection);
+                connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
             }
         }
     }
@@ -101,30 +105,34 @@ void StorageServiceManager::readConfig()
 {
     const QStringList services = PimCommon::PimCommonSettings::self()->services();
     Q_FOREACH(const QString &service, services) {
+        PimCommon::StorageServiceAbstract *storageService = 0;
         if (service == serviceName(DropBox)) {
             if (!mListService.contains(serviceName(DropBox))) {
-                mListService.insert(service, new DropBoxStorageService());
+                storageService = new DropBoxStorageService();
             }
         } else if (service == serviceName(Hubic)) {
             if (!mListService.contains(serviceName(Hubic))) {
-                mListService.insert(service, new HubicStorageService());
+                storageService = new HubicStorageService();
             }
         } else if (service == serviceName(UbuntuOne)) {
             if (!mListService.contains(serviceName(UbuntuOne))) {
-                mListService.insert(service, new UbuntuoneStorageService());
+                storageService = new UbuntuoneStorageService();
             }
         } else if (service == serviceName(YouSendIt)) {
             if (!mListService.contains(serviceName(YouSendIt))) {
-                mListService.insert(service, new YouSendItStorageService());
+                storageService = new YouSendItStorageService();
             }
         } else if (service == serviceName(WebDav)) {
             if (!mListService.contains(serviceName(WebDav))) {
-                mListService.insert(service, new WebDavStorageService());
+                storageService = new WebDavStorageService();
             }
         } else if (service == serviceName(Box)) {
             if (!mListService.contains(serviceName(Box))) {
-                mListService.insert(service, new BoxStorageService());
+                storageService = new BoxStorageService();
             }
+        }
+        if (storageService) {
+            mListService.insert(service, storageService);
         }
     }
 }

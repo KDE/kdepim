@@ -145,6 +145,9 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
+            case CreateServiceFolder:
+                deleteLater();
+                break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
                 deleteLater();
@@ -178,6 +181,9 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         break;
     case ShareLink:
         parseShareLink(data);
+        break;
+    case CreateServiceFolder:
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
@@ -251,7 +257,6 @@ void DropBoxJob::doAuthentification()
 {
     QUrl url(QLatin1String("https://api.dropbox.com/1/oauth/authorize"));
     url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
-    qDebug()<<" void DropBoxJob::doAuthentification()"<<url;
     QPointer<StorageAuthViewDialog> dlg = new StorageAuthViewDialog;
     dlg->setUrl(url);
     if (dlg->exec()) {
@@ -391,7 +396,6 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
 
 void DropBoxJob::parseShareLink(const QString &data)
 {
-    qDebug()<<" parseShareLink( );data :"<<data;
     QJson::Parser parser;
     bool ok;
     QString url;

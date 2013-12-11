@@ -170,6 +170,9 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
+        case CreateServiceFolder:
+            deleteLater();
+            break;
         default:
             qDebug()<<" Action Type unknown:"<<mActionType;
             deleteLater();
@@ -197,6 +200,9 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         parseAccountInfo(data);
         break;
     case ListFolder:
+        deleteLater();
+        break;
+    case CreateServiceFolder:
         deleteLater();
         break;
     default:
