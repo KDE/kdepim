@@ -31,7 +31,8 @@ using namespace PimCommon;
 
 OAuth2Job::OAuth2Job(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent),
-      mExpireInTime(0)
+      mExpireInTime(0),
+      mNeedRefreshToken(false)
 {
     mRedirectUri = QLatin1String("https://bugs.kde.org/");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
@@ -42,9 +43,11 @@ OAuth2Job::~OAuth2Job()
 
 }
 
-void OAuth2Job::initializeToken(const QString &refreshToken)
+void OAuth2Job::initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime)
 {
     mRefreshToken = refreshToken;
+    mToken = token;
+    mNeedRefreshToken = (QDateTime::currentDateTime() >= expireDateTime);
 }
 
 void OAuth2Job::requestTokenAccess()
@@ -154,19 +157,13 @@ void OAuth2Job::accountInfo()
 void OAuth2Job::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
-    //TODO
-    /*
-    QNetworkRequest request(QUrl(mServiceUrl + mPathToken));
+    QNetworkRequest request(QUrl(/*mServiceUrl + mPathToken*/QLatin1String("https://api.box.com/2.0/folders/0")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QUrl postData;
-    postData.addQueryItem(QLatin1String("code"), authorizeCode);
-    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
-    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
-    postData.addQueryItem(QLatin1String("client_id"), mClientId);
-    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    postData.addQueryItem(QLatin1String("name"), foldername);
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-    */
 }
 
 void OAuth2Job::shareLink(const QString &root, const QString &path)
@@ -299,7 +296,7 @@ void OAuth2Job::parseAccessToken(const QString &data)
     if (info.contains(QLatin1String("expires_in"))) {
         mExpireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
-    Q_EMIT authorizationDone(mRefreshToken, mExpireInTime);
+    Q_EMIT authorizationDone(mRefreshToken, mToken, mExpireInTime);
     //TODO save it.
     deleteLater();
 }

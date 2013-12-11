@@ -21,6 +21,8 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon_export.h"
 
+#include <QDateTime>
+
 namespace PimCommon {
 class PIMCOMMON_EXPORT HubicStorageService : public PimCommon::StorageServiceAbstract
 {
@@ -47,14 +49,15 @@ public:
     KIcon icon() const;
 
 private slots:
-    void slotAuthorizationDone(const QString &refreshToken, qint64 expireTime);
+    void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
     void readConfig();
 
     QString mRefreshToken;
-
+    QString mToken;
+    QDateTime mExpireDateTime;
 };
 }
 
