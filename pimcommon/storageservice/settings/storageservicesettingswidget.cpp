@@ -16,8 +16,8 @@
 */
 
 #include "storageservicesettingswidget.h"
+#include "storagelistwidgetitem.h"
 #include "addservicestoragedialog.h"
-#include "storageservice/storageservicemanager.h"
 #include "storageservice/dropbox/dropboxstorageservice.h"
 #include "storageservice/hubic/hubicstorageservice.h"
 #include "storageservice/ubuntuone/ubuntuonestorageservice.h"
@@ -132,14 +132,20 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             type = PimCommon::StorageServiceManager::Box;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Box);
         }
-        QListWidgetItem *item = new QListWidgetItem;
-        item->setText(serviceName);
-        if (!icon.isEmpty())
-            item->setIcon(KIcon(icon));
-        item->setData(Name, i.key());
-        item->setData(Type, type);
-        mListService->addItem(item);
+        createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
     }
+}
+
+void StorageServiceSettingsWidget::createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon)
+{
+    PimCommon::StorageListWidgetItem *item = new PimCommon::StorageListWidgetItem;
+    item->setText(serviceName);
+    item->setData(Name,service);
+    item->setData(Type, type);
+    if (!icon.isNull()) {
+        item->setIcon(icon);
+    }
+    mListService->addItem(item);
 }
 
 QMap<QString, StorageServiceAbstract *> StorageServiceSettingsWidget::listService() const
@@ -200,15 +206,7 @@ void StorageServiceSettingsWidget::slotAddService()
             break;
         }
         if (storage) {
-            QListWidgetItem *item = new QListWidgetItem;
-            item->setText(serviceName);
-            item->setData(Name,service);
-            item->setData(Type, type);
-            const KIcon icon = storage->icon();
-            if (!icon.isNull()) {
-                item->setIcon(icon);
-            }
-            mListService->addItem(item);
+            createItem(serviceName, service, type, storage->icon());
             storage->authentification();
             mListStorageService.insert(service, storage);
         }

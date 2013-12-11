@@ -22,11 +22,14 @@
 #include <QMap>
 #include "pimcommon_export.h"
 #include "storageservice/storageserviceabstract.h"
+#include "storageservice/storageservicemanager.h"
 class QListWidget;
 class QPushButton;
 class QLabel;
 class KTextBrowser;
 namespace PimCommon {
+class StorageListWidgetItem;
+
 class PIMCOMMON_EXPORT StorageServiceSettingsWidget : public QWidget
 {
     Q_OBJECT
@@ -46,6 +49,7 @@ private slots:
     void slotModifyService();
 private:
     void updateButtons();
+    void createItem(const QString &serviceName, const QString &service, PimCommon::StorageServiceManager::ServiceType type, const KIcon &icon);
     enum ServiceData {
         Name = Qt::UserRole + 1,
         Type = Qt::UserRole + 2
