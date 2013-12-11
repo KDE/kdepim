@@ -40,7 +40,7 @@ public:
     void initializeToken(const QString &refreshToken);
 
 Q_SIGNALS:
-    void authorizationDone(const QString &refreshToken);
+    void authorizationDone(const QString &refreshToken, qint64 expireTime);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);

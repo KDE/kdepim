@@ -53,7 +53,7 @@ void BoxStorageService::removeConfig()
 void BoxStorageService::authentification()
 {
     BoxJob *job = new BoxJob(this);
-    connect(job, SIGNAL(authorizationDone(QString)), this, SLOT(slotAuthorizationDone(QString)));
+    connect(job, SIGNAL(authorizationDone(QString,qint64)), this, SLOT(slotAuthorizationDone(QString,qint64)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
@@ -64,9 +64,10 @@ void BoxStorageService::slotAuthorizationFailed(const QString &errorMessage)
     Q_EMIT authentificationFailed(serviceName(), errorMessage);
 }
 
-void BoxStorageService::slotAuthorizationDone(const QString &refreshToken)
+void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, qint64 expireTime)
 {
     mRefreshToken = refreshToken;
+    mCreateToken = QTime::currentTime();
     KConfigGroup grp(KGlobal::config(), "Box Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.sync();

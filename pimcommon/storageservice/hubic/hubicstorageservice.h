@@ -47,7 +47,7 @@ public:
     KIcon icon() const;
 
 private slots:
-    void slotAuthorizationDone(const QString &refreshToken);
+    void slotAuthorizationDone(const QString &refreshToken, qint64 expireTime);
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
