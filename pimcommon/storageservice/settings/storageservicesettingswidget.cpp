@@ -133,6 +133,8 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Box);
         }
         createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
+        connect(i.value(),SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
+        connect(i.value(),SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
     }
 }
 
@@ -227,6 +229,7 @@ void StorageServiceSettingsWidget::slotAuthentificationFailed(const QString &ser
             break;
         }
     }
+    KMessageBox::error(this, error, i18n("Authenfication Failed"));
 }
 
 void StorageServiceSettingsWidget::slotAuthentificationDone(const QString &serviceName)
@@ -291,8 +294,6 @@ void StorageServiceSettingsWidget::slotModifyService()
         const QString serviceName = mListService->currentItem()->data(Name).toString();
         if (mListStorageService.contains(serviceName)) {
             StorageServiceAbstract *storage = mListStorageService.value(serviceName);
-            connect(storage,SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
-            connect(storage,SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
             storage->authentification();
         }
     }
