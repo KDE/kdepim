@@ -28,7 +28,6 @@
 #include <KMessageBox>
 #include <KMenu>
 #include <KRun>
-#include <KAction>
 #include <KHelpMenu>
 #include <KAboutData>
 
