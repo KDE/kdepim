@@ -1,8 +1,24 @@
 [Global]
 IconName=notes
 Comment=Notes Agent
+Comment[de]=Notizen-Agent
+Comment[nl]=Agent voor notities
+Comment[pt]=Agente de Notas
+Comment[pt_BR]=Agente de Notas
+Comment[sk]=Agent poznámok
+Comment[sv]=Anteckningsmodul
+Comment[uk]=Агент нотаток
+Comment[x-test]=xxNotes Agentxx
 
 [Event/receivednotes]
 Name=Received a note
+Name[de]=Notiz erhalten
+Name[nl]=Er is een notitie ontvangen
+Name[pt]=Nota recebida
+Name[pt_BR]=Nota recebida
+Name[sk]=Prijatá poznámka
+Name[sv]=Tog emot en anteckning
+Name[uk]=Отримано нотатку
+Name[x-test]=xxReceived a notexx
 Action=Popup
 
