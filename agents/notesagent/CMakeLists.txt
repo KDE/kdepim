@@ -2,6 +2,7 @@ project(notesagent)
 
 include_directories(
    ${CMAKE_SOURCE_DIR}/noteshared
+   ${CMAKE_BINARY_DIR}/noteshared
 )
 
 set(notesagent_SRCS

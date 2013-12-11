@@ -20,6 +20,7 @@
 #define NOTESMANAGER_H
 
 #include <QObject>
+class QTcpServer;
 
 class NotesManager : public QObject
 {
@@ -31,6 +32,15 @@ public:
     void printDebugInfo();
     void load(bool forced=false);
     void stopAll();
+
+private slots:
+    void slotAcceptConnection();
+    void slotNewNote(const QString &name, const QString &text);
+
+private:
+    void updateNetworkListener();
+    void clear();
+    QTcpServer *mListener;
 };
 
 #endif // NOTESMANAGER_H

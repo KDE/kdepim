@@ -17,17 +17,29 @@
 
 
 #include "notesmanager.h"
+#include "notesharedglobalconfig.h"
+#include "noteshared/network/notesnetworkreceiver.h"
+
+#include <ksocketfactory.h>
+
+#include <QTcpServer>
 
 NotesManager::NotesManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mListener(0)
 {
 }
 
 NotesManager::~NotesManager()
 {
-
+    clear();
 }
 
+void NotesManager::clear()
+{
+    delete mListener;
+    mListener=0;
+}
 
 void NotesManager::printDebugInfo()
 {
@@ -37,10 +49,40 @@ void NotesManager::printDebugInfo()
 
 void NotesManager::load(bool forced)
 {
-
+    updateNetworkListener();
 }
 
 void NotesManager::stopAll()
 {
+    clear();
+}
 
+void NotesManager::slotAcceptConnection()
+{
+    // Accept the connection and make KNotesNetworkReceiver do the job
+    QTcpSocket *s = mListener->nextPendingConnection();
+
+    if ( s ) {
+        NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver( s );
+        connect( recv, SIGNAL(noteReceived(QString,QString)), SLOT(slotNewNote(QString,QString)) );
+    }
+}
+
+void NotesManager::slotNewNote(const QString &name, const QString &text)
+{
+    //TODO
+}
+
+void NotesManager::updateNetworkListener()
+{
+    delete mListener;
+    mListener=0;
+
+    if ( NoteShared::NoteSharedGlobalConfig::receiveNotes() ) {
+        // create the socket and start listening for connections
+        mListener= KSocketFactory::listen( QLatin1String("knotes") , QHostAddress::Any,
+                                           NoteShared::NoteSharedGlobalConfig::port() );
+        connect( mListener, SIGNAL(newConnection()),
+                 SLOT(slotAcceptConnection()) );
+    }
 }
