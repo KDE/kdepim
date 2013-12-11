@@ -37,10 +37,10 @@ public:
     void accountInfo();
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
-    void initializeToken(const QString &refreshToken);
+    void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
 
 Q_SIGNALS:
-    void authorizationDone(const QString &refreshToken, qint64 expireTime);
+    void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
@@ -66,6 +66,7 @@ protected:
     QString mPathToken;
     qint64 mExpireInTime;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
+    bool mNeedRefreshToken;
 };
 }
 

@@ -41,6 +41,9 @@ void BoxStorageService::readConfig()
 {
     KConfigGroup grp(KGlobal::config(), "Box Settings");
     mRefreshToken = grp.readEntry("Refresh Token");
+    mToken = grp.readEntry("Token");
+    if (grp.hasKey("Expire Time"))
+        mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
 }
 
 void BoxStorageService::removeConfig()
@@ -53,7 +56,7 @@ void BoxStorageService::removeConfig()
 void BoxStorageService::authentification()
 {
     BoxJob *job = new BoxJob(this);
-    connect(job, SIGNAL(authorizationDone(QString,qint64)), this, SLOT(slotAuthorizationDone(QString,qint64)));
+    connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
@@ -61,15 +64,19 @@ void BoxStorageService::authentification()
 void BoxStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mRefreshToken.clear();
+    mToken.clear();
     Q_EMIT authentificationFailed(serviceName(), errorMessage);
 }
 
-void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, qint64 expireTime)
+void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime)
 {
     mRefreshToken = refreshToken;
+    mToken = token;
     mCreateToken = QTime::currentTime();
     KConfigGroup grp(KGlobal::config(), "Box Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
+    grp.writeEntry("Token", mToken);
+    grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
     grp.sync();
     Q_EMIT authentificationDone(serviceName());
 }
@@ -81,7 +88,7 @@ void BoxStorageService::shareLink(const QString &root, const QString &path)
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->shareLink(root, path);
@@ -94,7 +101,7 @@ void BoxStorageService::listFolder()
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder();
@@ -107,7 +114,7 @@ void BoxStorageService::createFolder(const QString &folder)
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createFolder(folder);
@@ -120,7 +127,7 @@ void BoxStorageService::accountInfo()
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->accountInfo();
@@ -138,7 +145,7 @@ void BoxStorageService::uploadFile(const QString &filename)
         authentification();
     } else {
         BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
