@@ -32,7 +32,6 @@
 
 #include <KABC/VCardConverter>
 
-#include <KApplication>
 #include <KDebug>
 #include <KDialog>
 #include <KFileDialog>

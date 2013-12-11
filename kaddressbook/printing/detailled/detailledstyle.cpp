@@ -29,14 +29,11 @@
 #include "printstyle.h"
 #include "ui_ds_appearance.h"
 
-#include <KApplication>
-#include <KColorButton>
 #include <KConfig>
 #include <KDebug>
 #include <KDialog>
 #include <KGlobal>
 #include <KLocale>
-#include <KStandardDirs>
 
 #include <QCheckBox>
 #include <QPrinter>

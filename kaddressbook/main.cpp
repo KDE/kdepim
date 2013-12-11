@@ -26,7 +26,6 @@
 
 #include <KCmdLineArgs>
 #include <KDebug>
-#include <KLocale>
 #include <kontactinterface/pimuniqueapplication.h>
 
 //-----------------------------------------------------------------------------

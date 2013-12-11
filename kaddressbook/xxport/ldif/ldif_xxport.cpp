@@ -39,7 +39,6 @@
 
 #include <KABC/LDIFConverter>
 
-#include <KCodecs>
 #include <KFileDialog>
 #include <KLocale>
 #include <KMessageBox>

@@ -17,7 +17,6 @@
 
 #include "mergecontacts.h"
 
-#include <QItemSelectionModel>
 
 MergeContacts::MergeContacts(QObject *parent)
     : QObject(parent)

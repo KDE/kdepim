@@ -26,7 +26,6 @@
 #include <KApplication>
 #include <KComboBox>
 #include <KDebug>
-#include <KFileDialog>
 #include <KInputDialog>
 #include <KLineEdit>
 #include <KLocale>
@@ -44,12 +43,12 @@
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QHBoxLayout>
-#include <QHeaderView>
 #include <QLabel>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QStyledItemDelegate>
 #include <QTableView>
+#include <QHeaderView>
 
 enum {
   Local = 0,

@@ -72,27 +72,21 @@
 #include <KApplication>
 #include <KCheckableProxyModel>
 #include <kdescendantsproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.9
-#include <KIcon>
-#include <KLineEdit>
 #include <KLocale>
 #include <KSelectionProxyModel>
-#include <KStandardDirs>
 #include <KTextBrowser>
 #include <KToggleAction>
-#include <KToolBar>
-#include <KXmlGuiWindow>
 #include <KCMultiDialog>
 #include <kdeprintdialog.h>
 #include <KPrintPreview>
+#include <KXMLGUIClient>
 
 #include <QAction>
 #include <QActionGroup>
 #include <QHBoxLayout>
 #include <QHeaderView>
-#include <QListView>
 #include <QPrinter>
 #include <QPrintDialog>
-#include <QSortFilterProxyModel>
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QDBusConnection>

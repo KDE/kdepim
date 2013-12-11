@@ -23,7 +23,6 @@
 #include "mainwidget.h"
 #include "startup.h"
 
-#include <KComponentData>
 #include <KDebug>
 #include <KIconLoader>
 #include <KLocale>
