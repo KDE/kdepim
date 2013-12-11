@@ -52,8 +52,10 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstractJo
     case NoneAction:
         break;
     case RequestToken:
+        error = i18n("Request Token returns an error: %1",errorStr);
         break;
     case AccessToken:
+        error = i18n("Access Token returns an error: %1",errorStr);
         break;
     case UploadFiles:
         error = i18n("Upload File returns an error: %1",errorStr);
@@ -73,5 +75,6 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstractJo
     default:
         break;
     }
-    Q_EMIT actionFailed(error);
+    if (!error.isEmpty())
+        Q_EMIT actionFailed(error);
 }

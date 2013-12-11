@@ -94,6 +94,16 @@ void YouSendItJob::uploadFile(const QString &filename)
 void YouSendItJob::listFolder()
 {
     mActionType = ListFolder;
+    QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/0"));
+    url.addQueryItem(QLatin1String("email"),mUsername);
+    url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
+    QNetworkRequest request(url);
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::accountInfo()
@@ -200,7 +210,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         parseAccountInfo(data);
         break;
     case ListFolder:
-        deleteLater();
+        parseListFolder(data);
         break;
     case CreateServiceFolder:
         deleteLater();
@@ -211,6 +221,17 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         break;
     }
 }
+
+void YouSendItJob::parseListFolder(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info "<<info;
+    deleteLater();
+}
+
 
 void YouSendItJob::parseRequestToken(const QString &data)
 {

@@ -125,11 +125,13 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
 void OAuth2Job::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
+    //TODO
 }
 
 void OAuth2Job::listFolder()
 {
     mActionType = ListFolder;
+    //TODO
 }
 
 void OAuth2Job::accountInfo()
@@ -152,6 +154,7 @@ void OAuth2Job::accountInfo()
 void OAuth2Job::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
+    //TODO
     /*
     QNetworkRequest request(QUrl(mServiceUrl + mPathToken));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
@@ -169,6 +172,7 @@ void OAuth2Job::createFolder(const QString &foldername)
 void OAuth2Job::shareLink(const QString &root, const QString &path)
 {
     mActionType = ShareLink;
+    //TODO
 }
 
 

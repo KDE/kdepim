@@ -82,7 +82,7 @@ void StorageListWidgetItem::stopAnimation()
     mProgress->stopAnimation();
 }
 
-void StorageListWidgetItem::setProgressAnimation(const QPixmap& pix)
+void StorageListWidgetItem::setProgressAnimation(const QPixmap &pix)
 {
     setIcon(QIcon(pix));
 }

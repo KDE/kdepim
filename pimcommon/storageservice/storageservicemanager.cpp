@@ -87,7 +87,6 @@ void StorageServiceManager::slotShareFile()
     QAction *act = qobject_cast< QAction* >( sender() );
     if ( act ) {
         const QString type = act->data().toString();
-        qDebug()<<" type "<<type;
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
             const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
