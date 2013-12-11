@@ -54,6 +54,7 @@ NotesAgentSettingsDialog::NotesAgentSettingsDialog(QWidget *parent)
 
     mNetworkConfig = new NoteShared::NoteNetworkConfigWidget(this);
     tab->addTab(mNetworkConfig, i18n("Network"));
+    mNetworkConfig->load();
 
 
     setMainWidget(mainWidget);
@@ -109,4 +110,5 @@ void NotesAgentSettingsDialog::readConfig()
 void NotesAgentSettingsDialog::slotOkClicked()
 {
     mNotify->save();
+    mNetworkConfig->save();
 }

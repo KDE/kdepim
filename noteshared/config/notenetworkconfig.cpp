@@ -47,9 +47,9 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     QGroupBox *incoming = new QGroupBox( i18n( "Incoming Notes" ) );
     QHBoxLayout *tmpLayout = new QHBoxLayout;
 
-    QCheckBox *tmpChkB=new QCheckBox( i18n( "Accept incoming notes" ) );
-    tmpChkB->setObjectName( QLatin1String("kcfg_ReceiveNotes") );
-    tmpLayout->addWidget( tmpChkB );
+    mTmpChkB=new QCheckBox( i18n( "Accept incoming notes" ) );
+    mTmpChkB->setObjectName( QLatin1String("kcfg_ReceiveNotes") );
+    tmpLayout->addWidget( mTmpChkB );
     incoming->setLayout( tmpLayout );
     layout->addWidget( incoming );
 
@@ -57,7 +57,7 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
     tmpLayout = new QHBoxLayout;
 
     QLabel *label_SenderID = new QLabel( i18n( "&Sender ID:" ) );
-    KLineEdit *kcfg_SenderID = new KLineEdit;
+    kcfg_SenderID = new KLineEdit;
     kcfg_SenderID->setClearButtonShown(true);
     kcfg_SenderID->setObjectName( QLatin1String("kcfg_SenderID") );
     label_SenderID->setBuddy( kcfg_SenderID );
@@ -72,7 +72,7 @@ NoteNetworkConfigWidget::NoteNetworkConfigWidget(QWidget *parent)
 
     tmpLayout->addWidget( label_Port );
 
-    KIntNumInput *kcfg_Port = new KIntNumInput;
+    kcfg_Port = new KIntNumInput;
     kcfg_Port->setObjectName( QLatin1String("kcfg_Port") );
     kcfg_Port->setRange( 0, 65535 );
     kcfg_Port->setSliderEnabled( false );
@@ -86,6 +86,17 @@ NoteNetworkConfigWidget::~NoteNetworkConfigWidget()
 {
 
 }
+
+void NoteNetworkConfigWidget::save()
+{
+    //TODO
+}
+
+void NoteNetworkConfigWidget::load()
+{
+    //TODO
+}
+
 
 NoteNetworkConfig::NoteNetworkConfig(const KComponentData &inst, QWidget *parent )
     :KCModule( inst, parent )
