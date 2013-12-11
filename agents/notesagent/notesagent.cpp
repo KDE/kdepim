@@ -19,6 +19,7 @@
 #include "notesmanager.h"
 #include "notesagentadaptor.h"
 #include "notesagentsettings.h"
+#include "notesagentsettingsdialog.h"
 
 #include <Akonadi/KMime/SpecialMailCollections>
 #include <Akonadi/AgentInstance>
@@ -108,7 +109,16 @@ void NotesAgent::configure( WId windowId )
 
 void NotesAgent::showConfigureDialog(qlonglong windowId)
 {
-    //TODO
+    QPointer<NotesAgentSettingsDialog> dialog = new NotesAgentSettingsDialog;
+    if (windowId) {
+#ifndef Q_WS_WIN
+        KWindowSystem::setMainWindow( dialog, windowId );
+#else
+        KWindowSystem::setMainWindow( dialog, (HWND)windowId );
+#endif
+    }
+    dialog->exec();
+    delete dialog;
 }
 
 void NotesAgent::printDebugInfo()
