@@ -24,10 +24,8 @@
 #include "akonadi_next/note.h"
 
 #include <KDebug>
-#include <KGlobal>
 #include <KLocale>
 #include <KRandom>
-#include <KStandardDirs>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentManager>

@@ -27,7 +27,6 @@
 #define KJOTSWIDGET_H
 
 #include <QWidget>
-#include <QModelIndexList>
 #include <QItemSelection>
 #include <QAbstractItemDelegate>
 #include <akonadi/item.h>
