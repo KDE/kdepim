@@ -17,25 +17,44 @@
 
 #include "storageservicedownloaddialog.h"
 
-#include <KLocale>
-#include <QGridLayout>
+#include "storageservice/storageserviceabstract.h"
 
+#include <KLocale>
+
+#include <QGridLayout>
+#include <QLabel>
+#include <QTreeWidget>
 
 using namespace PimCommon;
 
-StorageServiceDownloadDialog::StorageServiceDownloadDialog(QWidget *parent)
-    : KDialog(parent)
+StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent)
+    : KDialog(parent),
+      mStorage(storage)
 {
     setCaption( i18n( "Download File" ) );
     setButtons( Ok | Cancel );
 
     QWidget *w = new QWidget;
-    QGridLayout *grid = new QGridLayout;
-    w->setLayout(grid);
+    QVBoxLayout *vbox = new QVBoxLayout;
+
+    QLabel *lab = new QLabel(i18n("Select file to download:"));
+    vbox->addWidget(lab);
+
+    mTreeWidget = new QTreeWidget;
+    connect(mTreeWidget, SIGNAL(itemActivated(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
+    vbox->addWidget(mTreeWidget);
+
+    w->setLayout(vbox);
     setMainWidget(w);
+    enableButtonOk(false);
 }
 
 StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 {
 
+}
+
+void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item,int)
+{
+    enableButtonOk(item);
 }
