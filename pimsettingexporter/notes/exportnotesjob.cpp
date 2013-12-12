@@ -70,6 +70,10 @@ void ExportNotesJob::backupConfig()
     const QString knotesrc = KStandardDirs::locateLocal( "config", knotesStr);
     backupFile(knotesrc, Utils::configsPath(), knotesStr);
 
+    const QString globalNoteSettingsStr(QLatin1String("globalnotesettings"));
+    const QString globalNoteSettingsrc = KStandardDirs::locateLocal( "config", globalNoteSettingsStr);
+    backupFile(globalNoteSettingsrc, Utils::configsPath(), globalNoteSettingsStr);
+
     Q_EMIT info(i18n("Config backup done."));
 }
 

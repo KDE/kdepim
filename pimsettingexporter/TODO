@@ -11,4 +11,3 @@ TODO 4.13:
 - Add support for import/export other akonadi resources (facebook ? google ? etc.)
 
 - Add support for knotes-akonadi => increase archive number
-- Import "globalnotesettings"
