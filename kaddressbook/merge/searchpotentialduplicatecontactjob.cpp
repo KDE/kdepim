@@ -38,6 +38,7 @@ void SearchPotentialDuplicateContactJob::start()
         //qDebug()<<" loop";
         result = checkList(result);
     }
+    qDebug()<<" result.count()"<< mListDuplicate.count();
     Q_EMIT finished(this);
 }
 
@@ -65,7 +66,7 @@ QList<Akonadi::Item> SearchPotentialDuplicateContactJob::checkList(const QList<A
         }
 
         //qDebug()<<"not duplicate number"<<notDuplicate.count();
-        //qDebug()<<" duplicate number "<<lst.count();
+        qDebug()<<" duplicate number "<<lst.count();
     }
     //qDebug()<<" notDuplicate.count"<<notDuplicate.count();
     return notDuplicate;

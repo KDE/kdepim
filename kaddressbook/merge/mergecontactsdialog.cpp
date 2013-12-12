@@ -32,10 +32,13 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
     setCaption( i18n( "Select Contacts to merge" ) );
     setButtons( Ok | Cancel );
     readConfig();
+
     const Akonadi::Item::List lst = Utils::collectSelectedContactsItem(selectionModel);
     if (lst.count() < 2) {
         enableButtonOk(false);
         setMainWidget(new QLabel(i18n("You must select at least two elements.")));
+    } else {
+        setMainWidget(new QLabel(i18n("You select %1", lst.count())));
     }
 }
 
