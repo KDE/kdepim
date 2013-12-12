@@ -2,5 +2,8 @@
 Id=initial-noteagent-migration
 File=knotesrc,akonadi_notes_agentrc
 Group=Alarms,Alarms
+AllKeys
 Group=Network,Network
+AllKeys
 Group=Actions,Actions
+AllKeys
