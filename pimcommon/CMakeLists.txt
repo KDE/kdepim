@@ -46,7 +46,8 @@ set(libpimcommon_storageservice_SRCS
   storageservice/box/boxjob.cpp
   storageservice/box/boxstorageservice.cpp
   storageservice/oauth2job.cpp
-  storageservice/settings/storagelistwidgetitem.cpp 
+  storageservice/settings/storagelistwidgetitem.cpp
+  storageservice/storageservicedownloaddialog.cpp 
 )
 
 set(libpimcommon_autocorrection_SRCS

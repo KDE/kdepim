@@ -94,7 +94,6 @@ void StorageServiceTestWidget::slotServiceMenu()
         menu->clear();
         menu->addMenu(mStorageManager->menuUploadServices());
     }
-
 }
 
 void StorageServiceTestWidget::slotSettings()
