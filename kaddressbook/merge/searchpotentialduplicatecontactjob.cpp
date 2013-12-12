@@ -88,6 +88,13 @@ bool SearchPotentialDuplicateContactJob::isDuplicate(const Akonadi::Item &itemA,
             return true;
         }
     }
+    if (!addressA.emails().isEmpty() && !addressB.emails().isEmpty()) {
+        Q_FOREACH (const QString &email, addressA.emails()) {
+            if (addressB.emails().contains(email)) {
+                return true;
+            }
+        }
+    }
     return false;
 
 }
