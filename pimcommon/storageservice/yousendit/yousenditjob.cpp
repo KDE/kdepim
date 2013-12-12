@@ -254,7 +254,7 @@ void YouSendItJob::parseRequestToken(const QString &data)
         if (info.contains(QLatin1String("errorStatus"))) {
             QVariantMap map = info.value(QLatin1String("errorStatus")).toMap();
             if (map.contains(QLatin1String("message"))) {
-                error = i18n("Authenfication failed. Server returns this error:\n%1",map.value(QLatin1String("message")).toString());
+                error = i18n("Authentication failed. Server returns this error:\n%1",map.value(QLatin1String("message")).toString());
             }
         }
         Q_EMIT authorizationFailed(error);

@@ -229,7 +229,7 @@ void StorageServiceSettingsWidget::slotAuthentificationFailed(const QString &ser
             break;
         }
     }
-    KMessageBox::error(this, error, i18n("Authenfication Failed"));
+    KMessageBox::error(this, error, i18n("Authentication Failed"));
 }
 
 void StorageServiceSettingsWidget::slotAuthentificationDone(const QString &serviceName)
