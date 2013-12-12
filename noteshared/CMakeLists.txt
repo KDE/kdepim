@@ -26,6 +26,7 @@ set(libnoteshared_SRCS
     config/noteactionconfig.cpp
     config/notenetworkconfig.cpp
     resources/localresourcecreator.cpp
+    job/createnewnotejob.cpp
     ${libnoteshared_akonadi_SRCS}
 )
 
