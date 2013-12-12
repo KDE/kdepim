@@ -36,6 +36,12 @@ public:
 
     void reload();
 
+    bool receiveNotes() const;
+    void setReceiveNotes(bool b);
+
+    void setPort(int value);
+    int port() const;
+
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
