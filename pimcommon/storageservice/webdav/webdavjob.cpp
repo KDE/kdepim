@@ -49,21 +49,29 @@ void WebDavJob::requestTokenAccess()
 void WebDavJob::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::listFolder()
 {
     mActionType = ListFolder;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::accountInfo()
 {
     mActionType = AccountInfo;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::createFolder(const QString &filename)
 {
     mActionType = CreateFolder;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
@@ -168,5 +176,6 @@ void WebDavJob::parseListFolder(const QString &data)
 
 void WebDavJob::shareLink(const QString &root, const QString &path)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }

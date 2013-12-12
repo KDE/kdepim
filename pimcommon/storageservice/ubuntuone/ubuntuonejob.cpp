@@ -134,7 +134,8 @@ void UbuntuOneJob::createFolder(const QString &foldername)
 
 void UbuntuOneJob::shareLink(const QString &root, const QString &path)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void UbuntuOneJob::initializeToken(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret)

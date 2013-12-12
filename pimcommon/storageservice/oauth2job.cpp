@@ -129,12 +129,16 @@ void OAuth2Job::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
     //TODO
+    qDebug()<<" not implemented ";
+    deleteLater();
 }
 
 void OAuth2Job::listFolder()
 {
     mActionType = ListFolder;
     //TODO
+    qDebug()<<" not implemented ";
+    deleteLater();
 }
 
 void OAuth2Job::accountInfo()
@@ -152,6 +156,8 @@ void OAuth2Job::accountInfo()
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 */
+    deleteLater();
+    qDebug()<<" not implemented ";
 }
 
 void OAuth2Job::createFolder(const QString &foldername)
@@ -170,6 +176,9 @@ void OAuth2Job::shareLink(const QString &root, const QString &path)
 {
     mActionType = ShareLink;
     //TODO
+    qDebug()<<" not implemented ";
+    deleteLater();
+
 }
 
 
