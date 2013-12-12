@@ -59,7 +59,7 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
     Q_EMIT servicesChanged();
 }
 
-QMenu *StorageServiceManager::menuServices()
+QMenu *StorageServiceManager::menuUploadServices()
 {
     if (!mMenuService) {
         mMenuService = new QMenu(i18n("Storage service"));

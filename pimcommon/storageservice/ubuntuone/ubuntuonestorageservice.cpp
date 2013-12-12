@@ -179,6 +179,11 @@ void UbuntuoneStorageService::shareLink(const QString &root, const QString &path
     }
 }
 
+void UbuntuoneStorageService::downloadFile()
+{
+
+}
+
 QString UbuntuoneStorageService::storageServiceName() const
 {
     return serviceName();

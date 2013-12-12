@@ -75,6 +75,11 @@ void WebDavStorageService::shareLink(const QString &root, const QString &path)
     }
 }
 
+void WebDavStorageService::downloadFile()
+{
+
+}
+
 void WebDavStorageService::listFolder()
 {
     if (mServiceLocation.isEmpty()) {

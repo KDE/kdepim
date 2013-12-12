@@ -41,6 +41,8 @@ public:
     void removeConfig();
     void authentification();
     void shareLink(const QString &root, const QString &path);    
+    void downloadFile();
+
     QString storageServiceName() const;
     KIcon icon() const;
 
@@ -53,8 +55,7 @@ private:
 
     QString mToken;
     QString mPassword;
-    QString mUsername;
-
+    QString mUsername;    
 };
 }
 

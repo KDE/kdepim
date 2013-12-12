@@ -176,6 +176,11 @@ void YouSendItStorageService::shareLink(const QString &root, const QString &path
     }
 }
 
+void YouSendItStorageService::downloadFile()
+{
+
+}
+
 QString YouSendItStorageService::storageServiceName() const
 {
     return serviceName();

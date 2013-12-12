@@ -174,6 +174,11 @@ QString HubicStorageService::storageServiceName() const
     return serviceName();
 }
 
+void HubicStorageService::downloadFile()
+{
+
+}
+
 KIcon HubicStorageService::icon() const
 {
     return KIcon();

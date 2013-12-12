@@ -92,7 +92,7 @@ void StorageServiceTestWidget::slotServiceMenu()
     QMenu *menu = qobject_cast<QMenu*>(sender());
     if (menu) {
         menu->clear();
-        menu->addMenu(mStorageManager->menuServices());
+        menu->addMenu(mStorageManager->menuUploadServices());
     }
 
 }
