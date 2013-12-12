@@ -57,7 +57,7 @@ public:
 
 Q_SIGNALS:
     void servicesChanged();
-    void uploadFileDone(const QString &serviceName);
+    void uploadFileDone(const QString &serviceName, const QString &filename);
     void uploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
 

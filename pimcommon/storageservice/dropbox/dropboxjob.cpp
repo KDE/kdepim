@@ -169,15 +169,13 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         parseUploadFile(data);
         break;
     case CreateFolder:
-        Q_EMIT createFolderDone();
-        deleteLater();
+        parseCreateFolder(data);
         break;
     case AccountInfo:
         parseAccountInfo(data);
         break;
     case ListFolder:
-        Q_EMIT listFolderDone();
-        deleteLater();
+        parseListFolder(data);
         break;
     case ShareLink:
         parseShareLink(data);
@@ -374,7 +372,8 @@ void DropBoxJob::parseUploadFile(const QString &data)
         path = info.value(QLatin1String("path")).toString();
         //qDebug()<<" path "<<path;
     }
-    Q_EMIT uploadFileDone();
+    //TODO
+    Q_EMIT uploadFileDone(path);
     shareLink(root, path);
 }
 
@@ -406,5 +405,26 @@ void DropBoxJob::parseShareLink(const QString &data)
     qDebug()<<" info "<<info;
 
     Q_EMIT shareLinkDone(url);
+    deleteLater();
+}
+
+void DropBoxJob::parseCreateFolder(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    QJson::Parser parser;
+    bool ok;
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QString foldername;
+    if (info.contains(QLatin1String("path"))) {
+        foldername = info.value(QLatin1String("path")).toString();
+    }
+    Q_EMIT createFolderDone(foldername);
+    deleteLater();
+}
+
+void DropBoxJob::parseListFolder(const QString &data)
+{
+    //TODO
+    Q_EMIT listFolderDone(QStringList());
     deleteLater();
 }

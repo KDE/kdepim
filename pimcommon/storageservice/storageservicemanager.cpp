@@ -93,7 +93,7 @@ void StorageServiceManager::slotShareFile()
             if (!fileName.isEmpty()) {
                 service->uploadFile(fileName);
                 connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
-                connect(service,SIGNAL(uploadFileDone(QString)), this, SIGNAL(uploadFileDone(QString)), Qt::UniqueConnection);
+                connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
                 connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
             }
         }

@@ -152,47 +152,43 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     reply->deleteLater();
     if (mError) {
         qDebug()<<" error type "<<data;
-        QJson::Parser parser;
-        bool ok;
 
-        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
-        if (error.contains(QLatin1String("error"))) {
-            const QString errorStr = error.value(QLatin1String("error")).toString();
-            switch(mActionType) {
-            case NoneAction:
-                deleteLater();
-                break;
-            case RequestToken:
-                deleteLater();
-                break;
-            case AccessToken:
-                Q_EMIT authorizationFailed(errorStr);
-                deleteLater();
-                break;
-            case UploadFiles:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case CreateFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case AccountInfo:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case ListFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case CreateServiceFolder:
-                deleteLater();
-                break;
-            default:
-                qDebug()<<" Action Type unknown:"<<mActionType;
-                deleteLater();
-                break;
-            }
+        //TODO parsing
+        const QString errorStr = data;
+        switch(mActionType) {
+        case NoneAction:
+            deleteLater();
+            break;
+        case RequestToken:
+            deleteLater();
+            break;
+        case AccessToken:
+            Q_EMIT authorizationFailed(errorStr);
+            deleteLater();
+            break;
+        case UploadFiles:
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        case CreateFolder:
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        case AccountInfo:
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        case ListFolder:
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        case CreateServiceFolder:
+            deleteLater();
+            break;
+        default:
+            qDebug()<<" Action Type unknown:"<<mActionType;
+            deleteLater();
+            break;
         }
         return;
     }
@@ -246,7 +242,8 @@ void UbuntuOneJob::parseListFolder(const QString &data)
             //FIXME create folder !
         }
     }
-    Q_EMIT listFolderDone();
+    //TODO
+    Q_EMIT listFolderDone(QStringList());
     deleteLater();
 }
 
@@ -271,14 +268,15 @@ void UbuntuOneJob::parseCreateFolder(const QString &data)
 {
     //TODO
     qDebug()<<" data "<<data;
-    Q_EMIT createFolderDone();
+    Q_EMIT createFolderDone(QString());
     deleteLater();
 }
 
 void UbuntuOneJob::parseUploadFiles(const QString &data)
 {
     qDebug()<<" data "<<data;
-    Q_EMIT uploadFileDone();
+    //TODO
+    Q_EMIT uploadFileDone(QString());
     deleteLater();
 }
 

@@ -51,7 +51,9 @@ private:
     void parseResponseAccessToken(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseUploadFile(const QString &data);
+    void parseCreateFolder(const QString &data);
     void parseShareLink(const QString &data);
+    void parseListFolder(const QString &data);
     QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;

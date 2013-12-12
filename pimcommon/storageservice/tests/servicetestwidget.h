@@ -46,9 +46,9 @@ private Q_SLOTS:
     void slotShareLinkDone(const QString &serviceName, const QString &shareLink);
     void slotAuthentificationDone(const QString &serviceName);
     void slotAuthentificationFailed(const QString &serviceName, const QString &errorMessage);
-    void slotCreateFolderDone(const QString &serviceName);
-    void slotUploadFileDone(const QString &serviceName);
-    void slotListFolderDone(const QString &serviceName);
+    void slotCreateFolderDone(const QString &serviceName, const QString &folderName);
+    void slotUploadFileDone(const QString &serviceName, const QString &fileName);
+    void slotListFolderDone(const QString &serviceName, const QStringList &listFolder);
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info);
     void slotUploadFile();
     void slotAuthentification();

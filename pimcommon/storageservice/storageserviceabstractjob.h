@@ -46,9 +46,9 @@ Q_SIGNALS:
     void shareLinkDone(const QString &url);
     void accountInfoDone(const PimCommon::AccountInfo &data);
     void uploadFileProgress(qint64 done, qint64 total);
-    void createFolderDone();
-    void uploadFileDone();
-    void listFolderDone();
+    void createFolderDone(const QString &folderName);
+    void uploadFileDone(const QString &fileName);
+    void listFolderDone(const QStringList &listFolder);
     void authorizationFailed(const QString &error);
 
 protected:

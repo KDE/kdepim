@@ -276,7 +276,7 @@ void OAuth2Job::parseCreateFolder(const QString &data)
 {
     //TODO
     qDebug()<<" data "<<data;
-    Q_EMIT createFolderDone();
+    Q_EMIT createFolderDone(QString());
     deleteLater();
 }
 
@@ -284,7 +284,7 @@ void OAuth2Job::parseUploadFile(const QString &data)
 {
     //TODO
     qDebug()<<" data "<<data;
-    Q_EMIT uploadFileDone();
+    Q_EMIT uploadFileDone(QString());
     deleteLater();
 }
 

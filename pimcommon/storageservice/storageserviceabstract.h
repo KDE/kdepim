@@ -63,18 +63,18 @@ Q_SIGNALS:
     void shareLinkDone(const QString &serviceName, const QString &link);
     void authentificationDone(const QString &serviceName);
     void authentificationFailed(const QString &serviceName, const QString &error = QString());
-    void createFolderDone(const QString &serviceName);
-    void uploadFileDone(const QString &serviceName);
-    void listFolderDone(const QString &serviceName);
+    void createFolderDone(const QString &serviceName, const QString &folderName);
+    void uploadFileDone(const QString &serviceName, const QString &fileName);
+    void listFolderDone(const QString &serviceName, const QStringList &listFolder);
 
 protected slots:
     void slotActionFailed(const QString &error);
     void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotShareLinkDone(const QString &url);
     void slotUploadFileProgress(qint64 done, qint64 total);
-    void slotCreateFolderDone();
-    void slotUploadFileDone();
-    void slotListFolderDone();
+    void slotCreateFolderDone(const QString &folderName);
+    void slotUploadFileDone(const QString &filename);
+    void slotListFolderDone(const QStringList &listFolder);
 };
 }
 

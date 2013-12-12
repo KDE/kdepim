@@ -234,7 +234,7 @@ void YouSendItJob::parseListFolder(const QString &data)
         QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         qDebug()<<" mapFolder "<<mapFolder;
     }
-    Q_EMIT listFolderDone();
+    Q_EMIT listFolderDone(QStringList());
     deleteLater();
 }
 
@@ -266,18 +266,15 @@ void YouSendItJob::parseAccountInfo(const QString &data)
 {
     QJson::Parser parser;
     bool ok;
-    qDebug()<<" data "<<data;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
     if (info.contains(QLatin1String("storage"))) {
         PimCommon::AccountInfo accountInfo;
         const QVariantMap storageMap = info.value(QLatin1String("storage")).toMap();
         if (storageMap.contains(QLatin1String("currentUsage"))) {
-            qDebug()<<" ssss"<<storageMap.value(QLatin1String("currentUsage")).toString();
             accountInfo.shared = storageMap.value(QLatin1String("currentUsage")).toLongLong();
         }
         if (storageMap.contains(QLatin1String("storageQuota"))) {
-            qDebug()<<" ssss"<<storageMap.value(QLatin1String("storageQuota")).toString();
             accountInfo.quota = storageMap.value(QLatin1String("storageQuota")).toLongLong();
         }
         Q_EMIT accountInfoDone(accountInfo);
@@ -289,10 +286,13 @@ void YouSendItJob::parseCreateFolder(const QString &data)
 {
     QJson::Parser parser;
     bool ok;
-    qDebug()<<" data "<<data;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
-    Q_EMIT createFolderDone();
+    QString newFolderName;
+    if (info.contains(QLatin1String("name"))) {
+        newFolderName = info.value(QLatin1String("name")).toString();
+    }
+    Q_EMIT createFolderDone(newFolderName);
     deleteLater();
 }
 
