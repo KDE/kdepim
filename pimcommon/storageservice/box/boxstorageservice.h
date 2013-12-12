@@ -55,7 +55,6 @@ private:
     void readConfig();
     QString mToken;
     QString mRefreshToken;
-    QTime mCreateToken;
     QDateTime mExpireDateTime;
 };
 }

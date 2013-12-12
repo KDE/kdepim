@@ -72,7 +72,6 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
 {
     mRefreshToken = refreshToken;
     mToken = token;
-    mCreateToken = QTime::currentTime();
     KConfigGroup grp(KGlobal::config(), "Box Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
