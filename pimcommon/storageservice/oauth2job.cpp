@@ -314,7 +314,7 @@ void OAuth2Job::refreshToken()
     postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("refresh_token"));
     postData.addQueryItem(QLatin1String("client_id"), mClientId);
     postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
-    qDebug()<<"https://api.hubic.com/oauth/token "<<postData;
+    qDebug()<<"refreshToken postData: "<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
