@@ -21,6 +21,10 @@
 #include "noteshared/network/notesnetworkreceiver.h"
 
 #include <ksocketfactory.h>
+#include <KNotification>
+#include <KIconLoader>
+#include <KLocalizedString>
+#include <KIcon>
 
 #include <QTcpServer>
 
@@ -70,6 +74,15 @@ void NotesManager::slotAcceptConnection()
 
 void NotesManager::slotNewNote(const QString &name, const QString &text)
 {
+    const QPixmap pixmap = KIcon( QLatin1String("knotes") ).pixmap( KIconLoader::SizeSmall, KIconLoader::SizeSmall );
+
+    KNotification::event( QLatin1String("receivednotes"),
+                          i18n("Note Received"),
+                          pixmap,
+                          0,
+                          KNotification::CloseOnTimeout,
+                          KGlobal::mainComponent());
+
     //TODO
 }
 

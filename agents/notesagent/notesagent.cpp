@@ -117,7 +117,9 @@ void NotesAgent::showConfigureDialog(qlonglong windowId)
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
     }
-    dialog->exec();
+    if (dialog->exec()) {
+        mNotesManager->load();
+    }
     delete dialog;
 }
 
