@@ -19,9 +19,10 @@
 #define SELECTEDNOTEFOLDERDIALOG_H
 
 #include <Akonadi/CollectionDialog>
-#include "knotes_export.h"
+#include "noteshared_export.h"
 
-class KNOTES_EXPORT SelectedNotefolderDialog : public Akonadi::CollectionDialog
+namespace NoteShared {
+class NOTESHARED_EXPORT SelectedNotefolderDialog : public Akonadi::CollectionDialog
 {
     Q_OBJECT
 public:
@@ -32,5 +33,6 @@ private:
     void readConfig();
     void writeConfig();
 };
+}
 
 #endif // SELECTEDNOTEFOLDERDIALOG_H

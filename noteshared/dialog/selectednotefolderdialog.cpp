@@ -23,6 +23,8 @@
 #include <KGlobal>
 #include <KConfigGroup>
 
+using namespace NoteShared;
+
 SelectedNotefolderDialog::SelectedNotefolderDialog(QWidget *parent)
     : Akonadi::CollectionDialog (parent)
 {

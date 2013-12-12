@@ -22,6 +22,7 @@
 #include <QWidget>
 
 #include "noteshared_export.h"
+class KJob;
 
 namespace NoteShared {
 class NOTESHARED_EXPORT CreateNewNoteJob : public QObject
@@ -31,9 +32,19 @@ public:
     explicit CreateNewNoteJob(QObject *parent = 0, QWidget *widget=0);
     ~CreateNewNoteJob();
 
+    void setNote(const QString &name, const QString &text);
+
     void start();
 
+    void setRichText(bool richText);
+
+private slots:
+    void slotNoteCreationFinished(KJob *);
+
 private:
+    QString mTitle;
+    QString mText;
+    bool mRichText;
     QWidget *mWidget;
 };
 }
