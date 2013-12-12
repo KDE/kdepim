@@ -111,6 +111,8 @@ void CreateNewNoteJob::start()
 
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
         connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
+    } else {
+        deleteLater();
     }
 }
 
