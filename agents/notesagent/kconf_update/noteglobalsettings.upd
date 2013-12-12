@@ -7,3 +7,8 @@ Group=Network,Network
 AllKeys
 Group=Actions,Actions
 AllKeys
+
+Id=selectcollection-noteagent-migration
+File=knotesrc,akonadi_notes_agentrc
+Group=SelectNoteFolder,SelectNoteFolder
+AllKeys
