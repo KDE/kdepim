@@ -36,7 +36,7 @@
 #include <kdialog.h>
 #include "noteshared_export.h"
 class KHistoryComboBox;
-class QTableView;
+class QTreeView;
 class QModelIndex;
 
 
@@ -64,7 +64,7 @@ private slots:
 private:
     void readConfig();
     KHistoryComboBox *m_hostCombo;
-    QTableView *m_servicesView;
+    QTreeView *m_servicesView;
 };
 }
 
