@@ -315,9 +315,10 @@ void YouSendItJob::parseUploadFiles(const QString &data)
 void YouSendItJob::startUploadFile(const QString &fileId)
 {
     mActionType = UploadFiles;
-    QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/commitUpload"));
+    QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));
     QNetworkRequest request(url);
-    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("bid", fileId.toLatin1());
+    request.setRawHeader("filename", "test.txt");
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
     QUrl postData;
@@ -326,9 +327,9 @@ void YouSendItJob::startUploadFile(const QString &fileId)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-
+//Multipart
     //TODO
-    deleteLater();
+    //deleteLater();
 }
 
 void YouSendItJob::shareLink(const QString &root, const QString &path)
