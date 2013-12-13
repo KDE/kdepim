@@ -160,6 +160,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
             deleteLater();
             break;
         case RequestToken:
+            Q_EMIT authorizationFailed(errorStr);
             deleteLater();
             break;
         case AccessToken:

@@ -91,10 +91,11 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case RequestToken:
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case AccessToken:
-                errorMessage(mActionType, errorStr);
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case UploadFiles:

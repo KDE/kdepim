@@ -108,7 +108,6 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     if (mError) {
-        qDebug()<<" error type "<<data;
         QJson::Parser parser;
         bool ok;
 
@@ -120,9 +119,11 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case RequestToken:
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case AccessToken:
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case UploadFiles:

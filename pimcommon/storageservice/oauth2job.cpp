@@ -199,6 +199,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case RequestToken:
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case AccessToken:
