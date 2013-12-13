@@ -85,7 +85,7 @@ void HubicStorageService::listFolder()
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        connect(job, SIGNAL(listFolderDone(QStringList())), this, SLOT(slotListFolderDone(QStringList())));
+        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder();
     }

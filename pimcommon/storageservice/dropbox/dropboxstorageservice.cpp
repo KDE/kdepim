@@ -96,7 +96,7 @@ void DropBoxStorageService::listFolder()
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(listFolderDone(QStringList())), this, SLOT(slotListFolderDone(QStringList())));
+        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder();
     }
