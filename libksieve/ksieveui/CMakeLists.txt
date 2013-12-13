@@ -21,23 +21,18 @@ include_directories(${CMAKE_SOURCE_DIR}/libksieve
 add_subdirectory(tests)
 add_subdirectory(editor/tests)
 add_subdirectory(managescriptsjob/tests)
-set(ksieveui_LIB_SRCS
-  scriptsparsing/xmlprintingscriptbuilder.cpp
-  scriptsparsing/parsingresultdialog.cpp
-  scriptsparsing/xmlprintingsyntaxhighlighter.cpp
-  scriptsparsing/parsingutil.cpp
-  managesievescriptsdialog.cpp
-  widgets/sievetreewidgetitem.cpp
-  widgets/managesievetreeview.cpp
-  debug/sievedebugdialog.cpp
-  util/util.cpp
+set(ksieveui_vacation_LIB_SRCS
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
   vacation/vacationhelperjob.cpp
   vacation/vacationmanager.cpp
   vacation/vacationeditwidget.cpp
-  managescriptsjob/generateglobalscriptjob.cpp
-  managescriptsjob/parseuserscriptjob.cpp
+  vacation/multiimapvacationdialog.cpp
+  vacation/vacationpagewidget.cpp
+  vacation/vacationwarningwidget.cpp
+)
+
+set(ksieveui_editor_LIB_SRCS
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp
@@ -46,9 +41,9 @@ set(ksieveui_LIB_SRCS
   editor/sieveeditorabstractwidget.cpp
   editor/sieveeditorwarning.cpp
   editor/sieveeditorparsingmissingfeaturewarning.cpp
-  templates/sievetemplatewidget.cpp
-  templates/sievedefaulttemplate.cpp 
-  templates/sievetemplateeditdialog.cpp
+)
+
+set(ksieveui_autocreatescripts_LIB_SRCS
   autocreatescripts/sievescriptparsingerrordialog.cpp
   autocreatescripts/sieveeditorgraphicalmodewidget.cpp 
   autocreatescripts/autocreatescriptdialog.cpp
@@ -132,6 +127,27 @@ set(ksieveui_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectsizetypecombobox.cpp
   autocreatescripts/sieveconditions/widgets/selectsizewidget.cpp
 )
+
+set(ksieveui_LIB_SRCS
+  scriptsparsing/xmlprintingscriptbuilder.cpp
+  scriptsparsing/parsingresultdialog.cpp
+  scriptsparsing/xmlprintingsyntaxhighlighter.cpp
+  scriptsparsing/parsingutil.cpp
+  managesievescriptsdialog.cpp
+  widgets/sievetreewidgetitem.cpp
+  widgets/managesievetreeview.cpp
+  debug/sievedebugdialog.cpp
+  util/util.cpp
+  managescriptsjob/generateglobalscriptjob.cpp
+  managescriptsjob/parseuserscriptjob.cpp
+  templates/sievetemplatewidget.cpp
+  templates/sievedefaulttemplate.cpp 
+  templates/sievetemplateeditdialog.cpp
+  ${ksieveui_vacation_LIB_SRCS}
+  ${ksieveui_editor_LIB_SRCS}
+  ${ksieveui_autocreatescripts_LIB_SRCS}
+)
+
 
 kde4_add_kcfg_files(ksieveui_LIB_SRCS settings/sieve-vacation.kcfgc settings/sieve-editor.kcfgc)
 
