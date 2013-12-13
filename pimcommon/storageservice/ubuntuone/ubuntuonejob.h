@@ -55,9 +55,8 @@ private:
     void parseListFolder(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseUploadFiles(const QString &data);
+    void parseAccessToken(const QString &data);
     void createServiceFolder();
-    QString mPassword;
-    QString mUsername;
     QString mCustomerSecret;
     QString mToken;
     QString mCustomerKey;
