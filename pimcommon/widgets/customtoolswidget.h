@@ -57,6 +57,7 @@ Q_SIGNALS:
     void shortUrlWasClosed();
     void toolSwitched(PimCommon::CustomToolsWidget::ToolType type);
     void translatorWasClosed();
+    void insertShortUrl(const QString &url);
 
 private:
     void customToolWasClosed();

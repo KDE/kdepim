@@ -57,9 +57,11 @@ private Q_SLOTS:
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
     void slotCloseWidget();    
     void slotConfigure();
+    void slotInsertShortUrl();
 
 Q_SIGNALS:
     void shortUrlWasClosed();
+    void insertShortUrl(const QString &Url);
 
 private:
     void loadEngine();
@@ -67,6 +69,7 @@ private:
     KLineEdit *mShortUrl;
     QPushButton *mConvertButton;
     QPushButton *mCopyToClipboard;
+    QPushButton *mInsertShortUrl;
     AbstractShortUrl *mEngine;
     KPIMUtils::ProgressIndicatorLabel *mIndicatorLabel;
     KToggleAction *mToggleAction;

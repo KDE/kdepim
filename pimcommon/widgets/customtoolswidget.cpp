@@ -50,6 +50,7 @@ CustomToolsWidget::CustomToolsWidget(QWidget *parent)
     connect(mTranslatorWidget->toggleAction(), SIGNAL(triggered(bool)), this,SLOT(slotVisibleTranslatorTools(bool)));
 
     connect(mShortUrlWidget, SIGNAL(shortUrlWasClosed()), this, SIGNAL(shortUrlWasClosed()));
+    connect(mShortUrlWidget, SIGNAL(insertShortUrl(QString)), this, SIGNAL(insertShortUrl(QString)));
 
     connect(mTranslatorWidget, SIGNAL(translatorWasClosed()), this, SIGNAL(translatorWasClosed()));
 
