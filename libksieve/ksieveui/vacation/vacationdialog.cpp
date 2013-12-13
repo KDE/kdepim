@@ -25,9 +25,6 @@
 #include <QApplication>
 
 using KMime::Types::AddrSpecList;
-using KMime::Types::AddressList;
-using KMime::Types::MailboxList;
-using KMime::HeaderParsing::parseAddressList;
 
 using namespace KSieveUi;
 
