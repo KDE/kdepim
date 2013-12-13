@@ -58,6 +58,7 @@ private Q_SLOTS:
     void slotCloseWidget();    
     void slotConfigure();
     void slotInsertShortUrl();
+    void slotOpenShortUrl();
 
 Q_SIGNALS:
     void shortUrlWasClosed();
@@ -70,6 +71,7 @@ private:
     QPushButton *mConvertButton;
     QPushButton *mCopyToClipboard;
     QPushButton *mInsertShortUrl;
+    QPushButton *mOpenShortUrl;
     AbstractShortUrl *mEngine;
     KPIMUtils::ProgressIndicatorLabel *mIndicatorLabel;
     KToggleAction *mToggleAction;
