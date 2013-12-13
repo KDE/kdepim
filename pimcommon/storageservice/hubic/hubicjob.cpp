@@ -16,7 +16,11 @@
 */
 
 #include "hubicjob.h"
+#include "pimcommon/storageservice/storageserviceabstract.h"
 
+#include <qjson/parser.h>
+
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -27,13 +31,36 @@ HubicJob::HubicJob(QObject *parent)
     mClientSecret = QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
     mRedirectUri = QLatin1String("https://bugs.kde.org/");
     mServiceUrl = QLatin1String("https://api.hubic.com");
-    mScope = QLatin1String("account.r,links.rw");
+    mApiUrl = QLatin1String("https://api.hubic.com");
+    mScope = QLatin1String("usage.r,account.r,credentials.r,links.wd");
     mAuthorizePath = QLatin1String("/oauth/auth/");
     mPathToken = QLatin1String("/oauth/token/");
+    mCurrentAccountInfoPath = QLatin1String("/1.0/account/usage");
 }
 
 HubicJob::~HubicJob()
 {
 
+}
+
+void HubicJob::parseAccountInfo(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    PimCommon::AccountInfo accountInfo;
+    if (info.contains(QLatin1String("used"))) {
+        accountInfo.shared = info.value(QLatin1String("used")).toLongLong();
+    }
+    if (info.contains(QLatin1String("quota"))) {
+        accountInfo.quota = info.value(QLatin1String("quota")).toLongLong();
+    }
+    Q_EMIT accountInfoDone(accountInfo);
+
+
+    qDebug()<<" info"<<info;
+    //TODO
+    deleteLater();
 }
 

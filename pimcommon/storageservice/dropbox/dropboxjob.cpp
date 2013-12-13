@@ -334,7 +334,7 @@ void DropBoxJob::accountInfo()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void DropBoxJob::listFolder()
+void DropBoxJob::listFolder(const QString &folder)
 {
     qDebug()<<" void DropBoxJob::listFolders()";
     mActionType = ListFolder;

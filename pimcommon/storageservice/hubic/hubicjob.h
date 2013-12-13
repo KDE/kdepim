@@ -27,6 +27,9 @@ class HubicJob : public PimCommon::OAuth2Job
 public:
     explicit HubicJob(QObject *parent=0);
     ~HubicJob();
+
+private:
+    void parseAccountInfo(const QString &data);
 };
 }
 

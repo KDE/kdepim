@@ -33,7 +33,7 @@ public:
 
     void requestTokenAccess();
     void uploadFile(const QString &filename);
-    void listFolder();
+    void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
@@ -67,6 +67,8 @@ protected:
     QString mAuthorizePath;
     QString mPathToken;
     QString mFolderInfoPath;
+    QString mCurrentAccountInfoPath;
+    QString mApiUrl;
     qint64 mExpireInTime;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
     bool mNeedRefreshToken;

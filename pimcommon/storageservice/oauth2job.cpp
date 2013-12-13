@@ -133,11 +133,11 @@ void OAuth2Job::uploadFile(const QString &filename)
     deleteLater();
 }
 
-void OAuth2Job::listFolder()
+void OAuth2Job::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
     QUrl url;
-    url.setUrl(mFolderInfoPath + QLatin1String("/0"));
+    url.setUrl(mApiUrl + mFolderInfoPath + QLatin1String("0"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
@@ -148,30 +148,24 @@ void OAuth2Job::listFolder()
 void OAuth2Job::accountInfo()
 {
     mActionType = AccountInfo;
-    QNetworkRequest request(QUrl(mServiceUrl + QLatin1String("/oauth/account/")));
+    QUrl url;
+    url.setUrl(mApiUrl + mCurrentAccountInfoPath);
+    QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    //FIXME
-    /*
-    QUrl postData;
-    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
-    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
-    postData.addQueryItem(QLatin1String("client_id"), mClientId);
-    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-*/
-    deleteLater();
-    qDebug()<<" not implemented ";
 }
 
 void OAuth2Job::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
-    QNetworkRequest request(QUrl(/*mServiceUrl + mPathToken*/QLatin1String("https://api.box.com/2.0/folders/0")));
+    QNetworkRequest request(QUrl(/*mServiceUrl + mPathToken*/QLatin1String("https://api.box.com/2.0/folders")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), foldername);
+    postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\"id\": \"0\"}"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -273,20 +267,26 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
 
 void OAuth2Job::parseCreateServiceFolder(const QString &data)
 {
-    qDebug()<<" data"<<data;
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
     deleteLater();
 }
 
 void OAuth2Job::parseListFolder(const QString &data)
 {
-    qDebug()<<" data"<<data;
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
     deleteLater();
 }
 
-void OAuth2Job::parseAccountInfo(const QString &data)
+void OAuth2Job::parseAccountInfo(const QString &)
 {
-    //TODO
-    qDebug()<<" data "<<data;
     deleteLater();
 }
 

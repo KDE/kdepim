@@ -96,11 +96,16 @@ void YouSendItJob::uploadFile(const QString &filename)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void YouSendItJob::listFolder()
+void YouSendItJob::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
     //Show root folder => 0
-    QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/0"));
+    QUrl url;
+    if (folder.isEmpty()) {
+        url.setUrl(mDefaultUrl + QLatin1String("/dpi/v1/folder/0"));
+    } else {
+        url.setUrl(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/").arg(folder));
+    }
     url.addQueryItem(QLatin1String("email"),mUsername);
     url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
     QNetworkRequest request(url);

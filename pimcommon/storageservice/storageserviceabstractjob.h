@@ -33,7 +33,7 @@ public:
 
     virtual void requestTokenAccess() = 0;
     virtual void uploadFile(const QString &filename) = 0;
-    virtual void listFolder() = 0;
+    virtual void listFolder(const QString &folder = QString()) = 0;
     virtual void accountInfo() = 0;
     virtual void createFolder(const QString &filename=QString()) = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;

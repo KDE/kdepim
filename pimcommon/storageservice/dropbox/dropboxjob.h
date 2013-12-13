@@ -31,7 +31,7 @@ public:
 
     void requestTokenAccess();
     void uploadFile(const QString &filename);
-    void listFolder();
+    void listFolder(const QString &folder = QString());
     void accountInfo();
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename=QString());

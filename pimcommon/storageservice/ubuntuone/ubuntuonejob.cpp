@@ -64,7 +64,7 @@ void UbuntuOneJob::uploadFile(const QString &filename)
 
 }
 
-void UbuntuOneJob::listFolder()
+void UbuntuOneJob::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
     QUrl url(QLatin1String("https://one.ubuntu.com/api/file_storage/v1"));

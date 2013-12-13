@@ -33,7 +33,7 @@ public:
 
     void requestTokenAccess();
     void uploadFile(const QString &filename);
-    void listFolder();
+    void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &foldername);
     void shareLink(const QString &root, const QString &path);

@@ -62,7 +62,7 @@ void WebDavJob::uploadFile(const QString &filename)
     deleteLater();
 }
 
-void WebDavJob::listFolder()
+void WebDavJob::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
     qDebug()<<" not implemented";
