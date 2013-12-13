@@ -32,13 +32,13 @@ public:
     void printDebugInfo();
     void load(bool forced=false);
     void stopAll();
+    void updateNetworkListener();
 
 private slots:
     void slotAcceptConnection();
     void slotNewNote(const QString &name, const QString &text);
 
 private:
-    void updateNetworkListener();
     void clear();
     QTcpServer *mListener;
 };

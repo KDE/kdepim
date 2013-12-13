@@ -70,9 +70,9 @@ void ServiceTestWidget::connectStorageService()
     connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
     connect(mStorageService, SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
     connect(mStorageService, SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
-    connect(mStorageService, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
-    connect(mStorageService, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
-    connect(mStorageService, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
+    connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(listFolderDone(QString,QStringList)), this, SLOT(slotListFolderDone(QString,QStringList)));
     connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
 }
 
@@ -101,19 +101,19 @@ void ServiceTestWidget::slotAuthentificationDone(const QString &serviceName)
     mEdit->insertPlainText(serviceName + QLatin1String(" Authentification done\n"));
 }
 
-void ServiceTestWidget::slotCreateFolderDone(const QString &serviceName)
+void ServiceTestWidget::slotCreateFolderDone(const QString &serviceName, const QString &folderName)
 {
-    mEdit->insertPlainText(serviceName + QLatin1String(" Create folder done done\n"));
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Create new folder \"%1\" done\n").arg(folderName));
 }
 
-void ServiceTestWidget::slotUploadFileDone(const QString &serviceName)
+void ServiceTestWidget::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
-    mEdit->insertPlainText(serviceName + QLatin1String(" Upload file done\n"));
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Upload file done %1\n").arg(fileName));
 }
 
-void ServiceTestWidget::slotListFolderDone(const QString &serviceName)
+void ServiceTestWidget::slotListFolderDone(const QString &serviceName, const QStringList &listFolder)
 {
-    mEdit->insertPlainText(serviceName + QLatin1String(" list folder done\n"));
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" list folder done %1\n").arg(listFolder.join(QLatin1String(";"))));
 }
 
 void ServiceTestWidget::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info)

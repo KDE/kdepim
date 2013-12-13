@@ -31,18 +31,22 @@ public:
 
     void requestTokenAccess();
     void uploadFile(const QString &filename);
-    void listFolder();
+    void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
+
+
+private slots:
+    void slotSendDataFinished(QNetworkReply *reply);
 
 private:
     void parseUploadFiles(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseListFolder(const QString &data);
-private slots:
-    void slotSendDataFinished(QNetworkReply *reply);
+    QString mPublicLocation;
+    QString mServiceLocation;
 };
 }
 

@@ -53,14 +53,10 @@ void WebDavStorageService::removeConfig()
 
 void WebDavStorageService::authentification()
 {
-    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
-    if (dlg->exec()) {
-        WebDavJob *job = new WebDavJob(this);
-        mServiceLocation = dlg->serviceLocation();
-        mPublicLocation = dlg->publicLocation();
-        job->requestTokenAccess();
-    }
-    delete dlg;
+    WebDavJob *job = new WebDavJob(this);
+    connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    job->requestTokenAccess();
 }
 
 void WebDavStorageService::shareLink(const QString &root, const QString &path)
@@ -75,13 +71,18 @@ void WebDavStorageService::shareLink(const QString &root, const QString &path)
     }
 }
 
+void WebDavStorageService::downloadFile()
+{
+
+}
+
 void WebDavStorageService::listFolder()
 {
     if (mServiceLocation.isEmpty()) {
         authentification();
     } else {
         WebDavJob *job = new WebDavJob(this);
-        connect(job, SIGNAL(listFolderDone()), this, SLOT(slotListFolderDone()));
+        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder();
     }
@@ -93,7 +94,7 @@ void WebDavStorageService::createFolder(const QString &folder)
         authentification();
     } else {
         WebDavJob *job = new WebDavJob(this);
-        connect(job, SIGNAL(createFolderDone()), this, SLOT(slotCreateFolderDone()));
+        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createFolder(folder);
     }
@@ -122,7 +123,7 @@ void WebDavStorageService::uploadFile(const QString &filename)
         authentification();
     } else {
         WebDavJob *job = new WebDavJob(this);
-        connect(job, SIGNAL(uploadFileDone()), this, SLOT(slotUploadFileDone()));
+        connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         job->uploadFile(filename);

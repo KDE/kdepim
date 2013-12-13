@@ -19,7 +19,8 @@
 #include "shorturlconfigurewidget.h"
 
 #include <KLocale>
-
+#include <KSeparator>
+#include <QVBoxLayout>
 
 using namespace PimCommon;
 ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
@@ -28,9 +29,15 @@ ShortUrlConfigureDialog::ShortUrlConfigureDialog(QWidget *parent)
     setCaption( i18n( "Configure engine" ) );
     setButtons( Cancel | Ok | Default );
 
+    QWidget *w = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
+    w->setLayout(lay);
+    setMainWidget(w);
     mConfigureWidget = new ShortUrlConfigureWidget();
     mConfigureWidget->loadConfig();
-    setMainWidget(mConfigureWidget);
+    lay->addWidget(mConfigureWidget);
+    lay->addWidget(new KSeparator);
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
     connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
 }

@@ -33,7 +33,7 @@ public:
 
     void requestTokenAccess();
     void uploadFile(const QString &filename);
-    void listFolder();
+    void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
@@ -47,6 +47,8 @@ private slots:
     void slotRedirect(const QUrl &url);
 
 protected:
+    virtual void parseCreateServiceFolder(const QString &data);
+    virtual void parseListFolder(const QString &data);
     virtual void parseRedirectUrl(const QUrl &url);
     virtual void parseAccessToken(const QString &data);
     virtual void getTokenAccess(const QString &authorizeCode);
@@ -64,6 +66,9 @@ protected:
     QString mScope;
     QString mAuthorizePath;
     QString mPathToken;
+    QString mFolderInfoPath;
+    QString mCurrentAccountInfoPath;
+    QString mApiUrl;
     qint64 mExpireInTime;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
     bool mNeedRefreshToken;

@@ -46,7 +46,7 @@
 #include <QLabel>
 #include <QString>
 #include <QLineEdit>
-#include <QTableView>
+#include <QTreeView>
 #include <QSortFilterProxyModel>
 #include <QHeaderView>
 
@@ -60,8 +60,8 @@ NoteHostDialog::NoteHostDialog( const QString &caption, QWidget *parent )
     setMainWidget( page );
     ( void ) new QLabel( i18n("Select recipient:"), page );
 
-    m_servicesView = new QTableView( page );
-    m_servicesView->setShowGrid( false );
+    m_servicesView = new QTreeView( page );
+    m_servicesView->setRootIsDecorated(false);
     DNSSD::ServiceModel* mdl = new DNSSD::ServiceModel( new DNSSD::ServiceBrowser( QLatin1String("_knotes._tcp"), true ), this );
     m_servicesView->setModel( mdl );
     m_servicesView->setSelectionBehavior( QAbstractItemView::SelectRows );

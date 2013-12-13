@@ -27,6 +27,9 @@ class BoxJob : public PimCommon::OAuth2Job
 public:
     explicit BoxJob(QObject *parent=0);
     ~BoxJob();
+
+private:
+    void parseAccountInfo(const QString &data);
 };
 }
 

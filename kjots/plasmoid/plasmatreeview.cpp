@@ -19,8 +19,6 @@
 
 #include "plasmatreeview.h"
 
-#include <QHeaderView>
-#include <QScrollBar>
 
 #include <kiconloader.h>
 

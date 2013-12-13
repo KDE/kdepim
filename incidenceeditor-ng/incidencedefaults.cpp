@@ -38,7 +38,6 @@
 #include <KIO/NetAccess>
 #include <KDebug>
 #include <KLocalizedString>
-#include <KSystemTimeZones>
 
 #include <QFile>
 

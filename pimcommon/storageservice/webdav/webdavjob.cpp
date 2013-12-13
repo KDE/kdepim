@@ -18,6 +18,8 @@
 #include "webdavjob.h"
 #include "webdavsettingsdialog.h"
 
+#include <KLocalizedString>
+
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
@@ -42,6 +44,13 @@ void WebDavJob::requestTokenAccess()
 {
     QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
     if (dlg->exec()) {
+        WebDavJob *job = new WebDavJob(this);
+        mServiceLocation = dlg->serviceLocation();
+        mPublicLocation = dlg->publicLocation();
+        job->requestTokenAccess();
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        deleteLater();
     }
     delete dlg;
 }
@@ -49,21 +58,29 @@ void WebDavJob::requestTokenAccess()
 void WebDavJob::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
-void WebDavJob::listFolder()
+void WebDavJob::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::accountInfo()
 {
     mActionType = AccountInfo;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::createFolder(const QString &filename)
 {
     mActionType = CreateFolder;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
@@ -83,10 +100,11 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case RequestToken:
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case AccessToken:
-                errorMessage(mActionType, errorStr);
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case UploadFiles:
@@ -102,6 +120,10 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case ListFolder:
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case CreateServiceFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -168,5 +190,6 @@ void WebDavJob::parseListFolder(const QString &data)
 
 void WebDavJob::shareLink(const QString &root, const QString &path)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }

@@ -19,6 +19,8 @@
 #include "pimcommon/storageservice/logindialog.h"
 #include "pimcommon/storageservice/storageserviceutils.h"
 
+#include <KLocalizedString>
+
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
@@ -47,22 +49,14 @@ UbuntuOneJob::~UbuntuOneJob()
 
 void UbuntuOneJob::requestTokenAccess()
 {
-    QPointer<LoginDialog> dlg = new LoginDialog;
-    if (dlg->exec()) {
-        mPassword = dlg->password();
-        mUsername = dlg->username();
-    }
-    delete dlg;
-    if (!mUsername.isEmpty()) {
-        mActionType = RequestToken;
-        QUrl url(QLatin1String("https://login.ubuntu.com/api/1.0/authentications"));
-        url.addQueryItem(QLatin1String("ws.op"), QLatin1String("authenticate"));
-        url.addQueryItem(QLatin1String("token_name"), QLatin1String("Ubuntu One @ foo") );
-        qDebug()<<" postData "<<url;
-        QNetworkRequest request(url);
-        QNetworkReply *reply = mNetworkAccessManager->get(request);
-        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-    }
+    mActionType = RequestToken;
+    QUrl url(QLatin1String("https://login.ubuntu.com/api/1.0/authentications"));
+    url.addQueryItem(QLatin1String("ws.op"), QLatin1String("authenticate"));
+    url.addQueryItem(QLatin1String("token_name"), QLatin1String("Ubuntu One @ foo") );
+    qDebug()<<" postData "<<url;
+    QNetworkRequest request(url);
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void UbuntuOneJob::uploadFile(const QString &filename)
@@ -70,7 +64,7 @@ void UbuntuOneJob::uploadFile(const QString &filename)
 
 }
 
-void UbuntuOneJob::listFolder()
+void UbuntuOneJob::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
     QUrl url(QLatin1String("https://one.ubuntu.com/api/file_storage/v1"));
@@ -134,7 +128,8 @@ void UbuntuOneJob::createFolder(const QString &foldername)
 
 void UbuntuOneJob::shareLink(const QString &root, const QString &path)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void UbuntuOneJob::initializeToken(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret)
@@ -151,47 +146,44 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     reply->deleteLater();
     if (mError) {
         qDebug()<<" error type "<<data;
-        QJson::Parser parser;
-        bool ok;
 
-        QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
-        if (error.contains(QLatin1String("error"))) {
-            const QString errorStr = error.value(QLatin1String("error")).toString();
-            switch(mActionType) {
-            case NoneAction:
-                deleteLater();
-                break;
-            case RequestToken:
-                deleteLater();
-                break;
-            case AccessToken:
-                Q_EMIT authorizationFailed(errorStr);
-                deleteLater();
-                break;
-            case UploadFiles:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case CreateFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case AccountInfo:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case ListFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            case CreateServiceFolder:
-                deleteLater();
-                break;
-            default:
-                qDebug()<<" Action Type unknown:"<<mActionType;
-                deleteLater();
-                break;
-            }
+        const QString errorStr = data;
+        switch(mActionType) {
+        case NoneAction:
+            deleteLater();
+            break;
+        case RequestToken:
+            Q_EMIT authorizationFailed(errorStr);
+            deleteLater();
+            break;
+        case AccessToken:
+            Q_EMIT authorizationFailed(errorStr);
+            deleteLater();
+            break;
+        case UploadFiles:
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        case CreateFolder:
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        case AccountInfo:
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        case ListFolder:
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        case CreateServiceFolder:
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        default:
+            qDebug()<<" Action Type unknown:"<<mActionType;
+            deleteLater();
+            break;
         }
         return;
     }
@@ -204,7 +196,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         parseRequestToken(data);
         break;
     case AccessToken:
-        deleteLater();
+        parseAccessToken(data);
         break;
     case UploadFiles:
         parseUploadFiles(data);
@@ -245,7 +237,8 @@ void UbuntuOneJob::parseListFolder(const QString &data)
             //FIXME create folder !
         }
     }
-    Q_EMIT listFolderDone();
+    //TODO
+    Q_EMIT listFolderDone(QStringList());
     deleteLater();
 }
 
@@ -270,14 +263,15 @@ void UbuntuOneJob::parseCreateFolder(const QString &data)
 {
     //TODO
     qDebug()<<" data "<<data;
-    Q_EMIT createFolderDone();
+    Q_EMIT createFolderDone(QString());
     deleteLater();
 }
 
 void UbuntuOneJob::parseUploadFiles(const QString &data)
 {
     qDebug()<<" data "<<data;
-    Q_EMIT uploadFileDone();
+    //TODO
+    Q_EMIT uploadFileDone(QString());
     deleteLater();
 }
 
@@ -300,10 +294,15 @@ void UbuntuOneJob::parseAccountInfo(const QString &data)
 
 void UbuntuOneJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *auth)
 {
-    //FIXME when account is not ok.
-    qDebug()<<"slotAuthenticationRequired ";
-    auth->setUser(mUsername);
-    auth->setPassword(mPassword);
+    QPointer<LoginDialog> dlg = new LoginDialog;
+    if (dlg->exec()) {
+        auth->setUser(dlg->username());
+        auth->setPassword(dlg->password());
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        deleteLater();
+    }
+    delete dlg;
 }
 
 void UbuntuOneJob::parseRequestToken(const QString &data)
@@ -346,4 +345,10 @@ void UbuntuOneJob::finishGetToken()
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));    
+}
+
+void UbuntuOneJob::parseAccessToken(const QString &data)
+{
+    qDebug()<<" parseAccessToken :"<<data;
+    deleteLater();
 }

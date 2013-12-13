@@ -72,6 +72,7 @@ Root
 |       |---------kontactrc
 |       |---------kontact_summaryrc
 |       |---------knoderc
+|       |---------globalnotesettings
 |
 |-----akonadi
 |       |---------<archive akonadi>

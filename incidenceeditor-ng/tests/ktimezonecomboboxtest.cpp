@@ -20,7 +20,6 @@
 #include "ktimezonecomboboxtest.h"
 #include "../ktimezonecombobox.h"
 
-#include <KSystemTimeZones>
 
 #include "qtest_kde.h"
 

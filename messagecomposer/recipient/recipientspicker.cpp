@@ -37,7 +37,6 @@
 
 #include <QKeyEvent>
 #include <QTreeView>
-#include <QLayout>
 #include <QVBoxLayout>
 
 using namespace MessageComposer;

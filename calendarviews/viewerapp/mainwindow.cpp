@@ -37,7 +37,6 @@
 #include <Akonadi/Control>
 
 #include <KCheckableProxyModel>
-#include <KSystemTimeZones>
 
 using namespace Akonadi;
 using namespace CalendarSupport;

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Notes Agent
+Name[cs]=Agent poznámek
 Name[de]=Notizen-Agent
 Name[nl]=Agent voor notities
 Name[pt]=Agente de Notas
@@ -9,6 +10,7 @@ Name[sv]=Anteckningsmodul
 Name[uk]=Агент нотаток
 Name[x-test]=xxNotes Agentxx
 Comment=Notes Agent allows to get note send by network and show alarms
+Comment[de]=Mit dem Notizen-Agent können vom Netzwerk versendete Notizen empfangen und Erinnerungen angezeigt werden
 Comment[nl]=Agent voor notities stelt u in staat om notities te ontvangen en te zenden via het netwerk en om herinneringen te tonen
 Comment[pt]=O Agente de Notas permite obter as notas enviadas pela rede e mostrar alarmes
 Comment[pt_BR]=O Agente de Notas permite obter uma nota enviada pela rede e mostrar os alarmes

@@ -33,7 +33,7 @@ public:
 
     virtual void requestTokenAccess() = 0;
     virtual void uploadFile(const QString &filename) = 0;
-    virtual void listFolder() = 0;
+    virtual void listFolder(const QString &folder = QString()) = 0;
     virtual void accountInfo() = 0;
     virtual void createFolder(const QString &filename=QString()) = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
@@ -46,9 +46,9 @@ Q_SIGNALS:
     void shareLinkDone(const QString &url);
     void accountInfoDone(const PimCommon::AccountInfo &data);
     void uploadFileProgress(qint64 done, qint64 total);
-    void createFolderDone();
-    void uploadFileDone();
-    void listFolderDone();
+    void createFolderDone(const QString &folderName);
+    void uploadFileDone(const QString &fileName);
+    void listFolderDone(const QStringList &listFolder);
     void authorizationFailed(const QString &error);
 
 protected:

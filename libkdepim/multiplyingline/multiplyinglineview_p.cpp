@@ -27,8 +27,6 @@
 #include <KMessageBox>
 #include <KLocale>
 
-#include <QApplication>
-#include <QLayout>
 #include <QVBoxLayout>
 #include <QTimer>
 #include <QScrollBar>

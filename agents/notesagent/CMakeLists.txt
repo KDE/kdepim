@@ -9,6 +9,7 @@ set(notesagent_SRCS
     notesagent.cpp
     notesmanager.cpp
     notesagentsettingsdialog.cpp
+    notesagentalarmdialog.cpp
 )
 
 kde4_add_kcfg_files(notesagent_SRCS
@@ -43,4 +44,5 @@ install(TARGETS akonadi_notes_agent ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(FILES notesagent.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
 install(FILES akonadi_notes_agent.notifyrc DESTINATION "${DATA_INSTALL_DIR}/akonadi_notes_agent" )
 
+add_subdirectory(kconf_update)
 

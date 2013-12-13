@@ -51,19 +51,19 @@ void StorageServiceAbstract::slotUploadFileProgress(qint64 done, qint64 total)
     Q_EMIT uploadFileProgress(storageServiceName(), done, total);
 }
 
-void StorageServiceAbstract::slotCreateFolderDone()
+void StorageServiceAbstract::slotCreateFolderDone(const QString &folderName)
 {
-    Q_EMIT createFolderDone(storageServiceName());
+    Q_EMIT createFolderDone(storageServiceName(), folderName);
 }
 
-void StorageServiceAbstract::slotUploadFileDone()
+void StorageServiceAbstract::slotUploadFileDone(const QString &filename)
 {
-    Q_EMIT uploadFileDone(storageServiceName());
+    Q_EMIT uploadFileDone(storageServiceName(), filename);
 }
 
-void StorageServiceAbstract::slotListFolderDone()
+void StorageServiceAbstract::slotListFolderDone(const QStringList &listFolder)
 {
-    Q_EMIT listFolderDone(storageServiceName());
+    Q_EMIT listFolderDone(storageServiceName(), listFolder);
 }
 
 

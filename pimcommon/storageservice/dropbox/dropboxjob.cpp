@@ -20,7 +20,7 @@
 #include "storageservice/storageauthviewdialog.h"
 #include "storageservice/storageserviceabstract.h"
 #include "storageservice/storageserviceutils.h"
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <qjson/parser.h>
 #include <QFile>
@@ -108,7 +108,6 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     const QString data = QString::fromUtf8(reply->readAll());
     reply->deleteLater();
     if (mError) {
-        qDebug()<<" error type "<<data;
         QJson::Parser parser;
         bool ok;
 
@@ -120,9 +119,11 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case RequestToken:
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case AccessToken:
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case UploadFiles:
@@ -169,15 +170,13 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         parseUploadFile(data);
         break;
     case CreateFolder:
-        Q_EMIT createFolderDone();
-        deleteLater();
+        parseCreateFolder(data);
         break;
     case AccountInfo:
         parseAccountInfo(data);
         break;
     case ListFolder:
-        Q_EMIT listFolderDone();
-        deleteLater();
+        parseListFolder(data);
         break;
     case ShareLink:
         parseShareLink(data);
@@ -261,8 +260,12 @@ void DropBoxJob::doAuthentification()
     dlg->setUrl(url);
     if (dlg->exec()) {
         getTokenAccess();
+        delete dlg;
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        delete dlg;
+        deleteLater();
     }
-    delete dlg;
 }
 
 void DropBoxJob::createFolder(const QString &folder)
@@ -331,7 +334,7 @@ void DropBoxJob::accountInfo()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void DropBoxJob::listFolder()
+void DropBoxJob::listFolder(const QString &folder)
 {
     qDebug()<<" void DropBoxJob::listFolders()";
     mActionType = ListFolder;
@@ -374,7 +377,8 @@ void DropBoxJob::parseUploadFile(const QString &data)
         path = info.value(QLatin1String("path")).toString();
         //qDebug()<<" path "<<path;
     }
-    Q_EMIT uploadFileDone();
+    //TODO
+    Q_EMIT uploadFileDone(path);
     shareLink(root, path);
 }
 
@@ -406,5 +410,26 @@ void DropBoxJob::parseShareLink(const QString &data)
     qDebug()<<" info "<<info;
 
     Q_EMIT shareLinkDone(url);
+    deleteLater();
+}
+
+void DropBoxJob::parseCreateFolder(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    QJson::Parser parser;
+    bool ok;
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QString foldername;
+    if (info.contains(QLatin1String("path"))) {
+        foldername = info.value(QLatin1String("path")).toString();
+    }
+    Q_EMIT createFolderDone(foldername);
+    deleteLater();
+}
+
+void DropBoxJob::parseListFolder(const QString &data)
+{
+    //TODO
+    Q_EMIT listFolderDone(QStringList());
     deleteLater();
 }

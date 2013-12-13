@@ -129,39 +129,43 @@ void OAuth2Job::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
     //TODO
+    qDebug()<<" not implemented ";
+    deleteLater();
 }
 
-void OAuth2Job::listFolder()
+void OAuth2Job::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
-    //TODO
+    QUrl url;
+    url.setUrl(mApiUrl + mFolderInfoPath + QLatin1String("0"));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void OAuth2Job::accountInfo()
 {
     mActionType = AccountInfo;
-    QNetworkRequest request(QUrl(mServiceUrl + QLatin1String("/oauth/account/")));
+    QUrl url;
+    url.setUrl(mApiUrl + mCurrentAccountInfoPath);
+    QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    //FIXME
-    /*
-    QUrl postData;
-    postData.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
-    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("authorization_code"));
-    postData.addQueryItem(QLatin1String("client_id"), mClientId);
-    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-*/
 }
 
 void OAuth2Job::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
-    QNetworkRequest request(QUrl(/*mServiceUrl + mPathToken*/QLatin1String("https://api.box.com/2.0/folders/0")));
+    QNetworkRequest request(QUrl(/*mServiceUrl + mPathToken*/QLatin1String("https://api.box.com/2.0/folders")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), foldername);
+    postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\"id\": \"0\"}"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -170,6 +174,9 @@ void OAuth2Job::shareLink(const QString &root, const QString &path)
 {
     mActionType = ShareLink;
     //TODO
+    qDebug()<<" not implemented ";
+    deleteLater();
+
 }
 
 
@@ -183,13 +190,14 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         bool ok;
 
         QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
-        if (error.contains(QLatin1String("error"))) {
-            const QString errorStr = error.value(QLatin1String("error")).toString();
+        if (error.contains(QLatin1String("message"))) {
+            const QString errorStr = error.value(QLatin1String("message")).toString();
             switch(mActionType) {
             case NoneAction:
                 deleteLater();
                 break;
             case RequestToken:
+                Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
             case AccessToken:
@@ -213,6 +221,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case CreateServiceFolder:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             default:
@@ -244,10 +253,10 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         parseAccountInfo(data);
         break;
     case ListFolder:
-        deleteLater();
+        parseListFolder(data);
         break;
     case CreateServiceFolder:
-        deleteLater();
+        parseCreateServiceFolder(data);
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
@@ -256,10 +265,28 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
-void OAuth2Job::parseAccountInfo(const QString &data)
+void OAuth2Job::parseCreateServiceFolder(const QString &data)
 {
-    //TODO
-    qDebug()<<" data "<<data;
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    deleteLater();
+}
+
+void OAuth2Job::parseListFolder(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    deleteLater();
+}
+
+void OAuth2Job::parseAccountInfo(const QString &)
+{
     deleteLater();
 }
 
@@ -267,7 +294,7 @@ void OAuth2Job::parseCreateFolder(const QString &data)
 {
     //TODO
     qDebug()<<" data "<<data;
-    Q_EMIT createFolderDone();
+    Q_EMIT createFolderDone(QString());
     deleteLater();
 }
 
@@ -275,7 +302,7 @@ void OAuth2Job::parseUploadFile(const QString &data)
 {
     //TODO
     qDebug()<<" data "<<data;
-    Q_EMIT uploadFileDone();
+    Q_EMIT uploadFileDone(QString());
     deleteLater();
 }
 
@@ -314,7 +341,7 @@ void OAuth2Job::refreshToken()
     postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("refresh_token"));
     postData.addQueryItem(QLatin1String("client_id"), mClientId);
     postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
-    qDebug()<<"https://api.hubic.com/oauth/token "<<postData;
+    qDebug()<<"refreshToken postData: "<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));

@@ -53,7 +53,6 @@
 #include <KWordWrap>
 
 #include <QApplication>
-#include <QDialog>
 #include <QDrag>
 #include <QGridLayout>
 #include <QLabel>

@@ -36,6 +36,7 @@ public:
 
 private Q_SLOTS:
     void slotToolSwitched(PimCommon::CustomToolsWidget::ToolType);
+    void slotInsertShortUrl(const QString &shortUrl);
 
 private:
     BlogiloComposerEditor *mEditor;

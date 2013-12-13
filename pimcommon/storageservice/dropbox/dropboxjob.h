@@ -31,7 +31,7 @@ public:
 
     void requestTokenAccess();
     void uploadFile(const QString &filename);
-    void listFolder();
+    void listFolder(const QString &folder = QString());
     void accountInfo();
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename=QString());
@@ -51,7 +51,9 @@ private:
     void parseResponseAccessToken(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseUploadFile(const QString &data);
+    void parseCreateFolder(const QString &data);
     void parseShareLink(const QString &data);
+    void parseListFolder(const QString &data);
     QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;

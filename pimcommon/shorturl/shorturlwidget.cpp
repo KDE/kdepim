@@ -26,6 +26,7 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KToggleAction>
+#include <KRun>
 
 #include <QLabel>
 #include <QGridLayout>
@@ -58,43 +59,56 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
 
     grid->addWidget(closeBtn, 0, 0);
 
+    mIndicatorLabel = new KPIMUtils::ProgressIndicatorLabel(i18n("In progress to generate short url..."));
+    grid->addWidget(mIndicatorLabel, 0, 1);
+
     QPushButton *configure = new QPushButton(i18n("Configure..."));
     connect(configure, SIGNAL(clicked()), this, SLOT(slotConfigure()));
     grid->addWidget(configure, 0, 2);
 
-    mIndicatorLabel = new KPIMUtils::ProgressIndicatorLabel(i18n("In progress to generate short url..."));
-    grid->addWidget(mIndicatorLabel, 0, 1);
+    mConvertButton = new QPushButton(i18n("Convert"));
+    grid->addWidget(mConvertButton, 1, 2);
+    connect(mConvertButton, SIGNAL(clicked()), this, SLOT(slotConvertUrl()));
 
+    mInsertShortUrl = new QPushButton(i18n("Insert Short Url"));
+    connect(mInsertShortUrl, SIGNAL(clicked()), this, SLOT(slotInsertShortUrl()));
+    grid->addWidget(mInsertShortUrl, 2, 2);
 
     QLabel *lab = new QLabel(i18n("Original url:"));
-    grid->addWidget(lab, 1, 0);
+    grid->addWidget(lab, 3, 0);
 
     mOriginalUrl = new KLineEdit;
     mOriginalUrl->setClearButtonShown(true);
     mOriginalUrl->setTrapReturnKey(true);
     connect(mOriginalUrl, SIGNAL(textChanged(QString)), this, SLOT(slotOriginalUrlChanged(QString)));
     connect(mOriginalUrl, SIGNAL(returnPressed(QString)), this, SLOT(slotConvertUrl()));
-    grid->addWidget(mOriginalUrl, 1, 1);
+    grid->addWidget(mOriginalUrl, 3, 1);
 
-    mConvertButton = new QPushButton(i18n("Convert"));
-    grid->addWidget(mConvertButton, 1, 2);
-    connect(mConvertButton, SIGNAL(clicked()), this, SLOT(slotConvertUrl()));
+    mCopyToClipboard = new QPushButton(i18n("Copy to clipboard"));
+    connect(mCopyToClipboard, SIGNAL(clicked()), this, SLOT(slotPasteToClipboard()));
+    grid->addWidget(mCopyToClipboard, 3, 2);
+
 
     lab = new QLabel(i18n("Short url:"));
-    grid->addWidget(lab, 2, 0);
+    grid->addWidget(lab, 4, 0);
 
     mShortUrl = new KLineEdit;
     connect(mShortUrl, SIGNAL(textChanged(QString)), this, SLOT(slotShortUrlChanged(QString)));
     mShortUrl->setReadOnly(true);
-    grid->addWidget(mShortUrl, 2, 1);
+    grid->addWidget(mShortUrl, 4, 1);
 
-    mCopyToClipboard = new QPushButton(i18n("Copy to clipboard"));
-    connect(mCopyToClipboard, SIGNAL(clicked()), this, SLOT(slotPasteToClipboard()));
-    grid->addWidget(mCopyToClipboard, 2, 2);
 
-    grid->setRowStretch(3,1);
+
+    mOpenShortUrl = new QPushButton(i18n("Open Short Url"));
+    connect(mOpenShortUrl, SIGNAL(clicked()), this, SLOT(slotOpenShortUrl()));
+    grid->addWidget(mOpenShortUrl, 4, 2);
+
+
+    grid->setRowStretch(5,1);
     mConvertButton->setEnabled(false);
     mCopyToClipboard->setEnabled(false);
+    mInsertShortUrl->setEnabled(false);
+    mOpenShortUrl->setEnabled(false);
 
     connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
               this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
@@ -109,6 +123,14 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
 
 ShortUrlWidget::~ShortUrlWidget()
 {
+}
+
+void ShortUrlWidget::slotInsertShortUrl()
+{
+    const QString shortUrl = mShortUrl->text();
+    if (!shortUrl.isEmpty()) {
+        Q_EMIT insertShortUrl(shortUrl);
+    }
 }
 
 void ShortUrlWidget::slotConfigure()
@@ -149,8 +171,9 @@ void ShortUrlWidget::slotConvertUrl()
 
 void ShortUrlWidget::slotPasteToClipboard()
 {
-    if (!mShortUrl->text().isEmpty()) {
-        QApplication::clipboard()->setText(mShortUrl->text());
+    const QString shortUrl = mShortUrl->text();
+    if (!shortUrl.isEmpty()) {
+        QApplication::clipboard()->setText(shortUrl);
     }
 }
 
@@ -162,6 +185,8 @@ void ShortUrlWidget::slotOriginalUrlChanged(const QString &text)
 void ShortUrlWidget::slotShortUrlChanged(const QString &text)
 {
     mCopyToClipboard->setEnabled(!text.isEmpty());
+    mInsertShortUrl->setEnabled(!text.isEmpty());
+    mOpenShortUrl->setEnabled(!text.isEmpty());
 }
 
 void ShortUrlWidget::slotShortUrlDone(const QString &url)
@@ -209,4 +234,12 @@ KToggleAction *ShortUrlWidget::toggleAction()
         mToggleAction->setChecked(false);
     }
     return mToggleAction;
+}
+
+void ShortUrlWidget::slotOpenShortUrl()
+{
+    const QString shortUrl = mShortUrl->text();
+    if (!shortUrl.isEmpty()) {
+        new KRun( shortUrl, this );
+    }
 }

@@ -76,7 +76,6 @@
 #include <KReplaceDialog>
 #include <kselectionproxymodel.h>
 #include <KStandardDirs>
-#include <KTextBrowser>
 #include <KGlobalSettings>
 #include <KXMLGUIClient>
 #include <KProcess>

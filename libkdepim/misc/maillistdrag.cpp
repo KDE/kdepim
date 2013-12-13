@@ -32,9 +32,6 @@
 #include <QBuffer>
 #include <QDataStream>
 #include <QEventLoop>
-#include <QProgressBar>
-#include <QTextStream>
-#include <QDropEvent>
 
 using namespace KPIM;
 

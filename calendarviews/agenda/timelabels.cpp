@@ -35,7 +35,6 @@
 #include <QMenu>
 #include <QPainter>
 #include <QPointer>
-#include <QScrollArea>
 
 static const KCatalogLoader loader( QLatin1String("timezones4") );
 

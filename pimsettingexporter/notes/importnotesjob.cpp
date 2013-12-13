@@ -52,6 +52,8 @@ void ImportNotesJob::restoreConfig()
 {
     const QString knotesStr(QLatin1String("knotesrc"));
     restoreConfigFile(knotesStr);
+    const QString globalNoteSettingsStr(QLatin1String("globalnotesettings"));
+    restoreConfigFile(globalNoteSettingsStr);
     Q_EMIT info(i18n("Config restored."));
 }
 

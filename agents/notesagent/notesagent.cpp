@@ -18,10 +18,10 @@
 #include "notesagent.h"
 #include "notesmanager.h"
 #include "notesagentadaptor.h"
+#include "notesharedglobalconfig.h"
 #include "notesagentsettings.h"
 #include "notesagentsettingsdialog.h"
 
-#include <Akonadi/KMime/SpecialMailCollections>
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentManager>
 #include <akonadi/dbusconnectionpool.h>
@@ -30,14 +30,11 @@
 #include <akonadi/session.h>
 #include <Akonadi/AttributeFactory>
 #include <Akonadi/CollectionFetchScope>
-#include <KMime/Message>
 
 #include <KWindowSystem>
 #include <KLocale>
 
 #include <QPointer>
-
-//#define DEBUG_NOTESAGENT 1
 
 NotesAgent::NotesAgent(const QString &id)
     : Akonadi::AgentBase( id )
@@ -48,19 +45,10 @@ NotesAgent::NotesAgent(const QString &id)
     Akonadi::DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/NotesAgent" ), this, QDBusConnection::ExportAdaptors );
     Akonadi::DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.NotesAgent" ) );
 
-    changeRecorder()->setMimeTypeMonitored( KMime::Message::mimeType() );
-    changeRecorder()->itemFetchScope().setCacheOnly( true );
-    changeRecorder()->itemFetchScope().setFetchModificationTime( false );
-    changeRecorder()->setChangeRecordingEnabled( false );
-    changeRecorder()->ignoreSession( Akonadi::Session::defaultSession() );
     setNeedsNetwork(true);
 
     if (NotesAgentSettings::enabled()) {
-#ifdef DEBUG_NOTESAGENT
         QTimer::singleShot(1000, mNotesManager, SLOT(load()));
-#else
-        QTimer::singleShot(1000*60*4, mNotesManager, SLOT(load()));
-#endif
     }
 }
 
@@ -117,7 +105,9 @@ void NotesAgent::showConfigureDialog(qlonglong windowId)
         KWindowSystem::setMainWindow( dialog, (HWND)windowId );
 #endif
     }
-    dialog->exec();
+    if (dialog->exec()) {
+        mNotesManager->load();
+    }
     delete dialog;
 }
 
@@ -125,6 +115,38 @@ void NotesAgent::printDebugInfo()
 {
     mNotesManager->printDebugInfo();
 }
+
+bool NotesAgent::receiveNotes() const
+{
+    return NoteShared::NoteSharedGlobalConfig::receiveNotes();
+}
+
+void NotesAgent::setReceiveNotes(bool b)
+{
+    if (NoteShared::NoteSharedGlobalConfig::receiveNotes() != b ) {
+        NoteShared::NoteSharedGlobalConfig::setReceiveNotes(b);
+        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        mNotesManager->updateNetworkListener();
+    }
+}
+
+int NotesAgent::port() const
+{
+    return NoteShared::NoteSharedGlobalConfig::port();
+}
+
+void NotesAgent::setPort(int value)
+{
+    if (value < 0)
+        return;
+
+    if (NoteShared::NoteSharedGlobalConfig::port() != (uint)value ) {
+        NoteShared::NoteSharedGlobalConfig::setPort(value);
+        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        mNotesManager->updateNetworkListener();
+    }
+}
+
 
 AKONADI_AGENT_MAIN( NotesAgent )
 

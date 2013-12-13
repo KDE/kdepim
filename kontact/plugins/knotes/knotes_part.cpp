@@ -26,13 +26,12 @@
 #include "noteshared/noteutils.h"
 #include "knoteseditdialog.h"
 #include "knotesadaptor.h"
-#include "knotes/dialog/selectednotefolderdialog.h"
+#include "noteshared/job/createnewnotejob.h"
 //#include "knotesiconview.h"
 #include "knoteswidget.h"
 #include "knotesselectdeletenotesdialog.h"
 #include "knotetip.h"
 #include "knotes/configdialog/knoteconfigdialog.h"
-#include "noteshared/network/notesnetworkreceiver.h"
 #include "knotes/print/knoteprinter.h"
 #include "knotes/print/knoteprintobject.h"
 #include "knotes/print/knoteprintselectthemedialog.h"
@@ -71,7 +70,6 @@
 
 #include <QApplication>
 #include <QClipboard>
-#include <QTcpServer>
 #include <QMenu>
 #include <QPointer>
 #include <QCheckBox>
@@ -82,7 +80,6 @@ KNotesPart::KNotesPart( QObject *parent )
     : KParts::ReadOnlyPart( parent ),
       mNotesWidget( 0 ) ,
       mNoteTip( new KNoteTip( /*mNotesWidget->notesView()*/0 ) ),
-      mListener(0),
       mPublisher(0),
       mNotePrintPreview(0),
       mNoteTreeModel(0)
@@ -247,8 +244,6 @@ KNotesPart::KNotesPart( QObject *parent )
 
 KNotesPart::~KNotesPart()
 {
-    delete mListener;
-    mListener=0;
     delete mPublisher;
     mPublisher=0;
     delete mNoteTip;
@@ -335,58 +330,10 @@ bool KNotesPart::openFile()
 
 void KNotesPart::newNote( const QString &name, const QString &text )
 {
-    Akonadi::Collection col;
-    Akonadi::Collection::Id id = KNotesGlobalConfig::self()->defaultFolder();
-    if (id == -1) {
-        QPointer<SelectedNotefolderDialog> dlg = new SelectedNotefolderDialog(widget());
-        if (dlg->exec()) {
-            col = dlg->selectedCollection();
-        }
-        if (dlg->useFolderByDefault()) {
-            KNotesGlobalConfig::self()->setDefaultFolder(col.id());
-            KNotesGlobalConfig::self()->writeConfig();
-        }
-        delete dlg;
-    } else {
-        col = Akonadi::Collection(id);
-    }
-    if (col.isValid()) {
-        Akonadi::Item newItem;
-        newItem.setMimeType( Akonotes::Note::mimeType() );
-
-        KMime::Message::Ptr newPage = KMime::Message::Ptr( new KMime::Message() );
-
-        QString title;
-        if (name.isEmpty()) {
-            title = KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() );
-        } else {
-            title = name;
-        }
-        QByteArray encoding( "utf-8" );
-
-        newPage->subject( true )->fromUnicodeString( title, encoding );
-        newPage->contentType( true )->setMimeType( KNotesGlobalConfig::self()->richText() ? "text/html" : "text/plain" );
-        newPage->contentType()->setCharset("utf-8");
-        newPage->contentTransferEncoding(true)->setEncoding(KMime::Headers::CEquPr);
-        newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
-        newPage->from( true )->fromUnicodeString( QString::fromLatin1( "knotes@kde4" ), encoding );
-        // Need a non-empty body part so that the serializer regards this as a valid message.
-        newPage->mainBodyPart()->fromUnicodeString( text.isEmpty() ? QString::fromLatin1( " " ) : text);
-
-        newPage->assemble();
-
-        newItem.setPayload( newPage );
-
-        Akonadi::EntityDisplayAttribute *eda = new Akonadi::EntityDisplayAttribute();
-
-
-        eda->setIconName( QString::fromLatin1( "text-plain" ) );
-        newItem.addAttribute(eda);
-
-        Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotNoteCreationFinished(KJob*)) );
-    }
-
+    NoteShared::CreateNewNoteJob *job = new NoteShared::CreateNewNoteJob(this, widget());
+    job->setRichText(KNotesGlobalConfig::self()->richText());
+    job->setNote(name, text);
+    job->start();
 #if 0
     // create the new note
     Journal *journal = new Journal();
@@ -444,8 +391,8 @@ void KNotesPart::slotNoteCreationFinished(KJob* job)
 {
     if (job->error()) {
         kWarning() << job->errorString();
-        KNotesGlobalConfig::self()->setDefaultFolder(-1);
-        KNotesGlobalConfig::self()->writeConfig();
+        NoteShared::NoteSharedGlobalConfig::self()->setDefaultFolder(-1);
+        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
         KMessageBox::error(widget(), i18n("Note was not created."), i18n("Create new note"));
         return;
     }
@@ -771,29 +718,13 @@ void KNotesPart::slotSendToNetwork()
 
 void KNotesPart::updateNetworkListener()
 {
-    delete mListener;
-    mListener=0;
     delete mPublisher;
     mPublisher=0;
 
     if ( NoteShared::NoteSharedGlobalConfig::receiveNotes() ) {
         // create the socket and start listening for connections
-        mListener = KSocketFactory::listen( QLatin1String("knotes") , QHostAddress::Any,
-                                           NoteShared::NoteSharedGlobalConfig::port() );
-        connect( mListener, SIGNAL(newConnection()), SLOT(slotAcceptConnection()) );
         mPublisher=new DNSSD::PublicService(NoteShared::NoteSharedGlobalConfig::senderID(), QLatin1String("_knotes._tcp"), NoteShared::NoteSharedGlobalConfig::port());
         mPublisher->publishAsync();
-    }
-}
-
-void KNotesPart::slotAcceptConnection()
-{
-    // Accept the connection and make KNotesNetworkReceiver do the job
-    QTcpSocket *s = mListener->nextPendingConnection();
-
-    if ( s ) {
-        NoteShared::NotesNetworkReceiver *recv = new NoteShared::NotesNetworkReceiver( s );
-        connect( recv,SIGNAL(noteReceived(QString,QString)), SLOT(newNote(QString,QString)) );
     }
 }
 

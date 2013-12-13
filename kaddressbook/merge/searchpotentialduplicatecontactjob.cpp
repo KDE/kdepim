@@ -38,6 +38,7 @@ void SearchPotentialDuplicateContactJob::start()
         //qDebug()<<" loop";
         result = checkList(result);
     }
+    qDebug()<<" result.count()"<< mListDuplicate.count();
     Q_EMIT finished(this);
 }
 
@@ -65,7 +66,7 @@ QList<Akonadi::Item> SearchPotentialDuplicateContactJob::checkList(const QList<A
         }
 
         //qDebug()<<"not duplicate number"<<notDuplicate.count();
-        //qDebug()<<" duplicate number "<<lst.count();
+        qDebug()<<" duplicate number "<<lst.count();
     }
     //qDebug()<<" notDuplicate.count"<<notDuplicate.count();
     return notDuplicate;
@@ -86,6 +87,13 @@ bool SearchPotentialDuplicateContactJob::isDuplicate(const Akonadi::Item &itemA,
     if (!addressA.nickName().isEmpty() && !addressB.nickName().isEmpty()) {
         if (addressA.nickName() == addressB.nickName()) {
             return true;
+        }
+    }
+    if (!addressA.emails().isEmpty() && !addressB.emails().isEmpty()) {
+        Q_FOREACH (const QString &email, addressA.emails()) {
+            if (addressB.emails().contains(email)) {
+                return true;
+            }
         }
     }
     return false;

@@ -10,5 +10,19 @@
     <method name="enabledAgent" >
       <arg direction="out" type="b" />
     </method>
+    <method name="setReceiveNotes" >
+      <arg direction="in" type="b" name="enabled" />
+    </method>
+    <method name="receiveNotes" >
+      <arg direction="out" type="b" />
+    </method>
+    <method name="setPort" >
+      <arg direction="in" type="i" name="value" />
+    </method>
+    <method name="port" >
+      <arg direction="out" type="i" />
+    </method>
+
+
   </interface>
 </node>

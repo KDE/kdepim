@@ -24,8 +24,6 @@
 //Own Header
 #include "kjotsbrowser.h"
 
-#include <QTextDocument>
-#include <QStackedWidget>
 #include <QItemSelectionModel>
 
 #include <krun.h>

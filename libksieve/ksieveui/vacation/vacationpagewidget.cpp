@@ -15,22 +15,28 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef SELECTEDNOTEFOLDERDIALOG_H
-#define SELECTEDNOTEFOLDERDIALOG_H
+#include "vacationpagewidget.h"
+#include "vacationeditwidget.h"
+#include "vacationwarningwidget.h"
 
-#include <Akonadi/CollectionDialog>
-#include "knotes_export.h"
+#include <QVBoxLayout>
 
-class KNOTES_EXPORT SelectedNotefolderDialog : public Akonadi::CollectionDialog
+using namespace KSieveUi;
+VacationPageWidget::VacationPageWidget(QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit SelectedNotefolderDialog(QWidget *parent = 0);
-    ~SelectedNotefolderDialog();
+    QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
 
-private:
-    void readConfig();
-    void writeConfig();
-};
+    mVacationWarningWidget = new VacationWarningWidget;
+    lay->addWidget(mVacationWarningWidget);
 
-#endif // SELECTEDNOTEFOLDERDIALOG_H
+    mVacationEditWidget = new VacationEditWidget;
+    lay->addWidget(mVacationEditWidget);
+    setLayout(lay);
+}
+
+VacationPageWidget::~VacationPageWidget()
+{
+
+}

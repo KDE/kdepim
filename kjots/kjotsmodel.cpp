@@ -21,7 +21,6 @@
 
 #include "kjotsmodel.h"
 
-#include <QColor>
 #include <QTextDocument>
 
 #include <KIcon>

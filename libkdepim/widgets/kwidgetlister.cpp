@@ -40,7 +40,6 @@
 #include <KPushButton>
 
 #include <QPushButton>
-#include <QLayout>
 #include <QVBoxLayout>
 
 #include <assert.h>

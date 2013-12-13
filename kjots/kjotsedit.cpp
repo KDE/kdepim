@@ -30,16 +30,14 @@
 #include <QStackedWidget>
 #include <QUrl>
 #include <QMenu>
-#include <QContextMenuEvent>
-#include <QClipboard>
 #include <QItemSelectionModel>
 #include <QPointer>
+#include <QClipboard>
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <krun.h>
 #include <KApplication>
-#include <KLocale>
 
 #include "kjotslinkdialog.h"
 

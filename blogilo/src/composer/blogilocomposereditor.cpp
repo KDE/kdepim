@@ -174,6 +174,11 @@ void BlogiloComposerEditor::execCommand( const QString &cmd, const QString &arg 
     frame->evaluateJavaScript ( js );
 }
 
+void BlogiloComposerEditor::insertShortUrl(const QString &url)
+{
+    QString html = QString::fromLatin1( "<a href=\'%1\'>%1</a>").arg(url);
+    execCommand(QLatin1String("insertHtml"), html);
+}
 
 
 

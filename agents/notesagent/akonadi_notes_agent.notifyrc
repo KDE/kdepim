@@ -1,6 +1,7 @@
 [Global]
 IconName=notes
 Comment=Notes Agent
+Comment[cs]=Agent poznámek
 Comment[de]=Notizen-Agent
 Comment[nl]=Agent voor notities
 Comment[pt]=Agente de Notas

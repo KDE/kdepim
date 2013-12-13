@@ -45,7 +45,7 @@ public:
 
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
-    QMenu *menuServices();
+    QMenu *menuUploadServices();
     QMap<QString, StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, StorageServiceAbstract *> &lst);
 
@@ -57,7 +57,7 @@ public:
 
 Q_SIGNALS:
     void servicesChanged();
-    void uploadFileDone(const QString &serviceName);
+    void uploadFileDone(const QString &serviceName, const QString &filename);
     void uploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
 

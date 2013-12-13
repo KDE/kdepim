@@ -26,6 +26,8 @@ set(libnoteshared_SRCS
     config/noteactionconfig.cpp
     config/notenetworkconfig.cpp
     resources/localresourcecreator.cpp
+    job/createnewnotejob.cpp
+    dialog/selectednotefolderdialog.cpp
     ${libnoteshared_akonadi_SRCS}
 )
 
@@ -57,7 +59,7 @@ kde4_add_kcfg_files(libnoteshared_kcfg_lib_SRCS ${libnoteshared_kcfg_lib_SRCS})
 kde4_add_library(noteshared ${LIBRARY_TYPE} ${libnoteshared_SRCS} ${libnoteshared_kcfg_lib_SRCS} )
 
 target_link_libraries(noteshared
-     ${KDEPIMLIBS_AKONADI_LIBS} ${QT_QTNETWORK_LIBRARY} ${KDE4_KDNSSD_LIBS} pimcommon akonadi_next
+     ${KDEPIMLIBS_AKONADI_LIBS} ${QT_QTNETWORK_LIBRARY} ${KDE4_KDNSSD_LIBS} pimcommon akonadi_next ${KDEPIMLIBS_KMIME_LIBS}
 )
 
 set_target_properties(noteshared PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
