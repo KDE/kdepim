@@ -29,7 +29,6 @@
 #include "eventview.h"
 
 #include <KDateTime>
-#include <KRandom>
 
 class KCheckableProxyModel;
 

@@ -35,8 +35,6 @@
 #include <KLocale>
 #include <KJob>
 
-#include <QMetaObject>
-#include <QDebug>
 #include <QCoreApplication>
 
 static void print(const QString &message)

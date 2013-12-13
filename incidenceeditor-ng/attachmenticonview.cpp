@@ -32,7 +32,6 @@
 #include "attachmenticonview.h"
 
 #include <KIconLoader>
-#include <KLocale>
 #include <KTemporaryFile>
 #include <KDebug>
 

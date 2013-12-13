@@ -26,10 +26,8 @@
 #include <KCalCore/Duration>
 
 #include <KDebug>
-#include <KUrl>
 
 #include <QWidget>
-#include <QVector>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/concept_check.hpp>

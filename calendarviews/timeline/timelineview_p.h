@@ -28,7 +28,6 @@
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 
-#include <KDateTime>
 
 #include <QMap>
 #include <QModelIndex>

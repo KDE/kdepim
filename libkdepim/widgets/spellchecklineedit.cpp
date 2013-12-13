@@ -31,7 +31,6 @@
 #include <sonnet/speller.h>
 
 #include <QKeyEvent>
-#include <QContextMenuEvent>
 #include <QStyle>
 #include <QApplication>
 #include <QMenu>

@@ -42,13 +42,13 @@
 
 #include <QApplication>
 #include <QPainter>
-#include <QLayout>
 #include <QStandardItemModel>
-#include <QResizeEvent>
 #include <QSplitter>
 #include <QTreeWidget>
 #include <QHeaderView>
 #include <QPointer>
+#include <QVBoxLayout>
+#include <QHelpEvent>
 
 using namespace KCalCore;
 using namespace EventViews;

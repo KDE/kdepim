@@ -24,7 +24,6 @@
 
 #include <KCalCore/Alarm>
 
-#include <KGlobal>
 #include <KLocale>
 
 using namespace CalendarSupport;
