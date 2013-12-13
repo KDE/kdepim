@@ -136,9 +136,13 @@ void OAuth2Job::uploadFile(const QString &filename)
 void OAuth2Job::listFolder()
 {
     mActionType = ListFolder;
-    //TODO
-    qDebug()<<" not implemented ";
-    deleteLater();
+    QUrl url;
+    url.setUrl(mFolderInfoPath + QLatin1String("/0"));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void OAuth2Job::accountInfo()
@@ -192,8 +196,8 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         bool ok;
 
         QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
-        if (error.contains(QLatin1String("error"))) {
-            const QString errorStr = error.value(QLatin1String("error")).toString();
+        if (error.contains(QLatin1String("message"))) {
+            const QString errorStr = error.value(QLatin1String("message")).toString();
             switch(mActionType) {
             case NoneAction:
                 deleteLater();

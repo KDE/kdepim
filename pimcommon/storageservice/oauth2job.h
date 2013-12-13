@@ -66,6 +66,7 @@ protected:
     QString mScope;
     QString mAuthorizePath;
     QString mPathToken;
+    QString mFolderInfoPath;
     qint64 mExpireInTime;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
     bool mNeedRefreshToken;

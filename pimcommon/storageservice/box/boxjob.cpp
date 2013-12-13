@@ -28,6 +28,7 @@ BoxJob::BoxJob(QObject *parent)
     mServiceUrl = QLatin1String("https://app.box.com");
     mAuthorizePath = QLatin1String("/api/oauth2/authorize/");
     mPathToken = QLatin1String("/api/oauth2/token/");
+    mFolderInfoPath = QLatin1String("https://api.box.com/2.0/folders/");
 }
 
 BoxJob::~BoxJob()
