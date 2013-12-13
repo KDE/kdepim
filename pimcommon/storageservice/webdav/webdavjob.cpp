@@ -123,6 +123,10 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
+            case CreateServiceFolder:
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
                 deleteLater();

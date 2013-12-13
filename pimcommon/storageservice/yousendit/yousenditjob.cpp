@@ -189,6 +189,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             deleteLater();
             break;
         case CreateServiceFolder:
+            errorMessage(mActionType, errorStr);
             deleteLater();
             break;
         default:

@@ -223,6 +223,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case CreateServiceFolder:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             default:
@@ -254,16 +255,28 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         parseAccountInfo(data);
         break;
     case ListFolder:
-        deleteLater();
+        parseListFolder(data);
         break;
     case CreateServiceFolder:
-        deleteLater();
+        parseCreateServiceFolder(data);
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
         deleteLater();
         break;
     }
+}
+
+void OAuth2Job::parseCreateServiceFolder(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    deleteLater();
+}
+
+void OAuth2Job::parseListFolder(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    deleteLater();
 }
 
 void OAuth2Job::parseAccountInfo(const QString &data)

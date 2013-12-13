@@ -47,6 +47,8 @@ private slots:
     void slotRedirect(const QUrl &url);
 
 protected:
+    virtual void parseCreateServiceFolder(const QString &data);
+    virtual void parseListFolder(const QString &data);
     virtual void parseRedirectUrl(const QUrl &url);
     virtual void parseAccessToken(const QString &data);
     virtual void getTokenAccess(const QString &authorizeCode);

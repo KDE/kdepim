@@ -147,7 +147,6 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     if (mError) {
         qDebug()<<" error type "<<data;
 
-        //TODO parsing
         const QString errorStr = data;
         switch(mActionType) {
         case NoneAction:
@@ -178,6 +177,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
             deleteLater();
             break;
         case CreateServiceFolder:
+            errorMessage(mActionType, errorStr);
             deleteLater();
             break;
         default:
