@@ -20,7 +20,7 @@
 #include "storageservice/storageauthviewdialog.h"
 #include "storageservice/storageserviceabstract.h"
 #include "storageservice/storageserviceutils.h"
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <qjson/parser.h>
 #include <QFile>
@@ -260,8 +260,12 @@ void DropBoxJob::doAuthentification()
     dlg->setUrl(url);
     if (dlg->exec()) {
         getTokenAccess();
+        delete dlg;
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        delete dlg;
+        deleteLater();
     }
-    delete dlg;
 }
 
 void DropBoxJob::createFolder(const QString &folder)

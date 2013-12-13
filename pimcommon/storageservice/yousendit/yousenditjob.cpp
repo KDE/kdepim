@@ -19,7 +19,7 @@
 #include "pimcommon/storageservice/logindialog.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <qjson/parser.h>
 
@@ -57,6 +57,11 @@ void YouSendItJob::requestTokenAccess()
     if (dlg->exec()) {
         mPassword = dlg->password();
         mUsername = dlg->username();
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        deleteLater();
+        delete dlg;
+        return;
     }
     delete dlg;
 

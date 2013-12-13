@@ -53,14 +53,10 @@ void WebDavStorageService::removeConfig()
 
 void WebDavStorageService::authentification()
 {
-    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
-    if (dlg->exec()) {
-        WebDavJob *job = new WebDavJob(this);
-        mServiceLocation = dlg->serviceLocation();
-        mPublicLocation = dlg->publicLocation();
-        job->requestTokenAccess();
-    }
-    delete dlg;
+    WebDavJob *job = new WebDavJob(this);
+    connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    job->requestTokenAccess();
 }
 
 void WebDavStorageService::shareLink(const QString &root, const QString &path)

@@ -18,6 +18,8 @@
 #include "webdavjob.h"
 #include "webdavsettingsdialog.h"
 
+#include <KLocalizedString>
+
 #include <qjson/parser.h>
 
 #include <QNetworkAccessManager>
@@ -42,6 +44,13 @@ void WebDavJob::requestTokenAccess()
 {
     QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
     if (dlg->exec()) {
+        WebDavJob *job = new WebDavJob(this);
+        mServiceLocation = dlg->serviceLocation();
+        mPublicLocation = dlg->publicLocation();
+        job->requestTokenAccess();
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        deleteLater();
     }
     delete dlg;
 }
