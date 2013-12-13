@@ -39,6 +39,8 @@ public:
 
     void startEditing();
 
+    void insertShortUrl(const QString &url);
+
 private Q_SLOTS:
     void slotAddPostSplitter();
     void slotToggleCode(bool);

@@ -35,6 +35,7 @@ BlogiloComposerWidget::BlogiloComposerWidget(BlogiloComposerView *view, QWidget 
     lay->addWidget(mEditor);
     mCustomToolsWidget = new PimCommon::CustomToolsWidget;
     connect(mCustomToolsWidget, SIGNAL(toolSwitched(PimCommon::CustomToolsWidget::ToolType)), this, SLOT(slotToolSwitched(PimCommon::CustomToolsWidget::ToolType)));
+    connect(mCustomToolsWidget, SIGNAL(insertShortUrl(QString)), this, SLOT(slotInsertShortUrl(QString)));
     lay->addWidget(mCustomToolsWidget);
     setLayout(lay);
     view->setCustomTools(mCustomToolsWidget);
@@ -57,4 +58,9 @@ void BlogiloComposerWidget::slotToolSwitched(PimCommon::CustomToolsWidget::ToolT
         if(!text.isEmpty())
             mCustomToolsWidget->translatorWidget()->setTextToTranslate(text);
     }
+}
+
+void BlogiloComposerWidget::slotInsertShortUrl(const QString &shortUrl)
+{
+    mEditor->insertShortUrl(shortUrl);
 }
