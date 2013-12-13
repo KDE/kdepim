@@ -36,8 +36,6 @@
 
 #include <QPointer>
 
-//#define DEBUG_NOTESAGENT 1
-
 NotesAgent::NotesAgent(const QString &id)
     : Akonadi::AgentBase( id )
 {
@@ -50,11 +48,7 @@ NotesAgent::NotesAgent(const QString &id)
     setNeedsNetwork(true);
 
     if (NotesAgentSettings::enabled()) {
-#ifdef DEBUG_NOTESAGENT
         QTimer::singleShot(1000, mNotesManager, SLOT(load()));
-#else
-        QTimer::singleShot(1000*60*4, mNotesManager, SLOT(load()));
-#endif
     }
 }
 
