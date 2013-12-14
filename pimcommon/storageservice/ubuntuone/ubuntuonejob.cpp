@@ -299,7 +299,7 @@ void UbuntuOneJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *a
         auth->setUser(dlg->username());
         auth->setPassword(dlg->password());
     } else {
-        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         deleteLater();
     }
     delete dlg;

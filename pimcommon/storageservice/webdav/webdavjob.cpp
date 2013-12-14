@@ -49,7 +49,7 @@ void WebDavJob::requestTokenAccess()
         mPublicLocation = dlg->publicLocation();
         job->requestTokenAccess();
     } else {
-        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         deleteLater();
     }
     delete dlg;
