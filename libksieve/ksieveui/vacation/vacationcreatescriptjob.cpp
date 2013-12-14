@@ -16,12 +16,23 @@
 */
 
 #include "vacationcreatescriptjob.h"
+#include <kmanagesieve/sievejob.h>
+
+#include <KMessageBox>
+#include <KLocalizedString>
+#include <KDebug>
 
 using namespace KSieveUi;
 
-VacationCreateScriptJob::VacationCreateScriptJob(QObject *parent)
-    : QObject(parent)
+VacationCreateScriptJob::VacationCreateScriptJob(const QString &script, const KUrl &url, bool activate, bool wasActive, QObject *parent)
+    : QObject(parent),
+      mUrl(url),
+      mScript(script),
+      mActivate(activate),
+      mWasActive(wasActive),
+      mSieveJob(0)
 {
+
 }
 
 VacationCreateScriptJob::~VacationCreateScriptJob()
@@ -31,6 +42,36 @@ VacationCreateScriptJob::~VacationCreateScriptJob()
 
 void VacationCreateScriptJob::start()
 {
-
+    mSieveJob = KManageSieve::SieveJob::put( mUrl, mScript, mActivate, mWasActive );
+    if ( mActivate )
+        connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+                 SLOT(slotPutActiveResult(KManageSieve::SieveJob*,bool)) );
+    else
+        connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+                 SLOT(slotPutInactiveResult(KManageSieve::SieveJob*,bool)) );
 }
 
+void VacationCreateScriptJob::slotPutActiveResult( KManageSieve::SieveJob * job, bool success )
+{
+    handlePutResult( job, success, true );
+}
+
+void VacationCreateScriptJob::slotPutInactiveResult( KManageSieve::SieveJob * job, bool success )
+{
+    handlePutResult( job, success, false );
+}
+
+void VacationCreateScriptJob::handlePutResult( KManageSieve::SieveJob *, bool success, bool activated )
+{
+    if ( success )
+        KMessageBox::information( 0, activated
+                                  ? i18n("Sieve script installed successfully on the server.\n"
+                                         "Out of Office reply is now active.")
+                                  : i18n("Sieve script installed successfully on the server.\n"
+                                         "Out of Office reply has been deactivated.") );
+
+    kDebug() << "( ???," << success << ", ? )";
+    mSieveJob = 0; // job deletes itself after returning from this slot!
+    //emit result( success );
+    //emit scriptActive( activated, mServerName );
+}

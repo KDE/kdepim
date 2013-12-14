@@ -20,15 +20,33 @@
 
 #include <QObject>
 
+#include <KUrl>
+
+namespace KManageSieve {
+class SieveJob;
+}
+
 namespace KSieveUi {
 class VacationCreateScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit VacationCreateScriptJob(QObject *parent=0);
+    explicit VacationCreateScriptJob(const QString &script, const KUrl &url, bool activate, bool wasActive, QObject *parent=0);
     ~VacationCreateScriptJob();
 
     void start();
+
+private slots:
+    void slotPutActiveResult(KManageSieve::SieveJob *job, bool success);
+    void slotPutInactiveResult(KManageSieve::SieveJob *job, bool success);
+
+private:
+    void handlePutResult(KManageSieve::SieveJob *, bool success, bool activated);
+    KUrl mUrl;
+    QString mScript;
+    bool mActivate;
+    bool mWasActive;
+    KManageSieve::SieveJob *mSieveJob;
 };
 }
 
