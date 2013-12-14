@@ -131,11 +131,14 @@ set(ksieveui_autocreatescripts_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectsizewidget.cpp
 )
 
-set(ksieveui_LIB_SRCS
+set(ksieveui_scriptsparsing_LIB_SRCS
   scriptsparsing/xmlprintingscriptbuilder.cpp
   scriptsparsing/parsingresultdialog.cpp
   scriptsparsing/xmlprintingsyntaxhighlighter.cpp
   scriptsparsing/parsingutil.cpp
+)
+
+set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
   widgets/sievetreewidgetitem.cpp
   widgets/managesievetreeview.cpp
@@ -146,6 +149,7 @@ set(ksieveui_LIB_SRCS
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp
+  ${ksieveui_scriptsparsing_LIB_SRCS}
   ${ksieveui_vacation_LIB_SRCS}
   ${ksieveui_editor_LIB_SRCS}
   ${ksieveui_autocreatescripts_LIB_SRCS}
