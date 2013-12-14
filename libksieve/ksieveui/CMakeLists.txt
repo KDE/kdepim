@@ -30,6 +30,7 @@ set(ksieveui_vacation_LIB_SRCS
   vacation/multiimapvacationdialog.cpp
   vacation/vacationpagewidget.cpp
   vacation/vacationwarningwidget.cpp
+  vacation/vacationscriptextractor.cpp
 )
 
 set(ksieveui_editor_LIB_SRCS
