@@ -26,11 +26,9 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kmime/kmime_header_parsing.h>
+//#include <kmime/kmime_header_parsing.h>
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
-
-using KMime::Types::AddrSpecList;
 
 
 using namespace KSieveUi;
@@ -67,48 +65,6 @@ Vacation::~Vacation() {
     kDebug() << "~Vacation()";
 }
 
-static inline QString dotstuff( QString s ) { // krazy:exclude=passbyvalue
-    if ( s.startsWith( QLatin1Char('.') ) )
-        return QLatin1Char('.') + s.replace( QLatin1String("\n."), QLatin1String("\n..") );
-    else
-        return s.replace( QLatin1String("\n."), QLatin1String("\n..") );
-}
-
-QString Vacation::composeScript( const QString & messageText,
-                                 int notificationInterval,
-                                 const AddrSpecList & addrSpecs,
-                                 bool sendForSpam, const QString & domain )
-{
-    QString addressesArgument;
-    QStringList aliases;
-    if ( !addrSpecs.empty() ) {
-        addressesArgument += QLatin1String(":addresses [ ");
-        QStringList sl;
-        AddrSpecList::const_iterator end = addrSpecs.constEnd();
-        for ( AddrSpecList::const_iterator it = addrSpecs.begin() ; it != end; ++it ) {
-            sl.push_back( QLatin1Char('"') + (*it).asString().replace( QLatin1Char('\\'), QLatin1String("\\\\") ).replace( QLatin1Char('"'), QLatin1String("\\\"") ) + QLatin1Char('"') );
-            aliases.push_back( (*it).asString() );
-        }
-        addressesArgument += sl.join( QLatin1String(", ") ) + QLatin1String(" ] ");
-    }
-    QString script = QString::fromLatin1("require \"vacation\";\n\n" );
-    if ( !sendForSpam )
-        script += QString::fromLatin1( "if header :contains \"X-Spam-Flag\" \"YES\""
-                                       " { keep; stop; }\n" ); // FIXME?
-
-    if ( !domain.isEmpty() ) // FIXME
-        script += QString::fromLatin1( "if not address :domain :contains \"from\" \"%1\" { keep; stop; }\n" ).arg( domain );
-
-    script += QLatin1String("vacation ");
-    script += addressesArgument;
-    if ( notificationInterval > 0 )
-        script += QString::fromLatin1(":days %1 ").arg( notificationInterval );
-    script += QString::fromLatin1("text:\n");
-    script += dotstuff( messageText.isEmpty() ? VacationUtils::defaultMessageText() : messageText );
-    script += QString::fromLatin1( "\n.\n;\n" );
-    return script;
-}
-
 
 KUrl Vacation::findURL(QString &serverName) const
 {
@@ -126,43 +82,6 @@ KUrl Vacation::findURL(QString &serverName) const
 
     return KUrl();
 }
-
-bool Vacation::parseScript( const QString & script, QString & messageText,
-                            int & notificationInterval, QStringList & aliases,
-                            bool & sendForSpam, QString & domainName ) {
-    if ( script.trimmed().isEmpty() ) {
-        messageText = VacationUtils::defaultMessageText();
-        notificationInterval = VacationUtils::defaultNotificationInterval();
-        aliases = VacationUtils::defaultMailAliases();
-        sendForSpam = VacationUtils::defaultSendForSpam();
-        domainName = VacationUtils::defaultDomainName();
-        return true;
-    }
-
-    // The trimmed() call below prevents parsing errors. The
-    // slave somehow omits the last \n, which results in a lone \r at
-    // the end, leading to a parse error.
-    const QByteArray scriptUTF8 = script.trimmed().toUtf8();
-    kDebug() << "scriptUtf8 = \"" + scriptUTF8 +"\"";
-    KSieve::Parser parser( scriptUTF8.begin(),
-                           scriptUTF8.begin() + scriptUTF8.length() );
-    VacationDataExtractor vdx;
-    SpamDataExtractor sdx;
-    DomainRestrictionDataExtractor drdx;
-    KSieveExt::MultiScriptBuilder tsb( &vdx, &sdx, &drdx );
-    parser.setScriptBuilder( &tsb );
-    if ( !parser.parse() )
-        return false;
-    messageText = vdx.messageText().trimmed();
-    notificationInterval = vdx.notificationInterval();
-    aliases = vdx.aliases();
-    if ( !VacationSettings::allowOutOfOfficeUploadButNoSettings() ) {
-        sendForSpam = !sdx.found();
-        domainName = drdx.domainName();
-    }
-    return true;
-}
-
 
 void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
                               const QString & script, bool active ) {
@@ -193,7 +112,7 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
     QString domainName = VacationUtils::defaultDomainName();
     if ( !success ) active = false; // default to inactive
 
-    if ( !mCheckOnly && ( !success || !parseScript( script, messageText, notificationInterval, aliases, sendForSpam, domainName ) ) )
+    if ( !mCheckOnly && ( !success || !KSieveUi::VacationUtils::parseScript( script, messageText, notificationInterval, aliases, sendForSpam, domainName ) ) )
         KMessageBox::information( 0, i18n("Someone (probably you) changed the "
                                           "vacation script on the server.\n"
                                           "KMail is no longer able to determine "
@@ -244,7 +163,7 @@ void Vacation::slotDialogDefaults() {
 void Vacation::slotDialogOk() {
     kDebug();
     // compose a new script:
-    const QString script = composeScript( mDialog->messageText(),
+    const QString script = VacationUtils::composeScript( mDialog->messageText(),
                                           mDialog->notificationInterval(),
                                           mDialog->mailAliases(),
                                           mDialog->sendForSpam(),

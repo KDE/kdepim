@@ -16,6 +16,7 @@
 */
 
 #include "vacationutils.h"
+#include "vacationscriptextractor.h"
 #include "sieve-vacation.h"
 #include <KPIMIdentities/IdentityManager>
 #include <KPIMIdentities/Identity>
@@ -23,6 +24,15 @@
 #include <KLocale>
 #include <KGlobal>
 #include <QDate>
+
+using KMime::Types::AddrSpecList;
+
+static inline QString dotstuff( QString s ) { // krazy:exclude=passbyvalue
+    if ( s.startsWith( QLatin1Char('.') ) )
+        return QLatin1Char('.') + s.replace( QLatin1String("\n."), QLatin1String("\n..") );
+    else
+        return s.replace( QLatin1String("\n."), QLatin1String("\n..") );
+}
 
 QString KSieveUi::VacationUtils::defaultMessageText() {
     return i18n( "I am out of office till %1.\n"
@@ -63,3 +73,76 @@ bool KSieveUi::VacationUtils::defaultSendForSpam() {
 QString KSieveUi::VacationUtils::defaultDomainName() {
     return VacationSettings::outOfOfficeDomain();
 }
+
+bool KSieveUi::VacationUtils::parseScript( const QString &script, QString &messageText,
+                            int & notificationInterval, QStringList &aliases,
+                            bool & sendForSpam, QString &domainName )
+{
+    if ( script.trimmed().isEmpty() ) {
+        messageText = VacationUtils::defaultMessageText();
+        notificationInterval = VacationUtils::defaultNotificationInterval();
+        aliases = VacationUtils::defaultMailAliases();
+        sendForSpam = VacationUtils::defaultSendForSpam();
+        domainName = VacationUtils::defaultDomainName();
+        return true;
+    }
+
+    // The trimmed() call below prevents parsing errors. The
+    // slave somehow omits the last \n, which results in a lone \r at
+    // the end, leading to a parse error.
+    const QByteArray scriptUTF8 = script.trimmed().toUtf8();
+    kDebug() << "scriptUtf8 = \"" + scriptUTF8 +"\"";
+    KSieve::Parser parser( scriptUTF8.begin(),
+                           scriptUTF8.begin() + scriptUTF8.length() );
+    VacationDataExtractor vdx;
+    SpamDataExtractor sdx;
+    DomainRestrictionDataExtractor drdx;
+    KSieveExt::MultiScriptBuilder tsb( &vdx, &sdx, &drdx );
+    parser.setScriptBuilder( &tsb );
+    if ( !parser.parse() )
+        return false;
+    messageText = vdx.messageText().trimmed();
+    notificationInterval = vdx.notificationInterval();
+    aliases = vdx.aliases();
+    if ( !VacationSettings::allowOutOfOfficeUploadButNoSettings() ) {
+        sendForSpam = !sdx.found();
+        domainName = drdx.domainName();
+    }
+    return true;
+}
+
+QString KSieveUi::VacationUtils::composeScript( const QString & messageText,
+                                 int notificationInterval,
+                                 const AddrSpecList & addrSpecs,
+                                 bool sendForSpam, const QString & domain )
+{
+    QString addressesArgument;
+    QStringList aliases;
+    if ( !addrSpecs.empty() ) {
+        addressesArgument += QLatin1String(":addresses [ ");
+        QStringList sl;
+        AddrSpecList::const_iterator end = addrSpecs.constEnd();
+        for ( AddrSpecList::const_iterator it = addrSpecs.begin() ; it != end; ++it ) {
+            sl.push_back( QLatin1Char('"') + (*it).asString().replace( QLatin1Char('\\'), QLatin1String("\\\\") ).replace( QLatin1Char('"'), QLatin1String("\\\"") ) + QLatin1Char('"') );
+            aliases.push_back( (*it).asString() );
+        }
+        addressesArgument += sl.join( QLatin1String(", ") ) + QLatin1String(" ] ");
+    }
+    QString script = QString::fromLatin1("require \"vacation\";\n\n" );
+    if ( !sendForSpam )
+        script += QString::fromLatin1( "if header :contains \"X-Spam-Flag\" \"YES\""
+                                       " { keep; stop; }\n" ); // FIXME?
+
+    if ( !domain.isEmpty() ) // FIXME
+        script += QString::fromLatin1( "if not address :domain :contains \"from\" \"%1\" { keep; stop; }\n" ).arg( domain );
+
+    script += QLatin1String("vacation ");
+    script += addressesArgument;
+    if ( notificationInterval > 0 )
+        script += QString::fromLatin1(":days %1 ").arg( notificationInterval );
+    script += QString::fromLatin1("text:\n");
+    script += dotstuff( messageText.isEmpty() ? VacationUtils::defaultMessageText() : messageText );
+    script += QString::fromLatin1( "\n.\n;\n" );
+    return script;
+}
+
