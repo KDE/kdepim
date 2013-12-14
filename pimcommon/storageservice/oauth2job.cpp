@@ -190,6 +190,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         bool ok;
 
         QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
+        qDebug()<<" error "<<error;
         if (error.contains(QLatin1String("message"))) {
             const QString errorStr = error.value(QLatin1String("message")).toString();
             switch(mActionType) {
@@ -229,6 +230,9 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             }
+        } else {
+            errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            deleteLater();
         }
         return;
     }

@@ -132,6 +132,9 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             }
+        } else {
+            errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            deleteLater();
         }
         return;
     }

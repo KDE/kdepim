@@ -164,6 +164,8 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             if (storageMap.contains(QLatin1String("message"))) {
                 errorStr = storageMap.value(QLatin1String("message")).toString();
             }
+        } else {
+            errorStr = i18n("Unknown Error \"%1\"", data);
         }
         switch(mActionType) {
         case NoneAction:
