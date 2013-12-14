@@ -31,13 +31,16 @@ class VacationCreateScriptJob : public QObject
 {
     Q_OBJECT
 public:
-    explicit VacationCreateScriptJob(const QString &script, const KUrl &url, bool activate, bool wasActive, QObject *parent=0);
+    explicit VacationCreateScriptJob(QObject *parent=0);
     ~VacationCreateScriptJob();
 
     void start();
 
+    void setServerUrl(const KUrl &url);
+    void setScript(const QString &script);
     void setServerName(const QString &servername);
 
+    void setStatus(bool activate, bool wasActive);
 Q_SIGNALS:
     void result(bool);
     void scriptActive(bool activated, const QString &serverName);

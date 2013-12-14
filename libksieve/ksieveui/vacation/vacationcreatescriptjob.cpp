@@ -24,12 +24,10 @@
 
 using namespace KSieveUi;
 
-VacationCreateScriptJob::VacationCreateScriptJob(const QString &script, const KUrl &url, bool activate, bool wasActive, QObject *parent)
+VacationCreateScriptJob::VacationCreateScriptJob(QObject *parent)
     : QObject(parent),
-      mUrl(url),
-      mScript(script),
-      mActivate(activate),
-      mWasActive(wasActive),
+      mActivate(false),
+      mWasActive(false),
       mSieveJob(0)
 {
 
@@ -40,6 +38,12 @@ VacationCreateScriptJob::~VacationCreateScriptJob()
 
 }
 
+void VacationCreateScriptJob::setStatus(bool activate, bool wasActive)
+{
+    mActivate = activate;
+    mWasActive = wasActive;
+}
+
 void VacationCreateScriptJob::setServerName(const QString &servername)
 {
     mServerName = servername;
@@ -47,6 +51,11 @@ void VacationCreateScriptJob::setServerName(const QString &servername)
 
 void VacationCreateScriptJob::start()
 {
+    if (mUrl.isEmpty()) {
+        qDebug()<<" server url is empty";
+        deleteLater();
+        return;
+    }
     mSieveJob = KManageSieve::SieveJob::put( mUrl, mScript, mActivate, mWasActive );
     if ( mActivate )
         connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
@@ -54,6 +63,16 @@ void VacationCreateScriptJob::start()
     else
         connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
                  SLOT(slotPutInactiveResult(KManageSieve::SieveJob*,bool)) );
+}
+
+void VacationCreateScriptJob::setServerUrl(const KUrl &url)
+{
+    mUrl = url;
+}
+
+void VacationCreateScriptJob::setScript(const QString &script)
+{
+    mScript = script;
 }
 
 void VacationCreateScriptJob::slotPutActiveResult( KManageSieve::SieveJob * job, bool success )
@@ -79,4 +98,5 @@ void VacationCreateScriptJob::handlePutResult( KManageSieve::SieveJob *, bool su
     mSieveJob = 0; // job deletes itself after returning from this slot!
     Q_EMIT result( success );
     Q_EMIT scriptActive( activated, mServerName );
+    deleteLater();
 }
