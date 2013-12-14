@@ -32,6 +32,7 @@ set(ksieveui_vacation_LIB_SRCS
   vacation/vacationwarningwidget.cpp
   vacation/vacationscriptextractor.cpp
   vacation/vacationutils.cpp
+  vacation/vacationcreatescriptjob.cpp
 )
 
 set(ksieveui_editor_LIB_SRCS
