@@ -36,6 +36,12 @@ public:
 
     void start();
 
+    void setServerName(const QString &servername);
+
+Q_SIGNALS:
+    void result(bool);
+    void scriptActive(bool activated, const QString &serverName);
+
 private slots:
     void slotPutActiveResult(KManageSieve::SieveJob *job, bool success);
     void slotPutInactiveResult(KManageSieve::SieveJob *job, bool success);
@@ -44,6 +50,7 @@ private:
     void handlePutResult(KManageSieve::SieveJob *, bool success, bool activated);
     KUrl mUrl;
     QString mScript;
+    QString mServerName;
     bool mActivate;
     bool mWasActive;
     KManageSieve::SieveJob *mSieveJob;

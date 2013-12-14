@@ -40,6 +40,11 @@ VacationCreateScriptJob::~VacationCreateScriptJob()
 
 }
 
+void VacationCreateScriptJob::setServerName(const QString &servername)
+{
+    mServerName = servername;
+}
+
 void VacationCreateScriptJob::start()
 {
     mSieveJob = KManageSieve::SieveJob::put( mUrl, mScript, mActivate, mWasActive );
@@ -72,6 +77,6 @@ void VacationCreateScriptJob::handlePutResult( KManageSieve::SieveJob *, bool su
 
     kDebug() << "( ???," << success << ", ? )";
     mSieveJob = 0; // job deletes itself after returning from this slot!
-    //emit result( success );
-    //emit scriptActive( activated, mServerName );
+    Q_EMIT result( success );
+    Q_EMIT scriptActive( activated, mServerName );
 }
