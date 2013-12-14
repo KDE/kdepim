@@ -30,6 +30,8 @@ public:
     ~MultiImapVacationDialog();
 
 private:
+    void createPage(const QString &serverName, const KUrl &url);
+    void init();
     void readConfig();
     void writeConfig();
     QTabWidget *mTabWidget;

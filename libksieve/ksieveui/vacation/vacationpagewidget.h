@@ -19,6 +19,10 @@
 #define VACATIONPAGEWIDGET_H
 
 #include <QWidget>
+class KUrl;
+namespace KManageSieve {
+class SieveJob;
+}
 
 namespace KSieveUi {
 class VacationEditWidget;
@@ -30,9 +34,15 @@ public:
     explicit VacationPageWidget(QWidget *parent=0);
     ~VacationPageWidget();
 
+    void setServerUrl(const KUrl &url);
+
+private slots:
+    void slotGetResult(KManageSieve::SieveJob *job, bool success, const QString &script, bool active);
+
 private:
     VacationEditWidget *mVacationEditWidget;
     VacationWarningWidget *mVacationWarningWidget;
+    KManageSieve::SieveJob *mSieveJob;
 };
 }
 

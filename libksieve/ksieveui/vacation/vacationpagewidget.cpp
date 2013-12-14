@@ -19,11 +19,17 @@
 #include "vacationeditwidget.h"
 #include "vacationwarningwidget.h"
 
+#include <kmanagesieve/sievejob.h>
+
+#include <KUrl>
+#include <KDebug>
+
 #include <QVBoxLayout>
 
 using namespace KSieveUi;
 VacationPageWidget::VacationPageWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mSieveJob(0)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
@@ -38,5 +44,24 @@ VacationPageWidget::VacationPageWidget(QWidget *parent)
 
 VacationPageWidget::~VacationPageWidget()
 {
+    if ( mSieveJob )
+        mSieveJob->kill();
+    mSieveJob = 0;
+}
 
+void VacationPageWidget::setServerUrl(const KUrl &url)
+{
+    mSieveJob = KManageSieve::SieveJob::get( url );
+    connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
+             SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
+}
+
+void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool success, const QString & script, bool active )
+{
+    kDebug() << success
+             << ", ?," << active << ")" << endl
+             << "script:" << endl
+             << script;
+    mSieveJob = 0; // job deletes itself after returning from this slot!
+    //TODO
 }

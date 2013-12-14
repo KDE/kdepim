@@ -17,6 +17,10 @@
 
 
 #include "multiimapvacationdialog.h"
+#include "vacationpagewidget.h"
+#include "ksieveui/util/util.h"
+
+#include <Akonadi/AgentInstance>
 
 #include <KLocale>
 #include <kwindowsystem.h>
@@ -36,13 +40,35 @@ MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget
 
     mTabWidget = new QTabWidget;
     setMainWidget(mTabWidget);
-
+    init();
     readConfig();
 }
 
 MultiImapVacationDialog::~MultiImapVacationDialog()
 {
 
+}
+
+void MultiImapVacationDialog::init()
+{
+    const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
+    foreach ( const Akonadi::AgentInstance &instance, instances ) {
+        if ( instance.status() == Akonadi::AgentInstance::Broken )
+            continue;
+
+        const KUrl url = KSieveUi::Util::findSieveUrlForAccount( instance.identifier() );
+        if ( !url.isEmpty() ) {
+            const QString serverName = instance.name();
+            createPage(serverName, url);
+        }
+    }
+}
+
+void MultiImapVacationDialog::createPage(const QString &serverName, const KUrl &url)
+{
+    VacationPageWidget *page = new VacationPageWidget;
+    page->setServerUrl(url);
+    mTabWidget->addTab(page,serverName);
 }
 
 void MultiImapVacationDialog::readConfig()
