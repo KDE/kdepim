@@ -52,12 +52,6 @@ public:
 
     void showVacationDialog();
 
-    static QString defaultMessageText();
-    static int defaultNotificationInterval();
-    static QStringList defaultMailAliases();
-    static bool defaultSendForSpam();
-    static QString defaultDomainName();
-
 protected:
     static QString composeScript( const QString & messageText,
                                   int notificationInterval,

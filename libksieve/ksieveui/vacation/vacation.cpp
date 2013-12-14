@@ -13,6 +13,7 @@
 */
 
 #include "vacation.h"
+#include "vacationutils.h"
 #include "vacationscriptextractor.h"
 
 #include "sieve-vacation.h"
@@ -103,7 +104,7 @@ QString Vacation::composeScript( const QString & messageText,
     if ( notificationInterval > 0 )
         script += QString::fromLatin1(":days %1 ").arg( notificationInterval );
     script += QString::fromLatin1("text:\n");
-    script += dotstuff( messageText.isEmpty() ? defaultMessageText() : messageText );
+    script += dotstuff( messageText.isEmpty() ? VacationUtils::defaultMessageText() : messageText );
     script += QString::fromLatin1( "\n.\n;\n" );
     return script;
 }
@@ -130,11 +131,11 @@ bool Vacation::parseScript( const QString & script, QString & messageText,
                             int & notificationInterval, QStringList & aliases,
                             bool & sendForSpam, QString & domainName ) {
     if ( script.trimmed().isEmpty() ) {
-        messageText = defaultMessageText();
-        notificationInterval = defaultNotificationInterval();
-        aliases = defaultMailAliases();
-        sendForSpam = defaultSendForSpam();
-        domainName = defaultDomainName();
+        messageText = VacationUtils::defaultMessageText();
+        notificationInterval = VacationUtils::defaultNotificationInterval();
+        aliases = VacationUtils::defaultMailAliases();
+        sendForSpam = VacationUtils::defaultSendForSpam();
+        domainName = VacationUtils::defaultDomainName();
         return true;
     }
 
@@ -162,45 +163,6 @@ bool Vacation::parseScript( const QString & script, QString & messageText,
     return true;
 }
 
-QString Vacation::defaultMessageText() {
-    return i18n( "I am out of office till %1.\n"
-                 "\n"
-                 "In urgent cases, please contact Mrs. \"vacation replacement\"\n"
-                 "\n"
-                 "email: \"email address of vacation replacement\"\n"
-                 "phone: +49 711 1111 11\n"
-                 "fax.:  +49 711 1111 12\n"
-                 "\n"
-                 "Yours sincerely,\n"
-                 "-- \"enter your name and email address here\"\n",
-                 KGlobal::locale()->formatDate( QDate::currentDate().addDays( 1 ) ) );
-}
-
-int Vacation::defaultNotificationInterval() {
-    return 7; // days
-}
-
-QStringList Vacation::defaultMailAliases()
-{
-    QStringList sl;
-    KPIMIdentities::IdentityManager manager( true );
-    KPIMIdentities::IdentityManager::ConstIterator end(manager.end());
-    for ( KPIMIdentities::IdentityManager::ConstIterator it = manager.begin(); it != end ; ++it ) {
-        if ( !(*it).primaryEmailAddress().isEmpty() ) {
-            sl.push_back( (*it).primaryEmailAddress() );
-        }
-        sl += (*it).emailAliases();
-    }
-    return sl;
-}
-
-bool Vacation::defaultSendForSpam() {
-    return VacationSettings::outOfOfficeReactToSpam();
-}
-
-QString Vacation::defaultDomainName() {
-    return VacationSettings::outOfOfficeDomain();
-}
 
 void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
                               const QString & script, bool active ) {
@@ -224,11 +186,11 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
     if ( !mDialog && !mCheckOnly )
         mDialog = new VacationDialog( i18n("Configure \"Out of Office\" Replies"), 0, false );
 
-    QString messageText = defaultMessageText();
-    int notificationInterval = defaultNotificationInterval();
-    QStringList aliases = defaultMailAliases();
-    bool sendForSpam = defaultSendForSpam();
-    QString domainName = defaultDomainName();
+    QString messageText = VacationUtils::defaultMessageText();
+    int notificationInterval = VacationUtils::defaultNotificationInterval();
+    QStringList aliases = VacationUtils::defaultMailAliases();
+    bool sendForSpam = VacationUtils::defaultSendForSpam();
+    QString domainName = VacationUtils::defaultDomainName();
     if ( !success ) active = false; // default to inactive
 
     if ( !mCheckOnly && ( !success || !parseScript( script, messageText, notificationInterval, aliases, sendForSpam, domainName ) ) )
@@ -271,11 +233,11 @@ void Vacation::slotDialogDefaults() {
     if ( !mDialog )
         return;
     mDialog->setActivateVacation( true );
-    mDialog->setMessageText( defaultMessageText() );
-    mDialog->setNotificationInterval( defaultNotificationInterval() );
-    mDialog->setMailAliases( defaultMailAliases().join(QLatin1String(", ")) );
-    mDialog->setSendForSpam( defaultSendForSpam() );
-    mDialog->setDomainName( defaultDomainName() );
+    mDialog->setMessageText( VacationUtils::defaultMessageText() );
+    mDialog->setNotificationInterval( VacationUtils::defaultNotificationInterval() );
+    mDialog->setMailAliases( VacationUtils::defaultMailAliases().join(QLatin1String(", ")) );
+    mDialog->setSendForSpam( VacationUtils::defaultSendForSpam() );
+    mDialog->setDomainName( VacationUtils::defaultDomainName() );
     mDialog->setDomainCheck( false );
 }
 
