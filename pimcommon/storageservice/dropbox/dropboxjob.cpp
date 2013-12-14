@@ -63,6 +63,7 @@ void DropBoxJob::initializeToken(const QString &accessToken, const QString &acce
 void DropBoxJob::requestTokenAccess()
 {
     mActionType = RequestToken;
+    mError = false;
     QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/oauth/request_token")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
 
@@ -388,6 +389,7 @@ void DropBoxJob::parseUploadFile(const QString &data)
 void DropBoxJob::shareLink(const QString &root, const QString &path)
 {
     mActionType = ShareLink;
+    mError = false;
     //QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/shares/") + root + QLatin1Char('/') + path));
     //request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));

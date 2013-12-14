@@ -42,6 +42,7 @@ WebDavJob::~WebDavJob()
 
 void WebDavJob::requestTokenAccess()
 {
+    mError = false;
     QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
     if (dlg->exec()) {
         WebDavJob *job = new WebDavJob(this);
@@ -58,6 +59,7 @@ void WebDavJob::requestTokenAccess()
 void WebDavJob::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
+    mError = false;
     qDebug()<<" not implemented";
     deleteLater();
 }
@@ -65,6 +67,7 @@ void WebDavJob::uploadFile(const QString &filename)
 void WebDavJob::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
+    mError = false;
     qDebug()<<" not implemented";
     deleteLater();
 }
@@ -72,6 +75,7 @@ void WebDavJob::listFolder(const QString &folder)
 void WebDavJob::accountInfo()
 {
     mActionType = AccountInfo;
+    mError = false;
     qDebug()<<" not implemented";
     deleteLater();
 }
@@ -79,6 +83,7 @@ void WebDavJob::accountInfo()
 void WebDavJob::createFolder(const QString &filename)
 {
     mActionType = CreateFolder;
+    mError = false;
     qDebug()<<" not implemented";
     deleteLater();
 }
@@ -193,6 +198,8 @@ void WebDavJob::parseListFolder(const QString &data)
 
 void WebDavJob::shareLink(const QString &root, const QString &path)
 {
+    mActionType = ShareLink;
+    mError = false;
     qDebug()<<" not implemented";
     deleteLater();
 }
