@@ -25,6 +25,7 @@ class NotesAgentAlarmDialog : public KDialog
 public:
     explicit NotesAgentAlarmDialog(QWidget *parent=0);
     ~NotesAgentAlarmDialog();
+    void setAlarmText(const QString &text);
 };
 
 #endif // NOTESAGENTALARMDIALOG_H

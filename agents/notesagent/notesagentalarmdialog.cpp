@@ -17,12 +17,24 @@
 
 #include "notesagentalarmdialog.h"
 
+#include <KLocalizedString>
+
 NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     : KDialog(parent)
 {
+    setCaption( i18n( "Alarm" ) );
+    setWindowIcon( KIcon( QLatin1String("knotes") ) );
+    setButtons( Help | Ok|Cancel );
+    setDefaultButton( Ok );
+
 }
 
 NotesAgentAlarmDialog::~NotesAgentAlarmDialog()
 {
 
+}
+
+void NotesAgentAlarmDialog::setAlarmText(const QString &text)
+{
+    //TODO
 }
