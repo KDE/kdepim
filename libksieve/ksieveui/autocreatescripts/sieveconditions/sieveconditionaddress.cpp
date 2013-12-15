@@ -22,7 +22,7 @@
 #include "widgets/selectheadertypecombobox.h"
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QLabel>

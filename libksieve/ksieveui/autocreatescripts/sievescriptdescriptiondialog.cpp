@@ -18,8 +18,8 @@
 #include "sievescriptdescriptiondialog.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <KLocale>
-
+#include <KLocalizedString>
+#include <KSharedConfig>
 
 using namespace KSieveUi;
 

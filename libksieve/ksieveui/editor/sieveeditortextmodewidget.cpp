@@ -35,7 +35,8 @@
 #include <ksieve/scriptbuilder.h>
 
 
-#include <KLocale>
+#include <KLocalizedString>
+#include <KSharedConfig>
 
 #include <QSplitter>
 #include <QShortcut>

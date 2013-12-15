@@ -20,7 +20,7 @@
 #include "sieveeditorabstractwidget.h"
 #include "pimcommon/util/pimutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KFileDialog>
 

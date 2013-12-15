@@ -17,7 +17,7 @@
 #include "selectvacationcombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 namespace KSieveUi {
 SelectVacationComboBox::SelectVacationComboBox(QWidget *parent)

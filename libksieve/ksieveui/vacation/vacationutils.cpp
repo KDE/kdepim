@@ -21,6 +21,7 @@
 #include <KPIMIdentities/IdentityManager>
 #include <KPIMIdentities/Identity>
 
+#include <KLocalizedString>
 #include <KLocale>
 #include <KGlobal>
 #include <QDate>

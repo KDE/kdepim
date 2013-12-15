@@ -19,7 +19,7 @@
 #include "widgets/selectsizewidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QComboBox>

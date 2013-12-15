@@ -17,7 +17,7 @@
 
 #include "vacationeditwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIntSpinBox>
 #include <KLineEdit>
 #include <kseparator.h>

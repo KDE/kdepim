@@ -22,7 +22,8 @@
 
 #include <Akonadi/AgentInstance>
 
-#include <KLocale>
+#include <KLocalizedString>
+#include <KSharedConfig>
 #include <kwindowsystem.h>
 
 #include <QTabWidget>

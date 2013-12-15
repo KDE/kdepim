@@ -19,7 +19,7 @@
 
 #include "libksieve/kmanagesieve/sievejob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 GenerateGlobalScriptJob::GenerateGlobalScriptJob(const KUrl &url, QObject *parent)

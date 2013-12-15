@@ -17,7 +17,7 @@
 
 #include "sieveactionreturn.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 
 using namespace KSieveUi;

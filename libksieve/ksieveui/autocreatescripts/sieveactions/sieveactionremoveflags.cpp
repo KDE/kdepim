@@ -18,7 +18,7 @@
 #include "sieveactionremoveflags.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 SieveActionRemoveFlags::SieveActionRemoveFlags(QObject *parent)

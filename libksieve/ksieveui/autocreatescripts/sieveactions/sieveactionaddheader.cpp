@@ -19,7 +19,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/selectaddheaderpositioncombobox.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QWidget>

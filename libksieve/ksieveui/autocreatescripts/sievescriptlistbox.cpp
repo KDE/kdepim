@@ -23,7 +23,7 @@
 
 #include <KHBox>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KInputDialog>
 #include <KPushButton>
 

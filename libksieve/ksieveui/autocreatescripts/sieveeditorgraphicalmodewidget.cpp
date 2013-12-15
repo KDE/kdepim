@@ -22,8 +22,9 @@
 #include "sievescriptlistbox.h"
 #include "scriptsparsing/parsingutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
+#include <KSharedConfig>
 #include <KConfigGroup>
 #include <KMessageBox>
 

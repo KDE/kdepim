@@ -21,8 +21,8 @@
 #include "sieveactionwidgetlister.h"
 #include "sieveeditorgraphicalmodewidget.h"
 
-#include <KLocale>
-
+#include <KLocalizedString>
+#include <KSharedConfig>
 
 using namespace KSieveUi;
 

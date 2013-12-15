@@ -21,7 +21,7 @@
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QDomNode>

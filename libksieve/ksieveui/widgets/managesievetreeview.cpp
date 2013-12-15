@@ -17,7 +17,7 @@
 
 #include "managesievetreeview.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 

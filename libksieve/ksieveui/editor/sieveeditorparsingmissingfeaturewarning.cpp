@@ -18,7 +18,7 @@
 #include "sieveeditorparsingmissingfeaturewarning.h"
 #include "autocreatescripts/sievescriptparsingerrordialog.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAction>
 
 #include <QPointer>

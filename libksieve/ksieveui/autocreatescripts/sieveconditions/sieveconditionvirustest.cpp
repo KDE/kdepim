@@ -21,7 +21,7 @@
 #include "widgets/selectrelationalmatchtype.h"
 #include "widgets/selectcomparatorcombobox.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QSpinBox>
 #include <QDebug>

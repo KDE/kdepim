@@ -21,7 +21,8 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <KLocale>
+#include <KLocalizedString>
+#include <KSharedConfig>
 
 using namespace KSieveUi;
 

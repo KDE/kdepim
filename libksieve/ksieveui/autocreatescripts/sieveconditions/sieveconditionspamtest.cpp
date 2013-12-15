@@ -21,7 +21,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QSpinBox>
 #include <QDebug>

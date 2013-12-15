@@ -25,7 +25,7 @@
 #include "sievewidgetpageabstract.h"
 #include "autocreatescripts/autocreatescriptdialog.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QVBoxLayout>

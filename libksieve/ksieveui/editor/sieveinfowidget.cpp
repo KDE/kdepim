@@ -17,7 +17,7 @@
 
 #include "sieveinfowidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <KTextEdit>

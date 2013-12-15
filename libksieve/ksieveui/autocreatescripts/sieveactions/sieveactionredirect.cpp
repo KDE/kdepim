@@ -20,7 +20,7 @@
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "widgets/addresslineedit.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QHBoxLayout>

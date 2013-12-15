@@ -16,7 +16,7 @@
 */
 
 #include <KApplication>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCmdLineArgs>
 
 #include "vacation/multiimapvacationdialog.h"

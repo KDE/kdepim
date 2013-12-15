@@ -20,7 +20,7 @@
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditfindbar.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QVBoxLayout>

@@ -18,7 +18,7 @@
 #include "sievedefaulttemplate.h"
 #include "vacation/vacationutils.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
 {

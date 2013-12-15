@@ -19,7 +19,7 @@
 #include "sieveactionwidgetlister.h"
 #include "sieveconditionwidgetlister.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KPushButton>
 

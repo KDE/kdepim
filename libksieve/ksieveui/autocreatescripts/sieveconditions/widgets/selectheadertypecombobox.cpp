@@ -18,7 +18,7 @@
 #include "selectheadertypecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KPushButton>
 

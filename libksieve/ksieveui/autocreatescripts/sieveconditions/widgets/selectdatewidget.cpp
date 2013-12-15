@@ -17,7 +17,7 @@
 
 #include "selectdatewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
 #include <KDateComboBox>
