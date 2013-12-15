@@ -27,8 +27,8 @@ int main( int argc, char** argv )
 {
     KCmdLineArgs::init(argc, argv, "vacationmultiscripttest", 0, ki18n("VacationMultiScriptTest_Gui"),
                        "1.0", ki18n("Test for dialog when server has multiscript"));
-
     KApplication app;
+    app.setQuitOnLastWindowClosed( false );
 
     KSieveUi::MultiImapVacationDialog dlg(i18n("Configure Vacations"));
 
