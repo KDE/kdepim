@@ -58,13 +58,19 @@ VacationPageWidget::VacationPageWidget(QWidget *parent)
     vbox->addWidget(mVacationEditWidget);
     mStackWidget->addWidget(mainPage);
 
+
+    QWidget *w = new QWidget;
+    vbox = new QVBoxLayout;
     QLabel *lab = new QLabel(i18n( "Your server did not list \"vacation\" in "
                                   "its list of supported Sieve extensions;"
                                   "without it, KMail cannot install out-of-"
                                   "office replies for you."
                                   "Please contact your system administrator." ) );
+    vbox->addWidget(lab);
     lab->setWordWrap(true);
-    mStackWidget->addWidget(lab);
+    w->setLayout(vbox);
+    vbox->addStretch();
+    mStackWidget->addWidget(w);
 
     mStackWidget->setCurrentIndex(Script);
     setLayout(lay);
