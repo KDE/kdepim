@@ -47,7 +47,7 @@ MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget
 
 MultiImapVacationDialog::~MultiImapVacationDialog()
 {
-
+    writeConfig();
 }
 
 void MultiImapVacationDialog::init()
