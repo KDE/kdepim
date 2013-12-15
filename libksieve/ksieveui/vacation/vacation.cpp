@@ -26,7 +26,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-//#include <kmime/kmime_header_parsing.h>
+
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 

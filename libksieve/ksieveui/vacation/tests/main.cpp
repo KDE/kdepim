@@ -15,32 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MULTIIMAPVACATIONDIALOG_H
-#define MULTIIMAPVACATIONDIALOG_H
+#include <KApplication>
+#include <KLocale>
+#include <KCmdLineArgs>
 
-#include <KDialog>
+#include "vacation/multiimapvacationdialog.h"
 
-#include "ksieveui_export.h"
+#include <QDebug>
 
-class QTabWidget;
-namespace KSieveUi {
-class KSIEVEUI_EXPORT MultiImapVacationDialog : public KDialog
+int main( int argc, char** argv )
 {
-    Q_OBJECT
-public:
-    explicit MultiImapVacationDialog(const QString &caption, QWidget *parent=0);
-    ~MultiImapVacationDialog();
+    KCmdLineArgs::init(argc, argv, "vacationmultiscripttest", 0, ki18n("VacationMultiScriptTest_Gui"),
+                       "1.0", ki18n("Test for dialog when server has multiscript"));
 
-private slots:
-    void slotOkClicked();
+    KApplication app;
 
-private:
-    void createPage(const QString &serverName, const KUrl &url);
-    void init();
-    void readConfig();
-    void writeConfig();
-    QTabWidget *mTabWidget;
-};
+    KSieveUi::MultiImapVacationDialog dlg(i18n("Configure Vacations"));
+
+    dlg.show();
+    app.exec();
+    return 0;
 }
-
-#endif // MULTIIMAPVACATIONDIALOG_H

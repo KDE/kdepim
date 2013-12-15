@@ -42,6 +42,7 @@ MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget
     setMainWidget(mTabWidget);
     init();
     readConfig();
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
 }
 
 MultiImapVacationDialog::~MultiImapVacationDialog()
@@ -87,4 +88,11 @@ void MultiImapVacationDialog::writeConfig()
 {
     KConfigGroup group( KGlobal::config(), "MultiImapVacationDialog" );
     group.writeEntry( "Size", size() );
+}
+
+void MultiImapVacationDialog::slotOkClicked()
+{
+    for (int i=0; i < mTabWidget->count(); ++i) {
+        static_cast<VacationPageWidget *>(mTabWidget->widget(i))->writeScript();
+    }
 }
