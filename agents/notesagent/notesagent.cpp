@@ -32,6 +32,7 @@
 #include <Akonadi/CollectionFetchScope>
 
 #include <KWindowSystem>
+#include <KLocalizedString>
 #include <KLocale>
 
 #include <QPointer>
