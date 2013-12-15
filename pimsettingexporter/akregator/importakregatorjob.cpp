@@ -21,7 +21,7 @@
 #include "pimcommon/util/createresource.h"
 
 #include <KArchive>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KZip>
 #include <KGlobal>
 #include <KStandardDirs>

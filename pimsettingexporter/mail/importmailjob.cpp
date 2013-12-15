@@ -32,7 +32,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 #include <KStandardDirs>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KProcess>
 #include <KTemporaryFile>
 #include <KSharedConfig>

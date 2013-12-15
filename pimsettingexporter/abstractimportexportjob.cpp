@@ -26,7 +26,7 @@
 #include <kpimidentities/identitymanager.h>
 #include <KZip>
 #include <KTempDir>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KTemporaryFile>

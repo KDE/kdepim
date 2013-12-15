@@ -25,7 +25,7 @@
 #include <KStandardDirs>
 #include <KSharedConfig>
 #include <KTemporaryFile>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KZip>
 
 #include <QDir>

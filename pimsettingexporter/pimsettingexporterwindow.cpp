@@ -67,7 +67,7 @@
 #include <KFileDialog>
 #include <KMessageBox>
 #include <KStandardDirs>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStatusBar>
 #include <KRecentFilesAction>
 #include <KCmdLineArgs>

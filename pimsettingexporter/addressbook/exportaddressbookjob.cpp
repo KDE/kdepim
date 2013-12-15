@@ -20,7 +20,7 @@
 
 #include <Akonadi/AgentManager>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 #include <KTemporaryFile>
 #include <KConfigGroup>
