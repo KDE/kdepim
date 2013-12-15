@@ -20,7 +20,6 @@
 #include <KLocalizedString>
 #include <KIntSpinBox>
 #include <KLineEdit>
-#include <kseparator.h>
 
 #include <pimcommon/texteditor/richtexteditor/richtexteditorwidget.h>
 
@@ -111,10 +110,6 @@ VacationEditWidget::VacationEditWidget(QWidget *parent)
     glay->addWidget( mDomainEdit, row, 1 );
     connect( mDomainCheck, SIGNAL(toggled(bool)),
              mDomainEdit, SLOT(setEnabled(bool)) );
-
-    ++row;
-    KSeparator *separator = new KSeparator;
-    glay->addWidget( separator, row, 0, 1, 2 );
 }
 
 VacationEditWidget::~VacationEditWidget()

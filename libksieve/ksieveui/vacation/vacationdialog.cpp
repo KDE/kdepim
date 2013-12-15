@@ -21,9 +21,10 @@
 #include <klocale.h>
 #include <kmime/kmime_header_parsing.h>
 #include <kwindowsystem.h>
+#include <KSeparator>
 
 #include <QApplication>
-
+#include <QVBoxLayout>
 using KMime::Types::AddrSpecList;
 
 using namespace KSieveUi;
@@ -36,8 +37,19 @@ VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
     setButtons( Ok|Cancel|Default );
     setDefaultButton(  Ok );
     setModal( modal );
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->setMargin(0);
+    w->setLayout(vbox);
+    vbox->addWidget(mVacationEditWidget);
+
     mVacationEditWidget = new VacationEditWidget;
-    setMainWidget( mVacationEditWidget );
+
+    KSeparator *separator = new KSeparator;
+    vbox->addWidget(separator);
+
+    setMainWidget( w );
+
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
     readConfig();
 }
