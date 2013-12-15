@@ -27,7 +27,7 @@
 
 #include <KDebug>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KRandom>
 #include <KStandardDirs>
 #include <akonadi/resourcesynchronizationjob.h>

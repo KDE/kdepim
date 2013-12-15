@@ -19,9 +19,10 @@
 
 #include "akonadi_next/note.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 using namespace NoteShared;
 
