@@ -38,8 +38,7 @@ MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget
     : KDialog(parent)
 {
     setCaption( caption );
-    setButtons( Ok|Cancel|Default );
-    setDefaultButton(  Ok );
+
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
 
     mStackedWidget = new QStackedWidget;
@@ -84,8 +83,12 @@ void MultiImapVacationDialog::init()
             foundOneImap = true;
         }
     }
-    if (!foundOneImap) {
+    if (foundOneImap) {
+        setButtons( Ok | Cancel | Default );
+        setDefaultButton( Ok );
+    } else {
         mStackedWidget->setCurrentIndex(1);
+        setButtons( Close );
     }
 }
 
