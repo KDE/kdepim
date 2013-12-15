@@ -20,7 +20,7 @@
 #include "globalsettings_base.h"
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KUrlRequester>
 
 #include <QVBoxLayout>
