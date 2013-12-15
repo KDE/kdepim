@@ -68,6 +68,7 @@ void MultiImapVacationDialog::createPage(const QString &serverName, const KUrl &
 {
     VacationPageWidget *page = new VacationPageWidget;
     page->setServerUrl(url);
+    page->setServerName(serverName);
     mTabWidget->addTab(page,serverName);
 }
 

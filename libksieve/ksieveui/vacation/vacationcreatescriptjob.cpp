@@ -89,10 +89,10 @@ void VacationCreateScriptJob::handlePutResult( KManageSieve::SieveJob *, bool su
 {
     if ( success )
         KMessageBox::information( 0, activated
-                                  ? i18n("Sieve script installed successfully on the server.\n"
-                                         "Out of Office reply is now active.")
-                                  : i18n("Sieve script installed successfully on the server.\n"
-                                         "Out of Office reply has been deactivated.") );
+                                  ? i18n("Sieve script installed successfully on the server \'%1\'.\n"
+                                         "Out of Office reply is now active.", mServerName)
+                                  : i18n("Sieve script installed successfully on the server \'%1\'.\n"
+                                         "Out of Office reply has been deactivated.", mServerName) );
 
     kDebug() << "( ???," << success << ", ? )";
     mSieveJob = 0; // job deletes itself after returning from this slot!
