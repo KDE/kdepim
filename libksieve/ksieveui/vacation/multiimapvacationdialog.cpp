@@ -38,6 +38,7 @@ MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget
     : KDialog(parent)
 {
     setCaption( caption );
+    setAttribute(Qt::WA_DeleteOnClose);
     setButtons( Ok|Cancel|Default );
     setDefaultButton(  Ok );
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
