@@ -20,29 +20,53 @@
 #include "vacationwarningwidget.h"
 #include "vacationcreatescriptjob.h"
 #include "vacationutils.h"
+#include "sieve-vacation.h"
 
 #include <kmime/kmime_header_parsing.h>
 
 #include <kmanagesieve/sievejob.h>
 
 #include <KDebug>
+#include <KLocalizedString>
 
+#include <QStackedWidget>
 #include <QVBoxLayout>
+#include <QLabel>
 
 using namespace KSieveUi;
 VacationPageWidget::VacationPageWidget(QWidget *parent)
     : QWidget(parent),
+      mPageScript(Script),
       mSieveJob(0),
       mWasActive(false)
 {
     QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
+    mStackWidget = new QStackedWidget;
+    lay->addWidget(mStackWidget);
 
+
+
+    //Main Page
+    QWidget *mainPage = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    mainPage->setLayout(vbox);
     mVacationWarningWidget = new VacationWarningWidget;
-    lay->addWidget(mVacationWarningWidget);
+    vbox->addWidget(mVacationWarningWidget);
 
     mVacationEditWidget = new VacationEditWidget;
-    lay->addWidget(mVacationEditWidget);
+    vbox->addWidget(mVacationEditWidget);
+    mStackWidget->addWidget(mainPage);
+
+    QLabel *lab = new QLabel(i18n( "Your server did not list \"vacation\" in "
+                                  "its list of supported Sieve extensions;"
+                                  "without it, KMail cannot install out-of-"
+                                  "office replies for you."
+                                  "Please contact your system administrator." ) );
+    lab->setWordWrap(true);
+    mStackWidget->addWidget(lab);
+
+    mStackWidget->setCurrentIndex(Script);
     setLayout(lay);
 }
 
@@ -73,81 +97,51 @@ void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool succe
              << "script:" << endl
              << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
-    //TODO
 
-#if 0
-    if ( !mCheckOnly && mUrl.protocol() == QLatin1String("sieve") && !job->sieveCapabilities().isEmpty() &&
+    if ( mUrl.protocol() == QLatin1String("sieve") && !job->sieveCapabilities().isEmpty() &&
          !job->sieveCapabilities().contains(QLatin1String("vacation")) ) {
-        KMessageBox::sorry( 0, i18n( "Your server did not list \"vacation\" in "
-                                     "its list of supported Sieve extensions;\n"
-                                     "without it, KMail cannot install out-of-"
-                                     "office replies for you.\n"
-                                     "Please contact your system administrator." ) );
-        emit result( false );
+        mStackWidget->setCurrentIndex(ScriptNotSupported);
         return;
     }
-
-    if ( !mDialog && !mCheckOnly )
-        mDialog = new VacationDialog( i18n("Configure \"Out of Office\" Replies"), 0, false );
 
     QString messageText = VacationUtils::defaultMessageText();
     int notificationInterval = VacationUtils::defaultNotificationInterval();
     QStringList aliases = VacationUtils::defaultMailAliases();
     bool sendForSpam = VacationUtils::defaultSendForSpam();
     QString domainName = VacationUtils::defaultDomainName();
-    if ( !success ) active = false; // default to inactive
+    if ( !success )
+        active = false; // default to inactive
 
-    if ( !mCheckOnly && ( !success || !KSieveUi::VacationUtils::parseScript( script, messageText, notificationInterval, aliases, sendForSpam, domainName ) ) )
-        KMessageBox::information( 0, i18n("Someone (probably you) changed the "
-                                          "vacation script on the server.\n"
-                                          "KMail is no longer able to determine "
-                                          "the parameters for the autoreplies.\n"
-                                          "Default values will be used." ) );
+    if ( ( !success || !KSieveUi::VacationUtils::parseScript( script, messageText, notificationInterval, aliases, sendForSpam, domainName ) ) )
+        mVacationWarningWidget->setVisible(true);
 
     mWasActive = active;
-    if ( mDialog ) {
-        mDialog->setActivateVacation( active );
-        mDialog->setMessageText( messageText );
-        mDialog->setNotificationInterval( notificationInterval );
-        mDialog->setMailAliases( aliases.join(QLatin1String(", ")) );
-        mDialog->setSendForSpam( sendForSpam );
-        mDialog->setDomainName( domainName );
-        mDialog->enableDomainAndSendForSpam( !VacationSettings::allowOutOfOfficeUploadButNoSettings() );
+    mVacationEditWidget->setActivateVacation( active );
+    mVacationEditWidget->setMessageText( messageText );
+    mVacationEditWidget->setNotificationInterval( notificationInterval );
+    mVacationEditWidget->setMailAliases( aliases.join(QLatin1String(", ")) );
+    mVacationEditWidget->setSendForSpam( sendForSpam );
+    mVacationEditWidget->setDomainName( domainName );
+    mVacationEditWidget->enableDomainAndSendForSpam( !VacationSettings::allowOutOfOfficeUploadButNoSettings() );
 
-        connect( mDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
-        connect( mDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCancel()) );
-        connect( mDialog, SIGNAL(defaultClicked()), SLOT(slotDialogDefaults()) );
-
-        mDialog->show();
-    }
-
-    emit scriptActive( mWasActive, mServerName );
-    if ( mCheckOnly && mWasActive ) {
-        if ( KMessageBox::questionYesNo( 0, i18n( "There is still an active out-of-office reply configured.\n"
-                                                  "Do you want to edit it?"), i18n("Out-of-office reply still active"),
-                                         KGuiItem( i18n( "Edit"), QLatin1String("document-properties") ),
-                                         KGuiItem( i18n("Ignore"), QLatin1String("dialog-cancel") ) )
-             == KMessageBox::Yes ) {
-            emit requestEditVacation();
-        }
-    }
-
-#endif
-
+    //emit scriptActive( mWasActive, mServerName );
 }
 
 void VacationPageWidget::writeScript()
 {
-    KSieveUi::VacationCreateScriptJob *createJob = new KSieveUi::VacationCreateScriptJob;
-    createJob->setServerUrl(mUrl);
-    createJob->setServerName(mServerName);
-    const QString script = VacationUtils::composeScript( mVacationEditWidget->messageText(),
-                                          mVacationEditWidget->notificationInterval(),
-                                          mVacationEditWidget->mailAliases(),
-                                          mVacationEditWidget->sendForSpam(),
-                                          mVacationEditWidget->domainName() );
-    const bool active = mVacationEditWidget->activateVacation();
-    //Q_EMIT scriptActive( active, mServerName);
-    createJob->setScript(script);
-
+    if (mPageScript == Script) {
+        KSieveUi::VacationCreateScriptJob *createJob = new KSieveUi::VacationCreateScriptJob;
+        createJob->setServerUrl(mUrl);
+        createJob->setServerName(mServerName);
+        const QString script = VacationUtils::composeScript( mVacationEditWidget->messageText(),
+                                                             mVacationEditWidget->notificationInterval(),
+                                                             mVacationEditWidget->mailAliases(),
+                                                             mVacationEditWidget->sendForSpam(),
+                                                             mVacationEditWidget->domainName() );
+        const bool active = mVacationEditWidget->activateVacation();
+        createJob->setStatus(active, mWasActive);
+        //Q_EMIT scriptActive( active, mServerName);
+        createJob->setScript(script);
+        createJob->start();
+    }
 }

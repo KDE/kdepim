@@ -20,7 +20,7 @@
 
 #include <QWidget>
 #include <KUrl>
-
+class QStackedWidget;
 namespace KManageSieve {
 class SieveJob;
 }
@@ -44,8 +44,15 @@ private slots:
     void slotGetResult(KManageSieve::SieveJob *job, bool success, const QString &script, bool active);
 
 private:
+    enum PageType {
+        Script = 0,
+        ScriptNotSupported = 1
+    };
+
+    PageType mPageScript;
     QString mServerName;
     KUrl mUrl;
+    QStackedWidget *mStackWidget;
     VacationEditWidget *mVacationEditWidget;
     VacationWarningWidget *mVacationWarningWidget;
     KManageSieve::SieveJob *mSieveJob;
