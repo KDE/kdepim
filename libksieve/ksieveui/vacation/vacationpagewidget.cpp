@@ -98,7 +98,7 @@ void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool succe
              << script;
     mSieveJob = 0; // job deletes itself after returning from this slot!
 
-    if ( mUrl.protocol() == QLatin1String("sieve") && !job->sieveCapabilities().isEmpty() &&
+    if ( mUrl.protocol() == QLatin1String("sieve") &&
          !job->sieveCapabilities().contains(QLatin1String("vacation")) ) {
         mStackWidget->setCurrentIndex(ScriptNotSupported);
         return;
