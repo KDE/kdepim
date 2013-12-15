@@ -276,6 +276,9 @@ void DropBoxJob::createFolder(const QString &folder)
 {
     mActionType = CreateFolder;
     mError = false;
+    if (folder.isEmpty()) {
+        qDebug()<<" folder empty!";
+    }
     QUrl url(QLatin1String("https://api.dropbox.com/1/fileops/create_folder"));
     url.addQueryItem(QLatin1String("root"), QLatin1String("dropbox"));
     url.addQueryItem(QLatin1String("path"), folder );

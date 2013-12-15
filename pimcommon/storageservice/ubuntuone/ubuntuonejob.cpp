@@ -62,7 +62,10 @@ void UbuntuOneJob::requestTokenAccess()
 
 void UbuntuOneJob::uploadFile(const QString &filename)
 {
-
+    mActionType = UploadFiles;
+    mError = false;
+    qDebug()<<" upload file not implemented";
+    deleteLater();
 }
 
 void UbuntuOneJob::listFolder(const QString &folder)
@@ -115,6 +118,9 @@ void UbuntuOneJob::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
     mError = false;
+    if (foldername.isEmpty()) {
+        qDebug()<<" foldername is empty";
+    }
     QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/") + foldername));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
