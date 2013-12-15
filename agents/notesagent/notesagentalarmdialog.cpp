@@ -19,14 +19,26 @@
 
 #include <KLocalizedString>
 
+#include <QListWidget>
+#include <QLabel>
+#include <QVBoxLayout>
+
 NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Alarm" ) );
     setWindowIcon( KIcon( QLatin1String("knotes") ) );
-    setButtons( Help | Ok|Cancel );
-    setDefaultButton( Ok );
+    setButtons( Close );
+    setDefaultButton( Close );
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    w->setLayout(vbox);
 
+    QLabel *lab = new QLabel(i18n("The following notes triggered alarms:"));
+    vbox->addWidget(lab);
+    mListWidget = new QListWidget;
+    vbox->addWidget(mListWidget);
+    setMainWidget(w);
 }
 
 NotesAgentAlarmDialog::~NotesAgentAlarmDialog()
@@ -34,7 +46,7 @@ NotesAgentAlarmDialog::~NotesAgentAlarmDialog()
 
 }
 
-void NotesAgentAlarmDialog::setAlarmText(const QString &text)
+void NotesAgentAlarmDialog::setListAlarm(const QStringList &lstAlarm)
 {
-    //TODO
+    mListWidget->addItems(lstAlarm);
 }

@@ -18,14 +18,18 @@
 #ifndef NOTESAGENTALARMDIALOG_H
 #define NOTESAGENTALARMDIALOG_H
 #include <KDialog>
-
+class QListWidget;
 class NotesAgentAlarmDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit NotesAgentAlarmDialog(QWidget *parent=0);
     ~NotesAgentAlarmDialog();
-    void setAlarmText(const QString &text);
+
+    void setListAlarm(const QStringList &lstAlarm);
+
+private:
+    QListWidget *mListWidget;
 };
 
 #endif // NOTESAGENTALARMDIALOG_H
