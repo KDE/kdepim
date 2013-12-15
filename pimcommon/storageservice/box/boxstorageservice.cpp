@@ -18,7 +18,7 @@
 #include "boxstorageservice.h"
 #include "boxjob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>

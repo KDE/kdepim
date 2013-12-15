@@ -18,7 +18,7 @@
 #ifndef TRANSLATORUTIL_H
 #define TRANSLATORUTIL_H
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QMap>
 #include <QPair>
 #include <QString>

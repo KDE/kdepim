@@ -19,7 +19,7 @@
 
 #include "storageservice/storageserviceabstract.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QGridLayout>
 #include <QLabel>

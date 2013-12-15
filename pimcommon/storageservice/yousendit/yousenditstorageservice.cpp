@@ -18,7 +18,7 @@
 #include "yousenditstorageservice.h"
 #include "yousenditjob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>

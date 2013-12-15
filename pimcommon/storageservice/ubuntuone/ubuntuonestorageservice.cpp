@@ -18,7 +18,7 @@
 #include "ubuntuonestorageservice.h"
 #include "ubuntuonejob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>

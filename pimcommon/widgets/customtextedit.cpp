@@ -17,7 +17,7 @@
 
 #include "customtextedit.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <sonnet/speller.h>
 
 #include <QActionGroup>

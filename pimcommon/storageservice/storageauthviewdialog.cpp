@@ -17,8 +17,8 @@
 #include "storageauthviewdialog.h"
 #include "storageauthviewwidget.h"
 
-#include <KLocale>
-
+#include <KLocalizedString>
+#include <KSharedConfig>
 using namespace PimCommon;
 
 StorageAuthViewDialog::StorageAuthViewDialog(QWidget *parent)

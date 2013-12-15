@@ -24,8 +24,9 @@
 #include <KDebug>
 #include <KGlobal>
 #include <KIO/Scheduler>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMimeType>
+#include <KLocale>
 
 #include <QtCore/QFileInfo>
 

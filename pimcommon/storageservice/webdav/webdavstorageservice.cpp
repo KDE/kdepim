@@ -19,7 +19,7 @@
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>

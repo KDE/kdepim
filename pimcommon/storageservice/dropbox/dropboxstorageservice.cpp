@@ -18,7 +18,7 @@
 #include "dropboxstorageservice.h"
 #include "dropboxjob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>

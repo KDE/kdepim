@@ -26,6 +26,7 @@
 
 #include <KDebug>
 #include <KGlobal>
+#include <KLocalizedString>
 #include <KLocale>
 #include <KTempDir>
 

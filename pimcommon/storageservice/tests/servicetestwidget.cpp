@@ -19,7 +19,7 @@
 #include "servicetestwidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KFileDialog>
 
 #include <QVBoxLayout>

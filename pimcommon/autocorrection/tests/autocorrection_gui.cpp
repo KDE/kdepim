@@ -24,7 +24,7 @@
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSharedConfig>
 
 #include <QPointer>

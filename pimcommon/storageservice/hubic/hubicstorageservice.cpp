@@ -18,7 +18,7 @@
 #include "hubicstorageservice.h"
 #include "hubicjob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>

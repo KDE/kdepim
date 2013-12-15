@@ -20,7 +20,7 @@
 #include "settings/messagecomposersettings.h"
 
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QImageWriter>

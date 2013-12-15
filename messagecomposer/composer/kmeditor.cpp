@@ -33,7 +33,7 @@
 #include <grantlee/plaintextmarkupbuilder.h>
 
 #include <KEncodingFileDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KProcess>
 #include <KPushButton>

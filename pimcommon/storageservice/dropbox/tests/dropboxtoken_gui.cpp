@@ -23,7 +23,7 @@
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
-#include <KLocale>
+#include <KLocalizedString>
 
 
 DropboxTestWidget::DropboxTestWidget(QWidget *parent)

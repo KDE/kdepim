@@ -18,7 +18,7 @@
 #include "shorturlconfigurewidget.h"
 #include "shorturlutils.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QLabel>
 #include <QComboBox>

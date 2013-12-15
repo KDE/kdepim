@@ -28,7 +28,7 @@
 #include <akonadi/itemcreatejob.h>
 #include <kpimutils/email.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 #include <KLineEdit>
 #include <KMessageBox>

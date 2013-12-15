@@ -18,7 +18,7 @@
 #include "shorturlconfiguredialog.h"
 #include "shorturlconfigurewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 #include <QVBoxLayout>
 

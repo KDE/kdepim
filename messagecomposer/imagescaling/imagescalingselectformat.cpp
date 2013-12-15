@@ -19,7 +19,7 @@
 
 #include <KLineEdit>
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QListWidget>
 #include <QHBoxLayout>

@@ -26,7 +26,7 @@
 #include "webdav/webdavstorageservice.h"
 #include "box/boxstorageservice.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KFileDialog>
 
 #include <QMenu>

@@ -24,7 +24,7 @@
 
 #include <Akonadi/Contact/EmailAddressSelectionDialog>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QButtonGroup>
 #include <QGridLayout>

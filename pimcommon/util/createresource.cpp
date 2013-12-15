@@ -18,7 +18,7 @@
 #include "createresource.h"
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <akonadi/agenttype.h>
 #include <akonadi/agentmanager.h>

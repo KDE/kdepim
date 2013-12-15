@@ -21,7 +21,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KFileDialog>
 #include <KNS3/DownloadDialog>

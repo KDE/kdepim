@@ -20,7 +20,7 @@
 
 #include <kapplication.h>
 #include <KCmdLineArgs>
-#include <KLocale>
+#include <KLocalizedString>
 
 
 #include <QPointer>

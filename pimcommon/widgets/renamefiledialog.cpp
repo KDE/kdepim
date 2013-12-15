@@ -30,7 +30,7 @@
 #include <kseparator.h>
 #include <KLineEdit>
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 #include <kio/global.h>
 #include <kio/netaccess.h>
 #include <KMessageBox>

@@ -19,7 +19,7 @@
 #include "filter_kmail_archive.h"
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KFileDialog>
 #include <KZip>
 #include <KTar>
