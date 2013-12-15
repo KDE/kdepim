@@ -38,7 +38,6 @@ MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget
     : KDialog(parent)
 {
     setCaption( caption );
-    setAttribute(Qt::WA_DeleteOnClose);
     setButtons( Ok|Cancel|Default );
     setDefaultButton(  Ok );
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
@@ -62,6 +61,7 @@ MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget
     init();
     readConfig();
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
+    connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
 }
 
 MultiImapVacationDialog::~MultiImapVacationDialog()
@@ -120,6 +120,16 @@ void MultiImapVacationDialog::slotOkClicked()
         VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(mTabWidget->widget(i));
         if (vacationPage) {
             vacationPage->writeScript();
+        }
+    }
+}
+
+void MultiImapVacationDialog::slotDefaultClicked()
+{
+    for (int i=0; i < mTabWidget->count(); ++i) {
+        VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(mTabWidget->widget(i));
+        if (vacationPage) {
+            vacationPage->setDefault();
         }
     }
 }

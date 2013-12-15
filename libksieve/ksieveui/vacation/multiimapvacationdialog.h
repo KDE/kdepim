@@ -33,7 +33,8 @@ public:
     ~MultiImapVacationDialog();
 
 private slots:
-    void slotOkClicked();
+    void slotOkClicked();    
+    void slotDefaultClicked();
 
 private:
     void createPage(const QString &serverName, const KUrl &url);

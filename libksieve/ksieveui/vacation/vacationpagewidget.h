@@ -37,8 +37,8 @@ public:
 
     void setServerUrl(const KUrl &url);
     void setServerName(const QString &serverName);
-
     void writeScript();
+    void setDefault();
 
 private slots:
     void slotGetResult(KManageSieve::SieveJob *job, bool success, const QString &script, bool active);
