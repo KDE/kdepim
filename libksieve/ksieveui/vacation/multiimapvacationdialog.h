@@ -23,6 +23,7 @@
 #include "ksieveui_export.h"
 
 class QTabWidget;
+class QStackedWidget;
 namespace KSieveUi {
 class KSIEVEUI_EXPORT MultiImapVacationDialog : public KDialog
 {
@@ -40,6 +41,7 @@ private:
     void readConfig();
     void writeConfig();
     QTabWidget *mTabWidget;
+    QStackedWidget *mStackedWidget;
 };
 }
 

@@ -28,6 +28,9 @@
 
 #include <QTabWidget>
 #include <QApplication>
+#include <QStackedWidget>
+#include <QVBoxLayout>
+#include <QLabel>
 
 
 using namespace KSieveUi;
@@ -39,8 +42,22 @@ MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget
     setDefaultButton(  Ok );
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
 
+    mStackedWidget = new QStackedWidget;
+    setMainWidget(mStackedWidget);
     mTabWidget = new QTabWidget;
-    setMainWidget(mTabWidget);
+    mStackedWidget->addWidget(mTabWidget);
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    w->setLayout(vbox);
+    QLabel *lab = new QLabel(i18n("KMail's Out of Office Reply functionality relies on "
+                                  "server-side filtering. You have not yet configured an "
+                                  "IMAP server for this."
+                                  "You can do this on the \"Filtering\" tab of the IMAP "
+                                  "account configuration."));
+    vbox->addStretch();
+    vbox->addWidget(lab);
+    mStackedWidget->addWidget(w);
+    mStackedWidget->setCurrentIndex(0);
     init();
     readConfig();
     connect(this, SIGNAL(okClicked()), this, SLOT(slotOkClicked()));
@@ -53,6 +70,7 @@ MultiImapVacationDialog::~MultiImapVacationDialog()
 
 void MultiImapVacationDialog::init()
 {
+    bool foundOneImap = false;
     const Akonadi::AgentInstance::List instances = KSieveUi::Util::imapAgentInstances();
     foreach ( const Akonadi::AgentInstance &instance, instances ) {
         if ( instance.status() == Akonadi::AgentInstance::Broken )
@@ -62,7 +80,11 @@ void MultiImapVacationDialog::init()
         if ( !url.isEmpty() ) {
             const QString serverName = instance.name();
             createPage(serverName, url);
+            foundOneImap = true;
         }
+    }
+    if (!foundOneImap) {
+        mStackedWidget->setCurrentIndex(1);
     }
 }
 
@@ -94,6 +116,9 @@ void MultiImapVacationDialog::writeConfig()
 void MultiImapVacationDialog::slotOkClicked()
 {
     for (int i=0; i < mTabWidget->count(); ++i) {
-        static_cast<VacationPageWidget *>(mTabWidget->widget(i))->writeScript();
+        VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(mTabWidget->widget(i));
+        if (vacationPage) {
+            vacationPage->writeScript();
+        }
     }
 }
