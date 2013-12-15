@@ -24,7 +24,7 @@
 
 #include <KABC/VCardConverter>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>

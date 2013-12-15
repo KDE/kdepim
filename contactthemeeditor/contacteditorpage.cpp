@@ -25,7 +25,7 @@
 
 #include <knewstuff3/uploaddialog.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KInputDialog>
 #include <KZip>
 #include <KTempDir>

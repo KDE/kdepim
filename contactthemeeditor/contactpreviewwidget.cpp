@@ -26,9 +26,10 @@
 #include <Akonadi/Contact/ContactGroupViewer>
 #include <Akonadi/Contact/ContactViewer>
 #include <Akonadi/Item>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 #include <QTabWidget>
 #include <QHBoxLayout>

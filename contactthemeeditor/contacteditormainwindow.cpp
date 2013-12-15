@@ -32,6 +32,7 @@
 #include <KDebug>
 #include <KStandardDirs>
 #include <KRecentFilesAction>
+#include <KLocalizedString>
 #include <KLocale>
 
 #include <KNS3/KNewStuffAction>
