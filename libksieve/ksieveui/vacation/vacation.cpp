@@ -131,8 +131,6 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
 
         connect( mDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
         connect( mDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCancel()) );
-        connect( mDialog, SIGNAL(defaultClicked()), SLOT(slotDialogDefaults()) );
-
         mDialog->show();
     }
 
@@ -146,18 +144,6 @@ void Vacation::slotGetResult( KManageSieve::SieveJob * job, bool success,
             emit requestEditVacation();
         }
     }
-}
-
-void Vacation::slotDialogDefaults() {
-    if ( !mDialog )
-        return;
-    mDialog->setActivateVacation( true );
-    mDialog->setMessageText( VacationUtils::defaultMessageText() );
-    mDialog->setNotificationInterval( VacationUtils::defaultNotificationInterval() );
-    mDialog->setMailAliases( VacationUtils::defaultMailAliases().join(QLatin1String(", ")) );
-    mDialog->setSendForSpam( VacationUtils::defaultSendForSpam() );
-    mDialog->setDomainName( VacationUtils::defaultDomainName() );
-    mDialog->setDomainCheck( false );
 }
 
 void Vacation::slotDialogOk() {

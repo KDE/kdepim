@@ -52,6 +52,7 @@ VacationDialog::VacationDialog( const QString &caption, QWidget * parent,
 
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
     readConfig();
+    connect( this, SIGNAL(defaultClicked()), this, SLOT(slotDialogDefaults()) );
 }
 
 VacationDialog::~VacationDialog()
@@ -157,3 +158,7 @@ void VacationDialog::enableDomainAndSendForSpam( bool enable )
     mVacationEditWidget->enableDomainAndSendForSpam(enable);
 }
 
+void VacationDialog::slotDialogDefaults()
+{
+    mVacationEditWidget->setDefault();
+}

@@ -16,6 +16,7 @@
 */
 
 #include "vacationeditwidget.h"
+#include "vacationutils.h"
 
 #include <KLocalizedString>
 #include <KIntSpinBox>
@@ -225,3 +226,13 @@ void VacationEditWidget::enableDomainAndSendForSpam( bool enable )
     mSpamCheck->setEnabled( enable );
 }
 
+void VacationEditWidget::setDefault()
+{
+    setActivateVacation( true );
+    setMessageText( VacationUtils::defaultMessageText() );
+    setNotificationInterval( VacationUtils::defaultNotificationInterval() );
+    setMailAliases( VacationUtils::defaultMailAliases().join(QLatin1String(", ")) );
+    setSendForSpam( VacationUtils::defaultSendForSpam() );
+    setDomainName( VacationUtils::defaultDomainName() );
+    setDomainCheck( false );
+}

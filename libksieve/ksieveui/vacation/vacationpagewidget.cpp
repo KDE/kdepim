@@ -154,11 +154,5 @@ void VacationPageWidget::writeScript()
 
 void VacationPageWidget::setDefault()
 {
-    mVacationEditWidget->setActivateVacation( true );
-    mVacationEditWidget->setMessageText( VacationUtils::defaultMessageText() );
-    mVacationEditWidget->setNotificationInterval( VacationUtils::defaultNotificationInterval() );
-    mVacationEditWidget->setMailAliases( VacationUtils::defaultMailAliases().join(QLatin1String(", ")) );
-    mVacationEditWidget->setSendForSpam( VacationUtils::defaultSendForSpam() );
-    mVacationEditWidget->setDomainName( VacationUtils::defaultDomainName() );
-    mVacationEditWidget->setDomainCheck( false );
+    mVacationEditWidget->setDefault();
 }

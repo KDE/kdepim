@@ -57,7 +57,6 @@ signals:
     void requestEditVacation();
 
 protected slots:
-    void slotDialogDefaults();
     void slotGetResult( KManageSieve::SieveJob * job, bool success,
                         const QString & script, bool active );
     void slotDialogOk();

@@ -68,6 +68,8 @@ public:
     bool sendForSpam() const;
     void setSendForSpam( bool enable );
 
+    void setDefault();
+
 private Q_SLOTS:
     void slotIntervalSpinChanged( int value );
 
