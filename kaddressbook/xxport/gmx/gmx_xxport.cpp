@@ -83,7 +83,7 @@
 #include <KDebug>
 #include <KFileDialog>
 #include <KIO/NetAccess>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KUrl>

@@ -30,7 +30,7 @@
 
 #include <KABC/Addressee>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QCheckBox>
 #include <QPrinter>

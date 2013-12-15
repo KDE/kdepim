@@ -27,7 +27,7 @@
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KProgressDialog>
 

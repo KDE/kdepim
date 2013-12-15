@@ -22,7 +22,7 @@
 
 #include "kdepim-version.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 AboutData::AboutData()
   : KAboutData( "kaddressbook", 0, ki18n( "KAddressBook" ),

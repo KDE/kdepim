@@ -72,7 +72,7 @@
 #include <KApplication>
 #include <KCheckableProxyModel>
 #include <kdescendantsproxymodel.h> //krazy:exclude=camelcase TODO wait for kdelibs4.9
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSelectionProxyModel>
 #include <KTextBrowser>
 #include <KToggleAction>

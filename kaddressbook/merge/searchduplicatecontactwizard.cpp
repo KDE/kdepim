@@ -21,8 +21,9 @@
 
 #include <KABC/Addressee>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 SearchDuplicateContactWizard::SearchDuplicateContactWizard(QItemSelectionModel *selectionModel, QWidget *parent)
     : KAssistantDialog(parent)

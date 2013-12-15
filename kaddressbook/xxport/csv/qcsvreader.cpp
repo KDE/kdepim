@@ -23,7 +23,7 @@
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 QCsvBuilderInterface::~QCsvBuilderInterface()
 {

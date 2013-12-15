@@ -27,7 +27,7 @@
 #include <KEditToolBar>
 #include <KShortcutsDialog>
 #include <KStandardAction>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KToolBar>
 
 MainWindow::MainWindow()

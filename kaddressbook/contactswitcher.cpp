@@ -19,7 +19,7 @@
 
 #include "contactswitcher.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QAbstractItemView>
 #include <QHBoxLayout>

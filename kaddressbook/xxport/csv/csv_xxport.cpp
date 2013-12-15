@@ -24,7 +24,7 @@
 #include "pimcommon/widgets/renamefiledialog.h"
 
 #include <KFileDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KUrl>

@@ -20,7 +20,7 @@
 
 #include "contactfields.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 QString ContactFields::label( Field field )
 {

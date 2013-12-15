@@ -21,7 +21,8 @@
 #include <Akonadi/Item>
 
 #include <KConfigGroup>
-#include <KLocale>
+#include <KSharedConfig>
+#include <KLocalizedString>
 
 #include <QItemSelectionModel>
 #include <QLabel>

@@ -40,7 +40,7 @@
 #include <KABC/LDIFConverter>
 
 #include <KFileDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KUrl>
