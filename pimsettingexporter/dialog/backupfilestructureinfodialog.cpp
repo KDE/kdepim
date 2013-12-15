@@ -20,7 +20,8 @@
 
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
+#include <KSharedConfig>
 #include <KStandardDirs>
 #include <KMessageBox>
 

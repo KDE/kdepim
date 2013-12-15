@@ -20,7 +20,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QGridLayout>

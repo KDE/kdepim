@@ -20,7 +20,7 @@
 #include "ksieveui/scriptsparsing/parsingutil.h"
 #include <kmanagesieve/sievejob.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 
 using namespace KSieveUi;

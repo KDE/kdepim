@@ -45,6 +45,7 @@ YouSendItJob::~YouSendItJob()
 
 void YouSendItJob::initializeToken(const QString &password, const QString &userName, const QString &token)
 {
+    mError = false;
     mPassword = password;
     mUsername = userName;
     mToken = token;
@@ -58,7 +59,7 @@ void YouSendItJob::requestTokenAccess()
         mPassword = dlg->password();
         mUsername = dlg->username();
     } else {
-        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         deleteLater();
         delete dlg;
         return;
@@ -66,6 +67,7 @@ void YouSendItJob::requestTokenAccess()
     delete dlg;
 
     mActionType = RequestToken;
+    mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/auth"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
@@ -84,6 +86,7 @@ void YouSendItJob::requestTokenAccess()
 void YouSendItJob::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
+    mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));
     QNetworkRequest request(url);
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
@@ -99,6 +102,7 @@ void YouSendItJob::uploadFile(const QString &filename)
 void YouSendItJob::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
+    mError = false;
     //Show root folder => 0
     QUrl url;
     if (folder.isEmpty()) {
@@ -120,6 +124,7 @@ void YouSendItJob::listFolder(const QString &folder)
 void YouSendItJob::accountInfo()
 {
     mActionType = AccountInfo;
+    mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v2/user"));
     url.addQueryItem(QLatin1String("email"),mUsername);
     url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
@@ -135,6 +140,7 @@ void YouSendItJob::accountInfo()
 void YouSendItJob::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
+    mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder"));
     url.addQueryItem(QLatin1String("name"),foldername);
     QNetworkRequest request(url);
@@ -164,6 +170,8 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             if (storageMap.contains(QLatin1String("message"))) {
                 errorStr = storageMap.value(QLatin1String("message")).toString();
             }
+        } else {
+            errorStr = i18n("Unknown Error \"%1\"", data);
         }
         switch(mActionType) {
         case NoneAction:
@@ -328,6 +336,7 @@ void YouSendItJob::parseUploadFiles(const QString &data)
 void YouSendItJob::startUploadFile(const QString &fileId)
 {
     mActionType = UploadFiles;
+    mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));
     QNetworkRequest request(url);
     request.setRawHeader("bid", fileId.toLatin1());
@@ -347,6 +356,8 @@ void YouSendItJob::startUploadFile(const QString &fileId)
 
 void YouSendItJob::shareLink(const QString &root, const QString &path)
 {
+    mError = false;
+    mActionType = ShareLink;
     qDebug()<<" not implemented";
     deleteLater();
 }

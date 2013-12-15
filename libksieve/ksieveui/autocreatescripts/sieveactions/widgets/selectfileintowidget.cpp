@@ -18,7 +18,7 @@
 #include "selectfileintowidget.h"
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPushButton>
 #include <QHBoxLayout>

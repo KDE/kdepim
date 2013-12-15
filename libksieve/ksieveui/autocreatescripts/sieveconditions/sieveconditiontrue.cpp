@@ -17,7 +17,7 @@
 
 #include "sieveconditiontrue.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QLabel>

@@ -17,7 +17,7 @@
 
 #include "sieveeditorwarning.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 using namespace KSieveUi;
 
 SieveEditorWarning::SieveEditorWarning(QWidget *parent)

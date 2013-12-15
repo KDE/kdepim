@@ -20,7 +20,7 @@
 #include "sievedefaulttemplate.h"
 #include "pimcommon/templatewidgets/templatemanager.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 #include <QLabel>

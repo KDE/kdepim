@@ -50,6 +50,7 @@ UbuntuOneJob::~UbuntuOneJob()
 void UbuntuOneJob::requestTokenAccess()
 {
     mActionType = RequestToken;
+    mError = false;
     QUrl url(QLatin1String("https://login.ubuntu.com/api/1.0/authentications"));
     url.addQueryItem(QLatin1String("ws.op"), QLatin1String("authenticate"));
     url.addQueryItem(QLatin1String("token_name"), QLatin1String("Ubuntu One @ foo") );
@@ -61,12 +62,16 @@ void UbuntuOneJob::requestTokenAccess()
 
 void UbuntuOneJob::uploadFile(const QString &filename)
 {
-
+    mActionType = UploadFiles;
+    mError = false;
+    qDebug()<<" upload file not implemented";
+    deleteLater();
 }
 
 void UbuntuOneJob::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
+    mError = false;
     QUrl url(QLatin1String("https://one.ubuntu.com/api/file_storage/v1"));
     url.addQueryItem(QLatin1String("oauth_consumer_key"), mCustomerKey);
     url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
@@ -112,6 +117,10 @@ void UbuntuOneJob::accountInfo()
 void UbuntuOneJob::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
+    mError = false;
+    if (foldername.isEmpty()) {
+        qDebug()<<" foldername is empty";
+    }
     QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/") + foldername));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
@@ -128,6 +137,8 @@ void UbuntuOneJob::createFolder(const QString &foldername)
 
 void UbuntuOneJob::shareLink(const QString &root, const QString &path)
 {
+    mActionType = ShareLink;
+    mError = false;
     qDebug()<<" not implemented";
     deleteLater();
 }
@@ -299,7 +310,7 @@ void UbuntuOneJob::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *a
         auth->setUser(dlg->username());
         auth->setPassword(dlg->password());
     } else {
-        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         deleteLater();
     }
     delete dlg;
@@ -333,6 +344,7 @@ void UbuntuOneJob::parseRequestToken(const QString &data)
 void UbuntuOneJob::finishGetToken()
 {
     //FIXME
+    mError = false;
     mActionType = AccessToken;
 
     QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/")));

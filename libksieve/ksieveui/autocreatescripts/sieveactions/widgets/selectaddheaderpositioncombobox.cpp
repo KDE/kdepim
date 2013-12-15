@@ -19,7 +19,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 SelectAddHeaderPositionCombobox::SelectAddHeaderPositionCombobox(QWidget *parent)

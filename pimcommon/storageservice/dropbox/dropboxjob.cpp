@@ -63,6 +63,7 @@ void DropBoxJob::initializeToken(const QString &accessToken, const QString &acce
 void DropBoxJob::requestTokenAccess()
 {
     mActionType = RequestToken;
+    mError = false;
     QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/oauth/request_token")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
 
@@ -154,6 +155,9 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             }
+        } else {
+            errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            deleteLater();
         }
         return;
     }
@@ -262,7 +266,7 @@ void DropBoxJob::doAuthentification()
         getTokenAccess();
         delete dlg;
     } else {
-        Q_EMIT authorizationFailed(i18n("Authentification Canceled."));
+        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         delete dlg;
         deleteLater();
     }
@@ -272,6 +276,9 @@ void DropBoxJob::createFolder(const QString &folder)
 {
     mActionType = CreateFolder;
     mError = false;
+    if (folder.isEmpty()) {
+        qDebug()<<" folder empty!";
+    }
     QUrl url(QLatin1String("https://api.dropbox.com/1/fileops/create_folder"));
     url.addQueryItem(QLatin1String("root"), QLatin1String("dropbox"));
     url.addQueryItem(QLatin1String("path"), folder );
@@ -385,6 +392,7 @@ void DropBoxJob::parseUploadFile(const QString &data)
 void DropBoxJob::shareLink(const QString &root, const QString &path)
 {
     mActionType = ShareLink;
+    mError = false;
     //QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/shares/") + root + QLatin1Char('/') + path));
     //request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));

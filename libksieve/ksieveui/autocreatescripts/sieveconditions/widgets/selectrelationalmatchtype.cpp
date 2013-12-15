@@ -21,7 +21,7 @@
 
 #include <KComboBox>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QHBoxLayout>
 
 using namespace KSieveUi;

@@ -17,11 +17,12 @@
 
 #include "managethemes.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 #include <KPushButton>
 #include <KMessageBox>
 #include <KTempDir>
+#include <KSharedConfig>
 
 #include <QLabel>
 #include <QListWidget>

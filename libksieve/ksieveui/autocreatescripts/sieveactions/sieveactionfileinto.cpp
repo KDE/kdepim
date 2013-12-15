@@ -17,7 +17,7 @@
 
 #include "sieveactionfileinto.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QCheckBox>

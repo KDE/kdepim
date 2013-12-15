@@ -31,7 +31,7 @@
 
 
 #include <KZip>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KTemporaryFile>
 #include <KStandardDirs>
 #include <KProcess>

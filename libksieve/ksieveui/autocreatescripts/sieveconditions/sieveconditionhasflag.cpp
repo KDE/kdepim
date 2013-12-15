@@ -19,7 +19,7 @@
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QWidget>

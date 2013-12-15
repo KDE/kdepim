@@ -3,6 +3,7 @@ IconName=notes
 Comment=Notes Agent
 Comment[cs]=Agent poznámek
 Comment[de]=Notizen-Agent
+Comment[es]=Agente de notas
 Comment[nl]=Agent voor notities
 Comment[pt]=Agente de Notas
 Comment[pt_BR]=Agente de Notas
@@ -14,6 +15,7 @@ Comment[x-test]=xxNotes Agentxx
 [Event/receivednotes]
 Name=Received a note
 Name[de]=Notiz erhalten
+Name[es]=Recibida una nota
 Name[nl]=Er is een notitie ontvangen
 Name[pt]=Nota recebida
 Name[pt_BR]=Nota recebida

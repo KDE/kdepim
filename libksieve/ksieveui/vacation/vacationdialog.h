@@ -60,6 +60,9 @@ public:
     bool sendForSpam() const;
     void setSendForSpam( bool enable );
 
+private slots:
+    void slotDialogDefaults();
+
 private:
     void writeConfig();
     void readConfig();

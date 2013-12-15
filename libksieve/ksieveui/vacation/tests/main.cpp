@@ -15,40 +15,24 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VACATIONMANAGER_H
-#define VACATIONMANAGER_H
+#include <KApplication>
+#include <KLocalizedString>
+#include <KCmdLineArgs>
 
-#include <KUrl>
+#include "vacation/multiimapvacationdialog.h"
 
-#include <QObject>
-#include <QHash>
+#include <QDebug>
 
-
-namespace KSieveUi {
-class Vacation;
-struct vacationInfo
+int main( int argc, char** argv )
 {
-    QString displayName;
-    KUrl url;
-};
+    KCmdLineArgs::init(argc, argv, "vacationmultiscripttest", 0, ki18n("VacationMultiScriptTest_Gui"),
+                       "1.0", ki18n("Test for dialog when server has multiscript"));
+    KApplication app;
+    app.setQuitOnLastWindowClosed( false );
 
-class VacationManager : public QObject
-{
-    Q_OBJECT
-public:
-    explicit VacationManager(QObject *parent = 0);
-    ~VacationManager();
+    KSieveUi::MultiImapVacationDialog dlg(i18n("Configure Vacations"));
 
-    void checkVacation();
-    void editVacation();
-
-private:
-    void findImapResourceWithVacationSupport();
-    /*resource identifier, vacationInfo*/
-    QHash<QString, vacationInfo> mImapUrl;
-    QHash<QString, Vacation> mJobList;
-    bool mWasInitialized;
-};
+    dlg.show();
+    app.exec();
+    return 0;
 }
-
-#endif // VACATIONMANAGER_H

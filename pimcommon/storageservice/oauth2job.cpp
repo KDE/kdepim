@@ -45,6 +45,7 @@ OAuth2Job::~OAuth2Job()
 
 void OAuth2Job::initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime)
 {
+    mError = false;
     mRefreshToken = refreshToken;
     mToken = token;
     mNeedRefreshToken = (QDateTime::currentDateTime() >= expireDateTime);
@@ -52,6 +53,7 @@ void OAuth2Job::initializeToken(const QString &refreshToken, const QString &toke
 
 void OAuth2Job::requestTokenAccess()
 {
+    mError = false;
     mActionType = RequestToken;
     QUrl url(mServiceUrl + mAuthorizePath );
     url.addQueryItem(QLatin1String("response_type"), QLatin1String("code"));
@@ -113,6 +115,7 @@ void OAuth2Job::parseRedirectUrl(const QUrl &url)
 void OAuth2Job::getTokenAccess(const QString &authorizeCode)
 {
     mActionType = AccessToken;
+    mError = false;
     QNetworkRequest request(QUrl(mServiceUrl + mPathToken));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
@@ -128,6 +131,7 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
 void OAuth2Job::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
+    mError = false;
     //TODO
     qDebug()<<" not implemented ";
     deleteLater();
@@ -136,6 +140,7 @@ void OAuth2Job::uploadFile(const QString &filename)
 void OAuth2Job::listFolder(const QString &folder)
 {
     mActionType = ListFolder;
+    mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath + QLatin1String("0"));
     QNetworkRequest request(url);
@@ -148,6 +153,7 @@ void OAuth2Job::listFolder(const QString &folder)
 void OAuth2Job::accountInfo()
 {
     mActionType = AccountInfo;
+    mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mCurrentAccountInfoPath);
     QNetworkRequest request(url);
@@ -160,6 +166,7 @@ void OAuth2Job::accountInfo()
 void OAuth2Job::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
+    mError = false;
     QNetworkRequest request(QUrl(/*mServiceUrl + mPathToken*/QLatin1String("https://api.box.com/2.0/folders")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
@@ -173,6 +180,7 @@ void OAuth2Job::createFolder(const QString &foldername)
 void OAuth2Job::shareLink(const QString &root, const QString &path)
 {
     mActionType = ShareLink;
+    mError = false;
     //TODO
     qDebug()<<" not implemented ";
     deleteLater();
@@ -190,6 +198,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         bool ok;
 
         QMap<QString, QVariant> error = parser.parse(data.toUtf8(), &ok).toMap();
+        qDebug()<<" error "<<error;
         if (error.contains(QLatin1String("message"))) {
             const QString errorStr = error.value(QLatin1String("message")).toString();
             switch(mActionType) {
@@ -229,6 +238,9 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             }
+        } else {
+            errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            deleteLater();
         }
         return;
     }

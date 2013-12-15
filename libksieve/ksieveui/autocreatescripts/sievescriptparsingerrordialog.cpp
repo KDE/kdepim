@@ -19,8 +19,8 @@
 #include "pimcommon/util/pimutil.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <KLocale>
-
+#include <KLocalizedString>
+#include <KSharedConfig>
 
 #include <errno.h>
 

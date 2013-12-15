@@ -18,7 +18,7 @@
 #include "themeeditortabwidget.h"
 #include "editorpage.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KIcon>
 

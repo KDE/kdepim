@@ -20,7 +20,7 @@
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/selectheadertypecombobox.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QHBoxLayout>

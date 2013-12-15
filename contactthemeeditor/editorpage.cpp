@@ -22,8 +22,9 @@
 #include "contacttemplatewidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
+#include <KSharedConfig>
 #include <KConfigGroup>
 
 #include <QSplitter>

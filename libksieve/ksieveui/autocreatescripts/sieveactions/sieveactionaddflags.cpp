@@ -18,7 +18,7 @@
 
 #include "sieveactionaddflags.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 SieveActionAddFlags::SieveActionAddFlags(QObject *parent)

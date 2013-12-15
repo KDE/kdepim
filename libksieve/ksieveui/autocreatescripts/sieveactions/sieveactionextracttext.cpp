@@ -18,7 +18,7 @@
 
 #include "sieveactionextracttext.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QLabel>

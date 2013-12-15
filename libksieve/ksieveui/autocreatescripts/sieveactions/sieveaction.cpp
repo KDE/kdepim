@@ -17,7 +17,7 @@
 
 #include "sieveaction.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QWidget>
 

@@ -16,7 +16,7 @@
 */
 
 #include "sieveactiondiscard.h"
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KSieveUi;
 SieveActionDiscard::SieveActionDiscard(QObject *parent)

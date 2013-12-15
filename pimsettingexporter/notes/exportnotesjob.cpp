@@ -21,7 +21,7 @@
 
 #include <Akonadi/AgentManager>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 #include <KZip>
 

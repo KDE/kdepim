@@ -24,13 +24,6 @@ class QString;
 class QStringList;
 template <typename T> class QList;
 
-namespace KMime {
-namespace Types {
-struct AddrSpec;
-typedef QList<AddrSpec> AddrSpecList;
-}
-}
-
 namespace KManageSieve {
 class SieveJob;
 }
@@ -52,20 +45,7 @@ public:
 
     void showVacationDialog();
 
-    static QString defaultMessageText();
-    static int defaultNotificationInterval();
-    static QStringList defaultMailAliases();
-    static bool defaultSendForSpam();
-    static QString defaultDomainName();
-
 protected:
-    static QString composeScript( const QString & messageText,
-                                  int notificationInterval,
-                                  const KMime::Types::AddrSpecList & aliases,
-                                  bool sendForSpam, const QString & excludeDomain );
-    static bool parseScript( const QString & script, QString & messageText,
-                             int & notificationInterval, QStringList & aliases,
-                             bool & sendForSpam, QString & domainName );
     KUrl findURL(QString &serverName) const;
     void handlePutResult( KManageSieve::SieveJob * job, bool success, bool );
 
@@ -77,7 +57,6 @@ signals:
     void requestEditVacation();
 
 protected slots:
-    void slotDialogDefaults();
     void slotGetResult( KManageSieve::SieveJob * job, bool success,
                         const QString & script, bool active );
     void slotDialogOk();

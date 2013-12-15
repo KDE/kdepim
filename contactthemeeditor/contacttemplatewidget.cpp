@@ -18,7 +18,7 @@
 #include "contacttemplatewidget.h"
 #include "contactdefaulttemplate.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QLabel>

@@ -20,19 +20,29 @@
 
 #include <KDialog>
 
+#include "ksieveui_export.h"
+
 class QTabWidget;
+class QStackedWidget;
 namespace KSieveUi {
-class MultiImapVacationDialog : public KDialog
+class KSIEVEUI_EXPORT MultiImapVacationDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit MultiImapVacationDialog(const QString &caption, QWidget *parent=0);
     ~MultiImapVacationDialog();
 
+private slots:
+    void slotOkClicked();    
+    void slotDefaultClicked();
+
 private:
+    void createPage(const QString &serverName, const KUrl &url);
+    void init();
     void readConfig();
     void writeConfig();
     QTabWidget *mTabWidget;
+    QStackedWidget *mStackedWidget;
 };
 }
 

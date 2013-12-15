@@ -22,7 +22,7 @@
 
 #include <KStandardDirs>
 #include <KArchive>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
 #include <KZip>
 #include <KArchiveEntry>

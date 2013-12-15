@@ -25,11 +25,13 @@ set(ksieveui_vacation_LIB_SRCS
   vacation/vacation.cpp
   vacation/vacationdialog.cpp
   vacation/vacationhelperjob.cpp
-  vacation/vacationmanager.cpp
   vacation/vacationeditwidget.cpp
   vacation/multiimapvacationdialog.cpp
   vacation/vacationpagewidget.cpp
   vacation/vacationwarningwidget.cpp
+  vacation/vacationscriptextractor.cpp
+  vacation/vacationutils.cpp
+  vacation/vacationcreatescriptjob.cpp
 )
 
 set(ksieveui_editor_LIB_SRCS
@@ -128,11 +130,14 @@ set(ksieveui_autocreatescripts_LIB_SRCS
   autocreatescripts/sieveconditions/widgets/selectsizewidget.cpp
 )
 
-set(ksieveui_LIB_SRCS
+set(ksieveui_scriptsparsing_LIB_SRCS
   scriptsparsing/xmlprintingscriptbuilder.cpp
   scriptsparsing/parsingresultdialog.cpp
   scriptsparsing/xmlprintingsyntaxhighlighter.cpp
   scriptsparsing/parsingutil.cpp
+)
+
+set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
   widgets/sievetreewidgetitem.cpp
   widgets/managesievetreeview.cpp
@@ -143,6 +148,7 @@ set(ksieveui_LIB_SRCS
   templates/sievetemplatewidget.cpp
   templates/sievedefaulttemplate.cpp 
   templates/sievetemplateeditdialog.cpp
+  ${ksieveui_scriptsparsing_LIB_SRCS}
   ${ksieveui_vacation_LIB_SRCS}
   ${ksieveui_editor_LIB_SRCS}
   ${ksieveui_autocreatescripts_LIB_SRCS}
@@ -177,4 +183,5 @@ install(DIRECTORY data/scripts/ DESTINATION ${DATA_INSTALL_DIR}/sieve/scripts/ )
 
 add_subdirectory(autocreatescripts/tests)
 add_subdirectory(scriptsparsing/tests)
+add_subdirectory(vacation/tests)
 

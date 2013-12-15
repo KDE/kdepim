@@ -17,7 +17,7 @@
 
 #include "sieveconditionservermetadataexists.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QHBoxLayout>

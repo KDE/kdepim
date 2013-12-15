@@ -22,7 +22,7 @@
 #include "kdepim-version.h"
 #include <KMenu>
 #include <KHelpMenu>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIcon>
 #include <KAboutData>
 #include <KNotifyConfigWidget>

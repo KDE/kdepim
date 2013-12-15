@@ -17,7 +17,7 @@
 
 #include "archivestorage.h"
 #include <KZip>
-#include <KLocale>
+#include <KLocalizedString>
 
 ArchiveStorage::ArchiveStorage(const QString& filename, QObject *parent)
     :QObject(parent),

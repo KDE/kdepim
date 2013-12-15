@@ -23,7 +23,7 @@
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QGridLayout>
 #include <QLabel>

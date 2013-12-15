@@ -21,7 +21,7 @@
 #include <KConfigGroup>
 #include <KDebug>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDir>
 

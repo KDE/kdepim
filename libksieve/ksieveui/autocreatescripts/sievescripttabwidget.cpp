@@ -19,7 +19,7 @@
 #include "sievewidgetpageabstract.h"
 
 #include <KMenu>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIcon>
 
 #include <QTabBar>

@@ -19,7 +19,7 @@
 #include "pimsettingexporter/utils.h"
 #include "pimcommon/util/pimutil.h"
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KZip>
 #include <KMessageBox>
 

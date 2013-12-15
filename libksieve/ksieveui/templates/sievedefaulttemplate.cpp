@@ -16,9 +16,9 @@
 */
 
 #include "sievedefaulttemplate.h"
-#include "vacation/vacation.h"
+#include "vacation/vacationutils.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplates()
 {
@@ -87,7 +87,7 @@ QList<PimCommon::defaultTemplate> KSieveUi::SieveDefaultTemplate::defaultTemplat
     tmp.text = QString::fromLatin1("require \"vacation\";\n\n"
                                    "if header :contains \"X-Spam-Flag\" \"YES\" { keep; stop; }\n"
                                    "vacation :addresses [ \"me@example.net\", \"other@example.net\" ] :days 7 text: \n%1"
-                                   "\n.\n;\n").arg(Vacation::defaultMessageText());
+                                   "\n.\n;\n").arg(VacationUtils::defaultMessageText());
     lst << tmp;
 
 
