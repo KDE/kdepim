@@ -25,7 +25,7 @@
 
 #include <QWidget>
 
-using namespace KMail;
+using namespace KSieveUi;
 
 VacationManager::VacationManager(QWidget *parent)
     : QObject(parent),

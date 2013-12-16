@@ -19,15 +19,16 @@
 #define VACATIONMANAGER_H
 
 #include <QObject>
+#include "ksieveui_export.h"
+
 #include <QPointer>
 
+
+class QWidget;
 namespace KSieveUi {
 class MultiImapVacationManager;
 class MultiImapVacationDialog;
-}
-class QWidget;
-namespace KMail {
-class VacationManager : public QObject
+class KSIEVEUI_EXPORT VacationManager : public QObject
 {
     Q_OBJECT
 public:
