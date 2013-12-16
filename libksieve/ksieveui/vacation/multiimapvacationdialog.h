@@ -29,7 +29,7 @@ class KSIEVEUI_EXPORT MultiImapVacationDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit MultiImapVacationDialog(const QString &caption, QWidget *parent=0);
+    explicit MultiImapVacationDialog(QWidget *parent=0);
     ~MultiImapVacationDialog();
 
 private slots:

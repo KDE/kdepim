@@ -34,10 +34,10 @@
 
 
 using namespace KSieveUi;
-MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget *parent)
+MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
     : KDialog(parent)
 {
-    setCaption( caption );
+    setCaption( i18n("Configure \"Out of Office\" Replies") );
 
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
 
