@@ -40,6 +40,7 @@ VacationCheckJob::~VacationCheckJob()
 
 void VacationCheckJob::slotGetResult(KManageSieve::SieveJob */*job*/, bool success, const QString &/*script*/, bool active)
 {
+    mSieveJob = 0;
     if ( !success )
         active = false; // default to inactive
     emit scriptActive( active, mServerName );
