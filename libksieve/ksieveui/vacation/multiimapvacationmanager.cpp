@@ -66,14 +66,16 @@ void MultiImapVacationManager::slotScriptActive(bool active, const QString &serv
     --mNumberOfJobs;
     Q_EMIT scriptActive(active, serverName);
 
-    if (!mQuestionAsked) {
-        mQuestionAsked = true;
-        if ( KMessageBox::questionYesNo( 0, i18n( "There is still an active out-of-office reply configured.\n"
-                                                  "Do you want to edit it?"), i18n("Out-of-office reply still active"),
-                                         KGuiItem( i18n( "Edit"), QLatin1String("document-properties") ),
-                                         KGuiItem( i18n("Ignore"), QLatin1String("dialog-cancel") ) )
-             == KMessageBox::Yes ) {
-            Q_EMIT requestEditVacation();
+    if (active) {
+        if (!mQuestionAsked) {
+            mQuestionAsked = true;
+            if ( KMessageBox::questionYesNo( 0, i18n( "There is still an active out-of-office reply configured.\n"
+                                                      "Do you want to edit it?"), i18n("Out-of-office reply still active"),
+                                             KGuiItem( i18n( "Edit"), QLatin1String("document-properties") ),
+                                             KGuiItem( i18n("Ignore"), QLatin1String("dialog-cancel") ) )
+                 == KMessageBox::Yes ) {
+                Q_EMIT requestEditVacation();
+            }
         }
     }
 
