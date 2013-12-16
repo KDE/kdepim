@@ -58,6 +58,8 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     connect(mStorageManager, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
     connect(mStorageManager, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
     connect(mStorageManager, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
+    connect(mStorageManager, SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
+    connect(mStorageManager, SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
     bar->addAction(QLatin1String("Settings..."), this, SLOT(slotSettings()));
@@ -70,6 +72,16 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     mEdit->setReadOnly(true);
     lay->addWidget(mEdit);
     setLayout(lay);
+}
+
+void StorageServiceTestWidget::slotAuthentificationFailed(const QString &serviceName, const QString &error)
+{
+    mEdit->insertPlainText(QString::fromLatin1("authentification failed service name: %1 , error :%2\n").arg(serviceName).arg(error));
+}
+
+void StorageServiceTestWidget::slotAuthentificationDone(const QString &serviceName)
+{
+    mEdit->insertPlainText(QString::fromLatin1("authentification done service name: %1\n").arg(serviceName));
 }
 
 void StorageServiceTestWidget::slotShareLinkDone(const QString &serviceName, const QString &link)
