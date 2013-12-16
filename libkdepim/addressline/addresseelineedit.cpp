@@ -224,8 +224,6 @@ class AddresseeLineEdit::Private
         m_searchExtended( false ),
         m_useSemicolonAsSeparator( false )
     {
-        m_delayedQueryTimer.setSingleShot(true);
-        connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
     }
 
     void init();
@@ -247,7 +245,6 @@ class AddresseeLineEdit::Private
     void slotEditCompletionOrder();
     void slotUserCancelled( const QString & );
     void searchInBaloo();
-    void slotTriggerDelayedQueries();
     static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
@@ -260,7 +257,6 @@ class AddresseeLineEdit::Private
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
     bool m_useSemicolonAsSeparator;
-    QTimer m_delayedQueryTimer;
 };
 
 void AddresseeLineEdit::Private::init()
@@ -544,22 +540,12 @@ void AddresseeLineEdit::Private::updateSearchString()
   }
 }
 
-void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
+void AddresseeLineEdit::Private::startSearches()
 {
     if (m_searchString.isEmpty())
         return;
 
     searchInBaloo();
-}
-
-void AddresseeLineEdit::Private::startSearches()
-{
-    // vHanda FIXME: We're now always using Baloo?
-    // if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-    if ( true) {
-        if (!m_delayedQueryTimer.isActive())
-            m_delayedQueryTimer.start(500);
-    }
 }
 
 void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
