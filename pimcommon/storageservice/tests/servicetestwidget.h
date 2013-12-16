@@ -44,14 +44,14 @@ private Q_SLOTS:
     void slotActionFailed(const QString &serviceName, const QString &error);
     void slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void slotShareLinkDone(const QString &serviceName, const QString &shareLink);
-    void slotAuthentificationDone(const QString &serviceName);
-    void slotAuthentificationFailed(const QString &serviceName, const QString &errorMessage);
+    void slotAuthenticationDone(const QString &serviceName);
+    void slotAuthenticationFailed(const QString &serviceName, const QString &errorMessage);
     void slotCreateFolderDone(const QString &serviceName, const QString &folderName);
     void slotUploadFileDone(const QString &serviceName, const QString &fileName);
     void slotListFolderDone(const QString &serviceName, const QStringList &listFolder);
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info);
     void slotUploadFile();
-    void slotAuthentification();
+    void slotAuthentication();
 private:
     void connectStorageService();
     PimCommon::StorageServiceAbstract *mStorageService;

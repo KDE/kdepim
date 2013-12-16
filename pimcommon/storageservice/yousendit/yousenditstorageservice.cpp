@@ -52,7 +52,7 @@ void YouSendItStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void YouSendItStorageService::authentification()
+void YouSendItStorageService::authentication()
 {
     YouSendItJob *job = new YouSendItJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
@@ -66,7 +66,7 @@ void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessag
     mPassword.clear();
     mToken.clear();
     qDebug()<<" void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessage)"<<errorMessage;
-    Q_EMIT authentificationFailed(serviceName(), errorMessage);
+    Q_EMIT authenticationFailed(serviceName(), errorMessage);
 }
 
 
@@ -83,13 +83,13 @@ qDebug()<<"slotAuthorizationDone ";
     grp.readEntry("Token", mToken);
     grp.sync();
     KGlobal::config()->sync();
-    Q_EMIT authentificationDone(serviceName());
+    Q_EMIT authenticationDone(serviceName());
 }
 
 void YouSendItStorageService::listFolder()
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -102,7 +102,7 @@ void YouSendItStorageService::listFolder()
 void YouSendItStorageService::createFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -115,7 +115,7 @@ void YouSendItStorageService::createFolder(const QString &folder)
 void YouSendItStorageService::accountInfo()
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -133,7 +133,7 @@ QString YouSendItStorageService::name()
 void YouSendItStorageService::uploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -167,7 +167,7 @@ QString YouSendItStorageService::iconName()
 void YouSendItStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);

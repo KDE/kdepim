@@ -134,8 +134,8 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Box);
         }
         createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
-        connect(i.value(),SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
-        connect(i.value(),SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
+        connect(i.value(),SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+        connect(i.value(),SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
     }
 }
 
@@ -212,16 +212,16 @@ void StorageServiceSettingsWidget::slotAddService()
         if (storage) {
             PimCommon::StorageListWidgetItem *item = createItem(serviceName, service, type, storage->icon());
             item->startAnimation();
-            connect(storage,SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
-            connect(storage,SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
-            storage->authentification();
+            connect(storage,SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+            connect(storage,SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+            storage->authentication();
             mListStorageService.insert(service, storage);
         }
     }
     delete dlg;
 }
 
-void StorageServiceSettingsWidget::slotAuthentificationFailed(const QString &serviceName, const QString &error)
+void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
 {
     for (int i=0; i <mListService->count(); ++i) {
         if (mListService->item(i)->data(Name).toString() == serviceName) {
@@ -233,7 +233,7 @@ void StorageServiceSettingsWidget::slotAuthentificationFailed(const QString &ser
     KMessageBox::error(this, error, i18n("Authentication Failed"));
 }
 
-void StorageServiceSettingsWidget::slotAuthentificationDone(const QString &serviceName)
+void StorageServiceSettingsWidget::slotAuthenticationDone(const QString &serviceName)
 {
     for (int i=0; i <mListService->count(); ++i) {
         if (mListService->item(i)->data(Name).toString() == serviceName) {
@@ -295,7 +295,7 @@ void StorageServiceSettingsWidget::slotModifyService()
         const QString serviceName = mListService->currentItem()->data(Name).toString();
         if (mListStorageService.contains(serviceName)) {
             StorageServiceAbstract *storage = mListStorageService.value(serviceName);
-            storage->authentification();
+            storage->authentication();
         }
     }
 }

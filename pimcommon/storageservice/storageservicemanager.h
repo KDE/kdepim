@@ -60,8 +60,8 @@ Q_SIGNALS:
     void uploadFileDone(const QString &serviceName, const QString &filename);
     void uploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
-    void authentificationDone(const QString &serviceName);
-    void authentificationFailed(const QString &serviceName, const QString &error);
+    void authenticationDone(const QString &serviceName);
+    void authenticationFailed(const QString &serviceName, const QString &error);
     void actionFailed(const QString &serviceName, const QString &error);
 
 private Q_SLOTS:

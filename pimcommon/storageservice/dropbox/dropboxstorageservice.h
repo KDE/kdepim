@@ -40,7 +40,7 @@ public:
     void accountInfo();
     void createFolder(const QString &folder);
     void removeConfig();
-    void authentification();
+    void authentication();
     void shareLink(const QString &root, const QString &path);
     QString storageServiceName() const;
     void downloadFile();

@@ -42,7 +42,7 @@ public:
     void createFolder(const QString &folder);
     void listFolder();
     void removeConfig();
-    void authentification();
+    void authentication();
     void shareLink(const QString &root, const QString &path);
     void downloadFile();
 

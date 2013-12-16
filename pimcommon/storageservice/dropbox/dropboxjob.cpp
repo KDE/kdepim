@@ -253,10 +253,10 @@ void DropBoxJob::parseRequestToken(const QString &result)
     } else {
         qDebug()<<" data is not good: "<<result;
     }
-    doAuthentification();
+    doAuthentication();
 }
 
-void DropBoxJob::doAuthentification()
+void DropBoxJob::doAuthentication()
 {
     QUrl url(QLatin1String("https://api.dropbox.com/1/oauth/authorize"));
     url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);

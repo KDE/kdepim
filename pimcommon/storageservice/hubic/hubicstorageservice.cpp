@@ -52,7 +52,7 @@ void HubicStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void HubicStorageService::authentification()
+void HubicStorageService::authentication()
 {
     HubicJob *job = new HubicJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
@@ -63,7 +63,7 @@ void HubicStorageService::authentification()
 void HubicStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mRefreshToken.clear();
-    Q_EMIT authentificationFailed(serviceName(), errorMessage);
+    Q_EMIT authenticationFailed(serviceName(), errorMessage);
 }
 
 void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime)
@@ -75,13 +75,13 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
     grp.sync();
-    Q_EMIT authentificationDone(serviceName());
+    Q_EMIT authenticationDone(serviceName());
 }
 
 void HubicStorageService::listFolder()
 {
     if (mRefreshToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -94,7 +94,7 @@ void HubicStorageService::listFolder()
 void HubicStorageService::createFolder(const QString &folder)
 {
     if (mRefreshToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -107,7 +107,7 @@ void HubicStorageService::createFolder(const QString &folder)
 void HubicStorageService::accountInfo()
 {
     if (mRefreshToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -125,7 +125,7 @@ QString HubicStorageService::name()
 void HubicStorageService::uploadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -159,7 +159,7 @@ QString HubicStorageService::iconName()
 void HubicStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mRefreshToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
