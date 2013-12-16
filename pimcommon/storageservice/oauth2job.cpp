@@ -132,6 +132,17 @@ void OAuth2Job::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
     mError = false;
+    QUrl url;
+    url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    qDebug()<<" request "<<request.rawHeaderList()<<" reqyest "<<request.url();
+    QUrl postData;
+    //TODO
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+
     //TODO
     qDebug()<<" not implemented ";
     deleteLater();
@@ -175,8 +186,21 @@ void OAuth2Job::createFolder(const QString &foldername)
     qDebug()<<" request "<<request.rawHeaderList()<<" reqyest "<<request.url();
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), foldername);
-    postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\"id\":\"0\"}"));
+    postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\'id\': \'0\'}"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+void OAuth2Job::shareLink(const QString &fileId)
+{
+    mActionType = ShareLink;
+    mError = false;
+    QUrl url;
+    url.setUrl(mApiUrl + mFileInfoPath + fileId);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -184,6 +208,15 @@ void OAuth2Job::shareLink(const QString &root, const QString &path)
 {
     mActionType = ShareLink;
     mError = false;
+    QUrl url;
+    QString fileId; //TODO
+    url.setUrl(mApiUrl + mFileInfoPath + fileId);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+
     //TODO
     qDebug()<<" not implemented ";
     deleteLater();

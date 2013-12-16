@@ -35,6 +35,7 @@ BoxJob::BoxJob(QObject *parent)
     mAuthorizePath = QLatin1String("/api/oauth2/authorize/");
     mPathToken = QLatin1String("/api/oauth2/token/");
     mFolderInfoPath = QLatin1String("/2.0/folders/");
+    mFileInfoPath = QLatin1String("/2.0/files/");
     mCurrentAccountInfoPath = QLatin1String("/2.0/users/me");
 }
 
