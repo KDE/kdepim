@@ -86,6 +86,7 @@ VacationPageWidget::~VacationPageWidget()
 void VacationPageWidget::setServerUrl(const KUrl &url)
 {
     mUrl = url;
+    mVacationEditWidget->setEnabled(false);
     mSieveJob = KManageSieve::SieveJob::get( url );
     connect( mSieveJob, SIGNAL(gotScript(KManageSieve::SieveJob*,bool,QString,bool)),
              SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
@@ -109,7 +110,7 @@ void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool succe
         mStackWidget->setCurrentIndex(ScriptNotSupported);
         return;
     }
-
+    mVacationEditWidget->setEnabled(true);
     QString messageText = VacationUtils::defaultMessageText();
     int notificationInterval = VacationUtils::defaultNotificationInterval();
     QStringList aliases = VacationUtils::defaultMailAliases();
@@ -154,5 +155,6 @@ void VacationPageWidget::writeScript()
 
 void VacationPageWidget::setDefault()
 {
-    mVacationEditWidget->setDefault();
+    if (mVacationEditWidget->isEnabled())
+        mVacationEditWidget->setDefault();
 }
