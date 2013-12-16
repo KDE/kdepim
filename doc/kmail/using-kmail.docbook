@@ -58,7 +58,7 @@ entire left side of the screen but is able to show more mailboxes. You can toggl
 between these two views under <guilabel>Appearance</guilabel>/<guilabel>Layout</guilabel>
 in the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
 &kmail;...</guimenuitem></menuchoice> dialog. The top section of the folder pane contains quick links
-to your favorite folders. Add folders here through the &RMB; context menu <guimenuitem>Add to Favorite Folders</guimenuitem>
+to your favorite folders. Add folders here through the &RMB; context menu <guimenuitem>Add to Favorite Folders</guimenuitem>.
 Please see the <link linkend="folders">Folders Section</link> for detailed information about how to use folders.</para>
 </listitem>
 </varlistentry>
@@ -86,17 +86,18 @@ will select that message and display it in the Message pane; you can also select
 more than one message by holding down the &Ctrl; key when clicking on messages.
 Change the view of your message list by selecting <menuchoice><guimenu>View</guimenu><guimenuitem>Message List</guimenuitem>
 <guimenuitem>Theme</guimenuitem></menuchoice>. You have several options here.
+</para>
 <itemizedlist>
   <listitem><para><guilabel>Classic</guilabel> A simple, backward compatible, single row with clickable sort columns.</para></listitem>
   <listitem><para><guilabel>Fancy</guilabel> A fancy multi-line, multi-item with status icons, no sort columns.</para></listitem>
   <listitem><para><guilabel>Fancy with clickable status</guilabel> A fancy multi-line, multi-item, status icons and clickable sort icons.</para></listitem>
   <listitem><para><guilabel>Configure...</guilabel> Allows you to customize your own Message List Theme &eg; add or remove columns from the clickable sort bar.</para></listitem>
 </itemizedlist>
+<para>
 If you have chosen a theme with a clickable status, you may sort the messages by clicking on the column that you wish to sort;
 if you click on the same column more than once, sort order will toggle between ascending/descending and some alternative sorting criteria will become
 available (like sorting by Status when you click on the header of the Subject column). Clicking the &RMB; on the list header shows a pop up menu,
-which allows you to show or hide several columns in the list. You can customize the columns visible on the sort bar, see <link linkend="customize-messagelist-theme">Customize
-Configure Appearance Message List</link> for details.
+which allows you to show or hide several columns in the list. You can customize the columns visible on the sort bar, see <link linkend="customize-messagelist-theme">Configure Appearance Message List</link> for details.
 </para>
 </listitem>
 </varlistentry>

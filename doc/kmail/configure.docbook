@@ -848,8 +848,8 @@ the threads that have been active today.</para></listitem>
     </mediaobject>
   </screenshot>
 <para>To create a custom aggregation theme, click the <guibutton>Configure...</guibutton> button. Select an existing aggregation similar to what you want to
-  change it to and click the <guibutton>Clone Aggregation</guibutton>, if none are similar click the <guibutton>New Aggregation</guibutton> button. The <guilabel>
-  General</guilabel> tab allows you to change the <guilabel>Name:</guilabel> and <guilabel>Description:</guilabel>. The <guilabel>Groups and Threading</guilabel> tab
+  change it to and click the <guibutton>Clone Aggregation</guibutton>, if none are similar click the <guibutton>New Aggregation</guibutton> button. The <guilabel>General</guilabel>
+  tab allows you to change the <guilabel>Name:</guilabel> and <guilabel>Description:</guilabel>. The <guilabel>Groups &amp; Threading</guilabel> tab
   allows you to configure several elements to customize your aggregation.</para>
 <itemizedlist>
 <listitem><para>
@@ -859,7 +859,7 @@ the threads that have been active today.</para></listitem>
 <guilabel>Group expand policy:</guilabel> Allows you to set whether &kmail; will automatically expand grouped emails.
 </para></listitem>
 <listitem><para>
-<guilabel>Threading:</guilabel> Allows you to change if &kmail; will include references, references and subject in determining perfect threading. You can also turn off threading all together.
+<guilabel>Threading:</guilabel> Allows you to change if &kmail; will include references and subject in determining perfect threading. You can also turn off threading all together.
 </para></listitem>
 <listitem><para>
 <guilabel>Thread leader:</guilabel> Allows you to change the leader of the thread between most recent message or topmost.
@@ -915,7 +915,7 @@ the threads that have been active today.</para></listitem>
   change it to and click the <guibutton>Clone Theme</guibutton>, if none are similar click the <guibutton>New Theme</guibutton> button. The <guilabel>
   General</guilabel> tab allows you to change the <guilabel>Name:</guilabel> and <guilabel>Description:</guilabel>. </para>
 <para>The <guilabel>Appearance</guilabel> tab allows you to configure visible columns and status items. To add a column, right click the column bar and select <guilabel>Add Column</guilabel>.
- Name the column and select what the column will represent from the <guilabel>Header click sorts messages:</guilabel>drop down list.
+ Name the column and select what the column will represent from the <guilabel>Header click sorts messages:</guilabel> drop down list.
  By default <guilabel>Visible by default</guilabel> is checked, uncheck it if you only want the column to be available on the &RMB; add or remove menu for the clickable sort bar.
  Then drag the appropriate label from the <guilabel>Content Items</guilabel> to the column view box under the column bar, &eg; if you chose to add a size column you would drag the Size label to
  underneath the Size column. Continue to do this until you have all the columns you desire. You can change the font and color of column items through the view area &RMB; menu. Move, delete and
@@ -927,7 +927,7 @@ the threads that have been active today.</para></listitem>
 </variablelist>
 <para>In the <guilabel>Date Display</guilabel> section you can choose between several date formats. The <guilabel>Localized Format</guilabel>
  is the one you can specify under <guilabel>Country/Region &amp; Language</guilabel> in the &systemsettings;. <guilabel>Smart format</guilabel> will show
- today, yesterday &etc;.The <guilabel>Custom</guilabel> format you can get a description of the possible values by clicking on
+ today, yesterday &etc; The <guilabel>Custom</guilabel> format you can get a description of the possible values by clicking on
  <guilabel>Custom format information</guilabel> option.</para>
 </sect2>
 
