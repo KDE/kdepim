@@ -92,6 +92,7 @@ void StorageServiceManager::slotShareFile()
             const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
             if (!fileName.isEmpty()) {
                 service->uploadFile(fileName);
+                connect(service,SIGNAL(actionFailed(QString,QString)), this, SIGNAL(actionFailed(QString,QString)), Qt::UniqueConnection);
                 connect(service,SIGNAL(authentificationDone(QString)), this, SIGNAL(authentificationDone(QString)), Qt::UniqueConnection);
                 connect(service,SIGNAL(authentificationFailed(QString,QString)), this, SIGNAL(authentificationFailed(QString,QString)), Qt::UniqueConnection);
                 connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);

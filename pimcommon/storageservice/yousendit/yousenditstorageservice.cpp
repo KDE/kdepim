@@ -23,7 +23,7 @@
 #include <KGlobal>
 #include <KConfigGroup>
 
-
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -65,6 +65,7 @@ void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessag
     mUsername.clear();
     mPassword.clear();
     mToken.clear();
+    qDebug()<<" void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessage)"<<errorMessage;
     Q_EMIT authentificationFailed(serviceName(), errorMessage);
 }
 
@@ -74,7 +75,7 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     mUsername = username;
     mPassword = password;
     mToken = token;
-
+qDebug()<<"slotAuthorizationDone ";
     KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
     grp.readEntry("Username", mUsername);
     //TODO store in kwallet ?

@@ -85,6 +85,7 @@ void YouSendItJob::requestTokenAccess()
 
 void YouSendItJob::uploadFile(const QString &filename)
 {
+    //FIXME filename
     mActionType = UploadFiles;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));

@@ -62,6 +62,7 @@ Q_SIGNALS:
     void shareLinkDone(const QString &serviceName, const QString &link);
     void authentificationDone(const QString &serviceName);
     void authentificationFailed(const QString &serviceName, const QString &error);
+    void actionFailed(const QString &serviceName, const QString &error);
 
 private Q_SLOTS:
     void slotShareFile();

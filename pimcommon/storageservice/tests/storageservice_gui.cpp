@@ -60,6 +60,7 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     connect(mStorageManager, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
     connect(mStorageManager, SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
     connect(mStorageManager, SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
+    connect(mStorageManager, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
     bar->addAction(QLatin1String("Settings..."), this, SLOT(slotSettings()));
@@ -72,6 +73,11 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     mEdit->setReadOnly(true);
     lay->addWidget(mEdit);
     setLayout(lay);
+}
+
+void StorageServiceTestWidget::slotActionFailed(const QString &serviceName, const QString &error)
+{
+    mEdit->insertPlainText(QString::fromLatin1("action failed service name: %1 , error :%2\n").arg(serviceName).arg(error));
 }
 
 void StorageServiceTestWidget::slotAuthentificationFailed(const QString &serviceName, const QString &error)

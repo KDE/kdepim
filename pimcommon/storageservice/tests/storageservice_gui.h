@@ -54,6 +54,7 @@ private slots:
     void slotShareLinkDone(const QString &serviceName, const QString &link);
     void slotAuthentificationFailed(const QString &serviceName, const QString &error);
     void slotAuthentificationDone(const QString &serviceName);
+    void slotActionFailed(const QString &serviceName, const QString &error);
 private:
     QTextEdit *mEdit;
     PimCommon::StorageServiceManager *mStorageManager;
