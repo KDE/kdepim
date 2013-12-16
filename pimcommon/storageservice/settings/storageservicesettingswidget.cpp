@@ -210,12 +210,13 @@ void StorageServiceSettingsWidget::slotAddService()
             break;
         }
         if (storage) {
+            mListStorageService.insert(service, storage);
             PimCommon::StorageListWidgetItem *item = createItem(serviceName, service, type, storage->icon());
             item->startAnimation();
             connect(storage,SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
             connect(storage,SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
             storage->authentication();
-            mListStorageService.insert(service, storage);
+
         }
     }
     delete dlg;
@@ -223,10 +224,16 @@ void StorageServiceSettingsWidget::slotAddService()
 
 void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
 {
+    PimCommon::StorageListWidgetItem *item = 0;
     for (int i=0; i <mListService->count(); ++i) {
         if (mListService->item(i)->data(Name).toString() == serviceName) {
-            PimCommon::StorageListWidgetItem *item = static_cast<PimCommon::StorageListWidgetItem*>(mListService->item(i));
+            item = static_cast<PimCommon::StorageListWidgetItem*>(mListService->item(i));
             item->stopAnimation();
+            if (mListStorageService.contains(serviceName)) {
+                mListStorageService.value(serviceName)->removeConfig();
+            }
+            mListStorageService.remove(serviceName);
+            delete item;
             break;
         }
     }
