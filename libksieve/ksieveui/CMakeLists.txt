@@ -33,6 +33,7 @@ set(ksieveui_vacation_LIB_SRCS
   vacation/vacationutils.cpp
   vacation/vacationcreatescriptjob.cpp
   vacation/vacationcheckjob.cpp
+  vacation/multiimapvacationmanager.cpp
 )
 
 set(ksieveui_editor_LIB_SRCS

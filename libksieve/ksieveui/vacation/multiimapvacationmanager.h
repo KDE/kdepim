@@ -15,35 +15,34 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VACATIONCHECKJOB_H
-#define VACATIONCHECKJOB_H
+#ifndef MULTIIMAPVACATIONMANAGER_H
+#define MULTIIMAPVACATIONMANAGER_H
 
 #include <QObject>
-#include <KUrl>
 
-namespace KManageSieve {
-class SieveJob;
-}
+#include "ksieveui_export.h"
 
 namespace KSieveUi {
-class VacationCheckJob : public QObject
+class KSIEVEUI_EXPORT MultiImapVacationManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit VacationCheckJob(const KUrl &url, const QString &serverName, QObject *parent=0);
-    ~VacationCheckJob();
+    explicit MultiImapVacationManager(QObject *parent=0);
+    ~MultiImapVacationManager();
+
+    void checkVacation();
 
 Q_SIGNALS:
     void scriptActive(bool active, const QString &serverName);
+    void requestEditVacation();
 
 private slots:
-    void slotGetResult(KManageSieve::SieveJob *job, bool success, const QString &script, bool active);
+    void slotScriptActive(bool active, const QString &serverName);
 
 private:
-    QString mServerName;
-    KUrl mUrl;
-    KManageSieve::SieveJob * mSieveJob;
+    int mNumberOfJobs;
+    bool mQuestionAsked;
+    bool mCheckInProgress;
 };
 }
-
-#endif // VACATIONCHECKJOB_H
+#endif // MULTIIMAPVACATIONMANAGER_H
