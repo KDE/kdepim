@@ -22,7 +22,7 @@
 #include <KApplication>
 #include <KDebug>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMimeType>
 
 #include <QPixmap>

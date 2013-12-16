@@ -48,7 +48,7 @@
 #include <KColorDialog>
 #include <KComboBox>
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KFontDialog>
 #include <KMenu>
 #include <KIconLoader>

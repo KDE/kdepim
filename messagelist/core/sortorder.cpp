@@ -21,7 +21,7 @@
 
 #include "messagelistutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QMetaEnum>
 

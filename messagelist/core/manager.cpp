@@ -47,7 +47,7 @@
 #include <KIconLoader>
 #include <KGlobalSettings>
 #include <KApplication>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 
 using namespace MessageList::Core;

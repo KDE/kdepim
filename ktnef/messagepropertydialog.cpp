@@ -19,7 +19,7 @@
 
 #include <KTNEF/KTNEFMessage>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardGuiItem>
 
 #include <QTreeWidget>

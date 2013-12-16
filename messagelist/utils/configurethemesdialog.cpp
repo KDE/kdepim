@@ -31,7 +31,7 @@
 #include <QFrame>
 #include <QHash>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIconLoader>
 #include <KMessageBox>
 #include <KFileDialog>
