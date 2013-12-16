@@ -79,7 +79,7 @@ void OAuth2Job::requestTokenAccess()
 void OAuth2Job::slotRedirect(const QUrl &url)
 {
     if (url != mAuthUrl) {
-        qDebug()<<" Redirect !"<<url;
+        //qDebug()<<" Redirect !"<<url;
         mAuthDialog->accept();
         parseRedirectUrl(url);
     }
@@ -88,7 +88,7 @@ void OAuth2Job::slotRedirect(const QUrl &url)
 void OAuth2Job::parseRedirectUrl(const QUrl &url)
 {
     const QList<QPair<QString, QString> > listQuery = url.queryItems();
-    qDebug()<< "listQuery "<<listQuery;
+    //qDebug()<< "listQuery "<<listQuery;
 
     QString authorizeCode;
     QString errorStr;
@@ -167,7 +167,7 @@ void OAuth2Job::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
     mError = false;
-    QNetworkRequest request(QUrl(/*mServiceUrl + mPathToken*/QLatin1String("https://api.box.com/2.0/folders")));
+    QNetworkRequest request(QUrl(mApiUrl + QLatin1String("folders")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QUrl postData;
@@ -214,21 +214,9 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case UploadFiles:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case CreateFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case AccountInfo:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case ListFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case CreateServiceFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();

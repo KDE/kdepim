@@ -216,7 +216,6 @@ void StorageServiceSettingsWidget::slotAddService()
             connect(storage,SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
             connect(storage,SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
             storage->authentication();
-
         }
     }
     delete dlg;
