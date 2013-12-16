@@ -31,7 +31,7 @@
 #include "next/incidencesearchjob.h"
 
 #include <KFileDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KMimeType>
 #include <KRun>

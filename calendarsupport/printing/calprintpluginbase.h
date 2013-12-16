@@ -29,6 +29,7 @@
 #include "printplugin.h"
 
 #include <Akonadi/Calendar/ETMCalendar>
+#include <KCalendarSystem>
 
 #include <KCalCore/Event>
 #include <KCalCore/Journal>

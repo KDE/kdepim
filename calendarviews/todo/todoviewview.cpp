@@ -25,7 +25,7 @@
 
 #include "todoviewview.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 
 #include <QAction>

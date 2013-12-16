@@ -38,7 +38,7 @@
 #include <KCalCore/CalFilter>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 

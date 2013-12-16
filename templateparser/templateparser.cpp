@@ -37,7 +37,7 @@
 #include <KCalendarSystem>
 #include <KCharsets>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KProcess>
 #include <KShell>

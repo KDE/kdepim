@@ -21,7 +21,7 @@
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 static const char description[] = I18N_NOOP( "A test app for embedding calendarviews" );
 

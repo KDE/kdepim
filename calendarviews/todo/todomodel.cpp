@@ -26,7 +26,7 @@
 
 #include <calendarsupport/utils.h>
 #include <calendarsupport/kcalprefs.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCalCore/Todo>
 #include <KCalCore/Event>
 #include <KCalCore/Attachment>

@@ -37,7 +37,7 @@
 
 #include <KDebug>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KTemporaryFile>
 #include <KIO/NetAccess>

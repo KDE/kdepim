@@ -24,7 +24,7 @@
 #include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QWhatsThis>
