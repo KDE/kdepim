@@ -27,7 +27,7 @@
 #include <calendarsupport/categoryhierarchyreader.h>
 #include <calendarsupport/categoryconfig.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHeaderView>
 #include <QList>

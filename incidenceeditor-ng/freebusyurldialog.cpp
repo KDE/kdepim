@@ -25,7 +25,7 @@
 #include <KCalCore/FreeBusyUrlStore>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QBoxLayout>
 #include <KDebug>
