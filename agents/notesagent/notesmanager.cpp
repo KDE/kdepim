@@ -46,12 +46,6 @@ void NotesManager::clear()
     mListener=0;
 }
 
-void NotesManager::printDebugInfo()
-{
-    //TODO
-}
-
-
 void NotesManager::load(bool forced)
 {
     updateNetworkListener();

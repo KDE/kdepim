@@ -29,8 +29,6 @@ public:
 
     void showConfigureDialog(qlonglong windowId = 0);
 
-    void printDebugInfo();
-
     void setEnableAgent(bool b);
     bool enabledAgent() const;
 

@@ -29,7 +29,6 @@ public:
     explicit NotesManager(QObject *parent=0);
     ~NotesManager();
 
-    void printDebugInfo();
     void load(bool forced=false);
     void stopAll();
     void updateNetworkListener();
