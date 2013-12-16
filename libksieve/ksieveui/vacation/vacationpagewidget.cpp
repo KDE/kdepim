@@ -134,7 +134,7 @@ void VacationPageWidget::slotGetResult( KManageSieve::SieveJob * job, bool succe
     //emit scriptActive( mWasActive, mServerName );
 }
 
-void VacationPageWidget::writeScript()
+KSieveUi::VacationCreateScriptJob *VacationPageWidget::writeScript()
 {
     if (mPageScript == Script) {
         KSieveUi::VacationCreateScriptJob *createJob = new KSieveUi::VacationCreateScriptJob;
@@ -149,8 +149,9 @@ void VacationPageWidget::writeScript()
         createJob->setStatus(active, mWasActive);
         //Q_EMIT scriptActive( active, mServerName);
         createJob->setScript(script);
-        createJob->start();
+        return createJob;
     }
+    return 0;
 }
 
 void VacationPageWidget::setDefault()

@@ -68,6 +68,11 @@ MultiImapVacationDialog::~MultiImapVacationDialog()
     writeConfig();
 }
 
+QList<VacationCreateScriptJob *> MultiImapVacationDialog::listCreateJob() const
+{
+    return mListCreateJob;
+}
+
 void MultiImapVacationDialog::init()
 {
     bool foundOneImap = false;
@@ -122,7 +127,9 @@ void MultiImapVacationDialog::slotOkClicked()
     for (int i=0; i < mTabWidget->count(); ++i) {
         VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(mTabWidget->widget(i));
         if (vacationPage) {
-            vacationPage->writeScript();
+            VacationCreateScriptJob *job = vacationPage->writeScript();
+            if (job)
+                mListCreateJob.append(job);
         }
     }
 }
