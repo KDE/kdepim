@@ -28,10 +28,12 @@
 #include <KIcon>
 
 #include <QTcpServer>
+#include <QTimer>
 
 NotesManager::NotesManager(QObject *parent)
     : QObject(parent),
-      mListener(0)
+      mListener(0),
+      mCheckAlarm(0)
 {
 }
 
@@ -46,9 +48,23 @@ void NotesManager::clear()
     mListener=0;
 }
 
+void NotesManager::slotCheckAlarm()
+{
+    //TODO check alarm
+    //TODO retart it.
+    mCheckAlarm->start();
+}
+
 void NotesManager::load(bool forced)
 {
     updateNetworkListener();
+    if (!mCheckAlarm)
+        mCheckAlarm = new QTimer(this);
+    if (mCheckAlarm->isActive())
+        mCheckAlarm->stop();
+
+    mCheckAlarm->setInterval(1000*60*NoteShared::NoteSharedGlobalConfig::checkInterval());
+    mCheckAlarm->start();
 }
 
 void NotesManager::stopAll()
