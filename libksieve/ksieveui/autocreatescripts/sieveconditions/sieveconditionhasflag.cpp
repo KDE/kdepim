@@ -164,4 +164,10 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
     return true;
 }
 
+QString SieveConditionHasFlag::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
+}
+
+
 

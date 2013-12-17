@@ -41,3 +41,7 @@ QString SieveActionAddFlags::help() const
     return i18n("Addflag is used to add flags to a list of [IMAP] flags.  It doesn't replace any previously set flags.  This means that multiple occurrences of addflag are treated additively.");
 }
 
+QString SieveActionAddFlags::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
+}

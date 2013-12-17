@@ -140,3 +140,9 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
     return true;
 }
 
+
+
+QString KSieveUi::SieveConditionEnvironment::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5183");
+}

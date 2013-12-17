@@ -29,6 +29,7 @@ public:
     static SieveAction* newAction();
     QString flagsCode() const;
     QString help() const;
+    QString href() const;
 };
 }
 #endif // SIEVEACTIONREMOVEFLAGS_H

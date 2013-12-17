@@ -127,3 +127,7 @@ bool SieveConditionCurrentDate::setParamWidgetValue(const QDomElement &element, 
     return true;
 }
 
+QString SieveConditionCurrentDate::href() const
+{
+    return QLatin1String("http://tools.ietf.org/search/rfc5260#page-6");
+}

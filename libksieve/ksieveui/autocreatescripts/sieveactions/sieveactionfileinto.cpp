@@ -165,3 +165,9 @@ QString SieveActionFileInto::help() const
     return helpStr;
 }
 
+
+
+QString KSieveUi::SieveActionFileInto::href() const
+{
+    return QLatin1String("http://tools.ietf.org/search/rfc3028#page-20");
+}
