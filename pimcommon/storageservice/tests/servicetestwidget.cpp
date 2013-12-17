@@ -43,6 +43,7 @@ ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
     bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
     bar->addAction(QLatin1String("Upload File..."), this, SLOT(slotUploadFile()));
+    bar->addAction(QLatin1String("Create Service Folder..."), this, SLOT(slotCreateServiceFolder()));
     lay->addWidget(mEdit);
     setLayout(lay);
 }
@@ -148,3 +149,7 @@ void ServiceTestWidget::slotUploadFile()
     }
 }
 
+void ServiceTestWidget::slotCreateServiceFolder()
+{
+    //TODO
+}

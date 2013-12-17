@@ -54,7 +54,7 @@ StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 
 }
 
-void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item,int)
+void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
 {
     enableButtonOk(item);
 }
