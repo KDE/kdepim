@@ -49,6 +49,7 @@ public:
     virtual QString serverNeedsCapability() const;
 
     virtual QString help() const;
+    virtual QString href() const;
 
     QString comment() const;
 

@@ -22,6 +22,7 @@
 #include "sieveactions/sieveaction.h"
 #include "sieveactions/sieveactionlist.h"
 #include "commonwidgets/sievehelpbutton.h"
+#include "autocreatescriptutil_p.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KPushButton>
@@ -182,7 +183,9 @@ void SieveActionWidget::slotHelp()
     if (index < mActionList.count()) {
         KSieveUi::SieveAction* action = mActionList.at( index );
         const QString help = action->help();
-        QWhatsThis::showText( QCursor::pos(), help, mHelpButton );
+        const QString href = action->href();
+        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+        QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
     }
 }
 

@@ -17,6 +17,7 @@
 
 #include "sieveincludewidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescriptutil_p.h"
 #include "commonwidgets/sievehelpbutton.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
@@ -203,7 +204,9 @@ SieveIncludeWidget::~SieveIncludeWidget()
 void SieveIncludeWidget::slotHelp()
 {
     const QString help = i18n("The \"include\" command takes an optional \"location\" parameter, an optional \":once\" parameter, an optional \":optional\" parameter, and a single string argument representing the name of the script to include for processing at that point.");
-    QWhatsThis::showText( QCursor::pos(), help, mHelpButton );
+    const QString href = QString(); //TODO
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }
 
 void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)

@@ -19,7 +19,7 @@
 
 #include <KLocalizedString>
 #include <KIcon>
-
+#include <KRun>
 #include <QWhatsThisClickedEvent>
 #include <QDebug>
 #include <QWhatsThis>
@@ -43,7 +43,7 @@ bool SieveHelpButton::event(QEvent* event)
     if (event->type() == QEvent::WhatsThisClicked)
     {
         QWhatsThisClickedEvent* clicked = static_cast<QWhatsThisClickedEvent*>(event);
-        qDebug()<<" clicked->href() "<<clicked->href();
+        new KRun( clicked->href(), this );
         QWhatsThis::hideText();
         return true;
     }

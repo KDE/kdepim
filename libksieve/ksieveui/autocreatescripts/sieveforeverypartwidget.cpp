@@ -17,6 +17,7 @@
 
 #include "sieveforeverypartwidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescriptutil_p.h"
 #include "commonwidgets/sievehelpbutton.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
@@ -72,7 +73,9 @@ SieveForEveryPartWidget::~SieveForEveryPartWidget()
 void SieveForEveryPartWidget::slotHelp()
 {
     const QString help = i18n("\"foreverypart\", which is an iterator that walks though every MIME part of a message, including nested parts, depth first, and applies the commands in the specified block to each of them.");
-    QWhatsThis::showText( QCursor::pos(), help, mHelpButton );
+    const QString href = QString(); //TODO
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }
 
 void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requires)
