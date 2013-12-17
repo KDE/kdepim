@@ -243,14 +243,19 @@ void YouSendItJob::parseListFolder(const QString &data)
 {
     QJson::Parser parser;
     bool ok;
-
+    QStringList listFolder;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    //qDebug()<<" info "<<info;
     if (info.contains(QLatin1String("folders"))) {
         QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
-        qDebug()<<" mapFolder "<<mapFolder;
+        QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
+        Q_FOREACH (const QVariant &v, folders) {
+            QVariantMap map = v.toMap();
+            if (map.contains(QLatin1String("name"))) {
+                listFolder.append(map.value(QLatin1String("name")).toString());
+            }
+        }
     }
-    Q_EMIT listFolderDone(QStringList());
+    Q_EMIT listFolderDone(listFolder);
     deleteLater();
 }
 
