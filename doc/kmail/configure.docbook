@@ -34,23 +34,24 @@
 </address></affiliation>
 </author>
 <author>
-  <firstname>Laurent</firstname>
+<firstname>Laurent</firstname>
 <surname>Montel</surname>
 <affiliation><address>
-<email>montel@kde.org</email>
+&Laurent.Montel.mail;
 </address></affiliation>
 </author>
- <author>
-  <firstname>Scarlett</firstname>
-  <surname>Clark</surname>
-  <affiliation><address>
-    <email>scarlett@scarlettgatelyclark.com</email>
-  </address></affiliation>
+<author>
+<firstname>Scarlett</firstname>
+<surname>Clark</surname>
+<affiliation><address>
+&Scarlett.Clark.mail;
+</address></affiliation>
+
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2013-04-30</date>
-<releaseinfo>2.1.96 (&kde; 4.11)</releaseinfo>
+<date>2013-12-14</date>
+<releaseinfo>(&kde; 4.12)</releaseinfo>
 </chapterinfo>
 
 <title>Configure &kmail;</title>
@@ -719,7 +720,7 @@ are available via the <guibutton>Other Actions</guibutton> button.</para>
 <para>This section allows you to change the type, size and character set of the
 display fonts. <guilabel>Message Body</guilabel> sets the font for
 the reader pane, <guilabel>Composer</guilabel> sets the font for
-writing messages in the composer window.<!-- fixme in kmail: better wording? -->
+the body of your messages written in &kmail; Composer.
 </para>
 
 </sect2>
@@ -729,13 +730,15 @@ writing messages in the composer window.<!-- fixme in kmail: better wording? -->
 
 <para>This section allows you to change the color of the text by double clicking 
 on an item in the listbox.
-<guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
-quoted more than three times will appear in color. Note that the
+<guilabel>Recycle colors on deep quoting</guilabel> will restart the quote coloring at the first level
+after the third level of quoting has been reached. Note that the
 <guilabel>Quoted text</guilabel> colors only work in the message reader, not in
 the composer. If you want folders which are close to their quota
-(space allotment, usually used on IMAP servers) to be displayed in a different color,
+(space allotment, usually used on &imap; servers) to be displayed in a different color,
 you can specify a percentage value as a threshold for this. The color to be used
-can be configured along with the other custom colors.<!-- TODO --></para>
+can be configured along with the other custom colors.
+
+</para>
 
 </sect2>
 
@@ -782,111 +785,150 @@ the messages in the list.</para>
 Properties</guilabel> dialog for each folder individually.</para>
 <para>Using the <guibutton>Configure</guibutton> button opens a window to customize the default
 aggregation or theme to your needs and allows you to add your own.</para>
-<para>A brief overview of the predefined aggregations and themes:</para>
+<para>Available aggregations and themes:</para>
 <variablelist>
 <varlistentry>
-<term>Aggregation</term>
+<term>Default aggregation</term>
 <listitem>
-
 <variablelist>
 <varlistentry>
 <term>Senders/Receivers, Flat</term>
 <listitem><para>
 This view groups the messages by senders or receivers (depending on the folder type). 
-Messages are not threaded.</para>
-</listitem>
+Messages are not threaded.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term>Activity by Date, Flat</term>
 <listitem><para>This view uses day-by-day groups. Messages are not threaded. So for example, 
-in <quote>Today</quote> you will simply find all the messages arrived today.
-</para>
-</listitem>
+in <quote>Today</quote> you will simply find all the messages arrived today.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term>Activity by Date, Threaded</term>
 <listitem><para>This view uses day-by-day groups. Messages are threaded. So for example, in 
-<quote>Today</quote> you will find all the messages arrived today and all the threads.
-</para>
-</listitem>
+<quote>Today</quote> you will find all the messages arrived today and all the threads.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term>Current Activity, Flat</term>
 <listitem><para>This view uses smart date range groups. Messages are not threaded. So for 
-example, in <quote>Today</quote> you will simply find all the messages arrived today.
-</para>
-</listitem>
+example, in <quote>Today</quote> you will simply find all the messages arrived today.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term>Current Activity, Threaded </term>
 <listitem><para>This view uses smart date range groups. Messages are threaded. So for 
 example, in <quote>Today</quote> you will find all the messages arrived today and all 
-the threads that have been active today.
-</para>
-</listitem>
+the threads that have been active today.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term>Thread Starters</term>
-<listitem><para>This view groups the messages in threads and then groups the threads by the 
-starting user.
-</para>
-</listitem>
+<listitem><para>This view groups the messages in threads and then groups the threads by the starting user.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term>Flat Date View</term>
-<listitem><para>This is a plain and old list of messages sorted by date: no groups and no 
-threading.
-</para>
-</listitem>
+<listitem><para>This is a plain and old list of messages sorted by date: no groups and no threading.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term>Standard Mailing List</term>
-<listitem><para>This is a plain and old mailing list view: no groups and heavy threading.
-</para>
+<listitem><para>This is a plain and old mailing list view: no groups and heavy threading.</para></listitem>
+</varlistentry>
+<varlistentry id="customize-aggregation-theme">
+<term>Customize...</term>
+<listitem>
+<screenshot>
+  <screeninfo>Customize Message Aggregation Modes</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="aggregationtheme.png" format="PNG"/>
+      </imageobject>
+      <textobject>
+        <phrase>Customize Message Aggregation Modes</phrase>
+      </textobject>
+      <caption>
+        <para>Customize Message Aggregation Modes</para>
+      </caption>
+    </mediaobject>
+  </screenshot>
+<para>To create a custom aggregation theme, click the <guibutton>Configure...</guibutton> button. Select an existing aggregation similar to what you want to
+  change it to and click the <guibutton>Clone Aggregation</guibutton>, if none are similar click the <guibutton>New Aggregation</guibutton> button. The <guilabel>General</guilabel>
+  tab allows you to change the <guilabel>Name:</guilabel> and <guilabel>Description:</guilabel>. The <guilabel>Groups &amp; Threading</guilabel> tab
+  allows you to configure several elements to customize your aggregation.</para>
+<itemizedlist>
+<listitem><para>
+<guilabel>Grouping:</guilabel> Allows you to select from dates, sender/receiver or none. With the smart options &kmail; will group related emails together.
+</para></listitem>
+<listitem><para>
+<guilabel>Group expand policy:</guilabel> Allows you to set whether &kmail; will automatically expand grouped emails.
+</para></listitem>
+<listitem><para>
+<guilabel>Threading:</guilabel> Allows you to change if &kmail; will include references and subject in determining perfect threading. You can also turn off threading all together.
+</para></listitem>
+<listitem><para>
+<guilabel>Thread leader:</guilabel> Allows you to change the leader of the thread between most recent message or topmost.
+</para></listitem>
+<listitem><para>
+<guilabel>Thread expand policy:</guilabel> Allows you to change how &kmail; determines whether a thread should be expanded or no expanding at all.
+</para></listitem>
+</itemizedlist>
+<para>The <guilabel>Advanced</guilabel> allows you to change the <guilabel>Fill view strategy:</guilabel> You would choose Favor speed if you have a slow connection. Interactivity will show
+   all of your current conversations first. And Batch mode will not sort the view at all.</para>
 </listitem>
 </varlistentry>
 </variablelist>
-
 </listitem>
 </varlistentry>
 </variablelist>
 
 <variablelist>
 <varlistentry>
-<term>Theme</term>
+<term>Default Theme</term>
 <listitem>
-
 <variablelist>
+<varlistentry>
+<term>Classic</term>
+<listitem><para>A simple, backward compatible, single row theme</para></listitem>
+</varlistentry>
 <varlistentry>
 <term>Fancy</term>
-<listitem><para>A fancy multiline and multi-item theme
-</para>
-</listitem>
+<listitem><para>A fancy multi-line and multi-item theme</para></listitem>
 </varlistentry>
 <varlistentry>
 <term>Fancy with Clickable Status</term>
-<listitem><para>A fancy multiline and multi-item theme with a clickable status column
-</para>
-</listitem>
+<listitem><para>A fancy multi-line and multi-item theme with a clickable status column</para></listitem>
 </varlistentry>
-<varlistentry>
-<term>Classic</term>
-<listitem><para>A simple, backward compatible, single row theme
-</para>
-</listitem>
-</varlistentry>
+<varlistentry id="customize-messagelist-theme">
+<term>Configure...</term>
+<listitem>
+<screenshot >
+  <screeninfo>Customize Message List Theme</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="messagelisttheme.png" format="PNG"/>
+      </imageobject>
+      <textobject>
+        <phrase>Customize Message List Theme</phrase>
+      </textobject>
+      <caption>
+        <para>Customize Message List Theme</para>
+      </caption>
+    </mediaobject>
+  </screenshot>
+<para>To create a custom message list theme, click the <guibutton>Configure...</guibutton> button. Select an existing theme similar to what you want to
+  change it to and click the <guibutton>Clone Theme</guibutton>, if none are similar click the <guibutton>New Theme</guibutton> button. The <guilabel>
+  General</guilabel> tab allows you to change the <guilabel>Name:</guilabel> and <guilabel>Description:</guilabel>. </para>
+<para>The <guilabel>Appearance</guilabel> tab allows you to configure visible columns and status items. To add a column, right click the column bar and select <guilabel>Add Column</guilabel>.
+ Name the column and select what the column will represent from the <guilabel>Header click sorts messages:</guilabel> drop down list.
+ By default <guilabel>Visible by default</guilabel> is checked, uncheck it if you only want the column to be available on the &RMB; add or remove menu for the clickable sort bar.
+ Then drag the appropriate label from the <guilabel>Content Items</guilabel> to the column view box under the column bar, &eg; if you chose to add a size column you would drag the Size label to
+ underneath the Size column. Continue to do this until you have all the columns you desire. You can change the font and color of column items through the view area &RMB; menu. Move, delete and
+ resize columns through the &RMB; menu of the column bar.</para>
+<para>The <guilabel>Advanced</guilabel> tab allows you to change whether to show headers. You can also change the size of status icons.</para>
+</listitem></varlistentry>
 </variablelist>
-
-</listitem>
-</varlistentry>
+</listitem></varlistentry>
 </variablelist>
-
-<para>In the <guilabel>Date Display</guilabel> section you can choose between several
-date formats. The <guilabel>Localized Format</guilabel> is the one you can
-specify under <guilabel>Country/Region &amp; Language</guilabel> in the &systemsettings;.
-For the <guilabel>Custom</guilabel> format you can get
-a description of the possible values by clicking on <guilabel>Custom format 
-information</guilabel> option.</para>
+<para>In the <guilabel>Date Display</guilabel> section you can choose between several date formats. The <guilabel>Localized Format</guilabel>
+ is the one you can specify under <guilabel>Country/Region &amp; Language</guilabel> in the &systemsettings;. <guilabel>Smart format</guilabel> will show
+ today, yesterday &etc; The <guilabel>Custom</guilabel> format you can get a description of the possible values by clicking on
+ <guilabel>Custom format information</guilabel> option.</para>
 </sect2>
 
 <sect2 id="configure-appearance-message-window">

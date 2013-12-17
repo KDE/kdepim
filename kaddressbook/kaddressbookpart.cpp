@@ -25,7 +25,7 @@
 
 #include <KDebug>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPluginFactory>
 #include <KParts/StatusBarExtension>
 #include <KAction>

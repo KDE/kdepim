@@ -17,7 +17,7 @@
 
 #include "abstractshorturl.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace PimCommon;
 AbstractShortUrl::AbstractShortUrl(QObject *parent)

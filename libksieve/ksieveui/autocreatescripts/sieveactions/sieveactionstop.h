@@ -29,6 +29,7 @@ public:
     static SieveAction* newAction();
     QString code(QWidget *) const;
     QString help() const;
+    QString href() const;
 };
 }
 

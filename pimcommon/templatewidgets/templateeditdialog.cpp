@@ -18,7 +18,7 @@
 #include "templateeditdialog.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QVBoxLayout>

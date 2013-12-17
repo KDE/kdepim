@@ -21,7 +21,7 @@
 
 #include <QObject>
 class QTcpServer;
-
+class QTimer;
 class NotesManager : public QObject
 {
     Q_OBJECT
@@ -29,7 +29,6 @@ public:
     explicit NotesManager(QObject *parent=0);
     ~NotesManager();
 
-    void printDebugInfo();
     void load(bool forced=false);
     void stopAll();
     void updateNetworkListener();
@@ -37,10 +36,12 @@ public:
 private slots:
     void slotAcceptConnection();
     void slotNewNote(const QString &name, const QString &text);
+    void slotCheckAlarm();
 
 private:
     void clear();
     QTcpServer *mListener;
+    QTimer *mCheckAlarm;
 };
 
 #endif // NOTESMANAGER_H

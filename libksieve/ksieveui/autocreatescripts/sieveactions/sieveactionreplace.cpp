@@ -157,3 +157,8 @@ QString SieveActionReplace::help() const
     return i18n("The \"replace\" command is defined to allow a MIME part to be replaced with the text supplied in the command.");
 }
 
+QString SieveActionReplace::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5703#page-8");
+}
+

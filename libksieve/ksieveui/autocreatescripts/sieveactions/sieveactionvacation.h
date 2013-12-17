@@ -34,8 +34,8 @@ public:
     bool needCheckIfServerHasCapability() const;
     bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
     QStringList needRequires(QWidget *parent) const;
-    QString help() const;
-
+    QString help() const;    
+    QString href() const;
 private:
     bool mHasVacationSecondsSupport;
 };

@@ -27,7 +27,7 @@
 #include <kpimtextedit/emoticontexteditaction.h>
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAction>
 #include <KToggleAction>
 #include <KFontAction>

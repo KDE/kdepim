@@ -18,7 +18,7 @@
 #include "ubuntuonestorageservice.h"
 #include "ubuntuonejob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
@@ -61,7 +61,7 @@ void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecre
 
     grp.sync();
     KGlobal::config()->sync();
-    Q_EMIT authentificationDone(serviceName());
+    Q_EMIT authenticationDone(serviceName());
 }
 
 void UbuntuoneStorageService::removeConfig()
@@ -71,7 +71,7 @@ void UbuntuoneStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void UbuntuoneStorageService::authentification()
+void UbuntuoneStorageService::authentication()
 {
     UbuntuOneJob *job = new UbuntuOneJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString,QString)));
@@ -82,7 +82,7 @@ void UbuntuoneStorageService::authentification()
 void UbuntuoneStorageService::listFolder()
 {
     if (mTokenSecret.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
@@ -95,7 +95,7 @@ void UbuntuoneStorageService::listFolder()
 void UbuntuoneStorageService::createFolder(const QString &folder)
 {
     if (mTokenSecret.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -111,13 +111,13 @@ void UbuntuoneStorageService::slotAuthorizationFailed(const QString &errorMessag
     mToken.clear();
     mCustomerKey.clear();
     mTokenSecret.clear();
-    Q_EMIT authentificationFailed(serviceName(), errorMessage);
+    Q_EMIT authenticationFailed(serviceName(), errorMessage);
 }
 
 void UbuntuoneStorageService::accountInfo()
 {
     if (mTokenSecret.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -135,7 +135,7 @@ QString UbuntuoneStorageService::name()
 void UbuntuoneStorageService::uploadFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -169,7 +169,7 @@ QString UbuntuoneStorageService::iconName()
 void UbuntuoneStorageService::shareLink(const QString &root, const QString &path)
 {    
     if (mTokenSecret.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);

@@ -23,7 +23,7 @@
 #include "utils/composereditorutils_p.h"
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 #include <KComboBox>
 

@@ -43,10 +43,11 @@
 
 #include <KGlobal>
 #include <KMessageBox>
+#include <KLocale>
 
 #include <QApplication>
 #include <QLabel>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPointer>

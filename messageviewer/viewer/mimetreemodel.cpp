@@ -29,7 +29,7 @@
 
 #include <KDebug>
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMimeType>
 
 Q_DECLARE_METATYPE(KMime::Content*)

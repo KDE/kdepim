@@ -34,6 +34,7 @@ public:
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
     QString help() const;
+    QString href() const;
 
 private:
     bool mHasCopySupport;

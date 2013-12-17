@@ -20,7 +20,7 @@
 #include "utils/autoqpointer.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KTextEdit>
 #include <KFileDialog>

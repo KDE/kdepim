@@ -27,6 +27,7 @@
 
 #include <KGlobal>
 #include <KLocale>
+#include <KLocalizedString>
 #include <KSystemTimeZones>
 
 using namespace IncidenceEditorNG;

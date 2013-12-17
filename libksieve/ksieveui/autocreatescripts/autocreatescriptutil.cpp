@@ -166,3 +166,12 @@ void AutoCreateScriptUtil::comboboxItemNotFound(const QString &searchItem, const
 {
     error += i18n("Cannot find item \"%1\" in widget \"%2\"", searchItem, name);
 }
+
+QString AutoCreateScriptUtil::createFullWhatsThis(const QString &help, const QString &href)
+{
+    if (href.isEmpty()) {
+        return help;
+    }
+    const QString fullWhatsThis = QLatin1String("<qt>") + help + QString::fromLatin1("<br><a href=\'%1\'>%2</a></qt>").arg(href).arg(i18n("More information"));
+    return fullWhatsThis;
+}

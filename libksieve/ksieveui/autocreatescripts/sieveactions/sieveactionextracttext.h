@@ -34,6 +34,7 @@ public:
     bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
     QString serverNeedsCapability() const;
     QString help() const;
+    QString href() const;
 };
 }
 

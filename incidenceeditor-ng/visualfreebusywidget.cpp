@@ -29,7 +29,7 @@
 
 #include <KComboBox>
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHeaderView>
 #include <QLabel>

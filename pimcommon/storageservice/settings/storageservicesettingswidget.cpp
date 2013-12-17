@@ -25,6 +25,7 @@
 #include "storageservice/box/boxstorageservice.h"
 #include "storageservice/webdav/webdavstorageservice.h"
 #include "settings/pimcommonsettings.h"
+#include <KLocalizedString>
 #include <KLocale>
 #include <KMessageBox>
 #include <KTextBrowser>
@@ -133,8 +134,8 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Box);
         }
         createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
-        connect(i.value(),SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
-        connect(i.value(),SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
+        connect(i.value(),SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+        connect(i.value(),SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
     }
 }
 
@@ -209,30 +210,36 @@ void StorageServiceSettingsWidget::slotAddService()
             break;
         }
         if (storage) {
+            mListStorageService.insert(service, storage);
             PimCommon::StorageListWidgetItem *item = createItem(serviceName, service, type, storage->icon());
             item->startAnimation();
-            connect(storage,SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
-            connect(storage,SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
-            storage->authentification();
-            mListStorageService.insert(service, storage);
+            connect(storage,SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+            connect(storage,SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+            storage->authentication();
         }
     }
     delete dlg;
 }
 
-void StorageServiceSettingsWidget::slotAuthentificationFailed(const QString &serviceName, const QString &error)
+void StorageServiceSettingsWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
 {
+    PimCommon::StorageListWidgetItem *item = 0;
     for (int i=0; i <mListService->count(); ++i) {
         if (mListService->item(i)->data(Name).toString() == serviceName) {
-            PimCommon::StorageListWidgetItem *item = static_cast<PimCommon::StorageListWidgetItem*>(mListService->item(i));
+            item = static_cast<PimCommon::StorageListWidgetItem*>(mListService->item(i));
             item->stopAnimation();
+            if (mListStorageService.contains(serviceName)) {
+                mListStorageService.value(serviceName)->removeConfig();
+            }
+            mListStorageService.remove(serviceName);
+            delete item;
             break;
         }
     }
     KMessageBox::error(this, error, i18n("Authentication Failed"));
 }
 
-void StorageServiceSettingsWidget::slotAuthentificationDone(const QString &serviceName)
+void StorageServiceSettingsWidget::slotAuthenticationDone(const QString &serviceName)
 {
     for (int i=0; i <mListService->count(); ++i) {
         if (mListService->item(i)->data(Name).toString() == serviceName) {
@@ -294,7 +301,7 @@ void StorageServiceSettingsWidget::slotModifyService()
         const QString serviceName = mListService->currentItem()->data(Name).toString();
         if (mListStorageService.contains(serviceName)) {
             StorageServiceAbstract *storage = mListStorageService.value(serviceName);
-            storage->authentification();
+            storage->authentication();
         }
     }
 }

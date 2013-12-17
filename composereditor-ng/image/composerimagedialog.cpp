@@ -23,7 +23,7 @@
 
 #include "kpimtextedit/insertimagewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KSeparator>
 

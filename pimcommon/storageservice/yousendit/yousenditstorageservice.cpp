@@ -18,12 +18,12 @@
 #include "yousenditstorageservice.h"
 #include "yousenditjob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
 
-
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -52,7 +52,7 @@ void YouSendItStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void YouSendItStorageService::authentification()
+void YouSendItStorageService::authentication()
 {
     YouSendItJob *job = new YouSendItJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
@@ -65,7 +65,8 @@ void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessag
     mUsername.clear();
     mPassword.clear();
     mToken.clear();
-    Q_EMIT authentificationFailed(serviceName(), errorMessage);
+    qDebug()<<" void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessage)"<<errorMessage;
+    Q_EMIT authenticationFailed(serviceName(), errorMessage);
 }
 
 
@@ -74,7 +75,7 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     mUsername = username;
     mPassword = password;
     mToken = token;
-
+qDebug()<<"slotAuthorizationDone ";
     KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
     grp.readEntry("Username", mUsername);
     //TODO store in kwallet ?
@@ -82,13 +83,13 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     grp.readEntry("Token", mToken);
     grp.sync();
     KGlobal::config()->sync();
-    Q_EMIT authentificationDone(serviceName());
+    Q_EMIT authenticationDone(serviceName());
 }
 
 void YouSendItStorageService::listFolder()
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -101,7 +102,7 @@ void YouSendItStorageService::listFolder()
 void YouSendItStorageService::createFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -114,7 +115,7 @@ void YouSendItStorageService::createFolder(const QString &folder)
 void YouSendItStorageService::accountInfo()
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -132,7 +133,7 @@ QString YouSendItStorageService::name()
 void YouSendItStorageService::uploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -166,7 +167,7 @@ QString YouSendItStorageService::iconName()
 void YouSendItStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);

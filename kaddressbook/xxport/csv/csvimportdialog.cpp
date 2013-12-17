@@ -28,7 +28,7 @@
 #include <KDebug>
 #include <KInputDialog>
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KProgressDialog>
 #include <KStandardDirs>

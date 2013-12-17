@@ -22,7 +22,7 @@
 #include "extendattributes/extendattributesbutton.h"
 #include "helper/listhelper_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 #include <KComboBox>
 

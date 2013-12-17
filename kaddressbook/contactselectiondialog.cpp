@@ -20,7 +20,7 @@
 #include "contactselectiondialog.h"
 #include "contactselectionwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 ContactSelectionDialog::ContactSelectionDialog( QItemSelectionModel *selectionModel,
                                                 QWidget *parent )

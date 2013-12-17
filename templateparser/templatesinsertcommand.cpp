@@ -21,7 +21,7 @@
 #include <KAction>
 #include <KActionMenu>
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 
 #include <QSignalMapper>

@@ -24,7 +24,7 @@
 #include "cellitem.h"
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace CalendarSupport;
 

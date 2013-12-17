@@ -209,4 +209,7 @@ QString SieveActionVacation::help() const
     return helpStr;
 }
 
-
+QString SieveActionVacation::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5230#page-3");
+}

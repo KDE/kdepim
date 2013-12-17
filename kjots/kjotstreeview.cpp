@@ -30,7 +30,7 @@
 #include <KXMLGUIClient>
 #include <KColorDialog>
 #include <KInputDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <KMime/KMimeMessage>
 

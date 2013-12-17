@@ -69,9 +69,13 @@ protected:
     QString mFolderInfoPath;
     QString mCurrentAccountInfoPath;
     QString mApiUrl;
+    QString mFileInfoPath;
     qint64 mExpireInTime;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
     bool mNeedRefreshToken;
+
+private:
+    void shareLink(const QString &fileId);
 };
 }
 

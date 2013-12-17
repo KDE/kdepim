@@ -19,7 +19,7 @@
 #include "searchpotentialduplicatecontactjob.h"
 #include <KABC/Addressee>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QLabel>

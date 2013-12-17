@@ -31,6 +31,7 @@ public:
     QWidget *createParamWidget( QWidget *parent ) const;
     bool setParamWidgetValue( const QDomElement &element, QWidget *w, QString &error );
     QStringList needRequires(QWidget *) const;
+    QString href() const;
 
 private:
     bool mHasFlagSupport;

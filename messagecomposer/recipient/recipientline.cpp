@@ -22,7 +22,7 @@
 
 #include <kpimutils/email.h>
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCompletionBox>
 #include <KDebug>
 

@@ -33,6 +33,7 @@ class MinimumComboBox;
 
 namespace KSieveUi {
 class SieveAction;
+class SieveHelpButton;
 class SieveActionWidget : public QWidget
 {
     Q_OBJECT
@@ -64,7 +65,7 @@ private:
     KPushButton *mRemove;
     PimCommon::MinimumComboBox *mComboBox;
     QGridLayout *mLayout;
-    QToolButton *mHelpButton;
+    SieveHelpButton *mHelpButton;
     QToolButton *mCommentButton;
 };
 

@@ -26,7 +26,7 @@
 #include <QRadioButton>
 #include <QTreeView>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
 

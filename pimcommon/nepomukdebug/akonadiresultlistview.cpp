@@ -18,7 +18,7 @@
 #include "akonadiresultlistview.h"
 #include "pimcommon/nepomukdebug/searchdebugnepomukshowdialog.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QContextMenuEvent>
 #include <QAction>

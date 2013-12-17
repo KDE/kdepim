@@ -17,6 +17,8 @@
 
 #include "sieveincludewidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescriptutil_p.h"
+#include "commonwidgets/sievehelpbutton.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KPushButton>
@@ -185,11 +187,9 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    QToolButton *helpButton = new QToolButton;
-    helpButton->setToolTip(i18n("Help"));
-    lay->addWidget( helpButton );
-    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
-    connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    mHelpButton = new SieveHelpButton;
+    lay->addWidget( mHelpButton );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveIncludeWidgetLister;
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
@@ -204,7 +204,9 @@ SieveIncludeWidget::~SieveIncludeWidget()
 void SieveIncludeWidget::slotHelp()
 {
     const QString help = i18n("The \"include\" command takes an optional \"location\" parameter, an optional \":once\" parameter, an optional \":optional\" parameter, and a single string argument representing the name of the script to include for processing at that point.");
-    QWhatsThis::showText( QCursor::pos(), help );
+    const QString href = QLatin1String("http://tools.ietf.org/html/rfc6609#page-4");
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }
 
 void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)

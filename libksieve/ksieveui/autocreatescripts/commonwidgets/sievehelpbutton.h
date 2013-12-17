@@ -15,39 +15,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef VACATIONMANAGER_H
-#define VACATIONMANAGER_H
+#ifndef SIEVEHELPBUTTON_H
+#define SIEVEHELPBUTTON_H
 
-#include <QObject>
-#include <QPointer>
+#include <QToolButton>
 
 namespace KSieveUi {
-class Vacation;
-class MultiImapVacationDialog;
-}
-class QWidget;
-namespace KMail {
-class VacationManager : public QObject
+class SieveHelpButton : public QToolButton
 {
     Q_OBJECT
 public:
-    explicit VacationManager(QWidget *parent);
-    ~VacationManager();
+    explicit SieveHelpButton(QWidget *parent=0);
+    ~SieveHelpButton();
 
-    void checkVacation();
-
-public Q_SLOTS:
-    void slotEditVacation();
-
-Q_SIGNALS:
-    void updateVacationScriptStatus(bool, const QString&);
-    void editVacation();
-
-private:
-    QPointer<KSieveUi::MultiImapVacationDialog> mMultiImapVacationDialog;
-    QPointer<KSieveUi::Vacation> mCheckVacation;
-    QWidget *mWidget;
+protected:
+    bool event(QEvent *event);
 };
 }
 
-#endif // VACATIONMANAGER_H
+#endif // SIEVEHELPBUTTON_H

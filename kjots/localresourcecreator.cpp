@@ -24,7 +24,7 @@
 #include "akonadi_next/note.h"
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KRandom>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/AgentInstance>

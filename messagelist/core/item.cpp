@@ -26,7 +26,7 @@
 #include <kio/global.h> // for KIO::filesize_t and related functions
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace MessageList::Core;
 

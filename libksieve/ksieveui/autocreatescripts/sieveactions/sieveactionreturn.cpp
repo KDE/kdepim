@@ -36,6 +36,11 @@ QString SieveActionReturn::code(QWidget *) const
     return QLatin1String("return;");
 }
 
+QString SieveActionReturn::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc6609#page-7");
+}
+
 QString SieveActionReturn::help() const
 {
     return i18n("The \"return\" command stops processing of the immediately included script only and returns processing control to the script that includes it.");

@@ -71,7 +71,7 @@
 #include <KFileDialog>
 #include <KFind>
 #include <KFindDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KReplaceDialog>
 #include <kselectionproxymodel.h>

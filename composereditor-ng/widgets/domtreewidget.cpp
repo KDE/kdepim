@@ -20,7 +20,7 @@
 
 #include "domtreewidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QPushButton>

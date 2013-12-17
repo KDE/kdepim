@@ -26,7 +26,7 @@
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/RecursiveItemFetchJob>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QButtonGroup>
 #include <QCheckBox>

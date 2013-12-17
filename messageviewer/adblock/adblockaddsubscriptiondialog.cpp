@@ -18,7 +18,7 @@
 #include "adblockaddsubscriptiondialog.h"
 #include "adblockutil.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QComboBox>
 #include <QLabel>

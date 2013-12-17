@@ -26,7 +26,7 @@
 
 #include <akonadi/control.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QTreeView>
 #include <QHeaderView>

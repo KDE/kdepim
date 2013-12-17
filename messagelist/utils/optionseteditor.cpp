@@ -26,7 +26,7 @@
 #include <QComboBox>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KTextEdit>
 
 using namespace MessageList::Utils;

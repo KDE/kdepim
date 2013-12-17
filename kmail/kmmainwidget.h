@@ -63,16 +63,16 @@ namespace KIO {
 
 namespace KMail {
   class SearchWindow;
-  class StatusBarLabel;
+  class VacationScriptIndicatorWidget;
   class TagActionManager;
   class FolderShortcutActionManager;
-  class VacationManager;
 }
 
 namespace KSieveUi {
   class SieveDebugDialog;
   class Vacation;
   class ManageSieveScriptsDialog;
+  class VacationManager;
 }
 
 namespace MailCommon {
@@ -134,7 +134,7 @@ class KMAIL_EXPORT KMMainWidget : public QWidget
     */
     static const PtrList *mainWidgetList();
 
-    QLabel* vacationScriptIndicator() const;
+    QWidget *vacationScriptIndicator() const;
     void updateVacationScriptStatus() { updateVacationScriptStatus( mVacationIndicatorActive ); }
 
     MailCommon::FolderTreeView *folderTreeView() const {
@@ -591,7 +591,7 @@ private:
     QTimer *menutimer;
     QTimer *mShowBusySplashTimer;
 
-    KMail::VacationManager *mVacationManager;
+    KSieveUi::VacationManager *mVacationManager;
 #if !defined(NDEBUG)
     QPointer<KSieveUi::SieveDebugDialog> mSieveDebugDialog;
 #endif
@@ -615,7 +615,7 @@ private:
 
     MailCommon::FolderTreeWidget *mFolderTreeWidget;
 
-    KMail::StatusBarLabel *mVacationScriptIndicator;
+    KMail::VacationScriptIndicatorWidget *mVacationScriptIndicator;
     bool mVacationIndicatorActive;
     bool mGoToFirstUnreadMessageInSelectedFolder;
     MessageList::Core::PreSelectionMode mPreSelectionMode;

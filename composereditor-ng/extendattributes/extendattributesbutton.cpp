@@ -20,7 +20,7 @@
 
 #include "extendattributesbutton.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 #include <QWebElement>

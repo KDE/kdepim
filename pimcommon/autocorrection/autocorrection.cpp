@@ -19,7 +19,7 @@
 #include "autocorrection.h"
 #include "settings/pimcommonsettings.h"
 #include "import/importkmailautocorrection.h"
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 #include <KColorScheme>
 #include <KCalendarSystem>

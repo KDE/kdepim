@@ -23,7 +23,7 @@
 
 #include <KABC/Addressee>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QtCore/QEvent>
 #include <QtCore/QTimer>

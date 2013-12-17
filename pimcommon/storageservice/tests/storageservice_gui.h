@@ -52,6 +52,9 @@ private slots:
     void slotUploadFileDone(const QString &serviceName, const QString &fileName);
     void slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void slotShareLinkDone(const QString &serviceName, const QString &link);
+    void slotAuthenticationFailed(const QString &serviceName, const QString &error);
+    void slotAuthenticationDone(const QString &serviceName);
+    void slotActionFailed(const QString &serviceName, const QString &error);
 private:
     QTextEdit *mEdit;
     PimCommon::StorageServiceManager *mStorageManager;

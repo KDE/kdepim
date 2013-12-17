@@ -24,7 +24,7 @@
 #include <Soprano/Vocabulary/NAO>
 
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 
 #include <QLabel>

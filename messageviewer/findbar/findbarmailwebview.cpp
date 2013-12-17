@@ -19,7 +19,7 @@
 #include "findbarmailwebview.h"
 #include "viewer/mailwebview.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <QMenu>
 using namespace MessageViewer;

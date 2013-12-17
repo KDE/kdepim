@@ -33,7 +33,7 @@
 #include <KDebug>
 #include <KDialog>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QCheckBox>
 #include <QPrinter>

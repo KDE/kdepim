@@ -20,6 +20,8 @@
 
 #include <QObject>
 
+#include "ksieveui_export.h"
+
 #include <KUrl>
 
 namespace KManageSieve {
@@ -27,7 +29,7 @@ class SieveJob;
 }
 
 namespace KSieveUi {
-class VacationCreateScriptJob : public QObject
+class KSIEVEUI_EXPORT VacationCreateScriptJob : public QObject
 {
     Q_OBJECT
 public:
@@ -39,8 +41,8 @@ public:
     void setServerUrl(const KUrl &url);
     void setScript(const QString &script);
     void setServerName(const QString &servername);
-
     void setStatus(bool activate, bool wasActive);
+
 Q_SIGNALS:
     void result(bool);
     void scriptActive(bool activated, const QString &serverName);

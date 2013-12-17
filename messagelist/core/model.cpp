@@ -62,7 +62,7 @@
 #include <QDateTime>
 #include <QScrollBar>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCalendarSystem>
 #include <KGlobal>
 #include <KIcon>

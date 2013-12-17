@@ -23,7 +23,7 @@
 #include "extendattributesutils_p.h"
 
 #include <KSeparator>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KComboBox>
 #include <KLineEdit>
 #include <KPushButton>

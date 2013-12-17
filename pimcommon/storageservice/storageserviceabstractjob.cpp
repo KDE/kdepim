@@ -17,7 +17,7 @@
 
 #include "storageserviceabstractjob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QNetworkAccessManager>
 #include <QDebug>

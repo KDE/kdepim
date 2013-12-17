@@ -156,3 +156,8 @@ QStringList SieveActionNotify::needRequires(QWidget *) const
     return lst;
 }
 
+QString SieveActionNotify::href() const
+{
+    return QLatin1String("http://tools.ietf.org/search/rfc5435#page-3");
+}
+

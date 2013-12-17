@@ -33,7 +33,7 @@
 #include <KDateComboBox>
 #include <KFileDialog>
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KNumInput>
 #include <KUrl>

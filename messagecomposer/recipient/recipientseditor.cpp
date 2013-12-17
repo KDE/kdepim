@@ -36,7 +36,7 @@
 
 #include <KDebug>
 #include <KMime/Headers>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QLayout>

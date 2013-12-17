@@ -50,7 +50,7 @@
 #include <QSignalMapper>
 
 #include <KMenu>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 #include <KGlobalSettings>
 #include <KIcon>

@@ -24,7 +24,7 @@
 
 #include <KTextEdit>
 #include <KPushButton>
-#include <KLocale>
+#include <KLocalizedString>
 #include <kio/job.h>
 #include <KDebug>
 #include <KConfigGroup>

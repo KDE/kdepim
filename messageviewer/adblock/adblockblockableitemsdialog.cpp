@@ -18,7 +18,7 @@
 #include "adblockblockableitemsdialog.h"
 #include "adblockblockableitemswidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KTreeWidgetSearchLine>
 #include <KMenu>
 

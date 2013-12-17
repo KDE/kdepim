@@ -19,7 +19,7 @@
 
 #include "akonadisender.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 
 #include "helper/messagehelper.h"

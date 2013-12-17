@@ -18,8 +18,9 @@
 #include "selectmulticollectiondialog.h"
 #include "selectmulticollectionwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
+#include <KSharedConfig>
 
 using namespace PimCommon;
 

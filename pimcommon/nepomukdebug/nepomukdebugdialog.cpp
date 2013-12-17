@@ -25,8 +25,9 @@
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
+#include <KSharedConfig>
 #include <KMessageBox>
 
 #include <QStringListModel>

@@ -23,7 +23,7 @@
 #include <KPIMUtils/ProgressIndicatorLabel>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KToggleAction>
 #include <KRun>

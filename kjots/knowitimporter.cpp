@@ -29,7 +29,7 @@
 #include <KStandardDirs>
 #include <KUrl>
 #include <KTemporaryFile>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <kdebug.h>
 

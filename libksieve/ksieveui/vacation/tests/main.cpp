@@ -30,7 +30,7 @@ int main( int argc, char** argv )
     KApplication app;
     app.setQuitOnLastWindowClosed( false );
 
-    KSieveUi::MultiImapVacationDialog dlg(i18n("Configure Vacations"));
+    KSieveUi::MultiImapVacationDialog dlg;
 
     dlg.show();
     app.exec();

@@ -31,6 +31,7 @@ public:
     bool needCheckIfServerHasCapability() const;
     QString serverNeedsCapability() const;
     QString code(QWidget *) const;
+    QString href() const;
 };
 }
 

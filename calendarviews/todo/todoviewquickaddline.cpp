@@ -25,7 +25,7 @@
 
 #include "todoviewquickaddline.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QKeyEvent>
 

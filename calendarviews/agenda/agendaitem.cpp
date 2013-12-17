@@ -37,7 +37,7 @@
 
 #include <KPIMUtils/Email>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KWordWrap>
 

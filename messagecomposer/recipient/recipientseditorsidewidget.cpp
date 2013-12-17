@@ -28,7 +28,7 @@
 #include "kwindowpositioner.h"
 
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 
 #include <QLabel>

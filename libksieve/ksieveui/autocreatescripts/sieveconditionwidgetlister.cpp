@@ -17,6 +17,8 @@
 
 #include "sieveconditionwidgetlister.h"
 #include "autocreatescriptdialog.h"
+#include "autocreatescriptutil_p.h"
+#include "commonwidgets/sievehelpbutton.h"
 #include "sieveeditorgraphicalmodewidget.h"
 #include "sieveconditions/sieveconditionlist.h"
 #include "sieveconditions/sievecondition.h"
@@ -110,11 +112,9 @@ void SieveConditionWidget::initWidget()
         }
     }
 
-    mHelpButton = new QToolButton;
-    mHelpButton->setToolTip(i18n("Help"));
+    mHelpButton = new SieveHelpButton;
     mHelpButton->setEnabled(false);
     mLayout->addWidget( mHelpButton, 1, 0 );
-    mHelpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mComboBox->addItem(QLatin1String(""));
@@ -155,7 +155,9 @@ void SieveConditionWidget::slotHelp()
     if (index < mConditionList.count()) {
         KSieveUi::SieveCondition* condition = mConditionList.at( index );
         const QString help = condition->help();
-        QWhatsThis::showText( QCursor::pos(), help );
+        const QString href = condition->href();
+        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+        QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
     }
 }
 

@@ -38,7 +38,7 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <cassert>
 

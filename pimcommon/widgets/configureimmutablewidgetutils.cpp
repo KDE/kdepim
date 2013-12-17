@@ -18,7 +18,7 @@
 #include "configureimmutablewidgetutils.h"
 #include "simplestringlisteditor.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDialog>
 #include <KUrlRequester>
 

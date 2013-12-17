@@ -21,6 +21,8 @@
 #include "sievescriptdescriptiondialog.h"
 #include "sieveactions/sieveaction.h"
 #include "sieveactions/sieveactionlist.h"
+#include "commonwidgets/sievehelpbutton.h"
+#include "autocreatescriptutil_p.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KPushButton>
@@ -126,12 +128,10 @@ void SieveActionWidget::initWidget()
         }
     }
 
-    mHelpButton = new QToolButton;
-    mHelpButton->setToolTip(i18n("Help"));
+    mHelpButton = new SieveHelpButton;
     mHelpButton->setEnabled(false);
-    mLayout->addWidget( mHelpButton, 1, 0 );
-    mHelpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    mLayout->addWidget( mHelpButton, 1, 0 );
 
     mCommentButton = new QToolButton;
     mCommentButton->setToolTip(i18n("Add comment"));
@@ -183,7 +183,9 @@ void SieveActionWidget::slotHelp()
     if (index < mActionList.count()) {
         KSieveUi::SieveAction* action = mActionList.at( index );
         const QString help = action->help();
-        QWhatsThis::showText( QCursor::pos(), help );
+        const QString href = action->href();
+        const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+        QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
     }
 }
 

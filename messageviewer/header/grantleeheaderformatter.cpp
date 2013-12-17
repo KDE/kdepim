@@ -28,7 +28,7 @@
 #include <kmime/kmime_dateformatter.h>
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 
 #include <grantlee/templateloader.h>

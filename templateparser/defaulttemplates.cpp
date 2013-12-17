@@ -19,7 +19,7 @@
 
 #include "defaulttemplates.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace TemplateParser;
 

@@ -113,21 +113,9 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case UploadFiles:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case CreateFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case AccountInfo:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case ListFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case CreateServiceFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();

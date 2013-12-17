@@ -20,7 +20,7 @@
 #include "templateselectiondialog.h"
 
 #include <KConfig>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KPushButton>
 #include <KStandardDirs>

@@ -20,7 +20,7 @@
 #include "composercellsizewidget.h"
 
 #include <KComboBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 
 #include <QSpinBox>

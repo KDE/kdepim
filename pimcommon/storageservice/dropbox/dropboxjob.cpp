@@ -128,26 +128,12 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case UploadFiles:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case CreateFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case AccountInfo:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case ListFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case ShareLink:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case CreateServiceFolder:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             default:
@@ -253,10 +239,10 @@ void DropBoxJob::parseRequestToken(const QString &result)
     } else {
         qDebug()<<" data is not good: "<<result;
     }
-    doAuthentification();
+    doAuthentication();
 }
 
-void DropBoxJob::doAuthentification()
+void DropBoxJob::doAuthentication()
 {
     QUrl url(QLatin1String("https://api.dropbox.com/1/oauth/authorize"));
     url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
@@ -346,7 +332,7 @@ void DropBoxJob::listFolder(const QString &folder)
     qDebug()<<" void DropBoxJob::listFolders()";
     mActionType = ListFolder;
     mError = false;
-    QUrl url(QLatin1String("https://api.dropbox.com/1/metadata/dropbox/"));
+    QUrl url(QLatin1String("https://api.dropbox.com/1/metadata/dropbox/") + folder);
     url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey);
     url.addQueryItem(QLatin1String("oauth_nonce"), nonce);
     url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));
@@ -437,7 +423,26 @@ void DropBoxJob::parseCreateFolder(const QString &data)
 
 void DropBoxJob::parseListFolder(const QString &data)
 {
-    //TODO
-    Q_EMIT listFolderDone(QStringList());
+    QJson::Parser parser;
+    bool ok;
+    QStringList listFolder;
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (info.contains(QLatin1String("contents"))) {
+        const QVariantList lst = info.value(QLatin1String("contents")).toList();
+        Q_FOREACH (const QVariant &variant, lst) {
+            const QVariantMap qwer = variant.toMap();
+            const QList<QString> b = qwer.uniqueKeys();
+            for(int i=0;i<qwer.size();i++) {
+                const QString identifier = b.at(i);
+                if((identifier == QLatin1String("is_dir")) || (identifier == QLatin1String("path"))) {
+                    if(identifier == QLatin1String("path") && i==4) {
+                        const QString name = qwer[b[i]].toString().section(QLatin1Char('/'),-2);
+                        listFolder.append(name);
+                    }
+                }
+            }
+        }
+    }
+    Q_EMIT listFolderDone(listFolder);
     deleteLater();
 }

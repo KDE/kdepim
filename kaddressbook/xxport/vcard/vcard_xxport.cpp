@@ -35,13 +35,14 @@
 #include <KDebug>
 #include <KDialog>
 #include <KFileDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KPushButton>
 #include <KTemporaryFile>
 #include <KUrl>
 #include <KStandardGuiItem>
 #include <KIO/NetAccess>
+#include <KSharedConfig>
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>

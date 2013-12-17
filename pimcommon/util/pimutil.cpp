@@ -42,7 +42,7 @@
 
 #include <KFileDialog>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QTextStream>
 #include <QWidget>

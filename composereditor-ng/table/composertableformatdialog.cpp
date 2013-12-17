@@ -23,7 +23,7 @@
 
 #include <KPIMTextEdit/InsertTableWidget>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KColorButton>
 #include <KSeparator>
 

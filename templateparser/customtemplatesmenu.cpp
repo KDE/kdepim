@@ -24,7 +24,7 @@
 #include <KActionCollection>
 #include <KActionMenu>
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 
 #include <QSignalMapper>

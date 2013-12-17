@@ -20,7 +20,7 @@
 #include "settings/globalsettings.h"
 #include "adblock/adblockmanager.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KTreeWidgetSearchLine>
 #include <KMenu>
 #include <KConfigGroup>

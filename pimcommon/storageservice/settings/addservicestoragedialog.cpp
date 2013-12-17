@@ -19,7 +19,7 @@
 #include "storageservicecombobox.h"
 
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace PimCommon;
 

@@ -22,7 +22,7 @@
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
-#include <KLocale>
+#include <KLocalizedString>
 
 YouSendItTestWidget::YouSendItTestWidget(QWidget *parent)
     : ServiceTestWidget(parent)

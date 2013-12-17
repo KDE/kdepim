@@ -47,8 +47,8 @@ private slots:
     void slotRemoveService();
     void slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info);
     void slotModifyService();
-    void slotAuthentificationFailed(const QString &serviceName, const QString &error);
-    void slotAuthentificationDone(const QString &serviceName);
+    void slotAuthenticationFailed(const QString &serviceName, const QString &error);
+    void slotAuthenticationDone(const QString &serviceName);
 
 private:
     void updateButtons();

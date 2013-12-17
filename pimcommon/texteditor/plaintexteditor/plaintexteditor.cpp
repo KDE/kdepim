@@ -17,7 +17,7 @@
 
 #include "plaintexteditor.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobalSettings>
 #include <KIconTheme>
 #include <KStandardGuiItem>

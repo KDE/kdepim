@@ -17,7 +17,7 @@
 
 #include "logindialog.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QGridLayout>

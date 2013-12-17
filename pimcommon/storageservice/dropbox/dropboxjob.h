@@ -47,7 +47,7 @@ Q_SIGNALS:
 private:
     void getTokenAccess();
     void parseRequestToken(const QString &result);
-    void doAuthentification();
+    void doAuthentication();
     void parseResponseAccessToken(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseUploadFile(const QString &data);

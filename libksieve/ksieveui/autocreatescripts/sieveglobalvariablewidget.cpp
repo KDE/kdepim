@@ -17,6 +17,8 @@
 
 #include "sieveglobalvariablewidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescriptutil_p.h"
+#include "commonwidgets/sievehelpbutton.h"
 
 #include <KPushButton>
 #include <KLocalizedString>
@@ -150,11 +152,9 @@ SieveGlobalVariableWidget::SieveGlobalVariableWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    QToolButton *helpButton = new QToolButton;
-    helpButton->setToolTip(i18n("Help"));
-    lay->addWidget( helpButton );
-    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
-    connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    mHelpButton = new SieveHelpButton;
+    lay->addWidget( mHelpButton );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveGlobalVariableLister;
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
@@ -169,7 +169,9 @@ SieveGlobalVariableWidget::~SieveGlobalVariableWidget()
 void SieveGlobalVariableWidget::slotHelp()
 {
     const QString help = i18n("A variable has global scope in all scripts that have declared it with the \"global\" command.  If a script uses that variable name without declaring it global, the name specifies a separate, non-global variable within that script.");
-    QWhatsThis::showText( QCursor::pos(), help );
+    const QString href = QString(); //TODO
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }
 
 void SieveGlobalVariableWidget::generatedScript(QString &script, QStringList &requires)

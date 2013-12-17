@@ -18,7 +18,7 @@
 #include "importlibreofficeautocorrection.h"
 #include <QFile>
 #include <KZip>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KTempDir>
 #include <KDebug>

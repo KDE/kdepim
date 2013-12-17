@@ -27,7 +27,7 @@
 #include <akonadi/control.h>
 
 #include <KFileDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KTabWidget>
 #include <KTextEdit>
 #include <Akonadi/ServerManager>

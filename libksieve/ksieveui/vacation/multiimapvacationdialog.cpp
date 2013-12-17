@@ -34,10 +34,10 @@
 
 
 using namespace KSieveUi;
-MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget *parent)
+MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
     : KDialog(parent)
 {
-    setCaption( caption );
+    setCaption( i18n("Configure \"Out of Office\" Replies") );
 
     KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap(IconSize(KIconLoader::Desktop),IconSize(KIconLoader::Desktop)), qApp->windowIcon().pixmap(IconSize(KIconLoader::Small),IconSize(KIconLoader::Small)) );
 
@@ -66,6 +66,11 @@ MultiImapVacationDialog::MultiImapVacationDialog(const QString &caption, QWidget
 MultiImapVacationDialog::~MultiImapVacationDialog()
 {
     writeConfig();
+}
+
+QList<VacationCreateScriptJob *> MultiImapVacationDialog::listCreateJob() const
+{
+    return mListCreateJob;
 }
 
 void MultiImapVacationDialog::init()
@@ -122,7 +127,9 @@ void MultiImapVacationDialog::slotOkClicked()
     for (int i=0; i < mTabWidget->count(); ++i) {
         VacationPageWidget *vacationPage = qobject_cast<VacationPageWidget *>(mTabWidget->widget(i));
         if (vacationPage) {
-            vacationPage->writeScript();
+            VacationCreateScriptJob *job = vacationPage->writeScript();
+            if (job)
+                mListCreateJob.append(job);
         }
     }
 }

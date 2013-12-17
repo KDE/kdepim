@@ -17,6 +17,8 @@
 
 #include "sieveforeverypartwidget.h"
 #include "sievescriptblockwidget.h"
+#include "autocreatescriptutil_p.h"
+#include "commonwidgets/sievehelpbutton.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocalizedString>
@@ -42,11 +44,9 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     lay->setMargin(0);
     w->setLayout(lay);
 
-    QToolButton *helpButton = new QToolButton;
-    helpButton->setToolTip(i18n("Help"));
-    topLayout->addWidget( helpButton );
-    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
-    connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    mHelpButton = new SieveHelpButton;
+    topLayout->addWidget( mHelpButton );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
     topLayout->addWidget(mForLoop);
@@ -73,7 +73,9 @@ SieveForEveryPartWidget::~SieveForEveryPartWidget()
 void SieveForEveryPartWidget::slotHelp()
 {
     const QString help = i18n("\"foreverypart\", which is an iterator that walks though every MIME part of a message, including nested parts, depth first, and applies the commands in the specified block to each of them.");
-    QWhatsThis::showText( QCursor::pos(), help );
+    const QString href = QString(); //TODO
+    const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
+    QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }
 
 void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requires)

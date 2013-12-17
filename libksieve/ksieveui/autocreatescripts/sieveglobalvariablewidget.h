@@ -28,6 +28,7 @@ class QCheckBox;
 class QDomElement;
 
 namespace KSieveUi {
+class SieveHelpButton;
 class SieveGlobalVariableWidget;
 
 class SieveGlobalVariableActionWidget : public QWidget
@@ -103,6 +104,7 @@ private Q_SLOTS:
 
 private:
     SieveGlobalVariableLister *mIncludeLister;
+    SieveHelpButton *mHelpButton;
 };
 }
 

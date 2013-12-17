@@ -19,7 +19,7 @@
 #include "servicetestwidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KFileDialog>
 
 #include <QVBoxLayout>
@@ -38,7 +38,7 @@ ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
-    bar->addAction(QLatin1String("Authentification..."), this, SLOT(slotAuthentification()));
+    bar->addAction(QLatin1String("Authentication..."), this, SLOT(slotAuthentication()));
     bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
     bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
     bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
@@ -58,9 +58,9 @@ void ServiceTestWidget::setStorageService(PimCommon::StorageServiceAbstract *ser
     connectStorageService();
 }
 
-void ServiceTestWidget::slotAuthentification()
+void ServiceTestWidget::slotAuthentication()
 {
-    mStorageService->authentification();
+    mStorageService->authentication();
 }
 
 void ServiceTestWidget::connectStorageService()
@@ -68,8 +68,8 @@ void ServiceTestWidget::connectStorageService()
     connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString, QString)));
     connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
     connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
-    connect(mStorageService, SIGNAL(authentificationDone(QString)), this, SLOT(slotAuthentificationDone(QString)));
-    connect(mStorageService, SIGNAL(authentificationFailed(QString,QString)), this, SLOT(slotAuthentificationFailed(QString,QString)));
+    connect(mStorageService, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+    connect(mStorageService, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
     connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString,QString)));
     connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
     connect(mStorageService, SIGNAL(listFolderDone(QString,QStringList)), this, SLOT(slotListFolderDone(QString,QStringList)));
@@ -91,14 +91,14 @@ void ServiceTestWidget::slotShareLinkDone(const QString &serviceName, const QStr
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" return a share link: %1\n").arg(shareLink));
 }
 
-void ServiceTestWidget::slotAuthentificationFailed(const QString &serviceName, const QString &errorMessage)
+void ServiceTestWidget::slotAuthenticationFailed(const QString &serviceName, const QString &errorMessage)
 {
-    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Authentification failed: %1\n").arg(errorMessage));
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Authentication failed: %1\n").arg(errorMessage));
 }
 
-void ServiceTestWidget::slotAuthentificationDone(const QString &serviceName)
+void ServiceTestWidget::slotAuthenticationDone(const QString &serviceName)
 {
-    mEdit->insertPlainText(serviceName + QLatin1String(" Authentification done\n"));
+    mEdit->insertPlainText(serviceName + QLatin1String(" Authentication done\n"));
 }
 
 void ServiceTestWidget::slotCreateFolderDone(const QString &serviceName, const QString &folderName)

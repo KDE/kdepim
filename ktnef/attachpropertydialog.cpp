@@ -25,7 +25,7 @@
 #include <KApplication>
 #include <KDebug>
 #include <KFileDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KMimeType>
 

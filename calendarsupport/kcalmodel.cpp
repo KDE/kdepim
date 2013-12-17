@@ -29,7 +29,7 @@
 #include <KCalCore/Todo>
 
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPixmap>
 

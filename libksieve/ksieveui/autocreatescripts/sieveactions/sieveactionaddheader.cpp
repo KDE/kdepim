@@ -124,3 +124,7 @@ QString SieveActionAddHeader::help() const
     return i18n("The addheader action adds a header field to the existing message header.");
 }
 
+QString SieveActionAddHeader::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5293");
+}

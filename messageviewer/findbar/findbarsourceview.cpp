@@ -17,7 +17,7 @@
  */
 #include "findbarsourceview.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <QPlainTextEdit>
 #include <QAction>

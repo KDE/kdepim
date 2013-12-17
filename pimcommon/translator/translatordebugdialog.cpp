@@ -19,9 +19,10 @@
 #include "pimcommon/util/pimutil.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
 #include <KGlobal>
+#include <KSharedConfig>
 
 TranslatorDebugDialog::TranslatorDebugDialog(QWidget *parent)
     : KDialog(parent)

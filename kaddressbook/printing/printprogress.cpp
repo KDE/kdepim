@@ -26,7 +26,7 @@
 #include <KApplication>
 #include <KDebug>
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KTextBrowser>
 
 #include <QGridLayout>

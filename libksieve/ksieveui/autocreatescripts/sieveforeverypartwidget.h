@@ -24,6 +24,7 @@ class KLineEdit;
 class QDomElement;
 
 namespace KSieveUi {
+class SieveHelpButton;
 class SieveForEveryPartWidget : public SieveWidgetPageAbstract
 {
     Q_OBJECT
@@ -40,6 +41,7 @@ private Q_SLOTS:
 private:
     QCheckBox *mForLoop;
     KLineEdit *mName;
+    SieveHelpButton *mHelpButton;
 };
 }
 

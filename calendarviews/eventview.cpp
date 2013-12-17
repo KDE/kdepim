@@ -48,7 +48,7 @@ using namespace Future;
 
 #include <KCheckableProxyModel>
 #include <KGuiItem>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KRandom>
 #include <KViewStateMaintainer>
 

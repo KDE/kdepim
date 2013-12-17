@@ -22,7 +22,7 @@
 #include <kapplication.h>
 #include <KFileDialog>
 #include <KCmdLineArgs>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDebug>
 #include <QPointer>

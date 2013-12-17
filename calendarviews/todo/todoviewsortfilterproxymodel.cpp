@@ -28,7 +28,7 @@
 
 #include <calendarsupport/utils.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 TodoViewSortFilterProxyModel::TodoViewSortFilterProxyModel( const EventViews::PrefsPtr &prefs,
                                                             QObject *parent )

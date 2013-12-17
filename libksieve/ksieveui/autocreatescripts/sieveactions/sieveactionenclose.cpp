@@ -159,4 +159,8 @@ QString SieveActionEnclose::help() const
     return i18n("Enclose action command is defined to allow an entire message to be enclosed as an attachment to a new message.");
 }
 
+QString SieveActionEnclose::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5703#page-10");
+}
 

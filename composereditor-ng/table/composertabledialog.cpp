@@ -22,7 +22,7 @@
 
 #include <KPIMTextEdit/InsertTableWidget>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 
 #include <QWebElement>

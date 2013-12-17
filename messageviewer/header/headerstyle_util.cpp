@@ -26,7 +26,7 @@
 
 
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 
 #include <QBuffer>

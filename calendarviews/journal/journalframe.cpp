@@ -37,7 +37,7 @@
 
 #include <KDialog>
 #include <KTextBrowser>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobalSettings>
 
 #include <QEvent>

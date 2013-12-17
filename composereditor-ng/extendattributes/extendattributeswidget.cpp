@@ -24,7 +24,7 @@
 #include <KComboBox>
 #include <KPushButton>
 #include <KSeparator>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QTreeWidget>

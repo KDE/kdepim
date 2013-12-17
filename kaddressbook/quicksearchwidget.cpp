@@ -22,7 +22,7 @@
 #include "quicksearchwidget.h"
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QtCore/QTimer>
 #include <QKeyEvent>

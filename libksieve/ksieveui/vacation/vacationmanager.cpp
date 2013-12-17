@@ -16,15 +16,16 @@
 */
 
 #include "vacationmanager.h"
-#include "ksieveui/vacation/vacation.h"
+#include "ksieveui/vacation/multiimapvacationmanager.h"
 #include "ksieveui/vacation/multiimapvacationdialog.h"
+#include "ksieveui/vacation/vacationcreatescriptjob.h"
 
 #include <KMessageBox>
 #include <KLocale>
 
 #include <QWidget>
 
-using namespace KMail;
+using namespace KSieveUi;
 
 VacationManager::VacationManager(QWidget *parent)
     : QObject(parent),
@@ -40,9 +41,10 @@ void VacationManager::checkVacation()
 {
     delete mCheckVacation;
 
-    mCheckVacation = new KSieveUi::Vacation( this, true /* check only */ );
+    mCheckVacation = new KSieveUi::MultiImapVacationManager( this );
     connect( mCheckVacation, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)) );
     connect( mCheckVacation, SIGNAL(requestEditVacation()), SIGNAL(editVacation()) );
+    mCheckVacation->checkVacation();
 }
 
 void VacationManager::slotEditVacation()
@@ -54,9 +56,25 @@ void VacationManager::slotEditVacation()
         return;
     }
 
-    mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(i18n("Configure Vacation"), mWidget);
-    mMultiImapVacationDialog->setAttribute(Qt::WA_DeleteOnClose);
+    mMultiImapVacationDialog = new KSieveUi::MultiImapVacationDialog(mWidget);
+    connect( mMultiImapVacationDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
+    connect( mMultiImapVacationDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCanceled()) );
     mMultiImapVacationDialog->show();
 }
 
+void VacationManager::slotDialogCanceled()
+{
+    mMultiImapVacationDialog->delayedDestruct();
+    mMultiImapVacationDialog = 0;
+}
 
+void VacationManager::slotDialogOk()
+{
+    QList<KSieveUi::VacationCreateScriptJob *> listJob = mMultiImapVacationDialog->listCreateJob();
+    Q_FOREACH (KSieveUi::VacationCreateScriptJob *job, listJob) {
+        connect(job, SIGNAL(scriptActive(bool,QString)), SIGNAL(updateVacationScriptStatus(bool,QString)));
+        job->start();
+    }
+    mMultiImapVacationDialog->delayedDestruct();
+    mMultiImapVacationDialog = 0;
+}

@@ -21,8 +21,9 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditorwidget.h"
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
+#include <KSharedConfig>
 
 #include <QProcess>
 #include <QInputDialog>

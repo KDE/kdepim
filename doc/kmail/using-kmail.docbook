@@ -18,7 +18,7 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2013-12-02</date>
+<date>2013-12-14</date>
 <releaseinfo>(&kde; 4.12)</releaseinfo>
 </chapterinfo>
 
@@ -34,6 +34,21 @@ when &kmail; is started. It is by default divided into three panes:</para>
 <varlistentry>
 <term>Folder list (on the left)</term>
 <listitem>
+  <screenshot>
+<screeninfo>Folder Pane</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="folder-example.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Folder Pane</phrase>
+    </textobject>
+    <caption>
+      <para>Folder Pane</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+
 <para>This pane contains the list of your message folders (other email programs
 may call them mailboxes). To select a folder, simply click on
 it. The messages contained in the folder will now appear in the Headers
@@ -42,25 +57,47 @@ a small portion of the left side of the screen, and a long view, which takes up 
 entire left side of the screen but is able to show more mailboxes. You can toggle
 between these two views under <guilabel>Appearance</guilabel>/<guilabel>Layout</guilabel>
 in the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-&kmail;...</guimenuitem></menuchoice> dialog. Also see the <link
-linkend="folders">Folders Section</link> for more information about how to use
-folders.</para>
+&kmail;...</guimenuitem></menuchoice> dialog. The top section of the folder pane contains quick links
+to your favorite folders. Add folders here through the &RMB; context menu <guimenuitem>Add to Favorite Folders</guimenuitem>.
+Please see the <link linkend="folders">Folders Section</link> for detailed information about how to use folders.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term>Message list (in the upper right by default)</term>
 <listitem>
+<screenshot>
+<screeninfo>Message List with Message View</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="message.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Message List and Message View</phrase>
+    </textobject>
+    <caption>
+      <para>Message List and Message View</para>
+    </caption>
+  </mediaobject>
+</screenshot>
 <para>This pane lists header information (message Status Flags, Sender, Subject,
 Date, and other optional columns like Size, Attachment Flag, Important Flag, etc.)
 for the messages in the currently selected folder. Clicking on a header
 will select that message and display it in the Message pane; you can also select
 more than one message by holding down the &Ctrl; key when clicking on messages.
-You may sort the messages by clicking on the column that you wish to
-sort; if you click on the same column more than once, sort order will toggle
-between ascending/descending and some alternative sorting criteria will become
-available (like sorting by Status when you click on the header of the Subject column).
-Clicking the <mousebutton>right</mousebutton> mousebutton on the list header shows a popup menu,
-which allows you to show or hide several columns in the list.
+Change the view of your message list by selecting <menuchoice><guimenu>View</guimenu><guimenuitem>Message List</guimenuitem>
+<guimenuitem>Theme</guimenuitem></menuchoice>. You have several options here.
+</para>
+<itemizedlist>
+  <listitem><para><guilabel>Classic</guilabel> A simple, backward compatible, single row with clickable sort columns.</para></listitem>
+  <listitem><para><guilabel>Fancy</guilabel> A fancy multi-line, multi-item with status icons, no sort columns.</para></listitem>
+  <listitem><para><guilabel>Fancy with clickable status</guilabel> A fancy multi-line, multi-item, status icons and clickable sort icons.</para></listitem>
+  <listitem><para><guilabel>Configure...</guilabel> Allows you to customize your own Message List Theme &eg; add or remove columns from the clickable sort bar.</para></listitem>
+</itemizedlist>
+<para>
+If you have chosen a theme with a clickable status, you may sort the messages by clicking on the column that you wish to sort;
+if you click on the same column more than once, sort order will toggle between ascending/descending and some alternative sorting criteria will become
+available (like sorting by Status when you click on the header of the Subject column). Clicking the &RMB; on the list header shows a pop up menu,
+which allows you to show or hide several columns in the list. You can customize the columns visible on the sort bar, see <link linkend="customize-messagelist-theme">Configure Appearance Message List</link> for details.
 </para>
 </listitem>
 </varlistentry>

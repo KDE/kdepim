@@ -18,7 +18,7 @@
 
 #include "webdavsettingsdialog.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QLabel>

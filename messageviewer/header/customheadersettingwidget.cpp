@@ -22,7 +22,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>

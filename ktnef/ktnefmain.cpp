@@ -33,7 +33,7 @@
 #include <KFileDialog>
 #include <KGlobal>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KMessageBox>
 #include <KProcess>

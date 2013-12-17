@@ -22,7 +22,7 @@
 
 #include <KLineEdit>
 #include <KComponentData>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDialog>
 #include <KIntNumInput>
 

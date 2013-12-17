@@ -28,7 +28,7 @@
 #include <KCompletionBox>
 #include <KDebug>
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QBoxLayout>
 #include <QKeyEvent>

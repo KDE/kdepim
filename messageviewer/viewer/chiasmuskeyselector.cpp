@@ -3,7 +3,7 @@
 
 #include <KLineEdit>
 #include <KListWidget>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QLabel>
 #include <QVBoxLayout>

@@ -23,7 +23,7 @@
 #include <kdebug.h>
 #include <kapplication.h>
 #include <KCmdLineArgs>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDialog>
 
 #include <QVBoxLayout>
@@ -58,6 +58,9 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     connect(mStorageManager, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
     connect(mStorageManager, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
     connect(mStorageManager, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
+    connect(mStorageManager, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+    connect(mStorageManager, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+    connect(mStorageManager, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
     bar->addAction(QLatin1String("Settings..."), this, SLOT(slotSettings()));
@@ -70,6 +73,21 @@ StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     mEdit->setReadOnly(true);
     lay->addWidget(mEdit);
     setLayout(lay);
+}
+
+void StorageServiceTestWidget::slotActionFailed(const QString &serviceName, const QString &error)
+{
+    mEdit->insertPlainText(QString::fromLatin1("action failed service name: %1 , error :%2\n").arg(serviceName).arg(error));
+}
+
+void StorageServiceTestWidget::slotAuthenticationFailed(const QString &serviceName, const QString &error)
+{
+    mEdit->insertPlainText(QString::fromLatin1("authentication failed service name: %1 , error :%2\n").arg(serviceName).arg(error));
+}
+
+void StorageServiceTestWidget::slotAuthenticationDone(const QString &serviceName)
+{
+    mEdit->insertPlainText(QString::fromLatin1("authentication done service name: %1\n").arg(serviceName));
 }
 
 void StorageServiceTestWidget::slotShareLinkDone(const QString &serviceName, const QString &link)

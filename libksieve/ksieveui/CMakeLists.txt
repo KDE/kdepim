@@ -32,6 +32,9 @@ set(ksieveui_vacation_LIB_SRCS
   vacation/vacationscriptextractor.cpp
   vacation/vacationutils.cpp
   vacation/vacationcreatescriptjob.cpp
+  vacation/vacationcheckjob.cpp
+  vacation/multiimapvacationmanager.cpp
+  vacation/vacationmanager.cpp
 )
 
 set(ksieveui_editor_LIB_SRCS
@@ -96,6 +99,7 @@ set(ksieveui_autocreatescripts_LIB_SRCS
   autocreatescripts/commonwidgets/selectconvertparameterwidget.cpp
   autocreatescripts/commonwidgets/selectmatchtypecombobox.cpp
   autocreatescripts/commonwidgets/selectmimetypecombobox.cpp
+  autocreatescripts/commonwidgets/sievehelpbutton.cpp
   autocreatescripts/sieveconditions/sievecondition.cpp
   autocreatescripts/sieveconditions/sieveconditionheader.cpp
   autocreatescripts/sieveconditions/sieveconditionlist.cpp

@@ -30,6 +30,7 @@ public:
     QWidget *createParamWidget( QWidget *parent ) const;
     bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
     QString help() const;
+    QString href() const;
 };
 }
 

@@ -28,7 +28,7 @@
 
 #include <KCheckableProxyModel>
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QTreeView>

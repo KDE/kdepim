@@ -51,7 +51,7 @@ public:
     virtual void createFolder(const QString &folder) = 0;
     virtual void listFolder() = 0;
     virtual void removeConfig() = 0;
-    virtual void authentification() = 0;
+    virtual void authentication() = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual QString storageServiceName() const = 0;
     virtual KIcon icon() const = 0;
@@ -61,8 +61,8 @@ Q_SIGNALS:
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
     void uploadFileProgress(const QString &serviceName, qint64 done,qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
-    void authentificationDone(const QString &serviceName);
-    void authentificationFailed(const QString &serviceName, const QString &error = QString());
+    void authenticationDone(const QString &serviceName);
+    void authenticationFailed(const QString &serviceName, const QString &error = QString());
     void createFolderDone(const QString &serviceName, const QString &folderName);
     void uploadFileDone(const QString &serviceName, const QString &fileName);
     void listFolderDone(const QString &serviceName, const QStringList &listFolder);

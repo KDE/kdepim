@@ -39,7 +39,7 @@ using namespace Future;
 
 #include <KCheckableProxyModel>
 #include <KGlobalSettings>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KVBox>
 #include <KViewStateMaintainer>
 

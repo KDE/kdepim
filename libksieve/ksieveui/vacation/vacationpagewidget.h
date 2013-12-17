@@ -28,6 +28,7 @@ class SieveJob;
 namespace KSieveUi {
 class VacationEditWidget;
 class VacationWarningWidget;
+class VacationCreateScriptJob;
 class VacationPageWidget : public QWidget
 {
     Q_OBJECT
@@ -37,7 +38,7 @@ public:
 
     void setServerUrl(const KUrl &url);
     void setServerName(const QString &serverName);
-    void writeScript();
+    KSieveUi::VacationCreateScriptJob *writeScript();
     void setDefault();
 
 private slots:

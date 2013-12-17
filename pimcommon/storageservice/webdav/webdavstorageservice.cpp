@@ -19,7 +19,7 @@
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
@@ -51,7 +51,7 @@ void WebDavStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void WebDavStorageService::authentification()
+void WebDavStorageService::authentication()
 {
     WebDavJob *job = new WebDavJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
@@ -62,7 +62,7 @@ void WebDavStorageService::authentification()
 void WebDavStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mServiceLocation.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
@@ -79,7 +79,7 @@ void WebDavStorageService::downloadFile()
 void WebDavStorageService::listFolder()
 {
     if (mServiceLocation.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
@@ -91,7 +91,7 @@ void WebDavStorageService::listFolder()
 void WebDavStorageService::createFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
@@ -103,7 +103,7 @@ void WebDavStorageService::createFolder(const QString &folder)
 void WebDavStorageService::accountInfo()
 {
     if (mServiceLocation.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
@@ -120,7 +120,7 @@ QString WebDavStorageService::name()
 void WebDavStorageService::uploadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
-        authentification();
+        authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));

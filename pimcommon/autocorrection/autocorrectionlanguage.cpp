@@ -16,9 +16,9 @@
 */
 
 #include "autocorrectionlanguage.h"
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
-
+#include <KLocale>
 using namespace PimCommon;
 
 AutoCorrectionLanguage::AutoCorrectionLanguage(QWidget *parent)

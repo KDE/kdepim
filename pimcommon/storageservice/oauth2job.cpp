@@ -62,7 +62,7 @@ void OAuth2Job::requestTokenAccess()
     if (!mScope.isEmpty())
         url.addQueryItem(QLatin1String("scope"),mScope);
     mAuthUrl = url;
-    qDebug()<<" url"<<url;
+    //qDebug()<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
     connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
@@ -79,7 +79,7 @@ void OAuth2Job::requestTokenAccess()
 void OAuth2Job::slotRedirect(const QUrl &url)
 {
     if (url != mAuthUrl) {
-        qDebug()<<" Redirect !"<<url;
+        //qDebug()<<" Redirect !"<<url;
         mAuthDialog->accept();
         parseRedirectUrl(url);
     }
@@ -88,7 +88,7 @@ void OAuth2Job::slotRedirect(const QUrl &url)
 void OAuth2Job::parseRedirectUrl(const QUrl &url)
 {
     const QList<QPair<QString, QString> > listQuery = url.queryItems();
-    qDebug()<< "listQuery "<<listQuery;
+    //qDebug()<< "listQuery "<<listQuery;
 
     QString authorizeCode;
     QString errorStr;
@@ -132,9 +132,16 @@ void OAuth2Job::uploadFile(const QString &filename)
 {
     mActionType = UploadFiles;
     mError = false;
+    QUrl url;
+    url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    qDebug()<<" request "<<request.rawHeaderList()<<" reqyest "<<request.url();
+    QUrl postData;
     //TODO
-    qDebug()<<" not implemented ";
-    deleteLater();
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void OAuth2Job::listFolder(const QString &folder)
@@ -167,13 +174,29 @@ void OAuth2Job::createFolder(const QString &foldername)
 {
     mActionType = CreateFolder;
     mError = false;
-    QNetworkRequest request(QUrl(/*mServiceUrl + mPathToken*/QLatin1String("https://api.box.com/2.0/folders")));
+    QUrl url;
+    url.setUrl(mApiUrl + mFolderInfoPath);
+    QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), foldername);
-    postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\"id\": \"0\"}"));
+    //postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\'id\': \'0\'}"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+void OAuth2Job::shareLink(const QString &fileId)
+{
+    mActionType = ShareLink;
+    mError = false;
+    QUrl url;
+    url.setUrl(mApiUrl + mFileInfoPath + fileId);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -181,10 +204,14 @@ void OAuth2Job::shareLink(const QString &root, const QString &path)
 {
     mActionType = ShareLink;
     mError = false;
-    //TODO
-    qDebug()<<" not implemented ";
-    deleteLater();
-
+    QUrl url;
+    QString fileId; //TODO
+    url.setUrl(mApiUrl + mFileInfoPath + fileId);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 
@@ -214,21 +241,9 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case UploadFiles:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case CreateFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case AccountInfo:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case ListFolder:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case CreateServiceFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
@@ -299,6 +314,7 @@ void OAuth2Job::parseListFolder(const QString &data)
 
 void OAuth2Job::parseAccountInfo(const QString &)
 {
+    //TODO reimplement in derivated function
     deleteLater();
 }
 

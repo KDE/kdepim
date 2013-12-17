@@ -32,7 +32,7 @@
 #include <Akonadi/Session>
 
 #include <KJob>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QMessageBox>
 #include <QPointer>

@@ -62,3 +62,7 @@ bool SieveConditionTrue::setParamWidgetValue(const QDomElement &, QWidget *, boo
     return true;
 }
 
+QString SieveConditionTrue::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-26");
+}

@@ -112,11 +112,6 @@ void NotesAgent::showConfigureDialog(qlonglong windowId)
     delete dialog;
 }
 
-void NotesAgent::printDebugInfo()
-{
-    mNotesManager->printDebugInfo();
-}
-
 bool NotesAgent::receiveNotes() const
 {
     return NoteShared::NoteSharedGlobalConfig::receiveNotes();

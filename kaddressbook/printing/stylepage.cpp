@@ -32,7 +32,7 @@
 
 #include <KComboBox>
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 // helper method to sort contact fields by field label
 static bool contactFieldsNameLesser( const ContactFields::Field &field,

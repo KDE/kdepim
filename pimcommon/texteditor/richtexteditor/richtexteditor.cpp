@@ -17,7 +17,7 @@
 
 #include "richtexteditor.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KToolInvocation>
 #include <KAction>

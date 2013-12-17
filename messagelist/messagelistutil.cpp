@@ -22,7 +22,7 @@
 #include <KConfigGroup>
 #include <KMenu>
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <nepomuk2/nmo.h>
 #include <Nepomuk2/Resource>
 #include <Nepomuk2/Variant>

@@ -22,7 +22,7 @@
 #include <KProcess>
 #include <ksocketfactory.h>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 
