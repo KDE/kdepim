@@ -57,6 +57,7 @@ private:
     void parseUploadFiles(const QString &data);
     void parseAccessToken(const QString &data);
     void createServiceFolder();
+    void parseCreateServiceFolder(const QString &data);
     QString mCustomerSecret;
     QString mToken;
     QString mCustomerKey;

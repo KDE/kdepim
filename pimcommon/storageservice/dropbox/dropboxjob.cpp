@@ -132,10 +132,8 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             case AccountInfo:
             case ListFolder:
             case ShareLink:
-                errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
             case CreateServiceFolder:
+                errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
             default:

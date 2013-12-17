@@ -224,13 +224,19 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         parseListFolder(data);
         break;
     case CreateServiceFolder:
-        deleteLater();
+        parseCreateServiceFolder(data);
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
         deleteLater();
         break;
     }
+}
+
+void YouSendItJob::parseCreateServiceFolder(const QString &data)
+{
+    qDebug()<<" create service folder not implmented";
+    deleteLater();
 }
 
 void YouSendItJob::parseListFolder(const QString &data)

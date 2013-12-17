@@ -210,12 +210,17 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         parseListFolder(data);
         break;
     case CreateServiceFolder:
-        //TODO
-        deleteLater();
+        parseCreateServiceFolder(data);
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::parseCreateServiceFolder(const QString &data)
+{
+    qDebug()<<" create service folder not implemented";
+    deleteLater();
 }
 
 void UbuntuOneJob::parseListFolder(const QString &data)
