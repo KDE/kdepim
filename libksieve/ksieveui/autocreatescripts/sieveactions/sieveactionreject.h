@@ -37,6 +37,7 @@ public:
 
     QString serverNeedsCapability() const;
     QString help() const;
+    QString href() const;
 };
 }
 

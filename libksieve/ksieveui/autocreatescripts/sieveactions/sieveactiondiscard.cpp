@@ -39,3 +39,7 @@ QString SieveActionDiscard::help() const
     return i18n("Discard is used to silently throw away the message.");
 }
 
+QString SieveActionDiscard::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-22");
+}

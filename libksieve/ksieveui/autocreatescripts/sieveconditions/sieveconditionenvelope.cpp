@@ -173,3 +173,9 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
     }
     return true;
 }
+
+
+QString KSieveUi::SieveConditionEnvelope::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-24");
+}

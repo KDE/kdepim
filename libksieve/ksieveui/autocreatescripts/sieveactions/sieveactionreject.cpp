@@ -105,3 +105,7 @@ QString SieveActionReject::help() const
     return i18n(" The \"reject\" action cancels the implicit keep and refuses delivery of a message.");
 }
 
+QString SieveActionReject::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-20");
+}

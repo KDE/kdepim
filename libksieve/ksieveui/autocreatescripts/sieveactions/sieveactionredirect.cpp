@@ -156,4 +156,8 @@ QString SieveActionRedirect::help() const
     return helpStr;
 }
 
+QString SieveActionRedirect::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-20");
+}
 
