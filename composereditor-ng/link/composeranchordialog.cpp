@@ -22,7 +22,7 @@
 #include "extendattributes/extendattributesbutton.h"
 #include "utils/composereditorutils_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 #include <KSeparator>
 

@@ -22,7 +22,7 @@
 #include "pagecolorbackgroundwidget.h"
 #include "extendattributes/extendattributesbutton.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSeparator>
 
 #include <QVBoxLayout>

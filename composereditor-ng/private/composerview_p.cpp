@@ -40,7 +40,7 @@
 
 
 #include <KToolInvocation>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KToggleAction>
 #include <KAction>
 #include <KSelectAction>

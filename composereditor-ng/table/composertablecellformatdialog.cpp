@@ -22,7 +22,7 @@
 #include "composercellsizewidget.h"
 #include "extendattributes/extendattributesbutton.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KColorButton>
 #include <KComboBox>
 #include <KSeparator>

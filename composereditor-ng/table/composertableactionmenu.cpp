@@ -23,7 +23,7 @@
 #include "composertableformatdialog.h"
 #include "helper/tablehelper_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QWebElement>
 #include <QDebug>

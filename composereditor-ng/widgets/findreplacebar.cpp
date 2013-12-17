@@ -21,7 +21,7 @@
 #include "findreplacebar.h"
 
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KColorScheme>
 #include <KMessageBox>
 
