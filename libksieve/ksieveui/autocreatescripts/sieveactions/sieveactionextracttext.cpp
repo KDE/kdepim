@@ -126,3 +126,8 @@ QString SieveActionExtractText::help() const
     return i18n("The \"extracttext\" action may be used within the context of a \"foreverypart\" loop and is used to store text into a variable");
 }
 
+QString SieveActionExtractText::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5703#page-11");
+}
+

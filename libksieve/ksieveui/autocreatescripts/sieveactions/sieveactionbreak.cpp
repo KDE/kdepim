@@ -85,6 +85,11 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
     return true;
 }
 
+QString SieveActionBreak::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5703#page-3");
+}
+
 QString SieveActionBreak::code(QWidget *w) const
 {
     const KLineEdit *name = w->findChild<KLineEdit*>(QLatin1String("name"));

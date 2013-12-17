@@ -204,7 +204,7 @@ SieveIncludeWidget::~SieveIncludeWidget()
 void SieveIncludeWidget::slotHelp()
 {
     const QString help = i18n("The \"include\" command takes an optional \"location\" parameter, an optional \":once\" parameter, an optional \":optional\" parameter, and a single string argument representing the name of the script to include for processing at that point.");
-    const QString href = QString(); //TODO
+    const QString href = QLatin1String("http://tools.ietf.org/html/rfc6609#page-4");
     const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
     QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }

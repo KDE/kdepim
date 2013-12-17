@@ -33,6 +33,7 @@ public:
     QString serverNeedsCapability() const;
     QWidget *createParamWidget( QWidget *parent ) const;
     bool setParamWidgetValue(const QDomElement &element, QWidget *parent, QString &error );
+    QString href() const;
 };
 }
 
