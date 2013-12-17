@@ -38,7 +38,7 @@ public:
     void checkVacation();
 
 public Q_SLOTS:
-    void slotEditVacation();
+    void slotEditVacation(const QString &serverName);
 
 Q_SIGNALS:
     void updateVacationScriptStatus(bool, const QString&);
