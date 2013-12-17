@@ -17,7 +17,7 @@
 
 #include "adblocklistwidget.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobalSettings>
 
 #include <QPainter>

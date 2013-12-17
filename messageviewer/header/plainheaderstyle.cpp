@@ -26,7 +26,7 @@
 #include <messagecore/utils/stringutil.h>
 
 #include <kdebug.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KApplication>
 
 #include <kmime/kmime_message.h>

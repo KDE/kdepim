@@ -27,8 +27,9 @@
 #include <KDebug>
 #include <KGlobal>
 #include <KLibrary>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
+#include <KConfig>
 
 #include <QFile>
 #include <QStringList>

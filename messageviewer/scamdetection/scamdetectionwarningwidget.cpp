@@ -18,7 +18,7 @@
 #include "scamdetectionwarningwidget.h"
 #include "settings/globalsettings.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAction>
 
 #include <QDebug>

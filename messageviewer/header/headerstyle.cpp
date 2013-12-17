@@ -42,7 +42,7 @@
 
 #include <KDebug>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "messagecore/settings/globalsettings.h"
 

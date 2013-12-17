@@ -22,7 +22,7 @@
 
 #include <KGlobal>
 #include <KStandardDirs>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <qjson/parser.h>
 

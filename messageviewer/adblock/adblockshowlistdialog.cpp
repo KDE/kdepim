@@ -22,9 +22,10 @@
 
 #include <KPIMUtils/ProgressIndicatorLabel>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIO/Job>
 #include <KTemporaryFile>
+#include <KSharedConfig>
 
 #include <QHBoxLayout>
 #include <KDebug>
