@@ -62,7 +62,7 @@ void OAuth2Job::requestTokenAccess()
     if (!mScope.isEmpty())
         url.addQueryItem(QLatin1String("scope"),mScope);
     mAuthUrl = url;
-    qDebug()<<" url"<<url;
+    //qDebug()<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
     connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
@@ -142,10 +142,6 @@ void OAuth2Job::uploadFile(const QString &filename)
     //TODO
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-
-    //TODO
-    qDebug()<<" not implemented ";
-    deleteLater();
 }
 
 void OAuth2Job::listFolder(const QString &folder)
@@ -216,11 +212,6 @@ void OAuth2Job::shareLink(const QString &root, const QString &path)
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-
-    //TODO
-    qDebug()<<" not implemented ";
-    deleteLater();
-
 }
 
 
