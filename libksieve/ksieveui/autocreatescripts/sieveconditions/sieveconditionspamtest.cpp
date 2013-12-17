@@ -177,4 +177,8 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
     return true;
 }
 
+QString SieveConditionSpamTest::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc3685#page-3");
+}
 

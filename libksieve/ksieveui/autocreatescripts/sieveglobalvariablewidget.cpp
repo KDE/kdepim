@@ -169,7 +169,7 @@ SieveGlobalVariableWidget::~SieveGlobalVariableWidget()
 void SieveGlobalVariableWidget::slotHelp()
 {
     const QString help = i18n("A variable has global scope in all scripts that have declared it with the \"global\" command.  If a script uses that variable name without declaring it global, the name specifies a separate, non-global variable within that script.");
-    const QString href = QString(); //TODO
+    const QString href = QLatin1String("http://tools.ietf.org/search/rfc5229");
     const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
     QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }

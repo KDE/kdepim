@@ -106,3 +106,8 @@ bool SieveConditionIhave::setParamWidgetValue(const QDomElement &element, QWidge
     return true;
 }
 
+QString SieveConditionIhave::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5463");
+}
+
