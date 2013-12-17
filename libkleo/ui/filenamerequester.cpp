@@ -33,7 +33,7 @@
 #include "filenamerequester.h"
 
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QLayout>
 #include <QToolButton>
