@@ -43,9 +43,9 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     lay->setMargin(0);
     w->setLayout(lay);
 
-    SieveHelpButton *helpButton = new SieveHelpButton;
-    topLayout->addWidget( helpButton );
-    connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    mHelpButton = new SieveHelpButton;
+    topLayout->addWidget( mHelpButton );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
     topLayout->addWidget(mForLoop);
@@ -72,7 +72,7 @@ SieveForEveryPartWidget::~SieveForEveryPartWidget()
 void SieveForEveryPartWidget::slotHelp()
 {
     const QString help = i18n("\"foreverypart\", which is an iterator that walks though every MIME part of a message, including nested parts, depth first, and applies the commands in the specified block to each of them.");
-    QWhatsThis::showText( QCursor::pos(), help );
+    QWhatsThis::showText( QCursor::pos(), help, mHelpButton );
 }
 
 void SieveForEveryPartWidget::generatedScript(QString &script, QStringList &requires)

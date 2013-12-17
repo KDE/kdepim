@@ -28,7 +28,7 @@ class QGridLayout;
 class QCheckBox;
 class QDomElement;
 namespace KSieveUi {
-
+class SieveHelpButton;
 class SieveIncludeLocation : public KComboBox
 {
     Q_OBJECT
@@ -113,6 +113,7 @@ private Q_SLOTS:
 
 private:
     SieveIncludeWidgetLister *mIncludeLister;
+    SieveHelpButton *mHelpButton;
 };
 }
 

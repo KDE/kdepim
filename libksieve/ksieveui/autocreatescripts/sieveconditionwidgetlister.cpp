@@ -154,7 +154,7 @@ void SieveConditionWidget::slotHelp()
     if (index < mConditionList.count()) {
         KSieveUi::SieveCondition* condition = mConditionList.at( index );
         const QString help = condition->help();
-        QWhatsThis::showText( QCursor::pos(), help );
+        QWhatsThis::showText( QCursor::pos(), help, mHelpButton );
     }
 }
 

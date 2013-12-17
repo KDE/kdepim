@@ -186,9 +186,9 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    SieveHelpButton *helpButton = new SieveHelpButton;
-    lay->addWidget( helpButton );
-    connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
+    mHelpButton = new SieveHelpButton;
+    lay->addWidget( mHelpButton );
+    connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveIncludeWidgetLister;
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
@@ -203,7 +203,7 @@ SieveIncludeWidget::~SieveIncludeWidget()
 void SieveIncludeWidget::slotHelp()
 {
     const QString help = i18n("The \"include\" command takes an optional \"location\" parameter, an optional \":once\" parameter, an optional \":optional\" parameter, and a single string argument representing the name of the script to include for processing at that point.");
-    QWhatsThis::showText( QCursor::pos(), help );
+    QWhatsThis::showText( QCursor::pos(), help, mHelpButton );
 }
 
 void SieveIncludeWidget::generatedScript(QString &script, QStringList &requires)

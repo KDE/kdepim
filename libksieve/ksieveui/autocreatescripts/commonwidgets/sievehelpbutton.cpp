@@ -22,6 +22,7 @@
 
 #include <QWhatsThisClickedEvent>
 #include <QDebug>
+#include <QWhatsThis>
 
 using namespace KSieveUi;
 SieveHelpButton::SieveHelpButton(QWidget *parent)
@@ -43,6 +44,7 @@ bool SieveHelpButton::event(QEvent* event)
     {
         QWhatsThisClickedEvent* clicked = static_cast<QWhatsThisClickedEvent*>(event);
         qDebug()<<" clicked->href() "<<clicked->href();
+        QWhatsThis::hideText();
         return true;
     }
     return QToolButton::event(event);

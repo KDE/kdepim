@@ -182,7 +182,7 @@ void SieveActionWidget::slotHelp()
     if (index < mActionList.count()) {
         KSieveUi::SieveAction* action = mActionList.at( index );
         const QString help = action->help();
-        QWhatsThis::showText( QCursor::pos(), help );
+        QWhatsThis::showText( QCursor::pos(), help, mHelpButton );
     }
 }
 
