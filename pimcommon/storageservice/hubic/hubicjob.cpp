@@ -36,6 +36,9 @@ HubicJob::HubicJob(QObject *parent)
     mAuthorizePath = QLatin1String("/oauth/auth/");
     mPathToken = QLatin1String("/oauth/token/");
     mCurrentAccountInfoPath = QLatin1String("/1.0/account/usage");
+    //FIXME
+    //mFolderInfoPath = QLatin1String("/2.0/folders/");
+    //mFileInfoPath = QLatin1String("/2.0/files/");
 }
 
 HubicJob::~HubicJob()

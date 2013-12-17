@@ -231,18 +231,14 @@ void UbuntuOneJob::parseListFolder(const QString &data)
 
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
+    QStringList listFolder;
     if (info.contains(QLatin1String("user_node_paths"))) {
         qDebug()<<" list folder "<<info.value(QLatin1String("user_node_paths"));
-        QVariantList lst = info.value(QLatin1String("user_node_paths")).toList();
-        if (lst.contains(mAttachmentVolume)) {
-            qDebug()<<" Has kmail folder";
-        } else {
-            qDebug()<<"doesn't have kmail folder";
-            //FIXME create folder !
-        }
+        QList<QVariant> lst = info.value(QLatin1String("user_node_paths")).toList();
+        Q_FOREACH (const QVariant &v, lst)
+            listFolder.append(v.toString());
     }
-    //TODO
-    Q_EMIT listFolderDone(QStringList());
+    Q_EMIT listFolderDone(listFolder);
     deleteLater();
 }
 
