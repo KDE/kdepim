@@ -31,7 +31,7 @@
 #include <akonadi/private/notificationmessage_p.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardDirs>
 #include <KStandardGuiItem>

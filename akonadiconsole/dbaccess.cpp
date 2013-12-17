@@ -28,7 +28,7 @@
 #include <QSqlQuery>
 
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 using namespace Akonadi;

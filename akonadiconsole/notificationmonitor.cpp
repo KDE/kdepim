@@ -22,7 +22,7 @@
 
 #include <Akonadi/Control>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHeaderView>
 #include <QCheckBox>
