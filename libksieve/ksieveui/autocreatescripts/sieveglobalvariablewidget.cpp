@@ -17,6 +17,7 @@
 
 #include "sieveglobalvariablewidget.h"
 #include "sievescriptblockwidget.h"
+#include "commonwidgets/sievehelpbutton.h"
 
 #include <KPushButton>
 #include <KLocalizedString>
@@ -150,10 +151,8 @@ SieveGlobalVariableWidget::SieveGlobalVariableWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    QToolButton *helpButton = new QToolButton;
-    helpButton->setToolTip(i18n("Help"));
+    SieveHelpButton *helpButton = new SieveHelpButton;
     lay->addWidget( helpButton );
-    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
     connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveGlobalVariableLister;

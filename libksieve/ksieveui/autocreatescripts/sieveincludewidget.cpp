@@ -17,6 +17,7 @@
 
 #include "sieveincludewidget.h"
 #include "sievescriptblockwidget.h"
+#include "commonwidgets/sievehelpbutton.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KPushButton>
@@ -185,10 +186,8 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     : SieveWidgetPageAbstract(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    QToolButton *helpButton = new QToolButton;
-    helpButton->setToolTip(i18n("Help"));
+    SieveHelpButton *helpButton = new SieveHelpButton;
     lay->addWidget( helpButton );
-    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
     connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveIncludeWidgetLister;

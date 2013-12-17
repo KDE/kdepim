@@ -17,6 +17,7 @@
 
 #include "sieveforeverypartwidget.h"
 #include "sievescriptblockwidget.h"
+#include "commonwidgets/sievehelpbutton.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
 #include <KLocalizedString>
@@ -42,10 +43,8 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     lay->setMargin(0);
     w->setLayout(lay);
 
-    QToolButton *helpButton = new QToolButton;
-    helpButton->setToolTip(i18n("Help"));
+    SieveHelpButton *helpButton = new SieveHelpButton;
     topLayout->addWidget( helpButton );
-    helpButton->setIcon( KIcon( QLatin1String("help-hint") ) );
     connect(helpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
