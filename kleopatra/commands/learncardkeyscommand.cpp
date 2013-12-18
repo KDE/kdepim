@@ -43,7 +43,6 @@
 #include <gpgme++/key.h>
 
 #include <KLocale>
-#include <KMessageBox>
 
 using namespace Kleo;
 using namespace Kleo::Commands;

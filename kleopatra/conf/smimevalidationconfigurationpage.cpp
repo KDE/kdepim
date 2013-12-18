@@ -35,7 +35,6 @@
 #include "smimevalidationconfigurationpage.h"
 #include "smimevalidationconfigurationwidget.h"
 
-#include <QLayout>
 #include <QVBoxLayout>
 #include <kmessagebox.h>
 #include <klocale.h>

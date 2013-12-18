@@ -46,7 +46,6 @@
 #include <kleo/stl_util.h>
 
 #include <KLocale>
-#include <KMessageBox>
 #include <kdebug.h>
 
 #include <QApplication>

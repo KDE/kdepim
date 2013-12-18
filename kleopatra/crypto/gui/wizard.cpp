@@ -50,7 +50,6 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #ifndef QT_NO_WIZARD
-#include <QWizard>
 #else
 #include <utils/qwizard.h>
 #endif

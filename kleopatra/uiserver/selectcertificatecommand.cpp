@@ -50,10 +50,7 @@
 #include <KDebug>
 #include <KLocale>
 
-#include <QVariant>
 #include <QByteArray>
-#include <QIODevice>
-#include <QList>
 #include <QPointer>
 
 #include <string>

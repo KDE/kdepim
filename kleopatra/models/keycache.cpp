@@ -61,7 +61,6 @@
 #include <KLocale>
 
 #include <QPointer>
-#include <QStringList>
 #include <QTimer>
 
 #include <boost/bind.hpp>

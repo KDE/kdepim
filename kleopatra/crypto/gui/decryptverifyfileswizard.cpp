@@ -49,15 +49,13 @@
 #include "libkleo/ui/filenamerequester.h"
 
 #include <KLocale>
+#include <KGuiItem>
 
+#include <QBoxLayout>
 #include <QCheckBox>
-#include <QLayout>
 #include <QLabel>
-#include <QEventLoop>
-#include <QPointer>
-#include <QAbstractButton>
-#include <QScrollBar>
 #include <QTimer>
+#include <QTreeView>
 
 #include <boost/bind.hpp>
 

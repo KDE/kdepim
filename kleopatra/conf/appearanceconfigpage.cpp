@@ -41,7 +41,6 @@
 #include <kdebug.h>
 #include <kcomponentdata.h>
 
-#include <QLayout>
 #include <QVBoxLayout>
 
 using namespace Kleo;

@@ -56,7 +56,6 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include <QThread>
-#include <QTimer>
 #include <QPointer>
 
 #ifndef _WIN32_WCE

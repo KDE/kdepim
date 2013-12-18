@@ -42,7 +42,7 @@
 #include <kglobal.h>
 #include <knuminput.h>
 
-#include <QLayout>
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QCheckBox>
 #include <QComboBox>

@@ -80,7 +80,6 @@ namespace Kleo {
 #include <kmessagebox.h>
 
 #include <QTextDocument> // for Qt::escape
-#include <QStringList>
 #include <QMessageBox>
 #include <QTimer>
 #include <QTime>

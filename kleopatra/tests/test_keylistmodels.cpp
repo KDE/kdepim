@@ -43,7 +43,6 @@
 
 #include <QTreeView>
 #include <QLineEdit>
-#include <QLayout>
 #include <QTimer>
 #include <QEventLoop>
 #include <QDateTime>

@@ -49,7 +49,6 @@
 #include <QString>
 #include <QStringList>
 #include <QDateTime>
-#include <QCoreApplication>
 #include <QTextDocument> // for Qt::escape
 
 using namespace GpgME;

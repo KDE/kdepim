@@ -44,8 +44,6 @@
 
 #include <QCheckBox>
 #include <QHash>
-#include <QHBoxLayout>
-#include <QIcon>
 #include <QLabel>
 #include <QProgressBar>
 #include <QVBoxLayout>

@@ -45,7 +45,6 @@
 #include <gpgme++/key.h>
 
 #include <KLocale>
-#include <KMessageBox>
 #include <kdebug.h>
 
 #include <gpg-error.h>

@@ -41,7 +41,6 @@
 #include <kiconloader.h>
 
 #include <QPixmap>
-#include <QVariant>
 #include <QProcess>
 #include <QTextStream>
 

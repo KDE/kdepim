@@ -34,7 +34,6 @@
 
 #include "configuration.h"
 
-#include <QByteArray>
 #include <QDateTime>
 #include <QIODevice>
 #include <QString>

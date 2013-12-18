@@ -33,11 +33,12 @@
 #ifndef __KLEOPATRA_CRYPTO_GUI_WIZARD_H__
 #define __KLEOPATRA_CRYPTO_GUI_WIZARD_H__
 
-#include <KDialog>
 
 #include <utils/pimpl_ptr.h>
 
 #include <vector>
+
+#include <QDialog>
 
 namespace Kleo {
 namespace Crypto {

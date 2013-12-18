@@ -50,7 +50,6 @@
 #include <gpgme++/key.h>
 
 #include <KLocale>
-#include <KMessageBox>
 
 #include <QPointer>
 #include <QAbstractItemView>

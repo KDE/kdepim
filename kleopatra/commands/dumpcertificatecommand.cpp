@@ -51,9 +51,9 @@
 #include <QString>
 #include <QByteArray>
 #include <QTimer>
-#include <QLayout>
 #include <QPointer>
-
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds
 

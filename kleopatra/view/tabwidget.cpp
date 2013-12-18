@@ -53,13 +53,12 @@
 #include <KAction>
 #include <KActionCollection>
 
-#include <QGridLayout>
-#include <QTimer>
 #include <QTreeView>
 #include <QToolButton>
 #include <QAction>
 #include <QMenu>
 #include <QInputDialog>
+#include <QVBoxLayout>
 
 #include <map>
 #include <vector>

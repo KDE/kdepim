@@ -40,7 +40,6 @@
 
 #include <KDebug>
 #include <KProcess>
-#include <KMessageBox>
 #include <KLocale>
 #include <KWindowSystem>
 

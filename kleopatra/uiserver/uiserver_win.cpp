@@ -38,9 +38,6 @@
 
 #include <KLocalizedString>
 
-#include <QFile>
-#include <QDir>
-#include <QTextStream>
 #include <qendian.h>
 
 #include <stdexcept>

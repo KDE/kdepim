@@ -43,7 +43,6 @@
 #include <kconfiggroup.h>
 
 #include <QApplication>
-#include <QIcon>
 
 #ifdef KLEO_STATIC_KCMODULES
 # include <KDesktopFile>

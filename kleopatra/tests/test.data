@@ -39,7 +39,6 @@
 #include "../uiserver/kleo-assuan.h"
 #include <gpg-error.h>
 
-#include <QtCore>
 
 #include <unistd.h>
 #include <sys/types.h>

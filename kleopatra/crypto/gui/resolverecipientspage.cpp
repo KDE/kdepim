@@ -58,7 +58,6 @@
 #include <QPushButton>
 #include <QRadioButton>
 #include <QToolButton>
-#include <QSignalMapper>
 #include <QStringList>
 #include <QVBoxLayout>
 

@@ -47,7 +47,6 @@
 #include <gpgme++/key.h>
 
 #include <KLocale>
-#include <KMessageBox>
 #include <kdebug.h>
 
 #include <QDateTime>

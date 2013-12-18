@@ -25,10 +25,9 @@
 
 #include <QPointer>
 #include <QPushButton>
-#include <QLabel>
 #include <QLineEdit>
-#include <QLayout>
 #include <QMessageBox>
+#include <QHBoxLayout>
 
 #include <memory>
 

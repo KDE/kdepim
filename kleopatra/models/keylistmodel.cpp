@@ -45,14 +45,12 @@
 #include <kleo/keyfilter.h>
 
 #include <KLocale>
-#include <KIcon>
 
-#include <QDateTime>
 #include <QFont>
 #include <QColor>
-#include <QApplication>
 #include <QHash>
-
+#include <QIcon>
+#include <QDate>
 #include <gpgme++/key.h>
 
 

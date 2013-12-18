@@ -48,9 +48,6 @@
 
 #include <KLocale>
 #include <KDebug>
-#include <KSaveFile>
-#include <KGlobal>
-#include <KConfigGroup>
 
 #include <QPointer>
 #include <QFileInfo>

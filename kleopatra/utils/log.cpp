@@ -44,7 +44,6 @@
 #include <QDir>
 #include <QFile>
 #include <QString>
-#include <QDebug>
 
 #include <boost/weak_ptr.hpp>
 #include <cassert>

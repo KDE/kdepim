@@ -65,7 +65,6 @@
 #include <KDebug>
 #include <KLocalizedString>
 #include <KWindowSystem>
-#include <KMessageBox>
 
 #include <QSocketNotifier>
 #include <QTimer>
@@ -73,8 +72,8 @@
 #include <QPointer>
 #include <QFileInfo>
 #include <QStringList>
-#include <QDialog>
 #include <QRegExp>
+#include <QWidget>
 
 #include <kleo-assuan.h>
 

@@ -42,7 +42,6 @@
 #include <QFileDialog>
 
 #include <KProcess>
-#include <KMessageBox>
 #include <KLocale>
 
 static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds

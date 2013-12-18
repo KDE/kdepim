@@ -39,12 +39,9 @@
 #include "libkleo/ui/filenamerequester.h"
 
 #include <KLocale>
-#include <KIcon>
 
-#include <QLayout>
 #include <QLabel>
 #include <QCheckBox>
-#include <QToolButton>
 #include <QStackedLayout>
 #include <QComboBox>
 

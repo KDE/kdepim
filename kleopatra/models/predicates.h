@@ -35,7 +35,6 @@
 
 #include <kleo/stl_util.h>
 
-#include <QByteArray>
 #include <string>
 
 #include <gpgme++/key.h>

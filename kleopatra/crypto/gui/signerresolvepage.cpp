@@ -63,7 +63,6 @@
 #include <QPointer>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QStackedLayout>
 #include <QVBoxLayout>
 #include <QVector>
 

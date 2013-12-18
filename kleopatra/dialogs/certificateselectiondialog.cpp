@@ -54,10 +54,10 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QDialogButtonBox>
-#include <QLayout>
 #include <QItemSelectionModel>
 #include <QAbstractItemView>
 #include <QPointer>
+#include <QVBoxLayout>
 
 #include <boost/bind.hpp>
 

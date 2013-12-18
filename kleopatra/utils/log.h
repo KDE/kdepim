@@ -35,7 +35,6 @@
 
 #include <utils/pimpl_ptr.h>
 
-#include <QtGlobal>
 
 #include <boost/shared_ptr.hpp>
 

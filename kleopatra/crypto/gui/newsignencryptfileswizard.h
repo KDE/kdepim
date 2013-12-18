@@ -37,7 +37,6 @@
 
 #include <gpgme++/global.h>
 
-#include <QDialog>
 
 #ifndef QT_NO_WIZARD
 #include <QWizard>

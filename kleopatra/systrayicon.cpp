@@ -54,12 +54,9 @@
 #include <KLocale>
 #include <KAboutApplicationDialog>
 #include <KAboutData>
-#include <KComponentData>
-#include <KWindowSystem>
 
 #include <QMenu>
 #include <QAction>
-#include <QTimer>
 #include <QApplication>
 #include <QClipboard>
 #include <QPointer>

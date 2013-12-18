@@ -25,7 +25,6 @@
 
 #include <config-kleopatra.h>
 
-#include <QtGui>
 
 Q_DECLARE_METATYPE(QModelIndex)
 

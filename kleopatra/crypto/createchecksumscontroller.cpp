@@ -46,11 +46,11 @@
 #include <kdebug.h>
 #include <KSaveFile>
 
-#include <QLayout>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QListWidget>
+#include <QVBoxLayout>
 
 #include <QPointer>
 #include <QFileInfo>

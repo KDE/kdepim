@@ -43,10 +43,8 @@
 
 #include <KLocale>
 
-#include <QVariant>
 #include <QByteArray>
 #include <QIODevice>
-#include <QList>
 
 #include <string>
 #include <algorithm>

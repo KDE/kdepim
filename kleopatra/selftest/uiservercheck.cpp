@@ -41,7 +41,7 @@
 #include <libkleopatraclient/core/command.h>
 
 #include <QTextDocument> // for Qt::escape
-#include <QCoreApplication>
+#include <QEventLoop>
 
 #include <KLocale>
 

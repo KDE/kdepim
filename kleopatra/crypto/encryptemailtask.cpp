@@ -49,7 +49,6 @@
 
 #include <KLocale>
 
-#include <QIcon>
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 

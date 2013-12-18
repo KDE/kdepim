@@ -56,11 +56,7 @@
 #include <kglobal.h>
 #include <kicon.h>
 
-#include <QTextEdit>
-#include <QDir>
 #include <QEventLoop>
-#include <QTimer>
-#include <QTextCodec>
 #include <QTextStream>
 #include <QDateTime>
 #include <QFileDialog>

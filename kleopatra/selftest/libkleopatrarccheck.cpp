@@ -41,9 +41,7 @@
 #include <kleo/checksumdefinition.h>
 
 #include <KLocale>
-#include <KMessageBox>
 
-#include <QSettings>
 
 #include <boost/shared_ptr.hpp>
 

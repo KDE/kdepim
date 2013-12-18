@@ -57,7 +57,6 @@
 #include <KDebug>
 
 #include <QFile>
-#include <QFileInfo>
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 

@@ -47,13 +47,11 @@
 #include <KLocale>
 #include <KConfigGroup>
 
-#include <QByteArray>
 #include <QFile>
-#include <QFileDialog>
-#include <QPointer>
 #include <QString>
 #include <QWidget>
 #include <QFileInfo>
+#include <QDir>
 
 #include <memory>
 #include <cassert>

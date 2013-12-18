@@ -50,15 +50,12 @@
 
 #include <KLocale>
 #include <KMessageBox>
-#include <KConfigGroup>
 #include <KDebug>
 
 #include <QByteArray>
 #include <QFile>
-#include <QFileDialog>
 #include <QString>
 #include <QWidget>
-#include <QFileInfo>
 #include <QTreeView>
 #include <QTextDocument> // for Qt::escape
 

@@ -79,8 +79,6 @@
 #include <KLocalizedString>
 
 #include <QAbstractItemView>
-#include <QTreeView>
-#include <QTableView>
 #include <QPointer>
 #include <QItemSelectionModel>
 #include <QAction>

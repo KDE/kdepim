@@ -48,7 +48,6 @@
 #include <KIconLoader>
 #include <KLocale>
 
-#include <QIcon>
 #include <QString>
 
 #include <boost/bind.hpp>

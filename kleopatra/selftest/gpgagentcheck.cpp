@@ -43,7 +43,6 @@
 #include <gpgme++/gpgagentgetinfoassuantransaction.h>
 
 #include <QTextDocument> // for Qt::escape
-#include <QCoreApplication>
 
 #include <KLocale>
 

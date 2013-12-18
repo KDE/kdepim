@@ -22,7 +22,6 @@
 #include <kstandarddirs.h>
 #include <kiconloader.h>
 
-#include <QLayout>
 #include <QLabel>
 #include <QComboBox>
 #include <QtCore/QTimer>
