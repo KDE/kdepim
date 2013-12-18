@@ -76,6 +76,11 @@ void WebDavStorageService::downloadFile()
 
 }
 
+void WebDavStorageService::createServiceFolder()
+{
+
+}
+
 void WebDavStorageService::listFolder()
 {
     if (mServiceLocation.isEmpty()) {

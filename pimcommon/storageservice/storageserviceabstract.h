@@ -55,6 +55,7 @@ public:
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual QString storageServiceName() const = 0;
     virtual KIcon icon() const = 0;
+    virtual void createServiceFolder() = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);

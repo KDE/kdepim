@@ -186,3 +186,8 @@ KIcon BoxStorageService::icon() const
 {
     return KIcon();
 }
+
+void BoxStorageService::createServiceFolder()
+{
+    //TODO
+}

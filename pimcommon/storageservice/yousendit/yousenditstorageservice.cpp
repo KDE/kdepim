@@ -182,6 +182,11 @@ void YouSendItStorageService::downloadFile()
 
 }
 
+void YouSendItStorageService::createServiceFolder()
+{
+
+}
+
 QString YouSendItStorageService::storageServiceName() const
 {
     return serviceName();

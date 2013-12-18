@@ -151,5 +151,5 @@ void ServiceTestWidget::slotUploadFile()
 
 void ServiceTestWidget::slotCreateServiceFolder()
 {
-    //TODO
+    mStorageService->createServiceFolder();
 }
