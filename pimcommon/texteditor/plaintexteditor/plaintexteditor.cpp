@@ -35,6 +35,10 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QTextDocumentFragment>
+#include <QShortcut>
+#include <QScrollBar>
+#include <QApplication>
+#include <QClipboard>
 
 using namespace PimCommon;
 
@@ -324,7 +328,6 @@ bool PlainTextEditor::event(QEvent* ev)
 bool PlainTextEditor::overrideShortcut(const QKeyEvent* event)
 {
     const int key = event->key() | event->modifiers();
-
     if ( KStandardShortcut::copy().contains( key ) ) {
         return true;
     } else if ( KStandardShortcut::paste().contains( key ) ) {
@@ -359,8 +362,6 @@ bool PlainTextEditor::overrideShortcut(const QKeyEvent* event)
         return true;
     } else if (d->hasSearchSupport && KStandardShortcut::find().contains(key)) {
         return true;
-    } else if (d->hasSearchSupport && KStandardShortcut::findNext().contains(key)) {
-        return true;
     } else if (d->hasSearchSupport && KStandardShortcut::replace().contains(key)) {
         return true;
     } else if (event->matches(QKeySequence::SelectAll)) { // currently missing in QTextEdit
@@ -374,4 +375,126 @@ bool PlainTextEditor::overrideShortcut(const QKeyEvent* event)
     return false;
 }
 
+bool PlainTextEditor::handleShortcut(const QKeyEvent* event)
+{
+    const int key = event->key() | event->modifiers();
+
+    if ( KStandardShortcut::copy().contains( key ) ) {
+        copy();
+        return true;
+    } else if ( KStandardShortcut::paste().contains( key ) ) {
+        paste();
+        return true;
+    } else if ( KStandardShortcut::cut().contains( key ) ) {
+        cut();
+        return true;
+    } else if ( KStandardShortcut::undo().contains( key ) ) {
+        if (!isReadOnly())
+            undo();
+        return true;
+    } else if ( KStandardShortcut::redo().contains( key ) ) {
+        if (!isReadOnly())
+            redo();
+        return true;
+    } else if ( KStandardShortcut::deleteWordBack().contains( key ) ) {
+        deleteWordBack();
+        return true;
+    } else if ( KStandardShortcut::deleteWordForward().contains( key ) ) {
+        deleteWordForward();
+        return true;
+    } else if ( KStandardShortcut::backwardWord().contains( key ) ) {
+        QTextCursor cursor = textCursor();
+        cursor.movePosition( QTextCursor::PreviousWord );
+        setTextCursor( cursor );
+        return true;
+    } else if ( KStandardShortcut::forwardWord().contains( key ) ) {
+        QTextCursor cursor = textCursor();
+        cursor.movePosition( QTextCursor::NextWord );
+        setTextCursor( cursor );
+        return true;
+    } else if ( KStandardShortcut::next().contains( key ) ) {
+        QTextCursor cursor = textCursor();
+        bool moved = false;
+        qreal lastY = cursorRect(cursor).bottom();
+        qreal distance = 0;
+        do {
+            qreal y = cursorRect(cursor).bottom();
+            distance += qAbs(y - lastY);
+            lastY = y;
+            moved = cursor.movePosition(QTextCursor::Down);
+        } while (moved && distance < viewport()->height());
+
+        if (moved) {
+            cursor.movePosition(QTextCursor::Up);
+            verticalScrollBar()->triggerAction(QAbstractSlider::SliderPageStepAdd);
+        }
+        setTextCursor(cursor);
+        return true;
+    } else if ( KStandardShortcut::prior().contains( key ) ) {
+        QTextCursor cursor = textCursor();
+        bool moved = false;
+        qreal lastY = cursorRect(cursor).bottom();
+        qreal distance = 0;
+        do {
+            qreal y = cursorRect(cursor).bottom();
+            distance += qAbs(y - lastY);
+            lastY = y;
+            moved = cursor.movePosition(QTextCursor::Up);
+        } while (moved && distance < viewport()->height());
+
+        if (moved) {
+            cursor.movePosition(QTextCursor::Down);
+            verticalScrollBar()->triggerAction(QAbstractSlider::SliderPageStepSub);
+        }
+        setTextCursor(cursor);
+        return true;
+    } else if ( KStandardShortcut::begin().contains( key ) ) {
+        QTextCursor cursor = textCursor();
+        cursor.movePosition( QTextCursor::Start );
+        setTextCursor( cursor );
+        return true;
+    } else if ( KStandardShortcut::end().contains( key ) ) {
+        QTextCursor cursor = textCursor();
+        cursor.movePosition( QTextCursor::End );
+        setTextCursor( cursor );
+        return true;
+    } else if ( KStandardShortcut::beginningOfLine().contains( key ) ) {
+        QTextCursor cursor = textCursor();
+        cursor.movePosition( QTextCursor::StartOfLine );
+        setTextCursor( cursor );
+        return true;
+    } else if ( KStandardShortcut::endOfLine().contains( key ) ) {
+        QTextCursor cursor = textCursor();
+        cursor.movePosition( QTextCursor::EndOfLine );
+        setTextCursor( cursor );
+        return true;
+    } else if (d->hasSearchSupport && KStandardShortcut::find().contains(key)) {
+        Q_EMIT findText();
+        return true;
+    } else if (d->hasSearchSupport && KStandardShortcut::replace().contains(key)) {
+        if (!isReadOnly())
+            Q_EMIT replaceText();
+        return true;
+    } else if ( KStandardShortcut::pasteSelection().contains( key ) ) {
+        QString text = QApplication::clipboard()->text( QClipboard::Selection );
+        if ( !text.isEmpty() )
+            insertPlainText( text );  // TODO: check if this is html? (MiB)
+        return true;
+    }
+    return false;
+}
+
+
+void PlainTextEditor::keyPressEvent( QKeyEvent *event )
+{
+    if (handleShortcut(event)) {
+        event->accept();
+    }else if (event->modifiers() == Qt::ControlModifier &&
+            (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) &&
+              qobject_cast<KDialog*>(window()) ) {
+        event->ignore();
+    } else {
+        PlainTextEditor::keyPressEvent(event);
+    }
+}
 
