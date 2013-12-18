@@ -48,11 +48,12 @@ using MessageViewer::Interface::BodyPart;
 #include <KABC/VCardConverter>
 #include <KABC/Addressee>
 
+#include <KLocale>
 #include <kdemacros.h>
 #include <KFileDialog>
 #include <KGlobal>
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KMessageBox>
 #include <KTemporaryFile>

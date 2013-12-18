@@ -52,7 +52,7 @@
 #include <KDebug>
 #include <KGlobal>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSystemTimeZones>
 #include <KUrl>
 
