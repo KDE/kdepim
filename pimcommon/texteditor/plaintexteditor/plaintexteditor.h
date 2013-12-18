@@ -63,7 +63,8 @@ protected:
 protected:
     void contextMenuEvent( QContextMenuEvent *event );
     void wheelEvent( QWheelEvent *event );
-    bool event(QEvent* ev);
+    bool event(QEvent* ev);    
+    void keyPressEvent(QKeyEvent *event);
 
 Q_SIGNALS:
     void findText();
@@ -74,6 +75,7 @@ Q_SIGNALS:
     void spellCheckStatus(const QString &);
 
 private:
+    bool handleShortcut(const QKeyEvent *event);
     bool overrideShortcut(const QKeyEvent* event);
     void deleteWordBack();
     void deleteWordForward();
