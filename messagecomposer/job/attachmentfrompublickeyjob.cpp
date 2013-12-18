@@ -31,9 +31,7 @@
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/exportjob.h>
-#ifndef Q_OS_WINCE
 #include <libkleo/ui/progressdialog.h>
-#endif
 
 using namespace MessageComposer;
 using MessageCore::AttachmentPart;
@@ -122,13 +120,11 @@ void AttachmentFromPublicKeyJob::doStart()
     d->emitGpgError( error );
     // TODO check autodeletion policy of Kleo::Jobs...
     return;
-#ifndef Q_OS_WINCE
   } else if( uiDelegate() ) {
     Q_ASSERT( dynamic_cast<KDialogJobUiDelegate*>( uiDelegate() ) );
     KDialogJobUiDelegate *delegate = static_cast<KDialogJobUiDelegate*>( uiDelegate() );
     (void)new Kleo::ProgressDialog( job, i18n( "Exporting key..." ),
                                     delegate->window() );
-#endif
   }
 }
 

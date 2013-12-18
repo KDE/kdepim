@@ -19,9 +19,7 @@
 
 #include "filteractionwithtest.h"
 
-#ifndef Q_OS_WINCE
 #include "soundtestwidget.h"
-#endif
 
 #include <QTextDocument>
 

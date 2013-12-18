@@ -39,11 +39,7 @@
 #include <limits>
 #include <cassert>
 
-#ifdef Q_OS_WINCE
-typedef QWebView SuperClass;
-#else
 typedef KWebView SuperClass;
-#endif
 
 using namespace boost;
 using namespace MessageViewer;
@@ -159,10 +155,7 @@ bool MailWebView::event( QEvent *event )
     const QWebHitTestResult hit = frame->hitTestContent( contextMenuEvent->pos() );
     kDebug() << "Right-clicked URL:" << hit.linkUrl();
 
-#ifdef Q_OS_WINCE
-    if ( !hit.linkUrl().isEmpty() )
-#endif
-      emit popupMenu( hit.linkUrl(), ((hit.pixmap().isNull()) ? QUrl() : hit.imageUrl()), mapToGlobal( contextMenuEvent->pos() ) );
+    emit popupMenu( hit.linkUrl(), ((hit.pixmap().isNull()) ? QUrl() : hit.imageUrl()), mapToGlobal( contextMenuEvent->pos() ) );
     event->accept();
     return true;
   }
@@ -341,10 +334,7 @@ QString MailWebView::htmlSource() const
 
 void MailWebView::setAllowExternalContent( bool allow )
 {
-  // FIXME on WinCE we use a simple QWebView, check if there's an alternative API for it
-#ifndef Q_OS_WINCE
-    SuperClass::setAllowExternalContent( allow );
-#endif
+  SuperClass::setAllowExternalContent( allow );
 }
 
 QUrl MailWebView::linkOrImageUrlAt( const QPoint & global ) const

@@ -12,12 +12,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 ########### next target ###############
 
-if(NOT WINCE)
-  set(messageviewer_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp vcardmemento.cpp updatecontactjob.cpp)
-  kde4_add_plugin(messageviewer_bodypartformatter_text_vcard ${messageviewer_bodypartformatter_text_vcard_PART_SRCS})
-  target_link_libraries(messageviewer_bodypartformatter_text_vcard ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_KABC_LIBS} kdepim messageviewer)
-  install(TARGETS messageviewer_bodypartformatter_text_vcard DESTINATION ${PLUGIN_INSTALL_DIR})
-endif()
+set(messageviewer_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp vcardmemento.cpp updatecontactjob.cpp)
+kde4_add_plugin(messageviewer_bodypartformatter_text_vcard ${messageviewer_bodypartformatter_text_vcard_PART_SRCS})
+target_link_libraries(messageviewer_bodypartformatter_text_vcard ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_KABC_LIBS} kdepim messageviewer)
+install(TARGETS messageviewer_bodypartformatter_text_vcard DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
 
@@ -29,11 +27,7 @@ qt4_add_dbus_interfaces(messageviewer_bodypartformatter_text_calendar_PART_SRCS
 
 kde4_add_ui_files(messageviewer_bodypartformatter_text_calendar_PART_SRCS attendeeselector.ui)
 
-if(NOT WINCE)
-  kde4_add_plugin(messageviewer_bodypartformatter_text_calendar ${messageviewer_bodypartformatter_text_calendar_PART_SRCS})
-else()
-  kde4_add_plugin(messageviewer_bodypartformatter_text_calendar STATIC ${messageviewer_bodypartformatter_text_calendar_PART_SRCS})
-endif()
+kde4_add_plugin(messageviewer_bodypartformatter_text_calendar ${messageviewer_bodypartformatter_text_calendar_PART_SRCS})
 
 
 target_link_libraries(messageviewer_bodypartformatter_text_calendar
@@ -52,44 +46,33 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   messageviewer
 )
 
-# remove eventually?
-if(NOT WINCE)
-  target_link_libraries(messageviewer_bodypartformatter_text_calendar incidenceeditorsng)
-endif()
+target_link_libraries(messageviewer_bodypartformatter_text_calendar incidenceeditorsng)
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
 
-if(NOT WINCE)
-  set(messageviewer_bodypartformatter_text_xdiff_PART_SRCS text_xdiff.cpp)
-  kde4_add_plugin(messageviewer_bodypartformatter_text_xdiff ${messageviewer_bodypartformatter_text_xdiff_PART_SRCS})
-  target_link_libraries(messageviewer_bodypartformatter_text_xdiff  ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
-  install(TARGETS messageviewer_bodypartformatter_text_xdiff  DESTINATION ${PLUGIN_INSTALL_DIR})
-endif()
+set(messageviewer_bodypartformatter_text_xdiff_PART_SRCS text_xdiff.cpp)
+kde4_add_plugin(messageviewer_bodypartformatter_text_xdiff ${messageviewer_bodypartformatter_text_xdiff_PART_SRCS})
+target_link_libraries(messageviewer_bodypartformatter_text_xdiff  ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
+install(TARGETS messageviewer_bodypartformatter_text_xdiff  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
 
-if(NOT WINCE)
-  kde4_add_plugin(messageviewer_bodypartformatter_application_mstnef application_ms-tnef.cpp)
-  target_link_libraries(messageviewer_bodypartformatter_application_mstnef
-    ${KDE4_KDECORE_LIBS}
-    ${QT_QTGUI_LIBRARY}
-    ${KDEPIMLIBS_KCALCORE_LIBS}
-    ${KDEPIMLIBS_KCALUTILS_LIBS}
-    ${KDEPIMLIBS_KMIME_LIBS}
-    ${KDEPIMLIBS_KPIMUTILS_LIBS}
-    ${KDEPIMLIBS_KTNEF_LIBS}
-    messagecore
-    messageviewer
-  )
-  install(TARGETS messageviewer_bodypartformatter_application_mstnef DESTINATION ${PLUGIN_INSTALL_DIR})
-endif()
+kde4_add_plugin(messageviewer_bodypartformatter_application_mstnef application_ms-tnef.cpp)
+target_link_libraries(messageviewer_bodypartformatter_application_mstnef
+  ${KDE4_KDECORE_LIBS}
+  ${QT_QTGUI_LIBRARY}
+  ${KDEPIMLIBS_KCALCORE_LIBS}
+  ${KDEPIMLIBS_KCALUTILS_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_KPIMUTILS_LIBS}
+  ${KDEPIMLIBS_KTNEF_LIBS}
+  messagecore
+  messageviewer
+)
+install(TARGETS messageviewer_bodypartformatter_application_mstnef DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-if(NOT WINCE)
-  install(FILES text_vcard.desktop text_calendar.desktop text_xdiff.desktop application_ms-tnef.desktop DESTINATION ${DATA_INSTALL_DIR}/messageviewer/plugins/bodypartformatter)
-else()
-  install(FILES text_calendar.desktop DESTINATION ${DATA_INSTALL_DIR}/messageviewer/plugins/bodypartformatter)
-endif()
+install(FILES text_vcard.desktop text_calendar.desktop text_xdiff.desktop application_ms-tnef.desktop DESTINATION ${DATA_INSTALL_DIR}/messageviewer/plugins/bodypartformatter)

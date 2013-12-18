@@ -1292,22 +1292,16 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
 
 void ViewerPrivate::printMessage( const Akonadi::Item &message )
 {
-// wince does not support printing
-#ifndef Q_OS_WINCE
   disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
   connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
   setMessageItem( message, Viewer::Force );
-#endif
 }
 
 void ViewerPrivate::printPreviewMessage( const Akonadi::Item &message )
 {
-// wince does not support printing
-#ifndef Q_OS_WINCE
   disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()) );
   connect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()) );
   setMessageItem( message, Viewer::Force );
-#endif
 }
 
 
@@ -2438,23 +2432,18 @@ void ViewerPrivate::slotDelayedResize()
 void ViewerPrivate::slotPrintPreview()
 {
   disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintPreview()) );
-  // wince does not support printing
-#ifndef Q_OS_WINCE
   if ( !mMessage )
     return;
   QPrinter printer;
   KPrintPreview previewdlg( &printer/*, mViewer*/ );
   mViewer->print( &printer );
   previewdlg.exec();
-#endif
 }
 
 void ViewerPrivate::slotPrintMsg()
 {
   disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT(slotPrintMsg()) );
 
-// wince does not support printing
-#ifndef Q_OS_WINCE
   if ( !mMessage )
     return;
   QPrinter printer;
@@ -2464,7 +2453,6 @@ void ViewerPrivate::slotPrintMsg()
   if ( dlg && dlg->exec() == QDialog::Accepted ) {
     mViewer->print( &printer );
   }
-#endif
 }
 
 

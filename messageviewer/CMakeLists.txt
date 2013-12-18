@@ -60,10 +60,8 @@ else()
                        adblock/adblockcreatefilterdialog.cpp
                        adblock/adblockblockableitemswidget.cpp
                        )
-  if(NOT WINCE)
-    set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
-    add_subdirectory(a11y)
-  endif()
+  set(_mailwebview_lib ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QTWEBKIT_LIBRARY})
+  add_subdirectory(a11y)
 endif()
 
 set(libmessageviewer_SRCS

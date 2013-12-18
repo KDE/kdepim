@@ -32,14 +32,12 @@ else()
   set(korgac_SRCS ${korgac_SRCS} korgacmain.cpp)
 endif()
 
-if(NOT WINCE)
-  set(korgac_SRCS
-    ${korgac_SRCS}
-    alarmdialog.cpp
-    alarmdockwindow.cpp
-    mailclient.cpp
-  )
-endif()
+set(korgac_SRCS
+  ${korgac_SRCS}
+  alarmdialog.cpp
+  alarmdockwindow.cpp
+  mailclient.cpp
+)
 
 set(korganizer_xml ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
 
@@ -58,11 +56,7 @@ endif()
 kde4_add_app_icon(korgac_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pixmap/hi*-apps-korganizer.png")
 
 if(KORGAC_AKONADI_AGENT)
-  if(NOT WINCE)
-    kde4_add_plugin(korgac ${korgac_SRCS})
-  else()
-    kde4_add_plugin(korgac STATIC ${korgac_SRCS})
-  endif()
+  kde4_add_plugin(korgac ${korgac_SRCS})
 else()
   kde4_add_executable(korgac ${korgac_SRCS})
   if(Q_WS_MAC)

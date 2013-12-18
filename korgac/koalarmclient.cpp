@@ -228,7 +228,7 @@ void KOAlarmClient::createReminder( const Akonadi::ETMCalendar::Ptr &calendar,
     return;
   }
 
-#if !defined(Q_WS_MAEMO_5) && !defined(Q_WS_WINCE) && !defined(KORGAC_AKONADI_AGENT)
+#if !defined(Q_WS_MAEMO_5) && !defined(KORGAC_AKONADI_AGENT)
   if ( !mDialog ) {
     mDialog = new AlarmDialog( calendar );
     connect( this, SIGNAL(saveAllSignal()), mDialog, SLOT(slotSave()) );
@@ -284,14 +284,12 @@ void KOAlarmClient::quit()
 #endif
 }
 
-#if !defined(Q_WS_WINCE)
 bool KOAlarmClient::commitData( QSessionManager & )
 {
   emit saveAllSignal();
   saveLastCheckTime();
   return true;
 }
-#endif
 
 void KOAlarmClient::forceAlarmCheck()
 {

@@ -28,10 +28,6 @@
 #include <kmime/kmime_message.h>
 #include <akonadi/item.h>
 
-#ifndef _WIN32_WCE
-#include <Nepomuk/Tag>
-#endif
-
 namespace KPIMIdentities {
 class IdentityManager;
 }

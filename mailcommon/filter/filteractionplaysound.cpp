@@ -21,9 +21,7 @@
 
 #include "dialog/filteractionmissingargumentdialog.h"
 
-#ifndef Q_OS_WINCE
 #include <phonon/mediaobject.h>
-#endif
 
 #include <KDE/KLocale>
 
@@ -34,17 +32,13 @@ using namespace MailCommon;
 
 FilterActionPlaySound::FilterActionPlaySound( )
     : FilterActionWithTest( QLatin1String("play sound"), i18n( "Play Sound" ) )
-    #ifndef Q_OS_WINCE
     , mPlayer( 0 )
-    #endif
 {
 }
 
 FilterActionPlaySound::~FilterActionPlaySound()
 {
-#ifndef Q_OS_WINCE
     delete mPlayer;
-#endif
 }
 
 FilterAction* FilterActionPlaySound::newAction()
@@ -57,13 +51,11 @@ FilterAction::ReturnCode FilterActionPlaySound::process(ItemContext& , bool) con
     if ( mParameter.isEmpty() )
         return ErrorButGoOn;
 
-#ifndef Q_OS_WINCE
     if ( !mPlayer )
         mPlayer = Phonon::createPlayer( Phonon::NotificationCategory );
 
     mPlayer->setCurrentSource( mParameter );
     mPlayer->play();
-#endif
 
     return GoOn;
 }

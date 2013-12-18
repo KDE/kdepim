@@ -49,10 +49,6 @@
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
-#ifndef QT_NO_WIZARD
-#else
-#include <utils/qwizard.h>
-#endif
 
 #include <map>
 #include <set>

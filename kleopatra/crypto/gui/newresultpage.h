@@ -34,11 +34,7 @@
 #define __KLEOPATRA_CRYPTO_GUI_NEWRESULTPAGE_H__
 
 
-#ifndef QT_NO_WIZARD
 #include <QWizardPage>
-#else
-#include <utils/qwizard.h>
-#endif
 
 #include <utils/pimpl_ptr.h>
 

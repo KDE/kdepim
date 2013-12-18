@@ -95,13 +95,10 @@ class LdapClientSearch::Private
 LdapClientSearch::LdapClientSearch( QObject *parent )
   : QObject( parent ), d( new Private( this ) )
 {
-#ifndef Q_OS_WINCE
-// There is no KSycoca on WinCE so this would always fail
   if ( !KProtocolInfo::isKnownProtocol( KUrl( "ldap://localhost" ) ) ) {
     d->mNoLDAPLookup = true;
     return;
   }
-#endif
 
   d->readConfig();
   connect( KDirWatch::self(), SIGNAL(dirty(QString)), this,

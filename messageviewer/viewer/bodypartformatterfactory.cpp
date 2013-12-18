@@ -53,11 +53,6 @@
 using namespace MessageViewer::BodyPartFormatterFactoryPrivate;
 using namespace MessageViewer;
 
-#ifdef _WIN32_WCE
-extern "C"
-Interface::BodyPartFormatterPlugin *
-messageviewer_bodypartformatter_text_calendar_create_bodypart_formatter_plugin();
-#else
 namespace {
 
   DEFINE_PLUGIN_LOADER( BodyPartFormatterPluginLoader,
@@ -66,7 +61,6 @@ namespace {
                         "messageviewer/plugins/bodypartformatter/*.desktop" )
 
 }
-#endif
 
 BodyPartFormatterFactory * BodyPartFormatterFactory::mSelf = 0;
 
@@ -111,7 +105,6 @@ static void insertBodyPartFormatter( const char * type, const char * subtype,
 }
 
 static void loadPlugins() {
-#ifndef _WIN32_WCE
   const BodyPartFormatterPluginLoader * pl = BodyPartFormatterPluginLoader::instance();
   if ( !pl ) {
     kWarning() << "BodyPartFormatterFactory: cannot instantiate plugin loader!";
@@ -147,31 +140,6 @@ static void loadPlugins() {
     for ( int i = 0 ; (handler = plugin->urlHandler( i )) ; ++i )
       URLHandlerManager::instance()->registerHandler( handler );
   }
-#else
-
-    const Interface::BodyPartFormatterPlugin * plugin = messageviewer_bodypartformatter_text_calendar_create_bodypart_formatter_plugin();
-    const Interface::BodyPartFormatter * bfp;
-    for ( int i = 0 ; (bfp = plugin->bodyPartFormatter( i )) ; ++i ) {
-      const char * type = plugin->type( i );
-      if ( !type || !*type ) {
-        kWarning() << "BodyPartFormatterFactory: plugin bodypartformatter_text_calendar"
-                   << "returned empty type specification for index"
-                   << i;
-        break;
-      }
-      const char * subtype = plugin->subtype( i );
-      if ( !subtype || !*subtype ) {
-        kWarning() << "BodyPartFormatterFactory: plugin bodypartformatter_text_calendar"
-                   << "returned empty subtype specification for index"
-                   << i;
-        break;
-      }
-      insertBodyPartFormatter( type, subtype, bfp );
-    }
-    const Interface::BodyPartURLHandler * handler;
-    for ( int i = 0 ; (handler = plugin->urlHandler( i )) ; ++i )
-      URLHandlerManager::instance()->registerHandler( handler );
-#endif
 }
 
 static void setup() {

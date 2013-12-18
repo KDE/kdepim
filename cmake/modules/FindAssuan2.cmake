@@ -55,42 +55,22 @@ if ( WIN32 )
       ${CMAKE_INSTALL_PREFIX}/include
     )
 
-    if (NOT WINCE)
-      find_library( _assuan2_library NAMES assuan2 libassuan2 assuan-0 libassuan-0 #sic!
-        PATHS 
-          ${CMAKE_LIBRARY_PATH}
-          ${CMAKE_INSTALL_PREFIX}/lib
-      )
-    else (NOT WINCE)
-      find_library( _assuan2_library NAMES libassuan-0-msc
-        PATHS 
-          ${CMAKE_LIBRARY_PATH}
-          ${CMAKE_INSTALL_PREFIX}/lib
-      )
-    endif (NOT WINCE)
+    find_library( _assuan2_library NAMES assuan2 libassuan2 assuan-0 libassuan-0 #sic!
+      PATHS
+        ${CMAKE_LIBRARY_PATH}
+        ${CMAKE_INSTALL_PREFIX}/lib
+    )
 
-    if (NOT WINCE)
-      find_library( _gpg_error_library     NAMES gpg-error libgpg-error gpg-error-0 libgpg-error-0
-        PATHS 
-          ${CMAKE_LIBRARY_PATH}
-          ${CMAKE_INSTALL_PREFIX}/lib
-      )
-    else (NOT WINCE)
-      find_library( _gpg_error_library     NAMES libgpg-error-0-msc
-        PATHS 
-          ${CMAKE_LIBRARY_PATH}
-          ${CMAKE_INSTALL_PREFIX}/lib
-      )
-    endif (NOT WINCE)
+    find_library( _gpg_error_library     NAMES gpg-error libgpg-error gpg-error-0 libgpg-error-0
+      PATHS
+        ${CMAKE_LIBRARY_PATH}
+        ${CMAKE_INSTALL_PREFIX}/lib
+    )
 
     set( ASSUAN2_INCLUDES ${ASSUAN2_INCLUDES} )
 
     if ( _assuan2_library AND _gpg_error_library )
-      if (NOT WINCE)
-        set( ASSUAN2_LIBRARIES ${_assuan2_library} ${_gpg_error_library} ws2_32 )
-      else (NOT WINCE)
-        set( ASSUAN2_LIBRARIES ${_assuan2_library} ${_gpg_error_library} ws2 )
-      endif (NOT WINCE)
+      set( ASSUAN2_LIBRARIES ${_assuan2_library} ${_gpg_error_library} ws2_32 )
       set( ASSUAN2_FOUND             true )
     endif()
 

@@ -67,7 +67,6 @@ bool EditorWatcher::start()
   list.append( mUrl );
   KService::Ptr offer = KMimeTypeTrader::self()->preferredService( mMimeType, QLatin1String("Application") );
   if ( mOpenWith || !offer ) {
-#ifndef Q_OS_WINCE
     AutoQPointer<KOpenWithDialog> dlg( new KOpenWithDialog( list, i18n("Edit with:"),
                                                             QString(), mParentWidget ) );
     int dlgrc = dlg->exec();
@@ -75,7 +74,6 @@ bool EditorWatcher::start()
       offer = dlg->service();
     }
     if ( !dlgrc || !offer )
-#endif
       return false;
   }
 

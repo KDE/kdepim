@@ -26,9 +26,7 @@
 
 #include "addresseelineedit.h"
 #include "ldap/ldapclientsearch.h"
-#ifndef Q_OS_WINCE
 #include "completionordereditor.h"
-#endif
 
 #include "kmailcompletion.h"
 
@@ -961,11 +959,9 @@ void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::Li
 void AddresseeLineEdit::Private::slotEditCompletionOrder()
 {
   init(); // for s_static->ldapSearch
-#ifndef Q_OS_WINCE
   if(m_useCompletion){
       s_static->slotEditCompletionOrder();
   }
-#endif
 }
 
 void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )

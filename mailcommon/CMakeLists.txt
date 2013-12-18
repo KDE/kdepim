@@ -153,9 +153,7 @@ qt4_add_dbus_interfaces(libmailcommon_SRCS
 
 kde4_add_ui_files(libmailcommon_SRCS filter/ui/filterconfigwidget.ui snippets/ui/snippetdialog.ui filter/ui/selectthunderbirdfilterfileswidget.ui)
 
-if(NOT WINCE)
-  set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
-endif()
+set(libmailcommon_SRCS ${libmailcommon_SRCS} filter/soundtestwidget.cpp)
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)
   kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
@@ -193,13 +191,8 @@ target_link_libraries(mailcommon
   ${NEPOMUK_QUERY_LIBRARIES}
   ${SOPRANO_LIBRARIES}
   niefast_apps
+  incidenceeditorsng
 )
-
-if(NOT WINCE)
-  target_link_libraries(mailcommon incidenceeditorsng)
-else()
-  target_link_libraries(mailcommon incidenceeditorsngmobile)
-endif()
 
 set_target_properties(mailcommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS mailcommon ${INSTALL_TARGETS_DEFAULT_ARGS})

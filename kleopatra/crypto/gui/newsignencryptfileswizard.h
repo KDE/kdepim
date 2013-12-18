@@ -38,11 +38,7 @@
 #include <gpgme++/global.h>
 
 
-#ifndef QT_NO_WIZARD
 #include <QWizard>
-#else
-#include <utils/qwizard.h>
-#endif
 
 #include <vector>
 

@@ -20,17 +20,12 @@
 #ifndef MESSAGEVIEWER_MAILWEBVIEW_H
 #define MESSAGEVIEWER_MAILWEBVIEW_H
 
-#include <qglobal.h> // make sure we have Q_OS_WINCE defined
 #include "messageviewer/settings/globalsettings.h"
 
 #ifdef KDEPIM_NO_WEBKIT
 # include <QTextBrowser>
 #else
-# ifdef Q_OS_WINCE
-#  include <QWebView>
-# else
-#  include <KWebView>
-# endif
+# include <KWebView>
 #endif
 
 #include <boost/function.hpp>
@@ -47,11 +42,7 @@ class ScamDetection;
 #ifdef KDEPIM_NO_WEBKIT
 class MESSAGEVIEWER_EXPORT MailWebView : public QTextBrowser // krazy:exclude=qclasses
 #else
-# ifdef Q_OS_WINCE
-class MESSAGEVIEWER_EXPORT MailWebView : public QWebView
-# else
 class MESSAGEVIEWER_EXPORT MailWebView : public KWebView
-# endif
 #endif
 {
   Q_OBJECT

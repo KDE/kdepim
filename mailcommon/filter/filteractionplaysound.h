@@ -22,11 +22,9 @@
 
 #include "filteractionwithtest.h"
 
-#ifndef Q_OS_WINCE
 namespace Phonon {
 class MediaObject;
 }
-#endif
 
 namespace MailCommon {
 
@@ -46,9 +44,7 @@ public:
     bool argsFromStringInteractive( const QString &argsStr, const QString &filterName );
 
 private:
-#ifndef Q_OS_WINCE
     mutable Phonon::MediaObject* mPlayer;
-#endif
 };
 
 }

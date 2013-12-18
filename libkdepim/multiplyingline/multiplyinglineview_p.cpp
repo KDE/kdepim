@@ -202,21 +202,12 @@ void MultiplyingLineView::resizeView()
     if ( !mAutoResize ) {
       if ( mLines.count() < 6 ) {
         setMinimumHeight( mLineHeight * mLines.count() );
-#ifdef Q_OS_WINCE
-        widget()->resize( widget()->width(), mLineHeight * mLines.count() );
-#endif
       } else {
         setMinimumHeight( mLineHeight * 5 );
         setMaximumHeight( mLineHeight * mLines.count() );
-#ifdef Q_OS_WINCE
-        widget()->resize( widget()->width(), mLineHeight * 5 );
-#endif
       }
     } else {
       setMinimumHeight( mLineHeight * mLines.count() );
-#ifdef Q_OS_WINCE
-      widget()->resize( widget()->width(), mLineHeight * mLines.count() );
-#endif
     }
   }
 
@@ -414,11 +405,7 @@ bool MultiplyingLineView::autoResize()
 
 void MultiplyingLineView::setDynamicSizeHint( bool dynamic )
 {
-#ifdef Q_OS_WINCE
-  mDynamicSizeHint = true;
-#else
   mDynamicSizeHint = dynamic;
-#endif
 }
 
 bool MultiplyingLineView::dynamicSizeHint() const

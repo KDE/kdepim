@@ -176,7 +176,7 @@ bool MailCommon::Util::ensureKorganizerRunning( bool switchTo )
     bool result = true;
     QString dbusService;
 
-#if defined (Q_OS_WINCE) || defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN32)
     //Can't run the korganizer-mobile.sh through KDBusServiceStarter in these platforms.
     QDBusInterface *interface = new QDBusInterface( QLatin1String("org.kde.korganizer"), QLatin1String("/MainApplication") );
     if ( !interface->isValid() ) {

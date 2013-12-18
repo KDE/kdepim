@@ -54,10 +54,6 @@
 #include <gpgme++/key.h>
 
 
-#ifdef _WIN32_WCE
-#define BOOST_ALL_NO_LIB
-#endif
-
 #ifndef Q_MOC_RUN // QTBUG-22829
 #include <boost/bind.hpp>
 #include <boost/graph/topological_sort.hpp>

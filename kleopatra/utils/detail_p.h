@@ -74,9 +74,7 @@ namespace _detail {
     static inline int translate_sys2libc_fd( assuan_fd_t fd, bool for_write ) {
         if ( fd == ASSUAN_INVALID_FD )
             return -1;
-#ifdef _WIN32_WCE
-        return (int)fd;
-#elif defined(_WIN32) 
+#if defined(_WIN32)
         return _open_osfhandle( (intptr_t)fd, for_write );
 #else
         (void)for_write;
@@ -87,9 +85,7 @@ namespace _detail {
     static inline assuan_fd_t translate_libc2sys_fd( int fd ) {
         if ( fd == -1 )
             return ASSUAN_INVALID_FD;
-#ifdef _WIN32_WCE
-        return (assuan_fd_t)fd;
-#elif defined(_WIN32) 
+#if defined(_WIN32)
         return (assuan_fd_t)_get_osfhandle( fd );
 #else
         return fd;

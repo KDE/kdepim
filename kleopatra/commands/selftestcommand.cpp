@@ -130,7 +130,7 @@ private:
     void runTests() {
         std::vector< shared_ptr<Kleo::SelfTest> > tests;
 
-#if defined(Q_OS_WIN) && !defined(_WIN32_WCE)
+#if defined(Q_OS_WIN)
         //emit q->info( i18n("Checking Windows Registry...") );
         tests.push_back( makeGpgProgramRegistryCheckSelfTest() );
 #endif
@@ -140,22 +140,18 @@ private:
         tests.push_back( makeGpgSmEngineCheckSelfTest() );
         //emit q->info( i18n("Checking gpgconf installation...") );
         tests.push_back( makeGpgConfEngineCheckSelfTest() );
-#ifndef Q_OS_WINCE
         for ( unsigned int i = 0 ; i < numComponents ; ++i ) {
             //emit q->info( i18n("Checking %1 configuration...", components[i]) );
             tests.push_back( makeGpgConfCheckConfigurationSelfTest( components[i] ) );
         }
-#endif
-#if defined( HAVE_KLEOPATRACLIENT_LIBRARY ) && !defined ( Q_OS_WINCE )
+#if defined( HAVE_KLEOPATRACLIENT_LIBRARY )
         //emit q->info( i18n("Checking Ui Server connectivity...") );
         tests.push_back( makeUiServerConnectivitySelfTest() );
 #endif
 #ifndef Q_OS_WIN
         tests.push_back( makeGpgAgentConnectivitySelfTest() );
 #endif
-#ifndef _WIN32_WCE
         tests.push_back( makeLibKleopatraRcSelfTest() );
-#endif
 
         if ( !dialog && kdtools::none_of( tests, mem_fn( &Kleo::SelfTest::failed ) ) ) {
             finished();

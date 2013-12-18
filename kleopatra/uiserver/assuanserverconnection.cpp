@@ -79,9 +79,7 @@
 
 #ifndef Q_MOC_RUN // QTBUG-22829
 #include <boost/type_traits/remove_pointer.hpp>
-#ifndef _WIN32_WCE
 #include <boost/lexical_cast.hpp>
-#endif
 #include <boost/bind.hpp>
 #include <boost/mem_fn.hpp>
 #include <boost/mpl/if.hpp>
@@ -213,7 +211,7 @@ static std::map<std::string,std::string> parse_commandline( const char * line ) 
 
 static WId wid_from_string( const QString & winIdStr, bool * ok=0 ) {
     return
-#if defined(Q_OS_WIN32) || defined(_WIN32_WCE)
+#if defined(Q_OS_WIN32)
         reinterpret_cast<WId>
 #else
         static_cast<WId>
@@ -299,9 +297,7 @@ private:
         if ( currentCommand )
             currentCommand->canceled();
         if ( fd != ASSUAN_INVALID_FD ) {
-#ifdef _WIN32_WCE
-            CloseHandle( (HANDLE)fd );
-#elif defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN32)
             CloseHandle( fd );
 #else
             ::close( fd );
@@ -515,9 +511,7 @@ private:
                     if ( const gpg_error_t err = assuan_receivefd( conn.ctx.get(), &fd ) )
                         throw err;
                 } else {
-#ifdef _WIN32_WCE
-                    fd = (assuan_fd_t)atoi( fdstr.c_str() );
-#elif defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN32)
                     fd = (assuan_fd_t)lexical_cast<intptr_t>( fdstr );
 #else
                     fd = lexical_cast<assuan_fd_t>( fdstr );

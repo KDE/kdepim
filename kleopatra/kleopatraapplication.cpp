@@ -144,9 +144,7 @@ public:
           ignoreNewInstance( true ),
           firstNewInstance( true )
     {
-#ifndef _WIN32_WCE
         KDAB_SET_OBJECT_NAME( readerStatus );
-#endif
 #ifndef QT_NO_SYSTEMTRAYICON
         KDAB_SET_OBJECT_NAME( sysTray );
 
@@ -175,9 +173,7 @@ public:
     bool firstNewInstance;
     QPointer<ConfigureDialog> configureDialog;
     QPointer<MainWindow> mainWindow;
-#ifndef _WIN32_WCE
     SmartCard::ReaderStatus readerStatus;
-#endif
 #ifndef QT_NO_SYSTEMTRAYICON
     SysTrayIcon sysTray;
 #endif
