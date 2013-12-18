@@ -119,7 +119,8 @@ and try them out until you find one you like! Details for the various headers ar
   <listitem><para><guilabel>Download New Themes...</guilabel> Allows you to download custom themes created by other &kmail; users.</para></listitem>
 </itemizedlist>
 <para>If you prefer to view your email in &HTML; format instead of plain text (Default) click on the bar located on the left hand side of the pane.
-The text on the bar will inform you which view you are in. If this bar is missing you can enable it in the settings dialog, from there you want the <guilabel>Message Window</guilabel>
+The text on the bar will inform you which view you are in. If this bar is missing you can enable it in the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+&kmail;...</guimenuitem></menuchoice> dialog, from there you want the <guilabel>Message Window</guilabel>
 tab, and select <guilabel>Show &HTML; status bar</guilabel>.</para>
 <para>If you would like to change how your attachments appear in your messages, go to <menuchoice><guimenu>View</guimenu><guisubmenu>Attachments</guisubmenu></menuchoice>.
 Your options are as follows:</para>
