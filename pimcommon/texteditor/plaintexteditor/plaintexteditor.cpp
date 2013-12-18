@@ -497,7 +497,7 @@ void PlainTextEditor::keyPressEvent( QKeyEvent *event )
               qobject_cast<KDialog*>(window()) ) {
         event->ignore();
     } else {
-        QPlainTextEditor::keyPressEvent(event);
+        QPlainTextEdit::keyPressEvent(event);
     }
 }
 
