@@ -42,3 +42,8 @@ QString SieveActionSetFlags::help() const
     return i18n("Setflag is used for setting [IMAP] system flags or keywords. Setflag replaces any previously set flags.");
 }
 
+QString SieveActionSetFlags::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5232#page-4");
+}
+
