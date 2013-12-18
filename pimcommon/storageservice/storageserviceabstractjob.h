@@ -37,6 +37,7 @@ public:
     virtual void accountInfo() = 0;
     virtual void createFolder(const QString &filename=QString()) = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
+    virtual void createServiceFolder() = 0;
 
 protected Q_SLOTS:
     void slotError(QNetworkReply::NetworkError);

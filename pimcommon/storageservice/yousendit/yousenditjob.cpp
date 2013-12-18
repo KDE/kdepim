@@ -51,6 +51,11 @@ void YouSendItJob::initializeToken(const QString &password, const QString &userN
     mToken = token;
 }
 
+void YouSendItJob::createServiceFolder()
+{
+
+}
+
 void YouSendItJob::requestTokenAccess()
 {
     QPointer<LoginDialog> dlg = new LoginDialog;

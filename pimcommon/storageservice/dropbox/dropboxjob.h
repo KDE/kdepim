@@ -36,7 +36,7 @@ public:
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
     void createFolder(const QString &filename=QString());
     void shareLink(const QString &root, const QString &path);
-
+    void createServiceFolder();
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);    
     void slotUploadFileProgress(qint64 done, qint64 total);

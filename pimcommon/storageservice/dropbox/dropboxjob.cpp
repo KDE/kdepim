@@ -392,6 +392,11 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
+void DropBoxJob::createServiceFolder()
+{
+
+}
+
 void DropBoxJob::parseShareLink(const QString &data)
 {
     QJson::Parser parser;
