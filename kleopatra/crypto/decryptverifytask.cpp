@@ -64,6 +64,7 @@
 
 #include <gpg-error.h>
 
+#include <KLocalizedString>
 #include <KLocale>
 #include <KGlobal>
 #include <KLocalizedString>

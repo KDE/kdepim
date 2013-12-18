@@ -48,7 +48,7 @@
 #include <kleo/stl_util.h>
 #include "libkleo/ui/filenamerequester.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGuiItem>
 
 #include <QBoxLayout>

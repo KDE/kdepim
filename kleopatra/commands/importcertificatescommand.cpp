@@ -48,7 +48,7 @@
 #include <gpgme++/global.h>
 #include <gpgme++/importresult.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KDebug>
 

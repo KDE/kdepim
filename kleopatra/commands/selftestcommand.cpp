@@ -51,10 +51,11 @@
 
 #include <kleo/stl_util.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
 #include <KConfigGroup>
 #include <KSplashScreen>
+#include <KSharedConfig>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/mem_fn.hpp>

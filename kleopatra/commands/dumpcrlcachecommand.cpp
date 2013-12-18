@@ -41,7 +41,7 @@
 
 #include <KProcess>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 #include <KStandardGuiItem>
 #include <KGlobalSettings>

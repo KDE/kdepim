@@ -44,7 +44,7 @@
 #include <kleo/keyfiltermanager.h>
 #include <kleo/keyfilter.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QFont>
 #include <QColor>

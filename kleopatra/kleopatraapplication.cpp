@@ -59,7 +59,7 @@
 
 #include <KGlobal>
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KCmdLineOptions>
 #include <KDebug>
 #include <KUrl>

@@ -39,7 +39,7 @@
 
 #include <KDebug>
 #include <KGuiItem>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 #include <KStandardGuiItem>
 

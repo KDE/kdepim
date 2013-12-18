@@ -47,7 +47,7 @@
 
 #include <gpgme++/key.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSaveFile>
 
 #include <QMap>

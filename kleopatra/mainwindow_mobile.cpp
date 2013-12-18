@@ -66,7 +66,7 @@
 #include "declarativewidgetbase.h"
 
 #include <KActionCollection>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardAction>
 #include <KAction>
 #include <KAboutData>

@@ -42,7 +42,7 @@
 
 #include <gpgme++/global.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QByteArray>
 #include <QClipboard>

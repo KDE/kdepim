@@ -39,7 +39,7 @@
 
 #include <kleo/stl_util.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KDebug>

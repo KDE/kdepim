@@ -37,7 +37,7 @@
 #include <utils/filedialog.h>
 
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QFileInfo>
 #include <QListWidget>

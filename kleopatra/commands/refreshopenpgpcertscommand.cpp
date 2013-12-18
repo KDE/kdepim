@@ -39,7 +39,7 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptoconfig.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 using namespace Kleo;

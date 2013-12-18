@@ -41,10 +41,11 @@
 
 #include <gpg-error.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QByteArray>
 #include <QIODevice>
+#include <QVariant>
 
 #include <string>
 #include <algorithm>

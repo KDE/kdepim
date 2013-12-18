@@ -45,7 +45,7 @@
 
 #include <kleo/stl_util.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <kdebug.h>
 
 #include <QApplication>

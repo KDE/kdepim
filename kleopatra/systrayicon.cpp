@@ -51,7 +51,7 @@
 #include <commands/learncardkeyscommand.h>
 
 #include <KIcon>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAboutApplicationDialog>
 #include <KAboutData>
 

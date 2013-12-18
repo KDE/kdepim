@@ -40,7 +40,7 @@
 #include <utils/hex.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QProcess>
 #include <QDir>

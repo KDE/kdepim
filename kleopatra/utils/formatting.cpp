@@ -43,8 +43,9 @@
 #include <gpgme++/key.h>
 #include <gpgme++/importresult.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
+#include <KLocale>
 
 #include <QString>
 #include <QStringList>

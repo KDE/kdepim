@@ -37,7 +37,7 @@
 #include "libkleo/ui/filenamerequester.h"
 
 #include <KGuiItem>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 
 #include <QGridLayout>

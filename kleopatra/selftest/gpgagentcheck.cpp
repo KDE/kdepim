@@ -44,7 +44,7 @@
 
 #include <QTextDocument> // for Qt::escape
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <boost/shared_ptr.hpp>
 

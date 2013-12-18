@@ -58,7 +58,7 @@
 
 #include <kmime/kmime_header_parsing.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 #include <QTimer>

@@ -47,7 +47,7 @@
 #include <gpgme++/signingresult.h>
 #include <gpgme++/key.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape

@@ -33,7 +33,7 @@
 #include "configuration.h"
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QStringList>
 

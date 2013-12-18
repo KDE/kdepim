@@ -36,7 +36,7 @@
 
 #include <utils/gnupg-helper.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 using namespace Kleo;

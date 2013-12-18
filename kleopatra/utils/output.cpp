@@ -42,7 +42,7 @@
 
 #include <kleo/exception.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <kdebug.h>
 

@@ -47,7 +47,7 @@
 #include <gpgme++/encryptionresult.h>
 #include <gpgme++/key.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape

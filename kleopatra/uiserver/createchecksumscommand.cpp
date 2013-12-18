@@ -38,7 +38,7 @@
 
 #include <kleo/exception.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;

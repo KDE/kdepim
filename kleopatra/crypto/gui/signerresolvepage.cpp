@@ -53,7 +53,7 @@
 #include <gpgme++/key.h>
 
 #include <KDialog>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QButtonGroup>
 #include <QCheckBox>

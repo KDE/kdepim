@@ -53,7 +53,7 @@
 #include <kleo/stl_util.h>
 #include <ui/filenamerequester.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIcon>
 #include <KDebug>
 #include <KMessageBox>

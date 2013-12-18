@@ -49,7 +49,7 @@
 
 #include <gpgme++/key.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <kdebug.h>
 
 #include <boost/bind.hpp>

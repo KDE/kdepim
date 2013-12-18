@@ -38,7 +38,7 @@
 
 #include "libkleo/ui/filenamerequester.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QLabel>
 #include <QCheckBox>
