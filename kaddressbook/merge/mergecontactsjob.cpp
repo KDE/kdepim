@@ -15,15 +15,41 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "mergecontactsjob.h"
 
-#ifndef MERGECONTACTUTIL_H
-#define MERGECONTACTUTIL_H
+#include <QDebug>
 
-#include <Akonadi/Item>
-
-namespace MergeContactUtil
+MergeContactsJob::MergeContactsJob(QObject *parent)
+    : QObject(parent)
 {
-bool hasSameNames(const Akonadi::Item::List &lst);
 }
 
-#endif // MERGECONTACTUTIL_H
+MergeContactsJob::~MergeContactsJob()
+{
+
+}
+
+void MergeContactsJob::start()
+{
+    if (!mCollection.isValid()) {
+        deleteLater();
+        qDebug()<<" mCollection is not valid !";
+        return;
+    }
+    if (mListItem.isEmpty()) {
+        deleteLater();
+        qDebug()<<" list item is empty !";
+        return;
+    }
+    //TODO
+}
+
+void MergeContactsJob::setListItem(const Akonadi::Item::List &lstItem)
+{
+    mListItem = lstItem;
+}
+
+void MergeContactsJob::setDestination(const Akonadi::Collection &collection)
+{
+    mCollection = collection;
+}

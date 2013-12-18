@@ -19,17 +19,16 @@
 
 #include <KABC/Addressee>
 
-bool MergeContactUtil::hasDifferentNames(const Akonadi::Item::List &lst)
+bool MergeContactUtil::hasSameNames(const Akonadi::Item::List &lst)
 {
     QStringList names;
-    bool foundSameName = false;
+    bool foundSameName = true;
     Q_FOREACH (const Akonadi::Item &item, lst) {
         const KABC::Addressee address = item.payload<KABC::Addressee>();
-        const QString name = address.additionalName();
-        qDebug()<<" name"<<name;
-        qDebug()<<" address "<<address.familyName();
-        if (names.contains(name)) {
-            foundSameName = true;
+        const QString name = address.realName();
+        if (!names.isEmpty() && !names.contains(name)) {
+            foundSameName = false;
+            break;
         }
         names.append(name);
     }
