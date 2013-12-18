@@ -46,9 +46,7 @@
 
 #include <QGridLayout>
 #include <QStandardItem>
-#include <QStandardItemModel>
 #include <QListView>
-#include <QListWidgetItem>
 #include <QVBoxLayout>
 #include <QWizardPage>
 #include <QCheckBox>

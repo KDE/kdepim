@@ -37,7 +37,7 @@
 #include "ui_setinitialpindialog.h"
 
 #include <KIconLoader>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QTextDocument> // for Qt::escape
 

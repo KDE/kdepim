@@ -40,7 +40,7 @@
 
 #include <kleo/exception.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
 #include <QTimer>

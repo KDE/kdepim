@@ -150,4 +150,9 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
     return true;
 }
 
+QString SieveConditionBody::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5173");
+}
+
 

@@ -48,7 +48,6 @@
 #include <KStandardGuiItem>
 
 #include <QLabel>
-#include <QMoveEvent>
 #include <QVBoxLayout>
 
 #include <boost/bind.hpp>

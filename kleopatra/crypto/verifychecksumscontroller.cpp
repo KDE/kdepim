@@ -46,11 +46,8 @@
 #include <kleo/stl_util.h>
 #include <kleo/checksumdefinition.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
-#include <KSaveFile>
-#include <KGlobal>
-#include <KConfigGroup>
 
 #include <QPointer>
 #include <QFileInfo>

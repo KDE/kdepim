@@ -75,6 +75,11 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
     return w;
 }
 
+QString SieveActionSetVariable::href() const
+{
+    return QLatin1String("http://tools.ietf.org/search/rfc5229");
+}
+
 bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)
 {
     QDomNode node = element.firstChild();

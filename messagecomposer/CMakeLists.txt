@@ -65,6 +65,7 @@ set( messagecomposer_src
      recipient/recipientseditor.cpp
      recipient/recipientseditorsidewidget.cpp
      recipient/kwindowpositioner.cpp
+     recipient/distributionlistdialog.cpp
 
      job/aliasesexpandjob.cpp
      job/emailaddressresolvejob.cpp
@@ -81,13 +82,6 @@ kde4_add_ui_files(messagecomposer_src
      imagescaling/ui/imagescalingwidget.ui
 )
 
-
-if (NOT WINCE)
-  # disabled due to no QTreeWidget
-  set( messagecomposer_src ${messagecomposer_src}
-     recipient/distributionlistdialog.cpp
-  )
-endif ()
 
 if(KDEPIM_ENTERPRISE_BUILD)
   set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)

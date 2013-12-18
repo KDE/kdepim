@@ -34,7 +34,7 @@ set_target_properties(kleopatraclientcore PROPERTIES
   SOVERSION ${libkleopatraclient_soversion}
 )
 
-if(WIN32 AND NOT WINCE)
+if(WIN32)
   if(ASSUAN2_FOUND)
     target_link_libraries(kleopatraclientcore
       ${QT_QTCORE_LIBRARY}
@@ -46,20 +46,6 @@ if(WIN32 AND NOT WINCE)
       ${QT_QTCORE_LIBRARY}
       ${ASSUAN_VANILLA_LIBRARIES}
       ws2_32
-    )
-  endif()
-elseif(WINCE)
-  if(ASSUAN2_FOUND)
-    target_link_libraries(kleopatraclientcore
-      ${QT_QTCORE_LIBRARY}
-      ${ASSUAN2_LIBRARIES}
-      ws2
-    )
-  else()
-    target_link_libraries(kleopatraclientcore
-      ${QT_QTCORE_LIBRARY}
-      ${ASSUAN_VANILLA_LIBRARIES}
-      ws2
     )
   endif()
 else()

@@ -37,7 +37,7 @@
 #include <kleo/keyfilter.h>
 #include <kleo/keyfiltermanager.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 #include <QLabel>

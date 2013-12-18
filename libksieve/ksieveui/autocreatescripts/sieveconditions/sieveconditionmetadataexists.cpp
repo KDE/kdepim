@@ -126,3 +126,7 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
     return true;
 }
 
+QString SieveConditionMetaDataExists::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5490#page-6");
+}

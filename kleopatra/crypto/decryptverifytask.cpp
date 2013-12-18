@@ -64,13 +64,13 @@
 
 #include <gpg-error.h>
 
-#include <KIconLoader>
+#include <KLocalizedString>
 #include <KLocale>
+#include <KGlobal>
 #include <KLocalizedString>
 #include <KDebug>
 
 #include <QByteArray>
-#include <QColor>
 #include <QDateTime>
 #include <QStringList>
 #include <QTextDocument> // Qt::escape

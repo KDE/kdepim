@@ -45,14 +45,10 @@
 
 #include <gpgme++/key.h>
 
-#include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
-#include <QTreeView>
-#include <QLayout>
 #include <QPushButton>
 #include <QHeaderView>
-#include <QLabel>
 
 #include <boost/bind.hpp>
 

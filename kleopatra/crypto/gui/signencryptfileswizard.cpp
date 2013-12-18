@@ -35,7 +35,7 @@
 #include "signencryptfileswizard.h"
 #include "signerresolvepage.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <gpgme++/key.h>
 

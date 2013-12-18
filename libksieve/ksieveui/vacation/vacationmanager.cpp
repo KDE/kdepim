@@ -47,12 +47,15 @@ void VacationManager::checkVacation()
     mCheckVacation->checkVacation();
 }
 
-void VacationManager::slotEditVacation()
+void VacationManager::slotEditVacation(const QString &serverName)
 {
     if ( mMultiImapVacationDialog ) {
         mMultiImapVacationDialog->show();
         mMultiImapVacationDialog->raise();
         mMultiImapVacationDialog->activateWindow();
+        if (!serverName.isEmpty()) {
+            mMultiImapVacationDialog->switchToServerNamePage(serverName);
+        }
         return;
     }
 
@@ -60,6 +63,10 @@ void VacationManager::slotEditVacation()
     connect( mMultiImapVacationDialog, SIGNAL(okClicked()), SLOT(slotDialogOk()) );
     connect( mMultiImapVacationDialog, SIGNAL(cancelClicked()), SLOT(slotDialogCanceled()) );
     mMultiImapVacationDialog->show();
+    if (!serverName.isEmpty()) {
+        mMultiImapVacationDialog->switchToServerNamePage(serverName);
+    }
+
 }
 
 void VacationManager::slotDialogCanceled()

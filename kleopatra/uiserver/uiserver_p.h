@@ -41,7 +41,6 @@
 
 #include <QTcpServer>
 #include <QFile>
-#include <QDir>
 
 #include <kleo-assuan.h>
 

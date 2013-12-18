@@ -58,32 +58,27 @@
 #include "progresswidget/statusbarprogresswidget.h"
 #include "progresswidget/progressdialog.h"
 
+#include <KStatusBar>
+#include <KXMLGUIFactory>
 #include <KApplication>
 #include <KActionCollection>
-#include <KLocale>
-#include <KTabWidget>
-#include <KStatusBar>
+#include <KLocalizedString>
 #include <KStandardAction>
 #include <KAction>
 #include <KAboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
-#include <KStandardDirs>
 #include <KShortcutsDialog>
-#include <KXMLGUIFactory>
 #include <KEditToolBar>
 #include <KAboutApplicationDialog>
 #include <kdebug.h>
 
 #include <QAbstractItemView>
-#include <QFile>
-#include <QToolBar>
 #include <QApplication>
 #include <QCloseEvent>
 #include <QMenu>
 #include <QTimer>
 #include <QProcess>
-#include <QPointer>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>

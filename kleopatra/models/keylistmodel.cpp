@@ -44,21 +44,15 @@
 #include <kleo/keyfiltermanager.h>
 #include <kleo/keyfilter.h>
 
-#include <KLocale>
-#include <KIcon>
+#include <KLocalizedString>
 
-#include <QDateTime>
 #include <QFont>
 #include <QColor>
-#include <QApplication>
 #include <QHash>
-
+#include <QIcon>
+#include <QDate>
 #include <gpgme++/key.h>
 
-
-#ifdef _WIN32_WCE
-#define BOOST_ALL_NO_LIB
-#endif
 
 #ifndef Q_MOC_RUN // QTBUG-22829
 #include <boost/bind.hpp>

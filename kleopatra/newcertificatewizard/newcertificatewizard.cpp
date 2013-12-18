@@ -65,7 +65,7 @@
 
 #include <KConfigGroup>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 #include <KTempDir>
 #include <KMessageBox>

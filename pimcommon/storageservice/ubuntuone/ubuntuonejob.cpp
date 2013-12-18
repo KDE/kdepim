@@ -343,7 +343,8 @@ void UbuntuOneJob::finishGetToken()
     postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
     postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
     postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
-
+    postData.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
+    qDebug()<<" postData" <<postData;
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));    
 }

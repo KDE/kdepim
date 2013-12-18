@@ -75,6 +75,11 @@ void DropBoxStorageService::shareLink(const QString &root, const QString &path)
     }
 }
 
+void DropBoxStorageService::createServiceFolder()
+{
+    //TODO
+}
+
 void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)
 {
     mAccessToken = accessToken;

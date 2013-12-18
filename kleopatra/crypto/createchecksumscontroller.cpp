@@ -42,15 +42,15 @@
 #include <kleo/stl_util.h>
 #include <kleo/checksumdefinition.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <kdebug.h>
 #include <KSaveFile>
 
-#include <QLayout>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QListWidget>
+#include <QVBoxLayout>
 
 #include <QPointer>
 #include <QFileInfo>

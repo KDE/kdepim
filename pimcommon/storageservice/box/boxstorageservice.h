@@ -48,6 +48,7 @@ public:
 
     QString storageServiceName() const;
     KIcon icon() const;
+    void createServiceFolder();
 
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
@@ -58,6 +59,7 @@ private:
     QString mToken;
     QString mRefreshToken;
     QDateTime mExpireDateTime;
+
 };
 }
 

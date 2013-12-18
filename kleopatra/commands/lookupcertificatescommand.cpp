@@ -53,13 +53,11 @@
 #include <gpgme++/keylistresult.h>
 #include <gpgme++/importresult.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <kdebug.h>
 
-#include <QBuffer>
 #include <QRegExp>
-#include <QLineEdit>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>

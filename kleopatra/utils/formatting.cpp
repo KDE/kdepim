@@ -43,13 +43,13 @@
 #include <gpgme++/key.h>
 #include <gpgme++/importresult.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGlobal>
+#include <KLocale>
 
 #include <QString>
 #include <QStringList>
 #include <QDateTime>
-#include <QCoreApplication>
 #include <QTextDocument> // for Qt::escape
 
 using namespace GpgME;

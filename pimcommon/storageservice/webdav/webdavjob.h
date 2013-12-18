@@ -35,7 +35,7 @@ public:
     void accountInfo();
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
-
+    void createServiceFolder();
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);

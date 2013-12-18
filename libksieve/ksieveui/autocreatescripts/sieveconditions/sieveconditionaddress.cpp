@@ -171,3 +171,8 @@ bool SieveConditionAddress::setParamWidgetValue(const QDomElement &element, QWid
     return true;
 }
 
+QString SieveConditionAddress::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5228#page-16");
+}
+

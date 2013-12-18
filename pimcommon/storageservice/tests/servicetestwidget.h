@@ -52,6 +52,7 @@ private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info);
     void slotUploadFile();
     void slotAuthentication();
+    void slotCreateServiceFolder();
 private:
     void connectStorageService();
     PimCommon::StorageServiceAbstract *mStorageService;

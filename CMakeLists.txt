@@ -26,14 +26,6 @@ if(KDEPIM_NO_WEBKIT)
   add_definitions(-DKDEPIM_NO_WEBKIT)
 endif()
 
-# cmake would not find kde for xcompile if that is not set
-if(WINCE)
-    set(KDE4_DATA_DIR "${CMAKE_PREFIX_PATH}/share/apps")
-    set(LIBRARY_TYPE STATIC)
-    add_definitions(-DKDELIBS_STATIC_LIBS)
-    add_definitions(-DKDEPIM_STATIC_LIBS)
-endif()
-
 if(KDEPIM_ENTERPRISE_BUILD)
   message(STATUS "Enterprise build is enabled.")
 endif()
@@ -105,11 +97,6 @@ configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version
 set(CMAKE_AUTOMOC ON)
 
 ############### search packages used by KDE ###############
-
-# It is needed otherwise it finds the kde4-config of the target platform
-if(WINCE)
-  find_program(KDE4_KDECONFIG_EXECUTABLE NAMES kde4-config PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
-endif()
 
 find_package(KDE4 4.11.3 REQUIRED)
 include(KDE4Defaults)
@@ -264,15 +251,7 @@ else()
   add_subdirectory(grammar)
   add_subdirectory(messagecore)
   add_subdirectory(grantleetheme)
-  if(NOT WINCE)
-    add_subdirectory(messagelist)
-  else()
-    # We need to compile runtime in kdepim because of the static
-    # linking of korgac and the applications need to link against
-    # plugins like the serializer plugins. If the korgac would
-    # move to runtime this can be avoided
-    add_subdirectory(runtime)
-  endif()
+  add_subdirectory(messagelist)
   add_subdirectory(templateparser)
 
   if(QGPGME_FOUND)

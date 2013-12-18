@@ -66,36 +66,25 @@
 #include "declarativewidgetbase.h"
 
 #include <KActionCollection>
-#include <KLocale>
-#include <KTabWidget>
-#include <KStatusBar>
+#include <KLocalizedString>
 #include <KStandardAction>
 #include <KAction>
 #include <KAboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
-#include <KStandardDirs>
 #include <KLineEdit>
 #if 0
 #include <KShortcutsDialog>
-#include <KEditToolBar>
 #endif
 #include <KAboutApplicationDialog>
 #include <kdebug.h>
 
 #include <QTreeView>
-#include <QFile>
-#include <QToolBar>
-#include <QWidgetAction>
 #include <QApplication>
 #include <QCloseEvent>
-#include <QMenu>
 #include <QTimer>
 #include <QProcess>
 #include <QPointer>
-#include <QDeclarativeItem>
-#include <QDeclarativeEngine>
-#include <QDeclarativeContext>
 #include <QVariant>
 #include <QHeaderView>
 

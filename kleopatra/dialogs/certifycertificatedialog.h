@@ -33,13 +33,8 @@
 #ifndef __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__
 #define __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__
 
-#include <QDialog>
 
-#ifndef QT_NO_WIZARD
 #include <QWizard>
-#else
-#include <utils/qwizard.h>
-#endif
 
 #include <kleo/signkeyjob.h>
 

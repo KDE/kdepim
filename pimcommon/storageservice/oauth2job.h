@@ -38,6 +38,7 @@ public:
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
+    void createServiceFolder();
 
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
@@ -76,6 +77,7 @@ protected:
 
 private:
     void shareLink(const QString &fileId);
+
 };
 }
 

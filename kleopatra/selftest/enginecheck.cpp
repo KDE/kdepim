@@ -42,7 +42,7 @@
 
 #include <gpg-error.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 
 #include <QFile>

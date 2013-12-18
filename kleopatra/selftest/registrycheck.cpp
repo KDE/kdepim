@@ -36,7 +36,7 @@
 
 #include "implementation_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QSettings>

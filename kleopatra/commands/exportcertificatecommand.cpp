@@ -47,14 +47,11 @@
 
 #include <gpgme++/key.h>
 
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 #include <KSaveFile>
 
-#include <QDataStream>
 #include <QMap>
 #include <QPointer>
-#include <QTextStream>
 
 #include <boost/bind.hpp>
 #include <algorithm>

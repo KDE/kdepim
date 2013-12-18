@@ -245,7 +245,6 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   KUrl archiveURL( KCalPrefs::instance()->mArchiveFile );
   QString archiveFile;
 
-#ifndef Q_OS_WINCE
   // There is no KIO::NetAccess availabe for Windows CE
   if ( KIO::NetAccess::exists( archiveURL, KIO::NetAccess::SourceSide, widget ) ) {
     if( !KIO::NetAccess::download( archiveURL, archiveFile, widget ) ) {
@@ -263,10 +262,6 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   } else {
     archiveFile = tmpFileName;
   }
-#else
-  archiveFile = archiveURL.toLocalFile();
-  archiveStore.setFileName( archiveFile );
-#endif // Q_OS_WINCE
 
   // Save archive calendar
   if ( !archiveStore.save() ) {
@@ -282,7 +277,6 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
     return;
   }
 
-#ifndef Q_OS_WINCE
   // Upload if necessary
   KUrl srcUrl;
   srcUrl.setPath( archiveFile );
@@ -296,7 +290,6 @@ void EventArchiver::archiveIncidences( const Akonadi::ETMCalendar::Ptr &calendar
   }
 
   KIO::NetAccess::removeTempFile( archiveFile );
-#endif // Q_OS_WINCE
   QFile::remove( tmpFileName );
 
   // We don't want it to ask to send invitations for each incidence.

@@ -179,6 +179,11 @@ void HubicStorageService::downloadFile()
 
 }
 
+void HubicStorageService::createServiceFolder()
+{
+
+}
+
 KIcon HubicStorageService::icon() const
 {
     return KIcon();

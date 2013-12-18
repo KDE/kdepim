@@ -42,13 +42,7 @@
 
 #include <gpg-error.h>
 
-#include <KLocale>
-
-#include <QVariant>
-#include <QByteArray>
-#include <QIODevice>
-#include <QList>
-#include <QPointer>
+#include <QStringList>
 
 #include <string>
 #include <algorithm>

@@ -40,8 +40,7 @@
 
 #include <KDebug>
 #include <KProcess>
-#include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KWindowSystem>
 
 #include <QString>

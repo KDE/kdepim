@@ -42,6 +42,7 @@ public:
     void authentication();
     void shareLink(const QString &root, const QString &path);
     void downloadFile();
+    void createServiceFolder();
 
     QString storageServiceName() const;
 

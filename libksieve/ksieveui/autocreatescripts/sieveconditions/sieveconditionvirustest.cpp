@@ -150,4 +150,9 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
     return true;
 }
 
+QString SieveConditionVirusTest::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc3685#page-4");
+}
+
 

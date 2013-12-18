@@ -44,16 +44,16 @@
 #include <gpgme++/global.h>
 #include <gpgme++/importresult.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KConfigGroup>
 
-#include <QByteArray>
 #include <QFile>
-#include <QFileDialog>
-#include <QPointer>
 #include <QString>
 #include <QWidget>
 #include <QFileInfo>
+#include <QDir>
+
+#include <KSharedConfig>
 
 #include <memory>
 #include <cassert>

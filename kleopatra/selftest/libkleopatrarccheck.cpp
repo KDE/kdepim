@@ -40,10 +40,8 @@
 
 #include <kleo/checksumdefinition.h>
 
-#include <KLocale>
-#include <KMessageBox>
+#include <KLocalizedString>
 
-#include <QSettings>
 
 #include <boost/shared_ptr.hpp>
 

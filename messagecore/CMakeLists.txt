@@ -40,14 +40,8 @@ set(messagecore_LIB_SRCS
    helpers/messagehelpers.cpp
    helpers/nodehelper.cpp
    utils/stringutil.cpp
+   widgets/annotationdialog.cpp
 )
-
-if (NOT WINCE)
-  set(messagecore_LIB_SRCS
-     ${messagecore_LIB_SRCS}
-     widgets/annotationdialog.cpp
-  )
-endif ()
 
 kde4_add_kcfg_files(messagecore_LIB_SRCS
   settings/globalsettings_base.kcfgc

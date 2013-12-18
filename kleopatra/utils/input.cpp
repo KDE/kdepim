@@ -44,7 +44,7 @@
 #include <kleo/exception.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QFile>
 #include <QString>

@@ -57,7 +57,6 @@
 #include <QColor>
 #include <QFont>
 #include <QString>
-#include <QPainter>
 #include <QRegExp>
 #include <QApplication>
 #include <QColorDialog>
@@ -485,20 +484,16 @@ void AppearanceConfigWidget::Private::slotIconClicked() {
     if ( !item )
         return;
 
-#ifndef _WIN32_WCE
     const QString iconName = KIconDialog::getIcon( /* repeating default arguments begin */
                                                   KIconLoader::Desktop, KIconLoader::Application, false, 0, false,
                                                   /* repeating default arguments end */
                                                   q );
     if ( iconName.isEmpty() )
-#endif
         return;
 
-#ifndef _WIN32_WCE
     item->setIcon( KIcon( iconName ) );
     item->setData( IconNameRole, iconName );
     emit q->changed();
-#endif
 }
 
 #ifndef QT_NO_COLORDIALOG

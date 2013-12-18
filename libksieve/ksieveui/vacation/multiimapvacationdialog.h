@@ -35,6 +35,8 @@ public:
 
     QList<VacationCreateScriptJob *> listCreateJob() const;
 
+    void switchToServerNamePage(const QString &serverName);
+
 private slots:
     void slotOkClicked();    
     void slotDefaultClicked();

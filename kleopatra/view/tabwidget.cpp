@@ -46,20 +46,19 @@
 
 #include <gpgme++/key.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KTabWidget>
 #include <KConfigGroup>
 #include <KConfig>
 #include <KAction>
 #include <KActionCollection>
 
-#include <QGridLayout>
-#include <QTimer>
 #include <QTreeView>
 #include <QToolButton>
 #include <QAction>
 #include <QMenu>
 #include <QInputDialog>
+#include <QVBoxLayout>
 
 #include <map>
 #include <vector>

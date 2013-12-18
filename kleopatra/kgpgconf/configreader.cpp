@@ -38,7 +38,7 @@
 #include <gpgme++/engineinfo.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KStandardDirs>
 
 #include <QBuffer>

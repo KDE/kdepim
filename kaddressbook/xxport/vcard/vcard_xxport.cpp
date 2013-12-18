@@ -205,10 +205,11 @@ KABC::Addressee::List VCardXXPort::importContacts() const
     if ( !option( QLatin1String("importUrl") ).isEmpty() ) {
       urls.append( KUrl( option( QLatin1String("importUrl") ) ) );
     } else {
+      const QString filter = i18n( "*.vcf|Vcard (*.vcf)\n*|all files (*)" );
       urls =
         KFileDialog::getOpenUrls(
           KUrl(),
-          QLatin1String("*.vcf|vCards"),
+          filter,
           parentWidget(),
           i18nc( "@title:window", "Select vCard to Import" ) );
     }

@@ -40,7 +40,7 @@
 #include <utils/gnupg-helper.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KSaveFile>
 
 #include <QRegExp>

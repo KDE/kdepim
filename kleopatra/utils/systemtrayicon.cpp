@@ -36,15 +36,12 @@
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
-#include <KIcon>
-#include <KLocale>
-#include <KWindowSystem>
 #include <KDebug>
 
 #include <QTimer>
-#include <QApplication>
 #include <QPointer>
 #include <QWidget>
+#include <QEvent>
 
 #include <cassert>
 

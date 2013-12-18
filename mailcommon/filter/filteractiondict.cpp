@@ -72,9 +72,7 @@ void FilterActionDict::init()
     insert( FilterActionRemoveHeader::newAction );
     insert( FilterActionAddHeader::newAction );
     insert( FilterActionRewriteHeader::newAction );
-#ifndef Q_OS_WINCE
     insert( FilterActionPlaySound::newAction );
-#endif
     insert( FilterActionAddToAddressBook::newAction );
     insert( FilterActionDelete::newAction);
     insert( FilterActionBeep::newAction);

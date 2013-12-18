@@ -43,7 +43,7 @@
 
 #include <KProcess>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KPushButton>
 #include <KStandardGuiItem>
 #include <KGlobalSettings>
@@ -51,9 +51,9 @@
 #include <QString>
 #include <QByteArray>
 #include <QTimer>
-#include <QLayout>
 #include <QPointer>
-
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds
 

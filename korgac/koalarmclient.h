@@ -26,9 +26,7 @@
 
 #include <Akonadi/Calendar/ETMCalendar>
 
-#if !defined(Q_WS_WINCE)
-# include <KSessionManager>
-#endif
+#include <KSessionManager>
 
 #include <QTimer>
 #include <QDateTime>
@@ -41,20 +39,14 @@ namespace Akonadi {
   class EntityTreeModel;
 }
 
-#if !defined(Q_WS_WINCE)
 class KOAlarmClient : public QObject, public KSessionManager
-#else
-class KOAlarmClient : public QObject
-#endif
 {
   Q_OBJECT
   public:
     explicit KOAlarmClient( QObject *parent = 0 );
     ~KOAlarmClient();
 
-#if !defined(Q_WS_WINCE)
     bool commitData( QSessionManager & );
-#endif
 
     // DBUS interface
     void quit();

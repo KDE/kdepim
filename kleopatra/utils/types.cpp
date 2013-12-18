@@ -34,7 +34,6 @@
 
 #include "utils/types.h"
 
-#include <KWindowSystem>
 
 #include <QWidget>
 #include <QVector>

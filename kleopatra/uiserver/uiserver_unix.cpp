@@ -38,8 +38,6 @@
 
 #include <KLocalizedString>
 
-#include <QFile>
-#include <QDir>
 
 #include <stdexcept>
 #include <cassert>

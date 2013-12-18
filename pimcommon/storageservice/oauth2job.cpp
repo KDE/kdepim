@@ -51,6 +51,11 @@ void OAuth2Job::initializeToken(const QString &refreshToken, const QString &toke
     mNeedRefreshToken = (QDateTime::currentDateTime() >= expireDateTime);
 }
 
+void OAuth2Job::createServiceFolder()
+{
+    //TODO
+}
+
 void OAuth2Job::requestTokenAccess()
 {
     mError = false;

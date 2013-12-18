@@ -42,7 +42,6 @@
 
 #include <kleo/stl_util.h>
 
-#include <KLocalizedString>
 #include <QByteArray>
 #include <QMap>
 

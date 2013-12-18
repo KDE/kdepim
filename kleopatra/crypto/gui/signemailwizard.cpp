@@ -38,7 +38,7 @@
 
 #include <utils/formatting.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <gpgme++/key.h>
 

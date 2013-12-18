@@ -41,10 +41,8 @@
 #include <KStandardGuiItem>
 #include <kglobalsettings.h>
 
-#include <QLayout>
 #include <QLabel>
 #include <qtextedit.h>
-#include <QFontMetrics>
 #include <QTimer>
 
 #include <QVBoxLayout>

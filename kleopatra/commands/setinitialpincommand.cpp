@@ -39,7 +39,7 @@
 
 #include <smartcard/readerstatus.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <cassert>
 

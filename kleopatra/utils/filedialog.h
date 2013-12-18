@@ -33,7 +33,8 @@
 #ifndef __KLEOPATRA_UTILS_FILEDIALOG_H__
 #define __KLEOPATRA_UTILS_FILEDIALOG_H__
 
-#include <QFileDialog>
+#include <QString>
+#include <QWidget>
 
 namespace Kleo {
 namespace FileDialog {

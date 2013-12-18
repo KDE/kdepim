@@ -68,6 +68,16 @@ MultiImapVacationDialog::~MultiImapVacationDialog()
     writeConfig();
 }
 
+void MultiImapVacationDialog::switchToServerNamePage(const QString &serverName)
+{
+    for (int i=0; i < mTabWidget->count(); ++i) {
+        if (mTabWidget->tabText(i) == serverName) {
+            mTabWidget->setCurrentIndex(i);
+            break;
+        }
+    }
+}
+
 QList<VacationCreateScriptJob *> MultiImapVacationDialog::listCreateJob() const
 {
     return mListCreateJob;

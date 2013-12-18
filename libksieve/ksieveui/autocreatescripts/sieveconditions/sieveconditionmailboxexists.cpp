@@ -105,3 +105,8 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
     return true;
 }
 
+QString SieveConditionMailboxExists::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5490#page-2");
+}
+

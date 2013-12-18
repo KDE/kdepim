@@ -53,23 +53,22 @@
 #include <kleo/stl_util.h>
 #include <ui/filenamerequester.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIcon>
 #include <KDebug>
 #include <KMessageBox>
 
+#include <QVBoxLayout>
 #include <QLabel>
 #include <QWizardPage>
 #include <QRadioButton>
 #include <QCheckBox>
 #include <QPushButton>
 #include <QDialogButtonBox>
-#include <QTreeView>
 #include <QListWidget>
-#include <QLayout>
 #include <QComboBox>
+#include <QTreeView>
 
-#include <QVariant>
 #include <QPointer>
 
 #include <gpgme++/key.h>

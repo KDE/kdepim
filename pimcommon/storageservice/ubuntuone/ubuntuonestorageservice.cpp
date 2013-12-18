@@ -184,6 +184,11 @@ void UbuntuoneStorageService::downloadFile()
 
 }
 
+void UbuntuoneStorageService::createServiceFolder()
+{
+
+}
+
 QString UbuntuoneStorageService::storageServiceName() const
 {
     return serviceName();

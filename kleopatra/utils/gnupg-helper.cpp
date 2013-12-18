@@ -102,35 +102,7 @@ QStringList Kleo::gnupgFileBlacklist() {
 }
 
 QString Kleo::gpg4winInstallPath() {
-#ifndef _WIN32_WCE
     return gpgConfListDir( "bindir" );
-#else
-    HKEY hKey;
-    TCHAR *lszValue;
-    DWORD dwType=REG_SZ;
-    DWORD dwSize;
-
-    if ( ERROR_SUCCESS!=RegOpenKeyExW ( HKEY_LOCAL_MACHINE, L"Software\\GNU\\GnuPG", 0, KEY_READ, &hKey ) ){
-      return QString();
-    }
-
-    if ( ERROR_SUCCESS!=RegQueryValueExW ( hKey, L"Install Directory", NULL, NULL, NULL, &dwSize ) ){
-      return QString();
-    }
-
-    lszValue = new TCHAR[dwSize];
-
-    if ( ERROR_SUCCESS!=RegQueryValueExW ( hKey,L"Install Directory", NULL, &dwType, ( LPBYTE ) lszValue, &dwSize ) ) {
-        delete [] lszValue;
-        return QString();
-    }
-    RegCloseKey ( hKey );
-
-    QString res = QString::fromUtf16 ( ( const ushort* ) lszValue );
-    delete [] lszValue;
-
-    return res;
-#endif
 }
 
 QString Kleo::gpgConfListDir( const char * which ) {

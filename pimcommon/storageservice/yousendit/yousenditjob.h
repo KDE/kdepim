@@ -36,6 +36,7 @@ public:
     void createFolder(const QString &filename);
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &password, const QString &userName, const QString &token);
+    void createServiceFolder();
 
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);

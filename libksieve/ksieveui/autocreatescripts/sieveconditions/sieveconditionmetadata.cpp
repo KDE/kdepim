@@ -174,3 +174,8 @@ bool SieveConditionMetaData::setParamWidgetValue(const QDomElement &element, QWi
     return true;
 }
 
+QString SieveConditionMetaData::href() const
+{
+    return QLatin1String("http://tools.ietf.org/html/rfc5490#page-5");
+}
+

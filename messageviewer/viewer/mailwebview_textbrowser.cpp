@@ -201,10 +201,7 @@ QString MailWebView::htmlSource() const
 void MailWebView::setAllowExternalContent( bool allow )
 {
 #ifdef TEMPORARILY_REMOVED
-  // FIXME on WinCE we use a simple QWebView, check if there's an alternative API for it
-#ifndef Q_OS_WINCE
     SuperClass::setAllowExternalContent( allow );
-#endif
 #endif
 }
 

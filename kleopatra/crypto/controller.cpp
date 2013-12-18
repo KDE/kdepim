@@ -34,7 +34,6 @@
 
 #include "controller.h"
 
-#include <QDialog>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;

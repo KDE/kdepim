@@ -48,17 +48,14 @@
 #include <gpgme++/global.h>
 #include <gpgme++/importresult.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
-#include <KConfigGroup>
 #include <KDebug>
 
 #include <QByteArray>
 #include <QFile>
-#include <QFileDialog>
 #include <QString>
 #include <QWidget>
-#include <QFileInfo>
 #include <QTreeView>
 #include <QTextDocument> // for Qt::escape
 

@@ -45,12 +45,10 @@
 #include <KConfigGroup>
 #include <KDebug>
 #include <KLocalizedString>
-#include <KGlobal>
 #include <KConfig>
 #include <KShell>
 #include <KStandardDirs>
 
-#include <QProcess>
 #include <QString>
 #include <QStringList>
 #include <QDir>

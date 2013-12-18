@@ -51,7 +51,6 @@
 
 #include <KConfig>
 #include <KGlobal>
-#include <KLocale>
 
 #include <QFileInfo>
 #include <QTimer>

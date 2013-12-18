@@ -19,11 +19,9 @@
 
 #include "templateparser.h"
 #include "globalsettings_base.h"
-#ifndef Q_OS_WINCE
 #include "customtemplates_kfg.h"
 #include "templatesconfiguration_kfg.h"
 #include "templatesconfiguration.h"
-#endif
 
 #include <messagecore/attachment/attachmentcollector.h>
 #include <messagecore/misc/imagecollector.h>
@@ -115,12 +113,7 @@ void TemplateParser::setAllowDecryption( const bool allowDecryption )
 bool TemplateParser::shouldStripSignature() const
 {
   // Only strip the signature when replying, it should be preserved when forwarding
-  return
-    ( mMode == Reply || mMode == ReplyAll )
-#ifndef Q_OS_WINCE
-  && GlobalSettings::self()->stripSignature()
-#endif
-  ;
+  return ( mMode == Reply || mMode == ReplyAll ) && GlobalSettings::self()->stripSignature();
 }
 
 void TemplateParser::setIdentityManager( KPIMIdentities::IdentityManager *ident )
@@ -1381,7 +1374,6 @@ KMime::Content *TemplateParser::createMultipartAlternativeContent( const QString
 
 QString TemplateParser::findCustomTemplate( const QString &tmplName )
 {
-#ifndef Q_OS_WINCE
   CTemplates t( tmplName );
   mTo = t.to();
   mCC = t.cC();
@@ -1391,9 +1383,6 @@ QString TemplateParser::findCustomTemplate( const QString &tmplName )
   } else {
     return findTemplate();
   }
-#else
-  return findTemplate();
-#endif
 }
 
 QString TemplateParser::findTemplate()
@@ -1401,7 +1390,6 @@ QString TemplateParser::findTemplate()
   // kDebug() << "Trying to find template for mode" << mode;
 
   QString tmpl;
-#ifndef Q_OS_WINCE
 
 #if 0
   if ( !mFolder.isValid() ) { // find folder message belongs to
@@ -1417,7 +1405,6 @@ QString TemplateParser::findTemplate()
   }
 #else
   kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
   kDebug() << "Folder found:" << mFolder;
   if ( mFolder.isValid() ) { // only if a folder was found
     QString fid = QString::number( mFolder.id() );
@@ -1656,11 +1643,9 @@ QString TemplateParser::quotedPlainText( const QString &selection ) const
 
   const QString indentStr =
     MessageCore::StringUtil::formatString( mQuoteString, mOrigMsg->from()->asUnicodeString() );
-#ifndef Q_OS_WINCE
   if ( GlobalSettings::self()->smartQuote() && mWrap ) {
     content = MessageCore::StringUtil::smartQuote( content, mColWrap - indentStr.length() );
   }
-#endif
   content.replace( QLatin1Char('\n'), QLatin1Char('\n') + indentStr );
   content.prepend( indentStr );
   content += QLatin1Char('\n');

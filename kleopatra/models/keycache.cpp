@@ -58,10 +58,9 @@
 
 #include <kmime/kmime_header_parsing.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QPointer>
-#include <QStringList>
 #include <QTimer>
 
 #include <boost/bind.hpp>

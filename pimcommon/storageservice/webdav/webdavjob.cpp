@@ -191,3 +191,8 @@ void WebDavJob::shareLink(const QString &root, const QString &path)
     qDebug()<<" not implemented";
     deleteLater();
 }
+
+void WebDavJob::createServiceFolder()
+{
+
+}
