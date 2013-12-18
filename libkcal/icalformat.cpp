@@ -341,6 +341,13 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
       i->setSchedulingID( QString::null );
       i->setUid( tempId );
 
+      // If we send a schduling message this means that we have modified
+      // the incidence. But as we save the incidence only after scheduling
+      // the original incidence still has the old modified date.
+      // So we set the last modified to NOW for the temporary scheduling
+      // incidence. kolab issue/4870
+      i->setLastModified( QDateTime::currentDateTime() );
+
       // Build the message with the cloned incidence
       message = mImpl->createScheduleComponent( i, method );
 
