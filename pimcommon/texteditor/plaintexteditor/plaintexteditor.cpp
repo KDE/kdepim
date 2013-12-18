@@ -39,6 +39,7 @@
 #include <QScrollBar>
 #include <QApplication>
 #include <QClipboard>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -67,6 +68,7 @@ PlainTextEditor::PlainTextEditor(QWidget *parent)
       d(new PlainTextEditor::PlainTextEditorPrivate)
 {
     KCursor::setAutoHideCursor(this, true, false);
+    qDebug()<<"PlainTextEditor::PlainTextEditor "<<this;
 }
 
 PlainTextEditor::~PlainTextEditor()
@@ -469,6 +471,7 @@ bool PlainTextEditor::handleShortcut(const QKeyEvent* event)
         setTextCursor( cursor );
         return true;
     } else if (d->hasSearchSupport && KStandardShortcut::find().contains(key)) {
+        qDebug()<<" findtext *************";
         Q_EMIT findText();
         return true;
     } else if (d->hasSearchSupport && KStandardShortcut::replace().contains(key)) {
@@ -494,7 +497,7 @@ void PlainTextEditor::keyPressEvent( QKeyEvent *event )
               qobject_cast<KDialog*>(window()) ) {
         event->ignore();
     } else {
-        PlainTextEditor::keyPressEvent(event);
+        QPlainTextEditor::keyPressEvent(event);
     }
 }
 
