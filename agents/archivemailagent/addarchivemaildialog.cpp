@@ -115,7 +115,7 @@ AddArchiveMailDialog::AddArchiveMailDialog(ArchiveMailInfo *info,QWidget *parent
     mainLayout->addWidget( maxCountlabel, row, 0 );
     mMaximumArchive = new KIntSpinBox( mainWidget );
     mMaximumArchive->setMinimum(0);
-    mMaximumArchive->setMinimum(9999);
+    mMaximumArchive->setMaximum(9999);
     mMaximumArchive->setSpecialValueText(i18n("unlimited"));
     maxCountlabel->setBuddy( mMaximumArchive );
     mainLayout->addWidget( mMaximumArchive, row, 1 );
