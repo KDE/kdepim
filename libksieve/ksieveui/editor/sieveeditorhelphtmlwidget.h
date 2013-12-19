@@ -29,6 +29,8 @@ public:
     explicit SieveEditorHelpHtmlWidget(QWidget *parent=0);
     ~SieveEditorHelpHtmlWidget();
 
+    void setHelp(const QString &url);
+
 private:
     QWebView *mWebView;
 };

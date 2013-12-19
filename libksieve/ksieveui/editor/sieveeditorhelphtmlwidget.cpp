@@ -36,3 +36,8 @@ SieveEditorHelpHtmlWidget::~SieveEditorHelpHtmlWidget()
 
 }
 
+void SieveEditorHelpHtmlWidget::setHelp(const QString &url)
+{
+    mWebView->setUrl(url);
+}
+
