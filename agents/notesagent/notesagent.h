@@ -40,6 +40,9 @@ public:
     void setPort(int value);
     int port() const;
 
+    int alarmCheckInterval() const;
+    void setAlarmCheckInterval(int value);
+
 Q_SIGNALS:
     void needUpdateConfigDialogBox();
 
