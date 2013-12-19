@@ -22,6 +22,7 @@ Comment[pt]=Adiciona as notas recebidas pela rede e lida com as notificações d
 Comment[pt_BR]=Adiciona notas recebidas via rede e lida com as notificações de alarme das notas
 Comment[sv]=Lägger till anteckningar mottagna via nätverk och hanterar alarmunderrättelser för anteckningar
 Comment[uk]=Додає нотатки, отримані з мережі, та обробляє сповіщення-нагадування з нотаток
+Comment[x-test]=xxAdds notes received via network and handles note alarm notificationsxx
 Type=AkonadiAgent
 Exec=akonadi_notes_agent
 Icon=knotes
