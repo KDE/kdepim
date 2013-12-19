@@ -21,7 +21,7 @@
 #include "widgets/selectaddresspartcombobox.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "widgets/selectheadertypecombobox.h"
-
+#include "editor/sieveeditorutil.h"
 
 #include <KLineEdit>
 #include <KLocalizedString>
@@ -177,5 +177,5 @@ bool SieveConditionEnvelope::setParamWidgetValue(const QDomElement &element, QWi
 
 QString KSieveUi::SieveConditionEnvelope::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-24");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

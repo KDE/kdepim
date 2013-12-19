@@ -17,6 +17,7 @@
 
 #include "sieveconditionenvironment.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -144,5 +145,5 @@ bool SieveConditionEnvironment::setParamWidgetValue(const QDomElement &element, 
 
 QString KSieveUi::SieveConditionEnvironment::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5183");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

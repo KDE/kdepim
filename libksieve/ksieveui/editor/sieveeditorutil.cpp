@@ -23,15 +23,25 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
 {
     switch (type) {
     case AddressCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5228#page-16");
     case BodyCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5173");
     case ConvertCondition:
+        return QString(); //TODO
     case CurrentdateCondition:
+        return QLatin1String("http://tools.ietf.org/search/rfc5260#page-6");
     case DateCondition:
+        return QLatin1String("http://tools.ietf.org/search/rfc5260#page-4");
     case EnvelopeCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-24");
     case EnvironmentCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5183");
     case ExistsCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-25");
     case FalseCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-25");
     case HasflagCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
     case HeaderCondition:
     case IhaveCondition:
     case MailboxexistsCondition:
@@ -74,6 +84,25 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
 
 KSieveUi::SieveEditorUtil::HelpVariableName KSieveUi::SieveEditorUtil::strToVariableName(const QString &str)
 {
+    if (str == QLatin1String("address")) {
+        return AddressCondition;
+    } else if (str == QLatin1String("body")) {
+        return BodyCondition;
+    } else if (str == QLatin1String("currentdate")) {
+        return CurrentdateCondition;
+    } else if (str == QLatin1String("date")) {
+        return DateCondition;
+    } else if (str == QLatin1String("envelope")) {
+        return EnvelopeCondition;
+    } else if (str == QLatin1String("environment")) {
+        return EnvironmentCondition;
+    } else if (str == QLatin1String("exists")) {
+        return ExistsCondition;
+    } else if (str == QLatin1String("false")) {
+        return FalseCondition;
+    } else if (str == QLatin1String("hasflag")) {
+        return HasflagCondition;
+    }
     //TODO
     return VacationAction;
 }
