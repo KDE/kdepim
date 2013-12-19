@@ -20,7 +20,6 @@
 #include "dbbrowser.h"
 #include "dbaccess.h"
 
-#include <QSqlDatabase>
 #include <QSqlTableModel>
 
 DbBrowser::DbBrowser(QWidget* parent) :

@@ -25,7 +25,6 @@
 
 #include <KGlobal>
 #include <KLocale>
-#include <KLocalizedString>
 #include <QtCore/QStringList>
 #include <QtCore/QModelIndex>
 #include <QtCore/QDebug>

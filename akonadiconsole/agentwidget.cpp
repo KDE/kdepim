@@ -33,20 +33,17 @@
 #include <KDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
-#include <KStandardDirs>
 #include <KStandardGuiItem>
 #include <KTextEdit>
 #include <KLineEdit>
 
 #include <QtCore/QFile>
 #include <QtCore/QPointer>
-#include <QGridLayout>
 #include <QMenu>
 #include <QPushButton>
 #include <QDBusInterface>
 #include <QDBusMessage>
 #include <QDBusReply>
-#include <QMetaObject>
 #include <QMetaMethod>
 #include <QResizeEvent>
 

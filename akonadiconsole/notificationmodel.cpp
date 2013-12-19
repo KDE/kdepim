@@ -23,10 +23,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusConnection>
 
-#include <KRandom>
 #include <KDebug>
 #include <KLocale>
-#include <KLocalizedString>
 #include <KGlobal>
 
 #include <Akonadi/ServerManager>
