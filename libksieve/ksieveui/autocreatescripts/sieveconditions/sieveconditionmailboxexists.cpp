@@ -18,7 +18,7 @@
 
 #include "sieveconditionmailboxexists.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
-
+#include "editor/sieveeditorutil.h"
 #include <KLocalizedString>
 #include <KLineEdit>
 
@@ -107,6 +107,6 @@ bool SieveConditionMailboxExists::setParamWidgetValue(const QDomElement &element
 
 QString SieveConditionMailboxExists::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5490#page-2");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 

@@ -16,6 +16,7 @@
 */
 
 #include "sieveactiondiscard.h"
+#include "editor/sieveeditorutil.h"
 #include <KLocalizedString>
 
 using namespace KSieveUi;
@@ -41,5 +42,5 @@ QString SieveActionDiscard::help() const
 
 QString SieveActionDiscard::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-22");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

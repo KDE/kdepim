@@ -17,6 +17,7 @@
 
 
 #include "sieveactionaddflags.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 
@@ -43,5 +44,5 @@ QString SieveActionAddFlags::help() const
 
 QString SieveActionAddFlags::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

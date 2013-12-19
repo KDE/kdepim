@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionreturn.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 
@@ -38,7 +39,7 @@ QString SieveActionReturn::code(QWidget *) const
 
 QString SieveActionReturn::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc6609#page-7");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
 QString SieveActionReturn::help() const

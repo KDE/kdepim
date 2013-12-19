@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionkeep.h"
+#include "editor/sieveeditorutil.h"
 #include "widgets/selectflagswidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
@@ -124,6 +125,6 @@ QStringList SieveActionKeep::needRequires(QWidget *) const
 
 QString SieveActionKeep::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-21");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 

@@ -43,38 +43,69 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
     case HasflagCondition:
         return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
     case HeaderCondition:
+        return QString(); //TODO
     case IhaveCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5463");
     case MailboxexistsCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-2");
     case MetadataexistsCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-6");
     case MetadataCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-5");
     case ServermetadataexistsCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-4");
     case ServermetadataCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc5490#page-5");
     case SizeCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-26");
     case SpamtestCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc3685#page-3");
     case TrueCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-26");
     case VirustestCondition:
+        return QLatin1String("http://tools.ietf.org/html/rfc3685#page-4");
     case AbstracteditheaderAction:
-    case AbstractflagsAction:
+        return QString(); //TODO
     case AddflagsAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
     case AddheaderAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5293");
     case BreakAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-3");
     case ConvertAction:
+        return QString(); //TODO
     case DeleteheaderAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5293");
     case DiscardAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-22");
     case EncloseAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-10");
     case ExtracttextAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-11");
     case FileintoAction:
+        return QLatin1String("http://tools.ietf.org/search/rfc3028#page-20");
     case KeepAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-21");
     case NotifyAction:
+        return QLatin1String("http://tools.ietf.org/search/rfc5435#page-3");
     case RedirectAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-20");
     case RejectAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-20");
     case RemoveflagsAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
     case ReplaceAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-8");
     case ReturnAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc6609#page-7");
     case SetflagsAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5232#page-4");
     case SetvariableAction:
+        return QLatin1String("http://tools.ietf.org/search/rfc5229");
     case StopAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc3028#page-19");
     case VacationAction:
+        return QLatin1String("http://tools.ietf.org/html/rfc5230#page-3");
     default:
         break;
     }

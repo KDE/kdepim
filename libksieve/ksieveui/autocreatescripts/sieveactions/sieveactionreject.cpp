@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionreject.h"
+#include "editor/sieveeditorutil.h"
 #include "widgets/multilineedit.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
@@ -107,5 +108,5 @@ QString SieveActionReject::help() const
 
 QString SieveActionReject::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-20");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

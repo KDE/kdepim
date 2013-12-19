@@ -17,6 +17,7 @@
 
 
 #include "sieveactionnotify.h"
+#include "editor/sieveeditorutil.h"
 #include "widgets/selectimportancecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
@@ -158,6 +159,6 @@ QStringList SieveActionNotify::needRequires(QWidget *) const
 
 QString SieveActionNotify::href() const
 {
-    return QLatin1String("http://tools.ietf.org/search/rfc5435#page-3");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 

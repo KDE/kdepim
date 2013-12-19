@@ -46,7 +46,6 @@ enum HelpVariableName {
     TrueCondition,
     VirustestCondition,
     AbstracteditheaderAction,
-    AbstractflagsAction,
     AddflagsAction,
     AddheaderAction,
     BreakAction,

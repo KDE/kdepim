@@ -19,6 +19,7 @@
 #include "sieveactionenclose.h"
 #include "widgets/multilineedit.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -161,6 +162,6 @@ QString SieveActionEnclose::help() const
 
 QString SieveActionEnclose::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5703#page-10");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 

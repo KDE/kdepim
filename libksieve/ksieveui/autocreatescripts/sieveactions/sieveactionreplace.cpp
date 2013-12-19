@@ -17,6 +17,7 @@
 
 
 #include "sieveactionreplace.h"
+#include "editor/sieveeditorutil.h"
 #include "widgets/multilineedit.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 
@@ -159,6 +160,6 @@ QString SieveActionReplace::help() const
 
 QString SieveActionReplace::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5703#page-8");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 

@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionfileinto.h"
+#include "editor/sieveeditorutil.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -169,5 +170,5 @@ QString SieveActionFileInto::help() const
 
 QString KSieveUi::SieveActionFileInto::href() const
 {
-    return QLatin1String("http://tools.ietf.org/search/rfc3028#page-20");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

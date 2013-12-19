@@ -17,7 +17,7 @@
 
 #include "sieveconditionvirustest.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
-
+#include "editor/sieveeditorutil.h"
 #include "widgets/selectrelationalmatchtype.h"
 #include "widgets/selectcomparatorcombobox.h"
 
@@ -152,7 +152,7 @@ bool SieveConditionVirusTest::setParamWidgetValue(const QDomElement &element, QW
 
 QString SieveConditionVirusTest::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc3685#page-4");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
 

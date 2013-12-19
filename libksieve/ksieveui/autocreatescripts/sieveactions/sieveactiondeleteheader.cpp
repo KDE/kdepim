@@ -18,6 +18,7 @@
 #include "sieveactiondeleteheader.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -129,6 +130,6 @@ QString SieveActionDeleteHeader::help() const
 
 QString SieveActionDeleteHeader::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5293");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
