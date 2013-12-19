@@ -23,7 +23,6 @@
 #include <KCmdLineArgs>
 #include <KLocalizedString>
 
-#include <QVBoxLayout>
 
 
 

@@ -22,5 +22,12 @@
     <method name="port" >
       <arg direction="out" type="i" />
     </method>
+    <method name="setAlarmCheckInterval" >
+      <arg direction="in" type="i" name="value" />
+    </method>
+    <method name="alarmCheckInterval" >
+      <arg direction="out" type="i" />
+    </method>
+
   </interface>
 </node>

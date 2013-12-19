@@ -19,6 +19,8 @@
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
+#include "editor/sieveeditorutil.h"
+
 #include <KLocalizedString>
 #include <KLineEdit>
 
@@ -166,7 +168,7 @@ bool SieveConditionHasFlag::setParamWidgetValue(const QDomElement &element, QWid
 
 QString SieveConditionHasFlag::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
 

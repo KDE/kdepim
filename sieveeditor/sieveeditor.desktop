@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Sieve Editor
+Type=Application
+Exec=sieveeditor
+Icon=kmail
+X-DocPath=sieveeditor/index.html
+GenericName=Sieve Editor
+Terminal=false
+Categories=Qt;KDE;Office;Network;Sieve;
+InitialPreference=10

@@ -17,6 +17,7 @@
 
 #include "sieveactionbreak.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -87,7 +88,7 @@ bool SieveActionBreak::setParamWidgetValue(const QDomElement &element, QWidget *
 
 QString SieveActionBreak::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5703#page-3");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
 QString SieveActionBreak::code(QWidget *w) const

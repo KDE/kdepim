@@ -17,7 +17,7 @@
 
 #include "sieveconditionmetadataexists.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
-
+#include "editor/sieveeditorutil.h"
 #include <KLocalizedString>
 #include <KLineEdit>
 
@@ -128,5 +128,5 @@ bool SieveConditionMetaDataExists::setParamWidgetValue(const QDomElement &elemen
 
 QString SieveConditionMetaDataExists::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5490#page-6");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

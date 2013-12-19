@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionremoveflags.h"
+#include "editor/sieveeditorutil.h"
 #include "pimcommon/widgets/minimumcombobox.h"
 
 #include <KLocalizedString>
@@ -43,6 +44,6 @@ QString SieveActionRemoveFlags::help() const
 
 QString SieveActionRemoveFlags::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 

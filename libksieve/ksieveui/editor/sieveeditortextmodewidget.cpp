@@ -23,6 +23,7 @@
 #include "editor/sievetextedit.h"
 #include "editor/sieveeditorwarning.h"
 #include "editor/sieveeditorparsingmissingfeaturewarning.h"
+#include "editor/sieveeditortabwidget.h"
 
 #include "scriptsparsing/xmlprintingscriptbuilder.h"
 #include "scriptsparsing/parsingresultdialog.h"
@@ -37,6 +38,7 @@
 
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <KTabWidget>
 
 #include <QSplitter>
 #include <QShortcut>
@@ -77,8 +79,14 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     QWidget *textEditWidget = new QWidget;
     QVBoxLayout * textEditLayout = new QVBoxLayout;
     textEditLayout->setMargin(0);
+
+    mTabWidget = new SieveEditorTabWidget;
+
     mTextEdit = new SieveTextEdit;
-    textEditLayout->addWidget(mTextEdit);
+    mTabWidget->addTab(mTextEdit, i18n("Editor"));
+    mTabWidget->setTabBarHidden(true);
+    textEditLayout->addWidget(mTabWidget);
+    connect(mTextEdit, SIGNAL(openHelp(QString,QString)), mTabWidget, SLOT(slotAddHelpPage(QString,QString)));
     mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
 
     textEditLayout->addWidget(mFindBar);

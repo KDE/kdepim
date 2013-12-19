@@ -20,6 +20,7 @@
 #include "autocreatescriptutil_p.h"
 #include "commonwidgets/sievehelpbutton.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KPushButton>
 #include <KLocalizedString>

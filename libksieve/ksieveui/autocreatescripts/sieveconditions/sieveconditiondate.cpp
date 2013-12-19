@@ -19,6 +19,7 @@
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/selectdatewidget.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -148,7 +149,7 @@ bool SieveConditionDate::setParamWidgetValue(const QDomElement &element, QWidget
 
 QString SieveConditionDate::href() const
 {
-    return QLatin1String("http://tools.ietf.org/search/rfc5260#page-4");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
 

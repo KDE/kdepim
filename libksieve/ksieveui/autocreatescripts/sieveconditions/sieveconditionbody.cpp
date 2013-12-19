@@ -19,6 +19,7 @@
 #include "widgets/selectbodytypewidget.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -152,7 +153,7 @@ bool SieveConditionBody::setParamWidgetValue(const QDomElement &element, QWidget
 
 QString SieveConditionBody::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5173");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
 

@@ -17,6 +17,7 @@
 
 
 #include "sieveactionextracttext.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -128,6 +129,6 @@ QString SieveActionExtractText::help() const
 
 QString SieveActionExtractText::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5703#page-11");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 

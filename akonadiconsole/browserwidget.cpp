@@ -66,14 +66,11 @@
 #include <nepomuk2/variant.h>
 
 #include <QSplitter>
-#include <QTextEdit>
 #include <QVBoxLayout>
-#include <QStackedWidget>
-#include <QSortFilterProxyModel>
 #include <QStandardItemModel>
-#include <QSqlError>
 #include <QSqlQuery>
 #include <QTimer>
+#include <QSqlError>
 
 using namespace Akonadi;
 

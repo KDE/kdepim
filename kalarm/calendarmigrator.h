@@ -26,9 +26,7 @@
 #include <akonadi/agentinstance.h>
 #include <akonadi/collection.h>
 
-#include <QColor>
 
-class KConfigGroup;
 class KJob;
 namespace KRES { class Resource; }
 namespace Akonadi { class CollectionFetchJob; }

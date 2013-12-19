@@ -143,6 +143,22 @@ void NotesAgent::setPort(int value)
     }
 }
 
+void NotesAgent::setAlarmCheckInterval(int value)
+{
+    if (value < 0)
+        return;
+
+    if (NoteShared::NoteSharedGlobalConfig::checkInterval() != (uint)value ) {
+        NoteShared::NoteSharedGlobalConfig::setCheckInterval(value);
+        NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
+        //TODO reload
+    }
+}
+
+int NotesAgent::alarmCheckInterval() const
+{
+    return NoteShared::NoteSharedGlobalConfig::checkInterval();
+}
 
 AKONADI_AGENT_MAIN( NotesAgent )
 

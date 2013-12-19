@@ -16,6 +16,7 @@
 */
 
 #include "sieveactionsetvariable.h"
+#include "editor/sieveeditorutil.h"
 #include "widgets/selectvariablemodifiercombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
@@ -77,7 +78,7 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
 
 QString SieveActionSetVariable::href() const
 {
-    return QLatin1String("http://tools.ietf.org/search/rfc5229");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 
 bool SieveActionSetVariable::setParamWidgetValue(const QDomElement &element, QWidget *w , QString &error)

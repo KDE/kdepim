@@ -17,6 +17,7 @@
 
 
 #include "sieveactionvacation.h"
+#include "editor/sieveeditorutil.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "widgets/multilineedit.h"
@@ -211,5 +212,5 @@ QString SieveActionVacation::help() const
 
 QString SieveActionVacation::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5230#page-3");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

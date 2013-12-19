@@ -18,7 +18,7 @@
 #include "sieveconditionsize.h"
 #include "widgets/selectsizewidget.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
-
+#include "editor/sieveeditorutil.h"
 #include <KLocalizedString>
 
 #include <QHBoxLayout>
@@ -109,5 +109,5 @@ bool SieveConditionSize::setParamWidgetValue(const QDomElement &element, QWidget
 
 QString SieveConditionSize::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc3028#page-26");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

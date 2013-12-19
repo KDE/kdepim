@@ -24,10 +24,9 @@
 
 #include <QSettings>
 #include <QSqlDatabase>
-#include <QSqlError>
 #include <QSqlQuery>
+#include <QSqlError>
 
-#include <KGlobal>
 #include <KLocalizedString>
 #include <KMessageBox>
 

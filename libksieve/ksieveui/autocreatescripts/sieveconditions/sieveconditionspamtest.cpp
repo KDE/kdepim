@@ -20,6 +20,7 @@
 #include "widgets/selectcomparatorcombobox.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/sieveeditorgraphicalmodewidget.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 
@@ -179,6 +180,6 @@ bool SieveConditionSpamTest::setParamWidgetValue(const QDomElement &element, QWi
 
 QString SieveConditionSpamTest::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc3685#page-3");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }
 

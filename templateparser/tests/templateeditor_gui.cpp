@@ -23,8 +23,7 @@
 #include <KCmdLineArgs>
 #include <KLocalizedString>
 
-#include <QVBoxLayout>
-
+#include <QHBoxLayout>
 
 
 TemplateEditorTestWidget::TemplateEditorTestWidget(QWidget *parent)

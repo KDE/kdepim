@@ -18,6 +18,7 @@
 #include "sieveconditionservermetadata.h"
 #include "autocreatescripts/autocreatescriptutil_p.h"
 #include "autocreatescripts/commonwidgets/selectmatchtypecombobox.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -176,5 +177,5 @@ bool SieveConditionServerMetaData::setParamWidgetValue(const QDomElement &elemen
 
 QString SieveConditionServerMetaData::href() const
 {
-    return QLatin1String("http://tools.ietf.org/html/rfc5490#page-5");
+    return SieveEditorUtil::helpUrl(SieveEditorUtil::strToVariableName(name()));
 }

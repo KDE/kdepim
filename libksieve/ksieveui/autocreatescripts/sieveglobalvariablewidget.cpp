@@ -19,6 +19,7 @@
 #include "sievescriptblockwidget.h"
 #include "autocreatescriptutil_p.h"
 #include "commonwidgets/sievehelpbutton.h"
+#include "editor/sieveeditorutil.h"
 
 #include <KPushButton>
 #include <KLocalizedString>
@@ -169,7 +170,7 @@ SieveGlobalVariableWidget::~SieveGlobalVariableWidget()
 void SieveGlobalVariableWidget::slotHelp()
 {
     const QString help = i18n("A variable has global scope in all scripts that have declared it with the \"global\" command.  If a script uses that variable name without declaring it global, the name specifies a separate, non-global variable within that script.");
-    const QString href = QLatin1String("http://tools.ietf.org/search/rfc5229");
+    const QString href = KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::GlobalVariable);
     const QString fullWhatsThis = AutoCreateScriptUtil::createFullWhatsThis(help,href);
     QWhatsThis::showText( QCursor::pos(), fullWhatsThis, mHelpButton );
 }
