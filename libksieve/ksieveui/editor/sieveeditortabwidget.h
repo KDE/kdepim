@@ -30,14 +30,14 @@ public:
     explicit SieveEditorTabWidget(QWidget *parent=0);
     ~SieveEditorTabWidget();
 
-public slots:
-    void slotAddHelpPage(const QString &url);
+public Q_SLOTS:
+    void slotAddHelpPage(const QString &variableName, const QString &url);
 
 protected:
     void tabRemoved(int index);
     void tabInserted(int index);
 
-private slots:
+private Q_SLOTS:
     void slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
     void slotTabCloseRequested(int index);
 };

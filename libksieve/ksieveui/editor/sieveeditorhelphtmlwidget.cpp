@@ -36,13 +36,14 @@ SieveEditorHelpHtmlWidget::~SieveEditorHelpHtmlWidget()
 
 }
 
-void SieveEditorHelpHtmlWidget::setHelp(const QString &url)
+void SieveEditorHelpHtmlWidget::setHelp(const QString &variableName, const QString &url)
 {
+    mVariableName = variableName;
     mWebView->setUrl(url);
-    connect(mWebView, SIGNAL(titleChanged(QString)), this, SLOT(slotTitleChanged(QString)));
+    Q_EMIT titleChanged(this, mVariableName);
 }
 
-void SieveEditorHelpHtmlWidget::slotTitleChanged(const QString &title)
+QString SieveEditorHelpHtmlWidget::variableName() const
 {
-    Q_EMIT titleChanged(this, title);
+    return mVariableName;
 }

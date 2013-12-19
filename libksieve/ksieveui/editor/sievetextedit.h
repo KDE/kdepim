@@ -59,7 +59,7 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 Q_SIGNALS:
-    void openHelp(const QString &url);
+    void openHelp(const QString &variableName, const QString &url);
 
 private:
     QStringList completerList() const;

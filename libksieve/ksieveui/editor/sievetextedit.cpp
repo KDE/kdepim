@@ -180,12 +180,12 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
         QTextCursor wordSelectCursor(textCursor());
         wordSelectCursor.clearSelection();
         wordSelectCursor.select(QTextCursor::WordUnderCursor);
-        QString selectedWord = wordSelectCursor.selectedText();
+        const QString selectedWord = wordSelectCursor.selectedText();
         const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(selectedWord);
         if (type != KSieveUi::SieveEditorUtil::UnknownHelp) {
             const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
             if (!url.isEmpty())
-                Q_EMIT openHelp(url);
+                Q_EMIT openHelp(selectedWord, url);
         }
         return;
     }

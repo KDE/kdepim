@@ -44,12 +44,18 @@ void SieveEditorTabWidget::slotTabCloseRequested(int index)
     }
 }
 
-void SieveEditorTabWidget::slotAddHelpPage(const QString &url)
+void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QString &url)
 {
+    for (int i = 0; i < count(); ++i) {
+        SieveEditorHelpHtmlWidget *page = static_cast<SieveEditorHelpHtmlWidget *>(widget(i));
+        if (page->variableName() == variableName) {
+            setCurrentIndex(i);
+            return;
+        }
+    }
     SieveEditorHelpHtmlWidget *htmlPage = new SieveEditorHelpHtmlWidget;
     connect(htmlPage, SIGNAL(titleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)), this, SLOT(slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)));
-    htmlPage->setHelp(url);
-    //TODO customize name
+    htmlPage->setHelp(variableName, url);
     addTab(htmlPage, i18n("Help"));
 }
 
@@ -57,7 +63,7 @@ void SieveEditorTabWidget::slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget 
 {
     const int index = indexOf(widget);
     if (index != -1) {
-        setTabText(index, title);
+        setTabText(index, i18n("Help about: %1", title));
     }
 }
 

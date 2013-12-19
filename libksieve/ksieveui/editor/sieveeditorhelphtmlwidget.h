@@ -29,15 +29,14 @@ public:
     explicit SieveEditorHelpHtmlWidget(QWidget *parent=0);
     ~SieveEditorHelpHtmlWidget();
 
-    void setHelp(const QString &url);
+    void setHelp(const QString &variableName, const QString &url);
+    QString variableName() const;
 
 Q_SIGNALS:
     void titleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
 
-private slots:
-    void slotTitleChanged(const QString &title);
-
 private:
+    QString mVariableName;
     QWebView *mWebView;
 };
 }
