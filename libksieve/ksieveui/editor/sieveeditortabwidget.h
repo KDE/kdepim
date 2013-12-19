@@ -22,6 +22,7 @@
 #include <KTabWidget>
 
 namespace KSieveUi {
+class SieveEditorHelpHtmlWidget;
 class SieveEditorTabWidget : public KTabWidget
 {
     Q_OBJECT
@@ -35,6 +36,9 @@ public slots:
 protected:
     void tabRemoved(int index);
     void tabInserted(int index);
+
+private slots:
+    void slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
 };
 }
 

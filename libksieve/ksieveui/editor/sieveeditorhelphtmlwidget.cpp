@@ -39,5 +39,10 @@ SieveEditorHelpHtmlWidget::~SieveEditorHelpHtmlWidget()
 void SieveEditorHelpHtmlWidget::setHelp(const QString &url)
 {
     mWebView->setUrl(url);
+    connect(mWebView, SIGNAL(titleChanged(QString)), this, SLOT(slotTitleChanged(QString)));
 }
 
+void SieveEditorHelpHtmlWidget::slotTitleChanged(const QString &title)
+{
+    Q_EMIT titleChanged(this, title);
+}

@@ -37,9 +37,18 @@ SieveEditorTabWidget::~SieveEditorTabWidget()
 void SieveEditorTabWidget::slotAddHelpPage(const QString &url)
 {
     SieveEditorHelpHtmlWidget *htmlPage = new SieveEditorHelpHtmlWidget;
+    connect(htmlPage, SIGNAL(titleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)), this, SLOT(slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)));
     htmlPage->setHelp(url);
     //TODO customize name
     addTab(htmlPage, i18n("Help"));
+}
+
+void SieveEditorTabWidget::slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title)
+{
+    const int index = indexOf(widget);
+    if (index != -1) {
+        setTabText(index, title);
+    }
 }
 
 void SieveEditorTabWidget::tabRemoved(int index)
