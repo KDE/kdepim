@@ -27,11 +27,21 @@ using namespace KSieveUi;
 SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
     : KTabWidget(parent)
 {
+    setTabsClosable(true);
+    connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(slotTabCloseRequested(int)));
 }
 
 SieveEditorTabWidget::~SieveEditorTabWidget()
 {
 
+}
+
+void SieveEditorTabWidget::slotTabCloseRequested(int index)
+{
+    //Don't remove first tab.
+    if (index > 0) {
+        removeTab(index);
+    }
 }
 
 void SieveEditorTabWidget::slotAddHelpPage(const QString &url)

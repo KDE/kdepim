@@ -39,6 +39,7 @@ protected:
 
 private slots:
     void slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
+    void slotTabCloseRequested(int index);
 };
 }
 

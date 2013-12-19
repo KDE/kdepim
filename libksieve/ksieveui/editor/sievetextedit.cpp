@@ -18,6 +18,7 @@
 
 #include "sievetextedit.h"
 #include "editor/sievelinenumberarea.h"
+#include "editor/sieveeditorutil.h"
 #include "sievesyntaxhighlighter.h"
 
 
@@ -28,6 +29,7 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QScrollBar>
+#include <QDebug>
 
 using namespace KSieveUi;
 
@@ -156,7 +158,6 @@ void SieveTextEdit::slotInsertCompletion( const QString& completion )
     tc.movePosition(QTextCursor::EndOfWord);
     tc.insertText(completion.right(extra));
     setTextCursor(tc);
-
 }
 
 void SieveTextEdit::keyPressEvent(QKeyEvent* e)
@@ -175,7 +176,21 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
         }
     }
     QPlainTextEdit::keyPressEvent(e);
+    if (e->key() == Qt::Key_F1 && !textCursor().hasSelection()) {
+        QTextCursor wordSelectCursor(textCursor());
+        wordSelectCursor.clearSelection();
+        wordSelectCursor.select(QTextCursor::WordUnderCursor);
+        QString selectedWord = wordSelectCursor.selectedText();
+        const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(selectedWord);
+        if (type != KSieveUi::SieveEditorUtil::UnknownHelp) {
+            const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
+            if (!url.isEmpty())
+                Q_EMIT openHelp(url);
+        }
+        return;
+    }
     const QString text = wordUnderCursor();
+
     if ( text.length() < 2 ) // min 2 char for completion
         return;
 

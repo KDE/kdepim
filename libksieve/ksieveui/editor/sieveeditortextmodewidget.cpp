@@ -86,6 +86,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTabWidget->addTab(mTextEdit, i18n("Editor"));
     mTabWidget->setTabBarHidden(true);
     textEditLayout->addWidget(mTabWidget);
+    connect(mTextEdit, SIGNAL(openHelp(QString)), mTabWidget, SLOT(slotAddHelpPage(QString)));
     mFindBar = new PimCommon::PlainTextEditFindBar( mTextEdit, textEditWidget );
 
     textEditLayout->addWidget(mFindBar);

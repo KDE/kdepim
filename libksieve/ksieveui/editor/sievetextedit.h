@@ -58,6 +58,9 @@ protected:
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent *event);
 
+Q_SIGNALS:
+    void openHelp(const QString &url);
+
 private:
     QStringList completerList() const;
     void setCompleterList(const QStringList &list);
