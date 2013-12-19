@@ -22,6 +22,49 @@
 QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariableName type)
 {
     switch (type) {
+    case AddressCondition:
+    case BodyCondition:
+    case ConvertCondition:
+    case CurrentdateCondition:
+    case DateCondition:
+    case EnvelopeCondition:
+    case EnvironmentCondition:
+    case ExistsCondition:
+    case FalseCondition:
+    case HasflagCondition:
+    case HeaderCondition:
+    case IhaveCondition:
+    case MailboxexistsCondition:
+    case MetadataexistsCondition:
+    case MetadataCondition:
+    case ServermetadataexistsCondition:
+    case ServermetadataCondition:
+    case SizeCondition:
+    case SpamtestCondition:
+    case TrueCondition:
+    case VirustestCondition:
+    case AbstracteditheaderAction:
+    case AbstractflagsAction:
+    case AddflagsAction:
+    case AddheaderAction:
+    case BreakAction:
+    case ConvertAction:
+    case DeleteheaderAction:
+    case DiscardAction:
+    case EncloseAction:
+    case ExtracttextAction:
+    case FileintoAction:
+    case KeepAction:
+    case NotifyAction:
+    case RedirectAction:
+    case RejectAction:
+    case RemoveflagsAction:
+    case ReplaceAction:
+    case ReturnAction:
+    case SetflagsAction:
+    case SetvariableAction:
+    case StopAction:
+    case VacationAction:
     default:
         break;
     }
@@ -32,5 +75,5 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
 KSieveUi::SieveEditorUtil::HelpVariableName KSieveUi::SieveEditorUtil::strToVariableName(const QString &str)
 {
     //TODO
-    return Break;
+    return VacationAction;
 }
