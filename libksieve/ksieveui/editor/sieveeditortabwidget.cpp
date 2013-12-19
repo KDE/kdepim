@@ -1,0 +1,60 @@
+/*
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License, version 2, as
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+
+#include "sieveeditortabwidget.h"
+#include "ksieveui/editor/sieveeditorhelphtmlwidget.h"
+
+#include <KLocalizedString>
+
+#include <QDebug>
+
+using namespace KSieveUi;
+SieveEditorTabWidget::SieveEditorTabWidget(QWidget *parent)
+    : KTabWidget(parent)
+{
+}
+
+SieveEditorTabWidget::~SieveEditorTabWidget()
+{
+
+}
+
+void SieveEditorTabWidget::slotAddHelpPage(const QString &url)
+{
+    SieveEditorHelpHtmlWidget *htmlPage = new SieveEditorHelpHtmlWidget;
+    htmlPage->setHelp(url);
+    //TODO customize name
+    addTab(htmlPage, i18n("Help"));
+}
+
+void SieveEditorTabWidget::tabRemoved(int index)
+{
+    if (count() <= 1) {
+        setTabBarHidden(true);
+    }
+    KTabWidget::tabRemoved(index);
+}
+
+void SieveEditorTabWidget::tabInserted(int index)
+{
+    if (count()>1) {
+        setTabBarHidden(false);
+    }
+    KTabWidget::tabInserted(index);
+}
+

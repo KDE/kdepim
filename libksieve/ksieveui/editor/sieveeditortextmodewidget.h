@@ -22,6 +22,7 @@
 #include "sieveeditorabstractwidget.h"
 
 class QSplitter;
+class KTabWidget;
 
 namespace PimCommon {
 class PlainTextEditFindBar;
@@ -33,6 +34,7 @@ class SieveInfoWidget;
 class SieveTextEdit;
 class SieveEditorWarning;
 class SieveEditorParsingMissingFeatureWarning;
+class SieveEditorTabWidget;
 class SieveEditorTextModeWidget : public SieveEditorAbstractWidget
 {
     Q_OBJECT
@@ -85,6 +87,7 @@ private:
     QSplitter *mTemplateSplitter;
     SieveEditorWarning *mSieveEditorWarning;
     SieveEditorParsingMissingFeatureWarning *mSieveParsingWarning;
+    SieveEditorTabWidget *mTabWidget;
 };
 
 }

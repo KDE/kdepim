@@ -47,6 +47,7 @@ set(ksieveui_editor_LIB_SRCS
   editor/sieveeditorwarning.cpp
   editor/sieveeditorparsingmissingfeaturewarning.cpp
   editor/sieveeditorhelphtmlwidget.cpp
+  editor/sieveeditortabwidget.cpp
 )
 
 set(ksieveui_autocreatescripts_LIB_SRCS
