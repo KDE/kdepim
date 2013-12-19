@@ -1,0 +1,9 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="sieveeditor" version="1">
+ <MenuBar>
+  <Menu name="file" >
+   <Action name="new_theme" />
+  </Menu>
+ </MenuBar>
+</kpartgui>
+

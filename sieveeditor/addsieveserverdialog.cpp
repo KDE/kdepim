@@ -18,27 +18,25 @@
 
 */
 
+#include "addsieveserverdialog.h"
 
-#include "kdepim-version.h"
-#include "sieveeditormainwindow.h"
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#include <KLocalizedString>
+#include <QVBoxLayout>
 
-int main( int argc, char **argv )
+AddSieveServerDialog::AddSieveServerDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    KAboutData aboutData( "sieveeditor", 0, ki18n("Sieve Editor"),
-      KDEPIM_VERSION, ki18n("Sieve Editor"), KAboutData::License_GPL_V2,
-      ki18n("Copyright © 2013 sieveeditor authors"));
-    aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
-    aboutData.setProgramIconName(QLatin1String("kmail"));
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    setCaption( i18n( "Add Server Sieve" ) );
+    setButtons( Cancel | Ok  );
 
-    KCmdLineOptions options;
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    QWidget *w = new QWidget;
+    QVBoxLayout *lay = new QVBoxLayout;
+    lay->setMargin(0);
+    w->setLayout(lay);
+    setMainWidget(w);
+}
 
-    KApplication app;
-    SieveEditorMainWindow *mw = new SieveEditorMainWindow();
-    mw->show();
-    app.exec();
+AddSieveServerDialog::~AddSieveServerDialog()
+{
+
 }
