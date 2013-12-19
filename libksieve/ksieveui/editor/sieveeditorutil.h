@@ -24,6 +24,7 @@ namespace KSieveUi {
 namespace SieveEditorUtil {
 
 enum HelpVariableName {
+    UnknownHelp,
     AddressCondition,
     BodyCondition,
     ConvertCondition,
@@ -65,7 +66,10 @@ enum HelpVariableName {
     SetflagsAction,
     SetvariableAction,
     StopAction,
-    VacationAction
+    VacationAction,
+    GlobalVariable,
+    Includes,
+    ForEveryPart
 };
 KSieveUi::SieveEditorUtil::HelpVariableName strToVariableName(const QString &str);
 

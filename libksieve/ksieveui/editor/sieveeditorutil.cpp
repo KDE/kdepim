@@ -106,6 +106,12 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
         return QLatin1String("http://tools.ietf.org/html/rfc3028#page-19");
     case VacationAction:
         return QLatin1String("http://tools.ietf.org/html/rfc5230#page-3");
+    case GlobalVariable:
+        return QLatin1String("http://tools.ietf.org/search/rfc5229");
+    case Includes:
+        return QLatin1String("http://tools.ietf.org/html/rfc6609#page-4");
+    case ForEveryPart:
+        return QLatin1String("http://tools.ietf.org/html/rfc5703#page-3");
     default:
         break;
     }
@@ -133,7 +139,65 @@ KSieveUi::SieveEditorUtil::HelpVariableName KSieveUi::SieveEditorUtil::strToVari
         return FalseCondition;
     } else if (str == QLatin1String("hasflag")) {
         return HasflagCondition;
+    } else if (str == QLatin1String("header")) {
+        return HeaderCondition;
+    } else if (str == QLatin1String("ihave")) {
+        return IhaveCondition;
+    } else if (str == QLatin1String("mailboxexists")) {
+        return MailboxexistsCondition;
+    } else if (str == QLatin1String("metadata")) {
+        return MetadataCondition;
+    } else if (str == QLatin1String("metadataexists")) {
+        return MetadataexistsCondition;
+    } else if (str == QLatin1String("servermetadata")) {
+        return ServermetadataCondition;
+    } else if (str == QLatin1String("servermetadataexists")) {
+        return ServermetadataexistsCondition;
+    } else if (str == QLatin1String("size")) {
+        return SizeCondition;
+    } else if (str == QLatin1String("spamtest")) {
+        return SpamtestCondition;
+    } else if (str == QLatin1String("true")) {
+        return TrueCondition;
+    } else if (str == QLatin1String("virustest")) {
+        return VirustestCondition;
+    } else if (str == QLatin1String("break")) {
+        return BreakAction;
+    } else if (str == QLatin1String("convert")) {
+        return ConvertAction; //TODO
+    } else if (str == QLatin1String("discard")) {
+        return DiscardAction;
+    } else if (str == QLatin1String("enclose")) {
+        return EncloseAction;
+    } else if (str == QLatin1String("extracttext")) {
+        return ExtracttextAction;
+    } else if (str == QLatin1String("fileinto")) {
+        return FileintoAction;
+    } else if (str == QLatin1String("keep")) {
+        return KeepAction;
+    } else if (str == QLatin1String("notify")) {
+        return NotifyAction;
+    } else if (str == QLatin1String("redirect")) {
+        return RedirectAction;
+    } else if (str == QLatin1String("reject")) {
+        return RejectAction;
+    } else if (str == QLatin1String("replace")) {
+        return ReplaceAction;
+    } else if (str == QLatin1String("return")) {
+        return ReturnAction;
+    } else if (str == QLatin1String("set")) {
+        return SetvariableAction;
+    } else if (str == QLatin1String("stop")) {
+        return StopAction;
+    } else if (str == QLatin1String("vacation")) {
+         return VacationAction;
+    } else if (str == QLatin1String("include")) {
+        return Includes;
+    } else if (str == QLatin1String("globalvariable")) {
+        return GlobalVariable;
+    } else if (str == QLatin1String("foreverypart")) {
+        return ForEveryPart;
     }
     //TODO
-    return VacationAction;
+    return UnknownHelp;
 }
