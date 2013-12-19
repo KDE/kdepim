@@ -75,3 +75,7 @@ endif()
 if(BUILD_kmailcvt)
   add_subdirectory(kmailcvt)
 endif()
+
+if(BUILD_sieveeditor)
+  add_subdirectory(sieveeditor)
+endif()
