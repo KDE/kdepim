@@ -26,6 +26,7 @@ SieveEditorHelpHtmlWidget::SieveEditorHelpHtmlWidget(QWidget *parent)
     : QWidget(parent)
 {
     mWebView = new QWebView;
+    connect(mWebView, SIGNAL(titleChanged(QString)), this, SLOT(slotTitleChanged(QString)));
     QVBoxLayout *lay = new QVBoxLayout;
     lay->addWidget(mWebView);
     setLayout(lay);
@@ -36,11 +37,15 @@ SieveEditorHelpHtmlWidget::~SieveEditorHelpHtmlWidget()
 
 }
 
+void SieveEditorHelpHtmlWidget::slotTitleChanged(const QString &)
+{
+    Q_EMIT titleChanged(this, mVariableName);
+}
+
 void SieveEditorHelpHtmlWidget::setHelp(const QString &variableName, const QString &url)
 {
     mVariableName = variableName;
     mWebView->setUrl(url);
-    Q_EMIT titleChanged(this, mVariableName);
 }
 
 QString SieveEditorHelpHtmlWidget::variableName() const

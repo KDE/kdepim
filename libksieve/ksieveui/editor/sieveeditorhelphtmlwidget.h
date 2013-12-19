@@ -35,6 +35,9 @@ public:
 Q_SIGNALS:
     void titleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
 
+private slots:
+    void slotTitleChanged(const QString &);
+
 private:
     QString mVariableName;
     QWebView *mWebView;
