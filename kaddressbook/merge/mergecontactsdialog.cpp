@@ -41,9 +41,9 @@ MergeContactsDialog::MergeContactsDialog(QItemSelectionModel *selectionModel, QW
         setMainWidget(new QLabel(i18n("You must select at least two elements.")));
     } else {
         if (!MergeContactUtil::hasSameNames(lst)) {
-            setMainWidget(new QLabel(i18n("You select %1 and some item has not the same name", lst.count())));
+            setMainWidget(new QLabel(i18n("You selected %1 and some item has not the same name", lst.count())));
         } else {
-            setMainWidget(new QLabel(i18n("You select %1", lst.count())));
+            setMainWidget(new QLabel(i18n("You selected %1", lst.count())));
         }
     }
 }
