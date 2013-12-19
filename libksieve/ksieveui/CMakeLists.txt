@@ -46,6 +46,7 @@ set(ksieveui_editor_LIB_SRCS
   editor/sieveeditorabstractwidget.cpp
   editor/sieveeditorwarning.cpp
   editor/sieveeditorparsingmissingfeaturewarning.cpp
+  editor/sieveeditorhelphtmlwidget.cpp
 )
 
 set(ksieveui_autocreatescripts_LIB_SRCS
@@ -173,6 +174,7 @@ target_link_libraries(ksieveui
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KIO_LIBS}
   ${KDE4_KDECORE_LIBS}
+  ${QT_QTWEBKIT_LIBRARY}
 )
 
 set_target_properties(
