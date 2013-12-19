@@ -15,33 +15,35 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef SIEVEEDITORLOADPROGRESSINDICATOR_H
+#define SIEVEEDITORLOADPROGRESSINDICATOR_H
 
-#ifndef SIEVEEDITORTABWIDGET_H
-#define SIEVEEDITORTABWIDGET_H
-
-#include <KTabWidget>
+#include <QObject>
+#include <KPixmapSequence>
+#include <KIcon>
 
 namespace KSieveUi {
-class SieveEditorHelpHtmlWidget;
-class SieveEditorTabWidget : public KTabWidget
+class SieveEditorLoadProgressIndicator : public QObject
 {
     Q_OBJECT
 public:
-    explicit SieveEditorTabWidget(QWidget *parent=0);
-    ~SieveEditorTabWidget();
+    explicit SieveEditorLoadProgressIndicator(QObject *parent=0);
+    ~SieveEditorLoadProgressIndicator();
 
-public Q_SLOTS:
-    void slotAddHelpPage(const QString &variableName, const QString &url);
+    void startAnimation();
+    void stopAnimation();
 
-protected:
-    void tabRemoved(int index);
-    void tabInserted(int index);
+Q_SIGNALS:
+    void pixmapChanged(const QPixmap &);
 
 private Q_SLOTS:
-    void slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
-    void slotTabCloseRequested(int index);
-    void slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QPixmap &pixmap);
+    void slotTimerDone();
+
+private:
+    int mProgressCount;
+    KPixmapSequence mProgressPix;
+    QTimer *mProgressTimer;
 };
 }
 
-#endif // SIEVEEDITORTABWIDGET_H
+#endif // SIEVEEDITORLOADPROGRESSINDICATOR_H

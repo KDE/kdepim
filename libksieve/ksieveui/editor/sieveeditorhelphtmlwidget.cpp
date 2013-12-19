@@ -16,7 +16,7 @@
 */
 
 #include "sieveeditorhelphtmlwidget.h"
-
+#include "sieveeditorloadprogressindicator.h"
 #include <QWebView>
 #include <QVBoxLayout>
 
@@ -25,8 +25,12 @@ using namespace KSieveUi;
 SieveEditorHelpHtmlWidget::SieveEditorHelpHtmlWidget(QWidget *parent)
     : QWidget(parent)
 {
+    mProgressIndicator = new SieveEditorLoadProgressIndicator(this);
+    connect(mProgressIndicator, SIGNAL(pixmapChanged(QPixmap)), this, SLOT(slotPixmapChanged(QPixmap)));
     mWebView = new QWebView;
     connect(mWebView, SIGNAL(titleChanged(QString)), this, SLOT(slotTitleChanged(QString)));
+    connect(mWebView, SIGNAL(loadStarted()), this, SLOT(slotLoadStarted()));
+    connect(mWebView, SIGNAL(loadFinished(bool)), this, SLOT(slotFinished(bool)));
     QVBoxLayout *lay = new QVBoxLayout;
     lay->addWidget(mWebView);
     setLayout(lay);
@@ -35,6 +39,21 @@ SieveEditorHelpHtmlWidget::SieveEditorHelpHtmlWidget(QWidget *parent)
 SieveEditorHelpHtmlWidget::~SieveEditorHelpHtmlWidget()
 {
 
+}
+
+void SieveEditorHelpHtmlWidget::slotPixmapChanged(const QPixmap &pixmap)
+{
+    Q_EMIT progressIndicatorPixmapChanged(this, pixmap);
+}
+
+void SieveEditorHelpHtmlWidget::slotFinished(bool b)
+{
+    mProgressIndicator->stopAnimation();
+}
+
+void SieveEditorHelpHtmlWidget::slotLoadStarted()
+{
+    mProgressIndicator->startAnimation();
 }
 
 void SieveEditorHelpHtmlWidget::slotTitleChanged(const QString &)

@@ -55,8 +55,17 @@ void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QS
     }
     SieveEditorHelpHtmlWidget *htmlPage = new SieveEditorHelpHtmlWidget;
     connect(htmlPage, SIGNAL(titleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)), this, SLOT(slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)));
+    connect(htmlPage, SIGNAL(progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QPixmap)), this, SLOT(slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QPixmap)));
     htmlPage->setHelp(variableName, url);
     addTab(htmlPage, i18n("Help"));
+}
+
+void SieveEditorTabWidget::slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget* widget, const QPixmap &pixmap)
+{
+    const int index = indexOf(widget);
+    if (index != -1) {
+        setTabIcon(index, QIcon(pixmap));
+    }
 }
 
 void SieveEditorTabWidget::slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title)

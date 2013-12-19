@@ -49,6 +49,7 @@ set(ksieveui_editor_LIB_SRCS
   editor/sieveeditorhelphtmlwidget.cpp
   editor/sieveeditortabwidget.cpp
   editor/sieveeditorutil.cpp
+  editor/sieveeditorloadprogressindicator.cpp
 )
 
 set(ksieveui_autocreatescripts_LIB_SRCS

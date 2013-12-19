@@ -22,6 +22,7 @@
 class QWebView;
 
 namespace KSieveUi {
+class SieveEditorLoadProgressIndicator;
 class SieveEditorHelpHtmlWidget : public QWidget
 {
     Q_OBJECT
@@ -34,13 +35,18 @@ public:
 
 Q_SIGNALS:
     void titleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
+    void progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QPixmap &);
 
 private slots:
     void slotTitleChanged(const QString &);
+    void slotFinished(bool b);
+    void slotLoadStarted();
+    void slotPixmapChanged(const QPixmap &pixmap);
 
 private:
     QString mVariableName;
     QWebView *mWebView;
+    SieveEditorLoadProgressIndicator *mProgressIndicator;
 };
 }
 
