@@ -1,31 +1,6 @@
 [Global]
 IconName=kmail
-Comment=MessageViewer
-Comment[bs]=Preglednik poruka
-Comment[ca]=Visor de missatge
-Comment[ca@valencia]=Visor de missatge
-Comment[da]=Brevfremviser
-Comment[de]=Nachrichtenanzeige
-Comment[es]=Visor de mensajes
-Comment[fi]=MessageViewer
-Comment[fr]=MessageViewer
-Comment[gl]=Visor de mensaxes
-Comment[ia]=MessageViewer (visor de message)
-Comment[kk]=Хатты қарау құралы
-Comment[nb]=Meldingsviser
-Comment[nl]=MessageViewer
-Comment[pt]=Visualizador da Mensagem
-Comment[pt_BR]=Visualizador de mensagens
-Comment[sk]=Prehliadač správ
-Comment[sr]=Приказивач порука
-Comment[sr@ijekavian]=Приказивач порука
-Comment[sr@ijekavianlatin]=Prikazivač poruka
-Comment[sr@latin]=Prikazivač poruka
-Comment[sv]=Brevvisning
-Comment[tr]=PostaGörüntüleyici
-Comment[uk]=Перегляд повідомлень
-Comment[x-test]=xxMessageViewerxx
-Comment[zh_TW]=訊息檢視器
+Comment=Message Viewer
 
 [Event/adblock-list-download-done]
 Name=New Ad-Block list download done
