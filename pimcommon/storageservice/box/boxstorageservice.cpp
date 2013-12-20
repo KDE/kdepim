@@ -96,7 +96,15 @@ void BoxStorageService::shareLink(const QString &root, const QString &path)
 
 void BoxStorageService::downloadFile(const QString &filename)
 {
-
+    if (mToken.isEmpty()) {
+        authentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->downloadFile(filename);
+    }
 }
 
 void BoxStorageService::listFolder()

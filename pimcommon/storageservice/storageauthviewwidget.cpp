@@ -17,8 +17,10 @@
 
 
 #include "storageauthviewwidget.h"
+
 #include <QWebView>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QProgressBar>
 #include <QDebug>
 
 using namespace PimCommon;
@@ -26,11 +28,17 @@ using namespace PimCommon;
 StorageAuthViewWidget::StorageAuthViewWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QHBoxLayout *lay = new QHBoxLayout;
+    QVBoxLayout *lay = new QVBoxLayout;
     lay->setMargin(0);
     mWebView = new QWebView;
+    mProgressBar = new QProgressBar;
+    mProgressBar->hide();
     connect(mWebView, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged(QUrl)));
+    connect(mWebView, SIGNAL(loadStarted()), this, SLOT(slotLoadStarted()));
+    connect(mWebView, SIGNAL(loadProgress(int)), mProgressBar, SLOT(setValue(int)));
+    connect(mWebView, SIGNAL(loadFinished(bool)), this, SLOT(slotLoadFinished(bool)));
     lay->addWidget(mWebView);
+    lay->addWidget(mProgressBar);
     setLayout(lay);
 }
 
@@ -42,4 +50,14 @@ StorageAuthViewWidget::~StorageAuthViewWidget()
 void StorageAuthViewWidget::setUrl(const QUrl &url)
 {
     mWebView->load(url);
+}
+
+void StorageAuthViewWidget::slotLoadStarted()
+{
+    mProgressBar->show();
+}
+
+void StorageAuthViewWidget::slotLoadFinished(bool success)
+{
+    mProgressBar->hide();
 }

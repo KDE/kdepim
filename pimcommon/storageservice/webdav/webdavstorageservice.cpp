@@ -73,7 +73,14 @@ void WebDavStorageService::shareLink(const QString &root, const QString &path)
 
 void WebDavStorageService::downloadFile(const QString &filename)
 {
-
+    if (mServiceLocation.isEmpty()) {
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        //TODO connect
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->downloadFile(filename);
+    }
 }
 
 void WebDavStorageService::createServiceFolder()

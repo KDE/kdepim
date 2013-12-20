@@ -181,7 +181,15 @@ void UbuntuoneStorageService::shareLink(const QString &root, const QString &path
 
 void UbuntuoneStorageService::downloadFile(const QString &filename)
 {
-
+    if (mTokenSecret.isEmpty()) {
+        authentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        //TODO connect
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->downloadFile(filename);
+    }
 }
 
 void UbuntuoneStorageService::createServiceFolder()

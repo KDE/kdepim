@@ -179,7 +179,15 @@ void YouSendItStorageService::shareLink(const QString &root, const QString &path
 
 void YouSendItStorageService::downloadFile(const QString &filename)
 {
-
+    if (mToken.isEmpty()) {
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        //TODO download ?
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->downloadFile(filename);
+    }
 }
 
 void YouSendItStorageService::createServiceFolder()

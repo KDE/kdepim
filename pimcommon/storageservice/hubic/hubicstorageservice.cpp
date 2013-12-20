@@ -176,7 +176,15 @@ QString HubicStorageService::storageServiceName() const
 
 void HubicStorageService::downloadFile(const QString &filename)
 {
-
+    if (mRefreshToken.isEmpty()) {
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        //TODO connect
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->downloadFile(filename);
+    }
 }
 
 void HubicStorageService::createServiceFolder()

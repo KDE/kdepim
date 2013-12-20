@@ -22,7 +22,7 @@
 #include <QWidget>
 #include <QUrl>
 class QWebView;
-
+class QProgressBar;
 namespace PimCommon {
 class StorageAuthViewWidget : public QWidget
 {
@@ -36,8 +36,13 @@ public:
 Q_SIGNALS:
     void urlChanged(const QUrl &);
 
+private slots:
+    void slotLoadStarted();
+    void slotLoadFinished(bool success);
+
 private:
     QWebView *mWebView;
+    QProgressBar *mProgressBar;
 };
 }
 

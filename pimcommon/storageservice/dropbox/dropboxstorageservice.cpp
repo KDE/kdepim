@@ -195,6 +195,15 @@ QString DropBoxStorageService::storageServiceName() const
 
 void DropBoxStorageService::downloadFile(const QString &filename)
 {
+    if (mAccessToken.isEmpty()) {
+        authentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        //TODO connect
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->downloadFile(filename);
+    }
 
 }
 
