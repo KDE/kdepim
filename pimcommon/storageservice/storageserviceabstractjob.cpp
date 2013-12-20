@@ -75,6 +75,9 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstractJo
     case CreateServiceFolder:
         error = i18n("Create Service Folder returns an error: %1",errorStr);
         break;
+    case DownLoadFile:
+        error = i18n("Download file returns an error: %1",errorStr);
+        break;
     default:
         break;
     }

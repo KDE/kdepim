@@ -37,6 +37,8 @@ public:
     void createFolder(const QString &filename=QString());
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
+    void downloadFile(const QString &filename);
+
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);    
     void slotUploadFileProgress(qint64 done, qint64 total);

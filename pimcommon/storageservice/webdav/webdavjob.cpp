@@ -116,6 +116,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             case CreateFolder:
             case AccountInfo:
             case ListFolder:
+            case DownLoadFile:
             case CreateServiceFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
@@ -152,6 +153,9 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         break;
     case ListFolder:
         parseListFolder(data);
+        break;
+    case DownLoadFile:
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
@@ -193,6 +197,11 @@ void WebDavJob::shareLink(const QString &root, const QString &path)
 }
 
 void WebDavJob::createServiceFolder()
+{
+
+}
+
+void WebDavJob::downloadFile(const QString &filename)
 {
 
 }

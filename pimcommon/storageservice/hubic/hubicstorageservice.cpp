@@ -174,7 +174,7 @@ QString HubicStorageService::storageServiceName() const
     return serviceName();
 }
 
-void HubicStorageService::downloadFile()
+void HubicStorageService::downloadFile(const QString &filename)
 {
 
 }

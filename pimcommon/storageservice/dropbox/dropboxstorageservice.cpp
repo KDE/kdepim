@@ -193,7 +193,7 @@ QString DropBoxStorageService::storageServiceName() const
     return serviceName();
 }
 
-void DropBoxStorageService::downloadFile()
+void DropBoxStorageService::downloadFile(const QString &filename)
 {
 
 }

@@ -56,6 +56,11 @@ void OAuth2Job::createServiceFolder()
     //TODO
 }
 
+void OAuth2Job::downloadFile(const QString &filename)
+{
+
+}
+
 void OAuth2Job::requestTokenAccess()
 {
     mError = false;
@@ -249,6 +254,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
             case CreateFolder:
             case AccountInfo:
             case ListFolder:
+            case DownLoadFile:
             case CreateServiceFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
@@ -289,6 +295,9 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         break;
     case CreateServiceFolder:
         parseCreateServiceFolder(data);
+        break;
+    case DownLoadFile:
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;

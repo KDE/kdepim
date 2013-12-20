@@ -175,6 +175,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         case CreateFolder:
         case AccountInfo:
         case ListFolder:
+        case DownLoadFile:
         case CreateServiceFolder:
             errorMessage(mActionType, errorStr);
             deleteLater();
@@ -211,6 +212,10 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         break;
     case CreateServiceFolder:
         parseCreateServiceFolder(data);
+        break;
+    case DownLoadFile:
+        //TODO
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
@@ -257,6 +262,11 @@ void UbuntuOneJob::createServiceFolder()
     postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
     QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+void UbuntuOneJob::downloadFile(const QString &filename)
+{
+
 }
 
 void UbuntuOneJob::parseCreateFolder(const QString &data)

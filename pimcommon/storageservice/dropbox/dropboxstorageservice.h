@@ -44,7 +44,7 @@ public:
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
     QString storageServiceName() const;
-    void downloadFile();
+    void downloadFile(const QString &filename);
 
     KIcon icon() const;
 

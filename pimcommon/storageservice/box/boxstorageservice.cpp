@@ -94,7 +94,7 @@ void BoxStorageService::shareLink(const QString &root, const QString &path)
     }
 }
 
-void BoxStorageService::downloadFile()
+void BoxStorageService::downloadFile(const QString &filename)
 {
 
 }

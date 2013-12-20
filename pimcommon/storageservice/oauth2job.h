@@ -39,6 +39,7 @@ public:
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
     void createServiceFolder();
+    void downloadFile(const QString &filename);
 
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);

@@ -56,6 +56,11 @@ void YouSendItJob::createServiceFolder()
 
 }
 
+void YouSendItJob::downloadFile(const QString &filename)
+{
+
+}
+
 void YouSendItJob::requestTokenAccess()
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
@@ -196,6 +201,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         case AccountInfo:
         case ListFolder:
         case CreateServiceFolder:
+        case DownLoadFile:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -230,6 +236,10 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         break;
     case CreateServiceFolder:
         parseCreateServiceFolder(data);
+        break;
+    case DownLoadFile:
+        //TODO
+        deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;

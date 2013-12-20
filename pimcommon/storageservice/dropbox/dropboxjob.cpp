@@ -132,6 +132,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             case AccountInfo:
             case ListFolder:
             case ShareLink:
+            case DownLoadFile:
             case CreateServiceFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
@@ -172,6 +173,9 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         parseShareLink(data);
         break;
     case CreateServiceFolder:
+        deleteLater();
+        break;
+    case DownLoadFile:
         deleteLater();
         break;
     default:
@@ -393,6 +397,11 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
 }
 
 void DropBoxJob::createServiceFolder()
+{
+
+}
+
+void DropBoxJob::downloadFile(const QString &filename)
 {
 
 }
