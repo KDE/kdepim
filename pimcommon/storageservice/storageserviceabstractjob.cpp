@@ -72,6 +72,9 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstractJo
     case ShareLink:
         error = i18n("Share Link returns an error: %1",errorStr);
         break;
+    case CreateServiceFolder:
+        error = i18n("Create Service Folder returns an error: %1",errorStr);
+        break;
     default:
         break;
     }
