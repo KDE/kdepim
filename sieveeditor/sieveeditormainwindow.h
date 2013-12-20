@@ -30,6 +30,10 @@ public:
     explicit SieveEditorMainWindow();
     ~SieveEditorMainWindow();
 
+private slots:
+    void slotQuitApp();
+
+    void slotConfigure();
 private:
     void readConfig();
     void setupActions();

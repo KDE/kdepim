@@ -22,13 +22,16 @@
 #define ADDSIEVESERVERDIALOG_H
 
 #include <KDialog>
-
+class ServerSieveSettings;
 class AddSieveServerDialog : public KDialog
 {
     Q_OBJECT
 public:
     explicit AddSieveServerDialog(QWidget *parent=0);
     ~AddSieveServerDialog();
+
+private:
+    ServerSieveSettings *mServerSieveSettings;
 };
 
 #endif // ADDSIEVESERVERDIALOG_H

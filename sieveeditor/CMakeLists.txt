@@ -12,6 +12,11 @@ set(sieveeditor_SRCS
   main.cpp
   sieveeditormainwindow.cpp
   addsieveserverdialog.cpp
+  serversievesettings.cpp
+)
+
+kde4_add_ui_files(sieveeditor_SRCS
+    serversievesettings.ui
 )
 
 

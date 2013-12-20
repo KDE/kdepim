@@ -18,28 +18,25 @@
 
 */
 
-#include "addsieveserverdialog.h"
-#include "serversievesettings.h"
+#ifndef SERVERSIEVESETTINGS_H
+#define SERVERSIEVESETTINGS_H
 
-#include <KLocalizedString>
-#include <QVBoxLayout>
+#include <QWidget>
 
-AddSieveServerDialog::AddSieveServerDialog(QWidget *parent)
-    : KDialog(parent)
-{
-    setCaption( i18n( "Add Server Sieve" ) );
-    setButtons( Cancel | Ok  );
-
-    QWidget *w = new QWidget;
-    QVBoxLayout *lay = new QVBoxLayout;
-    mServerSieveSettings = new ServerSieveSettings;
-    lay->addWidget(mServerSieveSettings);
-    lay->setMargin(0);
-    w->setLayout(lay);
-    setMainWidget(w);
+namespace Ui {
+class ServerSieveSettings;
 }
 
-AddSieveServerDialog::~AddSieveServerDialog()
+class ServerSieveSettings : public QWidget
 {
+    Q_OBJECT
 
-}
+public:
+    explicit ServerSieveSettings(QWidget *parent = 0);
+    ~ServerSieveSettings();
+
+private:
+    Ui::ServerSieveSettings *ui;
+};
+
+#endif // SERVERSIEVESETTINGS_H

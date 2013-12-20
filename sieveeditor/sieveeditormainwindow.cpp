@@ -24,6 +24,9 @@
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KConfigGroup>
+#include <KStandardAction>
+#include <KApplication>
+#include <KActionCollection>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow()
@@ -54,10 +57,22 @@ void SieveEditorMainWindow::readConfig()
 
 void SieveEditorMainWindow::setupActions()
 {
+    KStandardAction::quit(this, SLOT(slotQuitApp()), actionCollection() );
+    KStandardAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
     //TODO
 }
 
 void SieveEditorMainWindow::updateActions()
 {
     //TODO
+}
+
+void SieveEditorMainWindow::slotQuitApp()
+{
+    kapp->quit();
+}
+
+void SieveEditorMainWindow::slotConfigure()
+{
+
 }
