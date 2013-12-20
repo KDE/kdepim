@@ -41,6 +41,7 @@ private Q_SLOTS:
     void slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
     void slotTabCloseRequested(int index);
     void slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QPixmap &pixmap);
+    void slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget *widget, bool success);
 };
 }
 
