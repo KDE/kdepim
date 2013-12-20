@@ -16,7 +16,7 @@ set(sieveeditor_SRCS
 )
 
 kde4_add_ui_files(sieveeditor_SRCS
-    serversievesettings.ui
+    ui/serversievesettings.ui
 )
 
 
