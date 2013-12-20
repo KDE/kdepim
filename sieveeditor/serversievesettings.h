@@ -35,6 +35,18 @@ public:
     explicit ServerSieveSettings(QWidget *parent = 0);
     ~ServerSieveSettings();
 
+    QString serverName() const;
+    void setServerName(const QString &name);
+
+    int port() const;
+    void setPort(int value);
+
+    QString userName() const;
+    void setUserName(const QString &name);
+
+    QString password() const;
+    void setPassword(const QString &pass);
+
 private:
     Ui::ServerSieveSettings *ui;
 };

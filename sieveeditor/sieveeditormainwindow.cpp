@@ -20,6 +20,7 @@
 
 #include "sieveeditormainwindow.h"
 #include "sieveeditormainwidget.h"
+#include "sieveeditorconfiguredialog.h"
 
 #include <KSharedConfig>
 #include <KGlobal>
@@ -28,6 +29,8 @@
 #include <KStandardAction>
 #include <KApplication>
 #include <KActionCollection>
+
+#include <QPointer>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow()
@@ -77,5 +80,9 @@ void SieveEditorMainWindow::slotQuitApp()
 
 void SieveEditorMainWindow::slotConfigure()
 {
-
+    QPointer<SieveEditorConfigureDialog> dlg = new SieveEditorConfigureDialog;
+    if (dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
 }

@@ -18,32 +18,20 @@
 
 */
 
-#ifndef ADDSIEVESERVERDIALOG_H
-#define ADDSIEVESERVERDIALOG_H
+#include "sieveeditorconfiguredialog.h"
 
-#include <KDialog>
-class ServerSieveSettings;
-class AddSieveServerDialog : public KDialog
+#include <KLocalizedString>
+
+SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit AddSieveServerDialog(QWidget *parent=0);
-    ~AddSieveServerDialog();
+    setCaption( i18n( "Configure" ) );
+    setButtons( Cancel | Ok  );
 
-    QString serverName() const;
-    void setServerName(const QString &name);
+}
 
-    int port() const;
-    void setPort(int value);
+SieveEditorConfigureDialog::~SieveEditorConfigureDialog()
+{
 
-    QString userName() const;
-    void setUserName(const QString &name);
+}
 
-    QString password() const;
-    void setPassword(const QString &pass);
-
-private:
-    ServerSieveSettings *mServerSieveSettings;
-};
-
-#endif // ADDSIEVESERVERDIALOG_H

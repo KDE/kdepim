@@ -32,3 +32,43 @@ ServerSieveSettings::~ServerSieveSettings()
 {
     delete ui;
 }
+
+QString ServerSieveSettings::serverName() const
+{
+    return ui->serverName->text();
+}
+
+void ServerSieveSettings::setServerName(const QString &name)
+{
+    ui->serverName->setText(name);
+}
+
+int ServerSieveSettings::port() const
+{
+    return ui->port->value();
+}
+
+void ServerSieveSettings::setPort(int value)
+{
+    ui->port->setValue(value);
+}
+
+QString ServerSieveSettings::userName() const
+{
+    return ui->userName->text();
+}
+
+void ServerSieveSettings::setUserName(const QString &name)
+{
+    ui->userName->setText(name);
+}
+
+QString ServerSieveSettings::password() const
+{
+    return ui->password->text();
+}
+
+void ServerSieveSettings::setPassword(const QString &pass)
+{
+    ui->password->setText(pass);
+}

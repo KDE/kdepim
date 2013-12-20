@@ -23,6 +23,8 @@
 
 #include <KLocalizedString>
 #include <QVBoxLayout>
+#include <QLineEdit>
+#include <QSpinBox>
 
 AddSieveServerDialog::AddSieveServerDialog(QWidget *parent)
     : KDialog(parent)
@@ -42,4 +44,44 @@ AddSieveServerDialog::AddSieveServerDialog(QWidget *parent)
 AddSieveServerDialog::~AddSieveServerDialog()
 {
 
+}
+
+QString AddSieveServerDialog::serverName() const
+{
+    return mServerSieveSettings->serverName();
+}
+
+void AddSieveServerDialog::setServerName(const QString &name)
+{
+    mServerSieveSettings->setServerName(name);
+}
+
+int AddSieveServerDialog::port() const
+{
+    return mServerSieveSettings->port();
+}
+
+void AddSieveServerDialog::setPort(int value)
+{
+    mServerSieveSettings->setPort(value);
+}
+
+QString AddSieveServerDialog::userName() const
+{
+    return mServerSieveSettings->userName();
+}
+
+void AddSieveServerDialog::setUserName(const QString &name)
+{
+    mServerSieveSettings->setUserName(name);
+}
+
+QString AddSieveServerDialog::password() const
+{
+    return mServerSieveSettings->password();
+}
+
+void AddSieveServerDialog::setPassword(const QString &pass)
+{
+    mServerSieveSettings->setPassword(pass);
 }
