@@ -50,7 +50,7 @@
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
-<date>2013-12-14</date>
+<date>2013-12-18</date>
 <releaseinfo>(&kde; 4.12)</releaseinfo>
 </chapterinfo>
 
@@ -59,16 +59,24 @@
 <sect1 id="configure-generalinfo">
 <title>General Information</title>
 
+<screenshot>
+<screeninfo>Configure &kmail; Dialog</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="configure.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Configure &kmail; Dialog</phrase>
+    </textobject>
+    <caption>
+      <para>Configure &kmail; Dialog</para>
+    </caption>
+  </mediaobject>
+</screenshot>
 <para>&kmail;'s configuration window enables you to configure &kmail;
 in many ways. You can reach it via
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-&kmail;...</guimenuitem></menuchoice>.</para>
-
-<para>It is divided into six
-pages, each of them represented by one of the
-icons in the list on the left hand side of the dialog. The pages
-will be described in detail below.</para>
-
+&kmail;...</guimenuitem></menuchoice></para>
 <para>The dialog has several buttons:</para>
 
 <variablelist>
@@ -101,11 +109,13 @@ dialog.</para></listitem>
 changes you have made.</para></listitem>
 </varlistentry>
 </variablelist>
-
+<para>The configuration pages are divided into six pages, each of them represented by one of the
+icons in the list on the left hand side of the dialog. The pages will be described in detail below.</para>
 </sect1>
 
 <sect1 id="configure-identity">
 <title>Identities Page</title>
+
 
 <para>You can find a quick introduction to the
 <guilabel>Identities</guilabel> page in the <link
@@ -125,13 +135,24 @@ least one identity, which is then the <guilabel>Default</guilabel>
 identity.</para>
 
 <para>To add a new identity to the identity list, click on the
-<guibutton>Add...</guibutton> button.
-The <link linkend="configure-identity-newidentitydialog">New identity</link> dialog
-will then appear.</para>
+<guibutton>Add...</guibutton> button.</para>
 
 <sect2 id="configure-identity-newidentitydialog">
-<title>The <guilabel>New Identity</guilabel> Dialog</title>
-
+<title>The New Identity Dialog</title>
+<screenshot>
+<screeninfo>New Identity Dialog</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="identity.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>New Identity Dialog</phrase>
+    </textobject>
+    <caption>
+      <para>New Identity Dialog</para>
+    </caption>
+  </mediaobject>
+</screenshot>
 <para>You have to enter the name of the new identity into the
 <guilabel>New Identity</guilabel> edit field. This will be the name
 shown in the identity list.</para>
@@ -174,6 +195,20 @@ entry in the <guilabel>Existing identities</guilabel> drop down box.</para>
 
 <sect2 id="configure-identity-general">
 <title>General</title>
+<screenshot>
+<screeninfo>Identity General</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="identitygeneral.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Identity General</phrase>
+    </textobject>
+    <caption>
+      <para>Identity General</para>
+    </caption>
+  </mediaobject>
+</screenshot>
 
 <para>The <guilabel>General</guilabel> tab allows you to specify some
 basic settings for the currently selected identity.</para>
@@ -223,162 +258,81 @@ a different identity).</para>
 
 </sect2>
 
-    <sect2 id="configure-identity-cryptography">
-      <title>
-	Cryptography
-      </title>
-
-      <para>
-	The <guilabel>Cryptography</guilabel> tab allows you to
-	specify &openpgp; and &smime; keys associated with this
-	identity, as well as choosing the preferred (cryptographic)
-	message format to use.
-      </para>
-
-      <variablelist>
-
-	<varlistentry id="configure-identity-cryptography-openpgp-sign">
-	  <term>
-	    <guilabel>OpenPGP signing key</guilabel>
-	  </term>
-	  <listitem>
-	    <para>
-	      Here you can select the key to be used when
-	      &openpgp;-signing messages written with this identity in
-	      effect.
-	    </para>
-	    <para>
-	      For brevity, only the short key id of selected keys is
-	      shown. Hovering with the mouse over the key list will
-	      show more information in a tooltip.
-	    </para>
-	    <para>
-	      To clear the label press the
-	      <guibutton>Clear</guibutton> button.
-	    </para>
-	    <para>
-	      To change the selected key, press the
-	      <guibutton>Change...</guibutton> button. A dialog
-	      listing all secret &openpgp; keys will be shown allowing
-	      you to select the one to use.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-
-	<varlistentry id="configure-identity-cryptography-openpgp-encrypt">
-	  <term>
-	    <guilabel>OpenPGP encryption key</guilabel>
-	  </term>
-	  <listitem>
-	    <para>
-	      Here you can select the key to &openpgp;-encrypt
-	      messages to when this identity and <xref
-	      linkend="configure-security-composing-encrypt-to-self"/>
-	      are in effect. This key is also used for the <xref
-	      linkend="composer-attach-attach-my-public-key"/>
-	      function of the <link
-	      linkend="the-composer-window">Composer</link>.
-	    </para>
-	    <para>
-	      To change the selected key, press the
-	      <guibutton>Change...</guibutton> button. A dialog
-	      listing all &openpgp; keys found in your keyring will be
-	      shown allowing you to select the one to use.
-	    </para>
-	    <para>
-	      You can clear the list of keys and get more information
-	      about them in the same way as described for <xref
-	      linkend="configure-identity-cryptography-openpgp-sign"/>.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-
-	<varlistentry id="configure-identity-cryptography-smime-sign">
-	  <term>
-	    <guilabel>&smime; signing certificate</guilabel>
-	  </term>
-	  <listitem>
-	    <para>
-	      Here you can select the certificate to be used when
-	      &smime;-signing messages written with this identity in
-	      effect.
-	    </para>
-	    <para>
-	      To change the selected certificate, press the
-	      <guibutton>Change...</guibutton> button. A dialog
-	      listing all secret &smime; signing certificates will be
-	      shown allowing you to select the one to use.
-	    </para>
-	    <para>
-	      You can clear the list of certificates and get more
-	      information about them in the same way as described for
-	      <xref linkend="configure-identity-cryptography-openpgp-sign"/>.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-
-	<varlistentry id="configure-identity-cryptography-smime-encrypt">
-	  <term>
-	    <guilabel>&smime; encryption certificate</guilabel>
-	  </term>
-	  <listitem>
-	    <para>
-	      Here you can select the certificate to &smime;-encrypt
-	      messages when this identity and <xref
-	      linkend="configure-security-composing-encrypt-to-self"/>
-	      are in effect.
-	    </para>
-	    <para>
-	      To change the selected certificate, press the
-	      <guibutton>Change...</guibutton> button. A dialog
-	      listing all &smime; encryption certificates found in
-	      your local keybox will be shown allowing you to select
-	      the one to use.
-	    </para>
-	    <para>
-	      You can clear the list of certificates and get more
-	      information about them in the same way as described for
-	      <xref linkend="configure-identity-cryptography-openpgp-sign"/>.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry id="configure-identity-cryptography-preferred-format">
-	  <term>
-	    <guilabel>Crypto</guilabel>
-	  </term>
-	  <listitem>
-	    <para>
-	      Here you can choose which cryptographic message format
-	      to use by default with this identity.
-	    </para>
-	    <para>
-	      You can either select any of the four formats supported
-	      by &kmail; or leave the option at the recommended
-	      default setting of <guilabel>Any</guilabel>, which will
-	      choose a suitable format based on the recipients of the
-	      message, or might even go so far as to create two copies
-	      of the message, one &smime; signed and/or encrypted, the
-	      other &openpgp; signed and/or encrypted.
-	    </para>
-	  </listitem>
-	</varlistentry>
-
-      </variablelist>
-
-    </sect2>
+<sect2 id="configure-identity-cryptography">
+<title>Cryptography</title>
+<screenshot>
+<screeninfo>Identity Cryptography</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="identitycryptography.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Identity Cryptography</phrase>
+    </textobject>
+    <caption>
+      <para>Identity Cryptography</para>
+    </caption>
+  </mediaobject>
+</screenshot>
+<para>The <guilabel>Cryptography</guilabel> tab allows you to specify &openpgp; and &smime; keys associated with this identity,
+ as well as choosing the preferred (cryptographic) message format to use.</para>
+<variablelist>
+<varlistentry id="configure-identity-cryptography-openpgp-sign">
+<term><guilabel>OpenPGP signing key</guilabel></term>
+<listitem>
+<para>Here you can select the key to be used when &openpgp;-signing messages written with this identity in effect.</para>
+<para>For brevity, only the short key id of selected keys is shown. Hovering with the mouse over the key list will show more information in a tooltip.</para>
+<para>To clear the label press the <guibutton>Clear</guibutton> button. To change the selected key, press the <guibutton>Change...</guibutton> button. A dialog
+listing all configured secret &openpgp; keys will be shown allowing you to select the one to use. If you do not have key configured yet, click the <guibutton>Start
+Certificate Manager</guibutton> to open &kleopatra;. See <ulink url="help:kleopatra">&kleopatra;</ulink> for information on using &kleopatra; to create and manage openpgp
+keys and certificates. Listed below is a brief description of the chosen key/certificate uses.</para>
+</listitem></varlistentry>
+<varlistentry id="configure-identity-cryptography-openpgp-encrypt">
+<term><guilabel>OpenPGP encryption key</guilabel></term>
+<listitem><para>Here you can select the key to &openpgp;-encrypt messages to when this identity and <xref linkend="configure-security-composing-encrypt-to-self"/>
+ are in effect. This key is also used for the <xref linkend="composer-attach-attach-my-public-key"/> function of the <link linkend="the-composer-window">Composer</link>.</para>
+</listitem></varlistentry>
+<varlistentry id="configure-identity-cryptography-smime-sign">
+<term><guilabel>&smime; signing certificate</guilabel></term>
+<listitem>
+<para>Here you can select the certificate to be used when &smime;-signing messages written with this identity in effect.</para>
+</listitem></varlistentry>
+<varlistentry id="configure-identity-cryptography-smime-encrypt">
+<term><guilabel>&smime; encryption certificate</guilabel></term>
+<listitem>
+<para>Here you can select the certificate to &smime;-encrypt messages when this identity and <xref linkend="configure-security-composing-encrypt-to-self"/> are in effect.</para>
+</listitem></varlistentry>
+<varlistentry id="configure-identity-cryptography-preferred-format">
+<term><guilabel>Preferred format</guilabel></term>
+<listitem>
+<para>Here you can choose which cryptographic message format to use by default with this identity. You can either select any of the four formats supported
+ by &kmail; or leave the option at the recommended default setting of <guilabel>Any</guilabel>, which will choose a suitable format based on the recipients
+ of the message, or might even go so far as to create two copies of the message, one &smime; signed and/or encrypted, the other &openpgp; signed and/or encrypted.</para>
+</listitem></varlistentry>
+</variablelist>
+</sect2>
 
 <sect2 id="configure-identity-advanced">
 <title>Advanced</title>
 
+<screenshot>
+<screeninfo>Identity Advanced</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="identitiesadvanced.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Identity Advanced</phrase>
+    </textobject>
+    <caption>
+      <para>Identity Advanced</para>
+    </caption>
+  </mediaobject>
+</screenshot>
 <para>The <guilabel>Advanced</guilabel> tab allows you to specify some
 rarely used or otherwise specialized settings for the currently
 selected identity.</para>
 <variablelist>
-
 <varlistentry>
 <term><guilabel>Reply-To address</guilabel></term>
 <listitem>
@@ -389,13 +343,12 @@ address (specified using the <guilabel>Name</guilabel> and
 linkend="configure-identity-general"><guilabel>General</guilabel>
 tab</link>), since replies default to the sender's address
 anyway.</para>
-<note><para>This field is only useful if you want replies to your mail
+<para>This field is only useful if you want replies to your mail
 to go somewhere else than your regular email address, &eg; if you are
 using this identity to send messages from an email address that cannot
-receive messages. Note that
-some mailing lists overwrite this header field with their post address to
-make sure that replies go to the list instead of individuals. So the
-usefulness of this field is very limited and it should only be used in
+receive messages.</para>
+<note><para>Note that some mailing lists overwrite this header field with their post address to
+make sure that replies go to the list instead of individuals. So the usefulness of this field is very limited and it should only be used in
 rare cases.</para></note>
 </listitem>
 </varlistentry>
@@ -410,29 +363,24 @@ of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
 <guilabel>Composer</guilabel> page.</para>
 </listitem>
 </varlistentry>
-
 <varlistentry>
 <term><guilabel>Dictionary</guilabel></term>
 <listitem>
 <para>Select the default dictionary for current identity.</para>
 </listitem>
 </varlistentry>
-
-
 <varlistentry>
 <term><guilabel>Sent-mail folder</guilabel></term>
 <listitem>
 <para>Select the folder into which messages should be filed after sending
-when using this identity. <acronym>IMAP</acronym> users should consider changing this to an
-<acronym>IMAP</acronym> folder, so their sent-mail is stored on a server instead of being
+when using this identity. &imap; users should consider changing this to an
+&imap; folder, so their sent-mail is stored on a server instead of being
 stored in a local folder. This way they can access these messages from a
 different location.</para>
-
 <tip><para>You can exercise more fine-grained control over where to
 file sent messages by creating a corresponding <link
 linkend="filters">message filter</link> that is applied to outgoing
 messages.</para></tip>
-
 </listitem>
 </varlistentry>
 
@@ -440,21 +388,25 @@ messages.</para></tip>
 <term><guilabel>Drafts folder</guilabel></term>
 <listitem>
 <para>Select the folder into which drafts should be filed when using
-this identity. <acronym>IMAP</acronym> users should consider changing this to an
-<acronym>IMAP</acronym> folder, so their drafts are stored on a server instead of being
+this identity. &imap; users should consider changing this to an
+&imap; folder, so their drafts are stored on a server instead of being
 stored in a local folder. This way they can easily continue to work
 on their drafts at a different location.</para>
 </listitem>
 </varlistentry>
 
-<!-- Templates folder missing-->
+<varlistentry>
+<term><guilabel>Templates folder</guilabel></term>
+<listitem>
+<para>Select the folder into which templates should be filed when using
+this identity. Please see <link linkend="new-compose-from-templates">Compose from templates</link> for more information on templates.</para>
+</listitem>
+</varlistentry>
  
 <varlistentry>
 <term><guilabel>Outgoing Account</guilabel></term>
 <listitem>
-  <para>Select or enter an alternative &SMTP; server to be used when sending
-messages using this identity.</para>
-
+<para>Select or enter an alternative &SMTP; server to be used when sending messages using this identity.</para>
 <note><para>You need to configure outgoing mail servers first, before
 you can choose them from the list. You can do this on the <link
 linkend="configure-accounts-sending"><guilabel>Sending</guilabel>
@@ -462,12 +414,25 @@ tab</link> of the <link linkend="configure-accounts">
 <guilabel>Accounts</guilabel> page</link>.</para></note>
 </listitem>
 </varlistentry>
-
 </variablelist>
 </sect2>
 
 <sect2 id="configure-identity-templates">
 <title>Templates</title>
+<screenshot>
+<screeninfo>Identity Templates</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="identitytemplate.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Identity Templates</phrase>
+    </textobject>
+    <caption>
+      <para>Identity Templates</para>
+    </caption>
+  </mediaobject>
+</screenshot>
 <para>Here you can create and manage templates to use when composing new 
 messages, replies or forwarded messages.</para>
 <para>The message templates support substitution commands, either simply 
@@ -479,11 +444,23 @@ specified.</para>
 
 <sect2 id="configure-identity-signature">
 <title>Signature</title>
-
+<screenshot>
+<screeninfo>Identity Signature</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="identitysignature.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Identity Signature</phrase>
+    </textobject>
+    <caption>
+      <para>Identity Signature</para>
+    </caption>
+  </mediaobject>
+</screenshot>
 <para>This tab allows you to specify a signature (sometimes called
 <quote>footer</quote> or <quote>disclaimer</quote>)
 to be appended to each message sent using this identity.</para>
-
 <note><para>This type of signature has nothing to do with the
 (digital) signatures for which you can select the keys to use on
 the <link linkend="configure-identity-cryptography">Cryptography</link>
@@ -491,43 +468,20 @@ tab. It is just bad wording to call this a signature, but since
 the term is already used everywhere else, we keep this notation. Just
 keep in mind that these signatures and digital signatures are two
 completely different things.</para></note>
-
 <para>Check the <guilabel>Enable signature</guilabel> option if you
 want to be able to append the signature when using this identity. To
 <emphasis>automatically</emphasis> append it to every new message
 you also have to select <guilabel>Automatically insert 
 signature</guilabel> in the <guilabel>Composer</guilabel> configuration page.</para>
-
-<para>&kmail; can obtain the signature text from various sources. The
-traditional way on Unix is to read the text from a file called
-<filename>.signature</filename> in your home folder. This file can
-be shared between several programs, so you get the same
-signature in each mail program you use.</para>
-
-<para>To read the signature from a text file you select
-<guilabel>Obtain signature text from</guilabel>-&gt;<guilabel>File</guilabel>. Enter the
-filename in the <guilabel>Specify file</guilabel> edit field or click
-the button to the right of it to browse your filesystem. If you want
-to edit the file, click the <guilabel>Edit File</guilabel>
-button.</para>
-
-<para>&kmail; can also read the signature text from the output of a
-command. Thus, you can use programs such as
-<command>fortune</command> to create a new signature text for
-every message. Everything the program prints onto
-<acronym>stdout</acronym> is caught and used as the signature
-text.</para>
-
-<para>To read the text from the output of a command you select
-<guilabel>Output of
-Command</guilabel>. Enter the command (preferably with full path) in
-the <guilabel>Specify command</guilabel> edit field.</para>
-
-<para>As a third option, you can enter the signature text directly in
-&kmail;'s configuration dialog. To do this, select <guilabel>Input 
-Field Below</guilabel> and enter the text
-into the resultant text box.</para>
-
+<para>&kmail; can obtain the signature text from various sources. The default is <guilabel>Input Field Below</guilabel>
+Just enter what you would like your signature to be into the textbox.</para>
+<para>The traditional way on Unix is to read the text from a file called <filename>.signature</filename> in your home folder.
+ This file canbe shared between several programs, so you get the same signature in each mail program you use.
+ Select <guilabel>File</guilabel> from the <guilabel>Obtain Signature text from</guilabel> drop down menu.
+If you want to edit the file, click the <guilabel>Edit File</guilabel> button.</para>
+<para>&kmail; can also read the signature text from the output of a command. Thus, you can use programs such as <command>fortune</command> to create a new signature text for
+every message. Everything the program prints onto <acronym>stdout</acronym> is caught and used as the signature text. To read the text from the output of a command you select
+<guilabel>Output of Command</guilabel>. Enter the command (preferably with full path) in the <guilabel>Specify command</guilabel> edit field.</para>
 <note><para>On the Internet, signatures are by convention separated
 from the body of the message by a line containing only the three
 character <quote>-- </quote> (dash, dash, space). &kmail; will
@@ -541,7 +495,21 @@ text yourself.</para>
 </sect2>
 
 <sect2 id="configure-identity-pictures">
-<title>Pictures</title>
+<title>Picture</title>
+<screenshot>
+<screeninfo>Identity Picture</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="identitypicture.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Identity Picture</phrase>
+    </textobject>
+    <caption>
+      <para>Identity Picture</para>
+    </caption>
+  </mediaobject>
+</screenshot>
 <para>&kmail; can send a small (48x48 pixels), low-quality, monochrome picture 
 with every message. For example, this could be a picture of you or a glyph. 
 It is shown in the recipient's mail client (if supported).</para>
@@ -555,21 +523,18 @@ messages written with this identity. An X-Face is a small (48x48 pixels)
 black and white image that some mail clients are able to display.</para>
 </listitem>
 </varlistentry>
-
 <varlistentry>
 <term><guilabel>External Source</guilabel></term>
 <listitem>
-  
-<variablelist>  
+<variablelist>
 <varlistentry>
-<term><guilabel>Select File</guilabel></term>
+<term><guilabel>Select File...</guilabel></term>
 <listitem>
 <para>Use this to select an image file to create the picture from. The image 
 should be of high contrast and nearly quadratic shape. A light background 
 helps improve the result.</para>
 </listitem>
 </varlistentry>
-
 <varlistentry>
 <term><guilabel>Set From Address Book</guilabel></term>
 <listitem>
@@ -577,9 +542,7 @@ helps improve the result.</para>
 address book entry.</para>
 </listitem>
 </varlistentry>
-
 </variablelist>  
-
 </listitem>
 </varlistentry>
 
@@ -592,7 +555,6 @@ Examples are available at <ulink url="http://ace.home.xs4all.nl/X-Faces/"
 </para>
 </listitem>
 </varlistentry>
-
 </variablelist>
 
 </sect2>
@@ -2354,21 +2316,21 @@ will be moved to the Trash folder, once the reply has been successfully sent.</p
 <sect1 id="configure-non-gui-options">
 <title>Options without a user interface representation</title>
 <para>
-Apart from the options presented in the configuration dialog, some options
-can only be set directly in the &kmail; configuration file or through KIOSK.
-  These so called <quote>hidden</quote> configuration options cannot be changed via
-the normal &kmail; Settings dialog; they must be made by modifying the
-configuration file using a text editor or the <command>kwriteconfig</command>
-program.
+Apart from the options presented in the configuration dialog, some options can only be set directly in the &kmail; configuration
+file or through KIOSK (eg. Input into &konsole;). These so called <quote>hidden</quote> configuration options cannot be changed via the
+normal &kmail; Settings dialog; they must be made by modifying the configuration file using a text editor or the <command>kwriteconfig</command>
+program. The configuration file is to be written in the format of [Section Name] and the following lines are the variables and their
+settings. If you are manually editing the configuration file you will need to add the [Section Name] before adding variables.
+The <command>kwriteconfig</command> will add the section for you as long as you use the <userinput>--group</userinput> switch.
 </para>
 
 <para>
-The &kmail; configuration file is called <filename>kmailrc</filename>
+The &kmail; configuration file is called <filename>kmail2rc</filename>
 and can be found in your home directory. The location can vary according
 to your operating system or distribution, but can always be found by running
-the command <userinput><command>kde4-config --path config --locate kmailrc</command></userinput>.
+the command <userinput><command>kde4-config --path config --locate kmail2rc</command></userinput>.
 For the remainder of this section, assume that the configuration file is
-located in <filename>/path/to/kmailrc</filename>.
+located in <filename>/path/to/kmail2rc</filename>.
 </para>
 
 <warning><para>
@@ -2380,42 +2342,23 @@ editing the configuration file.  Only restart &kmail; after you have made
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Send Message Distribution Notifications with an empty sender string (SendMDNsWithEmptySender)</guilabel></term>
+<term><guilabel>SendMDNsWithEmptySender</guilabel></term>
 <listitem>
 <para>
 Send Message Disposition Notifications with an empty sender string. Some servers might be configured to reject
 such messages, so if you are experiencing problems sending MDNs, make sure this option is set to false. To
-enable this feature, add a line reading:
-
-SendMDNsWithEmptySender=true
-
- to the [MDN] section of the &kmail; configuration file. If there is no such section, simply add <quote>[MDN]</quote> on
-a line by itself just above the option.
-
- Note that the default setting of <quote>false</quote> strictly speaking violates Internet standards, but is
-set that way for practical reasons, to avoid servers rejecting MDNs that &kmail;
-generates because they think they are SPAM.
-</para>
-<para>
-<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmailrc</replaceable> --group MDN --key SendMDNsWithEmptySender true</option></userinput>
+enable this feature, add to the <quote>[MDN]</quote> section:</para>
+<itemizedlist>
+<listitem><para>Configuration file:</para>
+<programlisting>SendMDNsWithEmptySender=true</programlisting></listitem>
+  <listitem><para><command>kwriteconfig</command></para>
+  <para>
+<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmail2rc</replaceable> --group MDN --key SendMDNsWithEmptySender true</option></userinput>
 </para>
 </listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>MaximumAttachmentSize</guilabel></term>
-<listitem>
-<para>
-This allows the maximum filesize allowed for attachments in the mail
-composer to be limited.
-
-To limit attachments to 20 MB in size, for example, add a line reading (under [Composer] section):
-</para>
-<programlisting>MaximumAttachmentSize=20
-</programlisting>
-<para>
-<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmailrc</replaceable> --group Composer --key MaximumAttachmentSize 20</option></userinput>
-</para>
+</itemizedlist>
+<note><para>The default setting of <quote>false</quote> strictly speaking violates Internet standards, but is
+set that way for practical reasons, to avoid servers rejecting MDNs that &kmail; generates because they think they are SPAM.</para></note>
 </listitem>
 </varlistentry>
 
@@ -2425,103 +2368,19 @@ To limit attachments to 20 MB in size, for example, add a line reading (under [C
 <para>
 This option allows you to configure the application to close fully, even if there
 is a system tray icon configured, which would normally keep the application running.
-
-To enable the feature, add a line reading (under [General] section):
+To enable the feature, add to the <quote>[General]</quote> section:
 </para>
-<programlisting>CloseDespiteSystemTray=true
-</programlisting>
+<itemizedlist>
+<listitem><para>Configuration file:</para>
+<programlisting>CloseDespiteSystemTray=true</programlisting></listitem>
+<listitem><para><command>kwriteconfig</command></para>
 <para>
 <prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command>
-<option>--file <replaceable>/path/to/kmailrc</replaceable> --group General --key CloseDespiteSystemTray true</option></userinput>
-</para>
+<option>--file <replaceable>/path/to/kmail2rc</replaceable> --group General --key CloseDespiteSystemTray true</option></userinput>
+</para></listitem>
+</itemizedlist>
 </listitem>
 </varlistentry>
-
-<varlistentry>
-<term><guilabel>CheckOutOfOfficeOnStartup</guilabel></term>
-<listitem>
-<para>
-With this option enabled, &kmail; will check on every startup if there is an
-active out-of-office configured and show a warning if this is the case.
-
-To disable the feature, add a line reading (under [OutOfOffice] section):
-</para>
-<programlisting>CheckOutOfOfficeOnStartup=false
-</programlisting>
-<para>
-<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command>
-<option>--file <replaceable>/path/to/kmailrc</replaceable> --group OutOfOffice --key CheckOutOfOfficeOnStartup false</option></userinput>
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Allow out-of-office settings to be adjusted by the user.</guilabel></term>
-<listitem>
-<para>
-In case you don't want users to be able to upload their own out-of-office scripts to
-the server you can add:
-</para>
-<programlisting>AllowOutOfOfficeSettings=false
-</programlisting><para>
-  to the [OutOfOffice] section of the &kmail; configuration file. If there is no such section, simply add <quote>[OutOfOffice]</quote> on
-a line by itself just above the option.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Allow out-of-office scripts to be uploaded by the user, but no settings changed.</guilabel></term>
-<listitem>
-<para>
-If you want to allow your users to upload their own out-of-office scripts but you do not want them to be
-able to change the domain to react to and the react-to-spam setting, you can add:
-</para>
-<programlisting>AllowOutOfOfficeUploadButNoSettings=true
-</programlisting><para>
-  to the [OutOfOffice] section of the &kmail; configuration file. If there is no such section, simply add <quote>[OutOfOffice]</quote> on
-a line by itself just above the option.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Default domain to limit out-of-office replies to.</guilabel></term>
-<listitem>
-<para>
-When editing vacation (out-of-office) scripts, the user can specify a domain to
-limit the sending of such replies to. To pre-load this setting with a default
-value, add
-</para>
-<programlisting>OutOfOfficeDomain=myMailDomain.test
-</programlisting><para>
-  to the [OutOfOffice] section of the &kmail; configuration file. If there is no such section, simply add <quote>[OutOfOffice]</quote> on
-a line by itself just above the option.
-
-Applying defaults to the out-of-office configuration dialog via the corresponding
-button will restore this domain, in case the user has changed it.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Enable sending of out-of-office replies to messages marked as SPAM.</guilabel></term>
-<listitem>
-<para>
-By default, out-of-office replies are not sent to messages marked as SPAM. To override this
-behavior, add
-</para>
-<programlisting>OutOfOfficeReactToSpam=true
-</programlisting><para>
-  to the [OutOfOffice] section of the &kmail; configuration file. If there is no such section, simply add <quote>[OutOfOffice]</quote> on
-a line by itself just above the option.
-
-Applying defaults to the out-of-office configuration dialog via the corresponding
-button will restore this setting, in case the user has changed it.
-</para>
-</listitem>
-</varlistentry>
-
 <varlistentry>
 <term><guilabel>disregardUmask</guilabel></term>
 <listitem>
@@ -2531,27 +2390,107 @@ to disk with permissions set to 600 &mdash; only readable or writable
 by the owner of the file. In response to user feedback, this was made
 configurable in &kmail; version 1.9, with the defaults changed to
 honour the umask set on the user account while saving files to disk.
-
-To enable this feature, add a line reading (under [General] section):
+To enable this feature, add to the <quote>[General]</quote> section:
 </para>
-<programlisting>disregardUmask=true
-</programlisting>
+<itemizedlist>
+<listitem><para>Configuration file:</para>
+<programlisting>disregardUmask=true</programlisting></listitem>
+<listitem><para><command>kwriteconfig</command></para>
+<para><prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmail2rc</replaceable> --group General --key disregardUmask true</option></userinput>
+</para></listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>CheckOutOfOfficeOnStartup</guilabel></term>
+<listitem>
 <para>
-<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmailrc</replaceable> --group General --key disregardUmask true</option></userinput>
+With this option enabled, &kmail; will check on every startup if there is an
+active out-of-office configured and show a warning if this is the case.
+To disable the feature, add to the <quote>[OutOfOffice]</quote> section:
 </para>
+<itemizedlist>
+<listitem><para>Configuration file:</para>
+<programlisting>CheckOutOfOfficeOnStartup=false</programlisting></listitem>
+<listitem><para><command>kwriteconfig</command></para>
+<para><prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command>
+<option>--file <replaceable>/path/to/kmail2rc</replaceable> --group OutOfOffice --key CheckOutOfOfficeOnStartup false</option></userinput>
+</para></listitem>
+</itemizedlist>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>AutoLostFoundMove</guilabel></term>
-<listitem><para>Activate this option to automate the handling of not yet uploaded messages in disconnected IMAP
-folders that cannot be uploaded. This can happen if the folder was removed from the server or your access
-rights have been restricted. Such messages will automatically be moved to a newly created lost+found folder if
-this option is enabled; you will be asked how to proceed every time otherwise.
+<term><guilabel>AllowOutOfOfficeSettings</guilabel></term>
+<listitem>
+<para>
+In case you don't want users to be able to upload their own out-of-office scripts to
+the server you can add to the <quote>[OutOfOffice]</quote> section:
 </para>
+<itemizedlist>
+<listitem><para>Configuration file:</para>
+<programlisting>AllowOutOfOfficeSettings=false</programlisting></listitem>
+<listitem><para><command>kwriteconfig</command></para>
+<para><prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command>
+<option>--file <replaceable>/path/to/kmail2rc</replaceable> --group OutOfOffice --key AllowOutOfOfficeSettings false</option></userinput>
+</para></listitem>
+</itemizedlist>
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>AllowOutOfOfficeUploadButNoSettings</guilabel></term>
+<listitem>
+<para>
+If you want to allow your users to upload their own out-of-office scripts but you do not want them to be
+able to change the domain to react to and the react-to-spam setting, you can add to the <quote>[OutOfOffice]</quote> section:
+</para>
+<itemizedlist>
+<listitem><para>Configuration file:</para>
+<programlisting>AllowOutOfOfficeUploadButNoSettings=true</programlisting></listitem>
+<listitem><para><command>kwriteconfig</command></para>
+<para><prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command>
+<option>--file <replaceable>/path/to/kmail2rc</replaceable> --group OutOfOffice --key AllowOutOfOfficeUploadButNoSettings true</option></userinput>
+</para></listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>OutOfOfficeDomain</guilabel></term>
+<listitem>
+<para>
+When editing vacation (out-of-office) scripts, the user can specify a domain to
+limit the sending of such replies to. Applying defaults to the out-of-office configuration dialog via the corresponding
+button will restore this domain, in case the user has changed it.
+To pre-load this setting with a default value, add to the <quote>[OutOfOffice]</quote> section:</para>
+<itemizedlist>
+<listitem><para>Configuration file:</para>
+<programlisting>OutOfOfficeDomain=myMailDomain.test</programlisting></listitem>
+<listitem><para><command>kwriteconfig</command></para>
+<para><prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command>
+<option>--file <replaceable>/path/to/kmail2rc</replaceable> --group OutOfOffice --key OutOfOfficeDomain myMailDomain.test</option></userinput>
+</para></listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>OutOfOfficeReactToSpam</guilabel></term>
+<listitem>
+<para>
+By default, out-of-office replies are not sent to messages marked as SPAM. To override this
+behavior, add to the [OutOfOffice] section:</para>
+<itemizedlist>
+<listitem><para>Configuration file:</para>
+<programlisting>OutOfOfficeReactToSpam=true</programlisting></listitem>
+<listitem><para><command>kwriteconfig</command></para>
+<para><prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command>
+<option>--file <replaceable>/path/to/kmail2rc</replaceable> --group OutOfOffice --key OutOfOfficeReactToSpam true</option></userinput>
+</para></listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
 <varlistentry>
 <term><guilabel>ShowUserAgent</guilabel></term>
 <listitem>
@@ -2559,17 +2498,16 @@ this option is enabled; you will be asked how to proceed every time otherwise.
 Starting in version 1.9, &kmail; can show the User-Agent or X-Mailer value
 from the message header when using Fancy Headers (see <menuchoice><guimenu>View</guimenu>
 <guisubmenu>Headers</guisubmenu></menuchoice> menu).
-
-To enable this feature, add a line reading (under [Reader] section):
-</para>
-<programlisting>ShowUserAgent=true
-</programlisting>
-<para>
-<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmailrc</replaceable> --group Reader --key ShowUserAgent true</option></userinput>
-</para>
+To enable this feature, add to the <quote>[Reader]</quote> section:</para>
+<itemizedlist>
+<listitem><para>Configuration file:</para>
+<programlisting>ShowUserAgent=true</programlisting></listitem>
+<listitem><para><command>kwriteconfig</command></para>
+<para><prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmail2rc</replaceable> --group Reader --key ShowUserAgent true</option></userinput>
+</para></listitem>
+</itemizedlist>
 </listitem>
 </varlistentry>
-
 </variablelist>
 </sect1>
 
