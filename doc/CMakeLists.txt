@@ -79,3 +79,7 @@ endif()
 if(BUILD_sieveeditor)
   add_subdirectory(sieveeditor)
 endif()
+
+if(BUILD_contactthemeeditor)
+  add_subdirectory(contactthemeeditor)
+endif()
