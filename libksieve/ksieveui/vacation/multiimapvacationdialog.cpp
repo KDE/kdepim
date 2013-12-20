@@ -50,7 +50,7 @@ MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
     w->setLayout(vbox);
     QLabel *lab = new QLabel(i18n("KMail's Out of Office Reply functionality relies on "
                                   "server-side filtering. You have not yet configured an "
-                                  "IMAP server for this."
+                                  "IMAP server for this. "
                                   "You can do this on the \"Filtering\" tab of the IMAP "
                                   "account configuration."));
     vbox->addStretch();
