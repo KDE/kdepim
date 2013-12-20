@@ -184,7 +184,15 @@ void YouSendItStorageService::downloadFile()
 
 void YouSendItStorageService::createServiceFolder()
 {
-
+    if (mToken.isEmpty()) {
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotShareLinkDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createServiceFolder();
+    }
 }
 
 QString YouSendItStorageService::storageServiceName() const

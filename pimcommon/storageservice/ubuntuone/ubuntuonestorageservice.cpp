@@ -186,7 +186,15 @@ void UbuntuoneStorageService::downloadFile()
 
 void UbuntuoneStorageService::createServiceFolder()
 {
-
+    if (mTokenSecret.isEmpty()) {
+        authentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createServiceFolder();
+    }
 }
 
 QString UbuntuoneStorageService::storageServiceName() const

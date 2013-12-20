@@ -189,5 +189,13 @@ KIcon BoxStorageService::icon() const
 
 void BoxStorageService::createServiceFolder()
 {
-    //TODO
+    if (mToken.isEmpty()) {
+        authentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createServiceFolder();
+    }
 }

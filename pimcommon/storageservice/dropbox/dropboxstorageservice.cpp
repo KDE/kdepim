@@ -77,7 +77,15 @@ void DropBoxStorageService::shareLink(const QString &root, const QString &path)
 
 void DropBoxStorageService::createServiceFolder()
 {
-    //TODO
+    if (mAccessToken.isEmpty()) {
+        authentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createServiceFolder();
+    }
 }
 
 void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature)

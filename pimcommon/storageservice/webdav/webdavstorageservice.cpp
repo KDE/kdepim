@@ -78,7 +78,14 @@ void WebDavStorageService::downloadFile()
 
 void WebDavStorageService::createServiceFolder()
 {
-
+    if (mServiceLocation.isEmpty()) {
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createServiceFolder();
+    }
 }
 
 void WebDavStorageService::listFolder()
