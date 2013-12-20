@@ -19,6 +19,7 @@
 */
 
 #include "sieveeditormainwindow.h"
+#include "sieveeditormainwidget.h"
 
 #include <KSharedConfig>
 #include <KGlobal>
@@ -35,6 +36,8 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     setupGUI();
     updateActions();
     readConfig();
+    mMainWidget = new SieveEditorMainWidget;
+    setCentralWidget(mMainWidget);
 }
 
 SieveEditorMainWindow::~SieveEditorMainWindow()

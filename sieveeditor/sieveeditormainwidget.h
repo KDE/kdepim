@@ -23,6 +23,9 @@
 
 #include <QWidget>
 class QStackedWidget;
+namespace KSieveUi {
+class ManageSieveTreeView;
+}
 class SieveEditorMainWidget : public QWidget
 {
     Q_OBJECT
@@ -32,6 +35,7 @@ public:
 
 private:
     QStackedWidget *mStackedWidget;
+    KSieveUi::ManageSieveTreeView *mTreeView;
 };
 
 #endif // SIEVEEDITORMAINWIDGET_H

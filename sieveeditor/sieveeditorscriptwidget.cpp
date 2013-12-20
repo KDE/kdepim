@@ -18,24 +18,21 @@
 
 */
 
-#include "sieveeditormainwidget.h"
-#include "ksieveui/widgets/managesievetreeview.h"
+#include "sieveeditorscriptwidget.h"
+#include "ksieveui/editor/sieveeditor.h"
 
 #include <QHBoxLayout>
-#include <QStackedWidget>
 
-SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
+SieveEditorScriptWidget::SieveEditorScriptWidget(QWidget *parent)
     : QWidget(parent)
 {
-    QHBoxLayout *hbox = new QHBoxLayout;
-    setLayout(hbox);
-    mStackedWidget = new QStackedWidget;
-    hbox->addWidget(mStackedWidget);
-    mTreeView = new KSieveUi::ManageSieveTreeView;
-    hbox->addWidget(mTreeView);
+    QHBoxLayout *lay = new QHBoxLayout;
+    lay->setMargin(0);
+    mSieveEditor = new KSieveUi::SieveEditor;
+    setLayout(lay);
 }
 
-SieveEditorMainWidget::~SieveEditorMainWidget()
+SieveEditorScriptWidget::~SieveEditorScriptWidget()
 {
 
 }

@@ -5,6 +5,8 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/libksieve/
+  ${CMAKE_SOURCE_DIR}/pimcommon/
+  ${CMAKE_SOURCE_DIR}/libksieve/ksieveui/
 )
 
 
@@ -14,6 +16,7 @@ set(sieveeditor_SRCS
   addsieveserverdialog.cpp
   serversievesettings.cpp
   sieveeditormainwidget.cpp
+  sieveeditorscriptwidget.cpp
 )
 
 kde4_add_ui_files(sieveeditor_SRCS
