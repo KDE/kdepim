@@ -247,7 +247,7 @@ void SieveTextEdit::addExtraMenuEntry(QMenu *menu)
             separator->setSeparator(true);
             menu->insertAction(menu->actions().at(0), separator);
 
-            KAction *searchAction = new KAction(i18n("Help about: %1",word), menu);
+            KAction *searchAction = new KAction(i18n("Help about: \'%1\'",word), menu);
             searchAction->setShortcut(Qt::Key_F1);
             searchAction->setIcon(KIcon(QLatin1String("help-hint")));
             searchAction->setData(word);
