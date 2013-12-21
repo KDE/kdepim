@@ -18,7 +18,11 @@
 #ifndef NOTESAGENTALARMDIALOG_H
 #define NOTESAGENTALARMDIALOG_H
 #include <KDialog>
+#include <Akonadi/Item>
 class QListWidget;
+namespace NoteShared {
+class NoteListWidget;
+}
 class NotesAgentAlarmDialog : public KDialog
 {
     Q_OBJECT
@@ -26,10 +30,10 @@ public:
     explicit NotesAgentAlarmDialog(QWidget *parent=0);
     ~NotesAgentAlarmDialog();
 
-    void setListAlarm(const QStringList &lstAlarm);
+    void setListAlarm(const Akonadi::Item::List &lstAlarm);
 
 private:
-    QListWidget *mListWidget;
+    NoteShared::NoteListWidget *mListWidget;
 };
 
 #endif // NOTESAGENTALARMDIALOG_H

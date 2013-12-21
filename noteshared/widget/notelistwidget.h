@@ -23,7 +23,7 @@
 #include <Akonadi/Item>
 
 namespace NoteShared {
-class NoteListWidget : public QListWidget
+class NOTESHARED_EXPORT NoteListWidget : public QListWidget
 {
 public:
     explicit NoteListWidget(QWidget *parent=0);

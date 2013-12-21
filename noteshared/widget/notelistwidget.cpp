@@ -36,6 +36,8 @@ void NoteListWidget::setNotes(const Akonadi::Item::List &notes)
     Q_FOREACH (const Akonadi::Item &note, mNotes) {
         QListWidgetItem *item =new QListWidgetItem(this);
         KMime::Message::Ptr noteMessage = note.payload<KMime::Message::Ptr>();
+        if (!noteMessage)
+            continue;
         item->setText(noteMessage->subject(false)->asUnicodeString());
         //TODO
         /*
