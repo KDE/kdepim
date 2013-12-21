@@ -28,6 +28,7 @@ set(libnoteshared_SRCS
     resources/localresourcecreator.cpp
     job/createnewnotejob.cpp
     dialog/selectednotefolderdialog.cpp
+    widget/notelistwidget.cpp
     ${libnoteshared_akonadi_SRCS}
 )
 
