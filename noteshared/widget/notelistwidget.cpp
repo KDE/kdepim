@@ -16,6 +16,7 @@
 */
 
 #include "notelistwidget.h"
+#include <KMime/KMimeMessage>
 
 using namespace NoteShared;
 NoteListWidget::NoteListWidget(QWidget *parent)
@@ -34,7 +35,18 @@ void NoteListWidget::setNotes(const Akonadi::Item::List &notes)
     mNotes = notes;
     Q_FOREACH (const Akonadi::Item &note, mNotes) {
         QListWidgetItem *item =new QListWidgetItem(this);
-        //item->setText(i.value()->name());
+        KMime::Message::Ptr noteMessage = note.payload<KMime::Message::Ptr>();
+        item->setText(noteMessage->subject(false)->asUnicodeString());
+        //TODO
+        /*
+        if ( noteMessage->contentType()->isHTMLText() ) {
+            m_editor->setAcceptRichText(true);
+            m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
+        } else {
+            m_editor->setAcceptRichText(false);
+            m_editor->setPlainText(noteMessage->mainBodyPart()->decodedText());
+        }
+        */
         //item->setToolTip(i.value()->text());
         item->setData(AkonadiId, note.id());
     }
