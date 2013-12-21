@@ -66,6 +66,8 @@ void NotesManager::clear()
 {
     delete mListener;
     mListener=0;
+    if (mCheckAlarm->isActive())
+        mCheckAlarm->stop();
 }
 
 void NotesManager::slotItemRemoved(const Akonadi::Item &item)
@@ -106,7 +108,7 @@ void NotesManager::slotCheckAlarm()
     mCheckAlarm->start();
 }
 
-void NotesManager::load(bool forced)
+void NotesManager::load()
 {
     updateNetworkListener();
     if (!mCheckAlarm)

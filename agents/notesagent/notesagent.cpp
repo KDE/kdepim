@@ -69,7 +69,7 @@ void NotesAgent::doSetOnline( bool online )
 void NotesAgent::reload()
 {
     if (NotesAgentSettings::enabled())
-        mNotesManager->load(true);
+        mNotesManager->load();
 }
 
 void NotesAgent::setEnableAgent(bool enabled)

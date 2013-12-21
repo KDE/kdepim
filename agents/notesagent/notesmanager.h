@@ -35,7 +35,7 @@ public:
     explicit NotesManager(QObject *parent=0);
     ~NotesManager();
 
-    void load(bool forced=false);
+    void load();
     void stopAll();
     void updateNetworkListener();
 
