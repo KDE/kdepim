@@ -1,10 +1,26 @@
 [Desktop Entry]
 Name=Sieve Editor
+Name[cs]=Editor Sieve
+Name[de]=Sieve-Editor
+Name[nl]=Sieve-bewerker
+Name[pt]=Editor do Sieve
+Name[pt_BR]=Editor do Sieve
+Name[sk]=Editor Sieve
+Name[uk]=Редактор фільтрів
+Name[x-test]=xxSieve Editorxx
 Type=Application
 Exec=sieveeditor
 Icon=kmail
 X-DocPath=sieveeditor/index.html
 GenericName=Sieve Editor
+GenericName[cs]=Editor Sieve
+GenericName[de]=Sieve-Editor
+GenericName[nl]=Sieve-bewerker
+GenericName[pt]=Editor do Sieve
+GenericName[pt_BR]=Editor do Sieve
+GenericName[sk]=Editor Sieve
+GenericName[uk]=Редактор фільтрів
+GenericName[x-test]=xxSieve Editorxx
 Terminal=false
 Categories=Qt;KDE;Office;Network;Sieve;
 InitialPreference=10
