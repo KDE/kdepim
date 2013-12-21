@@ -115,6 +115,7 @@ void NotesManager::load(bool forced)
         mCheckAlarm->stop();
 
     mCheckAlarm->setInterval(1000*60*NoteShared::NoteSharedGlobalConfig::checkInterval());
+    connect(mCheckAlarm, SIGNAL(timeout()), this, SLOT(slotCheckAlarm()));
     mCheckAlarm->start();
 }
 
