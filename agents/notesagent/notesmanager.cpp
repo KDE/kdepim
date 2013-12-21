@@ -103,8 +103,23 @@ void NotesManager::slotRowInserted(const QModelIndex &parent, int start, int end
 
 void NotesManager::slotCheckAlarm()
 {
-    //TODO check alarm
-    //TODO retart it.
+    QDateTime from = NoteShared::NoteSharedGlobalConfig::self()->alarmsLastChecked().addSecs( 1 );
+    if ( !from.isValid() ) {
+        from.setTime_t( 0 );
+    }
+
+    const KDateTime now = KDateTime::currentLocalDateTime();
+    NoteShared::NoteSharedGlobalConfig::self()->setAlarmsLastChecked( now.dateTime() );
+
+
+    Q_FOREACH (const Akonadi::Item &item, mListItem) {
+        NoteShared::NoteAlarmAttribute *attrAlarm = item.attribute<NoteShared::NoteAlarmAttribute>();
+        if (attrAlarm) {
+            if (attrAlarm->dateTime()< KDateTime::currentDateTime(KDateTime::LocalZone)) {
+                //Alarm !
+            }
+        }
+    }
     mCheckAlarm->start();
 }
 
