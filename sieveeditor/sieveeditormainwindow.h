@@ -33,8 +33,9 @@ public:
 
 private slots:
     void slotQuitApp();
-
     void slotConfigure();
+    void slotAddServerSieve();
+
 private:
     void readConfig();
     void setupActions();
