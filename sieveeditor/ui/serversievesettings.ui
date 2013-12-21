@@ -17,7 +17,10 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Server IMAP</string>
+      <string>Server IMAP:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
@@ -29,6 +32,9 @@
      <property name="text">
       <string>Username:</string>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
     </widget>
    </item>
    <item row="1" column="1">
@@ -37,7 +43,10 @@
    <item row="2" column="0">
     <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>Password</string>
+      <string>Password:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
@@ -52,6 +61,9 @@
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Port:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>

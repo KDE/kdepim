@@ -39,6 +39,7 @@ AddSieveServerDialog::AddSieveServerDialog(QWidget *parent)
     lay->setMargin(0);
     w->setLayout(lay);
     setMainWidget(w);
+    resize(300,200);
 }
 
 AddSieveServerDialog::~AddSieveServerDialog()
