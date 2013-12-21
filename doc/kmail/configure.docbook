@@ -473,10 +473,10 @@ want to be able to append the signature when using this identity. To
 <emphasis>automatically</emphasis> append it to every new message
 you also have to select <guilabel>Automatically insert 
 signature</guilabel> in the <guilabel>Composer</guilabel> configuration page.</para>
-<para>&kmail; can obtain the signature text from various sources. The default is <guilabel>Input Field Below</guilabel>
+<para>&kmail; can obtain the signature text from various sources. The default is <guilabel>Input Field Below</guilabel>.
 Just enter what you would like your signature to be into the textbox.</para>
 <para>The traditional way on Unix is to read the text from a file called <filename>.signature</filename> in your home folder.
- This file canbe shared between several programs, so you get the same signature in each mail program you use.
+ This file can be shared between several programs, so you get the same signature in each mail program you use.
  Select <guilabel>File</guilabel> from the <guilabel>Obtain Signature text from</guilabel> drop down menu.
 If you want to edit the file, click the <guilabel>Edit File</guilabel> button.</para>
 <para>&kmail; can also read the signature text from the output of a command. Thus, you can use programs such as <command>fortune</command> to create a new signature text for
@@ -2317,7 +2317,7 @@ will be moved to the Trash folder, once the reply has been successfully sent.</p
 <title>Options without a user interface representation</title>
 <para>
 Apart from the options presented in the configuration dialog, some options can only be set directly in the &kmail; configuration
-file or through KIOSK (eg. Input into &konsole;). These so called <quote>hidden</quote> configuration options cannot be changed via the
+file or through KIOSK (&eg; Input into &konsole;). These so called <quote>hidden</quote> configuration options cannot be changed via the
 normal &kmail; Settings dialog; they must be made by modifying the configuration file using a text editor or the <command>kwriteconfig</command>
 program. The configuration file is to be written in the format of [Section Name] and the following lines are the variables and their
 settings. If you are manually editing the configuration file you will need to add the [Section Name] before adding variables.
