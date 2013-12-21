@@ -23,6 +23,7 @@
 #include "noteshared/akonadi/noteschangerecorder.h"
 #include "noteshared/akonadi/notesakonaditreemodel.h"
 #include "noteshared/attributes/notealarmattribute.h"
+#include "notesagentalarmdialog.h"
 
 #include <Akonadi/Session>
 #include <Akonadi/Collection>
@@ -112,13 +113,19 @@ void NotesManager::slotCheckAlarm()
     NoteShared::NoteSharedGlobalConfig::self()->setAlarmsLastChecked( now.dateTime() );
 
 
+    Akonadi::Item::List lst;
     Q_FOREACH (const Akonadi::Item &item, mListItem) {
         NoteShared::NoteAlarmAttribute *attrAlarm = item.attribute<NoteShared::NoteAlarmAttribute>();
         if (attrAlarm) {
             if (attrAlarm->dateTime()< KDateTime::currentDateTime(KDateTime::LocalZone)) {
-                //Alarm !
+                lst.append(item);
             }
         }
+    }
+    if (!lst.isEmpty()) {
+        NotesAgentAlarmDialog *dlg = new NotesAgentAlarmDialog;
+        dlg->setListAlarm(lst);
+        dlg->show();
     }
     mCheckAlarm->start();
 }
