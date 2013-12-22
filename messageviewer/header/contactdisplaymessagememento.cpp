@@ -30,7 +30,7 @@ ContactDisplayMessageMemento::ContactDisplayMessageMemento( const QString &email
 {
     if( !emailAddress.isEmpty() ) {
         Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob();
-        searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress );
+        searchJob->setQuery( Akonadi::ContactSearchJob::Email, emailAddress.toLower() );
         connect( searchJob, SIGNAL(result(KJob*)),
                  this, SLOT(slotSearchJobFinished(KJob*)) );
     } else {

@@ -162,7 +162,7 @@ void DistributionListDialog::setRecipients( const Recipient::List &recipients )
       KABC::Addressee::parseEmailAddress( *it2, name, email );
       if ( !email.isEmpty() ) {
         Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob(this);
-        job->setQuery( Akonadi::ContactSearchJob::Email, email, Akonadi::ContactSearchJob::ExactMatch );
+        job->setQuery( Akonadi::ContactSearchJob::Email, email.toLower(), Akonadi::ContactSearchJob::ExactMatch );
         job->setProperty( "name", name );
         job->setProperty( "email", email );
         connect( job, SIGNAL(result(KJob*)), SLOT(slotDelayedSetRecipients(KJob*)) );

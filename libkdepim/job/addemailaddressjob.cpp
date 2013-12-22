@@ -283,7 +283,7 @@ void AddEmailAddressJob::start()
   // first check whether a contact with the same email exists already
   Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
   searchJob->setLimit( 1 );
-  searchJob->setQuery( Akonadi::ContactSearchJob::Email, d->mEmail,
+  searchJob->setQuery( Akonadi::ContactSearchJob::Email, d->mEmail.toLower(),
                        Akonadi::ContactSearchJob::ExactMatch );
   connect( searchJob, SIGNAL(result(KJob*)), SLOT(slotSearchDone(KJob*)) );
 }
