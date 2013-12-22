@@ -35,6 +35,11 @@ public:
     ~SieveEditorScriptManagerWidget();
 
     void addServerImap(const KUrl &url);
+
+private Q_SLOTS:
+    void slotCreateNewScript();
+    void slotDeleteScript();
+
 private:
     QList<KUrl> mUrls;
     KSieveUi::ManageSieveTreeView *mTreeView;

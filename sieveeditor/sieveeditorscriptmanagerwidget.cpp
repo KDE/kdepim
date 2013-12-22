@@ -44,3 +44,13 @@ void SieveEditorScriptManagerWidget::addServerImap(const KUrl &url)
         mUrls.append(url);
     //TODO
 }
+
+void SieveEditorScriptManagerWidget::slotCreateNewScript()
+{
+    //TODO
+}
+
+void SieveEditorScriptManagerWidget::slotDeleteScript()
+{
+
+}
