@@ -1,6 +1,13 @@
 [Global]
 IconName=kmail
 Comment=Message Viewer
+Comment[de]=Nachrichtenanzeige
+Comment[fi]=Viestikatselin
+Comment[pt]=Visualizador da Mensagem
+Comment[pt_BR]=Visualizador de mensagens
+Comment[sv]=Brevvisning
+Comment[uk]=Перегляд повідомлень
+Comment[x-test]=xxMessage Viewerxx
 
 [Event/adblock-list-download-done]
 Name=New Ad-Block list download done
