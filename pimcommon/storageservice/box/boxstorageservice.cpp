@@ -77,13 +77,14 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
     grp.sync();
-    Q_EMIT authenticationDone(serviceName());
+    emitAuthentificationDone();
 }
 
 
 void BoxStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
+        mNextAction = ShareLink;
         authentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -97,6 +98,7 @@ void BoxStorageService::shareLink(const QString &root, const QString &path)
 void BoxStorageService::downloadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
+        mNextAction = DownLoadFile;
         authentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -110,6 +112,7 @@ void BoxStorageService::downloadFile(const QString &filename)
 void BoxStorageService::listFolder()
 {
     if (mToken.isEmpty()) {
+        mNextAction = ListFolder;
         authentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -123,6 +126,7 @@ void BoxStorageService::listFolder()
 void BoxStorageService::createFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
+        mNextAction = CreateFolder;
         authentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -136,6 +140,7 @@ void BoxStorageService::createFolder(const QString &folder)
 void BoxStorageService::accountInfo()
 {
     if (mToken.isEmpty()) {
+        mNextAction = AccountInfo;
         authentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -154,6 +159,7 @@ QString BoxStorageService::name()
 void BoxStorageService::uploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
+        mNextAction = UploadFiles;
         authentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -198,6 +204,7 @@ KIcon BoxStorageService::icon() const
 void BoxStorageService::createServiceFolder()
 {
     if (mToken.isEmpty()) {
+        mNextAction = CreateServiceFolder;
         authentication();
     } else {
         BoxJob *job = new BoxJob(this);

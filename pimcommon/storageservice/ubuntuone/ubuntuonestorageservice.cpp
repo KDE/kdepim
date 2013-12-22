@@ -61,7 +61,7 @@ void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecre
 
     grp.sync();
     KGlobal::config()->sync();
-    Q_EMIT authenticationDone(serviceName());
+    emitAuthentificationDone();
 }
 
 void UbuntuoneStorageService::removeConfig()
@@ -82,6 +82,7 @@ void UbuntuoneStorageService::authentication()
 void UbuntuoneStorageService::listFolder()
 {
     if (mTokenSecret.isEmpty()) {
+        mNextAction = ListFolder;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -95,6 +96,7 @@ void UbuntuoneStorageService::listFolder()
 void UbuntuoneStorageService::createFolder(const QString &folder)
 {
     if (mTokenSecret.isEmpty()) {
+        mNextAction = CreateFolder;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -117,6 +119,7 @@ void UbuntuoneStorageService::slotAuthorizationFailed(const QString &errorMessag
 void UbuntuoneStorageService::accountInfo()
 {
     if (mTokenSecret.isEmpty()) {
+        mNextAction = AccountInfo;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -135,6 +138,7 @@ QString UbuntuoneStorageService::name()
 void UbuntuoneStorageService::uploadFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
+        mNextAction = UploadFiles;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -169,6 +173,7 @@ QString UbuntuoneStorageService::iconName()
 void UbuntuoneStorageService::shareLink(const QString &root, const QString &path)
 {    
     if (mTokenSecret.isEmpty()) {
+        mNextAction = ShareLink;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -182,6 +187,7 @@ void UbuntuoneStorageService::shareLink(const QString &root, const QString &path
 void UbuntuoneStorageService::downloadFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
+        mNextAction = DownLoadFile;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -195,6 +201,7 @@ void UbuntuoneStorageService::downloadFile(const QString &filename)
 void UbuntuoneStorageService::createServiceFolder()
 {
     if (mTokenSecret.isEmpty()) {
+        mNextAction = CreateServiceFolder;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);

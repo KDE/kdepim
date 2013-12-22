@@ -21,13 +21,49 @@
 using namespace PimCommon;
 
 StorageServiceAbstract::StorageServiceAbstract(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+      mNextAction(NoneAction)
 {
 }
 
 StorageServiceAbstract::~StorageServiceAbstract()
 {
 
+}
+
+void StorageServiceAbstract::executeNextAction()
+{
+    switch(mNextAction) {
+    case NoneAction:
+        break;
+    case RequestToken:
+        authentication();
+        break;
+    case AccessToken:
+        break;
+    case UploadFiles:
+        //uploadFile();
+        break;
+    case CreateFolder:
+        //createFolder();
+        break;
+    case ListFolder:
+        qDebug()<<" LISTFOLDER";
+        listFolder();
+        break;
+    case AccountInfo:
+        accountInfo();
+        break;
+    case ShareLink:
+        //shareLink();
+        break;
+    case CreateServiceFolder:
+        createServiceFolder();
+        break;
+    case DownLoadFile:
+        //downloadFile();
+        break;
+    }
 }
 
 void StorageServiceAbstract::slotAccountInfoDone(const PimCommon::AccountInfo &info)
@@ -69,6 +105,12 @@ void StorageServiceAbstract::slotListFolderDone(const QStringList &listFolder)
 void StorageServiceAbstract::slotDownLoadFileDone(const QString &fileName)
 {
     Q_EMIT downLoadFileDone(storageServiceName(), fileName);
+}
+
+void StorageServiceAbstract::emitAuthentificationDone()
+{
+    Q_EMIT authenticationDone(storageServiceName());
+    executeNextAction();
 }
 
 #include "moc_storageserviceabstract.cpp"

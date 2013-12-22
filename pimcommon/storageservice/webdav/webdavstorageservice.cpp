@@ -54,7 +54,7 @@ void WebDavStorageService::removeConfig()
 void WebDavStorageService::authentication()
 {
     WebDavJob *job = new WebDavJob(this);
-    connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
+    //connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
@@ -62,6 +62,7 @@ void WebDavStorageService::authentication()
 void WebDavStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mServiceLocation.isEmpty()) {
+        mNextAction = ShareLink;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -74,6 +75,7 @@ void WebDavStorageService::shareLink(const QString &root, const QString &path)
 void WebDavStorageService::downloadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
+        mNextAction = DownLoadFile;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -86,6 +88,7 @@ void WebDavStorageService::downloadFile(const QString &filename)
 void WebDavStorageService::createServiceFolder()
 {
     if (mServiceLocation.isEmpty()) {
+        mNextAction = CreateServiceFolder;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -98,6 +101,7 @@ void WebDavStorageService::createServiceFolder()
 void WebDavStorageService::listFolder()
 {
     if (mServiceLocation.isEmpty()) {
+        mNextAction = ListFolder;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -110,6 +114,7 @@ void WebDavStorageService::listFolder()
 void WebDavStorageService::createFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {
+        mNextAction = CreateFolder;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -122,6 +127,7 @@ void WebDavStorageService::createFolder(const QString &folder)
 void WebDavStorageService::accountInfo()
 {
     if (mServiceLocation.isEmpty()) {
+        mNextAction = AccountInfo;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -139,6 +145,7 @@ QString WebDavStorageService::name()
 void WebDavStorageService::uploadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
+        mNextAction = UploadFiles;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);

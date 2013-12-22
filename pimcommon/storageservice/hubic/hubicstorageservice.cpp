@@ -75,12 +75,13 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
     grp.sync();
-    Q_EMIT authenticationDone(serviceName());
+    emitAuthentificationDone();
 }
 
 void HubicStorageService::listFolder()
 {
     if (mRefreshToken.isEmpty()) {
+        mNextAction = ListFolder;
         authentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -94,6 +95,7 @@ void HubicStorageService::listFolder()
 void HubicStorageService::createFolder(const QString &folder)
 {
     if (mRefreshToken.isEmpty()) {
+        mNextAction = CreateFolder;
         authentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -107,6 +109,7 @@ void HubicStorageService::createFolder(const QString &folder)
 void HubicStorageService::accountInfo()
 {
     if (mRefreshToken.isEmpty()) {
+        mNextAction = AccountInfo;
         authentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -125,6 +128,7 @@ QString HubicStorageService::name()
 void HubicStorageService::uploadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
+        mNextAction = UploadFiles;
         authentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -159,6 +163,7 @@ QString HubicStorageService::iconName()
 void HubicStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mRefreshToken.isEmpty()) {
+        mNextAction = ShareLink;
         authentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -177,6 +182,7 @@ QString HubicStorageService::storageServiceName() const
 void HubicStorageService::downloadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
+        mNextAction = DownLoadFile;
         authentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -190,6 +196,7 @@ void HubicStorageService::downloadFile(const QString &filename)
 void HubicStorageService::createServiceFolder()
 {
     if (mRefreshToken.isEmpty()) {
+        mNextAction = CreateServiceFolder;
         authentication();
     } else {
         HubicJob *job = new HubicJob(this);

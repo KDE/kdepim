@@ -65,6 +65,7 @@ void DropBoxStorageService::authentication()
 void DropBoxStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mAccessToken.isEmpty()) {
+        mNextAction = ShareLink;
         authentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -78,6 +79,7 @@ void DropBoxStorageService::shareLink(const QString &root, const QString &path)
 void DropBoxStorageService::createServiceFolder()
 {
     if (mAccessToken.isEmpty()) {
+        mNextAction = CreateServiceFolder;
         authentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -99,12 +101,13 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     grp.writeEntry("Access Oauth Signature", mAccessOauthSignature);
     grp.sync();
     KGlobal::config()->sync();
-    Q_EMIT authenticationDone(serviceName());
+    emitAuthentificationDone();
 }
 
 void DropBoxStorageService::listFolder()
 {
     if (mAccessToken.isEmpty()) {
+        mNextAction = ListFolder;
         authentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -118,6 +121,7 @@ void DropBoxStorageService::listFolder()
 void DropBoxStorageService::accountInfo()
 {
     if (mAccessToken.isEmpty()) {
+        mNextAction = AccountInfo;
         authentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -131,6 +135,7 @@ void DropBoxStorageService::accountInfo()
 void DropBoxStorageService::createFolder(const QString &folder)
 {
     if (mAccessToken.isEmpty()) {
+        mNextAction = CreateFolder;
         authentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -144,6 +149,7 @@ void DropBoxStorageService::createFolder(const QString &folder)
 void DropBoxStorageService::uploadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
+        mNextAction = UploadFiles;
         authentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -196,6 +202,7 @@ QString DropBoxStorageService::storageServiceName() const
 void DropBoxStorageService::downloadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
+        mNextAction = DownLoadFile;
         authentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);

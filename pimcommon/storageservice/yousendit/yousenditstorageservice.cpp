@@ -81,13 +81,14 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     grp.readEntry("Token", mToken);
     grp.sync();
     KGlobal::config()->sync();
-    Q_EMIT authenticationDone(serviceName());
+    emitAuthentificationDone();
 }
 
 void YouSendItStorageService::listFolder()
 {
     if (mToken.isEmpty()) {
-        authentication();
+        mNextAction = ListFolder;
+        authentication();        
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -100,6 +101,7 @@ void YouSendItStorageService::listFolder()
 void YouSendItStorageService::createFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
+        mNextAction = CreateFolder;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -113,6 +115,7 @@ void YouSendItStorageService::createFolder(const QString &folder)
 void YouSendItStorageService::accountInfo()
 {
     if (mToken.isEmpty()) {
+        mNextAction = AccountInfo;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -131,6 +134,7 @@ QString YouSendItStorageService::name()
 void YouSendItStorageService::uploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
+        mNextAction = UploadFiles;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -165,6 +169,7 @@ QString YouSendItStorageService::iconName()
 void YouSendItStorageService::shareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
+        mNextAction = ShareLink;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -178,6 +183,7 @@ void YouSendItStorageService::shareLink(const QString &root, const QString &path
 void YouSendItStorageService::downloadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
+        mNextAction = DownLoadFile;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -191,6 +197,7 @@ void YouSendItStorageService::downloadFile(const QString &filename)
 void YouSendItStorageService::createServiceFolder()
 {
     if (mToken.isEmpty()) {
+        mNextAction = CreateServiceFolder;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);

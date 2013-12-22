@@ -92,6 +92,13 @@ protected slots:
     void slotUploadFileDone(const QString &filename);
     void slotListFolderDone(const QStringList &listFolder);
     void slotDownLoadFileDone(const QString &fileName);
+
+protected:
+    ActionType mNextAction;
+    void emitAuthentificationDone();
+
+private:
+    void executeNextAction();
 };
 }
 
