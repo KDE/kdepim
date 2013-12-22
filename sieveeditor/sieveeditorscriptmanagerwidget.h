@@ -18,24 +18,26 @@
 
 */
 
-#ifndef SIEVEEDITORMAINWIDGET_H
-#define SIEVEEDITORMAINWIDGET_H
+#ifndef SIEVEEDITORSCRIPTMANAGERWIDGET_H
+#define SIEVEEDITORSCRIPTMANAGERWIDGET_H
 
 #include <QWidget>
-class QStackedWidget;
-class SieveEditorScriptManagerWidget;
-class SieveEditorMainWidget : public QWidget
+#include <KUrl>
+
+namespace KSieveUi {
+class ManageSieveTreeView;
+}
+class SieveEditorScriptManagerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorMainWidget(QWidget *parent=0);
-    ~SieveEditorMainWidget();
+    explicit SieveEditorScriptManagerWidget(QWidget *parent=0);
+    ~SieveEditorScriptManagerWidget();
 
+    void addServerImap(const KUrl &url);
 private:
-    void loadConfig();
-
-    QStackedWidget *mStackedWidget;
-    SieveEditorScriptManagerWidget *mScriptManagerWidget;
+    QList<KUrl> mUrls;
+    KSieveUi::ManageSieveTreeView *mTreeView;
 };
 
-#endif // SIEVEEDITORMAINWIDGET_H
+#endif // SIEVEEDITORSCRIPTMANAGERWIDGET_H
