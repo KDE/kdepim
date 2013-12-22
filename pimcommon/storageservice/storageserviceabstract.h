@@ -47,15 +47,20 @@ public:
 
     enum ActionType {
         NoneAction = 0,
+        //Account
         RequestToken,
         AccessToken,
+        AccountInfo,
+        //File
         UploadFile,
+        DownLoadFile,
+        ShareLink,
+        DeleteFile,
+        //Folder
         CreateFolder,
         ListFolder,
-        AccountInfo,
-        ShareLink,
         CreateServiceFolder,
-        DownLoadFile
+        DeleteFolder
     };
 
 
@@ -70,6 +75,8 @@ public:
     virtual QString storageServiceName() const = 0;
     virtual KIcon icon() const = 0;
     virtual void createServiceFolder() = 0;
+    virtual void deleteFile(const QString &filename) = 0;
+    virtual void deleteFolder(const QString &foldername) = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
@@ -94,8 +101,8 @@ protected slots:
     void slotDownLoadFileDone(const QString &fileName);
 
 protected:
-    ActionType mNextAction;
     void emitAuthentificationDone();
+    ActionType mNextAction;
 
 private:
     void executeNextAction();

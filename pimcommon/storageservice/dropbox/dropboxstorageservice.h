@@ -45,6 +45,8 @@ public:
     void createServiceFolder();
     QString storageServiceName() const;
     void downloadFile(const QString &filename);
+    void deleteFile(const QString &filename);
+    void deleteFolder(const QString &foldername);
 
     KIcon icon() const;
 

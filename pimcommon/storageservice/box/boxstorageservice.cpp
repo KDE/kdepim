@@ -109,6 +109,16 @@ void BoxStorageService::downloadFile(const QString &filename)
     }
 }
 
+void BoxStorageService::deleteFile(const QString &filename)
+{
+
+}
+
+void BoxStorageService::deleteFolder(const QString &foldername)
+{
+
+}
+
 void BoxStorageService::listFolder()
 {
     if (mToken.isEmpty()) {

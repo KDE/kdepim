@@ -212,6 +212,16 @@ void UbuntuoneStorageService::createServiceFolder()
     }
 }
 
+void UbuntuoneStorageService::deleteFile(const QString &filename)
+{
+
+}
+
+void UbuntuoneStorageService::deleteFolder(const QString &foldername)
+{
+
+}
+
 QString UbuntuoneStorageService::storageServiceName() const
 {
     return serviceName();

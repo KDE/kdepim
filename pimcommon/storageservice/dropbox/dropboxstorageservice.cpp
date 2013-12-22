@@ -214,6 +214,16 @@ void DropBoxStorageService::downloadFile(const QString &filename)
 
 }
 
+void DropBoxStorageService::deleteFile(const QString &filename)
+{
+
+}
+
+void DropBoxStorageService::deleteFolder(const QString &foldername)
+{
+
+}
+
 KIcon DropBoxStorageService::icon() const
 {
     return KIcon();

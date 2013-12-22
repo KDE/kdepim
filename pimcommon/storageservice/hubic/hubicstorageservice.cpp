@@ -207,6 +207,16 @@ void HubicStorageService::createServiceFolder()
     }
 }
 
+void HubicStorageService::deleteFile(const QString &filename)
+{
+
+}
+
+void HubicStorageService::deleteFolder(const QString &foldername)
+{
+
+}
+
 KIcon HubicStorageService::icon() const
 {
     return KIcon();

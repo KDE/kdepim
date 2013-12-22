@@ -48,7 +48,6 @@ void StorageServiceAbstract::executeNextAction()
         //createFolder();
         break;
     case ListFolder:
-        qDebug()<<" LISTFOLDER";
         listFolder();
         break;
     case AccountInfo:
@@ -62,6 +61,10 @@ void StorageServiceAbstract::executeNextAction()
         break;
     case DownLoadFile:
         //downloadFile();
+        break;
+    case DeleteFile:
+        break;
+    case DeleteFolder:
         break;
     }
 }

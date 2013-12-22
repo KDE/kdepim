@@ -208,6 +208,16 @@ void YouSendItStorageService::createServiceFolder()
     }
 }
 
+void YouSendItStorageService::deleteFile(const QString &filename)
+{
+
+}
+
+void YouSendItStorageService::deleteFolder(const QString &foldername)
+{
+
+}
+
 QString YouSendItStorageService::storageServiceName() const
 {
     return serviceName();

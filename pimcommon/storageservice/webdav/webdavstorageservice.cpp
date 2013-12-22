@@ -98,6 +98,16 @@ void WebDavStorageService::createServiceFolder()
     }
 }
 
+void WebDavStorageService::deleteFile(const QString &filename)
+{
+
+}
+
+void WebDavStorageService::deleteFolder(const QString &foldername)
+{
+
+}
+
 void WebDavStorageService::listFolder()
 {
     if (mServiceLocation.isEmpty()) {
