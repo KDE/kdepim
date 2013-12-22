@@ -23,17 +23,37 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
+#include <QTabWidget>
+#include <QVBoxLayout>
+#include <QListWidget>
+#include <QLabel>
+
 SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure" ) );
     setButtons( Cancel | Ok  );
+    mTabWidget = new QTabWidget;
+    setMainWidget(mTabWidget);
+    initializeServerSieveSettings();
     readConfig();
 }
 
 SieveEditorConfigureDialog::~SieveEditorConfigureDialog()
 {
     writeConfig();
+}
+
+void SieveEditorConfigureDialog::initializeServerSieveSettings()
+{
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    w->setLayout(vbox);
+    mTabWidget->addTab(w, i18n("Server Sieve"));
+    QLabel *lab = new QLabel(i18n("Server Sieve:"));
+    vbox->addWidget(lab);
+    mServerWidget = new QListWidget;
+    vbox->addWidget(mServerWidget);
 }
 
 void SieveEditorConfigureDialog::loadServerSieveConfig()
