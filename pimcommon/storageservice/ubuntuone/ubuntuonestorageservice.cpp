@@ -186,7 +186,7 @@ void UbuntuoneStorageService::downloadFile(const QString &filename)
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
-        //TODO connect
+        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->downloadFile(filename);
     }

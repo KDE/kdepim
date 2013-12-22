@@ -65,7 +65,6 @@ void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessag
     mUsername.clear();
     mPassword.clear();
     mToken.clear();
-    qDebug()<<" void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessage)"<<errorMessage;
     Q_EMIT authenticationFailed(serviceName(), errorMessage);
 }
 
@@ -75,7 +74,6 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     mUsername = username;
     mPassword = password;
     mToken = token;
-qDebug()<<"slotAuthorizationDone ";
     KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
     grp.readEntry("Username", mUsername);
     //TODO store in kwallet ?
@@ -184,8 +182,8 @@ void YouSendItStorageService::downloadFile(const QString &filename)
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
-        //TODO download ?
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         job->downloadFile(filename);
     }
 }

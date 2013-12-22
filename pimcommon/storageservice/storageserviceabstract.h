@@ -67,6 +67,7 @@ Q_SIGNALS:
     void createFolderDone(const QString &serviceName, const QString &folderName);
     void uploadFileDone(const QString &serviceName, const QString &fileName);
     void listFolderDone(const QString &serviceName, const QStringList &listFolder);
+    void downLoadFileDone(const QString &serviceName, const QString &fileName);
 
 protected slots:
     void slotActionFailed(const QString &error);
@@ -76,6 +77,7 @@ protected slots:
     void slotCreateFolderDone(const QString &folderName);
     void slotUploadFileDone(const QString &filename);
     void slotListFolderDone(const QStringList &listFolder);
+    void slotDownLoadFileDone(const QString &fileName);
 };
 }
 

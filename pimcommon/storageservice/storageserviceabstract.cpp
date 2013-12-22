@@ -66,5 +66,9 @@ void StorageServiceAbstract::slotListFolderDone(const QStringList &listFolder)
     Q_EMIT listFolderDone(storageServiceName(), listFolder);
 }
 
+void StorageServiceAbstract::slotDownLoadFileDone(const QString &fileName)
+{
+    Q_EMIT downLoadFileDone(storageServiceName(), fileName);
+}
 
 #include "moc_storageserviceabstract.cpp"

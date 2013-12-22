@@ -101,7 +101,7 @@ void BoxStorageService::downloadFile(const QString &filename)
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        //TODO
+        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->downloadFile(filename);
     }

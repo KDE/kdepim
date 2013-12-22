@@ -200,7 +200,7 @@ void DropBoxStorageService::downloadFile(const QString &filename)
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        //TODO connect
+        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->downloadFile(filename);
     }

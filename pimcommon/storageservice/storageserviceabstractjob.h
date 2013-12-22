@@ -52,6 +52,7 @@ Q_SIGNALS:
     void uploadFileDone(const QString &fileName);
     void listFolderDone(const QStringList &listFolder);
     void authorizationFailed(const QString &error);
+    void downLoadFileDone(const QString &filename);
 
 protected:
     enum ActionType {

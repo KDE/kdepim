@@ -77,7 +77,7 @@ void WebDavStorageService::downloadFile(const QString &filename)
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
-        //TODO connect
+        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->downloadFile(filename);
     }
