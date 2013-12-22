@@ -36,3 +36,18 @@ SieveEditorScriptWidget::~SieveEditorScriptWidget()
 {
 
 }
+
+void SieveEditorScriptWidget::setScript(const QString &script)
+{
+    mSieveEditor->setScript(script);
+}
+
+void SieveEditorScriptWidget::setScriptName(const QString &scriptName)
+{
+    mSieveEditor->setScriptName(scriptName);
+}
+
+void SieveEditorScriptWidget::setSieveCapabilities(const QStringList &capabilities)
+{
+    mSieveEditor->setSieveCapabilities(capabilities);
+}

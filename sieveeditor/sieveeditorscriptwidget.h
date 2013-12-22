@@ -32,6 +32,10 @@ public:
     explicit SieveEditorScriptWidget(QWidget *parent=0);
     ~SieveEditorScriptWidget();
 
+    void setScript(const QString &script);
+    void setScriptName(const QString &scriptName);
+    void setSieveCapabilities(const QStringList &capabilities);
+
 private:
     KSieveUi::SieveEditor *mSieveEditor;
 };
