@@ -27,7 +27,7 @@ using namespace PimCommon;
 StorageServiceAbstractJob::StorageServiceAbstractJob(QObject *parent)
     : QObject(parent),
       mNetworkAccessManager(new QNetworkAccessManager(this)),
-      mActionType(NoneAction),
+      mActionType(PimCommon::StorageServiceAbstract::NoneAction),
       mError(false)
 {
     qDebug()<<"StorageServiceAbstractJob::StorageServiceAbstractJob() "<<this;
@@ -45,37 +45,37 @@ void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)
     mError = true;
 }
 
-void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstractJob::ActionType type, const QString &errorStr)
+void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr)
 {
     QString error;
     switch(type) {
-    case NoneAction:
+    case PimCommon::StorageServiceAbstract::NoneAction:
         break;
-    case RequestToken:
+    case PimCommon::StorageServiceAbstract::RequestToken:
         error = i18n("Request Token returns an error: %1",errorStr);
         break;
-    case AccessToken:
+    case PimCommon::StorageServiceAbstract::AccessToken:
         error = i18n("Access Token returns an error: %1",errorStr);
         break;
-    case UploadFiles:
+    case PimCommon::StorageServiceAbstract::UploadFiles:
         error = i18n("Upload File returns an error: %1",errorStr);
         break;
-    case CreateFolder:
+    case PimCommon::StorageServiceAbstract::CreateFolder:
         error = i18n("Create Folder returns an error: %1",errorStr);
         break;
-    case AccountInfo:
+    case PimCommon::StorageServiceAbstract::AccountInfo:
         error = i18n("Get account info returns an error: %1",errorStr);
         break;
-    case ListFolder:
+    case PimCommon::StorageServiceAbstract::ListFolder:
         error = i18n("List folder returns an error: %1",errorStr);
         break;
-    case ShareLink:
+    case PimCommon::StorageServiceAbstract::ShareLink:
         error = i18n("Share Link returns an error: %1",errorStr);
         break;
-    case CreateServiceFolder:
+    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         error = i18n("Create Service Folder returns an error: %1",errorStr);
         break;
-    case DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
         error = i18n("Download file returns an error: %1",errorStr);
         break;
     default:

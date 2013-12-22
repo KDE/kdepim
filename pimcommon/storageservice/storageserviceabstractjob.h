@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QNetworkReply>
+#include "storageservice/storageserviceabstract.h"
 
 class QNetworkAccessManager;
 namespace PimCommon {
@@ -55,22 +56,10 @@ Q_SIGNALS:
     void downLoadFileDone(const QString &filename);
 
 protected:
-    enum ActionType {
-        NoneAction = 0,
-        RequestToken,
-        AccessToken,
-        UploadFiles,
-        CreateFolder,
-        ListFolder,
-        AccountInfo,
-        ShareLink,
-        CreateServiceFolder,
-        DownLoadFile
-    };
-    void errorMessage(PimCommon::StorageServiceAbstractJob::ActionType type, const QString &errorStr);
+    void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);
 
     QNetworkAccessManager *mNetworkAccessManager;
-    ActionType mActionType;
+    PimCommon::StorageServiceAbstract::ActionType mActionType;
     bool mError;
 };
 }

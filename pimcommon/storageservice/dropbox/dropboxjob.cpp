@@ -62,7 +62,7 @@ void DropBoxJob::initializeToken(const QString &accessToken, const QString &acce
 
 void DropBoxJob::requestTokenAccess()
 {
-    mActionType = RequestToken;
+    mActionType = PimCommon::StorageServiceAbstract::RequestToken;
     mError = false;
     QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/oauth/request_token")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
@@ -83,7 +83,7 @@ void DropBoxJob::requestTokenAccess()
 
 void DropBoxJob::getTokenAccess()
 {
-    mActionType = AccessToken;
+    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
     mError = false;
     QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/oauth/access_token")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
@@ -116,24 +116,24 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         if (error.contains(QLatin1String("error"))) {
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
-            case NoneAction:
+            case PimCommon::StorageServiceAbstract::NoneAction:
                 deleteLater();
                 break;
-            case RequestToken:
+            case PimCommon::StorageServiceAbstract::RequestToken:
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case AccessToken:
+            case PimCommon::StorageServiceAbstract::AccessToken:
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case UploadFiles:
-            case CreateFolder:
-            case AccountInfo:
-            case ListFolder:
-            case ShareLink:
-            case DownLoadFile:
-            case CreateServiceFolder:
+            case PimCommon::StorageServiceAbstract::UploadFiles:
+            case PimCommon::StorageServiceAbstract::CreateFolder:
+            case PimCommon::StorageServiceAbstract::AccountInfo:
+            case PimCommon::StorageServiceAbstract::ListFolder:
+            case PimCommon::StorageServiceAbstract::ShareLink:
+            case PimCommon::StorageServiceAbstract::DownLoadFile:
+            case PimCommon::StorageServiceAbstract::CreateServiceFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -149,33 +149,33 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         return;
     }
     switch(mActionType) {
-    case NoneAction:
+    case PimCommon::StorageServiceAbstract::NoneAction:
         break;
-    case RequestToken:
+    case PimCommon::StorageServiceAbstract::RequestToken:
         parseRequestToken(data);
         break;
-    case AccessToken:
+    case PimCommon::StorageServiceAbstract::AccessToken:
         parseResponseAccessToken(data);
         break;
-    case UploadFiles:
+    case PimCommon::StorageServiceAbstract::UploadFiles:
         parseUploadFile(data);
         break;
-    case CreateFolder:
+    case PimCommon::StorageServiceAbstract::CreateFolder:
         parseCreateFolder(data);
         break;
-    case AccountInfo:
+    case PimCommon::StorageServiceAbstract::AccountInfo:
         parseAccountInfo(data);
         break;
-    case ListFolder:
+    case PimCommon::StorageServiceAbstract::ListFolder:
         parseListFolder(data);
         break;
-    case ShareLink:
+    case PimCommon::StorageServiceAbstract::ShareLink:
         parseShareLink(data);
         break;
-    case CreateServiceFolder:
+    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         deleteLater();
         break;
-    case DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
         deleteLater();
         break;
     default:
@@ -264,7 +264,7 @@ void DropBoxJob::doAuthentication()
 
 void DropBoxJob::createFolder(const QString &folder)
 {
-    mActionType = CreateFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     if (folder.isEmpty()) {
         qDebug()<<" folder empty!";
@@ -290,7 +290,7 @@ void DropBoxJob::uploadFile(const QString &filename)
 {
     QFile *file = new QFile(filename);
     if (file->exists()) {
-        mActionType = UploadFiles;
+        mActionType = PimCommon::StorageServiceAbstract::UploadFiles;
         mError = false;
         QFileInfo info(filename);
         const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
@@ -312,7 +312,7 @@ void DropBoxJob::uploadFile(const QString &filename)
 
 void DropBoxJob::accountInfo()
 {
-    mActionType = AccountInfo;
+    mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
     mError = false;
     QUrl url(QLatin1String("https://api.dropbox.com/1/account/info"));
     url.addQueryItem(QLatin1String("oauth_consumer_key"), mOauthconsumerKey);
@@ -334,7 +334,7 @@ void DropBoxJob::accountInfo()
 void DropBoxJob::listFolder(const QString &folder)
 {
     qDebug()<<" void DropBoxJob::listFolders()";
-    mActionType = ListFolder;
+    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     QUrl url(QLatin1String("https://api.dropbox.com/1/metadata/dropbox/") + folder);
     url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey);
@@ -381,7 +381,7 @@ void DropBoxJob::parseUploadFile(const QString &data)
 
 void DropBoxJob::shareLink(const QString &root, const QString &path)
 {
-    mActionType = ShareLink;
+    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
     //QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/shares/") + root + QLatin1Char('/') + path));
     //request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));

@@ -45,6 +45,20 @@ public:
     explicit StorageServiceAbstract(QObject *parent=0);
     ~StorageServiceAbstract();
 
+    enum ActionType {
+        NoneAction = 0,
+        RequestToken,
+        AccessToken,
+        UploadFiles,
+        CreateFolder,
+        ListFolder,
+        AccountInfo,
+        ShareLink,
+        CreateServiceFolder,
+        DownLoadFile
+    };
+
+
     virtual void downloadFile(const QString &filename) = 0;
     virtual void uploadFile(const QString &filename) = 0;
     virtual void accountInfo() = 0;
