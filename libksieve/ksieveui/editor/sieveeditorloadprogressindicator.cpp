@@ -40,11 +40,11 @@ void SieveEditorLoadProgressIndicator::startAnimation()
 
 }
 
-void SieveEditorLoadProgressIndicator::stopAnimation()
+void SieveEditorLoadProgressIndicator::stopAnimation(bool success)
 {
     if (mProgressTimer->isActive())
         mProgressTimer->stop();
-    Q_EMIT pixmapChanged(QPixmap());
+    Q_EMIT loadFinished(success);
 }
 
 void SieveEditorLoadProgressIndicator::slotTimerDone()

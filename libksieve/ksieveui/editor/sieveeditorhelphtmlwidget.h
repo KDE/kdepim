@@ -36,13 +36,14 @@ public:
 Q_SIGNALS:
     void titleChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QString &title);
     void progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget *widget, const QPixmap &);
+    void loadFinished(KSieveUi::SieveEditorHelpHtmlWidget *widget, bool success);
 
 private slots:
     void slotTitleChanged(const QString &);
     void slotFinished(bool b);
     void slotLoadStarted();
     void slotPixmapChanged(const QPixmap &pixmap);
-
+    void slotLoadFinished(bool success);
 private:
     QString mVariableName;
     QWebView *mWebView;

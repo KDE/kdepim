@@ -21,6 +21,7 @@
 #include <KPixmapSequence>
 #include <QTreeWidgetItem>
 
+#include "ksieveui_export.h"
 
 class QTimer;
 class QTreeWidget;
@@ -28,7 +29,7 @@ class QTreeWidgetItem;
 
 namespace KSieveUi {
 class SieveTreeWidgetProgress;
-class SieveTreeWidgetItem : public QTreeWidgetItem
+class KSIEVEUI_EXPORT SieveTreeWidgetItem : public QTreeWidgetItem
 {
 public:
     SieveTreeWidgetItem(QTreeWidget *treeWidget, QTreeWidgetItem *item);

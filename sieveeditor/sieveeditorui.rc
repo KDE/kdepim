@@ -2,7 +2,7 @@
 <kpartgui name="sieveeditor" version="1">
  <MenuBar>
   <Menu name="file" >
-   <Action name="new_theme" />
+   <Action name="add_server_sieve" />
   </Menu>
  </MenuBar>
 </kpartgui>

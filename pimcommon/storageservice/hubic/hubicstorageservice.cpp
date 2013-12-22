@@ -174,14 +174,30 @@ QString HubicStorageService::storageServiceName() const
     return serviceName();
 }
 
-void HubicStorageService::downloadFile()
+void HubicStorageService::downloadFile(const QString &filename)
 {
-
+    if (mRefreshToken.isEmpty()) {
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        //TODO connect
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->downloadFile(filename);
+    }
 }
 
 void HubicStorageService::createServiceFolder()
 {
-
+    if (mRefreshToken.isEmpty()) {
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createServiceFolder();
+    }
 }
 
 KIcon HubicStorageService::icon() const

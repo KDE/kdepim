@@ -27,6 +27,7 @@ SieveEditorHelpHtmlWidget::SieveEditorHelpHtmlWidget(QWidget *parent)
 {
     mProgressIndicator = new SieveEditorLoadProgressIndicator(this);
     connect(mProgressIndicator, SIGNAL(pixmapChanged(QPixmap)), this, SLOT(slotPixmapChanged(QPixmap)));
+    connect(mProgressIndicator, SIGNAL(loadFinished(bool)), this, SLOT(slotLoadFinished(bool)));
     mWebView = new QWebView;
     connect(mWebView, SIGNAL(titleChanged(QString)), this, SLOT(slotTitleChanged(QString)));
     connect(mWebView, SIGNAL(loadStarted()), this, SLOT(slotLoadStarted()));
@@ -41,6 +42,11 @@ SieveEditorHelpHtmlWidget::~SieveEditorHelpHtmlWidget()
 
 }
 
+void SieveEditorHelpHtmlWidget::slotLoadFinished(bool success)
+{
+    Q_EMIT loadFinished(this, success);
+}
+
 void SieveEditorHelpHtmlWidget::slotPixmapChanged(const QPixmap &pixmap)
 {
     Q_EMIT progressIndicatorPixmapChanged(this, pixmap);
@@ -48,7 +54,7 @@ void SieveEditorHelpHtmlWidget::slotPixmapChanged(const QPixmap &pixmap)
 
 void SieveEditorHelpHtmlWidget::slotFinished(bool b)
 {
-    mProgressIndicator->stopAnimation();
+    mProgressIndicator->stopAnimation(b);
 }
 
 void SieveEditorHelpHtmlWidget::slotLoadStarted()

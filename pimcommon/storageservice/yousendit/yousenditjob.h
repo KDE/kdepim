@@ -37,6 +37,7 @@ public:
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &password, const QString &userName, const QString &token);
     void createServiceFolder();
+    void downloadFile(const QString &filename);
 
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);
@@ -57,7 +58,7 @@ private:
     QString mUsername;
     QString mDefaultUrl;
     QString mApiKey;
-    QString mToken;
+    QString mToken;    
 };
 }
 

@@ -56,8 +56,20 @@ void SieveEditorTabWidget::slotAddHelpPage(const QString &variableName, const QS
     SieveEditorHelpHtmlWidget *htmlPage = new SieveEditorHelpHtmlWidget;
     connect(htmlPage, SIGNAL(titleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)), this, SLOT(slotTitleChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QString)));
     connect(htmlPage, SIGNAL(progressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QPixmap)), this, SLOT(slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget*,QPixmap)));
+    connect(htmlPage, SIGNAL(loadFinished(KSieveUi::SieveEditorHelpHtmlWidget*,bool)), this, SLOT(slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget*,bool)));
     htmlPage->setHelp(variableName, url);
     addTab(htmlPage, i18n("Help"));
+}
+
+void SieveEditorTabWidget::slotLoadFinished(KSieveUi::SieveEditorHelpHtmlWidget* widget, bool success)
+{
+    const int index = indexOf(widget);
+    if (index != -1) {
+        setTabIcon(index, QIcon());
+    }
+    if (!success) {
+        setTabText(index, i18n("Error during load page about %1", widget->variableName()));
+    }
 }
 
 void SieveEditorTabWidget::slotProgressIndicatorPixmapChanged(KSieveUi::SieveEditorHelpHtmlWidget* widget, const QPixmap &pixmap)

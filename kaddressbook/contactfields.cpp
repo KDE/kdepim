@@ -507,7 +507,7 @@ QString ContactFields::value( Field field, const KABC::Addressee &contact )
   case Birthday:
   {
     const QDateTime birthday = contact.birthday();
-    if ( birthday.isValid() ) {
+    if ( birthday.date().isValid() ) {
       return birthday.date().toString( Qt::ISODate );
     } else {
       return QString();

@@ -21,6 +21,7 @@
 
 #include "kdepim-version.h"
 #include "sieveeditormainwindow.h"
+#include "sieveeditor_options.h"
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -34,7 +35,7 @@ int main( int argc, char **argv )
     aboutData.setProgramIconName(QLatin1String("kmail"));
     KCmdLineArgs::init( argc, argv, &aboutData );
 
-    KCmdLineOptions options;
+    KCmdLineOptions options = sieveeditor_options();
     KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
     KApplication app;

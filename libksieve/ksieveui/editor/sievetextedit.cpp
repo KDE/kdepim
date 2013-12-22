@@ -23,6 +23,8 @@
 
 
 #include <KGlobalSettings>
+#include <KLocalizedString>
+#include <KAction>
 
 #include <QCompleter>
 #include <QStringListModel>
@@ -30,6 +32,8 @@
 #include <QPainter>
 #include <QScrollBar>
 #include <QDebug>
+#include <QAction>
+#include <QMenu>
 
 using namespace KSieveUi;
 
@@ -160,6 +164,15 @@ void SieveTextEdit::slotInsertCompletion( const QString& completion )
     setTextCursor(tc);
 }
 
+QString SieveTextEdit::selectedWord() const
+{
+    QTextCursor wordSelectCursor(textCursor());
+    wordSelectCursor.clearSelection();
+    wordSelectCursor.select(QTextCursor::WordUnderCursor);
+    const QString word = wordSelectCursor.selectedText();
+    return word;
+}
+
 void SieveTextEdit::keyPressEvent(QKeyEvent* e)
 {
     if ( m_completer->popup()->isVisible() ) {
@@ -177,15 +190,12 @@ void SieveTextEdit::keyPressEvent(QKeyEvent* e)
     }
     QPlainTextEdit::keyPressEvent(e);
     if (e->key() == Qt::Key_F1 && !textCursor().hasSelection()) {
-        QTextCursor wordSelectCursor(textCursor());
-        wordSelectCursor.clearSelection();
-        wordSelectCursor.select(QTextCursor::WordUnderCursor);
-        const QString selectedWord = wordSelectCursor.selectedText();
-        const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(selectedWord);
+        const QString word = selectedWord();
+        const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(word);
         if (type != KSieveUi::SieveEditorUtil::UnknownHelp) {
             const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
             if (!url.isEmpty())
-                Q_EMIT openHelp(selectedWord, url);
+                Q_EMIT openHelp(word, url);
         }
         return;
     }
@@ -227,3 +237,34 @@ void SieveTextEdit::setSieveCapabilities( const QStringList &capabilities )
     setCompleterList(completerList() + capabilities);
 }
 
+void SieveTextEdit::addExtraMenuEntry(QMenu *menu)
+{
+    if (!textCursor().hasSelection()) {
+        const QString word = selectedWord();
+        const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(word);
+        if (type != KSieveUi::SieveEditorUtil::UnknownHelp) {
+            QAction *separator = new QAction(menu);
+            separator->setSeparator(true);
+            menu->insertAction(menu->actions().at(0), separator);
+
+            KAction *searchAction = new KAction(i18n("Help about: \'%1\'",word), menu);
+            searchAction->setShortcut(Qt::Key_F1);
+            searchAction->setIcon(KIcon(QLatin1String("help-hint")));
+            searchAction->setData(word);
+            connect(searchAction, SIGNAL(triggered()), SLOT(slotHelp()));
+            menu->insertAction(menu->actions().at(0), searchAction);
+        }
+    }
+}
+
+void SieveTextEdit::slotHelp()
+{
+    QAction *act = qobject_cast<QAction*>(sender());
+    if (act) {
+        const QString word = act->data().toString();
+        const KSieveUi::SieveEditorUtil::HelpVariableName type =  KSieveUi::SieveEditorUtil::strToVariableName(act->data().toString());
+        const QString url = KSieveUi::SieveEditorUtil::helpUrl(type);
+        if (!url.isEmpty())
+            Q_EMIT openHelp(word, url);
+    }
+}

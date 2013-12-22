@@ -19,9 +19,12 @@
 */
 
 #include "addsieveserverdialog.h"
+#include "serversievesettings.h"
 
 #include <KLocalizedString>
 #include <QVBoxLayout>
+#include <QLineEdit>
+#include <QSpinBox>
 
 AddSieveServerDialog::AddSieveServerDialog(QWidget *parent)
     : KDialog(parent)
@@ -31,12 +34,55 @@ AddSieveServerDialog::AddSieveServerDialog(QWidget *parent)
 
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
+    mServerSieveSettings = new ServerSieveSettings;
+    lay->addWidget(mServerSieveSettings);
     lay->setMargin(0);
     w->setLayout(lay);
     setMainWidget(w);
+    resize(300,200);
 }
 
 AddSieveServerDialog::~AddSieveServerDialog()
 {
 
+}
+
+QString AddSieveServerDialog::serverName() const
+{
+    return mServerSieveSettings->serverName();
+}
+
+void AddSieveServerDialog::setServerName(const QString &name)
+{
+    mServerSieveSettings->setServerName(name);
+}
+
+int AddSieveServerDialog::port() const
+{
+    return mServerSieveSettings->port();
+}
+
+void AddSieveServerDialog::setPort(int value)
+{
+    mServerSieveSettings->setPort(value);
+}
+
+QString AddSieveServerDialog::userName() const
+{
+    return mServerSieveSettings->userName();
+}
+
+void AddSieveServerDialog::setUserName(const QString &name)
+{
+    mServerSieveSettings->setUserName(name);
+}
+
+QString AddSieveServerDialog::password() const
+{
+    return mServerSieveSettings->password();
+}
+
+void AddSieveServerDialog::setPassword(const QString &pass)
+{
+    mServerSieveSettings->setPassword(pass);
 }

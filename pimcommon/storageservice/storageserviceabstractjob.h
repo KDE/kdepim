@@ -38,6 +38,7 @@ public:
     virtual void createFolder(const QString &filename=QString()) = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual void createServiceFolder() = 0;
+    virtual void downloadFile(const QString &filename) = 0;
 
 protected Q_SLOTS:
     void slotError(QNetworkReply::NetworkError);
@@ -62,7 +63,8 @@ protected:
         ListFolder,
         AccountInfo,
         ShareLink,
-        CreateServiceFolder
+        CreateServiceFolder,
+        DownLoadFile
     };
     void errorMessage(PimCommon::StorageServiceAbstractJob::ActionType type, const QString &errorStr);
 

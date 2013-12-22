@@ -38,6 +38,7 @@ public:
     void createFolder(const QString &foldername);
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
+    void downloadFile(const QString &filename);
 
     void initializeToken(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
 

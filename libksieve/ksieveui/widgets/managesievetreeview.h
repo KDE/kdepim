@@ -21,9 +21,10 @@
 
 
 #include "pimcommon/widgets/customtreeview.h"
+#include "ksieveui_export.h"
 
 namespace KSieveUi {
-class ManageSieveTreeView : public PimCommon::CustomTreeView
+class KSIEVEUI_EXPORT ManageSieveTreeView : public PimCommon::CustomTreeView
 {
     Q_OBJECT
 public:

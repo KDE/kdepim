@@ -24,7 +24,7 @@
 #include "pimcommon/texteditor/plaintexteditor/plaintexteditor.h"
 
 class QCompleter;
-
+class QMenu;
 namespace PimCommon {
 class SieveSyntaxHighlighter;
 }
@@ -51,12 +51,14 @@ private Q_SLOTS:
     void slotInsertCompletion( const QString& );
     void slotUpdateLineNumberAreaWidth(int newBlockCount);
     void slotUpdateLineNumberArea(const QRect &, int);
+    void slotHelp();
 
 protected:
     QString wordUnderCursor() const;
     void initCompleter();
     void keyPressEvent(QKeyEvent* e);
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event);    
+    void addExtraMenuEntry(QMenu *menu);
 
 Q_SIGNALS:
     void openHelp(const QString &variableName, const QString &url);
@@ -64,6 +66,7 @@ Q_SIGNALS:
 private:
     QStringList completerList() const;
     void setCompleterList(const QStringList &list);
+    QString selectedWord() const;
 
     QCompleter *m_completer;
     SieveLineNumberArea *m_sieveLineNumberArea;

@@ -2183,7 +2183,7 @@ void AgendaView::alignAgendas()
 {
   // resize dummy widget so the allday agenda lines up with the hourly agenda.
   d->mDummyAllDayLeft->setFixedWidth( -SPACING + d->mTimeLabelsZone->width() -
-                                      d->mIsSideBySide ? 0 : d->mTimeBarHeaderFrame->width() );
+                                      ( d->mIsSideBySide ? 0 : d->mTimeBarHeaderFrame->width() ) );
 
   // Must be async, so they are centered
   createDayLabels( true );

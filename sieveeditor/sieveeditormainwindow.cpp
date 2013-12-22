@@ -19,11 +19,20 @@
 */
 
 #include "sieveeditormainwindow.h"
+#include "sieveeditormainwidget.h"
+#include "sieveeditorconfiguredialog.h"
+#include "addsieveserverdialog.h"
 
 #include <KSharedConfig>
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KConfigGroup>
+#include <KStandardAction>
+#include <KApplication>
+#include <KActionCollection>
+#include <KAction>
+
+#include <QPointer>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow()
@@ -32,6 +41,8 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     setupGUI();
     updateActions();
     readConfig();
+    mMainWidget = new SieveEditorMainWidget;
+    setCentralWidget(mMainWidget);
 }
 
 SieveEditorMainWindow::~SieveEditorMainWindow()
@@ -54,10 +65,40 @@ void SieveEditorMainWindow::readConfig()
 
 void SieveEditorMainWindow::setupActions()
 {
+    KActionCollection* ac=actionCollection();
+
+
+    KStandardAction::quit(this, SLOT(slotQuitApp()), ac );
+    KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+    KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
+    act->setText(i18n("Add Server Sieve..."));
     //TODO
 }
 
 void SieveEditorMainWindow::updateActions()
 {
     //TODO
+}
+
+void SieveEditorMainWindow::slotQuitApp()
+{
+    kapp->quit();
+}
+
+void SieveEditorMainWindow::slotConfigure()
+{
+    QPointer<SieveEditorConfigureDialog> dlg = new SieveEditorConfigureDialog(this);
+    if (dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
+}
+
+void SieveEditorMainWindow::slotAddServerSieve()
+{
+    QPointer<AddSieveServerDialog> dlg = new AddSieveServerDialog(this);
+    if (dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
 }

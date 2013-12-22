@@ -177,14 +177,30 @@ void YouSendItStorageService::shareLink(const QString &root, const QString &path
     }
 }
 
-void YouSendItStorageService::downloadFile()
+void YouSendItStorageService::downloadFile(const QString &filename)
 {
-
+    if (mToken.isEmpty()) {
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        //TODO download ?
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->downloadFile(filename);
+    }
 }
 
 void YouSendItStorageService::createServiceFolder()
 {
-
+    if (mToken.isEmpty()) {
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotShareLinkDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createServiceFolder();
+    }
 }
 
 QString YouSendItStorageService::storageServiceName() const

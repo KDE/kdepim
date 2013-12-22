@@ -23,6 +23,7 @@
 
 #include <KXmlGuiWindow>
 
+class SieveEditorMainWidget;
 class SieveEditorMainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
@@ -30,10 +31,16 @@ public:
     explicit SieveEditorMainWindow();
     ~SieveEditorMainWindow();
 
+private slots:
+    void slotQuitApp();
+    void slotConfigure();
+    void slotAddServerSieve();
+
 private:
     void readConfig();
     void setupActions();
     void updateActions();
+    SieveEditorMainWidget *mMainWidget;
 };
 
 #endif // SIEVEEDITORMAINWINDOW_H

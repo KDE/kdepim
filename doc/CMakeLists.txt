@@ -62,6 +62,7 @@ if(BUILD_agents)
   add_subdirectory(akonadi_archivemail_agent)
   add_subdirectory(akonadi_sendlater_agent)
   add_subdirectory(akonadi_folderarchive_agent)
+  add_subdirectory(akonadi_notes_agent)
 endif()
 
 if(BUILD_importwizard)
@@ -78,4 +79,8 @@ endif()
 
 if(BUILD_sieveeditor)
   add_subdirectory(sieveeditor)
+endif()
+
+if(BUILD_contactthemeeditor)
+  add_subdirectory(contactthemeeditor)
 endif()

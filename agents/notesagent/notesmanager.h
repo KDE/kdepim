@@ -20,8 +20,14 @@
 #define NOTESMANAGER_H
 
 #include <QObject>
+#include <Akonadi/Item>
 class QTcpServer;
 class QTimer;
+namespace NoteShared {
+class NotesChangeRecorder;
+class NotesAkonadiTreeModel;
+}
+class QModelIndex;
 class NotesManager : public QObject
 {
     Q_OBJECT
@@ -29,7 +35,7 @@ public:
     explicit NotesManager(QObject *parent=0);
     ~NotesManager();
 
-    void load(bool forced=false);
+    void load();
     void stopAll();
     void updateNetworkListener();
 
@@ -38,10 +44,16 @@ private slots:
     void slotNewNote(const QString &name, const QString &text);
     void slotCheckAlarm();
 
+    void slotItemRemoved(const Akonadi::Item &item);
+    void slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &set);
+    void slotRowInserted(const QModelIndex &parent, int start, int end);
 private:
     void clear();
+    Akonadi::Item::List mListItem;
     QTcpServer *mListener;
     QTimer *mCheckAlarm;
+    NoteShared::NotesChangeRecorder *mNoteRecorder;
+    NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;
 };
 
 #endif // NOTESMANAGER_H

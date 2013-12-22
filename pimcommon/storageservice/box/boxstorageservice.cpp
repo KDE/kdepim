@@ -94,9 +94,17 @@ void BoxStorageService::shareLink(const QString &root, const QString &path)
     }
 }
 
-void BoxStorageService::downloadFile()
+void BoxStorageService::downloadFile(const QString &filename)
 {
-
+    if (mToken.isEmpty()) {
+        authentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->downloadFile(filename);
+    }
 }
 
 void BoxStorageService::listFolder()
@@ -189,5 +197,13 @@ KIcon BoxStorageService::icon() const
 
 void BoxStorageService::createServiceFolder()
 {
-    //TODO
+    if (mToken.isEmpty()) {
+        authentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->createServiceFolder();
+    }
 }

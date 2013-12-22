@@ -31,10 +31,11 @@ public:
     ~SieveEditorLoadProgressIndicator();
 
     void startAnimation();
-    void stopAnimation();
+    void stopAnimation(bool success);
 
 Q_SIGNALS:
     void pixmapChanged(const QPixmap &);
+    void loadFinished(bool success);
 
 private Q_SLOTS:
     void slotTimerDone();
