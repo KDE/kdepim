@@ -21,17 +21,43 @@
 #include "sieveeditorconfiguredialog.h"
 
 #include <KLocalizedString>
+#include <KSharedConfig>
 
 SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure" ) );
     setButtons( Cancel | Ok  );
-
+    readConfig();
 }
 
 SieveEditorConfigureDialog::~SieveEditorConfigureDialog()
 {
+    writeConfig();
+}
+
+void SieveEditorConfigureDialog::loadServerSieveConfig()
+{
 
 }
 
+void SieveEditorConfigureDialog::saveServerSieveConfig()
+{
+
+}
+
+void SieveEditorConfigureDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveEditorConfigureDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void SieveEditorConfigureDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveEditorConfigureDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}

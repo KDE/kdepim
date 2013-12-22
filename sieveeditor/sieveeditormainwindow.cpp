@@ -21,7 +21,7 @@
 #include "sieveeditormainwindow.h"
 #include "sieveeditormainwidget.h"
 #include "sieveeditorconfiguredialog.h"
-#include "addsieveserverdialog.h"
+#include "serversievesettingsdialog.h"
 
 #include <KSharedConfig>
 #include <KGlobal>
@@ -96,7 +96,7 @@ void SieveEditorMainWindow::slotConfigure()
 
 void SieveEditorMainWindow::slotAddServerSieve()
 {
-    QPointer<AddSieveServerDialog> dlg = new AddSieveServerDialog(this);
+    QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
     if (dlg->exec()) {
         //TODO
     }

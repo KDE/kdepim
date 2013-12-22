@@ -30,6 +30,11 @@ public:
     explicit SieveEditorConfigureDialog(QWidget *parent=0);
     ~SieveEditorConfigureDialog();
 
+private:
+    void readConfig();
+    void writeConfig();
+    void loadServerSieveConfig();
+    void saveServerSieveConfig();
 };
 
 #endif // SIEVEEDITORCONFIGUREDIALOG_H

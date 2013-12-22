@@ -18,17 +18,17 @@
 
 */
 
-#ifndef ADDSIEVESERVERDIALOG_H
-#define ADDSIEVESERVERDIALOG_H
+#ifndef SERVERSIEVESETTINGSDIALOG_H
+#define SERVERSIEVESETTINGSDIALOG_H
 
 #include <KDialog>
 class ServerSieveSettings;
-class AddSieveServerDialog : public KDialog
+class ServerSieveSettingsDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit AddSieveServerDialog(QWidget *parent=0);
-    ~AddSieveServerDialog();
+    explicit ServerSieveSettingsDialog(QWidget *parent=0);
+    ~ServerSieveSettingsDialog();
 
     QString serverName() const;
     void setServerName(const QString &name);
@@ -46,4 +46,4 @@ private:
     ServerSieveSettings *mServerSieveSettings;
 };
 
-#endif // ADDSIEVESERVERDIALOG_H
+#endif // SERVERSIEVESETTINGSDIALOG_H

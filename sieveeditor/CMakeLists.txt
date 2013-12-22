@@ -13,7 +13,7 @@ include_directories(
 set(sieveeditor_SRCS
   main.cpp
   sieveeditormainwindow.cpp
-  addsieveserverdialog.cpp
+  serversievesettingsdialog.cpp
   serversievesettings.cpp
   sieveeditormainwidget.cpp
   sieveeditorscriptwidget.cpp
