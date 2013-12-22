@@ -145,7 +145,7 @@ QString WebDavStorageService::name()
 void WebDavStorageService::uploadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = UploadFiles;
+        mNextAction = UploadFile;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);

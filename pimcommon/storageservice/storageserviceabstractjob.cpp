@@ -57,7 +57,7 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstract::
     case PimCommon::StorageServiceAbstract::AccessToken:
         error = i18n("Access Token returns an error: %1",errorStr);
         break;
-    case PimCommon::StorageServiceAbstract::UploadFiles:
+    case PimCommon::StorageServiceAbstract::UploadFile:
         error = i18n("Upload File returns an error: %1",errorStr);
         break;
     case PimCommon::StorageServiceAbstract::CreateFolder:

@@ -134,7 +134,7 @@ QString YouSendItStorageService::name()
 void YouSendItStorageService::uploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        mNextAction = UploadFiles;
+        mNextAction = UploadFile;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);

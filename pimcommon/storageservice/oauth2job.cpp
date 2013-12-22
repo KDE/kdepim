@@ -140,7 +140,7 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
 
 void OAuth2Job::uploadFile(const QString &filename)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFiles;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
@@ -250,7 +250,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case PimCommon::StorageServiceAbstract::UploadFiles:
+            case PimCommon::StorageServiceAbstract::UploadFile:
             case PimCommon::StorageServiceAbstract::CreateFolder:
             case PimCommon::StorageServiceAbstract::AccountInfo:
             case PimCommon::StorageServiceAbstract::ListFolder:
@@ -281,7 +281,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::AccessToken:
         parseAccessToken(data);
         break;
-    case PimCommon::StorageServiceAbstract::UploadFiles:
+    case PimCommon::StorageServiceAbstract::UploadFile:
         parseUploadFile(data);
         break;
     case PimCommon::StorageServiceAbstract::CreateFolder:

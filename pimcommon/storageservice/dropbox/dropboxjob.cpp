@@ -127,7 +127,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case PimCommon::StorageServiceAbstract::UploadFiles:
+            case PimCommon::StorageServiceAbstract::UploadFile:
             case PimCommon::StorageServiceAbstract::CreateFolder:
             case PimCommon::StorageServiceAbstract::AccountInfo:
             case PimCommon::StorageServiceAbstract::ListFolder:
@@ -157,7 +157,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::AccessToken:
         parseResponseAccessToken(data);
         break;
-    case PimCommon::StorageServiceAbstract::UploadFiles:
+    case PimCommon::StorageServiceAbstract::UploadFile:
         parseUploadFile(data);
         break;
     case PimCommon::StorageServiceAbstract::CreateFolder:
@@ -290,7 +290,7 @@ void DropBoxJob::uploadFile(const QString &filename)
 {
     QFile *file = new QFile(filename);
     if (file->exists()) {
-        mActionType = PimCommon::StorageServiceAbstract::UploadFiles;
+        mActionType = PimCommon::StorageServiceAbstract::UploadFile;
         mError = false;
         QFileInfo info(filename);
         const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));

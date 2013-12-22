@@ -49,7 +49,7 @@ public:
         NoneAction = 0,
         RequestToken,
         AccessToken,
-        UploadFiles,
+        UploadFile,
         CreateFolder,
         ListFolder,
         AccountInfo,

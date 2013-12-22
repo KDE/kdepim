@@ -58,7 +58,7 @@ void WebDavJob::requestTokenAccess()
 
 void WebDavJob::uploadFile(const QString &filename)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFiles;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     qDebug()<<" not implemented";
     deleteLater();
@@ -112,7 +112,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case PimCommon::StorageServiceAbstract::UploadFiles:
+            case PimCommon::StorageServiceAbstract::UploadFile:
             case PimCommon::StorageServiceAbstract::CreateFolder:
             case PimCommon::StorageServiceAbstract::AccountInfo:
             case PimCommon::StorageServiceAbstract::ListFolder:
@@ -142,8 +142,8 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::AccessToken:
         deleteLater();
         break;
-    case PimCommon::StorageServiceAbstract::UploadFiles:
-        parseUploadFiles(data);
+    case PimCommon::StorageServiceAbstract::UploadFile:
+        parseUploadFile(data);
         break;
     case PimCommon::StorageServiceAbstract::CreateFolder:
         parseCreateFolder(data);
@@ -163,7 +163,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
-void WebDavJob::parseUploadFiles(const QString &data)
+void WebDavJob::parseUploadFile(const QString &data)
 {
     qDebug()<<" data "<<data;
     deleteLater();

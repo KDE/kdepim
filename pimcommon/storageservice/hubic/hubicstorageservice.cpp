@@ -128,7 +128,7 @@ QString HubicStorageService::name()
 void HubicStorageService::uploadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = UploadFiles;
+        mNextAction = UploadFile;
         authentication();
     } else {
         HubicJob *job = new HubicJob(this);

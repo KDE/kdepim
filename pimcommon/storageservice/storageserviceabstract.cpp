@@ -41,7 +41,7 @@ void StorageServiceAbstract::executeNextAction()
         break;
     case AccessToken:
         break;
-    case UploadFiles:
+    case UploadFile:
         //uploadFile();
         break;
     case CreateFolder:

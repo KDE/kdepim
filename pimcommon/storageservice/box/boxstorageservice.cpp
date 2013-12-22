@@ -159,7 +159,7 @@ QString BoxStorageService::name()
 void BoxStorageService::uploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        mNextAction = UploadFiles;
+        mNextAction = UploadFile;
         authentication();
     } else {
         BoxJob *job = new BoxJob(this);

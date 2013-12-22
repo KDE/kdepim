@@ -62,7 +62,7 @@ void UbuntuOneJob::requestTokenAccess()
 
 void UbuntuOneJob::uploadFile(const QString &filename)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFiles;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     qDebug()<<" upload file not implemented";
     deleteLater();
@@ -171,7 +171,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
             Q_EMIT authorizationFailed(errorStr);
             deleteLater();
             break;
-        case PimCommon::StorageServiceAbstract::UploadFiles:
+        case PimCommon::StorageServiceAbstract::UploadFile:
         case PimCommon::StorageServiceAbstract::CreateFolder:
         case PimCommon::StorageServiceAbstract::AccountInfo:
         case PimCommon::StorageServiceAbstract::ListFolder:
@@ -198,8 +198,8 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::AccessToken:
         parseAccessToken(data);
         break;
-    case PimCommon::StorageServiceAbstract::UploadFiles:
-        parseUploadFiles(data);
+    case PimCommon::StorageServiceAbstract::UploadFile:
+        parseUploadFile(data);
         break;
     case PimCommon::StorageServiceAbstract::CreateFolder:
         parseCreateFolder(data);
@@ -277,7 +277,7 @@ void UbuntuOneJob::parseCreateFolder(const QString &data)
     deleteLater();
 }
 
-void UbuntuOneJob::parseUploadFiles(const QString &data)
+void UbuntuOneJob::parseUploadFile(const QString &data)
 {
     qDebug()<<" data "<<data;
     //TODO

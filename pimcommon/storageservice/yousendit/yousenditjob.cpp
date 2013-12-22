@@ -96,7 +96,7 @@ void YouSendItJob::requestTokenAccess()
 void YouSendItJob::uploadFile(const QString &filename)
 {
     //FIXME filename
-    mActionType = PimCommon::StorageServiceAbstract::UploadFiles;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));
     QNetworkRequest request(url);
@@ -196,7 +196,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             Q_EMIT authorizationFailed(errorStr);
             deleteLater();
             break;
-        case PimCommon::StorageServiceAbstract::UploadFiles:
+        case PimCommon::StorageServiceAbstract::UploadFile:
         case PimCommon::StorageServiceAbstract::CreateFolder:
         case PimCommon::StorageServiceAbstract::AccountInfo:
         case PimCommon::StorageServiceAbstract::ListFolder:
@@ -222,8 +222,8 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::AccessToken:
         deleteLater();
         break;
-    case PimCommon::StorageServiceAbstract::UploadFiles:
-        parseUploadFiles(data);
+    case PimCommon::StorageServiceAbstract::UploadFile:
+        parseUploadFile(data);
         break;
     case PimCommon::StorageServiceAbstract::CreateFolder:
         parseCreateFolder(data);
@@ -333,7 +333,7 @@ void YouSendItJob::parseCreateFolder(const QString &data)
 }
 
 
-void YouSendItJob::parseUploadFiles(const QString &data)
+void YouSendItJob::parseUploadFile(const QString &data)
 {
     QJson::Parser parser;
     bool ok;
@@ -350,7 +350,7 @@ void YouSendItJob::parseUploadFiles(const QString &data)
 
 void YouSendItJob::startUploadFile(const QString &fileId)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFiles;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder/file/initUpload"));
     QNetworkRequest request(url);

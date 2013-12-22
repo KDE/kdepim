@@ -149,7 +149,7 @@ void DropBoxStorageService::createFolder(const QString &folder)
 void DropBoxStorageService::uploadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
-        mNextAction = UploadFiles;
+        mNextAction = UploadFile;
         authentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);

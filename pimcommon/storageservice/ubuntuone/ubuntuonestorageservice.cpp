@@ -138,7 +138,7 @@ QString UbuntuoneStorageService::name()
 void UbuntuoneStorageService::uploadFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
-        mNextAction = UploadFiles;
+        mNextAction = UploadFile;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);

@@ -42,7 +42,7 @@ private slots:
     void slotSendDataFinished(QNetworkReply *reply);
 
 private:
-    void parseUploadFiles(const QString &data);
+    void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseListFolder(const QString &data);
