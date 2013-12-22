@@ -40,6 +40,8 @@ public:
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual void createServiceFolder() = 0;
     virtual void downloadFile(const QString &filename) = 0;
+    virtual void deleteFile(const QString &filename) = 0;
+    virtual void deleteFolder(const QString &foldername) = 0;
 
 protected Q_SLOTS:
     void slotError(QNetworkReply::NetworkError);

@@ -210,12 +210,30 @@ void YouSendItStorageService::createServiceFolder()
 
 void YouSendItStorageService::deleteFile(const QString &filename)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction = DeleteFile;
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
 }
 
 void YouSendItStorageService::deleteFolder(const QString &foldername)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction = DeleteFolder;
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
+    }
 }
 
 QString YouSendItStorageService::storageServiceName() const

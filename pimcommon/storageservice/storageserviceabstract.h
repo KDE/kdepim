@@ -69,14 +69,15 @@ public:
     virtual void accountInfo() = 0;
     virtual void createFolder(const QString &folder) = 0;
     virtual void listFolder() = 0;
-    virtual void removeConfig() = 0;
     virtual void authentication() = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
-    virtual QString storageServiceName() const = 0;
-    virtual KIcon icon() const = 0;
     virtual void createServiceFolder() = 0;
     virtual void deleteFile(const QString &filename) = 0;
     virtual void deleteFolder(const QString &foldername) = 0;
+
+    virtual QString storageServiceName() const = 0;
+    virtual KIcon icon() const = 0;
+    virtual void removeConfig() = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);

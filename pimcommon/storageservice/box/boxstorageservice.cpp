@@ -111,12 +111,30 @@ void BoxStorageService::downloadFile(const QString &filename)
 
 void BoxStorageService::deleteFile(const QString &filename)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction = DeleteFile;
+        authentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
 }
 
 void BoxStorageService::deleteFolder(const QString &foldername)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction = DeleteFolder;
+        authentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
+    }
 }
 
 void BoxStorageService::listFolder()

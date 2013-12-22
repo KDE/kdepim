@@ -38,6 +38,8 @@ public:
     void initializeToken(const QString &password, const QString &userName, const QString &token);
     void createServiceFolder();
     void downloadFile(const QString &filename);
+    void deleteFile(const QString &filename);
+    void deleteFolder(const QString &foldername);
 
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);

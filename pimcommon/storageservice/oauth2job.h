@@ -40,6 +40,9 @@ public:
     void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
     void createServiceFolder();
     void downloadFile(const QString &filename);
+    void deleteFile(const QString &filename);
+    void deleteFolder(const QString &foldername);
+
 
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);

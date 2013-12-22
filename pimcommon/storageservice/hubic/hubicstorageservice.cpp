@@ -209,12 +209,30 @@ void HubicStorageService::createServiceFolder()
 
 void HubicStorageService::deleteFile(const QString &filename)
 {
-
+    if (mRefreshToken.isEmpty()) {
+        mNextAction = DeleteFile;
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
 }
 
 void HubicStorageService::deleteFolder(const QString &foldername)
 {
-
+    if (mRefreshToken.isEmpty()) {
+        mNextAction = DeleteFolder;
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
+    }
 }
 
 KIcon HubicStorageService::icon() const

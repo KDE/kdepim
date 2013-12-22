@@ -37,6 +37,8 @@ public:
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
     void downloadFile(const QString &filename);
+    void deleteFile(const QString &filename);
+    void deleteFolder(const QString &foldername);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);

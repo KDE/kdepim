@@ -214,11 +214,31 @@ void UbuntuoneStorageService::createServiceFolder()
 
 void UbuntuoneStorageService::deleteFile(const QString &filename)
 {
+    if (mTokenSecret.isEmpty()) {
+        mNextAction = DeleteFile;
+        authentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
 
 }
 
 void UbuntuoneStorageService::deleteFolder(const QString &foldername)
 {
+    if (mTokenSecret.isEmpty()) {
+        mNextAction = DeleteFolder;
+        authentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
+    }
 
 }
 

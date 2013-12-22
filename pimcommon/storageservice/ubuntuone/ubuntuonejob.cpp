@@ -177,6 +177,8 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::ListFolder:
         case PimCommon::StorageServiceAbstract::DownLoadFile:
         case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+        case PimCommon::StorageServiceAbstract::DeleteFile:
+        case PimCommon::StorageServiceAbstract::DeleteFolder:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -214,6 +216,8 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         parseCreateServiceFolder(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
         //TODO
         deleteLater();
         break;
@@ -265,6 +269,16 @@ void UbuntuOneJob::createServiceFolder()
 }
 
 void UbuntuOneJob::downloadFile(const QString &filename)
+{
+
+}
+
+void UbuntuOneJob::deleteFile(const QString &filename)
+{
+
+}
+
+void UbuntuOneJob::deleteFolder(const QString &foldername)
 {
 
 }

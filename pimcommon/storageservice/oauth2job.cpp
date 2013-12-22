@@ -61,6 +61,16 @@ void OAuth2Job::downloadFile(const QString &filename)
 
 }
 
+void OAuth2Job::deleteFile(const QString &filename)
+{
+
+}
+
+void OAuth2Job::deleteFolder(const QString &foldername)
+{
+
+}
+
 void OAuth2Job::requestTokenAccess()
 {
     mError = false;
@@ -256,6 +266,8 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::ListFolder:
             case PimCommon::StorageServiceAbstract::DownLoadFile:
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+            case PimCommon::StorageServiceAbstract::DeleteFile:
+            case PimCommon::StorageServiceAbstract::DeleteFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -297,6 +309,8 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         parseCreateServiceFolder(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
         deleteLater();
         break;
     default:

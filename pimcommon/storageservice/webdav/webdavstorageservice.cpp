@@ -100,12 +100,28 @@ void WebDavStorageService::createServiceFolder()
 
 void WebDavStorageService::deleteFile(const QString &filename)
 {
-
+    if (mServiceLocation.isEmpty()) {
+        mNextAction = DeleteFile;
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
 }
 
 void WebDavStorageService::deleteFolder(const QString &foldername)
 {
-
+    if (mServiceLocation.isEmpty()) {
+        mNextAction = DeleteFolder;
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
+    }
 }
 
 void WebDavStorageService::listFolder()

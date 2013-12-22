@@ -118,6 +118,8 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::ListFolder:
             case PimCommon::StorageServiceAbstract::DownLoadFile:
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+            case PimCommon::StorageServiceAbstract::DeleteFile:
+            case PimCommon::StorageServiceAbstract::DeleteFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -155,6 +157,8 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         parseListFolder(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
         deleteLater();
         break;
     default:
@@ -202,6 +206,16 @@ void WebDavJob::createServiceFolder()
 }
 
 void WebDavJob::downloadFile(const QString &filename)
+{
+
+}
+
+void WebDavJob::deleteFile(const QString &filename)
+{
+
+}
+
+void WebDavJob::deleteFolder(const QString &foldername)
 {
 
 }

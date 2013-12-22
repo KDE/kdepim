@@ -211,17 +211,34 @@ void DropBoxStorageService::downloadFile(const QString &filename)
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->downloadFile(filename);
     }
-
 }
 
 void DropBoxStorageService::deleteFile(const QString &filename)
 {
-
+    if (mAccessToken.isEmpty()) {
+        mNextAction = DeleteFile;
+        authentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
 }
 
 void DropBoxStorageService::deleteFolder(const QString &foldername)
 {
-
+    if (mAccessToken.isEmpty()) {
+        mNextAction = DeleteFolder;
+        authentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        //TODO
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
+    }
 }
 
 KIcon DropBoxStorageService::icon() const

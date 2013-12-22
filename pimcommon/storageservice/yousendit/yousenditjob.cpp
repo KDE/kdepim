@@ -61,6 +61,16 @@ void YouSendItJob::downloadFile(const QString &filename)
 
 }
 
+void YouSendItJob::deleteFile(const QString &filename)
+{
+
+}
+
+void YouSendItJob::deleteFolder(const QString &foldername)
+{
+
+}
+
 void YouSendItJob::requestTokenAccess()
 {
     QPointer<LoginDialog> dlg = new LoginDialog;
@@ -201,6 +211,8 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::AccountInfo:
         case PimCommon::StorageServiceAbstract::ListFolder:
         case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+        case PimCommon::StorageServiceAbstract::DeleteFile:
+        case PimCommon::StorageServiceAbstract::DeleteFolder:
         case PimCommon::StorageServiceAbstract::DownLoadFile:
             errorMessage(mActionType, errorStr);
             deleteLater();
@@ -238,6 +250,8 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         parseCreateServiceFolder(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
         //TODO
         deleteLater();
         break;

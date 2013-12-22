@@ -134,6 +134,8 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::ShareLink:
             case PimCommon::StorageServiceAbstract::DownLoadFile:
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+            case PimCommon::StorageServiceAbstract::DeleteFile:
+            case PimCommon::StorageServiceAbstract::DeleteFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -176,6 +178,8 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
         deleteLater();
         break;
     default:
@@ -402,6 +406,16 @@ void DropBoxJob::createServiceFolder()
 }
 
 void DropBoxJob::downloadFile(const QString &filename)
+{
+
+}
+
+void DropBoxJob::deleteFile(const QString &filename)
+{
+
+}
+
+void DropBoxJob::deleteFolder(const QString &foldername)
 {
 
 }
