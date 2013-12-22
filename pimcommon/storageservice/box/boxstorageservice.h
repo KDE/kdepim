@@ -61,7 +61,6 @@ private:
     QString mToken;
     QString mRefreshToken;
     QDateTime mExpireDateTime;
-
 };
 }
 

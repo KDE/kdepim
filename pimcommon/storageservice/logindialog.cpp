@@ -30,6 +30,7 @@ LoginDialog::LoginDialog(QWidget *parent)
 {
     setCaption( i18n( "Authorize" ) );
     setButtons( Ok | Cancel );
+    setDefaultButton(Ok);
 
     QWidget *w = new QWidget;
     QGridLayout *grid = new QGridLayout;
