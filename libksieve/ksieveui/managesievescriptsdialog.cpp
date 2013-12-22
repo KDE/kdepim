@@ -63,8 +63,6 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     vlay->setMargin( 0 );
 
     mListView = new ManageSieveTreeView( frame);
-    mListView->setContextMenuPolicy(Qt::CustomContextMenu);
-    mListView->setHeaderLabel( i18n( "Available Scripts" ) );
 #ifndef QT_NO_CONTEXTMENU
     connect( mListView, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(slotContextMenuRequested(QPoint)) );

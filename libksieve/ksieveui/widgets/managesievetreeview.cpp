@@ -29,6 +29,7 @@ ManageSieveTreeView::ManageSieveTreeView(QWidget *parent)
     setAlternatingRowColors( true );
     setSelectionMode( QAbstractItemView::SingleSelection );
     setHeaderLabel( i18n( "Available Scripts" ) );
+    setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 ManageSieveTreeView::~ManageSieveTreeView()
