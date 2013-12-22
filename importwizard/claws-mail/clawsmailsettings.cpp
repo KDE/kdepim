@@ -150,7 +150,7 @@ void ClawsMailSettings::readTemplateFormat(const KConfigGroup& group)
 void ClawsMailSettings::readGlobalSettings(const KConfigGroup& group)
 {
     SylpheedSettings::readGlobalSettings(group);
-    if (!group.readEntry(QLatin1String("check_while_typing"),0) == 1) {
+    if (group.readEntry(QLatin1String("check_while_typing"),0) == 1) {
         addKmailConfig(QLatin1String("Spelling"), QLatin1String("backgroundCheckerEnabled"), true);
     }
     const int markAsRead = group.readEntry(QLatin1String("mark_as_read_delay"),-1);
