@@ -70,7 +70,7 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
 QStringList NoteListWidget::selectedNotes() const
 {
     QStringList lst;
-    Q_FOREACH(QListWidgetItem *item, selectedItems()) {
+    Q_FOREACH (QListWidgetItem *item, selectedItems()) {
         Akonadi::Item::Id akonadiId = item->data(AkonadiId).toLongLong();
         if (akonadiId != -1) {
             lst.append(QString::number(akonadiId));
