@@ -60,6 +60,7 @@ private:
     void parseListFolder(const QString &data);
     void parseDeleteFile(const QString &data);
     void parseDeleteFolder(const QString &data);
+    void parseDownLoadFile(const QString &data);
     QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;

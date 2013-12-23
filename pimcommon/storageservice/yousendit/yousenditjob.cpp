@@ -53,22 +53,26 @@ void YouSendItJob::initializeToken(const QString &password, const QString &userN
 
 void YouSendItJob::createServiceFolder()
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void YouSendItJob::downloadFile(const QString &filename)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void YouSendItJob::deleteFile(const QString &filename)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void YouSendItJob::deleteFolder(const QString &foldername)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void YouSendItJob::requestTokenAccess()

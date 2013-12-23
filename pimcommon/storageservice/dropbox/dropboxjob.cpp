@@ -182,7 +182,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
         parseDeleteFolder(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
-        deleteLater();
+        parseDownLoadFile(data);
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
@@ -528,5 +528,10 @@ void DropBoxJob::parseListFolder(const QString &data)
         }
     }
     Q_EMIT listFolderDone(listFolder);
+    deleteLater();
+}
+
+void DropBoxJob::parseDownLoadFile(const QString &data)
+{
     deleteLater();
 }
