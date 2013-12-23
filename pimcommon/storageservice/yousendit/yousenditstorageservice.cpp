@@ -65,7 +65,7 @@ void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessag
     mUsername.clear();
     mPassword.clear();
     mToken.clear();
-    Q_EMIT authenticationFailed(serviceName(), errorMessage);
+    emitAuthentificationFailder(errorMessage);
 }
 
 

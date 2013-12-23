@@ -54,25 +54,40 @@ void YouSendItJob::initializeToken(const QString &password, const QString &userN
 void YouSendItJob::createServiceFolder()
 {
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
 void YouSendItJob::downloadFile(const QString &filename)
 {
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
 void YouSendItJob::deleteFile(const QString &filename)
 {
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
 void YouSendItJob::deleteFolder(const QString &foldername)
 {
-    qDebug()<<" not implemented";
-    deleteLater();
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mError = false;
+    //TODO use folderId
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(foldername));
+    QNetworkRequest request(url);
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QUrl postData;
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    //FIXME !
+    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::requestTokenAccess()
@@ -253,9 +268,11 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         parseCreateServiceFolder(data);
         break;
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
+        parseDeleteFolder(data);
+        break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
-    case PimCommon::StorageServiceAbstract::DeleteFolder:
         //TODO
         deleteLater();
         break;
@@ -264,6 +281,12 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     }
+}
+
+void YouSendItJob::parseDeleteFolder(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    deleteLater();
 }
 
 void YouSendItJob::parseCreateServiceFolder(const QString &data)
@@ -391,6 +414,7 @@ void YouSendItJob::shareLink(const QString &root, const QString &path)
 {
     mError = false;
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
 }

@@ -118,6 +118,7 @@ protected:
     virtual void storageServicedeleteFile(const QString &filename) = 0;
     virtual void storageServicedeleteFolder(const QString &foldername) = 0;
     void emitAuthentificationDone();
+    void emitAuthentificationFailder(const QString &errorMessage);
     ActionType mNextAction;
 
 private:

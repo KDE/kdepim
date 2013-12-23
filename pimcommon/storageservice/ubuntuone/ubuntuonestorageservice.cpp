@@ -113,7 +113,7 @@ void UbuntuoneStorageService::slotAuthorizationFailed(const QString &errorMessag
     mToken.clear();
     mCustomerKey.clear();
     mTokenSecret.clear();
-    Q_EMIT authenticationFailed(serviceName(), errorMessage);
+    emitAuthentificationFailder(errorMessage);
 }
 
 void UbuntuoneStorageService::storageServiceaccountInfo()

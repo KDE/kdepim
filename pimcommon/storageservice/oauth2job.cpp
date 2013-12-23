@@ -56,6 +56,7 @@ void OAuth2Job::createServiceFolder()
     mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
     mError = false;
     //TODO
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
 }
@@ -64,6 +65,7 @@ void OAuth2Job::downloadFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
 }
@@ -72,6 +74,7 @@ void OAuth2Job::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
 }
@@ -80,6 +83,7 @@ void OAuth2Job::deleteFolder(const QString &foldername)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
 }

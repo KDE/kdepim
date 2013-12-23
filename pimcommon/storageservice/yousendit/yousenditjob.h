@@ -56,11 +56,12 @@ private:
     void startUploadFile(const QString &fileId);
     void parseListFolder(const QString &data);
     void parseCreateServiceFolder(const QString &data);
+    void parseDeleteFolder(const QString &data);
     QString mPassword;
     QString mUsername;
     QString mDefaultUrl;
     QString mApiKey;
-    QString mToken;    
+    QString mToken;
 };
 }
 

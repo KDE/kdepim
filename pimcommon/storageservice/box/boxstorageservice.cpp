@@ -65,7 +65,7 @@ void BoxStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mRefreshToken.clear();
     mToken.clear();
-    Q_EMIT authenticationFailed(serviceName(), errorMessage);
+    emitAuthentificationFailder(errorMessage);
 }
 
 void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime)

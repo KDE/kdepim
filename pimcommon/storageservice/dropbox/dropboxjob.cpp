@@ -205,7 +205,6 @@ void DropBoxJob::parseDeleteFolder(const QString &data)
 
 void DropBoxJob::parseDeleteFile(const QString &data)
 {
-    qDebug()<<" data "<<data;
     QJson::Parser parser;
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
@@ -247,7 +246,6 @@ void DropBoxJob::parseAccountInfo(const QString &data)
 void DropBoxJob::parseResponseAccessToken(const QString &data)
 {
     if(data.contains(QLatin1String("error"))) {
-        qDebug()<<" return error !";
         Q_EMIT authorizationFailed(data);
     } else {
         QStringList split           = data.split(QLatin1Char('&'));
@@ -430,6 +428,7 @@ void DropBoxJob::createServiceFolder()
     mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -438,6 +437,7 @@ void DropBoxJob::downloadFile(const QString &filename)
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 

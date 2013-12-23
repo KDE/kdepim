@@ -279,6 +279,7 @@ void UbuntuOneJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -286,6 +287,7 @@ void UbuntuOneJob::deleteFolder(const QString &foldername)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
