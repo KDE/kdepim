@@ -411,7 +411,6 @@ void DropBoxJob::parseUploadFile(const QString &data)
         path = info.value(QLatin1String("path")).toString();
         //qDebug()<<" path "<<path;
     }
-    //TODO
     Q_EMIT uploadFileDone(path);
     shareLink(root, path);
 }
@@ -420,13 +419,16 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
 {
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
-    //QNetworkRequest request(QUrl(QLatin1String("https://api.dropbox.com/1/shares/") + root + QLatin1Char('/') + path));
-    //request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
-    const QString str = QString::fromLatin1("https://api.dropbox.com/1/shares///%1/%2?oauth_consumer_key=%3&oauth_nonce=%4&oauth_signature=%5&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%6").
-            arg(root).arg(path).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp);
-    KUrl url(str);
-    qDebug()<<" url"<<url;
+
+    QUrl url = QUrl(QString::fromLatin1("https://api.dropbox.com/1/shares/%1/%2").arg(root).arg(path));
+    url.addQueryItem(QLatin1String("root"), QLatin1String("dropbox"));
+    url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey);
+    url.addQueryItem(QLatin1String("oauth_nonce"), nonce);
+    url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));
+    url.addQueryItem(QLatin1String("oauth_signature_method"),mOauthSignatureMethod);
+    url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
+    url.addQueryItem(QLatin1String("oauth_version"),mOauthVersion);
+    url.addQueryItem(QLatin1String("oauth_token"),mOauthToken);
     QNetworkRequest request(url);
 
     QNetworkReply *reply = mNetworkAccessManager->get(request);
@@ -491,7 +493,7 @@ void DropBoxJob::parseShareLink(const QString &data)
     if (info.contains(QLatin1String("url"))) {
         url = info.value(QLatin1String("url")).toString();
     }
-    qDebug()<<" info "<<info;
+    qDebug()<<" info url "<<url;
 
     Q_EMIT shareLinkDone(url);
     deleteLater();
