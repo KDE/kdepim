@@ -2581,7 +2581,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                   QString::fromLatin1( block.keyId ) );
 
           keyWithWithoutURL =
-              QString::fromLatin1("%1%2</a>").arg( startKeyHREF, QString::fromLatin1("0x" + block.keyId) );
+              QString::fromLatin1("%1%2</a>").arg( startKeyHREF, QString::fromLatin1(QByteArray(QByteArray("0x") + block.keyId)) );
       } else {
           keyWithWithoutURL = QLatin1String("0x") + QString::fromUtf8( block.keyId );
       }

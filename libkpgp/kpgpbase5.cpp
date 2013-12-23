@@ -319,7 +319,7 @@ Key*
 Base5::readPublicKey( const KeyID& keyId, const bool readTrust, Key* key )
 {
   status = 0;
-  int exitStatus = run( "pgpk -ll 0x" + keyId, 0, true );
+  int exitStatus = run( QByteArray(QByteArray("pgpk -ll 0x") + keyId), 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -335,7 +335,7 @@ Base5::readPublicKey( const KeyID& keyId, const bool readTrust, Key* key )
 
   if( readTrust )
   {
-    exitStatus = run( "pgpk -c 0x" + keyId, 0, true );
+    exitStatus = run( QByteArray(QByteArray("pgpk -c 0x") + keyId), 0, true );
 
     if(exitStatus != 0) {
       status = ERROR;
@@ -416,7 +416,7 @@ QByteArray Base5::getAsciiPublicKey(const KeyID& keyID)
     return QByteArray();
 
   status = 0;
-  int exitStatus = run( "pgpk -xa 0x" + keyID, 0, true );
+  int exitStatus = run( QByteArray(QByteArray("pgpk -xa 0x") + keyID), 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;

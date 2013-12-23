@@ -64,7 +64,7 @@ void AttachmentFromPublicKeyJob::Private::exportResult( const GpgME::Error &erro
   // Create the AttachmentPart.
   AttachmentPart::Ptr part = AttachmentPart::Ptr( new AttachmentPart );
   part->setName( i18n( "OpenPGP key 0x%1", fingerprint ) );
-  part->setFileName( QString::fromLatin1( "0x" + fingerprint.toLatin1() + ".asc" ) );
+  part->setFileName( QString::fromLatin1( QByteArray(QByteArray("0x") + fingerprint.toLatin1() + QByteArray(".asc")) ) );
   part->setMimeType( "application/pgp-keys" );
   part->setData( keyData );
 

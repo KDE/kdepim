@@ -21,7 +21,7 @@ else()
 endif()
 
 add_definitions( -DDISABLE_NEPOMUK_LEGACY )
-add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
+add_definitions(-DQT_USE_QSTRINGBUILDER)
 if(KDEPIM_NO_WEBKIT)
   add_definitions(-DKDEPIM_NO_WEBKIT)
 endif()

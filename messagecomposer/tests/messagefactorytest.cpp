@@ -127,7 +127,7 @@ void MessageFactoryTest::testCreateReply()
   QDateTime date = msg->date()->dateTime().dateTime();
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( " " ) + KGlobal::locale()->formatTime( date.time(), true );
-  QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
+  QString replyStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n")) );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: Test Email Subject" ) );
   QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
   QCOMPARE_OR_DIFF( reply.msg->body(), replyStr.toLatin1() );
@@ -151,7 +151,7 @@ void MessageFactoryTest::testCreateReplyHtml()
   QDateTime date = msg->date()->dateTime().dateTime();
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( " " ) + KGlobal::locale()->formatTime( date.time(), true );
-  QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> encoded?\n" );
+  QString replyStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> encoded?\n")) );
   QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
   QVERIFY( reply.msg->contentType()->mimeType() == "multipart/alternative" );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: reply to please" ) );
@@ -176,7 +176,7 @@ void MessageFactoryTest::testCreateReplyUTF16Base64()
   QDateTime date = msg->date()->dateTime().dateTime();
   QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
   datetime += QLatin1String( " " ) + KGlobal::locale()->formatTime( date.time(), true );
-  QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> quote me please.\n" );
+  QString replyStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> quote me please.\n")) );
   QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
   QVERIFY( reply.msg->contentType()->mimeType() == "multipart/alternative" );
   QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: asking for reply" ) );
@@ -257,7 +257,7 @@ void MessageFactoryTest::testCreateForward()
   
 //   kDebug() << "got:" << fw->encodedContent() << "against" << fwdMsg.toLatin1();
   
-  QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
+  QString fwdStr = QString::fromLatin1( QByteArray(QByteArray("On ") + datetime.toLatin1() + QByteArray(" you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n")) );
   QSKIP("This test has been failing for a long time, please someone fix it", SkipSingle);
   QCOMPARE( fw->subject()->asUnicodeString(), QLatin1String( "Fwd: Test Email Subject" ) );
   QCOMPARE_OR_DIFF( fw->encodedContent(), fwdMsg.toLatin1() );
@@ -434,7 +434,7 @@ KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
 
 KMime::Message::Ptr MessageFactoryTest::loadMessageFromFile(QString filename)
 {
-  QFile file( QLatin1String( MAIL_DATA_DIR "/" + filename.toLatin1() ) );
+  QFile file( QLatin1String( QByteArray(MAIL_DATA_DIR "/" + filename.toLatin1()) ) );
   const bool opened = file.open( QIODevice::ReadOnly );
   Q_ASSERT( opened );
   Q_UNUSED( opened );

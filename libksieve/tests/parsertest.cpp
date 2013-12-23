@@ -473,14 +473,14 @@ private:
   }
   void write( const QByteArray & key, const QString & value ) {
     if ( value.isEmpty() ) {
-      write( "<" + key + "/>" );
+      write( QByteArray(QByteArray("<") + key + QByteArray("/>")) );
       return;
     }
-    write( "<" + key + ">" );
+    write( QByteArray(QByteArray("<") + key + QByteArray(">")) );
     ++indent;
     write( value.toUtf8().data() );
     --indent;
-    write( "</" + key + ">" );
+    write( QByteArray(QByteArray("</") + key + QByteArray(">")) );
   }
 };
 

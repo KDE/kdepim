@@ -1524,7 +1524,7 @@ void MessageComposer::ComposerViewBase::collectImages( KMime::Content *root )
           kDebug() << "found image in multipart/related : " << node->contentType()->name();
           QImage img;
           img.loadFromData( node->decodedContent() );
-          m_editor->loadImage( img, QString::fromLatin1( "cid:" + node->contentID()->identifier() ),
+          m_editor->loadImage( img, QString::fromLatin1( QByteArray(QByteArray("cid:") + node->contentID()->identifier()) ),
                               node->contentType()->name() );
         }
         node = MessageCore::NodeHelper::nextSibling( node );

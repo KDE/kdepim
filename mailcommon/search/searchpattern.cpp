@@ -564,7 +564,7 @@ QString SearchRule::contents() const
 
 const QString SearchRule::asString() const
 {
-  QString result  = "\"" + mField + "\" <";
+  QString result  = QLatin1String("\"") + mField + QLatin1String("\" <");
   result += functionToString( mFunction );
   result += "> \"" + mContents + "\"";
 

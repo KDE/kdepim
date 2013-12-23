@@ -186,8 +186,8 @@ Base6::readPublicKey( const KeyID& keyID,
                       Key* key /* = 0 */ )
 {
   status = 0;
-  int exitStatus = run( PGP6 " +batchmode -compatible +verbose=0 +language=C -kvvc "
-                    "0x" + keyID, 0, true );
+  int exitStatus = run( QByteArray(QByteArray(PGP6 " +batchmode -compatible +verbose=0 +language=C -kvvc "
+                    "0x") + keyID), 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -203,8 +203,8 @@ Base6::readPublicKey( const KeyID& keyID,
 
   if( readTrust )
   {
-    exitStatus = run( PGP6 " +batchmode -compatible +verbose=0 +language=C -kc "
-                      "0x" + keyID, 0, true );
+    exitStatus = run( QByteArray(QByteArray(PGP6 " +batchmode -compatible +verbose=0 +language=C -kc "
+                      "0x") + keyID), 0, true );
 
     if(exitStatus != 0) {
       status = ERROR;
