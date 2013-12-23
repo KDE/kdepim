@@ -56,19 +56,15 @@ void NoteListWidget::createItem(const Akonadi::Item &note)
         return;
     QListWidgetItem *item =new QListWidgetItem(this);
     item->setText(noteMessage->subject(false)->asUnicodeString());
-    //TODO
-    /*
-    if ( noteMessage->contentType()->isHTMLText() ) {
-        m_editor->setAcceptRichText(true);
-        m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
-    } else {
-        m_editor->setAcceptRichText(false);
-        m_editor->setPlainText(noteMessage->mainBodyPart()->decodedText());
-    }
-    */
-    //item->setToolTip(i.value()->text());
-    item->setData(AkonadiId, note.id());
 
+    QString text;
+    if ( noteMessage->contentType()->isHTMLText() ) {
+        text = noteMessage->mainBodyPart()->decodedText();
+    } else {
+        text = noteMessage->mainBodyPart()->decodedText().replace(QLatin1Char('\n'), QLatin1String("<br>"));
+    }
+    item->setToolTip(QLatin1String("<qt>") + text + QLatin1String("</qt>"));
+    item->setData(AkonadiId, note.id());
 }
 
 QStringList NoteListWidget::selectedNotes() const
