@@ -270,17 +270,23 @@ void UbuntuOneJob::createServiceFolder()
 
 void UbuntuOneJob::downloadFile(const QString &filename)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mError = false;
+    deleteLater();
 }
 
 void UbuntuOneJob::deleteFile(const QString &filename)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mError = false;
+    deleteLater();
 }
 
 void UbuntuOneJob::deleteFolder(const QString &foldername)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mError = false;
+    deleteLater();
 }
 
 void UbuntuOneJob::parseCreateFolder(const QString &data)

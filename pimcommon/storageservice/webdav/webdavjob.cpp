@@ -202,20 +202,32 @@ void WebDavJob::shareLink(const QString &root, const QString &path)
 
 void WebDavJob::createServiceFolder()
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::downloadFile(const QString &filename)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::deleteFile(const QString &filename)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::deleteFolder(const QString &foldername)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    deleteLater();
 }

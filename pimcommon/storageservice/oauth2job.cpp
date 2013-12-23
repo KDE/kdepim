@@ -53,6 +53,8 @@ void OAuth2Job::initializeToken(const QString &refreshToken, const QString &toke
 
 void OAuth2Job::createServiceFolder()
 {
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mError = false;
     //TODO
     qDebug()<<" not implemented";
     deleteLater();
@@ -60,18 +62,24 @@ void OAuth2Job::createServiceFolder()
 
 void OAuth2Job::downloadFile(const QString &filename)
 {
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mError = false;
     qDebug()<<" not implemented";
     deleteLater();
 }
 
 void OAuth2Job::deleteFile(const QString &filename)
 {
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mError = false;
     qDebug()<<" not implemented";
     deleteLater();
 }
 
 void OAuth2Job::deleteFolder(const QString &foldername)
 {
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mError = false;
     qDebug()<<" not implemented";
     deleteLater();
 }
