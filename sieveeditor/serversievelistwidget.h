@@ -18,28 +18,20 @@
 
 */
 
-#ifndef SIEVEEDITORCONFIGUREDIALOG_H
-#define SIEVEEDITORCONFIGUREDIALOG_H
+#ifndef SERVERSIEVELISTWIDGET_H
+#define SERVERSIEVELISTWIDGET_H
 
-#include <KDialog>
-class QTabWidget;
-class QListWidget;
-class ServerSieveListWidget;
-class SieveEditorConfigureDialog : public KDialog
+#include <QListWidget>
+
+class ServerSieveListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit SieveEditorConfigureDialog(QWidget *parent=0);
-    ~SieveEditorConfigureDialog();
+    explicit ServerSieveListWidget(QWidget *parent=0);
+    ~ServerSieveListWidget();
 
-private:
     void readConfig();
     void writeConfig();
-    void loadServerSieveConfig();
-    void saveServerSieveConfig();
-    void initializeServerSieveSettings();
-    QTabWidget *mTabWidget;
-    ServerSieveListWidget *mServerWidget;
 };
 
-#endif // SIEVEEDITORCONFIGUREDIALOG_H
+#endif // SERVERSIEVELISTWIDGET_H

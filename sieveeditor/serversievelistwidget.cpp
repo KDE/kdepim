@@ -18,28 +18,36 @@
 
 */
 
-#ifndef SIEVEEDITORCONFIGUREDIALOG_H
-#define SIEVEEDITORCONFIGUREDIALOG_H
+#include "serversievelistwidget.h"
+#include "sieveeditorutil.h"
 
-#include <KDialog>
-class QTabWidget;
-class QListWidget;
-class ServerSieveListWidget;
-class SieveEditorConfigureDialog : public KDialog
+#include <QListWidgetItem>
+
+ServerSieveListWidget::ServerSieveListWidget(QWidget *parent)
+    : QListWidget(parent)
 {
-    Q_OBJECT
-public:
-    explicit SieveEditorConfigureDialog(QWidget *parent=0);
-    ~SieveEditorConfigureDialog();
 
-private:
-    void readConfig();
-    void writeConfig();
-    void loadServerSieveConfig();
-    void saveServerSieveConfig();
-    void initializeServerSieveSettings();
-    QTabWidget *mTabWidget;
-    ServerSieveListWidget *mServerWidget;
-};
+}
 
-#endif // SIEVEEDITORCONFIGUREDIALOG_H
+ServerSieveListWidget::~ServerSieveListWidget()
+{
+
+}
+
+void ServerSieveListWidget::readConfig()
+{
+    const QList<SieveEditorUtil::SieveServerConfig> lstServer = SieveEditorUtil::readServerSieveConfig();
+    Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, lstServer) {
+        QListWidgetItem *item = new QListWidgetItem(this);
+        item->setText(conf.serverName);
+        //TODO
+    }
+}
+
+void ServerSieveListWidget::writeConfig()
+{
+    for (int i=0; i <count(); ++i) {
+
+    }
+    //TODO
+}
