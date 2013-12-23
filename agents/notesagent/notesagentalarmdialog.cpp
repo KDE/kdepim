@@ -19,6 +19,9 @@
 #include "noteshared/widget/notelistwidget.h"
 
 #include <KLocalizedString>
+#include <KGlobal>
+#include <KLocale>
+#include <KDateTime>
 
 #include <QListWidget>
 #include <QLabel>
@@ -35,6 +38,10 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
 
+    mCurrentDateTime = new QLabel;
+    mCurrentDateTime->setText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+    vbox->addWidget(mCurrentDateTime);
+
     QLabel *lab = new QLabel(i18n("The following notes triggered alarms:"));
     vbox->addWidget(lab);
     mListWidget = new NoteShared::NoteListWidget;
@@ -50,4 +57,5 @@ NotesAgentAlarmDialog::~NotesAgentAlarmDialog()
 void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 {
     mListWidget->addNotes(lstAlarm);
+    mCurrentDateTime->setText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
 }

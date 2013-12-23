@@ -20,6 +20,7 @@
 #include <KDialog>
 #include <Akonadi/Item>
 class QListWidget;
+class QLabel;
 namespace NoteShared {
 class NoteListWidget;
 }
@@ -34,6 +35,7 @@ public:
 
 private:
     NoteShared::NoteListWidget *mListWidget;
+    QLabel *mCurrentDateTime;
 };
 
 #endif // NOTESAGENTALARMDIALOG_H
