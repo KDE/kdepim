@@ -70,6 +70,7 @@ private:
     QString mOauthTokenSecret;
     QString mAccessOauthSignature;
     QString mOauthToken;
+    QString mRootPath;
 };
 }
 
