@@ -91,14 +91,14 @@ void DropBoxJob::getTokenAccess()
     QUrl postData;
 
     postData.addQueryItem(QLatin1String("oauth_consumer_key"), mOauthconsumerKey);
-    qDebug()<<" mAccessOauthSignature"<<mAccessOauthSignature;
+    //qDebug()<<" mAccessOauthSignature"<<mAccessOauthSignature;
     postData.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
     postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature);
     postData.addQueryItem(QLatin1String("oauth_signature_method"),mOauthSignatureMethod);
     postData.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
     postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
     postData.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
-    qDebug()<<"getTokenAccess  postdata"<<postData;
+    //qDebug()<<"getTokenAccess  postdata"<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -193,7 +193,6 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
 
 void DropBoxJob::parseDeleteFolder(const QString &data)
 {
-    qDebug()<<" data "<<data;
     QJson::Parser parser;
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
@@ -275,7 +274,7 @@ void DropBoxJob::parseRequestToken(const QString &result)
         mOauthToken = tokenList.at(1);
         mAccessOauthSignature = mOauthSignature + mOauthTokenSecret;
 
-        qDebug()<<" mOauthToken" <<mOauthToken<<"mAccessOauthSignature "<<mAccessOauthSignature<<" mOauthSignature"<<mOauthSignature;
+        //qDebug()<<" mOauthToken" <<mOauthToken<<"mAccessOauthSignature "<<mAccessOauthSignature<<" mOauthSignature"<<mOauthSignature;
 
     } else {
         qDebug()<<" data is not good: "<<result;
@@ -316,7 +315,6 @@ void DropBoxJob::createFolder(const QString &folder)
     url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
     url.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
     url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
-    qDebug()<<" postData "<<url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->get(request);
@@ -359,9 +357,7 @@ void DropBoxJob::accountInfo()
     url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
     url.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
     url.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
-    qDebug()<<" accountInfo "<<url;
     QNetworkRequest request(url);
-    qDebug()<<" url "<<url;
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
 
     QNetworkReply *reply = mNetworkAccessManager->get(request);
@@ -370,7 +366,6 @@ void DropBoxJob::accountInfo()
 
 void DropBoxJob::listFolder(const QString &folder)
 {
-    qDebug()<<" void DropBoxJob::listFolders()";
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     QUrl url(QLatin1String("https://api.dropbox.com/1/metadata/dropbox/") + folder);
@@ -390,7 +385,7 @@ void DropBoxJob::listFolder(const QString &folder)
 
 void DropBoxJob::slotUploadFileProgress(qint64 done, qint64 total)
 {
-    qDebug()<<" done "<<done<<" total :"<<total;
+    //qDebug()<<" done "<<done<<" total :"<<total;
     Q_EMIT uploadFileProgress(done, total);
 }
 
@@ -400,16 +395,13 @@ void DropBoxJob::parseUploadFile(const QString &data)
     bool ok;
 
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    //qDebug()<<" info "<<info;
     QString root;
     QString path;
     if (info.contains(QLatin1String("root"))) {
         root = info.value(QLatin1String("root")).toString();
-        //qDebug()<<" root "<<root;
     }
     if (info.contains(QLatin1String("path"))) {
         path = info.value(QLatin1String("path")).toString();
-        //qDebug()<<" path "<<path;
     }
     Q_EMIT uploadFileDone(path);
     shareLink(root, path);
@@ -437,13 +429,18 @@ void DropBoxJob::shareLink(const QString &root, const QString &path)
 
 void DropBoxJob::createServiceFolder()
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void DropBoxJob::downloadFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void DropBoxJob::deleteFile(const QString &filename)
@@ -493,15 +490,12 @@ void DropBoxJob::parseShareLink(const QString &data)
     if (info.contains(QLatin1String("url"))) {
         url = info.value(QLatin1String("url")).toString();
     }
-    qDebug()<<" info url "<<url;
-
     Q_EMIT shareLinkDone(url);
     deleteLater();
 }
 
 void DropBoxJob::parseCreateFolder(const QString &data)
 {
-    qDebug()<<" data "<<data;
     QJson::Parser parser;
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
