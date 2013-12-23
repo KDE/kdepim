@@ -20,6 +20,7 @@
 
 #include "sieveeditorconfiguredialog.h"
 #include "serversievelistwidget.h"
+#include "sieveeditorconfigureserverwidget.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -53,19 +54,19 @@ void SieveEditorConfigureDialog::initializeServerSieveSettings()
     mTabWidget->addTab(w, i18n("Server Sieve"));
     QLabel *lab = new QLabel(i18n("Server Sieve:"));
     vbox->addWidget(lab);
-    mServerWidget = new ServerSieveListWidget;
+    mServerWidget = new SieveEditorConfigureServerWidget;
     vbox->addWidget(mServerWidget);
     loadServerSieveConfig();
 }
 
 void SieveEditorConfigureDialog::loadServerSieveConfig()
 {
-    mServerWidget->readConfig();
+    //mServerWidget->readConfig();
 }
 
 void SieveEditorConfigureDialog::saveServerSieveConfig()
 {
-    mServerWidget->writeConfig();
+    //mServerWidget->writeConfig();
 }
 
 void SieveEditorConfigureDialog::readConfig()

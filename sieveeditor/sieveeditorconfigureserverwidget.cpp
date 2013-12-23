@@ -18,28 +18,17 @@
 
 */
 
-#ifndef SIEVEEDITORCONFIGUREDIALOG_H
-#define SIEVEEDITORCONFIGUREDIALOG_H
+#include "sieveeditorconfigureserverwidget.h"
+#include "ui_sieveeditorconfigureserverwidget.h"
 
-#include <KDialog>
-class QTabWidget;
-class QListWidget;
-class SieveEditorConfigureServerWidget;
-class SieveEditorConfigureDialog : public KDialog
+SieveEditorConfigureServerWidget::SieveEditorConfigureServerWidget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::SieveEditorConfigureServerWidget)
 {
-    Q_OBJECT
-public:
-    explicit SieveEditorConfigureDialog(QWidget *parent=0);
-    ~SieveEditorConfigureDialog();
+    ui->setupUi(this);
+}
 
-private:
-    void readConfig();
-    void writeConfig();
-    void loadServerSieveConfig();
-    void saveServerSieveConfig();
-    void initializeServerSieveSettings();
-    QTabWidget *mTabWidget;
-    SieveEditorConfigureServerWidget *mServerWidget;
-};
-
-#endif // SIEVEEDITORCONFIGUREDIALOG_H
+SieveEditorConfigureServerWidget::~SieveEditorConfigureServerWidget()
+{
+    delete ui;
+}
