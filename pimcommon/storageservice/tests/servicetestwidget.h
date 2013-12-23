@@ -53,6 +53,11 @@ private Q_SLOTS:
     void slotUploadFile();
     void slotAuthentication();
     void slotCreateServiceFolder();
+    void slotDeleteFile();
+    void slotDeleteFolder();
+
+    void slotDeleteFolderDone(const QString &serviceName, const QString &foldername);
+    void slotDeleteFileDone(const QString &serviceName, const QString &filename);
 private:
     void connectStorageService();
     PimCommon::StorageServiceAbstract *mStorageService;

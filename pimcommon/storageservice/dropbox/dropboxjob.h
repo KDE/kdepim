@@ -58,6 +58,8 @@ private:
     void parseCreateFolder(const QString &data);
     void parseShareLink(const QString &data);
     void parseListFolder(const QString &data);
+    void parseDeleteFile(const QString &data);
+    void parseDeleteFolder(const QString &data);
     QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;

@@ -90,6 +90,8 @@ Q_SIGNALS:
     void uploadFileDone(const QString &serviceName, const QString &fileName);
     void listFolderDone(const QString &serviceName, const QStringList &listFolder);
     void downLoadFileDone(const QString &serviceName, const QString &fileName);
+    void deleteFolderDone(const QString &serviceName, const QString &folder);
+    void deleteFileDone(const QString &serviceName, const QString &filename);
 
 protected slots:
     void slotActionFailed(const QString &error);
@@ -99,8 +101,9 @@ protected slots:
     void slotCreateFolderDone(const QString &folderName);
     void slotUploadFileDone(const QString &filename);
     void slotListFolderDone(const QStringList &listFolder);
-    void slotDownLoadFileDone(const QString &fileName);
-
+    void slotDownLoadFileDone(const QString &fileName);    
+    void slotDeleteFolderDone(const QString &folder);
+    void slotDeleteFileDone(const QString &filename);
 protected:
     void emitAuthentificationDone();
     ActionType mNextAction;

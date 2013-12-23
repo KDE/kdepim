@@ -215,7 +215,7 @@ void HubicStorageService::deleteFile(const QString &filename)
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        //TODO
+        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFile(filename);
     }
@@ -229,7 +229,7 @@ void HubicStorageService::deleteFolder(const QString &foldername)
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        //TODO
+        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFolder(foldername);
     }

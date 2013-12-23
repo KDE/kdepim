@@ -44,6 +44,8 @@ ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
     bar->addAction(QLatin1String("Upload File..."), this, SLOT(slotUploadFile()));
     bar->addAction(QLatin1String("Create Service Folder..."), this, SLOT(slotCreateServiceFolder()));
+    bar->addAction(QLatin1String("Delete File..."), this, SLOT(slotDeleteFile()));
+    bar->addAction(QLatin1String("Delete Folder..."), this, SLOT(slotDeleteFolder()));
     lay->addWidget(mEdit);
     setLayout(lay);
 }
@@ -51,6 +53,22 @@ ServiceTestWidget::ServiceTestWidget(QWidget *parent)
 ServiceTestWidget::~ServiceTestWidget()
 {
 
+}
+
+void ServiceTestWidget::slotDeleteFile()
+{
+    const QString filename = QInputDialog::getText(this,i18n("Filename"), i18n("Filename:"));
+    if (!filename.isEmpty()) {
+        mStorageService->deleteFile(filename);
+    }
+}
+
+void ServiceTestWidget::slotDeleteFolder()
+{
+    const QString folder = QInputDialog::getText(this,i18n("Folder Name"), i18n("Folder:"));
+    if (!folder.isEmpty()) {
+        mStorageService->deleteFolder(folder);
+    }
 }
 
 void ServiceTestWidget::setStorageService(PimCommon::StorageServiceAbstract *service)
@@ -75,6 +93,19 @@ void ServiceTestWidget::connectStorageService()
     connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
     connect(mStorageService, SIGNAL(listFolderDone(QString,QStringList)), this, SLOT(slotListFolderDone(QString,QStringList)));
     connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
+    connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(listFolderDone(QString,QStringList)), this, SLOT(slotListFolderDone(QString,QStringList)));
+}
+
+void ServiceTestWidget::slotDeleteFolderDone(const QString &serviceName, const QString &foldername)
+{
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Delete Folder: %1\n").arg(foldername));
+}
+
+void ServiceTestWidget::slotDeleteFileDone(const QString &serviceName, const QString &filename)
+{
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" Delete File: %1\n").arg(filename));
 }
 
 void ServiceTestWidget::slotActionFailed(const QString &serviceName, const QString &error)

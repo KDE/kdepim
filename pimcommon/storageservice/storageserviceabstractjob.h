@@ -56,6 +56,8 @@ Q_SIGNALS:
     void listFolderDone(const QStringList &listFolder);
     void authorizationFailed(const QString &error);
     void downLoadFileDone(const QString &filename);
+    void deleteFileDone(const QString &filename);
+    void deleteFolderDone(const QString &filename);
 
 protected:
     void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);

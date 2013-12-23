@@ -105,7 +105,7 @@ void WebDavStorageService::deleteFile(const QString &filename)
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
-        //TODO
+        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFile(filename);
     }
@@ -118,7 +118,7 @@ void WebDavStorageService::deleteFolder(const QString &foldername)
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
-        //TODO
+        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFolder(foldername);
     }

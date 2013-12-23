@@ -69,6 +69,16 @@ void StorageServiceAbstract::executeNextAction()
     }
 }
 
+void StorageServiceAbstract::slotDeleteFolderDone(const QString &folder)
+{
+    Q_EMIT deleteFolderDone(storageServiceName(), folder);
+}
+
+void StorageServiceAbstract::slotDeleteFileDone(const QString &filename)
+{
+    Q_EMIT deleteFileDone(storageServiceName(), filename);
+}
+
 void StorageServiceAbstract::slotAccountInfoDone(const PimCommon::AccountInfo &info)
 {
     Q_EMIT accountInfoDone(storageServiceName(), info);

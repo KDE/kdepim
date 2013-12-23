@@ -221,7 +221,7 @@ void DropBoxStorageService::deleteFile(const QString &filename)
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        //TODO
+        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFile(filename);
     }
@@ -235,7 +235,7 @@ void DropBoxStorageService::deleteFolder(const QString &foldername)
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        //TODO
+        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFolder(foldername);
     }

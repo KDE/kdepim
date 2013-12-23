@@ -117,7 +117,7 @@ void BoxStorageService::deleteFile(const QString &filename)
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        //TODO
+        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFile(filename);
     }
@@ -131,7 +131,7 @@ void BoxStorageService::deleteFolder(const QString &foldername)
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        //TODO
+        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFolder(foldername);
     }
