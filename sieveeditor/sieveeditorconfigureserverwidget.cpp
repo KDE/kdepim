@@ -20,15 +20,75 @@
 
 #include "sieveeditorconfigureserverwidget.h"
 #include "ui_sieveeditorconfigureserverwidget.h"
+#include "serversievesettingsdialog.h"
+
+#include <KLocalizedString>
+#include <KMessageBox>
+
+#include <QPointer>
 
 SieveEditorConfigureServerWidget::SieveEditorConfigureServerWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SieveEditorConfigureServerWidget)
 {
     ui->setupUi(this);
+    connect(ui->modifyServer, SIGNAL(clicked()), this, SLOT(slotModifyServer()));
+    connect(ui->addServer, SIGNAL(clicked()), this, SLOT(slotAddServer()));
+    connect(ui->removeServer, SIGNAL(clicked()), this, SLOT(slotDeleteServer()));
+    connect(ui->serverSieveListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(slotItemSelectionChanged()));
+    slotItemSelectionChanged();
 }
 
 SieveEditorConfigureServerWidget::~SieveEditorConfigureServerWidget()
 {
     delete ui;
+}
+
+void SieveEditorConfigureServerWidget::readConfig()
+{
+    ui->serverSieveListWidget->readConfig();
+}
+
+void SieveEditorConfigureServerWidget::writeConfig()
+{
+    ui->serverSieveListWidget->writeConfig();
+}
+
+void SieveEditorConfigureServerWidget::slotModifyServer()
+{
+    QListWidgetItem *item = ui->serverSieveListWidget->currentItem();
+    if (!item)
+        return;
+
+    QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
+    if (dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
+}
+
+void SieveEditorConfigureServerWidget::slotAddServer()
+{
+    QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
+    if (dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
+}
+
+void SieveEditorConfigureServerWidget::slotDeleteServer()
+{
+    QListWidgetItem *item = ui->serverSieveListWidget->currentItem();
+    if (!item)
+        return;
+    if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Remove Server Sieve"), i18n("Do you want to remove this server \'%1\'?", item->text()))) {
+        //TODO
+    }
+}
+
+void SieveEditorConfigureServerWidget::slotItemSelectionChanged()
+{
+    const bool hasItemSelected = ui->serverSieveListWidget->currentItem();
+    ui->modifyServer->setEnabled(hasItemSelected);
+    ui->removeServer->setEnabled(hasItemSelected);
 }

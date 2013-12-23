@@ -23,6 +23,13 @@
 
 #include <QListWidget>
 
+class ServerSieveListWidgetItem : public QListWidgetItem
+{
+public:
+    ServerSieveListWidgetItem(QListWidget *parent=0);
+    ~ServerSieveListWidgetItem();
+};
+
 class ServerSieveListWidget : public QListWidget
 {
     Q_OBJECT

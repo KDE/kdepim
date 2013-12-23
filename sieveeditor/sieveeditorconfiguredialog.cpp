@@ -52,8 +52,6 @@ void SieveEditorConfigureDialog::initializeServerSieveSettings()
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
     mTabWidget->addTab(w, i18n("Server Sieve"));
-    QLabel *lab = new QLabel(i18n("Server Sieve:"));
-    vbox->addWidget(lab);
     mServerWidget = new SieveEditorConfigureServerWidget;
     vbox->addWidget(mServerWidget);
     loadServerSieveConfig();
@@ -61,12 +59,12 @@ void SieveEditorConfigureDialog::initializeServerSieveSettings()
 
 void SieveEditorConfigureDialog::loadServerSieveConfig()
 {
-    //mServerWidget->readConfig();
+    mServerWidget->readConfig();
 }
 
 void SieveEditorConfigureDialog::saveServerSieveConfig()
 {
-    //mServerWidget->writeConfig();
+    mServerWidget->writeConfig();
 }
 
 void SieveEditorConfigureDialog::readConfig()

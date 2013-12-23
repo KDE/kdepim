@@ -57,7 +57,7 @@ void SieveEditorMainWindow::readConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = KConfigGroup( config, "SieveEditorMainWindow" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
     }

@@ -35,6 +35,15 @@ public:
     explicit SieveEditorConfigureServerWidget(QWidget *parent = 0);
     ~SieveEditorConfigureServerWidget();
 
+    void readConfig();
+    void writeConfig();
+
+private slots:
+    void slotModifyServer();
+    void slotAddServer();
+    void slotDeleteServer();
+    void slotItemSelectionChanged();
+
 private:
     Ui::SieveEditorConfigureServerWidget *ui;
 };

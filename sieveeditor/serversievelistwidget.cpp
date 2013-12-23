@@ -38,7 +38,7 @@ void ServerSieveListWidget::readConfig()
 {
     const QList<SieveEditorUtil::SieveServerConfig> lstServer = SieveEditorUtil::readServerSieveConfig();
     Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, lstServer) {
-        QListWidgetItem *item = new QListWidgetItem(this);
+        ServerSieveListWidgetItem *item = new ServerSieveListWidgetItem(this);
         item->setText(conf.serverName);
         //TODO
     }
@@ -50,4 +50,16 @@ void ServerSieveListWidget::writeConfig()
 
     }
     //TODO
+}
+
+
+ServerSieveListWidgetItem::ServerSieveListWidgetItem(QListWidget *parent)
+    : QListWidgetItem(parent)
+{
+
+}
+
+ServerSieveListWidgetItem::~ServerSieveListWidgetItem()
+{
+
 }
