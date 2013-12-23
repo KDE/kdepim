@@ -15,33 +15,23 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef NOTESAGENTALARMDIALOG_H
-#define NOTESAGENTALARMDIALOG_H
+
+#ifndef NOTESAGENTNOTEDIALOG_H
+#define NOTESAGENTNOTEDIALOG_H
+
 #include <KDialog>
-#include <Akonadi/Item>
-class QListWidget;
-class QLabel;
-class QListWidgetItem;
-namespace NoteShared {
-class NoteListWidget;
-}
-class NotesAgentAlarmDialog : public KDialog
+class QTextEdit;
+class NotesAgentNoteDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit NotesAgentAlarmDialog(QWidget *parent=0);
-    ~NotesAgentAlarmDialog();
-
-    void addListAlarm(const Akonadi::Item::List &lstAlarm);
-
-private slots:
-    void slotItemDoubleClicked(QListWidgetItem *item);
+    explicit NotesAgentNoteDialog(QWidget *parent = 0);
+    ~NotesAgentNoteDialog();
 
 private:
     void readConfig();
     void writeConfig();
-    NoteShared::NoteListWidget *mListWidget;
-    QLabel *mCurrentDateTime;
+    QTextEdit *mNote;
 };
 
-#endif // NOTESAGENTALARMDIALOG_H
+#endif // NOTESAGENTNOTEDIALOG_H

@@ -10,6 +10,7 @@ set(notesagent_SRCS
     notesmanager.cpp
     notesagentsettingsdialog.cpp
     notesagentalarmdialog.cpp
+    notesagentnotedialog.cpp
 )
 
 kde4_add_kcfg_files(notesagent_SRCS
