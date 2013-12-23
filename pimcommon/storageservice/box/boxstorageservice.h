@@ -37,20 +37,20 @@ public:
     static QString serviceName();
     static QString iconName();
 
-    void uploadFile(const QString &filename);
-    void accountInfo();
-    void createFolder(const QString &folder);
-    void listFolder();
+    void storageServiceuploadFile(const QString &filename);
+    void storageServiceaccountInfo();
+    void storageServicecreateFolder(const QString &folder);
+    void storageServicelistFolder();
     void removeConfig();
-    void authentication();
-    void shareLink(const QString &root, const QString &path);
-    void downloadFile(const QString &filename);
-    void deleteFile(const QString &filename);
-    void deleteFolder(const QString &foldername);
+    void storageServiceauthentication();
+    void storageServiceShareLink(const QString &root, const QString &path);
+    void storageServicedownloadFile(const QString &filename);
+    void storageServicedeleteFile(const QString &filename);
+    void storageServicedeleteFolder(const QString &foldername);
 
     QString storageServiceName() const;
     KIcon icon() const;
-    void createServiceFolder();
+    void storageServicecreateServiceFolder();
 
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);

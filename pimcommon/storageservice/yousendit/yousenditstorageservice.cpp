@@ -52,7 +52,7 @@ void YouSendItStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void YouSendItStorageService::authentication()
+void YouSendItStorageService::storageServiceauthentication()
 {
     YouSendItJob *job = new YouSendItJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
@@ -84,11 +84,11 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     emitAuthentificationDone();
 }
 
-void YouSendItStorageService::listFolder()
+void YouSendItStorageService::storageServicelistFolder()
 {
     if (mToken.isEmpty()) {
         mNextAction = ListFolder;
-        authentication();        
+        authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -98,7 +98,7 @@ void YouSendItStorageService::listFolder()
     }
 }
 
-void YouSendItStorageService::createFolder(const QString &folder)
+void YouSendItStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
         mNextAction = CreateFolder;
@@ -112,7 +112,7 @@ void YouSendItStorageService::createFolder(const QString &folder)
     }
 }
 
-void YouSendItStorageService::accountInfo()
+void YouSendItStorageService::storageServiceaccountInfo()
 {
     if (mToken.isEmpty()) {
         mNextAction = AccountInfo;
@@ -131,7 +131,7 @@ QString YouSendItStorageService::name()
     return i18n("YouSendIt");
 }
 
-void YouSendItStorageService::uploadFile(const QString &filename)
+void YouSendItStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction = UploadFile;
@@ -167,7 +167,7 @@ QString YouSendItStorageService::iconName()
     return QString();
 }
 
-void YouSendItStorageService::shareLink(const QString &root, const QString &path)
+void YouSendItStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
         mNextAction = ShareLink;
@@ -181,7 +181,7 @@ void YouSendItStorageService::shareLink(const QString &root, const QString &path
     }
 }
 
-void YouSendItStorageService::downloadFile(const QString &filename)
+void YouSendItStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction = DownLoadFile;
@@ -195,7 +195,7 @@ void YouSendItStorageService::downloadFile(const QString &filename)
     }
 }
 
-void YouSendItStorageService::createServiceFolder()
+void YouSendItStorageService::storageServicecreateServiceFolder()
 {
     if (mToken.isEmpty()) {
         mNextAction = CreateServiceFolder;
@@ -209,7 +209,7 @@ void YouSendItStorageService::createServiceFolder()
     }
 }
 
-void YouSendItStorageService::deleteFile(const QString &filename)
+void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction = DeleteFile;
@@ -223,7 +223,7 @@ void YouSendItStorageService::deleteFile(const QString &filename)
     }
 }
 
-void YouSendItStorageService::deleteFolder(const QString &foldername)
+void YouSendItStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mToken.isEmpty()) {
         mNextAction = DeleteFolder;

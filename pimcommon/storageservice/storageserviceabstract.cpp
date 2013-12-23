@@ -37,42 +37,143 @@ bool StorageServiceAbstract::isInProgress() const
     return mInProgress;
 }
 
+void StorageServiceAbstract::downloadFile(const QString &filename)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    mInProgress = true;
+    storageServicedownloadFile(filename);
+}
+
+void StorageServiceAbstract::uploadFile(const QString &filename)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+
+    mInProgress = true;
+    storageServiceuploadFile(filename);
+}
+
+void StorageServiceAbstract::accountInfo()
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    mInProgress = true;
+    storageServiceaccountInfo();
+}
+
+void StorageServiceAbstract::createFolder(const QString &folder)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    mInProgress = true;
+    storageServicecreateFolder(folder);
+}
+
+void StorageServiceAbstract::listFolder()
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    mInProgress = true;
+    storageServicelistFolder();
+}
+
+void StorageServiceAbstract::authentication()
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    mInProgress = true;
+    storageServiceauthentication();
+}
+
+void StorageServiceAbstract::shareLink(const QString &root, const QString &path)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    mInProgress = true;
+    storageServiceShareLink(root, path);
+}
+
+void StorageServiceAbstract::createServiceFolder()
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    mInProgress = true;
+    storageServicecreateServiceFolder();
+}
+
+void StorageServiceAbstract::deleteFile(const QString &filename)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    mInProgress = true;
+    storageServicedeleteFile(filename);
+}
+
+void StorageServiceAbstract::deleteFolder(const QString &foldername)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    mInProgress = true;
+    storageServicedeleteFolder(foldername);
+}
+
 void StorageServiceAbstract::executeNextAction()
 {
     switch(mNextAction) {
     case NoneAction:
         break;
     case RequestToken:
-        authentication();
+        storageServiceauthentication();
         break;
     case AccessToken:
         break;
     case UploadFile:
-        //uploadFile();
+        //storageServiceuploadFile();
         break;
     case CreateFolder:
-        //createFolder();
+        //storageServicecreateFolder();
         break;
     case ListFolder:
-        listFolder();
+        storageServicelistFolder();
         break;
     case AccountInfo:
-        accountInfo();
+        storageServiceaccountInfo();
         break;
     case ShareLink:
-        //shareLink();
+        //storageServiceshareLink();
         break;
     case CreateServiceFolder:
-        createServiceFolder();
+        storageServicecreateServiceFolder();
         break;
     case DownLoadFile:
-        //downloadFile();
+        //storageServicedownloadFile();
         break;
     case DeleteFile:
-        //deleteFile();
+        //storageServicedeleteFile();
         break;
     case DeleteFolder:
-        //deleteFolder();
+        //storageServicedeleteFolder();
         break;
     }
 }

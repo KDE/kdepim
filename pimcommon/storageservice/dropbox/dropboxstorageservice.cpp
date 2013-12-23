@@ -54,7 +54,7 @@ void DropBoxStorageService::readConfig()
     mAccessOauthSignature = grp.readEntry("Access Oauth Signature");
 }
 
-void DropBoxStorageService::authentication()
+void DropBoxStorageService::storageServiceauthentication()
 {
     DropBoxJob *job = new DropBoxJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
@@ -62,11 +62,11 @@ void DropBoxStorageService::authentication()
     job->requestTokenAccess();
 }
 
-void DropBoxStorageService::shareLink(const QString &root, const QString &path)
+void DropBoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = ShareLink;
-        authentication();
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -76,11 +76,11 @@ void DropBoxStorageService::shareLink(const QString &root, const QString &path)
     }
 }
 
-void DropBoxStorageService::createServiceFolder()
+void DropBoxStorageService::storageServicecreateServiceFolder()
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = CreateServiceFolder;
-        authentication();
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -104,11 +104,11 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     emitAuthentificationDone();
 }
 
-void DropBoxStorageService::listFolder()
+void DropBoxStorageService::storageServicelistFolder()
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = ListFolder;
-        authentication();
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -118,11 +118,11 @@ void DropBoxStorageService::listFolder()
     }
 }
 
-void DropBoxStorageService::accountInfo()
+void DropBoxStorageService::storageServiceaccountInfo()
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = AccountInfo;
-        authentication();
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -132,11 +132,11 @@ void DropBoxStorageService::accountInfo()
     }
 }
 
-void DropBoxStorageService::createFolder(const QString &folder)
+void DropBoxStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = CreateFolder;
-        authentication();
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -146,11 +146,11 @@ void DropBoxStorageService::createFolder(const QString &folder)
     }
 }
 
-void DropBoxStorageService::uploadFile(const QString &filename)
+void DropBoxStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = UploadFile;
-        authentication();
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -200,11 +200,11 @@ QString DropBoxStorageService::storageServiceName() const
     return serviceName();
 }
 
-void DropBoxStorageService::downloadFile(const QString &filename)
+void DropBoxStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = DownLoadFile;
-        authentication();
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -214,11 +214,11 @@ void DropBoxStorageService::downloadFile(const QString &filename)
     }
 }
 
-void DropBoxStorageService::deleteFile(const QString &filename)
+void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = DeleteFile;
-        authentication();
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -228,11 +228,11 @@ void DropBoxStorageService::deleteFile(const QString &filename)
     }
 }
 
-void DropBoxStorageService::deleteFolder(const QString &foldername)
+void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = DeleteFolder;
-        authentication();
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);

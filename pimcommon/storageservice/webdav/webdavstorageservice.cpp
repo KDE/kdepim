@@ -51,7 +51,7 @@ void WebDavStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void WebDavStorageService::authentication()
+void WebDavStorageService::storageServiceauthentication()
 {
     WebDavJob *job = new WebDavJob(this);
     //connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
@@ -59,11 +59,11 @@ void WebDavStorageService::authentication()
     job->requestTokenAccess();
 }
 
-void WebDavStorageService::shareLink(const QString &root, const QString &path)
+void WebDavStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = ShareLink;
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
@@ -72,11 +72,11 @@ void WebDavStorageService::shareLink(const QString &root, const QString &path)
     }
 }
 
-void WebDavStorageService::downloadFile(const QString &filename)
+void WebDavStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = DownLoadFile;
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
@@ -85,11 +85,11 @@ void WebDavStorageService::downloadFile(const QString &filename)
     }
 }
 
-void WebDavStorageService::createServiceFolder()
+void WebDavStorageService::storageServicecreateServiceFolder()
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = CreateServiceFolder;
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
@@ -98,7 +98,7 @@ void WebDavStorageService::createServiceFolder()
     }
 }
 
-void WebDavStorageService::deleteFile(const QString &filename)
+void WebDavStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = DeleteFile;
@@ -111,7 +111,7 @@ void WebDavStorageService::deleteFile(const QString &filename)
     }
 }
 
-void WebDavStorageService::deleteFolder(const QString &foldername)
+void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = DeleteFolder;
@@ -124,11 +124,11 @@ void WebDavStorageService::deleteFolder(const QString &foldername)
     }
 }
 
-void WebDavStorageService::listFolder()
+void WebDavStorageService::storageServicelistFolder()
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = ListFolder;
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
@@ -137,11 +137,11 @@ void WebDavStorageService::listFolder()
     }
 }
 
-void WebDavStorageService::createFolder(const QString &folder)
+void WebDavStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = CreateFolder;
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
@@ -150,11 +150,11 @@ void WebDavStorageService::createFolder(const QString &folder)
     }
 }
 
-void WebDavStorageService::accountInfo()
+void WebDavStorageService::storageServiceaccountInfo()
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = AccountInfo;
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
@@ -168,11 +168,11 @@ QString WebDavStorageService::name()
     return i18n("Webdav");
 }
 
-void WebDavStorageService::uploadFile(const QString &filename)
+void WebDavStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = UploadFile;
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));

@@ -65,16 +65,17 @@ public:
 
     bool isInProgress() const;
 
-    virtual void downloadFile(const QString &filename) = 0;
-    virtual void uploadFile(const QString &filename) = 0;
-    virtual void accountInfo() = 0;
-    virtual void createFolder(const QString &folder) = 0;
-    virtual void listFolder() = 0;
-    virtual void authentication() = 0;
-    virtual void shareLink(const QString &root, const QString &path) = 0;
-    virtual void createServiceFolder() = 0;
-    virtual void deleteFile(const QString &filename) = 0;
-    virtual void deleteFolder(const QString &foldername) = 0;
+    virtual void downloadFile(const QString &filename);
+    virtual void uploadFile(const QString &filename);
+    virtual void accountInfo();
+    virtual void createFolder(const QString &folder);
+    virtual void listFolder();
+    virtual void authentication();
+    virtual void shareLink(const QString &root, const QString &path);
+    virtual void createServiceFolder();
+    virtual void deleteFile(const QString &filename);
+    virtual void deleteFolder(const QString &foldername);
+
 
     virtual QString storageServiceName() const = 0;
     virtual KIcon icon() const = 0;
@@ -106,6 +107,16 @@ protected slots:
     void slotDeleteFolderDone(const QString &folder);
     void slotDeleteFileDone(const QString &filename);
 protected:
+    virtual void storageServicedownloadFile(const QString &filename) = 0;
+    virtual void storageServiceuploadFile(const QString &filename) = 0;
+    virtual void storageServiceaccountInfo() = 0;
+    virtual void storageServicecreateFolder(const QString &folder) = 0;
+    virtual void storageServicelistFolder() = 0;
+    virtual void storageServiceauthentication() = 0;
+    virtual void storageServiceShareLink(const QString &root, const QString &path) = 0;
+    virtual void storageServicecreateServiceFolder() = 0;
+    virtual void storageServicedeleteFile(const QString &filename) = 0;
+    virtual void storageServicedeleteFolder(const QString &foldername) = 0;
     void emitAuthentificationDone();
     ActionType mNextAction;
 
