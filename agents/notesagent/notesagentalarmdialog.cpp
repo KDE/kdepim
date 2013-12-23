@@ -47,7 +47,7 @@ NotesAgentAlarmDialog::~NotesAgentAlarmDialog()
 
 }
 
-void NotesAgentAlarmDialog::setListAlarm(const Akonadi::Item::List &lstAlarm)
+void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 {
-    mListWidget->setNotes(lstAlarm);
+    mListWidget->addNotes(lstAlarm);
 }

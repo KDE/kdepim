@@ -123,9 +123,11 @@ void NotesManager::slotCheckAlarm()
         }
     }
     if (!lst.isEmpty()) {
-        NotesAgentAlarmDialog *dlg = new NotesAgentAlarmDialog;
-        dlg->setListAlarm(lst);
-        dlg->show();
+        if (!mAlarmDialog) {
+            mAlarmDialog = new NotesAgentAlarmDialog;
+        }
+        mAlarmDialog->addListAlarm(lst);
+        mAlarmDialog->show();
     }
     mCheckAlarm->start();
 }

@@ -30,12 +30,15 @@ public:
     ~NoteListWidget();
 
     void setNotes(const Akonadi::Item::List &notes);
+    void addNotes(const Akonadi::Item::List &notes);
     QStringList selectedNotes() const;
+
 private:
     enum listViewData {
         AkonadiId = Qt::UserRole + 1
     };
     Akonadi::Item::List mNotes;
+    void createItem(const Akonadi::Item &note);
 };
 }
 

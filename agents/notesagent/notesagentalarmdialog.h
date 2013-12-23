@@ -30,7 +30,7 @@ public:
     explicit NotesAgentAlarmDialog(QWidget *parent=0);
     ~NotesAgentAlarmDialog();
 
-    void setListAlarm(const Akonadi::Item::List &lstAlarm);
+    void addListAlarm(const Akonadi::Item::List &lstAlarm);
 
 private:
     NoteShared::NoteListWidget *mListWidget;

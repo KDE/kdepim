@@ -30,28 +30,45 @@ NoteListWidget::~NoteListWidget()
 
 }
 
+void NoteListWidget::addNotes(const Akonadi::Item::List &notes)
+{
+    Q_FOREACH (const Akonadi::Item &note, notes) {
+        if (mNotes.contains(note)) {
+            continue;
+        }
+        createItem(note);
+        mNotes.append(note);
+    }
+}
+
 void NoteListWidget::setNotes(const Akonadi::Item::List &notes)
 {
     mNotes = notes;
     Q_FOREACH (const Akonadi::Item &note, mNotes) {
-        QListWidgetItem *item =new QListWidgetItem(this);
-        KMime::Message::Ptr noteMessage = note.payload<KMime::Message::Ptr>();
-        if (!noteMessage)
-            continue;
-        item->setText(noteMessage->subject(false)->asUnicodeString());
-        //TODO
-        /*
-        if ( noteMessage->contentType()->isHTMLText() ) {
-            m_editor->setAcceptRichText(true);
-            m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
-        } else {
-            m_editor->setAcceptRichText(false);
-            m_editor->setPlainText(noteMessage->mainBodyPart()->decodedText());
-        }
-        */
-        //item->setToolTip(i.value()->text());
-        item->setData(AkonadiId, note.id());
+        createItem(note);
     }
+}
+
+void NoteListWidget::createItem(const Akonadi::Item &note)
+{
+    KMime::Message::Ptr noteMessage = note.payload<KMime::Message::Ptr>();
+    if (!noteMessage)
+        return;
+    QListWidgetItem *item =new QListWidgetItem(this);
+    item->setText(noteMessage->subject(false)->asUnicodeString());
+    //TODO
+    /*
+    if ( noteMessage->contentType()->isHTMLText() ) {
+        m_editor->setAcceptRichText(true);
+        m_editor->setHtml(noteMessage->mainBodyPart()->decodedText());
+    } else {
+        m_editor->setAcceptRichText(false);
+        m_editor->setPlainText(noteMessage->mainBodyPart()->decodedText());
+    }
+    */
+    //item->setToolTip(i.value()->text());
+    item->setData(AkonadiId, note.id());
+
 }
 
 QStringList NoteListWidget::selectedNotes() const
