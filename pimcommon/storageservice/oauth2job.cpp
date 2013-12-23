@@ -54,21 +54,26 @@ void OAuth2Job::initializeToken(const QString &refreshToken, const QString &toke
 void OAuth2Job::createServiceFolder()
 {
     //TODO
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void OAuth2Job::downloadFile(const QString &filename)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void OAuth2Job::deleteFile(const QString &filename)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void OAuth2Job::deleteFolder(const QString &foldername)
 {
-
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void OAuth2Job::requestTokenAccess()

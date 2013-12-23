@@ -76,7 +76,6 @@ void DropBoxJob::requestTokenAccess()
     postData.addQueryItem(QLatin1String("oauth_signature_method"),mOauthSignatureMethod);
     postData.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
     postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
-    qDebug()<<" https://api.dropbox.com/1/oauth/request_token"<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -92,14 +91,12 @@ void DropBoxJob::getTokenAccess()
     QUrl postData;
 
     postData.addQueryItem(QLatin1String("oauth_consumer_key"), mOauthconsumerKey);
-    //qDebug()<<" mAccessOauthSignature"<<mAccessOauthSignature;
     postData.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
     postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature);
     postData.addQueryItem(QLatin1String("oauth_signature_method"),mOauthSignatureMethod);
     postData.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
     postData.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
     postData.addQueryItem(QLatin1String("oauth_token"), mOauthToken);
-    //qDebug()<<"getTokenAccess  postdata"<<postData;
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
