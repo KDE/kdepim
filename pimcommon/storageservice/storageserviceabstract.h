@@ -63,6 +63,7 @@ public:
         DeleteFolder
     };
 
+    bool isInProgress() const;
 
     virtual void downloadFile(const QString &filename) = 0;
     virtual void uploadFile(const QString &filename) = 0;
@@ -110,6 +111,7 @@ protected:
 
 private:
     void executeNextAction();
+    bool mInProgress;
 };
 }
 

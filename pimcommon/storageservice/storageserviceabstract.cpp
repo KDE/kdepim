@@ -22,13 +22,19 @@ using namespace PimCommon;
 
 StorageServiceAbstract::StorageServiceAbstract(QObject *parent)
     : QObject(parent),
-      mNextAction(NoneAction)
+      mNextAction(NoneAction),
+      mInProgress(false)
 {
 }
 
 StorageServiceAbstract::~StorageServiceAbstract()
 {
 
+}
+
+bool StorageServiceAbstract::isInProgress() const
+{
+    return mInProgress;
 }
 
 void StorageServiceAbstract::executeNextAction()
@@ -63,8 +69,10 @@ void StorageServiceAbstract::executeNextAction()
         //downloadFile();
         break;
     case DeleteFile:
+        //deleteFile();
         break;
     case DeleteFolder:
+        //deleteFolder();
         break;
     }
 }
@@ -72,58 +80,71 @@ void StorageServiceAbstract::executeNextAction()
 void StorageServiceAbstract::slotDeleteFolderDone(const QString &folder)
 {
     Q_EMIT deleteFolderDone(storageServiceName(), folder);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::slotDeleteFileDone(const QString &filename)
 {
     Q_EMIT deleteFileDone(storageServiceName(), filename);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::slotAccountInfoDone(const PimCommon::AccountInfo &info)
 {
     Q_EMIT accountInfoDone(storageServiceName(), info);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::slotActionFailed(const QString &error)
 {
-    qDebug()<<" error found "<<error;
+    //qDebug()<<" error found "<<error;
     Q_EMIT actionFailed(storageServiceName(), error);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::slotShareLinkDone(const QString &url)
 {
     Q_EMIT shareLinkDone(storageServiceName(), url);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::slotUploadFileProgress(qint64 done, qint64 total)
 {
     Q_EMIT uploadFileProgress(storageServiceName(), done, total);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::slotCreateFolderDone(const QString &folderName)
 {
     Q_EMIT createFolderDone(storageServiceName(), folderName);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::slotUploadFileDone(const QString &filename)
 {
     Q_EMIT uploadFileDone(storageServiceName(), filename);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::slotListFolderDone(const QStringList &listFolder)
 {
     Q_EMIT listFolderDone(storageServiceName(), listFolder);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::slotDownLoadFileDone(const QString &fileName)
 {
     Q_EMIT downLoadFileDone(storageServiceName(), fileName);
+    mInProgress = false;
 }
 
 void StorageServiceAbstract::emitAuthentificationDone()
 {
     Q_EMIT authenticationDone(storageServiceName());
-    executeNextAction();
+    if (mNextAction != NoneAction)
+        executeNextAction();
+    else
+        mInProgress = false;
 }
 
 #include "moc_storageserviceabstract.cpp"
