@@ -20,6 +20,8 @@
 #include <KDialog>
 #include <Akonadi/Item>
 class QListWidget;
+class QLabel;
+class QListWidgetItem;
 namespace NoteShared {
 class NoteListWidget;
 }
@@ -30,10 +32,16 @@ public:
     explicit NotesAgentAlarmDialog(QWidget *parent=0);
     ~NotesAgentAlarmDialog();
 
-    void setListAlarm(const Akonadi::Item::List &lstAlarm);
+    void addListAlarm(const Akonadi::Item::List &lstAlarm);
+
+private slots:
+    void slotItemDoubleClicked(QListWidgetItem *item);
 
 private:
+    void readConfig();
+    void writeConfig();
     NoteShared::NoteListWidget *mListWidget;
+    QLabel *mCurrentDateTime;
 };
 
 #endif // NOTESAGENTALARMDIALOG_H

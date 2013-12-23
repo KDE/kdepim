@@ -468,8 +468,8 @@ Base2::readPublicKey( const KeyID& keyID,
   int exitStatus = 0;
 
   status = 0;
-  exitStatus = run( PGP2 " +batchmode +language=en +verbose=0 -kvc -f 0x" +
-                    keyID, 0, true );
+  exitStatus = run( QByteArray(QByteArray(PGP2 " +batchmode +language=en +verbose=0 -kvc -f 0x") +
+                    keyID), 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -531,7 +531,7 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
     QStringList::ConstIterator end( patterns.constEnd() );
     for ( QStringList::ConstIterator it = patterns.constBegin();
           it != end; ++it ) {
-      exitStatus = run( cmd + ' ' + KShell::quoteArg( *it ).toLocal8Bit(),
+      exitStatus = run( QByteArray(cmd + QByteArray(" ") + KShell::quoteArg( *it ).toLocal8Bit()),
                         0, true );
 
       if ( exitStatus != 0 ) {
@@ -597,7 +597,7 @@ QByteArray Base2::getAsciiPublicKey(const KeyID& keyID)
     return QByteArray();
 
   status = 0;
-  int exitStatus = run( PGP2 " +batchmode +force +language=en -kxaf 0x" + keyID,
+  int exitStatus = run( QByteArray(QByteArray(PGP2 " +batchmode +force +language=en -kxaf 0x") + keyID),
                     0, true );
 
   if(exitStatus != 0) {

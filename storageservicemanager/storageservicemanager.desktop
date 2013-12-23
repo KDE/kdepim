@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Storage Service Manager
+Type=Application
+Exec=storageservicemanager
+Icon=kmail
+X-DocPath=storageservicemanager/index.html
+GenericName=Storage Service Manager
+Terminal=false
+Categories=Qt;KDE;Office;Network;
+InitialPreference=10

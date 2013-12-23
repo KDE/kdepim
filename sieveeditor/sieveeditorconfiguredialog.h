@@ -22,7 +22,9 @@
 #define SIEVEEDITORCONFIGUREDIALOG_H
 
 #include <KDialog>
-
+class QTabWidget;
+class QListWidget;
+class SieveEditorConfigureServerWidget;
 class SieveEditorConfigureDialog : public KDialog
 {
     Q_OBJECT
@@ -30,6 +32,14 @@ public:
     explicit SieveEditorConfigureDialog(QWidget *parent=0);
     ~SieveEditorConfigureDialog();
 
+private:
+    void readConfig();
+    void writeConfig();
+    void loadServerSieveConfig();
+    void saveServerSieveConfig();
+    void initializeServerSieveSettings();
+    QTabWidget *mTabWidget;
+    SieveEditorConfigureServerWidget *mServerWidget;
 };
 
 #endif // SIEVEEDITORCONFIGUREDIALOG_H

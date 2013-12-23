@@ -37,12 +37,14 @@ public:
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
     void downloadFile(const QString &filename);
+    void deleteFile(const QString &filename);
+    void deleteFolder(const QString &foldername);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
 
 private:
-    void parseUploadFiles(const QString &data);
+    void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseListFolder(const QString &data);

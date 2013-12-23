@@ -25,6 +25,11 @@ ManageSieveTreeView::ManageSieveTreeView(QWidget *parent)
     : PimCommon::CustomTreeView(parent)
 {
     setDefaultText(i18n( "No imap server configured..." ));
+    setRootIsDecorated( true );
+    setAlternatingRowColors( true );
+    setSelectionMode( QAbstractItemView::SingleSelection );
+    setHeaderLabel( i18n( "Available Scripts" ) );
+    setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 ManageSieveTreeView::~ManageSieveTreeView()

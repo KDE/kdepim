@@ -23,9 +23,7 @@
 
 #include <QWidget>
 class QStackedWidget;
-namespace KSieveUi {
-class ManageSieveTreeView;
-}
+class SieveEditorScriptManagerWidget;
 class SieveEditorMainWidget : public QWidget
 {
     Q_OBJECT
@@ -34,8 +32,10 @@ public:
     ~SieveEditorMainWidget();
 
 private:
+    void loadConfig();
+
     QStackedWidget *mStackedWidget;
-    KSieveUi::ManageSieveTreeView *mTreeView;
+    SieveEditorScriptManagerWidget *mScriptManagerWidget;
 };
 
 #endif // SIEVEEDITORMAINWIDGET_H

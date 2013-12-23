@@ -19,7 +19,7 @@
 */
 
 #include "sieveeditormainwidget.h"
-#include "ksieveui/widgets/managesievetreeview.h"
+#include "sieveeditorscriptmanagerwidget.h"
 
 #include <QHBoxLayout>
 #include <QStackedWidget>
@@ -31,11 +31,17 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     setLayout(hbox);
     mStackedWidget = new QStackedWidget;
     hbox->addWidget(mStackedWidget);
-    mTreeView = new KSieveUi::ManageSieveTreeView;
-    hbox->addWidget(mTreeView);
+    mScriptManagerWidget = new SieveEditorScriptManagerWidget;
+    hbox->addWidget(mScriptManagerWidget);
+    loadConfig();
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
 {
 
+}
+
+void SieveEditorMainWidget::loadConfig()
+{
+    //TODO load list of server imap
 }

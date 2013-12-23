@@ -52,7 +52,7 @@ void HubicStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void HubicStorageService::authentication()
+void HubicStorageService::storageServiceauthentication()
 {
     HubicJob *job = new HubicJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
@@ -63,7 +63,7 @@ void HubicStorageService::authentication()
 void HubicStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mRefreshToken.clear();
-    Q_EMIT authenticationFailed(serviceName(), errorMessage);
+    emitAuthentificationFailder(errorMessage);
 }
 
 void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime)
@@ -75,13 +75,14 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
     grp.sync();
-    Q_EMIT authenticationDone(serviceName());
+    emitAuthentificationDone();
 }
 
-void HubicStorageService::listFolder()
+void HubicStorageService::storageServicelistFolder()
 {
     if (mRefreshToken.isEmpty()) {
-        authentication();
+        mNextAction = ListFolder;
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -91,10 +92,11 @@ void HubicStorageService::listFolder()
     }
 }
 
-void HubicStorageService::createFolder(const QString &folder)
+void HubicStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mRefreshToken.isEmpty()) {
-        authentication();
+        mNextAction = CreateFolder;
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -104,10 +106,11 @@ void HubicStorageService::createFolder(const QString &folder)
     }
 }
 
-void HubicStorageService::accountInfo()
+void HubicStorageService::storageServiceaccountInfo()
 {
     if (mRefreshToken.isEmpty()) {
-        authentication();
+        mNextAction = AccountInfo;
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -122,15 +125,17 @@ QString HubicStorageService::name()
     return i18n("Hubic");
 }
 
-void HubicStorageService::uploadFile(const QString &filename)
+void HubicStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
-        authentication();
+        mNextAction = UploadFile;
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         job->uploadFile(filename);
     }
@@ -156,10 +161,11 @@ QString HubicStorageService::iconName()
     return QString();
 }
 
-void HubicStorageService::shareLink(const QString &root, const QString &path)
+void HubicStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mRefreshToken.isEmpty()) {
-        authentication();
+        mNextAction = ShareLink;
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -174,29 +180,59 @@ QString HubicStorageService::storageServiceName() const
     return serviceName();
 }
 
-void HubicStorageService::downloadFile(const QString &filename)
+void HubicStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
-        authentication();
+        mNextAction = DownLoadFile;
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        //TODO connect
+        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->downloadFile(filename);
     }
 }
 
-void HubicStorageService::createServiceFolder()
+void HubicStorageService::storageServicecreateServiceFolder()
 {
     if (mRefreshToken.isEmpty()) {
-        authentication();
+        mNextAction = CreateServiceFolder;
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createServiceFolder();
+    }
+}
+
+void HubicStorageService::storageServicedeleteFile(const QString &filename)
+{
+    if (mRefreshToken.isEmpty()) {
+        mNextAction = DeleteFile;
+        storageServiceauthentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
+}
+
+void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
+{
+    if (mRefreshToken.isEmpty()) {
+        mNextAction = DeleteFolder;
+        storageServiceauthentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
     }
 }
 

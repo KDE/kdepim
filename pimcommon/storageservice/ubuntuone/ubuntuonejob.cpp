@@ -49,7 +49,7 @@ UbuntuOneJob::~UbuntuOneJob()
 
 void UbuntuOneJob::requestTokenAccess()
 {
-    mActionType = RequestToken;
+    mActionType = PimCommon::StorageServiceAbstract::RequestToken;
     mError = false;
     QUrl url(QLatin1String("https://login.ubuntu.com/api/1.0/authentications"));
     url.addQueryItem(QLatin1String("ws.op"), QLatin1String("authenticate"));
@@ -62,7 +62,7 @@ void UbuntuOneJob::requestTokenAccess()
 
 void UbuntuOneJob::uploadFile(const QString &filename)
 {
-    mActionType = UploadFiles;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     qDebug()<<" upload file not implemented";
     deleteLater();
@@ -70,7 +70,7 @@ void UbuntuOneJob::uploadFile(const QString &filename)
 
 void UbuntuOneJob::listFolder(const QString &folder)
 {
-    mActionType = ListFolder;
+    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     QUrl url(QLatin1String("https://one.ubuntu.com/api/file_storage/v1"));
     url.addQueryItem(QLatin1String("oauth_consumer_key"), mCustomerKey);
@@ -93,7 +93,7 @@ void UbuntuOneJob::listFolder(const QString &folder)
 
 void UbuntuOneJob::accountInfo()
 {
-    mActionType = AccountInfo;
+    mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
     mError = false;
     QUrl url(QLatin1String("https://one.ubuntu.com/api/quota/"));
     url.addQueryItem(QLatin1String("oauth_consumer_key"), mCustomerKey);
@@ -116,7 +116,7 @@ void UbuntuOneJob::accountInfo()
 
 void UbuntuOneJob::createFolder(const QString &foldername)
 {
-    mActionType = CreateFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     if (foldername.isEmpty()) {
         qDebug()<<" foldername is empty";
@@ -137,7 +137,7 @@ void UbuntuOneJob::createFolder(const QString &foldername)
 
 void UbuntuOneJob::shareLink(const QString &root, const QString &path)
 {
-    mActionType = ShareLink;
+    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
     qDebug()<<" not implemented";
     deleteLater();
@@ -160,23 +160,25 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
 
         const QString errorStr = data;
         switch(mActionType) {
-        case NoneAction:
+        case PimCommon::StorageServiceAbstract::NoneAction:
             deleteLater();
             break;
-        case RequestToken:
+        case PimCommon::StorageServiceAbstract::RequestToken:
             Q_EMIT authorizationFailed(errorStr);
             deleteLater();
             break;
-        case AccessToken:
+        case PimCommon::StorageServiceAbstract::AccessToken:
             Q_EMIT authorizationFailed(errorStr);
             deleteLater();
             break;
-        case UploadFiles:
-        case CreateFolder:
-        case AccountInfo:
-        case ListFolder:
-        case DownLoadFile:
-        case CreateServiceFolder:
+        case PimCommon::StorageServiceAbstract::UploadFile:
+        case PimCommon::StorageServiceAbstract::CreateFolder:
+        case PimCommon::StorageServiceAbstract::AccountInfo:
+        case PimCommon::StorageServiceAbstract::ListFolder:
+        case PimCommon::StorageServiceAbstract::DownLoadFile:
+        case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+        case PimCommon::StorageServiceAbstract::DeleteFile:
+        case PimCommon::StorageServiceAbstract::DeleteFolder:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -189,31 +191,33 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     }
     qDebug()<<" Data ? "<<data;
     switch(mActionType) {
-    case NoneAction:
+    case PimCommon::StorageServiceAbstract::NoneAction:
         deleteLater();
         break;
-    case RequestToken:
+    case PimCommon::StorageServiceAbstract::RequestToken:
         parseRequestToken(data);
         break;
-    case AccessToken:
+    case PimCommon::StorageServiceAbstract::AccessToken:
         parseAccessToken(data);
         break;
-    case UploadFiles:
-        parseUploadFiles(data);
+    case PimCommon::StorageServiceAbstract::UploadFile:
+        parseUploadFile(data);
         break;
-    case CreateFolder:
+    case PimCommon::StorageServiceAbstract::CreateFolder:
         parseCreateFolder(data);
         break;
-    case AccountInfo:
+    case PimCommon::StorageServiceAbstract::AccountInfo:
         parseAccountInfo(data);
         break;
-    case ListFolder:
+    case PimCommon::StorageServiceAbstract::ListFolder:
         parseListFolder(data);
         break;
-    case CreateServiceFolder:
+    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         parseCreateServiceFolder(data);
         break;
-    case DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
         //TODO
         deleteLater();
         break;
@@ -249,7 +253,7 @@ void UbuntuOneJob::parseListFolder(const QString &data)
 
 void UbuntuOneJob::createServiceFolder()
 {
-    mActionType = CreateServiceFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
     QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/") + mAttachmentVolume));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
@@ -266,7 +270,25 @@ void UbuntuOneJob::createServiceFolder()
 
 void UbuntuOneJob::downloadFile(const QString &filename)
 {
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mError = false;
+    deleteLater();
+}
 
+void UbuntuOneJob::deleteFile(const QString &filename)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+}
+
+void UbuntuOneJob::deleteFolder(const QString &foldername)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
 }
 
 void UbuntuOneJob::parseCreateFolder(const QString &data)
@@ -277,7 +299,7 @@ void UbuntuOneJob::parseCreateFolder(const QString &data)
     deleteLater();
 }
 
-void UbuntuOneJob::parseUploadFiles(const QString &data)
+void UbuntuOneJob::parseUploadFile(const QString &data)
 {
     qDebug()<<" data "<<data;
     //TODO
@@ -344,7 +366,7 @@ void UbuntuOneJob::finishGetToken()
 {
     //FIXME
     mError = false;
-    mActionType = AccessToken;
+    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
 
     QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));

@@ -348,7 +348,7 @@ void AgentWidget::cloneAgent( KJob* job )
       continue;
     const QString methodName = QString::fromLatin1( signature.left( signature.indexOf( '(' ) ) );
     const QDBusMessage reply = sourceIface.call( methodName );
-    if ( !reply.arguments().count() == 1 ) {
+    if ( reply.arguments().count() != 1 ) {
       kError() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
       continue;
     }

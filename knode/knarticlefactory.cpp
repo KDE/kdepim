@@ -537,9 +537,9 @@ void KNArticleFactory::sendMailExternal(const QString &address, const QString &s
   if (!address.isEmpty())
     mailtoURL.setPath(address);
   if (!subject.isEmpty())
-    queries.append("subject="+KUrl::toPercentEncoding(subject));
+    queries.append(QLatin1String("subject=")+KUrl::toPercentEncoding(subject));
   if (!body.isEmpty())
-    queries.append("body="+KUrl::toPercentEncoding(body));
+    queries.append(QLatin1String("body=")+KUrl::toPercentEncoding(body));
 
   if (queries.count() > 0) {
     query = '?';

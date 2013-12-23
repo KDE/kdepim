@@ -49,7 +49,7 @@ NotesAgent::NotesAgent(const QString &id)
     setNeedsNetwork(true);
 
     if (NotesAgentSettings::enabled()) {
-        QTimer::singleShot(1000, mNotesManager, SLOT(load()));
+        QTimer::singleShot(60 * 1000, mNotesManager, SLOT(load()));
     }
 }
 

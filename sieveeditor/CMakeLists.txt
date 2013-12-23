@@ -13,15 +13,20 @@ include_directories(
 set(sieveeditor_SRCS
   main.cpp
   sieveeditormainwindow.cpp
-  addsieveserverdialog.cpp
+  serversievesettingsdialog.cpp
   serversievesettings.cpp
   sieveeditormainwidget.cpp
   sieveeditorscriptwidget.cpp
   sieveeditorconfiguredialog.cpp
+  sieveeditorscriptmanagerwidget.cpp
+  sieveeditorutil.cpp
+  serversievelistwidget.cpp
+  sieveeditorconfigureserverwidget.cpp
 )
 
 kde4_add_ui_files(sieveeditor_SRCS
     ui/serversievesettings.ui
+    ui/sieveeditorconfigureserverwidget.ui
 )
 
 

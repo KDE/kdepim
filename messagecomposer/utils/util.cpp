@@ -142,7 +142,7 @@ void MessageComposer::Util::makeToplevelContentType( KMime::Content* content, Kl
       if( sign ) {
         content->contentType()->setMimeType( QByteArray( "multipart/signed" ) );
         content->contentType()->setParameter( QString::fromLatin1( "protocol" ), QString::fromAscii( "application/pgp-signature" ) );
-        content->contentType()->setParameter( QString::fromLatin1( "micalg" ), QString::fromAscii( "pgp-" + hashAlgo ).toLower() );
+        content->contentType()->setParameter( QString::fromLatin1( "micalg" ), QString::fromAscii( QByteArray(QByteArray("pgp-") + hashAlgo) ).toLower() );
 
       } else {
         content->contentType()->setMimeType( QByteArray( "multipart/encrypted" ) );

@@ -123,9 +123,11 @@ void NotesManager::slotCheckAlarm()
         }
     }
     if (!lst.isEmpty()) {
-        NotesAgentAlarmDialog *dlg = new NotesAgentAlarmDialog;
-        dlg->setListAlarm(lst);
-        dlg->show();
+        if (!mAlarmDialog) {
+            mAlarmDialog = new NotesAgentAlarmDialog;
+        }
+        mAlarmDialog->addListAlarm(lst);
+        mAlarmDialog->show();
     }
     mCheckAlarm->start();
 }
@@ -140,7 +142,8 @@ void NotesManager::load()
 
     mCheckAlarm->setInterval(1000*60*NoteShared::NoteSharedGlobalConfig::checkInterval());
     connect(mCheckAlarm, SIGNAL(timeout()), this, SLOT(slotCheckAlarm()));
-    mCheckAlarm->start();
+    //mCheckAlarm->start();
+    slotCheckAlarm();
 }
 
 void NotesManager::stopAll()

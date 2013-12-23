@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QNetworkReply>
+#include "storageservice/storageserviceabstract.h"
 
 class QNetworkAccessManager;
 namespace PimCommon {
@@ -39,6 +40,8 @@ public:
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual void createServiceFolder() = 0;
     virtual void downloadFile(const QString &filename) = 0;
+    virtual void deleteFile(const QString &filename) = 0;
+    virtual void deleteFolder(const QString &foldername) = 0;
 
 protected Q_SLOTS:
     void slotError(QNetworkReply::NetworkError);
@@ -52,24 +55,15 @@ Q_SIGNALS:
     void uploadFileDone(const QString &fileName);
     void listFolderDone(const QStringList &listFolder);
     void authorizationFailed(const QString &error);
+    void downLoadFileDone(const QString &filename);
+    void deleteFileDone(const QString &filename);
+    void deleteFolderDone(const QString &filename);
 
 protected:
-    enum ActionType {
-        NoneAction = 0,
-        RequestToken,
-        AccessToken,
-        UploadFiles,
-        CreateFolder,
-        ListFolder,
-        AccountInfo,
-        ShareLink,
-        CreateServiceFolder,
-        DownLoadFile
-    };
-    void errorMessage(PimCommon::StorageServiceAbstractJob::ActionType type, const QString &errorStr);
+    void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);
 
     QNetworkAccessManager *mNetworkAccessManager;
-    ActionType mActionType;
+    PimCommon::StorageServiceAbstract::ActionType mActionType;
     bool mError;
 };
 }

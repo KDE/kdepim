@@ -58,7 +58,7 @@ void WebDavJob::requestTokenAccess()
 
 void WebDavJob::uploadFile(const QString &filename)
 {
-    mActionType = UploadFiles;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     qDebug()<<" not implemented";
     deleteLater();
@@ -66,7 +66,7 @@ void WebDavJob::uploadFile(const QString &filename)
 
 void WebDavJob::listFolder(const QString &folder)
 {
-    mActionType = ListFolder;
+    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     qDebug()<<" not implemented";
     deleteLater();
@@ -74,7 +74,7 @@ void WebDavJob::listFolder(const QString &folder)
 
 void WebDavJob::accountInfo()
 {
-    mActionType = AccountInfo;
+    mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
     mError = false;
     qDebug()<<" not implemented";
     deleteLater();
@@ -82,7 +82,7 @@ void WebDavJob::accountInfo()
 
 void WebDavJob::createFolder(const QString &filename)
 {
-    mActionType = CreateFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     qDebug()<<" not implemented";
     deleteLater();
@@ -101,23 +101,25 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         if (error.contains(QLatin1String("error"))) {
             const QString errorStr = error.value(QLatin1String("error")).toString();
             switch(mActionType) {
-            case NoneAction:
+            case PimCommon::StorageServiceAbstract::NoneAction:
                 deleteLater();
                 break;
-            case RequestToken:
+            case PimCommon::StorageServiceAbstract::RequestToken:
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case AccessToken:
+            case PimCommon::StorageServiceAbstract::AccessToken:
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case UploadFiles:
-            case CreateFolder:
-            case AccountInfo:
-            case ListFolder:
-            case DownLoadFile:
-            case CreateServiceFolder:
+            case PimCommon::StorageServiceAbstract::UploadFile:
+            case PimCommon::StorageServiceAbstract::CreateFolder:
+            case PimCommon::StorageServiceAbstract::AccountInfo:
+            case PimCommon::StorageServiceAbstract::ListFolder:
+            case PimCommon::StorageServiceAbstract::DownLoadFile:
+            case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+            case PimCommon::StorageServiceAbstract::DeleteFile:
+            case PimCommon::StorageServiceAbstract::DeleteFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -133,28 +135,30 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         return;
     }
     switch(mActionType) {
-    case NoneAction:
+    case PimCommon::StorageServiceAbstract::NoneAction:
         deleteLater();
         break;
-    case RequestToken:
+    case PimCommon::StorageServiceAbstract::RequestToken:
         deleteLater();
         break;
-    case AccessToken:
+    case PimCommon::StorageServiceAbstract::AccessToken:
         deleteLater();
         break;
-    case UploadFiles:
-        parseUploadFiles(data);
+    case PimCommon::StorageServiceAbstract::UploadFile:
+        parseUploadFile(data);
         break;
-    case CreateFolder:
+    case PimCommon::StorageServiceAbstract::CreateFolder:
         parseCreateFolder(data);
         break;
-    case AccountInfo:
+    case PimCommon::StorageServiceAbstract::AccountInfo:
         parseAccountInfo(data);
         break;
-    case ListFolder:
+    case PimCommon::StorageServiceAbstract::ListFolder:
         parseListFolder(data);
         break;
-    case DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
         deleteLater();
         break;
     default:
@@ -163,7 +167,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
-void WebDavJob::parseUploadFiles(const QString &data)
+void WebDavJob::parseUploadFile(const QString &data)
 {
     qDebug()<<" data "<<data;
     deleteLater();
@@ -190,18 +194,45 @@ void WebDavJob::parseListFolder(const QString &data)
 
 void WebDavJob::shareLink(const QString &root, const QString &path)
 {
-    mActionType = ShareLink;
+    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
 }
 
 void WebDavJob::createServiceFolder()
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void WebDavJob::downloadFile(const QString &filename)
 {
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" not implemented";
+    deleteLater();
+}
 
+void WebDavJob::deleteFile(const QString &filename)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" not implemented";
+    deleteLater();
+}
+
+void WebDavJob::deleteFolder(const QString &foldername)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" not implemented";
+    deleteLater();
 }

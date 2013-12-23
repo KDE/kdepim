@@ -386,9 +386,9 @@ BaseG::readPublicKey( const KeyID& keyID,
 
   status = 0;
   if( readTrust )
-    exitStatus = runGpg( "--batch --list-public-keys --with-fingerprint --with-colons --fixed-list-mode 0x" + keyID, 0, true );
+    exitStatus = runGpg( QByteArray(QByteArray("--batch --list-public-keys --with-fingerprint --with-colons --fixed-list-mode 0x") + keyID), 0, true );
   else
-    exitStatus = runGpg( "--batch --list-public-keys --with-fingerprint --with-colons --fixed-list-mode --no-expensive-trust-checks 0x" + keyID, 0, true );
+    exitStatus = runGpg( QByteArray(QByteArray("--batch --list-public-keys --with-fingerprint --with-colons --fixed-list-mode --no-expensive-trust-checks 0x") + keyID), 0, true );
 
   if(exitStatus != 0) {
     status = ERROR;
@@ -507,7 +507,7 @@ BaseG::getAsciiPublicKey(const KeyID& keyID)
     return QByteArray();
 
   status = 0;
-  exitStatus = runGpg("--batch --armor --export 0x" + keyID, 0, true);
+  exitStatus = runGpg(QByteArray(QByteArray("--batch --armor --export 0x") + keyID), 0, true);
 
   if(exitStatus != 0) {
     status = ERROR;

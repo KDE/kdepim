@@ -52,7 +52,7 @@ void YouSendItStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void YouSendItStorageService::authentication()
+void YouSendItStorageService::storageServiceauthentication()
 {
     YouSendItJob *job = new YouSendItJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
@@ -65,8 +65,7 @@ void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessag
     mUsername.clear();
     mPassword.clear();
     mToken.clear();
-    qDebug()<<" void YouSendItStorageService::slotAuthorizationFailed(const QString &errorMessage)"<<errorMessage;
-    Q_EMIT authenticationFailed(serviceName(), errorMessage);
+    emitAuthentificationFailder(errorMessage);
 }
 
 
@@ -75,7 +74,6 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     mUsername = username;
     mPassword = password;
     mToken = token;
-qDebug()<<"slotAuthorizationDone ";
     KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
     grp.readEntry("Username", mUsername);
     //TODO store in kwallet ?
@@ -83,12 +81,13 @@ qDebug()<<"slotAuthorizationDone ";
     grp.readEntry("Token", mToken);
     grp.sync();
     KGlobal::config()->sync();
-    Q_EMIT authenticationDone(serviceName());
+    emitAuthentificationDone();
 }
 
-void YouSendItStorageService::listFolder()
+void YouSendItStorageService::storageServicelistFolder()
 {
     if (mToken.isEmpty()) {
+        mNextAction = ListFolder;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -99,9 +98,10 @@ void YouSendItStorageService::listFolder()
     }
 }
 
-void YouSendItStorageService::createFolder(const QString &folder)
+void YouSendItStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
+        mNextAction = CreateFolder;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -112,9 +112,10 @@ void YouSendItStorageService::createFolder(const QString &folder)
     }
 }
 
-void YouSendItStorageService::accountInfo()
+void YouSendItStorageService::storageServiceaccountInfo()
 {
     if (mToken.isEmpty()) {
+        mNextAction = AccountInfo;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -130,15 +131,17 @@ QString YouSendItStorageService::name()
     return i18n("YouSendIt");
 }
 
-void YouSendItStorageService::uploadFile(const QString &filename)
+void YouSendItStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
+        mNextAction = UploadFile;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         job->uploadFile(filename);
     }
@@ -164,9 +167,10 @@ QString YouSendItStorageService::iconName()
     return QString();
 }
 
-void YouSendItStorageService::shareLink(const QString &root, const QString &path)
+void YouSendItStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
+        mNextAction = ShareLink;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -177,22 +181,24 @@ void YouSendItStorageService::shareLink(const QString &root, const QString &path
     }
 }
 
-void YouSendItStorageService::downloadFile(const QString &filename)
+void YouSendItStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
+        mNextAction = DownLoadFile;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
-        //TODO download ?
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         job->downloadFile(filename);
     }
 }
 
-void YouSendItStorageService::createServiceFolder()
+void YouSendItStorageService::storageServicecreateServiceFolder()
 {
     if (mToken.isEmpty()) {
+        mNextAction = CreateServiceFolder;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -200,6 +206,34 @@ void YouSendItStorageService::createServiceFolder()
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createServiceFolder();
+    }
+}
+
+void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
+{
+    if (mToken.isEmpty()) {
+        mNextAction = DeleteFile;
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
+}
+
+void YouSendItStorageService::storageServicedeleteFolder(const QString &foldername)
+{
+    if (mToken.isEmpty()) {
+        mNextAction = DeleteFolder;
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
     }
 }
 

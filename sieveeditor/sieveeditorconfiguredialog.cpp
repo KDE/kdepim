@@ -19,19 +19,66 @@
 */
 
 #include "sieveeditorconfiguredialog.h"
+#include "serversievelistwidget.h"
+#include "sieveeditorconfigureserverwidget.h"
 
 #include <KLocalizedString>
+#include <KSharedConfig>
+
+#include <QTabWidget>
+#include <QVBoxLayout>
+#include <QListWidget>
+#include <QLabel>
 
 SieveEditorConfigureDialog::SieveEditorConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure" ) );
     setButtons( Cancel | Ok  );
-
+    mTabWidget = new QTabWidget;
+    setMainWidget(mTabWidget);
+    initializeServerSieveSettings();
+    readConfig();
 }
 
 SieveEditorConfigureDialog::~SieveEditorConfigureDialog()
 {
-
+    writeConfig();
 }
 
+void SieveEditorConfigureDialog::initializeServerSieveSettings()
+{
+    QWidget *w = new QWidget;
+    QVBoxLayout *vbox = new QVBoxLayout;
+    w->setLayout(vbox);
+    mTabWidget->addTab(w, i18n("Server Sieve"));
+    mServerWidget = new SieveEditorConfigureServerWidget;
+    vbox->addWidget(mServerWidget);
+    loadServerSieveConfig();
+}
+
+void SieveEditorConfigureDialog::loadServerSieveConfig()
+{
+    mServerWidget->readConfig();
+}
+
+void SieveEditorConfigureDialog::saveServerSieveConfig()
+{
+    mServerWidget->writeConfig();
+}
+
+void SieveEditorConfigureDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveEditorConfigureDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void SieveEditorConfigureDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "SieveEditorConfigureDialog" );
+    group.writeEntry( "Size", size() );
+    group.sync();
+}

@@ -21,7 +21,7 @@
 #include "sieveeditormainwindow.h"
 #include "sieveeditormainwidget.h"
 #include "sieveeditorconfiguredialog.h"
-#include "addsieveserverdialog.h"
+#include "serversievesettingsdialog.h"
 
 #include <KSharedConfig>
 #include <KGlobal>
@@ -57,7 +57,7 @@ void SieveEditorMainWindow::readConfig()
 {
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group = KConfigGroup( config, "SieveEditorMainWindow" );
-    const QSize sizeDialog = group.readEntry( "Size", QSize(600,400) );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(800,600) );
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
     }
@@ -96,7 +96,7 @@ void SieveEditorMainWindow::slotConfigure()
 
 void SieveEditorMainWindow::slotAddServerSieve()
 {
-    QPointer<AddSieveServerDialog> dlg = new AddSieveServerDialog(this);
+    QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
     if (dlg->exec()) {
         //TODO
     }

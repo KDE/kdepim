@@ -76,7 +76,7 @@ public:
         // first check whether a contact with the same email exists already
         Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( q );
         searchJob->setLimit( 1 );
-        searchJob->setQuery( Akonadi::ContactSearchJob::Email, mEmail,
+        searchJob->setQuery( Akonadi::ContactSearchJob::Email, mEmail.toLower(),
                              Akonadi::ContactSearchJob::ExactMatch );
         q->connect( searchJob, SIGNAL(result(KJob*)), q, SLOT(slotSearchDone(KJob*)) );
     }

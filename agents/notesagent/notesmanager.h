@@ -20,7 +20,11 @@
 #define NOTESMANAGER_H
 
 #include <QObject>
+
+#include "notesagentalarmdialog.h"
+
 #include <Akonadi/Item>
+#include <QPointer>
 class QTcpServer;
 class QTimer;
 namespace NoteShared {
@@ -54,6 +58,7 @@ private:
     QTimer *mCheckAlarm;
     NoteShared::NotesChangeRecorder *mNoteRecorder;
     NoteShared::NotesAkonadiTreeModel *mNoteTreeModel;
+    QPointer<NotesAgentAlarmDialog> mAlarmDialog;
 };
 
 #endif // NOTESMANAGER_H

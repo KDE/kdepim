@@ -54,7 +54,7 @@ void DropBoxStorageService::readConfig()
     mAccessOauthSignature = grp.readEntry("Access Oauth Signature");
 }
 
-void DropBoxStorageService::authentication()
+void DropBoxStorageService::storageServiceauthentication()
 {
     DropBoxJob *job = new DropBoxJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
@@ -62,10 +62,11 @@ void DropBoxStorageService::authentication()
     job->requestTokenAccess();
 }
 
-void DropBoxStorageService::shareLink(const QString &root, const QString &path)
+void DropBoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mAccessToken.isEmpty()) {
-        authentication();
+        mNextAction = ShareLink;
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -75,10 +76,11 @@ void DropBoxStorageService::shareLink(const QString &root, const QString &path)
     }
 }
 
-void DropBoxStorageService::createServiceFolder()
+void DropBoxStorageService::storageServicecreateServiceFolder()
 {
     if (mAccessToken.isEmpty()) {
-        authentication();
+        mNextAction = CreateServiceFolder;
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -99,13 +101,14 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     grp.writeEntry("Access Oauth Signature", mAccessOauthSignature);
     grp.sync();
     KGlobal::config()->sync();
-    Q_EMIT authenticationDone(serviceName());
+    emitAuthentificationDone();
 }
 
-void DropBoxStorageService::listFolder()
+void DropBoxStorageService::storageServicelistFolder()
 {
     if (mAccessToken.isEmpty()) {
-        authentication();
+        mNextAction = ListFolder;
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -115,10 +118,11 @@ void DropBoxStorageService::listFolder()
     }
 }
 
-void DropBoxStorageService::accountInfo()
+void DropBoxStorageService::storageServiceaccountInfo()
 {
     if (mAccessToken.isEmpty()) {
-        authentication();
+        mNextAction = AccountInfo;
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -128,10 +132,11 @@ void DropBoxStorageService::accountInfo()
     }
 }
 
-void DropBoxStorageService::createFolder(const QString &folder)
+void DropBoxStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mAccessToken.isEmpty()) {
-        authentication();
+        mNextAction = CreateFolder;
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
@@ -141,14 +146,16 @@ void DropBoxStorageService::createFolder(const QString &folder)
     }
 }
 
-void DropBoxStorageService::uploadFile(const QString &filename)
+void DropBoxStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
-        authentication();
+        mNextAction = UploadFile;
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
+        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         job->uploadFile(filename);
@@ -160,7 +167,7 @@ void DropBoxStorageService::slotAuthorizationFailed(const QString &errorMessage)
     mAccessToken.clear();
     mAccessTokenSecret.clear();
     mAccessOauthSignature.clear();
-    Q_EMIT authenticationFailed(serviceName(), errorMessage);
+    emitAuthentificationFailder(errorMessage);
 }
 
 QString DropBoxStorageService::name()
@@ -193,18 +200,46 @@ QString DropBoxStorageService::storageServiceName() const
     return serviceName();
 }
 
-void DropBoxStorageService::downloadFile(const QString &filename)
+void DropBoxStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
-        authentication();
+        mNextAction = DownLoadFile;
+        storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        //TODO connect
+        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->downloadFile(filename);
     }
+}
 
+void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
+{
+    if (mAccessToken.isEmpty()) {
+        mNextAction = DeleteFile;
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
+}
+
+void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername)
+{
+    if (mAccessToken.isEmpty()) {
+        mNextAction = DeleteFolder;
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
+    }
 }
 
 KIcon DropBoxStorageService::icon() const

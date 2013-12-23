@@ -38,6 +38,8 @@ public:
     void initializeToken(const QString &password, const QString &userName, const QString &token);
     void createServiceFolder();
     void downloadFile(const QString &filename);
+    void deleteFile(const QString &filename);
+    void deleteFolder(const QString &foldername);
 
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);
@@ -50,15 +52,16 @@ private:
     void parseRequestToken(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseCreateFolder(const QString &data);
-    void parseUploadFiles(const QString &data);
+    void parseUploadFile(const QString &data);
     void startUploadFile(const QString &fileId);
     void parseListFolder(const QString &data);
     void parseCreateServiceFolder(const QString &data);
+    void parseDeleteFolder(const QString &data);
     QString mPassword;
     QString mUsername;
     QString mDefaultUrl;
     QString mApiKey;
-    QString mToken;    
+    QString mToken;
 };
 }
 

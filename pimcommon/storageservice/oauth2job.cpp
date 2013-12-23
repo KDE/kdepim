@@ -53,18 +53,45 @@ void OAuth2Job::initializeToken(const QString &refreshToken, const QString &toke
 
 void OAuth2Job::createServiceFolder()
 {
+    mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mError = false;
     //TODO
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void OAuth2Job::downloadFile(const QString &filename)
 {
+    mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
+    mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" not implemented";
+    deleteLater();
+}
 
+void OAuth2Job::deleteFile(const QString &filename)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" not implemented";
+    deleteLater();
+}
+
+void OAuth2Job::deleteFolder(const QString &foldername)
+{
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
+    mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" not implemented";
+    deleteLater();
 }
 
 void OAuth2Job::requestTokenAccess()
 {
     mError = false;
-    mActionType = RequestToken;
+    mActionType = PimCommon::StorageServiceAbstract::RequestToken;
     QUrl url(mServiceUrl + mAuthorizePath );
     url.addQueryItem(QLatin1String("response_type"), QLatin1String("code"));
     url.addQueryItem(QLatin1String("client_id"), mClientId);
@@ -124,7 +151,7 @@ void OAuth2Job::parseRedirectUrl(const QUrl &url)
 
 void OAuth2Job::getTokenAccess(const QString &authorizeCode)
 {
-    mActionType = AccessToken;
+    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
     mError = false;
     QNetworkRequest request(QUrl(mServiceUrl + mPathToken));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
@@ -140,7 +167,7 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
 
 void OAuth2Job::uploadFile(const QString &filename)
 {
-    mActionType = UploadFiles;
+    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
@@ -156,7 +183,7 @@ void OAuth2Job::uploadFile(const QString &filename)
 
 void OAuth2Job::listFolder(const QString &folder)
 {
-    mActionType = ListFolder;
+    mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath + QLatin1String("0"));
@@ -169,7 +196,7 @@ void OAuth2Job::listFolder(const QString &folder)
 
 void OAuth2Job::accountInfo()
 {
-    mActionType = AccountInfo;
+    mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mCurrentAccountInfoPath);
@@ -182,7 +209,7 @@ void OAuth2Job::accountInfo()
 
 void OAuth2Job::createFolder(const QString &foldername)
 {
-    mActionType = CreateFolder;
+    mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath);
@@ -199,7 +226,7 @@ void OAuth2Job::createFolder(const QString &foldername)
 
 void OAuth2Job::shareLink(const QString &fileId)
 {
-    mActionType = ShareLink;
+    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFileInfoPath + fileId);
@@ -212,7 +239,7 @@ void OAuth2Job::shareLink(const QString &fileId)
 
 void OAuth2Job::shareLink(const QString &root, const QString &path)
 {
-    mActionType = ShareLink;
+    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
     QUrl url;
     QString fileId; //TODO
@@ -239,23 +266,25 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         if (error.contains(QLatin1String("message"))) {
             const QString errorStr = error.value(QLatin1String("message")).toString();
             switch(mActionType) {
-            case NoneAction:
+            case PimCommon::StorageServiceAbstract::NoneAction:
                 deleteLater();
                 break;
-            case RequestToken:
+            case PimCommon::StorageServiceAbstract::RequestToken:
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case AccessToken:
+            case PimCommon::StorageServiceAbstract::AccessToken:
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case UploadFiles:
-            case CreateFolder:
-            case AccountInfo:
-            case ListFolder:
-            case DownLoadFile:
-            case CreateServiceFolder:
+            case PimCommon::StorageServiceAbstract::UploadFile:
+            case PimCommon::StorageServiceAbstract::CreateFolder:
+            case PimCommon::StorageServiceAbstract::AccountInfo:
+            case PimCommon::StorageServiceAbstract::ListFolder:
+            case PimCommon::StorageServiceAbstract::DownLoadFile:
+            case PimCommon::StorageServiceAbstract::CreateServiceFolder:
+            case PimCommon::StorageServiceAbstract::DeleteFile:
+            case PimCommon::StorageServiceAbstract::DeleteFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -272,31 +301,33 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     }
     qDebug()<<" data: "<<data;
     switch(mActionType) {
-    case NoneAction:
+    case PimCommon::StorageServiceAbstract::NoneAction:
         deleteLater();
         break;
-    case RequestToken:
+    case PimCommon::StorageServiceAbstract::RequestToken:
         deleteLater();
         break;
-    case AccessToken:
+    case PimCommon::StorageServiceAbstract::AccessToken:
         parseAccessToken(data);
         break;
-    case UploadFiles:
+    case PimCommon::StorageServiceAbstract::UploadFile:
         parseUploadFile(data);
         break;
-    case CreateFolder:
+    case PimCommon::StorageServiceAbstract::CreateFolder:
         parseCreateFolder(data);
         break;
-    case AccountInfo:
+    case PimCommon::StorageServiceAbstract::AccountInfo:
         parseAccountInfo(data);
         break;
-    case ListFolder:
+    case PimCommon::StorageServiceAbstract::ListFolder:
         parseListFolder(data);
         break;
-    case CreateServiceFolder:
+    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         parseCreateServiceFolder(data);
         break;
-    case DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
         deleteLater();
         break;
     default:
@@ -373,7 +404,7 @@ void OAuth2Job::parseAccessToken(const QString &data)
 
 void OAuth2Job::refreshToken()
 {
-    mActionType = AccessToken;
+    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
     QNetworkRequest request(QUrl(mServiceUrl + QLatin1String("/oauth/token")));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
 

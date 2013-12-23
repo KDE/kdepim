@@ -1,0 +1,65 @@
+/*
+  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
+
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
+
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
+
+*/
+
+#include "serversievelistwidget.h"
+#include "sieveeditorutil.h"
+
+#include <QListWidgetItem>
+
+ServerSieveListWidget::ServerSieveListWidget(QWidget *parent)
+    : QListWidget(parent)
+{
+
+}
+
+ServerSieveListWidget::~ServerSieveListWidget()
+{
+
+}
+
+void ServerSieveListWidget::readConfig()
+{
+    const QList<SieveEditorUtil::SieveServerConfig> lstServer = SieveEditorUtil::readServerSieveConfig();
+    Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, lstServer) {
+        ServerSieveListWidgetItem *item = new ServerSieveListWidgetItem(this);
+        item->setText(conf.serverName);
+        //TODO
+    }
+}
+
+void ServerSieveListWidget::writeConfig()
+{
+    for (int i=0; i <count(); ++i) {
+
+    }
+    //TODO
+}
+
+
+ServerSieveListWidgetItem::ServerSieveListWidgetItem(QListWidget *parent)
+    : QListWidgetItem(parent)
+{
+
+}
+
+ServerSieveListWidgetItem::~ServerSieveListWidgetItem()
+{
+
+}

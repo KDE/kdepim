@@ -16,9 +16,13 @@
 */
 
 #include "notesagentalarmdialog.h"
+#include "notesagentnotedialog.h"
 #include "noteshared/widget/notelistwidget.h"
 
 #include <KLocalizedString>
+#include <KGlobal>
+#include <KLocale>
+#include <KDateTime>
 
 #include <QListWidget>
 #include <QLabel>
@@ -35,19 +39,51 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
 
+    mCurrentDateTime = new QLabel;
+    mCurrentDateTime->setText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+    vbox->addWidget(mCurrentDateTime);
+
     QLabel *lab = new QLabel(i18n("The following notes triggered alarms:"));
     vbox->addWidget(lab);
     mListWidget = new NoteShared::NoteListWidget;
+    connect(mListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotItemDoubleClicked(QListWidgetItem*)));
     vbox->addWidget(mListWidget);
     setMainWidget(w);
+    readConfig();
 }
 
 NotesAgentAlarmDialog::~NotesAgentAlarmDialog()
 {
-
+    writeConfig();
 }
 
-void NotesAgentAlarmDialog::setListAlarm(const Akonadi::Item::List &lstAlarm)
+void NotesAgentAlarmDialog::readConfig()
 {
-    mListWidget->setNotes(lstAlarm);
+    KConfigGroup grp( KGlobal::config(), "NotesAgentAlarmDialog" );
+    const QSize size = grp.readEntry( "Size", QSize(300, 200) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void NotesAgentAlarmDialog::writeConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "NotesAgentAlarmDialog" );
+    grp.writeEntry( "Size", size() );
+    grp.sync();
+}
+
+
+void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
+{
+    mListWidget->addNotes(lstAlarm);
+    mCurrentDateTime->setText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+}
+
+void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)
+{
+    if (item) {
+        NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
+        dlg->show();
+    }
 }

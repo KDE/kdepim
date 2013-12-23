@@ -53,7 +53,7 @@ void BoxStorageService::removeConfig()
     KGlobal::config()->sync();
 }
 
-void BoxStorageService::authentication()
+void BoxStorageService::storageServiceauthentication()
 {
     BoxJob *job = new BoxJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
@@ -65,7 +65,7 @@ void BoxStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mRefreshToken.clear();
     mToken.clear();
-    Q_EMIT authenticationFailed(serviceName(), errorMessage);
+    emitAuthentificationFailder(errorMessage);
 }
 
 void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime)
@@ -77,14 +77,15 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
     grp.sync();
-    Q_EMIT authenticationDone(serviceName());
+    emitAuthentificationDone();
 }
 
 
-void BoxStorageService::shareLink(const QString &root, const QString &path)
+void BoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
-        authentication();
+        mNextAction = ShareLink;
+        storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -94,23 +95,53 @@ void BoxStorageService::shareLink(const QString &root, const QString &path)
     }
 }
 
-void BoxStorageService::downloadFile(const QString &filename)
+void BoxStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        authentication();
+        mNextAction = DownLoadFile;
+        storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        //TODO
+        connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->downloadFile(filename);
     }
 }
 
-void BoxStorageService::listFolder()
+void BoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        authentication();
+        mNextAction = DeleteFile;
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFile(filename);
+    }
+}
+
+void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
+{
+    if (mToken.isEmpty()) {
+        mNextAction = DeleteFolder;
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->deleteFolder(foldername);
+    }
+}
+
+void BoxStorageService::storageServicelistFolder()
+{
+    if (mToken.isEmpty()) {
+        mNextAction = ListFolder;
+        storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -120,10 +151,11 @@ void BoxStorageService::listFolder()
     }
 }
 
-void BoxStorageService::createFolder(const QString &folder)
+void BoxStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
-        authentication();
+        mNextAction = CreateFolder;
+        storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -133,10 +165,11 @@ void BoxStorageService::createFolder(const QString &folder)
     }
 }
 
-void BoxStorageService::accountInfo()
+void BoxStorageService::storageServiceaccountInfo()
 {
     if (mToken.isEmpty()) {
-        authentication();
+        mNextAction = AccountInfo;
+        storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -151,15 +184,17 @@ QString BoxStorageService::name()
     return i18n("Box");
 }
 
-void BoxStorageService::uploadFile(const QString &filename)
+void BoxStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        authentication();
+        mNextAction = UploadFile;
+        storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         job->uploadFile(filename);
     }
@@ -195,10 +230,11 @@ KIcon BoxStorageService::icon() const
     return KIcon();
 }
 
-void BoxStorageService::createServiceFolder()
+void BoxStorageService::storageServicecreateServiceFolder()
 {
     if (mToken.isEmpty()) {
-        authentication();
+        mNextAction = CreateServiceFolder;
+        storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);

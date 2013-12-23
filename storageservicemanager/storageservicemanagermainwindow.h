@@ -18,32 +18,26 @@
 
 */
 
-#ifndef ADDSIEVESERVERDIALOG_H
-#define ADDSIEVESERVERDIALOG_H
+#ifndef STORAGESERVICEMANAGERMAINWINDOW_H
+#define STORAGESERVICEMANAGERMAINWINDOW_H
 
-#include <KDialog>
-class ServerSieveSettings;
-class AddSieveServerDialog : public KDialog
+#include <KXmlGuiWindow>
+class StorageServiceTabWidget;
+class StorageServiceManagerMainWindow : public KXmlGuiWindow
 {
     Q_OBJECT
 public:
-    explicit AddSieveServerDialog(QWidget *parent=0);
-    ~AddSieveServerDialog();
+    explicit StorageServiceManagerMainWindow();
+    ~StorageServiceManagerMainWindow();
 
-    QString serverName() const;
-    void setServerName(const QString &name);
-
-    int port() const;
-    void setPort(int value);
-
-    QString userName() const;
-    void setUserName(const QString &name);
-
-    QString password() const;
-    void setPassword(const QString &pass);
+private slots:
+    void slotQuitApp();    
+    void slotAddStorageService();
 
 private:
-    ServerSieveSettings *mServerSieveSettings;
+    void setupActions();
+    void readConfig();
+    StorageServiceTabWidget *mStorageServiceTabWidget;
 };
 
-#endif // ADDSIEVESERVERDIALOG_H
+#endif // STORAGESERVICEMANAGERMAINWINDOW_H
