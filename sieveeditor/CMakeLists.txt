@@ -19,6 +19,7 @@ set(sieveeditor_SRCS
   sieveeditorscriptwidget.cpp
   sieveeditorconfiguredialog.cpp
   sieveeditorscriptmanagerwidget.cpp
+  sieveeditorutil.cpp
 )
 
 kde4_add_ui_files(sieveeditor_SRCS
