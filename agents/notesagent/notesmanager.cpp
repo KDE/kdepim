@@ -81,12 +81,13 @@ void NotesManager::slotItemRemoved(const Akonadi::Item &item)
 void NotesManager::slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &set)
 {
     if (set.contains("ATR:NoteAlarmAttribute")) {
+        qDebug()<<" NoteAlarm !";
         mListItem.removeAll(item);
         if (item.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
             mListItem.append(item);
         } else {
             if (mAlarmDialog) {
-                mListItem.removeNote(item);
+                mAlarmDialog->removeAlarm(item);
             }
         }
     }

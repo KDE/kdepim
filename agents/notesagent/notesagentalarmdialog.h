@@ -33,7 +33,8 @@ public:
     explicit NotesAgentAlarmDialog(QWidget *parent=0);
     ~NotesAgentAlarmDialog();
 
-    void addListAlarm(const Akonadi::Item::List &lstAlarm);
+    void addListAlarm(const Akonadi::Item::List &lstAlarm);    
+    void removeAlarm(const Akonadi::Item &note);
 
 private slots:
     void slotItemDoubleClicked(QListWidgetItem *item);    

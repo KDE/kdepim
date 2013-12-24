@@ -68,6 +68,11 @@ NotesAgentAlarmDialog::~NotesAgentAlarmDialog()
     writeConfig();
 }
 
+void NotesAgentAlarmDialog::removeAlarm(const Akonadi::Item &note)
+{
+    mListWidget->removeNote(note);
+}
+
 void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
 {
     if ( mListWidget->selectedItems().isEmpty() )
