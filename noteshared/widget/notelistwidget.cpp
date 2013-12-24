@@ -41,8 +41,20 @@ void NoteListWidget::addNotes(const Akonadi::Item::List &notes)
     }
 }
 
+void NoteListWidget::removeNote(const Akonadi::Item &note)
+{
+    for (int i=0; i <count(); ++i) {
+        if (item(i)->data(AkonadiId)==note.id()) {
+            delete item(i);
+            mNotes.removeAll(note);
+            break;
+        }
+    }
+}
+
 void NoteListWidget::setNotes(const Akonadi::Item::List &notes)
 {
+    clear();
     mNotes = notes;
     Q_FOREACH (const Akonadi::Item &note, mNotes) {
         createItem(note);
@@ -77,4 +89,13 @@ QStringList NoteListWidget::selectedNotes() const
         }
     }
     return lst;
+}
+
+Akonadi::Entity::Id NoteListWidget::currentItemId() const
+{
+    QListWidgetItem *item = currentItem();
+    if (item) {
+        return item->data(AkonadiId).toLongLong();
+    }
+    return -1;
 }

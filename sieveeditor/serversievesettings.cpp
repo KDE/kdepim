@@ -72,3 +72,21 @@ void ServerSieveSettings::setPassword(const QString &pass)
 {
     ui->password->setText(pass);
 }
+
+void ServerSieveSettings::setServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf)
+{
+    setPassword(conf.password);
+    setPort(conf.port);
+    setServerName(conf.serverName);
+    setUserName(conf.serverName);
+}
+
+SieveEditorUtil::SieveServerConfig ServerSieveSettings::serverSieveConfig() const
+{
+    SieveEditorUtil::SieveServerConfig conf;
+    conf.password = password();
+    conf.port = port();
+    conf.serverName = serverName();
+    conf.userName = userName();
+    return conf;
+}

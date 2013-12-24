@@ -271,10 +271,11 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DeleteFolder:
         parseDeleteFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
-        //TODO
-        deleteLater();
+        parseDeleteFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
+        parseDownloadFile(data);
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
@@ -283,15 +284,33 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     }
 }
 
+void YouSendItJob::parseDownloadFile(const QString &data)
+{
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
+void YouSendItJob::parseDeleteFile(const QString &data)
+{
+    qDebug()<<" data "<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //Q_EMIT deleteFolderDone(foldername);
+    deleteLater();
+}
+
 void YouSendItJob::parseDeleteFolder(const QString &data)
 {
     qDebug()<<" data "<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //Q_EMIT deleteFolderDone(foldername);
     deleteLater();
 }
 
 void YouSendItJob::parseCreateServiceFolder(const QString &data)
 {
     qDebug()<<" create service folder not implmented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 

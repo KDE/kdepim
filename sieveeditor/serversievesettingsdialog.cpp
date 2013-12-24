@@ -86,3 +86,13 @@ void ServerSieveSettingsDialog::setPassword(const QString &pass)
 {
     mServerSieveSettings->setPassword(pass);
 }
+
+void ServerSieveSettingsDialog::setServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf)
+{
+    mServerSieveSettings->setServerSieveConfig(conf);
+}
+
+SieveEditorUtil::SieveServerConfig ServerSieveSettingsDialog::serverSieveConfig() const
+{
+    return mServerSieveSettings->serverSieveConfig();
+}

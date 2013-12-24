@@ -18,11 +18,18 @@
 #include "notesagentalarmdialog.h"
 #include "notesagentnotedialog.h"
 #include "noteshared/widget/notelistwidget.h"
+#include "noteshared/attributes/notealarmattribute.h"
+
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+#include <Akonadi/ItemModifyJob>
 
 #include <KLocalizedString>
 #include <KGlobal>
 #include <KLocale>
 #include <KDateTime>
+#include <KMenu>
+#include <KAction>
 
 #include <QListWidget>
 #include <QLabel>
@@ -46,7 +53,11 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("The following notes triggered alarms:"));
     vbox->addWidget(lab);
     mListWidget = new NoteShared::NoteListWidget;
+    mListWidget->setContextMenuPolicy( Qt::CustomContextMenu );
     connect(mListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotItemDoubleClicked(QListWidgetItem*)));
+    connect( mListWidget, SIGNAL(customContextMenuRequested(QPoint)),
+             this, SLOT(slotCustomContextMenuRequested(QPoint)) );
+
     vbox->addWidget(mListWidget);
     setMainWidget(w);
     readConfig();
@@ -55,6 +66,27 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
 NotesAgentAlarmDialog::~NotesAgentAlarmDialog()
 {
     writeConfig();
+}
+
+void NotesAgentAlarmDialog::removeAlarm(const Akonadi::Item &note)
+{
+    mListWidget->removeNote(note);
+}
+
+void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
+{
+    if ( mListWidget->selectedItems().isEmpty() )
+        return;
+    Q_UNUSED(pos);
+    KMenu *entriesContextMenu = new KMenu;
+    KAction *removeAlarm = new KAction(i18n("Remove Alarm"), entriesContextMenu);
+    connect(removeAlarm, SIGNAL(triggered()), this, SLOT(slotRemoveAlarm()));
+    KAction *showNote = new KAction(i18n("Show Note..."), entriesContextMenu);
+    connect(showNote, SIGNAL(triggered()), this, SLOT(slotShowAlarm()));
+    entriesContextMenu->addAction( showNote );
+    entriesContextMenu->addAction( removeAlarm );
+    entriesContextMenu->exec( QCursor::pos() );
+    delete entriesContextMenu;
 }
 
 void NotesAgentAlarmDialog::readConfig()
@@ -76,7 +108,7 @@ void NotesAgentAlarmDialog::writeConfig()
 
 void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 {
-    mListWidget->addNotes(lstAlarm);
+    mListWidget->setNotes(lstAlarm);
     mCurrentDateTime->setText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
 }
 
@@ -85,5 +117,46 @@ void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)
     if (item) {
         NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
         dlg->show();
+    }
+}
+
+void NotesAgentAlarmDialog::slotShowAlarm()
+{
+    NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
+    dlg->show();
+}
+
+void NotesAgentAlarmDialog::slotRemoveAlarm()
+{
+    Akonadi::Item::Id id = mListWidget->currentItemId();
+    if (id!=-1) {
+        Akonadi::Item item(id);
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+        job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchItem(KJob*)) );
+    }
+}
+
+void NotesAgentAlarmDialog::slotFetchItem(KJob *job)
+{
+    if ( job->error() ) {
+        qDebug()<<"fetch item failed "<<job->errorString();
+        return;
+    }
+    Akonadi::ItemFetchJob *itemFetchJob = static_cast<Akonadi::ItemFetchJob *>(job);
+    Akonadi::Item::List items = itemFetchJob->items();
+    if (!items.isEmpty()) {
+        Akonadi::Item item = items.first();
+        item.removeAttribute<NoteShared::NoteAlarmAttribute>();
+        Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(item);
+        connect( modify, SIGNAL(result(KJob*)), SLOT(slotModifyItem(KJob*)) );
+    }
+}
+
+void NotesAgentAlarmDialog::slotModifyItem(KJob *job)
+{
+    if ( job->error() ) {
+        qDebug()<<"modify item failed "<<job->errorString();
+        return;
     }
 }

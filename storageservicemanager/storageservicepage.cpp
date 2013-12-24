@@ -32,5 +32,10 @@ StorageServicePage::~StorageServicePage()
 
 void StorageServicePage::authenticate()
 {
+    //TODO
+}
 
+void StorageServicePage::createFolder()
+{
+    //TODO
 }

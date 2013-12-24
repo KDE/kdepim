@@ -57,6 +57,8 @@ private:
     void parseListFolder(const QString &data);
     void parseCreateServiceFolder(const QString &data);
     void parseDeleteFolder(const QString &data);
+    void parseDeleteFile(const QString &data);
+    void parseDownloadFile(const QString &data);
     QString mPassword;
     QString mUsername;
     QString mDefaultUrl;

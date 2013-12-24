@@ -55,6 +55,9 @@ void StorageServiceManagerMainWindow::setupActions()
     KAction *act = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
     act->setText(i18n("Authenticate..."));
 
+    act = ac->addAction(QLatin1String("create_folder"), mStorageServiceTabWidget, SLOT(slotCreateFolder()));
+    act->setText(i18n("Create Folder..."));
+
     act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
     act->setText(i18n("Add Storage Service..."));
 
@@ -68,7 +71,6 @@ void StorageServiceManagerMainWindow::slotAddStorageService()
 
 void StorageServiceManagerMainWindow::slotQuitApp()
 {
-    //TODO
     kapp->quit();
 }
 

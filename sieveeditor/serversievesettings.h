@@ -22,6 +22,7 @@
 #define SERVERSIEVESETTINGS_H
 
 #include <QWidget>
+#include "sieveeditorutil.h"
 
 namespace Ui {
 class ServerSieveSettings;
@@ -46,6 +47,9 @@ public:
 
     QString password() const;
     void setPassword(const QString &pass);
+
+    void setServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf);
+    SieveEditorUtil::SieveServerConfig serverSieveConfig() const;
 
 private:
     Ui::ServerSieveSettings *ui;

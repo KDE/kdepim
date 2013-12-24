@@ -18,6 +18,7 @@ Name[uk]=Агент нотаток
 Name[x-test]=xxNotes Agentxx
 Comment=Adds notes received via network and handles note alarm notifications
 Comment[de]=Fügt Notizen hinzu, die über das Netzwerk erhalten wurden und verarbeitet Benachrichtigungen über Notiz-Erinnerungen
+Comment[es]=Añade notas recibidas vía red y maneja notificaciones de alarmas de notas
 Comment[fi]=Lisää verkon välityksellä vastaanotetut muistiinpanot ja käsittelee muistiinpanojen hälytysilmoitukset
 Comment[ia]=Adde notas recipite via rete e manea notificationes de nota de alarma
 Comment[nl]=Voegt notities toe ontvangen via het netwerk en behandelt meldingen over herinneringen voor notities

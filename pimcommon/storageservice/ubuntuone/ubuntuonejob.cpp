@@ -65,6 +65,7 @@ void UbuntuOneJob::uploadFile(const QString &filename)
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     qDebug()<<" upload file not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -140,6 +141,7 @@ void UbuntuOneJob::shareLink(const QString &root, const QString &path)
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
     qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -229,6 +231,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
 void UbuntuOneJob::parseCreateServiceFolder(const QString &data)
 {
     qDebug()<<" create service folder not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -272,6 +275,7 @@ void UbuntuOneJob::downloadFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -384,5 +388,6 @@ void UbuntuOneJob::finishGetToken()
 void UbuntuOneJob::parseAccessToken(const QString &data)
 {
     qDebug()<<" parseAccessToken :"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }

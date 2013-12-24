@@ -32,7 +32,10 @@ public:
 
 public slots:
     void slotAuthenticate();
+    void slotCreateFolder();
 
+private:
+    void loadStorageService();
 };
 
 #endif // STORAGESERVICETABWIDGET_H

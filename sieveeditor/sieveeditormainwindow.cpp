@@ -89,7 +89,7 @@ void SieveEditorMainWindow::slotConfigure()
 {
     QPointer<SieveEditorConfigureDialog> dlg = new SieveEditorConfigureDialog(this);
     if (dlg->exec()) {
-        //TODO
+        dlg->saveServerSieveConfig();
     }
     delete dlg;
 }
