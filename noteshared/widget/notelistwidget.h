@@ -31,6 +31,7 @@ public:
 
     void setNotes(const Akonadi::Item::List &notes);
     void addNotes(const Akonadi::Item::List &notes);
+    void removeNote(const Akonadi::Item &note);
     QStringList selectedNotes() const;
 
     Akonadi::Item::Id currentItemId() const;

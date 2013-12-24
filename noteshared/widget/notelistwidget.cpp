@@ -41,6 +41,17 @@ void NoteListWidget::addNotes(const Akonadi::Item::List &notes)
     }
 }
 
+void NoteListWidget::removeNote(const Akonadi::Item &note)
+{
+    for (int i=0; i <count(); ++i) {
+        if (item(i)->data(AkonadiId)==note.id()) {
+            delete item(i);
+            mNotes.removeAll(note);
+            break;
+        }
+    }
+}
+
 void NoteListWidget::setNotes(const Akonadi::Item::List &notes)
 {
     clear();
