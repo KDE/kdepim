@@ -533,5 +533,7 @@ void DropBoxJob::parseListFolder(const QString &data)
 
 void DropBoxJob::parseDownLoadFile(const QString &data)
 {
+    qDebug()<<" data "<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
