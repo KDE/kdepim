@@ -2,6 +2,7 @@
 Name=Sieve Editor
 Name[cs]=Editor Sieve
 Name[de]=Sieve-Editor
+Name[es]=Editor de Sieve
 Name[fi]=Sieve-muokkain
 Name[nl]=Sieve-bewerker
 Name[pt]=Editor do Sieve
@@ -21,6 +22,7 @@ X-DocPath=sieveeditor/index.html
 GenericName=Sieve Editor
 GenericName[cs]=Editor Sieve
 GenericName[de]=Sieve-Editor
+GenericName[es]=Editor de Sieve
 GenericName[fi]=Sieve-muokkain
 GenericName[nl]=Sieve-bewerker
 GenericName[pt]=Editor do Sieve
