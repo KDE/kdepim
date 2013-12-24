@@ -78,6 +78,12 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstract::
     case PimCommon::StorageServiceAbstract::DownLoadFile:
         error = i18n("Download file returns an error: %1",errorStr);
         break;
+    case PimCommon::StorageServiceAbstract::DeleteFile:
+        error = i18n("Delete File returns an error: %1",errorStr);
+        break;
+    case PimCommon::StorageServiceAbstract::DeleteFolder:
+        error = i18n("Delete Folder returns an error: %1",errorStr);
+        break;
     default:
         break;
     }
