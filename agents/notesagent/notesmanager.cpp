@@ -82,7 +82,9 @@ void NotesManager::slotItemChanged(const Akonadi::Item &item, const QSet<QByteAr
 {
     if (set.contains("ATR:NoteAlarmAttribute")) {
         mListItem.removeAll(item);
-        mListItem.append(item);
+        if (item.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
+            mListItem.append(item);
+        }
     }
 }
 
