@@ -25,6 +25,7 @@ class QListWidgetItem;
 namespace NoteShared {
 class NoteListWidget;
 }
+class KJob;
 class NotesAgentAlarmDialog : public KDialog
 {
     Q_OBJECT
@@ -35,7 +36,12 @@ public:
     void addListAlarm(const Akonadi::Item::List &lstAlarm);
 
 private slots:
-    void slotItemDoubleClicked(QListWidgetItem *item);
+    void slotItemDoubleClicked(QListWidgetItem *item);    
+    void slotCustomContextMenuRequested(const QPoint &pos);
+    void slotShowAlarm();
+    void slotRemoveAlarm();
+    void slotFetchItem(KJob *job);
+    void slotModifyItem(KJob *job);
 
 private:
     void readConfig();
