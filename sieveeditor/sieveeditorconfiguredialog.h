@@ -32,11 +32,12 @@ public:
     explicit SieveEditorConfigureDialog(QWidget *parent=0);
     ~SieveEditorConfigureDialog();
 
+    void saveServerSieveConfig();
+
 private:
     void readConfig();
     void writeConfig();
     void loadServerSieveConfig();
-    void saveServerSieveConfig();
     void initializeServerSieveSettings();
     QTabWidget *mTabWidget;
     SieveEditorConfigureServerWidget *mServerWidget;

@@ -22,6 +22,7 @@
 #define SERVERSIEVESETTINGSDIALOG_H
 
 #include <KDialog>
+#include "sieveeditorutil.h"
 class ServerSieveSettings;
 class ServerSieveSettingsDialog : public KDialog
 {
@@ -41,6 +42,9 @@ public:
 
     QString password() const;
     void setPassword(const QString &pass);
+
+    void setServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf);
+    SieveEditorUtil::SieveServerConfig serverSieveConfig() const;
 
 private:
     ServerSieveSettings *mServerSieveSettings;

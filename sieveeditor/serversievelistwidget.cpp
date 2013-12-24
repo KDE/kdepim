@@ -20,8 +20,10 @@
 
 #include "serversievelistwidget.h"
 #include "sieveeditorutil.h"
+#include "serversievesettingsdialog.h"
 
 #include <QListWidgetItem>
+#include <QPointer>
 
 ServerSieveListWidget::ServerSieveListWidget(QWidget *parent)
     : QListWidget(parent)
@@ -39,7 +41,6 @@ void ServerSieveListWidget::readConfig()
     const QList<SieveEditorUtil::SieveServerConfig> lstServer = SieveEditorUtil::readServerSieveConfig();
     Q_FOREACH (const SieveEditorUtil::SieveServerConfig &conf, lstServer) {
         ServerSieveListWidgetItem *item = new ServerSieveListWidgetItem(this);
-        item->setText(conf.serverName);
         item->setServerConfig(conf);
     }
 }
@@ -56,6 +57,30 @@ void ServerSieveListWidget::writeConfig()
     SieveEditorUtil::writeServerSieveConfig(lstServerConfig);
 }
 
+
+void ServerSieveListWidget::modifyServerConfig()
+{
+    QListWidgetItem *item = currentItem();
+    if (!item)
+        return;
+
+    QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
+    if (dlg->exec()) {
+        ServerSieveListWidgetItem *serverSieveListItem = static_cast<ServerSieveListWidgetItem *>(item);
+        serverSieveListItem->setServerConfig(dlg->serverSieveConfig());
+    }
+    delete dlg;
+}
+
+void ServerSieveListWidget::addServerConfig()
+{
+    QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
+    if (dlg->exec()) {
+        ServerSieveListWidgetItem *item = new ServerSieveListWidgetItem(this);
+        item->setServerConfig(dlg->serverSieveConfig());
+    }
+    delete dlg;
+}
 
 ServerSieveListWidgetItem::ServerSieveListWidgetItem(QListWidget *parent)
     : QListWidgetItem(parent)
@@ -75,5 +100,6 @@ SieveEditorUtil::SieveServerConfig ServerSieveListWidgetItem::serverConfig() con
 
 void ServerSieveListWidgetItem::setServerConfig(const SieveEditorUtil::SieveServerConfig &conf)
 {
+    setText(conf.serverName);
     mServerConfig = conf;
 }

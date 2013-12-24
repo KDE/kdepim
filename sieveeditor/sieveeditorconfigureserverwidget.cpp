@@ -56,24 +56,12 @@ void SieveEditorConfigureServerWidget::writeConfig()
 
 void SieveEditorConfigureServerWidget::slotModifyServer()
 {
-    QListWidgetItem *item = ui->serverSieveListWidget->currentItem();
-    if (!item)
-        return;
-
-    QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
-    if (dlg->exec()) {
-        //TODO
-    }
-    delete dlg;
+    ui->serverSieveListWidget->modifyServerConfig();
 }
 
 void SieveEditorConfigureServerWidget::slotAddServer()
 {
-    QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
-    if (dlg->exec()) {
-        //TODO
-    }
-    delete dlg;
+    ui->serverSieveListWidget->addServerConfig();
 }
 
 void SieveEditorConfigureServerWidget::slotDeleteServer()
@@ -82,7 +70,8 @@ void SieveEditorConfigureServerWidget::slotDeleteServer()
     if (!item)
         return;
     if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Remove Server Sieve"), i18n("Do you want to remove this server \'%1\'?", item->text()))) {
-        //TODO
+        delete item;
+        slotItemSelectionChanged();
     }
 }
 

@@ -46,6 +46,8 @@ public:
 
     void readConfig();
     void writeConfig();
+    void modifyServerConfig();
+    void addServerConfig();
 };
 
 #endif // SERVERSIEVELISTWIDGET_H
