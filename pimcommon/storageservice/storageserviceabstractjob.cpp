@@ -84,8 +84,6 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstract::
     case PimCommon::StorageServiceAbstract::DeleteFolder:
         error = i18n("Delete Folder returns an error: %1",errorStr);
         break;
-    default:
-        break;
     }
     if (!error.isEmpty())
         Q_EMIT actionFailed(error);
