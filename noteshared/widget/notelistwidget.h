@@ -33,6 +33,8 @@ public:
     void addNotes(const Akonadi::Item::List &notes);
     QStringList selectedNotes() const;
 
+    Akonadi::Item::Id currentItemId() const;
+
 private:
     enum listViewData {
         AkonadiId = Qt::UserRole + 1
