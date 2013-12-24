@@ -31,6 +31,7 @@ public:
     ~StorageServicePage();
 
     void authenticate();
+    void createFolder();
 };
 
 #endif // STORAGESERVICEPAGE_H

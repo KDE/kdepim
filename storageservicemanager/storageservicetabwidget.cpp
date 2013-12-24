@@ -31,11 +31,25 @@ StorageServiceTabWidget::~StorageServiceTabWidget()
 
 }
 
+void StorageServiceTabWidget::loadStorageService()
+{
+    //TODO
+}
+
 void StorageServiceTabWidget::slotAuthenticate()
 {
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
         if (page)
             page->authenticate();
+    }
+}
+
+void StorageServiceTabWidget::slotCreateFolder()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->createFolder();
     }
 }
