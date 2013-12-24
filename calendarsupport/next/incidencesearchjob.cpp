@@ -40,16 +40,16 @@ IncidenceSearchJob::IncidenceSearchJob( QObject *parent )
   d->mLimit = -1;
 
   // by default search for all incidences
-  ItemSearchJob::setQuery( QLatin1String( "prefix ncal:<http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#>"
+  ItemSearchJob::setQuery( QLatin1String( QByteArray(QByteArray("prefix ncal:<http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#>"
                                           "prefix nao:<http://www.semanticdesktop.org/ontologies/2007/08/15/nao#>"
                                           "SELECT DISTINCT ?r WHERE"
                                           "{"
                                           "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
                                           "?r a ?subclasses ."
                                           "?r nao:hasSymbol \"view-pim-calendar\"^^<http://www.w3.org/2001/XMLSchema#string> ."
-                                          "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
-                                          "}"
-                         ) );
+                                          "?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
+                                          "}")
+                         ) ) );
 }
 
 IncidenceSearchJob::~IncidenceSearchJob()
@@ -68,41 +68,41 @@ void IncidenceSearchJob::setQuery( Criterion criterion, const QString &value, Ma
   if ( match == ExactMatch ) {
     if ( criterion == IncidenceUid ) {
       query += QString::fromLatin1(
-        "SELECT ?r WHERE {"
+        QByteArray(QByteArray("SELECT ?r WHERE {"
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
         "?r nao:hasSymbol \"view-pim-calendar\"^^<http://www.w3.org/2001/XMLSchema#string> ."
         "?r ncal:uid \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
-        "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
-        "}"
+        "?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
+        "}") )
       );
     }
   } else if ( match == StartsWithMatch ) {
     if ( criterion == IncidenceUid ) {
       query += QString::fromLatin1(
-        "SELECT ?r WHERE"
+        QByteArray(QByteArray("SELECT ?r WHERE"
         "{"
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
         "?r ncal:uid ?uid ."
         "?r nao:hasSymbol \"view-pim-calendar\"^^<http://www.w3.org/2001/XMLSchema#string> ."
-        "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
         "FILTER REGEX( ?uid, \"^%1\", 'i')"
-        "}"
+        "}") )
       );
     }
   } else if ( match == ContainsMatch ) {
     if ( criterion == IncidenceUid ) {
       query += QString::fromLatin1(
-        "SELECT ?r WHERE"
+        QByteArray(QByteArray("SELECT ?r WHERE"
         "{"
         "?subclasses rdfs:subClassOf ncal:UnionOfEventJournalTodo ."
         "?r a ?subclasses ."
         "?r ncal:uid ?uid ."
         "?r nao:hasSymbol \"view-pim-calendar\"^^<http://www.w3.org/2001/XMLSchema#string> ."
-        "?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "?r <") + akonadiItemIdUri().toEncoded() + QByteArray("> ?itemId . "
         "FILTER REGEX( ?uid, \"%1\", 'i')"
-        "}"
+        "}") )
       );
     }
   }
