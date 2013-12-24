@@ -43,6 +43,7 @@ private slots:
     void slotRemoveAlarm();
     void slotFetchItem(KJob *job);
     void slotModifyItem(KJob *job);
+    void slotModifyAlarm();
 
 private:
     void readConfig();
