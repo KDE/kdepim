@@ -22,12 +22,19 @@
 #define SERVERSIEVELISTWIDGET_H
 
 #include <QListWidget>
+#include "sieveeditorutil.h"
 
 class ServerSieveListWidgetItem : public QListWidgetItem
 {
 public:
     ServerSieveListWidgetItem(QListWidget *parent=0);
     ~ServerSieveListWidgetItem();
+
+    SieveEditorUtil::SieveServerConfig serverConfig() const;
+    void setServerConfig(const SieveEditorUtil::SieveServerConfig &conf);
+
+private:
+    SieveEditorUtil::SieveServerConfig mServerConfig;
 };
 
 class ServerSieveListWidget : public QListWidget
