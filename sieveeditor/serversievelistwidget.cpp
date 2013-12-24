@@ -28,7 +28,7 @@
 ServerSieveListWidget::ServerSieveListWidget(QWidget *parent)
     : QListWidget(parent)
 {
-
+    connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(modifyServerConfig()));
 }
 
 ServerSieveListWidget::~ServerSieveListWidget()
