@@ -64,9 +64,11 @@ void ServerSieveListWidget::modifyServerConfig()
     if (!item)
         return;
 
+    ServerSieveListWidgetItem *serverSieveListItem = static_cast<ServerSieveListWidgetItem *>(item);
+
     QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
+    dlg->setServerSieveConfig(serverSieveListItem->serverConfig());
     if (dlg->exec()) {
-        ServerSieveListWidgetItem *serverSieveListItem = static_cast<ServerSieveListWidgetItem *>(item);
         serverSieveListItem->setServerConfig(dlg->serverSieveConfig());
     }
     delete dlg;
