@@ -29,21 +29,21 @@
  your version.
 *******************************************************************/
 
-#ifndef KNOTEALARMDIALOG_H
-#define KNOTEALARMDIALOG_H
+#ifndef NOTEALARMDIALOG_H
+#define NOTEALARMDIALOG_H
 
 #include <KDialog>
-#include "knotes_export.h"
+#include "noteshared_export.h"
 class KDateComboBox;
 class KTimeComboBox;
 class QButtonGroup;
 class KDateTime;
-
-class KNOTES_EXPORT KNoteAlarmDialog : public KDialog
+namespace NoteShared {
+class NOTESHARED_EXPORT NoteAlarmDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit KNoteAlarmDialog( const QString &caption, QWidget *parent = 0 );
+    explicit NoteAlarmDialog( const QString &caption, QWidget *parent = 0 );
     void setAlarm(const KDateTime &dateTime);
     KDateTime alarm() const;
 
@@ -55,5 +55,6 @@ private:
     KTimeComboBox *m_atTime;
     QButtonGroup *m_buttons;
 };
+}
 
 #endif
