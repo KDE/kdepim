@@ -1,10 +1,22 @@
 [Desktop Entry]
 Name=Storage Service Manager
+Name[de]=Speicherdienstverwaltung
+Name[nl]=Beheerder van opslagservice
+Name[pt]=Gestor de Serviços de Armazenamento
+Name[pt_BR]=Gerenciador de Serviços de Armazenamento
+Name[uk]=Керування службою збереження
+Name[x-test]=xxStorage Service Managerxx
 Type=Application
 Exec=storageservicemanager
 Icon=kmail
 X-DocPath=storageservicemanager/index.html
 GenericName=Storage Service Manager
+GenericName[de]=Speicherdienstverwaltung
+GenericName[nl]=Beheerder van opslagservice
+GenericName[pt]=Gestor de Serviços de Armazenamento
+GenericName[pt_BR]=Gerenciador de Serviços de Armazenamento
+GenericName[uk]=Керування службою збереження
+GenericName[x-test]=xxStorage Service Managerxx
 Terminal=false
 Categories=Qt;KDE;Office;Network;
 InitialPreference=10
