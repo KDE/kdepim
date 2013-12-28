@@ -50,14 +50,15 @@ struct MultiChange {
       success( true )
   {}
 
-  bool inProgress() {
+  bool inProgress() const
+  {
     return parent.isValid() && !children.isEmpty();
   }
 };
 
 namespace CalendarSupport {
 
-struct CalendarUtilsPrivate
+class CalendarUtilsPrivate
 {
   public:
     /// Methods

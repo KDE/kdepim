@@ -22,26 +22,28 @@
 
 #include "calendarsingleton.h"
 #include "kcalprefs.h"
+
+#include <Akonadi/Calendar/ETMCalendar>
 #include <KCalCore/Person>
-#include <QWeakPointer>
+
+#include <QCoreApplication>
 
 /**
- * Singleton is implemented with weak and strong refs because we can't rely on K_GLOBAL_STATIC.
+ * Singleton is implemented through qApp parenting because we can't rely on K_GLOBAL_STATIC.
  *
- * QWidgets and QAbstractItemModels can't be global because their dtor depends on other globals, and the order of
- * global destruction is random.
+ * QWidgets and QAbstractItemModels can't be global because their dtor depends on other globals
+ * and the order of global destruction is undefined.
  */
-Akonadi::ETMCalendar::Ptr CalendarSupport::calendarSingleton()
+Akonadi::ETMCalendar* CalendarSupport::calendarSingleton()
 {
-    static QWeakPointer<Akonadi::ETMCalendar> weakRef;
-    Akonadi::ETMCalendar::Ptr strongRef = weakRef;
-    if (!strongRef) {
-        strongRef = Akonadi::ETMCalendar::Ptr(new Akonadi::ETMCalendar());
-        strongRef->setCollectionFilteringEnabled(false);
-        strongRef->setOwner(KCalCore::Person::Ptr(new KCalCore::Person(KCalPrefs::instance()->fullName(),
-                                                                       KCalPrefs::instance()->email())));
-        weakRef = strongRef;
+    static Akonadi::ETMCalendar *calendar = 0;
+
+    if (!calendar) {
+        calendar = new Akonadi::ETMCalendar(qApp);
+        calendar->setCollectionFilteringEnabled(false);
+        calendar->setOwner(KCalCore::Person::Ptr(new KCalCore::Person(KCalPrefs::instance()->fullName(),
+                                                                      KCalPrefs::instance()->email())));
     }
 
-    return strongRef;
+    return calendar;
 }
