@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=Storage Service Manager
 Name[de]=Speicherdienstverwaltung
+Name[es]=Gestor del servicio de almacenamiento
 Name[nl]=Beheerder van opslagservice
 Name[pt]=Gestor de Serviços de Armazenamento
 Name[pt_BR]=Gerenciador de Serviços de Armazenamento
 Name[sk]=Správca úložných služieb
+Name[sv]=Hantering av lagringstjänst
 Name[uk]=Керування службою збереження
 Name[x-test]=xxStorage Service Managerxx
 Type=Application
@@ -13,10 +15,12 @@ Icon=kmail
 X-DocPath=storageservicemanager/index.html
 GenericName=Storage Service Manager
 GenericName[de]=Speicherdienstverwaltung
+GenericName[es]=Gestor del servicio de almacenamiento
 GenericName[nl]=Beheerder van opslagservice
 GenericName[pt]=Gestor de Serviços de Armazenamento
 GenericName[pt_BR]=Gerenciador de Serviços de Armazenamento
 GenericName[sk]=Správca úložných služieb
+GenericName[sv]=Hantering av lagringstjänst
 GenericName[uk]=Керування службою збереження
 GenericName[x-test]=xxStorage Service Managerxx
 Terminal=false
