@@ -2,6 +2,7 @@
 Name=Storage Service Manager
 Name[de]=Speicherdienstverwaltung
 Name[es]=Gestor del servicio de almacenamiento
+Name[fi]=Tallennuspalvelun hallinta
 Name[nl]=Beheerder van opslagservice
 Name[pt]=Gestor de Serviços de Armazenamento
 Name[pt_BR]=Gerenciador de Serviços de Armazenamento
@@ -16,6 +17,7 @@ X-DocPath=storageservicemanager/index.html
 GenericName=Storage Service Manager
 GenericName[de]=Speicherdienstverwaltung
 GenericName[es]=Gestor del servicio de almacenamiento
+GenericName[fi]=Tallennuspalvelun hallinta
 GenericName[nl]=Beheerder van opslagservice
 GenericName[pt]=Gestor de Serviços de Armazenamento
 GenericName[pt_BR]=Gerenciador de Serviços de Armazenamento
