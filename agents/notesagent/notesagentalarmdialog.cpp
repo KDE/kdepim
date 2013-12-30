@@ -19,6 +19,7 @@
 #include "notesagentnotedialog.h"
 #include "noteshared/widget/notelistwidget.h"
 #include "noteshared/attributes/notealarmattribute.h"
+#include "noteshared/alarms/notealarmdialog.h"
 
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
@@ -34,6 +35,7 @@
 #include <QListWidget>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QPointer>
 
 NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     : KDialog(parent)
@@ -83,7 +85,11 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
     connect(removeAlarm, SIGNAL(triggered()), this, SLOT(slotRemoveAlarm()));
     KAction *showNote = new KAction(i18n("Show Note..."), entriesContextMenu);
     connect(showNote, SIGNAL(triggered()), this, SLOT(slotShowAlarm()));
+    KAction *modifyAlarm = new KAction(i18n("Modify Alarm..."), entriesContextMenu);
+    connect(modifyAlarm, SIGNAL(triggered()), this, SLOT(slotModifyAlarm()));
     entriesContextMenu->addAction( showNote );
+
+    entriesContextMenu->addSeparator();
     entriesContextMenu->addAction( removeAlarm );
     entriesContextMenu->exec( QCursor::pos() );
     delete entriesContextMenu;
@@ -159,4 +165,14 @@ void NotesAgentAlarmDialog::slotModifyItem(KJob *job)
         qDebug()<<"modify item failed "<<job->errorString();
         return;
     }
+}
+
+void NotesAgentAlarmDialog::slotModifyAlarm()
+{
+    QPointer<NoteShared::NoteAlarmDialog> dlg = new NoteShared::NoteAlarmDialog(QString(), this);
+    if (dlg->exec()) {
+
+    }
+    delete dlg;
+    //TODO
 }

@@ -24,7 +24,10 @@
 #define CALENDARSUPPORT_CALENDARSINGLETON_H
 
 #include "calendarsupport_export.h"
-#include <Akonadi/Calendar/ETMCalendar>
+
+namespace Akonadi {
+class ETMCalendar;
+}
 
 namespace CalendarSupport {
 
@@ -34,7 +37,7 @@ namespace CalendarSupport {
      *
      * KOrganizer itself can't use this one since it disables calendar selection filtering.
      */
-    CALENDARSUPPORT_EXPORT Akonadi::ETMCalendar::Ptr calendarSingleton();
+    CALENDARSUPPORT_EXPORT Akonadi::ETMCalendar* calendarSingleton();
 }
 
 #endif

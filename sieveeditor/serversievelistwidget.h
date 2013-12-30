@@ -46,8 +46,10 @@ public:
 
     void readConfig();
     void writeConfig();
-    void modifyServerConfig();
     void addServerConfig();
+
+public Q_SLOTS:
+    void modifyServerConfig();
 };
 
 #endif // SERVERSIEVELISTWIDGET_H

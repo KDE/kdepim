@@ -27,16 +27,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="removeServer">
+      <widget class="QPushButton" name="modifyServer">
        <property name="text">
-        <string>Remove...</string>
+        <string>Modify...</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="modifyServer">
+      <widget class="QPushButton" name="removeServer">
        <property name="text">
-        <string>Modify...</string>
+        <string>Remove...</string>
        </property>
       </widget>
      </item>

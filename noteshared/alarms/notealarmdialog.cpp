@@ -29,7 +29,7 @@
  your version.
 *******************************************************************/
 
-#include "knotealarmdialog.h"
+#include "notealarmdialog.h"
 
 #include <KDateComboBox>
 #include <KLocalizedString>
@@ -41,7 +41,8 @@
 #include <QRadioButton>
 #include <QVBoxLayout>
 
-KNoteAlarmDialog::KNoteAlarmDialog( const QString &caption, QWidget *parent )
+using namespace NoteShared;
+NoteAlarmDialog::NoteAlarmDialog( const QString &caption, QWidget *parent )
     : KDialog( parent )
 {
     setCaption( caption );
@@ -73,7 +74,7 @@ KNoteAlarmDialog::KNoteAlarmDialog( const QString &caption, QWidget *parent )
     slotButtonChanged( m_buttons->checkedId() );
 }
 
-void KNoteAlarmDialog::setAlarm(const KDateTime &dateTime)
+void NoteAlarmDialog::setAlarm(const KDateTime &dateTime)
 {
     if (dateTime.isValid()) {
         m_buttons->button( 1 )->setChecked( true );
@@ -85,7 +86,7 @@ void KNoteAlarmDialog::setAlarm(const KDateTime &dateTime)
     slotButtonChanged( m_buttons->checkedId() );
 }
 
-void KNoteAlarmDialog::slotButtonChanged( int id )
+void NoteAlarmDialog::slotButtonChanged( int id )
 {
     switch ( id ) {
     case 0:
@@ -99,7 +100,7 @@ void KNoteAlarmDialog::slotButtonChanged( int id )
     }
 }
 
-KDateTime KNoteAlarmDialog::alarm() const
+KDateTime NoteAlarmDialog::alarm() const
 {
     if ( m_buttons->checkedId() == 1 ) {
         return KDateTime( m_atDate->date(), m_atTime->time(), KDateTime::LocalZone );

@@ -29,6 +29,7 @@ set(libnoteshared_SRCS
     job/createnewnotejob.cpp
     dialog/selectednotefolderdialog.cpp
     widget/notelistwidget.cpp
+    alarms/notealarmdialog.cpp
     ${libnoteshared_akonadi_SRCS}
 )
 
