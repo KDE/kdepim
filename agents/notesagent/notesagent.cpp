@@ -139,7 +139,8 @@ void NotesAgent::setPort(int value)
     if (NoteShared::NoteSharedGlobalConfig::port() != (uint)value ) {
         NoteShared::NoteSharedGlobalConfig::setPort(value);
         NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
-        mNotesManager->updateNetworkListener();
+        if (NotesAgentSettings::enabled())
+            mNotesManager->updateNetworkListener();
     }
 }
 
@@ -151,7 +152,7 @@ void NotesAgent::setAlarmCheckInterval(int value)
     if (NoteShared::NoteSharedGlobalConfig::checkInterval() != (uint)value ) {
         NoteShared::NoteSharedGlobalConfig::setCheckInterval(value);
         NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
-        //TODO reload
+        reload();
     }
 }
 
