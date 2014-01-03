@@ -30,7 +30,7 @@ int main( int argc, char **argv )
 {
     KAboutData aboutData( "headerthemeeditor", 0, ki18n("Messageviewer Header Theme Editor"),
       KDEPIM_VERSION, ki18n("Header Theme Editor"), KAboutData::License_GPL_V2,
-      ki18n("Copyright © 2013 headerthemeeditor authors"));
+      ki18n("Copyright © 2013, 2014 headerthemeeditor authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
     aboutData.setProgramIconName(QLatin1String("kmail"));
     KCmdLineArgs::init( argc, argv, &aboutData );

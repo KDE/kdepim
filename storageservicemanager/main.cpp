@@ -29,7 +29,7 @@ int main( int argc, char **argv )
 {
     KAboutData aboutData( "storageservicemanager", 0, ki18n("Storage Service Manager"),
       KDEPIM_VERSION, ki18n("Storage Service Manager"), KAboutData::License_GPL_V2,
-      ki18n("Copyright © 2013 storageservicemanager authors"));
+      ki18n("Copyright © 2013, 2014 storageservicemanager authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
     aboutData.setProgramIconName(QLatin1String("kmail"));
     KCmdLineArgs::init( argc, argv, &aboutData );
