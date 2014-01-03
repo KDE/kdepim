@@ -90,6 +90,7 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
     KAction *modifyAlarm = new KAction(i18n("Modify Alarm..."), entriesContextMenu);
     connect(modifyAlarm, SIGNAL(triggered()), this, SLOT(slotModifyAlarm()));
     entriesContextMenu->addAction( showNote );
+    entriesContextMenu->addAction( modifyAlarm );
 
     entriesContextMenu->addSeparator();
     entriesContextMenu->addAction( removeAlarm );
