@@ -50,6 +50,7 @@ private Q_SLOTS:
     void slotUploadFileDone(const QString &serviceName, const QString &fileName);
     void slotListFolderDone(const QString &serviceName, const QStringList &listFolder);
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info);
+    void slotDownloadFileDone(const QString &serviceName, const QString &filename);
     void slotUploadFile();
     void slotAuthentication();
     void slotCreateServiceFolder();
@@ -58,6 +59,8 @@ private Q_SLOTS:
 
     void slotDeleteFolderDone(const QString &serviceName, const QString &foldername);
     void slotDeleteFileDone(const QString &serviceName, const QString &filename);
+    void slotDownloadFile();
+
 private:
     void connectStorageService();
     PimCommon::StorageServiceAbstract *mStorageService;
