@@ -176,6 +176,7 @@ void NotesAgentAlarmDialog::slotModifyAlarm()
     if (id!=-1) {
         Akonadi::Item item(id);
         Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+        job->fetchScope().fetchFullPayload( true );
         job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
         connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchAlarmItem(KJob*)) );
     }
