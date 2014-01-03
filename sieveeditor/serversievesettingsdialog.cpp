@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -35,11 +35,13 @@ ServerSieveSettingsDialog::ServerSieveSettingsDialog(QWidget *parent)
     QWidget *w = new QWidget;
     QVBoxLayout *lay = new QVBoxLayout;
     mServerSieveSettings = new ServerSieveSettings;
+    connect(mServerSieveSettings, SIGNAL(enableOkButton(bool)), this, SLOT(enableButtonOk(bool)));
     lay->addWidget(mServerSieveSettings);
     lay->setMargin(0);
     w->setLayout(lay);
     setMainWidget(w);
     resize(300,200);
+    enableButtonOk(false);
 }
 
 ServerSieveSettingsDialog::~ServerSieveSettingsDialog()

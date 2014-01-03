@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -20,8 +20,15 @@
 
 #include "storageservicepage.h"
 
+#include "pimcommon/storageservice/storageserviceabstract.h"
+
+#include <KLocalizedString>
+
+#include <QInputDialog>
+
 StorageServicePage::StorageServicePage(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mStorageService(0)
 {
 }
 
@@ -32,10 +39,38 @@ StorageServicePage::~StorageServicePage()
 
 void StorageServicePage::authenticate()
 {
-    //TODO
+    mStorageService->authentication();
 }
 
 void StorageServicePage::createFolder()
 {
+    const QString folder = QInputDialog::getText(this,i18n("Folder Name"), i18n("Folder:"));
+    if (!folder.isEmpty()) {
+        mStorageService->createFolder(folder);
+    }
+}
+
+void StorageServicePage::refreshList()
+{
     //TODO
+}
+
+void StorageServicePage::accountInfo()
+{
+    //TODO
+}
+
+void StorageServicePage::uploadFile()
+{
+
+}
+
+void StorageServicePage::deleteFile()
+{
+
+}
+
+void StorageServicePage::downloadFile()
+{
+
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -139,7 +139,8 @@ void NotesAgent::setPort(int value)
     if (NoteShared::NoteSharedGlobalConfig::port() != (uint)value ) {
         NoteShared::NoteSharedGlobalConfig::setPort(value);
         NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
-        mNotesManager->updateNetworkListener();
+        if (NotesAgentSettings::enabled())
+            mNotesManager->updateNetworkListener();
     }
 }
 
@@ -151,7 +152,7 @@ void NotesAgent::setAlarmCheckInterval(int value)
     if (NoteShared::NoteSharedGlobalConfig::checkInterval() != (uint)value ) {
         NoteShared::NoteSharedGlobalConfig::setCheckInterval(value);
         NoteShared::NoteSharedGlobalConfig::self()->writeConfig();
-        //TODO reload
+        reload();
     }
 }
 

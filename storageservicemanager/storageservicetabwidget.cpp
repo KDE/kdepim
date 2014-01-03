@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -24,9 +24,20 @@
 StorageServiceTabWidget::StorageServiceTabWidget(QWidget *parent)
     : QTabWidget(parent)
 {
+    loadStorageService();
 }
 
 StorageServiceTabWidget::~StorageServiceTabWidget()
+{
+
+}
+
+void StorageServiceTabWidget::createPage()
+{
+    //TODO
+}
+
+void StorageServiceTabWidget::reloadStorageService()
 {
 
 }
@@ -51,5 +62,50 @@ void StorageServiceTabWidget::slotCreateFolder()
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
         if (page)
             page->createFolder();
+    }
+}
+
+void StorageServiceTabWidget::slotRefreshList()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->refreshList();
+    }
+}
+
+void StorageServiceTabWidget::slotAccountInfo()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->accountInfo();
+    }
+}
+
+void StorageServiceTabWidget::slotUploadFile()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->uploadFile();
+    }
+}
+
+void StorageServiceTabWidget::slotDeleteFile()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->deleteFile();
+    }
+}
+
+void StorageServiceTabWidget::slotDownloadFile()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->downloadFile();
     }
 }

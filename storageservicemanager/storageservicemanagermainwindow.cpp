@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -20,6 +20,8 @@
 
 #include "storageservicemanagermainwindow.h"
 #include "storageservicetabwidget.h"
+#include "storageserviceconfiguredialog.h"
+#include "pimcommon/storageservice/storageservicemanager.h"
 
 #include <KStandardAction>
 #include <KLocalizedString>
@@ -28,9 +30,12 @@
 #include <KConfigGroup>
 #include <KAction>
 
+#include <QPointer>
+
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     : KXmlGuiWindow()
 {
+    mStorageManager = new PimCommon::StorageServiceManager(this);
     mStorageServiceTabWidget = new StorageServiceTabWidget;
     setCentralWidget(mStorageServiceTabWidget);
 
@@ -61,6 +66,23 @@ void StorageServiceManagerMainWindow::setupActions()
     act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
     act->setText(i18n("Add Storage Service..."));
 
+    act = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
+    act->setText(i18n("Refresh List"));
+
+    act = ac->addAction(QLatin1String("account_info"), mStorageServiceTabWidget, SLOT(slotAccountInfo()));
+    act->setText(i18n("Account Info..."));
+
+    act = ac->addAction(QLatin1String("upload_file"), mStorageServiceTabWidget, SLOT(slotUploadFile()));
+    act->setText(i18n("Upload File..."));
+
+    act = ac->addAction(QLatin1String("delete_file"), mStorageServiceTabWidget, SLOT(slotDeleteFile()));
+    act->setText(i18n("Delete File..."));
+
+    act = ac->addAction(QLatin1String("download_file"), mStorageServiceTabWidget, SLOT(slotDownloadFile()));
+    act->setText(i18n("Download File..."));
+
+    KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+
     //TODO
 }
 
@@ -74,6 +96,16 @@ void StorageServiceManagerMainWindow::slotQuitApp()
     kapp->quit();
 }
 
+void StorageServiceManagerMainWindow::slotConfigure()
+{
+    QPointer<StorageServiceConfigureDialog> dlg = new StorageServiceConfigureDialog(this);
+    dlg->setListService(mStorageManager->listService());
+    if (dlg->exec()) {
+        mStorageManager->setListService(dlg->listService());
+        mStorageServiceTabWidget->reloadStorageService();
+    }
+    delete dlg;
+}
 
 void StorageServiceManagerMainWindow::readConfig()
 {

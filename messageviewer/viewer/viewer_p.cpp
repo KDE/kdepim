@@ -2190,8 +2190,10 @@ void ViewerPrivate::slotToggleHtmlMode()
 
 void ViewerPrivate::slotFind()
 {
+#ifndef KDEPIM_NO_WEBKIT
   if ( mViewer->hasSelection() )
     mFindBar->setText( mViewer->selectedText() );
+#endif
   mFindBar->show();
   mFindBar->focusAndSetCursor();
 }
@@ -3331,7 +3333,9 @@ void ViewerPrivate::slotBlockImage()
 {
     if (mImageUrl.isEmpty())
         return;
+#ifndef KDEPIM_NO_WEBKIT
     MessageViewer::AdBlockManager::self()->addCustomRule(mImageUrl.url(), true);
+#endif
 }
 
 void ViewerPrivate::slotOpenBlockableItems()

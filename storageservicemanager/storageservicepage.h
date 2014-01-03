@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -22,7 +22,9 @@
 #define STORAGESERVICEPAGE_H
 
 #include <QWidget>
-
+namespace PimCommon {
+class StorageServiceAbstract;
+}
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
@@ -32,6 +34,15 @@ public:
 
     void authenticate();
     void createFolder();
+    void refreshList();
+    void accountInfo();
+    void uploadFile();
+    void downloadFile();
+    void deleteFile();
+
+
+private:
+    PimCommon::StorageServiceAbstract *mStorageService;
 };
 
 #endif // STORAGESERVICEPAGE_H

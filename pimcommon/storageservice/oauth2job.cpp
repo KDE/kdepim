@@ -290,6 +290,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 break;
             default:
                 qDebug()<<" Action Type unknown:"<<mActionType;
+                Q_EMIT actionFailed(QLatin1String("Action Type Unknown"));
                 deleteLater();
                 break;
             }
@@ -328,10 +329,12 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
     case PimCommon::StorageServiceAbstract::DeleteFolder:
+        Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
+        Q_EMIT actionFailed(QLatin1String("Action type unknown"));
         deleteLater();
         break;
     }
@@ -344,6 +347,7 @@ void OAuth2Job::parseCreateServiceFolder(const QString &data)
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -354,12 +358,14 @@ void OAuth2Job::parseListFolder(const QString &data)
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
 void OAuth2Job::parseAccountInfo(const QString &)
 {
     //TODO reimplement in derivated function
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 
@@ -418,5 +424,4 @@ void OAuth2Job::refreshToken()
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-
 }

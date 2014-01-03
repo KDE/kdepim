@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -58,7 +58,7 @@ SendLaterConfigureDialog::SendLaterConfigureDialog(QWidget *parent)
                 QByteArray( KDEPIM_VERSION ),
                 ki18n( "Send emails later agent." ),
                 KAboutData::License_GPL_V2,
-                ki18n( "Copyright (C) 2013 Laurent Montel" ) );
+                ki18n( "Copyright (C) 2013, 2014 Laurent Montel" ) );
 
     mAboutData->addAuthor( ki18n( "Laurent Montel" ),
                          ki18n( "Maintainer" ), "montel@kde.org" );

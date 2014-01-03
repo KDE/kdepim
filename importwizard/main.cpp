@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     //FIXME: "wizards" are "assistents" in new KDE slang
     KAboutData aboutData( "importwizard", 0, ki18n("importwizard"),
                           KDEPIM_VERSION, ki18n("PIM Import Tool"), KAboutData::License_GPL_V2,
-                          ki18n("Copyright © 2012-2013 importwizard authors"));
+                          ki18n("Copyright © 2012-2013-2014 importwizard authors"));
     aboutData.addAuthor(ki18n("Laurent Montel"), ki18n("Maintainer"), "montel@kde.org");
     aboutData.setProgramIconName(QLatin1String("kontact-import-wizard"));
     KCmdLineArgs::init( argc, argv, &aboutData );

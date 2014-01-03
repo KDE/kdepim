@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -28,14 +28,23 @@ class StorageServiceTabWidget : public QTabWidget
     Q_OBJECT
 public:
     explicit StorageServiceTabWidget(QWidget *parent=0);
-    ~StorageServiceTabWidget();
+    ~StorageServiceTabWidget();    
+
+    void reloadStorageService();
 
 public slots:
     void slotAuthenticate();
     void slotCreateFolder();
+    void slotRefreshList();
+    void slotAccountInfo();
+    void slotUploadFile();
+    void slotDeleteFile();
+    void slotDownloadFile();
+
 
 private:
     void loadStorageService();
+    void createPage();
 };
 
 #endif // STORAGESERVICETABWIDGET_H

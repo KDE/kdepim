@@ -3,6 +3,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/messageviewer
 )
 
+if(NOT KDEPIM_NO_WEBKIT)
 set(adblocksettings_gui_SRCS adblocksettings_gui.cpp)
 kde4_add_executable(adblocksettings_gui TEST ${adblocksettings_gui_SRCS})
 target_link_libraries(adblocksettings_gui
@@ -38,3 +39,4 @@ target_link_libraries(adblockblockableitemdialog_gui
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   messageviewer
 )
+endif()

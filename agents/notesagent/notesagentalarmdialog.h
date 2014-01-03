@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -33,17 +33,18 @@ public:
     explicit NotesAgentAlarmDialog(QWidget *parent=0);
     ~NotesAgentAlarmDialog();
 
-    void addListAlarm(const Akonadi::Item::List &lstAlarm);    
+    void addListAlarm(const Akonadi::Item::List &lstAlarm);
     void removeAlarm(const Akonadi::Item &note);
 
 private slots:
-    void slotItemDoubleClicked(QListWidgetItem *item);    
+    void slotItemDoubleClicked(QListWidgetItem *item);
     void slotCustomContextMenuRequested(const QPoint &pos);
     void slotShowAlarm();
     void slotRemoveAlarm();
     void slotFetchItem(KJob *job);
     void slotModifyItem(KJob *job);
     void slotModifyAlarm();
+    void slotFetchAlarmItem(KJob *job);
 
 private:
     void readConfig();

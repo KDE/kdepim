@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -22,6 +22,11 @@
 #define STORAGESERVICEMANAGERMAINWINDOW_H
 
 #include <KXmlGuiWindow>
+
+namespace PimCommon {
+class StorageServiceManager;
+}
+
 class StorageServiceTabWidget;
 class StorageServiceManagerMainWindow : public KXmlGuiWindow
 {
@@ -32,12 +37,14 @@ public:
 
 private slots:
     void slotQuitApp();    
-    void slotAddStorageService();
+    void slotAddStorageService();    
+    void slotConfigure();    
 
 private:
     void setupActions();
     void readConfig();
     StorageServiceTabWidget *mStorageServiceTabWidget;
+    PimCommon::StorageServiceManager *mStorageManager;
 };
 
 #endif // STORAGESERVICEMANAGERMAINWINDOW_H

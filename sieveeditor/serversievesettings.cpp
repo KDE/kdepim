@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -26,11 +26,17 @@ ServerSieveSettings::ServerSieveSettings(QWidget *parent) :
     ui(new Ui::ServerSieveSettings)
 {
     ui->setupUi(this);
+    connect(ui->serverName, SIGNAL(textChanged(QString)), this, SLOT(slotServerNameChanged(QString)));
 }
 
 ServerSieveSettings::~ServerSieveSettings()
 {
     delete ui;
+}
+
+void ServerSieveSettings::slotServerNameChanged(const QString &name)
+{
+    Q_EMIT enableOkButton(!name.isEmpty());
 }
 
 QString ServerSieveSettings::serverName() const

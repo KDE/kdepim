@@ -46,6 +46,7 @@ ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     bar->addAction(QLatin1String("Create Service Folder..."), this, SLOT(slotCreateServiceFolder()));
     bar->addAction(QLatin1String("Delete File..."), this, SLOT(slotDeleteFile()));
     bar->addAction(QLatin1String("Delete Folder..."), this, SLOT(slotDeleteFolder()));
+    bar->addAction(QLatin1String("Download File..."), this, SLOT(slotDownloadFile()));
     lay->addWidget(mEdit);
     setLayout(lay);
 }
@@ -96,6 +97,7 @@ void ServiceTestWidget::connectStorageService()
     connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
     connect(mStorageService, SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)));
     connect(mStorageService, SIGNAL(listFolderDone(QString,QStringList)), this, SLOT(slotListFolderDone(QString,QStringList)));
+    connect(mStorageService, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownloadFileDone(QString,QString)));
 }
 
 void ServiceTestWidget::slotDeleteFolderDone(const QString &serviceName, const QString &foldername)
@@ -154,6 +156,11 @@ void ServiceTestWidget::slotAccountInfoDone(const QString &serviceName, const Pi
                            .arg(info.accountSize).arg(info.quota).arg(info.shared).arg(info.displayName));
 }
 
+void ServiceTestWidget::slotDownloadFileDone(const QString &serviceName, const QString &filename)
+{
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" download file done %1\n").arg(filename));
+}
+
 void ServiceTestWidget::slotAccountInfo()
 {
     mStorageService->accountInfo();
@@ -183,4 +190,10 @@ void ServiceTestWidget::slotUploadFile()
 void ServiceTestWidget::slotCreateServiceFolder()
 {
     mStorageService->createServiceFolder();
+}
+
+void ServiceTestWidget::slotDownloadFile()
+{
+    const QString filename = QInputDialog::getText(this,i18n("Filename"), i18n("Filename:"));
+    mStorageService->downloadFile(filename);
 }

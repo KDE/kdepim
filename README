@@ -38,6 +38,8 @@ What it is
 * headerthemeeditor: Application to generate grantlee header mail
 * contactthemeeditor: Application to generate grantlee kaddressbook theme
 * mboximporter: Application to import mbox directly
+* sieveeditor: Application to edit sieve script
+* storageservicemanager: Application to manage storage service
 
 Mailing List, getting involved
 ------------------------------
