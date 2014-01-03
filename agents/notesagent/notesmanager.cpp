@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -81,7 +81,6 @@ void NotesManager::slotItemRemoved(const Akonadi::Item &item)
 void NotesManager::slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &set)
 {
     if (set.contains("ATR:NoteAlarmAttribute")) {
-        qDebug()<<" NoteAlarm !";
         mListItem.removeAll(item);
         if (item.hasAttribute<NoteShared::NoteAlarmAttribute>()) {
             mListItem.append(item);
