@@ -20,6 +20,7 @@
 
 #include "storageservicemanagermainwindow.h"
 #include "storageservicetabwidget.h"
+#include "storageserviceconfiguredialog.h"
 
 #include <KStandardAction>
 #include <KLocalizedString>
@@ -27,6 +28,8 @@
 #include <KApplication>
 #include <KConfigGroup>
 #include <KAction>
+
+#include <QPointer>
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     : KXmlGuiWindow()
@@ -61,6 +64,8 @@ void StorageServiceManagerMainWindow::setupActions()
     act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
     act->setText(i18n("Add Storage Service..."));
 
+    KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+
     //TODO
 }
 
@@ -74,6 +79,14 @@ void StorageServiceManagerMainWindow::slotQuitApp()
     kapp->quit();
 }
 
+void StorageServiceManagerMainWindow::slotConfigure()
+{
+    QPointer<StorageServiceConfigureDialog> dlg = new StorageServiceConfigureDialog(this);
+    if (dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
+}
 
 void StorageServiceManagerMainWindow::readConfig()
 {

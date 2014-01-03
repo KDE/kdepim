@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2014 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,27 +18,26 @@
 
 */
 
-#ifndef STORAGESERVICEMANAGERMAINWINDOW_H
-#define STORAGESERVICEMANAGERMAINWINDOW_H
+#ifndef STORAGESERVICECONFIGUREDIALOG_H
+#define STORAGESERVICECONFIGUREDIALOG_H
 
-#include <KXmlGuiWindow>
-class StorageServiceTabWidget;
-class StorageServiceManagerMainWindow : public KXmlGuiWindow
+#include <KDialog>
+
+namespace PimCommon {
+class StorageServiceSettingsWidget;
+}
+
+class StorageServiceConfigureDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceManagerMainWindow();
-    ~StorageServiceManagerMainWindow();
-
-private slots:
-    void slotQuitApp();    
-    void slotAddStorageService();    
-    void slotConfigure();
+    explicit StorageServiceConfigureDialog(QWidget *parent=0);
+    ~StorageServiceConfigureDialog();
 
 private:
-    void setupActions();
     void readConfig();
-    StorageServiceTabWidget *mStorageServiceTabWidget;
+    void writeConfig();
+    PimCommon::StorageServiceSettingsWidget *mStorageSettings;
 };
 
-#endif // STORAGESERVICEMANAGERMAINWINDOW_H
+#endif // STORAGESERVICECONFIGUREDIALOG_H
