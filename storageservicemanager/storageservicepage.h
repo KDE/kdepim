@@ -22,7 +22,9 @@
 #define STORAGESERVICEPAGE_H
 
 #include <QWidget>
-
+namespace PimCommon {
+class StorageServiceAbstract;
+}
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
@@ -37,6 +39,10 @@ public:
     void uploadFile();
     void downloadFile();
     void deleteFile();
+
+
+private:
+    PimCommon::StorageServiceAbstract *mStorageService;
 };
 
 #endif // STORAGESERVICEPAGE_H
