@@ -39,7 +39,6 @@ SieveEditorMainWindow::SieveEditorMainWindow()
 {    
     setupActions();
     setupGUI();
-    updateActions();
     readConfig();
     mMainWidget = new SieveEditorMainWidget;
     setCentralWidget(mMainWidget);
@@ -75,11 +74,6 @@ void SieveEditorMainWindow::setupActions()
     //TODO
 }
 
-void SieveEditorMainWindow::updateActions()
-{
-    //TODO
-}
-
 void SieveEditorMainWindow::slotQuitApp()
 {
     kapp->quit();
@@ -98,7 +92,7 @@ void SieveEditorMainWindow::slotAddServerSieve()
 {
     QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
     if (dlg->exec()) {
-        //TODO
+        //TODO update list of script.
     }
     delete dlg;
 }

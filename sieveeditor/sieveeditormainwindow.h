@@ -39,7 +39,6 @@ private slots:
 private:
     void readConfig();
     void setupActions();
-    void updateActions();
     SieveEditorMainWidget *mMainWidget;
 };
 
