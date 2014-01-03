@@ -38,7 +38,7 @@ public:
 private slots:
     void slotQuitApp();    
     void slotAddStorageService();    
-    void slotConfigure();
+    void slotConfigure();    
 
 private:
     void setupActions();

@@ -33,6 +33,12 @@ public:
 public slots:
     void slotAuthenticate();
     void slotCreateFolder();
+    void slotRefreshList();
+    void slotAccountInfo();
+    void slotUploadFile();
+    void slotDeleteFile();
+    void slotDownloadFile();
+
 
 private:
     void loadStorageService();

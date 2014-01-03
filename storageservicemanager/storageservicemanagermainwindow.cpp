@@ -66,6 +66,21 @@ void StorageServiceManagerMainWindow::setupActions()
     act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
     act->setText(i18n("Add Storage Service..."));
 
+    act = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
+    act->setText(i18n("Refresh List"));
+
+    act = ac->addAction(QLatin1String("account_info"), mStorageServiceTabWidget, SLOT(slotAccountInfo()));
+    act->setText(i18n("Account Info..."));
+
+    act = ac->addAction(QLatin1String("upload_file"), mStorageServiceTabWidget, SLOT(slotUploadFile()));
+    act->setText(i18n("Upload File..."));
+
+    act = ac->addAction(QLatin1String("delete_file"), mStorageServiceTabWidget, SLOT(slotDeleteFile()));
+    act->setText(i18n("Delete File..."));
+
+    act = ac->addAction(QLatin1String("download_file"), mStorageServiceTabWidget, SLOT(slotDownloadFile()));
+    act->setText(i18n("Download File..."));
+
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
 
     //TODO

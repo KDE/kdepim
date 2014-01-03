@@ -53,3 +53,48 @@ void StorageServiceTabWidget::slotCreateFolder()
             page->createFolder();
     }
 }
+
+void StorageServiceTabWidget::slotRefreshList()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->refreshList();
+    }
+}
+
+void StorageServiceTabWidget::slotAccountInfo()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->accountInfo();
+    }
+}
+
+void StorageServiceTabWidget::slotUploadFile()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->uploadFile();
+    }
+}
+
+void StorageServiceTabWidget::slotDeleteFile()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->deleteFile();
+    }
+}
+
+void StorageServiceTabWidget::slotDownloadFile()
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            page->downloadFile();
+    }
+}

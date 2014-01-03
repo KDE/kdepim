@@ -32,6 +32,11 @@ public:
 
     void authenticate();
     void createFolder();
+    void refreshList();
+    void accountInfo();
+    void uploadFile();
+    void downloadFile();
+    void deleteFile();
 };
 
 #endif // STORAGESERVICEPAGE_H

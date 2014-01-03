@@ -39,3 +39,28 @@ void StorageServicePage::createFolder()
 {
     //TODO
 }
+
+void StorageServicePage::refreshList()
+{
+    //TODO
+}
+
+void StorageServicePage::accountInfo()
+{
+    //TODO
+}
+
+void StorageServicePage::uploadFile()
+{
+
+}
+
+void StorageServicePage::deleteFile()
+{
+
+}
+
+void StorageServicePage::downloadFile()
+{
+
+}
