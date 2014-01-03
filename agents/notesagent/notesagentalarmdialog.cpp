@@ -21,6 +21,8 @@
 #include "noteshared/attributes/notealarmattribute.h"
 #include "noteshared/alarms/notealarmdialog.h"
 
+#include <KMime/KMimeMessage>
+
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/ItemModifyJob>
@@ -169,10 +171,39 @@ void NotesAgentAlarmDialog::slotModifyItem(KJob *job)
 
 void NotesAgentAlarmDialog::slotModifyAlarm()
 {
-    QPointer<NoteShared::NoteAlarmDialog> dlg = new NoteShared::NoteAlarmDialog(QString(), this);
-    if (dlg->exec()) {
-
+    Akonadi::Item::Id id = mListWidget->currentItemId();
+    if (id!=-1) {
+        Akonadi::Item item(id);
+        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+        job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
+        connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchAlarmItem(KJob*)) );
     }
-    delete dlg;
-    //TODO
+}
+
+void NotesAgentAlarmDialog::slotFetchAlarmItem(KJob *job)
+{
+    if ( job->error() ) {
+        qDebug()<<"fetch item failed "<<job->errorString();
+        return;
+    }
+    Akonadi::ItemFetchJob *itemFetchJob = static_cast<Akonadi::ItemFetchJob *>(job);
+    Akonadi::Item::List items = itemFetchJob->items();
+    if (!items.isEmpty()) {
+        Akonadi::Item item = items.first();
+        NoteShared::NoteAlarmAttribute *attr = item.attribute<NoteShared::NoteAlarmAttribute>();
+        if (attr) {
+            KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
+            if (!noteMessage)
+                return;
+            const QString caption = noteMessage->subject(false)->asUnicodeString();
+            QPointer<NoteShared::NoteAlarmDialog> dlg = new NoteShared::NoteAlarmDialog(caption, this);
+            dlg->setAlarm(attr->dateTime());
+            if (dlg->exec()) {
+                attr->setDateTime(dlg->alarm());
+                Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(item);
+                connect( modify, SIGNAL(result(KJob*)), SLOT(slotModifyItem(KJob*)) );
+            }
+            delete dlg;
+        }
+    }
 }
