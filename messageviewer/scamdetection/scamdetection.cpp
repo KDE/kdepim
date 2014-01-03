@@ -49,6 +49,7 @@ ScamCheckShortUrl *ScamDetection::scamCheckShortUrl() const
 
 void ScamDetection::scanPage(QWebFrame *frame)
 {
+#ifndef KDEPIM_NO_WEBKIT
     if (GlobalSettings::self()->scamDetectionEnabled()) {
         mDetails.clear();
         mDetails = QLatin1String("<b>") + i18n("Details:") + QLatin1String("</b><ul>");
@@ -67,10 +68,12 @@ void ScamDetection::scanPage(QWebFrame *frame)
         if (foundScam)
             Q_EMIT messageMayBeAScam();
     }
+#endif
 }
 
 bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
 {
+#ifndef KDEPIM_NO_WEBKIT
     bool foundScam = false;
     QRegExp ip4regExp;
     ip4regExp.setPattern(IPv4_PATTERN);
@@ -136,6 +139,9 @@ bool ScamDetection::scanFrame(const QWebElement &rootElement, QString &details)
     }
     details += QLatin1String("</ul>");
     return foundScam;
+#else
+    return false;
+#endif
 }
 
 void ScamDetection::showDetails()
