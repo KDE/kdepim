@@ -50,7 +50,7 @@ void BoxJob::parseAccountInfo(const QString &data)
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
+    //qDebug()<<" info"<<info;
     PimCommon::AccountInfo accountInfo;
     if (info.contains(QLatin1String("space_used"))) {
         accountInfo.shared = info.value(QLatin1String("space_used")).toLongLong();
