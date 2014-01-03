@@ -26,11 +26,17 @@ ServerSieveSettings::ServerSieveSettings(QWidget *parent) :
     ui(new Ui::ServerSieveSettings)
 {
     ui->setupUi(this);
+    connect(ui->serverName, SIGNAL(textChanged(QString)), this, SLOT(slotServerNameChanged(QString)));
 }
 
 ServerSieveSettings::~ServerSieveSettings()
 {
     delete ui;
+}
+
+void ServerSieveSettings::slotServerNameChanged(const QString &name)
+{
+    Q_EMIT enableOkButton(!name.isEmpty());
 }
 
 QString ServerSieveSettings::serverName() const

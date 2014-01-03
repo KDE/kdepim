@@ -51,6 +51,12 @@ public:
     void setServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf);
     SieveEditorUtil::SieveServerConfig serverSieveConfig() const;
 
+Q_SIGNALS:
+    void enableOkButton(bool enabled);
+
+private slots:
+    void slotServerNameChanged(const QString &name);
+
 private:
     Ui::ServerSieveSettings *ui;
 };
