@@ -25,6 +25,7 @@
 
 namespace PimCommon {
 class StorageServiceSettingsWidget;
+class StorageServiceAbstract;
 }
 
 class StorageServiceConfigureDialog : public KDialog
@@ -33,6 +34,9 @@ class StorageServiceConfigureDialog : public KDialog
 public:
     explicit StorageServiceConfigureDialog(QWidget *parent=0);
     ~StorageServiceConfigureDialog();
+
+    QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
+    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
 
 private:
     void readConfig();

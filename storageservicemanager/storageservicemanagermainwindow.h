@@ -22,6 +22,11 @@
 #define STORAGESERVICEMANAGERMAINWINDOW_H
 
 #include <KXmlGuiWindow>
+
+namespace PimCommon {
+class StorageServiceManager;
+}
+
 class StorageServiceTabWidget;
 class StorageServiceManagerMainWindow : public KXmlGuiWindow
 {
@@ -39,6 +44,7 @@ private:
     void setupActions();
     void readConfig();
     StorageServiceTabWidget *mStorageServiceTabWidget;
+    PimCommon::StorageServiceManager *mStorageManager;
 };
 
 #endif // STORAGESERVICEMANAGERMAINWINDOW_H

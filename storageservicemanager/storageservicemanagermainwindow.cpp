@@ -21,6 +21,7 @@
 #include "storageservicemanagermainwindow.h"
 #include "storageservicetabwidget.h"
 #include "storageserviceconfiguredialog.h"
+#include "pimcommon/storageservice/storageservicemanager.h"
 
 #include <KStandardAction>
 #include <KLocalizedString>
@@ -34,6 +35,7 @@
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     : KXmlGuiWindow()
 {
+    mStorageManager = new PimCommon::StorageServiceManager(this);
     mStorageServiceTabWidget = new StorageServiceTabWidget;
     setCentralWidget(mStorageServiceTabWidget);
 
@@ -82,9 +84,11 @@ void StorageServiceManagerMainWindow::slotQuitApp()
 void StorageServiceManagerMainWindow::slotConfigure()
 {
     QPointer<StorageServiceConfigureDialog> dlg = new StorageServiceConfigureDialog(this);
+    dlg->setListService(mStorageManager->listService());
     if (dlg->exec()) {
-        //TODO
+        mStorageManager->setListService(dlg->listService());
     }
+    //TODO update tabwidget
     delete dlg;
 }
 

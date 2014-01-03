@@ -40,6 +40,16 @@ StorageServiceConfigureDialog::~StorageServiceConfigureDialog()
     writeConfig();
 }
 
+QMap<QString, PimCommon::StorageServiceAbstract *> StorageServiceConfigureDialog::listService() const
+{
+    return mStorageSettings->listService();
+}
+
+void StorageServiceConfigureDialog::setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst)
+{
+    mStorageSettings->setListService(lst);
+}
+
 void StorageServiceConfigureDialog::readConfig()
 {
     KConfigGroup group( KGlobal::config(), "StorageServiceConfigureDialog" );
