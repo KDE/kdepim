@@ -17,6 +17,7 @@ Comment[sr@latin]=Agent beležaka
 Comment[sv]=Anteckningsmodul
 Comment[uk]=Агент нотаток
 Comment[x-test]=xxNotes Agentxx
+Comment[zh_TW]=便條代理程式
 
 [Event/receivednotes]
 Name=Received a note
@@ -35,5 +36,6 @@ Name[sr@latin]=Primljena beleška
 Name[sv]=Tog emot en anteckning
 Name[uk]=Отримано нотатку
 Name[x-test]=xxReceived a notexx
+Name[zh_TW]=接收到一張便條
 Action=Popup
 

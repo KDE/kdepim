@@ -15,6 +15,7 @@ Comment[sr@latin]=Prikazivač poruka
 Comment[sv]=Brevvisning
 Comment[uk]=Перегляд повідомлень
 Comment[x-test]=xxMessage Viewerxx
+Comment[zh_TW]=訊息檢視器
 
 [Event/adblock-list-download-done]
 Name=New Ad-Block list download done
