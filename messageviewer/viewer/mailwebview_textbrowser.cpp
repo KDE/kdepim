@@ -301,12 +301,12 @@ void MailWebView::clearFindSelection()
   // not supported
 }
 
-void MailWebView::keyReleaseEvent(QKeyEvent*)
+void MailWebView::keyReleaseEvent(QKeyEvent* e)
 {
   QTextBrowser::keyReleaseEvent(e);
 }
 
-void MailWebView::keyPressEvent(QKeyEvent*)
+void MailWebView::keyPressEvent(QKeyEvent* e)
 {
   QTextBrowser::keyPressEvent(e);
 }
@@ -335,5 +335,4 @@ bool MailWebView::isAShortUrl(const KUrl &url) const
     return false;
 }
 
-
-#include "mailwebview.moc"
+#include "moc_mailwebview.cpp"
