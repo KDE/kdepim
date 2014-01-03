@@ -24,9 +24,20 @@
 StorageServiceTabWidget::StorageServiceTabWidget(QWidget *parent)
     : QTabWidget(parent)
 {
+    loadStorageService();
 }
 
 StorageServiceTabWidget::~StorageServiceTabWidget()
+{
+
+}
+
+void StorageServiceTabWidget::createPage()
+{
+    //TODO
+}
+
+void StorageServiceTabWidget::reloadStorageService()
 {
 
 }

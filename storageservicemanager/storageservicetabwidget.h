@@ -28,7 +28,9 @@ class StorageServiceTabWidget : public QTabWidget
     Q_OBJECT
 public:
     explicit StorageServiceTabWidget(QWidget *parent=0);
-    ~StorageServiceTabWidget();
+    ~StorageServiceTabWidget();    
+
+    void reloadStorageService();
 
 public slots:
     void slotAuthenticate();
@@ -42,6 +44,7 @@ public slots:
 
 private:
     void loadStorageService();
+    void createPage();
 };
 
 #endif // STORAGESERVICETABWIDGET_H
