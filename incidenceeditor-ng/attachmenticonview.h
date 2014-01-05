@@ -67,6 +67,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentIconItem : public QListWidgetItem
 
     KCalCore::Attachment::Ptr attachment() const;
     const QString uri() const;
+    const QString savedUri() const;
     void setUri( const QString &uri );
 
     using QListWidgetItem::setData;
@@ -88,6 +89,7 @@ class INCIDENCEEDITORS_NG_EXPORT AttachmentIconItem : public QListWidgetItem
 
   private:
     KCalCore::Attachment::Ptr mAttachment;
+    QString mSaveUri;
 };
 
 }
