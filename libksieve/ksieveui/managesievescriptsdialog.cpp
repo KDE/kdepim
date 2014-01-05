@@ -24,7 +24,6 @@
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kwindowsystem.h>
-#include <kinputdialog.h>
 #include <kpushbutton.h>
 #include <kmessagebox.h>
 

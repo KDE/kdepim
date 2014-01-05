@@ -21,7 +21,6 @@
 #include "ksieveui_export.h"
 #include "widgets/managesievewidget.h"
 
-#include <QTreeWidget>
 #include <qdialog.h>
 #include <kurl.h>
 
@@ -36,8 +35,6 @@ class SieveJob;
 
 namespace KSieveUi {
 class SieveEditor;
-class ManageSieveTreeView;
-
 class CustomManageSieveWidget : public KSieveUi::ManageSieveWidget
 {
     Q_OBJECT
@@ -82,9 +79,6 @@ private:
 
     CustomManageSieveWidget* mTreeView;
     SieveEditor * mSieveEditor;
-
-    // Maps top-level items to their child which has the radio button selection
-    QMap<QTreeWidgetItem*,QTreeWidgetItem*> mSelectedItems;
 
     KUrl mCurrentURL;
     QStringList mCurrentCapabilities;
