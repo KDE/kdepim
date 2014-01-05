@@ -70,6 +70,10 @@ void StorageServiceJobConfig::registerConfigIf(ISettingsJob *settingsJob)
 
 QString StorageServiceJobConfig::youSendItApiKey() const
 {
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
     return mSettingsJob->youSendItApiKey();
 }
 
