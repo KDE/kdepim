@@ -60,7 +60,7 @@
  <customwidgets>
   <customwidget>
    <class>ServerSieveListWidget</class>
-   <extends>QTreeWidget</extends>
+   <extends>QListWidget</extends>
    <header>serversievelistwidget.h</header>
   </customwidget>
  </customwidgets>

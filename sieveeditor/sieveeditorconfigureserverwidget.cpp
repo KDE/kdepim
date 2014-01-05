@@ -66,10 +66,10 @@ void SieveEditorConfigureServerWidget::slotAddServer()
 
 void SieveEditorConfigureServerWidget::slotDeleteServer()
 {
-    QTreeWidgetItem *item = ui->serverSieveListWidget->currentItem();
+    QListWidgetItem *item = ui->serverSieveListWidget->currentItem();
     if (!item)
         return;
-    if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to remove this server \'%1\'?", item->text(0)), i18n("Remove Server Sieve"))) {
+    if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to remove this server \'%1\'?", item->text()), i18n("Remove Server Sieve"))) {
         delete item;
         slotItemSelectionChanged();
     }

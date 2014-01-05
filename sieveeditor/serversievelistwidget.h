@@ -21,13 +21,13 @@
 #ifndef SERVERSIEVELISTWIDGET_H
 #define SERVERSIEVELISTWIDGET_H
 
-#include <QTreeWidget>
+#include <QListWidget>
 #include "sieveeditorutil.h"
 
-class ServerSieveListWidgetItem : public QTreeWidgetItem
+class ServerSieveListWidgetItem : public QListWidgetItem
 {
 public:
-    ServerSieveListWidgetItem(QTreeWidget *parent=0);
+    ServerSieveListWidgetItem(QListWidget *parent=0);
     ~ServerSieveListWidgetItem();
 
     SieveEditorUtil::SieveServerConfig serverConfig() const;
@@ -37,7 +37,7 @@ private:
     SieveEditorUtil::SieveServerConfig mServerConfig;
 };
 
-class ServerSieveListWidget : public QTreeWidget
+class ServerSieveListWidget : public QListWidget
 {
     Q_OBJECT
 public:
@@ -50,9 +50,6 @@ public:
 
 public Q_SLOTS:
     void modifyServerConfig();
-
-private slots:
-    void slotContextMenuRequested(const QPoint &pos);
 };
 
 #endif // SERVERSIEVELISTWIDGET_H
