@@ -367,6 +367,5 @@ void ManageSieveWidget::slotDoubleClicked( QTreeWidgetItem * item )
 {
     if ( !isFileNameItem( item ) )
         return;
-
-    Q_EMIT editScript();
+    slotEditScript();
 }

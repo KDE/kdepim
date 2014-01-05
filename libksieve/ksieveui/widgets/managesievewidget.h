@@ -48,7 +48,6 @@ public:
 
 Q_SIGNALS:
     void updateButtons(QTreeWidgetItem *item);
-    void editScript();
     void newScript(const KUrl &u, const QStringList &currentCapabilities);
     void editScript(const KUrl &url, const QStringList &currentCapabilities);
 
