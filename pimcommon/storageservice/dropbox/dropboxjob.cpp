@@ -42,8 +42,8 @@ DropBoxJob::DropBoxJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
     mApiPath = QLatin1String("https://api.dropbox.com/1/");
-    mOauthconsumerKey = QLatin1String("e40dvomckrm48ci");
-    mOauthSignature = QLatin1String("0icikya464lny9g&");
+    mOauthconsumerKey = PimCommon::StorageServiceJobConfig::self()->dropboxOauthConsumerKey();
+    mOauthSignature = PimCommon::StorageServiceJobConfig::self()->dropboxOauthSignature();
     mOauthVersion = QLatin1String("1.0");
     mOauthSignatureMethod = QLatin1String("PLAINTEXT");
     mRootPath = QLatin1String("dropbox");

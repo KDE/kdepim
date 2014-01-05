@@ -77,4 +77,22 @@ QString StorageServiceJobConfig::youSendItApiKey() const
     return mSettingsJob->youSendItApiKey();
 }
 
+QString StorageServiceJobConfig::dropboxOauthConsumerKey() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->dropboxOauthConsumerKey();
+}
+
+QString StorageServiceJobConfig::dropboxOauthSignature() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->dropboxOauthSignature();
+}
+
 }

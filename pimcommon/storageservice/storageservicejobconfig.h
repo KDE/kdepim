@@ -36,6 +36,8 @@ public:
     void registerConfigIf(ISettingsJob *settingsJob);
 
     QString youSendItApiKey() const;
+    QString dropboxOauthConsumerKey() const;
+    QString dropboxOauthSignature() const;
 
 private:
     StorageServiceJobConfig(QObject *parent=0);
