@@ -57,7 +57,7 @@ struct MultiChange {
 
 namespace CalendarSupport {
 
-struct CalendarUtilsPrivate
+class CalendarUtilsPrivate
 {
   public:
     /// Methods

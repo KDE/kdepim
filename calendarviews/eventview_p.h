@@ -37,10 +37,8 @@ namespace EventViews {
 
 class EventViewPrivate
 {
-  EventView *const q;
-
   public: /// Methods
-    explicit EventViewPrivate( EventView *qq );
+    EventViewPrivate();
     ~EventViewPrivate();
 
     /**

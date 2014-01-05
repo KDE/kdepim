@@ -27,7 +27,7 @@ using namespace IncidenceEditorNG;
 /// public methods
 
 CombinedIncidenceEditor::CombinedIncidenceEditor( QWidget *parent )
-  : IncidenceEditor( parent ), mDirtyEditorCount( 0 ), mParent( parent )
+  : IncidenceEditor( parent ), mDirtyEditorCount( 0 )
 {
 }
 

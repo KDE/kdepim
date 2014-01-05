@@ -66,8 +66,9 @@ using namespace KCalCore;
 
 namespace EventViews {
 // We share this struct between all views, for performance and memory purposes
-struct ModelStack
+class ModelStack
 {
+public:
   ModelStack( const EventViews::PrefsPtr &preferences, QObject *parent_ )
     : todoModel( new TodoModel( preferences ) ),
       parent( parent_ ),
