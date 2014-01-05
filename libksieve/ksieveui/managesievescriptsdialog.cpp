@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -161,6 +161,9 @@ void ManageSieveScriptsDialog::slotUpdateButtons(QTreeWidgetItem *item)
         enabled = false;
     else if ( !item->parent() && !mUrls.count( item ))
         enabled = false;
+
+
+
     if ( !enabled ) {
         mNewScript->setEnabled( false );
         mEditScript->setEnabled( false );
