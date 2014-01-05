@@ -38,3 +38,14 @@ QString StorageServiceManagerSettingsJob::youSendItApiKey() const
     return QLatin1String("fnab8fkgwrka7v6zs2ycd34a");
 }
 
+QString StorageServiceManagerSettingsJob::dropboxOauthConsumerKey() const
+{
+    //TODO customize it
+    return QLatin1String("e40dvomckrm48ci");
+}
+
+QString StorageServiceManagerSettingsJob::dropboxOauthSignature() const
+{
+    //TODO customize it
+    return QLatin1String("0icikya464lny9g&");
+}

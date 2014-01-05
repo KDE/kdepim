@@ -32,6 +32,8 @@ public:
     ~StorageServiceManagerSettingsJob();
 
     QString youSendItApiKey() const;
+    QString dropboxOauthConsumerKey() const;
+    QString dropboxOauthSignature() const;
 };
 
 #endif // STORAGESERVICEMANAGERSETTINGSJOB_H

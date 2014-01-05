@@ -30,6 +30,9 @@ class ISettingsJob
 public:
     virtual ~ISettingsJob() {}
     virtual QString youSendItApiKey() const = 0;
+    virtual QString dropboxOauthConsumerKey() const = 0;
+    virtual QString dropboxOauthSignature() const = 0;
+
 };
 
 }

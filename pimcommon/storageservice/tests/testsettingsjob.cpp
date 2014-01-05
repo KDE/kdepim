@@ -38,3 +38,12 @@ QString TestSettingsJob::youSendItApiKey() const
     return QLatin1String("fnab8fkgwrka7v6zs2ycd34a");
 }
 
+QString TestSettingsJob::dropboxOauthConsumerKey() const
+{
+    return QLatin1String("e40dvomckrm48ci");
+}
+
+QString TestSettingsJob::dropboxOauthSignature() const
+{
+    return QLatin1String("0icikya464lny9g&");
+}

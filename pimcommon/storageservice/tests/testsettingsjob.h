@@ -35,6 +35,8 @@ public:
     ~TestSettingsJob();
 
     QString youSendItApiKey() const;
+    QString dropboxOauthConsumerKey() const;
+    QString dropboxOauthSignature() const;
 };
 }
 
