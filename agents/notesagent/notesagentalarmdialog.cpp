@@ -124,13 +124,13 @@ void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)
 {
     if (item) {
-        NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
-        dlg->show();
+        slotShowAlarm();
     }
 }
 
 void NotesAgentAlarmDialog::slotShowAlarm()
 {
+    //deleted on close
     NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
     dlg->show();
 }
