@@ -19,7 +19,7 @@
 */
 
 #include "sieveeditorscriptmanagerwidget.h"
-#include "libksieve/ksieveui/widgets/managesievetreeview.h"
+#include "sieveeditormanagesievewidget.h"
 
 #include <QHBoxLayout>
 
@@ -29,7 +29,7 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     QHBoxLayout *hbox = new QHBoxLayout;
     hbox->setMargin(0);
     setLayout(hbox);
-    mTreeView = new KSieveUi::ManageSieveTreeView;
+    mTreeView = new SieveEditorManageSieveWidget;
     hbox->addWidget(mTreeView);
 }
 
