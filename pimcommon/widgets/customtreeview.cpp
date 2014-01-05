@@ -25,7 +25,7 @@ using namespace PimCommon;
 
 CustomTreeView::CustomTreeView(QWidget *parent)
     : QTreeWidget(parent),
-      mShowDefaultText(false)
+      mShowDefaultText(true)
 {
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
              this, SLOT(slotGeneralFontChanged()));
