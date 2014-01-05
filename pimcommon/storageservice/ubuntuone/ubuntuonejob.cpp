@@ -18,6 +18,7 @@
 #include "ubuntuonejob.h"
 #include "pimcommon/storageservice/logindialog.h"
 #include "pimcommon/storageservice/storageserviceutils.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
 

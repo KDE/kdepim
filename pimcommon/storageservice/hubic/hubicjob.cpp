@@ -17,6 +17,7 @@
 
 #include "hubicjob.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <qjson/parser.h>
 
