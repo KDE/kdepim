@@ -58,7 +58,6 @@ protected:
 private Q_SLOTS:
     void slotItemChanged(QTreeWidgetItem *item, int col);
     void slotContextMenuRequested(const QPoint &p);
-    void slotRefresh();
     void slotUpdateButtons();
     void slotDoubleClicked(QTreeWidgetItem *item);
 
@@ -68,6 +67,11 @@ public Q_SLOTS:
     void slotEditScript();
     void slotDeleteScript();
     void slotDeactivateScript();
+    void slotRefresh();
+
+protected:
+    QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
+    QMap<QTreeWidgetItem*,KUrl> mUrls;
 
 private:
     enum sieveServerStatus
@@ -84,8 +88,6 @@ private:
     void changeActiveScript(QTreeWidgetItem *item, bool activate);
     bool isProtectedName(const QString &name);
 
-    QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
-    QMap<QTreeWidgetItem*,KUrl> mUrls;
 
     // Maps top-level items to their child which has the radio button selection
     QMap<QTreeWidgetItem*,QTreeWidgetItem*> mSelectedItems;

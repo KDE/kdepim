@@ -41,6 +41,49 @@
 
 using namespace KSieveUi;
 
+CustomManageSieveWidget::CustomManageSieveWidget(QWidget *parent)
+    : KSieveUi::ManageSieveWidget(parent)
+{
+
+}
+
+CustomManageSieveWidget::~CustomManageSieveWidget()
+{
+
+}
+
+bool CustomManageSieveWidget::refreshList()
+{
+    bool noImapFound = true;
+    SieveTreeWidgetItem *last = 0;
+    Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
+    foreach ( const Akonadi::AgentInstance &type, lst ) {
+        if ( type.status() == Akonadi::AgentInstance::Broken )
+            continue;
+
+        last = new SieveTreeWidgetItem( treeView(), last );
+        last->setText( 0, type.name() );
+        last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
+
+        const KUrl u = KSieveUi::Util::findSieveUrlForAccount( type.identifier() );
+        if ( u.isEmpty() ) {
+            QTreeWidgetItem *item = new QTreeWidgetItem( last );
+            item->setText( 0, i18n( "No Sieve URL configured" ) );
+            item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
+            treeView()->expandItem( last );
+        } else {
+            KManageSieve::SieveJob * job = KManageSieve::SieveJob::list( u );
+            connect( job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
+                     this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
+            mJobs.insert( job, last );
+            mUrls.insert( last, u );
+            last->startAnimation();
+        }
+        noImapFound = false;
+    }
+    return noImapFound;
+}
+
 
 ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     : QDialog( parent ),
@@ -579,4 +622,6 @@ void ManageSieveScriptsDialog::disableManagerScriptsDialog(bool disable)
 {
     setDisabled(disable);
 }
+
+
 

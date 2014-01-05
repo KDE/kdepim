@@ -19,6 +19,7 @@
 #define KSIEVE_KSIEVEUI_MANAGESIEVESCRIPTSDIALOG_H
 
 #include "ksieveui_export.h"
+#include "widgets/managesievewidget.h"
 
 #include <QTreeWidget>
 #include <qdialog.h>
@@ -36,6 +37,18 @@ class SieveJob;
 namespace KSieveUi {
 class SieveEditor;
 class ManageSieveTreeView;
+
+class CustomManageSieveWidget : public KSieveUi::ManageSieveWidget
+{
+    Q_OBJECT
+public:
+    explicit CustomManageSieveWidget(QWidget *parent=0);
+    virtual ~CustomManageSieveWidget();
+
+protected:
+    virtual bool refreshList();
+};
+
 class KSIEVEUI_EXPORT ManageSieveScriptsDialog : public QDialog
 {
     Q_OBJECT
