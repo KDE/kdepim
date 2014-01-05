@@ -22,6 +22,7 @@
 
 #include <kmanagesieve/sievejob.h>
 
+#include <KInputDialog>
 #include <KStandardGuiItem>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -124,6 +125,78 @@ void ManageSieveWidget::slotContextMenuRequested( const QPoint& p )
     }
     if ( !menu.actions().isEmpty() )
         menu.exec( mTreeView->viewport()->mapToGlobal(p) );
+}
+
+void ManageSieveWidget::slotNewScript()
+{
+    QTreeWidgetItem *currentItem = mTreeView->currentItem();
+    if ( !currentItem )
+        return;
+    if ( currentItem->parent() )
+        currentItem = currentItem->parent();
+    if ( !currentItem )
+        return;
+
+    if ( !mUrls.count( currentItem ) )
+        return;
+
+    KUrl u = mUrls[currentItem];
+    if ( u.isEmpty() )
+        return;
+
+    bool ok = false;
+    const QString name = KInputDialog::getText( i18n( "New Sieve Script" ),
+                                                i18n( "Please enter a name for the new Sieve script:" ),
+                                                i18n( "unnamed" ), &ok, this );
+    if ( !ok || name.isEmpty() )
+        return;
+
+    if (isProtectedName(name.toLower())) {
+        KMessageBox::error(this, i18n("You cannot use protected name."), i18n("New Script"));
+        return;
+    }
+
+    u.setFileName( name );
+
+    QTreeWidgetItem * parentItem = currentItem;
+    if (parentItem) {
+        const int numberOfElement(parentItem->childCount());
+        for (int i = 0; i <numberOfElement; ++i) {
+            if (parentItem->child(i)->text(0) == name) {
+                KMessageBox::error(
+                            this,
+                            i18n( "Script name already used \"%1\".", name ),
+                            i18n( "New Script" ) );
+                return;
+            }
+        }
+    }
+
+    const QStringList currentCapabilities = currentItem->data(0, SIEVE_SERVER_CAPABILITIES).toStringList();
+
+    mBlockSignal = true;
+    QTreeWidgetItem *newItem = new QTreeWidgetItem( currentItem );
+    newItem->setFlags(newItem->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
+    newItem->setText(0,name);
+    newItem->setCheckState(0,Qt::Unchecked);
+    mBlockSignal = false;
+    Q_EMIT newScript(u, currentCapabilities);
+}
+
+void ManageSieveWidget::slotEditScript()
+{
+    QTreeWidgetItem *currentItem = mTreeView->currentItem();
+    if ( !isFileNameItem( currentItem ) )
+        return;
+    QTreeWidgetItem* parent = currentItem->parent();
+    if ( !mUrls.count( parent ) )
+        return;
+    KUrl url = mUrls[parent];
+    if ( url.isEmpty() )
+        return;
+    url.setFileName( currentItem->text(0) );
+    const QStringList currentCapabilities = parent->data(0, SIEVE_SERVER_CAPABILITIES).toStringList();
+    Q_EMIT editScript(url, currentCapabilities);
 }
 
 void ManageSieveWidget::slotDeactivateScript()
@@ -229,35 +302,6 @@ void ManageSieveWidget::slotRefresh()
     mBlockSignal = true;
     clear();
     const bool noImapFound = refreshList();
-    /*
-    SieveTreeWidgetItem *last = 0;
-    Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
-    bool noImapFound = true;
-    foreach ( const Akonadi::AgentInstance &type, lst ) {
-        if ( type.status() == Akonadi::AgentInstance::Broken )
-            continue;
-
-        last = new SieveTreeWidgetItem( mTreeView, last );
-        last->setText( 0, type.name() );
-        last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
-
-        const KUrl u = KSieveUi::Util::findSieveUrlForAccount( type.identifier() );
-        if ( u.isEmpty() ) {
-            QTreeWidgetItem *item = new QTreeWidgetItem( last );
-            item->setText( 0, i18n( "No Sieve URL configured" ) );
-            item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
-            mTreeView->expandItem( last );
-        } else {
-            KManageSieve::SieveJob * job = KManageSieve::SieveJob::list( u );
-            connect( job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
-                     this, SLOT(slotGotList(KManageSieve::SieveJob*,bool,QStringList,QString)) );
-            mJobs.insert( job, last );
-            mUrls.insert( last, u );
-            last->startAnimation();
-        }
-        noImapFound = false;
-    }
-    */
     slotUpdateButtons();
     mTreeView->setNoImapFound(noImapFound);
 }

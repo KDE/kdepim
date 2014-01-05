@@ -49,6 +49,8 @@ public:
 Q_SIGNALS:
     void updateButtons(QTreeWidgetItem *item);
     void editScript();
+    void newScript(const KUrl &u, const QStringList &currentCapabilities);
+    void editScript(const KUrl &url, const QStringList &currentCapabilities);
 
 protected:
     virtual bool refreshList() = 0;
@@ -56,14 +58,16 @@ protected:
 private Q_SLOTS:
     void slotItemChanged(QTreeWidgetItem *item, int col);
     void slotContextMenuRequested(const QPoint &p);
-    void slotDeactivateScript();
-    void slotDeleteScript();
     void slotRefresh();
     void slotUpdateButtons();
     void slotDoubleClicked(QTreeWidgetItem *item);
 
 public Q_SLOTS:
     void slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript);
+    void slotNewScript();
+    void slotEditScript();
+    void slotDeleteScript();
+    void slotDeactivateScript();
 
 private:
     enum sieveServerStatus
