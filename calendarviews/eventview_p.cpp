@@ -36,9 +36,8 @@
 
 using namespace EventViews;
 
-EventViewPrivate::EventViewPrivate( EventView *qq )
-  : q( qq ),
-    calendar( 0 ),
+EventViewPrivate::EventViewPrivate()
+  : calendar( 0 ),
     customCollectionSelection( 0 ),
     collectionSelectionModel( 0 ),
     mReturnPressed( false ),

@@ -65,11 +65,9 @@ using namespace EventViews;
 ///////////////////////////////////////////////////////////////////////////////
 class MarcusBains::Private
 {
-  MarcusBains *const q;
-
   public:
-    Private( MarcusBains *parent, EventView *eventView, Agenda *agenda )
-      : q( parent ), mEventView( eventView ), mAgenda( agenda ),
+    Private( EventView *eventView, Agenda *agenda )
+      : mEventView( eventView ), mAgenda( agenda ),
         mTimer( 0 ), mTimeBox( 0 ), mOldTime( 0, 0 ), mOldTodayCol( -1 )
     {
     }
@@ -102,7 +100,7 @@ int MarcusBains::Private::todayColumn() const
 }
 
 MarcusBains::MarcusBains( EventView *eventView, Agenda *agenda )
-  : QFrame( agenda ), d( new Private( this, eventView, agenda ) )
+  : QFrame( agenda ), d( new Private( eventView, agenda ) )
 {
   d->mTimeBox = new QLabel( d->mAgenda );
   d->mTimeBox->setAlignment( Qt::AlignRight | Qt::AlignBottom );
@@ -203,12 +201,10 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
 
 class Agenda::Private
 {
-  Agenda *const q;
-
   public:
-    Private( Agenda *parent, AgendaView *agendaView, QScrollArea *scrollArea,
+    Private( AgendaView *agendaView, QScrollArea *scrollArea,
              int columns, int rows, int rowSize, bool isInteractive )
-      : q( parent ), mAgendaView( agendaView ), mScrollArea( scrollArea ), mAllDayMode( false ),
+      : mAgendaView( agendaView ), mScrollArea( scrollArea ), mAllDayMode( false ),
         mColumns( columns ), mRows( rows ), mGridSpacingX( 0.0 ), mGridSpacingY( rowSize ),
         mDesiredGridSpacingY( rowSize ), mCalendar( 0 ), mChanger( 0 ),
         mResizeBorderWidth( 0 ), mScrollBorderWidth( 0 ), mScrollDelay( 0 ), mScrollOffset( 0 ),
@@ -325,7 +321,7 @@ class Agenda::Private
 Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
                 int columns, int rows, int rowSize, bool isInteractive )
   : QWidget( scrollArea ),
-    d( new Private( this, agendaView, scrollArea, columns, rows, rowSize, isInteractive ) )
+    d( new Private( agendaView, scrollArea, columns, rows, rowSize, isInteractive ) )
 {
   setMouseTracking( true );
 
@@ -338,7 +334,7 @@ Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
 */
 Agenda::Agenda( AgendaView *agendaView, QScrollArea *scrollArea,
                 int columns, bool isInteractive )
-  : QWidget( scrollArea ), d( new Private( this, agendaView, scrollArea, columns, 1, 24,
+  : QWidget( scrollArea ), d( new Private( agendaView, scrollArea, columns, 1, 24,
                                            isInteractive ) )
 {
   d->mAllDayMode = true;
