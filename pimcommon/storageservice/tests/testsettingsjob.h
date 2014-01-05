@@ -18,22 +18,22 @@
 
 */
 
-#ifndef DEFAULTSETTINGSJOB_H
-#define DEFAULTSETTINGSJOB_H
+#ifndef TESTSETTINGSJOB_H
+#define TESTSETTINGSJOB_H
 
 #include <QObject>
 
-#include "storageserviceinterface.h"
+#include "pimcommon/storageservice/storageserviceinterface.h"
 
 namespace PimCommon {
 
-class DefaultSettingsJob : public QObject, public ISettingsJob
+class TestSettingsJob : public QObject, public ISettingsJob
 {
     Q_OBJECT
 public:
-    explicit DefaultSettingsJob(QObject *parent=0);
-    ~DefaultSettingsJob();
+    explicit TestSettingsJob(QObject *parent=0);
+    ~TestSettingsJob();
 };
 }
 
-#endif // DEFAULTSETTINGSJOB_H
+#endif // TESTSETTINGSJOB_H

@@ -18,16 +18,16 @@
 
 */
 
-#include "defaultsettingsjob.h"
+#include "testsettingsjob.h"
 
 using namespace PimCommon;
 
-DefaultSettingsJob::DefaultSettingsJob(QObject *parent)
+TestSettingsJob::TestSettingsJob(QObject *parent)
     : QObject(parent)
 {
 }
 
-DefaultSettingsJob::~DefaultSettingsJob()
+TestSettingsJob::~TestSettingsJob()
 {
 
 }
