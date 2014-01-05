@@ -149,6 +149,7 @@ set(ksieveui_LIB_SRCS
   managesievescriptsdialog.cpp
   widgets/sievetreewidgetitem.cpp
   widgets/managesievetreeview.cpp
+  widgets/managesievewidget.cpp
   debug/sievedebugdialog.cpp
   util/util.cpp
   managescriptsjob/generateglobalscriptjob.cpp
