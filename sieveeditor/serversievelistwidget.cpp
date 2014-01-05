@@ -26,6 +26,7 @@
 
 #include <QTreeWidgetItem>
 #include <QPointer>
+#include <QMenu>
 
 ServerSieveListWidget::ServerSieveListWidget(QWidget *parent)
     : QTreeWidget(parent)
@@ -42,29 +43,31 @@ ServerSieveListWidget::~ServerSieveListWidget()
 
 void ServerSieveListWidget::slotContextMenuRequested(const QPoint &pos)
 {
-    /*
-    QTreeWidgetItem *item = itemAt( p );
+    QTreeWidgetItem *item = itemAt( pos );
     if ( !item )
         return;
-    if ( !item->parent() && !mUrls.count( item ))
-        return;
+    //if ( !item->parent() && !mUrls.count( item ))
+        //return;
     QMenu menu;
-    if ( isFileNameItem( item ) ) {
+    if ( /*isFileNameItem( item )*/false ) {
         // script items:
         menu.addAction( i18n( "Edit Script..." ), this, SLOT(slotEditScript()) );
         menu.addAction( i18n( "Delete Script" ), this, SLOT(slotDeleteScript()) );
+#if 0
         if ( itemIsActived( item ) ) {
             menu.addSeparator();
             menu.addAction( i18n( "Deactivate Script" ), this, SLOT(slotDeactivateScript()) );
         }
+#endif
     } else if ( !item->parent() ) {
+#if 0
         // top-levels:
         if ( !serverHasError(item) && mJobs.keys(item).isEmpty())
             menu.addAction( i18n( "New Script..." ), this, SLOT(slotNewScript()) );
+#endif
     }
     if ( !menu.actions().isEmpty() )
-        menu.exec( mListView->viewport()->mapToGlobal(p) );
-        */
+        menu.exec( viewport()->mapToGlobal(pos) );
 }
 
 void ServerSieveListWidget::readConfig()
