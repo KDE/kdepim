@@ -18,6 +18,8 @@
 #include "storageservice_gui.h"
 #include "storageservice/storageservicemanager.h"
 #include "storageservice/settings/storageservicesettingswidget.h"
+#include "pimcommon/storageservice/tests/testsettingsjob.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 #include <QWidget>
 
 #include <kdebug.h>
@@ -53,6 +55,10 @@ void StorageServiceSettingsDialog::setListService(const QMap<QString, PimCommon:
 StorageServiceTestWidget::StorageServiceTestWidget(QWidget *parent)
     : QWidget(parent)
 {
+    PimCommon::TestSettingsJob *settingsJob = new PimCommon::TestSettingsJob(this);
+    PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
+    configJob->registerConfigIf(settingsJob);
+
     QVBoxLayout *lay = new QVBoxLayout;
     mStorageManager = new PimCommon::StorageServiceManager(this);
     connect(mStorageManager, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));

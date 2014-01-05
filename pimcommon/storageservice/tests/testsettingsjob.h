@@ -22,12 +22,12 @@
 #define TESTSETTINGSJOB_H
 
 #include <QObject>
-
+#include "pimcommon_export.h"
 #include "pimcommon/storageservice/storageserviceinterface.h"
 
 namespace PimCommon {
 
-class TestSettingsJob : public QObject, public ISettingsJob
+class PIMCOMMON_EXPORT TestSettingsJob : public QObject, public ISettingsJob
 {
     Q_OBJECT
 public:

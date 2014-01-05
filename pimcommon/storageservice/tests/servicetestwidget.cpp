@@ -18,6 +18,8 @@
 
 #include "servicetestwidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/tests/testsettingsjob.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
 #include <KFileDialog>
@@ -33,6 +35,10 @@ ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     : QWidget(parent),
       mStorageService(0)
 {
+    PimCommon::TestSettingsJob *settingsJob = new PimCommon::TestSettingsJob(this);
+    PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
+    configJob->registerConfigIf(settingsJob);
+
     mEdit = new QTextEdit;
     mEdit->setReadOnly(true);
     QVBoxLayout *lay = new QVBoxLayout;
