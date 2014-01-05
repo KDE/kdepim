@@ -21,7 +21,9 @@
 #include "storageservicemanagermainwindow.h"
 #include "storageservicetabwidget.h"
 #include "storageserviceconfiguredialog.h"
+#include "storageservicemanagersettingsjob.h"
 #include "pimcommon/storageservice/storageservicemanager.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KStandardAction>
 #include <KLocalizedString>
@@ -35,6 +37,10 @@
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     : KXmlGuiWindow()
 {
+    StorageServiceManagerSettingsJob *settingsJob = new StorageServiceManagerSettingsJob(this);
+    PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
+    configJob->registerConfigIf(settingsJob);
+
     mStorageManager = new PimCommon::StorageServiceManager(this);
     mStorageServiceTabWidget = new StorageServiceTabWidget;
     setCentralWidget(mStorageServiceTabWidget);
