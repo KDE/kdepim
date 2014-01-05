@@ -37,20 +37,33 @@ class KSIEVEUI_EXPORT ManageSieveWidget : public QWidget
 {
     Q_OBJECT
 public:
+    enum SieveEditorMode {
+        NormalEditorMode = 0,
+        Kep14EditorMode
+    };
     explicit ManageSieveWidget(QWidget *parent=0);
     ~ManageSieveWidget();
 
     ManageSieveTreeView *treeView() const;
 
+Q_SIGNALS:
+    void updateButtons(QTreeWidgetItem *item);
+    void editScript();
+
 protected:
     virtual bool refreshList() = 0;
 
-private slots:
+private Q_SLOTS:
     void slotItemChanged(QTreeWidgetItem *item, int col);
     void slotContextMenuRequested(const QPoint &p);
     void slotDeactivateScript();
     void slotDeleteScript();
     void slotRefresh();
+    void slotUpdateButtons();
+    void slotDoubleClicked(QTreeWidgetItem *item);
+
+public Q_SLOTS:
+    void slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript);
 
 private:
     enum sieveServerStatus

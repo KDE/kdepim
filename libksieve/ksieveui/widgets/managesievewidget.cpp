@@ -55,7 +55,7 @@ ManageSieveWidget::ManageSieveWidget(QWidget *parent)
 
 ManageSieveWidget::~ManageSieveWidget()
 {
-
+    clear();
 }
 
 ManageSieveTreeView *ManageSieveWidget::treeView() const
@@ -258,6 +258,71 @@ void ManageSieveWidget::slotRefresh()
         noImapFound = false;
     }
     */
-    //FIXME slotUpdateButtons();
+    slotUpdateButtons();
     mTreeView->setNoImapFound(noImapFound);
+}
+
+void ManageSieveWidget::slotUpdateButtons()
+{
+    Q_EMIT updateButtons(mTreeView->currentItem());
+}
+
+void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript)
+{
+    if (mClearAll)
+        return;
+    QTreeWidgetItem * parent = mJobs[job];
+    if ( !parent )
+        return;
+    (static_cast<SieveTreeWidgetItem*>(parent))->stopAnimation();
+
+    mJobs.remove( job );
+    if (!success) {
+        mBlockSignal = false;
+        parent->setData( 0, SIEVE_SERVER_ERROR, true );
+        QTreeWidgetItem * item =
+                new QTreeWidgetItem( parent );
+        item->setText( 0, i18n( "Failed to fetch the list of scripts" ) );
+        item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
+        return;
+    }
+
+
+    mBlockSignal = true; // don't trigger slotItemChanged
+    Q_FOREACH (const QString &script, listScript) {
+        //Hide protected name.
+        const QString lowerScript(script.toLower());
+        if (isProtectedName(lowerScript))
+            continue;
+        QTreeWidgetItem* item = new QTreeWidgetItem( parent );
+        item->setFlags(item->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
+
+        item->setText(0, script);
+        const bool isActive = (script == activeScript);
+        item->setCheckState(0, isActive ? Qt::Checked : Qt::Unchecked);
+        if ( isActive ) {
+            mSelectedItems[parent] = item;
+        }
+    }
+    mBlockSignal = false;
+
+    const bool hasIncludeCapability = job->sieveCapabilities().contains(QLatin1String("include"));
+    const bool hasUserActiveScript = (activeScript.toLower() == QLatin1String("USER"));
+    QStringList mUserActiveScriptList;
+    if (hasUserActiveScript && hasIncludeCapability) {
+        //TODO parse file.
+    }
+
+    parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
+    parent->setData( 0, SIEVE_SERVER_ERROR, false );
+    parent->setData( 0, SIEVE_SERVER_MODE, hasIncludeCapability ? Kep14EditorMode : NormalEditorMode);
+    mTreeView->expandItem( parent );
+}
+
+void ManageSieveWidget::slotDoubleClicked( QTreeWidgetItem * item )
+{
+    if ( !isFileNameItem( item ) )
+        return;
+
+    Q_EMIT editScript();
 }
