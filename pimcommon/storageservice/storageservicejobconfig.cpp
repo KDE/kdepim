@@ -68,4 +68,9 @@ void StorageServiceJobConfig::registerConfigIf(ISettingsJob *settingsJob)
     mSettingsJob = settingsJob;
 }
 
+QString StorageServiceJobConfig::youSendItApiKey() const
+{
+    return mSettingsJob->youSendItApiKey();
+}
+
 }

@@ -32,3 +32,9 @@ TestSettingsJob::~TestSettingsJob()
 
 }
 
+QString TestSettingsJob::youSendItApiKey() const
+{
+    //TODO customize it
+    return QLatin1String("fnab8fkgwrka7v6zs2ycd34a");
+}
+

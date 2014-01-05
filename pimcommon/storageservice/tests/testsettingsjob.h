@@ -33,6 +33,8 @@ class TestSettingsJob : public QObject, public ISettingsJob
 public:
     explicit TestSettingsJob(QObject *parent=0);
     ~TestSettingsJob();
+
+    QString youSendItApiKey() const;
 };
 }
 

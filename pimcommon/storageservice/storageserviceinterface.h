@@ -21,13 +21,15 @@
 #ifndef STORAGESERVICEINTERFACE_H
 #define STORAGESERVICEINTERFACE_H
 
+#include <QString>
+
 namespace PimCommon {
 
 class ISettingsJob
 {
 public:
     virtual ~ISettingsJob() {}
-
+    virtual QString youSendItApiKey() const = 0;
 };
 
 }

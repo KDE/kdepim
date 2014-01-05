@@ -35,6 +35,8 @@ public:
 
     void registerConfigIf(ISettingsJob *settingsJob);
 
+    QString youSendItApiKey() const;
+
 private:
     StorageServiceJobConfig(QObject *parent=0);
     friend class StorageServiceJobConfigPrivate;
