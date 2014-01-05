@@ -104,7 +104,7 @@ private:
         SIEVE_SERVER_MODE = Qt::UserRole +3
     };
 
-    ManageSieveTreeView* mListView;
+    ManageSieveTreeView* mTreeView;
     SieveEditor * mSieveEditor;
     QMap<KManageSieve::SieveJob*,QTreeWidgetItem*> mJobs;
     QMap<QTreeWidgetItem*,KUrl> mUrls;

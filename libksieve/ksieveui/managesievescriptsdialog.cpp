@@ -62,18 +62,18 @@ ManageSieveScriptsDialog::ManageSieveScriptsDialog( QWidget * parent )
     vlay->setSpacing( 0 );
     vlay->setMargin( 0 );
 
-    mListView = new ManageSieveTreeView( frame);
+    mTreeView = new ManageSieveTreeView( frame);
 #ifndef QT_NO_CONTEXTMENU
-    connect( mListView, SIGNAL(customContextMenuRequested(QPoint)),
+    connect( mTreeView, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(slotContextMenuRequested(QPoint)) );
 #endif
-    connect( mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+    connect( mTreeView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
              this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
-    connect( mListView, SIGNAL(itemSelectionChanged()),
+    connect( mTreeView, SIGNAL(itemSelectionChanged()),
              this, SLOT(slotUpdateButtons()) );
-    connect( mListView, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+    connect( mTreeView, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
              this, SLOT(slotItemChanged(QTreeWidgetItem*,int)));
-    vlay->addWidget( mListView );
+    vlay->addWidget( mTreeView );
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     vlay->addLayout( buttonLayout );
@@ -155,7 +155,7 @@ void ManageSieveScriptsDialog::slotItemChanged(QTreeWidgetItem *item, int col)
 
 void ManageSieveScriptsDialog::slotUpdateButtons()
 {
-    QTreeWidgetItem * item = mListView->currentItem();
+    QTreeWidgetItem * item = mTreeView->currentItem();
 
     bool enabled = true;
     if ( !item )
@@ -190,7 +190,7 @@ void ManageSieveScriptsDialog::slotRefresh()
         if ( type.status() == Akonadi::AgentInstance::Broken )
             continue;
 
-        last = new SieveTreeWidgetItem( mListView, last );
+        last = new SieveTreeWidgetItem( mTreeView, last );
         last->setText( 0, type.name() );
         last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 
@@ -199,7 +199,7 @@ void ManageSieveScriptsDialog::slotRefresh()
             QTreeWidgetItem *item = new QTreeWidgetItem( last );
             item->setText( 0, i18n( "No Sieve URL configured" ) );
             item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
-            mListView->expandItem( last );
+            mTreeView->expandItem( last );
         } else {
             KManageSieve::SieveJob * job = KManageSieve::SieveJob::list( u );
             connect( job, SIGNAL(gotList(KManageSieve::SieveJob*,bool,QStringList,QString)),
@@ -211,7 +211,7 @@ void ManageSieveScriptsDialog::slotRefresh()
         noImapFound = false;
     }
     slotUpdateButtons();
-    mListView->setNoImapFound(noImapFound);
+    mTreeView->setNoImapFound(noImapFound);
 }
 
 void ManageSieveScriptsDialog::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript)
@@ -263,12 +263,12 @@ void ManageSieveScriptsDialog::slotGotList(KManageSieve::SieveJob *job, bool suc
     parent->setData( 0, SIEVE_SERVER_CAPABILITIES, job->sieveCapabilities() );
     parent->setData( 0, SIEVE_SERVER_ERROR, false );
     parent->setData( 0, SIEVE_SERVER_MODE, hasIncludeCapability ? Kep14EditorMode : NormalEditorMode);
-    mListView->expandItem( parent );
+    mTreeView->expandItem( parent );
 }
 
 void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
 {
-    QTreeWidgetItem *item = mListView->itemAt( p );
+    QTreeWidgetItem *item = mTreeView->itemAt( p );
     if ( !item )
         return;
     if ( !item->parent() && !mUrls.count( item ))
@@ -288,12 +288,12 @@ void ManageSieveScriptsDialog::slotContextMenuRequested( const QPoint& p )
             menu.addAction( i18n( "New Script..." ), this, SLOT(slotNewScript()) );
     }
     if ( !menu.actions().isEmpty() )
-        menu.exec( mListView->viewport()->mapToGlobal(p) );
+        menu.exec( mTreeView->viewport()->mapToGlobal(p) );
 }
 
 void ManageSieveScriptsDialog::slotDeactivateScript()
 {
-    QTreeWidgetItem * item = mListView->currentItem();
+    QTreeWidgetItem * item = mTreeView->currentItem();
     if ( !isFileNameItem( item ) )
         return;
     QTreeWidgetItem *parent = item->parent();
@@ -347,7 +347,7 @@ void ManageSieveScriptsDialog::clear()
     killAllJobs();
     mSelectedItems.clear();
     mUrls.clear();
-    mListView->clear();
+    mTreeView->clear();
 }
 
 void ManageSieveScriptsDialog::slotDoubleClicked( QTreeWidgetItem * item )
@@ -360,7 +360,7 @@ void ManageSieveScriptsDialog::slotDoubleClicked( QTreeWidgetItem * item )
 
 void ManageSieveScriptsDialog::slotDeleteScript()
 {
-    QTreeWidgetItem * currentItem =  mListView->currentItem();
+    QTreeWidgetItem * currentItem =  mTreeView->currentItem();
     if ( !isFileNameItem( currentItem ) )
         return;
 
@@ -389,7 +389,7 @@ void ManageSieveScriptsDialog::slotDeleteScript()
 
 void ManageSieveScriptsDialog::slotEditScript()
 {
-    QTreeWidgetItem *currentItem = mListView->currentItem();
+    QTreeWidgetItem *currentItem = mTreeView->currentItem();
     if ( !isFileNameItem( currentItem ) )
         return;
     QTreeWidgetItem* parent = currentItem->parent();
@@ -420,7 +420,7 @@ bool ManageSieveScriptsDialog::isProtectedName(const QString &name)
 
 void ManageSieveScriptsDialog::slotNewScript()
 {
-    QTreeWidgetItem *currentItem = mListView->currentItem();
+    QTreeWidgetItem *currentItem = mTreeView->currentItem();
     if ( !currentItem )
         return;
     if ( currentItem->parent() )
