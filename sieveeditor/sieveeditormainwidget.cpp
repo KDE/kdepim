@@ -34,7 +34,6 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createNewScriptPage(QString,QString,QStringList)), this, SLOT(slotCreateNewScriptPage(QString,QString,QStringList)));
     hbox->addWidget(mScriptManagerWidget);
-    loadConfig();
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
@@ -47,11 +46,6 @@ void SieveEditorMainWidget::slotCreateNewScriptPage(const QString &scriptName, c
     //TODO
 }
 
-void SieveEditorMainWidget::loadConfig()
-{
-    //TODO load list of server imap
-}
-
 void SieveEditorMainWidget::createNewScript()
 {
     mScriptManagerWidget->slotCreateNewScript();
@@ -60,9 +54,4 @@ void SieveEditorMainWidget::createNewScript()
 void SieveEditorMainWidget::deleteScript()
 {
     mScriptManagerWidget->slotDeleteScript();
-}
-
-void SieveEditorMainWidget::addNewScriptPage()
-{
-
 }
