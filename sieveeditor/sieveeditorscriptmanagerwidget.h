@@ -24,9 +24,6 @@
 #include <QWidget>
 #include <KUrl>
 
-namespace KManageSieve {
-class SieveJob;
-}
 class SieveEditorManageSieveWidget;
 class SieveEditorScriptManagerWidget : public QWidget
 {
@@ -38,7 +35,7 @@ public:
     void addServerImap(const KUrl &url);
 
 Q_SIGNALS:
-    void createNewScriptPage(const QString &scriptName, const QString &script, const QStringList &capabilities);
+    void createNewScriptPage(const KUrl &url, const QStringList &capabilities);
 
 public Q_SLOTS:
     void slotCreateNewScript();
@@ -47,8 +44,6 @@ public Q_SLOTS:
 private Q_SLOTS:
     void slotNewScript(const KUrl &url, const QStringList &capabilities);
     void slotEditScript(const KUrl &url, const QStringList &capabilities);    
-    void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
-
 private:
     QList<KUrl> mUrls;
     SieveEditorManageSieveWidget *mTreeView;

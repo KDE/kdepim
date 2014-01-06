@@ -20,6 +20,8 @@
 
 #include "sieveeditormainwidget.h"
 #include "sieveeditorscriptmanagerwidget.h"
+#include "sieveeditorpagewidget.h"
+#include "editor/sieveeditor.h"
 
 #include <QHBoxLayout>
 #include <QStackedWidget>
@@ -32,7 +34,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     mStackedWidget = new QStackedWidget;
     hbox->addWidget(mStackedWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
-    connect(mScriptManagerWidget, SIGNAL(createNewScriptPage(QString,QString,QStringList)), this, SLOT(slotCreateNewScriptPage(QString,QString,QStringList)));
+    connect(mScriptManagerWidget, SIGNAL(createNewScriptPage(KUrl,QStringList)), this, SLOT(slotCreateNewScriptPage(KUrl,QStringList)));
     hbox->addWidget(mScriptManagerWidget);
 }
 
@@ -41,9 +43,12 @@ SieveEditorMainWidget::~SieveEditorMainWidget()
 
 }
 
-void SieveEditorMainWidget::slotCreateNewScriptPage(const QString &scriptName, const QString &script, const QStringList &capabilitied)
+void SieveEditorMainWidget::slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities)
 {
-    //TODO
+    SieveEditorPageWidget *editor = new SieveEditorPageWidget;
+    editor->loadScript(url, capabilities);
+    mStackedWidget->addWidget(editor);
+    mStackedWidget->setCurrentWidget(editor);
 }
 
 void SieveEditorMainWidget::createNewScript()

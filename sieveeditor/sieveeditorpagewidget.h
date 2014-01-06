@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,30 +18,28 @@
 
 */
 
-#ifndef SIEVEEDITORMAINWIDGET_H
-#define SIEVEEDITORMAINWIDGET_H
+#ifndef SIEVEEDITORPAGEWIDGET_H
+#define SIEVEEDITORPAGEWIDGET_H
 
-#include <QWidget>
-#include <KUrl>
+#include "editor/sieveeditor.h"
+namespace KManageSieve {
+class SieveJob;
+}
 
-class QStackedWidget;
-class SieveEditorScriptManagerWidget;
-class SieveEditorMainWidget : public QWidget
+class SieveEditorPageWidget : public KSieveUi::SieveEditor
 {
     Q_OBJECT
 public:
-    explicit SieveEditorMainWidget(QWidget *parent=0);
-    ~SieveEditorMainWidget();
+    explicit SieveEditorPageWidget(QWidget *parent=0);
+    ~SieveEditorPageWidget();
 
-    void createNewScript();
-    void deleteScript();
+    void loadScript(const KUrl &url, const QStringList &capabilities);
 
 private slots:
-    void slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities);
+    void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
 
 private:
-    QStackedWidget *mStackedWidget;
-    SieveEditorScriptManagerWidget *mScriptManagerWidget;
+    KUrl mCurrentURL;
 };
 
-#endif // SIEVEEDITORMAINWIDGET_H
+#endif // SIEVEEDITORPAGEWIDGET_H
