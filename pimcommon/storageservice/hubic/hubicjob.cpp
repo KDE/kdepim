@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -17,6 +17,7 @@
 
 #include "hubicjob.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <qjson/parser.h>
 
@@ -27,8 +28,8 @@ using namespace PimCommon;
 HubicJob::HubicJob(QObject *parent)
     : PimCommon::OAuth2Job(parent)
 {
-    mClientId = QLatin1String("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
-    mClientSecret = QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
+    mClientId = PimCommon::StorageServiceJobConfig::self()->hubicClientId();
+    mClientSecret = PimCommon::StorageServiceJobConfig::self()->hubicClientSecret();
     mRedirectUri = QLatin1String("https://bugs.kde.org/");
     mServiceUrl = QLatin1String("https://api.hubic.com");
     mApiUrl = QLatin1String("https://api.hubic.com");

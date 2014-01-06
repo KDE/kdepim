@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -45,6 +45,25 @@ public:
     explicit StorageServiceAbstract(QObject *parent=0);
     ~StorageServiceAbstract();
 
+    enum Capability {
+        NoCapability = 0,
+        //Account
+        AccountInfoCapability = 1,
+        //File
+        UploadFileCapability = 2,
+        DeleteFileCapability = 4,
+        DownloadFileCapability = 8,
+        //Folder
+        CreateFolderCapability = 16,
+        DeleteFolderCapability = 32,
+        ListFolderCapability = 64,
+        //Share
+        ShareLinkCapability = 128
+    };
+
+    Q_ENUMS(Capability)
+    Q_DECLARE_FLAGS(Capabilities, Capability)
+
     enum ActionType {
         NoneAction = 0,
         //Account
@@ -64,6 +83,7 @@ public:
     };
 
     bool isInProgress() const;
+    virtual StorageServiceAbstract::Capabilities capabilities() const;
 
     virtual void downloadFile(const QString &filename);
     virtual void uploadFile(const QString &filename);
@@ -106,6 +126,7 @@ protected slots:
     void slotDownLoadFileDone(const QString &fileName);    
     void slotDeleteFolderDone(const QString &folder);
     void slotDeleteFileDone(const QString &filename);
+
 protected:
     virtual void storageServicedownloadFile(const QString &filename) = 0;
     virtual void storageServiceuploadFile(const QString &filename) = 0;
@@ -120,6 +141,7 @@ protected:
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
     ActionType mNextAction;
+    Capabilities mCapabilities;
 
 private:
     void executeNextAction();

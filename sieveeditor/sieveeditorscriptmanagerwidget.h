@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -24,9 +24,7 @@
 #include <QWidget>
 #include <KUrl>
 
-namespace KSieveUi {
-class ManageSieveTreeView;
-}
+class SieveEditorManageSieveWidget;
 class SieveEditorScriptManagerWidget : public QWidget
 {
     Q_OBJECT
@@ -36,13 +34,19 @@ public:
 
     void addServerImap(const KUrl &url);
 
-private Q_SLOTS:
+Q_SIGNALS:
+    void createNewScriptPage(const KUrl &url, const QStringList &capabilities);
+
+public Q_SLOTS:
     void slotCreateNewScript();
     void slotDeleteScript();
 
+private Q_SLOTS:
+    void slotNewScript(const KUrl &url, const QStringList &capabilities);
+    void slotEditScript(const KUrl &url, const QStringList &capabilities);    
 private:
     QList<KUrl> mUrls;
-    KSieveUi::ManageSieveTreeView *mTreeView;
+    SieveEditorManageSieveWidget *mTreeView;
 };
 
 #endif // SIEVEEDITORSCRIPTMANAGERWIDGET_H

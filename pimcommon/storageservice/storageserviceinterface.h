@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014 Montel Laurent <montel.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,13 +21,28 @@
 #ifndef STORAGESERVICEINTERFACE_H
 #define STORAGESERVICEINTERFACE_H
 
+#include <QString>
+
 namespace PimCommon {
 
 class ISettingsJob
 {
 public:
     virtual ~ISettingsJob() {}
+    //YouSendit
+    virtual QString youSendItApiKey() const = 0;
 
+    //DropBox
+    virtual QString dropboxOauthConsumerKey() const = 0;
+    virtual QString dropboxOauthSignature() const = 0;
+
+    //Box
+    virtual QString boxClientId() const = 0;
+    virtual QString boxClientSecret() const = 0;
+
+    //Box
+    virtual QString hubicClientId() const = 0;
+    virtual QString hubicClientSecret() const = 0;
 };
 
 }

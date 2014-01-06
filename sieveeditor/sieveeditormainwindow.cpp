@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -71,7 +71,23 @@ void SieveEditorMainWindow::setupActions()
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
     KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
+
+    act = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));
+    act->setText(i18n("Delete Script"));
+
+    act = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
+    act->setText(i18n("Create New Script..."));
     //TODO
+}
+
+void SieveEditorMainWindow::slotCreateNewScript()
+{
+    mMainWidget->createNewScript();
+}
+
+void SieveEditorMainWindow::slotDeleteScript()
+{
+    mMainWidget->deleteScript();
 }
 
 void SieveEditorMainWindow::slotQuitApp()

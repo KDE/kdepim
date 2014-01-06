@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014 Montel Laurent <montel.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -67,5 +67,69 @@ void StorageServiceJobConfig::registerConfigIf(ISettingsJob *settingsJob)
 {
     mSettingsJob = settingsJob;
 }
+
+QString StorageServiceJobConfig::youSendItApiKey() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->youSendItApiKey();
+}
+
+QString StorageServiceJobConfig::dropboxOauthConsumerKey() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->dropboxOauthConsumerKey();
+}
+
+QString StorageServiceJobConfig::dropboxOauthSignature() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->dropboxOauthSignature();
+}
+
+QString StorageServiceJobConfig::boxClientId() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->boxClientId();
+}
+
+QString StorageServiceJobConfig::boxClientSecret() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->boxClientSecret();
+}
+
+QString StorageServiceJobConfig::hubicClientId() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->hubicClientId();
+}
+
+QString StorageServiceJobConfig::hubicClientSecret() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->hubicClientSecret();
+}
+
 
 }

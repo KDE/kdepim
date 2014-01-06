@@ -87,6 +87,7 @@ IncidenceDateTime::IncidenceDateTime( Ui::EventOrTodoDesktop *ui )
   setObjectName( "IncidenceDateTime" );
 
 #ifdef KDEPIM_MOBILE_UI
+  Q_UNUSED(mTimezoneCombosWereVisibile);
   mUi->mTimeZoneComboStart->setVisible( false );
   mUi->mTimeZoneComboEnd->setVisible( false );
 

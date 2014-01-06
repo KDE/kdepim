@@ -118,7 +118,7 @@ bool ListViewItem::operator<( const QTreeWidgetItem &other ) const
 class ListView::Private
 {
   public:
-    Private( ListView *mListView ): q( mListView )
+    Private()
     {
     }
 
@@ -145,9 +145,6 @@ class ListView::Private
     // if it's non interactive we disable context menu, and incidence editing
     bool mIsNonInteractive;
     class ListItemVisitor;
-
-  private:
-    ListView *const q;
 };
 
 /**
@@ -264,7 +261,7 @@ bool ListView::Private::ListItemVisitor::visit( Journal::Ptr j )
 
 ListView::ListView( const Akonadi::ETMCalendar::Ptr &calendar,
                     QWidget *parent, bool nonInteractive )
-  : EventView( parent ), d( new Private( this ) )
+  : EventView( parent ), d( new Private() )
 {
   setCalendar( calendar );
   d->mActiveItem = 0;

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,7 +21,9 @@
 #include "storageservicemanagermainwindow.h"
 #include "storageservicetabwidget.h"
 #include "storageserviceconfiguredialog.h"
+#include "storageservicemanagersettingsjob.h"
 #include "pimcommon/storageservice/storageservicemanager.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KStandardAction>
 #include <KLocalizedString>
@@ -35,8 +37,13 @@
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     : KXmlGuiWindow()
 {
+    StorageServiceManagerSettingsJob *settingsJob = new StorageServiceManagerSettingsJob(this);
+    PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
+    configJob->registerConfigIf(settingsJob);
+
     mStorageManager = new PimCommon::StorageServiceManager(this);
     mStorageServiceTabWidget = new StorageServiceTabWidget;
+    connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentTabChanged(QWidget*)));
     setCentralWidget(mStorageServiceTabWidget);
 
     setupActions();
@@ -50,6 +57,16 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
     group.writeEntry( "Size", size() );
+}
+
+void StorageServiceManagerMainWindow::slotCurrentTabChanged(QWidget *widget)
+{
+    //TODO
+}
+
+void StorageServiceManagerMainWindow::updateActions()
+{
+
 }
 
 void StorageServiceManagerMainWindow::setupActions()

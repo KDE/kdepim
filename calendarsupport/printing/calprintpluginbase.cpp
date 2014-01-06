@@ -1675,9 +1675,9 @@ void CalPrintPluginBase::drawMonth( QPainter &p, const QDate &dt,
       monthentries.append( MonthEventStruct( e->dtStart(), e->dtEnd(), e ) );
     }
   }
-#ifdef __GNUC__
-#warning todo: to port the month entries sorting
-#endif
+
+// TODO: to port the month entries sorting
+
 //  qSort( monthentries.begin(), monthentries.end() );
 
   QList<MonthEventStruct>::ConstIterator mit = monthentries.constBegin();
@@ -2060,7 +2060,7 @@ void CalPrintPluginBase::drawTodo( int &count, const KCalCore::Todo::Ptr &todo, 
   KCalCore::Todo::List sl = mCalendar->sortTodos( &t, sortField, sortDir );
 #else
   KCalCore::Todo::List tl;
-  foreach ( const KCalCore::Todo::Ptr &todo, tl ) {
+  foreach ( const KCalCore::Todo::Ptr &todo, t ) {
     tl.append( todo );
   }
   KCalCore::Todo::List sl = mCalendar->sortTodos( tl, sortField, sortDir );

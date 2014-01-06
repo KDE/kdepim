@@ -72,7 +72,7 @@ void EventView::setGlobalCollectionSelection( CalendarSupport::CollectionSelecti
 
 EventView::EventView( QWidget *parent )
   : QWidget( parent ),
-    d_ptr( new EventViewPrivate( this ) )
+    d_ptr( new EventViewPrivate() )
 {
   QByteArray cname = metaObject()->className();
   cname.replace( ':', '_' );

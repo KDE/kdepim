@@ -60,12 +60,15 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
 
   setMainWidget( page );
   setModal( modal );
+  enableButtonOk( false );
 
+  mUi->mInlineCheck->setEnabled( false );
   if ( item->attachment()->isUri() || item->attachment()->data().isEmpty() ) {
     mUi->mStackedWidget->setCurrentIndex( 0 );
     mUi->mURLRequester->setUrl( item->uri() );
     urlChanged( item->uri() );
   } else {
+    mUi->mInlineCheck->setEnabled( true );
     mUi->mStackedWidget->setCurrentIndex( 1 );
     mUi->mSizeLabel->setText( QString::fromLatin1( "%1 (%2)" ).
                                  arg( KIO::convertSize( item->attachment()->size() ) ).
@@ -73,6 +76,8 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
                                         item->attachment()->size(), 0 ) ) );
   }
 
+  connect( mUi->mInlineCheck, SIGNAL(stateChanged(int)),
+           SLOT(inlineChanged(int)) );
   connect( mUi->mURLRequester, SIGNAL(urlSelected(KUrl)),
            SLOT(urlChanged(KUrl)) );
   connect( mUi->mURLRequester, SIGNAL(textChanged(QString)),
@@ -109,7 +114,7 @@ void AttachmentEditDialog::slotApply()
   mItem->setMimeType( mMimeType->name() );
 
   QString correctedUrl = url.url();
-  if ( url.isRelative() ) {
+  if ( !url.isEmpty() && url.isRelative() ) {
     // If the user used KURLRequester's KURLCompletion
     // (used the line edit instead of the file dialog)
     // the returned url is not absolute and is always relative
@@ -144,9 +149,25 @@ void AttachmentEditDialog::slotApply()
   }
 }
 
+void AttachmentEditDialog::inlineChanged( int state )
+{
+  enableButtonOk( !mUi->mURLRequester->url().isEmpty() ||
+                  mUi->mStackedWidget->currentIndex() == 1 );
+  if ( state == Qt::Unchecked && mUi->mStackedWidget->currentIndex() == 1 ) {
+    mUi->mStackedWidget->setCurrentIndex( 0 );
+    if ( !mItem->savedUri().isEmpty() ) {
+      mUi->mURLRequester->setUrl( mItem->savedUri() );
+    } else {
+      mUi->mURLRequester->setUrl( mItem->uri() );
+    }
+  }
+}
+
 void AttachmentEditDialog::urlChanged( const QString &url )
 {
   enableButtonOk( !url.isEmpty() );
+  mUi->mInlineCheck->setEnabled( !url.isEmpty() ||
+                                 mUi->mStackedWidget->currentIndex() == 1 );
 }
 
 void AttachmentEditDialog::urlChanged( const KUrl &url )

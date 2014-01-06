@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   based on localresourcecreator from kjots
 

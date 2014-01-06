@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,6 +18,7 @@
 #include "yousenditjob.h"
 #include "pimcommon/storageservice/logindialog.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
 
@@ -33,7 +34,7 @@ using namespace PimCommon;
 YouSendItJob::YouSendItJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
-    mApiKey = QLatin1String("fnab8fkgwrka7v6zs2ycd34a");
+    mApiKey = PimCommon::StorageServiceJobConfig::self()->youSendItApiKey();
     mDefaultUrl = QLatin1String("https://test2-api.yousendit.com");
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }

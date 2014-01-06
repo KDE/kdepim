@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -33,6 +33,7 @@
 #include <KDateTime>
 #include <KMenu>
 #include <KAction>
+#include <KMessageBox>
 
 #include <QListWidget>
 #include <QLabel>
@@ -124,25 +125,27 @@ void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)
 {
     if (item) {
-        NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
-        dlg->show();
+        slotShowAlarm();
     }
 }
 
 void NotesAgentAlarmDialog::slotShowAlarm()
 {
+    //deleted on close
     NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
     dlg->show();
 }
 
 void NotesAgentAlarmDialog::slotRemoveAlarm()
 {
-    Akonadi::Item::Id id = mListWidget->currentItemId();
-    if (id!=-1) {
-        Akonadi::Item item(id);
-        Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
-        job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
-        connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchItem(KJob*)) );
+    if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Remove Alarm"), i18n("Are you sure to remove alarm?")) ) {
+        Akonadi::Item::Id id = mListWidget->currentItemId();
+        if (id!=-1) {
+            Akonadi::Item item(id);
+            Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+            job->fetchScope().fetchAttribute<NoteShared::NoteAlarmAttribute>();
+            connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchItem(KJob*)) );
+        }
     }
 }
 

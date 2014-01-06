@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -20,6 +20,8 @@
 
 #include "sieveeditormainwidget.h"
 #include "sieveeditorscriptmanagerwidget.h"
+#include "sieveeditorpagewidget.h"
+#include "editor/sieveeditor.h"
 
 #include <QHBoxLayout>
 #include <QStackedWidget>
@@ -32,8 +34,8 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     mStackedWidget = new QStackedWidget;
     hbox->addWidget(mStackedWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
+    connect(mScriptManagerWidget, SIGNAL(createNewScriptPage(KUrl,QStringList)), this, SLOT(slotCreateNewScriptPage(KUrl,QStringList)));
     hbox->addWidget(mScriptManagerWidget);
-    loadConfig();
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
@@ -41,7 +43,20 @@ SieveEditorMainWidget::~SieveEditorMainWidget()
 
 }
 
-void SieveEditorMainWidget::loadConfig()
+void SieveEditorMainWidget::slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities)
 {
-    //TODO load list of server imap
+    SieveEditorPageWidget *editor = new SieveEditorPageWidget;
+    editor->loadScript(url, capabilities);
+    mStackedWidget->addWidget(editor);
+    mStackedWidget->setCurrentWidget(editor);
+}
+
+void SieveEditorMainWidget::createNewScript()
+{
+    mScriptManagerWidget->slotCreateNewScript();
+}
+
+void SieveEditorMainWidget::deleteScript()
+{
+    mScriptManagerWidget->slotDeleteScript();
 }

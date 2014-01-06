@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -26,6 +26,17 @@
 #include <KConfigGroup>
 
 #include <QRegExp>
+
+
+KUrl SieveEditorUtil::SieveServerConfig::url() const {
+    //TODO encryption
+    KUrl u;
+    u.setHost(serverName);
+    u.setUserName(userName);
+    u.setPassword(password);
+    u.setPort(port);
+    return u;
+}
 
 
 QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig()

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -23,6 +23,7 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
+#include <KFileDialog>
 
 #include <QInputDialog>
 
@@ -57,12 +58,14 @@ void StorageServicePage::refreshList()
 
 void StorageServicePage::accountInfo()
 {
-    //TODO
+    mStorageService->accountInfo();
 }
 
 void StorageServicePage::uploadFile()
 {
-
+    const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
+    if (!filename.isEmpty())
+        mStorageService->uploadFile(filename);
 }
 
 void StorageServicePage::deleteFile()

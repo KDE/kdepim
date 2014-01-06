@@ -452,7 +452,7 @@ void CalPrintTodos::drawTodo(int &count, const KCalCore::Todo::Ptr &todo, QPaint
     KCalCore::Todo::List sl = printCalendar()->sortTodos(&t, d->mSortField, d->mSortDirection);
 #else
     KCalCore::Todo::List tl;
-    Q_FOREACH (const KCalCore::Todo::Ptr &todo, tl) {
+    Q_FOREACH (const KCalCore::Todo::Ptr &todo, t) {
         tl.append(todo);
     }
     KCalCore::Todo::List sl = printCalendar()->sortTodos(tl, d->mSortField, d->mSortDirection);

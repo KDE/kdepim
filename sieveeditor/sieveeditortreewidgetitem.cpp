@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014 Montel Laurent <montel.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,22 +18,26 @@
 
 */
 
-#ifndef DEFAULTSETTINGSJOB_H
-#define DEFAULTSETTINGSJOB_H
 
-#include <QObject>
+#include "sieveeditortreewidgetitem.h"
 
-#include "storageserviceinterface.h"
-
-namespace PimCommon {
-
-class DefaultSettingsJob : public QObject, public ISettingsJob
+SieveEditorTreeWidgetItem::SieveEditorTreeWidgetItem(QTreeWidgetItem *parent)
+    : QTreeWidgetItem(parent),
+      mAssociatePage(0)
 {
-    Q_OBJECT
-public:
-    explicit DefaultSettingsJob(QObject *parent=0);
-    ~DefaultSettingsJob();
-};
 }
 
-#endif // DEFAULTSETTINGSJOB_H
+SieveEditorTreeWidgetItem::~SieveEditorTreeWidgetItem()
+{
+    //TODO
+}
+
+QWidget *SieveEditorTreeWidgetItem::associatePage() const
+{
+    return mAssociatePage;
+}
+
+void SieveEditorTreeWidgetItem::setAssociatePage(QWidget *page)
+{
+    mAssociatePage = page;
+}

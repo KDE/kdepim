@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -20,6 +20,8 @@
 #include "storageservice/storageauthviewdialog.h"
 #include "storageservice/storageserviceabstract.h"
 #include "storageservice/storageserviceutils.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
+
 #include <KLocalizedString>
 
 #include <qjson/parser.h>
@@ -40,8 +42,8 @@ DropBoxJob::DropBoxJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
     mApiPath = QLatin1String("https://api.dropbox.com/1/");
-    mOauthconsumerKey = QLatin1String("e40dvomckrm48ci");
-    mOauthSignature = QLatin1String("0icikya464lny9g&");
+    mOauthconsumerKey = PimCommon::StorageServiceJobConfig::self()->dropboxOauthConsumerKey();
+    mOauthSignature = PimCommon::StorageServiceJobConfig::self()->dropboxOauthSignature();
     mOauthVersion = QLatin1String("1.0");
     mOauthSignatureMethod = QLatin1String("PLAINTEXT");
     mRootPath = QLatin1String("dropbox");

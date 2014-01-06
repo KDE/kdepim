@@ -49,7 +49,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/settings/storagelistwidgetitem.cpp
   storageservice/storageservicedownloaddialog.cpp
   storageservice/storageservicejobconfig.cpp 
-  storageservice/defaultsettingsjob.cpp
+  storageservice/tests/testsettingsjob.cpp
 )
 
 set(libpimcommon_autocorrection_SRCS

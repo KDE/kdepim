@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -24,47 +24,18 @@
 
 #include <KLocalizedString>
 
-#include <QTreeWidgetItem>
+#include <QListWidgetItem>
 #include <QPointer>
 
 ServerSieveListWidget::ServerSieveListWidget(QWidget *parent)
-    : QTreeWidget(parent)
+    : QListWidget(parent)
 {
     connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(modifyServerConfig()));
-    connect( this, SIGNAL(customContextMenuRequested(QPoint)),
-             this, SLOT(slotContextMenuRequested(QPoint)) );
 }
 
 ServerSieveListWidget::~ServerSieveListWidget()
 {
 
-}
-
-void ServerSieveListWidget::slotContextMenuRequested(const QPoint &pos)
-{
-    /*
-    QTreeWidgetItem *item = itemAt( p );
-    if ( !item )
-        return;
-    if ( !item->parent() && !mUrls.count( item ))
-        return;
-    QMenu menu;
-    if ( isFileNameItem( item ) ) {
-        // script items:
-        menu.addAction( i18n( "Edit Script..." ), this, SLOT(slotEditScript()) );
-        menu.addAction( i18n( "Delete Script" ), this, SLOT(slotDeleteScript()) );
-        if ( itemIsActived( item ) ) {
-            menu.addSeparator();
-            menu.addAction( i18n( "Deactivate Script" ), this, SLOT(slotDeactivateScript()) );
-        }
-    } else if ( !item->parent() ) {
-        // top-levels:
-        if ( !serverHasError(item) && mJobs.keys(item).isEmpty())
-            menu.addAction( i18n( "New Script..." ), this, SLOT(slotNewScript()) );
-    }
-    if ( !menu.actions().isEmpty() )
-        menu.exec( mListView->viewport()->mapToGlobal(p) );
-        */
 }
 
 void ServerSieveListWidget::readConfig()
@@ -79,8 +50,8 @@ void ServerSieveListWidget::readConfig()
 void ServerSieveListWidget::writeConfig()
 {
     QList<SieveEditorUtil::SieveServerConfig> lstServerConfig;
-    for (int i=0; i <topLevelItemCount(); ++i) {
-        ServerSieveListWidgetItem *serverSieveItem = static_cast<ServerSieveListWidgetItem*>(topLevelItem(i));
+    for (int i=0; i <count(); ++i) {
+        ServerSieveListWidgetItem *serverSieveItem = static_cast<ServerSieveListWidgetItem*>(item(i));
         if (serverSieveItem) {
             lstServerConfig.append(serverSieveItem->serverConfig());
         }
@@ -91,7 +62,7 @@ void ServerSieveListWidget::writeConfig()
 
 void ServerSieveListWidget::modifyServerConfig()
 {
-    QTreeWidgetItem *item = currentItem();
+    QListWidgetItem *item = currentItem();
     if (!item)
         return;
 
@@ -116,8 +87,8 @@ void ServerSieveListWidget::addServerConfig()
     delete dlg;
 }
 
-ServerSieveListWidgetItem::ServerSieveListWidgetItem(QTreeWidget *parent)
-    : QTreeWidgetItem(parent)
+ServerSieveListWidgetItem::ServerSieveListWidgetItem(QListWidget *parent)
+    : QListWidgetItem(parent)
 {
 
 }
@@ -134,6 +105,6 @@ SieveEditorUtil::SieveServerConfig ServerSieveListWidgetItem::serverConfig() con
 
 void ServerSieveListWidgetItem::setServerConfig(const SieveEditorUtil::SieveServerConfig &conf)
 {
-    setText(0, conf.serverName);
+    setText(conf.serverName);
     mServerConfig = conf;
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -25,7 +25,7 @@ using namespace PimCommon;
 
 CustomTreeView::CustomTreeView(QWidget *parent)
     : QTreeWidget(parent),
-      mShowDefaultText(false)
+      mShowDefaultText(true)
 {
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()),
              this, SLOT(slotGeneralFontChanged()));

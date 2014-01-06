@@ -1,6 +1,6 @@
 /*
  * This file is part of the KDE project.
- * Copyright (c) 2013 Montel Laurent <montel@kde.org>
+ * Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
  * based on code from kwebkit part Copyright (C) 2009 Dawit Alemayehu <adawit @ kde.org>
  *
  * This library is free software; you can redistribute it and/or modify it

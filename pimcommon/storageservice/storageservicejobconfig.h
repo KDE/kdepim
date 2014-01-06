@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2014 Montel Laurent <montel.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -34,6 +34,14 @@ public:
     static StorageServiceJobConfig *self();
 
     void registerConfigIf(ISettingsJob *settingsJob);
+
+    QString youSendItApiKey() const;
+    QString dropboxOauthConsumerKey() const;
+    QString dropboxOauthSignature() const;
+    QString boxClientId() const;
+    QString boxClientSecret() const;
+    QString hubicClientId() const;
+    QString hubicClientSecret() const;
 
 private:
     StorageServiceJobConfig(QObject *parent=0);

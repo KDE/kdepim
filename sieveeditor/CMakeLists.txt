@@ -22,6 +22,9 @@ set(sieveeditor_SRCS
   sieveeditorutil.cpp
   serversievelistwidget.cpp
   sieveeditorconfigureserverwidget.cpp
+  sieveeditormanagesievewidget.cpp
+  sieveeditortreewidgetitem.cpp
+  sieveeditorpagewidget.cpp
 )
 
 kde4_add_ui_files(sieveeditor_SRCS
@@ -36,6 +39,7 @@ TARGET_LINK_LIBRARIES(sieveeditor
                        ${KDE4_KNEWSTUFF3_LIBS} 
                        pimcommon 
                        ksieveui
+                       kmanagesieve
 )
 
 install(TARGETS sieveeditor ${INSTALL_TARGETS_DEFAULT_ARGS})

@@ -1,6 +1,6 @@
 /*
  * This file is a part of the rekonq project
- * Copyright (c) 2013 Montel Laurent <montel@kde.org>
+ * Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
  * based on code from rekonq
  * Copyright (c) 2009 by Benjamin C. Meyer <ben@meyerhome.net>
  * Copyright (C) 2010-2012 by Andrea Diamantini <adjam7 at gmail dot com>

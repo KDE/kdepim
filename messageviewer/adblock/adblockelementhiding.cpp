@@ -1,7 +1,7 @@
 /* ============================================================
 *
 * This file is a part of the rekonq project
-* Copyright (c) 2013 Montel Laurent <montel@kde.org>
+* Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 * based on code from rekonq
 * Copyright (C) 2013 by Paul Rohrbach <p.b.r at gmx dot net>
 *

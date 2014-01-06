@@ -1,5 +1,5 @@
 /* ============================================================
-* Copyright (c) 2013 Montel Laurent <montel@kde.org>
+* Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 * based on code from rekonq
 * This file is a part of the rekonq project
 *

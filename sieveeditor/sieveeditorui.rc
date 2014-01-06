@@ -4,6 +4,11 @@
   <Menu name="file" >
    <Action name="add_server_sieve" />
   </Menu>
+  <Menu name="edit" >
+   <text>&amp;Edit</text>
+   <Action name="create_new_script" />
+   <Action name="delete_script" />
+  </Menu>
  </MenuBar>
 </kpartgui>
 

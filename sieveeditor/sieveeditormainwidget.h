@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -22,6 +22,8 @@
 #define SIEVEEDITORMAINWIDGET_H
 
 #include <QWidget>
+#include <KUrl>
+
 class QStackedWidget;
 class SieveEditorScriptManagerWidget;
 class SieveEditorMainWidget : public QWidget
@@ -31,9 +33,13 @@ public:
     explicit SieveEditorMainWidget(QWidget *parent=0);
     ~SieveEditorMainWidget();
 
-private:
-    void loadConfig();
+    void createNewScript();
+    void deleteScript();
 
+private slots:
+    void slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities);
+
+private:
     QStackedWidget *mStackedWidget;
     SieveEditorScriptManagerWidget *mScriptManagerWidget;
 };

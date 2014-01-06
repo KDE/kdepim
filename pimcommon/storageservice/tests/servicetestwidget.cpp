@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -18,6 +18,8 @@
 
 #include "servicetestwidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/tests/testsettingsjob.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
 #include <KFileDialog>
@@ -26,27 +28,31 @@
 #include <QToolBar>
 #include <QInputDialog>
 #include <QTextEdit>
-
+#include <QAction>
 
 
 ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     : QWidget(parent),
       mStorageService(0)
 {
+    PimCommon::TestSettingsJob *settingsJob = new PimCommon::TestSettingsJob(this);
+    PimCommon::StorageServiceJobConfig *configJob = PimCommon::StorageServiceJobConfig::self();
+    configJob->registerConfigIf(settingsJob);
+
     mEdit = new QTextEdit;
     mEdit->setReadOnly(true);
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
-    bar->addAction(QLatin1String("Authentication..."), this, SLOT(slotAuthentication()));
-    bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
-    bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
-    bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
-    bar->addAction(QLatin1String("Upload File..."), this, SLOT(slotUploadFile()));
-    bar->addAction(QLatin1String("Create Service Folder..."), this, SLOT(slotCreateServiceFolder()));
-    bar->addAction(QLatin1String("Delete File..."), this, SLOT(slotDeleteFile()));
-    bar->addAction(QLatin1String("Delete Folder..."), this, SLOT(slotDeleteFolder()));
-    bar->addAction(QLatin1String("Download File..."), this, SLOT(slotDownloadFile()));
+    mAuthenticationAction = bar->addAction(QLatin1String("Authentication..."), this, SLOT(slotAuthentication()));
+    mListFolderAction = bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
+    mCreateFolderAction = bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
+    mAccountInfoAction = bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
+    mUploadFileAction = bar->addAction(QLatin1String("Upload File..."), this, SLOT(slotUploadFile()));
+    mCreateServiceFolderAction = bar->addAction(QLatin1String("Create Service Folder..."), this, SLOT(slotCreateServiceFolder()));
+    mDeleteFileAction = bar->addAction(QLatin1String("Delete File..."), this, SLOT(slotDeleteFile()));
+    mDeleteFolderAction = bar->addAction(QLatin1String("Delete Folder..."), this, SLOT(slotDeleteFolder()));
+    mDownloadFileAction = bar->addAction(QLatin1String("Download File..."), this, SLOT(slotDownloadFile()));
     lay->addWidget(mEdit);
     setLayout(lay);
 }
@@ -75,6 +81,7 @@ void ServiceTestWidget::slotDeleteFolder()
 void ServiceTestWidget::setStorageService(PimCommon::StorageServiceAbstract *service)
 {
     mStorageService = service;
+    updateButtons(mStorageService->capabilities());
     connectStorageService();
 }
 
@@ -196,4 +203,16 @@ void ServiceTestWidget::slotDownloadFile()
 {
     const QString filename = QInputDialog::getText(this,i18n("Filename"), i18n("Filename:"));
     mStorageService->downloadFile(filename);
+}
+
+void ServiceTestWidget::updateButtons(PimCommon::StorageServiceAbstract::Capabilities capabilities)
+{
+    mListFolderAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::ListFolderCapability);
+    mCreateFolderAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability);
+    mAccountInfoAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
+    mUploadFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
+    mDeleteFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
+    mDeleteFolderAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability);
+    mDownloadFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
+
 }
