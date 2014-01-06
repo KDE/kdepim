@@ -38,11 +38,13 @@ public:
 private slots:
     void slotQuitApp();    
     void slotAddStorageService();    
-    void slotConfigure();    
+    void slotConfigure();        
+    void slotCurrentTabChanged(QWidget *widget);
 
 private:
     void setupActions();
     void readConfig();
+    void updateActions();
     StorageServiceTabWidget *mStorageServiceTabWidget;
     PimCommon::StorageServiceManager *mStorageManager;
 };

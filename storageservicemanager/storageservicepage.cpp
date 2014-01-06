@@ -23,6 +23,7 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
+#include <KFileDialog>
 
 #include <QInputDialog>
 
@@ -57,12 +58,14 @@ void StorageServicePage::refreshList()
 
 void StorageServicePage::accountInfo()
 {
-    //TODO
+    mStorageService->accountInfo();
 }
 
 void StorageServicePage::uploadFile()
 {
-
+    const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
+    if (!filename.isEmpty())
+        mStorageService->uploadFile(filename);
 }
 
 void StorageServicePage::deleteFile()

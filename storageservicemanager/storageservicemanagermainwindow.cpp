@@ -43,6 +43,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
 
     mStorageManager = new PimCommon::StorageServiceManager(this);
     mStorageServiceTabWidget = new StorageServiceTabWidget;
+    connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentTabChanged(QWidget*)));
     setCentralWidget(mStorageServiceTabWidget);
 
     setupActions();
@@ -56,6 +57,16 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
     group.writeEntry( "Size", size() );
+}
+
+void StorageServiceManagerMainWindow::slotCurrentTabChanged(QWidget *widget)
+{
+    //TODO
+}
+
+void StorageServiceManagerMainWindow::updateActions()
+{
+
 }
 
 void StorageServiceManagerMainWindow::setupActions()
