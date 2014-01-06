@@ -69,3 +69,8 @@ bool SieveEditorManageSieveWidget::refreshList()
 #endif
     return noImapFound;
 }
+
+QTreeWidgetItem *SieveEditorManageSieveWidget::createNewItem(QTreeWidgetItem *parent)
+{
+    return new QTreeWidgetItem(parent);
+}

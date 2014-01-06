@@ -32,6 +32,7 @@ public:
 
 protected:
     virtual bool refreshList();
+    QTreeWidgetItem *createNewItem(QTreeWidgetItem *parent);
 };
 
 #endif // SIEVEEDITORMANAGESIEVEWIDGET_H
