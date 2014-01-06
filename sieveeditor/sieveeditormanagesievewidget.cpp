@@ -19,7 +19,11 @@
 */
 
 #include "sieveeditormanagesievewidget.h"
+#include "sieveeditorutil.h"
 #include "widgets/sievetreewidgetitem.h"
+#include "widgets/managesievetreeview.h"
+
+#include <kmanagesieve/sievejob.h>
 
 #include <KLocalizedString>
 
@@ -40,17 +44,14 @@ bool SieveEditorManageSieveWidget::refreshList()
 {
     bool noImapFound = true;
     SieveTreeWidgetItem *last = 0;
-#if 0
-    Akonadi::AgentInstance::List lst = KSieveUi::Util::imapAgentInstances();
-    foreach ( const Akonadi::AgentInstance &type, lst ) {
-        if ( type.status() == Akonadi::AgentInstance::Broken )
-            continue;
 
+    const QList<SieveEditorUtil::SieveServerConfig> listConfig = SieveEditorUtil::readServerSieveConfig();
+    Q_FOREACH ( const SieveEditorUtil::SieveServerConfig &conf, listConfig) {
         last = new SieveTreeWidgetItem( treeView(), last );
-        last->setText( 0, type.name() );
+        last->setText( 0, conf.serverName );
         last->setIcon( 0, SmallIcon( QLatin1String("network-server") ) );
 
-        const KUrl u = KSieveUi::Util::findSieveUrlForAccount( type.identifier() );
+        const KUrl u = conf.url();
         if ( u.isEmpty() ) {
             QTreeWidgetItem *item = new QTreeWidgetItem( last );
             item->setText( 0, i18n( "No Sieve URL configured" ) );
@@ -66,7 +67,6 @@ bool SieveEditorManageSieveWidget::refreshList()
         }
         noImapFound = false;
     }
-#endif
     return noImapFound;
 }
 

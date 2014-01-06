@@ -33,6 +33,7 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     connect(mTreeView, SIGNAL(newScript(KUrl,QStringList)), this, SLOT(slotNewScript(KUrl,QStringList)));
     connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), this, SLOT(slotEditScript(KUrl,QStringList)));
     hbox->addWidget(mTreeView);
+    mTreeView->slotRefresh();
 }
 
 SieveEditorScriptManagerWidget::~SieveEditorScriptManagerWidget()
