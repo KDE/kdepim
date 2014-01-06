@@ -45,3 +45,13 @@ void SieveEditorMainWidget::loadConfig()
 {
     //TODO load list of server imap
 }
+
+void SieveEditorMainWidget::createNewScript()
+{
+    mScriptManagerWidget->slotCreateNewScript();
+}
+
+void SieveEditorMainWidget::deleteScript()
+{
+    mScriptManagerWidget->slotDeleteScript();
+}

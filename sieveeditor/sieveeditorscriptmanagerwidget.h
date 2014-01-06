@@ -34,10 +34,11 @@ public:
 
     void addServerImap(const KUrl &url);
 
-private Q_SLOTS:
+public Q_SLOTS:
     void slotCreateNewScript();
     void slotDeleteScript();
 
+private Q_SLOTS:
     void slotNewScript(const KUrl &url, const QStringList &capabilities);
     void slotEditScript(const KUrl &url, const QStringList &capabilities);
 

@@ -31,6 +31,9 @@ public:
     explicit SieveEditorMainWidget(QWidget *parent=0);
     ~SieveEditorMainWidget();
 
+    void createNewScript();
+    void deleteScript();
+
 private:
     void loadConfig();
 

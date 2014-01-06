@@ -36,6 +36,8 @@ private slots:
     void slotConfigure();
     void slotAddServerSieve();
 
+    void slotCreateNewScript();
+    void slotDeleteScript();
 private:
     void readConfig();
     void setupActions();
