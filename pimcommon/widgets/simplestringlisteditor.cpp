@@ -383,6 +383,7 @@ void SimpleStringListEditor::slotContextMenu(const QPoint &pos)
         menu->addAction( mModifyButton->text(), this, SLOT(slotModify()));
     }
     if (mRemoveButton && hasItemsSelected) {
+        menu->addSeparator();
         menu->addAction( mRemoveButton->text(), this, SLOT(slotRemove()));
     }
     menu->exec( mListBox->mapToGlobal( pos ) );
