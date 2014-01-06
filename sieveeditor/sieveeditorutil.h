@@ -22,13 +22,22 @@
 #define SIEVEEDITORUTIL_H
 
 #include <QString>
-
+#include <KUrl>
 namespace SieveEditorUtil {
 struct SieveServerConfig {
     SieveServerConfig()
         : port(-1)
     {
 
+    }
+    KUrl url() const {
+        //TODO encryption
+        KUrl u;
+        u.setHost(serverName);
+        u.setUserName(userName);
+        u.setPassword(password);
+        u.setPort(port);
+        return u;
     }
     int port;
     QString userName;
