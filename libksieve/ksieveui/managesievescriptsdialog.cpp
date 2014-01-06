@@ -151,34 +151,16 @@ ManageSieveScriptsDialog::~ManageSieveScriptsDialog()
 
 void ManageSieveScriptsDialog::slotUpdateButtons(QTreeWidgetItem *item)
 {
-    //FIXME
-    /*
-    QTreeWidgetItem * item = mTreeView->currentItem();
-
-    bool enabled = true;
-    if ( !item )
-        enabled = false;
-    else if ( !item->parent() && !mUrls.count( item ))
-        enabled = false;
-
-
-
-    if ( !enabled ) {
-        mNewScript->setEnabled( false );
-        mEditScript->setEnabled( false );
-        mDeleteScript->setEnabled( false );
-        mDeactivateScript->setEnabled( false );
-    } else {
-        if ( serverHasError(item) || !mJobs.keys(item).isEmpty())
-            mNewScript->setEnabled( false );
-        else
-            mNewScript->setEnabled( mUrls.count( item ) );
-        enabled = isFileNameItem( item );
-        mEditScript->setEnabled( enabled );
-        mDeleteScript->setEnabled( enabled );
-        mDeactivateScript->setEnabled( enabled && itemIsActived( item ));
-    }
-    */
+    Q_UNUSED(item);
+    bool newScriptAction;
+    bool editScriptAction;
+    bool deleteScriptAction;
+    bool desactivateScriptAction;
+    mTreeView->enableDisableActions(newScriptAction, editScriptAction, deleteScriptAction, desactivateScriptAction);
+    mNewScript->setEnabled( newScriptAction );
+    mEditScript->setEnabled( editScriptAction );
+    mDeleteScript->setEnabled( deleteScriptAction );
+    mDeactivateScript->setEnabled( desactivateScriptAction );
 }
 
 

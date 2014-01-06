@@ -45,6 +45,7 @@ public:
     ~ManageSieveWidget();
 
     ManageSieveTreeView *treeView() const;
+    void enableDisableActions(bool &newScriptAction, bool &editScriptAction, bool &deleteScriptAction, bool &desactivateScriptAction);
 
 Q_SIGNALS:
     void updateButtons(QTreeWidgetItem *item);

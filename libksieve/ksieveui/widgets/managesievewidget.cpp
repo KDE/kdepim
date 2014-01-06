@@ -369,3 +369,30 @@ void ManageSieveWidget::slotDoubleClicked( QTreeWidgetItem * item )
         return;
     slotEditScript();
 }
+
+void ManageSieveWidget::enableDisableActions(bool &newScriptAction, bool &editScriptAction, bool &deleteScriptAction, bool &desactivateScriptAction)
+{
+    QTreeWidgetItem * item = mTreeView->currentItem();
+
+    bool enabled = true;
+    if ( !item )
+        enabled = false;
+    else if ( !item->parent() && !mUrls.count( item ))
+        enabled = false;
+
+    if ( !enabled ) {
+        newScriptAction = false;
+        editScriptAction = false;
+        deleteScriptAction = false;
+        desactivateScriptAction = false;
+    } else {
+        if ( serverHasError(item) || !mJobs.keys(item).isEmpty())
+            newScriptAction =  false;
+        else
+            newScriptAction = mUrls.count( item );
+        enabled = isFileNameItem( item );
+        editScriptAction = enabled;
+        deleteScriptAction = enabled;
+        desactivateScriptAction = enabled && itemIsActived( item );
+    }
+}
