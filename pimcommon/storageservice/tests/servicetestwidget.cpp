@@ -28,7 +28,7 @@
 #include <QToolBar>
 #include <QInputDialog>
 #include <QTextEdit>
-
+#include <QAction>
 
 
 ServiceTestWidget::ServiceTestWidget(QWidget *parent)
@@ -44,15 +44,15 @@ ServiceTestWidget::ServiceTestWidget(QWidget *parent)
     QVBoxLayout *lay = new QVBoxLayout;
     QToolBar *bar = new QToolBar;
     lay->addWidget(bar);
-    bar->addAction(QLatin1String("Authentication..."), this, SLOT(slotAuthentication()));
-    bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
-    bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
-    bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
-    bar->addAction(QLatin1String("Upload File..."), this, SLOT(slotUploadFile()));
-    bar->addAction(QLatin1String("Create Service Folder..."), this, SLOT(slotCreateServiceFolder()));
-    bar->addAction(QLatin1String("Delete File..."), this, SLOT(slotDeleteFile()));
-    bar->addAction(QLatin1String("Delete Folder..."), this, SLOT(slotDeleteFolder()));
-    bar->addAction(QLatin1String("Download File..."), this, SLOT(slotDownloadFile()));
+    mAuthenticationAction = bar->addAction(QLatin1String("Authentication..."), this, SLOT(slotAuthentication()));
+    mListFolderAction = bar->addAction(QLatin1String("List Folder..."), this, SLOT(slotListFolder()));
+    mCreateFolderAction = bar->addAction(QLatin1String("Create Folder..."), this, SLOT(slotCreateFolder()));
+    mAccountInfoAction = bar->addAction(QLatin1String("Account info..."), this, SLOT(slotAccountInfo()));
+    mUploadFileAction = bar->addAction(QLatin1String("Upload File..."), this, SLOT(slotUploadFile()));
+    mCreateServiceFolderAction = bar->addAction(QLatin1String("Create Service Folder..."), this, SLOT(slotCreateServiceFolder()));
+    mDeleteFileAction = bar->addAction(QLatin1String("Delete File..."), this, SLOT(slotDeleteFile()));
+    mDeleteFolderAction = bar->addAction(QLatin1String("Delete Folder..."), this, SLOT(slotDeleteFolder()));
+    mDownloadFileAction = bar->addAction(QLatin1String("Download File..."), this, SLOT(slotDownloadFile()));
     lay->addWidget(mEdit);
     setLayout(lay);
 }
@@ -81,6 +81,7 @@ void ServiceTestWidget::slotDeleteFolder()
 void ServiceTestWidget::setStorageService(PimCommon::StorageServiceAbstract *service)
 {
     mStorageService = service;
+    updateButtons(mStorageService->capabilities());
     connectStorageService();
 }
 
@@ -202,4 +203,16 @@ void ServiceTestWidget::slotDownloadFile()
 {
     const QString filename = QInputDialog::getText(this,i18n("Filename"), i18n("Filename:"));
     mStorageService->downloadFile(filename);
+}
+
+void ServiceTestWidget::updateButtons(PimCommon::StorageServiceAbstract::Capabilities capabilities)
+{
+    mListFolderAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::ListFolderCapability);
+    mCreateFolderAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability);
+    mAccountInfoAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
+    mUploadFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
+    mDeleteFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
+    mDeleteFolderAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability);
+    mDownloadFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
+
 }

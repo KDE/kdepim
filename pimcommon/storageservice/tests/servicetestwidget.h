@@ -20,6 +20,7 @@
 #define SERVICETESTWIDGET_H
 
 #include <QWidget>
+#include "storageservice/storageserviceabstract.h"
 class QTextEdit;
 
 namespace PimCommon {
@@ -63,8 +64,18 @@ private Q_SLOTS:
 
 private:
     void connectStorageService();
+    void updateButtons(PimCommon::StorageServiceAbstract::Capabilities capabilities);
     PimCommon::StorageServiceAbstract *mStorageService;
     QTextEdit *mEdit;
+    QAction *mAuthenticationAction;
+    QAction *mListFolderAction;
+    QAction *mCreateFolderAction;
+    QAction *mAccountInfoAction;
+    QAction *mUploadFileAction;
+    QAction *mCreateServiceFolderAction;
+    QAction *mDeleteFileAction;
+    QAction *mDeleteFolderAction;
+    QAction *mDownloadFileAction;
 };
 
 #endif // SERVICETESTWIDGET_H
