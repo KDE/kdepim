@@ -175,7 +175,7 @@ void ManageSieveWidget::slotNewScript()
     const QStringList currentCapabilities = currentItem->data(0, SIEVE_SERVER_CAPABILITIES).toStringList();
 
     mBlockSignal = true;
-    QTreeWidgetItem *newItem = new QTreeWidgetItem( currentItem );
+    QTreeWidgetItem *newItem = createNewItem( currentItem );
     newItem->setFlags(newItem->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
     newItem->setText(0,name);
     newItem->setCheckState(0,Qt::Unchecked);
@@ -324,8 +324,7 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
     if (!success) {
         mBlockSignal = false;
         parent->setData( 0, SIEVE_SERVER_ERROR, true );
-        QTreeWidgetItem * item =
-                new QTreeWidgetItem( parent );
+        QTreeWidgetItem * item = createNewItem( parent );
         item->setText( 0, i18n( "Failed to fetch the list of scripts" ) );
         item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
         return;
@@ -338,7 +337,7 @@ void ManageSieveWidget::slotGotList(KManageSieve::SieveJob *job, bool success, c
         const QString lowerScript(script.toLower());
         if (isProtectedName(lowerScript))
             continue;
-        QTreeWidgetItem* item = new QTreeWidgetItem( parent );
+        QTreeWidgetItem* item = createNewItem( parent );
         item->setFlags(item->flags() & (Qt::ItemIsUserCheckable|Qt::ItemIsEnabled|Qt::ItemIsSelectable));
 
         item->setText(0, script);
@@ -395,4 +394,10 @@ void ManageSieveWidget::enableDisableActions(bool &newScriptAction, bool &editSc
         deleteScriptAction = enabled;
         desactivateScriptAction = enabled && itemIsActived( item );
     }
+}
+
+
+QTreeWidgetItem *ManageSieveWidget::createNewItem(QTreeWidgetItem *parent)
+{
+    return new QTreeWidgetItem(parent);
 }
