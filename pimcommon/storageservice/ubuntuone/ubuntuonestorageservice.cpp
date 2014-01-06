@@ -29,6 +29,13 @@ using namespace PimCommon;
 UbuntuoneStorageService::UbuntuoneStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
+    mCapabilities |= AccountInfoCapability;
+    //mCapabilities |= UploadFileCapability;
+    //mCapabilities |= DownloadFileCapability;
+    //mCapabilities |= CreateFolderCapability;
+    //mCapabilities |= DeleteFolderCapability;
+    //mCapabilities |= ListFolderCapability;
+    //mCapabilities |= ShareLinkCapability;
     readConfig();
 }
 

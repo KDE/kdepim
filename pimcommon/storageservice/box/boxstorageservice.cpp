@@ -30,6 +30,13 @@ using namespace PimCommon;
 BoxStorageService::BoxStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
+    mCapabilities |= AccountInfoCapability;
+    //mCapabilities |= UploadFileCapability;
+    //mCapabilities |= DownloadFileCapability;
+    mCapabilities |= CreateFolderCapability;
+    mCapabilities |= DeleteFolderCapability;
+    mCapabilities |= ListFolderCapability;
+    //mCapabilities |= ShareLinkCapability;
     readConfig();
 }
 
