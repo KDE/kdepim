@@ -218,6 +218,8 @@ void ManageSieveScriptsDialog::slotRefresh()
     }
     slotUpdateButtons();
     mListView->setNoImapFound(noImapFound);
+    if (!noImapFound)
+       mBlockSignal = false;
 }
 
 void ManageSieveScriptsDialog::slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript)
