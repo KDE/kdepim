@@ -74,6 +74,8 @@ void ExportNotesJob::backupConfig()
     const QString globalNoteSettingsrc = KStandardDirs::locateLocal( "config", globalNoteSettingsStr);
     backupFile(globalNoteSettingsrc, Utils::configsPath(), globalNoteSettingsStr);
 
+    backupConfigFile(QLatin1String("akonadi_mailfilter_agent.notifyrc"));
+
     Q_EMIT info(i18n("Config backup done."));
 }
 

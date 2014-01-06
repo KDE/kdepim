@@ -54,6 +54,11 @@ void ImportNotesJob::restoreConfig()
     restoreConfigFile(knotesStr);
     const QString globalNoteSettingsStr(QLatin1String("globalnotesettings"));
     restoreConfigFile(globalNoteSettingsStr);
+
+    //We can't merge it.
+    restoreConfigFile(QLatin1String("akonadi_mailfilter_agent.notifyrc"));
+
+
     Q_EMIT info(i18n("Config restored."));
 }
 
