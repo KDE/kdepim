@@ -49,3 +49,23 @@ QString StorageServiceManagerSettingsJob::dropboxOauthSignature() const
     //TODO customize it
     return QLatin1String("0icikya464lny9g&");
 }
+
+QString StorageServiceManagerSettingsJob::boxClientId() const
+{
+    return QLatin1String("o4sn4e0dvz50pd3ps6ao3qxehvqv8dyo");
+}
+
+QString StorageServiceManagerSettingsJob::boxClientSecret() const
+{
+    return QLatin1String("wLdaOgrblYzi1Y6WN437wStvqighmSJt");
+}
+
+QString StorageServiceManagerSettingsJob::hubicClientId() const
+{
+    return QLatin1String("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
+}
+
+QString StorageServiceManagerSettingsJob::hubicClientSecret() const
+{
+    return QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
+}

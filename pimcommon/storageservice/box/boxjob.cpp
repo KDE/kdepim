@@ -29,8 +29,8 @@ using namespace PimCommon;
 BoxJob::BoxJob(QObject *parent)
     : PimCommon::OAuth2Job(parent)
 {
-    mClientId = QLatin1String("o4sn4e0dvz50pd3ps6ao3qxehvqv8dyo");
-    mClientSecret = QLatin1String("wLdaOgrblYzi1Y6WN437wStvqighmSJt");
+    mClientId = PimCommon::StorageServiceJobConfig::self()->boxClientId();
+    mClientSecret = PimCommon::StorageServiceJobConfig::self()->boxClientSecret();
     mRedirectUri = QLatin1String("https://bugs.kde.org/");
     mServiceUrl = QLatin1String("https://app.box.com");
     mApiUrl = QLatin1String("https://api.box.com");

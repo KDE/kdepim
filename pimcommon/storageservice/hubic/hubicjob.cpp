@@ -28,8 +28,8 @@ using namespace PimCommon;
 HubicJob::HubicJob(QObject *parent)
     : PimCommon::OAuth2Job(parent)
 {
-    mClientId = QLatin1String("api_hubic_zBKQ6UDUj2vDT7ciDsgjmXA78OVDnzJi");
-    mClientSecret = QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
+    mClientId = PimCommon::StorageServiceJobConfig::self()->hubicClientId();
+    mClientSecret = PimCommon::StorageServiceJobConfig::self()->hubicClientSecret();
     mRedirectUri = QLatin1String("https://bugs.kde.org/");
     mServiceUrl = QLatin1String("https://api.hubic.com");
     mApiUrl = QLatin1String("https://api.hubic.com");

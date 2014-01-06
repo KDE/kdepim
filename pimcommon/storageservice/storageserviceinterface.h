@@ -29,10 +29,20 @@ class ISettingsJob
 {
 public:
     virtual ~ISettingsJob() {}
+    //YouSendit
     virtual QString youSendItApiKey() const = 0;
+
+    //DropBox
     virtual QString dropboxOauthConsumerKey() const = 0;
     virtual QString dropboxOauthSignature() const = 0;
 
+    //Box
+    virtual QString boxClientId() const = 0;
+    virtual QString boxClientSecret() const = 0;
+
+    //Box
+    virtual QString hubicClientId() const = 0;
+    virtual QString hubicClientSecret() const = 0;
 };
 
 }

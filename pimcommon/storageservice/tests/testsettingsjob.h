@@ -37,6 +37,10 @@ public:
     QString youSendItApiKey() const;
     QString dropboxOauthConsumerKey() const;
     QString dropboxOauthSignature() const;
+    QString boxClientId() const;
+    QString boxClientSecret() const;
+    QString hubicClientId() const;
+    QString hubicClientSecret() const;
 };
 }
 

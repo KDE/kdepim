@@ -95,4 +95,41 @@ QString StorageServiceJobConfig::dropboxOauthSignature() const
     return mSettingsJob->dropboxOauthSignature();
 }
 
+QString StorageServiceJobConfig::boxClientId() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->boxClientId();
+}
+
+QString StorageServiceJobConfig::boxClientSecret() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->boxClientSecret();
+}
+
+QString StorageServiceJobConfig::hubicClientId() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->hubicClientId();
+}
+
+QString StorageServiceJobConfig::hubicClientSecret() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->hubicClientSecret();
+}
+
+
 }
