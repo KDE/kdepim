@@ -32,6 +32,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     mStackedWidget = new QStackedWidget;
     hbox->addWidget(mStackedWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
+    connect(mScriptManagerWidget, SIGNAL(createNewScriptPage(QString,QString,QStringList)), this, SLOT(slotCreateNewScriptPage(QString,QString,QStringList)));
     hbox->addWidget(mScriptManagerWidget);
     loadConfig();
 }
@@ -39,6 +40,11 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
 SieveEditorMainWidget::~SieveEditorMainWidget()
 {
 
+}
+
+void SieveEditorMainWidget::slotCreateNewScriptPage(const QString &scriptName, const QString &script, const QStringList &capabilitied)
+{
+    //TODO
 }
 
 void SieveEditorMainWidget::loadConfig()
@@ -54,4 +60,9 @@ void SieveEditorMainWidget::createNewScript()
 void SieveEditorMainWidget::deleteScript()
 {
     mScriptManagerWidget->slotDeleteScript();
+}
+
+void SieveEditorMainWidget::addNewScriptPage()
+{
+
 }

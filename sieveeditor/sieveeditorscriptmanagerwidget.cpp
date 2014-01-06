@@ -43,8 +43,40 @@ SieveEditorScriptManagerWidget::~SieveEditorScriptManagerWidget()
 
 void SieveEditorScriptManagerWidget::slotEditScript(const KUrl &url, const QStringList &capabilities)
 {
+    /*
+    mCurrentURL = url;
+    mCurrentCapabilities = capabilities;
+    mIsNewScript = false;
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( url );
+    connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+             this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
+
     //TODO
+    */
 }
+
+void SieveEditorScriptManagerWidget::slotGetResult( KManageSieve::SieveJob *, bool success, const QString & script, bool isActive )
+{
+    if ( !success )
+        return;
+/*
+    if ( mSieveEditor )
+        return;
+
+    disableManagerScriptsDialog(true);
+    mSieveEditor = new SieveEditor;
+    mSieveEditor->setScriptName( mCurrentURL.fileName() );
+    mSieveEditor->setSieveCapabilities(mCurrentCapabilities);
+    mSieveEditor->setScript( script );
+    connect( mSieveEditor, SIGNAL(okClicked()), this, SLOT(slotSieveEditorOkClicked()) );
+    connect( mSieveEditor, SIGNAL(cancelClicked()), this, SLOT(slotSieveEditorCancelClicked()) );
+    connect( mSieveEditor, SIGNAL(checkSyntax()), this, SLOT(slotSieveEditorCheckSyntaxClicked()) );
+    mSieveEditor->show();
+    mWasActive = isActive;
+    */
+}
+
+
 
 void SieveEditorScriptManagerWidget::slotNewScript(const KUrl &url, const QStringList &capabilities)
 {

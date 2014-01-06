@@ -28,6 +28,12 @@ class SieveEditorTreeWidgetItem : public QTreeWidgetItem
 public:
     SieveEditorTreeWidgetItem(QTreeWidgetItem *parent);
     ~SieveEditorTreeWidgetItem();
+
+    QWidget *associatePage() const;
+    void setAssociatePage(QWidget *page);
+
+private:
+    QWidget *mAssociatePage;
 };
 
 #endif // SIEVEEDITORTREEWIDGETITEM_H

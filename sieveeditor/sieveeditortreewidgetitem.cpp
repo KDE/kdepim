@@ -22,7 +22,8 @@
 #include "sieveeditortreewidgetitem.h"
 
 SieveEditorTreeWidgetItem::SieveEditorTreeWidgetItem(QTreeWidgetItem *parent)
-    : QTreeWidgetItem(parent)
+    : QTreeWidgetItem(parent),
+      mAssociatePage(0)
 {
 }
 
@@ -31,3 +32,12 @@ SieveEditorTreeWidgetItem::~SieveEditorTreeWidgetItem()
     //TODO
 }
 
+QWidget *SieveEditorTreeWidgetItem::associatePage() const
+{
+    return mAssociatePage;
+}
+
+void SieveEditorTreeWidgetItem::setAssociatePage(QWidget *page)
+{
+    mAssociatePage = page;
+}

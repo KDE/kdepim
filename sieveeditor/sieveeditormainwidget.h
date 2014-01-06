@@ -34,6 +34,11 @@ public:
     void createNewScript();
     void deleteScript();
 
+    void addNewScriptPage();
+
+private slots:
+    void slotCreateNewScriptPage(const QString &scriptName, const QString &script, const QStringList &capabilitied);
+
 private:
     void loadConfig();
 
