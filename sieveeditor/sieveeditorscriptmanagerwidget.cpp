@@ -30,12 +30,24 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     hbox->setMargin(0);
     setLayout(hbox);
     mTreeView = new SieveEditorManageSieveWidget;
+    connect(mTreeView, SIGNAL(newScript(KUrl,QStringList)), this, SLOT(slotNewScript(KUrl,QStringList)));
+    connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), this, SLOT(slotEditScript(KUrl,QStringList)));
     hbox->addWidget(mTreeView);
 }
 
 SieveEditorScriptManagerWidget::~SieveEditorScriptManagerWidget()
 {
 
+}
+
+void SieveEditorScriptManagerWidget::slotEditScript(const KUrl &url, const QStringList &capabilities)
+{
+    //TODO
+}
+
+void SieveEditorScriptManagerWidget::slotNewScript(const KUrl &url, const QStringList &capabilities)
+{
+    //TODO
 }
 
 void SieveEditorScriptManagerWidget::addServerImap(const KUrl &url)
@@ -47,10 +59,10 @@ void SieveEditorScriptManagerWidget::addServerImap(const KUrl &url)
 
 void SieveEditorScriptManagerWidget::slotCreateNewScript()
 {
-    //TODO
+    mTreeView->slotNewScript();
 }
 
 void SieveEditorScriptManagerWidget::slotDeleteScript()
 {
-
+    mTreeView->slotEditScript();
 }

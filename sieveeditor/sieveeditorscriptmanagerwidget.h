@@ -38,6 +38,9 @@ private Q_SLOTS:
     void slotCreateNewScript();
     void slotDeleteScript();
 
+    void slotNewScript(const KUrl &url, const QStringList &capabilities);
+    void slotEditScript(const KUrl &url, const QStringList &capabilities);
+
 private:
     QList<KUrl> mUrls;
     SieveEditorManageSieveWidget *mTreeView;
