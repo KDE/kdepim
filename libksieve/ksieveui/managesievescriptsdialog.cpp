@@ -228,12 +228,9 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
     mSieveEditor->deleteLater();
     mSieveEditor = 0;
     mCurrentURL = KUrl();
-#if 0
-    mBlockSignal = true;
-    if ( mIsNewScript )
-        slotRefresh();
-    mBlockSignal = false;
-#endif
+    if ( mIsNewScript ) {
+        mTreeView->slotRefresh();
+    }
 }
 
 void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob *,bool success ,const QString &errorMsg)
