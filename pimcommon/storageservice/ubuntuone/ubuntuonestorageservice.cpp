@@ -36,6 +36,7 @@ UbuntuoneStorageService::UbuntuoneStorageService(QObject *parent)
     //mCapabilities |= DeleteFolderCapability;
     //mCapabilities |= ListFolderCapability;
     //mCapabilities |= ShareLinkCapability;
+    //mCapabilities |= DeleteFileCapability;
     readConfig();
 }
 

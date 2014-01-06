@@ -36,6 +36,7 @@ BoxStorageService::BoxStorageService(QObject *parent)
     mCapabilities |= CreateFolderCapability;
     mCapabilities |= DeleteFolderCapability;
     mCapabilities |= ListFolderCapability;
+    //mCapabilities |= DeleteFileCapability;
     //mCapabilities |= ShareLinkCapability;
     readConfig();
 }

@@ -37,6 +37,7 @@ DropBoxStorageService::DropBoxStorageService(QObject *parent)
     //mCapabilities |= DownloadFileCapability;
     mCapabilities |= CreateFolderCapability;
     mCapabilities |= DeleteFolderCapability;
+    mCapabilities |= DeleteFileCapability;
     mCapabilities |= ListFolderCapability;
     mCapabilities |= ShareLinkCapability;
     readConfig();
