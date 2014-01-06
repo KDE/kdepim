@@ -30,20 +30,15 @@ struct SieveServerConfig {
     {
 
     }
-    KUrl url() const {
-        //TODO encryption
-        KUrl u;
-        u.setHost(serverName);
-        u.setUserName(userName);
-        u.setPassword(password);
-        u.setPort(port);
-        return u;
-    }
-    int port;
+
+    KUrl url() const;
+
     QString userName;
     QString password;
     QString serverName;
+    int port;
 };
+
 QList<SieveServerConfig> readServerSieveConfig();
 void writeServerSieveConfig(const QList<SieveEditorUtil::SieveServerConfig> &lstConfig);
 }

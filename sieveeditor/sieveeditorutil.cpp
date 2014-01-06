@@ -28,6 +28,17 @@
 #include <QRegExp>
 
 
+KUrl SieveEditorUtil::SieveServerConfig::url() const {
+    //TODO encryption
+    KUrl u;
+    u.setHost(serverName);
+    u.setUserName(userName);
+    u.setPassword(password);
+    u.setPort(port);
+    return u;
+}
+
+
 QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig()
 {
     QList<SieveServerConfig> lstConfig;
