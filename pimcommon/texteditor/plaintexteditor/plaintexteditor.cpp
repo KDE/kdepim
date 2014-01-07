@@ -68,7 +68,6 @@ PlainTextEditor::PlainTextEditor(QWidget *parent)
       d(new PlainTextEditor::PlainTextEditorPrivate)
 {
     KCursor::setAutoHideCursor(this, true, false);
-    qDebug()<<"PlainTextEditor::PlainTextEditor "<<this;
 }
 
 PlainTextEditor::~PlainTextEditor()
