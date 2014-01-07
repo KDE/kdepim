@@ -42,7 +42,7 @@ Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
 
 private slots:
-    void slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities);
+    void slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
 
 private:
     QStackedWidget *mStackedWidget;

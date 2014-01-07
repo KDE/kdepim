@@ -24,13 +24,19 @@
 
 SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     : KSieveUi::SieveEditor(parent),
-      mWasActive(false)
+      mWasActive(false),
+      mIsNewScript(false)
 {
 }
 
 SieveEditorPageWidget::~SieveEditorPageWidget()
 {
 
+}
+
+void SieveEditorPageWidget::setIsNewScript(bool isNewScript)
+{
+    mIsNewScript = isNewScript;
 }
 
 void SieveEditorPageWidget::loadScript(const KUrl &url, const QStringList &capabilities)

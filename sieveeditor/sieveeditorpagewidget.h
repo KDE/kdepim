@@ -37,12 +37,15 @@ public:
 
     KUrl currentUrl() const;
 
+    void setIsNewScript(bool isNewScript);
+
 private slots:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
 
 private:
     KUrl mCurrentURL;
     bool mWasActive;
+    bool mIsNewScript;
 };
 
 #endif // SIEVEEDITORPAGEWIDGET_H

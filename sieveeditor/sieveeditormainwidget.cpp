@@ -34,7 +34,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     mStackedWidget = new QStackedWidget;
     addWidget(mStackedWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
-    connect(mScriptManagerWidget, SIGNAL(createNewScriptPage(KUrl,QStringList)), this, SLOT(slotCreateNewScriptPage(KUrl,QStringList)));
+    connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
     addWidget(mScriptManagerWidget);
     setChildrenCollapsible(false);
@@ -51,9 +51,10 @@ SieveEditorMainWidget::~SieveEditorMainWidget()
     myGroup.sync();
 }
 
-void SieveEditorMainWidget::slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities)
+void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript)
 {
     SieveEditorPageWidget *editor = new SieveEditorPageWidget;
+    editor->setIsNewScript(isNewScript);
     editor->loadScript(url, capabilities);
     mStackedWidget->addWidget(editor);
     mStackedWidget->setCurrentWidget(editor);

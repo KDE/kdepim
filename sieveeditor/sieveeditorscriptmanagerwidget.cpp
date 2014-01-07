@@ -55,12 +55,12 @@ void SieveEditorScriptManagerWidget::slotUpdateButtons(QTreeWidgetItem *item)
 
 void SieveEditorScriptManagerWidget::slotEditScript(const KUrl &url, const QStringList &capabilities)
 {
-    Q_EMIT createNewScriptPage(url, capabilities);
+    Q_EMIT createScriptPage(url, capabilities, false);
 }
 
 void SieveEditorScriptManagerWidget::slotNewScript(const KUrl &url, const QStringList &capabilities)
 {
-    Q_EMIT createNewScriptPage(url, capabilities);
+    Q_EMIT createScriptPage(url, capabilities, true);
 }
 
 void SieveEditorScriptManagerWidget::slotCreateNewScript()

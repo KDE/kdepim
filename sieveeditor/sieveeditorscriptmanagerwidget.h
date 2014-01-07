@@ -36,7 +36,7 @@ public:
     void updateServerList();
 
 Q_SIGNALS:
-    void createNewScriptPage(const KUrl &url, const QStringList &capabilities);
+    void createScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
 
 public Q_SLOTS:
