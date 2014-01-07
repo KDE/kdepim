@@ -58,6 +58,16 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
 
 QMenu *StorageServiceManager::menuUploadServices(QWidget *parent) const
 {
+    return menuWithCapability(PimCommon::StorageServiceAbstract::ShareLinkCapability, parent);
+}
+
+QMenu *StorageServiceManager::menuDownloadServices(QWidget *parent) const
+{
+    return menuWithCapability(PimCommon::StorageServiceAbstract::DownloadFileCapability, parent);
+}
+
+QMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const
+{
     QMenu *menuService = new QMenu(i18n("Storage service"), parent);
     if (mListService.isEmpty()) {
         QAction *act = new QAction(i18n("No Storage service configured"), menuService);
@@ -68,7 +78,7 @@ QMenu *StorageServiceManager::menuUploadServices(QWidget *parent) const
         while (i.hasNext()) {
             i.next();
             //FIXME
-            if (i.value()->capabilities() & PimCommon::StorageServiceAbstract::ShareLinkCapability) {
+            if (i.value()->capabilities() & capability) {
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), menuService);
                 act->setData(i.key());
                 connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
