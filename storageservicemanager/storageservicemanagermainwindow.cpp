@@ -64,7 +64,7 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 
 void StorageServiceManagerMainWindow::slotUpdateActions()
 {
-    PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
+    const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
     mDownloadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
     mCreateFolder->setEnabled(capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability);
     mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
@@ -75,7 +75,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
 void StorageServiceManagerMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
-    KStandardAction::quit(this, SLOT(slotQuitApp()), ac );
+    KStandardAction::quit(this, SLOT(close()), ac );
 
     KAction *act = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
     act->setText(i18n("Authenticate..."));
@@ -109,11 +109,6 @@ void StorageServiceManagerMainWindow::setupActions()
 void StorageServiceManagerMainWindow::slotAddStorageService()
 {
 
-}
-
-void StorageServiceManagerMainWindow::slotQuitApp()
-{
-    kapp->quit();
 }
 
 void StorageServiceManagerMainWindow::slotConfigure()

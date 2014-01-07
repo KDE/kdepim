@@ -36,7 +36,6 @@ public:
     ~StorageServiceManagerMainWindow();
 
 private slots:
-    void slotQuitApp();    
     void slotAddStorageService();    
     void slotConfigure();        
     void slotUpdateActions();
