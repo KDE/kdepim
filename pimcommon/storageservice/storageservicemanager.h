@@ -44,7 +44,7 @@ public:
 
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
-    QMenu *menuUploadServices(QWidget *parent=0) const;
+    QMenu *menuUploadServices(QWidget *parent) const;
     QMap<QString, StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, StorageServiceAbstract *> &lst);
 
