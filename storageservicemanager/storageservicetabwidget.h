@@ -22,6 +22,7 @@
 #define STORAGESERVICETABWIDGET_H
 
 #include <QTabWidget>
+#include "pimcommon/storageservice/storageserviceabstract.h"
 
 class StorageServiceTabWidget : public QTabWidget
 {
@@ -31,6 +32,8 @@ public:
     ~StorageServiceTabWidget();    
 
     void reloadStorageService();
+
+    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
 
 public slots:
     void slotAuthenticate();

@@ -24,6 +24,8 @@
 #include "storageservicemanagersettingsjob.h"
 #include "pimcommon/storageservice/storageservicemanager.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
+#include "pimcommon/storageservice/storageserviceabstract.h"
+
 
 #include <KStandardAction>
 #include <KLocalizedString>
@@ -43,12 +45,13 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
 
     mStorageManager = new PimCommon::StorageServiceManager(this);
     mStorageServiceTabWidget = new StorageServiceTabWidget;
-    connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentTabChanged(QWidget*)));
+    connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
     setCentralWidget(mStorageServiceTabWidget);
 
     setupActions();
     setupGUI();
     readConfig();
+    slotUpdateActions();
 }
 
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
@@ -59,14 +62,14 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
     group.writeEntry( "Size", size() );
 }
 
-void StorageServiceManagerMainWindow::slotCurrentTabChanged(QWidget *widget)
+void StorageServiceManagerMainWindow::slotUpdateActions()
 {
-    //TODO
-}
-
-void StorageServiceManagerMainWindow::updateActions()
-{
-
+    PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
+    mDownloadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
+    mCreateFolder->setEnabled(capabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability);
+    mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
+    mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
+    mDeleteFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
 }
 
 void StorageServiceManagerMainWindow::setupActions()
@@ -77,8 +80,8 @@ void StorageServiceManagerMainWindow::setupActions()
     KAction *act = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
     act->setText(i18n("Authenticate..."));
 
-    act = ac->addAction(QLatin1String("create_folder"), mStorageServiceTabWidget, SLOT(slotCreateFolder()));
-    act->setText(i18n("Create Folder..."));
+    mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceTabWidget, SLOT(slotCreateFolder()));
+    mCreateFolder->setText(i18n("Create Folder..."));
 
     act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
     act->setText(i18n("Add Storage Service..."));
@@ -86,17 +89,17 @@ void StorageServiceManagerMainWindow::setupActions()
     act = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
     act->setText(i18n("Refresh List"));
 
-    act = ac->addAction(QLatin1String("account_info"), mStorageServiceTabWidget, SLOT(slotAccountInfo()));
-    act->setText(i18n("Account Info..."));
+    mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceTabWidget, SLOT(slotAccountInfo()));
+    mAccountInfo->setText(i18n("Account Info..."));
 
-    act = ac->addAction(QLatin1String("upload_file"), mStorageServiceTabWidget, SLOT(slotUploadFile()));
-    act->setText(i18n("Upload File..."));
+    mUploadFile = ac->addAction(QLatin1String("upload_file"), mStorageServiceTabWidget, SLOT(slotUploadFile()));
+    mUploadFile->setText(i18n("Upload File..."));
 
-    act = ac->addAction(QLatin1String("delete_file"), mStorageServiceTabWidget, SLOT(slotDeleteFile()));
-    act->setText(i18n("Delete File..."));
+    mDeleteFile = ac->addAction(QLatin1String("delete_file"), mStorageServiceTabWidget, SLOT(slotDeleteFile()));
+    mDeleteFile->setText(i18n("Delete File..."));
 
-    act = ac->addAction(QLatin1String("download_file"), mStorageServiceTabWidget, SLOT(slotDownloadFile()));
-    act->setText(i18n("Download File..."));
+    mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceTabWidget, SLOT(slotDownloadFile()));
+    mDownloadFile->setText(i18n("Download File..."));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
 
