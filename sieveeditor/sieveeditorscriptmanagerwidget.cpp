@@ -60,14 +60,7 @@ void SieveEditorScriptManagerWidget::slotEditScript(const KUrl &url, const QStri
 
 void SieveEditorScriptManagerWidget::slotNewScript(const KUrl &url, const QStringList &capabilities)
 {
-    //TODO
-}
-
-void SieveEditorScriptManagerWidget::addServerImap(const KUrl &url)
-{
-    if (!mUrls.contains(url))
-        mUrls.append(url);
-    //TODO
+    Q_EMIT createNewScriptPage(url, capabilities);
 }
 
 void SieveEditorScriptManagerWidget::slotCreateNewScript()
@@ -78,4 +71,9 @@ void SieveEditorScriptManagerWidget::slotCreateNewScript()
 void SieveEditorScriptManagerWidget::slotDeleteScript()
 {
     mTreeView->slotEditScript();
+}
+
+void SieveEditorScriptManagerWidget::updateServerList()
+{
+    mTreeView->slotRefresh();
 }

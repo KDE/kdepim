@@ -33,7 +33,7 @@ public:
     explicit SieveEditorScriptManagerWidget(QWidget *parent=0);
     ~SieveEditorScriptManagerWidget();
 
-    void addServerImap(const KUrl &url);
+    void updateServerList();
 
 Q_SIGNALS:
     void createNewScriptPage(const KUrl &url, const QStringList &capabilities);
@@ -49,7 +49,6 @@ private Q_SLOTS:
     void slotUpdateButtons(QTreeWidgetItem *item);
 
 private:
-    QList<KUrl> mUrls;
     SieveEditorManageSieveWidget *mTreeView;
 };
 

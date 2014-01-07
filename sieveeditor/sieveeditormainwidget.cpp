@@ -68,3 +68,8 @@ void SieveEditorMainWidget::deleteScript()
 {
     mScriptManagerWidget->slotDeleteScript();
 }
+
+void SieveEditorMainWidget::updateServerList()
+{
+    mScriptManagerWidget->updateServerList();
+}

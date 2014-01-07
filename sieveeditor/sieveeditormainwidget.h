@@ -35,7 +35,8 @@ public:
     ~SieveEditorMainWidget();
 
     void createNewScript();
-    void deleteScript();
+    void deleteScript();    
+    void updateServerList();
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);

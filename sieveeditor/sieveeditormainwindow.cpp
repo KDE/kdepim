@@ -101,7 +101,7 @@ void SieveEditorMainWindow::slotDeleteScript()
 
 void SieveEditorMainWindow::slotQuitApp()
 {
-    kapp->quit();
+    close();
 }
 
 void SieveEditorMainWindow::slotConfigure()
@@ -109,6 +109,7 @@ void SieveEditorMainWindow::slotConfigure()
     QPointer<SieveEditorConfigureDialog> dlg = new SieveEditorConfigureDialog(this);
     if (dlg->exec()) {
         dlg->saveServerSieveConfig();
+        mMainWidget->updateServerList();
     }
     delete dlg;
 }
@@ -117,7 +118,7 @@ void SieveEditorMainWindow::slotAddServerSieve()
 {
     QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
     if (dlg->exec()) {
-        //TODO update list of script.
+        mMainWidget->updateServerList();
     }
     delete dlg;
 }
