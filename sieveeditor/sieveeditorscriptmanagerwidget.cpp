@@ -27,11 +27,10 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(0);
     setLayout(hbox);
     mTreeView = new SieveEditorManageSieveWidget;
     connect(mTreeView, SIGNAL(newScript(KUrl,QStringList)), this, SLOT(slotNewScript(KUrl,QStringList)));
-    connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), this, SIGNAL(createNewScriptPage(KUrl,QStringList)));
+    connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), this, SLOT(slotEditScript(KUrl,QStringList)));
     connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem*)), this, SLOT(slotUpdateButtons(QTreeWidgetItem*)));
     hbox->addWidget(mTreeView);
     mTreeView->slotRefresh();

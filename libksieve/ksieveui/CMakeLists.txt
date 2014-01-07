@@ -38,6 +38,7 @@ set(ksieveui_vacation_LIB_SRCS
 )
 
 set(ksieveui_editor_LIB_SRCS
+  editor/sieveeditorwidget.cpp
   editor/sievetextedit.cpp
   editor/sieveeditor.cpp
   editor/sievelinenumberarea.cpp

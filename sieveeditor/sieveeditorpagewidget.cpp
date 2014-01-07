@@ -20,18 +20,45 @@
 
 #include "sieveeditorpagewidget.h"
 
+#include <KLocalizedString>
+
 #include <kmanagesieve/sievejob.h>
 
 SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
-    : KSieveUi::SieveEditor(parent),
+    : KSieveUi::SieveEditorWidget(parent),
       mWasActive(false),
       mIsNewScript(false)
 {
+    connect(this, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
 }
 
 SieveEditorPageWidget::~SieveEditorPageWidget()
 {
 
+}
+
+void SieveEditorPageWidget::slotCheckSyntaxClicked()
+{
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL,script(), mWasActive, mWasActive );
+    job->setInteractive( false );
+    connect( job, SIGNAL(errorMessage(KManageSieve::SieveJob*,bool,QString)),
+             this, SLOT(slotPutResultDebug(KManageSieve::SieveJob*,bool,QString)) );
+}
+
+void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *,bool success ,const QString &errorMsg)
+{
+    if ( success ) {
+        addOkMessage( i18n( "No errors found." ) );
+    } else {
+        if ( errorMsg.isEmpty() )
+            addFailedMessage( i18n( "An unknown error was encountered." ) );
+        else
+            addFailedMessage( errorMsg );
+    }
+    //Put original script after check otherwise we will put a script even if we don't click on ok
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, originalScript(), mWasActive, mWasActive );
+    job->setInteractive( false );
+    resultDone();
 }
 
 void SieveEditorPageWidget::setIsNewScript(bool isNewScript)
@@ -60,4 +87,22 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
     setScriptName( mCurrentURL.fileName() );
     setScript( script );
     mWasActive = isActive;
+}
+
+void SieveEditorPageWidget::addFailedMessage( const QString &err )
+{
+    addMessageEntry( err, QColor( Qt::darkRed ) );
+}
+
+void SieveEditorPageWidget::addOkMessage( const QString &err )
+{
+    addMessageEntry( err, QColor( Qt::darkGreen ) );
+}
+
+void SieveEditorPageWidget::addMessageEntry( const QString &errorMsg, const QColor &color )
+{
+    const QString logText = QString::fromLatin1( "<font color=%1>%2</font>" )
+            .arg( color.name() ).arg(errorMsg);
+
+    setDebugScript( logText );
 }

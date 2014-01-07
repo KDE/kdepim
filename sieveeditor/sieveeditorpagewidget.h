@@ -21,12 +21,13 @@
 #ifndef SIEVEEDITORPAGEWIDGET_H
 #define SIEVEEDITORPAGEWIDGET_H
 
-#include "editor/sieveeditor.h"
+#include "editor/sieveeditorwidget.h"
+#include <KUrl>
 namespace KManageSieve {
 class SieveJob;
 }
 
-class SieveEditorPageWidget : public KSieveUi::SieveEditor
+class SieveEditorPageWidget : public KSieveUi::SieveEditorWidget
 {
     Q_OBJECT
 public:
@@ -39,10 +40,15 @@ public:
 
     void setIsNewScript(bool isNewScript);
 
+    void addFailedMessage(const QString &err);
+    void addOkMessage(const QString &err);
 private slots:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
+    void slotCheckSyntaxClicked();
+    void slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg);
 
 private:
+    void addMessageEntry(const QString &errorMsg, const QColor &color);
     KUrl mCurrentURL;
     bool mWasActive;
     bool mIsNewScript;
