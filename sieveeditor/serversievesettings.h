@@ -58,6 +58,7 @@ private slots:
     void slotServerNameChanged(const QString &name);
 
 private:
+    void populateDefaultAuthenticationOptions();
     Ui::ServerSieveSettings *ui;
 };
 

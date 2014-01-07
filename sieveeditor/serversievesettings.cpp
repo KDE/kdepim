@@ -20,6 +20,42 @@
 
 #include "serversievesettings.h"
 #include "ui_serversievesettings.h"
+#include <mailtransport/transport.h>
+
+#include <KLocalizedString>
+
+/** static helper functions **/
+static QString authenticationModeString( MailTransport::Transport::EnumAuthenticationType::type mode )
+{
+    switch ( mode ) {
+    case  MailTransport::Transport::EnumAuthenticationType::LOGIN:
+        return QLatin1String("LOGIN");
+    case MailTransport::Transport::EnumAuthenticationType::PLAIN:
+        return QLatin1String("PLAIN");
+    case MailTransport::Transport::EnumAuthenticationType::CRAM_MD5:
+        return QLatin1String("CRAM-MD5");
+    case MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5:
+        return QLatin1String("DIGEST-MD5");
+    case MailTransport::Transport::EnumAuthenticationType::GSSAPI:
+        return QLatin1String("GSSAPI");
+    case MailTransport::Transport::EnumAuthenticationType::NTLM:
+        return QLatin1String("NTLM");
+    case MailTransport::Transport::EnumAuthenticationType::CLEAR:
+        return i18nc( "Authentication method", "Clear text" );
+    case MailTransport::Transport::EnumAuthenticationType::ANONYMOUS:
+        return i18nc( "Authentication method", "Anonymous" );
+    default:
+        break;
+    }
+    return QString();
+}
+
+static void addAuthenticationItem( QComboBox* authCombo, MailTransport::Transport::EnumAuthenticationType::type authtype )
+{
+    kDebug() << "adding auth item " << authenticationModeString( authtype );
+    authCombo->addItem( authenticationModeString( authtype ), QVariant( authtype ) );
+}
+
 
 ServerSieveSettings::ServerSieveSettings(QWidget *parent) :
     QWidget(parent),
@@ -32,6 +68,19 @@ ServerSieveSettings::ServerSieveSettings(QWidget *parent) :
 ServerSieveSettings::~ServerSieveSettings()
 {
     delete ui;
+}
+
+void ServerSieveSettings::populateDefaultAuthenticationOptions()
+{
+    ui->authenticationCombo->clear();
+    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::CLEAR);
+    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::LOGIN );
+    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::PLAIN );
+    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::CRAM_MD5 );
+    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5 );
+    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::NTLM );
+    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::GSSAPI );
+    addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::ANONYMOUS );
 }
 
 void ServerSieveSettings::slotServerNameChanged(const QString &name)
