@@ -23,19 +23,21 @@
 #include "sieveeditorpagewidget.h"
 #include "editor/sieveeditor.h"
 
-#include <QHBoxLayout>
 #include <QStackedWidget>
+#include <QSplitter>
 
 SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
-    : QWidget(parent)
+    : QSplitter(parent)
 {
-    QHBoxLayout *hbox = new QHBoxLayout;
-    setLayout(hbox);
     mStackedWidget = new QStackedWidget;
-    hbox->addWidget(mStackedWidget);
+    addWidget(mStackedWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createNewScriptPage(KUrl,QStringList)), this, SLOT(slotCreateNewScriptPage(KUrl,QStringList)));
-    hbox->addWidget(mScriptManagerWidget);
+    addWidget(mScriptManagerWidget);
+    setChildrenCollapsible(false);
+    QList<int> splitterSizes;
+    splitterSizes << 80 << 20;
+    setSizes( splitterSizes );
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()

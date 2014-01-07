@@ -21,12 +21,13 @@
 #ifndef SIEVEEDITORMAINWIDGET_H
 #define SIEVEEDITORMAINWIDGET_H
 
-#include <QWidget>
+#include <QSplitter>
 #include <KUrl>
 
 class QStackedWidget;
+
 class SieveEditorScriptManagerWidget;
-class SieveEditorMainWidget : public QWidget
+class SieveEditorMainWidget : public QSplitter
 {
     Q_OBJECT
 public:
@@ -42,6 +43,7 @@ private slots:
 private:
     QStackedWidget *mStackedWidget;
     SieveEditorScriptManagerWidget *mScriptManagerWidget;
+    QSplitter *mSplitter;
 };
 
 #endif // SIEVEEDITORMAINWIDGET_H
