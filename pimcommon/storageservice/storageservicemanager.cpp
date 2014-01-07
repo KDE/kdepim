@@ -161,7 +161,10 @@ QString StorageServiceManager::description(ServiceType type)
         return PimCommon::WebDavStorageService::description();
     case Box:
         return PimCommon::BoxStorageService::description();
-    default:
+    case YouSendIt:
+        return PimCommon::YouSendItStorageService::description();
+    case EndListService:
+    case Unknown:
         return QString();
     }
     return QString();
@@ -182,7 +185,8 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::WebDavStorageService::serviceUrl();
     case Box:
         return PimCommon::BoxStorageService::serviceUrl();
-    default:
+    case EndListService:
+    case Unknown:
         return QString();
     }
     return QString();
@@ -204,9 +208,11 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::WebDavStorageService::serviceName();
     case Box:
         return PimCommon::BoxStorageService::serviceName();
-    default:
+    case EndListService:
+    case Unknown:
         return QString();
     }
+    return QString();
 }
 
 QString StorageServiceManager::serviceToI18n(ServiceType type)
@@ -224,9 +230,11 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::WebDavStorageService::name();
     case Box:
         return PimCommon::BoxStorageService::name();
-    default:
+    case EndListService:
+    case Unknown:
         return QString();
     }
+    return QString();
 }
 
 QString StorageServiceManager::icon(ServiceType type)
@@ -244,7 +252,9 @@ QString StorageServiceManager::icon(ServiceType type)
         return PimCommon::WebDavStorageService::iconName();
     case Box:
         return PimCommon::BoxStorageService::iconName();
-    default:
+    case EndListService:
+    case Unknown:
         return QString();
     }
+    return QString();
 }
