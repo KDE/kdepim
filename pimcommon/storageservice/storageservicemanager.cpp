@@ -72,15 +72,18 @@ QMenu *StorageServiceManager::menuUploadServices()
             while (i.hasNext()) {
                 i.next();
                 //FIXME
-                QAction *act = new QAction(/*serviceToI18n(*/i.key(), mMenuService);
-                act->setData(i.key());
-                connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
-                mMenuService->addAction(act);
+                if (i.value()->capabilities() & PimCommon::StorageServiceAbstract::ShareLinkCapability) {
+                    QAction *act = new QAction(/*serviceToI18n(*/i.key(), mMenuService);
+                    act->setData(i.key());
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
+                    mMenuService->addAction(act);
+                }
             }
         }
     }
     return mMenuService;
 }
+
 
 void StorageServiceManager::slotShareFile()
 {
