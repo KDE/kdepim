@@ -34,8 +34,7 @@
 using namespace PimCommon;
 
 StorageServiceManager::StorageServiceManager(QObject *parent)
-    : QObject(parent),
-      mMenuService(0)
+    : QObject(parent)
 {
     readConfig();
 }
@@ -53,35 +52,31 @@ QMap<QString, StorageServiceAbstract *> StorageServiceManager::listService() con
 void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbstract *> &lst)
 {
     mListService = lst;
-    delete mMenuService;
-    mMenuService = 0;
     writeConfig();
     Q_EMIT servicesChanged();
 }
 
-QMenu *StorageServiceManager::menuUploadServices()
+QMenu *StorageServiceManager::menuUploadServices(QWidget *parent) const
 {
-    if (!mMenuService) {
-        mMenuService = new QMenu(i18n("Storage service"));
-        if (mListService.isEmpty()) {
-            QAction *act = new QAction(i18n("No Storage service configured"), mMenuService);
-            act->setEnabled(false);
-            mMenuService->addAction(act);
-        } else {
-            QMapIterator<QString, StorageServiceAbstract *> i(mListService);
-            while (i.hasNext()) {
-                i.next();
-                //FIXME
-                if (i.value()->capabilities() & PimCommon::StorageServiceAbstract::ShareLinkCapability) {
-                    QAction *act = new QAction(/*serviceToI18n(*/i.key(), mMenuService);
-                    act->setData(i.key());
-                    connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
-                    mMenuService->addAction(act);
-                }
+    QMenu *menuService = new QMenu(i18n("Storage service"), parent);
+    if (mListService.isEmpty()) {
+        QAction *act = new QAction(i18n("No Storage service configured"), menuService);
+        act->setEnabled(false);
+        menuService->addAction(act);
+    } else {
+        QMapIterator<QString, StorageServiceAbstract *> i(mListService);
+        while (i.hasNext()) {
+            i.next();
+            //FIXME
+            if (i.value()->capabilities() & PimCommon::StorageServiceAbstract::ShareLinkCapability) {
+                QAction *act = new QAction(/*serviceToI18n(*/i.key(), menuService);
+                act->setData(i.key());
+                connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
+                menuService->addAction(act);
             }
         }
     }
-    return mMenuService;
+    return menuService;
 }
 
 

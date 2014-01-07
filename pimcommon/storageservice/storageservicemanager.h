@@ -24,7 +24,6 @@
 #include "storageserviceabstract.h"
 
 class QMenu;
-
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceManager : public QObject
 {
@@ -45,7 +44,7 @@ public:
 
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
-    QMenu *menuUploadServices();
+    QMenu *menuUploadServices(QWidget *parent=0) const;
     QMap<QString, StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, StorageServiceAbstract *> &lst);
 
@@ -71,7 +70,6 @@ private:
     void readConfig();
     void writeConfig();
     QMap<QString, StorageServiceAbstract *> mListService;
-    QMenu *mMenuService;
 };
 }
 
