@@ -32,6 +32,7 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     mTreeView = new SieveEditorManageSieveWidget;
     connect(mTreeView, SIGNAL(newScript(KUrl,QStringList)), this, SLOT(slotNewScript(KUrl,QStringList)));
     connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), this, SIGNAL(createNewScriptPage(KUrl,QStringList)));
+    connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem*)), this, SLOT(slotUpdateButtons(QTreeWidgetItem*)));
     hbox->addWidget(mTreeView);
     mTreeView->slotRefresh();
 }
@@ -39,6 +40,17 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
 SieveEditorScriptManagerWidget::~SieveEditorScriptManagerWidget()
 {
 
+}
+
+void SieveEditorScriptManagerWidget::slotUpdateButtons(QTreeWidgetItem *item)
+{
+    Q_UNUSED(item);
+    bool newScriptAction;
+    bool editScriptAction;
+    bool deleteScriptAction;
+    bool desactivateScriptAction;
+    mTreeView->enableDisableActions(newScriptAction, editScriptAction, deleteScriptAction, desactivateScriptAction);
+    Q_EMIT updateButtons(newScriptAction, editScriptAction, deleteScriptAction, desactivateScriptAction);
 }
 
 void SieveEditorScriptManagerWidget::slotEditScript(const KUrl &url, const QStringList &capabilities)

@@ -35,6 +35,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     addWidget(mStackedWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createNewScriptPage(KUrl,QStringList)), this, SLOT(slotCreateNewScriptPage(KUrl,QStringList)));
+    connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
     addWidget(mScriptManagerWidget);
     setChildrenCollapsible(false);
     QList<int> splitterSizes;

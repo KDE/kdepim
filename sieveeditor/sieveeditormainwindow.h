@@ -23,6 +23,7 @@
 
 #include <KXmlGuiWindow>
 
+class KAction;
 class SieveEditorMainWidget;
 class SieveEditorMainWindow : public KXmlGuiWindow
 {
@@ -35,13 +36,16 @@ private slots:
     void slotQuitApp();
     void slotConfigure();
     void slotAddServerSieve();
-
     void slotCreateNewScript();
     void slotDeleteScript();
+    void slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
+
 private:
     void readConfig();
     void setupActions();
     SieveEditorMainWidget *mMainWidget;
+    KAction *mDeleteScript;
+    KAction *mNewScript;
 };
 
 #endif // SIEVEEDITORMAINWINDOW_H

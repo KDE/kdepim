@@ -25,6 +25,7 @@
 #include <KUrl>
 
 class SieveEditorManageSieveWidget;
+class QTreeWidgetItem;
 class SieveEditorScriptManagerWidget : public QWidget
 {
     Q_OBJECT
@@ -36,6 +37,7 @@ public:
 
 Q_SIGNALS:
     void createNewScriptPage(const KUrl &url, const QStringList &capabilities);
+    void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
 
 public Q_SLOTS:
     void slotCreateNewScript();
@@ -43,7 +45,8 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void slotNewScript(const KUrl &url, const QStringList &capabilities);
-    void slotEditScript(const KUrl &url, const QStringList &capabilities);    
+    void slotEditScript(const KUrl &url, const QStringList &capabilities);        
+    void slotUpdateButtons(QTreeWidgetItem *item);
 
 private:
     QList<KUrl> mUrls;

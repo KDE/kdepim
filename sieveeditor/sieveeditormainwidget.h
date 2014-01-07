@@ -37,6 +37,9 @@ public:
     void createNewScript();
     void deleteScript();
 
+Q_SIGNALS:
+    void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
+
 private slots:
     void slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities);
 
