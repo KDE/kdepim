@@ -23,6 +23,8 @@
 #include "sieveeditorpagewidget.h"
 #include "editor/sieveeditor.h"
 
+#include <KSharedConfig>
+
 #include <QStackedWidget>
 #include <QSplitter>
 
@@ -37,12 +39,15 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     setChildrenCollapsible(false);
     QList<int> splitterSizes;
     splitterSizes << 80 << 20;
-    setSizes( splitterSizes );
+    KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
+    setSizes(myGroup.readEntry( "mainSplitter", splitterSizes));
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
 {
-
+    KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
+    myGroup.writeEntry( "mainSplitter", sizes());
+    myGroup.sync();
 }
 
 void SieveEditorMainWidget::slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities)
