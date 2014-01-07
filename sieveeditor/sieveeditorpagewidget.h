@@ -35,11 +35,14 @@ public:
 
     void loadScript(const KUrl &url, const QStringList &capabilities);
 
+    KUrl currentUrl() const;
+
 private slots:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
 
 private:
     KUrl mCurrentURL;
+    bool mWasActive;
 };
 
 #endif // SIEVEEDITORPAGEWIDGET_H

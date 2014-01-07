@@ -23,7 +23,8 @@
 #include <kmanagesieve/sievejob.h>
 
 SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
-    : KSieveUi::SieveEditor(parent)
+    : KSieveUi::SieveEditor(parent),
+      mWasActive(false)
 {
 }
 
@@ -41,10 +42,16 @@ void SieveEditorPageWidget::loadScript(const KUrl &url, const QStringList &capab
              this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
 }
 
+KUrl SieveEditorPageWidget::currentUrl() const
+{
+    return mCurrentURL;
+}
+
 void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool success, const QString & script, bool isActive )
 {
     if ( !success )
         return;
     setScriptName( mCurrentURL.fileName() );
     setScript( script );
+    mWasActive = isActive;
 }
