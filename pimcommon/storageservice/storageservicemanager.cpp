@@ -81,7 +81,21 @@ QMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstra
             if (i.value()->capabilities() & capability) {
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), menuService);
                 act->setData(i.key());
-                connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
+                switch(capability) {
+                case PimCommon::StorageServiceAbstract::NoCapability:
+                case PimCommon::StorageServiceAbstract::AccountInfoCapability:
+                case PimCommon::StorageServiceAbstract::UploadFileCapability:
+                case PimCommon::StorageServiceAbstract::DeleteFileCapability:
+                case PimCommon::StorageServiceAbstract::DownloadFileCapability:
+                case PimCommon::StorageServiceAbstract::CreateFolderCapability:
+                case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
+                case PimCommon::StorageServiceAbstract::ListFolderCapability:
+                    qDebug()<<" not implemented ";
+                    break;
+                case PimCommon::StorageServiceAbstract::ShareLinkCapability:
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
+                    break;
+                }
                 menuService->addAction(act);
             }
         }

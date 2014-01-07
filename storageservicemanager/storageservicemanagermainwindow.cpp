@@ -70,6 +70,8 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
     mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
     mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
     mDeleteFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
+    mAuthenticate->setEnabled(! (capabilities & PimCommon::StorageServiceAbstract::NoCapability));
+    mRefreshList->setEnabled(! (capabilities & PimCommon::StorageServiceAbstract::NoCapability));
 }
 
 void StorageServiceManagerMainWindow::setupActions()
@@ -77,17 +79,18 @@ void StorageServiceManagerMainWindow::setupActions()
     KActionCollection *ac = actionCollection();
     KStandardAction::quit(this, SLOT(close()), ac );
 
-    KAction *act = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
-    act->setText(i18n("Authenticate..."));
+    KAction *act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
+    act->setText(i18n("Add Storage Service..."));
+
+    mAuthenticate = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
+    mAuthenticate->setText(i18n("Authenticate..."));
 
     mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceTabWidget, SLOT(slotCreateFolder()));
     mCreateFolder->setText(i18n("Create Folder..."));
 
-    act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
-    act->setText(i18n("Add Storage Service..."));
 
-    act = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
-    act->setText(i18n("Refresh List"));
+    mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
+    mRefreshList->setText(i18n("Refresh List"));
 
     mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceTabWidget, SLOT(slotAccountInfo()));
     mAccountInfo->setText(i18n("Account Info..."));

@@ -50,6 +50,8 @@ private:
     KAction *mAccountInfo;
     KAction *mUploadFile;
     KAction *mDeleteFile;
+    KAction *mAuthenticate;
+    KAction *mRefreshList;
 };
 
 #endif // STORAGESERVICEMANAGERMAINWINDOW_H
