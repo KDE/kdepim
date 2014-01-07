@@ -56,12 +56,12 @@ static void addAuthenticationItem( QComboBox* authCombo, MailTransport::Transpor
     authCombo->addItem( authenticationModeString( authtype ), QVariant( authtype ) );
 }
 
-
 ServerSieveSettings::ServerSieveSettings(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ServerSieveSettings)
 {
     ui->setupUi(this);
+    populateDefaultAuthenticationOptions();
     connect(ui->serverName, SIGNAL(textChanged(QString)), this, SLOT(slotServerNameChanged(QString)));
 }
 
