@@ -304,6 +304,8 @@ void ManageSieveWidget::slotRefresh()
     const bool noImapFound = refreshList();
     slotUpdateButtons();
     mTreeView->setNoImapFound(noImapFound);
+    if (!noImapFound)
+       mBlockSignal = false;
 }
 
 void ManageSieveWidget::slotUpdateButtons()
