@@ -23,10 +23,13 @@
 
 #include <QString>
 #include <KUrl>
+#include <mailtransport/transport.h>
+
 namespace SieveEditorUtil {
 struct SieveServerConfig {
     SieveServerConfig()
-        : port(-1)
+        : authenticationType(MailTransport::Transport::EnumAuthenticationType::PLAIN),
+          port(-1)
     {
 
     }
@@ -36,6 +39,7 @@ struct SieveServerConfig {
     QString userName;
     QString password;
     QString serverName;
+    MailTransport::Transport::EnumAuthenticationType::type authenticationType;
     int port;
 };
 

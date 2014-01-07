@@ -29,15 +29,41 @@
 
 
 KUrl SieveEditorUtil::SieveServerConfig::url() const {
-    //TODO encryption
     KUrl u;
     u.setHost(serverName);
     u.setUserName(userName);
     u.setPassword(password);
     u.setPort(port);
+
+    QString authStr;
+    switch( authenticationType ) {
+    case MailTransport::Transport::EnumAuthenticationType::CLEAR:
+    case MailTransport::Transport::EnumAuthenticationType::PLAIN:
+        authStr = QLatin1String("PLAIN");
+        break;
+    case MailTransport::Transport::EnumAuthenticationType::LOGIN:
+        authStr = QLatin1String("LOGIN");
+        break;
+    case MailTransport::Transport::EnumAuthenticationType::CRAM_MD5:
+        authStr = QLatin1String("CRAM-MD5");
+        break;
+    case MailTransport::Transport::EnumAuthenticationType::DIGEST_MD5:
+        authStr = QLatin1String("DIGEST-MD5");
+        break;
+    case MailTransport::Transport::EnumAuthenticationType::GSSAPI:
+        authStr = QLatin1String("GSSAPI");
+        break;
+    case MailTransport::Transport::EnumAuthenticationType::ANONYMOUS:
+        authStr = QLatin1String("ANONYMOUS");
+        break;
+    default:
+        authStr = QLatin1String("PLAIN");
+        break;
+    }
+    u.addQueryItem( QLatin1String("x-mech"), authStr );
+
     return u;
 }
-
 
 QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig()
 {
@@ -53,6 +79,7 @@ QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig
         sieve.serverName = group.readEntry(QLatin1String("ServerName"));
         sieve.userName = group.readEntry(QLatin1String("UserName"));
         sieve.password = group.readEntry(QLatin1String("Password"));
+        sieve.authenticationType = static_cast<MailTransport::Transport::EnumAuthenticationType::type>(group.readEntry(QLatin1String("Authentication"), static_cast<int>(MailTransport::Transport::EnumAuthenticationType::PLAIN)));
         lstConfig.append(sieve);
     }
     return lstConfig;
@@ -76,6 +103,7 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
         group.writeEntry(QLatin1String("ServerName"), conf.serverName);
         group.writeEntry(QLatin1String("UserName"), conf.userName);
         group.writeEntry(QLatin1String("Password"), conf.password);
+        group.writeEntry(QLatin1String("Authentication"), static_cast<int>(conf.authenticationType));
 
         ++i;
     }
