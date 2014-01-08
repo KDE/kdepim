@@ -236,12 +236,12 @@ void ManageSieveScriptsDialog::slotSieveEditorCancelClicked()
 void ManageSieveScriptsDialog::slotPutResultDebug(KManageSieve::SieveJob *,bool success ,const QString &errorMsg)
 {
     if ( success ) {
-        addOkMessage( i18n( "No errors found." ) );
+        mSieveEditor->addOkMessage( i18n( "No errors found." ) );
     } else {
         if ( errorMsg.isEmpty() )
-            addFailedMessage( i18n( "An unknown error was encountered." ) );
+            mSieveEditor->addFailedMessage( i18n( "An unknown error was encountered." ) );
         else
-            addFailedMessage( errorMsg );
+            mSieveEditor->addFailedMessage( errorMsg );
     }
     //Put original script after check otherwise we will put a script even if we don't click on ok
     KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditor->originalScript(), mWasActive, mWasActive );
@@ -260,24 +260,6 @@ void ManageSieveScriptsDialog::slotPutResult( KManageSieve::SieveJob *, bool suc
     } else {
         mSieveEditor->show();
     }
-}
-
-void ManageSieveScriptsDialog::addFailedMessage( const QString &err )
-{
-    addMessageEntry( err, QColor( Qt::darkRed ) );
-}
-
-void ManageSieveScriptsDialog::addOkMessage( const QString &err )
-{
-    addMessageEntry( err, QColor( Qt::darkGreen ) );
-}
-
-void ManageSieveScriptsDialog::addMessageEntry( const QString &errorMsg, const QColor &color )
-{
-    const QString logText = QString::fromLatin1( "<font color=%1>%2</font>" )
-            .arg( color.name() ).arg(errorMsg);
-
-    mSieveEditor->setDebugScript( logText );
 }
 
 void ManageSieveScriptsDialog::disableManagerScriptsDialog(bool disable)

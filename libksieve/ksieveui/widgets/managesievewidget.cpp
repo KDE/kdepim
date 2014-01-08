@@ -285,6 +285,7 @@ void ManageSieveWidget::slotDeleteScript()
     KManageSieve::SieveJob * job = KManageSieve::SieveJob::del( u );
     connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotRefresh()) );
+    Q_EMIT scriptDeleted(u);
 }
 
 bool ManageSieveWidget::isProtectedName(const QString &name)
@@ -304,6 +305,8 @@ void ManageSieveWidget::slotRefresh()
     const bool noImapFound = refreshList();
     slotUpdateButtons();
     mTreeView->setNoImapFound(noImapFound);
+    if (!noImapFound)
+       mBlockSignal = false;
 }
 
 void ManageSieveWidget::slotUpdateButtons()

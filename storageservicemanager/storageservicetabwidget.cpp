@@ -109,3 +109,13 @@ void StorageServiceTabWidget::slotDownloadFile()
             page->downloadFile();
     }
 }
+
+PimCommon::StorageServiceAbstract::Capabilities StorageServiceTabWidget::capabilities() const
+{
+    if (currentWidget()) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page)
+            return page->capabilities();
+    }
+    return PimCommon::StorageServiceAbstract::NoCapability;
+}

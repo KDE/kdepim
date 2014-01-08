@@ -21,12 +21,13 @@
 #ifndef SIEVEEDITORMAINWIDGET_H
 #define SIEVEEDITORMAINWIDGET_H
 
-#include <QWidget>
+#include <QSplitter>
 #include <KUrl>
 
 class QStackedWidget;
+
 class SieveEditorScriptManagerWidget;
-class SieveEditorMainWidget : public QWidget
+class SieveEditorMainWidget : public QSplitter
 {
     Q_OBJECT
 public:
@@ -35,13 +36,22 @@ public:
 
     void createNewScript();
     void deleteScript();
+    void updateServerList();
+    void editScript();
+    void desactivateScript();
+
+Q_SIGNALS:
+    void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
 
 private slots:
-    void slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities);
+    void slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
+    void slotScriptDeleted(const KUrl &url);
 
 private:
+    QWidget *hasExistingPage(const KUrl &url);
     QStackedWidget *mStackedWidget;
     SieveEditorScriptManagerWidget *mScriptManagerWidget;
+    QSplitter *mSplitter;
 };
 
 #endif // SIEVEEDITORMAINWIDGET_H

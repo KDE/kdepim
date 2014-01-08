@@ -22,6 +22,7 @@
 #define STORAGESERVICEPAGE_H
 
 #include <QWidget>
+#include "pimcommon/storageservice/storageserviceabstract.h"
 namespace PimCommon {
 class StorageServiceAbstract;
 }
@@ -40,6 +41,8 @@ public:
     void downloadFile();
     void deleteFile();
 
+
+    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
 
 private:
     PimCommon::StorageServiceAbstract *mStorageService;

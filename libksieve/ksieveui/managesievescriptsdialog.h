@@ -69,9 +69,6 @@ private slots:
 private:
     void changeActiveScript( QTreeWidgetItem *, bool activate = true );
 
-    void addFailedMessage( const QString &logEntry );
-    void addOkMessage( const QString &logEntry );
-    void addMessageEntry( const QString &errorMsg, const QColor &color );
     void updateButtons(QTreeWidgetItem *item);
     void disableManagerScriptsDialog(bool disable);
 

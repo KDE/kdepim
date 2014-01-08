@@ -51,6 +51,7 @@ Q_SIGNALS:
     void updateButtons(QTreeWidgetItem *item);
     void newScript(const KUrl &u, const QStringList &currentCapabilities);
     void editScript(const KUrl &url, const QStringList &currentCapabilities);
+    void scriptDeleted(const KUrl &u);
 
 protected:
     virtual bool refreshList() = 0;

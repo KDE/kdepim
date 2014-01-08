@@ -77,3 +77,8 @@ void StorageServicePage::downloadFile()
 {
 
 }
+
+PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities() const
+{
+    return mStorageService->capabilities();
+}

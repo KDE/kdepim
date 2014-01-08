@@ -23,32 +23,69 @@
 #include "sieveeditorpagewidget.h"
 #include "editor/sieveeditor.h"
 
-#include <QHBoxLayout>
+#include <KSharedConfig>
+
 #include <QStackedWidget>
+#include <QSplitter>
 
 SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
-    : QWidget(parent)
+    : QSplitter(parent)
 {
-    QHBoxLayout *hbox = new QHBoxLayout;
-    setLayout(hbox);
     mStackedWidget = new QStackedWidget;
-    hbox->addWidget(mStackedWidget);
+    addWidget(mStackedWidget);
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
-    connect(mScriptManagerWidget, SIGNAL(createNewScriptPage(KUrl,QStringList)), this, SLOT(slotCreateNewScriptPage(KUrl,QStringList)));
-    hbox->addWidget(mScriptManagerWidget);
+    connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
+    connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
+    connect(mScriptManagerWidget, SIGNAL(scriptDeleted(KUrl)), this, SLOT(slotScriptDeleted(KUrl)));
+    addWidget(mScriptManagerWidget);
+    setChildrenCollapsible(false);
+    QList<int> splitterSizes;
+    splitterSizes << 80 << 20;
+    KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
+    setSizes(myGroup.readEntry( "mainSplitter", splitterSizes));
 }
 
 SieveEditorMainWidget::~SieveEditorMainWidget()
 {
-
+    KConfigGroup myGroup( KGlobal::config(), "SieveEditorMainWidget" );
+    myGroup.writeEntry( "mainSplitter", sizes());
+    myGroup.sync();
 }
 
-void SieveEditorMainWidget::slotCreateNewScriptPage(const KUrl &url, const QStringList &capabilities)
+QWidget *SieveEditorMainWidget::hasExistingPage(const KUrl &url)
 {
-    SieveEditorPageWidget *editor = new SieveEditorPageWidget;
-    editor->loadScript(url, capabilities);
-    mStackedWidget->addWidget(editor);
-    mStackedWidget->setCurrentWidget(editor);
+    for (int i=0; i < mStackedWidget->count(); ++i) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mStackedWidget->widget(i));
+        if (page) {
+            if (page->currentUrl() == url) {
+                return page;
+            }
+        }
+    }
+    return 0;
+}
+
+void SieveEditorMainWidget::slotScriptDeleted(const KUrl &url)
+{
+    QWidget *page = hasExistingPage(url);
+    if (page) {
+        mStackedWidget->removeWidget(page);
+        delete page;
+    }
+}
+
+void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript)
+{
+    QWidget *page = hasExistingPage(url);
+    if (page) {
+        mStackedWidget->setCurrentWidget(page);
+    } else {
+        SieveEditorPageWidget *editor = new SieveEditorPageWidget;
+        editor->setIsNewScript(isNewScript);
+        editor->loadScript(url, capabilities);
+        mStackedWidget->addWidget(editor);
+        mStackedWidget->setCurrentWidget(editor);
+    }
 }
 
 void SieveEditorMainWidget::createNewScript()
@@ -59,4 +96,19 @@ void SieveEditorMainWidget::createNewScript()
 void SieveEditorMainWidget::deleteScript()
 {
     mScriptManagerWidget->slotDeleteScript();
+}
+
+void SieveEditorMainWidget::updateServerList()
+{
+    mScriptManagerWidget->updateServerList();
+}
+
+void SieveEditorMainWidget::editScript()
+{
+    mScriptManagerWidget->editScript();
+}
+
+void SieveEditorMainWidget::desactivateScript()
+{
+    mScriptManagerWidget->desactivateScript();
 }

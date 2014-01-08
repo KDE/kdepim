@@ -21,9 +21,10 @@
 
 #include "kdepim-version.h"
 #include "storageservicemanagermainwindow.h"
-#include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <KDebug>
+#include <KUniqueApplication>
 
 int main( int argc, char **argv )
 {
@@ -37,8 +38,14 @@ int main( int argc, char **argv )
     KCmdLineOptions options;
     KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-    KApplication app;
+    KUniqueApplication::addCmdLineOptions();
+    if (!KUniqueApplication::start())
+    {
+        kDebug() << "storageservicemanager is already running!";
+        return (0);
+    }
+    KUniqueApplication a;
     StorageServiceManagerMainWindow *mw = new StorageServiceManagerMainWindow();
     mw->show();
-    app.exec();
+    a.exec();
 }

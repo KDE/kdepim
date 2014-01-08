@@ -26,7 +26,7 @@
 namespace PimCommon {
 class StorageServiceManager;
 }
-
+class KAction;
 class StorageServiceTabWidget;
 class StorageServiceManagerMainWindow : public KXmlGuiWindow
 {
@@ -36,17 +36,22 @@ public:
     ~StorageServiceManagerMainWindow();
 
 private slots:
-    void slotQuitApp();    
     void slotAddStorageService();    
     void slotConfigure();        
-    void slotCurrentTabChanged(QWidget *widget);
+    void slotUpdateActions();
 
 private:
     void setupActions();
     void readConfig();
-    void updateActions();
     StorageServiceTabWidget *mStorageServiceTabWidget;
     PimCommon::StorageServiceManager *mStorageManager;
+    KAction *mDownloadFile;
+    KAction *mCreateFolder;
+    KAction *mAccountInfo;
+    KAction *mUploadFile;
+    KAction *mDeleteFile;
+    KAction *mAuthenticate;
+    KAction *mRefreshList;
 };
 
 #endif // STORAGESERVICEMANAGERMAINWINDOW_H

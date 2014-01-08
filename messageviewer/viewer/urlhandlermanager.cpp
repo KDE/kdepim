@@ -641,7 +641,7 @@ namespace {
                           displayName, libName, keyId ) )
       return false;
     QStringList lst;
-    lst << QLatin1String("-parent-windowid") << QString::number( w->viewer()->mainWindow()->winId() ) << QLatin1String("-query") << keyId;
+    lst << QLatin1String("-parent-windowid") << QString::number((qlonglong)w->viewer()->mainWindow()->winId() ) << QLatin1String("-query") << keyId;
     if ( !QProcess::startDetached( QLatin1String("kleopatra"),lst) )
       KMessageBox::error( w->mMainWindow, i18n("Could not start certificate manager. "
                                   "Please check your installation."),

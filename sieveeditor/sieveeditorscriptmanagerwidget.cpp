@@ -27,11 +27,12 @@ SieveEditorScriptManagerWidget::SieveEditorScriptManagerWidget(QWidget *parent)
     : QWidget(parent)
 {
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->setMargin(0);
     setLayout(hbox);
     mTreeView = new SieveEditorManageSieveWidget;
     connect(mTreeView, SIGNAL(newScript(KUrl,QStringList)), this, SLOT(slotNewScript(KUrl,QStringList)));
-    connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), this, SIGNAL(createNewScriptPage(KUrl,QStringList)));
+    connect(mTreeView, SIGNAL(editScript(KUrl,QStringList)), this, SLOT(slotEditScript(KUrl,QStringList)));
+    connect(mTreeView, SIGNAL(updateButtons(QTreeWidgetItem*)), this, SLOT(slotUpdateButtons(QTreeWidgetItem*)));
+    connect(mTreeView, SIGNAL(scriptDeleted(KUrl)), this, SIGNAL(scriptDeleted(KUrl)));
     hbox->addWidget(mTreeView);
     mTreeView->slotRefresh();
 }
@@ -41,21 +42,25 @@ SieveEditorScriptManagerWidget::~SieveEditorScriptManagerWidget()
 
 }
 
+void SieveEditorScriptManagerWidget::slotUpdateButtons(QTreeWidgetItem *item)
+{
+    Q_UNUSED(item);
+    bool newScriptAction;
+    bool editScriptAction;
+    bool deleteScriptAction;
+    bool desactivateScriptAction;
+    mTreeView->enableDisableActions(newScriptAction, editScriptAction, deleteScriptAction, desactivateScriptAction);
+    Q_EMIT updateButtons(newScriptAction, editScriptAction, deleteScriptAction, desactivateScriptAction);
+}
+
 void SieveEditorScriptManagerWidget::slotEditScript(const KUrl &url, const QStringList &capabilities)
 {
-    Q_EMIT createNewScriptPage(url, capabilities);
+    Q_EMIT createScriptPage(url, capabilities, false);
 }
 
 void SieveEditorScriptManagerWidget::slotNewScript(const KUrl &url, const QStringList &capabilities)
 {
-    //TODO
-}
-
-void SieveEditorScriptManagerWidget::addServerImap(const KUrl &url)
-{
-    if (!mUrls.contains(url))
-        mUrls.append(url);
-    //TODO
+    Q_EMIT createScriptPage(url, capabilities, true);
 }
 
 void SieveEditorScriptManagerWidget::slotCreateNewScript()
@@ -67,3 +72,19 @@ void SieveEditorScriptManagerWidget::slotDeleteScript()
 {
     mTreeView->slotEditScript();
 }
+
+void SieveEditorScriptManagerWidget::updateServerList()
+{
+    mTreeView->slotRefresh();
+}
+
+void SieveEditorScriptManagerWidget::editScript()
+{
+    mTreeView->slotEditScript();
+}
+
+void SieveEditorScriptManagerWidget::desactivateScript()
+{
+    mTreeView->slotDeactivateScript();
+}
+

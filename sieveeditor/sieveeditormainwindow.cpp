@@ -41,6 +41,7 @@ SieveEditorMainWindow::SieveEditorMainWindow()
     setupGUI();
     readConfig();
     mMainWidget = new SieveEditorMainWidget;
+    connect(mMainWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), this, SLOT(slotUpdateButtons(bool,bool,bool,bool)));
     setCentralWidget(mMainWidget);
 }
 
@@ -50,6 +51,14 @@ SieveEditorMainWindow::~SieveEditorMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("SieveEditorMainWindow") );
     group.writeEntry( "Size", size() );
+}
+
+void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction)
+{
+    mDeleteScript->setEnabled(deleteScriptAction);
+    mNewScript->setEnabled(newScriptAction);
+    mEditScript->setEnabled(editScriptAction);
+    mDesactivateScript->setEnabled(desactivateScriptAction);
 }
 
 void SieveEditorMainWindow::readConfig()
@@ -66,18 +75,37 @@ void SieveEditorMainWindow::setupActions()
 {
     KActionCollection* ac=actionCollection();
 
-
     KStandardAction::quit(this, SLOT(slotQuitApp()), ac );
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+
     KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
 
-    act = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));
-    act->setText(i18n("Delete Script"));
+    mDeleteScript = ac->addAction(QLatin1String("delete_script"), this, SLOT(slotDeleteScript()));
+    mDeleteScript->setText(i18n("Delete Script"));
+    mDeleteScript->setEnabled(false);
 
-    act = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
-    act->setText(i18n("Create New Script..."));
-    //TODO
+    mNewScript = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
+    mNewScript->setText(i18n("Create New Script..."));
+    mNewScript->setEnabled(false);
+
+    mEditScript = ac->addAction(QLatin1String("edit_script"), this, SLOT(slotEditScript()));
+    mEditScript->setText(i18n("Edit Script"));
+    mEditScript->setEnabled(false);
+
+    mDesactivateScript = ac->addAction(QLatin1String("desactivate_script"), this, SLOT(slotDesactivateScript()));
+    mDesactivateScript->setText(i18n("Desactivate Script"));
+    mDesactivateScript->setEnabled(false);
+}
+
+void SieveEditorMainWindow::slotDesactivateScript()
+{
+    mMainWidget->desactivateScript();
+}
+
+void SieveEditorMainWindow::slotEditScript()
+{
+    mMainWidget->editScript();
 }
 
 void SieveEditorMainWindow::slotCreateNewScript()
@@ -92,7 +120,7 @@ void SieveEditorMainWindow::slotDeleteScript()
 
 void SieveEditorMainWindow::slotQuitApp()
 {
-    kapp->quit();
+    close();
 }
 
 void SieveEditorMainWindow::slotConfigure()
@@ -100,6 +128,7 @@ void SieveEditorMainWindow::slotConfigure()
     QPointer<SieveEditorConfigureDialog> dlg = new SieveEditorConfigureDialog(this);
     if (dlg->exec()) {
         dlg->saveServerSieveConfig();
+        mMainWidget->updateServerList();
     }
     delete dlg;
 }
@@ -108,7 +137,7 @@ void SieveEditorMainWindow::slotAddServerSieve()
 {
     QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
     if (dlg->exec()) {
-        //TODO update list of script.
+        mMainWidget->updateServerList();
     }
     delete dlg;
 }

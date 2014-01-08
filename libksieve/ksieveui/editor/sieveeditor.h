@@ -23,23 +23,12 @@
 
 #include <kdialog.h>
 
-class QStackedWidget;
-class QLineEdit;
-class QAction;
 namespace KSieveUi {
-class SieveEditorTextModeWidget;
-class SieveEditorGraphicalModeWidget;
+class SieveEditorWidget;
 class KSIEVEUI_EXPORT SieveEditor : public KDialog
 {
     Q_OBJECT
-    Q_PROPERTY( QString script READ script WRITE setScript )
-
 public:
-    enum EditorMode {
-        TextMode = 0,
-        GraphicMode = 1
-    };
-
     explicit SieveEditor( QWidget * parent=0 );
     ~SieveEditor();
 
@@ -47,23 +36,16 @@ public:
     QString originalScript() const;
     void setScript( const QString &script );
     void setDebugScript( const QString &debug );
+    void addFailedMessage(const QString &err);
+    void addOkMessage(const QString &msg);
     void setScriptName( const QString &name );
 
     void resultDone();
 
     void setSieveCapabilities( const QStringList &capabilities );
-    void changeMode(EditorMode mode);
 
 private Q_SLOTS:
     void slotEnableButtonOk(bool b);
-    void slotAutoGenerateScripts();
-    void slotCheckSyntax();
-    void slotGenerateXml();
-    void slotSaveAs();
-    void slotImport();
-    void slotSwitchMode();
-    void slotSwitchTextMode(const QString &script);
-    void slotSwitchToGraphicalMode();
 
 Q_SIGNALS:
     void checkSyntax();
@@ -71,20 +53,7 @@ Q_SIGNALS:
 private:
     void writeConfig();
     void readConfig();
-
-    QString mOriginalScript;
-    SieveEditorTextModeWidget *mTextModeWidget;
-    SieveEditorGraphicalModeWidget *mGraphicalModeWidget;
-    QStackedWidget *mStackedWidget;
-    QLineEdit *mScriptName;
-    QAction *mCheckSyntax;
-    QAction *mSwitchMode;
-    QAction *mAutoGenerateScript;
-    QAction *mSaveAs;
-#if !defined(NDEBUG)
-    QAction *mGenerateXml;
-#endif
-    EditorMode mMode;
+    SieveEditorWidget *mSieveEditorWidget;
 };
 
 }

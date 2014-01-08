@@ -22,9 +22,10 @@
 #include "kdepim-version.h"
 #include "sieveeditormainwindow.h"
 #include "sieveeditor_options.h"
-#include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <KDebug>
+#include <KUniqueApplication>
 
 int main( int argc, char **argv )
 {
@@ -37,9 +38,15 @@ int main( int argc, char **argv )
 
     KCmdLineOptions options = sieveeditor_options();
     KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KUniqueApplication::addCmdLineOptions();
+    if (!KUniqueApplication::start())
+    {
+        kDebug() << "sieveeditor is already running!";
+        return (0);
+    }
+    KUniqueApplication a;
 
-    KApplication app;
     SieveEditorMainWindow *mw = new SieveEditorMainWindow();
     mw->show();
-    app.exec();
+    a.exec();
 }
