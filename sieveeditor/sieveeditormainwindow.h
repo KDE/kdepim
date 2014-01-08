@@ -41,6 +41,8 @@ private slots:
     void slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);    
     void slotEditScript();
     void slotDesactivateScript();
+    void slotRefreshList();
+
 private:
     void readConfig();
     void setupActions();
@@ -49,6 +51,7 @@ private:
     KAction *mNewScript;
     KAction *mEditScript;
     KAction *mDesactivateScript;
+    KAction *mRefreshList;
 };
 
 #endif // SIEVEEDITORMAINWINDOW_H

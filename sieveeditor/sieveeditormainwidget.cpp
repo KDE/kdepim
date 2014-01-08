@@ -112,3 +112,8 @@ void SieveEditorMainWidget::desactivateScript()
 {
     mScriptManagerWidget->desactivateScript();
 }
+
+void SieveEditorMainWidget::refreshList()
+{
+    mScriptManagerWidget->refreshList();
+}

@@ -19,19 +19,25 @@
 */
 
 #include "sieveeditorpagewidget.h"
+#include "editor/sieveeditorwidget.h"
 
 #include <KLocalizedString>
 
 #include <kmanagesieve/sievejob.h>
 
 #include <QDebug>
+#include <QVBoxLayout>
 
 SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
-    : KSieveUi::SieveEditorWidget(parent),
+    : QWidget(parent),
       mWasActive(false),
       mIsNewScript(false)
 {
-    connect(this, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
+    QVBoxLayout *vbox = new QVBoxLayout;
+    setLayout(vbox);
+    mSieveEditorWidget = new KSieveUi::SieveEditorWidget;
+    vbox->addWidget(mSieveEditorWidget);
+    connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
     qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
 }
 
@@ -42,7 +48,7 @@ SieveEditorPageWidget::~SieveEditorPageWidget()
 
 void SieveEditorPageWidget::slotCheckSyntaxClicked()
 {
-    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL,script(), mWasActive, mWasActive );
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive );
     job->setInteractive( false );
     connect( job, SIGNAL(errorMessage(KManageSieve::SieveJob*,bool,QString)),
              this, SLOT(slotPutResultDebug(KManageSieve::SieveJob*,bool,QString)) );
@@ -51,17 +57,17 @@ void SieveEditorPageWidget::slotCheckSyntaxClicked()
 void SieveEditorPageWidget::slotPutResultDebug(KManageSieve::SieveJob *,bool success ,const QString &errorMsg)
 {
     if ( success ) {
-        addOkMessage( i18n( "No errors found." ) );
+        mSieveEditorWidget->addOkMessage( i18n( "No errors found." ) );
     } else {
         if ( errorMsg.isEmpty() )
-            addFailedMessage( i18n( "An unknown error was encountered." ) );
+            mSieveEditorWidget->addFailedMessage( i18n( "An unknown error was encountered." ) );
         else
-            addFailedMessage( errorMsg );
+            mSieveEditorWidget->addFailedMessage( errorMsg );
     }
     //Put original script after check otherwise we will put a script even if we don't click on ok
-    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, originalScript(), mWasActive, mWasActive );
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditorWidget->originalScript(), mWasActive, mWasActive );
     job->setInteractive( false );
-    resultDone();
+    mSieveEditorWidget->resultDone();
 }
 
 void SieveEditorPageWidget::setIsNewScript(bool isNewScript)
@@ -72,7 +78,7 @@ void SieveEditorPageWidget::setIsNewScript(bool isNewScript)
 void SieveEditorPageWidget::loadScript(const KUrl &url, const QStringList &capabilities)
 {
     mCurrentURL = url;
-    setSieveCapabilities(capabilities);
+    mSieveEditorWidget->setSieveCapabilities(capabilities);
     KManageSieve::SieveJob * job = KManageSieve::SieveJob::get( url );
     connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotGetResult(KManageSieve::SieveJob*,bool,QString,bool)) );
@@ -87,7 +93,7 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
 {
     if ( !success )
         return;
-    setScriptName( mCurrentURL.fileName() );
-    setScript( script );
+    mSieveEditorWidget->setScriptName( mCurrentURL.fileName() );
+    mSieveEditorWidget->setScript( script );
     mWasActive = isActive;
 }

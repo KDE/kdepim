@@ -6,6 +6,8 @@
   </Menu>
   <Menu name="edit" >
    <text>&amp;Edit</text>
+   <Action name="refresh_list"/>
+   <Separator/>
    <Action name="create_new_script" />
    <Action name="edit_script"/>
    <Action name="desactivate_script"/>

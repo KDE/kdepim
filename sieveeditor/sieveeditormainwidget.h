@@ -38,7 +38,8 @@ public:
     void deleteScript();
     void updateServerList();
     void editScript();
-    void desactivateScript();
+    void desactivateScript();    
+    void refreshList();
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);

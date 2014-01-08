@@ -88,3 +88,7 @@ void SieveEditorScriptManagerWidget::desactivateScript()
     mTreeView->slotDeactivateScript();
 }
 
+void SieveEditorScriptManagerWidget::refreshList()
+{
+    mTreeView->slotRefresh();
+}

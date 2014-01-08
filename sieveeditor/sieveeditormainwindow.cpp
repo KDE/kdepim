@@ -96,6 +96,15 @@ void SieveEditorMainWindow::setupActions()
     mDesactivateScript = ac->addAction(QLatin1String("desactivate_script"), this, SLOT(slotDesactivateScript()));
     mDesactivateScript->setText(i18n("Desactivate Script"));
     mDesactivateScript->setEnabled(false);
+
+    mRefreshList = ac->addAction(QLatin1String("refresh_list"), this, SLOT(slotRefreshList()));
+    mRefreshList->setText(i18n("Refresh List"));
+    mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
+}
+
+void SieveEditorMainWindow::slotRefreshList()
+{
+    mMainWidget->refreshList();
 }
 
 void SieveEditorMainWindow::slotDesactivateScript()

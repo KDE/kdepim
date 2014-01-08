@@ -20,14 +20,16 @@
 
 #ifndef SIEVEEDITORPAGEWIDGET_H
 #define SIEVEEDITORPAGEWIDGET_H
-
-#include "editor/sieveeditorwidget.h"
+#include <QWidget>
 #include <KUrl>
 namespace KManageSieve {
 class SieveJob;
 }
+namespace KSieveUi {
+class SieveEditorWidget;
+}
 
-class SieveEditorPageWidget : public KSieveUi::SieveEditorWidget
+class SieveEditorPageWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -47,6 +49,7 @@ private slots:
 
 private:
     KUrl mCurrentURL;
+    KSieveUi::SieveEditorWidget *mSieveEditorWidget;
     bool mWasActive;
     bool mIsNewScript;
 };
