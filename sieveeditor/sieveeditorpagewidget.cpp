@@ -91,21 +91,3 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
     setScript( script );
     mWasActive = isActive;
 }
-
-void SieveEditorPageWidget::addFailedMessage( const QString &err )
-{
-    addMessageEntry( err, QColor( Qt::darkRed ) );
-}
-
-void SieveEditorPageWidget::addOkMessage( const QString &err )
-{
-    addMessageEntry( err, QColor( Qt::darkGreen ) );
-}
-
-void SieveEditorPageWidget::addMessageEntry( const QString &errorMsg, const QColor &color )
-{
-    const QString logText = QString::fromLatin1( "<font color=%1>%2</font>" )
-            .arg( color.name() ).arg(errorMsg);
-
-    setDebugScript( logText );
-}
