@@ -28,8 +28,10 @@
 
 #include <KLocalizedString>
 #include <KFileDialog>
+#include <KInputDialog>
 
 #include <QMenu>
+
 
 using namespace PimCommon;
 
@@ -85,7 +87,6 @@ QMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstra
                 case PimCommon::StorageServiceAbstract::NoCapability:
                 case PimCommon::StorageServiceAbstract::AccountInfoCapability:
                 case PimCommon::StorageServiceAbstract::UploadFileCapability:
-                case PimCommon::StorageServiceAbstract::DeleteFileCapability:
                 case PimCommon::StorageServiceAbstract::DownloadFileCapability:
                 case PimCommon::StorageServiceAbstract::CreateFolderCapability:
                 case PimCommon::StorageServiceAbstract::DeleteFolderCapability:
@@ -94,6 +95,9 @@ QMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstra
                     break;
                 case PimCommon::StorageServiceAbstract::ShareLinkCapability:
                     connect(act, SIGNAL(triggered()), this, SLOT(slotShareFile()));
+                    break;
+                case PimCommon::StorageServiceAbstract::DeleteFileCapability:
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFile()));
                     break;
                 }
                 menuService->addAction(act);
@@ -113,13 +117,35 @@ void StorageServiceManager::slotShareFile()
             StorageServiceAbstract *service = mListService.value(type);
             const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
             if (!fileName.isEmpty()) {
-                service->uploadFile(fileName);
-                connect(service,SIGNAL(actionFailed(QString,QString)), this, SIGNAL(actionFailed(QString,QString)), Qt::UniqueConnection);
-                connect(service,SIGNAL(authenticationDone(QString)), this, SIGNAL(authenticationDone(QString)), Qt::UniqueConnection);
-                connect(service,SIGNAL(authenticationFailed(QString,QString)), this, SIGNAL(authenticationFailed(QString,QString)), Qt::UniqueConnection);
+                defaultConnect(service);
                 connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
                 connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
                 connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
+                service->uploadFile(fileName);
+            }
+        }
+    }
+}
+
+void StorageServiceManager::defaultConnect(StorageServiceAbstract *service)
+{
+    connect(service,SIGNAL(actionFailed(QString,QString)), this, SIGNAL(actionFailed(QString,QString)), Qt::UniqueConnection);
+    connect(service,SIGNAL(authenticationDone(QString)), this, SIGNAL(authenticationDone(QString)), Qt::UniqueConnection);
+    connect(service,SIGNAL(authenticationFailed(QString,QString)), this, SIGNAL(authenticationFailed(QString,QString)), Qt::UniqueConnection);
+}
+
+void StorageServiceManager::slotDeleteFile()
+{
+    QAction *act = qobject_cast< QAction* >( sender() );
+    if ( act ) {
+        const QString type = act->data().toString();
+        if (mListService.contains(type)) {
+            StorageServiceAbstract *service = mListService.value(type);
+            const QString fileName = KInputDialog::getText(i18n("Delete File"), i18n("Filename:"));
+            if (!fileName.isEmpty()) {
+                defaultConnect(service);
+                connect(service,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileDone(QString,QString)), Qt::UniqueConnection);
+                service->deleteFile(fileName);
             }
         }
     }

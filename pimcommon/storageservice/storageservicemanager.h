@@ -65,12 +65,15 @@ Q_SIGNALS:
     void authenticationDone(const QString &serviceName);
     void authenticationFailed(const QString &serviceName, const QString &error);
     void actionFailed(const QString &serviceName, const QString &error);
+    void deleteFileDone(const QString &serviceName, const QString &filename);
 
 private Q_SLOTS:
     void slotShareFile();
+    void slotDeleteFile();
 
 private:
     QMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const;
+    void defaultConnect(StorageServiceAbstract *service);
     void readConfig();
     void writeConfig();
     QMap<QString, StorageServiceAbstract *> mListService;
