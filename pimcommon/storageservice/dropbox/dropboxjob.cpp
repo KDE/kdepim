@@ -337,7 +337,7 @@ void DropBoxJob::uploadFile(const QString &filename)
             return;
         } else {
             QNetworkReply *reply = mNetworkAccessManager->put(request, file);
-            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64, qint64)));
+            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
         }

@@ -262,7 +262,7 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         mDescription->setText(descriptionStr);
         if (mListStorageService.contains(mListService->currentItem()->data(Name).toString())) {
             StorageServiceAbstract *storage = mListStorageService.value(mListService->currentItem()->data(Name).toString());
-            connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString, PimCommon::AccountInfo)),Qt::UniqueConnection);
+            connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString,PimCommon::AccountInfo)),Qt::UniqueConnection);
             storage->accountInfo();
         }
     } else {
