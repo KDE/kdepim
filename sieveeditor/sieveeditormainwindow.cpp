@@ -57,6 +57,7 @@ void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScr
 {
     mDeleteScript->setEnabled(deleteScriptAction);
     mNewScript->setEnabled(newScriptAction);
+    mEditScript->setEnabled(editScriptAction);
 }
 
 void SieveEditorMainWindow::readConfig()
@@ -86,7 +87,16 @@ void SieveEditorMainWindow::setupActions()
     mNewScript = ac->addAction(QLatin1String("create_new_script"), this, SLOT(slotCreateNewScript()));
     mNewScript->setText(i18n("Create New Script..."));
     mNewScript->setEnabled(false);
+
+    mEditScript = ac->addAction(QLatin1String("edit_script"), this, SLOT(slotEditScript()));
+    mEditScript->setText(i18n("Edit Script..."));
+    mEditScript->setEnabled(false);
     //TODO
+}
+
+void SieveEditorMainWindow::slotEditScript()
+{
+    mMainWidget->editScript();
 }
 
 void SieveEditorMainWindow::slotCreateNewScript()

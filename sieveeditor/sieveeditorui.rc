@@ -7,6 +7,8 @@
   <Menu name="edit" >
    <text>&amp;Edit</text>
    <Action name="create_new_script" />
+   <Action name="edit_script"/>
+   <Separator/>
    <Action name="delete_script" />
   </Menu>
  </MenuBar>

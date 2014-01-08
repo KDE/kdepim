@@ -74,3 +74,8 @@ void SieveEditorMainWidget::updateServerList()
 {
     mScriptManagerWidget->updateServerList();
 }
+
+void SieveEditorMainWidget::editScript()
+{
+    mScriptManagerWidget->editScript();
+}

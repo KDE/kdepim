@@ -33,7 +33,8 @@ public:
     explicit SieveEditorScriptManagerWidget(QWidget *parent=0);
     ~SieveEditorScriptManagerWidget();
 
-    void updateServerList();
+    void updateServerList();    
+    void editScript();
 
 Q_SIGNALS:
     void createScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);

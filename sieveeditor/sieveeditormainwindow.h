@@ -38,7 +38,8 @@ private slots:
     void slotAddServerSieve();
     void slotCreateNewScript();
     void slotDeleteScript();
-    void slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
+    void slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);    
+    void slotEditScript();
 
 private:
     void readConfig();
@@ -46,6 +47,7 @@ private:
     SieveEditorMainWidget *mMainWidget;
     KAction *mDeleteScript;
     KAction *mNewScript;
+    KAction *mEditScript;
 };
 
 #endif // SIEVEEDITORMAINWINDOW_H
