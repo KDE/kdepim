@@ -47,6 +47,7 @@ private slots:
     void slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
 
 private:
+    QWidget *hasExistingPage(const KUrl &url);
     QStackedWidget *mStackedWidget;
     SieveEditorScriptManagerWidget *mScriptManagerWidget;
     QSplitter *mSplitter;

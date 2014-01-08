@@ -24,17 +24,20 @@
 
 #include <kmanagesieve/sievejob.h>
 
+#include <QDebug>
+
 SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     : KSieveUi::SieveEditorWidget(parent),
       mWasActive(false),
       mIsNewScript(false)
 {
     connect(this, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
+    qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
 }
 
 SieveEditorPageWidget::~SieveEditorPageWidget()
 {
-
+    qDebug()<<" SieveEditorPageWidget::~SieveEditorPageWidget"<<this;
 }
 
 void SieveEditorPageWidget::slotCheckSyntaxClicked()

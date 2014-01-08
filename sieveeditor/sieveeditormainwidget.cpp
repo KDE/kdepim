@@ -51,13 +51,31 @@ SieveEditorMainWidget::~SieveEditorMainWidget()
     myGroup.sync();
 }
 
+QWidget *SieveEditorMainWidget::hasExistingPage(const KUrl &url)
+{
+    for (int i=0; i < mStackedWidget->count(); ++i) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mStackedWidget->widget(i));
+        if (page) {
+            if (page->currentUrl() == url) {
+                return page;
+            }
+        }
+    }
+    return 0;
+}
+
 void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript)
 {
-    SieveEditorPageWidget *editor = new SieveEditorPageWidget;
-    editor->setIsNewScript(isNewScript);
-    editor->loadScript(url, capabilities);
-    mStackedWidget->addWidget(editor);
-    mStackedWidget->setCurrentWidget(editor);
+    QWidget *page = hasExistingPage(url);
+    if (page) {
+        mStackedWidget->setCurrentWidget(page);
+    } else {
+        SieveEditorPageWidget *editor = new SieveEditorPageWidget;
+        editor->setIsNewScript(isNewScript);
+        editor->loadScript(url, capabilities);
+        mStackedWidget->addWidget(editor);
+        mStackedWidget->setCurrentWidget(editor);
+    }
 }
 
 void SieveEditorMainWidget::createNewScript()
