@@ -23,6 +23,7 @@
 
 #include <QWidget>
 #include "pimcommon/storageservice/storageserviceabstract.h"
+class QListWidget;
 namespace PimCommon {
 class StorageServiceAbstract;
 }
@@ -46,6 +47,7 @@ public:
 
 private:
     PimCommon::StorageServiceAbstract *mStorageService;
+    QListWidget *mListWidget;
 };
 
 #endif // STORAGESERVICEPAGE_H

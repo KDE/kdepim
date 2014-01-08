@@ -26,11 +26,18 @@
 #include <KFileDialog>
 
 #include <QInputDialog>
+#include <QListWidget>
+
+#include <QVBoxLayout>
 
 StorageServicePage::StorageServicePage(QWidget *parent)
     : QWidget(parent),
       mStorageService(0)
 {
+    QVBoxLayout *vbox = new QVBoxLayout;
+    setLayout(vbox);
+    mListWidget = new QListWidget;
+    vbox->addWidget(mListWidget);
 }
 
 StorageServicePage::~StorageServicePage()
@@ -70,12 +77,18 @@ void StorageServicePage::uploadFile()
 
 void StorageServicePage::deleteFile()
 {
-
+    const QString filename = QInputDialog::getText(this,i18n("Delete File"), i18n("Filename:"));
+    if (!filename.isEmpty()) {
+        mStorageService->deleteFile(filename);
+    }
 }
 
 void StorageServicePage::downloadFile()
 {
-
+    const QString filename = QInputDialog::getText(this,i18n("Download File"), i18n("Filename:"));
+    if (!filename.isEmpty()) {
+        mStorageService->downloadFile(filename);
+    }
 }
 
 PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities() const
