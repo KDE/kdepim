@@ -36,6 +36,7 @@ SieveEditorMainWidget::SieveEditorMainWidget(QWidget *parent)
     mScriptManagerWidget = new SieveEditorScriptManagerWidget;
     connect(mScriptManagerWidget, SIGNAL(createScriptPage(KUrl,QStringList,bool)), this, SLOT(slotCreateScriptPage(KUrl,QStringList,bool)));
     connect(mScriptManagerWidget, SIGNAL(updateButtons(bool,bool,bool,bool)), SIGNAL(updateButtons(bool,bool,bool,bool)));
+    connect(mScriptManagerWidget, SIGNAL(scriptDeleted(KUrl)), this, SLOT(slotScriptDeleted(KUrl)));
     addWidget(mScriptManagerWidget);
     setChildrenCollapsible(false);
     QList<int> splitterSizes;
@@ -62,6 +63,15 @@ QWidget *SieveEditorMainWidget::hasExistingPage(const KUrl &url)
         }
     }
     return 0;
+}
+
+void SieveEditorMainWidget::slotScriptDeleted(const KUrl &url)
+{
+    QWidget *page = hasExistingPage(url);
+    if (page) {
+        mStackedWidget->removeWidget(page);
+        delete page;
+    }
 }
 
 void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript)

@@ -45,6 +45,7 @@ Q_SIGNALS:
 
 private slots:
     void slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
+    void slotScriptDeleted(const KUrl &url);
 
 private:
     QWidget *hasExistingPage(const KUrl &url);

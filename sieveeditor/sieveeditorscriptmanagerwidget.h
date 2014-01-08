@@ -40,6 +40,7 @@ public:
 Q_SIGNALS:
     void createScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
+    void scriptDeleted(const KUrl &url);
 
 public Q_SLOTS:
     void slotCreateNewScript();
