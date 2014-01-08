@@ -79,3 +79,8 @@ void SieveEditorMainWidget::editScript()
 {
     mScriptManagerWidget->editScript();
 }
+
+void SieveEditorMainWidget::desactivateScript()
+{
+    mScriptManagerWidget->desactivateScript();
+}

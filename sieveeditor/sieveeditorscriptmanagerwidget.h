@@ -33,8 +33,9 @@ public:
     explicit SieveEditorScriptManagerWidget(QWidget *parent=0);
     ~SieveEditorScriptManagerWidget();
 
-    void updateServerList();    
+    void updateServerList();
     void editScript();
+    void desactivateScript();
 
 Q_SIGNALS:
     void createScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
@@ -46,7 +47,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void slotNewScript(const KUrl &url, const QStringList &capabilities);
-    void slotEditScript(const KUrl &url, const QStringList &capabilities);        
+    void slotEditScript(const KUrl &url, const QStringList &capabilities);
     void slotUpdateButtons(QTreeWidgetItem *item);
 
 private:

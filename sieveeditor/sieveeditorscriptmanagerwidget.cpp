@@ -81,3 +81,9 @@ void SieveEditorScriptManagerWidget::editScript()
 {
     mTreeView->slotEditScript();
 }
+
+void SieveEditorScriptManagerWidget::desactivateScript()
+{
+    mTreeView->slotDeactivateScript();
+}
+
