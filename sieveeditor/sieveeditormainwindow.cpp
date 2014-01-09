@@ -94,7 +94,7 @@ void SieveEditorMainWindow::setupActions()
     mEditScript->setEnabled(false);
 
     mDesactivateScript = ac->addAction(QLatin1String("desactivate_script"), this, SLOT(slotDesactivateScript()));
-    mDesactivateScript->setText(i18n("Desactivate Script"));
+    mDesactivateScript->setText(i18n("Deactivate Script"));
     mDesactivateScript->setEnabled(false);
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), this, SLOT(slotRefreshList()));
