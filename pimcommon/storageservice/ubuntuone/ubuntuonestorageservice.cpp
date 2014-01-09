@@ -105,6 +105,7 @@ void UbuntuoneStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction = CreateFolder;
+        mNextActionArgument = folder;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -147,6 +148,7 @@ void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction = UploadFile;
+        mNextActionArgument = filename;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -197,6 +199,7 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction = DownLoadFile;
+        mNextActionArgument = filename;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -225,6 +228,7 @@ void UbuntuoneStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction = DeleteFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -240,6 +244,7 @@ void UbuntuoneStorageService::storageServicedeleteFolder(const QString &folderna
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction = DeleteFolder;
+        mNextActionArgument = foldername;
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);

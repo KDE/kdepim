@@ -107,6 +107,7 @@ void BoxStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction = DownLoadFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -121,6 +122,7 @@ void BoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction = DeleteFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -135,6 +137,7 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mToken.isEmpty()) {
         mNextAction = DeleteFolder;
+        mNextActionArgument = foldername;
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -163,6 +166,7 @@ void BoxStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
         mNextAction = CreateFolder;
+        mNextActionArgument = folder;
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -196,6 +200,7 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction = UploadFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);

@@ -110,6 +110,7 @@ void YouSendItStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
         mNextAction = CreateFolder;
+        mNextActionArgument = folder;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -143,6 +144,7 @@ void YouSendItStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction = UploadFile;
+        mNextActionArgument = filename;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -193,6 +195,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &filename
 {
     if (mToken.isEmpty()) {
         mNextAction = DownLoadFile;
+        mNextActionArgument = filename;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -221,6 +224,7 @@ void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction = DeleteFile;
+        mNextActionArgument = filename;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -235,6 +239,7 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
 {
     if (mToken.isEmpty()) {
         mNextAction = DeleteFolder;
+        mNextActionArgument = foldername;
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);

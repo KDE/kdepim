@@ -84,6 +84,7 @@ void WebDavStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = DownLoadFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -110,6 +111,7 @@ void WebDavStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = DeleteFile;
+        mNextActionArgument = filename;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -123,6 +125,7 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = DeleteFolder;
+        mNextActionArgument = foldername;
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -149,6 +152,7 @@ void WebDavStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = CreateFolder;
+        mNextActionArgument = folder;
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -180,6 +184,7 @@ void WebDavStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction = UploadFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);

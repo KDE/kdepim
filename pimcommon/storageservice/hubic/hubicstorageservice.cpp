@@ -104,6 +104,7 @@ void HubicStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction = CreateFolder;
+        mNextActionArgument = folder;
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -137,6 +138,7 @@ void HubicStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction = UploadFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -192,6 +194,7 @@ void HubicStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction = DownLoadFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -220,6 +223,7 @@ void HubicStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction = DeleteFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -234,6 +238,7 @@ void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction = DeleteFolder;
+        mNextActionArgument = foldername;
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);

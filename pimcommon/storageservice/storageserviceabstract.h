@@ -142,6 +142,7 @@ protected:
     void emitAuthentificationFailder(const QString &errorMessage);
     ActionType mNextAction;
     Capabilities mCapabilities;
+    QString mNextActionArgument;
 
 private:
     void executeNextAction();

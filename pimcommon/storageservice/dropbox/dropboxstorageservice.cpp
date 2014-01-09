@@ -144,6 +144,7 @@ void DropBoxStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = CreateFolder;
+        mNextActionArgument = folder;
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -158,6 +159,7 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = UploadFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -212,6 +214,7 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = DownLoadFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -226,6 +229,7 @@ void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = DeleteFile;
+        mNextActionArgument = filename;
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -240,6 +244,7 @@ void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername
 {
     if (mAccessToken.isEmpty()) {
         mNextAction = DeleteFolder;
+        mNextActionArgument = foldername;
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);

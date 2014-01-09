@@ -150,10 +150,10 @@ void StorageServiceAbstract::executeNextAction()
     case AccessToken:
         break;
     case UploadFile:
-        //storageServiceuploadFile();
+        storageServiceuploadFile(mNextActionArgument);
         break;
     case CreateFolder:
-        //storageServicecreateFolder();
+        storageServicecreateFolder(mNextActionArgument);
         break;
     case ListFolder:
         storageServicelistFolder();
@@ -163,18 +163,19 @@ void StorageServiceAbstract::executeNextAction()
         break;
     case ShareLink:
         //storageServiceshareLink();
+        qDebug()<<" not implemented !";
         break;
     case CreateServiceFolder:
         storageServicecreateServiceFolder();
         break;
     case DownLoadFile:
-        //storageServicedownloadFile();
+        storageServicedownloadFile(mNextActionArgument);
         break;
     case DeleteFile:
-        //storageServicedeleteFile();
+        storageServicedeleteFile(mNextActionArgument);
         break;
     case DeleteFolder:
-        //storageServicedeleteFolder();
+        storageServicedeleteFolder(mNextActionArgument);
         break;
     }
 }
