@@ -38,6 +38,8 @@ struct AccountInfo {
     QString displayName;
 };
 
+
+class NextAction;
 class StorageServiceAbstract : public QObject
 {
     Q_OBJECT
@@ -140,14 +142,42 @@ protected:
     virtual void storageServicedeleteFolder(const QString &foldername) = 0;
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
-    ActionType mNextAction;
+    NextAction *mNextAction;
     Capabilities mCapabilities;
-    QString mNextActionArgument;
 
 private:
     void executeNextAction();
     bool mInProgress;
 };
+
+class NextAction {
+public:
+    NextAction()
+        : mNextAction(StorageServiceAbstract::NoneAction)
+    {
+    }
+
+    void setNextActionType(StorageServiceAbstract::ActionType type) { mNextAction = type; }
+    void setNextActionFileName(const QString &filename) { mNextActionFileName = filename; }
+    void setNextActionFolder(const QString &foldername) { mNextActionFolder = foldername; }
+    void setRootPath(const QString &path) { mRootPath = path; }
+    void setPath(const QString &path) { mPath = path; }
+
+
+    StorageServiceAbstract::ActionType nextActionType() const { return mNextAction; }
+    QString nextActionFileName() const { return mNextActionFileName; }
+    QString nextActionFolder() const { return mNextActionFolder; }
+    QString rootPath() const { return mRootPath; }
+    QString path() const { return mPath; }
+
+private:
+    StorageServiceAbstract::ActionType mNextAction;
+    QString mRootPath;
+    QString mPath;
+    QString mNextActionFileName;
+    QString mNextActionFolder;
+};
+
 }
 
 #endif // STORAGESERVICEABSTRACT_H

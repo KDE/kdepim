@@ -90,7 +90,7 @@ void UbuntuoneStorageService::storageServiceauthentication()
 void UbuntuoneStorageService::storageServicelistFolder()
 {
     if (mTokenSecret.isEmpty()) {
-        mNextAction = ListFolder;
+        mNextAction->setNextActionType(ListFolder);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -104,8 +104,8 @@ void UbuntuoneStorageService::storageServicelistFolder()
 void UbuntuoneStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mTokenSecret.isEmpty()) {
-        mNextAction = CreateFolder;
-        mNextActionArgument = folder;
+        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionFolder(folder);
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -128,7 +128,7 @@ void UbuntuoneStorageService::slotAuthorizationFailed(const QString &errorMessag
 void UbuntuoneStorageService::storageServiceaccountInfo()
 {
     if (mTokenSecret.isEmpty()) {
-        mNextAction = AccountInfo;
+        mNextAction->setNextActionType(AccountInfo);
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -147,8 +147,8 @@ QString UbuntuoneStorageService::name()
 void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
-        mNextAction = UploadFile;
-        mNextActionArgument = filename;
+        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionFileName(filename);
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -184,7 +184,9 @@ QString UbuntuoneStorageService::iconName()
 void UbuntuoneStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {    
     if (mTokenSecret.isEmpty()) {
-        mNextAction = ShareLink;
+        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setRootPath(root);
+        mNextAction->setPath(path);
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -198,8 +200,8 @@ void UbuntuoneStorageService::storageServiceShareLink(const QString &root, const
 void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
-        mNextAction = DownLoadFile;
-        mNextActionArgument = filename;
+        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionFileName(filename);
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -213,7 +215,7 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename
 void UbuntuoneStorageService::storageServicecreateServiceFolder()
 {
     if (mTokenSecret.isEmpty()) {
-        mNextAction = CreateServiceFolder;
+        mNextAction->setNextActionType(CreateServiceFolder);
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -227,8 +229,8 @@ void UbuntuoneStorageService::storageServicecreateServiceFolder()
 void UbuntuoneStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
-        mNextAction = DeleteFile;
-        mNextActionArgument = filename;
+        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -243,8 +245,8 @@ void UbuntuoneStorageService::storageServicedeleteFile(const QString &filename)
 void UbuntuoneStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mTokenSecret.isEmpty()) {
-        mNextAction = DeleteFolder;
-        mNextActionArgument = foldername;
+        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionFolder(foldername);
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);

@@ -70,7 +70,9 @@ void WebDavStorageService::storageServiceauthentication()
 void WebDavStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = ShareLink;
+        mNextAction->setRootPath(root);
+        mNextAction->setPath(path);
+        mNextAction->setNextActionType(ShareLink);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -83,8 +85,8 @@ void WebDavStorageService::storageServiceShareLink(const QString &root, const QS
 void WebDavStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = DownLoadFile;
-        mNextActionArgument = filename;
+        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -97,7 +99,7 @@ void WebDavStorageService::storageServicedownloadFile(const QString &filename)
 void WebDavStorageService::storageServicecreateServiceFolder()
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = CreateServiceFolder;
+        mNextAction->setNextActionType(CreateServiceFolder);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -110,8 +112,8 @@ void WebDavStorageService::storageServicecreateServiceFolder()
 void WebDavStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = DeleteFile;
-        mNextActionArgument = filename;
+        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionFileName(filename);
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -124,8 +126,8 @@ void WebDavStorageService::storageServicedeleteFile(const QString &filename)
 void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = DeleteFolder;
-        mNextActionArgument = foldername;
+        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionFileName(foldername);
         authentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -138,7 +140,7 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
 void WebDavStorageService::storageServicelistFolder()
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = ListFolder;
+        mNextAction->setNextActionType(ListFolder);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -151,8 +153,8 @@ void WebDavStorageService::storageServicelistFolder()
 void WebDavStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = CreateFolder;
-        mNextActionArgument = folder;
+        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -165,7 +167,7 @@ void WebDavStorageService::storageServicecreateFolder(const QString &folder)
 void WebDavStorageService::storageServiceaccountInfo()
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = AccountInfo;
+        mNextAction->setNextActionType(AccountInfo);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
@@ -183,8 +185,8 @@ QString WebDavStorageService::name()
 void WebDavStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mServiceLocation.isEmpty()) {
-        mNextAction = UploadFile;
-        mNextActionArgument = filename;
+        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);

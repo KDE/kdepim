@@ -22,7 +22,7 @@ using namespace PimCommon;
 
 StorageServiceAbstract::StorageServiceAbstract(QObject *parent)
     : QObject(parent),
-      mNextAction(NoneAction),
+      mNextAction(new NextAction),
       mCapabilities(NoCapability),
       mInProgress(false)
 {
@@ -30,7 +30,7 @@ StorageServiceAbstract::StorageServiceAbstract(QObject *parent)
 
 StorageServiceAbstract::~StorageServiceAbstract()
 {
-
+    delete mNextAction;
 }
 
 bool StorageServiceAbstract::isInProgress() const
@@ -141,7 +141,7 @@ void StorageServiceAbstract::deleteFolder(const QString &foldername)
 
 void StorageServiceAbstract::executeNextAction()
 {
-    switch(mNextAction) {
+    switch(mNextAction->nextActionType()) {
     case NoneAction:
         break;
     case RequestToken:
@@ -150,10 +150,10 @@ void StorageServiceAbstract::executeNextAction()
     case AccessToken:
         break;
     case UploadFile:
-        storageServiceuploadFile(mNextActionArgument);
+        storageServiceuploadFile(mNextAction->nextActionFileName());
         break;
     case CreateFolder:
-        storageServicecreateFolder(mNextActionArgument);
+        storageServicecreateFolder(mNextAction->nextActionFolder());
         break;
     case ListFolder:
         storageServicelistFolder();
@@ -162,20 +162,19 @@ void StorageServiceAbstract::executeNextAction()
         storageServiceaccountInfo();
         break;
     case ShareLink:
-        //storageServiceshareLink();
-        qDebug()<<" not implemented !";
+        storageServiceShareLink(mNextAction->rootPath(), mNextAction->path());
         break;
     case CreateServiceFolder:
         storageServicecreateServiceFolder();
         break;
     case DownLoadFile:
-        storageServicedownloadFile(mNextActionArgument);
+        storageServicedownloadFile(mNextAction->nextActionFileName());
         break;
     case DeleteFile:
-        storageServicedeleteFile(mNextActionArgument);
+        storageServicedeleteFile(mNextAction->nextActionFileName());
         break;
     case DeleteFolder:
-        storageServicedeleteFolder(mNextActionArgument);
+        storageServicedeleteFolder(mNextAction->nextActionFolder());
         break;
     }
 }
@@ -250,7 +249,7 @@ void StorageServiceAbstract::emitAuthentificationFailder(const QString &errorMes
 void StorageServiceAbstract::emitAuthentificationDone()
 {
     Q_EMIT authenticationDone(storageServiceName());
-    if (mNextAction != NoneAction)
+    if (mNextAction->nextActionType() != NoneAction)
         executeNextAction();
     else
         mInProgress = false;
