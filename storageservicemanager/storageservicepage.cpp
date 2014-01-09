@@ -19,28 +19,73 @@
 */
 
 #include "storageservicepage.h"
-
+#include "storageservicelistwidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
 #include <KFileDialog>
-
-#include <QInputDialog>
-#include <QListWidget>
+#include <KInputDialog>
 
 #include <QVBoxLayout>
 
-StorageServicePage::StorageServicePage(QWidget *parent)
+StorageServicePage::StorageServicePage(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : QWidget(parent),
-      mStorageService(0)
+      mStorageService(storageService)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
-    mListWidget = new QListWidget;
+    mListWidget = new StorageServiceListWidget;
     vbox->addWidget(mListWidget);
+    connectStorageService();
 }
 
 StorageServicePage::~StorageServicePage()
+{
+
+}
+
+void StorageServicePage::connectStorageService()
+{
+    connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
+    connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
+    connect(mStorageService, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+    connect(mStorageService, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+    connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
+    connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
+}
+
+void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
+{
+
+}
+
+void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QString &fileName)
+{
+
+}
+
+void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total)
+{
+
+}
+
+void StorageServicePage::slotShareLinkDone(const QString &serviceName, const QString &link)
+{
+
+}
+
+void StorageServicePage::slotAuthenticationFailed(const QString &serviceName, const QString &error)
+{
+
+}
+
+void StorageServicePage::slotAuthenticationDone(const QString &serviceName)
+{
+
+}
+
+void StorageServicePage::slotActionFailed(const QString &serviceName, const QString &error)
 {
 
 }
@@ -52,7 +97,7 @@ void StorageServicePage::authenticate()
 
 void StorageServicePage::createFolder()
 {
-    const QString folder = QInputDialog::getText(this,i18n("Folder Name"), i18n("Folder:"));
+    const QString folder = KInputDialog::getText(i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
         mStorageService->createFolder(folder);
     }
@@ -77,7 +122,8 @@ void StorageServicePage::uploadFile()
 
 void StorageServicePage::deleteFile()
 {
-    const QString filename = QInputDialog::getText(this,i18n("Delete File"), i18n("Filename:"));
+    //TODO use selected element
+    const QString filename = KInputDialog::getText(i18n("Delete File"), i18n("Filename:"));
     if (!filename.isEmpty()) {
         mStorageService->deleteFile(filename);
     }
@@ -85,7 +131,8 @@ void StorageServicePage::deleteFile()
 
 void StorageServicePage::downloadFile()
 {
-    const QString filename = QInputDialog::getText(this,i18n("Download File"), i18n("Filename:"));
+    //TODO use selected element
+    const QString filename = KInputDialog::getText(i18n("Download File"), i18n("Filename:"));
     if (!filename.isEmpty()) {
         mStorageService->downloadFile(filename);
     }

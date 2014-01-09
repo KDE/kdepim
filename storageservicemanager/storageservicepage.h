@@ -23,7 +23,7 @@
 
 #include <QWidget>
 #include "pimcommon/storageservice/storageserviceabstract.h"
-class QListWidget;
+class StorageServiceListWidget;
 namespace PimCommon {
 class StorageServiceAbstract;
 }
@@ -31,7 +31,7 @@ class StorageServicePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServicePage(QWidget *parent=0);
+    explicit StorageServicePage(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
     ~StorageServicePage();
 
     void authenticate();
@@ -41,13 +41,21 @@ public:
     void uploadFile();
     void downloadFile();
     void deleteFile();
-
-
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
 
+private Q_SLOTS:
+    void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
+    void slotUploadFileDone(const QString &serviceName, const QString &fileName);
+    void slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void slotShareLinkDone(const QString &serviceName, const QString &link);
+    void slotAuthenticationFailed(const QString &serviceName, const QString &error);
+    void slotAuthenticationDone(const QString &serviceName);
+    void slotActionFailed(const QString &serviceName, const QString &error);
+
 private:
+    void connectStorageService();
     PimCommon::StorageServiceAbstract *mStorageService;
-    QListWidget *mListWidget;
+    StorageServiceListWidget *mListWidget;
 };
 
 #endif // STORAGESERVICEPAGE_H
