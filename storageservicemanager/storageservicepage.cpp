@@ -25,11 +25,16 @@
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KInputDialog>
+#include <KMessageBox>
 
+#include <QApplication>
+#include <QClipboard>
 #include <QVBoxLayout>
+#include <QDebug>
 
-StorageServicePage::StorageServicePage(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
+StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : QWidget(parent),
+      mServiceName(serviceName),
       mStorageService(storageService)
 {
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -53,41 +58,67 @@ void StorageServicePage::connectStorageService()
     connect(mStorageService, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
     connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
+    connect(mStorageService, SIGNAL(inProgress(bool)), this, SLOT(slotProgressStateChanged(bool)));
 }
 
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
 {
+    if (verifyService(serviceName)) {
 
+    }
 }
 
 void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
+    if (verifyService(serviceName)) {
 
+    }
 }
 
 void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
+    if (verifyService(serviceName)) {
 
+    }
 }
 
 void StorageServicePage::slotShareLinkDone(const QString &serviceName, const QString &link)
 {
-
+    if (verifyService(serviceName)) {
+        QClipboard* const cb = QApplication::clipboard();
+        cb->setText( link, QClipboard::Clipboard );
+        KMessageBox::information(this, i18n("Link \'%1\' stored in clipboard",link),i18n("Shared Link"));
+    }
 }
 
 void StorageServicePage::slotAuthenticationFailed(const QString &serviceName, const QString &error)
 {
+    if (verifyService(serviceName)) {
 
+    }
 }
 
 void StorageServicePage::slotAuthenticationDone(const QString &serviceName)
 {
+    if (verifyService(serviceName)) {
 
+    }
 }
 
 void StorageServicePage::slotActionFailed(const QString &serviceName, const QString &error)
 {
+    if (verifyService(serviceName)) {
 
+    }
+}
+
+bool StorageServicePage::verifyService(const QString &serviceName)
+{
+    if (serviceName != mServiceName) {
+        qDebug()<<" Error in signal/Slots";
+        return false;
+    }
+    return true;
 }
 
 void StorageServicePage::authenticate()
@@ -141,4 +172,10 @@ void StorageServicePage::downloadFile()
 PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities() const
 {
     return mStorageService->capabilities();
+}
+
+void StorageServicePage::slotProgressStateChanged(bool state)
+{
+    //TODO fixme
+    setEnabled(state);
 }

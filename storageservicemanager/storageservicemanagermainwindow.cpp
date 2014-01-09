@@ -51,6 +51,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     setupActions();
     setupGUI();
     readConfig();
+    mStorageServiceTabWidget->setListStorageService(mStorageManager->listService());
     slotUpdateActions();
 }
 
@@ -120,7 +121,7 @@ void StorageServiceManagerMainWindow::slotConfigure()
     dlg->setListService(mStorageManager->listService());
     if (dlg->exec()) {
         mStorageManager->setListService(dlg->listService());
-        mStorageServiceTabWidget->reloadStorageService();
+        mStorageServiceTabWidget->updateListService(dlg->listService());
     }
     delete dlg;
 }

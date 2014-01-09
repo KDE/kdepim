@@ -31,7 +31,7 @@ class StorageServicePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServicePage(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
+    explicit StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
     ~StorageServicePage();
 
     void authenticate();
@@ -50,10 +50,13 @@ private Q_SLOTS:
     void slotShareLinkDone(const QString &serviceName, const QString &link);
     void slotAuthenticationFailed(const QString &serviceName, const QString &error);
     void slotAuthenticationDone(const QString &serviceName);
-    void slotActionFailed(const QString &serviceName, const QString &error);
+    void slotActionFailed(const QString &serviceName, const QString &error);    
+    void slotProgressStateChanged(bool state);
 
 private:
+    bool verifyService(const QString &serviceName);
     void connectStorageService();
+    QString mServiceName;
     PimCommon::StorageServiceAbstract *mStorageService;
     StorageServiceListWidget *mListWidget;
 };
