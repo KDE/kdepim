@@ -82,7 +82,7 @@ void SieveEditorMainWidget::slotCreateScriptPage(const KUrl &url, const QStringL
         mStackedWidget->setCurrentWidget(page);
     } else {
         SieveEditorPageWidget *editor = new SieveEditorPageWidget;
-        connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateServerList()));
+        connect(editor, SIGNAL(refreshList()), this, SIGNAL(updateScriptList()));
         editor->setIsNewScript(isNewScript);
         editor->loadScript(url, capabilities);
         mStackedWidget->addWidget(editor);
