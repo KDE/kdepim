@@ -47,6 +47,8 @@ public:
 
     QMenu *menuDownloadServices(QWidget *parent) const;
     QMenu *menuUploadServices(QWidget *parent) const;
+    QMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const;
+
 
     QMap<QString, StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, StorageServiceAbstract *> &lst);
@@ -66,13 +68,14 @@ Q_SIGNALS:
     void authenticationFailed(const QString &serviceName, const QString &error);
     void actionFailed(const QString &serviceName, const QString &error);
     void deleteFileDone(const QString &serviceName, const QString &filename);
+    void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
 
 private Q_SLOTS:
+    void slotAccountInfo();
     void slotShareFile();
     void slotDeleteFile();
 
 private:
-    QMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const;
     void defaultConnect(StorageServiceAbstract *service);
     void readConfig();
     void writeConfig();

@@ -85,7 +85,6 @@ QMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstra
                 act->setData(i.key());
                 switch(capability) {
                 case PimCommon::StorageServiceAbstract::NoCapability:
-                case PimCommon::StorageServiceAbstract::AccountInfoCapability:
                 case PimCommon::StorageServiceAbstract::UploadFileCapability:
                 case PimCommon::StorageServiceAbstract::DownloadFileCapability:
                 case PimCommon::StorageServiceAbstract::CreateFolderCapability:
@@ -98,6 +97,9 @@ QMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstra
                     break;
                 case PimCommon::StorageServiceAbstract::DeleteFileCapability:
                     connect(act, SIGNAL(triggered()), this, SLOT(slotDeleteFile()));
+                    break;
+                case PimCommon::StorageServiceAbstract::AccountInfoCapability:
+                    connect(act, SIGNAL(triggered()), this, SLOT(slotAccountInfo()));
                     break;
                 }
                 menuService->addAction(act);
@@ -147,6 +149,20 @@ void StorageServiceManager::slotDeleteFile()
                 connect(service,SIGNAL(deleteFileDone(QString,QString)), this, SIGNAL(deleteFileDone(QString,QString)), Qt::UniqueConnection);
                 service->deleteFile(fileName);
             }
+        }
+    }
+}
+
+void StorageServiceManager::slotAccountInfo()
+{
+    QAction *act = qobject_cast< QAction* >( sender() );
+    if ( act ) {
+        const QString type = act->data().toString();
+        if (mListService.contains(type)) {
+            StorageServiceAbstract *service = mListService.value(type);
+            defaultConnect(service);
+            connect(service,SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), Qt::UniqueConnection);
+            service->accountInfo();
         }
     }
 }
