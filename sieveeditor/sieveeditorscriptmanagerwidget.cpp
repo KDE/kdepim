@@ -70,7 +70,7 @@ void SieveEditorScriptManagerWidget::slotCreateNewScript()
 
 void SieveEditorScriptManagerWidget::slotDeleteScript()
 {
-    mTreeView->slotEditScript();
+    mTreeView->slotDeleteScript();
 }
 
 void SieveEditorScriptManagerWidget::slotRefreshList()
