@@ -108,6 +108,8 @@ void SieveEditorPageWidget::saveScript()
 
 void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *, bool success )
 {
+    if (mIsNewScript)
+        Q_EMIT refreshList();
     if ( success ) {
         KMessageBox::information( this, i18n( "The Sieve script was successfully uploaded." ),
                                   i18n( "Sieve Script Upload" ) );
@@ -115,6 +117,4 @@ void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *, bool succes
     } else {
         //TODO error
     }
-    if (mIsNewScript)
-        Q_EMIT refreshList();
 }
