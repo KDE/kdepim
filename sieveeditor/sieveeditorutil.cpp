@@ -75,7 +75,7 @@ QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig
     Q_FOREACH (const QString &conf, groups) {
         SieveServerConfig sieve;
         KConfigGroup group = cfg->group(conf);
-        sieve.port = group.readEntry(QLatin1String("Port"), -1);
+        sieve.port = group.readEntry(QLatin1String("Port"), 0);
         sieve.serverName = group.readEntry(QLatin1String("ServerName"));
         sieve.userName = group.readEntry(QLatin1String("UserName"));
         sieve.password = group.readEntry(QLatin1String("Password"));
@@ -88,7 +88,7 @@ QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig
 void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveServerConfig> &lstConfig)
 {
     KSharedConfigPtr cfg = KGlobal::config();
-    QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
+    const QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
     //Delete Old Group
     const QStringList groups = cfg->groupList().filter( re );
     Q_FOREACH (const QString &conf, groups) {
@@ -107,5 +107,19 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
 
         ++i;
     }
+    cfg->sync();
+}
+
+void SieveEditorUtil::addServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf)
+{
+    KSharedConfigPtr cfg = KGlobal::config();
+    const QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
+    const QStringList groups = cfg->groupList().filter( re );
+    KConfigGroup group = cfg->group(QString::fromLatin1("ServerSieve %1").arg(groups.count()));
+    group.writeEntry(QLatin1String("Port"), conf.port);
+    group.writeEntry(QLatin1String("ServerName"), conf.serverName);
+    group.writeEntry(QLatin1String("UserName"), conf.userName);
+    group.writeEntry(QLatin1String("Password"), conf.password);
+    group.writeEntry(QLatin1String("Authentication"), static_cast<int>(conf.authenticationType));
     cfg->sync();
 }

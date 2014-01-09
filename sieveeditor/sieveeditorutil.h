@@ -45,6 +45,7 @@ struct SieveServerConfig {
 
 QList<SieveServerConfig> readServerSieveConfig();
 void writeServerSieveConfig(const QList<SieveEditorUtil::SieveServerConfig> &lstConfig);
+void addServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf);
 }
 
 #endif // SIEVEEDITORUTIL_H

@@ -146,6 +146,8 @@ void SieveEditorMainWindow::slotAddServerSieve()
 {
     QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
     if (dlg->exec()) {
+        const SieveEditorUtil::SieveServerConfig conf = dlg->serverSieveConfig();
+        SieveEditorUtil::addServerSieveConfig(conf);
         mMainWidget->updateServerList();
     }
     delete dlg;
