@@ -239,6 +239,7 @@ void ManageSieveScriptsDialog::slotGotList(KManageSieve::SieveJob *job, bool suc
                 new QTreeWidgetItem( parent );
         item->setText( 0, i18n( "Failed to fetch the list of scripts" ) );
         item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
+        mListView->expandItem( parent );
         return;
     }
 
