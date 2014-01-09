@@ -42,11 +42,16 @@ public:
 
     void setIsNewScript(bool isNewScript);
 
+    void saveScript();
+
+Q_SIGNALS:
+    void refreshList();
+
 private slots:
     void slotGetResult(KManageSieve::SieveJob *, bool success, const QString &script, bool isActive);
     void slotCheckSyntaxClicked();
     void slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg);
-
+    void slotPutResult(KManageSieve::SieveJob *, bool success);
 private:
     KUrl mCurrentURL;
     KSieveUi::SieveEditorWidget *mSieveEditorWidget;

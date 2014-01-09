@@ -21,9 +21,10 @@
 #include "sieveeditorpagewidget.h"
 #include "editor/sieveeditorwidget.h"
 
-#include <KLocalizedString>
-
 #include <kmanagesieve/sievejob.h>
+
+#include <KLocalizedString>
+#include <KMessageBox>
 
 #include <QDebug>
 #include <QVBoxLayout>
@@ -96,4 +97,24 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
     mSieveEditorWidget->setScriptName( mCurrentURL.fileName() );
     mSieveEditorWidget->setScript( script );
     mWasActive = isActive;
+}
+
+void SieveEditorPageWidget::saveScript()
+{
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive );
+    connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
+             this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)) );
+}
+
+void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *, bool success )
+{
+    if ( success ) {
+        KMessageBox::information( this, i18n( "The Sieve script was successfully uploaded." ),
+                                  i18n( "Sieve Script Upload" ) );
+        mIsNewScript = false;
+    } else {
+        //TODO error
+    }
+    if (mIsNewScript)
+        Q_EMIT refreshList();
 }

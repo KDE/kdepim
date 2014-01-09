@@ -77,6 +77,7 @@ void SieveEditorMainWindow::setupActions()
 
     KStandardAction::quit(this, SLOT(slotQuitApp()), ac );
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+    mSaveScript = KStandardAction::save( this, SLOT(slotSaveScript()), ac );
 
     KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
@@ -105,6 +106,11 @@ void SieveEditorMainWindow::setupActions()
 void SieveEditorMainWindow::slotRefreshList()
 {
     mMainWidget->refreshList();
+}
+
+void SieveEditorMainWindow::slotSaveScript()
+{
+    mMainWidget->saveScript();
 }
 
 void SieveEditorMainWindow::slotDesactivateScript()

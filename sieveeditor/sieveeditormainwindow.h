@@ -42,6 +42,7 @@ private slots:
     void slotEditScript();
     void slotDesactivateScript();
     void slotRefreshList();
+    void slotSaveScript();
 
 private:
     void readConfig();
@@ -52,6 +53,7 @@ private:
     KAction *mEditScript;
     KAction *mDesactivateScript;
     KAction *mRefreshList;
+    KAction *mSaveScript;
 };
 
 #endif // SIEVEEDITORMAINWINDOW_H

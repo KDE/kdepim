@@ -46,6 +46,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void slotCreateNewScript();
     void slotDeleteScript();
+    void slotRefreshList();
 
 private Q_SLOTS:
     void slotNewScript(const KUrl &url, const QStringList &capabilities);

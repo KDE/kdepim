@@ -73,6 +73,11 @@ void SieveEditorScriptManagerWidget::slotDeleteScript()
     mTreeView->slotEditScript();
 }
 
+void SieveEditorScriptManagerWidget::slotRefreshList()
+{
+    updateServerList();
+}
+
 void SieveEditorScriptManagerWidget::updateServerList()
 {
     mTreeView->slotRefresh();
