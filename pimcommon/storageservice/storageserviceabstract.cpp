@@ -38,13 +38,19 @@ bool StorageServiceAbstract::isInProgress() const
     return mInProgress;
 }
 
+void StorageServiceAbstract::changeProgressState(bool state)
+{
+    mInProgress = state;
+    Q_EMIT inProgress(state);
+}
+
 void StorageServiceAbstract::downloadFile(const QString &filename)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";
         return;
     }
-    mInProgress = true;
+    changeProgressState(true);
     storageServicedownloadFile(filename);
 }
 
@@ -55,7 +61,7 @@ void StorageServiceAbstract::uploadFile(const QString &filename)
         return;
     }
 
-    mInProgress = true;
+    changeProgressState(true);
     storageServiceuploadFile(filename);
 }
 
@@ -65,7 +71,7 @@ void StorageServiceAbstract::accountInfo()
         qDebug()<<" still in progress";
         return;
     }
-    mInProgress = true;
+    changeProgressState(true);
     storageServiceaccountInfo();
 }
 
@@ -75,7 +81,7 @@ void StorageServiceAbstract::createFolder(const QString &folder)
         qDebug()<<" still in progress";
         return;
     }
-    mInProgress = true;
+    changeProgressState(true);
     storageServicecreateFolder(folder);
 }
 
@@ -85,7 +91,7 @@ void StorageServiceAbstract::listFolder()
         qDebug()<<" still in progress";
         return;
     }
-    mInProgress = true;
+    changeProgressState(true);
     storageServicelistFolder();
 }
 
@@ -95,7 +101,7 @@ void StorageServiceAbstract::authentication()
         qDebug()<<" still in progress";
         return;
     }
-    mInProgress = true;
+    changeProgressState(true);
     storageServiceauthentication();
 }
 
@@ -105,7 +111,7 @@ void StorageServiceAbstract::shareLink(const QString &root, const QString &path)
         qDebug()<<" still in progress";
         return;
     }
-    mInProgress = true;
+    changeProgressState(true);
     storageServiceShareLink(root, path);
 }
 
@@ -115,7 +121,7 @@ void StorageServiceAbstract::createServiceFolder()
         qDebug()<<" still in progress";
         return;
     }
-    mInProgress = true;
+    changeProgressState(true);
     storageServicecreateServiceFolder();
 }
 
@@ -125,7 +131,7 @@ void StorageServiceAbstract::deleteFile(const QString &filename)
         qDebug()<<" still in progress";
         return;
     }
-    mInProgress = true;
+    changeProgressState(true);
     storageServicedeleteFile(filename);
 }
 
@@ -135,7 +141,7 @@ void StorageServiceAbstract::deleteFolder(const QString &foldername)
         qDebug()<<" still in progress";
         return;
     }
-    mInProgress = true;
+    changeProgressState(true);
     storageServicedeleteFolder(foldername);
 }
 
@@ -182,68 +188,68 @@ void StorageServiceAbstract::executeNextAction()
 void StorageServiceAbstract::slotDeleteFolderDone(const QString &folder)
 {
     Q_EMIT deleteFolderDone(storageServiceName(), folder);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::slotDeleteFileDone(const QString &filename)
 {
     Q_EMIT deleteFileDone(storageServiceName(), filename);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::slotAccountInfoDone(const PimCommon::AccountInfo &info)
 {
     Q_EMIT accountInfoDone(storageServiceName(), info);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::slotActionFailed(const QString &error)
 {
     //qDebug()<<" error found "<<error;
     Q_EMIT actionFailed(storageServiceName(), error);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::slotShareLinkDone(const QString &url)
 {
     Q_EMIT shareLinkDone(storageServiceName(), url);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::slotUploadFileProgress(qint64 done, qint64 total)
 {
     Q_EMIT uploadFileProgress(storageServiceName(), done, total);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::slotCreateFolderDone(const QString &folderName)
 {
     Q_EMIT createFolderDone(storageServiceName(), folderName);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::slotUploadFileDone(const QString &filename)
 {
     Q_EMIT uploadFileDone(storageServiceName(), filename);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::slotListFolderDone(const QStringList &listFolder)
 {
     Q_EMIT listFolderDone(storageServiceName(), listFolder);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::slotDownLoadFileDone(const QString &fileName)
 {
     Q_EMIT downLoadFileDone(storageServiceName(), fileName);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::emitAuthentificationFailder(const QString &errorMessage)
 {
     Q_EMIT authenticationFailed(storageServiceName(), errorMessage);
-    mInProgress = false;
+    changeProgressState(false);
 }
 
 void StorageServiceAbstract::emitAuthentificationDone()
@@ -251,8 +257,9 @@ void StorageServiceAbstract::emitAuthentificationDone()
     Q_EMIT authenticationDone(storageServiceName());
     if (mNextAction->nextActionType() != NoneAction)
         executeNextAction();
-    else
-        mInProgress = false;
+    else {
+        changeProgressState(false);
+    }
 }
 
 StorageServiceAbstract::Capabilities StorageServiceAbstract::capabilities() const

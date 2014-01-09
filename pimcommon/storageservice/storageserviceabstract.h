@@ -116,6 +116,7 @@ Q_SIGNALS:
     void downLoadFileDone(const QString &serviceName, const QString &fileName);
     void deleteFolderDone(const QString &serviceName, const QString &folder);
     void deleteFileDone(const QString &serviceName, const QString &filename);
+    void inProgress(bool state);
 
 protected slots:
     void slotActionFailed(const QString &error);
@@ -146,6 +147,7 @@ protected:
     Capabilities mCapabilities;
 
 private:
+    inline void changeProgressState(bool state);
     void executeNextAction();
     bool mInProgress;
 };
