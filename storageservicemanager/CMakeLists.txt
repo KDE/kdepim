@@ -16,6 +16,7 @@ set(storageservicemanager_SRCS
   storageserviceconfiguredialog.cpp
   storageservicemanagersettingsjob.cpp
   storageservicelistwidget.cpp
+  storageserviceprogressindicator.cpp
 )
 
 kde4_add_executable(storageservicemanager ${storageservicemanager_SRCS} )
