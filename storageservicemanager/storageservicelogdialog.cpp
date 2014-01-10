@@ -18,39 +18,14 @@
 
 */
 
-#include "storageservicewarning.h"
+#include "storageservicelogdialog.h"
 
-#include <KLocalizedString>
-
-StorageServiceWarning::StorageServiceWarning(QWidget *parent)
-    : KMessageWidget(parent)
+StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    setVisible(false);
-    setCloseButtonVisible(true);
-    setMessageType(Error);
-    setWordWrap(true);
-    setText(i18n("Actions failed. <a href=\"actionfailed\">(Details...)</a>"));
-    connect(this, SIGNAL(linkActivated(QString)), SLOT(slotShowDetails(QString)));
 }
 
-StorageServiceWarning::~StorageServiceWarning()
+StorageServiceLogDialog::~StorageServiceLogDialog()
 {
 
-}
-
-void StorageServiceWarning::slotShowDetails(const QString &content)
-{
-    if (content == QLatin1String("actionfailed")) {
-        //TODO
-    }
-}
-
-void StorageServiceWarning::addLog(const QString &log)
-{
-    mLogInformation.append(log);
-}
-
-void StorageServiceWarning::slotClearLog()
-{
-    mLogInformation.clear();
 }

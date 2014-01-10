@@ -29,8 +29,14 @@ public:
     explicit StorageServiceWarning(QWidget *parent=0);
     ~StorageServiceWarning();
 
+    void addLog(const QString &log);
+
 private slots:
     void slotShowDetails(const QString &content);
+    void slotClearLog();
+
+private:
+    QString mLogInformation;
 };
 
 #endif // STORAGESERVICEWARNING_H
