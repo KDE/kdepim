@@ -42,7 +42,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
-    mListWidget = new StorageServiceListWidget;
+    mListWidget = new StorageServiceListWidget(mStorageService->capabilities());
     vbox->addWidget(mListWidget);
     connectStorageService();
 }

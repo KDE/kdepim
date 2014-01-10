@@ -106,8 +106,6 @@ void StorageServiceManagerMainWindow::setupActions()
     mDownloadFile->setText(i18n("Download File..."));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
-
-    //TODO
 }
 
 void StorageServiceManagerMainWindow::slotAddStorageService()

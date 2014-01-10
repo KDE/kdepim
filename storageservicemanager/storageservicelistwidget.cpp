@@ -19,10 +19,14 @@
 */
 
 #include "storageservicelistwidget.h"
+#include <KMenu>
 
-StorageServiceListWidget::StorageServiceListWidget(QWidget *parent)
-    : QListWidget(parent)
+StorageServiceListWidget::StorageServiceListWidget(PimCommon::StorageServiceAbstract::Capabilities capabilities, QWidget *parent)
+    : QListWidget(parent),
+      mCapabilities(capabilities)
 {
+    connect( this, SIGNAL(customContextMenuRequested(QPoint)),
+             SLOT(slotContextMenu(QPoint)) );
 }
 
 StorageServiceListWidget::~StorageServiceListWidget()
@@ -30,3 +34,12 @@ StorageServiceListWidget::~StorageServiceListWidget()
 
 }
 
+void StorageServiceListWidget::slotContextMenu(const QPoint &pos)
+{
+    const QList<QListWidgetItem *> lstSelectedItems = selectedItems();
+    const bool hasItemsSelected = !lstSelectedItems.isEmpty();
+    KMenu *menu = new KMenu( this );
+    //TODO
+    menu->exec( mapToGlobal( pos ) );
+    delete menu;
+}
