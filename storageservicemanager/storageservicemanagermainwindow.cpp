@@ -89,7 +89,6 @@ void StorageServiceManagerMainWindow::setupActions()
     mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceTabWidget, SLOT(slotCreateFolder()));
     mCreateFolder->setText(i18n("Create Folder..."));
 
-
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
 

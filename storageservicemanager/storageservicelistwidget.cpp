@@ -20,6 +20,7 @@
 
 #include "storageservicelistwidget.h"
 #include <KMenu>
+#include <KLocalizedString>
 
 StorageServiceListWidget::StorageServiceListWidget(PimCommon::StorageServiceAbstract::Capabilities capabilities, QWidget *parent)
     : QListWidget(parent),
@@ -39,7 +40,16 @@ void StorageServiceListWidget::slotContextMenu(const QPoint &pos)
     const QList<QListWidgetItem *> lstSelectedItems = selectedItems();
     const bool hasItemsSelected = !lstSelectedItems.isEmpty();
     KMenu *menu = new KMenu( this );
+    menu->addAction( i18n("Up"), this, SLOT(slotMoveUp()));
+    QAction *act = new QAction(menu);
+    act->setSeparator(true);
+    menu->addAction(act);
     //TODO
     menu->exec( mapToGlobal( pos ) );
     delete menu;
+}
+
+void StorageServiceListWidget::slotMoveUp()
+{
+
 }
