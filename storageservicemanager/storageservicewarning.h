@@ -28,6 +28,9 @@ class StorageServiceWarning : public KMessageWidget
 public:
     explicit StorageServiceWarning(QWidget *parent=0);
     ~StorageServiceWarning();
+
+private slots:
+    void slotShowDetails(const QString &content);
 };
 
 #endif // STORAGESERVICEWARNING_H
