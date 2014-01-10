@@ -41,8 +41,8 @@ public:
     QString boxClientId() const;
     QString boxClientSecret() const;
     QString hubicClientId() const;
-    QString hubicClientSecret() const;
-
+    QString hubicClientSecret() const;    
+    QString dropboxRootPath() const;
 private:
     StorageServiceJobConfig(QObject *parent=0);
     friend class StorageServiceJobConfigPrivate;

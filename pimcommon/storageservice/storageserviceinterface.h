@@ -35,6 +35,7 @@ public:
     //DropBox
     virtual QString dropboxOauthConsumerKey() const = 0;
     virtual QString dropboxOauthSignature() const = 0;
+    virtual QString dropboxRootPath() const = 0;
 
     //Box
     virtual QString boxClientId() const = 0;

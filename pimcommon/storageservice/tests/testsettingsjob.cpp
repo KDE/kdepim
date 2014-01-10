@@ -67,3 +67,8 @@ QString TestSettingsJob::hubicClientSecret() const
 {
     return QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
 }
+
+QString TestSettingsJob::dropboxRootPath() const
+{
+    return QLatin1String("dropbox");
+}

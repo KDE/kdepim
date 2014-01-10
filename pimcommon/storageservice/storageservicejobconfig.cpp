@@ -131,5 +131,13 @@ QString StorageServiceJobConfig::hubicClientSecret() const
     return mSettingsJob->hubicClientSecret();
 }
 
+QString StorageServiceJobConfig::dropboxRootPath() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->dropboxRootPath();
+}
 
 }
