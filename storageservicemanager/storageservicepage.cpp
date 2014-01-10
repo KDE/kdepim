@@ -186,4 +186,9 @@ void StorageServicePage::slotProgressStateChanged(bool state)
 {
     //TODO fixme
     setEnabled(state);
+    if (state) {
+        mProgressIndicator->startAnimation();
+    } else {
+        mProgressIndicator->stopAnimation();
+    }
 }
