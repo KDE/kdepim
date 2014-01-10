@@ -18,25 +18,19 @@
 
 */
 
+#include "storageserviceaccountinfodialog.h"
 
-#ifndef STORAGESERVICELOGDIALOG_H
-#define STORAGESERVICELOGDIALOG_H
+#include <KLocalizedString>
 
-#include <KDialog>
-namespace PimCommon {
-class RichTextEditorWidget;
-}
-class StorageServiceLogDialog : public KDialog
+StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(QWidget *parent)
+    : KDialog(parent)
 {
-    Q_OBJECT
-public:
-    explicit StorageServiceLogDialog(QWidget *parent=0);
-    ~StorageServiceLogDialog();
+    setCaption(i18n("Account Info"));
+    setButtons(Close);
+}
 
-private:
-    void readConfig();
-    void writeConfig();
-    PimCommon::RichTextEditorWidget *mLog;
-};
+StorageServiceAccountInfoDialog::~StorageServiceAccountInfoDialog()
+{
 
-#endif // STORAGESERVICELOGDIALOG_H
+}
+

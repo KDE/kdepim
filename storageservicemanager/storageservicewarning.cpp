@@ -19,8 +19,11 @@
 */
 
 #include "storageservicewarning.h"
+#include "storageservicelogdialog.h"
 
 #include <KLocalizedString>
+
+#include <QPointer>
 
 StorageServiceWarning::StorageServiceWarning(QWidget *parent)
     : KMessageWidget(parent)
@@ -41,7 +44,9 @@ StorageServiceWarning::~StorageServiceWarning()
 void StorageServiceWarning::slotShowDetails(const QString &content)
 {
     if (content == QLatin1String("actionfailed")) {
-        //TODO
+        QPointer<StorageServiceLogDialog> dlg = new StorageServiceLogDialog(this);
+        dlg->exec();
+        delete dlg;
     }
 }
 

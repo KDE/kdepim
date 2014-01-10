@@ -19,13 +19,44 @@
 */
 
 #include "storageservicelogdialog.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+
+
+#include <KLocalizedString>
+#include <KConfigGroup>
+#include <KSharedConfig>
+
+#include <QHBoxLayout>
 
 StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     : KDialog(parent)
 {
+    setCaption(i18n("Log"));
+    setButtons( Close );
+    mLog = new PimCommon::RichTextEditorWidget;
+    mLog->setReadOnly(true);
+    readConfig();
+    setMainWidget(mLog);
 }
 
 StorageServiceLogDialog::~StorageServiceLogDialog()
 {
+    writeConfig();
+}
 
+void StorageServiceLogDialog::writeConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    KConfigGroup group = config->group( QLatin1String("StorageServiceLogDialog") );
+    group.writeEntry( "Size", size() );
+}
+
+void StorageServiceLogDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "StorageServiceLogDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
 }

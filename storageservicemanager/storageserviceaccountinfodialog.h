@@ -18,25 +18,17 @@
 
 */
 
-
-#ifndef STORAGESERVICELOGDIALOG_H
-#define STORAGESERVICELOGDIALOG_H
+#ifndef STORAGESERVICEACCOUNTINFODIALOG_H
+#define STORAGESERVICEACCOUNTINFODIALOG_H
 
 #include <KDialog>
-namespace PimCommon {
-class RichTextEditorWidget;
-}
-class StorageServiceLogDialog : public KDialog
+
+class StorageServiceAccountInfoDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceLogDialog(QWidget *parent=0);
-    ~StorageServiceLogDialog();
-
-private:
-    void readConfig();
-    void writeConfig();
-    PimCommon::RichTextEditorWidget *mLog;
+    explicit StorageServiceAccountInfoDialog(QWidget *parent);
+    ~StorageServiceAccountInfoDialog();
 };
 
-#endif // STORAGESERVICELOGDIALOG_H
+#endif // STORAGESERVICEACCOUNTINFODIALOG_H

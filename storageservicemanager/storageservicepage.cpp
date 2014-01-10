@@ -22,6 +22,7 @@
 #include "storageservicelistwidget.h"
 #include "storageserviceprogressindicator.h"
 #include "storageservicewarning.h"
+#include "storageserviceaccountinfodialog.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
@@ -33,6 +34,7 @@
 #include <QClipboard>
 #include <QVBoxLayout>
 #include <QDebug>
+#include <QPointer>
 
 StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : QWidget(parent),
@@ -75,14 +77,16 @@ void StorageServicePage::connectStorageService()
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
 {
     if (verifyService(serviceName)) {
-
+        QPointer<StorageServiceAccountInfoDialog> dlg = new StorageServiceAccountInfoDialog(this);
+        dlg->exec();
+        delete dlg;
     }
 }
 
 void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
     if (verifyService(serviceName)) {
-
+        KMessageBox::information(this, i18n("Upload File"), i18n("%1 was correctly uploaded", fileName));
     }
 }
 
@@ -188,8 +192,7 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities
 
 void StorageServicePage::slotProgressStateChanged(bool state)
 {
-    //TODO fixme
-    setEnabled(state);
+    mListWidget->setEnabled(state);
     if (state) {
         mProgressIndicator->startAnimation();
     } else {
