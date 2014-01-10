@@ -27,6 +27,7 @@ class StorageServiceListWidget;
 namespace PimCommon {
 class StorageServiceAbstract;
 }
+class StorageServiceProgressIndicator;
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
@@ -43,6 +44,9 @@ public:
     void deleteFile();
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
 
+Q_SIGNALS:
+    void updatePixmap(const QPixmap &pix, StorageServicePage *page);
+
 private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
     void slotUploadFileDone(const QString &serviceName, const QString &fileName);
@@ -51,7 +55,8 @@ private Q_SLOTS:
     void slotAuthenticationFailed(const QString &serviceName, const QString &error);
     void slotAuthenticationDone(const QString &serviceName);
     void slotActionFailed(const QString &serviceName, const QString &error);    
-    void slotProgressStateChanged(bool state);
+    void slotProgressStateChanged(bool state);    
+    void slotUpdatePixmap(const QPixmap &pix);
 
 private:
     bool verifyService(const QString &serviceName);
@@ -59,6 +64,7 @@ private:
     QString mServiceName;
     PimCommon::StorageServiceAbstract *mStorageService;
     StorageServiceListWidget *mListWidget;
+    StorageServiceProgressIndicator *mProgressIndicator;
 };
 
 #endif // STORAGESERVICEPAGE_H

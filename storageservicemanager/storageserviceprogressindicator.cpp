@@ -36,7 +36,7 @@ StorageServiceProgressIndicator::~StorageServiceProgressIndicator()
 
 void StorageServiceProgressIndicator::slotTimerDone()
 {
-    //mItem->setProgressAnimation(mProgressPix.frameAt(mProgressCount));
+    Q_EMIT updatePixmap(mProgressPix.frameAt(mProgressCount));
     ++mProgressCount;
     if (mProgressCount == 8)
         mProgressCount = 0;
@@ -54,5 +54,5 @@ void StorageServiceProgressIndicator::stopAnimation()
 {
     if (mProgressTimer->isActive())
         mProgressTimer->stop();
-    //mItem->setDefaultIcon();
+    Q_EMIT updatePixmap();
 }

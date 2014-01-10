@@ -20,6 +20,7 @@
 
 #include "storageservicepage.h"
 #include "storageservicelistwidget.h"
+#include "storageserviceprogressindicator.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
@@ -37,6 +38,8 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
       mServiceName(serviceName),
       mStorageService(storageService)
 {
+    mProgressIndicator = new StorageServiceProgressIndicator(this);
+    connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mListWidget = new StorageServiceListWidget;
@@ -47,6 +50,11 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
 StorageServicePage::~StorageServicePage()
 {
 
+}
+
+void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
+{
+    Q_EMIT updatePixmap(pix, this);
 }
 
 void StorageServicePage::connectStorageService()

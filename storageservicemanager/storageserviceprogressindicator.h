@@ -22,6 +22,7 @@
 #define STORAGESERVICEPROGRESSINDICATOR_H
 
 #include <KPixmapSequence>
+#include <QPixmap>
 
 class QTimer;
 
@@ -34,6 +35,9 @@ public:
 
     void startAnimation();
     void stopAnimation();
+
+Q_SIGNALS:
+    void updatePixmap(const QPixmap &pix = QPixmap());
 
 private Q_SLOTS:
     void slotTimerDone();
