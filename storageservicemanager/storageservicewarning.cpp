@@ -23,6 +23,7 @@
 StorageServiceWarning::StorageServiceWarning(QWidget *parent)
     : KMessageWidget(parent)
 {
+    hide();
 }
 
 StorageServiceWarning::~StorageServiceWarning()

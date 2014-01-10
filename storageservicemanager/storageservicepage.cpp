@@ -21,6 +21,7 @@
 #include "storageservicepage.h"
 #include "storageservicelistwidget.h"
 #include "storageserviceprogressindicator.h"
+#include "storageservicewarning.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
@@ -44,6 +45,8 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     setLayout(vbox);
     mListWidget = new StorageServiceListWidget(mStorageService->capabilities());
     vbox->addWidget(mListWidget);
+    mStorageServiceWarning = new StorageServiceWarning;
+    vbox->addWidget(mStorageServiceWarning);
     connectStorageService();
 }
 
@@ -115,8 +118,9 @@ void StorageServicePage::slotAuthenticationDone(const QString &serviceName)
 
 void StorageServicePage::slotActionFailed(const QString &serviceName, const QString &error)
 {
+    qDebug()<<" void StorageServicePage::slotActionFailed(const QString &serviceName, const QString &error)"<<error;
     if (verifyService(serviceName)) {
-
+        mStorageServiceWarning->animatedShow();
     }
 }
 
