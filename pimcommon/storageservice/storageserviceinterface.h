@@ -41,9 +41,11 @@ public:
     virtual QString boxClientId() const = 0;
     virtual QString boxClientSecret() const = 0;
 
-    //Box
+    //Hubic
     virtual QString hubicClientId() const = 0;
     virtual QString hubicClientSecret() const = 0;
+
+    virtual QString oauth2RedirectUrl() const = 0;
 };
 
 }

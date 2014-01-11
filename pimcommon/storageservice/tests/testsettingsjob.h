@@ -42,6 +42,7 @@ public:
     QString hubicClientId() const;
     QString hubicClientSecret() const;
     QString dropboxRootPath() const;
+    QString oauth2RedirectUrl() const;
 };
 }
 

@@ -122,7 +122,6 @@ void StorageServicePage::slotAuthenticationDone(const QString &serviceName)
 
 void StorageServicePage::slotActionFailed(const QString &serviceName, const QString &error)
 {
-    qDebug()<<" void StorageServicePage::slotActionFailed(const QString &serviceName, const QString &error)"<<error;
     if (verifyService(serviceName)) {
         mStorageServiceWarning->animatedShow();
     }

@@ -74,3 +74,8 @@ QString StorageServiceManagerSettingsJob::dropboxRootPath() const
 {
     return QLatin1String("dropbox");
 }
+
+QString StorageServiceManagerSettingsJob::oauth2RedirectUrl() const
+{
+    return QLatin1String("https://bugs.kde.org/");
+}

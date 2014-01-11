@@ -140,4 +140,13 @@ QString StorageServiceJobConfig::dropboxRootPath() const
     return mSettingsJob->dropboxRootPath();
 }
 
+QString StorageServiceJobConfig::oauth2RedirectUrl() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->oauth2RedirectUrl();
+}
+
 }

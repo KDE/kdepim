@@ -72,3 +72,8 @@ QString TestSettingsJob::dropboxRootPath() const
 {
     return QLatin1String("dropbox");
 }
+
+QString TestSettingsJob::oauth2RedirectUrl() const
+{
+    return QLatin1String("https://bugs.kde.org/");
+}

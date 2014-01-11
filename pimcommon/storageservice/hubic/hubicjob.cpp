@@ -30,7 +30,7 @@ HubicJob::HubicJob(QObject *parent)
 {
     mClientId = PimCommon::StorageServiceJobConfig::self()->hubicClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->hubicClientSecret();
-    mRedirectUri = QLatin1String("https://bugs.kde.org/");
+    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     mServiceUrl = QLatin1String("https://api.hubic.com");
     mApiUrl = QLatin1String("https://api.hubic.com");
     mScope = QLatin1String("usage.r,account.r,credentials.r,links.wd");
