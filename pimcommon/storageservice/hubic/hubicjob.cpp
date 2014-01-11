@@ -61,10 +61,6 @@ void HubicJob::parseAccountInfo(const QString &data)
         accountInfo.quota = info.value(QLatin1String("quota")).toLongLong();
     }
     Q_EMIT accountInfoDone(accountInfo);
-
-
-    qDebug()<<" info"<<info;
-    //TODO
     deleteLater();
 }
 
