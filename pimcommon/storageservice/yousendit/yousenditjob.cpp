@@ -288,6 +288,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
 void YouSendItJob::parseDownloadFile(const QString &data)
 {
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //Q_EMIT downLoadFileDone(filename);
     //TODO
     deleteLater();
 }
