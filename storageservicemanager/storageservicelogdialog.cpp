@@ -32,16 +32,23 @@ StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Log"));
-    setButtons( Close );
+    setButtons( User1 | Close );
+    setButtonText(User1, i18n("Clear Log"));
     mLog = new PimCommon::RichTextEditorWidget;
     mLog->setReadOnly(true);
     readConfig();
     setMainWidget(mLog);
+    connect(this, SIGNAL(user1Clicked()), this, SIGNAL(clearLog()));
 }
 
 StorageServiceLogDialog::~StorageServiceLogDialog()
 {
     writeConfig();
+}
+
+void StorageServiceLogDialog::setLog(const QString &log)
+{
+    mLog->setHtml(log);
 }
 
 void StorageServiceLogDialog::writeConfig()

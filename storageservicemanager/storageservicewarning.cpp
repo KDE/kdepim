@@ -22,8 +22,11 @@
 #include "storageservicelogdialog.h"
 
 #include <KLocalizedString>
+#include <KDateTime>
+#include <KLocale>
 
 #include <QPointer>
+
 
 StorageServiceWarning::StorageServiceWarning(QWidget *parent)
     : KMessageWidget(parent)
@@ -45,6 +48,8 @@ void StorageServiceWarning::slotShowDetails(const QString &content)
 {
     if (content == QLatin1String("actionfailed")) {
         QPointer<StorageServiceLogDialog> dlg = new StorageServiceLogDialog(this);
+        connect(dlg, SIGNAL(clearLog()), this, SLOT(slotClearLog()));
+        dlg->setLog(mLogInformation);
         dlg->exec();
         delete dlg;
     }
@@ -52,7 +57,8 @@ void StorageServiceWarning::slotShowDetails(const QString &content)
 
 void StorageServiceWarning::addLog(const QString &log)
 {
-    mLogInformation.append(log);
+    const QString dateTime = QString::fromLatin1("<b>[%1]</b>").arg(KDateTime::currentLocalDateTime().toString());
+    mLogInformation.append(dateTime + log + QLatin1String("<br>"));
 }
 
 void StorageServiceWarning::slotClearLog()

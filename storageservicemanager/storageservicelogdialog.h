@@ -33,6 +33,11 @@ public:
     explicit StorageServiceLogDialog(QWidget *parent=0);
     ~StorageServiceLogDialog();
 
+    void setLog(const QString &log);
+
+Q_SIGNALS:
+    void clearLog();
+
 private:
     void readConfig();
     void writeConfig();
