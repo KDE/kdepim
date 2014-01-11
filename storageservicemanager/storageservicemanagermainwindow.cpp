@@ -71,8 +71,8 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
     mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
     mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
     mDeleteFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
-    mAuthenticate->setEnabled(! (capabilities & PimCommon::StorageServiceAbstract::NoCapability));
-    mRefreshList->setEnabled(! (capabilities & PimCommon::StorageServiceAbstract::NoCapability));
+    mAuthenticate->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
+    mRefreshList->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
 }
 
 void StorageServiceManagerMainWindow::setupActions()
