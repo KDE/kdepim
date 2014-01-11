@@ -48,6 +48,9 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
     setCentralWidget(mStorageServiceTabWidget);
 
+    connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+
     setupActions();
     setupGUI();
     readConfig();
@@ -61,6 +64,13 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
     group.writeEntry( "Size", size() );
+}
+
+void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
+{
+    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+    } else {
+    }
 }
 
 void StorageServiceManagerMainWindow::slotUpdateActions()

@@ -77,3 +77,8 @@ QString TestSettingsJob::oauth2RedirectUrl() const
 {
     return QLatin1String("https://bugs.kde.org/");
 }
+
+QString TestSettingsJob::ubuntuOneAttachmentVolume() const
+{
+    return QLatin1String("/~/KMail Attachments");
+}

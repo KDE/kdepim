@@ -34,7 +34,7 @@ using namespace PimCommon;
 UbuntuOneJob::UbuntuOneJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
-    mAttachmentVolume = QLatin1String("/~/KMail Attachments");
+    mAttachmentVolume = PimCommon::StorageServiceJobConfig::self()->ubuntuOneAttachmentVolume();
     mOauthVersion = QLatin1String("1.0");
     mOauthSignatureMethod = QLatin1String("PLAINTEXT");
     mNonce = PimCommon::StorageServiceUtils::generateNonce(8);

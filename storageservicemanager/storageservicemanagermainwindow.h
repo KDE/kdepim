@@ -22,6 +22,7 @@
 #define STORAGESERVICEMANAGERMAINWINDOW_H
 
 #include <KXmlGuiWindow>
+#include <Solid/Networking>
 
 namespace PimCommon {
 class StorageServiceManager;
@@ -38,7 +39,8 @@ public:
 private slots:
     void slotAddStorageService();    
     void slotConfigure();        
-    void slotUpdateActions();
+    void slotUpdateActions();   
+    void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
 
 private:
     void setupActions();

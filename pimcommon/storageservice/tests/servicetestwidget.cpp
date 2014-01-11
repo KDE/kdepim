@@ -214,5 +214,4 @@ void ServiceTestWidget::updateButtons(PimCommon::StorageServiceAbstract::Capabil
     mDeleteFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
     mDeleteFolderAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability);
     mDownloadFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
-
 }

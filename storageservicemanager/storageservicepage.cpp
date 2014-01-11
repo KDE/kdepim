@@ -77,7 +77,7 @@ void StorageServicePage::connectStorageService()
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
 {
     if (verifyService(serviceName)) {
-        QPointer<StorageServiceAccountInfoDialog> dlg = new StorageServiceAccountInfoDialog(this);
+        QPointer<StorageServiceAccountInfoDialog> dlg = new StorageServiceAccountInfoDialog(accountInfo, this);
         dlg->exec();
         delete dlg;
     }

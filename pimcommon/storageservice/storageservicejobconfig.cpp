@@ -149,4 +149,13 @@ QString StorageServiceJobConfig::oauth2RedirectUrl() const
     return mSettingsJob->oauth2RedirectUrl();
 }
 
+QString StorageServiceJobConfig::ubuntuOneAttachmentVolume() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->ubuntuOneAttachmentVolume();
+}
+
 }

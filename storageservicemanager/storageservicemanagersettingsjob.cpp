@@ -79,3 +79,8 @@ QString StorageServiceManagerSettingsJob::oauth2RedirectUrl() const
 {
     return QLatin1String("https://bugs.kde.org/");
 }
+
+QString StorageServiceManagerSettingsJob::ubuntuOneAttachmentVolume() const
+{
+    return QLatin1String("/~/KMail Attachments");
+}

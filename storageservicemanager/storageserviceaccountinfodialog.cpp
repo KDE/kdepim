@@ -19,14 +19,16 @@
 */
 
 #include "storageserviceaccountinfodialog.h"
+#include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
 
-StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(QWidget *parent)
+StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const PimCommon::AccountInfo &accountInfo, QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Account Info"));
     setButtons(Close);
+    //TODO add infos
 }
 
 StorageServiceAccountInfoDialog::~StorageServiceAccountInfoDialog()

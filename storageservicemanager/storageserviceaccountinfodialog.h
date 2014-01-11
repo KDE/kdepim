@@ -23,11 +23,15 @@
 
 #include <KDialog>
 
+namespace PimCommon {
+class AccountInfo;
+}
+
 class StorageServiceAccountInfoDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceAccountInfoDialog(QWidget *parent);
+    explicit StorageServiceAccountInfoDialog(const PimCommon::AccountInfo &accountInfo, QWidget *parent);
     ~StorageServiceAccountInfoDialog();
 };
 

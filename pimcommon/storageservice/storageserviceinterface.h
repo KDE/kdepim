@@ -46,6 +46,10 @@ public:
     virtual QString hubicClientSecret() const = 0;
 
     virtual QString oauth2RedirectUrl() const = 0;
+
+    //UbuntuOne
+    virtual QString ubuntuOneAttachmentVolume() const = 0;
+
 };
 
 }

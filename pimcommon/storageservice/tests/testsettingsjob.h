@@ -43,6 +43,7 @@ public:
     QString hubicClientSecret() const;
     QString dropboxRootPath() const;
     QString oauth2RedirectUrl() const;
+    QString ubuntuOneAttachmentVolume() const;
 };
 }
 
