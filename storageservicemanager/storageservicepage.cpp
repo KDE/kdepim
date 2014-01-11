@@ -109,6 +109,7 @@ void StorageServicePage::slotShareLinkDone(const QString &serviceName, const QSt
 void StorageServicePage::slotAuthenticationFailed(const QString &serviceName, const QString &error)
 {
     if (verifyService(serviceName)) {
+        mStorageServiceWarning->addLog(error);
         mStorageServiceWarning->animatedShow();
     }
 }
@@ -123,6 +124,7 @@ void StorageServicePage::slotAuthenticationDone(const QString &serviceName)
 void StorageServicePage::slotActionFailed(const QString &serviceName, const QString &error)
 {
     if (verifyService(serviceName)) {
+        mStorageServiceWarning->addLog(error);
         mStorageServiceWarning->animatedShow();
     }
 }
