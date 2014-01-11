@@ -35,6 +35,10 @@ public:
 private slots:
     void slotContextMenu(const QPoint &pos);
     void slotMoveUp();
+    void slotDeleteFile();
+    void slotShareFile();
+    void slotDownloadFile();
+    void slotUploadFile();
 
 private:
     PimCommon::StorageServiceAbstract::Capabilities mCapabilities;

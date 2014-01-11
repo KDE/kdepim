@@ -26,8 +26,8 @@ StorageServiceListWidget::StorageServiceListWidget(PimCommon::StorageServiceAbst
     : QListWidget(parent),
       mCapabilities(capabilities)
 {
-    connect( this, SIGNAL(customContextMenuRequested(QPoint)),
-             SLOT(slotContextMenu(QPoint)) );
+    setContextMenuPolicy( Qt::CustomContextMenu );
+    connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
 }
 
 StorageServiceListWidget::~StorageServiceListWidget()
@@ -39,17 +39,47 @@ void StorageServiceListWidget::slotContextMenu(const QPoint &pos)
 {
     const QList<QListWidgetItem *> lstSelectedItems = selectedItems();
     const bool hasItemsSelected = !lstSelectedItems.isEmpty();
+
     KMenu *menu = new KMenu( this );
     menu->addAction( i18n("Up"), this, SLOT(slotMoveUp()));
     QAction *act = new QAction(menu);
     act->setSeparator(true);
     menu->addAction(act);
+    if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
+        menu->addAction(i18n("Delete File"), this, SLOT(slotDeleteFile()));
+    if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability)
+        menu->addAction(i18n("Share File"), this, SLOT(slotShareFile()));
+    if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
+        menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
+    if (mCapabilities & PimCommon::StorageServiceAbstract::UploadFileCapability)
+        menu->addAction(i18n("Upload File"), this, SLOT(slotUploadFile()));
+
     //TODO
     menu->exec( mapToGlobal( pos ) );
     delete menu;
 }
 
 void StorageServiceListWidget::slotMoveUp()
+{
+
+}
+
+void StorageServiceListWidget::slotDeleteFile()
+{
+
+}
+
+void StorageServiceListWidget::slotShareFile()
+{
+
+}
+
+void StorageServiceListWidget::slotDownloadFile()
+{
+
+}
+
+void StorageServiceListWidget::slotUploadFile()
 {
 
 }
