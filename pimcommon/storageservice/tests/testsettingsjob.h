@@ -44,6 +44,7 @@ public:
     QString dropboxRootPath() const;
     QString oauth2RedirectUrl() const;
     QString ubuntuOneAttachmentVolume() const;
+    QString hubicScope() const;
 };
 }
 

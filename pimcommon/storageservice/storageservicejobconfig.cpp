@@ -158,4 +158,13 @@ QString StorageServiceJobConfig::ubuntuOneAttachmentVolume() const
     return mSettingsJob->ubuntuOneAttachmentVolume();
 }
 
+QString StorageServiceJobConfig::hubicScope() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->hubicScope();
+}
+
 }

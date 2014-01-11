@@ -84,3 +84,8 @@ QString StorageServiceManagerSettingsJob::ubuntuOneAttachmentVolume() const
 {
     return QLatin1String("/~/KMail Attachments");
 }
+
+QString StorageServiceManagerSettingsJob::hubicScope() const
+{
+    return QLatin1String("usage.r,account.r,credentials.r,links.wd");
+}

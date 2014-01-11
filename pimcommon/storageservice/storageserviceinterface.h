@@ -44,6 +44,7 @@ public:
     //Hubic
     virtual QString hubicClientId() const = 0;
     virtual QString hubicClientSecret() const = 0;
+    virtual QString hubicScope() const = 0;
 
     virtual QString oauth2RedirectUrl() const = 0;
 
