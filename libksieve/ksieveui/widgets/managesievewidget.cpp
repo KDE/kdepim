@@ -29,7 +29,8 @@
 
 #include <QHBoxLayout>
 #include <QMenu>
-
+#include <QTimer>
+#include <QDebug>
 
 using namespace KSieveUi;
 ManageSieveWidget::ManageSieveWidget(QWidget *parent)
@@ -50,14 +51,35 @@ ManageSieveWidget::ManageSieveWidget(QWidget *parent)
              this, SLOT(slotUpdateButtons()) );
     connect( mTreeView, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
              this, SLOT(slotItemChanged(QTreeWidgetItem*,int)));
+    connect ( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+
     lay->addWidget(mTreeView);
     setLayout(lay);
+    QTimer::singleShot(0,this, SLOT(slotCheckNetworkStatus()));
 }
 
 ManageSieveWidget::~ManageSieveWidget()
 {
     clear();
 }
+
+void ManageSieveWidget::slotCheckNetworkStatus()
+{
+    slotSystemNetworkStatusChanged(Solid::Networking::status());
+}
+
+void ManageSieveWidget::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
+{
+    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+        mTreeView->setEnabled(true);
+        slotRefresh();
+    } else {
+        mTreeView->setEnabled(false);
+        mTreeView->setNetworkDown(false);
+    }
+}
+
 
 ManageSieveTreeView *ManageSieveWidget::treeView() const
 {

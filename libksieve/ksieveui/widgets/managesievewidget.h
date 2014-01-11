@@ -22,6 +22,8 @@
 
 #include <KUrl>
 
+#include <Solid/Networking>
+
 #include <QWidget>
 #include <QMap>
 
@@ -61,7 +63,9 @@ private Q_SLOTS:
     void slotItemChanged(QTreeWidgetItem *item, int col);
     void slotContextMenuRequested(const QPoint &p);
     void slotUpdateButtons();
-    void slotDoubleClicked(QTreeWidgetItem *item);
+    void slotDoubleClicked(QTreeWidgetItem *item);    
+    void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
+    void slotCheckNetworkStatus();
 
 public Q_SLOTS:
     void slotGotList(KManageSieve::SieveJob *job, bool success, const QStringList &listScript, const QString &activeScript);
