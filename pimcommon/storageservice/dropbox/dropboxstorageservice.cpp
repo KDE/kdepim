@@ -32,14 +32,6 @@ using namespace PimCommon;
 DropBoxStorageService::DropBoxStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mCapabilities |= AccountInfoCapability;
-    mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    mCapabilities |= CreateFolderCapability;
-    mCapabilities |= DeleteFolderCapability;
-    mCapabilities |= DeleteFileCapability;
-    mCapabilities |= ListFolderCapability;
-    mCapabilities |= ShareLinkCapability;
     readConfig();
 }
 
@@ -73,7 +65,9 @@ void DropBoxStorageService::storageServiceauthentication()
 void DropBoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mAccessToken.isEmpty()) {
-        mNextAction = ShareLink;
+        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setRootPath(root);
+        mNextAction->setPath(path);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -87,7 +81,7 @@ void DropBoxStorageService::storageServiceShareLink(const QString &root, const Q
 void DropBoxStorageService::storageServicecreateServiceFolder()
 {
     if (mAccessToken.isEmpty()) {
-        mNextAction = CreateServiceFolder;
+        mNextAction->setNextActionType(CreateServiceFolder);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -114,8 +108,8 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
 
 void DropBoxStorageService::storageServicelistFolder()
 {
-    if (mAccessToken.isEmpty()) {
-        mNextAction = ListFolder;
+    if (mAccessToken.isEmpty()) {        
+        mNextAction->setNextActionType(ListFolder);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -129,7 +123,7 @@ void DropBoxStorageService::storageServicelistFolder()
 void DropBoxStorageService::storageServiceaccountInfo()
 {
     if (mAccessToken.isEmpty()) {
-        mNextAction = AccountInfo;
+        mNextAction->setNextActionType(AccountInfo);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -143,7 +137,8 @@ void DropBoxStorageService::storageServiceaccountInfo()
 void DropBoxStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mAccessToken.isEmpty()) {
-        mNextAction = CreateFolder;
+        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -157,7 +152,8 @@ void DropBoxStorageService::storageServicecreateFolder(const QString &folder)
 void DropBoxStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
-        mNextAction = UploadFile;
+        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -203,6 +199,20 @@ QString DropBoxStorageService::iconName()
     return QString();
 }
 
+StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    cap |= AccountInfoCapability;
+    cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= DeleteFileCapability;
+    cap |= ListFolderCapability;
+    cap |= ShareLinkCapability;
+    return cap;
+}
+
 QString DropBoxStorageService::storageServiceName() const
 {
     return serviceName();
@@ -211,7 +221,8 @@ QString DropBoxStorageService::storageServiceName() const
 void DropBoxStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
-        mNextAction = DownLoadFile;
+        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -225,7 +236,8 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &filename)
 void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
-        mNextAction = DeleteFile;
+        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -239,7 +251,8 @@ void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
 void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mAccessToken.isEmpty()) {
-        mNextAction = DeleteFolder;
+        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionFolder(foldername);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -248,6 +261,11 @@ void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFolder(foldername);
     }
+}
+
+StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
+{
+    return serviceCapabilities();
 }
 
 KIcon DropBoxStorageService::icon() const

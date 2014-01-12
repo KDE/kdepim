@@ -18,34 +18,33 @@
 
 */
 
-#ifndef TESTSETTINGSJOB_H
-#define TESTSETTINGSJOB_H
 
-#include <QObject>
-#include "pimcommon_export.h"
-#include "pimcommon/storageservice/storageserviceinterface.h"
+#ifndef STORAGESERVICELOGDIALOG_H
+#define STORAGESERVICELOGDIALOG_H
 
+#include <KDialog>
 namespace PimCommon {
-
-class PIMCOMMON_EXPORT TestSettingsJob : public QObject, public ISettingsJob
+class RichTextEditorWidget;
+}
+class StorageServiceLogDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit TestSettingsJob(QObject *parent=0);
-    ~TestSettingsJob();
+    explicit StorageServiceLogDialog(QWidget *parent=0);
+    ~StorageServiceLogDialog();
 
-    QString youSendItApiKey() const;
-    QString dropboxOauthConsumerKey() const;
-    QString dropboxOauthSignature() const;
-    QString boxClientId() const;
-    QString boxClientSecret() const;
-    QString hubicClientId() const;
-    QString hubicClientSecret() const;
-    QString dropboxRootPath() const;
-    QString oauth2RedirectUrl() const;
-    QString ubuntuOneAttachmentVolume() const;
-    QString hubicScope() const;
+    void setLog(const QString &log);
+
+Q_SIGNALS:
+    void clearLog();
+
+private slots:
+    void slotSaveAs();
+
+private:
+    void readConfig();
+    void writeConfig();
+    PimCommon::RichTextEditorWidget *mLog;
 };
-}
 
-#endif // TESTSETTINGSJOB_H
+#endif // STORAGESERVICELOGDIALOG_H

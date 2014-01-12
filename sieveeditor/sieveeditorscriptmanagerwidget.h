@@ -35,7 +35,8 @@ public:
 
     void updateServerList();
     void editScript();
-    void desactivateScript();
+    void desactivateScript();    
+    void refreshList();
 
 Q_SIGNALS:
     void createScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);
@@ -45,6 +46,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void slotCreateNewScript();
     void slotDeleteScript();
+    void slotRefreshList();
 
 private Q_SLOTS:
     void slotNewScript(const KUrl &url, const QStringList &capabilities);

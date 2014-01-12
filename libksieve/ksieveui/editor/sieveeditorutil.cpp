@@ -43,7 +43,7 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
     case HasflagCondition:
         return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
     case HeaderCondition:
-        return QString(); //TODO
+        return QLatin1String("http://tools.ietf.org/html/rfc5228#page-9");
     case IhaveCondition:
         return QLatin1String("http://tools.ietf.org/html/rfc5463");
     case MailboxexistsCondition:
@@ -65,7 +65,7 @@ QString KSieveUi::SieveEditorUtil::helpUrl(KSieveUi::SieveEditorUtil::HelpVariab
     case VirustestCondition:
         return QLatin1String("http://tools.ietf.org/html/rfc3685#page-4");
     case AbstracteditheaderAction:
-        return QString(); //TODO
+        return QLatin1String("http://tools.ietf.org/html/rfc5228#page-9");
     case AddflagsAction:
         return QLatin1String("http://tools.ietf.org/html/rfc5232#page-5");
     case AddheaderAction:

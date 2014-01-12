@@ -44,9 +44,9 @@ DropBoxJob::DropBoxJob(QObject *parent)
     mApiPath = QLatin1String("https://api.dropbox.com/1/");
     mOauthconsumerKey = PimCommon::StorageServiceJobConfig::self()->dropboxOauthConsumerKey();
     mOauthSignature = PimCommon::StorageServiceJobConfig::self()->dropboxOauthSignature();
+    mRootPath = PimCommon::StorageServiceJobConfig::self()->dropboxRootPath();
     mOauthVersion = QLatin1String("1.0");
     mOauthSignatureMethod = QLatin1String("PLAINTEXT");
-    mRootPath = QLatin1String("dropbox");
     mTimestamp = QString::number(QDateTime::currentMSecsSinceEpoch()/1000);
     mNonce = PimCommon::StorageServiceUtils::generateNonce(8);
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
@@ -337,7 +337,7 @@ void DropBoxJob::uploadFile(const QString &filename)
             return;
         } else {
             QNetworkReply *reply = mNetworkAccessManager->put(request, file);
-            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64, qint64)));
+            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
         }

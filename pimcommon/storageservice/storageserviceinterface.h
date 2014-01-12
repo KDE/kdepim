@@ -35,14 +35,22 @@ public:
     //DropBox
     virtual QString dropboxOauthConsumerKey() const = 0;
     virtual QString dropboxOauthSignature() const = 0;
+    virtual QString dropboxRootPath() const = 0;
 
     //Box
     virtual QString boxClientId() const = 0;
     virtual QString boxClientSecret() const = 0;
 
-    //Box
+    //Hubic
     virtual QString hubicClientId() const = 0;
     virtual QString hubicClientSecret() const = 0;
+    virtual QString hubicScope() const = 0;
+
+    virtual QString oauth2RedirectUrl() const = 0;
+
+    //UbuntuOne
+    virtual QString ubuntuOneAttachmentVolume() const = 0;
+
 };
 
 }

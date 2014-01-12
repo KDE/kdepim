@@ -97,7 +97,9 @@ if (KDEPIM_BUILD_DESKTOP)
      configuredialog/colorlistbox.cpp
      configuredialog/accountconfigorderdialog.cpp
      configuredialog/configureagentswidget.cpp
+     configuredialog/configurestorageservicewidget.cpp
   )
+
   set(kmailprivate_searchdialog_LIB_SRCS
      searchdialog/kmsearchmessagemodel.cpp
      searchdialog/kmsearchfilterproxymodel.cpp
@@ -189,14 +191,6 @@ if (KDEPIM_BUILD_DESKTOP)
   )
 
 
-  set_source_files_properties(${CMAKE_SOURCE_DIR}/agents/folderarchiveagent/org.freedesktop.Akonadi.FolderArchiveAgent.xml PROPERTIES INCLUDE "../mailcommon/dbusoperators.h")
-
-  qt4_add_dbus_interfaces(kmailprivate_LIB_SRCS
-    ${CMAKE_SOURCE_DIR}/agents/folderarchiveagent/org.freedesktop.Akonadi.FolderArchiveAgent.xml
-  )
-
-
-
   kde4_add_ui_files(kmailprivate_LIB_SRCS
     ui/composercryptoconfiguration.ui
     ui/warningconfiguration.ui
@@ -269,7 +263,6 @@ if (KDEPIM_BUILD_DESKTOP)
     ${KDE4_KPRINTUTILS_LIBS}
     ${NEPOMUK_CORE_LIBRARY}
     sendlater
-    folderarchive
     ${AKONADI_COMMON_LIBRARIES}
   )
 

@@ -39,8 +39,17 @@ ManageSieveTreeView::~ManageSieveTreeView()
 void ManageSieveTreeView::setNoImapFound(bool found)
 {
     if (mShowDefaultText != found) {
+        setDefaultText(i18n( "No imap server configured..." ));
         mShowDefaultText = found;
         update();
     }
+}
+
+void ManageSieveTreeView::setNetworkDown(bool state)
+{
+    if (!state) {
+        setDefaultText(i18n("Network down."));
+    }
+    update();
 }
 

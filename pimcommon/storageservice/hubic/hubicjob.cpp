@@ -30,10 +30,10 @@ HubicJob::HubicJob(QObject *parent)
 {
     mClientId = PimCommon::StorageServiceJobConfig::self()->hubicClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->hubicClientSecret();
-    mRedirectUri = QLatin1String("https://bugs.kde.org/");
+    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     mServiceUrl = QLatin1String("https://api.hubic.com");
     mApiUrl = QLatin1String("https://api.hubic.com");
-    mScope = QLatin1String("usage.r,account.r,credentials.r,links.wd");
+    mScope = PimCommon::StorageServiceJobConfig::self()->hubicScope();
     mAuthorizePath = QLatin1String("/oauth/auth/");
     mPathToken = QLatin1String("/oauth/token/");
     mCurrentAccountInfoPath = QLatin1String("/1.0/account/usage");
@@ -61,10 +61,6 @@ void HubicJob::parseAccountInfo(const QString &data)
         accountInfo.quota = info.value(QLatin1String("quota")).toLongLong();
     }
     Q_EMIT accountInfoDone(accountInfo);
-
-
-    qDebug()<<" info"<<info;
-    //TODO
     deleteLater();
 }
 

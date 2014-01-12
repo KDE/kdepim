@@ -18,22 +18,25 @@
 
 */
 
-#ifndef SIEVEEDITORTREEWIDGETITEM_H
-#define SIEVEEDITORTREEWIDGETITEM_H
+#ifndef STORAGESERVICEWARNING_H
+#define STORAGESERVICEWARNING_H
+#include <KMessageWidget>
 
-#include <QTreeWidgetItem>
-
-class SieveEditorTreeWidgetItem : public QTreeWidgetItem
+class StorageServiceWarning : public KMessageWidget
 {
+    Q_OBJECT
 public:
-    SieveEditorTreeWidgetItem(QTreeWidgetItem *parent);
-    ~SieveEditorTreeWidgetItem();
+    explicit StorageServiceWarning(QWidget *parent=0);
+    ~StorageServiceWarning();
 
-    QWidget *associatePage() const;
-    void setAssociatePage(QWidget *page);
+    void addLog(const QString &log);
+
+private slots:
+    void slotShowDetails(const QString &content);
+    void slotClearLog();
 
 private:
-    QWidget *mAssociatePage;
+    QString mLogInformation;
 };
 
-#endif // SIEVEEDITORTREEWIDGETITEM_H
+#endif // STORAGESERVICEWARNING_H

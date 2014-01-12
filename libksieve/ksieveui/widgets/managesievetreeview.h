@@ -31,7 +31,8 @@ public:
     explicit ManageSieveTreeView(QWidget *parent = 0);
     ~ManageSieveTreeView();
 
-    void setNoImapFound(bool found);
+    void setNoImapFound(bool found);    
+    void setNetworkDown(bool state);
 
 private:
     bool mImapFound;

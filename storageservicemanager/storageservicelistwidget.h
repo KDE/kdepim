@@ -18,34 +18,30 @@
 
 */
 
-#ifndef TESTSETTINGSJOB_H
-#define TESTSETTINGSJOB_H
 
-#include <QObject>
-#include "pimcommon_export.h"
-#include "pimcommon/storageservice/storageserviceinterface.h"
+#ifndef STORAGESERVICELISTWIDGET_H
+#define STORAGESERVICELISTWIDGET_H
 
-namespace PimCommon {
+#include <QListWidget>
+#include "pimcommon/storageservice/storageserviceabstract.h"
 
-class PIMCOMMON_EXPORT TestSettingsJob : public QObject, public ISettingsJob
+class StorageServiceListWidget : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit TestSettingsJob(QObject *parent=0);
-    ~TestSettingsJob();
+    explicit StorageServiceListWidget(PimCommon::StorageServiceAbstract::Capabilities, QWidget *parent=0);
+    ~StorageServiceListWidget();
 
-    QString youSendItApiKey() const;
-    QString dropboxOauthConsumerKey() const;
-    QString dropboxOauthSignature() const;
-    QString boxClientId() const;
-    QString boxClientSecret() const;
-    QString hubicClientId() const;
-    QString hubicClientSecret() const;
-    QString dropboxRootPath() const;
-    QString oauth2RedirectUrl() const;
-    QString ubuntuOneAttachmentVolume() const;
-    QString hubicScope() const;
+private slots:
+    void slotContextMenu(const QPoint &pos);
+    void slotMoveUp();
+    void slotDeleteFile();
+    void slotShareFile();
+    void slotDownloadFile();
+    void slotUploadFile();
+
+private:
+    PimCommon::StorageServiceAbstract::Capabilities mCapabilities;
 };
-}
 
-#endif // TESTSETTINGSJOB_H
+#endif // STORAGESERVICELISTWIDGET_H

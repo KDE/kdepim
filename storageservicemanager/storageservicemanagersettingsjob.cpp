@@ -69,3 +69,23 @@ QString StorageServiceManagerSettingsJob::hubicClientSecret() const
 {
     return QLatin1String("pkChgk2sRrrCEoVHmYYCglEI9E2Y2833Te5Vn8n2J6qPdxLU6K8NPUvzo1mEhyzf");
 }
+
+QString StorageServiceManagerSettingsJob::dropboxRootPath() const
+{
+    return QLatin1String("dropbox");
+}
+
+QString StorageServiceManagerSettingsJob::oauth2RedirectUrl() const
+{
+    return QLatin1String("https://bugs.kde.org/");
+}
+
+QString StorageServiceManagerSettingsJob::ubuntuOneAttachmentVolume() const
+{
+    return QLatin1String("/~/KMail Attachments");
+}
+
+QString StorageServiceManagerSettingsJob::hubicScope() const
+{
+    return QLatin1String("usage.r,account.r,credentials.r,links.wd");
+}

@@ -180,6 +180,7 @@ target_link_libraries(ksieveui
   ${KDE4_KIO_LIBS}
   ${KDE4_KDECORE_LIBS}
   ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_SOLID_LIBS}
 )
 
 set_target_properties(

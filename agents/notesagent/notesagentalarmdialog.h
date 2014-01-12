@@ -39,7 +39,7 @@ public:
 private slots:
     void slotItemDoubleClicked(QListWidgetItem *item);
     void slotCustomContextMenuRequested(const QPoint &pos);
-    void slotShowAlarm();
+    void slotShowNote();
     void slotRemoveAlarm();
     void slotFetchItem(KJob *job);
     void slotModifyItem(KJob *job);

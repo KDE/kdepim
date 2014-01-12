@@ -15,12 +15,18 @@ set(storageservicemanager_SRCS
   storageservicetabwidget.cpp
   storageserviceconfiguredialog.cpp
   storageservicemanagersettingsjob.cpp
+  storageservicelistwidget.cpp
+  storageserviceprogressindicator.cpp
+  storageservicewarning.cpp
+  storageservicelogdialog.cpp
+  storageserviceaccountinfodialog.cpp
 )
 
 kde4_add_executable(storageservicemanager ${storageservicemanager_SRCS} )
 TARGET_LINK_LIBRARIES(storageservicemanager 
                        ${KDE4_KDEUI_LIBS} 
                        ${KDE4_KIO_LIBS}
+		       ${KDE4_SOLID_LIBS}
                        pimcommon 
 )
 

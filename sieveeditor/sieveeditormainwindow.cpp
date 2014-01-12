@@ -77,6 +77,7 @@ void SieveEditorMainWindow::setupActions()
 
     KStandardAction::quit(this, SLOT(slotQuitApp()), ac );
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
+    mSaveScript = KStandardAction::save( this, SLOT(slotSaveScript()), ac );
 
     KAction *act = ac->addAction(QLatin1String("add_server_sieve"), this, SLOT(slotAddServerSieve()));
     act->setText(i18n("Add Server Sieve..."));
@@ -94,8 +95,22 @@ void SieveEditorMainWindow::setupActions()
     mEditScript->setEnabled(false);
 
     mDesactivateScript = ac->addAction(QLatin1String("desactivate_script"), this, SLOT(slotDesactivateScript()));
-    mDesactivateScript->setText(i18n("Desactivate Script"));
+    mDesactivateScript->setText(i18n("Deactivate Script"));
     mDesactivateScript->setEnabled(false);
+
+    mRefreshList = ac->addAction(QLatin1String("refresh_list"), this, SLOT(slotRefreshList()));
+    mRefreshList->setText(i18n("Refresh List"));
+    mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
+}
+
+void SieveEditorMainWindow::slotRefreshList()
+{
+    mMainWidget->refreshList();
+}
+
+void SieveEditorMainWindow::slotSaveScript()
+{
+    mMainWidget->saveScript();
 }
 
 void SieveEditorMainWindow::slotDesactivateScript()
@@ -137,6 +152,8 @@ void SieveEditorMainWindow::slotAddServerSieve()
 {
     QPointer<ServerSieveSettingsDialog> dlg = new ServerSieveSettingsDialog(this);
     if (dlg->exec()) {
+        const SieveEditorUtil::SieveServerConfig conf = dlg->serverSieveConfig();
+        SieveEditorUtil::addServerSieveConfig(conf);
         mMainWidget->updateServerList();
     }
     delete dlg;

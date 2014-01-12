@@ -38,6 +38,8 @@ struct AccountInfo {
     QString displayName;
 };
 
+
+class NextAction;
 class StorageServiceAbstract : public QObject
 {
     Q_OBJECT
@@ -83,7 +85,6 @@ public:
     };
 
     bool isInProgress() const;
-    virtual StorageServiceAbstract::Capabilities capabilities() const;
 
     virtual void downloadFile(const QString &filename);
     virtual void uploadFile(const QString &filename);
@@ -100,6 +101,7 @@ public:
     virtual QString storageServiceName() const = 0;
     virtual KIcon icon() const = 0;
     virtual void removeConfig() = 0;
+    virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
@@ -114,6 +116,7 @@ Q_SIGNALS:
     void downLoadFileDone(const QString &serviceName, const QString &fileName);
     void deleteFolderDone(const QString &serviceName, const QString &folder);
     void deleteFileDone(const QString &serviceName, const QString &filename);
+    void inProgress(bool state);
 
 protected slots:
     void slotActionFailed(const QString &error);
@@ -140,13 +143,42 @@ protected:
     virtual void storageServicedeleteFolder(const QString &foldername) = 0;
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
-    ActionType mNextAction;
-    Capabilities mCapabilities;
+    NextAction *mNextAction;
 
 private:
+    inline void changeProgressState(bool state);
     void executeNextAction();
     bool mInProgress;
 };
+
+class NextAction {
+public:
+    NextAction()
+        : mNextAction(StorageServiceAbstract::NoneAction)
+    {
+    }
+
+    void setNextActionType(StorageServiceAbstract::ActionType type) { mNextAction = type; }
+    void setNextActionFileName(const QString &filename) { mNextActionFileName = filename; }
+    void setNextActionFolder(const QString &foldername) { mNextActionFolder = foldername; }
+    void setRootPath(const QString &path) { mRootPath = path; }
+    void setPath(const QString &path) { mPath = path; }
+
+
+    StorageServiceAbstract::ActionType nextActionType() const { return mNextAction; }
+    QString nextActionFileName() const { return mNextActionFileName; }
+    QString nextActionFolder() const { return mNextActionFolder; }
+    QString rootPath() const { return mRootPath; }
+    QString path() const { return mPath; }
+
+private:
+    StorageServiceAbstract::ActionType mNextAction;
+    QString mRootPath;
+    QString mPath;
+    QString mNextActionFileName;
+    QString mNextActionFolder;
+};
+
 }
 
 #endif // STORAGESERVICEABSTRACT_H

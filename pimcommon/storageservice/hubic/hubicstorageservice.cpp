@@ -29,14 +29,6 @@ using namespace PimCommon;
 HubicStorageService::HubicStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mCapabilities |= AccountInfoCapability;
-    //mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    mCapabilities |= CreateFolderCapability;
-    mCapabilities |= DeleteFolderCapability;
-    //mCapabilities |= ListFolderCapability;
-    //mCapabilities |= ShareLinkCapability;
-    //mCapabilities |= DeleteFileCapability;
     readConfig();
 }
 
@@ -89,7 +81,7 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
 void HubicStorageService::storageServicelistFolder()
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = ListFolder;
+        mNextAction->setNextActionType(ListFolder);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -103,7 +95,8 @@ void HubicStorageService::storageServicelistFolder()
 void HubicStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = CreateFolder;
+        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -117,7 +110,7 @@ void HubicStorageService::storageServicecreateFolder(const QString &folder)
 void HubicStorageService::storageServiceaccountInfo()
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = AccountInfo;
+        mNextAction->setNextActionType(AccountInfo);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -136,7 +129,8 @@ QString HubicStorageService::name()
 void HubicStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = UploadFile;
+        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -169,10 +163,26 @@ QString HubicStorageService::iconName()
     return QString();
 }
 
+StorageServiceAbstract::Capabilities HubicStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    cap |= AccountInfoCapability;
+    //cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    //cap |= ListFolderCapability;
+    //cap |= ShareLinkCapability;
+    //cap |= DeleteFileCapability;
+    return cap;
+}
+
 void HubicStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = ShareLink;
+        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setRootPath(root);
+        mNextAction->setPath(path);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -191,7 +201,8 @@ QString HubicStorageService::storageServiceName() const
 void HubicStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = DownLoadFile;
+        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -205,7 +216,7 @@ void HubicStorageService::storageServicedownloadFile(const QString &filename)
 void HubicStorageService::storageServicecreateServiceFolder()
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = CreateServiceFolder;
+        mNextAction->setNextActionType(CreateServiceFolder);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -219,7 +230,8 @@ void HubicStorageService::storageServicecreateServiceFolder()
 void HubicStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = DeleteFile;
+        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -233,7 +245,8 @@ void HubicStorageService::storageServicedeleteFile(const QString &filename)
 void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mRefreshToken.isEmpty()) {
-        mNextAction = DeleteFolder;
+        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionFolder(foldername);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -247,4 +260,9 @@ void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
 KIcon HubicStorageService::icon() const
 {
     return KIcon();
+}
+
+StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
+{
+    return serviceCapabilities();
 }

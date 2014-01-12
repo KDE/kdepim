@@ -23,7 +23,6 @@ set(sieveeditor_SRCS
   serversievelistwidget.cpp
   sieveeditorconfigureserverwidget.cpp
   sieveeditormanagesievewidget.cpp
-  sieveeditortreewidgetitem.cpp
   sieveeditorpagewidget.cpp
 )
 

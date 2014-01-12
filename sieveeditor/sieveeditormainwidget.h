@@ -38,10 +38,13 @@ public:
     void deleteScript();
     void updateServerList();
     void editScript();
-    void desactivateScript();
+    void desactivateScript();    
+    void refreshList();
+    void saveScript();
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);
+    void updateScriptList();
 
 private slots:
     void slotCreateScriptPage(const KUrl &url, const QStringList &capabilities, bool isNewScript);

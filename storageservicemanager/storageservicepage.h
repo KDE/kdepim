@@ -26,11 +26,14 @@
 namespace PimCommon {
 class StorageServiceAbstract;
 }
+class StorageServiceProgressIndicator;
+class StorageServiceWarning;
+class StorageServiceListWidget;
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServicePage(QWidget *parent=0);
+    explicit StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
     ~StorageServicePage();
 
     void authenticate();
@@ -40,12 +43,30 @@ public:
     void uploadFile();
     void downloadFile();
     void deleteFile();
-
-
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
 
+Q_SIGNALS:
+    void updatePixmap(const QPixmap &pix, StorageServicePage *page);
+
+private Q_SLOTS:
+    void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
+    void slotUploadFileDone(const QString &serviceName, const QString &fileName);
+    void slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void slotShareLinkDone(const QString &serviceName, const QString &link);
+    void slotAuthenticationFailed(const QString &serviceName, const QString &error);
+    void slotAuthenticationDone(const QString &serviceName);
+    void slotActionFailed(const QString &serviceName, const QString &error);    
+    void slotProgressStateChanged(bool state);    
+    void slotUpdatePixmap(const QPixmap &pix);
+
 private:
+    bool verifyService(const QString &serviceName);
+    void connectStorageService();
+    QString mServiceName;
     PimCommon::StorageServiceAbstract *mStorageService;
+    StorageServiceListWidget *mListWidget;
+    StorageServiceProgressIndicator *mProgressIndicator;
+    StorageServiceWarning *mStorageServiceWarning;
 };
 
 #endif // STORAGESERVICEPAGE_H

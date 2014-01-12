@@ -777,7 +777,6 @@ void ImportMailJob::restoreConfig()
               << QLatin1String("kmail2.notifyrc")
               << QLatin1String("akonadi_newmailnotifier_agent.notifyrc")
               << QLatin1String("akonadi_maildispatcher_agent.notifyrc")
-              << QLatin1String("akonadi_folderarchive_agent.notifyrc")
               << QLatin1String("akonadi_followupreminder_agent.notifyrc")
               << QLatin1String("messageviewer.notifyrc");
 

@@ -36,6 +36,7 @@ public:
     static QUrl serviceUrl();
     static QString serviceName();
     static QString iconName();
+    static StorageServiceAbstract::Capabilities serviceCapabilities();
 
     void storageServiceuploadFile(const QString &filename);
     void storageServiceaccountInfo();
@@ -49,8 +50,7 @@ public:
     void storageServicecreateServiceFolder();
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
-
-
+    StorageServiceAbstract::Capabilities capabilities() const;
 
     KIcon icon() const;
 

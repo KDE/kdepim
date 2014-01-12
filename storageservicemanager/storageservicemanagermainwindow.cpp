@@ -48,9 +48,13 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
     setCentralWidget(mStorageServiceTabWidget);
 
+    connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
+              this, SLOT(slotSystemNetworkStatusChanged(Solid::Networking::Status)) );
+
     setupActions();
     setupGUI();
     readConfig();
+    mStorageServiceTabWidget->setListStorageService(mStorageManager->listService());
     slotUpdateActions();
 }
 
@@ -62,6 +66,13 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
     group.writeEntry( "Size", size() );
 }
 
+void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
+{
+    if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
+    } else {
+    }
+}
+
 void StorageServiceManagerMainWindow::slotUpdateActions()
 {
     const PimCommon::StorageServiceAbstract::Capabilities capabilities = mStorageServiceTabWidget->capabilities();
@@ -70,8 +81,8 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
     mAccountInfo->setEnabled(capabilities & PimCommon::StorageServiceAbstract::AccountInfoCapability);
     mUploadFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::UploadFileCapability);
     mDeleteFile->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
-    mAuthenticate->setEnabled(! (capabilities & PimCommon::StorageServiceAbstract::NoCapability));
-    mRefreshList->setEnabled(! (capabilities & PimCommon::StorageServiceAbstract::NoCapability));
+    mAuthenticate->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
+    mRefreshList->setDisabled(capabilities & PimCommon::StorageServiceAbstract::NoCapability);
 }
 
 void StorageServiceManagerMainWindow::setupActions()
@@ -87,7 +98,6 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceTabWidget, SLOT(slotCreateFolder()));
     mCreateFolder->setText(i18n("Create Folder..."));
-
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
@@ -105,8 +115,6 @@ void StorageServiceManagerMainWindow::setupActions()
     mDownloadFile->setText(i18n("Download File..."));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
-
-    //TODO
 }
 
 void StorageServiceManagerMainWindow::slotAddStorageService()
@@ -120,7 +128,7 @@ void StorageServiceManagerMainWindow::slotConfigure()
     dlg->setListService(mStorageManager->listService());
     if (dlg->exec()) {
         mStorageManager->setListService(dlg->listService());
-        mStorageServiceTabWidget->reloadStorageService();
+        mStorageServiceTabWidget->updateListService(dlg->listService());
     }
     delete dlg;
 }

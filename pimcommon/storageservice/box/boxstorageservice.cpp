@@ -30,14 +30,6 @@ using namespace PimCommon;
 BoxStorageService::BoxStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mCapabilities |= AccountInfoCapability;
-    //mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    mCapabilities |= CreateFolderCapability;
-    mCapabilities |= DeleteFolderCapability;
-    mCapabilities |= ListFolderCapability;
-    //mCapabilities |= DeleteFileCapability;
-    //mCapabilities |= ShareLinkCapability;
     readConfig();
 }
 
@@ -92,7 +84,9 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
 void BoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
-        mNextAction = ShareLink;
+        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setPath(path);
+        mNextAction->setRootPath(root);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -106,7 +100,8 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
 void BoxStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        mNextAction = DownLoadFile;
+        mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -120,7 +115,8 @@ void BoxStorageService::storageServicedownloadFile(const QString &filename)
 void BoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        mNextAction = DeleteFile;
+        mNextAction->setNextActionType(DeleteFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -134,7 +130,8 @@ void BoxStorageService::storageServicedeleteFile(const QString &filename)
 void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mToken.isEmpty()) {
-        mNextAction = DeleteFolder;
+        mNextAction->setNextActionType(DeleteFolder);
+        mNextAction->setNextActionFolder(foldername);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -148,7 +145,7 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
 void BoxStorageService::storageServicelistFolder()
 {
     if (mToken.isEmpty()) {
-        mNextAction = ListFolder;
+        mNextAction->setNextActionType(ListFolder);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -162,7 +159,8 @@ void BoxStorageService::storageServicelistFolder()
 void BoxStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
-        mNextAction = CreateFolder;
+        mNextAction->setNextActionType(CreateFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -176,7 +174,7 @@ void BoxStorageService::storageServicecreateFolder(const QString &folder)
 void BoxStorageService::storageServiceaccountInfo()
 {
     if (mToken.isEmpty()) {
-        mNextAction = AccountInfo;
+        mNextAction->setNextActionType(AccountInfo);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -195,7 +193,8 @@ QString BoxStorageService::name()
 void BoxStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        mNextAction = UploadFile;
+        mNextAction->setNextActionType(UploadFile);
+        mNextAction->setNextActionFileName(filename);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -228,6 +227,21 @@ QString BoxStorageService::iconName()
     return QString();
 }
 
+StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    cap |= AccountInfoCapability;
+    //cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
+    //cap |= DeleteFileCapability;
+    //cap |= ShareLinkCapability;
+    return cap;
+}
+
+
 QString BoxStorageService::storageServiceName() const
 {
     return serviceName();
@@ -238,10 +252,15 @@ KIcon BoxStorageService::icon() const
     return KIcon();
 }
 
+StorageServiceAbstract::Capabilities BoxStorageService::capabilities() const
+{
+    return serviceCapabilities();
+}
+
 void BoxStorageService::storageServicecreateServiceFolder()
 {
     if (mToken.isEmpty()) {
-        mNextAction = CreateServiceFolder;
+        mNextAction->setNextActionType(CreateServiceFolder);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);

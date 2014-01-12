@@ -38,11 +38,7 @@ FolderArchiveManager::FolderArchiveManager(QObject *parent)
       mCurrentJob(0)
 {
     mFolderArchiveCache = new FolderArchiveCache(this);
-
-    /*
-    connect( Akonadi::AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
-             this, SLOT(slotInstanceRemoved(Akonadi::AgentInstance)) );
-             */
+    load();
 }
 
 FolderArchiveManager::~FolderArchiveManager()
@@ -53,13 +49,14 @@ FolderArchiveManager::~FolderArchiveManager()
     delete mCurrentJob;
 }
 
-void FolderArchiveManager::collectionRemoved(const Akonadi::Collection &collection)
+void FolderArchiveManager::slotCollectionRemoved(const Akonadi::Collection &collection)
 {
+    KConfig config(QLatin1String("foldermailarchiverc"));
     mFolderArchiveCache->clearCacheWithContainsCollection(collection.id());
     Q_FOREACH (FolderArchiveAccountInfo *info, mListAccountInfo) {
         if (info->archiveTopLevel() == collection.id()) {
             info->setArchiveTopLevel(-1);
-            KConfigGroup group = KGlobal::config()->group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + info->instanceName());
+            KConfigGroup group = config.group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + info->instanceName());
             info->writeConfig(group);
         }
     }
@@ -117,16 +114,16 @@ void FolderArchiveManager::slotFetchCollection(KJob *job)
         return;
     }
 
-    QList<qlonglong> itemIds;
-    itemIds << jobCol->property("itemId").toLongLong();
+    QList<Akonadi::Item> itemIds;
+    itemIds << Akonadi::Item(jobCol->property("itemId").toLongLong());
     setArchiveItems(itemIds, jobCol->collections().first().resource());
 }
 
-void FolderArchiveManager::setArchiveItems(const QList<qlonglong> &itemIds, const QString &instanceName)
+void FolderArchiveManager::setArchiveItems(const QList<Akonadi::Item> &items, const QString &instanceName)
 {
     FolderArchiveAccountInfo *info = infoFromInstanceName(instanceName);
     if (info) {
-        FolderArchiveAgentJob *job = new FolderArchiveAgentJob(this, info, itemIds);
+        FolderArchiveAgentJob *job = new FolderArchiveAgentJob(this, info, items);
         if (mCurrentJob) {
             mJobQueue.enqueue(job);
         } else {
@@ -150,9 +147,10 @@ void FolderArchiveManager::slotInstanceRemoved(const Akonadi::AgentInstance &ins
 
 void FolderArchiveManager::removeInfo(const QString &instanceName)
 {
-    KConfigGroup group = KGlobal::config()->group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + instanceName);
+    KConfig config(QLatin1String("foldermailarchiverc"));
+    KConfigGroup group = config.group(FolderArchive::FolderArchiveUtil::groupConfigPattern() + instanceName);
     group.deleteGroup();
-    KGlobal::config()->sync();
+    config.sync();
 }
 
 void FolderArchiveManager::load()
@@ -162,9 +160,10 @@ void FolderArchiveManager::load()
     //Be sure to clear cache.
     mFolderArchiveCache->clearCache();
 
-    const QStringList accountList = KGlobal::config()->groupList().filter( QRegExp( FolderArchive::FolderArchiveUtil::groupConfigPattern() ) );
+    KConfig config(QLatin1String("foldermailarchiverc"));
+    const QStringList accountList = config.groupList().filter( QRegExp( FolderArchive::FolderArchiveUtil::groupConfigPattern() ) );
     Q_FOREACH (const QString &account, accountList) {
-        KConfigGroup group = KGlobal::config()->group(account);
+        KConfigGroup group = config.group(account);
         FolderArchiveAccountInfo *info = new FolderArchiveAccountInfo(group);
         if (info->enabled()) {
             mListAccountInfo.append(info);
@@ -214,10 +213,5 @@ void FolderArchiveManager::nextJob()
 FolderArchiveCache *FolderArchiveManager::folderArchiveCache() const
 {
     return mFolderArchiveCache;
-}
-
-void FolderArchiveManager::debugCache()
-{
-    mFolderArchiveCache->debugCache();
 }
 

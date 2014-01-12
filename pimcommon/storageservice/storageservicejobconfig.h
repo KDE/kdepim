@@ -41,7 +41,11 @@ public:
     QString boxClientId() const;
     QString boxClientSecret() const;
     QString hubicClientId() const;
-    QString hubicClientSecret() const;
+    QString hubicClientSecret() const;    
+    QString dropboxRootPath() const;
+    QString oauth2RedirectUrl() const;
+    QString ubuntuOneAttachmentVolume() const;
+    QString hubicScope() const;
 
 private:
     StorageServiceJobConfig(QObject *parent=0);

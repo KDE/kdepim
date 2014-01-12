@@ -78,6 +78,7 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
     mAccountSize = new QLabel;
     mQuota = new QLabel;
     mShared = new QLabel;
+    setDefaultLabel();
 
     vbox->addWidget(mAccountSize);
     vbox->addWidget(mQuota);
@@ -91,6 +92,13 @@ StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
 StorageServiceSettingsWidget::~StorageServiceSettingsWidget()
 {
 
+}
+
+void StorageServiceSettingsWidget::setDefaultLabel()
+{
+    mAccountSize->setText(i18n("Account size:"));
+    mQuota->setText(i18n("Quota:"));
+    mShared->setText(i18n("Shared:"));
 }
 
 void StorageServiceSettingsWidget::updateButtons()
@@ -262,14 +270,12 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         mDescription->setText(descriptionStr);
         if (mListStorageService.contains(mListService->currentItem()->data(Name).toString())) {
             StorageServiceAbstract *storage = mListStorageService.value(mListService->currentItem()->data(Name).toString());
-            connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString, PimCommon::AccountInfo)),Qt::UniqueConnection);
+            connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString,PimCommon::AccountInfo)),Qt::UniqueConnection);
             storage->accountInfo();
         }
     } else {
         mDescription->clear();
-        mAccountSize->clear();
-        mQuota->clear();
-        mShared->clear();
+        setDefaultLabel();
     }
     updateButtons();
 }
@@ -280,17 +286,17 @@ void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceN
         if (info.accountSize != -1) {
             mAccountSize->setText(i18n("Account size: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
         } else {
-            mAccountSize->clear();
+            mAccountSize->setText(i18n("Account size:"));
         }
         if (info.quota != -1) {
             mQuota->setText(i18n("Quota: %1", KGlobal::locale()->formatByteSize(info.quota,1)));
         } else {
-            mQuota->clear();
+            mQuota->setText(i18n("Quota:"));
         }
         if (info.accountSize != -1) {
             mShared->setText(i18n("Shared: %1", KGlobal::locale()->formatByteSize(info.accountSize,1)));
         } else {
-            mShared->clear();
+            mShared->setText(i18n("Shared:"));
         }
     }
 }

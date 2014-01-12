@@ -23,7 +23,7 @@
 
 #include <QTabWidget>
 #include "pimcommon/storageservice/storageserviceabstract.h"
-
+class StorageServicePage;
 class StorageServiceTabWidget : public QTabWidget
 {
     Q_OBJECT
@@ -31,9 +31,9 @@ public:
     explicit StorageServiceTabWidget(QWidget *parent=0);
     ~StorageServiceTabWidget();    
 
-    void reloadStorageService();
-
-    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
+    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;    
+    void setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);
+    void updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);
 
 public slots:
     void slotAuthenticate();
@@ -44,10 +44,11 @@ public slots:
     void slotDeleteFile();
     void slotDownloadFile();
 
+private slots:
+    void slotUpdatePixmap(const QPixmap &pix, StorageServicePage *page);
 
 private:
-    void loadStorageService();
-    void createPage();
+    void createPage(const QString &name, PimCommon::StorageServiceAbstract *service);
 };
 
 #endif // STORAGESERVICETABWIDGET_H

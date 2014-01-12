@@ -52,28 +52,28 @@ static QString authenticationModeString( MailTransport::Transport::EnumAuthentic
 
 static void addAuthenticationItem( QComboBox* authCombo, MailTransport::Transport::EnumAuthenticationType::type authtype )
 {
-    kDebug() << "adding auth item " << authenticationModeString( authtype );
+    //kDebug() << "adding auth item " << authenticationModeString( authtype );
     authCombo->addItem( authenticationModeString( authtype ), QVariant( authtype ) );
 }
 
 static MailTransport::Transport::EnumAuthenticationType::type getCurrentAuthMode( QComboBox* authCombo )
 {
     MailTransport::Transport::EnumAuthenticationType::type authtype = (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData( authCombo->currentIndex() ).toInt();
-    kDebug() << "current auth mode: " << authenticationModeString( authtype );
+    //kDebug() << "current auth mode: " << authenticationModeString( authtype );
     return authtype;
 }
 
 
 static void setCurrentAuthMode( QComboBox* authCombo, MailTransport::Transport::EnumAuthenticationType::type authtype )
 {
-    kDebug() << "setting authcombo: " << authenticationModeString( authtype );
+    //kDebug() << "setting authcombo: " << authenticationModeString( authtype );
     int index = authCombo->findData( authtype );
     if ( index == -1 )
         kWarning() << "desired authmode not in the combo";
-    kDebug() << "found corresponding index: " << index << "with data" << authenticationModeString( (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData( index ).toInt() );
+    //kDebug() << "found corresponding index: " << index << "with data" << authenticationModeString( (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData( index ).toInt() );
     authCombo->setCurrentIndex( index );
     MailTransport::Transport::EnumAuthenticationType::type t = (MailTransport::Transport::EnumAuthenticationType::type) authCombo->itemData( authCombo->currentIndex() ).toInt();
-    kDebug() << "selected auth mode:" << authenticationModeString( t );
+    //kDebug() << "selected auth mode:" << authenticationModeString( t );
     Q_ASSERT( t == authtype );
 }
 

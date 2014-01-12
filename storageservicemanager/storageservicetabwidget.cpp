@@ -21,10 +21,11 @@
 #include "storageservicetabwidget.h"
 #include "storageservicepage.h"
 
+#include <QMap>
+
 StorageServiceTabWidget::StorageServiceTabWidget(QWidget *parent)
     : QTabWidget(parent)
 {
-    loadStorageService();
 }
 
 StorageServiceTabWidget::~StorageServiceTabWidget()
@@ -32,19 +33,35 @@ StorageServiceTabWidget::~StorageServiceTabWidget()
 
 }
 
-void StorageServiceTabWidget::createPage()
+void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
 {
     //TODO
 }
 
-void StorageServiceTabWidget::reloadStorageService()
+void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
 {
-
+    QMapIterator<QString, PimCommon::StorageServiceAbstract*> i(list);
+    while (i.hasNext()) {
+        i.next();
+        createPage(i.key(), i.value());
+    }
 }
 
-void StorageServiceTabWidget::loadStorageService()
+void StorageServiceTabWidget::createPage(const QString &name, PimCommon::StorageServiceAbstract *service)
 {
-    //TODO
+    StorageServicePage *page = new StorageServicePage(name, service);
+    connect(page, SIGNAL(updatePixmap(QPixmap,StorageServicePage*)), this, SLOT(slotUpdatePixmap(QPixmap,StorageServicePage*)));
+    addTab(page, name);
+}
+
+void StorageServiceTabWidget::slotUpdatePixmap(const QPixmap &pix, StorageServicePage *page)
+{
+    if (page) {
+        const int index = indexOf(page);
+        if (index != -1) {
+            setTabIcon(index, QIcon(pix));
+        }
+    }
 }
 
 void StorageServiceTabWidget::slotAuthenticate()

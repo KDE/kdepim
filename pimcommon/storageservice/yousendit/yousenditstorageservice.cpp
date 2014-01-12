@@ -30,14 +30,6 @@ using namespace PimCommon;
 YouSendItStorageService::YouSendItStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mCapabilities |= AccountInfoCapability;
-    mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    mCapabilities |= CreateFolderCapability;
-    mCapabilities |= DeleteFolderCapability;
-    mCapabilities |= ListFolderCapability;
-    //mCapabilities |= ShareLinkCapability;
-    //mCapabilities |= DeleteFileCapability;
     readConfig();
 }
 
@@ -95,7 +87,7 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
 void YouSendItStorageService::storageServicelistFolder()
 {
     if (mToken.isEmpty()) {
-        mNextAction = ListFolder;
+        mNextAction->setNextActionType(ListFolder);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -109,7 +101,8 @@ void YouSendItStorageService::storageServicelistFolder()
 void YouSendItStorageService::storageServicecreateFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
-        mNextAction = CreateFolder;
+        mNextAction->setNextActionFolder(folder);
+        mNextAction->setNextActionType(CreateFolder);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -123,7 +116,7 @@ void YouSendItStorageService::storageServicecreateFolder(const QString &folder)
 void YouSendItStorageService::storageServiceaccountInfo()
 {
     if (mToken.isEmpty()) {
-        mNextAction = AccountInfo;
+        mNextAction->setNextActionType(AccountInfo);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -142,7 +135,8 @@ QString YouSendItStorageService::name()
 void YouSendItStorageService::storageServiceuploadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        mNextAction = UploadFile;
+        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionType(UploadFile);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -175,10 +169,26 @@ QString YouSendItStorageService::iconName()
     return QString();
 }
 
+StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    cap |= AccountInfoCapability;
+    cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
+    //cap |= ShareLinkCapability;
+    //cap |= DeleteFileCapability;
+    return cap;
+}
+
 void YouSendItStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
-        mNextAction = ShareLink;
+        mNextAction->setRootPath(root);
+        mNextAction->setPath(path);
+        mNextAction->setNextActionType(ShareLink);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -192,7 +202,8 @@ void YouSendItStorageService::storageServiceShareLink(const QString &root, const
 void YouSendItStorageService::storageServicedownloadFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        mNextAction = DownLoadFile;
+        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionType(DownLoadFile);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -206,7 +217,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &filename
 void YouSendItStorageService::storageServicecreateServiceFolder()
 {
     if (mToken.isEmpty()) {
-        mNextAction = CreateServiceFolder;
+        mNextAction->setNextActionType(CreateServiceFolder);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -220,7 +231,8 @@ void YouSendItStorageService::storageServicecreateServiceFolder()
 void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        mNextAction = DeleteFile;
+        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionType(DeleteFile);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -234,7 +246,8 @@ void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
 void YouSendItStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mToken.isEmpty()) {
-        mNextAction = DeleteFolder;
+        mNextAction->setNextActionFileName(foldername);
+        mNextAction->setNextActionType(DeleteFolder);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -243,6 +256,11 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFolder(foldername);
     }
+}
+
+StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const
+{
+    return serviceCapabilities();
 }
 
 QString YouSendItStorageService::storageServiceName() const

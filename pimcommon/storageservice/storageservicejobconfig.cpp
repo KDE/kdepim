@@ -131,5 +131,40 @@ QString StorageServiceJobConfig::hubicClientSecret() const
     return mSettingsJob->hubicClientSecret();
 }
 
+QString StorageServiceJobConfig::dropboxRootPath() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->dropboxRootPath();
+}
+
+QString StorageServiceJobConfig::oauth2RedirectUrl() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->oauth2RedirectUrl();
+}
+
+QString StorageServiceJobConfig::ubuntuOneAttachmentVolume() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->ubuntuOneAttachmentVolume();
+}
+
+QString StorageServiceJobConfig::hubicScope() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->hubicScope();
+}
 
 }

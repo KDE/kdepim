@@ -92,7 +92,7 @@ void ServiceTestWidget::slotAuthentication()
 
 void ServiceTestWidget::connectStorageService()
 {
-    connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString, QString)));
+    connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
     connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
     connect(mStorageService, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
@@ -214,5 +214,4 @@ void ServiceTestWidget::updateButtons(PimCommon::StorageServiceAbstract::Capabil
     mDeleteFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability);
     mDeleteFolderAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability);
     mDownloadFileAction->setEnabled(capabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability);
-
 }

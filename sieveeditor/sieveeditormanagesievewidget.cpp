@@ -20,7 +20,6 @@
 
 #include "sieveeditormanagesievewidget.h"
 #include "sieveeditorutil.h"
-#include "sieveeditortreewidgetitem.h"
 #include "widgets/sievetreewidgetitem.h"
 #include "widgets/managesievetreeview.h"
 
@@ -71,7 +70,3 @@ bool SieveEditorManageSieveWidget::refreshList()
     return noImapFound;
 }
 
-QTreeWidgetItem *SieveEditorManageSieveWidget::createNewItem(QTreeWidgetItem *parent)
-{
-    return new SieveEditorTreeWidgetItem(parent);
-}

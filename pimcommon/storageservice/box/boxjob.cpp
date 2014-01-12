@@ -31,7 +31,7 @@ BoxJob::BoxJob(QObject *parent)
 {
     mClientId = PimCommon::StorageServiceJobConfig::self()->boxClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->boxClientSecret();
-    mRedirectUri = QLatin1String("https://bugs.kde.org/");
+    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     mServiceUrl = QLatin1String("https://app.box.com");
     mApiUrl = QLatin1String("https://api.box.com");
     mAuthorizePath = QLatin1String("/api/oauth2/authorize/");

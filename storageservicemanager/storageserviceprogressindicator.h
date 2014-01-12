@@ -18,26 +18,34 @@
 
 */
 
+#ifndef STORAGESERVICEPROGRESSINDICATOR_H
+#define STORAGESERVICEPROGRESSINDICATOR_H
 
-#include "sieveeditortreewidgetitem.h"
+#include <KPixmapSequence>
+#include <QPixmap>
 
-SieveEditorTreeWidgetItem::SieveEditorTreeWidgetItem(QTreeWidgetItem *parent)
-    : QTreeWidgetItem(parent),
-      mAssociatePage(0)
+class QTimer;
+
+class StorageServiceProgressIndicator : public QObject
 {
-}
+    Q_OBJECT
+public:
+    explicit StorageServiceProgressIndicator(QObject *parent = 0);
+    ~StorageServiceProgressIndicator();
 
-SieveEditorTreeWidgetItem::~SieveEditorTreeWidgetItem()
-{
-    //TODO
-}
+    void startAnimation();
+    void stopAnimation();
 
-QWidget *SieveEditorTreeWidgetItem::associatePage() const
-{
-    return mAssociatePage;
-}
+Q_SIGNALS:
+    void updatePixmap(const QPixmap &pix = QPixmap());
 
-void SieveEditorTreeWidgetItem::setAssociatePage(QWidget *page)
-{
-    mAssociatePage = page;
-}
+private Q_SLOTS:
+    void slotTimerDone();
+
+private:
+    int mProgressCount;
+    KPixmapSequence mProgressPix;
+    QTimer *mProgressTimer;
+};
+
+#endif // STORAGESERVICEPROGRESSINDICATOR_H
