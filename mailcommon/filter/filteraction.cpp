@@ -131,6 +131,6 @@ QStringList FilterAction::sieveRequires() const
 
 QString FilterAction::sieveCode() const
 {
-    return i18n("### \"%1 not supported\"", name());
+    return i18n("### \"action '%1' not supported\"", name());
 }
 
