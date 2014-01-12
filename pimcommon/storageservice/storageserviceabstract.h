@@ -85,7 +85,6 @@ public:
     };
 
     bool isInProgress() const;
-    virtual StorageServiceAbstract::Capabilities capabilities() const;
 
     virtual void downloadFile(const QString &filename);
     virtual void uploadFile(const QString &filename);
@@ -102,6 +101,7 @@ public:
     virtual QString storageServiceName() const = 0;
     virtual KIcon icon() const = 0;
     virtual void removeConfig() = 0;
+    virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
@@ -144,7 +144,6 @@ protected:
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
     NextAction *mNextAction;
-    Capabilities mCapabilities;
 
 private:
     inline void changeProgressState(bool state);

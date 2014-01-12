@@ -29,14 +29,6 @@ using namespace PimCommon;
 HubicStorageService::HubicStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mCapabilities |= AccountInfoCapability;
-    //mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    mCapabilities |= CreateFolderCapability;
-    mCapabilities |= DeleteFolderCapability;
-    //mCapabilities |= ListFolderCapability;
-    //mCapabilities |= ShareLinkCapability;
-    //mCapabilities |= DeleteFileCapability;
     readConfig();
 }
 
@@ -171,6 +163,20 @@ QString HubicStorageService::iconName()
     return QString();
 }
 
+StorageServiceAbstract::Capabilities HubicStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    cap |= AccountInfoCapability;
+    //cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    //cap |= ListFolderCapability;
+    //cap |= ShareLinkCapability;
+    //cap |= DeleteFileCapability;
+    return cap;
+}
+
 void HubicStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mRefreshToken.isEmpty()) {
@@ -254,4 +260,9 @@ void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
 KIcon HubicStorageService::icon() const
 {
     return KIcon();
+}
+
+StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
+{
+    return serviceCapabilities();
 }

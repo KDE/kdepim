@@ -30,14 +30,6 @@ using namespace PimCommon;
 YouSendItStorageService::YouSendItStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mCapabilities |= AccountInfoCapability;
-    mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    mCapabilities |= CreateFolderCapability;
-    mCapabilities |= DeleteFolderCapability;
-    mCapabilities |= ListFolderCapability;
-    //mCapabilities |= ShareLinkCapability;
-    //mCapabilities |= DeleteFileCapability;
     readConfig();
 }
 
@@ -177,6 +169,20 @@ QString YouSendItStorageService::iconName()
     return QString();
 }
 
+StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    cap |= AccountInfoCapability;
+    cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
+    //cap |= ShareLinkCapability;
+    //cap |= DeleteFileCapability;
+    return cap;
+}
+
 void YouSendItStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
@@ -250,6 +256,11 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFolder(foldername);
     }
+}
+
+StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const
+{
+    return serviceCapabilities();
 }
 
 QString YouSendItStorageService::storageServiceName() const

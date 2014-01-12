@@ -36,6 +36,8 @@ public:
     static QUrl serviceUrl();
     static QString serviceName();
     static QString iconName();
+    static StorageServiceAbstract::Capabilities serviceCapabilities();
+
 
     void storageServiceuploadFile(const QString &filename);
     void storageServiceaccountInfo();
@@ -50,6 +52,7 @@ public:
 
     QString storageServiceName() const;
     KIcon icon() const;
+    StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();
 
 private slots:

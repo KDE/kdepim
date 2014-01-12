@@ -29,14 +29,6 @@ using namespace PimCommon;
 UbuntuoneStorageService::UbuntuoneStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mCapabilities |= AccountInfoCapability;
-    //mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    //mCapabilities |= CreateFolderCapability;
-    //mCapabilities |= DeleteFolderCapability;
-    //mCapabilities |= ListFolderCapability;
-    //mCapabilities |= ShareLinkCapability;
-    //mCapabilities |= DeleteFileCapability;
     readConfig();
 }
 
@@ -181,6 +173,20 @@ QString UbuntuoneStorageService::iconName()
     return QString();
 }
 
+StorageServiceAbstract::Capabilities UbuntuoneStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    cap |= AccountInfoCapability;
+    //cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    //cap |= CreateFolderCapability;
+    //cap |= DeleteFolderCapability;
+    //cap |= ListFolderCapability;
+    //cap |= ShareLinkCapability;
+    //cap |= DeleteFileCapability;
+    return cap;
+}
+
 void UbuntuoneStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {    
     if (mTokenSecret.isEmpty()) {
@@ -256,6 +262,11 @@ void UbuntuoneStorageService::storageServicedeleteFolder(const QString &folderna
         job->deleteFolder(foldername);
     }
 
+}
+
+StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() const
+{
+    return serviceCapabilities();
 }
 
 QString UbuntuoneStorageService::storageServiceName() const

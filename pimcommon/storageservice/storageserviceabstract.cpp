@@ -23,7 +23,6 @@ using namespace PimCommon;
 StorageServiceAbstract::StorageServiceAbstract(QObject *parent)
     : QObject(parent),
       mNextAction(new NextAction),
-      mCapabilities(NoCapability),
       mInProgress(false)
 {
 }
@@ -260,11 +259,6 @@ void StorageServiceAbstract::emitAuthentificationDone()
     else {
         changeProgressState(false);
     }
-}
-
-StorageServiceAbstract::Capabilities StorageServiceAbstract::capabilities() const
-{
-    return mCapabilities;
 }
 
 #include "moc_storageserviceabstract.cpp"

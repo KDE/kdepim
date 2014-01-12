@@ -30,14 +30,6 @@ using namespace PimCommon;
 BoxStorageService::BoxStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mCapabilities |= AccountInfoCapability;
-    //mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    mCapabilities |= CreateFolderCapability;
-    mCapabilities |= DeleteFolderCapability;
-    mCapabilities |= ListFolderCapability;
-    //mCapabilities |= DeleteFileCapability;
-    //mCapabilities |= ShareLinkCapability;
     readConfig();
 }
 
@@ -235,6 +227,21 @@ QString BoxStorageService::iconName()
     return QString();
 }
 
+StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    cap |= AccountInfoCapability;
+    //cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
+    //cap |= DeleteFileCapability;
+    //cap |= ShareLinkCapability;
+    return cap;
+}
+
+
 QString BoxStorageService::storageServiceName() const
 {
     return serviceName();
@@ -243,6 +250,11 @@ QString BoxStorageService::storageServiceName() const
 KIcon BoxStorageService::icon() const
 {
     return KIcon();
+}
+
+StorageServiceAbstract::Capabilities BoxStorageService::capabilities() const
+{
+    return serviceCapabilities();
 }
 
 void BoxStorageService::storageServicecreateServiceFolder()

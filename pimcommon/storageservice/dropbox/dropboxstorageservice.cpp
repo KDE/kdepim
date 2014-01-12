@@ -32,14 +32,6 @@ using namespace PimCommon;
 DropBoxStorageService::DropBoxStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    mCapabilities |= AccountInfoCapability;
-    mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    mCapabilities |= CreateFolderCapability;
-    mCapabilities |= DeleteFolderCapability;
-    mCapabilities |= DeleteFileCapability;
-    mCapabilities |= ListFolderCapability;
-    mCapabilities |= ShareLinkCapability;
     readConfig();
 }
 
@@ -207,6 +199,20 @@ QString DropBoxStorageService::iconName()
     return QString();
 }
 
+StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    cap |= AccountInfoCapability;
+    cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= DeleteFileCapability;
+    cap |= ListFolderCapability;
+    cap |= ShareLinkCapability;
+    return cap;
+}
+
 QString DropBoxStorageService::storageServiceName() const
 {
     return serviceName();
@@ -255,6 +261,11 @@ void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->deleteFolder(foldername);
     }
+}
+
+StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
+{
+    return serviceCapabilities();
 }
 
 KIcon DropBoxStorageService::icon() const

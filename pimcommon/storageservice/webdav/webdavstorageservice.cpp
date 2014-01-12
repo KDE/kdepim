@@ -31,14 +31,6 @@ using namespace PimCommon;
 WebDavStorageService::WebDavStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
-    //mCapabilities |= AccountInfoCapability;
-    //mCapabilities |= UploadFileCapability;
-    //mCapabilities |= DownloadFileCapability;
-    //mCapabilities |= CreateFolderCapability;
-    //mCapabilities |= DeleteFolderCapability;
-    //mCapabilities |= ListFolderCapability;
-    //mCapabilities |= ShareLinkCapability;
-    //mCapabilities |= DeleteFileCapability;
     readConfig();
 }
 
@@ -137,6 +129,11 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
     }
 }
 
+StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
+{
+    return serviceCapabilities();
+}
+
 void WebDavStorageService::storageServicelistFolder()
 {
     if (mServiceLocation.isEmpty()) {
@@ -217,6 +214,20 @@ QString WebDavStorageService::serviceName()
 QString WebDavStorageService::iconName()
 {
     return QString();
+}
+
+StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
+{
+    StorageServiceAbstract::Capabilities cap;
+    //cap |= AccountInfoCapability;
+    //cap |= UploadFileCapability;
+    //cap |= DownloadFileCapability;
+    //cap |= CreateFolderCapability;
+    //cap |= DeleteFolderCapability;
+    //cap |= ListFolderCapability;
+    //cap |= ShareLinkCapability;
+    //cap |= DeleteFileCapability;
+    return cap;
 }
 
 QString WebDavStorageService::storageServiceName() const
