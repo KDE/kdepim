@@ -20,7 +20,7 @@
 
 #include "storageservicelogdialog.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
-
+#include "pimcommon/util/pimutil.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -32,18 +32,27 @@ StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Log"));
-    setButtons( User1 | Close );
-    setButtonText(User1, i18n("Clear Log"));
+
+    setButtons( User2 | User1 | Close );
+    setButtonText( User1, i18n("Clear Log"));
+    setButtonText( User2, i18n("Save As..."));
     mLog = new PimCommon::RichTextEditorWidget;
     mLog->setReadOnly(true);
     readConfig();
     setMainWidget(mLog);
     connect(this, SIGNAL(user1Clicked()), this, SIGNAL(clearLog()));
+    connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSaveAs()));
 }
 
 StorageServiceLogDialog::~StorageServiceLogDialog()
 {
     writeConfig();
+}
+
+void StorageServiceLogDialog::slotSaveAs()
+{
+    const QString filter = i18n( "all files (*)" );
+    PimCommon::Util::saveTextAs(mLog->toPlainText(), filter, this);
 }
 
 void StorageServiceLogDialog::setLog(const QString &log)

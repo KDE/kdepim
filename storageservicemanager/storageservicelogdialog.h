@@ -38,6 +38,9 @@ public:
 Q_SIGNALS:
     void clearLog();
 
+private slots:
+    void slotSaveAs();
+
 private:
     void readConfig();
     void writeConfig();
