@@ -20,7 +20,10 @@
 #define NOTESAGENTNOTEDIALOG_H
 
 #include <KDialog>
+#include <Akonadi/Item>
 class QTextEdit;
+class QLineEdit;
+class KJob;
 class NotesAgentNoteDialog : public KDialog
 {
     Q_OBJECT
@@ -28,10 +31,16 @@ public:
     explicit NotesAgentNoteDialog(QWidget *parent = 0);
     ~NotesAgentNoteDialog();
 
+    void setNoteId(Akonadi::Item::Id id);
+
+private slots:
+    void slotFetchItem(KJob *job);
+
 private:
     void readConfig();
     void writeConfig();
     QTextEdit *mNote;
+    QLineEdit *mSubject;
 };
 
 #endif // NOTESAGENTNOTEDIALOG_H

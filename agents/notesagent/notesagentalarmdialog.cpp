@@ -132,8 +132,12 @@ void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)
 void NotesAgentAlarmDialog::slotShowNote()
 {
     //deleted on close
-    NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
-    dlg->show();
+    Akonadi::Item::Id id = mListWidget->currentItemId();
+    if (id!=-1) {
+        NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
+        dlg->setNoteId(id);
+        dlg->show();
+    }
 }
 
 void NotesAgentAlarmDialog::slotRemoveAlarm()

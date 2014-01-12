@@ -18,9 +18,15 @@
 
 #include "notesagentnotedialog.h"
 
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
+
 #include <KLocalizedString>
 #include <KSharedConfig>
 
+#include <KMime/KMimeMessage>
+
+#include <QLineEdit>
 #include <QVBoxLayout>
 #include <QTextEdit>
 
@@ -33,7 +39,13 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
+
+    mSubject = new QLineEdit;
+    mSubject->setReadOnly(true);
+    vbox->addWidget(mSubject);
+
     mNote = new QTextEdit;
+    mNote->setReadOnly(true);
     vbox->addWidget(mNote);
     setMainWidget(w);
     readConfig();
@@ -42,6 +54,37 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
 NotesAgentNoteDialog::~NotesAgentNoteDialog()
 {
     writeConfig();
+}
+
+void NotesAgentNoteDialog::setNoteId(Akonadi::Item::Id id)
+{
+    Akonadi::Item item(id);
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
+    job->fetchScope().fetchFullPayload( true );
+    connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchItem(KJob*)) );
+}
+
+void NotesAgentNoteDialog::slotFetchItem(KJob* job)
+{
+    if ( job->error() ) {
+        qDebug()<<"fetch item failed "<<job->errorString();
+        return;
+    }
+    Akonadi::ItemFetchJob *itemFetchJob = static_cast<Akonadi::ItemFetchJob *>(job);
+    const Akonadi::Item::List lstItem = itemFetchJob->items();
+    if (!lstItem.isEmpty()) {
+        KMime::Message::Ptr noteMessage = lstItem.first().payload<KMime::Message::Ptr>();
+        if (noteMessage) {
+            mSubject->setText(noteMessage->subject(false)->asUnicodeString());
+            if ( noteMessage->contentType()->isHTMLText() ) {
+                mNote->setAcceptRichText(true);
+                mNote->setHtml(noteMessage->mainBodyPart()->decodedText());
+            } else {
+                mNote->setAcceptRichText(false);
+                mNote->setPlainText(noteMessage->mainBodyPart()->decodedText());
+            }
+        }
+    }
 }
 
 void NotesAgentNoteDialog::readConfig()
