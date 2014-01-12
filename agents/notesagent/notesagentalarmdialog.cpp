@@ -87,7 +87,7 @@ void NotesAgentAlarmDialog::slotCustomContextMenuRequested(const QPoint &pos)
     KAction *removeAlarm = new KAction(i18n("Remove Alarm"), entriesContextMenu);
     connect(removeAlarm, SIGNAL(triggered()), this, SLOT(slotRemoveAlarm()));
     KAction *showNote = new KAction(i18n("Show Note..."), entriesContextMenu);
-    connect(showNote, SIGNAL(triggered()), this, SLOT(slotShowAlarm()));
+    connect(showNote, SIGNAL(triggered()), this, SLOT(slotShowNote()));
     KAction *modifyAlarm = new KAction(i18n("Modify Alarm..."), entriesContextMenu);
     connect(modifyAlarm, SIGNAL(triggered()), this, SLOT(slotModifyAlarm()));
     entriesContextMenu->addAction( showNote );
@@ -125,11 +125,11 @@ void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)
 {
     if (item) {
-        slotShowAlarm();
+        slotShowNote();
     }
 }
 
-void NotesAgentAlarmDialog::slotShowAlarm()
+void NotesAgentAlarmDialog::slotShowNote()
 {
     //deleted on close
     NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
