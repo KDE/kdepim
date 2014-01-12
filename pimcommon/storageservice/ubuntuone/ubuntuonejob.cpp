@@ -251,7 +251,7 @@ void UbuntuOneJob::parseListFolder(const QString &data)
         Q_FOREACH (const QVariant &v, lst)
             listFolder.append(v.toString());
     }
-    Q_EMIT listFolderDone(listFolder);
+    Q_EMIT listFolderDone(data);
     deleteLater();
 }
 

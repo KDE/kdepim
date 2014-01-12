@@ -86,7 +86,7 @@ void UbuntuoneStorageService::storageServicelistFolder()
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
-        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
+        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         job->listFolder();

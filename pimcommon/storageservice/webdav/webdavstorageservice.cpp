@@ -141,7 +141,7 @@ void WebDavStorageService::storageServicelistFolder()
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
-        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
+        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->listFolder();
     }

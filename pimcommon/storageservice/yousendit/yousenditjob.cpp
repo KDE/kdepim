@@ -334,7 +334,7 @@ void YouSendItJob::parseListFolder(const QString &data)
             }
         }
     }
-    Q_EMIT listFolderDone(listFolder);
+    Q_EMIT listFolderDone(data);
     deleteLater();
 }
 

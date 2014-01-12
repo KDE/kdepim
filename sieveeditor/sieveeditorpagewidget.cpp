@@ -101,7 +101,7 @@ void SieveEditorPageWidget::slotGetResult( KManageSieve::SieveJob *, bool succes
 
 void SieveEditorPageWidget::saveScript()
 {
-    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put(mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive );
+    KManageSieve::SieveJob * job = KManageSieve::SieveJob::put( mCurrentURL, mSieveEditorWidget->script(), mWasActive, mWasActive );
     connect( job, SIGNAL(result(KManageSieve::SieveJob*,bool,QString,bool)),
              this, SLOT(slotPutResult(KManageSieve::SieveJob*,bool)) );
 }
