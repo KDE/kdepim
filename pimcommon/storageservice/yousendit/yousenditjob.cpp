@@ -68,9 +68,15 @@ void YouSendItJob::downloadFile(const QString &filename)
 
 void YouSendItJob::deleteFile(const QString &filename)
 {
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
+    mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
+    mError = false;
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1").arg(filename));
+    QNetworkRequest request(url);
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::deleteFolder(const QString &foldername)
@@ -83,11 +89,7 @@ void YouSendItJob::deleteFolder(const QString &foldername)
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
-    QUrl postData;
-
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    //FIXME !
-    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
+    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -226,13 +228,13 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             Q_EMIT authorizationFailed(errorStr);
             deleteLater();
             break;
+        case PimCommon::StorageServiceAbstract::DeleteFile:
+        case PimCommon::StorageServiceAbstract::DeleteFolder:
         case PimCommon::StorageServiceAbstract::UploadFile:
         case PimCommon::StorageServiceAbstract::CreateFolder:
         case PimCommon::StorageServiceAbstract::AccountInfo:
         case PimCommon::StorageServiceAbstract::ListFolder:
         case PimCommon::StorageServiceAbstract::CreateServiceFolder:
-        case PimCommon::StorageServiceAbstract::DeleteFile:
-        case PimCommon::StorageServiceAbstract::DeleteFolder:
         case PimCommon::StorageServiceAbstract::DownLoadFile:
             errorMessage(mActionType, errorStr);
             deleteLater();

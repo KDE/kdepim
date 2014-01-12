@@ -61,8 +61,6 @@ void BoxJob::parseAccountInfo(const QString &data)
         accountInfo.quota = info.value(QLatin1String("space_amount")).toLongLong();
     }
     Q_EMIT accountInfoDone(accountInfo);
-
-
     deleteLater();
 }
 
