@@ -17,6 +17,7 @@
 
 #include "dropboxutil.h"
 #include <qjson/parser.h>
+#include <QVariant>
 
 QStringList PimCommon::DropBoxUtil::parseListFolder(const QString &data)
 {
