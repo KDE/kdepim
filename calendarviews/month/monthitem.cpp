@@ -326,7 +326,8 @@ IncidenceMonthItem::IncidenceMonthItem( MonthScene *monthScene,
 
   // first set to 0, because it's used in startDate()
   mRecurDayOffset = 0;
-  if ( mIncidence->recurs() && startDate().isValid() && recurStartDate.isValid() ) {
+  if ( ( mIncidence->recurs() || mIncidence->recurrenceId().isValid() ) &&
+       startDate().isValid() && recurStartDate.isValid() ) {
     mRecurDayOffset = startDate().daysTo( recurStartDate );
   }
 }
