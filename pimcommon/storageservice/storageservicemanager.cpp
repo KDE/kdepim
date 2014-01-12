@@ -319,3 +319,25 @@ QString StorageServiceManager::icon(ServiceType type)
     }
     return QString();
 }
+
+StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(ServiceType type)
+{
+    switch(type) {
+    case DropBox:
+        return PimCommon::DropBoxStorageService::serviceCapabilities();
+    case Hubic:
+        return PimCommon::HubicStorageService::serviceCapabilities();
+    case UbuntuOne:
+        return PimCommon::UbuntuoneStorageService::serviceCapabilities();
+    case YouSendIt:
+        return PimCommon::YouSendItStorageService::serviceCapabilities();
+    case WebDav:
+        return PimCommon::WebDavStorageService::serviceCapabilities();
+    case Box:
+        return PimCommon::BoxStorageService::serviceCapabilities();
+    case EndListService:
+    case Unknown:
+        return StorageServiceAbstract::NoCapability;
+    }
+    return StorageServiceAbstract::NoCapability;
+}
