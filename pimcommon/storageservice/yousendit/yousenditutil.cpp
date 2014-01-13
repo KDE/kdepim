@@ -19,7 +19,7 @@
 #include <qjson/parser.h>
 #include <QVariant>
 
-QStringList PimCommon::YouSendItUtil::parseListFolder(const QString &data)
+QStringList PimCommon::YouSendItUtil::getListFolder(const QString &data)
 {
     QJson::Parser parser;
     bool ok;

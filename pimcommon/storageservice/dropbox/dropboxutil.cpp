@@ -19,7 +19,7 @@
 #include <qjson/parser.h>
 #include <QVariant>
 
-QStringList PimCommon::DropBoxUtil::parseListFolder(const QString &data)
+QStringList PimCommon::DropBoxUtil::getListFolder(const QString &data)
 {
     QJson::Parser parser;
     bool ok;

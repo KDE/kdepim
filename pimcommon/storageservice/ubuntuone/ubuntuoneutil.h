@@ -23,7 +23,7 @@
 namespace PimCommon {
 namespace UbuntuOneUtil
 {
-QStringList parseListFolder(const QString &data);
+QStringList getListFolder(const QString &data);
 }
 }
 

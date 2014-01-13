@@ -22,7 +22,7 @@
 namespace PimCommon {
 namespace YouSendItUtil
 {
-QStringList parseListFolder(const QString &data);
+QStringList getListFolder(const QString &data);
 }
 }
 

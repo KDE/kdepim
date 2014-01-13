@@ -22,7 +22,7 @@
 #include <QVariant>
 #include <QDebug>
 
-QStringList PimCommon::UbuntuOneUtil::parseListFolder(const QString &data)
+QStringList PimCommon::UbuntuOneUtil::getListFolder(const QString &data)
 {
     QJson::Parser parser;
     bool ok;
