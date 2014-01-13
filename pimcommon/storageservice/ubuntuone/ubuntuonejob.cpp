@@ -239,18 +239,7 @@ void UbuntuOneJob::parseCreateServiceFolder(const QString &data)
 void UbuntuOneJob::parseListFolder(const QString &data)
 {
     qDebug()<<" data "<<data;
-    QJson::Parser parser;
-    bool ok;
 
-    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info "<<info;
-    QStringList listFolder;
-    if (info.contains(QLatin1String("user_node_paths"))) {
-        qDebug()<<" list folder "<<info.value(QLatin1String("user_node_paths"));
-        QList<QVariant> lst = info.value(QLatin1String("user_node_paths")).toList();
-        Q_FOREACH (const QVariant &v, lst)
-            listFolder.append(v.toString());
-    }
     Q_EMIT listFolderDone(data);
     deleteLater();
 }

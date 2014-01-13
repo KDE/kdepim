@@ -24,28 +24,41 @@ set(libpimcommon_shorturl_SRCS
 set(libpimcommon_storageservice_SRCS
   storageservice/storageserviceabstract.cpp
   storageservice/storageservicemanager.cpp
+
   storageservice/dropbox/dropboxstorageservice.cpp
   storageservice/dropbox/dropboxjob.cpp
   storageservice/dropbox/dropboxutil.cpp
+
   storageservice/settings/storageservicesettingswidget.cpp
   storageservice/storageauthviewwidget.cpp
   storageservice/storageauthviewdialog.cpp
+
   storageservice/hubic/hubicstorageservice.cpp
+  storageservice/hubic/hubicjob.cpp
+
   storageservice/settings/storageservicecombobox.cpp
   storageservice/settings/addservicestoragedialog.cpp
+  
   storageservice/ubuntuone/ubuntuonestorageservice.cpp
-  storageservice/hubic/hubicjob.cpp
   storageservice/ubuntuone/ubuntuonejob.cpp
+  storageservice/ubuntuone/ubuntuoneutil.cpp
+
   storageservice/logindialog.cpp
   storageservice/storageserviceabstractjob.cpp
+
   storageservice/yousendit/yousenditjob.cpp
   storageservice/yousendit/yousenditstorageservice.cpp
+  storageservice/yousendit/yousenditutil.cpp
+
   storageservice/webdav/webdavstorageservice.cpp
   storageservice/webdav/webdavjob.cpp
   storageservice/webdav/webdavsettingsdialog.cpp
+
   storageservice/storageserviceutils.cpp
+
   storageservice/box/boxjob.cpp
   storageservice/box/boxstorageservice.cpp
+
   storageservice/oauth2job.cpp
   storageservice/settings/storagelistwidgetitem.cpp
   storageservice/storageservicedownloaddialog.cpp
