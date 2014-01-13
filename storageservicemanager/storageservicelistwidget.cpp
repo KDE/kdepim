@@ -23,7 +23,7 @@
 #include <KLocalizedString>
 
 StorageServiceListWidget::StorageServiceListWidget(PimCommon::StorageServiceAbstract::Capabilities capabilities, QWidget *parent)
-    : QListWidget(parent),
+    : PimCommon::StorageServiceListWidget(parent),
       mCapabilities(capabilities)
 {
     setContextMenuPolicy( Qt::CustomContextMenu );
