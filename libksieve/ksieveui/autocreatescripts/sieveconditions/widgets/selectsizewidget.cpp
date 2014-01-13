@@ -34,6 +34,7 @@ SelectSizeWidget::SelectSizeWidget(QWidget *parent)
     mSpinBoxSize->setMinimum(1);
     mSpinBoxSize->setMaximum(9999);
     hbox->addWidget(mSpinBoxSize);
+    connect(mSpinBoxSize, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
 
     mSelectSizeType = new SelectSizeTypeComboBox;
     hbox->addWidget(mSelectSizeType);

@@ -48,6 +48,7 @@ QWidget *SieveConditionMetaDataExists::createParamWidget( QWidget *parent ) cons
     grid->addWidget(lab, 0, 0);
 
     KLineEdit *mailbox = new KLineEdit;
+    connect(mailbox, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mailbox->setObjectName(QLatin1String("mailbox"));
     grid->addWidget(mailbox, 0, 1);
 
@@ -55,6 +56,7 @@ QWidget *SieveConditionMetaDataExists::createParamWidget( QWidget *parent ) cons
     grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
     grid->addWidget(value, 1, 1);
 

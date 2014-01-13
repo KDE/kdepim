@@ -50,6 +50,7 @@ void SelectBodyTypeWidget::initialize()
     connect(mBodyCombobox, SIGNAL(activated(int)), this, SLOT(slotBodyTypeChanged(int)));
 
     mBodyLineEdit = new KLineEdit;
+    connect(mBodyLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mBodyLineEdit);
     mBodyLineEdit->hide();
 }
@@ -71,6 +72,7 @@ void SelectBodyTypeWidget::slotBodyTypeChanged(int index)
     } else {
         mBodyLineEdit->hide();
     }
+    Q_EMIT valueChanged();
 }
 
 void SelectBodyTypeWidget::setCode(const QString &type, const QString &content, const QString &name, QString &error)

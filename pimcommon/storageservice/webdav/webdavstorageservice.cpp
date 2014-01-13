@@ -16,6 +16,7 @@
 */
 
 #include "webdavstorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"
 
@@ -134,16 +135,22 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-void WebDavStorageService::storageServicelistFolder()
+void WebDavStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+    listWidget->clear();
+}
+
+void WebDavStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
-        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
+        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->listFolder();
+        job->listFolder(folder);
     }
 }
 

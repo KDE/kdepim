@@ -16,6 +16,7 @@
 */
 
 #include "ubuntuonestorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "ubuntuonejob.h"
 
 #include <KLocalizedString>
@@ -79,17 +80,18 @@ void UbuntuoneStorageService::storageServiceauthentication()
     job->requestTokenAccess();
 }
 
-void UbuntuoneStorageService::storageServicelistFolder()
+void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
-        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
+        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
-        job->listFolder();
+        job->listFolder(folder);
     }
 }
 
@@ -267,6 +269,11 @@ void UbuntuoneStorageService::storageServicedeleteFolder(const QString &folderna
 StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() const
 {
     return serviceCapabilities();
+}
+
+void UbuntuoneStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+    listWidget->clear();
 }
 
 QString UbuntuoneStorageService::storageServiceName() const

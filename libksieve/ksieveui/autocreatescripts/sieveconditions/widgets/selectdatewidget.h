@@ -52,6 +52,9 @@ public:
     QString code() const;
     void setCode(const QString &type, const QString &value);
 
+Q_SIGNALS:
+    void valueChanged();
+
 private Q_SLOTS:
     void slotDateTypeActivated(int);
 

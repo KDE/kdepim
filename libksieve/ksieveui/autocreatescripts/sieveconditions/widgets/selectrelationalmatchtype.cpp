@@ -71,6 +71,7 @@ void SelectRelationalMatchType::initialize()
     mType->addItem(i18n("Value"), QLatin1String(":value"));
     mType->addItem(i18n("Count"), QLatin1String(":count"));
     lay->addWidget(mType);
+    connect(mType, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 
     mMatch = new KComboBox;
     mMatch->addItem(i18n("Greater than"), QLatin1String("gt"));
@@ -79,6 +80,7 @@ void SelectRelationalMatchType::initialize()
     mMatch->addItem(i18n("Less than or equal"), QLatin1String("le"));
     mMatch->addItem(i18n("Equal to"), QLatin1String("eq"));
     mMatch->addItem(i18n("Not equal to"), QLatin1String("ne"));
+    connect(mMatch, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
     lay->addWidget(mMatch);
 }
 

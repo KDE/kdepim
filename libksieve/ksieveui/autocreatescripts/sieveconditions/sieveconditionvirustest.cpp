@@ -48,10 +48,12 @@ QWidget *SieveConditionVirusTest::createParamWidget( QWidget *parent ) const
     w->setLayout(lay);
 
     SelectRelationalMatchType *relation = new SelectRelationalMatchType;
+    connect(relation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     relation->setObjectName(QLatin1String("relation"));
     lay->addWidget(relation);
 
     SelectComparatorComboBox *comparator = new SelectComparatorComboBox;
+    connect(comparator, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     comparator->setObjectName(QLatin1String("comparator"));
     lay->addWidget(comparator);
 

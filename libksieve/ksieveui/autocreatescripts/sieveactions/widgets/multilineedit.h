@@ -28,6 +28,9 @@ public:
     explicit MultiLineEdit(QWidget *parent = 0);
     ~MultiLineEdit();
 
+Q_SIGNALS:
+    void valueChanged();
+
 protected:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;

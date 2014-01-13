@@ -20,10 +20,10 @@
 
 #include <KDialog>
 
-class QTreeWidget;
-class QTreeWidgetItem;
+class QListWidgetItem;
 namespace PimCommon {
 class StorageServiceAbstract;
+class StorageServiceListWidget;
 class StorageServiceDownloadDialog : public KDialog
 {
     Q_OBJECT
@@ -31,11 +31,13 @@ public:
     explicit StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
     ~StorageServiceDownloadDialog();
 
+
 private slots:
-    void slotItemActivated(QTreeWidgetItem *item, int);
+    void slotItemActivated(QListWidgetItem *item);
 
 private:
-    QTreeWidget *mTreeWidget;
+    void initializeList();
+    StorageServiceListWidget *mListWidget;
     PimCommon::StorageServiceAbstract *mStorage;
 };
 }

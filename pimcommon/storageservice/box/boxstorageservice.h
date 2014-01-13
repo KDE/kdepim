@@ -42,7 +42,7 @@ public:
     void storageServiceuploadFile(const QString &filename);
     void storageServiceaccountInfo();
     void storageServicecreateFolder(const QString &folder);
-    void storageServicelistFolder();
+    void storageServicelistFolder(const QString &folder);
     void removeConfig();
     void storageServiceauthentication();
     void storageServiceShareLink(const QString &root, const QString &path);
@@ -54,6 +54,7 @@ public:
     KIcon icon() const;
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();
+    void fillListWidget(StorageServiceListWidget *listWidget, const QString &data);
 
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);

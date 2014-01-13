@@ -60,12 +60,14 @@ QWidget *SieveConditionServerMetaData::createParamWidget( QWidget *parent ) cons
 
     KLineEdit *mailbox = new KLineEdit;
     mailbox->setObjectName(QLatin1String("mailbox"));
+    connect(mailbox, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(mailbox, 0, 1);
 
     lab = new QLabel(i18n("Annotations:"));
     grid->addWidget(lab, 1, 0);
 
     KLineEdit *annotation = new KLineEdit;
+    connect(annotation, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     annotation->setObjectName(QLatin1String("annotation"));
     grid->addWidget(annotation, 1, 1);
 
@@ -73,6 +75,7 @@ QWidget *SieveConditionServerMetaData::createParamWidget( QWidget *parent ) cons
     grid->addWidget(lab, 2, 0);
 
     KLineEdit *value = new KLineEdit;
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
     grid->addWidget(value, 2, 1);
 

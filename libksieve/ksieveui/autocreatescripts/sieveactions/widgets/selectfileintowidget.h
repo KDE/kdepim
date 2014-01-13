@@ -43,6 +43,9 @@ public:
 
     QString selectedFolder() const;
 
+Q_SIGNALS:
+    void valueChanged();
+
 private Q_SLOTS:
     void slotSelectFolder();
 

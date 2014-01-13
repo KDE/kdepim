@@ -38,7 +38,7 @@ public:
     void storageServiceuploadFile(const QString &filename);
     void storageServiceaccountInfo();
     void storageServicecreateFolder(const QString &folder);
-    void storageServicelistFolder();
+    void storageServicelistFolder(const QString &folder);
     void removeConfig();
     void storageServiceauthentication();
     void storageServiceShareLink(const QString &root, const QString &path);
@@ -47,6 +47,7 @@ public:
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
     StorageServiceAbstract::Capabilities capabilities() const;
+    void fillListWidget(StorageServiceListWidget *listWidget, const QString &data);
 
     QString storageServiceName() const;
 

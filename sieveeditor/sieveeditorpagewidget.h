@@ -37,12 +37,10 @@ public:
     ~SieveEditorPageWidget();
 
     void loadScript(const KUrl &url, const QStringList &capabilities);
-
     KUrl currentUrl() const;
-
     void setIsNewScript(bool isNewScript);
-
     void saveScript();
+    void needToSaveScript();
 
 Q_SIGNALS:
     void refreshList();
@@ -57,6 +55,7 @@ private:
     KSieveUi::SieveEditorWidget *mSieveEditorWidget;
     bool mWasActive;
     bool mIsNewScript;
+    bool mWasChanged;
 };
 
 #endif // SIEVEEDITORPAGEWIDGET_H

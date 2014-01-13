@@ -16,6 +16,7 @@
 */
 
 #include "hubicstorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "hubicjob.h"
 
 #include <KLocalizedString>
@@ -78,17 +79,18 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
     emitAuthentificationDone();
 }
 
-void HubicStorageService::storageServicelistFolder()
+void HubicStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
+        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->listFolder();
+        job->listFolder(folder);
     }
 }
 
@@ -265,4 +267,9 @@ KIcon HubicStorageService::icon() const
 StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
 {
     return serviceCapabilities();
+}
+
+void HubicStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+    listWidget->clear();
 }

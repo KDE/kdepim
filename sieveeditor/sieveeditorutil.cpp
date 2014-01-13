@@ -108,6 +108,7 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
         ++i;
     }
     cfg->sync();
+    cfg->reparseConfiguration();
 }
 
 void SieveEditorUtil::addServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf)

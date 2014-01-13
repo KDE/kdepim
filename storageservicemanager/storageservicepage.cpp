@@ -45,7 +45,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
-    mListWidget = new StorageServiceListWidget(mStorageService->capabilities());
+    mListWidget = new StorageServiceListWidget(mStorageService);
     vbox->addWidget(mListWidget);
     mStorageServiceWarning = new StorageServiceWarning;
     vbox->addWidget(mStorageServiceWarning);
@@ -72,6 +72,7 @@ void StorageServicePage::connectStorageService()
     connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
     connect(mStorageService, SIGNAL(inProgress(bool)), this, SLOT(slotProgressStateChanged(bool)));
+    connect(mStorageService, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
 }
 
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
@@ -145,15 +146,12 @@ void StorageServicePage::authenticate()
 
 void StorageServicePage::createFolder()
 {
-    const QString folder = KInputDialog::getText(i18n("Folder Name"), i18n("Folder:"));
-    if (!folder.isEmpty()) {
-        mStorageService->createFolder(folder);
-    }
+    mListWidget->slotCreateFolder();
 }
 
 void StorageServicePage::refreshList()
 {
-    //TODO
+    mStorageService->listFolder(mCurrentFolder);
 }
 
 void StorageServicePage::accountInfo()
@@ -163,27 +161,17 @@ void StorageServicePage::accountInfo()
 
 void StorageServicePage::uploadFile()
 {
-    const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
-    if (!filename.isEmpty())
-        mStorageService->uploadFile(filename);
+    mListWidget->slotUploadFile();
 }
 
 void StorageServicePage::deleteFile()
 {
-    //TODO use selected element
-    const QString filename = KInputDialog::getText(i18n("Delete File"), i18n("Filename:"));
-    if (!filename.isEmpty()) {
-        mStorageService->deleteFile(filename);
-    }
+    mListWidget->slotDeleteFile();
 }
 
 void StorageServicePage::downloadFile()
 {
-    //TODO use selected element
-    const QString filename = KInputDialog::getText(i18n("Download File"), i18n("Filename:"));
-    if (!filename.isEmpty()) {
-        mStorageService->downloadFile(filename);
-    }
+    mListWidget->slotDownloadFile();
 }
 
 PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities() const
@@ -193,10 +181,17 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities
 
 void StorageServicePage::slotProgressStateChanged(bool state)
 {
-    mListWidget->setEnabled(state);
+    mListWidget->setEnabled(!state);
     if (state) {
         mProgressIndicator->startAnimation();
     } else {
         mProgressIndicator->stopAnimation();
+    }
+}
+
+void StorageServicePage::slotListFolderDone(const QString &serviceName, const QString &data)
+{
+    if (verifyService(serviceName)) {
+        mStorageService->fillListWidget(mListWidget, data);
     }
 }

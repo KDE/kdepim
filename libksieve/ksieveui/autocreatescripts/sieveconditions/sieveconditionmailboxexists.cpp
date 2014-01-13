@@ -46,6 +46,7 @@ QWidget *SieveConditionMailboxExists::createParamWidget( QWidget *parent ) const
     w->setLayout(lay);
 
     KLineEdit *edit = new KLineEdit;
+    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     edit->setClearButtonShown(true);
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("edit"));

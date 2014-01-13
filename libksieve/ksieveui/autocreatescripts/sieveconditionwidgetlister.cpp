@@ -97,7 +97,7 @@ void SieveConditionWidget::initWidget()
             if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mConditionList.append( *it );
-
+                connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
                 // add (i18n-ized) name to combo box
                 mComboBox->addItem( (*it)->label(),(*it)->name() );
             } else {
@@ -106,7 +106,7 @@ void SieveConditionWidget::initWidget()
         } else {
             // append to the list of actions:
             mConditionList.append( *it );
-
+            connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
             // add (i18n-ized) name to combo box
             mComboBox->addItem( (*it)->label(),(*it)->name() );
         }
@@ -260,6 +260,8 @@ void SieveConditionWidgetLister::reconnectWidget( SieveConditionWidget *w )
              this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
     connect( w, SIGNAL(removeWidget(QWidget*)),
              this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(valueChanged()),
+             this, SIGNAL(valueChanged()), Qt::UniqueConnection );
 }
 
 void SieveConditionWidgetLister::clearWidget( QWidget *aWidget )

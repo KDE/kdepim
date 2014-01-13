@@ -23,7 +23,7 @@
 #include <KIcon>
 
 namespace PimCommon {
-
+class StorageServiceListWidget;
 struct AccountInfo {
     AccountInfo()
         : accountSize(-1),
@@ -90,7 +90,7 @@ public:
     virtual void uploadFile(const QString &filename);
     virtual void accountInfo();
     virtual void createFolder(const QString &folder);
-    virtual void listFolder();
+    virtual void listFolder(const QString &folder=QString());
     virtual void authentication();
     virtual void shareLink(const QString &root, const QString &path);
     virtual void createServiceFolder();
@@ -102,6 +102,8 @@ public:
     virtual KIcon icon() const = 0;
     virtual void removeConfig() = 0;
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
+    virtual void fillListWidget(StorageServiceListWidget *listWidget, const QString &data) = 0;
+
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
@@ -112,7 +114,7 @@ Q_SIGNALS:
     void authenticationFailed(const QString &serviceName, const QString &error = QString());
     void createFolderDone(const QString &serviceName, const QString &folderName);
     void uploadFileDone(const QString &serviceName, const QString &fileName);
-    void listFolderDone(const QString &serviceName, const QStringList &listFolder);
+    void listFolderDone(const QString &serviceName, const QString &listFolder);
     void downLoadFileDone(const QString &serviceName, const QString &fileName);
     void deleteFolderDone(const QString &serviceName, const QString &folder);
     void deleteFileDone(const QString &serviceName, const QString &filename);
@@ -125,7 +127,7 @@ protected slots:
     void slotUploadFileProgress(qint64 done, qint64 total);
     void slotCreateFolderDone(const QString &folderName);
     void slotUploadFileDone(const QString &filename);
-    void slotListFolderDone(const QStringList &listFolder);
+    void slotListFolderDone(const QString &listFolder);
     void slotDownLoadFileDone(const QString &fileName);    
     void slotDeleteFolderDone(const QString &folder);
     void slotDeleteFileDone(const QString &filename);
@@ -135,7 +137,7 @@ protected:
     virtual void storageServiceuploadFile(const QString &filename) = 0;
     virtual void storageServiceaccountInfo() = 0;
     virtual void storageServicecreateFolder(const QString &folder) = 0;
-    virtual void storageServicelistFolder() = 0;
+    virtual void storageServicelistFolder(const QString &folder) = 0;
     virtual void storageServiceauthentication() = 0;
     virtual void storageServiceShareLink(const QString &root, const QString &path) = 0;
     virtual void storageServicecreateServiceFolder() = 0;

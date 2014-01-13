@@ -28,6 +28,10 @@ class AddressLineEdit : public KLineEdit
 public:
     explicit AddressLineEdit(QWidget *parent = 0);
     ~AddressLineEdit();
+
+Q_SIGNALS:
+    void valueChanged();
+
 protected:
     void focusOutEvent(QFocusEvent *ev);
 

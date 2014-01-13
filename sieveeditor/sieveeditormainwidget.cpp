@@ -130,3 +130,13 @@ void SieveEditorMainWidget::saveScript()
         }
     }
 }
+
+void SieveEditorMainWidget::needToSaveScript()
+{
+    for (int i=0; i < mStackedWidget->count(); ++i) {
+        SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mStackedWidget->widget(i));
+        if (page) {
+            page->needToSaveScript();
+        }
+    }
+}

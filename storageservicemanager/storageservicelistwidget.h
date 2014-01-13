@@ -22,25 +22,30 @@
 #ifndef STORAGESERVICELISTWIDGET_H
 #define STORAGESERVICELISTWIDGET_H
 
-#include <QListWidget>
+#include "pimcommon/storageservice/storageservicelistwidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
-
-class StorageServiceListWidget : public QListWidget
+class StorageServiceListWidget : public PimCommon::StorageServiceListWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceListWidget(PimCommon::StorageServiceAbstract::Capabilities, QWidget *parent=0);
+    explicit StorageServiceListWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
     ~StorageServiceListWidget();
 
-private slots:
-    void slotContextMenu(const QPoint &pos);
-    void slotMoveUp();
+public Q_SLOTS:
+    void slotCreateFolder();
+    void slotUploadFile();
+    void slotDownloadFile();
+    void slotDeleteFolder();
     void slotDeleteFile();
     void slotShareFile();
-    void slotDownloadFile();
-    void slotUploadFile();
+
+private Q_SLOTS:
+    void slotContextMenu(const QPoint &pos);
+    void slotMoveUp();
+    void slotItemDoubleClicked(QListWidgetItem *item);
 
 private:
+    PimCommon::StorageServiceAbstract *mStorageService;
     PimCommon::StorageServiceAbstract::Capabilities mCapabilities;
 };
 

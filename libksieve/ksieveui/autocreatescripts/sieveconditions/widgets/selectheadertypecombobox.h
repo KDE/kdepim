@@ -76,6 +76,9 @@ public:
     QString code() const;
     void setCode(const QString &code);
 
+Q_SIGNALS:
+    void valueChanged();
+
 private Q_SLOTS:
     void slotSelectItem(const QString &str);
 

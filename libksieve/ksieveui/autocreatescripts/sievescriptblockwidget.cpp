@@ -63,6 +63,7 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     mConditions->setLayout(vbox);
 
     mScriptConditionLister = new SieveConditionWidgetLister;
+    connect(mScriptConditionLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     vbox->addWidget(mScriptConditionLister);
 
     topLayout->addWidget(mConditions,0, Qt::AlignTop);
@@ -71,6 +72,7 @@ SieveScriptBlockWidget::SieveScriptBlockWidget(QWidget *parent)
     vbox = new QVBoxLayout;
     actions->setLayout(vbox);
     mScriptActionLister = new SieveActionWidgetLister;
+    connect(mScriptActionLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     vbox->addWidget(mScriptActionLister,0, Qt::AlignTop);
     topLayout->addWidget(actions);
 

@@ -53,14 +53,17 @@ QWidget *SieveConditionSpamTest::createParamWidget( QWidget *parent ) const
     if (mHasSpamTestPlusSupport) {
         QCheckBox *percent = new QCheckBox(i18n("Percent"));
         percent->setObjectName(QLatin1String("percent"));
+        connect(percent, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
         lay->addWidget(percent);
     }
 
     SelectRelationalMatchType *relation = new SelectRelationalMatchType;
+    connect(relation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     relation->setObjectName(QLatin1String("relation"));
     lay->addWidget(relation);
 
     SelectComparatorComboBox *comparator = new SelectComparatorComboBox;
+    connect(comparator, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     comparator->setObjectName(QLatin1String("comparator"));
     lay->addWidget(comparator);
 
@@ -68,6 +71,7 @@ QWidget *SieveConditionSpamTest::createParamWidget( QWidget *parent ) const
     spinbox->setMaximum(10);
     spinbox->setMinimum(0);
     spinbox->setObjectName(QLatin1String("value"));
+    connect(spinbox, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
     lay->addWidget(spinbox);
     return w;
 }

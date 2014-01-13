@@ -49,6 +49,7 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     lay->addWidget(lab);
 
     SelectMimeTypeComboBox *fromMimeType = new SelectMimeTypeComboBox;
+    connect(fromMimeType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     fromMimeType->setObjectName(QLatin1String("from"));
     lay->addWidget(fromMimeType);
 
@@ -56,6 +57,7 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     lay->addWidget(lab);
 
     SelectMimeTypeComboBox *toMimeType = new SelectMimeTypeComboBox;
+    connect(toMimeType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     toMimeType->setObjectName(QLatin1String("to"));
     lay->addWidget(toMimeType);
 
@@ -63,6 +65,7 @@ QWidget *SieveActionConvert::createParamWidget( QWidget *parent ) const
     lay->addWidget(lab);
 
     SelectConvertParameterWidget *params = new SelectConvertParameterWidget;
+    connect(params, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     params->setObjectName(QLatin1String("params"));
     lay->addWidget(params);
 

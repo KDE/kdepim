@@ -16,7 +16,10 @@
 */
 
 #include "dropboxstorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "dropboxjob.h"
+
+#include <qjson/parser.h>
 
 #include <KLocalizedString>
 #include <KConfig>
@@ -106,17 +109,18 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     emitAuthentificationDone();
 }
 
-void DropBoxStorageService::storageServicelistFolder()
+void DropBoxStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mAccessToken.isEmpty()) {        
         mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
+        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->listFolder();
+        job->listFolder(folder);
     }
 }
 
@@ -266,6 +270,17 @@ void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername
 StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
 {
     return serviceCapabilities();
+}
+
+void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+    listWidget->clear();
+    QJson::Parser parser;
+    bool ok;
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info "<<info;
+
+    //TODO parse data
 }
 
 KIcon DropBoxStorageService::icon() const

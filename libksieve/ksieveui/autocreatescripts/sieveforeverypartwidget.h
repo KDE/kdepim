@@ -35,6 +35,9 @@ public:
     void generatedScript(QString &script, QStringList &requires);
     void loadScript(const QDomElement &element, QString &error);
 
+Q_SIGNALS:
+    void forEveryPartChanged();
+
 private Q_SLOTS:
     void slotHelp();
 

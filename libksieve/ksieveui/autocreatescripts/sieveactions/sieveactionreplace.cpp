@@ -52,6 +52,7 @@ QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const
 
     KLineEdit *subject = new KLineEdit;
     subject->setObjectName(QLatin1String("subject"));
+    connect(subject, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(subject,0,1);
 
     lab = new QLabel(i18n("from:"));
@@ -59,6 +60,7 @@ QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const
 
     KLineEdit *headers = new KLineEdit;
     headers->setObjectName(QLatin1String("from"));
+    connect(headers, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(headers,1,1);
 
     lab = new QLabel(i18n("text:"));
@@ -66,6 +68,7 @@ QWidget *SieveActionReplace::createParamWidget( QWidget *parent ) const
 
     MultiLineEdit *text = new MultiLineEdit;
     text->setObjectName(QLatin1String("text"));
+    connect(text, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
     grid->addWidget(text,2,1);
 
     return w;

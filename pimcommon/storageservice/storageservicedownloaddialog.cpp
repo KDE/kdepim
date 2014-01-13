@@ -16,6 +16,7 @@
 */
 
 #include "storageservicedownloaddialog.h"
+#include "storageservicelistwidget.h"
 
 #include "storageservice/storageserviceabstract.h"
 
@@ -40,13 +41,15 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     QLabel *lab = new QLabel(i18n("Select file to download:"));
     vbox->addWidget(lab);
 
-    mTreeWidget = new QTreeWidget;
-    connect(mTreeWidget, SIGNAL(itemActivated(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
-    vbox->addWidget(mTreeWidget);
+    mListWidget = new StorageServiceListWidget;
+    connect(mListWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slotItemActivated(QListWidgetItem*)));
+
+    vbox->addWidget(mListWidget);
 
     w->setLayout(vbox);
     setMainWidget(w);
     enableButtonOk(false);
+    initializeList();
 }
 
 StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
@@ -54,7 +57,12 @@ StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 
 }
 
-void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
+void StorageServiceDownloadDialog::slotItemActivated(QListWidgetItem *item)
 {
-    enableButtonOk(item);
+    enableButtonOk(item && (mListWidget->type(item) == StorageServiceListWidget::File));
+}
+
+void StorageServiceDownloadDialog::initializeList()
+{
+
 }

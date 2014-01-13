@@ -57,6 +57,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     if (mHasVacationSecondsSupport) {
         SelectVacationComboBox *vacation = new SelectVacationComboBox;
         vacation->setObjectName(QLatin1String("vacationcombobox"));
+        connect(vacation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
         grid->addWidget(vacation, 0 ,0);
     } else {
         lab = new QLabel(i18n("day:"));
@@ -68,6 +69,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     day->setMinimum(1);
     day->setMaximum(999);
     day->setObjectName(QLatin1String("day"));
+    connect(day, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
     grid->addWidget(day, 0 ,1);
 
 
@@ -76,6 +78,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
 
     KLineEdit *subject = new KLineEdit;
     subject->setObjectName(QLatin1String("subject"));
+    connect(subject, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(subject, 1 ,1);
 
     lab = new QLabel(i18n("Additional email:"));
@@ -83,6 +86,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
 
     KLineEdit *addresses = new KLineEdit;
     addresses->setObjectName(QLatin1String("addresses"));
+    connect(addresses, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(addresses, 2 ,1);
 
 
@@ -90,6 +94,7 @@ QWidget *SieveActionVacation::createParamWidget( QWidget *parent ) const
     grid->addWidget(lab, 3 ,0);
 
     MultiLineEdit *text = new MultiLineEdit;
+    connect(text, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     text->setObjectName(QLatin1String("text"));
     grid->addWidget(text, 3 ,1);
 

@@ -50,6 +50,7 @@ QWidget *SieveActionBreak::createParamWidget( QWidget *parent ) const
 
     KLineEdit *subject = new KLineEdit;
     subject->setObjectName(QLatin1String("name"));
+    connect(subject, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(subject);
     return w;
 }

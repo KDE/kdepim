@@ -33,6 +33,9 @@ public:
     QString code() const;
     void setCode(qlonglong value, const QString &identifier, const QString &name, QString &error);
 
+Q_SIGNALS:
+    void valueChanged();
+
 private:
     SelectSizeTypeComboBox *mSelectSizeType;
     QSpinBox *mSpinBoxSize;

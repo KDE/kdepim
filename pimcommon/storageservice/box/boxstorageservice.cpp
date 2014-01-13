@@ -16,6 +16,7 @@
 */
 
 #include "boxstorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "boxjob.h"
 
 #include <KLocalizedString>
@@ -142,17 +143,18 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
     }
 }
 
-void BoxStorageService::storageServicelistFolder()
+void BoxStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        connect(job, SIGNAL(listFolderDone(QStringList)), this, SLOT(slotListFolderDone(QStringList)));
+        connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->listFolder();
+        job->listFolder(folder);
     }
 }
 
@@ -269,4 +271,9 @@ void BoxStorageService::storageServicecreateServiceFolder()
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->createServiceFolder();
     }
+}
+
+void BoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+    listWidget->clear();
 }

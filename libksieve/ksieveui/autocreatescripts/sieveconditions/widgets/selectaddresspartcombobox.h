@@ -33,6 +33,9 @@ public:
 
     QString extraRequire() const;
 
+Q_SIGNALS:
+    void valueChanged();
+
 private:
     void initialize();
     bool mHasSubaddressCapability;

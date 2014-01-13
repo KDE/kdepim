@@ -55,14 +55,16 @@ private Q_SLOTS:
     void slotShareLinkDone(const QString &serviceName, const QString &link);
     void slotAuthenticationFailed(const QString &serviceName, const QString &error);
     void slotAuthenticationDone(const QString &serviceName);
-    void slotActionFailed(const QString &serviceName, const QString &error);    
-    void slotProgressStateChanged(bool state);    
+    void slotActionFailed(const QString &serviceName, const QString &error);
+    void slotProgressStateChanged(bool state);
     void slotUpdatePixmap(const QPixmap &pix);
+    void slotListFolderDone(const QString &serviceName, const QString &data);
 
 private:
     bool verifyService(const QString &serviceName);
     void connectStorageService();
     QString mServiceName;
+    QString mCurrentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
     StorageServiceListWidget *mListWidget;
     StorageServiceProgressIndicator *mProgressIndicator;
