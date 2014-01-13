@@ -79,17 +79,18 @@ void UbuntuoneStorageService::storageServiceauthentication()
     job->requestTokenAccess();
 }
 
-void UbuntuoneStorageService::storageServicelistFolder()
+void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
-        job->listFolder();
+        job->listFolder(folder);
     }
 }
 

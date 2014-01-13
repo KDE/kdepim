@@ -36,7 +36,7 @@ public:
     static StorageServiceAbstract::Capabilities serviceCapabilities();
 
 
-    void storageServicelistFolder();
+    void storageServicelistFolder(const QString &folder);
     void storageServiceuploadFile(const QString &filename);
     void storageServiceaccountInfo();
     void storageServicecreateFolder(const QString &folder);

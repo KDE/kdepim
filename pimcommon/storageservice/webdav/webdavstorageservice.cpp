@@ -139,16 +139,17 @@ void WebDavStorageService::fillListWidget(StorageServiceListWidget *listWidget, 
 
 }
 
-void WebDavStorageService::storageServicelistFolder()
+void WebDavStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->listFolder();
+        job->listFolder(folder);
     }
 }
 

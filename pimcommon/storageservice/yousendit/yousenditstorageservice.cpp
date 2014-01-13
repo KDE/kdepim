@@ -84,17 +84,18 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     emitAuthentificationDone();
 }
 
-void YouSendItStorageService::storageServicelistFolder()
+void YouSendItStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionFolder(folder);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
         connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->listFolder();
+        job->listFolder(folder);
     }
 }
 

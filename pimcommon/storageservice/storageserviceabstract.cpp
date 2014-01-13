@@ -84,14 +84,14 @@ void StorageServiceAbstract::createFolder(const QString &folder)
     storageServicecreateFolder(folder);
 }
 
-void StorageServiceAbstract::listFolder()
+void StorageServiceAbstract::listFolder(const QString &folder)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";
         return;
     }
     changeProgressState(true);
-    storageServicelistFolder();
+    storageServicelistFolder(folder);
 }
 
 void StorageServiceAbstract::authentication()
@@ -161,7 +161,7 @@ void StorageServiceAbstract::executeNextAction()
         storageServicecreateFolder(mNextAction->nextActionFolder());
         break;
     case ListFolder:
-        storageServicelistFolder();
+        storageServicelistFolder(mNextAction->nextActionFolder());
         break;
     case AccountInfo:
         storageServiceaccountInfo();

@@ -90,7 +90,7 @@ public:
     virtual void uploadFile(const QString &filename);
     virtual void accountInfo();
     virtual void createFolder(const QString &folder);
-    virtual void listFolder();
+    virtual void listFolder(const QString &folder=QString());
     virtual void authentication();
     virtual void shareLink(const QString &root, const QString &path);
     virtual void createServiceFolder();
@@ -137,7 +137,7 @@ protected:
     virtual void storageServiceuploadFile(const QString &filename) = 0;
     virtual void storageServiceaccountInfo() = 0;
     virtual void storageServicecreateFolder(const QString &folder) = 0;
-    virtual void storageServicelistFolder() = 0;
+    virtual void storageServicelistFolder(const QString &folder) = 0;
     virtual void storageServiceauthentication() = 0;
     virtual void storageServiceShareLink(const QString &root, const QString &path) = 0;
     virtual void storageServicecreateServiceFolder() = 0;
