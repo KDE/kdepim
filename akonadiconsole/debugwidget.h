@@ -52,6 +52,7 @@ class DebugWidget : public QWidget
     void clearAllTabs();
     void clearCurrentTab();
     void saveRichText();
+    void closeAllTabs();
 
   private:
     KTextEdit *mGeneralView;

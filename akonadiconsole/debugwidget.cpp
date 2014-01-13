@@ -95,16 +95,19 @@ DebugWidget::DebugWidget( QWidget *parent )
   QPushButton *clearAllButton = new QPushButton( "Clear All Tabs", this );
   QPushButton *clearCurrentButton = new QPushButton( "Clear Current Tab", this );
   QPushButton *clearGeneralButton = new QPushButton( "Clear Information View", this );
+  QPushButton *closeAllTabsButton = new QPushButton( "Close All Tabs", this );
   QPushButton *saveRichtextButton = new QPushButton( "Save as RichText...", this );
 
   buttonLayout->addWidget( clearAllButton );
   buttonLayout->addWidget( clearCurrentButton );
   buttonLayout->addWidget( clearGeneralButton );
+  buttonLayout->addWidget( closeAllTabsButton );
   buttonLayout->addWidget( saveRichtextButton );
 
   connect( clearAllButton, SIGNAL(clicked()), this, SLOT(clearAllTabs()) );
   connect( clearCurrentButton, SIGNAL(clicked()), this, SLOT(clearCurrentTab()) );
   connect( clearGeneralButton, SIGNAL(clicked()), mGeneralView, SLOT(clear()) );
+  connect( closeAllTabsButton, SIGNAL(clicked()), this, SLOT(closeAllTabs()) );
   connect( saveRichtextButton, SIGNAL(clicked()), this, SLOT(saveRichText()) );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
@@ -149,6 +152,7 @@ void DebugWidget::tabCloseRequested( int index )
     }
 
     mConnectionPages->removeTab( index );
+    delete page;
   }
 }
 
@@ -170,6 +174,20 @@ void DebugWidget::clearCurrentTab()
     return;
 
   page->clear();
+}
+
+void DebugWidget::closeAllTabs()
+{
+  ConnectionPage *page = qobject_cast<ConnectionPage*>( mConnectionPages->widget( 0 ) );
+  if ( page ) {
+    page->clear();
+  }
+
+  while ( mConnectionPages->count() > 1 ) {
+    mConnectionPages->removeTab( 1 );
+  }
+  qDeleteAll(mPageHash);
+  mPageHash.clear();
 }
 
 void DebugWidget::signalEmitted( const QString &signalName, const QString &msg )
