@@ -45,7 +45,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
-    mListWidget = new StorageServiceListWidget(mStorageService->capabilities());
+    mListWidget = new StorageServiceListWidget(mStorageService);
     vbox->addWidget(mListWidget);
     mStorageServiceWarning = new StorageServiceWarning;
     vbox->addWidget(mStorageServiceWarning);
@@ -146,10 +146,7 @@ void StorageServicePage::authenticate()
 
 void StorageServicePage::createFolder()
 {
-    const QString folder = KInputDialog::getText(i18n("Folder Name"), i18n("Folder:"));
-    if (!folder.isEmpty()) {
-        mStorageService->createFolder(folder);
-    }
+    mListWidget->slotCreateFolder();
 }
 
 void StorageServicePage::refreshList()
@@ -164,9 +161,7 @@ void StorageServicePage::accountInfo()
 
 void StorageServicePage::uploadFile()
 {
-    const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
-    if (!filename.isEmpty())
-        mStorageService->uploadFile(filename);
+    mListWidget->slotUploadFile();
 }
 
 void StorageServicePage::deleteFile()

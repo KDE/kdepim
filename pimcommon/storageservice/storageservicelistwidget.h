@@ -30,6 +30,7 @@ class PIMCOMMON_EXPORT StorageServiceListWidget : public QListWidget
     Q_OBJECT
 public:
     enum ItemType {
+        UnKnown = -1,
         Folder = 0,
         File = 1
     };
@@ -43,6 +44,11 @@ public:
 
     void addFolder(const QString &name, const QString &ident);
     void addFile(const QString &name, const QString &ident);
+
+    StorageServiceListWidget::ItemType itemTypeSelected() const;
+    StorageServiceListWidget::ItemType type(QListWidgetItem *item) const;
+    QString itemIdentifier(QListWidgetItem *item) const;
+    QString itemIdentifierSelected() const;
 };
 }
 

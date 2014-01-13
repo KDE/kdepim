@@ -20,6 +20,8 @@
 
 #include "storageservicelistwidget.h"
 
+#include <QListWidgetItem>
+
 using namespace PimCommon;
 
 StorageServiceListWidget::StorageServiceListWidget(QWidget *parent)
@@ -34,10 +36,50 @@ StorageServiceListWidget::~StorageServiceListWidget()
 
 void StorageServiceListWidget::addFolder(const QString &name, const QString &ident)
 {
-    //TODO
+    QListWidgetItem *item = new QListWidgetItem(name, this);
+    item->setData(Ident, ident);
+    item->setData(Type, Folder);
+    //TODO add default icon etc.
 }
 
 void StorageServiceListWidget::addFile(const QString &name, const QString &ident)
 {
-    //TODO
+    QListWidgetItem *item = new QListWidgetItem(name, this);
+    item->setData(Ident, ident);
+    item->setData(Type, File);
+    //TODO add default icon etc.
+}
+
+StorageServiceListWidget::ItemType StorageServiceListWidget::itemTypeSelected() const
+{
+    QListWidgetItem *item = currentItem();
+    if (item) {
+        return static_cast<StorageServiceListWidget::ItemType>(item->data(Type).toInt());
+    }
+    return StorageServiceListWidget::UnKnown;
+}
+
+StorageServiceListWidget::ItemType StorageServiceListWidget::type(QListWidgetItem *item) const
+{
+    if (item) {
+        return static_cast<StorageServiceListWidget::ItemType>(item->data(Type).toInt());
+    }
+    return StorageServiceListWidget::UnKnown;
+}
+
+QString StorageServiceListWidget::itemIdentifier(QListWidgetItem *item) const
+{
+    if (item) {
+        return item->data(Ident).toString();
+    }
+    return QString();
+}
+
+QString StorageServiceListWidget::itemIdentifierSelected() const
+{
+    QListWidgetItem *item = currentItem();
+    if (item) {
+        return item->data(Type).toString();
+    }
+    return QString();
 }
