@@ -135,6 +135,7 @@ void SieveEditorMainWindow::slotDeleteScript()
 
 void SieveEditorMainWindow::slotQuitApp()
 {
+    mMainWidget->needToSaveScript();
     close();
 }
 
