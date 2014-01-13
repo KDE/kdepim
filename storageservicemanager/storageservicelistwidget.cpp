@@ -101,7 +101,10 @@ void StorageServiceListWidget::slotMoveUp()
 void StorageServiceListWidget::slotDeleteFile()
 {
     if (itemTypeSelected() == StorageServiceListWidget::File) {
-
+        const QString filename = itemIdentifierSelected();
+        if (!filename.isEmpty()) {
+            mStorageService->deleteFile(filename);
+        }
     }
 }
 
@@ -115,7 +118,10 @@ void StorageServiceListWidget::slotShareFile()
 void StorageServiceListWidget::slotDownloadFile()
 {
     if (itemTypeSelected() == StorageServiceListWidget::File) {
-
+        const QString filename = itemIdentifierSelected();
+        if (!filename.isEmpty()) {
+            mStorageService->downloadFile(filename);
+        }
     }
 }
 

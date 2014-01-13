@@ -34,14 +34,14 @@ public:
 public Q_SLOTS:
     void slotCreateFolder();
     void slotUploadFile();
+    void slotDownloadFile();
+    void slotDeleteFolder();
+    void slotDeleteFile();
+    void slotShareFile();
 
 private Q_SLOTS:
     void slotContextMenu(const QPoint &pos);
     void slotMoveUp();
-    void slotDeleteFile();
-    void slotShareFile();
-    void slotDownloadFile();
-    void slotDeleteFolder();
     void slotItemDoubleClicked(QListWidgetItem *item);
 
 private:

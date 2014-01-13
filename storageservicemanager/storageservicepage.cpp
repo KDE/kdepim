@@ -166,20 +166,12 @@ void StorageServicePage::uploadFile()
 
 void StorageServicePage::deleteFile()
 {
-    //TODO use selected element
-    const QString filename = KInputDialog::getText(i18n("Delete File"), i18n("Filename:"));
-    if (!filename.isEmpty()) {
-        mStorageService->deleteFile(filename);
-    }
+    mListWidget->slotDeleteFile();
 }
 
 void StorageServicePage::downloadFile()
 {
-    //TODO use selected element
-    const QString filename = KInputDialog::getText(i18n("Download File"), i18n("Filename:"));
-    if (!filename.isEmpty()) {
-        mStorageService->downloadFile(filename);
-    }
+    mListWidget->slotDownloadFile();
 }
 
 PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities() const
