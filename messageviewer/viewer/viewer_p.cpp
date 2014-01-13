@@ -1826,12 +1826,14 @@ void ViewerPrivate::createActions()
   connect(mFindInMessageAction, SIGNAL(triggered(bool)), SLOT(slotFind()));
   mFindInMessageAction->setShortcut(KStandardShortcut::find());
 
+#ifndef KDEPIM_NO_WEBKIT
 #if QTWEBKIT_VERSION >= QTWEBKIT_VERSION_CHECK(2, 3, 0)
   mCaretBrowsing = new KToggleAction(i18n("Toggle Caret Browsing"), this);
   mCaretBrowsing->setShortcut(Qt::Key_F7);
   ac->addAction( QLatin1String("toggle_caret_browsing"), mCaretBrowsing );
   connect( mCaretBrowsing, SIGNAL(triggered(bool)), SLOT(slotToggleCaretBrowsing(bool)) );
   mCaretBrowsing->setChecked(false);
+#endif
 #endif
   mBlockImage = new KAction(i18n("Block image"), this);
   ac->addAction(QLatin1String("adblock_image"), mBlockImage);
