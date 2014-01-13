@@ -20,6 +20,8 @@
 
 #include "storageservicelistwidget.h"
 
+#include <KIcon>
+
 #include <QListWidgetItem>
 
 using namespace PimCommon;
@@ -39,6 +41,7 @@ void StorageServiceListWidget::addFolder(const QString &name, const QString &ide
     QListWidgetItem *item = new QListWidgetItem(name, this);
     item->setData(Ident, ident);
     item->setData(Type, Folder);
+    item->setIcon(KIcon(QLatin1String("folder")));
     //TODO add default icon etc.
 }
 
