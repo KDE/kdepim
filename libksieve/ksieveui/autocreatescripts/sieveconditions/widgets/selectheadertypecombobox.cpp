@@ -159,6 +159,7 @@ SelectHeaderTypeComboBox::SelectHeaderTypeComboBox(bool onlyEnvelopType, QWidget
     //TODO add completion
     initialize(onlyEnvelopType);
     connect(this, SIGNAL(activated(QString)), SLOT(slotSelectItem(QString)));
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 }
 
 SelectHeaderTypeComboBox::~SelectHeaderTypeComboBox()

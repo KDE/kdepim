@@ -22,6 +22,7 @@
 SelectComparatorComboBox::SelectComparatorComboBox(QWidget *parent)
     : KComboBox(parent)
 {
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
     initialize();
 }
 

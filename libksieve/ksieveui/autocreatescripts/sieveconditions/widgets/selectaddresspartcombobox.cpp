@@ -28,6 +28,7 @@ SelectAddressPartComboBox::SelectAddressPartComboBox(QWidget *parent)
 {
     mHasSubaddressCapability = SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("subaddress"));
     initialize();
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 }
 
 SelectAddressPartComboBox::~SelectAddressPartComboBox()

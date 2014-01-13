@@ -32,6 +32,8 @@ public:
 
     QString require() const;
 
+Q_SIGNALS:
+    void valueChanged();
 private:
     void initialize();
 };

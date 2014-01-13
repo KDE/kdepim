@@ -26,6 +26,7 @@ SelectSizeTypeComboBox::SelectSizeTypeComboBox(QWidget *parent)
     : KComboBox(parent)
 {
     initialize();
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 }
 
 SelectSizeTypeComboBox::~SelectSizeTypeComboBox()
