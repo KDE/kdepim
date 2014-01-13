@@ -19,6 +19,8 @@
 #include "storageservice/storageservicelistwidget.h"
 #include "dropboxjob.h"
 
+#include <qjson/parser.h>
+
 #include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
@@ -273,6 +275,12 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
 void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    QJson::Parser parser;
+    bool ok;
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info "<<info;
+
+    //TODO parse data
 }
 
 KIcon DropBoxStorageService::icon() const

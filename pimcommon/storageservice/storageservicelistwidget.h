@@ -25,6 +25,14 @@
 #include "pimcommon_export.h"
 
 namespace PimCommon {
+class StorageServiceListWidget;
+class StorageServiceListItem : public QListWidgetItem
+{
+public:
+    StorageServiceListItem(const QString &name, StorageServiceListWidget *parent);
+    virtual bool operator<(const QListWidgetItem &other) const;
+};
+
 class PIMCOMMON_EXPORT StorageServiceListWidget : public QListWidget
 {
     Q_OBJECT

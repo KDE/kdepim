@@ -29,6 +29,7 @@ using namespace PimCommon;
 StorageServiceListWidget::StorageServiceListWidget(QWidget *parent)
     : QListWidget(parent)
 {
+    setSortingEnabled(true);
 }
 
 StorageServiceListWidget::~StorageServiceListWidget()
@@ -38,7 +39,7 @@ StorageServiceListWidget::~StorageServiceListWidget()
 
 void StorageServiceListWidget::addFolder(const QString &name, const QString &ident)
 {
-    QListWidgetItem *item = new QListWidgetItem(name, this);
+    StorageServiceListItem *item = new StorageServiceListItem(name, this);
     item->setData(Ident, ident);
     item->setData(Type, Folder);
     item->setIcon(KIcon(QLatin1String("folder")));
@@ -47,7 +48,7 @@ void StorageServiceListWidget::addFolder(const QString &name, const QString &ide
 
 void StorageServiceListWidget::addFile(const QString &name, const QString &ident)
 {
-    QListWidgetItem *item = new QListWidgetItem(name, this);
+    StorageServiceListItem *item = new StorageServiceListItem(name, this);
     item->setData(Ident, ident);
     item->setData(Type, File);
     //TODO add default icon etc.
@@ -86,3 +87,26 @@ QString StorageServiceListWidget::itemIdentifierSelected() const
     }
     return QString();
 }
+
+
+StorageServiceListItem::StorageServiceListItem(const QString &name, StorageServiceListWidget *parent)
+    : QListWidgetItem(name, parent)
+{
+
+}
+
+bool StorageServiceListItem::operator<(const QListWidgetItem &other) const
+{
+    StorageServiceListWidget::ItemType sourceType = static_cast<StorageServiceListWidget::ItemType>(data(Type).toInt());
+    StorageServiceListWidget::ItemType otherType = static_cast<StorageServiceListWidget::ItemType>(other.data(Type).toInt());
+    if (sourceType == otherType) {
+        return text() < other.text();
+    } else {
+        if (sourceType == StorageServiceListWidget::Folder) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
