@@ -31,6 +31,9 @@ public:
     QString code() const;
     void setCode(const QStringList &code, QString &error);
 
+Q_SIGNALS:
+    void valueChanged();
+
 private:
     void initialize();
     QSpinBox *mWidth;

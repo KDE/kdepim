@@ -52,6 +52,7 @@ SelectFileIntoWidget::SelectFileIntoWidget(QWidget *parent)
     QHBoxLayout *lay = new QHBoxLayout;
     lay->setMargin(0);
     mLineEdit = new KLineEdit;
+    connect(mLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mLineEdit);
     QPushButton *selectFileInfo = new QPushButton(i18n("..."));
     connect(selectFileInfo, SIGNAL(clicked(bool)), SLOT(slotSelectFolder()));

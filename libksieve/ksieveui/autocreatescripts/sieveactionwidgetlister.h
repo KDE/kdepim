@@ -56,6 +56,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
+    void actionModified();
 
 private:
     void setFilterAction( QWidget *widget );

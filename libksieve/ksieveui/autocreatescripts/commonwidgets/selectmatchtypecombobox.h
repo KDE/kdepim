@@ -32,6 +32,9 @@ public:
     bool isNegative() const;
     void setCode(const QString &code, const QString &name, QString &error);
 
+Q_SIGNALS:
+    void valueChanged();
+
 private:
     void initialize();
     bool mHasRegexCapability;

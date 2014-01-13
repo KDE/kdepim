@@ -27,6 +27,7 @@ MultiLineEdit::MultiLineEdit(QWidget *parent)
     setAcceptRichText(false);
     setSearchSupport(false);
     setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Fixed));
+    connect(this, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
 }
 
 MultiLineEdit::~MultiLineEdit()

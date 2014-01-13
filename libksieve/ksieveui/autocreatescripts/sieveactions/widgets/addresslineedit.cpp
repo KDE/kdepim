@@ -39,6 +39,7 @@ void AddressLineEdit::slotTextChanged()
     if (mIncorrectEmail) {
         verifyAddress();
     }
+    Q_EMIT valueChanged();
 }
 
 void AddressLineEdit::verifyAddress()

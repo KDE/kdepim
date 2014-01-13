@@ -214,7 +214,6 @@ void SieveActionWidget::slotActionChanged(int index)
         //All actions after stop will not execute => don't allow to add more actions.
         const bool enableAddAction = (action->name() != QLatin1String("stop"));
         mAdd->setEnabled(enableAddAction);
-
     } else {
         mAdd->setEnabled(true);
         mCommentButton->setEnabled(false);
