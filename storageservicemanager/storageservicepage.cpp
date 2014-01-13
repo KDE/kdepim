@@ -189,7 +189,7 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities
 
 void StorageServicePage::slotProgressStateChanged(bool state)
 {
-    mListWidget->setEnabled(state);
+    mListWidget->setEnabled(!state);
     if (state) {
         mProgressIndicator->startAnimation();
     } else {
