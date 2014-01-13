@@ -34,6 +34,9 @@ public:
     QString code() const;
     void setCode(const QString &type, const QString &content, const QString &name, QString &error);
 
+Q_SIGNALS:
+    void valueChanged();
+
 private Q_SLOTS:
     void slotBodyTypeChanged(int);
 

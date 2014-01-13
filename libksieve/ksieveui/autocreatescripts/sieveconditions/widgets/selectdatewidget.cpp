@@ -73,15 +73,19 @@ void SelectDateWidget::initialize()
 
     mDateLineEdit = new KLineEdit;
     mStackWidget->addWidget(mDateLineEdit);
+    connect(mDateLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
 
     mDateValue = new QSpinBox;
     mStackWidget->addWidget(mDateValue);
+    connect(mDateValue, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
 
     mDateEdit = new KDateComboBox;
     mStackWidget->addWidget(mDateEdit);
+    connect(mDateEdit, SIGNAL(dateChanged(QDate)), this, SIGNAL(valueChanged()));
 
     mTimeEdit = new KTimeComboBox;
     mStackWidget->addWidget(mTimeEdit);
+    connect(mTimeEdit, SIGNAL(timeChanged(QTime)), this, SIGNAL(valueChanged()));
 
     mStackWidget->setCurrentWidget(mDateValue);
 
@@ -146,6 +150,7 @@ void SelectDateWidget::slotDateTypeActivated(int index)
         mStackWidget->setCurrentWidget(mDateLineEdit);
         break;
     }
+    Q_EMIT valueChanged();
 }
 
 QString SelectDateWidget::dateValue(SelectDateWidget::DateType type) const

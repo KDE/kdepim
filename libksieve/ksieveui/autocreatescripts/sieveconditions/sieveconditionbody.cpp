@@ -53,8 +53,10 @@ QWidget *SieveConditionBody::createParamWidget( QWidget *parent ) const
     SelectMatchTypeComboBox *matchType = new SelectMatchTypeComboBox;
     lay->addWidget(matchType);
     matchType->setObjectName(QLatin1String("matchtype"));
+    connect(matchType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
 
     KLineEdit *edit = new KLineEdit;
+    connect(edit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     edit->setClearButtonShown(true);
     lay->addWidget(edit);
     edit->setObjectName(QLatin1String("edit"));

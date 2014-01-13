@@ -61,12 +61,14 @@ QWidget *SieveConditionHasFlag::createParamWidget( QWidget *parent ) const
 
     KLineEdit *variableName = new KLineEdit;
     variableName->setObjectName(QLatin1String("variablename"));
+    connect(variableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(variableName, 0, 1);
 
     lab = new QLabel(i18n("Value:"));
     grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
     grid->addWidget(value, 1, 1);
 

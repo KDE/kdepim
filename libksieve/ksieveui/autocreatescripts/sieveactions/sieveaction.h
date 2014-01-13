@@ -59,6 +59,10 @@ public:
     void unknowTagValue(const QString &tagValue, QString &error);
     void tooManyArgument(const QString &tagName, int index, int maxValue, QString &error);
     void serverDoesNotSupportFeatures(const QString &feature, QString &error);
+
+Q_SIGNALS:
+    void valueChanged();
+
 private:
     QString mName;
     QString mLabel;
