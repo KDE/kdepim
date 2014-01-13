@@ -72,6 +72,7 @@ void StorageServicePage::connectStorageService()
     connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
     connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
     connect(mStorageService, SIGNAL(inProgress(bool)), this, SLOT(slotProgressStateChanged(bool)));
+    connect(mStorageService, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
 }
 
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
@@ -153,6 +154,8 @@ void StorageServicePage::createFolder()
 
 void StorageServicePage::refreshList()
 {
+    //TODO customize listfolder
+    //mStorageService->listFolder();
     //TODO
 }
 
@@ -198,5 +201,12 @@ void StorageServicePage::slotProgressStateChanged(bool state)
         mProgressIndicator->startAnimation();
     } else {
         mProgressIndicator->stopAnimation();
+    }
+}
+
+void StorageServicePage::slotListFolderDone(const QString &serviceName, const QString &data)
+{
+    if (verifyService(serviceName)) {
+        mStorageService->fillListWidget(mListWidget, data);
     }
 }
