@@ -29,8 +29,20 @@ class PIMCOMMON_EXPORT StorageServiceListWidget : public QListWidget
 {
     Q_OBJECT
 public:
+    enum ItemType {
+        Folder = 0,
+        File = 1
+    };
+    enum StorageServiceData {
+        Type = Qt::UserRole + 1,
+        Ident = Qt::UserRole + 2
+    };
+
     explicit StorageServiceListWidget(QWidget *parent=0);
     ~StorageServiceListWidget();
+
+    void addFolder(const QString &name, const QString &ident);
+    void addFile(const QString &name, const QString &ident);
 };
 }
 

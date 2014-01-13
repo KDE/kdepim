@@ -31,3 +31,13 @@ StorageServiceListWidget::~StorageServiceListWidget()
 {
 
 }
+
+void StorageServiceListWidget::addFolder(const QString &name, const QString &ident)
+{
+    //TODO
+}
+
+void StorageServiceListWidget::addFile(const QString &name, const QString &ident)
+{
+    //TODO
+}

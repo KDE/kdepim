@@ -16,6 +16,7 @@
 */
 
 #include "hubicstorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "hubicjob.h"
 
 #include <KLocalizedString>
@@ -270,5 +271,5 @@ StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
 
 void HubicStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
 {
-
+    listWidget->clear();
 }

@@ -16,6 +16,7 @@
 */
 
 #include "dropboxstorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "dropboxjob.h"
 
 #include <KLocalizedString>
@@ -271,7 +272,7 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
 
 void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
 {
-
+    listWidget->clear();
 }
 
 KIcon DropBoxStorageService::icon() const

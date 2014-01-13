@@ -16,6 +16,7 @@
 */
 
 #include "ubuntuonestorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "ubuntuonejob.h"
 
 #include <KLocalizedString>
@@ -272,7 +273,7 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() con
 
 void UbuntuoneStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
 {
-
+    listWidget->clear();
 }
 
 QString UbuntuoneStorageService::storageServiceName() const

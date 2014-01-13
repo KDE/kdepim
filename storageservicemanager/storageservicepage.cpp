@@ -154,9 +154,7 @@ void StorageServicePage::createFolder()
 
 void StorageServicePage::refreshList()
 {
-    //TODO customize listfolder
-    //mStorageService->listFolder();
-    //TODO
+    mStorageService->listFolder(mCurrentFolder);
 }
 
 void StorageServicePage::accountInfo()

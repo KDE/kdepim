@@ -16,6 +16,7 @@
 */
 
 #include "yousenditstorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "yousenditjob.h"
 
 #include <KLocalizedString>
@@ -266,6 +267,7 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() con
 
 void YouSendItStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
 {
+    listWidget->clear();
     //TODO
 }
 

@@ -16,6 +16,7 @@
 */
 
 #include "webdavstorageservice.h"
+#include "storageservice/storageservicelistwidget.h"
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"
 
@@ -136,7 +137,7 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 
 void WebDavStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
 {
-
+    listWidget->clear();
 }
 
 void WebDavStorageService::storageServicelistFolder(const QString &folder)
