@@ -49,12 +49,14 @@ QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
 
     SelectAddHeaderPositionCombobox *combo = new SelectAddHeaderPositionCombobox;
     combo->setObjectName(QLatin1String("selectposition"));
+    connect(combo, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     grid->addWidget(combo, 0, 0);
 
     QLabel *lab = new QLabel(i18n("header:"));
     grid->addWidget(lab, 0, 1);
 
     KLineEdit *headerEdit = new KLineEdit;
+    connect(headerEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     headerEdit->setObjectName(QLatin1String("headeredit"));
     grid->addWidget(headerEdit, 0, 2);
 
@@ -62,6 +64,7 @@ QWidget *SieveActionAddHeader::createParamWidget( QWidget *parent ) const
     grid->addWidget(lab, 1, 1);
 
     KLineEdit *valueEdit = new KLineEdit;
+    connect(valueEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     valueEdit->setObjectName(QLatin1String("valueedit"));
     grid->addWidget(valueEdit, 1, 2);
 

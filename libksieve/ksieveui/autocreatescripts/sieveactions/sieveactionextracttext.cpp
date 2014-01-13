@@ -54,11 +54,13 @@ QWidget *SieveActionExtractText::createParamWidget( QWidget *parent ) const
     nbCharacters->setMaximum(99999);
     nbCharacters->setObjectName(QLatin1String("numberOfCharacters"));
     grid->addWidget(nbCharacters, 0, 1);
+    connect(nbCharacters, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
 
     lab = new QLabel(i18n("Stored in variable name:"));
     grid->addWidget(lab, 1, 0);
 
     KLineEdit *variableName = new KLineEdit;
+    connect(variableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     variableName->setObjectName(QLatin1String("variablename"));
     grid->addWidget(variableName, 1, 1);
 

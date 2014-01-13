@@ -61,6 +61,7 @@ QWidget *SieveConditionSpamTest::createParamWidget( QWidget *parent ) const
     lay->addWidget(relation);
 
     SelectComparatorComboBox *comparator = new SelectComparatorComboBox;
+    connect(comparator, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     comparator->setObjectName(QLatin1String("comparator"));
     lay->addWidget(comparator);
 
@@ -68,6 +69,7 @@ QWidget *SieveConditionSpamTest::createParamWidget( QWidget *parent ) const
     spinbox->setMaximum(10);
     spinbox->setMinimum(0);
     spinbox->setObjectName(QLatin1String("value"));
+    connect(spinbox, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
     lay->addWidget(spinbox);
     return w;
 }
