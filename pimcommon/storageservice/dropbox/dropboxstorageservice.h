@@ -49,6 +49,7 @@ public:
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
     StorageServiceAbstract::Capabilities capabilities() const;
+    void fillListWidget(StorageServiceListWidget *listWidget, const QString &data);
 
     KIcon icon() const;
 

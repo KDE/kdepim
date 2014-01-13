@@ -270,3 +270,8 @@ void BoxStorageService::storageServicecreateServiceFolder()
         job->createServiceFolder();
     }
 }
+
+void BoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+
+}

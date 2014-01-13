@@ -269,6 +269,11 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() con
     return serviceCapabilities();
 }
 
+void UbuntuoneStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+
+}
+
 QString UbuntuoneStorageService::storageServiceName() const
 {
     return serviceName();

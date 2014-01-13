@@ -266,3 +266,8 @@ StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
 {
     return serviceCapabilities();
 }
+
+void HubicStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+
+}

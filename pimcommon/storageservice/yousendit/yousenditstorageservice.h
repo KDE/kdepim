@@ -41,18 +41,20 @@ public:
     void storageServicelistFolder();
     void removeConfig();
     void storageServiceauthentication();
-    void storageServiceShareLink(const QString &root, const QString &path);    
+    void storageServiceShareLink(const QString &root, const QString &path);
     void storageServicedownloadFile(const QString &filename);
     void storageServicecreateServiceFolder();
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
     StorageServiceAbstract::Capabilities capabilities() const;
+    void fillListWidget(StorageServiceListWidget *listWidget, const QString &data);
+
 
     QString storageServiceName() const;
     KIcon icon() const;
 
 private slots:
-    void slotAuthorizationDone(const QString &password, const QString &username, const QString &token);    
+    void slotAuthorizationDone(const QString &password, const QString &username, const QString &token);
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
@@ -60,7 +62,7 @@ private:
 
     QString mToken;
     QString mPassword;
-    QString mUsername;        
+    QString mUsername;
 };
 }
 

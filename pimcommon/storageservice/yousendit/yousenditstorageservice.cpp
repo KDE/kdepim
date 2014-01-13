@@ -263,6 +263,11 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() con
     return serviceCapabilities();
 }
 
+void YouSendItStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+    //TODO
+}
+
 QString YouSendItStorageService::storageServiceName() const
 {
     return serviceName();

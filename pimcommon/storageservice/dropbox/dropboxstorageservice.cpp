@@ -268,6 +268,11 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
     return serviceCapabilities();
 }
 
+void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+
+}
+
 KIcon DropBoxStorageService::icon() const
 {
     return KIcon();

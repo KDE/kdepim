@@ -23,7 +23,7 @@
 #include <KIcon>
 
 namespace PimCommon {
-
+class StorageServiceListWidget;
 struct AccountInfo {
     AccountInfo()
         : accountSize(-1),
@@ -102,6 +102,8 @@ public:
     virtual KIcon icon() const = 0;
     virtual void removeConfig() = 0;
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
+    virtual void fillListWidget(StorageServiceListWidget *listWidget, const QString &data) = 0;
+
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);

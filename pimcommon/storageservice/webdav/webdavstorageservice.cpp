@@ -134,6 +134,11 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
     return serviceCapabilities();
 }
 
+void WebDavStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+{
+
+}
+
 void WebDavStorageService::storageServicelistFolder()
 {
     if (mServiceLocation.isEmpty()) {
