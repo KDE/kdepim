@@ -53,6 +53,7 @@ QWidget *SieveConditionSize::createParamWidget( QWidget *parent ) const
     connect(combo, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 
     SelectSizeWidget *sizeWidget = new SelectSizeWidget;
+    connect(sizeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     sizeWidget->setObjectName(QLatin1String("sizewidget"));
     lay->addWidget(sizeWidget);
 

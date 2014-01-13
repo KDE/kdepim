@@ -53,6 +53,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
+    void valueChanged();
 
 private:
     void initWidget();
@@ -77,6 +78,8 @@ public:
     int conditionNumber() const;
     void loadScript(const QDomElement &element, bool uniqTest, bool notCondition, QString &error);
 
+Q_SIGNALS:
+    void valueChanged();
 
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );

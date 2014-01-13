@@ -54,6 +54,7 @@ public:
 
 Q_SIGNALS:
     void addNewBlock(QWidget *widget, KSieveUi::SieveWidgetPageAbstract::PageType type);
+    void valueChanged();
 
 private Q_SLOTS:
     void slotRadioClicked(QAbstractButton*);

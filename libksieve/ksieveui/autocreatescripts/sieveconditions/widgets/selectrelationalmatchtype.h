@@ -31,6 +31,9 @@ public:
     QString code() const;
     void setCode(const QString &type, const QString &comparatorStr, const QString &name, QString &error);
 
+Q_SIGNALS:
+    void valueChanged();
+
 private:
     void initialize();
     KComboBox *mType;

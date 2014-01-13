@@ -62,6 +62,7 @@ QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
     QCompleter *completer = new QCompleter(itemList, w);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     item->setCompleter(completer);
+    connect(item, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
 
     item->setObjectName(QLatin1String("item"));
     grid->addWidget(item, 0, 1);
@@ -70,6 +71,7 @@ QWidget *SieveConditionEnvironment::createParamWidget( QWidget *parent ) const
     grid->addWidget(lab, 1, 0);
 
     KLineEdit *value = new KLineEdit;
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     value->setObjectName(QLatin1String("value"));
     grid->addWidget(value, 1, 1);
 

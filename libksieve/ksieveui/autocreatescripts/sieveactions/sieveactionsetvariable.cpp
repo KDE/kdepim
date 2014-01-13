@@ -51,10 +51,12 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
 
     SelectVariableModifierComboBox *modifier = new SelectVariableModifierComboBox;
     modifier->setObjectName(QLatin1String("modifier"));
+    connect(modifier, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     grid->addWidget(modifier, 0, 0);
 
     if (mHasRegexCapability) {
         QCheckBox *protectAgainstUseRegexp = new QCheckBox(i18n("Protect special character"));
+        connect(protectAgainstUseRegexp, SIGNAL(clicked(bool)), this, SIGNAL(valueChanged()));
         protectAgainstUseRegexp->setObjectName(QLatin1String("regexprotect"));
         grid->addWidget(protectAgainstUseRegexp, 0, 1);
     }
@@ -64,6 +66,7 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
 
     KLineEdit *value = new KLineEdit;
     value->setObjectName(QLatin1String("value"));
+    connect(value, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(value, 1, 1);
 
     lab = new QLabel(i18n("In variable:"));
@@ -71,6 +74,7 @@ QWidget *SieveActionSetVariable::createParamWidget( QWidget *parent ) const
 
     KLineEdit *variable = new KLineEdit;
     variable->setObjectName(QLatin1String("variable"));
+    connect(variable, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     grid->addWidget(variable, 2, 1);
 
     return w;

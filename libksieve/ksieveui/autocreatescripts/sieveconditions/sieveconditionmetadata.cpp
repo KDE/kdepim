@@ -48,6 +48,7 @@ QWidget *SieveConditionMetaData::createParamWidget( QWidget *parent ) const
 
     SelectMatchTypeComboBox *selectType = new SelectMatchTypeComboBox;
     selectType->setObjectName(QLatin1String("selecttype"));
+    connect(selectType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     lay->addWidget(selectType);
 
     QGridLayout *grid = new QGridLayout;

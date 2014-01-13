@@ -44,14 +44,17 @@ SieveScriptPage::SieveScriptPage(QWidget *parent)
 
     if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("include"))) {
         mIncludeWidget = new SieveIncludeWidget;
+        connect(mIncludeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
         mTabWidget->addTab(mIncludeWidget, i18n("Includes"));
 
         mGlobalVariableWidget = new SieveGlobalVariableWidget;
+        connect(mGlobalVariableWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
         mTabWidget->addTab(mGlobalVariableWidget, i18n("Global Variable"));
     }
 
     if (SieveEditorGraphicalModeWidget::sieveCapabilities().contains(QLatin1String("foreverypart"))) {
         mForEveryPartWidget = new SieveForEveryPartWidget;
+        connect(mForEveryPartWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
         mTabWidget->addTab(mForEveryPartWidget, i18n("ForEveryPart"));
     }
 
@@ -79,6 +82,7 @@ SieveScriptBlockWidget *SieveScriptPage::createScriptBlock(KSieveUi::SieveWidget
 {
     SieveScriptBlockWidget *blockWidget = new SieveScriptBlockWidget;
     connect(blockWidget, SIGNAL(addNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)), SLOT(slotAddNewBlock(QWidget*,KSieveUi::SieveWidgetPageAbstract::PageType)));
+    connect(blockWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     blockWidget->setPageType(type);
     return blockWidget;
 }

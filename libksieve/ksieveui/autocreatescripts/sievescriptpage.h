@@ -44,6 +44,8 @@ public:
     SieveScriptBlockWidget *blockIfWidget() const;
     SieveScriptBlockWidget *addScriptBlock(KSieveUi::SieveWidgetPageAbstract::PageType type);
 
+Q_SIGNALS:
+    void valueChanged();
 
 private Q_SLOTS:
     void slotAddNewBlock(QWidget* widget,KSieveUi::SieveWidgetPageAbstract::PageType type);

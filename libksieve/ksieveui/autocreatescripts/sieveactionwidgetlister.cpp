@@ -113,7 +113,7 @@ void SieveActionWidget::initWidget()
             if (listCapabilities.contains((*it)->serverNeedsCapability())) {
                 // append to the list of actions:
                 mActionList.append( *it );
-
+                connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
                 // add (i18n-ized) name to combo box
                 mComboBox->addItem( (*it)->label(),(*it)->name() );
             } else {
@@ -122,7 +122,7 @@ void SieveActionWidget::initWidget()
         } else {
             // append to the list of actions:
             mActionList.append( *it );
-
+            connect(*it, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
             // add (i18n-ized) name to combo box
             mComboBox->addItem( (*it)->label(),(*it)->name() );
         }
@@ -318,6 +318,7 @@ void SieveActionWidgetLister::reconnectWidget( SieveActionWidget *w )
              this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
     connect( w, SIGNAL(removeWidget(QWidget*)),
              this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()), Qt::UniqueConnection);
 }
 
 void SieveActionWidgetLister::clearWidget( QWidget *aWidget )

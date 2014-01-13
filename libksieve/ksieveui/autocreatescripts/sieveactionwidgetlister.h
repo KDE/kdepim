@@ -57,6 +57,7 @@ Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
     void actionModified();
+    void valueChanged();
 
 private:
     void setFilterAction( QWidget *widget );
@@ -82,9 +83,13 @@ public:
     void loadScript(const QDomElement &element, bool onlyActions, QString &error);
 
     int actionNumber() const;
+
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );
     void slotRemoveWidget( QWidget *w );
+
+Q_SIGNALS:
+    void valueChanged();
 
 protected:
     void clearWidget( QWidget *aWidget );

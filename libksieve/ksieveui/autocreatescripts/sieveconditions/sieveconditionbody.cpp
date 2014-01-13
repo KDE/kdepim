@@ -48,6 +48,7 @@ QWidget *SieveConditionBody::createParamWidget( QWidget *parent ) const
 
     SelectBodyTypeWidget *bodyType = new SelectBodyTypeWidget;
     bodyType->setObjectName(QLatin1String("bodytype"));
+    connect(bodyType, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     lay->addWidget(bodyType);
 
     SelectMatchTypeComboBox *matchType = new SelectMatchTypeComboBox;

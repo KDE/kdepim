@@ -53,10 +53,12 @@ QWidget *SieveConditionSpamTest::createParamWidget( QWidget *parent ) const
     if (mHasSpamTestPlusSupport) {
         QCheckBox *percent = new QCheckBox(i18n("Percent"));
         percent->setObjectName(QLatin1String("percent"));
+        connect(percent, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
         lay->addWidget(percent);
     }
 
     SelectRelationalMatchType *relation = new SelectRelationalMatchType;
+    connect(relation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     relation->setObjectName(QLatin1String("relation"));
     lay->addWidget(relation);
 

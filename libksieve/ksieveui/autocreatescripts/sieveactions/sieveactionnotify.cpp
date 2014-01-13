@@ -61,14 +61,12 @@ QWidget *SieveActionNotify::createParamWidget( QWidget *parent ) const
     message->setObjectName(QLatin1String("message"));
     connect(message, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(message);
-    connect(message, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
 
     lab = new QLabel(i18n("method:"));
     lay->addWidget(lab);
 
     KLineEdit *method = new KLineEdit;
     method->setObjectName(QLatin1String("method"));
-    connect(method, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(method);
     connect(method, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
 
