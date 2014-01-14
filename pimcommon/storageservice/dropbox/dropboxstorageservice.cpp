@@ -279,8 +279,24 @@ void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget,
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
-
-    //TODO parse data
+    if (info.contains(QLatin1String("contents"))) {
+        const QVariantList lst = info.value(QLatin1String("contents")).toList();
+        Q_FOREACH (const QVariant &variant, lst) {
+            const QVariantMap qwer = variant.toMap();
+            const QList<QString> b = qwer.uniqueKeys();
+            for(int i=0;i<qwer.size();i++) {
+                const QString identifier = b.at(i);
+                if((identifier == QLatin1String("is_dir")) || (identifier == QLatin1String("path"))) {
+                    if(identifier == QLatin1String("path") && i==4) {
+                        const QString name = qwer[b[i]].toString().section(QLatin1Char('/'),-2);
+                        listWidget->addFolder(name, name);
+                    }
+                } else {
+                    listWidget->addFile(QLatin1String("name"), QLatin1String("name"));
+                }
+            }
+        }
+    }
 }
 
 KIcon DropBoxStorageService::icon() const
