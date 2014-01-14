@@ -89,7 +89,10 @@ void StorageServiceListWidget::slotCreateFolder()
 void StorageServiceListWidget::slotDeleteFolder()
 {
     if (itemTypeSelected() == StorageServiceListWidget::Folder) {
-
+        const QString folder = itemIdentifierSelected();
+        if (!folder.isEmpty()) {
+            mStorageService->deleteFolder(folder);
+        }
     }
 }
 

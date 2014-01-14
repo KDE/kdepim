@@ -75,6 +75,8 @@ void StorageServicePage::connectStorageService()
     connect(mStorageService, SIGNAL(inProgress(bool)), this, SLOT(slotProgressStateChanged(bool)));
     connect(mStorageService, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
     connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString, QString)));
+    connect(mStorageService, SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
 }
 
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
@@ -89,6 +91,7 @@ void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const P
 void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
     if (verifyService(serviceName)) {
+        updateList(serviceName);
         KMessageBox::information(this, i18n("Upload File"), i18n("%1 was correctly uploaded", fileName));
     }
 }
@@ -201,8 +204,24 @@ void StorageServicePage::slotListFolderDone(const QString &serviceName, const QS
 void StorageServicePage::slotCreateFolderDone(const QString &serviceName, const QString &folder)
 {
     Q_UNUSED(folder);
+    updateList(serviceName);
+}
+
+void StorageServicePage::slotDeleteFolderDone(const QString &serviceName, const QString &folder)
+{
+    Q_UNUSED(folder);
+    updateList(serviceName);
+}
+
+void StorageServicePage::slotDeleteFileDone(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(filename);
+    updateList(serviceName);
+}
+
+void StorageServicePage::updateList(const QString &serviceName)
+{
     if (verifyService(serviceName)) {
         QTimer::singleShot(0, this, SLOT(refreshList()));
-        //mStorageService->listFolder(mCurrentFolder);
     }
 }

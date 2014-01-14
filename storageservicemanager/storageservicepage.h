@@ -63,9 +63,11 @@ private Q_SLOTS:
     void slotUpdatePixmap(const QPixmap &pix);
     void slotListFolderDone(const QString &serviceName, const QString &data);
     void slotCreateFolderDone(const QString &serviceName, const QString &folder);
-
+    void slotDeleteFolderDone(const QString &serviceName, const QString &folder);
+    void slotDeleteFileDone(const QString &serviceName, const QString &filename);
 private:
     bool verifyService(const QString &serviceName);
+    inline void updateList(const QString &serviceName);
     void connectStorageService();
     QString mServiceName;
     QString mCurrentFolder;
