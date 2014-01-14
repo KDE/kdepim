@@ -47,6 +47,7 @@ public:
 
 Q_SIGNALS:
     void updatePixmap(const QPixmap &pix, StorageServicePage *page);
+    void updateStatusBarMessage(const QString &msg);
 
 public Q_SLOTS:
     void refreshList();

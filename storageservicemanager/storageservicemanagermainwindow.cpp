@@ -33,8 +33,10 @@
 #include <KApplication>
 #include <KConfigGroup>
 #include <KAction>
+#include <KStatusBar>
 
 #include <QPointer>
+
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     : KXmlGuiWindow()
@@ -46,6 +48,7 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     mStorageManager = new PimCommon::StorageServiceManager(this);
     mStorageServiceTabWidget = new StorageServiceTabWidget;
     connect(mStorageServiceTabWidget, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotUpdateActions()));
+    connect(mStorageServiceTabWidget, SIGNAL(updateStatusBarMessage(QString)), this, SLOT(slotSetStatusBarMessage(QString)));
     setCentralWidget(mStorageServiceTabWidget);
 
     connect( Solid::Networking::notifier(), SIGNAL(statusChanged(Solid::Networking::Status)),
@@ -142,5 +145,10 @@ void StorageServiceManagerMainWindow::readConfig()
     if ( sizeDialog.isValid() ) {
         resize( sizeDialog );
     }
+}
+
+void StorageServiceManagerMainWindow::slotSetStatusBarMessage(const QString &message)
+{
+    statusBar()->insertItem(message,0);
 }
 

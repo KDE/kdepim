@@ -210,6 +210,7 @@ void StorageServicePage::slotDeleteFolderDone(const QString &serviceName, const 
 {
     Q_UNUSED(folder);
     updateList(serviceName);
+    Q_EMIT updateStatusBarMessage(i18n("%1: Folder %2 was deleted.", serviceName, folder));
 }
 
 void StorageServicePage::slotDeleteFileDone(const QString &serviceName, const QString &filename)

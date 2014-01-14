@@ -35,6 +35,9 @@ public:
     void setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);
     void updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);
 
+Q_SIGNALS:
+    void updateStatusBarMessage(const QString &msg);
+
 public slots:
     void slotAuthenticate();
     void slotCreateFolder();
