@@ -101,6 +101,7 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
+    mRefreshList->setShortcut(QKeySequence( Qt::Key_F5 ));
 
     mAccountInfo = ac->addAction(QLatin1String("account_info"), mStorageServiceTabWidget, SLOT(slotAccountInfo()));
     mAccountInfo->setText(i18n("Account Info..."));

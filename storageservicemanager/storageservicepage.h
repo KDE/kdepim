@@ -38,7 +38,7 @@ public:
 
     void authenticate();
     void createFolder();
-    void refreshList();
+
     void accountInfo();
     void uploadFile();
     void downloadFile();
@@ -47,6 +47,9 @@ public:
 
 Q_SIGNALS:
     void updatePixmap(const QPixmap &pix, StorageServicePage *page);
+
+public Q_SLOTS:
+    void refreshList();
 
 private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);

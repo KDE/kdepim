@@ -35,6 +35,7 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QPointer>
+#include <QTimer>
 
 StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : QWidget(parent),
@@ -201,6 +202,7 @@ void StorageServicePage::slotCreateFolderDone(const QString &serviceName, const 
 {
     Q_UNUSED(folder);
     if (verifyService(serviceName)) {
-        mStorageService->listFolder(mCurrentFolder);
+        QTimer::singleShot(0, this, SLOT(refreshList()));
+        //mStorageService->listFolder(mCurrentFolder);
     }
 }
