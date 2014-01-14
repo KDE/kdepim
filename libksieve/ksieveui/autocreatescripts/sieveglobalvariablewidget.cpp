@@ -70,13 +70,16 @@ void SieveGlobalVariableActionWidget::initWidget()
     mLayout->addWidget( lab, 1, 0 );
 
     mVariableName = new KLineEdit;
+    connect(mVariableName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mVariableName, 1, 1 );
 
     mSetValueTo = new QCheckBox(i18n("Set value to:"));
+    connect(mSetValueTo, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mSetValueTo, 1, 2 );
     mSetValueTo->setChecked(false);
 
     mVariableValue = new KLineEdit;
+    connect(mVariableValue, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mVariableValue->setEnabled(false);
     mLayout->addWidget( mVariableValue, 1, 3 );
 
@@ -263,6 +266,8 @@ void SieveGlobalVariableLister::reconnectWidget(SieveGlobalVariableActionWidget 
              this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
     connect( w, SIGNAL(removeWidget(QWidget*)),
              this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(valueChanged()),
+             this, SIGNAL(valueChanged()), Qt::UniqueConnection );
 }
 
 void SieveGlobalVariableLister::clearWidget( QWidget *aWidget )

@@ -50,6 +50,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mForLoop = new QCheckBox(i18n("Add ForEveryPart loop"));
+    connect(mForLoop, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     topLayout->addWidget(mForLoop);
 
 
@@ -57,6 +58,7 @@ SieveForEveryPartWidget::SieveForEveryPartWidget(QWidget *parent)
     lay->addWidget(lab);
 
     mName = new KLineEdit;
+    connect(mName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mName->setEnabled(false);
     lay->addWidget(mName);
 
