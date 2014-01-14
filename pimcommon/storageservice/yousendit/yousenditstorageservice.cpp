@@ -24,6 +24,8 @@
 #include <KGlobal>
 #include <KConfigGroup>
 
+#include <qjson/parser.h>
+
 #include <QDebug>
 
 using namespace PimCommon;
@@ -268,7 +270,21 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() con
 void YouSendItStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
 {
     listWidget->clear();
-    //TODO
+    QJson::Parser parser;
+    bool ok;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("folders"))) {
+        QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
+        QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
+        Q_FOREACH (const QVariant &v, folders) {
+            QVariantMap map = v.toMap();
+            if (map.contains(QLatin1String("name"))) {
+                const QString name = map.value(QLatin1String("name")).toString();
+                listWidget->addFolder(name, name);
+            }
+        }
+    }
 }
 
 QString YouSendItStorageService::storageServiceName() const

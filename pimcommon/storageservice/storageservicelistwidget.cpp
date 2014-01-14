@@ -89,7 +89,6 @@ QString StorageServiceListWidget::itemIdentifierSelected() const
     return QString();
 }
 
-
 StorageServiceListItem::StorageServiceListItem(const QString &name, StorageServiceListWidget *parent)
     : QListWidgetItem(name, parent)
 {
