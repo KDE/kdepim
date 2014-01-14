@@ -38,6 +38,7 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mSieveEditorWidget = new KSieveUi::SieveEditorWidget;
+    connect(mSieveEditorWidget, SIGNAL(valueChanged()), this, SLOT(slotValueChanged()));
     vbox->addWidget(mSieveEditorWidget);
     connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
     qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
@@ -129,4 +130,9 @@ void SieveEditorPageWidget::needToSaveScript()
             saveScript();
         }
     }
+}
+
+void SieveEditorPageWidget::slotValueChanged()
+{
+    mWasChanged = true;
 }

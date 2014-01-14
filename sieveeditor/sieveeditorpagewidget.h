@@ -50,6 +50,8 @@ private slots:
     void slotCheckSyntaxClicked();
     void slotPutResultDebug(KManageSieve::SieveJob *, bool success, const QString &errorMsg);
     void slotPutResult(KManageSieve::SieveJob *, bool success);
+    void slotValueChanged();
+
 private:
     KUrl mCurrentURL;
     KSieveUi::SieveEditorWidget *mSieveEditorWidget;

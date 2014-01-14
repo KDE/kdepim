@@ -53,7 +53,7 @@ bool SieveEditorManageSieveWidget::refreshList()
 
         const KUrl u = conf.url();
         if ( u.isEmpty() ) {
-            QTreeWidgetItem *item = createNewItem( last );
+            QTreeWidgetItem *item = new QTreeWidgetItem( last );
             item->setText( 0, i18n( "No Sieve URL configured" ) );
             item->setFlags( item->flags() & ~Qt::ItemIsEnabled );
             treeView()->expandItem( last );
