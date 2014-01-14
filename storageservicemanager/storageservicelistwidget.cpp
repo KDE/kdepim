@@ -141,9 +141,9 @@ void StorageServiceListWidget::slotUploadFile()
 void StorageServiceListWidget::slotItemDoubleClicked(QListWidgetItem *item)
 {
     if (item) {
-        if (item->type() == StorageServiceListWidget::Folder) {
-            //Move into directory
+        if (type(item) == StorageServiceListWidget::Folder) {
+            const QString folder = itemIdentifierSelected();
+            Q_EMIT goToFolder(folder);
         }
     }
-    //TODO
 }

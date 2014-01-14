@@ -47,6 +47,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mListWidget = new StorageServiceListWidget(mStorageService);
+    connect(mListWidget, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
     vbox->addWidget(mListWidget);
     mStorageServiceWarning = new StorageServiceWarning;
     vbox->addWidget(mStorageServiceWarning);
@@ -217,6 +218,13 @@ void StorageServicePage::slotDeleteFileDone(const QString &serviceName, const QS
 {
     Q_UNUSED(filename);
     updateList(serviceName);
+}
+
+void StorageServicePage::slotGoToFolder(const QString &folder)
+{
+    //TODO verify it when we go up.
+    mCurrentFolder = folder;
+    QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
 void StorageServicePage::updateList(const QString &serviceName)

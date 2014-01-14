@@ -31,6 +31,9 @@ public:
     explicit StorageServiceListWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
     ~StorageServiceListWidget();
 
+Q_SIGNALS:
+    void goToFolder(const QString &folder);
+
 public Q_SLOTS:
     void slotCreateFolder();
     void slotUploadFile();
