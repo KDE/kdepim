@@ -87,3 +87,8 @@ QString TestSettingsJob::hubicScope() const
 {
     return QLatin1String("usage.r,account.r,credentials.r,links.wd");
 }
+
+QString TestSettingsJob::ubuntoOneTokenName() const
+{
+    return QLatin1String("foo");
+}
