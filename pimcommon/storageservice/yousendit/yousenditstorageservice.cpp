@@ -273,7 +273,7 @@ void YouSendItStorageService::fillListWidget(StorageServiceListWidget *listWidge
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
+    //qDebug()<<" info"<<info;
     if (info.contains(QLatin1String("folders"))) {
         QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
@@ -282,6 +282,15 @@ void YouSendItStorageService::fillListWidget(StorageServiceListWidget *listWidge
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
                 listWidget->addFolder(name, name);
+            }
+        }
+        QVariantMap mapFiles = info.value(QLatin1String("files")).toMap();
+        QVariantList files = mapFiles.value(QLatin1String("file")).toList();
+        Q_FOREACH (const QVariant &v, files) {
+            const QVariantMap map = v.toMap();
+            if (map.contains(QLatin1String("name"))) {
+                const QString name = map.value(QLatin1String("name")).toString();
+                listWidget->addFile(name, name);
             }
         }
     }
