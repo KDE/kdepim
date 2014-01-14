@@ -49,6 +49,7 @@ private slots:
     void slotModifyService();
     void slotAuthenticationFailed(const QString &serviceName, const QString &error);
     void slotAuthenticationDone(const QString &serviceName);
+    void slotUpdateAccountInfoFailed(const QString &serviceName, const QString &error);
 
 private:
     void updateButtons();
