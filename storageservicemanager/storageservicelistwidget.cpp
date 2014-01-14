@@ -111,7 +111,10 @@ void StorageServiceListWidget::slotDeleteFile()
 void StorageServiceListWidget::slotShareFile()
 {
     if (itemTypeSelected() == StorageServiceListWidget::File) {
-
+        const QString filename = itemIdentifierSelected();
+        if (!filename.isEmpty()) {
+            //mStorageService->shareLink(filename);
+        }
     }
 }
 

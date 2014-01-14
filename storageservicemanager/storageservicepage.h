@@ -59,6 +59,7 @@ private Q_SLOTS:
     void slotProgressStateChanged(bool state);
     void slotUpdatePixmap(const QPixmap &pix);
     void slotListFolderDone(const QString &serviceName, const QString &data);
+    void slotCreateFolderDone(const QString &serviceName, const QString &folder);
 
 private:
     bool verifyService(const QString &serviceName);
