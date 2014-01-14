@@ -84,7 +84,7 @@ QString StorageServiceListWidget::itemIdentifierSelected() const
 {
     QListWidgetItem *item = currentItem();
     if (item) {
-        return item->data(ElementType).toString();
+        return item->data(Ident).toString();
     }
     return QString();
 }
