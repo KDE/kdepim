@@ -38,20 +38,22 @@ StorageServiceListWidget::~StorageServiceListWidget()
 
 }
 
-void StorageServiceListWidget::addFolder(const QString &name, const QString &ident)
+StorageServiceListItem *StorageServiceListWidget::addFolder(const QString &name, const QString &ident)
 {
     StorageServiceListItem *item = new StorageServiceListItem(name, this);
     item->setData(Ident, ident);
     item->setData(ElementType, Folder);
     item->setIcon(KIcon(QLatin1String("folder")));
+    return item;
 }
 
-void StorageServiceListWidget::addFile(const QString &name, const QString &ident, const QString &mimetype)
+StorageServiceListItem *StorageServiceListWidget::addFile(const QString &name, const QString &ident, const QString &mimetype)
 {
     StorageServiceListItem *item = new StorageServiceListItem(name, this);
     item->setData(Ident, ident);
     item->setData(ElementType, File);
-    //TODO add default icon etc.
+    //TODO fix mimetype;
+    return item;
 }
 
 StorageServiceListWidget::ItemType StorageServiceListWidget::itemTypeSelected() const

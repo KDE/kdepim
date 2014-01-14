@@ -44,14 +44,15 @@ public:
     };
     enum StorageServiceData {
         ElementType = Qt::UserRole + 1,
-        Ident = Qt::UserRole + 2
+        Ident = Qt::UserRole + 2,
+        Size = Qt::UserRole + 3
     };
 
     explicit StorageServiceListWidget(QWidget *parent=0);
     ~StorageServiceListWidget();
 
-    void addFolder(const QString &name, const QString &ident);
-    void addFile(const QString &name, const QString &ident, const QString &mimetype = QString());
+    StorageServiceListItem *addFolder(const QString &name, const QString &ident);
+    StorageServiceListItem *addFile(const QString &name, const QString &ident, const QString &mimetype = QString());
 
     StorageServiceListWidget::ItemType itemTypeSelected() const;
     StorageServiceListWidget::ItemType type(QListWidgetItem *item) const;
