@@ -23,6 +23,7 @@
 #include <KIcon>
 
 #include <QListWidgetItem>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -41,7 +42,7 @@ void StorageServiceListWidget::addFolder(const QString &name, const QString &ide
 {
     StorageServiceListItem *item = new StorageServiceListItem(name, this);
     item->setData(Ident, ident);
-    item->setData(Type, Folder);
+    item->setData(ElementType, Folder);
     item->setIcon(KIcon(QLatin1String("folder")));
     //TODO add default icon etc.
 }
@@ -50,7 +51,7 @@ void StorageServiceListWidget::addFile(const QString &name, const QString &ident
 {
     StorageServiceListItem *item = new StorageServiceListItem(name, this);
     item->setData(Ident, ident);
-    item->setData(Type, File);
+    item->setData(ElementType, File);
     //TODO add default icon etc.
 }
 
@@ -58,7 +59,7 @@ StorageServiceListWidget::ItemType StorageServiceListWidget::itemTypeSelected() 
 {
     QListWidgetItem *item = currentItem();
     if (item) {
-        return static_cast<StorageServiceListWidget::ItemType>(item->data(Type).toInt());
+        return static_cast<StorageServiceListWidget::ItemType>(item->data(StorageServiceListWidget::ElementType).toInt());
     }
     return StorageServiceListWidget::UnKnown;
 }
@@ -66,7 +67,7 @@ StorageServiceListWidget::ItemType StorageServiceListWidget::itemTypeSelected() 
 StorageServiceListWidget::ItemType StorageServiceListWidget::type(QListWidgetItem *item) const
 {
     if (item) {
-        return static_cast<StorageServiceListWidget::ItemType>(item->data(Type).toInt());
+        return static_cast<StorageServiceListWidget::ItemType>(item->data(StorageServiceListWidget::ElementType).toInt());
     }
     return StorageServiceListWidget::UnKnown;
 }
@@ -83,7 +84,7 @@ QString StorageServiceListWidget::itemIdentifierSelected() const
 {
     QListWidgetItem *item = currentItem();
     if (item) {
-        return item->data(Type).toString();
+        return item->data(ElementType).toString();
     }
     return QString();
 }
@@ -97,8 +98,8 @@ StorageServiceListItem::StorageServiceListItem(const QString &name, StorageServi
 
 bool StorageServiceListItem::operator<(const QListWidgetItem &other) const
 {
-    StorageServiceListWidget::ItemType sourceType = static_cast<StorageServiceListWidget::ItemType>(data(Type).toInt());
-    StorageServiceListWidget::ItemType otherType = static_cast<StorageServiceListWidget::ItemType>(other.data(Type).toInt());
+    StorageServiceListWidget::ItemType sourceType = static_cast<StorageServiceListWidget::ItemType>(data(StorageServiceListWidget::ElementType).toInt());
+    StorageServiceListWidget::ItemType otherType = static_cast<StorageServiceListWidget::ItemType>(other.data(StorageServiceListWidget::ElementType).toInt());
     if (sourceType == otherType) {
         return text() < other.text();
     } else {

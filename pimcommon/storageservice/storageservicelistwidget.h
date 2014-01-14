@@ -43,7 +43,7 @@ public:
         File = 1
     };
     enum StorageServiceData {
-        Type = Qt::UserRole + 1,
+        ElementType = Qt::UserRole + 1,
         Ident = Qt::UserRole + 2
     };
 
