@@ -282,14 +282,19 @@ void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget,
         const QVariantList lst = info.value(QLatin1String("contents")).toList();
         Q_FOREACH (const QVariant &variant, lst) {
             const QVariantMap qwer = variant.toMap();
+            //qDebug()<<" qwer "<<qwer;
             if (qwer.contains(QLatin1String("is_dir"))) {
                 bool value = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
                 if (value) {
                     listWidget->addFolder(name, name);
                 } else {
-                    listWidget->addFile(name, name);
-
+                    QString mimetype;
+                    if (qwer.contains(QLatin1String("mime_type"))) {
+                        mimetype = qwer.value(QLatin1String("mime_type")).toString();
+                        qDebug()<<" mimetype"<<mimetype;
+                    }
+                    listWidget->addFile(name, name, mimetype);
                 }
             }
         }

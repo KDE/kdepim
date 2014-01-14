@@ -44,10 +44,9 @@ void StorageServiceListWidget::addFolder(const QString &name, const QString &ide
     item->setData(Ident, ident);
     item->setData(ElementType, Folder);
     item->setIcon(KIcon(QLatin1String("folder")));
-    //TODO add default icon etc.
 }
 
-void StorageServiceListWidget::addFile(const QString &name, const QString &ident)
+void StorageServiceListWidget::addFile(const QString &name, const QString &ident, const QString &mimetype)
 {
     StorageServiceListItem *item = new StorageServiceListItem(name, this);
     item->setData(Ident, ident);

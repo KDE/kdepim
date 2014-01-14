@@ -51,7 +51,7 @@ public:
     ~StorageServiceListWidget();
 
     void addFolder(const QString &name, const QString &ident);
-    void addFile(const QString &name, const QString &ident);
+    void addFile(const QString &name, const QString &ident, const QString &mimetype = QString());
 
     StorageServiceListWidget::ItemType itemTypeSelected() const;
     StorageServiceListWidget::ItemType type(QListWidgetItem *item) const;
