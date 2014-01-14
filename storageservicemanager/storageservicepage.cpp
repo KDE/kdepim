@@ -123,9 +123,7 @@ void StorageServicePage::slotAuthenticationFailed(const QString &serviceName, co
 
 void StorageServicePage::slotAuthenticationDone(const QString &serviceName)
 {
-    if (verifyService(serviceName)) {
-
-    }
+    updateList(serviceName);
 }
 
 void StorageServicePage::slotActionFailed(const QString &serviceName, const QString &error)
