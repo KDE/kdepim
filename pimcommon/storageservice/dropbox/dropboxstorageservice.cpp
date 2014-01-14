@@ -16,7 +16,7 @@
 */
 
 #include "dropboxstorageservice.h"
-#include "storageservice/storageservicelistwidget.h"
+#include "storageservice/storageservicetreewidget.h"
 #include "dropboxjob.h"
 
 #include <qjson/parser.h>
@@ -272,7 +272,7 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+void DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
     QJson::Parser parser;
@@ -282,7 +282,7 @@ void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget,
         const QVariantList lst = info.value(QLatin1String("contents")).toList();
         Q_FOREACH (const QVariant &variant, lst) {
             const QVariantMap qwer = variant.toMap();
-            //qDebug()<<" qwer "<<qwer;
+            qDebug()<<" qwer "<<qwer;
             if (qwer.contains(QLatin1String("is_dir"))) {
                 bool value = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
@@ -294,7 +294,10 @@ void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget,
                         mimetype = qwer.value(QLatin1String("mime_type")).toString();
                         qDebug()<<" mimetype"<<mimetype;
                     }
-                    listWidget->addFile(name, name, mimetype);
+                    StorageServiceListItem *item = listWidget->addFile(name, name, mimetype);
+                    if (qwer.contains(QLatin1String("bytes"))) {
+                        item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
+                    }
                 }
             }
         }

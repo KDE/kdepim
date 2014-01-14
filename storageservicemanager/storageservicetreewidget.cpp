@@ -18,15 +18,15 @@
 
 */
 
-#include "storageservicelistwidget.h"
+#include "storageservicetreewidget.h"
 
 #include <KMenu>
 #include <KInputDialog>
 #include <KLocalizedString>
 #include <KFileDialog>
 
-StorageServiceListWidget::StorageServiceListWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
-    : PimCommon::StorageServiceListWidget(parent),
+StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
+    : PimCommon::StorageServiceTreeWidget(parent),
       mStorageService(storageService)
 {
     mCapabilities = mStorageService->capabilities();
@@ -34,31 +34,31 @@ StorageServiceListWidget::StorageServiceListWidget(PimCommon::StorageServiceAbst
     setSelectionMode(QAbstractItemView::SingleSelection);
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
-    connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotItemDoubleClicked(QListWidgetItem*)));
+    connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
 }
 
-StorageServiceListWidget::~StorageServiceListWidget()
+StorageServiceTreeWidget::~StorageServiceTreeWidget()
 {
 
 }
 
-void StorageServiceListWidget::slotContextMenu(const QPoint &pos)
+void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
 {
     KMenu *menu = new KMenu( this );
     menu->addAction( i18n("Up"), this, SLOT(slotMoveUp()));
-    const PimCommon::StorageServiceListWidget::ItemType type = StorageServiceListWidget::itemTypeSelected();
-    if (type != StorageServiceListWidget::UnKnown) {
+    const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
+    if (type != StorageServiceTreeWidget::UnKnown) {
         QAction *act = new QAction(menu);
         act->setSeparator(true);
         menu->addAction(act);
-        if (type == StorageServiceListWidget::File) {
+        if (type == StorageServiceTreeWidget::File) {
             if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
                 menu->addAction(i18n("Delete File"), this, SLOT(slotDeleteFile()));
             if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability)
                 menu->addAction(i18n("Share File"), this, SLOT(slotShareFile()));
             if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
                 menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
-        } else if (type == StorageServiceListWidget::Folder) {
+        } else if (type == StorageServiceTreeWidget::Folder) {
             if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability)
                 menu->addAction(i18n("Delete Folder"), this, SLOT(slotDeleteFolder()));
         }
@@ -78,7 +78,7 @@ void StorageServiceListWidget::slotContextMenu(const QPoint &pos)
     delete menu;
 }
 
-void StorageServiceListWidget::slotCreateFolder()
+void StorageServiceTreeWidget::slotCreateFolder()
 {
     const QString folder = KInputDialog::getText(i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
@@ -86,9 +86,9 @@ void StorageServiceListWidget::slotCreateFolder()
     }
 }
 
-void StorageServiceListWidget::slotDeleteFolder()
+void StorageServiceTreeWidget::slotDeleteFolder()
 {
-    if (itemTypeSelected() == StorageServiceListWidget::Folder) {
+    if (itemTypeSelected() == StorageServiceTreeWidget::Folder) {
         const QString folder = itemIdentifierSelected();
         if (!folder.isEmpty()) {
             mStorageService->deleteFolder(folder);
@@ -96,14 +96,14 @@ void StorageServiceListWidget::slotDeleteFolder()
     }
 }
 
-void StorageServiceListWidget::slotMoveUp()
+void StorageServiceTreeWidget::slotMoveUp()
 {
     //TODO ?
 }
 
-void StorageServiceListWidget::slotDeleteFile()
+void StorageServiceTreeWidget::slotDeleteFile()
 {
-    if (itemTypeSelected() == StorageServiceListWidget::File) {
+    if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         const QString filename = itemIdentifierSelected();
         if (!filename.isEmpty()) {
             mStorageService->deleteFile(filename);
@@ -111,9 +111,9 @@ void StorageServiceListWidget::slotDeleteFile()
     }
 }
 
-void StorageServiceListWidget::slotShareFile()
+void StorageServiceTreeWidget::slotShareFile()
 {
-    if (itemTypeSelected() == StorageServiceListWidget::File) {
+    if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         const QString filename = itemIdentifierSelected();
         if (!filename.isEmpty()) {
             //mStorageService->shareLink(filename);
@@ -121,9 +121,9 @@ void StorageServiceListWidget::slotShareFile()
     }
 }
 
-void StorageServiceListWidget::slotDownloadFile()
+void StorageServiceTreeWidget::slotDownloadFile()
 {
-    if (itemTypeSelected() == StorageServiceListWidget::File) {
+    if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         const QString filename = itemIdentifierSelected();
         if (!filename.isEmpty()) {
             mStorageService->downloadFile(filename);
@@ -131,17 +131,18 @@ void StorageServiceListWidget::slotDownloadFile()
     }
 }
 
-void StorageServiceListWidget::slotUploadFile()
+void StorageServiceTreeWidget::slotUploadFile()
 {
     const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
     if (!filename.isEmpty())
         mStorageService->uploadFile(filename);
 }
 
-void StorageServiceListWidget::slotItemDoubleClicked(QListWidgetItem *item)
+void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int column)
 {
+    Q_UNUSED(column);
     if (item) {
-        if (type(item) == StorageServiceListWidget::Folder) {
+        if (type(item) == StorageServiceTreeWidget::Folder) {
             const QString folder = itemIdentifierSelected();
             Q_EMIT goToFolder(folder);
         }

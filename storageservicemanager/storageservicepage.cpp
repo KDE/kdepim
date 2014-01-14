@@ -19,7 +19,7 @@
 */
 
 #include "storageservicepage.h"
-#include "storageservicelistwidget.h"
+#include "storageservicetreewidget.h"
 #include "storageserviceprogressindicator.h"
 #include "storageservicewarning.h"
 #include "storageserviceaccountinfodialog.h"
@@ -46,7 +46,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
-    mListWidget = new StorageServiceListWidget(mStorageService);
+    mListWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mListWidget, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
     vbox->addWidget(mListWidget);
     mStorageServiceWarning = new StorageServiceWarning;
@@ -100,7 +100,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
 void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
     if (verifyService(serviceName)) {
-
+        //TODO
     }
 }
 
@@ -204,6 +204,7 @@ void StorageServicePage::slotCreateFolderDone(const QString &serviceName, const 
 {
     Q_UNUSED(folder);
     updateList(serviceName);
+    Q_EMIT updateStatusBarMessage(i18n("%1: Folder %2 was created.", serviceName, folder));
 }
 
 void StorageServicePage::slotDeleteFolderDone(const QString &serviceName, const QString &folder)

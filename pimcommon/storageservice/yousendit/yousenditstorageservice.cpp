@@ -16,7 +16,7 @@
 */
 
 #include "yousenditstorageservice.h"
-#include "storageservice/storageservicelistwidget.h"
+#include "storageservice/storageservicetreewidget.h"
 #include "yousenditjob.h"
 
 #include <KLocalizedString>
@@ -267,13 +267,12 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() con
     return serviceCapabilities();
 }
 
-void YouSendItStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+void YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    //qDebug()<<" info"<<info;
     if (info.contains(QLatin1String("folders"))) {
         const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         const QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
@@ -288,9 +287,16 @@ void YouSendItStorageService::fillListWidget(StorageServiceListWidget *listWidge
         const QVariantList files = mapFiles.value(QLatin1String("file")).toList();
         Q_FOREACH (const QVariant &v, files) {
             const QVariantMap map = v.toMap();
+            qDebug()<<" map !"<<map;
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
-                listWidget->addFile(name, name);
+                StorageServiceListItem *item = listWidget->addFile(name, name);
+                if (map.contains(QLatin1String("size"))) {
+                    qDebug()<<" size "<<map.value(QLatin1String("size"));
+                    const qulonglong size = map.value(QLatin1String("size")).toULongLong();
+                    item->setSize(size);
+                }
+
             }
         }
     }

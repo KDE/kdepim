@@ -16,7 +16,7 @@
 */
 
 #include "boxstorageservice.h"
-#include "storageservice/storageservicelistwidget.h"
+#include "storageservice/storageservicetreewidget.h"
 #include "boxjob.h"
 
 #include <KLocalizedString>
@@ -273,7 +273,7 @@ void BoxStorageService::storageServicecreateServiceFolder()
     }
 }
 
-void BoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+void BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
 }
