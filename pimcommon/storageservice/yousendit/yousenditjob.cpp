@@ -105,17 +105,32 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
 
 void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::RenameFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void YouSendItJob::moveFolder(const QString &source, const QString &destination)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void YouSendItJob::moveFile(const QString &source, const QString &destination)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::MoveFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void YouSendItJob::requestTokenAccess()
@@ -486,7 +501,7 @@ void YouSendItJob::startUploadFile(const QString &fileId)
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-//Multipart
+    //Multipart
     //TODO
     //deleteLater();
 }

@@ -100,17 +100,32 @@ void OAuth2Job::renameFolder(const QString &source, const QString &destination)
 
 void OAuth2Job::renameFile(const QString &oldName, const QString &newName)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::RenameFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void OAuth2Job::moveFolder(const QString &source, const QString &destination)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void OAuth2Job::moveFile(const QString &source, const QString &destination)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::MoveFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void OAuth2Job::requestTokenAccess()

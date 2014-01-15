@@ -538,17 +538,32 @@ void DropBoxJob::renameFolder(const QString &source, const QString &destination)
 
 void DropBoxJob::renameFile(const QString &oldName, const QString &newName)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::RenameFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void DropBoxJob::moveFolder(const QString &source, const QString &destination)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void DropBoxJob::moveFile(const QString &source, const QString &destination)
 {
-
+    mActionType = PimCommon::StorageServiceAbstract::MoveFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void DropBoxJob::parseShareLink(const QString &data)
