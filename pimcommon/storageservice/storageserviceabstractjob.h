@@ -43,6 +43,10 @@ public:
     virtual void deleteFile(const QString &filename) = 0;
     virtual void deleteFolder(const QString &foldername) = 0;
     virtual void renameFolder(const QString &source, const QString &destination) = 0;
+    virtual void renameFile(const QString &oldName, const QString &newName) = 0;
+    virtual void moveFolder(const QString &source, const QString &destination) = 0;
+    virtual void moveFile(const QString &source, const QString &destination) = 0;
+
 
 protected Q_SLOTS:
     void slotError(QNetworkReply::NetworkError);
@@ -59,6 +63,10 @@ Q_SIGNALS:
     void downLoadFileDone(const QString &filename);
     void deleteFileDone(const QString &filename);
     void deleteFolderDone(const QString &filename);
+    void renameFolderDone(const QString &folder);
+    void renameFileDone(const QString &folder);
+    void moveFolderDone(const QString &folder);
+    void moveFileDone(const QString &folder);
 
 protected:
     void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);

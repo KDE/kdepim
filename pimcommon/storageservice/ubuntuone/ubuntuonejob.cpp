@@ -182,6 +182,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         case PimCommon::StorageServiceAbstract::DeleteFile:
         case PimCommon::StorageServiceAbstract::DeleteFolder:
+        case PimCommon::StorageServiceAbstract::RenameFolder:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -221,6 +222,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
     case PimCommon::StorageServiceAbstract::DeleteFolder:
+    case PimCommon::StorageServiceAbstract::RenameFolder:
         //TODO
         deleteLater();
         break;
@@ -287,8 +289,27 @@ void UbuntuOneJob::deleteFolder(const QString &foldername)
 
 void UbuntuOneJob::renameFolder(const QString &source, const QString &destination)
 {
+    mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();
+}
+
+void UbuntuOneJob::renameFile(const QString &oldName, const QString &newName)
+{
+
+}
+
+void UbuntuOneJob::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void UbuntuOneJob::moveFile(const QString &source, const QString &destination)
+{
+
 }
 
 void UbuntuOneJob::parseCreateFolder(const QString &data)

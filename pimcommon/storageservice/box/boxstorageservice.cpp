@@ -148,6 +148,32 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
 
 void BoxStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+
+}
+
+void BoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void BoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void BoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
+{
 
 }
 
@@ -248,6 +274,10 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     cap |= ListFolderCapability;
     //cap |= DeleteFileCapability;
     //cap |= ShareLinkCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
     return cap;
 }
 

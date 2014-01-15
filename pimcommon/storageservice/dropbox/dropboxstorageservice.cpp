@@ -214,6 +214,11 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities(
     cap |= DeleteFileCapability;
     cap |= ListFolderCapability;
     cap |= ShareLinkCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+
     return cap;
 }
 
@@ -276,10 +281,25 @@ void DropBoxStorageService::storageServiceRenameFolder(const QString &source, co
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
-        //connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
-        //connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        //job->deleteFolder(foldername);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
     }
+}
+
+void DropBoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void DropBoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void DropBoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
+{
+
 }
 
 StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const

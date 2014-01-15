@@ -41,6 +41,10 @@ public:
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);
+    void renameFile(const QString &oldName, const QString &newName);
+    void moveFolder(const QString &source, const QString &destination);
+    void moveFile(const QString &source, const QString &destination);
+
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);    
@@ -62,6 +66,7 @@ private:
     void parseDeleteFile(const QString &data);
     void parseDeleteFolder(const QString &data);
     void parseDownLoadFile(const QString &data);
+    void parseRenameFolder(const QString &data);
     QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;

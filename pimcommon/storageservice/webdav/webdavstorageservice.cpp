@@ -132,6 +132,30 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
 
 void WebDavStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
+    if (mServiceLocation.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+}
+
+void WebDavStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void WebDavStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void WebDavStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
+{
 
 }
 
@@ -239,6 +263,11 @@ StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
     //cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     //cap |= DeleteFileCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+
     return cap;
 }
 

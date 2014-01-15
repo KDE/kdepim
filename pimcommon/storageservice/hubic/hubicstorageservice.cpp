@@ -176,6 +176,11 @@ StorageServiceAbstract::Capabilities HubicStorageService::serviceCapabilities()
     //cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     //cap |= DeleteFileCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+
     return cap;
 }
 
@@ -260,6 +265,31 @@ void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
 }
 
 void HubicStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+    if (mRefreshToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+}
+
+void HubicStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void HubicStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void HubicStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
 
 }

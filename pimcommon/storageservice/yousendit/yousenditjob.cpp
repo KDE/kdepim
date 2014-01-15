@@ -95,8 +95,27 @@ void YouSendItJob::deleteFolder(const QString &foldername)
 
 void YouSendItJob::renameFolder(const QString &source, const QString &destination)
 {
+    mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();
+}
+
+void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
+{
+
+}
+
+void YouSendItJob::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void YouSendItJob::moveFile(const QString &source, const QString &destination)
+{
+
 }
 
 void YouSendItJob::requestTokenAccess()
@@ -242,6 +261,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::ListFolder:
         case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         case PimCommon::StorageServiceAbstract::DownLoadFile:
+        case PimCommon::StorageServiceAbstract::RenameFolder:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -286,11 +306,22 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DownLoadFile:
         parseDownloadFile(data);
         break;
+    case PimCommon::StorageServiceAbstract::RenameFolder:
+        parseRenameFolder(data);
+        break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
         deleteLater();
         break;
     }
+}
+
+void YouSendItJob::parseRenameFolder(const QString &data)
+{
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //Q_EMIT downLoadFileDone(filename);
+    //TODO
+    deleteLater();
 }
 
 void YouSendItJob::parseDownloadFile(const QString &data)

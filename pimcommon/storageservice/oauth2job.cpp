@@ -90,8 +90,27 @@ void OAuth2Job::deleteFolder(const QString &foldername)
 
 void OAuth2Job::renameFolder(const QString &source, const QString &destination)
 {
+    mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();
+}
+
+void OAuth2Job::renameFile(const QString &oldName, const QString &newName)
+{
+
+}
+
+void OAuth2Job::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void OAuth2Job::moveFile(const QString &source, const QString &destination)
+{
+
 }
 
 void OAuth2Job::requestTokenAccess()
@@ -291,6 +310,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
             case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
+            case PimCommon::StorageServiceAbstract::RenameFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -335,6 +355,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
     case PimCommon::StorageServiceAbstract::DeleteFolder:
+    case PimCommon::StorageServiceAbstract::RenameFolder:
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;

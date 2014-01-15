@@ -120,6 +120,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
             case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
+            case PimCommon::StorageServiceAbstract::RenameFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -159,6 +160,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
     case PimCommon::StorageServiceAbstract::DeleteFolder:
+    case PimCommon::StorageServiceAbstract::RenameFolder:
         deleteLater();
         break;
     default:
@@ -239,6 +241,26 @@ void WebDavJob::deleteFolder(const QString &foldername)
 
 void WebDavJob::renameFolder(const QString &source, const QString &destination)
 {
+    mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+
     //TODO
     deleteLater();
+}
+
+void WebDavJob::renameFile(const QString &oldName, const QString &newName)
+{
+
+}
+
+void WebDavJob::moveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void WebDavJob::moveFile(const QString &source, const QString &destination)
+{
+
 }

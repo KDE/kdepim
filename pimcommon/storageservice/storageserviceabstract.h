@@ -55,13 +55,16 @@ public:
         UploadFileCapability = 2,
         DeleteFileCapability = 4,
         DownloadFileCapability = 8,
+        RenameFileCapabilitity = 16,
+        MoveFileCapability = 32,
         //Folder
-        CreateFolderCapability = 16,
-        DeleteFolderCapability = 32,
-        ListFolderCapability = 64,
-        RenameFolderCapability = 128,
+        CreateFolderCapability = 64,
+        DeleteFolderCapability = 128,
+        ListFolderCapability = 256,
+        RenameFolderCapability = 512,
+        MoveFolderCapability = 1024,
         //Share
-        ShareLinkCapability = 256
+        ShareLinkCapability = 2048
     };
 
     Q_ENUMS(Capability)
@@ -78,12 +81,15 @@ public:
         DownLoadFile,
         ShareLink,
         DeleteFile,
+        RenameFile,
+        MoveFile,
         //Folder
         CreateFolder,
         ListFolder,
         CreateServiceFolder,
         DeleteFolder,
-        RenameFolder
+        RenameFolder,
+        MoveFolder
     };
 
     bool isInProgress() const;
@@ -99,7 +105,9 @@ public:
     virtual void deleteFile(const QString &filename);
     virtual void deleteFolder(const QString &foldername);
     virtual void renameFolder(const QString &source, const QString &destination);
-
+    virtual void renameFile(const QString &source, const QString &destination);
+    virtual void moveFile(const QString &source, const QString &destination);
+    virtual void moveFolder(const QString &source, const QString &destination);
 
     virtual QString storageServiceName() const = 0;
     virtual KIcon icon() const = 0;
@@ -121,6 +129,7 @@ Q_SIGNALS:
     void downLoadFileDone(const QString &serviceName, const QString &fileName);
     void deleteFolderDone(const QString &serviceName, const QString &folder);
     void deleteFileDone(const QString &serviceName, const QString &filename);
+    void renameFolderDone(const QString &serviceName, const QString &folderName);
     void inProgress(bool state);
 
 protected slots:
@@ -134,6 +143,7 @@ protected slots:
     void slotDownLoadFileDone(const QString &fileName);    
     void slotDeleteFolderDone(const QString &folder);
     void slotDeleteFileDone(const QString &filename);
+    void slotRenameFolderDone(const QString &folder);
 
 protected:
     virtual void storageServicedownloadFile(const QString &filename) = 0;
@@ -147,6 +157,9 @@ protected:
     virtual void storageServicedeleteFile(const QString &filename) = 0;
     virtual void storageServicedeleteFolder(const QString &foldername) = 0;
     virtual void storageServiceRenameFolder(const QString &source, const QString &destination) = 0;
+    virtual void storageServiceRenameFile(const QString &source, const QString &destination) = 0;
+    virtual void storageServiceMoveFolder(const QString &source, const QString &destination) = 0;
+    virtual void storageServiceMoveFile(const QString &source, const QString &destination) = 0;
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
     NextAction *mNextAction;

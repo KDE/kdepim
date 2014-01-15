@@ -42,6 +42,10 @@ public:
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);
+    void renameFile(const QString &oldName, const QString &newName);
+    void moveFolder(const QString &source, const QString &destination);
+    void moveFile(const QString &source, const QString &destination);
+
 
     void initializeToken(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
 

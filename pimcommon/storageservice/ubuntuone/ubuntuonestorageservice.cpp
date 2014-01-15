@@ -186,6 +186,11 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::serviceCapabilitie
     //cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     //cap |= DeleteFileCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+
     return cap;
 }
 
@@ -267,6 +272,31 @@ void UbuntuoneStorageService::storageServicedeleteFolder(const QString &folderna
 }
 
 void UbuntuoneStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+}
+
+void UbuntuoneStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void UbuntuoneStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void UbuntuoneStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
 
 }

@@ -184,6 +184,11 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     cap |= DeleteFileCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+
     return cap;
 }
 
@@ -263,6 +268,31 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
 }
 
 void YouSendItStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+}
+
+void YouSendItStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+
+}
+
+void YouSendItStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+
+}
+
+void YouSendItStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
 
 }

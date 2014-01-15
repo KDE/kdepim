@@ -154,6 +154,36 @@ void StorageServiceAbstract::renameFolder(const QString &source, const QString &
     storageServiceRenameFolder(source, destination);
 }
 
+void StorageServiceAbstract::renameFile(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceRenameFile(source, destination);
+}
+
+void StorageServiceAbstract::moveFile(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceMoveFile(source, destination);
+}
+
+void StorageServiceAbstract::moveFolder(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceMoveFolder(source, destination);
+}
+
 bool StorageServiceAbstract::hasProgressIndicatorSupport() const
 {
     return false;
@@ -266,6 +296,12 @@ void StorageServiceAbstract::slotDownLoadFileDone(const QString &fileName)
 void StorageServiceAbstract::emitAuthentificationFailder(const QString &errorMessage)
 {
     Q_EMIT authenticationFailed(storageServiceName(), errorMessage);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotRenameFolderDone(const QString &folderName)
+{
+    Q_EMIT renameFolderDone(storageServiceName(), folderName);
     changeProgressState(false);
 }
 
