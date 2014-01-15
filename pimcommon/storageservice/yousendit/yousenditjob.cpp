@@ -71,6 +71,7 @@ void YouSendItJob::deleteFile(const QString &filename)
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1").arg(filename));
+    qDebug()<<" url"<<url;
     QNetworkRequest request(url);
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
@@ -83,7 +84,6 @@ void YouSendItJob::deleteFolder(const QString &foldername)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
-    //TODO use folderId
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(foldername));
     QNetworkRequest request(url);
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
@@ -305,9 +305,9 @@ void YouSendItJob::parseDeleteFile(const QString &data)
 
 void YouSendItJob::parseDeleteFolder(const QString &data)
 {
-    qDebug()<<" data "<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //Q_EMIT deleteFolderDone(foldername);
+    //qDebug()<<" data "<<data;
+    //Api doesn't return folder name.
+    Q_EMIT deleteFolderDone(QString());
     deleteLater();
 }
 

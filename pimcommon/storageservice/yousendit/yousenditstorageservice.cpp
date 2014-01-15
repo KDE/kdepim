@@ -183,7 +183,7 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
-    //cap |= DeleteFileCapability;
+    cap |= DeleteFileCapability;
     return cap;
 }
 
@@ -277,22 +277,26 @@ void YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
         const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         const QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
         Q_FOREACH (const QVariant &v, folders) {
-            QVariantMap map = v.toMap();
+            const QVariantMap map = v.toMap();
+            //qDebug()<<" folder map"<<map;
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
-                listWidget->addFolder(name, name);
+                const QString folderId = map.value(QLatin1String("id")).toString();
+                listWidget->addFolder(name, folderId);
             }
         }
         const QVariantMap mapFiles = info.value(QLatin1String("files")).toMap();
         const QVariantList files = mapFiles.value(QLatin1String("file")).toList();
         Q_FOREACH (const QVariant &v, files) {
             const QVariantMap map = v.toMap();
-            qDebug()<<" map !"<<map;
+            //qDebug()<<" file map !"<<map;
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
-                StorageServiceListItem *item = listWidget->addFile(name, name);
+                qDebug()<<" name !"<<name;
+                const QString fileId = map.value(QLatin1String("fileid")).toString();
+                StorageServiceListItem *item = listWidget->addFile(name, fileId);
                 if (map.contains(QLatin1String("size"))) {
-                    qDebug()<<" size "<<map.value(QLatin1String("size"));
+                    //qDebug()<<" size "<<map.value(QLatin1String("size"));
                     const qulonglong size = map.value(QLatin1String("size")).toULongLong();
                     item->setSize(size);
                 }
