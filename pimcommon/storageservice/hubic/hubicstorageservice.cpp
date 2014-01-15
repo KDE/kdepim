@@ -16,7 +16,7 @@
 */
 
 #include "hubicstorageservice.h"
-#include "storageservice/storageservicelistwidget.h"
+#include "storageservice/storageservicetreewidget.h"
 #include "hubicjob.h"
 
 #include <KLocalizedString>
@@ -176,6 +176,11 @@ StorageServiceAbstract::Capabilities HubicStorageService::serviceCapabilities()
     //cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     //cap |= DeleteFileCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+
     return cap;
 }
 
@@ -259,6 +264,66 @@ void HubicStorageService::storageServicedeleteFolder(const QString &foldername)
     }
 }
 
+void HubicStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+    if (mRefreshToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+}
+
+void HubicStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+    if (mRefreshToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFile(source, destination);
+    }
+}
+
+void HubicStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+    if (mRefreshToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFolder(source, destination);
+    }
+}
+
+void HubicStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
+{
+    if (mRefreshToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFile(source, destination);
+    }
+}
+
 KIcon HubicStorageService::icon() const
 {
     return KIcon();
@@ -269,7 +334,7 @@ StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-void HubicStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+void HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
 }

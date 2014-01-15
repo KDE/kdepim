@@ -36,6 +36,9 @@ public:
     explicit StorageServiceManagerMainWindow();
     ~StorageServiceManagerMainWindow();
 
+public slots:
+    void slotSetStatusBarMessage(const QString &message);
+
 private slots:
     void slotAddStorageService();    
     void slotConfigure();        

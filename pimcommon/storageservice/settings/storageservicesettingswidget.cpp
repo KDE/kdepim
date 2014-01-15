@@ -271,6 +271,7 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         if (mListStorageService.contains(mListService->currentItem()->data(Name).toString())) {
             StorageServiceAbstract *storage = mListStorageService.value(mListService->currentItem()->data(Name).toString());
             connect(storage, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotUpdateAccountInfo(QString,PimCommon::AccountInfo)),Qt::UniqueConnection);
+            connect(storage, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotUpdateAccountInfoFailed(QString,QString)),Qt::UniqueConnection);
             storage->accountInfo();
         }
     } else {
@@ -278,6 +279,14 @@ void StorageServiceSettingsWidget::slotServiceSelected()
         setDefaultLabel();
     }
     updateButtons();
+}
+
+void StorageServiceSettingsWidget::slotUpdateAccountInfoFailed(const QString &serviceName, const QString &error)
+{
+    Q_UNUSED(error);
+    if (mListService->currentItem() && (mListService->currentItem()->data(Name).toString()==serviceName)) {
+        setDefaultLabel();
+    }
 }
 
 void StorageServiceSettingsWidget::slotUpdateAccountInfo(const QString &serviceName, const PimCommon::AccountInfo &info)

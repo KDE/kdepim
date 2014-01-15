@@ -120,6 +120,11 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
             case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
+            case PimCommon::StorageServiceAbstract::RenameFolder:
+            case PimCommon::StorageServiceAbstract::RenameFile:
+            case PimCommon::StorageServiceAbstract::MoveFolder:
+            case PimCommon::StorageServiceAbstract::MoveFile:
+
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -159,6 +164,11 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
     case PimCommon::StorageServiceAbstract::DeleteFolder:
+    case PimCommon::StorageServiceAbstract::RenameFolder:
+    case PimCommon::StorageServiceAbstract::RenameFile:
+    case PimCommon::StorageServiceAbstract::MoveFolder:
+    case PimCommon::StorageServiceAbstract::MoveFile:
+
         deleteLater();
         break;
     default:
@@ -234,5 +244,49 @@ void WebDavJob::deleteFolder(const QString &foldername)
     mError = false;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
+    deleteLater();
+}
+
+void WebDavJob::renameFolder(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+
+    //TODO
+    deleteLater();
+}
+
+void WebDavJob::renameFile(const QString &oldName, const QString &newName)
+{
+    mActionType = PimCommon::StorageServiceAbstract::RenameFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+
+    //TODO
+    deleteLater();
+}
+
+void WebDavJob::moveFolder(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+
+    //TODO
+    deleteLater();
+}
+
+void WebDavJob::moveFile(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::MoveFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+
+    //TODO
     deleteLater();
 }

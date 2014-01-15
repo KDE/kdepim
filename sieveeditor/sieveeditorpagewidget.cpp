@@ -38,6 +38,7 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mSieveEditorWidget = new KSieveUi::SieveEditorWidget;
+    connect(mSieveEditorWidget, SIGNAL(valueChanged()), this, SLOT(slotValueChanged()));
     vbox->addWidget(mSieveEditorWidget);
     connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
     qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
@@ -125,8 +126,13 @@ void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *, bool succes
 void SieveEditorPageWidget::needToSaveScript()
 {
     if (mWasChanged) {
-        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Script %1 was changed. Do you want to save it ?", mCurrentURL.fileName()))) {
+        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Script '%1' was changed. Do you want to save it ?", mCurrentURL.fileName()))) {
             saveScript();
         }
     }
+}
+
+void SieveEditorPageWidget::slotValueChanged()
+{
+    mWasChanged = true;
 }

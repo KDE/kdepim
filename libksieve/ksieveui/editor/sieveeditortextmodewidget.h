@@ -66,6 +66,7 @@ public:
 Q_SIGNALS:
     void enableButtonOk( bool );
     void switchToGraphicalMode();
+    void valueChanged();
 
 private slots:
     void slotTextChanged();

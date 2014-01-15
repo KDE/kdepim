@@ -68,6 +68,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void checkSyntax();
     void enableButtonOk(bool b);
+    void valueChanged();
 
 private:
     void changeMode(EditorMode mode);

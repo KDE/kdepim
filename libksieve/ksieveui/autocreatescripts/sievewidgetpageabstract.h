@@ -42,6 +42,9 @@ public:
     virtual void setPageType(PageType type);
     PageType pageType() const;
 
+Q_SIGNALS:
+    void valueChanged();
+
 private:
     PageType mType;
 };

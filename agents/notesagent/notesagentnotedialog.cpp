@@ -20,6 +20,9 @@
 
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
+#include "noteshared/attributes/notedisplayattribute.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -44,7 +47,7 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
     mSubject->setReadOnly(true);
     vbox->addWidget(mSubject);
 
-    mNote = new QTextEdit;
+    mNote = new PimCommon::RichTextEditorWidget;
     mNote->setReadOnly(true);
     vbox->addWidget(mNote);
     setMainWidget(w);
@@ -61,6 +64,7 @@ void NotesAgentNoteDialog::setNoteId(Akonadi::Item::Id id)
     Akonadi::Item item(id);
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
     job->fetchScope().fetchFullPayload( true );
+    job->fetchScope().fetchAttribute< NoteShared::NoteDisplayAttribute >();
     connect( job, SIGNAL(result(KJob*)), SLOT(slotFetchItem(KJob*)) );
 }
 
@@ -73,7 +77,8 @@ void NotesAgentNoteDialog::slotFetchItem(KJob* job)
     Akonadi::ItemFetchJob *itemFetchJob = static_cast<Akonadi::ItemFetchJob *>(job);
     const Akonadi::Item::List lstItem = itemFetchJob->items();
     if (!lstItem.isEmpty()) {
-        KMime::Message::Ptr noteMessage = lstItem.first().payload<KMime::Message::Ptr>();
+        const Akonadi::Item item = lstItem.first();
+        KMime::Message::Ptr noteMessage = item.payload<KMime::Message::Ptr>();
         if (noteMessage) {
             mSubject->setText(noteMessage->subject(false)->asUnicodeString());
             if ( noteMessage->contentType()->isHTMLText() ) {
@@ -82,6 +87,13 @@ void NotesAgentNoteDialog::slotFetchItem(KJob* job)
             } else {
                 mNote->setAcceptRichText(false);
                 mNote->setPlainText(noteMessage->mainBodyPart()->decodedText());
+            }
+        }
+        if (item.hasAttribute<NoteShared::NoteDisplayAttribute>()) {
+            NoteShared::NoteDisplayAttribute *attr = item.attribute<NoteShared::NoteDisplayAttribute>();
+            if (attr) {
+                mNote->editor()->setTextColor( attr->backgroundColor() );
+                //TODO
             }
         }
     }

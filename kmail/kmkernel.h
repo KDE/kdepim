@@ -22,9 +22,6 @@
 #define kmkernel KMKernel::self()
 #define kmconfig KMKernel::config()
 
-namespace MailCommon {
-  class KMFilterDialog;
-}
 
 class QAbstractItemModel;
 namespace Akonadi {
@@ -47,6 +44,7 @@ namespace MessageComposer {
 }
 namespace PimCommon {
 class AutoCorrection;
+class StorageServiceManager;
 }
 
 /** The KMail namespace contains classes used for KMail.
@@ -68,6 +66,15 @@ namespace KPIMIdentities {
   class Identity;
   class IdentityManager;
 }
+
+namespace MailCommon {
+  class Kernel;
+  class FolderCollection;
+  class FolderCollectionMonitor;
+  class JobScheduler;
+  class KMFilterDialog;
+}
+
 class KComponentData;
 class QTimer;
 class KMMainWin;
@@ -75,13 +82,6 @@ class KMainWindow;
 class KMMainWidget;
 class ConfigureDialog;
 class FolderArchiveManager;
-
-namespace MailCommon {
-  class Kernel;
-  class FolderCollection;
-  class FolderCollectionMonitor;
-  class JobScheduler;
-}
 
 /**
  * @short Central point of coordination in KMail
@@ -431,6 +431,7 @@ public:
 
   void toggleSystemTray();
   FolderArchiveManager *folderArchiveManager() const;
+  PimCommon::StorageServiceManager *storageServiceManager() const;
 
 protected:
   void agentInstanceBroken( const Akonadi::AgentInstance& instance );
@@ -538,6 +539,7 @@ private:
   QPointer<MailCommon::KMFilterDialog> mFilterEditDialog;
   PimCommon::AutoCorrection *mAutoCorrection;
   FolderArchiveManager *mFolderArchiveManager;
+  PimCommon::StorageServiceManager *mStorageManager;
 };
 
 #endif // _KMKERNEL_H

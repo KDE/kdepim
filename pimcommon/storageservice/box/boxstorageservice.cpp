@@ -16,8 +16,10 @@
 */
 
 #include "boxstorageservice.h"
-#include "storageservice/storageservicelistwidget.h"
+#include "storageservice/storageservicetreewidget.h"
 #include "boxjob.h"
+
+#include <qjson/parser.h>
 
 #include <KLocalizedString>
 #include <KConfig>
@@ -25,6 +27,7 @@
 #include <KConfigGroup>
 
 #include <QPointer>
+#include <QDebug>
 
 using namespace PimCommon;
 
@@ -143,6 +146,66 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
     }
 }
 
+void BoxStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+}
+
+void BoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFile(source, destination);
+    }
+}
+
+void BoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFolder(source, destination);
+    }
+}
+
+void BoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFile(source, destination);
+    }
+}
+
 void BoxStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
@@ -240,6 +303,10 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     cap |= ListFolderCapability;
     //cap |= DeleteFileCapability;
     //cap |= ShareLinkCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
     return cap;
 }
 
@@ -273,7 +340,20 @@ void BoxStorageService::storageServicecreateServiceFolder()
     }
 }
 
-void BoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+void BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    //qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("item_collection"))) {
+        const QVariantMap itemCollection = info.value(QLatin1String("item_collection")).toMap();
+        qDebug()<<" itemCollection"<<itemCollection;
+        if (itemCollection.contains(QLatin1String("entries"))) {
+            const QVariantMap entries = itemCollection.value(QLatin1String("entries")).toMap();
+            qDebug()<<" entries !"<<entries;
+        }
+    }
 }

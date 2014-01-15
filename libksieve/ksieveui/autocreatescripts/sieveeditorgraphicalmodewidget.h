@@ -27,6 +27,7 @@ class QStackedWidget;
 class QDomDocument;
 
 namespace KSieveUi {
+class SieveScriptPage;
 class SieveScriptListBox;
 class SieveEditorParsingMissingFeatureWarning;
 class SieveEditorGraphicalModeWidget : public SieveEditorAbstractWidget
@@ -49,6 +50,7 @@ public:
 Q_SIGNALS:
     void enableButtonOk(bool);
     void switchTextMode(const QString &script);
+    void valueChanged();
 
 private:
     void readConfig();
@@ -56,7 +58,7 @@ private:
 
 private Q_SLOTS:
     void slotSwitchToTextMode();
-    void slotAddScriptPage(QWidget *page);
+    void slotAddScriptPage(KSieveUi::SieveScriptPage *page);
     void slotRemoveScriptPage(QWidget *page);
     void slotActivateScriptPage(QWidget *page);
 

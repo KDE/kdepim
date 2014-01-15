@@ -83,6 +83,7 @@ SieveEditorTextModeWidget::SieveEditorTextModeWidget(QWidget *parent)
     mTabWidget = new SieveEditorTabWidget;
 
     mTextEdit = new SieveTextEdit;
+    connect(mTextEdit, SIGNAL(textChanged()), this, SIGNAL(valueChanged()));
     mTabWidget->addTab(mTextEdit, i18n("Editor"));
     mTabWidget->setTabBarHidden(true);
     textEditLayout->addWidget(mTabWidget);

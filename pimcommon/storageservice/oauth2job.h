@@ -42,6 +42,10 @@ public:
     void downloadFile(const QString &filename);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
+    void renameFolder(const QString &source, const QString &destination);
+    void renameFile(const QString &oldName, const QString &newName);
+    void moveFolder(const QString &source, const QString &destination);
+    void moveFile(const QString &source, const QString &destination);
 
 
 Q_SIGNALS:
@@ -81,7 +85,6 @@ protected:
 
 private:
     void shareLink(const QString &fileId);
-
 };
 }
 

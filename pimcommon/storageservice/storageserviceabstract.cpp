@@ -144,6 +144,51 @@ void StorageServiceAbstract::deleteFolder(const QString &foldername)
     storageServicedeleteFolder(foldername);
 }
 
+void StorageServiceAbstract::renameFolder(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceRenameFolder(source, destination);
+}
+
+void StorageServiceAbstract::renameFile(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceRenameFile(source, destination);
+}
+
+void StorageServiceAbstract::moveFile(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceMoveFile(source, destination);
+}
+
+void StorageServiceAbstract::moveFolder(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceMoveFolder(source, destination);
+}
+
+bool StorageServiceAbstract::hasProgressIndicatorSupport() const
+{
+    return false;
+}
+
 void StorageServiceAbstract::executeNextAction()
 {
     switch(mNextAction->nextActionType()) {
@@ -180,6 +225,18 @@ void StorageServiceAbstract::executeNextAction()
         break;
     case DeleteFolder:
         storageServicedeleteFolder(mNextAction->nextActionFolder());
+        break;
+    case RenameFolder:
+        storageServiceRenameFolder(mNextAction->renameSource(), mNextAction->renameDestination());
+        break;
+    case RenameFile:
+        storageServiceRenameFile(mNextAction->renameSource(), mNextAction->renameDestination());
+        break;
+    case MoveFile:
+        storageServiceMoveFile(mNextAction->renameSource(), mNextAction->renameDestination());
+        break;
+    case MoveFolder:
+        storageServiceMoveFolder(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
     }
 }
@@ -250,6 +307,31 @@ void StorageServiceAbstract::emitAuthentificationFailder(const QString &errorMes
     Q_EMIT authenticationFailed(storageServiceName(), errorMessage);
     changeProgressState(false);
 }
+
+void StorageServiceAbstract::slotRenameFolderDone(const QString &folderName)
+{
+    Q_EMIT renameFolderDone(storageServiceName(), folderName);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotRenameFileDone(const QString &filename)
+{
+    Q_EMIT renameFileDone(storageServiceName(), filename);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotMoveFolderDone(const QString &folderName)
+{
+    Q_EMIT moveFolderDone(storageServiceName(), folderName);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotMoveFileDone(const QString &filename)
+{
+    Q_EMIT moveFileDone(storageServiceName(), filename);
+    changeProgressState(false);
+}
+
 
 void StorageServiceAbstract::emitAuthentificationDone()
 {

@@ -23,12 +23,14 @@
 
 #include <QWidget>
 #include "pimcommon/storageservice/storageserviceabstract.h"
+
+class QProgressBar;
 namespace PimCommon {
 class StorageServiceAbstract;
 }
 class StorageServiceProgressIndicator;
 class StorageServiceWarning;
-class StorageServiceListWidget;
+class StorageServiceTreeWidget;
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
@@ -38,15 +40,20 @@ public:
 
     void authenticate();
     void createFolder();
-    void refreshList();
+
     void accountInfo();
     void uploadFile();
     void downloadFile();
     void deleteFile();
-    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
+    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;    
+    QString serviceName() const;
 
 Q_SIGNALS:
     void updatePixmap(const QPixmap &pix, StorageServicePage *page);
+    void updateStatusBarMessage(const QString &msg);
+
+public Q_SLOTS:
+    void refreshList();
 
 private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
@@ -59,16 +66,23 @@ private Q_SLOTS:
     void slotProgressStateChanged(bool state);
     void slotUpdatePixmap(const QPixmap &pix);
     void slotListFolderDone(const QString &serviceName, const QString &data);
-
+    void slotCreateFolderDone(const QString &serviceName, const QString &folder);
+    void slotDeleteFolderDone(const QString &serviceName, const QString &folder);
+    void slotDeleteFileDone(const QString &serviceName, const QString &filename);
+    void slotGoToFolder(const QString &folder);
+    void slotRenameFolderDone(const QString &serviceName, const QString &fileName);
+    void slotRenameFileDone(const QString &serviceName, const QString &fileName);
 private:
     bool verifyService(const QString &serviceName);
+    inline void updateList(const QString &serviceName);
     void connectStorageService();
     QString mServiceName;
     QString mCurrentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
-    StorageServiceListWidget *mListWidget;
+    StorageServiceTreeWidget *mListWidget;
     StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
+    QProgressBar *mProgressBar;
 };
 
 #endif // STORAGESERVICEPAGE_H

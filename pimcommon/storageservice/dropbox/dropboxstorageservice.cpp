@@ -16,7 +16,7 @@
 */
 
 #include "dropboxstorageservice.h"
-#include "storageservice/storageservicelistwidget.h"
+#include "storageservice/storageservicetreewidget.h"
 #include "dropboxjob.h"
 
 #include <qjson/parser.h>
@@ -214,6 +214,11 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities(
     cap |= DeleteFileCapability;
     cap |= ListFolderCapability;
     cap |= ShareLinkCapability;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+
     return cap;
 }
 
@@ -267,20 +272,107 @@ void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername
     }
 }
 
+void DropBoxStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+}
+
+void DropBoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFile(source, destination);
+    }
+}
+
+void DropBoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFolder(source, destination);
+    }
+}
+
+void DropBoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
+{
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFile(source, destination);
+    }
+}
+
 StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
 {
     return serviceCapabilities();
 }
 
-void DropBoxStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+void DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
     QJson::Parser parser;
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
+    if (info.contains(QLatin1String("contents"))) {
+        const QVariantList lst = info.value(QLatin1String("contents")).toList();
+        Q_FOREACH (const QVariant &variant, lst) {
+            const QVariantMap qwer = variant.toMap();
+            qDebug()<<" qwer "<<qwer;
+            if (qwer.contains(QLatin1String("is_dir"))) {
+                bool value = qwer.value(QLatin1String("is_dir")).toBool();
+                const QString name = qwer.value(QLatin1String("path")).toString();
+                if (value) {
+                    listWidget->addFolder(name, name);
+                } else {
+                    QString mimetype;
+                    if (qwer.contains(QLatin1String("mime_type"))) {
+                        mimetype = qwer.value(QLatin1String("mime_type")).toString();
+                        qDebug()<<" mimetype"<<mimetype;
+                    }
+                    StorageServiceListItem *item = listWidget->addFile(name, name, mimetype);
+                    if (qwer.contains(QLatin1String("bytes"))) {
+                        item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
+                    }
+                }
+            }
+        }
+    }
+}
 
-    //TODO parse data
+bool DropBoxStorageService::hasProgressIndicatorSupport() const
+{
+    return true;
 }
 
 KIcon DropBoxStorageService::icon() const

@@ -52,7 +52,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
-    void globalVariableActionChanged();
+    void valueChanged();
 
 private:
     void initWidget();
@@ -74,6 +74,9 @@ public:
     void generatedScript(QString &script, QStringList &requires);
     void loadScript(const QDomElement &element, QString &error);
     void loadSetVariable(const QDomElement &element, QString &error);
+
+Q_SIGNALS:
+    void valueChanged();
 
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );

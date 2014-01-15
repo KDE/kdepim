@@ -50,7 +50,7 @@ public:
 
     //UbuntuOne
     virtual QString ubuntuOneAttachmentVolume() const = 0;
-
+    virtual QString ubuntuOneTokenName() const = 0;
 };
 
 }

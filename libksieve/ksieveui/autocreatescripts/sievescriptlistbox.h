@@ -57,7 +57,7 @@ public:
     void loadScript(const QDomDocument &doc, QString &error);
 
 Q_SIGNALS:
-    void addNewPage(QWidget *);
+    void addNewPage(KSieveUi::SieveScriptPage *);
     void removePage(QWidget *);
     void activatePage(QWidget *);
     void enableButtonOk(bool);

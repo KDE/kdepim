@@ -167,4 +167,13 @@ QString StorageServiceJobConfig::hubicScope() const
     return mSettingsJob->hubicScope();
 }
 
+QString StorageServiceJobConfig::ubuntuOneTokenName() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->ubuntuOneTokenName();
+}
+
 }

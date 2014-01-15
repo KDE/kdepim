@@ -40,6 +40,10 @@ public:
     void downloadFile(const QString &filename);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
+    void renameFolder(const QString &source, const QString &destination);
+    void renameFile(const QString &oldName, const QString &newName);
+    void moveFolder(const QString &source, const QString &destination);
+    void moveFile(const QString &source, const QString &destination);
 
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);
@@ -49,6 +53,10 @@ private slots:
     void slotSendDataFinished(QNetworkReply *reply);
 
 private:
+    void parseRenameFile(const QString &data);
+    void parseMoveFolder(const QString &data);
+    void parseMoveFile(const QString &data);
+    void parseRenameFolder(const QString &data);
     void parseRequestToken(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseCreateFolder(const QString &data);

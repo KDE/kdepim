@@ -50,8 +50,13 @@ public:
     void storageServicecreateServiceFolder();
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
+    void storageServiceRenameFolder(const QString &source, const QString &destination);
+    void storageServiceRenameFile(const QString &source, const QString &destination);
+    void storageServiceMoveFolder(const QString &source, const QString &destination);
+    void storageServiceMoveFile(const QString &source, const QString &destination);
+
     StorageServiceAbstract::Capabilities capabilities() const;
-    void fillListWidget(StorageServiceListWidget *listWidget, const QString &data);
+    void fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
 
 
     KIcon icon() const;

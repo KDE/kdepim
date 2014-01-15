@@ -21,6 +21,7 @@
 #include "ksieveui/editor/sieveeditorparsingmissingfeaturewarning.h"
 #include "sievescriptlistbox.h"
 #include "scriptsparsing/parsingutil.h"
+#include "sievescriptpage.h"
 
 #include <KLocalizedString>
 #include <KGlobal>
@@ -48,7 +49,7 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
     mSplitter = new QSplitter;
     mSplitter->setChildrenCollapsible(false);
     mSieveScript = new SieveScriptListBox( i18n("Sieve Script"));
-    connect(mSieveScript, SIGNAL(addNewPage(QWidget*)), SLOT(slotAddScriptPage(QWidget*)));
+    connect(mSieveScript, SIGNAL(addNewPage(KSieveUi::SieveScriptPage*)), SLOT(slotAddScriptPage(KSieveUi::SieveScriptPage*)));
     connect(mSieveScript, SIGNAL(removePage(QWidget*)), SLOT(slotRemoveScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(activatePage(QWidget*)), SLOT(slotActivateScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(enableButtonOk(bool)), SIGNAL(enableButtonOk(bool)));
@@ -109,10 +110,11 @@ QString SieveEditorGraphicalModeWidget::script(QString &requires) const
     return mSieveScript->generatedScript(requires);
 }
 
-void SieveEditorGraphicalModeWidget::slotAddScriptPage(QWidget *page)
+void SieveEditorGraphicalModeWidget::slotAddScriptPage(KSieveUi::SieveScriptPage *page)
 {
     mStackWidget->addWidget(page);
     mStackWidget->setCurrentWidget(page);
+    connect(page, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
 }
 
 void SieveEditorGraphicalModeWidget::slotRemoveScriptPage(QWidget *page)

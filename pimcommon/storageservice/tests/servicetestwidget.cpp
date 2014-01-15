@@ -153,7 +153,7 @@ void ServiceTestWidget::slotUploadFileDone(const QString &serviceName, const QSt
 
 void ServiceTestWidget::slotListFolderDone(const QString &serviceName, const QString &listFolder)
 {
-    //mEdit->insertPlainText(serviceName + QString::fromLatin1(" list folder done %1\n").arg(listFolder.join(QLatin1String(";"))));
+    mEdit->insertPlainText(serviceName + QString::fromLatin1(" list folder done %1\n").arg(listFolder));
 }
 
 void ServiceTestWidget::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &info)

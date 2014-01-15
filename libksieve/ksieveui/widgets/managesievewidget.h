@@ -57,7 +57,6 @@ Q_SIGNALS:
 
 protected:
     virtual bool refreshList() = 0;
-    virtual QTreeWidgetItem *createNewItem(QTreeWidgetItem *parent);
 
 private Q_SLOTS:
     void slotItemChanged(QTreeWidgetItem *item, int col);

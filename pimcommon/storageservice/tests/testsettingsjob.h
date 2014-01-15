@@ -45,6 +45,7 @@ public:
     QString oauth2RedirectUrl() const;
     QString ubuntuOneAttachmentVolume() const;
     QString hubicScope() const;
+    QString ubuntuOneTokenName() const;
 };
 }
 

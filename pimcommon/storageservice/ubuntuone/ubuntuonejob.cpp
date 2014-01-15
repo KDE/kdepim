@@ -54,7 +54,7 @@ void UbuntuOneJob::requestTokenAccess()
     mError = false;
     QUrl url(QLatin1String("https://login.ubuntu.com/api/1.0/authentications"));
     url.addQueryItem(QLatin1String("ws.op"), QLatin1String("authenticate"));
-    url.addQueryItem(QLatin1String("token_name"), QLatin1String("Ubuntu One @ foo") );
+    url.addQueryItem(QLatin1String("token_name"), QLatin1String("Ubuntu One @ ") + PimCommon::StorageServiceJobConfig::self()->ubuntuOneTokenName() );
     qDebug()<<" postData "<<url;
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
@@ -182,6 +182,10 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         case PimCommon::StorageServiceAbstract::DeleteFile:
         case PimCommon::StorageServiceAbstract::DeleteFolder:
+        case PimCommon::StorageServiceAbstract::RenameFolder:
+        case PimCommon::StorageServiceAbstract::RenameFile:
+        case PimCommon::StorageServiceAbstract::MoveFolder:
+        case PimCommon::StorageServiceAbstract::MoveFile:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -221,6 +225,11 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
     case PimCommon::StorageServiceAbstract::DeleteFolder:
+    case PimCommon::StorageServiceAbstract::RenameFolder:
+    case PimCommon::StorageServiceAbstract::RenameFile:
+    case PimCommon::StorageServiceAbstract::MoveFolder:
+    case PimCommon::StorageServiceAbstract::MoveFile:
+
         //TODO
         deleteLater();
         break;
@@ -282,6 +291,48 @@ void UbuntuOneJob::deleteFolder(const QString &foldername)
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+}
+
+void UbuntuOneJob::renameFolder(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
+void UbuntuOneJob::renameFile(const QString &oldName, const QString &newName)
+{
+    mActionType = PimCommon::StorageServiceAbstract::RenameFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+
+}
+
+void UbuntuOneJob::moveFolder(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+
+}
+
+void UbuntuOneJob::moveFile(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::MoveFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
     deleteLater();
 }
 

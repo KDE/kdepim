@@ -63,7 +63,7 @@ set(libpimcommon_storageservice_SRCS
   storageservice/settings/storagelistwidgetitem.cpp
   storageservice/storageservicedownloaddialog.cpp
   storageservice/storageservicejobconfig.cpp
-  storageservice/storageservicelistwidget.cpp
+  storageservice/storageservicetreewidget.cpp
  
   storageservice/tests/testsettingsjob.cpp
 )

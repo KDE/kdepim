@@ -16,7 +16,7 @@
 */
 
 #include "webdavstorageservice.h"
-#include "storageservice/storageservicelistwidget.h"
+#include "storageservice/storageservicetreewidget.h"
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"
 
@@ -130,12 +130,68 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
     }
 }
 
+void WebDavStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+    if (mServiceLocation.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+}
+
+void WebDavStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+    if (mServiceLocation.isEmpty()) {
+        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFile(source, destination);
+    }
+}
+
+void WebDavStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+    if (mServiceLocation.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFolder(source, destination);
+    }
+}
+
+void WebDavStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
+{
+    if (mServiceLocation.isEmpty()) {
+        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFile(source, destination);
+    }
+}
+
 StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 {
     return serviceCapabilities();
 }
 
-void WebDavStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+void WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
 }
@@ -234,6 +290,11 @@ StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
     //cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     //cap |= DeleteFileCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+
     return cap;
 }
 

@@ -19,17 +19,22 @@
 */
 
 
-#ifndef STORAGESERVICELISTWIDGET_H
-#define STORAGESERVICELISTWIDGET_H
+#ifndef STORAGESERVICETREEWIDGET_H
+#define STORAGESERVICETREEWIDGET_H
 
-#include "pimcommon/storageservice/storageservicelistwidget.h"
+#include "pimcommon/storageservice/storageservicetreewidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
-class StorageServiceListWidget : public PimCommon::StorageServiceListWidget
+class StorageServiceTreeWidget : public PimCommon::StorageServiceTreeWidget
 {
     Q_OBJECT
 public:
-    explicit StorageServiceListWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
-    ~StorageServiceListWidget();
+    explicit StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
+    ~StorageServiceTreeWidget();
+
+    void setIsInitialized();
+
+Q_SIGNALS:
+    void goToFolder(const QString &folder);
 
 public Q_SLOTS:
     void slotCreateFolder();
@@ -39,14 +44,22 @@ public Q_SLOTS:
     void slotDeleteFile();
     void slotShareFile();
 
+protected:
+    void paintEvent(QPaintEvent *event);
+
 private Q_SLOTS:
     void slotContextMenu(const QPoint &pos);
     void slotMoveUp();
-    void slotItemDoubleClicked(QListWidgetItem *item);
-
+    void slotItemDoubleClicked(QTreeWidgetItem *item, int column);
+    void slotRenameFile();
+    void slotRenameFolder();
+    void slotGeneralPaletteChanged();
+    void slotGeneralFontChanged();
 private:
+    QColor mTextColor;
     PimCommon::StorageServiceAbstract *mStorageService;
     PimCommon::StorageServiceAbstract::Capabilities mCapabilities;
+    bool mInitialized;
 };
 
-#endif // STORAGESERVICELISTWIDGET_H
+#endif // STORAGESERVICETREEWIDGET_H

@@ -51,6 +51,7 @@ void StorageServiceTabWidget::createPage(const QString &name, PimCommon::Storage
 {
     StorageServicePage *page = new StorageServicePage(name, service);
     connect(page, SIGNAL(updatePixmap(QPixmap,StorageServicePage*)), this, SLOT(slotUpdatePixmap(QPixmap,StorageServicePage*)));
+    connect(page, SIGNAL(updateStatusBarMessage(QString)), this, SIGNAL(updateStatusBarMessage(QString)));
     addTab(page, name);
 }
 

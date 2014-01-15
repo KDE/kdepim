@@ -49,12 +49,17 @@ public:
     void storageServicedownloadFile(const QString &filename);
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
+    void storageServiceRenameFolder(const QString &source, const QString &destination);
+    void storageServiceRenameFile(const QString &source, const QString &destination);
+    void storageServiceMoveFolder(const QString &source, const QString &destination);
+    void storageServiceMoveFile(const QString &source, const QString &destination);
+
 
     QString storageServiceName() const;
     KIcon icon() const;
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();
-    void fillListWidget(StorageServiceListWidget *listWidget, const QString &data);
+    void fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
 
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);

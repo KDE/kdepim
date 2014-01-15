@@ -16,13 +16,15 @@
 */
 
 #include "yousenditstorageservice.h"
-#include "storageservice/storageservicelistwidget.h"
+#include "storageservice/storageservicetreewidget.h"
 #include "yousenditjob.h"
 
 #include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
+
+#include <qjson/parser.h>
 
 #include <QDebug>
 
@@ -181,7 +183,12 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
-    //cap |= DeleteFileCapability;
+    cap |= DeleteFileCapability;
+    cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+
     return cap;
 }
 
@@ -260,15 +267,108 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
     }
 }
 
+void YouSendItStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFolder(source, destination);
+    }
+}
+
+void YouSendItStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFile(source, destination);
+    }
+}
+
+void YouSendItStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFolder(source, destination);
+    }
+}
+
+void YouSendItStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFile(source, destination);
+    }
+}
+
 StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const
 {
     return serviceCapabilities();
 }
 
-void YouSendItStorageService::fillListWidget(StorageServiceListWidget *listWidget, const QString &data)
+void YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
-    //TODO
+    QJson::Parser parser;
+    bool ok;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (info.contains(QLatin1String("folders"))) {
+        const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
+        const QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
+        Q_FOREACH (const QVariant &v, folders) {
+            const QVariantMap map = v.toMap();
+            //qDebug()<<" folder map"<<map;
+            if (map.contains(QLatin1String("name"))) {
+                const QString name = map.value(QLatin1String("name")).toString();
+                const QString folderId = map.value(QLatin1String("id")).toString();
+                listWidget->addFolder(name, folderId);
+            }
+        }
+        const QVariantMap mapFiles = info.value(QLatin1String("files")).toMap();
+        const QVariantList files = mapFiles.value(QLatin1String("file")).toList();
+        Q_FOREACH (const QVariant &v, files) {
+            const QVariantMap map = v.toMap();
+            qDebug()<<" file map !"<<map;
+            if (map.contains(QLatin1String("name"))) {
+                const QString name = map.value(QLatin1String("name")).toString();
+                qDebug()<<" name !"<<name;
+                const QString fileId = map.value(QLatin1String("id")).toString();
+                StorageServiceListItem *item = listWidget->addFile(name, fileId);
+                if (map.contains(QLatin1String("size"))) {
+                    //qDebug()<<" size "<<map.value(QLatin1String("size"));
+                    const qulonglong size = map.value(QLatin1String("size")).toULongLong();
+                    item->setSize(size);
+                }
+
+            }
+        }
+    }
 }
 
 QString YouSendItStorageService::storageServiceName() const

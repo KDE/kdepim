@@ -15,7 +15,7 @@ set(storageservicemanager_SRCS
   storageservicetabwidget.cpp
   storageserviceconfiguredialog.cpp
   storageservicemanagersettingsjob.cpp
-  storageservicelistwidget.cpp
+  storageservicetreewidget.cpp
   storageserviceprogressindicator.cpp
   storageservicewarning.cpp
   storageservicelogdialog.cpp
