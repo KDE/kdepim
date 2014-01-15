@@ -90,7 +90,7 @@ QString StorageServiceManagerSettingsJob::hubicScope() const
     return QLatin1String("usage.r,account.r,credentials.r,links.wd");
 }
 
-QString StorageServiceManagerSettingsJob::ubuntoOneTokenName() const
+QString StorageServiceManagerSettingsJob::ubuntuOneTokenName() const
 {
     return QLatin1String("kde storagemanager");
 }

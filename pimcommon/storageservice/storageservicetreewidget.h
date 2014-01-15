@@ -47,7 +47,7 @@ public:
     };
     enum StorageServiceData {
         ElementType = Qt::UserRole + 1,
-        Ident = Qt::UserRole + 2,
+        Ident = Qt::UserRole + 2
     };
     enum TreeWidgetColumn {
         ColumnName = 0,

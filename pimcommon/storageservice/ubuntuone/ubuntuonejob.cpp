@@ -54,7 +54,7 @@ void UbuntuOneJob::requestTokenAccess()
     mError = false;
     QUrl url(QLatin1String("https://login.ubuntu.com/api/1.0/authentications"));
     url.addQueryItem(QLatin1String("ws.op"), QLatin1String("authenticate"));
-    url.addQueryItem(QLatin1String("token_name"), QLatin1String("Ubuntu One @ foo") );
+    url.addQueryItem(QLatin1String("token_name"), QLatin1String("Ubuntu One @ ") + PimCommon::StorageServiceJobConfig::self()->ubuntuOneTokenName() );
     qDebug()<<" postData "<<url;
     QNetworkRequest request(url);
     QNetworkReply *reply = mNetworkAccessManager->get(request);
