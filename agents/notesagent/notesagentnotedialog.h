@@ -24,6 +24,9 @@
 class QTextEdit;
 class QLineEdit;
 class KJob;
+namespace PimCommon {
+class RichTextEditorWidget;
+}
 class NotesAgentNoteDialog : public KDialog
 {
     Q_OBJECT
@@ -39,7 +42,7 @@ private slots:
 private:
     void readConfig();
     void writeConfig();
-    QTextEdit *mNote;
+    PimCommon::RichTextEditorWidget *mNote;
     QLineEdit *mSubject;
 };
 

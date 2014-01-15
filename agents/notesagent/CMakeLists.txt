@@ -3,6 +3,7 @@ project(notesagent)
 include_directories(
    ${CMAKE_SOURCE_DIR}/noteshared
    ${CMAKE_BINARY_DIR}/noteshared
+   ${CMAKE_SOURCE_DIR}/pimcommon
 )
 
 set(notesagent_SRCS
@@ -32,6 +33,7 @@ target_link_libraries(akonadi_notes_agent
   ${KDE4_KIO_LIBS}
   ${KDE4_KNOTIFYCONFIG_LIBS}
   noteshared
+  pimcommon
 )
 
 if (Q_WS_MAC)
