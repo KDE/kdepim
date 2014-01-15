@@ -353,12 +353,7 @@ void OAuth2Job::parseCreateServiceFolder(const QString &data)
 
 void OAuth2Job::parseListFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT listFolderDone(data);
     deleteLater();
 }
 
