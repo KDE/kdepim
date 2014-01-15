@@ -184,7 +184,7 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     cap |= DeleteFileCapability;
-    //cap |= RenameFolderCapability;
+    cap |= RenameFolderCapability;
     //cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
@@ -284,17 +284,47 @@ void YouSendItStorageService::storageServiceRenameFolder(const QString &source, 
 
 void YouSendItStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFile(source, destination);
+    }
 }
 
 void YouSendItStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFolder(source, destination);
+    }
 }
 
 void YouSendItStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFile(source, destination);
+    }
 }
 
 StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const

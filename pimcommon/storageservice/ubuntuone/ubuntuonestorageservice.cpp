@@ -288,17 +288,47 @@ void UbuntuoneStorageService::storageServiceRenameFolder(const QString &source, 
 
 void UbuntuoneStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFile(source, destination);
+    }
 }
 
 void UbuntuoneStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFolder(source, destination);
+    }
 }
 
 void UbuntuoneStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFile(source, destination);
+    }
 }
 
 StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() const

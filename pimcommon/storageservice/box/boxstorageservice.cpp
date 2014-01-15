@@ -159,22 +159,51 @@ void BoxStorageService::storageServiceRenameFolder(const QString &source, const 
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->renameFolder(source, destination);
     }
-
 }
 
 void BoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFile(source, destination);
+    }
 }
 
 void BoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFolder(source, destination);
+    }
 }
 
 void BoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFile(source, destination);
+    }
 }
 
 void BoxStorageService::storageServicelistFolder(const QString &folder)

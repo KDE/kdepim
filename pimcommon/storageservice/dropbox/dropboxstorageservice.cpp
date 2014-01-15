@@ -214,8 +214,8 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities(
     cap |= DeleteFileCapability;
     cap |= ListFolderCapability;
     cap |= ShareLinkCapability;
-    //cap |= RenameFolderCapability;
-    //cap |= RenameFileCapabilitity;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
 
@@ -289,17 +289,47 @@ void DropBoxStorageService::storageServiceRenameFolder(const QString &source, co
 
 void DropBoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->renameFile(source, destination);
+    }
 }
 
 void DropBoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(MoveFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotMoveFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFolder(source, destination);
+    }
 }
 
 void DropBoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotMoveFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->moveFile(source, destination);
+    }
 }
 
 StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const

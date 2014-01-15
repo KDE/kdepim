@@ -97,10 +97,19 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFolder;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1/rename").arg(source));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+
+    QUrl postData;
+
+    postData.addQueryItem(QLatin1String("name"), destination);
+    qDebug()<<" postData"<<postData;
+    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
@@ -345,6 +354,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
 
 void YouSendItJob::parseMoveFolder(const QString &data)
 {
+    qDebug()<<" data :"<<data;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();
@@ -352,6 +362,7 @@ void YouSendItJob::parseMoveFolder(const QString &data)
 
 void YouSendItJob::parseMoveFile(const QString &data)
 {
+    qDebug()<<" data :"<<data;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //TODO
     deleteLater();
@@ -359,6 +370,7 @@ void YouSendItJob::parseMoveFile(const QString &data)
 
 void YouSendItJob::parseRenameFile(const QString &data)
 {
+    qDebug()<<" data :"<<data;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //Q_EMIT downLoadFileDone(filename);
     //TODO
@@ -367,6 +379,7 @@ void YouSendItJob::parseRenameFile(const QString &data)
 
 void YouSendItJob::parseRenameFolder(const QString &data)
 {
+    qDebug()<<" data :"<<data;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //Q_EMIT downLoadFileDone(filename);
     //TODO
@@ -375,6 +388,7 @@ void YouSendItJob::parseRenameFolder(const QString &data)
 
 void YouSendItJob::parseDownloadFile(const QString &data)
 {
+    qDebug()<<" data :"<<data;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     //Q_EMIT downLoadFileDone(filename);
     //TODO
