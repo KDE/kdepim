@@ -39,6 +39,7 @@ public:
     void downloadFile(const QString &filename);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
+    void renameFolder(const QString &source, const QString &destination);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);

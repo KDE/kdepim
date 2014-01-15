@@ -40,6 +40,7 @@ public:
     void downloadFile(const QString &filename);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
+    void renameFolder(const QString &source, const QString &destination);
 
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);

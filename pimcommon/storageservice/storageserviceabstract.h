@@ -59,8 +59,9 @@ public:
         CreateFolderCapability = 16,
         DeleteFolderCapability = 32,
         ListFolderCapability = 64,
+        RenameFolderCapability = 128,
         //Share
-        ShareLinkCapability = 128
+        ShareLinkCapability = 256
     };
 
     Q_ENUMS(Capability)
@@ -81,7 +82,8 @@ public:
         CreateFolder,
         ListFolder,
         CreateServiceFolder,
-        DeleteFolder
+        DeleteFolder,
+        RenameFolder
     };
 
     bool isInProgress() const;
@@ -96,6 +98,7 @@ public:
     virtual void createServiceFolder();
     virtual void deleteFile(const QString &filename);
     virtual void deleteFolder(const QString &foldername);
+    virtual void renameFolder(const QString &source, const QString &destination);
 
 
     virtual QString storageServiceName() const = 0;
@@ -143,6 +146,7 @@ protected:
     virtual void storageServicecreateServiceFolder() = 0;
     virtual void storageServicedeleteFile(const QString &filename) = 0;
     virtual void storageServicedeleteFolder(const QString &foldername) = 0;
+    virtual void storageServiceRenameFolder(const QString &source, const QString &destination) = 0;
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
     NextAction *mNextAction;
@@ -166,12 +170,15 @@ public:
     void setRootPath(const QString &path) { mRootPath = path; }
     void setPath(const QString &path) { mPath = path; }
 
+    void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
 
     StorageServiceAbstract::ActionType nextActionType() const { return mNextAction; }
     QString nextActionFileName() const { return mNextActionFileName; }
     QString nextActionFolder() const { return mNextActionFolder; }
     QString rootPath() const { return mRootPath; }
     QString path() const { return mPath; }
+    QString renameSource() const { return mRenameSource; }
+    QString renameDestination() const { return mRenameDestination; }
 
 private:
     StorageServiceAbstract::ActionType mNextAction;
@@ -179,6 +186,8 @@ private:
     QString mPath;
     QString mNextActionFileName;
     QString mNextActionFolder;
+    QString mRenameSource;
+    QString mRenameDestination;
 };
 
 }

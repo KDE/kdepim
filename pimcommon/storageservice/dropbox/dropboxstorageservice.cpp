@@ -267,6 +267,21 @@ void DropBoxStorageService::storageServicedeleteFolder(const QString &foldername
     }
 }
 
+void DropBoxStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(RenameFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        //connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
+        //connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        //job->deleteFolder(foldername);
+    }
+}
+
 StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
 {
     return serviceCapabilities();
@@ -278,6 +293,7 @@ void DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget,
     QJson::Parser parser;
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info "<<info;
     if (info.contains(QLatin1String("contents"))) {
         const QVariantList lst = info.value(QLatin1String("contents")).toList();
         Q_FOREACH (const QVariant &variant, lst) {

@@ -88,6 +88,12 @@ void OAuth2Job::deleteFolder(const QString &foldername)
     deleteLater();
 }
 
+void OAuth2Job::renameFolder(const QString &source, const QString &destination)
+{
+    //TODO
+    deleteLater();
+}
+
 void OAuth2Job::requestTokenAccess()
 {
     mError = false;

@@ -236,3 +236,9 @@ void WebDavJob::deleteFolder(const QString &foldername)
     qDebug()<<" not implemented";
     deleteLater();
 }
+
+void WebDavJob::renameFolder(const QString &source, const QString &destination)
+{
+    //TODO
+    deleteLater();
+}

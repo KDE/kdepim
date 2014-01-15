@@ -482,6 +482,12 @@ void DropBoxJob::deleteFolder(const QString &foldername)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
+void DropBoxJob::renameFolder(const QString &source, const QString &destination)
+{
+    //TODO
+    deleteLater();
+}
+
 void DropBoxJob::parseShareLink(const QString &data)
 {
     QJson::Parser parser;

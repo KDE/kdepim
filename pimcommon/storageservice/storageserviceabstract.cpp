@@ -144,6 +144,16 @@ void StorageServiceAbstract::deleteFolder(const QString &foldername)
     storageServicedeleteFolder(foldername);
 }
 
+void StorageServiceAbstract::renameFolder(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceRenameFolder(source, destination);
+}
+
 bool StorageServiceAbstract::hasProgressIndicatorSupport() const
 {
     return false;
@@ -185,6 +195,9 @@ void StorageServiceAbstract::executeNextAction()
         break;
     case DeleteFolder:
         storageServicedeleteFolder(mNextAction->nextActionFolder());
+        break;
+    case RenameFolder:
+        storageServiceRenameFolder(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
     }
 }

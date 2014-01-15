@@ -262,6 +262,11 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
     }
 }
 
+void YouSendItStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+
+}
+
 StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const
 {
     return serviceCapabilities();

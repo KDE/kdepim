@@ -93,6 +93,12 @@ void YouSendItJob::deleteFolder(const QString &foldername)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
+void YouSendItJob::renameFolder(const QString &source, const QString &destination)
+{
+    //TODO
+    deleteLater();
+}
+
 void YouSendItJob::requestTokenAccess()
 {
     QPointer<LoginDialog> dlg = new LoginDialog;

@@ -146,6 +146,11 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
     }
 }
 
+void BoxStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+
+}
+
 void BoxStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {

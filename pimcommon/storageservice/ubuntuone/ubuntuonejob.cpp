@@ -285,6 +285,12 @@ void UbuntuOneJob::deleteFolder(const QString &foldername)
     deleteLater();
 }
 
+void UbuntuOneJob::renameFolder(const QString &source, const QString &destination)
+{
+    //TODO
+    deleteLater();
+}
+
 void UbuntuOneJob::parseCreateFolder(const QString &data)
 {
     //TODO

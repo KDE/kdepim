@@ -266,6 +266,11 @@ void UbuntuoneStorageService::storageServicedeleteFolder(const QString &folderna
 
 }
 
+void UbuntuoneStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+
+}
+
 StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() const
 {
     return serviceCapabilities();

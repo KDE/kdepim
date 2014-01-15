@@ -42,6 +42,7 @@ public:
     virtual void downloadFile(const QString &filename) = 0;
     virtual void deleteFile(const QString &filename) = 0;
     virtual void deleteFolder(const QString &foldername) = 0;
+    virtual void renameFolder(const QString &source, const QString &destination) = 0;
 
 protected Q_SLOTS:
     void slotError(QNetworkReply::NetworkError);

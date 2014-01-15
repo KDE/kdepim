@@ -49,6 +49,7 @@ public:
     void storageServicedownloadFile(const QString &filename);
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
+    void storageServiceRenameFolder(const QString &source, const QString &destination);
 
     QString storageServiceName() const;
     KIcon icon() const;

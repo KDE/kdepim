@@ -130,6 +130,11 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
     }
 }
 
+void WebDavStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+{
+
+}
+
 StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 {
     return serviceCapabilities();
