@@ -52,6 +52,8 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
         act->setSeparator(true);
         menu->addAction(act);
         if (type == StorageServiceTreeWidget::File) {
+            if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity)
+                menu->addAction(i18n("Delete File"), this, SLOT(slotRenameFile()));
             if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
                 menu->addAction(i18n("Delete File"), this, SLOT(slotDeleteFile()));
             if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability)
@@ -59,6 +61,8 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
             if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
                 menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
         } else if (type == StorageServiceTreeWidget::Folder) {
+            if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability)
+                menu->addAction(i18n("Rename Folder"), this, SLOT(slotRenameFolder()));
             if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability)
                 menu->addAction(i18n("Delete Folder"), this, SLOT(slotDeleteFolder()));
         }
@@ -76,6 +80,24 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
     //TODO
     menu->exec( mapToGlobal( pos ) );
     delete menu;
+}
+
+void StorageServiceTreeWidget::slotRenameFolder()
+{
+    const QString oldFolderName = itemIdentifierSelected();
+    const QString folder = KInputDialog::getText(i18n("Rename Folder Name"), i18n("Folder:"));
+    if (!folder.isEmpty()) {
+        mStorageService->renameFolder(oldFolderName, folder);
+    }
+}
+
+void StorageServiceTreeWidget::slotRenameFile()
+{
+    const QString oldFolderName = itemIdentifierSelected();
+    const QString folder = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"));
+    if (!folder.isEmpty()) {
+        mStorageService->renameFolder(oldFolderName, folder);
+    }
 }
 
 void StorageServiceTreeWidget::slotCreateFolder()

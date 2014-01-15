@@ -69,7 +69,8 @@ private Q_SLOTS:
     void slotDeleteFolderDone(const QString &serviceName, const QString &folder);
     void slotDeleteFileDone(const QString &serviceName, const QString &filename);
     void slotGoToFolder(const QString &folder);
-
+    void slotRenameFolderDone(const QString &serviceName, const QString &fileName);
+    void slotRenameFileDone(const QString &serviceName, const QString &fileName);
 private:
     bool verifyService(const QString &serviceName);
     inline void updateList(const QString &serviceName);
