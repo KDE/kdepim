@@ -83,6 +83,7 @@ SieveEditorWidget::SieveEditorWidget(QWidget *parent)
     mStackedWidget = new QStackedWidget;
 
     mTextModeWidget = new SieveEditorTextModeWidget;
+    connect(mTextModeWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     mStackedWidget->addWidget(mTextModeWidget);
     mGraphicalModeWidget = new SieveEditorGraphicalModeWidget;
     mStackedWidget->addWidget(mGraphicalModeWidget);
