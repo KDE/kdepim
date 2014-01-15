@@ -50,6 +50,7 @@ public:
     void storageServicedeleteFolder(const QString &foldername);
     StorageServiceAbstract::Capabilities capabilities() const;
     void fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
+    bool hasProgressIndicatorSupport() const;
 
     KIcon icon() const;
 
@@ -61,8 +62,7 @@ private:
     void readConfig();
     QString mAccessToken;
     QString mAccessTokenSecret;
-    QString mAccessOauthSignature;
-
+    QString mAccessOauthSignature;    
 };
 }
 

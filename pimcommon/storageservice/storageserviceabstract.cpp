@@ -144,6 +144,11 @@ void StorageServiceAbstract::deleteFolder(const QString &foldername)
     storageServicedeleteFolder(foldername);
 }
 
+bool StorageServiceAbstract::hasProgressIndicatorSupport() const
+{
+    return false;
+}
+
 void StorageServiceAbstract::executeNextAction()
 {
     switch(mNextAction->nextActionType()) {

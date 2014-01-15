@@ -304,6 +304,11 @@ void DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget,
     }
 }
 
+bool DropBoxStorageService::hasProgressIndicatorSupport() const
+{
+    return true;
+}
+
 KIcon DropBoxStorageService::icon() const
 {
     return KIcon();

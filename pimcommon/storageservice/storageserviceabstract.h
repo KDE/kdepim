@@ -103,7 +103,7 @@ public:
     virtual void removeConfig() = 0;
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
     virtual void fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
-
+    virtual bool hasProgressIndicatorSupport() const;
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
