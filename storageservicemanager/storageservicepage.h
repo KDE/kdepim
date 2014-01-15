@@ -45,7 +45,8 @@ public:
     void uploadFile();
     void downloadFile();
     void deleteFile();
-    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
+    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;    
+    QString serviceName() const;
 
 Q_SIGNALS:
     void updatePixmap(const QPixmap &pix, StorageServicePage *page);

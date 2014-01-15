@@ -67,6 +67,11 @@ StorageServicePage::~StorageServicePage()
 
 }
 
+QString StorageServicePage::serviceName() const
+{
+    return mStorageService->storageServiceName();
+}
+
 void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
 {
     Q_EMIT updatePixmap(pix, this);
@@ -92,7 +97,8 @@ void StorageServicePage::connectStorageService()
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
 {
-   //TODO
+    Q_EMIT updateStatusBarMessage(i18n("%1: Folder was renamed to '%2'.", serviceName, folderName));
+    updateList(serviceName);
 }
 
 void StorageServicePage::slotRenameFileDone(const QString &serviceName, const QString &fileName)
@@ -216,13 +222,13 @@ void StorageServicePage::slotProgressStateChanged(bool state)
 void StorageServicePage::slotListFolderDone(const QString &serviceName, const QString &data)
 {
     if (verifyService(serviceName)) {
+        mListWidget->setIsInitialized();
         mStorageService->fillListWidget(mListWidget, data);
     }
 }
 
 void StorageServicePage::slotCreateFolderDone(const QString &serviceName, const QString &folder)
 {
-    Q_UNUSED(folder);
     updateList(serviceName);
     Q_EMIT updateStatusBarMessage(i18n("%1: Folder %2 was created.", serviceName, folder));
 }

@@ -31,6 +31,8 @@ public:
     explicit StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
     ~StorageServiceTreeWidget();
 
+    void setIsInitialized();
+
 Q_SIGNALS:
     void goToFolder(const QString &folder);
 
@@ -42,15 +44,22 @@ public Q_SLOTS:
     void slotDeleteFile();
     void slotShareFile();
 
+protected:
+    void paintEvent(QPaintEvent *event);
+
 private Q_SLOTS:
     void slotContextMenu(const QPoint &pos);
     void slotMoveUp();
     void slotItemDoubleClicked(QTreeWidgetItem *item, int column);
     void slotRenameFile();
     void slotRenameFolder();
+    void slotGeneralPaletteChanged();
+    void slotGeneralFontChanged();
 private:
+    QColor mTextColor;
     PimCommon::StorageServiceAbstract *mStorageService;
     PimCommon::StorageServiceAbstract::Capabilities mCapabilities;
+    bool mInitialized;
 };
 
 #endif // STORAGESERVICETREEWIDGET_H

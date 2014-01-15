@@ -24,10 +24,14 @@
 #include <KInputDialog>
 #include <KLocalizedString>
 #include <KFileDialog>
+#include <KGlobalSettings>
+
+#include <QPainter>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : PimCommon::StorageServiceTreeWidget(parent),
-      mStorageService(storageService)
+      mStorageService(storageService),
+      mInitialized(false)
 {
     mCapabilities = mStorageService->capabilities();
     //Single selection for the moment
@@ -35,11 +39,32 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
     connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotGeneralFontChanged()));
+    connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
+
 }
 
 StorageServiceTreeWidget::~StorageServiceTreeWidget()
 {
 
+}
+
+void StorageServiceTreeWidget::slotGeneralPaletteChanged()
+{
+    const QPalette palette = viewport()->palette();
+    QColor color = palette.text().color();
+    color.setAlpha( 128 );
+    mTextColor = color;
+}
+
+void StorageServiceTreeWidget::slotGeneralFontChanged()
+{
+    setFont( KGlobalSettings::generalFont() );
+}
+
+void StorageServiceTreeWidget::setIsInitialized()
+{
+    mInitialized = true;
 }
 
 void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
@@ -53,7 +78,7 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
         menu->addAction(act);
         if (type == StorageServiceTreeWidget::File) {
             if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity)
-                menu->addAction(i18n("Delete File"), this, SLOT(slotRenameFile()));
+                menu->addAction(i18n("Rename File"), this, SLOT(slotRenameFile()));
             if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
                 menu->addAction(i18n("Delete File"), this, SLOT(slotDeleteFile()));
             if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability)
@@ -77,7 +102,6 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
     menu->addAction(act);
     if (mCapabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability)
         menu->addAction(i18n("Create Folder"), this, SLOT(slotCreateFolder()));
-    //TODO
     menu->exec( mapToGlobal( pos ) );
     delete menu;
 }
@@ -87,7 +111,9 @@ void StorageServiceTreeWidget::slotRenameFolder()
     const QString oldFolderName = itemIdentifierSelected();
     const QString folder = KInputDialog::getText(i18n("Rename Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
-        mStorageService->renameFolder(oldFolderName, folder);
+        if (oldFolderName != folder) {
+            mStorageService->renameFolder(oldFolderName, folder);
+        }
     }
 }
 
@@ -96,7 +122,9 @@ void StorageServiceTreeWidget::slotRenameFile()
     const QString oldFolderName = itemIdentifierSelected();
     const QString folder = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"));
     if (!folder.isEmpty()) {
-        mStorageService->renameFolder(oldFolderName, folder);
+        if (oldFolderName != folder) {
+            mStorageService->renameFolder(oldFolderName, folder);
+        }
     }
 }
 
@@ -170,3 +198,24 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
         }
     }
 }
+
+void StorageServiceTreeWidget::paintEvent( QPaintEvent *event )
+{
+    if ( mInitialized ) {
+        PimCommon::StorageServiceTreeWidget::paintEvent(event);
+    } else {
+        QPainter p( viewport() );
+
+        QFont font = p.font();
+        font.setItalic( true );
+        p.setFont( font );
+
+        if (!mTextColor.isValid()) {
+            slotGeneralPaletteChanged();
+        }
+        p.setPen( mTextColor );
+        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n("Storage service no initialized.") );
+    }
+}
+
+
