@@ -138,6 +138,9 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
             case PimCommon::StorageServiceAbstract::RenameFolder:
+            case PimCommon::StorageServiceAbstract::RenameFile:
+            case PimCommon::StorageServiceAbstract::MoveFolder:
+            case PimCommon::StorageServiceAbstract::MoveFile:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -191,14 +194,46 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::RenameFolder:
         parseRenameFolder(data);
         break;
+    case PimCommon::StorageServiceAbstract::RenameFile:
+        parseRenameFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::MoveFolder:
+        parseMoveFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::MoveFile:
+        parseMoveFile(data);
+        break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
 }
 
+void DropBoxJob::parseMoveFolder(const QString &data)
+{
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
+void DropBoxJob::parseMoveFile(const QString &data)
+{
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
+void DropBoxJob::parseRenameFile(const QString &data)
+{
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
 void DropBoxJob::parseRenameFolder(const QString &data)
 {
-
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void DropBoxJob::parseDeleteFolder(const QString &data)

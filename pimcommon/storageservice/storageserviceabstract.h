@@ -130,6 +130,9 @@ Q_SIGNALS:
     void deleteFolderDone(const QString &serviceName, const QString &folder);
     void deleteFileDone(const QString &serviceName, const QString &filename);
     void renameFolderDone(const QString &serviceName, const QString &folderName);
+    void renameFileDone(const QString &serviceName, const QString &folderName);
+    void moveFolderDone(const QString &serviceName, const QString &folderName);
+    void moveFileDone(const QString &serviceName, const QString &folderName);
     void inProgress(bool state);
 
 protected slots:
@@ -140,11 +143,13 @@ protected slots:
     void slotCreateFolderDone(const QString &folderName);
     void slotUploadFileDone(const QString &filename);
     void slotListFolderDone(const QString &listFolder);
-    void slotDownLoadFileDone(const QString &fileName);    
+    void slotDownLoadFileDone(const QString &fileName);
     void slotDeleteFolderDone(const QString &folder);
     void slotDeleteFileDone(const QString &filename);
     void slotRenameFolderDone(const QString &folder);
-
+    void slotRenameFileDone(const QString &filename);
+    void slotMoveFolderDone(const QString &folderName);
+    void slotMoveFileDone(const QString &filename);
 protected:
     virtual void storageServicedownloadFile(const QString &filename) = 0;
     virtual void storageServiceuploadFile(const QString &filename) = 0;

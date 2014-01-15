@@ -229,6 +229,15 @@ void StorageServiceAbstract::executeNextAction()
     case RenameFolder:
         storageServiceRenameFolder(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
+    case RenameFile:
+        storageServiceRenameFile(mNextAction->renameSource(), mNextAction->renameDestination());
+        break;
+    case MoveFile:
+        storageServiceMoveFile(mNextAction->renameSource(), mNextAction->renameDestination());
+        break;
+    case MoveFolder:
+        storageServiceMoveFolder(mNextAction->renameSource(), mNextAction->renameDestination());
+        break;
     }
 }
 
@@ -304,6 +313,25 @@ void StorageServiceAbstract::slotRenameFolderDone(const QString &folderName)
     Q_EMIT renameFolderDone(storageServiceName(), folderName);
     changeProgressState(false);
 }
+
+void StorageServiceAbstract::slotRenameFileDone(const QString &filename)
+{
+    Q_EMIT renameFileDone(storageServiceName(), filename);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotMoveFolderDone(const QString &folderName)
+{
+    Q_EMIT moveFolderDone(storageServiceName(), folderName);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotMoveFileDone(const QString &filename)
+{
+    Q_EMIT moveFileDone(storageServiceName(), filename);
+    changeProgressState(false);
+}
+
 
 void StorageServiceAbstract::emitAuthentificationDone()
 {

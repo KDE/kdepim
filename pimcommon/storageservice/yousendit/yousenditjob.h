@@ -53,6 +53,9 @@ private slots:
     void slotSendDataFinished(QNetworkReply *reply);
 
 private:
+    void parseRenameFile(const QString &data);
+    void parseMoveFolder(const QString &data);
+    void parseMoveFile(const QString &data);
     void parseRenameFolder(const QString &data);
     void parseRequestToken(const QString &data);
     void parseAccountInfo(const QString &data);

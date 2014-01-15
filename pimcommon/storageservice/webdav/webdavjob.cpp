@@ -121,6 +121,10 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
             case PimCommon::StorageServiceAbstract::RenameFolder:
+            case PimCommon::StorageServiceAbstract::RenameFile:
+            case PimCommon::StorageServiceAbstract::MoveFolder:
+            case PimCommon::StorageServiceAbstract::MoveFile:
+
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -161,6 +165,10 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DeleteFile:
     case PimCommon::StorageServiceAbstract::DeleteFolder:
     case PimCommon::StorageServiceAbstract::RenameFolder:
+    case PimCommon::StorageServiceAbstract::RenameFile:
+    case PimCommon::StorageServiceAbstract::MoveFolder:
+    case PimCommon::StorageServiceAbstract::MoveFile:
+
         deleteLater();
         break;
     default:
