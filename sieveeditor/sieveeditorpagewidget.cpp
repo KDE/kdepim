@@ -126,7 +126,7 @@ void SieveEditorPageWidget::slotPutResult( KManageSieve::SieveJob *, bool succes
 void SieveEditorPageWidget::needToSaveScript()
 {
     if (mWasChanged) {
-        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Script %1 was changed. Do you want to save it ?", mCurrentURL.fileName()))) {
+        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Script '%1' was changed. Do you want to save it ?", mCurrentURL.fileName()))) {
             saveScript();
         }
     }
