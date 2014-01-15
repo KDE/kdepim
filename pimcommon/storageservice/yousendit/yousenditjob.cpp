@@ -70,7 +70,7 @@ void YouSendItJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1").arg(filename));
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/file/%1").arg(filename));
     qDebug()<<" url"<<url;
     QNetworkRequest request(url);
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());

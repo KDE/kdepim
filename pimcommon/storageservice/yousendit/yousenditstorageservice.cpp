@@ -289,11 +289,11 @@ void YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
         const QVariantList files = mapFiles.value(QLatin1String("file")).toList();
         Q_FOREACH (const QVariant &v, files) {
             const QVariantMap map = v.toMap();
-            //qDebug()<<" file map !"<<map;
+            qDebug()<<" file map !"<<map;
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
                 qDebug()<<" name !"<<name;
-                const QString fileId = map.value(QLatin1String("fileid")).toString();
+                const QString fileId = map.value(QLatin1String("id")).toString();
                 StorageServiceListItem *item = listWidget->addFile(name, fileId);
                 if (map.contains(QLatin1String("size"))) {
                     //qDebug()<<" size "<<map.value(QLatin1String("size"));
