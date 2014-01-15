@@ -23,6 +23,8 @@
 
 #include <QWidget>
 #include "pimcommon/storageservice/storageserviceabstract.h"
+
+class QProgressBar;
 namespace PimCommon {
 class StorageServiceAbstract;
 }
@@ -78,6 +80,7 @@ private:
     StorageServiceTreeWidget *mListWidget;
     StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
+    QProgressBar *mProgressBar;
 };
 
 #endif // STORAGESERVICEPAGE_H

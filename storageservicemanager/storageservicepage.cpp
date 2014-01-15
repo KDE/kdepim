@@ -36,11 +36,13 @@
 #include <QDebug>
 #include <QPointer>
 #include <QTimer>
+#include <QProgressBar>
 
 StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : QWidget(parent),
       mServiceName(serviceName),
-      mStorageService(storageService)
+      mStorageService(storageService),
+      mProgressBar(0)
 {
     mProgressIndicator = new StorageServiceProgressIndicator(this);
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
@@ -49,6 +51,12 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     mListWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mListWidget, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
     vbox->addWidget(mListWidget);
+
+    if (mStorageService->hasProgressIndicatorSupport()) {
+        mProgressBar = new QProgressBar;
+        mProgressBar->hide();
+        vbox->addWidget(mProgressBar);
+    }
     mStorageServiceWarning = new StorageServiceWarning;
     vbox->addWidget(mStorageServiceWarning);
     connectStorageService();
