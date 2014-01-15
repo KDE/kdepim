@@ -151,7 +151,7 @@ void YouSendItJob::listFolder(const QString &folder)
     if (folder.isEmpty()) {
         url.setUrl(mDefaultUrl + QLatin1String("/dpi/v1/folder/0"));
     } else {
-        url.setUrl(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/").arg(folder));
+        url.setUrl(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1").arg(folder));
     }
     url.addQueryItem(QLatin1String("email"),mUsername);
     url.addQueryItem(QLatin1String("X-Auth-Token"), mToken);
@@ -305,6 +305,7 @@ void YouSendItJob::parseDeleteFile(const QString &data)
 
 void YouSendItJob::parseDeleteFolder(const QString &data)
 {
+    Q_UNUSED(data);
     //qDebug()<<" data "<<data;
     //Api doesn't return folder name.
     Q_EMIT deleteFolderDone(QString());
