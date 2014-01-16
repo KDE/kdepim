@@ -20,6 +20,7 @@
 
 #include "storageserviceconfiguredialog.h"
 #include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
+#include "pimcommon/widgets/configureimmutablewidgetutils.h"
 #include "storageservicemanagerglobalconfig.h"
 
 #include <KLocalizedString>
@@ -61,12 +62,12 @@ StorageServiceConfigureDialog::~StorageServiceConfigureDialog()
 
 void StorageServiceConfigureDialog::loadSettings()
 {
-    mDownloadFolder->setUrl(KUrl(StorageServiceManagerGlobalConfig::self()->downloadDirectory()));
+    PimCommon::ConfigureImmutableWidgetUtils::loadWidget(mDownloadFolder, StorageServiceManagerGlobalConfig::self()->downloadDirectoryItem());
 }
 
 void StorageServiceConfigureDialog::writeSettings()
 {
-    StorageServiceManagerGlobalConfig::self()->setDownloadDirectory(mDownloadFolder->url().path());
+    PimCommon::ConfigureImmutableWidgetUtils::saveUrlRequester(mDownloadFolder, StorageServiceManagerGlobalConfig::self()->downloadDirectoryItem());
     StorageServiceManagerGlobalConfig::self()->writeConfig();
 }
 

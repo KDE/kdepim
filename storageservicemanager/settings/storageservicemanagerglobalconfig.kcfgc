@@ -2,3 +2,4 @@ File=storageservicemanagerglobalconfig.kcfg
 ClassName=StorageServiceManagerGlobalConfig
 Mutators=true
 Singleton=true
+ItemAccessors=true
