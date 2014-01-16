@@ -134,5 +134,6 @@ void SieveEditorPageWidget::needToSaveScript()
 
 void SieveEditorPageWidget::slotValueChanged()
 {
+    qDebug()<<"void SieveEditorPageWidget::slotValueChanged() ";
     mWasChanged = true;
 }
