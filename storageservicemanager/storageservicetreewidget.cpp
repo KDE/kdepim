@@ -69,6 +69,9 @@ void StorageServiceTreeWidget::setIsInitialized()
 
 void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
 {
+    if (!mInitialized)
+        return;
+
     KMenu *menu = new KMenu( this );
     menu->addAction( i18n("Up"), this, SLOT(slotMoveUp()));
     const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
