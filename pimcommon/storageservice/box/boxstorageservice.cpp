@@ -362,13 +362,24 @@ void BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, con
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    //qDebug()<<" info"<<info;
     if (info.contains(QLatin1String("item_collection"))) {
         const QVariantMap itemCollection = info.value(QLatin1String("item_collection")).toMap();
-        //qDebug()<<" itemCollection"<<itemCollection;
         if (itemCollection.contains(QLatin1String("entries"))) {
             const QVariantList entries = itemCollection.value(QLatin1String("entries")).toList();
-            qDebug()<<" entries !"<<entries;
+            Q_FOREACH (const QVariant &v, entries) {
+                const QVariantMap mapEntries = v.toMap();
+                if (mapEntries.contains(QLatin1String("type"))) {
+                    const QString type = mapEntries.value(QLatin1String("type")).toString();
+                    const QString name = mapEntries.value(QLatin1String("name")).toString();
+                    const QString id = mapEntries.value(QLatin1String("id")).toString();
+                    if (type == QLatin1String("folder")) {
+                        listWidget->addFolder(name, id);
+                    } else if (type == QLatin1String("file")) {
+                        listWidget->addFile(name, id);
+                    }
+                }
+                qDebug()<<" v"<<v;
+            }
         }
     }
 }
