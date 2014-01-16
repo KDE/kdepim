@@ -43,8 +43,8 @@ public:
     void renameFolder(const QString &source, const QString &destination);
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
-    void moveFile(const QString &source, const QString &destination);
-
+    void moveFile(const QString &source, const QString &destination);    
+    void copyFile(const QString &source, const QString &destination);
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);    
@@ -70,6 +70,7 @@ private:
     void parseRenameFile(const QString &data);
     void parseMoveFolder(const QString &data);
     void parseMoveFile(const QString &data);
+    void parseCopyFile(const QString &data);
     QString nonce;
     QString mOauthconsumerKey;
     QString mOauthSignature;

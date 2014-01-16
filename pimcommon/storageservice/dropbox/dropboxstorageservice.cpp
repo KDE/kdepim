@@ -332,6 +332,21 @@ void DropBoxStorageService::storageServiceMoveFile(const QString &source, const 
     }
 }
 
+void DropBoxStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
+{
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFile(source, destination);
+    }
+}
+
 StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
 {
     return serviceCapabilities();

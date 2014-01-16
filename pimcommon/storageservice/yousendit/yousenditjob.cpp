@@ -52,6 +52,16 @@ void YouSendItJob::initializeToken(const QString &password, const QString &userN
     mToken = token;
 }
 
+void YouSendItJob::copyFile(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
 void YouSendItJob::createServiceFolder()
 {
     qDebug()<<" not implemented";
@@ -289,6 +299,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::RenameFile:
         case PimCommon::StorageServiceAbstract::MoveFolder:
         case PimCommon::StorageServiceAbstract::MoveFile:
+        case PimCommon::StorageServiceAbstract::CopyFile:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -345,11 +356,22 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::MoveFile:
         parseMoveFile(data);
         break;
+    case PimCommon::StorageServiceAbstract::CopyFile:
+        parseCopyFile(data);
+        break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
         deleteLater();
         break;
     }
+}
+
+void YouSendItJob::parseCopyFile(const QString &data)
+{
+    qDebug()<<" data :"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void YouSendItJob::parseMoveFolder(const QString &data)

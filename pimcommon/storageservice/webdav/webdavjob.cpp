@@ -56,6 +56,16 @@ void WebDavJob::requestTokenAccess()
     delete dlg;
 }
 
+void WebDavJob::copyFile(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
 void WebDavJob::uploadFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
@@ -124,6 +134,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::RenameFile:
             case PimCommon::StorageServiceAbstract::MoveFolder:
             case PimCommon::StorageServiceAbstract::MoveFile:
+            case PimCommon::StorageServiceAbstract::CopyFile:
 
                 errorMessage(mActionType, errorStr);
                 deleteLater();
@@ -168,6 +179,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::RenameFile:
     case PimCommon::StorageServiceAbstract::MoveFolder:
     case PimCommon::StorageServiceAbstract::MoveFile:
+    case PimCommon::StorageServiceAbstract::CopyFile:
 
         deleteLater();
         break;

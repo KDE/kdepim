@@ -141,6 +141,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::RenameFile:
             case PimCommon::StorageServiceAbstract::MoveFolder:
             case PimCommon::StorageServiceAbstract::MoveFile:
+            case PimCommon::StorageServiceAbstract::CopyFile:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -203,10 +204,22 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::MoveFile:
         parseMoveFile(data);
         break;
+    case PimCommon::StorageServiceAbstract::CopyFile:
+        parseCopyFile(data);
+        break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
 }
+
+void DropBoxJob::parseCopyFile(const QString &data)
+{
+    qDebug()<<" data :"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
 
 void DropBoxJob::parseMoveFolder(const QString &data)
 {
@@ -223,6 +236,8 @@ void DropBoxJob::parseMoveFile(const QString &data)
     //TODO
     deleteLater();
 }
+
+
 
 void DropBoxJob::parseRenameFile(const QString &data)
 {
@@ -603,6 +618,17 @@ void DropBoxJob::moveFile(const QString &source, const QString &destination)
     //TODO
     deleteLater();
 }
+
+void DropBoxJob::copyFile(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
 
 void DropBoxJob::parseShareLink(const QString &data)
 {

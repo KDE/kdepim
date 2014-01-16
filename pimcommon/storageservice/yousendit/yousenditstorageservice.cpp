@@ -327,6 +327,21 @@ void YouSendItStorageService::storageServiceMoveFile(const QString &source, cons
     }
 }
 
+void YouSendItStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFile(source, destination);
+    }
+}
+
 StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const
 {
     return serviceCapabilities();

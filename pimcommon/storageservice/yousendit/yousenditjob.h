@@ -43,8 +43,8 @@ public:
     void renameFolder(const QString &source, const QString &destination);
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
-    void moveFile(const QString &source, const QString &destination);
-
+    void moveFile(const QString &source, const QString &destination);    
+    void copyFile(const QString &source, const QString &destination);
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);
 
@@ -67,6 +67,7 @@ private:
     void parseDeleteFolder(const QString &data);
     void parseDeleteFile(const QString &data);
     void parseDownloadFile(const QString &data);
+    void parseCopyFile(const QString &data);
     QString mPassword;
     QString mUsername;
     QString mDefaultUrl;

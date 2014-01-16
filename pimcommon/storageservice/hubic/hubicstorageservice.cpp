@@ -324,6 +324,21 @@ void HubicStorageService::storageServiceMoveFile(const QString &source, const QS
     }
 }
 
+void HubicStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
+{
+    if (mRefreshToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFile(source, destination);
+    }
+}
+
 KIcon HubicStorageService::icon() const
 {
     return KIcon();

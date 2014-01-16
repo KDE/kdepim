@@ -331,6 +331,21 @@ void UbuntuoneStorageService::storageServiceMoveFile(const QString &source, cons
     }
 }
 
+void UbuntuoneStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFile(source, destination);
+    }
+}
+
 StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() const
 {
     return serviceCapabilities();

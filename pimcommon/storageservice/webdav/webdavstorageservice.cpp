@@ -186,6 +186,20 @@ void WebDavStorageService::storageServiceMoveFile(const QString &source, const Q
     }
 }
 
+void WebDavStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
+{
+    if (mServiceLocation.isEmpty()) {
+        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setRenameFolder(source, destination);
+        authentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFile(source, destination);
+    }
+}
+
 StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 {
     return serviceCapabilities();

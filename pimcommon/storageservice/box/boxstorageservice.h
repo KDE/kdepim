@@ -53,7 +53,7 @@ public:
     void storageServiceRenameFile(const QString &source, const QString &destination);
     void storageServiceMoveFolder(const QString &source, const QString &destination);
     void storageServiceMoveFile(const QString &source, const QString &destination);
-
+    void storageServiceCopyFile(const QString &source, const QString &destination);
 
     QString storageServiceName() const;
     KIcon icon() const;

@@ -46,7 +46,7 @@ public:
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
     void moveFile(const QString &source, const QString &destination);
-
+    void copyFile(const QString &source, const QString &destination);
 
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
@@ -84,7 +84,7 @@ protected:
     bool mNeedRefreshToken;
 
 private:
-    void shareLink(const QString &fileId);
+    void shareLink(const QString &fileId);    
 };
 }
 

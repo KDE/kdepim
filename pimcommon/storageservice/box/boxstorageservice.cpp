@@ -206,6 +206,21 @@ void BoxStorageService::storageServiceMoveFile(const QString &source, const QStr
     }
 }
 
+void BoxStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFile(source, destination);
+    }
+}
+
 void BoxStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {

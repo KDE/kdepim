@@ -46,6 +46,7 @@ public:
     virtual void renameFile(const QString &oldName, const QString &newName) = 0;
     virtual void moveFolder(const QString &source, const QString &destination) = 0;
     virtual void moveFile(const QString &source, const QString &destination) = 0;
+    virtual void copyFile(const QString &source, const QString &destination) = 0;
 
 
 protected Q_SLOTS:
@@ -67,6 +68,7 @@ Q_SIGNALS:
     void renameFileDone(const QString &folder);
     void moveFolderDone(const QString &folder);
     void moveFileDone(const QString &folder);
+    void copyFileDone(const QString &folder);
 
 protected:
     void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);

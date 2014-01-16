@@ -128,6 +128,16 @@ void OAuth2Job::moveFile(const QString &source, const QString &destination)
     deleteLater();
 }
 
+void OAuth2Job::copyFile(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
 void OAuth2Job::requestTokenAccess()
 {
     mError = false;
@@ -329,6 +339,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::RenameFile:
             case PimCommon::StorageServiceAbstract::MoveFolder:
             case PimCommon::StorageServiceAbstract::MoveFile:
+            case PimCommon::StorageServiceAbstract::CopyFile:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -377,6 +388,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::RenameFile:
     case PimCommon::StorageServiceAbstract::MoveFolder:
     case PimCommon::StorageServiceAbstract::MoveFile:
+    case PimCommon::StorageServiceAbstract::CopyFile:
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;

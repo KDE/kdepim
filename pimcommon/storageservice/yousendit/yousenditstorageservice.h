@@ -50,6 +50,8 @@ public:
     void storageServiceRenameFile(const QString &source, const QString &destination);
     void storageServiceMoveFolder(const QString &source, const QString &destination);
     void storageServiceMoveFile(const QString &source, const QString &destination);
+    void storageServiceCopyFile(const QString &source, const QString &destination);
+
 
     StorageServiceAbstract::Capabilities capabilities() const;
     void fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
@@ -67,7 +69,7 @@ private:
 
     QString mToken;
     QString mPassword;
-    QString mUsername;
+    QString mUsername;    
 };
 }
 
