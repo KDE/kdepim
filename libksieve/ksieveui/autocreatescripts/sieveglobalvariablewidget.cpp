@@ -161,6 +161,7 @@ SieveGlobalVariableWidget::SieveGlobalVariableWidget(QWidget *parent)
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveGlobalVariableLister;
+    connect(mIncludeLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
     setPageType(KSieveUi::SieveScriptBlockWidget::GlobalVariable);
     setLayout(lay);

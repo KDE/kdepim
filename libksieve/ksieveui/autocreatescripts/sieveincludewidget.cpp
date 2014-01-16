@@ -42,6 +42,7 @@ SieveIncludeLocation::SieveIncludeLocation(QWidget *parent)
     : KComboBox(parent)
 {
     initialize();
+    connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 }
 
 SieveIncludeLocation::~SieveIncludeLocation()
@@ -133,18 +134,22 @@ void SieveIncludeActionWidget::initWidget()
     QLabel *lab = new QLabel(i18n("Include:"));
     mLayout->addWidget( lab, 1, 0 );
     mLocation = new SieveIncludeLocation;
+    connect(mLocation, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mLocation, 1, 1 );
 
     lab = new QLabel(i18n("Name:"));
     mLayout->addWidget( lab, 1, 2 );
 
     mIncludeName = new KLineEdit;
+    connect(mIncludeName, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mIncludeName, 1, 3 );
 
     mOptional = new QCheckBox(i18n("Optional"));
+    connect(mOptional, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mOptional, 1, 4 );
 
     mOnce = new QCheckBox(i18n("Once"));
+    connect(mOnce, SIGNAL(toggled(bool)), this, SIGNAL(valueChanged()));
     mLayout->addWidget( mOnce, 1, 5 );
 
     mAdd = new KPushButton( this );
@@ -165,12 +170,14 @@ void SieveIncludeActionWidget::initWidget()
 
 void SieveIncludeActionWidget::slotAddWidget()
 {
-    emit addWidget( this );
+    Q_EMIT valueChanged();
+    Q_EMIT addWidget( this );
 }
 
 void SieveIncludeActionWidget::slotRemoveWidget()
 {
-    emit removeWidget( this );
+    Q_EMIT valueChanged();
+    Q_EMIT removeWidget( this );
 }
 
 bool SieveIncludeActionWidget::isInitialized() const
@@ -193,6 +200,7 @@ SieveIncludeWidget::SieveIncludeWidget(QWidget *parent)
     connect(mHelpButton, SIGNAL(clicked()), this, SLOT(slotHelp()));
 
     mIncludeLister = new SieveIncludeWidgetLister;
+    connect(mIncludeLister, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     lay->addWidget(mIncludeLister,0, Qt::AlignTop);
     setPageType(KSieveUi::SieveScriptBlockWidget::Include);
     setLayout(lay);
@@ -292,6 +300,8 @@ void SieveIncludeWidgetLister::reconnectWidget(SieveIncludeActionWidget *w )
              this, SLOT(slotAddWidget(QWidget*)), Qt::UniqueConnection );
     connect( w, SIGNAL(removeWidget(QWidget*)),
              this, SLOT(slotRemoveWidget(QWidget*)), Qt::UniqueConnection );
+    connect( w, SIGNAL(valueChanged()),
+             this, SIGNAL(valueChanged()), Qt::UniqueConnection );
 }
 
 void SieveIncludeWidgetLister::clearWidget( QWidget *aWidget )
