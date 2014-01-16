@@ -61,6 +61,7 @@ Q_SIGNALS:
     void removePage(QWidget *);
     void activatePage(QWidget *);
     void enableButtonOk(bool);
+    void valueChanged();
 
 private Q_SLOTS:
     void slotNew();

@@ -171,6 +171,7 @@ void SieveConditionWidget::slotConditionChanged(int index)
         setFilterCondition( 0 );
         mHelpButton->setEnabled(false);
     }
+    Q_EMIT valueChanged();
 }
 
 void SieveConditionWidget::slotAddWidget()

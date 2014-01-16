@@ -220,6 +220,7 @@ void SieveActionWidget::slotActionChanged(int index)
         setFilterAction( 0 );
         mHelpButton->setEnabled(false);
     }
+    Q_EMIT valueChanged();
 }
 
 void SieveActionWidget::slotAddWidget()
