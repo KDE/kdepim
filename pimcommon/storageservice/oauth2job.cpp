@@ -17,6 +17,7 @@
 
 #include "oauth2job.h"
 #include "storageservice/storageauthviewdialog.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
 
@@ -34,7 +35,7 @@ OAuth2Job::OAuth2Job(QObject *parent)
       mExpireInTime(0),
       mNeedRefreshToken(false)
 {
-    mRedirectUri = QLatin1String("https://bugs.kde.org/");
+    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
