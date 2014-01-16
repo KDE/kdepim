@@ -19,6 +19,7 @@
 */
 
 #include "storageservicetreewidget.h"
+#include "storageservicemanagerglobalconfig.h"
 
 #include <KMenu>
 #include <KInputDialog>
@@ -179,7 +180,13 @@ void StorageServiceTreeWidget::slotDownloadFile()
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         const QString filename = itemIdentifierSelected();
         if (!filename.isEmpty()) {
-            mStorageService->downloadFile(filename);
+            QString destination = StorageServiceManagerGlobalConfig::self()->downloadDirectory();
+            if (destination.isEmpty()) {
+                destination = KFileDialog::getExistingDirectory(KUrl(), this);
+                if (destination.isEmpty())
+                    return;
+            }
+            mStorageService->downloadFile(filename, destination);
         }
     }
 }

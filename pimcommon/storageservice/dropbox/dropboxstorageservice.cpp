@@ -227,11 +227,12 @@ QString DropBoxStorageService::storageServiceName() const
     return serviceName();
 }
 
-void DropBoxStorageService::storageServicedownloadFile(const QString &filename)
+void DropBoxStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);

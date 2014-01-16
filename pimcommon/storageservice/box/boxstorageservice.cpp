@@ -101,11 +101,12 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
     }
 }
 
-void BoxStorageService::storageServicedownloadFile(const QString &filename)
+void BoxStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -316,7 +317,7 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
-    //cap |= DeleteFileCapability;
+    cap |= DeleteFileCapability;
     //cap |= ShareLinkCapability;
     //cap |= RenameFolderCapability;
     //cap |= RenameFileCapabilitity;

@@ -208,11 +208,12 @@ void YouSendItStorageService::storageServiceShareLink(const QString &root, const
     }
 }
 
-void YouSendItStorageService::storageServicedownloadFile(const QString &filename)
+void YouSendItStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionFileName(filename);
         mNextAction->setNextActionType(DownLoadFile);
+        mNextAction->setDownloadDestination(filename);
         authentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);

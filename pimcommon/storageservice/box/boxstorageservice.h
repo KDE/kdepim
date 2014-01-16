@@ -46,7 +46,7 @@ public:
     void removeConfig();
     void storageServiceauthentication();
     void storageServiceShareLink(const QString &root, const QString &path);
-    void storageServicedownloadFile(const QString &filename);
+    void storageServicedownloadFile(const QString &filename, const QString &destination);
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
     void storageServiceRenameFolder(const QString &source, const QString &destination);

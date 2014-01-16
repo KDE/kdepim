@@ -38,7 +38,11 @@ public:
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
 
+
+    void writeSettings();
+
 private:
+    void loadSettings();
     void readConfig();
     void writeConfig();
     PimCommon::StorageServiceSettingsWidget *mStorageSettings;

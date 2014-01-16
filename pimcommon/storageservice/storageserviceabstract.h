@@ -96,7 +96,7 @@ public:
 
     bool isInProgress() const;
 
-    virtual void downloadFile(const QString &filename);
+    virtual void downloadFile(const QString &filename, const QString &destination);
     virtual void uploadFile(const QString &filename);
     virtual void accountInfo();
     virtual void createFolder(const QString &folder);
@@ -157,7 +157,7 @@ protected slots:
     void slotCopyFileDone(const QString &filename);
 
 protected:
-    virtual void storageServicedownloadFile(const QString &filename) = 0;
+    virtual void storageServicedownloadFile(const QString &filename, const QString &destination) = 0;
     virtual void storageServiceuploadFile(const QString &filename) = 0;
     virtual void storageServiceaccountInfo() = 0;
     virtual void storageServicecreateFolder(const QString &folder) = 0;
@@ -194,8 +194,9 @@ public:
     void setNextActionFolder(const QString &foldername) { mNextActionFolder = foldername; }
     void setRootPath(const QString &path) { mRootPath = path; }
     void setPath(const QString &path) { mPath = path; }
-
     void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
+
+    void setDownloadDestination(const QString &destination) { mDownLoadDestination = destination; }
 
     StorageServiceAbstract::ActionType nextActionType() const { return mNextAction; }
     QString nextActionFileName() const { return mNextActionFileName; }
@@ -204,7 +205,7 @@ public:
     QString path() const { return mPath; }
     QString renameSource() const { return mRenameSource; }
     QString renameDestination() const { return mRenameDestination; }
-
+    QString downloadDestination() const { return mDownLoadDestination; }
 private:
     StorageServiceAbstract::ActionType mNextAction;
     QString mRootPath;
@@ -213,6 +214,7 @@ private:
     QString mNextActionFolder;
     QString mRenameSource;
     QString mRenameDestination;
+    QString mDownLoadDestination;
 };
 
 }

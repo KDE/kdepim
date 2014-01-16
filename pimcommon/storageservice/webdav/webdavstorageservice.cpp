@@ -75,11 +75,12 @@ void WebDavStorageService::storageServiceShareLink(const QString &root, const QS
     }
 }
 
-void WebDavStorageService::storageServicedownloadFile(const QString &filename)
+void WebDavStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);

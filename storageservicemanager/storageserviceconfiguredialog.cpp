@@ -20,6 +20,7 @@
 
 #include "storageserviceconfiguredialog.h"
 #include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
+#include "storageservicemanagerglobalconfig.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -47,13 +48,26 @@ StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     QLabel *lab = new QLabel(i18n("Download Default Folder:"));
     lay->addWidget(lab);
     mDownloadFolder = new KUrlRequester;
+    mDownloadFolder->setMode(KFile::Directory|KFile::LocalOnly);
     lay->addWidget(mDownloadFolder);
     readConfig();
+    loadSettings();
 }
 
 StorageServiceConfigureDialog::~StorageServiceConfigureDialog()
 {
     writeConfig();
+}
+
+void StorageServiceConfigureDialog::loadSettings()
+{
+    mDownloadFolder->setUrl(KUrl(StorageServiceManagerGlobalConfig::self()->downloadDirectory()));
+}
+
+void StorageServiceConfigureDialog::writeSettings()
+{
+    StorageServiceManagerGlobalConfig::self()->setDownloadDirectory(mDownloadFolder->url().path());
+    StorageServiceManagerGlobalConfig::self()->writeConfig();
 }
 
 QMap<QString, PimCommon::StorageServiceAbstract *> StorageServiceConfigureDialog::listService() const
@@ -73,6 +87,7 @@ void StorageServiceConfigureDialog::readConfig()
     if ( size.isValid() ) {
         resize( size );
     }
+    //TODO load default download path
 }
 
 void StorageServiceConfigureDialog::writeConfig()

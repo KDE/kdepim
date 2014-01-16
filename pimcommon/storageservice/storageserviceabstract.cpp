@@ -43,14 +43,14 @@ void StorageServiceAbstract::changeProgressState(bool state)
     Q_EMIT inProgress(state);
 }
 
-void StorageServiceAbstract::downloadFile(const QString &filename)
+void StorageServiceAbstract::downloadFile(const QString &filename, const QString &destination)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";
         return;
     }
     changeProgressState(true);
-    storageServicedownloadFile(filename);
+    storageServicedownloadFile(filename, destination);
 }
 
 void StorageServiceAbstract::uploadFile(const QString &filename)
@@ -228,7 +228,7 @@ void StorageServiceAbstract::executeNextAction()
         storageServicecreateServiceFolder();
         break;
     case DownLoadFile:
-        storageServicedownloadFile(mNextAction->nextActionFileName());
+        storageServicedownloadFile(mNextAction->nextActionFileName(), mNextAction->downloadDestination());
         break;
     case DeleteFile:
         storageServicedeleteFile(mNextAction->nextActionFileName());

@@ -210,11 +210,12 @@ void UbuntuoneStorageService::storageServiceShareLink(const QString &root, const
     }
 }
 
-void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename)
+void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setDownloadDestination(filename);
         authentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);

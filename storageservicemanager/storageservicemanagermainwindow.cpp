@@ -140,6 +140,7 @@ void StorageServiceManagerMainWindow::slotConfigure()
     if (dlg->exec()) {
         mStorageManager->setListService(dlg->listService());
         mStorageServiceTabWidget->updateListService(dlg->listService());
+        dlg->writeSettings();
     }
     delete dlg;
 }

@@ -201,7 +201,7 @@ void ServiceTestWidget::slotCreateServiceFolder()
 void ServiceTestWidget::slotDownloadFile()
 {
     const QString filename = QInputDialog::getText(this,i18n("Filename"), i18n("Filename:"));
-    mStorageService->downloadFile(filename);
+    mStorageService->downloadFile(filename, QDir::homePath());
 }
 
 void ServiceTestWidget::updateButtons(PimCommon::StorageServiceAbstract::Capabilities capabilities)

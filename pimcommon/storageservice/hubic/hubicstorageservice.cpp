@@ -205,11 +205,12 @@ QString HubicStorageService::storageServiceName() const
     return serviceName();
 }
 
-void HubicStorageService::storageServicedownloadFile(const QString &filename)
+void HubicStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
