@@ -26,6 +26,7 @@
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KGlobalSettings>
+#include <KMessageBox>
 
 #include <QPainter>
 
@@ -144,8 +145,11 @@ void StorageServiceTreeWidget::slotDeleteFolder()
 {
     if (itemTypeSelected() == StorageServiceTreeWidget::Folder) {
         const QString folder = itemIdentifierSelected();
-        if (!folder.isEmpty()) {
-            mStorageService->deleteFolder(folder);
+        const QString name = currentItem()->text(0);
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name))) {
+            if (!folder.isEmpty()) {
+                mStorageService->deleteFolder(folder);
+            }
         }
     }
 }
@@ -159,8 +163,11 @@ void StorageServiceTreeWidget::slotDeleteFile()
 {
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         const QString filename = itemIdentifierSelected();
-        if (!filename.isEmpty()) {
-            mStorageService->deleteFile(filename);
+        const QString name = currentItem()->text(0);
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name) )) {
+            if (!filename.isEmpty()) {
+                mStorageService->deleteFile(filename);
+            }
         }
     }
 }
