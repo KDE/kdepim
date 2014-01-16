@@ -24,14 +24,30 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KUrlRequester>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
 
 StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure" ) );
     setButtons( Cancel | Ok  );
+    QWidget *w = new QWidget;
+    setMainWidget(w);
+    QVBoxLayout *lay = new QVBoxLayout;
+    w->setLayout(lay);
     mStorageSettings = new PimCommon::StorageServiceSettingsWidget;
-    setMainWidget(mStorageSettings);
+    lay->addWidget(mStorageSettings);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
+    QLabel *lab = new QLabel(i18n("Download Default Folder:"));
+    lay->addWidget(lab);
+    mDownloadFolder = new KUrlRequester;
+    lay->addWidget(mDownloadFolder);
     readConfig();
 }
 

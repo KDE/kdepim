@@ -27,7 +27,7 @@ namespace PimCommon {
 class StorageServiceSettingsWidget;
 class StorageServiceAbstract;
 }
-
+class KUrlRequester;
 class StorageServiceConfigureDialog : public KDialog
 {
     Q_OBJECT
@@ -42,6 +42,7 @@ private:
     void readConfig();
     void writeConfig();
     PimCommon::StorageServiceSettingsWidget *mStorageSettings;
+    KUrlRequester *mDownloadFolder;
 };
 
 #endif // STORAGESERVICECONFIGUREDIALOG_H
