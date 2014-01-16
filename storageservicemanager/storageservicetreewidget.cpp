@@ -217,7 +217,7 @@ void StorageServiceTreeWidget::paintEvent( QPaintEvent *event )
             slotGeneralPaletteChanged();
         }
         p.setPen( mTextColor );
-        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n("Storage service no initialized.") );
+        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n("Storage service not initialized.") );
     }
 }
 
