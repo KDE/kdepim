@@ -365,9 +365,9 @@ void BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, con
     //qDebug()<<" info"<<info;
     if (info.contains(QLatin1String("item_collection"))) {
         const QVariantMap itemCollection = info.value(QLatin1String("item_collection")).toMap();
-        qDebug()<<" itemCollection"<<itemCollection;
+        //qDebug()<<" itemCollection"<<itemCollection;
         if (itemCollection.contains(QLatin1String("entries"))) {
-            const QVariantMap entries = itemCollection.value(QLatin1String("entries")).toMap();
+            const QVariantList entries = itemCollection.value(QLatin1String("entries")).toList();
             qDebug()<<" entries !"<<entries;
         }
     }
