@@ -220,7 +220,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &filename
         job->initializeToken(mPassword, mUsername, mToken);
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
-        job->downloadFile(filename);
+        job->downloadFile(filename, destination);
     }
 }
 

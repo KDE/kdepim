@@ -39,7 +39,7 @@ public:
     virtual void createFolder(const QString &filename=QString()) = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual void createServiceFolder() = 0;
-    virtual void downloadFile(const QString &filename) = 0;
+    virtual void downloadFile(const QString &filename, const QString &destination) = 0;
     virtual void deleteFile(const QString &filename) = 0;
     virtual void deleteFolder(const QString &foldername) = 0;
     virtual void renameFolder(const QString &source, const QString &destination) = 0;

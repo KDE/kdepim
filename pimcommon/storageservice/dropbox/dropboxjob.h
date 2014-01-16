@@ -37,7 +37,7 @@ public:
     void createFolder(const QString &filename=QString());
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
-    void downloadFile(const QString &filename);
+    void downloadFile(const QString &filename, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);

@@ -86,7 +86,7 @@ void WebDavStorageService::storageServicedownloadFile(const QString &filename, c
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename);
+        job->downloadFile(filename, destination);
     }
 }
 

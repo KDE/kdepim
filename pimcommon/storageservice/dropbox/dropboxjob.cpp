@@ -510,7 +510,7 @@ void DropBoxJob::createServiceFolder()
     deleteLater();
 }
 
-void DropBoxJob::downloadFile(const QString &filename)
+void DropBoxJob::downloadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;

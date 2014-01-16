@@ -69,7 +69,7 @@ void YouSendItJob::createServiceFolder()
     deleteLater();
 }
 
-void YouSendItJob::downloadFile(const QString &filename)
+void YouSendItJob::downloadFile(const QString &filename, const QString &destination)
 {
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));

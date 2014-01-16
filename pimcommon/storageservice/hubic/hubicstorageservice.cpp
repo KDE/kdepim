@@ -173,9 +173,9 @@ StorageServiceAbstract::Capabilities HubicStorageService::serviceCapabilities()
     //cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
-    //cap |= ListFolderCapability;
+    cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
-    //cap |= DeleteFileCapability;
+    cap |= DeleteFileCapability;
     //cap |= RenameFolderCapability;
     //cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
@@ -217,7 +217,7 @@ void HubicStorageService::storageServicedownloadFile(const QString &filename, co
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename);
+        job->downloadFile(filename, destination);
     }
 }
 

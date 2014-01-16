@@ -232,7 +232,7 @@ void WebDavJob::createServiceFolder()
     deleteLater();
 }
 
-void WebDavJob::downloadFile(const QString &filename)
+void WebDavJob::downloadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
