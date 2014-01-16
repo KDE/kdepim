@@ -137,3 +137,9 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServiceTabWidget::capabil
     }
     return PimCommon::StorageServiceAbstract::NoCapability;
 }
+
+bool StorageServiceTabWidget::hasUploadDownloadProgress() const
+{
+    //TODO
+    return false;
+}

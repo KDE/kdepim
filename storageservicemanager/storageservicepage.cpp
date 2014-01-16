@@ -42,7 +42,8 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     : QWidget(parent),
       mServiceName(serviceName),
       mStorageService(storageService),
-      mProgressBar(0)
+      mProgressBar(0),
+      mDownloadUploadProgress(false)
 {
     mProgressIndicator = new StorageServiceProgressIndicator(this);
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
@@ -70,6 +71,11 @@ StorageServicePage::~StorageServicePage()
 QString StorageServicePage::serviceName() const
 {
     return mStorageService->storageServiceName();
+}
+
+bool StorageServicePage::hasUploadDownloadProgress() const
+{
+    return mDownloadUploadProgress;
 }
 
 void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)

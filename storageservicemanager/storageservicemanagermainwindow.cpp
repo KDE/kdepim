@@ -91,7 +91,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
 void StorageServiceManagerMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
-    KStandardAction::quit(this, SLOT(close()), ac );
+    KStandardAction::quit(this, SLOT(slotClose()), ac );
 
     KAction *act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
     act->setText(i18n("Add Storage Service..."));
@@ -124,6 +124,13 @@ void StorageServiceManagerMainWindow::setupActions()
 void StorageServiceManagerMainWindow::slotAddStorageService()
 {
 
+}
+
+void StorageServiceManagerMainWindow::slotClose()
+{
+    if (!mStorageServiceTabWidget->hasUploadDownloadProgress()) {
+        close();
+    }
 }
 
 void StorageServiceManagerMainWindow::slotConfigure()
