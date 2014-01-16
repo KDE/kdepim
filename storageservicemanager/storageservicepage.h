@@ -80,6 +80,7 @@ private:
     void connectStorageService();
     QString mServiceName;
     QString mCurrentFolder;
+    QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
     StorageServiceTreeWidget *mListWidget;
     StorageServiceProgressIndicator *mProgressIndicator;

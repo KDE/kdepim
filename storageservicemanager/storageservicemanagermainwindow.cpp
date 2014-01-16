@@ -36,6 +36,7 @@
 #include <KStatusBar>
 
 #include <QPointer>
+#include <QLabel>
 
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
@@ -58,6 +59,8 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     setupGUI();
     readConfig();
     mStorageServiceTabWidget->setListStorageService(mStorageManager->listService());
+    mStatusBarInfo = new QLabel;
+    statusBar()->insertWidget(0, mStatusBarInfo);
     slotUpdateActions();
 }
 
@@ -157,6 +160,6 @@ void StorageServiceManagerMainWindow::readConfig()
 
 void StorageServiceManagerMainWindow::slotSetStatusBarMessage(const QString &message)
 {
-    statusBar()->insertItem(message,0);
+    mStatusBarInfo->setText(message);
 }
 

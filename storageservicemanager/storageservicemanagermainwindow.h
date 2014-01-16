@@ -28,6 +28,7 @@ namespace PimCommon {
 class StorageServiceManager;
 }
 class KAction;
+class QLabel;
 class StorageServiceTabWidget;
 class StorageServiceManagerMainWindow : public KXmlGuiWindow
 {
@@ -57,6 +58,7 @@ private:
     KAction *mDeleteFile;
     KAction *mAuthenticate;
     KAction *mRefreshList;
+    QLabel *mStatusBarInfo;
 };
 
 #endif // STORAGESERVICEMANAGERMAINWINDOW_H
