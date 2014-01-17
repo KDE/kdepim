@@ -32,11 +32,15 @@
 #include <KActionCollection>
 #include <KAction>
 
+#include <kwallet.h>
+
 #include <QPointer>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow()
 {    
+    mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
+    //TODO
     setupActions();
     setupGUI();
     readConfig();
