@@ -46,7 +46,7 @@ StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
 
     QHBoxLayout *hbox = new QHBoxLayout;
     lay->addLayout(hbox);
-    QLabel *lab = new QLabel(i18n("Download Default Folder:"));
+    QLabel *lab = new QLabel(i18n("Default Download Folder:"));
     lay->addWidget(lab);
     mDownloadFolder = new KUrlRequester;
     mDownloadFolder->setMode(KFile::Directory|KFile::LocalOnly);
