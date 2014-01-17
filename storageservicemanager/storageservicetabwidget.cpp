@@ -49,8 +49,11 @@ void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::S
         }
         if (!foundPage) {
             createPage(i.key(), i.value());
+        } else {
+            //TODO update page ?
         }
     }
+    //TODO remove service ?
 }
 
 void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
