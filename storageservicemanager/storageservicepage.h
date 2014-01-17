@@ -45,7 +45,7 @@ public:
     void uploadFile();
     void downloadFile();
     void deleteFile();
-    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;    
+    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
     QString serviceName() const;
     bool hasUploadDownloadProgress() const;
 
@@ -73,7 +73,7 @@ private Q_SLOTS:
     void slotGoToFolder(const QString &folder);
     void slotRenameFolderDone(const QString &serviceName, const QString &fileName);
     void slotRenameFileDone(const QString &serviceName, const QString &fileName);
-
+    void slotMoveUp();
 private:
     bool verifyService(const QString &serviceName);
     inline void updateList(const QString &serviceName);

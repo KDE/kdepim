@@ -35,6 +35,7 @@ public:
 
 Q_SIGNALS:
     void goToFolder(const QString &folder);
+    void moveUp();
 
 public Q_SLOTS:
     void slotCreateFolder();

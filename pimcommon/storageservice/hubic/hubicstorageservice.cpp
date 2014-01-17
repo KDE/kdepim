@@ -360,7 +360,8 @@ StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-void HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    return QString();
 }

@@ -111,7 +111,7 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
 
 void DropBoxStorageService::storageServicelistFolder(const QString &folder)
 {
-    if (mAccessToken.isEmpty()) {        
+    if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
@@ -353,28 +353,43 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-void DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
     QJson::Parser parser;
     bool ok;
+    QString parentFolder;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
     if (info.contains(QLatin1String("contents"))) {
         const QVariantList lst = info.value(QLatin1String("contents")).toList();
         Q_FOREACH (const QVariant &variant, lst) {
             const QVariantMap qwer = variant.toMap();
-            qDebug()<<" qwer "<<qwer;
+            //qDebug()<<" qwer "<<qwer;
             if (qwer.contains(QLatin1String("is_dir"))) {
                 bool value = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
+                if (parentFolder.isEmpty()) {
+                    if (!name.isEmpty()) {
+                        if (name == QLatin1String("/")) {
+                            parentFolder = name;
+                        } else {
+                            QStringList parts = name.split(QLatin1String("/"));
+                            parts.removeLast();
+                            parentFolder = parts.join(QLatin1String("/"));
+                            if (parentFolder.isEmpty()) {
+                                parentFolder = QLatin1String("/");
+                            }
+                        }
+                    }
+                }
                 if (value) {
                     listWidget->addFolder(name, name);
                 } else {
                     QString mimetype;
                     if (qwer.contains(QLatin1String("mime_type"))) {
                         mimetype = qwer.value(QLatin1String("mime_type")).toString();
-                        qDebug()<<" mimetype"<<mimetype;
+                        //qDebug()<<" mimetype"<<mimetype;
                     }
                     StorageServiceListItem *item = listWidget->addFile(name, name, mimetype);
                     if (qwer.contains(QLatin1String("bytes"))) {
@@ -384,6 +399,7 @@ void DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget,
             }
         }
     }
+    return QString();
 }
 
 bool DropBoxStorageService::hasProgressIndicatorSupport() const

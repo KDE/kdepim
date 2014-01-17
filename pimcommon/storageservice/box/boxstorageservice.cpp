@@ -365,7 +365,7 @@ void BoxStorageService::storageServicecreateServiceFolder()
     }
 }
 
-void BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
     QJson::Parser parser;
@@ -392,4 +392,5 @@ void BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, con
             }
         }
     }
+    return QString();
 }

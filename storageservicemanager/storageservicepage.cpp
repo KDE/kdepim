@@ -51,6 +51,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     setLayout(vbox);
     mListWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mListWidget, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
+    connect(mListWidget, SIGNAL(moveUp()), this, SLOT(slotMoveUp()));
     vbox->addWidget(mListWidget);
 
     if (mStorageService->hasProgressIndicatorSupport()) {
@@ -229,7 +230,8 @@ void StorageServicePage::slotListFolderDone(const QString &serviceName, const QS
 {
     if (verifyService(serviceName)) {
         mListWidget->setIsInitialized();
-        mStorageService->fillListWidget(mListWidget, data);
+        const QString parentFolder = mStorageService->fillListWidget(mListWidget, data);
+        mParentFolder = parentFolder;
     }
 }
 
@@ -254,8 +256,13 @@ void StorageServicePage::slotDeleteFileDone(const QString &serviceName, const QS
 
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
-    //TODO verify it when we go up.
     mCurrentFolder = folder;
+    QTimer::singleShot(0, this, SLOT(refreshList()));
+}
+
+void StorageServicePage::slotMoveUp()
+{
+    mCurrentFolder = mParentFolder;
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 

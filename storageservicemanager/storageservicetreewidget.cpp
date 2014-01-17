@@ -156,7 +156,7 @@ void StorageServiceTreeWidget::slotDeleteFolder()
 
 void StorageServiceTreeWidget::slotMoveUp()
 {
-    //TODO ?
+    Q_EMIT moveUp();
 }
 
 void StorageServiceTreeWidget::slotDeleteFile()

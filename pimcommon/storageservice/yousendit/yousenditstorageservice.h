@@ -54,7 +54,7 @@ public:
 
 
     StorageServiceAbstract::Capabilities capabilities() const;
-    void fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
+    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
 
 
     QString storageServiceName() const;

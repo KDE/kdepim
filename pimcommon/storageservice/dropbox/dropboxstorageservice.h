@@ -55,7 +55,7 @@ public:
     void storageServiceCopyFile(const QString &source, const QString &destination);
 
     StorageServiceAbstract::Capabilities capabilities() const;
-    void fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
+    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
     bool hasProgressIndicatorSupport() const;
 
     KIcon icon() const;

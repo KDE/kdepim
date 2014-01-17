@@ -206,9 +206,10 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
     return serviceCapabilities();
 }
 
-void WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    return QString();
 }
 
 void WebDavStorageService::storageServicelistFolder(const QString &folder)

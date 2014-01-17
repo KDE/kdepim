@@ -348,7 +348,7 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() con
     return serviceCapabilities();
 }
 
-void YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
     QJson::Parser parser;
@@ -385,6 +385,7 @@ void YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
             }
         }
     }
+    return QString();
 }
 
 QString YouSendItStorageService::storageServiceName() const
