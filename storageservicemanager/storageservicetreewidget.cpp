@@ -19,6 +19,7 @@
 */
 
 #include "storageservicetreewidget.h"
+#include "storageservice/storageserviceabstract.h"
 #include "storageservicemanagerglobalconfig.h"
 
 #include <KMenu>
@@ -29,6 +30,7 @@
 #include <KMessageBox>
 
 #include <QPainter>
+#include <QHeaderView>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : PimCommon::StorageServiceTreeWidget(parent),
@@ -43,12 +45,25 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
     connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotGeneralFontChanged()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
-
+    readConfig();
 }
 
 StorageServiceTreeWidget::~StorageServiceTreeWidget()
 {
+    qDebug()<<" StorageServiceTreeWidget::~StorageServiceTreeWidget()";
+    writeConfig();
+}
 
+void StorageServiceTreeWidget::writeConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "StorageServiceTreeWidget" );
+    grp.writeEntry(mStorageService->storageServiceName(), header()->saveState());
+}
+
+void StorageServiceTreeWidget::readConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "StorageServiceTreeWidget" );
+    header()->restoreState( grp.readEntry( mStorageService->storageServiceName(), QByteArray() ) );
 }
 
 void StorageServiceTreeWidget::slotGeneralPaletteChanged()

@@ -74,6 +74,11 @@ private Q_SLOTS:
     void slotRenameFolderDone(const QString &serviceName, const QString &fileName);
     void slotRenameFileDone(const QString &serviceName, const QString &fileName);
     void slotMoveUp();
+    void slotMoveFileDone(const QString &serviceName, const QString &filename);
+    void slotMoveFolderDone(const QString &serviceName, const QString &filename);
+    void slotCopyFileDone(const QString &serviceName, const QString &filename);
+    void slotCopyFolderDone(const QString &serviceName, const QString &filename);
+
 private:
     bool verifyService(const QString &serviceName);
     inline void updateList(const QString &serviceName);

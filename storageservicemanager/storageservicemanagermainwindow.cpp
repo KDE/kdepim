@@ -26,7 +26,6 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
-
 #include <KStandardAction>
 #include <KLocalizedString>
 #include <KActionCollection>
@@ -37,6 +36,7 @@
 
 #include <QPointer>
 #include <QLabel>
+#include <QDebug>
 
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
@@ -66,10 +66,12 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
 
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 {
+    delete mStorageServiceTabWidget;
     KSharedConfig::Ptr config = KGlobal::config();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
     group.writeEntry( "Size", size() );
+    qDebug()<<" StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
 }
 
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)

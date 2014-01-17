@@ -100,6 +100,10 @@ void StorageServicePage::connectStorageService()
     connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
     connect(mStorageService, SIGNAL(renameFolderDone(QString,QString)), this, SLOT(slotRenameFolderDone(QString,QString)));
     connect(mStorageService, SIGNAL(renameFileDone(QString,QString)), this, SLOT(slotRenameFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(moveFileDone(QString,QString)), this, SLOT(slotMoveFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(moveFolderDone(QString,QString)), this, SLOT(slotMoveFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(copyFolderDone(QString,QString)), this, SLOT(slotCopyFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(copyFileDone(QString,QString)), this, SLOT(slotCopyFileDone(QString,QString)));
 }
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
@@ -249,6 +253,30 @@ void StorageServicePage::slotDeleteFolderDone(const QString &serviceName, const 
 }
 
 void StorageServicePage::slotDeleteFileDone(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(filename);
+    updateList(serviceName);
+}
+
+void StorageServicePage::slotMoveFileDone(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(filename);
+    updateList(serviceName);
+}
+
+void StorageServicePage::slotMoveFolderDone(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(filename);
+    updateList(serviceName);
+}
+
+void StorageServicePage::slotCopyFileDone(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(filename);
+    updateList(serviceName);
+}
+
+void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QString &filename)
 {
     Q_UNUSED(filename);
     updateList(serviceName);

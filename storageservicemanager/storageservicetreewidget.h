@@ -69,6 +69,9 @@ private Q_SLOTS:
     void slotPasteFile();
 
 private:
+    void readConfig();
+    void writeConfig();
+
     enum CopyType {
         UnknownType = 0,
         FileType = 1,
