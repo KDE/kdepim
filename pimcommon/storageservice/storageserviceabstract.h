@@ -57,14 +57,16 @@ public:
         DownloadFileCapability = 8,
         RenameFileCapabilitity = 16,
         MoveFileCapability = 32,
+        CopyFileCapability = 64,
         //Folder
-        CreateFolderCapability = 64,
-        DeleteFolderCapability = 128,
-        ListFolderCapability = 256,
-        RenameFolderCapability = 512,
-        MoveFolderCapability = 1024,
+        CreateFolderCapability = 128,
+        DeleteFolderCapability = 256,
+        ListFolderCapability = 512,
+        RenameFolderCapability = 1024,
+        MoveFolderCapability = 2048,
+        CopyFolderCapability = 4096,
         //Share
-        ShareLinkCapability = 2048
+        ShareLinkCapability = 8192
     };
 
     Q_ENUMS(Capability)
@@ -83,18 +85,20 @@ public:
         DeleteFile,
         RenameFile,
         MoveFile,
+        CopyFile,
         //Folder
         CreateFolder,
         ListFolder,
         CreateServiceFolder,
         DeleteFolder,
         RenameFolder,
-        MoveFolder
+        MoveFolder,
+        CopyFolder
     };
 
     bool isInProgress() const;
 
-    virtual void downloadFile(const QString &filename);
+    virtual void downloadFile(const QString &filename, const QString &destination);
     virtual void uploadFile(const QString &filename);
     virtual void accountInfo();
     virtual void createFolder(const QString &folder);
@@ -108,12 +112,14 @@ public:
     virtual void renameFile(const QString &source, const QString &destination);
     virtual void moveFile(const QString &source, const QString &destination);
     virtual void moveFolder(const QString &source, const QString &destination);
+    virtual void copyFile(const QString &source, const QString &destination);
+    virtual void copyFolder(const QString &source, const QString &destination);
 
     virtual QString storageServiceName() const = 0;
     virtual KIcon icon() const = 0;
     virtual void removeConfig() = 0;
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
-    virtual void fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
+    virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
     virtual bool hasProgressIndicatorSupport() const;
 
 Q_SIGNALS:
@@ -133,6 +139,8 @@ Q_SIGNALS:
     void renameFileDone(const QString &serviceName, const QString &folderName);
     void moveFolderDone(const QString &serviceName, const QString &folderName);
     void moveFileDone(const QString &serviceName, const QString &folderName);
+    void copyFileDone(const QString &serviceName, const QString &folderName);
+    void copyFolderDone(const QString &serviceName, const QString &folderName);
     void inProgress(bool state);
 
 protected slots:
@@ -150,8 +158,11 @@ protected slots:
     void slotRenameFileDone(const QString &filename);
     void slotMoveFolderDone(const QString &folderName);
     void slotMoveFileDone(const QString &filename);
+    void slotCopyFileDone(const QString &filename);
+    void slotCopyFolderDone(const QString &filename);
+
 protected:
-    virtual void storageServicedownloadFile(const QString &filename) = 0;
+    virtual void storageServicedownloadFile(const QString &filename, const QString &destination) = 0;
     virtual void storageServiceuploadFile(const QString &filename) = 0;
     virtual void storageServiceaccountInfo() = 0;
     virtual void storageServicecreateFolder(const QString &folder) = 0;
@@ -165,6 +176,8 @@ protected:
     virtual void storageServiceRenameFile(const QString &source, const QString &destination) = 0;
     virtual void storageServiceMoveFolder(const QString &source, const QString &destination) = 0;
     virtual void storageServiceMoveFile(const QString &source, const QString &destination) = 0;
+    virtual void storageServiceCopyFile(const QString &source, const QString &destination) = 0;
+    virtual void storageServiceCopyFolder(const QString &source, const QString &destination) = 0;
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
     NextAction *mNextAction;
@@ -187,8 +200,9 @@ public:
     void setNextActionFolder(const QString &foldername) { mNextActionFolder = foldername; }
     void setRootPath(const QString &path) { mRootPath = path; }
     void setPath(const QString &path) { mPath = path; }
-
     void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
+
+    void setDownloadDestination(const QString &destination) { mDownLoadDestination = destination; }
 
     StorageServiceAbstract::ActionType nextActionType() const { return mNextAction; }
     QString nextActionFileName() const { return mNextActionFileName; }
@@ -197,7 +211,7 @@ public:
     QString path() const { return mPath; }
     QString renameSource() const { return mRenameSource; }
     QString renameDestination() const { return mRenameDestination; }
-
+    QString downloadDestination() const { return mDownLoadDestination; }
 private:
     StorageServiceAbstract::ActionType mNextAction;
     QString mRootPath;
@@ -206,6 +220,7 @@ private:
     QString mNextActionFolder;
     QString mRenameSource;
     QString mRenameDestination;
+    QString mDownLoadDestination;
 };
 
 }

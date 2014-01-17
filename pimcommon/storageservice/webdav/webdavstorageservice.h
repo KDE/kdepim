@@ -43,7 +43,7 @@ public:
     void removeConfig();
     void storageServiceauthentication();
     void storageServiceShareLink(const QString &root, const QString &path);
-    void storageServicedownloadFile(const QString &filename);
+    void storageServicedownloadFile(const QString &filename, const QString &destination);
     void storageServicecreateServiceFolder();
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
@@ -51,9 +51,11 @@ public:
     void storageServiceRenameFile(const QString &source, const QString &destination);
     void storageServiceMoveFolder(const QString &source, const QString &destination);
     void storageServiceMoveFile(const QString &source, const QString &destination);
+    void storageServiceCopyFile(const QString &source, const QString &destination);
+    void storageServiceCopyFolder(const QString &source, const QString &destination);
 
     StorageServiceAbstract::Capabilities capabilities() const;
-    void fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
+    QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
 
 
     QString storageServiceName() const;

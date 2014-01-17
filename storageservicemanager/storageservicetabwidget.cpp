@@ -20,6 +20,7 @@
 
 #include "storageservicetabwidget.h"
 #include "storageservicepage.h"
+#include "storageservice/storageserviceabstract.h"
 
 #include <QMap>
 
@@ -35,7 +36,24 @@ StorageServiceTabWidget::~StorageServiceTabWidget()
 
 void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
 {
-    //TODO
+    QMapIterator<QString, PimCommon::StorageServiceAbstract*> i(list);
+    while (i.hasNext()) {
+        i.next();
+        bool foundPage = false;
+        for (int nbPage=0; nbPage < count(); ++nbPage) {
+            StorageServicePage *page = static_cast<StorageServicePage*>(widget(nbPage));
+            if (i.value()->storageServiceName() == page->serviceName()) {
+                foundPage = true;
+                break;
+            }
+        }
+        if (!foundPage) {
+            createPage(i.key(), i.value());
+        } else {
+            //TODO update page ?
+        }
+    }
+    //TODO remove service ?
 }
 
 void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
@@ -136,4 +154,10 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServiceTabWidget::capabil
             return page->capabilities();
     }
     return PimCommon::StorageServiceAbstract::NoCapability;
+}
+
+bool StorageServiceTabWidget::hasUploadDownloadProgress() const
+{
+    //TODO
+    return false;
 }

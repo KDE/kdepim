@@ -39,14 +39,15 @@ public:
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
     void createServiceFolder();
-    void downloadFile(const QString &filename);
+    void downloadFile(const QString &filename, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
     void moveFile(const QString &source, const QString &destination);
-
+    void copyFile(const QString &source, const QString &destination);
+    void copyFolder(const QString &source, const QString &destination);
 
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
@@ -64,6 +65,8 @@ protected:
     virtual void parseUploadFile(const QString &data);
     virtual void parseCreateFolder(const QString &data);
     virtual void parseAccountInfo(const QString &data);
+    virtual void parseDeleteFile(const QString &data);
+    virtual void parseDeleteFolder(const QString &data);
     virtual void refreshToken();
     QString mServiceUrl;
     QUrl mAuthUrl;
@@ -84,7 +87,7 @@ protected:
     bool mNeedRefreshToken;
 
 private:
-    void shareLink(const QString &fileId);
+    void shareLink(const QString &fileId);    
 };
 }
 

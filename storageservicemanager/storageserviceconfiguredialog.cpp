@@ -20,24 +20,55 @@
 
 #include "storageserviceconfiguredialog.h"
 #include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
+#include "pimcommon/widgets/configureimmutablewidgetutils.h"
+#include "storageservicemanagerglobalconfig.h"
 
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KUrlRequester>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
 
 StorageServiceConfigureDialog::StorageServiceConfigureDialog(QWidget *parent)
     : KDialog(parent)
 {
     setCaption( i18n( "Configure" ) );
     setButtons( Cancel | Ok  );
+    QWidget *w = new QWidget;
+    setMainWidget(w);
+    QVBoxLayout *lay = new QVBoxLayout;
+    w->setLayout(lay);
     mStorageSettings = new PimCommon::StorageServiceSettingsWidget;
-    setMainWidget(mStorageSettings);
+    lay->addWidget(mStorageSettings);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    lay->addLayout(hbox);
+    QLabel *lab = new QLabel(i18n("Default Download Folder:"));
+    lay->addWidget(lab);
+    mDownloadFolder = new KUrlRequester;
+    mDownloadFolder->setMode(KFile::Directory|KFile::LocalOnly);
+    lay->addWidget(mDownloadFolder);
     readConfig();
+    loadSettings();
 }
 
 StorageServiceConfigureDialog::~StorageServiceConfigureDialog()
 {
     writeConfig();
+}
+
+void StorageServiceConfigureDialog::loadSettings()
+{
+    PimCommon::ConfigureImmutableWidgetUtils::loadWidget(mDownloadFolder, StorageServiceManagerGlobalConfig::self()->downloadDirectoryItem());
+}
+
+void StorageServiceConfigureDialog::writeSettings()
+{
+    PimCommon::ConfigureImmutableWidgetUtils::saveUrlRequester(mDownloadFolder, StorageServiceManagerGlobalConfig::self()->downloadDirectoryItem());
+    StorageServiceManagerGlobalConfig::self()->writeConfig();
 }
 
 QMap<QString, PimCommon::StorageServiceAbstract *> StorageServiceConfigureDialog::listService() const
@@ -57,6 +88,7 @@ void StorageServiceConfigureDialog::readConfig()
     if ( size.isValid() ) {
         resize( size );
     }
+    //TODO load default download path
 }
 
 void StorageServiceConfigureDialog::writeConfig()

@@ -45,8 +45,9 @@ public:
     void uploadFile();
     void downloadFile();
     void deleteFile();
-    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;    
+    PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
     QString serviceName() const;
+    bool hasUploadDownloadProgress() const;
 
 Q_SIGNALS:
     void updatePixmap(const QPixmap &pix, StorageServicePage *page);
@@ -72,17 +73,24 @@ private Q_SLOTS:
     void slotGoToFolder(const QString &folder);
     void slotRenameFolderDone(const QString &serviceName, const QString &fileName);
     void slotRenameFileDone(const QString &serviceName, const QString &fileName);
+    void slotMoveUp();
+    void slotMoveFileDone(const QString &serviceName, const QString &filename);
+    void slotMoveFolderDone(const QString &serviceName, const QString &filename);
+    void slotCopyFileDone(const QString &serviceName, const QString &filename);
+    void slotCopyFolderDone(const QString &serviceName, const QString &filename);
+
 private:
     bool verifyService(const QString &serviceName);
     inline void updateList(const QString &serviceName);
     void connectStorageService();
     QString mServiceName;
-    QString mCurrentFolder;
+    QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
     StorageServiceTreeWidget *mListWidget;
     StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
     QProgressBar *mProgressBar;
+    bool mDownloadUploadProgress;
 };
 
 #endif // STORAGESERVICEPAGE_H

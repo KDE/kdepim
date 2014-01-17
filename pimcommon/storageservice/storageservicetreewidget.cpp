@@ -24,6 +24,7 @@
 #include <KLocalizedString>
 
 #include <QTreeWidgetItem>
+#include <QHeaderView>
 #include <QDebug>
 
 using namespace PimCommon;
@@ -37,6 +38,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(QWidget *parent)
     QStringList lst;
     lst << i18n("Name") << i18n("Size") << i18n("Created") << i18n("Last Modified");
     setHeaderLabels(lst);
+    header()->setMovable(false);
 }
 
 StorageServiceTreeWidget::~StorageServiceTreeWidget()

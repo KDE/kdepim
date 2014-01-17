@@ -42,7 +42,8 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     : QWidget(parent),
       mServiceName(serviceName),
       mStorageService(storageService),
-      mProgressBar(0)
+      mProgressBar(0),
+      mDownloadUploadProgress(false)
 {
     mProgressIndicator = new StorageServiceProgressIndicator(this);
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
@@ -50,6 +51,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     setLayout(vbox);
     mListWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mListWidget, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
+    connect(mListWidget, SIGNAL(moveUp()), this, SLOT(slotMoveUp()));
     vbox->addWidget(mListWidget);
 
     if (mStorageService->hasProgressIndicatorSupport()) {
@@ -70,6 +72,11 @@ StorageServicePage::~StorageServicePage()
 QString StorageServicePage::serviceName() const
 {
     return mStorageService->storageServiceName();
+}
+
+bool StorageServicePage::hasUploadDownloadProgress() const
+{
+    return mDownloadUploadProgress;
 }
 
 void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
@@ -93,6 +100,10 @@ void StorageServicePage::connectStorageService()
     connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
     connect(mStorageService, SIGNAL(renameFolderDone(QString,QString)), this, SLOT(slotRenameFolderDone(QString,QString)));
     connect(mStorageService, SIGNAL(renameFileDone(QString,QString)), this, SLOT(slotRenameFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(moveFileDone(QString,QString)), this, SLOT(slotMoveFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(moveFolderDone(QString,QString)), this, SLOT(slotMoveFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(copyFolderDone(QString,QString)), this, SLOT(slotCopyFolderDone(QString,QString)));
+    connect(mStorageService, SIGNAL(copyFileDone(QString,QString)), this, SLOT(slotCopyFileDone(QString,QString)));
 }
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
@@ -181,7 +192,7 @@ void StorageServicePage::createFolder()
 
 void StorageServicePage::refreshList()
 {
-    mStorageService->listFolder(mCurrentFolder);
+    mStorageService->listFolder(mListWidget->currentFolder());
 }
 
 void StorageServicePage::accountInfo()
@@ -223,7 +234,8 @@ void StorageServicePage::slotListFolderDone(const QString &serviceName, const QS
 {
     if (verifyService(serviceName)) {
         mListWidget->setIsInitialized();
-        mStorageService->fillListWidget(mListWidget, data);
+        const QString parentFolder = mStorageService->fillListWidget(mListWidget, data);
+        mParentFolder = parentFolder;
     }
 }
 
@@ -246,10 +258,39 @@ void StorageServicePage::slotDeleteFileDone(const QString &serviceName, const QS
     updateList(serviceName);
 }
 
+void StorageServicePage::slotMoveFileDone(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(filename);
+    updateList(serviceName);
+}
+
+void StorageServicePage::slotMoveFolderDone(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(filename);
+    updateList(serviceName);
+}
+
+void StorageServicePage::slotCopyFileDone(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(filename);
+    updateList(serviceName);
+}
+
+void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QString &filename)
+{
+    Q_UNUSED(filename);
+    updateList(serviceName);
+}
+
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
-    //TODO verify it when we go up.
-    mCurrentFolder = folder;
+    mListWidget->setCurrentFolder(folder);
+    QTimer::singleShot(0, this, SLOT(refreshList()));
+}
+
+void StorageServicePage::slotMoveUp()
+{
+    mListWidget->setCurrentFolder(mParentFolder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 

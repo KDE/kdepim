@@ -26,7 +26,6 @@
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
-
 #include <KStandardAction>
 #include <KLocalizedString>
 #include <KActionCollection>
@@ -36,6 +35,8 @@
 #include <KStatusBar>
 
 #include <QPointer>
+#include <QLabel>
+#include <QDebug>
 
 
 StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
@@ -58,15 +59,19 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     setupGUI();
     readConfig();
     mStorageServiceTabWidget->setListStorageService(mStorageManager->listService());
+    mStatusBarInfo = new QLabel;
+    statusBar()->insertWidget(0, mStatusBarInfo);
     slotUpdateActions();
 }
 
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 {
+    delete mStorageServiceTabWidget;
     KSharedConfig::Ptr config = KGlobal::config();
 
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
     group.writeEntry( "Size", size() );
+    qDebug()<<" StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
 }
 
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
@@ -91,7 +96,7 @@ void StorageServiceManagerMainWindow::slotUpdateActions()
 void StorageServiceManagerMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
-    KStandardAction::quit(this, SLOT(close()), ac );
+    KStandardAction::quit(this, SLOT(slotClose()), ac );
 
     KAction *act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
     act->setText(i18n("Add Storage Service..."));
@@ -126,6 +131,13 @@ void StorageServiceManagerMainWindow::slotAddStorageService()
 
 }
 
+void StorageServiceManagerMainWindow::slotClose()
+{
+    if (!mStorageServiceTabWidget->hasUploadDownloadProgress()) {
+        close();
+    }
+}
+
 void StorageServiceManagerMainWindow::slotConfigure()
 {
     QPointer<StorageServiceConfigureDialog> dlg = new StorageServiceConfigureDialog(this);
@@ -133,6 +145,7 @@ void StorageServiceManagerMainWindow::slotConfigure()
     if (dlg->exec()) {
         mStorageManager->setListService(dlg->listService());
         mStorageServiceTabWidget->updateListService(dlg->listService());
+        dlg->writeSettings();
     }
     delete dlg;
 }
@@ -149,6 +162,6 @@ void StorageServiceManagerMainWindow::readConfig()
 
 void StorageServiceManagerMainWindow::slotSetStatusBarMessage(const QString &message)
 {
-    statusBar()->insertItem(message,0);
+    mStatusBarInfo->setText(message);
 }
 

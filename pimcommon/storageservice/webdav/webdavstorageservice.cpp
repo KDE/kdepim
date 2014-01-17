@@ -75,17 +75,18 @@ void WebDavStorageService::storageServiceShareLink(const QString &root, const QS
     }
 }
 
-void WebDavStorageService::storageServicedownloadFile(const QString &filename)
+void WebDavStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename);
+        job->downloadFile(filename, destination);
     }
 }
 
@@ -107,7 +108,7 @@ void WebDavStorageService::storageServicedeleteFile(const QString &filename)
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionFileName(filename);
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
@@ -121,7 +122,7 @@ void WebDavStorageService::storageServicedeleteFolder(const QString &foldername)
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(DeleteFolder);
         mNextAction->setNextActionFileName(foldername);
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
@@ -135,7 +136,7 @@ void WebDavStorageService::storageServiceRenameFolder(const QString &source, con
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
@@ -149,7 +150,7 @@ void WebDavStorageService::storageServiceRenameFile(const QString &source, const
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
@@ -163,7 +164,7 @@ void WebDavStorageService::storageServiceMoveFolder(const QString &source, const
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
@@ -177,7 +178,7 @@ void WebDavStorageService::storageServiceMoveFile(const QString &source, const Q
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
@@ -186,14 +187,44 @@ void WebDavStorageService::storageServiceMoveFile(const QString &source, const Q
     }
 }
 
+void WebDavStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
+{
+    if (mServiceLocation.isEmpty()) {
+        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFile(source, destination);
+    }
+}
+
+void WebDavStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
+{
+    if (mServiceLocation.isEmpty()) {
+        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        WebDavJob *job = new WebDavJob(this);
+        connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFolder(source, destination);
+    }
+}
+
+
 StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 {
     return serviceCapabilities();
 }
 
-void WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    return QString();
 }
 
 void WebDavStorageService::storageServicelistFolder(const QString &folder)
@@ -294,6 +325,9 @@ StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
     //cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
+
 
     return cap;
 }

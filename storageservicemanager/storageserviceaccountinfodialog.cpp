@@ -23,12 +23,21 @@
 
 #include <KLocalizedString>
 
+#include <QVBoxLayout>
+#include <QLabel>
+
 StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const PimCommon::AccountInfo &accountInfo, QWidget *parent)
     : KDialog(parent)
 {
     setCaption(i18n("Account Info"));
     setButtons(Close);
-    //TODO add infos
+    QWidget *w = new QWidget;
+    setMainWidget(w);
+    QVBoxLayout *vbox = new QVBoxLayout;
+    w->setLayout(vbox);
+    vbox->addWidget(new QLabel(i18n("Size: %1", accountInfo.accountSize)));
+    vbox->addWidget(new QLabel(i18n("Quota: %1", accountInfo.quota)));
+    vbox->addWidget(new QLabel(i18n("Shared: %1", accountInfo.shared)));
 }
 
 StorageServiceAccountInfoDialog::~StorageServiceAccountInfoDialog()

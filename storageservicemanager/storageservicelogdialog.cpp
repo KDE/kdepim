@@ -20,6 +20,7 @@
 
 #include "storageservicelogdialog.h"
 #include "pimcommon/texteditor/richtexteditor/richtexteditorwidget.h"
+#include "pimcommon/texteditor/richtexteditor/richtexteditor.h"
 #include "pimcommon/util/pimutil.h"
 
 #include <KLocalizedString>
@@ -40,13 +41,19 @@ StorageServiceLogDialog::StorageServiceLogDialog(QWidget *parent)
     mLog->setReadOnly(true);
     readConfig();
     setMainWidget(mLog);
-    connect(this, SIGNAL(user1Clicked()), this, SIGNAL(clearLog()));
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotClearLog()));
     connect(this, SIGNAL(user2Clicked()), this, SLOT(slotSaveAs()));
 }
 
 StorageServiceLogDialog::~StorageServiceLogDialog()
 {
     writeConfig();
+}
+
+void StorageServiceLogDialog::slotClearLog()
+{
+    mLog->editor()->clear();
+    Q_EMIT clearLog();
 }
 
 void StorageServiceLogDialog::slotSaveAs()

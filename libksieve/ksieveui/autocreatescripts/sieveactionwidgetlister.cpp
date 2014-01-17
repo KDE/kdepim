@@ -199,6 +199,7 @@ void SieveActionWidget::slotAddComment()
         dlg->setDescription(comment);
         if (dlg->exec()) {
             action->setComment(dlg->description());
+            Q_EMIT valueChanged();
         }
         delete dlg;
     }
@@ -220,6 +221,7 @@ void SieveActionWidget::slotActionChanged(int index)
         setFilterAction( 0 );
         mHelpButton->setEnabled(false);
     }
+    Q_EMIT valueChanged();
 }
 
 void SieveActionWidget::slotAddWidget()

@@ -19,14 +19,18 @@
 */
 
 #include "storageservicetreewidget.h"
+#include "storageservice/storageserviceabstract.h"
+#include "storageservicemanagerglobalconfig.h"
 
 #include <KMenu>
 #include <KInputDialog>
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KGlobalSettings>
+#include <KMessageBox>
 
 #include <QPainter>
+#include <QHeaderView>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : PimCommon::StorageServiceTreeWidget(parent),
@@ -41,12 +45,25 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
     connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotGeneralFontChanged()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
-
+    readConfig();
 }
 
 StorageServiceTreeWidget::~StorageServiceTreeWidget()
 {
+    qDebug()<<" StorageServiceTreeWidget::~StorageServiceTreeWidget()";
+    writeConfig();
+}
 
+void StorageServiceTreeWidget::writeConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "StorageServiceTreeWidget" );
+    grp.writeEntry(mStorageService->storageServiceName(), header()->saveState());
+}
+
+void StorageServiceTreeWidget::readConfig()
+{
+    KConfigGroup grp( KGlobal::config(), "StorageServiceTreeWidget" );
+    header()->restoreState( grp.readEntry( mStorageService->storageServiceName(), QByteArray() ) );
 }
 
 void StorageServiceTreeWidget::slotGeneralPaletteChanged()
@@ -69,6 +86,9 @@ void StorageServiceTreeWidget::setIsInitialized()
 
 void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
 {
+    if (!mInitialized)
+        return;
+
     KMenu *menu = new KMenu( this );
     menu->addAction( i18n("Up"), this, SLOT(slotMoveUp()));
     const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
@@ -85,11 +105,20 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 menu->addAction(i18n("Share File"), this, SLOT(slotShareFile()));
             if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
                 menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
+            if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFileCapability)
+                menu->addAction(i18n("Cut"), this, SLOT(slotCutFile()));
+            if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFileCapability)
+                menu->addAction(i18n("Copy"), this, SLOT(slotCopyFile()));
+
         } else if (type == StorageServiceTreeWidget::Folder) {
             if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability)
                 menu->addAction(i18n("Rename Folder"), this, SLOT(slotRenameFolder()));
             if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability)
                 menu->addAction(i18n("Delete Folder"), this, SLOT(slotDeleteFolder()));
+            if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability)
+                menu->addAction(i18n("Cut"), this, SLOT(slotCutFolder()));
+            if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFolderCapability)
+                menu->addAction(i18n("Copy"), this, SLOT(slotCopyFolder()));
         }
     }
     QAction *act = new QAction(menu);
@@ -102,8 +131,51 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
     menu->addAction(act);
     if (mCapabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability)
         menu->addAction(i18n("Create Folder"), this, SLOT(slotCreateFolder()));
+
+    if (mCopyItem.moveItem) {
+        if (mCopyItem.type == FileType) {
+            if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFileCapability) {
+                menu->addAction(i18n("Paste"), this, SLOT(slotMoveFile()));
+            }
+        } else if (mCopyItem.type == FolderType) {
+            if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability) {
+                menu->addAction(i18n("Paste"), this, SLOT(slotMoveFolder()));
+            }
+        }
+    } else {
+        if (mCopyItem.type == FileType) {
+            if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFileCapability) {
+                menu->addAction(i18n("Paste"), this, SLOT(slotPasteFile()));
+            }
+        } else if (mCopyItem.type == FolderType) {
+            if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFolderCapability) {
+                menu->addAction(i18n("Paste"), this, SLOT(slotPasteFolder()));
+            }
+        }
+    }
+
     menu->exec( mapToGlobal( pos ) );
     delete menu;
+}
+
+void StorageServiceTreeWidget::slotMoveFolder()
+{
+    mStorageService->moveFolder(mCopyItem.identifier, mCurrentFolder);
+}
+
+void StorageServiceTreeWidget::slotMoveFile()
+{
+    mStorageService->moveFile(mCopyItem.identifier, mCurrentFolder);
+}
+
+void StorageServiceTreeWidget::slotPasteFolder()
+{
+    mStorageService->copyFolder(mCopyItem.identifier, mCurrentFolder);
+}
+
+void StorageServiceTreeWidget::slotPasteFile()
+{
+    mStorageService->copyFile(mCopyItem.identifier, mCurrentFolder);
 }
 
 void StorageServiceTreeWidget::slotRenameFolder()
@@ -140,23 +212,29 @@ void StorageServiceTreeWidget::slotDeleteFolder()
 {
     if (itemTypeSelected() == StorageServiceTreeWidget::Folder) {
         const QString folder = itemIdentifierSelected();
-        if (!folder.isEmpty()) {
-            mStorageService->deleteFolder(folder);
+        const QString name = currentItem()->text(0);
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name))) {
+            if (!folder.isEmpty()) {
+                mStorageService->deleteFolder(folder);
+            }
         }
     }
 }
 
 void StorageServiceTreeWidget::slotMoveUp()
 {
-    //TODO ?
+    Q_EMIT moveUp();
 }
 
 void StorageServiceTreeWidget::slotDeleteFile()
 {
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         const QString filename = itemIdentifierSelected();
-        if (!filename.isEmpty()) {
-            mStorageService->deleteFile(filename);
+        const QString name = currentItem()->text(0);
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Are you sure that you want to delete \"%1\"?", name) )) {
+            if (!filename.isEmpty()) {
+                mStorageService->deleteFile(filename);
+            }
         }
     }
 }
@@ -176,7 +254,13 @@ void StorageServiceTreeWidget::slotDownloadFile()
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         const QString filename = itemIdentifierSelected();
         if (!filename.isEmpty()) {
-            mStorageService->downloadFile(filename);
+            QString destination = StorageServiceManagerGlobalConfig::self()->downloadDirectory();
+            if (destination.isEmpty()) {
+                destination = KFileDialog::getExistingDirectory(KUrl(), this);
+                if (destination.isEmpty())
+                    return;
+            }
+            mStorageService->downloadFile(filename, destination);
         }
     }
 }
@@ -214,8 +298,45 @@ void StorageServiceTreeWidget::paintEvent( QPaintEvent *event )
             slotGeneralPaletteChanged();
         }
         p.setPen( mTextColor );
-        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n("Storage service no initialized.") );
+        p.drawText( QRect( 0, 0, width(), height() ), Qt::AlignCenter, i18n("Storage service not initialized.") );
     }
 }
 
 
+void StorageServiceTreeWidget::slotCutFile()
+{
+    mCopyItem.moveItem = true;
+    mCopyItem.type = FileType;
+    mCopyItem.identifier = itemIdentifierSelected();
+}
+
+void StorageServiceTreeWidget::slotCutFolder()
+{
+    mCopyItem.moveItem = true;
+    mCopyItem.type = FolderType;
+    mCopyItem.identifier = itemIdentifierSelected();
+}
+
+void StorageServiceTreeWidget::slotCopyFile()
+{
+    mCopyItem.moveItem = false;
+    mCopyItem.type = FileType;
+    mCopyItem.identifier = itemIdentifierSelected();
+}
+
+void StorageServiceTreeWidget::slotCopyFolder()
+{
+    mCopyItem.moveItem = false;
+    mCopyItem.type = FolderType;
+    mCopyItem.identifier = itemIdentifierSelected();
+}
+
+void StorageServiceTreeWidget::setCurrentFolder(const QString &folder)
+{
+    mCurrentFolder = folder;
+}
+
+QString StorageServiceTreeWidget::currentFolder() const
+{
+    return mCurrentFolder;
+}

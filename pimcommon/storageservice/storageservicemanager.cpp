@@ -94,6 +94,8 @@ QMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstra
                 case PimCommon::StorageServiceAbstract::RenameFileCapabilitity:
                 case PimCommon::StorageServiceAbstract::MoveFolderCapability:
                 case PimCommon::StorageServiceAbstract::MoveFileCapability:
+                case PimCommon::StorageServiceAbstract::CopyFileCapability:
+                case PimCommon::StorageServiceAbstract::CopyFolderCapability:
                     qDebug()<<" not implemented ";
                     break;
                 case PimCommon::StorageServiceAbstract::ShareLinkCapability:

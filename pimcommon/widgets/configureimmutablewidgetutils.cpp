@@ -21,6 +21,7 @@
 #include <KLocalizedString>
 #include <KDialog>
 #include <KUrlRequester>
+#include <KIntSpinBox>
 
 #include <QWidget>
 #include <QLineEdit>
@@ -30,6 +31,8 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QRadioButton>
+#include <QSpinBox>
+
 using namespace PimCommon;
 
 static const char * lockedDownWarning =
@@ -93,6 +96,29 @@ void ConfigureImmutableWidgetUtils::loadWidget( QGroupBox * box, QButtonGroup * 
     checkLockDown( box, e );
     group->buttons()[e->value()]->setChecked( true );
 }
+
+void ConfigureImmutableWidgetUtils::loadWidget( QSpinBox * b, const KCoreConfigSkeleton::ItemInt *e )
+{
+    checkLockDown( b, e );
+    b->setValue( e->value() );
+}
+
+void ConfigureImmutableWidgetUtils::saveSpinBox( QSpinBox * b, KCoreConfigSkeleton::ItemInt *e )
+{
+    e->setValue( b->value() );
+}
+
+void ConfigureImmutableWidgetUtils::loadWidget( KIntSpinBox * b, const KCoreConfigSkeleton::ItemInt *e )
+{
+    checkLockDown( b, e );
+    b->setValue( e->value() );
+}
+
+void ConfigureImmutableWidgetUtils::saveKIntSpinBox( KIntSpinBox * b, KCoreConfigSkeleton::ItemInt *e )
+{
+    e->setValue( b->value() );
+}
+
 
 void ConfigureImmutableWidgetUtils::saveCheckBox( QCheckBox * b, KCoreConfigSkeleton::ItemBool *e )
 {

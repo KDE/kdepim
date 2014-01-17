@@ -111,6 +111,7 @@ void SieveScriptBlockWidget::slotAddBlock()
         break;
     }
 
+    Q_EMIT valueChanged();
     Q_EMIT addNewBlock(this, type);
 }
 
@@ -159,6 +160,7 @@ void SieveScriptBlockWidget::slotRadioClicked(QAbstractButton* button)
     } else {
         mMatchCondition = AllCondition;
     }
+    Q_EMIT valueChanged();
     updateWidget();
 }
 

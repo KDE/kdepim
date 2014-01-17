@@ -48,6 +48,8 @@ void BoxStorageService::readConfig()
     mToken = grp.readEntry("Token");
     if (grp.hasKey("Expire Time"))
         mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
+    else
+        mExpireDateTime = QDateTime::currentDateTime();
 }
 
 void BoxStorageService::removeConfig()
@@ -84,6 +86,13 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
     emitAuthentificationDone();
 }
 
+bool BoxStorageService::needToRefreshToken() const
+{
+    if (mExpireDateTime < QDateTime::currentDateTime())
+        return true;
+    else
+        return false;
+}
 
 void BoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
@@ -101,18 +110,19 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
     }
 }
 
-void BoxStorageService::storageServicedownloadFile(const QString &filename)
+void BoxStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename);
+        job->downloadFile(filename, destination);
     }
 }
 
@@ -203,6 +213,36 @@ void BoxStorageService::storageServiceMoveFile(const QString &source, const QStr
         connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->moveFile(source, destination);
+    }
+}
+
+void BoxStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFile);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFile(source, destination);
+    }
+}
+
+void BoxStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFolder(source, destination);
     }
 }
 
@@ -301,12 +341,14 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
-    //cap |= DeleteFileCapability;
+    cap |= DeleteFileCapability;
     //cap |= ShareLinkCapability;
     //cap |= RenameFolderCapability;
     //cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
     return cap;
 }
 
@@ -340,20 +382,38 @@ void BoxStorageService::storageServicecreateServiceFolder()
     }
 }
 
-void BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
     QJson::Parser parser;
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    //qDebug()<<" info"<<info;
+    qDebug()<<" info "<<info;
+    QString parentId;
+    if (info.contains(QLatin1String("id"))) {
+        parentId = info.value(QLatin1String("id")).toString();
+    }
     if (info.contains(QLatin1String("item_collection"))) {
         const QVariantMap itemCollection = info.value(QLatin1String("item_collection")).toMap();
-        qDebug()<<" itemCollection"<<itemCollection;
         if (itemCollection.contains(QLatin1String("entries"))) {
-            const QVariantMap entries = itemCollection.value(QLatin1String("entries")).toMap();
-            qDebug()<<" entries !"<<entries;
+            const QVariantList entries = itemCollection.value(QLatin1String("entries")).toList();
+            Q_FOREACH (const QVariant &v, entries) {
+                const QVariantMap mapEntries = v.toMap();
+                if (mapEntries.contains(QLatin1String("type"))) {
+                    const QString type = mapEntries.value(QLatin1String("type")).toString();
+                    const QString name = mapEntries.value(QLatin1String("name")).toString();
+                    const QString id = mapEntries.value(QLatin1String("id")).toString();
+                    if (type == QLatin1String("folder")) {
+                        listWidget->addFolder(name, id);
+                    } else if (type == QLatin1String("file")) {
+                        listWidget->addFile(name, id);
+                    }
+                }
+                //qDebug()<<" v"<<v;
+            }
         }
     }
+    qDebug()<<" parentId"<<parentId;
+    return parentId;
 }

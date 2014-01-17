@@ -33,3 +33,4 @@ Icon=kmail
 MimeType=application/mbox;
 Categories=Qt;KDE;Office;Network;Email;
 X-KDE-StartupNotify=true
+Hidden=true

@@ -33,8 +33,12 @@ public:
 
     void setIsInitialized();
 
+    void setCurrentFolder(const QString &folder);
+    QString currentFolder() const;
+
 Q_SIGNALS:
     void goToFolder(const QString &folder);
+    void moveUp();
 
 public Q_SLOTS:
     void slotCreateFolder();
@@ -55,10 +59,42 @@ private Q_SLOTS:
     void slotRenameFolder();
     void slotGeneralPaletteChanged();
     void slotGeneralFontChanged();
+    void slotCutFile();
+    void slotCutFolder();
+    void slotCopyFile();
+    void slotCopyFolder();
+    void slotMoveFolder();
+    void slotMoveFile();
+    void slotPasteFolder();
+    void slotPasteFile();
+
 private:
+    void readConfig();
+    void writeConfig();
+
+    enum CopyType {
+        UnknownType = 0,
+        FileType = 1,
+        FolderType = 2
+    };
+
+    struct copyCutItem {
+        copyCutItem()
+            : moveItem(false),
+              type(UnknownType)
+        {
+
+        }
+        bool moveItem;
+        CopyType type;
+        QString identifier;
+    };
+
     QColor mTextColor;
-    PimCommon::StorageServiceAbstract *mStorageService;
+    copyCutItem mCopyItem;
+    QString mCurrentFolder;
     PimCommon::StorageServiceAbstract::Capabilities mCapabilities;
+    PimCommon::StorageServiceAbstract *mStorageService;
     bool mInitialized;
 };
 

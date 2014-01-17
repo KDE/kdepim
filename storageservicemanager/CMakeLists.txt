@@ -7,8 +7,12 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/pimcommon/
 )
 
+set( storageservicemanager_kcfg_SRCS settings/storageservicemanagerglobalconfig.kcfgc )
+
+kde4_add_kcfg_files(storageservicemanager_kcfg_SRCS ${storageservicemanager_kcfg_SRCS})
 
 set(storageservicemanager_SRCS
+  ${storageservicemanager_kcfg_SRCS}
   main.cpp
   storageservicemanagermainwindow.cpp
   storageservicepage.cpp

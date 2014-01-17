@@ -48,6 +48,26 @@ UbuntuOneJob::~UbuntuOneJob()
 
 }
 
+void UbuntuOneJob::copyFile(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
+void UbuntuOneJob::copyFolder(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
 void UbuntuOneJob::requestTokenAccess()
 {
     mActionType = PimCommon::StorageServiceAbstract::RequestToken;
@@ -186,6 +206,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::RenameFile:
         case PimCommon::StorageServiceAbstract::MoveFolder:
         case PimCommon::StorageServiceAbstract::MoveFile:
+        case PimCommon::StorageServiceAbstract::CopyFile:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -229,6 +250,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::RenameFile:
     case PimCommon::StorageServiceAbstract::MoveFolder:
     case PimCommon::StorageServiceAbstract::MoveFile:
+    case PimCommon::StorageServiceAbstract::CopyFile:
 
         //TODO
         deleteLater();
@@ -270,7 +292,7 @@ void UbuntuOneJob::createServiceFolder()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void UbuntuOneJob::downloadFile(const QString &filename)
+void UbuntuOneJob::downloadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;

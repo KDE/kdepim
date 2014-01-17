@@ -43,14 +43,14 @@ void StorageServiceAbstract::changeProgressState(bool state)
     Q_EMIT inProgress(state);
 }
 
-void StorageServiceAbstract::downloadFile(const QString &filename)
+void StorageServiceAbstract::downloadFile(const QString &filename, const QString &destination)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";
         return;
     }
     changeProgressState(true);
-    storageServicedownloadFile(filename);
+    storageServicedownloadFile(filename, destination);
 }
 
 void StorageServiceAbstract::uploadFile(const QString &filename)
@@ -184,6 +184,26 @@ void StorageServiceAbstract::moveFolder(const QString &source, const QString &de
     storageServiceMoveFolder(source, destination);
 }
 
+void StorageServiceAbstract::copyFile(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceCopyFile(source, destination);
+}
+
+void StorageServiceAbstract::copyFolder(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceCopyFolder(source, destination);
+}
+
 bool StorageServiceAbstract::hasProgressIndicatorSupport() const
 {
     return false;
@@ -218,7 +238,7 @@ void StorageServiceAbstract::executeNextAction()
         storageServicecreateServiceFolder();
         break;
     case DownLoadFile:
-        storageServicedownloadFile(mNextAction->nextActionFileName());
+        storageServicedownloadFile(mNextAction->nextActionFileName(), mNextAction->downloadDestination());
         break;
     case DeleteFile:
         storageServicedeleteFile(mNextAction->nextActionFileName());
@@ -237,6 +257,12 @@ void StorageServiceAbstract::executeNextAction()
         break;
     case MoveFolder:
         storageServiceMoveFolder(mNextAction->renameSource(), mNextAction->renameDestination());
+        break;
+    case CopyFile:
+        storageServiceCopyFile(mNextAction->renameSource(), mNextAction->renameDestination());
+        break;
+    case CopyFolder:
+        storageServiceCopyFolder(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
     }
 }
@@ -332,6 +358,17 @@ void StorageServiceAbstract::slotMoveFileDone(const QString &filename)
     changeProgressState(false);
 }
 
+void StorageServiceAbstract::slotCopyFileDone(const QString &filename)
+{
+    Q_EMIT copyFileDone(storageServiceName(), filename);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotCopyFolderDone(const QString &filename)
+{
+    Q_EMIT copyFolderDone(storageServiceName(), filename);
+    changeProgressState(false);
+}
 
 void StorageServiceAbstract::emitAuthentificationDone()
 {

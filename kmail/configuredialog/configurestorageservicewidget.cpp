@@ -25,13 +25,22 @@ using namespace PimCommon::ConfigureImmutableWidgetUtils;
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QCheckBox>
+#include <QSpinBox>
 
 ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(QWidget *parent)
     : QWidget(parent)
 {
     QVBoxLayout *lay = new QVBoxLayout;
-    mActivateStorageService = new QCheckBox(i18n("Use Storage Service for Attachments"));
-    lay->addWidget(mActivateStorageService);
+    QHBoxLayout *hbox = new QHBoxLayout;
+    mActivateStorageService = new QCheckBox(i18n("Offer to share for files larger than"));
+    hbox->addWidget(mActivateStorageService);
+    mLimitAttachment = new QSpinBox;
+    mLimitAttachment->setMinimum(0);
+    mLimitAttachment->setMaximum(9999);
+    mLimitAttachment->setSuffix(i18nc("mega bytes"," MB"));
+    hbox->addWidget(mLimitAttachment);
+    lay->addLayout(hbox);
+    connect(mActivateStorageService, SIGNAL(toggled(bool)), mLimitAttachment, SLOT(setEnabled(bool)));
 
     mStorageServiceWidget = new PimCommon::StorageServiceSettingsWidget;
     lay->addWidget(mStorageServiceWidget);
@@ -47,11 +56,11 @@ ConfigureStorageServiceWidget::~ConfigureStorageServiceWidget()
 void ConfigureStorageServiceWidget::save()
 {
     saveCheckBox(mActivateStorageService, GlobalSettings::self()->useStorageServiceItem());
-    //TODO
+    saveSpinBox(mLimitAttachment, GlobalSettings::self()->storageServiceLimitItem());
 }
 
 void ConfigureStorageServiceWidget::doLoadFromGlobalSettings()
 {
     loadWidget(mActivateStorageService, GlobalSettings::self()->useStorageServiceItem());
-    //TODO
+    loadWidget(mLimitAttachment, GlobalSettings::self()->storageServiceLimitItem());
 }

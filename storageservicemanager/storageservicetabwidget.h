@@ -33,7 +33,8 @@ public:
 
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;    
     void setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);
-    void updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);
+    void updateListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list);    
+    bool hasUploadDownloadProgress() const;
 
 Q_SIGNALS:
     void updateStatusBarMessage(const QString &msg);

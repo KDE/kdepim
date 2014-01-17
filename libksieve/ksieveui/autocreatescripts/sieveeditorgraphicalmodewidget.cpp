@@ -49,6 +49,7 @@ SieveEditorGraphicalModeWidget::SieveEditorGraphicalModeWidget(QWidget *parent)
     mSplitter = new QSplitter;
     mSplitter->setChildrenCollapsible(false);
     mSieveScript = new SieveScriptListBox( i18n("Sieve Script"));
+    connect(mSieveScript, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
     connect(mSieveScript, SIGNAL(addNewPage(KSieveUi::SieveScriptPage*)), SLOT(slotAddScriptPage(KSieveUi::SieveScriptPage*)));
     connect(mSieveScript, SIGNAL(removePage(QWidget*)), SLOT(slotRemoveScriptPage(QWidget*)));
     connect(mSieveScript, SIGNAL(activatePage(QWidget*)), SLOT(slotActivateScriptPage(QWidget*)));

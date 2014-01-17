@@ -39,13 +39,15 @@ public:
     virtual void createFolder(const QString &filename=QString()) = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual void createServiceFolder() = 0;
-    virtual void downloadFile(const QString &filename) = 0;
+    virtual void downloadFile(const QString &filename, const QString &destination) = 0;
     virtual void deleteFile(const QString &filename) = 0;
     virtual void deleteFolder(const QString &foldername) = 0;
     virtual void renameFolder(const QString &source, const QString &destination) = 0;
     virtual void renameFile(const QString &oldName, const QString &newName) = 0;
     virtual void moveFolder(const QString &source, const QString &destination) = 0;
     virtual void moveFile(const QString &source, const QString &destination) = 0;
+    virtual void copyFile(const QString &source, const QString &destination) = 0;
+    virtual void copyFolder(const QString &source, const QString &destination) = 0;
 
 
 protected Q_SLOTS:
@@ -67,6 +69,8 @@ Q_SIGNALS:
     void renameFileDone(const QString &folder);
     void moveFolderDone(const QString &folder);
     void moveFileDone(const QString &folder);
+    void copyFileDone(const QString &folder);
+    void copyFolderDone(const QString &folder);
 
 protected:
     void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);

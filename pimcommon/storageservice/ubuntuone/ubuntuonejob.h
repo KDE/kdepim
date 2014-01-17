@@ -38,14 +38,15 @@ public:
     void createFolder(const QString &foldername);
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
-    void downloadFile(const QString &filename);
+    void downloadFile(const QString &filename, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
     void moveFile(const QString &source, const QString &destination);
-
+    void copyFile(const QString &source, const QString &destination);
+    void copyFolder(const QString &source, const QString &destination);
 
     void initializeToken(const QString &customerSecret, const QString &token, const QString &customerKey, const QString &tokenSecret);
 

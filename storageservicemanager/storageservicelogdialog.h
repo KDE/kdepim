@@ -40,7 +40,7 @@ Q_SIGNALS:
 
 private slots:
     void slotSaveAs();
-
+    void slotClearLog();
 private:
     void readConfig();
     void writeConfig();

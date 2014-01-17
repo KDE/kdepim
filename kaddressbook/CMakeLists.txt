@@ -101,7 +101,7 @@ set(kaddressbook_LIB_SRCS
 
 qt4_add_dbus_adaptor( kaddressbook_LIB_SRCS org.kde.kaddressbook.xml mainwidget.h MainWidget)
 
-kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
+kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings/settings.kcfgc)
 kde4_add_library(kaddressbookprivate ${LIBRARY_TYPE} ${kaddressbook_LIB_SRCS})
 target_link_libraries(kaddressbookprivate
   kdepim

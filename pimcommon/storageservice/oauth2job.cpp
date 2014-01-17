@@ -17,6 +17,7 @@
 
 #include "oauth2job.h"
 #include "storageservice/storageauthviewdialog.h"
+#include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
 
@@ -34,7 +35,7 @@ OAuth2Job::OAuth2Job(QObject *parent)
       mExpireInTime(0),
       mNeedRefreshToken(false)
 {
-    mRedirectUri = QLatin1String("https://bugs.kde.org/");
+    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
@@ -61,7 +62,7 @@ void OAuth2Job::createServiceFolder()
     deleteLater();
 }
 
-void OAuth2Job::downloadFile(const QString &filename)
+void OAuth2Job::downloadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
@@ -74,18 +75,27 @@ void OAuth2Job::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
+    QUrl url;
+    url.setUrl(mApiUrl + mFileInfoPath + filename);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void OAuth2Job::deleteFolder(const QString &foldername)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    qDebug()<<" not implemented";
-    deleteLater();
+    QUrl url;
+    url.setUrl(mApiUrl + mFolderInfoPath + foldername);
+    url.addQueryItem(QLatin1String("recursive"), QLatin1String("true"));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void OAuth2Job::renameFolder(const QString &source, const QString &destination)
@@ -121,6 +131,26 @@ void OAuth2Job::moveFolder(const QString &source, const QString &destination)
 void OAuth2Job::moveFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
+void OAuth2Job::copyFile(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFile;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
+void OAuth2Job::copyFolder(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
@@ -226,7 +256,7 @@ void OAuth2Job::listFolder(const QString &folder)
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + QLatin1String("0"));
+    url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
@@ -259,7 +289,8 @@ void OAuth2Job::createFolder(const QString &foldername)
     qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), foldername);
-    //postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\'id\': \'0\'}"));
+    //postData.addQueryItem(QLatin1String("id"), QLatin1String("0"));
+    postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\'id\': \'0\'}"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -317,18 +348,19 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
+            case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::UploadFile:
             case PimCommon::StorageServiceAbstract::CreateFolder:
             case PimCommon::StorageServiceAbstract::AccountInfo:
             case PimCommon::StorageServiceAbstract::ListFolder:
             case PimCommon::StorageServiceAbstract::DownLoadFile:
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
-            case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
             case PimCommon::StorageServiceAbstract::RenameFolder:
             case PimCommon::StorageServiceAbstract::RenameFile:
             case PimCommon::StorageServiceAbstract::MoveFolder:
             case PimCommon::StorageServiceAbstract::MoveFile:
+            case PimCommon::StorageServiceAbstract::CopyFile:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -370,13 +402,18 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         parseCreateServiceFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
+        parseDeleteFile(data);
+        break;
     case PimCommon::StorageServiceAbstract::DeleteFolder:
+        parseDeleteFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::RenameFolder:
     case PimCommon::StorageServiceAbstract::RenameFile:
     case PimCommon::StorageServiceAbstract::MoveFolder:
     case PimCommon::StorageServiceAbstract::MoveFile:
+    case PimCommon::StorageServiceAbstract::CopyFile:
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;
@@ -386,6 +423,26 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     }
+}
+
+void OAuth2Job::parseDeleteFolder(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    Q_EMIT deleteFolderDone(QString());
+}
+
+void OAuth2Job::parseDeleteFile(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    Q_EMIT deleteFileDone(QString());
 }
 
 void OAuth2Job::parseCreateServiceFolder(const QString &data)

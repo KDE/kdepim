@@ -28,8 +28,30 @@ public:
     explicit BoxJob(QObject *parent=0);
     ~BoxJob();
 
+    void deleteFile(const QString &filename);
+    void deleteFolder(const QString &foldername);
+
+    void renameFolder(const QString &source, const QString &destination);
+    void renameFile(const QString &oldName, const QString &newName);
+    void moveFolder(const QString &source, const QString &destination);
+    void moveFile(const QString &source, const QString &destination);
+    void uploadFile(const QString &filename);
+    void listFolder(const QString &folder);
+    void accountInfo();
+    void createFolder(const QString &foldername);
+    void shareLink(const QString &fileId);
+    void shareLink(const QString &root, const QString &path);
+    void copyFile(const QString &source, const QString &destination);
+    void copyFolder(const QString &source, const QString &destination);
+
 private:
+    void parseDeleteFolder(const QString &data);
     void parseAccountInfo(const QString &data);
+    void parseDeleteFile(const QString &data);
+    void parseCreateServiceFolder(const QString &data);
+    void parseListFolder(const QString &data);
+    void parseCreateFolder(const QString &data);
+    void parseUploadFile(const QString &data);
 };
 }
 

@@ -39,6 +39,9 @@ public:
     QString code() const;
     void setCode(const QString &code, QString &error);
 
+Q_SIGNALS:
+    void valueChanged();
+
 private:
     void initialize();
 };
@@ -62,6 +65,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void addWidget(QWidget *w);
     void removeWidget(QWidget *w);
+    void valueChanged();
 
 private:
     void initWidget();
@@ -83,6 +87,9 @@ public:
 
     void generatedScript(QString &script, QStringList &requires);
     void loadScript(const QDomElement &element, QString &error);
+
+Q_SIGNALS:
+    void valueChanged();
 
 public Q_SLOTS:
     void slotAddWidget( QWidget *w );

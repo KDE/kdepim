@@ -206,6 +206,7 @@ void SieveScriptListBox::slotNew()
     const QString newName = KInputDialog::getText(i18n("New Script"), i18n("Add new name:"));
     if (!newName.isEmpty()) {
         createNewScript(newName);
+        Q_EMIT valueChanged();
     }
 }
 
@@ -219,6 +220,7 @@ void SieveScriptListBox::slotDelete()
             delete item;
             Q_EMIT enableButtonOk(mSieveListScript->count()>0);
             updateButtons();
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -230,6 +232,7 @@ void SieveScriptListBox::slotRename()
         const QString newName = KInputDialog::getText(i18n("Rename"), i18n("Add new name:"), item->text());
         if (!newName.isEmpty()) {
             item->setText(newName);
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -243,6 +246,7 @@ void SieveScriptListBox::slotEditDescription()
         dlg->setDescription(sieveItem->description());
         if (dlg->exec()) {
             sieveItem->setDescription(dlg->description());
+            Q_EMIT valueChanged();
         }
         delete dlg;
     }
@@ -257,6 +261,7 @@ void SieveScriptListBox::slotTop()
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( 0, item );
             mSieveListScript->setCurrentItem(item);
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -270,6 +275,7 @@ void SieveScriptListBox::slotBottom()
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( mSieveListScript->count() , item );
             mSieveListScript->setCurrentItem(item);
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -283,6 +289,7 @@ void SieveScriptListBox::slotDown()
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( currentIndex + 1, item );
             mSieveListScript->setCurrentItem(item);
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -296,6 +303,7 @@ void SieveScriptListBox::slotUp()
             item = mSieveListScript->takeItem( currentIndex );
             mSieveListScript->insertItem( currentIndex - 1, item );
             mSieveListScript->setCurrentItem(item);
+            Q_EMIT valueChanged();
         }
     }
 }

@@ -28,6 +28,7 @@ namespace PimCommon {
 class StorageServiceManager;
 }
 class KAction;
+class QLabel;
 class StorageServiceTabWidget;
 class StorageServiceManagerMainWindow : public KXmlGuiWindow
 {
@@ -40,11 +41,11 @@ public slots:
     void slotSetStatusBarMessage(const QString &message);
 
 private slots:
-    void slotAddStorageService();    
-    void slotConfigure();        
-    void slotUpdateActions();   
+    void slotAddStorageService();
+    void slotConfigure();
+    void slotUpdateActions();
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
-
+    void slotClose();
 private:
     void setupActions();
     void readConfig();
@@ -57,6 +58,7 @@ private:
     KAction *mDeleteFile;
     KAction *mAuthenticate;
     KAction *mRefreshList;
+    QLabel *mStatusBarInfo;
 };
 
 #endif // STORAGESERVICEMANAGERMAINWINDOW_H
