@@ -360,7 +360,23 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
     bool ok;
     QString parentFolder;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info "<<info;
+    if (info.contains(QLatin1String("path"))) {
+        const QString path = info.value(QLatin1String("path")).toString();
+        if (parentFolder.isEmpty()) {
+            if (!path.isEmpty()) {
+                if (path == QLatin1String("/")) {
+                    parentFolder = path;
+                } else {
+                    QStringList parts = path.split(QLatin1String("/"));
+                    parts.removeLast();
+                    parentFolder = parts.join(QLatin1String("/"));
+                    if (parentFolder.isEmpty()) {
+                        parentFolder = QLatin1String("/");
+                    }
+                }
+            }
+        }
+    }
     if (info.contains(QLatin1String("contents"))) {
         const QVariantList lst = info.value(QLatin1String("contents")).toList();
         Q_FOREACH (const QVariant &variant, lst) {
@@ -369,20 +385,6 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             if (qwer.contains(QLatin1String("is_dir"))) {
                 bool value = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
-                if (parentFolder.isEmpty()) {
-                    if (!name.isEmpty()) {
-                        if (name == QLatin1String("/")) {
-                            parentFolder = name;
-                        } else {
-                            QStringList parts = name.split(QLatin1String("/"));
-                            parts.removeLast();
-                            parentFolder = parts.join(QLatin1String("/"));
-                            if (parentFolder.isEmpty()) {
-                                parentFolder = QLatin1String("/");
-                            }
-                        }
-                    }
-                }
                 if (value) {
                     listWidget->addFolder(name, name);
                 } else {
@@ -399,7 +401,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             }
         }
     }
-    return QString();
+    return parentFolder;
 }
 
 bool DropBoxStorageService::hasProgressIndicatorSupport() const
