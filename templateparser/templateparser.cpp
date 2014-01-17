@@ -297,7 +297,6 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
   mOtp->parseObjectTree( mOrigMsg.get() );
   const int tmpl_len = tmpl.length();
   QString plainBody, htmlBody;
-  bool forceSignature = false;
 
   bool dnl = false;
   for ( int i = 0; i < tmpl_len; ++i ) {
@@ -1153,10 +1152,8 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
         kDebug() << "Command: SIGNATURE";
         i += strlen( "SIGNATURE" );
         plainBody.append( getPlainSignature() );
-        const QString htmlSignature = getHtmlSignature();
-        htmlBody.append( htmlSignature );
-        if (!htmlSignature.isEmpty())
-            forceSignature = true;
+        htmlBody.append( getHtmlSignature() );
+
       } else {
         // wrong command, do nothing
         plainBody.append( c );
@@ -1193,18 +1190,13 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
   // there is no use of FORCED command but a configure setting has ReplyUsingHtml disabled,
   // OR the original mail has no HTML part.
   const KMime::Content *content = mOrigMsg->mainBodyPart( "text/html" );
-  if( mQuotes == ReplyAsPlain )
-      htmlBody.clear();
-  else if (( mQuotes != ReplyAsHtml && !GlobalSettings::self()->replyUsingHtml() ) ||(!content || !content->hasContent() )) {
-      htmlBody.clear();
-      if (forceSignature) { //When we force signature and it's html signature we can put it.
-          htmlBody = getHtmlSignature();
-          makeValidHtml( htmlBody );
-      }
+  if( mQuotes == ReplyAsPlain ||
+      ( mQuotes != ReplyAsHtml && !GlobalSettings::self()->replyUsingHtml() ) ||
+      (!content || !content->hasContent() ) ) {
+    htmlBody.clear();
   } else {
-      makeValidHtml( htmlBody );
+    makeValidHtml( htmlBody );
   }
-
   addProcessedBodyToMessage( plainBody, htmlBody );
 }
 
@@ -1276,11 +1268,13 @@ void TemplateParser::addProcessedBodyToMessage( const QString &plainBody,
 
   mMsg->contentType()->clear(); // to get rid of old boundary
 
+  const QByteArray boundary = KMime::multiPartBoundary();
   KMime::Content *const mainTextPart =
     htmlBody.isEmpty() ?
       createPlainPartContent( plainBody ) :
       createMultipartAlternativeContent( plainBody, htmlBody );
   mainTextPart->assemble();
+
   KMime::Content *textPart = mainTextPart;
   if ( !ic.images().empty() ) {
     textPart = createMultipartRelated( ic, mainTextPart );
