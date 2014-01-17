@@ -145,32 +145,23 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
 
 void StorageServiceTreeWidget::slotMoveFolder()
 {
-    //TODO
-    const QString destination;
-    mStorageService->moveFolder(mCopyItem.identifier, destination);
+    mStorageService->moveFolder(mCopyItem.identifier, mCurrentFolder);
 }
 
 void StorageServiceTreeWidget::slotMoveFile()
 {
-    //TODO
-    const QString destination;
-    mStorageService->moveFile(mCopyItem.identifier, destination);
+    mStorageService->moveFile(mCopyItem.identifier, mCurrentFolder);
 }
 
 void StorageServiceTreeWidget::slotPasteFolder()
 {
-    //TODO
-    const QString destination;
-    mStorageService->copyFolder(mCopyItem.identifier, destination);
+    mStorageService->copyFolder(mCopyItem.identifier, mCurrentFolder);
 }
 
 void StorageServiceTreeWidget::slotPasteFile()
 {
-    //TODO
-    const QString destination;
-    mStorageService->copyFile(mCopyItem.identifier, destination);
+    mStorageService->copyFile(mCopyItem.identifier, mCurrentFolder);
 }
-
 
 void StorageServiceTreeWidget::slotRenameFolder()
 {
@@ -323,4 +314,14 @@ void StorageServiceTreeWidget::slotCopyFolder()
     mCopyItem.moveItem = false;
     mCopyItem.type = FolderType;
     mCopyItem.identifier = itemIdentifierSelected();
+}
+
+void StorageServiceTreeWidget::setCurrentFolder(const QString &folder)
+{
+    mCurrentFolder = folder;
+}
+
+QString StorageServiceTreeWidget::currentFolder() const
+{
+    return mCurrentFolder;
 }

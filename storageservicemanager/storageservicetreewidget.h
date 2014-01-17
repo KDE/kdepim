@@ -33,6 +33,9 @@ public:
 
     void setIsInitialized();
 
+    void setCurrentFolder(const QString &folder);
+    QString currentFolder() const;
+
 Q_SIGNALS:
     void goToFolder(const QString &folder);
     void moveUp();
@@ -86,6 +89,7 @@ private:
 
     QColor mTextColor;
     copyCutItem mCopyItem;
+    QString mCurrentFolder;
     PimCommon::StorageServiceAbstract::Capabilities mCapabilities;
     PimCommon::StorageServiceAbstract *mStorageService;
     bool mInitialized;

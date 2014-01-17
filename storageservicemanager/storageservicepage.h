@@ -79,7 +79,6 @@ private:
     inline void updateList(const QString &serviceName);
     void connectStorageService();
     QString mServiceName;
-    QString mCurrentFolder;
     QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
     StorageServiceTreeWidget *mListWidget;

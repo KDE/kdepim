@@ -188,7 +188,7 @@ void StorageServicePage::createFolder()
 
 void StorageServicePage::refreshList()
 {
-    mStorageService->listFolder(mCurrentFolder);
+    mStorageService->listFolder(mListWidget->currentFolder());
 }
 
 void StorageServicePage::accountInfo()
@@ -256,13 +256,13 @@ void StorageServicePage::slotDeleteFileDone(const QString &serviceName, const QS
 
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
-    mCurrentFolder = folder;
+    mListWidget->setCurrentFolder(folder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
 void StorageServicePage::slotMoveUp()
 {
-    mCurrentFolder = mParentFolder;
+    mListWidget->setCurrentFolder(mParentFolder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
