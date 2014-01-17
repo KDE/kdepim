@@ -68,6 +68,7 @@ private slots:
 
 private:
     void readConfig();
+    bool needToRefreshToken() const;
 
     QString mRefreshToken;
     QString mToken;

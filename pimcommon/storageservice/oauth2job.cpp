@@ -279,7 +279,8 @@ void OAuth2Job::createFolder(const QString &foldername)
     qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     QUrl postData;
     postData.addQueryItem(QLatin1String("name"), foldername);
-    //postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\'id\': \'0\'}"));
+    //postData.addQueryItem(QLatin1String("id"), QLatin1String("0"));
+    postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\'id\': \'0\'}"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }

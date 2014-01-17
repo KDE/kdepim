@@ -66,6 +66,7 @@ private slots:
     void slotAuthorizationFailed(const QString &errorMessage);
 
 private:
+    bool needToRefreshToken() const;
     void readConfig();
     QString mToken;
     QString mRefreshToken;

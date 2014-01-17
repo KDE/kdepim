@@ -37,6 +37,14 @@ HubicStorageService::~HubicStorageService()
 {
 }
 
+bool HubicStorageService::needToRefreshToken() const
+{
+    if (mExpireDateTime < QDateTime::currentDateTime())
+        return true;
+    else
+        return false;
+}
+
 void HubicStorageService::readConfig()
 {
     KConfigGroup grp(KGlobal::config(), "Hubic Settings");
@@ -44,6 +52,8 @@ void HubicStorageService::readConfig()
     mToken = grp.readEntry("Token");
     if (grp.hasKey("Expire Time"))
         mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
+    else
+        mExpireDateTime = QDateTime::currentDateTime();
 }
 
 void HubicStorageService::removeConfig()

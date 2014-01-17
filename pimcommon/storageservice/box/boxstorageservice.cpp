@@ -48,6 +48,8 @@ void BoxStorageService::readConfig()
     mToken = grp.readEntry("Token");
     if (grp.hasKey("Expire Time"))
         mExpireDateTime = grp.readEntry("Expire Time", QDateTime::currentDateTime());
+    else
+        mExpireDateTime = QDateTime::currentDateTime();
 }
 
 void BoxStorageService::removeConfig()
@@ -84,6 +86,13 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
     emitAuthentificationDone();
 }
 
+bool BoxStorageService::needToRefreshToken() const
+{
+    if (mExpireDateTime < QDateTime::currentDateTime())
+        return true;
+    else
+        return false;
+}
 
 void BoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
