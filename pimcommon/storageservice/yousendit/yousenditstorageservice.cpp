@@ -80,10 +80,9 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
     grp.readEntry("Username", mUsername);
     //TODO store in kwallet ?
-    grp.readEntry("Password", mPassword);
-    grp.readEntry("Token", mToken);
+    grp.writeEntry("Password", mPassword);
+    grp.writeEntry("Token", mToken);
     grp.sync();
-    KGlobal::config()->sync();
     emitAuthentificationDone();
 }
 
