@@ -218,6 +218,9 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities(
     cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
+
 
     return cap;
 }
@@ -345,6 +348,21 @@ void DropBoxStorageService::storageServiceCopyFile(const QString &source, const 
         connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->copyFile(source, destination);
+    }
+}
+
+void DropBoxStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
+{
+    if (mAccessToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        DropBoxJob *job = new DropBoxJob(this);
+        job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
+        connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFolder(source, destination);
     }
 }
 

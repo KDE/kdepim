@@ -194,6 +194,16 @@ void StorageServiceAbstract::copyFile(const QString &source, const QString &dest
     storageServiceCopyFile(source, destination);
 }
 
+void StorageServiceAbstract::copyFolder(const QString &source, const QString &destination)
+{
+    if (mInProgress) {
+        qDebug()<<" still in progress";
+        return;
+    }
+    changeProgressState(true);
+    storageServiceCopyFolder(source, destination);
+}
+
 bool StorageServiceAbstract::hasProgressIndicatorSupport() const
 {
     return false;
@@ -250,6 +260,9 @@ void StorageServiceAbstract::executeNextAction()
         break;
     case CopyFile:
         storageServiceCopyFile(mNextAction->renameSource(), mNextAction->renameDestination());
+        break;
+    case CopyFolder:
+        storageServiceCopyFolder(mNextAction->renameSource(), mNextAction->renameDestination());
         break;
     }
 }
@@ -348,6 +361,12 @@ void StorageServiceAbstract::slotMoveFileDone(const QString &filename)
 void StorageServiceAbstract::slotCopyFileDone(const QString &filename)
 {
     Q_EMIT copyFileDone(storageServiceName(), filename);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotCopyFolderDone(const QString &filename)
+{
+    Q_EMIT copyFolderDone(storageServiceName(), filename);
     changeProgressState(false);
 }
 

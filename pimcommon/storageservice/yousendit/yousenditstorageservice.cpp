@@ -92,7 +92,7 @@ void YouSendItStorageService::storageServicelistFolder(const QString &folder)
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -107,7 +107,7 @@ void YouSendItStorageService::storageServicecreateFolder(const QString &folder)
     if (mToken.isEmpty()) {
         mNextAction->setNextActionFolder(folder);
         mNextAction->setNextActionType(CreateFolder);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -121,7 +121,7 @@ void YouSendItStorageService::storageServiceaccountInfo()
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(AccountInfo);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -141,7 +141,7 @@ void YouSendItStorageService::storageServiceuploadFile(const QString &filename)
     if (mToken.isEmpty()) {
         mNextAction->setNextActionFileName(filename);
         mNextAction->setNextActionType(UploadFile);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -185,9 +185,12 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     //cap |= ShareLinkCapability;
     cap |= DeleteFileCapability;
     cap |= RenameFolderCapability;
-    //cap |= RenameFileCapabilitity;
+    cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
+
 
     return cap;
 }
@@ -198,7 +201,7 @@ void YouSendItStorageService::storageServiceShareLink(const QString &root, const
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
         mNextAction->setNextActionType(ShareLink);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -214,7 +217,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &filename
         mNextAction->setNextActionFileName(filename);
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setDownloadDestination(filename);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -228,7 +231,7 @@ void YouSendItStorageService::storageServicecreateServiceFolder()
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(CreateServiceFolder);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -243,7 +246,7 @@ void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
     if (mToken.isEmpty()) {
         mNextAction->setNextActionFileName(filename);
         mNextAction->setNextActionType(DeleteFile);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -258,7 +261,7 @@ void YouSendItStorageService::storageServicedeleteFolder(const QString &folderna
     if (mToken.isEmpty()) {
         mNextAction->setNextActionFileName(foldername);
         mNextAction->setNextActionType(DeleteFolder);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -273,7 +276,7 @@ void YouSendItStorageService::storageServiceRenameFolder(const QString &source, 
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -288,7 +291,7 @@ void YouSendItStorageService::storageServiceRenameFile(const QString &source, co
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -303,7 +306,7 @@ void YouSendItStorageService::storageServiceMoveFolder(const QString &source, co
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -318,7 +321,7 @@ void YouSendItStorageService::storageServiceMoveFile(const QString &source, cons
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
@@ -333,13 +336,28 @@ void YouSendItStorageService::storageServiceCopyFile(const QString &source, cons
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
         job->initializeToken(mPassword, mUsername, mToken);
         connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->copyFile(source, destination);
+    }
+}
+
+void YouSendItStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        YouSendItJob *job = new YouSendItJob(this);
+        job->initializeToken(mPassword, mUsername, mToken);
+        connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFolder(source, destination);
     }
 }
 
@@ -354,6 +372,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" INFO "<<info;
     if (info.contains(QLatin1String("folders"))) {
         const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         const QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
@@ -370,7 +389,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
         const QVariantList files = mapFiles.value(QLatin1String("file")).toList();
         Q_FOREACH (const QVariant &v, files) {
             const QVariantMap map = v.toMap();
-            qDebug()<<" file map !"<<map;
+            //qDebug()<<" file map !"<<map;
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
                 qDebug()<<" name !"<<name;

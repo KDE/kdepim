@@ -62,6 +62,16 @@ void YouSendItJob::copyFile(const QString &source, const QString &destination)
     deleteLater();
 }
 
+void YouSendItJob::copyFolder(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
 void YouSendItJob::createServiceFolder()
 {
     qDebug()<<" not implemented";

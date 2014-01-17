@@ -66,6 +66,16 @@ void WebDavJob::copyFile(const QString &source, const QString &destination)
     deleteLater();
 }
 
+void WebDavJob::copyFolder(const QString &source, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
+    mError = false;
+    qDebug()<<" not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
+}
+
 void WebDavJob::uploadFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;

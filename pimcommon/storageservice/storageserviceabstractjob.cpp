@@ -99,6 +99,9 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstract::
     case PimCommon::StorageServiceAbstract::CopyFile:
         error = i18n("Copy File returns an error: %1",errorStr);
         break;
+    case PimCommon::StorageServiceAbstract::CopyFolder:
+        error = i18n("Copy Folder returns an error: %1",errorStr);
+        break;
     }
     if (!error.isEmpty())
         Q_EMIT actionFailed(error);

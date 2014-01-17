@@ -231,6 +231,21 @@ void BoxStorageService::storageServiceCopyFile(const QString &source, const QStr
     }
 }
 
+void BoxStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFolder(source, destination);
+    }
+}
+
 void BoxStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
@@ -332,6 +347,8 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     //cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
     return cap;
 }
 
@@ -372,6 +389,11 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info "<<info;
+    QString parentId;
+    if (info.contains(QLatin1String("id"))) {
+        parentId = info.value(QLatin1String("id")).toString();
+    }
     if (info.contains(QLatin1String("item_collection"))) {
         const QVariantMap itemCollection = info.value(QLatin1String("item_collection")).toMap();
         if (itemCollection.contains(QLatin1String("entries"))) {
@@ -388,9 +410,10 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
                         listWidget->addFile(name, id);
                     }
                 }
-                qDebug()<<" v"<<v;
+                //qDebug()<<" v"<<v;
             }
         }
     }
-    return QString();
+    qDebug()<<" parentId"<<parentId;
+    return parentId;
 }

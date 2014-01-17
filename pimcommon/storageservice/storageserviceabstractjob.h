@@ -47,6 +47,7 @@ public:
     virtual void moveFolder(const QString &source, const QString &destination) = 0;
     virtual void moveFile(const QString &source, const QString &destination) = 0;
     virtual void copyFile(const QString &source, const QString &destination) = 0;
+    virtual void copyFolder(const QString &source, const QString &destination) = 0;
 
 
 protected Q_SLOTS:
@@ -69,6 +70,7 @@ Q_SIGNALS:
     void moveFolderDone(const QString &folder);
     void moveFileDone(const QString &folder);
     void copyFileDone(const QString &folder);
+    void copyFolderDone(const QString &folder);
 
 protected:
     void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);

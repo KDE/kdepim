@@ -45,6 +45,8 @@ public:
     void moveFolder(const QString &source, const QString &destination);
     void moveFile(const QString &source, const QString &destination);    
     void copyFile(const QString &source, const QString &destination);
+    void copyFolder(const QString &source, const QString &destination);
+
 Q_SIGNALS:
     void authorizationDone(const QString &password, const QString &username, const QString &token);
 

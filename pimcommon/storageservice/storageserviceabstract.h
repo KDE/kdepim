@@ -64,8 +64,9 @@ public:
         ListFolderCapability = 512,
         RenameFolderCapability = 1024,
         MoveFolderCapability = 2048,
+        CopyFolderCapability = 4096,
         //Share
-        ShareLinkCapability = 4096
+        ShareLinkCapability = 8192
     };
 
     Q_ENUMS(Capability)
@@ -91,7 +92,8 @@ public:
         CreateServiceFolder,
         DeleteFolder,
         RenameFolder,
-        MoveFolder
+        MoveFolder,
+        CopyFolder
     };
 
     bool isInProgress() const;
@@ -111,6 +113,7 @@ public:
     virtual void moveFile(const QString &source, const QString &destination);
     virtual void moveFolder(const QString &source, const QString &destination);
     virtual void copyFile(const QString &source, const QString &destination);
+    virtual void copyFolder(const QString &source, const QString &destination);
 
     virtual QString storageServiceName() const = 0;
     virtual KIcon icon() const = 0;
@@ -137,6 +140,7 @@ Q_SIGNALS:
     void moveFolderDone(const QString &serviceName, const QString &folderName);
     void moveFileDone(const QString &serviceName, const QString &folderName);
     void copyFileDone(const QString &serviceName, const QString &folderName);
+    void copyFolderDone(const QString &serviceName, const QString &folderName);
     void inProgress(bool state);
 
 protected slots:
@@ -155,6 +159,7 @@ protected slots:
     void slotMoveFolderDone(const QString &folderName);
     void slotMoveFileDone(const QString &filename);
     void slotCopyFileDone(const QString &filename);
+    void slotCopyFolderDone(const QString &filename);
 
 protected:
     virtual void storageServicedownloadFile(const QString &filename, const QString &destination) = 0;
@@ -172,6 +177,7 @@ protected:
     virtual void storageServiceMoveFolder(const QString &source, const QString &destination) = 0;
     virtual void storageServiceMoveFile(const QString &source, const QString &destination) = 0;
     virtual void storageServiceCopyFile(const QString &source, const QString &destination) = 0;
+    virtual void storageServiceCopyFolder(const QString &source, const QString &destination) = 0;
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
     NextAction *mNextAction;

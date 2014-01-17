@@ -190,6 +190,9 @@ StorageServiceAbstract::Capabilities HubicStorageService::serviceCapabilities()
     //cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
+
 
     return cap;
 }
@@ -280,7 +283,7 @@ void HubicStorageService::storageServiceRenameFolder(const QString &source, cons
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -295,7 +298,7 @@ void HubicStorageService::storageServiceRenameFile(const QString &source, const 
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -310,7 +313,7 @@ void HubicStorageService::storageServiceMoveFolder(const QString &source, const 
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -325,7 +328,7 @@ void HubicStorageService::storageServiceMoveFile(const QString &source, const QS
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -340,13 +343,28 @@ void HubicStorageService::storageServiceCopyFile(const QString &source, const QS
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->copyFile(source, destination);
+    }
+}
+
+void HubicStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
+{
+    if (mRefreshToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        HubicJob *job = new HubicJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFolder(source, destination);
     }
 }
 

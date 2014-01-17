@@ -45,6 +45,7 @@ public:
     void moveFolder(const QString &source, const QString &destination);
     void moveFile(const QString &source, const QString &destination);    
     void copyFile(const QString &source, const QString &destination);
+    void copyFolder(const QString &source, const QString &destination);
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);    

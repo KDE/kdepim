@@ -100,7 +100,7 @@ void UbuntuoneStorageService::storageServicecreateFolder(const QString &folder)
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
         mNextAction->setNextActionFolder(folder);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -123,7 +123,7 @@ void UbuntuoneStorageService::storageServiceaccountInfo()
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(AccountInfo);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -143,7 +143,7 @@ void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename)
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionFileName(filename);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -190,6 +190,8 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::serviceCapabilitie
     //cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
 
     return cap;
 }
@@ -200,7 +202,7 @@ void UbuntuoneStorageService::storageServiceShareLink(const QString &root, const
         mNextAction->setNextActionType(ShareLink);
         mNextAction->setRootPath(root);
         mNextAction->setPath(path);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -216,7 +218,7 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionFileName(filename);
         mNextAction->setDownloadDestination(filename);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -230,7 +232,7 @@ void UbuntuoneStorageService::storageServicecreateServiceFolder()
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(CreateServiceFolder);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -261,7 +263,7 @@ void UbuntuoneStorageService::storageServicedeleteFolder(const QString &folderna
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionFolder(foldername);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -277,7 +279,7 @@ void UbuntuoneStorageService::storageServiceRenameFolder(const QString &source, 
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -292,7 +294,7 @@ void UbuntuoneStorageService::storageServiceRenameFile(const QString &source, co
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -307,7 +309,7 @@ void UbuntuoneStorageService::storageServiceMoveFolder(const QString &source, co
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -322,7 +324,7 @@ void UbuntuoneStorageService::storageServiceMoveFile(const QString &source, cons
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
@@ -337,13 +339,28 @@ void UbuntuoneStorageService::storageServiceCopyFile(const QString &source, cons
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
-        authentication();
+        storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         job->copyFile(source, destination);
+    }
+}
+
+void UbuntuoneStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
+{
+    if (mToken.isEmpty()) {
+        mNextAction->setNextActionType(CopyFolder);
+        mNextAction->setRenameFolder(source, destination);
+        storageServiceauthentication();
+    } else {
+        UbuntuOneJob *job = new UbuntuOneJob(this);
+        job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
+        connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
+        connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        job->copyFolder(source, destination);
     }
 }
 
