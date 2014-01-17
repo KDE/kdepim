@@ -31,6 +31,7 @@ class QButtonGroup;
 class QLineEdit;
 class KConfigSkeletonItem;
 class KUrlRequester;
+class QSpinBox;
 namespace PimCommon {
 class SimpleStringListEditor;
 namespace ConfigureImmutableWidgetUtils {
@@ -41,8 +42,10 @@ PIMCOMMON_EXPORT void loadWidget( QCheckBox * b, const KCoreConfigSkeleton::Item
 PIMCOMMON_EXPORT void loadWidget( QGroupBox * box, QButtonGroup * group, const KCoreConfigSkeleton::ItemEnum *e );
 PIMCOMMON_EXPORT void loadWidget( QLineEdit * b, const KCoreConfigSkeleton::ItemString *e );
 PIMCOMMON_EXPORT void loadWidget( KUrlRequester * b, const KCoreConfigSkeleton::ItemString *e );
+PIMCOMMON_EXPORT void loadWidget( QSpinBox * b, const KCoreConfigSkeleton::ItemInt *e );
 PIMCOMMON_EXPORT void loadWidget( PimCommon::SimpleStringListEditor * b, const KCoreConfigSkeleton::ItemStringList *e );
 
+PIMCOMMON_EXPORT void saveSpinBox( QSpinBox * b, KCoreConfigSkeleton::ItemInt *e );
 PIMCOMMON_EXPORT void saveCheckBox( QCheckBox * b, KCoreConfigSkeleton::ItemBool *e );
 PIMCOMMON_EXPORT void saveLineEdit( QLineEdit * b, KCoreConfigSkeleton::ItemString *e );
 PIMCOMMON_EXPORT void saveUrlRequester( KUrlRequester * b, KCoreConfigSkeleton::ItemString *e );
