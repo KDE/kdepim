@@ -152,6 +152,7 @@ void SieveScriptPage::generatedScript(QString &script, QStringList &requires)
 void SieveScriptPage::slotCloseTab(int index)
 {
     mTabWidget->removeTab(index);
+    Q_EMIT valueChanged();
 }
 
 SieveIncludeWidget *SieveScriptPage::includeWidget() const
