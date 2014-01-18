@@ -53,7 +53,7 @@ void StorageServiceAbstract::downloadFile(const QString &filename, const QString
     storageServicedownloadFile(filename, destination);
 }
 
-void StorageServiceAbstract::uploadFile(const QString &filename)
+void StorageServiceAbstract::uploadFile(const QString &filename, const QString &destination)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";

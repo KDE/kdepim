@@ -235,7 +235,7 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void OAuth2Job::uploadFile(const QString &filename)
+void OAuth2Job::uploadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;

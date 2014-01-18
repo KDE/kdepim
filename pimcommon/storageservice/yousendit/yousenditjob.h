@@ -30,7 +30,7 @@ public:
     ~YouSendItJob();
 
     void requestTokenAccess();
-    void uploadFile(const QString &filename);
+    void uploadFile(const QString &filename, const QString &destination=QString());
     void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &filename);

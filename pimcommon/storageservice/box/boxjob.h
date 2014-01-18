@@ -35,7 +35,7 @@ public:
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
     void moveFile(const QString &source, const QString &destination);
-    void uploadFile(const QString &filename);
+    void uploadFile(const QString &filename, const QString &destination=QString());
     void listFolder(const QString &folder);
     void accountInfo();
     void createFolder(const QString &foldername);

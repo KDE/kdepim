@@ -151,7 +151,7 @@ void BoxJob::copyFolder(const QString &source, const QString &destination)
     deleteLater();
 }
 
-void BoxJob::uploadFile(const QString &filename)
+void BoxJob::uploadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;

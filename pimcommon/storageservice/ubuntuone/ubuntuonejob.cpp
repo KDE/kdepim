@@ -81,7 +81,7 @@ void UbuntuOneJob::requestTokenAccess()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void UbuntuOneJob::uploadFile(const QString &filename)
+void UbuntuOneJob::uploadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
