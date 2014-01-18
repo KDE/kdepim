@@ -202,12 +202,10 @@ void BoxJob::createFolder(const QString &foldername)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
-    QUrl postData;
-    postData.addQueryItem(QLatin1String("name"), foldername);
-    //postData.addQueryItem(QLatin1String("id"), QLatin1String("0"));
-    postData.addQueryItem(QLatin1String("parent"), QLatin1String("{\'id\': \'0\'}"));
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
+    const QString data = QString::fromLatin1("{\"name\":\"%1\", \"parent\": {\"id\": \"0\"}}").arg(foldername);
+
+    QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
