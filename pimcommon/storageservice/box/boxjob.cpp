@@ -135,20 +135,32 @@ void BoxJob::copyFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFile;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    QUrl url;
+    url.setUrl(mApiUrl + mFileInfoPath + QString::fromLatin1("%1/copy").arg(source));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
+    const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
+
+    QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void BoxJob::copyFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CopyFolder;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    QUrl url;
+    url.setUrl(mApiUrl + mFolderInfoPath + QString::fromLatin1("%1/copy").arg(source));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
+    const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
+
+    QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void BoxJob::uploadFile(const QString &filename, const QString &destination)
@@ -286,5 +298,33 @@ void BoxJob::parseUploadFile(const QString &data)
     //TODO
     qDebug()<<" data "<<data;
     Q_EMIT uploadFileDone(QString());
+    deleteLater();
+}
+
+void BoxJob::parseCopyFile(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    QString filename;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (info.contains(QLatin1String("name"))) {
+        filename = info.value(QLatin1String("name")).toString();
+    }
+    Q_EMIT copyFileDone(filename);
+    deleteLater();
+}
+
+void BoxJob::parsecopyFolder(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    QString filename;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (info.contains(QLatin1String("name"))) {
+        filename = info.value(QLatin1String("name")).toString();
+    }
+    Q_EMIT copyFolderDone(filename);
     deleteLater();
 }

@@ -142,6 +142,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::MoveFolder:
             case PimCommon::StorageServiceAbstract::MoveFile:
             case PimCommon::StorageServiceAbstract::CopyFile:
+            case PimCommon::StorageServiceAbstract::CopyFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;

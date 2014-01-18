@@ -67,6 +67,8 @@ protected:
     virtual void parseAccountInfo(const QString &data);
     virtual void parseDeleteFile(const QString &data);
     virtual void parseDeleteFolder(const QString &data);
+    virtual void parseCopyFile(const QString &data);
+    virtual void parseCopyFolder(const QString &data);
     virtual void refreshToken();
     QString mServiceUrl;
     QUrl mAuthUrl;

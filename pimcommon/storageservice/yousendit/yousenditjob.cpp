@@ -317,6 +317,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::MoveFolder:
         case PimCommon::StorageServiceAbstract::MoveFile:
         case PimCommon::StorageServiceAbstract::CopyFile:
+        case PimCommon::StorageServiceAbstract::CopyFolder:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -376,11 +377,22 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CopyFile:
         parseCopyFile(data);
         break;
+    case PimCommon::StorageServiceAbstract::CopyFolder:
+        parseCopyFolder(data);
+        break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
         deleteLater();
         break;
     }
+}
+
+void YouSendItJob::parseCopyFolder(const QString &data)
+{
+    qDebug()<<" data :"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    //TODO
+    deleteLater();
 }
 
 void YouSendItJob::parseCopyFile(const QString &data)

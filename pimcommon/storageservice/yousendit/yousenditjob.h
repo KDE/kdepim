@@ -70,6 +70,7 @@ private:
     void parseDeleteFile(const QString &data);
     void parseDownloadFile(const QString &data);
     void parseCopyFile(const QString &data);
+    void parseCopyFolder(const QString &data);
     QString mPassword;
     QString mUsername;
     QString mDefaultUrl;

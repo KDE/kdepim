@@ -361,6 +361,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::MoveFolder:
             case PimCommon::StorageServiceAbstract::MoveFile:
             case PimCommon::StorageServiceAbstract::CopyFile:
+            case PimCommon::StorageServiceAbstract::CopyFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -408,12 +409,18 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DeleteFolder:
         parseDeleteFolder(data);
         break;
+    case PimCommon::StorageServiceAbstract::CopyFile:
+        parseCopyFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::CopyFolder:
+        parseCopyFolder(data);
+        break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::RenameFolder:
     case PimCommon::StorageServiceAbstract::RenameFile:
     case PimCommon::StorageServiceAbstract::MoveFolder:
     case PimCommon::StorageServiceAbstract::MoveFile:
-    case PimCommon::StorageServiceAbstract::CopyFile:
+
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;
@@ -423,6 +430,16 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     }
+}
+
+void OAuth2Job::parseCopyFile(const QString &data)
+{
+    Q_EMIT copyFileDone(QString());
+}
+
+void OAuth2Job::parseCopyFolder(const QString &data)
+{
+    Q_EMIT copyFolderDone(QString());
 }
 
 void OAuth2Job::parseDeleteFolder(const QString &data)

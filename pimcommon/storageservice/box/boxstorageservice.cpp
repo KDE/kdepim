@@ -349,8 +349,8 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     //cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
-    //cap |= CopyFileCapability;
-    //cap |= CopyFolderCapability;
+    cap |= CopyFileCapability;
+    cap |= CopyFolderCapability;
     return cap;
 }
 
