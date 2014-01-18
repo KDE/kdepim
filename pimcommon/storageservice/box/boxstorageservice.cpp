@@ -114,7 +114,7 @@ void BoxStorageService::storageServicedownloadFile(const QString &filename, cons
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
@@ -130,7 +130,7 @@ void BoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(DeleteFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
@@ -261,18 +261,19 @@ void BoxStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void BoxStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
+void BoxStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
-        mNextAction->setNextActionFolder(folder);
+        mNextAction->setNextActionName(name);
+        mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder, destination);
+        job->createFolder(name, destination);
     }
 }
 
@@ -299,7 +300,7 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {

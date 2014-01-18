@@ -220,10 +220,10 @@ void StorageServiceAbstract::executeNextAction()
     case AccessToken:
         break;
     case UploadFile:
-        storageServiceuploadFile(mNextAction->nextActionFileName(), mNextAction->nextActionFolder());
+        storageServiceuploadFile(mNextAction->nextActionName(), mNextAction->nextActionFolder());
         break;
     case CreateFolder:
-        storageServicecreateFolder(mNextAction->nextActionFolder());
+        storageServicecreateFolder(mNextAction->nextActionName(), mNextAction->nextActionFolder());
         break;
     case ListFolder:
         storageServicelistFolder(mNextAction->nextActionFolder());
@@ -238,10 +238,10 @@ void StorageServiceAbstract::executeNextAction()
         storageServicecreateServiceFolder();
         break;
     case DownLoadFile:
-        storageServicedownloadFile(mNextAction->nextActionFileName(), mNextAction->downloadDestination());
+        storageServicedownloadFile(mNextAction->nextActionName(), mNextAction->downloadDestination());
         break;
     case DeleteFile:
-        storageServicedeleteFile(mNextAction->nextActionFileName());
+        storageServicedeleteFile(mNextAction->nextActionName());
         break;
     case DeleteFolder:
         storageServicedeleteFolder(mNextAction->nextActionFolder());

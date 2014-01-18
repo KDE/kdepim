@@ -195,23 +195,28 @@ public:
     {
     }
 
+    //Action Type
     void setNextActionType(StorageServiceAbstract::ActionType type) { mNextAction = type; }
-    void setNextActionFileName(const QString &filename) { mNextActionFileName = filename; }
+    StorageServiceAbstract::ActionType nextActionType() const { return mNextAction; }
+
+
+    void setNextActionName(const QString &filename) { mNextActionFileName = filename; }
     void setNextActionFolder(const QString &foldername) { mNextActionFolder = foldername; }
     void setRootPath(const QString &path) { mRootPath = path; }
     void setPath(const QString &path) { mPath = path; }
-    void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
 
+    void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
     void setDownloadDestination(const QString &destination) { mDownLoadDestination = destination; }
 
-    StorageServiceAbstract::ActionType nextActionType() const { return mNextAction; }
-    QString nextActionFileName() const { return mNextActionFileName; }
+
+    QString nextActionName() const { return mNextActionFileName; }
     QString nextActionFolder() const { return mNextActionFolder; }
     QString rootPath() const { return mRootPath; }
     QString path() const { return mPath; }
     QString renameSource() const { return mRenameSource; }
     QString renameDestination() const { return mRenameDestination; }
     QString downloadDestination() const { return mDownLoadDestination; }
+
 private:
     StorageServiceAbstract::ActionType mNextAction;
     QString mRootPath;

@@ -101,10 +101,11 @@ void YouSendItStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void YouSendItStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
+void YouSendItStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
     if (mToken.isEmpty()) {
-        mNextAction->setNextActionFolder(folder);
+        mNextAction->setNextActionName(name);
+        mNextAction->setNextActionFolder(destination);
         mNextAction->setNextActionType(CreateFolder);
         storageServiceauthentication();
     } else {
@@ -112,7 +113,7 @@ void YouSendItStorageService::storageServicecreateFolder(const QString &folder, 
         job->initializeToken(mPassword, mUsername, mToken);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder, destination);
+        job->createFolder(name, destination);
     }
 }
 
@@ -138,7 +139,7 @@ QString YouSendItStorageService::name()
 void YouSendItStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
     if (mToken.isEmpty()) {
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         mNextAction->setNextActionType(UploadFile);
         storageServiceauthentication();
@@ -214,7 +215,7 @@ void YouSendItStorageService::storageServiceShareLink(const QString &root, const
 void YouSendItStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mToken.isEmpty()) {
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
@@ -244,7 +245,7 @@ void YouSendItStorageService::storageServicecreateServiceFolder()
 void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setNextActionType(DeleteFile);
         storageServiceauthentication();
     } else {
@@ -259,7 +260,7 @@ void YouSendItStorageService::storageServicedeleteFile(const QString &filename)
 void YouSendItStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mToken.isEmpty()) {
-        mNextAction->setNextActionFileName(foldername);
+        mNextAction->setNextActionName(foldername);
         mNextAction->setNextActionType(DeleteFolder);
         storageServiceauthentication();
     } else {

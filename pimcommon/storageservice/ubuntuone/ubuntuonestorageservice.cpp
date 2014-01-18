@@ -95,18 +95,20 @@ void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void UbuntuoneStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
+void UbuntuoneStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
-        mNextAction->setNextActionFolder(folder);
+        mNextAction->setNextActionName(name);
+        mNextAction->setNextActionFolder(destination);
+
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder, destination);
+        job->createFolder(name, destination);
     }
 }
 
@@ -142,7 +144,7 @@ void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename, 
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
@@ -217,7 +219,7 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
@@ -247,7 +249,7 @@ void UbuntuoneStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(DeleteFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);

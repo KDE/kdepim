@@ -104,18 +104,19 @@ void HubicStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void HubicStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
+void HubicStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
-        mNextAction->setNextActionFolder(folder);
+        mNextAction->setNextActionName(name);
+        mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder, destination);
+        job->createFolder(name, destination);
     }
 }
 
@@ -142,7 +143,7 @@ void HubicStorageService::storageServiceuploadFile(const QString &filename, cons
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
@@ -223,7 +224,7 @@ void HubicStorageService::storageServicedownloadFile(const QString &filename, co
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
@@ -253,7 +254,7 @@ void HubicStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(DeleteFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
