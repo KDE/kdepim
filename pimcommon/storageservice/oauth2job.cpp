@@ -421,10 +421,13 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::RenameFolder:
         parseRenameFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
-
     case PimCommon::StorageServiceAbstract::MoveFolder:
+        parseMoveFolder(data);
+        break;
     case PimCommon::StorageServiceAbstract::MoveFile:
+        parseMoveFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
 
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
@@ -491,6 +494,18 @@ void OAuth2Job::parseCreateServiceFolder(const QString &data)
 void OAuth2Job::parseListFolder(const QString &data)
 {
     Q_EMIT listFolderDone(data);
+    deleteLater();
+}
+
+void OAuth2Job::parseMoveFolder(const QString &data)
+{
+    Q_EMIT moveFolderDone(data);
+    deleteLater();
+}
+
+void OAuth2Job::parseMoveFile(const QString &data)
+{
+    Q_EMIT moveFileDone(data);
     deleteLater();
 }
 

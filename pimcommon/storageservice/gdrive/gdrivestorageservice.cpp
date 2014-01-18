@@ -337,13 +337,13 @@ QString GDriveStorageService::iconName()
 StorageServiceAbstract::Capabilities GDriveStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
-    cap |= AccountInfoCapability;
+    //cap |= AccountInfoCapability;
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
-    cap |= CreateFolderCapability;
-    cap |= DeleteFolderCapability;
-    cap |= ListFolderCapability;
-    cap |= DeleteFileCapability;
+    //cap |= CreateFolderCapability;
+    //cap |= DeleteFolderCapability;
+    //cap |= ListFolderCapability;
+    //cap |= DeleteFileCapability;
     //cap |= ShareLinkCapability;
     //cap |= RenameFolderCapability;
     //cap |= RenameFileCapabilitity;
