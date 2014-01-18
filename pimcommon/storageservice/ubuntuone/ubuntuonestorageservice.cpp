@@ -138,11 +138,12 @@ QString UbuntuoneStorageService::name()
     return i18n("Ubuntu One");
 }
 
-void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename)
+void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -151,7 +152,7 @@ void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename)
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename);
+        job->uploadFile(filename, destination);
     }
 }
 

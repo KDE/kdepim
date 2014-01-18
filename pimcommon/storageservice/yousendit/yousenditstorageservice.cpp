@@ -135,10 +135,11 @@ QString YouSendItStorageService::name()
     return i18n("YouSendIt");
 }
 
-void YouSendItStorageService::storageServiceuploadFile(const QString &filename)
+void YouSendItStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionFolder(destination);
         mNextAction->setNextActionType(UploadFile);
         storageServiceauthentication();
     } else {
@@ -148,7 +149,7 @@ void YouSendItStorageService::storageServiceuploadFile(const QString &filename)
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename);
+        job->uploadFile(filename, destination);
     }
 }
 

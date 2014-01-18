@@ -153,11 +153,12 @@ void DropBoxStorageService::storageServicecreateFolder(const QString &folder)
     }
 }
 
-void DropBoxStorageService::storageServiceuploadFile(const QString &filename)
+void DropBoxStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -166,7 +167,7 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename)
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename);
+        job->uploadFile(filename, destination);
     }
 }
 

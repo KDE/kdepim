@@ -163,7 +163,7 @@ protected slots:
 
 protected:
     virtual void storageServicedownloadFile(const QString &filename, const QString &destination) = 0;
-    virtual void storageServiceuploadFile(const QString &filename) = 0;
+    virtual void storageServiceuploadFile(const QString &filename, const QString &destination = QString()) = 0;
     virtual void storageServiceaccountInfo() = 0;
     virtual void storageServicecreateFolder(const QString &folder) = 0;
     virtual void storageServicelistFolder(const QString &folder) = 0;

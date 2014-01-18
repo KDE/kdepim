@@ -61,7 +61,7 @@ void StorageServiceAbstract::uploadFile(const QString &filename, const QString &
     }
 
     changeProgressState(true);
-    storageServiceuploadFile(filename);
+    storageServiceuploadFile(filename, destination);
 }
 
 void StorageServiceAbstract::accountInfo()
@@ -220,7 +220,7 @@ void StorageServiceAbstract::executeNextAction()
     case AccessToken:
         break;
     case UploadFile:
-        storageServiceuploadFile(mNextAction->nextActionFileName());
+        storageServiceuploadFile(mNextAction->nextActionFileName(), mNextAction->nextActionFolder());
         break;
     case CreateFolder:
         storageServicecreateFolder(mNextAction->nextActionFolder());

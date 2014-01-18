@@ -138,11 +138,12 @@ QString HubicStorageService::name()
     return i18n("Hubic");
 }
 
-void HubicStorageService::storageServiceuploadFile(const QString &filename)
+void HubicStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -151,7 +152,7 @@ void HubicStorageService::storageServiceuploadFile(const QString &filename)
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename);
+        job->uploadFile(filename,destination);
     }
 }
 
