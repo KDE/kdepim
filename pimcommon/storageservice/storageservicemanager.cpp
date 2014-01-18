@@ -58,6 +58,16 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
     Q_EMIT servicesChanged();
 }
 
+void StorageServiceManager::setDefaultUploadFolder(const QString &folder)
+{
+    mDefaultUploadFolder = folder;
+}
+
+QString StorageServiceManager::defaultUploadFolder() const
+{
+    return mDefaultUploadFolder;
+}
+
 QMenu *StorageServiceManager::menuUploadServices(QWidget *parent) const
 {
     return menuWithCapability(PimCommon::StorageServiceAbstract::ShareLinkCapability, parent);
@@ -129,7 +139,7 @@ void StorageServiceManager::slotShareFile()
                 connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
                 connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
                 connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
-                service->uploadFile(fileName);
+                service->uploadFile(fileName, mDefaultUploadFolder);
             }
         }
     }

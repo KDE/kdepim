@@ -99,7 +99,7 @@ public:
     bool isInProgress() const;
 
     virtual void downloadFile(const QString &filename, const QString &destination);
-    virtual void uploadFile(const QString &filename, const QString &destination=QString());
+    virtual void uploadFile(const QString &filename, const QString &destination);
     virtual void accountInfo();
     virtual void createFolder(const QString &folder);
     virtual void listFolder(const QString &folder=QString());

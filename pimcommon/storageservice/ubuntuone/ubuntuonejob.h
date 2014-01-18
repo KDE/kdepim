@@ -32,7 +32,7 @@ public:
     ~UbuntuOneJob();
 
     void requestTokenAccess();
-    void uploadFile(const QString &filename, const QString &destination=QString());
+    void uploadFile(const QString &filename, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &foldername);
