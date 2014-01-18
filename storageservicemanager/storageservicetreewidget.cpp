@@ -208,7 +208,7 @@ void StorageServiceTreeWidget::slotRenameFile()
     const QString folder = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"));
     if (!folder.isEmpty()) {
         if (oldFolderName != folder) {
-            mStorageService->renameFolder(oldFolderName, folder);
+            mStorageService->renameFile(oldFolderName, folder);
         }
     }
 }
