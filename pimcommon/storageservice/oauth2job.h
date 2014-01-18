@@ -69,6 +69,7 @@ protected:
     virtual void parseDeleteFolder(const QString &data);
     virtual void parseCopyFile(const QString &data);
     virtual void parseCopyFolder(const QString &data);
+    virtual void parseRenameFile(const QString &data);
     virtual void refreshToken();
     QString mServiceUrl;
     QUrl mAuthUrl;
@@ -89,7 +90,7 @@ protected:
     bool mNeedRefreshToken;
 
 private:
-    void shareLink(const QString &fileId);    
+    void shareLink(const QString &fileId);
 };
 }
 

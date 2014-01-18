@@ -105,10 +105,17 @@ void BoxJob::renameFile(const QString &oldName, const QString &newName)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFile;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+
+    QUrl url;
+    url.setUrl(mApiUrl + mFileInfoPath + oldName);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
+    const QString data = QString::fromLatin1("{\"name\":\"%1\"}").arg(newName);
+
+    QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void BoxJob::moveFolder(const QString &source, const QString &destination)
@@ -315,7 +322,21 @@ void BoxJob::parseCopyFile(const QString &data)
     deleteLater();
 }
 
-void BoxJob::parsecopyFolder(const QString &data)
+void BoxJob::parseRenameFile(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    QString filename;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (info.contains(QLatin1String("name"))) {
+        filename = info.value(QLatin1String("name")).toString();
+    }
+    Q_EMIT renameFileDone(filename);
+    deleteLater();
+}
+
+void BoxJob::parseCopyFolder(const QString &data)
 {
     QJson::Parser parser;
     bool ok;

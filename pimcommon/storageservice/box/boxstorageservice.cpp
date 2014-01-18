@@ -345,8 +345,8 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     cap |= ListFolderCapability;
     cap |= DeleteFileCapability;
     //cap |= ShareLinkCapability;
-    //cap |= RenameFolderCapability;
-    //cap |= RenameFileCapabilitity;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
     cap |= CopyFileCapability;

@@ -53,7 +53,8 @@ private:
     void parseCreateFolder(const QString &data);
     void parseUploadFile(const QString &data);
     void parseCopyFile(const QString &data);
-    void parsecopyFolder(const QString &data);
+    void parseCopyFolder(const QString &data);
+    void parseRenameFile(const QString &data);
 };
 }
 
