@@ -418,8 +418,10 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::RenameFile:
         parseRenameFile(data);
         break;
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::RenameFolder:
+        parseRenameFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
 
     case PimCommon::StorageServiceAbstract::MoveFolder:
     case PimCommon::StorageServiceAbstract::MoveFile:
@@ -438,6 +440,11 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
 void OAuth2Job::parseRenameFile(const QString &data)
 {
     Q_EMIT renameFileDone(QString());
+}
+
+void OAuth2Job::parseRenameFolder(const QString &data)
+{
+    Q_EMIT renameFolderDone(QString());
 }
 
 void OAuth2Job::parseCopyFile(const QString &data)

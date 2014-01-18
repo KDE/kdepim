@@ -55,6 +55,7 @@ private:
     void parseCopyFile(const QString &data);
     void parseCopyFolder(const QString &data);
     void parseRenameFile(const QString &data);
+    void parseRenameFolder(const QString &data);
 };
 }
 
