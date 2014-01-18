@@ -100,7 +100,7 @@ void WebDavJob::accountInfo()
     deleteLater();
 }
 
-void WebDavJob::createFolder(const QString &filename)
+void WebDavJob::createFolder(const QString &foldername, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;

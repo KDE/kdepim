@@ -33,7 +33,7 @@ public:
     void uploadFile(const QString &filename, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
-    void createFolder(const QString &filename);
+    void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &password, const QString &userName, const QString &token);
     void createServiceFolder();
@@ -43,7 +43,7 @@ public:
     void renameFolder(const QString &source, const QString &destination);
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
-    void moveFile(const QString &source, const QString &destination);    
+    void moveFile(const QString &source, const QString &destination);
     void copyFile(const QString &source, const QString &destination);
     void copyFolder(const QString &source, const QString &destination);
 

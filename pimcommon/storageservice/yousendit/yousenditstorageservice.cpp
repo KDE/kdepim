@@ -101,7 +101,7 @@ void YouSendItStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void YouSendItStorageService::storageServicecreateFolder(const QString &folder)
+void YouSendItStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionFolder(folder);
@@ -112,7 +112,7 @@ void YouSendItStorageService::storageServicecreateFolder(const QString &folder)
         job->initializeToken(mPassword, mUsername, mToken);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder);
+        job->createFolder(folder, destination);
     }
 }
 

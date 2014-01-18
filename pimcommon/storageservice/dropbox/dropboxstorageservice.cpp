@@ -138,7 +138,7 @@ void DropBoxStorageService::storageServiceaccountInfo()
     }
 }
 
-void DropBoxStorageService::storageServicecreateFolder(const QString &folder)
+void DropBoxStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
@@ -149,7 +149,7 @@ void DropBoxStorageService::storageServicecreateFolder(const QString &folder)
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder);
+        job->createFolder(folder, destination);
     }
 }
 

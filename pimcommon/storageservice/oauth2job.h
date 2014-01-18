@@ -35,7 +35,7 @@ public:
     void uploadFile(const QString &filename, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
-    void createFolder(const QString &filename);
+    void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
     void createServiceFolder();

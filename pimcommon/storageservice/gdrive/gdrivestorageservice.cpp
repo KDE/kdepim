@@ -261,7 +261,7 @@ void GDriveStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void GDriveStorageService::storageServicecreateFolder(const QString &folder)
+void GDriveStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
@@ -272,7 +272,7 @@ void GDriveStorageService::storageServicecreateFolder(const QString &folder)
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder);
+        job->createFolder(folder, destination);
     }
 }
 

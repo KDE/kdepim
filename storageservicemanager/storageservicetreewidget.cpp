@@ -217,7 +217,7 @@ void StorageServiceTreeWidget::slotCreateFolder()
 {
     const QString folder = KInputDialog::getText(i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
-        mStorageService->createFolder(folder);
+        mStorageService->createFolder(folder, mCurrentFolder);
     }
 }
 

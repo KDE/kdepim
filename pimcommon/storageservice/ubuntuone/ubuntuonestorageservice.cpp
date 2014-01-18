@@ -95,7 +95,7 @@ void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void UbuntuoneStorageService::storageServicecreateFolder(const QString &folder)
+void UbuntuoneStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
@@ -106,7 +106,7 @@ void UbuntuoneStorageService::storageServicecreateFolder(const QString &folder)
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder);
+        job->createFolder(folder, destination);
     }
 }
 

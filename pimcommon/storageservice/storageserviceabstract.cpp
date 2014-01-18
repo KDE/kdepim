@@ -74,14 +74,14 @@ void StorageServiceAbstract::accountInfo()
     storageServiceaccountInfo();
 }
 
-void StorageServiceAbstract::createFolder(const QString &folder)
+void StorageServiceAbstract::createFolder(const QString &foldername, const QString &destination)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";
         return;
     }
     changeProgressState(true);
-    storageServicecreateFolder(folder);
+    storageServicecreateFolder(foldername, destination);
 }
 
 void StorageServiceAbstract::listFolder(const QString &folder)

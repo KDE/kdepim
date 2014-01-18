@@ -406,16 +406,16 @@ void DropBoxJob::doAuthentication()
     }
 }
 
-void DropBoxJob::createFolder(const QString &folder)
+void DropBoxJob::createFolder(const QString &foldername, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
-    if (folder.isEmpty()) {
+    if (foldername.isEmpty()) {
         qDebug()<<" folder empty!";
     }
     QUrl url(mApiPath + QLatin1String("fileops/create_folder"));
     url.addQueryItem(QLatin1String("root"), mRootPath);
-    url.addQueryItem(QLatin1String("path"), folder );
+    url.addQueryItem(QLatin1String("path"), foldername );
     url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey );
     url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
     url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));

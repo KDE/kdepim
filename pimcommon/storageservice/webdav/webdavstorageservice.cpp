@@ -241,7 +241,7 @@ void WebDavStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void WebDavStorageService::storageServicecreateFolder(const QString &folder)
+void WebDavStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
@@ -251,7 +251,7 @@ void WebDavStorageService::storageServicecreateFolder(const QString &folder)
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder);
+        job->createFolder(folder, destination);
     }
 }
 

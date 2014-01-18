@@ -101,7 +101,7 @@ public:
     virtual void downloadFile(const QString &filename, const QString &destination);
     virtual void uploadFile(const QString &filename, const QString &destination);
     virtual void accountInfo();
-    virtual void createFolder(const QString &folder);
+    virtual void createFolder(const QString &foldername, const QString &destination);
     virtual void listFolder(const QString &folder=QString());
     virtual void authentication();
     virtual void shareLink(const QString &root, const QString &path);
@@ -165,7 +165,7 @@ protected:
     virtual void storageServicedownloadFile(const QString &filename, const QString &destination) = 0;
     virtual void storageServiceuploadFile(const QString &filename, const QString &destination = QString()) = 0;
     virtual void storageServiceaccountInfo() = 0;
-    virtual void storageServicecreateFolder(const QString &folder) = 0;
+    virtual void storageServicecreateFolder(const QString &folder, const QString &destination = QString()) = 0;
     virtual void storageServicelistFolder(const QString &folder) = 0;
     virtual void storageServiceauthentication() = 0;
     virtual void storageServiceShareLink(const QString &root, const QString &path) = 0;

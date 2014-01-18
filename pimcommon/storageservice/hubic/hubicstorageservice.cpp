@@ -104,7 +104,7 @@ void HubicStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void HubicStorageService::storageServicecreateFolder(const QString &folder)
+void HubicStorageService::storageServicecreateFolder(const QString &folder, const QString &destination)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
@@ -115,7 +115,7 @@ void HubicStorageService::storageServicecreateFolder(const QString &folder)
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder);
+        job->createFolder(folder, destination);
     }
 }
 
