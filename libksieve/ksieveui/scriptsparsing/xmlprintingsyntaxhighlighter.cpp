@@ -71,6 +71,7 @@ void XMLPrintingSyntaxHighLighter::init()
     misc.setFontWeight( QFont::Bold );
     QStringList miscType;
     miscType << QLatin1String("control") << QLatin1String("block") << QLatin1String("script")<< QLatin1String("action")<<QLatin1String("comment");
+    miscType << QLatin1String("num") << QLatin1String("tag")<< QLatin1String("list")<< QLatin1String("str")<< QLatin1String("test") <<QLatin1String("crlf/");
     Q_FOREACH ( const QString &s, miscType ) {
         const QRegExp regex( s, Qt::CaseInsensitive );
         m_rules.append( Rule( regex, misc ) );
