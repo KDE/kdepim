@@ -154,7 +154,7 @@ void ServerSieveSettings::setServerSieveConfig(const SieveEditorUtil::SieveServe
     setPassword(conf.password);
     setPort(conf.port);
     setServerName(conf.serverName);
-    setUserName(conf.serverName);
+    setUserName(conf.userName);
     setCurrentAuthMode( ui->authenticationCombo, conf.authenticationType );
 }
 

@@ -1,6 +1,4 @@
 1.0:
 ----
-- Use KWallet to store password ?
-- Allow to inform when script was changed (to save before to close)
 - Change "script wasActive"
 
