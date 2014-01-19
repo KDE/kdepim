@@ -94,7 +94,7 @@ void UbuntuOneJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
-    QUrl url(QLatin1String("https://one.ubuntu.com/api/file_storage/v1"));
+    QUrl url(QString::fromLatin1("https://one.ubuntu.com/api/file_storage/v1/~/Ubuntu%20One")/*.arg(folder)*/ + QLatin1String("?include_children=true"));
     url.addQueryItem(QLatin1String("oauth_consumer_key"), mCustomerKey);
     url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
 

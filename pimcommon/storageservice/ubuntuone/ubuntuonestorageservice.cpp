@@ -188,13 +188,13 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::serviceCapabilitie
     cap |= AccountInfoCapability;
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
-    //cap |= CreateFolderCapability;
-    //cap |= DeleteFolderCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     cap |= DeleteFileCapability;
-    //cap |= RenameFolderCapability;
-    //cap |= RenameFileCapabilitity;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
     //cap |= CopyFileCapability;
@@ -383,7 +383,25 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     bool ok;
     QString parentFolder;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info "<<info;
+    //qDebug()<<" info "<<info;
+    if (info.contains(QLatin1String("children"))) {
+        const QVariantList lst = info.value(QLatin1String("children")).toList();
+        Q_FOREACH (const QVariant &v, lst) {
+            const QVariantMap map = v.toMap();
+            if (map.contains(QLatin1String("kind"))) {
+                const QString kind = map.value(QLatin1String("kind")).toString();
+                if (kind == QLatin1String("directory")) {
+                    const QString path = map.value(QLatin1String("path")).toString();
+                    listWidget->addFolder(path, path);
+                } else if (kind == QLatin1String("file")) {
+                    const QString path = map.value(QLatin1String("path")).toString();
+                    listWidget->addFile(path, path);
+                } else {
+                    qDebug() <<" kind unknown "<<kind;
+                }
+            }
+        }
+    }
     return parentFolder;
 }
 
