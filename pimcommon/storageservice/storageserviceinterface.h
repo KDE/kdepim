@@ -51,6 +51,10 @@ public:
     //UbuntuOne
     virtual QString ubuntuOneAttachmentVolume() const = 0;
     virtual QString ubuntuOneTokenName() const = 0;
+
+    //GDrive
+    virtual QString gdriveClientId() const = 0;
+    virtual QString gdriveClientSecret() const = 0;
 };
 
 }

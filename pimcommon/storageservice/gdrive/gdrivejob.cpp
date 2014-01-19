@@ -29,8 +29,8 @@ using namespace PimCommon;
 GDriveJob::GDriveJob(QObject *parent)
     : PimCommon::OAuth2Job(parent)
 {
-    mClientId = PimCommon::StorageServiceJobConfig::self()->boxClientId();
-    mClientSecret = PimCommon::StorageServiceJobConfig::self()->boxClientSecret();
+    mClientId = PimCommon::StorageServiceJobConfig::self()->gdriveClientId();
+    mClientSecret = PimCommon::StorageServiceJobConfig::self()->gdriveClientSecret();
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     mServiceUrl = QLatin1String("https://app.box.com");
     mApiUrl = QLatin1String("https://api.box.com");

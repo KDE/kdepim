@@ -92,3 +92,15 @@ QString TestSettingsJob::ubuntuOneTokenName() const
 {
     return QLatin1String("foo");
 }
+
+QString TestSettingsJob::gdriveClientId() const
+{
+    //TODO
+    return QString();
+}
+
+QString TestSettingsJob::gdriveClientSecret() const
+{
+    //TODO
+    return QString();
+}

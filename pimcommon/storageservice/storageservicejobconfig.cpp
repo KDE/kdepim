@@ -176,4 +176,22 @@ QString StorageServiceJobConfig::ubuntuOneTokenName() const
     return mSettingsJob->ubuntuOneTokenName();
 }
 
+QString StorageServiceJobConfig::gdriveClientId() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->gdriveClientId();
+}
+
+QString StorageServiceJobConfig::gdriveClientSecret() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->gdriveClientSecret();
+}
+
 }
