@@ -146,12 +146,14 @@ void BoxJob::moveFile(const QString &source, const QString &destination)
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFileInfoPath + source);
+    qDebug()<<" url "<<url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
     //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     const QString data = QString::fromLatin1("{\"parent\":\"%1\"}").arg(destination);
 
+    qDebug()<<" data" <<data;
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -242,6 +244,7 @@ void BoxJob::createFolder(const QString &foldername, const QString &destination)
     //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     const QString data = QString::fromLatin1("{\"name\":\"%1\", \"parent\": {\"id\": \"%2\"}}").arg(foldername).arg(destination);
 
+    qDebug()<<" data "<<data;
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -275,21 +278,25 @@ void BoxJob::shareLink(const QString &root, const QString &path)
 
 void BoxJob::parseDeleteFolder(const QString &data)
 {
+    /*
     QJson::Parser parser;
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
+    */
     Q_EMIT deleteFolderDone(QString());
 }
 
 void BoxJob::parseDeleteFile(const QString &data)
 {
+    /*
     QJson::Parser parser;
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
+    */
     Q_EMIT deleteFileDone(QString());
 }
 
