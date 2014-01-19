@@ -1723,7 +1723,7 @@ void AgendaView::fillAgenda()
 bool AgendaView::displayIncidence( const Akonadi::Item &aitem, bool createSelected )
 {
   KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
-  if ( incidence->hasRecurrenceId() ) {
+  if ( !incidence || incidence->hasRecurrenceId() ) {
     return false;
   }
 
