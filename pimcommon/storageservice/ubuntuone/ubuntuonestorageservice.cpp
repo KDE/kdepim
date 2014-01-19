@@ -19,10 +19,14 @@
 #include "storageservice/storageservicetreewidget.h"
 #include "ubuntuonejob.h"
 
+#include <qjson/parser.h>
+
 #include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
+
+#include <QDebug>
 
 
 using namespace PimCommon;
@@ -186,7 +190,7 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::serviceCapabilitie
     //cap |= DownloadFileCapability;
     //cap |= CreateFolderCapability;
     //cap |= DeleteFolderCapability;
-    //cap |= ListFolderCapability;
+    cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
     cap |= DeleteFileCapability;
     //cap |= RenameFolderCapability;
@@ -375,7 +379,12 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() con
 QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
-    return QString();
+    QJson::Parser parser;
+    bool ok;
+    QString parentFolder;
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info "<<info;
+    return parentFolder;
 }
 
 QString UbuntuoneStorageService::storageServiceName() const
