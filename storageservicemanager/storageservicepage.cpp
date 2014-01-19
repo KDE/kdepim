@@ -49,10 +49,10 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
-    mListWidget = new StorageServiceTreeWidget(mStorageService);
-    connect(mListWidget, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
-    connect(mListWidget, SIGNAL(moveUp()), this, SLOT(slotMoveUp()));
-    vbox->addWidget(mListWidget);
+    mTreeWidget = new StorageServiceTreeWidget(mStorageService);
+    connect(mTreeWidget, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
+    connect(mTreeWidget, SIGNAL(moveUp()), this, SLOT(slotMoveUp()));
+    vbox->addWidget(mTreeWidget);
 
     if (mStorageService->hasProgressIndicatorSupport()) {
         mProgressBar = new QProgressBar;
@@ -187,12 +187,12 @@ void StorageServicePage::authenticate()
 
 void StorageServicePage::createFolder()
 {
-    mListWidget->slotCreateFolder();
+    mTreeWidget->slotCreateFolder();
 }
 
 void StorageServicePage::refreshList()
 {
-    mStorageService->listFolder(mListWidget->currentFolder());
+    mStorageService->listFolder(mTreeWidget->currentFolder());
 }
 
 void StorageServicePage::accountInfo()
@@ -202,17 +202,17 @@ void StorageServicePage::accountInfo()
 
 void StorageServicePage::uploadFile()
 {
-    mListWidget->slotUploadFile();
+    mTreeWidget->slotUploadFile();
 }
 
 void StorageServicePage::deleteFile()
 {
-    mListWidget->slotDeleteFile();
+    mTreeWidget->slotDeleteFile();
 }
 
 void StorageServicePage::downloadFile()
 {
-    mListWidget->slotDownloadFile();
+    mTreeWidget->slotDownloadFile();
 }
 
 PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities() const
@@ -222,7 +222,7 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities
 
 void StorageServicePage::slotProgressStateChanged(bool state)
 {
-    mListWidget->setEnabled(!state);
+    mTreeWidget->setEnabled(!state);
     if (state) {
         mProgressIndicator->startAnimation();
     } else {
@@ -233,8 +233,8 @@ void StorageServicePage::slotProgressStateChanged(bool state)
 void StorageServicePage::slotListFolderDone(const QString &serviceName, const QString &data)
 {
     if (verifyService(serviceName)) {
-        mListWidget->setIsInitialized();
-        const QString parentFolder = mStorageService->fillListWidget(mListWidget, data);
+        mTreeWidget->setIsInitialized();
+        const QString parentFolder = mStorageService->fillListWidget(mTreeWidget, data);
         mParentFolder = parentFolder;
     }
 }
@@ -284,13 +284,13 @@ void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QS
 
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
-    mListWidget->setCurrentFolder(folder);
+    mTreeWidget->setCurrentFolder(folder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
 void StorageServicePage::slotMoveUp()
 {
-    mListWidget->setCurrentFolder(mParentFolder);
+    mTreeWidget->setCurrentFolder(mParentFolder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 

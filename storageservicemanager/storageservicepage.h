@@ -86,7 +86,7 @@ private:
     QString mServiceName;
     QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
-    StorageServiceTreeWidget *mListWidget;
+    StorageServiceTreeWidget *mTreeWidget;
     StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
     QProgressBar *mProgressBar;
