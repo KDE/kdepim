@@ -32,15 +32,11 @@
 #include <KActionCollection>
 #include <KAction>
 
-#include <kwallet.h>
-
 #include <QPointer>
 
 SieveEditorMainWindow::SieveEditorMainWindow()
     : KXmlGuiWindow()
 {    
-    mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
-    //TODO
     setupActions();
     setupGUI();
     readConfig();
@@ -55,8 +51,6 @@ SieveEditorMainWindow::~SieveEditorMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("SieveEditorMainWindow") );
     group.writeEntry( "Size", size() );
-    mWallet->deleteLater();
-    mWallet = 0;
 }
 
 void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction)

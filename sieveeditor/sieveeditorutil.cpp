@@ -20,6 +20,7 @@
 
 
 #include "sieveeditorutil.h"
+#include "sieveserversettings.h"
 #include <KConfig>
 #include <KGlobal>
 #include <KLocale>
@@ -71,7 +72,7 @@ QList<SieveEditorUtil::SieveServerConfig> SieveEditorUtil::readServerSieveConfig
     KSharedConfigPtr cfg = KGlobal::config();
     QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
     const QStringList groups = cfg->groupList().filter( re );
-
+    SieveServerSettings::self()->wallet();
     Q_FOREACH (const QString &conf, groups) {
         SieveServerConfig sieve;
         KConfigGroup group = cfg->group(conf);
