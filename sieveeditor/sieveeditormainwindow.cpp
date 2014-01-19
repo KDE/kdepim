@@ -55,6 +55,8 @@ SieveEditorMainWindow::~SieveEditorMainWindow()
 
     KConfigGroup group = config->group( QLatin1String("SieveEditorMainWindow") );
     group.writeEntry( "Size", size() );
+    mWallet->deleteLater();
+    mWallet = 0;
 }
 
 void SieveEditorMainWindow::slotUpdateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction)
