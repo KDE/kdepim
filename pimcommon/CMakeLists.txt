@@ -43,6 +43,9 @@ set(libpimcommon_storageservice_SRCS
   storageservice/ubuntuone/ubuntuonejob.cpp
   storageservice/ubuntuone/ubuntuoneutil.cpp
 
+  storageservice/gdrive/gdrivestorageservice.cpp
+  storageservice/gdrive/gdrivejob.cpp
+
   storageservice/logindialog.cpp
   storageservice/storageserviceabstractjob.cpp
 
@@ -215,6 +218,9 @@ add_subdirectory(storageservice/yousendit/tests)
 add_subdirectory(storageservice/webdav/tests)
 add_subdirectory(storageservice/ubuntuone/tests)
 add_subdirectory(storageservice/box/tests)
+add_subdirectory(storageservice/gdrive/tests/)
+
+add_subdirectory(storageservice/dropbox/icons/)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

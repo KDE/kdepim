@@ -32,10 +32,10 @@ public:
     ~OAuth2Job();
 
     void requestTokenAccess();
-    void uploadFile(const QString &filename);
+    void uploadFile(const QString &filename, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
-    void createFolder(const QString &filename);
+    void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
     void createServiceFolder();
@@ -67,6 +67,12 @@ protected:
     virtual void parseAccountInfo(const QString &data);
     virtual void parseDeleteFile(const QString &data);
     virtual void parseDeleteFolder(const QString &data);
+    virtual void parseCopyFile(const QString &data);
+    virtual void parseCopyFolder(const QString &data);
+    virtual void parseRenameFile(const QString &data);
+    virtual void parseRenameFolder(const QString &data);
+    virtual void parseMoveFolder(const QString &data);
+    virtual void parseMoveFile(const QString &data);
     virtual void refreshToken();
     QString mServiceUrl;
     QUrl mAuthUrl;
@@ -87,7 +93,7 @@ protected:
     bool mNeedRefreshToken;
 
 private:
-    void shareLink(const QString &fileId);    
+    void shareLink(const QString &fileId);
 };
 }
 

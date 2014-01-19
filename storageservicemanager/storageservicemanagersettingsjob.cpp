@@ -94,3 +94,15 @@ QString StorageServiceManagerSettingsJob::ubuntuOneTokenName() const
 {
     return QLatin1String("kde storagemanager");
 }
+
+QString StorageServiceManagerSettingsJob::gdriveClientId() const
+{
+    //TODO
+    return QString();
+}
+
+QString StorageServiceManagerSettingsJob::gdriveClientSecret() const
+{
+    //TODO
+    return QString();
+}

@@ -53,7 +53,7 @@ void StorageServiceAbstract::downloadFile(const QString &filename, const QString
     storageServicedownloadFile(filename, destination);
 }
 
-void StorageServiceAbstract::uploadFile(const QString &filename)
+void StorageServiceAbstract::uploadFile(const QString &filename, const QString &destination)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";
@@ -61,7 +61,7 @@ void StorageServiceAbstract::uploadFile(const QString &filename)
     }
 
     changeProgressState(true);
-    storageServiceuploadFile(filename);
+    storageServiceuploadFile(filename, destination);
 }
 
 void StorageServiceAbstract::accountInfo()
@@ -74,14 +74,14 @@ void StorageServiceAbstract::accountInfo()
     storageServiceaccountInfo();
 }
 
-void StorageServiceAbstract::createFolder(const QString &folder)
+void StorageServiceAbstract::createFolder(const QString &foldername, const QString &destination)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";
         return;
     }
     changeProgressState(true);
-    storageServicecreateFolder(folder);
+    storageServicecreateFolder(foldername, destination);
 }
 
 void StorageServiceAbstract::listFolder(const QString &folder)
@@ -220,10 +220,10 @@ void StorageServiceAbstract::executeNextAction()
     case AccessToken:
         break;
     case UploadFile:
-        storageServiceuploadFile(mNextAction->nextActionFileName());
+        storageServiceuploadFile(mNextAction->nextActionName(), mNextAction->nextActionFolder());
         break;
     case CreateFolder:
-        storageServicecreateFolder(mNextAction->nextActionFolder());
+        storageServicecreateFolder(mNextAction->nextActionName(), mNextAction->nextActionFolder());
         break;
     case ListFolder:
         storageServicelistFolder(mNextAction->nextActionFolder());
@@ -238,10 +238,10 @@ void StorageServiceAbstract::executeNextAction()
         storageServicecreateServiceFolder();
         break;
     case DownLoadFile:
-        storageServicedownloadFile(mNextAction->nextActionFileName(), mNextAction->downloadDestination());
+        storageServicedownloadFile(mNextAction->nextActionName(), mNextAction->downloadDestination());
         break;
     case DeleteFile:
-        storageServicedeleteFile(mNextAction->nextActionFileName());
+        storageServicedeleteFile(mNextAction->nextActionName());
         break;
     case DeleteFolder:
         storageServicedeleteFolder(mNextAction->nextActionFolder());

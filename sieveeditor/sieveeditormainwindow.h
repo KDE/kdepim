@@ -23,10 +23,6 @@
 
 #include <KXmlGuiWindow>
 
-namespace KWallet {
-class Wallet;
-}
-
 class KAction;
 class SieveEditorMainWidget;
 class SieveEditorMainWindow : public KXmlGuiWindow
@@ -58,7 +54,6 @@ private:
     KAction *mDesactivateScript;
     KAction *mRefreshList;
     KAction *mSaveScript;
-    KWallet::Wallet *mWallet;
 };
 
 #endif // SIEVEEDITORMAINWINDOW_H

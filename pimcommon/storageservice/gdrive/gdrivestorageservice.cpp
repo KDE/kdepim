@@ -15,9 +15,9 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "boxstorageservice.h"
+#include "gdrivestorageservice.h"
 #include "storageservice/storageservicetreewidget.h"
-#include "boxjob.h"
+#include "gdrivejob.h"
 
 #include <qjson/parser.h>
 
@@ -31,19 +31,19 @@
 
 using namespace PimCommon;
 
-BoxStorageService::BoxStorageService(QObject *parent)
+GDriveStorageService::GDriveStorageService(QObject *parent)
     : PimCommon::StorageServiceAbstract(parent)
 {
     readConfig();
 }
 
-BoxStorageService::~BoxStorageService()
+GDriveStorageService::~GDriveStorageService()
 {
 }
 
-void BoxStorageService::readConfig()
+void GDriveStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Box Settings");
+    KConfigGroup grp(KGlobal::config(), "GoogleDrive Settings");
     mRefreshToken = grp.readEntry("Refresh Token");
     mToken = grp.readEntry("Token");
     if (grp.hasKey("Expire Time"))
@@ -52,33 +52,33 @@ void BoxStorageService::readConfig()
         mExpireDateTime = QDateTime::currentDateTime();
 }
 
-void BoxStorageService::removeConfig()
+void GDriveStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Box Settings");
+    KConfigGroup grp(KGlobal::config(), "GoogleDrive Settings");
     grp.deleteGroup();
     KGlobal::config()->sync();
 }
 
-void BoxStorageService::storageServiceauthentication()
+void GDriveStorageService::storageServiceauthentication()
 {
-    BoxJob *job = new BoxJob(this);
+    GDriveJob *job = new GDriveJob(this);
     connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
 
-void BoxStorageService::slotAuthorizationFailed(const QString &errorMessage)
+void GDriveStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
     mRefreshToken.clear();
     mToken.clear();
     emitAuthentificationFailder(errorMessage);
 }
 
-void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime)
+void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime)
 {
     mRefreshToken = refreshToken;
     mToken = token;
-    KConfigGroup grp(KGlobal::config(), "Box Settings");
+    KConfigGroup grp(KGlobal::config(), "GoogleDrive Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
@@ -86,7 +86,7 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
     emitAuthentificationDone();
 }
 
-bool BoxStorageService::needToRefreshToken() const
+bool GDriveStorageService::needToRefreshToken() const
 {
     if (mExpireDateTime < QDateTime::currentDateTime())
         return true;
@@ -94,7 +94,7 @@ bool BoxStorageService::needToRefreshToken() const
         return false;
 }
 
-void BoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
+void GDriveStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(ShareLink);
@@ -102,7 +102,7 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
         mNextAction->setRootPath(root);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -110,7 +110,7 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
     }
 }
 
-void BoxStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void GDriveStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
@@ -118,7 +118,7 @@ void BoxStorageService::storageServicedownloadFile(const QString &filename, cons
         mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -126,14 +126,14 @@ void BoxStorageService::storageServicedownloadFile(const QString &filename, cons
     }
 }
 
-void BoxStorageService::storageServicedeleteFile(const QString &filename)
+void GDriveStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionName(filename);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(deleteFileDone(QString)), SLOT(slotDeleteFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -141,14 +141,14 @@ void BoxStorageService::storageServicedeleteFile(const QString &filename)
     }
 }
 
-void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
+void GDriveStorageService::storageServicedeleteFolder(const QString &foldername)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(DeleteFolder);
         mNextAction->setNextActionFolder(foldername);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(deleteFolderDone(QString)), SLOT(slotDeleteFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -156,14 +156,14 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
     }
 }
 
-void BoxStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
+void GDriveStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(renameFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -171,14 +171,14 @@ void BoxStorageService::storageServiceRenameFolder(const QString &source, const 
     }
 }
 
-void BoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
+void GDriveStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(renameFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -186,14 +186,14 @@ void BoxStorageService::storageServiceRenameFile(const QString &source, const QS
     }
 }
 
-void BoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
+void GDriveStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(moveFolderDone(QString)), SLOT(slotRenameFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -201,14 +201,14 @@ void BoxStorageService::storageServiceMoveFolder(const QString &source, const QS
     }
 }
 
-void BoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
+void GDriveStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(moveFileDone(QString)), SLOT(slotRenameFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -216,14 +216,14 @@ void BoxStorageService::storageServiceMoveFile(const QString &source, const QStr
     }
 }
 
-void BoxStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
+void GDriveStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(copyFileDone(QString)), SLOT(slotCopyFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -231,14 +231,14 @@ void BoxStorageService::storageServiceCopyFile(const QString &source, const QStr
     }
 }
 
-void BoxStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
+void GDriveStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(CopyFolder);
         mNextAction->setRenameFolder(source, destination);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(copyFolderDone(QString)), SLOT(slotCopyFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -246,14 +246,14 @@ void BoxStorageService::storageServiceCopyFolder(const QString &source, const QS
     }
 }
 
-void BoxStorageService::storageServicelistFolder(const QString &folder)
+void GDriveStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(listFolderDone(QString)), this, SLOT(slotListFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -261,7 +261,7 @@ void BoxStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void BoxStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
+void GDriveStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
@@ -269,7 +269,7 @@ void BoxStorageService::storageServicecreateFolder(const QString &name, const QS
         mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -277,13 +277,13 @@ void BoxStorageService::storageServicecreateFolder(const QString &name, const QS
     }
 }
 
-void BoxStorageService::storageServiceaccountInfo()
+void GDriveStorageService::storageServiceaccountInfo()
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(AccountInfo);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job,SIGNAL(accountInfoDone(PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(PimCommon::AccountInfo)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -291,12 +291,12 @@ void BoxStorageService::storageServiceaccountInfo()
     }
 }
 
-QString BoxStorageService::name()
+QString GDriveStorageService::name()
 {
-    return i18n("Box");
+    return i18n("GoogleDrive");
 }
 
-void BoxStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
+void GDriveStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
@@ -304,7 +304,7 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
         mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -314,69 +314,69 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
     }
 }
 
-QString BoxStorageService::description()
+QString GDriveStorageService::description()
 {
     return i18n("Box.com is a file hosting that offers cloud storage, file synchronization, and client software.");
 }
 
-QUrl BoxStorageService::serviceUrl()
+QUrl GDriveStorageService::serviceUrl()
 {
     return QUrl(QLatin1String("https://app.box.com/"));
 }
 
-QString BoxStorageService::serviceName()
+QString GDriveStorageService::serviceName()
 {
     return QLatin1String("box");
 }
 
-QString BoxStorageService::iconName()
+QString GDriveStorageService::iconName()
 {
     return QString();
 }
 
-StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
+StorageServiceAbstract::Capabilities GDriveStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
-    cap |= AccountInfoCapability;
+    //cap |= AccountInfoCapability;
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
-    cap |= CreateFolderCapability;
-    cap |= DeleteFolderCapability;
-    cap |= ListFolderCapability;
-    cap |= DeleteFileCapability;
+    //cap |= CreateFolderCapability;
+    //cap |= DeleteFolderCapability;
+    //cap |= ListFolderCapability;
+    //cap |= DeleteFileCapability;
     //cap |= ShareLinkCapability;
-    cap |= RenameFolderCapability;
-    cap |= RenameFileCapabilitity;
-    cap |= MoveFileCapability;
-    cap |= MoveFolderCapability;
-    cap |= CopyFileCapability;
-    cap |= CopyFolderCapability;
+    //cap |= RenameFolderCapability;
+    //cap |= RenameFileCapabilitity;
+    //cap |= MoveFileCapability;
+    //cap |= MoveFolderCapability;
+    //cap |= CopyFileCapability;
+    //cap |= CopyFolderCapability;
     return cap;
 }
 
 
-QString BoxStorageService::storageServiceName() const
+QString GDriveStorageService::storageServiceName() const
 {
     return serviceName();
 }
 
-KIcon BoxStorageService::icon() const
+KIcon GDriveStorageService::icon() const
 {
     return KIcon();
 }
 
-StorageServiceAbstract::Capabilities BoxStorageService::capabilities() const
+StorageServiceAbstract::Capabilities GDriveStorageService::capabilities() const
 {
     return serviceCapabilities();
 }
 
-void BoxStorageService::storageServicecreateServiceFolder()
+void GDriveStorageService::storageServicecreateServiceFolder()
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(CreateServiceFolder);
         storageServiceauthentication();
     } else {
-        BoxJob *job = new BoxJob(this);
+        GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
@@ -384,7 +384,7 @@ void BoxStorageService::storageServicecreateServiceFolder()
     }
 }
 
-QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
+QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
     QJson::Parser parser;

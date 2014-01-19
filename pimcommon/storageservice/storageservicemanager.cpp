@@ -25,6 +25,7 @@
 #include "yousendit/yousenditstorageservice.h"
 #include "webdav/webdavstorageservice.h"
 #include "box/boxstorageservice.h"
+#include "gdrive/gdrivestorageservice.h"
 
 #include <KLocalizedString>
 #include <KFileDialog>
@@ -56,6 +57,16 @@ void StorageServiceManager::setListService(const QMap<QString, StorageServiceAbs
     mListService = lst;
     writeConfig();
     Q_EMIT servicesChanged();
+}
+
+void StorageServiceManager::setDefaultUploadFolder(const QString &folder)
+{
+    mDefaultUploadFolder = folder;
+}
+
+QString StorageServiceManager::defaultUploadFolder() const
+{
+    return mDefaultUploadFolder;
 }
 
 QMenu *StorageServiceManager::menuUploadServices(QWidget *parent) const
@@ -129,7 +140,7 @@ void StorageServiceManager::slotShareFile()
                 connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
                 connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
                 connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
-                service->uploadFile(fileName);
+                service->uploadFile(fileName, mDefaultUploadFolder);
             }
         }
     }
@@ -202,6 +213,10 @@ void StorageServiceManager::readConfig()
             if (!mListService.contains(serviceName(Box))) {
                 storageService = new BoxStorageService();
             }
+        } else if (service == serviceName(GDrive)) {
+            if (!mListService.contains(serviceName(GDrive))) {
+                storageService = new GDriveStorageService();
+            }
         }
         if (storageService) {
             mListService.insert(service, storageService);
@@ -230,6 +245,8 @@ QString StorageServiceManager::description(ServiceType type)
         return PimCommon::BoxStorageService::description();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::description();
+    case GDrive:
+        return PimCommon::GDriveStorageService::description();
     case EndListService:
     case Unknown:
         return QString();
@@ -252,6 +269,8 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::WebDavStorageService::serviceUrl();
     case Box:
         return PimCommon::BoxStorageService::serviceUrl();
+    case GDrive:
+        return PimCommon::GDriveStorageService::serviceUrl();
     case EndListService:
     case Unknown:
         return QString();
@@ -275,6 +294,8 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::WebDavStorageService::serviceName();
     case Box:
         return PimCommon::BoxStorageService::serviceName();
+    case GDrive:
+        return PimCommon::GDriveStorageService::serviceName();
     case EndListService:
     case Unknown:
         return QString();
@@ -297,6 +318,8 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::WebDavStorageService::name();
     case Box:
         return PimCommon::BoxStorageService::name();
+    case GDrive:
+        return PimCommon::GDriveStorageService::name();
     case EndListService:
     case Unknown:
         return QString();
@@ -319,6 +342,8 @@ QString StorageServiceManager::icon(ServiceType type)
         return PimCommon::WebDavStorageService::iconName();
     case Box:
         return PimCommon::BoxStorageService::iconName();
+    case GDrive:
+        return PimCommon::GDriveStorageService::iconName();
     case EndListService:
     case Unknown:
         return QString();
@@ -341,6 +366,8 @@ StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(Service
         return PimCommon::WebDavStorageService::serviceCapabilities();
     case Box:
         return PimCommon::BoxStorageService::serviceCapabilities();
+    case GDrive:
+        return PimCommon::GDriveStorageService::serviceCapabilities();
     case EndListService:
     case Unknown:
         return StorageServiceAbstract::NoCapability;

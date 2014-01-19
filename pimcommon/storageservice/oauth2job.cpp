@@ -235,7 +235,7 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void OAuth2Job::uploadFile(const QString &filename)
+void OAuth2Job::uploadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
@@ -277,7 +277,7 @@ void OAuth2Job::accountInfo()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void OAuth2Job::createFolder(const QString &foldername)
+void OAuth2Job::createFolder(const QString &foldername, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
@@ -361,6 +361,7 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::MoveFolder:
             case PimCommon::StorageServiceAbstract::MoveFile:
             case PimCommon::StorageServiceAbstract::CopyFile:
+            case PimCommon::StorageServiceAbstract::CopyFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -408,12 +409,26 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DeleteFolder:
         parseDeleteFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
-    case PimCommon::StorageServiceAbstract::RenameFolder:
-    case PimCommon::StorageServiceAbstract::RenameFile:
-    case PimCommon::StorageServiceAbstract::MoveFolder:
-    case PimCommon::StorageServiceAbstract::MoveFile:
     case PimCommon::StorageServiceAbstract::CopyFile:
+        parseCopyFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::CopyFolder:
+        parseCopyFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::RenameFile:
+        parseRenameFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::RenameFolder:
+        parseRenameFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::MoveFolder:
+        parseMoveFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::MoveFile:
+        parseMoveFile(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
+
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;
@@ -423,6 +438,26 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     }
+}
+
+void OAuth2Job::parseRenameFile(const QString &data)
+{
+    Q_EMIT renameFileDone(QString());
+}
+
+void OAuth2Job::parseRenameFolder(const QString &data)
+{
+    Q_EMIT renameFolderDone(QString());
+}
+
+void OAuth2Job::parseCopyFile(const QString &data)
+{
+    Q_EMIT copyFileDone(QString());
+}
+
+void OAuth2Job::parseCopyFolder(const QString &data)
+{
+    Q_EMIT copyFolderDone(QString());
 }
 
 void OAuth2Job::parseDeleteFolder(const QString &data)
@@ -459,6 +494,18 @@ void OAuth2Job::parseCreateServiceFolder(const QString &data)
 void OAuth2Job::parseListFolder(const QString &data)
 {
     Q_EMIT listFolderDone(data);
+    deleteLater();
+}
+
+void OAuth2Job::parseMoveFolder(const QString &data)
+{
+    Q_EMIT moveFolderDone(data);
+    deleteLater();
+}
+
+void OAuth2Job::parseMoveFile(const QString &data)
+{
+    Q_EMIT moveFileDone(data);
     deleteLater();
 }
 

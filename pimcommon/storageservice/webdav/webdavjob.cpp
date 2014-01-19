@@ -76,7 +76,7 @@ void WebDavJob::copyFolder(const QString &source, const QString &destination)
     deleteLater();
 }
 
-void WebDavJob::uploadFile(const QString &filename)
+void WebDavJob::uploadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
@@ -100,7 +100,7 @@ void WebDavJob::accountInfo()
     deleteLater();
 }
 
-void WebDavJob::createFolder(const QString &filename)
+void WebDavJob::createFolder(const QString &foldername, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
@@ -145,6 +145,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::MoveFolder:
             case PimCommon::StorageServiceAbstract::MoveFile:
             case PimCommon::StorageServiceAbstract::CopyFile:
+            case PimCommon::StorageServiceAbstract::CopyFolder:
 
                 errorMessage(mActionType, errorStr);
                 deleteLater();
@@ -190,6 +191,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::MoveFolder:
     case PimCommon::StorageServiceAbstract::MoveFile:
     case PimCommon::StorageServiceAbstract::CopyFile:
+    case PimCommon::StorageServiceAbstract::CopyFolder:
 
         deleteLater();
         break;

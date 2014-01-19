@@ -15,18 +15,17 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVEUTIL_H
-#define FOLDERARCHIVEUTIL_H
+#ifndef TEST_GDRIVE_GUI_H
+#define TEST_GDRIVE_GUI_H
 
-#include <QString>
-namespace FolderArchive {
-namespace FolderArchiveUtil
+#include <QWidget>
+#include "pimcommon/storageservice/tests/servicetestwidget.h"
+class QTextEdit;
+class GdriveTestWidget : public ServiceTestWidget
 {
-QString groupConfigPattern();
-bool resourceSupportArchiving(const QString &resource);
-QString configFileName();
-}
-}
+    Q_OBJECT
+public:
+    explicit GdriveTestWidget(QWidget *parent=0);
+};
 
-
-#endif // FOLDERARCHIVEUTIL_H
+#endif

@@ -30,11 +30,11 @@ public:
     ~DropBoxJob();
 
     void requestTokenAccess();
-    void uploadFile(const QString &filename);
+    void uploadFile(const QString &filename, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
-    void createFolder(const QString &filename=QString());
+    void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
     void downloadFile(const QString &filename, const QString &destination);
@@ -43,7 +43,7 @@ public:
     void renameFolder(const QString &source, const QString &destination);
     void renameFile(const QString &oldName, const QString &newName);
     void moveFolder(const QString &source, const QString &destination);
-    void moveFile(const QString &source, const QString &destination);    
+    void moveFile(const QString &source, const QString &destination);
     void copyFile(const QString &source, const QString &destination);
     void copyFolder(const QString &source, const QString &destination);
 

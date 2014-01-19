@@ -32,10 +32,10 @@ public:
     ~UbuntuOneJob();
 
     void requestTokenAccess();
-    void uploadFile(const QString &filename);
+    void uploadFile(const QString &filename, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
-    void createFolder(const QString &foldername);
+    void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
     void downloadFile(const QString &filename, const QString &destination);
@@ -66,6 +66,7 @@ private:
     void parseUploadFile(const QString &data);
     void parseAccessToken(const QString &data);
     void parseCreateServiceFolder(const QString &data);
+    void parseDeleteFolder(const QString &data);
     QString mCustomerSecret;
     QString mToken;
     QString mCustomerKey;

@@ -37,9 +37,9 @@ public:
 
 
     void storageServicelistFolder(const QString &folder);
-    void storageServiceuploadFile(const QString &filename);
+    void storageServiceuploadFile(const QString &filename, const QString &destination = QString());
     void storageServiceaccountInfo();
-    void storageServicecreateFolder(const QString &folder);
+    void storageServicecreateFolder(const QString &folder, const QString &destination = QString());
     void removeConfig();
     void storageServiceauthentication();
     void storageServiceShareLink(const QString &root, const QString &path);

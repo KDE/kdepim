@@ -154,6 +154,7 @@ PimCommon::StorageListWidgetItem *StorageServiceSettingsWidget::createItem(const
     item->setData(Name,service);
     item->setData(Type, type);
     if (!icon.isNull()) {
+        item->setDefaultIcon(icon);
         item->setIcon(icon);
     }
     mListService->addItem(item);

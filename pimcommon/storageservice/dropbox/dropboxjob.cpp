@@ -142,6 +142,7 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::MoveFolder:
             case PimCommon::StorageServiceAbstract::MoveFile:
             case PimCommon::StorageServiceAbstract::CopyFile:
+            case PimCommon::StorageServiceAbstract::CopyFolder:
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
@@ -406,16 +407,16 @@ void DropBoxJob::doAuthentication()
     }
 }
 
-void DropBoxJob::createFolder(const QString &folder)
+void DropBoxJob::createFolder(const QString &foldername, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
-    if (folder.isEmpty()) {
+    if (foldername.isEmpty()) {
         qDebug()<<" folder empty!";
     }
     QUrl url(mApiPath + QLatin1String("fileops/create_folder"));
     url.addQueryItem(QLatin1String("root"), mRootPath);
-    url.addQueryItem(QLatin1String("path"), folder );
+    url.addQueryItem(QLatin1String("path"), foldername );
     url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey );
     url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
     url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));
@@ -429,16 +430,17 @@ void DropBoxJob::createFolder(const QString &folder)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void DropBoxJob::uploadFile(const QString &filename)
+void DropBoxJob::uploadFile(const QString &filename, const QString &destination)
 {
     QFile *file = new QFile(filename);
     if (file->exists()) {
         mActionType = PimCommon::StorageServiceAbstract::UploadFile;
         mError = false;
         QFileInfo info(filename);
+        const QString defaultDestination = (destination.isEmpty() ? QLatin1String("test") : destination);
         const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
-        const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox///test/%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5&overwrite=false").
-                arg(info.fileName()).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp);
+        const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox///%7/%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5&overwrite=false").
+                arg(info.fileName()).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp).arg(defaultDestination);
         KUrl url(str);
         QNetworkRequest request(url);
         if (!file->open(QIODevice::ReadOnly)) {

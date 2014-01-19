@@ -176,7 +176,7 @@ void ServiceTestWidget::slotCreateFolder()
 {
     const QString folder = QInputDialog::getText(this,i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
-        mStorageService->createFolder(folder);
+        mStorageService->createFolder(folder, QString());
     }
 }
 
@@ -189,7 +189,7 @@ void ServiceTestWidget::slotUploadFile()
 {
     const QString filename = KFileDialog::getOpenFileName();
     if (!filename.isEmpty()) {
-        mStorageService->uploadFile(filename);
+        mStorageService->uploadFile(filename, QString());
     }
 }
 

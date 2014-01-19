@@ -15,18 +15,32 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef FOLDERARCHIVEUTIL_H
-#define FOLDERARCHIVEUTIL_H
+#include "gdrive_gui.h"
+#include "pimcommon/storageservice/gdrive/gdrivestorageservice.h"
+#include <QWidget>
 
-#include <QString>
-namespace FolderArchive {
-namespace FolderArchiveUtil
+#include <kdebug.h>
+#include <kapplication.h>
+#include <KCmdLineArgs>
+#include <KLocalizedString>
+
+
+GdriveTestWidget::GdriveTestWidget(QWidget *parent)
+    : ServiceTestWidget(parent)
 {
-QString groupConfigPattern();
-bool resourceSupportArchiving(const QString &resource);
-QString configFileName();
-}
+    setStorageService(new PimCommon::GDriveStorageService(this));
 }
 
 
-#endif // FOLDERARCHIVEUTIL_H
+int main (int argc, char **argv)
+{
+    KCmdLineArgs::init(argc, argv, "gdrive_gui", 0, ki18n("gdrive_Gui"),
+                       "1.0", ki18n("Test for gdrive"));
+
+    KApplication app;
+
+    GdriveTestWidget *w = new GdriveTestWidget;
+    w->show();
+    return app.exec();
+}
+

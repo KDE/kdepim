@@ -138,26 +138,28 @@ void DropBoxStorageService::storageServiceaccountInfo()
     }
 }
 
-void DropBoxStorageService::storageServicecreateFolder(const QString &folder)
+void DropBoxStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
-        mNextAction->setNextActionFolder(folder);
+        mNextAction->setNextActionName(name);
+        mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder);
+        job->createFolder(name, destination);
     }
 }
 
-void DropBoxStorageService::storageServiceuploadFile(const QString &filename)
+void DropBoxStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
+        mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -166,7 +168,7 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename)
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename);
+        job->uploadFile(filename, destination);
     }
 }
 
@@ -200,7 +202,7 @@ QString DropBoxStorageService::serviceName()
 
 QString DropBoxStorageService::iconName()
 {
-    return QString();
+    return QLatin1String("kdepim-dropbox");
 }
 
 StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities()
@@ -234,7 +236,7 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &filename, 
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
@@ -250,7 +252,7 @@ void DropBoxStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(DeleteFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -429,5 +431,5 @@ bool DropBoxStorageService::hasProgressIndicatorSupport() const
 
 KIcon DropBoxStorageService::icon() const
 {
-    return KIcon();
+    return KIcon(iconName());
 }

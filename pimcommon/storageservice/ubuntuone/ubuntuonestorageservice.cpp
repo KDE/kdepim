@@ -19,10 +19,14 @@
 #include "storageservice/storageservicetreewidget.h"
 #include "ubuntuonejob.h"
 
+#include <qjson/parser.h>
+
 #include <KLocalizedString>
 #include <KConfig>
 #include <KGlobal>
 #include <KConfigGroup>
+
+#include <QDebug>
 
 
 using namespace PimCommon;
@@ -95,18 +99,20 @@ void UbuntuoneStorageService::storageServicelistFolder(const QString &folder)
     }
 }
 
-void UbuntuoneStorageService::storageServicecreateFolder(const QString &folder)
+void UbuntuoneStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(CreateFolder);
-        mNextAction->setNextActionFolder(folder);
+        mNextAction->setNextActionName(name);
+        mNextAction->setNextActionFolder(destination);
+
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         connect(job, SIGNAL(createFolderDone(QString)), this, SLOT(slotCreateFolderDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->createFolder(folder);
+        job->createFolder(name, destination);
     }
 }
 
@@ -138,11 +144,12 @@ QString UbuntuoneStorageService::name()
     return i18n("Ubuntu One");
 }
 
-void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename)
+void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
+        mNextAction->setNextActionFolder(destination);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -151,7 +158,7 @@ void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename)
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename);
+        job->uploadFile(filename, destination);
     }
 }
 
@@ -181,13 +188,13 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::serviceCapabilitie
     cap |= AccountInfoCapability;
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
-    //cap |= CreateFolderCapability;
-    //cap |= DeleteFolderCapability;
-    //cap |= ListFolderCapability;
+    cap |= CreateFolderCapability;
+    cap |= DeleteFolderCapability;
+    cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
-    //cap |= DeleteFileCapability;
-    //cap |= RenameFolderCapability;
-    //cap |= RenameFileCapabilitity;
+    cap |= DeleteFileCapability;
+    cap |= RenameFolderCapability;
+    cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
     //cap |= MoveFolderCapability;
     //cap |= CopyFileCapability;
@@ -216,7 +223,7 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         mNextAction->setDownloadDestination(filename);
         storageServiceauthentication();
     } else {
@@ -246,7 +253,7 @@ void UbuntuoneStorageService::storageServicedeleteFile(const QString &filename)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(DeleteFile);
-        mNextAction->setNextActionFileName(filename);
+        mNextAction->setNextActionName(filename);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -372,7 +379,30 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() con
 QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
-    return QString();
+    QJson::Parser parser;
+    bool ok;
+    QString parentFolder;
+    QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    //qDebug()<<" info "<<info;
+    if (info.contains(QLatin1String("children"))) {
+        const QVariantList lst = info.value(QLatin1String("children")).toList();
+        Q_FOREACH (const QVariant &v, lst) {
+            const QVariantMap map = v.toMap();
+            if (map.contains(QLatin1String("kind"))) {
+                const QString kind = map.value(QLatin1String("kind")).toString();
+                if (kind == QLatin1String("directory")) {
+                    const QString path = map.value(QLatin1String("path")).toString();
+                    listWidget->addFolder(path, path);
+                } else if (kind == QLatin1String("file")) {
+                    const QString path = map.value(QLatin1String("path")).toString();
+                    listWidget->addFile(path, path);
+                } else {
+                    qDebug() <<" kind unknown "<<kind;
+                }
+            }
+        }
+    }
+    return parentFolder;
 }
 
 QString UbuntuoneStorageService::storageServiceName() const

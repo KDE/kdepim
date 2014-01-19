@@ -37,6 +37,7 @@ public:
         YouSendIt,
         WebDav,
         Box,
+        GDrive,
 
         //Last element
         EndListService
@@ -52,6 +53,8 @@ public:
 
     QMap<QString, StorageServiceAbstract *> listService() const;
     void setListService(const QMap<QString, StorageServiceAbstract *> &lst);
+    void setDefaultUploadFolder(const QString &folder);
+    QString defaultUploadFolder() const;
 
     static QString serviceToI18n(ServiceType type);
     static QString serviceName(ServiceType type);
@@ -81,6 +84,7 @@ private:
     void readConfig();
     void writeConfig();
     QMap<QString, StorageServiceAbstract *> mListService;
+    QString mDefaultUploadFolder;
 };
 }
 

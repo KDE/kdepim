@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,18 +15,18 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef BoxJob_H
-#define BoxJob_H
+#ifndef GDriveJob_H
+#define GDriveJob_H
 
 #include <QObject>
 #include "storageservice/oauth2job.h"
 namespace PimCommon {
-class BoxJob : public PimCommon::OAuth2Job
+class GDriveJob : public PimCommon::OAuth2Job
 {
     Q_OBJECT
 public:
-    explicit BoxJob(QObject *parent=0);
-    ~BoxJob();
+    explicit GDriveJob(QObject *parent=0);
+    ~GDriveJob();
 
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
@@ -52,13 +52,7 @@ private:
     void parseListFolder(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseUploadFile(const QString &data);
-    void parseCopyFile(const QString &data);
-    void parseCopyFolder(const QString &data);
-    void parseRenameFile(const QString &data);
-    void parseRenameFolder(const QString &data);
-    void parseMoveFolder(const QString &data);
-    void parseMoveFile(const QString &data);
 };
 }
 
-#endif // BoxJob_H
+#endif // GDriveJob_H
