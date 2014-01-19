@@ -122,7 +122,6 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
         group.writeEntry(QLatin1String("ServerName"), conf.serverName);
         group.writeEntry(QLatin1String("UserName"), conf.userName);
         const QString walletEntry = conf.userName + QLatin1Char('@') + conf.serverName;
-        qDebug()<<" walletEntry"<<walletEntry;
         wallet->writePassword(walletEntry, conf.password);
         group.writeEntry(QLatin1String("Authentication"), static_cast<int>(conf.authenticationType));
 
@@ -134,6 +133,11 @@ void SieveEditorUtil::writeServerSieveConfig(const QList<SieveEditorUtil::SieveS
 
 void SieveEditorUtil::addServerSieveConfig(const SieveEditorUtil::SieveServerConfig &conf)
 {
+    KWallet::Wallet *wallet = SieveServerSettings::self()->wallet();
+    if ( !wallet->hasFolder( QLatin1String("sieveeditor") ) ) {
+        wallet->createFolder( QLatin1String("sieveeditor") );
+    }
+    wallet->setFolder( QLatin1String("sieveeditor") );
     KSharedConfigPtr cfg = KGlobal::config();
     const QRegExp re( QLatin1String( "^ServerSieve (.+)$" ) );
     const QStringList groups = cfg->groupList().filter( re );
@@ -141,7 +145,8 @@ void SieveEditorUtil::addServerSieveConfig(const SieveEditorUtil::SieveServerCon
     group.writeEntry(QLatin1String("Port"), conf.port);
     group.writeEntry(QLatin1String("ServerName"), conf.serverName);
     group.writeEntry(QLatin1String("UserName"), conf.userName);
-    group.writeEntry(QLatin1String("Password"), conf.password);
+    const QString walletEntry = conf.userName + QLatin1Char('@') + conf.serverName;
+    wallet->writePassword(walletEntry, conf.password);
     group.writeEntry(QLatin1String("Authentication"), static_cast<int>(conf.authenticationType));
     cfg->sync();
 }
