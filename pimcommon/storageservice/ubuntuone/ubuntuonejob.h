@@ -67,6 +67,8 @@ private:
     void parseAccessToken(const QString &data);
     void parseCreateServiceFolder(const QString &data);
     void parseDeleteFolder(const QString &data);
+    void parseRenameFile(const QString &data);
+    void parseRenameFolder(const QString &data);
     QString mCustomerSecret;
     QString mToken;
     QString mCustomerKey;

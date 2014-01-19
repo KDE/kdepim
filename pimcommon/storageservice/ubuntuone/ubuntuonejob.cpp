@@ -94,7 +94,7 @@ void UbuntuOneJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
-    QUrl url(QString::fromLatin1("https://one.ubuntu.com/api/file_storage/v1/~/Ubuntu%20One")/*.arg(folder)*/ + QLatin1String("?include_children=true"));
+    QUrl url(QString::fromLatin1("https://one.ubuntu.com/api/file_storage/v1/~/Ubuntu%20One/%1/?include_children=true").arg(folder));
     url.addQueryItem(QLatin1String("oauth_consumer_key"), mCustomerKey);
     url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
 
@@ -143,7 +143,7 @@ void UbuntuOneJob::createFolder(const QString &foldername, const QString &destin
     if (foldername.isEmpty()) {
         qDebug()<<" foldername is empty";
     }
-    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/") + foldername));
+    QNetworkRequest request(QUrl(QString::fromLatin1("https://one.ubuntu.com/api/file_storage/v1/volumes/~/%1").arg(destination) + foldername));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
     const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
@@ -247,21 +247,38 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::DeleteFile:
         parseDeleteFolder(data);
         break;
+    case PimCommon::StorageServiceAbstract::RenameFolder:
+        parseRenameFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::RenameFile:
+        parseRenameFile(data);
+        break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFolder:
-    case PimCommon::StorageServiceAbstract::RenameFolder:
-    case PimCommon::StorageServiceAbstract::RenameFile:
     case PimCommon::StorageServiceAbstract::MoveFolder:
     case PimCommon::StorageServiceAbstract::MoveFile:
     case PimCommon::StorageServiceAbstract::CopyFile:
     case PimCommon::StorageServiceAbstract::CopyFolder:
-
-        //TODO
+        Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::parseRenameFile(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+}
+
+void UbuntuOneJob::parseRenameFolder(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
 }
 
 void UbuntuOneJob::parseDeleteFolder(const QString &data)
