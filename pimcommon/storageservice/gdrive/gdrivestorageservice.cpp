@@ -331,7 +331,7 @@ QString GDriveStorageService::serviceName()
 
 QString GDriveStorageService::iconName()
 {
-    return QString();
+    return QLatin1String("kdepim-googledrive");
 }
 
 StorageServiceAbstract::Capabilities GDriveStorageService::serviceCapabilities()
@@ -362,7 +362,7 @@ QString GDriveStorageService::storageServiceName() const
 
 KIcon GDriveStorageService::icon() const
 {
-    return KIcon();
+    return KIcon(iconName());
 }
 
 StorageServiceAbstract::Capabilities GDriveStorageService::capabilities() const
