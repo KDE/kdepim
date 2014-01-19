@@ -244,8 +244,10 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CreateServiceFolder:
         parseCreateServiceFolder(data);
         break;
-    case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFile:
+        parseDeleteFolder(data);
+        break;
+    case PimCommon::StorageServiceAbstract::DownLoadFile:
     case PimCommon::StorageServiceAbstract::DeleteFolder:
     case PimCommon::StorageServiceAbstract::RenameFolder:
     case PimCommon::StorageServiceAbstract::RenameFile:
@@ -260,6 +262,13 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::parseDeleteFolder(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
 }
 
 void UbuntuOneJob::parseCreateServiceFolder(const QString &data)
@@ -280,6 +289,7 @@ void UbuntuOneJob::parseListFolder(const QString &data)
 void UbuntuOneJob::createServiceFolder()
 {
     mActionType = PimCommon::StorageServiceAbstract::CreateServiceFolder;
+    mError = false;
     QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/") + mAttachmentVolume));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
@@ -306,8 +316,19 @@ void UbuntuOneJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
+
+    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/") + filename));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
+
+    postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
+    postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
+    postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
+    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void UbuntuOneJob::deleteFolder(const QString &foldername)
@@ -433,20 +454,25 @@ void UbuntuOneJob::parseRequestToken(const QString &data)
 
 void UbuntuOneJob::finishGetToken()
 {
-    //FIXME
     mError = false;
     mActionType = PimCommon::StorageServiceAbstract::AccessToken;
+    QUrl url(QUrl(QLatin1String("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/")));
 
-    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/oauth/sso-finished-so-get-tokens/")));
+    url.addQueryItem(QLatin1String("oauth_consumer_key"), mCustomerKey);
+    url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
+
+    const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
+
+    url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    url.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
+    url.addQueryItem(QLatin1String("oauth_timestamp"), mTimestamp);
+    url.addQueryItem(QLatin1String("oauth_version"), mOauthVersion);
+    url.addQueryItem(QLatin1String("oauth_token"), mToken);
+    QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    QUrl postData;
-    postData.addQueryItem(QLatin1String("token"), mToken);
-    postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
-    postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
-    postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
-    postData.addQueryItem(QLatin1String("oauth_signature_method"), mOauthSignatureMethod);
-    qDebug()<<" postData" <<postData;
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    //qDebug()<<" url "<<url;
+
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));    
 }
 

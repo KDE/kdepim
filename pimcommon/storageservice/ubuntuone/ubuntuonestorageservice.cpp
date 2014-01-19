@@ -188,7 +188,7 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::serviceCapabilitie
     //cap |= DeleteFolderCapability;
     //cap |= ListFolderCapability;
     //cap |= ShareLinkCapability;
-    //cap |= DeleteFileCapability;
+    cap |= DeleteFileCapability;
     //cap |= RenameFolderCapability;
     //cap |= RenameFileCapabilitity;
     //cap |= MoveFileCapability;
