@@ -37,6 +37,7 @@ public:
         YouSendIt,
         WebDav,
         Box,
+        GDrive,
 
         //Last element
         EndListService
