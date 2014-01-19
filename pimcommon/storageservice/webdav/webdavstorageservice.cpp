@@ -60,6 +60,17 @@ void WebDavStorageService::storageServiceauthentication()
     job->requestTokenAccess();
 }
 
+void WebDavStorageService::slotAuthorizationFailed(const QString &errorMessage)
+{
+#if 0
+    mCustomerSecret.clear();
+    mToken.clear();
+    mCustomerKey.clear();
+    mTokenSecret.clear();
+#endif
+    emitAuthentificationFailder(errorMessage);
+}
+
 void WebDavStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
     if (mServiceLocation.isEmpty()) {

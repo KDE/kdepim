@@ -61,6 +61,9 @@ public:
     QString storageServiceName() const;
     KIcon icon() const;
 
+private slots:
+    void slotAuthorizationFailed(const QString &errorMessage);
+
 private:
     void readConfig();
     QString mPublicLocation;
