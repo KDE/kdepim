@@ -220,6 +220,8 @@ add_subdirectory(storageservice/ubuntuone/tests)
 add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/gdrive/tests/)
 
+add_subdirectory(storageservice/dropbox/icons/)
+
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
   kde4_add_widget_files(pimcommonwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/pimcommon.widgets)

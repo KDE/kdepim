@@ -202,7 +202,7 @@ QString DropBoxStorageService::serviceName()
 
 QString DropBoxStorageService::iconName()
 {
-    return QString();
+    return QLatin1String("kdepim-dropbox");
 }
 
 StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities()
@@ -431,5 +431,5 @@ bool DropBoxStorageService::hasProgressIndicatorSupport() const
 
 KIcon DropBoxStorageService::icon() const
 {
-    return KIcon();
+    return KIcon(iconName());
 }

@@ -35,7 +35,8 @@ public:
     void stopAnimation();
     void resetToDefaultIcon();
     void setProgressAnimation(const QPixmap &pix);
-    void setDefaultIcon(const QString &defaultIconName);
+    void setDefaultIcon(const QString &defaultIconName);    
+    void setDefaultIcon(const KIcon &icon);
 
 private:
     KIcon mDefaultIcon;
