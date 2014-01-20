@@ -78,6 +78,9 @@ protected:
     QNetworkAccessManager *mNetworkAccessManager;
     PimCommon::StorageServiceAbstract::ActionType mActionType;
     bool mError;
+
+private slots:
+    void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
 };
 }
 

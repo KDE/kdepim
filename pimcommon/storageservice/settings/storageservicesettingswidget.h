@@ -40,6 +40,9 @@ public:
     void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
 
+Q_SIGNALS:
+    void changed();
+
 private slots:
     void slotServiceSelected();
 

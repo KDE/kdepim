@@ -17,6 +17,7 @@
 
 #include "yousenditstorageservice.h"
 #include "storageservice/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "yousenditjob.h"
 
 #include <KLocalizedString>
@@ -42,7 +43,8 @@ YouSendItStorageService::~YouSendItStorageService()
 
 void YouSendItStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "YouSendIt Settings");
     mUsername = grp.readEntry("Username");
     mPassword = grp.readEntry("Password");
     mToken = grp.readEntry("Token");
@@ -50,7 +52,8 @@ void YouSendItStorageService::readConfig()
 
 void YouSendItStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "YouSendIt Settings");
     grp.deleteGroup();
     KGlobal::config()->sync();
 }
@@ -77,7 +80,8 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     mUsername = username;
     mPassword = password;
     mToken = token;
-    KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "YouSendIt Settings");
     grp.readEntry("Username", mUsername);
     //TODO store in kwallet ?
     grp.writeEntry("Password", mPassword);

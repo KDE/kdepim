@@ -17,6 +17,7 @@
 
 #include "ubuntuonestorageservice.h"
 #include "storageservice/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "ubuntuonejob.h"
 
 #include <qjson/parser.h>
@@ -43,7 +44,8 @@ UbuntuoneStorageService::~UbuntuoneStorageService()
 
 void UbuntuoneStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Ubuntu One Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Ubuntu One Settings");
 
     mCustomerSecret = grp.readEntry("Customer Secret");
     mToken = grp.readEntry("Token");
@@ -58,7 +60,8 @@ void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecre
     mCustomerKey = customerKey;
     mTokenSecret = tokenSecret;
 
-    KConfigGroup grp(KGlobal::config(), "Ubuntu One Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Ubuntu One Settings");
     grp.writeEntry("Customer Secret", mCustomerSecret);
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Customer Key", mCustomerKey);
@@ -71,9 +74,10 @@ void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecre
 
 void UbuntuoneStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Ubuntu One Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Ubuntu One Settings");
     grp.deleteGroup();
-    KGlobal::config()->sync();
+    grp.sync();
 }
 
 void UbuntuoneStorageService::storageServiceauthentication()

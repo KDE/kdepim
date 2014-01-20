@@ -17,6 +17,7 @@
 
 #include "gdrivestorageservice.h"
 #include "storageservice/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "gdrivejob.h"
 
 #include <qjson/parser.h>
@@ -43,7 +44,8 @@ GDriveStorageService::~GDriveStorageService()
 
 void GDriveStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "GoogleDrive Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "GoogleDrive Settings");
     mRefreshToken = grp.readEntry("Refresh Token");
     mToken = grp.readEntry("Token");
     if (grp.hasKey("Expire Time"))
@@ -54,9 +56,10 @@ void GDriveStorageService::readConfig()
 
 void GDriveStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "GoogleDrive Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "GoogleDrive Settings");
     grp.deleteGroup();
-    KGlobal::config()->sync();
+    config.sync();
 }
 
 void GDriveStorageService::storageServiceauthentication()
@@ -78,7 +81,8 @@ void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, co
 {
     mRefreshToken = refreshToken;
     mToken = token;
-    KConfigGroup grp(KGlobal::config(), "GoogleDrive Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "GoogleDrive Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));

@@ -182,6 +182,7 @@ protected:
     void emitAuthentificationFailder(const QString &errorMessage);
     NextAction *mNextAction;
 
+
 private:
     inline void changeProgressState(bool state);
     void executeNextAction();

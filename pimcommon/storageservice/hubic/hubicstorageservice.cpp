@@ -17,6 +17,7 @@
 
 #include "hubicstorageservice.h"
 #include "storageservice/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "hubicjob.h"
 
 #include <KLocalizedString>
@@ -47,7 +48,8 @@ bool HubicStorageService::needToRefreshToken() const
 
 void HubicStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Hubic Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Hubic Settings");
     mRefreshToken = grp.readEntry("Refresh Token");
     mToken = grp.readEntry("Token");
     if (grp.hasKey("Expire Time"))
@@ -58,9 +60,10 @@ void HubicStorageService::readConfig()
 
 void HubicStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Hubic Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Hubic Settings");
     grp.deleteGroup();
-    KGlobal::config()->sync();
+    config.sync();
 }
 
 void HubicStorageService::storageServiceauthentication()
@@ -81,7 +84,8 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
 {
     mRefreshToken = refreshToken;
     mToken = token;
-    KConfigGroup grp(KGlobal::config(), "Hubic Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Hubic Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));

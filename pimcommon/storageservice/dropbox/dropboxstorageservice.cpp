@@ -17,6 +17,7 @@
 
 #include "dropboxstorageservice.h"
 #include "storageservice/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "dropboxjob.h"
 
 #include <qjson/parser.h>
@@ -44,14 +45,16 @@ DropBoxStorageService::~DropBoxStorageService()
 
 void DropBoxStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Dropbox Settings");
     grp.deleteGroup();
-    KGlobal::config()->sync();
+    config.sync();
 }
 
 void DropBoxStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Dropbox Settings");
     mAccessToken = grp.readEntry("Access Token");
     mAccessTokenSecret = grp.readEntry("Access Token Secret");
     mAccessOauthSignature = grp.readEntry("Access Oauth Signature");
@@ -100,12 +103,13 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     mAccessToken = accessToken;
     mAccessTokenSecret = accessTokenSecret;
     mAccessOauthSignature = accessOauthSignature;
-    KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Dropbox Settings");
     grp.writeEntry("Access Token", mAccessToken);
     grp.writeEntry("Access Token Secret", mAccessTokenSecret);
     grp.writeEntry("Access Oauth Signature", mAccessOauthSignature);
     grp.sync();
-    KGlobal::config()->sync();
+    config.sync();
     emitAuthentificationDone();
 }
 

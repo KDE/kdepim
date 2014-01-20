@@ -62,6 +62,7 @@ public:
     static QUrl serviceUrl(ServiceType type);    
     static QString icon(ServiceType type);
     static StorageServiceAbstract::Capabilities capabilities(ServiceType type);
+    static QString kconfigName();
 
 Q_SIGNALS:
     void servicesChanged();

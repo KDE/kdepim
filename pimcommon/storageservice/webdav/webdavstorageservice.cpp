@@ -17,6 +17,7 @@
 
 #include "webdavstorageservice.h"
 #include "storageservice/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"
 
@@ -41,13 +42,15 @@ WebDavStorageService::~WebDavStorageService()
 
 void WebDavStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Webdav Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Webdav Settings");
 
 }
 
 void WebDavStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Webdav Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Webdav Settings");
     grp.deleteGroup();
     KGlobal::config()->sync();
 }
@@ -55,6 +58,8 @@ void WebDavStorageService::removeConfig()
 void WebDavStorageService::storageServiceauthentication()
 {
     WebDavJob *job = new WebDavJob(this);
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Webdav Settings");
     //connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();

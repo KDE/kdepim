@@ -180,6 +180,7 @@ void StorageServiceSettingsWidget::slotRemoveService()
             if (mListStorageService.contains(serviceName)) {
                 StorageServiceAbstract *storage = mListStorageService.take(serviceName);
                 storage->removeConfig();
+                Q_EMIT changed();
                 delete storage;
             }
             delete item;
@@ -263,6 +264,7 @@ void StorageServiceSettingsWidget::slotAuthenticationDone(const QString &service
         if (mListService->item(i)->data(Name).toString() == serviceName) {
             PimCommon::StorageListWidgetItem *item = static_cast<PimCommon::StorageListWidgetItem*>(mListService->item(i));
             item->stopAnimation();
+            Q_EMIT changed();
             break;
         }
     }
