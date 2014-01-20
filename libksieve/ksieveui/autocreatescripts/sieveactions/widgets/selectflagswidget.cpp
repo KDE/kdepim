@@ -113,6 +113,7 @@ SelectFlagsWidget::SelectFlagsWidget(QWidget *parent)
     lay->setMargin(0);
     mEdit = new KLineEdit;
     mEdit->setReadOnly(true);
+    connect(mEdit, SIGNAL(textChanged(QString)), this, SIGNAL(valueChanged()));
     lay->addWidget(mEdit);
     QPushButton *selectFlags = new QPushButton(i18n("..."));
     connect(selectFlags, SIGNAL(clicked(bool)), this, SLOT(slotSelectFlags()));
@@ -135,6 +136,7 @@ void SelectFlagsWidget::slotSelectFlags()
             flags = AutoCreateScriptUtil::createList(lstFlags);
         }
         mEdit->setText(flags);
+
     }
     delete dialog;
 }

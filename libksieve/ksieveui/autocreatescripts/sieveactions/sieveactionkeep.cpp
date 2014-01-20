@@ -72,6 +72,7 @@ QWidget *SieveActionKeep::createParamWidget( QWidget *parent ) const
         lay->addWidget(addFlags);
 
         SelectFlagsWidget *flagsWidget = new SelectFlagsWidget;
+        connect(flagsWidget, SIGNAL(valueChanged()), this, SIGNAL(valueChanged()));
         flagsWidget->setObjectName(QLatin1String("flagswidget"));
         lay->addWidget(flagsWidget);
         return w;
