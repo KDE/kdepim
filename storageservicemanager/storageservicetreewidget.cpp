@@ -31,6 +31,7 @@
 
 #include <QPainter>
 #include <QHeaderView>
+#include <QTimer>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : PimCommon::StorageServiceTreeWidget(parent),
@@ -291,7 +292,7 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
     if (item) {
         if (type(item) == StorageServiceTreeWidget::Folder) {
             const QString folder = itemIdentifierSelected();
-            Q_EMIT goToFolder(folder);
+            goToFolder(folder);
         } else if (type(item) == StorageServiceTreeWidget::MoveUpType) {
             Q_EMIT moveUp();
         }
@@ -353,4 +354,17 @@ void StorageServiceTreeWidget::setCurrentFolder(const QString &folder)
 QString StorageServiceTreeWidget::currentFolder() const
 {
     return mCurrentFolder;
+}
+
+void StorageServiceTreeWidget::refreshList()
+{
+    mStorageService->listFolder(mCurrentFolder);
+}
+
+void StorageServiceTreeWidget::goToFolder(const QString &folder)
+{
+    if (folder == currentFolder())
+        return;
+    setCurrentFolder(folder);
+    QTimer::singleShot(0, this, SLOT(refreshList()));
 }

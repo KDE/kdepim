@@ -50,7 +50,6 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
-    connect(mTreeWidget, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
     connect(mTreeWidget, SIGNAL(moveUp()), this, SLOT(slotMoveUp()));
     vbox->addWidget(mTreeWidget);
 
@@ -191,11 +190,6 @@ void StorageServicePage::createFolder()
     mTreeWidget->slotCreateFolder();
 }
 
-void StorageServicePage::refreshList()
-{
-    mStorageService->listFolder(mTreeWidget->currentFolder());
-}
-
 void StorageServicePage::accountInfo()
 {
     mStorageService->accountInfo();
@@ -283,25 +277,22 @@ void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QS
     updateList(serviceName);
 }
 
-void StorageServicePage::slotGoToFolder(const QString &folder)
-{
-    if (folder == mTreeWidget->currentFolder())
-        return;
-    mTreeWidget->setCurrentFolder(folder);
-    QTimer::singleShot(0, this, SLOT(refreshList()));
-}
-
 void StorageServicePage::slotMoveUp()
 {
     if (mParentFolder == mTreeWidget->currentFolder())
         return;
     mTreeWidget->setCurrentFolder(mParentFolder);
-    QTimer::singleShot(0, this, SLOT(refreshList()));
+    QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
 }
 
 void StorageServicePage::updateList(const QString &serviceName)
 {
     if (verifyService(serviceName)) {
-        QTimer::singleShot(0, this, SLOT(refreshList()));
+        QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
     }
+}
+
+void StorageServicePage::refreshList()
+{
+    QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
 }

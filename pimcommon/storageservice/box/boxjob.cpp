@@ -319,17 +319,30 @@ void BoxJob::parseListFolder(const QString &data)
 
 void BoxJob::parseCreateFolder(const QString &data)
 {
-    //TODO
-    qDebug()<<" data "<<data;
-    Q_EMIT createFolderDone(QString());
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QString folderName;
+    if (info.contains(QLatin1String("name"))) {
+        folderName = info.value(QLatin1String("name")).toString();
+    }
+    Q_EMIT createFolderDone(folderName);
     deleteLater();
 }
 
 void BoxJob::parseUploadFile(const QString &data)
 {
-    //TODO
     qDebug()<<" data "<<data;
-    Q_EMIT uploadFileDone(QString());
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QString folderName;
+    if (info.contains(QLatin1String("name"))) {
+        folderName = info.value(QLatin1String("name")).toString();
+    }
+    Q_EMIT uploadFileDone(folderName);
     deleteLater();
 }
 

@@ -22,6 +22,7 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
+#include <KLocale>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -35,9 +36,9 @@ StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const PimCommon
     setMainWidget(w);
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
-    vbox->addWidget(new QLabel(i18n("Size: %1", accountInfo.accountSize)));
-    vbox->addWidget(new QLabel(i18n("Quota: %1", accountInfo.quota)));
-    vbox->addWidget(new QLabel(i18n("Shared: %1", accountInfo.shared)));
+    vbox->addWidget(new QLabel(i18n("Size: %1", KGlobal::locale()->formatByteSize(accountInfo.accountSize,1))));
+    vbox->addWidget(new QLabel(i18n("Quota: %1", KGlobal::locale()->formatByteSize(accountInfo.quota,1))));
+    vbox->addWidget(new QLabel(i18n("Shared: %1", KGlobal::locale()->formatByteSize(accountInfo.shared,1))));
 }
 
 StorageServiceAccountInfoDialog::~StorageServiceAccountInfoDialog()

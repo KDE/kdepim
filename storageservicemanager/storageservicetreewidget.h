@@ -37,7 +37,6 @@ public:
     QString currentFolder() const;
 
 Q_SIGNALS:
-    void goToFolder(const QString &folder);
     void moveUp();
 
 public Q_SLOTS:
@@ -47,6 +46,7 @@ public Q_SLOTS:
     void slotDeleteFolder();
     void slotDeleteFile();
     void slotShareFile();
+    void refreshList();
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -69,6 +69,7 @@ private Q_SLOTS:
     void slotPasteFile();
 
 private:
+    void goToFolder(const QString &folder);
     void readConfig();
     void writeConfig();
 

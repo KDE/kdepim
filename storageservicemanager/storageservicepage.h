@@ -48,13 +48,11 @@ public:
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
     QString serviceName() const;
     bool hasUploadDownloadProgress() const;
+    void refreshList();
 
 Q_SIGNALS:
     void updatePixmap(const QPixmap &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);
-
-public Q_SLOTS:
-    void refreshList();
 
 private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
@@ -70,7 +68,6 @@ private Q_SLOTS:
     void slotCreateFolderDone(const QString &serviceName, const QString &folder);
     void slotDeleteFolderDone(const QString &serviceName, const QString &folder);
     void slotDeleteFileDone(const QString &serviceName, const QString &filename);
-    void slotGoToFolder(const QString &folder);
     void slotRenameFolderDone(const QString &serviceName, const QString &fileName);
     void slotRenameFileDone(const QString &serviceName, const QString &fileName);
     void slotMoveUp();

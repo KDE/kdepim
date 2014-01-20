@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -316,17 +316,17 @@ void GDriveStorageService::storageServiceuploadFile(const QString &filename, con
 
 QString GDriveStorageService::description()
 {
-    return i18n("Box.com is a file hosting that offers cloud storage, file synchronization, and client software.");
+    return i18n("Googledrive is a file hosting that offers cloud storage, file synchronization, and client software.");
 }
 
 QUrl GDriveStorageService::serviceUrl()
 {
-    return QUrl(QLatin1String("https://app.box.com/"));
+    return QUrl(QLatin1String("http://www.google.com/drive"));
 }
 
 QString GDriveStorageService::serviceName()
 {
-    return QLatin1String("box");
+    return QLatin1String("googledrive");
 }
 
 QString GDriveStorageService::iconName()
