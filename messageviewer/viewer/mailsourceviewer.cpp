@@ -131,7 +131,6 @@ void MailSourceViewTextBrowser::contextMenuEvent( QContextMenuEvent *event )
 
 void MailSourceViewTextBrowser::slotSaveAs()
 {
-    KUrl url;
     PimCommon::Util::saveTextAs( toPlainText(), QString(), this );
 }
 
