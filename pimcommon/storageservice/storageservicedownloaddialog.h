@@ -36,7 +36,6 @@ private slots:
     void slotItemActivated(QTreeWidgetItem *item, int column);
 
 private:
-    void initializeList();
     StorageServiceTreeWidget *mTreeWidget;
     PimCommon::StorageServiceAbstract *mStorage;
 };

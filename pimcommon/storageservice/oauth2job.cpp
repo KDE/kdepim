@@ -428,7 +428,6 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         parseMoveFile(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
-
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;

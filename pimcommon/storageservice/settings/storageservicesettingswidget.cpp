@@ -23,6 +23,7 @@
 #include "storageservice/ubuntuone/ubuntuonestorageservice.h"
 #include "storageservice/yousendit/yousenditstorageservice.h"
 #include "storageservice/box/boxstorageservice.h"
+#include "storageservice/gdrive/gdrivestorageservice.h"
 #include "storageservice/webdav/webdavstorageservice.h"
 #include "settings/pimcommonsettings.h"
 #include <KLocalizedString>
@@ -140,6 +141,10 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Box);
             type = PimCommon::StorageServiceManager::Box;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Box);
+        } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::GDrive)) {
+            serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::GDrive);
+            type = PimCommon::StorageServiceManager::GDrive;
+            icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::GDrive);
         }
         createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
         connect(i.value(),SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
@@ -213,6 +218,10 @@ void StorageServiceSettingsWidget::slotAddService()
         }
         case PimCommon::StorageServiceManager::WebDav: {
             storage = new PimCommon::WebDavStorageService;
+            break;
+        }
+        case PimCommon::StorageServiceManager::GDrive: {
+            storage = new PimCommon::GDriveStorageService;
             break;
         }
         default:

@@ -28,12 +28,12 @@ using namespace PimCommon;
 HubicJob::HubicJob(QObject *parent)
     : PimCommon::OAuth2Job(parent)
 {
+    mScope = PimCommon::StorageServiceJobConfig::self()->hubicScope();
     mClientId = PimCommon::StorageServiceJobConfig::self()->hubicClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->hubicClientSecret();
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     mServiceUrl = QLatin1String("https://api.hubic.com");
     mApiUrl = QLatin1String("https://api.hubic.com");
-    mScope = PimCommon::StorageServiceJobConfig::self()->hubicScope();
     mAuthorizePath = QLatin1String("/oauth/auth/");
     mPathToken = QLatin1String("/oauth/token/");
     mCurrentAccountInfoPath = QLatin1String("/1.0/account/usage");

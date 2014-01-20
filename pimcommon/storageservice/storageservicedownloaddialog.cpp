@@ -50,7 +50,6 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     w->setLayout(vbox);
     setMainWidget(w);
     enableButtonOk(false);
-    initializeList();
 }
 
 StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
@@ -61,9 +60,4 @@ StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
 {
     enableButtonOk(item && (mTreeWidget->type(item) == StorageServiceTreeWidget::File));
-}
-
-void StorageServiceDownloadDialog::initializeList()
-{
-
 }
