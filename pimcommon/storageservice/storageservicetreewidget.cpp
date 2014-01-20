@@ -49,6 +49,7 @@ StorageServiceTreeWidget::~StorageServiceTreeWidget()
 void StorageServiceTreeWidget::createMoveUpItem()
 {
     StorageServiceListItem *item = new StorageServiceListItem(this);
+    item->setText(ColumnName, QLatin1String(".."));
     item->setData(ColumnName, ElementType, MoveUpType);
     item->setIcon(ColumnName, KIcon(QLatin1String("go-up")));
 }
