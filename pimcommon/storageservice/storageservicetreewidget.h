@@ -26,6 +26,7 @@
 
 namespace PimCommon {
 class StorageServiceTreeWidget;
+class StorageServiceAbstract;
 class PIMCOMMON_EXPORT StorageServiceListItem : public QTreeWidgetItem
 {
 public:
@@ -57,8 +58,11 @@ public:
         ColumnLastModification = 3
     };
 
-    explicit StorageServiceTreeWidget(QWidget *parent=0);
+    explicit StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent=0);
     ~StorageServiceTreeWidget();
+
+    void setCurrentFolder(const QString &folder);
+    QString currentFolder() const;
 
     StorageServiceListItem *addFolder(const QString &name, const QString &ident);
     StorageServiceListItem *addFile(const QString &name, const QString &ident, const QString &mimetype = QString());
@@ -68,6 +72,14 @@ public:
     QString itemIdentifier(QTreeWidgetItem *item) const;
     QString itemIdentifierSelected() const;
     void createMoveUpItem();
+
+public Q_SLOTS:
+    void refreshList();
+
+protected:
+    void goToFolder(const QString &folder);
+    QString mCurrentFolder;
+    PimCommon::StorageServiceAbstract *mStorageService;
 };
 }
 

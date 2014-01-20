@@ -19,18 +19,23 @@
 */
 
 #include "storageservicetreewidget.h"
+#include "storageservice/storageserviceabstract.h"
 
 #include <KIcon>
 #include <KLocalizedString>
+#include <KGlobal>
+#include <KLocale>
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
 #include <QDebug>
+#include <QTimer>
 
 using namespace PimCommon;
 
-StorageServiceTreeWidget::StorageServiceTreeWidget(QWidget *parent)
-    : QTreeWidget(parent)
+StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *storageService, QWidget *parent)
+    : QTreeWidget(parent),
+      mStorageService(storageService)
 {
     setSortingEnabled(true);
     setAlternatingRowColors(true);
@@ -108,6 +113,30 @@ QString StorageServiceTreeWidget::itemIdentifierSelected() const
     return QString();
 }
 
+void StorageServiceTreeWidget::setCurrentFolder(const QString &folder)
+{
+    mCurrentFolder = folder;
+}
+
+QString StorageServiceTreeWidget::currentFolder() const
+{
+    return mCurrentFolder;
+}
+
+void StorageServiceTreeWidget::refreshList()
+{
+    mStorageService->listFolder(mCurrentFolder);
+}
+
+void StorageServiceTreeWidget::goToFolder(const QString &folder)
+{
+    if (folder == currentFolder())
+        return;
+    setCurrentFolder(folder);
+    QTimer::singleShot(0, this, SLOT(refreshList()));
+}
+
+
 StorageServiceListItem::StorageServiceListItem(StorageServiceTreeWidget *parent)
     : QTreeWidgetItem(parent)
 {
@@ -133,7 +162,7 @@ bool StorageServiceListItem::operator<(const QTreeWidgetItem &other) const
 
 void StorageServiceListItem::setSize(qulonglong size)
 {
-    setText(StorageServiceTreeWidget::ColumnSize, QString::number(size));
+    setText(StorageServiceTreeWidget::ColumnSize, KGlobal::locale()->formatByteSize(size));
 }
 
 void StorageServiceListItem::setDateCreated(const QString &date)

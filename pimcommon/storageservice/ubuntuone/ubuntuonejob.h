@@ -69,6 +69,12 @@ private:
     void parseDeleteFolder(const QString &data);
     void parseRenameFile(const QString &data);
     void parseRenameFolder(const QString &data);
+    void parseCopyFolder(const QString &data);
+    void parseCopyFile(const QString &data);
+    void parseMoveFolder(const QString &data);
+    void parseMoveFile(const QString &data);
+    void parseDeleteFile(const QString &data);
+    void parseDownloadFile(const QString &data);
     QString mCustomerSecret;
     QString mToken;
     QString mCustomerKey;

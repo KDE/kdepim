@@ -37,7 +37,7 @@ private slots:
 
 private:
     void initializeList();
-    StorageServiceTreeWidget *mListWidget;
+    StorageServiceTreeWidget *mTreeWidget;
     PimCommon::StorageServiceAbstract *mStorage;
 };
 }

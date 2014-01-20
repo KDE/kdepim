@@ -244,7 +244,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         parseCreateServiceFolder(data);
         break;
     case PimCommon::StorageServiceAbstract::DeleteFile:
-        parseDeleteFolder(data);
+        parseDeleteFile(data);
         break;
     case PimCommon::StorageServiceAbstract::RenameFolder:
         parseRenameFolder(data);
@@ -253,17 +253,79 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         parseRenameFile(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
+        parseDownloadFile(data);
+        break;
     case PimCommon::StorageServiceAbstract::DeleteFolder:
+        parseDeleteFolder(data);
+        break;
     case PimCommon::StorageServiceAbstract::MoveFolder:
+        parseMoveFolder(data);
+        break;
     case PimCommon::StorageServiceAbstract::MoveFile:
+        parseMoveFile(data);
+        break;
     case PimCommon::StorageServiceAbstract::CopyFile:
+        parseCopyFile(data);
+        break;
     case PimCommon::StorageServiceAbstract::CopyFolder:
+        parseCopyFolder(data);
+        break;
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::parseCopyFolder(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+}
+
+void UbuntuOneJob::parseCopyFile(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+}
+
+
+void UbuntuOneJob::parseMoveFolder(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+}
+
+void UbuntuOneJob::parseDeleteFolder(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+}
+
+void UbuntuOneJob::parseMoveFile(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+}
+
+void UbuntuOneJob::parseDeleteFile(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+}
+
+void UbuntuOneJob::parseDownloadFile(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
 }
 
 void UbuntuOneJob::parseRenameFile(const QString &data)
@@ -274,13 +336,6 @@ void UbuntuOneJob::parseRenameFile(const QString &data)
 }
 
 void UbuntuOneJob::parseRenameFolder(const QString &data)
-{
-    qDebug()<<" data"<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
-}
-
-void UbuntuOneJob::parseDeleteFolder(const QString &data)
 {
     qDebug()<<" data"<<data;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));

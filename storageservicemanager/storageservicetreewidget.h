@@ -33,9 +33,6 @@ public:
 
     void setIsInitialized();
 
-    void setCurrentFolder(const QString &folder);
-    QString currentFolder() const;
-
 Q_SIGNALS:
     void moveUp();
     void uploadFile();
@@ -47,7 +44,7 @@ public Q_SLOTS:
     void slotDeleteFolder();
     void slotDeleteFile();
     void slotShareFile();
-    void refreshList();
+
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -70,7 +67,6 @@ private Q_SLOTS:
     void slotPasteFile();
 
 private:
-    void goToFolder(const QString &folder);
     void readConfig();
     void writeConfig();
 
@@ -94,9 +90,7 @@ private:
 
     QColor mTextColor;
     copyCutItem mCopyItem;
-    QString mCurrentFolder;
     PimCommon::StorageServiceAbstract::Capabilities mCapabilities;
-    PimCommon::StorageServiceAbstract *mStorageService;
     bool mInitialized;
 };
 

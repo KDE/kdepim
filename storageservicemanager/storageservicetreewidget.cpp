@@ -34,8 +34,7 @@
 #include <QTimer>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
-    : PimCommon::StorageServiceTreeWidget(parent),
-      mStorageService(storageService),
+    : PimCommon::StorageServiceTreeWidget(storageService, parent),
       mInitialized(false)
 {
     mCapabilities = mStorageService->capabilities();
@@ -344,27 +343,4 @@ void StorageServiceTreeWidget::slotCopyFolder()
     mCopyItem.moveItem = false;
     mCopyItem.type = FolderType;
     mCopyItem.identifier = itemIdentifierSelected();
-}
-
-void StorageServiceTreeWidget::setCurrentFolder(const QString &folder)
-{
-    mCurrentFolder = folder;
-}
-
-QString StorageServiceTreeWidget::currentFolder() const
-{
-    return mCurrentFolder;
-}
-
-void StorageServiceTreeWidget::refreshList()
-{
-    mStorageService->listFolder(mCurrentFolder);
-}
-
-void StorageServiceTreeWidget::goToFolder(const QString &folder)
-{
-    if (folder == currentFolder())
-        return;
-    setCurrentFolder(folder);
-    QTimer::singleShot(0, this, SLOT(refreshList()));
 }
