@@ -114,7 +114,8 @@ void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const 
 
 void StorageServicePage::slotRenameFileDone(const QString &serviceName, const QString &fileName)
 {
-   //TODO
+    Q_UNUSED(fileName);
+    updateList(serviceName);
 }
 
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
