@@ -124,7 +124,7 @@ void StorageServiceTabWidget::slotUploadFile()
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
         if (page)
-            page->uploadFile();
+            page->slotUploadFile();
     }
 }
 

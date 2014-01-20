@@ -51,10 +51,13 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     setLayout(vbox);
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mTreeWidget, SIGNAL(moveUp()), this, SLOT(slotMoveUp()));
+    connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
     vbox->addWidget(mTreeWidget);
 
     if (mStorageService->hasProgressIndicatorSupport()) {
         mProgressBar = new QProgressBar;
+        mProgressBar->setMinimum(0);
+        mProgressBar->setMaximum(100);
         mProgressBar->hide();
         vbox->addWidget(mProgressBar);
     }
@@ -129,6 +132,10 @@ void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const P
 void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
     if (verifyService(serviceName)) {
+        if (mStorageService->hasProgressIndicatorSupport()) {
+            mProgressBar->hide();
+            mProgressBar->setValue(0);
+        }
         updateList(serviceName);
         KMessageBox::information(this, i18n("Upload File"), i18n("%1 was correctly uploaded", fileName));
     }
@@ -137,7 +144,9 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
 void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
     if (verifyService(serviceName)) {
-        //TODO
+        if (mStorageService->hasProgressIndicatorSupport()) {
+            mProgressBar->setValue((100*done)/total);
+        }
     }
 }
 
@@ -195,8 +204,12 @@ void StorageServicePage::accountInfo()
     mStorageService->accountInfo();
 }
 
-void StorageServicePage::uploadFile()
+void StorageServicePage::slotUploadFile()
 {
+    if (mStorageService->hasProgressIndicatorSupport()) {
+        mProgressBar->show();
+        mProgressBar->setValue(0);
+    }
     mTreeWidget->slotUploadFile();
 }
 

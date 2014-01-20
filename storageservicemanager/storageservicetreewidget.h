@@ -38,6 +38,7 @@ public:
 
 Q_SIGNALS:
     void moveUp();
+    void uploadFile();
 
 public Q_SLOTS:
     void slotCreateFolder();

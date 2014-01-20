@@ -135,7 +135,7 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
     act->setSeparator(true);
     menu->addAction(act);
     if (mCapabilities & PimCommon::StorageServiceAbstract::UploadFileCapability)
-        menu->addAction(i18n("Upload File..."), this, SLOT(slotUploadFile()));
+        menu->addAction(i18n("Upload File..."), this, SIGNAL(uploadFile()));
     act = new QAction(menu);
     act->setSeparator(true);
     menu->addAction(act);

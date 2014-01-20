@@ -54,6 +54,9 @@ Q_SIGNALS:
     void updatePixmap(const QPixmap &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);
 
+public Q_SLOTS:
+    void slotUploadFile();
+
 private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
     void slotUploadFileDone(const QString &serviceName, const QString &fileName);
