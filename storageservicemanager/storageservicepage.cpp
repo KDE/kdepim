@@ -285,12 +285,16 @@ void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QS
 
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
+    if (folder == mTreeWidget->currentFolder())
+        return;
     mTreeWidget->setCurrentFolder(folder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 
 void StorageServicePage::slotMoveUp()
 {
+    if (mParentFolder == mTreeWidget->currentFolder())
+        return;
     mTreeWidget->setCurrentFolder(mParentFolder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
