@@ -98,9 +98,6 @@ void StorageServiceManagerMainWindow::setupActions()
     KActionCollection *ac = actionCollection();
     KStandardAction::quit(this, SLOT(slotClose()), ac );
 
-    KAction *act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
-    act->setText(i18n("Add Storage Service..."));
-
     mAuthenticate = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
     mAuthenticate->setText(i18n("Authenticate..."));
 
@@ -124,11 +121,6 @@ void StorageServiceManagerMainWindow::setupActions()
     mDownloadFile->setText(i18n("Download File..."));
 
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
-}
-
-void StorageServiceManagerMainWindow::slotAddStorageService()
-{
-
 }
 
 void StorageServiceManagerMainWindow::slotClose()

@@ -78,6 +78,7 @@ private Q_SLOTS:
     void slotMoveFolderDone(const QString &serviceName, const QString &filename);
     void slotCopyFileDone(const QString &serviceName, const QString &filename);
     void slotCopyFolderDone(const QString &serviceName, const QString &filename);
+    void slotDownloadFileDone(const QString &serviceName, const QString &filename);
 
 private:
     bool verifyService(const QString &serviceName);

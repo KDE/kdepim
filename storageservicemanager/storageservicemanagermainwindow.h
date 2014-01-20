@@ -41,7 +41,6 @@ public slots:
     void slotSetStatusBarMessage(const QString &message);
 
 private slots:
-    void slotAddStorageService();
     void slotConfigure();
     void slotUpdateActions();
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);

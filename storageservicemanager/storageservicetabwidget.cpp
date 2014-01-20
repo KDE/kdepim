@@ -158,6 +158,12 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServiceTabWidget::capabil
 
 bool StorageServiceTabWidget::hasUploadDownloadProgress() const
 {
-    //TODO
+    for (int i=0; i <count() ; ++i) {
+        StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
+        if (page) {
+            if (page->hasUploadDownloadProgress())
+                return true;
+        }
+    }
     return false;
 }

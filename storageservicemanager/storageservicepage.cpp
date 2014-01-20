@@ -106,6 +106,7 @@ void StorageServicePage::connectStorageService()
     connect(mStorageService, SIGNAL(moveFolderDone(QString,QString)), this, SLOT(slotMoveFolderDone(QString,QString)));
     connect(mStorageService, SIGNAL(copyFolderDone(QString,QString)), this, SLOT(slotCopyFolderDone(QString,QString)));
     connect(mStorageService, SIGNAL(copyFileDone(QString,QString)), this, SLOT(slotCopyFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownloadFileDone(QString,QString)));
 }
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
@@ -136,6 +137,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
             mProgressBar->hide();
             mProgressBar->setValue(0);
         }
+        mDownloadUploadProgress = false;
         updateList(serviceName);
         KMessageBox::information(this, i18n("Upload File"), i18n("%1 was correctly uploaded", fileName));
     }
@@ -210,6 +212,7 @@ void StorageServicePage::slotUploadFile()
         mProgressBar->show();
         mProgressBar->setValue(0);
     }
+    mDownloadUploadProgress = true;
     mTreeWidget->slotUploadFile();
 }
 
@@ -288,6 +291,12 @@ void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QS
 {
     Q_UNUSED(filename);
     updateList(serviceName);
+}
+
+void StorageServicePage::slotDownloadFileDone(const QString &serviceName, const QString &filename)
+{
+    mDownloadUploadProgress = false;
+    //TODO
 }
 
 void StorageServicePage::slotMoveUp()
