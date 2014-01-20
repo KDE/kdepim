@@ -292,6 +292,8 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
         if (type(item) == StorageServiceTreeWidget::Folder) {
             const QString folder = itemIdentifierSelected();
             Q_EMIT goToFolder(folder);
+        } else if (type(item) == StorageServiceTreeWidget::MoveUpType) {
+            Q_EMIT moveUp();
         }
     }
 }
