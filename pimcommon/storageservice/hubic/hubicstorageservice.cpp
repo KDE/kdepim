@@ -383,5 +383,6 @@ StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
 QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    listWidget->createMoveUpItem();
     return QString();
 }

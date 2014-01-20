@@ -392,6 +392,7 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
+    listWidget->createMoveUpItem();
     QString parentId;
     if (info.contains(QLatin1String("id"))) {
         parentId = info.value(QLatin1String("id")).toString();

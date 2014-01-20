@@ -221,6 +221,7 @@ add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/gdrive/tests/)
 
 add_subdirectory(storageservice/dropbox/icons/)
+add_subdirectory(storageservice/gdrive/icons/)
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)

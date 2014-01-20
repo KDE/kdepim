@@ -235,6 +235,7 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    listWidget->createMoveUpItem();
     return QString();
 }
 

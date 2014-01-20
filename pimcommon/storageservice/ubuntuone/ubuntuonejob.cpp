@@ -218,7 +218,6 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         }
         return;
     }
-    qDebug()<<" Data ? "<<data;
     switch(mActionType) {
     case PimCommon::StorageServiceAbstract::NoneAction:
         deleteLater();

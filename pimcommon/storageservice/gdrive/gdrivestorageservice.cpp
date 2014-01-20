@@ -389,7 +389,7 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     listWidget->clear();
     QJson::Parser parser;
     bool ok;
-
+    listWidget->createMoveUpItem();
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
     QString parentId;

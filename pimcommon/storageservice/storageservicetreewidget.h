@@ -43,7 +43,8 @@ public:
     enum ItemType {
         UnKnown = -1,
         Folder = 0,
-        File = 1
+        File = 1,
+        MoveUpType = 2
     };
     enum StorageServiceData {
         ElementType = Qt::UserRole + 1,
@@ -66,6 +67,7 @@ public:
     StorageServiceTreeWidget::ItemType type(QTreeWidgetItem *item) const;
     QString itemIdentifier(QTreeWidgetItem *item) const;
     QString itemIdentifierSelected() const;
+    void createMoveUpItem();
 };
 }
 

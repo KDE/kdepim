@@ -46,6 +46,13 @@ StorageServiceTreeWidget::~StorageServiceTreeWidget()
 
 }
 
+void StorageServiceTreeWidget::createMoveUpItem()
+{
+    StorageServiceListItem *item = new StorageServiceListItem(this);
+    item->setData(ColumnName, ElementType, MoveUpType);
+    item->setIcon(ColumnName, KIcon(QLatin1String("go-up")));
+}
+
 StorageServiceListItem *StorageServiceTreeWidget::addFolder(const QString &name, const QString &ident)
 {
     StorageServiceListItem *item = new StorageServiceListItem(this);
@@ -110,7 +117,9 @@ bool StorageServiceListItem::operator<(const QTreeWidgetItem &other) const
 {
     StorageServiceTreeWidget::ItemType sourceType = static_cast<StorageServiceTreeWidget::ItemType>(data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::ElementType).toInt());
     StorageServiceTreeWidget::ItemType otherType = static_cast<StorageServiceTreeWidget::ItemType>(other.data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::ElementType).toInt());
-    if (sourceType == otherType) {
+    if (sourceType == StorageServiceTreeWidget::MoveUpType) {
+        return false;
+    } else if (sourceType == otherType) {
         return text(StorageServiceTreeWidget::ColumnName) < other.text(StorageServiceTreeWidget::ColumnName);
     } else {
         if (sourceType == StorageServiceTreeWidget::Folder) {

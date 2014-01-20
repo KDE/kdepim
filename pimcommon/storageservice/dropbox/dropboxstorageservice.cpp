@@ -379,6 +379,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
     QJson::Parser parser;
     bool ok;
     QString parentFolder;
+    listWidget->createMoveUpItem();
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (info.contains(QLatin1String("path"))) {
         const QString path = info.value(QLatin1String("path")).toString();
