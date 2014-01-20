@@ -131,12 +131,16 @@ void SieveEditorMainWidget::saveScript()
     }
 }
 
-void SieveEditorMainWidget::needToSaveScript()
+bool SieveEditorMainWidget::needToSaveScript()
 {
+    bool scriptSaved = false;
     for (int i=0; i < mStackedWidget->count(); ++i) {
         SieveEditorPageWidget *page = qobject_cast<SieveEditorPageWidget *>(mStackedWidget->widget(i));
         if (page) {
-            page->needToSaveScript();
+            const bool result = page->needToSaveScript();
+            if (result)
+                scriptSaved = true;
         }
     }
+    return scriptSaved;
 }

@@ -40,7 +40,7 @@ public:
     KUrl currentUrl() const;
     void setIsNewScript(bool isNewScript);
     void saveScript();
-    void needToSaveScript();
+    bool needToSaveScript();
 
 Q_SIGNALS:
     void refreshList();
