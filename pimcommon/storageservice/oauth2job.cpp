@@ -348,12 +348,20 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::UploadFile:
+                Q_EMIT uploadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::DownLoadFile:
+                Q_EMIT downLoadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::CreateFolder:
             case PimCommon::StorageServiceAbstract::AccountInfo:
             case PimCommon::StorageServiceAbstract::ListFolder:
-            case PimCommon::StorageServiceAbstract::DownLoadFile:
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
             case PimCommon::StorageServiceAbstract::RenameFolder:

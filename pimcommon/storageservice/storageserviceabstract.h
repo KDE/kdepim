@@ -142,6 +142,8 @@ Q_SIGNALS:
     void copyFileDone(const QString &serviceName, const QString &folderName);
     void copyFolderDone(const QString &serviceName, const QString &folderName);
     void inProgress(bool state);
+    void downLoadFileFailed(const QString &serviceName, const QString &folderName);
+    void uploadFileFailed(const QString &serviceName, const QString &folderName);
 
 protected slots:
     void slotActionFailed(const QString &error);
@@ -160,6 +162,8 @@ protected slots:
     void slotMoveFileDone(const QString &filename);
     void slotCopyFileDone(const QString &filename);
     void slotCopyFolderDone(const QString &filename);
+    void slotDownLoadFileFailed(const QString &filename);
+    void slotUploadFileFailed(const QString &filename);
 
 protected:
     virtual void storageServicedownloadFile(const QString &filename, const QString &destination) = 0;
@@ -181,7 +185,6 @@ protected:
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
     NextAction *mNextAction;
-
 
 private:
     inline void changeProgressState(bool state);

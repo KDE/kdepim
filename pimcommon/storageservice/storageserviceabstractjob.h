@@ -60,9 +60,11 @@ Q_SIGNALS:
     void uploadFileProgress(qint64 done, qint64 total);
     void createFolderDone(const QString &folderName);
     void uploadFileDone(const QString &fileName);
+    void uploadFileFailed(const QString &fileName);
     void listFolderDone(const QString &listFolder);
     void authorizationFailed(const QString &error);
     void downLoadFileDone(const QString &filename);
+    void downLoadFileFailed(const QString &filename);
     void deleteFileDone(const QString &filename);
     void deleteFolderDone(const QString &filename);
     void renameFolderDone(const QString &folder);
@@ -71,6 +73,7 @@ Q_SIGNALS:
     void moveFileDone(const QString &folder);
     void copyFileDone(const QString &folder);
     void copyFolderDone(const QString &folder);
+
 
 protected:
     void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);

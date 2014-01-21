@@ -380,4 +380,16 @@ void StorageServiceAbstract::emitAuthentificationDone()
     }
 }
 
+void StorageServiceAbstract::slotDownLoadFileFailed(const QString &filename)
+{
+    Q_EMIT downLoadFileFailed(storageServiceName(), filename);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotUploadFileFailed(const QString &filename)
+{
+    Q_EMIT downLoadFileFailed(storageServiceName(), filename);
+    changeProgressState(false);
+}
+
 #include "moc_storageserviceabstract.cpp"
