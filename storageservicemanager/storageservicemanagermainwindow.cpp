@@ -33,6 +33,7 @@
 #include <KConfigGroup>
 #include <KAction>
 #include <KStatusBar>
+#include <KMessageBox>
 
 #include <QPointer>
 #include <QLabel>
@@ -127,6 +128,10 @@ void StorageServiceManagerMainWindow::slotClose()
 {
     if (!mStorageServiceTabWidget->hasUploadDownloadProgress()) {
         close();
+    } else {
+        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("There is still upload or download in progress. Do you want to close anyway?"))) {
+            close();
+        }
     }
 }
 

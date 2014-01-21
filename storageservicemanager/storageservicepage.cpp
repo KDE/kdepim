@@ -88,27 +88,43 @@ void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
 
 void StorageServicePage::connectStorageService()
 {
-    connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
-    connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
     connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
     connect(mStorageService, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+
     connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
+
     connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
+
     connect(mStorageService, SIGNAL(inProgress(bool)), this, SLOT(slotProgressStateChanged(bool)));
+
     connect(mStorageService, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString, QString)));
+
     connect(mStorageService, SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(renameFolderDone(QString,QString)), this, SLOT(slotRenameFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(renameFileDone(QString,QString)), this, SLOT(slotRenameFileDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(moveFileDone(QString,QString)), this, SLOT(slotMoveFileDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(moveFolderDone(QString,QString)), this, SLOT(slotMoveFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(copyFolderDone(QString,QString)), this, SLOT(slotCopyFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(copyFileDone(QString,QString)), this, SLOT(slotCopyFileDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownloadFileDone(QString,QString)));
     connect(mStorageService, SIGNAL(downLoadFileFailed(QString,QString)), this, SLOT(slotDownloadFileFailed(QString,QString)));
+
     connect(mStorageService, SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
+    connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
 }
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
