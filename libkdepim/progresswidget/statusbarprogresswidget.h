@@ -41,7 +41,6 @@
 
 #include <QFrame>
 
-class QBoxLayout;
 class QEvent;
 class QProgressBar;
 class QPushButton;
@@ -96,7 +95,6 @@ private:
     uint mode;
     bool m_bShowButton;
 
-    QBoxLayout *box;
     QStackedWidget *stack;
     ProgressItem *mCurrentItem;
     ProgressDialog* mProgressDialog;
