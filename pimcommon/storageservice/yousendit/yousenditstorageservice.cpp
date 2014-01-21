@@ -192,8 +192,8 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     cap |= DeleteFileCapability;
     cap |= RenameFolderCapability;
     cap |= RenameFileCapabilitity;
-    //cap |= MoveFileCapability;
-    //cap |= MoveFolderCapability;
+    cap |= MoveFileCapability;
+    cap |= MoveFolderCapability;
     //cap |= CopyFileCapability;
     //cap |= CopyFolderCapability;
 

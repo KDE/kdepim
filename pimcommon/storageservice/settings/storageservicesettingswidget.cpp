@@ -117,6 +117,7 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
         QString serviceName;
         PimCommon::StorageServiceManager::ServiceType type = PimCommon::StorageServiceManager::Unknown;
         QString icon;
+        bool showItem = true;
         if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::DropBox)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::DropBox);
             type = PimCommon::StorageServiceManager::DropBox;
@@ -146,9 +147,13 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             type = PimCommon::StorageServiceManager::GDrive;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::GDrive);
         }
-        createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
-        connect(i.value(),SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
-        connect(i.value(),SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+        PimCommon::StorageListWidgetItem *item = createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
+        if (showItem) {
+            connect(i.value(),SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+            connect(i.value(),SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
+        } else {
+            item->setHidden(true);
+        }
     }
 }
 

@@ -16,7 +16,7 @@
 */
 
 #include "storageservicedownloaddialog.h"
-#include "storageservicetreewidget.h"
+#include "storageservice/storageservicetreewidget.h"
 
 #include "storageservice/storageserviceabstract.h"
 

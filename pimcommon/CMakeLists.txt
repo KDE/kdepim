@@ -64,7 +64,7 @@ set(libpimcommon_storageservice_SRCS
 
   storageservice/oauth2job.cpp
   storageservice/settings/storagelistwidgetitem.cpp
-  storageservice/storageservicedownloaddialog.cpp
+  storageservice/dialog/storageservicedownloaddialog.cpp
   storageservice/storageservicejobconfig.cpp
   storageservice/storageservicetreewidget.cpp
  

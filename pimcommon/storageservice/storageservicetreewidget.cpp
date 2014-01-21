@@ -25,6 +25,7 @@
 #include <KLocalizedString>
 #include <KGlobal>
 #include <KLocale>
+#include <KMimeType>
 
 #include <QTreeWidgetItem>
 #include <QHeaderView>
@@ -75,7 +76,10 @@ StorageServiceListItem *StorageServiceTreeWidget::addFile(const QString &name, c
     item->setText(ColumnName, name);
     item->setData(ColumnName, Ident, ident);
     item->setData(ColumnName, ElementType, File);
-    //TODO fix mimetype;
+    if (!mimetype.isEmpty()) {
+        KMimeType::Ptr mime = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
+        item->setIcon(ColumnName, KIcon(mime->iconName()));
+    }
     return item;
 }
 

@@ -124,8 +124,12 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
-    QByteArray t("\"sdfsdf\"");
-    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
+    QUrl postData;
+
+    postData.addQueryItem(QLatin1String("name"), destination);
+    qDebug()<<" url"<<url<<" postData"<<postData;
+
+    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
