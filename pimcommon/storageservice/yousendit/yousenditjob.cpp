@@ -90,7 +90,7 @@ void YouSendItJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/file/%1").arg(filename));
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1").arg(filename));
     qDebug()<<" url"<<url;
     QNetworkRequest request(url);
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
@@ -124,8 +124,7 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
-
-    QByteArray t("\"name\":\"sdfsdf\"");
+    QByteArray t("\"sdfsdf\"");
     QNetworkReply *reply = mNetworkAccessManager->put(request, t);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -150,10 +149,16 @@ void YouSendItJob::moveFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1/move").arg(source));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+
+    QByteArray t("\"name\"=\"sdfsdf\"");
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::moveFile(const QString &source, const QString &destination)
@@ -459,9 +464,7 @@ void YouSendItJob::parseDownloadFile(const QString &data)
 
 void YouSendItJob::parseDeleteFile(const QString &data)
 {
-    qDebug()<<" data "<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //Q_EMIT deleteFolderDone(foldername);
+    Q_EMIT deleteFileDone(QString());
     deleteLater();
 }
 
