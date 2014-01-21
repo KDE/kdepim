@@ -78,7 +78,8 @@ StorageServiceListItem *StorageServiceTreeWidget::addFile(const QString &name, c
     item->setData(ColumnName, ElementType, File);
     if (!mimetype.isEmpty()) {
         KMimeType::Ptr mime = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
-        item->setIcon(ColumnName, KIcon(mime->iconName()));
+        if (mime)
+           item->setIcon(ColumnName, KIcon(mime->iconName()));
     }
     return item;
 }
