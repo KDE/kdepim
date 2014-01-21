@@ -95,12 +95,10 @@ QString TestSettingsJob::ubuntuOneTokenName() const
 
 QString TestSettingsJob::gdriveClientId() const
 {
-    //TODO
-    return QString();
+    return QLatin1String("76182239499.apps.googleusercontent.com");
 }
 
 QString TestSettingsJob::gdriveClientSecret() const
 {
-    //TODO
-    return QString();
+    return QLatin1String("U4RJJV7ymQ4Xf59wk7YSLSx8");
 }

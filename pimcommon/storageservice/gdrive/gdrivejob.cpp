@@ -32,10 +32,10 @@ GDriveJob::GDriveJob(QObject *parent)
     mClientId = PimCommon::StorageServiceJobConfig::self()->gdriveClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->gdriveClientSecret();
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
-    mServiceUrl = QLatin1String("https://app.box.com");
-    mApiUrl = QLatin1String("https://api.box.com");
+    mServiceUrl = QLatin1String("https://accounts.google.com/o/");
+    mApiUrl = QLatin1String("https://www.googleapis.com/auth/drive");
     mAuthorizePath = QLatin1String("/api/oauth2/authorize/");
-    mPathToken = QLatin1String("/api/oauth2/token/");
+    mPathToken = QLatin1String("/oauth2/token/");
     mFolderInfoPath = QLatin1String("/2.0/folders/");
     mFileInfoPath = QLatin1String("/2.0/files/");
     mCurrentAccountInfoPath = QLatin1String("/2.0/users/me");
