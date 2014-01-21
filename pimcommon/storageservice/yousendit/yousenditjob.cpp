@@ -125,7 +125,7 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
 
-    QByteArray t;//("name=sdfsdf");
+    QByteArray t("\"name\":\"sdfsdf\"");
     QNetworkReply *reply = mNetworkAccessManager->put(request, t);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -134,18 +134,15 @@ void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFile;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/file/%1/rename").arg(oldName));
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/rename").arg(oldName));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
 
-    QUrl postData;
-
-    postData.addQueryItem(QLatin1String("name"), newName);
-    qDebug()<<" postData"<<postData;
-    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
+    QByteArray t("\"name\"=\"sdfsdf\"");
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -163,10 +160,16 @@ void YouSendItJob::moveFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFile;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/move").arg(source));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+
+    QByteArray t("\"name\"=\"sdfsdf\"");
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::requestTokenAccess()
