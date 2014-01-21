@@ -38,6 +38,7 @@ set(libpimcommon_storageservice_SRCS
 
   storageservice/settings/storageservicecombobox.cpp
   storageservice/settings/addservicestoragedialog.cpp
+  storageservice/settings/storagelistwidgetitem.cpp
   
   storageservice/ubuntuone/ubuntuonestorageservice.cpp
   storageservice/ubuntuone/ubuntuonejob.cpp
@@ -63,10 +64,11 @@ set(libpimcommon_storageservice_SRCS
   storageservice/box/boxstorageservice.cpp
 
   storageservice/oauth2job.cpp
-  storageservice/settings/storagelistwidgetitem.cpp
+  
   storageservice/dialog/storageservicedownloaddialog.cpp
   storageservice/storageservicejobconfig.cpp
   storageservice/storageservicetreewidget.cpp
+  storageservice/storageserviceprogresswidget.cpp
  
   storageservice/tests/testsettingsjob.cpp
 )
