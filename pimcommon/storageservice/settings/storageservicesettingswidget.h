@@ -37,7 +37,7 @@ public:
     explicit StorageServiceSettingsWidget(QWidget *parent=0);
     ~StorageServiceSettingsWidget();
 
-    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
+    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst, PimCommon::StorageServiceAbstract::Capability cap = PimCommon::StorageServiceAbstract::AccountInfoCapability);
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
 
 Q_SIGNALS:

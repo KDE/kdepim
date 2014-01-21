@@ -108,7 +108,7 @@ void StorageServiceSettingsWidget::updateButtons()
     mModifyService->setEnabled(mListService->currentItem());
 }
 
-void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageServiceAbstract *> &lst)
+void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageServiceAbstract *> &lst, PimCommon::StorageServiceAbstract::Capability cap)
 {
     mListStorageService = lst;
     QMapIterator<QString, StorageServiceAbstract*> i(mListStorageService);
@@ -122,30 +122,36 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::DropBox);
             type = PimCommon::StorageServiceManager::DropBox;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::DropBox);
+            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::DropBox) & cap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Hubic)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Hubic);
             type = PimCommon::StorageServiceManager::Hubic;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Hubic);
+            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::Hubic) & cap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::UbuntuOne)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::UbuntuOne);
             type = PimCommon::StorageServiceManager::UbuntuOne;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::UbuntuOne);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::YouSendIt)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::YouSendIt);
+            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::YouSendIt) & cap);
             type = PimCommon::StorageServiceManager::YouSendIt;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::YouSendIt);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::WebDav)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::WebDav);
             type = PimCommon::StorageServiceManager::WebDav;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::WebDav);
+            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::WebDav) & cap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::Box)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::Box);
             type = PimCommon::StorageServiceManager::Box;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Box);
+            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::Box) & cap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::GDrive)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::GDrive);
             type = PimCommon::StorageServiceManager::GDrive;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::GDrive);
+            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::GDrive) & cap);
         }
         PimCommon::StorageListWidgetItem *item = createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
         if (showItem) {
