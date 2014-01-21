@@ -107,6 +107,8 @@ void StorageServicePage::connectStorageService()
     connect(mStorageService, SIGNAL(copyFolderDone(QString,QString)), this, SLOT(slotCopyFolderDone(QString,QString)));
     connect(mStorageService, SIGNAL(copyFileDone(QString,QString)), this, SLOT(slotCopyFileDone(QString,QString)));
     connect(mStorageService, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownloadFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(downLoadFileFailed(QString,QString)), this, SLOT(slotDownloadFileFailed(QString,QString)));
+    connect(mStorageService, SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
 }
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
@@ -317,4 +319,20 @@ void StorageServicePage::updateList(const QString &serviceName)
 void StorageServicePage::refreshList()
 {
     QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
+}
+
+void StorageServicePage::slotDownloadFileFailed(const QString &serviceName, const QString &filename)
+{
+    if (verifyService(serviceName)) {
+        mDownloadUploadProgress = false;
+    }
+    //TODO inform it.
+}
+
+void StorageServicePage::slotUploadFileFailed(const QString &serviceName, const QString &filename)
+{
+    if (verifyService(serviceName)) {
+        mDownloadUploadProgress = false;
+    }
+    //TODO inform it.
 }

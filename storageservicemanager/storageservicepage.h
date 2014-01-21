@@ -79,7 +79,8 @@ private Q_SLOTS:
     void slotCopyFileDone(const QString &serviceName, const QString &filename);
     void slotCopyFolderDone(const QString &serviceName, const QString &filename);
     void slotDownloadFileDone(const QString &serviceName, const QString &filename);
-
+    void slotUploadFileFailed(const QString &serviceName, const QString &filename);
+    void slotDownloadFileFailed(const QString &serviceName, const QString &filename);
 private:
     bool verifyService(const QString &serviceName);
     inline void updateList(const QString &serviceName);
