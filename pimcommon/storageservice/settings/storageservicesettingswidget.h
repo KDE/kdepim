@@ -62,6 +62,7 @@ private:
         Name = Qt::UserRole + 1,
         Type = Qt::UserRole + 2
     };
+    PimCommon::StorageServiceAbstract::Capability mNeedCapability;
     QMap<QString, PimCommon::StorageServiceAbstract *> mListStorageService;
     QListWidget *mListService;
     KTextBrowser *mDescription;

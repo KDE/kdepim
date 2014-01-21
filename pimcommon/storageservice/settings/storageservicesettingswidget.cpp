@@ -42,7 +42,9 @@
 using namespace PimCommon;
 
 StorageServiceSettingsWidget::StorageServiceSettingsWidget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      mNeedCapability(PimCommon::StorageServiceAbstract::NoCapability)
+
 {
     QHBoxLayout *mainLayout = new QHBoxLayout;
 
@@ -111,6 +113,7 @@ void StorageServiceSettingsWidget::updateButtons()
 void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageServiceAbstract *> &lst, PimCommon::StorageServiceAbstract::Capability cap)
 {
     mListStorageService = lst;
+    mNeedCapability = cap;
     QMapIterator<QString, StorageServiceAbstract*> i(mListStorageService);
     while (i.hasNext()) {
         i.next();
@@ -201,7 +204,7 @@ void StorageServiceSettingsWidget::slotRemoveService()
 
 void StorageServiceSettingsWidget::slotAddService()
 {
-    QPointer<AddServiceStorageDialog> dlg = new AddServiceStorageDialog(mListStorageService.keys(), this);
+    QPointer<AddServiceStorageDialog> dlg = new AddServiceStorageDialog(mNeedCapability, mListStorageService.keys(), this);
     if (dlg->exec()) {
         const PimCommon::StorageServiceManager::ServiceType type = dlg->serviceSelected();
         const QString serviceName = PimCommon::StorageServiceManager::serviceToI18n(type);
