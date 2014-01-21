@@ -27,6 +27,7 @@
 #include <KCmdLineArgs>
 #include <KLocalizedString>
 #include <KDialog>
+#include <KActionMenu>
 
 #include <QVBoxLayout>
 #include <QToolBar>
@@ -116,7 +117,7 @@ void StorageServiceTestWidget::slotServiceMenu()
     QMenu *menu = qobject_cast<QMenu*>(sender());
     if (menu) {
         menu->clear();
-        menu->addMenu(mStorageManager->menuUploadServices(menu));
+        menu->addAction(mStorageManager->menuUploadServices(menu));
     }
 }
 

@@ -41,6 +41,7 @@ StorageServiceAbstractJob::~StorageServiceAbstractJob()
 
 void StorageServiceAbstractJob::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)
 {
+    qDebug()<<" void StorageServiceAbstractJob::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)"<<error.count();
     reply->ignoreSslErrors(error);
 }
 
