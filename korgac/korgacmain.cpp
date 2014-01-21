@@ -66,7 +66,7 @@ static const char korgacVersion[] = KDEPIM_VERSION;
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "korgac", "korganizer", ki18n( "KOrganizer Reminder Daemon" ),
+  KAboutData aboutData( "korgac", QByteArray(), ki18n( "KOrganizer Reminder Daemon" ),
                         korgacVersion, ki18n( "KOrganizer Reminder Daemon" ),
                         KAboutData::License_GPL,
                         ki18n( "(c) 2003 Cornelius Schumacher" ),

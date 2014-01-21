@@ -32,7 +32,6 @@ KorgacAgent::KorgacAgent( const QString &id )
   : AgentBase( id ),
     m_alarmClient( new KOAlarmClient )
 {
-  KGlobal::locale()->insertCatalog( "korganizer" );
 }
 
 KorgacAgent::~KorgacAgent()
