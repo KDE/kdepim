@@ -126,7 +126,7 @@ void BoxStorageService::storageServicedownloadFile(const QString &filename, cons
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(filename, destination);
     }
 }
 
@@ -314,7 +314,7 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename, destination);
+        mUploadReply = job->uploadFile(filename, destination);
     }
 }
 

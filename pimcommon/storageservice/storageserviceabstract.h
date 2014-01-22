@@ -21,6 +21,8 @@
 #include <QObject>
 #include <QUrl>
 #include <KIcon>
+#include <QPointer>
+#include <QNetworkReply>
 
 namespace PimCommon {
 class StorageServiceTreeWidget;
@@ -121,6 +123,8 @@ public:
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
     virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
     virtual bool hasProgressIndicatorSupport() const;
+    void cancelUploadFile();
+    void cancelDownloadFile();
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
@@ -185,6 +189,8 @@ protected:
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
     NextAction *mNextAction;
+    QPointer<QNetworkReply> mUploadReply;
+    QPointer<QNetworkReply> mDownloadReply;
 
 private:
     inline void changeProgressState(bool state);

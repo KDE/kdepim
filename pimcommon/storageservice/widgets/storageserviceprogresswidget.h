@@ -23,6 +23,7 @@
 #include <QFrame>
 class QProgressBar;
 class QLabel;
+class QToolButton;
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceProgressWidget : public QFrame
 {
@@ -40,7 +41,11 @@ public Q_SLOTS:
 protected:
     void hideEvent(QHideEvent *e);
 
+private slots:
+    void slotCancelTask();
+
 private:
+    QToolButton *mCancel;
     QProgressBar *mProgressBar;
     QLabel *mProgressInfo;
 };

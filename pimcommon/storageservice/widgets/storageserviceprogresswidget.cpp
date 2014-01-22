@@ -21,11 +21,13 @@
 #include <KLocalizedString>
 #include <KLocale>
 #include <KGlobal>
+#include <KIcon>
 
 #include <QProgressBar>
 #include <QHBoxLayout>
 #include <QHideEvent>
 #include <QLabel>
+#include <QToolButton>
 
 using namespace PimCommon;
 
@@ -42,11 +44,21 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(QWidget *parent)
     mProgressBar->setMinimum(0);
     mProgressBar->setMaximum(100);
     box->addWidget(mProgressBar);
+
+    mCancel = new QToolButton;
+    mCancel->setIcon(KIcon(QLatin1String("dialog-cancel")));
+    connect(mCancel, SIGNAL(clicked()), this, SLOT(slotCancelTask()));
+    box->addWidget(mCancel);
 }
 
 StorageServiceProgressWidget::~StorageServiceProgressWidget()
 {
 
+}
+
+void StorageServiceProgressWidget::slotCancelTask()
+{
+    //TODO
 }
 
 void StorageServiceProgressWidget::reset()

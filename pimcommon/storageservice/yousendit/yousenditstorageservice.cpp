@@ -155,7 +155,7 @@ void YouSendItStorageService::storageServiceuploadFile(const QString &filename, 
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
-        job->uploadFile(filename, destination);
+        mUploadReply = job->uploadFile(filename, destination);
     }
 }
 
@@ -230,7 +230,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &filename
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(filename, destination);
     }
 }
 

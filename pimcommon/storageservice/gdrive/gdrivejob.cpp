@@ -23,6 +23,7 @@
 #include <qjson/parser.h>
 
 #include <QDebug>
+#include <QFile>
 
 using namespace PimCommon;
 
@@ -152,20 +153,30 @@ void GDriveJob::copyFolder(const QString &source, const QString &destination)
     deleteLater();
 }
 
-void GDriveJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
-    mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    qDebug()<<" request "<<request.rawHeaderList()<<" reqyest "<<request.url();
-    QUrl postData;
-    //TODO
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    QFile *file = new QFile(filename);
+    if (file->exists()) {
+        mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+        mError = false;
+        if (file->open(QIODevice::ReadOnly)) {
+            QUrl url;
+            url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
+            QNetworkRequest request(url);
+            request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+            request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+            qDebug()<<" request "<<request.rawHeaderList()<<" reqyest "<<request.url();
+            QUrl postData;
+            //TODO
+            QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+            file->setParent(reply);
+            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            return reply;
+        } else {
+            delete file;
+        }
+    }
+    return 0;
 }
 
 void GDriveJob::listFolder(const QString &folder)

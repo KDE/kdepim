@@ -28,6 +28,7 @@
 #include <QDebug>
 #include <QNetworkReply>
 #include <QPointer>
+#include <QFile>
 
 using namespace PimCommon;
 
@@ -79,11 +80,12 @@ void YouSendItJob::createServiceFolder()
     deleteLater();
 }
 
-void YouSendItJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *YouSendItJob::downloadFile(const QString &filename, const QString &destination)
 {
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
+    return 0;
 }
 
 void YouSendItJob::deleteFile(const QString &filename)
@@ -213,7 +215,7 @@ void YouSendItJob::requestTokenAccess()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void YouSendItJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *YouSendItJob::uploadFile(const QString &filename, const QString &destination)
 {
     //FIXME filename
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
@@ -228,6 +230,7 @@ void YouSendItJob::uploadFile(const QString &filename, const QString &destinatio
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    return reply;
 }
 
 void YouSendItJob::listFolder(const QString &folder)

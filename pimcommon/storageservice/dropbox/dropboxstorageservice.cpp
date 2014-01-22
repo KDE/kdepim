@@ -173,7 +173,7 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename, co
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
-        job->uploadFile(filename, destination);
+        mUploadReply = job->uploadFile(filename, destination);
     }
 }
 

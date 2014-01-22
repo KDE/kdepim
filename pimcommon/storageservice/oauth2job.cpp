@@ -62,13 +62,14 @@ void OAuth2Job::createServiceFolder()
     deleteLater();
 }
 
-void OAuth2Job::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply * OAuth2Job::downloadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
+    return 0;
 }
 
 void OAuth2Job::deleteFile(const QString &filename)
@@ -235,7 +236,7 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void OAuth2Job::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *OAuth2Job::uploadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
@@ -249,6 +250,7 @@ void OAuth2Job::uploadFile(const QString &filename, const QString &destination)
     //TODO
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    return reply;
 }
 
 void OAuth2Job::listFolder(const QString &folder)
