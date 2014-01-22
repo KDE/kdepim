@@ -97,10 +97,10 @@ QString StorageServiceManagerSettingsJob::ubuntuOneTokenName() const
 
 QString StorageServiceManagerSettingsJob::gdriveClientId() const
 {
-    return QLatin1String("76182239499.apps.googleusercontent.com");
+    return QLatin1String("76182239499-2krm3lvlrqrj446loaqrrep594n3u2o8.apps.googleusercontent.com");
 }
 
 QString StorageServiceManagerSettingsJob::gdriveClientSecret() const
 {
-    return QLatin1String("U4RJJV7ymQ4Xf59wk7YSLSx8");
+    return QLatin1String("7SinUSCxfbrJYN7az3VvxTJ9");
 }

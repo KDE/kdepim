@@ -31,14 +31,15 @@ GDriveJob::GDriveJob(QObject *parent)
 {
     mClientId = PimCommon::StorageServiceJobConfig::self()->gdriveClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->gdriveClientSecret();
-    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
-    mServiceUrl = QLatin1String("https://accounts.google.com/o/");
+    mRedirectUri = QLatin1String("urn:ietf:wg:oauth:2.0:oob");
+    mServiceUrl = QLatin1String("https://accounts.google.com/o");
     mApiUrl = QLatin1String("https://www.googleapis.com/auth/drive/v2/");
     mAuthorizePath = QLatin1String("/oauth2/auth");
     mPathToken = QLatin1String("/oauth2/token/");
     mFolderInfoPath = QLatin1String("/2.0/folders/");
     mFileInfoPath = QLatin1String("/2.0/files/");
     mCurrentAccountInfoPath = QLatin1String("/2.0/users/me");
+    mScope = QLatin1String("https://www.googleapis.com/auth/drive");
 }
 
 GDriveJob::~GDriveJob()
