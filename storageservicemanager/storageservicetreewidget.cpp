@@ -166,7 +166,7 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 }
             }
         }
-        if (type != StorageServiceTreeWidget::UnKnown) {
+        if ((type == StorageServiceTreeWidget::File) || (type == StorageServiceTreeWidget::Folder)) {
             act = new QAction(menu);
             act->setSeparator(true);
             menu->addAction(act);
