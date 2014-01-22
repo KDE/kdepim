@@ -412,7 +412,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             if (qwer.contains(QLatin1String("is_dir"))) {
                 const bool isDir = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
-                StorageServiceListItem *item;
+                StorageServiceTreeWidgetItem *item;
                 if (isDir) {
                     item = listWidget->addFolder(name, name);
                 } else {
@@ -431,6 +431,11 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
         }
     }
     return parentFolder;
+}
+
+QString DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    return QString();
 }
 
 bool DropBoxStorageService::hasProgressIndicatorSupport() const

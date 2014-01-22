@@ -18,6 +18,7 @@
 #ifndef STORAGESERVICEABSTRACT_H
 #define STORAGESERVICEABSTRACT_H
 
+#include "pimcommon_export.h"
 #include <QObject>
 #include <QUrl>
 #include <KIcon>
@@ -42,7 +43,8 @@ struct AccountInfo {
 
 
 class NextAction;
-class StorageServiceAbstract : public QObject
+class StorageServiceTreeWidgetItem;
+class PIMCOMMON_EXPORT StorageServiceAbstract : public QObject
 {
     Q_OBJECT
 public:
@@ -99,6 +101,7 @@ public:
     };
 
     bool isInProgress() const;
+    bool hasUploadOrDownloadInProgress() const;
 
     virtual void downloadFile(const QString &filename, const QString &destination);
     virtual void uploadFile(const QString &filename, const QString &destination);
@@ -122,6 +125,7 @@ public:
     virtual void removeConfig() = 0;
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
     virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
+    virtual QString itemInformation(const QVariantMap &variantMap) = 0;
     virtual bool hasProgressIndicatorSupport() const;
     void cancelUploadFile();
     void cancelDownloadFile();

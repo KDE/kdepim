@@ -251,6 +251,11 @@ void GDriveStorageService::storageServiceCopyFolder(const QString &source, const
     }
 }
 
+QString GDriveStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 void GDriveStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {

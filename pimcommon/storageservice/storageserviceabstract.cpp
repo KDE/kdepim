@@ -32,6 +32,11 @@ StorageServiceAbstract::~StorageServiceAbstract()
     delete mNextAction;
 }
 
+bool StorageServiceAbstract::hasUploadOrDownloadInProgress() const
+{
+    return (mUploadReply || mDownloadReply);
+}
+
 void StorageServiceAbstract::cancelUploadFile()
 {
     if (mUploadReply) {

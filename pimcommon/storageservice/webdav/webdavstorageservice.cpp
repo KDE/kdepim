@@ -245,6 +245,11 @@ QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     return QString();
 }
 
+QString WebDavStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 void WebDavStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {

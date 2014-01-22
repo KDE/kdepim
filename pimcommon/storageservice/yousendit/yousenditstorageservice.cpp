@@ -368,6 +368,11 @@ void YouSendItStorageService::storageServiceCopyFolder(const QString &source, co
     }
 }
 
+QString YouSendItStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const
 {
     return serviceCapabilities();
@@ -380,7 +385,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" INFO "<<info;
+    //qDebug()<<" INFO "<<info;
     if (info.contains(QLatin1String("folders"))) {
         const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         const QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
@@ -390,7 +395,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
                 const QString folderId = map.value(QLatin1String("id")).toString();
-                StorageServiceListItem *item = listWidget->addFolder(name, folderId);
+                StorageServiceTreeWidgetItem *item = listWidget->addFolder(name, folderId);
                 item->setStoreInfo(map);
             }
         }
@@ -403,7 +408,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                 const QString name = map.value(QLatin1String("name")).toString();
                 qDebug()<<" name !"<<name;
                 const QString fileId = map.value(QLatin1String("id")).toString();
-                StorageServiceListItem *item = listWidget->addFile(name, fileId);
+                StorageServiceTreeWidgetItem *item = listWidget->addFile(name, fileId);
                 if (map.contains(QLatin1String("size"))) {
                     //qDebug()<<" size "<<map.value(QLatin1String("size"));
                     const qulonglong size = map.value(QLatin1String("size")).toULongLong();

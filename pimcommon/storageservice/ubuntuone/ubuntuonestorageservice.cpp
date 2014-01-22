@@ -397,7 +397,7 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
             const QVariantMap map = v.toMap();
             if (map.contains(QLatin1String("kind"))) {
                 const QString kind = map.value(QLatin1String("kind")).toString();
-                StorageServiceListItem *item = 0;
+                StorageServiceTreeWidgetItem *item = 0;
                 if (kind == QLatin1String("directory")) {
                     const QString path = map.value(QLatin1String("path")).toString();
                     item = listWidget->addFolder(path, path);
@@ -414,6 +414,11 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
         }
     }
     return parentFolder;
+}
+
+QString UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    return QString();
 }
 
 QString UbuntuoneStorageService::storageServiceName() const

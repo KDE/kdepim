@@ -54,15 +54,15 @@ StorageServiceTreeWidget::~StorageServiceTreeWidget()
 
 void StorageServiceTreeWidget::createMoveUpItem()
 {
-    StorageServiceListItem *item = new StorageServiceListItem(this);
+    StorageServiceTreeWidgetItem *item = new StorageServiceTreeWidgetItem(this);
     item->setText(ColumnName, QLatin1String(".."));
     item->setData(ColumnName, ElementType, MoveUpType);
     item->setIcon(ColumnName, KIcon(QLatin1String("go-up")));
 }
 
-StorageServiceListItem *StorageServiceTreeWidget::addFolder(const QString &name, const QString &ident)
+StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFolder(const QString &name, const QString &ident)
 {
-    StorageServiceListItem *item = new StorageServiceListItem(this);
+    StorageServiceTreeWidgetItem *item = new StorageServiceTreeWidgetItem(this);
     item->setText(ColumnName, name);
     item->setData(ColumnName, Ident, ident);
     item->setData(ColumnName, ElementType, Folder);
@@ -70,9 +70,9 @@ StorageServiceListItem *StorageServiceTreeWidget::addFolder(const QString &name,
     return item;
 }
 
-StorageServiceListItem *StorageServiceTreeWidget::addFile(const QString &name, const QString &ident, const QString &mimetype)
+StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFile(const QString &name, const QString &ident, const QString &mimetype)
 {
-    StorageServiceListItem *item = new StorageServiceListItem(this);
+    StorageServiceTreeWidgetItem *item = new StorageServiceTreeWidgetItem(this);
     item->setText(ColumnName, name);
     item->setData(ColumnName, Ident, ident);
     item->setData(ColumnName, ElementType, File);
@@ -118,6 +118,15 @@ QString StorageServiceTreeWidget::itemIdentifierSelected() const
     return QString();
 }
 
+QVariantMap StorageServiceTreeWidget::itemInformationSelected() const
+{
+    QTreeWidgetItem *item = currentItem();
+    if (item) {
+        return static_cast<StorageServiceTreeWidgetItem*>(item)->storeInfo();
+    }
+    return QVariantMap();
+}
+
 void StorageServiceTreeWidget::setCurrentFolder(const QString &folder)
 {
     mCurrentFolder = folder;
@@ -142,13 +151,13 @@ void StorageServiceTreeWidget::goToFolder(const QString &folder)
 }
 
 
-StorageServiceListItem::StorageServiceListItem(StorageServiceTreeWidget *parent)
+StorageServiceTreeWidgetItem::StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent)
     : QTreeWidgetItem(parent)
 {
 
 }
 
-bool StorageServiceListItem::operator<(const QTreeWidgetItem &other) const
+bool StorageServiceTreeWidgetItem::operator<(const QTreeWidgetItem &other) const
 {
     StorageServiceTreeWidget::ItemType sourceType = static_cast<StorageServiceTreeWidget::ItemType>(data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::ElementType).toInt());
     StorageServiceTreeWidget::ItemType otherType = static_cast<StorageServiceTreeWidget::ItemType>(other.data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::ElementType).toInt());
@@ -165,27 +174,27 @@ bool StorageServiceListItem::operator<(const QTreeWidgetItem &other) const
     }
 }
 
-void StorageServiceListItem::setSize(qulonglong size)
+void StorageServiceTreeWidgetItem::setSize(qulonglong size)
 {
     setText(StorageServiceTreeWidget::ColumnSize, KGlobal::locale()->formatByteSize(size));
 }
 
-void StorageServiceListItem::setDateCreated(const QString &date)
+void StorageServiceTreeWidgetItem::setDateCreated(const QString &date)
 {
     setText(StorageServiceTreeWidget::ColumnCreated, date);
 }
 
-void StorageServiceListItem::setLastModification(const QString &date)
+void StorageServiceTreeWidgetItem::setLastModification(const QString &date)
 {
     setText(StorageServiceTreeWidget::ColumnLastModification, date);
 }
 
-void StorageServiceListItem::setStoreInfo(const QVariantMap &data)
+void StorageServiceTreeWidgetItem::setStoreInfo(const QVariantMap &data)
 {
     setData(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::Info, data);
 }
 
-QVariantMap StorageServiceListItem::storeInfo() const
+QVariantMap StorageServiceTreeWidgetItem::storeInfo() const
 {
     return data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::Info).value<QVariantMap>();
 }

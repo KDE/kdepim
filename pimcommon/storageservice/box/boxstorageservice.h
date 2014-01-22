@@ -61,6 +61,7 @@ public:
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
+    QString itemInformation(const QVariantMap &variantMap);
 
 private slots:
     void slotAuthorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);

@@ -27,10 +27,10 @@
 namespace PimCommon {
 class StorageServiceTreeWidget;
 class StorageServiceAbstract;
-class PIMCOMMON_EXPORT StorageServiceListItem : public QTreeWidgetItem
+class PIMCOMMON_EXPORT StorageServiceTreeWidgetItem : public QTreeWidgetItem
 {
 public:
-    StorageServiceListItem(StorageServiceTreeWidget *parent);
+    StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent);
     bool operator<(const QTreeWidgetItem &other) const;
     void setSize(qulonglong size);
     void setDateCreated(const QString &date);
@@ -67,8 +67,8 @@ public:
     void setCurrentFolder(const QString &folder);
     QString currentFolder() const;
 
-    StorageServiceListItem *addFolder(const QString &name, const QString &ident);
-    StorageServiceListItem *addFile(const QString &name, const QString &ident, const QString &mimetype = QString());
+    StorageServiceTreeWidgetItem *addFolder(const QString &name, const QString &ident);
+    StorageServiceTreeWidgetItem *addFile(const QString &name, const QString &ident, const QString &mimetype = QString());
 
     StorageServiceTreeWidget::ItemType itemTypeSelected() const;
     StorageServiceTreeWidget::ItemType type(QTreeWidgetItem *item) const;
@@ -76,6 +76,7 @@ public:
     QString itemIdentifierSelected() const;
     void createMoveUpItem();
 
+    QVariantMap itemInformationSelected() const;
 public Q_SLOTS:
     void refreshList();
 

@@ -392,3 +392,8 @@ QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget
     listWidget->createMoveUpItem();
     return QString();
 }
+
+QString HubicStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    return QString();
+}

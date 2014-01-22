@@ -28,6 +28,7 @@
 #include <QAuthenticator>
 #include <QPointer>
 #include <QDebug>
+#include <QFile>
 
 using namespace PimCommon;
 
@@ -85,6 +86,17 @@ QNetworkReply *UbuntuOneJob::uploadFile(const QString &filename, const QString &
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
+    QFile *file = new QFile(filename);
+    if (file->exists()) {
+        mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+        mError = false;
+        if (file->open(QIODevice::ReadOnly)) {
+            //TODO
+            delete file;
+        } else {
+            delete file;
+        }
+    }
     qDebug()<<" upload file not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
