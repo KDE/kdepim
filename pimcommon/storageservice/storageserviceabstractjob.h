@@ -50,10 +50,6 @@ public:
     virtual void copyFile(const QString &source, const QString &destination) = 0;
     virtual void copyFolder(const QString &source, const QString &destination) = 0;
 
-
-protected Q_SLOTS:
-    void slotError(QNetworkReply::NetworkError);
-
 Q_SIGNALS:
     void actionFailed(const QString &data);
     void shareLinkDone(const QString &url);
@@ -85,6 +81,7 @@ protected:
 
 private slots:
     void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
+    void slotError(QNetworkReply::NetworkError);
 };
 }
 
