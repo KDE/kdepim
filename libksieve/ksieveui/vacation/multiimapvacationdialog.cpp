@@ -53,8 +53,8 @@ MultiImapVacationDialog::MultiImapVacationDialog(QWidget *parent)
                                   "IMAP server for this. "
                                   "You can do this on the \"Filtering\" tab of the IMAP "
                                   "account configuration."));
-    vbox->addStretch();
     vbox->addWidget(lab);
+    vbox->addStretch();
     mStackedWidget->addWidget(w);
     mStackedWidget->setCurrentIndex(0);
     init();
