@@ -139,11 +139,13 @@ void SieveGlobalVariableActionWidget::loadScript(const QDomElement &element, QSt
 void SieveGlobalVariableActionWidget::slotAddWidget()
 {
     emit addWidget( this );
+    Q_EMIT valueChanged();
 }
 
 void SieveGlobalVariableActionWidget::slotRemoveWidget()
 {
     emit removeWidget( this );
+    Q_EMIT valueChanged();
 }
 
 void SieveGlobalVariableActionWidget::updateAddRemoveButton( bool addButtonEnabled, bool removeButtonEnabled )
@@ -273,7 +275,9 @@ void SieveGlobalVariableLister::reconnectWidget(SieveGlobalVariableActionWidget 
 
 void SieveGlobalVariableLister::clearWidget( QWidget *aWidget )
 {
+    Q_UNUSED(aWidget);
     //TODO
+    Q_EMIT valueChanged();
 }
 
 QWidget *SieveGlobalVariableLister::createWidget( QWidget *parent )
