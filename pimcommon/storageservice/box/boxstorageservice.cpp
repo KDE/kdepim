@@ -430,5 +430,6 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
 
 QString BoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
+    qDebug()<<" variantMap" <<variantMap;
     return QString();
 }
