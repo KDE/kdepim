@@ -445,7 +445,7 @@ void DropBoxJob::uploadFile(const QString &filename, const QString &destination)
         mActionType = PimCommon::StorageServiceAbstract::UploadFile;
         mError = false;
         QFileInfo info(filename);
-        const QString defaultDestination = (destination.isEmpty() ? QLatin1String("test") : destination);
+        const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->dropboxDefaultUploadFolder() : destination);
         const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
         const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox///%7/%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5&overwrite=false").
                 arg(info.fileName()).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp).arg(defaultDestination);

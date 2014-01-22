@@ -48,6 +48,11 @@ QString TestSettingsJob::dropboxOauthSignature() const
     return QLatin1String("0icikya464lny9g&");
 }
 
+QString TestSettingsJob::dropboxDefaultUploadFolder() const
+{
+    return QString();
+}
+
 QString TestSettingsJob::boxClientId() const
 {
     return QLatin1String("o4sn4e0dvz50pd3ps6ao3qxehvqv8dyo");
