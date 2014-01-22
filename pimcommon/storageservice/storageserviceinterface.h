@@ -36,7 +36,6 @@ public:
     virtual QString dropboxOauthConsumerKey() const = 0;
     virtual QString dropboxOauthSignature() const = 0;
     virtual QString dropboxRootPath() const = 0;
-    virtual QString dropboxDefaultUploadFolder() const = 0;
 
     //Box
     virtual QString boxClientId() const = 0;
@@ -56,6 +55,9 @@ public:
     //GDrive
     virtual QString gdriveClientId() const = 0;
     virtual QString gdriveClientSecret() const = 0;
+
+
+    virtual QString defaultUploadFolder() const = 0;
 };
 
 }

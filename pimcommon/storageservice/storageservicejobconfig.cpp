@@ -140,13 +140,13 @@ QString StorageServiceJobConfig::dropboxRootPath() const
     return mSettingsJob->dropboxRootPath();
 }
 
-QString StorageServiceJobConfig::dropboxDefaultUploadFolder() const
+QString StorageServiceJobConfig::defaultUploadFolder() const
 {
     if (!mSettingsJob) {
         qDebug()<<" settings job not registered";
         return QString();
     }
-    return mSettingsJob->dropboxDefaultUploadFolder();
+    return mSettingsJob->defaultUploadFolder();
 }
 
 QString StorageServiceJobConfig::oauth2RedirectUrl() const

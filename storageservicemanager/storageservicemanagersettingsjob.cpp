@@ -105,7 +105,7 @@ QString StorageServiceManagerSettingsJob::gdriveClientSecret() const
     return QLatin1String("7SinUSCxfbrJYN7az3VvxTJ9");
 }
 
-QString StorageServiceManagerSettingsJob::dropboxDefaultUploadFolder() const
+QString StorageServiceManagerSettingsJob::defaultUploadFolder() const
 {
     return QString();
 }
