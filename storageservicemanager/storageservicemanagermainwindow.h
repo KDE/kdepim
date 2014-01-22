@@ -48,6 +48,7 @@ private slots:
 private:
     void setupActions();
     void readConfig();
+    void initStatusBar();
     StorageServiceTabWidget *mStorageServiceTabWidget;
     PimCommon::StorageServiceManager *mStorageManager;
     KAction *mDownloadFile;

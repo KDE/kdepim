@@ -60,9 +60,8 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     setupGUI();
     readConfig();
     mStorageServiceTabWidget->setListStorageService(mStorageManager->listService());
-    mStatusBarInfo = new QLabel;
-    statusBar()->insertWidget(0, mStatusBarInfo);
     slotUpdateActions();
+    initStatusBar();
 }
 
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
@@ -73,6 +72,13 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
     KConfigGroup group = config->group( QLatin1String("StorageServiceManagerMainWindow") );
     group.writeEntry( "Size", size() );
     qDebug()<<" StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
+}
+
+void StorageServiceManagerMainWindow::initStatusBar()
+{
+    statusBar()->setItemAlignment( 1, Qt::AlignLeft | Qt::AlignVCenter );
+    mStatusBarInfo = new QLabel;
+    statusBar()->insertWidget(0, mStatusBarInfo, 4);
 }
 
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
