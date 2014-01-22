@@ -158,6 +158,7 @@ void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint
 {
     if (verifyService(serviceName)) {
         if (mStorageService->hasProgressIndicatorSupport()) {
+            qDebug()<<" done "<<done<<" total"<<total;
             mProgressWidget->setProgressValue((100*done)/total);
         }
     }
@@ -342,6 +343,7 @@ void StorageServicePage::slotUploadFileFailed(const QString &serviceName, const 
 {
     if (verifyService(serviceName)) {
         mDownloadUploadProgress = false;
+        mProgressWidget->hide();
     }
     //TODO inform it.
 }
