@@ -155,9 +155,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
 void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
     if (verifyService(serviceName)) {
-        if (mStorageService->hasProgressIndicatorSupport()) {
-            mProgressWidget->setProgressValue(done, total);
-        }
+        mProgressWidget->setProgressValue(done, total);
     }
 }
 
@@ -219,7 +217,7 @@ void StorageServicePage::slotUploadFile()
 {
     if (mTreeWidget->uploadFileToService()) {
         mProgressWidget->reset();
-        mProgressWidget->setBusyIndicator(!mStorageService->hasProgressIndicatorSupport());
+        mProgressWidget->setBusyIndicator(false);
         mProgressWidget->show();
     }
 }

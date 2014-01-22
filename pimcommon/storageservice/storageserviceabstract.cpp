@@ -223,11 +223,6 @@ void StorageServiceAbstract::copyFolder(const QString &source, const QString &de
     storageServiceCopyFolder(source, destination);
 }
 
-bool StorageServiceAbstract::hasProgressIndicatorSupport() const
-{
-    return false;
-}
-
 void StorageServiceAbstract::executeNextAction()
 {
     switch(mNextAction->nextActionType()) {

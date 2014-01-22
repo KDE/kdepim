@@ -438,11 +438,6 @@ QString DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
     return QString();
 }
 
-bool DropBoxStorageService::hasProgressIndicatorSupport() const
-{
-    return true;
-}
-
 KIcon DropBoxStorageService::icon() const
 {
     return KIcon(iconName());

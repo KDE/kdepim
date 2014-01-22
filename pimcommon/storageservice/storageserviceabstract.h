@@ -126,7 +126,6 @@ public:
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
     virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
     virtual QString itemInformation(const QVariantMap &variantMap) = 0;
-    virtual bool hasProgressIndicatorSupport() const;
     void cancelUploadFile();
     void cancelDownloadFile();
 
