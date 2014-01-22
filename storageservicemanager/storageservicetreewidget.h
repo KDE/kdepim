@@ -32,6 +32,7 @@ public:
     ~StorageServiceTreeWidget();
 
     void setIsInitialized();
+    bool uploadFileToService();
 
 Q_SIGNALS:
     void moveUp();
@@ -39,7 +40,6 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void slotCreateFolder();
-    void slotUploadFile();
     void slotDownloadFile();
     void slotDeleteFolder();
     void slotDeleteFile();

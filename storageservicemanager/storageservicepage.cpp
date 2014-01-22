@@ -219,11 +219,12 @@ void StorageServicePage::accountInfo()
 
 void StorageServicePage::slotUploadFile()
 {
-    mProgressWidget->show();
-    mProgressWidget->setProgressValue(0);
-    mProgressWidget->setBusyIndicator(!mStorageService->hasProgressIndicatorSupport());
-    mDownloadUploadProgress = true;
-    mTreeWidget->slotUploadFile();
+    if (mTreeWidget->uploadFileToService()) {
+        mProgressWidget->show();
+        mProgressWidget->setProgressValue(0);
+        mProgressWidget->setBusyIndicator(!mStorageService->hasProgressIndicatorSupport());
+        mDownloadUploadProgress = true;
+    }
 }
 
 void StorageServicePage::deleteFile()

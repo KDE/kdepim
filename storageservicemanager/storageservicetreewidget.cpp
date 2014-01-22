@@ -278,11 +278,15 @@ void StorageServiceTreeWidget::slotDownloadFile()
     }
 }
 
-void StorageServiceTreeWidget::slotUploadFile()
+bool StorageServiceTreeWidget::uploadFileToService()
 {
     const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
-    if (!filename.isEmpty())
+    if (!filename.isEmpty()) {
         mStorageService->uploadFile(filename, mCurrentFolder);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int column)
