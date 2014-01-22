@@ -24,6 +24,7 @@
 #include "storageservicewarning.h"
 #include "storageserviceaccountinfodialog.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/widgets/storageserviceprogresswidget.h"
 
 #include <KLocalizedString>
 #include <KFileDialog>
@@ -42,7 +43,6 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     : QWidget(parent),
       mServiceName(serviceName),
       mStorageService(storageService),
-      mProgressBar(0),
       mDownloadUploadProgress(false)
 {
     mProgressIndicator = new StorageServiceProgressIndicator(this);
@@ -53,14 +53,9 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     connect(mTreeWidget, SIGNAL(moveUp()), this, SLOT(slotMoveUp()));
     connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
     vbox->addWidget(mTreeWidget);
-
-    if (mStorageService->hasProgressIndicatorSupport()) {
-        mProgressBar = new QProgressBar;
-        mProgressBar->setMinimum(0);
-        mProgressBar->setMaximum(100);
-        mProgressBar->hide();
-        vbox->addWidget(mProgressBar);
-    }
+    mProgressWidget = new PimCommon::StorageServiceProgressWidget;
+    vbox->addWidget(mProgressWidget);
+    mProgressWidget->hide();
     mStorageServiceWarning = new StorageServiceWarning;
     vbox->addWidget(mStorageServiceWarning);
     connectStorageService();
@@ -151,10 +146,8 @@ void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const P
 void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
     if (verifyService(serviceName)) {
-        if (mStorageService->hasProgressIndicatorSupport()) {
-            mProgressBar->hide();
-            mProgressBar->setValue(0);
-        }
+        mProgressWidget->setProgressValue(0);
+        mProgressWidget->hide();
         mDownloadUploadProgress = false;
         updateList(serviceName);
         KMessageBox::information(this, i18n("Upload File"), i18n("%1 was correctly uploaded", fileName));
@@ -165,7 +158,7 @@ void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint
 {
     if (verifyService(serviceName)) {
         if (mStorageService->hasProgressIndicatorSupport()) {
-            mProgressBar->setValue((100*done)/total);
+            mProgressWidget->setProgressValue((100*done)/total);
         }
     }
 }
@@ -226,10 +219,9 @@ void StorageServicePage::accountInfo()
 
 void StorageServicePage::slotUploadFile()
 {
-    if (mStorageService->hasProgressIndicatorSupport()) {
-        mProgressBar->show();
-        mProgressBar->setValue(0);
-    }
+    mProgressWidget->show();
+    mProgressWidget->setProgressValue(0);
+    mProgressWidget->setBusyIndicator(!mStorageService->hasProgressIndicatorSupport());
     mDownloadUploadProgress = true;
     mTreeWidget->slotUploadFile();
 }

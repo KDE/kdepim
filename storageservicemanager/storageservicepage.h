@@ -27,10 +27,11 @@
 class QProgressBar;
 namespace PimCommon {
 class StorageServiceAbstract;
+class StorageServiceProgressWidget;
 }
-class StorageServiceProgressIndicator;
 class StorageServiceWarning;
 class StorageServiceTreeWidget;
+class StorageServiceProgressIndicator;
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
@@ -91,7 +92,7 @@ private:
     StorageServiceTreeWidget *mTreeWidget;
     StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
-    QProgressBar *mProgressBar;
+    PimCommon::StorageServiceProgressWidget *mProgressWidget;
     bool mDownloadUploadProgress;
 };
 

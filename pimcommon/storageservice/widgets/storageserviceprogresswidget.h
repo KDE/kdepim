@@ -33,7 +33,6 @@ public:
 
      void setBusyIndicator(bool busy);
 
-
 public Q_SLOTS:
     void setProgressValue(int);
 

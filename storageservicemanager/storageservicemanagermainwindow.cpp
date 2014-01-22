@@ -76,7 +76,7 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
 
 void StorageServiceManagerMainWindow::initStatusBar()
 {
-    statusBar()->setItemAlignment( 1, Qt::AlignLeft | Qt::AlignVCenter );
+    statusBar()->setItemAlignment( 0, Qt::AlignLeft | Qt::AlignVCenter );
     mStatusBarInfo = new QLabel;
     statusBar()->insertWidget(0, mStatusBarInfo, 4);
 }
