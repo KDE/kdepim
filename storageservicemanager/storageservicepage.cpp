@@ -42,8 +42,7 @@
 StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : QWidget(parent),
       mServiceName(serviceName),
-      mStorageService(storageService),
-      mDownloadUploadProgress(false)
+      mStorageService(storageService)
 {
     mProgressIndicator = new StorageServiceProgressIndicator(this);
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
@@ -73,7 +72,7 @@ QString StorageServicePage::serviceName() const
 
 bool StorageServicePage::hasUploadDownloadProgress() const
 {
-    return mDownloadUploadProgress;
+    return mStorageService->hasUploadOrDownloadInProgress();
 }
 
 void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
@@ -148,7 +147,6 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
     if (verifyService(serviceName)) {
         mProgressWidget->reset();
         mProgressWidget->hide();
-        mDownloadUploadProgress = false;
         updateList(serviceName);
         KMessageBox::information(this, i18n("Upload File"), i18n("%1 was correctly uploaded", fileName));
     }
@@ -223,7 +221,6 @@ void StorageServicePage::slotUploadFile()
         mProgressWidget->reset();
         mProgressWidget->setBusyIndicator(!mStorageService->hasProgressIndicatorSupport());
         mProgressWidget->show();
-        mDownloadUploadProgress = true;
     }
 }
 
@@ -306,7 +303,6 @@ void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QS
 
 void StorageServicePage::slotDownloadFileDone(const QString &serviceName, const QString &filename)
 {
-    mDownloadUploadProgress = false;
     //TODO
 }
 
@@ -333,7 +329,6 @@ void StorageServicePage::refreshList()
 void StorageServicePage::slotDownloadFileFailed(const QString &serviceName, const QString &filename)
 {
     if (verifyService(serviceName)) {
-        mDownloadUploadProgress = false;
     }
     //TODO inform it.
 }
@@ -341,7 +336,6 @@ void StorageServicePage::slotDownloadFileFailed(const QString &serviceName, cons
 void StorageServicePage::slotUploadFileFailed(const QString &serviceName, const QString &filename)
 {
     if (verifyService(serviceName)) {
-        mDownloadUploadProgress = false;
         mProgressWidget->hide();
     }
     //TODO inform it.

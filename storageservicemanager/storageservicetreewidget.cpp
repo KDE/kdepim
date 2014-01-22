@@ -21,6 +21,7 @@
 #include "storageservicetreewidget.h"
 #include "storageservice/storageserviceabstract.h"
 #include "storageservicemanagerglobalconfig.h"
+#include "storageservicepropertiesdialog.h"
 
 #include <KMenu>
 #include <KInputDialog>
@@ -32,6 +33,7 @@
 #include <QPainter>
 #include <QHeaderView>
 #include <QTimer>
+#include <QPointer>
 
 StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : PimCommon::StorageServiceTreeWidget(storageService, parent),
@@ -86,91 +88,92 @@ void StorageServiceTreeWidget::setIsInitialized()
 
 void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
 {
-    if (!mInitialized)
-        return;
-
     KMenu *menu = new KMenu( this );
-    menu->addAction( KIcon(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
-    const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
-    if (type != StorageServiceTreeWidget::UnKnown) {
+    if (mInitialized) {
+        menu->addAction( KIcon(QLatin1String("go-up")),  i18n("Up"), this, SLOT(slotMoveUp()));
+        const PimCommon::StorageServiceTreeWidget::ItemType type = StorageServiceTreeWidget::itemTypeSelected();
+        if (type != StorageServiceTreeWidget::UnKnown) {
+            QAction *act = new QAction(menu);
+            act->setSeparator(true);
+            menu->addAction(act);
+            if (type == StorageServiceTreeWidget::File) {
+                if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFileCapability)
+                    menu->addAction(KIcon(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFile()));
+                if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFileCapability)
+                    menu->addAction(KIcon(QLatin1String("edit-copy")), i18n("Copy"), this, SLOT(slotCopyFile()));
+                act = new QAction(menu);
+                act->setSeparator(true);
+                menu->addAction(act);
+                if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity)
+                    menu->addAction(i18n("Rename File..."), this, SLOT(slotRenameFile()));
+                if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
+                    menu->addAction(i18n("Delete File"), this, SLOT(slotDeleteFile()));
+                if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability)
+                    menu->addAction(i18n("Share File"), this, SLOT(slotShareFile()));
+                act = new QAction(menu);
+                act->setSeparator(true);
+                menu->addAction(act);
+                if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
+                    menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
+
+            } else if (type == StorageServiceTreeWidget::Folder) {
+                if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability)
+                    menu->addAction(KIcon(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFolder()));
+                if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFolderCapability)
+                    menu->addAction(KIcon(QLatin1String("edit-copy")), i18n("Copy"), this, SLOT(slotCopyFolder()));
+                act = new QAction(menu);
+                act->setSeparator(true);
+                menu->addAction(act);
+                if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability)
+                    menu->addAction(i18n("Rename Folder..."), this, SLOT(slotRenameFolder()));
+                if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability)
+                    menu->addAction(i18n("Delete Folder"), this, SLOT(slotDeleteFolder()));
+            }
+        }
         QAction *act = new QAction(menu);
         act->setSeparator(true);
         menu->addAction(act);
-        if (type == StorageServiceTreeWidget::File) {
-            if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFileCapability)
-                menu->addAction(KIcon(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFile()));
-            if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFileCapability)
-                menu->addAction(KIcon(QLatin1String("edit-copy")), i18n("Copy"), this, SLOT(slotCopyFile()));
-            act = new QAction(menu);
-            act->setSeparator(true);
-            menu->addAction(act);
-            if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity)
-                menu->addAction(i18n("Rename File..."), this, SLOT(slotRenameFile()));
-            if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
-                menu->addAction(i18n("Delete File"), this, SLOT(slotDeleteFile()));
-            if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability)
-                menu->addAction(i18n("Share File"), this, SLOT(slotShareFile()));
-            act = new QAction(menu);
-            act->setSeparator(true);
-            menu->addAction(act);
-            if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
-                menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
-
-        } else if (type == StorageServiceTreeWidget::Folder) {
-            if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability)
-                menu->addAction(KIcon(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFolder()));
-            if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFolderCapability)
-                menu->addAction(KIcon(QLatin1String("edit-copy")), i18n("Copy"), this, SLOT(slotCopyFolder()));
-            act = new QAction(menu);
-            act->setSeparator(true);
-            menu->addAction(act);
-            if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability)
-                menu->addAction(i18n("Rename Folder..."), this, SLOT(slotRenameFolder()));
-            if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability)
-                menu->addAction(i18n("Delete Folder"), this, SLOT(slotDeleteFolder()));
-        }
-    }
-    QAction *act = new QAction(menu);
-    act->setSeparator(true);
-    menu->addAction(act);
-    if (mCapabilities & PimCommon::StorageServiceAbstract::UploadFileCapability)
-        menu->addAction(i18n("Upload File..."), this, SIGNAL(uploadFile()));
-    act = new QAction(menu);
-    act->setSeparator(true);
-    menu->addAction(act);
-    if (mCapabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability)
-        menu->addAction(i18n("Create Folder..."), this, SLOT(slotCreateFolder()));
-
-    act = new QAction(menu);
-    act->setSeparator(true);
-    menu->addAction(act);
-
-    if (mCopyItem.moveItem) {
-        if (mCopyItem.type == FileType) {
-            if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFileCapability) {
-                menu->addAction(KIcon(QLatin1String("edit-paste")), i18n("Paste"), this, SLOT(slotMoveFile()));
-            }
-        } else if (mCopyItem.type == FolderType) {
-            if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability) {
-                menu->addAction(KIcon(QLatin1String("edit-paste")), i18n("Paste"), this, SLOT(slotMoveFolder()));
-            }
-        }
-    } else {
-        if (mCopyItem.type == FileType) {
-            if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFileCapability) {
-                menu->addAction(KIcon(QLatin1String("edit-paste")), i18n("Paste"), this, SLOT(slotPasteFile()));
-            }
-        } else if (mCopyItem.type == FolderType) {
-            if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFolderCapability) {
-                menu->addAction(KIcon(QLatin1String("edit-paste")), i18n("Paste"), this, SLOT(slotPasteFolder()));
-            }
-        }
-    }
-    if (type != StorageServiceTreeWidget::UnKnown) {
+        if (mCapabilities & PimCommon::StorageServiceAbstract::UploadFileCapability)
+            menu->addAction(i18n("Upload File..."), this, SIGNAL(uploadFile()));
         act = new QAction(menu);
         act->setSeparator(true);
         menu->addAction(act);
-        menu->addAction(i18n("Property"), this, SLOT(slotProperty()));
+        if (mCapabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability)
+            menu->addAction(i18n("Create Folder..."), this, SLOT(slotCreateFolder()));
+
+        act = new QAction(menu);
+        act->setSeparator(true);
+        menu->addAction(act);
+
+        if (mCopyItem.moveItem) {
+            if (mCopyItem.type == FileType) {
+                if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFileCapability) {
+                    menu->addAction(KIcon(QLatin1String("edit-paste")), i18n("Paste"), this, SLOT(slotMoveFile()));
+                }
+            } else if (mCopyItem.type == FolderType) {
+                if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability) {
+                    menu->addAction(KIcon(QLatin1String("edit-paste")), i18n("Paste"), this, SLOT(slotMoveFolder()));
+                }
+            }
+        } else {
+            if (mCopyItem.type == FileType) {
+                if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFileCapability) {
+                    menu->addAction(KIcon(QLatin1String("edit-paste")), i18n("Paste"), this, SLOT(slotPasteFile()));
+                }
+            } else if (mCopyItem.type == FolderType) {
+                if (mCapabilities & PimCommon::StorageServiceAbstract::CopyFolderCapability) {
+                    menu->addAction(KIcon(QLatin1String("edit-paste")), i18n("Paste"), this, SLOT(slotPasteFolder()));
+                }
+            }
+        }
+        if (type != StorageServiceTreeWidget::UnKnown) {
+            act = new QAction(menu);
+            act->setSeparator(true);
+            menu->addAction(act);
+            menu->addAction(i18n("Properties"), this, SLOT(slotProperties()));
+        }
+    } else {
+        menu->addAction(KIcon(QLatin1String("view-refresh")), i18n("Refresh"), this, SLOT(refreshList()));
     }
     menu->exec( mapToGlobal( pos ) );
     delete menu;
@@ -354,7 +357,14 @@ void StorageServiceTreeWidget::slotCopyFolder()
     mCopyItem.identifier = itemIdentifierSelected();
 }
 
-void StorageServiceTreeWidget::slotProperty()
+void StorageServiceTreeWidget::slotProperties()
 {
-    //TODO
+    const QString info = mStorageService->itemInformation(itemInformationSelected());
+    if (!info.isEmpty()) {
+        QPointer<StorageServicePropertiesDialog> dlg = new StorageServicePropertiesDialog(this);
+        dlg->setInformation(info);
+        dlg->exec();
+        delete dlg;
+    }
+
 }

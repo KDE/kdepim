@@ -65,7 +65,7 @@ private Q_SLOTS:
     void slotMoveFile();
     void slotPasteFolder();
     void slotPasteFile();
-    void slotProperty();
+    void slotProperties();
 private:
     void readConfig();
     void writeConfig();

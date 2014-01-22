@@ -93,7 +93,6 @@ private:
     StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
     PimCommon::StorageServiceProgressWidget *mProgressWidget;
-    bool mDownloadUploadProgress;
 };
 
 #endif // STORAGESERVICEPAGE_H
