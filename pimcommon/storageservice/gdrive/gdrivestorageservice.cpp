@@ -16,7 +16,7 @@
 */
 
 #include "gdrivestorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
 #include "gdrivejob.h"
 

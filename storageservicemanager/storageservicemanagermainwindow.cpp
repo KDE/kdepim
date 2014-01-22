@@ -83,6 +83,7 @@ void StorageServiceManagerMainWindow::initStatusBar()
 
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
 {
+    //TODO
     if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
     } else {
     }

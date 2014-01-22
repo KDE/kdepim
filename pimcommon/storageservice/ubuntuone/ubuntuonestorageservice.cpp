@@ -16,7 +16,7 @@
 */
 
 #include "ubuntuonestorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
 #include "ubuntuonejob.h"
 

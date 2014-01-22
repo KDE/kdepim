@@ -24,14 +24,17 @@ set(libpimcommon_shorturl_SRCS
 set(libpimcommon_storageservice_SRCS
   storageservice/storageserviceabstract.cpp
   storageservice/storageservicemanager.cpp
+  storageservice/oauth2job.cpp
+  storageservice/storageservicejobconfig.cpp
+
 
   storageservice/dropbox/dropboxstorageservice.cpp
   storageservice/dropbox/dropboxjob.cpp
   storageservice/dropbox/dropboxutil.cpp
 
-  storageservice/settings/storageservicesettingswidget.cpp
-  storageservice/storageauthviewwidget.cpp
-  storageservice/storageauthviewdialog.cpp
+  storageservice/authdialog/storageauthviewwidget.cpp
+  storageservice/authdialog/storageauthviewdialog.cpp
+  storageservice/authdialog/logindialog.cpp
 
   storageservice/hubic/hubicstorageservice.cpp
   storageservice/hubic/hubicjob.cpp
@@ -39,7 +42,8 @@ set(libpimcommon_storageservice_SRCS
   storageservice/settings/storageservicecombobox.cpp
   storageservice/settings/addservicestoragedialog.cpp
   storageservice/settings/storagelistwidgetitem.cpp
-  
+  storageservice/settings/storageservicesettingswidget.cpp
+
   storageservice/ubuntuone/ubuntuonestorageservice.cpp
   storageservice/ubuntuone/ubuntuonejob.cpp
   storageservice/ubuntuone/ubuntuoneutil.cpp
@@ -47,7 +51,6 @@ set(libpimcommon_storageservice_SRCS
   storageservice/gdrive/gdrivestorageservice.cpp
   storageservice/gdrive/gdrivejob.cpp
 
-  storageservice/logindialog.cpp
   storageservice/storageserviceabstractjob.cpp
 
   storageservice/yousendit/yousenditjob.cpp
@@ -58,17 +61,15 @@ set(libpimcommon_storageservice_SRCS
   storageservice/webdav/webdavjob.cpp
   storageservice/webdav/webdavsettingsdialog.cpp
 
-  storageservice/storageserviceutils.cpp
+  storageservice/utils/storageserviceutils.cpp
 
   storageservice/box/boxjob.cpp
   storageservice/box/boxstorageservice.cpp
 
-  storageservice/oauth2job.cpp
-  
   storageservice/dialog/storageservicedownloaddialog.cpp
-  storageservice/storageservicejobconfig.cpp
-  storageservice/storageservicetreewidget.cpp
-  storageservice/storageserviceprogresswidget.cpp
+
+  storageservice/widgets/storageservicetreewidget.cpp
+  storageservice/widgets/storageserviceprogresswidget.cpp
  
   storageservice/tests/testsettingsjob.cpp
 )

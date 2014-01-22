@@ -17,9 +17,9 @@
 
 
 #include "dropboxjob.h"
-#include "storageservice/storageauthviewdialog.h"
+#include "storageservice/authdialog/storageauthviewdialog.h"
 #include "storageservice/storageserviceabstract.h"
-#include "storageservice/storageserviceutils.h"
+#include "storageservice/utils/storageserviceutils.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>

@@ -16,7 +16,7 @@
 */
 
 #include "oauth2job.h"
-#include "storageservice/storageauthviewdialog.h"
+#include "storageservice/authdialog/storageauthviewdialog.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>

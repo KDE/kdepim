@@ -16,7 +16,7 @@
 */
 
 #include "webdavstorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"

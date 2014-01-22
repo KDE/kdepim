@@ -22,7 +22,7 @@
 #ifndef STORAGESERVICETREEWIDGET_H
 #define STORAGESERVICETREEWIDGET_H
 
-#include "pimcommon/storageservice/storageservicetreewidget.h"
+#include "pimcommon/storageservice/widgets/storageservicetreewidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 class StorageServiceTreeWidget : public PimCommon::StorageServiceTreeWidget
 {

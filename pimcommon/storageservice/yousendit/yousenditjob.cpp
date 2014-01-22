@@ -16,7 +16,7 @@
 */
 
 #include "yousenditjob.h"
-#include "pimcommon/storageservice/logindialog.h"
+#include "pimcommon/storageservice/authdialog/logindialog.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
