@@ -31,8 +31,14 @@ public:
     explicit StorageServiceProgressWidget(QWidget *parent=0);
     ~StorageServiceProgressWidget();
 
+     void setBusyIndicator(bool busy);
+
+
 public Q_SLOTS:
     void setProgressValue(int);
+
+protected:
+    void hideEvent(QHideEvent *e);
 
 private:
     QProgressBar *mProgressBar;

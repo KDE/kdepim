@@ -18,8 +18,11 @@
 
 #include "storageserviceprogresswidget.h"
 
+#include <KLocalizedString>
+
 #include <QProgressBar>
 #include <QHBoxLayout>
+#include <QHideEvent>
 
 using namespace PimCommon;
 
@@ -40,7 +43,26 @@ StorageServiceProgressWidget::~StorageServiceProgressWidget()
 
 }
 
+void StorageServiceProgressWidget::setBusyIndicator(bool busy)
+{
+    if (busy) {
+        mProgressBar->setMinimum(0);
+        mProgressBar->setMaximum(0);
+    } else {
+        mProgressBar->setMinimum(0);
+        mProgressBar->setMaximum(100);
+    }
+}
+
 void StorageServiceProgressWidget::setProgressValue(int val)
 {
     mProgressBar->setValue(val);
+}
+
+void StorageServiceProgressWidget::hideEvent(QHideEvent *e)
+{
+    if (!e->spontaneous()) {
+        mProgressBar->reset();
+    }
+    QFrame::hideEvent(e);
 }
