@@ -45,6 +45,7 @@ public:
     QString ubuntuOneTokenName() const;
     QString gdriveClientId() const;
     QString gdriveClientSecret() const;
+    QString defaultUploadFolder() const;
 };
 
 #endif // STORAGESERVICEMANAGERSETTINGSJOB_H

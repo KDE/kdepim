@@ -41,7 +41,6 @@ public slots:
     void slotSetStatusBarMessage(const QString &message);
 
 private slots:
-    void slotAddStorageService();
     void slotConfigure();
     void slotUpdateActions();
     void slotSystemNetworkStatusChanged(Solid::Networking::Status status);
@@ -49,6 +48,7 @@ private slots:
 private:
     void setupActions();
     void readConfig();
+    void initStatusBar();
     StorageServiceTabWidget *mStorageServiceTabWidget;
     PimCommon::StorageServiceManager *mStorageManager;
     KAction *mDownloadFile;

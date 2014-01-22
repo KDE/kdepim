@@ -1623,7 +1623,7 @@ std::vector<GpgME::Key> Kleo::KeyResolver::selectKeys(
 
   std::vector<GpgME::Key> keys = dlg->selectedKeys();
   keys.erase( std::remove_if( keys.begin(), keys.end(),
-                              NotValidTrustedEncryptionKey ), // -= trusted?
+                              NotValidEncryptionKey ),
                               keys.end() );
   if ( !keys.empty() && dlg->rememberSelection() ) {
     setKeysForAddress( person, dlg->pgpKeyFingerprints(), dlg->smimeFingerprints() );

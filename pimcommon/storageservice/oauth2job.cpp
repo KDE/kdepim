@@ -16,7 +16,7 @@
 */
 
 #include "oauth2job.h"
-#include "storageservice/storageauthviewdialog.h"
+#include "storageservice/authdialog/storageauthviewdialog.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
@@ -62,13 +62,14 @@ void OAuth2Job::createServiceFolder()
     deleteLater();
 }
 
-void OAuth2Job::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply * OAuth2Job::downloadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
+    return 0;
 }
 
 void OAuth2Job::deleteFile(const QString &filename)
@@ -169,7 +170,7 @@ void OAuth2Job::requestTokenAccess()
     if (!mScope.isEmpty())
         url.addQueryItem(QLatin1String("scope"),mScope);
     mAuthUrl = url;
-    //qDebug()<<" url"<<url;
+    qDebug()<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
     connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
@@ -235,7 +236,7 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void OAuth2Job::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *OAuth2Job::uploadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
@@ -249,6 +250,7 @@ void OAuth2Job::uploadFile(const QString &filename, const QString &destination)
     //TODO
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    return reply;
 }
 
 void OAuth2Job::listFolder(const QString &folder)
@@ -348,12 +350,20 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 Q_EMIT authorizationFailed(errorStr);
                 deleteLater();
                 break;
-            case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::UploadFile:
+                Q_EMIT uploadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::DownLoadFile:
+                Q_EMIT downLoadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::CreateFolder:
             case PimCommon::StorageServiceAbstract::AccountInfo:
             case PimCommon::StorageServiceAbstract::ListFolder:
-            case PimCommon::StorageServiceAbstract::DownLoadFile:
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
             case PimCommon::StorageServiceAbstract::RenameFolder:
@@ -428,7 +438,6 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         parseMoveFile(data);
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
-
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
         deleteLater();
         break;

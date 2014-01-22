@@ -24,6 +24,7 @@
 #include "storageservicewarning.h"
 #include "storageserviceaccountinfodialog.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
+#include "pimcommon/storageservice/widgets/storageserviceprogresswidget.h"
 
 #include <KLocalizedString>
 #include <KFileDialog>
@@ -41,24 +42,19 @@
 StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::StorageServiceAbstract *storageService, QWidget *parent)
     : QWidget(parent),
       mServiceName(serviceName),
-      mStorageService(storageService),
-      mProgressBar(0),
-      mDownloadUploadProgress(false)
+      mStorageService(storageService)
 {
     mProgressIndicator = new StorageServiceProgressIndicator(this);
     connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
-    connect(mTreeWidget, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
     connect(mTreeWidget, SIGNAL(moveUp()), this, SLOT(slotMoveUp()));
+    connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
     vbox->addWidget(mTreeWidget);
-
-    if (mStorageService->hasProgressIndicatorSupport()) {
-        mProgressBar = new QProgressBar;
-        mProgressBar->hide();
-        vbox->addWidget(mProgressBar);
-    }
+    mProgressWidget = new PimCommon::StorageServiceProgressWidget;
+    vbox->addWidget(mProgressWidget);
+    mProgressWidget->hide();
     mStorageServiceWarning = new StorageServiceWarning;
     vbox->addWidget(mStorageServiceWarning);
     connectStorageService();
@@ -76,7 +72,7 @@ QString StorageServicePage::serviceName() const
 
 bool StorageServicePage::hasUploadDownloadProgress() const
 {
-    return mDownloadUploadProgress;
+    return mStorageService->hasUploadOrDownloadInProgress();
 }
 
 void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
@@ -86,24 +82,43 @@ void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
 
 void StorageServicePage::connectStorageService()
 {
-    connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
-    connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
     connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
     connect(mStorageService, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
+
     connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
+
     connect(mStorageService, SIGNAL(accountInfoDone(QString,PimCommon::AccountInfo)), this, SLOT(slotAccountInfoDone(QString,PimCommon::AccountInfo)));
+
     connect(mStorageService, SIGNAL(inProgress(bool)), this, SLOT(slotProgressStateChanged(bool)));
+
     connect(mStorageService, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString, QString)));
+
     connect(mStorageService, SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(deleteFileDone(QString,QString)), this, SLOT(slotDeleteFileDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(renameFolderDone(QString,QString)), this, SLOT(slotRenameFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(renameFileDone(QString,QString)), this, SLOT(slotRenameFileDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(moveFileDone(QString,QString)), this, SLOT(slotMoveFileDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(moveFolderDone(QString,QString)), this, SLOT(slotMoveFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(copyFolderDone(QString,QString)), this, SLOT(slotCopyFolderDone(QString,QString)));
+
     connect(mStorageService, SIGNAL(copyFileDone(QString,QString)), this, SLOT(slotCopyFileDone(QString,QString)));
+
+    connect(mStorageService, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownloadFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(downLoadFileFailed(QString,QString)), this, SLOT(slotDownloadFileFailed(QString,QString)));
+
+    connect(mStorageService, SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
+    connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
+    connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
 }
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
@@ -114,7 +129,8 @@ void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const 
 
 void StorageServicePage::slotRenameFileDone(const QString &serviceName, const QString &fileName)
 {
-   //TODO
+    Q_UNUSED(fileName);
+    updateList(serviceName);
 }
 
 void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo)
@@ -129,6 +145,8 @@ void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const P
 void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
     if (verifyService(serviceName)) {
+        mProgressWidget->reset();
+        mProgressWidget->hide();
         updateList(serviceName);
         KMessageBox::information(this, i18n("Upload File"), i18n("%1 was correctly uploaded", fileName));
     }
@@ -137,7 +155,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
 void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
     if (verifyService(serviceName)) {
-        //TODO
+        mProgressWidget->setProgressValue(done, total);
     }
 }
 
@@ -190,19 +208,18 @@ void StorageServicePage::createFolder()
     mTreeWidget->slotCreateFolder();
 }
 
-void StorageServicePage::refreshList()
-{
-    mStorageService->listFolder(mTreeWidget->currentFolder());
-}
-
 void StorageServicePage::accountInfo()
 {
     mStorageService->accountInfo();
 }
 
-void StorageServicePage::uploadFile()
+void StorageServicePage::slotUploadFile()
 {
-    mTreeWidget->slotUploadFile();
+    if (mTreeWidget->uploadFileToService()) {
+        mProgressWidget->reset();
+        mProgressWidget->setBusyIndicator(false);
+        mProgressWidget->show();
+    }
 }
 
 void StorageServicePage::deleteFile()
@@ -282,21 +299,42 @@ void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QS
     updateList(serviceName);
 }
 
-void StorageServicePage::slotGoToFolder(const QString &folder)
+void StorageServicePage::slotDownloadFileDone(const QString &serviceName, const QString &filename)
 {
-    mTreeWidget->setCurrentFolder(folder);
-    QTimer::singleShot(0, this, SLOT(refreshList()));
+    //TODO
 }
 
 void StorageServicePage::slotMoveUp()
 {
+    if (mParentFolder == mTreeWidget->currentFolder())
+        return;
     mTreeWidget->setCurrentFolder(mParentFolder);
-    QTimer::singleShot(0, this, SLOT(refreshList()));
+    QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
 }
 
 void StorageServicePage::updateList(const QString &serviceName)
 {
     if (verifyService(serviceName)) {
-        QTimer::singleShot(0, this, SLOT(refreshList()));
+        QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
     }
+}
+
+void StorageServicePage::refreshList()
+{
+    QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
+}
+
+void StorageServicePage::slotDownloadFileFailed(const QString &serviceName, const QString &filename)
+{
+    if (verifyService(serviceName)) {
+    }
+    //TODO inform it.
+}
+
+void StorageServicePage::slotUploadFileFailed(const QString &serviceName, const QString &filename)
+{
+    if (verifyService(serviceName)) {
+        mProgressWidget->hide();
+    }
+    //TODO inform it.
 }

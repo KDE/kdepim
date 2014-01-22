@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -15,31 +15,40 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STORAGESERVICEDOWNLOADDIALOG_H
-#define STORAGESERVICEDOWNLOADDIALOG_H
+#ifndef STORAGESERVICEPROGRESSWIDGET_H
+#define STORAGESERVICEPROGRESSWIDGET_H
 
-#include <KDialog>
+#include "pimcommon_export.h"
 
-class QTreeWidgetItem;
+#include <QFrame>
+class QProgressBar;
+class QLabel;
+class QToolButton;
 namespace PimCommon {
-class StorageServiceAbstract;
-class StorageServiceTreeWidget;
-class StorageServiceDownloadDialog : public KDialog
+class PIMCOMMON_EXPORT StorageServiceProgressWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
-    ~StorageServiceDownloadDialog();
+    explicit StorageServiceProgressWidget(QWidget *parent=0);
+    ~StorageServiceProgressWidget();
 
+     void setBusyIndicator(bool busy);
+     void reset();
+
+public Q_SLOTS:
+    void setProgressValue(qint64 done, qint64 total);
+
+protected:
+    void hideEvent(QHideEvent *e);
 
 private slots:
-    void slotItemActivated(QTreeWidgetItem *item, int column);
+    void slotCancelTask();
 
 private:
-    void initializeList();
-    StorageServiceTreeWidget *mListWidget;
-    PimCommon::StorageServiceAbstract *mStorage;
+    QToolButton *mCancel;
+    QProgressBar *mProgressBar;
+    QLabel *mProgressInfo;
 };
 }
 
-#endif // STORAGESERVICEDOWNLOADDIALOG_H
+#endif // STORAGESERVICEPROGRESSWIDGET_H

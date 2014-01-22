@@ -23,6 +23,7 @@
 #include <qjson/parser.h>
 
 #include <QDebug>
+#include <QFile>
 
 using namespace PimCommon;
 
@@ -31,14 +32,15 @@ GDriveJob::GDriveJob(QObject *parent)
 {
     mClientId = PimCommon::StorageServiceJobConfig::self()->gdriveClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->gdriveClientSecret();
-    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
-    mServiceUrl = QLatin1String("https://app.box.com");
-    mApiUrl = QLatin1String("https://api.box.com");
-    mAuthorizePath = QLatin1String("/api/oauth2/authorize/");
-    mPathToken = QLatin1String("/api/oauth2/token/");
+    mRedirectUri = QLatin1String("urn:ietf:wg:oauth:2.0:oob");
+    mServiceUrl = QLatin1String("https://accounts.google.com/o");
+    mApiUrl = QLatin1String("https://www.googleapis.com/auth/drive/v2/");
+    mAuthorizePath = QLatin1String("/oauth2/auth");
+    mPathToken = QLatin1String("/oauth2/token/");
     mFolderInfoPath = QLatin1String("/2.0/folders/");
     mFileInfoPath = QLatin1String("/2.0/files/");
     mCurrentAccountInfoPath = QLatin1String("/2.0/users/me");
+    mScope = QLatin1String("https://www.googleapis.com/auth/drive");
 }
 
 GDriveJob::~GDriveJob()
@@ -151,20 +153,30 @@ void GDriveJob::copyFolder(const QString &source, const QString &destination)
     deleteLater();
 }
 
-void GDriveJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
-    mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    qDebug()<<" request "<<request.rawHeaderList()<<" reqyest "<<request.url();
-    QUrl postData;
-    //TODO
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    QFile *file = new QFile(filename);
+    if (file->exists()) {
+        mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+        mError = false;
+        if (file->open(QIODevice::ReadOnly)) {
+            QUrl url;
+            url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
+            QNetworkRequest request(url);
+            request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+            request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+            qDebug()<<" request "<<request.rawHeaderList()<<" reqyest "<<request.url();
+            QUrl postData;
+            //TODO
+            QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+            file->setParent(reply);
+            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            return reply;
+        } else {
+            delete file;
+        }
+    }
+    return 0;
 }
 
 void GDriveJob::listFolder(const QString &folder)

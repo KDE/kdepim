@@ -1,6 +1,6 @@
 /*
  * This file is part of KMail.
- * Copyright (c) 2011,2012 Laurent Montel <montel@kde.org>
+ * Copyright (c) 2011,2012,2013,2014 Laurent Montel <montel@kde.org>
  *
  * Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
  *
@@ -56,6 +56,8 @@
 #include "warningwidgets/externaleditorwarning.h"
 
 #include "pimcommon/util/editorutil.h"
+#include "pimcommon/storageservice/storageservicemanager.h"
+#include "pimcommon/storageservice/widgets/storageserviceprogresswidget.h"
 
 #include "agents/sendlateragent/sendlaterutil.h"
 #include "agents/sendlateragent/sendlaterdialog.h"
@@ -493,6 +495,11 @@ KMComposeWin::KMComposeWin( const KMime::Message::Ptr &aMsg, bool lastSignState,
 
   mDummyComposer = new MessageComposer::Composer( this );
   mDummyComposer->globalPart()->setParentWidgetForGui( this );
+
+  connect(KMKernel::self()->storageServiceManager(), SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
+  connect(KMKernel::self()->storageServiceManager(), SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
+  connect(KMKernel::self()->storageServiceManager(), SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
+  connect(KMKernel::self()->storageServiceManager(), SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
 }
 
 //-----------------------------------------------------------------------------
@@ -1438,6 +1445,7 @@ void KMComposeWin::setupActions( void )
   mCryptoModuleAction->setToolTip( i18n( "Select a cryptographic format for this message" ) );
 
   mComposerBase->editor()->createActions( actionCollection() );
+  actionCollection()->addAction( QLatin1String("shared_link"), KMKernel::self()->storageServiceManager()->menuUploadServices(this) );
 
   createGUI( QLatin1String("kmcomposerui.rc") );
   connect( toolBar( QLatin1String("htmlToolBar") )->toggleViewAction(),
@@ -1478,7 +1486,10 @@ void KMComposeWin::changeCryptoAction()
 //-----------------------------------------------------------------------------
 void KMComposeWin::setupStatusBar( QWidget *w )
 {
+  mProgressWidget  = new PimCommon::StorageServiceProgressWidget;
+  mProgressWidget->hide();
   statusBar()->addWidget(w);
+  statusBar()->addWidget(mProgressWidget);
   statusBar()->insertItem( QString(), 0, 1 );
   statusBar()->setItemAlignment( 0, Qt::AlignLeft | Qt::AlignVCenter );
   statusBar()->insertPermanentItem( overwriteModeStr(), 4,0 );
@@ -3549,4 +3560,29 @@ void KMComposeWin::slotExternalEditorClosed()
 void KMComposeWin::slotInsertShortUrl(const QString &url)
 {
     mComposerBase->editor()->insertLink(url);
+}
+
+void KMComposeWin::slotUploadFileDone(const QString &serviceName, const QString &fileName)
+{
+    mProgressWidget->hide();
+}
+
+void KMComposeWin::slotUploadFileFailed(const QString &serviceName, const QString &fileName)
+{
+    mProgressWidget->hide();
+    qDebug()<<" void KMComposeWin::slotUploadFileFailed(const QString &serviceName, const QString &fileName)"<<fileName;
+    //TODO
+}
+
+void KMComposeWin::slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total)
+{
+    mProgressWidget->show();
+    mProgressWidget->setProgressValue(done, total);
+}
+
+void KMComposeWin::slotShareLinkDone(const QString &serviceName, const QString &link)
+{
+    //Improve it.
+    mComposerBase->editor()->insertLink(link);
+    qDebug()<<" link"<<link;
 }

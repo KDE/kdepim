@@ -16,6 +16,7 @@
 */
 
 #include "configurestorageservicewidget.h"
+#include "kmkernel.h"
 #include "settings/globalsettings.h"
 #include "pimcommon/storageservice/settings/storageservicesettingswidget.h"
 #include "pimcommon/widgets/configureimmutablewidgetutils.h"
@@ -41,10 +42,11 @@ ConfigureStorageServiceWidget::ConfigureStorageServiceWidget(QWidget *parent)
     hbox->addWidget(mLimitAttachment);
     lay->addLayout(hbox);
     connect(mActivateStorageService, SIGNAL(toggled(bool)), mLimitAttachment, SLOT(setEnabled(bool)));
-
+    connect(mActivateStorageService, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(mLimitAttachment, SIGNAL(valueChanged(int)), this, SIGNAL(changed()));
     mStorageServiceWidget = new PimCommon::StorageServiceSettingsWidget;
+    connect(mStorageServiceWidget, SIGNAL(changed()), this, SIGNAL(changed()));
     lay->addWidget(mStorageServiceWidget);
-
     setLayout(lay);
 }
 
@@ -57,10 +59,13 @@ void ConfigureStorageServiceWidget::save()
 {
     saveCheckBox(mActivateStorageService, GlobalSettings::self()->useStorageServiceItem());
     saveSpinBox(mLimitAttachment, GlobalSettings::self()->storageServiceLimitItem());
+    KMKernel::self()->storageServiceManager()->setListService(mStorageServiceWidget->listService());
 }
 
 void ConfigureStorageServiceWidget::doLoadFromGlobalSettings()
 {
     loadWidget(mActivateStorageService, GlobalSettings::self()->useStorageServiceItem());
     loadWidget(mLimitAttachment, GlobalSettings::self()->storageServiceLimitItem());
+    mStorageServiceWidget->setListService(KMKernel::self()->storageServiceManager()->listService(), PimCommon::StorageServiceAbstract::ShareLinkCapability);
+    mLimitAttachment->setEnabled(mActivateStorageService->isChecked());
 }

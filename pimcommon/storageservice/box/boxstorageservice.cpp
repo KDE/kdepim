@@ -16,7 +16,8 @@
 */
 
 #include "boxstorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "boxjob.h"
 
 #include <qjson/parser.h>
@@ -43,7 +44,8 @@ BoxStorageService::~BoxStorageService()
 
 void BoxStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Box Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Box Settings");
     mRefreshToken = grp.readEntry("Refresh Token");
     mToken = grp.readEntry("Token");
     if (grp.hasKey("Expire Time"))
@@ -54,9 +56,10 @@ void BoxStorageService::readConfig()
 
 void BoxStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Box Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Box Settings");
     grp.deleteGroup();
-    KGlobal::config()->sync();
+    grp.sync();
 }
 
 void BoxStorageService::storageServiceauthentication()
@@ -78,7 +81,8 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
 {
     mRefreshToken = refreshToken;
     mToken = token;
-    KConfigGroup grp(KGlobal::config(), "Box Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Box Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
@@ -122,7 +126,7 @@ void BoxStorageService::storageServicedownloadFile(const QString &filename, cons
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(filename, destination);
     }
 }
 
@@ -310,7 +314,7 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename, destination);
+        mUploadReply = job->uploadFile(filename, destination);
     }
 }
 
@@ -391,7 +395,8 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info "<<info;
+    //qDebug()<<" info "<<info;
+    listWidget->createMoveUpItem();
     QString parentId;
     if (info.contains(QLatin1String("id"))) {
         parentId = info.value(QLatin1String("id")).toString();
@@ -406,16 +411,25 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
                     const QString type = mapEntries.value(QLatin1String("type")).toString();
                     const QString name = mapEntries.value(QLatin1String("name")).toString();
                     const QString id = mapEntries.value(QLatin1String("id")).toString();
+                    StorageServiceTreeWidgetItem *item = 0;
                     if (type == QLatin1String("folder")) {
-                        listWidget->addFolder(name, id);
+                        item = listWidget->addFolder(name, id);
                     } else if (type == QLatin1String("file")) {
-                        listWidget->addFile(name, id);
+                        item = listWidget->addFile(name, id);
+                    }
+                    if (item) {
+                        item->setStoreInfo(mapEntries);
                     }
                 }
-                //qDebug()<<" v"<<v;
             }
         }
     }
-    qDebug()<<" parentId"<<parentId;
+    //qDebug()<<" parentId"<<parentId;
     return parentId;
+}
+
+QString BoxStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    qDebug()<<" variantMap" <<variantMap;
+    return QString();
 }

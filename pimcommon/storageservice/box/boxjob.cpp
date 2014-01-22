@@ -23,6 +23,7 @@
 #include <qjson/parser.h>
 
 #include <QDebug>
+#include <QFile>
 
 using namespace PimCommon;
 
@@ -100,7 +101,6 @@ void BoxJob::renameFolder(const QString &source, const QString &destination)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     const QString data = QString::fromLatin1("{\"name\":\"%1\"}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
@@ -117,7 +117,6 @@ void BoxJob::renameFile(const QString &oldName, const QString &newName)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     const QString data = QString::fromLatin1("{\"name\":\"%1\"}").arg(newName);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
@@ -133,7 +132,6 @@ void BoxJob::moveFolder(const QString &source, const QString &destination)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     const QString data = QString::fromLatin1("{\"parent\":\"%1\"}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
@@ -150,10 +148,8 @@ void BoxJob::moveFile(const QString &source, const QString &destination)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     const QString data = QString::fromLatin1("{\"parent\":\"%1\"}").arg(destination);
 
-    qDebug()<<" data" <<data;
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -167,7 +163,6 @@ void BoxJob::copyFile(const QString &source, const QString &destination)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
@@ -183,27 +178,34 @@ void BoxJob::copyFolder(const QString &source, const QString &destination)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     const QString data = QString::fromLatin1("{\"parent\": {\"id\": \"%1\"}}").arg(destination);
 
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void BoxJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &destination)
 {
-    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
-    mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    qDebug()<<" request "<<request.rawHeaderList()<<" reqyest "<<request.url();
-    QUrl postData;
-    //TODO
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    QFile *file = new QFile(filename);
+    if (file->exists()) {
+        mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+        mError = false;
+        if (file->open(QIODevice::ReadOnly)) {
+            QUrl url;
+            url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
+            QNetworkRequest request(url);
+            request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+            request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
+            QUrl postData;
+            QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+            file->setParent(reply);
+            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            return reply;
+        } else {
+            delete file;
+        }
+    }
+    return 0;
 }
 
 void BoxJob::listFolder(const QString &folder)
@@ -241,10 +243,7 @@ void BoxJob::createFolder(const QString &foldername, const QString &destination)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    //qDebug()<<" request "<<request.rawHeaderList()<<" url "<<request.url();
     const QString data = QString::fromLatin1("{\"name\":\"%1\", \"parent\": {\"id\": \"%2\"}}").arg(foldername).arg(destination);
-
-    qDebug()<<" data "<<data;
     QNetworkReply *reply = mNetworkAccessManager->post(request, data.toLatin1());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
@@ -319,17 +318,30 @@ void BoxJob::parseListFolder(const QString &data)
 
 void BoxJob::parseCreateFolder(const QString &data)
 {
-    //TODO
-    qDebug()<<" data "<<data;
-    Q_EMIT createFolderDone(QString());
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QString folderName;
+    if (info.contains(QLatin1String("name"))) {
+        folderName = info.value(QLatin1String("name")).toString();
+    }
+    Q_EMIT createFolderDone(folderName);
     deleteLater();
 }
 
 void BoxJob::parseUploadFile(const QString &data)
 {
-    //TODO
     qDebug()<<" data "<<data;
-    Q_EMIT uploadFileDone(QString());
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    QString folderName;
+    if (info.contains(QLatin1String("name"))) {
+        folderName = info.value(QLatin1String("name")).toString();
+    }
+    Q_EMIT uploadFileDone(folderName);
     deleteLater();
 }
 

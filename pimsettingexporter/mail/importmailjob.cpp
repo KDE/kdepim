@@ -769,6 +769,7 @@ void ImportMailJob::restoreConfig()
     restoreConfigFile(QLatin1String("kontactrc"));
 
     restoreConfigFile(QLatin1String("kontact_summaryrc"));
+    restoreConfigFile(QLatin1String("storageservicerc"));
     //Restore notify file
     QStringList lstNotify;
     lstNotify << QLatin1String("akonadi_mailfilter_agent.notifyrc")

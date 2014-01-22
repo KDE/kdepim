@@ -17,9 +17,9 @@
 
 
 #include "dropboxjob.h"
-#include "storageservice/storageauthviewdialog.h"
+#include "storageservice/authdialog/storageauthviewdialog.h"
 #include "storageservice/storageserviceabstract.h"
-#include "storageservice/storageserviceutils.h"
+#include "storageservice/utils/storageserviceutils.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
 #include <KLocalizedString>
@@ -129,11 +129,19 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case PimCommon::StorageServiceAbstract::UploadFile:
+                Q_EMIT uploadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::DownLoadFile:
+                Q_EMIT downLoadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
             case PimCommon::StorageServiceAbstract::CreateFolder:
             case PimCommon::StorageServiceAbstract::AccountInfo:
             case PimCommon::StorageServiceAbstract::ListFolder:
             case PimCommon::StorageServiceAbstract::ShareLink:
-            case PimCommon::StorageServiceAbstract::DownLoadFile:
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
             case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
@@ -430,29 +438,30 @@ void DropBoxJob::createFolder(const QString &foldername, const QString &destinat
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void DropBoxJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &destination)
 {
     QFile *file = new QFile(filename);
     if (file->exists()) {
         mActionType = PimCommon::StorageServiceAbstract::UploadFile;
         mError = false;
-        QFileInfo info(filename);
-        const QString defaultDestination = (destination.isEmpty() ? QLatin1String("test") : destination);
-        const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
-        const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox///%7/%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5&overwrite=false").
-                arg(info.fileName()).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp).arg(defaultDestination);
-        KUrl url(str);
-        QNetworkRequest request(url);
-        if (!file->open(QIODevice::ReadOnly)) {
-            delete file;
-            return;
-        } else {
+        if (file->open(QIODevice::ReadOnly)) {
+            QFileInfo info(filename);
+            const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
+            const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
+            const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files_put/dropbox///%7/%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5&overwrite=false").
+                    arg(info.fileName()).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp).arg(defaultDestination);
+            KUrl url(str);
+            QNetworkRequest request(url);
             QNetworkReply *reply = mNetworkAccessManager->put(request, file);
             connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+            return reply;
+        } else {
+            delete file;
         }
     }
+    return 0;
 }
 
 void DropBoxJob::accountInfo()
@@ -546,13 +555,14 @@ void DropBoxJob::createServiceFolder()
     deleteLater();
 }
 
-void DropBoxJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *DropBoxJob::downloadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
+    return 0;
 }
 
 void DropBoxJob::deleteFile(const QString &filename)

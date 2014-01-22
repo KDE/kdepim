@@ -16,7 +16,8 @@
 */
 
 #include "yousenditstorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "yousenditjob.h"
 
 #include <KLocalizedString>
@@ -42,7 +43,8 @@ YouSendItStorageService::~YouSendItStorageService()
 
 void YouSendItStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "YouSendIt Settings");
     mUsername = grp.readEntry("Username");
     mPassword = grp.readEntry("Password");
     mToken = grp.readEntry("Token");
@@ -50,7 +52,8 @@ void YouSendItStorageService::readConfig()
 
 void YouSendItStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "YouSendIt Settings");
     grp.deleteGroup();
     KGlobal::config()->sync();
 }
@@ -77,7 +80,8 @@ void YouSendItStorageService::slotAuthorizationDone(const QString &password, con
     mUsername = username;
     mPassword = password;
     mToken = token;
-    KConfigGroup grp(KGlobal::config(), "YouSendIt Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "YouSendIt Settings");
     grp.readEntry("Username", mUsername);
     //TODO store in kwallet ?
     grp.writeEntry("Password", mPassword);
@@ -150,7 +154,8 @@ void YouSendItStorageService::storageServiceuploadFile(const QString &filename, 
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename, destination);
+        connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
+        mUploadReply = job->uploadFile(filename, destination);
     }
 }
 
@@ -187,8 +192,8 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::serviceCapabilitie
     cap |= DeleteFileCapability;
     cap |= RenameFolderCapability;
     cap |= RenameFileCapabilitity;
-    //cap |= MoveFileCapability;
-    //cap |= MoveFolderCapability;
+    cap |= MoveFileCapability;
+    cap |= MoveFolderCapability;
     //cap |= CopyFileCapability;
     //cap |= CopyFolderCapability;
 
@@ -224,7 +229,8 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &filename
         job->initializeToken(mPassword, mUsername, mToken);
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
-        job->downloadFile(filename, destination);
+        connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
+        mDownloadReply = job->downloadFile(filename, destination);
     }
 }
 
@@ -362,6 +368,19 @@ void YouSendItStorageService::storageServiceCopyFolder(const QString &source, co
     }
 }
 
+QString YouSendItStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    qDebug()<<" variantMap"<<variantMap;
+    QString information;
+    if (variantMap.contains(QLatin1String("name"))) {
+        information = i18n("name: %1", variantMap.value(QLatin1String("name")).toString());
+    }
+    if (variantMap.contains(QLatin1String("writeable"))) {
+        information += QLatin1String("\n") + i18n("writable: %1", (variantMap.value(QLatin1String("writeable")).toString() == QLatin1String("true")) ? i18n("Yes") : i18n("No"));
+    }
+    return information;
+}
+
 StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const
 {
     return serviceCapabilities();
@@ -370,10 +389,11 @@ StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() con
 QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    listWidget->createMoveUpItem();
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" INFO "<<info;
+    //qDebug()<<" INFO "<<info;
     if (info.contains(QLatin1String("folders"))) {
         const QVariantMap mapFolder = info.value(QLatin1String("folders")).toMap();
         const QVariantList folders = mapFolder.value(QLatin1String("folder")).toList();
@@ -383,7 +403,8 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
                 const QString folderId = map.value(QLatin1String("id")).toString();
-                listWidget->addFolder(name, folderId);
+                StorageServiceTreeWidgetItem *item = listWidget->addFolder(name, folderId);
+                item->setStoreInfo(map);
             }
         }
         const QVariantMap mapFiles = info.value(QLatin1String("files")).toMap();
@@ -395,13 +416,13 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                 const QString name = map.value(QLatin1String("name")).toString();
                 qDebug()<<" name !"<<name;
                 const QString fileId = map.value(QLatin1String("id")).toString();
-                StorageServiceListItem *item = listWidget->addFile(name, fileId);
+                StorageServiceTreeWidgetItem *item = listWidget->addFile(name, fileId);
                 if (map.contains(QLatin1String("size"))) {
                     //qDebug()<<" size "<<map.value(QLatin1String("size"));
                     const qulonglong size = map.value(QLatin1String("size")).toULongLong();
                     item->setSize(size);
                 }
-
+                item->setStoreInfo(map);
             }
         }
     }

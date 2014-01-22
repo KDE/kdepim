@@ -27,10 +27,11 @@
 class QProgressBar;
 namespace PimCommon {
 class StorageServiceAbstract;
+class StorageServiceProgressWidget;
 }
-class StorageServiceProgressIndicator;
 class StorageServiceWarning;
 class StorageServiceTreeWidget;
+class StorageServiceProgressIndicator;
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
@@ -48,13 +49,14 @@ public:
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
     QString serviceName() const;
     bool hasUploadDownloadProgress() const;
+    void refreshList();
 
 Q_SIGNALS:
     void updatePixmap(const QPixmap &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);
 
 public Q_SLOTS:
-    void refreshList();
+    void slotUploadFile();
 
 private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
@@ -70,7 +72,6 @@ private Q_SLOTS:
     void slotCreateFolderDone(const QString &serviceName, const QString &folder);
     void slotDeleteFolderDone(const QString &serviceName, const QString &folder);
     void slotDeleteFileDone(const QString &serviceName, const QString &filename);
-    void slotGoToFolder(const QString &folder);
     void slotRenameFolderDone(const QString &serviceName, const QString &fileName);
     void slotRenameFileDone(const QString &serviceName, const QString &fileName);
     void slotMoveUp();
@@ -78,7 +79,9 @@ private Q_SLOTS:
     void slotMoveFolderDone(const QString &serviceName, const QString &filename);
     void slotCopyFileDone(const QString &serviceName, const QString &filename);
     void slotCopyFolderDone(const QString &serviceName, const QString &filename);
-
+    void slotDownloadFileDone(const QString &serviceName, const QString &filename);
+    void slotUploadFileFailed(const QString &serviceName, const QString &filename);
+    void slotDownloadFileFailed(const QString &serviceName, const QString &filename);
 private:
     bool verifyService(const QString &serviceName);
     inline void updateList(const QString &serviceName);
@@ -89,8 +92,7 @@ private:
     StorageServiceTreeWidget *mTreeWidget;
     StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
-    QProgressBar *mProgressBar;
-    bool mDownloadUploadProgress;
+    PimCommon::StorageServiceProgressWidget *mProgressWidget;
 };
 
 #endif // STORAGESERVICEPAGE_H

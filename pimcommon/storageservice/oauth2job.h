@@ -32,14 +32,14 @@ public:
     ~OAuth2Job();
 
     void requestTokenAccess();
-    void uploadFile(const QString &filename, const QString &destination);
+    QNetworkReply *uploadFile(const QString &filename, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
     void createServiceFolder();
-    void downloadFile(const QString &filename, const QString &destination);
+    QNetworkReply *downloadFile(const QString &filename, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);

@@ -33,6 +33,7 @@
 #include <KConfigGroup>
 #include <KAction>
 #include <KStatusBar>
+#include <KMessageBox>
 
 #include <QPointer>
 #include <QLabel>
@@ -59,9 +60,8 @@ StorageServiceManagerMainWindow::StorageServiceManagerMainWindow()
     setupGUI();
     readConfig();
     mStorageServiceTabWidget->setListStorageService(mStorageManager->listService());
-    mStatusBarInfo = new QLabel;
-    statusBar()->insertWidget(0, mStatusBarInfo);
     slotUpdateActions();
+    initStatusBar();
 }
 
 StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
@@ -74,8 +74,16 @@ StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()
     qDebug()<<" StorageServiceManagerMainWindow::~StorageServiceManagerMainWindow()";
 }
 
+void StorageServiceManagerMainWindow::initStatusBar()
+{
+    statusBar()->setItemAlignment( 0, Qt::AlignLeft | Qt::AlignVCenter );
+    mStatusBarInfo = new QLabel;
+    statusBar()->insertWidget(0, mStatusBarInfo, 4);
+}
+
 void StorageServiceManagerMainWindow::slotSystemNetworkStatusChanged(Solid::Networking::Status status)
 {
+    //TODO
     if ( status == Solid::Networking::Connected || status == Solid::Networking::Unknown) {
     } else {
     }
@@ -97,9 +105,6 @@ void StorageServiceManagerMainWindow::setupActions()
 {
     KActionCollection *ac = actionCollection();
     KStandardAction::quit(this, SLOT(slotClose()), ac );
-
-    KAction *act = ac->addAction(QLatin1String("add_storage_service"), this, SLOT(slotAddStorageService()));
-    act->setText(i18n("Add Storage Service..."));
 
     mAuthenticate = ac->addAction(QLatin1String("authenticate"), mStorageServiceTabWidget, SLOT(slotAuthenticate()));
     mAuthenticate->setText(i18n("Authenticate..."));
@@ -126,15 +131,14 @@ void StorageServiceManagerMainWindow::setupActions()
     KStandardAction::preferences( this, SLOT(slotConfigure()), ac );
 }
 
-void StorageServiceManagerMainWindow::slotAddStorageService()
-{
-
-}
-
 void StorageServiceManagerMainWindow::slotClose()
 {
     if (!mStorageServiceTabWidget->hasUploadDownloadProgress()) {
         close();
+    } else {
+        if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("There is still upload or download in progress. Do you want to close anyway?"))) {
+            close();
+        }
     }
 }
 

@@ -46,6 +46,7 @@ NotesAgentAlarmDialog::NotesAgentAlarmDialog(QWidget *parent)
     setCaption( i18n( "Alarm" ) );
     setWindowIcon( KIcon( QLatin1String("knotes") ) );
     setButtons( Close );
+    setAttribute(Qt::WA_DeleteOnClose);
     setDefaultButton( Close );
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;

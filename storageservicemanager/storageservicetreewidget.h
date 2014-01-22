@@ -22,7 +22,7 @@
 #ifndef STORAGESERVICETREEWIDGET_H
 #define STORAGESERVICETREEWIDGET_H
 
-#include "pimcommon/storageservice/storageservicetreewidget.h"
+#include "pimcommon/storageservice/widgets/storageservicetreewidget.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 class StorageServiceTreeWidget : public PimCommon::StorageServiceTreeWidget
 {
@@ -32,21 +32,19 @@ public:
     ~StorageServiceTreeWidget();
 
     void setIsInitialized();
-
-    void setCurrentFolder(const QString &folder);
-    QString currentFolder() const;
+    bool uploadFileToService();
 
 Q_SIGNALS:
-    void goToFolder(const QString &folder);
     void moveUp();
+    void uploadFile();
 
 public Q_SLOTS:
     void slotCreateFolder();
-    void slotUploadFile();
     void slotDownloadFile();
     void slotDeleteFolder();
     void slotDeleteFile();
     void slotShareFile();
+
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -67,7 +65,7 @@ private Q_SLOTS:
     void slotMoveFile();
     void slotPasteFolder();
     void slotPasteFile();
-
+    void slotProperties();
 private:
     void readConfig();
     void writeConfig();
@@ -92,9 +90,7 @@ private:
 
     QColor mTextColor;
     copyCutItem mCopyItem;
-    QString mCurrentFolder;
     PimCommon::StorageServiceAbstract::Capabilities mCapabilities;
-    PimCommon::StorageServiceAbstract *mStorageService;
     bool mInitialized;
 };
 

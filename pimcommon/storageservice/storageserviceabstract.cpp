@@ -32,6 +32,25 @@ StorageServiceAbstract::~StorageServiceAbstract()
     delete mNextAction;
 }
 
+bool StorageServiceAbstract::hasUploadOrDownloadInProgress() const
+{
+    return (mUploadReply || mDownloadReply);
+}
+
+void StorageServiceAbstract::cancelUploadFile()
+{
+    if (mUploadReply) {
+        mUploadReply->abort();
+    }
+}
+
+void StorageServiceAbstract::cancelDownloadFile()
+{
+    if (mDownloadReply) {
+        mDownloadReply->abort();
+    }
+}
+
 bool StorageServiceAbstract::isInProgress() const
 {
     return mInProgress;
@@ -204,11 +223,6 @@ void StorageServiceAbstract::copyFolder(const QString &source, const QString &de
     storageServiceCopyFolder(source, destination);
 }
 
-bool StorageServiceAbstract::hasProgressIndicatorSupport() const
-{
-    return false;
-}
-
 void StorageServiceAbstract::executeNextAction()
 {
     switch(mNextAction->nextActionType()) {
@@ -378,6 +392,18 @@ void StorageServiceAbstract::emitAuthentificationDone()
     else {
         changeProgressState(false);
     }
+}
+
+void StorageServiceAbstract::slotDownLoadFileFailed(const QString &filename)
+{
+    Q_EMIT downLoadFileFailed(storageServiceName(), filename);
+    changeProgressState(false);
+}
+
+void StorageServiceAbstract::slotUploadFileFailed(const QString &filename)
+{
+    Q_EMIT downLoadFileFailed(storageServiceName(), filename);
+    changeProgressState(false);
 }
 
 #include "moc_storageserviceabstract.cpp"

@@ -32,13 +32,13 @@ public:
     ~UbuntuOneJob();
 
     void requestTokenAccess();
-    void uploadFile(const QString &filename, const QString &destination);
+    QNetworkReply *uploadFile(const QString &filename, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
-    void downloadFile(const QString &filename, const QString &destination);
+    QNetworkReply *downloadFile(const QString &filename, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);
@@ -67,6 +67,14 @@ private:
     void parseAccessToken(const QString &data);
     void parseCreateServiceFolder(const QString &data);
     void parseDeleteFolder(const QString &data);
+    void parseRenameFile(const QString &data);
+    void parseRenameFolder(const QString &data);
+    void parseCopyFolder(const QString &data);
+    void parseCopyFile(const QString &data);
+    void parseMoveFolder(const QString &data);
+    void parseMoveFile(const QString &data);
+    void parseDeleteFile(const QString &data);
+    void parseDownloadFile(const QString &data);
     QString mCustomerSecret;
     QString mToken;
     QString mCustomerKey;

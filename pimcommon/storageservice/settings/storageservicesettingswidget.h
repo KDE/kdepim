@@ -37,8 +37,11 @@ public:
     explicit StorageServiceSettingsWidget(QWidget *parent=0);
     ~StorageServiceSettingsWidget();
 
-    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst);
+    void setListService(const QMap<QString, PimCommon::StorageServiceAbstract *> &lst, PimCommon::StorageServiceAbstract::Capability cap = PimCommon::StorageServiceAbstract::AccountInfoCapability);
     QMap<QString, PimCommon::StorageServiceAbstract *> listService() const;
+
+Q_SIGNALS:
+    void changed();
 
 private slots:
     void slotServiceSelected();
@@ -59,6 +62,7 @@ private:
         Name = Qt::UserRole + 1,
         Type = Qt::UserRole + 2
     };
+    PimCommon::StorageServiceAbstract::Capability mNeedCapability;
     QMap<QString, PimCommon::StorageServiceAbstract *> mListStorageService;
     QListWidget *mListService;
     KTextBrowser *mDescription;

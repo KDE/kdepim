@@ -30,6 +30,7 @@
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KInputDialog>
+#include <KActionMenu>
 
 #include <QMenu>
 
@@ -69,19 +70,19 @@ QString StorageServiceManager::defaultUploadFolder() const
     return mDefaultUploadFolder;
 }
 
-QMenu *StorageServiceManager::menuUploadServices(QWidget *parent) const
+KActionMenu *StorageServiceManager::menuUploadServices(QWidget *parent) const
 {
     return menuWithCapability(PimCommon::StorageServiceAbstract::ShareLinkCapability, parent);
 }
 
-QMenu *StorageServiceManager::menuDownloadServices(QWidget *parent) const
+KActionMenu *StorageServiceManager::menuDownloadServices(QWidget *parent) const
 {
     return menuWithCapability(PimCommon::StorageServiceAbstract::DownloadFileCapability, parent);
 }
 
-QMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const
+KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const
 {
-    QMenu *menuService = new QMenu(i18n("Storage service"), parent);
+    KActionMenu *menuService = new KActionMenu(i18n("Storage service"), parent);
     if (mListService.isEmpty()) {
         QAction *act = new QAction(i18n("No Storage service configured"), menuService);
         act->setEnabled(false);
@@ -134,13 +135,19 @@ void StorageServiceManager::slotShareFile()
         const QString type = act->data().toString();
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
-            const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
-            if (!fileName.isEmpty()) {
-                defaultConnect(service);
-                connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
-                connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
-                connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
-                service->uploadFile(fileName, mDefaultUploadFolder);
+            if (service->hasUploadOrDownloadInProgress()) {
+                //KMessageBox::
+                //TODO
+            } else {
+                const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
+                if (!fileName.isEmpty()) {
+                    defaultConnect(service);
+                    connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
+                    connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
+                    connect(service,SIGNAL(uploadFileFailed(QString,QString)), this, SIGNAL(uploadFileFailed(QString,QString)), Qt::UniqueConnection);
+                    connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);
+                    service->uploadFile(fileName, mDefaultUploadFolder);
+                }
             }
         }
     }
@@ -186,7 +193,10 @@ void StorageServiceManager::slotAccountInfo()
 
 void StorageServiceManager::readConfig()
 {
-    const QStringList services = PimCommon::PimCommonSettings::self()->services();
+    KConfig conf(kconfigName());
+    KConfigGroup grp(&conf, QLatin1String("General"));
+
+    const QStringList services = grp.readEntry("Services", QStringList());
     Q_FOREACH(const QString &service, services) {
         PimCommon::StorageServiceAbstract *storageService = 0;
         if (service == serviceName(DropBox)) {
@@ -226,8 +236,10 @@ void StorageServiceManager::readConfig()
 
 void StorageServiceManager::writeConfig()
 {
-    PimCommon::PimCommonSettings::self()->setServices(mListService.keys());
-    PimCommon::PimCommonSettings::self()->writeConfig();
+    KConfig conf(kconfigName());
+    KConfigGroup grp(&conf, QLatin1String("General"));
+    grp.writeEntry("Services", mListService.keys());
+    conf.sync();
 }
 
 QString StorageServiceManager::description(ServiceType type)
@@ -373,4 +385,9 @@ StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(Service
         return StorageServiceAbstract::NoCapability;
     }
     return StorageServiceAbstract::NoCapability;
+}
+
+QString StorageServiceManager::kconfigName()
+{
+    return QLatin1String("storageservicerc");
 }

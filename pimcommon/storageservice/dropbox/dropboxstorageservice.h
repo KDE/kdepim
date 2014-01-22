@@ -57,7 +57,7 @@ public:
 
     StorageServiceAbstract::Capabilities capabilities() const;
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
-    bool hasProgressIndicatorSupport() const;
+    QString itemInformation(const QVariantMap &variantMap);
 
     KIcon icon() const;
 

@@ -177,11 +177,13 @@ void SieveConditionWidget::slotConditionChanged(int index)
 void SieveConditionWidget::slotAddWidget()
 {
     emit addWidget( this );
+    Q_EMIT valueChanged();
 }
 
 void SieveConditionWidget::slotRemoveWidget()
 {
     emit removeWidget( this );
+    Q_EMIT valueChanged();
 }
 
 void SieveConditionWidget::reset()
@@ -268,6 +270,8 @@ void SieveConditionWidgetLister::reconnectWidget( SieveConditionWidget *w )
 void SieveConditionWidgetLister::clearWidget( QWidget *aWidget )
 {
     //TODO
+    Q_UNUSED(aWidget);
+    Q_EMIT valueChanged();
 }
 
 QWidget *SieveConditionWidgetLister::createWidget( QWidget *parent )

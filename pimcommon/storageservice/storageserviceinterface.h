@@ -55,6 +55,9 @@ public:
     //GDrive
     virtual QString gdriveClientId() const = 0;
     virtual QString gdriveClientSecret() const = 0;
+
+
+    virtual QString defaultUploadFolder() const = 0;
 };
 
 }

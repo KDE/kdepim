@@ -41,7 +41,7 @@ public:
     void desactivateScript();    
     void refreshList();
     void saveScript();
-    void needToSaveScript();
+    bool needToSaveScript();
 
 Q_SIGNALS:
     void updateButtons(bool newScriptAction, bool editScriptAction, bool deleteScriptAction, bool desactivateScriptAction);

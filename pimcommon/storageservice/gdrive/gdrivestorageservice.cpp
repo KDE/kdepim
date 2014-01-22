@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013, 2014 Montel Laurent <montel@kde.org>
+  Copyright (c) 2014 Montel Laurent <montel@kde.org>
 
   This program is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
@@ -16,7 +16,8 @@
 */
 
 #include "gdrivestorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "gdrivejob.h"
 
 #include <qjson/parser.h>
@@ -43,7 +44,8 @@ GDriveStorageService::~GDriveStorageService()
 
 void GDriveStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "GoogleDrive Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "GoogleDrive Settings");
     mRefreshToken = grp.readEntry("Refresh Token");
     mToken = grp.readEntry("Token");
     if (grp.hasKey("Expire Time"))
@@ -54,9 +56,10 @@ void GDriveStorageService::readConfig()
 
 void GDriveStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "GoogleDrive Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "GoogleDrive Settings");
     grp.deleteGroup();
-    KGlobal::config()->sync();
+    config.sync();
 }
 
 void GDriveStorageService::storageServiceauthentication()
@@ -78,7 +81,8 @@ void GDriveStorageService::slotAuthorizationDone(const QString &refreshToken, co
 {
     mRefreshToken = refreshToken;
     mToken = token;
-    KConfigGroup grp(KGlobal::config(), "GoogleDrive Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "GoogleDrive Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
@@ -122,7 +126,8 @@ void GDriveStorageService::storageServicedownloadFile(const QString &filename, c
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename, destination);
+        connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
+        mDownloadReply = job->downloadFile(filename, destination);
     }
 }
 
@@ -246,6 +251,11 @@ void GDriveStorageService::storageServiceCopyFolder(const QString &source, const
     }
 }
 
+QString GDriveStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 void GDriveStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mToken.isEmpty()) {
@@ -310,34 +320,35 @@ void GDriveStorageService::storageServiceuploadFile(const QString &filename, con
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename, destination);
+        connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
+        mUploadReply = job->uploadFile(filename, destination);
     }
 }
 
 QString GDriveStorageService::description()
 {
-    return i18n("Box.com is a file hosting that offers cloud storage, file synchronization, and client software.");
+    return i18n("Googledrive is a file hosting that offers cloud storage, file synchronization, and client software.");
 }
 
 QUrl GDriveStorageService::serviceUrl()
 {
-    return QUrl(QLatin1String("https://app.box.com/"));
+    return QUrl(QLatin1String("http://www.google.com/drive"));
 }
 
 QString GDriveStorageService::serviceName()
 {
-    return QLatin1String("box");
+    return QLatin1String("googledrive");
 }
 
 QString GDriveStorageService::iconName()
 {
-    return QString();
+    return QLatin1String("kdepim-googledrive");
 }
 
 StorageServiceAbstract::Capabilities GDriveStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
-    //cap |= AccountInfoCapability;
+    cap |= AccountInfoCapability;
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
     //cap |= CreateFolderCapability;
@@ -362,7 +373,7 @@ QString GDriveStorageService::storageServiceName() const
 
 KIcon GDriveStorageService::icon() const
 {
-    return KIcon();
+    return KIcon(iconName());
 }
 
 StorageServiceAbstract::Capabilities GDriveStorageService::capabilities() const
@@ -389,7 +400,7 @@ QString GDriveStorageService::fillListWidget(StorageServiceTreeWidget *listWidge
     listWidget->clear();
     QJson::Parser parser;
     bool ok;
-
+    listWidget->createMoveUpItem();
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info "<<info;
     QString parentId;

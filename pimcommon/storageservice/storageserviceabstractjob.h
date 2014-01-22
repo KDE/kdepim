@@ -32,14 +32,15 @@ public:
     explicit StorageServiceAbstractJob(QObject *parent = 0);
     ~StorageServiceAbstractJob();
 
+    virtual QNetworkReply *uploadFile(const QString &filename, const QString &destination=QString()) = 0;
+    virtual QNetworkReply *downloadFile(const QString &filename, const QString &destination) = 0;
+
     virtual void requestTokenAccess() = 0;
-    virtual void uploadFile(const QString &filename, const QString &destination=QString()) = 0;
     virtual void listFolder(const QString &folder = QString()) = 0;
     virtual void accountInfo() = 0;
     virtual void createFolder(const QString &filename, const QString &destination) = 0;
     virtual void shareLink(const QString &root, const QString &path) = 0;
     virtual void createServiceFolder() = 0;
-    virtual void downloadFile(const QString &filename, const QString &destination) = 0;
     virtual void deleteFile(const QString &filename) = 0;
     virtual void deleteFolder(const QString &foldername) = 0;
     virtual void renameFolder(const QString &source, const QString &destination) = 0;
@@ -49,10 +50,6 @@ public:
     virtual void copyFile(const QString &source, const QString &destination) = 0;
     virtual void copyFolder(const QString &source, const QString &destination) = 0;
 
-
-protected Q_SLOTS:
-    void slotError(QNetworkReply::NetworkError);
-
 Q_SIGNALS:
     void actionFailed(const QString &data);
     void shareLinkDone(const QString &url);
@@ -60,9 +57,11 @@ Q_SIGNALS:
     void uploadFileProgress(qint64 done, qint64 total);
     void createFolderDone(const QString &folderName);
     void uploadFileDone(const QString &fileName);
+    void uploadFileFailed(const QString &fileName);
     void listFolderDone(const QString &listFolder);
     void authorizationFailed(const QString &error);
     void downLoadFileDone(const QString &filename);
+    void downLoadFileFailed(const QString &filename);
     void deleteFileDone(const QString &filename);
     void deleteFolderDone(const QString &filename);
     void renameFolderDone(const QString &folder);
@@ -72,12 +71,17 @@ Q_SIGNALS:
     void copyFileDone(const QString &folder);
     void copyFolderDone(const QString &folder);
 
+
 protected:
     void errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr);
 
     QNetworkAccessManager *mNetworkAccessManager;
     PimCommon::StorageServiceAbstract::ActionType mActionType;
     bool mError;
+
+private slots:
+    void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
+    void slotError(QNetworkReply::NetworkError);
 };
 }
 

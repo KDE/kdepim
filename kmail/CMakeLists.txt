@@ -111,17 +111,32 @@ if (KDEPIM_BUILD_DESKTOP)
   set(kmailprivate_storageservice_LIB_SRCS
      storageservice/storageservicesettingsjob.cpp
   )
+  set(kmailprivate_identity_LIB_SRCS
+     identity/identitylistview.cpp
+     identity/identitydialog.cpp
+     identity/xfaceconfigurator.cpp
+     identity/identitypage.cpp
+     identity/newidentitydialog.cpp
+     identity/identityeditvcarddialog.cpp
+     identity/identityaddvcarddialog.cpp
+  )
+  set(kmailprivate_editor_LIB_SRCS
+     editor/snippetwidget.cpp
+     editor/kmcomposereditor.cpp
+     editor/composer.cpp
+     editor/codecaction.cpp
+     editor/codecmanager.cpp
+     editor/kmcomposewin.cpp
+     editor/attachmentcontroller.cpp
+     editor/attachmentview.cpp
+  )
 
   set(kmailprivate_LIB_SRCS
      widgets/collectionpane.cpp
      kmmainwin.cpp
-     identity/identitylistview.cpp
-     identity/identitydialog.cpp
      settings/globalsettings.cpp
-     editor/snippetwidget.cpp
      kmreaderwin.cpp
      kmsystemtray.cpp
-     identity/xfaceconfigurator.cpp
      undostack.cpp
      kmkernel.cpp
      searchdialog/searchwindow.cpp
@@ -131,29 +146,18 @@ if (KDEPIM_BUILD_DESKTOP)
      kmmainwidget.cpp
      aboutdata.cpp
      mailserviceimpl.cpp
-     editor/kmcomposereditor.cpp
-     editor/composer.cpp
      antispam-virus/antispamwizard.cpp
      secondarywindow.cpp
-     editor/codecaction.cpp
-     editor/codecmanager.cpp
      util.cpp
      messageactions.cpp
-     editor/kmcomposewin.cpp
-     editor/attachmentcontroller.cpp
-     editor/attachmentview.cpp
      dialog/archivefolderdialog.cpp
      dialog/addemailtoexistingcontactdialog.cpp
      searchdialog/searchdescriptionattribute.cpp
      tag/tagactionmanager.cpp
      foldershortcutactionmanager.cpp
      job/addressvalidationjob.cpp
-     identity/identitypage.cpp
-     identity/newidentitydialog.cpp
      dialog/kmknotify.cpp
      tag/tagselectdialog.cpp
-     identity/identityeditvcarddialog.cpp
-     identity/identityaddvcarddialog.cpp
      warningwidgets/attachmentmissingwarning.cpp
      job/createnewcontactjob.cpp
      job/addemailtoexistingcontactjob.cpp
@@ -164,6 +168,8 @@ if (KDEPIM_BUILD_DESKTOP)
      ${kmailprivate_configuredialog_LIB_SRCS}
      ${kmailprivate_searchdialog_LIB_SRCS}
      ${kmailprivate_storageservice_LIB_SRCS}
+     ${kmailprivate_identity_LIB_SRCS}
+     ${kmailprivate_editor_LIB_SRCS}
   )
 
   # TODO PORT

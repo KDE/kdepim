@@ -18,9 +18,12 @@
 #ifndef STORAGESERVICEABSTRACT_H
 #define STORAGESERVICEABSTRACT_H
 
+#include "pimcommon_export.h"
 #include <QObject>
 #include <QUrl>
 #include <KIcon>
+#include <QPointer>
+#include <QNetworkReply>
 
 namespace PimCommon {
 class StorageServiceTreeWidget;
@@ -40,7 +43,8 @@ struct AccountInfo {
 
 
 class NextAction;
-class StorageServiceAbstract : public QObject
+class StorageServiceTreeWidgetItem;
+class PIMCOMMON_EXPORT StorageServiceAbstract : public QObject
 {
     Q_OBJECT
 public:
@@ -97,6 +101,7 @@ public:
     };
 
     bool isInProgress() const;
+    bool hasUploadOrDownloadInProgress() const;
 
     virtual void downloadFile(const QString &filename, const QString &destination);
     virtual void uploadFile(const QString &filename, const QString &destination);
@@ -120,7 +125,9 @@ public:
     virtual void removeConfig() = 0;
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
     virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
-    virtual bool hasProgressIndicatorSupport() const;
+    virtual QString itemInformation(const QVariantMap &variantMap) = 0;
+    void cancelUploadFile();
+    void cancelDownloadFile();
 
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
@@ -142,6 +149,8 @@ Q_SIGNALS:
     void copyFileDone(const QString &serviceName, const QString &folderName);
     void copyFolderDone(const QString &serviceName, const QString &folderName);
     void inProgress(bool state);
+    void downLoadFileFailed(const QString &serviceName, const QString &folderName);
+    void uploadFileFailed(const QString &serviceName, const QString &folderName);
 
 protected slots:
     void slotActionFailed(const QString &error);
@@ -160,6 +169,8 @@ protected slots:
     void slotMoveFileDone(const QString &filename);
     void slotCopyFileDone(const QString &filename);
     void slotCopyFolderDone(const QString &filename);
+    void slotDownLoadFileFailed(const QString &filename);
+    void slotUploadFileFailed(const QString &filename);
 
 protected:
     virtual void storageServicedownloadFile(const QString &filename, const QString &destination) = 0;
@@ -181,6 +192,8 @@ protected:
     void emitAuthentificationDone();
     void emitAuthentificationFailder(const QString &errorMessage);
     NextAction *mNextAction;
+    QPointer<QNetworkReply> mUploadReply;
+    QPointer<QNetworkReply> mDownloadReply;
 
 private:
     inline void changeProgressState(bool state);

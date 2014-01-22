@@ -72,6 +72,7 @@
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 #include <QActionGroup>
+#include <QPointer>
 
 using namespace MessageViewer;
 
@@ -474,41 +475,52 @@ bool Util::saveMessageInMbox( const QList<Akonadi::Item>& retrievedMsgs, QWidget
     fileName += QLatin1String(".mbox");
 
   const QString filter = i18n( "*.mbox|email messages (*.mbox)\n*|all files (*)" );
-  KFileDialog::Option options = static_cast<KFileDialog::Option>(0);
+  QPointer<KFileDialog> dlg = new KFileDialog(KUrl::fromPath( fileName ), filter, parent);
+  dlg->setCaption(i18np("Save Message", "Save Messages", retrievedMsgs.count()));
+  dlg->setMode(KFile::File|KFile::LocalOnly);
+  dlg->setOperationMode(KFileDialog::Saving);
   if( !appendMessages )
-      options = KFileDialog::ConfirmOverwrite;
-  const KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( fileName ), filter, parent, i18np("Save Message", "Save Messages", retrievedMsgs.count() ), options);
-
-  if ( url.isEmpty() )
-    return true;
-
-  const QString localFileName = url.toLocalFile();
-  if ( localFileName.isEmpty() )
-    return true;
-
-  if( !appendMessages ) {
-      QFile::remove(localFileName);
-  }
-
-  KMBox::MBox mbox;
-  if ( !mbox.load( localFileName ) ) {
-      if( appendMessages ) {
-         KMessageBox::error( parent, i18n("File %1 could not be loaded.",localFileName) , i18n( "Error loading message" ) );
-      } else {
-          KMessageBox::error( parent, i18n("File %1 could not be created.",localFileName) , i18n( "Error saving message" ) );
+      dlg->setConfirmOverwrite(true);
+  if (dlg->exec()) {
+      KUrl url = dlg->selectedUrl();
+      if ( url.isEmpty() ) {
+          delete dlg;
+          return true;
       }
-      return false;
-  }
-  foreach ( const Akonadi::Item &item, retrievedMsgs ) {
-    if ( item.hasPayload<KMime::Message::Ptr>() ) {
-      mbox.appendMessage( item.payload<KMime::Message::Ptr>() );
-    }
-  }
 
-  if ( !mbox.save() ) {
-      KMessageBox::error( parent, i18n("We cannot save message.") , i18n( "Error saving message" ) );
-      return false;
+      const QString localFileName = url.toLocalFile();
+      if ( localFileName.isEmpty() ) {
+          delete dlg;
+          return true;
+      }
+
+      if( !appendMessages ) {
+          QFile::remove(localFileName);
+      }
+
+      KMBox::MBox mbox;
+      if ( !mbox.load( localFileName ) ) {
+          if( appendMessages ) {
+              KMessageBox::error( parent, i18n("File %1 could not be loaded.",localFileName) , i18n( "Error loading message" ) );
+          } else {
+              KMessageBox::error( parent, i18n("File %1 could not be created.",localFileName) , i18n( "Error saving message" ) );
+          }
+          delete dlg;
+          return false;
+      }
+      foreach ( const Akonadi::Item &item, retrievedMsgs ) {
+          if ( item.hasPayload<KMime::Message::Ptr>() ) {
+              mbox.appendMessage( item.payload<KMime::Message::Ptr>() );
+          }
+      }
+
+      if ( !mbox.save() ) {
+          KMessageBox::error( parent, i18n("We cannot save message.") , i18n( "Error saving message" ) );
+          delete dlg;
+          return false;
+      }
   }
+  delete dlg;
   return true;
 }
 

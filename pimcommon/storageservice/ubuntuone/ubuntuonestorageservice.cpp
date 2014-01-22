@@ -16,7 +16,8 @@
 */
 
 #include "ubuntuonestorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "ubuntuonejob.h"
 
 #include <qjson/parser.h>
@@ -43,7 +44,8 @@ UbuntuoneStorageService::~UbuntuoneStorageService()
 
 void UbuntuoneStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Ubuntu One Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Ubuntu One Settings");
 
     mCustomerSecret = grp.readEntry("Customer Secret");
     mToken = grp.readEntry("Token");
@@ -58,7 +60,8 @@ void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecre
     mCustomerKey = customerKey;
     mTokenSecret = tokenSecret;
 
-    KConfigGroup grp(KGlobal::config(), "Ubuntu One Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Ubuntu One Settings");
     grp.writeEntry("Customer Secret", mCustomerSecret);
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Customer Key", mCustomerKey);
@@ -71,9 +74,10 @@ void UbuntuoneStorageService::slotAuthorizationDone(const QString &customerSecre
 
 void UbuntuoneStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Ubuntu One Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Ubuntu One Settings");
     grp.deleteGroup();
-    KGlobal::config()->sync();
+    grp.sync();
 }
 
 void UbuntuoneStorageService::storageServiceauthentication()
@@ -158,7 +162,8 @@ void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename, 
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename, destination);
+        connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
+        mUploadReply = job->uploadFile(filename, destination);
     }
 }
 
@@ -231,7 +236,8 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename
         job->initializeToken(mCustomerSecret, mToken, mCustomerKey, mTokenSecret);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename, destination);
+        connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
+        mDownloadReply = job->downloadFile(filename, destination);
     }
 }
 
@@ -379,6 +385,7 @@ StorageServiceAbstract::Capabilities UbuntuoneStorageService::capabilities() con
 QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    listWidget->createMoveUpItem();
     QJson::Parser parser;
     bool ok;
     QString parentFolder;
@@ -390,19 +397,28 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
             const QVariantMap map = v.toMap();
             if (map.contains(QLatin1String("kind"))) {
                 const QString kind = map.value(QLatin1String("kind")).toString();
+                StorageServiceTreeWidgetItem *item = 0;
                 if (kind == QLatin1String("directory")) {
                     const QString path = map.value(QLatin1String("path")).toString();
-                    listWidget->addFolder(path, path);
+                    item = listWidget->addFolder(path, path);
                 } else if (kind == QLatin1String("file")) {
                     const QString path = map.value(QLatin1String("path")).toString();
-                    listWidget->addFile(path, path);
+                    item = listWidget->addFile(path, path);
                 } else {
                     qDebug() <<" kind unknown "<<kind;
+                }
+                if (item) {
+                    item->setStoreInfo(map);
                 }
             }
         }
     }
     return parentFolder;
+}
+
+QString UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    return QString();
 }
 
 QString UbuntuoneStorageService::storageServiceName() const

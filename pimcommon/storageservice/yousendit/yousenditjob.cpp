@@ -16,7 +16,7 @@
 */
 
 #include "yousenditjob.h"
-#include "pimcommon/storageservice/logindialog.h"
+#include "pimcommon/storageservice/authdialog/logindialog.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
@@ -28,6 +28,7 @@
 #include <QDebug>
 #include <QNetworkReply>
 #include <QPointer>
+#include <QFile>
 
 using namespace PimCommon;
 
@@ -79,18 +80,19 @@ void YouSendItJob::createServiceFolder()
     deleteLater();
 }
 
-void YouSendItJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *YouSendItJob::downloadFile(const QString &filename, const QString &destination)
 {
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
+    return 0;
 }
 
 void YouSendItJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/file/%1").arg(filename));
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1").arg(filename));
     qDebug()<<" url"<<url;
     QNetworkRequest request(url);
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
@@ -124,9 +126,12 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+    QUrl postData;
 
-    QByteArray t;//("name=sdfsdf");
-    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
+    postData.addQueryItem(QLatin1String("name"), destination);
+    qDebug()<<" url"<<url<<" postData"<<postData;
+
+    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -134,18 +139,15 @@ void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFile;
     mError = false;
-    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/file/%1/rename").arg(oldName));
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/rename").arg(oldName));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
 
-    QUrl postData;
-
-    postData.addQueryItem(QLatin1String("name"), newName);
-    qDebug()<<" postData"<<postData;
-    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
+    QByteArray t("\"name\"=\"sdfsdf\"");
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -153,20 +155,32 @@ void YouSendItJob::moveFolder(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFolder;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/%1/move").arg(source));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+
+    QByteArray t("\"name\"=\"sdfsdf\"");
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::moveFile(const QString &source, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::MoveFile;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/move").arg(source));
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
+    request.setRawHeader("Accept", "application/json");
+    request.setRawHeader("X-Auth-Token", mToken.toLatin1());
+
+    QByteArray t("\"name\"=\"sdfsdf\"");
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void YouSendItJob::requestTokenAccess()
@@ -201,7 +215,7 @@ void YouSendItJob::requestTokenAccess()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void YouSendItJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *YouSendItJob::uploadFile(const QString &filename, const QString &destination)
 {
     //FIXME filename
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
@@ -216,6 +230,7 @@ void YouSendItJob::uploadFile(const QString &filename, const QString &destinatio
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    return reply;
 }
 
 void YouSendItJob::listFolder(const QString &folder)
@@ -304,14 +319,22 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             Q_EMIT authorizationFailed(errorStr);
             deleteLater();
             break;
+        case PimCommon::StorageServiceAbstract::UploadFile:
+            Q_EMIT uploadFileFailed(errorStr);
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
+        case PimCommon::StorageServiceAbstract::DownLoadFile:
+            Q_EMIT downLoadFileFailed(errorStr);
+            errorMessage(mActionType, errorStr);
+            deleteLater();
+            break;
         case PimCommon::StorageServiceAbstract::DeleteFile:
         case PimCommon::StorageServiceAbstract::DeleteFolder:
-        case PimCommon::StorageServiceAbstract::UploadFile:
         case PimCommon::StorageServiceAbstract::CreateFolder:
         case PimCommon::StorageServiceAbstract::AccountInfo:
         case PimCommon::StorageServiceAbstract::ListFolder:
         case PimCommon::StorageServiceAbstract::CreateServiceFolder:
-        case PimCommon::StorageServiceAbstract::DownLoadFile:
         case PimCommon::StorageServiceAbstract::RenameFolder:
         case PimCommon::StorageServiceAbstract::RenameFile:
         case PimCommon::StorageServiceAbstract::MoveFolder:
@@ -448,9 +471,7 @@ void YouSendItJob::parseDownloadFile(const QString &data)
 
 void YouSendItJob::parseDeleteFile(const QString &data)
 {
-    qDebug()<<" data "<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //Q_EMIT deleteFolderDone(foldername);
+    Q_EMIT deleteFileDone(QString());
     deleteLater();
 }
 

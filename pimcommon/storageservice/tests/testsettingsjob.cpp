@@ -48,6 +48,11 @@ QString TestSettingsJob::dropboxOauthSignature() const
     return QLatin1String("0icikya464lny9g&");
 }
 
+QString TestSettingsJob::defaultUploadFolder() const
+{
+    return QString();
+}
+
 QString TestSettingsJob::boxClientId() const
 {
     return QLatin1String("o4sn4e0dvz50pd3ps6ao3qxehvqv8dyo");
@@ -95,12 +100,10 @@ QString TestSettingsJob::ubuntuOneTokenName() const
 
 QString TestSettingsJob::gdriveClientId() const
 {
-    //TODO
-    return QString();
+    return QLatin1String("76182239499-2krm3lvlrqrj446loaqrrep594n3u2o8.apps.googleusercontent.com");
 }
 
 QString TestSettingsJob::gdriveClientSecret() const
 {
-    //TODO
-    return QString();
+    return QLatin1String("7SinUSCxfbrJYN7az3VvxTJ9");
 }

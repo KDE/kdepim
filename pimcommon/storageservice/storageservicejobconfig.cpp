@@ -140,6 +140,15 @@ QString StorageServiceJobConfig::dropboxRootPath() const
     return mSettingsJob->dropboxRootPath();
 }
 
+QString StorageServiceJobConfig::defaultUploadFolder() const
+{
+    if (!mSettingsJob) {
+        qDebug()<<" settings job not registered";
+        return QString();
+    }
+    return mSettingsJob->defaultUploadFolder();
+}
+
 QString StorageServiceJobConfig::oauth2RedirectUrl() const
 {
     if (!mSettingsJob) {
@@ -193,5 +202,6 @@ QString StorageServiceJobConfig::gdriveClientSecret() const
     }
     return mSettingsJob->gdriveClientSecret();
 }
+
 
 }

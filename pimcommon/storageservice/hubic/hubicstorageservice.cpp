@@ -16,7 +16,8 @@
 */
 
 #include "hubicstorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "hubicjob.h"
 
 #include <KLocalizedString>
@@ -47,7 +48,8 @@ bool HubicStorageService::needToRefreshToken() const
 
 void HubicStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Hubic Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Hubic Settings");
     mRefreshToken = grp.readEntry("Refresh Token");
     mToken = grp.readEntry("Token");
     if (grp.hasKey("Expire Time"))
@@ -58,9 +60,10 @@ void HubicStorageService::readConfig()
 
 void HubicStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Hubic Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Hubic Settings");
     grp.deleteGroup();
-    KGlobal::config()->sync();
+    config.sync();
 }
 
 void HubicStorageService::storageServiceauthentication()
@@ -81,7 +84,8 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
 {
     mRefreshToken = refreshToken;
     mToken = token;
-    KConfigGroup grp(KGlobal::config(), "Hubic Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Hubic Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
     grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
@@ -153,7 +157,8 @@ void HubicStorageService::storageServiceuploadFile(const QString &filename, cons
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename,destination);
+        connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
+        mUploadReply = job->uploadFile(filename,destination);
     }
 }
 
@@ -232,7 +237,8 @@ void HubicStorageService::storageServicedownloadFile(const QString &filename, co
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename, destination);
+        connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
+        mDownloadReply = job->downloadFile(filename, destination);
     }
 }
 
@@ -383,5 +389,11 @@ StorageServiceAbstract::Capabilities HubicStorageService::capabilities() const
 QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    listWidget->createMoveUpItem();
+    return QString();
+}
+
+QString HubicStorageService::itemInformation(const QVariantMap &variantMap)
+{
     return QString();
 }

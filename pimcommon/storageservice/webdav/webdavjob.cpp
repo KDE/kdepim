@@ -76,12 +76,13 @@ void WebDavJob::copyFolder(const QString &source, const QString &destination)
     deleteLater();
 }
 
-void WebDavJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *WebDavJob::uploadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
     qDebug()<<" not implemented";
     deleteLater();
+    return 0;
 }
 
 void WebDavJob::listFolder(const QString &folder)
@@ -133,10 +134,18 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
                 deleteLater();
                 break;
             case PimCommon::StorageServiceAbstract::UploadFile:
+                Q_EMIT uploadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
+            case PimCommon::StorageServiceAbstract::DownLoadFile:
+                Q_EMIT downLoadFileFailed(errorStr);
+                errorMessage(mActionType, errorStr);
+                deleteLater();
+                break;
             case PimCommon::StorageServiceAbstract::CreateFolder:
             case PimCommon::StorageServiceAbstract::AccountInfo:
             case PimCommon::StorageServiceAbstract::ListFolder:
-            case PimCommon::StorageServiceAbstract::DownLoadFile:
             case PimCommon::StorageServiceAbstract::CreateServiceFolder:
             case PimCommon::StorageServiceAbstract::DeleteFile:
             case PimCommon::StorageServiceAbstract::DeleteFolder:
@@ -244,13 +253,14 @@ void WebDavJob::createServiceFolder()
     deleteLater();
 }
 
-void WebDavJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *WebDavJob::downloadFile(const QString &filename, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     qDebug()<<" not implemented";
     deleteLater();
+    return 0;
 }
 
 void WebDavJob::deleteFile(const QString &filename)

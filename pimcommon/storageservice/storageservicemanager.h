@@ -23,7 +23,7 @@
 #include "pimcommon_export.h"
 #include "storageserviceabstract.h"
 
-class QMenu;
+class KActionMenu;
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceManager : public QObject
 {
@@ -46,9 +46,9 @@ public:
     explicit StorageServiceManager(QObject *parent=0);
     ~StorageServiceManager();
 
-    QMenu *menuDownloadServices(QWidget *parent) const;
-    QMenu *menuUploadServices(QWidget *parent) const;
-    QMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const;
+    KActionMenu *menuDownloadServices(QWidget *parent) const;
+    KActionMenu *menuUploadServices(QWidget *parent) const;
+    KActionMenu *menuWithCapability(PimCommon::StorageServiceAbstract::Capability capability, QWidget *parent) const;
 
 
     QMap<QString, StorageServiceAbstract *> listService() const;
@@ -62,11 +62,13 @@ public:
     static QUrl serviceUrl(ServiceType type);    
     static QString icon(ServiceType type);
     static StorageServiceAbstract::Capabilities capabilities(ServiceType type);
+    static QString kconfigName();
 
 Q_SIGNALS:
     void servicesChanged();
     void uploadFileDone(const QString &serviceName, const QString &filename);
     void uploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void uploadFileFailed(const QString &serviceName, const QString &filename);
     void shareLinkDone(const QString &serviceName, const QString &link);
     void authenticationDone(const QString &serviceName);
     void authenticationFailed(const QString &serviceName, const QString &error);

@@ -46,10 +46,12 @@ SieveActionWidget::SieveActionWidget(QWidget *parent)
     : QWidget(parent)
 {
     initWidget();
+    qDebug()<<"SieveActionWidget::SieveActionWidget "<<this;
 }
 
 SieveActionWidget::~SieveActionWidget()
 {
+    qDebug()<<" SieveActionWidget::~SieveActionWidget()"<<this;
     qDeleteAll(mActionList);
     mActionList.clear();
 }
@@ -226,11 +228,13 @@ void SieveActionWidget::slotActionChanged(int index)
 
 void SieveActionWidget::slotAddWidget()
 {
+    Q_EMIT valueChanged();
     emit addWidget( this );
 }
 
 void SieveActionWidget::slotRemoveWidget()
 {
+    Q_EMIT valueChanged();
     emit removeWidget( this );
 }
 
@@ -326,6 +330,7 @@ void SieveActionWidgetLister::reconnectWidget( SieveActionWidget *w )
 void SieveActionWidgetLister::clearWidget( QWidget *aWidget )
 {
     Q_UNUSED(aWidget);
+    Q_EMIT valueChanged();
     //TODO
 }
 

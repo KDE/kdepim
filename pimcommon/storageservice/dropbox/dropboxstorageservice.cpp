@@ -16,7 +16,8 @@
 */
 
 #include "dropboxstorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "dropboxjob.h"
 
 #include <qjson/parser.h>
@@ -44,14 +45,16 @@ DropBoxStorageService::~DropBoxStorageService()
 
 void DropBoxStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Dropbox Settings");
     grp.deleteGroup();
-    KGlobal::config()->sync();
+    config.sync();
 }
 
 void DropBoxStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Dropbox Settings");
     mAccessToken = grp.readEntry("Access Token");
     mAccessTokenSecret = grp.readEntry("Access Token Secret");
     mAccessOauthSignature = grp.readEntry("Access Oauth Signature");
@@ -100,12 +103,13 @@ void DropBoxStorageService::slotAuthorizationDone(const QString &accessToken, co
     mAccessToken = accessToken;
     mAccessTokenSecret = accessTokenSecret;
     mAccessOauthSignature = accessOauthSignature;
-    KConfigGroup grp(KGlobal::config(), "Dropbox Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Dropbox Settings");
     grp.writeEntry("Access Token", mAccessToken);
     grp.writeEntry("Access Token Secret", mAccessTokenSecret);
     grp.writeEntry("Access Oauth Signature", mAccessOauthSignature);
     grp.sync();
-    KGlobal::config()->sync();
+    config.sync();
     emitAuthentificationDone();
 }
 
@@ -168,7 +172,8 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename, co
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename, destination);
+        connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
+        mUploadReply = job->uploadFile(filename, destination);
     }
 }
 
@@ -244,6 +249,7 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &filename, 
         job->initializeToken(mAccessToken,mAccessTokenSecret,mAccessOauthSignature);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
         job->downloadFile(filename, destination);
     }
 }
@@ -379,6 +385,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
     QJson::Parser parser;
     bool ok;
     QString parentFolder;
+    listWidget->createMoveUpItem();
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     if (info.contains(QLatin1String("path"))) {
         const QString path = info.value(QLatin1String("path")).toString();
@@ -403,30 +410,32 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             const QVariantMap qwer = variant.toMap();
             //qDebug()<<" qwer "<<qwer;
             if (qwer.contains(QLatin1String("is_dir"))) {
-                bool value = qwer.value(QLatin1String("is_dir")).toBool();
+                const bool isDir = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
-                if (value) {
-                    listWidget->addFolder(name, name);
+                StorageServiceTreeWidgetItem *item;
+                if (isDir) {
+                    item = listWidget->addFolder(name, name);
                 } else {
                     QString mimetype;
                     if (qwer.contains(QLatin1String("mime_type"))) {
                         mimetype = qwer.value(QLatin1String("mime_type")).toString();
                         //qDebug()<<" mimetype"<<mimetype;
                     }
-                    StorageServiceListItem *item = listWidget->addFile(name, name, mimetype);
+                    item = listWidget->addFile(name, name, mimetype);
                     if (qwer.contains(QLatin1String("bytes"))) {
                         item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
                     }
                 }
+                item->setStoreInfo(qwer);
             }
         }
     }
     return parentFolder;
 }
 
-bool DropBoxStorageService::hasProgressIndicatorSupport() const
+QString DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
-    return true;
+    return QString();
 }
 
 KIcon DropBoxStorageService::icon() const

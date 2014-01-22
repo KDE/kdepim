@@ -59,7 +59,7 @@ public:
 
     StorageServiceAbstract::Capabilities capabilities() const;
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
-
+    QString itemInformation(const QVariantMap &variantMap);
 
     KIcon icon() const;
 

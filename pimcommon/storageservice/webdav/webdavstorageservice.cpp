@@ -16,7 +16,8 @@
 */
 
 #include "webdavstorageservice.h"
-#include "storageservice/storageservicetreewidget.h"
+#include "storageservice/widgets/storageservicetreewidget.h"
+#include "storageservice/storageservicemanager.h"
 #include "webdavsettingsdialog.h"
 #include "webdavjob.h"
 
@@ -41,13 +42,15 @@ WebDavStorageService::~WebDavStorageService()
 
 void WebDavStorageService::readConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Webdav Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Webdav Settings");
 
 }
 
 void WebDavStorageService::removeConfig()
 {
-    KConfigGroup grp(KGlobal::config(), "Webdav Settings");
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Webdav Settings");
     grp.deleteGroup();
     KGlobal::config()->sync();
 }
@@ -55,6 +58,8 @@ void WebDavStorageService::removeConfig()
 void WebDavStorageService::storageServiceauthentication()
 {
     WebDavJob *job = new WebDavJob(this);
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Webdav Settings");
     //connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
@@ -97,7 +102,8 @@ void WebDavStorageService::storageServicedownloadFile(const QString &filename, c
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        job->downloadFile(filename, destination);
+        connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
+        mDownloadReply = job->downloadFile(filename, destination);
     }
 }
 
@@ -235,6 +241,12 @@ StorageServiceAbstract::Capabilities WebDavStorageService::capabilities() const
 QString WebDavStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data)
 {
     listWidget->clear();
+    listWidget->createMoveUpItem();
+    return QString();
+}
+
+QString WebDavStorageService::itemInformation(const QVariantMap &variantMap)
+{
     return QString();
 }
 
@@ -298,7 +310,8 @@ void WebDavStorageService::storageServiceuploadFile(const QString &filename, con
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
-        job->uploadFile(filename, destination);
+        connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
+        mUploadReply = job->uploadFile(filename, destination);
     }
 }
 

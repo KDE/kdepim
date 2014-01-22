@@ -307,6 +307,8 @@ void SieveIncludeWidgetLister::reconnectWidget(SieveIncludeActionWidget *w )
 void SieveIncludeWidgetLister::clearWidget( QWidget *aWidget )
 {
     //TODO
+    Q_UNUSED(aWidget);
+    Q_EMIT valueChanged();
 }
 
 QWidget *SieveIncludeWidgetLister::createWidget( QWidget *parent )

@@ -68,6 +68,9 @@ public:
     QString code() const;
     void setFlags(const QStringList &flags);
 
+Q_SIGNALS:
+    void valueChanged();
+
 private Q_SLOTS:
     void slotSelectFlags();
 
