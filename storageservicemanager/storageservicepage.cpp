@@ -146,7 +146,7 @@ void StorageServicePage::slotAccountInfoDone(const QString &serviceName, const P
 void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QString &fileName)
 {
     if (verifyService(serviceName)) {
-        mProgressWidget->setProgressValue(0);
+        mProgressWidget->reset();
         mProgressWidget->hide();
         mDownloadUploadProgress = false;
         updateList(serviceName);
@@ -158,8 +158,7 @@ void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint
 {
     if (verifyService(serviceName)) {
         if (mStorageService->hasProgressIndicatorSupport()) {
-            qDebug()<<" done "<<done<<" total"<<total;
-            mProgressWidget->setProgressValue((100*done)/total);
+            mProgressWidget->setProgressValue(done, total);
         }
     }
 }
@@ -221,9 +220,9 @@ void StorageServicePage::accountInfo()
 void StorageServicePage::slotUploadFile()
 {
     if (mTreeWidget->uploadFileToService()) {
-        mProgressWidget->show();
-        mProgressWidget->setProgressValue(0);
+        mProgressWidget->reset();
         mProgressWidget->setBusyIndicator(!mStorageService->hasProgressIndicatorSupport());
+        mProgressWidget->show();
         mDownloadUploadProgress = true;
     }
 }

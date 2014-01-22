@@ -22,7 +22,7 @@
 
 #include <QFrame>
 class QProgressBar;
-
+class QLabel;
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceProgressWidget : public QFrame
 {
@@ -32,15 +32,17 @@ public:
     ~StorageServiceProgressWidget();
 
      void setBusyIndicator(bool busy);
+     void reset();
 
 public Q_SLOTS:
-    void setProgressValue(int);
+    void setProgressValue(qint64 done, qint64 total);
 
 protected:
     void hideEvent(QHideEvent *e);
 
 private:
     QProgressBar *mProgressBar;
+    QLabel *mProgressInfo;
 };
 }
 

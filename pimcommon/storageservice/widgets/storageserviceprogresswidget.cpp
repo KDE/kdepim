@@ -19,10 +19,13 @@
 #include "storageserviceprogresswidget.h"
 
 #include <KLocalizedString>
+#include <KLocale>
+#include <KGlobal>
 
 #include <QProgressBar>
 #include <QHBoxLayout>
 #include <QHideEvent>
+#include <QLabel>
 
 using namespace PimCommon;
 
@@ -32,6 +35,9 @@ StorageServiceProgressWidget::StorageServiceProgressWidget(QWidget *parent)
     QHBoxLayout *box = new QHBoxLayout( this );
     box->setMargin(0);
     box->setSpacing(0);
+    mProgressInfo = new QLabel;
+    box->addWidget(mProgressInfo);
+
     mProgressBar = new QProgressBar;
     mProgressBar->setMinimum(0);
     mProgressBar->setMaximum(100);
@@ -43,8 +49,14 @@ StorageServiceProgressWidget::~StorageServiceProgressWidget()
 
 }
 
+void StorageServiceProgressWidget::reset()
+{
+    mProgressBar->setValue(0);
+}
+
 void StorageServiceProgressWidget::setBusyIndicator(bool busy)
 {
+    mProgressInfo->clear();
     if (busy) {
         mProgressBar->setMinimum(0);
         mProgressBar->setMaximum(0);
@@ -54,9 +66,10 @@ void StorageServiceProgressWidget::setBusyIndicator(bool busy)
     }
 }
 
-void StorageServiceProgressWidget::setProgressValue(int val)
+void StorageServiceProgressWidget::setProgressValue(qint64 done, qint64 total)
 {
-    mProgressBar->setValue(val);
+    mProgressInfo->setText(i18n("%1 on %2", KGlobal::locale()->formatByteSize(done), KGlobal::locale()->formatByteSize(total)));
+    mProgressBar->setValue((100*done)/total);
 }
 
 void StorageServiceProgressWidget::hideEvent(QHideEvent *e)
