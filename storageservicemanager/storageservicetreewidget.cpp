@@ -166,7 +166,12 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
             }
         }
     }
-
+    if (type != StorageServiceTreeWidget::UnKnown) {
+        act = new QAction(menu);
+        act->setSeparator(true);
+        menu->addAction(act);
+        menu->addAction(i18n("Property"), this, SLOT(slotProperty()));
+    }
     menu->exec( mapToGlobal( pos ) );
     delete menu;
 }
@@ -347,4 +352,9 @@ void StorageServiceTreeWidget::slotCopyFolder()
     mCopyItem.moveItem = false;
     mCopyItem.type = FolderType;
     mCopyItem.identifier = itemIdentifierSelected();
+}
+
+void StorageServiceTreeWidget::slotProperty()
+{
+    //TODO
 }

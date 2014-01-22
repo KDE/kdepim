@@ -390,7 +390,8 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
             if (map.contains(QLatin1String("name"))) {
                 const QString name = map.value(QLatin1String("name")).toString();
                 const QString folderId = map.value(QLatin1String("id")).toString();
-                listWidget->addFolder(name, folderId);
+                StorageServiceListItem *item = listWidget->addFolder(name, folderId);
+                item->setStoreInfo(map);
             }
         }
         const QVariantMap mapFiles = info.value(QLatin1String("files")).toMap();
@@ -408,7 +409,7 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                     const qulonglong size = map.value(QLatin1String("size")).toULongLong();
                     item->setSize(size);
                 }
-
+                item->setStoreInfo(map);
             }
         }
     }

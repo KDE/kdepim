@@ -35,6 +35,8 @@ public:
     void setSize(qulonglong size);
     void setDateCreated(const QString &date);
     void setLastModification(const QString &date);
+    void setStoreInfo(const QVariantMap &data);
+    QVariantMap storeInfo() const;
 };
 
 class PIMCOMMON_EXPORT StorageServiceTreeWidget : public QTreeWidget
@@ -49,7 +51,8 @@ public:
     };
     enum StorageServiceData {
         ElementType = Qt::UserRole + 1,
-        Ident = Qt::UserRole + 2
+        Ident = Qt::UserRole + 2,
+        Info = Qt::UserRole + 3
     };
     enum TreeWidgetColumn {
         ColumnName = 0,

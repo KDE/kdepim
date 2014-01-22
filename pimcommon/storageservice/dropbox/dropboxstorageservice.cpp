@@ -410,21 +410,23 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             const QVariantMap qwer = variant.toMap();
             //qDebug()<<" qwer "<<qwer;
             if (qwer.contains(QLatin1String("is_dir"))) {
-                bool value = qwer.value(QLatin1String("is_dir")).toBool();
+                const bool isDir = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
-                if (value) {
-                    listWidget->addFolder(name, name);
+                StorageServiceListItem *item;
+                if (isDir) {
+                    item = listWidget->addFolder(name, name);
                 } else {
                     QString mimetype;
                     if (qwer.contains(QLatin1String("mime_type"))) {
                         mimetype = qwer.value(QLatin1String("mime_type")).toString();
                         //qDebug()<<" mimetype"<<mimetype;
                     }
-                    StorageServiceListItem *item = listWidget->addFile(name, name, mimetype);
+                    item = listWidget->addFile(name, name, mimetype);
                     if (qwer.contains(QLatin1String("bytes"))) {
                         item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
                     }
                 }
+                item->setStoreInfo(qwer);
             }
         }
     }

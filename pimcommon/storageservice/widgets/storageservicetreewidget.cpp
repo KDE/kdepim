@@ -179,3 +179,13 @@ void StorageServiceListItem::setLastModification(const QString &date)
 {
     setText(StorageServiceTreeWidget::ColumnLastModification, date);
 }
+
+void StorageServiceListItem::setStoreInfo(const QVariantMap &data)
+{
+    setData(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::Info, data);
+}
+
+QVariantMap StorageServiceListItem::storeInfo() const
+{
+    return data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::Info).value<QVariantMap>();
+}
