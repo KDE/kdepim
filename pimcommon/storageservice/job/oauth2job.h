@@ -19,7 +19,7 @@
 #define OAUTH2JOB_H
 
 #include <QObject>
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 #include <QPointer>
 class QNetworkReply;
 namespace PimCommon {

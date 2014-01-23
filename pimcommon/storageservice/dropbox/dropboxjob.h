@@ -18,7 +18,7 @@
 
 #ifndef DROPBOXJOB_H
 #define DROPBOXJOB_H
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 #include <QNetworkReply>
 namespace PimCommon {
 class AccountInfo;

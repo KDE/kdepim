@@ -19,7 +19,7 @@
 #define WEBDAVJOB_H
 
 #include <QObject>
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 class QNetworkReply;
 namespace PimCommon {
 class WebDavJob : public PimCommon::StorageServiceAbstractJob

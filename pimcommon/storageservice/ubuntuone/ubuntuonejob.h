@@ -19,7 +19,7 @@
 #ifndef UBUNTUONEJOB_H
 #define UBUNTUONEJOB_H
 
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 #include "storageservice/storageserviceabstract.h"
 #include <QNetworkReply>
 class QAuthenticator;

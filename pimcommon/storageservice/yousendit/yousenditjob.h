@@ -19,7 +19,7 @@
 #define YOUSENDITJOB_H
 
 #include <QObject>
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 class QNetworkReply;
 namespace PimCommon {
 class YouSendItJob : public PimCommon::StorageServiceAbstractJob
