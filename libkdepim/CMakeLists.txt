@@ -36,7 +36,6 @@ set(kdepim_LIB_SRCS
    ldap/ldapsearchdialog.cpp
    ldap/ldapclientsearch.cpp
    ldap/ldapclientsearchconfig.cpp
-   progresswidget/overlaywidget.cpp
    progresswidget/progressmanager.cpp
    progresswidget/progressmanager_akonadiagent.cpp
    progresswidget/agentprogressmonitor.cpp
@@ -59,6 +58,7 @@ set(kdepim_LIB_SRCS
    widgets/kwidgetlister.cpp
    widgets/pimmessagebox.cpp
    widgets/nepomukwarning.cpp
+   widgets/overlaywidget.cpp
 )
 
 if (KDEPIM_INPROCESS_LDAP)

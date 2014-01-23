@@ -18,7 +18,7 @@
 #ifndef STORAGESERVICEPROGRESSDIALOG_H
 #define STORAGESERVICEPROGRESSDIALOG_H
 #include "pimcommon_export.h"
-#include "libkdepim/progresswidget/overlaywidget.h"
+#include "libkdepim/widgets/overlaywidget.h"
 
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceProgressDialog : public KPIM::OverlayWidget

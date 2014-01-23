@@ -33,7 +33,7 @@
 #ifndef KDEPIM_PROGRESSDIALOG_H
 #define KDEPIM_PROGRESSDIALOG_H
 
-#include "overlaywidget.h"
+#include "widgets/overlaywidget.h"
 #include "kdepim_export.h"
 
 #include <QScrollArea>
