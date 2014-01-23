@@ -407,6 +407,14 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                     if (map.contains(QLatin1String("size"))) {
                         item->setSize(map.value(QLatin1String("size")).toULongLong());
                     }
+                    if (map.contains(QLatin1String("when_created"))) {
+                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        item->setDateCreated(t);
+                    }
+                    if (map.contains(QLatin1String("when_changed"))) {
+                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        item->setLastModification(t);
+                    }
                 } else {
                     qDebug() <<" kind unknown "<<kind;
                 }

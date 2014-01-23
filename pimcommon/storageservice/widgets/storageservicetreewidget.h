@@ -33,8 +33,8 @@ public:
     StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent);
     bool operator<(const QTreeWidgetItem &other) const;
     void setSize(qulonglong size);
-    void setDateCreated(const QString &date);
-    void setLastModification(const QString &date);
+    void setDateCreated(const QDateTime &date);
+    void setLastModification(const QDateTime &date);
     void setStoreInfo(const QVariantMap &data);
     QVariantMap storeInfo() const;
 };
