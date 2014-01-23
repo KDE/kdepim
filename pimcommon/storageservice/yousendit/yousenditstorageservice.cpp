@@ -218,12 +218,12 @@ void YouSendItStorageService::storageServiceShareLink(const QString &root, const
     }
 }
 
-void YouSendItStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void YouSendItStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mToken.isEmpty()) {
-        mNextAction->setNextActionName(filename);
+        mNextAction->setNextActionName(name);
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setDownloadDestination(filename);
+        mNextAction->setDownloadDestination(destination);
         storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);
@@ -231,7 +231,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &filename
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        mDownloadReply = job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
 
@@ -406,6 +406,14 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                 const QString folderId = map.value(QLatin1String("id")).toString();
                 StorageServiceTreeWidgetItem *item = listWidget->addFolder(name, folderId);
                 item->setStoreInfo(map);
+                if (map.contains(QLatin1String("createdOn"))) {
+                    const QString t = map.value(QLatin1String("createdOn")).toString();
+                    item->setDateCreated(YouSendItUtil::convertToDateTime(t,true));
+                }
+                if (map.contains(QLatin1String("updatedOn"))) {
+                    const QString t = map.value(QLatin1String("updatedOn")).toString();
+                    item->setLastModification(YouSendItUtil::convertToDateTime(t,true));
+                }
             }
         }
         const QVariantMap mapFiles = info.value(QLatin1String("files")).toMap();

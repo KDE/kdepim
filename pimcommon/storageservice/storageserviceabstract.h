@@ -173,7 +173,7 @@ protected slots:
     void slotUploadFileFailed(const QString &filename);
 
 protected:
-    virtual void storageServicedownloadFile(const QString &filename, const QString &destination) = 0;
+    virtual void storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination) = 0;
     virtual void storageServiceuploadFile(const QString &filename, const QString &destination = QString()) = 0;
     virtual void storageServiceaccountInfo() = 0;
     virtual void storageServicecreateFolder(const QString &folder, const QString &destination = QString()) = 0;

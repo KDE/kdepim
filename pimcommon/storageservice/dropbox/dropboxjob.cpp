@@ -555,7 +555,7 @@ void DropBoxJob::createServiceFolder()
     deleteLater();
 }
 
-QNetworkReply *DropBoxJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;

@@ -45,7 +45,7 @@ public:
     void storageServiceShareLink(const QString &root, const QString &path);
     void storageServicecreateServiceFolder();
     QString storageServiceName() const;
-    void storageServicedownloadFile(const QString &filename, const QString &destination);
+    void storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination);
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
     void storageServiceRenameFolder(const QString &source, const QString &destination);

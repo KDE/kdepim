@@ -20,13 +20,42 @@
 #include "pimcommon_export.h"
 #include "libkdepim/widgets/overlaywidget.h"
 
+
+
+#include <QScrollArea>
+class KVBox;
 namespace PimCommon {
+
+class ProgressIndicatorView : public QScrollArea
+{
+    Q_OBJECT
+public:
+    explicit ProgressIndicatorView( QWidget * parent = 0 );
+    ~ProgressIndicatorView();
+
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
+
+public Q_SLOTS:
+    void slotLayoutFirstItem();
+
+protected:
+    void resizeEvent ( QResizeEvent *event );
+
+private:
+    KVBox *mBigBox;
+};
+
+
 class PIMCOMMON_EXPORT StorageServiceProgressDialog : public KPIM::OverlayWidget
 {
     Q_OBJECT
 public:
     explicit StorageServiceProgressDialog(QWidget *alignWidget, QWidget *parent=0);
     ~StorageServiceProgressDialog();
+
+private:
+    ProgressIndicatorView *mScrollView;
 };
 }
 #endif // STORAGESERVICEPROGRESSDIALOG_H

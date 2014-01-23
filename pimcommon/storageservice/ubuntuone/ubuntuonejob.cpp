@@ -396,7 +396,7 @@ void UbuntuOneJob::createServiceFolder()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *UbuntuOneJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *UbuntuOneJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;

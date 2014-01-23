@@ -224,12 +224,12 @@ void UbuntuoneStorageService::storageServiceShareLink(const QString &root, const
     }
 }
 
-void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void UbuntuoneStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionName(filename);
-        mNextAction->setDownloadDestination(filename);
+        mNextAction->setNextActionName(name);
+        mNextAction->setDownloadDestination(destination);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -237,7 +237,7 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        mDownloadReply = job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
 
@@ -401,6 +401,14 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                 if (kind == QLatin1String("directory")) {
                     const QString path = map.value(QLatin1String("path")).toString();
                     item = listWidget->addFolder(path, path);
+                    if (map.contains(QLatin1String("when_created"))) {
+                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        item->setDateCreated(t);
+                    }
+                    if (map.contains(QLatin1String("when_changed"))) {
+                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        item->setLastModification(t);
+                    }
                 } else if (kind == QLatin1String("file")) {
                     const QString path = map.value(QLatin1String("path")).toString();
                     item = listWidget->addFile(path, path);

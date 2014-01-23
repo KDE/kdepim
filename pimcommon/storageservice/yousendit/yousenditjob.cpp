@@ -80,7 +80,7 @@ void YouSendItJob::createServiceFolder()
     deleteLater();
 }
 
-QNetworkReply *YouSendItJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *YouSendItJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));

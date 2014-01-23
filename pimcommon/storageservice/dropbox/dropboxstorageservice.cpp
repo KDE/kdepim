@@ -238,12 +238,12 @@ QString DropBoxStorageService::storageServiceName() const
     return serviceName();
 }
 
-void DropBoxStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void DropBoxStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionName(filename);
-        mNextAction->setDownloadDestination(filename);
+        mNextAction->setNextActionName(name);
+        mNextAction->setDownloadDestination(destination);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -251,7 +251,7 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &filename, 
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        job->downloadFile(filename, destination);
+        job->downloadFile(name, fileId, destination);
     }
 }
 
@@ -425,14 +425,14 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
                     if (qwer.contains(QLatin1String("bytes"))) {
                         item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
                     }
-                    if (qwer.contains(QLatin1String("client_mtime"))) {
-                        QString tmp = qwer.value(QLatin1String("client_mtime")).toString();
-                        item->setDateCreated(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
-                    }
-                    if (qwer.contains(QLatin1String("modified"))) {
-                        QString tmp = qwer.value(QLatin1String("modified")).toString();
-                        item->setLastModification(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
-                    }
+                }
+                if (qwer.contains(QLatin1String("client_mtime"))) {
+                    QString tmp = qwer.value(QLatin1String("client_mtime")).toString();
+                    item->setDateCreated(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
+                }
+                if (qwer.contains(QLatin1String("modified"))) {
+                    QString tmp = qwer.value(QLatin1String("modified")).toString();
+                    item->setLastModification(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
                 }
                 item->setStoreInfo(qwer);
             }

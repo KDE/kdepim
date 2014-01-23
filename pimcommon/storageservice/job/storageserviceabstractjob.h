@@ -33,7 +33,7 @@ public:
     ~StorageServiceAbstractJob();
 
     virtual QNetworkReply *uploadFile(const QString &filename, const QString &destination=QString()) = 0;
-    virtual QNetworkReply *downloadFile(const QString &filename, const QString &destination) = 0;
+    virtual QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination) = 0;
 
     virtual void requestTokenAccess() = 0;
     virtual void listFolder(const QString &folder = QString()) = 0;

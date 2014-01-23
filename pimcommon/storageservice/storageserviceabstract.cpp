@@ -69,7 +69,7 @@ void StorageServiceAbstract::downloadFile(const QString &filename, const QString
         return;
     }
     changeProgressState(true);
-    storageServicedownloadFile(filename, destination);
+    storageServicedownloadFile(filename, QString(), destination); //TODO
 }
 
 void StorageServiceAbstract::uploadFile(const QString &filename, const QString &destination)
@@ -252,7 +252,7 @@ void StorageServiceAbstract::executeNextAction()
         storageServicecreateServiceFolder();
         break;
     case DownLoadFile:
-        storageServicedownloadFile(mNextAction->nextActionName(), mNextAction->downloadDestination());
+        storageServicedownloadFile(mNextAction->nextActionName(), QString(), mNextAction->downloadDestination()); //TODO
         break;
     case DeleteFile:
         storageServicedeleteFile(mNextAction->nextActionName());
