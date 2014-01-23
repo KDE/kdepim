@@ -72,6 +72,7 @@ set(libpimcommon_storageservice_SRCS
 
   storageservice/widgets/storageservicetreewidget.cpp
   storageservice/widgets/storageserviceprogresswidget.cpp
+  storageservice/widgets/storageserviceprogressdialog.cpp
  
   storageservice/tests/testsettingsjob.cpp
 )
