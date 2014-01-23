@@ -89,6 +89,9 @@ protected:
     QString mCurrentFolder;
     QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
+
+private Q_SLOTS:
+    void slotItemDoubleClicked(QTreeWidgetItem *item, int column);
 };
 }
 

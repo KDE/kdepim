@@ -45,6 +45,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *stora
     lst << i18n("Name") << i18n("Size") << i18n("Created") << i18n("Last Modified");
     setHeaderLabels(lst);
     header()->setMovable(false);
+    connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
 }
 
 StorageServiceTreeWidget::~StorageServiceTreeWidget()
@@ -166,6 +167,19 @@ void StorageServiceTreeWidget::moveUp()
         return;
     setCurrentFolder(parentFolder());
     QTimer::singleShot(0, this, SLOT(refreshList()));
+}
+
+void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+    Q_UNUSED(column);
+    if (item) {
+        if (type(item) == StorageServiceTreeWidget::Folder) {
+            const QString folder = itemIdentifierSelected();
+            goToFolder(folder);
+        } else if (type(item) == StorageServiceTreeWidget::MoveUpType) {
+            moveUp();
+        }
+    }
 }
 
 

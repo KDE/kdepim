@@ -44,7 +44,6 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
     setSelectionMode(QAbstractItemView::SingleSelection);
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
-    connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotGeneralFontChanged()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
     readConfig();
@@ -294,19 +293,6 @@ bool StorageServiceTreeWidget::uploadFileToService()
         return true;
     } else {
         return false;
-    }
-}
-
-void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int column)
-{
-    Q_UNUSED(column);
-    if (item) {
-        if (type(item) == StorageServiceTreeWidget::Folder) {
-            const QString folder = itemIdentifierSelected();
-            goToFolder(folder);
-        } else if (type(item) == StorageServiceTreeWidget::MoveUpType) {
-            slotMoveUp();
-        }
     }
 }
 
