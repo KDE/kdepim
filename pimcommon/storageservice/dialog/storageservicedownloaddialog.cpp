@@ -33,7 +33,7 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
       mStorage(storage)
 {
     setCaption( i18n( "Download File" ) );
-    setButtons( Ok | Cancel );
+    setButtons( User1 | Cancel );
 
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -49,7 +49,8 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
 
     w->setLayout(vbox);
     setMainWidget(w);
-    enableButtonOk(false);
+    enableButton(User1, false);
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDownloadFile()));
 }
 
 StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
@@ -59,5 +60,10 @@ StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 
 void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
 {
-    enableButtonOk(item && (mTreeWidget->type(item) == StorageServiceTreeWidget::File));
+    enableButton(User1, (item && (mTreeWidget->type(item) == StorageServiceTreeWidget::File)));
+}
+
+void StorageServiceDownloadDialog::slotDownloadFile()
+{
+    //TODO mStorage->downloadFile();
 }

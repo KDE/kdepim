@@ -31,9 +31,9 @@ public:
     explicit StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
     ~StorageServiceDownloadDialog();
 
-
 private slots:
     void slotItemActivated(QTreeWidgetItem *item, int column);
+    void slotDownloadFile();
 
 private:
     StorageServiceTreeWidget *mTreeWidget;
