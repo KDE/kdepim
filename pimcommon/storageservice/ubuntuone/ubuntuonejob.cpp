@@ -400,6 +400,26 @@ QNetworkReply *UbuntuOneJob::downloadFile(const QString &filename, const QString
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
+#if 0
+    QFile *file = new QFile(destination);
+    if (file->exists()) {
+        mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+        mError = false;
+        if (file->open(QIODevice::WriteOnly)) {
+            //TODO
+            delete file;
+
+        } else {
+            delete file;
+        }
+    }
+    qDebug()<<" upload file not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+    return 0;
+
+
+#endif
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
     return 0;

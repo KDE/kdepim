@@ -425,6 +425,12 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
                     if (qwer.contains(QLatin1String("bytes"))) {
                         item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
                     }
+                    if (qwer.contains(QLatin1String("client_mtime"))) {
+                        //TODO
+                    }
+                    if (qwer.contains(QLatin1String("modified"))) {
+                        //TODO
+                    }
                 }
                 item->setStoreInfo(qwer);
             }
@@ -435,6 +441,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
 
 QString DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
+    qDebug()<<" variantMap "<<variantMap;
     return QString();
 }
 
