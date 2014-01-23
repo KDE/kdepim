@@ -19,7 +19,7 @@
 */
 
 #include "storageservicejobconfig.h"
-#include "storageserviceinterface.h"
+#include "interface/storageserviceinterface.h"
 
 
 #include <KGlobal>
