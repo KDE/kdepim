@@ -40,8 +40,9 @@ void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::S
     while (i.hasNext()) {
         i.next();
         bool foundPage = false;
+        StorageServicePage *page = 0;
         for (int nbPage=0; nbPage < count(); ++nbPage) {
-            StorageServicePage *page = static_cast<StorageServicePage*>(widget(nbPage));
+            page = static_cast<StorageServicePage*>(widget(nbPage));
             if (i.value()->storageServiceName() == page->serviceName()) {
                 foundPage = true;
                 break;
@@ -50,7 +51,9 @@ void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::S
         if (!foundPage) {
             createPage(i.key(), i.value());
         } else {
-            //TODO update page ?
+            if (page) {
+                page->refreshList();
+            }
         }
     }
     //TODO remove service ?

@@ -31,7 +31,10 @@ public:
     ~StorageServicePropertiesDialog();
 
     void setInformation(const QString &info);
+
 private:
+    void readConfig();
+    void writeConfig();
     QLabel *mInformation;
 };
 
