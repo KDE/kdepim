@@ -31,6 +31,7 @@
 #include <KFileDialog>
 #include <KInputDialog>
 #include <KActionMenu>
+#include <KMessageBox>
 
 #include <QMenu>
 
@@ -136,8 +137,7 @@ void StorageServiceManager::slotShareFile()
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
             if (service->hasUploadOrDownloadInProgress()) {
-                //KMessageBox::
-                //TODO
+                KMessageBox::information(0, i18n("There is still an upload in progress."));
             } else {
                 const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
                 if (!fileName.isEmpty()) {
