@@ -404,6 +404,9 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                 } else if (kind == QLatin1String("file")) {
                     const QString path = map.value(QLatin1String("path")).toString();
                     item = listWidget->addFile(path, path);
+                    if (map.contains(QLatin1String("size"))) {
+                        item->setSize(map.value(QLatin1String("size")).toULongLong());
+                    }
                 } else {
                     qDebug() <<" kind unknown "<<kind;
                 }
@@ -418,6 +421,7 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
 
 QString UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
 {
+    qDebug()<<" variantMap "<<variantMap;
     return QString();
 }
 
