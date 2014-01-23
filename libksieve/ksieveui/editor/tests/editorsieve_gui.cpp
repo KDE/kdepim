@@ -15,6 +15,7 @@
   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "editorsieve_gui.h"
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
@@ -22,12 +23,15 @@
 #include "ksieveui/editor/sieveeditor.h"
 #include "pimcommon/sievehighlighter/sievesyntaxhighlighterutil.h"
 
+
+
+
 int main (int argc, char **argv)
 {
     KCmdLineArgs::init(argc, argv, "editorsieve_gui", 0, ki18n("EditorSievetest_Gui"),
                        "1.0", ki18n("Test for editor sieve dialog"));
     KApplication app;
-    KSieveUi::SieveEditor *dialog = new KSieveUi::SieveEditor;
+    SieveEditorTestWidget *dialog = new SieveEditorTestWidget;
     const QStringList capabilities = PimCommon::SieveSyntaxHighlighterUtil::fullCapabilities();
     //Add all capabilities for testing
     dialog->setSieveCapabilities(capabilities);
@@ -38,3 +42,20 @@ int main (int argc, char **argv)
     return 0;
 }
 
+
+
+SieveEditorTestWidget::SieveEditorTestWidget(QWidget *parent)
+    : KSieveUi::SieveEditor(parent)
+{
+    connect(this, SIGNAL(valueChanged()), this, SLOT(slotValueChanged()));
+}
+
+SieveEditorTestWidget::~SieveEditorTestWidget()
+{
+
+}
+
+void SieveEditorTestWidget::slotValueChanged()
+{
+    qDebug()<<" value changed";
+}
