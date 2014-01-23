@@ -55,7 +55,6 @@ UploadMediaDialog::UploadMediaDialog( QWidget *parent )
     connect( ui.kcfg_urlBrowser, SIGNAL(clicked(bool)), this, SLOT(selectNewFile()) );
     connect(ui.kcfg_uploadType, SIGNAL(currentIndexChanged(int)), this, SLOT(slotUploadTypeChanged(int)));
     connect( ui.kcfg_urlLineEdit, SIGNAL(textChanged(QString)), this, SLOT(currentMediaChanged(QString)) );
-    connect(this,SIGNAL(okClicked()),this,SLOT(slotOkClicked()));
 }
 
 UploadMediaDialog::~UploadMediaDialog()
