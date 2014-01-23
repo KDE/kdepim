@@ -18,6 +18,7 @@
 #include "yousenditstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
+#include "yousenditutil.h"
 #include "yousenditjob.h"
 
 #include <KLocalizedString>
@@ -421,6 +422,14 @@ QString YouSendItStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                     //qDebug()<<" size "<<map.value(QLatin1String("size"));
                     const qulonglong size = map.value(QLatin1String("size")).toULongLong();
                     item->setSize(size);
+                }
+                if (map.contains(QLatin1String("createdOn"))) {
+                    const QString t = map.value(QLatin1String("createdOn")).toString();
+                    item->setDateCreated(YouSendItUtil::convertToDateTime(t));
+                }
+                if (map.contains(QLatin1String("lastUpdatedOn"))) {
+                    const QString t = map.value(QLatin1String("lastUpdatedOn")).toString();
+                    item->setLastModification(YouSendItUtil::convertToDateTime(t));
                 }
                 item->setStoreInfo(map);
             }

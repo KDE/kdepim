@@ -18,6 +18,7 @@
 #include "dropboxstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
+#include "dropboxutil.h"
 #include "dropboxjob.h"
 
 #include <qjson/parser.h>
@@ -419,17 +420,18 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
                     QString mimetype;
                     if (qwer.contains(QLatin1String("mime_type"))) {
                         mimetype = qwer.value(QLatin1String("mime_type")).toString();
-                        //qDebug()<<" mimetype"<<mimetype;
                     }
                     item = listWidget->addFile(name, name, mimetype);
                     if (qwer.contains(QLatin1String("bytes"))) {
                         item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
                     }
                     if (qwer.contains(QLatin1String("client_mtime"))) {
-                        //TODO
+                        QString tmp = qwer.value(QLatin1String("client_mtime")).toString();
+                        item->setDateCreated(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
                     }
                     if (qwer.contains(QLatin1String("modified"))) {
-                        //TODO
+                        QString tmp = qwer.value(QLatin1String("modified")).toString();
+                        item->setLastModification(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
                     }
                 }
                 item->setStoreInfo(qwer);
