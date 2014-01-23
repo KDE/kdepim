@@ -74,7 +74,6 @@ private Q_SLOTS:
     void slotDeleteFileDone(const QString &serviceName, const QString &filename);
     void slotRenameFolderDone(const QString &serviceName, const QString &fileName);
     void slotRenameFileDone(const QString &serviceName, const QString &fileName);
-    void slotMoveUp();
     void slotMoveFileDone(const QString &serviceName, const QString &filename);
     void slotMoveFolderDone(const QString &serviceName, const QString &filename);
     void slotCopyFileDone(const QString &serviceName, const QString &filename);
@@ -87,7 +86,6 @@ private:
     inline void updateList(const QString &serviceName);
     void connectStorageService();
     QString mServiceName;
-    QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
     StorageServiceTreeWidget *mTreeWidget;
     StorageServiceProgressIndicator *mProgressIndicator;

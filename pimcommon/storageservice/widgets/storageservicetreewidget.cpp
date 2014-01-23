@@ -137,6 +137,16 @@ QString StorageServiceTreeWidget::currentFolder() const
     return mCurrentFolder;
 }
 
+void StorageServiceTreeWidget::setParentFolder(const QString &folder)
+{
+    mParentFolder = folder;
+}
+
+QString StorageServiceTreeWidget::parentFolder() const
+{
+    return mParentFolder;
+}
+
 void StorageServiceTreeWidget::refreshList()
 {
     mStorageService->listFolder(mCurrentFolder);
@@ -147,6 +157,14 @@ void StorageServiceTreeWidget::goToFolder(const QString &folder)
     if (folder == currentFolder())
         return;
     setCurrentFolder(folder);
+    QTimer::singleShot(0, this, SLOT(refreshList()));
+}
+
+void StorageServiceTreeWidget::moveUp()
+{
+    if (parentFolder() == currentFolder())
+        return;
+    setCurrentFolder(parentFolder());
     QTimer::singleShot(0, this, SLOT(refreshList()));
 }
 

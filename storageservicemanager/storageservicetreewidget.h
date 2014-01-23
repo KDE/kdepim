@@ -35,7 +35,6 @@ public:
     bool uploadFileToService();
 
 Q_SIGNALS:
-    void moveUp();
     void uploadFile();
 
 public Q_SLOTS:

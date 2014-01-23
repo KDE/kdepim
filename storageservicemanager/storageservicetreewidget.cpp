@@ -244,7 +244,7 @@ void StorageServiceTreeWidget::slotDeleteFolder()
 
 void StorageServiceTreeWidget::slotMoveUp()
 {
-    Q_EMIT moveUp();
+    moveUp();
 }
 
 void StorageServiceTreeWidget::slotDeleteFile()
@@ -305,7 +305,7 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
             const QString folder = itemIdentifierSelected();
             goToFolder(folder);
         } else if (type(item) == StorageServiceTreeWidget::MoveUpType) {
-            Q_EMIT moveUp();
+            slotMoveUp();
         }
     }
 }

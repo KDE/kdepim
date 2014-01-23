@@ -49,7 +49,6 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
-    connect(mTreeWidget, SIGNAL(moveUp()), this, SLOT(slotMoveUp()));
     connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
     vbox->addWidget(mTreeWidget);
     mProgressWidget = new PimCommon::StorageServiceProgressWidget;
@@ -252,7 +251,7 @@ void StorageServicePage::slotListFolderDone(const QString &serviceName, const QS
     if (verifyService(serviceName)) {
         mTreeWidget->setIsInitialized();
         const QString parentFolder = mStorageService->fillListWidget(mTreeWidget, data);
-        mParentFolder = parentFolder;
+        mTreeWidget->setParentFolder(parentFolder);
     }
 }
 
@@ -304,18 +303,10 @@ void StorageServicePage::slotDownloadFileDone(const QString &serviceName, const 
     //TODO
 }
 
-void StorageServicePage::slotMoveUp()
-{
-    if (mParentFolder == mTreeWidget->currentFolder())
-        return;
-    mTreeWidget->setCurrentFolder(mParentFolder);
-    QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
-}
-
 void StorageServicePage::updateList(const QString &serviceName)
 {
     if (verifyService(serviceName)) {
-        QTimer::singleShot(0, mTreeWidget, SLOT(refreshList()));
+        refreshList();
     }
 }
 
