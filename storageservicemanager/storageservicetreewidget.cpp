@@ -279,8 +279,8 @@ void StorageServiceTreeWidget::slotDownloadFile()
                 if (destination.isEmpty())
                     return;
             }
-//TODO
-            mStorageService->downloadFile(filename,QString(),  destination);
+            const QString fileId = mStorageService->fileIdentifier(itemInformationSelected());
+            mStorageService->downloadFile(filename, fileId, destination);
         }
     }
 }
