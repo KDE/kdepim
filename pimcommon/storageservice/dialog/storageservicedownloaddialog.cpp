@@ -21,6 +21,8 @@
 #include "storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
+#include <KGlobal>
+#include <KSharedConfig>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -54,11 +56,29 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     connect(mStorage, SIGNAL(listFolderDone(QString,QString)), mTreeWidget, SLOT(slotListFolderDone(QString,QString)));
     connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
     mTreeWidget->refreshList();
+    readConfig();
 }
 
 StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 {
+    writeConfig();
+}
 
+void StorageServiceDownloadDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "StorageServiceDownloadDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void StorageServiceDownloadDialog::writeConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    KConfigGroup group = config->group( QLatin1String("StorageServiceDownloadDialog") );
+    group.writeEntry( "Size", size() );
 }
 
 void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)

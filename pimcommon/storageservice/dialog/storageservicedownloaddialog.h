@@ -37,6 +37,8 @@ private slots:
     void slotDownloadFile();
 
 private:
+    void readConfig();
+    void writeConfig();
     QString mDestination;
     StorageServiceTreeWidget *mTreeWidget;
     PimCommon::StorageServiceAbstract *mStorage;
