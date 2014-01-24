@@ -200,7 +200,7 @@ void StorageServiceTreeWidget::slotPasteFile()
 void StorageServiceTreeWidget::slotRenameFolder()
 {
     const QString oldFolderName = itemIdentifierSelected();
-    const QString folder = KInputDialog::getText(i18n("Rename Folder Name"), i18n("Folder:"));
+    const QString folder = KInputDialog::getText(i18n("Rename Folder Name"), i18n("Folder:"), oldFolderName);
     if (!folder.isEmpty()) {
         if (oldFolderName != folder) {
             mStorageService->renameFolder(oldFolderName, folder);
@@ -210,11 +210,11 @@ void StorageServiceTreeWidget::slotRenameFolder()
 
 void StorageServiceTreeWidget::slotRenameFile()
 {
-    const QString oldFolderName = itemIdentifierSelected();
-    const QString folder = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"));
-    if (!folder.isEmpty()) {
-        if (oldFolderName != folder) {
-            mStorageService->renameFile(oldFolderName, folder);
+    const QString oldFileName = itemIdentifierSelected();
+    const QString filename = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"), oldFileName);
+    if (!filename.isEmpty()) {
+        if (oldFileName != filename) {
+            mStorageService->renameFile(oldFileName, filename);
         }
     }
 }
