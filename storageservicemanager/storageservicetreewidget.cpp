@@ -106,7 +106,7 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity)
                     menu->addAction(i18n("Rename File..."), this, SLOT(slotRenameFile()));
                 if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
-                    menu->addAction(i18n("Delete File"), this, SLOT(slotDeleteFile()));
+                    menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete File"), this, SLOT(slotDeleteFile()));
                 if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability)
                     menu->addAction(i18n("Share File"), this, SLOT(slotShareFile()));
                 act = new QAction(menu);
@@ -125,7 +125,7 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability)
                     menu->addAction(i18n("Rename Folder..."), this, SLOT(slotRenameFolder()));
                 if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability)
-                    menu->addAction(i18n("Delete Folder"), this, SLOT(slotDeleteFolder()));
+                    menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete Folder"), this, SLOT(slotDeleteFolder()));
             }
         }
         QAction *act = new QAction(menu);
@@ -137,7 +137,7 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
         act->setSeparator(true);
         menu->addAction(act);
         if (mCapabilities & PimCommon::StorageServiceAbstract::CreateFolderCapability)
-            menu->addAction(i18n("Create Folder..."), this, SLOT(slotCreateFolder()));
+            menu->addAction(KIcon(QLatin1String("folder-new")), i18n("Create Folder..."), this, SLOT(slotCreateFolder()));
 
         act = new QAction(menu);
         act->setSeparator(true);
@@ -168,7 +168,7 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
             act = new QAction(menu);
             act->setSeparator(true);
             menu->addAction(act);
-            menu->addAction(i18n("Properties"), this, SLOT(slotProperties()));
+            menu->addAction(KIcon(QLatin1String("document-properties")), i18n("Properties"), this, SLOT(slotProperties()));
         }
     } else {
         menu->addAction(KIcon(QLatin1String("view-refresh")), i18n("Refresh"), this, SLOT(refreshList()));
