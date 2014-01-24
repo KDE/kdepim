@@ -15,7 +15,7 @@ set(notesagent_SRCS
 )
 
 kde4_add_kcfg_files(notesagent_SRCS
-    notesagentsettings.kcfgc
+    settings/notesagentsettings.kcfgc
 )
 
 
