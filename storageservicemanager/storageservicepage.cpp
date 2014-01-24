@@ -250,8 +250,7 @@ void StorageServicePage::slotListFolderDone(const QString &serviceName, const QS
 {
     if (verifyService(serviceName)) {
         mTreeWidget->setIsInitialized();
-        const QString parentFolder = mStorageService->fillListWidget(mTreeWidget, data);
-        mTreeWidget->setParentFolder(parentFolder);
+        mTreeWidget->slotListFolderDone(serviceName, data);
     }
 }
 

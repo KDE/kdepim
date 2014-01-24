@@ -43,8 +43,7 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     vbox->addWidget(lab);
 
     mTreeWidget = new StorageServiceTreeWidget(storage);
-    mTreeWidget->refreshList();
-    connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
+
 
     vbox->addWidget(mTreeWidget);
 
@@ -52,6 +51,9 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     setMainWidget(w);
     enableButton(User1, false);
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDownloadFile()));
+    connect(mStorage, SIGNAL(listFolderDone(QString,QString)), mTreeWidget, SLOT(slotListFolderDone(QString,QString)));
+    connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
+    mTreeWidget->refreshList();
 }
 
 StorageServiceDownloadDialog::~StorageServiceDownloadDialog()

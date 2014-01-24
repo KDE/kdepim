@@ -82,6 +82,7 @@ public:
     QVariantMap itemInformationSelected() const;
 public Q_SLOTS:
     void refreshList();
+    void slotListFolderDone(const QString &serviceName, const QString &data);
 
 protected:
     void moveUp();
