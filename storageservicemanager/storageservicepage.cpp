@@ -76,7 +76,11 @@ bool StorageServicePage::hasUploadDownloadProgress() const
 
 void StorageServicePage::slotUpdatePixmap(const QPixmap &pix)
 {
-    Q_EMIT updatePixmap(pix, this);
+    if (pix.isNull()) {
+        Q_EMIT updateIcon(mStorageService->icon(), this);
+    } else {
+        Q_EMIT updateIcon(QIcon(pix), this);
+    }
 }
 
 void StorageServicePage::connectStorageService()

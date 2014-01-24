@@ -49,7 +49,7 @@ public slots:
     void slotDownloadFile();
 
 private slots:
-    void slotUpdatePixmap(const QPixmap &pix, StorageServicePage *page);
+    void slotUpdateIcon(const QIcon &icon, StorageServicePage *page);
 
 private:
     void createPage(const QString &name, PimCommon::StorageServiceAbstract *service);

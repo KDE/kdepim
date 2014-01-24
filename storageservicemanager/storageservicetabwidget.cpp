@@ -71,17 +71,17 @@ void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommo
 void StorageServiceTabWidget::createPage(const QString &name, PimCommon::StorageServiceAbstract *service)
 {
     StorageServicePage *page = new StorageServicePage(name, service);
-    connect(page, SIGNAL(updatePixmap(QPixmap,StorageServicePage*)), this, SLOT(slotUpdatePixmap(QPixmap,StorageServicePage*)));
+    connect(page, SIGNAL(updateIcon(QIcon,StorageServicePage*)), this, SLOT(slotUpdateIcon(QIcon,StorageServicePage*)));
     connect(page, SIGNAL(updateStatusBarMessage(QString)), this, SIGNAL(updateStatusBarMessage(QString)));
     addTab(page, name);
 }
 
-void StorageServiceTabWidget::slotUpdatePixmap(const QPixmap &pix, StorageServicePage *page)
+void StorageServiceTabWidget::slotUpdateIcon(const QIcon &icon, StorageServicePage *page)
 {
     if (page) {
         const int index = indexOf(page);
         if (index != -1) {
-            setTabIcon(index, QIcon(pix));
+            setTabIcon(index, icon);
         }
     }
 }
