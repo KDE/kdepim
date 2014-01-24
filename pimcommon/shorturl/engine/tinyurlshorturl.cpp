@@ -32,6 +32,11 @@ TinyurlShortUrl::~TinyurlShortUrl()
 {
 }
 
+QString TinyurlShortUrl::shortUrlName() const
+{
+    return QLatin1String("TinyURL.com");
+}
+
 void TinyurlShortUrl::start()
 {
     const QString requestUrl = QString::fromLatin1("http://tinyurl.com/api-create.php?url=%1").arg(mOriginalUrl);

@@ -29,10 +29,11 @@ public:
     ~GoogleShortUrl();
 
     void start();
+    QString shortUrlName() const;
 
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply*reply);
-    void slotSslErrors(QNetworkReply *, const QList<QSslError> &error);
+    void slotSslErrors(QNetworkReply *, const QList<QSslError> &error);    
 };
 }
 

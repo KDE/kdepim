@@ -39,6 +39,7 @@ using namespace PimCommon;
 
 ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     : QWidget(parent),
+      mShorturlServiceName(0),
       mEngine(0),
       mToggleAction(0),
       mStandalone(false)
@@ -65,6 +66,9 @@ ShortUrlWidget::ShortUrlWidget(QWidget *parent)
     QPushButton *configure = new QPushButton(i18n("Configure..."));
     connect(configure, SIGNAL(clicked()), this, SLOT(slotConfigure()));
     grid->addWidget(configure, 0, 2);
+
+    mShorturlServiceName = new QLabel(mEngine->shortUrlName());
+    grid->addWidget(mShorturlServiceName, 1, 1);
 
     mConvertButton = new QPushButton(i18n("Convert"));
     grid->addWidget(mConvertButton, 1, 2);
@@ -151,6 +155,8 @@ void ShortUrlWidget::loadEngine()
 {
     delete mEngine;
     mEngine = PimCommon::ShortUrlUtils::loadEngine(this);
+    if (mShorturlServiceName)
+        mShorturlServiceName->setText(mEngine->shortUrlName());
     connect(mEngine, SIGNAL(shortUrlDone(QString)), this, SLOT(slotShortUrlDone(QString)));
     connect(mEngine, SIGNAL(shortUrlFailed(QString)), this, SLOT(slotShortUrlFailed(QString)));
 }

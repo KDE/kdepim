@@ -32,6 +32,11 @@ MigremeShortUrl::~MigremeShortUrl()
 {
 }
 
+QString MigremeShortUrl::shortUrlName() const
+{
+    return QLatin1String("migre.me");
+}
+
 void MigremeShortUrl::start()
 {
     const QString requestUrl = QString::fromLatin1("http://migre.me/api.txt?url=%1").arg(mOriginalUrl);

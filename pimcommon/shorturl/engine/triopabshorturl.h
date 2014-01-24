@@ -31,8 +31,11 @@ public:
 
     void start();
 
+    QString shortUrlName() const;
+
 private Q_SLOTS:
     void slotShortUrlFinished(QNetworkReply*reply);
+
 };
 }
 
