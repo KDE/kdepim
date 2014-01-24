@@ -372,6 +372,12 @@ QString GDriveStorageService::storageServiceName() const
     return serviceName();
 }
 
+QString GDriveStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    //TODO
+    return QString();
+}
+
 KIcon GDriveStorageService::icon() const
 {
     return KIcon(iconName());

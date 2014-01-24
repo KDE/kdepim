@@ -442,6 +442,11 @@ QString UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
     return QString();
 }
 
+QString UbuntuoneStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 QString UbuntuoneStorageService::storageServiceName() const
 {
     return serviceName();

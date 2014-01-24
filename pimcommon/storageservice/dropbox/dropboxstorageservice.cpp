@@ -376,6 +376,11 @@ void DropBoxStorageService::storageServiceCopyFolder(const QString &source, cons
     }
 }
 
+QString DropBoxStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
 {
     return serviceCapabilities();

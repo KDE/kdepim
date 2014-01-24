@@ -251,6 +251,11 @@ QString WebDavStorageService::itemInformation(const QVariantMap &variantMap)
     return QString();
 }
 
+QString WebDavStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 void WebDavStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {

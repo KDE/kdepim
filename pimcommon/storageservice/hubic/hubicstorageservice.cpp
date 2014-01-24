@@ -398,3 +398,8 @@ QString HubicStorageService::itemInformation(const QVariantMap &variantMap)
 {
     return QString();
 }
+
+QString HubicStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}

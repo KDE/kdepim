@@ -383,6 +383,12 @@ QString YouSendItStorageService::itemInformation(const QVariantMap &variantMap)
     return information;
 }
 
+QString YouSendItStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    //TODO
+    return QString();
+}
+
 StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const
 {
     return serviceCapabilities();

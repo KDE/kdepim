@@ -434,3 +434,8 @@ QString BoxStorageService::itemInformation(const QVariantMap &variantMap)
     qDebug()<<" variantMap" <<variantMap;
     return QString();
 }
+
+QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}

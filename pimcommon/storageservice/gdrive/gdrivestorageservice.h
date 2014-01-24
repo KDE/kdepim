@@ -57,6 +57,7 @@ public:
     void storageServiceCopyFolder(const QString &source, const QString &destination);
     QString itemInformation(const QVariantMap &variantMap);
     QString storageServiceName() const;
+    QString fileIdentifier(const QVariantMap &variantMap);
     KIcon icon() const;
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();
