@@ -381,6 +381,14 @@ QString DropBoxStorageService::fileIdentifier(const QVariantMap &variantMap)
     return QString();
 }
 
+QString DropBoxStorageService::fileShareRoot(const QVariantMap &variantMap)
+{
+    if (variantMap.contains(QLatin1String("root"))) {
+        return variantMap.value(QLatin1String("root")).toString();
+    }
+    return QString();
+}
+
 StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
 {
     return serviceCapabilities();

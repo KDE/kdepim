@@ -389,6 +389,11 @@ QString YouSendItStorageService::fileIdentifier(const QVariantMap &variantMap)
     return QString();
 }
 
+QString YouSendItStorageService::fileShareRoot(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 StorageServiceAbstract::Capabilities YouSendItStorageService::capabilities() const
 {
     return serviceCapabilities();

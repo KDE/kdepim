@@ -58,6 +58,7 @@ public:
     QString itemInformation(const QVariantMap &variantMap);
     QString storageServiceName() const;
     QString fileIdentifier(const QVariantMap &variantMap);
+    QString fileShareRoot(const QVariantMap &variantMap);
     KIcon icon() const;
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();

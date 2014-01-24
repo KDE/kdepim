@@ -378,6 +378,11 @@ QString GDriveStorageService::fileIdentifier(const QVariantMap &variantMap)
     return QString();
 }
 
+QString GDriveStorageService::fileShareRoot(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 KIcon GDriveStorageService::icon() const
 {
     return KIcon(iconName());

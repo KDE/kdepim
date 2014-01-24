@@ -70,6 +70,8 @@ public:
     void setParentFolder(const QString &folder);
     QString parentFolder() const;
 
+    void goToFolder(const QString &folder);
+
     StorageServiceTreeWidgetItem *addFolder(const QString &name, const QString &ident);
     StorageServiceTreeWidgetItem *addFile(const QString &name, const QString &ident, const QString &mimetype = QString());
 
@@ -86,7 +88,6 @@ public Q_SLOTS:
 
 protected:
     void moveUp();
-    void goToFolder(const QString &folder);
     QString mCurrentFolder;
     QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;

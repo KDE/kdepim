@@ -439,3 +439,8 @@ QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
     return QString();
 }
+
+QString BoxStorageService::fileShareRoot(const QVariantMap &variantMap)
+{
+    return QString();
+}

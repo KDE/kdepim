@@ -403,3 +403,8 @@ QString HubicStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
     return QString();
 }
+
+QString HubicStorageService::fileShareRoot(const QVariantMap &variantMap)
+{
+    return QString();
+}

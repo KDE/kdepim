@@ -424,7 +424,7 @@ void DropBoxJob::createFolder(const QString &foldername, const QString &destinat
     }
     QUrl url(mApiPath + QLatin1String("fileops/create_folder"));
     url.addQueryItem(QLatin1String("root"), mRootPath);
-    url.addQueryItem(QLatin1String("path"), foldername );
+    url.addQueryItem(QLatin1String("path"), destination + QLatin1Char('/') + foldername );
     url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey );
     url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
     url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));

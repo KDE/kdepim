@@ -127,6 +127,7 @@ public:
     virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
     virtual QString itemInformation(const QVariantMap &variantMap) = 0;
     virtual QString fileIdentifier(const QVariantMap &variantMap) = 0;
+    virtual QString fileShareRoot(const QVariantMap &variantMap) = 0;
 
     void cancelUploadFile();
     void cancelDownloadFile();

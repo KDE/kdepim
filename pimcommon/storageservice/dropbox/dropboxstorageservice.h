@@ -55,6 +55,7 @@ public:
     void storageServiceCopyFile(const QString &source, const QString &destination);
     void storageServiceCopyFolder(const QString &source, const QString &destination);
     QString fileIdentifier(const QVariantMap &variantMap);
+    QString fileShareRoot(const QVariantMap &variantMap);
     StorageServiceAbstract::Capabilities capabilities() const;
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
     QString itemInformation(const QVariantMap &variantMap);

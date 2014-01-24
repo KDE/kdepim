@@ -57,6 +57,7 @@ public:
     QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data);
     QString itemInformation(const QVariantMap &variantMap);
     QString fileIdentifier(const QVariantMap &variantMap);
+    QString fileShareRoot(const QVariantMap &variantMap);
     QString storageServiceName() const;
 
     KIcon icon() const;

@@ -202,13 +202,15 @@ bool StorageServiceTreeWidgetItem::operator<(const QTreeWidgetItem &other) const
     StorageServiceTreeWidget::ItemType otherType = static_cast<StorageServiceTreeWidget::ItemType>(other.data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::ElementType).toInt());
     if (sourceType == StorageServiceTreeWidget::MoveUpType) {
         return false;
+    } else if (otherType == StorageServiceTreeWidget::MoveUpType) {
+        return false;
     } else if (sourceType == otherType) {
         return text(StorageServiceTreeWidget::ColumnName) < other.text(StorageServiceTreeWidget::ColumnName);
     } else {
         if (sourceType == StorageServiceTreeWidget::Folder) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 }

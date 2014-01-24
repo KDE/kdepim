@@ -439,10 +439,20 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
 QString UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
 {
     qDebug()<<" variantMap "<<variantMap;
-    return QString();
+    QString information;
+    if (variantMap.contains(QLatin1String("is_public"))) {
+        const bool value = variantMap.value(QLatin1String("is_public")).toString() == QLatin1String("true");
+        information = i18n("File is public: %1", value ? i18n("Yes") : i18n("No"));
+    }
+    return information;
 }
 
 QString UbuntuoneStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
+QString UbuntuoneStorageService::fileShareRoot(const QVariantMap &variantMap)
 {
     return QString();
 }

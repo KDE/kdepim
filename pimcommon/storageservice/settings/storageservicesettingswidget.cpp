@@ -135,6 +135,7 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::UbuntuOne);
             type = PimCommon::StorageServiceManager::UbuntuOne;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::UbuntuOne);
+            showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::YouSendIt) & cap);
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::YouSendIt)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::YouSendIt);
             showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::YouSendIt) & cap);
