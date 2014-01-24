@@ -32,6 +32,7 @@ class StorageServiceProgressWidget;
 class StorageServiceWarning;
 class StorageServiceTreeWidget;
 class StorageServiceProgressIndicator;
+class StorageServiceNavigationBar;
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
@@ -81,6 +82,9 @@ private Q_SLOTS:
     void slotDownloadFileDone(const QString &serviceName, const QString &filename);
     void slotUploadFileFailed(const QString &serviceName, const QString &filename);
     void slotDownloadFileFailed(const QString &serviceName, const QString &filename);
+    void slotGoHome();
+    void slotGoToFolder(const QString &folder);
+
 private:
     bool verifyService(const QString &serviceName);
     inline void updateList(const QString &serviceName);
@@ -90,6 +94,7 @@ private:
     StorageServiceTreeWidget *mTreeWidget;
     StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
+    StorageServiceNavigationBar *mStorageServiceNavigationBar;
     PimCommon::StorageServiceProgressWidget *mProgressWidget;
 };
 

@@ -23,6 +23,7 @@
 #include "storageserviceprogressindicator.h"
 #include "storageservicewarning.h"
 #include "storageserviceaccountinfodialog.h"
+#include "storageservicenavigationbar.h"
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/storageservice/widgets/storageserviceprogresswidget.h"
 
@@ -44,10 +45,17 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
       mServiceName(serviceName),
       mStorageService(storageService)
 {
-    mProgressIndicator = new StorageServiceProgressIndicator(this);
-    connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
     QVBoxLayout *vbox = new QVBoxLayout;
     setLayout(vbox);
+
+    mProgressIndicator = new StorageServiceProgressIndicator(this);
+    connect(mProgressIndicator, SIGNAL(updatePixmap(QPixmap)), this, SLOT(slotUpdatePixmap(QPixmap)));
+    mStorageServiceNavigationBar = new StorageServiceNavigationBar(this);
+    connect(mStorageServiceNavigationBar, SIGNAL(goHome()), this, SLOT(slotGoHome()));
+    connect(mStorageServiceNavigationBar, SIGNAL(goToFolder(QString)), this, SLOT(slotGoToFolder(QString)));
+    mStorageServiceNavigationBar->setEnabled(false);
+    vbox->addWidget(mStorageServiceNavigationBar);
+
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
     vbox->addWidget(mTreeWidget);
@@ -98,7 +106,7 @@ void StorageServicePage::connectStorageService()
 
     connect(mStorageService, SIGNAL(listFolderDone(QString,QString)), this, SLOT(slotListFolderDone(QString,QString)));
 
-    connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString, QString)));
+    connect(mStorageService, SIGNAL(createFolderDone(QString,QString)), this, SLOT(slotCreateFolderDone(QString,QString)));
 
     connect(mStorageService, SIGNAL(deleteFolderDone(QString,QString)), this, SLOT(slotDeleteFolderDone(QString,QString)));
 
@@ -243,6 +251,7 @@ PimCommon::StorageServiceAbstract::Capabilities StorageServicePage::capabilities
 void StorageServicePage::slotProgressStateChanged(bool state)
 {
     mTreeWidget->setEnabled(!state);
+    mStorageServiceNavigationBar->setEnabled(!state);
     if (state) {
         mProgressIndicator->startAnimation();
     } else {
@@ -331,4 +340,14 @@ void StorageServicePage::slotUploadFileFailed(const QString &serviceName, const 
         mProgressWidget->hide();
     }
     //TODO inform it.
+}
+
+void StorageServicePage::slotGoHome()
+{
+    mTreeWidget->goToFolder(QString());
+}
+
+void StorageServicePage::slotGoToFolder(const QString &folder)
+{
+    //TODO
 }

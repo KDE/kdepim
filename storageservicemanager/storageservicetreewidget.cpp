@@ -105,8 +105,6 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFileCapabilitity)
                     menu->addAction(i18n("Rename File..."), this, SLOT(slotRenameFile()));
-                if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
-                    menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete File"), this, SLOT(slotDeleteFile()));
                 if (mCapabilities & PimCommon::StorageServiceAbstract::ShareLinkCapability)
                     menu->addAction(i18n("Share File"), this, SLOT(slotShareFile()));
                 act = new QAction(menu);
@@ -114,6 +112,11 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
                     menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
+                act = new QAction(menu);
+                act->setSeparator(true);
+                menu->addAction(act);
+                if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFileCapability)
+                    menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete File"), this, SLOT(slotDeleteFile()));
             } else if (type == StorageServiceTreeWidget::Folder) {
                 if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability)
                     menu->addAction(KIcon(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFolder()));
@@ -124,6 +127,9 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::RenameFolderCapability)
                     menu->addAction(i18n("Rename Folder..."), this, SLOT(slotRenameFolder()));
+                act = new QAction(menu);
+                act->setSeparator(true);
+                menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::DeleteFolderCapability)
                     menu->addAction(KIcon(QLatin1String("edit-delete")), i18n("Delete Folder"), this, SLOT(slotDeleteFolder()));
             }
@@ -200,7 +206,8 @@ void StorageServiceTreeWidget::slotPasteFile()
 void StorageServiceTreeWidget::slotRenameFolder()
 {
     const QString oldFolderName = itemIdentifierSelected();
-    const QString folder = KInputDialog::getText(i18n("Rename Folder Name"), i18n("Folder:"), oldFolderName);
+    const QString name = currentItem()->text(0);
+    const QString folder = KInputDialog::getText(i18n("Rename Folder Name"), i18n("Folder:"), name);
     if (!folder.isEmpty()) {
         if (oldFolderName != folder) {
             mStorageService->renameFolder(oldFolderName, folder);
@@ -211,7 +218,8 @@ void StorageServiceTreeWidget::slotRenameFolder()
 void StorageServiceTreeWidget::slotRenameFile()
 {
     const QString oldFileName = itemIdentifierSelected();
-    const QString filename = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"), oldFileName);
+    const QString name = currentItem()->text(0);
+    const QString filename = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"), name);
     if (!filename.isEmpty()) {
         if (oldFileName != filename) {
             mStorageService->renameFile(oldFileName, filename);
@@ -223,6 +231,7 @@ void StorageServiceTreeWidget::slotCreateFolder()
 {
     const QString folder = KInputDialog::getText(i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
+        qDebug()<<" mCurrentFolder" <<mCurrentFolder;
         mStorageService->createFolder(folder, mCurrentFolder);
     }
 }
@@ -263,8 +272,8 @@ void StorageServiceTreeWidget::slotShareFile()
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         const QString filename = itemIdentifierSelected();
         if (!filename.isEmpty()) {
-            //fixme!
-            mStorageService->shareLink(QLatin1String("root"), filename);
+            const QString rootShareFile = mStorageService->fileShareRoot(itemInformationSelected());
+            mStorageService->shareLink(rootShareFile, filename);
         }
     }
 }
