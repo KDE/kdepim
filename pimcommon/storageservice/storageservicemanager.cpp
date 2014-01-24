@@ -96,6 +96,9 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
             if (i.value()->capabilities() & capability) {
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), menuService);
                 act->setData(i.key());
+                const KIcon icon = i.value()->icon();
+                if (!icon.isNull())
+                    act->setIcon(icon);
                 switch(capability) {
                 case PimCommon::StorageServiceAbstract::NoCapability:
                 case PimCommon::StorageServiceAbstract::UploadFileCapability:
