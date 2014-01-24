@@ -41,12 +41,12 @@ SieveEditorPageWidget::SieveEditorPageWidget(QWidget *parent)
     connect(mSieveEditorWidget, SIGNAL(valueChanged()), this, SLOT(slotValueChanged()));
     vbox->addWidget(mSieveEditorWidget);
     connect(mSieveEditorWidget, SIGNAL(checkSyntax()), this, SLOT(slotCheckSyntaxClicked()));
-    qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
+    //qDebug()<<"SieveEditorPageWidget::SieveEditorPageWidget "<<this;
 }
 
 SieveEditorPageWidget::~SieveEditorPageWidget()
 {
-    qDebug()<<" SieveEditorPageWidget::~SieveEditorPageWidget"<<this;
+    //qDebug()<<" SieveEditorPageWidget::~SieveEditorPageWidget"<<this;
 }
 
 void SieveEditorPageWidget::slotCheckSyntaxClicked()

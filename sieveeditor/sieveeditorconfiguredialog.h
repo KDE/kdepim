@@ -23,7 +23,6 @@
 
 #include <KDialog>
 class QTabWidget;
-class QListWidget;
 class SieveEditorConfigureServerWidget;
 class SieveEditorConfigureDialog : public KDialog
 {
