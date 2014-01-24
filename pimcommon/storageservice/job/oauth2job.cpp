@@ -181,7 +181,7 @@ void OAuth2Job::requestTokenAccess()
         Q_EMIT authorizationFailed(i18n("Authorization canceled."));
         delete mAuthDialog;
         deleteLater();
-    }    
+    }
 }
 
 void OAuth2Job::slotRedirect(const QUrl &url)
@@ -382,7 +382,11 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 break;
             }
         } else {
-            errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            if (!mErrorMsg.isEmpty()) {
+                errorMessage(mActionType, mErrorMsg);
+            } else {
+                errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            }
             deleteLater();
         }
         return;
