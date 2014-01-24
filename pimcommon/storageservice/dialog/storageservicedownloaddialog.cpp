@@ -36,7 +36,9 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
       mStorage(storage)
 {
     setCaption( i18n( "Download File" ) );
-    setButtons( User1 | Cancel );
+
+    setButtons( User1 | Close );
+    setButtonText(User1, i18n("Download"));
 
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;

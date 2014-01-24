@@ -559,6 +559,13 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
+    QFile *file = new QFile(destination+ QLatin1Char('/') + name);
+    if (file->open(QIODevice::WriteOnly)) {
+        //TODO
+        delete file;
+    } else {
+        delete file;
+    }
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();

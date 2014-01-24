@@ -263,7 +263,8 @@ void StorageServiceTreeWidget::slotShareFile()
     if (itemTypeSelected() == StorageServiceTreeWidget::File) {
         const QString filename = itemIdentifierSelected();
         if (!filename.isEmpty()) {
-            //mStorageService->shareLink(filename);
+            //fixme!
+            mStorageService->shareLink(QLatin1String("root"), filename);
         }
     }
 }
