@@ -20,6 +20,7 @@
 #include "pimcommon/storageservice/storageserviceabstract.h"
 #include "pimcommon/storageservice/tests/testsettingsjob.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
+#include "pimcommon/storageservice/dialog/storageservicedownloaddialog.h"
 
 #include <KLocalizedString>
 #include <KFileDialog>
@@ -29,6 +30,8 @@
 #include <QInputDialog>
 #include <QTextEdit>
 #include <QAction>
+#include <QPointer>
+#include <QDir>
 
 
 ServiceTestWidget::ServiceTestWidget(QWidget *parent)
@@ -200,9 +203,13 @@ void ServiceTestWidget::slotCreateServiceFolder()
 
 void ServiceTestWidget::slotDownloadFile()
 {
-    const QString filename = QInputDialog::getText(this,i18n("Filename"), i18n("Filename:"));
-    //TODO we need to use download dialog box
-    mStorageService->downloadFile(filename, QString(), QDir::homePath());
+    const QString destination = QDir::homePath();
+
+    QPointer<PimCommon::StorageServiceDownloadDialog> dlg = new PimCommon::StorageServiceDownloadDialog(mStorageService, destination, this);
+    if (dlg->exec()) {
+        //TODO
+    }
+    delete dlg;
 }
 
 void ServiceTestWidget::updateButtons(PimCommon::StorageServiceAbstract::Capabilities capabilities)

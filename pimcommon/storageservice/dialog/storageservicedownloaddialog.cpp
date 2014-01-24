@@ -28,8 +28,9 @@
 
 using namespace PimCommon;
 
-StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent)
+StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, const QString &destination, QWidget *parent)
     : KDialog(parent),
+      mDestination(destination),
       mStorage(storage)
 {
     setCaption( i18n( "Download File" ) );

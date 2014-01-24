@@ -216,7 +216,7 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities(
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
     cap |= UploadFileCapability;
-    //cap |= DownloadFileCapability;
+    cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
     cap |= DeleteFileCapability;

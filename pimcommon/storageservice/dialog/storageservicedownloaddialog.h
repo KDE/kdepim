@@ -19,16 +19,17 @@
 #define STORAGESERVICEDOWNLOADDIALOG_H
 
 #include <KDialog>
+#include "pimcommon_export.h"
 
 class QTreeWidgetItem;
 namespace PimCommon {
 class StorageServiceAbstract;
 class StorageServiceTreeWidget;
-class StorageServiceDownloadDialog : public KDialog
+class PIMCOMMON_EXPORT StorageServiceDownloadDialog : public KDialog
 {
     Q_OBJECT
 public:
-    explicit StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent=0);
+    explicit StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, const QString &destination, QWidget *parent=0);
     ~StorageServiceDownloadDialog();
 
 private slots:
@@ -36,6 +37,7 @@ private slots:
     void slotDownloadFile();
 
 private:
+    QString mDestination;
     StorageServiceTreeWidget *mTreeWidget;
     PimCommon::StorageServiceAbstract *mStorage;
 };
