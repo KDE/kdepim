@@ -224,6 +224,7 @@ void YouSendItStorageService::storageServicedownloadFile(const QString &name, co
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         YouSendItJob *job = new YouSendItJob(this);

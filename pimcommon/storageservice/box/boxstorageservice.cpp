@@ -120,6 +120,7 @@ void BoxStorageService::storageServicedownloadFile(const QString &name, const QS
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);

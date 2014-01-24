@@ -114,7 +114,6 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
                     menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
-
             } else if (type == StorageServiceTreeWidget::Folder) {
                 if (mCapabilities & PimCommon::StorageServiceAbstract::MoveFolderCapability)
                     menu->addAction(KIcon(QLatin1String("edit-cut")), i18n("Cut"), this, SLOT(slotCutFolder()));
@@ -280,7 +279,8 @@ void StorageServiceTreeWidget::slotDownloadFile()
                 if (destination.isEmpty())
                     return;
             }
-            mStorageService->downloadFile(filename, destination);
+//TODO
+            mStorageService->downloadFile(filename,QString(),  destination);
         }
     }
 }

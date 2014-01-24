@@ -97,6 +97,7 @@ void WebDavStorageService::storageServicedownloadFile(const QString &name, const
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);

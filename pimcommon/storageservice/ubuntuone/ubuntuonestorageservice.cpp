@@ -230,6 +230,7 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &name, co
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);

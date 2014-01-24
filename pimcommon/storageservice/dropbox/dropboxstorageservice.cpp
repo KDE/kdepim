@@ -244,6 +244,7 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &name, cons
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);

@@ -103,7 +103,7 @@ public:
     bool isInProgress() const;
     bool hasUploadOrDownloadInProgress() const;
 
-    virtual void downloadFile(const QString &filename, const QString &destination);
+    virtual void downloadFile(const QString &name, const QString &fileId, const QString &destination);
     virtual void uploadFile(const QString &filename, const QString &destination);
     virtual void accountInfo();
     virtual void createFolder(const QString &foldername, const QString &destination);
@@ -220,7 +220,7 @@ public:
 
     void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
     void setDownloadDestination(const QString &destination) { mDownLoadDestination = destination; }
-
+    void setFileId(const QString &fileid) { mFileId = fileid; }
 
     QString nextActionName() const { return mNextActionFileName; }
     QString nextActionFolder() const { return mNextActionFolder; }
@@ -229,6 +229,7 @@ public:
     QString renameSource() const { return mRenameSource; }
     QString renameDestination() const { return mRenameDestination; }
     QString downloadDestination() const { return mDownLoadDestination; }
+    QString fileId() const { return mFileId; }
 
 private:
     StorageServiceAbstract::ActionType mNextAction;
@@ -239,6 +240,7 @@ private:
     QString mRenameSource;
     QString mRenameDestination;
     QString mDownLoadDestination;
+    QString mFileId;
 };
 
 }
