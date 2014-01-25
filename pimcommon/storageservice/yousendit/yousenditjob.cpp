@@ -410,49 +410,67 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
 
 void YouSendItJob::parseCopyFolder(const QString &data)
 {
-    qDebug()<<" data :"<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
+    QJson::Parser parser;
+    bool ok;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (!parseError(info)) {
+        Q_EMIT copyFolderDone(QString());
+    }
     deleteLater();
 }
 
 void YouSendItJob::parseCopyFile(const QString &data)
 {
-    qDebug()<<" data :"<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
+    QJson::Parser parser;
+    bool ok;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (!parseError(info)) {
+        Q_EMIT copyFileDone(QString());
+    }
     deleteLater();
 }
 
 void YouSendItJob::parseMoveFolder(const QString &data)
 {
-    qDebug()<<" data :"<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
+    QJson::Parser parser;
+    bool ok;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (!parseError(info)) {
+        Q_EMIT moveFolderDone(QString());
+    }
     deleteLater();
 }
 
 void YouSendItJob::parseMoveFile(const QString &data)
 {
-    qDebug()<<" data :"<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
+    QJson::Parser parser;
+    bool ok;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (!parseError(info)) {
+        Q_EMIT moveFileDone(QString());
+    }
     deleteLater();
+}
+
+bool YouSendItJob::parseError(const QMap<QString, QVariant> &info)
+{
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("errorStatus"))) {
+        const QVariantMap map =info.value(QLatin1String("errorStatus")).toMap();
+        if (map.contains(QLatin1String("message"))) {
+            Q_EMIT actionFailed(map.value(QLatin1String("message")).toString());
+            return true;
+        }
+    }
+    return false;
 }
 
 void YouSendItJob::parseRenameFile(const QString &data)
 {
     QJson::Parser parser;
     bool ok;
-
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
-    if (info.contains(QLatin1String("errorStatus"))) {
-        const QVariantMap map =info.value(QLatin1String("errorStatus")).toMap();
-        if (map.contains(QLatin1String("message"))) {
-            Q_EMIT actionFailed(map.value(QLatin1String("message")).toString());
-        }
-    } else {
+    if (!parseError(info)) {
         Q_EMIT renameFileDone(QString());
     }
     deleteLater();
@@ -463,13 +481,7 @@ void YouSendItJob::parseRenameFolder(const QString &data)
     QJson::Parser parser;
     bool ok;
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    qDebug()<<" info"<<info;
-    if (info.contains(QLatin1String("errorStatus"))) {
-        const QVariantMap map =info.value(QLatin1String("errorStatus")).toMap();
-        if (map.contains(QLatin1String("message"))) {
-            Q_EMIT actionFailed(map.value(QLatin1String("message")).toString());
-        }
-    } else {
+    if (!parseError(info)) {
         Q_EMIT renameFolderDone(QString());
     }
     deleteLater();
@@ -511,7 +523,6 @@ void YouSendItJob::parseListFolder(const QString &data)
     Q_EMIT listFolderDone(data);
     deleteLater();
 }
-
 
 void YouSendItJob::parseRequestToken(const QString &data)
 {

@@ -71,6 +71,7 @@ private:
     void parseDownloadFile(const QString &data);
     void parseCopyFile(const QString &data);
     void parseCopyFolder(const QString &data);
+    bool parseError(const QMap<QString, QVariant> &info);
     QString mPassword;
     QString mUsername;
     QString mDefaultUrl;
