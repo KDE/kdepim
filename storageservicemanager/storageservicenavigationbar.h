@@ -35,8 +35,8 @@ Q_SIGNALS:
     void goToFolder(const QString &parent);
 
 private:
-    QAction *mGoNext;
-    QAction *mGoPrevious;
+    QAction *mGoBack;
+    QAction *mGoForward;
 };
 
 #endif // STORAGESERVICENAVIGATIONBAR_H
