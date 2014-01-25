@@ -340,6 +340,7 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::MoveFile:
         case PimCommon::StorageServiceAbstract::CopyFile:
         case PimCommon::StorageServiceAbstract::CopyFolder:
+        case PimCommon::StorageServiceAbstract::ShareLink:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
@@ -402,11 +403,26 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CopyFolder:
         parseCopyFolder(data);
         break;
+    case PimCommon::StorageServiceAbstract::ShareLink:
+        parseShareLink(data);
+        break;
     default:
         qDebug()<<" Action Type unknown:"<<mActionType;
         deleteLater();
         break;
     }
+}
+
+void YouSendItJob::parseShareLink(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (!parseError(info)) {
+        //TODO
+        Q_EMIT shareLinkDone(QString());
+    }
+    deleteLater();
 }
 
 void YouSendItJob::parseCopyFolder(const QString &data)

@@ -266,8 +266,8 @@ void BoxJob::shareLink(const QString &root, const QString &path)
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
     QUrl url;
-    QString fileId; //TODO
-    url.setUrl(mApiUrl + mFileInfoPath + fileId);
+    qDebug()<<" path"<<path;
+    url.setUrl(mApiUrl + mFileInfoPath + path);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
@@ -301,11 +301,13 @@ void BoxJob::parseDeleteFile(const QString &data)
 
 void BoxJob::parseCreateServiceFolder(const QString &data)
 {
+#if 0
     QJson::Parser parser;
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
+#endif
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
@@ -326,7 +328,9 @@ void BoxJob::parseCreateFolder(const QString &data)
 void BoxJob::parseUploadFile(const QString &data)
 {
     const QString folderName = parseNameInfo(data);
+    qDebug()<<" data"<<data;
     Q_EMIT uploadFileDone(folderName);
+    //shareLink(QString());
     deleteLater();
 }
 
@@ -383,4 +387,12 @@ QString BoxJob::parseNameInfo(const QString &data)
         filename = info.value(QLatin1String("name")).toString();
     }
     return filename;
+}
+
+void BoxJob::parseShareLink(const QString &data)
+{
+    //TODO
+    const QString filename = parseNameInfo(data);
+    Q_EMIT shareLinkDone(filename);
+    deleteLater();
 }

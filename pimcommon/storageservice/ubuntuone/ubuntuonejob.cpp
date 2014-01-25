@@ -229,6 +229,7 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::MoveFile:
         case PimCommon::StorageServiceAbstract::CopyFile:
         case PimCommon::StorageServiceAbstract::CopyFolder:
+        case PimCommon::StorageServiceAbstract::ShareLink:
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;

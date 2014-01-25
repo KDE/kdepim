@@ -73,6 +73,7 @@ protected:
     virtual void parseRenameFolder(const QString &data);
     virtual void parseMoveFolder(const QString &data);
     virtual void parseMoveFile(const QString &data);
+    virtual void parseShareLink(const QString &data);
     virtual void refreshToken();
     QString mServiceUrl;
     QUrl mAuthUrl;
