@@ -154,10 +154,6 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
-            default:
-                qDebug()<<" Action Type unknown:"<<mActionType;
-                deleteLater();
-                break;
             }
         } else {
             errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
@@ -219,8 +215,6 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CopyFolder:
         parseCopyFolder(data);
         break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
     }
 }
 

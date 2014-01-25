@@ -233,10 +233,6 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
-        default:
-            qDebug()<<" Action Type unknown:"<<mActionType;
-            deleteLater();
-            break;
         }
         return;
     }
@@ -292,12 +288,17 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CopyFolder:
         parseCopyFolder(data);
         break;
-        Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-        deleteLater();
+    case PimCommon::StorageServiceAbstract::ShareLink:
+        parseShareLink(data);
         break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::parseShareLink(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
 }
 
 void UbuntuOneJob::parseCopyFolder(const QString &data)

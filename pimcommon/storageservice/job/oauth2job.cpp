@@ -376,11 +376,6 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
-            default:
-                qDebug()<<" Action Type unknown:"<<mActionType;
-                Q_EMIT actionFailed(QLatin1String("Action Type Unknown"));
-                deleteLater();
-                break;
             }
         } else {
             if (!mErrorMsg.isEmpty()) {
@@ -447,11 +442,6 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
         break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-        deleteLater();
-        break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
-        Q_EMIT actionFailed(QLatin1String("Action type unknown"));
         deleteLater();
         break;
     }

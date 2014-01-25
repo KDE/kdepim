@@ -75,6 +75,7 @@ private:
     void parseMoveFile(const QString &data);
     void parseDeleteFile(const QString &data);
     void parseDownloadFile(const QString &data);
+    void parseShareLink(const QString &data);
     QString mCustomerSecret;
     QString mToken;
     QString mCustomerKey;

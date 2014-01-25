@@ -344,10 +344,6 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
             errorMessage(mActionType, errorStr);
             deleteLater();
             break;
-        default:
-            qDebug()<<" Action Type unknown:"<<mActionType;
-            deleteLater();
-            break;
         }
         return;
     }
@@ -405,10 +401,6 @@ void YouSendItJob::slotSendDataFinished(QNetworkReply *reply)
         break;
     case PimCommon::StorageServiceAbstract::ShareLink:
         parseShareLink(data);
-        break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
-        deleteLater();
         break;
     }
 }

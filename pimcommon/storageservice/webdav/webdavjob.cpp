@@ -156,12 +156,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::CopyFile:
             case PimCommon::StorageServiceAbstract::CopyFolder:
             case PimCommon::StorageServiceAbstract::ShareLink:
-
                 errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            default:
-                qDebug()<<" Action Type unknown:"<<mActionType;
                 deleteLater();
                 break;
             }
@@ -203,12 +198,10 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CopyFile:
     case PimCommon::StorageServiceAbstract::CopyFolder:
     case PimCommon::StorageServiceAbstract::ShareLink:
+    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
 
         deleteLater();
         break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
-        deleteLater();
     }
 }
 
