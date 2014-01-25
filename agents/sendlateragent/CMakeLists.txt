@@ -18,7 +18,7 @@ set(sendlaterlib_SRCS
 )
 
 kde4_add_kcfg_files(sendlaterlib_SRCS
-    sendlateragentsettings.kcfgc 
+    settings/sendlateragentsettings.kcfgc 
   )
 
 kde4_add_ui_files(sendlaterlib_SRCS ui/sendlaterwidget.ui)

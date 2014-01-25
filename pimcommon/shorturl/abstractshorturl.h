@@ -32,6 +32,7 @@ public:
     explicit AbstractShortUrl(QObject *parent=0);
     ~AbstractShortUrl();
 
+    virtual QString shortUrlName() const = 0;
     virtual void shortUrl(const QString &url);
     virtual void start() = 0;
 

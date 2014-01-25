@@ -24,7 +24,10 @@ set(libpimcommon_shorturl_SRCS
 set(libpimcommon_storageservice_SRCS
   storageservice/storageserviceabstract.cpp
   storageservice/storageservicemanager.cpp
-  storageservice/oauth2job.cpp
+
+  storageservice/job/oauth2job.cpp
+  storageservice/job/storageserviceabstractjob.cpp
+
   storageservice/storageservicejobconfig.cpp
 
 
@@ -51,7 +54,6 @@ set(libpimcommon_storageservice_SRCS
   storageservice/gdrive/gdrivestorageservice.cpp
   storageservice/gdrive/gdrivejob.cpp
 
-  storageservice/storageserviceabstractjob.cpp
 
   storageservice/yousendit/yousenditjob.cpp
   storageservice/yousendit/yousenditstorageservice.cpp
@@ -70,6 +72,7 @@ set(libpimcommon_storageservice_SRCS
 
   storageservice/widgets/storageservicetreewidget.cpp
   storageservice/widgets/storageserviceprogresswidget.cpp
+  storageservice/widgets/storageserviceprogressdialog.cpp
  
   storageservice/tests/testsettingsjob.cpp
 )

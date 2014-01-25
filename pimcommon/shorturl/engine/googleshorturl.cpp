@@ -46,6 +46,11 @@ void GoogleShortUrl::start()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotErrorFound(QNetworkReply::NetworkError)));
 }
 
+QString GoogleShortUrl::shortUrlName() const
+{
+    return QLatin1String("Google");
+}
+
 void GoogleShortUrl::slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error)
 {
     reply->ignoreSslErrors(error);

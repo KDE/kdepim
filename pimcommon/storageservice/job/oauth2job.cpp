@@ -62,7 +62,7 @@ void OAuth2Job::createServiceFolder()
     deleteLater();
 }
 
-QNetworkReply * OAuth2Job::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply * OAuth2Job::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
@@ -181,7 +181,7 @@ void OAuth2Job::requestTokenAccess()
         Q_EMIT authorizationFailed(i18n("Authorization canceled."));
         delete mAuthDialog;
         deleteLater();
-    }    
+    }
 }
 
 void OAuth2Job::slotRedirect(const QUrl &url)
@@ -372,17 +372,17 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::MoveFile:
             case PimCommon::StorageServiceAbstract::CopyFile:
             case PimCommon::StorageServiceAbstract::CopyFolder:
+            case PimCommon::StorageServiceAbstract::ShareLink:
                 errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            default:
-                qDebug()<<" Action Type unknown:"<<mActionType;
-                Q_EMIT actionFailed(QLatin1String("Action Type Unknown"));
                 deleteLater();
                 break;
             }
         } else {
-            errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            if (!mErrorMsg.isEmpty()) {
+                errorMessage(mActionType, mErrorMsg);
+            } else {
+                errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
+            }
             deleteLater();
         }
         return;
@@ -437,13 +437,11 @@ void OAuth2Job::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::MoveFile:
         parseMoveFile(data);
         break;
+    case PimCommon::StorageServiceAbstract::ShareLink:
+        parseShareLink(data);
+        break;
     case PimCommon::StorageServiceAbstract::DownLoadFile:
         Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-        deleteLater();
-        break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
-        Q_EMIT actionFailed(QLatin1String("Action type unknown"));
         deleteLater();
         break;
     }
@@ -515,6 +513,13 @@ void OAuth2Job::parseMoveFolder(const QString &data)
 void OAuth2Job::parseMoveFile(const QString &data)
 {
     Q_EMIT moveFileDone(data);
+    deleteLater();
+}
+
+void OAuth2Job::parseShareLink(const QString &data)
+{
+    //TODO reimplement in derivated function
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
 

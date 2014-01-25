@@ -111,6 +111,7 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mCreateFolder = ac->addAction(QLatin1String("create_folder"), mStorageServiceTabWidget, SLOT(slotCreateFolder()));
     mCreateFolder->setText(i18n("Create Folder..."));
+    mCreateFolder->setIcon(KIcon(QLatin1String("folder-new")));
 
     mRefreshList = ac->addAction(QLatin1String("refresh_list"), mStorageServiceTabWidget, SLOT(slotRefreshList()));
     mRefreshList->setText(i18n("Refresh List"));
@@ -124,6 +125,7 @@ void StorageServiceManagerMainWindow::setupActions()
 
     mDeleteFile = ac->addAction(QLatin1String("delete_file"), mStorageServiceTabWidget, SLOT(slotDeleteFile()));
     mDeleteFile->setText(i18n("Delete File..."));
+    mDeleteFile->setIcon(KIcon(QLatin1String("edit-delete")));
 
     mDownloadFile = ac->addAction(QLatin1String("download_file"), mStorageServiceTabWidget, SLOT(slotDownloadFile()));
     mDownloadFile->setText(i18n("Download File..."));

@@ -35,7 +35,6 @@ public:
     bool uploadFileToService();
 
 Q_SIGNALS:
-    void moveUp();
     void uploadFile();
 
 public Q_SLOTS:
@@ -52,7 +51,6 @@ protected:
 private Q_SLOTS:
     void slotContextMenu(const QPoint &pos);
     void slotMoveUp();
-    void slotItemDoubleClicked(QTreeWidgetItem *item, int column);
     void slotRenameFile();
     void slotRenameFolder();
     void slotGeneralPaletteChanged();

@@ -88,7 +88,6 @@ void StorageServiceConfigureDialog::readConfig()
     if ( size.isValid() ) {
         resize( size );
     }
-    //TODO load default download path
 }
 
 void StorageServiceConfigureDialog::writeConfig()

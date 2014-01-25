@@ -229,11 +229,8 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
         case PimCommon::StorageServiceAbstract::MoveFile:
         case PimCommon::StorageServiceAbstract::CopyFile:
         case PimCommon::StorageServiceAbstract::CopyFolder:
+        case PimCommon::StorageServiceAbstract::ShareLink:
             errorMessage(mActionType, errorStr);
-            deleteLater();
-            break;
-        default:
-            qDebug()<<" Action Type unknown:"<<mActionType;
             deleteLater();
             break;
         }
@@ -291,12 +288,17 @@ void UbuntuOneJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CopyFolder:
         parseCopyFolder(data);
         break;
-        Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-        deleteLater();
+    case PimCommon::StorageServiceAbstract::ShareLink:
+        parseShareLink(data);
         break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
     }
+}
+
+void UbuntuOneJob::parseShareLink(const QString &data)
+{
+    qDebug()<<" data"<<data;
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
 }
 
 void UbuntuOneJob::parseCopyFolder(const QString &data)
@@ -396,10 +398,30 @@ void UbuntuOneJob::createServiceFolder()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *UbuntuOneJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *UbuntuOneJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
+#if 0
+    QFile *file = new QFile(destination);
+    if (file->exists()) {
+        mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+        mError = false;
+        if (file->open(QIODevice::WriteOnly)) {
+            //TODO
+            delete file;
+
+        } else {
+            delete file;
+        }
+    }
+    qDebug()<<" upload file not implemented";
+    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    deleteLater();
+    return 0;
+
+
+#endif
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
     return 0;
@@ -410,7 +432,7 @@ void UbuntuOneJob::deleteFile(const QString &filename)
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
 
-    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/") + filename));
+    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/Ubuntu One/") + filename));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
     const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
@@ -428,8 +450,18 @@ void UbuntuOneJob::deleteFolder(const QString &foldername)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFolder;
     mError = false;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
+    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/Ubuntu One/") + foldername));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
+
+    postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
+    postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
+    postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
+    QNetworkReply *reply = mNetworkAccessManager->deleteResource(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void UbuntuOneJob::renameFolder(const QString &source, const QString &destination)
@@ -446,11 +478,19 @@ void UbuntuOneJob::renameFile(const QString &oldName, const QString &newName)
 {
     mActionType = PimCommon::StorageServiceAbstract::RenameFile;
     mError = false;
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //TODO
-    deleteLater();
+    QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/Ubuntu One/") + oldName));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    const QString mAccessOauth = mCustomerSecret + QLatin1String("%26") + mTokenSecret;
 
+    postData.addQueryItem(QLatin1String("oauth_signature"), mAccessOauth);
+    postData.addQueryItem(QLatin1String("token"), mToken);
+    postData.addQueryItem(QLatin1String("token_secret"), mTokenSecret);
+    postData.addQueryItem(QLatin1String("consumer_secret"), mCustomerSecret);
+    postData.addQueryItem(QLatin1String("consumer_key"), mCustomerKey);
+    QByteArray t("{\"path\":dd}");
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void UbuntuOneJob::moveFolder(const QString &source, const QString &destination)

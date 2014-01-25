@@ -19,7 +19,7 @@
 #define BoxJob_H
 
 #include <QObject>
-#include "storageservice/oauth2job.h"
+#include "storageservice/job/oauth2job.h"
 namespace PimCommon {
 class BoxJob : public PimCommon::OAuth2Job
 {
@@ -39,8 +39,7 @@ public:
     void listFolder(const QString &folder);
     void accountInfo();
     void createFolder(const QString &foldername, const QString &destination);
-    void shareLink(const QString &fileId);
-    void shareLink(const QString &root, const QString &path);
+    void shareLink(const QString &root, const QString &fileId);
     void copyFile(const QString &source, const QString &destination);
     void copyFolder(const QString &source, const QString &destination);
 
@@ -58,6 +57,8 @@ private:
     void parseRenameFolder(const QString &data);
     void parseMoveFolder(const QString &data);
     void parseMoveFile(const QString &data);
+    void parseShareLink(const QString &data);
+    QString parseNameInfo(const QString &data);
 };
 }
 

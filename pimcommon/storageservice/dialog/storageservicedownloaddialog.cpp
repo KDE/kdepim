@@ -17,10 +17,12 @@
 
 #include "storageservicedownloaddialog.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
-
+#include "storageservice/widgets/storageserviceprogresswidget.h"
 #include "storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
+#include <KGlobal>
+#include <KSharedConfig>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -28,12 +30,15 @@
 
 using namespace PimCommon;
 
-StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, QWidget *parent)
+StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageServiceAbstract *storage, const QString &destination, QWidget *parent)
     : KDialog(parent),
+      mDestination(destination),
       mStorage(storage)
 {
     setCaption( i18n( "Download File" ) );
-    setButtons( Ok | Cancel );
+
+    setButtons( User1 | Close );
+    setButtonText(User1, i18n("Download"));
 
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
@@ -42,22 +47,62 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
     vbox->addWidget(lab);
 
     mTreeWidget = new StorageServiceTreeWidget(storage);
-    mTreeWidget->refreshList();
-    connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
+
 
     vbox->addWidget(mTreeWidget);
-
+    mProgressWidget = new StorageServiceProgressWidget;
+    vbox->addWidget(mProgressWidget);
+    mProgressWidget->hide();
     w->setLayout(vbox);
     setMainWidget(w);
-    enableButtonOk(false);
+    enableButton(User1, false);
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDownloadFile()));
+    connect(mStorage, SIGNAL(listFolderDone(QString,QString)), mTreeWidget, SLOT(slotListFolderDone(QString,QString)));
+    connect(mStorage, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownfileDone(QString,QString)));
+    connect(mStorage, SIGNAL(downLoadFileFailed(QString,QString)), this, SLOT(slotDownfileFailed(QString,QString)));
+    connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
+    mTreeWidget->refreshList();
+    readConfig();
 }
 
 StorageServiceDownloadDialog::~StorageServiceDownloadDialog()
 {
+    writeConfig();
+}
 
+void StorageServiceDownloadDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "StorageServiceDownloadDialog" );
+    const QSize size = group.readEntry( "Size", QSize(600, 400) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void StorageServiceDownloadDialog::writeConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    KConfigGroup group = config->group( QLatin1String("StorageServiceDownloadDialog") );
+    group.writeEntry( "Size", size() );
 }
 
 void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
 {
-    enableButtonOk(item && (mTreeWidget->type(item) == StorageServiceTreeWidget::File));
+    enableButton(User1, (item && (mTreeWidget->type(item) == StorageServiceTreeWidget::File)));
+}
+
+void StorageServiceDownloadDialog::slotDownloadFile()
+{
+    //TODO mStorage->downloadFile();
+}
+
+void StorageServiceDownloadDialog::slotDownfileDone(const QString &serviceName, const QString &filename)
+{
+    //TODO
+}
+
+void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName, const QString &filename)
+{
+    //TODO
 }

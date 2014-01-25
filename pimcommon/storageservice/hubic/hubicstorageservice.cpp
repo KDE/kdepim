@@ -156,7 +156,7 @@ void HubicStorageService::storageServiceuploadFile(const QString &filename, cons
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
         mUploadReply = job->uploadFile(filename,destination);
     }
@@ -225,12 +225,13 @@ QString HubicStorageService::storageServiceName() const
     return serviceName();
 }
 
-void HubicStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void HubicStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mRefreshToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionName(filename);
-        mNextAction->setDownloadDestination(filename);
+        mNextAction->setNextActionName(name);
+        mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         HubicJob *job = new HubicJob(this);
@@ -238,7 +239,7 @@ void HubicStorageService::storageServicedownloadFile(const QString &filename, co
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        mDownloadReply = job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
 
@@ -394,6 +395,16 @@ QString HubicStorageService::fillListWidget(StorageServiceTreeWidget *listWidget
 }
 
 QString HubicStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
+QString HubicStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
+QString HubicStorageService::fileShareRoot(const QVariantMap &variantMap)
 {
     return QString();
 }

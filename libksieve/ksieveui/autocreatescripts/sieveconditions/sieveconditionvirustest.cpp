@@ -61,6 +61,7 @@ QWidget *SieveConditionVirusTest::createParamWidget( QWidget *parent ) const
     spinbox->setMaximum(5);
     spinbox->setMinimum(0);
     spinbox->setObjectName(QLatin1String("value"));
+    connect(spinbox, SIGNAL(valueChanged(int)), this, SIGNAL(valueChanged()));
     lay->addWidget(spinbox);
     return w;
 }

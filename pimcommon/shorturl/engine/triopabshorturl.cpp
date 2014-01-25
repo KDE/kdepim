@@ -39,6 +39,11 @@ void TriopabShortUrl::start()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotErrorFound(QNetworkReply::NetworkError)));
 }
 
+QString TriopabShortUrl::shortUrlName() const
+{
+    return QLatin1String("to.ly");
+}
+
 void TriopabShortUrl::slotShortUrlFinished(QNetworkReply *reply)
 {
     reply->deleteLater();

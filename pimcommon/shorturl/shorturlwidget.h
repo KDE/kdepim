@@ -26,7 +26,7 @@
 class KLineEdit;
 class KToggleAction;
 class QPushButton;
-
+class QLabel;
 namespace KPIMUtils {
 class ProgressIndicatorLabel;
 }
@@ -66,6 +66,7 @@ Q_SIGNALS:
 
 private:
     void loadEngine();
+    QLabel *mShorturlServiceName;
     KLineEdit *mOriginalUrl;
     KLineEdit *mShortUrl;
     QPushButton *mConvertButton;

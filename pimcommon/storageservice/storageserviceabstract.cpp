@@ -37,6 +37,12 @@ bool StorageServiceAbstract::hasUploadOrDownloadInProgress() const
     return (mUploadReply || mDownloadReply);
 }
 
+void StorageServiceAbstract::cancelUploadDownloadFile()
+{
+    cancelUploadFile();
+    cancelDownloadFile();
+}
+
 void StorageServiceAbstract::cancelUploadFile()
 {
     if (mUploadReply) {
@@ -62,14 +68,14 @@ void StorageServiceAbstract::changeProgressState(bool state)
     Q_EMIT inProgress(state);
 }
 
-void StorageServiceAbstract::downloadFile(const QString &filename, const QString &destination)
+void StorageServiceAbstract::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";
         return;
     }
     changeProgressState(true);
-    storageServicedownloadFile(filename, destination);
+    storageServicedownloadFile(name, fileId, destination);
 }
 
 void StorageServiceAbstract::uploadFile(const QString &filename, const QString &destination)
@@ -252,7 +258,7 @@ void StorageServiceAbstract::executeNextAction()
         storageServicecreateServiceFolder();
         break;
     case DownLoadFile:
-        storageServicedownloadFile(mNextAction->nextActionName(), mNextAction->downloadDestination());
+        storageServicedownloadFile(mNextAction->nextActionName(), mNextAction->fileId(), mNextAction->downloadDestination());
         break;
     case DeleteFile:
         storageServicedeleteFile(mNextAction->nextActionName());
@@ -312,9 +318,9 @@ void StorageServiceAbstract::slotShareLinkDone(const QString &url)
     changeProgressState(false);
 }
 
-void StorageServiceAbstract::slotUploadFileProgress(qint64 done, qint64 total)
+void StorageServiceAbstract::slotuploadDownloadFileProgress(qint64 done, qint64 total)
 {
-    Q_EMIT uploadFileProgress(storageServiceName(), done, total);
+    Q_EMIT uploadDownloadFileProgress(storageServiceName(), done, total);
     changeProgressState(false);
 }
 

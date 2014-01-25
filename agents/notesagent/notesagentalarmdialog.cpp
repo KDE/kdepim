@@ -116,7 +116,6 @@ void NotesAgentAlarmDialog::writeConfig()
     grp.sync();
 }
 
-
 void NotesAgentAlarmDialog::addListAlarm(const Akonadi::Item::List &lstAlarm)
 {
     mListWidget->setNotes(lstAlarm);
@@ -133,7 +132,7 @@ void NotesAgentAlarmDialog::slotItemDoubleClicked(QListWidgetItem *item)
 void NotesAgentAlarmDialog::slotShowNote()
 {
     //deleted on close
-    Akonadi::Item::Id id = mListWidget->currentItemId();
+    const Akonadi::Item::Id id = mListWidget->currentItemId();
     if (id!=-1) {
         NotesAgentNoteDialog *dlg = new NotesAgentNoteDialog;
         dlg->setNoteId(id);
@@ -144,7 +143,7 @@ void NotesAgentAlarmDialog::slotShowNote()
 void NotesAgentAlarmDialog::slotRemoveAlarm()
 {
     if (KMessageBox::Yes == KMessageBox::warningYesNo(this, i18n("Remove Alarm"), i18n("Are you sure to remove alarm?")) ) {
-        Akonadi::Item::Id id = mListWidget->currentItemId();
+        const Akonadi::Item::Id id = mListWidget->currentItemId();
         if (id!=-1) {
             Akonadi::Item item(id);
             Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item, this );
@@ -211,7 +210,7 @@ void NotesAgentAlarmDialog::slotFetchAlarmItem(KJob *job)
             if (dlg->exec()) {
                 attr->setDateTime(dlg->alarm());
                 Akonadi::ItemModifyJob *modify = new Akonadi::ItemModifyJob(item);
-                connect( modify, SIGNAL(result(KJob*)), SLOT(slotModifyItem(KJob*)) );
+                connect(modify, SIGNAL(result(KJob*)), SLOT(slotModifyItem(KJob*)));
             }
             delete dlg;
         }

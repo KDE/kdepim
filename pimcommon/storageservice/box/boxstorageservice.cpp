@@ -114,19 +114,20 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
     }
 }
 
-void BoxStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void BoxStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionName(filename);
-        mNextAction->setDownloadDestination(filename);
+        mNextAction->setNextActionName(name);
+        mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        mDownloadReply = job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
 
@@ -313,7 +314,7 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         mUploadReply = job->uploadFile(filename, destination);
     }
 }
@@ -348,7 +349,7 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
     cap |= DeleteFolderCapability;
     cap |= ListFolderCapability;
     cap |= DeleteFileCapability;
-    //cap |= ShareLinkCapability;
+    cap |= ShareLinkCapability;
     cap |= RenameFolderCapability;
     cap |= RenameFileCapabilitity;
     cap |= MoveFileCapability;
@@ -395,7 +396,7 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    //qDebug()<<" info "<<info;
+    qDebug()<<" info "<<info;
     listWidget->createMoveUpItem();
     QString parentId;
     if (info.contains(QLatin1String("id"))) {
@@ -431,5 +432,15 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
 QString BoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
     qDebug()<<" variantMap" <<variantMap;
+    return QString();
+}
+
+QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
+QString BoxStorageService::fileShareRoot(const QVariantMap &variantMap)
+{
     return QString();
 }

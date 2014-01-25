@@ -31,6 +31,7 @@
 #include <KFileDialog>
 #include <KInputDialog>
 #include <KActionMenu>
+#include <KMessageBox>
 
 #include <QMenu>
 
@@ -95,6 +96,9 @@ KActionMenu *StorageServiceManager::menuWithCapability(PimCommon::StorageService
             if (i.value()->capabilities() & capability) {
                 QAction *act = new QAction(/*serviceToI18n(*/i.key(), menuService);
                 act->setData(i.key());
+                const KIcon icon = i.value()->icon();
+                if (!icon.isNull())
+                    act->setIcon(icon);
                 switch(capability) {
                 case PimCommon::StorageServiceAbstract::NoCapability:
                 case PimCommon::StorageServiceAbstract::UploadFileCapability:
@@ -136,13 +140,12 @@ void StorageServiceManager::slotShareFile()
         if (mListService.contains(type)) {
             StorageServiceAbstract *service = mListService.value(type);
             if (service->hasUploadOrDownloadInProgress()) {
-                //KMessageBox::
-                //TODO
+                KMessageBox::information(0, i18n("There is still an upload in progress."));
             } else {
                 const QString fileName = KFileDialog::getOpenFileName( QString(), QString(), 0, i18n("File to upload") );
                 if (!fileName.isEmpty()) {
                     defaultConnect(service);
-                    connect(service,SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
+                    connect(service,SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), Qt::UniqueConnection);
                     connect(service,SIGNAL(uploadFileDone(QString,QString)), this, SIGNAL(uploadFileDone(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(uploadFileFailed(QString,QString)), this, SIGNAL(uploadFileFailed(QString,QString)), Qt::UniqueConnection);
                     connect(service,SIGNAL(shareLinkDone(QString,QString)), this, SIGNAL(shareLinkDone(QString,QString)), Qt::UniqueConnection);

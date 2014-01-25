@@ -1,0 +1,6 @@
+1.0:
+----
+- Add wallet support
+- Remove page service when we remove a service.
+- Add multi selection
+

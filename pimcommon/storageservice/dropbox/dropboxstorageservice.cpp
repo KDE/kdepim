@@ -18,6 +18,7 @@
 #include "dropboxstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
+#include "dropboxutil.h"
 #include "dropboxjob.h"
 
 #include <qjson/parser.h>
@@ -171,7 +172,7 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename, co
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
-        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
         mUploadReply = job->uploadFile(filename, destination);
     }
@@ -215,7 +216,7 @@ StorageServiceAbstract::Capabilities DropBoxStorageService::serviceCapabilities(
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
     cap |= UploadFileCapability;
-    //cap |= DownloadFileCapability;
+    cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
     cap |= DeleteFileCapability;
@@ -237,12 +238,13 @@ QString DropBoxStorageService::storageServiceName() const
     return serviceName();
 }
 
-void DropBoxStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void DropBoxStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionName(filename);
-        mNextAction->setDownloadDestination(filename);
+        mNextAction->setNextActionName(name);
+        mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         DropBoxJob *job = new DropBoxJob(this);
@@ -250,7 +252,7 @@ void DropBoxStorageService::storageServicedownloadFile(const QString &filename, 
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        job->downloadFile(filename, destination);
+        job->downloadFile(name, fileId, destination);
     }
 }
 
@@ -374,6 +376,19 @@ void DropBoxStorageService::storageServiceCopyFolder(const QString &source, cons
     }
 }
 
+QString DropBoxStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
+QString DropBoxStorageService::fileShareRoot(const QVariantMap &variantMap)
+{
+    if (variantMap.contains(QLatin1String("root"))) {
+        return variantMap.value(QLatin1String("root")).toString();
+    }
+    return QString();
+}
+
 StorageServiceAbstract::Capabilities DropBoxStorageService::capabilities() const
 {
     return serviceCapabilities();
@@ -419,12 +434,19 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
                     QString mimetype;
                     if (qwer.contains(QLatin1String("mime_type"))) {
                         mimetype = qwer.value(QLatin1String("mime_type")).toString();
-                        //qDebug()<<" mimetype"<<mimetype;
                     }
                     item = listWidget->addFile(name, name, mimetype);
                     if (qwer.contains(QLatin1String("bytes"))) {
                         item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
                     }
+                }
+                if (qwer.contains(QLatin1String("client_mtime"))) {
+                    QString tmp = qwer.value(QLatin1String("client_mtime")).toString();
+                    item->setDateCreated(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
+                }
+                if (qwer.contains(QLatin1String("modified"))) {
+                    QString tmp = qwer.value(QLatin1String("modified")).toString();
+                    item->setLastModification(PimCommon::DropBoxUtil::convertToDateTime( tmp ));
                 }
                 item->setStoreInfo(qwer);
             }
@@ -435,6 +457,7 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
 
 QString DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
 {
+    qDebug()<<" variantMap "<<variantMap;
     return QString();
 }
 

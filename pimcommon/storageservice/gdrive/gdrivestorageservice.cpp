@@ -114,12 +114,13 @@ void GDriveStorageService::storageServiceShareLink(const QString &root, const QS
     }
 }
 
-void GDriveStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void GDriveStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mToken.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionName(filename);
-        mNextAction->setDownloadDestination(filename);
+        mNextAction->setNextActionName(name);
+        mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         GDriveJob *job = new GDriveJob(this);
@@ -127,7 +128,7 @@ void GDriveStorageService::storageServicedownloadFile(const QString &filename, c
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        mDownloadReply = job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
 
@@ -319,7 +320,7 @@ void GDriveStorageService::storageServiceuploadFile(const QString &filename, con
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
         mUploadReply = job->uploadFile(filename, destination);
     }
@@ -369,6 +370,17 @@ StorageServiceAbstract::Capabilities GDriveStorageService::serviceCapabilities()
 QString GDriveStorageService::storageServiceName() const
 {
     return serviceName();
+}
+
+QString GDriveStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    //TODO
+    return QString();
+}
+
+QString GDriveStorageService::fileShareRoot(const QVariantMap &variantMap)
+{
+    return QString();
 }
 
 KIcon GDriveStorageService::icon() const

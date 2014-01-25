@@ -46,7 +46,7 @@ public:
     void removeConfig();
     void storageServiceauthentication();
     void storageServiceShareLink(const QString &root, const QString &path);
-    void storageServicedownloadFile(const QString &filename, const QString &destination);
+    void storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination);
     void storageServicedeleteFile(const QString &filename);
     void storageServicedeleteFolder(const QString &foldername);
     void storageServiceRenameFolder(const QString &source, const QString &destination);
@@ -57,6 +57,8 @@ public:
     void storageServiceCopyFolder(const QString &source, const QString &destination);
     QString itemInformation(const QVariantMap &variantMap);
     QString storageServiceName() const;
+    QString fileIdentifier(const QVariantMap &variantMap);
+    QString fileShareRoot(const QVariantMap &variantMap);
     KIcon icon() const;
     StorageServiceAbstract::Capabilities capabilities() const;
     void storageServicecreateServiceFolder();

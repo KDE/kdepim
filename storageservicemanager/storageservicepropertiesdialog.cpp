@@ -21,6 +21,7 @@
 #include "storageservicepropertiesdialog.h"
 
 #include <KLocalizedString>
+#include <KSharedConfig>
 
 #include <QLabel>
 
@@ -32,11 +33,12 @@ StorageServicePropertiesDialog::StorageServicePropertiesDialog(QWidget *parent)
     setButtons( Close );
     mInformation = new QLabel;
     setMainWidget(mInformation);
+    readConfig();
 }
 
 StorageServicePropertiesDialog::~StorageServicePropertiesDialog()
 {
-
+    writeConfig();
 }
 
 void StorageServicePropertiesDialog::setInformation(const QString &info)
@@ -44,3 +46,19 @@ void StorageServicePropertiesDialog::setInformation(const QString &info)
     mInformation->setText(info);
 }
 
+void StorageServicePropertiesDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "StorageServicePropertiesDialog" );
+    const QSize size = group.readEntry( "Size", QSize(300, 200) );
+    if ( size.isValid() ) {
+        resize( size );
+    }
+}
+
+void StorageServicePropertiesDialog::writeConfig()
+{
+    KSharedConfig::Ptr config = KGlobal::config();
+
+    KConfigGroup group = config->group( QLatin1String("StorageServicePropertiesDialog") );
+    group.writeEntry( "Size", size() );
+}

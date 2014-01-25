@@ -159,6 +159,7 @@ SelectHeaderTypeComboBox::SelectHeaderTypeComboBox(bool onlyEnvelopType, QWidget
     //TODO add completion
     initialize(onlyEnvelopType);
     connect(this, SIGNAL(activated(QString)), SLOT(slotSelectItem(QString)));
+    connect(this, SIGNAL(textChanged(QString)), SIGNAL(valueChanged()));
     connect(this, SIGNAL(activated(int)), this, SIGNAL(valueChanged()));
 }
 
@@ -174,6 +175,7 @@ void SelectHeaderTypeComboBox::slotSelectItem(const QString &str)
         if (dlg->exec()) {
             mCode = dlg->headers();
             lineEdit()->setText(dlg->headers());
+            Q_EMIT valueChanged();
         } else {
             lineEdit()->setText(mCode);
         }

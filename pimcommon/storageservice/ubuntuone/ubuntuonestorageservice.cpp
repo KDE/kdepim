@@ -161,7 +161,7 @@ void UbuntuoneStorageService::storageServiceuploadFile(const QString &filename, 
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
         mUploadReply = job->uploadFile(filename, destination);
     }
@@ -224,12 +224,13 @@ void UbuntuoneStorageService::storageServiceShareLink(const QString &root, const
     }
 }
 
-void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void UbuntuoneStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mTokenSecret.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionName(filename);
-        mNextAction->setDownloadDestination(filename);
+        mNextAction->setNextActionName(name);
+        mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         UbuntuOneJob *job = new UbuntuOneJob(this);
@@ -237,7 +238,7 @@ void UbuntuoneStorageService::storageServicedownloadFile(const QString &filename
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        mDownloadReply = job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
 
@@ -401,9 +402,28 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
                 if (kind == QLatin1String("directory")) {
                     const QString path = map.value(QLatin1String("path")).toString();
                     item = listWidget->addFolder(path, path);
+                    if (map.contains(QLatin1String("when_created"))) {
+                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        item->setDateCreated(t);
+                    }
+                    if (map.contains(QLatin1String("when_changed"))) {
+                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        item->setLastModification(t);
+                    }
                 } else if (kind == QLatin1String("file")) {
                     const QString path = map.value(QLatin1String("path")).toString();
                     item = listWidget->addFile(path, path);
+                    if (map.contains(QLatin1String("size"))) {
+                        item->setSize(map.value(QLatin1String("size")).toULongLong());
+                    }
+                    if (map.contains(QLatin1String("when_created"))) {
+                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_created")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        item->setDateCreated(t);
+                    }
+                    if (map.contains(QLatin1String("when_changed"))) {
+                        const QDateTime t = QDateTime::fromString(map.value(QLatin1String("when_changed")).toString(), QLatin1String("yyyy-MM-ddThh:mm:ssZ"));
+                        item->setLastModification(t);
+                    }
                 } else {
                     qDebug() <<" kind unknown "<<kind;
                 }
@@ -417,6 +437,22 @@ QString UbuntuoneStorageService::fillListWidget(StorageServiceTreeWidget *listWi
 }
 
 QString UbuntuoneStorageService::itemInformation(const QVariantMap &variantMap)
+{
+    qDebug()<<" variantMap "<<variantMap;
+    QString information;
+    if (variantMap.contains(QLatin1String("is_public"))) {
+        const bool value = variantMap.value(QLatin1String("is_public")).toString() == QLatin1String("true");
+        information = i18n("File is public: %1", value ? i18n("Yes") : i18n("No"));
+    }
+    return information;
+}
+
+QString UbuntuoneStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
+QString UbuntuoneStorageService::fileShareRoot(const QVariantMap &variantMap)
 {
     return QString();
 }

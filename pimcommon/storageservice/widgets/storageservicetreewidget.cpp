@@ -45,6 +45,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(StorageServiceAbstract *stora
     lst << i18n("Name") << i18n("Size") << i18n("Created") << i18n("Last Modified");
     setHeaderLabels(lst);
     header()->setMovable(false);
+    connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemDoubleClicked(QTreeWidgetItem*,int)));
 }
 
 StorageServiceTreeWidget::~StorageServiceTreeWidget()
@@ -137,9 +138,26 @@ QString StorageServiceTreeWidget::currentFolder() const
     return mCurrentFolder;
 }
 
+void StorageServiceTreeWidget::setParentFolder(const QString &folder)
+{
+    mParentFolder = folder;
+}
+
+QString StorageServiceTreeWidget::parentFolder() const
+{
+    return mParentFolder;
+}
+
 void StorageServiceTreeWidget::refreshList()
 {
     mStorageService->listFolder(mCurrentFolder);
+}
+
+void StorageServiceTreeWidget::slotListFolderDone(const QString &serviceName, const QString &data)
+{
+    Q_UNUSED(serviceName);
+    const QString parentFolder = mStorageService->fillListWidget(this, data);
+    setParentFolder(parentFolder);
 }
 
 void StorageServiceTreeWidget::goToFolder(const QString &folder)
@@ -148,6 +166,27 @@ void StorageServiceTreeWidget::goToFolder(const QString &folder)
         return;
     setCurrentFolder(folder);
     QTimer::singleShot(0, this, SLOT(refreshList()));
+}
+
+void StorageServiceTreeWidget::moveUp()
+{
+    if (parentFolder() == currentFolder())
+        return;
+    setCurrentFolder(parentFolder());
+    QTimer::singleShot(0, this, SLOT(refreshList()));
+}
+
+void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+    Q_UNUSED(column);
+    if (item) {
+        if (type(item) == StorageServiceTreeWidget::Folder) {
+            const QString folder = itemIdentifierSelected();
+            goToFolder(folder);
+        } else if (type(item) == StorageServiceTreeWidget::MoveUpType) {
+            moveUp();
+        }
+    }
 }
 
 
@@ -163,13 +202,15 @@ bool StorageServiceTreeWidgetItem::operator<(const QTreeWidgetItem &other) const
     StorageServiceTreeWidget::ItemType otherType = static_cast<StorageServiceTreeWidget::ItemType>(other.data(StorageServiceTreeWidget::ColumnName, StorageServiceTreeWidget::ElementType).toInt());
     if (sourceType == StorageServiceTreeWidget::MoveUpType) {
         return false;
+    } else if (otherType == StorageServiceTreeWidget::MoveUpType) {
+        return false;
     } else if (sourceType == otherType) {
         return text(StorageServiceTreeWidget::ColumnName) < other.text(StorageServiceTreeWidget::ColumnName);
     } else {
         if (sourceType == StorageServiceTreeWidget::Folder) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 }
@@ -179,14 +220,14 @@ void StorageServiceTreeWidgetItem::setSize(qulonglong size)
     setText(StorageServiceTreeWidget::ColumnSize, KGlobal::locale()->formatByteSize(size));
 }
 
-void StorageServiceTreeWidgetItem::setDateCreated(const QString &date)
+void StorageServiceTreeWidgetItem::setDateCreated(const QDateTime &date)
 {
-    setText(StorageServiceTreeWidget::ColumnCreated, date);
+    setText(StorageServiceTreeWidget::ColumnCreated, KGlobal::locale()->formatDateTime(date));
 }
 
-void StorageServiceTreeWidgetItem::setLastModification(const QString &date)
+void StorageServiceTreeWidgetItem::setLastModification(const QDateTime &date)
 {
-    setText(StorageServiceTreeWidget::ColumnLastModification, date);
+    setText(StorageServiceTreeWidget::ColumnLastModification, KGlobal::locale()->formatDateTime(date));
 }
 
 void StorageServiceTreeWidgetItem::setStoreInfo(const QVariantMap &data)

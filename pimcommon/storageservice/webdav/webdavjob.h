@@ -19,7 +19,7 @@
 #define WEBDAVJOB_H
 
 #include <QObject>
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 class QNetworkReply;
 namespace PimCommon {
 class WebDavJob : public PimCommon::StorageServiceAbstractJob
@@ -36,7 +36,7 @@ public:
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
-    QNetworkReply *downloadFile(const QString &filename, const QString &destination);
+    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);

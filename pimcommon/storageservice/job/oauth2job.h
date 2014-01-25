@@ -19,7 +19,7 @@
 #define OAUTH2JOB_H
 
 #include <QObject>
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 #include <QPointer>
 class QNetworkReply;
 namespace PimCommon {
@@ -39,7 +39,7 @@ public:
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
     void createServiceFolder();
-    QNetworkReply *downloadFile(const QString &filename, const QString &destination);
+    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);
@@ -73,6 +73,7 @@ protected:
     virtual void parseRenameFolder(const QString &data);
     virtual void parseMoveFolder(const QString &data);
     virtual void parseMoveFile(const QString &data);
+    virtual void parseShareLink(const QString &data);
     virtual void refreshToken();
     QString mServiceUrl;
     QUrl mAuthUrl;

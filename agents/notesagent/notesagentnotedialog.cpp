@@ -39,6 +39,7 @@ NotesAgentNoteDialog::NotesAgentNoteDialog(QWidget *parent)
 {
     setButtons(Close);
     setAttribute(Qt::WA_DeleteOnClose);
+    setWindowIcon( KIcon( QLatin1String("knotes") ) );
     QWidget *w = new QWidget;
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);

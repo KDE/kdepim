@@ -18,7 +18,7 @@ set(archivemailagent_SRCS
 )
 
 kde4_add_kcfg_files(archivemailagent_SRCS
-    archivemailagentsettings.kcfgc
+    settings/archivemailagentsettings.kcfgc
 )
 
 

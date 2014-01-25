@@ -33,7 +33,7 @@ public:
     ~StorageServiceAbstractJob();
 
     virtual QNetworkReply *uploadFile(const QString &filename, const QString &destination=QString()) = 0;
-    virtual QNetworkReply *downloadFile(const QString &filename, const QString &destination) = 0;
+    virtual QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination) = 0;
 
     virtual void requestTokenAccess() = 0;
     virtual void listFolder(const QString &folder = QString()) = 0;
@@ -54,7 +54,7 @@ Q_SIGNALS:
     void actionFailed(const QString &data);
     void shareLinkDone(const QString &url);
     void accountInfoDone(const PimCommon::AccountInfo &data);
-    void uploadFileProgress(qint64 done, qint64 total);
+    void uploadDownloadFileProgress(qint64 done, qint64 total);
     void createFolderDone(const QString &folderName);
     void uploadFileDone(const QString &fileName);
     void uploadFileFailed(const QString &fileName);
@@ -78,6 +78,7 @@ protected:
     QNetworkAccessManager *mNetworkAccessManager;
     PimCommon::StorageServiceAbstract::ActionType mActionType;
     bool mError;
+    QString mErrorMsg;
 
 private slots:
     void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);

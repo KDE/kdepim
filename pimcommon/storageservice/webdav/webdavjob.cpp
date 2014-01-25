@@ -155,12 +155,8 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
             case PimCommon::StorageServiceAbstract::MoveFile:
             case PimCommon::StorageServiceAbstract::CopyFile:
             case PimCommon::StorageServiceAbstract::CopyFolder:
-
+            case PimCommon::StorageServiceAbstract::ShareLink:
                 errorMessage(mActionType, errorStr);
-                deleteLater();
-                break;
-            default:
-                qDebug()<<" Action Type unknown:"<<mActionType;
                 deleteLater();
                 break;
             }
@@ -201,12 +197,11 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::MoveFile:
     case PimCommon::StorageServiceAbstract::CopyFile:
     case PimCommon::StorageServiceAbstract::CopyFolder:
+    case PimCommon::StorageServiceAbstract::ShareLink:
+    case PimCommon::StorageServiceAbstract::CreateServiceFolder:
 
         deleteLater();
         break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
-        deleteLater();
     }
 }
 
@@ -253,7 +248,7 @@ void WebDavJob::createServiceFolder()
     deleteLater();
 }
 
-QNetworkReply *WebDavJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *WebDavJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;

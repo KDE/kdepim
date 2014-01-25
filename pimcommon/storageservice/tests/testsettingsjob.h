@@ -23,7 +23,7 @@
 
 #include <QObject>
 #include "pimcommon_export.h"
-#include "pimcommon/storageservice/storageserviceinterface.h"
+#include "pimcommon/storageservice/interface/storageserviceinterface.h"
 
 namespace PimCommon {
 

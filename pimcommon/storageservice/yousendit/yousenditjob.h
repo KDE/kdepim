@@ -19,7 +19,7 @@
 #define YOUSENDITJOB_H
 
 #include <QObject>
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 class QNetworkReply;
 namespace PimCommon {
 class YouSendItJob : public PimCommon::StorageServiceAbstractJob
@@ -37,7 +37,7 @@ public:
     void shareLink(const QString &root, const QString &path);
     void initializeToken(const QString &password, const QString &userName, const QString &token);
     void createServiceFolder();
-    QNetworkReply *downloadFile(const QString &filename, const QString &destination);
+    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);
@@ -71,6 +71,8 @@ private:
     void parseDownloadFile(const QString &data);
     void parseCopyFile(const QString &data);
     void parseCopyFolder(const QString &data);
+    bool parseError(const QMap<QString, QVariant> &info);
+    void parseShareLink(const QString &data);
     QString mPassword;
     QString mUsername;
     QString mDefaultUrl;

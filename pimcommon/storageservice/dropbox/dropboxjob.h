@@ -18,7 +18,7 @@
 
 #ifndef DROPBOXJOB_H
 #define DROPBOXJOB_H
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 #include <QNetworkReply>
 namespace PimCommon {
 class AccountInfo;
@@ -37,7 +37,7 @@ public:
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
-    QNetworkReply *downloadFile(const QString &filename, const QString &destination);
+    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);
@@ -49,7 +49,7 @@ public:
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);    
-    void slotUploadFileProgress(qint64 done, qint64 total);
+    void slotuploadDownloadFileProgress(qint64 done, qint64 total);
 
 Q_SIGNALS:
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

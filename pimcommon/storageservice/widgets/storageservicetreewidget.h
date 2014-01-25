@@ -33,8 +33,8 @@ public:
     StorageServiceTreeWidgetItem(StorageServiceTreeWidget *parent);
     bool operator<(const QTreeWidgetItem &other) const;
     void setSize(qulonglong size);
-    void setDateCreated(const QString &date);
-    void setLastModification(const QString &date);
+    void setDateCreated(const QDateTime &date);
+    void setLastModification(const QDateTime &date);
     void setStoreInfo(const QVariantMap &data);
     QVariantMap storeInfo() const;
 };
@@ -67,6 +67,11 @@ public:
     void setCurrentFolder(const QString &folder);
     QString currentFolder() const;
 
+    void setParentFolder(const QString &folder);
+    QString parentFolder() const;
+
+    void goToFolder(const QString &folder);
+
     StorageServiceTreeWidgetItem *addFolder(const QString &name, const QString &ident);
     StorageServiceTreeWidgetItem *addFile(const QString &name, const QString &ident, const QString &mimetype = QString());
 
@@ -79,11 +84,16 @@ public:
     QVariantMap itemInformationSelected() const;
 public Q_SLOTS:
     void refreshList();
+    void slotListFolderDone(const QString &serviceName, const QString &data);
 
 protected:
-    void goToFolder(const QString &folder);
+    void moveUp();
     QString mCurrentFolder;
+    QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
+
+private Q_SLOTS:
+    void slotItemDoubleClicked(QTreeWidgetItem *item, int column);
 };
 }
 

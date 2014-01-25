@@ -103,7 +103,7 @@ public:
     bool isInProgress() const;
     bool hasUploadOrDownloadInProgress() const;
 
-    virtual void downloadFile(const QString &filename, const QString &destination);
+    virtual void downloadFile(const QString &name, const QString &fileId, const QString &destination);
     virtual void uploadFile(const QString &filename, const QString &destination);
     virtual void accountInfo();
     virtual void createFolder(const QString &foldername, const QString &destination);
@@ -126,13 +126,16 @@ public:
     virtual StorageServiceAbstract::Capabilities capabilities() const = 0;
     virtual QString fillListWidget(StorageServiceTreeWidget *listWidget, const QString &data) = 0;
     virtual QString itemInformation(const QVariantMap &variantMap) = 0;
+    virtual QString fileIdentifier(const QVariantMap &variantMap) = 0;
+    virtual QString fileShareRoot(const QVariantMap &variantMap) = 0;
+
     void cancelUploadFile();
     void cancelDownloadFile();
-
+    void cancelUploadDownloadFile();
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
-    void uploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void uploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
     void authenticationDone(const QString &serviceName);
     void authenticationFailed(const QString &serviceName, const QString &error = QString());
@@ -156,7 +159,7 @@ protected slots:
     void slotActionFailed(const QString &error);
     void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotShareLinkDone(const QString &url);
-    void slotUploadFileProgress(qint64 done, qint64 total);
+    void slotuploadDownloadFileProgress(qint64 done, qint64 total);
     void slotCreateFolderDone(const QString &folderName);
     void slotUploadFileDone(const QString &filename);
     void slotListFolderDone(const QString &listFolder);
@@ -173,7 +176,7 @@ protected slots:
     void slotUploadFileFailed(const QString &filename);
 
 protected:
-    virtual void storageServicedownloadFile(const QString &filename, const QString &destination) = 0;
+    virtual void storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination) = 0;
     virtual void storageServiceuploadFile(const QString &filename, const QString &destination = QString()) = 0;
     virtual void storageServiceaccountInfo() = 0;
     virtual void storageServicecreateFolder(const QString &folder, const QString &destination = QString()) = 0;
@@ -220,7 +223,7 @@ public:
 
     void setRenameFolder(const QString &source, const QString &destination) { mRenameSource = source; mRenameDestination = destination; }
     void setDownloadDestination(const QString &destination) { mDownLoadDestination = destination; }
-
+    void setFileId(const QString &fileid) { mFileId = fileid; }
 
     QString nextActionName() const { return mNextActionFileName; }
     QString nextActionFolder() const { return mNextActionFolder; }
@@ -229,6 +232,7 @@ public:
     QString renameSource() const { return mRenameSource; }
     QString renameDestination() const { return mRenameDestination; }
     QString downloadDestination() const { return mDownLoadDestination; }
+    QString fileId() const { return mFileId; }
 
 private:
     StorageServiceAbstract::ActionType mNextAction;
@@ -239,6 +243,7 @@ private:
     QString mRenameSource;
     QString mRenameDestination;
     QString mDownLoadDestination;
+    QString mFileId;
 };
 
 }

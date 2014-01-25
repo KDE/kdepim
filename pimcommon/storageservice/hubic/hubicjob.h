@@ -19,7 +19,7 @@
 #define HUBICJOB_H
 
 #include <QObject>
-#include "storageservice/oauth2job.h"
+#include "storageservice/job/oauth2job.h"
 namespace PimCommon {
 class HubicJob : public PimCommon::OAuth2Job
 {

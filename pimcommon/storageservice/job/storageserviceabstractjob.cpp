@@ -50,6 +50,7 @@ void StorageServiceAbstractJob::slotError(QNetworkReply::NetworkError error)
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
     qDebug()<<" Error "<<error<<" reply"<<reply->errorString();
     mError = true;
+    mErrorMsg = reply->errorString();
 }
 
 void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstract::ActionType type, const QString &errorStr)

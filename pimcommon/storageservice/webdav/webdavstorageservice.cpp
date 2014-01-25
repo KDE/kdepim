@@ -91,19 +91,20 @@ void WebDavStorageService::storageServiceShareLink(const QString &root, const QS
     }
 }
 
-void WebDavStorageService::storageServicedownloadFile(const QString &filename, const QString &destination)
+void WebDavStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(DownLoadFile);
-        mNextAction->setNextActionName(filename);
-        mNextAction->setDownloadDestination(filename);
+        mNextAction->setNextActionName(name);
+        mNextAction->setDownloadDestination(destination);
+        mNextAction->setFileId(fileId);
         storageServiceauthentication();
     } else {
         WebDavJob *job = new WebDavJob(this);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
-        mDownloadReply = job->downloadFile(filename, destination);
+        mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
 
@@ -250,6 +251,16 @@ QString WebDavStorageService::itemInformation(const QVariantMap &variantMap)
     return QString();
 }
 
+QString WebDavStorageService::fileIdentifier(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
+QString WebDavStorageService::fileShareRoot(const QVariantMap &variantMap)
+{
+    return QString();
+}
+
 void WebDavStorageService::storageServicelistFolder(const QString &folder)
 {
     if (mServiceLocation.isEmpty()) {
@@ -309,7 +320,7 @@ void WebDavStorageService::storageServiceuploadFile(const QString &filename, con
         connect(job, SIGNAL(uploadFileDone(QString)), this, SLOT(slotUploadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
-        connect(job, SIGNAL(uploadFileProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
         mUploadReply = job->uploadFile(filename, destination);
     }

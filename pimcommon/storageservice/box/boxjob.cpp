@@ -213,7 +213,7 @@ void BoxJob::listFolder(const QString &folder)
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder));
+    url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder) + QLatin1String("/items?fields=name,created_at,size,modified_at,id"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
@@ -248,8 +248,9 @@ void BoxJob::createFolder(const QString &foldername, const QString &destination)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void BoxJob::shareLink(const QString &fileId)
+void BoxJob::shareLink(const QString &root, const QString &fileId)
 {
+    Q_UNUSED(root);
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
     QUrl url;
@@ -257,21 +258,10 @@ void BoxJob::shareLink(const QString &fileId)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-}
 
-void BoxJob::shareLink(const QString &root, const QString &path)
-{
-    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
-    mError = false;
-    QUrl url;
-    QString fileId; //TODO
-    url.setUrl(mApiUrl + mFileInfoPath + fileId);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    const QByteArray data("{\"shared_link\": {\"access\": \"open\"}}");
+
+    QNetworkReply *reply = mNetworkAccessManager->put(request,data);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -301,11 +291,13 @@ void BoxJob::parseDeleteFile(const QString &data)
 
 void BoxJob::parseCreateServiceFolder(const QString &data)
 {
+#if 0
     QJson::Parser parser;
     bool ok;
 
     const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
     qDebug()<<" info"<<info;
+#endif
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }
@@ -318,104 +310,63 @@ void BoxJob::parseListFolder(const QString &data)
 
 void BoxJob::parseCreateFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    QString folderName;
-    if (info.contains(QLatin1String("name"))) {
-        folderName = info.value(QLatin1String("name")).toString();
-    }
+    const QString folderName = parseNameInfo(data);
     Q_EMIT createFolderDone(folderName);
     deleteLater();
 }
 
 void BoxJob::parseUploadFile(const QString &data)
 {
-    qDebug()<<" data "<<data;
-    QJson::Parser parser;
-    bool ok;
-
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    QString folderName;
-    if (info.contains(QLatin1String("name"))) {
-        folderName = info.value(QLatin1String("name")).toString();
-    }
+    const QString folderName = parseNameInfo(data);
+    qDebug()<<" data"<<data;
     Q_EMIT uploadFileDone(folderName);
+    //shareLink(QString());
     deleteLater();
 }
 
 void BoxJob::parseCopyFile(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT copyFileDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseRenameFile(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT renameFileDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseRenameFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT renameFolderDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseCopyFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT copyFolderDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseMoveFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT moveFolderDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseMoveFile(const QString &data)
+{
+    const QString filename = parseNameInfo(data);
+    Q_EMIT moveFileDone(filename);
+    deleteLater();
+}
+
+QString BoxJob::parseNameInfo(const QString &data)
 {
     QJson::Parser parser;
     bool ok;
@@ -425,6 +376,22 @@ void BoxJob::parseMoveFile(const QString &data)
     if (info.contains(QLatin1String("name"))) {
         filename = info.value(QLatin1String("name")).toString();
     }
-    Q_EMIT moveFileDone(filename);
+    return filename;
+}
+
+void BoxJob::parseShareLink(const QString &data)
+{
+    QJson::Parser parser;
+    bool ok;
+
+    QString url;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (info.contains(QLatin1String("shared_link"))) {
+        const QVariantMap map = info.value(QLatin1String("shared_link")).toMap();
+        if (map.contains(QLatin1String("url"))) {
+            url = map.value(QLatin1String("url")).toString();
+        }
+    }
+    Q_EMIT shareLinkDone(url);
     deleteLater();
 }

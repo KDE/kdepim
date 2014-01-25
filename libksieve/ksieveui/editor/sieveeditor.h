@@ -49,6 +49,7 @@ private Q_SLOTS:
 
 Q_SIGNALS:
     void checkSyntax();
+    void valueChanged();
 
 private:
     void writeConfig();

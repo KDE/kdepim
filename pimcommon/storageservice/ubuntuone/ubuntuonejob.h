@@ -19,7 +19,7 @@
 #ifndef UBUNTUONEJOB_H
 #define UBUNTUONEJOB_H
 
-#include "storageservice/storageserviceabstractjob.h"
+#include "storageservice/job/storageserviceabstractjob.h"
 #include "storageservice/storageserviceabstract.h"
 #include <QNetworkReply>
 class QAuthenticator;
@@ -38,7 +38,7 @@ public:
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
     void createServiceFolder();
-    QNetworkReply *downloadFile(const QString &filename, const QString &destination);
+    QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
     void deleteFile(const QString &filename);
     void deleteFolder(const QString &foldername);
     void renameFolder(const QString &source, const QString &destination);
@@ -75,6 +75,7 @@ private:
     void parseMoveFile(const QString &data);
     void parseDeleteFile(const QString &data);
     void parseDownloadFile(const QString &data);
+    void parseShareLink(const QString &data);
     QString mCustomerSecret;
     QString mToken;
     QString mCustomerKey;

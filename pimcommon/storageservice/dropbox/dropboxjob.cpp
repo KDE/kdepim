@@ -154,10 +154,6 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
                 errorMessage(mActionType, errorStr);
                 deleteLater();
                 break;
-            default:
-                qDebug()<<" Action Type unknown:"<<mActionType;
-                deleteLater();
-                break;
             }
         } else {
             errorMessage(mActionType, i18n("Unknown Error \"%1\"", data));
@@ -219,8 +215,6 @@ void DropBoxJob::slotSendDataFinished(QNetworkReply *reply)
     case PimCommon::StorageServiceAbstract::CopyFolder:
         parseCopyFolder(data);
         break;
-    default:
-        qDebug()<<" Action Type unknown:"<<mActionType;
     }
 }
 
@@ -268,7 +262,7 @@ void DropBoxJob::parseMoveFolder(const QString &data)
 
 void DropBoxJob::parseMoveFile(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    //qDebug()<<" data :"<<data;
     QJson::Parser parser;
     bool ok;
     QString name;
@@ -284,7 +278,7 @@ void DropBoxJob::parseMoveFile(const QString &data)
 
 void DropBoxJob::parseRenameFile(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    //qDebug()<<" data :"<<data;
     QJson::Parser parser;
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
@@ -298,7 +292,7 @@ void DropBoxJob::parseRenameFile(const QString &data)
 
 void DropBoxJob::parseRenameFolder(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    //qDebug()<<" data :"<<data;
     QJson::Parser parser;
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
@@ -424,7 +418,7 @@ void DropBoxJob::createFolder(const QString &foldername, const QString &destinat
     }
     QUrl url(mApiPath + QLatin1String("fileops/create_folder"));
     url.addQueryItem(QLatin1String("root"), mRootPath);
-    url.addQueryItem(QLatin1String("path"), foldername );
+    url.addQueryItem(QLatin1String("path"), destination + QLatin1Char('/') + foldername );
     url.addQueryItem(QLatin1String("oauth_consumer_key"),mOauthconsumerKey );
     url.addQueryItem(QLatin1String("oauth_nonce"), mNonce);
     url.addQueryItem(QLatin1String("oauth_signature"), mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26")));
@@ -453,7 +447,7 @@ QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &de
             KUrl url(str);
             QNetworkRequest request(url);
             QNetworkReply *reply = mNetworkAccessManager->put(request, file);
-            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotUploadFileProgress(qint64,qint64)));
+            connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
             return reply;
@@ -502,10 +496,10 @@ void DropBoxJob::listFolder(const QString &folder)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void DropBoxJob::slotUploadFileProgress(qint64 done, qint64 total)
+void DropBoxJob::slotuploadDownloadFileProgress(qint64 done, qint64 total)
 {
     //qDebug()<<" done "<<done<<" total :"<<total;
-    Q_EMIT uploadFileProgress(done, total);
+    Q_EMIT uploadDownloadFileProgress(done, total);
 }
 
 void DropBoxJob::parseUploadFile(const QString &data)
@@ -555,10 +549,17 @@ void DropBoxJob::createServiceFolder()
     deleteLater();
 }
 
-QNetworkReply *DropBoxJob::downloadFile(const QString &filename, const QString &destination)
+QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
+    QFile *file = new QFile(destination+ QLatin1Char('/') + name);
+    if (file->open(QIODevice::WriteOnly)) {
+        //TODO
+        delete file;
+    } else {
+        delete file;
+    }
     qDebug()<<" not implemented";
     Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();

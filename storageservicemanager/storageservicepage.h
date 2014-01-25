@@ -32,6 +32,7 @@ class StorageServiceProgressWidget;
 class StorageServiceWarning;
 class StorageServiceTreeWidget;
 class StorageServiceProgressIndicator;
+class StorageServiceNavigationBar;
 class StorageServicePage : public QWidget
 {
     Q_OBJECT
@@ -52,7 +53,7 @@ public:
     void refreshList();
 
 Q_SIGNALS:
-    void updatePixmap(const QPixmap &pix, StorageServicePage *page);
+    void updateIcon(const QIcon &pix, StorageServicePage *page);
     void updateStatusBarMessage(const QString &msg);
 
 public Q_SLOTS:
@@ -61,7 +62,7 @@ public Q_SLOTS:
 private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
     void slotUploadFileDone(const QString &serviceName, const QString &fileName);
-    void slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void slotuploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void slotShareLinkDone(const QString &serviceName, const QString &link);
     void slotAuthenticationFailed(const QString &serviceName, const QString &error);
     void slotAuthenticationDone(const QString &serviceName);
@@ -74,7 +75,6 @@ private Q_SLOTS:
     void slotDeleteFileDone(const QString &serviceName, const QString &filename);
     void slotRenameFolderDone(const QString &serviceName, const QString &fileName);
     void slotRenameFileDone(const QString &serviceName, const QString &fileName);
-    void slotMoveUp();
     void slotMoveFileDone(const QString &serviceName, const QString &filename);
     void slotMoveFolderDone(const QString &serviceName, const QString &filename);
     void slotCopyFileDone(const QString &serviceName, const QString &filename);
@@ -82,16 +82,19 @@ private Q_SLOTS:
     void slotDownloadFileDone(const QString &serviceName, const QString &filename);
     void slotUploadFileFailed(const QString &serviceName, const QString &filename);
     void slotDownloadFileFailed(const QString &serviceName, const QString &filename);
+    void slotGoHome();
+    void slotGoToFolder(const QString &folder);
+
 private:
     bool verifyService(const QString &serviceName);
     inline void updateList(const QString &serviceName);
     void connectStorageService();
     QString mServiceName;
-    QString mParentFolder;
     PimCommon::StorageServiceAbstract *mStorageService;
     StorageServiceTreeWidget *mTreeWidget;
     StorageServiceProgressIndicator *mProgressIndicator;
     StorageServiceWarning *mStorageServiceWarning;
+    StorageServiceNavigationBar *mStorageServiceNavigationBar;
     PimCommon::StorageServiceProgressWidget *mProgressWidget;
 };
 
