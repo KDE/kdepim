@@ -248,8 +248,9 @@ void BoxJob::createFolder(const QString &foldername, const QString &destination)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void BoxJob::shareLink(const QString &fileId)
+void BoxJob::shareLink(const QString &root, const QString &fileId)
 {
+    Q_UNUSED(root);
     mActionType = PimCommon::StorageServiceAbstract::ShareLink;
     mError = false;
     QUrl url;
@@ -257,21 +258,10 @@ void BoxJob::shareLink(const QString &fileId)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-}
 
-void BoxJob::shareLink(const QString &root, const QString &path)
-{
-    mActionType = PimCommon::StorageServiceAbstract::ShareLink;
-    mError = false;
-    QUrl url;
-    qDebug()<<" path"<<path;
-    url.setUrl(mApiUrl + mFileInfoPath + path);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    const QByteArray data("{\"shared_link\": {\"access\": \"open\"}}");
+
+    QNetworkReply *reply = mNetworkAccessManager->put(request,data);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -391,8 +381,17 @@ QString BoxJob::parseNameInfo(const QString &data)
 
 void BoxJob::parseShareLink(const QString &data)
 {
-    //TODO
-    const QString filename = parseNameInfo(data);
-    Q_EMIT shareLinkDone(filename);
+    QJson::Parser parser;
+    bool ok;
+
+    QString url;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    if (info.contains(QLatin1String("shared_link"))) {
+        const QVariantMap map = info.value(QLatin1String("shared_link")).toMap();
+        if (map.contains(QLatin1String("url"))) {
+            url = map.value(QLatin1String("url")).toString();
+        }
+    }
+    Q_EMIT shareLinkDone(url);
     deleteLater();
 }

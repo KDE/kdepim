@@ -39,8 +39,7 @@ public:
     void listFolder(const QString &folder);
     void accountInfo();
     void createFolder(const QString &foldername, const QString &destination);
-    void shareLink(const QString &fileId);
-    void shareLink(const QString &root, const QString &path);
+    void shareLink(const QString &root, const QString &fileId);
     void copyFile(const QString &source, const QString &destination);
     void copyFolder(const QString &source, const QString &destination);
 
