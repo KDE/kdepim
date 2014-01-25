@@ -47,6 +47,7 @@ void YouSendItStorageService::readConfig()
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "YouSendIt Settings");
     mUsername = grp.readEntry("Username");
+    //Use password ?
     mPassword = grp.readEntry("Password");
     mToken = grp.readEntry("Token");
 }

@@ -131,7 +131,7 @@ public:
 
     void cancelUploadFile();
     void cancelDownloadFile();
-
+    void cancelUploadDownloadFile();
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);

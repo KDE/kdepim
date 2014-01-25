@@ -17,7 +17,7 @@
 
 #include "storageservicedownloaddialog.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
-
+#include "storageservice/widgets/storageserviceprogresswidget.h"
 #include "storageservice/storageserviceabstract.h"
 
 #include <KLocalizedString>
@@ -50,12 +50,16 @@ StorageServiceDownloadDialog::StorageServiceDownloadDialog(PimCommon::StorageSer
 
 
     vbox->addWidget(mTreeWidget);
-
+    mProgressWidget = new StorageServiceProgressWidget;
+    vbox->addWidget(mProgressWidget);
+    mProgressWidget->hide();
     w->setLayout(vbox);
     setMainWidget(w);
     enableButton(User1, false);
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDownloadFile()));
     connect(mStorage, SIGNAL(listFolderDone(QString,QString)), mTreeWidget, SLOT(slotListFolderDone(QString,QString)));
+    connect(mStorage, SIGNAL(downLoadFileDone(QString,QString)), this, SLOT(slotDownfileDone(QString,QString)));
+    connect(mStorage, SIGNAL(downLoadFileFailed(QString,QString)), this, SLOT(slotDownfileFailed(QString,QString)));
     connect(mTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotItemActivated(QTreeWidgetItem*,int)));
     mTreeWidget->refreshList();
     readConfig();
@@ -91,4 +95,14 @@ void StorageServiceDownloadDialog::slotItemActivated(QTreeWidgetItem *item, int)
 void StorageServiceDownloadDialog::slotDownloadFile()
 {
     //TODO mStorage->downloadFile();
+}
+
+void StorageServiceDownloadDialog::slotDownfileDone(const QString &serviceName, const QString &filename)
+{
+    //TODO
+}
+
+void StorageServiceDownloadDialog::slotDownfileFailed(const QString &serviceName, const QString &filename)
+{
+    //TODO
 }

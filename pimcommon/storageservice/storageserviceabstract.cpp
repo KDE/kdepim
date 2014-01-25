@@ -37,6 +37,12 @@ bool StorageServiceAbstract::hasUploadOrDownloadInProgress() const
     return (mUploadReply || mDownloadReply);
 }
 
+void StorageServiceAbstract::cancelUploadDownloadFile()
+{
+    cancelUploadFile();
+    cancelDownloadFile();
+}
+
 void StorageServiceAbstract::cancelUploadFile()
 {
     if (mUploadReply) {
