@@ -135,7 +135,7 @@ public:
 Q_SIGNALS:
     void actionFailed(const QString &serviceName, const QString &error);
     void accountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &);
-    void uploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void uploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void shareLinkDone(const QString &serviceName, const QString &link);
     void authenticationDone(const QString &serviceName);
     void authenticationFailed(const QString &serviceName, const QString &error = QString());
@@ -159,7 +159,7 @@ protected slots:
     void slotActionFailed(const QString &error);
     void slotAccountInfoDone(const PimCommon::AccountInfo &info);
     void slotShareLinkDone(const QString &url);
-    void slotUploadFileProgress(qint64 done, qint64 total);
+    void slotuploadDownloadFileProgress(qint64 done, qint64 total);
     void slotCreateFolderDone(const QString &folderName);
     void slotUploadFileDone(const QString &filename);
     void slotListFolderDone(const QString &listFolder);

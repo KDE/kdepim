@@ -129,7 +129,7 @@ void StorageServicePage::connectStorageService()
 
     connect(mStorageService, SIGNAL(uploadFileFailed(QString,QString)), this, SLOT(slotUploadFileFailed(QString,QString)));
     connect(mStorageService, SIGNAL(uploadFileDone(QString,QString)), this, SLOT(slotUploadFileDone(QString,QString)));
-    connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
+    connect(mStorageService, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SLOT(slotuploadDownloadFileProgress(QString,qint64,qint64)));
 }
 
 void StorageServicePage::slotRenameFolderDone(const QString &serviceName, const QString &folderName)
@@ -163,7 +163,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
     }
 }
 
-void StorageServicePage::slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total)
+void StorageServicePage::slotuploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total)
 {
     if (verifyService(serviceName)) {
         mProgressWidget->setProgressValue(done, total);

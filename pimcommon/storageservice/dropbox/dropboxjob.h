@@ -49,7 +49,7 @@ public:
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);    
-    void slotUploadFileProgress(qint64 done, qint64 total);
+    void slotuploadDownloadFileProgress(qint64 done, qint64 total);
 
 Q_SIGNALS:
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

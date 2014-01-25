@@ -318,9 +318,9 @@ void StorageServiceAbstract::slotShareLinkDone(const QString &url)
     changeProgressState(false);
 }
 
-void StorageServiceAbstract::slotUploadFileProgress(qint64 done, qint64 total)
+void StorageServiceAbstract::slotuploadDownloadFileProgress(qint64 done, qint64 total)
 {
-    Q_EMIT uploadFileProgress(storageServiceName(), done, total);
+    Q_EMIT uploadDownloadFileProgress(storageServiceName(), done, total);
     changeProgressState(false);
 }
 

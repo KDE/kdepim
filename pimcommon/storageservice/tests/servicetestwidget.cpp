@@ -96,7 +96,7 @@ void ServiceTestWidget::slotAuthentication()
 void ServiceTestWidget::connectStorageService()
 {
     connect(mStorageService, SIGNAL(actionFailed(QString,QString)), this, SLOT(slotActionFailed(QString,QString)));
-    connect(mStorageService, SIGNAL(uploadFileProgress(QString,qint64,qint64)), this, SLOT(slotUploadFileProgress(QString,qint64,qint64)));
+    connect(mStorageService, SIGNAL(uploadDownloadFileProgress(QString,qint64,qint64)), this, SLOT(slotuploadDownloadFileProgress(QString,qint64,qint64)));
     connect(mStorageService, SIGNAL(shareLinkDone(QString,QString)), this, SLOT(slotShareLinkDone(QString,QString)));
     connect(mStorageService, SIGNAL(authenticationDone(QString)), this, SLOT(slotAuthenticationDone(QString)));
     connect(mStorageService, SIGNAL(authenticationFailed(QString,QString)), this, SLOT(slotAuthenticationFailed(QString,QString)));
@@ -124,7 +124,7 @@ void ServiceTestWidget::slotActionFailed(const QString &serviceName, const QStri
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" return an error: %1\n").arg(error));
 }
 
-void ServiceTestWidget::slotUploadFileProgress(const QString &serviceName, qint64 done ,qint64 total)
+void ServiceTestWidget::slotuploadDownloadFileProgress(const QString &serviceName, qint64 done ,qint64 total)
 {
     mEdit->insertPlainText(serviceName + QString::fromLatin1(" upload in progress: send:%1 total:%2\n").arg(done).arg(total));
 }

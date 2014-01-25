@@ -62,7 +62,7 @@ public Q_SLOTS:
 private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);
     void slotUploadFileDone(const QString &serviceName, const QString &fileName);
-    void slotUploadFileProgress(const QString &serviceName, qint64 done, qint64 total);
+    void slotuploadDownloadFileProgress(const QString &serviceName, qint64 done, qint64 total);
     void slotShareLinkDone(const QString &serviceName, const QString &link);
     void slotAuthenticationFailed(const QString &serviceName, const QString &error);
     void slotAuthenticationDone(const QString &serviceName);
