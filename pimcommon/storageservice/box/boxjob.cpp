@@ -318,104 +318,61 @@ void BoxJob::parseListFolder(const QString &data)
 
 void BoxJob::parseCreateFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    QString folderName;
-    if (info.contains(QLatin1String("name"))) {
-        folderName = info.value(QLatin1String("name")).toString();
-    }
+    const QString folderName = parseNameInfo(data);
     Q_EMIT createFolderDone(folderName);
     deleteLater();
 }
 
 void BoxJob::parseUploadFile(const QString &data)
 {
-    qDebug()<<" data "<<data;
-    QJson::Parser parser;
-    bool ok;
-
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    QString folderName;
-    if (info.contains(QLatin1String("name"))) {
-        folderName = info.value(QLatin1String("name")).toString();
-    }
+    const QString folderName = parseNameInfo(data);
     Q_EMIT uploadFileDone(folderName);
     deleteLater();
 }
 
 void BoxJob::parseCopyFile(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT copyFileDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseRenameFile(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT renameFileDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseRenameFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT renameFolderDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseCopyFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT copyFolderDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseMoveFolder(const QString &data)
 {
-    QJson::Parser parser;
-    bool ok;
-
-    QString filename;
-    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
-    if (info.contains(QLatin1String("name"))) {
-        filename = info.value(QLatin1String("name")).toString();
-    }
+    const QString filename = parseNameInfo(data);
     Q_EMIT moveFolderDone(filename);
     deleteLater();
 }
 
 void BoxJob::parseMoveFile(const QString &data)
+{
+    const QString filename = parseNameInfo(data);
+    Q_EMIT moveFileDone(filename);
+    deleteLater();
+}
+
+QString BoxJob::parseNameInfo(const QString &data)
 {
     QJson::Parser parser;
     bool ok;
@@ -425,6 +382,5 @@ void BoxJob::parseMoveFile(const QString &data)
     if (info.contains(QLatin1String("name"))) {
         filename = info.value(QLatin1String("name")).toString();
     }
-    Q_EMIT moveFileDone(filename);
-    deleteLater();
+    return filename;
 }

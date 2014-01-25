@@ -268,7 +268,7 @@ void DropBoxJob::parseMoveFolder(const QString &data)
 
 void DropBoxJob::parseMoveFile(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    //qDebug()<<" data :"<<data;
     QJson::Parser parser;
     bool ok;
     QString name;
@@ -284,7 +284,7 @@ void DropBoxJob::parseMoveFile(const QString &data)
 
 void DropBoxJob::parseRenameFile(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    //qDebug()<<" data :"<<data;
     QJson::Parser parser;
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
@@ -298,7 +298,7 @@ void DropBoxJob::parseRenameFile(const QString &data)
 
 void DropBoxJob::parseRenameFolder(const QString &data)
 {
-    qDebug()<<" data :"<<data;
+    //qDebug()<<" data :"<<data;
     QJson::Parser parser;
     bool ok;
     QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();

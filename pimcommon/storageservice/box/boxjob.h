@@ -58,6 +58,7 @@ private:
     void parseRenameFolder(const QString &data);
     void parseMoveFolder(const QString &data);
     void parseMoveFile(const QString &data);
+    QString parseNameInfo(const QString &data);
 };
 }
 
