@@ -213,7 +213,7 @@ void BoxJob::listFolder(const QString &folder)
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     QUrl url;
-    url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder));
+    url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder) + QLatin1String("/items?fields=name,created_at,size,modified_at,id"));
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
