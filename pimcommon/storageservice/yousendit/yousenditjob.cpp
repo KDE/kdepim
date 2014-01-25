@@ -126,12 +126,9 @@ void YouSendItJob::renameFolder(const QString &source, const QString &destinatio
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
-    QUrl postData;
+    QByteArray t("\"name\"=\"sdfsdf\"");
 
-    postData.addQueryItem(QLatin1String("name"), destination);
-    qDebug()<<" url"<<url<<" postData"<<postData;
-
-    QNetworkReply *reply = mNetworkAccessManager->put(request, postData.encodedQuery());
+    QNetworkReply *reply = mNetworkAccessManager->put(request, t);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
@@ -141,6 +138,7 @@ void YouSendItJob::renameFile(const QString &oldName, const QString &newName)
     mError = false;
     QUrl url(mDefaultUrl + QString::fromLatin1("/dpi/v1/folder/file/%1/rename").arg(oldName));
     QNetworkRequest request(url);
+    qDebug()<<" url;"<<url;
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
@@ -444,19 +442,36 @@ void YouSendItJob::parseMoveFile(const QString &data)
 
 void YouSendItJob::parseRenameFile(const QString &data)
 {
-    qDebug()<<" data :"<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //Q_EMIT downLoadFileDone(filename);
-    //TODO
+    QJson::Parser parser;
+    bool ok;
+
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("errorStatus"))) {
+        const QVariantMap map =info.value(QLatin1String("errorStatus")).toMap();
+        if (map.contains(QLatin1String("message"))) {
+            Q_EMIT actionFailed(map.value(QLatin1String("message")).toString());
+        }
+    } else {
+        Q_EMIT renameFileDone(QString());
+    }
     deleteLater();
 }
 
 void YouSendItJob::parseRenameFolder(const QString &data)
 {
-    qDebug()<<" data :"<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    //Q_EMIT downLoadFileDone(filename);
-    //TODO
+    QJson::Parser parser;
+    bool ok;
+    const QMap<QString, QVariant> info = parser.parse(data.toUtf8(), &ok).toMap();
+    qDebug()<<" info"<<info;
+    if (info.contains(QLatin1String("errorStatus"))) {
+        const QVariantMap map =info.value(QLatin1String("errorStatus")).toMap();
+        if (map.contains(QLatin1String("message"))) {
+            Q_EMIT actionFailed(map.value(QLatin1String("message")).toString());
+        }
+    } else {
+        Q_EMIT renameFolderDone(QString());
+    }
     deleteLater();
 }
 
