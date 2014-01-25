@@ -43,7 +43,6 @@ QDateTime PimCommon::YouSendItUtil::convertToDateTime(QString dateTime, bool rem
 {
     if (removeTimeZone)
         dateTime.chop(6);     // chop() removes the time zone
-    qDebug()<<" dateTime"<<dateTime;
     const QDateTime t =QDateTime::fromString(dateTime, QLatin1String("yyyy-MM-ddThh:mm:ss"));
     return t;
 }
