@@ -229,6 +229,11 @@ void StorageServiceAbstract::copyFolder(const QString &source, const QString &de
     storageServiceCopyFolder(source, destination);
 }
 
+QRegExp StorageServiceAbstract::supportedFileName() const
+{
+    return QRegExp();
+}
+
 void StorageServiceAbstract::executeNextAction()
 {
     switch(mNextAction->nextActionType()) {

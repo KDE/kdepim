@@ -129,6 +129,8 @@ public:
     virtual QString fileIdentifier(const QVariantMap &variantMap) = 0;
     virtual QString fileShareRoot(const QVariantMap &variantMap) = 0;
 
+    virtual QRegExp supportedFileName() const;
+
     void cancelUploadFile();
     void cancelDownloadFile();
     void cancelUploadDownloadFile();
