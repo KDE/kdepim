@@ -274,13 +274,13 @@ void YouSendItJob::createFolder(const QString &foldername, const QString &destin
     mActionType = PimCommon::StorageServiceAbstract::CreateFolder;
     mError = false;
     QUrl url(mDefaultUrl + QLatin1String("/dpi/v1/folder"));
-    url.addQueryItem(QLatin1String("name"),foldername);
     QNetworkRequest request(url);
     request.setRawHeader("X-Api-Key", mApiKey.toLatin1());
     request.setRawHeader("Accept", "application/json");
     request.setRawHeader("X-Auth-Token", mToken.toLatin1());
     QUrl postData;
-
+    postData.addQueryItem(QLatin1String("name"), foldername);
+    postData.addQueryItem(QLatin1String("parentId"), destination);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
