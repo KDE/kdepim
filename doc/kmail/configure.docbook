@@ -706,33 +706,31 @@ can be configured along with the other custom colors.
 
 <sect2 id="configure-appearance-layout">
 <title>Layout</title>
+<screenshot >
+  <screeninfo>Default Layout</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="layout.png" format="PNG"/>
+      </imageobject>
+      <textobject>
+        <phrase>Default Layout</phrase>
+      </textobject>
+      <caption>
+        <para>Default Layout</para>
+      </caption>
+    </mediaobject>
+  </screenshot>
 <para>This tab lets you configure the layout of the main window.</para>
 <para>In the <guilabel>Folder List</guilabel> section you can choose between the 
-<guilabel>Long folder list</guilabel> using the full height of the window and 
-the <guilabel>Short folder list</guilabel> with the message preview pane using the 
-bottom part of the window.</para>
+<guilabel>Long folder list</guilabel> (default) using the full height of the window and
+the <guilabel>Short folder list</guilabel> with the message preview pane using the
+entire bottom part of the window.</para>
 <para>If you want to have your favorite folders and a quick search field for folders at
 the top left of the main window select the next two options.</para>
-<!--Show Favorite Folders View (Never, As Icons, As List) + Show folder quick search field-->
-
-<!--Folder Tooltips display additional information like the total number of messages, 
-unread messages and storage size when hoovering a folder with the mouse pointer 
--->
-<para>You can choose where you want the
-<guilabel>Message Preview Pane</guilabel> or choose not to have
-it at all.</para>
-
-<!--this setting is apparently only available via the context menu in the message preview pane?
-para>The <guilabel>Message Structure Viewer</guilabel> option lets you choose when
-the structure viewer will be shown: the structure viewer is a part of the main window that
-lets you access all parts of a message. <guilabel>Show never</guilabel> will
-disable the structure viewer (note that you can still access attachments as icons),
-<guilabel>Show always</guilabel> will show the structure viewer even if there is only
-one plaintext part. <guilabel>Show only for non-plaintext messages</guilabel> will
-display the structure viewer only if it makes sense, &ie; if the current message
-has attachments or has &html; parts.</para
-not in 2.1.0 lueck-->
-
+<para> The <guilabel>Show Favorite Folders View</guilabel> section allows you
+to change how your favorites folder displays your favorite folder. <guilabel>As Icons</guilabel> uses a lot of space, so if you have several favorite folders you might try <guilabel>As List</guilabel>. If you do not have any favorite folders you can disable the view altogether by selecting <guilabel>Never</guilabel>.</para>
+<para> On by default, <guilabel>Folder Tooltips</guilabel> display additional information like the total number of messages, unread messages and storage size when hovering a folder with the mouse pointer. Select <guilabel>Never</guilabel> to disable this feature.</para>
+<para>You can choose where in relation to the message list you want the <guilabel>Message Preview Pane</guilabel> or disable it all together.</para>
 </sect2>
 
 <sect2 id="configure-appearance-message-list">
