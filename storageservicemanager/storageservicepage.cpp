@@ -330,6 +330,7 @@ void StorageServicePage::refreshList()
 void StorageServicePage::slotDownloadFileFailed(const QString &serviceName, const QString &filename)
 {
     if (verifyService(serviceName)) {
+        mProgressWidget->hide();
     }
     //TODO inform it.
 }
