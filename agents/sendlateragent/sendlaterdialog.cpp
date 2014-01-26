@@ -36,6 +36,7 @@ using namespace SendLater;
 SendLaterDialog::SendLaterDialog(SendLater::SendLaterInfo *info, QWidget *parent)
     : KDialog(parent),
       mAction(Unknown),
+      mDelay(0),
       mInfo(info)
 {
     setCaption( i18n("Send Later") );
@@ -129,7 +130,7 @@ SendLaterDialog::SendLaterAction SendLaterDialog::action() const
 
 void SendLaterDialog::slotOkClicked()
 {
-    if (mDelay->isChecked()) {
+    if (!mDelay || (mDelay && mDelay->isChecked())) {
         mSendDateTime = mSendLaterWidget->mDateTime->dateTime();
         mAction = SendDeliveryAtTime;
     } else {
