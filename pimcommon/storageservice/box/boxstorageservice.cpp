@@ -344,7 +344,7 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
-    //cap |= UploadFileCapability;
+    cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
@@ -447,5 +447,6 @@ QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 
 QString BoxStorageService::fileShareRoot(const QVariantMap &variantMap)
 {
+    Q_UNUSED(variantMap);
     return QString();
 }

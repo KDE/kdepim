@@ -197,6 +197,8 @@ QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &destin
             request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
             request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
             QUrl postData;
+            postData.addQueryItem(QLatin1String("parent_id"), destination);
+            postData.addQueryItem(QLatin1String("filename"), filename);
             QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
