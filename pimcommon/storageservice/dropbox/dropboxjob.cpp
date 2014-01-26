@@ -553,16 +553,23 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
 {
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
-    QFile *file = new QFile(destination+ QLatin1Char('/') + name);
+    const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
+    QFile *file = new QFile(defaultDestination+ QLatin1Char('/') + name);
     if (file->open(QIODevice::WriteOnly)) {
-        //TODO
-        delete file;
+        qDebug()<<" fileId"<<fileId;
+        const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
+        const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files/dropbox///%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5").
+                arg(name).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp);
+        KUrl url(str);
+        QNetworkRequest request(url);
+        QNetworkReply *reply = mNetworkAccessManager->get(request);
+        file->setParent(reply);
+        connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
+        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        return reply;
     } else {
         delete file;
     }
-    qDebug()<<" not implemented";
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
-    deleteLater();
     return 0;
 }
 
@@ -766,6 +773,6 @@ void DropBoxJob::parseListFolder(const QString &data)
 void DropBoxJob::parseDownLoadFile(const QString &data)
 {
     qDebug()<<" data "<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    Q_EMIT downLoadFileDone(QString());
     deleteLater();
 }
