@@ -289,6 +289,12 @@ void StorageServiceTreeWidget::slotDownloadFile()
                 if (destination.isEmpty())
                     return;
             }
+            QFileInfo fileInfo(destination + QLatin1Char('/') + filename);
+            if (fileInfo.exists()) {
+                if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Filename already exists. Do you want to overwrite it?"), i18n("Overwrite file"))) {
+                    return;
+                }
+            }
             const QString fileId = mStorageService->fileIdentifier(itemInformationSelected());
             mStorageService->downloadFile(filename, fileId, destination);
         }
