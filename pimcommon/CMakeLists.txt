@@ -67,6 +67,7 @@ set(libpimcommon_storageservice_SRCS
 
   storageservice/box/boxjob.cpp
   storageservice/box/boxstorageservice.cpp
+  storageservice/box/boxutil.cpp
 
   storageservice/dialog/storageservicedownloaddialog.cpp
 

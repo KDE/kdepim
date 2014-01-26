@@ -18,6 +18,7 @@
 #include "boxstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
+#include "boxutil.h"
 #include "boxjob.h"
 
 #include <qjson/parser.h>
@@ -399,28 +400,32 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     qDebug()<<" info "<<info;
     listWidget->createMoveUpItem();
     QString parentId;
-    if (info.contains(QLatin1String("id"))) {
-        parentId = info.value(QLatin1String("id")).toString();
-    }
-    if (info.contains(QLatin1String("item_collection"))) {
-        const QVariantMap itemCollection = info.value(QLatin1String("item_collection")).toMap();
-        if (itemCollection.contains(QLatin1String("entries"))) {
-            const QVariantList entries = itemCollection.value(QLatin1String("entries")).toList();
-            Q_FOREACH (const QVariant &v, entries) {
-                const QVariantMap mapEntries = v.toMap();
-                if (mapEntries.contains(QLatin1String("type"))) {
-                    const QString type = mapEntries.value(QLatin1String("type")).toString();
-                    const QString name = mapEntries.value(QLatin1String("name")).toString();
-                    const QString id = mapEntries.value(QLatin1String("id")).toString();
-                    StorageServiceTreeWidgetItem *item = 0;
-                    if (type == QLatin1String("folder")) {
-                        item = listWidget->addFolder(name, id);
-                    } else if (type == QLatin1String("file")) {
-                        item = listWidget->addFile(name, id);
+
+    if (info.contains(QLatin1String("entries"))) {
+        const QVariantList entries = info.value(QLatin1String("entries")).toList();
+        Q_FOREACH (const QVariant &v, entries) {
+            QVariantMap mapEntries = v.toMap();
+            if (mapEntries.contains(QLatin1String("type"))) {
+                const QString type = mapEntries.value(QLatin1String("type")).toString();
+                const QString name = mapEntries.value(QLatin1String("name")).toString();
+                const QString id = mapEntries.value(QLatin1String("id")).toString();
+                StorageServiceTreeWidgetItem *item = 0;
+                if (type == QLatin1String("folder")) {
+                    item = listWidget->addFolder(name, id);
+                } else if (type == QLatin1String("file")) {
+                    item = listWidget->addFile(name, id);
+                }
+                if (item) {
+                    if (mapEntries.contains(QLatin1String("size"))) {
+                        item->setSize(mapEntries.value(QLatin1String("size")).toULongLong());
                     }
-                    if (item) {
-                        item->setStoreInfo(mapEntries);
+                    if (mapEntries.contains(QLatin1String("created_at"))) {
+                        item->setDateCreated(PimCommon::BoxUtil::convertToDateTime(mapEntries.value(QLatin1String("created_at")).toString()));
                     }
+                    if (mapEntries.contains(QLatin1String("modified_at"))) {
+                        item->setLastModification(PimCommon::BoxUtil::convertToDateTime(mapEntries.value(QLatin1String("modified_at")).toString()));
+                    }
+                    item->setStoreInfo(mapEntries);
                 }
             }
         }
