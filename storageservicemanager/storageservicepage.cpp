@@ -240,6 +240,9 @@ void StorageServicePage::deleteFile()
 
 void StorageServicePage::downloadFile()
 {
+    mProgressWidget->reset();
+    mProgressWidget->setBusyIndicator(false);
+    mProgressWidget->show();
     mTreeWidget->slotDownloadFile();
 }
 
@@ -312,7 +315,12 @@ void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QS
 
 void StorageServicePage::slotDownloadFileDone(const QString &serviceName, const QString &filename)
 {
-    //TODO
+    if (verifyService(serviceName)) {
+        mProgressWidget->reset();
+        mProgressWidget->hide();
+        updateList(serviceName);
+        KMessageBox::information(this, i18n("Download File"), i18n("%1 was correctly download", filename));
+    }
 }
 
 void StorageServicePage::updateList(const QString &serviceName)
