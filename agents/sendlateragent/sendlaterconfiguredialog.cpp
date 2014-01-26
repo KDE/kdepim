@@ -127,8 +127,6 @@ SendLaterItem::~SendLaterItem()
 
 void SendLaterItem::setInfo(SendLater::SendLaterInfo *info)
 {
-    //Be safe
-    delete mInfo;
     mInfo = info;
 }
 
