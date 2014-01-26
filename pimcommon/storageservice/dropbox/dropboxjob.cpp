@@ -496,12 +496,6 @@ void DropBoxJob::listFolder(const QString &folder)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-void DropBoxJob::slotuploadDownloadFileProgress(qint64 done, qint64 total)
-{
-    //qDebug()<<" done "<<done<<" total :"<<total;
-    Q_EMIT uploadDownloadFileProgress(done, total);
-}
-
 void DropBoxJob::parseUploadFile(const QString &data)
 {
     QJson::Parser parser;
@@ -573,12 +567,6 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
         delete mDownloadFile;
     }
     return 0;
-}
-
-void DropBoxJob::slotDownloadReadyRead()
-{
-    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    mDownloadFile->write(reply->readAll());
 }
 
 void DropBoxJob::deleteFile(const QString &filename)

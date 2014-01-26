@@ -50,8 +50,7 @@ public:
 
 private Q_SLOTS:
     void slotSendDataFinished(QNetworkReply *);
-    void slotuploadDownloadFileProgress(qint64 done, qint64 total);
-    void slotDownloadReadyRead();
+
 Q_SIGNALS:
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);
 
@@ -86,7 +85,6 @@ private:
     QString mOauthToken;
     QString mRootPath;
     QString mApiPath;
-    QPointer<QFile> mDownloadFile;
 };
 }
 

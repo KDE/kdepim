@@ -22,6 +22,7 @@
 #include <QNetworkReply>
 #include "storageservice/storageserviceabstract.h"
 
+class QFile;
 class QNetworkAccessManager;
 namespace PimCommon {
 class AccountInfo;
@@ -80,9 +81,16 @@ protected:
     bool mError;
     QString mErrorMsg;
 
+protected Q_SLOTS:
+    void slotDownloadReadyRead();
+    void slotuploadDownloadFileProgress(qint64 done, qint64 total);
+
 private slots:
     void slotSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
     void slotError(QNetworkReply::NetworkError);
+
+protected:
+    QPointer<QFile> mDownloadFile;
 };
 }
 
