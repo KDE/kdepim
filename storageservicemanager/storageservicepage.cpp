@@ -349,5 +349,5 @@ void StorageServicePage::slotGoHome()
 
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
-    //TODO
+    mTreeWidget->goToFolder(folder);
 }
