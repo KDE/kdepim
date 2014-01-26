@@ -554,8 +554,9 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
     const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
-    QFile *file = new QFile(defaultDestination+ QLatin1Char('/') + name);
-    if (file->open(QIODevice::WriteOnly)) {
+    delete mDownloadFile;
+    mDownloadFile = new QFile(defaultDestination+ QLatin1Char('/') + name);
+    if (mDownloadFile->open(QIODevice::WriteOnly)) {
         qDebug()<<" fileId"<<fileId;
         const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
         const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files/dropbox///%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5").
@@ -563,14 +564,21 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
         KUrl url(str);
         QNetworkRequest request(url);
         QNetworkReply *reply = mNetworkAccessManager->get(request);
-        file->setParent(reply);
+        mDownloadFile->setParent(reply);
+        connect(reply, SIGNAL(readyRead()), this, SLOT(slotDownloadReadyRead()));
         connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
         return reply;
     } else {
-        delete file;
+        delete mDownloadFile;
     }
     return 0;
+}
+
+void DropBoxJob::slotDownloadReadyRead()
+{
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+    mDownloadFile->write(reply->readAll());
 }
 
 void DropBoxJob::deleteFile(const QString &filename)
