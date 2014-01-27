@@ -100,23 +100,28 @@ bool BoxStorageService::needToRefreshToken() const
         return false;
 }
 
+void BoxStorageService::refreshToken()
+{
+    BoxJob *job = new BoxJob(this);
+    job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+    connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    job->refreshToken();
+}
+
 void BoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(ShareLink);
         mNextAction->setPath(path);
         mNextAction->setRootPath(root);
-        storageServiceauthentication();
-    } else if (needToRefreshToken()) {
-        mNextAction->setNextActionType(ShareLink);
-        mNextAction->setPath(path);
-        mNextAction->setRootPath(root);
-        BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
-        connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
-        job->refreshToken();
-    } else {
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
+    }  else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
@@ -127,12 +132,17 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
 
 void BoxStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -146,10 +156,15 @@ void BoxStorageService::storageServicedownloadFile(const QString &name, const QS
 
 void BoxStorageService::storageServicedeleteFile(const QString &filename)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionName(filename);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -161,10 +176,15 @@ void BoxStorageService::storageServicedeleteFile(const QString &filename)
 
 void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DeleteFolder);
         mNextAction->setNextActionFolder(foldername);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -176,10 +196,15 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
 
 void BoxStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -191,10 +216,15 @@ void BoxStorageService::storageServiceRenameFolder(const QString &source, const 
 
 void BoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -206,10 +236,15 @@ void BoxStorageService::storageServiceRenameFile(const QString &source, const QS
 
 void BoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -221,10 +256,15 @@ void BoxStorageService::storageServiceMoveFolder(const QString &source, const QS
 
 void BoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -236,10 +276,15 @@ void BoxStorageService::storageServiceMoveFile(const QString &source, const QStr
 
 void BoxStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -251,10 +296,15 @@ void BoxStorageService::storageServiceCopyFile(const QString &source, const QStr
 
 void BoxStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CopyFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -266,18 +316,15 @@ void BoxStorageService::storageServiceCopyFolder(const QString &source, const QS
 
 void BoxStorageService::storageServicelistFolder(const QString &folder)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
-        storageServiceauthentication();
-    } else if (needToRefreshToken()) {
-        mNextAction->setNextActionType(ListFolder);
-        mNextAction->setNextActionFolder(folder);
-        BoxJob *job = new BoxJob(this);
-        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
-        connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
-        connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
-        job->refreshToken();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -289,11 +336,16 @@ void BoxStorageService::storageServicelistFolder(const QString &folder)
 
 void BoxStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CreateFolder);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -305,9 +357,14 @@ void BoxStorageService::storageServicecreateFolder(const QString &name, const QS
 
 void BoxStorageService::storageServiceaccountInfo()
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(AccountInfo);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -324,11 +381,16 @@ QString BoxStorageService::name()
 
 void BoxStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -399,9 +461,14 @@ StorageServiceAbstract::Capabilities BoxStorageService::capabilities() const
 
 void BoxStorageService::storageServicecreateServiceFolder()
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CreateServiceFolder);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
