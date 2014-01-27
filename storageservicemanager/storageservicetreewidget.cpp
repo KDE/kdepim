@@ -211,6 +211,9 @@ void StorageServiceTreeWidget::slotRenameFolder()
     const QString folder = KInputDialog::getText(i18n("Rename Folder Name"), i18n("Folder:"), name);
     if (!folder.isEmpty()) {
         if (name != folder) {
+            if (!checkName(folder)) {
+                return;
+            }
             mStorageService->renameFolder(oldFolderName, folder);
         }
     }
@@ -223,15 +226,36 @@ void StorageServiceTreeWidget::slotRenameFile()
     const QString filename = KInputDialog::getText(i18n("Rename Filename"), i18n("Filename:"), name);
     if (!filename.isEmpty()) {
         if (name != filename) {
+            if (!checkName(filename)) {
+                return;
+            }
             mStorageService->renameFile(oldFileName, filename);
         }
     }
+}
+
+bool StorageServiceTreeWidget::checkName(const QString &name)
+{
+    const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
+    if (!disallowedSymbols.isEmpty()) {
+        if (name.contains(disallowedSymbols)) {
+            KMessageBox::error(this, i18n("The following characters aren't allowed by %1:\n%2", mStorageService->storageServiceName(), mStorageService->disallowedSymbolsStr()), i18n("Create folder"));
+            return false;
+        }
+    }
+    if (name == QLatin1String(".") || name == QLatin1String("..")) {
+        KMessageBox::error(this, i18n("You can not name a folder or file . or .."), i18n("Create Folder"));
+        return false;
+    }
+    return true;
 }
 
 void StorageServiceTreeWidget::slotCreateFolder()
 {
     const QString folder = KInputDialog::getText(i18n("Folder Name"), i18n("Folder:"));
     if (!folder.isEmpty()) {
+        if (!checkName(folder))
+            return;
         qDebug()<<" mCurrentFolder" <<mCurrentFolder;
         mStorageService->createFolder(folder, mCurrentFolder);
     }
@@ -306,7 +330,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
 {
     const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
     if (!filename.isEmpty()) {
-        mStorageService->uploadFile(filename, mCurrentFolder);
+        mStorageService->uploadFile(filename, filename, mCurrentFolder);//TODO
         return true;
     } else {
         return false;
