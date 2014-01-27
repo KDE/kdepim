@@ -44,6 +44,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
     setSelectionMode(QAbstractItemView::SingleSelection);
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
+    connect(this, SIGNAL(fileDoubleClicked()), this, SLOT(slotFileDoubleClicked()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotGeneralFontChanged()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
     readConfig();
@@ -369,4 +370,13 @@ void StorageServiceTreeWidget::slotProperties()
         delete dlg;
     }
 
+}
+
+void StorageServiceTreeWidget::slotFileDoubleClicked()
+{
+    if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability) {
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to download this file?"), i18n("Download File"))) {
+            Q_EMIT downloadFile();
+        }
+    }
 }

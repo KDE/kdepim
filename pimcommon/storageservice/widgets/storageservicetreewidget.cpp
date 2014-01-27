@@ -80,7 +80,7 @@ StorageServiceTreeWidgetItem *StorageServiceTreeWidget::addFile(const QString &n
     if (!mimetype.isEmpty()) {
         KMimeType::Ptr mime = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
         if (mime)
-           item->setIcon(ColumnName, KIcon(mime->iconName()));
+            item->setIcon(ColumnName, KIcon(mime->iconName()));
     }
     return item;
 }
@@ -180,11 +180,22 @@ void StorageServiceTreeWidget::slotItemDoubleClicked(QTreeWidgetItem *item, int 
 {
     Q_UNUSED(column);
     if (item) {
-        if (type(item) == StorageServiceTreeWidget::Folder) {
+        StorageServiceTreeWidget::ItemType itemType = type(item);
+        switch (itemType) {
+        case StorageServiceTreeWidget::Folder:
+        {
             const QString folder = itemIdentifierSelected();
             goToFolder(folder);
-        } else if (type(item) == StorageServiceTreeWidget::MoveUpType) {
+            break;
+        }
+        case StorageServiceTreeWidget::MoveUpType:
             moveUp();
+            break;
+        case StorageServiceTreeWidget::File:
+            Q_EMIT fileDoubleClicked();
+            break;
+        default:
+            break;
         }
     }
 }

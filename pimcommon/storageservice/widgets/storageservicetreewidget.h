@@ -82,6 +82,10 @@ public:
     void createMoveUpItem();
 
     QVariantMap itemInformationSelected() const;
+
+Q_SIGNALS:
+    void fileDoubleClicked();
+
 public Q_SLOTS:
     void refreshList();
     void slotListFolderDone(const QString &serviceName, const QString &data);
