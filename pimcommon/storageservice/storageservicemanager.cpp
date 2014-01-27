@@ -25,8 +25,9 @@
 #include "yousendit/yousenditstorageservice.h"
 #include "webdav/webdavstorageservice.h"
 #include "box/boxstorageservice.h"
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
 #include "gdrive/gdrivestorageservice.h"
-
+#endif
 #include <KLocalizedString>
 #include <KFileDialog>
 #include <KInputDialog>
@@ -226,10 +227,12 @@ void StorageServiceManager::readConfig()
             if (!mListService.contains(serviceName(Box))) {
                 storageService = new BoxStorageService();
             }
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
         } else if (service == serviceName(GDrive)) {
             if (!mListService.contains(serviceName(GDrive))) {
                 storageService = new GDriveStorageService();
             }
+#endif
         }
         if (storageService) {
             mListService.insert(service, storageService);
@@ -260,8 +263,10 @@ QString StorageServiceManager::description(ServiceType type)
         return PimCommon::BoxStorageService::description();
     case YouSendIt:
         return PimCommon::YouSendItStorageService::description();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::description();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -284,8 +289,10 @@ QUrl StorageServiceManager::serviceUrl(ServiceType type)
         return PimCommon::WebDavStorageService::serviceUrl();
     case Box:
         return PimCommon::BoxStorageService::serviceUrl();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::serviceUrl();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -309,8 +316,10 @@ QString StorageServiceManager::serviceName(ServiceType type)
         return PimCommon::WebDavStorageService::serviceName();
     case Box:
         return PimCommon::BoxStorageService::serviceName();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::serviceName();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -333,8 +342,10 @@ QString StorageServiceManager::serviceToI18n(ServiceType type)
         return PimCommon::WebDavStorageService::name();
     case Box:
         return PimCommon::BoxStorageService::name();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::name();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -357,8 +368,10 @@ QString StorageServiceManager::icon(ServiceType type)
         return PimCommon::WebDavStorageService::iconName();
     case Box:
         return PimCommon::BoxStorageService::iconName();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::iconName();
+#endif
     case EndListService:
     case Unknown:
         return QString();
@@ -381,8 +394,10 @@ StorageServiceAbstract::Capabilities StorageServiceManager::capabilities(Service
         return PimCommon::WebDavStorageService::serviceCapabilities();
     case Box:
         return PimCommon::BoxStorageService::serviceCapabilities();
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
     case GDrive:
         return PimCommon::GDriveStorageService::serviceCapabilities();
+#endif
     case EndListService:
     case Unknown:
         return StorageServiceAbstract::NoCapability;

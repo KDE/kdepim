@@ -21,7 +21,16 @@ set(libpimcommon_shorturl_SRCS
   shorturl/engine/triopabshorturl.cpp
 )
 
+if( LibKGAPI2_FOUND )
+  set(libpimcommon_storageservice_gdrive 
+    storageservice/gdrive/gdrivestorageservice.cpp
+    storageservice/gdrive/gdrivejob.cpp
+  )
+endif()
+
+
 set(libpimcommon_storageservice_SRCS
+  ${libpimcommon_storageservice_gdrive}
   storageservice/storageserviceabstract.cpp
   storageservice/storageservicemanager.cpp
 
@@ -50,10 +59,6 @@ set(libpimcommon_storageservice_SRCS
   storageservice/ubuntuone/ubuntuonestorageservice.cpp
   storageservice/ubuntuone/ubuntuonejob.cpp
   storageservice/ubuntuone/ubuntuoneutil.cpp
-
-  storageservice/gdrive/gdrivestorageservice.cpp
-  storageservice/gdrive/gdrivejob.cpp
-
 
   storageservice/yousendit/yousenditjob.cpp
   storageservice/yousendit/yousenditstorageservice.cpp

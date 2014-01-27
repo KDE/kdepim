@@ -37,7 +37,9 @@ public:
         YouSendIt,
         WebDav,
         Box,
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
         GDrive,
+#endif
 
         //Last element
         EndListService

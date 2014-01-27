@@ -23,7 +23,9 @@
 #include "storageservice/ubuntuone/ubuntuonestorageservice.h"
 #include "storageservice/yousendit/yousenditstorageservice.h"
 #include "storageservice/box/boxstorageservice.h"
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
 #include "storageservice/gdrive/gdrivestorageservice.h"
+#endif
 #include "storageservice/webdav/webdavstorageservice.h"
 #include "settings/pimcommonsettings.h"
 #include <KLocalizedString>
@@ -151,11 +153,13 @@ void StorageServiceSettingsWidget::setListService(const QMap<QString, StorageSer
             type = PimCommon::StorageServiceManager::Box;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::Box);
             showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::Box) & cap);
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
         } else if (i.key() == PimCommon::StorageServiceManager::serviceName(PimCommon::StorageServiceManager::GDrive)) {
             serviceName = PimCommon::StorageServiceManager::serviceToI18n(PimCommon::StorageServiceManager::GDrive);
             type = PimCommon::StorageServiceManager::GDrive;
             icon = PimCommon::StorageServiceManager::icon(PimCommon::StorageServiceManager::GDrive);
             showItem = (PimCommon::StorageServiceManager::capabilities(PimCommon::StorageServiceManager::GDrive) & cap);
+#endif
         }
         PimCommon::StorageListWidgetItem *item = createItem(serviceName, i.key(), type, icon.isEmpty() ? KIcon() : KIcon(icon));
         if (showItem) {
@@ -236,10 +240,12 @@ void StorageServiceSettingsWidget::slotAddService()
             storage = new PimCommon::WebDavStorageService;
             break;
         }
+#ifdef KDEPIM_STORAGESERVICE_GDRIVE
         case PimCommon::StorageServiceManager::GDrive: {
             storage = new PimCommon::GDriveStorageService;
             break;
         }
+#endif
         default:
             break;
         }

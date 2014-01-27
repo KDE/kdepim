@@ -190,7 +190,7 @@ void GDriveJob::requestTokenAccess()
     qDebug()<<" url"<<url;
     delete mAuthDialog;
     mAuthDialog = new PimCommon::StorageAuthViewDialog;
-    //connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
+    connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
     mAuthDialog->setUrl(url);
     if (mAuthDialog->exec()) {
         delete mAuthDialog;
@@ -205,8 +205,8 @@ void GDriveJob::slotRedirect(const QUrl &url)
 {
     if (url != mAuthUrl) {
         qDebug()<<" Redirect !"<<url;
-        mAuthDialog->accept();
-        parseRedirectUrl(url);
+        //mAuthDialog->accept();
+        //parseRedirectUrl(url);
     }
 }
 
