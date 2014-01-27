@@ -83,7 +83,8 @@ ServerSieveSettings::ServerSieveSettings(QWidget *parent) :
 {
     ui->setupUi(this);
     populateDefaultAuthenticationOptions();
-    connect(ui->serverName, SIGNAL(textChanged(QString)), this, SLOT(slotServerNameChanged(QString)));
+    connect(ui->serverName, SIGNAL(textChanged(QString)), this, SLOT(slotUserServerNameChanged()));
+    connect(ui->userName, SIGNAL(textChanged(QString)), this, SLOT(slotUserServerNameChanged()));
 }
 
 ServerSieveSettings::~ServerSieveSettings()
@@ -104,9 +105,9 @@ void ServerSieveSettings::populateDefaultAuthenticationOptions()
     addAuthenticationItem( ui->authenticationCombo, MailTransport::Transport::EnumAuthenticationType::ANONYMOUS );
 }
 
-void ServerSieveSettings::slotServerNameChanged(const QString &name)
+void ServerSieveSettings::slotUserServerNameChanged()
 {
-    Q_EMIT enableOkButton(!name.isEmpty());
+    Q_EMIT enableOkButton(!ui->userName->text().isEmpty() && !ui->serverName->text().isEmpty());
 }
 
 QString ServerSieveSettings::serverName() const
