@@ -145,7 +145,7 @@ void StorageServiceTabWidget::slotDownloadFile()
     if (currentWidget()) {
         StorageServicePage *page = static_cast<StorageServicePage *>(currentWidget());
         if (page)
-            page->downloadFile();
+            page->slotDownloadFile();
     }
 }
 

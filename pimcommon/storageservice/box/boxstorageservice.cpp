@@ -18,6 +18,7 @@
 #include "boxstorageservice.h"
 #include "storageservice/widgets/storageservicetreewidget.h"
 #include "storageservice/storageservicemanager.h"
+#include "boxutil.h"
 #include "boxjob.h"
 
 #include <qjson/parser.h>
@@ -81,11 +82,12 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
 {
     mRefreshToken = refreshToken;
     mToken = token;
+    mExpireDateTime = QDateTime::currentDateTime().addSecs(expireTime);
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "Box Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
-    grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
+    grp.writeEntry("Expire Time", mExpireDateTime);
     grp.sync();
     emitAuthentificationDone();
 }
@@ -98,14 +100,28 @@ bool BoxStorageService::needToRefreshToken() const
         return false;
 }
 
+void BoxStorageService::refreshToken()
+{
+    BoxJob *job = new BoxJob(this);
+    job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+    connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    job->refreshToken();
+}
+
 void BoxStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(ShareLink);
         mNextAction->setPath(path);
         mNextAction->setRootPath(root);
-        storageServiceauthentication();
-    } else {
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
+    }  else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
@@ -116,27 +132,39 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
 
 void BoxStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
         connect(job, SIGNAL(downLoadFileDone(QString)), this, SLOT(slotDownLoadFileDone(QString)));
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
+        connect(job, SIGNAL(downLoadFileFailed(QString)), this, SLOT(slotDownLoadFileFailed(QString)));
+        connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         mDownloadReply = job->downloadFile(name, fileId, destination);
     }
 }
 
 void BoxStorageService::storageServicedeleteFile(const QString &filename)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionName(filename);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -148,10 +176,15 @@ void BoxStorageService::storageServicedeleteFile(const QString &filename)
 
 void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DeleteFolder);
         mNextAction->setNextActionFolder(foldername);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -163,10 +196,15 @@ void BoxStorageService::storageServicedeleteFolder(const QString &foldername)
 
 void BoxStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -178,10 +216,15 @@ void BoxStorageService::storageServiceRenameFolder(const QString &source, const 
 
 void BoxStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -193,10 +236,15 @@ void BoxStorageService::storageServiceRenameFile(const QString &source, const QS
 
 void BoxStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -208,10 +256,15 @@ void BoxStorageService::storageServiceMoveFolder(const QString &source, const QS
 
 void BoxStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -223,10 +276,15 @@ void BoxStorageService::storageServiceMoveFile(const QString &source, const QStr
 
 void BoxStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -238,10 +296,15 @@ void BoxStorageService::storageServiceCopyFile(const QString &source, const QStr
 
 void BoxStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CopyFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -253,10 +316,15 @@ void BoxStorageService::storageServiceCopyFolder(const QString &source, const QS
 
 void BoxStorageService::storageServicelistFolder(const QString &folder)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -268,11 +336,16 @@ void BoxStorageService::storageServicelistFolder(const QString &folder)
 
 void BoxStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CreateFolder);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -284,9 +357,14 @@ void BoxStorageService::storageServicecreateFolder(const QString &name, const QS
 
 void BoxStorageService::storageServiceaccountInfo()
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(AccountInfo);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -303,11 +381,16 @@ QString BoxStorageService::name()
 
 void BoxStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -315,6 +398,7 @@ void BoxStorageService::storageServiceuploadFile(const QString &filename, const 
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
+        connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
         mUploadReply = job->uploadFile(filename, destination);
     }
 }
@@ -343,7 +427,7 @@ StorageServiceAbstract::Capabilities BoxStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
     cap |= AccountInfoCapability;
-    //cap |= UploadFileCapability;
+    cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
     cap |= CreateFolderCapability;
     cap |= DeleteFolderCapability;
@@ -377,9 +461,14 @@ StorageServiceAbstract::Capabilities BoxStorageService::capabilities() const
 
 void BoxStorageService::storageServicecreateServiceFolder()
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CreateServiceFolder);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -399,28 +488,32 @@ QString BoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidget, 
     qDebug()<<" info "<<info;
     listWidget->createMoveUpItem();
     QString parentId;
-    if (info.contains(QLatin1String("id"))) {
-        parentId = info.value(QLatin1String("id")).toString();
-    }
-    if (info.contains(QLatin1String("item_collection"))) {
-        const QVariantMap itemCollection = info.value(QLatin1String("item_collection")).toMap();
-        if (itemCollection.contains(QLatin1String("entries"))) {
-            const QVariantList entries = itemCollection.value(QLatin1String("entries")).toList();
-            Q_FOREACH (const QVariant &v, entries) {
-                const QVariantMap mapEntries = v.toMap();
-                if (mapEntries.contains(QLatin1String("type"))) {
-                    const QString type = mapEntries.value(QLatin1String("type")).toString();
-                    const QString name = mapEntries.value(QLatin1String("name")).toString();
-                    const QString id = mapEntries.value(QLatin1String("id")).toString();
-                    StorageServiceTreeWidgetItem *item = 0;
-                    if (type == QLatin1String("folder")) {
-                        item = listWidget->addFolder(name, id);
-                    } else if (type == QLatin1String("file")) {
-                        item = listWidget->addFile(name, id);
+
+    if (info.contains(QLatin1String("entries"))) {
+        const QVariantList entries = info.value(QLatin1String("entries")).toList();
+        Q_FOREACH (const QVariant &v, entries) {
+            QVariantMap mapEntries = v.toMap();
+            if (mapEntries.contains(QLatin1String("type"))) {
+                const QString type = mapEntries.value(QLatin1String("type")).toString();
+                const QString name = mapEntries.value(QLatin1String("name")).toString();
+                const QString id = mapEntries.value(QLatin1String("id")).toString();
+                StorageServiceTreeWidgetItem *item = 0;
+                if (type == QLatin1String("folder")) {
+                    item = listWidget->addFolder(name, id);
+                } else if (type == QLatin1String("file")) {
+                    item = listWidget->addFile(name, id);
+                }
+                if (item) {
+                    if (mapEntries.contains(QLatin1String("size"))) {
+                        item->setSize(mapEntries.value(QLatin1String("size")).toULongLong());
                     }
-                    if (item) {
-                        item->setStoreInfo(mapEntries);
+                    if (mapEntries.contains(QLatin1String("created_at"))) {
+                        item->setDateCreated(PimCommon::BoxUtil::convertToDateTime(mapEntries.value(QLatin1String("created_at")).toString()));
                     }
+                    if (mapEntries.contains(QLatin1String("modified_at"))) {
+                        item->setLastModification(PimCommon::BoxUtil::convertToDateTime(mapEntries.value(QLatin1String("modified_at")).toString()));
+                    }
+                    item->setStoreInfo(mapEntries);
                 }
             }
         }
@@ -442,5 +535,6 @@ QString BoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 
 QString BoxStorageService::fileShareRoot(const QVariantMap &variantMap)
 {
+    Q_UNUSED(variantMap);
     return QString();
 }

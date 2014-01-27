@@ -36,6 +36,7 @@ public:
 
 Q_SIGNALS:
     void uploadFile();
+    void downloadFile();
 
 public Q_SLOTS:
     void slotCreateFolder();
@@ -64,6 +65,7 @@ private Q_SLOTS:
     void slotPasteFolder();
     void slotPasteFile();
     void slotProperties();
+    void slotFileDoubleClicked();
 private:
     void readConfig();
     void writeConfig();

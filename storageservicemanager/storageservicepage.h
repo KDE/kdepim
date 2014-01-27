@@ -45,7 +45,6 @@ public:
 
     void accountInfo();
     void uploadFile();
-    void downloadFile();
     void deleteFile();
     PimCommon::StorageServiceAbstract::Capabilities capabilities() const;
     QString serviceName() const;
@@ -58,6 +57,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void slotUploadFile();
+    void slotDownloadFile();
 
 private Q_SLOTS:
     void slotAccountInfoDone(const QString &serviceName, const PimCommon::AccountInfo &accountInfo);

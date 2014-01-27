@@ -21,6 +21,7 @@
 
 #include <QNetworkAccessManager>
 #include <QDebug>
+#include <QFile>
 
 using namespace PimCommon;
 
@@ -113,4 +114,16 @@ void StorageServiceAbstractJob::errorMessage(PimCommon::StorageServiceAbstract::
     }
     if (!error.isEmpty())
         Q_EMIT actionFailed(error);
+}
+
+void StorageServiceAbstractJob::slotDownloadReadyRead()
+{
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+    mDownloadFile->write(reply->readAll());
+}
+
+void StorageServiceAbstractJob::slotuploadDownloadFileProgress(qint64 done, qint64 total)
+{
+    //qDebug()<<" done "<<done<<" total :"<<total;
+    Q_EMIT uploadDownloadFileProgress(done, total);
 }

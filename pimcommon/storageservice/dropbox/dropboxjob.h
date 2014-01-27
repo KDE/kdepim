@@ -20,6 +20,7 @@
 #define DROPBOXJOB_H
 #include "storageservice/job/storageserviceabstractjob.h"
 #include <QNetworkReply>
+class QFile;
 namespace PimCommon {
 class AccountInfo;
 class DropBoxJob : public PimCommon::StorageServiceAbstractJob
@@ -48,8 +49,7 @@ public:
     void copyFolder(const QString &source, const QString &destination);
 
 private Q_SLOTS:
-    void slotSendDataFinished(QNetworkReply *);    
-    void slotuploadDownloadFileProgress(qint64 done, qint64 total);
+    void slotSendDataFinished(QNetworkReply *);
 
 Q_SIGNALS:
     void authorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

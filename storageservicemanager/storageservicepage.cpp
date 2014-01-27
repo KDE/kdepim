@@ -58,6 +58,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
 
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
+    connect(mTreeWidget, SIGNAL(downloadFile()), this, SLOT(slotDownloadFile()));
     vbox->addWidget(mTreeWidget);
     mProgressWidget = new PimCommon::StorageServiceProgressWidget;
     vbox->addWidget(mProgressWidget);
@@ -159,7 +160,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
         mProgressWidget->reset();
         mProgressWidget->hide();
         updateList(serviceName);
-        KMessageBox::information(this, i18n("Upload File"), i18n("%1 was correctly uploaded", fileName));
+        KMessageBox::information(this, i18n("%1 was correctly uploaded", i18n("Upload File"), fileName));
     }
 }
 
@@ -238,8 +239,11 @@ void StorageServicePage::deleteFile()
     mTreeWidget->slotDeleteFile();
 }
 
-void StorageServicePage::downloadFile()
+void StorageServicePage::slotDownloadFile()
 {
+    mProgressWidget->reset();
+    mProgressWidget->setBusyIndicator(false);
+    mProgressWidget->show();
     mTreeWidget->slotDownloadFile();
 }
 
@@ -312,7 +316,12 @@ void StorageServicePage::slotCopyFolderDone(const QString &serviceName, const QS
 
 void StorageServicePage::slotDownloadFileDone(const QString &serviceName, const QString &filename)
 {
-    //TODO
+    if (verifyService(serviceName)) {
+        mProgressWidget->reset();
+        mProgressWidget->hide();
+        updateList(serviceName);
+        KMessageBox::information(this, i18n("%1 was correctly download", i18n("Download File"), filename));
+    }
 }
 
 void StorageServicePage::updateList(const QString &serviceName)
@@ -330,6 +339,7 @@ void StorageServicePage::refreshList()
 void StorageServicePage::slotDownloadFileFailed(const QString &serviceName, const QString &filename)
 {
     if (verifyService(serviceName)) {
+        mProgressWidget->hide();
     }
     //TODO inform it.
 }
@@ -349,5 +359,5 @@ void StorageServicePage::slotGoHome()
 
 void StorageServicePage::slotGoToFolder(const QString &folder)
 {
-    //TODO
+    mTreeWidget->goToFolder(folder);
 }

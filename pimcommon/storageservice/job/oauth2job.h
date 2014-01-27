@@ -48,6 +48,7 @@ public:
     void moveFile(const QString &source, const QString &destination);
     void copyFile(const QString &source, const QString &destination);
     void copyFolder(const QString &source, const QString &destination);
+    virtual void refreshToken();
 
 Q_SIGNALS:
     void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
@@ -74,7 +75,7 @@ protected:
     virtual void parseMoveFolder(const QString &data);
     virtual void parseMoveFile(const QString &data);
     virtual void parseShareLink(const QString &data);
-    virtual void refreshToken();
+
     QString mServiceUrl;
     QUrl mAuthUrl;
     QString mClientId;

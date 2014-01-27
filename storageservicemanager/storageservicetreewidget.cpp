@@ -44,6 +44,7 @@ StorageServiceTreeWidget::StorageServiceTreeWidget(PimCommon::StorageServiceAbst
     setSelectionMode(QAbstractItemView::SingleSelection);
     setContextMenuPolicy( Qt::CustomContextMenu );
     connect( this, SIGNAL(customContextMenuRequested(QPoint)), SLOT(slotContextMenu(QPoint)) );
+    connect(this, SIGNAL(fileDoubleClicked()), this, SLOT(slotFileDoubleClicked()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayFontChanged()), this, SLOT(slotGeneralFontChanged()));
     connect( KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), this, SLOT(slotGeneralPaletteChanged()));
     readConfig();
@@ -111,7 +112,7 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 act->setSeparator(true);
                 menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
-                    menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
+                    menu->addAction(i18n("Download File"), this, SIGNAL(downloadFile()));
                 act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);
@@ -289,6 +290,12 @@ void StorageServiceTreeWidget::slotDownloadFile()
                 if (destination.isEmpty())
                     return;
             }
+            QFileInfo fileInfo(destination + QLatin1Char('/') + filename);
+            if (fileInfo.exists()) {
+                if (KMessageBox::No == KMessageBox::questionYesNo(this, i18n("Filename already exists. Do you want to overwrite it?"), i18n("Overwrite file"))) {
+                    return;
+                }
+            }
             const QString fileId = mStorageService->fileIdentifier(itemInformationSelected());
             mStorageService->downloadFile(filename, fileId, destination);
         }
@@ -362,5 +369,13 @@ void StorageServiceTreeWidget::slotProperties()
         dlg->exec();
         delete dlg;
     }
+}
 
+void StorageServiceTreeWidget::slotFileDoubleClicked()
+{
+    if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability) {
+        if (KMessageBox::Yes == KMessageBox::questionYesNo(this, i18n("Do you want to download this file?"), i18n("Download File"))) {
+            Q_EMIT downloadFile();
+        }
+    }
 }
