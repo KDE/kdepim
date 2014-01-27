@@ -84,11 +84,12 @@ void HubicStorageService::slotAuthorizationDone(const QString &refreshToken, con
 {
     mRefreshToken = refreshToken;
     mToken = token;
+    mExpireDateTime = QDateTime::currentDateTime().addSecs(expireTime);
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "Hubic Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
-    grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
+    grp.writeEntry("Expire Time", mExpireDateTime);
     grp.sync();
     emitAuthentificationDone();
 }

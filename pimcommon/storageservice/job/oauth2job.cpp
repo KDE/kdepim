@@ -563,6 +563,7 @@ void OAuth2Job::parseAccessToken(const QString &data)
     if (info.contains(QLatin1String("expires_in"))) {
         mExpireInTime = info.value(QLatin1String("expires_in")).toLongLong();
     }
+    qDebug()<<" parseAccessToken";
     Q_EMIT authorizationDone(mRefreshToken, mToken, mExpireInTime);
     //TODO save it.
     deleteLater();

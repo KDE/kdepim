@@ -41,7 +41,8 @@ public:
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &fileId);
     void copyFile(const QString &source, const QString &destination);
-    void copyFolder(const QString &source, const QString &destination);
+    void copyFolder(const QString &source, const QString &destination);    
+    void refreshToken();
 
 private:
     void parseDeleteFolder(const QString &data);

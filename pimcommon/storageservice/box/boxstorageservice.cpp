@@ -82,11 +82,12 @@ void BoxStorageService::slotAuthorizationDone(const QString &refreshToken, const
 {
     mRefreshToken = refreshToken;
     mToken = token;
+    mExpireDateTime = QDateTime::currentDateTime().addSecs(expireTime);
     KConfig config(StorageServiceManager::kconfigName());
     KConfigGroup grp(&config, "Box Settings");
     grp.writeEntry("Refresh Token", mRefreshToken);
     grp.writeEntry("Token", mToken);
-    grp.writeEntry("Expire Time", QDateTime::currentDateTime().addSecs(expireTime));
+    grp.writeEntry("Expire Time", mExpireDateTime);
     grp.sync();
     emitAuthentificationDone();
 }
@@ -106,6 +107,15 @@ void BoxStorageService::storageServiceShareLink(const QString &root, const QStri
         mNextAction->setPath(path);
         mNextAction->setRootPath(root);
         storageServiceauthentication();
+    } else if (needToRefreshToken()) {
+        mNextAction->setNextActionType(ShareLink);
+        mNextAction->setPath(path);
+        mNextAction->setRootPath(root);
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
+        connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+        job->refreshToken();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -260,6 +270,14 @@ void BoxStorageService::storageServicelistFolder(const QString &folder)
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
         storageServiceauthentication();
+    } else if (needToRefreshToken()) {
+        mNextAction->setNextActionType(ListFolder);
+        mNextAction->setNextActionFolder(folder);
+        BoxJob *job = new BoxJob(this);
+        job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+        connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
+        connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+        job->refreshToken();
     } else {
         BoxJob *job = new BoxJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);

@@ -65,6 +65,23 @@ void BoxJob::parseAccountInfo(const QString &data)
     deleteLater();
 }
 
+void BoxJob::refreshToken()
+{
+    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
+    QNetworkRequest request(QUrl(QLatin1String("https://www.box.com/api/oauth2/token")));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
+    QUrl postData;
+    postData.addQueryItem(QLatin1String("refresh_token"), mRefreshToken);
+    postData.addQueryItem(QLatin1String("grant_type"), QLatin1String("refresh_token"));
+    postData.addQueryItem(QLatin1String("client_id"), mClientId);
+    postData.addQueryItem(QLatin1String("client_secret"), mClientSecret);
+    qDebug()<<"refreshToken postData: "<<postData;
+
+    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+}
+
+
 void BoxJob::deleteFile(const QString &filename)
 {
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
