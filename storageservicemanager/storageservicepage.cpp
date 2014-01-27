@@ -160,7 +160,7 @@ void StorageServicePage::slotUploadFileDone(const QString &serviceName, const QS
         mProgressWidget->reset();
         mProgressWidget->hide();
         updateList(serviceName);
-        KMessageBox::information(this, i18n("Upload File"), i18n("%1 was correctly uploaded", fileName));
+        KMessageBox::information(this, i18n("%1 was correctly uploaded", i18n("Upload File"), fileName));
     }
 }
 
@@ -320,7 +320,7 @@ void StorageServicePage::slotDownloadFileDone(const QString &serviceName, const 
         mProgressWidget->reset();
         mProgressWidget->hide();
         updateList(serviceName);
-        KMessageBox::information(this, i18n("Download File"), i18n("%1 was correctly download", filename));
+        KMessageBox::information(this, i18n("%1 was correctly download", i18n("Download File"), filename));
     }
 }
 
