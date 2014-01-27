@@ -62,6 +62,16 @@ void GDriveStorageService::removeConfig()
     config.sync();
 }
 
+void GDriveStorageService::refreshToken()
+{
+    GDriveJob *job = new GDriveJob(this);
+    job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
+    connect(job, SIGNAL(authorizationDone(QString,QString,qint64)), this, SLOT(slotAuthorizationDone(QString,QString,qint64)));
+    connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
+    job->refreshToken();
+}
+
+
 void GDriveStorageService::storageServiceauthentication()
 {
     GDriveJob *job = new GDriveJob(this);
@@ -101,11 +111,16 @@ bool GDriveStorageService::needToRefreshToken() const
 
 void GDriveStorageService::storageServiceShareLink(const QString &root, const QString &path)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(ShareLink);
         mNextAction->setPath(path);
         mNextAction->setRootPath(root);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -117,12 +132,17 @@ void GDriveStorageService::storageServiceShareLink(const QString &root, const QS
 
 void GDriveStorageService::storageServicedownloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DownLoadFile);
         mNextAction->setNextActionName(name);
         mNextAction->setDownloadDestination(destination);
         mNextAction->setFileId(fileId);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -136,10 +156,15 @@ void GDriveStorageService::storageServicedownloadFile(const QString &name, const
 
 void GDriveStorageService::storageServicedeleteFile(const QString &filename)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DeleteFile);
         mNextAction->setNextActionName(filename);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -151,10 +176,15 @@ void GDriveStorageService::storageServicedeleteFile(const QString &filename)
 
 void GDriveStorageService::storageServicedeleteFolder(const QString &foldername)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(DeleteFolder);
         mNextAction->setNextActionFolder(foldername);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -166,10 +196,15 @@ void GDriveStorageService::storageServicedeleteFolder(const QString &foldername)
 
 void GDriveStorageService::storageServiceRenameFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(RenameFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -181,10 +216,15 @@ void GDriveStorageService::storageServiceRenameFolder(const QString &source, con
 
 void GDriveStorageService::storageServiceRenameFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(RenameFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -196,10 +236,15 @@ void GDriveStorageService::storageServiceRenameFile(const QString &source, const
 
 void GDriveStorageService::storageServiceMoveFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(MoveFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -211,10 +256,15 @@ void GDriveStorageService::storageServiceMoveFolder(const QString &source, const
 
 void GDriveStorageService::storageServiceMoveFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(MoveFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -226,10 +276,15 @@ void GDriveStorageService::storageServiceMoveFile(const QString &source, const Q
 
 void GDriveStorageService::storageServiceCopyFile(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CopyFile);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -241,10 +296,15 @@ void GDriveStorageService::storageServiceCopyFile(const QString &source, const Q
 
 void GDriveStorageService::storageServiceCopyFolder(const QString &source, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CopyFolder);
         mNextAction->setRenameFolder(source, destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -261,10 +321,15 @@ QString GDriveStorageService::itemInformation(const QVariantMap &variantMap)
 
 void GDriveStorageService::storageServicelistFolder(const QString &folder)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(ListFolder);
         mNextAction->setNextActionFolder(folder);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -276,11 +341,16 @@ void GDriveStorageService::storageServicelistFolder(const QString &folder)
 
 void GDriveStorageService::storageServicecreateFolder(const QString &name, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CreateFolder);
         mNextAction->setNextActionName(name);
         mNextAction->setNextActionFolder(destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -292,9 +362,14 @@ void GDriveStorageService::storageServicecreateFolder(const QString &name, const
 
 void GDriveStorageService::storageServiceaccountInfo()
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(AccountInfo);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -311,11 +386,16 @@ QString GDriveStorageService::name()
 
 void GDriveStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(UploadFile);
         mNextAction->setNextActionName(filename);
         mNextAction->setNextActionFolder(destination);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);
@@ -397,9 +477,14 @@ StorageServiceAbstract::Capabilities GDriveStorageService::capabilities() const
 
 void GDriveStorageService::storageServicecreateServiceFolder()
 {
-    if (mToken.isEmpty()) {
+    const bool needRefresh = needToRefreshToken();
+    if (mToken.isEmpty() || needRefresh) {
         mNextAction->setNextActionType(CreateServiceFolder);
-        storageServiceauthentication();
+        if (needRefresh) {
+            refreshToken();
+        } else {
+            storageServiceauthentication();
+        }
     } else {
         GDriveJob *job = new GDriveJob(this);
         job->initializeToken(mRefreshToken, mToken, mExpireDateTime);

@@ -369,7 +369,6 @@ void StorageServiceTreeWidget::slotProperties()
         dlg->exec();
         delete dlg;
     }
-
 }
 
 void StorageServiceTreeWidget::slotFileDoubleClicked()
