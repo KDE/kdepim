@@ -106,6 +106,7 @@ target_link_libraries(messagelist
   ${SOPRANO_LIBRARIES}
   ${NEPOMUK_CORE_LIBRARY}
   ${NEPOMUK_QUERY_LIBRARIES}
+  ${BALOO_LIBRARIES}
   messagecore
   niefast_apps
 )
