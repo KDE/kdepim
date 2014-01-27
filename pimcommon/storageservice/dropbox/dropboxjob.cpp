@@ -432,7 +432,7 @@ void DropBoxJob::createFolder(const QString &foldername, const QString &destinat
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *DropBoxJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     QFile *file = new QFile(filename);
     if (file->exists()) {

@@ -39,13 +39,11 @@
 using namespace PimCommon;
 
 GDriveJob::GDriveJob(QObject *parent)
-    : PimCommon::StorageServiceAbstractJob(parent),
-      mExpireInTime(0),
-      mNeedRefreshToken(false)
+    : PimCommon::StorageServiceAbstractJob(parent)
 {
     mClientId = PimCommon::StorageServiceJobConfig::self()->gdriveClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->gdriveClientSecret();
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
+    //connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
 GDriveJob::~GDriveJob()
@@ -53,12 +51,45 @@ GDriveJob::~GDriveJob()
 
 }
 
-void GDriveJob::initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime)
+void GDriveJob::requestTokenAccess()
+{
+    mError = false;
+    mActionType = PimCommon::StorageServiceAbstract::RequestToken;
+    KGAPI2::AccountPtr account(new KGAPI2::Account);
+
+    KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(
+                account,
+                mClientId,
+                mClientSecret);
+    connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
+            this, SLOT(slotAuthJobFinished(KGAPI2::Job*)));
+}
+
+void GDriveJob::slotAuthJobFinished(KGAPI2::Job *job)
+{
+    KGAPI2::AuthJob *authJob = qobject_cast<KGAPI2::AuthJob*>(job);
+    Q_ASSERT(authJob);
+
+    if (authJob->error() != KGAPI2::NoError) {
+        Q_EMIT authorizationFailed(authJob->errorString());
+        deleteLater();
+        return;
+    }
+    KGAPI2::AccountPtr account = authJob->account();
+    Q_EMIT authorizationDone(account->refreshToken(),account->accessToken());
+    /* Always remember to delete the jobs, otherwise your application will
+     * leak memory. */
+    authJob->deleteLater();
+    deleteLater();
+}
+
+/*old **********************/
+
+void GDriveJob::initializeToken(const QString &refreshToken, const QString &token)
 {
     mError = false;
     mRefreshToken = refreshToken;
     mToken = token;
-    mNeedRefreshToken = (QDateTime::currentDateTime() >= expireDateTime);
 }
 
 void GDriveJob::createServiceFolder()
@@ -168,52 +199,6 @@ void GDriveJob::copyFolder(const QString &source, const QString &destination)
     deleteLater();
 }
 
-void GDriveJob::requestTokenAccess()
-{
-    mError = false;
-    mActionType = PimCommon::StorageServiceAbstract::RequestToken;
-    KGAPI2::AccountPtr account(new KGAPI2::Account);
-
-    KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(
-        account,
-        mClientId,
-        mClientSecret);
-    connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
-             this, SLOT(slotAuthJobFinished(KGAPI2::Job*)));
-
-
-/*
-    QUrl url(mServiceUrl + mAuthorizePath );
-    url.addQueryItem(QLatin1String("response_type"), QLatin1String("code"));
-    url.addQueryItem(QLatin1String("client_id"), mClientId);
-    url.addQueryItem(QLatin1String("redirect_uri"), mRedirectUri);
-    if (!mScope.isEmpty())
-        url.addQueryItem(QLatin1String("scope"),mScope);
-    mAuthUrl = url;
-    qDebug()<<" url"<<url;
-    delete mAuthDialog;
-    mAuthDialog = new PimCommon::StorageAuthViewDialog;
-    connect(mAuthDialog, SIGNAL(urlChanged(QUrl)), this, SLOT(slotRedirect(QUrl)));
-    mAuthDialog->setUrl(url);
-    if (mAuthDialog->exec()) {
-        delete mAuthDialog;
-    } else {
-        Q_EMIT authorizationFailed(i18n("Authorization canceled."));
-        delete mAuthDialog;
-        deleteLater();
-    }
-    */
-}
-
-void GDriveJob::slotRedirect(const QUrl &url)
-{
-    if (url != mAuthUrl) {
-        qDebug()<<" Redirect !"<<url;
-        //mAuthDialog->accept();
-        //parseRedirectUrl(url);
-    }
-}
-
 void GDriveJob::parseRedirectUrl(const QUrl &url)
 {
     const QList<QPair<QString, QString> > listQuery = url.queryItems();
@@ -257,7 +242,7 @@ void GDriveJob::getTokenAccess(const QString &authorizeCode)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;
@@ -581,11 +566,8 @@ void GDriveJob::parseAccessToken(const QString &data)
     if (info.contains(QLatin1String("access_token"))) {
         mToken = info.value(QLatin1String("access_token")).toString();
     }
-    if (info.contains(QLatin1String("expires_in"))) {
-        mExpireInTime = info.value(QLatin1String("expires_in")).toLongLong();
-    }
     qDebug()<<" parseAccessToken";
-    Q_EMIT authorizationDone(mRefreshToken, mToken, mExpireInTime);
+    //Q_EMIT authorizationDone(mRefreshToken, mToken, mExpireInTime);
     //TODO save it.
     deleteLater();
 }

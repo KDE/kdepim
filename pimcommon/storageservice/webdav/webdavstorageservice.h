@@ -36,7 +36,7 @@ public:
     static QString iconName();
     static StorageServiceAbstract::Capabilities serviceCapabilities();
 
-    void storageServiceuploadFile(const QString &filename, const QString &destination = QString());
+    void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString());
     void storageServiceaccountInfo();
     void storageServicecreateFolder(const QString &name, const QString &destination = QString());
     void storageServicelistFolder(const QString &folder);

@@ -78,7 +78,7 @@ void StorageServiceAbstract::downloadFile(const QString &name, const QString &fi
     storageServicedownloadFile(name, fileId, destination);
 }
 
-void StorageServiceAbstract::uploadFile(const QString &filename, const QString &destination)
+void StorageServiceAbstract::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     if (mInProgress) {
         qDebug()<<" still in progress";
@@ -229,9 +229,14 @@ void StorageServiceAbstract::copyFolder(const QString &source, const QString &de
     storageServiceCopyFolder(source, destination);
 }
 
-QRegExp StorageServiceAbstract::supportedFileName() const
+QRegExp StorageServiceAbstract::disallowedSymbols() const
 {
     return QRegExp();
+}
+
+QString StorageServiceAbstract::disallowedSymbolsStr() const
+{
+    return QString();
 }
 
 void StorageServiceAbstract::executeNextAction()

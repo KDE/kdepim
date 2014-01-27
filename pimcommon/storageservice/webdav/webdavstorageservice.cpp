@@ -309,7 +309,7 @@ QString WebDavStorageService::name()
     return i18n("Webdav");
 }
 
-void WebDavStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
+void WebDavStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     if (mServiceLocation.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
@@ -323,7 +323,7 @@ void WebDavStorageService::storageServiceuploadFile(const QString &filename, con
         connect(job, SIGNAL(shareLinkDone(QString)), this, SLOT(slotShareLinkDone(QString)));
         connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
-        mUploadReply = job->uploadFile(filename, destination);
+        mUploadReply = job->uploadFile(filename, uploadAsName, destination);
     }
 }
 

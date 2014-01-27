@@ -37,7 +37,7 @@ public:
 
 
     void storageServicelistFolder(const QString &folder);
-    void storageServiceuploadFile(const QString &filename, const QString &destination = QString());
+    void storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination = QString());
     void storageServiceaccountInfo();
     void storageServicecreateFolder(const QString &folder, const QString &destination = QString());
     void removeConfig();
@@ -61,6 +61,8 @@ public:
     QString itemInformation(const QVariantMap &variantMap);
 
     KIcon icon() const;
+    QRegExp disallowedSymbols() const;
+    QString disallowedSymbolsStr() const;
 
 private slots:
     void slotAuthorizationDone(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

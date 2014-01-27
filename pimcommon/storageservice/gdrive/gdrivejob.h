@@ -20,8 +20,10 @@
 
 #include <QObject>
 #include "storageservice/job/storageserviceabstractjob.h"
+namespace KGAPI2 {
+class Job;
+}
 namespace PimCommon {
-class StorageAuthViewDialog;
 class GDriveJob : public PimCommon::StorageServiceAbstractJob
 {
     Q_OBJECT
@@ -30,12 +32,12 @@ public:
     ~GDriveJob();
 
     void requestTokenAccess();
-    QNetworkReply *uploadFile(const QString &filename, const QString &destination);
+    QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
-    void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
+    void initializeToken(const QString &refreshToken, const QString &token);
     void createServiceFolder();
     QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
     void deleteFile(const QString &filename);
@@ -49,11 +51,11 @@ public:
     virtual void refreshToken();
 
 Q_SIGNALS:
-    void authorizationDone(const QString &refreshToken, const QString &token, qint64 expireTime);
+    void authorizationDone(const QString &refreshToken, const QString &token);
 
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
-    void slotRedirect(const QUrl &url);
+    void slotAuthJobFinished(KGAPI2::Job *job);
 
 protected:
     virtual void parseCreateServiceFolder(const QString &data);
@@ -88,10 +90,6 @@ protected:
     QString mCurrentAccountInfoPath;
     QString mApiUrl;
     QString mFileInfoPath;
-    qint64 mExpireInTime;
-    QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
-    bool mNeedRefreshToken;
-
 private:
     void shareLink(const QString &fileId);
 };

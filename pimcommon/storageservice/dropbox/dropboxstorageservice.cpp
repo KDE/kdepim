@@ -159,7 +159,7 @@ void DropBoxStorageService::storageServicecreateFolder(const QString &name, cons
     }
 }
 
-void DropBoxStorageService::storageServiceuploadFile(const QString &filename, const QString &destination)
+void DropBoxStorageService::storageServiceuploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     if (mAccessToken.isEmpty()) {
         mNextAction->setNextActionType(UploadFile);
@@ -174,7 +174,7 @@ void DropBoxStorageService::storageServiceuploadFile(const QString &filename, co
         connect(job, SIGNAL(actionFailed(QString)), SLOT(slotActionFailed(QString)));
         connect(job, SIGNAL(uploadDownloadFileProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(job, SIGNAL(uploadFileFailed(QString)), this, SLOT(slotUploadFileFailed(QString)));
-        mUploadReply = job->uploadFile(filename, destination);
+        mUploadReply = job->uploadFile(filename, uploadAsName, destination);
     }
 }
 
@@ -465,4 +465,14 @@ QString DropBoxStorageService::itemInformation(const QVariantMap &variantMap)
 KIcon DropBoxStorageService::icon() const
 {
     return KIcon(iconName());
+}
+
+QRegExp DropBoxStorageService::disallowedSymbols() const
+{
+    return QRegExp(QLatin1String("[/:?*<>\"|]"));
+}
+
+QString DropBoxStorageService::disallowedSymbolsStr() const
+{
+    return QLatin1String("\\ / : ? * < > \" |");
 }

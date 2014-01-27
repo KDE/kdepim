@@ -32,12 +32,12 @@ public:
     ~OAuth2Job();
 
     void requestTokenAccess();
-    QNetworkReply *uploadFile(const QString &filename, const QString &destination);
+    QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
     void createFolder(const QString &foldername, const QString &destination);
     void shareLink(const QString &root, const QString &path);
-    void initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime);
+    void initializeToken(const QString &refreshToken, const QString &token);
     void createServiceFolder();
     QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination);
     void deleteFile(const QString &filename);
@@ -92,7 +92,6 @@ protected:
     QString mFileInfoPath;
     qint64 mExpireInTime;
     QPointer<PimCommon::StorageAuthViewDialog> mAuthDialog;
-    bool mNeedRefreshToken;
 
 private:
     void shareLink(const QString &fileId);

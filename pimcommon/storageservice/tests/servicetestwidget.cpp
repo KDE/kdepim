@@ -192,7 +192,7 @@ void ServiceTestWidget::slotUploadFile()
 {
     const QString filename = KFileDialog::getOpenFileName();
     if (!filename.isEmpty()) {
-        mStorageService->uploadFile(filename, QString());
+        mStorageService->uploadFile(filename, QString(), QString()); //TODO
     }
 }
 

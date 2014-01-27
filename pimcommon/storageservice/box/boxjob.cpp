@@ -201,7 +201,7 @@ void BoxJob::copyFolder(const QString &source, const QString &destination)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     QFile *file = new QFile(filename);
     if (file->exists()) {
@@ -215,7 +215,7 @@ QNetworkReply *BoxJob::uploadFile(const QString &filename, const QString &destin
             request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
             QUrl postData;
             postData.addQueryItem(QLatin1String("parent_id"), destination);
-            postData.addQueryItem(QLatin1String("filename"), filename);
+            postData.addQueryItem(QLatin1String("filename"), uploadAsName);
             QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
             file->setParent(reply);
             connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));

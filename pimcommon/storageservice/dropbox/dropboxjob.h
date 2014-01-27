@@ -31,7 +31,7 @@ public:
     ~DropBoxJob();
 
     void requestTokenAccess();
-    QNetworkReply *uploadFile(const QString &filename, const QString &destination);
+    QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination);
     void listFolder(const QString &folder = QString());
     void accountInfo();
     void initializeToken(const QString &accessToken, const QString &accessTokenSecret, const QString &accessOauthSignature);

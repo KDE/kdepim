@@ -33,7 +33,7 @@ public:
     explicit StorageServiceAbstractJob(QObject *parent = 0);
     ~StorageServiceAbstractJob();
 
-    virtual QNetworkReply *uploadFile(const QString &filename, const QString &destination=QString()) = 0;
+    virtual QNetworkReply *uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination=QString()) = 0;
     virtual QNetworkReply *downloadFile(const QString &name, const QString &fileId, const QString &destination) = 0;
 
     virtual void requestTokenAccess() = 0;

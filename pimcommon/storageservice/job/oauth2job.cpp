@@ -32,8 +32,7 @@ using namespace PimCommon;
 
 OAuth2Job::OAuth2Job(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent),
-      mExpireInTime(0),
-      mNeedRefreshToken(false)
+      mExpireInTime(0)
 {
     mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
@@ -44,12 +43,11 @@ OAuth2Job::~OAuth2Job()
 
 }
 
-void OAuth2Job::initializeToken(const QString &refreshToken, const QString &token, const QDateTime &expireDateTime)
+void OAuth2Job::initializeToken(const QString &refreshToken, const QString &token)
 {
     mError = false;
     mRefreshToken = refreshToken;
     mToken = token;
-    mNeedRefreshToken = (QDateTime::currentDateTime() >= expireDateTime);
 }
 
 void OAuth2Job::createServiceFolder()
@@ -236,7 +234,7 @@ void OAuth2Job::getTokenAccess(const QString &authorizeCode)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *OAuth2Job::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *OAuth2Job::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
     mError = false;

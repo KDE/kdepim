@@ -213,7 +213,7 @@ void YouSendItJob::requestTokenAccess()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *YouSendItJob::uploadFile(const QString &filename, const QString &destination)
+QNetworkReply *YouSendItJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
 {
     //FIXME filename
     mActionType = PimCommon::StorageServiceAbstract::UploadFile;
