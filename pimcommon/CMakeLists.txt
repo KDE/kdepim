@@ -243,7 +243,9 @@ add_subdirectory(storageservice/box/tests)
 add_subdirectory(storageservice/gdrive/tests/)
 
 add_subdirectory(storageservice/dropbox/icons/)
+if( LibKGAPI2_FOUND )
 add_subdirectory(storageservice/gdrive/icons/)
+endif()
 
 if (QT_QTDESIGNER_FOUND)
   set(pimcommonwidgets_PART_SRCS)
