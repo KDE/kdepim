@@ -58,6 +58,7 @@ StorageServicePage::StorageServicePage(const QString &serviceName, PimCommon::St
 
     mTreeWidget = new StorageServiceTreeWidget(mStorageService);
     connect(mTreeWidget, SIGNAL(uploadFile()), this, SLOT(slotUploadFile()));
+    connect(mTreeWidget, SIGNAL(downloadFile()), this, SLOT(slotDownloadFile()));
     vbox->addWidget(mTreeWidget);
     mProgressWidget = new PimCommon::StorageServiceProgressWidget;
     vbox->addWidget(mProgressWidget);
@@ -238,7 +239,7 @@ void StorageServicePage::deleteFile()
     mTreeWidget->slotDeleteFile();
 }
 
-void StorageServicePage::downloadFile()
+void StorageServicePage::slotDownloadFile()
 {
     mProgressWidget->reset();
     mProgressWidget->setBusyIndicator(false);

@@ -551,7 +551,6 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
     delete mDownloadFile;
     mDownloadFile = new QFile(defaultDestination+ QLatin1Char('/') + name);
     if (mDownloadFile->open(QIODevice::WriteOnly)) {
-        qDebug()<<" fileId"<<fileId;
         const QString r = mAccessOauthSignature.replace(QLatin1Char('&'),QLatin1String("%26"));
         const QString str = QString::fromLatin1("https://api-content.dropbox.com/1/files/dropbox///%1?oauth_consumer_key=%2&oauth_nonce=%3&oauth_signature=%4&oauth_signature_method=PLAINTEXT&oauth_timestamp=%6&oauth_version=1.0&oauth_token=%5").
                 arg(name).arg(mOauthconsumerKey).arg(mNonce).arg(r).arg(mOauthToken).arg(mTimestamp);
@@ -560,7 +559,7 @@ QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &file
         QNetworkReply *reply = mNetworkAccessManager->get(request);
         mDownloadFile->setParent(reply);
         connect(reply, SIGNAL(readyRead()), this, SLOT(slotDownloadReadyRead()));
-        connect(reply, SIGNAL(uploadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
+        connect(reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(slotuploadDownloadFileProgress(qint64,qint64)));
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
         return reply;
     } else {

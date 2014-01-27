@@ -111,7 +111,7 @@ void StorageServiceTreeWidget::slotContextMenu(const QPoint &pos)
                 act->setSeparator(true);
                 menu->addAction(act);
                 if (mCapabilities & PimCommon::StorageServiceAbstract::DownloadFileCapability)
-                    menu->addAction(i18n("Download File"), this, SLOT(slotDownloadFile()));
+                    menu->addAction(i18n("Download File"), this, SIGNAL(downloadFile()));
                 act = new QAction(menu);
                 act->setSeparator(true);
                 menu->addAction(act);
