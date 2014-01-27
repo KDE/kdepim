@@ -11,6 +11,7 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
   ${SOPRANO_INCLUDE_DIR}
   ${NEPOMUK_CORE_INCLUDE_DIR}
+  ${BALOO_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/messagecore
   )
@@ -106,6 +107,7 @@ target_link_libraries(messagelist
   ${SOPRANO_LIBRARIES}
   ${NEPOMUK_CORE_LIBRARY}
   ${NEPOMUK_QUERY_LIBRARIES}
+  ${BALOO_LIBRARIES}
   messagecore
   niefast_apps
 )

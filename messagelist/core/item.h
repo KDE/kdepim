@@ -253,7 +253,7 @@ public:
   /**
    * Returns a string describing the status e.g: "Read, Forwarded, Important"
    */
-  QString statusDescription(bool hasNepomukTag) const;
+  QString statusDescription() const;
 
   /**
    * Returns the size of this item (size of the Message, mainly)

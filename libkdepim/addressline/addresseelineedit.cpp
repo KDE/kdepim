@@ -39,12 +39,7 @@
 #include <Akonadi/Session>
 #include <Akonadi/Job>
 
-#include <Nepomuk2/Query/Query>
-#include <Nepomuk2/Query/QueryServiceClient>
-#include <Nepomuk2/Query/Result>
-#include <Nepomuk2/Resource>
-#include <Nepomuk2/Vocabulary/NCO>
-#include <Nepomuk2/ResourceManager>
+#include <baloo/pim/contactcompleter.h>
 
 #include <KPIMUtils/Email>
 
@@ -90,14 +85,10 @@ class AddresseeLineEditStatic
         ldapTimer( 0 ),
         ldapSearch( 0 ),
         ldapLineEdit( 0 ),
-        nepomukSearchClient( 0 ),
-        akonadiSession( new Akonadi::Session("contactsCompletionSession") ),
-        nepomukCompletionSource( 0 ),
-        contactsListed( false )
+        balooCompletionSource( 0 )
     {
       KConfig config( QLatin1String( "kpimcompletionorder" ) );
       const KConfigGroup group( &config, QLatin1String( "General" ) );
-      useNepomukCompletion = group.readEntry( "UseNepomuk", true );
     }
 
     ~AddresseeLineEditStatic()
@@ -105,7 +96,6 @@ class AddresseeLineEditStatic
       delete completion;
       delete ldapTimer;
       delete ldapSearch;
-      delete nepomukSearchClient;
     }
 
     void slotEditCompletionOrder()
@@ -174,16 +164,7 @@ class AddresseeLineEditStatic
     // the assumption that they are always the first n indices in s_static->completion
     // does not hold when clients are added later on
     QMap<int, int> ldapClientToCompletionSourceMap;
-    // holds the cached mapping from akonadi collection id to the completion source index
-    QMap<Akonadi::Collection::Id, int> akonadiCollectionToCompletionSourceMap;
-    // a list of akonadi items (contacts) that have not had their collection fetched yet
-    Akonadi::Item::List akonadiPendingItems;
-    Nepomuk2::Query::QueryServiceClient* nepomukSearchClient;
-    Akonadi::Session *akonadiSession;
-    QVector<QWeakPointer<Akonadi::Job> > akonadiJobsInFlight;
-    bool useNepomukCompletion;
-    int nepomukCompletionSource;
-    bool contactsListed;
+    int balooCompletionSource;
 };
 
 K_GLOBAL_STATIC( AddresseeLineEditStatic, s_static )
@@ -241,8 +222,6 @@ class AddresseeLineEdit::Private
         m_searchExtended( false ),
         m_useSemicolonAsSeparator( false )
     {
-        m_delayedQueryTimer.setSingleShot(true);
-        connect( &m_delayedQueryTimer, SIGNAL(timeout()), q, SLOT(slotTriggerDelayedQueries()) );
     }
 
     void init();
@@ -254,10 +233,6 @@ class AddresseeLineEdit::Private
     const QStringList adjustedCompletionItems( bool fullSearch );
     void updateSearchString();
     void startSearches();
-    void akonadiPerformSearch();
-    void akonadiListAllContacts();
-    void akonadiHandlePending();
-    void akonadiHandleItems( const Akonadi::Item::List &items );
     void doCompletion( bool ctrlT );
 
     void slotCompletion();
@@ -267,14 +242,7 @@ class AddresseeLineEdit::Private
     void slotLDAPSearchData( const KLDAP::LdapResult::List & );
     void slotEditCompletionOrder();
     void slotUserCancelled( const QString & );
-    void slotAkonadiSearchResult( KJob * );
-    void slotAkonadiSearchDbResult( KJob* );
-    void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
-    void startNepomukSearch();
-    void stopNepomukSearch();
-    void slotNepomukHits( const QList<Nepomuk2::Query::Result>& result );
-    void slotNepomukSearchFinished();
-    void slotTriggerDelayedQueries();
+    void searchInBaloo();
     static KCompletion::CompOrder completionOrder();
 
     AddresseeLineEdit *q;
@@ -287,7 +255,6 @@ class AddresseeLineEdit::Private
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
     bool m_useSemicolonAsSeparator;
-    QTimer m_delayedQueryTimer;
 };
 
 void AddresseeLineEdit::Private::init()
@@ -304,10 +271,7 @@ void AddresseeLineEdit::Private::init()
 
     }
 
-    if ( !s_static->nepomukSearchClient ) {
-      s_static->nepomukSearchClient = new Nepomuk2::Query::QueryServiceClient;
-      s_static->nepomukCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
-    }
+    s_static->balooCompletionSource = q->addCompletionSource( i18nc( "@title:group", "Contacts found in your data"), -1 );
 
     s_static->updateLDAPWeights();
 
@@ -328,9 +292,6 @@ void AddresseeLineEdit::Private::init()
       q->connect( s_static->ldapSearch, SIGNAL(searchData(KLDAP::LdapResult::List)),
                   SLOT(slotLDAPSearchData(KLDAP::LdapResult::List)) );
 
-      q->connect( s_static->nepomukSearchClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
-                  q, SLOT(slotNepomukHits(QList<Nepomuk2::Query::Result>)) );
-      q->connect( s_static->nepomukSearchClient, SIGNAL(finishedListing()), q, SLOT(slotNepomukSearchFinished()));
       m_completionInitialized = true;
     }
   }
@@ -361,86 +322,17 @@ void AddresseeLineEdit::Private::stopLDAPLookup()
   s_static->ldapLineEdit = 0;
 }
 
-
-static const char* sparqlquery =
-    "select distinct ?email ?fullname where {"
-    "{"
-        "?r nco:hasEmailAddress   ?em ."
-        "?em nco:emailAddress ?email ."
-        "?r ?p ?fullname ."
-        "FILTER( ?p in (nco:fullname, nco:nameFamily, nco:nameGiven, nco:nickname, nco:nameAdditional)  )."
-        "FILTER( bif:contains(?fullname, \"'%1*'\")  )."
-    "} UNION {"
-        "?r nco:hasEmailAddress   ?em ."
-        "?em nco:emailAddress ?email ."
-        "FILTER( bif:contains(?email, \"'%1*'\")  )."
-        "?r nco:fullname ?fullname ."
-    "}"
-    "}";
-
-void AddresseeLineEdit::Private::startNepomukSearch()
+void AddresseeLineEdit::Private::searchInBaloo()
 {
-  // We do a word boundary substring search, which will easily yield hundreds
-  // of hits. Since the nepomuk search is mostly an auxiliary measure,
-  // we limit it to substrings of size 4 (min. of bif:contains) or larger.
-  if ( m_searchString.size() <= 3 || !s_static->useNepomukCompletion ) {
-    return;
+  Baloo::PIM::ContactCompleter com(m_searchString.trimmed(), 20);
+  Q_FOREACH (const QString& email, com.complete()) {
+    addCompletionItem(email, 1, s_static->balooCompletionSource);
   }
-  const QString query = QString::fromLatin1( sparqlquery ).arg( m_searchString );
-  Nepomuk2::Query::RequestPropertyMap requestPropertyMap;
-  requestPropertyMap.insert( QLatin1String("email"), Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
-  requestPropertyMap.insert( QLatin1String("fullname"), Nepomuk2::Vocabulary::NCO::fullname() );
-  const bool result = s_static->nepomukSearchClient->sparqlQuery( query, requestPropertyMap );
-  if (!result) {
-    kDebug() << "Starting the nepomuk lookup failed. Search string: " << m_searchString;
-  }
+  doCompletion( m_lastSearchMode );
+        //  if ( q->hasFocus() || q->completionBox()->hasFocus() ) {
+        //}
 }
 
-void AddresseeLineEdit::Private::stopNepomukSearch()
-{
-  s_static->nepomukSearchClient->close();
-}
-
-void AddresseeLineEdit::Private::slotNepomukHits( const QList<Nepomuk2::Query::Result>& results )
-{
-  if ( results.isEmpty() || ( !q->hasFocus() && !q->completionBox()->hasFocus() ) ) {
-    return;
-  }
-  // Extract and process the hits
-  Q_FOREACH( const Nepomuk2::Query::Result& result, results) {
-    Soprano::Node node = result.requestProperty( Nepomuk2::Vocabulary::NCO::hasEmailAddress() );
-    if ( node.isValid() && node.isLiteral() ) {
-      const QString fullEmail = node.literal().toString();
-      Q_ASSERT(!fullEmail.isEmpty()); // the query took care of that, right?
-      QString formattedName;
-      // extract name, if we have one
-      Soprano::Node nodeName = result.requestProperty( Nepomuk2::Vocabulary::NCO::fullname() );
-      if ( nodeName.isValid() && nodeName.isLiteral() ) {
-        formattedName = nodeName.literal().toString();
-      }
-      Q_ASSERT(s_static);
-
-      if ( formattedName.isEmpty() ) {
-        addCompletionItem( fullEmail, 1, s_static->nepomukCompletionSource );
-      } else {
-        const QString byFirstName = formattedName + QLatin1String(" <") + fullEmail + QLatin1Char('>');
-        addCompletionItem( byFirstName, 1, s_static->nepomukCompletionSource );
-      }
-    }
-  }
-}
-
-void AddresseeLineEdit::Private::slotNepomukSearchFinished()
-{
-  if ( q->hasFocus() || q->completionBox()->hasFocus() ) {
-    // only complete again if the user didn't change the selection while
-    // we were waiting; otherwise the completion box will be closed
-    const QListWidgetItem *current = q->completionBox()->currentItem();
-    if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
-      doCompletion( m_lastSearchMode );
-    }
-  }
-}
 
 void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bool autoSuggest )
 {
@@ -646,115 +538,12 @@ void AddresseeLineEdit::Private::updateSearchString()
   }
 }
 
-void AddresseeLineEdit::Private::slotTriggerDelayedQueries()
+void AddresseeLineEdit::Private::startSearches()
 {
     if (m_searchString.isEmpty())
         return;
 
-    // If Nepomuk is running, we send a ContactSearch job to
-    // Akonadi, which will forward the query to Nepomuk, be
-    // notified of matching items and return those to us.
-    akonadiPerformSearch();
-    // additionally, we ask Nepomuk directly, to get hits that
-    // did not come in through Akonadi
-    startNepomukSearch();
-}
-
-void AddresseeLineEdit::Private::startSearches()
-{
-    if ( Nepomuk2::ResourceManager::instance()->initialized() ) {
-        if (!m_delayedQueryTimer.isActive())
-            m_delayedQueryTimer.start(500);
-    } else {
-      // If Nepomuk is not available, we instead simply fetch
-      // all contacts from Akonadi and filter them ourselves.
-      // This is slower, but a reasonable fallback. We only do this
-      // once, since it returns the same contacts (all of them)
-      // every time. If one is added or removed during the lifetime
-      // of the widget, we miss that update, but that's better than
-      // doing useless repeat queries for every typed letter. We could
-      // monitor, but that doesn't seem worth the bother, for fallback
-      // code.
-      if ( !s_static->contactsListed ) {
-        akonadiListAllContacts();
-        s_static->contactsListed = true;
-      } else {
-        doCompletion( true );
-      }
-    }
-}
-
-void AddresseeLineEdit::Private::akonadiPerformSearch()
-{
-
-  if ( m_searchString.size() <= 2 ) {
-    return;
-  }
-  kDebug() << "searching akonadi with:" << m_searchString;
-
-  // first, kill all job still in flight, they are no longer current
-  Q_FOREACH( QWeakPointer<Akonadi::Job> job, s_static->akonadiJobsInFlight ) {
-      if ( !job.isNull() ) {
-        job.data()->kill();
-      }
-  }
-  s_static->akonadiJobsInFlight.clear();
-
-  // now start new jobs
-  Akonadi::ContactSearchJob *contactJob = new Akonadi::ContactSearchJob( s_static->akonadiSession );
-  Akonadi::ContactGroupSearchJob *groupJob = new Akonadi::ContactGroupSearchJob( s_static->akonadiSession );
-  contactJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  groupJob->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  contactJob->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString,
-                        Akonadi::ContactSearchJob::ContainsWordBoundaryMatch );
-  groupJob->setQuery( Akonadi::ContactGroupSearchJob::Name, m_searchString,
-                      Akonadi::ContactGroupSearchJob::StartsWithMatch );
-  // FIXME: ContainsMatch is broken, even though it creates the correct SPARQL query, so use
-  //        StartsWith for now
-                      //Akonadi::ContactGroupSearchJob::ContainsMatch );
-  q->connect( contactJob, SIGNAL(result(KJob*)),
-              q, SLOT(slotAkonadiSearchResult(KJob*)) );
-  q->connect( groupJob, SIGNAL(result(KJob*)),
-              q, SLOT(slotAkonadiSearchResult(KJob*)) );
-  s_static->akonadiJobsInFlight.append( contactJob );
-  s_static->akonadiJobsInFlight.append( groupJob );
-  akonadiHandlePending();
-}
-
-void AddresseeLineEdit::Private::akonadiListAllContacts()
-{
-  kDebug() << "listing all contacts in Akonadi";
-  Akonadi::RecursiveItemFetchJob *job =
-           new Akonadi::RecursiveItemFetchJob( Akonadi::Collection::root(),
-                                               QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType(),
-                                               s_static->akonadiSession );
-  job->fetchScope().fetchFullPayload();
-  job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-  q->connect( job, SIGNAL(result(KJob*)),
-              q, SLOT(slotAkonadiSearchDbResult(KJob*)) );
-  job->start();
-  akonadiHandlePending();
-}
-
-void AddresseeLineEdit::Private::akonadiHandlePending()
-{
-  kDebug() << "Pending items: " << s_static->akonadiPendingItems.size();
-  Akonadi::Item::List::iterator it = s_static->akonadiPendingItems.begin();
-  while ( it != s_static->akonadiPendingItems.end() ) {
-    const Akonadi::Item item = *it;
-
-    const int sourceIndex =
-      s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
-    if ( sourceIndex >= 0 ) {
-      kDebug() << "identified collection: " << s_static->completionSources[sourceIndex];
-      q->addItem( item, 1, sourceIndex );
-
-      // remove from the pending
-      it = s_static->akonadiPendingItems.erase( it );
-    } else {
-      ++it;
-    }
-  }
+    searchInBaloo();
 }
 
 void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
@@ -970,103 +759,7 @@ void AddresseeLineEdit::Private::slotUserCancelled( const QString &cancelText )
     stopLDAPLookup();
   }
 
-  if ( s_static->nepomukSearchClient ) {
-    stopNepomukSearch();
-  }
   q->userCancelled( m_previousAddresses + cancelText ); // in KLineEdit
-}
-
-void AddresseeLineEdit::Private::akonadiHandleItems( const Akonadi::Item::List &items )
-{
-    /* We have to fetch the collections of the items, so that
-       the source name can be correctly labeled.*/
-    foreach ( const Akonadi::Item &item, items ) {
-
-      // check the local cache of collections
-      const int sourceIndex =
-        s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
-      if ( sourceIndex == -1 ) {
-        kDebug() << "Fetching New collection: " << item.parentCollection().id();
-        // the collection isn't there, start the fetch job.
-        Akonadi::CollectionFetchJob *collectionJob =
-          new Akonadi::CollectionFetchJob( item.parentCollection(),
-                                           Akonadi::CollectionFetchJob::Base,
-                                           s_static->akonadiSession );
-        connect( collectionJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                 q, SLOT(slotAkonadiCollectionsReceived(Akonadi::Collection::List)) );
-        /* we don't want to start multiple fetch jobs for the same collection,
-           so insert the collection with an index value of -2 */
-        s_static->akonadiCollectionToCompletionSourceMap.insert( item.parentCollection().id(), -2 );
-        s_static->akonadiPendingItems.append( item );
-      } else if ( sourceIndex == -2 ) {
-        /* fetch job already started, don't need to start another one,
-           so just append the item as pending */
-        s_static->akonadiPendingItems.append( item );
-      } else {
-        q->addItem( item, 1, sourceIndex );
-      }
-    }
-
-   if ( !items.isEmpty() ) {
-      const QListWidgetItem *current = q->completionBox()->currentItem();
-      if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
-        doCompletion( m_lastSearchMode );
-      }
-    }
-}
-
-void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob *job )
-{
-  const int index = s_static->akonadiJobsInFlight.indexOf( qobject_cast<Akonadi::Job*>( job ) );
-  if( index != -1 )
-    s_static->akonadiJobsInFlight.remove( index );
-  const Akonadi::ContactSearchJob *contactJob =
-    qobject_cast<Akonadi::ContactSearchJob*>( job );
-  const Akonadi::ContactGroupSearchJob *groupJob =
-    qobject_cast<Akonadi::ContactGroupSearchJob*>( job );
-
-  Akonadi::Item::List items;
-  if ( contactJob ) {
-    items += contactJob->items();
-    kDebug() << "Found" << contactJob->contacts().size() << "contacts";
-  } else if ( groupJob ) {
-    items += groupJob->items();
-    kDebug() << "Found" << groupJob->contactGroups().size() << "groups";
-  }
-  akonadiHandleItems( items );
-}
-
-void AddresseeLineEdit::Private::slotAkonadiSearchDbResult( KJob *job )
-{
-  const Akonadi::RecursiveItemFetchJob *contactJob =
-    qobject_cast<Akonadi::RecursiveItemFetchJob*>( job );
-  Akonadi::Item::List items;
-  if ( contactJob ) {
-      items += contactJob->items();
-      kDebug() << "Found in DB directly:" << contactJob->items().size() << "contacts";
-  }
-  akonadiHandleItems( items );
-}
-
-void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived(
-  const Akonadi::Collection::List &collections )
-{
-  foreach ( const Akonadi::Collection &collection, collections ) {
-    if ( collection.isValid() ) {
-      const QString sourceString = collection.displayName();
-      const int index = q->addCompletionSource( sourceString, 1 );
-      kDebug() << "\treceived: " << sourceString << "index: " << index;
-      s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), index );
-    }
-  }
-
-  // now that we have added the new collections, recheck our list of pending contacts
-  akonadiHandlePending();
-  // do completion
-  const QListWidgetItem *current = q->completionBox()->currentItem();
-  if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
-    doCompletion( m_lastSearchMode );
-  }
 }
 
 // not cached, to make sure we get an up-to-date value when it changes
@@ -1097,9 +790,6 @@ AddresseeLineEdit::~AddresseeLineEdit()
 {
   if ( s_static->ldapSearch && s_static->ldapLineEdit == this ) {
     d->stopLDAPLookup();
-  }
-  if( s_static->nepomukSearchClient ) {
-    d->stopNepomukSearch();
   }
   delete d;
 }

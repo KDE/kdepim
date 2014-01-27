@@ -21,41 +21,14 @@
 #include "core/filter.h"
 #include "core/messageitem.h"
 
-#include <Nepomuk2/Query/AndTerm>
-#include <Nepomuk2/Query/ComparisonTerm>
-#include <Nepomuk2/Query/LiteralTerm>
-#include <Nepomuk2/Query/QueryServiceClient>
-#include <Nepomuk2/Query/ResourceTerm>
-#include <Nepomuk2/Vocabulary/NIE>
-
-#include <ontologies/nie.h>
-#include <ontologies/nmo.h>
-
 #include <akonadi/itemsearchjob.h>
+#include <baloo/pim/emailquery.h>
+#include <baloo/pim/resultiterator.h>
 
 using namespace MessageList::Core;
 
 Filter::Filter()
-  : mQueryClient( new Nepomuk2::Query::QueryServiceClient( this ) )
 {
-  connect( mQueryClient, SIGNAL(newEntries(QList<Nepomuk2::Query::Result>)),
-           this, SLOT(newEntries(QList<Nepomuk2::Query::Result>)) );
-  connect( mQueryClient, SIGNAL(finishedListing()),
-           this, SLOT(finishedListing()) );
-}
-
-bool Filter::containString(const QString& searchInString) const
-{
-  bool found = false;
-  Q_FOREACH(const QString& str, mSearchList) {
-    if(searchInString.contains(str,Qt::CaseInsensitive)) {
-      found = true;
-    } else {
-      found = false;
-      break;
-    }
-  }
-  return found;
 }
 
 bool Filter::match( const MessageItem * item ) const
@@ -70,16 +43,7 @@ bool Filter::match( const MessageItem * item ) const
   {
     if ( mMatchingItemIds.contains( item->itemId() ) )
       return true;
-
-    bool searchMatches = false;
-    if ( containString(item->subject()) )
-      searchMatches = true;
-    else if ( containString(item->sender()) )
-      searchMatches = true;
-    else if ( containString(item->receiver()) )
-      searchMatches = true;
-
-    if ( !searchMatches )
+    else
       return false;
   }
 
@@ -112,8 +76,6 @@ void Filter::clear()
   mSearchString.clear();
   mTagId.clear();
   mMatchingItemIds.clear();
-  mQueryClient->close();
-  mSearchList.clear();
 }
 
 void Filter::setCurrentFolder( const KUrl &url )
@@ -123,58 +85,30 @@ void Filter::setCurrentFolder( const KUrl &url )
 
 void Filter::setSearchString( const QString &search )
 {
-  mSearchString = search;
-  mSearchList = mSearchString.trimmed().split(QLatin1Char(' '));
-
-  emit finished(); // let the view update according to restrictions
-
-  if( mSearchString.isEmpty()) {
-    mQueryClient->close();
+  QString trimStr = search.trimmed();
+  if (mSearchString == trimStr) {
     return;
   }
-  if (mSearchString.count()<4) {
-      mQueryClient->close();
-      return;
-  }
-  const Nepomuk2::Resource parentResource( mCurrentFolder );
-  if( !parentResource.exists() ) {
-     mQueryClient->close();
-     return;
-  }
-  const Nepomuk2::Query::ComparisonTerm isChildTerm( Nepomuk2::Vocabulary::NIE::isPartOf(), Nepomuk2::Query::ResourceTerm( parentResource ) );
 
-  const Nepomuk2::Query::ComparisonTerm bodyTerm(
-      Vocabulary::NMO::plainTextMessageContent(),
-      Nepomuk2::Query::LiteralTerm( QString::fromLatin1( "\'%1*\'" ).arg( mSearchString ) ),
-      Nepomuk2::Query::ComparisonTerm::Contains );
-
-  const Nepomuk2::Query::AndTerm andTerm( isChildTerm, bodyTerm );
-
-  Nepomuk2::Query::Query query( andTerm );
-  query.setRequestProperties( QList<Nepomuk2::Query::Query::RequestProperty>() << Nepomuk2::Types::Property( Akonadi::ItemSearchJob::akonadiItemIdUri() ) );
-
+  mSearchString = trimStr;
   mMatchingItemIds.clear();
-  mQueryClient->close();
-  bool ok = mQueryClient->query( query );
-  if (!ok) {
-    kDebug() << "Cannot start query:" << mQueryClient->errorMessage();
-  }
-}
 
-void Filter::newEntries( const QList<Nepomuk2::Query::Result> &entries )
-{
-  Q_FOREACH( const Nepomuk2::Query::Result &result, entries ) {
-    const Soprano::Node &property = result.requestProperty( Akonadi::ItemSearchJob::akonadiItemIdUri() );
-    if ( !(property.isValid() && property.isLiteral() && property.literal().isString()) ) {
-      continue;
-    } else {
-      mMatchingItemIds.insert( property.literal().toString().toLongLong() );
-    }
+  if (mSearchString.isEmpty()) {
+    return;
   }
-}
 
-void Filter::finishedListing()
-{
-  emit finished(); // let the view update according to restrictions _and_ matching full-text search results
+  Baloo::PIM::EmailQuery query;
+  query.matches(mSearchString);
+
+  Akonadi::Collection col = Akonadi::Collection::fromUrl(mCurrentFolder);
+  if (col.isValid()) {
+    query.addCollection(col.id());
+  }
+
+  Baloo::PIM::ResultIterator it = query.exec();
+  while (it.next())
+    mMatchingItemIds << it.id();
+
+  emit finished();
 }
 

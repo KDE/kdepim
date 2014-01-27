@@ -432,6 +432,7 @@ void UbuntuOneJob::deleteFile(const QString &filename)
     mActionType = PimCommon::StorageServiceAbstract::DeleteFile;
     mError = false;
 
+    qDebug()<<" filename"<<filename;
     QNetworkRequest request(QUrl(QLatin1String("https://one.ubuntu.com/api/file_storage/v1/volumes/~/Ubuntu One/") + filename));
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     QUrl postData;
@@ -606,12 +607,12 @@ void UbuntuOneJob::finishGetToken()
     //qDebug()<<" url "<<url;
 
     QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));    
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void UbuntuOneJob::parseAccessToken(const QString &data)
 {
-    qDebug()<<" parseAccessToken :"<<data;
-    Q_EMIT actionFailed(QLatin1String("Not Implemented"));
+    qDebug()<<" data "<<data;
+    //Q_EMIT actionFailed(QLatin1String("Not Implemented"));
     deleteLater();
 }

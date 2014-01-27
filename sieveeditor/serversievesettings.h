@@ -55,7 +55,7 @@ Q_SIGNALS:
     void enableOkButton(bool enabled);
 
 private slots:
-    void slotServerNameChanged(const QString &name);
+    void slotUserServerNameChanged();
 
 private:
     void populateDefaultAuthenticationOptions();

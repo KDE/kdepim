@@ -49,12 +49,6 @@ namespace KABC {
   class ContactGroup;
 }
 
-namespace Nepomuk2 {
-  namespace Query {
-    class Result;
-  }
-}
-
 namespace KPIM {
 
 
@@ -190,12 +184,6 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     Q_PRIVATE_SLOT( d, void slotLDAPSearchData( const KLDAP::LdapResult::List & ) )
     Q_PRIVATE_SLOT( d, void slotEditCompletionOrder() )
     Q_PRIVATE_SLOT( d, void slotUserCancelled( const QString & ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiSearchResult( KJob * ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiSearchDbResult( KJob * ) )
-    Q_PRIVATE_SLOT( d, void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & ) )
-    Q_PRIVATE_SLOT( d, void slotNepomukHits( const QList<Nepomuk2::Query::Result>& ) )
-    Q_PRIVATE_SLOT( d, void slotNepomukSearchFinished() )
-    Q_PRIVATE_SLOT( d, void slotTriggerDelayedQueries() )
     //@endcond
 };
 

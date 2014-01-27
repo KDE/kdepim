@@ -192,6 +192,9 @@ else()
   find_package(NepomukWidgets QUIET CONFIG)
   set_package_properties(NepomukWidgets PROPERTIES DESCRIPTION "The NepomukWidget libraries" URL "http://www.kde.org" TYPE RECOMMENDED PURPOSE "Nepomuk-widgets is needed for building Akonadiconsole")
 
+  find_package(Baloo QUIET CONFIG)
+  set_package_properties(Baloo PROPERTIES DESCRIPTION "The Baloo libraries" URL "http://www.kde.org" TYPE REQUIRED PURPOSE "Baloo provides search capabilities in KMail and Akonadi")
+
   # Xsltproc
   find_package(Xsltproc)
   set_package_properties(Xsltproc PROPERTIES DESCRIPTION "XSLT processor from libxslt" TYPE REQUIRED PURPOSE "Required to generate D-Bus interfaces.")
@@ -328,9 +331,6 @@ else()
     macro_optional_add_subdirectory(akonadiconsole)
   endif()
   macro_optional_add_subdirectory(console)
-  if(Strigi_FOUND)
-    macro_optional_add_subdirectory(strigi-analyzer)
-  endif()
 
   # These targets depend on optional applications
   if(KDEPIMLIBS_KRESOURCES_LIBRARY)
