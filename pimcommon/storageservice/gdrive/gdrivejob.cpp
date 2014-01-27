@@ -19,6 +19,9 @@
 #include "storageservice/authdialog/storageauthviewdialog.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
+#include <libkgapi2/authjob.h>
+#include <libkgapi2/account.h>
+
 #include <KLocalizedString>
 
 #include <qjson/parser.h>
@@ -40,19 +43,8 @@ GDriveJob::GDriveJob(QObject *parent)
       mExpireInTime(0),
       mNeedRefreshToken(false)
 {
-    mRedirectUri = PimCommon::StorageServiceJobConfig::self()->oauth2RedirectUrl();
     mClientId = PimCommon::StorageServiceJobConfig::self()->gdriveClientId();
     mClientSecret = PimCommon::StorageServiceJobConfig::self()->gdriveClientSecret();
-    mRedirectUri = QLatin1String("urn:ietf:wg:oauth:2.0:oob");
-    mServiceUrl = QLatin1String("https://accounts.google.com/o");
-    mApiUrl = QLatin1String("https://www.googleapis.com/auth/drive/v2/");
-    mAuthorizePath = QLatin1String("/oauth2/auth");
-    mPathToken = QLatin1String("/oauth2/token/");
-    mFolderInfoPath = QLatin1String("/2.0/folders/");
-    mFileInfoPath = QLatin1String("/2.0/files/");
-    mCurrentAccountInfoPath = QLatin1String("/2.0/users/me");
-    mScope = QLatin1String("https://www.googleapis.com/auth/drive");
-
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
 }
 
@@ -180,6 +172,17 @@ void GDriveJob::requestTokenAccess()
 {
     mError = false;
     mActionType = PimCommon::StorageServiceAbstract::RequestToken;
+    KGAPI2::AccountPtr account(new KGAPI2::Account);
+
+    KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(
+        account,
+        mClientId,
+        mClientSecret);
+    connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
+             this, SLOT(slotAuthJobFinished(KGAPI2::Job*)));
+
+
+/*
     QUrl url(mServiceUrl + mAuthorizePath );
     url.addQueryItem(QLatin1String("response_type"), QLatin1String("code"));
     url.addQueryItem(QLatin1String("client_id"), mClientId);
@@ -199,6 +202,7 @@ void GDriveJob::requestTokenAccess()
         delete mAuthDialog;
         deleteLater();
     }
+    */
 }
 
 void GDriveJob::slotRedirect(const QUrl &url)

@@ -160,6 +160,8 @@ set(libpimcommon_widgets_SRCS
   widgets/configureimmutablewidgetutils.cpp
 )
 
+
+
 set(libpimcommon_SRCS
   util/createresource.cpp
   util/pimutil.cpp
@@ -198,6 +200,13 @@ kde4_add_kcfg_files(libpimcommon_SRCS
 
 kde4_add_library(pimcommon ${LIBRARY_TYPE} ${libpimcommon_SRCS})
 
+if( LibKGAPI2_FOUND )
+  target_link_libraries(pimcommon
+    ${LibKGAPI2_LIBRARY}
+  )
+endif()
+
+
 target_link_libraries(pimcommon
     ${KDEPIMLIBS_KABC_LIBS}
     ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
@@ -209,6 +218,7 @@ target_link_libraries(pimcommon
     ${QJSON_LIBRARIES}
     ${KDE4_SOLID_LIBS}
     ${KDE4_KNEWSTUFF3_LIBS}
+    ${LibKGAPI2_LIBRARY}
     kdepim
 )
 
