@@ -1,7 +1,7 @@
             Authentication  |  Delete File | Delete Folder | create Folder | Upload | Download | AccountInfo | Copy File | Copy Folder | Move File | Move Folder | Share Link | Rename file | Rename Folder 
 
 DropBox:          X               X             X                X             X         X           X           X           X             X           X               X            X            X
-YouSendIt:        X               X             X                                                    X                                                                              
+YouSendIt:        X               X             X                X                                   X                                                                              
 WebDav:           
 GDrive:          
 Box:              X               X             X                                                    X                                                             
