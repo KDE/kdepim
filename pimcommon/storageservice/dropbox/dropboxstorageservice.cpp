@@ -380,6 +380,9 @@ void DropBoxStorageService::storageServiceCopyFolder(const QString &source, cons
 
 QString DropBoxStorageService::fileIdentifier(const QVariantMap &variantMap)
 {
+    if (variantMap.contains(QLatin1String("path"))) {
+        return variantMap.value(QLatin1String("path")).toString();
+    }
     return QString();
 }
 
@@ -429,15 +432,19 @@ QString DropBoxStorageService::fillListWidget(StorageServiceTreeWidget *listWidg
             if (qwer.contains(QLatin1String("is_dir"))) {
                 const bool isDir = qwer.value(QLatin1String("is_dir")).toBool();
                 const QString name = qwer.value(QLatin1String("path")).toString();
+
+                const QString itemName = name.right((name.length() - name.lastIndexOf(QLatin1Char('/'))) - 1);
+
+
                 StorageServiceTreeWidgetItem *item;
                 if (isDir) {
-                    item = listWidget->addFolder(name, name);
+                    item = listWidget->addFolder(itemName, name);
                 } else {
                     QString mimetype;
                     if (qwer.contains(QLatin1String("mime_type"))) {
                         mimetype = qwer.value(QLatin1String("mime_type")).toString();
                     }
-                    item = listWidget->addFile(name, name, mimetype);
+                    item = listWidget->addFile(itemName, name, mimetype);
                     if (qwer.contains(QLatin1String("bytes"))) {
                         item->setSize(qwer.value(QLatin1String("bytes")).toULongLong());
                     }
