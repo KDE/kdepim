@@ -56,7 +56,15 @@ void StorageServiceTabWidget::updateListService(const QMap<QString, PimCommon::S
             }
         }
     }
-    //TODO remove service ?
+    //Remove page.
+    const QStringList listService = list.keys();
+    for (int nbPage=0; nbPage < count(); ++nbPage) {
+        StorageServicePage *page = static_cast<StorageServicePage*>(widget(nbPage));
+        if (!listService.contains(page->serviceName())) {
+            delete widget(nbPage);
+            removeTab(nbPage);
+        }
+    }
 }
 
 void StorageServiceTabWidget::setListStorageService(const QMap<QString, PimCommon::StorageServiceAbstract *> &list)
