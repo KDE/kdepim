@@ -65,8 +65,8 @@ public:
     KIcon icon() const;
 
 private slots:
-    void slotAuthorizationFailed(const QString &errorMessage);
-
+    void slotAuthorizationFailed(const QString &errorMessage);    
+    void slotAuthorizationDone(const QString &, const QString &, const QString &);
 private:
     void readConfig();
     QString mPublicLocation;

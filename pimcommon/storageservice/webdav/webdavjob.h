@@ -46,14 +46,19 @@ public:
     void copyFile(const QString &source, const QString &destination);
     void copyFolder(const QString &source, const QString &destination);
 
-private slots:
-    void slotSendDataFinished(QNetworkReply *reply);
 
+Q_SIGNALS:
+    void authorizationDone(const QString &, const QString &, const QString &);
+
+private slots:
+    void slotSendDataFinished(QNetworkReply *reply);    
+    void slotAuthenticationRequired(QNetworkReply *, QAuthenticator *);
 private:
     void parseUploadFile(const QString &data);
     void parseCreateFolder(const QString &data);
     void parseAccountInfo(const QString &data);
     void parseListFolder(const QString &data);
+    void parseAccessToken(const QString &data);
     QString mPublicLocation;
     QString mServiceLocation;
 };

@@ -17,11 +17,13 @@
 
 #include "webdavjob.h"
 #include "webdavsettingsdialog.h"
+#include "pimcommon/storageservice/authdialog/logindialog.h"
 
 #include <KLocalizedString>
 
 #include <qjson/parser.h>
 
+#include <QAuthenticator>
 #include <QNetworkAccessManager>
 #include <QDebug>
 #include <QNetworkReply>
@@ -33,6 +35,7 @@ WebDavJob::WebDavJob(QObject *parent)
     : PimCommon::StorageServiceAbstractJob(parent)
 {
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotSendDataFinished(QNetworkReply*)));
+    connect(mNetworkAccessManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(slotAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
 }
 
 WebDavJob::~WebDavJob()
@@ -40,20 +43,36 @@ WebDavJob::~WebDavJob()
 
 }
 
-void WebDavJob::requestTokenAccess()
+void WebDavJob::slotAuthenticationRequired(QNetworkReply *,QAuthenticator *auth)
 {
-    mError = false;
-    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
+    QPointer<LoginDialog> dlg = new LoginDialog;
     if (dlg->exec()) {
-        WebDavJob *job = new WebDavJob(this);
-        mServiceLocation = dlg->serviceLocation();
-        mPublicLocation = dlg->publicLocation();
-        job->requestTokenAccess();
+        auth->setUser(dlg->username());
+        auth->setPassword(dlg->password());
     } else {
         Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
         deleteLater();
     }
     delete dlg;
+}
+
+void WebDavJob::requestTokenAccess()
+{
+    mError = false;
+    mActionType = PimCommon::StorageServiceAbstract::AccessToken;
+    QPointer<WebDavSettingsDialog> dlg = new WebDavSettingsDialog;
+    if (dlg->exec()) {
+        mServiceLocation = dlg->serviceLocation();
+        mPublicLocation = dlg->publicLocation();
+    } else {
+        Q_EMIT authorizationFailed(i18n("Authentication Canceled."));
+        deleteLater();
+    }
+    delete dlg;
+    QUrl url(mServiceLocation);
+    QNetworkRequest request(url);
+    QNetworkReply *reply = mNetworkAccessManager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 void WebDavJob::copyFile(const QString &source, const QString &destination)
@@ -174,7 +193,7 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     case PimCommon::StorageServiceAbstract::AccessToken:
-        deleteLater();
+        parseAccessToken(data);
         break;
     case PimCommon::StorageServiceAbstract::UploadFile:
         parseUploadFile(data);
@@ -203,6 +222,14 @@ void WebDavJob::slotSendDataFinished(QNetworkReply *reply)
         deleteLater();
         break;
     }
+}
+
+void WebDavJob::parseAccessToken(const QString &data)
+{
+    qDebug()<<" void WebDavJob::parseAccessToken(const QString &data)"<<data;
+    Q_EMIT authorizationDone(QString(), QString(), QString());
+    deleteLater();
+
 }
 
 void WebDavJob::parseUploadFile(const QString &data)

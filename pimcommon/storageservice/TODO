@@ -2,8 +2,8 @@
 
 DropBox:          X               X             X                X             X         X           X           X           X             X           X               X            X            X
 YouSendIt:        X               X             X                X                                   X                                                                              
-WebDav:           
+WebDav:           X
 GDrive:           X 
-Box:              X               X             X                                                    X                                                             
-Hubic:           
+Box:              X               X             X                X                                   X                                                                 X            X            X
+Hubic:            
 UbuntuOne:        X                                                                                  X

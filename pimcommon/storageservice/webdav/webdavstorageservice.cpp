@@ -58,21 +58,23 @@ void WebDavStorageService::removeConfig()
 void WebDavStorageService::storageServiceauthentication()
 {
     WebDavJob *job = new WebDavJob(this);
-    KConfig config(StorageServiceManager::kconfigName());
-    KConfigGroup grp(&config, "Webdav Settings");
-    //connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
+    connect(job, SIGNAL(authorizationDone(QString,QString,QString)), this, SLOT(slotAuthorizationDone(QString,QString,QString)));
     connect(job, SIGNAL(authorizationFailed(QString)), this, SLOT(slotAuthorizationFailed(QString)));
     job->requestTokenAccess();
 }
 
+void WebDavStorageService::slotAuthorizationDone(const QString &, const QString &, const QString &)
+{
+    KConfig config(StorageServiceManager::kconfigName());
+    KConfigGroup grp(&config, "Webdav Settings");
+
+    grp.sync();
+    KGlobal::config()->sync();
+    emitAuthentificationDone();
+}
+
 void WebDavStorageService::slotAuthorizationFailed(const QString &errorMessage)
 {
-#if 0
-    mCustomerSecret.clear();
-    mToken.clear();
-    mCustomerKey.clear();
-    mTokenSecret.clear();
-#endif
     emitAuthentificationFailder(errorMessage);
 }
 
@@ -352,7 +354,7 @@ QString WebDavStorageService::iconName()
 StorageServiceAbstract::Capabilities WebDavStorageService::serviceCapabilities()
 {
     StorageServiceAbstract::Capabilities cap;
-    //cap |= AccountInfoCapability;
+    cap |= AccountInfoCapability;
     //cap |= UploadFileCapability;
     //cap |= DownloadFileCapability;
     //cap |= CreateFolderCapability;
