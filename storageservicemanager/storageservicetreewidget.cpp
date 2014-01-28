@@ -20,6 +20,7 @@
 
 #include "storageservicetreewidget.h"
 #include "storageservice/storageserviceabstract.h"
+#include "storageservice/dialog/storageservicechecknamedialog.h"
 #include "storageservicemanagerglobalconfig.h"
 #include "storageservicepropertiesdialog.h"
 
@@ -330,7 +331,27 @@ bool StorageServiceTreeWidget::uploadFileToService()
 {
     const QString filename = KFileDialog::getOpenFileName(KUrl(), QLatin1String("*"), this);
     if (!filename.isEmpty()) {
-        mStorageService->uploadFile(filename, filename, mCurrentFolder);//TODO
+        const QRegExp disallowedSymbols = mStorageService->disallowedSymbols();
+
+        qDebug()<<"filename "<<filename;
+        QFileInfo info(filename);
+        QString newName = info.fileName();
+        qDebug()<<" newName "<<newName;
+        if (!disallowedSymbols.isEmpty()) {
+            if (newName.contains(disallowedSymbols)) {
+                QPointer<PimCommon::StorageServiceCheckNameDialog> dlg = new PimCommon::StorageServiceCheckNameDialog(this);
+                dlg->setOldName(newName);
+                dlg->setDisallowedSymbols(disallowedSymbols);
+                if (dlg->exec()) {
+                    newName = dlg->newName();
+                    delete dlg;
+                } else {
+                    delete dlg;
+                    return false;
+                }
+            }
+        }
+        mStorageService->uploadFile(filename, newName, mCurrentFolder);
         return true;
     } else {
         return false;
