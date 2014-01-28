@@ -320,7 +320,13 @@ void StorageServicePage::slotDownloadFileDone(const QString &serviceName, const 
         mProgressWidget->reset();
         mProgressWidget->hide();
         updateList(serviceName);
-        KMessageBox::information(this, i18n("%1 was correctly downloaded", filename), i18n("Download File"));
+        QString msg;
+        if (filename.isEmpty()) {
+            msg = i18n("File was correctly downloaded");
+        } else {
+            msg = i18n("%1 was correctly downloaded", filename);
+        }
+        KMessageBox::information(this, msg, i18n("Download File"));
     }
 }
 
