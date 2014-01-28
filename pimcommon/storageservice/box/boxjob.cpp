@@ -146,11 +146,11 @@ void BoxJob::moveFolder(const QString &source, const QString &destination)
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath + source);
+    qDebug()<<" url "<<url;
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    const QString data = QString::fromLatin1("{\"parent\":\"%1\"}").arg(destination);
-
+    const QString data = QString::fromLatin1("{\"id\":\"%1\"}").arg(destination);
     QNetworkReply *reply = mNetworkAccessManager->put(request, data.toLatin1());
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
