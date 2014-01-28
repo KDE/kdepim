@@ -1,9 +1,14 @@
+X == done
+I == In progress
+N == not possible
+
+
             Authentication  |  Delete File | Delete Folder | create Folder | Upload | Download | AccountInfo | Copy File | Copy Folder | Move File | Move Folder | Share Link | Rename file | Rename Folder 
 
 DropBox:          X               X             X                X             X         X           X           X           X             X           X               X            X            X
 YouSendIt:        X               X             X                X                                   X                                                                              
 WebDav:           X
 GDrive:           X 
-Box:              X               X             X                X                                   X                                                                 X            X            X
+Box:              X               X             X                X             I         I           X           X           X                         I               X            X            X
 Hubic:            
 UbuntuOne:        X                                                                                  X

@@ -267,6 +267,7 @@ void BoxJob::createFolder(const QString &foldername, const QString &destination)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
+
 void BoxJob::shareLink(const QString &root, const QString &fileId)
 {
     Q_UNUSED(root);
