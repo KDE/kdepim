@@ -544,6 +544,7 @@ void DropBoxJob::createServiceFolder()
 
 QNetworkReply *DropBoxJob::downloadFile(const QString &name, const QString &fileId, const QString &destination)
 {
+    Q_UNUSED(fileId);
     mActionType = PimCommon::StorageServiceAbstract::DownLoadFile;
     mError = false;
     const QString defaultDestination = (destination.isEmpty() ? PimCommon::StorageServiceJobConfig::self()->defaultUploadFolder() : destination);
