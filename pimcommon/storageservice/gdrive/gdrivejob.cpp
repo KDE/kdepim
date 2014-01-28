@@ -19,8 +19,12 @@
 #include "storageservice/authdialog/storageauthviewdialog.h"
 #include "pimcommon/storageservice/storageservicejobconfig.h"
 
+
 #include <libkgapi2/authjob.h>
 #include <libkgapi2/account.h>
+#include <libkgapi2/drive/aboutfetchjob.h>
+#include <libkgapi2/drive/about.h>
+#include <libkgapi2/drive/filecreatejob.h>
 
 #include <KLocalizedString>
 
@@ -54,10 +58,9 @@ void GDriveJob::requestTokenAccess()
 {
     mError = false;
     mActionType = PimCommon::StorageServiceAbstract::RequestToken;
-    KGAPI2::AccountPtr account(new KGAPI2::Account);
 
     KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(
-                account,
+                mAccount,
                 mClientId,
                 mClientSecret);
     connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
@@ -86,6 +89,41 @@ void GDriveJob::initializeToken(KGAPI2::AccountPtr account)
 {
     mError = false;
     mAccount = account;
+}
+
+void GDriveJob::accountInfo()
+{
+    mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
+    mError = false;
+    KGAPI2::Drive::AboutFetchJob *aboutFetchJob = new KGAPI2::Drive::AboutFetchJob(mAccount, this);
+    connect(aboutFetchJob, SIGNAL(finished(KGAPI2::Job*)), this, SLOT(slotAboutFetchJobFinished(KGAPI2::Job*)));
+}
+
+void GDriveJob::slotAboutFetchJobFinished(KGAPI2::Job *job)
+{
+    KGAPI2::Drive::AboutFetchJob *aboutFetchJob = qobject_cast<KGAPI2::Drive::AboutFetchJob*>(job);
+    Q_ASSERT(aboutFetchJob);
+
+    if (aboutFetchJob->error() != KGAPI2::NoError) {
+        qDebug()<<" ERRRRR"<<aboutFetchJob->errorString();
+        Q_EMIT actionFailed(aboutFetchJob->errorString());
+        deleteLater();
+        return;
+    }
+    KGAPI2::Drive::AboutPtr about = aboutFetchJob->aboutData();
+    PimCommon::AccountInfo accountInfo;
+    accountInfo.shared = about->quotaBytesUsed();
+    accountInfo.quota = about->quotaBytesTotal();
+    Q_EMIT accountInfoDone(accountInfo);
+    deleteLater();
+}
+
+QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
+{
+    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
+    mError = false;
+    //TODO
+    return 0;
 }
 
 
@@ -242,42 +280,12 @@ void GDriveJob::getTokenAccess(const QString &authorizeCode)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-QNetworkReply *GDriveJob::uploadFile(const QString &filename, const QString &uploadAsName, const QString &destination)
-{
-    mActionType = PimCommon::StorageServiceAbstract::UploadFile;
-    mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mFileInfoPath + QLatin1String("content"));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    qDebug()<<" request "<<request.rawHeaderList()<<" reqyest "<<request.url();
-    QUrl postData;
-    //TODO
-    QNetworkReply *reply = mNetworkAccessManager->post(request, postData.encodedQuery());
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-    return reply;
-}
-
 void GDriveJob::listFolder(const QString &folder)
 {
     mActionType = PimCommon::StorageServiceAbstract::ListFolder;
     mError = false;
     QUrl url;
     url.setUrl(mApiUrl + mFolderInfoPath + (folder.isEmpty() ? QLatin1String("0") : folder));
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
-    request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());
-    QNetworkReply *reply = mNetworkAccessManager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-}
-
-void GDriveJob::accountInfo()
-{
-    mActionType = PimCommon::StorageServiceAbstract::AccountInfo;
-    mError = false;
-    QUrl url;
-    url.setUrl(mApiUrl + mCurrentAccountInfoPath);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QLatin1String("application/x-www-form-urlencoded"));
     request.setRawHeader("Authorization", "Bearer "+ mToken.toLatin1());

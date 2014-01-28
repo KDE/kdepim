@@ -58,7 +58,7 @@ Q_SIGNALS:
 private slots:
     void slotSendDataFinished(QNetworkReply *reply);
     void slotAuthJobFinished(KGAPI2::Job *job);
-
+    void slotAboutFetchJobFinished(KGAPI2::Job *job);
 protected:
     virtual void parseCreateServiceFolder(const QString &data);
     virtual void parseListFolder(const QString &data);
