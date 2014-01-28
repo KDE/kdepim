@@ -98,7 +98,7 @@ if(DEFINED KDEPIM_DEV_VERSION)
   set(KDEPIM_DEV_VERSION " ${KDEPIM_DEV_VERSION}")
 endif()
 
-set(KDEPIM_VERSION "4.12.1${KDEPIM_DEV_VERSION}")
+set(KDEPIM_VERSION "4.12.2${KDEPIM_DEV_VERSION}")
 
 configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h @ONLY)
 
@@ -112,7 +112,7 @@ endif()
 find_package(KDE4 4.11.3 REQUIRED)
 include(KDE4Defaults)
 
-find_package(KdepimLibs 4.12.1)
+find_package(KdepimLibs 4.12.2)
 set_package_properties(KdepimLibs PROPERTIES DESCRIPTION "The KDEPIM libraries" URL "http://www.kde.org" TYPE REQUIRED)
 
 ############### Load the CTest options ###############
