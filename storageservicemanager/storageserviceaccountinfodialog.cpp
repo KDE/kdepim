@@ -36,9 +36,12 @@ StorageServiceAccountInfoDialog::StorageServiceAccountInfoDialog(const PimCommon
     setMainWidget(w);
     QVBoxLayout *vbox = new QVBoxLayout;
     w->setLayout(vbox);
-    vbox->addWidget(new QLabel(i18n("Size: %1", KGlobal::locale()->formatByteSize(accountInfo.accountSize,1))));
-    vbox->addWidget(new QLabel(i18n("Quota: %1", KGlobal::locale()->formatByteSize(accountInfo.quota,1))));
-    vbox->addWidget(new QLabel(i18n("Shared: %1", KGlobal::locale()->formatByteSize(accountInfo.shared,1))));
+    if (accountInfo.accountSize>=0)
+        vbox->addWidget(new QLabel(i18n("Size: %1", KGlobal::locale()->formatByteSize(accountInfo.accountSize,1))));
+    if (accountInfo.quota>=0)
+        vbox->addWidget(new QLabel(i18n("Quota: %1", KGlobal::locale()->formatByteSize(accountInfo.quota,1))));
+    if (accountInfo.shared>=0)
+        vbox->addWidget(new QLabel(i18n("Shared: %1", KGlobal::locale()->formatByteSize(accountInfo.shared,1))));
 }
 
 StorageServiceAccountInfoDialog::~StorageServiceAccountInfoDialog()
