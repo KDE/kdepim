@@ -342,6 +342,7 @@ bool StorageServiceTreeWidget::uploadFileToService()
                 QPointer<PimCommon::StorageServiceCheckNameDialog> dlg = new PimCommon::StorageServiceCheckNameDialog(this);
                 dlg->setOldName(newName);
                 dlg->setDisallowedSymbols(disallowedSymbols);
+                dlg->setDisallowedSymbolsStr(mStorageService->disallowedSymbolsStr());
                 if (dlg->exec()) {
                     newName = dlg->newName();
                     delete dlg;

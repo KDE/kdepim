@@ -22,6 +22,7 @@
 #include <KDialog>
 #include "pimcommon_export.h"
 class KLineEdit;
+class QLabel;
 namespace PimCommon {
 class PIMCOMMON_EXPORT StorageServiceCheckNameDialog : public KDialog
 {
@@ -31,6 +32,7 @@ public:
     ~StorageServiceCheckNameDialog();
 
     void setDisallowedSymbols(const QRegExp &regExp);
+    void setDisallowedSymbolsStr(const QString &str);
     void setOldName(const QString &name);
 
     QString newName() const;
@@ -40,6 +42,7 @@ private slots:
 
 private:
     QRegExp mRegExp;
+    QLabel *mInfo;
     KLineEdit *mName;
 };
 }

@@ -37,6 +37,10 @@ StorageServiceCheckNameDialog::StorageServiceCheckNameDialog(QWidget *parent)
     QWidget *w = new QWidget;
     w->setLayout(lay);
     setMainWidget(w);
+
+    mInfo = new QLabel(i18n("Some characters are not allowed."));
+    lay->addWidget(mInfo);
+
     QHBoxLayout *hbox = new QHBoxLayout;
     QLabel *lab = new QLabel(i18n("New name:"));
     hbox->addWidget(lab);
@@ -53,7 +57,7 @@ StorageServiceCheckNameDialog::~StorageServiceCheckNameDialog()
 
 void StorageServiceCheckNameDialog::slotNameChanged(const QString &text)
 {
-    if (text.contains(mRegExp) || text == QLatin1String(".") || text == QLatin1String("..")) {
+    if (text.isEmpty() || text.contains(mRegExp) || text == QLatin1String(".") || text == QLatin1String("..")) {
         enableButtonOk(false);
         return;
     }
@@ -63,6 +67,12 @@ void StorageServiceCheckNameDialog::slotNameChanged(const QString &text)
 void StorageServiceCheckNameDialog::setDisallowedSymbols(const QRegExp &regExp)
 {
     mRegExp = regExp;
+}
+
+void StorageServiceCheckNameDialog::setDisallowedSymbolsStr(const QString &str)
+{
+    if (!str.isEmpty())
+        mInfo->setText(i18n("Some characters (%1) are not allowed.", str));
 }
 
 void StorageServiceCheckNameDialog::setOldName(const QString &name)
